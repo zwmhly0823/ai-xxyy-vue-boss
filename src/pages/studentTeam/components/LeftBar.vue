@@ -1,8 +1,10 @@
 <!--
+ * @Descripttion: 
+ * @version: 
+ * @Author: zhubaodong
  * @Date: 2020-03-13 16:53:27
  * @LastEditors: zhubaodong
- * @LastEditTime: 2020-03-13 17:19:54
- * @FilePath: /ai-app-vue-toss/src/pages/studentTeam/components/LeftBar.vue
+ * @LastEditTime: 2020-03-13 20:19:49
  -->
 <template>
   <div class="left-container">

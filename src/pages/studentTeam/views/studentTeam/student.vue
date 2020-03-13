@@ -1,8 +1,10 @@
 <!--
+ * @Descripttion: 
+ * @version: 
+ * @Author: zhubaodong
  * @Date: 2020-03-13 15:24:11
  * @LastEditors: zhubaodong
- * @LastEditTime: 2020-03-13 18:44:50
- * @FilePath: /ai-app-vue-toss/src/pages/studentTeam/views/studentTeam/student.vue
+ * @LastEditTime: 2020-03-13 20:10:20
  -->
 <template>
   <div class="bg-color">

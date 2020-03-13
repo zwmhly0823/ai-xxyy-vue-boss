@@ -1,8 +1,10 @@
 <!--
+ * @Descripttion: 
+ * @version: 
+ * @Author: zhubaodong
  * @Date: 2020-03-13 16:53:33
  * @LastEditors: zhubaodong
- * @LastEditTime: 2020-03-13 18:28:01
- * @FilePath: /ai-app-vue-toss/src/pages/studentTeam/components/CenterBar.vue
+ * @LastEditTime: 2020-03-13 20:10:05
  -->
 <template>
   <div class="center-container">
