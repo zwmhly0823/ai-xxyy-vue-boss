@@ -8,16 +8,48 @@ const routes = [
   {
     path: '/',
     name: 'Home',
+    // hidden: true, // 不显示在导航中
+    meta: {
+      title: 'Dashboard',
+      icon: 'el-icon-s-data'
+    },
+    // redirect: '/about',
     component: Home
   },
   {
     path: '/about',
     name: 'About',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
+    meta: {
+      title: '关于',
+      icon: 'user'
+    },
     component: () =>
       import(/* webpackChunkName: "about" */ '../views/About.vue')
+  },
+
+  {
+    path: '/components',
+    name: 'Components',
+    meta: {
+      title: '组件',
+      icon: 'user'
+    },
+    children: [
+      {
+        path: 'table',
+        name: 'Table',
+        component: () =>
+          import(/* webpackChunkName: "table" */ '../views/table/index'),
+        meta: { title: 'Table', icon: 'table' }
+      },
+      {
+        path: 'form',
+        name: 'Form',
+        component: () =>
+          import(/* webpackChunkName: "form" */ '../views/form/index'),
+        meta: { title: 'Form', icon: 'table' }
+      }
+    ]
   }
 ]
 
