@@ -4,7 +4,7 @@
  * @Author: shentong
  * @Date: 2020-03-13 14:17:45
  * @LastEditors: shentong
- * @LastEditTime: 2020-03-13 17:47:40
+ * @LastEditTime: 2020-03-14 12:19:47
  */
 import Vue from 'vue'
 import App from './App.vue'
@@ -14,11 +14,11 @@ import '@/plugins/element-ui'
 
 import 'normalize.css/normalize.css' // A modern alternative to CSS resets
 import '@/assets/styles/index.scss' // global css
-import api from '@/api'
+import $http from '@/api'
 Vue.config.productionTip = false
 
 Object.assign(Vue.prototype, {
-  $http: api
+  $http
   //
 })
 
