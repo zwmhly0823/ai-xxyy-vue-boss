@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-13 16:53:41
  * @LastEditors: zhubaodong
- * @LastEditTime: 2020-03-14 18:49:56
+ * @LastEditTime: 2020-03-14 19:18:31
  -->
 <template>
   <div class="right-container">
@@ -21,12 +21,12 @@
             <span>学员:60</span>
             <span>辅导老师:陈实</span>
             <span>辅导老师微信:陈老师</span>
-            <span>
+            <span style="margin-right:0px">
               <span>01-23开班</span>
               <span>02-16结课</span>
             </span>
-            <span>
-              <span>01-20 </span>
+            <span style="margin-right:0px">
+              <span>01-20</span>
               <span>19:20:45创建</span>
             </span>
           </div>
@@ -134,7 +134,8 @@ export default {
   .box-card1 {
     .header {
       display: flex;
-      margin-bottom: 10px;
+      justify-content: space-between;
+      margin-bottom: 6px;
       .header-left {
         .title {
           font-size: 16px;
@@ -145,10 +146,9 @@ export default {
             background: #41a0fa;
           }
         }
-
         .info {
-          font-size: 14px;
-          color: #cfcfcf;
+          font-size: 12px;
+          color: gray;
           margin-top: 5px;
           span {
             margin-right: 8px;
@@ -161,14 +161,18 @@ export default {
       color: gray;
       display: flex;
       font-size: 12px;
-      &-boxLeft {
-        flex: 0.3;
+      &-boxLeft,
+      &-boxCenter,
+      &-boxRight {
         padding: 10px;
         margin-right: 15px;
         background: rgba(241, 242, 242, 1);
         display: flex;
         flex-direction: column;
         align-items: center;
+      }
+      &-boxLeft {
+        flex: 0.3;
         .order-title {
           margin-bottom: 10px;
           flex: 1;
@@ -187,12 +191,6 @@ export default {
       }
       &-boxCenter {
         flex: 0.3;
-        padding: 10px;
-        margin-right: 15px;
-        background: rgba(241, 242, 242, 1);
-        display: flex;
-        flex-direction: column;
-        align-items: center;
         .Conversion-title {
           margin-bottom: 10px;
           flex: 1;
@@ -211,11 +209,7 @@ export default {
       }
       &-boxRight {
         flex: 1;
-        background: rgba(241, 242, 242, 1);
-        padding: 10px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
+        margin-right: 0px;
         .params-top {
           width: 100%;
           display: flex;
@@ -254,6 +248,9 @@ export default {
   .el-card__body {
     font-size: 14px;
     padding: 10px 15px;
+    span {
+      cursor: pointer;
+    }
   }
 }
 </style>
