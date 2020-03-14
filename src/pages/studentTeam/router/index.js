@@ -25,9 +25,9 @@ const routes = [
     name: 'student',
     meta: {
       title: '班级详情',
-      icon: 'el-icon-s-custom',
-      hidden: true
+      icon: 'el-icon-s-custom'
     },
+    hidden: true,
     component: () =>
       import(
         /* webpackChunkName: "student" */ '../views/studentTeam/student.vue'
