@@ -7,25 +7,23 @@
  * @LastEditTime: 2020-03-13 20:10:20
  -->
 <template>
-  <div class="bg-color">
-    <el-row :gutter="8" type="flex">
-      <el-col style="paddingLeft:0px;width:160px">
-        <div class="grid-content">
-          <left-bar />
-        </div>
-      </el-col>
-      <el-col style="width:260px">
-        <div class="grid-content">
-          <center-bar />
-        </div>
-      </el-col>
-      <el-col style="flex:1">
-        <div class="grid-content">
-          <right-bar />
-        </div>
-      </el-col>
-    </el-row>
-  </div>
+  <el-row type="flex" class="app-main height student-team">
+    <el-col class="student-team-left">
+      <div class="grid-content">
+        <left-bar />
+      </div>
+    </el-col>
+    <el-col class="student-team-center">
+      <div class="grid-content">
+        <center-bar />
+      </div>
+    </el-col>
+    <el-col class="student-team-right">
+      <div class="grid-content">
+        <right-bar />
+      </div>
+    </el-col>
+  </el-row>
 </template>
 
 <script>
@@ -51,12 +49,22 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.bg-color {
-  background: #e3e3e3;
-  height: 100vh;
+.student-team {
+  &-left {
+    padding-left: 0px;
+    width: 160px;
+    border-right: 1px solid #e3e3e3;
+  }
+  &-center {
+    width: 260px;
+  }
+  &-right {
+    flex: 1;
+    margin: 10px;
+  }
   .grid-content {
     background: white;
-    height: 100vh;
+    height: 100%;
   }
 }
 </style>

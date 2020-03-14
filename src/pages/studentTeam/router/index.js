@@ -12,15 +12,21 @@ Vue.use(VueRouter)
 const routes = [
   {
     path: '/',
-    name: 'studentTeamIndex',
+    name: 'Home',
+    meta: {
+      title: '班级',
+      icon: 'el-icon-s-custom',
+      keepAlive: true
+    },
     component: () => import('../views/studentTeam/student.vue')
   },
   {
     path: '/student-team', // 班级模块
     name: 'student',
     meta: {
-      title: '班级模块',
-      keepAlive: true
+      title: '班级详情',
+      icon: 'el-icon-s-custom',
+      hidden: true
     },
     component: () =>
       import(
@@ -30,7 +36,7 @@ const routes = [
 ]
 
 const router = new VueRouter({
-  mode: 'history',
+  // mode: 'history',
   base: process.env.BASE_URL,
   routes
 })

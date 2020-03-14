@@ -16,30 +16,32 @@
         <i class="el-icon-sort" />
       </span>
     </div>
-    <div class="container" style="marginTop:10px">
-      <div v-for="o in 4" :key="o" class="cycle-box">
-        <el-card class="box-card" shadow="hover">
-          <div class="clcle-header">
-            <span>80期S1-3班</span>
-            <span class="text-icons">W1D1</span>
-          </div>
-          <div class="clcle-info">
-            <span>
-              <i class="el-icon-school"></i>
-              60
-            </span>
-            <span>
-              <i class="el-icon-user"></i>
-              陈实啊
-            </span>
-            <span>
-              <i class="el-icon-date"></i>
-              0120-0210
-            </span>
-          </div>
-        </el-card>
+    <el-scrollbar wrap-class="scrollbar-wrapper" style="flex: 1;">
+      <div class="container" style="marginTop:10px">
+        <div v-for="o in 20" :key="o" class="cycle-box">
+          <el-card class="box-card" shadow="hover">
+            <div class="clcle-header">
+              <span>80期S1-3班</span>
+              <span class="text-icons">W1D1</span>
+            </div>
+            <div class="clcle-info">
+              <span>
+                <i class="el-icon-school"></i>
+                60
+              </span>
+              <span>
+                <i class="el-icon-user"></i>
+                陈实啊
+              </span>
+              <span>
+                <i class="el-icon-date"></i>
+                0120-0210
+              </span>
+            </div>
+          </el-card>
+        </div>
       </div>
-    </div>
+    </el-scrollbar>
   </div>
 </template>
 
@@ -59,10 +61,14 @@ export default {
 </script>
 <style lang="scss" scoped>
 .center-container {
+  display: flex;
+  flex-direction: column;
   padding: 10px;
+  height: 100%;
   .headers {
     display: flex;
     justify-content: flex-end;
+    border-bottom: 1px solid #e3e3e3;
     span {
       width: 36px;
       height: 36px;
@@ -70,11 +76,13 @@ export default {
       justify-content: center;
       align-items: center;
       i {
-        font-size: 24px;
+        font-size: 18px;
       }
     }
   }
   .container {
+    // flex: 1;
+    // overflow: hidden;
     .cycle-box {
       .box-card {
         margin-top: 5px;
