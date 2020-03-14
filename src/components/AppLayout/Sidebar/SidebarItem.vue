@@ -15,6 +15,7 @@
           <item
             :icon="onlyOneChild.meta.icon || (item.meta && item.meta.icon)"
             :title="onlyOneChild.meta.title"
+            :item="item"
             level-one
           />
         </el-menu-item>
@@ -27,6 +28,7 @@
           v-if="item.meta"
           :icon="item.meta && item.meta.icon"
           :title="item.meta.title"
+          :item="item"
           has-children
         />
       </template>
@@ -87,9 +89,10 @@ export default {
       })
 
       // When there is only one child router, the child router is displayed by default
-      if (showingChildren.length === 1) {
-        return true
-      }
+      // 注释原因：只一个时二级菜单也正常显示 yangjiyong
+      // if (showingChildren.length === 1) {
+      //   return true
+      // }
 
       // Show parent if there are no child router to display
       if (showingChildren.length === 0) {
@@ -100,6 +103,11 @@ export default {
       return false
     },
     resolvePath(routePath) {
+      console.log(routePath)
+      if (routePath === '/' && this.item.meta) {
+        console.log(this.item.meta.title)
+        return this.item.meta.title
+      }
       if (isExternal(routePath)) {
         return routePath
       }

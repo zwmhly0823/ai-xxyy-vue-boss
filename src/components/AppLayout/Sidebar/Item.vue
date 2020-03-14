@@ -1,9 +1,9 @@
 <template>
   <div>
     <div class="item d-flex align-center justify-between" v-if="levelOne">
-      <i :class="icon" v-if="levelOne"></i>
+      <!-- <i :class="icon" v-if="levelOne"></i> -->
       <span class="flex-1">{{ title }}</span>
-      <i class="el-icon-arrow-right" v-if="levelOne || hasChildren"></i>
+      <!-- <i class="el-icon-arrow-right" v-if="levelOne || hasChildren"></i> -->
     </div>
     <div
       class="item d-flex align-center justify-between"
@@ -20,6 +20,10 @@
 export default {
   name: 'MenuItem',
   props: {
+    item: {
+      type: Object,
+      default: () => ({})
+    },
     // icon 类名，在sidebar.scss中统一定义 'el-icon-share'
     icon: {
       type: String,
@@ -41,7 +45,10 @@ export default {
   methods: {
     // 展开更多
     handleOpen() {
-      console.log('more')
+      if (this.$route.path === '/') return
+      const { path } = this.item
+      this.$router.push(path)
+      // TODO: 更多二级菜单弹层
     }
   }
 }

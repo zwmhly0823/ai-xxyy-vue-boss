@@ -25,6 +25,10 @@ export default {
   width: 100%;
   position: relative;
   overflow: hidden;
+  // 设置app-main的固定高度
+  &.height {
+    height: calc(100vh - #{$topBarWidth});
+  }
 }
 .fixed-header + .app-main {
   padding-top: 50px;

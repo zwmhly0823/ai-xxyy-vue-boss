@@ -1,3 +1,13 @@
+/*
+ * @Author: YangJiyong
+ * @Email: yangjiyong@meishubao.com
+ * @Date: 2020-03-14 16:43:52
+ * @Last Modified by: YangJiyong
+ * @Last Modified time: 2020-03-14 17:17:47
+ * @Description: 模块的默认首页 设为 path: '/', name: 'Home'。显示在左侧导航中
+ * 如果要作为快捷导航显示在左侧，为设置 meta:{showMenu: true}
+ */
+
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
@@ -20,8 +30,8 @@ const routes = [
     path: '/about',
     name: 'About',
     meta: {
-      title: '关于',
-      icon: 'el-icon-share'
+      title: '关于我们',
+      showMenu: true
     },
     component: () =>
       import(/* webpackChunkName: "about" */ '../views/About.vue')
@@ -29,14 +39,13 @@ const routes = [
 
   // 二级目录
   {
-    path: '/components',
+    path: '/components/table',
     name: 'Components',
     meta: {
       title: '组件',
-      icon: 'el-icon-document'
-      // alwaysShow: true
+      showMenu: true
     },
-    component: () => import('../views/components/index'),
+    component: () => import('../views/components/table/index'),
     children: [
       {
         path: 'table',
@@ -79,7 +88,7 @@ const routes = [
 ]
 
 const router = new VueRouter({
-  mode: 'history',
+  // mode: 'history',
   base: process.env.BASE_URL,
   routes
 })
