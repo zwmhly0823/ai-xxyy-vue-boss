@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-13 16:53:41
  * @LastEditors: zhubaodong
- * @LastEditTime: 2020-03-13 20:10:13
+ * @LastEditTime: 2020-03-14 18:49:56
  -->
 <template>
   <div class="right-container">
@@ -32,7 +32,10 @@
           </div>
         </div>
         <div class="header-right">
-          <el-card> <i class="el-icon-plus"></i> 关联微信群 </el-card>
+          <el-card shadow="never">
+            <i class="el-icon-plus"></i>
+            <span>关联微信群</span>
+          </el-card>
         </div>
       </div>
       <div class="body">
@@ -247,7 +250,9 @@ export default {
   }
 }
 .header-right {
+  white-space: nowrap;
   .el-card__body {
+    font-size: 14px;
     padding: 10px 15px;
   }
 }
