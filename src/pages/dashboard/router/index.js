@@ -21,33 +21,58 @@ const routes = [
     name: 'About',
     meta: {
       title: '关于',
-      icon: 'user'
+      icon: 'el-icon-share'
     },
     component: () =>
       import(/* webpackChunkName: "about" */ '../views/About.vue')
   },
 
+  // 二级目录
   {
     path: '/components',
     name: 'Components',
     meta: {
       title: '组件',
-      icon: 'user'
+      icon: 'el-icon-document'
+      // alwaysShow: true
     },
+    component: () => import('../views/components/index'),
     children: [
       {
         path: 'table',
         name: 'Table',
         component: () =>
-          import(/* webpackChunkName: "table" */ '../views/table/index'),
-        meta: { title: 'Table', icon: 'table' }
+          import(
+            /* webpackChunkName: "table" */ '../views/components/table/index'
+          ),
+        meta: { title: '全部订单' }
       },
       {
         path: 'form',
         name: 'Form',
         component: () =>
-          import(/* webpackChunkName: "form" */ '../views/form/index'),
-        meta: { title: 'Form', icon: 'table' }
+          import(
+            /* webpackChunkName: "form" */ '../views/components/form/index'
+          ),
+        meta: { title: '支付流水' }
+      },
+      {
+        path: 'table2',
+        name: 'Table',
+        component: () =>
+          import(
+            /* webpackChunkName: "table" */ '../views/components/table/index'
+          ),
+        meta: { title: '全部订单' }
+      },
+      {
+        path: 'form2',
+        name: 'Form',
+        component: () =>
+          import(
+            /* webpackChunkName: "form" */ '../views/components/form/index'
+          ),
+        meta: { title: '支付流水' }
       }
     ]
   }
