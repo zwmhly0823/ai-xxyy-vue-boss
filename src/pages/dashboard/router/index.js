@@ -43,36 +43,48 @@ const routes = [
         name: 'Table',
         component: () =>
           import(
-            /* webpackChunkName: "table" */ '../views/components/table/index'
+            /* webpackChunkName: "table" */
+            '../views/components/table/index'
           ),
-        meta: { title: '全部订单' }
+        meta: {
+          title: '全部订单'
+        }
       },
       {
         path: 'form',
         name: 'Form',
         component: () =>
           import(
-            /* webpackChunkName: "form" */ '../views/components/form/index'
+            /* webpackChunkName: "form" */
+            '../views/components/form/index'
           ),
-        meta: { title: '支付流水' }
+        meta: {
+          title: '支付流水'
+        }
       },
       {
         path: 'table2',
         name: 'Table',
         component: () =>
           import(
-            /* webpackChunkName: "table" */ '../views/components/table/index'
+            /* webpackChunkName: "table" */
+            '../views/components/table/index'
           ),
-        meta: { title: '全部订单' }
+        meta: {
+          title: '全部订单'
+        }
       },
       {
         path: 'form2',
         name: 'Form',
         component: () =>
           import(
-            /* webpackChunkName: "form" */ '../views/components/form/index'
+            /* webpackChunkName: "form" */
+            '../views/components/form/index'
           ),
-        meta: { title: '支付流水' }
+        meta: {
+          title: '支付流水'
+        }
       }
     ]
   }
