@@ -103,9 +103,7 @@ export default {
       return false
     },
     resolvePath(routePath) {
-      console.log(routePath)
       if (routePath === '/' && this.item.meta) {
-        console.log(this.item.meta.title)
         return this.item.meta.title
       }
       if (isExternal(routePath)) {
