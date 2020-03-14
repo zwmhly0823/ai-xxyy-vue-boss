@@ -1,3 +1,11 @@
+/*
+ * @Descripttion:
+ * @version:
+ * @Author: shentong
+ * @Date: 2020-03-13 14:17:45
+ * @LastEditors: shentong
+ * @LastEditTime: 2020-03-13 17:47:02
+ */
 import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
