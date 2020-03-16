@@ -3,8 +3,8 @@
  * @version: 
  * @Author: zhubaodong
  * @Date: 2020-03-13 16:53:33
- * @LastEditors: zhubaodong
- * @LastEditTime: 2020-03-13 20:10:05
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-03-16 11:53:55
  -->
 <template>
   <div class="center-container">
@@ -31,7 +31,7 @@
               </span>
               <span>
                 <i class="el-icon-user"></i>
-                陈实啊
+                洋洋老师
               </span>
               <span>
                 <i class="el-icon-date"></i>
@@ -81,8 +81,6 @@ export default {
     }
   }
   .container {
-    // flex: 1;
-    // overflow: hidden;
     .cycle-box {
       .box-card {
         margin-top: 5px;
@@ -112,5 +110,8 @@ export default {
   .el-card__body {
     padding: 10px;
   }
+}
+.center-container .scrollbar-wrapper {
+  overflow-x: hidden;
 }
 </style>

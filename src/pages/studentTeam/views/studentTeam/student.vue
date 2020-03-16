@@ -3,8 +3,8 @@
  * @version: 
  * @Author: zhubaodong
  * @Date: 2020-03-13 15:24:11
- * @LastEditors: zhubaodong
- * @LastEditTime: 2020-03-14 19:16:11
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-03-16 11:54:13
  -->
 <template>
   <el-row type="flex" class="app-main height student-team">
@@ -52,11 +52,11 @@ export default {
 .student-team {
   &-left {
     padding-left: 0px;
-    width: 160px;
+    width: 140px;
     border-right: 1px solid #e3e3e3;
   }
   &-center {
-    width: 260px;
+    width: 240px;
   }
   &-right {
     flex: 1;
