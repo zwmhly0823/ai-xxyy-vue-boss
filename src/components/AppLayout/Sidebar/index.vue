@@ -55,6 +55,9 @@ export default {
     isCollapse() {
       return !this.sidebar.opened
     }
+    // basePath() {
+    //   return location.pathname
+    // }
   }
 }
 </script>

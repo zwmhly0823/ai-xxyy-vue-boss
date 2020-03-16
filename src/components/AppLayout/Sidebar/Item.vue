@@ -1,3 +1,11 @@
+<!--
+ * @Descripttion: 
+ * @version: 
+ * @Author: YangJiyong
+ * @Date: 2020-03-16 11:38:09
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-03-16 14:11:56
+ -->
 <template>
   <div>
     <div class="item d-flex align-center justify-between" v-if="levelOne">
@@ -46,12 +54,23 @@ export default {
     // 展开更多
     handleOpen() {
       const { path, meta } = this.item
+      const pathname = location.pathname
       if (this.$route.path === `${path}`) return
-      if (meta.moudle) {
+      // 同一模块,hash
+      if (meta.module === pathname.split('/')[1]) {
+        if (path.split('/')[1] !== meta.module) {
+          this.$router.push(path)
+        } else if (this.$route.path !== '/') {
+          this.$router.push('/')
+        }
+      } else {
+        if (path.split('/')[1] !== meta.module) {
+          location.href = `/${meta.module}/#${path}`
+          return
+        }
         location.href = `${path}/#/`
-        return
       }
-      this.$router.push(path)
+
       // TODO: 更多二级菜单弹层
     }
   }
