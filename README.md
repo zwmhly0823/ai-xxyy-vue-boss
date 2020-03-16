@@ -1,5 +1,7 @@
 # ai-app-vue-toss
 
+## https://msb-ai.meixiu.mobi/frontend/ai-app-vue-toss/student-team/#/
+
 ## Project setup
 ```
 yarn install
