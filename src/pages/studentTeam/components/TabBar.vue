@@ -2,22 +2,32 @@
   <div class="tab-box">
     <el-tabs v-model="activeName" @tab-click="handleClick" type="border-card">
       <el-tab-pane label="学员" name="students">
-        学员
+        <studens-tab />
       </el-tab-pane>
       <el-tab-pane label="带班详情" name="details">
-        带班详情
+        <details-tab />
       </el-tab-pane>
       <el-tab-pane label="微信群聊" name="groupChat">
-        微信群聊
+        <groupchat-tab />
       </el-tab-pane>
       <el-tab-pane label="系统课订单" name="systemOrder">
-        系统课订单
+        <systemorder-tab />
       </el-tab-pane>
     </el-tabs>
   </div>
 </template>
 <script>
+import StudensTab from './StudentsTab'
+import DetailsTab from './DetailsTab'
+import GroupchatTab from './GroupchatTab'
+import SystemorderTab from './SystemorderTab'
 export default {
+  components: {
+    StudensTab,
+    DetailsTab,
+    GroupchatTab,
+    SystemorderTab
+  },
   data() {
     return {
       activeName: 'students'
