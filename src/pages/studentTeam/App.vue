@@ -5,28 +5,16 @@
  * @FilePath: /ai-app-vue-toss/src/pages/studentTeam/App.vue
  -->
 <template>
-  <router-view></router-view>
+  <div id="app">
+    <app-layout />
+  </div>
 </template>
-
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
+<script>
+import AppLayout from '@/components/AppLayout/index.vue'
+export default {
+  name: 'dashboard',
+  components: {
+    AppLayout
+  }
 }
-
-#nav {
-  padding: 30px;
-}
-
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-#nav a.router-link-exact-active {
-  color: #42b983;
-}
-</style>
+</script>

@@ -1,0 +1,31 @@
+/*
+ * @Author: YangJiyong
+ * @Email: yangjiyong@meishubao.com
+ * @Date: 2020-03-14 00:39:19
+ * @Last Modified by: YangJiyong
+ * @Last Modified time: 2020-03-14 00:40:38
+ * @Description: 公共样式
+ */
+
+ .d-flex{
+   display: flex;
+   &.align-center{
+     align-items: center;
+   }
+   &.justify-center{
+     justify-content: center;
+   }
+   &.justify-around{
+     justify-content: space-around;
+   }
+   &.justify-between{
+     justify-content: space-between
+   }
+   .flex-1{
+     flex: 1;
+   }
+ }
+
+ .el-input--small{
+   font-size: 12px;
+ }
