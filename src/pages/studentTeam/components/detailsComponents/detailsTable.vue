@@ -9,13 +9,11 @@
 <template>
   <div>
     <el-table
-      :height="tableHeight"
       class="el-table-list"
       ref="multipleTable"
       :data="tables.tableData"
       tooltip-effect="dark"
       :header-cell-style="headerCss"
-      style="width:100%"
       @selection-change="handleSelectionChange"
     >
       <el-table-column type="selection" width="50"> </el-table-column>
@@ -54,18 +52,10 @@ export default {
   props: ['tables'],
   data() {
     return {
-      tableHeight: '',
       multipleSelection: []
     }
   },
-  created() {
-    if (window.innerHeight === 946) {
-      this.tableHeight = window.innerHeight * 0.55
-    } else if (window.innerHeight === 768) {
-      this.tableHeight = window.innerHeight * 0.44
-    }
-    // console.log(this.tables)
-  },
+  created() {},
   methods: {
     // 表头回调样式
     headerCss({ row, column, rowIndex, columnIndex }) {
