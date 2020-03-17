@@ -3,8 +3,8 @@
  * @version: 
  * @Author: zhubaodong
  * @Date: 2020-03-13 16:53:33
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-03-16 11:53:55
+ * @LastEditors: zhubaodong
+ * @LastEditTime: 2020-03-17 11:22:30
  -->
 <template>
   <div class="center-container">
@@ -77,6 +77,7 @@ export default {
       align-items: center;
       i {
         font-size: 18px;
+        cursor: pointer;
       }
     }
   }

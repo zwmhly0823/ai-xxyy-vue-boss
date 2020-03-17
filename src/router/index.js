@@ -3,13 +3,15 @@
  * @Email: yangjiyong@meishubao.com
  * @Date: 2020-03-14 15:07:26
  * @Last Modified by: YangJiyong
- * @Last Modified time: 2020-03-14 19:18:55
+ * @Last Modified time: 2020-03-17 12:42:11
  * @Description: 设置左侧导航展示数据
  * 通过导入模块router/index.js判断，规定模块入口文件为 {path: '/', name: 'Home'}
- * TODO: 需要手动导入
+ * TODO: 自动完成
  */
 // import dashboardRouter from '@/pages/dashboard/router/index'
 // import studentTeamdRouter from '@/pages/studentTeam/router/index'
+// console.log(dashboardRouter.options)
+// console.log(studentTeamdRouter.options)
 
 // function getRoutes(router = {}) {
 //   const { routes = [] } = router.options
@@ -31,25 +33,27 @@ const routes = [
   {
     path: '/dashboard',
     name: 'dashboard',
-    // hidden: true,
+    hidden: true,
     meta: {
       title: 'Dashboard',
       icon: 'el-icon-s-data',
-      moudle: true
+      module: 'dashboard'
     },
     children: [
       {
         path: '/components/table',
         name: 'Table',
         meta: {
-          title: '全部订单'
+          title: '全部订单',
+          module: 'dashboard'
         }
       },
       {
         path: '/components/form',
         name: 'Form',
         meta: {
-          title: '支付流水'
+          title: '支付流水',
+          module: 'dashboard'
         }
       }
     ]
@@ -60,7 +64,7 @@ const routes = [
     meta: {
       title: '班级',
       icon: 'el-icon-s-custom',
-      moudle: true
+      module: 'student-team'
     }
   }
 ]

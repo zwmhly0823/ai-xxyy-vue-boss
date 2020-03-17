@@ -4,14 +4,14 @@
  * @Author: Shentong
  * @Date: 2020-03-13 15:24:11
  * @LastEditors: Shentong
- * @LastEditTime: 2020-03-17 18:48:28
+ * @LastEditTime: 2020-03-17 19:03:10
  -->
 <template>
   <div id="login" class="login-container">
     <div class="form-container">
       <!-- logo -->
       <div class="logo-container">
-        <img src="../../../assets/logo.png" alt="" />
+        <img src="../../../assets/images/toss.png" alt="" />
       </div>
       <div class="title-container login-type">
         <div
@@ -371,8 +371,9 @@ $light_gray: #eee;
     overflow: hidden;
     .logo-container {
       text-align: center;
+      margin-bottom: 30px;
       > img {
-        width: 100px;
+        height: 50px;
       }
     }
   }

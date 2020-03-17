@@ -1,10 +1,17 @@
 <!--
  * @Descripttion: 
  * @version: 
+<<<<<<< HEAD
  * @Author: panjian
  * @Date: 2020-03-16 16:58:26
  * @LastEditors: Shentong
  * @LastEditTime: 2020-03-17 18:47:52
+=======
+ * @Author: YangJiyong
+ * @Date: 2020-03-16 11:38:09
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-03-16 14:11:56
+>>>>>>> develop
  -->
 <template>
   <div>
@@ -54,12 +61,32 @@ export default {
     // 展开更多
     handleOpen() {
       const { path, meta } = this.item
-      if (this.$route.path === `${path}`) return
-      if (meta.moudle) {
-        location.href = `${path}/#/`
-        return
+      const pathname = location.pathname
+      let baseUrl = ''
+
+      // https://msb-ai.meixiu.mobi/frontend/ai-app-vue-toss/student-team/#/ 测试环境
+      if (pathname.includes('frontend')) {
+        const pathArr = pathname.split('/')
+        baseUrl = '/' + [pathArr[1], pathArr[2]].join('/')
       }
-      this.$router.push(path)
+
+      if (this.$route.path === `${path}`) return
+      // 同一模块,hash
+      // if (meta.module === pathname.split('/')[1]) {
+      if (pathname.includes(meta.module)) {
+        if (path.split('/')[1] !== meta.module) {
+          this.$router.push(path)
+        } else if (this.$route.path !== '/') {
+          this.$router.push('/')
+        }
+      } else {
+        if (path.split('/')[1] !== meta.module) {
+          location.href = `${baseUrl}/${meta.module}/#${path}`
+          return
+        }
+        location.href = `${baseUrl}${path}/#/`
+      }
+
       // TODO: 更多二级菜单弹层
     }
   }

@@ -3,7 +3,7 @@
  * @Email: yangjiyong@meishubao.com
  * @Date: 2020-03-14 16:43:52
  * @Last Modified by: YangJiyong
- * @Last Modified time: 2020-03-14 19:02:29
+ * @Last Modified time: 2020-03-16 15:48:36
  * @Description: 模块的默认首页 设为 path: '/', name: 'Home'。显示在左侧导航中
  * 如果要作为快捷导航显示在左侧，为设置 meta:{showMenu: true}
  */
@@ -78,6 +78,7 @@ const routes = [
 const router = new VueRouter({
   // mode: 'history',
   base: process.env.BASE_URL,
+  module: 'dashboard',
   routes
 })
 
