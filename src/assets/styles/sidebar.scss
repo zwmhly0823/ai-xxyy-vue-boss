@@ -153,7 +153,7 @@
     .el-submenu {
       overflow: hidden;
 
-      &>.el-submenu__title {
+      .el-submenu__title {
         padding: 0 !important;
 
         .item i {
@@ -161,10 +161,11 @@
         }
 
         .el-submenu__icon-arrow {
-          display: none;
+          display: none !important;
         }
       }
     }
+
 
     .el-menu--collapse {
       .el-submenu {

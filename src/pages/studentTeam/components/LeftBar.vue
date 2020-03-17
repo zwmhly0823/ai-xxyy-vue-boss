@@ -3,8 +3,8 @@
  * @version: 
  * @Author: zhubaodong
  * @Date: 2020-03-13 16:53:27
- * @LastEditors: zhubaodong
- * @LastEditTime: 2020-03-13 20:19:49
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-03-16 11:54:43
  -->
 <template>
   <div class="left-container">
@@ -12,6 +12,7 @@
       v-model="input"
       placeholder="搜索班级名称"
       prefix-icon="el-icon-search"
+      size="small"
     >
     </el-input>
     <el-tree

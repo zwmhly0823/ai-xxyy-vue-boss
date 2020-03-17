@@ -1,3 +1,13 @@
+/*
+ * @Author: YangJiyong
+ * @Email: yangjiyong@meishubao.com
+ * @Date: 2020-03-14 16:43:52
+ * @Last Modified by: YangJiyong
+ * @Last Modified time: 2020-03-16 15:48:36
+ * @Description: 模块的默认首页 设为 path: '/', name: 'Home'。显示在左侧导航中
+ * 如果要作为快捷导航显示在左侧，为设置 meta:{showMenu: true}
+ */
+
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
@@ -20,8 +30,8 @@ const routes = [
     path: '/about',
     name: 'About',
     meta: {
-      title: '关于',
-      icon: 'el-icon-share'
+      title: '关于我们',
+      showMenu: true
     },
     component: () =>
       import(/* webpackChunkName: "about" */ '../views/About.vue')
@@ -33,8 +43,7 @@ const routes = [
     name: 'Components',
     meta: {
       title: '组件',
-      icon: 'el-icon-document'
-      // alwaysShow: true
+      showMenu: true
     },
     component: () => import('../views/components/index'),
     children: [
@@ -43,36 +52,24 @@ const routes = [
         name: 'Table',
         component: () =>
           import(
-            /* webpackChunkName: "table" */ '../views/components/table/index'
+            /* webpackChunkName: "table" */
+            '../views/components/table/index'
           ),
-        meta: { title: '全部订单' }
+        meta: {
+          title: '全部订单'
+        }
       },
       {
         path: 'form',
         name: 'Form',
         component: () =>
           import(
-            /* webpackChunkName: "form" */ '../views/components/form/index'
+            /* webpackChunkName: "form" */
+            '../views/components/form/index'
           ),
-        meta: { title: '支付流水' }
-      },
-      {
-        path: 'table2',
-        name: 'Table',
-        component: () =>
-          import(
-            /* webpackChunkName: "table" */ '../views/components/table/index'
-          ),
-        meta: { title: '全部订单' }
-      },
-      {
-        path: 'form2',
-        name: 'Form',
-        component: () =>
-          import(
-            /* webpackChunkName: "form" */ '../views/components/form/index'
-          ),
-        meta: { title: '支付流水' }
+        meta: {
+          title: '支付流水'
+        }
       }
     ]
   }
@@ -81,6 +78,7 @@ const routes = [
 const router = new VueRouter({
   // mode: 'history',
   base: process.env.BASE_URL,
+  module: 'dashboard',
   routes
 })
 

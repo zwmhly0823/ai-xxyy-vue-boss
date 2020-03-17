@@ -27,6 +27,7 @@
 import { mapGetters } from 'vuex'
 import Logo from './Logo'
 import SidebarItem from './SidebarItem'
+import routes from '@/router/index'
 import variables from '@/assets/styles/variables.scss'
 
 export default {
@@ -34,9 +35,7 @@ export default {
   computed: {
     ...mapGetters(['sidebar']),
     routes() {
-      console.log(this.$router.options)
-
-      return this.$router.options.routes
+      return routes
     },
     activeMenu() {
       const route = this.$route
@@ -56,6 +55,9 @@ export default {
     isCollapse() {
       return !this.sidebar.opened
     }
+    // basePath() {
+    //   return location.pathname
+    // }
   }
 }
 </script>

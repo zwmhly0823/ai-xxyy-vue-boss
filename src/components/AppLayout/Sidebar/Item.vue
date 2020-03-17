@@ -1,9 +1,17 @@
+<!--
+ * @Descripttion: 
+ * @version: 
+ * @Author: YangJiyong
+ * @Date: 2020-03-16 11:38:09
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-03-16 14:11:56
+ -->
 <template>
   <div>
     <div class="item d-flex align-center justify-between" v-if="levelOne">
-      <i :class="icon" v-if="levelOne"></i>
+      <!-- <i :class="icon" v-if="levelOne"></i> -->
       <span class="flex-1">{{ title }}</span>
-      <i class="el-icon-arrow-right" v-if="levelOne || hasChildren"></i>
+      <!-- <i class="el-icon-arrow-right" v-if="levelOne || hasChildren"></i> -->
     </div>
     <div
       class="item d-flex align-center justify-between"
@@ -20,6 +28,10 @@
 export default {
   name: 'MenuItem',
   props: {
+    item: {
+      type: Object,
+      default: () => ({})
+    },
     // icon 类名，在sidebar.scss中统一定义 'el-icon-share'
     icon: {
       type: String,
@@ -41,7 +53,25 @@ export default {
   methods: {
     // 展开更多
     handleOpen() {
-      console.log('more')
+      const { path, meta } = this.item
+      const pathname = location.pathname
+      if (this.$route.path === `${path}`) return
+      // 同一模块,hash
+      if (meta.module === pathname.split('/')[1]) {
+        if (path.split('/')[1] !== meta.module) {
+          this.$router.push(path)
+        } else if (this.$route.path !== '/') {
+          this.$router.push('/')
+        }
+      } else {
+        if (path.split('/')[1] !== meta.module) {
+          location.href = `/${meta.module}/#${path}`
+          return
+        }
+        location.href = `${path}/#/`
+      }
+
+      // TODO: 更多二级菜单弹层
     }
   }
 }
