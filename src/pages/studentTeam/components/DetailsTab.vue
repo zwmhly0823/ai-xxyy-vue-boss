@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 14:19:58
  * @LastEditors: panjian
- * @LastEditTime: 2020-03-16 20:56:03
+ * @LastEditTime: 2020-03-17 17:01:53
  -->
 <template>
   <div>
@@ -12,14 +12,26 @@
       <div class="tabs-tab">
         <el-tabs v-model="activeName" @tab-click="handleClick" width="500">
           <el-tab-pane label="加好友进群" name="group">
-            <detailsTable></detailsTable>
+            <details-table :tables="table"></details-table>
           </el-tab-pane>
-          <el-tab-pane label="物流" name="logistics">配置管理</el-tab-pane>
-          <el-tab-pane label="登陆" name="login">角色管理</el-tab-pane>
-          <el-tab-pane label="参课" name="participateIn">角色管理</el-tab-pane>
-          <el-tab-pane label="完课" name="finish">角色管理</el-tab-pane>
-          <el-tab-pane label="传作品" name="works">角色管理</el-tab-pane>
-          <el-tab-pane label="点评" name="comment">角色管理</el-tab-pane>
+          <el-tab-pane label="物流" name="logistics">
+            <details-table :tables="table"></details-table>
+          </el-tab-pane>
+          <el-tab-pane label="登陆" name="login"
+            ><details-table :tables="table"></details-table
+          ></el-tab-pane>
+          <el-tab-pane label="参课" name="participateIn"
+            ><details-table :tables="table"></details-table
+          ></el-tab-pane>
+          <el-tab-pane label="完课" name="finish"
+            ><details-table :tables="table"></details-table
+          ></el-tab-pane>
+          <el-tab-pane label="传作品" name="works"
+            ><details-table :tables="table"></details-table
+          ></el-tab-pane>
+          <el-tab-pane label="点评" name="comment"
+            ><details-table :tables="table"></details-table
+          ></el-tab-pane>
         </el-tabs>
         <el-input
           class="el-input-search"
@@ -42,166 +54,766 @@ export default {
   },
   data() {
     return {
-      group: '10',
-      friend: '30',
-      student: '60',
       input: '',
       table: {
-        tableData: [
-          {
-            date: '2016-05-03',
-            name: '王小虎1',
-            address: '上海市普陀区金沙江路 1518 弄'
-          },
-          {
-            date: '2016-05-02',
-            name: '王小虎',
-            address: '上海市普陀区金沙江路 1518 弄'
-          },
-          {
-            date: '2016-05-04',
-            name: '王小虎',
-            address: '上海市普陀区金沙江路 1518 弄'
-          },
-          {
-            date: '2016-05-01',
-            name: '王小虎',
-            address: '上海市普陀区金沙江路 1518 弄'
-          },
-          {
-            date: '2016-05-08',
-            name: '王小虎',
-            address: '上海市普陀区金沙江路 1518 弄'
-          },
-          {
-            date: '2016-05-06',
-            name: '王小虎',
-            address: '上海市普陀区金沙江路 1518 弄'
-          },
-          {
-            date: '2016-05-07',
-            name: '王小虎',
-            address: '上海市普陀区金沙江路 1518 弄'
-          },
-          {
-            date: '2016-05-03',
-            name: '王小虎',
-            address: '上海市普陀区金沙江路 1518 弄'
-          },
-          {
-            date: '2016-05-02',
-            name: '王小虎',
-            address: '上海市普陀区金沙江路 1518 弄'
-          },
-          {
-            date: '2016-05-04',
-            name: '王小虎',
-            address: '上海市普陀区金沙江路 1518 弄'
-          },
-          {
-            date: '2016-05-01',
-            name: '王小虎',
-            address: '上海市普陀区金沙江路 1518 弄'
-          },
-          {
-            date: '2016-05-08',
-            name: '王小虎',
-            address: '上海市普陀区金沙江路 1518 弄'
-          },
-          {
-            date: '2016-05-06',
-            name: '王小虎',
-            address: '上海市普陀区金沙江路 1518 弄'
-          },
-          {
-            date: '2016-05-07',
-            name: '王小虎',
-            address: '上海市普陀区金沙江路 1518 弄'
-          },
-          {
-            date: '2016-05-03',
-            name: '王小虎',
-            address: '上海市普陀区金沙江路 1518 弄'
-          },
-          {
-            date: '2016-05-02',
-            name: '王小虎',
-            address: '上海市普陀区金沙江路 1518 弄'
-          },
-          {
-            date: '2016-05-04',
-            name: '王小虎',
-            address: '上海市普陀区金沙江路 1518 弄'
-          },
-          {
-            date: '2016-05-01',
-            name: '王小虎',
-            address: '上海市普陀区金沙江路 1518 弄'
-          },
-          {
-            date: '2016-05-08',
-            name: '王小虎',
-            address: '上海市普陀区金沙江路 1518 弄'
-          },
-          {
-            date: '2016-05-06',
-            name: '王小虎',
-            address: '上海市普陀区金沙江路 1518 弄'
-          },
-          {
-            date: '2016-05-07',
-            name: '王小虎',
-            address: '上海市普陀区金沙江路 1518 弄'
-          },
-          {
-            date: '2016-05-03',
-            name: '王小虎',
-            address: '上海市普陀区金沙江路 1518 弄'
-          },
-          {
-            date: '2016-05-02',
-            name: '王小虎',
-            address: '上海市普陀区金沙江路 1518 弄'
-          },
-          {
-            date: '2016-05-04',
-            name: '王小虎',
-            address: '上海市普陀区金沙江路 1518 弄'
-          },
-          {
-            date: '2016-05-01',
-            name: '王小虎',
-            address: '上海市普陀区金沙江路 1518 弄'
-          },
-          {
-            date: '2016-05-08',
-            name: '王小虎',
-            address: '上海市普陀区金沙江路 1518 弄'
-          },
-          {
-            date: '2016-05-06',
-            name: '王小虎',
-            address: '上海市普陀区金沙江路 1518 弄'
-          },
-          {
-            date: '2016-05-07',
-            name: '王小虎',
-            address: '上海市普陀区金沙江路 1518 弄'
-          }
-        ],
-        multipleSelection: [],
-        currentPage3: 1
+        // 表头信息
+        tableLabel: [],
+        // 列表数据
+        tableData: [],
+        group: '10',
+        friend: '30',
+        student: '60',
+        currentPage: 1
       },
+      // tabs标签默认状态
       activeName: 'group'
     }
   },
-  mounted() {},
+  mounted() {
+    this.table.tableLabel = [
+      { label: '手机号', prop: 'telephone' },
+      { label: '购买时间', prop: 'time' },
+      { label: '已加好友', prop: 'friend' },
+      { label: '已进群', prop: 'group' },
+      { label: '关注公众号', prop: 'follow' },
+      { label: '微信信息', prop: 'wechat' }
+    ]
+    this.table.tableData = [
+      {
+        telephone: 13311113333,
+        time: '2018-07-24',
+        friend: '已加',
+        group: '已进',
+        follow: '已关注',
+        wechat: 'qwea'
+      },
+      {
+        telephone: 13311113333,
+        time: '2018-07-24',
+        friend: '已加',
+        group: '已进',
+        follow: '已关注',
+        wechat: 'qwea'
+      },
+      {
+        telephone: 13311113333,
+        time: '2018-07-24',
+        friend: '已加',
+        group: '已进',
+        follow: '已关注',
+        wechat: 'qwea'
+      },
+      {
+        telephone: 13311113333,
+        time: '2018-07-24',
+        friend: '已加',
+        group: '已进',
+        follow: '已关注',
+        wechat: 'qwea'
+      },
+      {
+        telephone: 13311113333,
+        time: '2018-07-24',
+        friend: '已加',
+        group: '已进',
+        follow: '已关注',
+        wechat: 'qwea'
+      },
+      {
+        telephone: 13311113333,
+        time: '2018-07-24',
+        friend: '已加',
+        group: '已进',
+        follow: '已关注',
+        wechat: 'qwea'
+      },
+      {
+        telephone: 13311113333,
+        time: '2018-07-24',
+        friend: '已加',
+        group: '已进',
+        follow: '已关注',
+        wechat: 'qwea'
+      },
+      {
+        telephone: 13311113333,
+        time: '2018-07-24',
+        friend: '已加',
+        group: '已进',
+        follow: '已关注',
+        wechat: 'qwea'
+      },
+      {
+        telephone: 13311113333,
+        time: '2018-07-24',
+        friend: '已加',
+        group: '已进',
+        follow: '已关注',
+        wechat: 'qwea'
+      },
+      {
+        telephone: 13311113333,
+        time: '2018-07-24',
+        friend: '已加',
+        group: '已进',
+        follow: '已关注',
+        wechat: 'qwea'
+      },
+      {
+        telephone: 13311113333,
+        time: '2018-07-24',
+        friend: '已加',
+        group: '已进',
+        follow: '已关注',
+        wechat: 'qwea'
+      },
+      {
+        telephone: 13311113333,
+        time: '2018-07-24',
+        friend: '已加',
+        group: '已进',
+        follow: '已关注',
+        wechat: 'qwea'
+      },
+      {
+        telephone: 13311113333,
+        time: '2018-07-24',
+        friend: '已加',
+        group: '已进',
+        follow: '已关注',
+        wechat: 'qwea'
+      },
+      {
+        telephone: 13311113333,
+        time: '2018-07-24',
+        friend: '已加',
+        group: '已进',
+        follow: '已关注',
+        wechat: 'qwea'
+      }
+    ]
+    this.table.group = '10'
+    this.table.friend = '30'
+    this.table.student = '60'
+    this.table.currentPage = 1
+  },
   methods: {
     handleClick(tab, event) {
-      console.log(tab, event)
+      if (tab.index === '0') {
+        console.log('加好友进群')
+        this.table.tableLabel = [
+          { label: '手机号', prop: 'telephone' },
+          { label: '购买时间', prop: 'time' },
+          { label: '已加好友', prop: 'friend' },
+          { label: '已进群', prop: 'group' },
+          { label: '关注公众号', prop: 'follow' },
+          { label: '微信信息', prop: 'wechat' }
+        ]
+        this.table.tableData = [
+          {
+            telephone: 13311113333,
+            time: '2018-07-24',
+            friend: '已加',
+            group: '已进',
+            follow: '已关注',
+            wechat: 'qwea'
+          },
+          {
+            telephone: 13311113333,
+            time: '2018-07-24',
+            friend: '已加',
+            group: '已进',
+            follow: '已关注',
+            wechat: 'qwea'
+          },
+          {
+            telephone: 13311113333,
+            time: '2018-07-24',
+            friend: '已加',
+            group: '已进',
+            follow: '已关注',
+            wechat: 'qwea'
+          },
+          {
+            telephone: 13311113333,
+            time: '2018-07-24',
+            friend: '已加',
+            group: '已进',
+            follow: '已关注',
+            wechat: 'qwea'
+          },
+          {
+            telephone: 13311113333,
+            time: '2018-07-24',
+            friend: '已加',
+            group: '已进',
+            follow: '已关注',
+            wechat: 'qwea'
+          },
+          {
+            telephone: 13311113333,
+            time: '2018-07-24',
+            friend: '已加',
+            group: '已进',
+            follow: '已关注',
+            wechat: 'qwea'
+          },
+          {
+            telephone: 13311113333,
+            time: '2018-07-24',
+            friend: '已加',
+            group: '已进',
+            follow: '已关注',
+            wechat: 'qwea'
+          },
+          {
+            telephone: 13311113333,
+            time: '2018-07-24',
+            friend: '已加',
+            group: '已进',
+            follow: '已关注',
+            wechat: 'qwea'
+          },
+          {
+            telephone: 13311113333,
+            time: '2018-07-24',
+            friend: '已加',
+            group: '已进',
+            follow: '已关注',
+            wechat: 'qwea'
+          }
+        ]
+        this.table.group = '10'
+        this.table.friend = '30'
+        this.table.student = '60'
+        this.table.currentPage = 1
+      } else if (tab.index === '1') {
+        console.log('物流')
+        this.table.tableLabel = [
+          { label: '订单号', prop: 'telephone' },
+          { label: '物流地址', prop: 'time' },
+          { label: '物流详情', prop: 'friend' },
+          { label: '收货人', prop: 'group' },
+          { label: '手机号', prop: 'follow' },
+          { label: '地址详情', prop: 'wechat' }
+        ]
+        this.table.tableData = [
+          {
+            telephone: 13311113333,
+            time: '2018-07-24',
+            friend: '已加',
+            group: '已进',
+            follow: '已关注',
+            wechat: 'qwea'
+          },
+          {
+            telephone: 13311113333,
+            time: '2018-07-24',
+            friend: '已加',
+            group: '已进',
+            follow: '已关注',
+            wechat: 'qwea'
+          },
+          {
+            telephone: 13311113333,
+            time: '2018-07-24',
+            friend: '已加',
+            group: '已进',
+            follow: '已关注',
+            wechat: 'qwea'
+          },
+          {
+            telephone: 13311113333,
+            time: '2018-07-24',
+            friend: '已加',
+            group: '已进',
+            follow: '已关注',
+            wechat: 'qwea'
+          },
+          {
+            telephone: 13311113333,
+            time: '2018-07-24',
+            friend: '已加',
+            group: '已进',
+            follow: '已关注',
+            wechat: 'qwea'
+          },
+          {
+            telephone: 13311113333,
+            time: '2018-07-24',
+            friend: '已加',
+            group: '已进',
+            follow: '已关注',
+            wechat: 'qwea'
+          },
+          {
+            telephone: 13311113333,
+            time: '2018-07-24',
+            friend: '已加',
+            group: '已进',
+            follow: '已关注',
+            wechat: 'qwea'
+          },
+          {
+            telephone: 13311113333,
+            time: '2018-07-24',
+            friend: '已加',
+            group: '已进',
+            follow: '已关注',
+            wechat: 'qwea'
+          },
+          {
+            telephone: 13311113333,
+            time: '2018-07-24',
+            friend: '已加',
+            group: '已进',
+            follow: '已关注',
+            wechat: 'qwea'
+          }
+        ]
+        this.table.group = '10'
+        this.table.friend = '30'
+        this.table.student = '60'
+        this.table.currentPage = 1
+      } else if (tab.index === '2') {
+        console.log('登陆')
+        this.table.tableLabel = [
+          { label: '注册账号', prop: 'telephone' },
+          { label: '是否登陆', prop: 'time' },
+          { label: '是否有app', prop: 'friend' },
+          { label: '姓名', prop: 'group' },
+          { label: '手机号', prop: 'follow' }
+        ]
+        this.table.tableData = [
+          {
+            telephone: 13311113333,
+            time: '2018-07-24',
+            friend: '已加',
+            group: '已进',
+            follow: '已关注',
+            wechat: 'qwea'
+          },
+          {
+            telephone: 13311113333,
+            time: '2018-07-24',
+            friend: '已加',
+            group: '已进',
+            follow: '已关注',
+            wechat: 'qwea'
+          },
+          {
+            telephone: 13311113333,
+            time: '2018-07-24',
+            friend: '已加',
+            group: '已进',
+            follow: '已关注',
+            wechat: 'qwea'
+          },
+          {
+            telephone: 13311113333,
+            time: '2018-07-24',
+            friend: '已加',
+            group: '已进',
+            follow: '已关注',
+            wechat: 'qwea'
+          },
+          {
+            telephone: 13311113333,
+            time: '2018-07-24',
+            friend: '已加',
+            group: '已进',
+            follow: '已关注',
+            wechat: 'qwea'
+          },
+          {
+            telephone: 13311113333,
+            time: '2018-07-24',
+            friend: '已加',
+            group: '已进',
+            follow: '已关注',
+            wechat: 'qwea'
+          },
+          {
+            telephone: 13311113333,
+            time: '2018-07-24',
+            friend: '已加',
+            group: '已进',
+            follow: '已关注',
+            wechat: 'qwea'
+          },
+          {
+            telephone: 13311113333,
+            time: '2018-07-24',
+            friend: '已加',
+            group: '已进',
+            follow: '已关注',
+            wechat: 'qwea'
+          },
+          {
+            telephone: 13311113333,
+            time: '2018-07-24',
+            friend: '已加',
+            group: '已进',
+            follow: '已关注',
+            wechat: 'qwea'
+          }
+        ]
+        this.table.group = '10'
+        this.table.friend = '30'
+        this.table.student = '60'
+        this.table.currentPage = 1
+      } else if (tab.index === '3') {
+        console.log('参课')
+        this.table.tableLabel = [
+          { label: '参加课程', prop: 'telephone' },
+          { label: '购买时间', prop: 'time' },
+          { label: '课程进度', prop: 'friend' },
+          { label: '姓名', prop: 'group' },
+          { label: '手机号', prop: 'follow' },
+          { label: '微信信息', prop: 'wechat' }
+        ]
+        this.table.tableData = [
+          {
+            telephone: 13311113333,
+            time: '2018-07-24',
+            friend: '已加',
+            group: '已进',
+            follow: '已关注',
+            wechat: 'qwea'
+          },
+          {
+            telephone: 13311113333,
+            time: '2018-07-24',
+            friend: '已加',
+            group: '已进',
+            follow: '已关注',
+            wechat: 'qwea'
+          },
+          {
+            telephone: 13311113333,
+            time: '2018-07-24',
+            friend: '已加',
+            group: '已进',
+            follow: '已关注',
+            wechat: 'qwea'
+          },
+          {
+            telephone: 13311113333,
+            time: '2018-07-24',
+            friend: '已加',
+            group: '已进',
+            follow: '已关注',
+            wechat: 'qwea'
+          },
+          {
+            telephone: 13311113333,
+            time: '2018-07-24',
+            friend: '已加',
+            group: '已进',
+            follow: '已关注',
+            wechat: 'qwea'
+          },
+          {
+            telephone: 13311113333,
+            time: '2018-07-24',
+            friend: '已加',
+            group: '已进',
+            follow: '已关注',
+            wechat: 'qwea'
+          },
+          {
+            telephone: 13311113333,
+            time: '2018-07-24',
+            friend: '已加',
+            group: '已进',
+            follow: '已关注',
+            wechat: 'qwea'
+          },
+          {
+            telephone: 13311113333,
+            time: '2018-07-24',
+            friend: '已加',
+            group: '已进',
+            follow: '已关注',
+            wechat: 'qwea'
+          },
+          {
+            telephone: 13311113333,
+            time: '2018-07-24',
+            friend: '已加',
+            group: '已进',
+            follow: '已关注',
+            wechat: 'qwea'
+          }
+        ]
+        this.table.group = '10'
+        this.table.friend = '30'
+        this.table.student = '60'
+        this.table.currentPage = 1
+      } else if (tab.index === '4') {
+        console.log('完课')
+        this.table.tableLabel = [
+          { label: '姓名', prop: 'telephone' },
+          { label: '购买时间', prop: 'time' },
+          { label: '完课时间', prop: 'friend' },
+          { label: '手机号', prop: 'group' }
+        ]
+        this.table.tableData = [
+          {
+            telephone: 13311113333,
+            time: '2018-07-24',
+            friend: '已加',
+            group: '已进',
+            follow: '已关注',
+            wechat: 'qwea'
+          },
+          {
+            telephone: 13311113333,
+            time: '2018-07-24',
+            friend: '已加',
+            group: '已进',
+            follow: '已关注',
+            wechat: 'qwea'
+          },
+          {
+            telephone: 13311113333,
+            time: '2018-07-24',
+            friend: '已加',
+            group: '已进',
+            follow: '已关注',
+            wechat: 'qwea'
+          },
+          {
+            telephone: 13311113333,
+            time: '2018-07-24',
+            friend: '已加',
+            group: '已进',
+            follow: '已关注',
+            wechat: 'qwea'
+          },
+          {
+            telephone: 13311113333,
+            time: '2018-07-24',
+            friend: '已加',
+            group: '已进',
+            follow: '已关注',
+            wechat: 'qwea'
+          },
+          {
+            telephone: 13311113333,
+            time: '2018-07-24',
+            friend: '已加',
+            group: '已进',
+            follow: '已关注',
+            wechat: 'qwea'
+          },
+          {
+            telephone: 13311113333,
+            time: '2018-07-24',
+            friend: '已加',
+            group: '已进',
+            follow: '已关注',
+            wechat: 'qwea'
+          },
+          {
+            telephone: 13311113333,
+            time: '2018-07-24',
+            friend: '已加',
+            group: '已进',
+            follow: '已关注',
+            wechat: 'qwea'
+          },
+          {
+            telephone: 13311113333,
+            time: '2018-07-24',
+            friend: '已加',
+            group: '已进',
+            follow: '已关注',
+            wechat: 'qwea'
+          }
+        ]
+        this.table.group = '10'
+        this.table.friend = '30'
+        this.table.student = '60'
+        this.table.currentPage = 1
+      } else if (tab.index === '5') {
+        console.log('传作品')
+        this.table.tableLabel = [
+          { label: '姓名', prop: 'telephone' },
+          { label: '手机号', prop: 'time' },
+          { label: '作品名称', prop: 'friend' },
+          { label: '学员老师', prop: 'group' },
+          { label: '作品简介', prop: 'follow' }
+        ]
+        this.table.tableData = [
+          {
+            telephone: 13311113333,
+            time: '2018-07-24',
+            friend: '已加',
+            group: '已进',
+            follow: '已关注',
+            wechat: 'qwea'
+          },
+          {
+            telephone: 13311113333,
+            time: '2018-07-24',
+            friend: '已加',
+            group: '已进',
+            follow: '已关注',
+            wechat: 'qwea'
+          },
+          {
+            telephone: 13311113333,
+            time: '2018-07-24',
+            friend: '已加',
+            group: '已进',
+            follow: '已关注',
+            wechat: 'qwea'
+          },
+          {
+            telephone: 13311113333,
+            time: '2018-07-24',
+            friend: '已加',
+            group: '已进',
+            follow: '已关注',
+            wechat: 'qwea'
+          },
+          {
+            telephone: 13311113333,
+            time: '2018-07-24',
+            friend: '已加',
+            group: '已进',
+            follow: '已关注',
+            wechat: 'qwea'
+          },
+          {
+            telephone: 13311113333,
+            time: '2018-07-24',
+            friend: '已加',
+            group: '已进',
+            follow: '已关注',
+            wechat: 'qwea'
+          },
+          {
+            telephone: 13311113333,
+            time: '2018-07-24',
+            friend: '已加',
+            group: '已进',
+            follow: '已关注',
+            wechat: 'qwea'
+          },
+          {
+            telephone: 13311113333,
+            time: '2018-07-24',
+            friend: '已加',
+            group: '已进',
+            follow: '已关注',
+            wechat: 'qwea'
+          },
+          {
+            telephone: 13311113333,
+            time: '2018-07-24',
+            friend: '已加',
+            group: '已进',
+            follow: '已关注',
+            wechat: 'qwea'
+          }
+        ]
+        this.table.group = '10'
+        this.table.friend = '30'
+        this.table.student = '60'
+        this.table.currentPage = 1
+      } else if (tab.index === '6') {
+        console.log('点评')
+        this.table.tableLabel = [
+          { label: '学员姓名', prop: 'telephone' },
+          { label: '作业名称', prop: 'time' },
+          { label: '老师点评', prop: 'friend' },
+          { label: '点评详情', prop: 'group' }
+        ]
+        this.table.tableData = [
+          {
+            telephone: 13311113333,
+            time: '2018-07-24',
+            friend: '已加',
+            group: '已进',
+            follow: '已关注',
+            wechat: 'qwea'
+          },
+          {
+            telephone: 13311113333,
+            time: '2018-07-24',
+            friend: '已加',
+            group: '已进',
+            follow: '已关注',
+            wechat: 'qwea'
+          },
+          {
+            telephone: 13311113333,
+            time: '2018-07-24',
+            friend: '已加',
+            group: '已进',
+            follow: '已关注',
+            wechat: 'qwea'
+          },
+          {
+            telephone: 13311113333,
+            time: '2018-07-24',
+            friend: '已加',
+            group: '已进',
+            follow: '已关注',
+            wechat: 'qwea'
+          },
+          {
+            telephone: 13311113333,
+            time: '2018-07-24',
+            friend: '已加',
+            group: '已进',
+            follow: '已关注',
+            wechat: 'qwea'
+          },
+          {
+            telephone: 13311113333,
+            time: '2018-07-24',
+            friend: '已加',
+            group: '已进',
+            follow: '已关注',
+            wechat: 'qwea'
+          },
+          {
+            telephone: 13311113333,
+            time: '2018-07-24',
+            friend: '已加',
+            group: '已进',
+            follow: '已关注',
+            wechat: 'qwea'
+          },
+          {
+            telephone: 13311113333,
+            time: '2018-07-24',
+            friend: '已加',
+            group: '已进',
+            follow: '已关注',
+            wechat: 'qwea'
+          },
+          {
+            telephone: 13311113333,
+            time: '2018-07-24',
+            friend: '已加',
+            group: '已进',
+            follow: '已关注',
+            wechat: 'qwea'
+          }
+        ]
+        this.table.group = '10'
+        this.table.friend = '30'
+        this.table.student = '60'
+        this.table.currentPage = 1
+      }
+      console.log(tab, event, tab.index, tab.label)
     },
     enter(val) {
-      console.log(this.input, 'input', val)
+      console.log('input', val)
     }
   }
 }
