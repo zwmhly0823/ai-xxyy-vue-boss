@@ -4,46 +4,42 @@
  * @Author: panjian
  * @Date: 2020-03-16 20:22:24
  * @LastEditors: panjian
- * @LastEditTime: 2020-03-16 21:00:37
+ * @LastEditTime: 2020-03-17 17:42:18
  -->
 <template>
   <div>
     <el-table
-      height="350"
+      :height="tableHeight"
       class="el-table-list"
       ref="multipleTable"
-      :data="tableData"
+      :data="tables.tableData"
       tooltip-effect="dark"
       :header-cell-style="headerCss"
-      style="width: 100%"
+      style="width:100%"
       @selection-change="handleSelectionChange"
     >
-      <el-table-column type="selection" width="35"> </el-table-column>
-      <div prefix-icon="el-icon-more"></div>
-      <el-table-column prop="name" label="手机号" width="120">
-      </el-table-column>
-      <el-table-column prop="name" label="购买时间" width="100">
-      </el-table-column>
-      <el-table-column prop="name" label="已加好友" width="120">
-      </el-table-column>
-      <el-table-column prop="name" label="已进群" width="120">
-      </el-table-column>
-      <el-table-column prop="name" label="关注公众号" width="120">
-      </el-table-column>
-      <el-table-column prop="name" label="微信信息" width="120">
+      <el-table-column type="selection" width="50"> </el-table-column>
+      <el-table-column
+        v-for="(item, index) in tables.tableLabel"
+        :key="index"
+        :prop="item.prop"
+        :width="item.width"
+        :label="item.label"
+      >
       </el-table-column>
     </el-table>
     <div class="table-flex">
-      <span
-        >当前结果：共计<span class="table-flex-text">{{ student }}</span
-        >个学员，<span class="table-flex-text">{{ friend }}</span
-        >已加好友，<span class="table-flex-text">{{ group }}</span>
+      <span class="table-text"
+        >当前结果：共计<span class="table-flex-text">{{ tables.student }}</span
+        >个学员，<span class="table-flex-text">{{ tables.friend }}</span
+        >已加好友，<span class="table-flex-text">{{ tables.group }}</span>
         已进微信群</span
       >
       <el-pagination
+        class="page"
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
-        :current-page.sync="currentPage3"
+        :current-page.sync="tables.currentPage"
         :page-size="100"
         layout="prev, pager, next, jumper"
         :total="1000"
@@ -55,18 +51,29 @@
 <script>
 export default {
   name: 'detailsTable',
-  props: [],
+  props: ['tables'],
   data() {
-    return {}
+    return {
+      tableHeight: '',
+      multipleSelection: []
+    }
+  },
+  created() {
+    if (window.innerHeight === 946) {
+      this.tableHeight = window.innerHeight * 0.55
+    } else if (window.innerHeight === 768) {
+      this.tableHeight = window.innerHeight * 0.44
+    }
+    // console.log(this.tables)
   },
   methods: {
     // 表头回调样式
     headerCss({ row, column, rowIndex, columnIndex }) {
-      console.log(row, column, rowIndex, columnIndex, 'headerCss')
+      // console.log(row, column, rowIndex, columnIndex, 'headerCss')
     },
     // 复选框
     handleSelectionChange(val) {
-      console.log(val, 'val')
+      console.log(val, 'val', this.table)
       this.multipleSelection = val
     },
     // 分页
@@ -82,18 +89,17 @@ export default {
 <style lang="scss" scoped>
 .table-flex {
   display: flex;
-  /* justify-content: space-between; */
+  justify-content: space-between;
   align-items: center;
   font-size: 12px;
-  .table-flex-text {
-    color: #1e90ff;
+  .table-text {
+    padding-top: 5px;
+    .table-flex-text {
+      color: #1e90ff;
+    }
   }
-}
-.el-input-search {
-  float: right;
-  width: 180px;
-}
-.el-button--default {
-  border-radius: 15px;
+  .page {
+    padding-top: 5px;
+  }
 }
 </style>
