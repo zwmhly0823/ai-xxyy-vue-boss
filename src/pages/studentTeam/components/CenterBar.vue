@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-13 16:53:33
  * @LastEditors: zhubaodong
- * @LastEditTime: 2020-03-13 20:10:05
+ * @LastEditTime: 2020-03-16 17:12:00
  -->
 <template>
   <div class="center-container">
@@ -77,6 +77,7 @@ export default {
       align-items: center;
       i {
         font-size: 18px;
+        cursor: pointer;
       }
     }
   }
