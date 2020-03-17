@@ -4,14 +4,15 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
+    "build": "vue-cli-service build --color=true",
     "build:live": "cross-env BASE_URL=ghpageslive npm run build",
-    "deploy:live": "cross-env BASE_URL=ghpageslive node ghpages.js",
+    "deploy:live": "cross-env BASE_URL=ghpageslive node ghpages.js --color=true",
     "test:unit": "vue-cli-service test:unit",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
     "axios": "^0.19.2",
+    "colors": "^1.4.0",
     "core-js": "^3.6.4",
     "dayjs": "^1.8.22",
     "element-ui": "^2.13.0",
