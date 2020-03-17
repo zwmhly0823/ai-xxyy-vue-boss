@@ -8,7 +8,7 @@
  -->
 <template>
   <div class="right-container">
-    <el-card shadow="hover" class="box-card1">
+    <el-card shadow="never" class="box-card1">
       <div class="header">
         <div class="header-left">
           <div class="title">
@@ -111,13 +111,18 @@
         </div>
       </div>
     </el-card>
+
+    <tab-bar />
   </div>
 </template>
 
 <script>
+import TabBar from './TabPane/TabBar.vue'
 export default {
   props: [],
-  components: {},
+  components: {
+    TabBar
+  },
   data() {
     return {}
   },
@@ -129,9 +134,10 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+@import '~@/assets/styles/variables.scss';
 .right-container {
-  padding: 10px;
   .box-card1 {
+    border-bottom: 10px solid $gray-e3;
     .header {
       display: flex;
       justify-content: space-between;
@@ -234,11 +240,15 @@ export default {
       }
     }
   }
+  .el-tabs--border-card {
+    border: none;
+  }
 }
 </style>
 
 <style lang="scss">
 .box-card1 {
+  border-radius: 0;
   .el-card__body {
     padding: 15px;
   }

@@ -18,10 +18,11 @@
         <center-bar />
       </div>
     </el-col>
-    <el-col class="student-team-right">
-      <div class="grid-content">
-        <right-bar />
-        <tab-bar />
+    <el-col class="student-team-right ">
+      <div class="grid-content right">
+        <el-scrollbar wrap-class="scrollbar-wrapper">
+          <right-bar />
+        </el-scrollbar>
       </div>
     </el-col>
   </el-row>
@@ -31,15 +32,13 @@
 import LeftBar from '../../components/LeftBar'
 import CenterBar from '../../components/CenterBar'
 import RightBar from '../../components/RightBar'
-import TabBar from '../../components/TabBar'
 
 export default {
   props: [],
   components: {
     LeftBar,
     RightBar,
-    CenterBar,
-    TabBar
+    CenterBar
   },
   data() {
     return {}
@@ -56,10 +55,12 @@ export default {
   &-left {
     padding-left: 0px;
     width: 180px;
+    min-width: 180px;
     border-right: 1px solid #e3e3e3;
   }
   &-center {
     width: 240px;
+    min-width: 240px;
   }
   &-right {
     flex: 1;
@@ -70,6 +71,17 @@ export default {
     height: 100%;
     display: flex;
     flex-direction: column;
+    &.right {
+      padding: 0;
+    }
   }
+}
+</style>
+<style>
+.grid-content .scrollbar-wrapper {
+  overflow-x: hidden;
+}
+.grid-content .el-scrollbar {
+  flex: 1;
 }
 </style>
