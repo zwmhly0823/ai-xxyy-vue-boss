@@ -55,9 +55,6 @@ export default {
     handleOpen() {
       const { path, meta } = this.item
       const pathname = location.pathname
-      console.log(pathname, 'pathname')
-      console.log(path, 'path')
-      console.log(meta.module, 'module')
       let baseUrl = ''
 
       // https://msb-ai.meixiu.mobi/frontend/ai-app-vue-toss/student-team/#/ 测试环境
