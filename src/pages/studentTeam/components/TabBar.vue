@@ -1,6 +1,11 @@
 <template>
   <div class="tab-box">
-    <el-tabs v-model="activeName" @tab-click="handleClick" type="border-card">
+    <el-tabs
+      v-model="activeName"
+      @tab-click="handleClick"
+      type="border-card"
+      style="height:100%"
+    >
       <el-tab-pane label="学员" name="students">
         <studens-tab />
       </el-tab-pane>
@@ -42,6 +47,7 @@ export default {
 </script>
 <style scoped lang="scss">
 .tab-box {
-  padding: 0px 10px;
+  padding: 0px 10px 10px;
+  flex: 1;
 }
 </style>

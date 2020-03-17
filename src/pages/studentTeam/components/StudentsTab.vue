@@ -1,5 +1,5 @@
 <template>
-  <el-table :data="tableData" style="width: 100%" height="600">
+  <el-table :data="tableData" style="width: 100%;" max-height="600px">
     <el-table-column fixed label="基本信息" class="information">
       <template slot-scope="scope">
         <div class="information-img">
@@ -12,7 +12,8 @@
         </div>
       </template>
     </el-table-column>
-    <el-table-column label="上课信息" class="haveclass">
+    <el-table-column label="上课信息" class="haveclass"
+      >å
       <template slot-scope="scope">
         <div class="haveclass-content">
           参课:
@@ -49,82 +50,6 @@ export default {
   data() {
     return {
       tableData: [
-        {
-          // 基本信息
-          img: 'el-icon-user',
-          phone: '15133266546',
-          age: '2岁3个月 无基础',
-          wechatNote: '爱死的鱼',
-          // 上课信息
-          participate: '3',
-          end: '4',
-          works: '5',
-          review: '6',
-          // 关联物流
-          logisticsNum: '5',
-          logisticsState: '最近一次已发货',
-          // 状态
-          course: '已体验课',
-          addBuddy: '已加好友',
-          wechatGroup: '已进微信群'
-        },
-        {
-          // 基本信息
-          img: 'el-icon-user',
-          phone: '15133266546',
-          age: '2岁3个月 无基础',
-          wechatNote: '爱死的鱼',
-          // 上课信息
-          participate: '3',
-          end: '4',
-          works: '5',
-          review: '6',
-          // 关联物流
-          logisticsNum: '5',
-          logisticsState: '最近一次已发货',
-          // 状态
-          course: '已体验课',
-          addBuddy: '已加好友',
-          wechatGroup: '已进微信群'
-        },
-        {
-          // 基本信息
-          img: 'el-icon-user',
-          phone: '15133266546',
-          age: '2岁3个月 无基础',
-          wechatNote: '爱死的鱼',
-          // 上课信息
-          participate: '3',
-          end: '4',
-          works: '5',
-          review: '6',
-          // 关联物流
-          logisticsNum: '5',
-          logisticsState: '最近一次已发货',
-          // 状态
-          course: '已体验课',
-          addBuddy: '已加好友',
-          wechatGroup: '已进微信群'
-        },
-        {
-          // 基本信息
-          img: 'el-icon-user',
-          phone: '15133266546',
-          age: '2岁3个月 无基础',
-          wechatNote: '爱死的鱼',
-          // 上课信息
-          participate: '3',
-          end: '4',
-          works: '5',
-          review: '6',
-          // 关联物流
-          logisticsNum: '5',
-          logisticsState: '最近一次已发货',
-          // 状态
-          course: '已体验课',
-          addBuddy: '已加好友',
-          wechatGroup: '已进微信群'
-        },
         {
           // 基本信息
           img: 'el-icon-user',

@@ -68,6 +68,8 @@ export default {
   .grid-content {
     background: white;
     height: 100%;
+    display: flex;
+    flex-direction: column;
   }
 }
 </style>
