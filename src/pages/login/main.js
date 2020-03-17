@@ -1,10 +1,10 @@
 /*
  * @Descripttion:
  * @version:
- * @Author: shentong
+ * @Author: Shentong
  * @Date: 2020-03-16 17:04:26
- * @LastEditors: panjian
- * @LastEditTime: 2020-03-17 12:02:53
+ * @LastEditors: Shentong
+ * @LastEditTime: 2020-03-17 18:52:26
  */
 import Vue from 'vue'
 import App from './App.vue'

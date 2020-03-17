@@ -1,8 +1,10 @@
 <!--
- * @Date: 2020-03-13 15:20:21
- * @LastEditors: shentong
- * @LastEditTime: 2020-03-16 17:14:14
- * @FilePath: /ai-app-vue-toss/src/pages/studentTeam/App.vue
+ * @Descripttion: 
+ * @version: 
+ * @Author: Shentong
+ * @Date: 2020-03-16 17:04:26
+ * @LastEditors: Shentong
+ * @LastEditTime: 2020-03-17 18:51:29
  -->
 <template>
   <div id="app">
@@ -12,11 +14,8 @@
   </div>
 </template>
 <script>
-// import AppLayout from '@/components/AppLayout/index.vue'
 export default {
   name: 'login',
-  components: {
-    // AppLayout
-  }
+  components: {}
 }
 </script>

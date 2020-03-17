@@ -3,8 +3,8 @@
  * @version:
  * @Author: shentong
  * @Date: 2020-03-13 14:38:28
- * @LastEditors: panjian
- * @LastEditTime: 2020-03-17 17:35:05
+ * @LastEditors: Shentong
+ * @LastEditTime: 2020-03-17 18:49:56
  */
 import axios from 'axios'
 import _ from 'lodash'
@@ -30,7 +30,6 @@ axios.interceptors.response.use(
     let _data = null
     if (response.status === 200) {
       _data = response.data
-      console.log(_data, 'data')
       if (_.isPlainObject(_data) && _data.code) {
         switch (_data.code) {
           case '0':

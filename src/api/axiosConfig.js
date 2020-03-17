@@ -1,10 +1,10 @@
 /*
  * @Descripttion:
  * @version:
- * @Author: panjian
+ * @Author: Shentong
  * @Date: 2020-03-17 11:50:18
- * @LastEditors: panjian
- * @LastEditTime: 2020-03-17 18:31:36
+ * @LastEditors: Shentong
+ * @LastEditTime: 2020-03-17 18:48:49
  */
 import axios from './axios'
 import { getToken } from '@/utils/auth'
