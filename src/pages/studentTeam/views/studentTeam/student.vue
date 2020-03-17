@@ -1,6 +1,6 @@
 <!--
- * @Descripttion: 
- * @version: 
+ * @Descripttion:
+ * @version:
  * @Author: zhubaodong
  * @Date: 2020-03-13 15:24:11
  * @LastEditors: zhubaodong
@@ -21,6 +21,7 @@
     <el-col class="student-team-right">
       <div class="grid-content">
         <right-bar />
+        <tab-bar />
       </div>
     </el-col>
   </el-row>
@@ -30,13 +31,15 @@
 import LeftBar from '../../components/LeftBar'
 import CenterBar from '../../components/CenterBar'
 import RightBar from '../../components/RightBar'
+import TabBar from '../../components/TabBar'
 
 export default {
   props: [],
   components: {
     LeftBar,
     RightBar,
-    CenterBar
+    CenterBar,
+    TabBar
   },
   data() {
     return {}
@@ -65,6 +68,8 @@ export default {
   .grid-content {
     background: white;
     height: 100%;
+    display: flex;
+    flex-direction: column;
   }
 }
 </style>
