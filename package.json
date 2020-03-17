@@ -4,9 +4,9 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build --color=true",
+    "build": "vue-cli-service build",
     "build:live": "cross-env BASE_URL=ghpageslive npm run build",
-    "deploy:live": "cross-env BASE_URL=ghpageslive node ghpages.js --color=true",
+    "deploy:live": "cross-env BASE_URL=ghpageslive node ghpages.js",
     "test:unit": "vue-cli-service test:unit",
     "lint": "vue-cli-service lint"
   },
