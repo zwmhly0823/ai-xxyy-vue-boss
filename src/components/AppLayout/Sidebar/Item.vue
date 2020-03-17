@@ -1,3 +1,11 @@
+<!--
+ * @Descripttion: 
+ * @version: 
+ * @Author: panjian
+ * @Date: 2020-03-16 16:58:26
+ * @LastEditors: panjian
+ * @LastEditTime: 2020-03-17 12:38:03
+ -->
 <template>
   <div>
     <div class="item d-flex align-center justify-between" v-if="levelOne">
@@ -48,6 +56,7 @@ export default {
       const { path, meta } = this.item
       if (this.$route.path === `${path}`) return
       if (meta.moudle) {
+        console.log('path', path)
         location.href = `${path}/#/`
         return
       }

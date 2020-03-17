@@ -3,11 +3,11 @@
  * @version:
  * @Author: shentong
  * @Date: 2020-03-13 14:38:28
- * @LastEditors: shentong
- * @LastEditTime: 2020-03-13 18:00:57
+ * @LastEditors: panjian
+ * @LastEditTime: 2020-03-17 17:35:05
  */
 import axios from 'axios'
-// import _ from 'lodash'
+import _ from 'lodash'
 
 // axios.defaults.baseURL = ''
 // 请求超时时间
@@ -30,20 +30,18 @@ axios.interceptors.response.use(
     let _data = null
     if (response.status === 200) {
       _data = response.data
-      /**
+      console.log(_data, 'data')
       if (_.isPlainObject(_data) && _data.code) {
         switch (_data.code) {
           case '0':
-            window._Vue.$message.error(_data.errMsg)
             _data = null
             break
           case '2':
           default:
-            window._Vue.$message.error('服务器异常')
+            window._Vue.$message.error(_data.errors || '服务器异常')
             break
         }
       }
-       */
     }
     return _data
   },

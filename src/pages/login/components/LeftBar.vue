@@ -1,0 +1,86 @@
+<!--
+ * @Descripttion: 
+ * @version: 
+ * @Author: zhubaodong
+ * @Date: 2020-03-13 16:53:27
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-03-16 11:54:43
+ -->
+<template>
+  <div class="left-container">
+    <el-input
+      v-model="input"
+      placeholder="搜索班级名称"
+      prefix-icon="el-icon-search"
+      size="small"
+    >
+    </el-input>
+    <el-tree
+      :data="classData"
+      :props="defaultProps"
+      style="marginTop:10px"
+    ></el-tree>
+  </div>
+</template>
+
+<script>
+export default {
+  props: [],
+  components: {},
+  data() {
+    return {
+      input: '',
+      classData: [
+        {
+          label: '体验课班级',
+          children: [
+            {
+              label: '待开课'
+            },
+            {
+              label: '今日开课'
+            },
+            {
+              label: '上课中'
+            },
+            {
+              label: '已结课'
+            }
+          ]
+        },
+        {
+          label: '系统课班级',
+          children: [
+            {
+              label: '待开课'
+            },
+            {
+              label: '今日开课'
+            },
+            {
+              label: '上课中'
+            },
+            {
+              label: '已结课'
+            }
+          ]
+        }
+      ],
+      defaultProps: {
+        children: 'children',
+        label: 'label'
+      }
+    }
+  },
+  computed: {},
+  watch: {},
+  methods: {},
+  created() {},
+  mounted() {}
+}
+</script>
+<style lang="scss" scoped>
+.left-container {
+  padding: 10px;
+}
+</style>
