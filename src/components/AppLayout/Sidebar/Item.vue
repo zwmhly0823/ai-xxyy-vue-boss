@@ -55,9 +55,18 @@ export default {
     handleOpen() {
       const { path, meta } = this.item
       const pathname = location.pathname
+      let baseUrl = ''
+
+      // https://msb-ai.meixiu.mobi/frontend/ai-app-vue-toss/student-team/#/ 测试环境
+      if (pathname.includes('frontend')) {
+        const pathArr = pathname.split('/')
+        baseUrl = '/' + [pathArr[1], pathArr[2]].join('/')
+      }
+
       if (this.$route.path === `${path}`) return
       // 同一模块,hash
-      if (meta.module === pathname.split('/')[1]) {
+      // if (meta.module === pathname.split('/')[1]) {
+      if (pathname.includes(meta.module)) {
         if (path.split('/')[1] !== meta.module) {
           this.$router.push(path)
         } else if (this.$route.path !== '/') {
@@ -65,10 +74,10 @@ export default {
         }
       } else {
         if (path.split('/')[1] !== meta.module) {
-          location.href = `/${meta.module}/#${path}`
+          location.href = `${baseUrl}/${meta.module}/#${path}`
           return
         }
-        location.href = `${path}/#/`
+        location.href = `${baseUrl}${path}/#/`
       }
 
       // TODO: 更多二级菜单弹层
