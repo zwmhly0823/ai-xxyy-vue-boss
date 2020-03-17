@@ -3,8 +3,8 @@
  * @version: 
  * @Author: zhubaodong
  * @Date: 2020-03-13 16:53:27
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-03-16 11:54:43
+ * @LastEditors: zhubaodong
+ * @LastEditTime: 2020-03-17 15:14:47
  -->
 <template>
   <div class="left-container">
@@ -18,7 +18,10 @@
     <el-tree
       :data="classData"
       :props="defaultProps"
+      default-expand-all
+      highlight-current
       style="marginTop:10px"
+      @node-click="nodeClick"
     ></el-tree>
   </div>
 </template>
@@ -30,53 +33,77 @@ export default {
   data() {
     return {
       input: '',
-      classData: [
-        {
-          label: '体验课班级',
-          children: [
-            {
-              label: '待开课'
-            },
-            {
-              label: '今日开课'
-            },
-            {
-              label: '上课中'
-            },
-            {
-              label: '已结课'
-            }
-          ]
-        },
-        {
-          label: '系统课班级',
-          children: [
-            {
-              label: '待开课'
-            },
-            {
-              label: '今日开课'
-            },
-            {
-              label: '上课中'
-            },
-            {
-              label: '已结课'
-            }
-          ]
-        }
-      ],
+      ExperienceNum: {
+        all: 0,
+        classWait: 0,
+        classToday: 0,
+        classNow: 0,
+        classOver: 0
+      }, // 体验课num
+      systemNum: {
+        all: 0,
+        classWait: 0,
+        classToday: 0,
+        classNow: 0,
+        classOver: 0
+      }, // 系统课num
+      classData: [], // 节点
       defaultProps: {
         children: 'children',
         label: 'label'
-      }
+      } // 定义节点名称
     }
   },
-  computed: {},
-  watch: {},
-  methods: {},
+  methods: {
+    nodeClick(data) {
+      console.log(data, 'data')
+    }
+  },
   created() {},
-  mounted() {}
+  mounted() {
+    this.classData = [
+      {
+        label: '体验课班级',
+        children: [
+          {
+            label: `全部（${this.ExperienceNum.all}）`
+          },
+          {
+            label: `待开课（${this.ExperienceNum.classWait}）`
+          },
+          {
+            label: `今日开课（${this.ExperienceNum.classToday}）`
+          },
+          {
+            label: `上课中（${this.ExperienceNum.classNow}）`
+          },
+          {
+            label: `已结课（${this.ExperienceNum.classOver}）`
+          }
+        ]
+      },
+      {
+        label: '系统课班级',
+        children: [
+          {
+            label: `全部（${this.systemNum.all}）`
+          },
+          {
+            label: `待开课（${this.systemNum.classWait}）`
+          },
+          {
+            label: `今日开课（${this.systemNum.classToday}）`
+          },
+          {
+            label: `上课中（${this.systemNum.classNow}）`
+          },
+          {
+            label: `已结课（${this.systemNum.classOver}）`
+          }
+        ]
+      }
+    ]
+  }
 }
 </script>
 <style lang="scss" scoped>
