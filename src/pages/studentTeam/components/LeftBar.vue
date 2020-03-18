@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-13 16:53:27
  * @LastEditors: zhubaodong
- * @LastEditTime: 2020-03-17 15:14:47
+ * @LastEditTime: 2020-03-18 15:00:26
  -->
 <template>
   <div class="left-container">
@@ -13,6 +13,7 @@
       placeholder="搜索班级名称"
       prefix-icon="el-icon-search"
       size="small"
+      v-if="false"
     >
     </el-input>
     <el-tree
@@ -56,6 +57,7 @@ export default {
   },
   methods: {
     nodeClick(data) {
+      this.$emit('getLeftBarChange', data)
       console.log(data, 'data')
     }
   },

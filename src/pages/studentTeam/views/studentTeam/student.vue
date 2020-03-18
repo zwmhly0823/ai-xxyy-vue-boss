@@ -4,13 +4,13 @@
  * @Author: zhubaodong
  * @Date: 2020-03-13 15:24:11
  * @LastEditors: zhubaodong
- * @LastEditTime: 2020-03-18 11:57:35
+ * @LastEditTime: 2020-03-18 16:02:44
  -->
 <template>
   <el-row type="flex" class="app-main height student-team">
     <el-col class="student-team-left">
       <div class="grid-content">
-        <left-bar />
+        <left-bar @getLeftBarChange="getLeftBarChange" />
       </div>
     </el-col>
     <el-col class="student-team-center">
@@ -32,6 +32,7 @@
 import LeftBar from '../../components/LeftBar'
 import CenterBar from '../../components/CenterBar'
 import RightBar from '../../components/RightBar'
+import axios from '@/api/axios'
 
 export default {
   props: [],
@@ -45,8 +46,36 @@ export default {
   },
   computed: {},
   watch: {},
-  methods: {},
-  created() {},
+  methods: {
+    getLeftBarChange(data) {
+      console.log(data)
+    },
+    getData() {
+      const res = axios
+        .get('/graphql/team', {
+          params: {
+            query: `{
+          teamStatusCount(field: "team_state") {
+            code
+            value
+          }
+          teamStatusPage(page: 1) {
+            content {
+              id
+            }
+          }
+        }`
+          }
+        })
+        .then((res) => {
+          console.log(res.data)
+        })
+      console.log(res)
+    }
+  },
+  created() {
+    this.getData()
+  },
   mounted() {}
 }
 </script>
