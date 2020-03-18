@@ -6824,7 +6824,6 @@ humanize-ms@^1.2.1:
     ms "^2.0.0"
 
 <<<<<<< HEAD
-=======
 humanize-url@^1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/humanize-url/-/humanize-url-1.0.1.tgz#f4ab99e0d288174ca4e1e50407c55fbae464efff"
@@ -6833,7 +6832,8 @@ humanize-url@^1.0.0:
     normalize-url "^1.0.0"
     strip-url-auth "^1.0.0"
 
->>>>>>> develop
+=======
+>>>>>>> 82078ba6ee6b6d1e3ae40d7034f853bdde35152e
 iconv-lite@0.4.24, iconv-lite@^0.4.24, iconv-lite@~0.4.13:
   version "0.4.24"
   resolved "https://registry.npm.taobao.org/iconv-lite/download/iconv-lite-0.4.24.tgz#2022b4b25fbddc21d2f524974a474aafe733908b"
