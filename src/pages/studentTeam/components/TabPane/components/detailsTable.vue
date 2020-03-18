@@ -4,20 +4,22 @@
  * @Author: panjian
  * @Date: 2020-03-16 20:22:24
  * @LastEditors: panjian
- * @LastEditTime: 2020-03-17 18:15:59
+ * @LastEditTime: 2020-03-18 20:10:53
  -->
 <template>
   <div>
     <el-table
-      class="el-table-list"
       ref="multipleTable"
       :data="tables.tableData"
       tooltip-effect="dark"
       :header-cell-style="headerCss"
+      :row-class-name="tableRowClassName"
+      @row-click="onClick"
       @selection-change="handleSelectionChange"
     >
       <el-table-column type="selection" width="50"> </el-table-column>
       <el-table-column
+        align="center"
         v-for="(item, index) in tables.tableLabel"
         :key="index"
         :prop="item.prop"
@@ -55,8 +57,16 @@ export default {
       multipleSelection: []
     }
   },
+  mounted() {},
   created() {},
   methods: {
+    tableRowClassName({ row, rowIndex }) {
+      row.index = rowIndex
+    },
+    onClick(row, column, event) {
+      this.index = row.index
+      // console.log(row, column, event, index)
+    },
     // 表头回调样式
     headerCss({ row, column, rowIndex, columnIndex }) {
       // console.log(row, column, rowIndex, columnIndex, 'headerCss')
