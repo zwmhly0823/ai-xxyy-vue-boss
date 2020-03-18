@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 14:19:58
  * @LastEditors: panjian
- * @LastEditTime: 2020-03-17 17:01:53
+ * @LastEditTime: 2020-03-17 21:07:01
  -->
 <template>
   <div>
@@ -71,54 +71,13 @@ export default {
   },
   mounted() {
     this.table.tableLabel = [
-      { label: '手机号', prop: 'telephone' },
+      { label: '基本信息', prop: 'telephone' },
       { label: '购买时间', prop: 'time' },
       { label: '已加好友', prop: 'friend' },
       { label: '已进群', prop: 'group' },
-      { label: '关注公众号', prop: 'follow' },
-      { label: '微信信息', prop: 'wechat' }
+      { label: '关注公众号', prop: 'follow' }
     ]
     this.table.tableData = [
-      {
-        telephone: 13311113333,
-        time: '2018-07-24',
-        friend: '已加',
-        group: '已进',
-        follow: '已关注',
-        wechat: 'qwea'
-      },
-      {
-        telephone: 13311113333,
-        time: '2018-07-24',
-        friend: '已加',
-        group: '已进',
-        follow: '已关注',
-        wechat: 'qwea'
-      },
-      {
-        telephone: 13311113333,
-        time: '2018-07-24',
-        friend: '已加',
-        group: '已进',
-        follow: '已关注',
-        wechat: 'qwea'
-      },
-      {
-        telephone: 13311113333,
-        time: '2018-07-24',
-        friend: '已加',
-        group: '已进',
-        follow: '已关注',
-        wechat: 'qwea'
-      },
-      {
-        telephone: 13311113333,
-        time: '2018-07-24',
-        friend: '已加',
-        group: '已进',
-        follow: '已关注',
-        wechat: 'qwea'
-      },
       {
         telephone: 13311113333,
         time: '2018-07-24',
@@ -202,12 +161,11 @@ export default {
       if (tab.index === '0') {
         console.log('加好友进群')
         this.table.tableLabel = [
-          { label: '手机号', prop: 'telephone' },
+          { label: '基本信息', prop: 'telephone' },
           { label: '购买时间', prop: 'time' },
           { label: '已加好友', prop: 'friend' },
           { label: '已进群', prop: 'group' },
-          { label: '关注公众号', prop: 'follow' },
-          { label: '微信信息', prop: 'wechat' }
+          { label: '关注公众号', prop: 'follow' }
         ]
         this.table.tableData = [
           {
