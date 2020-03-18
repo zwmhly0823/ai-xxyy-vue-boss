@@ -47,7 +47,7 @@
   </div>
 </template>
 <script>
-import detailsTable from '../components/detailsComponents/detailsTable'
+import detailsTable from './components/detailsTable'
 export default {
   components: {
     detailsTable

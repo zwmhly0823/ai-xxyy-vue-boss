@@ -1,5 +1,5 @@
 <template>
-  <el-table :data="tableData" style="width: 100%;" :height="tableHeight">
+  <el-table :data="tableData">
     <el-table-column fixed label="基本信息" class="information">
       <template slot-scope="scope">
         <div class="information-img">
@@ -49,8 +49,6 @@
 export default {
   data() {
     return {
-      // 表格高度
-      tableHeight: window.innerHeight - 335,
       tableData: [
         {
           // 基本信息
