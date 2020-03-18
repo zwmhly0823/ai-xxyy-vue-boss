@@ -4,13 +4,17 @@
  * @Author: zhubaodong
  * @Date: 2020-03-13 15:24:11
  * @LastEditors: zhubaodong
- * @LastEditTime: 2020-03-18 11:57:35
+ * @LastEditTime: 2020-03-18 20:04:34
  -->
 <template>
   <el-row type="flex" class="app-main height student-team">
     <el-col class="student-team-left">
       <div class="grid-content">
-        <left-bar />
+        <left-bar
+          @change="getLeftBarSelect"
+          :expressData="experienceStatusList"
+          :systemData="systemStatusList"
+        />
       </div>
     </el-col>
     <el-col class="student-team-center">
@@ -32,6 +36,7 @@
 import LeftBar from '../../components/LeftBar'
 import CenterBar from '../../components/CenterBar'
 import RightBar from '../../components/RightBar'
+import axios from '@/api/axios'
 
 export default {
   props: [],
@@ -41,12 +46,98 @@ export default {
     CenterBar
   },
   data() {
-    return {}
+    return {
+      experienceStatusList: {},
+      systemStatusList: {},
+      classListData: {},
+      classStatus: [0, 1, 2]
+    }
   },
   computed: {},
   watch: {},
-  methods: {},
-  created() {},
+  methods: {
+    getLeftBarSelect(data) {
+      if (data.code === '_all') {
+        this.classStatus = [0, 1, 2]
+      } else {
+        this.classStatus = [+data.code]
+      }
+      console.log(this.classStatus, 'this.classstatus')
+    },
+    async getExperienceStatusList(data = 0) {
+      const queryParams = `{"bool":{"must":[{"term":{"team_type":${data}}}]}}`
+      await axios
+        .get('/graphql/team', {
+          params: {
+            query: `{
+              teamStatusCount(field: "team_state",query:${JSON.stringify(
+                queryParams
+              )}) {
+                code
+                value
+                name
+              }
+            }`
+          }
+        })
+        .then((res) => {
+          if (data === 0) {
+            this.experienceStatusList = res.data
+          }
+          if (data === 1) {
+            this.systemStatusList = res.data
+          }
+        })
+    },
+    async getClassList() {
+      const queryParams = `{"bool":{"must":[{"terms":{"team_state":[${this.classStatus}]}},{"term":{"team_type":0}}]}}`
+      console.log(queryParams)
+      await axios
+        .get('/graphql/team', {
+          params: {
+            query: `{
+              teamStatusPage(query:${JSON.stringify(queryParams)},page:1){
+                empty
+                first
+                last
+                number
+                size
+                numberOfElements
+                totalElements
+                totalPages
+                content {
+                  id
+                  team_state
+                  team_type
+                  team_name
+                  ctime
+                  sup
+                  term
+                  enroll_state
+                  enrolled
+                  pre_enroll
+                  teacher_id
+                  teacher {
+                    realname
+                  }
+                  current_lesson
+                  week
+                }
+              }
+            }`
+          }
+        })
+        .then((res) => {
+          this.classListData = res.data
+          console.log(this.classListData, 'this.classListData')
+        })
+    }
+  },
+  created() {
+    this.getExperienceStatusList(0)
+    this.getExperienceStatusList(1)
+    this.getClassList()
+  },
   mounted() {}
 }
 </script>
