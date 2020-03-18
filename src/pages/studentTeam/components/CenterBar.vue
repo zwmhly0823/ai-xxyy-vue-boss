@@ -3,12 +3,12 @@
  * @version: 
  * @Author: zhubaodong
  * @Date: 2020-03-13 16:53:33
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-03-16 11:53:55
+ * @LastEditors: zhubaodong
+ * @LastEditTime: 2020-03-17 14:34:02
  -->
 <template>
   <div class="center-container">
-    <div class="headers">
+    <div class="headers" v-if="false">
       <span>
         <i class="el-icon-brush" />
       </span>
@@ -18,7 +18,7 @@
     </div>
     <el-scrollbar wrap-class="scrollbar-wrapper" style="flex: 1;">
       <div class="container" style="marginTop:10px">
-        <div v-for="o in 20" :key="o" class="cycle-box">
+        <div v-for="o in 10" :key="o" class="cycle-box">
           <el-card class="box-card" shadow="hover">
             <div class="clcle-header">
               <span>80期S1-3班</span>
@@ -77,6 +77,7 @@ export default {
       align-items: center;
       i {
         font-size: 18px;
+        cursor: pointer;
       }
     }
   }

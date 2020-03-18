@@ -117,3 +117,9 @@ export default {
   }
 }
 </script>
+
+<style>
+.el-submenu__icon-arrow {
+  display: none !important;
+}
+</style>

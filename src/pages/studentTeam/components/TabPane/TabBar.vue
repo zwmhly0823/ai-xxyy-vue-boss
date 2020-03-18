@@ -4,7 +4,7 @@
       v-model="activeName"
       @tab-click="handleClick"
       type="border-card"
-      style="height:100%"
+      class="box-shadow-0"
     >
       <el-tab-pane label="学员" name="students">
         <studens-tab />
@@ -47,7 +47,7 @@ export default {
 </script>
 <style scoped lang="scss">
 .tab-box {
-  padding: 0px 10px 10px;
+  padding: 0;
   flex: 1;
 }
 </style>

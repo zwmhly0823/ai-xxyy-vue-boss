@@ -7,11 +7,11 @@ const name = defaultSettings.title || '小熊美术TOSS' // page title
 
 let baseUrl = '/'
 if (process.env.BASE_URL === 'ghpageslive') {
-  baseUrl = ''
+  baseUrl = '/frontend/ai-app-vue-toss/'
 } else if (process.env.BASE_URL === 'ghpagesdev') {
-  baseUrl = '/ai-app-vue-dev/'
+  baseUrl = '/frontend/ai-app-vue-toss-dev/'
 } else if (process.env.BASE_URL === 'ghpagestest') {
-  baseUrl = '/ai-app-vue-test/'
+  baseUrl = '/frontend/ai-app-vue-toss-test/'
 }
 
 function camel2Line(str) {
