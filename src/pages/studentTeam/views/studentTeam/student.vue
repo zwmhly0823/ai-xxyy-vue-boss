@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-13 15:24:11
  * @LastEditors: zhubaodong
- * @LastEditTime: 2020-03-17 14:58:15
+ * @LastEditTime: 2020-03-18 11:57:35
  -->
 <template>
   <el-row type="flex" class="app-main height student-team">
@@ -56,9 +56,11 @@ export default {
   &-left {
     padding-left: 0px;
     width: 180px;
+    min-width: 180px;
     border-right: 1px solid #e3e3e3;
   }
   &-center {
+    min-width: 240px;
     width: 240px;
   }
   &-right {
