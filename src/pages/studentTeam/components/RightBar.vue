@@ -1,6 +1,6 @@
 <!--
- * @Descripttion: 
- * @version: 
+ * @Descripttion:
+ * @version:
  * @Author: zhubaodong
  * @Date: 2020-03-13 16:53:41
  * @LastEditors: zhubaodong
@@ -31,12 +31,12 @@
             </span>
           </div>
         </div>
-        <div class="header-right">
+        <!-- <div class="header-right">
           <el-card shadow="never">
             <i class="el-icon-plus"></i>
             <span>关联微信群</span>
           </el-card>
-        </div>
+        </div> -->
       </div>
       <div class="body">
         <div class="body-boxLeft">

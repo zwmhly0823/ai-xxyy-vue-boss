@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-13 16:53:27
  * @LastEditors: zhubaodong
- * @LastEditTime: 2020-03-17 15:14:47
+ * @LastEditTime: 2020-03-18 20:06:47
  -->
 <template>
   <div class="left-container">
@@ -13,10 +13,11 @@
       placeholder="搜索班级名称"
       prefix-icon="el-icon-search"
       size="small"
+      v-if="false"
     >
     </el-input>
     <el-tree
-      :data="classData"
+      :data="[...showExpressData, ...showSystemData]"
       :props="defaultProps"
       default-expand-all
       highlight-current
@@ -28,81 +29,80 @@
 
 <script>
 export default {
-  props: [],
+  props: {
+    expressData: {
+      type: Object,
+      default: () => ({})
+    },
+    systemData: {
+      type: Object,
+      default: () => ({})
+    }
+  },
   components: {},
   data() {
     return {
       input: '',
-      ExperienceNum: {
-        all: 0,
-        classWait: 0,
-        classToday: 0,
-        classNow: 0,
-        classOver: 0
-      }, // 体验课num
-      systemNum: {
-        all: 0,
-        classWait: 0,
-        classToday: 0,
-        classNow: 0,
-        classOver: 0
-      }, // 系统课num
-      classData: [], // 节点
       defaultProps: {
         children: 'children',
-        label: 'label'
+        label: 'showName'
       } // 定义节点名称
+    }
+  },
+  computed: {
+    showExpressData() {
+      const datas =
+        this.expressData.teamStatusCount &&
+        this.expressData.teamStatusCount
+          .map((item) => {
+            item.showName = `${item.name}（${item.value}）`
+            return item
+          })
+          .reverse()
+      const classData = [
+        {
+          showName: '体验课班级',
+          value: '',
+          children: datas
+        }
+      ]
+      return classData
+    },
+    showSystemData() {
+      const datas =
+        this.systemData.teamStatusCount &&
+        this.systemData.teamStatusCount
+          .map((item) => {
+            item.showName = `${item.name}（${item.value}）`
+            return item
+          })
+          .reverse()
+      const classData = [
+        {
+          showName: '系统课班级',
+          value: '',
+          children: datas
+        }
+      ]
+      return classData
     }
   },
   methods: {
     nodeClick(data) {
-      console.log(data, 'data')
-    }
+      this.$emit('change', data)
+      console.log('子组件data')
+    },
+    defineDefaultData() {}
+  },
+  watch: {
+    // expressData(val) {
+    //   console.log(val)
+    //   this.expressDatas = val
+    // }
   },
   created() {},
   mounted() {
-    this.classData = [
-      {
-        label: '体验课班级',
-        children: [
-          {
-            label: `全部（${this.ExperienceNum.all}）`
-          },
-          {
-            label: `待开课（${this.ExperienceNum.classWait}）`
-          },
-          {
-            label: `今日开课（${this.ExperienceNum.classToday}）`
-          },
-          {
-            label: `上课中（${this.ExperienceNum.classNow}）`
-          },
-          {
-            label: `已结课（${this.ExperienceNum.classOver}）`
-          }
-        ]
-      },
-      {
-        label: '系统课班级',
-        children: [
-          {
-            label: `全部（${this.systemNum.all}）`
-          },
-          {
-            label: `待开课（${this.systemNum.classWait}）`
-          },
-          {
-            label: `今日开课（${this.systemNum.classToday}）`
-          },
-          {
-            label: `上课中（${this.systemNum.classNow}）`
-          },
-          {
-            label: `已结课（${this.systemNum.classOver}）`
-          }
-        ]
-      }
-    ]
+    this.defineDefaultData()
   }
 }
 </script>

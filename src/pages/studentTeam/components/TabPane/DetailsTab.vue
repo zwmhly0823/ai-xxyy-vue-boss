@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 14:19:58
  * @LastEditors: panjian
- * @LastEditTime: 2020-03-17 17:01:53
+ * @LastEditTime: 2020-03-18 20:19:51
  -->
 <template>
   <div>
@@ -12,7 +12,11 @@
       <div class="tabs-tab">
         <el-tabs v-model="activeName" @tab-click="handleClick" width="500">
           <el-tab-pane label="加好友进群" name="group">
-            <details-table :tables="table"></details-table>
+            <group-table
+              @func="getMsgFormSon"
+              @onGroup="onGroup"
+              :tables="table"
+            ></group-table>
           </el-tab-pane>
           <el-tab-pane label="物流" name="logistics">
             <details-table :tables="table"></details-table>
@@ -48,14 +52,17 @@
 </template>
 <script>
 import detailsTable from './components/detailsTable'
+import groupTable from './components/groupTable'
 export default {
   components: {
-    detailsTable
+    detailsTable,
+    groupTable
   },
   data() {
     return {
       input: '',
       table: {
+        tabs: '',
         // 表头信息
         tableLabel: [],
         // 列表数据
@@ -70,126 +77,40 @@ export default {
     }
   },
   mounted() {
-    this.table.tableLabel = [
-      { label: '手机号', prop: 'telephone' },
-      { label: '购买时间', prop: 'time' },
-      { label: '已加好友', prop: 'friend' },
-      { label: '已进群', prop: 'group' },
-      { label: '关注公众号', prop: 'follow' },
-      { label: '微信信息', prop: 'wechat' }
-    ]
+    this.table.tableLabel = [{ label: '购买时间', prop: 'time' }]
     this.table.tableData = [
       {
+        img: require('@/assets/images/character.png'),
+        sex: '男',
         telephone: 13311113333,
+        age: '2岁5个月',
+        basics: '无基础',
         time: '2018-07-24',
-        friend: '已加',
-        group: '已进',
-        follow: '已关注',
-        wechat: 'qwea'
+        friend: '1',
+        group: '1',
+        follow: '已关注'
       },
       {
+        img: require('@/assets/images/character.png'),
+        sex: '男',
         telephone: 13311113333,
+        age: '2岁67个月',
+        basics: '无基础',
         time: '2018-07-24',
-        friend: '已加',
-        group: '已进',
-        follow: '已关注',
-        wechat: 'qwea'
+        friend: '2',
+        group: '2',
+        follow: '已关注'
       },
       {
+        img: require('@/assets/images/character.png'),
+        sex: '男',
         telephone: 13311113333,
+        age: '2岁11个月',
+        basics: '无基础',
         time: '2018-07-24',
-        friend: '已加',
-        group: '已进',
-        follow: '已关注',
-        wechat: 'qwea'
-      },
-      {
-        telephone: 13311113333,
-        time: '2018-07-24',
-        friend: '已加',
-        group: '已进',
-        follow: '已关注',
-        wechat: 'qwea'
-      },
-      {
-        telephone: 13311113333,
-        time: '2018-07-24',
-        friend: '已加',
-        group: '已进',
-        follow: '已关注',
-        wechat: 'qwea'
-      },
-      {
-        telephone: 13311113333,
-        time: '2018-07-24',
-        friend: '已加',
-        group: '已进',
-        follow: '已关注',
-        wechat: 'qwea'
-      },
-      {
-        telephone: 13311113333,
-        time: '2018-07-24',
-        friend: '已加',
-        group: '已进',
-        follow: '已关注',
-        wechat: 'qwea'
-      },
-      {
-        telephone: 13311113333,
-        time: '2018-07-24',
-        friend: '已加',
-        group: '已进',
-        follow: '已关注',
-        wechat: 'qwea'
-      },
-      {
-        telephone: 13311113333,
-        time: '2018-07-24',
-        friend: '已加',
-        group: '已进',
-        follow: '已关注',
-        wechat: 'qwea'
-      },
-      {
-        telephone: 13311113333,
-        time: '2018-07-24',
-        friend: '已加',
-        group: '已进',
-        follow: '已关注',
-        wechat: 'qwea'
-      },
-      {
-        telephone: 13311113333,
-        time: '2018-07-24',
-        friend: '已加',
-        group: '已进',
-        follow: '已关注',
-        wechat: 'qwea'
-      },
-      {
-        telephone: 13311113333,
-        time: '2018-07-24',
-        friend: '已加',
-        group: '已进',
-        follow: '已关注',
-        wechat: 'qwea'
-      },
-      {
-        telephone: 13311113333,
-        time: '2018-07-24',
-        friend: '已加',
-        group: '已进',
-        follow: '已关注',
-        wechat: 'qwea'
-      },
-      {
-        telephone: 13311113333,
-        time: '2018-07-24',
-        friend: '已加',
-        group: '已进',
-        follow: '已关注',
-        wechat: 'qwea'
+        friend: '1',
+        group: '1',
+        follow: '已关注'
       }
     ]
     this.table.group = '10'
@@ -198,89 +119,49 @@ export default {
     this.table.currentPage = 1
   },
   methods: {
+    getMsgFormSon(data) {
+      this.table.tableData[data.index].friend = data.command
+    },
+    onGroup(data) {
+      this.table.tableData[data.index].group = data.command
+    },
     handleClick(tab, event) {
       if (tab.index === '0') {
         console.log('加好友进群')
-        this.table.tableLabel = [
-          { label: '手机号', prop: 'telephone' },
-          { label: '购买时间', prop: 'time' },
-          { label: '已加好友', prop: 'friend' },
-          { label: '已进群', prop: 'group' },
-          { label: '关注公众号', prop: 'follow' },
-          { label: '微信信息', prop: 'wechat' }
-        ]
+        this.table.tableLabel = [{ label: '购买时间', prop: 'time' }]
         this.table.tableData = [
           {
+            img: require('@/assets/images/character.png'),
+            sex: '男',
             telephone: 13311113333,
+            age: '2岁5个月',
+            basics: '无基础',
             time: '2018-07-24',
-            friend: '已加',
-            group: '已进',
-            follow: '已关注',
-            wechat: 'qwea'
+            friend: '1',
+            group: '1',
+            follow: '已关注'
           },
           {
+            img: require('@/assets/images/character.png'),
+            sex: '男',
             telephone: 13311113333,
+            age: '2岁67个月',
+            basics: '无基础',
             time: '2018-07-24',
-            friend: '已加',
-            group: '已进',
-            follow: '已关注',
-            wechat: 'qwea'
+            friend: '2',
+            group: '2',
+            follow: '已关注'
           },
           {
+            img: require('@/assets/images/character.png'),
+            sex: '男',
             telephone: 13311113333,
+            age: '2岁11个月',
+            basics: '无基础',
             time: '2018-07-24',
-            friend: '已加',
-            group: '已进',
-            follow: '已关注',
-            wechat: 'qwea'
-          },
-          {
-            telephone: 13311113333,
-            time: '2018-07-24',
-            friend: '已加',
-            group: '已进',
-            follow: '已关注',
-            wechat: 'qwea'
-          },
-          {
-            telephone: 13311113333,
-            time: '2018-07-24',
-            friend: '已加',
-            group: '已进',
-            follow: '已关注',
-            wechat: 'qwea'
-          },
-          {
-            telephone: 13311113333,
-            time: '2018-07-24',
-            friend: '已加',
-            group: '已进',
-            follow: '已关注',
-            wechat: 'qwea'
-          },
-          {
-            telephone: 13311113333,
-            time: '2018-07-24',
-            friend: '已加',
-            group: '已进',
-            follow: '已关注',
-            wechat: 'qwea'
-          },
-          {
-            telephone: 13311113333,
-            time: '2018-07-24',
-            friend: '已加',
-            group: '已进',
-            follow: '已关注',
-            wechat: 'qwea'
-          },
-          {
-            telephone: 13311113333,
-            time: '2018-07-24',
-            friend: '已加',
-            group: '已进',
-            follow: '已关注',
-            wechat: 'qwea'
+            friend: '1',
+            group: '1',
+            follow: '已关注'
           }
         ]
         this.table.group = '10'
@@ -289,6 +170,7 @@ export default {
         this.table.currentPage = 1
       } else if (tab.index === '1') {
         console.log('物流')
+        this.table.tabs = 1
         this.table.tableLabel = [
           { label: '订单号', prop: 'telephone' },
           { label: '物流地址', prop: 'time' },
@@ -377,6 +259,7 @@ export default {
         this.table.currentPage = 1
       } else if (tab.index === '2') {
         console.log('登陆')
+        this.table.tabs = 2
         this.table.tableLabel = [
           { label: '注册账号', prop: 'telephone' },
           { label: '是否登陆', prop: 'time' },
@@ -464,6 +347,7 @@ export default {
         this.table.currentPage = 1
       } else if (tab.index === '3') {
         console.log('参课')
+        this.table.tabs = 3
         this.table.tableLabel = [
           { label: '参加课程', prop: 'telephone' },
           { label: '购买时间', prop: 'time' },
@@ -552,6 +436,7 @@ export default {
         this.table.currentPage = 1
       } else if (tab.index === '4') {
         console.log('完课')
+        this.table.tabs = 4
         this.table.tableLabel = [
           { label: '姓名', prop: 'telephone' },
           { label: '购买时间', prop: 'time' },
@@ -638,6 +523,7 @@ export default {
         this.table.currentPage = 1
       } else if (tab.index === '5') {
         console.log('传作品')
+        this.table.tabs = 5
         this.table.tableLabel = [
           { label: '姓名', prop: 'telephone' },
           { label: '手机号', prop: 'time' },
@@ -725,6 +611,7 @@ export default {
         this.table.currentPage = 1
       } else if (tab.index === '6') {
         console.log('点评')
+        this.table.tabs = 6
         this.table.tableLabel = [
           { label: '学员姓名', prop: 'telephone' },
           { label: '作业名称', prop: 'time' },
@@ -810,7 +697,7 @@ export default {
         this.table.student = '60'
         this.table.currentPage = 1
       }
-      console.log(tab, event, tab.index, tab.label)
+      // console.log(tab, event, tab.index, tab.label)
     },
     enter(val) {
       console.log('input', val)
