@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-13 16:53:41
  * @LastEditors: zhubaodong
- * @LastEditTime: 2020-03-19 19:12:08
+ * @LastEditTime: 2020-03-19 22:11:08
  -->
 <template>
   <div class="right-container">
@@ -148,7 +148,6 @@ export default {
   computed: {},
   watch: {
     classId(vals) {
-      console.log(vals.classId.id, 'vals')
       this.getClassTeacher(vals.classId.id)
     }
   },
@@ -203,12 +202,12 @@ export default {
           }
           this.classMessage = res.data
           // this.classMessage2 = res.data
-          console.log(
-            this.classMessage,
-            this.classMessage.statictis,
-            res.data,
-            'res'
-          )
+          // console.log(
+          //   this.classMessage,
+          //   this.classMessage.statictis,
+          //   res.data,
+          //   'res'
+          // )
         })
     }
   }

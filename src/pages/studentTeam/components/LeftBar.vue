@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-13 16:53:27
  * @LastEditors: zhubaodong
- * @LastEditTime: 2020-03-19 20:09:08
+ * @LastEditTime: 2020-03-19 22:19:52
  -->
 <template>
   <div class="left-container">
@@ -46,7 +46,63 @@ export default {
       defaultProps: {
         children: 'children',
         label: 'showName'
-      } // 定义节点名称
+      }, // 定义节点名称
+      expresslist: [
+        {
+          showName: '体验课班级',
+          value: '',
+          children: [
+            {
+              showName: '全部',
+              value: '_all'
+            },
+            {
+              showName: '待开课',
+              value: '0'
+            },
+            {
+              showName: '今日开课',
+              value: '3'
+            },
+            {
+              showName: '上课中',
+              value: '1'
+            },
+            {
+              showName: '已结课',
+              value: '2'
+            }
+          ]
+        }
+      ],
+      systemlist: [
+        {
+          showName: '系统课班级',
+          value: '',
+          children: [
+            {
+              showName: '全部',
+              value: '_all'
+            },
+            {
+              showName: '待开课',
+              value: '0'
+            },
+            {
+              showName: '今日开课',
+              value: '3'
+            },
+            {
+              showName: '上课中',
+              value: '1'
+            },
+            {
+              showName: '已结课',
+              value: '2'
+            }
+          ]
+        }
+      ]
     }
   },
   computed: {
@@ -54,45 +110,82 @@ export default {
      * 体验课状态展示数据
      */
     showExpressData() {
-      const datas =
+      const datas = this.expresslist[0].children.map((values) => {
+        values.types = 0
+        values.code = values.value
         this.expressData.teamStatusCount &&
-        this.expressData.teamStatusCount
-          .map((item) => {
-            item.types = 0
-            item.showName = `${item.name}（${item.value}）`
-            return item
+          this.expressData.teamStatusCount.filter((v) => {
+            if (v.code === values.value) {
+              values.showName = `${values.showName}(${v.value ? v.value : 0})`
+            }
           })
-          .reverse()
-      const classData = [
+        return values
+      })
+      const showExepress = [
         {
           showName: '体验课班级',
           value: '',
           children: datas
         }
       ]
-      return classData
+      // const datas =
+      //   this.expressData.teamStatusCount &&
+      //   this.expressData.teamStatusCount
+      //     .map((item) => {
+      //       item.types = 0
+      //       item.showName = `${item.name}（${item.value}）`
+      //       return item
+      //     })
+      //     .reverse()
+      // const classData = [
+      //   {
+      //     showName: '体验课班级',
+      //     value: '',
+      //     children: datas
+      //   }
+      // ]
+      return showExepress
     },
     /**
-     * 体验课状态展示数据
+     * 系统课状态展示数据
      */
     showSystemData() {
-      const datas =
+      const datas = this.systemlist[0].children.map((values) => {
+        values.types = 1
+        values.code = values.value
         this.systemData.teamStatusCount &&
-        this.systemData.teamStatusCount
-          .map((item) => {
-            item.types = 1
-            item.showName = `${item.name}（${item.value}）`
-            return item
+          this.systemData.teamStatusCount.filter((v) => {
+            if (v.code === values.value) {
+              values.showName = `${values.showName}(${v.value ? v.value : 0})`
+            }
           })
-          .reverse()
-      const classData = [
+        return values
+      })
+      const showStstem = [
         {
           showName: '系统课班级',
           value: '',
           children: datas
         }
       ]
-      return classData
+
+      // const datas =
+      //   this.systemData.teamStatusCount &&
+      //   this.systemData.teamStatusCount
+      //     .map((item) => {
+      //       item.types = 1
+      //       item.showName = `${item.name}（${item.value}）`
+      //       return item
+      //     })
+      //     .reverse()
+      // const classData = [
+      //   {
+      //     showName: '系统课班级',
+      //     value: '',
+      //     children: datas
+      //   }
+      // ]
+      return showStstem
     }
   },
   methods: {

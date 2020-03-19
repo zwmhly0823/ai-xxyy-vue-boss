@@ -88,7 +88,7 @@ export default {
   created() {},
   watch: {
     classId(value) {
-      console.log(value, 'value')
+      // console.log(value, 'value')
       this.getstatusList()
       this.studentsList()
     }
@@ -148,7 +148,7 @@ export default {
         })
         .then((res) => {
           const _data = res.data.teamUserListPage.content
-          console.log(_data, '_data')
+          // console.log(_data, '_data')
           _data.forEach((ele) => {
             ele.birthday = GetAgeByBrithday(ele.birthday)
             // 是否添加微信群  0/未加  1/已加

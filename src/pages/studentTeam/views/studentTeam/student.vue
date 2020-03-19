@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-13 15:24:11
  * @LastEditors: zhubaodong
- * @LastEditTime: 2020-03-19 20:08:47
+ * @LastEditTime: 2020-03-19 21:02:51
  -->
 <template>
   <el-row type="flex" class="app-main height student-team">
@@ -182,11 +182,7 @@ export default {
         .then((res) => {
           res.data.type = type
           res.data.scrollStatus = `${this.scrollStatus}+${type}`
-          // this.classListData = res.data
-          this.classListData = {
-            ...this.classListData,
-            ...res.data
-          }
+          this.classListData = res.data
         })
     }
   },
