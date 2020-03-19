@@ -27,6 +27,7 @@ import DetailsTab from './DetailsTab'
 // import GroupchatTab from './GroupchatTab'
 // import SystemorderTab from './SystemorderTab'
 export default {
+  props: { classId: String },
   components: {
     StudensTab,
     DetailsTab
@@ -37,6 +38,9 @@ export default {
     return {
       activeName: 'students'
     }
+  },
+  created() {
+    console.log(this.classId, 'this.classId')
   },
   methods: {
     handleClick(tab, event) {

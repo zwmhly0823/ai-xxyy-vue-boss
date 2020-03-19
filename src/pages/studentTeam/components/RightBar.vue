@@ -112,14 +112,14 @@
       </div>
     </el-card>
 
-    <tab-bar />
+    <tab-bar :classId="classId" />
   </div>
 </template>
 
 <script>
 import TabBar from './TabPane/TabBar.vue'
 export default {
-  props: [],
+  props: { classId: String },
   components: {
     TabBar
   },

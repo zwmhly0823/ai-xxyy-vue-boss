@@ -25,7 +25,7 @@
     <el-col class="student-team-right ">
       <div class="grid-content right">
         <el-scrollbar wrap-class="scrollbar-wrapper">
-          <right-bar />
+          <right-bar :classId="classId" />
         </el-scrollbar>
       </div>
     </el-col>
@@ -75,7 +75,7 @@ export default {
      * @param(回调数据) 获得选中内容
      */
     async getRightBarSelect(data) {
-      console.log(data)
+      console.log(data, 'data')
       this.classId = data
     },
     /**
