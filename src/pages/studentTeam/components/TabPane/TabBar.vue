@@ -7,7 +7,7 @@
       class="box-shadow-0"
     >
       <el-tab-pane label="学员" name="students">
-        <studens-tab />
+        <studens-tab :classId="classId" />
       </el-tab-pane>
       <el-tab-pane label="带班详情" name="details">
         <details-tab />
@@ -27,6 +27,12 @@ import DetailsTab from './DetailsTab'
 // import GroupchatTab from './GroupchatTab'
 // import SystemorderTab from './SystemorderTab'
 export default {
+  props: {
+    classId: {
+      type: String,
+      default: ''
+    }
+  },
   components: {
     StudensTab,
     DetailsTab
@@ -37,6 +43,9 @@ export default {
     return {
       activeName: 'students'
     }
+  },
+  created() {
+    console.log(this.classId, 'this.classId')
   },
   methods: {
     handleClick(tab, event) {

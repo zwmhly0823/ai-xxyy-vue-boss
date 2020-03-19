@@ -4,19 +4,19 @@
  * @Author: panjian
  * @Date: 2020-03-16 14:19:58
  * @LastEditors: panjian
- * @LastEditTime: 2020-03-18 20:19:51
+ * @LastEditTime: 2020-03-19 19:38:15
  -->
 <template>
   <div>
     <div>
       <div class="tabs-tab">
-        <el-tabs v-model="activeName" @tab-click="handleClick" width="500">
+        <el-tabs v-model="activeName" @tab-click="handleClick">
           <el-tab-pane label="加好友进群" name="group">
-            <group-table
-              @func="getMsgFormSon"
+            <details-table
+              @commandFriend="onCommandFriend"
               @onGroup="onGroup"
               :tables="table"
-            ></group-table>
+            ></details-table>
           </el-tab-pane>
           <el-tab-pane label="物流" name="logistics">
             <details-table :tables="table"></details-table>
@@ -52,17 +52,15 @@
 </template>
 <script>
 import detailsTable from './components/detailsTable'
-import groupTable from './components/groupTable'
 export default {
   components: {
-    detailsTable,
-    groupTable
+    detailsTable
   },
   data() {
     return {
       input: '',
       table: {
-        tabs: '',
+        tabs: '0',
         // 表头信息
         tableLabel: [],
         // 列表数据
@@ -87,6 +85,7 @@ export default {
         basics: '无基础',
         time: '2018-07-24',
         friend: '1',
+        date: '01-02 12:22',
         group: '1',
         follow: '已关注'
       },
@@ -98,6 +97,7 @@ export default {
         basics: '无基础',
         time: '2018-07-24',
         friend: '2',
+        date: '01-12 13:22',
         group: '2',
         follow: '已关注'
       },
@@ -109,6 +109,7 @@ export default {
         basics: '无基础',
         time: '2018-07-24',
         friend: '1',
+        date: '05-12 13:22',
         group: '1',
         follow: '已关注'
       }
@@ -119,7 +120,7 @@ export default {
     this.table.currentPage = 1
   },
   methods: {
-    getMsgFormSon(data) {
+    onCommandFriend(data) {
       this.table.tableData[data.index].friend = data.command
     },
     onGroup(data) {
@@ -138,6 +139,7 @@ export default {
             basics: '无基础',
             time: '2018-07-24',
             friend: '1',
+            date: '01-02 12:22',
             group: '1',
             follow: '已关注'
           },
@@ -149,6 +151,7 @@ export default {
             basics: '无基础',
             time: '2018-07-24',
             friend: '2',
+            date: '01-12 13:22',
             group: '2',
             follow: '已关注'
           },
@@ -160,6 +163,7 @@ export default {
             basics: '无基础',
             time: '2018-07-24',
             friend: '1',
+            date: '05-12 13:22',
             group: '1',
             follow: '已关注'
           }
@@ -168,6 +172,7 @@ export default {
         this.table.friend = '30'
         this.table.student = '60'
         this.table.currentPage = 1
+        this.table.tabs = 0
       } else if (tab.index === '1') {
         console.log('物流')
         this.table.tabs = 1
@@ -700,7 +705,7 @@ export default {
       // console.log(tab, event, tab.index, tab.label)
     },
     enter(val) {
-      console.log('input', val)
+      console.log('input', val, this.input)
     }
   }
 }
