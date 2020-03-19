@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-13 16:53:27
  * @LastEditors: zhubaodong
- * @LastEditTime: 2020-03-18 20:06:47
+ * @LastEditTime: 2020-03-18 22:06:57
  -->
 <template>
   <div class="left-container">
@@ -50,11 +50,15 @@ export default {
     }
   },
   computed: {
+    /**
+     * 体验课状态展示数据
+     */
     showExpressData() {
       const datas =
         this.expressData.teamStatusCount &&
         this.expressData.teamStatusCount
           .map((item) => {
+            item.types = 0
             item.showName = `${item.name}（${item.value}）`
             return item
           })
@@ -68,11 +72,15 @@ export default {
       ]
       return classData
     },
+    /**
+     * 体验课状态展示数据
+     */
     showSystemData() {
       const datas =
         this.systemData.teamStatusCount &&
         this.systemData.teamStatusCount
           .map((item) => {
+            item.types = 1
             item.showName = `${item.name}（${item.value}）`
             return item
           })
@@ -90,20 +98,9 @@ export default {
   methods: {
     nodeClick(data) {
       this.$emit('change', data)
-      console.log('子组件data')
-    },
-    defineDefaultData() {}
+    }
   },
-  watch: {
-    // expressData(val) {
-    //   console.log(val)
-    //   this.expressDatas = val
-    // }
-  },
-  created() {},
-  mounted() {
-    this.defineDefaultData()
-  }
+  created() {}
 }
 </script>
 <style lang="scss" scoped>

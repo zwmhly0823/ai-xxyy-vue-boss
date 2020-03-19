@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-13 16:53:41
  * @LastEditors: zhubaodong
- * @LastEditTime: 2020-03-14 19:18:31
+ * @LastEditTime: 2020-03-19 11:36:41
  -->
 <template>
   <div class="right-container">
@@ -112,14 +112,19 @@
       </div>
     </el-card>
 
-    <tab-bar />
+    <tab-bar :classId="classId" />
   </div>
 </template>
 
 <script>
 import TabBar from './TabPane/TabBar.vue'
 export default {
-  props: [],
+  props: {
+    classId: {
+      type: String,
+      default: ''
+    }
+  },
   components: {
     TabBar
   },
@@ -127,7 +132,11 @@ export default {
     return {}
   },
   computed: {},
-  watch: {},
+  watch: {
+    classId(vals) {
+      console.log(vals)
+    }
+  },
   methods: {},
   created() {},
   mounted() {}
