@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 14:19:58
  * @LastEditors: panjian
- * @LastEditTime: 2020-03-19 12:10:19
+ * @LastEditTime: 2020-03-19 14:34:20
  -->
 <template>
   <div>
@@ -85,6 +85,7 @@ export default {
         basics: '无基础',
         time: '2018-07-24',
         friend: '1',
+        date: '01-02 12:22',
         group: '1',
         follow: '已关注'
       },
@@ -96,6 +97,7 @@ export default {
         basics: '无基础',
         time: '2018-07-24',
         friend: '2',
+        date: '01-12 13:22',
         group: '2',
         follow: '已关注'
       },
@@ -107,6 +109,7 @@ export default {
         basics: '无基础',
         time: '2018-07-24',
         friend: '1',
+        date: '05-12 13:22',
         group: '1',
         follow: '已关注'
       }
@@ -124,7 +127,6 @@ export default {
       this.table.tableData[data.index].group = data.command
     },
     handleClick(tab, event) {
-      console.log(tab.name, 'tabname')
       if (tab.index === '0') {
         console.log('加好友进群')
         this.table.tableLabel = [{ label: '购买时间', prop: 'time' }]
@@ -137,6 +139,7 @@ export default {
             basics: '无基础',
             time: '2018-07-24',
             friend: '1',
+            date: '01-02 12:22',
             group: '1',
             follow: '已关注'
           },
@@ -148,6 +151,7 @@ export default {
             basics: '无基础',
             time: '2018-07-24',
             friend: '2',
+            date: '01-12 13:22',
             group: '2',
             follow: '已关注'
           },
@@ -159,6 +163,7 @@ export default {
             basics: '无基础',
             time: '2018-07-24',
             friend: '1',
+            date: '05-12 13:22',
             group: '1',
             follow: '已关注'
           }

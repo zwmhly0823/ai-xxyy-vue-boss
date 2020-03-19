@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 20:22:24
  * @LastEditors: panjian
- * @LastEditTime: 2020-03-19 12:11:29
+ * @LastEditTime: 2020-03-19 12:39:08
  -->
 <template>
   <div>
@@ -17,8 +17,13 @@
       @row-click="onClick"
       @selection-change="handleSelectionChange"
     >
-      <el-table-column type="selection" width="50"></el-table-column>
-      <!-- 基本信息 -->
+      <!-- 加好友进群 - 复选框 -->
+      <el-table-column
+        v-if="this.tables.tabs == 0"
+        type="selection"
+        width="50"
+      ></el-table-column>
+      <!-- 加好友进群 - 基本信息 -->
       <el-table-column
         v-if="this.tables.tabs == 0"
         width="260"
@@ -34,6 +39,7 @@
           </div>
         </template>
       </el-table-column>
+      <!-- 组建遍历表头 -->
       <el-table-column
         align="center"
         v-for="(item, index) in tables.tableLabel"
@@ -43,7 +49,7 @@
         :label="item.label"
       >
       </el-table-column>
-      <!-- 已加好友 -->
+      <!-- 加好友进群 - 已加好友 -->
       <el-table-column
         v-if="this.tables.tabs == 0"
         align="center"
@@ -75,10 +81,11 @@
               ></el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
+          <div>{{ scope.row.date }}</div>
           <span style="display: none;"> {{ scope.row.group }}</span>
         </template>
       </el-table-column>
-      <!-- 已进群 -->
+      <!-- 加好友进群 - 已进群 -->
       <el-table-column
         v-if="this.tables.tabs == 0"
         align="center"
@@ -110,10 +117,11 @@
               ></el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
+          <div>{{ scope.row.date }}</div>
           <span style="display: none;"> {{ scope.row.group }}</span>
         </template>
       </el-table-column>
-      <!-- 关注公众号 -->
+      <!-- 加好友进群 - 关注公众号 -->
       <el-table-column
         v-if="this.tables.tabs == 0"
         align="center"
@@ -123,6 +131,7 @@
           <span class="icon-warp">
             <i class="el-icon-error"></i>
           </span>
+          <div>{{ scope.row.date }}</div>
           <span style="display: none;"> {{ scope.row }}</span>
         </template>
       </el-table-column>
