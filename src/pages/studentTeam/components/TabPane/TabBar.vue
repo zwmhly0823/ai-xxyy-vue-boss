@@ -29,8 +29,8 @@ import DetailsTab from './DetailsTab'
 export default {
   props: {
     classId: {
-      type: String,
-      default: ''
+      type: Object,
+      default: null
     }
   },
   components: {
@@ -42,6 +42,11 @@ export default {
   data() {
     return {
       activeName: 'students'
+    }
+  },
+  watch: {
+    classId(value) {
+      console.log(value, 123213213)
     }
   },
   created() {

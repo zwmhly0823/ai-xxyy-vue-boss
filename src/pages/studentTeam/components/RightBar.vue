@@ -4,23 +4,28 @@
  * @Author: zhubaodong
  * @Date: 2020-03-13 16:53:41
  * @LastEditors: zhubaodong
- * @LastEditTime: 2020-03-19 11:36:41
+ * @LastEditTime: 2020-03-19 19:12:08
  -->
 <template>
   <div class="right-container">
-    <el-card shadow="never" class="box-card1">
+    <el-card
+      shadow="never"
+      class="box-card1"
+      :key="i"
+      v-for="(item, i) in classMessage"
+    >
       <div class="header">
         <div class="header-left">
           <div class="title">
-            <span>100202:80期S1-S3班</span>
+            <span>100202:{{ item.team_name }}</span>
             <span class="text-icons">体验课</span>
             <span class="text-icons">W1D1</span>
             <span class="text-icons">上课中</span>
           </div>
           <div class="info">
             <span>学员:60</span>
-            <span>辅导老师:陈实</span>
-            <span>辅导老师微信:陈老师</span>
+            <span>辅导老师:{{ item.teacher.nickname }}</span>
+            <span>辅导老师微信:{{ item.teacher.weixin_ids }}</span>
             <span style="margin-right:0px">
               <span>01-23开班</span>
               <span>02-16结课</span>
@@ -41,10 +46,10 @@
       <div class="body">
         <div class="body-boxLeft">
           <div class="order-title">累计订单</div>
-          <div class="order-number">3</div>
+          <div class="order-number">{{ item.statictis.order_all }}</div>
           <div class="order-count">
-            <span>今日1</span>
-            <span>昨日5</span>
+            <span>今日{{ item.statictis.today_order }}</span>
+            <span>昨日{{ item.statictis.yestoday_order }}</span>
           </div>
         </div>
         <div class="body-boxCenter">
@@ -58,53 +63,53 @@
         <div class="body-boxRight">
           <div class="params-top">
             <div>
-              <div>1</div>
+              <div>{{ item.statictis.wait_sent }}</div>
               <div>待发货</div>
             </div>
             <div>
-              <div>2</div>
+              <div>{{ item.statictis.unlogin }}</div>
               <div>待登录</div>
             </div>
             <div>
-              <div>3</div>
+              <div>{{ item.statictis.unadd_wechat }}</div>
               <div>待加好友</div>
             </div>
             <div>
-              <div>4</div>
+              <div>{{ item.statictis.unadd_group }}</div>
               <div>待进群</div>
             </div>
             <div>
-              <div>5</div>
+              <div>{{ item.statictis.today_add_class }}</div>
               <div>今日参课</div>
             </div>
             <div>
-              <div>6</div>
+              <div>{{ item.statictis.yestoday_add_class }}</div>
               <div>昨日参课</div>
             </div>
           </div>
           <div class="params-bottom">
             <div>
-              <div>1</div>
+              <div>{{ item.statictis.tody_comp_class }}</div>
               <div>今日完课</div>
             </div>
             <div>
-              <div>2</div>
+              <div>{{ item.statictis.yestody_comp_class }}</div>
               <div>昨日完课</div>
             </div>
             <div>
-              <div>3</div>
+              <div>{{ item.statictis.tody_works }}</div>
               <div>今日作品</div>
             </div>
             <div>
-              <div>4</div>
+              <div>{{ item.statictis.yestoday_works }}</div>
               <div>昨日作品</div>
             </div>
             <div>
-              <div>5</div>
+              <div>{{ item.statictis.tody_comment }}</div>
               <div>今日点评</div>
             </div>
             <div>
-              <div>6</div>
+              <div>{{ item.statictis.yestody_comment }}</div>
               <div>昨日点评</div>
             </div>
           </div>
@@ -118,28 +123,76 @@
 
 <script>
 import TabBar from './TabPane/TabBar.vue'
+import axios from '@/api/axios'
 export default {
   props: {
     classId: {
-      type: String,
-      default: ''
+      type: Object,
+      default: null
     }
   },
   components: {
     TabBar
   },
   data() {
-    return {}
+    return {
+      classMessage: {}
+    }
   },
   computed: {},
   watch: {
     classId(vals) {
-      console.log(vals)
+      console.log(vals, 'vals')
+      this.getClassTeacher(vals)
     }
   },
-  methods: {},
-  created() {},
-  mounted() {}
+  methods: {
+    getClassTeacher(data) {
+      const queryParams = `[{id:${data}}]`
+      axios
+        .get('/graphql/getClassTeacher', {
+          params: {
+            query: `{
+ detail (query: "${queryParams}"){
+  id
+  team_name
+  team_state
+  team_type
+  teacher{
+    id
+    nickname
+    weixin_ids
+    ctime
+          }
+  statictis {
+        today_order
+        yestoday_order
+        order_all
+        wait_sent
+        unadd_wechat
+        unadd_group
+        unlogin
+        today_add_class
+        yestoday_add_class
+        tody_comp_class
+        yestody_comp_class
+        tody_works
+        yestoday_works
+        tody_comment
+        yestody_comment
+               }
+                  }
+                    }`
+          }
+        })
+        .then((res) => {
+          this.classMessage = res.data
+          // this.classMessage2 = res.data
+
+          console.log(this.classMessage, this.classMessage.statictis, 'res')
+        })
+    }
+  }
 }
 </script>
 <style lang="scss" scoped>

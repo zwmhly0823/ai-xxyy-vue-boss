@@ -75,8 +75,8 @@ import { GetAgeByBrithday } from '@/utils/menuItems'
 export default {
   props: {
     classId: {
-      type: String,
-      default: ''
+      type: Object,
+      default: null
     }
   },
   data() {
@@ -87,7 +87,8 @@ export default {
   },
   created() {},
   watch: {
-    classId() {
+    classId(value) {
+      console.log(value, 'value')
       this.getstatusList()
       this.studentsList()
     }
@@ -97,7 +98,7 @@ export default {
       axios
         .post('/graphql/team', {
           query: `{
-          teamUserListPage(type: 0, team_id: "${this.classId}") {
+          teamUserListPage(type: ${this.classId.type}, team_id: "${this.classId.classId.id}") {
             empty
             first
             last

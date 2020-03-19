@@ -49,3 +49,27 @@ export function formatData(str, type = 'd') {
   }
   return dayjs.unix(Number(str) / 1000).format(ft)
 }
+
+/**
+ * 数组对象单一属性排序
+ * @arr 源数组
+ * @field 排序字段名
+ */
+function compare(prop) {
+  return function cpare(obj1, obj2) {
+    let val1 = obj1[prop]
+    let val2 = obj2[prop]
+    val1 = Number(val1) ? Number(val1) : obj1[prop]
+    val2 = Number(val2) ? Number(val2) : obj2[prop]
+    if (val1 < val2) {
+      return -1
+    }
+    if (val1 > val2) {
+      return 1
+    }
+    return 0
+  }
+}
+export function sortArrObject(arr, field) {
+  return arr.sort(compare(field))
+}

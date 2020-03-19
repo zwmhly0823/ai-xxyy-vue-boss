@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 20:22:24
  * @LastEditors: panjian
- * @LastEditTime: 2020-03-19 12:39:08
+ * @LastEditTime: 2020-03-19 19:39:17
  -->
 <template>
   <div>
@@ -15,14 +15,13 @@
       :header-cell-style="headerCss"
       :row-class-name="tableRowClassName"
       @row-click="onClick"
-      @selection-change="handleSelectionChange"
     >
       <!-- 加好友进群 - 复选框 -->
-      <el-table-column
+      <!-- <el-table-column
         v-if="this.tables.tabs == 0"
         type="selection"
         width="50"
-      ></el-table-column>
+      ></el-table-column> -->
       <!-- 加好友进群 - 基本信息 -->
       <el-table-column
         v-if="this.tables.tabs == 0"
@@ -162,7 +161,7 @@ export default {
   props: ['tables'],
   data() {
     return {
-      multipleSelection: [],
+      // multipleSelection: [],
       index: null
       // tableData: []
     }
@@ -202,10 +201,10 @@ export default {
       // console.log(row, column, rowIndex, columnIndex, 'headerCss')
     },
     // 复选框
-    handleSelectionChange(val) {
-      console.log(val, 'val', this.table)
-      this.multipleSelection = val
-    },
+    // handleSelectionChange(val) {
+    //   console.log(val, 'val', this.table)
+    //   this.multipleSelection = val
+    // },
     // 分页
     handleSizeChange(val) {
       console.log(`每页 ${val} 条`)
