@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-13 16:53:33
  * @LastEditors: zhubaodong
- * @LastEditTime: 2020-03-19 19:50:32
+ * @LastEditTime: 2020-03-19 22:10:55
  -->
 <template>
   <div class="center-container">
@@ -28,9 +28,12 @@
           v-for="(item, index) in showList ? showList : showClassData.datas"
           :key="index"
           class="infinite-list-item cycle-box"
-          @click="clickHandler(item)"
+          @click="clickHandler(item, index)"
         >
-          <el-card class="box-card" shadow="hover">
+          <el-card
+            :class="['box-card', heighLight == index ? 'hover-color' : '']"
+            shadow="hover"
+          >
             <div class="clcle-header">
               <span>{{ item.team_name }}</span>
               <span class="text-icons">{{ item.week }}</span>
@@ -78,7 +81,8 @@ export default {
       loading: false,
       noMore: false,
       type: 0,
-      showList: []
+      showList: [],
+      heighLight: 0
     }
   },
   computed: {
@@ -130,8 +134,8 @@ export default {
     }
   },
   methods: {
-    clickHandler(data) {
-      console.log(this.showClassData.types)
+    clickHandler(data, index) {
+      this.heighLight = index
       this.$emit('change', { datas: data, type: this.showClassData.types })
     },
     // 下拉刷新
@@ -157,7 +161,6 @@ export default {
 
         setTimeout(() => {
           this.loading = false
-          console.log(this.showList.length, 'this.showList.length')
 
           this.showList.push(...this.showClassData.datas)
           // 列表数据总数等于分页总数时 不再加载
@@ -200,6 +203,7 @@ export default {
     list-style: none;
     padding-left: 0;
     .cycle-box {
+      cursor: pointer;
       .box-card {
         margin-top: 5px;
         .clcle-header {
@@ -221,6 +225,9 @@ export default {
       }
     }
   }
+}
+.hover-color {
+  background: rgb(240, 247, 255);
 }
 </style>
 <style lang="scss">
