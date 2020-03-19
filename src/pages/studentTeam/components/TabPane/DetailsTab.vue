@@ -4,36 +4,36 @@
  * @Author: panjian
  * @Date: 2020-03-16 14:19:58
  * @LastEditors: panjian
- * @LastEditTime: 2020-03-18 20:19:51
+ * @LastEditTime: 2020-03-19 12:10:19
  -->
 <template>
   <div>
     <div>
       <div class="tabs-tab">
-        <el-tabs v-model="activeName" @tab-click="handleClick" width="500">
-          <el-tab-pane label="加好友进群" name="group">
-            <group-table
-              @func="getMsgFormSon"
+        <el-tabs v-model="activeName" @tab-click="handleClick">
+          <el-tab-pane label="加好友进群" ref="group" name="group">
+            <details-table
+              @commandFriend="onCommandFriend"
               @onGroup="onGroup"
               :tables="table"
-            ></group-table>
+            ></details-table>
           </el-tab-pane>
-          <el-tab-pane label="物流" name="logistics">
+          <el-tab-pane label="物流" ref="logistics" name="logistics">
             <details-table :tables="table"></details-table>
           </el-tab-pane>
-          <el-tab-pane label="登陆" name="login"
+          <el-tab-pane label="登陆" ref="login" name="login"
             ><details-table :tables="table"></details-table
           ></el-tab-pane>
-          <el-tab-pane label="参课" name="participateIn"
+          <el-tab-pane label="参课" ref="participateIn" name="participateIn"
             ><details-table :tables="table"></details-table
           ></el-tab-pane>
-          <el-tab-pane label="完课" name="finish"
+          <el-tab-pane label="完课" ref="finish" name="finish"
             ><details-table :tables="table"></details-table
           ></el-tab-pane>
-          <el-tab-pane label="传作品" name="works"
+          <el-tab-pane label="传作品" ref="works" name="works"
             ><details-table :tables="table"></details-table
           ></el-tab-pane>
-          <el-tab-pane label="点评" name="comment"
+          <el-tab-pane label="点评" ref="comment" name="comment"
             ><details-table :tables="table"></details-table
           ></el-tab-pane>
         </el-tabs>
@@ -52,11 +52,9 @@
 </template>
 <script>
 import detailsTable from './components/detailsTable'
-import groupTable from './components/groupTable'
 export default {
   components: {
-    detailsTable,
-    groupTable
+    detailsTable
   },
   data() {
     return {
@@ -119,13 +117,14 @@ export default {
     this.table.currentPage = 1
   },
   methods: {
-    getMsgFormSon(data) {
+    onCommandFriend(data) {
       this.table.tableData[data.index].friend = data.command
     },
     onGroup(data) {
       this.table.tableData[data.index].group = data.command
     },
     handleClick(tab, event) {
+      console.log(tab.name, 'tabname')
       if (tab.index === '0') {
         console.log('加好友进群')
         this.table.tableLabel = [{ label: '购买时间', prop: 'time' }]
@@ -168,6 +167,7 @@ export default {
         this.table.friend = '30'
         this.table.student = '60'
         this.table.currentPage = 1
+        this.table.tabs = 0
       } else if (tab.index === '1') {
         console.log('物流')
         this.table.tabs = 1
@@ -700,7 +700,7 @@ export default {
       // console.log(tab, event, tab.index, tab.label)
     },
     enter(val) {
-      console.log('input', val)
+      console.log('input', val, this.input)
     }
   }
 }
