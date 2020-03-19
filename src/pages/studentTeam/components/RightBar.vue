@@ -158,12 +158,10 @@ export default {
   team_name
   team_state
   team_type
-  teacher_wx
   teacher{
     id
     nickname
     weixin_ids
-    weichat_num
     ctime
           }
   statictis {
