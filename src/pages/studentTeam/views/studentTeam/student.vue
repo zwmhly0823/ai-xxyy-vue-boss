@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-13 15:24:11
  * @LastEditors: zhubaodong
- * @LastEditTime: 2020-03-18 22:04:55
+ * @LastEditTime: 2020-03-19 11:38:49
  -->
 <template>
   <el-row type="flex" class="app-main height student-team">
@@ -25,7 +25,7 @@
     <el-col class="student-team-right ">
       <div class="grid-content right">
         <el-scrollbar wrap-class="scrollbar-wrapper">
-          <right-bar :classId="classId" />
+          <right-bar :classId="classIdData" />
         </el-scrollbar>
       </div>
     </el-col>
@@ -51,7 +51,19 @@ export default {
       systemStatusList: {}, // 左栏 系统课状态（数量）
       classStatus: [0, 1, 2], // 选中的课程状态值（传入中栏，获取班级列表）
       classListData: {}, // 中栏 班级列表
-      classId: null // 班级Id
+      classId: '' // 班级Id
+    }
+  },
+  computed: {
+    // 初始化的班级ID(体验课全部中第一条)
+    classIdData() {
+      if (!this.classId) {
+        const data =
+          this.classListData.teamStatusPage &&
+          this.classListData.teamStatusPage.content[0].id
+        return data
+      }
+      return this.classId
     }
   },
   methods: {
@@ -74,8 +86,8 @@ export default {
      * 中栏回调函数
      * @param(回调数据) 获得选中内容
      */
-    async getRightBarSelect(data) {
-      console.log(data, 'data')
+    getRightBarSelect(data) {
+      console.log(data)
       this.classId = data
     },
     /**
@@ -153,13 +165,14 @@ export default {
         })
     }
   },
-  created() {
+  async created() {
     // 请求体验课状态列表
-    this.getExperienceStatusList(0)
+    await this.getExperienceStatusList(0)
     // 请求系统课状态列表
-    this.getExperienceStatusList(1)
+    await this.getExperienceStatusList(1)
     // 请求班级列表
-    this.getClassList()
+    await this.getClassList()
+    console.log(this.classIdData, 'classIdData')
   },
   mounted() {}
 }

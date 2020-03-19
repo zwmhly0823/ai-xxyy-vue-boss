@@ -60,6 +60,12 @@
 </template>
 <script>
 export default {
+  props: {
+    classId: {
+      type: String,
+      default: ''
+    }
+  },
   data() {
     return {
       tableData: [
