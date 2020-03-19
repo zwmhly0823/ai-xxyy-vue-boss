@@ -4,36 +4,36 @@
  * @Author: panjian
  * @Date: 2020-03-16 14:19:58
  * @LastEditors: panjian
- * @LastEditTime: 2020-03-19 14:34:20
+ * @LastEditTime: 2020-03-19 19:38:15
  -->
 <template>
   <div>
     <div>
       <div class="tabs-tab">
         <el-tabs v-model="activeName" @tab-click="handleClick">
-          <el-tab-pane label="加好友进群" ref="group" name="group">
+          <el-tab-pane label="加好友进群" name="group">
             <details-table
               @commandFriend="onCommandFriend"
               @onGroup="onGroup"
               :tables="table"
             ></details-table>
           </el-tab-pane>
-          <el-tab-pane label="物流" ref="logistics" name="logistics">
+          <el-tab-pane label="物流" name="logistics">
             <details-table :tables="table"></details-table>
           </el-tab-pane>
-          <el-tab-pane label="登陆" ref="login" name="login"
+          <el-tab-pane label="登陆" name="login"
             ><details-table :tables="table"></details-table
           ></el-tab-pane>
-          <el-tab-pane label="参课" ref="participateIn" name="participateIn"
+          <el-tab-pane label="参课" name="participateIn"
             ><details-table :tables="table"></details-table
           ></el-tab-pane>
-          <el-tab-pane label="完课" ref="finish" name="finish"
+          <el-tab-pane label="完课" name="finish"
             ><details-table :tables="table"></details-table
           ></el-tab-pane>
-          <el-tab-pane label="传作品" ref="works" name="works"
+          <el-tab-pane label="传作品" name="works"
             ><details-table :tables="table"></details-table
           ></el-tab-pane>
-          <el-tab-pane label="点评" ref="comment" name="comment"
+          <el-tab-pane label="点评" name="comment"
             ><details-table :tables="table"></details-table
           ></el-tab-pane>
         </el-tabs>
@@ -60,7 +60,7 @@ export default {
     return {
       input: '',
       table: {
-        tabs: '',
+        tabs: '0',
         // 表头信息
         tableLabel: [],
         // 列表数据
