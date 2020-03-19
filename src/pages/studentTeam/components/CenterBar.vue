@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-13 16:53:33
  * @LastEditors: zhubaodong
- * @LastEditTime: 2020-03-18 22:43:30
+ * @LastEditTime: 2020-03-19 19:50:32
  -->
 <template>
   <div class="center-container">
@@ -19,12 +19,14 @@
     <el-scrollbar wrap-class="scrollbar-wrapper" style="flex: 1;">
       <ul
         class="infinite-list container"
-        style="marginTop:10px;overflow:auto"
+        style="marginTop:10px;"
         v-infinite-scroll="load"
+        infinite-scroll-distance="10px"
+        infinite-scroll-disabled="disabled"
       >
         <li
-          v-for="item in showClassData.datas"
-          :key="item.id"
+          v-for="(item, index) in showList ? showList : showClassData.datas"
+          :key="index"
           class="infinite-list-item cycle-box"
           @click="clickHandler(item)"
         >
@@ -50,6 +52,12 @@
           </el-card>
         </li>
       </ul>
+      <p v-if="loading" style="text-align:center">
+        加载中...
+      </p>
+      <p v-if="noMore" style="text-align:center">
+        没有更多了
+      </p>
     </el-scrollbar>
   </div>
 </template>
@@ -66,7 +74,12 @@ export default {
   },
   components: {},
   data() {
-    return {}
+    return {
+      loading: false,
+      noMore: false,
+      type: 0,
+      showList: []
+    }
   },
   computed: {
     /**
@@ -82,25 +95,79 @@ export default {
             .format('MMDD')
           return item
         })
-      //!  分页数据
-      // const pageData = {
-      //   totalElements:
-      //     this.classData.teamStatusPage &&
-      //     this.classData.teamStatusPage.totalElements,
-      //   totalPages:
-      //     this.classData.teamStatusPage &&
-      //     this.classData.teamStatusPage.totalPages
-      // }
-      return { datas }
+      // 分页数据
+      const pageData = {
+        totalElements:
+          this.classData.teamStatusPage &&
+          this.classData.teamStatusPage.totalElements,
+        totalPages:
+          this.classData.teamStatusPage &&
+          this.classData.teamStatusPage.totalPages,
+        nums:
+          this.classData.teamStatusPage && this.classData.teamStatusPage.number
+      }
+      // 0体验课 1系统课
+      const types = this.classData.type
+      const scrollStatus = this.classData.scrollStatus
+      return { datas, pageData, types, scrollStatus }
+    },
+    disabled() {
+      return this.loading || this.noMore
     }
   },
-  watch: {},
+  watch: {
+    showClassData(val, old) {
+      if (val.scrollStatus !== old.scrollStatus) {
+        this.showList = []
+        this.showList = this.showClassData.datas
+        this.noMore = false
+        this.load()
+      } else {
+        if (this.showList.length === 0) {
+          this.showList = this.showClassData.datas
+        }
+      }
+    }
+  },
   methods: {
     clickHandler(data) {
-      this.$emit('change', data.id)
+      console.log(this.showClassData.types)
+      this.$emit('change', { datas: data, type: this.showClassData.types })
     },
+    // 下拉刷新
     load() {
-      console.log('a')
+      console.log('触发load函数')
+      // 页码总数大于20 并且当前页数小于总页数
+      if (
+        +this.showClassData.pageData.totalElements > 9 &&
+        +this.showClassData.pageData.totalPages >
+          this.classData.teamStatusPage.number
+      ) {
+        // loading
+        this.loading = true
+        // 页码
+        const nums = +this.showClassData.pageData.nums + 1
+        // 课程类型
+        this.type = this.showClassData.types
+
+        this.$emit('scrollHandler', {
+          page: nums,
+          type: this.type
+        })
+
+        setTimeout(() => {
+          this.loading = false
+          console.log(this.showList.length, 'this.showList.length')
+
+          this.showList.push(...this.showClassData.datas)
+          // 列表数据总数等于分页总数时 不再加载
+          if (
+            this.showList.length === +this.showClassData.pageData.totalElements
+          ) {
+            this.noMore = true
+          }
+        }, 1000)
+      }
     }
   },
   created() {},

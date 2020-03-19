@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-13 16:53:41
  * @LastEditors: zhubaodong
- * @LastEditTime: 2020-03-19 11:36:41
+ * @LastEditTime: 2020-03-19 19:12:08
  -->
 <template>
   <div class="right-container">
@@ -133,8 +133,8 @@ import axios from '@/api/axios'
 export default {
   props: {
     classId: {
-      type: String,
-      default: ''
+      type: Object,
+      default: null
     }
   },
   components: {
