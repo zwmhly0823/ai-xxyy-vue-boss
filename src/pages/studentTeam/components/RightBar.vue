@@ -17,7 +17,7 @@
       <div class="header">
         <div class="header-left">
           <div class="title">
-            <span>100202:{{ item.team_name }}</span>
+            <span>{{ item.onetime }}:{{ item.team_name }}</span>
             <span class="text-icons">{{
               item.team_type == 0 ? '体验课' : '系统课'
             }}</span>
@@ -37,8 +37,7 @@
               <span>02-16结课</span>
             </span>
             <span style="margin-right:0px">
-              <span>{{ item.formatCtime }}</span>
-              <span>19:20:45创建</span>
+              <span>{{ item.timebegin }}创建</span>
             </span>
           </div>
         </div>
@@ -138,6 +137,7 @@
 <script>
 import TabBar from './TabPane/TabBar.vue'
 import axios from '@/api/axios'
+import dayjs from 'dayjs'
 export default {
   props: {
     classId: {
@@ -219,6 +219,7 @@ export default {
             this.classId.enrolled,
             'seeek'
           )
+
           res.data.detail.todayTrans = (
             res.data.detail.statictis.today_order / this.classId.enrolled
           ).toFixed(2)
@@ -230,10 +231,19 @@ export default {
           ).toFixed(2)
 
           res.data.detail.week = this.classId.classId.week
-          res.data.detail.formatCtime = this.classId.classId.formatCtime
           res.data.detail.pre_enroll = this.classId.classId.pre_enroll
+          res.data.detail.timebegin = dayjs
+            .unix(Number(this.classId.classId.ctime) / 1000)
+            .format('MM-DD  hh:mm:ss')
+          res.data.detail.formatCtime = dayjs
+            .unix(Number(this.classId.classId.ctime) / 1000)
+            .format('MM-DD')
+          res.data.detail.onetime = dayjs
+            .unix(Number(this.classId.classId.ctime) / 1000)
+            .format('YYMMDD')
           this.classMessage = res.data
           // this.classMessage2 = res.data
+
           console.log(
             this.classMessage,
             this.classMessage.statictis,
