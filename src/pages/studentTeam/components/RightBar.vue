@@ -18,13 +18,19 @@
         <div class="header-left">
           <div class="title">
             <span>100202:{{ item.team_name }}</span>
-            <span class="text-icons">体验课</span>
+            <span class="text-icons">{{
+              item.team_type == 0 ? '体验课' : '系统课'
+            }}</span>
             <span class="text-icons">W1D1</span>
-            <span class="text-icons">上课中</span>
+            <span class="text-icons">{{ item.state }}</span>
           </div>
           <div class="info">
             <span>学员:60</span>
-            <span>辅导老师:{{ item.teacher.nickname }}</span>
+            <span
+              >辅导老师:{{
+                item.teacher.nickname || item.teacher.realname
+              }}</span
+            >
             <span>辅导老师微信:{{ item.teacher.weixin_ids }}</span>
             <span style="margin-right:0px">
               <span>01-23开班</span>
@@ -186,10 +192,23 @@ export default {
           }
         })
         .then((res) => {
+          if (Number(res.data.detail.team_state) === 0) {
+            res.data.detail.state = '待开课'
+          } else if (Number(res.data.detail.team_state) === 1) {
+            res.data.detail.state = '开课中'
+          } else if (Number(res.data.deatil.team_state) === 2) {
+            res.data.detail.state = '已结课'
+          } else {
+            res.data.detail.state = '今日开课'
+          }
           this.classMessage = res.data
           // this.classMessage2 = res.data
-
-          console.log(this.classMessage, this.classMessage.statictis, 'res')
+          console.log(
+            this.classMessage,
+            this.classMessage.statictis,
+            res.data,
+            'res'
+          )
         })
     }
   }
