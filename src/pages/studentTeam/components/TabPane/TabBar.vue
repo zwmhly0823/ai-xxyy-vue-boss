@@ -10,7 +10,7 @@
         <studens-tab :classId="classId" />
       </el-tab-pane>
       <el-tab-pane label="带班详情" name="details">
-        <details-tab />
+        <details-tab :classId="classId" />
       </el-tab-pane>
       <!-- <el-tab-pane label="微信群聊" name="groupChat">
         <groupchat-tab />
