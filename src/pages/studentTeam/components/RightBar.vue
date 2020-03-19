@@ -21,7 +21,7 @@
             <span class="text-icons">{{
               item.team_type == 0 ? '体验课' : '系统课'
             }}</span>
-            <span class="text-icons">W1D1</span>
+            <span class="text-icons">{{ item.week }}</span>
             <span class="text-icons">{{ item.state }}</span>
           </div>
           <div class="info">
@@ -31,7 +31,7 @@
                 item.teacher.nickname || item.teacher.realname
               }}</span
             >
-            <span>辅导老师微信:{{ item.teacher.weixin_ids }}</span>
+            <span>辅导老师微信: {{ item.teacher_wx }}</span>
             <span style="margin-right:0px">
               <span>01-23开班</span>
               <span>02-16结课</span>
@@ -148,8 +148,8 @@ export default {
   computed: {},
   watch: {
     classId(vals) {
+      this.getClassTeacher(vals.classId.id)
       console.log(vals, 'vals')
-      this.getClassTeacher(vals)
     }
   },
   methods: {
@@ -164,9 +164,11 @@ export default {
   team_name
   team_state
   team_type
+  teacher_wx
   teacher{
     id
     nickname
+    realname
     weixin_ids
     ctime
           }
@@ -211,6 +213,9 @@ export default {
           )
         })
     }
+  },
+  mounted() {
+    console.log(this.classId)
   }
 }
 </script>
