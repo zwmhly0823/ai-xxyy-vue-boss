@@ -148,8 +148,8 @@ export default {
   computed: {},
   watch: {
     classId(vals) {
+      console.log(vals.classId.id, 'vals')
       this.getClassTeacher(vals.classId.id)
-      console.log(vals, 'vals')
     }
   },
   methods: {

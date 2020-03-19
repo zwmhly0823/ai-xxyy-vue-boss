@@ -10,7 +10,7 @@
         <studens-tab :classId="classId" />
       </el-tab-pane>
       <el-tab-pane label="带班详情" name="details">
-        <details-tab />
+        <details-tab :classId="classId" />
       </el-tab-pane>
       <!-- <el-tab-pane label="微信群聊" name="groupChat">
         <groupchat-tab />
@@ -29,8 +29,8 @@ import DetailsTab from './DetailsTab'
 export default {
   props: {
     classId: {
-      type: String,
-      default: ''
+      type: Object,
+      default: null
     }
   },
   components: {
@@ -42,6 +42,11 @@ export default {
   data() {
     return {
       activeName: 'students'
+    }
+  },
+  watch: {
+    classId(value) {
+      console.log(value, 123213213)
     }
   },
   created() {

@@ -1,275 +1,220 @@
 <template>
-  <el-table :data="tableData">
-    <el-table-column fixed label="基本信息" class="information">
-      <template slot-scope="scope">
-        <div class="information-img">
-          <i :class="scope.row.img"></i>
-        </div>
-        <div class="information-right">
-          <div class="phone">{{ scope.row.phone }}</div>
-          <div class="age">{{ scope.row.age }}</div>
-          <div class="wechatnote">
-            微信备注:<span>{{ scope.row.wechatNote }}</span>
+  <div>
+    <el-table :data="tableData">
+      <el-table-column fixed label="基本信息" class="information" width="250px">
+        <template slot-scope="scope">
+          <img class="information-img" :src="scope.row.head" alt="" />
+          <div class="information-right">
+            <div class="phone">{{ scope.row.ctime }}</div>
+            <div class="age">
+              {{ scope.row.birthday }} {{ scope.row.base_painting_text }}
+            </div>
+            <!-- <div class="wechatnote">
+              微信备注:<span>{{ scope.row.wechatNote }}</span>
+            </div> -->
           </div>
-        </div>
-      </template>
-    </el-table-column>
-    <el-table-column label="上课信息" class="haveclass" width="140px">
-      <template slot-scope="scope">
-        <div class="haveclass-content">
-          登陆:
-          <span>{{ scope.row.landing }}</span>
-        </div>
-        <div class="haveclass-content">
-          参课:
-          <span>{{ scope.row.participate }}</span>
-        </div>
-        <div class="haveclass-content">
-          完课:
-          <span>{{ scope.row.end }}</span>
-        </div>
-        <div class="haveclass-content">
-          作品:
-          <span>{{ scope.row.works }}</span>
-        </div>
-        <div class="haveclass-content">
-          点评:
-          <span>{{ scope.row.review }}</span>
-        </div>
-        <div class="haveclass-content">
-          听点评:
-          <span>{{ scope.row.listen }}</span>
-        </div>
-      </template>
-    </el-table-column>
-    <el-table-column label="关联物流" class="logistics">
-      <template slot-scope="scope">
-        <div class="logistics-num">{{ scope.row.logisticsNum }}</div>
-        <div>{{ scope.row.logisticsState }}</div>
-      </template>
-    </el-table-column>
-    <el-table-column label="状态">
-      <template slot-scope="scope">
-        <div>{{ scope.row.course }}</div>
-        <div>{{ scope.row.addBuddy }}</div>
-        <div>{{ scope.row.wechatGroup }}</div>
-      </template>
-    </el-table-column>
-    <!-- <el-table-column label="标签" class="thelabel"></el-table-column> -->
-  </el-table>
+        </template>
+      </el-table-column>
+      <el-table-column label="上课信息" class="haveclass" width="140px">
+        <template slot-scope="scope">
+          <div class="haveclass-content">
+            登陆:
+            <span>{{ scope.row.statistics.login }}</span>
+          </div>
+          <div class="haveclass-content">
+            参课:
+            <span>{{ scope.row.statistics.join_course }}</span>
+          </div>
+          <div class="haveclass-content">
+            完课:
+            <span>{{ scope.row.statistics.complete_course }}</span>
+          </div>
+          <div class="haveclass-content">
+            作品:
+            <span>{{ scope.row.statistics.course_task }}</span>
+          </div>
+          <div class="haveclass-content">
+            点评:
+            <span>{{ scope.row.statistics.comment }}</span>
+          </div>
+          <div class="haveclass-content">
+            听点评:
+            <span>{{ scope.row.statistics.listen_comment }}</span>
+          </div>
+        </template>
+      </el-table-column>
+      <el-table-column label="关联物流" class="logistics">
+        <template slot-scope="scope">
+          <div class="logistics-num">{{ scope.row.express.total }}</div>
+          <div>{{ scope.row.express.status }}</div>
+        </template>
+      </el-table-column>
+      <el-table-column label="状态">
+        <template slot-scope="scope">
+          <div>{{ scope.row.status }}</div>
+          <div>{{ scope.row.wechat_status.added_wechat }}</div>
+          <div>{{ scope.row.wechat_status.added_group }}</div>
+        </template>
+      </el-table-column>
+      <!-- <el-table-column label="标签" class="thelabel"></el-table-column> -->
+    </el-table>
+    <!-- <div class="block">
+      <el-pagination
+        layout="prev, pager, next"
+        :total="4"
+        :page-size="1"
+        @current-change="handleSizeChange"
+      >
+      </el-pagination>
+    </div> -->
+  </div>
 </template>
 <script>
+import axios from '@/api/axios'
+import { GetAgeByBrithday } from '@/utils/menuItems'
 export default {
   props: {
     classId: {
-      type: String,
-      default: ''
+      type: Object,
+      default: null
     }
   },
   data() {
     return {
-      tableData: [
-        {
-          // 基本信息
-          img: 'el-icon-user',
-          phone: '15133266546',
-          age: '2岁3个月 无基础',
-          wechatNote: '爱死的鱼aaaaaaaaaaaaa',
-          // 上课信息
-          landing: '2',
-          participate: '3',
-          end: '4',
-          works: '5',
-          review: '6',
-          listen: '7',
-          // 关联物流
-          logisticsNum: '5',
-          logisticsState: '最近一次已发货',
-          // 状态
-          course: '已体验课',
-          addBuddy: '已加好友',
-          wechatGroup: '已进微信群'
-        },
-        {
-          // 基本信息
-          img: 'el-icon-user',
-          phone: '15133266546',
-          age: '2岁3个月 无基础',
-          wechatNote: '爱死的鱼',
-          // 上课信息
-          landing: '2',
-          participate: '3',
-          end: '4',
-          works: '5',
-          review: '6',
-          listen: '7',
-          // 关联物流
-          logisticsNum: '5',
-          logisticsState: '最近一次已发货',
-          // 状态
-          course: '已体验课',
-          addBuddy: '已加好友',
-          wechatGroup: '已进微信群'
-        },
-        {
-          // 基本信息
-          img: 'el-icon-user',
-          phone: '15133266546',
-          age: '2岁3个月 无基础',
-          wechatNote: '爱死的鱼',
-          // 上课信息
-          landing: '2',
-          participate: '3',
-          end: '4',
-          works: '5',
-          review: '6',
-          listen: '7',
-          // 关联物流
-          logisticsNum: '5',
-          logisticsState: '最近一次已发货',
-          // 状态
-          course: '已体验课',
-          addBuddy: '已加好友',
-          wechatGroup: '已进微信群'
-        },
-        {
-          // 基本信息
-          img: 'el-icon-user',
-          phone: '15133266546',
-          age: '2岁3个月 无基础',
-          wechatNote: '爱死的鱼',
-          // 上课信息
-          landing: '2',
-          participate: '3',
-          end: '4',
-          works: '5',
-          review: '6',
-          listen: '7',
-          // 关联物流
-          logisticsNum: '5',
-          logisticsState: '最近一次已发货',
-          // 状态
-          course: '已体验课',
-          addBuddy: '已加好友',
-          wechatGroup: '已进微信群'
-        },
-        {
-          // 基本信息
-          img: 'el-icon-user',
-          phone: '15133266546',
-          age: '2岁3个月 无基础',
-          wechatNote: '爱死的鱼',
-          // 上课信息
-          landing: '2',
-          participate: '3',
-          end: '4',
-          works: '5',
-          review: '6',
-          listen: '7',
-          // 关联物流
-          logisticsNum: '5',
-          logisticsState: '最近一次已发货',
-          // 状态
-          course: '已体验课',
-          addBuddy: '已加好友',
-          wechatGroup: '已进微信群'
-        },
-        {
-          // 基本信息
-          img: 'el-icon-user',
-          phone: '15133266546',
-          age: '2岁3个月 无基础',
-          wechatNote: '爱死的鱼',
-          // 上课信息
-          landing: '2',
-          participate: '3',
-          end: '4',
-          works: '5',
-          review: '6',
-          listen: '7',
-          // 关联物流
-          logisticsNum: '5',
-          logisticsState: '最近一次已发货',
-          // 状态
-          course: '已体验课',
-          addBuddy: '已加好友',
-          wechatGroup: '已进微信群'
-        },
-        {
-          // 基本信息
-          img: 'el-icon-user',
-          phone: '15133266546',
-          age: '2岁3个月 无基础',
-          wechatNote: '爱死的鱼',
-          // 上课信息
-          landing: '2',
-          participate: '3',
-          end: '4',
-          works: '5',
-          review: '6',
-          listen: '7',
-          // 关联物流
-          logisticsNum: '5',
-          logisticsState: '最近一次已发货',
-          // 状态
-          course: '已体验课',
-          addBuddy: '已加好友',
-          wechatGroup: '已进微信群'
-        },
-        {
-          // 基本信息
-          img: 'el-icon-user',
-          phone: '15133266546',
-          age: '2岁3个月 无基础',
-          wechatNote: '爱死的鱼',
-          // 上课信息
-          landing: '2',
-          participate: '3',
-          end: '4',
-          works: '5',
-          review: '6',
-          listen: '7',
-          // 关联物流
-          logisticsNum: '5',
-          logisticsState: '最近一次已发货',
-          // 状态
-          course: '已体验课',
-          addBuddy: '已加好友',
-          wechatGroup: '已进微信群'
-        },
-        {
-          // 基本信息
-          img: 'el-icon-user',
-          phone: '15133266546',
-          age: '2岁3个月 无基础',
-          wechatNote: '爱死的鱼',
-          // 上课信息
-          landing: '2',
-          participate: '3',
-          end: '4',
-          works: '5',
-          review: '6',
-          listen: '7',
-          // 关联物流
-          logisticsNum: '5',
-          logisticsState: '最近一次已发货',
-          // 状态
-          course: '已体验课',
-          addBuddy: '已加好友',
-          wechatGroup: '已进微信群'
-        }
-      ]
+      tableData: [],
+      statusData: []
     }
   },
-  methods: {}
+  created() {},
+  watch: {
+    classId(value) {
+      console.log(value, 'value')
+      this.getstatusList()
+      this.studentsList()
+    }
+  },
+  methods: {
+    studentsList() {
+      axios
+        .post('/graphql/team', {
+          query: `{
+          teamUserListPage(type: ${this.classId.type}, team_id: "${this.classId.classId.id}") {
+            empty
+            first
+            last
+            number
+            size
+            numberOfElements
+            totalElements
+            totalPages
+            content {
+              id
+              ctime
+              birthday
+              nickname
+              username
+              country
+              head
+              send_id
+              channel
+              status
+              subscribe
+              sex
+              type
+              weixin_openid
+              user_num
+              base_painting
+              base_painting_text
+              team_id
+              statistics {
+                login
+                complete_course
+                join_course
+                course_task
+                comment
+                listen_comment
+              }
+              wechat_status {
+                added_group
+                added_wechat
+              }
+              express {
+                total
+                status
+              }
+            }
+          }
+        }`
+        })
+        .then((res) => {
+          const _data = res.data.teamUserListPage.content
+          console.log(_data, '_data')
+          _data.forEach((ele) => {
+            ele.birthday = GetAgeByBrithday(ele.birthday)
+            // 是否添加微信群  0/未加  1/已加
+            const addedGroup = ele.wechat_status.added_group
+            if (addedGroup === 0) {
+              ele.wechat_status.added_group = '未进微信群'
+            } else if (addedGroup === 1) {
+              ele.wechat_status.added_group = '已进微信群'
+            }
+            //  是否添加好友 0/未加 1/已加
+            const addedWechat = ele.wechat_status.added_wechat
+            if (addedWechat === 0) {
+              ele.wechat_status.added_wechat = '未加好友'
+            } else if (addedWechat === 1) {
+              ele.wechat_status.added_wechat = '已加好友'
+            }
+            //  物流状态  1/最后一次代发货  2/最后一次已发货  3/最后一次已经完成
+            const status = ele.express.status
+            if (status === 0) {
+              ele.express.status = '最后一次已创建'
+            } else if (status === 1) {
+              ele.express.status = '最后一次待发货'
+            } else if (status === 2) {
+              ele.express.status = '最后一次已发货'
+            } else if (status === 3) {
+              ele.express.status = '最后一次已完成'
+            } else if (status === 4) {
+              ele.express.status = '最后一次签收失败'
+            } else if (status === 5) {
+              ele.express.status = '最后一次已退货'
+            }
+            // 状态匹配
+            this.statusList.forEach((value) => {
+              if (value.id === ele.status) {
+                ele.status = value.nameZh
+              }
+            })
+          })
+          this.tableData = _data
+        })
+    },
+    getstatusList() {
+      axios
+        .post('/graphql/user', {
+          query: `{
+          userFollowStateList {
+            id
+            nameZh
+            sort
+          }
+        }`
+        })
+        .then((res) => {
+          this.statusList = res.data.userFollowStateList
+        })
+    }
+    // handleSizeChange(val) {}
+  }
 }
 </script>
 <style scoped lang="scss">
 // 基本信息
 .information {
   &-img {
-    line-height: 70px;
-    width: 70px;
+    width: 50px;
+    height: 50px;
     float: left;
     text-align: center;
     border: 1px solid #cccccc;
@@ -301,5 +246,8 @@ export default {
   &-num {
     color: #409eff;
   }
+}
+.block {
+  text-align: center;
 }
 </style>
