@@ -8,24 +8,37 @@
         <div class="information-right">
           <div class="phone">{{ scope.row.phone }}</div>
           <div class="age">{{ scope.row.age }}</div>
-          <div class="wechatnote">微信备注:{{ scope.row.wechatNote }}</div>
+          <div class="wechatnote">
+            微信备注:<span>{{ scope.row.wechatNote }}</span>
+          </div>
         </div>
       </template>
     </el-table-column>
-    <el-table-column label="上课信息" class="haveclass"
-      >å
+    <el-table-column label="上课信息" class="haveclass" width="140px">
       <template slot-scope="scope">
+        <div class="haveclass-content">
+          登陆:
+          <span>{{ scope.row.landing }}</span>
+        </div>
         <div class="haveclass-content">
           参课:
           <span>{{ scope.row.participate }}</span>
+        </div>
+        <div class="haveclass-content">
           完课:
           <span>{{ scope.row.end }}</span>
         </div>
         <div class="haveclass-content">
           作品:
           <span>{{ scope.row.works }}</span>
+        </div>
+        <div class="haveclass-content">
           点评:
           <span>{{ scope.row.review }}</span>
+        </div>
+        <div class="haveclass-content">
+          听点评:
+          <span>{{ scope.row.listen }}</span>
         </div>
       </template>
     </el-table-column>
@@ -55,12 +68,14 @@ export default {
           img: 'el-icon-user',
           phone: '15133266546',
           age: '2岁3个月 无基础',
-          wechatNote: '爱死的鱼',
+          wechatNote: '爱死的鱼aaaaaaaaaaaaa',
           // 上课信息
+          landing: '2',
           participate: '3',
           end: '4',
           works: '5',
           review: '6',
+          listen: '7',
           // 关联物流
           logisticsNum: '5',
           logisticsState: '最近一次已发货',
@@ -76,10 +91,12 @@ export default {
           age: '2岁3个月 无基础',
           wechatNote: '爱死的鱼',
           // 上课信息
+          landing: '2',
           participate: '3',
           end: '4',
           works: '5',
           review: '6',
+          listen: '7',
           // 关联物流
           logisticsNum: '5',
           logisticsState: '最近一次已发货',
@@ -95,10 +112,12 @@ export default {
           age: '2岁3个月 无基础',
           wechatNote: '爱死的鱼',
           // 上课信息
+          landing: '2',
           participate: '3',
           end: '4',
           works: '5',
           review: '6',
+          listen: '7',
           // 关联物流
           logisticsNum: '5',
           logisticsState: '最近一次已发货',
@@ -114,10 +133,12 @@ export default {
           age: '2岁3个月 无基础',
           wechatNote: '爱死的鱼',
           // 上课信息
+          landing: '2',
           participate: '3',
           end: '4',
           works: '5',
           review: '6',
+          listen: '7',
           // 关联物流
           logisticsNum: '5',
           logisticsState: '最近一次已发货',
@@ -133,10 +154,12 @@ export default {
           age: '2岁3个月 无基础',
           wechatNote: '爱死的鱼',
           // 上课信息
+          landing: '2',
           participate: '3',
           end: '4',
           works: '5',
           review: '6',
+          listen: '7',
           // 关联物流
           logisticsNum: '5',
           logisticsState: '最近一次已发货',
@@ -152,10 +175,12 @@ export default {
           age: '2岁3个月 无基础',
           wechatNote: '爱死的鱼',
           // 上课信息
+          landing: '2',
           participate: '3',
           end: '4',
           works: '5',
           review: '6',
+          listen: '7',
           // 关联物流
           logisticsNum: '5',
           logisticsState: '最近一次已发货',
@@ -171,10 +196,54 @@ export default {
           age: '2岁3个月 无基础',
           wechatNote: '爱死的鱼',
           // 上课信息
+          landing: '2',
           participate: '3',
           end: '4',
           works: '5',
           review: '6',
+          listen: '7',
+          // 关联物流
+          logisticsNum: '5',
+          logisticsState: '最近一次已发货',
+          // 状态
+          course: '已体验课',
+          addBuddy: '已加好友',
+          wechatGroup: '已进微信群'
+        },
+        {
+          // 基本信息
+          img: 'el-icon-user',
+          phone: '15133266546',
+          age: '2岁3个月 无基础',
+          wechatNote: '爱死的鱼',
+          // 上课信息
+          landing: '2',
+          participate: '3',
+          end: '4',
+          works: '5',
+          review: '6',
+          listen: '7',
+          // 关联物流
+          logisticsNum: '5',
+          logisticsState: '最近一次已发货',
+          // 状态
+          course: '已体验课',
+          addBuddy: '已加好友',
+          wechatGroup: '已进微信群'
+        },
+        {
+          // 基本信息
+          img: 'el-icon-user',
+          phone: '15133266546',
+          age: '2岁3个月 无基础',
+          wechatNote: '爱死的鱼',
+          // 上课信息
+          landing: '2',
+          participate: '3',
+          end: '4',
+          works: '5',
+          review: '6',
+          listen: '7',
           // 关联物流
           logisticsNum: '5',
           logisticsState: '最近一次已发货',
@@ -194,19 +263,28 @@ export default {
 .information {
   &-img {
     line-height: 70px;
-    width: 20px;
+    width: 70px;
     float: left;
+    text-align: center;
+    border: 1px solid #cccccc;
+    margin: 0 3px 0 0;
   }
   &-right {
     float: left;
+    width: 140px;
     .wechatnote {
-      color: #cccccc;
+      color: #bbbbbb;
+      span {
+        color: #606266;
+      }
     }
   }
 }
 // 上课信息
 .haveclass {
   &-content {
+    float: left;
+    margin: 0 5px 0 0;
     span {
       color: #409eff;
     }
