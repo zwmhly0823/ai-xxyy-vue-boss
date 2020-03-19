@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-13 16:53:41
  * @LastEditors: zhubaodong
- * @LastEditTime: 2020-03-19 19:12:08
+ * @LastEditTime: 2020-03-19 22:11:08
  -->
 <template>
   <div class="right-container">
@@ -25,7 +25,7 @@
             <span class="text-icons">{{ item.state }}</span>
           </div>
           <div class="info">
-            <span>学员:60</span>
+            <span>学员:{{ item.pre_enroll }}</span>
             <span
               >辅导老师:{{
                 item.teacher.nickname || item.teacher.realname
@@ -33,11 +33,11 @@
             >
             <span>辅导老师微信: {{ item.teacher_wx }}</span>
             <span style="margin-right:0px">
-              <span>01-23开班</span>
+              <span>{{ item.formatCtime }}开班</span>
               <span>02-16结课</span>
             </span>
             <span style="margin-right:0px">
-              <span>01-20</span>
+              <span>{{ item.formatCtime }}</span>
               <span>19:20:45创建</span>
             </span>
           </div>
@@ -58,12 +58,20 @@
             <span>昨日{{ item.statictis.yestoday_order }}</span>
           </div>
         </div>
-        <div class="body-boxCenter">
+        <div class="body-boxCenter" v-show="item.team_type == 0">
           <div class="Conversion-title">累计转化率</div>
-          <div class="Conversion-number">15.7</div>
+          <div class="Conversion-number">
+            {{ item.allTrans == 'NaN' ? 0 : item.allTrans }}
+          </div>
           <div class="Conversion-count">
-            <span>今日1%</span>
-            <span>昨日3%</span>
+            <span
+              >今日{{ item.todayTrans == 'NaN' ? 0 : item.todayTrans }}%</span
+            >
+            <span
+              >昨日{{
+                item.yestodayTrans == 'NaN' ? 0 : item.yestodayTrans
+              }}%</span
+            >
           </div>
         </div>
         <div class="body-boxRight">
@@ -148,7 +156,6 @@ export default {
   computed: {},
   watch: {
     classId(vals) {
-      console.log(vals.classId.id, 'vals')
       this.getClassTeacher(vals.classId.id)
     }
   },
@@ -194,23 +201,44 @@ export default {
           }
         })
         .then((res) => {
+          console.log(res.data.detail.team_state, 'res.data.detail.team_state')
           if (Number(res.data.detail.team_state) === 0) {
             res.data.detail.state = '待开课'
           } else if (Number(res.data.detail.team_state) === 1) {
             res.data.detail.state = '开课中'
-          } else if (Number(res.data.deatil.team_state) === 2) {
+          } else if (Number(res.data.detail.team_state) === 2) {
             res.data.detail.state = '已结课'
           } else {
             res.data.detail.state = '今日开课'
           }
+          console.log(
+            this.classId,
+            this.classId.week,
+            this.classId.formatCtime,
+            this.classId.enrolled,
+            'seeek'
+          )
+          res.data.detail.todayTrans = (
+            res.data.detail.statictis.today_order / this.classId.enrolled
+          ).toFixed(2)
+          res.data.detail.yestodayTrans = (
+            res.data.detail.statictis.yestoday_order / this.classId.enrolled
+          ).toFixed(2)
+          res.data.detail.allTrans = (
+            res.data.detail.statictis.order_all / this.classId.enrolled
+          ).toFixed(2)
+
+          res.data.detail.week = this.classId.classId.week
+          res.data.detail.formatCtime = this.classId.classId.formatCtime
+          res.data.detail.pre_enroll = this.classId.classId.pre_enroll
           this.classMessage = res.data
           // this.classMessage2 = res.data
-          console.log(
-            this.classMessage,
-            this.classMessage.statictis,
-            res.data,
-            'res'
-          )
+          // console.log(
+          //   this.classMessage,
+          //   this.classMessage.statictis,
+          //   res.data,
+          //   'res'
+          // )
         })
     }
   },
