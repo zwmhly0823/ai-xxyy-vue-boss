@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-13 16:53:33
  * @LastEditors: zhubaodong
- * @LastEditTime: 2020-03-17 14:34:02
+ * @LastEditTime: 2020-03-18 22:43:30
  -->
 <template>
   <div class="center-container">
@@ -17,44 +17,92 @@
       </span>
     </div>
     <el-scrollbar wrap-class="scrollbar-wrapper" style="flex: 1;">
-      <div class="container" style="marginTop:10px">
-        <div v-for="o in 10" :key="o" class="cycle-box">
+      <ul
+        class="infinite-list container"
+        style="marginTop:10px;overflow:auto"
+        v-infinite-scroll="load"
+      >
+        <li
+          v-for="item in showClassData.datas"
+          :key="item.id"
+          class="infinite-list-item cycle-box"
+          @click="clickHandler(item)"
+        >
           <el-card class="box-card" shadow="hover">
             <div class="clcle-header">
-              <span>80期S1-3班</span>
-              <span class="text-icons">W1D1</span>
+              <span>{{ item.team_name }}</span>
+              <span class="text-icons">{{ item.week }}</span>
             </div>
             <div class="clcle-info">
               <span>
                 <i class="el-icon-school"></i>
-                60
+                {{ item.pre_enroll }}
               </span>
               <span>
                 <i class="el-icon-user"></i>
-                洋洋老师
+                {{ item.teacher.realname }}
               </span>
               <span>
                 <i class="el-icon-date"></i>
-                0120-0210
+                {{ item.formatCtime }}-0210
               </span>
             </div>
           </el-card>
-        </div>
-      </div>
+        </li>
+      </ul>
     </el-scrollbar>
   </div>
 </template>
 
 <script>
+import dayjs from 'dayjs'
+
 export default {
-  props: [],
+  props: {
+    classData: {
+      type: Object,
+      default: () => ({})
+    }
+  },
   components: {},
   data() {
     return {}
   },
-  computed: {},
+  computed: {
+    /**
+     * 班级列表展示数据
+     */
+    showClassData() {
+      const datas =
+        this.classData.teamStatusPage &&
+        this.classData.teamStatusPage.content.map((item) => {
+          // 格式化开课时间
+          item.formatCtime = dayjs
+            .unix(Number(item.ctime) / 1000)
+            .format('MMDD')
+          return item
+        })
+      //!  分页数据
+      // const pageData = {
+      //   totalElements:
+      //     this.classData.teamStatusPage &&
+      //     this.classData.teamStatusPage.totalElements,
+      //   totalPages:
+      //     this.classData.teamStatusPage &&
+      //     this.classData.teamStatusPage.totalPages
+      // }
+      return { datas }
+    }
+  },
   watch: {},
-  methods: {},
+  methods: {
+    clickHandler(data) {
+      this.$emit('change', data.id)
+    },
+    load() {
+      console.log('a')
+    }
+  },
   created() {},
   mounted() {}
 }
@@ -82,6 +130,8 @@ export default {
     }
   }
   .container {
+    list-style: none;
+    padding-left: 0;
     .cycle-box {
       .box-card {
         margin-top: 5px;

@@ -7,6 +7,8 @@
  * @Description: 全局公共方法，添加或改动及时全员通知。 注释一定要写详细！
  */
 
+import dayjs from 'dayjs'
+
 /**
  * 字符串 小驼峰转连接线
  * @param {string} str
@@ -33,4 +35,17 @@ export function param2Obj(url) {
         .replace(/\+/g, ' ') +
       '"}'
   )
+}
+
+/**
+ * 格式化时间戳
+ * @str: 时间戳 @type: String 'd'：天 'm':分 's': 秒
+ */
+export function formatData(str, type = 'd') {
+  if (!str) return ''
+  let ft = 'YYYY-MM-DD'
+  if (type !== 'd') {
+    ft = type === 'm' ? 'YYYY-MM-DD HH:mm' : 'YYYY-MM-DD HH:mm:ss'
+  }
+  return dayjs.unix(Number(str) / 1000).format(ft)
 }
