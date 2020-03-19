@@ -106,6 +106,15 @@ module.exports = {
         pathRewrite: {
           '^/data': '/data'
         }
+      },
+      '/graphql': {
+        target: 'http://47.98.38.59:3401',
+        changeOrigin: true,
+        ws: true,
+        secure: false,
+        pathRewrite: {
+          '^/graphql': ''
+        }
       }
     }
   }

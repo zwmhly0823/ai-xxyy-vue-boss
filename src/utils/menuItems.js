@@ -2,8 +2,8 @@
  * @Author: YangJiyong
  * @Email: yangjiyong@meishubao.com
  * @Date: 2019-12-26 17:13:38
- * @Last Modified by: YangJiyong
- * @Last Modified time: 2020-03-13 11:55:40
+ * @Last Modified by: chengweihua
+ * @Last Modified time: 2020-03-19 15:06:33
  * @Description: (顶部)模块导航 map - 显示对应名称
  * 如果 `src/pages/`下的模板名称是 小骆峰 ，link改为 中线 - 连接
  * TODO: 动态设置
@@ -64,4 +64,32 @@ function getMenuText(link) {
   return menu[0] ? menu[0].text : ''
 }
 
-module.exports = { getMenuText, menuItems }
+/**
+ * 通过班级的当前课程计算当前开课周数及节次
+ **/
+function GetAgeByBrithday(birth) {
+  var age = 0
+  var month = 0
+  var today = new Date()
+  var todayYear = today.getFullYear()
+  var todayMonth = today.getMonth() + 1
+
+  const birthday = new Date(Number(birth) * 1000)
+  const birthdayYear = birthday.getFullYear()
+  const birthdayMonth = birthday.getMonth() + 1
+
+  if (today.getTime() < birthday.getTime()) {
+    console.log('无法计算')
+  } else {
+    age = todayYear - birthdayYear
+
+    if (todayMonth <= birthdayMonth) {
+      month = todayMonth - birthdayMonth + 12
+      age--
+    } else {
+      month = todayMonth - birthdayMonth
+    }
+    return age + '岁' + month + '个月'
+  }
+}
+module.exports = { getMenuText, menuItems, GetAgeByBrithday }
