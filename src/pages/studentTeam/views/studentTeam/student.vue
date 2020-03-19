@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-13 15:24:11
  * @LastEditors: zhubaodong
- * @LastEditTime: 2020-03-19 11:38:49
+ * @LastEditTime: 2020-03-19 20:08:47
  -->
 <template>
   <el-row type="flex" class="app-main height student-team">
@@ -19,7 +19,11 @@
     </el-col>
     <el-col class="student-team-center">
       <div class="grid-content">
-        <center-bar @change="getRightBarSelect" :classData="classListData" />
+        <center-bar
+          @change="getCenterBarSelect"
+          @scrollHandler="infiniteScroll"
+          :classData="classListData"
+        />
       </div>
     </el-col>
     <el-col class="student-team-right ">
@@ -51,7 +55,9 @@ export default {
       systemStatusList: {}, // 左栏 系统课状态（数量）
       classStatus: [0, 1, 2], // 选中的课程状态值（传入中栏，获取班级列表）
       classListData: {}, // 中栏 班级列表
-      classId: '' // 班级Id
+      classId: '', // 班级Id
+      scrollStatus: null,
+      type: 0
     }
   },
   computed: {
@@ -60,10 +66,12 @@ export default {
       if (!this.classId) {
         const data =
           this.classListData.teamStatusPage &&
-          this.classListData.teamStatusPage.content[0].id
-        return data
+          this.classListData.teamStatusPage.content[0]
+        // &&
+        // this.classListData.teamStatusPage.content[0].id
+        return { classId: data, type: this.type }
       }
-      return this.classId
+      return { classId: this.classId, type: this.type }
     }
   },
   methods: {
@@ -73,6 +81,8 @@ export default {
      */
     async getLeftBarSelect(data) {
       if (!data.code) return
+      this.scrollStatus = data.code
+      this.type = data.types
       // 状态为全部时 classStatus为[0,1,2]
       if (data.code === '_all') {
         this.classStatus = [0, 1, 2]
@@ -86,9 +96,16 @@ export default {
      * 中栏回调函数
      * @param(回调数据) 获得选中内容
      */
-    getRightBarSelect(data) {
-      console.log(data)
-      this.classId = data
+    getCenterBarSelect(data) {
+      this.classId = data.datas
+      this.type = data.type
+    },
+    /**
+     * 中栏下拉滚动
+     * @param(type,page,size) 课程类型 页码 数量
+     */
+    infiniteScroll(data) {
+      this.getClassList(data.type, data.page)
     },
     /**
      * 获取体验课状态列表
@@ -100,9 +117,9 @@ export default {
         .get('/graphql/team', {
           params: {
             query: `{
-              teamStatusCount(field: "team_state",query:${JSON.stringify(
-                queryParams
-              )}) {
+              teamStatusCount(field: "team_state",team_type:${data},query:${JSON.stringify(
+              queryParams
+            )}) {
                 code
                 value
                 name
@@ -123,13 +140,15 @@ export default {
      * 获取班级列表
      * @param(team_type) 0为体验课 1为系统课
      */
-    async getClassList(data = 0) {
-      const queryParams = `{"bool":{"must":[{"terms":{"team_state":[${this.classStatus}]}},{"term":{"team_type":${data}}}]}}`
+    async getClassList(type = 0, page = 1) {
+      const queryParams = `{"bool":{"must":[{"terms":{"team_state":[${this.classStatus}]}},{"term":{"team_type":${type}}}]}}`
       await axios
         .get('/graphql/team', {
           params: {
             query: `{
-              teamStatusPage(query:${JSON.stringify(queryParams)},page:1){
+              teamStatusPage(query:${JSON.stringify(
+                queryParams
+              )},page:${page},size:20){
                 empty
                 first
                 last
@@ -161,7 +180,13 @@ export default {
           }
         })
         .then((res) => {
-          this.classListData = res.data
+          res.data.type = type
+          res.data.scrollStatus = `${this.scrollStatus}+${type}`
+          // this.classListData = res.data
+          this.classListData = {
+            ...this.classListData,
+            ...res.data
+          }
         })
     }
   },
@@ -172,9 +197,7 @@ export default {
     await this.getExperienceStatusList(1)
     // 请求班级列表
     await this.getClassList()
-    console.log(this.classIdData, 'classIdData')
-  },
-  mounted() {}
+  }
 }
 </script>
 <style lang="scss" scoped>
