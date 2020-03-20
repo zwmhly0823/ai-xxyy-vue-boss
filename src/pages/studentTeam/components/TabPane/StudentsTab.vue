@@ -1,13 +1,17 @@
 <template>
   <div class="dataStyle">
-    <el-table :data="tableData">
-      <el-table-column fixed label="基本信息" class="information" width="250px">
+    <el-table
+      :data="tableData"
+      :header-cell-style="{ fontSize: '12px', color: '#666' }"
+    >
+      <el-table-column fixed label="基本信息" class="information" width="280px">
         <template slot-scope="scope">
           <img class="information-img" :src="scope.row.head" alt="" />
           <div class="information-right">
             <div class="phone">{{ scope.row.mobile }}</div>
             <div class="age">
-              {{ scope.row.sex }} {{ scope.row.birthday }}
+              {{ scope.row.sex }} · {{ scope.row.birthday }}
+              <span v-show="scope.row.base_painting_text">·</span>
               {{ scope.row.base_painting_text }}
             </div>
             <!-- <div class="wechatnote">
@@ -16,8 +20,8 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="上课信息" class="haveclass" width="140px">
-        <template slot-scope="scope">
+      <el-table-column label="上课信息" class="haveclass">
+        <div slot-scope="scope" class="haveclass-box">
           <div class="haveclass-content">
             登陆:
             <span>{{ scope.row.statistics.login }}</span>
@@ -42,14 +46,11 @@
             听点评:
             <span>{{ scope.row.statistics.listen_comment }}</span>
           </div>
-        </template>
+        </div>
       </el-table-column>
       <el-table-column label="关联物流" class="logistics">
         <template slot-scope="scope">
-          <span class="text333"> 全部物流:</span>
-          <span class="logistics-num">
-            {{ scope.row.express.total }}
-          </span>
+          <div class="logistics-num">{{ scope.row.express.total }}</div>
           <div class="text333">{{ scope.row.express.status }}</div>
         </template>
       </el-table-column>
@@ -180,7 +181,9 @@ export default {
               ele.sex = '保密'
             }
             // 年龄转换
-            ele.birthday = GetAgeByBrithday(ele.birthday)
+            ele.birthday !== '0'
+              ? (ele.birthday = GetAgeByBrithday(ele.birthday))
+              : (ele.birthday = '-')
             // 是否添加微信群  0/未加  1/已加
             const addedGroup = ele.wechat_status.added_group
             if (addedGroup === 0) {
@@ -255,14 +258,16 @@ export default {
     height: 50px;
     float: left;
     text-align: center;
-    border: 1px solid #e5e5e5;
+    border: 1px solid #cccccc;
     margin: 0 10px 0 0;
-    border-radius: 4px;
   }
   &-right {
     float: left;
     width: 140px;
     color: #333333;
+    .age {
+      color: #666;
+    }
     .wechatnote {
       span {
         color: #606266;
@@ -272,12 +277,15 @@ export default {
 }
 // 上课信息
 .haveclass {
-  &-content {
-    color: #333333;
-    float: left;
-    margin: 0 5px 0 0;
-    span {
-      color: #2461b9;
+  &-box {
+    width: 140px;
+    .haveclass-content {
+      color: #333333;
+      float: left;
+      margin: 0 5px 0 0;
+      span {
+        color: #2461b9;
+      }
     }
   }
 }

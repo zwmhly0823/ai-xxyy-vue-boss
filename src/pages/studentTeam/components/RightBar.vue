@@ -24,10 +24,17 @@
               item.team_type == 0 ? '体验课' : '系统课'
             }}</span>
             <span class="text-iconsB">{{ item.week }}</span>
-            <span class="text-iconsR">{{ item.state }}</span>
+            <span
+              :class="[
+                Number(item.team_state) === 2 || Number(item.team_state) === 0
+                  ? 'text-iconsGray'
+                  : 'text-iconsR'
+              ]"
+              >{{ item.state }}</span
+            >
           </div>
           <div class="info">
-            <span>学员:{{ item.pre_enroll }}</span>
+            <span>学员:{{ item.enrolled }}</span>
             <span
               >辅导老师:{{
                 item.teacher.nickname || item.teacher.realname
@@ -35,11 +42,10 @@
             >
             <span>辅导老师微信: {{ item.teacher_wx }}</span>
             <span style="margin-right:0px">
-              <span>{{ item.formatCtime }}开班</span>
-              <span>02-16结课</span>
+              <span>开课~结课 &nbsp;{{ item.formatCtime }}~0516</span>
             </span>
             <span style="margin-right:0px">
-              <span>{{ item.timebegin }}创建</span>
+              <span>创建 &nbsp;{{ item.timebegin }}</span>
             </span>
           </div>
         </div>
@@ -164,15 +170,18 @@ export default {
   },
   data() {
     return {
-      classMessage: {}
+      classMessage: {},
+      cout: 0
     }
   },
   computed: {},
   watch: {
     classId(vals) {
       if (vals.classId) {
-        // this.classMessage = ''
         this.getClassTeacher(vals.classId.id)
+        console.log(vals, this.cout++, 'vals')
+      } else {
+        this.classMessage = ''
       }
     }
   },
@@ -189,6 +198,7 @@ export default {
   team_state
   team_type
   teacher_wx
+  enrolled
   teacher{
     id
     nickname
@@ -229,13 +239,13 @@ export default {
           } else {
             res.data.detail.state = '今日开课'
           }
-          console.log(
-            this.classId,
-            this.classId.week,
-            this.classId.formatCtime,
-            this.classId.classId.enrolled,
-            'seeek'
-          )
+          // console.log(
+          //   this.classId,
+          //   this.classId.week,
+          //   this.classId.formatCtime,
+          //   this.classId.classId.enrolled,
+          //   'seeek'
+          // )
 
           res.data.detail.todayTrans =
             res.data.detail.statictis.today_order /
@@ -253,7 +263,7 @@ export default {
             .format('MM-DD  hh:mm:ss')
           res.data.detail.formatCtime = dayjs
             .unix(Number(this.classId.classId.ctime) / 1000)
-            .format('MM-DD')
+            .format('MMDD')
           res.data.detail.onetime = dayjs
             .unix(Number(this.classId.classId.ctime) / 1000)
             .format('YYMMDD')
@@ -313,6 +323,12 @@ export default {
             padding: 2px 6px;
             color: #ff554d;
             background: #ffe7e5;
+          }
+          .text-iconsGray {
+            margin-left: 8px;
+            padding: 2px 6px;
+            color: #808080;
+            background: #ededed;
           }
         }
         .info {
@@ -436,15 +452,15 @@ export default {
   .el-card__body {
     padding: 15px;
   }
-}
-.header-right {
-  white-space: nowrap;
-  .el-card__body {
-    font-size: 14px;
-    padding: 10px 15px;
-    span {
-      cursor: pointer;
-    }
-  }
+  // }
+  // .header-right {
+  //   white-space: nowrap;
+  //   .el-card__body {
+  //     font-size: 14px;
+  //     padding: 10px 15px;
+  //     span {
+  //       cursor: pointer;
+  //     }
+  // }
 }
 </style>
