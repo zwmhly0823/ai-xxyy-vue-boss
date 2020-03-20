@@ -176,21 +176,12 @@ export default {
     id
     nickname
     weixin_ids
-<<<<<<< HEAD
      weichat_num
     ctime
     realname
           }
   statictis {
        today_order
-=======
-    weichat_num
-    ctime
-    realname
-  }
-  statictis {
-        today_order
->>>>>>> 176ba76c2a55ed787de424bfe4165ccaf9454148
         yesterday_order
         order_all
         wait_sent
@@ -232,11 +223,7 @@ export default {
           res.data.detail.todayTrans = (
             res.data.detail.statictis.today_order / this.classId.enrolled
           ).toFixed(2)
-<<<<<<< HEAD
           res.data.detail.yestodayTrans = (
-=======
-          res.data.detail.yesterdayTrans = (
->>>>>>> 176ba76c2a55ed787de424bfe4165ccaf9454148
             res.data.detail.statictis.yesterday_order / this.classId.enrolled
           ).toFixed(2)
           res.data.detail.allTrans = (
