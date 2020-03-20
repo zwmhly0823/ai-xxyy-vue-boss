@@ -1,9 +1,17 @@
+<!--
+ * @Descripttion: 
+ * @version: 
+ * @Author: zhubaodong
+ * @Date: 2020-03-19 20:50:40
+ * @LastEditors: zhubaodong
+ * @LastEditTime: 2020-03-20 17:09:46
+ -->
 <template>
   <div class="tab-box">
     <el-tabs
       v-model="activeName"
       @tab-click="handleClick"
-      type="border-card"
+      type="card"
       class="box-shadow-0"
     >
       <el-tab-pane label="学员" name="students">
@@ -63,5 +71,39 @@ export default {
 .tab-box {
   padding: 0;
   flex: 1;
+}
+</style>
+<style lang="scss">
+.tab-box {
+  // .el-table__header {
+  //   border-bottom: 1px solid #e6e6e6;
+  // }
+  .el-tabs--border-card > .el-tabs__content {
+    padding: 0px;
+  }
+  .el-table_1_column_1 {
+    .cell {
+      margin-left: 15px;
+    }
+  }
+  .el-table_1_column_4 {
+    .cell {
+      margin-right: 15px;
+    }
+  }
+  .el-tabs--card > .el-tabs__header .el-tabs__nav {
+    border: none;
+    border-bottom: none;
+    border-radius: 4px 4px 0 0;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+  }
+  .el-tabs__nav-scroll {
+    background: #f5f7fa;
+  }
+  .el-tabs--card > .el-tabs__header .el-tabs__item.is-active {
+    background: #fff;
+    border: none;
+  }
 }
 </style>

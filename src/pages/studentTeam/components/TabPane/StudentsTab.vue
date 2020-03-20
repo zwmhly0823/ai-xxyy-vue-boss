@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="dataStyle">
     <el-table :data="tableData">
       <el-table-column fixed label="基本信息" class="information" width="250px">
         <template slot-scope="scope">
@@ -46,14 +46,14 @@
       <el-table-column label="关联物流" class="logistics">
         <template slot-scope="scope">
           <div class="logistics-num">{{ scope.row.express.total }}</div>
-          <div>{{ scope.row.express.status }}</div>
+          <div class="text333">{{ scope.row.express.status }}</div>
         </template>
       </el-table-column>
-      <el-table-column label="状态">
+      <el-table-column label="状态" class="status-style">
         <template slot-scope="scope">
-          <div>{{ scope.row.status }}</div>
-          <div>{{ scope.row.wechat_status.added_wechat }}</div>
-          <div>{{ scope.row.wechat_status.added_group }}</div>
+          <div class="text333">{{ scope.row.status }}</div>
+          <div class="text333">{{ scope.row.wechat_status.added_wechat }}</div>
+          <div class="text333">{{ scope.row.wechat_status.added_group }}</div>
         </template>
       </el-table-column>
       <!-- <el-table-column label="标签" class="thelabel"></el-table-column> -->
@@ -223,8 +223,8 @@ export default {
   &-right {
     float: left;
     width: 140px;
+    color: #333333;
     .wechatnote {
-      color: #bbbbbb;
       span {
         color: #606266;
       }
@@ -234,20 +234,33 @@ export default {
 // 上课信息
 .haveclass {
   &-content {
+    color: #333333;
     float: left;
     margin: 0 5px 0 0;
     span {
-      color: #409eff;
+      color: #2461b9;
     }
   }
 }
 //关联物流
 .logistics {
   &-num {
-    color: #409eff;
+    color: #2461b9;
   }
 }
 .block {
   text-align: center;
+}
+.text333 {
+  color: #333333 !important;
+}
+</style>
+<style lang="scss">
+.el-table thead {
+  color: #666666;
+  font-weight: normal;
+}
+.hover-row {
+  background: #ebebeb !important;
 }
 </style>
