@@ -108,7 +108,7 @@ module.exports = {
         }
       },
       '/graphql': {
-        target: 'http://47.98.38.59:3401',
+        target: 'http://47.98.38.59:43401', // 测试
         changeOrigin: true,
         ws: true,
         secure: false,

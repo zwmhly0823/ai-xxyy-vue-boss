@@ -68,7 +68,7 @@
         </el-form-item>
         <el-button
           type="primary"
-          style="width:100%;margin-bottom:30px;"
+          style="width:100%;margin:30px atuo; height: 50px;"
           @click.native.prevent="pwdLoginHandle('pwdLoginForm')"
           >登录</el-button
         >
@@ -102,17 +102,12 @@
               <i class="el-icon-lock"></i>
             </span>
             <el-input
-              :type="passwordType"
               v-model="codeLoginForm.code"
               placeholder="验证码"
               name="password"
               auto-complete="on"
               @keyup.enter.native="pwdLoginHandle('codeLoginForm')"
             />
-            <span class="show-pwd" @click="showPwd">
-              <i class="el-icon-view" v-if="passwordType"></i>
-              <i class="el-icon-key" v-else></i>
-            </span>
           </el-form-item>
           <div class="button-timer">
             <el-button
@@ -133,7 +128,7 @@
 
         <el-button
           type="primary"
-          style="width:100%;margin-bottom:30px;"
+          style="width:100%;margin:30px atuo; height: 50px;"
           @click.native.prevent="pwdLoginHandle('codeLoginForm')"
           >登录</el-button
         >
@@ -286,7 +281,7 @@ export default {
 
         if (getToken && getToken.token) {
           setToken(getToken.token)
-          location.href = `${path}/#/`
+          location.href = `${path}#/`
         }
 
         // 以服务的方式调用的 Loading 需要异步关闭
@@ -385,7 +380,11 @@ $light_gray: #eee;
         flex: 1;
       }
       .button-timer {
-        margin: 5px 0 0 20px;
+        height: 52px;
+        margin: 0px 0 0 20px;
+        button {
+          height: 100%;
+        }
       }
     }
   }

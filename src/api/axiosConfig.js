@@ -8,6 +8,7 @@
  */
 import axios from './axios'
 import { getToken } from '@/utils/auth'
+import { baseUrl } from '@/utils/index'
 
 export default {
   // 判断是否需要token
@@ -16,7 +17,7 @@ export default {
     const needToken = location.href.indexOf('login') === -1
 
     if (needToken && !token) {
-      location.href = `/login/#/`
+      location.href = `${baseUrl}login/#/`
       return 0
     }
     return 1
