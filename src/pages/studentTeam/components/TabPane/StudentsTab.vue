@@ -58,15 +58,15 @@
       </el-table-column>
       <!-- <el-table-column label="标签" class="thelabel"></el-table-column> -->
     </el-table>
-    <!-- <div class="block">
+    <div class="block">
       <el-pagination
         layout="prev, pager, next"
-        :total="4"
+        :total="totalPages"
         :page-size="1"
         @current-change="handleSizeChange"
       >
       </el-pagination>
-    </div> -->
+    </div>
   </div>
 </template>
 <script>
@@ -81,6 +81,7 @@ export default {
   },
   data() {
     return {
+      totalPages: 1,
       tableData: [],
       statusData: []
     }
@@ -88,9 +89,10 @@ export default {
   created() {},
   watch: {
     classId(value) {
-      console.log(value, 'value')
-      this.getstatusList()
-      this.studentsList()
+      if (value.classId) {
+        this.getstatusList()
+        this.studentsList()
+      }
     }
   },
   methods: {
@@ -147,8 +149,8 @@ export default {
         }`
         })
         .then((res) => {
+          this.totalPages = res.data.teamUserListPage.totalPages * 1
           const _data = res.data.teamUserListPage.content
-          console.log(_data, '_data')
           _data.forEach((ele) => {
             ele.birthday = GetAgeByBrithday(ele.birthday)
             // 是否添加微信群  0/未加  1/已加
@@ -165,7 +167,7 @@ export default {
             } else if (addedWechat === 1) {
               ele.wechat_status.added_wechat = '已加好友'
             }
-            //  物流状态  1/最后一次代发货  2/最后一次已发货  3/最后一次已经完成
+            //  物流状态  0/最后一次已创建 1/最后一次代发货  2/最后一次已发货  3/最后一次已经完成 4/最后一次签收失败 5/最后一次已退货
             const status = ele.express.status
             if (status === 0) {
               ele.express.status = '最后一次已创建'
@@ -204,8 +206,8 @@ export default {
         .then((res) => {
           this.statusList = res.data.userFollowStateList
         })
-    }
-    // handleSizeChange(val) {}
+    },
+    handleSizeChange(val) {}
   }
 }
 </script>

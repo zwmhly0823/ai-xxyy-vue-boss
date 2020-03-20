@@ -192,6 +192,7 @@ export default {
           }
         })
         .then((res) => {
+          console.log(res, 'res')
           if (Number(res.data.detail.team_state) === 0) {
             res.data.detail.state = '待开课'
           } else if (Number(res.data.detail.team_state) === 1) {
