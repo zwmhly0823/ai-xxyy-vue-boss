@@ -1,13 +1,17 @@
 <template>
   <div class="dataStyle">
-    <el-table :data="tableData">
+    <el-table
+      :data="tableData"
+      :header-cell-style="{ fontSize: '12px', color: '#666' }"
+    >
       <el-table-column fixed label="基本信息" class="information" width="250px">
         <template slot-scope="scope">
           <img class="information-img" :src="scope.row.head" alt="" />
           <div class="information-right">
             <div class="phone">{{ scope.row.mobile }}</div>
             <div class="age">
-              {{ scope.row.sex }} {{ scope.row.birthday }}
+              {{ scope.row.sex }} · {{ scope.row.birthday }}
+              <span v-show="scope.row.base_painting_text">·</span>
               {{ scope.row.base_painting_text }}
             </div>
             <!-- <div class="wechatnote">
@@ -263,6 +267,9 @@ export default {
     float: left;
     width: 140px;
     color: #333333;
+    .age {
+      color: #666;
+    }
     .wechatnote {
       span {
         color: #606266;

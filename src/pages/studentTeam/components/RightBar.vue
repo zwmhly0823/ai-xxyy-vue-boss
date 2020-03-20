@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-13 16:53:41
  * @LastEditors: zhubaodong
- * @LastEditTime: 2020-03-20 18:07:57
+ * @LastEditTime: 2020-03-20 18:37:03
  -->
 <template>
   <div class="right-container">
@@ -283,7 +283,7 @@ export default {
 
 @font-face {
   font-family: 'number_font';
-  src: url('~@/assets/fonts/AlibabaSans-Medium.otf');
+  src: url('~@/assets/fonts/TG-TYPE-Bold.otf');
 } //引入本地字体数字文件
 
 .right-container {
@@ -357,6 +357,7 @@ export default {
           flex: 1;
         }
         .order-number {
+          color: #4d4d4d;
           font-size: 24px;
           margin-bottom: 10px;
           flex: 1;
@@ -377,6 +378,7 @@ export default {
         }
         .Conversion-number {
           font-size: 24px;
+          color: #4d4d4d;
           font-weight: 500;
           margin-bottom: 10px;
           font-family: 'number_font';
@@ -404,6 +406,7 @@ export default {
             align-items: center;
             div:nth-child(1) {
               font-family: 'number_font';
+              color: #4d4d4d;
               margin-bottom: 4px;
             }
           }
@@ -418,6 +421,7 @@ export default {
             align-items: center;
             div:nth-child(1) {
               font-family: 'number_font';
+              color: #4d4d4d;
               margin-bottom: 4px;
             }
           }
