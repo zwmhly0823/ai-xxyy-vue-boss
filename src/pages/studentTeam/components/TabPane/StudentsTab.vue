@@ -5,9 +5,10 @@
         <template slot-scope="scope">
           <img class="information-img" :src="scope.row.head" alt="" />
           <div class="information-right">
-            <div class="phone">{{ scope.row.ctime }}</div>
+            <div class="phone">{{ scope.row.mobile }}</div>
             <div class="age">
-              {{ scope.row.birthday }} {{ scope.row.base_painting_text }}
+              {{ scope.row.sex }} {{ scope.row.birthday }}
+              {{ scope.row.base_painting_text }}
             </div>
             <!-- <div class="wechatnote">
               微信备注:<span>{{ scope.row.wechatNote }}</span>
@@ -58,11 +59,12 @@
       </el-table-column>
       <!-- <el-table-column label="标签" class="thelabel"></el-table-column> -->
     </el-table>
+    <!-- 分页 -->
     <div class="block">
       <el-pagination
         layout="prev, pager, next"
-        :total="totalPages"
-        :page-size="1"
+        :page-count="totalPages"
+        :current-page="pageSize"
         @current-change="handleSizeChange"
       >
       </el-pagination>
@@ -74,6 +76,7 @@ import axios from '@/api/axios'
 import { GetAgeByBrithday } from '@/utils/menuItems'
 export default {
   props: {
+    // 班级传参
     classId: {
       type: Object,
       default: null
@@ -81,8 +84,13 @@ export default {
   },
   data() {
     return {
+      // 总页数
       totalPages: 1,
+      // 当前页数
+      pageSize: 1,
+      // 学员列表
       tableData: [],
+      // 用户状态列表
       statusData: []
     }
   },
@@ -96,11 +104,12 @@ export default {
     }
   },
   methods: {
+    // 学员列表
     studentsList() {
       axios
         .post('/graphql/team', {
           query: `{
-          teamUserListPage(type: ${this.classId.type}, team_id: "${this.classId.classId.id}") {
+          teamUserListPage(type: ${this.classId.type}, team_id: "${this.classId.classId.id}",page:${this.pageSize}) {
             empty
             first
             last
@@ -128,6 +137,7 @@ export default {
               base_painting
               base_painting_text
               team_id
+              mobile
               statistics {
                 login
                 complete_course
@@ -152,6 +162,18 @@ export default {
           this.totalPages = res.data.teamUserListPage.totalPages * 1
           const _data = res.data.teamUserListPage.content
           _data.forEach((ele) => {
+            // 性别 0/默认 1/男 2/女  3/保密
+            const sex = ele.sex
+            if (sex === '0') {
+              ele.sex = '-'
+            } else if (sex === '1') {
+              ele.sex = '男'
+            } else if (sex === '2') {
+              ele.sex = '女'
+            } else if (sex === '3') {
+              ele.sex = '保密'
+            }
+            // 年龄转换
             ele.birthday = GetAgeByBrithday(ele.birthday)
             // 是否添加微信群  0/未加  1/已加
             const addedGroup = ele.wechat_status.added_group
@@ -192,6 +214,7 @@ export default {
           this.tableData = _data
         })
     },
+    // 用户状态接口
     getstatusList() {
       axios
         .post('/graphql/user', {
@@ -207,7 +230,12 @@ export default {
           this.statusList = res.data.userFollowStateList
         })
     },
-    handleSizeChange(val) {}
+    // 点击分页
+    handleSizeChange(val) {
+      this.pageSize = val
+      this.getstatusList()
+      this.studentsList()
+    }
   }
 }
 </script>
@@ -220,7 +248,7 @@ export default {
     float: left;
     text-align: center;
     border: 1px solid #cccccc;
-    margin: 0 3px 0 0;
+    margin: 0 10px 0 0;
   }
   &-right {
     float: left;

@@ -3,8 +3,8 @@
  * @version:
  * @Author: zhubaodong
  * @Date: 2020-03-13 16:53:41
- * @LastEditors: zhubaodong
- * @LastEditTime: 2020-03-19 19:12:08
+ * @LastEditors: Shentong
+ * @LastEditTime: 2020-03-20 12:11:25
  -->
 <template>
   <div class="right-container">
@@ -17,28 +17,27 @@
       <div class="header">
         <div class="header-left">
           <div class="title">
-            <span>100202:{{ item.team_name }}</span>
+            <span>{{ item.onetime }}:{{ item.team_name }}</span>
             <span class="text-icons">{{
               item.team_type == 0 ? '体验课' : '系统课'
             }}</span>
-            <span class="text-icons">W1D1</span>
+            <span class="text-icons">{{ item.week }}</span>
             <span class="text-icons">{{ item.state }}</span>
           </div>
           <div class="info">
-            <span>学员:60</span>
+            <span>学员:{{ item.pre_enroll }}</span>
             <span
               >辅导老师:{{
                 item.teacher.nickname || item.teacher.realname
               }}</span
             >
-            <span>辅导老师微信:{{ item.teacher.weixin_ids }}</span>
+            <span>辅导老师微信: {{ item.teacher_wx }}</span>
             <span style="margin-right:0px">
-              <span>01-23开班</span>
+              <span>{{ item.formatCtime }}开班</span>
               <span>02-16结课</span>
             </span>
             <span style="margin-right:0px">
-              <span>01-20</span>
-              <span>19:20:45创建</span>
+              <span>{{ item.timebegin }}创建</span>
             </span>
           </div>
         </div>
@@ -55,15 +54,23 @@
           <div class="order-number">{{ item.statictis.order_all }}</div>
           <div class="order-count">
             <span>今日{{ item.statictis.today_order }}</span>
-            <span>昨日{{ item.statictis.yestoday_order }}</span>
+            <span>昨日{{ item.statictis.yesterday_order }}</span>
           </div>
         </div>
-        <div class="body-boxCenter">
+        <div class="body-boxCenter" v-show="item.team_type == 0">
           <div class="Conversion-title">累计转化率</div>
-          <div class="Conversion-number">15.7</div>
+          <div class="Conversion-number">
+            {{ item.allTrans == 'NaN' ? 0 : item.allTrans }}
+          </div>
           <div class="Conversion-count">
-            <span>今日1%</span>
-            <span>昨日3%</span>
+            <span
+              >今日{{ item.todayTrans == 'NaN' ? 0 : item.todayTrans }}%</span
+            >
+            <span
+              >昨日{{
+                item.yesterdayTrans == 'NaN' ? 0 : item.yesterdayTrans
+              }}%</span
+            >
           </div>
         </div>
         <div class="body-boxRight">
@@ -89,7 +96,7 @@
               <div>今日参课</div>
             </div>
             <div>
-              <div>{{ item.statictis.yestoday_add_class }}</div>
+              <div>{{ item.statictis.yesterday_add_class }}</div>
               <div>昨日参课</div>
             </div>
           </div>
@@ -99,7 +106,7 @@
               <div>今日完课</div>
             </div>
             <div>
-              <div>{{ item.statictis.yestody_comp_class }}</div>
+              <div>{{ item.statictis.yesterday_comp_class }}</div>
               <div>昨日完课</div>
             </div>
             <div>
@@ -107,7 +114,7 @@
               <div>今日作品</div>
             </div>
             <div>
-              <div>{{ item.statictis.yestoday_works }}</div>
+              <div>{{ item.statictis.yesterday_works }}</div>
               <div>昨日作品</div>
             </div>
             <div>
@@ -115,7 +122,7 @@
               <div>今日点评</div>
             </div>
             <div>
-              <div>{{ item.statictis.yestody_comment }}</div>
+              <div>{{ item.statictis.yesterday_comment }}</div>
               <div>昨日点评</div>
             </div>
           </div>
@@ -130,6 +137,7 @@
 <script>
 import TabBar from './TabPane/TabBar.vue'
 import axios from '@/api/axios'
+import dayjs from 'dayjs'
 export default {
   props: {
     classId: {
@@ -148,7 +156,6 @@ export default {
   computed: {},
   watch: {
     classId(vals) {
-      console.log(vals.classId.id, 'vals')
       this.getClassTeacher(vals.classId.id)
     }
   },
@@ -164,46 +171,79 @@ export default {
   team_name
   team_state
   team_type
+  teacher_wx
   teacher{
     id
     nickname
     weixin_ids
+     weichat_num
     ctime
+    realname
           }
   statictis {
-        today_order
-        yestoday_order
+       today_order
+        yesterday_order
         order_all
         wait_sent
         unadd_wechat
         unadd_group
         unlogin
         today_add_class
-        yestoday_add_class
+        yesterday_add_class
         tody_comp_class
-        yestody_comp_class
+        yesterday_comp_class
         tody_works
-        yestoday_works
+        yesterday_works
         tody_comment
-        yestody_comment
+        yesterday_comment
                }
                   }
                     }`
           }
         })
         .then((res) => {
-          console.log(res, 'res')
+          console.log(res.data.detail.team_state, 'res.data.detail.team_state')
           if (Number(res.data.detail.team_state) === 0) {
             res.data.detail.state = '待开课'
           } else if (Number(res.data.detail.team_state) === 1) {
             res.data.detail.state = '开课中'
-          } else if (Number(res.data.deatil.team_state) === 2) {
+          } else if (Number(res.data.detail.team_state) === 2) {
             res.data.detail.state = '已结课'
           } else {
             res.data.detail.state = '今日开课'
           }
+          console.log(
+            this.classId,
+            this.classId.week,
+            this.classId.formatCtime,
+            this.classId.enrolled,
+            'seeek'
+          )
+
+          res.data.detail.todayTrans = (
+            res.data.detail.statictis.today_order / this.classId.enrolled
+          ).toFixed(2)
+          res.data.detail.yesterdayTrans = (
+            res.data.detail.statictis.yesterday_order / this.classId.enrolled
+          ).toFixed(2)
+          res.data.detail.allTrans = (
+            res.data.detail.statictis.order_all / this.classId.enrolled
+          ).toFixed(2)
+
+          res.data.detail.week = this.classId.classId.week
+          res.data.detail.pre_enroll = this.classId.classId.pre_enroll
+          res.data.detail.timebegin = dayjs
+            .unix(Number(this.classId.classId.ctime) / 1000)
+            .format('MM-DD  hh:mm:ss')
+          res.data.detail.formatCtime = dayjs
+            .unix(Number(this.classId.classId.ctime) / 1000)
+            .format('MM-DD')
+          res.data.detail.onetime = dayjs
+            .unix(Number(this.classId.classId.ctime) / 1000)
+            .format('YYMMDD')
           this.classMessage = res.data
           // this.classMessage2 = res.data
+
           console.log(
             this.classMessage,
             this.classMessage.statictis,
@@ -212,6 +252,9 @@ export default {
           )
         })
     }
+  },
+  mounted() {
+    console.log(this.classId)
   }
 }
 </script>

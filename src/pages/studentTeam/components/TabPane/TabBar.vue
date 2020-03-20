@@ -44,11 +44,7 @@ export default {
       activeName: 'students'
     }
   },
-  watch: {
-    classId(value) {
-      console.log(value, 123213213)
-    }
-  },
+  watch: {},
   created() {
     console.log(this.classId, 'this.classId')
   },
