@@ -241,6 +241,8 @@ export default {
       this.currentPage = val
       this.getstatusList()
       this.studentsList()
+      var dom = document.getElementById('right-scroll')
+      dom.querySelector('.scrollbar-wrapper').scrollTo(0, 0)
     }
   }
 }
