@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-13 16:53:33
  * @LastEditors: zhubaodong
- * @LastEditTime: 2020-03-20 12:15:01
+ * @LastEditTime: 2020-03-20 17:34:48
  -->
 <template>
   <div class="center-container">
@@ -19,7 +19,6 @@
     <el-scrollbar wrap-class="scrollbar-wrapper" style="flex: 1;">
       <ul
         class="infinite-list container"
-        style="marginTop:10px;"
         v-infinite-scroll="load"
         infinite-scroll-distance="10px"
         infinite-scroll-disabled="disabled"
@@ -30,7 +29,7 @@
           class="infinite-list-item cycle-box"
           @click="clickHandler(item, index)"
         >
-          <el-card
+          <div
             :class="['box-card', heighLight == index ? 'hover-color' : '']"
             shadow="hover"
           >
@@ -39,9 +38,9 @@
               <span class="text-icons">{{ item.week }}</span>
             </div>
             <div class="clcle-info">
-              <span>
-                <i class="el-icon-school"></i>
-                {{ item.pre_enroll }}
+              <span class="imgtext">
+                <img src="@/assets/images/icon/num.png" alt="" />
+                {{ item.enrolled }}
               </span>
               <span>
                 <i class="el-icon-user"></i>
@@ -52,7 +51,7 @@
                 {{ item.formatCtime }}-0210
               </span>
             </div>
-          </el-card>
+          </div>
         </li>
       </ul>
       <p v-if="loading" style="text-align:center">
@@ -183,7 +182,6 @@ export default {
 .center-container {
   display: flex;
   flex-direction: column;
-  padding: 10px;
   height: 100%;
   .headers {
     display: flex;
@@ -204,24 +202,33 @@ export default {
   .container {
     list-style: none;
     padding-left: 0;
+    margin-top: 0px;
     .cycle-box {
       cursor: pointer;
       .box-card {
-        margin-top: 5px;
         .clcle-header {
           font-size: 14px;
           .text-icons {
             margin-left: 8px;
-            padding: 0 5px;
-            color: white;
-            background: #41a0fa;
+            padding: 3px 8px;
+            color: #59a0f3;
+            background: #e5f1ff;
           }
         }
         .clcle-info {
+          color: #666;
           font-size: 12px;
-          margin-top: 6px;
+          margin-top: 8px;
           span {
             margin-right: 8px;
+          }
+        }
+        .imgtext {
+          display: inline-block;
+          img {
+            display: inline-block;
+            vertical-align: middle;
+            width: 18px;
           }
         }
       }
@@ -229,14 +236,17 @@ export default {
   }
 }
 .hover-color {
-  background: rgb(240, 247, 255);
+  // background: rgba(240, 241, 242, 1);
+  background: #ebebeb;
 }
 </style>
 <style lang="scss">
 .box-card {
-  .el-card__body {
-    padding: 10px;
-  }
+  padding: 15px 17px;
+  border-bottom: 1px solid rgba(237, 237, 237, 1);
+
+  // .el-card__body {
+  // }
 }
 .center-container .scrollbar-wrapper {
   overflow-x: hidden;

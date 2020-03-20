@@ -4,14 +4,15 @@
  * @Author: zhubaodong
  * @Date: 2020-03-19 11:12:25
  * @LastEditors: zhubaodong
- * @LastEditTime: 2020-03-19 22:11:40
+ * @LastEditTime: 2020-03-20 16:56:16
  -->
 <template>
   <div class="tab-box">
     <el-tabs
       v-model="activeName"
       @tab-click="handleClick"
-      type="border-card"
+      type="card"
+      class="tabsborder"
       style="height:100%"
     >
       <el-tab-pane label="学员" name="students">

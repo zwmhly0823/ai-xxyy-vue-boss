@@ -3,8 +3,8 @@
  * @version:
  * @Author: zhubaodong
  * @Date: 2020-03-13 16:53:41
- * @LastEditors: Shentong
- * @LastEditTime: 2020-03-20 12:11:25
+ * @LastEditors: zhubaodong
+ * @LastEditTime: 2020-03-20 18:07:57
  -->
 <template>
   <div class="right-container">
@@ -17,12 +17,14 @@
       <div class="header">
         <div class="header-left">
           <div class="title">
-            <span>{{ item.onetime }}:{{ item.team_name }}</span>
-            <span class="text-icons">{{
+            <span class="title-text"
+              >{{ item.onetime }}:{{ item.team_name }}</span
+            >
+            <span class="text-iconsY">{{
               item.team_type == 0 ? '体验课' : '系统课'
             }}</span>
-            <span class="text-icons">{{ item.week }}</span>
-            <span class="text-icons">{{ item.state }}</span>
+            <span class="text-iconsB">{{ item.week }}</span>
+            <span class="text-iconsR">{{ item.state }}</span>
           </div>
           <div class="info">
             <span>学员:{{ item.pre_enroll }}</span>
@@ -268,27 +270,49 @@ export default {
 </script>
 <style lang="scss" scoped>
 @import '~@/assets/styles/variables.scss';
+
+@font-face {
+  font-family: 'number_font';
+  src: url('~@/assets/fonts/AlibabaSans-Medium.otf');
+} //引入本地字体数字文件
+
 .right-container {
   .box-card1 {
-    border-bottom: 10px solid $gray-e3;
+    border-bottom: 10px solid rgba(240, 241, 242, 1);
     .header {
       display: flex;
       justify-content: space-between;
-      margin-bottom: 6px;
+      margin-bottom: 12px;
       .header-left {
         .title {
-          font-size: 16px;
-          .text-icons {
+          .title-text {
+            font-size: 18px;
+            font-weight: 500;
+            color: #222222;
+          }
+          .text-iconsY {
             margin-left: 8px;
-            padding: 0 5px;
-            color: white;
-            background: #41a0fa;
+            padding: 2px 6px;
+            color: #ff9c00;
+            background: #fff5e5;
+          }
+          .text-iconsB {
+            margin-left: 8px;
+            padding: 2px 6px;
+            color: #4096fb;
+            background: #e5f1ff;
+          }
+          .text-iconsR {
+            margin-left: 8px;
+            padding: 2px 6px;
+            color: #ff554d;
+            background: #ffe7e5;
           }
         }
         .info {
           font-size: 12px;
-          color: gray;
-          margin-top: 5px;
+          color: #666666;
+          margin-top: 10px;
           span {
             margin-right: 8px;
           }
@@ -297,29 +321,31 @@ export default {
     }
     .body {
       background: #fff;
-      color: gray;
+      color: #666666;
       display: flex;
       font-size: 12px;
       &-boxLeft,
       &-boxCenter,
       &-boxRight {
+        flex: 0.3;
         padding: 10px;
         margin-right: 15px;
-        background: rgba(241, 242, 242, 1);
+        background: rgba(247, 247, 247, 1);
         display: flex;
         flex-direction: column;
         align-items: center;
       }
       &-boxLeft {
-        flex: 0.3;
         .order-title {
           margin-bottom: 10px;
           flex: 1;
         }
         .order-number {
-          font-size: 18px;
+          font-size: 24px;
           margin-bottom: 10px;
           flex: 1;
+          font-family: 'number_font';
+          font-weight: 500;
         }
         .order-count {
           width: 100%;
@@ -329,14 +355,15 @@ export default {
         }
       }
       &-boxCenter {
-        flex: 0.3;
         .Conversion-title {
           margin-bottom: 10px;
           flex: 1;
         }
         .Conversion-number {
-          font-size: 18px;
+          font-size: 24px;
+          font-weight: 500;
           margin-bottom: 10px;
+          font-family: 'number_font';
           flex: 1;
         }
         .Conversion-count {
@@ -348,16 +375,21 @@ export default {
       }
       &-boxRight {
         flex: 1;
+        display: flex;
+        justify-content: space-between;
         margin-right: 0px;
         .params-top {
           width: 100%;
           display: flex;
-          margin-bottom: 10px;
           div {
             flex: 1;
             display: flex;
             flex-direction: column;
             align-items: center;
+            div:nth-child(1) {
+              font-family: 'number_font';
+              margin-bottom: 4px;
+            }
           }
         }
         .params-bottom {
@@ -368,6 +400,10 @@ export default {
             display: flex;
             flex-direction: column;
             align-items: center;
+            div:nth-child(1) {
+              font-family: 'number_font';
+              margin-bottom: 4px;
+            }
           }
         }
       }
