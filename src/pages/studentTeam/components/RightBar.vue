@@ -165,7 +165,7 @@ export default {
   watch: {
     classId(vals) {
       if (vals.classId) {
-        this.classMessage = ''
+        // this.classMessage = ''
         this.getClassTeacher(vals.classId.id)
       }
     }
