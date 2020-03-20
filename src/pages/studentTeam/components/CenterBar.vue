@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-13 16:53:33
  * @LastEditors: zhubaodong
- * @LastEditTime: 2020-03-20 17:34:48
+ * @LastEditTime: 2020-03-20 18:12:42
  -->
 <template>
   <div class="center-container">
@@ -209,8 +209,9 @@ export default {
         .clcle-header {
           font-size: 14px;
           .text-icons {
+            font-size: 12px;
             margin-left: 8px;
-            padding: 3px 8px;
+            padding: 2px 4px;
             color: #59a0f3;
             background: #e5f1ff;
           }

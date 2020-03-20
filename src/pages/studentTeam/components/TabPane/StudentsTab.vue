@@ -50,7 +50,10 @@
       </el-table-column>
       <el-table-column label="关联物流" class="logistics">
         <template slot-scope="scope">
-          <div class="logistics-num">{{ scope.row.express.total }}</div>
+          <span class="text333"> 全部物流:</span>
+          <span class="logistics-num">
+            {{ scope.row.express.total }}
+          </span>
           <div class="text333">{{ scope.row.express.status }}</div>
         </template>
       </el-table-column>
@@ -256,8 +259,9 @@ export default {
     height: 50px;
     float: left;
     text-align: center;
-    border: 1px solid #cccccc;
+    border: 1px solid #e5e5e5;
     margin: 0 10px 0 0;
+    border-radius: 4px;
   }
   &-right {
     float: left;
