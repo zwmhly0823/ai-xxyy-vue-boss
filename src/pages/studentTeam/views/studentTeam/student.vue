@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-13 15:24:11
  * @LastEditors: zhubaodong
- * @LastEditTime: 2020-03-19 21:02:51
+ * @LastEditTime: 2020-03-20 12:27:23
  -->
 <template>
   <el-row type="flex" class="app-main height student-team">
@@ -74,6 +74,13 @@ export default {
       return { classId: this.classId, type: this.type }
     }
   },
+  watch: {
+    scrollStatus(val, old) {
+      if (val !== old) {
+        this.classId = ''
+      }
+    }
+  },
   methods: {
     /**
      * 左栏回调函数
@@ -120,8 +127,8 @@ export default {
               teamStatusCount(field: "team_state",team_type:${data},query:${JSON.stringify(
               queryParams
             )}) {
-                code
-                value
+                code,
+                value,
                 name
               }
             }`
@@ -149,30 +156,30 @@ export default {
               teamStatusPage(query:${JSON.stringify(
                 queryParams
               )},page:${page},size:20){
-                empty
-                first
-                last
-                number
-                size
-                numberOfElements
-                totalElements
-                totalPages
+                empty,
+                first,
+                last,
+                number,
+                size,
+                numberOfElements,
+                totalElements,
+                totalPages,
                 content {
-                  id
-                  team_state
-                  team_type
-                  team_name
-                  ctime
-                  sup
-                  term
-                  enroll_state
-                  enrolled
-                  pre_enroll
-                  teacher_id
+                  id,
+                  team_state,
+                  team_type,
+                  team_name,
+                  ctime,
+                  sup,
+                  term,
+                  enroll_state,
+                  enrolled,
+                  pre_enroll,
+                  teacher_id,
                   teacher {
-                    realname
+                    realname,
                   }
-                  current_lesson
+                  current_lesson,
                   week
                 }
               }

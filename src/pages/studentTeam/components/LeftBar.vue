@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-13 16:53:27
  * @LastEditors: zhubaodong
- * @LastEditTime: 2020-03-19 22:19:52
+ * @LastEditTime: 2020-03-20 12:07:44
  -->
 <template>
   <div class="left-container">
@@ -53,23 +53,23 @@ export default {
           value: '',
           children: [
             {
-              showName: '全部',
+              showName: '全部（0）',
               value: '_all'
             },
             {
-              showName: '待开课',
+              showName: '待开课（0）',
               value: '0'
             },
             {
-              showName: '今日开课',
+              showName: '今日开课（0）',
               value: '3'
             },
             {
-              showName: '上课中',
+              showName: '上课中（0）',
               value: '1'
             },
             {
-              showName: '已结课',
+              showName: '已结课（0）',
               value: '2'
             }
           ]
@@ -77,27 +77,27 @@ export default {
       ],
       systemlist: [
         {
-          showName: '系统课班级',
+          showName: '系统课班级（0）',
           value: '',
           children: [
             {
-              showName: '全部',
+              showName: '全部（0）',
               value: '_all'
             },
             {
-              showName: '待开课',
+              showName: '待开课（0）',
               value: '0'
             },
             {
-              showName: '今日开课',
+              showName: '今日开课（0）',
               value: '3'
             },
             {
-              showName: '上课中',
+              showName: '上课中（0）',
               value: '1'
             },
             {
-              showName: '已结课',
+              showName: '已结课（0）',
               value: '2'
             }
           ]
@@ -116,7 +116,9 @@ export default {
         this.expressData.teamStatusCount &&
           this.expressData.teamStatusCount.filter((v) => {
             if (v.code === values.value) {
-              values.showName = `${values.showName}(${v.value ? v.value : 0})`
+              values.showName = `${values.showName.split('（')[0]}（${
+                v.value ? v.value : 0
+              }）`
             }
           })
         return values
@@ -156,7 +158,9 @@ export default {
         this.systemData.teamStatusCount &&
           this.systemData.teamStatusCount.filter((v) => {
             if (v.code === values.value) {
-              values.showName = `${values.showName}(${v.value ? v.value : 0})`
+              values.showName = `${values.showName.split('（')[0]}（${
+                v.value ? v.value : 0
+              }）`
             }
           })
         return values
