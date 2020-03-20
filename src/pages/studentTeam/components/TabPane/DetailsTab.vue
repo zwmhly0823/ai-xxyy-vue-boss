@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 14:19:58
  * @LastEditors: panjian
- * @LastEditTime: 2020-03-20 21:00:34
+ * @LastEditTime: 2020-03-20 22:03:49
  -->
 <template>
   <div>
@@ -90,7 +90,7 @@ export default {
     this.table.student = '60'
   },
   methods: {
-    // 加好友进群
+    // 加好友进群接口
     getGroup() {
       const querys = `{"bool":{"must":[{"terms":{"team_id":${this.classId.classId.id}}},{"term":{"team_type":${this.classId.type}}}]}}`
       axios
@@ -124,6 +124,7 @@ export default {
           }`
         })
         .then((res) => {
+          this.table.tableData = []
           // console.log(res.data.userListForTeam.content, 'getGroupRes')
           // 1男 2 女
           // 0 不显示  1 无基础  2 一年以下 3 一年以上
@@ -145,6 +146,47 @@ export default {
           this.table.tableData = _data
         })
     },
+    // 物流接口
+    // gitLogistics() {
+    //   const querys = `{"bool":{"must":[{"terms":{"team_id":${this.classId.classId.id}}},{"term":{"team_type":${this.classId.type}}}]}}`
+    //   axios
+    //     .post('/graphql/express', {
+    //       query: `{
+    //         stuExpressPage(query:${JSON.stringify(
+    //           querys
+    //         )} , page: 2, size: 10) {
+    //           empty
+    //           first
+    //           last
+    //           number
+    //           size
+    //           numberOfElements
+    //           totalElements
+    //           totalPages
+    //           content {
+    //             id
+    //             head
+    //             nickname
+    //             username
+    //             address_detail
+    //             province
+    //             city
+    //             area
+    //             express_status
+    //             ctime
+    //             mobile
+    //           }
+    //         }
+    //       }`
+    //     })
+    //     .then((res) => {
+    //       this.table.tableData = []
+    //       console.log(this.table.tableData, '_data121212121')
+    //       const _data = res.data.stuExpressPage.content
+    //       console.log(_data, '_data')
+    //       this.table.tableData = _data
+    //     })
+    // },
     // 加好友进群 已加好友子组建传值方法
     onCommandFriend(data) {
       this.table.tableData[data.index].added_wechat = data.command
@@ -155,84 +197,90 @@ export default {
     },
     handleClick(tab, event) {
       if (tab.index === '0') {
+        this.table.tableData = []
         // 加好友进群
         this.getGroup()
         // console.log(this.table.tableData, 'this.table.tableData')
         this.table.tableLabel = [{ label: '购买时间', prop: 'buytime' }]
-
         this.table.group = '10'
         this.table.friend = '30'
         this.table.student = '60'
         this.table.currentPage = 1
         this.table.tabs = 0
       } else if (tab.index === '1') {
+        this.table.tableData = []
         // 物流
+        // this.gitLogistics()
         console.log('物流')
+        console.log(this.table.tableData, 'this.table.tableData112121212')
         this.table.tabs = 1
-        this.table.tableData = [
-          {
-            telephone: 13311113333,
-            time: '2018-07-24',
-            friend: '已加',
-            group: '已进',
-            follow: '已关注',
-            wechat: 'qwea'
-          }
-        ]
+        // this.table.tableData = [
+        //   {
+        //     telephone: 13311113333,
+        //     time: '2018-07-24',
+        //     friend: '已加',
+        //     group: '已进',
+        //     follow: '已关注',
+        //     wechat: 'qwea'
+        //   }
+        // ]
         this.table.group = '10'
         this.table.friend = '30'
         this.table.student = '60'
         this.table.currentPage = 1
       } else if (tab.index === '2') {
+        this.table.tableData = []
         // 登陆
         console.log('登陆')
         this.table.tabs = 2
-        this.table.tableData = [
-          {
-            telephone: 13311113333,
-            time: '2018-07-24',
-            friend: '已加',
-            group: '已进',
-            follow: '已关注',
-            wechat: 'qwea'
-          }
-        ]
+        // this.table.tableData = [
+        //   {
+        //     telephone: 13311113333,
+        //     time: '2018-07-24',
+        //     friend: '已加',
+        //     group: '已进',
+        //     follow: '已关注',
+        //     wechat: 'qwea'
+        //   }
+        // ]
         this.table.group = '10'
         this.table.friend = '30'
         this.table.student = '60'
         this.table.currentPage = 1
       } else if (tab.index === '3') {
+        this.table.tableData = []
         // 参课和完课
         console.log('参课和完课')
         this.table.tabs = 3
-        this.table.tableData = [
-          {
-            telephone: 13311113333,
-            time: '2018-07-24',
-            friend: '已加',
-            group: '已进',
-            follow: '已关注',
-            wechat: 'qwea'
-          }
-        ]
+        // this.table.tableData = [
+        //   {
+        //     telephone: 13311113333,
+        //     time: '2018-07-24',
+        //     friend: '已加',
+        //     group: '已进',
+        //     follow: '已关注',
+        //     wechat: 'qwea'
+        //   }
+        // ]
         this.table.group = '10'
         this.table.friend = '30'
         this.table.student = '60'
         this.table.currentPage = 1
       } else if (tab.index === '4') {
+        this.table.tableData = []
         // 作品及点评
         console.log('作品及点评')
         this.table.tabs = 4
-        this.table.tableData = [
-          {
-            telephone: 13311113333,
-            time: '2018-07-24',
-            friend: '已加',
-            group: '已进',
-            follow: '已关注',
-            wechat: 'qwea'
-          }
-        ]
+        // this.table.tableData = [
+        //   {
+        //     telephone: 13311113333,
+        //     time: '2018-07-24',
+        //     friend: '已加',
+        //     group: '已进',
+        //     follow: '已关注',
+        //     wechat: 'qwea'
+        //   }
+        // ]
         this.table.group = '10'
         this.table.friend = '30'
         this.table.student = '60'

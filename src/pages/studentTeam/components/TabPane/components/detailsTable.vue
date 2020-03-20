@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 20:22:24
  * @LastEditors: panjian
- * @LastEditTime: 2020-03-20 21:11:07
+ * @LastEditTime: 2020-03-20 21:59:08
  -->
 <template>
   <div>
@@ -189,7 +189,7 @@
         <el-table-column width="150" label="用户和购买时间">
           <template slot-scope="scope">
             <div class="scope-logistics-box">
-              <span class="logistics-age">{{ scope.row }}</span>
+              <span class="logistics-age">{{ scope.row.mobile }}</span>
             </div>
           </template>
         </el-table-column>
