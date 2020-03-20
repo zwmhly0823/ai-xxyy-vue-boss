@@ -64,7 +64,9 @@
       <el-pagination
         layout="prev, pager, next"
         :page-count="totalPages"
-        :current-page="pageSize"
+        :current-page="currentPage"
+        prev-text="上一页"
+        next-text="下一页"
         @current-change="handleSizeChange"
       >
       </el-pagination>
@@ -87,7 +89,7 @@ export default {
       // 总页数
       totalPages: 1,
       // 当前页数
-      pageSize: 1,
+      currentPage: 1,
       // 学员列表
       tableData: [],
       // 用户状态列表
@@ -98,6 +100,7 @@ export default {
   watch: {
     classId(value) {
       if (value.classId) {
+        this.currentPage = 1
         this.getstatusList()
         this.studentsList()
       }
@@ -109,7 +112,7 @@ export default {
       axios
         .post('/graphql/team', {
           query: `{
-          teamUserListPage(type: ${this.classId.type}, team_id: "${this.classId.classId.id}",page:${this.pageSize}) {
+          teamUserListPage(type: ${this.classId.type}, team_id: "${this.classId.classId.id}",page:${this.currentPage}) {
             empty
             first
             last
@@ -232,7 +235,7 @@ export default {
     },
     // 点击分页
     handleSizeChange(val) {
-      this.pageSize = val
+      this.currentPage = val
       this.getstatusList()
       this.studentsList()
     }
@@ -278,6 +281,7 @@ export default {
   }
 }
 .block {
+  margin-top: 20px;
   text-align: center;
 }
 </style>
