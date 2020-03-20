@@ -5,9 +5,10 @@
         <template slot-scope="scope">
           <img class="information-img" :src="scope.row.head" alt="" />
           <div class="information-right">
-            <div class="phone">{{ scope.row.ctime }}</div>
+            <div class="phone">{{ scope.row.mobile }}</div>
             <div class="age">
-              {{ scope.row.birthday }} {{ scope.row.base_painting_text }}
+              {{ scope.row.sex }} {{ scope.row.birthday }}
+              {{ scope.row.base_painting_text }}
             </div>
             <!-- <div class="wechatnote">
               微信备注:<span>{{ scope.row.wechatNote }}</span>
@@ -58,15 +59,18 @@
       </el-table-column>
       <!-- <el-table-column label="标签" class="thelabel"></el-table-column> -->
     </el-table>
-    <!-- <div class="block">
+    <!-- 分页 -->
+    <div class="block">
       <el-pagination
         layout="prev, pager, next"
-        :total="4"
-        :page-size="1"
+        :page-count="totalPages"
+        :current-page="currentPage"
+        prev-text="上一页"
+        next-text="下一页"
         @current-change="handleSizeChange"
       >
       </el-pagination>
-    </div> -->
+    </div>
   </div>
 </template>
 <script>
@@ -74,6 +78,7 @@ import axios from '@/api/axios'
 import { GetAgeByBrithday } from '@/utils/menuItems'
 export default {
   props: {
+    // 班级传参
     classId: {
       type: Object,
       default: null
@@ -81,24 +86,33 @@ export default {
   },
   data() {
     return {
+      // 总页数
+      totalPages: 1,
+      // 当前页数
+      currentPage: 1,
+      // 学员列表
       tableData: [],
+      // 用户状态列表
       statusData: []
     }
   },
   created() {},
   watch: {
     classId(value) {
-      // console.log(value, 'value')
-      this.getstatusList()
-      this.studentsList()
+      if (value.classId) {
+        this.currentPage = 1
+        this.getstatusList()
+        this.studentsList()
+      }
     }
   },
   methods: {
+    // 学员列表
     studentsList() {
       axios
         .post('/graphql/team', {
           query: `{
-          teamUserListPage(type: ${this.classId.type}, team_id: "${this.classId.classId.id}") {
+          teamUserListPage(type: ${this.classId.type}, team_id: "${this.classId.classId.id}",page:${this.currentPage}) {
             empty
             first
             last
@@ -126,6 +140,7 @@ export default {
               base_painting
               base_painting_text
               team_id
+              mobile
               statistics {
                 login
                 complete_course
@@ -147,9 +162,21 @@ export default {
         }`
         })
         .then((res) => {
+          this.totalPages = res.data.teamUserListPage.totalPages * 1
           const _data = res.data.teamUserListPage.content
-          // console.log(_data, '_data')
           _data.forEach((ele) => {
+            // 性别 0/默认 1/男 2/女  3/保密
+            const sex = ele.sex
+            if (sex === '0') {
+              ele.sex = '-'
+            } else if (sex === '1') {
+              ele.sex = '男'
+            } else if (sex === '2') {
+              ele.sex = '女'
+            } else if (sex === '3') {
+              ele.sex = '保密'
+            }
+            // 年龄转换
             ele.birthday = GetAgeByBrithday(ele.birthday)
             // 是否添加微信群  0/未加  1/已加
             const addedGroup = ele.wechat_status.added_group
@@ -165,7 +192,7 @@ export default {
             } else if (addedWechat === 1) {
               ele.wechat_status.added_wechat = '已加好友'
             }
-            //  物流状态  1/最后一次代发货  2/最后一次已发货  3/最后一次已经完成
+            //  物流状态  0/最后一次已创建 1/最后一次代发货  2/最后一次已发货  3/最后一次已经完成 4/最后一次签收失败 5/最后一次已退货
             const status = ele.express.status
             if (status === 0) {
               ele.express.status = '最后一次已创建'
@@ -190,6 +217,7 @@ export default {
           this.tableData = _data
         })
     },
+    // 用户状态接口
     getstatusList() {
       axios
         .post('/graphql/user', {
@@ -204,8 +232,13 @@ export default {
         .then((res) => {
           this.statusList = res.data.userFollowStateList
         })
+    },
+    // 点击分页
+    handleSizeChange(val) {
+      this.currentPage = val
+      this.getstatusList()
+      this.studentsList()
     }
-    // handleSizeChange(val) {}
   }
 }
 </script>
@@ -218,7 +251,7 @@ export default {
     float: left;
     text-align: center;
     border: 1px solid #cccccc;
-    margin: 0 3px 0 0;
+    margin: 0 10px 0 0;
   }
   &-right {
     float: left;
@@ -249,6 +282,7 @@ export default {
   }
 }
 .block {
+  margin-top: 20px;
   text-align: center;
 }
 .text333 {
