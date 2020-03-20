@@ -3,8 +3,8 @@
  * @version:
  * @Author: zhubaodong
  * @Date: 2020-03-13 16:53:41
- * @LastEditors: zhubaodong
- * @LastEditTime: 2020-03-19 22:11:08
+ * @LastEditors: Shentong
+ * @LastEditTime: 2020-03-20 12:11:25
  -->
 <template>
   <div class="right-container">
@@ -54,7 +54,7 @@
           <div class="order-number">{{ item.statictis.order_all }}</div>
           <div class="order-count">
             <span>今日{{ item.statictis.today_order }}</span>
-            <span>昨日{{ item.statictis.yestoday_order }}</span>
+            <span>昨日{{ item.statictis.yesterday_order }}</span>
           </div>
         </div>
         <div class="body-boxCenter" v-show="item.team_type == 0">
@@ -68,7 +68,7 @@
             >
             <span
               >昨日{{
-                item.yestodayTrans == 'NaN' ? 0 : item.yestodayTrans
+                item.yesterdayTrans == 'NaN' ? 0 : item.yesterdayTrans
               }}%</span
             >
           </div>
@@ -96,7 +96,7 @@
               <div>今日参课</div>
             </div>
             <div>
-              <div>{{ item.statictis.yestoday_add_class }}</div>
+              <div>{{ item.statictis.yesterday_add_class }}</div>
               <div>昨日参课</div>
             </div>
           </div>
@@ -114,7 +114,7 @@
               <div>今日作品</div>
             </div>
             <div>
-              <div>{{ item.statictis.yestoday_works }}</div>
+              <div>{{ item.statictis.yesterday_works }}</div>
               <div>昨日作品</div>
             </div>
             <div>
@@ -175,26 +175,27 @@ export default {
   teacher{
     id
     nickname
-    realname
     weixin_ids
+    weichat_num
     ctime
-          }
+    realname
+  }
   statictis {
         today_order
-        yestoday_order
+        yesterday_order
         order_all
         wait_sent
         unadd_wechat
         unadd_group
         unlogin
         today_add_class
-        yestoday_add_class
+        yesterday_add_class
         tody_comp_class
-        yestody_comp_class
+        yesterday_comp_class
         tody_works
-        yestoday_works
+        yesterday_works
         tody_comment
-        yestody_comment
+        yesterday_comment
                }
                   }
                     }`
@@ -222,8 +223,8 @@ export default {
           res.data.detail.todayTrans = (
             res.data.detail.statictis.today_order / this.classId.enrolled
           ).toFixed(2)
-          res.data.detail.yestodayTrans = (
-            res.data.detail.statictis.yestoday_order / this.classId.enrolled
+          res.data.detail.yesterdayTrans = (
+            res.data.detail.statictis.yesterday_order / this.classId.enrolled
           ).toFixed(2)
           res.data.detail.allTrans = (
             res.data.detail.statictis.order_all / this.classId.enrolled
