@@ -4,7 +4,7 @@ const ghpages = require('gh-pages')
 const colors = require('colors/safe')
 
 const repo =
-  'https://newsgitlab.meishubao.com/msb-ai/frontend/ai-app-vue-toss.git'
+  'https://newsgitlab.meishubao.com/msb-ai/frontend/ai-app-vue-boss.git'
 ghpages.publish(
   'dist',
   {

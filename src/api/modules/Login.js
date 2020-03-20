@@ -14,18 +14,18 @@ export default {
    *
    */
   getCodeByPhone(params) {
-    return axios.post(`/api/t/v1/teacher/sendCode?mobile=${params.mobile}`)
+    return axios.post(`/api/b/v1/staff/sendCode?mobile=${params.mobile}`)
   },
   /**
    * 验证码登录
    * */
   codeLoginIn(params) {
-    return axios.post(`/api/t/v1/teacher/login`, params)
+    return axios.post(`/api/b/v1/staff/mobileLogin`, params)
   },
   /**
    * 密码登录
    * */
   pwdLoginIn(params) {
-    return axios.post('/api/t/v1/teacher/teacherLogin', params)
+    return axios.post('/api/b/v1/staff/login', params)
   }
 }

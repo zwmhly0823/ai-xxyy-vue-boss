@@ -23,8 +23,8 @@
 </template>
 
 <script>
-import Logo from '@/assets/images/toss.png'
-import LogoSmall from '@/assets/images/toss-64.png'
+import Logo from '@/assets/images/boss.png'
+import LogoSmall from '@/assets/images/boss-64.png'
 export default {
   name: 'SidebarLogo',
   props: {

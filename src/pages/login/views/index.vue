@@ -11,7 +11,7 @@
     <div class="form-container">
       <!-- logo -->
       <div class="logo-container">
-        <img src="../../../assets/images/toss.png" alt="" />
+        <img src="../../../assets/images/boss.png" alt="" />
       </div>
       <div class="title-container login-type">
         <div

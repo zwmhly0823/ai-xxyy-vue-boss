@@ -3,15 +3,15 @@ const defaultSettings = require('./src/settings.js')
 const { NODE_ENV } = process.env
 // TODO: 使用router
 const { getMenuText } = require('./src/utils/menuItems')
-const name = defaultSettings.title || '小熊美术TOSS' // page title
+const name = defaultSettings.title || '小熊美术BOSS' // page title
 
 let baseUrl = '/'
 if (process.env.BASE_URL === 'ghpageslive') {
   baseUrl = '/'
 } else if (process.env.BASE_URL === 'ghpagesdev') {
-  baseUrl = '/frontend/ai-app-vue-toss-dev/'
+  baseUrl = '/frontend/ai-app-vue-boss-dev/'
 } else if (process.env.BASE_URL === 'ghpagestest') {
-  baseUrl = '/frontend/ai-app-vue-toss/'
+  baseUrl = '/frontend/ai-app-vue-boss/'
 }
 
 function camel2Line(str) {
