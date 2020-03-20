@@ -3,7 +3,8 @@ const dayjs = require('dayjs')
 const ghpages = require('gh-pages')
 const colors = require('colors/safe')
 
-const repo = 'https://newsgitlab.meishubao.com/msb-ai/ai-app-vue-toss-live.git'
+const repo =
+  'https://newsgitlab.meishubao.com/msb-ai/frontend/ai-app-vue-toss.git'
 ghpages.publish(
   'dist',
   {
@@ -16,7 +17,7 @@ ghpages.publish(
       console.error(err, date)
       return
     }
-    console.log(colors.green('生产环境发布成功：'), repo)
+    console.log(colors.green('测试环境发布成功：'), repo)
     console.log(colors.green('发布时间：', date))
   }
 )

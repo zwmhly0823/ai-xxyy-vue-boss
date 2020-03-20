@@ -3,8 +3,8 @@
  * @version:
  * @Author: zhubaodong
  * @Date: 2020-03-13 16:53:41
- * @LastEditors: zhubaodong
- * @LastEditTime: 2020-03-19 22:11:08
+ * @LastEditors: Shentong
+ * @LastEditTime: 2020-03-20 12:11:25
  -->
 <template>
   <div class="right-container">
@@ -68,7 +68,7 @@
             >
             <span
               >昨日{{
-                item.yestodayTrans == 'NaN' ? 0 : item.yestodayTrans
+                item.yesterdayTrans == 'NaN' ? 0 : item.yesterdayTrans
               }}%</span
             >
           </div>
@@ -175,14 +175,22 @@ export default {
   teacher{
     id
     nickname
-    realname
     weixin_ids
+<<<<<<< HEAD
      weichat_num
     ctime
     realname
           }
   statictis {
        today_order
+=======
+    weichat_num
+    ctime
+    realname
+  }
+  statictis {
+        today_order
+>>>>>>> 176ba76c2a55ed787de424bfe4165ccaf9454148
         yesterday_order
         order_all
         wait_sent
@@ -224,7 +232,11 @@ export default {
           res.data.detail.todayTrans = (
             res.data.detail.statictis.today_order / this.classId.enrolled
           ).toFixed(2)
+<<<<<<< HEAD
           res.data.detail.yestodayTrans = (
+=======
+          res.data.detail.yesterdayTrans = (
+>>>>>>> 176ba76c2a55ed787de424bfe4165ccaf9454148
             res.data.detail.statictis.yesterday_order / this.classId.enrolled
           ).toFixed(2)
           res.data.detail.allTrans = (

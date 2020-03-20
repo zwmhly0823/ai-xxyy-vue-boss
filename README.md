@@ -1,6 +1,13 @@
 # ai-app-vue-toss
 
-## https://msb-ai.meixiu.mobi/frontend/ai-app-vue-toss/student-team/#/
+### [Graphql测试](http://47.98.38.59:43401/)
+
+### [测试环境](https://msb-ai.meixiu.mobi/frontend/ai-app-vue-toss/student-team/#/)
+
+### [正式环境](https://toss.xiaoxiongmeishu.com/student-team/#/)
+
+
+---
 
 ## Project setup
 ```

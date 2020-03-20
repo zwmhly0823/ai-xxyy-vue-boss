@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-13 16:53:33
  * @LastEditors: zhubaodong
- * @LastEditTime: 2020-03-19 22:10:55
+ * @LastEditTime: 2020-03-20 12:15:01
  -->
 <template>
   <div class="center-container">
@@ -120,11 +120,13 @@ export default {
     }
   },
   watch: {
+    // 是否切换左栏
     showClassData(val, old) {
       if (val.scrollStatus !== old.scrollStatus) {
         this.showList = []
         this.showList = this.showClassData.datas
         this.noMore = false
+        this.heighLight = ''
         this.load()
       } else {
         if (this.showList.length === 0) {
