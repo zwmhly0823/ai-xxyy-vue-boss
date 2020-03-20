@@ -235,6 +235,8 @@ export default {
       this.pageSize = val
       this.getstatusList()
       this.studentsList()
+      var dom = document.getElementById('right-scroll')
+      dom.querySelector('.scrollbar-wrapper').scrollTo(0, 0)
     }
   }
 }

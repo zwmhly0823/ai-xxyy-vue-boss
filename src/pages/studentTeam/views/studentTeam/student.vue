@@ -28,7 +28,7 @@
     </el-col>
     <el-col class="student-team-right ">
       <div class="grid-content right">
-        <el-scrollbar wrap-class="scrollbar-wrapper">
+        <el-scrollbar wrap-class="scrollbar-wrapper" id="right-scroll">
           <right-bar :classId="classIdData" />
         </el-scrollbar>
       </div>
