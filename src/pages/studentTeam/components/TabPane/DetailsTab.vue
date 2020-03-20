@@ -21,7 +21,7 @@
           <el-tab-pane label="物流" name="logistics">
             <details-table :tables="table"></details-table>
           </el-tab-pane>
-          <el-tab-pane label="登陆" name="login"
+          <el-tab-pane label="登录" name="login"
             ><details-table :tables="table"></details-table
           ></el-tab-pane>
           <el-tab-pane label="参课和完课" name="participateIn"
@@ -98,7 +98,7 @@ export default {
           query: `{
             userListForTeam(query:${JSON.stringify(
               querys
-            )} , page: 1, size: 10) {
+            )} , page: 1, size: 20) {
               empty
               first
               last
@@ -230,8 +230,8 @@ export default {
         this.table.currentPage = 1
       } else if (tab.index === '2') {
         this.table.tableData = []
-        // 登陆
-        console.log('登陆')
+        // 登录
+        console.log('登录')
         this.table.tabs = 2
         // this.table.tableData = [
         //   {
