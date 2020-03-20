@@ -60,17 +60,21 @@
         <div class="body-boxCenter" v-show="item.team_type == 0">
           <div class="Conversion-title">累计转化率</div>
           <div class="Conversion-number">
-            {{ item.allTrans == 'NaN' ? 0 : item.allTrans * 100 }}
+            {{ item.allTrans == 'NaN' ? 0 : (item.allTrans * 100).toFixed(2) }}
           </div>
           <div class="Conversion-count">
             <span
               >今日{{
-                item.todayTrans == 'NaN' ? 0 : item.todayTrans * 100
+                item.todayTrans == 'NaN'
+                  ? 0
+                  : (item.todayTrans * 100).toFixed(2)
               }}%</span
             >
             <span
               >昨日{{
-                item.yesterdayTrans == 'NaN' ? 0 : item.yesterdayTrans * 100
+                item.yesterdayTrans == 'NaN'
+                  ? 0
+                  : (item.yesterdayTrans * 100).toFixed(2)
               }}%</span
             >
           </div>
@@ -222,17 +226,14 @@ export default {
             'seeek'
           )
 
-          res.data.detail.todayTrans = (
+          res.data.detail.todayTrans =
             res.data.detail.statictis.today_order /
             this.classId.classId.enrolled
-          ).toFixed(4)
-          res.data.detail.yesterdayTrans = (
+          res.data.detail.yesterdayTrans =
             res.data.detail.statictis.yesterday_order /
             this.classId.classId.enrolled
-          ).toFixed(4)
-          res.data.detail.allTrans = (
+          res.data.detail.allTrans =
             res.data.detail.statictis.order_all / this.classId.classId.enrolled
-          ).toFixed(4)
 
           res.data.detail.week = this.classId.classId.week
           res.data.detail.pre_enroll = this.classId.classId.pre_enroll
