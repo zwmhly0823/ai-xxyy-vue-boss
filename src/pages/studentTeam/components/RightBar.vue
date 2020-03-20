@@ -162,7 +162,10 @@ export default {
   computed: {},
   watch: {
     classId(vals) {
-      this.getClassTeacher(vals.classId.id)
+      if (vals.classId) {
+        this.classMessage = ''
+        this.getClassTeacher(vals.classId.id)
+      }
     }
   },
   methods: {
