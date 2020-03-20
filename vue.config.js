@@ -7,11 +7,11 @@ const name = defaultSettings.title || '小熊美术TOSS' // page title
 
 let baseUrl = '/'
 if (process.env.BASE_URL === 'ghpageslive') {
-  baseUrl = '/frontend/ai-app-vue-toss/'
+  baseUrl = '/'
 } else if (process.env.BASE_URL === 'ghpagesdev') {
   baseUrl = '/frontend/ai-app-vue-toss-dev/'
 } else if (process.env.BASE_URL === 'ghpagestest') {
-  baseUrl = '/frontend/ai-app-vue-toss-test/'
+  baseUrl = '/frontend/ai-app-vue-toss/'
 }
 
 function camel2Line(str) {
@@ -108,7 +108,11 @@ module.exports = {
         }
       },
       '/graphql': {
+<<<<<<< HEAD
         target: 'http://47.98.38.59:43401',
+=======
+        target: 'http://47.98.38.59:43401', // 测试
+>>>>>>> 187b986a5c84ed4cc7893801b427888524b6b1cb
         changeOrigin: true,
         ws: true,
         secure: false,

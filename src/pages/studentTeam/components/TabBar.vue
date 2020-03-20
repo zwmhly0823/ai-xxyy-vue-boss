@@ -1,3 +1,11 @@
+<!--
+ * @Descripttion: 
+ * @version: 
+ * @Author: zhubaodong
+ * @Date: 2020-03-19 11:12:25
+ * @LastEditors: zhubaodong
+ * @LastEditTime: 2020-03-19 22:11:40
+ -->
 <template>
   <div class="tab-box">
     <el-tabs
@@ -40,7 +48,7 @@ export default {
   },
   methods: {
     handleClick(tab, event) {
-      console.log(tab, event)
+      // console.log(tab, event)
     }
   }
 }
