@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="dataStyle">
     <el-table :data="tableData">
       <el-table-column fixed label="基本信息" class="information" width="250px">
         <template slot-scope="scope">
@@ -47,14 +47,14 @@
       <el-table-column label="关联物流" class="logistics">
         <template slot-scope="scope">
           <div class="logistics-num">{{ scope.row.express.total }}</div>
-          <div>{{ scope.row.express.status }}</div>
+          <div class="text333">{{ scope.row.express.status }}</div>
         </template>
       </el-table-column>
-      <el-table-column label="状态">
+      <el-table-column label="状态" class="status-style">
         <template slot-scope="scope">
-          <div>{{ scope.row.status }}</div>
-          <div>{{ scope.row.wechat_status.added_wechat }}</div>
-          <div>{{ scope.row.wechat_status.added_group }}</div>
+          <div class="text333">{{ scope.row.status }}</div>
+          <div class="text333">{{ scope.row.wechat_status.added_wechat }}</div>
+          <div class="text333">{{ scope.row.wechat_status.added_group }}</div>
         </template>
       </el-table-column>
       <!-- <el-table-column label="标签" class="thelabel"></el-table-column> -->
@@ -64,7 +64,9 @@
       <el-pagination
         layout="prev, pager, next"
         :page-count="totalPages"
-        :current-page="pageSize"
+        :current-page="currentPage"
+        prev-text="上一页"
+        next-text="下一页"
         @current-change="handleSizeChange"
       >
       </el-pagination>
@@ -87,7 +89,7 @@ export default {
       // 总页数
       totalPages: 1,
       // 当前页数
-      pageSize: 1,
+      currentPage: 1,
       // 学员列表
       tableData: [],
       // 用户状态列表
@@ -98,6 +100,7 @@ export default {
   watch: {
     classId(value) {
       if (value.classId) {
+        this.currentPage = 1
         this.getstatusList()
         this.studentsList()
       }
@@ -109,7 +112,7 @@ export default {
       axios
         .post('/graphql/team', {
           query: `{
-          teamUserListPage(type: ${this.classId.type}, team_id: "${this.classId.classId.id}",page:${this.pageSize}) {
+          teamUserListPage(type: ${this.classId.type}, team_id: "${this.classId.classId.id}",page:${this.currentPage}) {
             empty
             first
             last
@@ -232,7 +235,7 @@ export default {
     },
     // 点击分页
     handleSizeChange(val) {
-      this.pageSize = val
+      this.currentPage = val
       this.getstatusList()
       this.studentsList()
       var dom = document.getElementById('right-scroll')
@@ -255,8 +258,8 @@ export default {
   &-right {
     float: left;
     width: 140px;
+    color: #333333;
     .wechatnote {
-      color: #bbbbbb;
       span {
         color: #606266;
       }
@@ -266,20 +269,34 @@ export default {
 // 上课信息
 .haveclass {
   &-content {
+    color: #333333;
     float: left;
     margin: 0 5px 0 0;
     span {
-      color: #409eff;
+      color: #2461b9;
     }
   }
 }
 //关联物流
 .logistics {
   &-num {
-    color: #409eff;
+    color: #2461b9;
   }
 }
 .block {
+  margin-top: 20px;
   text-align: center;
+}
+.text333 {
+  color: #333333 !important;
+}
+</style>
+<style lang="scss">
+.el-table thead {
+  color: #666666;
+  font-weight: normal;
+}
+.hover-row {
+  background: #ebebeb !important;
 }
 </style>

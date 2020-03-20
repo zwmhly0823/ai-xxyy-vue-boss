@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-13 16:53:27
  * @LastEditors: zhubaodong
- * @LastEditTime: 2020-03-20 12:07:44
+ * @LastEditTime: 2020-03-20 15:36:17
  -->
 <template>
   <div class="left-container">
@@ -17,11 +17,12 @@
     >
     </el-input>
     <el-tree
+      class="left-container-tree"
       :data="[...showExpressData, ...showSystemData]"
       :props="defaultProps"
       default-expand-all
       highlight-current
-      style="marginTop:10px"
+      style="color:#2F2E31"
       @node-click="nodeClick"
     ></el-tree>
   </div>
@@ -202,6 +203,16 @@ export default {
 </script>
 <style lang="scss" scoped>
 .left-container {
-  padding: 10px;
+  padding: 10px 0px;
+}
+</style>
+<style lang="scss">
+.left-container-tree {
+  .is-current {
+    .el-tree-node__content {
+      background: #ebebeb !important;
+      // background: rgba(240, 241, 242, 1) !important;
+    }
+  }
 }
 </style>
