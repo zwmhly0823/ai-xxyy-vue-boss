@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-13 16:53:33
  * @LastEditors: zhubaodong
- * @LastEditTime: 2020-03-20 18:12:42
+ * @LastEditTime: 2020-03-20 21:40:54
  -->
 <template>
   <div class="center-container">
@@ -38,17 +38,17 @@
               <span class="text-icons">{{ item.week }}</span>
             </div>
             <div class="clcle-info">
-              <span class="imgtext">
-                <img src="@/assets/images/icon/num.png" alt="" />
-                {{ item.enrolled }}
+              <span class="imgtext1">
+                <img src="@/assets/images/icon/teams.png" alt="" />
+                <span>{{ item.enrolled }}</span>
               </span>
-              <span>
-                <i class="el-icon-user"></i>
-                {{ item.teacher.realname }}
+              <span class="imgtext2">
+                <img src="@/assets/images/icon/teacher.png" alt="" />
+                <span>{{ item.teacher.realname }}</span>
               </span>
-              <span>
+              <span class="imgtext3">
                 <i class="el-icon-date"></i>
-                {{ item.formatCtime }}-0210
+                <span>{{ item.formatCtime }}-{{ item.formatCtime }}</span>
               </span>
             </div>
           </div>
@@ -221,15 +221,23 @@ export default {
           font-size: 12px;
           margin-top: 8px;
           span {
-            margin-right: 8px;
+            span {
+              margin-left: 3px;
+            }
           }
-        }
-        .imgtext {
-          display: inline-block;
-          img {
-            display: inline-block;
-            vertical-align: middle;
-            width: 18px;
+          .imgtext1 {
+            margin-right: 8px;
+            img {
+              display: inline-block;
+              width: 18px;
+            }
+          }
+          .imgtext2 {
+            margin-right: 8px;
+            img {
+              display: inline-block;
+              width: 10px;
+            }
           }
         }
       }

@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-13 16:53:41
  * @LastEditors: zhubaodong
- * @LastEditTime: 2020-03-20 18:37:03
+ * @LastEditTime: 2020-03-20 21:34:27
  -->
 <template>
   <div class="right-container">
@@ -55,8 +55,14 @@
           <div class="order-title">累计订单</div>
           <div class="order-number">{{ item.statictis.order_all }}</div>
           <div class="order-count">
-            <span>今日{{ item.statictis.today_order }}</span>
-            <span>昨日{{ item.statictis.yesterday_order }}</span>
+            <span
+              >今日
+              <span>{{ item.statictis.today_order }}</span>
+            </span>
+            <span
+              >昨日
+              <span>{{ item.statictis.yesterday_order }}</span>
+            </span>
           </div>
         </div>
         <div class="body-boxCenter" v-show="item.team_type == 0">
@@ -330,7 +336,7 @@ export default {
         flex: 0.3;
         padding: 10px;
         margin-right: 15px;
-        background: rgba(247, 247, 247, 1);
+        background: #f5f6f7;
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -353,6 +359,11 @@ export default {
           display: flex;
           justify-content: space-around;
           flex: 1;
+          span {
+            span {
+              font-family: 'number_font';
+            }
+          }
         }
       }
       &-boxCenter {
