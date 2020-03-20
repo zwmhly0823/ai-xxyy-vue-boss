@@ -42,7 +42,7 @@
             >
             <span>辅导老师微信: {{ item.teacher_wx }}</span>
             <span style="margin-right:0px">
-              <span>开课~结课 &nbsp;{{ item.formatCtime }}~02-16</span>
+              <span>开课~结课 &nbsp;{{ item.formatCtime }}~0516</span>
             </span>
             <span style="margin-right:0px">
               <span>创建 &nbsp;{{ item.timebegin }}</span>
@@ -257,7 +257,7 @@ export default {
             .format('MM-DD  hh:mm:ss')
           res.data.detail.formatCtime = dayjs
             .unix(Number(this.classId.classId.ctime) / 1000)
-            .format('MM-DD')
+            .format('MMDD')
           res.data.detail.onetime = dayjs
             .unix(Number(this.classId.classId.ctime) / 1000)
             .format('YYMMDD')
