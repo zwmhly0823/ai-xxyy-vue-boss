@@ -7,6 +7,8 @@
     "build": "vue-cli-service build",
     "build:live": "cross-env BASE_URL=ghpageslive npm run build",
     "deploy:live": "cross-env BASE_URL=ghpageslive node ghpages.js",
+    "build:test": "cross-env BASE_URL=ghpagestest npm run build",
+    "deploy:test": "cross-env BASE_URL=ghpagestest node ghpagestest.js",
     "test:unit": "vue-cli-service test:unit",
     "lint": "vue-cli-service lint"
   },
