@@ -223,7 +223,7 @@ export default {
           res.data.detail.todayTrans = (
             res.data.detail.statictis.today_order / this.classId.enrolled
           ).toFixed(2)
-          res.data.detail.yestodayTrans = (
+          res.data.detail.yesterdayTrans = (
             res.data.detail.statictis.yesterday_order / this.classId.enrolled
           ).toFixed(2)
           res.data.detail.allTrans = (
