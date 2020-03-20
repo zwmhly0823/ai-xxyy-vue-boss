@@ -49,6 +49,41 @@ export function formatData(str, type = 'd') {
   }
   return dayjs.unix(Number(str) / 1000).format(ft)
 }
+// 时间戳转年月日
+export function timestamp(stamp, type) {
+  // type = 1: 月-日 时-分   type = 2: 年-月-日 时-分-秒 type = 3: 20 08 type=4 : 2019年12月12日
+  const now = new Date(Number(stamp))
+  const year = now.getFullYear()
+  const month = now.getMonth() + 1
+  const day = now.getDate()
+  const hour = now.getHours()
+  const minute = now.getMinutes()
+  const second = now.getSeconds()
+
+  const _mouth = month > 9 ? month : '0' + month
+  const _day = day > 9 ? day : '0' + day
+  const _hour = hour > 9 ? hour : '0' + hour
+  const _minute = minute > 9 ? minute : '0' + minute
+  if (type === 1) {
+    return _mouth + '-' + _day + ' ' + _hour + ':' + _minute
+  } else if (type === 2) {
+    return (
+      year + '-' + month + '-' + day + ' ' + hour + ':' + minute + ':' + second
+    )
+  } else if (type === 3) {
+    return _mouth + '.' + _day
+  } else if (type === 4) {
+    return year + '年' + _mouth + '月' + _day + '日'
+  } else if (type === 5) {
+    return year + '-' + _mouth + '-' + _day
+  } else if (type === 6) {
+    const months = month < 9 ? '0' + month : month
+    const days = day < 9 ? '0' + day : day
+    const hours = hour < 9 ? '0' + hour : hour
+    const minutes = minute < 9 ? '0' + minute : minute
+    return months + '-' + days + ' ' + hours + ':' + minutes
+  }
+}
 
 /**
  * 数组对象单一属性排序
