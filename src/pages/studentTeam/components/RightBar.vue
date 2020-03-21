@@ -7,34 +7,46 @@
  * @LastEditTime: 2020-03-21 17:00:38
  -->
 <template>
-  <div class="right-container"
-       style="width:100%">
-    <el-card shadow="never"
-             class="box-card1"
-             :key="i"
-             v-for="(item, i) in classMessage">
+  <div class="right-container" style="width:100%">
+    <el-card
+      shadow="never"
+      class="box-card1"
+      :key="i"
+      v-for="(item, i) in classMessage"
+    >
       <div class="header">
         <div class="header-left">
           <div class="title">
-            <span class="title-text">{{ item.onetime }}:{{ item.team_name }}</span>
+            <span class="title-text"
+              >{{ item.onetime }}:{{ item.team_name }}</span
+            >
             <span class="text-iconsY">{{
               item.team_type == 0 ? '体验课' : '系统课'
             }}</span>
             <span class="text-iconsB">{{ item.week }}</span>
-            <span :class="[
+            <span
+              :class="[
                 Number(item.team_state) === 2 || Number(item.team_state) === 0
                   ? 'text-iconsGray'
                   : 'text-iconsR'
-              ]">{{ item.state }}</span>
+              ]"
+              >{{ item.state }}</span
+            >
           </div>
           <div class="info">
             <span>学员:{{ item.enrolled }}</span>
-            <span>辅导老师:{{
+            <span
+              >辅导老师:{{
                 item.teacher.nickname || item.teacher.realname
-              }}</span>
+              }}</span
+            >
             <span>辅导老师微信: {{ item.teacher_wx }}</span>
             <span style="margin-right:0px">
-              <span>开课~结课 &nbsp;{{ item.formatCtime }}~{{item.formatEndDay}}</span>
+              <span
+                >开课~结课 &nbsp;{{ item.formatCtime }}~{{
+                  item.formatEndDay
+                }}</span
+              >
             </span>
             <span style="margin-right:0px">
               <span>创建 &nbsp;{{ item.timebegin }}</span>
@@ -53,16 +65,17 @@
           <div class="order-title">累计订单</div>
           <div class="order-number">{{ item.statictis.order_all }}</div>
           <div class="order-count">
-            <span>今日
+            <span
+              >今日
               <span>{{ item.statictis.today_order }}</span>
             </span>
-            <span>昨日
+            <span
+              >昨日
               <span>{{ item.statictis.yesterday_order }}</span>
             </span>
           </div>
         </div>
-        <div class="body-boxCenter"
-             v-show="item.team_type == 0">
+        <div class="body-boxCenter" v-show="item.team_type == 0">
           <div class="Conversion-title">累计转化率</div>
           <div class="Conversion-number">
             {{ item.allTrans == 'NaN' ? 0 : (item.allTrans * 100).toFixed(2) }}
@@ -140,8 +153,7 @@
         </div>
       </div>
     </el-card>
-    <div class="right-bar-empty"
-         v-if="!classMessage.detail">
+    <div class="right-bar-empty" v-if="!classMessage.detail">
       暂无可用数据
     </div>
     <tab-bar :classId="classId" />
@@ -162,7 +174,7 @@ export default {
   components: {
     TabBar
   },
-  data () {
+  data() {
     return {
       classMessage: {},
       cout: 0
@@ -170,7 +182,7 @@ export default {
   },
   computed: {},
   watch: {
-    classId (vals) {
+    classId(vals) {
       if (vals.classId) {
         this.getClassTeacher(vals.classId.id)
         console.log(vals, this.cout++, 'vals')
@@ -180,7 +192,7 @@ export default {
     }
   },
   methods: {
-    getClassTeacher (data) {
+    getClassTeacher(data) {
       const queryParams = `[{id:${data}}]`
       axios
         .get('/graphql/getClassTeacher', {
@@ -274,7 +286,7 @@ export default {
         })
     }
   },
-  mounted () {
+  mounted() {
     console.log(this.classId)
   }
 }

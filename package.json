@@ -10,7 +10,7 @@
     "build:test": "cross-env BASE_URL=ghpagestest npm run build",
     "deploy:test": "cross-env BASE_URL=ghpagestest node ghpagestest.js",
     "test:unit": "vue-cli-service test:unit",
-    "lint": "vue-cli-service lint"
+    "lint": "eslint --fix --ext .js,.vue src"
   },
   "dependencies": {
     "axios": "^0.19.2",
