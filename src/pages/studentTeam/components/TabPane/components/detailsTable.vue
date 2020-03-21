@@ -156,24 +156,23 @@
       </el-table>
       <!-- 分页 -->
       <div class="table-flex">
-        <span class="table-text"
+        <!-- <span class="table-text"
           >当前结果：共计<span class="table-flex-text">{{
             tables.student
           }}</span
           >个学员，<span class="table-flex-text">{{ tables.friend }}</span
           >已加好友，<span class="table-flex-text">{{ tables.group }}</span>
           已进微信群</span
-        >
-        <el-pagination
+        > -->
+        <!-- <el-pagination
           class="page"
-          @size-change="handleSizeChange"
+          layout="prev, pager, next"
           @current-change="handleCurrentChange"
-          :current-page.sync="tables.currentPage"
-          :page-size="100"
-          layout="prev, pager, next, jumper"
-          :total="1000"
+          :current-page="currentPage"
+          :page-size="20"
+          :total="tables.tableData.length"
         >
-        </el-pagination>
+        </el-pagination> -->
       </div>
     </div>
     <!-- 物流 -->
@@ -226,7 +225,7 @@
         ></el-table-column> -->
       </el-table>
     </div>
-    <!-- 登陆 -->
+    <!-- 登录 -->
     <div v-if="this.tables.tabs == 2">
       <el-table
         ref="multipleTable"
@@ -412,10 +411,13 @@ export default {
   props: ['tables'],
   data() {
     return {
-      index: null
+      index: null,
+      currentPage: 1
     }
   },
-  mounted() {},
+  mounted() {
+    // console.log(this.tables)
+  },
   created() {},
   methods: {
     // 获取表格 下标

@@ -149,7 +149,9 @@
         </div>
       </div>
     </el-card>
-
+    <div class="right-bar-empty" v-if="!classMessage.detail">
+      暂无可用数据
+    </div>
     <tab-bar :classId="classId" />
   </div>
 </template>
@@ -462,5 +464,14 @@ export default {
   //       cursor: pointer;
   //     }
   // }
+}
+.right-bar-empty {
+  width: 1162px;
+  height: 179px;
+  text-align: center;
+  line-height: 159px;
+  color: #808080;
+  background-color: #fff;
+  border: #ebebeb 10px solid;
 }
 </style>

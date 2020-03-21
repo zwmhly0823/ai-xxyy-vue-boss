@@ -281,6 +281,19 @@ export default {
 
         if (getToken && getToken.token) {
           setToken(getToken.token)
+          if (getToken.teacher) {
+            localStorage.setItem(
+              'teacher',
+              JSON.stringify(getToken.teacher || '{}')
+            )
+          }
+          if (getToken.staff) {
+            localStorage.setItem(
+              'staff',
+              JSON.stringify(getToken.staff || '{}')
+            )
+          }
+
           location.href = `${path}#/`
         }
 
