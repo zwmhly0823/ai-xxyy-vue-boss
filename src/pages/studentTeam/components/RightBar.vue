@@ -17,9 +17,7 @@
       <div class="header">
         <div class="header-left">
           <div class="title">
-            <span class="title-text"
-              >{{ item.onetime }}:{{ item.team_name }}</span
-            >
+            <span class="title-text">{{ item.id }}:{{ item.team_name }}</span>
             <span class="text-iconsY">{{
               item.team_type == 0 ? '体验课' : '系统课'
             }}</span>
