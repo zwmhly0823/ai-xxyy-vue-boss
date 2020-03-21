@@ -4,10 +4,10 @@
  * @Author: panjian
  * @Date: 2020-03-16 20:22:24
  * @LastEditors: panjian
- * @LastEditTime: 2020-03-21 16:23:39
+ * @LastEditTime: 2020-03-21 20:53:15
  -->
 <template>
-  <div>
+  <div class="table-box">
     <!-- 加好友进群 -->
     <div class="group-box" v-if="this.tables.tabs == 0">
       <el-table
@@ -16,15 +16,21 @@
         tooltip-effect="dark"
         :header-cell-style="headerCss"
         :row-class-name="tableRowClassName"
+        :cell-style="cellStyle"
         @row-click="onClick"
       >
         <!-- 基本信息 -->
         <el-table-column width="260" label="基本信息">
           <template slot-scope="scope">
             <div class="scope-info-box">
-              <img class="scope-info-img" :src="scope.row.head" alt="" />
+              <img
+                class="scope-info-img borders"
+                :src="scope.row.head"
+                alt=""
+              />
               <div class="info-telephone">{{ scope.row.mobile }}</div>
-              <span class="info-sex" v-if="scope.row.sex == 1">男 ·</span>
+              <span class="info-sex" v-if="scope.row.sex == 0">- ·</span>
+              <span class="info-sex" v-else-if="scope.row.sex == 1">男 ·</span>
               <span class="info-sex" v-else>女 ·</span>
               <span class="info-age">{{ scope.row.birthday }}</span>
               <span class="info-basics">{{ scope.row.base_painting }}</span>
@@ -41,7 +47,7 @@
         >
         </el-table-column>
         <!-- 已加好友 -->
-        <el-table-column align="center" label="已加好友">
+        <el-table-column label="已加好友">
           <template slot-scope="scope">
             <!-- <span>{{ scope.row.friend }}</span> -->
             <img
@@ -83,7 +89,7 @@
           </template>
         </el-table-column>
         <!-- 已进群 -->
-        <el-table-column align="center" label="已进群">
+        <el-table-column label="已进群">
           <template slot-scope="scope">
             <img
               class="group-img"
@@ -124,7 +130,7 @@
           </template>
         </el-table-column>
         <!-- 关注公众号 -->
-        <el-table-column align="center" label="关注公众号">
+        <el-table-column label="关注公众号">
           <template slot-scope="scope">
             <img
               class="group-img"
@@ -162,6 +168,7 @@
         tooltip-effect="dark"
         :header-cell-style="headerCss"
         :row-class-name="tableRowClassName"
+        :cell-style="cellStyle"
         @row-click="onClick"
       >
         <el-table-column key="1" width="150" label="用户和购买时间">
@@ -176,7 +183,11 @@
         <el-table-column key="2" label="用户微信">
           <template slot-scope="scope">
             <div class="logistics-wx-box">
-              <img class="logistics-wx-img" :src="scope.row.head" alt="" />
+              <img
+                class="logistics-wx-img borders"
+                :src="scope.row.head"
+                alt=""
+              />
               <span class="logistics-username">{{ scope.row.username }}</span>
               <span class="logistics-nickname">{{ scope.row.nickname }}</span>
             </div>
@@ -227,6 +238,7 @@
         tooltip-effect="dark"
         :header-cell-style="headerCss"
         :row-class-name="tableRowClassName"
+        :cell-style="cellStyle"
         @row-click="onClick"
       >
         <el-table-column width="150" label="用户和购买时间">
@@ -241,7 +253,7 @@
         <el-table-column label="用户微信">
           <template slot-scope="scope">
             <div class="login-wx-box">
-              <img class="login-wx-img" :src="scope.row.head" alt="" />
+              <img class="login-wx-img borders" :src="scope.row.head" alt="" />
               <span class="login-username">{{ scope.row.username }}</span>
               <span class="login-nickname">{{ scope.row.nickname }}</span>
             </div>
@@ -250,7 +262,7 @@
         <el-table-column label="状态">
           <template slot-scope="scope">
             <div>
-              <span style="display: none;">{{ scope.row }}</span>
+              <span>{{ scope.row.status }}</span>
             </div>
           </template>
         </el-table-column>
@@ -276,60 +288,73 @@
       </el-pagination>
     </div>
     <!-- 参课和完课 -->
-    <div v-if="this.tables.tabs == 3">
+    <div class="participateIn-box" v-if="this.tables.tabs == 3">
       <el-table
         ref="multipleTable"
         :data="tables.tableData"
         tooltip-effect="dark"
         :header-cell-style="headerCss"
         :row-class-name="tableRowClassName"
+        :cell-style="cellStyle"
         @row-click="onClick"
       >
         <el-table-column width="150" label="用户和购买时间">
           <template slot-scope="scope">
             <div>
-              <span>{{ scope.row }}</span>
+              <span>{{ scope.row.mobile }}</span>
+              <br />
+              <span>{{ scope.row.buytime }}</span>
             </div>
           </template>
         </el-table-column>
-        <el-table-column label="用户微信">
+        <el-table-column width="200" label="用户微信">
           <template slot-scope="scope">
-            <div>
-              <img :src="scope.row.head" alt="" />
-              <div class="logistics-telephone">{{ scope.row.mobile }}</div>
-              <span>{{ scope.row }}</span>
+            <div class="participateIn-wx-box">
+              <img
+                class="participateIn-wx-img borders"
+                :src="scope.row.head"
+                alt=""
+              />
+              <span class="participateIn-username">{{
+                scope.row.username
+              }}</span>
+              <span class="participateIn-nickname">{{
+                scope.row.nickname
+              }}</span>
             </div>
           </template>
         </el-table-column>
         <el-table-column label="状态">
           <template slot-scope="scope">
             <div>
-              <img :src="scope.row.head" alt="" />
-              <span>{{ scope.row }}</span>
+              <span>{{ scope.row.status }}</span>
             </div>
           </template>
         </el-table-column>
         <el-table-column label="课程">
           <template slot-scope="scope">
             <div>
-              <img :src="scope.row.head" alt="" />
-              <span>{{ scope.row }}</span>
+              <span>{{ scope.row.current_lesson }}</span>
+              <br />
+              <span>{{ scope.row.classTitle }}</span>
             </div>
           </template>
         </el-table-column>
         <el-table-column label="参课">
           <template slot-scope="scope">
             <div>
-              <img :src="scope.row.head" alt="" />
-              <span>{{ scope.row }}</span>
+              <span>{{ scope.row.add_class_status }}</span>
+              <br />
+              <span>{{ scope.row.add_class_ctime }}</span>
             </div>
           </template>
         </el-table-column>
         <el-table-column label="完课">
           <template slot-scope="scope">
             <div>
-              <img :src="scope.row.head" alt="" />
-              <span>{{ scope.row }}</span>
+              <span>{{ scope.row.add_class_status }}</span>
+              <br />
+              <span>{{ scope.row.add_class_utime }}</span>
             </div>
           </template>
         </el-table-column>
@@ -342,6 +367,16 @@
           :label="item.label"
         ></el-table-column> -->
       </el-table>
+      <!-- 分页 -->
+      <el-pagination
+        class="page"
+        @current-change="handleCurrentChange"
+        :current-page="tables.totalPages"
+        :page-size="10"
+        layout="prev, pager, next"
+        :total="tables.totalElements"
+      >
+      </el-pagination>
     </div>
     <!-- 作品及点评 -->
     <div v-if="this.tables.tabs == 4">
@@ -351,6 +386,7 @@
         tooltip-effect="dark"
         :header-cell-style="headerCss"
         :row-class-name="tableRowClassName"
+        :cell-style="cellStyle"
         @row-click="onClick"
       >
         <el-table-column width="150" label="用户和购买时间">
@@ -411,8 +447,7 @@ export default {
   props: ['tables'],
   data() {
     return {
-      index: null,
-      currentPage: 1
+      index: null
     }
   },
   mounted() {
@@ -445,9 +480,20 @@ export default {
       }
       this.$emit('onGroup', val)
     },
+    // 单元格回调样式
+    cellStyle({ row, column, rowIndex, columnIndex }) {
+      // console.log(row, column, rowIndex, columnIndex)
+      // if (column.label === '已加好友' || column.label === '已进群') {
+      //   return 'padding-left:50px;'
+      // }
+      if (columnIndex === 0) {
+        return 'padding-left:15px;padding-top:20px;padding-bottom:15px;'
+      }
+    },
     // 表头回调样式
     headerCss({ row, column, rowIndex, columnIndex }) {
       // console.log(row, column, rowIndex, columnIndex, 'headerCss')
+      return 'padding-left:15px;font-size:12px;color:#666;font-weight:normal;'
     },
     // 分页
     handleCurrentChange(val) {
@@ -457,82 +503,106 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.group-box {
-  .scope-info-box {
-    position: relative;
-    .scope-info-img {
-      display: inline-block;
-      height: 50px;
-      width: 50px;
+.table-box {
+  margin-top: 16px;
+  .group-box {
+    .scope-info-box {
+      position: relative;
+      .scope-info-img {
+        display: inline-block;
+        height: 50px;
+        width: 50px;
+      }
+      .info-telephone {
+        position: absolute;
+        left: 70px;
+        top: 0;
+      }
+      .info-sex {
+        margin-left: 20px;
+      }
+      .info-age {
+        margin-left: 10px;
+      }
+      .info-basics {
+        margin-left: 10px;
+      }
     }
-    .info-telephone {
-      position: absolute;
-      left: 70px;
-      top: 0;
-    }
-    .info-sex {
-      margin-left: 20px;
-    }
-    .info-age {
+    .group-img {
+      width: 18px;
       margin-left: 10px;
     }
-    .info-basics {
-      margin-left: 10px;
+    .icon-warps {
+      position: relative;
+      top: -3px;
+      margin-left: 2px;
+      font-size: 12px;
     }
   }
-  .group-img {
-    width: 18px;
-    margin-left: 10px;
-  }
-  .icon-warps {
-    position: relative;
-    top: -3px;
-    margin-left: 2px;
-    font-size: 12px;
-  }
-}
-.logistics-box {
-  .logistics-wx-box {
-    position: relative;
-    .logistics-wx-img {
-      width: 50px;
+  .logistics-box {
+    .logistics-wx-box {
+      position: relative;
+      .logistics-wx-img {
+        width: 50px;
+      }
+      .logistics-username {
+        position: absolute;
+        top: 0;
+        left: 55px;
+      }
+      .logistics-nickname {
+        position: absolute;
+        top: 25px;
+        left: 55px;
+      }
     }
-    .logistics-username {
-      position: absolute;
-      top: 0;
-      left: 55px;
-    }
-    .logistics-nickname {
-      position: absolute;
-      top: 25px;
-      left: 55px;
+    .logistics-address-name {
+      margin-left: -8px;
     }
   }
-  .logistics-address-name {
-    margin-left: -8px;
-  }
-}
-.login-box {
-  .login-wx-box {
-    position: relative;
-    .login-wx-img {
-      width: 50px;
-    }
-    .login-username {
-      position: absolute;
-      top: 0;
-      left: 55px;
-    }
-    .login-nickname {
-      position: absolute;
-      top: 25px;
-      left: 55px;
+  .login-box {
+    .login-wx-box {
+      position: relative;
+      .login-wx-img {
+        width: 50px;
+      }
+      .login-username {
+        position: absolute;
+        top: 0;
+        left: 55px;
+      }
+      .login-nickname {
+        position: absolute;
+        top: 25px;
+        left: 55px;
+      }
     }
   }
-}
-.page {
-  padding-top: 5px;
-  float: right;
-  margin-right: 20px;
+  .participateIn-box {
+    .participateIn-wx-box {
+      position: relative;
+      .participateIn-wx-img {
+        width: 50px;
+      }
+      .participateIn-username {
+        position: absolute;
+        top: 0;
+        left: 55px;
+      }
+      .participateIn-nickname {
+        position: absolute;
+        top: 25px;
+        left: 55px;
+      }
+    }
+  }
+  .borders {
+    border: 1px solid #f2f2f2;
+  }
+  .page {
+    padding-top: 5px;
+    float: right;
+    margin-right: 20px;
+  }
 }
 </style>
