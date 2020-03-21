@@ -77,10 +77,10 @@ export function timestamp(stamp, type) {
   } else if (type === 5) {
     return year + '-' + _mouth + '-' + _day
   } else if (type === 6) {
-    const months = month < 9 ? '0' + month : month
-    const days = day < 9 ? '0' + day : day
-    const hours = hour < 9 ? '0' + hour : hour
-    const minutes = minute < 9 ? '0' + minute : minute
+    const months = month <= 9 ? '0' + month : month
+    const days = day <= 9 ? '0' + day : day
+    const hours = hour <= 9 ? '0' + hour : hour
+    const minutes = minute <= 9 ? '0' + minute : minute
     return months + '-' + days + ' ' + hours + ':' + minutes
   }
 }

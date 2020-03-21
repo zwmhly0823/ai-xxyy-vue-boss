@@ -127,8 +127,8 @@ export default {
           cursor: pointer;
           vertical-align: middle;
           display: inline-block;
-          width: 40px;
-          height: 40px;
+          width: 32px;
+          height: 32px;
           border-radius: 100%;
           border: 2px solid #e5e5e5;
         }
