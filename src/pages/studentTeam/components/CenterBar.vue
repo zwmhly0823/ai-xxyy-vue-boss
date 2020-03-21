@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-13 16:53:33
  * @LastEditors: zhubaodong
- * @LastEditTime: 2020-03-20 21:40:54
+ * @LastEditTime: 2020-03-21 15:28:59
  -->
 <template>
   <div class="center-container">
@@ -230,6 +230,11 @@ export default {
             img {
               display: inline-block;
               width: 18px;
+              position: relative;
+              top: 4px;
+            }
+            span {
+              position: relative;
             }
           }
           .imgtext2 {
