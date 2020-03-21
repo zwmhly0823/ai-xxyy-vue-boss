@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-13 16:53:41
  * @LastEditors: zhubaodong
- * @LastEditTime: 2020-03-20 21:34:27
+ * @LastEditTime: 2020-03-21 17:00:38
  -->
 <template>
   <div class="right-container" style="width:100%">
@@ -76,7 +76,7 @@
           <div class="Conversion-number">
             {{ item.allTrans == 'NaN' ? 0 : (item.allTrans * 100).toFixed(2) }}
           </div>
-          <div class="Conversion-count">
+          <!-- <div class="Conversion-count">
             <span
               >今日{{
                 item.todayTrans == 'NaN'
@@ -91,7 +91,7 @@
                   : (item.yesterdayTrans * 100).toFixed(2)
               }}%</span
             >
-          </div>
+          </div> -->
         </div>
         <div class="body-boxRight">
           <div class="params-top">
