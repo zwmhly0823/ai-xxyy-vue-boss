@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 20:22:24
  * @LastEditors: panjian
- * @LastEditTime: 2020-03-21 15:46:34
+ * @LastEditTime: 2020-03-21 16:23:39
  -->
 <template>
   <div>
@@ -207,14 +207,6 @@
             </div>
           </template>
         </el-table-column>
-        <!-- 组建遍历表头 -->
-        <!-- <el-table-column
-          v-for="(item, index) in tables.tableLabel"
-          :key="index"
-          :prop="item.prop"
-          :width="item.width"
-          :label="item.label"
-        ></el-table-column> -->
       </el-table>
       <!-- 分页 -->
       <el-pagination
@@ -258,7 +250,7 @@
         <el-table-column label="状态">
           <template slot-scope="scope">
             <div>
-              <span>{{ scope.row }}</span>
+              <span style="display: none;">{{ scope.row }}</span>
             </div>
           </template>
         </el-table-column>
@@ -266,18 +258,11 @@
           <template slot-scope="scope">
             <div>
               <span>{{ scope.row.login_time }}</span>
+              <br />
               <span>{{ scope.row.ctime }}</span>
             </div>
           </template>
         </el-table-column>
-        <!-- 组建遍历表头 -->
-        <!-- <el-table-column
-          v-for="(item, index) in tables.tableLabel"
-          :key="index"
-          :prop="item.prop"
-          :width="item.width"
-          :label="item.label"
-        ></el-table-column> -->
       </el-table>
       <!-- 分页 -->
       <el-pagination
@@ -480,14 +465,6 @@ export default {
       height: 50px;
       width: 50px;
     }
-    // .scope-info-sex {
-    //   position: absolute;
-    //   left: 40px;
-    //   top: 40px;
-    //   display: inline-block;
-    //   height: 20px;
-    //   width: 20px;
-    // }
     .info-telephone {
       position: absolute;
       left: 70px;
@@ -513,11 +490,6 @@ export default {
     margin-left: 2px;
     font-size: 12px;
   }
-  .page {
-    padding-top: 5px;
-    float: right;
-    margin-right: 20px;
-  }
 }
 .logistics-box {
   .logistics-wx-box {
@@ -539,11 +511,6 @@ export default {
   .logistics-address-name {
     margin-left: -8px;
   }
-  .page {
-    padding-top: 5px;
-    float: right;
-    margin-right: 20px;
-  }
 }
 .login-box {
   .login-wx-box {
@@ -562,5 +529,10 @@ export default {
       left: 55px;
     }
   }
+}
+.page {
+  padding-top: 5px;
+  float: right;
+  margin-right: 20px;
 }
 </style>

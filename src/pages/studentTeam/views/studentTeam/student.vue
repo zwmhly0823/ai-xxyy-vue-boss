@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-13 15:24:11
  * @LastEditors: zhubaodong
- * @LastEditTime: 2020-03-20 22:03:26
+ * @LastEditTime: 2020-03-21 17:41:29
  -->
 <template>
   <el-row type="flex" class="app-main height student-team">
@@ -195,6 +195,8 @@ export default {
                   ctime,
                   sup,
                   term,
+                  start_day,
+                  end_day,
                   enroll_state,
                   enrolled,
                   pre_enroll,
