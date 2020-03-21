@@ -268,7 +268,7 @@ export default {
     height: 50px;
     float: left;
     text-align: center;
-    border: 1px solid #cccccc;
+    border: 1px solid #f2f2f2;
     margin: 0 10px 0 0;
   }
   &-right {
@@ -320,5 +320,8 @@ export default {
 }
 .hover-row {
   background: #ebebeb !important;
+}
+.el-table td {
+  border-bottom: 1px solid #ededed;
 }
 </style>

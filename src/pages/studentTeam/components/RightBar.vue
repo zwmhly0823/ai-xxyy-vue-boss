@@ -7,7 +7,7 @@
  * @LastEditTime: 2020-03-20 21:34:27
  -->
 <template>
-  <div class="right-container" style="width:100%">
+  <div class="right-container">
     <el-card
       shadow="never"
       class="box-card1"
@@ -42,10 +42,10 @@
             >
             <span>辅导老师微信: {{ item.teacher_wx }}</span>
             <span style="margin-right:0px">
-              <span>开课~结课 &nbsp;{{ item.formatCtime }}~0516</span>
+              <span>开课-结课: &nbsp;{{ item.formatCtime }}-0516</span>
             </span>
             <span style="margin-right:0px">
-              <span>创建 &nbsp;{{ item.timebegin }}</span>
+              <span>创建: &nbsp;{{ item.timebegin }}</span>
             </span>
           </div>
         </div>
@@ -412,12 +412,14 @@ export default {
         .params-top {
           width: 100%;
           display: flex;
+          padding: 0 0 6px 0;
           div {
             flex: 1;
             display: flex;
             flex-direction: column;
             align-items: center;
             div:nth-child(1) {
+              font-size: 14px;
               font-family: 'number_font';
               color: #4d4d4d;
               margin-bottom: 4px;
@@ -433,6 +435,7 @@ export default {
             flex-direction: column;
             align-items: center;
             div:nth-child(1) {
+              font-size: 14px;
               font-family: 'number_font';
               color: #4d4d4d;
               margin-bottom: 4px;
