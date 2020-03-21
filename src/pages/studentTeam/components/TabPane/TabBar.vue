@@ -1,10 +1,10 @@
 <!--
- * @Descripttion: 
- * @version: 
+ * @Descripttion:
+ * @version:
  * @Author: zhubaodong
  * @Date: 2020-03-19 20:50:40
  * @LastEditors: zhubaodong
- * @LastEditTime: 2020-03-20 17:09:46
+ * @LastEditTime: 2020-03-20 18:56:00
  -->
 <template>
   <div class="tab-box">
@@ -20,6 +20,7 @@
       <el-tab-pane label="带班详情" name="details">
         <details-tab :classId="classId" />
       </el-tab-pane>
+      <!-- <div style="height:20px;width:20px;background:red" @click="aa"></div> -->
       <!-- <el-tab-pane label="微信群聊" name="groupChat">
         <groupchat-tab />
       </el-tab-pane>
@@ -60,6 +61,10 @@ export default {
     handleClick(tab, event) {
       console.log(tab, event)
     }
+    // aa() {
+    //   var dom = document.getElementById('right-scroll')
+    //   dom.querySelector('.scrollbar-wrapper').scrollTo(0, 0)
+    // }
   }
 }
 </script>

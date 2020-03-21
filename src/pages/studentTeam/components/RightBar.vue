@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-13 16:53:41
  * @LastEditors: zhubaodong
- * @LastEditTime: 2020-03-20 18:07:57
+ * @LastEditTime: 2020-03-20 21:34:27
  -->
 <template>
   <div class="right-container">
@@ -24,10 +24,17 @@
               item.team_type == 0 ? '体验课' : '系统课'
             }}</span>
             <span class="text-iconsB">{{ item.week }}</span>
-            <span class="text-iconsR">{{ item.state }}</span>
+            <span
+              :class="[
+                Number(item.team_state) === 2 || Number(item.team_state) === 0
+                  ? 'text-iconsGray'
+                  : 'text-iconsR'
+              ]"
+              >{{ item.state }}</span
+            >
           </div>
           <div class="info">
-            <span>学员:{{ item.pre_enroll }}</span>
+            <span>学员:{{ item.enrolled }}</span>
             <span
               >辅导老师:{{
                 item.teacher.nickname || item.teacher.realname
@@ -35,11 +42,10 @@
             >
             <span>辅导老师微信: {{ item.teacher_wx }}</span>
             <span style="margin-right:0px">
-              <span>{{ item.formatCtime }}开班</span>
-              <span>02-16结课</span>
+              <span>开课~结课 &nbsp;{{ item.formatCtime }}~0516</span>
             </span>
             <span style="margin-right:0px">
-              <span>{{ item.timebegin }}创建</span>
+              <span>创建 &nbsp;{{ item.timebegin }}</span>
             </span>
           </div>
         </div>
@@ -55,8 +61,14 @@
           <div class="order-title">累计订单</div>
           <div class="order-number">{{ item.statictis.order_all }}</div>
           <div class="order-count">
-            <span>今日{{ item.statictis.today_order }}</span>
-            <span>昨日{{ item.statictis.yesterday_order }}</span>
+            <span
+              >今日
+              <span>{{ item.statictis.today_order }}</span>
+            </span>
+            <span
+              >昨日
+              <span>{{ item.statictis.yesterday_order }}</span>
+            </span>
           </div>
         </div>
         <div class="body-boxCenter" v-show="item.team_type == 0">
@@ -158,15 +170,18 @@ export default {
   },
   data() {
     return {
-      classMessage: {}
+      classMessage: {},
+      cout: 0
     }
   },
   computed: {},
   watch: {
     classId(vals) {
       if (vals.classId) {
-        this.classMessage = ''
         this.getClassTeacher(vals.classId.id)
+        console.log(vals, this.cout++, 'vals')
+      } else {
+        this.classMessage = ''
       }
     }
   },
@@ -183,6 +198,7 @@ export default {
   team_state
   team_type
   teacher_wx
+  enrolled
   teacher{
     id
     nickname
@@ -223,13 +239,13 @@ export default {
           } else {
             res.data.detail.state = '今日开课'
           }
-          console.log(
-            this.classId,
-            this.classId.week,
-            this.classId.formatCtime,
-            this.classId.classId.enrolled,
-            'seeek'
-          )
+          // console.log(
+          //   this.classId,
+          //   this.classId.week,
+          //   this.classId.formatCtime,
+          //   this.classId.classId.enrolled,
+          //   'seeek'
+          // )
 
           res.data.detail.todayTrans =
             res.data.detail.statictis.today_order /
@@ -247,7 +263,7 @@ export default {
             .format('MM-DD  hh:mm:ss')
           res.data.detail.formatCtime = dayjs
             .unix(Number(this.classId.classId.ctime) / 1000)
-            .format('MM-DD')
+            .format('MMDD')
           res.data.detail.onetime = dayjs
             .unix(Number(this.classId.classId.ctime) / 1000)
             .format('YYMMDD')
@@ -273,7 +289,7 @@ export default {
 
 @font-face {
   font-family: 'number_font';
-  src: url('~@/assets/fonts/AlibabaSans-Medium.otf');
+  src: url('~@/assets/fonts/TG-TYPE-Bold.otf');
 } //引入本地字体数字文件
 
 .right-container {
@@ -308,6 +324,12 @@ export default {
             color: #ff554d;
             background: #ffe7e5;
           }
+          .text-iconsGray {
+            margin-left: 8px;
+            padding: 2px 6px;
+            color: #808080;
+            background: #ededed;
+          }
         }
         .info {
           font-size: 12px;
@@ -330,7 +352,7 @@ export default {
         flex: 0.3;
         padding: 10px;
         margin-right: 15px;
-        background: rgba(247, 247, 247, 1);
+        background: #f5f6f7;
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -341,6 +363,7 @@ export default {
           flex: 1;
         }
         .order-number {
+          color: #4d4d4d;
           font-size: 24px;
           margin-bottom: 10px;
           flex: 1;
@@ -352,6 +375,11 @@ export default {
           display: flex;
           justify-content: space-around;
           flex: 1;
+          span {
+            span {
+              font-family: 'number_font';
+            }
+          }
         }
       }
       &-boxCenter {
@@ -361,6 +389,7 @@ export default {
         }
         .Conversion-number {
           font-size: 24px;
+          color: #4d4d4d;
           font-weight: 500;
           margin-bottom: 10px;
           font-family: 'number_font';
@@ -388,6 +417,7 @@ export default {
             align-items: center;
             div:nth-child(1) {
               font-family: 'number_font';
+              color: #4d4d4d;
               margin-bottom: 4px;
             }
           }
@@ -402,6 +432,7 @@ export default {
             align-items: center;
             div:nth-child(1) {
               font-family: 'number_font';
+              color: #4d4d4d;
               margin-bottom: 4px;
             }
           }
@@ -421,15 +452,15 @@ export default {
   .el-card__body {
     padding: 15px;
   }
-}
-.header-right {
-  white-space: nowrap;
-  .el-card__body {
-    font-size: 14px;
-    padding: 10px 15px;
-    span {
-      cursor: pointer;
-    }
-  }
+  // }
+  // .header-right {
+  //   white-space: nowrap;
+  //   .el-card__body {
+  //     font-size: 14px;
+  //     padding: 10px 15px;
+  //     span {
+  //       cursor: pointer;
+  //     }
+  // }
 }
 </style>

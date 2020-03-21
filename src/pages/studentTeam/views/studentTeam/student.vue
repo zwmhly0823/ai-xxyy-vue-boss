@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-13 15:24:11
  * @LastEditors: zhubaodong
- * @LastEditTime: 2020-03-20 12:27:23
+ * @LastEditTime: 2020-03-20 22:03:26
  -->
 <template>
   <el-row type="flex" class="app-main height student-team">
@@ -57,20 +57,19 @@ export default {
       classListData: {}, // 中栏 班级列表
       classId: '', // 班级Id
       scrollStatus: null,
-      type: 0
+      type: 0,
+      scrollPage: 1
     }
   },
   computed: {
     // 初始化的班级ID(体验课全部中第一条)
     classIdData() {
-      if (!this.classId) {
-        const data =
-          this.classListData.teamStatusPage &&
-          this.classListData.teamStatusPage.content[0]
-        // &&
-        // this.classListData.teamStatusPage.content[0].id
-        return { classId: data, type: this.type }
-      }
+      // if (+this.scrollPage === 1) {
+      //   const data =
+      //     this.classListData.teamStatusPage &&
+      //     this.classListData.teamStatusPage.content[0]
+      //   return { classId: data, type: this.type }
+      // }
       return { classId: this.classId, type: this.type }
     }
   },
@@ -98,6 +97,9 @@ export default {
         this.classStatus = [+data.code]
         await this.getClassList(data.types)
       }
+      this.classId =
+        this.classListData.teamStatusPage &&
+        this.classListData.teamStatusPage.content[0]
     },
     /**
      * 中栏回调函数
@@ -112,6 +114,7 @@ export default {
      * @param(type,page,size) 课程类型 页码 数量
      */
     infiniteScroll(data) {
+      this.scrollPage = data.page
       this.getClassList(data.type, data.page)
     },
     /**
@@ -190,6 +193,11 @@ export default {
           res.data.type = type
           res.data.scrollStatus = `${this.scrollStatus}+${type}`
           this.classListData = res.data
+          if (+this.scrollPage === 1) {
+            this.classId =
+              this.classListData.teamStatusPage &&
+              this.classListData.teamStatusPage.content[0]
+          }
         })
     }
   },

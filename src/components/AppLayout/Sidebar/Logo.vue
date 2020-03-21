@@ -1,3 +1,11 @@
+<!--
+ * @Descripttion: 
+ * @version: 
+ * @Author: zhubaodong
+ * @Date: 2020-03-17 11:22:08
+ * @LastEditors: zhubaodong
+ * @LastEditTime: 2020-03-20 19:38:23
+ -->
 <template>
   <div class="sidebar-logo-container" :class="{ collapse: collapse }">
     <transition name="sidebarLogoFade">
@@ -58,7 +66,7 @@ export default {
   width: 100%;
   height: 50px;
   line-height: 50px;
-  background: #2b2f3a;
+  background: #2a2e3a;
   text-align: center;
   overflow: hidden;
 
