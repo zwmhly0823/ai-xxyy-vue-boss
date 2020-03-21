@@ -4,12 +4,12 @@
  * @Author: panjian
  * @Date: 2020-03-16 20:22:24
  * @LastEditors: panjian
- * @LastEditTime: 2020-03-20 21:59:08
+ * @LastEditTime: 2020-03-21 15:44:14
  -->
 <template>
   <div>
     <!-- 加好友进群 -->
-    <div v-if="this.tables.tabs == 0">
+    <div class="group-box" v-if="this.tables.tabs == 0">
       <el-table
         ref="multipleTable"
         :data="tables.tableData"
@@ -23,17 +23,6 @@
           <template slot-scope="scope">
             <div class="scope-info-box">
               <img class="scope-info-img" :src="scope.row.head" alt="" />
-              <!-- <img
-                v-if="scope.row.sex == 1"
-                class="scope-info-sex"
-                src="@/assets/images/man-icon.png"
-                alt=""
-              /><img
-                v-else
-                class="scope-info-sex"
-                src="@/assets/images/woman-icon.png"
-                alt=""
-              /> -->
               <div class="info-telephone">{{ scope.row.mobile }}</div>
               <span class="info-sex" v-if="scope.row.sex == 1">男 ·</span>
               <span class="info-sex" v-else>女 ·</span>
@@ -52,7 +41,7 @@
         >
         </el-table-column>
         <!-- 已加好友 -->
-        <el-table-column label="已加好友">
+        <el-table-column align="center" label="已加好友">
           <template slot-scope="scope">
             <!-- <span>{{ scope.row.friend }}</span> -->
             <img
@@ -77,7 +66,7 @@
               <el-dropdown-menu slot="dropdown">
                 <el-dropdown-item command="1">
                   <img
-                    class="group-imgs"
+                    style="width: 18px;"
                     src="@/assets/images/success.png"
                     alt=""
                   />
@@ -89,12 +78,12 @@
               ></el-dropdown-item> -->
               </el-dropdown-menu>
             </el-dropdown>
-            <div>{{ scope.row.date }}</div>
+            <div>{{ scope.row.added_wechat_time }}</div>
             <span style="display: none;"> {{ scope.row.group }}</span>
           </template>
         </el-table-column>
         <!-- 已进群 -->
-        <el-table-column label="已进群">
+        <el-table-column align="center" label="已进群">
           <template slot-scope="scope">
             <img
               class="group-img"
@@ -118,7 +107,7 @@
               <el-dropdown-menu slot="dropdown">
                 <el-dropdown-item command="1">
                   <img
-                    class="group-imgs"
+                    style="width: 18px;"
                     src="@/assets/images/success.png"
                     alt=""
                   />
@@ -130,12 +119,12 @@
               ></el-dropdown-item> -->
               </el-dropdown-menu>
             </el-dropdown>
-            <div>{{ scope.row.date }}</div>
+            <div>{{ scope.row.added_group_time }}</div>
             <span style="display: none;"> {{ scope.row.group }}</span>
           </template>
         </el-table-column>
         <!-- 关注公众号 -->
-        <el-table-column label="关注公众号">
+        <el-table-column align="center" label="关注公众号">
           <template slot-scope="scope">
             <img
               class="group-img"
@@ -149,35 +138,24 @@
               src="@/assets/images/success.png"
               alt=""
             />
-            <div>{{ scope.row.date }}</div>
+            <div>{{ scope.row.follow_time }}</div>
             <span style="display: none;"> {{ scope.row }}</span>
           </template>
         </el-table-column>
       </el-table>
       <!-- 分页 -->
-      <div class="table-flex">
-        <span class="table-text"
-          >当前结果：共计<span class="table-flex-text">{{
-            tables.student
-          }}</span
-          >个学员，<span class="table-flex-text">{{ tables.friend }}</span
-          >已加好友，<span class="table-flex-text">{{ tables.group }}</span>
-          已进微信群</span
-        >
-        <el-pagination
-          class="page"
-          @size-change="handleSizeChange"
-          @current-change="handleCurrentChange"
-          :current-page.sync="tables.currentPage"
-          :page-size="100"
-          layout="prev, pager, next, jumper"
-          :total="1000"
-        >
-        </el-pagination>
-      </div>
+      <el-pagination
+        class="page"
+        @current-change="handleCurrentChange"
+        :current-page="tables.totalPages"
+        :page-size="10"
+        layout="prev, pager, next"
+        :total="tables.totalElements"
+      >
+      </el-pagination>
     </div>
     <!-- 物流 -->
-    <div v-if="this.tables.tabs == 1">
+    <div class="logistics-box" v-if="this.tables.tabs == 1">
       <el-table
         ref="multipleTable"
         :data="tables.tableData"
@@ -186,33 +164,46 @@
         :row-class-name="tableRowClassName"
         @row-click="onClick"
       >
-        <el-table-column width="150" label="用户和购买时间">
+        <el-table-column key="1" width="150" label="用户和购买时间">
           <template slot-scope="scope">
-            <div class="scope-logistics-box">
-              <span class="logistics-age">{{ scope.row.mobile }}</span>
+            <div>
+              <span>{{ scope.row.mobile }}</span>
+              <br />
+              <span>{{ scope.row.ctime }}</span>
             </div>
           </template>
         </el-table-column>
-        <el-table-column label="用户微信">
+        <el-table-column key="2" label="用户微信">
           <template slot-scope="scope">
-            <div class="scope-logistics-box">
-              <img class="scope-logistics-img" :src="scope.row.head" alt="" />
-              <div class="logistics-telephone">{{ scope.row.mobile }}</div>
-              <span class="logistics-age">{{ scope.row }}</span>
+            <div class="logistics-wx-box">
+              <img class="logistics-wx-img" :src="scope.row.head" alt="" />
+              <span class="logistics-username">{{ scope.row.username }}</span>
+              <span class="logistics-nickname">{{ scope.row.nickname }}</span>
             </div>
           </template>
         </el-table-column>
-        <el-table-column label="收货人及地址">
+        <el-table-column key="3" width="280" label="收货人及地址">
           <template slot-scope="scope">
-            <div class="scope-logistics-box">
-              <span class="logistics-age">{{ scope.row }}</span>
+            <div>
+              <span class="logistics-address-name"
+                >「 {{ scope.row.product_name }}」</span
+              >
+              <br />
+              <span>{{ scope.row.receipt_name }}</span>
+              <span>{{ scope.row.receipt_tel }}</span>
+              <br />
+              <span>{{ scope.row.province }}</span>
+              <span>{{ scope.row.city }}</span>
+              <span>{{ scope.row.area }}</span>
+              <br />
+              <span>{{ scope.row.address_detail }}</span>
             </div>
           </template>
         </el-table-column>
-        <el-table-column label="发货">
+        <el-table-column key="4" label="发货">
           <template slot-scope="scope">
-            <div class="scope-logistics-box">
-              <span class="logistics-age">{{ scope.row }}</span>
+            <div>
+              <span>{{ scope.row.express_status }}</span>
             </div>
           </template>
         </el-table-column>
@@ -225,9 +216,19 @@
           :label="item.label"
         ></el-table-column> -->
       </el-table>
+      <!-- 分页 -->
+      <el-pagination
+        class="page"
+        @current-change="handleCurrentChange"
+        :current-page="tables.totalPages"
+        :page-size="10"
+        layout="prev, pager, next"
+        :total="tables.totalElements"
+      >
+      </el-pagination>
     </div>
     <!-- 登陆 -->
-    <div v-if="this.tables.tabs == 2">
+    <div class="login-box" v-if="this.tables.tabs == 2">
       <el-table
         ref="multipleTable"
         :data="tables.tableData"
@@ -238,31 +239,34 @@
       >
         <el-table-column width="150" label="用户和购买时间">
           <template slot-scope="scope">
-            <div class="scope-logistics-box">
-              <span class="logistics-age">{{ scope.row }}</span>
+            <div>
+              <span>{{ scope.row.mobile }}</span>
+              <br />
+              <span>{{ scope.row.express_ctime }}</span>
             </div>
           </template>
         </el-table-column>
         <el-table-column label="用户微信">
           <template slot-scope="scope">
-            <div class="scope-logistics-box">
-              <img class="scope-logistics-img" :src="scope.row.head" alt="" />
-              <div class="logistics-telephone">{{ scope.row.mobile }}</div>
-              <span class="logistics-age">{{ scope.row }}</span>
+            <div class="login-wx-box">
+              <img class="login-wx-img" :src="scope.row.head" alt="" />
+              <span class="login-username">{{ scope.row.username }}</span>
+              <span class="login-nickname">{{ scope.row.nickname }}</span>
             </div>
           </template>
         </el-table-column>
         <el-table-column label="状态">
           <template slot-scope="scope">
-            <div class="scope-logistics-box">
-              <span class="logistics-age">{{ scope.row }}</span>
+            <div>
+              <span>{{ scope.row }}</span>
             </div>
           </template>
         </el-table-column>
         <el-table-column label="最近登录次数">
           <template slot-scope="scope">
-            <div class="scope-logistics-box">
-              <span class="logistics-age">{{ scope.row }}</span>
+            <div>
+              <span>{{ scope.row.login_time }}</span>
+              <span>{{ scope.row.ctime }}</span>
             </div>
           </template>
         </el-table-column>
@@ -275,6 +279,16 @@
           :label="item.label"
         ></el-table-column> -->
       </el-table>
+      <!-- 分页 -->
+      <el-pagination
+        class="page"
+        @current-change="handleCurrentChange"
+        :current-page="tables.totalPages"
+        :page-size="10"
+        layout="prev, pager, next"
+        :total="tables.totalElements"
+      >
+      </el-pagination>
     </div>
     <!-- 参课和完课 -->
     <div v-if="this.tables.tabs == 3">
@@ -288,49 +302,49 @@
       >
         <el-table-column width="150" label="用户和购买时间">
           <template slot-scope="scope">
-            <div class="scope-logistics-box">
-              <span class="logistics-age">{{ scope.row }}</span>
+            <div>
+              <span>{{ scope.row }}</span>
             </div>
           </template>
         </el-table-column>
         <el-table-column label="用户微信">
           <template slot-scope="scope">
-            <div class="scope-logistics-box">
-              <img class="scope-logistics-img" :src="scope.row.head" alt="" />
+            <div>
+              <img :src="scope.row.head" alt="" />
               <div class="logistics-telephone">{{ scope.row.mobile }}</div>
-              <span class="logistics-age">{{ scope.row }}</span>
+              <span>{{ scope.row }}</span>
             </div>
           </template>
         </el-table-column>
         <el-table-column label="状态">
           <template slot-scope="scope">
-            <div class="scope-logistics-box">
-              <img class="scope-logistics-img" :src="scope.row.head" alt="" />
-              <span class="logistics-age">{{ scope.row }}</span>
+            <div>
+              <img :src="scope.row.head" alt="" />
+              <span>{{ scope.row }}</span>
             </div>
           </template>
         </el-table-column>
         <el-table-column label="课程">
           <template slot-scope="scope">
-            <div class="scope-logistics-box">
-              <img class="scope-logistics-img" :src="scope.row.head" alt="" />
-              <span class="logistics-age">{{ scope.row }}</span>
+            <div>
+              <img :src="scope.row.head" alt="" />
+              <span>{{ scope.row }}</span>
             </div>
           </template>
         </el-table-column>
         <el-table-column label="参课">
           <template slot-scope="scope">
-            <div class="scope-logistics-box">
-              <img class="scope-logistics-img" :src="scope.row.head" alt="" />
-              <span class="logistics-age">{{ scope.row }}</span>
+            <div>
+              <img :src="scope.row.head" alt="" />
+              <span>{{ scope.row }}</span>
             </div>
           </template>
         </el-table-column>
         <el-table-column label="完课">
           <template slot-scope="scope">
-            <div class="scope-logistics-box">
-              <img class="scope-logistics-img" :src="scope.row.head" alt="" />
-              <span class="logistics-age">{{ scope.row }}</span>
+            <div>
+              <img :src="scope.row.head" alt="" />
+              <span>{{ scope.row }}</span>
             </div>
           </template>
         </el-table-column>
@@ -356,41 +370,41 @@
       >
         <el-table-column width="150" label="用户和购买时间">
           <template slot-scope="scope">
-            <div class="scope-logistics-box">
-              <span class="logistics-age">{{ scope.row }}</span>
+            <div>
+              <span>{{ scope.row }}</span>
             </div>
           </template>
         </el-table-column>
         <el-table-column width="180" label="用户微信">
           <template slot-scope="scope">
-            <div class="scope-logistics-box">
-              <img class="scope-logistics-img" :src="scope.row.head" alt="" />
+            <div>
+              <img :src="scope.row.head" alt="" />
               <div class="logistics-telephone">{{ scope.row.mobile }}</div>
-              <span class="logistics-age">{{ scope.row }}</span>
+              <span>{{ scope.row }}</span>
             </div>
           </template>
         </el-table-column>
         <el-table-column label="课程">
           <template slot-scope="scope">
-            <div class="scope-logistics-box">
-              <img class="scope-logistics-img" :src="scope.row.head" alt="" />
-              <span class="logistics-age">{{ scope.row }}</span>
+            <div>
+              <img :src="scope.row.head" alt="" />
+              <span>{{ scope.row }}</span>
             </div>
           </template>
         </el-table-column>
         <el-table-column label="作品">
           <template slot-scope="scope">
-            <div class="scope-logistics-box">
-              <img class="scope-logistics-img" :src="scope.row.head" alt="" />
-              <span class="logistics-age">{{ scope.row }}</span>
+            <div>
+              <img :src="scope.row.head" alt="" />
+              <span>{{ scope.row }}</span>
             </div>
           </template>
         </el-table-column>
         <el-table-column label="点评">
           <template slot-scope="scope">
-            <div class="scope-logistics-box">
-              <img class="scope-logistics-img" :src="scope.row.head" alt="" />
-              <span class="logistics-age">{{ scope.row }}</span>
+            <div>
+              <img :src="scope.row.head" alt="" />
+              <span>{{ scope.row }}</span>
             </div>
           </template>
         </el-table-column>
@@ -448,72 +462,102 @@ export default {
       // console.log(row, column, rowIndex, columnIndex, 'headerCss')
     },
     // 分页
-    handleSizeChange(val) {
-      console.log(`每页 ${val} 条`)
-    },
     handleCurrentChange(val) {
-      console.log(`当前页: ${val}`)
+      this.$emit('onTotalPages', val)
     }
   }
 }
 </script>
 <style lang="scss" scoped>
-.scope-info-box {
-  position: relative;
-  .scope-info-img {
-    display: inline-block;
-    height: 50px;
-    width: 50px;
-  }
-  // .scope-info-sex {
-  //   position: absolute;
-  //   left: 40px;
-  //   top: 40px;
-  //   display: inline-block;
-  //   height: 20px;
-  //   width: 20px;
-  // }
-  .info-telephone {
-    position: absolute;
-    left: 70px;
-    top: 0;
-  }
-  .info-sex {
-    margin-left: 20px;
-  }
-  .info-age {
-    margin-left: 10px;
-  }
-  .info-basics {
-    margin-left: 10px;
-  }
-}
-.group-img {
-  width: 18px;
-  margin-left: 10px;
-}
-.group-imgs {
-  width: 18px;
-}
-.icon-warps {
-  position: relative;
-  top: -3px;
-  margin-left: 2px;
-  font-size: 12px;
-}
-.table-flex {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 12px;
-  .table-text {
-    padding-top: 5px;
-    .table-flex-text {
-      color: #1e90ff;
+.group-box {
+  .scope-info-box {
+    position: relative;
+    .scope-info-img {
+      display: inline-block;
+      height: 50px;
+      width: 50px;
     }
+    // .scope-info-sex {
+    //   position: absolute;
+    //   left: 40px;
+    //   top: 40px;
+    //   display: inline-block;
+    //   height: 20px;
+    //   width: 20px;
+    // }
+    .info-telephone {
+      position: absolute;
+      left: 70px;
+      top: 0;
+    }
+    .info-sex {
+      margin-left: 20px;
+    }
+    .info-age {
+      margin-left: 10px;
+    }
+    .info-basics {
+      margin-left: 10px;
+    }
+  }
+  .group-img {
+    width: 18px;
+    margin-left: 10px;
+  }
+  .icon-warps {
+    position: relative;
+    top: -3px;
+    margin-left: 2px;
+    font-size: 12px;
   }
   .page {
     padding-top: 5px;
+    float: right;
+    margin-right: 20px;
+  }
+}
+.logistics-box {
+  .logistics-wx-box {
+    position: relative;
+    .logistics-wx-img {
+      width: 50px;
+    }
+    .logistics-username {
+      position: absolute;
+      top: 0;
+      left: 55px;
+    }
+    .logistics-nickname {
+      position: absolute;
+      top: 25px;
+      left: 55px;
+    }
+  }
+  .logistics-address-name {
+    margin-left: -8px;
+  }
+  .page {
+    padding-top: 5px;
+    float: right;
+    margin-right: 20px;
+  }
+}
+.login-box {
+  .login-wx-box {
+    position: relative;
+    .login-wx-img {
+      width: 50px;
+    }
+    .login-username {
+      position: absolute;
+      top: 0;
+      left: 55px;
+    }
+    .login-nickname {
+      position: absolute;
+      top: 25px;
+      left: 55px;
+    }
   }
 }
 </style>
