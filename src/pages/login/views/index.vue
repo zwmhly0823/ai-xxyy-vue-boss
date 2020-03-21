@@ -279,8 +279,12 @@ export default {
               console.log(err)
             ))
 
-        if (getToken && getToken.token) {
+        if (getToken && getToken.token && getToken.teacher) {
           setToken(getToken.token)
+          localStorage.setItem(
+            'teacher',
+            JSON.stringify(getToken.teacher || '{}')
+          )
           location.href = `${path}#/`
         }
 
