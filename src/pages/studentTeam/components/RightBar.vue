@@ -7,7 +7,7 @@
  * @LastEditTime: 2020-03-20 21:34:27
  -->
 <template>
-  <div class="right-container">
+  <div class="right-container" style="width:100%">
     <el-card
       shadow="never"
       class="box-card1"
@@ -466,7 +466,7 @@ export default {
   // }
 }
 .right-bar-empty {
-  width: 1162px;
+  width: 100%;
   height: 179px;
   text-align: center;
   line-height: 159px;
