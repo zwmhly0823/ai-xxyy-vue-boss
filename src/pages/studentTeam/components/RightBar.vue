@@ -33,11 +33,7 @@
           </div>
           <div class="info">
             <span>学员:{{ item.enrolled }}</span>
-            <span
-              >辅导老师:{{
-                item.teacher.nickname || item.teacher.realname
-              }}</span
-            >
+            <span>辅导老师:{{ item.teacher.realname }}</span>
             <span>辅导老师微信: {{ item.teacher_wx }}</span>
             <span style="margin-right:0px">
               <span
