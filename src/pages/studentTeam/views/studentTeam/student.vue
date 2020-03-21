@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-13 15:24:11
  * @LastEditors: zhubaodong
- * @LastEditTime: 2020-03-20 12:27:23
+ * @LastEditTime: 2020-03-20 22:03:26
  -->
 <template>
   <el-row type="flex" class="app-main height student-team">
@@ -57,20 +57,20 @@ export default {
       classListData: {}, // 中栏 班级列表
       classId: '', // 班级Id
       scrollStatus: null,
-      type: 0
+      type: 0,
+      scrollPage: 1,
+      teacher_id: null
     }
   },
   computed: {
     // 初始化的班级ID(体验课全部中第一条)
     classIdData() {
-      if (!this.classId) {
-        const data =
-          this.classListData.teamStatusPage &&
-          this.classListData.teamStatusPage.content[0]
-        // &&
-        // this.classListData.teamStatusPage.content[0].id
-        return { classId: data, type: this.type }
-      }
+      // if (+this.scrollPage === 1) {
+      //   const data =
+      //     this.classListData.teamStatusPage &&
+      //     this.classListData.teamStatusPage.content[0]
+      //   return { classId: data, type: this.type }
+      // }
       return { classId: this.classId, type: this.type }
     }
   },
@@ -98,6 +98,9 @@ export default {
         this.classStatus = [+data.code]
         await this.getClassList(data.types)
       }
+      this.classId =
+        this.classListData.teamStatusPage &&
+        this.classListData.teamStatusPage.content[0]
     },
     /**
      * 中栏回调函数
@@ -112,6 +115,7 @@ export default {
      * @param(type,page,size) 课程类型 页码 数量
      */
     infiniteScroll(data) {
+      this.scrollPage = data.page
       this.getClassList(data.type, data.page)
     },
     /**
@@ -119,7 +123,15 @@ export default {
      * @param(team_type) 0为体验课 1为系统课
      */
     async getExperienceStatusList(data = 0) {
-      const queryParams = `{"bool":{"must":[{"term":{"team_type":${data}}}]}}`
+      const queryParams =
+        data === 0
+          ? !this.teacher_id
+            ? `{"bool":{"must":[{"term":{"team_type":${data}}}]}}`
+            : `{"bool":{"must":[{"term":{"team_type":${data}}},{"term":{"teacher_id": ${this.teacher_id}}}]}}`
+          : !this.teacher_id
+          ? `{"bool":{"must":[{"range":{"team_type":{"gte":${data}}}}]}}`
+          : `{"bool":{"must":[{"range":{"team_type":{"gte":${data}}}},{"term":{"teacher_id": ${this.teacher_id}}}]}}`
+      // const queryParams = `{"bool":{"must":[{"range":{"team_type":{"gt":${data}}}}]}}`
       await axios
         .get('/graphql/team', {
           params: {
@@ -145,10 +157,21 @@ export default {
     },
     /**
      * 获取班级列表
-     * @param(team_type) 0为体验课 1为系统课
+     * @param(team_type) 0为体验课 >=1为系统课
      */
     async getClassList(type = 0, page = 1) {
-      const queryParams = `{"bool":{"must":[{"terms":{"team_state":[${this.classStatus}]}},{"term":{"team_type":${type}}}]}}`
+      let queryParams
+      if (type === 0) {
+        // queryParams = `{"bool":{"must":[{"terms":{"team_state":[${this.classStatus}]}},{"term":{"team_type":${type}}}]}}`
+        queryParams = this.teacher_id
+          ? `{"bool":{"must":[{"terms":{"team_state":[${this.classStatus}]}},{"term":{"team_type":${type}}},{"term":{"teacher_id": ${this.teacher_id}}}]}}`
+          : `{"bool":{"must":[{"terms":{"team_state":[${this.classStatus}]}},{"term":{"team_type":${type}}}]}}`
+      } else {
+        // queryParams = `{"bool":{"must":[{"terms":{"team_state":[${this.classStatus}]}},{"range":{"team_type":{"gte":${type}}}}]}}`
+        queryParams = this.teacher_id
+          ? `{"bool":{"must":[{"terms":{"team_state":[${this.classStatus}]}},{"range":{"team_type":{"gte":${type}}}},{"term":{"teacher_id": ${this.teacher_id}}}]}}`
+          : `{"bool":{"must":[{"terms":{"team_state":[${this.classStatus}]}},{"range":{"team_type":{"gte":${type}}}}]}}`
+      }
       await axios
         .get('/graphql/team', {
           params: {
@@ -190,10 +213,19 @@ export default {
           res.data.type = type
           res.data.scrollStatus = `${this.scrollStatus}+${type}`
           this.classListData = res.data
+          if (+this.scrollPage === 1) {
+            this.classId =
+              this.classListData.teamStatusPage &&
+              this.classListData.teamStatusPage.content[0]
+          }
         })
     }
   },
   async created() {
+    const teacher = localStorage.getItem('teacher')
+    if (teacher) {
+      this.teacher_id = JSON.parse(teacher).id
+    }
     // 请求体验课状态列表
     await this.getExperienceStatusList(0)
     // 请求系统课状态列表

@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 20:22:24
  * @LastEditors: panjian
- * @LastEditTime: 2020-03-21 15:44:14
+ * @LastEditTime: 2020-03-21 15:46:34
  -->
 <template>
   <div>
@@ -426,10 +426,13 @@ export default {
   props: ['tables'],
   data() {
     return {
-      index: null
+      index: null,
+      currentPage: 1
     }
   },
-  mounted() {},
+  mounted() {
+    // console.log(this.tables)
+  },
   created() {},
   methods: {
     // 获取表格 下标

@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 14:19:58
  * @LastEditors: panjian
- * @LastEditTime: 2020-03-21 15:40:51
+ * @LastEditTime: 2020-03-21 15:47:14
  -->
 <template>
   <div>
@@ -22,7 +22,7 @@
           <el-tab-pane label="物流" name="logistics">
             <details-table :tables="table"></details-table>
           </el-tab-pane>
-          <el-tab-pane label="登陆" name="login"
+          <el-tab-pane label="登录" name="login"
             ><details-table :tables="table"></details-table
           ></el-tab-pane>
           <el-tab-pane label="参课和完课" name="participateIn"
@@ -83,6 +83,8 @@ export default {
       if (value.classId) {
         console.log(value, 'getGroup value')
         this.getGroup() // 加好友进群
+      } else {
+        this.table.tableData = []
       }
     }
   },

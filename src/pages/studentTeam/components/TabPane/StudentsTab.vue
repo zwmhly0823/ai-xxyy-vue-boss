@@ -2,7 +2,11 @@
   <div class="dataStyle">
     <el-table
       :data="tableData"
-      :header-cell-style="{ fontSize: '12px', color: '#666' }"
+      :header-cell-style="{
+        fontSize: '12px',
+        color: '#666',
+        fontWeight: 'normal'
+      }"
     >
       <el-table-column fixed label="基本信息" class="information" width="280px">
         <template slot-scope="scope">
@@ -23,7 +27,7 @@
       <el-table-column label="上课信息" class="haveclass">
         <div slot-scope="scope" class="haveclass-box">
           <div class="haveclass-content">
-            登陆:
+            登录:
             <span>{{ scope.row.statistics.login }}</span>
           </div>
           <div class="haveclass-content">
@@ -50,7 +54,11 @@
       </el-table-column>
       <el-table-column label="关联物流" class="logistics">
         <template slot-scope="scope">
-          <div class="logistics-num">{{ scope.row.express.total }}</div>
+          <!-- <div class="logistics-num">{{ scope.row.express.total }}</div> -->
+          <span class="text333"> 全部物流:</span>
+          <span class="logistics-num">
+            {{ scope.row.express.total }}
+          </span>
           <div class="text333">{{ scope.row.express.status }}</div>
         </template>
       </el-table-column>
@@ -107,6 +115,8 @@ export default {
         this.currentPage = 1
         this.getstatusList()
         this.studentsList()
+      } else {
+        this.tableData = []
       }
     }
   },
@@ -244,7 +254,7 @@ export default {
       this.currentPage = val
       this.getstatusList()
       this.studentsList()
-      var dom = document.getElementById('right-scroll')
+      const dom = document.getElementById('right-scroll')
       dom.querySelector('.scrollbar-wrapper').scrollTo(0, 0)
     }
   }

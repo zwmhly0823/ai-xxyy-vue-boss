@@ -8,16 +8,16 @@
  */
 import axios from './axios'
 import { getToken } from '@/utils/auth'
-import { baseUrl } from '@/utils/index'
+// import { baseUrl } from '@/utils/index'
 
 export default {
   // 判断是否需要token
   judgeToken() {
     const token = this.getHeaders().token
     const needToken = location.href.indexOf('login') === -1
-
     if (needToken && !token) {
-      location.href = `${baseUrl}login/#/`
+      // location.href = `${baseUrl}login/#/`
+      location.href = `/login/#/`
       return 0
     }
     return 1
