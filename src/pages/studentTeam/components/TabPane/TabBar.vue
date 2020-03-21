@@ -42,7 +42,7 @@
       >
         <el-tab-pane label="学员" name="students"></el-tab-pane>
         <el-tab-pane label="带班详情" name="details"> </el-tab-pane>
-        <el-tab-pane label="订单" name="order"> </el-tab-pane>
+        <!-- <el-tab-pane label="订单" name="order"> </el-tab-pane> -->
       </el-tabs>
     </div>
   </div>
