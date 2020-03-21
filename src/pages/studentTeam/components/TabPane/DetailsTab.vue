@@ -79,8 +79,10 @@ export default {
   },
   watch: {
     classId(value) {
-      console.log(value, 'getGroup value')
-      this.getGroup() // 加好友进群
+      if (value.classId) {
+        console.log(value, 'getGroup value')
+        this.getGroup() // 加好友进群
+      }
     }
   },
   mounted() {

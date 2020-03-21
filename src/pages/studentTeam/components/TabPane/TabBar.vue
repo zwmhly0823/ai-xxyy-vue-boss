@@ -29,7 +29,7 @@
       </el-tab-pane> -->
       </el-tabs>
     </div>
-    <!-- <div class="tab-box" v-show="suckTop">
+    <div class="tab-box" v-show="suckTop">
       <el-tabs
         v-model="activeName"
         @tab-click="handleClick"
@@ -39,7 +39,7 @@
         <el-tab-pane label="学员" name="students"></el-tab-pane>
         <el-tab-pane label="带班详情" name="details"> </el-tab-pane>
       </el-tabs>
-    </div> -->
+    </div>
   </div>
 </template>
 <script>
@@ -72,6 +72,9 @@ export default {
   },
   methods: {
     handleClick(tab, event) {
+      document
+        .getElementById('right-scroll')
+        .querySelector('.scrollbar-wrapper').scrollTop = 0
       console.log(tab, event)
     },
     handleScroll() {
@@ -90,12 +93,13 @@ export default {
 }
 </script>
 <style scoped lang="scss">
-// .box-shadow {
-//   width: 100%;
-//   position: absolute;
-//   top: 0;
-//   z-index: 1000;
-// }
+.box-shadow {
+  width: 100%;
+  position: absolute;
+  border: 1px solid #ebeef5;
+  top: -1px;
+  z-index: 1000;
+}
 .tab-box {
   padding: 0;
   flex: 1;
@@ -103,9 +107,9 @@ export default {
 </style>
 <style lang="scss">
 .tab-box {
-  // .el-table__header {
-  //   border-bottom: 1px solid #e6e6e6;
-  // }
+  .el-tabs__header {
+    margin: 0;
+  }
   .el-tabs--border-card > .el-tabs__content {
     padding: 0px;
   }

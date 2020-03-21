@@ -2,7 +2,11 @@
   <div class="dataStyle">
     <el-table
       :data="tableData"
-      :header-cell-style="{ fontSize: '12px', color: '#666' }"
+      :header-cell-style="{
+        fontSize: '12px',
+        color: '#666',
+        fontWeight: 'normal'
+      }"
     >
       <el-table-column fixed label="基本信息" class="information" width="280px">
         <template slot-scope="scope">
