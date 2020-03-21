@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 14:19:58
  * @LastEditors: panjian
- * @LastEditTime: 2020-03-21 21:36:57
+ * @LastEditTime: 2020-03-21 21:59:53
  -->
 <template>
   <div>
@@ -13,7 +13,7 @@
         <el-tabs v-model="activeName" @tab-click="handleClick">
           <el-tab-pane label="加好友进群" name="group">
             <details-table
-              @onTotalPages="onTotalPages"
+              @onCurrentPage="onCurrentPage"
               @commandFriend="onCommandFriend"
               @onGroup="onGroup"
               :tables="table"
@@ -21,25 +21,25 @@
           </el-tab-pane>
           <el-tab-pane label="物流" name="logistics">
             <details-table
-              @onTotalPages="onTotalPages"
+              @onCurrentPage="onCurrentPage"
               :tables="table"
             ></details-table>
           </el-tab-pane>
           <el-tab-pane label="登录" name="login"
             ><details-table
-              @onTotalPages="onTotalPages"
+              @onCurrentPage="onCurrentPage"
               :tables="table"
             ></details-table
           ></el-tab-pane>
           <el-tab-pane label="参课和完课" name="participateIn"
             ><details-table
-              @onTotalPages="onTotalPages"
+              @onCurrentPage="onCurrentPage"
               :tables="table"
             ></details-table
           ></el-tab-pane>
           <el-tab-pane label="作品及点评" name="works"
             ><details-table
-              @onTotalPages="onTotalPages"
+              @onCurrentPage="onCurrentPage"
               :tables="table"
             ></details-table
           ></el-tab-pane>
@@ -85,7 +85,7 @@ export default {
         // 总条数
         totalElements: null,
         // 当前页
-        totalPages: 1
+        currentPage: 1
       },
       // tabs标签默认状态
       activeName: 'group'
@@ -93,7 +93,7 @@ export default {
   },
   watch: {
     classId(value) {
-      this.table.totalPages = 1
+      this.table.currentPage = 1
       if (value.classId) {
         this.getGroup() // 加好友进群
       } else {
@@ -113,8 +113,8 @@ export default {
         .post('/graphql/user', {
           query: `{
             userListForTeam(query:${JSON.stringify(querys)} , page: ${
-            this.table.totalPages
-          }, size: 10) {
+            this.table.currentPage
+          }) {
               empty
               first
               last
@@ -148,7 +148,6 @@ export default {
           // 0 不显示  1 无基础  2 一年以下 3 一年以上
           // 0 叉 1 对号
           this.table.totalElements = res.data.userListForTeam.totalElements * 1
-          // this.table.totalPages = res.data.userListForTeam.totalPages * 1
           const _data = res.data.userListForTeam.content
           _data.forEach((item) => {
             item.birthday = GetAgeByBrithday(item.birthday)
@@ -181,8 +180,8 @@ export default {
         .post('/graphql/express', {
           query: `{
             stuExpressPage(query:${JSON.stringify(querys)} , page: ${
-            this.table.totalPages
-          }, size: 10) {
+            this.table.currentPage
+          }) {
               empty
               first
               last
@@ -221,15 +220,22 @@ export default {
             } else {
               item.nickname = `微信昵称: ${item.nickname}`
             }
-            if (item.express_status === '1') {
-              item.express_status = '未发货'
-            } else if (
-              item.express_status === '2' ||
-              item.express_status === '3'
-            ) {
+            if (item.express_status === '0') {
+              item.express_status = '以创建无地址'
+            } else if (item.express_status === '1') {
+              item.express_status = '待发货(无地址)'
+            } else if (item.express_status === '2') {
               item.express_status = '已发货'
-            } else if (item.express_status === '5') {
+            } else if (item.express_status === '3') {
               item.express_status = '已签收'
+            } else if (item.express_status === '4') {
+              item.express_status = '签收失败'
+            } else if (item.express_status === '5') {
+              item.express_status = '已退货'
+            } else if (item.express_status === '6') {
+              item.express_status = '待确认'
+            } else if (item.express_status === '7') {
+              item.express_status = '无效'
             }
           })
           this.table.tableData = _data
@@ -242,8 +248,8 @@ export default {
         .post('/graphql/getClassLogin', {
           query: `{
           stuLoginPage(query:${JSON.stringify(querys)}, page: ${
-            this.table.totalPages
-          }, size: 10) {
+            this.table.currentPage
+          }) {
             first
             last
             number
@@ -316,8 +322,8 @@ export default {
         .post('/graphql/getClassComplete', {
           query: `{
             getClassCompPage(query:${JSON.stringify(querys)}, page: ${
-            this.table.totalPages
-          }, size: 10) {
+            this.table.currentPage
+          }) {
               first
               last
               number
@@ -338,6 +344,7 @@ export default {
                 add_class_status
                 classTitle
                 buytime
+                mobile
               }
             }
           }`
@@ -407,7 +414,6 @@ export default {
     },
     handleClick(tab, event) {
       this.table.tableData = []
-      this.totalPages = 1
       if (tab.index === '0') {
         // 加好友进群
         this.getGroup()
@@ -433,8 +439,8 @@ export default {
         this.table.tabs = 4
       }
     },
-    onTotalPages(data) {
-      this.table.totalPages = data
+    onCurrentPage(data) {
+      this.table.currentPage = data
       if (this.table.tabs === '0') {
         this.getGroup()
       } else if (this.table.tabs === '1') {

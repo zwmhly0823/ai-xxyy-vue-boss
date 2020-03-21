@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 20:22:24
  * @LastEditors: panjian
- * @LastEditTime: 2020-03-21 20:53:15
+ * @LastEditTime: 2020-03-21 21:43:09
  -->
 <template>
   <div class="table-box">
@@ -152,7 +152,7 @@
       <!-- 分页 -->
       <m-pagination
         @current-change="handleCurrentChange"
-        :current-page="+tables.totalPages"
+        :current-page="+tables.currentPage"
         :total="+tables.totalElements"
       />
     </div>
@@ -218,7 +218,7 @@
       <!-- 分页 -->
       <m-pagination
         @current-change="handleCurrentChange"
-        :current-page="+tables.totalPages"
+        :current-page="+tables.currentPage"
         :total="+tables.totalElements"
       />
     </div>
@@ -272,7 +272,7 @@
       <!-- <el-pagination
         class="page"
         @current-change="handleCurrentChange"
-        :current-page="+tables.totalPages"
+        :current-page="+tables.currentPage"
         :page-size="10"
         layout="prev, pager, next"
         :total="+tables.totalElements"
@@ -280,7 +280,7 @@
       </el-pagination> -->
       <m-pagination
         @current-change="handleCurrentChange"
-        :current-page="+tables.totalPages"
+        :current-page="+tables.currentPage"
         :total="+tables.totalElements"
       />
     </div>
@@ -365,15 +365,11 @@
         ></el-table-column> -->
       </el-table>
       <!-- 分页 -->
-      <el-pagination
-        class="page"
+      <m-pagination
         @current-change="handleCurrentChange"
-        :current-page="tables.totalPages"
-        :page-size="10"
-        layout="prev, pager, next"
-        :total="tables.totalElements"
-      >
-      </el-pagination>
+        :current-page="+tables.currentPage"
+        :total="+tables.totalElements"
+      />
     </div>
     <!-- 作品及点评 -->
     <div v-if="this.tables.tabs == 4">
@@ -499,7 +495,7 @@ export default {
     // 分页
     handleCurrentChange(val) {
       this.currentPage = val
-      this.$emit('onTotalPages', val)
+      this.$emit('onCurrentPage', val)
     }
   }
 }
