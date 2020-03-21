@@ -144,15 +144,12 @@
         </el-table-column>
       </el-table>
       <!-- 分页 -->
-      <el-pagination
-        class="page"
+      <m-pagination
         @current-change="handleCurrentChange"
-        :current-page="tables.totalPages"
-        :page-size="10"
-        layout="prev, pager, next"
+        :current-page="tables.number"
+        :page-count="tables.totalPages"
         :total="tables.totalElements"
-      >
-      </el-pagination>
+      />
     </div>
     <!-- 物流 -->
     <div class="logistics-box" v-if="this.tables.tabs == 1">
@@ -209,15 +206,12 @@
         </el-table-column>
       </el-table>
       <!-- 分页 -->
-      <el-pagination
-        class="page"
+      <m-pagination
         @current-change="handleCurrentChange"
-        :current-page="tables.totalPages"
-        :page-size="10"
-        layout="prev, pager, next"
+        :current-page="tables.number"
+        :page-count="tables.totalPages"
         :total="tables.totalElements"
-      >
-      </el-pagination>
+      />
     </div>
     <!-- 登陆 -->
     <div class="login-box" v-if="this.tables.tabs == 2">
@@ -265,7 +259,7 @@
         </el-table-column>
       </el-table>
       <!-- 分页 -->
-      <el-pagination
+      <!-- <el-pagination
         class="page"
         @current-change="handleCurrentChange"
         :current-page="tables.totalPages"
@@ -273,7 +267,13 @@
         layout="prev, pager, next"
         :total="tables.totalElements"
       >
-      </el-pagination>
+      </el-pagination> -->
+      <m-pagination
+        @current-change="handleCurrentChange"
+        :current-page="tables.number"
+        :page-count="tables.totalPages"
+        :total="tables.totalElements"
+      />
     </div>
     <!-- 参课和完课 -->
     <div v-if="this.tables.tabs == 3">
@@ -406,9 +406,13 @@
   </div>
 </template>
 <script>
+import MPagination from '@/components/MPagination/index.vue'
 export default {
   name: 'detailsTable',
   props: ['tables'],
+  components: {
+    MPagination
+  },
   data() {
     return {
       index: null,

@@ -72,7 +72,7 @@
       <!-- <el-table-column label="标签" class="thelabel"></el-table-column> -->
     </el-table>
     <!-- 分页 -->
-    <div class="block">
+    <!-- <div class="block">
       <el-pagination
         layout="prev, pager, next"
         :page-count="totalPages"
@@ -82,13 +82,24 @@
         @current-change="handleSizeChange"
       >
       </el-pagination>
-    </div>
+    </div> -->
+    <m-pagination
+      :current-page="currentPage"
+      :page-count="totalPages"
+      :total="totalElements"
+      @current-change="handleSizeChange"
+    />
   </div>
 </template>
 <script>
 import axios from '@/api/axios'
 import { GetAgeByBrithday } from '@/utils/menuItems'
+import MPagination from '@/components/MPagination/index.vue'
+
 export default {
+  components: {
+    MPagination
+  },
   props: {
     // 班级传参
     classId: {
@@ -100,6 +111,7 @@ export default {
     return {
       // 总页数
       totalPages: 1,
+      totalElements: 0, // 总条数
       // 当前页数
       currentPage: 1,
       // 学员列表
@@ -177,6 +189,7 @@ export default {
         })
         .then((res) => {
           this.totalPages = res.data.teamUserListPage.totalPages * 1
+          this.totalElements = +res.data.teamUserListPage.totalElements
           const _data = res.data.teamUserListPage.content
           _data.forEach((ele) => {
             // 性别 0/默认 1/男 2/女  3/保密
