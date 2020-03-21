@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-13 16:53:41
  * @LastEditors: zhubaodong
- * @LastEditTime: 2020-03-20 21:34:27
+ * @LastEditTime: 2020-03-21 18:36:02
  -->
 <template>
   <div class="right-container" style="width:100%">
@@ -17,9 +17,7 @@
       <div class="header">
         <div class="header-left">
           <div class="title">
-            <span class="title-text"
-              >{{ item.onetime }}:{{ item.team_name }}</span
-            >
+            <span class="title-text">{{ item.id }}:{{ item.team_name }}</span>
             <span class="text-iconsY">{{
               item.team_type == 0 ? '体验课' : '系统课'
             }}</span>
@@ -42,7 +40,11 @@
             >
             <span>辅导老师微信: {{ item.teacher_wx }}</span>
             <span style="margin-right:0px">
-              <span>开课~结课 &nbsp;{{ item.formatCtime }}~0516</span>
+              <span
+                >开课~结课 &nbsp;{{ item.formatStartDay }}~{{
+                  item.formatEndDay
+                }}</span
+              >
             </span>
             <span style="margin-right:0px">
               <span>创建 &nbsp;{{ item.timebegin }}</span>
@@ -57,7 +59,7 @@
         </div> -->
       </div>
       <div class="body">
-        <div class="body-boxLeft">
+        <div class="body-boxLeft" v-show="item.team_type == 0">
           <div class="order-title">累计订单</div>
           <div class="order-number">{{ item.statictis.order_all }}</div>
           <div class="order-count">
@@ -76,7 +78,7 @@
           <div class="Conversion-number">
             {{ item.allTrans == 'NaN' ? 0 : (item.allTrans * 100).toFixed(2) }}
           </div>
-          <div class="Conversion-count">
+          <!-- <div class="Conversion-count">
             <span
               >今日{{
                 item.todayTrans == 'NaN'
@@ -91,7 +93,7 @@
                   : (item.yesterdayTrans * 100).toFixed(2)
               }}%</span
             >
-          </div>
+          </div> -->
         </div>
         <div class="body-boxRight">
           <div class="params-top">
@@ -263,14 +265,13 @@ export default {
           res.data.detail.timebegin = dayjs
             .unix(Number(this.classId.classId.ctime) / 1000)
             .format('MM-DD  hh:mm:ss')
-          res.data.detail.formatCtime = dayjs
-            .unix(Number(this.classId.classId.ctime) / 1000)
-            .format('MMDD')
           res.data.detail.onetime = dayjs
-            .unix(Number(this.classId.classId.ctime) / 1000)
+            .unix(Number(this.classId.classId.start_day) / 1000)
             .format('YYMMDD')
+          res.data.detail.formatStartDay = this.classId.classId.formatStartDay
+          res.data.detail.formatEndDay = this.classId.classId.formatEndDay
           this.classMessage = res.data
-          // this.classMessage2 = res.data
+          // this.classMessage2 = res.dataformatEndDay
 
           console.log(
             this.classMessage,

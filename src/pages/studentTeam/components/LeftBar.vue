@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-13 16:53:27
  * @LastEditors: zhubaodong
- * @LastEditTime: 2020-03-20 15:36:17
+ * @LastEditTime: 2020-03-21 18:00:39
  -->
 <template>
   <div class="left-container">
@@ -21,6 +21,8 @@
       :data="[...showExpressData, ...showSystemData]"
       :props="defaultProps"
       default-expand-all
+      node-key="customId"
+      :current-node-key="0"
       highlight-current
       style="color:#2F2E31"
       @node-click="nodeClick"
@@ -111,9 +113,10 @@ export default {
      * 体验课状态展示数据
      */
     showExpressData() {
-      const datas = this.expresslist[0].children.map((values) => {
+      const datas = this.expresslist[0].children.map((values, index) => {
         values.types = 0
         values.code = values.value
+        values.customId = +`${index}0`
         this.expressData.teamStatusCount &&
           this.expressData.teamStatusCount.filter((v) => {
             if (v.code === values.value) {
@@ -153,9 +156,10 @@ export default {
      * 系统课状态展示数据
      */
     showSystemData() {
-      const datas = this.systemlist[0].children.map((values) => {
+      const datas = this.systemlist[0].children.map((values, index) => {
         values.types = 1
         values.code = values.value
+        values.customId = +`${index}1`
         this.systemData.teamStatusCount &&
           this.systemData.teamStatusCount.filter((v) => {
             if (v.code === values.value) {
@@ -196,6 +200,7 @@ export default {
   methods: {
     nodeClick(data) {
       this.$emit('change', data)
+      console.log(data, 'changedata')
     }
   },
   created() {}
