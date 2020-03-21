@@ -20,7 +20,6 @@
       <el-tab-pane label="带班详情" name="details">
         <details-tab :classId="classId" />
       </el-tab-pane>
-      <!-- <div style="height:20px;width:20px;background:red" @click="aa"></div> -->
       <!-- <el-tab-pane label="微信群聊" name="groupChat">
         <groupchat-tab />
       </el-tab-pane>
@@ -55,16 +54,23 @@ export default {
   },
   watch: {},
   created() {
-    console.log(this.classId, 'this.classId')
+    window.addEventListener('scroll', this.handleScroll, true)
   },
   methods: {
     handleClick(tab, event) {
       console.log(tab, event)
+    },
+    handleScroll() {
+      const dom = document
+        .getElementById('right-scroll')
+        .querySelector('.scrollbar-wrapper').scrollTop
+      if (dom > 190) {
+        document
+          .getElementById('right-scroll')
+          .querySelector('.scrollbar-wrapper')
+          .scrollTo(0, 190)
+      }
     }
-    // aa() {
-    //   var dom = document.getElementById('right-scroll')
-    //   dom.querySelector('.scrollbar-wrapper').scrollTo(0, 0)
-    // }
   }
 }
 </script>
