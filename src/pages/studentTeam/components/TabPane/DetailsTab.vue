@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 14:19:58
  * @LastEditors: panjian
- * @LastEditTime: 2020-03-21 15:47:14
+ * @LastEditTime: 2020-03-21 15:58:06
  -->
 <template>
   <div>
@@ -253,7 +253,7 @@ export default {
         }`
         })
         .then((res) => {
-          console.log(res, 'login res')
+          this.table.totalElements = res.data.stuLoginPage.totalElements * 1
           const _data = res.data.stuLoginPage.content
           _data.forEach((item) => {
             item.express_ctime = timestamp(item.express_ctime, 6)
@@ -263,11 +263,16 @@ export default {
             } else {
               item.nickname = `微信昵称: ${item.nickname}`
             }
+            if (!item.login_time) {
+              item.login_time = '-'
+              item.ctime = ''
+            }
             if (item.page_origin === '') {
               item.page_origin = ''
             }
           })
           this.table.tableData = _data
+          console.log(this.table.tableData, 'this.table.tableData login')
         })
     },
     // 加好友进群 已加好友子组建传值方法
@@ -279,12 +284,10 @@ export default {
       this.table.tableData[data.index].added_group = data.command
     },
     handleClick(tab, event) {
-      // this.table.totalElements = []
       this.table.tableData = []
       if (tab.index === '0') {
         // 加好友进群
         this.getGroup()
-        // console.log(this.table.tableData, 'this.table.tableData')
         this.table.tableLabel = [{ label: '购买时间', prop: 'buytime' }]
         this.table.tabs = 0
       } else if (tab.index === '1') {
@@ -296,46 +299,15 @@ export default {
         this.geiLogin()
         console.log('登陆')
         this.table.tabs = 2
-        // this.table.tableData = [
-        //   {
-        //     telephone: 13311113333,
-        //     time: '2018-07-24',
-        //     friend: '已加',
-        //     group: '已进',
-        //     follow: '已关注',
-        //     wechat: 'qwea'
-        //   }
-        // ]
       } else if (tab.index === '3') {
         // 参课和完课
         console.log('参课和完课')
         this.table.tabs = 3
-        // this.table.tableData = [
-        //   {
-        //     telephone: 13311113333,
-        //     time: '2018-07-24',
-        //     friend: '已加',
-        //     group: '已进',
-        //     follow: '已关注',
-        //     wechat: 'qwea'
-        //   }
-        // ]
       } else if (tab.index === '4') {
         // 作品及点评
         console.log('作品及点评')
         this.table.tabs = 4
-        // this.table.tableData = [
-        //   {
-        //     telephone: 13311113333,
-        //     time: '2018-07-24',
-        //     friend: '已加',
-        //     group: '已进',
-        //     follow: '已关注',
-        //     wechat: 'qwea'
-        //   }
-        // ]
       }
-      // console.log(tab, event, tab.index, tab.label)
     },
     onTotalPages(data) {
       this.table.totalPages = data
@@ -344,6 +316,7 @@ export default {
       } else if (this.table.tabs === '1') {
         this.gitLogistics()
       } else if (this.table.tabs === '2') {
+        this.geiLogin()
       } else if (this.table.tabs === '3') {
       } else if (this.table.tabs === '4') {
       }
