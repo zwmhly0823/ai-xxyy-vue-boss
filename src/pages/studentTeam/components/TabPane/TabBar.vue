@@ -7,26 +7,39 @@
  * @LastEditTime: 2020-03-20 18:56:00
  -->
 <template>
-  <div class="tab-box">
-    <el-tabs
-      v-model="activeName"
-      @tab-click="handleClick"
-      type="card"
-      class="box-shadow-0"
-    >
-      <el-tab-pane label="学员" name="students">
-        <studens-tab :classId="classId" />
-      </el-tab-pane>
-      <el-tab-pane label="带班详情" name="details">
-        <details-tab :classId="classId" />
-      </el-tab-pane>
-      <!-- <el-tab-pane label="微信群聊" name="groupChat">
+  <div>
+    <div class="tab-box">
+      <el-tabs
+        v-model="activeName"
+        @tab-click="handleClick"
+        type="card"
+        class="box-shadow-0"
+      >
+        <el-tab-pane label="学员" name="students">
+          <studens-tab :classId="classId" />
+        </el-tab-pane>
+        <el-tab-pane label="带班详情" name="details">
+          <details-tab :classId="classId" />
+        </el-tab-pane>
+        <!-- <el-tab-pane label="微信群聊" name="groupChat">
         <groupchat-tab />
       </el-tab-pane>
       <el-tab-pane label="系统课订单" name="systemOrder">
         <systemorder-tab />
       </el-tab-pane> -->
-    </el-tabs>
+      </el-tabs>
+    </div>
+    <!-- <div class="tab-box" v-show="suckTop">
+      <el-tabs
+        v-model="activeName"
+        @tab-click="handleClick"
+        type="card"
+        class="box-shadow"
+      >
+        <el-tab-pane label="学员" name="students"></el-tab-pane>
+        <el-tab-pane label="带班详情" name="details"> </el-tab-pane>
+      </el-tabs>
+    </div> -->
   </div>
 </template>
 <script>
@@ -49,7 +62,8 @@ export default {
   },
   data() {
     return {
-      activeName: 'students'
+      activeName: 'students',
+      suckTop: false
     }
   },
   watch: {},
@@ -64,17 +78,24 @@ export default {
       const dom = document
         .getElementById('right-scroll')
         .querySelector('.scrollbar-wrapper').scrollTop
-      if (dom > 190) {
-        document
-          .getElementById('right-scroll')
-          .querySelector('.scrollbar-wrapper')
-          .scrollTo(0, 190)
-      }
+      // if (dom > 190) {
+      //   document
+      //     .getElementById('right-scroll')
+      //     .querySelector('.scrollbar-wrapper')
+      //     .scrollTo(0, 190)
+      // }
+      dom > 190 ? (this.suckTop = true) : (this.suckTop = false)
     }
   }
 }
 </script>
 <style scoped lang="scss">
+// .box-shadow {
+//   width: 100%;
+//   position: absolute;
+//   top: 0;
+//   z-index: 1000;
+// }
 .tab-box {
   padding: 0;
   flex: 1;
