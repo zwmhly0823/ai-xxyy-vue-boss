@@ -146,9 +146,8 @@
       <!-- 分页 -->
       <m-pagination
         @current-change="handleCurrentChange"
-        :current-page="tables.number"
-        :page-count="tables.totalPages"
-        :total="tables.totalElements"
+        :current-page="+tables.totalPages"
+        :total="+tables.totalElements"
       />
     </div>
     <!-- 物流 -->
@@ -208,9 +207,8 @@
       <!-- 分页 -->
       <m-pagination
         @current-change="handleCurrentChange"
-        :current-page="tables.number"
-        :page-count="tables.totalPages"
-        :total="tables.totalElements"
+        :current-page="+tables.totalPages"
+        :total="+tables.totalElements"
       />
     </div>
     <!-- 登陆 -->
@@ -262,17 +260,16 @@
       <!-- <el-pagination
         class="page"
         @current-change="handleCurrentChange"
-        :current-page="tables.totalPages"
+        :current-page="+tables.totalPages"
         :page-size="10"
         layout="prev, pager, next"
-        :total="tables.totalElements"
+        :total="+tables.totalElements"
       >
       </el-pagination> -->
       <m-pagination
         @current-change="handleCurrentChange"
-        :current-page="tables.number"
-        :page-count="tables.totalPages"
-        :total="tables.totalElements"
+        :current-page="+tables.totalPages"
+        :total="+tables.totalElements"
       />
     </div>
     <!-- 参课和完课 -->
@@ -455,6 +452,7 @@ export default {
     },
     // 分页
     handleCurrentChange(val) {
+      this.currentPage = val
       this.$emit('onTotalPages', val)
     }
   }

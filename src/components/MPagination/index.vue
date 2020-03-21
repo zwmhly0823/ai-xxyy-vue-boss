@@ -76,18 +76,16 @@ export default {
     // 总页数. 如果有 pageCount 用 pageCount, 没有用 total / pageSize
     totalPage() {
       return this.pageCount || Math.ceil(this.total / this.pageSize) || 1
-    }
-  },
-  data() {
-    return {
-      page: this.currentPage
+    },
+    page() {
+      return this.currentPage
     }
   },
   methods: {
     handleCurrentChange(page) {
       this.page = page
       // 回调
-      this.$emit('currentPage', page)
+      this.$emit('current-change', page)
     }
   }
 }

@@ -80,6 +80,7 @@ export default {
   },
   watch: {
     classId(value) {
+      this.table.totalPages = 1
       if (value.classId) {
         console.log(value, 'getGroup value')
         this.getGroup() // 加好友进群

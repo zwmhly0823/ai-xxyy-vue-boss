@@ -123,8 +123,8 @@ export default {
   created() {},
   watch: {
     classId(value) {
+      this.currentPage = 1
       if (value.classId) {
-        this.currentPage = 1
         this.getstatusList()
         this.studentsList()
       } else {
@@ -264,6 +264,8 @@ export default {
     },
     // 点击分页
     handleSizeChange(val) {
+      console.log(val)
+
       this.currentPage = val
       this.getstatusList()
       this.studentsList()
