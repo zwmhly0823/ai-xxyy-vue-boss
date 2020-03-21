@@ -265,13 +265,13 @@ export default {
           res.data.detail.week = this.classId.classId.week
           res.data.detail.pre_enroll = this.classId.classId.pre_enroll
           res.data.detail.timebegin = dayjs
-            .unix(Number(this.classId.classId.ctime) / 1000)
+            .unix(Number(this.classId.classId.start_day) / 1000)
             .format('MM-DD  hh:mm:ss')
           res.data.detail.formatCtime = dayjs
-            .unix(Number(this.classId.classId.ctime) / 1000)
+            .unix(Number(this.classId.classId.start_day) / 1000)
             .format('MMDD')
           res.data.detail.onetime = dayjs
-            .unix(Number(this.classId.classId.ctime) / 1000)
+            .unix(Number(this.classId.classId.start_day) / 1000)
             .format('YYMMDD')
           res.data.detail.formatEndDay = this.classId.classId.formatEndDay
           this.classMessage = res.data
