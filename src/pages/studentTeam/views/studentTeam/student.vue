@@ -58,7 +58,8 @@ export default {
       classId: '', // 班级Id
       scrollStatus: null,
       type: 0,
-      scrollPage: 1
+      scrollPage: 1,
+      teacher_id: null
     }
   },
   computed: {
@@ -122,7 +123,15 @@ export default {
      * @param(team_type) 0为体验课 1为系统课
      */
     async getExperienceStatusList(data = 0) {
-      const queryParams = `{"bool":{"must":[{"term":{"team_type":${data}}}]}}`
+      const queryParams =
+        data === 0
+          ? !this.teacher_id
+            ? `{"bool":{"must":[{"term":{"team_type":${data}}}]}}`
+            : `{"bool":{"must":[{"term":{"team_type":${data}}},{"term":{"teacher_id": ${this.teacher_id}}}]}}`
+          : !this.teacher_id
+          ? `{"bool":{"must":[{"range":{"team_type":{"gte":${data}}}}]}}`
+          : `{"bool":{"must":[{"range":{"team_type":{"gte":${data}}}},{"term":{"teacher_id": ${this.teacher_id}}}]}}`
+      // const queryParams = `{"bool":{"must":[{"range":{"team_type":{"gt":${data}}}}]}}`
       await axios
         .get('/graphql/team', {
           params: {
@@ -148,10 +157,21 @@ export default {
     },
     /**
      * 获取班级列表
-     * @param(team_type) 0为体验课 1为系统课
+     * @param(team_type) 0为体验课 >=1为系统课
      */
     async getClassList(type = 0, page = 1) {
-      const queryParams = `{"bool":{"must":[{"terms":{"team_state":[${this.classStatus}]}},{"term":{"team_type":${type}}}]}}`
+      let queryParams
+      if (type === 0) {
+        // queryParams = `{"bool":{"must":[{"terms":{"team_state":[${this.classStatus}]}},{"term":{"team_type":${type}}}]}}`
+        queryParams = this.teacher_id
+          ? `{"bool":{"must":[{"terms":{"team_state":[${this.classStatus}]}},{"term":{"team_type":${type}}},{"term":{"teacher_id": ${this.teacher_id}}}]}}`
+          : `{"bool":{"must":[{"terms":{"team_state":[${this.classStatus}]}},{"term":{"team_type":${type}}}]}}`
+      } else {
+        // queryParams = `{"bool":{"must":[{"terms":{"team_state":[${this.classStatus}]}},{"range":{"team_type":{"gte":${type}}}}]}}`
+        queryParams = this.teacher_id
+          ? `{"bool":{"must":[{"terms":{"team_state":[${this.classStatus}]}},{"range":{"team_type":{"gte":${type}}}},{"term":{"teacher_id": ${this.teacher_id}}}]}}`
+          : `{"bool":{"must":[{"terms":{"team_state":[${this.classStatus}]}},{"range":{"team_type":{"gte":${type}}}}]}}`
+      }
       await axios
         .get('/graphql/team', {
           params: {
@@ -202,6 +222,10 @@ export default {
     }
   },
   async created() {
+    const teacher = localStorage.getItem('teacher')
+    if (teacher) {
+      this.teacher_id = JSON.parse(teacher).id
+    }
     // 请求体验课状态列表
     await this.getExperienceStatusList(0)
     // 请求系统课状态列表
