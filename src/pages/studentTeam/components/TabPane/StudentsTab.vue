@@ -115,6 +115,8 @@ export default {
         this.currentPage = 1
         this.getstatusList()
         this.studentsList()
+      } else {
+        this.tableData = []
       }
     }
   },
