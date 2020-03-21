@@ -97,7 +97,7 @@ export default {
 .box-shadow {
   width: 100%;
   position: absolute;
-  border: 1px solid #ebeef5;
+  border-bottom: 1px solid #ebeef5;
   top: -1px;
   z-index: 1000;
 }

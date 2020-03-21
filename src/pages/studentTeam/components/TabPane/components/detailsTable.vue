@@ -1,6 +1,6 @@
 <!--
- * @Descripttion: 
- * @version: 
+ * @Descripttion:
+ * @version:
  * @Author: panjian
  * @Date: 2020-03-16 20:22:24
  * @LastEditors: panjian
@@ -60,7 +60,7 @@
               <span class="el-dropdown-link icon-warps">
                 <i
                   v-show="scope.row.added_wechat == 0 ? true : false"
-                  class="el-icon-arrow-down el-icon--right"
+                  class="el-icon-caret-bottom el-icon--right"
                 ></i>
               </span>
               <el-dropdown-menu slot="dropdown">
@@ -101,7 +101,7 @@
               <span class="el-dropdown-link icon-warps">
                 <i
                   v-show="scope.row.added_group == 0 ? true : false"
-                  class="el-icon-arrow-down el-icon--right"
+                  class="el-icon-caret-bottom el-icon--right"
                 ></i>
               </span>
               <el-dropdown-menu slot="dropdown">

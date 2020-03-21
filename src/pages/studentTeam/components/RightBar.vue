@@ -42,7 +42,11 @@
             >
             <span>辅导老师微信: {{ item.teacher_wx }}</span>
             <span style="margin-right:0px">
-              <span>开课~结课 &nbsp;{{ item.formatCtime }}~0516</span>
+              <span
+                >开课~结课 &nbsp;{{ item.formatCtime }}~{{
+                  item.formatEndDay
+                }}</span
+              >
             </span>
             <span style="margin-right:0px">
               <span>创建 &nbsp;{{ item.timebegin }}</span>
@@ -269,8 +273,9 @@ export default {
           res.data.detail.onetime = dayjs
             .unix(Number(this.classId.classId.ctime) / 1000)
             .format('YYMMDD')
+          res.data.detail.formatEndDay = this.classId.classId.formatEndDay
           this.classMessage = res.data
-          // this.classMessage2 = res.data
+          // this.classMessage2 = res.dataformatEndDay
 
           console.log(
             this.classMessage,
