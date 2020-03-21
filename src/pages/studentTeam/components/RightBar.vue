@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-13 16:53:41
  * @LastEditors: zhubaodong
- * @LastEditTime: 2020-03-21 17:00:38
+ * @LastEditTime: 2020-03-21 18:36:02
  -->
 <template>
   <div class="right-container" style="width:100%">
@@ -41,7 +41,7 @@
             <span>辅导老师微信: {{ item.teacher_wx }}</span>
             <span style="margin-right:0px">
               <span
-                >开课~结课 &nbsp;{{ item.formatCtime }}~{{
+                >开课~结课 &nbsp;{{ item.formatStartDay }}~{{
                   item.formatEndDay
                 }}</span
               >
@@ -263,14 +263,12 @@ export default {
           res.data.detail.week = this.classId.classId.week
           res.data.detail.pre_enroll = this.classId.classId.pre_enroll
           res.data.detail.timebegin = dayjs
-            .unix(Number(this.classId.classId.start_day) / 1000)
+            .unix(Number(this.classId.classId.ctime) / 1000)
             .format('MM-DD  hh:mm:ss')
-          res.data.detail.formatCtime = dayjs
-            .unix(Number(this.classId.classId.start_day) / 1000)
-            .format('MMDD')
           res.data.detail.onetime = dayjs
             .unix(Number(this.classId.classId.start_day) / 1000)
             .format('YYMMDD')
+          res.data.detail.formatStartDay = this.classId.classId.formatStartDay
           res.data.detail.formatEndDay = this.classId.classId.formatEndDay
           this.classMessage = res.data
           // this.classMessage2 = res.dataformatEndDay
