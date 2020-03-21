@@ -122,7 +122,11 @@ export default {
      * @param(team_type) 0为体验课 1为系统课
      */
     async getExperienceStatusList(data = 0) {
-      const queryParams = `{"bool":{"must":[{"term":{"team_type":${data}}}]}}`
+      const queryParams =
+        data === 0
+          ? `{"bool":{"must":[{"term":{"team_type":${data}}}]}}`
+          : `{"bool":{"must":[{"range":{"team_type":{"gte":${data}}}}]}}`
+      // const queryParams = `{"bool":{"must":[{"range":{"team_type":{"gt":${data}}}}]}}`
       await axios
         .get('/graphql/team', {
           params: {
@@ -148,10 +152,15 @@ export default {
     },
     /**
      * 获取班级列表
-     * @param(team_type) 0为体验课 1为系统课
+     * @param(team_type) 0为体验课 >=1为系统课
      */
     async getClassList(type = 0, page = 1) {
-      const queryParams = `{"bool":{"must":[{"terms":{"team_state":[${this.classStatus}]}},{"term":{"team_type":${type}}}]}}`
+      let queryParams
+      if (type === 0) {
+        queryParams = `{"bool":{"must":[{"terms":{"team_state":[${this.classStatus}]}},{"term":{"team_type":${type}}}]}}`
+      } else {
+        queryParams = `{"bool":{"must":[{"terms":{"team_state":[${this.classStatus}]}},{"range":{"team_type":{"gte":${type}}}}]}}`
+      }
       await axios
         .get('/graphql/team', {
           params: {
