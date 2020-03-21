@@ -15,7 +15,6 @@ export default {
   judgeToken() {
     const token = this.getHeaders().token
     const needToken = location.href.indexOf('login') === -1
-    debugger
     if (needToken && !token) {
       // location.href = `${baseUrl}login/#/`
       location.href = `/login/#/`
