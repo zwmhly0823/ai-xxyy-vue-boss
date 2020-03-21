@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 20:22:24
  * @LastEditors: panjian
- * @LastEditTime: 2020-03-21 21:43:09
+ * @LastEditTime: 2020-03-21 22:24:49
  -->
 <template>
   <div class="table-box">
@@ -20,7 +20,7 @@
         @row-click="onClick"
       >
         <!-- 基本信息 -->
-        <el-table-column width="260" label="基本信息">
+        <el-table-column width="280" label="基本信息">
           <template slot-scope="scope">
             <div class="scope-info-box">
               <img

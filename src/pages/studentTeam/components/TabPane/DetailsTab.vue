@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 14:19:58
  * @LastEditors: panjian
- * @LastEditTime: 2020-03-21 21:59:53
+ * @LastEditTime: 2020-03-21 22:23:20
  -->
 <template>
   <div>
@@ -88,14 +88,24 @@ export default {
         currentPage: 1
       },
       // tabs标签默认状态
-      activeName: 'group'
+      activeName: 'group',
+      tablsName: ''
     }
   },
   watch: {
     classId(value) {
       this.table.currentPage = 1
       if (value.classId) {
-        this.getGroup() // 加好友进群
+        this.getGroup()
+        if (this.tabsName === '加好友进群') {
+          this.getGroup()
+        } else if (this.tabsName === '物流') {
+          this.gitLogistics()
+        } else if (this.tabsName === '登录') {
+          this.geiLogin()
+        } else if (this.tabsName === '参课和完课') {
+          this.getClassCompPage()
+        }
       } else {
         this.table.tableData = []
       }
@@ -413,6 +423,7 @@ export default {
       this.table.tableData[data.index].added_group = data.command
     },
     handleClick(tab, event) {
+      this.tabsName = tab.label
       this.table.tableData = []
       if (tab.index === '0') {
         // 加好友进群
