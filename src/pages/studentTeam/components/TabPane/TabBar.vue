@@ -81,12 +81,6 @@ export default {
       const dom = document
         .getElementById('right-scroll')
         .querySelector('.scrollbar-wrapper').scrollTop
-      // if (dom > 190) {
-      //   document
-      //     .getElementById('right-scroll')
-      //     .querySelector('.scrollbar-wrapper')
-      //     .scrollTo(0, 190)
-      // }
       dom > 190 ? (this.suckTop = true) : (this.suckTop = false)
     }
   }
