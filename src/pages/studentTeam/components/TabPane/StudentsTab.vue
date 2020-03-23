@@ -24,7 +24,7 @@
       <el-table-column label="上课信息" class="haveclass">
         <div slot-scope="scope" class="haveclass-box">
           <div class="haveclass-content">
-            登录:
+            打开:
             <span>{{ scope.row.statistics.login }}</span>
           </div>
           <div class="haveclass-content">
