@@ -9,7 +9,11 @@
  -->
 
 <template>
-  <el-row class="m-pagination" type="flex">
+  <el-row
+    class="m-pagination"
+    :class="{ opened: !isCollapse, close: isCollapse }"
+    type="flex"
+  >
     <el-col>
       <!-- 这里是自定义的附加信息 -->
       <slot></slot>
@@ -32,6 +36,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 export default {
   props: {
     // 是否需要显示页码，设置 pager
@@ -66,6 +71,10 @@ export default {
     }
   },
   computed: {
+    ...mapGetters(['sidebar']),
+    isCollapse() {
+      return !this.sidebar.opened
+    },
     defaultLayout() {
       // 这里是有顺序的 ！！！
       const layout = this.showPager
@@ -93,8 +102,20 @@ export default {
 
 <style lang="scss" scoped>
 .m-pagination {
-  padding: 15px;
+  background: #fff;
+  position: fixed;
+  bottom: 10px;
+  right: 10px;
+  z-index: 1000;
+  padding: 8px 15px;
   color: #4d4d4d;
+  transition: width 0.3s;
+  &.opened {
+    width: calc(100vw - 180px - 240px - 165px - 30px);
+  }
+  &.close {
+    width: calc(100vw - 180px - 240px - 45px - 30px);
+  }
   .el-pagination {
     display: flex;
     justify-content: flex-end;
