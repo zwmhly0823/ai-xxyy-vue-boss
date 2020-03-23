@@ -117,7 +117,7 @@ export default {
       // 学员列表
       tableData: [],
       // 用户状态列表
-      statusData: []
+      statusList: []
     }
   },
   created() {},
