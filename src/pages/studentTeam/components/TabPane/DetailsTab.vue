@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 14:19:58
  * @LastEditors: panjian
- * @LastEditTime: 2020-03-21 22:23:20
+ * @LastEditTime: 2020-03-23 18:37:01
  -->
 <template>
   <div>
@@ -25,7 +25,7 @@
               :tables="table"
             ></details-table>
           </el-tab-pane>
-          <el-tab-pane label="登录" name="login"
+          <el-tab-pane label="打开APP" name="login"
             ><details-table
               @onCurrentPage="onCurrentPage"
               :tables="table"
@@ -75,9 +75,10 @@ export default {
   },
   data() {
     return {
+      type: null,
       input: '',
       table: {
-        tabs: '0',
+        tabs: 0,
         // 表头信息
         tableLabel: [],
         // 列表数据
@@ -89,11 +90,20 @@ export default {
       },
       // tabs标签默认状态
       activeName: 'group',
-      tablsName: ''
+      tablsName: '',
+      codeHandle: {}
     }
   },
   watch: {
     classId(value) {
+      console.log(value, 'classIdclassIdclassIdclassId')
+      if (value.classId.team_type === 0) {
+        this.type = 'TRAIL'
+      } else if (value.classId.team_type === 0) {
+        this.type = 'MONTH'
+      } else if (value.classId.team_type === 2) {
+        this.type = 'YEAR'
+      }
       this.table.currentPage = 1
       if (value.classId) {
         this.getGroup()
@@ -101,10 +111,12 @@ export default {
           this.getGroup()
         } else if (this.tabsName === '物流') {
           this.gitLogistics()
-        } else if (this.tabsName === '登录') {
+        } else if (this.tabsName === '打开APP') {
           this.geiLogin()
         } else if (this.tabsName === '参课和完课') {
           this.getClassCompPage()
+        } else if (this.tabsName === '作品及点评') {
+          this.getStuComment()
         }
       } else {
         this.table.tableData = []
@@ -116,6 +128,31 @@ export default {
     this.table.tableLabel = [{ label: '购买时间', prop: 'buytime' }]
   },
   methods: {
+    getCodeHandle() {
+      this.$http.User.updateTeamStudent({
+        studentId: this.codeHandle.studentId,
+        teamId: this.classId.classId.id,
+        courseType: this.type,
+        addedGroup: this.codeHandle.addedGroup,
+        addedWechat: this.codeHandle.addedWechat
+      })
+        .catch((err) => console.log(err, '修改失败'))
+        .then((res) => {
+          if (this.codeHandle.type === 'wechat') {
+            this.table.tableData[
+              this.codeHandle.index
+            ].added_wechat = this.codeHandle.command
+          } else if (this.codeHandle.type === 'group') {
+            this.table.tableData[
+              this.codeHandle.index
+            ].added_group = this.codeHandle.command
+          }
+          this.$message({
+            message: '修改成功',
+            type: 'success'
+          })
+        })
+    },
     // 加好友进群接口
     getGroup() {
       const querys = `{"team_id":${this.classId.classId.id},"team_type":${this.classId.type}}`
@@ -124,7 +161,7 @@ export default {
           query: `{
             userListForTeam(query:${JSON.stringify(querys)} , page: ${
             this.table.currentPage
-          }) {
+          }, size: 20) {
               empty
               first
               last
@@ -154,8 +191,8 @@ export default {
         })
         .then((res) => {
           this.table.tableData = []
-          // 1男 2 女
-          // 0 不显示  1 无基础  2 一年以下 3 一年以上
+          // 0 默认 1 男 2 女 3 保密
+          // 0 默认  1 无基础  2 一年以下 3 一年以上
           // 0 叉 1 对号
           this.table.totalElements = res.data.userListForTeam.totalElements * 1
           const _data = res.data.userListForTeam.content
@@ -163,6 +200,15 @@ export default {
             item.birthday = GetAgeByBrithday(item.birthday)
             // const birthday = item.birthday.substring(0, 2)
             // console.log(birthday, 'birthdaybirthdaybirthdaybirthday')
+            if (item.sex === '0') {
+              item.sex = '- ·'
+            } else if (item.sex === '1') {
+              item.sex = '男 ·'
+            } else if (item.sex === '2') {
+              item.sex = '女 ·'
+            } else if (item.sex === '3') {
+              item.sex = '保密 ·'
+            }
             if (item.birthday.indexOf(50) !== -1) {
               item.birthday = '-'
             }
@@ -191,7 +237,7 @@ export default {
           query: `{
             stuExpressPage(query:${JSON.stringify(querys)} , page: ${
             this.table.currentPage
-          }) {
+          }, size: 20) {
               empty
               first
               last
@@ -259,7 +305,7 @@ export default {
           query: `{
           stuLoginPage(query:${JSON.stringify(querys)}, page: ${
             this.table.currentPage
-          }) {
+          }, size: 20) {
             first
             last
             number
@@ -316,6 +362,12 @@ export default {
               item.status = '年课完课'
             } else if (item.status === '7') {
               item.status = '年课续费'
+            } else if (item.status === '8') {
+              item.status = '注销失败'
+            } else if (item.status === '9') {
+              item.status = '已季课'
+            } else if (item.status === '10') {
+              item.status = '季课完课'
             } else if (item.status === '11') {
               item.status = '已半年课'
             } else if (item.status === '12') {
@@ -333,7 +385,7 @@ export default {
           query: `{
             getClassCompPage(query:${JSON.stringify(querys)}, page: ${
             this.table.currentPage
-          }) {
+          }, size: 20) {
               first
               last
               number
@@ -362,7 +414,6 @@ export default {
         .then((res) => {
           // ctime 已参课 utime 完课
           // 0 1 已参加课  1 已完课
-          console.log(res, 'res.getClassCompPage')
           this.table.totalElements = res.data.getClassCompPage.totalElements * 1
           const _data = res.data.getClassCompPage.content
           _data.forEach((item) => {
@@ -387,9 +438,7 @@ export default {
             } else {
               item.nickname = `微信昵称: ${item.nickname}`
             }
-            if (item.status === '') {
-              item.status = '-'
-            } else if (item.status === '0') {
+            if (item.status === '0') {
               item.status = '已注册'
             } else if (item.status === '1') {
               item.status = '已体验课'
@@ -409,21 +458,79 @@ export default {
               item.status = '已半年课'
             } else if (item.status === '12') {
               item.status = '半年课完课'
+            } else {
+              item.status = '-'
             }
+          })
+          this.table.tableData = _data
+        })
+    },
+    // 作品及点评
+    getStuComment() {
+      const querys = `{"team_id":${this.classId.classId.id},"team_type":${this.classId.type}}`
+      axios
+        .post('/graphql/getStuComment', {
+          query: `{
+            getStuCommentPage(query:${JSON.stringify(querys)}, page: ${
+            this.table.currentPage
+          }, size: 20) {
+              first
+              last
+              number
+              size
+              totalPages
+              totalElements
+              content {
+                id
+                team_name
+                current_lesson
+                buytime
+                classTitle
+                head
+                mobile
+                username
+                nickname
+                has_comment_ctime
+                has_comment_utime
+                sound_comment
+                sound_comment_second
+                listenInfoArr {
+                  has_listen_comment_ctime
+                  task_sound
+                  task_video
+                  task_video_second
+                  task_sound_second
+                }
+              }
+            }
+          }`
+        })
+        .then((res) => {
+          // classTitle 课程名字
+          //   has_listen_comment_ctime  已听点评的时间
+          // task_sound 点评的音频
+          // task_sound_second 音频多少秒
+          console.log(res, 'getStuComment res')
+          const _data = res.data.getStuCommentPage.content
+          _data.forEach((item) => {
+            item.buytime = timestamp(item.buytime, 6)
           })
           this.table.tableData = _data
         })
     },
     // 加好友进群 已加好友子组建传值方法
     onCommandFriend(data) {
-      this.table.tableData[data.index].added_wechat = data.command
+      this.codeHandle = data
+      this.getCodeHandle()
     },
     // 加好友进群 已进群子组建传值方法
     onGroup(data) {
-      this.table.tableData[data.index].added_group = data.command
+      this.codeHandle = data
+      this.getCodeHandle()
     },
     handleClick(tab, event) {
       this.tabsName = tab.label
+      this.table.currentPage = 1
       this.table.tableData = []
       if (tab.index === '0') {
         // 加好友进群
@@ -446,20 +553,24 @@ export default {
         this.table.tabs = 3
       } else if (tab.index === '4') {
         // 作品及点评
+        // this.getStuComment()
         console.log('作品及点评')
         this.table.tabs = 4
       }
     },
+    // 分页
     onCurrentPage(data) {
       this.table.currentPage = data
-      if (this.table.tabs === '0') {
+      if (this.table.tabs === 0) {
         this.getGroup()
-      } else if (this.table.tabs === '1') {
+      } else if (this.table.tabs === 1) {
         this.gitLogistics()
-      } else if (this.table.tabs === '2') {
+      } else if (this.table.tabs === 2) {
         this.geiLogin()
-      } else if (this.table.tabs === '3') {
-      } else if (this.table.tabs === '4') {
+      } else if (this.table.tabs === 3) {
+        this.getClassCompPage()
+      } else if (this.table.tabs === 4) {
+        this.getStuComment()
       }
       var dom = document.getElementById('right-scroll')
       dom.querySelector('.scrollbar-wrapper').scrollTo(0, 0)
