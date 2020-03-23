@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-13 16:53:33
  * @LastEditors: zhubaodong
- * @LastEditTime: 2020-03-23 21:08:48
+ * @LastEditTime: 2020-03-23 21:43:48
  -->
 <template>
   <div class="center-container">
@@ -22,6 +22,7 @@
         v-infinite-scroll="load"
         infinite-scroll-distance="10px"
         infinite-scroll-disabled="disabled"
+        v-if="showClassData.datas && showClassData.datas.length !== 0"
       >
         <li
           v-for="(item, index) in showList ? showList : showClassData.datas"
@@ -54,6 +55,12 @@
           </div>
         </li>
       </ul>
+      <div
+        v-else
+        style="display:flex;color:rgb(128, 128, 128);justify-content:center;align-items:center;height:90vh"
+      >
+        暂无班级
+      </div>
       <p v-if="loading" style="text-align:center">
         加载中...
       </p>
