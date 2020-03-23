@@ -9,7 +9,10 @@
 import axios from 'axios'
 import _ from 'lodash'
 
-// axios.defaults.baseURL = ''
+// 测试环境配置
+// const isTest = process.env.BASE_URL === 'ghpagestest'
+// const isTest = location.href.indexOf('test.')
+// axios.defaults.baseURL = isTest ? 'http://47.98.38.59:43401' : ''
 // 请求超时时间
 axios.defaults.timeout = 20000
 
@@ -18,6 +21,10 @@ axios.defaults.headers.post['Content-Type'] =
 
 axios.interceptors.request.use(
   (config) => {
+    // if (isTest) {
+    //   const { url } = config
+    //   config.url = url.replace(/\/graphql/, '')
+    // }
     return config
   },
   (error) => {
