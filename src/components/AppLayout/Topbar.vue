@@ -16,17 +16,20 @@
 
     <div class="right-menu">
       <el-dropdown class="avatar-container" trigger="click">
-        <div class="avatar-wrapper">
-          <img :src="avatar + '?imageView2/1/w/80/h/80'" class="user-avatar" />
+        <div class="user-info">
+          <div class="avatar-wrapper">
+            <img :src="userInfo.head || head" class="user-avatar" />
+          </div>
+          <p>{{ userInfo.realName }}</p>
           <i class="el-icon-arrow-down" />
         </div>
         <el-dropdown-menu slot="dropdown" class="user-dropdown">
-          <router-link to="/">
+          <!-- <router-link to="/">
             <el-dropdown-item>
               个人中心
             </el-dropdown-item>
-          </router-link>
-          <el-dropdown-item divided @click.native="logout">
+          </router-link> -->
+          <el-dropdown-item @click.native="logout">
             <span style="display:block;">退出登录</span>
           </el-dropdown-item>
         </el-dropdown-menu>
@@ -48,6 +51,17 @@ export default {
   },
   computed: {
     ...mapGetters(['sidebar', 'avatar'])
+  },
+  data() {
+    return {
+      userInfo: null,
+      head: 'https://msb-ai.meixiu.mobi/ai-pm/static/touxiang.png'
+    }
+  },
+  created() {
+    const userInfo =
+      localStorage.getItem('teacher') || localStorage.getItem('staff')
+    this.userInfo = JSON.parse(userInfo)
   },
   methods: {
     toggleSideBar() {
@@ -113,6 +127,14 @@ export default {
         }
       }
     }
+    .user-info {
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      p {
+        margin: 0 0 0 8px;
+      }
+    }
 
     .avatar-container {
       margin-right: 30px;
@@ -124,23 +146,20 @@ export default {
         position: relative;
 
         .user-avatar {
-          cursor: pointer;
           vertical-align: middle;
           display: inline-block;
           width: 32px;
           height: 32px;
           border-radius: 100%;
-          border: 2px solid #e5e5e5;
-        }
-
-        .el-icon-arrow-down {
-          cursor: pointer;
-          position: absolute;
-          right: -20px;
-          top: 22px;
-          font-size: 12px;
+          border: 1px solid #e5e5e5;
         }
       }
+    }
+    .el-icon-arrow-down {
+      position: absolute;
+      right: -20px;
+      top: 22px;
+      font-size: 12px;
     }
   }
 }
