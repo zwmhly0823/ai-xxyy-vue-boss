@@ -1,17 +1,10 @@
 <!--
  * @Descripttion: 
  * @version: 
-<<<<<<< HEAD
- * @Author: panjian
- * @Date: 2020-03-16 16:58:26
- * @LastEditors: Shentong
- * @LastEditTime: 2020-03-17 18:47:52
-=======
  * @Author: YangJiyong
  * @Date: 2020-03-16 11:38:09
  * @LastEditors: YangJiyong
  * @LastEditTime: 2020-03-16 14:11:56
->>>>>>> develop
  -->
 <template>
   <div>
