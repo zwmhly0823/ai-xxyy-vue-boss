@@ -348,7 +348,7 @@ export default {
       &-boxLeft,
       &-boxCenter,
       &-boxRight {
-        flex: 0.3;
+        flex: 0.15;
         padding: 10px;
         margin-right: 15px;
         background: #f5f6f7;
