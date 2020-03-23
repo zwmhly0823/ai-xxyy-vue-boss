@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 14:19:58
  * @LastEditors: panjian
- * @LastEditTime: 2020-03-23 18:37:01
+ * @LastEditTime: 2020-03-23 21:31:26
  -->
 <template>
   <div>
@@ -44,7 +44,7 @@
             ></details-table
           ></el-tab-pane>
         </el-tabs>
-        <el-input
+        <!-- <el-input
           class="el-input-search"
           size="mini"
           placeholder="昵称、手机号、微信信息"
@@ -52,7 +52,7 @@
           v-model="input"
           @keyup.enter.native="enter"
         >
-        </el-input>
+        </el-input> -->
       </div>
     </div>
   </div>
@@ -103,6 +103,8 @@ export default {
         this.type = 'MONTH'
       } else if (value.classId.team_type === 2) {
         this.type = 'YEAR'
+      } else {
+        this.type = ''
       }
       this.table.currentPage = 1
       if (value.classId) {
@@ -482,24 +484,25 @@ export default {
               totalElements
               content {
                 id
-                team_name
-                current_lesson
                 buytime
-                classTitle
+                team_name
                 head
                 mobile
                 username
-                nickname
                 has_comment_ctime
                 has_comment_utime
                 sound_comment
                 sound_comment_second
+                nickname
+                classTitle
+                current_lesson 
                 listenInfoArr {
-                  has_listen_comment_ctime
-                  task_sound
+                  works_ctime
+                  task_sound 
                   task_video
                   task_video_second
                   task_sound_second
+                  task_image
                 }
               }
             }
