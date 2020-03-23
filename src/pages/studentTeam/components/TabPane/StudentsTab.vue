@@ -2,11 +2,8 @@
   <div class="dataStyle">
     <el-table
       :data="tableData"
-      :header-cell-style="{
-        fontSize: '12px',
-        color: '#666',
-        fontWeight: 'normal'
-      }"
+      :header-cell-style="headerStyle"
+      class="students-box"
     >
       <el-table-column fixed label="基本信息" class="information" width="280px">
         <template slot-scope="scope">
@@ -256,6 +253,10 @@ export default {
       this.studentsList()
       const dom = document.getElementById('right-scroll')
       dom.querySelector('.scrollbar-wrapper').scrollTo(0, 0)
+    },
+    // 表头样式
+    headerStyle() {
+      return 'font-size: 12px;color: #666;font-weight: normal;'
     }
   }
 }
