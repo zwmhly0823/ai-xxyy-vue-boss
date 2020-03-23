@@ -136,8 +136,5 @@ export function startToEndTime(startTime, endTime) {
       dayjs.unix(Number(endTime) / 1000).format('MMDD')
     ]
   }
-  return [
-    dayjs.unix(Number(startTime) / 1000).format('YYMMDD'),
-    dayjs.unix(Number(endTime) / 1000).format('YYMMDD')
-  ]
+  return [formatS, formatE]
 }
