@@ -3,7 +3,7 @@
  * @Email: yangjiyong@meishubao.com
  * @Date: 2020-03-13 12:10:04
  * @Last Modified by: YangJiyong
- * @Last Modified time: 2020-03-20 11:21:40
+ * @Last Modified time: 2020-03-23 19:02:11
  * @Description: 全局公共方法，添加或改动及时全员通知。 注释一定要写详细！
  */
 
@@ -115,7 +115,8 @@ export function baseUrl() {
   if (BASE_URL === 'ghpageslive') {
     myBaseUrl = ''
   } else if (BASE_URL === 'ghpagestest' || BASE_URL.indexOf('test') > -1) {
-    myBaseUrl = '/frontend/ai-app-vue-toss/'
+    // myBaseUrl = '/frontend/ai-app-vue-toss/'
+    myBaseUrl = ''
   }
   return myBaseUrl
 }

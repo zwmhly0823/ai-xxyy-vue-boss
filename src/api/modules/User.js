@@ -3,8 +3,8 @@
  * @version:
  * @Author: shentong
  * @Date: 2020-03-13 14:38:28
- * @LastEditors: shentong
- * @LastEditTime: 2020-03-13 19:12:17
+ * @LastEditors: panjian
+ * @LastEditTime: 2020-03-23 16:25:07
  */
 import axios from '../axios'
 
@@ -18,5 +18,13 @@ export default {
   orderList(params) {
     // return this.post(this.API_HOST + '/admin/login/pass/2', params)
     return axios.post('/data/orderList', params)
+  },
+  updateTeamStudent(params) {
+    // return this.post(this.API_HOST + '/admin/login/pass/2', params)
+    return axios.put(
+      '/api/tm/v1/teacher/manager/team/updateTeamStudent',
+      params
+    )
+    // return axios.put('/api/v1/teacher/manager/team/updateTeamStudent', params)
   }
 }
