@@ -2,11 +2,8 @@
   <div class="dataStyle">
     <el-table
       :data="tableData"
-      :header-cell-style="{
-        fontSize: '12px',
-        color: '#666',
-        fontWeight: 'normal'
-      }"
+      :header-cell-style="headerStyle"
+      class="students-box"
     >
       <el-table-column fixed label="基本信息" class="information" width="280px">
         <template slot-scope="scope">
@@ -27,7 +24,7 @@
       <el-table-column label="上课信息" class="haveclass">
         <div slot-scope="scope" class="haveclass-box">
           <div class="haveclass-content">
-            登录:
+            打开:
             <span>{{ scope.row.statistics.login }}</span>
           </div>
           <div class="haveclass-content">
@@ -65,30 +62,21 @@
       <el-table-column label="状态" class="status-style">
         <template slot-scope="scope">
           <div class="text333">{{ scope.row.status }}</div>
-          <div class="text333">{{ scope.row.wechat_status.added_wechat }}</div>
+          <div class="text333">
+            {{ scope.row.wechat_status.added_wechat }}
+          </div>
           <div class="text333">{{ scope.row.wechat_status.added_group }}</div>
         </template>
       </el-table-column>
       <!-- <el-table-column label="标签" class="thelabel"></el-table-column> -->
     </el-table>
     <!-- 分页 -->
-    <!-- <div class="block">
-      <el-pagination
-        layout="prev, pager, next"
-        :page-count="totalPages"
-        :current-page="currentPage"
-        prev-text="上一页"
-        next-text="下一页"
-        @current-change="handleSizeChange"
-      >
-      </el-pagination>
-    </div> -->
     <m-pagination
       :current-page="currentPage"
       :page-count="totalPages"
       :total="totalElements"
       @current-change="handleSizeChange"
-    />
+    ></m-pagination>
   </div>
 </template>
 <script>
@@ -125,8 +113,8 @@ export default {
     classId(value) {
       this.currentPage = 1
       if (value.classId) {
-        this.getstatusList()
         this.studentsList()
+        this.getstatusList()
       } else {
         this.tableData = []
       }
@@ -271,6 +259,10 @@ export default {
       this.studentsList()
       const dom = document.getElementById('right-scroll')
       dom.querySelector('.scrollbar-wrapper').scrollTo(0, 0)
+    },
+    // 表头样式
+    headerStyle() {
+      return 'font-size: 12px;color: #666;font-weight: normal;'
     }
   }
 }
@@ -320,10 +312,7 @@ export default {
     color: #2461b9;
   }
 }
-.block {
-  margin-top: 20px;
-  text-align: center;
-}
+
 .text333 {
   color: #333333 !important;
 }
