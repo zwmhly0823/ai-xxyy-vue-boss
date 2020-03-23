@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-13 16:53:33
  * @LastEditors: zhubaodong
- * @LastEditTime: 2020-03-21 18:32:47
+ * @LastEditTime: 2020-03-23 21:08:48
  -->
 <template>
   <div class="center-container">
@@ -65,7 +65,7 @@
 </template>
 
 <script>
-import dayjs from 'dayjs'
+import { startToEndTime } from '@/utils'
 
 export default {
   props: {
@@ -93,12 +93,9 @@ export default {
         this.classData.teamStatusPage &&
         this.classData.teamStatusPage.content.map((item) => {
           // 格式化开课时间
-          item.formatStartDay = dayjs
-            .unix(Number(item.start_day) / 1000)
-            .format('MMDD')
-          item.formatEndDay = dayjs
-            .unix(Number(item.end_day) / 1000)
-            .format('MMDD')
+          const times = startToEndTime(item.start_day, item.end_day)
+          item.formatStartDay = times[0]
+          item.formatEndDay = times[1]
           return item
         })
       // 分页数据

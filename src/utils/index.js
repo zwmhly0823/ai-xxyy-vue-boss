@@ -120,3 +120,21 @@ export function baseUrl() {
   }
   return myBaseUrl
 }
+
+/**
+ * 转化跨年体验课或系统课时间戳
+ * @param(开课时间，结课时间)
+ * return [开课时间，结课时间] 如果跨年返回YYMMDD 否则MMDD
+ */
+
+export function startToEndTime(startTime, endTime) {
+  const formatS = dayjs.unix(Number(startTime) / 1000).format('YYMMDD')
+  const formatE = dayjs.unix(Number(endTime) / 1000).format('YYMMDD')
+  if (formatS.slice(0, 2) === formatE.slice(0, 2)) {
+    return [
+      dayjs.unix(Number(startTime) / 1000).format('MMDD'),
+      dayjs.unix(Number(endTime) / 1000).format('MMDD')
+    ]
+  }
+  return [formatS, formatE]
+}
