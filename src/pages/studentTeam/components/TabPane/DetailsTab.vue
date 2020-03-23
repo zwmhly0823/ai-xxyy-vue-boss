@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 14:19:58
  * @LastEditors: panjian
- * @LastEditTime: 2020-03-21 15:58:06
+ * @LastEditTime: 2020-03-21 22:23:20
  -->
 <template>
   <div>
@@ -13,23 +13,35 @@
         <el-tabs v-model="activeName" @tab-click="handleClick">
           <el-tab-pane label="加好友进群" name="group">
             <details-table
-              @onTotalPages="onTotalPages"
+              @onCurrentPage="onCurrentPage"
               @commandFriend="onCommandFriend"
               @onGroup="onGroup"
               :tables="table"
             ></details-table>
           </el-tab-pane>
           <el-tab-pane label="物流" name="logistics">
-            <details-table :tables="table"></details-table>
+            <details-table
+              @onCurrentPage="onCurrentPage"
+              :tables="table"
+            ></details-table>
           </el-tab-pane>
           <el-tab-pane label="登录" name="login"
-            ><details-table :tables="table"></details-table
+            ><details-table
+              @onCurrentPage="onCurrentPage"
+              :tables="table"
+            ></details-table
           ></el-tab-pane>
           <el-tab-pane label="参课和完课" name="participateIn"
-            ><details-table :tables="table"></details-table
+            ><details-table
+              @onCurrentPage="onCurrentPage"
+              :tables="table"
+            ></details-table
           ></el-tab-pane>
           <el-tab-pane label="作品及点评" name="works"
-            ><details-table :tables="table"></details-table
+            ><details-table
+              @onCurrentPage="onCurrentPage"
+              :tables="table"
+            ></details-table
           ></el-tab-pane>
         </el-tabs>
         <el-input
@@ -50,6 +62,7 @@ import detailsTable from './components/detailsTable'
 import axios from '@/api/axios'
 import { GetAgeByBrithday } from '@/utils/menuItems'
 import { timestamp } from '@/utils/index'
+import status from '@/utils/status'
 export default {
   components: {
     detailsTable
@@ -72,23 +85,34 @@ export default {
         // 总条数
         totalElements: null,
         // 当前页
-        totalPages: 1
+        currentPage: 1
       },
       // tabs标签默认状态
-      activeName: 'group'
+      activeName: 'group',
+      tablsName: ''
     }
   },
   watch: {
     classId(value) {
+      this.table.currentPage = 1
       if (value.classId) {
-        console.log(value, 'getGroup value')
-        this.getGroup() // 加好友进群
+        this.getGroup()
+        if (this.tabsName === '加好友进群') {
+          this.getGroup()
+        } else if (this.tabsName === '物流') {
+          this.gitLogistics()
+        } else if (this.tabsName === '登录') {
+          this.geiLogin()
+        } else if (this.tabsName === '参课和完课') {
+          this.getClassCompPage()
+        }
       } else {
         this.table.tableData = []
       }
     }
   },
   mounted() {
+    console.log(status, 'status')
     this.table.tableLabel = [{ label: '购买时间', prop: 'buytime' }]
   },
   methods: {
@@ -99,8 +123,8 @@ export default {
         .post('/graphql/user', {
           query: `{
             userListForTeam(query:${JSON.stringify(querys)} , page: ${
-            this.table.totalPages
-          }, size: 10) {
+            this.table.currentPage
+          }) {
               empty
               first
               last
@@ -134,7 +158,6 @@ export default {
           // 0 不显示  1 无基础  2 一年以下 3 一年以上
           // 0 叉 1 对号
           this.table.totalElements = res.data.userListForTeam.totalElements * 1
-          // this.table.totalPages = res.data.userListForTeam.totalPages * 1
           const _data = res.data.userListForTeam.content
           _data.forEach((item) => {
             item.birthday = GetAgeByBrithday(item.birthday)
@@ -167,8 +190,8 @@ export default {
         .post('/graphql/express', {
           query: `{
             stuExpressPage(query:${JSON.stringify(querys)} , page: ${
-            this.table.totalPages
-          }, size: 10) {
+            this.table.currentPage
+          }) {
               empty
               first
               last
@@ -207,19 +230,25 @@ export default {
             } else {
               item.nickname = `微信昵称: ${item.nickname}`
             }
-            if (item.express_status === '1') {
-              item.express_status = '未发货'
-            } else if (
-              item.express_status === '2' ||
-              item.express_status === '3'
-            ) {
+            if (item.express_status === '0') {
+              item.express_status = '以创建无地址'
+            } else if (item.express_status === '1') {
+              item.express_status = '待发货(无地址)'
+            } else if (item.express_status === '2') {
               item.express_status = '已发货'
-            } else if (item.express_status === '5') {
+            } else if (item.express_status === '3') {
               item.express_status = '已签收'
+            } else if (item.express_status === '4') {
+              item.express_status = '签收失败'
+            } else if (item.express_status === '5') {
+              item.express_status = '已退货'
+            } else if (item.express_status === '6') {
+              item.express_status = '待确认'
+            } else if (item.express_status === '7') {
+              item.express_status = '无效'
             }
           })
           this.table.tableData = _data
-          console.log(this.table.tableData, 'this.table.tableData112121212')
         })
     },
     // 登陆接口
@@ -229,8 +258,8 @@ export default {
         .post('/graphql/getClassLogin', {
           query: `{
           stuLoginPage(query:${JSON.stringify(querys)}, page: ${
-            this.table.totalPages
-          }, size: 10) {
+            this.table.currentPage
+          }) {
             first
             last
             number
@@ -244,6 +273,7 @@ export default {
               nickname
               ctime
               mobile
+              status
               login_time
               express_ctime
               first_login_time
@@ -270,9 +300,118 @@ export default {
             if (item.page_origin === '') {
               item.page_origin = ''
             }
+            if (item.status === '0') {
+              item.status = '已注册'
+            } else if (item.status === '1') {
+              item.status = '已体验课'
+            } else if (item.status === '2') {
+              item.status = '体验完课'
+            } else if (item.status === '3') {
+              item.status = '已月课'
+            } else if (item.status === '4') {
+              item.status = '月课完课'
+            } else if (item.status === '5') {
+              item.status = '已年课'
+            } else if (item.status === '6') {
+              item.status = '年课完课'
+            } else if (item.status === '7') {
+              item.status = '年课续费'
+            } else if (item.status === '11') {
+              item.status = '已半年课'
+            } else if (item.status === '12') {
+              item.status = '半年课完课'
+            }
           })
           this.table.tableData = _data
-          console.log(this.table.tableData, 'this.table.tableData login')
+        })
+    },
+    // 参课和完课接口
+    getClassCompPage() {
+      const querys = `{"team_id":${this.classId.classId.id},"team_type":${this.classId.type}}`
+      axios
+        .post('/graphql/getClassComplete', {
+          query: `{
+            getClassCompPage(query:${JSON.stringify(querys)}, page: ${
+            this.table.currentPage
+          }) {
+              first
+              last
+              number
+              size
+              totalPages
+              totalElements
+              content {
+                id
+                status
+                team_name
+                head
+                username
+                nickname
+                current_lesson
+                team_id
+                add_class_ctime
+                add_class_utime
+                add_class_status
+                classTitle
+                buytime
+                mobile
+              }
+            }
+          }`
+        })
+        .then((res) => {
+          // ctime 已参课 utime 完课
+          // 0 1 已参加课  1 已完课
+          console.log(res, 'res.getClassCompPage')
+          this.table.totalElements = res.data.getClassCompPage.totalElements * 1
+          const _data = res.data.getClassCompPage.content
+          _data.forEach((item) => {
+            item.buytime = timestamp(item.buytime, 6)
+            if (
+              item.add_class_status === '0' ||
+              item.add_class_status === '1'
+            ) {
+              item.add_class_status = '已参课'
+              item.add_class_ctime = timestamp(item.add_class_ctime, 6)
+            } else {
+              item.add_class_status = '-'
+            }
+            if (item.add_class_status === '1') {
+              item.add_class_status = '已完课'
+              item.add_class_utime = timestamp(item.add_class_utime, 6)
+            } else {
+              item.add_class_status = '-'
+            }
+            if (item.nickname === '') {
+              item.nickname = ''
+            } else {
+              item.nickname = `微信昵称: ${item.nickname}`
+            }
+            if (item.status === '') {
+              item.status = '-'
+            } else if (item.status === '0') {
+              item.status = '已注册'
+            } else if (item.status === '1') {
+              item.status = '已体验课'
+            } else if (item.status === '2') {
+              item.status = '体验完课'
+            } else if (item.status === '3') {
+              item.status = '已月课'
+            } else if (item.status === '4') {
+              item.status = '月课完课'
+            } else if (item.status === '5') {
+              item.status = '已年课'
+            } else if (item.status === '6') {
+              item.status = '年课完课'
+            } else if (item.status === '7') {
+              item.status = '年课续费'
+            } else if (item.status === '11') {
+              item.status = '已半年课'
+            } else if (item.status === '12') {
+              item.status = '半年课完课'
+            }
+          })
+          this.table.tableData = _data
         })
     },
     // 加好友进群 已加好友子组建传值方法
@@ -284,6 +423,7 @@ export default {
       this.table.tableData[data.index].added_group = data.command
     },
     handleClick(tab, event) {
+      this.tabsName = tab.label
       this.table.tableData = []
       if (tab.index === '0') {
         // 加好友进群
@@ -301,6 +441,7 @@ export default {
         this.table.tabs = 2
       } else if (tab.index === '3') {
         // 参课和完课
+        this.getClassCompPage()
         console.log('参课和完课')
         this.table.tabs = 3
       } else if (tab.index === '4') {
@@ -309,8 +450,8 @@ export default {
         this.table.tabs = 4
       }
     },
-    onTotalPages(data) {
-      this.table.totalPages = data
+    onCurrentPage(data) {
+      this.table.currentPage = data
       if (this.table.tabs === '0') {
         this.getGroup()
       } else if (this.table.tabs === '1') {
@@ -331,11 +472,13 @@ export default {
 </script>
 <style lang="scss" scoped>
 .tabs-tab {
+  // padding-left: 20px;
+  margin-top: 10px;
   position: relative;
   .el-input-search {
     position: absolute;
-    top: 0;
-    right: 10px;
+    top: 5px;
+    right: 16px;
     float: right;
     width: 180px;
   }
@@ -361,6 +504,23 @@ export default {
   .el-tabs__nav-scroll {
     padding-left: 10px !important;
     background: #fff !important;
+  }
+  .el-tabs__nav {
+    padding-left: 16px;
+  }
+  .el-tabs__nav-wrap::after {
+    background-color: #fff !important;
+  }
+  .el-tabs__active-bar {
+    width: 50%;
+    top: 34px;
+    margin-left: 16px;
+  }
+  .el-tabs__item {
+    color: #999;
+  }
+  .el-tabs__item.is-active {
+    color: #409eff;
   }
 }
 </style>
