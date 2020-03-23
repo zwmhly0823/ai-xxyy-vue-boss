@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 20:22:24
  * @LastEditors: panjian
- * @LastEditTime: 2020-03-21 22:24:49
+ * @LastEditTime: 2020-03-23 18:25:49
  -->
 <template>
   <div class="table-box">
@@ -29,9 +29,10 @@
                 alt=""
               />
               <div class="info-telephone">{{ scope.row.mobile }}</div>
-              <span class="info-sex" v-if="scope.row.sex == 0">- ·</span>
+              <!-- <span class="info-sex" v-if="scope.row.sex == 0">- ·</span>
               <span class="info-sex" v-else-if="scope.row.sex == 1">男 ·</span>
-              <span class="info-sex" v-else>女 ·</span>
+              <span class="info-sex" v-else>女 ·</span> -->
+              <span class="info-sex">{{ scope.row.sex }}</span>
               <span class="info-age">{{ scope.row.birthday }}</span>
               <span class="info-basics">{{ scope.row.base_painting }}</span>
             </div>
@@ -222,7 +223,7 @@
         :total="+tables.totalElements"
       />
     </div>
-    <!-- 登陆 -->
+    <!-- 打开APP -->
     <div class="login-box" v-if="this.tables.tabs == 2">
       <el-table
         ref="multipleTable"
@@ -269,15 +270,6 @@
         </el-table-column>
       </el-table>
       <!-- 分页 -->
-      <!-- <el-pagination
-        class="page"
-        @current-change="handleCurrentChange"
-        :current-page="+tables.currentPage"
-        :page-size="10"
-        layout="prev, pager, next"
-        :total="+tables.totalElements"
-      >
-      </el-pagination> -->
       <m-pagination
         @current-change="handleCurrentChange"
         :current-page="+tables.currentPage"
@@ -355,14 +347,6 @@
             </div>
           </template>
         </el-table-column>
-        <!-- 组建遍历表头 -->
-        <!-- <el-table-column
-          v-for="(item, index) in tables.tableLabel"
-          :key="index"
-          :prop="item.prop"
-          :width="item.width"
-          :label="item.label"
-        ></el-table-column> -->
       </el-table>
       <!-- 分页 -->
       <m-pagination
@@ -372,7 +356,7 @@
       />
     </div>
     <!-- 作品及点评 -->
-    <div v-if="this.tables.tabs == 4">
+    <div class="works-box" v-if="this.tables.tabs == 4">
       <el-table
         ref="multipleTable"
         :data="tables.tableData"
@@ -385,23 +369,32 @@
         <el-table-column width="150" label="用户和购买时间">
           <template slot-scope="scope">
             <div>
-              <span>{{ scope.row }}</span>
+              <span>{{ scope.row.mobile }}</span>
+              <br />
+              <span>{{ scope.row.buytime }}</span>
             </div>
           </template>
         </el-table-column>
-        <el-table-column width="180" label="用户微信">
+        <el-table-column width="200" label="用户微信">
           <template slot-scope="scope">
-            <div>
-              <img :src="scope.row.head" alt="" />
-              <div class="logistics-telephone">{{ scope.row.mobile }}</div>
-              <span>{{ scope.row }}</span>
+            <div class="participateIn-wx-box">
+              <img
+                class="participateIn-wx-img borders"
+                :src="scope.row.head"
+                alt=""
+              />
+              <span class="participateIn-username">{{
+                scope.row.username
+              }}</span>
+              <span class="participateIn-nickname">{{
+                scope.row.nickname
+              }}</span>
             </div>
           </template>
         </el-table-column>
         <el-table-column label="课程">
           <template slot-scope="scope">
             <div>
-              <img :src="scope.row.head" alt="" />
               <span>{{ scope.row }}</span>
             </div>
           </template>
@@ -409,7 +402,6 @@
         <el-table-column label="作品">
           <template slot-scope="scope">
             <div>
-              <img :src="scope.row.head" alt="" />
               <span>{{ scope.row }}</span>
             </div>
           </template>
@@ -417,7 +409,6 @@
         <el-table-column label="点评">
           <template slot-scope="scope">
             <div>
-              <img :src="scope.row.head" alt="" />
               <span>{{ scope.row }}</span>
             </div>
           </template>
@@ -444,7 +435,10 @@ export default {
   },
   data() {
     return {
-      index: null
+      index: null,
+      studentId: null,
+      added_group: null,
+      added_wechat: null
     }
   },
   mounted() {
@@ -458,13 +452,21 @@ export default {
     },
     // 获取表格 下标
     onClick(row, column, event) {
+      // console.log(row, column, event)
+      this.added_group = row.added_group
+      this.added_wechat = row.added_wechat
+      this.studentId = row.id
       this.index = row.index
       // console.log(row, column, event, index)
     },
     // 向父组建传值 已加好友
     commandFriend(command) {
+      console.log(command, 'command')
       const val = {
-        command: command,
+        type: 'wechat',
+        studentId: this.studentId,
+        addedGroup: this.added_group,
+        addedWechat: command,
         index: this.index
       }
       this.$emit('commandFriend', val)
@@ -472,17 +474,16 @@ export default {
     // 向父组建传值 已进群
     onGroup(command) {
       const val = {
-        command: command,
+        type: 'group',
+        studentId: this.studentId,
+        addedWechat: this.added_wechat,
+        addedGroup: command,
         index: this.index
       }
       this.$emit('onGroup', val)
     },
     // 单元格回调样式
     cellStyle({ row, column, rowIndex, columnIndex }) {
-      // console.log(row, column, rowIndex, columnIndex)
-      // if (column.label === '已加好友' || column.label === '已进群') {
-      //   return 'padding-left:50px;'
-      // }
       if (columnIndex === 0) {
         return 'padding-left:15px;padding-top:20px;padding-bottom:15px;'
       }
@@ -520,7 +521,7 @@ export default {
         margin-left: 20px;
       }
       .info-age {
-        margin-left: 10px;
+        margin-left: 5px;
       }
       .info-basics {
         margin-left: 10px;
@@ -593,6 +594,8 @@ export default {
         left: 55px;
       }
     }
+  }
+  .works-box {
   }
   .borders {
     border: 1px solid #f2f2f2;
