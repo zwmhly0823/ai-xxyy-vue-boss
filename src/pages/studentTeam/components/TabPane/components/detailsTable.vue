@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 20:22:24
  * @LastEditors: panjian
- * @LastEditTime: 2020-03-23 18:25:49
+ * @LastEditTime: 2020-03-23 21:34:56
  -->
 <template>
   <div class="table-box">
@@ -223,7 +223,7 @@
         :total="+tables.totalElements"
       />
     </div>
-    <!-- 打开APP -->
+    <!-- 打开APP 原 登陆 -->
     <div class="login-box" v-if="this.tables.tabs == 2">
       <el-table
         ref="multipleTable"
@@ -377,25 +377,19 @@
         </el-table-column>
         <el-table-column width="200" label="用户微信">
           <template slot-scope="scope">
-            <div class="participateIn-wx-box">
-              <img
-                class="participateIn-wx-img borders"
-                :src="scope.row.head"
-                alt=""
-              />
-              <span class="participateIn-username">{{
-                scope.row.username
-              }}</span>
-              <span class="participateIn-nickname">{{
-                scope.row.nickname
-              }}</span>
+            <div class="works-wx-box">
+              <img class="works-wx-img borders" :src="scope.row.head" alt="" />
+              <span class="works-username">{{ scope.row.username }}</span>
+              <span class="works-nickname">{{ scope.row.nickname }}</span>
             </div>
           </template>
         </el-table-column>
         <el-table-column label="课程">
           <template slot-scope="scope">
             <div>
-              <span>{{ scope.row }}</span>
+              <span>{{ scope.row.current_lesson }}</span>
+              <br />
+              <span>{{ scope.row.classTitle }}</span>
             </div>
           </template>
         </el-table-column>
@@ -490,8 +484,10 @@ export default {
     },
     // 表头回调样式
     headerCss({ row, column, rowIndex, columnIndex }) {
-      // console.log(row, column, rowIndex, columnIndex, 'headerCss')
-      return 'padding-left:15px;font-size:12px;color:#666;font-weight:normal;'
+      if (columnIndex === 0) {
+        return 'padding-left:15px;font-size:12px;color:#666;font-weight:normal;'
+      }
+      return 'font-size:12px;color:#666;font-weight:normal;'
     },
     // 分页
     handleCurrentChange(val) {
@@ -542,7 +538,9 @@ export default {
     .logistics-wx-box {
       position: relative;
       .logistics-wx-img {
+        display: inline-block;
         width: 50px;
+        height: 50px;
       }
       .logistics-username {
         position: absolute;
@@ -563,7 +561,9 @@ export default {
     .login-wx-box {
       position: relative;
       .login-wx-img {
+        display: inline-block;
         width: 50px;
+        height: 50px;
       }
       .login-username {
         position: absolute;
@@ -581,7 +581,9 @@ export default {
     .participateIn-wx-box {
       position: relative;
       .participateIn-wx-img {
+        display: inline-block;
         width: 50px;
+        height: 50px;
       }
       .participateIn-username {
         position: absolute;
@@ -596,6 +598,22 @@ export default {
     }
   }
   .works-box {
+    .works-wx-box {
+      position: relative;
+      .works-wx-img {
+        width: 50px;
+      }
+      .works-username {
+        position: absolute;
+        top: 0;
+        left: 55px;
+      }
+      .works-nickname {
+        position: absolute;
+        top: 25px;
+        left: 55px;
+      }
+    }
   }
   .borders {
     border: 1px solid #f2f2f2;
