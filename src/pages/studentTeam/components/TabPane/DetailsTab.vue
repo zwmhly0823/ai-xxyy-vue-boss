@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 14:19:58
  * @LastEditors: panjian
- * @LastEditTime: 2020-03-23 21:19:36
+ * @LastEditTime: 2020-03-23 21:31:26
  -->
 <template>
   <div>
@@ -103,6 +103,8 @@ export default {
         this.type = 'MONTH'
       } else if (value.classId.team_type === 2) {
         this.type = 'YEAR'
+      } else {
+        this.type = ''
       }
       this.table.currentPage = 1
       if (value.classId) {

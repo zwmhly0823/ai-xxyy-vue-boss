@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 20:22:24
  * @LastEditors: panjian
- * @LastEditTime: 2020-03-23 21:24:45
+ * @LastEditTime: 2020-03-23 21:34:56
  -->
 <template>
   <div class="table-box">
@@ -538,7 +538,9 @@ export default {
     .logistics-wx-box {
       position: relative;
       .logistics-wx-img {
+        display: inline-block;
         width: 50px;
+        height: 50px;
       }
       .logistics-username {
         position: absolute;
@@ -559,7 +561,9 @@ export default {
     .login-wx-box {
       position: relative;
       .login-wx-img {
+        display: inline-block;
         width: 50px;
+        height: 50px;
       }
       .login-username {
         position: absolute;
@@ -577,7 +581,9 @@ export default {
     .participateIn-wx-box {
       position: relative;
       .participateIn-wx-img {
+        display: inline-block;
         width: 50px;
+        height: 50px;
       }
       .participateIn-username {
         position: absolute;
