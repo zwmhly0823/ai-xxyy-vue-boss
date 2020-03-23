@@ -98,10 +98,6 @@
               <div>待发货</div>
             </div>
             <div>
-              <div>{{ item.statictis.unlogin }}</div>
-              <div>待登录</div>
-            </div>
-            <div>
               <div>{{ item.statictis.unadd_wechat }}</div>
               <div>待加好友</div>
             </div>
@@ -110,38 +106,42 @@
               <div>待进群</div>
             </div>
             <div>
+              <div>{{ item.statictis.unlogin }}</div>
+              <div>待登录App</div>
+            </div>
+            <div>
               <div>{{ item.statictis.today_add_class }}</div>
-              <div>今日参课</div>
+              <div>今日课程参课</div>
             </div>
             <div>
               <div>{{ item.statictis.yesterday_add_class }}</div>
-              <div>昨日参课</div>
+              <div>昨日课程参课</div>
             </div>
           </div>
           <div class="params-bottom">
             <div>
               <div>{{ item.statictis.tody_comp_class }}</div>
-              <div>今日完课</div>
+              <div>今日课程完课</div>
             </div>
             <div>
               <div>{{ item.statictis.yesterday_comp_class }}</div>
-              <div>昨日完课</div>
+              <div>昨日课程完课</div>
             </div>
             <div>
               <div>{{ item.statictis.tody_works }}</div>
-              <div>今日作品</div>
+              <div>今日课程作品</div>
             </div>
             <div>
               <div>{{ item.statictis.yesterday_works }}</div>
-              <div>昨日作品</div>
+              <div>昨日课程作品</div>
             </div>
             <div>
               <div>{{ item.statictis.tody_comment }}</div>
-              <div>今日点评</div>
+              <div>今日点评作品</div>
             </div>
             <div>
               <div>{{ item.statictis.yesterday_comment }}</div>
-              <div>昨日点评</div>
+              <div>昨日点评作品</div>
             </div>
           </div>
         </div>
