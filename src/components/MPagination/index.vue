@@ -111,10 +111,10 @@ export default {
   color: #4d4d4d;
   transition: width 0.3s;
   &.opened {
-    width: calc(100vw - 180px - 240px - 175px - 30px);
+    width: calc(100vw - 180px - 240px - 165px - 30px);
   }
   &.close {
-    width: calc(100vw - 180px - 240px - 50px - 30px);
+    width: calc(100vw - 180px - 240px - 45px - 30px);
   }
   .el-pagination {
     display: flex;
