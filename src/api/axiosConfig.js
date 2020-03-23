@@ -3,8 +3,8 @@
  * @version:
  * @Author: Shentong
  * @Date: 2020-03-17 11:50:18
- * @LastEditors: Shentong
- * @LastEditTime: 2020-03-18 14:03:38
+ * @LastEditors: panjian
+ * @LastEditTime: 2020-03-23 18:43:00
  */
 import axios from './axios'
 import { getToken } from '@/utils/auth'
@@ -50,6 +50,27 @@ export default {
    * @param {Object} params [请求时携带的参数]
    */
   post(url, params) {
+    if (this.judgeToken()) {
+      return new Promise((resolve, reject) => {
+        axios
+          .post(url, params, {
+            headers: this.getHeaders()
+          })
+          .then((res) => {
+            resolve(res)
+          })
+          .catch((err) => {
+            reject(err)
+          })
+      })
+    }
+  },
+  /**
+   * put方法，对应put请求
+   * @param {String} url [请求的url地址]
+   * @param {Object} params [请求时携带的参数]
+   */
+  put(url, params) {
     if (this.judgeToken()) {
       return new Promise((resolve, reject) => {
         axios

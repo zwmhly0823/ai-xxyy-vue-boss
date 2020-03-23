@@ -17,9 +17,7 @@
       <div class="header">
         <div class="header-left">
           <div class="title">
-            <span class="title-text"
-              >{{ item.onetime }}:{{ item.team_name }}</span
-            >
+            <span class="title-text">{{ item.id }}:{{ item.team_name }}</span>
             <span class="text-iconsY">{{
               item.team_type == 0 ? '体验课' : '系统课'
             }}</span>
@@ -35,11 +33,7 @@
           </div>
           <div class="info">
             <span>学员:{{ item.enrolled }}</span>
-            <span
-              >辅导老师:{{
-                item.teacher.nickname || item.teacher.realname
-              }}</span
-            >
+            <span>辅导老师:{{ item.teacher.realname }}</span>
             <span>辅导老师微信: {{ item.teacher_wx }}</span>
             <span style="margin-right:0px">
               <span
@@ -61,7 +55,7 @@
         </div> -->
       </div>
       <div class="body">
-        <div class="body-boxLeft">
+        <div class="body-boxLeft" v-show="item.team_type == 0">
           <div class="order-title">累计订单</div>
           <div class="order-number">{{ item.statictis.order_all }}</div>
           <div class="order-count">
@@ -104,10 +98,6 @@
               <div>待发货</div>
             </div>
             <div>
-              <div>{{ item.statictis.unlogin }}</div>
-              <div>待登录</div>
-            </div>
-            <div>
               <div>{{ item.statictis.unadd_wechat }}</div>
               <div>待加好友</div>
             </div>
@@ -116,38 +106,42 @@
               <div>待进群</div>
             </div>
             <div>
+              <div>{{ item.statictis.unlogin }}</div>
+              <div>待登录App</div>
+            </div>
+            <div>
               <div>{{ item.statictis.today_add_class }}</div>
-              <div>今日参课</div>
+              <div>今日课程参课</div>
             </div>
             <div>
               <div>{{ item.statictis.yesterday_add_class }}</div>
-              <div>昨日参课</div>
+              <div>昨日课程参课</div>
             </div>
           </div>
           <div class="params-bottom">
             <div>
               <div>{{ item.statictis.tody_comp_class }}</div>
-              <div>今日完课</div>
+              <div>今日课程完课</div>
             </div>
             <div>
               <div>{{ item.statictis.yesterday_comp_class }}</div>
-              <div>昨日完课</div>
+              <div>昨日课程完课</div>
             </div>
             <div>
               <div>{{ item.statictis.tody_works }}</div>
-              <div>今日作品</div>
+              <div>今日课程作品</div>
             </div>
             <div>
               <div>{{ item.statictis.yesterday_works }}</div>
-              <div>昨日作品</div>
+              <div>昨日课程作品</div>
             </div>
             <div>
               <div>{{ item.statictis.tody_comment }}</div>
-              <div>今日点评</div>
+              <div>今日点评作品</div>
             </div>
             <div>
               <div>{{ item.statictis.yesterday_comment }}</div>
-              <div>昨日点评</div>
+              <div>昨日点评作品</div>
             </div>
           </div>
         </div>
