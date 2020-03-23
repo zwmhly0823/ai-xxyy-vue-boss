@@ -18,9 +18,12 @@
       <el-dropdown class="avatar-container" trigger="click">
         <div class="user-info">
           <div class="avatar-wrapper">
-            <img :src="userInfo.head || head" class="user-avatar" />
+            <img
+              :src="userInfo ? userInfo.head || head : head"
+              class="user-avatar"
+            />
           </div>
-          <p>{{ userInfo.realName }}</p>
+          <p>{{ userInfo ? userInfo.realName : '' }}</p>
           <i class="el-icon-arrow-down" />
         </div>
         <el-dropdown-menu slot="dropdown" class="user-dropdown">
@@ -43,6 +46,7 @@ import { mapGetters } from 'vuex'
 import Breadcrumb from './Breadcrumb'
 import Hamburger from './Hamburger'
 import { removeToken } from '@/utils/auth'
+import { baseUrl } from '@/utils/index'
 
 export default {
   components: {
@@ -61,6 +65,10 @@ export default {
   created() {
     const userInfo =
       localStorage.getItem('teacher') || localStorage.getItem('staff')
+    if (!userInfo) {
+      this.logout()
+      return
+    }
     this.userInfo = JSON.parse(userInfo)
   },
   methods: {
@@ -69,7 +77,7 @@ export default {
     },
     logout() {
       removeToken()
-      location.href = `/login/#/`
+      location.href = `${baseUrl()}login/#/`
       // await this.$store.dispatch('user/logout')
       // this.$router.push(`/login?redirect=${this.$route.fullPath}`)
     }
