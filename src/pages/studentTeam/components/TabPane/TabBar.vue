@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-19 20:50:40
  * @LastEditors: zhubaodong
- * @LastEditTime: 2020-03-21 16:25:21
+ * @LastEditTime: 2020-03-21 18:33:33
  -->
 <template>
   <div>
@@ -21,9 +21,9 @@
         <el-tab-pane label="带班详情" name="details">
           <details-tab :classId="classId" />
         </el-tab-pane>
-        <el-tab-pane label="订单" name="order">
+        <!-- <el-tab-pane label="订单" name="order">
           <order-tab :classId="classId" />
-        </el-tab-pane>
+        </el-tab-pane> -->
 
         <!-- <el-tab-pane label="微信群聊" name="groupChat">
         <groupchat-tab />
@@ -42,7 +42,7 @@
       >
         <el-tab-pane label="学员" name="students"></el-tab-pane>
         <el-tab-pane label="带班详情" name="details"> </el-tab-pane>
-        <el-tab-pane label="订单" name="order"> </el-tab-pane>
+        <!-- <el-tab-pane label="订单" name="order"> </el-tab-pane> -->
       </el-tabs>
     </div>
   </div>
@@ -50,9 +50,8 @@
 <script>
 import StudensTab from './StudentsTab'
 import DetailsTab from './DetailsTab'
-import OrderTab from './OrderTab'
+// import OrderTab from './OrderTab'
 // import GroupchatTab from './GroupchatTab'
-// import SystemorderTab from './SystemorderTab'
 export default {
   props: {
     classId: {
@@ -62,10 +61,9 @@ export default {
   },
   components: {
     StudensTab,
-    DetailsTab,
-    OrderTab
+    DetailsTab
+    // OrderTab
     // GroupchatTab,
-    // SystemorderTab
   },
   data() {
     return {
@@ -102,7 +100,7 @@ export default {
   z-index: 1000;
 }
 .tab-box {
-  padding: 0;
+  padding: 0 0 20px 0;
   flex: 1;
 }
 </style>

@@ -62,30 +62,32 @@
       <el-table-column label="状态" class="status-style">
         <template slot-scope="scope">
           <div class="text333">{{ scope.row.status }}</div>
-          <div class="text333">{{ scope.row.wechat_status.added_wechat }}</div>
+          <div class="text333">
+            {{ scope.row.wechat_status.added_wechat }}
+          </div>
           <div class="text333">{{ scope.row.wechat_status.added_group }}</div>
         </template>
       </el-table-column>
       <!-- <el-table-column label="标签" class="thelabel"></el-table-column> -->
     </el-table>
     <!-- 分页 -->
-    <div class="block">
-      <el-pagination
-        layout="prev, pager, next"
-        :page-count="totalPages"
-        :current-page="currentPage"
-        prev-text="上一页"
-        next-text="下一页"
-        @current-change="handleSizeChange"
-      >
-      </el-pagination>
-    </div>
+    <m-pagination
+      :current-page="currentPage"
+      :page-count="totalPages"
+      :total="totalElements"
+      @current-change="handleSizeChange"
+    ></m-pagination>
   </div>
 </template>
 <script>
 import axios from '@/api/axios'
 import { GetAgeByBrithday } from '@/utils/menuItems'
+import MPagination from '@/components/MPagination/index.vue'
+
 export default {
+  components: {
+    MPagination
+  },
   props: {
     // 班级传参
     classId: {
@@ -97,21 +99,22 @@ export default {
     return {
       // 总页数
       totalPages: 1,
+      totalElements: 0, // 总条数
       // 当前页数
       currentPage: 1,
       // 学员列表
       tableData: [],
       // 用户状态列表
-      statusData: []
+      statusList: []
     }
   },
   created() {},
   watch: {
     classId(value) {
+      this.currentPage = 1
       if (value.classId) {
-        this.currentPage = 1
-        this.getstatusList()
         this.studentsList()
+        this.getstatusList()
       } else {
         this.tableData = []
       }
@@ -174,6 +177,7 @@ export default {
         })
         .then((res) => {
           this.totalPages = res.data.teamUserListPage.totalPages * 1
+          this.totalElements = +res.data.teamUserListPage.totalElements
           const _data = res.data.teamUserListPage.content
           _data.forEach((ele) => {
             // 性别 0/默认 1/男 2/女  3/保密
@@ -248,6 +252,8 @@ export default {
     },
     // 点击分页
     handleSizeChange(val) {
+      console.log(val)
+
       this.currentPage = val
       this.getstatusList()
       this.studentsList()
@@ -306,10 +312,7 @@ export default {
     color: #2461b9;
   }
 }
-.block {
-  margin-top: 20px;
-  text-align: center;
-}
+
 .text333 {
   color: #333333 !important;
 }

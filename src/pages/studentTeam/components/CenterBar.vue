@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-13 16:53:33
  * @LastEditors: zhubaodong
- * @LastEditTime: 2020-03-21 17:43:07
+ * @LastEditTime: 2020-03-21 18:32:47
  -->
 <template>
   <div class="center-container">
@@ -48,7 +48,7 @@
               </span>
               <span class="imgtext3">
                 <i class="el-icon-date"></i>
-                <span>{{ item.formatSrartDay }}-{{ item.formatEndDay }}</span>
+                <span>{{ item.formatStartDay }}-{{ item.formatEndDay }}</span>
               </span>
             </div>
           </div>
@@ -93,7 +93,7 @@ export default {
         this.classData.teamStatusPage &&
         this.classData.teamStatusPage.content.map((item) => {
           // 格式化开课时间
-          item.formatSrartDay = dayjs
+          item.formatStartDay = dayjs
             .unix(Number(item.start_day) / 1000)
             .format('MMDD')
           item.formatEndDay = dayjs

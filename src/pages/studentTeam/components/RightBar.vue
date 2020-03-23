@@ -4,10 +4,10 @@
  * @Author: zhubaodong
  * @Date: 2020-03-13 16:53:41
  * @LastEditors: zhubaodong
- * @LastEditTime: 2020-03-21 17:00:38
+ * @LastEditTime: 2020-03-21 18:36:02
  -->
 <template>
-  <div class="right-container">
+  <div class="right-container" style="width:100%">
     <el-card
       shadow="never"
       class="box-card1"
@@ -17,9 +17,7 @@
       <div class="header">
         <div class="header-left">
           <div class="title">
-            <span class="title-text"
-              >{{ item.onetime }}:{{ item.team_name }}</span
-            >
+            <span class="title-text">{{ item.id }}:{{ item.team_name }}</span>
             <span class="text-iconsY">{{
               item.team_type == 0 ? '体验课' : '系统课'
             }}</span>
@@ -35,17 +33,17 @@
           </div>
           <div class="info">
             <span>学员:{{ item.enrolled }}</span>
-            <span
-              >辅导老师:{{
-                item.teacher.nickname || item.teacher.realname
-              }}</span
-            >
+            <span>辅导老师:{{ item.teacher.realname }}</span>
             <span>辅导老师微信: {{ item.teacher_wx }}</span>
             <span style="margin-right:0px">
-              <span>开课-结课: &nbsp;{{ item.formatCtime }}-0516</span>
+              <span
+                >开课~结课 &nbsp;{{ item.formatStartDay }}~{{
+                  item.formatEndDay
+                }}</span
+              >
             </span>
             <span style="margin-right:0px">
-              <span>创建: &nbsp;{{ item.timebegin }}</span>
+              <span>创建 &nbsp;{{ item.timebegin }}</span>
             </span>
           </div>
         </div>
@@ -57,7 +55,7 @@
         </div> -->
       </div>
       <div class="body">
-        <div class="body-boxLeft">
+        <div class="body-boxLeft" v-show="item.team_type == 0">
           <div class="order-title">累计订单</div>
           <div class="order-number">{{ item.statictis.order_all }}</div>
           <div class="order-count">
@@ -100,10 +98,6 @@
               <div>待发货</div>
             </div>
             <div>
-              <div>{{ item.statictis.unlogin }}</div>
-              <div>待登录</div>
-            </div>
-            <div>
               <div>{{ item.statictis.unadd_wechat }}</div>
               <div>待加好友</div>
             </div>
@@ -112,38 +106,42 @@
               <div>待进群</div>
             </div>
             <div>
+              <div>{{ item.statictis.unlogin }}</div>
+              <div>待登录App</div>
+            </div>
+            <div>
               <div>{{ item.statictis.today_add_class }}</div>
-              <div>今日参课</div>
+              <div>今日课程参课</div>
             </div>
             <div>
               <div>{{ item.statictis.yesterday_add_class }}</div>
-              <div>昨日参课</div>
+              <div>昨日课程参课</div>
             </div>
           </div>
           <div class="params-bottom">
             <div>
               <div>{{ item.statictis.tody_comp_class }}</div>
-              <div>今日完课</div>
+              <div>今日课程完课</div>
             </div>
             <div>
               <div>{{ item.statictis.yesterday_comp_class }}</div>
-              <div>昨日完课</div>
+              <div>昨日课程完课</div>
             </div>
             <div>
               <div>{{ item.statictis.tody_works }}</div>
-              <div>今日作品</div>
+              <div>今日课程作品</div>
             </div>
             <div>
               <div>{{ item.statictis.yesterday_works }}</div>
-              <div>昨日作品</div>
+              <div>昨日课程作品</div>
             </div>
             <div>
               <div>{{ item.statictis.tody_comment }}</div>
-              <div>今日点评</div>
+              <div>今日点评作品</div>
             </div>
             <div>
               <div>{{ item.statictis.yesterday_comment }}</div>
-              <div>昨日点评</div>
+              <div>昨日点评作品</div>
             </div>
           </div>
         </div>
@@ -263,14 +261,13 @@ export default {
           res.data.detail.timebegin = dayjs
             .unix(Number(this.classId.classId.ctime) / 1000)
             .format('MM-DD  hh:mm:ss')
-          res.data.detail.formatCtime = dayjs
-            .unix(Number(this.classId.classId.ctime) / 1000)
-            .format('MMDD')
           res.data.detail.onetime = dayjs
-            .unix(Number(this.classId.classId.ctime) / 1000)
+            .unix(Number(this.classId.classId.start_day) / 1000)
             .format('YYMMDD')
+          res.data.detail.formatStartDay = this.classId.classId.formatStartDay
+          res.data.detail.formatEndDay = this.classId.classId.formatEndDay
           this.classMessage = res.data
-          // this.classMessage2 = res.data
+          // this.classMessage2 = res.dataformatEndDay
 
           console.log(
             this.classMessage,
@@ -412,14 +409,12 @@ export default {
         .params-top {
           width: 100%;
           display: flex;
-          padding: 0 0 6px 0;
           div {
             flex: 1;
             display: flex;
             flex-direction: column;
             align-items: center;
             div:nth-child(1) {
-              font-size: 14px;
               font-family: 'number_font';
               color: #4d4d4d;
               margin-bottom: 4px;
@@ -435,7 +430,6 @@ export default {
             flex-direction: column;
             align-items: center;
             div:nth-child(1) {
-              font-size: 14px;
               font-family: 'number_font';
               color: #4d4d4d;
               margin-bottom: 4px;
