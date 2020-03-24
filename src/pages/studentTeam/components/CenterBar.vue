@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-13 16:53:33
  * @LastEditors: zhubaodong
- * @LastEditTime: 2020-03-23 20:50:20
+ * @LastEditTime: 2020-03-24 11:29:23
  -->
 <template>
   <div class="center-container">
@@ -22,6 +22,7 @@
         v-infinite-scroll="load"
         infinite-scroll-distance="10px"
         infinite-scroll-disabled="disabled"
+        v-if="showClassData.datas && showClassData.datas.length !== 0"
       >
         <li
           v-for="(item, index) in showList ? showList : showClassData.datas"
@@ -54,6 +55,12 @@
           </div>
         </li>
       </ul>
+      <div
+        v-else
+        style="display:flex;color:rgb(128, 128, 128);justify-content:center;align-items:center;height:90vh"
+      >
+        暂无班级
+      </div>
       <p v-if="loading" style="text-align:center">
         加载中...
       </p>
@@ -65,7 +72,7 @@
 </template>
 
 <script>
-import dayjs from 'dayjs'
+import { startToEndTime } from '@/utils'
 
 export default {
   props: {
@@ -93,12 +100,9 @@ export default {
         this.classData.teamStatusPage &&
         this.classData.teamStatusPage.content.map((item) => {
           // 格式化开课时间
-          item.formatStartDay = dayjs
-            .unix(Number(item.start_day) / 1000)
-            .format('MMDD')
-          item.formatEndDay = dayjs
-            .unix(Number(item.end_day) / 1000)
-            .format('MMDD')
+          const times = startToEndTime(item.start_day, item.end_day)
+          item.formatStartDay = times[0]
+          item.formatEndDay = times[1]
           return item
         })
       // 分页数据

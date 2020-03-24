@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-13 16:53:41
  * @LastEditors: zhubaodong
- * @LastEditTime: 2020-03-21 18:36:02
+ * @LastEditTime: 2020-03-23 21:50:41
  -->
 <template>
   <div class="right-container" style="width:100%">
@@ -348,7 +348,7 @@ export default {
       &-boxLeft,
       &-boxCenter,
       &-boxRight {
-        flex: 0.3;
+        flex: 0.15;
         padding: 10px;
         margin-right: 15px;
         background: #f5f6f7;

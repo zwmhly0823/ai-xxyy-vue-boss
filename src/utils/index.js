@@ -2,8 +2,8 @@
  * @Author: YangJiyong
  * @Email: yangjiyong@meishubao.com
  * @Date: 2020-03-13 12:10:04
- * @Last Modified by: chengweihua
- * @Last Modified time: 2020-03-23 13:10:47
+ * @Last Modified by: YangJiyong
+ * @Last Modified time: 2020-03-23 19:51:50
  * @Description: 全局公共方法，添加或改动及时全员通知。 注释一定要写详细！
  */
 
@@ -115,7 +115,26 @@ export function baseUrl() {
   if (BASE_URL === 'ghpageslive') {
     myBaseUrl = ''
   } else if (BASE_URL === 'ghpagestest' || BASE_URL.indexOf('test') > -1) {
-    myBaseUrl = '/frontend/ai-app-vue-toss/'
+    myBaseUrl = '/ai-app-vue-toss-test/'
+    // myBaseUrl = ''
   }
   return myBaseUrl
+}
+
+/**
+ * 转化跨年体验课或系统课时间戳
+ * @param(开课时间，结课时间)
+ * return [开课时间，结课时间] 如果跨年返回YYMMDD 否则MMDD
+ */
+
+export function startToEndTime(startTime, endTime) {
+  const formatS = dayjs.unix(Number(startTime) / 1000).format('YYMMDD')
+  const formatE = dayjs.unix(Number(endTime) / 1000).format('YYMMDD')
+  if (formatS.slice(0, 2) === formatE.slice(0, 2)) {
+    return [
+      dayjs.unix(Number(startTime) / 1000).format('MMDD'),
+      dayjs.unix(Number(endTime) / 1000).format('MMDD')
+    ]
+  }
+  return [formatS, formatE]
 }
