@@ -1,11 +1,3 @@
-<!--
- * @Descripttion: 
- * @version: 
- * @Author: zhubaodong
- * @Date: 2020-03-24 18:31:57
- * @LastEditors: zhubaodong
- * @LastEditTime: 2020-03-24 18:42:10
- -->
 #公共搜索组件
 
 ##想要哪个搜索项，设置相应的名称，值为当前页面所需的表达式的具体字段。如: 用户模块手机号搜索，表达式中的字段为 mobile. 设置 umobile="mobile" 定义函数handleSearch() 取搜索结果query
