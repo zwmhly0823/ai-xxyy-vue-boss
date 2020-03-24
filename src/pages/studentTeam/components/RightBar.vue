@@ -7,7 +7,7 @@
  * @LastEditTime: 2020-03-23 21:50:41
  -->
 <template>
-  <div class="right-container" style="width:100%">
+  <div class="right-container">
     <el-card
       shadow="never"
       class="box-card1"

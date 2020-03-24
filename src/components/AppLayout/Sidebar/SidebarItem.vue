@@ -22,8 +22,12 @@
     <!-- 有二级目录的 -->
     <el-submenu :index="index.toString()" v-else>
       <template slot="title">
-        <i :class="item.meta.icon"></i>
-        <span slot="title">{{ item.meta.title }}</span>
+        <div
+          @click.prevent.stop="handleOpen(item, `${index.toString()}`, true)"
+        >
+          <i :class="item.meta.icon"></i>
+          <span slot="title">{{ item.meta.title }}</span>
+        </div>
       </template>
       <el-menu-item-group>
         <span slot="title">{{ item.meta.title }}</span>
@@ -33,7 +37,7 @@
           v-for="(cItem, cIndex) in item.children"
           :key="cItem.path"
           @click="handleOpen(cItem, `${index}-${cIndex}`)"
-          >{{ cItem.meta.title }}1</el-menu-item
+          >{{ cItem.meta.title }}</el-menu-item
         >
       </el-menu-item-group>
     </el-submenu>
@@ -54,17 +58,20 @@ export default {
     }
   },
   data() {
-    return {}
+    return {
+      clicked: false
+    }
   },
   methods: {
     // 展开更多
-    handleOpen(item, index = 0) {
+    handleOpen(item, index = 0, hasChildren = false) {
       const currentItem = item || this.item
       const { path, meta } = currentItem
       const pathname = location.pathname
       let baseUrl = ''
 
-      // this.$emit('active-menu', index)
+      if (this.clicked && hasChildren) return
+      this.clicked = hasChildren
 
       // https://msb-ai.meixiu.mobi/frontend/ai-app-vue-toss/student-team/#/ 测试环境
       if (pathname.includes('frontend')) {
