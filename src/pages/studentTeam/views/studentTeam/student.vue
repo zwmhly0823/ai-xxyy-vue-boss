@@ -250,6 +250,7 @@ export default {
     min-width: 245px;
   }
   &-right {
+    overflow-x: hidden;
     flex: 1;
     margin: 10px;
   }
