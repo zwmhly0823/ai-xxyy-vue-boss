@@ -151,7 +151,7 @@ export default {
       console.log('触发load函数')
       // 页码总数大于20 并且当前页数小于总页数
       if (
-        +this.showClassData.pageData.totalElements > 9 &&
+        +this.showClassData.pageData.totalElements > 20 &&
         +this.showClassData.pageData.totalPages >
           this.classData.teamStatusPage.number
       ) {
