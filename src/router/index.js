@@ -66,6 +66,34 @@ const routes = [
       icon: 'el-icon-s-custom',
       module: 'student-team'
     }
+  },
+  {
+    path: '/trading',
+    name: 'trading',
+    // hidden: true,
+    meta: {
+      title: '交易',
+      icon: 'el-icon-s-data',
+      module: 'trading'
+    },
+    children: [
+      {
+        path: '/express',
+        name: 'express',
+        meta: {
+          title: '物流',
+          module: 'trading'
+        }
+      },
+      {
+        path: '/order',
+        name: 'order',
+        meta: {
+          title: '订单',
+          module: 'trading'
+        }
+      }
+    ]
   }
 ]
 
