@@ -10,12 +10,14 @@
         :unique-opened="false"
         :active-text-color="variables.menuActiveText"
         :collapse-transition="false"
+        :default-openeds="defaultOpendIndex"
         mode="vertical"
       >
         <sidebar-item
-          v-for="route in routes"
+          v-for="(route, index) in routes"
           :key="route.path"
           :item="route"
+          :index="index"
           :base-path="route.path"
         />
       </el-menu>
@@ -35,16 +37,25 @@ export default {
   computed: {
     ...mapGetters(['sidebar']),
     routes() {
-      return routes
+      return routes.filter((item) => !item.hidden)
     },
+    // 高亮选中状态
     activeMenu() {
-      const route = this.$route
-      const { meta, path } = route
-      // if set path, the sidebar will highlight the path you set
-      if (meta.activeMenu) {
-        return meta.activeMenu
-      }
-      return path
+      const { path } = this.$route
+      const { pathname } = location
+      let active = '0'
+      if (this.routes.length === 0) return active
+      this.routes.forEach((item, index) => {
+        if (pathname.includes(item.meta.module)) {
+          active = index.toString()
+          if (item.children) {
+            item.children.forEach((child, cindex) => {
+              if (child.path.includes(path)) active = `${index}-${cindex}`
+            })
+          }
+        }
+      })
+      return active
     },
     showLogo() {
       return this.$store.state.settings.sidebarLogo
@@ -54,10 +65,12 @@ export default {
     },
     isCollapse() {
       return !this.sidebar.opened
+    },
+    // 默认全部展开
+    defaultOpendIndex() {
+      const ids = routes.map((_, index) => index.toString())
+      return ids
     }
-    // basePath() {
-    //   return location.pathname
-    // }
   }
 }
 </script>
