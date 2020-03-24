@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-13 15:24:11
  * @LastEditors: zhubaodong
- * @LastEditTime: 2020-03-24 22:08:05
+ * @LastEditTime: 2020-03-24 22:36:58
  -->
 <template>
   <el-row type="flex" class="app-main height student-team">
@@ -178,7 +178,7 @@ export default {
             query: `{
               teamStatusPage(query:${JSON.stringify(
                 queryParams
-              )},page:${page},size:20){
+              )},page:${page},size:15){
                 empty,
                 first,
                 last,
