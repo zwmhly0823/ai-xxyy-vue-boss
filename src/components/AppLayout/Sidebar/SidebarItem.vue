@@ -15,13 +15,14 @@
       @click="handleOpen(item, `${index.toString()}`)"
       v-if="!item.children"
     >
-      <i class="el-icon-menu"></i>
+      <!-- 自定义icon类 -->
+      <i :class="item.meta.icon"></i>
       <span slot="title">{{ item.meta.title }}</span>
     </el-menu-item>
     <!-- 有二级目录的 -->
     <el-submenu :index="index.toString()" v-else>
       <template slot="title">
-        <i class="el-icon-location"></i>
+        <i :class="item.meta.icon"></i>
         <span slot="title">{{ item.meta.title }}</span>
       </template>
       <el-menu-item-group>
