@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-13 16:53:33
  * @LastEditors: zhubaodong
- * @LastEditTime: 2020-03-23 21:43:48
+ * @LastEditTime: 2020-03-24 22:39:33
  -->
 <template>
   <div class="center-container">
@@ -133,7 +133,7 @@ export default {
         this.showList = this.showClassData.datas
         this.noMore = false
         this.heighLight = ''
-        this.load()
+        // this.load()
       } else {
         if (this.showList.length === 0) {
           this.showList = this.showClassData.datas
@@ -151,7 +151,7 @@ export default {
       console.log('触发load函数')
       // 页码总数大于20 并且当前页数小于总页数
       if (
-        +this.showClassData.pageData.totalElements > 9 &&
+        +this.showClassData.pageData.totalElements > 15 &&
         +this.showClassData.pageData.totalPages >
           this.classData.teamStatusPage.number
       ) {
@@ -210,9 +210,11 @@ export default {
     list-style: none;
     padding-left: 0;
     margin-top: 0px;
+    min-height: calc(100vh - 70px);
     .cycle-box {
       cursor: pointer;
       .box-card {
+        padding: 14px;
         .clcle-header {
           font-size: 14px;
           .text-icons {
