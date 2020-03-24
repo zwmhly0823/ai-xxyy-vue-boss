@@ -38,7 +38,7 @@
         v-model="activeName"
         @tab-click="handleClick"
         type="card"
-        class="box-shadow"
+        class="tab-fixed"
       >
         <el-tab-pane label="学员" name="students"></el-tab-pane>
         <el-tab-pane label="带班详情" name="details"> </el-tab-pane>
@@ -92,7 +92,7 @@ export default {
 }
 </script>
 <style scoped lang="scss">
-.box-shadow {
+.tab-fixed {
   width: 100%;
   position: absolute;
   border-bottom: 1px solid #ebeef5;
@@ -135,6 +135,9 @@ export default {
   .el-tabs--card > .el-tabs__header .el-tabs__item.is-active {
     background: #fff;
     border: none;
+  }
+  table {
+    width: 100% !important;
   }
 }
 </style>

@@ -33,7 +33,7 @@
           v-for="(cItem, cIndex) in item.children"
           :key="cItem.path"
           @click="handleOpen(cItem, `${index}-${cIndex}`)"
-          >{{ cItem.meta.title }}1</el-menu-item
+          >{{ cItem.meta.title }}</el-menu-item
         >
       </el-menu-item-group>
     </el-submenu>
