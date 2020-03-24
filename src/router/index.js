@@ -71,15 +71,6 @@ const routes = [
     ]
   },
   {
-    path: '/student-team',
-    name: 'student-team',
-    meta: {
-      title: '班级',
-      icon: 'el-icon-s-custom',
-      module: 'student-team'
-    }
-  },
-  {
     path: '/trading',
     name: 'trading',
     // hidden: true,

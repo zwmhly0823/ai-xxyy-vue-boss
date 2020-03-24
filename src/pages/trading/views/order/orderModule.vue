@@ -4,10 +4,11 @@
  * @Author: zhubaodong
  * @Date: 2020-03-24 15:16:26
  * @LastEditors: zhubaodong
- * @LastEditTime: 2020-03-24 16:20:20
+ * @LastEditTime: 2020-03-24 19:52:00
  -->
 <template>
   <div class="order-box">
+    <m-search @search="handleSearch" hasaddress="hasaddress" />
     <el-tabs type="border-card" @tab-click="handleClick">
       <el-tab-pane label="全部订单">
         <all-order />
@@ -24,10 +25,12 @@
 
 <script>
 import allOrder from './components/allOrder'
+import MSearch from '@/components/MSearch/index.vue'
 export default {
   props: [],
   components: {
-    allOrder
+    allOrder,
+    MSearch
   },
   data() {
     return {}
@@ -37,6 +40,9 @@ export default {
   methods: {
     handleClick(tab, event) {
       console.log(tab.index, event)
+    },
+    handleSearch(res) {
+      console.log(res)
     }
   },
   created() {},
