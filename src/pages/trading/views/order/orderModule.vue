@@ -8,7 +8,7 @@
  -->
 <template>
   <div class="order-box">
-    <el-tabs type="border-card" @tab-click="handleClick">
+    <el-tabs type="border-card" @tab-click="handleClick" class="tab-box">
       <el-tab-pane label="全部订单">
         <all-order />
       </el-tab-pane>
@@ -43,4 +43,10 @@ export default {
   mounted() {}
 }
 </script>
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.order-box {
+  width: 100%;
+  height: 100%;
+  margin: 10px 0 0 10px;
+}
+</style>
