@@ -26,7 +26,7 @@
           @click.prevent.stop="handleOpen(item, `${index.toString()}`, true)"
         >
           <i :class="item.meta.icon"></i>
-          <span slot="title">{{ item.meta.title }}123</span>
+          <span slot="title">{{ item.meta.title }}</span>
         </div>
       </template>
       <el-menu-item-group>
