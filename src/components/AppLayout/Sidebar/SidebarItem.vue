@@ -1,125 +1,95 @@
+<!--
+ * @Author: YangJiyong
+ * @Email: yangjiyong@meishubao.com
+ * @Date: 2020-03-24 12:49:53
+ * @Last Modified by:   YangJiyong
+ * @Last Modified time: 2020-03-24 12:49:53
+ * @Description: TODO: 目前只支持二级
+ -->
+
 <template>
   <div v-if="!item.hidden">
-    <template
-      v-if="
-        hasOneShowingChild(item.children, item) &&
-          (!onlyOneChild.children || onlyOneChild.noShowingChildren) &&
-          !item.alwaysShow
-      "
+    <!-- 只有一级的情况 -->
+    <el-menu-item
+      :index="index.toString()"
+      @click="handleOpen(item, `${index.toString()}`)"
+      v-if="!item.children"
     >
-      <app-link v-if="onlyOneChild.meta" :to="resolvePath(onlyOneChild.path)">
-        <el-menu-item
-          :index="resolvePath(onlyOneChild.path)"
-          :class="{ 'submenu-title-noDropdown': !isNest }"
-        >
-          <item
-            :icon="onlyOneChild.meta.icon || (item.meta && item.meta.icon)"
-            :title="onlyOneChild.meta.title"
-            :item="item"
-            level-one
-          />
-        </el-menu-item>
-      </app-link>
-    </template>
-
-    <el-submenu v-else ref="subMenu" :index="resolvePath(item.path)">
+      <!-- 自定义icon类 -->
+      <i :class="item.meta.icon"></i>
+      <span slot="title">{{ item.meta.title }}</span>
+    </el-menu-item>
+    <!-- 有二级目录的 -->
+    <el-submenu :index="index.toString()" v-else>
       <template slot="title">
-        <item
-          v-if="item.meta"
-          :icon="item.meta && item.meta.icon"
-          :title="item.meta.title"
-          :item="item"
-          has-children
-        />
+        <i :class="item.meta.icon"></i>
+        <span slot="title">{{ item.meta.title }}</span>
       </template>
-      <sidebar-item
-        v-for="child in item.children"
-        :key="child.path"
-        :is-nest="true"
-        :item="child"
-        :base-path="resolvePath(child.path)"
-        class="nest-menu"
-      />
+      <el-menu-item-group>
+        <span slot="title">{{ item.meta.title }}</span>
+        <!-- 支持多级的话，此处递归 -->
+        <el-menu-item
+          :index="`${index}-${cIndex}`"
+          v-for="(cItem, cIndex) in item.children"
+          :key="cItem.path"
+          @click="handleOpen(cItem, `${index}-${cIndex}`)"
+          >{{ cItem.meta.title }}</el-menu-item
+        >
+      </el-menu-item-group>
     </el-submenu>
   </div>
 </template>
 
 <script>
-import path from 'path'
-import { isExternal } from '@/utils/validate'
-import Item from './Item.vue'
-import AppLink from './Link'
-import FixiOSBug from './FixiOSBug'
-
 export default {
   name: 'SidebarItem',
-  components: { Item, AppLink },
-  mixins: [FixiOSBug],
   props: {
-    // route object
     item: {
       type: Object,
-      required: true
+      default: () => ({})
     },
-    isNest: {
-      type: Boolean,
-      default: false
-    },
-    basePath: {
-      type: String,
-      default: ''
+    index: {
+      type: Number,
+      default: 0
     }
   },
   data() {
-    // To fix https://github.com/PanJiaChen/vue-admin-template/issues/237
-    // TODO: refactor with render function
-    this.onlyOneChild = null
     return {}
   },
   methods: {
-    hasOneShowingChild(children = [], parent) {
-      const showingChildren = children.filter((item) => {
-        if (item.hidden) {
-          return false
-        } else {
-          // Temp set(will be used if only has one showing child)
-          this.onlyOneChild = item
-          return true
+    // 展开更多
+    handleOpen(item, index = 0) {
+      const currentItem = item || this.item
+      const { path, meta } = currentItem
+      const pathname = location.pathname
+      let baseUrl = ''
+
+      // this.$emit('active-menu', index)
+
+      // https://msb-ai.meixiu.mobi/frontend/ai-app-vue-toss/student-team/#/ 测试环境
+      if (pathname.includes('frontend')) {
+        const pathArr = pathname.split('/')
+        baseUrl = '/' + [pathArr[1], pathArr[2]].join('/')
+      }
+
+      if (this.$route.path === `${path}`) return
+      // 同一模块,hash
+      if (pathname.includes(meta.module)) {
+        if (path.split('/')[1] !== meta.module) {
+          this.$router.push(path)
+        } else if (this.$route.path !== '/') {
+          this.$router.push('/')
         }
-      })
-
-      // When there is only one child router, the child router is displayed by default
-      // 注释原因：只一个时二级菜单也正常显示 yangjiyong
-      // if (showingChildren.length === 1) {
-      //   return true
-      // }
-
-      // Show parent if there are no child router to display
-      if (showingChildren.length === 0) {
-        this.onlyOneChild = { ...parent, path: '', noShowingChildren: true }
-        return false
+      } else {
+        if (path.split('/')[1] !== meta.module) {
+          location.href = `${baseUrl}/${meta.module}/#${path}`
+          return
+        }
+        location.href = `${baseUrl}${path}/#/`
       }
-
-      return false
-    },
-    resolvePath(routePath) {
-      if (routePath === '/' && this.item.meta) {
-        return this.item.meta.title
-      }
-      if (isExternal(routePath)) {
-        return routePath
-      }
-      if (isExternal(this.basePath)) {
-        return this.basePath
-      }
-      return path.resolve(this.basePath, routePath)
     }
   }
 }
 </script>
 
-<style>
-.el-submenu__icon-arrow {
-  display: none !important;
-}
-</style>
+<style lang="scss" scoped></style>

@@ -75,18 +75,24 @@
 
     .is-active>.el-submenu__title {
       color: $subMenuActiveText !important;
+      i{
+        color: $subMenuActiveText !important;
+      }
     }
 
     .el-submenu{
-      // .el-submenu__title{
-      //   padding-left: 10px !important;
-      // }
-      .el-menu{
-        display: flex !important; // 默认展示二维菜单
-        flex-wrap: wrap;
-        align-items: center;
-        .nest-menu{
-          width: 48%;
+      .el-menu-item-group__title{
+        display: none;
+      }
+      .el-menu-item-group{
+        ul{
+          display: flex;
+        }
+        .el-menu-item{
+          width: 50% !important;
+          min-width: 50% !important;
+          padding: 0 10px !important;
+          text-align: center;
         }
       }
     }
@@ -102,14 +108,13 @@
 
     & .nest-menu .el-submenu>.el-submenu__title,
     & .el-submenu .el-menu-item {
-      // min-width: $sideBarWidth !important;
-      display: flex;
-      justify-content: center;
-      padding: 10px 0 !important;
-      min-width: 100% !important;
-      height: inherit;
-      line-height: inherit;
-      background-color: $subMenuBg !important;
+      // display: flex;
+      // justify-content: center;
+      // padding: 10px 0 !important;
+      // min-width: 100% !important;
+      // height: inherit;
+      // line-height: inherit;
+      // background-color: $subMenuBg !important;
       .item{
         font-size: 14px;
         font-weight: normal;
@@ -143,19 +148,32 @@
 
       .el-tooltip {
         padding: 0 !important;
-
         .item i {
           margin-left: 18px;
+        }
+      }
+    }
+    .el-menu-item{
+      .el-tooltip{
+        i{
+          position: relative;
+          right: 3px;
         }
       }
     }
 
     .el-submenu {
       overflow: hidden;
-
+      &.is-active{
+        i{
+          color: $subMenuActiveText !important;
+        }
+      }
       .el-submenu__title {
-        padding: 0 !important;
-
+        i{
+          position: relative;
+          right: 3px;
+        }
         .item i {
           margin-left: 18px;
         }
