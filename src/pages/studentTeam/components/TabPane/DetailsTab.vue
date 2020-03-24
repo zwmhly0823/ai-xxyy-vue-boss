@@ -7,44 +7,42 @@
  * @LastEditTime: 2020-03-23 21:31:26
  -->
 <template>
-  <div>
-    <div>
-      <div class="tabs-tab">
-        <el-tabs v-model="activeName" @tab-click="handleClick">
-          <el-tab-pane label="加好友进群" name="group">
-            <details-table
-              @onCurrentPage="onCurrentPage"
-              @commandFriend="onCommandFriend"
-              @onGroup="onGroup"
-              :tables="table"
-            ></details-table>
-          </el-tab-pane>
-          <el-tab-pane label="物流" name="logistics">
-            <details-table
-              @onCurrentPage="onCurrentPage"
-              :tables="table"
-            ></details-table>
-          </el-tab-pane>
-          <el-tab-pane label="打开APP" name="login"
-            ><details-table
-              @onCurrentPage="onCurrentPage"
-              :tables="table"
-            ></details-table
-          ></el-tab-pane>
-          <el-tab-pane label="参课和完课" name="participateIn"
-            ><details-table
-              @onCurrentPage="onCurrentPage"
-              :tables="table"
-            ></details-table
-          ></el-tab-pane>
-          <el-tab-pane label="作品及点评" name="works"
-            ><details-table
-              @onCurrentPage="onCurrentPage"
-              :tables="table"
-            ></details-table
-          ></el-tab-pane>
-        </el-tabs>
-        <!-- <el-input
+  <div class="tabs-tab">
+    <el-tabs v-model="activeName" @tab-click="handleClick">
+      <el-tab-pane label="加好友进群" name="group">
+        <details-table
+          @onCurrentPage="onCurrentPage"
+          @commandFriend="onCommandFriend"
+          @onGroup="onGroup"
+          :tables="table"
+        ></details-table>
+      </el-tab-pane>
+      <el-tab-pane label="物流" name="logistics">
+        <details-table
+          @onCurrentPage="onCurrentPage"
+          :tables="table"
+        ></details-table>
+      </el-tab-pane>
+      <el-tab-pane label="打开APP" name="login"
+        ><details-table
+          @onCurrentPage="onCurrentPage"
+          :tables="table"
+        ></details-table
+      ></el-tab-pane>
+      <el-tab-pane label="参课和完课" name="participateIn"
+        ><details-table
+          @onCurrentPage="onCurrentPage"
+          :tables="table"
+        ></details-table
+      ></el-tab-pane>
+      <el-tab-pane label="作品及点评" name="works"
+        ><details-table
+          @onCurrentPage="onCurrentPage"
+          :tables="table"
+        ></details-table
+      ></el-tab-pane>
+    </el-tabs>
+    <!-- <el-input
           class="el-input-search"
           size="mini"
           placeholder="昵称、手机号、微信信息"
@@ -53,8 +51,6 @@
           @keyup.enter.native="enter"
         >
         </el-input> -->
-      </div>
-    </div>
   </div>
 </template>
 <script>

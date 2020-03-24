@@ -5,7 +5,7 @@
       :header-cell-style="headerStyle"
       class="students-box"
     >
-      <el-table-column fixed label="基本信息" class="information" width="280px">
+      <el-table-column label="基本信息" class="information" width="280px">
         <template slot-scope="scope">
           <img class="information-img" :src="scope.row.head" alt="" />
           <div class="information-right">
