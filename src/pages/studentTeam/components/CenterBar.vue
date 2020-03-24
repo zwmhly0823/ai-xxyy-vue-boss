@@ -210,6 +210,7 @@ export default {
     list-style: none;
     padding-left: 0;
     margin-top: 0px;
+    min-height: calc(100vh - 70px);
     .cycle-box {
       cursor: pointer;
       .box-card {
