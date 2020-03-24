@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-13 16:53:33
  * @LastEditors: zhubaodong
- * @LastEditTime: 2020-03-24 21:35:20
+ * @LastEditTime: 2020-03-24 22:07:58
  -->
 <template>
   <div class="center-container">
@@ -133,7 +133,7 @@ export default {
         this.showList = this.showClassData.datas
         this.noMore = false
         this.heighLight = ''
-        this.load()
+        // this.load()
       } else {
         if (this.showList.length === 0) {
           this.showList = this.showClassData.datas
