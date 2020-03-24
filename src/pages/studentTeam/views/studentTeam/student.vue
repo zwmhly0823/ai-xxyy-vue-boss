@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-13 15:24:11
  * @LastEditors: zhubaodong
- * @LastEditTime: 2020-03-24 21:36:33
+ * @LastEditTime: 2020-03-24 22:08:05
  -->
 <template>
   <el-row type="flex" class="app-main height student-team">
