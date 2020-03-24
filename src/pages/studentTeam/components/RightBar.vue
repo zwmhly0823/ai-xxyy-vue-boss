@@ -72,7 +72,8 @@
         <div class="body-boxCenter" v-show="item.team_type == 0">
           <div class="Conversion-title">累计转化率</div>
           <div class="Conversion-number">
-            {{ item.allTrans == 'NaN' ? 0 : (item.allTrans * 100).toFixed(2) }}
+            {{ item.allTrans == 'NaN' ? 0 : (item.allTrans * 100).toFixed(2)
+            }}<span>%</span>
           </div>
           <!-- <div class="Conversion-count">
             <span
@@ -393,6 +394,9 @@ export default {
           margin-bottom: 10px;
           font-family: 'number_font';
           flex: 1;
+          span {
+            font-size: 14px;
+          }
         }
         .Conversion-count {
           width: 100%;
