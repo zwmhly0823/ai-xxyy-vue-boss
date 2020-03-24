@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-13 16:53:33
  * @LastEditors: zhubaodong
- * @LastEditTime: 2020-03-23 21:43:48
+ * @LastEditTime: 2020-03-24 21:35:20
  -->
 <template>
   <div class="center-container">
@@ -214,6 +214,7 @@ export default {
     .cycle-box {
       cursor: pointer;
       .box-card {
+        padding: 14px;
         .clcle-header {
           font-size: 14px;
           .text-icons {

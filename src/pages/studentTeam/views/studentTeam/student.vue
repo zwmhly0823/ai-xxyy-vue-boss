@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-13 15:24:11
  * @LastEditors: zhubaodong
- * @LastEditTime: 2020-03-23 21:59:39
+ * @LastEditTime: 2020-03-24 21:36:33
  -->
 <template>
   <el-row type="flex" class="app-main height student-team">
@@ -241,13 +241,13 @@ export default {
 .student-team {
   &-left {
     padding-left: 0px;
-    width: 180px;
-    min-width: 180px;
+    width: 170px;
+    min-width: 170px;
     border-right: 1px solid #e3e3e3;
   }
   &-center {
-    width: 245px;
-    min-width: 245px;
+    width: 242px;
+    min-width: 242px;
   }
   &-right {
     overflow-x: hidden;
