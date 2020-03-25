@@ -51,8 +51,18 @@ export default {
 </script>
 <style lang="scss" scoped>
 .order-box {
-  width: 100%;
+  // width: 100%;
   height: 100%;
-  margin: 10px 0 0 10px;
+  padding: 10px 10px 0 10px;
+  .el-tabs--border-card > .el-tabs__content {
+    padding: 15px 0 !important;
+  }
+}
+</style>
+<style lang="scss">
+.order-box {
+  .el-tabs--border-card > .el-tabs__content {
+    padding: 15px 0 !important;
+  }
 }
 </style>

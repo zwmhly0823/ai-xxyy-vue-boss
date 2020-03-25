@@ -1,5 +1,5 @@
 <template>
-  <div class="order-box">
+  <div class="order-call">
     <article class="top-box">
       <el-row :gutter="20">
         <!-- 订单总计 -->
@@ -65,6 +65,10 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+@font-face {
+  font-family: 'number_font';
+  src: url('~@/assets/fonts/TG-TYPE-Bold.otf');
+} //引入本地字体数字文件
 .top-box {
   width: 100%;
   height: 100%;
@@ -75,14 +79,22 @@ export default {
       display: inline-block;
     }
     .oride-top {
+      font-size: 12px;
       text-align: center;
       padding: 10px 0;
+      color: #666666;
     }
     .oride-middle {
+      font-family: 'number_font';
+      font-size: 24px;
+      color: #4d4d4d;
       text-align: center;
       padding: 10px 0;
     }
     .oride-bottom {
+      font-family: 'number_font';
+      color: #666666;
+      font-size: 12px;
       text-align: center;
       padding: 10px 0;
     }
@@ -90,14 +102,22 @@ export default {
   // 体验课
   .experience-order {
     .oride-top {
+      font-size: 12px;
+      color: #666666;
       text-align: center;
       padding: 10px 0;
     }
     .oride-middle {
+      font-family: 'number_font';
+      font-size: 24px;
+      color: #4d4d4d;
       text-align: center;
       padding: 10px 0;
     }
     .oride-bottom {
+      font-family: 'number_font';
+      color: #666666;
+      font-size: 12px;
       text-align: center;
       padding: 10px 0;
     }
@@ -105,14 +125,22 @@ export default {
   // 系统课
   .system-order {
     .oride-top {
+      font-size: 12px;
+      color: #666666;
       text-align: center;
       padding: 10px 0;
     }
     .oride-middle {
+      font-family: 'number_font';
+      font-size: 24px;
+      color: #4d4d4d;
       text-align: center;
       padding: 10px 0;
     }
     .oride-bottom {
+      font-family: 'number_font';
+      color: #666666;
+      font-size: 12px;
       text-align: center;
       padding: 10px 0;
     }
@@ -120,14 +148,22 @@ export default {
   // 小熊商城
   .bear-order {
     .oride-top {
+      font-size: 12px;
+      color: #666666;
       text-align: center;
       padding: 10px 0;
     }
     .oride-middle {
+      font-family: 'number_font';
+      font-size: 24px;
+      color: #4d4d4d;
       text-align: center;
       padding: 10px 0;
     }
     .oride-bottom {
+      font-family: 'number_font';
+      color: #666666;
+      font-size: 12px;
       text-align: center;
       padding: 10px 0;
     }
@@ -135,28 +171,36 @@ export default {
   // 推荐有礼
   .recommended-order {
     .oride-top {
+      color: #666666;
+      font-size: 12px;
       text-align: center;
       padding: 10px 0;
     }
     .oride-middle {
+      font-family: 'number_font';
+      font-size: 24px;
+      color: #4d4d4d;
       text-align: center;
       padding: 10px 0;
     }
     .oride-bottom {
+      font-family: 'number_font';
+      color: #666666;
+      font-size: 12px;
       text-align: center;
       padding: 10px 0;
     }
   }
 }
-.bottom-box {
-  margin: 20px 0 0 0;
-}
+// .bottom-box {
+//   margin: 20px 0 0 0;
+// }
 .el-divider--horizontal {
-  margin: 0 0 0 -10px !important;
+  margin: 0 !important;
 }
 </style>
 <style lang="scss">
-.order-box {
+.order-call {
   .el-row {
     padding: 0px 0 20px 10px;
     &:last-child {
@@ -174,6 +218,7 @@ export default {
   }
   .el-tabs--border-card > .el-tabs__content {
     padding-left: 0;
+    padding-right: 0;
   }
 }
 </style>
