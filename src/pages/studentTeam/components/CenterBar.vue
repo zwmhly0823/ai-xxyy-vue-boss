@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-13 16:53:33
  * @LastEditors: zhubaodong
- * @LastEditTime: 2020-03-24 22:39:33
+ * @LastEditTime: 2020-03-25 13:32:01
  -->
 <template>
   <div class="center-container">
@@ -119,6 +119,7 @@ export default {
       // 0体验课 1系统课
       const types = this.classData.type
       const scrollStatus = this.classData.scrollStatus
+
       return { datas, pageData, types, scrollStatus }
     },
     disabled() {
@@ -137,6 +138,16 @@ export default {
       } else {
         if (this.showList.length === 0) {
           this.showList = this.showClassData.datas
+        } else {
+          this.loading = false
+
+          this.showList.push(...this.showClassData.datas)
+          // 列表数据总数等于分页总数时 不再加载
+          if (
+            this.showList.length === +this.showClassData.pageData.totalElements
+          ) {
+            this.noMore = true
+          }
         }
       }
     }
@@ -167,17 +178,17 @@ export default {
           type: this.type
         })
 
-        setTimeout(() => {
-          this.loading = false
+        // setTimeout(() => {
+        //   this.loading = false
 
-          this.showList.push(...this.showClassData.datas)
-          // 列表数据总数等于分页总数时 不再加载
-          if (
-            this.showList.length === +this.showClassData.pageData.totalElements
-          ) {
-            this.noMore = true
-          }
-        }, 1000)
+        //   this.showList.push(...this.showClassData.datas)
+        //   // 列表数据总数等于分页总数时 不再加载
+        //   if (
+        //     this.showList.length === +this.showClassData.pageData.totalElements
+        //   ) {
+        //     this.noMore = true
+        //   }
+        // }, 1000)
       }
     }
   },
