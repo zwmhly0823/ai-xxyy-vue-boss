@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-13 15:24:11
  * @LastEditors: zhubaodong
- * @LastEditTime: 2020-03-24 22:36:58
+ * @LastEditTime: 2020-03-25 13:08:27
  -->
 <template>
   <el-row type="flex" class="app-main height student-team">
@@ -114,9 +114,9 @@ export default {
      * 中栏下拉滚动
      * @param(type,page,size) 课程类型 页码 数量
      */
-    infiniteScroll(data) {
+    async infiniteScroll(data) {
       this.scrollPage = data.page
-      this.getClassList(data.type, data.page)
+      await this.getClassList(data.type, data.page)
     },
     /**
      * 获取体验课状态列表

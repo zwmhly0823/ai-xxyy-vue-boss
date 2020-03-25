@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-13 16:53:33
  * @LastEditors: zhubaodong
- * @LastEditTime: 2020-03-24 22:39:33
+ * @LastEditTime: 2020-03-25 13:09:07
  -->
 <template>
   <div class="center-container">
@@ -20,7 +20,6 @@
       <ul
         class="infinite-list container"
         v-infinite-scroll="load"
-        infinite-scroll-distance="10px"
         infinite-scroll-disabled="disabled"
         v-if="showClassData.datas && showClassData.datas.length !== 0"
       >
