@@ -348,7 +348,7 @@ export default {
     },
     resetForm(formName) {
       this.passwordType = 'password'
-      this.$refs[formName].resetFields()
+      if (this.$refs[formName] !== undefined) this.$refs[formName].resetFields()
     },
     startInterval() {
       this.timer = setInterval(() => {

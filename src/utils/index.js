@@ -97,6 +97,10 @@ export function timestamp(stamp, type) {
     const hours = hour <= 9 ? '0' + hour : hour
     const minutes = minute <= 9 ? '0' + minute : minute
     return months + '-' + days + ' ' + hours + ':' + minutes
+  } else if (type === 7) {
+    const months = month <= 9 ? '0' + month : month
+    const days = day <= 9 ? '0' + day : day
+    return months + '-' + days
   }
 }
 
