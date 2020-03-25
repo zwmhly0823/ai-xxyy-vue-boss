@@ -11,7 +11,7 @@ export function setToken(token) {
 }
 
 export function removeToken() {
-  localStorage.removeItem('teacher')
+  // localStorage.removeItem('teacher')
   localStorage.removeItem('staff')
   return Cookies.remove(TokenKey)
 }

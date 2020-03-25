@@ -63,8 +63,7 @@ export default {
     }
   },
   created() {
-    const userInfo =
-      localStorage.getItem('teacher') || localStorage.getItem('staff')
+    const userInfo = localStorage.getItem('staff')
     if (!userInfo) {
       this.logout()
       return
