@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 20:22:24
  * @LastEditors: panjian
- * @LastEditTime: 2020-03-24 22:51:25
+ * @LastEditTime: 2020-03-25 15:10:03
  -->
 <template>
   <div class="table-box">
@@ -179,11 +179,12 @@
           <template slot-scope="scope">
             <div class="logistics-wx-box">
               <img
+                v-if="scope.row.head != ''"
                 class="logistics-wx-img borders"
                 :src="scope.row.head"
                 alt=""
               />
-              <span class="logistics-username">{{ scope.row.username }}</span>
+              <span v-else class="logistics-wx-imgs borders"> - </span>
               <span class="logistics-nickname">{{ scope.row.nickname }}</span>
             </div>
           </template>
@@ -191,9 +192,9 @@
         <el-table-column key="3" width="280" label="收货人及地址">
           <template slot-scope="scope">
             <div>
-              <span class="logistics-address-name"
-                >「 {{ scope.row.product_name }}」</span
-              >
+              <span class="logistics-address-name">{{
+                scope.row.product_name
+              }}</span>
               <br />
               <span>{{ scope.row.receipt_name }}</span>
               <span>{{ scope.row.receipt_tel }}</span>
@@ -243,8 +244,13 @@
         <el-table-column label="用户微信">
           <template slot-scope="scope">
             <div class="login-wx-box">
-              <img class="login-wx-img borders" :src="scope.row.head" alt="" />
-              <span class="login-username">{{ scope.row.username }}</span>
+              <img
+                v-if="scope.row.head != ''"
+                class="login-wx-img borders"
+                :src="scope.row.head"
+                alt=""
+              />
+              <span v-else class="login-wx-imgs borders"> - </span>
               <span class="login-nickname">{{ scope.row.nickname }}</span>
             </div>
           </template>
@@ -296,13 +302,12 @@
           <template slot-scope="scope">
             <div class="participateIn-wx-box">
               <img
+                v-if="scope.row.head != ''"
                 class="participateIn-wx-img borders"
                 :src="scope.row.head"
                 alt=""
               />
-              <span class="participateIn-username">{{
-                scope.row.username
-              }}</span>
+              <span v-else class="participateIn-wx-imgs borders"> - </span>
               <span class="participateIn-nickname">{{
                 scope.row.nickname
               }}</span>
@@ -390,8 +395,12 @@
         </el-table-column>
         <el-table-column label="作品">
           <template slot-scope="scope">
-            <div>
-              <span>{{ scope.row }}</span>
+            <div class="works-task-box">
+              <img
+                class="works-task-img borders"
+                :src="scope.row.task_image"
+                alt=""
+              />
             </div>
           </template>
         </el-table-column>
@@ -453,15 +462,17 @@ export default {
     }
   },
   mounted() {
+    console.log(this.tables, ' tables ')
     // this.audioIndex = this.tables.audioIndex
   },
   watch: {
     classId(value) {
       console.log(value, '子组建 watch')
       this.audioIndex = null
-      // if (value.classId) {
-
-      // }
+    },
+    tables(value) {
+      console.log(value, '子组建 watch tabs')
+      this.audioIndex = null
     }
   },
   created() {},
@@ -475,7 +486,6 @@ export default {
           item[0].load()
         })
       }
-
       const audio = this.$refs[itemss][0]
       if (audio.paused) {
         this.audioIndex = index
@@ -589,6 +599,12 @@ export default {
         width: 50px;
         height: 50px;
       }
+      .logistics-wx-imgs {
+        display: inline-block;
+        width: 50px;
+        height: 50px;
+        border: none;
+      }
       .logistics-username {
         position: absolute;
         top: 0;
@@ -596,7 +612,7 @@ export default {
       }
       .logistics-nickname {
         position: absolute;
-        top: 25px;
+        top: 0px;
         left: 55px;
       }
     }
@@ -612,14 +628,15 @@ export default {
         width: 50px;
         height: 50px;
       }
-      .login-username {
-        position: absolute;
-        top: 0;
-        left: 55px;
+      .login-wx-imgs {
+        display: inline-block;
+        width: 50px;
+        height: 50px;
+        border: none;
       }
       .login-nickname {
         position: absolute;
-        top: 25px;
+        top: 0px;
         left: 55px;
       }
     }
@@ -632,14 +649,15 @@ export default {
         width: 50px;
         height: 50px;
       }
-      .participateIn-username {
-        position: absolute;
-        top: 0;
-        left: 55px;
+      .participateIn-wx-imgs {
+        display: inline-block;
+        width: 50px;
+        height: 50px;
+        border: none;
       }
       .participateIn-nickname {
         position: absolute;
-        top: 25px;
+        top: 0px;
         left: 55px;
       }
     }
@@ -659,6 +677,13 @@ export default {
         position: absolute;
         top: 25px;
         left: 55px;
+      }
+    }
+    .works-task-box {
+      .works-task-img {
+        display: inline-block;
+        width: 50px;
+        height: 50px;
       }
     }
     .audio-box {

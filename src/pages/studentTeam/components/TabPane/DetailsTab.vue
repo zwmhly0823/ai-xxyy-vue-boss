@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 14:19:58
  * @LastEditors: panjian
- * @LastEditTime: 2020-03-24 22:55:17
+ * @LastEditTime: 2020-03-25 15:11:54
  -->
 <template>
   <div>
@@ -113,15 +113,9 @@ export default {
   watch: {
     classId(value) {
       console.log(value, 'classIdclassIdclassIdclassId')
-      if (value.classId.team_type === 0) {
-        this.type = 'TRAIL'
-      } else if (value.classId.team_type === 0) {
-        this.type = 'MONTH'
-      } else if (value.classId.team_type === 2) {
-        this.type = 'YEAR'
-      } else {
-        this.type = ''
-      }
+      // if (value.classId.team_type === null) {
+      //   this.type = ''
+      // } else
       const audios = this.$refs
       const audiosList = Object.values(audios)
       audiosList.forEach((item, index) => {
@@ -130,6 +124,15 @@ export default {
       // this.table.audioIndex = 10000
       this.table.currentPage = 1
       if (value.classId) {
+        if (value.classId.team_type === 0) {
+          this.type = 'TRAIL'
+        } else if (value.classId.team_type === 1) {
+          this.type = 'MONTH'
+        } else if (value.classId.team_type === 2) {
+          this.type = 'YEAR'
+        } else {
+          this.type = ''
+        }
         this.getGroup()
         if (this.tabsName === '加好友进群') {
           this.getGroup()
@@ -296,10 +299,14 @@ export default {
           const _data = res.data.stuExpressPage.content
           _data.forEach((item) => {
             item.ctime = timestamp(item.ctime, 6)
-            if (item.nickname === '') {
+            if (!item.nickname) {
               item.nickname = ''
+              item.head = ''
+            }
+            if (item.product_name) {
+              item.product_name = `「${item.product_name}」`
             } else {
-              item.nickname = `微信昵称: ${item.nickname}`
+              item.product_name = '-'
             }
             if (item.express_status === '0') {
               item.express_status = '已创建无地址'
@@ -322,7 +329,7 @@ export default {
           this.table.tableData = _data
         })
     },
-    // 登陆接口
+    // 打开APP接口
     geiLogin() {
       const querys = `{"team_id":${this.classId.classId.id},"team_type":${this.classId.type}}`
       axios
@@ -359,12 +366,13 @@ export default {
           _data.forEach((item) => {
             item.express_ctime = timestamp(item.express_ctime, 6)
             item.ctime = timestamp(item.ctime, 2)
-            if (item.nickname === '') {
+            if (!item.nickname) {
               item.nickname = ''
-            } else {
-              item.nickname = `微信昵称: ${item.nickname}`
+              item.head = ''
             }
-            if (!item.login_time) {
+            if (item.login_time) {
+              item.ctime = `首次登录: ${item.ctime}`
+            } else {
               item.login_time = '-'
               item.ctime = ''
             }
@@ -443,6 +451,13 @@ export default {
           const _data = res.data.getClassCompPage.content
           _data.forEach((item) => {
             item.buytime = timestamp(item.buytime, 6)
+            if (!item.nickname) {
+              item.nickname = ''
+              item.head = ''
+            }
+            if (!item.current_lesson) {
+              item.current_lesson = '-'
+            }
             if (
               item.add_class_status === '0' ||
               item.add_class_status === '1'
@@ -606,7 +621,7 @@ export default {
         this.table.tabs = 3
       } else if (tab.index === '4') {
         // 作品及点评
-        this.getStuComment()
+        // this.getStuComment()
         console.log('作品及点评')
         this.table.tabs = 4
       }
