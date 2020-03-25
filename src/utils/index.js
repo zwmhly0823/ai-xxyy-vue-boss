@@ -67,8 +67,23 @@ export function timestamp(stamp, type) {
   if (type === 1) {
     return _mouth + '-' + _day + ' ' + _hour + ':' + _minute
   } else if (type === 2) {
+    const months = month <= 9 ? '0' + month : month
+    const days = day <= 9 ? '0' + day : day
+    const hours = hour <= 9 ? '0' + hour : hour
+    const minutes = minute <= 9 ? '0' + minute : minute
+    const seconds = second <= 9 ? '0' + second : second
     return (
-      year + '-' + month + '-' + day + ' ' + hour + ':' + minute + ':' + second
+      year +
+      '-' +
+      months +
+      '-' +
+      days +
+      ' ' +
+      hours +
+      ':' +
+      minutes +
+      ':' +
+      seconds
     )
   } else if (type === 3) {
     return _mouth + '.' + _day

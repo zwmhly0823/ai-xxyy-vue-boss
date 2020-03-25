@@ -4,45 +4,48 @@
  * @Author: panjian
  * @Date: 2020-03-16 14:19:58
  * @LastEditors: panjian
- * @LastEditTime: 2020-03-23 21:31:26
+ * @LastEditTime: 2020-03-25 15:20:13
  -->
 <template>
-  <div class="tabs-tab">
-    <el-tabs v-model="activeName" @tab-click="handleClick">
-      <el-tab-pane label="加好友进群" name="group">
-        <details-table
-          @onCurrentPage="onCurrentPage"
-          @commandFriend="onCommandFriend"
-          @onGroup="onGroup"
-          :tables="table"
-        ></details-table>
-      </el-tab-pane>
-      <el-tab-pane label="物流" name="logistics">
-        <details-table
-          @onCurrentPage="onCurrentPage"
-          :tables="table"
-        ></details-table>
-      </el-tab-pane>
-      <el-tab-pane label="打开APP" name="login"
-        ><details-table
-          @onCurrentPage="onCurrentPage"
-          :tables="table"
-        ></details-table
-      ></el-tab-pane>
-      <el-tab-pane label="参课和完课" name="participateIn"
-        ><details-table
-          @onCurrentPage="onCurrentPage"
-          :tables="table"
-        ></details-table
-      ></el-tab-pane>
-      <el-tab-pane label="作品及点评" name="works"
-        ><details-table
-          @onCurrentPage="onCurrentPage"
-          :tables="table"
-        ></details-table
-      ></el-tab-pane>
-    </el-tabs>
-    <!-- <el-input
+  <div>
+    <div>
+      <div class="tabs-tab">
+        <el-tabs v-model="activeName" @tab-click="handleClick">
+          <el-tab-pane label="加好友进群" name="group">
+            <details-table
+              @onCurrentPage="onCurrentPage"
+              @commandFriend="onCommandFriend"
+              @onGroup="onGroup"
+              :tables="table"
+              :classId="classId"
+            ></details-table>
+          </el-tab-pane>
+          <el-tab-pane label="物流" name="logistics">
+            <details-table
+              @onCurrentPage="onCurrentPage"
+              :tables="table"
+            ></details-table>
+          </el-tab-pane>
+          <el-tab-pane label="打开APP" name="login"
+            ><details-table
+              @onCurrentPage="onCurrentPage"
+              :tables="table"
+            ></details-table
+          ></el-tab-pane>
+          <el-tab-pane label="参课和完课" name="participateIn"
+            ><details-table
+              @onCurrentPage="onCurrentPage"
+              :tables="table"
+            ></details-table
+          ></el-tab-pane>
+          <el-tab-pane label="作品及点评" name="works"
+            ><details-table
+              @onCurrentPage="onCurrentPage"
+              :tables="table"
+            ></details-table
+          ></el-tab-pane>
+        </el-tabs>
+        <!-- <el-input
           class="el-input-search"
           size="mini"
           placeholder="昵称、手机号、微信信息"
@@ -51,6 +54,8 @@
           @keyup.enter.native="enter"
         >
         </el-input> -->
+      </div>
+    </div>
   </div>
 </template>
 <script>
@@ -82,7 +87,22 @@ export default {
         // 总条数
         totalElements: null,
         // 当前页
-        currentPage: 1
+        currentPage: 1,
+        audioList: [
+          {
+            src: require('@/assets/images/shaonian.mp3')
+          },
+          {
+            src: require('@/assets/images/zuimeideshangkou.mp3')
+          },
+          {
+            src: require('@/assets/images/shaonian.mp3')
+          },
+          {
+            src: require('@/assets/images/zuimeideshangkou.mp3')
+          }
+        ]
+        // audioIndex: 10000
       },
       // tabs标签默认状态
       activeName: 'group',
@@ -93,17 +113,26 @@ export default {
   watch: {
     classId(value) {
       console.log(value, 'classIdclassIdclassIdclassId')
-      if (value.classId.team_type === 0) {
-        this.type = 'TRAIL'
-      } else if (value.classId.team_type === 0) {
-        this.type = 'MONTH'
-      } else if (value.classId.team_type === 2) {
-        this.type = 'YEAR'
-      } else {
-        this.type = ''
-      }
+      // if (value.classId.team_type === null) {
+      //   this.type = ''
+      // } else
+      const audios = this.$refs
+      const audiosList = Object.values(audios)
+      audiosList.forEach((item, index) => {
+        item[0].load()
+      })
+      // this.table.audioIndex = 10000
       this.table.currentPage = 1
       if (value.classId) {
+        if (value.classId.team_type === 0) {
+          this.type = 'TRAIL'
+        } else if (value.classId.team_type === 1) {
+          this.type = 'MONTH'
+        } else if (value.classId.team_type === 2) {
+          this.type = 'YEAR'
+        } else {
+          this.type = ''
+        }
         this.getGroup()
         if (this.tabsName === '加好友进群') {
           this.getGroup()
@@ -126,6 +155,7 @@ export default {
     this.table.tableLabel = [{ label: '购买时间', prop: 'buytime' }]
   },
   methods: {
+    // 加好友进群 修改已加好友 已进群 接口
     getCodeHandle() {
       this.$http.User.updateTeamStudent({
         studentId: this.codeHandle.studentId,
@@ -269,15 +299,19 @@ export default {
           const _data = res.data.stuExpressPage.content
           _data.forEach((item) => {
             item.ctime = timestamp(item.ctime, 6)
-            if (item.nickname === '') {
+            if (!item.nickname) {
               item.nickname = ''
+              item.head = ''
+            }
+            if (item.product_name) {
+              item.product_name = `「${item.product_name}」`
             } else {
-              item.nickname = `微信昵称: ${item.nickname}`
+              item.product_name = '-'
             }
             if (item.express_status === '0') {
-              item.express_status = '以创建无地址'
+              item.express_status = '已创建无地址'
             } else if (item.express_status === '1') {
-              item.express_status = '待发货(无地址)'
+              item.express_status = '待发货有地址'
             } else if (item.express_status === '2') {
               item.express_status = '已发货'
             } else if (item.express_status === '3') {
@@ -295,7 +329,7 @@ export default {
           this.table.tableData = _data
         })
     },
-    // 登陆接口
+    // 打开APP接口
     geiLogin() {
       const querys = `{"team_id":${this.classId.classId.id},"team_type":${this.classId.type}}`
       axios
@@ -332,12 +366,13 @@ export default {
           _data.forEach((item) => {
             item.express_ctime = timestamp(item.express_ctime, 6)
             item.ctime = timestamp(item.ctime, 2)
-            if (item.nickname === '') {
+            if (!item.nickname) {
               item.nickname = ''
-            } else {
-              item.nickname = `微信昵称: ${item.nickname}`
+              item.head = ''
             }
-            if (!item.login_time) {
+            if (item.login_time) {
+              item.ctime = `首次登录: ${item.ctime}`
+            } else {
               item.login_time = '-'
               item.ctime = ''
             }
@@ -416,25 +451,27 @@ export default {
           const _data = res.data.getClassCompPage.content
           _data.forEach((item) => {
             item.buytime = timestamp(item.buytime, 6)
+            if (!item.nickname) {
+              item.nickname = ''
+              item.head = ''
+            }
+            if (!item.current_lesson) {
+              item.current_lesson = '-'
+            }
             if (
               item.add_class_status === '0' ||
               item.add_class_status === '1'
             ) {
-              item.add_class_status = '已参课'
+              item.attend_class = '已参课'
               item.add_class_ctime = timestamp(item.add_class_ctime, 6)
             } else {
-              item.add_class_status = '-'
+              item.attend_class = '-'
             }
             if (item.add_class_status === '1') {
-              item.add_class_status = '已完课'
+              item.finish_class = '已完课'
               item.add_class_utime = timestamp(item.add_class_utime, 6)
             } else {
-              item.add_class_status = '-'
-            }
-            if (item.nickname === '') {
-              item.nickname = ''
-            } else {
-              item.nickname = `微信昵称: ${item.nickname}`
+              item.finish_class = '-'
             }
             if (item.status === '0') {
               item.status = '已注册'
@@ -485,6 +522,7 @@ export default {
                 head
                 mobile
                 username
+                status
                 has_comment_ctime
                 has_comment_utime
                 sound_comment
@@ -506,13 +544,34 @@ export default {
         })
         .then((res) => {
           // classTitle 课程名字
-          //   has_listen_comment_ctime  已听点评的时间
+          // has_listen_comment_ctime  已听点评的时间
           // task_sound 点评的音频
           // task_sound_second 音频多少秒
-          console.log(res, 'getStuComment res')
           const _data = res.data.getStuCommentPage.content
-          _data.forEach((item) => {
+          _data.forEach((item, index) => {
             item.buytime = timestamp(item.buytime, 6)
+            if (!item.nickname) {
+              item.nickname = ''
+              item.head = ''
+            }
+            // item.audioIndex = 10000
+            item.audioList = [
+              {
+                src: require('@/assets/images/shaonian.mp3')
+              },
+              {
+                src: require('@/assets/images/zuimeideshangkou.mp3')
+              }
+            ]
+            Number(index) === 1 &&
+              (item.audioList = [
+                {
+                  src: require('@/assets/images/zuimeideshangkou.mp3')
+                },
+                {
+                  src: require('@/assets/images/shaonian.mp3')
+                }
+              ])
           })
           this.table.tableData = _data
         })
@@ -527,10 +586,20 @@ export default {
       this.codeHandle = data
       this.getCodeHandle()
     },
+    // 播放语音传值
+    // onAudioIndex(data) {
+    //   this.table.audioIndex = data
+    // },
     handleClick(tab, event) {
       this.tabsName = tab.label
       this.table.currentPage = 1
       this.table.tableData = []
+      const audios = this.$refs
+      const audiosList = Object.values(audios)
+      audiosList.forEach((item, index) => {
+        item[0].load()
+      })
+      // this.table.audioIndex = 10000
       if (tab.index === '0') {
         // 加好友进群
         this.getGroup()
