@@ -6,13 +6,21 @@
       tooltip-effect="dark"
       style="width: 100%"
       @selection-change="handleSelectionChange"
+      @cell-mouse-enter="handleSelectionChangeEnter"
+      @cell-mouse-leave="handleSelectionChangeLeave"
     >
-      <el-table-column type="selection" width="55"> </el-table-column>
-      <el-table-column label="用户及日期" width="120">
+      <el-table-column type="selection" width="35"> </el-table-column>
+      <!-- <el-table-column width="25">
+        <div :class="[false, 'trans']">
+          <i class="el-icon-more-outline"></i>
+        </div>
+      </el-table-column> -->
+      <el-table-column label="用户及日期">
         <template slot-scope="scope">
+          <!-- <i class="el-icon-more-outline"></i> -->
           <div class="user">
-            <span>{{ scope.row.phone }}</span>
-            <span>{{ scope.row.date }}</span>
+            <div>{{ scope.row.phone }}</div>
+            <div>{{ scope.row.date }}</div>
           </div>
         </template>
       </el-table-column>
@@ -23,7 +31,7 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="收货信息" show-overflow-tooltip>
+      <el-table-column label="收货信息" width="240">
         <template slot-scope="scope">
           <div class="take">
             <div>
@@ -44,17 +52,17 @@
       <el-table-column label="物流状态" show-overflow-tooltip>
         <template slot-scope="scope">
           <div class="express">
-            <span>{{ scope.row.wait }}</span>
-            <span>{{ scope.row.trail }}</span>
+            <div class="wait">{{ scope.row.wait }}</div>
+            <div class="trail">{{ scope.row.trail }}</div>
           </div>
         </template>
       </el-table-column>
       <el-table-column label="物流创建·揽收·签收" show-overflow-tooltip>
         <template slot-scope="scope">
           <div class="sign">
-            <span>{{ scope.row.date }}</span>
-            <span>{{ scope.row.date }}</span>
-            <span>{{ scope.row.date }}</span>
+            <div>{{ scope.row.date }}</div>
+            <div>{{ scope.row.date }}</div>
+            <div>{{ scope.row.date }}</div>
           </div>
         </template>
       </el-table-column>
@@ -110,7 +118,9 @@ export default {
           address: '上海市普陀区金沙江路 1518 弄'
         }
       ],
-      multipleSelection: []
+      multipleSelection: [],
+      enter: false,
+      cout: 0
     }
   },
 
@@ -126,6 +136,17 @@ export default {
     },
     handleSelectionChange(val) {
       this.multipleSelection = val
+    },
+    handleSelectionChangeEnter() {
+      this.cout++
+      console.log('鼠标进入', this.cout)
+      this.enter = true
+    },
+    handleSelectionChangeLeave() {
+      console.log('鼠标离开', this.cout)
+      this.cout++
+
+      this.enter = false
     }
   }
 }
@@ -135,11 +156,19 @@ export default {
 .container {
   margin-top: 10px;
   background-color: #fff;
-  .wait {
-    color: rgb(50, 241, 98);
-  }
-  .trail {
-    color: aqua;
+  font-size: 12px;
+
+  // .trans {
+  //   transform: rotate(-90deg);
+  //   margin-bottom: -8px;
+  // }
+  .express {
+    .wait {
+      color: rgb(127, 255, 136);
+    }
+    .trail {
+      color: rgb(0, 51, 255);
+    }
   }
 }
 </style>
