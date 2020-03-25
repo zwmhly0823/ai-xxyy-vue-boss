@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 14:19:58
  * @LastEditors: panjian
- * @LastEditTime: 2020-03-25 15:20:13
+ * @LastEditTime: 2020-03-25 21:23:46
  -->
 <template>
   <div>
@@ -18,30 +18,35 @@
               @onGroup="onGroup"
               :tables="table"
               :classId="classId"
+              :audioTabs="audioTabs"
             ></details-table>
           </el-tab-pane>
           <el-tab-pane label="物流" name="logistics">
             <details-table
               @onCurrentPage="onCurrentPage"
               :tables="table"
+              :audioTabs="audioTabs"
             ></details-table>
           </el-tab-pane>
           <el-tab-pane label="打开APP" name="login"
             ><details-table
               @onCurrentPage="onCurrentPage"
               :tables="table"
+              :audioTabs="audioTabs"
             ></details-table
           ></el-tab-pane>
           <el-tab-pane label="参课和完课" name="participateIn"
             ><details-table
               @onCurrentPage="onCurrentPage"
               :tables="table"
+              :audioTabs="audioTabs"
             ></details-table
           ></el-tab-pane>
           <el-tab-pane label="作品及点评" name="works"
             ><details-table
               @onCurrentPage="onCurrentPage"
               :tables="table"
+              :audioTabs="audioTabs"
             ></details-table
           ></el-tab-pane>
         </el-tabs>
@@ -78,6 +83,7 @@ export default {
     return {
       type: null,
       input: '',
+      audioTabs: '0',
       table: {
         tabs: 0,
         // 表头信息
@@ -89,18 +95,20 @@ export default {
         // 当前页
         currentPage: 1,
         audioList: [
-          {
-            src: require('@/assets/images/shaonian.mp3')
-          },
-          {
-            src: require('@/assets/images/zuimeideshangkou.mp3')
-          },
-          {
-            src: require('@/assets/images/shaonian.mp3')
-          },
-          {
-            src: require('@/assets/images/zuimeideshangkou.mp3')
-          }
+          // {
+          //   // src: require('@/assets/images/shaonian.mp3')
+          //   src:
+          //     'http://s1.meixiu.mobi/iOSAcc/30b1075beebb7e1debe9e0a67bde7611.aac'
+          // },
+          // {
+          //   src: require('@/assets/images/zuimeideshangkou.mp3')
+          // },
+          // {
+          //   src: require('@/assets/images/shaonian.mp3')
+          // },
+          // {
+          //   src: require('@/assets/images/zuimeideshangkou.mp3')
+          // }
         ]
         // audioIndex: 10000
       },
@@ -112,10 +120,7 @@ export default {
   },
   watch: {
     classId(value) {
-      console.log(value, 'classIdclassIdclassIdclassId')
-      // if (value.classId.team_type === null) {
-      //   this.type = ''
-      // } else
+      // 切换标签 语音停止
       const audios = this.$refs
       const audiosList = Object.values(audios)
       audiosList.forEach((item, index) => {
@@ -135,15 +140,25 @@ export default {
         }
         this.getGroup()
         if (this.tabsName === '加好友进群') {
-          this.getGroup()
+          setTimeout(() => {
+            this.getGroup()
+          }, 200)
         } else if (this.tabsName === '物流') {
-          this.gitLogistics()
+          setTimeout(() => {
+            this.gitLogistics()
+          }, 200)
         } else if (this.tabsName === '打开APP') {
-          this.geiLogin()
+          setTimeout(() => {
+            this.geiLogin()
+          }, 200)
         } else if (this.tabsName === '参课和完课') {
-          this.getClassCompPage()
+          setTimeout(() => {
+            this.getClassCompPage()
+          }, 200)
         } else if (this.tabsName === '作品及点评') {
-          this.getStuComment()
+          setTimeout(() => {
+            this.getStuComment()
+          }, 200)
         }
       } else {
         this.table.tableData = []
@@ -226,8 +241,6 @@ export default {
           const _data = res.data.userListForTeam.content
           _data.forEach((item) => {
             item.birthday = GetAgeByBrithday(item.birthday)
-            // const birthday = item.birthday.substring(0, 2)
-            // console.log(birthday, 'birthdaybirthdaybirthdaybirthday')
             if (item.sex === '0') {
               item.sex = '- ·'
             } else if (item.sex === '1') {
@@ -365,16 +378,16 @@ export default {
           const _data = res.data.stuLoginPage.content
           _data.forEach((item) => {
             item.express_ctime = timestamp(item.express_ctime, 6)
-            item.ctime = timestamp(item.ctime, 2)
+            item.first_login_time = timestamp(item.first_login_time, 2)
             if (!item.nickname) {
               item.nickname = ''
               item.head = ''
             }
             if (item.login_time) {
-              item.ctime = `首次登录: ${item.ctime}`
+              item.first_login_time = `首次登录: ${item.first_login_time}`
             } else {
               item.login_time = '-'
-              item.ctime = ''
+              item.first_login_time = ''
             }
             if (item.page_origin === '') {
               item.page_origin = ''
@@ -426,20 +439,20 @@ export default {
               totalPages
               totalElements
               content {
-                id
-                status
-                team_name
-                head
+                mobile
+                buy_time
                 username
                 nickname
-                current_lesson
-                team_id
-                add_class_ctime
-                add_class_utime
-                add_class_status
-                classTitle
-                buytime
-                mobile
+                head
+                status
+                course_id
+                course_title
+                course_begin_time
+                course_current_num
+                join_course_state
+                join_course_time
+                complete_course_state
+                complete_course_time
               }
             }
           }`
@@ -450,52 +463,77 @@ export default {
           this.table.totalElements = res.data.getClassCompPage.totalElements * 1
           const _data = res.data.getClassCompPage.content
           _data.forEach((item) => {
-            item.buytime = timestamp(item.buytime, 6)
+            if (item.buy_time) {
+              item.buy_time = timestamp(item.buy_time, 6)
+            } else {
+              item.buy_time = '-'
+            }
             if (!item.nickname) {
               item.nickname = ''
               item.head = ''
             }
-            if (!item.current_lesson) {
-              item.current_lesson = '-'
-            }
-            if (
-              item.add_class_status === '0' ||
-              item.add_class_status === '1'
-            ) {
-              item.attend_class = '已参课'
-              item.add_class_ctime = timestamp(item.add_class_ctime, 6)
+            if (item.course_current_num) {
+              item.course_begin_time = timestamp(item.course_begin_time, 7)
+              item.course_current_num = `${item.course_current_num}·${item.course_begin_time}`
             } else {
-              item.attend_class = '-'
+              item.course_current_num = '-'
             }
-            if (item.add_class_status === '1') {
-              item.finish_class = '已完课'
-              item.add_class_utime = timestamp(item.add_class_utime, 6)
+            if (item.join_course_state) {
+              item.join_course_time = timestamp(item.join_course_time, 6)
             } else {
-              item.finish_class = '-'
+              item.join_course_state = '-'
+              item.join_course_time = ''
             }
-            if (item.status === '0') {
-              item.status = '已注册'
-            } else if (item.status === '1') {
-              item.status = '已体验课'
-            } else if (item.status === '2') {
-              item.status = '体验完课'
-            } else if (item.status === '3') {
-              item.status = '已月课'
-            } else if (item.status === '4') {
-              item.status = '月课完课'
-            } else if (item.status === '5') {
-              item.status = '已年课'
-            } else if (item.status === '6') {
-              item.status = '年课完课'
-            } else if (item.status === '7') {
-              item.status = '年课续费'
-            } else if (item.status === '11') {
-              item.status = '已半年课'
-            } else if (item.status === '12') {
-              item.status = '半年课完课'
+            if (item.complete_course_state) {
+              item.complete_course_time = timestamp(
+                item.complete_course_time,
+                6
+              )
             } else {
-              item.status = '-'
+              item.complete_course_state = '-'
+              item.complete_course_time = ''
             }
+            // if (!item.current_lesson) {
+            //   item.current_lesson = '-'
+            // }
+            // if (
+            //   item.add_class_status === '0' ||
+            //   item.add_class_status === '1'
+            // ) {
+            //   item.attend_class = '已参课'
+            //   item.add_class_ctime = timestamp(item.add_class_ctime, 6)
+            // } else {
+            //   item.attend_class = '-'
+            // }
+            // if (item.add_class_status === '1') {
+            //   item.finish_class = '已完课'
+            //   item.add_class_utime = timestamp(item.add_class_utime, 6)
+            // } else {
+            //   item.finish_class = '-'
+            // }
+            // if (item.status === '0') {
+            //   item.status = '已注册'
+            // } else if (item.status === '1') {
+            //   item.status = '已体验课'
+            // } else if (item.status === '2') {
+            //   item.status = '体验完课'
+            // } else if (item.status === '3') {
+            //   item.status = '已月课'
+            // } else if (item.status === '4') {
+            //   item.status = '月课完课'
+            // } else if (item.status === '5') {
+            //   item.status = '已年课'
+            // } else if (item.status === '6') {
+            //   item.status = '年课完课'
+            // } else if (item.status === '7') {
+            //   item.status = '年课续费'
+            // } else if (item.status === '11') {
+            //   item.status = '已半年课'
+            // } else if (item.status === '12') {
+            //   item.status = '半年课完课'
+            // } else {
+            //   item.status = '-'
+            // }
           })
           this.table.tableData = _data
         })
@@ -550,14 +588,22 @@ export default {
           const _data = res.data.getStuCommentPage.content
           _data.forEach((item, index) => {
             item.buytime = timestamp(item.buytime, 6)
+            item.works_ctime = timestamp(item.works_ctime, 6)
             if (!item.nickname) {
               item.nickname = ''
               item.head = ''
             }
+            // if (!item.task_image) {
+            //   item.item.task_image = '-'
+            //   item.works_ctime = ''
+            // }
+
             // item.audioIndex = 10000
             item.audioList = [
               {
-                src: require('@/assets/images/shaonian.mp3')
+                // src: require('@/assets/images/shaonian.mp3')
+                src:
+                  'http://s1.meixiu.mobi/iOSAcc/30b1075beebb7e1debe9e0a67bde7611.aac'
               },
               {
                 src: require('@/assets/images/zuimeideshangkou.mp3')
@@ -594,6 +640,7 @@ export default {
       this.tabsName = tab.label
       this.table.currentPage = 1
       this.table.tableData = []
+      // 切换标签 语音停止
       const audios = this.$refs
       const audiosList = Object.values(audios)
       audiosList.forEach((item, index) => {
@@ -602,43 +649,65 @@ export default {
       // this.table.audioIndex = 10000
       if (tab.index === '0') {
         // 加好友进群
-        this.getGroup()
+        setTimeout(() => {
+          this.getGroup()
+        }, 200)
         this.table.tableLabel = [{ label: '购买时间', prop: 'buytime' }]
         this.table.tabs = 0
+        this.audioTabs = '0'
       } else if (tab.index === '1') {
         // 物流
-        this.gitLogistics()
+        setTimeout(() => {
+          this.gitLogistics()
+        }, 200)
         this.table.tabs = 1
+        this.audioTabs = '1'
       } else if (tab.index === '2') {
         // 登陆
-        this.geiLogin()
-        console.log('登陆')
+        setTimeout(() => {
+          this.geiLogin()
+        }, 200)
         this.table.tabs = 2
+        this.audioTabs = '2'
       } else if (tab.index === '3') {
         // 参课和完课
-        this.getClassCompPage()
-        console.log('参课和完课')
+        setTimeout(() => {
+          this.getClassCompPage()
+        }, 200)
         this.table.tabs = 3
+        this.audioTabs = '3'
       } else if (tab.index === '4') {
         // 作品及点评
-        // this.getStuComment()
-        console.log('作品及点评')
+        setTimeout(() => {
+          this.getStuComment()
+        }, 200)
         this.table.tabs = 4
+        this.audioTabs = '4'
       }
     },
     // 分页
     onCurrentPage(data) {
       this.table.currentPage = data
       if (this.table.tabs === 0) {
-        this.getGroup()
+        setTimeout(() => {
+          this.getGroup()
+        }, 200)
       } else if (this.table.tabs === 1) {
-        this.gitLogistics()
+        setTimeout(() => {
+          this.gitLogistics()
+        }, 200)
       } else if (this.table.tabs === 2) {
-        this.geiLogin()
+        setTimeout(() => {
+          this.geiLogin()
+        }, 200)
       } else if (this.table.tabs === 3) {
-        this.getClassCompPage()
+        setTimeout(() => {
+          this.getClassCompPage()
+        }, 200)
       } else if (this.table.tabs === 4) {
-        this.getStuComment()
+        setTimeout(() => {
+          this.getStuComment()
+        }, 200)
       }
       var dom = document.getElementById('right-scroll')
       dom.querySelector('.scrollbar-wrapper').scrollTo(0, 0)
