@@ -6,6 +6,8 @@
 
 ### [正式环境](https://boss.xiaoxiongmeishu.com/student-team/#/)
 
+### [Search API](http://docker.meixiu.mobi:48767/jsondoc-ui.html?url=/data/search/m1/jsondoc#)
+
 
 ---
 
