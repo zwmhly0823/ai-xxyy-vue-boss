@@ -224,10 +224,10 @@ export default {
     }
   },
   async created() {
-    const teacher = localStorage.getItem('teacher')
-    if (teacher) {
-      this.teacher_id = JSON.parse(teacher).id
-    }
+    // const teacher = localStorage.getItem('teacher')
+    // if (teacher) {
+    //   this.teacher_id = JSON.parse(teacher).id
+    // }
     // 请求体验课状态列表
     await this.getExperienceStatusList(0)
     // 请求系统课状态列表
