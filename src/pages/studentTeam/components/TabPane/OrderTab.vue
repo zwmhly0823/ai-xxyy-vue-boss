@@ -12,22 +12,27 @@
         <template slot-scope="scope">
           <img class="bugUser-img" :src="scope.row.user.head" alt="" />
           <div class="bugUser-right">
-            <div class="phone">{{ scope.row.user.mobile }}</div>
+            <div class="phone">
+              {{ scope.row.user.mobile ? scope.row.user.mobile : '-' }}
+            </div>
             <div class="age">
-              {{ scope.row.sex }} · {{ scope.row.user.birthday }}
+              {{ scope.row.sex }} ·
+              {{ scope.row.user.birthday }}
+            </div>
+            <div>
               <span v-show="scope.row.user.base_painting_text">·</span>
               {{ scope.row.user.base_painting_text }}
             </div>
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="商品" class="haveclass">
-        <div slot-scope="scope" class="haveclass-box">
-          <div class="haveclass-content">
-            <div class="text333">
-              <div>
-                {{ scope.row.packages_name ? scope.row.packages_name : '-' }}
-              </div>
+      <el-table-column label="商品">
+        <div slot-scope="scope">
+          <div class="text333">
+            <div>
+              {{ scope.row.packages_name ? scope.row.packages_name : '-' }}
+            </div>
+            <div>
               <span style="color: #666"
                 >时长:{{
                   scope.row.packages_course_week
@@ -53,12 +58,60 @@
       </el-table-column>
       <el-table-column label="支付状态" class="status-style">
         <template slot-scope="scope">
-          <div class="text333">{{ scope.row.id }}</div>
+          <div>
+            <span class="text333">{{ scope.row.order_status }}</span>
+            <span v-if="scope.row.express_status">.</span>
+            <span class="text333">{{ scope.row.express_status }}</span>
+          </div>
+          <div v-if="scope.row.express_status">
+            {{ scope.row.express_cur_time ? scope.row.express_cur_time : '-' }}
+          </div>
         </template>
       </el-table-column>
-      <el-table-column label="系统课信息" class="status-style">
+      <el-table-column label="系统课信息" class="status-style" width="240px">
         <template slot-scope="scope">
-          <div class="text333">{{ scope.row.id }}</div>
+          <div
+            v-if="
+              scope.row.management_start_date ||
+                scope.row.student_team_name ||
+                scope.row.teacher_name ||
+                scope.row.teacher_wx
+            "
+          >
+            <div class="text333">
+              <span
+                >开课:{{
+                  scope.row.management_start_date
+                    ? `${scope.row.management_start_date} `
+                    : '- '
+                }}</span
+              >
+
+              <span
+                >班级:{{
+                  scope.row.student_team_name
+                    ? scope.row.student_team_name
+                    : '-'
+                }}</span
+              >
+            </div>
+            <div class="text333">
+              <span
+                >老师:{{
+                  scope.row.teacher_name ? `${scope.row.teacher_name} ` : '- '
+                }}
+              </span>
+
+              <span
+                >微信:{{
+                  scope.row.teacher_wx ? scope.row.teacher_wx : '-'
+                }}</span
+              >
+            </div>
+          </div>
+          <div v-else>
+            -
+          </div>
         </template>
       </el-table-column>
     </el-table>
@@ -72,6 +125,7 @@
   </div>
 </template>
 <script>
+import dayjs from 'dayjs'
 import axios from '@/api/axios'
 import { GetAgeByBrithday } from '@/utils/menuItems'
 import { formatData } from '@/utils'
@@ -129,21 +183,19 @@ export default {
               totalPages
               totalElements
               content {
-                teacher_wx
-                teacher_name
-                student_team_name
-                management_start_date
                 id
+                packages_name
                 sup
                 packages_course_week
                 ctime
                 status
                 packages_id
+              order_status
                 packages_name
                 express_status
                 express_cur_time
-                teacher_name
                 teacher_wx
+                teacher_name
                 student_team_name
                 management_start_date
                 user {
@@ -190,6 +242,12 @@ export default {
               : (ele.user.birthday = '-')
 
             ele.ctime = formatData(ele.ctime, 's')
+            ele.express_cur_time = formatData(ele.express_cur_time, 's')
+            ele.management_start_date = ele.management_start_date
+              ? dayjs
+                  .unix(Number(ele.management_start_date) / 1000)
+                  .format('MMDD')
+              : ''
           })
           this.tableData = _data
           console.log(this.tableData)
