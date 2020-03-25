@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 14:19:58
  * @LastEditors: panjian
- * @LastEditTime: 2020-03-25 21:28:42
+ * @LastEditTime: 2020-03-25 22:10:19
  -->
 <template>
   <div>
@@ -382,11 +382,11 @@ export default {
               item.nickname = ''
               item.head = ''
             }
-            if (item.login_time) {
-              item.first_login_time = `首次登录: ${item.first_login_time}`
-            } else {
+            if (!item.login_time || item.login_time === '0') {
               item.login_time = '-'
               item.first_login_time = ''
+            } else {
+              item.first_login_time = `首次登录: ${item.first_login_time}`
             }
             if (item.page_origin === '') {
               item.page_origin = ''
