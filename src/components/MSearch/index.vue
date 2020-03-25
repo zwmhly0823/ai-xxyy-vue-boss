@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-24 18:20:12
  * @LastEditors: zhubaodong
- * @LastEditTime: 2020-03-24 19:54:16
+ * @LastEditTime: 2020-03-25 17:00:08
  -->
 
 <template>
@@ -22,7 +22,7 @@
   </el-card>
 </template>
 <script>
-import HasReceiptaddress from './searchItems/hasReceiptaddress.vue'
+import HasReceiptaddress from './searchItems/example.vue'
 export default {
   props: {
     // 有无收货地址
