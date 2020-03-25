@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-13 15:24:11
  * @LastEditors: zhubaodong
- * @LastEditTime: 2020-03-25 13:08:27
+ * @LastEditTime: 2020-03-25 22:20:44
  -->
 <template>
   <el-row type="flex" class="app-main height student-team">
@@ -220,6 +220,11 @@ export default {
               this.classListData.teamStatusPage &&
               this.classListData.teamStatusPage.content[0]
           }
+
+          // sessionStorage.setItem(
+          //   'CenterBarSaveData',
+          //   JSON.stringify(this.classId)
+          // )
         })
     }
   },
@@ -241,8 +246,8 @@ export default {
 .student-team {
   &-left {
     padding-left: 0px;
-    width: 170px;
-    min-width: 170px;
+    width: 160px;
+    min-width: 160px;
     border-right: 1px solid #e3e3e3;
   }
   &-center {

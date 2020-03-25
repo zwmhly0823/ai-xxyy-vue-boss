@@ -3,7 +3,7 @@
  * @Email: yangjiyong@meishubao.com
  * @Date: 2020-03-13 12:10:04
  * @Last Modified by: YangJiyong
- * @Last Modified time: 2020-03-25 15:52:58
+ * @Last Modified time: 2020-03-25 21:59:14
  * @Description: 全局公共方法，添加或改动及时全员通知。 注释一定要写详细！
  */
 
@@ -134,7 +134,7 @@ export function baseUrl() {
   if (BASE_URL === 'ghpageslive') {
     myBaseUrl = ''
   } else if (BASE_URL === 'ghpagestest' || BASE_URL.indexOf('test') > -1) {
-    myBaseUrl = '/ai-app-vue-boss-test/'
+    myBaseUrl = '/ai-app-vue-toss-test/'
     // myBaseUrl = ''
   }
   return myBaseUrl
@@ -156,4 +156,33 @@ export function startToEndTime(startTime, endTime) {
     ]
   }
   return [formatS, formatE]
+}
+
+/**
+ * 通过班级的当前课程计算当前开课周数及节次
+ **/
+export function GetAgeByBrithday(birth) {
+  var age = 0
+  var month = 0
+  var today = new Date()
+  var todayYear = today.getFullYear()
+  var todayMonth = today.getMonth() + 1
+
+  const birthday = new Date(Number(birth) * 1000)
+  const birthdayYear = birthday.getFullYear()
+  const birthdayMonth = birthday.getMonth() + 1
+
+  if (today.getTime() < birthday.getTime()) {
+    console.log('无法计算')
+  } else {
+    age = todayYear - birthdayYear
+
+    if (todayMonth <= birthdayMonth) {
+      month = todayMonth - birthdayMonth + 12
+      age--
+    } else {
+      month = todayMonth - birthdayMonth
+    }
+    return age + '岁' + month + '个月'
+  }
 }

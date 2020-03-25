@@ -81,7 +81,7 @@
 </template>
 <script>
 import axios from '@/api/axios'
-import { GetAgeByBrithday } from '@/utils/menuItems'
+import { GetAgeByBrithday } from '@/utils/index'
 import MPagination from '@/components/MPagination/index.vue'
 
 export default {
