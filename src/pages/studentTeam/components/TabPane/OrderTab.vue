@@ -97,78 +97,52 @@ export default {
   methods: {
     // 学员列表
     studentsList() {
+      const queryParams = `{"bool":{"must":[{"term":{"team_state":${this.classId.classId.id}}}]}}`
       axios
         .post('/graphql/team', {
           query: `{
-          teamUserListPage(type: ${this.classId.type}, team_id: "${this.classId.classId.id}",page:${this.currentPage}) {
-            empty
-            first
-            last
-            number
-            size
-            numberOfElements
-            totalElements
-            totalPages
-            content {
-              id
-              ctime
-              birthday
-              nickname
-              username
-              country
-              head
-              send_id
-              channel
-              status
-              subscribe
-              sex
-              type
-              weixin_openid
-              user_num
-              base_painting
-              base_painting_text
-              team_id
-              mobile
-              statistics {
-                login
-                complete_course
-                join_course
-                course_task
-                comment
-                listen_comment
-              }
-              wechat_status {
-                added_group
-                added_wechat
-              }
-              express {
-                total
+            teamUserOrderPage(query: ${JSON.stringify(queryParams)}, page: ${
+            this.currentPage
+          }) {
+              first
+              last
+              number
+              size
+              totalPages
+              totalElements
+              content {
+                teacher_wx
+                teacher_name
+                student_team_name
+                management_start_date
+                id
+                packages_name
+                sup
+                packages_course_week
+                ctime
                 status
+                packages_id
+                packages_name
+                express_status
+                express_cur_time
+                teacher_name
+                teacher_wx
+                student_team_name
+                management_start_date
+                user {
+                  id
+                  mobile
+                  username
+                  nickname
+                  head
+                  sex
+                  birthday
+                  base_painting_text
+                }
               }
             }
-          }
-        }`
+          }`
         })
-        // .post('/graphql/teamUserOrderPage', {
-        //   query: `{
-        //     teamUserOrderPage(team_id: "${this.classId.classId.id}", team_type: ${this.classId.type}, query:""){
-        //       totalPages
-        //       totalElements
-        //       content{
-        //         id
-        //         uid
-        //         packages_name
-        //         user{
-        //           nickname
-        //           username
-        //           mobile
-        //           sex
-        //           base_painting_text
-        //         }
-        //       }
-        //     }
-        //   `
-        // })
         .then((res) => {
           this.totalPages = res.data.teamUserListPage.totalPages * 1
           this.totalElements = +res.data.teamUserListPage.totalElements
