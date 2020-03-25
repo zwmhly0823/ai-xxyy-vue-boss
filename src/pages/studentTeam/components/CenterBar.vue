@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-13 16:53:33
  * @LastEditors: zhubaodong
- * @LastEditTime: 2020-03-25 13:51:59
+ * @LastEditTime: 2020-03-25 14:17:04
  -->
 <template>
   <div class="center-container">
@@ -130,6 +130,10 @@ export default {
     // 是否切换左栏
     showClassData(val, old) {
       if (val.scrollStatus !== old.scrollStatus) {
+        const dom = document.getElementsByClassName('el-scrollbar')
+        console.log(dom, 'dom')
+
+        dom[1].querySelector('.scrollbar-wrapper').scrollTo(0, 0)
         this.showList = []
         this.showList = this.showClassData.datas
         this.noMore = false
