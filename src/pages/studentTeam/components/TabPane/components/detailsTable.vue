@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 20:22:24
  * @LastEditors: panjian
- * @LastEditTime: 2020-03-25 15:10:03
+ * @LastEditTime: 2020-03-25 15:14:20
  -->
 <template>
   <div class="table-box">
@@ -378,8 +378,13 @@
         <el-table-column width="200" label="用户微信">
           <template slot-scope="scope">
             <div class="works-wx-box">
-              <img class="works-wx-img borders" :src="scope.row.head" alt="" />
-              <span class="works-username">{{ scope.row.username }}</span>
+              <img
+                v-if="scope.row.head != ''"
+                class="works-wx-img borders"
+                :src="scope.row.head"
+                alt=""
+              />
+              <span v-else class="works-wx-imgs borders"> - </span>
               <span class="works-nickname">{{ scope.row.nickname }}</span>
             </div>
           </template>
@@ -666,16 +671,19 @@ export default {
     .works-wx-box {
       position: relative;
       .works-wx-img {
+        display: inline-block;
         width: 50px;
+        height: 50px;
       }
-      .works-username {
-        position: absolute;
-        top: 0;
-        left: 55px;
+      .works-wx-imgs {
+        display: inline-block;
+        width: 50px;
+        height: 50px;
+        border: none;
       }
       .works-nickname {
         position: absolute;
-        top: 25px;
+        top: 0px;
         left: 55px;
       }
     }

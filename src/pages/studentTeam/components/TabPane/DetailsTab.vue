@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 14:19:58
  * @LastEditors: panjian
- * @LastEditTime: 2020-03-25 15:11:54
+ * @LastEditTime: 2020-03-25 15:20:13
  -->
 <template>
   <div>
@@ -473,11 +473,6 @@ export default {
             } else {
               item.finish_class = '-'
             }
-            if (item.nickname === '') {
-              item.nickname = ''
-            } else {
-              item.nickname = `微信昵称: ${item.nickname}`
-            }
             if (item.status === '0') {
               item.status = '已注册'
             } else if (item.status === '1') {
@@ -527,6 +522,7 @@ export default {
                 head
                 mobile
                 username
+                status
                 has_comment_ctime
                 has_comment_utime
                 sound_comment
@@ -554,6 +550,10 @@ export default {
           const _data = res.data.getStuCommentPage.content
           _data.forEach((item, index) => {
             item.buytime = timestamp(item.buytime, 6)
+            if (!item.nickname) {
+              item.nickname = ''
+              item.head = ''
+            }
             // item.audioIndex = 10000
             item.audioList = [
               {
