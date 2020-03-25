@@ -48,6 +48,8 @@
             type="text"
             auto-complete="on"
             maxlength="18"
+            @focus="checkStart"
+            @blur="checkEnd"
           />
         </el-form-item>
         <el-form-item prop="pwd">
@@ -60,6 +62,8 @@
             placeholder="密码"
             name="password"
             auto-complete="on"
+            @focus="checkStart"
+            @blur="checkEnd"
             @keyup.enter.native="pwdLoginHandle('pwdLoginForm')"
           />
           <span class="show-pwd" @click="showPwd">
@@ -96,6 +100,8 @@
             type="text"
             auto-complete="on"
             maxlength="11"
+            @focus="checkStart"
+            @blur="checkEnd"
           />
         </el-form-item>
         <div class="code-form-outer">
@@ -177,8 +183,16 @@ export default {
         callback()
       }
     }
-    // 验证密码
+    // 密码
     const validatePassword = (rule, value, callback) => {
+      if (!value.length) {
+        callback(new Error('请输入密码'))
+      } else {
+        callback()
+      }
+    }
+    // 验证密码
+    const validatecode = (rule, value, callback) => {
       if (!value.length) {
         callback(new Error('请填写验证码'))
       } else {
@@ -211,9 +225,7 @@ export default {
         phone: [
           { required: true, trigger: 'change', validator: validatePhone }
         ],
-        code: [
-          { required: true, trigger: 'change', validator: validatePassword }
-        ]
+        code: [{ required: true, trigger: 'change', validator: validatecode }]
       }
     }
   },
@@ -248,6 +260,15 @@ export default {
     },
     checkChinese() {
       this.codeLoginForm.code = this.codeLoginForm.code.replace(
+        /[^0-9A-Za-z]/g,
+        ''
+      )
+      this.pwdLoginForm.userName = this.pwdLoginForm.userName.replace(
+        /[^0-9A-Za-z]/g,
+        ''
+      )
+      this.pwdLoginForm.pwd = this.pwdLoginForm.pwd.replace(/[^0-9A-Za-z]/g, '')
+      this.codeLoginForm.phone = this.codeLoginForm.phone.replace(
         /[^0-9A-Za-z]/g,
         ''
       )
