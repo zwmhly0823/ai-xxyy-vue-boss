@@ -4,14 +4,13 @@
  * @Author: panjian
  * @Date: 2020-03-16 20:22:24
  * @LastEditors: panjian
- * @LastEditTime: 2020-03-23 21:34:56
+ * @LastEditTime: 2020-03-24 22:51:25
  -->
 <template>
   <div class="table-box">
     <!-- 加好友进群 -->
     <div class="group-box" v-if="this.tables.tabs == 0">
       <el-table
-        ref="multipleTable"
         :data="tables.tableData"
         tooltip-effect="dark"
         :header-cell-style="headerCss"
@@ -160,7 +159,6 @@
     <!-- 物流 -->
     <div class="logistics-box" v-if="this.tables.tabs == 1">
       <el-table
-        ref="multipleTable"
         :data="tables.tableData"
         tooltip-effect="dark"
         :header-cell-style="headerCss"
@@ -226,7 +224,6 @@
     <!-- 打开APP 原 登陆 -->
     <div class="login-box" v-if="this.tables.tabs == 2">
       <el-table
-        ref="multipleTable"
         :data="tables.tableData"
         tooltip-effect="dark"
         :header-cell-style="headerCss"
@@ -279,7 +276,6 @@
     <!-- 参课和完课 -->
     <div class="participateIn-box" v-if="this.tables.tabs == 3">
       <el-table
-        ref="multipleTable"
         :data="tables.tableData"
         tooltip-effect="dark"
         :header-cell-style="headerCss"
@@ -332,7 +328,7 @@
         <el-table-column label="参课">
           <template slot-scope="scope">
             <div>
-              <span>{{ scope.row.add_class_status }}</span>
+              <span>{{ scope.row.attend_class }}</span>
               <br />
               <span>{{ scope.row.add_class_ctime }}</span>
             </div>
@@ -341,7 +337,7 @@
         <el-table-column label="完课">
           <template slot-scope="scope">
             <div>
-              <span>{{ scope.row.add_class_status }}</span>
+              <span>{{ scope.row.finish_class }}</span>
               <br />
               <span>{{ scope.row.add_class_utime }}</span>
             </div>
@@ -358,7 +354,6 @@
     <!-- 作品及点评 -->
     <div class="works-box" v-if="this.tables.tabs == 4">
       <el-table
-        ref="multipleTable"
         :data="tables.tableData"
         tooltip-effect="dark"
         :header-cell-style="headerCss"
@@ -403,7 +398,28 @@
         <el-table-column label="点评">
           <template slot-scope="scope">
             <div>
-              <span>{{ scope.row }}</span>
+              <div
+                v-for="(item, index) in scope.row.audioList"
+                :key="index"
+                @click="aplayAudio(item, index, 'audioRef' + index)"
+                class="audio-box"
+              >
+                <span class="audio-triangle"></span>
+                <img
+                  v-if="audioIndex === index && studentId == scope.row.id"
+                  class="audio-imgs"
+                  src="@/assets/images/sound-active.gif"
+                  alt=""
+                />
+                <img
+                  v-else
+                  class="audio-img"
+                  src="@/assets/images/playing-icon.png"
+                  alt=""
+                />
+                <audio :ref="'audioRef' + index" :src="item.src"></audio>
+              </div>
+              <!-- <span>{{ scope.row }}</span> -->
             </div>
           </template>
         </el-table-column>
@@ -423,23 +439,54 @@
 import MPagination from '@/components/MPagination/index.vue'
 export default {
   name: 'detailsTable',
-  props: ['tables'],
+  props: ['tables', 'classId'],
   components: {
     MPagination
   },
   data() {
     return {
-      index: null,
+      audioIndex: null,
+      tableindex: null,
       studentId: null,
       added_group: null,
       added_wechat: null
     }
   },
   mounted() {
-    // console.log(this.tables)
+    // this.audioIndex = this.tables.audioIndex
+  },
+  watch: {
+    classId(value) {
+      console.log(value, '子组建 watch')
+      this.audioIndex = null
+      // if (value.classId) {
+
+      // }
+    }
   },
   created() {},
   methods: {
+    // 语音播放
+    aplayAudio(item, index, itemss) {
+      if (this.audioIndex !== index) {
+        const audios = this.$refs
+        const audiosList = Object.values(audios)
+        audiosList.forEach((item, index) => {
+          item[0].load()
+        })
+      }
+
+      const audio = this.$refs[itemss][0]
+      if (audio.paused) {
+        this.audioIndex = index
+        // this.$emit('onAudioIndex', index)
+        audio.play() // audio.play();// 播放
+      } else {
+        // audio.pause() // 暂停
+        audio.load() // 取消播放并回到0秒
+        this.audioIndex = null
+      }
+    },
     // 获取表格 下标
     tableRowClassName({ row, rowIndex }) {
       row.index = rowIndex
@@ -450,7 +497,7 @@ export default {
       this.added_group = row.added_group
       this.added_wechat = row.added_wechat
       this.studentId = row.id
-      this.index = row.index
+      this.tableindex = row.index
       // console.log(row, column, event, index)
     },
     // 向父组建传值 已加好友
@@ -461,7 +508,7 @@ export default {
         studentId: this.studentId,
         addedGroup: this.added_group,
         addedWechat: command,
-        index: this.index
+        index: this.tableindex
       }
       this.$emit('commandFriend', val)
     },
@@ -472,7 +519,7 @@ export default {
         studentId: this.studentId,
         addedWechat: this.added_wechat,
         addedGroup: command,
-        index: this.index
+        index: this.tableindex
       }
       this.$emit('onGroup', val)
     },
@@ -612,6 +659,43 @@ export default {
         position: absolute;
         top: 25px;
         left: 55px;
+      }
+    }
+    .audio-box {
+      position: relative;
+      left: 20px;
+      width: 100px;
+      height: 30px;
+      border-radius: 5px;
+      border: #ccc 1px solid;
+      margin-top: 10px;
+      background: #bbe166;
+      .audio-triangle {
+        position: absolute;
+        top: 10px;
+        left: -6px;
+        width: 10px;
+        height: 10px;
+        background: #bbe166;
+        transform: rotate(45deg);
+        border-left: #ccc 1px solid;
+        border-bottom: #ccc 1px solid;
+      }
+      .audio-img {
+        display: inline-block;
+        position: absolute;
+        top: 6px;
+        left: 5px;
+        width: 13px;
+        height: 18px;
+      }
+      .audio-imgs {
+        display: inline-block;
+        position: absolute;
+        top: 6px;
+        left: 5px;
+        width: 13px;
+        height: 18px;
       }
     }
   }

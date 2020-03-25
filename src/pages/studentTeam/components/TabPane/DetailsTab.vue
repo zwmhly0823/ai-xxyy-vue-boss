@@ -4,45 +4,48 @@
  * @Author: panjian
  * @Date: 2020-03-16 14:19:58
  * @LastEditors: panjian
- * @LastEditTime: 2020-03-23 21:31:26
+ * @LastEditTime: 2020-03-24 22:55:17
  -->
 <template>
-  <div class="tabs-tab">
-    <el-tabs v-model="activeName" @tab-click="handleClick">
-      <el-tab-pane label="加好友进群" name="group">
-        <details-table
-          @onCurrentPage="onCurrentPage"
-          @commandFriend="onCommandFriend"
-          @onGroup="onGroup"
-          :tables="table"
-        ></details-table>
-      </el-tab-pane>
-      <el-tab-pane label="物流" name="logistics">
-        <details-table
-          @onCurrentPage="onCurrentPage"
-          :tables="table"
-        ></details-table>
-      </el-tab-pane>
-      <el-tab-pane label="打开APP" name="login"
-        ><details-table
-          @onCurrentPage="onCurrentPage"
-          :tables="table"
-        ></details-table
-      ></el-tab-pane>
-      <el-tab-pane label="参课和完课" name="participateIn"
-        ><details-table
-          @onCurrentPage="onCurrentPage"
-          :tables="table"
-        ></details-table
-      ></el-tab-pane>
-      <el-tab-pane label="作品及点评" name="works"
-        ><details-table
-          @onCurrentPage="onCurrentPage"
-          :tables="table"
-        ></details-table
-      ></el-tab-pane>
-    </el-tabs>
-    <!-- <el-input
+  <div>
+    <div>
+      <div class="tabs-tab">
+        <el-tabs v-model="activeName" @tab-click="handleClick">
+          <el-tab-pane label="加好友进群" name="group">
+            <details-table
+              @onCurrentPage="onCurrentPage"
+              @commandFriend="onCommandFriend"
+              @onGroup="onGroup"
+              :tables="table"
+              :classId="classId"
+            ></details-table>
+          </el-tab-pane>
+          <el-tab-pane label="物流" name="logistics">
+            <details-table
+              @onCurrentPage="onCurrentPage"
+              :tables="table"
+            ></details-table>
+          </el-tab-pane>
+          <el-tab-pane label="打开APP" name="login"
+            ><details-table
+              @onCurrentPage="onCurrentPage"
+              :tables="table"
+            ></details-table
+          ></el-tab-pane>
+          <el-tab-pane label="参课和完课" name="participateIn"
+            ><details-table
+              @onCurrentPage="onCurrentPage"
+              :tables="table"
+            ></details-table
+          ></el-tab-pane>
+          <el-tab-pane label="作品及点评" name="works"
+            ><details-table
+              @onCurrentPage="onCurrentPage"
+              :tables="table"
+            ></details-table
+          ></el-tab-pane>
+        </el-tabs>
+        <!-- <el-input
           class="el-input-search"
           size="mini"
           placeholder="昵称、手机号、微信信息"
@@ -51,6 +54,8 @@
           @keyup.enter.native="enter"
         >
         </el-input> -->
+      </div>
+    </div>
   </div>
 </template>
 <script>
@@ -82,7 +87,22 @@ export default {
         // 总条数
         totalElements: null,
         // 当前页
-        currentPage: 1
+        currentPage: 1,
+        audioList: [
+          {
+            src: require('@/assets/images/shaonian.mp3')
+          },
+          {
+            src: require('@/assets/images/zuimeideshangkou.mp3')
+          },
+          {
+            src: require('@/assets/images/shaonian.mp3')
+          },
+          {
+            src: require('@/assets/images/zuimeideshangkou.mp3')
+          }
+        ]
+        // audioIndex: 10000
       },
       // tabs标签默认状态
       activeName: 'group',
@@ -102,6 +122,12 @@ export default {
       } else {
         this.type = ''
       }
+      const audios = this.$refs
+      const audiosList = Object.values(audios)
+      audiosList.forEach((item, index) => {
+        item[0].load()
+      })
+      // this.table.audioIndex = 10000
       this.table.currentPage = 1
       if (value.classId) {
         this.getGroup()
@@ -126,6 +152,7 @@ export default {
     this.table.tableLabel = [{ label: '购买时间', prop: 'buytime' }]
   },
   methods: {
+    // 加好友进群 修改已加好友 已进群 接口
     getCodeHandle() {
       this.$http.User.updateTeamStudent({
         studentId: this.codeHandle.studentId,
@@ -275,9 +302,9 @@ export default {
               item.nickname = `微信昵称: ${item.nickname}`
             }
             if (item.express_status === '0') {
-              item.express_status = '以创建无地址'
+              item.express_status = '已创建无地址'
             } else if (item.express_status === '1') {
-              item.express_status = '待发货(无地址)'
+              item.express_status = '待发货有地址'
             } else if (item.express_status === '2') {
               item.express_status = '已发货'
             } else if (item.express_status === '3') {
@@ -420,16 +447,16 @@ export default {
               item.add_class_status === '0' ||
               item.add_class_status === '1'
             ) {
-              item.add_class_status = '已参课'
+              item.attend_class = '已参课'
               item.add_class_ctime = timestamp(item.add_class_ctime, 6)
             } else {
-              item.add_class_status = '-'
+              item.attend_class = '-'
             }
             if (item.add_class_status === '1') {
-              item.add_class_status = '已完课'
+              item.finish_class = '已完课'
               item.add_class_utime = timestamp(item.add_class_utime, 6)
             } else {
-              item.add_class_status = '-'
+              item.finish_class = '-'
             }
             if (item.nickname === '') {
               item.nickname = ''
@@ -506,13 +533,30 @@ export default {
         })
         .then((res) => {
           // classTitle 课程名字
-          //   has_listen_comment_ctime  已听点评的时间
+          // has_listen_comment_ctime  已听点评的时间
           // task_sound 点评的音频
           // task_sound_second 音频多少秒
-          console.log(res, 'getStuComment res')
           const _data = res.data.getStuCommentPage.content
-          _data.forEach((item) => {
+          _data.forEach((item, index) => {
             item.buytime = timestamp(item.buytime, 6)
+            // item.audioIndex = 10000
+            item.audioList = [
+              {
+                src: require('@/assets/images/shaonian.mp3')
+              },
+              {
+                src: require('@/assets/images/zuimeideshangkou.mp3')
+              }
+            ]
+            Number(index) === 1 &&
+              (item.audioList = [
+                {
+                  src: require('@/assets/images/zuimeideshangkou.mp3')
+                },
+                {
+                  src: require('@/assets/images/shaonian.mp3')
+                }
+              ])
           })
           this.table.tableData = _data
         })
@@ -527,10 +571,20 @@ export default {
       this.codeHandle = data
       this.getCodeHandle()
     },
+    // 播放语音传值
+    // onAudioIndex(data) {
+    //   this.table.audioIndex = data
+    // },
     handleClick(tab, event) {
       this.tabsName = tab.label
       this.table.currentPage = 1
       this.table.tableData = []
+      const audios = this.$refs
+      const audiosList = Object.values(audios)
+      audiosList.forEach((item, index) => {
+        item[0].load()
+      })
+      // this.table.audioIndex = 10000
       if (tab.index === '0') {
         // 加好友进群
         this.getGroup()
@@ -552,7 +606,7 @@ export default {
         this.table.tabs = 3
       } else if (tab.index === '4') {
         // 作品及点评
-        // this.getStuComment()
+        this.getStuComment()
         console.log('作品及点评')
         this.table.tabs = 4
       }
