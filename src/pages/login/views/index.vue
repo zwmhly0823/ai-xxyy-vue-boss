@@ -240,18 +240,18 @@ export default {
       })
     },
     // 禁止输入中文
-    // checkStart() {
-    //   this.checkInterval = setInterval(this.checkChinese, 100)
-    // },
-    // checkEnd() {
-    //   clearInterval(this.checkInterval)
-    // },
-    // checkChinese() {
-    //   this.codeLoginForm.code = this.codeLoginForm.code.replace(
-    //     /^[0-9A-Za-z]/g,
-    //     ''
-    //   )
-    // },
+    checkStart() {
+      this.checkInterval = setInterval(this.checkChinese, 100)
+    },
+    checkEnd() {
+      clearInterval(this.checkInterval)
+    },
+    checkChinese() {
+      this.codeLoginForm.code = this.codeLoginForm.code.replace(
+        /[^0-9A-Za-z]/g,
+        ''
+      )
+    },
     // 通过密码登录
     async loginByPwd() {
       const pwdLoginIn = await this.$http.Login.pwdLoginIn(this.pwdLoginForm)
