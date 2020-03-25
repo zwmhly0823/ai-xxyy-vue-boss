@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 20:22:24
  * @LastEditors: panjian
- * @LastEditTime: 2020-03-25 15:14:20
+ * @LastEditTime: 2020-03-25 21:24:14
  -->
 <template>
   <div class="table-box">
@@ -166,7 +166,7 @@
         :cell-style="cellStyle"
         @row-click="onClick"
       >
-        <el-table-column key="1" width="150" label="用户和购买时间">
+        <el-table-column key="1" label="用户和购买时间">
           <template slot-scope="scope">
             <div>
               <span>{{ scope.row.mobile }}</span>
@@ -232,7 +232,7 @@
         :cell-style="cellStyle"
         @row-click="onClick"
       >
-        <el-table-column width="150" label="用户和购买时间">
+        <el-table-column label="用户和购买时间">
           <template slot-scope="scope">
             <div>
               <span>{{ scope.row.mobile }}</span>
@@ -267,7 +267,7 @@
             <div>
               <span>{{ scope.row.login_time }}</span>
               <br />
-              <span>{{ scope.row.ctime }}</span>
+              <span>{{ scope.row.first_login_time }}</span>
             </div>
           </template>
         </el-table-column>
@@ -289,7 +289,7 @@
         :cell-style="cellStyle"
         @row-click="onClick"
       >
-        <el-table-column width="150" label="用户和购买时间">
+        <el-table-column label="用户和购买时间">
           <template slot-scope="scope">
             <div>
               <span>{{ scope.row.mobile }}</span>
@@ -298,7 +298,7 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column width="200" label="用户微信">
+        <el-table-column label="用户微信">
           <template slot-scope="scope">
             <div class="participateIn-wx-box">
               <img
@@ -324,27 +324,27 @@
         <el-table-column label="课程">
           <template slot-scope="scope">
             <div>
-              <span>{{ scope.row.current_lesson }}</span>
+              <span>{{ scope.row.course_current_num }}</span>
               <br />
-              <span>{{ scope.row.classTitle }}</span>
+              <span>{{ scope.row.course_title }}</span>
             </div>
           </template>
         </el-table-column>
         <el-table-column label="参课">
           <template slot-scope="scope">
             <div>
-              <span>{{ scope.row.attend_class }}</span>
+              <span>{{ scope.row.join_course_state }}</span>
               <br />
-              <span>{{ scope.row.add_class_ctime }}</span>
+              <span>{{ scope.row.join_course_time }}</span>
             </div>
           </template>
         </el-table-column>
         <el-table-column label="完课">
           <template slot-scope="scope">
             <div>
-              <span>{{ scope.row.finish_class }}</span>
+              <span>{{ scope.row.complete_course_state }}</span>
               <br />
-              <span>{{ scope.row.add_class_utime }}</span>
+              <span>{{ scope.row.complete_course_time }}</span>
             </div>
           </template>
         </el-table-column>
@@ -366,16 +366,18 @@
         :cell-style="cellStyle"
         @row-click="onClick"
       >
-        <el-table-column width="150" label="用户和购买时间">
+        <el-table-column label="用户和购买时间">
           <template slot-scope="scope">
             <div>
               <span>{{ scope.row.mobile }}</span>
               <br />
               <span>{{ scope.row.buytime }}</span>
+              <br />
+              <span>{{ scope.row.status }}</span>
             </div>
           </template>
         </el-table-column>
-        <el-table-column width="200" label="用户微信">
+        <el-table-column label="用户微信">
           <template slot-scope="scope">
             <div class="works-wx-box">
               <img
@@ -401,11 +403,12 @@
         <el-table-column label="作品">
           <template slot-scope="scope">
             <div class="works-task-box">
-              <img
+              <!-- <img
                 class="works-task-img borders"
                 :src="scope.row.task_image"
                 alt=""
-              />
+              /> -->
+              <span class="works-ctime">{{ scope.row.works_ctime }}</span>
             </div>
           </template>
         </el-table-column>
@@ -446,6 +449,12 @@
           :label="item.label"
         ></el-table-column> -->
       </el-table>
+      <!-- 分页 -->
+      <m-pagination
+        @current-change="handleCurrentChange"
+        :current-page="+tables.currentPage"
+        :total="+tables.totalElements"
+      />
     </div>
   </div>
 </template>
@@ -453,7 +462,21 @@
 import MPagination from '@/components/MPagination/index.vue'
 export default {
   name: 'detailsTable',
-  props: ['tables', 'classId'],
+  // props: ['tables', 'classId'],
+  props: {
+    classId: {
+      type: Object,
+      default: null
+    },
+    tables: {
+      type: Object,
+      default: null
+    },
+    audioTabs: {
+      type: String,
+      default: ''
+    }
+  },
   components: {
     MPagination
   },
@@ -467,16 +490,13 @@ export default {
     }
   },
   mounted() {
-    console.log(this.tables, ' tables ')
-    // this.audioIndex = this.tables.audioIndex
+    // console.log(this.audioTabs, ' audioTabs ')
   },
   watch: {
     classId(value) {
-      console.log(value, '子组建 watch')
       this.audioIndex = null
     },
-    tables(value) {
-      console.log(value, '子组建 watch tabs')
+    audioTabs(value) {
       this.audioIndex = null
     }
   },
@@ -494,7 +514,6 @@ export default {
       const audio = this.$refs[itemss][0]
       if (audio.paused) {
         this.audioIndex = index
-        // this.$emit('onAudioIndex', index)
         audio.play() // audio.play();// 播放
       } else {
         // audio.pause() // 暂停
@@ -508,7 +527,6 @@ export default {
     },
     // 获取表格 下标
     onClick(row, column, event) {
-      // console.log(row, column, event)
       this.added_group = row.added_group
       this.added_wechat = row.added_wechat
       this.studentId = row.id
@@ -517,7 +535,6 @@ export default {
     },
     // 向父组建传值 已加好友
     commandFriend(command) {
-      console.log(command, 'command')
       const val = {
         type: 'wechat',
         studentId: this.studentId,
@@ -688,10 +705,15 @@ export default {
       }
     }
     .works-task-box {
+      position: relative;
       .works-task-img {
         display: inline-block;
         width: 50px;
         height: 50px;
+      }
+      .works-ctime {
+        position: absolute;
+        bottom: 0;
       }
     }
     .audio-box {
