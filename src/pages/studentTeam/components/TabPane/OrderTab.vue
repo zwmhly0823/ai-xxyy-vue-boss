@@ -8,15 +8,15 @@
         fontWeight: 'normal'
       }"
     >
-      <el-table-column fixed label="购买用户" class="bugUser" width="280px">
+      <el-table-column fixed label="购买用户" class="bugUser" width="240px">
         <template slot-scope="scope">
-          <img class="bugUser-img" :src="scope.row.head" alt="" />
+          <img class="bugUser-img" :src="scope.row.user.head" alt="" />
           <div class="bugUser-right">
-            <div class="phone">{{ scope.row.mobile }}</div>
+            <div class="phone">{{ scope.row.user.mobile }}</div>
             <div class="age">
-              {{ scope.row.sex }} · {{ scope.row.birthday }}
-              <span v-show="scope.row.base_painting_text">·</span>
-              {{ scope.row.base_painting_text }}
+              {{ scope.row.sex }} · {{ scope.row.user.birthday }}
+              <span v-show="scope.row.user.base_painting_text">·</span>
+              {{ scope.row.user.base_painting_text }}
             </div>
           </div>
         </template>
@@ -24,24 +24,41 @@
       <el-table-column label="商品" class="haveclass">
         <div slot-scope="scope" class="haveclass-box">
           <div class="haveclass-content">
-            登录:
-            <span>{{ scope.row.statistics.login }}</span>
+            <div class="text333">
+              <div>
+                {{ scope.row.packages_name ? scope.row.packages_name : '-' }}
+              </div>
+              <span style="color: #666"
+                >时长:{{
+                  scope.row.packages_course_week
+                    ? scope.row.packages_course_week
+                    : '-'
+                }}
+              </span>
+              <span style="color: #666"
+                >级别:{{ scope.row.sup ? `S${scope.row.sup}` : '-' }}</span
+              >
+            </div>
           </div>
         </div>
       </el-table-column>
       <el-table-column label="创建时间" class="logistics">
         <template slot-scope="scope">
-          <div class="text333">{{ scope.row.status }}</div>
+          <div v-if="scope.row.ctime">
+            <div class="text333">{{ scope.row.ctime.split(' ')[0] }}</div>
+            <div class="text333">{{ scope.row.ctime.split(' ')[1] }}</div>
+          </div>
+          <span v-else>-</span>
         </template>
       </el-table-column>
       <el-table-column label="支付状态" class="status-style">
         <template slot-scope="scope">
-          <div class="text333">{{ scope.row.status }}</div>
+          <div class="text333">{{ scope.row.id }}</div>
         </template>
       </el-table-column>
       <el-table-column label="系统课信息" class="status-style">
         <template slot-scope="scope">
-          <div class="text333">{{ scope.row.status }}</div>
+          <div class="text333">{{ scope.row.id }}</div>
         </template>
       </el-table-column>
     </el-table>
@@ -57,6 +74,7 @@
 <script>
 import axios from '@/api/axios'
 import { GetAgeByBrithday } from '@/utils/menuItems'
+import { formatData } from '@/utils'
 import MPagination from '@/components/MPagination/index.vue'
 
 export default {
@@ -97,13 +115,13 @@ export default {
   methods: {
     // 学员列表
     studentsList() {
-      const queryParams = `{"bool":{"must":[{"term":{"team_state":${this.classId.classId.id}}}]}}`
+      const queryParams = `{"bool":{"must":[{"term":{"team_id":${this.classId.classId.id}}}]}}`
       axios
-        .post('/graphql/team', {
+        .post('/graphql/order', {
           query: `{
             teamUserOrderPage(query: ${JSON.stringify(queryParams)}, page: ${
             this.currentPage
-          }) {
+          },size:20) {
               first
               last
               number
@@ -116,7 +134,6 @@ export default {
                 student_team_name
                 management_start_date
                 id
-                packages_name
                 sup
                 packages_course_week
                 ctime
@@ -144,12 +161,12 @@ export default {
           }`
         })
         .then((res) => {
-          this.totalPages = res.data.teamUserListPage.totalPages * 1
-          this.totalElements = +res.data.teamUserListPage.totalElements
-          const _data = res.data.teamUserListPage.content
+          this.totalPages = res.data.teamUserOrderPage.totalPages * 1
+          this.totalElements = +res.data.teamUserOrderPage.totalElements
+          const _data = res.data.teamUserOrderPage.content
           _data.forEach((ele) => {
             // 性别 0/默认 1/男 2/女  3/保密
-            const sex = ele.sex
+            const sex = ele.user.sex
             switch (sex) {
               case '1': {
                 ele.sex = '男'
@@ -168,11 +185,14 @@ export default {
                 break
             }
             // 年龄转换
-            ele.birthday !== '0'
-              ? (ele.birthday = GetAgeByBrithday(ele.birthday))
-              : (ele.birthday = '-')
+            ele.user.birthday !== '0'
+              ? (ele.user.birthday = GetAgeByBrithday(ele.user.birthday))
+              : (ele.user.birthday = '-')
+
+            ele.ctime = formatData(ele.ctime, 's')
           })
           this.tableData = _data
+          console.log(this.tableData)
         })
     },
     // 点击分页
