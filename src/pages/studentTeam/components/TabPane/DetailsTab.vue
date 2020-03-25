@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 14:19:58
  * @LastEditors: panjian
- * @LastEditTime: 2020-03-25 21:23:46
+ * @LastEditTime: 2020-03-25 21:28:42
  -->
 <template>
   <div>
@@ -679,7 +679,7 @@ export default {
       } else if (tab.index === '4') {
         // 作品及点评
         setTimeout(() => {
-          this.getStuComment()
+          // this.getStuComment()
         }, 200)
         this.table.tabs = 4
         this.audioTabs = '4'
