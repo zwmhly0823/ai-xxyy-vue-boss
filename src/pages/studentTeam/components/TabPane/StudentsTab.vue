@@ -25,7 +25,7 @@
         <div slot-scope="scope" class="haveclass-box">
           <div class="haveclass-content">
             打开:
-            <span>{{ scope.row.statistics.login }}</span>
+            <span>{{ scope.row.statistics.open_app }}</span>
           </div>
           <div class="haveclass-content">
             参课:
@@ -164,6 +164,7 @@ export default {
                 course_task
                 comment
                 listen_comment
+                open_app
               }
               wechat_status {
                 added_group
