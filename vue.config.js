@@ -11,7 +11,7 @@ if (process.env.BASE_URL === 'ghpageslive') {
 } else if (process.env.BASE_URL === 'ghpagesdev') {
   baseUrl = '/frontend/ai-app-vue-boss-dev/'
 } else if (process.env.BASE_URL === 'ghpagestest') {
-  baseUrl = '/frontend/ai-app-vue-boss/'
+  baseUrl = '/ai-app-vue-boss-test/'
 }
 
 function camel2Line(str) {

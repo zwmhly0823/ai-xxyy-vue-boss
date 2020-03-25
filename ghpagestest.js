@@ -3,8 +3,7 @@ const dayjs = require('dayjs')
 const ghpages = require('gh-pages')
 const colors = require('colors/safe')
 
-const repo =
-  'https://newsgitlab.meishubao.com/msb-ai/frontend/ai-app-vue-boss.git'
+const repo = 'https://newsgitlab.meishubao.com/msb-ai/ai-app-vue-boss-test.git'
 ghpages.publish(
   'dist',
   {
