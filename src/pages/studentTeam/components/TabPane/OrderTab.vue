@@ -127,8 +127,8 @@
 <script>
 import dayjs from 'dayjs'
 import axios from '@/api/axios'
-import { GetAgeByBrithday } from '@/utils/menuItems'
-import { formatData } from '@/utils'
+import { GetAgeByBrithday, formatData } from '@/utils/index'
+
 import MPagination from '@/components/MPagination/index.vue'
 
 export default {
