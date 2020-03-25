@@ -111,6 +111,8 @@ export default {
   created() {},
   watch: {
     classId(value) {
+      if (!value) return
+      this.scrollTop()
       this.currentPage = 1
       if (value.classId) {
         this.studentsList()
@@ -252,11 +254,12 @@ export default {
     },
     // 点击分页
     handleSizeChange(val) {
-      console.log(val)
-
       this.currentPage = val
       this.getstatusList()
       this.studentsList()
+      this.scrollTop()
+    },
+    scrollTop() {
       const dom = document.getElementById('right-scroll')
       dom.querySelector('.scrollbar-wrapper').scrollTo(0, 0)
     },

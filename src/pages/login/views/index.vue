@@ -47,6 +47,7 @@
             name="userName"
             type="text"
             auto-complete="on"
+            maxlength="18"
           />
         </el-form-item>
         <el-form-item prop="pwd">
@@ -94,6 +95,7 @@
             name="phone"
             type="text"
             auto-complete="on"
+            maxlength="11"
           />
         </el-form-item>
         <div class="code-form-outer">
@@ -106,6 +108,10 @@
               placeholder="验证码"
               name="password"
               auto-complete="on"
+              maxlength="6"
+              style="ime-mode:disabled;"
+              @focus="checkStart"
+              @blur="checkEnd"
               @keyup.enter.native="pwdLoginHandle('codeLoginForm')"
             />
           </el-form-item>
@@ -143,7 +149,10 @@ import { setToken } from '@/utils/auth'
 
 const valid = {
   isPhoneNum(str) {
-    return /^[1][3,4,5,7,8,9][0-9]{9}$/.test(str)
+    return /^1(3|4|5|6|7|8|9)\d{9}$/.test(str)
+  },
+  isUserName(str) {
+    return /^[0-9A-Za-z]{2,18}$/.test(str)
   }
 }
 export default {
@@ -161,7 +170,9 @@ export default {
     // 验证用户名
     const validateUsername = (urle, value, callback) => {
       if (!value) {
-        callback(new Error('请输入用户名哦~'))
+        callback(new Error('请输入账号'))
+      } else if (!valid.isUserName(value)) {
+        callback(new Error('请输入正确的账号哦~'))
       } else {
         callback()
       }
@@ -169,7 +180,7 @@ export default {
     // 验证密码
     const validatePassword = (rule, value, callback) => {
       if (!value.length) {
-        callback(new Error('密码长度不够哟~'))
+        callback(new Error('请填写验证码'))
       } else {
         callback()
       }
@@ -186,6 +197,7 @@ export default {
         phone: '',
         code: ''
       },
+      checkInterval: '',
       passwordType: 'password',
       pwdLoginRules: {
         userName: [
@@ -227,6 +239,19 @@ export default {
         }
       })
     },
+    // 禁止输入中文
+    checkStart() {
+      this.checkInterval = setInterval(this.checkChinese, 100)
+    },
+    checkEnd() {
+      clearInterval(this.checkInterval)
+    },
+    checkChinese() {
+      this.codeLoginForm.code = this.codeLoginForm.code.replace(
+        /[^0-9A-Za-z]/g,
+        ''
+      )
+    },
     // 通过密码登录
     async loginByPwd() {
       const pwdLoginIn = await this.$http.Login.pwdLoginIn(this.pwdLoginForm)
@@ -262,7 +287,6 @@ export default {
       const validatePromise = await this.judegeValidate(formName).catch((err) =>
         console.log(err)
       )
-
       if (validatePromise) {
         const loadingInstance = Loading.service({
           target: 'section',
