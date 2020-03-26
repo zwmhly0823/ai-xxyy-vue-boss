@@ -4,12 +4,12 @@
  * @Author: zhubaodong
  * @Date: 2020-03-24 18:20:12
  * @LastEditors: zhubaodong
- * @LastEditTime: 2020-03-25 17:00:08
+ * @LastEditTime: 2020-03-26 20:01:18
  -->
 
 <template>
   <el-card class="search-style" shadow="never">
-    <el-form>
+    <el-form :inline="true">
       <el-form-item>
         <!-- 有无收货地址 -->
         <has-receiptaddress
@@ -18,21 +18,47 @@
           :name="hasaddress"
         />
       </el-form-item>
+      <el-form-item>
+        <!-- 下拉时间选择 -->
+        <data-select v-if="changeData" :name="changeData"></data-select>
+      </el-form-item>
+      <el-form-item>
+        <!-- 下拉时间选择 -->
+        <channel-select
+          @result="getChannel"
+          v-if="channel"
+          :name="channel"
+        ></channel-select>
+      </el-form-item>
     </el-form>
   </el-card>
 </template>
 <script>
-import HasReceiptaddress from './searchItems/example.vue'
+import HasReceiptaddress from './searchItems/localSelect.vue'
+import DataSelect from './searchItems/dataSelect.vue'
+import ChannelSelect from './searchItems/search.vue'
+
 export default {
   props: {
     // 有无收货地址
     hasaddress: {
       type: String,
       default: '' // hasaddress
+    },
+    changeData: {
+      type: String,
+      default: '' // hasaddress
+    },
+    // 渠道
+    channel: {
+      type: String,
+      default: '' // channelid
     }
   },
   components: {
-    HasReceiptaddress
+    HasReceiptaddress,
+    DataSelect,
+    ChannelSelect
   },
   data() {
     return {
@@ -46,7 +72,11 @@ export default {
   methods: {
     // 有无收货地址
     getHasaddress(res) {
-      this.setSeachParmas(res, [this.hasaddress])
+      this.setSeachParmas(res, [this.hasaddress || 'hasaddress'])
+    },
+    // 选择渠道
+    getChannel(res) {
+      this.setSeachParmas(res, [this.channel || 'channelid'], 'terms')
     },
 
     /**  处理接收到的查询参数
@@ -90,10 +120,13 @@ export default {
   }
 }
 </script>
-
-<style lang="scss">
+<style lang="scss" scoped>
 .search-style {
   margin-bottom: 10px;
+}
+</style>
+<style lang="scss">
+.search-style {
   .el-form-item {
     margin-bottom: 0px !important;
   }
