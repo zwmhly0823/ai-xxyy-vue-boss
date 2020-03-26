@@ -33,6 +33,9 @@ export default {
               label: '无地址（0）'
             },
             {
+              label: '待审核（0）'
+            },
+            {
               label: '待发货（0）'
             },
             {
@@ -48,6 +51,12 @@ export default {
         {
           label: '异常状态',
           children: [
+            {
+              label: '全部（0）'
+            },
+            {
+              label: '失效（0）'
+            },
             {
               label: '已取消（0）'
             },

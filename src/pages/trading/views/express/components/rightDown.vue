@@ -1,155 +1,222 @@
 <template>
   <div class="container">
-    <div class="mess">
-      <div class="mess-item-user">
-        <div class="header">
-          <span class="top">用户及购买时间</span>
+    <el-table
+      ref="multipleTable"
+      :data="tableData"
+      tooltip-effect="dark"
+      :height="680"
+      style="width: 100%"
+      @selection-change="handleSelectionChange"
+      @cell-mouse-enter="handleSelectionChangeEnter"
+      @cell-mouse-leave="handleSelectionChangeLeave"
+    >
+      <el-table-column type="selection" width="35"> </el-table-column>
+      <el-table-column width="25">
+        <div :class="[false, 'trans']">
+          <i class="el-icon-more-outline"></i>
         </div>
-        <div class="text">
-          <span>16789098976</span>
-          <span>19-03-30</span>
-        </div>
-      </div>
-      <div class="mess-item-product">
-        <div class="header">
-          <span class="top">商品信息</span>
-        </div>
-        <div class="text">
-          <span>小熊美术体验课随材礼包</span>
-        </div>
-      </div>
-      <div class="mess-item-express">
-        <div class="header">
-          <span class="top">收货信息</span>
-        </div>
-        <div class="text">
-          <div>
-            <span>团团 13432567865</span>
+      </el-table-column>
+      <el-table-column label="用户及日期">
+        <template slot-scope="scope">
+          <!-- <i class="el-icon-more-outline"></i> -->
+          <div class="user">
+            <div>{{ scope.row.phone }}</div>
+            <div>{{ scope.row.date }}</div>
           </div>
-          <div>
-            <span>北京市</span>
-            <span>北京市</span>
-            <span>朝阳区</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="商品信息">
+        <template slot-scope="scope">
+          <div class="product">
+            <span>{{ scope.row.gift }}</span>
           </div>
-          <div>
-            <span>
-              读课文凯迪拉克没得看了都快来试试看的开始卡卡；乐扣乐扣；安康
-            </span>
+        </template>
+      </el-table-column>
+      <el-table-column label="收货信息" width="240">
+        <template slot-scope="scope">
+          <div class="take">
+            <div>
+              <span>{{ scope.row.name }}</span>
+              <span>{{ scope.row.phone }}</span>
+            </div>
+            <div>
+              <span>{{ scope.row.province }}</span>
+              <span>{{ scope.row.city }}</span>
+              <span>{{ scope.row.area }}</span>
+            </div>
+            <div>
+              <span>{{ scope.row.address }}</span>
+            </div>
           </div>
-        </div>
-      </div>
-      <div class="mess-item-logtics">
-        <div class="header">
-          <span class="top">物流状态</span>
-        </div>
-        <div class="text">
-          <span>待发货</span>
-          <span>追踪</span>
-        </div>
-      </div>
-      <div class="mess-item-take">
-        <div class="header">
-          <span class="top">物流创建·揽收·签收时间</span>
-        </div>
-        <div class="text">
-          <span>20-03-23 23:12:54</span>
-          <span>20-03-23 23:12:54</span>
-          <span>20-03-23 23:12:54</span>
-        </div>
-      </div>
-    </div>
+        </template>
+      </el-table-column>
+      <el-table-column label="物流状态" show-overflow-tooltip>
+        <template slot-scope="scope">
+          <div class="express">
+            <div class="wait">{{ scope.row.wait }}</div>
+            <div class="trail">{{ scope.row.trail }}</div>
+          </div>
+        </template>
+      </el-table-column>
+      <el-table-column label="物流创建·揽收·签收" show-overflow-tooltip>
+        <template slot-scope="scope">
+          <div class="sign">
+            <div>{{ scope.row.date }}</div>
+            <div>{{ scope.row.date }}</div>
+            <div>{{ scope.row.date }}</div>
+          </div>
+        </template>
+      </el-table-column>
+    </el-table>
   </div>
 </template>
 
 <script>
-export default {}
+export default {
+  data() {
+    return {
+      tableData: [
+        {
+          phone: '15656565656',
+          date: '2016-05-03 11:28:58',
+          name: '王小虎',
+          province: '北京市',
+          city: '北京市',
+          address: '上海市普陀区金沙江路 1518 弄',
+          gift: '小熊美术素材包',
+          wait: '待发货',
+          trail: '追踪',
+          area: '朝阳区'
+        },
+        {
+          phone: '15656565656',
+          date: '2016-05-03 11:28:58',
+          name: '王小虎',
+          province: '北京市',
+          city: '北京市',
+          address: '上海市普陀区金沙江路 1518 弄',
+          gift: '小熊美术素材包',
+          wait: '待发货',
+          trail: '追踪',
+          area: '朝阳区'
+        },
+        {
+          phone: '15656565656',
+          date: '2016-05-03 11:28:58',
+          name: '王小虎',
+          province: '北京市',
+          city: '北京市',
+          address: '上海市普陀区金沙江路 1518 弄',
+          gift: '小熊美术素材包',
+          wait: '待发货',
+          trail: '追踪',
+          area: '朝阳区'
+        },
+        {
+          phone: '15656565656',
+          date: '2016-05-03 11:28:58',
+          name: '王小虎',
+          province: '北京市',
+          city: '北京市',
+          address: '上海市普陀区金沙江路 1518 弄',
+          gift: '小熊美术素材包',
+          wait: '待发货',
+          trail: '追踪',
+          area: '朝阳区'
+        },
+        {
+          phone: '15656565656',
+          date: '2016-05-03 11:28:58',
+          name: '王小虎',
+          province: '北京市',
+          city: '北京市',
+          address: '上海市普陀区金沙江路 1518 弄',
+          gift: '小熊美术素材包',
+          wait: '待发货',
+          trail: '追踪',
+          area: '朝阳区'
+        },
+        {
+          date: '2016-05-02',
+          name: '王小虎',
+          address: '上海市普陀区金沙江路 1518 弄'
+        },
+        {
+          date: '2016-05-04',
+          name: '王小虎',
+          address: '上海市普陀区金沙江路 1518 弄'
+        },
+        {
+          date: '2016-05-01',
+          name: '王小虎',
+          address: '上海市普陀区金沙江路 1518 弄'
+        },
+        {
+          date: '2016-05-08',
+          name: '王小虎',
+          address: '上海市普陀区金沙江路 1518 弄'
+        },
+        {
+          date: '2016-05-06',
+          name: '王小虎',
+          address: '上海市普陀区金沙江路 1518 弄'
+        },
+        {
+          date: '2016-05-07',
+          name: '王小虎',
+          address: '上海市普陀区金沙江路 1518 弄'
+        }
+      ],
+      multipleSelection: [],
+      enter: false,
+      cout: 0
+    }
+  },
+
+  methods: {
+    toggleSelection(rows) {
+      if (rows) {
+        rows.forEach((row) => {
+          this.$refs.multipleTable.toggleRowSelection(row)
+        })
+      } else {
+        this.$refs.multipleTable.clearSelection()
+      }
+    },
+    handleSelectionChange(val) {
+      this.multipleSelection = val
+    },
+    handleSelectionChangeEnter() {
+      this.cout++
+      console.log('鼠标进入', this.cout)
+      this.enter = true
+    },
+    handleSelectionChangeLeave() {
+      console.log('鼠标离开', this.cout)
+      this.cout++
+
+      this.enter = false
+    }
+  }
+}
 </script>
 
 <style lang="scss" scoped>
 .container {
-  height: 100vh;
+  margin-top: 10px;
   background-color: #fff;
-  .mess {
-    margin-top: 10px;
-    display: flex;
-    padding: 10px;
-    font-size: 12px;
-    &-item {
-      &-user {
-        width: 15%;
-        .header {
-          padding: 5px 0 10px 0;
-          border-bottom: 1px solid rgba(240, 241, 242, 1);
-        }
-        .text {
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
+  font-size: 12px;
 
-          height: 100px;
-          border-bottom: 1px solid rgba(240, 241, 242, 1);
-        }
-      }
-      &-product {
-        width: 20%;
-        .header {
-          padding: 5px 0 10px 0;
-          border-bottom: 1px solid rgba(240, 241, 242, 1);
-        }
-        .text {
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-
-          height: 100px;
-          border-bottom: 1px solid rgba(240, 241, 242, 1);
-        }
-      }
-      &-express {
-        width: 30%;
-        .header {
-          padding: 5px 0 10px 0;
-          border-bottom: 1px solid rgba(240, 241, 242, 1);
-        }
-        .text {
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-
-          height: 100px;
-          border-bottom: 1px solid rgba(240, 241, 242, 1);
-        }
-      }
-      &-logtics {
-        width: 10%;
-        .header {
-          padding: 5px 0 10px 0;
-          border-bottom: 1px solid rgba(240, 241, 242, 1);
-        }
-        .text {
-          display: flex;
-          flex-direction: column;
-          // align-items: center;
-          justify-content: center;
-          height: 100px;
-          border-bottom: 1px solid rgba(240, 241, 242, 1);
-        }
-      }
-      &-take {
-        width: 25%;
-        .header {
-          padding: 5px 0 10px 0;
-          border-bottom: 1px solid rgba(240, 241, 242, 1);
-        }
-        .text {
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-
-          height: 100px;
-          border-bottom: 1px solid rgba(240, 241, 242, 1);
-        }
-      }
+  .trans {
+    transform: rotate(-90deg);
+    margin-bottom: -8px;
+  }
+  .express {
+    .wait {
+      color: rgb(127, 255, 136);
+    }
+    .trail {
+      color: rgb(0, 51, 255);
     }
   }
 }
