@@ -57,10 +57,19 @@
         </div>
       </div>
     </el-card>
+    <m-pagination
+      show-pager
+      open="calc(100vw - 170px - 30px)"
+      close="calc(100vw - 50px - 30px)"
+    ></m-pagination>
   </div>
 </template>
 <script>
+import MPagination from '@/components/MPagination/index.vue'
 export default {
+  components: {
+    MPagination
+  },
   data() {
     return {
       cardData: [{}]
@@ -133,7 +142,7 @@ export default {
 </style>
 <style lang="scss">
 .title-box {
-  padding: 0 10px 0 10px;
+  padding: 0 10px 30px 10px;
   .el-table::before {
     height: 0px;
   }
@@ -156,7 +165,7 @@ export default {
   }
   .el-card__header {
     padding: 10px;
-    background: #f5f6f7;
+    background: #f5f7fa;
   }
   // 卡片表头
   .el-row {
