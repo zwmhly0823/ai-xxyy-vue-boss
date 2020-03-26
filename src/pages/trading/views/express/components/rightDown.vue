@@ -4,17 +4,18 @@
       ref="multipleTable"
       :data="tableData"
       tooltip-effect="dark"
+      :height="680"
       style="width: 100%"
       @selection-change="handleSelectionChange"
       @cell-mouse-enter="handleSelectionChangeEnter"
       @cell-mouse-leave="handleSelectionChangeLeave"
     >
       <el-table-column type="selection" width="35"> </el-table-column>
-      <!-- <el-table-column width="25">
+      <el-table-column width="25">
         <div :class="[false, 'trans']">
           <i class="el-icon-more-outline"></i>
         </div>
-      </el-table-column> -->
+      </el-table-column>
       <el-table-column label="用户及日期">
         <template slot-scope="scope">
           <!-- <i class="el-icon-more-outline"></i> -->
@@ -75,6 +76,54 @@ export default {
   data() {
     return {
       tableData: [
+        {
+          phone: '15656565656',
+          date: '2016-05-03 11:28:58',
+          name: '王小虎',
+          province: '北京市',
+          city: '北京市',
+          address: '上海市普陀区金沙江路 1518 弄',
+          gift: '小熊美术素材包',
+          wait: '待发货',
+          trail: '追踪',
+          area: '朝阳区'
+        },
+        {
+          phone: '15656565656',
+          date: '2016-05-03 11:28:58',
+          name: '王小虎',
+          province: '北京市',
+          city: '北京市',
+          address: '上海市普陀区金沙江路 1518 弄',
+          gift: '小熊美术素材包',
+          wait: '待发货',
+          trail: '追踪',
+          area: '朝阳区'
+        },
+        {
+          phone: '15656565656',
+          date: '2016-05-03 11:28:58',
+          name: '王小虎',
+          province: '北京市',
+          city: '北京市',
+          address: '上海市普陀区金沙江路 1518 弄',
+          gift: '小熊美术素材包',
+          wait: '待发货',
+          trail: '追踪',
+          area: '朝阳区'
+        },
+        {
+          phone: '15656565656',
+          date: '2016-05-03 11:28:58',
+          name: '王小虎',
+          province: '北京市',
+          city: '北京市',
+          address: '上海市普陀区金沙江路 1518 弄',
+          gift: '小熊美术素材包',
+          wait: '待发货',
+          trail: '追踪',
+          area: '朝阳区'
+        },
         {
           phone: '15656565656',
           date: '2016-05-03 11:28:58',
@@ -158,10 +207,10 @@ export default {
   background-color: #fff;
   font-size: 12px;
 
-  // .trans {
-  //   transform: rotate(-90deg);
-  //   margin-bottom: -8px;
-  // }
+  .trans {
+    transform: rotate(-90deg);
+    margin-bottom: -8px;
+  }
   .express {
     .wait {
       color: rgb(127, 255, 136);

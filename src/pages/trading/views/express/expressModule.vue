@@ -7,7 +7,7 @@
  * @LastEditTime: 2020-03-24 19:49:18
  -->
 <template>
-  <el-row type="flex" class="logtics height express-main">
+  <el-row type="flex" class="app-main height express-main">
     <el-col class="express-main-left">
       <div class="express-main-left-content">
         <left-bar></left-bar>
@@ -16,7 +16,7 @@
     <el-col class="express-main-right">
       <div class="express-main-right-content">
         <el-scrollbar wrap-class="scrollbar-wrapper" id="right-scroll">
-          <right-bar :classId="classIdData" />
+          <right-bar />
         </el-scrollbar>
       </div>
     </el-col>
@@ -59,17 +59,20 @@ export default {
   &-right {
     flex: 1;
     margin: 10px;
+    overflow-y: auto;
+    // overflow-x: hidden;
     &-content {
+      display: flex;
       flex-direction: column;
     }
   }
 }
 </style>
 <style>
-.grid-content .scrollbar-wrapper {
+.express-main-right-content .scrollbar-wrapper {
   overflow-x: hidden;
 }
-.grid-content .el-scrollbar {
+.express-main-right-content .el-scrollbar {
   flex: 1;
 }
 </style>
