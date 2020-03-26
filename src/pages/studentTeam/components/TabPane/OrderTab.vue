@@ -8,7 +8,7 @@
         fontWeight: 'normal'
       }"
     >
-      <el-table-column fixed label="购买用户" class="bugUser" width="240px">
+      <el-table-column fixed label="购买用户" class="bugUser" width="220px">
         <template slot-scope="scope">
           <img class="bugUser-img" :src="scope.row.user.head" alt="" />
           <div class="bugUser-right">
