@@ -7,20 +7,39 @@
  * @LastEditTime: 2020-03-24 19:52:00
  -->
 <template>
-  <div class="order-box">
-    <m-search @search="handleSearch" hasaddress="hasaddress" />
-    <el-tabs type="border-card" @tab-click="handleClick" class="tab-box">
-      <el-tab-pane label="全部订单">
-        <all-order />
-      </el-tab-pane>
-      <el-tab-pane label="代支付">代支付</el-tab-pane>
-      <el-tab-pane label="已支付">已支付</el-tab-pane>
-      <el-tab-pane label="已完成">已完成</el-tab-pane>
-      <el-tab-pane label="退费中">退费中</el-tab-pane>
-      <el-tab-pane label="已退费">已退费</el-tab-pane>
-      <el-tab-pane label="已关闭">已关闭</el-tab-pane>
-    </el-tabs>
-  </div>
+  <el-scrollbar wrap-class="order-wrapper" id="order-scroll">
+    <div class="order-box">
+      <m-search @search="handleSearch" hasaddress="hasaddress" />
+      <el-tabs type="border-card" @tab-click="handleClick" v-model="activeName">
+        <el-tab-pane label="全部订单" name="allOrders">
+          <all-order />
+        </el-tab-pane>
+        <el-tab-pane label="代支付" name="generationPay">
+          <all-order />
+        </el-tab-pane>
+        <el-tab-pane label="已支付" name="havePay">已支付</el-tab-pane>
+        <el-tab-pane label="已完成" name="hasCompleted">已完成</el-tab-pane>
+        <el-tab-pane label="退费中" name="theRefund">退费中</el-tab-pane>
+        <el-tab-pane label="已退费" name="haveRefund">已退费</el-tab-pane>
+        <el-tab-pane label="已关闭" name="closed">已关闭</el-tab-pane>
+      </el-tabs>
+      <el-tabs
+        v-show="suckTop"
+        type="border-card"
+        @tab-click="handleClick"
+        v-model="activeName"
+        class="tab-top"
+      >
+        <el-tab-pane label="全部订单" name="allOrders"></el-tab-pane>
+        <el-tab-pane label="代支付" name="generationPay"></el-tab-pane>
+        <el-tab-pane label="已支付" name="havePay"></el-tab-pane>
+        <el-tab-pane label="已完成" name="hasCompleted"></el-tab-pane>
+        <el-tab-pane label="退费中" name="theRefund"></el-tab-pane>
+        <el-tab-pane label="已退费" name="haveRefund"></el-tab-pane>
+        <el-tab-pane label="已关闭" name="closed"></el-tab-pane>
+      </el-tabs>
+    </div>
+  </el-scrollbar>
 </template>
 
 <script>
@@ -33,26 +52,70 @@ export default {
     MSearch
   },
   data() {
-    return {}
+    return {
+      activeName: 'allOrders',
+      suckTop: false
+    }
   },
   computed: {},
   watch: {},
   methods: {
     handleClick(tab, event) {
-      console.log(tab.index, event)
+      document
+        .getElementById('order-scroll')
+        .querySelector('.order-wrapper').scrollTop = 0
+      console.log(tab, event)
     },
     handleSearch(res) {
       console.log(res)
+    },
+    handleScroll() {
+      const dom = document
+        .getElementById('order-scroll')
+        .querySelector('.order-wrapper').scrollTop
+      dom > 100 ? (this.suckTop = true) : (this.suckTop = false)
     }
   },
-  created() {},
+  created() {
+    window.addEventListener('scroll', this.handleScroll, true)
+  },
   mounted() {}
 }
 </script>
 <style lang="scss" scoped>
+#order-scroll {
+  height: calc(100vh - 60px);
+  position: relative;
+  .order-box {
+    width: 100%;
+    height: 100%;
+    padding: 10px 10px 0 10px;
+    .el-tabs--border-card > .el-tabs__content {
+      padding: 15px 0 !important;
+    }
+    .tab-top {
+      position: absolute;
+      top: 0px;
+      right: 10px;
+      left: 10px;
+      z-index: 1000;
+    }
+  }
+}
+</style>
+<style lang="scss">
 .order-box {
-  width: 100%;
-  height: 100%;
-  margin: 10px 0 0 10px;
+  .el-tabs--border-card > .el-tabs__content {
+    padding: 15px 0 !important;
+  }
+  .el-tabs--border-card > .el-tabs__header {
+    background: #f5f7fa;
+  }
+  .el-tabs--border-card > .el-tabs__content {
+    padding: 0 !important;
+  }
+  // .el-tabs--border-card {
+  //   box-shadow: none;
+  // }
 }
 </style>

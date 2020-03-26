@@ -12,6 +12,7 @@
   <el-row
     class="m-pagination"
     :class="{ opened: !isCollapse, close: isCollapse }"
+    :style="{ width: isCollapse ? close : open }"
     type="flex"
   >
     <el-col>
@@ -39,6 +40,14 @@
 import { mapGetters } from 'vuex'
 export default {
   props: {
+    open: {
+      type: String,
+      default: `calc(100vw - 180px - 240px - 170px - 30px)`
+    },
+    close: {
+      type: String,
+      default: `calc(100vw - 180px - 240px - 50px - 30px)`
+    },
     // 是否需要显示页码，设置 pager
     showPager: {
       type: Boolean,
@@ -110,12 +119,12 @@ export default {
   padding: 8px 15px;
   color: #4d4d4d;
   transition: width 0.3s;
-  &.opened {
-    width: calc(100vw - 180px - 240px - 170px - 30px);
-  }
-  &.close {
-    width: calc(100vw - 180px - 240px - 50px - 30px);
-  }
+  // &.opened {
+  //   width: calc(100vw - 180px - 240px - 170px - 30px);
+  // }
+  // &.close {
+  //   width: calc(100vw - 180px - 240px - 50px - 30px);
+  // }
   .el-pagination {
     display: flex;
     justify-content: flex-end;
