@@ -66,6 +66,7 @@
 </template>
 <script>
 import MPagination from '@/components/MPagination/index.vue'
+import axios from '@/api/axios'
 export default {
   components: {
     MPagination
@@ -75,7 +76,28 @@ export default {
       cardData: [{}]
     }
   },
-  methods: {}
+  created() {
+    this.orderList()
+  },
+  methods: {
+    orderList() {
+      axios
+        .post('/graphql/order', {
+          query: `{
+          orderPage(query: "{ bool:{ must: [{ term: { teacher_id: 18 } }] } }") {
+            totalElements
+            totalPages
+            content {
+              id
+            }
+          }
+        }`
+        })
+        .then((res) => {
+          console.log(res)
+        })
+    }
+  }
 }
 </script>
 <style scoped lang="scss">

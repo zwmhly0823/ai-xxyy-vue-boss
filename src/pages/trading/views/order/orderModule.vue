@@ -114,8 +114,5 @@ export default {
   .el-tabs--border-card > .el-tabs__content {
     padding: 0 !important;
   }
-  // .el-tabs--border-card {
-  //   box-shadow: none;
-  // }
 }
 </style>
