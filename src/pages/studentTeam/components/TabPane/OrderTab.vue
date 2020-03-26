@@ -125,6 +125,8 @@
       :page-count="totalPages"
       :total="totalElements"
       @current-change="handleSizeChange"
+      open="calc(100vw - 180px - 240px - 147px - 30px)"
+      close="calc(100vw - 180px - 240px - 26px - 30px)"
     />
   </div>
 </template>

@@ -154,6 +154,8 @@
         @current-change="handleCurrentChange"
         :current-page="+tables.currentPage"
         :total="+tables.totalElements"
+        open="calc(100vw - 180px - 240px - 147px - 30px)"
+        close="calc(100vw - 180px - 240px - 26px - 30px)"
       />
     </div>
     <!-- 物流 -->
@@ -220,6 +222,8 @@
         @current-change="handleCurrentChange"
         :current-page="+tables.currentPage"
         :total="+tables.totalElements"
+        open="calc(100vw - 180px - 240px - 147px - 30px)"
+        close="calc(100vw - 180px - 240px - 26px - 30px)"
       />
     </div>
     <!-- 打开APP 原 登陆 -->
@@ -277,6 +281,8 @@
         @current-change="handleCurrentChange"
         :current-page="+tables.currentPage"
         :total="+tables.totalElements"
+        open="calc(100vw - 180px - 240px - 147px - 30px)"
+        close="calc(100vw - 180px - 240px - 26px - 30px)"
       />
     </div>
     <!-- 参课和完课 -->
@@ -354,6 +360,8 @@
         @current-change="handleCurrentChange"
         :current-page="+tables.currentPage"
         :total="+tables.totalElements"
+        open="calc(100vw - 180px - 240px - 147px - 30px)"
+        close="calc(100vw - 180px - 240px - 26px - 30px)"
       />
     </div>
     <!-- 作品及点评 -->
@@ -454,6 +462,8 @@
         @current-change="handleCurrentChange"
         :current-page="+tables.currentPage"
         :total="+tables.totalElements"
+        open="calc(100vw - 180px - 240px - 147px - 30px)"
+        close="calc(100vw - 180px - 240px - 26px - 30px)"
       />
     </div>
   </div>
