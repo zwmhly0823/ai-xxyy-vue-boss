@@ -56,7 +56,11 @@
             <div :class="'wait_' + scope.row.express_status">
               {{ scope.row.express_status_chinese }}
             </div>
-            <el-button class="trail" type="text" @click="Express">
+            <el-button
+              class="trail"
+              type="text"
+              @click="Express(scope.row.express_nu)"
+            >
               追踪
             </el-button>
           </div>
@@ -78,7 +82,7 @@
           <span>物流公司：</span><span>中通物流</span>
         </div>
         <span>快递单号：</span>
-        <span>2435345465756768788798</span>
+        <span>{{ expressNu }}</span>
       </div>
       <div class="waitFor" v-show="waitFor">快递待揽收</div>
       <el-timeline v-show="timeLine">
@@ -141,6 +145,7 @@ export default {
       waitFor: false,
       // 物流详情
       expressDetail: [],
+      expressNu: '',
       tableData: [],
       multipleSelection: [],
       enter: false,
@@ -263,9 +268,10 @@ export default {
       this.enter = false
     },
     // 物流列表信息
-    Express() {
+    Express(expressNu) {
       this.timeline = true
-      this.$http.Express.ExpressList({ expressNo: 293103003754 })
+      this.expressNu = expressNu
+      this.$http.Express.ExpressList({ expressNo: expressNu })
         .catch((err) => console.log(err))
         .then((res) => {
           if (res && res.payload) {
