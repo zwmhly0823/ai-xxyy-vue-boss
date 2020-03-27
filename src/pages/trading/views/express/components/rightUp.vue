@@ -18,7 +18,6 @@
         date="octime"
         date-placeholder="下单时间"
         phone="umobile"
-        style="width: 100%"
       />
     </div>
     <div class="search-export">

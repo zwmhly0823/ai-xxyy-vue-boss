@@ -196,6 +196,7 @@ export default {
       signing_time
       receipt_name
       receipt_tel
+      express_nu
       ctime
       utime
       user{
