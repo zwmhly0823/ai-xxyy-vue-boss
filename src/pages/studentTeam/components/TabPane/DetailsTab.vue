@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 14:19:58
  * @LastEditors: panjian
- * @LastEditTime: 2020-03-27 21:02:01
+ * @LastEditTime: 2020-03-27 22:45:46
  -->
 <template>
   <div>
@@ -623,16 +623,14 @@ export default {
               item.course_current_num = '-'
             }
             if (item.works_ctime) {
-              item.works_ctime = timestamp(item.item.works_ctime, 6)
+              item.works_ctime = timestamp(item.works_ctime, 6)
             }
             if (!item.task_image) {
               item.task_image = ''
               item.works_ctime = ''
             }
-            // item.has_comment_ctime = `已点评·12-12 12:33`
-            // item.has_listen_time = `已听点评·12-12 12:35`
             if (item.has_comment_ctime) {
-              item.has_comment_ctime = timestamp(item.item.has_comment_ctime, 6)
+              item.has_comment_ctime = timestamp(item.has_comment_ctime, 6)
               item.has_comment_ctime = `已点评·${item.has_comment_ctime}`
               if (item.has_listen_time) {
                 item.has_listen_time = timestamp(item.has_listen_time, 6)
@@ -643,6 +641,9 @@ export default {
             } else {
               item.has_comment_ctime = '-'
             }
+            // if (!item.listenInfoArr) {
+            //   item.listenInfoArr = []
+            // }
           })
           this.table.tableData = _data
         })
