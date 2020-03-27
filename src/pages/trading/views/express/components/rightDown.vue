@@ -9,12 +9,15 @@
       @selection-change="handleSelectionChange"
       @cell-mouse-enter="handleSelectionChangeEnter"
       @cell-mouse-leave="handleSelectionChangeLeave"
+      @row-click="handleExpressTo"
     >
       <el-table-column type="selection" width="25"> </el-table-column>
       <el-table-column width="25">
-        <div :class="[false, 'trans']">
-          <i class="el-icon-more-outline"></i>
-        </div>
+        <el-popover placement="right" width="400" trigger="click">
+          <div class="trans">
+            <i class="el-icon-more-outline"></i>
+          </div>
+        </el-popover>
       </el-table-column>
       <el-table-column label="用户及日期">
         <template slot-scope="scope">
@@ -77,22 +80,30 @@
           <span>物流公司：</span><span>中通物流</span>
         </div>
         <span>快递单号：</span>
-        <span>2435345465756768788798</span>
+        <span>{{}}</span>
       </div>
       <div class="waitFor" v-show="waitFor">快递待揽收</div>
       <el-timeline v-show="timeLine">
         <el-timeline-item
-          v-for="(item, index) in expressDetail.data"
+          v-for="(value, index) in expressDetail"
           :key="index"
+          :color="exprssStyle.color"
         >
-          <div class="statebox">
-            <div class="state">{{}}</div>
-            <div class="time">12.1.1.1.1.</div>
+          <div v-if="value != []">
+            <div class="statebox" v-for="(item, key) in value" :key="key">
+              <div class="state" v-if="key === 0">{{ item.status }}</div>
+              <div class="content">{{ item.context }}</div>
+              <div class="time">{{ item.time }}</div>
+            </div>
           </div>
         </el-timeline-item>
       </el-timeline>
     </el-dialog>
     <m-pagination
+      :current-page="currentPage"
+      :page-count="totalPages"
+      :total="totalElements"
+      @current-change="handleSizeChange"
       show-pager
       open="calc(100vw - 170px - 30px - 180px)"
       close="calc(100vw - 50px - 30px - 180px)"
@@ -111,45 +122,52 @@ export default {
   },
   watch: {
     dataExp(val) {
+      this.currentPage = 1
+      this.tableData = []
       console.log(val, 'orange')
       this.getExpressList(val.id)
     }
   },
   created() {
     console.log('dataExp', this.dataExp)
-    this.getExpressList(this.dataExp)
+    this.getExpressList(this.dataExp.id)
   },
   mounted() {},
   data() {
     return {
+      exprssStyle: {
+        color: 'rgb(50, 182, 235)'
+      },
+      createDataExp: '',
+      // 总页数
+      totalPages: 1,
+      totalElements: 0, // 总条数
+      // 当前页数
+      currentPage: 1,
       // 时间线
       timeLine: true,
       // 等待揽收
       waitFor: false,
       // 物流详情
-      expressDetail: {
-        ctime: '',
-        utime: '',
-        expressNo: '',
-        data: []
-      },
+      expressDetail: [],
       tableData: [],
       multipleSelection: [],
       enter: false,
       cout: 0,
       // 弹出层
-      timeline: false,
-      // 时间线样式
-      activities: [
-        {
-          size: 'large',
-          type: 'primary',
-          color: '#0bbd87'
-        }
-      ]
+      timeline: false
     }
   },
   methods: {
+    handleExpressTo(row, column, event) {
+      console.log(row, column, event, 'row, column, event')
+    },
+    handleSizeChange(val) {
+      console.log(val, 'handleSizeChange')
+      this.currentPage = val
+      console.log(this.dataExp.id, this.dataExp, 'this.dataExp.id')
+      this.getExpressList(this.dataExp.id)
+    },
     getExpressList(id) {
       const query = JSON.stringify(`{"express_status":"${id}"}`)
       console.log(query)
@@ -157,7 +175,7 @@ export default {
         .post('/graphql/logisticsList', {
           query: `
           {
-  LogisticsListPage(query:${query}, size: 20, page: 1) {
+  LogisticsListPage(query:${query}, size: 20, page: ${this.currentPage}) {
     first
     last
     number
@@ -179,6 +197,7 @@ export default {
       signing_time
       receipt_name
       receipt_tel
+      express_nu
       ctime
       utime
       user{
@@ -199,11 +218,22 @@ export default {
             item.uptime = this.timeFormat(item.utime)
             item.sgtime = this.timeFormat(item.signing_time)
             item.buytime = this.timeFormat(item.buy_time)
-            // item.birthday = this.timeFormat(item.user.birthday) || ''
             return item
           })
           this.tableData = resData
-          console.log(resData, ' this.tableData')
+          // 总页数
+          this.totalPages = +res.data.LogisticsListPage.totalPages
+
+          this.totalElements = +res.data.LogisticsListPage.totalElements // 总条数
+
+          console.log(
+            resData,
+            ' this.tableData',
+            this.totalElements,
+            ' this.totalElements',
+            this.totalPages,
+            'this.totalPages'
+          )
           //  = res.data.LogisticsListPage.content
         })
     },
@@ -241,13 +271,31 @@ export default {
         .then((res) => {
           if (res && res.payload) {
             this.timeLine = true
-            res.payload.forEach((item) => {
-              this.expressDetail.expressNo = item.expressNo
-              this.expressDetail.ctime = item.ctime
-              this.expressDetail.utime = item.utime
-              this.expressDetail.data = item.data
+            const lastData = {
+              receive: [],
+              onway: [],
+              begin: []
+            }
+
+            res.payload[0].data.forEach((item) => {
+              if (item.status === '揽收') {
+                lastData.begin.push(item)
+              } else if (item.status === '在途' || item.status === '派件') {
+                lastData.onway.push(item)
+              } else {
+                lastData.receive.push(item)
+              }
+              this.expressDetail = lastData
             })
-            console.log('expressDatail >>>>>>>>>>>', this.expressDetail)
+
+            // res.payload.forEach((item) => {
+            //   this.expressDetail.expressNo = item.expressNo
+            //   this.expressDetail.ctime = item.ctime
+            //   this.expressDetail.utime = item.utime
+            //   item.data.forEach((Dataitem) => {
+
+            //   })
+            // })
           } else {
             this.waitFor = true
           }
@@ -277,7 +325,7 @@ export default {
   .line {
     width: 100%;
     height: 48px;
-    border-bottom: 1px solid gainsboro;
+    border-bottom: 1px solid rgb(220, 220, 220);
     margin-top: -40px;
     margin-bottom: 22px;
     .logistics {
@@ -291,6 +339,16 @@ export default {
   }
   .statebox {
     margin-bottom: 20px;
+    .state {
+      font-size: 18px;
+      line-height: 30px;
+    }
+    .content {
+      line-height: 20px;
+    }
+    .time {
+      line-height: 20px;
+    }
   }
 }
 </style>

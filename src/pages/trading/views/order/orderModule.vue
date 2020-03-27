@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-24 15:16:26
  * @LastEditors: zhubaodong
- * @LastEditTime: 2020-03-27 17:23:36
+ * @LastEditTime: 2020-03-27 22:34:42
  -->
 <template>
   <el-scrollbar wrap-class="order-wrapper" id="order-scroll">
@@ -12,13 +12,17 @@
       <m-search
         @search="handleSearch"
         channel="pay_channel"
-        topicType="topicType"
+        topicType="topic_id"
         stage="stage"
         sup="sup"
-        level="current_level"
         date="ctime"
         date-placeholder="下单时间"
         phone="umobile"
+        :timeData="[
+          { text: '创建时间', value: 'ectime' },
+          { text: '发货时间', value: 'delivery_time' },
+          { text: '签收时间', value: 'signing_time' }
+        ]"
       />
       <el-tabs type="border-card" @tab-click="handleClick" v-model="activeName">
         <el-tab-pane label="全部订单" name=""> </el-tab-pane>

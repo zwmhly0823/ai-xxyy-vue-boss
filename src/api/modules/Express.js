@@ -1,5 +1,4 @@
 import axios from '../axios'
-// import format from '../modules/format'
 
 export default {
   /**

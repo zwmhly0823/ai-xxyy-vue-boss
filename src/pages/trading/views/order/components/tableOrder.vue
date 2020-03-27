@@ -252,6 +252,7 @@ export default {
     handleSizeChange(val) {
       this.currentPage = val
       this.orderList()
+
       const dom = document.getElementById('order-scroll')
       dom.querySelector('.order-wrapper').scrollTo(0, 0)
     }
