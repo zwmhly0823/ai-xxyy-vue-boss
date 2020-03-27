@@ -5,7 +5,6 @@
       :data="[...whack]"
       :props="defaultProps"
       default-expand-all
-      node-key="customId"
       :current-node-key="0"
       highlight-current
       style="color:#2F2E31"
@@ -28,21 +27,27 @@ export default {
           label: '物流状态',
           children: [
             {
+              id: '_all',
               label: '全部（0）'
             },
             {
+              id: 0,
               label: '无地址（0）'
             },
             {
+              id: 6,
               label: '待审核（0）'
             },
             {
+              id: 1,
               label: '待发货（0）'
             },
             {
+              id: 2,
               label: '已发货（0）'
             },
             {
+              id: 3,
               label: '已完成（0）'
             }
           ]
@@ -54,15 +59,15 @@ export default {
               label: '全部（0）'
             },
             {
+              id: 7,
               label: '失效（0）'
             },
             {
-              label: '已取消（0）'
-            },
-            {
+              id: 5,
               label: '已退货（0）'
             },
             {
+              id: 4,
               label: '签收失败（0）'
             }
           ]
@@ -88,18 +93,81 @@ export default {
         }`
         })
         .then((res) => {
-          console.log(res, 'resList', res.data.logisticsStatistics)
+          console.log(res, 'resList', res.data.logisticsStatistics, this.whack)
           const x = res.data.logisticsStatistics
-          const arr = [x.no_address, x.wait_send, x.has_send, x.has_signed]
-
+          const logisticsStatus = [
+            x.no_address,
+            x.wait_send,
+            x.has_send,
+            x.has_signed,
+            x.confirm_wait_send
+          ]
+          const logisticsError = [x.invalid, x.has_return, x.signed_failed]
           // arr = res.data.logisticsStatistics.no_address
+          // const s = this.arrSum(logisticsStatus)
+          // this.whack[0].children[1].label = logisticsStatus[0]
+          // this.whack[0].children[2].label = logisticsStatus[1]
+          // this.whack[0].children[3].label = logisticsStatus[2]
+          // this.whack[0].children[4].label = logisticsStatus[3]
+          // this.whack[0].children[5].label = logisticsStatus[4]
+          this.whack[0].children = [
+            {
+              id: '0,1,2,3,6',
+              label: `全部（${this.arrSum(logisticsStatus)}）`
+            },
+            {
+              id: '0',
+              label: `无地址（${Number(x.no_address)}）`
+            },
+            {
+              id: '6',
+              label: `待审核（${Number(x.confirm_wait_send)}）`
+            },
+            {
+              id: '1',
+              label: `待发货（${Number(x.wait_send)}）`
+            },
+            {
+              id: '2',
+              label: `已发货（${Number(x.has_send)}）`
+            },
+            {
+              id: '3',
+              label: `已完成（${Number(x.has_signed)}）`
+            }
+          ]
+          this.whack[1].children = [
+            {
+              id: '7,5,4',
+              label: `全部（${this.arrSum(logisticsError)}）`
+            },
+            {
+              id: '7',
+              label: `失效（${Number(x.invalid)}）`
+            },
+            {
+              id: '5',
+              label: `已退货（${Number(x.has_return)}）`
+            },
+            {
+              id: '4',
+              label: `签收失败（${Number(x.signed_failed)}）`
+            }
+          ]
 
-          console.log(arr)
+          console.log(logisticsStatus, logisticsError)
         })
     },
-    nodeClick(data) {
-      // this.$emit('change', data)
-      console.log(data, 'changedata')
+    nodeClick(dataExpress) {
+      this.$emit('change', dataExpress)
+      console.log(dataExpress, 'changedata')
+    },
+    arrSum(arr) {
+      let val = 0
+      arr.forEach((arr) => {
+        val += Number(arr)
+      })
+      return val
     }
   },
   created() {

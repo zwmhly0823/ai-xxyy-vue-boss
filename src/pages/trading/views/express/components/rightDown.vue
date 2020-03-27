@@ -80,6 +80,7 @@
 import MPagination from '@/components/MPagination/index.vue'
 
 export default {
+  props: {},
   components: {
     MPagination
   },
@@ -168,6 +169,16 @@ export default {
         },
         {
           date: '2016-05-06',
+          name: '王小虎',
+          address: '上海市普陀区金沙江路 1518 弄'
+        },
+        {
+          date: '2016-05-07',
+          name: '王小虎',
+          address: '上海市普陀区金沙江路 1518 弄'
+        },
+        {
+          date: '2016-05-07',
           name: '王小虎',
           address: '上海市普陀区金沙江路 1518 弄'
         },
