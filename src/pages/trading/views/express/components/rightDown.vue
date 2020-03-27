@@ -13,11 +13,9 @@
     >
       <el-table-column type="selection" width="25"> </el-table-column>
       <el-table-column width="25">
-        <el-popover placement="right" width="400" trigger="click">
-          <div class="trans">
-            <i class="el-icon-more-outline"></i>
-          </div>
-        </el-popover>
+        <div :class="[false, 'trans']">
+          <i class="el-icon-more-outline"></i>
+        </div>
       </el-table-column>
       <el-table-column label="用户及日期">
         <template slot-scope="scope">
@@ -88,11 +86,7 @@
       </div>
       <div class="waitFor" v-show="waitFor">快递待揽收</div>
       <el-timeline v-show="timeLine">
-        <el-timeline-item
-          v-for="(value, index) in expressDetail"
-          :key="index"
-          :color="exprssStyle.color"
-        >
+        <el-timeline-item v-for="(value, index) in expressDetail" :key="index">
           <div v-if="value != []">
             <div class="statebox" v-for="(item, key) in value" :key="key">
               <div class="state" v-if="key === 0">{{ item.status }}</div>
@@ -139,9 +133,6 @@ export default {
   mounted() {},
   data() {
     return {
-      exprssStyle: {
-        color: 'rgb(50, 182, 235)'
-      },
       createDataExp: '',
       // 总页数
       totalPages: 1,
@@ -163,7 +154,15 @@ export default {
       enter: false,
       cout: 0,
       // 弹出层
-      timeline: false
+      timeline: false,
+      // 时间线样式
+      activities: [
+        {
+          size: 'large',
+          type: 'primary',
+          color: '#0bbd87'
+        }
+      ]
     }
   },
   methods: {
@@ -330,7 +329,7 @@ export default {
   .line {
     width: 100%;
     height: 48px;
-    border-bottom: 1px solid rgb(220, 220, 220);
+    border-bottom: 1px solid gainsboro;
     margin-top: -40px;
     margin-bottom: 22px;
     .logistics {

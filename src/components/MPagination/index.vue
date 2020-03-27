@@ -40,6 +40,7 @@
 import { mapGetters } from 'vuex'
 export default {
   props: {
+    // width动态传参
     open: {
       type: String,
       default: `calc(100vw - 180px - 240px - 170px - 30px)`
@@ -95,8 +96,16 @@ export default {
     totalPage() {
       return this.pageCount || Math.ceil(this.total / this.pageSize) || 1
     },
-    page() {
-      return this.currentPage
+    // page() {
+    //   return this.currentPage
+    // }
+    page: {
+      get() {
+        return this.currentPage
+      },
+      set(val) {
+        return val
+      }
     }
   },
   methods: {

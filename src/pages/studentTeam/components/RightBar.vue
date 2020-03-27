@@ -56,7 +56,7 @@
       </div>
       <div class="body">
         <div class="body-boxLeft" v-show="item.team_type == 0">
-          <div class="order-title">累计订单</div>
+          <div class="order-title">累计系统课订单</div>
           <div class="order-number">{{ item.statictis.order_all }}</div>
           <div class="order-count">
             <span
@@ -72,7 +72,8 @@
         <div class="body-boxCenter" v-show="item.team_type == 0">
           <div class="Conversion-title">累计转化率</div>
           <div class="Conversion-number">
-            {{ item.allTrans == 'NaN' ? 0 : (item.allTrans * 100).toFixed(2) }}
+            {{ item.allTrans == 'NaN' ? 0 : (item.allTrans * 100).toFixed(2)
+            }}<span>%</span>
           </div>
           <!-- <div class="Conversion-count">
             <span
@@ -107,7 +108,7 @@
             </div>
             <div>
               <div>{{ item.statictis.unlogin }}</div>
-              <div>待登录App</div>
+              <div>待打开App</div>
             </div>
             <div>
               <div>{{ item.statictis.today_add_class }}</div>
@@ -393,6 +394,9 @@ export default {
           margin-bottom: 10px;
           font-family: 'number_font';
           flex: 1;
+          span {
+            font-size: 14px;
+          }
         }
         .Conversion-count {
           width: 100%;

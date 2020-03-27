@@ -3,7 +3,7 @@
  * @Email: yangjiyong@meishubao.com
  * @Date: 2020-03-13 12:10:04
  * @Last Modified by: YangJiyong
- * @Last Modified time: 2020-03-23 19:51:50
+ * @Last Modified time: 2020-03-25 21:59:14
  * @Description: 全局公共方法，添加或改动及时全员通知。 注释一定要写详细！
  */
 
@@ -67,8 +67,23 @@ export function timestamp(stamp, type) {
   if (type === 1) {
     return _mouth + '-' + _day + ' ' + _hour + ':' + _minute
   } else if (type === 2) {
+    const months = month <= 9 ? '0' + month : month
+    const days = day <= 9 ? '0' + day : day
+    const hours = hour <= 9 ? '0' + hour : hour
+    const minutes = minute <= 9 ? '0' + minute : minute
+    const seconds = second <= 9 ? '0' + second : second
     return (
-      year + '-' + month + '-' + day + ' ' + hour + ':' + minute + ':' + second
+      year +
+      '-' +
+      months +
+      '-' +
+      days +
+      ' ' +
+      hours +
+      ':' +
+      minutes +
+      ':' +
+      seconds
     )
   } else if (type === 3) {
     return _mouth + '.' + _day
@@ -82,6 +97,10 @@ export function timestamp(stamp, type) {
     const hours = hour <= 9 ? '0' + hour : hour
     const minutes = minute <= 9 ? '0' + minute : minute
     return months + '-' + days + ' ' + hours + ':' + minutes
+  } else if (type === 7) {
+    const months = month <= 9 ? '0' + month : month
+    const days = day <= 9 ? '0' + day : day
+    return months + '-' + days
   }
 }
 
@@ -137,4 +156,33 @@ export function startToEndTime(startTime, endTime) {
     ]
   }
   return [formatS, formatE]
+}
+
+/**
+ * 通过班级的当前课程计算当前开课周数及节次
+ **/
+export function GetAgeByBrithday(birth) {
+  var age = 0
+  var month = 0
+  var today = new Date()
+  var todayYear = today.getFullYear()
+  var todayMonth = today.getMonth() + 1
+
+  const birthday = new Date(Number(birth) * 1000)
+  const birthdayYear = birthday.getFullYear()
+  const birthdayMonth = birthday.getMonth() + 1
+
+  if (today.getTime() < birthday.getTime()) {
+    console.log('无法计算')
+  } else {
+    age = todayYear - birthdayYear
+
+    if (todayMonth <= birthdayMonth) {
+      month = todayMonth - birthdayMonth + 12
+      age--
+    } else {
+      month = todayMonth - birthdayMonth
+    }
+    return age + '岁' + month + '个月'
+  }
 }
