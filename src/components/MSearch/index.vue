@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-24 18:20:12
  * @LastEditors: zhubaodong
- * @LastEditTime: 2020-03-27 19:03:12
+ * @LastEditTime: 2020-03-27 20:07:34
  -->
 
 <template>
@@ -204,7 +204,7 @@ export default {
       if (name === 'must') {
         if (res) {
           temp.push({
-            [extraKey]: res
+            [`${extraKey}`]: `${JSON.stringify(res)}`
           })
           this.must = temp
         }
