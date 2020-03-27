@@ -4,18 +4,18 @@
       ref="multipleTable"
       :data="tableData"
       tooltip-effect="dark"
-      :height="680"
+      height="680"
       style="width: 100%"
       @selection-change="handleSelectionChange"
       @cell-mouse-enter="handleSelectionChangeEnter"
       @cell-mouse-leave="handleSelectionChangeLeave"
     >
-      <el-table-column type="selection" width="35"> </el-table-column>
+      <!-- <el-table-column type="selection" width="35"> </el-table-column>
       <el-table-column width="25">
         <div :class="[false, 'trans']">
           <i class="el-icon-more-outline"></i>
         </div>
-      </el-table-column>
+      </el-table-column> -->
       <el-table-column label="用户及日期">
         <template slot-scope="scope">
           <!-- <i class="el-icon-more-outline"></i> -->
@@ -68,11 +68,22 @@
         </template>
       </el-table-column>
     </el-table>
+    <m-pagination
+      show-pager
+      open="calc(100vw - 170px - 30px)"
+      close="calc(100vw - 50px - 30px)"
+    ></m-pagination>
   </div>
 </template>
 
 <script>
+import MPagination from '@/components/MPagination/index.vue'
+
 export default {
+  props: {},
+  components: {
+    MPagination
+  },
   data() {
     return {
       tableData: [
@@ -165,6 +176,16 @@ export default {
           date: '2016-05-07',
           name: '王小虎',
           address: '上海市普陀区金沙江路 1518 弄'
+        },
+        {
+          date: '2016-05-07',
+          name: '王小虎',
+          address: '上海市普陀区金沙江路 1518 弄'
+        },
+        {
+          date: '2016-05-07',
+          name: '王小虎',
+          address: '上海市普陀区金沙江路 1518 弄'
         }
       ],
       multipleSelection: [],
@@ -206,7 +227,7 @@ export default {
   margin-top: 10px;
   background-color: #fff;
   font-size: 12px;
-
+  color: #666666;
   .trans {
     transform: rotate(-90deg);
     margin-bottom: -8px;
