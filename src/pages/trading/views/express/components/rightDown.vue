@@ -116,14 +116,15 @@ export default {
   },
   watch: {
     dataExp(val) {
+      this.currentPage = 1
+      this.tableData = []
       console.log(val, 'orange')
       this.getExpressList(val.id)
     }
   },
   created() {
     console.log('dataExp', this.dataExp)
-    this.createDataExp = this.dataExp
-    this.getExpressList(this.createDataExp)
+    this.getExpressList(this.dataExp.id)
   },
   mounted() {},
   data() {
@@ -164,7 +165,7 @@ export default {
       console.log(val, 'handleSizeChange')
       this.currentPage = val
       console.log(this.dataExp.id, this.dataExp, 'this.dataExp.id')
-      this.getExpressList(this.dataExp || this.dataExp.id)
+      this.getExpressList(this.dataExp.id)
     },
     getExpressList(id) {
       const query = JSON.stringify(`{"express_status":"${id}"}`)
