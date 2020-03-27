@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 14:19:58
  * @LastEditors: panjian
- * @LastEditTime: 2020-03-27 11:33:34
+ * @LastEditTime: 2020-03-27 17:58:47
  -->
 <template>
   <div>
@@ -236,7 +236,7 @@ export default {
           // 0 默认 1 男 2 女 3 保密
           // 0 默认  1 无基础  2 一年以下 3 一年以上
           // 0 叉 1 对号
-          this.table.totalElements = res.data.userListForTeam.totalElements * 1
+          this.table.totalElements = +res.data.userListForTeam.totalElements
           const _data = res.data.userListForTeam.content
           _data.forEach((item) => {
             item.birthday = GetAgeByBrithday(item.birthday)
@@ -307,7 +307,7 @@ export default {
         })
         .then((res) => {
           this.table.tableData = []
-          this.table.totalElements = res.data.stuExpressPage.totalElements * 1
+          this.table.totalElements = +res.data.stuExpressPage.totalElements
           const _data = res.data.stuExpressPage.content
           _data.forEach((item) => {
             item.ctime = timestamp(item.ctime, 6)
@@ -395,7 +395,7 @@ export default {
         }`
         })
         .then((res) => {
-          this.table.totalElements = res.data.stuLoginPage.totalElements * 1
+          this.table.totalElements = +res.data.stuLoginPage.totalElements
           const _data = res.data.stuLoginPage.content
           _data.forEach((item) => {
             item.express_ctime = timestamp(item.express_ctime, 6)
@@ -513,7 +513,7 @@ export default {
         .then((res) => {
           // ctime 已参课 utime 完课
           // 0 1 已参加课  1 已完课
-          this.table.totalElements = res.data.getClassCompPage.totalElements * 1
+          this.table.totalElements = +res.data.getClassCompPage.totalElements
           const _data = res.data.getClassCompPage.content
           _data.forEach((item) => {
             if (item.buy_time) {
@@ -559,34 +559,45 @@ export default {
             getStuCommentPage(query:${JSON.stringify(querys)}, page: ${
             this.table.currentPage
           }, size: 20) {
+              empty
               first
               last
               number
               size
-              totalPages
+              numberOfElements
               totalElements
+              totalPages
               content {
                 id
-                buytime
                 team_name
+                current_lesson
+                buytime
+                classTitle
+                course_current_num
+                start_course_date
+                status
                 head
                 mobile
                 username
-                status
+                nickname
+                task_image
+                works_ctime
+                task_sound
+                task_video
+                task_video_second
+                task_sound_second
                 has_comment_ctime
                 has_comment_utime
+                has_listen_time
                 sound_comment
                 sound_comment_second
-                nickname
-                classTitle
-                current_lesson 
                 listenInfoArr {
+                  task_image
                   works_ctime
-                  task_sound 
+                  task_sound
                   task_video
                   task_video_second
                   task_sound_second
-                  task_image
                 }
               }
             }
@@ -597,33 +608,28 @@ export default {
           // has_listen_comment_ctime  已听点评的时间
           // task_sound 点评的音频
           // task_sound_second 音频多少秒
+          this.table.totalElements = +res.data.getStuCommentPage.totalElements
           const _data = res.data.getStuCommentPage.content
           _data.forEach((item, index) => {
             item.buytime = timestamp(item.buytime, 6)
-            item.works_ctime = timestamp(item.works_ctime, 6)
+            // item.works_ctime = timestamp(item.works_ctime, 6)
             if (!item.nickname) {
               item.nickname = ''
               item.head = ''
             }
-            item.audioList = [
-              {
-                // src: require('@/assets/images/shaonian.mp3')
-                src:
-                  'http://s1.meixiu.mobi/iOSAcc/30b1075beebb7e1debe9e0a67bde7611.aac'
-              },
-              {
-                src: require('@/assets/images/zuimeideshangkou.mp3')
-              }
-            ]
-            Number(index) === 1 &&
-              (item.audioList = [
-                {
-                  src: require('@/assets/images/zuimeideshangkou.mp3')
-                },
-                {
-                  src: require('@/assets/images/shaonian.mp3')
-                }
-              ])
+            if (item.course_current_num) {
+              item.start_course_date = timestamp(item.works_ctime, 7)
+              item.course_current_num = `${item.course_current_num}·${item.start_course_date}`
+            } else {
+              item.course_current_num = '-'
+            }
+            if (item.works_ctime) {
+              item.works_ctime = timestamp(item.item.works_ctime, 6)
+            }
+            if (!item.task_image) {
+              item.task_image = ''
+              item.works_ctime = ''
+            }
           })
           this.table.tableData = _data
         })

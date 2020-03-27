@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 20:22:24
  * @LastEditors: panjian
- * @LastEditTime: 2020-03-27 11:31:11
+ * @LastEditTime: 2020-03-27 19:47:45
  -->
 <template>
   <div class="table-box">
@@ -300,7 +300,7 @@
             <div>
               <span>{{ scope.row.mobile }}</span>
               <br />
-              <span>{{ scope.row.buytime }}</span>
+              <span>{{ scope.row.buy_time }}</span>
             </div>
           </template>
         </el-table-column>
@@ -402,7 +402,7 @@
         <el-table-column label="课程">
           <template slot-scope="scope">
             <div>
-              <span>{{ scope.row.current_lesson }}</span>
+              <span>{{ scope.row.course_current_num }}</span>
               <br />
               <span>{{ scope.row.classTitle }}</span>
             </div>
@@ -411,11 +411,13 @@
         <el-table-column label="作品">
           <template slot-scope="scope">
             <div class="works-task-box">
-              <!-- <img
+              <img
+                v-if="scope.row.task_image"
                 class="works-task-img borders"
                 :src="scope.row.task_image"
                 alt=""
-              /> -->
+              />
+              <span v-else>-</span>
               <span class="works-ctime">{{ scope.row.works_ctime }}</span>
             </div>
           </template>
@@ -424,7 +426,7 @@
           <template slot-scope="scope">
             <div>
               <div
-                v-for="(item, index) in scope.row.audioList"
+                v-for="(item, index) in scope.row.listenInfoArr"
                 :key="index"
                 @click="aplayAudio(item, index, 'audioRef' + index)"
                 class="audio-box"
@@ -442,7 +444,7 @@
                   src="@/assets/images/playing-icon.png"
                   alt=""
                 />
-                <audio :ref="'audioRef' + index" :src="item.src"></audio>
+                <audio :ref="'audioRef' + index" :src="item.task_sound"></audio>
               </div>
               <!-- <span>{{ scope.row }}</span> -->
             </div>
@@ -718,11 +720,12 @@ export default {
       position: relative;
       .works-task-img {
         display: inline-block;
-        width: 50px;
-        height: 50px;
+        width: 80px;
+        height: 80px;
       }
       .works-ctime {
         position: absolute;
+        left: 3px;
         bottom: 0;
       }
     }
