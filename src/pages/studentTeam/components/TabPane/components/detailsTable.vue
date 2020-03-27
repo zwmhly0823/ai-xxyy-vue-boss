@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 20:22:24
  * @LastEditors: panjian
- * @LastEditTime: 2020-03-27 21:01:34
+ * @LastEditTime: 2020-03-27 22:39:36
  -->
 <template>
   <div class="table-box">
@@ -445,8 +445,14 @@
                   src="@/assets/images/playing-icon.png"
                   alt=""
                 />
-                <audio :ref="'audioRef' + index" :src="item.task_sound"></audio>
+                <audio
+                  @ended="audioEnded"
+                  :ref="'audioRef' + index"
+                  :src="item.task_sound"
+                ></audio>
+                <span class="audio-second">{{ item.task_sound_second }}</span>
               </div>
+              <!-- {{ item.task_sound ? item.task_sound : '-' }} -->
               <p>{{ scope.row.has_listen_time }}</p>
               <!-- <span>{{ scope.row }}</span> -->
             </div>
@@ -516,6 +522,9 @@ export default {
   },
   created() {},
   methods: {
+    audioEnded() {
+      this.audioIndex = null
+    },
     // 语音播放
     aplayAudio(item, index, itemss) {
       if (this.audioIndex !== index) {
@@ -742,7 +751,7 @@ export default {
       background: #bbe166;
       .audio-triangle {
         position: absolute;
-        top: 10px;
+        top: -3px;
         left: -6px;
         width: 10px;
         height: 10px;
@@ -766,6 +775,11 @@ export default {
         left: 5px;
         width: 13px;
         height: 18px;
+      }
+      .audio-second {
+        position: absolute;
+        right: -22px;
+        top: 3px;
       }
     }
   }
