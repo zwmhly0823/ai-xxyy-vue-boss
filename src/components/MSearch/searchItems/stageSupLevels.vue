@@ -4,13 +4,14 @@
  * @Author: zhubaodong
  * @Date: 2020-03-24 18:50:54
  * @LastEditors: zhubaodong
- * @LastEditTime: 2020-03-27 18:45:56
+ * @LastEditTime: 2020-03-27 22:15:06
  -->
 <template>
   <div class="search-item small">
     <el-select
       v-model="stageData"
       class="item-style"
+      v-if="stageName"
       clearable
       multiple
       size="mini"
@@ -30,6 +31,7 @@
       v-model="supData"
       class="item-style"
       clearable
+      v-if="supName"
       size="mini"
       multiple
       collapse-tags
@@ -48,6 +50,7 @@
       v-model="levelData"
       class="item-style"
       clearable
+      v-if="levelName"
       multiple
       size="mini"
       collapse-tags
@@ -180,7 +183,7 @@ export default {
 <style lang="scss" scoped>
 .search-item {
   &.small {
-    width: 440px !important;
+    width: 100%;
     .item-style {
       width: 140px !important;
       margin-right: 10px;

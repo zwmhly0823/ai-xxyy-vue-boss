@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-26 16:30:11
  * @LastEditors: zhubaodong
- * @LastEditTime: 2020-03-27 18:45:25
+ * @LastEditTime: 2020-03-27 21:51:20
  -->
 <template>
   <div class="search-item">
@@ -89,8 +89,8 @@ export default {
   methods: {
     changeHandler(data) {
       if (data) {
-        const gte = data[0]
-        const lte = data[1]
+        const gte = this.timeData[0]
+        const lte = this.timeData[1]
         const octime = { gte, lte }
         this.$emit('result', { [this.name]: octime })
         return
@@ -116,6 +116,9 @@ export default {
   }
   .el-range-input {
     width: 50%;
+  }
+  .el-range-separator {
+    color: #c0c4cc;
   }
 }
 </style>
