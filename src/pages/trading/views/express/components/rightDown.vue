@@ -54,7 +54,9 @@
         <template slot-scope="scope">
           <div class="express">
             <div class="wait">{{ scope.row.wait }}</div>
-            <div class="trail">{{ scope.row.trail }}</div>
+            <el-button class="trail" type="text" @click="Express">{{
+              scope.row.trail
+            }}</el-button>
           </div>
         </template>
       </el-table-column>
@@ -68,6 +70,49 @@
         </template>
       </el-table-column>
     </el-table>
+    <!-- 弹出层 -->
+    <el-dialog :visible.sync="timeline" width="30%" v-model="expressDetail">
+      <div class="line">
+        <div class="logistics">
+          <span>物流公司：</span><span>中通物流</span>
+        </div>
+        <span>快递单号：</span>
+        <span>2435345465756768788798</span>
+      </div>
+      <div class="waitFor" v-show="waitFor">快递待揽收</div>
+      <!-- 时间线 -->
+      <el-timeline v-show="timeLine">
+        <!-- <el-timeline-item
+          v-for="(activity, index) in activities"
+          :key="index"
+          :type="activity.type"
+          :color="activity.color"
+          :size="activity.size"
+        > -->
+        <el-timeline-item
+          v-for="(item, index) in expressDetail.data"
+          :key="index"
+        >
+          <div class="statebox">
+            <div class="state">{{ item.status }}</div>
+            <div class="time">{{ item.time }}</div>
+          </div>
+        </el-timeline-item>
+        <!-- </el-timeline-item> -->
+      </el-timeline>
+      <!-- 步骤条 -->
+      <!-- <div style="height: 300px;" v-show="step">
+        <el-steps direction="vertical" :active="1">
+          <el-step title="已签收"></el-step>
+          <el-step title="运输中"></el-step>
+          <el-step
+            title="等待揽收"
+            description="这是一段很长很长很长的描述性文字"
+          >
+          </el-step>
+        </el-steps>
+      </div> -->
+    </el-dialog>
   </div>
 </template>
 
@@ -75,6 +120,17 @@
 export default {
   data() {
     return {
+      // 时间线
+      timeLine: true,
+      // 等待揽收
+      waitFor: false,
+      // 物流详情
+      expressDetail: {
+        ctime: '',
+        utime: '',
+        expressNo: '',
+        data: []
+      },
       tableData: [
         {
           phone: '15656565656',
@@ -169,11 +225,32 @@ export default {
       ],
       multipleSelection: [],
       enter: false,
-      cout: 0
+      cout: 0,
+      // 弹出层
+      timeline: false,
+      // 时间线样式
+      activities: [
+        {
+          size: 'large',
+          type: 'primary',
+          color: '#0bbd87'
+        },
+        {
+          size: 'large',
+          type: 'primary',
+          color: '#0bbd87'
+        },
+        {
+          size: 'large',
+          type: 'primary',
+          color: '#0bbd87'
+        }
+      ]
     }
   },
-
+  watch: {},
   methods: {
+    // 弹出框
     toggleSelection(rows) {
       if (rows) {
         rows.forEach((row) => {
@@ -196,6 +273,26 @@ export default {
       this.cout++
 
       this.enter = false
+    },
+    // 物流列表信息
+    Express() {
+      this.timeline = true
+      this.$http.Express.ExpressList({ expressNo: 293103003754 })
+        .catch((err) => console.log(err))
+        .then((res) => {
+          if (res && res.payload) {
+            this.timeLine = true
+            res.payload.forEach((item) => {
+              this.expressDetail.expressNo = item.expressNo
+              this.expressDetail.ctime = item.ctime
+              this.expressDetail.utime = item.utime
+              this.expressDetail.data = item.data
+            })
+            console.log('expressDatail >>>>>>>>>>>', this.expressDetail)
+          } else {
+            this.waitFor = true
+          }
+        })
     }
   }
 }
@@ -217,7 +314,26 @@ export default {
     }
     .trail {
       color: rgb(0, 51, 255);
+      cursor: pointer;
     }
+  }
+  .line {
+    width: 100%;
+    height: 48px;
+    border-bottom: 1px solid gainsboro;
+    margin-top: -40px;
+    margin-bottom: 22px;
+    .logistics {
+      margin-bottom: 6px;
+    }
+  }
+  .waitFor {
+    font-size: 16px;
+    color: rgb(190, 190, 190);
+    text-align: center;
+  }
+  .statebox {
+    margin-bottom: 20px;
   }
 }
 </style>
