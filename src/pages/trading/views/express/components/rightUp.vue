@@ -15,9 +15,12 @@
         stage="stage"
         sup="sup"
         level="current_level"
-        date-picker="下单时间"
-        date="ctime"
         phone="umobile"
+        :timeData="[
+          { text: '创建时间', value: 'ectime' },
+          { text: '发货时间', value: 'delivery_time' },
+          { text: '签收时间', value: 'signing_time' }
+        ]"
       />
     </div>
     <div class="search-export">
