@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-03-13 15:24:11
  * @LastEditors: Shentong
- * @LastEditTime: 2020-03-18 14:03:31
+ * @LastEditTime: 2020-03-27 22:44:46
  -->
 <template>
   <div id="login" class="login-container">
@@ -47,6 +47,9 @@
             name="userName"
             type="text"
             auto-complete="on"
+            maxlength="18"
+            @focus="checkStart"
+            @blur="checkEnd"
           />
         </el-form-item>
         <el-form-item prop="pwd">
@@ -59,6 +62,8 @@
             placeholder="密码"
             name="password"
             auto-complete="on"
+            @focus="checkStart"
+            @blur="checkEnd"
             @keyup.enter.native="pwdLoginHandle('pwdLoginForm')"
           />
           <span class="show-pwd" @click="showPwd">
@@ -94,6 +99,9 @@
             name="phone"
             type="text"
             auto-complete="on"
+            maxlength="11"
+            @focus="checkStart"
+            @blur="checkEnd"
           />
         </el-form-item>
         <div class="code-form-outer">
@@ -106,6 +114,10 @@
               placeholder="验证码"
               name="password"
               auto-complete="on"
+              maxlength="6"
+              style="ime-mode:disabled;"
+              @focus="checkStart"
+              @blur="checkEnd"
               @keyup.enter.native="pwdLoginHandle('codeLoginForm')"
             />
           </el-form-item>
@@ -143,7 +155,10 @@ import { setToken } from '@/utils/auth'
 
 const valid = {
   isPhoneNum(str) {
-    return /^[1][3,4,5,7,8,9][0-9]{9}$/.test(str)
+    return /^1(3|4|5|6|7|8|9)\d{9}$/.test(str)
+  },
+  isUserName(str) {
+    return /^[0-9A-Za-z]{2,18}$/.test(str)
   }
 }
 export default {
@@ -161,15 +176,25 @@ export default {
     // 验证用户名
     const validateUsername = (urle, value, callback) => {
       if (!value) {
-        callback(new Error('请输入用户名哦~'))
+        callback(new Error('请输入账号'))
+      } else if (!valid.isUserName(value)) {
+        callback(new Error('请输入正确的账号哦~'))
+      } else {
+        callback()
+      }
+    }
+    // 密码
+    const validatePassword = (rule, value, callback) => {
+      if (!value.length) {
+        callback(new Error('请输入密码'))
       } else {
         callback()
       }
     }
     // 验证密码
-    const validatePassword = (rule, value, callback) => {
+    const validatecode = (rule, value, callback) => {
       if (!value.length) {
-        callback(new Error('密码长度不够哟~'))
+        callback(new Error('请填写验证码'))
       } else {
         callback()
       }
@@ -186,6 +211,7 @@ export default {
         phone: '',
         code: ''
       },
+      checkInterval: '',
       passwordType: 'password',
       pwdLoginRules: {
         userName: [
@@ -199,9 +225,7 @@ export default {
         phone: [
           { required: true, trigger: 'change', validator: validatePhone }
         ],
-        code: [
-          { required: true, trigger: 'change', validator: validatePassword }
-        ]
+        code: [{ required: true, trigger: 'change', validator: validatecode }]
       }
     }
   },
@@ -209,8 +233,10 @@ export default {
   methods: {
     // 切换登录方式点击事件
     loginTypeHandle(loginType) {
-      this.resetForm(loginType)
-      this.tabFirstActive = !this.tabFirstActive
+      if (this.$refs[loginType]) {
+        this.resetForm(loginType)
+        this.tabFirstActive = !this.tabFirstActive
+      }
     },
     // 根据手机号获取验证码
     getCodeHandle() {
@@ -226,6 +252,28 @@ export default {
             })
         }
       })
+    },
+    // 禁止输入中文
+    checkStart() {
+      this.checkInterval = setInterval(this.checkChinese, 100)
+    },
+    checkEnd() {
+      clearInterval(this.checkInterval)
+    },
+    checkChinese() {
+      this.codeLoginForm.code = this.codeLoginForm.code.replace(
+        /[^0-9A-Za-z]/g,
+        ''
+      )
+      this.pwdLoginForm.userName = this.pwdLoginForm.userName.replace(
+        /[^0-9A-Za-z]/g,
+        ''
+      )
+      this.pwdLoginForm.pwd = this.pwdLoginForm.pwd.replace(/[^0-9A-Za-z]/g, '')
+      this.codeLoginForm.phone = this.codeLoginForm.phone.replace(
+        /[^0-9A-Za-z]/g,
+        ''
+      )
     },
     // 通过密码登录
     async loginByPwd() {
@@ -262,7 +310,6 @@ export default {
       const validatePromise = await this.judegeValidate(formName).catch((err) =>
         console.log(err)
       )
-
       if (validatePromise) {
         const loadingInstance = Loading.service({
           target: 'section',
