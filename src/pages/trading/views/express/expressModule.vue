@@ -35,7 +35,7 @@ export default {
   },
   data() {
     return {
-      Express: '0,1,2,3,6'
+      Express: { id: '0,1,2,3,6' }
     }
   },
   computed: {},
