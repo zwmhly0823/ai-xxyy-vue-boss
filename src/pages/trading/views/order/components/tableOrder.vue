@@ -156,10 +156,11 @@ export default {
       // 搜索 must
       const mustArr = this.searchIn.map((item) => JSON.stringify(item))
       must.push(...mustArr)
+      console.log(must, 'must')
       const should = this.tab ? [`{"terms": {"status": [${this.tab}]}}`] : []
       const queryStr = `{
         "bool": {
-          "must": [${mustArr}],
+          "must": [${must}],
           "filter": {
             "bool": {
               "should": [${should}]
