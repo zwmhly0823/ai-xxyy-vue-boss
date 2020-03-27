@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-03-13 15:24:11
  * @LastEditors: Shentong
- * @LastEditTime: 2020-03-18 14:03:31
+ * @LastEditTime: 2020-03-27 22:44:46
  -->
 <template>
   <div id="login" class="login-container">
@@ -233,8 +233,10 @@ export default {
   methods: {
     // 切换登录方式点击事件
     loginTypeHandle(loginType) {
-      this.resetForm(loginType)
-      this.tabFirstActive = !this.tabFirstActive
+      if (this.$refs[loginType]) {
+        this.resetForm(loginType)
+        this.tabFirstActive = !this.tabFirstActive
+      }
     },
     // 根据手机号获取验证码
     getCodeHandle() {
@@ -348,7 +350,7 @@ export default {
     },
     resetForm(formName) {
       this.passwordType = 'password'
-      if (this.$refs[formName] !== undefined) this.$refs[formName].resetFields()
+      this.$refs[formName].resetFields()
     },
     startInterval() {
       this.timer = setInterval(() => {
