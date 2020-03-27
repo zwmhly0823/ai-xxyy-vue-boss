@@ -16,7 +16,7 @@
         stage="stage"
         sup="sup"
         level="current_level"
-        date="octime"
+        date="ctime"
         date-placeholder="下单时间"
         phone="umobile"
       />
@@ -60,26 +60,31 @@ export default {
   },
   data() {
     return {
+      // 默认显示tab
       activeName: '',
+      // 吸顶tab显示
       suckTop: false,
+      // 切换tab
       status: '',
+      // 搜索
       search: []
     }
   },
   computed: {},
   watch: {},
   methods: {
+    // 点击tab
     handleClick(tab, event) {
       document
         .getElementById('order-scroll')
         .querySelector('.order-wrapper').scrollTop = 0
-      console.log(tab, event)
       this.status = tab.name
     },
+    // 点击搜索
     handleSearch(res) {
       this.search = res
-      console.log(res)
     },
+    // 吸顶
     handleScroll() {
       const dom = document
         .getElementById('order-scroll')
@@ -87,11 +92,11 @@ export default {
       const domheight = document
         .getElementById('order-scroll')
         .querySelector('.el-card__body').offsetHeight
-      console.log(domheight, 'domheight')
       dom > domheight + 20 ? (this.suckTop = true) : (this.suckTop = false)
     }
   },
   created() {
+    // 吸顶
     window.addEventListener('scroll', this.handleScroll, true)
   },
   mounted() {}

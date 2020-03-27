@@ -131,13 +131,13 @@ export default {
     this.orderList()
   },
   watch: {
+    // 切换tab
     status(val) {
       this.tab = val
       this.orderList()
-      // console.log(val)
     },
+    // 搜索
     search(val) {
-      console.log(val, 'searchIn')
       this.searchIn = val
       this.orderList()
     }
@@ -154,10 +154,8 @@ export default {
       // "filter":{"bool":{"should":[{"term":{"orderstatus":1}},{"term":{"orderstatus":0}}]}}
 
       // 搜索 must
-      console.log(this.searchIn)
       const mustArr = this.searchIn.map((item) => JSON.stringify(item))
       must.push(...mustArr)
-      console.log(must, 'mustArr')
       const should = this.tab ? [`{"terms": {"status": [${this.tab}]}}`] : []
       const queryStr = `{
         "bool": {
@@ -252,7 +250,6 @@ export default {
     },
     // 点击分页
     handleSizeChange(val) {
-      console.log(val)
       this.currentPage = val
       this.orderList()
       const dom = document.getElementById('order-scroll')
