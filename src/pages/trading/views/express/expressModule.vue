@@ -10,13 +10,13 @@
   <el-row type="flex" class="app-main height express-main">
     <el-col class="express-main-left">
       <div class="express-main-left-content">
-        <left-bar></left-bar>
+        <left-bar @change="dataExpress" />>
       </div>
     </el-col>
     <el-col class="express-main-right">
       <div class="express-main-right-content">
         <el-scrollbar wrap-class="scrollbar-wrapper" id="right-scroll">
-          <right-bar />
+          <right-bar :dataExp="Express" />
         </el-scrollbar>
       </div>
     </el-col>
@@ -34,11 +34,17 @@ export default {
     rightBar
   },
   data() {
-    return {}
+    return {
+      Express: '0,1,2,3,6'
+    }
   },
   computed: {},
   watch: {},
-  methods: {},
+  methods: {
+    dataExpress(val) {
+      this.Express = val ? (this.Express = val) : this.Express
+    }
+  },
   created() {},
   mounted() {}
 }

@@ -11,17 +11,14 @@
     <div class="order-box">
       <m-search @search="handleSearch" hasaddress="hasaddress" />
       <el-tabs type="border-card" @tab-click="handleClick" v-model="activeName">
-        <el-tab-pane label="全部订单" name="allOrders">
-          <all-order />
-        </el-tab-pane>
-        <el-tab-pane label="代支付" name="generationPay">
-          <all-order />
-        </el-tab-pane>
-        <el-tab-pane label="已支付" name="havePay">已支付</el-tab-pane>
-        <el-tab-pane label="已完成" name="hasCompleted">已完成</el-tab-pane>
-        <el-tab-pane label="退费中" name="theRefund">退费中</el-tab-pane>
-        <el-tab-pane label="已退费" name="haveRefund">已退费</el-tab-pane>
-        <el-tab-pane label="已关闭" name="closed">已关闭</el-tab-pane>
+        <el-tab-pane label="全部订单" name=""> </el-tab-pane>
+        <el-tab-pane label="待支付" name="0,1"> </el-tab-pane>
+        <el-tab-pane label="已支付" name="2"></el-tab-pane>
+        <el-tab-pane label="已完成" name="3"></el-tab-pane>
+        <el-tab-pane label="退费中" name="5"></el-tab-pane>
+        <el-tab-pane label="已退费" name="6,7"></el-tab-pane>
+        <el-tab-pane label="已关闭" name="8"></el-tab-pane>
+        <all-order :status="status" />
       </el-tabs>
       <el-tabs
         v-show="suckTop"
@@ -30,13 +27,13 @@
         v-model="activeName"
         class="tab-top"
       >
-        <el-tab-pane label="全部订单" name="allOrders"></el-tab-pane>
-        <el-tab-pane label="代支付" name="generationPay"></el-tab-pane>
-        <el-tab-pane label="已支付" name="havePay"></el-tab-pane>
-        <el-tab-pane label="已完成" name="hasCompleted"></el-tab-pane>
-        <el-tab-pane label="退费中" name="theRefund"></el-tab-pane>
-        <el-tab-pane label="已退费" name="haveRefund"></el-tab-pane>
-        <el-tab-pane label="已关闭" name="closed"></el-tab-pane>
+        <el-tab-pane label="全部订单" name=""> </el-tab-pane>
+        <el-tab-pane label="待支付" name="0,1"> </el-tab-pane>
+        <el-tab-pane label="已支付" name="2"></el-tab-pane>
+        <el-tab-pane label="已完成" name="3"></el-tab-pane>
+        <el-tab-pane label="退费中" name="5"></el-tab-pane>
+        <el-tab-pane label="已退费" name="6,7"></el-tab-pane>
+        <el-tab-pane label="已关闭" name="8"></el-tab-pane>
       </el-tabs>
     </div>
   </el-scrollbar>
@@ -53,8 +50,9 @@ export default {
   },
   data() {
     return {
-      activeName: 'allOrders',
-      suckTop: false
+      activeName: '',
+      suckTop: false,
+      status: ''
     }
   },
   computed: {},
@@ -65,6 +63,7 @@ export default {
         .getElementById('order-scroll')
         .querySelector('.order-wrapper').scrollTop = 0
       console.log(tab, event)
+      this.status = tab.name
     },
     handleSearch(res) {
       console.log(res)
@@ -114,8 +113,5 @@ export default {
   .el-tabs--border-card > .el-tabs__content {
     padding: 0 !important;
   }
-  // .el-tabs--border-card {
-  //   box-shadow: none;
-  // }
 }
 </style>

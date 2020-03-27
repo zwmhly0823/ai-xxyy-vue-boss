@@ -10,21 +10,25 @@
     <el-card
       class="box-card"
       shadow="never"
-      v-for="(item, index) in 10"
+      v-for="(item, index) in cardData"
       :key="index"
     >
       <div slot="header" class="card-title">
         <el-row :gutter="20">
           <el-col :span="5">
-            <div class="grid-content">订单号:12321232123212</div>
-          </el-col>
-          <el-col :span="6">
             <div class="grid-content">
-              下单时间:2143245356545436547
+              订单号:{{ item.out_trade_no ? item.out_trade_no : '-' }}
             </div>
           </el-col>
           <el-col :span="6">
-            <div class="grid-content">支付方式:21432543654786</div>
+            <div class="grid-content">
+              下单时间:{{ item.ctime ? item.ctime : '-' }}
+            </div>
+          </el-col>
+          <el-col :span="6">
+            <div>
+              支付方式:{{ item.payment ? item.payment.trade_type : '-' }}
+            </div>
           </el-col>
         </el-row>
       </div>
@@ -32,32 +36,52 @@
         <div class="content-details card-style1">
           <div class="card-style1-left">
             <div>
-              <div>小熊美术体验课</div>
-              <div class="card-style1-num">8期·s1</div>
+              <div>
+                {{
+                  item.packages_name ? item.packages_name : item.product_name
+                }}
+              </div>
+              <div class="card-style1-num">
+                {{ item.stage ? item.stage : '-' }}期·S{{
+                  item.sup ? item.sup : '-'
+                }}
+              </div>
             </div>
           </div>
           <div class="card-style1-right">
             <div>
-              <div class="card-style1-rmb">人民币：28000</div>
-              <div class="sign">×<span>1</span></div>
+              <div class="card-style1-rmb">
+                {{ item.currency ? item.currency : '人民币' }}:{{
+                  item.amount ? item.amount : '-'
+                }}
+              </div>
+              <!-- <div class="sign">×<span>1</span></div> -->
             </div>
           </div>
         </div>
         <div class="content-details">
-          <div>多彩抖音</div>
+          <div>{{ item.channel ? item.channel.channel_outer_name : '-' }}</div>
         </div>
         <div class="content-details">
-          <div>已支付</div>
+          <div>{{ item.order_status ? item.order_status : '-' }}</div>
         </div>
         <div class="content-details card-style4">
           <div>
-            <div class="card-style4-num">5</div>
-            <div>最后一次已发货</div>
+            <div class="card-style4-num">
+              {{ item.express ? item.express.total || 0 : '-' }}
+            </div>
+            <div>
+              {{ item.express ? item.express.express_status_text || '-' : '-' }}
+            </div>
           </div>
         </div>
       </div>
     </el-card>
     <m-pagination
+      :current-page="currentPage"
+      :page-count="totalPages"
+      :total="totalElements"
+      @current-change="handleSizeChange"
       show-pager
       open="calc(100vw - 170px - 30px)"
       close="calc(100vw - 50px - 30px)"
@@ -66,16 +90,157 @@
 </template>
 <script>
 import MPagination from '@/components/MPagination/index.vue'
+import axios from '@/api/axios'
+import { timestamp } from '@/utils/index.js'
 export default {
   components: {
     MPagination
   },
-  data() {
-    return {
-      cardData: [{}]
+  props: {
+    status: {
+      type: String,
+      default: ''
     }
   },
-  methods: {}
+  data() {
+    return {
+      // 总页数
+      totalPages: 1,
+      totalElements: 0, // 总条数
+      // 当前页数
+      currentPage: 1,
+      // 订单列表
+      cardData: [],
+      teacherStor: '',
+      search: [],
+      tab: ''
+    }
+  },
+  created() {
+    // 订单列表接口
+    this.orderList()
+  },
+  watch: {
+    status(val) {
+      this.tab = val
+      this.orderList()
+      // console.log(val)
+    }
+  },
+  methods: {
+    // 订单列表
+    orderList() {
+      this.teacherStor = JSON.parse(localStorage.getItem('teacher') || '{}')
+      const must = []
+      if (this.teacherStor.id) {
+        must.push(`{ "term": { "teacher_id": ${this.teacherStor.id} } }`)
+      }
+      // TODO: 切换tab filter
+      // "filter":{"bool":{"should":[{"term":{"orderstatus":1}},{"term":{"orderstatus":0}}]}}
+
+      // 搜索 must
+      const mustArr = must.concat(this.search)
+      const should = this.tab ? [`{"terms": {"status": [${this.tab}]}}`] : []
+      const queryStr = `{
+        "bool": {
+          "must": [${mustArr}],
+          "filter": {
+            "bool": {
+              "should": [${should}]
+            }
+          }
+        }
+      }`
+
+      axios
+        .post('/graphql/order', {
+          query: `{
+          orderPage(query: ${JSON.stringify(queryStr)},page:${
+            this.currentPage
+          }) {
+            totalElements
+            totalPages
+            content {
+              id
+              out_trade_no
+              ctime
+              packages_name
+              sup
+              stage
+              regtype
+              amount
+              order_status
+              bear_integral
+              gem_integral
+              product_name
+              channel {
+                channel_outer_name
+              }
+              pay_channel
+              payment {
+                trade_type
+              }
+              express{
+                total
+                express_status_text
+
+              }
+            }
+          }
+        }`
+        })
+        .then((res) => {
+          console.log(res)
+          this.totalPages = res.data.orderPage.totalPages * 1
+          this.totalElements = +res.data.orderPage.totalElements
+          const _data = res.data.orderPage.content
+          _data.forEach((item, index) => {
+            // 订单号格式化
+            item.out_trade_no = item.out_trade_no.split('xiong')[1]
+            // 下单时间格式化
+            item.ctime = timestamp(item.ctime, 2)
+            // 支付方式
+            if (item.payment) {
+              const tradeType = item.payment.trade_type
+              let currency = {}
+              if (tradeType === 4) {
+                item.payment.trade_type = '宝石兑换'
+                currency = { currency: '宝石' }
+                Object.assign(item, currency)
+                item.amount = item.gem_integral
+              } else if (tradeType === 5) {
+                item.payment.trade_type = '小熊币兑换'
+                currency = { currency: '小熊币' }
+                Object.assign(item, currency)
+                item.amount = item.bear_integral
+              } else if (tradeType === 'WAP') {
+                item.payment.trade_type = '支付宝'
+              } else if (tradeType === 'APP') {
+                item.payment.trade_type = 'APP微信'
+              } else if (tradeType === 'MWEB') {
+                item.payment.trade_type = 'WEB微信'
+              } else if (tradeType === 'JSAPI') {
+                item.payment.trade_type = '微信内部'
+              } else if (tradeType) {
+                item.payment.trade_type = tradeType
+              } else {
+                item.payment.trade_type = '-'
+              }
+            }
+          })
+          this.cardData = _data
+          console.log(this.cardData)
+        })
+    },
+    // 点击分页
+    handleSizeChange(val) {
+      console.log(val)
+      this.currentPage = val
+      this.orderList()
+      const dom = document.getElementById('order-scroll')
+      dom.querySelector('.order-wrapper').scrollTo(0, 0)
+    }
+  }
 }
 </script>
 <style scoped lang="scss">
