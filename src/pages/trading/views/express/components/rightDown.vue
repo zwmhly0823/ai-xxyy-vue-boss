@@ -71,7 +71,6 @@
         </template>
       </el-table-column>
     </el-table>
-    <!-- 弹出层 -->
     <el-dialog :visible.sync="timeline" width="30%" v-model="expressDetail">
       <div class="line">
         <div class="logistics">
@@ -81,7 +80,6 @@
         <span>2435345465756768788798</span>
       </div>
       <div class="waitFor" v-show="waitFor">快递待揽收</div>
-      <!-- 时间线 -->
       <el-timeline v-show="timeLine">
         <el-timeline-item v-for="(value, index) in expressDetail" :key="index">
           <div v-if="value != []">
@@ -96,8 +94,8 @@
     </el-dialog>
     <m-pagination
       show-pager
-      open="calc(100vw - 170px - 30px)"
-      close="calc(100vw - 50px - 30px)"
+      open="calc(100vw - 170px - 30px - 180px)"
+      close="calc(100vw - 50px - 30px - 180px)"
     ></m-pagination>
   </div>
 </template>

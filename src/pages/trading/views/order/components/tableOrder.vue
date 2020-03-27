@@ -77,6 +77,7 @@
         </div>
       </div>
     </el-card>
+    <div v-if="cardData.length === 0" class="noData">暂无数据</div>
     <m-pagination
       :current-page="currentPage"
       :page-count="totalPages"
@@ -100,6 +101,12 @@ export default {
     status: {
       type: String,
       default: ''
+    },
+    search: {
+      type: Array,
+      default: () => {
+        return []
+      }
     }
   },
   data() {
@@ -111,8 +118,11 @@ export default {
       currentPage: 1,
       // 订单列表
       cardData: [],
+      // 获取teacherid
       teacherStor: '',
-      search: [],
+      // 搜索
+      searchIn: [],
+      // 切换tab
       tab: ''
     }
   },
@@ -125,6 +135,11 @@ export default {
       this.tab = val
       this.orderList()
       // console.log(val)
+    },
+    search(val) {
+      console.log(val, 'searchIn')
+      this.searchIn = val
+      this.orderList()
     }
   },
   methods: {
@@ -133,13 +148,16 @@ export default {
       this.teacherStor = JSON.parse(localStorage.getItem('teacher') || '{}')
       const must = []
       if (this.teacherStor.id) {
-        must.push(`{ "term": { "teacher_id": ${this.teacherStor.id} } }`)
+        must.push(`{ term: { teacher_id: ${this.teacherStor.id} } }`)
       }
       // TODO: 切换tab filter
       // "filter":{"bool":{"should":[{"term":{"orderstatus":1}},{"term":{"orderstatus":0}}]}}
 
       // 搜索 must
-      const mustArr = must.concat(this.search)
+      console.log(this.searchIn)
+      const mustArr = this.searchIn.map((item) => JSON.stringify(item))
+      must.push(...mustArr)
+      console.log(must, 'mustArr')
       const should = this.tab ? [`{"terms": {"status": [${this.tab}]}}`] : []
       const queryStr = `{
         "bool": {
@@ -303,6 +321,11 @@ export default {
       }
     }
   }
+}
+.noData {
+  text-align: center;
+  padding: 20px 0 0 0;
+  color: #909399;
 }
 </style>
 <style lang="scss">
