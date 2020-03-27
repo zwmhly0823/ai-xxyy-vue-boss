@@ -3,7 +3,7 @@
     <div class="up">
       <right-up></right-up>
     </div>
-    <div class="down"><right-down :dataExp="dataExp" />></div>
+    <div class="down"><right-down :dataExp="dataExp" /></div>
   </div>
 </template>
 
