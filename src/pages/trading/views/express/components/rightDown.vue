@@ -52,7 +52,9 @@
       <el-table-column label="物流状态" show-overflow-tooltip>
         <template slot-scope="scope">
           <div class="express">
-            <div class="wait">{{ scope.row.express_status_chinese }}</div>
+            <div :class="'wait_' + scope.row.express_status">
+              {{ scope.row.express_status_chinese }}
+            </div>
             <el-button class="trail" type="text" @click="Express">
               追踪
             </el-button>
@@ -112,17 +114,22 @@
         </el-steps>
       </div> -->
     </el-dialog>
+    <m-pagination
+      show-pager
+      open="calc(100vw - 170px - 30px)"
+      close="calc(100vw - 50px - 30px)"
+    ></m-pagination>
   </div>
 </template>
 
 <script>
-// import MPagination from '@/components/MPagination/index.vue'
+import MPagination from '@/components/MPagination/index.vue'
 import axios from '@/api/axios'
 import dayjs from 'dayjs'
 export default {
   props: ['dataExp'],
   components: {
-    // MPagination
+    MPagination
   },
   watch: {
     dataExp(val) {
@@ -277,17 +284,15 @@ export default {
   margin-top: 10px;
   background-color: #fff;
   font-size: 12px;
-
   .trans {
     transform: rotate(-90deg);
     margin-bottom: -8px;
   }
   .express {
-    .wait {
-      color: rgb(127, 255, 136);
+    .wait_4 {
+      color: red;
     }
     .trail {
-      color: rgb(0, 51, 255);
       cursor: pointer;
     }
   }
