@@ -234,9 +234,10 @@ export default {
     },
     // 点击分页
     handleSizeChange(val) {
-      console.log(val)
+      console.log(val, '查看页面')
       this.currentPage = val
       this.orderList()
+
       const dom = document.getElementById('order-scroll')
       dom.querySelector('.order-wrapper').scrollTo(0, 0)
     }

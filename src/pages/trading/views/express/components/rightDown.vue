@@ -9,6 +9,7 @@
       @selection-change="handleSelectionChange"
       @cell-mouse-enter="handleSelectionChangeEnter"
       @cell-mouse-leave="handleSelectionChangeLeave"
+      @row-click="handleExpressTo"
     >
       <el-table-column type="selection" width="25"> </el-table-column>
       <el-table-column width="25">
@@ -93,6 +94,10 @@
       </el-timeline>
     </el-dialog>
     <m-pagination
+      :current-page="currentPage"
+      :page-count="totalPages"
+      :total="totalElements"
+      @current-change="handleSizeChange"
       show-pager
       open="calc(100vw - 170px - 30px - 180px)"
       close="calc(100vw - 50px - 30px - 180px)"
@@ -117,11 +122,18 @@ export default {
   },
   created() {
     console.log('dataExp', this.dataExp)
-    this.getExpressList(this.dataExp)
+    this.createDataExp = this.dataExp
+    this.getExpressList(this.createDataExp)
   },
   mounted() {},
   data() {
     return {
+      createDataExp: '',
+      // 总页数
+      totalPages: 1,
+      totalElements: 0, // 总条数
+      // 当前页数
+      currentPage: 1,
       // 时间线
       timeLine: true,
       // 等待揽收
@@ -150,6 +162,15 @@ export default {
     }
   },
   methods: {
+    handleExpressTo(row, column, event) {
+      console.log(row, column, event, 'row, column, event')
+    },
+    handleSizeChange(val) {
+      console.log(val, 'handleSizeChange')
+      this.currentPage = val
+      console.log(this.dataExp.id, this.dataExp, 'this.dataExp.id')
+      this.getExpressList(this.dataExp || this.dataExp.id)
+    },
     getExpressList(id) {
       const query = JSON.stringify(`{"express_status":"${id}"}`)
       console.log(query)
@@ -157,7 +178,7 @@ export default {
         .post('/graphql/logisticsList', {
           query: `
           {
-  LogisticsListPage(query:${query}, size: 20, page: 1) {
+  LogisticsListPage(query:${query}, size: 20, page: ${this.currentPage}) {
     first
     last
     number
@@ -203,7 +224,19 @@ export default {
             return item
           })
           this.tableData = resData
-          console.log(resData, ' this.tableData')
+          // 总页数
+          this.totalPages = +res.data.LogisticsListPage.totalPages
+
+          this.totalElements = +res.data.LogisticsListPage.totalElements // 总条数
+
+          console.log(
+            resData,
+            ' this.tableData',
+            this.totalElements,
+            ' this.totalElements',
+            this.totalPages,
+            'this.totalPages'
+          )
           //  = res.data.LogisticsListPage.content
         })
     },
