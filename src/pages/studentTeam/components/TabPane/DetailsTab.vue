@@ -66,8 +66,7 @@
 <script>
 import detailsTable from './components/detailsTable'
 import axios from '@/api/axios'
-import { GetAgeByBrithday } from '@/utils/menuItems'
-import { timestamp } from '@/utils/index'
+import { timestamp, GetAgeByBrithday } from '@/utils/index'
 import status from '@/utils/status'
 export default {
   components: {
