@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-24 15:16:26
  * @LastEditors: zhubaodong
- * @LastEditTime: 2020-03-27 17:23:36
+ * @LastEditTime: 2020-03-27 22:34:42
  -->
 <template>
   <el-scrollbar wrap-class="order-wrapper" id="order-scroll">
@@ -15,10 +15,14 @@
         topicType="topic_id"
         stage="stage"
         sup="sup"
-        level="current_level"
         date="ctime"
         date-placeholder="下单时间"
         phone="umobile"
+        :timeData="[
+          { text: '创建时间', value: 'ectime' },
+          { text: '发货时间', value: 'delivery_time' },
+          { text: '签收时间', value: 'signing_time' }
+        ]"
       />
       <el-tabs type="border-card" @tab-click="handleClick" v-model="activeName">
         <el-tab-pane label="全部订单" name=""> </el-tab-pane>
@@ -60,26 +64,31 @@ export default {
   },
   data() {
     return {
+      // 默认显示tab
       activeName: '',
+      // 吸顶tab显示
       suckTop: false,
+      // 切换tab
       status: '',
+      // 搜索
       search: []
     }
   },
   computed: {},
   watch: {},
   methods: {
+    // 点击tab
     handleClick(tab, event) {
       document
         .getElementById('order-scroll')
         .querySelector('.order-wrapper').scrollTop = 0
-      console.log(tab, event)
       this.status = tab.name
     },
+    // 点击搜索
     handleSearch(res) {
       this.search = res
-      console.log(res)
     },
+    // 吸顶
     handleScroll() {
       const dom = document
         .getElementById('order-scroll')
@@ -87,11 +96,11 @@ export default {
       const domheight = document
         .getElementById('order-scroll')
         .querySelector('.el-card__body').offsetHeight
-      console.log(domheight, 'domheight')
       dom > domheight + 20 ? (this.suckTop = true) : (this.suckTop = false)
     }
   },
   created() {
+    // 吸顶
     window.addEventListener('scroll', this.handleScroll, true)
   },
   mounted() {}

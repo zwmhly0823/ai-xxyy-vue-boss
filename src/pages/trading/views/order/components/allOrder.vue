@@ -6,11 +6,11 @@
         <el-col :span="6">
           <div class="grid-content bg-purple total-order">
             <div class="oride-top">订单总计</div>
-            <div class="oride-middle">3005笔</div>
+            <div class="oride-middle">{{ penTotal }}笔</div>
             <div class="oride-bottom">
-              <span>121111元</span>
-              <span>0币</span>
-              <span>0宝石</span>
+              <span>{{ amountTotal }}元</span>
+              <span>{{ systemClass.value }}币</span>
+              <span>{{ recommended.value }}宝石</span>
             </div>
           </div>
         </el-col>
@@ -18,32 +18,32 @@
         <el-col :span="4">
           <div class="grid-content bg-purple experience-order">
             <div class="oride-top">体验课</div>
-            <div class="oride-middle">1234笔</div>
-            <div class="oride-bottom">214354元</div>
+            <div class="oride-middle">{{ experience.count || 0 }}笔</div>
+            <div class="oride-bottom">{{ experience.value || 0 }}元</div>
           </div>
         </el-col>
         <!-- 系统课 -->
         <el-col :span="4">
           <div class="grid-content bg-purple system-order">
             <div class="oride-top">系统课</div>
-            <div class="oride-middle">123243笔</div>
-            <div class="oride-bottom">1234元</div>
+            <div class="oride-middle">{{ systemClass.count || 0 }}笔</div>
+            <div class="oride-bottom">{{ systemClass.value || 0 }}元</div>
           </div>
         </el-col>
         <!-- 小熊商城 -->
         <el-col :span="4">
           <div class="grid-content bg-purple bear-order">
             <div class="oride-top">小熊商城</div>
-            <div class="oride-middle">0笔</div>
-            <div class="oride-bottom">0币</div>
+            <div class="oride-middle">{{ littleBear.count || 0 }}笔</div>
+            <div class="oride-bottom">{{ littleBear.value || 0 }}币</div>
           </div>
         </el-col>
         <!-- 推荐有礼 -->
         <el-col :span="4">
           <div class="grid-content bg-purple recommended-order">
             <div class="oride-top">推荐有礼</div>
-            <div class="oride-middle">0笔</div>
-            <div class="oride-bottom">0宝石</div>
+            <div class="oride-middle">{{ recommended.count || 0 }}笔</div>
+            <div class="oride-bottom">{{ recommended.value || 0 }}宝石</div>
           </div>
         </el-col>
       </el-row>
@@ -58,6 +58,7 @@
 </template>
 <script>
 import tableOrder from './tableOrder'
+import axios from '@/api/axios'
 export default {
   components: {
     tableOrder
@@ -74,9 +75,105 @@ export default {
       }
     }
   },
+  data() {
+    return {
+      statData: [],
+      // 获取teacherid
+      teacherStor: '',
+      // 切换tab
+      tab: '',
+      // 搜索
+      searchIn: [],
+      // 体验课
+      experience: {},
+      // 系统课
+      systemClass: {},
+      // 小熊商城
+      littleBear: { count: 0 },
+      // 推荐有礼
+      recommended: {}
+    }
+  },
+  computed: {
+    penTotal() {
+      return (
+        this.experience.count +
+        this.systemClass.count +
+        this.littleBear.count +
+        this.recommended.count
+      )
+    },
+    amountTotal() {
+      return this.experience.value + this.systemClass.value
+    }
+  },
   watch: {
+    // 切换tab
+    status(val) {
+      this.tab = val
+      this.statList()
+    },
+    // 搜索
     search(val) {
-      console.log(val, '213r')
+      this.searchIn = val
+      this.statList()
+    }
+  },
+  created() {
+    this.statList()
+  },
+  methods: {
+    statList() {
+      this.teacherStor = JSON.parse(localStorage.getItem('teacher') || '{}')
+      const must = []
+      if (this.teacherStor.id) {
+        must.push(`{ term: { teacher_id: ${this.teacherStor.id} } }`)
+      }
+      // TODO: 切换tab filter
+      // "filter":{"bool":{"should":[{"term":{"orderstatus":1}},{"term":{"orderstatus":0}}]}}
+
+      // 搜索 must
+      const mustArr = this.searchIn.map((item) => JSON.stringify(item))
+      must.push(...mustArr)
+      const should = this.tab ? [`{"terms": {"status": [${this.tab}]}}`] : []
+      const queryStr = `{
+        "bool": {
+          "must": [${mustArr}],
+          "filter": {
+            "bool": {
+              "should": [${should}]
+            }
+          }
+        }
+      }`
+      axios
+        .post('/graphql/order', {
+          query: `{
+            orderStatistics(query: ${JSON.stringify(queryStr)}) {
+              code
+              value
+              count
+              type
+              desc
+            }
+        }`
+        })
+        .then((res) => {
+          const _data = res.data.orderStatistics
+          _data.forEach((val) => {
+            if (val.code === 1) {
+              this.littleBear = val
+            } else if (val.code === 2) {
+              this.recommended = val
+            } else if (val.code === 3) {
+              this.experience = val
+            } else if (val.code === 4) {
+              this.systemClass = val
+            }
+          })
+          console.log(res, 'res')
+          this.statData = res.data.orderStatistics
+        })
     }
   }
 }

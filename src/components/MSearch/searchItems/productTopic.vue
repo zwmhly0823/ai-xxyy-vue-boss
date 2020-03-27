@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-24 18:50:54
  * @LastEditors: zhubaodong
- * @LastEditTime: 2020-03-27 18:45:40
+ * @LastEditTime: 2020-03-27 21:37:03
  -->
 <template>
   <div class="search-item small">
@@ -14,6 +14,7 @@
       clearable
       placeholder="选择商品类型"
       @change="onChange"
+      @clear="onClear"
     >
       <el-option
         v-for="item in pruductTopicList"
@@ -73,6 +74,9 @@ export default {
     },
     onChange(data) {
       this.$emit('result', data ? { [this.name]: data } : '')
+    },
+    onClear() {
+      this.$emit('result', '')
     }
   }
 }

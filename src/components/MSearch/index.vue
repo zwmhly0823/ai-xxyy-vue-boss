@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-24 18:20:12
  * @LastEditors: zhubaodong
- * @LastEditTime: 2020-03-27 20:07:34
+ * @LastEditTime: 2020-03-27 22:32:32
  -->
 
 <template>
@@ -14,6 +14,7 @@
         <!-- 手机号、订单号搜索 -->
         <search-phone @result="getPhoneHander" v-if="phone" :name="phone" />
       </el-form-item>
+
       <el-form-item>
         <!-- 下单时间 -->
         <date-picker
@@ -21,6 +22,16 @@
           :name="date"
           @result="getDate"
           :date-placeholder="datePlaceholder"
+        />
+      </el-form-item>
+
+      <el-form-item>
+        <!-- 下拉时间选择 -->
+        <select-date
+          v-if="timeData"
+          :name="timeData"
+          @result="getTimeData"
+          @timeCallBack="getTimeCallBack"
         />
       </el-form-item>
 
@@ -77,6 +88,7 @@ import ChannelSelect from './searchItems/channel.vue'
 import ProductTopic from './searchItems/productTopic.vue'
 import StageSupLevels from './searchItems/stageSupLevels.vue'
 import SearchPhone from './searchItems/searchPhone.vue'
+import SelectDate from './searchItems/selectDate.vue'
 
 export default {
   props: {
@@ -128,6 +140,11 @@ export default {
     phone: {
       type: String,
       default: '' // phone
+    },
+    // 下拉时间选择
+    timeData: {
+      type: Array,
+      default: null // [ {text:'创建时间',value:'ectime'}]
     }
   },
   components: {
@@ -135,22 +152,21 @@ export default {
     ProductTopic,
     StageSupLevels,
     DatePicker,
-    SearchPhone
+    SearchPhone,
+    SelectDate
   },
   data() {
     return {
       showErr: false,
       errTips: '搜索条件不能为空',
       must: [],
-      should: []
+      should: [],
+      selectTime: null, // 物流时间下拉列表_选中项
+      oldTime: '' // 上次时间选择值
     }
   },
   computed: {},
   methods: {
-    // 有无收货地址
-    getHasaddress(res) {
-      this.setSeachParmas(res, [this.hasaddress || 'hasaddress'])
-    },
     // 选择渠道
     getChannel(res) {
       this.setSeachParmas(res, [this.channel || 'channelid'], 'terms')
@@ -163,17 +179,17 @@ export default {
     // 期数
     stageCallBack(res) {
       console.log(res, 'res')
-      this.setSeachParmas(res, [this.stage || 'stage'])
+      this.setSeachParmas(res, [this.stage || 'stage'], 'terms')
     },
     // 难度
     supCallBack(res) {
       console.log(res, 'res')
-      this.setSeachParmas(res, [this.sup || 'sup'])
+      this.setSeachParmas(res, [this.sup || 'sup'], 'terms')
     },
     // 级别
     levelCallBack(res) {
       console.log(res, 'res')
-      this.setSeachParmas(res, [this.level || 'current_level'])
+      this.setSeachParmas(res, [this.level || 'current_level'], 'terms')
     },
     // 选择订单下单时间
     getDate(res) {
@@ -182,6 +198,20 @@ export default {
     // 选择手机号、订单号
     getPhoneHander(res) {
       this.setSeachParmas(res, [this.phone || 'umobile'], 'wildcard')
+    },
+    // 获取下拉时间选择select
+    getTimeCallBack(data) {
+      if (data) {
+        this.selectTime = data
+      } else {
+        this.oldTime = data
+      }
+    },
+    // 物流时间
+    getTimeData(res) {
+      console.log(this.selectTime, '清除时的this.selectTime')
+
+      this.setSeachParmas(res, [this.selectTime || this.oldTime], 'range')
     },
 
     /**  处理接收到的查询参数
@@ -196,7 +226,11 @@ export default {
       const temp = name === 'must' ? must : should
       key.forEach((k) => {
         temp.forEach((item, index) => {
-          if (item[extraKey] && (item[extraKey][k] || +item[extraKey][k] === 0))
+          if (
+            JSON.parse(item[extraKey])[k] &&
+            (JSON.parse(item[extraKey])[k] ||
+              +JSON.parse(item[extraKey])[k] === 0)
+          )
             temp.splice(index, 1)
         })
       })
@@ -209,15 +243,13 @@ export default {
           })
           this.must = temp
         }
-        // emit result to parent component
-        // 父组件的 page 设为1
         this.$emit('search', temp)
         return
       }
       // should
       if (res) {
         temp.push({
-          [extraKey]: res
+          [`${extraKey}`]: `${JSON.stringify(res)}`
         })
         this.should = temp
       }
