@@ -52,10 +52,10 @@
       <el-table-column label="物流状态" show-overflow-tooltip>
         <template slot-scope="scope">
           <div class="express">
-            <div class="wait">{{ scope.row.wait }}</div>
-            <el-button class="trail" type="text" @click="Express">{{
-              scope.row.trail
-            }}</el-button>
+            <div class="wait">{{ scope.row.express_status_chinese }}</div>
+            <el-button class="trail" type="text" @click="Express">
+              追踪
+            </el-button>
           </div>
         </template>
       </el-table-column>
