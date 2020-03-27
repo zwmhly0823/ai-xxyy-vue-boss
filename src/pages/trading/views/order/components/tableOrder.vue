@@ -148,13 +148,16 @@ export default {
       this.teacherStor = JSON.parse(localStorage.getItem('teacher') || '{}')
       const must = []
       if (this.teacherStor.id) {
-        must.push(`{ "term": { "teacher_id": ${this.teacherStor.id} } }`)
+        must.push(`{ term: { teacher_id: ${this.teacherStor.id} } }`)
       }
       // TODO: 切换tab filter
       // "filter":{"bool":{"should":[{"term":{"orderstatus":1}},{"term":{"orderstatus":0}}]}}
 
       // 搜索 must
-      const mustArr = must.concat(this.searchIn)
+      console.log(this.searchIn)
+      const mustArr = this.searchIn.map((item) => JSON.stringify(item))
+      must.push(...mustArr)
+      console.log(must, 'mustArr')
       const should = this.tab ? [`{"terms": {"status": [${this.tab}]}}`] : []
       const queryStr = `{
         "bool": {

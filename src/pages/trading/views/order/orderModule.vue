@@ -11,7 +11,7 @@
     <div class="order-box">
       <m-search
         @search="handleSearch"
-        channel="channelid"
+        channel="pay_channel"
         topicType="topicType"
         stage="stage"
         sup="sup"
@@ -84,7 +84,11 @@ export default {
       const dom = document
         .getElementById('order-scroll')
         .querySelector('.order-wrapper').scrollTop
-      dom > 100 ? (this.suckTop = true) : (this.suckTop = false)
+      const domheight = document
+        .getElementById('order-scroll')
+        .querySelector('.el-card__body').offsetHeight
+      console.log(domheight, 'domheight')
+      dom > domheight + 20 ? (this.suckTop = true) : (this.suckTop = false)
     }
   },
   created() {
@@ -109,7 +113,7 @@ export default {
       top: 0px;
       right: 10px;
       left: 10px;
-      z-index: 1000;
+      z-index: 10000;
     }
   }
 }
