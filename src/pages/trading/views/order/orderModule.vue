@@ -18,11 +18,6 @@
         date="ctime"
         date-placeholder="下单时间"
         phone="umobile"
-        :timeData="[
-          { text: '创建时间', value: 'ectime' },
-          { text: '发货时间', value: 'delivery_time' },
-          { text: '签收时间', value: 'signing_time' }
-        ]"
       />
       <el-tabs type="border-card" @tab-click="handleClick" v-model="activeName">
         <el-tab-pane label="全部订单" name=""> </el-tab-pane>
