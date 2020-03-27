@@ -83,36 +83,16 @@
       <div class="waitFor" v-show="waitFor">快递待揽收</div>
       <!-- 时间线 -->
       <el-timeline v-show="timeLine">
-        <!-- <el-timeline-item
-          v-for="(activity, index) in activities"
-          :key="index"
-          :type="activity.type"
-          :color="activity.color"
-          :size="activity.size"
-        > -->
-        <el-timeline-item
-          v-for="(item, index) in expressDetail.data"
-          :key="index"
-        >
-          <div class="statebox">
-            <div class="state">{{}}</div>
-            <div class="time">12.1.1.1.1.</div>
+        <el-timeline-item v-for="(value, index) in expressDetail" :key="index">
+          <div v-if="value != []">
+            <div class="statebox" v-for="(item, key) in value" :key="key">
+              <div class="state" v-if="key === 0">{{ item.status }}</div>
+              <div class="content">{{ item.context }}</div>
+              <div class="time">{{ item.time }}</div>
+            </div>
           </div>
         </el-timeline-item>
-        <!-- </el-timeline-item> -->
       </el-timeline>
-      <!-- 步骤条 -->
-      <!-- <div style="height: 300px;" v-show="step">
-        <el-steps direction="vertical" :active="1">
-          <el-step title="已签收"></el-step>
-          <el-step title="运输中"></el-step>
-          <el-step
-            title="等待揽收"
-            description="这是一段很长很长很长的描述性文字"
-          >
-          </el-step>
-        </el-steps>
-      </div> -->
     </el-dialog>
     <m-pagination
       show-pager
@@ -149,12 +129,7 @@ export default {
       // 等待揽收
       waitFor: false,
       // 物流详情
-      expressDetail: {
-        ctime: '',
-        utime: '',
-        expressNo: '',
-        data: []
-      },
+      expressDetail: [],
       tableData: [],
       multipleSelection: [],
       enter: false,
@@ -221,7 +196,6 @@ export default {
             item.uptime = this.timeFormat(item.utime)
             item.sgtime = this.timeFormat(item.signing_time)
             item.buytime = this.timeFormat(item.buy_time)
-            // item.birthday = this.timeFormat(item.user.birthday) || ''
             return item
           })
           this.tableData = resData
@@ -263,13 +237,31 @@ export default {
         .then((res) => {
           if (res && res.payload) {
             this.timeLine = true
-            res.payload.forEach((item) => {
-              this.expressDetail.expressNo = item.expressNo
-              this.expressDetail.ctime = item.ctime
-              this.expressDetail.utime = item.utime
-              this.expressDetail.data = item.data
+            const lastData = {
+              receive: [],
+              onway: [],
+              begin: []
+            }
+
+            res.payload[0].data.forEach((item) => {
+              if (item.status === '揽收') {
+                lastData.begin.push(item)
+              } else if (item.status === '在途' || item.status === '派件') {
+                lastData.onway.push(item)
+              } else {
+                lastData.receive.push(item)
+              }
+              this.expressDetail = lastData
             })
-            console.log('expressDatail >>>>>>>>>>>', this.expressDetail)
+
+            // res.payload.forEach((item) => {
+            //   this.expressDetail.expressNo = item.expressNo
+            //   this.expressDetail.ctime = item.ctime
+            //   this.expressDetail.utime = item.utime
+            //   item.data.forEach((Dataitem) => {
+
+            //   })
+            // })
           } else {
             this.waitFor = true
           }
@@ -313,6 +305,16 @@ export default {
   }
   .statebox {
     margin-bottom: 20px;
+    .state {
+      font-size: 18px;
+      line-height: 30px;
+    }
+    .content {
+      line-height: 20px;
+    }
+    .time {
+      line-height: 20px;
+    }
   }
 }
 </style>
