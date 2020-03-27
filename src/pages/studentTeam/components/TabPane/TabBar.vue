@@ -21,7 +21,11 @@
         <el-tab-pane label="带班详情" name="details">
           <details-tab :classId="classId" />
         </el-tab-pane>
-        <el-tab-pane label="订单" name="order" v-if="+classId.type === 0">
+        <el-tab-pane
+          label="非体验课订单"
+          name="order"
+          v-if="+classId.type === 0"
+        >
           <order-tab :classId="classId" />
         </el-tab-pane>
 
@@ -39,7 +43,11 @@
       >
         <el-tab-pane label="学员" name="students"></el-tab-pane>
         <el-tab-pane label="带班详情" name="details"> </el-tab-pane>
-        <el-tab-pane label="订单" name="order" v-if="+classId.type === 0">
+        <el-tab-pane
+          label="非体验课订单"
+          name="order"
+          v-if="+classId.type === 0"
+        >
         </el-tab-pane>
       </el-tabs>
     </div>
