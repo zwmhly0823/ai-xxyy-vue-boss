@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 20:22:24
  * @LastEditors: panjian
- * @LastEditTime: 2020-03-27 22:39:36
+ * @LastEditTime: 2020-03-27 23:07:13
  -->
 <template>
   <div class="table-box">
@@ -418,8 +418,8 @@
                 alt=""
               />
               <span v-else>-</span>
-              <span class="works-ctime">{{ scope.row.works_ctime }}</span>
             </div>
+            <div class="works-ctime">{{ scope.row.works_ctime }}</div>
           </template>
         </el-table-column>
         <el-table-column label="点评">
@@ -580,8 +580,13 @@ export default {
     },
     // 单元格回调样式
     cellStyle({ row, column, rowIndex, columnIndex }) {
+      // console.log(row, column.label, columnIndex)
+      // if (column.label === '作品' && columnIndex === 3) {
+      //   console.log('作品样式函数')
+      //   return 'margin-bottom:30px;'
+      // }
       if (columnIndex === 0) {
-        return 'padding-left:15px;padding-top:20px;padding-bottom:15px;'
+        return 'padding-left:15px;padding-top:20px;padding-bottom:20px;'
       }
     },
     // 表头回调样式
@@ -734,11 +739,11 @@ export default {
         width: 80px;
         height: 80px;
       }
-      .works-ctime {
-        position: absolute;
-        left: 3px;
-        bottom: 0;
-      }
+    }
+    .works-ctime {
+      position: absolute;
+      // left: 3px;
+      bottom: 0;
     }
     .audio-box {
       position: relative;
