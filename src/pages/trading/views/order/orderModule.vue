@@ -4,16 +4,18 @@
  * @Author: zhubaodong
  * @Date: 2020-03-24 15:16:26
  * @LastEditors: zhubaodong
- * @LastEditTime: 2020-03-26 20:04:46
+ * @LastEditTime: 2020-03-27 14:47:02
  -->
 <template>
   <el-scrollbar wrap-class="order-wrapper" id="order-scroll">
     <div class="order-box">
       <m-search
         @search="handleSearch"
-        hasaddress="hasaddress"
         channel="channelid"
-        changeData="changeData"
+        topicType="topicType"
+        stage="stage"
+        sup="sup"
+        level="current_level"
       />
       <el-tabs type="border-card" @tab-click="handleClick" v-model="activeName">
         <el-tab-pane label="全部订单" name="allOrders">
