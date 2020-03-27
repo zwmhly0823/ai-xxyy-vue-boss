@@ -9,7 +9,7 @@
       }"
     >
       <el-table-column fixed label="购买用户" class="bugUser" width="220px">
-        <template slot-scope="scope">
+        <template slot-scope="scope" v-if="scope.row.user">
           <img class="bugUser-img" :src="scope.row.user.head" alt="" />
           <div class="bugUser-right">
             <div class="phone">
@@ -42,7 +42,7 @@
               <span style="color: #666"
                 >时长:{{
                   scope.row.packages_course_week
-                    ? scope.row.packages_course_week
+                    ? `${scope.row.packages_course_week}周`
                     : '-'
                 }}
               </span>
@@ -230,37 +230,40 @@ export default {
           const _data = res.data.teamUserOrderPage.content
           _data &&
             _data.forEach((ele) => {
-              // 性别 0/默认 1/男 2/女  3/保密
-              const sex = ele.user.sex
-              switch (sex) {
-                case '1': {
-                  ele.sex = '男'
-                  break
+              if (ele.user) {
+                // 性别 0/默认 1/男 2/女  3/保密
+                const sex = ele.user.sex
+                switch (sex) {
+                  case '1': {
+                    ele.sex = '男'
+                    break
+                  }
+                  case '2': {
+                    ele.sex = '女'
+                    break
+                  }
+                  case '3': {
+                    ele.sex = '保密'
+                    break
+                  }
+                  default:
+                    ele.sex = '-'
+                    break
                 }
-                case '2': {
-                  ele.sex = '女'
-                  break
-                }
-                case '3': {
-                  ele.sex = '保密'
-                  break
-                }
-                default:
-                  ele.sex = '-'
-                  break
-              }
-              // 年龄转换
-              ele.user.birthday !== '0'
-                ? (ele.user.birthday = GetAgeByBrithday(ele.user.birthday))
-                : (ele.user.birthday = '-')
 
-              ele.ctime = formatData(ele.ctime, 's')
-              ele.express_cur_time = formatData(ele.express_cur_time, 's')
-              ele.management_start_date = ele.management_start_date
-                ? dayjs
-                    .unix(Number(ele.management_start_date) / 1000)
-                    .format('MMDD')
-                : ''
+                // 年龄转换
+                ele.user.birthday !== '0'
+                  ? (ele.user.birthday = GetAgeByBrithday(ele.user.birthday))
+                  : (ele.user.birthday = '-')
+
+                ele.ctime = formatData(ele.ctime, 's')
+                ele.express_cur_time = formatData(ele.express_cur_time, 's')
+                ele.management_start_date = ele.management_start_date
+                  ? dayjs
+                      .unix(Number(ele.management_start_date) / 1000)
+                      .format('MMDD')
+                  : ''
+              }
             })
           this.tableData = _data
           console.log(this.tableData)
