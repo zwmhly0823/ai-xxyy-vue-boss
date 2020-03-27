@@ -56,7 +56,7 @@
       </div>
       <div class="body">
         <div class="body-boxLeft" v-show="item.team_type == 0">
-          <div class="order-title">累计订单</div>
+          <div class="order-title">累计系统课订单</div>
           <div class="order-number">{{ item.statictis.order_all }}</div>
           <div class="order-count">
             <span
