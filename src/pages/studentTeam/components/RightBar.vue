@@ -108,7 +108,7 @@
             </div>
             <div>
               <div>{{ item.statictis.unlogin }}</div>
-              <div>待登录App</div>
+              <div>待打开App</div>
             </div>
             <div>
               <div>{{ item.statictis.today_add_class }}</div>

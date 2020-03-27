@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 14:19:58
  * @LastEditors: panjian
- * @LastEditTime: 2020-03-25 22:10:19
+ * @LastEditTime: 2020-03-27 11:33:34
  -->
 <template>
   <div>
@@ -109,7 +109,6 @@ export default {
           //   src: require('@/assets/images/zuimeideshangkou.mp3')
           // }
         ]
-        // audioIndex: 10000
       },
       // tabs标签默认状态
       activeName: 'group',
@@ -320,22 +319,44 @@ export default {
             } else {
               item.product_name = '-'
             }
-            if (item.express_status === '0') {
-              item.express_status = '已创建无地址'
-            } else if (item.express_status === '1') {
-              item.express_status = '待发货有地址'
-            } else if (item.express_status === '2') {
-              item.express_status = '已发货'
-            } else if (item.express_status === '3') {
-              item.express_status = '已签收'
-            } else if (item.express_status === '4') {
-              item.express_status = '签收失败'
-            } else if (item.express_status === '5') {
-              item.express_status = '已退货'
-            } else if (item.express_status === '6') {
-              item.express_status = '待确认'
-            } else if (item.express_status === '7') {
-              item.express_status = '无效'
+            const experssStatus = [
+              {
+                id: '0',
+                statusName: '-'
+              },
+              {
+                id: '1',
+                statusName: '待发货'
+              },
+              {
+                id: '2',
+                statusName: '已发货'
+              },
+              {
+                id: '3',
+                statusName: '已签收'
+              },
+              {
+                id: '4',
+                statusName: '签收失败'
+              },
+              {
+                id: '5',
+                statusName: '已退货'
+              },
+              {
+                id: '6',
+                statusName: '待确认'
+              },
+              {
+                id: '7',
+                statusName: '无效'
+              }
+            ]
+            for (let i = 0; i < experssStatus.length; i++) {
+              if (item.express_status === experssStatus[i].id) {
+                item.express_status = experssStatus[i].statusName
+              }
             }
           })
           this.table.tableData = _data
@@ -386,37 +407,69 @@ export default {
               item.login_time = '-'
               item.first_login_time = ''
             } else {
-              item.first_login_time = `首次登录: ${item.first_login_time}`
+              item.first_login_time = `首次打开: ${item.first_login_time}`
             }
             if (item.page_origin === '') {
               item.page_origin = ''
             }
-            if (item.status === '0') {
-              item.status = '已注册'
-            } else if (item.status === '1') {
-              item.status = '已体验课'
-            } else if (item.status === '2') {
-              item.status = '体验完课'
-            } else if (item.status === '3') {
-              item.status = '已月课'
-            } else if (item.status === '4') {
-              item.status = '月课完课'
-            } else if (item.status === '5') {
-              item.status = '已年课'
-            } else if (item.status === '6') {
-              item.status = '年课完课'
-            } else if (item.status === '7') {
-              item.status = '年课续费'
-            } else if (item.status === '8') {
-              item.status = '注销失败'
-            } else if (item.status === '9') {
-              item.status = '已季课'
-            } else if (item.status === '10') {
-              item.status = '季课完课'
-            } else if (item.status === '11') {
-              item.status = '已半年课'
-            } else if (item.status === '12') {
-              item.status = '半年课完课'
+            const status = [
+              {
+                id: '0',
+                statusName: '已注册'
+              },
+              {
+                id: '1',
+                statusName: '已体验课'
+              },
+              {
+                id: '2',
+                statusName: '体验完课'
+              },
+              {
+                id: '3',
+                statusName: '已月课'
+              },
+              {
+                id: '4',
+                statusName: '月课完课'
+              },
+              {
+                id: '5',
+                statusName: '已年课'
+              },
+              {
+                id: '6',
+                statusName: '年课完课'
+              },
+              {
+                id: '7',
+                statusName: '年课续费'
+              },
+              {
+                id: '8',
+                statusName: '注销失败'
+              },
+              {
+                id: '9',
+                statusName: '已季课'
+              },
+              {
+                id: '10',
+                statusName: '季课完课'
+              },
+              {
+                id: '11',
+                statusName: '已半年课'
+              },
+              {
+                id: '12',
+                statusName: '半年课完课'
+              }
+            ]
+            for (let i = 0; i < status.length; i++) {
+              if (item.status === status[i].id) {
+                item.status = status[i].statusName
+              }
             }
           })
           this.table.tableData = _data
@@ -492,47 +545,6 @@ export default {
               item.complete_course_state = '-'
               item.complete_course_time = ''
             }
-            // if (!item.current_lesson) {
-            //   item.current_lesson = '-'
-            // }
-            // if (
-            //   item.add_class_status === '0' ||
-            //   item.add_class_status === '1'
-            // ) {
-            //   item.attend_class = '已参课'
-            //   item.add_class_ctime = timestamp(item.add_class_ctime, 6)
-            // } else {
-            //   item.attend_class = '-'
-            // }
-            // if (item.add_class_status === '1') {
-            //   item.finish_class = '已完课'
-            //   item.add_class_utime = timestamp(item.add_class_utime, 6)
-            // } else {
-            //   item.finish_class = '-'
-            // }
-            // if (item.status === '0') {
-            //   item.status = '已注册'
-            // } else if (item.status === '1') {
-            //   item.status = '已体验课'
-            // } else if (item.status === '2') {
-            //   item.status = '体验完课'
-            // } else if (item.status === '3') {
-            //   item.status = '已月课'
-            // } else if (item.status === '4') {
-            //   item.status = '月课完课'
-            // } else if (item.status === '5') {
-            //   item.status = '已年课'
-            // } else if (item.status === '6') {
-            //   item.status = '年课完课'
-            // } else if (item.status === '7') {
-            //   item.status = '年课续费'
-            // } else if (item.status === '11') {
-            //   item.status = '已半年课'
-            // } else if (item.status === '12') {
-            //   item.status = '半年课完课'
-            // } else {
-            //   item.status = '-'
-            // }
           })
           this.table.tableData = _data
         })
@@ -592,12 +604,6 @@ export default {
               item.nickname = ''
               item.head = ''
             }
-            // if (!item.task_image) {
-            //   item.item.task_image = '-'
-            //   item.works_ctime = ''
-            // }
-
-            // item.audioIndex = 10000
             item.audioList = [
               {
                 // src: require('@/assets/images/shaonian.mp3')
@@ -631,10 +637,6 @@ export default {
       this.codeHandle = data
       this.getCodeHandle()
     },
-    // 播放语音传值
-    // onAudioIndex(data) {
-    //   this.table.audioIndex = data
-    // },
     handleClick(tab, event) {
       this.tabsName = tab.label
       this.table.currentPage = 1
@@ -678,7 +680,7 @@ export default {
       } else if (tab.index === '4') {
         // 作品及点评
         setTimeout(() => {
-          // this.getStuComment()
+          this.getStuComment()
         }, 200)
         this.table.tabs = 4
         this.audioTabs = '4'

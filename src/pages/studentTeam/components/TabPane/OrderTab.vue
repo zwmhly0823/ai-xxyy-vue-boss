@@ -8,7 +8,7 @@
         fontWeight: 'normal'
       }"
     >
-      <el-table-column fixed label="购买用户" class="bugUser" width="240px">
+      <el-table-column fixed label="购买用户" class="bugUser" width="220px">
         <template slot-scope="scope">
           <img class="bugUser-img" :src="scope.row.user.head" alt="" />
           <div class="bugUser-right">
@@ -20,7 +20,7 @@
               {{ scope.row.user.birthday }}
             </div>
             <div>
-              <span v-show="scope.row.user.base_painting_text">·</span>
+              <!-- <span v-show="scope.row.user.base_painting_text">·</span> -->
               {{ scope.row.user.base_painting_text }}
             </div>
           </div>
@@ -38,7 +38,7 @@
                   : '-'
               }}
             </div>
-            <div>
+            <div style="white-space:nowrap">
               <span style="color: #666"
                 >时长:{{
                   scope.row.packages_course_week
@@ -56,8 +56,12 @@
       <el-table-column label="创建时间" class="logistics">
         <template slot-scope="scope">
           <div v-if="scope.row.ctime">
-            <div class="text333">{{ scope.row.ctime.split(' ')[0] }}</div>
-            <div class="text333">{{ scope.row.ctime.split(' ')[1] }}</div>
+            <div class="text333" style="white-space:nowrap">
+              {{ scope.row.ctime.split(' ')[0] }}
+            </div>
+            <div class="text333" style="white-space:nowrap">
+              {{ scope.row.ctime.split(' ')[1] }}
+            </div>
           </div>
           <span v-else>-</span>
         </template>
@@ -74,7 +78,7 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="系统课信息" class="status-style" width="240px">
+      <el-table-column label="系统课信息" class="status-style">
         <template slot-scope="scope">
           <div
             v-if="
@@ -127,6 +131,8 @@
       :page-count="totalPages"
       :total="totalElements"
       @current-change="handleSizeChange"
+      open="calc(100vw - 180px - 240px - 147px - 30px)"
+      close="calc(100vw - 180px - 240px - 26px - 30px)"
     />
   </div>
 </template>
@@ -219,42 +225,43 @@ export default {
           }`
         })
         .then((res) => {
-          this.totalPages = res.data.teamUserOrderPage.totalPages * 1
+          this.totalPages = +res.data.teamUserOrderPage.totalPages
           this.totalElements = +res.data.teamUserOrderPage.totalElements
           const _data = res.data.teamUserOrderPage.content
-          _data.forEach((ele) => {
-            // 性别 0/默认 1/男 2/女  3/保密
-            const sex = ele.user.sex
-            switch (sex) {
-              case '1': {
-                ele.sex = '男'
-                break
+          _data &&
+            _data.forEach((ele) => {
+              // 性别 0/默认 1/男 2/女  3/保密
+              const sex = ele.user.sex
+              switch (sex) {
+                case '1': {
+                  ele.sex = '男'
+                  break
+                }
+                case '2': {
+                  ele.sex = '女'
+                  break
+                }
+                case '3': {
+                  ele.sex = '保密'
+                  break
+                }
+                default:
+                  ele.sex = '-'
+                  break
               }
-              case '2': {
-                ele.sex = '女'
-                break
-              }
-              case '3': {
-                ele.sex = '保密'
-                break
-              }
-              default:
-                ele.sex = '-'
-                break
-            }
-            // 年龄转换
-            ele.user.birthday !== '0'
-              ? (ele.user.birthday = GetAgeByBrithday(ele.user.birthday))
-              : (ele.user.birthday = '-')
+              // 年龄转换
+              ele.user.birthday !== '0'
+                ? (ele.user.birthday = GetAgeByBrithday(ele.user.birthday))
+                : (ele.user.birthday = '-')
 
-            ele.ctime = formatData(ele.ctime, 's')
-            ele.express_cur_time = formatData(ele.express_cur_time, 's')
-            ele.management_start_date = ele.management_start_date
-              ? dayjs
-                  .unix(Number(ele.management_start_date) / 1000)
-                  .format('MMDD')
-              : ''
-          })
+              ele.ctime = formatData(ele.ctime, 's')
+              ele.express_cur_time = formatData(ele.express_cur_time, 's')
+              ele.management_start_date = ele.management_start_date
+                ? dayjs
+                    .unix(Number(ele.management_start_date) / 1000)
+                    .format('MMDD')
+                : ''
+            })
           this.tableData = _data
           console.log(this.tableData)
         })
@@ -284,7 +291,7 @@ export default {
   }
   &-right {
     float: left;
-    width: 140px;
+    width: 110px;
     color: #333333;
     .age {
       color: #666;
@@ -326,6 +333,7 @@ export default {
 </style>
 <style lang="scss">
 .orderStyle {
+  padding: 0 0 10px 0;
   .el-table_7_column_25 {
     .cell {
       margin-left: 15px !important;
