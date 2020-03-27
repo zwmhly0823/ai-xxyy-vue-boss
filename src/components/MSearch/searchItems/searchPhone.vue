@@ -4,10 +4,18 @@
  * @Author: zhubaodong
  * @Date: 2020-03-26 16:28:45
  * @LastEditors: zhubaodong
- * @LastEditTime: 2020-03-26 16:32:17
+ * @LastEditTime: 2020-03-27 18:01:50
  -->
 <template>
-  <div class="search-item small"></div>
+  <div class="search-item small">
+    <el-input
+      placeholder="手机号/订单号"
+      v-model="input"
+      clearable
+      @input="inputHandler"
+    >
+    </el-input>
+  </div>
 </template>
 
 <script>
@@ -15,11 +23,17 @@ export default {
   props: [],
   components: {},
   data() {
-    return {}
+    return {
+      input: ''
+    }
   },
   computed: {},
   watch: {},
-  methods: {},
+  methods: {
+    inputHandler() {
+      console.log(this.input, 'data')
+    }
+  },
   created() {},
   mounted() {}
 }

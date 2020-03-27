@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-26 16:30:11
  * @LastEditors: zhubaodong
- * @LastEditTime: 2020-03-26 17:28:48
+ * @LastEditTime: 2020-03-27 17:37:51
  -->
 <template>
   <div class="search-item">
@@ -16,8 +16,8 @@
       prefix-icon="none"
       :picker-options="pickerOptions"
       range-separator="至"
-      start-placeholder="开始日期"
-      end-placeholder="结束日期"
+      start-placeholder="下单时间start"
+      end-placeholder="下单时间end"
       align="right"
       @change="changeHandler"
     >
@@ -27,7 +27,16 @@
 
 <script>
 export default {
-  props: [],
+  props: {
+    name: {
+      type: String,
+      default: 'octime'
+    },
+    datePlaceholder: {
+      type: String,
+      default: '下单时间'
+    }
+  },
   components: {},
   data() {
     return {
@@ -77,8 +86,15 @@ export default {
   computed: {},
   watch: {},
   methods: {
-    changeHandler() {
-      console.log(this.timeData, 'time')
+    changeHandler(data) {
+      if (data) {
+        const gte = data[0]
+        const lte = data[1]
+        const octime = { gte, lte }
+        this.$emit('result', { [this.name]: octime })
+        return
+      }
+      this.$emit('result', '')
     }
   },
   created() {},

@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-24 18:50:54
  * @LastEditors: zhubaodong
- * @LastEditTime: 2020-03-27 14:56:02
+ * @LastEditTime: 2020-03-27 17:16:50
  -->
 <template>
   <div class="search-item small">
@@ -177,9 +177,13 @@ export default {
 <style lang="scss" scoped>
 .search-item {
   &.small {
-    width: 420px !important;
+    width: 440px !important;
     .item-style {
       width: 140px !important;
+      margin-right: 10px;
+    }
+    .item-style:last-child {
+      margin-right: 0px;
     }
   }
 }

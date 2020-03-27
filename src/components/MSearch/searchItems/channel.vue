@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-24 18:50:54
  * @LastEditors: zhubaodong
- * @LastEditTime: 2020-03-26 20:12:18
+ * @LastEditTime: 2020-03-27 18:18:38
  -->
 <template>
   <div class="search-item small">
@@ -13,6 +13,10 @@
       multiple
       collapse-tags
       clearable
+      filterable
+      reserve-keyword
+      remote
+      :remote-method="remoteMethod"
       placeholder="订单来源"
       @change="onChange"
     >
@@ -47,11 +51,6 @@ export default {
       channelData: null
     }
   },
-  watch: {
-    channelData(val) {
-      console.log(val)
-    }
-  },
   async created() {
     await this.getChannel()
   },
@@ -77,6 +76,26 @@ export default {
         'result',
         data.length > 0 ? { [this.name]: this.channelData } : ''
       )
+    },
+    remoteMethod(data) {
+      if (!data) {
+        this.getChannel()
+        return
+      }
+      console.log(data, 'data')
+      axios
+        .post('/graphql/filter', {
+          query: `{
+              channelList(filter:"${data}"){
+                id
+                channel_outer_name
+              }
+            }
+          `
+        })
+        .then((res) => {
+          this.channelList = res.data.channelList
+        })
     }
   }
 }
@@ -84,7 +103,7 @@ export default {
 <style lang="scss" scoped>
 .search-item {
   &.small {
-    width: 180px !important;
+    width: 200px !important;
   }
 }
 </style>

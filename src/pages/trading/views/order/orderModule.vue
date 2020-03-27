@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-24 15:16:26
  * @LastEditors: zhubaodong
- * @LastEditTime: 2020-03-27 14:47:02
+ * @LastEditTime: 2020-03-27 17:23:36
  -->
 <template>
   <el-scrollbar wrap-class="order-wrapper" id="order-scroll">
@@ -16,6 +16,9 @@
         stage="stage"
         sup="sup"
         level="current_level"
+        date="octime"
+        date-placeholder="下单时间"
+        phone="umobile"
       />
       <el-tabs type="border-card" @tab-click="handleClick" v-model="activeName">
         <el-tab-pane label="全部订单" name="allOrders">
