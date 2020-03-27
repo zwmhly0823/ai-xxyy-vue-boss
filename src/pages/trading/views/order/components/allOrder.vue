@@ -52,7 +52,7 @@
     <el-divider></el-divider>
     <!-- tab列表 -->
     <article class="bottom-box">
-      <table-order />
+      <table-order :status="status" />
     </article>
   </div>
 </template>
@@ -61,6 +61,12 @@ import tableOrder from './tableOrder'
 export default {
   components: {
     tableOrder
+  },
+  props: {
+    status: {
+      type: String,
+      default: ''
+    }
   }
 }
 </script>
