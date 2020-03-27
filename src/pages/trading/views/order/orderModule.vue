@@ -12,11 +12,11 @@
       <m-search
         @search="handleSearch"
         channel="pay_channel"
-        topicType="topicType"
+        topicType="topic_id"
         stage="stage"
         sup="sup"
         level="current_level"
-        date="octime"
+        date="ctime"
         date-placeholder="下单时间"
         phone="umobile"
       />
