@@ -52,7 +52,7 @@
     <el-divider></el-divider>
     <!-- tab列表 -->
     <article class="bottom-box">
-      <table-order :status="status" />
+      <table-order :status="status" :search="search" />
     </article>
   </div>
 </template>
@@ -66,6 +66,17 @@ export default {
     status: {
       type: String,
       default: ''
+    },
+    search: {
+      type: Array,
+      default: () => {
+        return []
+      }
+    }
+  },
+  watch: {
+    search(val) {
+      console.log(val, '213r')
     }
   }
 }

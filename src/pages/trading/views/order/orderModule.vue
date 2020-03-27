@@ -11,7 +11,7 @@
     <div class="order-box">
       <m-search
         @search="handleSearch"
-        channel="channelid"
+        channel="pay_channel"
         topicType="topicType"
         stage="stage"
         sup="sup"
@@ -28,7 +28,7 @@
         <el-tab-pane label="退费中" name="5"></el-tab-pane>
         <el-tab-pane label="已退费" name="6,7"></el-tab-pane>
         <el-tab-pane label="已关闭" name="8"></el-tab-pane>
-        <all-order :status="status" />
+        <all-order :status="status" :search="search" />
       </el-tabs>
       <el-tabs
         v-show="suckTop"
@@ -62,7 +62,8 @@ export default {
     return {
       activeName: '',
       suckTop: false,
-      status: ''
+      status: '',
+      search: []
     }
   },
   computed: {},
@@ -76,13 +77,18 @@ export default {
       this.status = tab.name
     },
     handleSearch(res) {
+      this.search = res
       console.log(res)
     },
     handleScroll() {
       const dom = document
         .getElementById('order-scroll')
         .querySelector('.order-wrapper').scrollTop
-      dom > 100 ? (this.suckTop = true) : (this.suckTop = false)
+      const domheight = document
+        .getElementById('order-scroll')
+        .querySelector('.el-card__body').offsetHeight
+      console.log(domheight, 'domheight')
+      dom > domheight + 20 ? (this.suckTop = true) : (this.suckTop = false)
     }
   },
   created() {
@@ -107,7 +113,7 @@ export default {
       top: 0px;
       right: 10px;
       left: 10px;
-      z-index: 1000;
+      z-index: 10000;
     }
   }
 }
