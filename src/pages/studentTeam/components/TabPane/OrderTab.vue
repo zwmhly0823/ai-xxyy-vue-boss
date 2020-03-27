@@ -30,7 +30,13 @@
         <div slot-scope="scope">
           <div class="text333">
             <div>
-              {{ scope.row.packages_name ? scope.row.packages_name : '-' }}
+              {{
+                scope.row.packages_name
+                  ? scope.row.packages_name
+                  : scope.row.product_name
+                  ? scope.row.product_name
+                  : '-'
+              }}
             </div>
             <div>
               <span style="color: #666"
@@ -184,13 +190,13 @@ export default {
               totalElements
               content {
                 id
-                packages_name
+                product_name
                 sup
                 packages_course_week
                 ctime
                 status
                 packages_id
-              order_status
+                order_status
                 packages_name
                 express_status
                 express_cur_time
