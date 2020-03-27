@@ -4,35 +4,138 @@
  * @Author: zhubaodong
  * @Date: 2020-03-24 18:20:12
  * @LastEditors: zhubaodong
- * @LastEditTime: 2020-03-24 19:54:16
+ * @LastEditTime: 2020-03-27 19:03:12
  -->
 
 <template>
   <el-card class="search-style" shadow="never">
-    <el-form>
+    <el-form :inline="true">
       <el-form-item>
-        <!-- 有无收货地址 -->
-        <has-receiptaddress
-          @result="getHasaddress"
-          v-if="hasaddress"
-          :name="hasaddress"
+        <!-- 手机号、订单号搜索 -->
+        <search-phone @result="getPhoneHander" v-if="phone" :name="phone" />
+      </el-form-item>
+      <el-form-item>
+        <!-- 下单时间 -->
+        <date-picker
+          v-if="date"
+          :name="date"
+          @result="getDate"
+          :date-placeholder="datePlaceholder"
         />
+      </el-form-item>
+
+      <el-form-item>
+        <!-- 渠道 -->
+        <channel-select @result="getChannel" v-if="channel" :name="channel" />
+      </el-form-item>
+
+      <el-form-item>
+        <!-- 主题 -->
+        <product-topic
+          @result="getProductTopic"
+          v-if="topicType"
+          :name="topicType"
+        />
+      </el-form-item>
+      <!-- <el-form-item>
+        <stage-sup-levels
+          @stageCallBack="stageCallBack"
+          @supCallBack="supCallBack"
+          @levelCallBack="levelCallBack"
+          v-if="level || sup || stage"
+          :stageName="stage"
+          :supName="sup"
+          :levelName="level"
+          style="margin-bottom:0px"
+        />
+      </el-form-item> -->
+
+      <el-form-item size="mini" style="position:relative;top:6px">
+        <el-popover width="100%" trigger="click">
+          <stage-sup-levels
+            @stageCallBack="stageCallBack"
+            @supCallBack="supCallBack"
+            @levelCallBack="levelCallBack"
+            v-if="level || sup || stage"
+            :stageName="stage"
+            :supName="sup"
+            :levelName="level"
+            style="margin-bottom:0px"
+          />
+          <el-button slot="reference" style="color:#c0c4cc ;font-weight: 400;">
+            班级信息
+            <i class="el-icon-arrow-down" />
+          </el-button>
+        </el-popover>
       </el-form-item>
     </el-form>
   </el-card>
 </template>
 <script>
-import HasReceiptaddress from './searchItems/hasReceiptaddress.vue'
+import DatePicker from './searchItems/datePicker.vue'
+import ChannelSelect from './searchItems/channel.vue'
+import ProductTopic from './searchItems/productTopic.vue'
+import StageSupLevels from './searchItems/stageSupLevels.vue'
+import SearchPhone from './searchItems/searchPhone.vue'
+
 export default {
   props: {
     // 有无收货地址
     hasaddress: {
       type: String,
       default: '' // hasaddress
+    },
+    changeData: {
+      type: String,
+      default: '' // hasaddress
+    },
+    // 渠道
+    channel: {
+      type: String,
+      default: '' // channelid
+    },
+    // 主题
+    topicType: {
+      type: String,
+      default: '' // topicType
+    },
+    // 期数
+    stage: {
+      type: String,
+      default: '' // stage
+    },
+    // 难度
+    sup: {
+      type: String,
+      default: '' // sup
+    },
+    // 级别
+    level: {
+      type: String,
+      default: '' // current_level
+    },
+    // 下单时间
+    date: {
+      type: String,
+      default: '' // octime
+    },
+    // datepicker placeholder
+    datePlaceholder: {
+      type: String,
+      default: '下单时间'
+    },
+    // 手机号、订单号
+    phone: {
+      type: String,
+      default: '' // phone
     }
   },
   components: {
-    HasReceiptaddress
+    ChannelSelect,
+    ProductTopic,
+    StageSupLevels,
+    DatePicker,
+    SearchPhone
   },
   data() {
     return {
@@ -46,7 +149,39 @@ export default {
   methods: {
     // 有无收货地址
     getHasaddress(res) {
-      this.setSeachParmas(res, [this.hasaddress])
+      this.setSeachParmas(res, [this.hasaddress || 'hasaddress'])
+    },
+    // 选择渠道
+    getChannel(res) {
+      this.setSeachParmas(res, [this.channel || 'channelid'], 'terms')
+    },
+    // 主题
+    getProductTopic(res) {
+      console.log(res, 'res')
+      this.setSeachParmas(res, [this.topicType || 'topicType'])
+    },
+    // 期数
+    stageCallBack(res) {
+      console.log(res, 'res')
+      this.setSeachParmas(res, [this.stage || 'stage'])
+    },
+    // 难度
+    supCallBack(res) {
+      console.log(res, 'res')
+      this.setSeachParmas(res, [this.sup || 'sup'])
+    },
+    // 级别
+    levelCallBack(res) {
+      console.log(res, 'res')
+      this.setSeachParmas(res, [this.level || 'current_level'])
+    },
+    // 选择订单下单时间
+    getDate(res) {
+      this.setSeachParmas(res, [this.date || 'octime'], 'range')
+    },
+    // 选择手机号、订单号
+    getPhoneHander(res) {
+      this.setSeachParmas(res, [this.phone || 'umobile'], 'wildcard')
     },
 
     /**  处理接收到的查询参数
@@ -90,10 +225,16 @@ export default {
   }
 }
 </script>
-
-<style lang="scss">
+<style lang="scss" scoped>
 .search-style {
   margin-bottom: 10px;
+}
+</style>
+<style lang="scss">
+.search-style {
+  .el-card__body {
+    padding: 0px 10px 0px 10px;
+  }
   .el-form-item {
     margin-bottom: 0px !important;
   }
