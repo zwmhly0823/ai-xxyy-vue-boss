@@ -11,12 +11,12 @@
     <div class="search-up">
       <m-search
         @search="handleSearch"
-        topicType="topicType"
+        topicType="topic_id"
         stage="stage"
         sup="sup"
         level="current_level"
-        date="octime"
-        date-placeholder="下单时间"
+        date-picker="下单时间"
+        date="ctime"
         phone="umobile"
       />
     </div>
@@ -34,8 +34,8 @@ export default {
     MSearch
   },
   methods: {
-    handleSearch() {
-      console.log('1111')
+    handleSearch(res) {
+      console.log(res, '1111')
     }
   }
 }

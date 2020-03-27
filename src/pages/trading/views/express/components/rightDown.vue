@@ -13,9 +13,11 @@
     >
       <el-table-column type="selection" width="25"> </el-table-column>
       <el-table-column width="25">
-        <div :class="[false, 'trans']">
-          <i class="el-icon-more-outline"></i>
-        </div>
+        <el-popover placement="right" width="400" trigger="click">
+          <div class="trans">
+            <i class="el-icon-more-outline"></i>
+          </div>
+        </el-popover>
       </el-table-column>
       <el-table-column label="用户及日期">
         <template slot-scope="scope">
