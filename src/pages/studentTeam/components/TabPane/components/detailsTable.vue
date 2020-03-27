@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 20:22:24
  * @LastEditors: panjian
- * @LastEditTime: 2020-03-25 21:24:14
+ * @LastEditTime: 2020-03-27 11:31:11
  -->
 <template>
   <div class="table-box">
@@ -266,7 +266,7 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column label="最近登录次数">
+        <el-table-column label="打开次数">
           <template slot-scope="scope">
             <div>
               <span>{{ scope.row.login_time }}</span>

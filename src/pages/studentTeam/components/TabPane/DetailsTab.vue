@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 14:19:58
  * @LastEditors: panjian
- * @LastEditTime: 2020-03-26 17:14:16
+ * @LastEditTime: 2020-03-27 11:33:34
  -->
 <template>
   <div>
@@ -323,11 +323,11 @@ export default {
             const experssStatus = [
               {
                 id: '0',
-                statusName: '已创建无地址'
+                statusName: '-'
               },
               {
                 id: '1',
-                statusName: '待发货有地址'
+                statusName: '待发货'
               },
               {
                 id: '2',
@@ -408,7 +408,7 @@ export default {
               item.login_time = '-'
               item.first_login_time = ''
             } else {
-              item.first_login_time = `首次登录: ${item.first_login_time}`
+              item.first_login_time = `首次打开: ${item.first_login_time}`
             }
             if (item.page_origin === '') {
               item.page_origin = ''
