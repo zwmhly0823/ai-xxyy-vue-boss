@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 20:22:24
  * @LastEditors: panjian
- * @LastEditTime: 2020-03-27 11:31:11
+ * @LastEditTime: 2020-03-27 21:01:34
  -->
 <template>
   <div class="table-box">
@@ -300,7 +300,7 @@
             <div>
               <span>{{ scope.row.mobile }}</span>
               <br />
-              <span>{{ scope.row.buytime }}</span>
+              <span>{{ scope.row.buy_time }}</span>
             </div>
           </template>
         </el-table-column>
@@ -402,7 +402,7 @@
         <el-table-column label="课程">
           <template slot-scope="scope">
             <div>
-              <span>{{ scope.row.current_lesson }}</span>
+              <span>{{ scope.row.course_current_num }}</span>
               <br />
               <span>{{ scope.row.classTitle }}</span>
             </div>
@@ -411,11 +411,13 @@
         <el-table-column label="作品">
           <template slot-scope="scope">
             <div class="works-task-box">
-              <!-- <img
+              <img
+                v-if="scope.row.task_image"
                 class="works-task-img borders"
                 :src="scope.row.task_image"
                 alt=""
-              /> -->
+              />
+              <span v-else>-</span>
               <span class="works-ctime">{{ scope.row.works_ctime }}</span>
             </div>
           </template>
@@ -423,13 +425,14 @@
         <el-table-column label="点评">
           <template slot-scope="scope">
             <div>
+              <span>{{ scope.row.has_comment_ctime }}</span>
               <div
-                v-for="(item, index) in scope.row.audioList"
+                v-for="(item, index) in scope.row.listenInfoArr"
                 :key="index"
                 @click="aplayAudio(item, index, 'audioRef' + index)"
                 class="audio-box"
               >
-                <span class="audio-triangle"></span>
+                <p class="audio-triangle"></p>
                 <img
                   v-if="audioIndex === index && studentId == scope.row.id"
                   class="audio-imgs"
@@ -442,8 +445,9 @@
                   src="@/assets/images/playing-icon.png"
                   alt=""
                 />
-                <audio :ref="'audioRef' + index" :src="item.src"></audio>
+                <audio :ref="'audioRef' + index" :src="item.task_sound"></audio>
               </div>
+              <p>{{ scope.row.has_listen_time }}</p>
               <!-- <span>{{ scope.row }}</span> -->
             </div>
           </template>
@@ -718,11 +722,12 @@ export default {
       position: relative;
       .works-task-img {
         display: inline-block;
-        width: 50px;
-        height: 50px;
+        width: 80px;
+        height: 80px;
       }
       .works-ctime {
         position: absolute;
+        left: 3px;
         bottom: 0;
       }
     }
