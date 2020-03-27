@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-13 15:24:11
  * @LastEditors: zhubaodong
- * @LastEditTime: 2020-03-23 21:59:39
+ * @LastEditTime: 2020-03-25 22:20:44
  -->
 <template>
   <el-row type="flex" class="app-main height student-team">
@@ -114,9 +114,9 @@ export default {
      * 中栏下拉滚动
      * @param(type,page,size) 课程类型 页码 数量
      */
-    infiniteScroll(data) {
+    async infiniteScroll(data) {
       this.scrollPage = data.page
-      this.getClassList(data.type, data.page)
+      await this.getClassList(data.type, data.page)
     },
     /**
      * 获取体验课状态列表
@@ -178,7 +178,7 @@ export default {
             query: `{
               teamStatusPage(query:${JSON.stringify(
                 queryParams
-              )},page:${page},size:20){
+              )},page:${page},size:15){
                 empty,
                 first,
                 last,
@@ -220,6 +220,11 @@ export default {
               this.classListData.teamStatusPage &&
               this.classListData.teamStatusPage.content[0]
           }
+
+          // sessionStorage.setItem(
+          //   'CenterBarSaveData',
+          //   JSON.stringify(this.classId)
+          // )
         })
     }
   },
@@ -241,13 +246,13 @@ export default {
 .student-team {
   &-left {
     padding-left: 0px;
-    width: 180px;
-    min-width: 180px;
+    width: 160px;
+    min-width: 160px;
     border-right: 1px solid #e3e3e3;
   }
   &-center {
-    width: 245px;
-    min-width: 245px;
+    width: 242px;
+    min-width: 242px;
   }
   &-right {
     overflow-x: hidden;

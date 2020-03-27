@@ -25,7 +25,7 @@
         <div slot-scope="scope" class="haveclass-box">
           <div class="haveclass-content">
             打开:
-            <span>{{ scope.row.statistics.login }}</span>
+            <span>{{ scope.row.statistics.open_app }}</span>
           </div>
           <div class="haveclass-content">
             参课:
@@ -76,12 +76,14 @@
       :page-count="totalPages"
       :total="totalElements"
       @current-change="handleSizeChange"
+      open="calc(100vw - 180px - 240px - 147px - 30px)"
+      close="calc(100vw - 180px - 240px - 26px - 30px)"
     ></m-pagination>
   </div>
 </template>
 <script>
 import axios from '@/api/axios'
-import { GetAgeByBrithday } from '@/utils/menuItems'
+import { GetAgeByBrithday } from '@/utils/index'
 import MPagination from '@/components/MPagination/index.vue'
 
 export default {
@@ -111,6 +113,8 @@ export default {
   created() {},
   watch: {
     classId(value) {
+      if (!value) return
+      this.scrollTop()
       this.currentPage = 1
       if (value.classId) {
         this.studentsList()
@@ -162,6 +166,7 @@ export default {
                 course_task
                 comment
                 listen_comment
+                open_app
               }
               wechat_status {
                 added_group
@@ -252,11 +257,12 @@ export default {
     },
     // 点击分页
     handleSizeChange(val) {
-      console.log(val)
-
       this.currentPage = val
       this.getstatusList()
       this.studentsList()
+      this.scrollTop()
+    },
+    scrollTop() {
       const dom = document.getElementById('right-scroll')
       dom.querySelector('.scrollbar-wrapper').scrollTo(0, 0)
     },
