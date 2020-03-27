@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 20:22:24
  * @LastEditors: panjian
- * @LastEditTime: 2020-03-27 19:47:45
+ * @LastEditTime: 2020-03-27 21:01:34
  -->
 <template>
   <div class="table-box">
@@ -425,13 +425,14 @@
         <el-table-column label="点评">
           <template slot-scope="scope">
             <div>
+              <span>{{ scope.row.has_comment_ctime }}</span>
               <div
                 v-for="(item, index) in scope.row.listenInfoArr"
                 :key="index"
                 @click="aplayAudio(item, index, 'audioRef' + index)"
                 class="audio-box"
               >
-                <span class="audio-triangle"></span>
+                <p class="audio-triangle"></p>
                 <img
                   v-if="audioIndex === index && studentId == scope.row.id"
                   class="audio-imgs"
@@ -446,6 +447,7 @@
                 />
                 <audio :ref="'audioRef' + index" :src="item.task_sound"></audio>
               </div>
+              <p>{{ scope.row.has_listen_time }}</p>
               <!-- <span>{{ scope.row }}</span> -->
             </div>
           </template>

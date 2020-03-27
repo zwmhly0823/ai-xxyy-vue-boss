@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 14:19:58
  * @LastEditors: panjian
- * @LastEditTime: 2020-03-27 17:58:47
+ * @LastEditTime: 2020-03-27 21:02:01
  -->
 <template>
   <div>
@@ -629,6 +629,20 @@ export default {
             if (!item.task_image) {
               item.task_image = ''
               item.works_ctime = ''
+            }
+            // item.has_comment_ctime = `已点评·12-12 12:33`
+            // item.has_listen_time = `已听点评·12-12 12:35`
+            if (item.has_comment_ctime) {
+              item.has_comment_ctime = timestamp(item.item.has_comment_ctime, 6)
+              item.has_comment_ctime = `已点评·${item.has_comment_ctime}`
+              if (item.has_listen_time) {
+                item.has_listen_time = timestamp(item.has_listen_time, 6)
+                item.has_listen_time = `已听点评·${item.has_listen_time}`
+              } else {
+                item.has_listen_time = '未听点评'
+              }
+            } else {
+              item.has_comment_ctime = '-'
             }
           })
           this.table.tableData = _data
