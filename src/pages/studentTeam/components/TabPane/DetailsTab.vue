@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 14:19:58
  * @LastEditors: panjian
- * @LastEditTime: 2020-03-27 21:02:01
+ * @LastEditTime: 2020-03-27 22:26:59
  -->
 <template>
   <div>
@@ -610,6 +610,7 @@ export default {
           // task_sound_second 音频多少秒
           this.table.totalElements = +res.data.getStuCommentPage.totalElements
           const _data = res.data.getStuCommentPage.content
+          // console.log(_data, ' _datatatata')
           _data.forEach((item, index) => {
             item.buytime = timestamp(item.buytime, 6)
             // item.works_ctime = timestamp(item.works_ctime, 6)
@@ -624,7 +625,7 @@ export default {
               item.course_current_num = '-'
             }
             if (item.works_ctime) {
-              item.works_ctime = timestamp(item.item.works_ctime, 6)
+              item.works_ctime = timestamp(item.works_ctime, 6)
             }
             if (!item.task_image) {
               item.task_image = ''
@@ -632,18 +633,24 @@ export default {
             }
             // item.has_comment_ctime = `已点评·12-12 12:33`
             // item.has_listen_time = `已听点评·12-12 12:35`
+            console.log(item.has_comment_ctime)
             if (item.has_comment_ctime) {
-              item.has_comment_ctime = timestamp(item.item.has_comment_ctime, 6)
+              item.has_comment_ctime = timestamp(item.has_comment_ctime, 6)
               item.has_comment_ctime = `已点评·${item.has_comment_ctime}`
+              console.log(item.has_comment_ctime)
               if (item.has_listen_time) {
                 item.has_listen_time = timestamp(item.has_listen_time, 6)
                 item.has_listen_time = `已听点评·${item.has_listen_time}`
+                console.log(item.has_listen_time)
               } else {
                 item.has_listen_time = '未听点评'
               }
             } else {
               item.has_comment_ctime = '-'
             }
+            // if (!item.listenInfoArr) {
+            //   item.listenInfoArr = []
+            // }
           })
           this.table.tableData = _data
         })
