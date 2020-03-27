@@ -4,12 +4,13 @@
  * @Author: zhubaodong
  * @Date: 2020-03-26 16:28:45
  * @LastEditors: zhubaodong
- * @LastEditTime: 2020-03-27 18:01:50
+ * @LastEditTime: 2020-03-27 18:41:40
  -->
 <template>
   <div class="search-item small">
     <el-input
       placeholder="手机号/订单号"
+      size="mini"
       v-model="input"
       clearable
       @input="inputHandler"
@@ -38,4 +39,10 @@ export default {
   mounted() {}
 }
 </script>
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.search-item {
+  &.small {
+    width: 160px !important;
+  }
+}
+</style>

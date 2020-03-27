@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-24 18:20:12
  * @LastEditors: zhubaodong
- * @LastEditTime: 2020-03-27 17:57:46
+ * @LastEditTime: 2020-03-27 19:03:12
  -->
 
 <template>
@@ -14,7 +14,6 @@
         <!-- 手机号、订单号搜索 -->
         <search-phone @result="getPhoneHander" v-if="phone" :name="phone" />
       </el-form-item>
-
       <el-form-item>
         <!-- 下单时间 -->
         <date-picker
@@ -38,7 +37,7 @@
           :name="topicType"
         />
       </el-form-item>
-      <el-form-item>
+      <!-- <el-form-item>
         <stage-sup-levels
           @stageCallBack="stageCallBack"
           @supCallBack="supCallBack"
@@ -49,9 +48,9 @@
           :levelName="level"
           style="margin-bottom:0px"
         />
-      </el-form-item>
+      </el-form-item> -->
 
-      <!-- <el-form-item>
+      <el-form-item size="mini" style="position:relative;top:6px">
         <el-popover width="100%" trigger="click">
           <stage-sup-levels
             @stageCallBack="stageCallBack"
@@ -64,15 +63,11 @@
             style="margin-bottom:0px"
           />
           <el-button slot="reference" style="color:#c0c4cc ;font-weight: 400;">
-            期数
-            <i class="el-icon-arrow-down" />
-            难度
-            <i class="el-icon-arrow-down" />
-            级别
+            班级信息
             <i class="el-icon-arrow-down" />
           </el-button>
         </el-popover>
-      </el-form-item> -->
+      </el-form-item>
     </el-form>
   </el-card>
 </template>
@@ -238,10 +233,10 @@ export default {
 <style lang="scss">
 .search-style {
   .el-card__body {
-    padding: 20px 15px 0px 15px;
+    padding: 0px 10px 0px 10px;
   }
-  // .el-form-item {
-  //   margin-bottom: 0px !important;
-  // }
+  .el-form-item {
+    margin-bottom: 0px !important;
+  }
 }
 </style>

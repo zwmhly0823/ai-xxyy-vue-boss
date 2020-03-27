@@ -4,13 +4,14 @@
  * @Author: zhubaodong
  * @Date: 2020-03-24 18:50:54
  * @LastEditors: zhubaodong
- * @LastEditTime: 2020-03-27 18:18:38
+ * @LastEditTime: 2020-03-27 19:03:42
  -->
 <template>
   <div class="search-item small">
     <el-select
       v-model="channelData"
       multiple
+      size="mini"
       collapse-tags
       clearable
       filterable
@@ -100,10 +101,4 @@ export default {
   }
 }
 </script>
-<style lang="scss" scoped>
-.search-item {
-  &.small {
-    width: 200px !important;
-  }
-}
-</style>
+<style lang="scss" scoped></style>

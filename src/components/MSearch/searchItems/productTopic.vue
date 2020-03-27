@@ -4,12 +4,13 @@
  * @Author: zhubaodong
  * @Date: 2020-03-24 18:50:54
  * @LastEditors: zhubaodong
- * @LastEditTime: 2020-03-27 14:57:58
+ * @LastEditTime: 2020-03-27 18:45:40
  -->
 <template>
   <div class="search-item small">
     <el-select
       v-model="topicData"
+      size="mini"
       clearable
       placeholder="选择商品类型"
       @change="onChange"

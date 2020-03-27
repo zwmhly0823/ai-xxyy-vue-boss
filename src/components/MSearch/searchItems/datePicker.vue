@@ -4,12 +4,13 @@
  * @Author: zhubaodong
  * @Date: 2020-03-26 16:30:11
  * @LastEditors: zhubaodong
- * @LastEditTime: 2020-03-27 17:37:51
+ * @LastEditTime: 2020-03-27 18:45:25
  -->
 <template>
   <div class="search-item">
     <el-date-picker
       class="small"
+      size="mini"
       v-model="timeData"
       value-format="timestamp"
       type="datetimerange"

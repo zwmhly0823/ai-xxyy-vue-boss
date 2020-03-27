@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-24 18:50:54
  * @LastEditors: zhubaodong
- * @LastEditTime: 2020-03-27 17:16:50
+ * @LastEditTime: 2020-03-27 18:45:56
  -->
 <template>
   <div class="search-item small">
@@ -13,6 +13,7 @@
       class="item-style"
       clearable
       multiple
+      size="mini"
       collapse-tags
       placeholder="期数"
       @change="stageChange"
@@ -29,6 +30,7 @@
       v-model="supData"
       class="item-style"
       clearable
+      size="mini"
       multiple
       collapse-tags
       placeholder="难度"
@@ -47,6 +49,7 @@
       class="item-style"
       clearable
       multiple
+      size="mini"
       collapse-tags
       placeholder="级别"
       @change="levelChange"
