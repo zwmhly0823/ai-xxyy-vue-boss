@@ -42,7 +42,7 @@
               <span style="color: #666"
                 >时长:{{
                   scope.row.packages_course_week
-                    ? scope.row.packages_course_week
+                    ? `${scope.row.packages_course_week}周`
                     : '-'
                 }}
               </span>
