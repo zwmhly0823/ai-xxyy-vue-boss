@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 20:22:24
  * @LastEditors: panjian
- * @LastEditTime: 2020-03-25 21:24:14
+ * @LastEditTime: 2020-03-27 11:31:11
  -->
 <template>
   <div class="table-box">
@@ -154,6 +154,8 @@
         @current-change="handleCurrentChange"
         :current-page="+tables.currentPage"
         :total="+tables.totalElements"
+        open="calc(100vw - 180px - 240px - 147px - 30px)"
+        close="calc(100vw - 180px - 240px - 26px - 30px)"
       />
     </div>
     <!-- 物流 -->
@@ -220,6 +222,8 @@
         @current-change="handleCurrentChange"
         :current-page="+tables.currentPage"
         :total="+tables.totalElements"
+        open="calc(100vw - 180px - 240px - 147px - 30px)"
+        close="calc(100vw - 180px - 240px - 26px - 30px)"
       />
     </div>
     <!-- 打开APP 原 登陆 -->
@@ -262,7 +266,7 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column label="最近登录次数">
+        <el-table-column label="打开次数">
           <template slot-scope="scope">
             <div>
               <span>{{ scope.row.login_time }}</span>
@@ -277,6 +281,8 @@
         @current-change="handleCurrentChange"
         :current-page="+tables.currentPage"
         :total="+tables.totalElements"
+        open="calc(100vw - 180px - 240px - 147px - 30px)"
+        close="calc(100vw - 180px - 240px - 26px - 30px)"
       />
     </div>
     <!-- 参课和完课 -->
@@ -354,6 +360,8 @@
         @current-change="handleCurrentChange"
         :current-page="+tables.currentPage"
         :total="+tables.totalElements"
+        open="calc(100vw - 180px - 240px - 147px - 30px)"
+        close="calc(100vw - 180px - 240px - 26px - 30px)"
       />
     </div>
     <!-- 作品及点评 -->
@@ -454,6 +462,8 @@
         @current-change="handleCurrentChange"
         :current-page="+tables.currentPage"
         :total="+tables.totalElements"
+        open="calc(100vw - 180px - 240px - 147px - 30px)"
+        close="calc(100vw - 180px - 240px - 26px - 30px)"
       />
     </div>
   </div>
