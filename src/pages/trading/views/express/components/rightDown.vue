@@ -10,25 +10,24 @@
       @cell-mouse-enter="handleSelectionChangeEnter"
       @cell-mouse-leave="handleSelectionChangeLeave"
     >
-      <!-- <el-table-column type="selection" width="35"> </el-table-column>
+      <el-table-column type="selection" width="25"> </el-table-column>
       <el-table-column width="25">
         <div :class="[false, 'trans']">
           <i class="el-icon-more-outline"></i>
         </div>
-      </el-table-column> -->
+      </el-table-column>
       <el-table-column label="用户及日期">
         <template slot-scope="scope">
-          <!-- <i class="el-icon-more-outline"></i> -->
           <div class="user">
-            <div>{{ scope.row.phone }}</div>
-            <div>{{ scope.row.date }}</div>
+            <div>{{ scope.row.receipt_tel }}</div>
+            <div>{{ scope.row.buytime }}</div>
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="商品信息">
+      <el-table-column label="商品信息" width="300">
         <template slot-scope="scope">
           <div class="product">
-            <span>{{ scope.row.gift }}</span>
+            <span>{{ scope.row.product_name }}</span>
           </div>
         </template>
       </el-table-column>
@@ -36,8 +35,8 @@
         <template slot-scope="scope">
           <div class="take">
             <div>
-              <span>{{ scope.row.name }}</span>
-              <span>{{ scope.row.phone }}</span>
+              <span>{{ scope.row.receipt_name }}</span>
+              <span>{{ scope.row.receipt_tel }}</span>
             </div>
             <div>
               <span>{{ scope.row.province }}</span>
@@ -45,7 +44,7 @@
               <span>{{ scope.row.area }}</span>
             </div>
             <div>
-              <span>{{ scope.row.address }}</span>
+              <span>{{ scope.row.address_detail }}</span>
             </div>
           </div>
         </template>
@@ -53,17 +52,19 @@
       <el-table-column label="物流状态" show-overflow-tooltip>
         <template slot-scope="scope">
           <div class="express">
-            <div class="wait">{{ scope.row.wait }}</div>
-            <div class="trail">{{ scope.row.trail }}</div>
+            <div>
+              {{ scope.row.express_status_chinese }}
+            </div>
+            <div class="trail">追踪</div>
           </div>
         </template>
       </el-table-column>
       <el-table-column label="物流创建·揽收·签收" show-overflow-tooltip>
         <template slot-scope="scope">
           <div class="sign">
-            <div>{{ scope.row.date }}</div>
-            <div>{{ scope.row.date }}</div>
-            <div>{{ scope.row.date }}</div>
+            <div>{{ scope.row.crtime }}</div>
+            <div>{{ scope.row.detime }}</div>
+            <div>{{ scope.row.sgtime }}</div>
           </div>
         </template>
       </el-table-column>
@@ -78,116 +79,27 @@
 
 <script>
 import MPagination from '@/components/MPagination/index.vue'
-
+import axios from '@/api/axios'
+import dayjs from 'dayjs'
 export default {
-  props: {},
+  props: ['dataExp'],
   components: {
     MPagination
   },
+  watch: {
+    dataExp(val) {
+      console.log(val, 'orange')
+      this.getExpressList(val.id)
+    }
+  },
+  created() {
+    console.log('dataExp', this.dataExp)
+    this.getExpressList(this.dataExp)
+  },
+  mounted() {},
   data() {
     return {
-      tableData: [
-        {
-          phone: '15656565656',
-          date: '2016-05-03 11:28:58',
-          name: '王小虎',
-          province: '北京市',
-          city: '北京市',
-          address: '上海市普陀区金沙江路 1518 弄',
-          gift: '小熊美术素材包',
-          wait: '待发货',
-          trail: '追踪',
-          area: '朝阳区'
-        },
-        {
-          phone: '15656565656',
-          date: '2016-05-03 11:28:58',
-          name: '王小虎',
-          province: '北京市',
-          city: '北京市',
-          address: '上海市普陀区金沙江路 1518 弄',
-          gift: '小熊美术素材包',
-          wait: '待发货',
-          trail: '追踪',
-          area: '朝阳区'
-        },
-        {
-          phone: '15656565656',
-          date: '2016-05-03 11:28:58',
-          name: '王小虎',
-          province: '北京市',
-          city: '北京市',
-          address: '上海市普陀区金沙江路 1518 弄',
-          gift: '小熊美术素材包',
-          wait: '待发货',
-          trail: '追踪',
-          area: '朝阳区'
-        },
-        {
-          phone: '15656565656',
-          date: '2016-05-03 11:28:58',
-          name: '王小虎',
-          province: '北京市',
-          city: '北京市',
-          address: '上海市普陀区金沙江路 1518 弄',
-          gift: '小熊美术素材包',
-          wait: '待发货',
-          trail: '追踪',
-          area: '朝阳区'
-        },
-        {
-          phone: '15656565656',
-          date: '2016-05-03 11:28:58',
-          name: '王小虎',
-          province: '北京市',
-          city: '北京市',
-          address: '上海市普陀区金沙江路 1518 弄',
-          gift: '小熊美术素材包',
-          wait: '待发货',
-          trail: '追踪',
-          area: '朝阳区'
-        },
-        {
-          date: '2016-05-02',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        },
-        {
-          date: '2016-05-04',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        },
-        {
-          date: '2016-05-01',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        },
-        {
-          date: '2016-05-08',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        },
-        {
-          date: '2016-05-06',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        },
-        {
-          date: '2016-05-07',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        },
-        {
-          date: '2016-05-07',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        },
-        {
-          date: '2016-05-07',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }
-      ],
+      tableData: [],
       multipleSelection: [],
       enter: false,
       cout: 0
@@ -195,6 +107,66 @@ export default {
   },
 
   methods: {
+    getExpressList(id) {
+      const query = JSON.stringify(`{"express_status":"${id}"}`)
+      console.log(query)
+      axios
+        .post('/graphql/logisticsList', {
+          query: `
+          {
+  LogisticsListPage(query:${query}, size: 20, page: 1) {
+    first
+    last
+    number
+    size
+    totalPages
+    totalElements
+    content {
+      id
+      product_name
+      delivery_collect_time
+      express_status
+      express_status_chinese
+      buy_time
+      province
+      area
+      city
+      address_detail
+      express_company
+      signing_time
+      receipt_name
+      receipt_tel
+      ctime
+      utime
+      user{
+        id
+        birthday
+        mobile
+      }
+    }
+  }
+}`
+        })
+        .then((res) => {
+          console.log(res.data.LogisticsListPage.content, 'res123')
+          const resData = res.data.LogisticsListPage.content
+          resData.forEach((item) => {
+            item.crtime = this.timeFormat(item.ctime)
+            item.detime = this.timeFormat(item.delivery_collect_time)
+            item.uptime = this.timeFormat(item.utime)
+            item.sgtime = this.timeFormat(item.signing_time)
+            item.buytime = this.timeFormat(item.buy_time)
+            // item.birthday = this.timeFormat(item.user.birthday) || ''
+            return item
+          })
+          this.tableData = resData
+          console.log(resData, ' this.tableData')
+          //  = res.data.LogisticsListPage.content
+        })
+    },
+    timeFormat(time) {
+      return dayjs.unix(Number(time) / 1000).format('YYYY-MM-DD  hh:mm:ss')
+    },
     toggleSelection(rows) {
       if (rows) {
         rows.forEach((row) => {
@@ -233,10 +205,13 @@ export default {
     margin-bottom: -8px;
   }
   .express {
-    .wait {
-      color: rgb(127, 255, 136);
+    .express_status_1,
+    .express_status_2,
+    .express_status_3,
+    .express_status_4 {
+      color: red;
     }
-    .trail {
+    .express_status_5 {
       color: rgb(0, 51, 255);
     }
   }

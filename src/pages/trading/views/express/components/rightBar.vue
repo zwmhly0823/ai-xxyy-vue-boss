@@ -3,7 +3,7 @@
     <div class="up">
       <right-up></right-up>
     </div>
-    <div class="down"><right-down />></div>
+    <div class="down"><right-down :dataExp="dataExp" />></div>
   </div>
 </template>
 
@@ -16,8 +16,11 @@ export default {
     rightUp,
     rightDown
   },
+  data() {
+    return {}
+  },
   mounted() {
-    console.log(this.dataExp(), '00000changer')
+    console.log(this.dataExp, '00000changer')
   }
 }
 </script>

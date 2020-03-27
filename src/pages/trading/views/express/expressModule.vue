@@ -16,7 +16,7 @@
     <el-col class="express-main-right">
       <div class="express-main-right-content">
         <el-scrollbar wrap-class="scrollbar-wrapper" id="right-scroll">
-          <right-bar :dataExp="dataExpress" />
+          <right-bar :dataExp="Express" />
         </el-scrollbar>
       </div>
     </el-col>
@@ -35,14 +35,14 @@ export default {
   },
   data() {
     return {
-      dataExp: '0,1,2,3,6'
+      Express: '0,1,2,3,6'
     }
   },
   computed: {},
   watch: {},
   methods: {
     dataExpress(val) {
-      this.dataExp = val
+      this.Express = val ? (this.Express = val) : this.Express
     }
   },
   created() {},
