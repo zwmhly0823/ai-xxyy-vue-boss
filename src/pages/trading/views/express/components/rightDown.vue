@@ -11,9 +11,9 @@
       @row-click="handleExpressTo"
       :header-cell-style="headerStyle"
     >
-      <el-table-column type="selection" width="25" v-show="teacherId">
+      <el-table-column type="selection" width="25" v-show="!teacherId">
       </el-table-column>
-      <el-table-column width="25" v-show="teacherId">
+      <el-table-column width="25" v-show="!teacherId">
         <div :class="[false, 'trans']">
           <i class="el-icon-more-outline"></i>
         </div>
