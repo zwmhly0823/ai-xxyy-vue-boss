@@ -9,7 +9,7 @@
 <template>
   <div class="container">
     <div class="search-up">
-      <m-search
+      <!-- <m-search
         @search="handleSearch"
         topicType="topic_id"
         phone="umobile"
@@ -18,16 +18,24 @@
           { text: '揽收时间', value: 'delivery_collect_time' },
           { text: '签收时间', value: 'signing_time' }
         ]"
+      /> -->
+      <m-search
+        @search="handleSearch"
+        phone="user_id"
+        :timeData="[
+          { text: '揽收时间', value: 'delivery_collect_time' },
+          { text: '签收时间', value: 'signing_time' }
+        ]"
       />
     </div>
-    <div class="search-export">
+    <!-- <div class="search-export">
       <div @click="exportExpress">
         <el-button size="small" type="primary">导出物流信息</el-button>
       </div>
       <div @click="importExpress">
         <el-button size="small" type="primary">导入物流信息</el-button>
       </div>
-    </div>
+    </div> -->
   </div>
 </template>
 
