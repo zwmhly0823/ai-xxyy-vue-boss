@@ -18,6 +18,7 @@ import axios from '@/api/axios'
 export default {
   data() {
     return {
+      teacherId: '',
       defaultProps: {
         children: 'children',
         label: 'label'
@@ -77,10 +78,12 @@ export default {
   },
   methods: {
     getExpressList() {
+      const q = `{"teacher_id": ${this.teacherId}}`
+      const query = JSON.stringify(q)
       axios
         .post('/graphql/logisticsStatistics', {
           query: `{
-          logisticsStatistics(query:"") {
+          logisticsStatistics(query:${query}) {
             no_address
             wait_send
             has_send
@@ -171,6 +174,10 @@ export default {
     }
   },
   created() {
+    const teacher = localStorage.getItem('teacher')
+    if (teacher) {
+      this.teacherId = JSON.parse(teacher).id
+    }
     this.getExpressList()
   }
 }
