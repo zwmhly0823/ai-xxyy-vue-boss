@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 20:22:24
  * @LastEditors: panjian
- * @LastEditTime: 2020-03-27 23:07:13
+ * @LastEditTime: 2020-03-28 10:43:12
  -->
 <template>
   <div class="table-box">
@@ -580,11 +580,6 @@ export default {
     },
     // 单元格回调样式
     cellStyle({ row, column, rowIndex, columnIndex }) {
-      // console.log(row, column.label, columnIndex)
-      // if (column.label === '作品' && columnIndex === 3) {
-      //   console.log('作品样式函数')
-      //   return 'margin-bottom:30px;'
-      // }
       if (columnIndex === 0) {
         return 'padding-left:15px;padding-top:20px;padding-bottom:20px;'
       }
