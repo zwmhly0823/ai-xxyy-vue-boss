@@ -8,11 +8,11 @@
  -->
 <template>
   <el-scrollbar wrap-class="order-wrapper" id="order-scroll">
+    <!-- topicType="topic_id" -->
     <div class="order-box">
       <m-search
         @search="handleSearch"
         channel="pay_channel"
-        topicType="topic_id"
         stage="stage"
         sup="sup"
         date="ctime"

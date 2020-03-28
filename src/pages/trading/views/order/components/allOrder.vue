@@ -1,6 +1,6 @@
 <template>
   <div class="order-call">
-    <article class="top-box">
+    <article class="top-box" style="display: none;">
       <el-row :gutter="20">
         <!-- 订单总计 -->
         <el-col :span="6">
@@ -125,7 +125,7 @@ export default {
     if (teacherId) {
       this.teacherId = teacherId
     }
-    this.statList()
+    // this.statList()
   },
   methods: {
     statList() {
