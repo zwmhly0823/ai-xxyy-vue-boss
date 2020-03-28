@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 14:19:58
  * @LastEditors: panjian
- * @LastEditTime: 2020-03-27 22:45:46
+ * @LastEditTime: 2020-03-28 10:44:22
  -->
 <template>
   <div>
@@ -92,23 +92,7 @@ export default {
         // 总条数
         totalElements: null,
         // 当前页
-        currentPage: 1,
-        audioList: [
-          // {
-          //   // src: require('@/assets/images/shaonian.mp3')
-          //   src:
-          //     'http://s1.meixiu.mobi/iOSAcc/30b1075beebb7e1debe9e0a67bde7611.aac'
-          // },
-          // {
-          //   src: require('@/assets/images/zuimeideshangkou.mp3')
-          // },
-          // {
-          //   src: require('@/assets/images/shaonian.mp3')
-          // },
-          // {
-          //   src: require('@/assets/images/zuimeideshangkou.mp3')
-          // }
-        ]
+        currentPage: 1
       },
       // tabs标签默认状态
       activeName: 'group',
@@ -641,9 +625,6 @@ export default {
             } else {
               item.has_comment_ctime = '-'
             }
-            // if (!item.listenInfoArr) {
-            //   item.listenInfoArr = []
-            // }
           })
           this.table.tableData = _data
         })
