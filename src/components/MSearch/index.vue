@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-24 18:20:12
  * @LastEditors: zhubaodong
- * @LastEditTime: 2020-03-28 19:14:44
+ * @LastEditTime: 2020-03-28 19:33:24
  -->
 
 <template>
@@ -14,6 +14,16 @@
         <!-- 手机号搜索 -->
         <search-phone @result="getPhoneHander" v-if="phone" :name="phone" />
       </el-form-item>
+
+      <el-form-item>
+        <!-- 商品名称搜索 -->
+        <product-name
+          @result="getProductName"
+          v-if="productName"
+          :name="productName"
+        />
+      </el-form-item>
+
       <el-form-item>
         <!-- 订单号搜索 -->
         <out-trade-no
@@ -100,6 +110,7 @@ import ProductTopic from './searchItems/productTopic.vue'
 import StageSupLevels from './searchItems/stageSupLevels.vue'
 import SearchPhone from './searchItems/searchPhone.vue'
 import OutTradeNo from './searchItems/outTradeNo.vue'
+import ProductName from './searchItems/productName.vue'
 import SelectDate from './searchItems/selectDate.vue'
 
 export default {
@@ -158,6 +169,11 @@ export default {
       type: String,
       default: '' // out_trade_no
     },
+    // 商品名称
+    productName: {
+      type: String,
+      default: '' // product_name
+    },
     // 下拉时间选择
     timeData: {
       type: Array,
@@ -171,7 +187,8 @@ export default {
     DatePicker,
     SearchPhone,
     SelectDate,
-    OutTradeNo
+    OutTradeNo,
+    ProductName
   },
   data() {
     return {
@@ -221,6 +238,10 @@ export default {
     // 选择订单号
     getOutTradeNo(res) {
       this.setSeachParmas(res, [this.outTradeNo || 'out_trade_no'])
+    },
+    // 选择订单号
+    getProductName(res) {
+      this.setSeachParmas(res, [this.productName || 'product_name'])
     },
     // 获取下拉时间选择select
     getTimeCallBack(data) {
