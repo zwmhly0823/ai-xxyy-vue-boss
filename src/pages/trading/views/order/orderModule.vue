@@ -117,7 +117,7 @@ export default {
       top: 0px;
       right: 10px;
       left: 10px;
-      z-index: 99999;
+      z-index: 1001;
     }
   }
 }
