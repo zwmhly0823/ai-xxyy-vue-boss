@@ -90,12 +90,10 @@
           :key="index"
           :color="activities.color"
         >
-          <div v-if="value != []">
-            <div class="statebox" v-for="(item, key) in value" :key="key">
-              <div class="state" v-if="key === 0">{{ item.status }}</div>
-              <div class="content">{{ item.context }}</div>
-              <div class="time">{{ item.time }}</div>
-            </div>
+          <div class="statebox" v-for="(item, key) in value" :key="key">
+            <div class="state" v-if="key === 0">{{ item.status }}</div>
+            <div class="content">{{ item.context }}</div>
+            <div class="time">{{ item.time }}</div>
           </div>
         </el-timeline-item>
       </el-timeline>
@@ -293,18 +291,18 @@ export default {
             this.waitFor = false
             console.log('ress----', res && res.payload)
             this.timeLine = true
-            const lastData = {
-              receive: [],
-              onway: [],
-              begin: []
-            }
+            const lastData = {}
 
             res.payload[0].data.forEach((item) => {
               if (item.status === '揽收') {
+                lastData.begin = lastData.begin == null ? [] : lastData.begin
                 lastData.begin.push(item)
               } else if (item.status === '在途' || item.status === '派件') {
+                lastData.onway = lastData.onway == null ? [] : lastData.onway
                 lastData.onway.push(item)
               } else {
+                lastData.receive =
+                  lastData.receive == null ? [] : lastData.receive
                 lastData.receive.push(item)
               }
               this.expressDetail = lastData

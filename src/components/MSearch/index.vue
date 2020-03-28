@@ -225,6 +225,14 @@ export default {
       const { must, should } = this
       const temp = name === 'must' ? must : should
       key.forEach((k) => {
+        // temp.forEach((item, index) => {
+        //   if (
+        //     JSON.parse(item[extraKey])[k] &&
+        //     (JSON.parse(item[extraKey])[k] ||
+        //       +JSON.parse(item[extraKey])[k] === 0)
+        //   )
+        //     temp.splice(index, 1)
+        // })
         temp.forEach((item, index) => {
           if (
             item[extraKey] &&
