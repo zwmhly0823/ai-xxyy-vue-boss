@@ -132,11 +132,16 @@ export default {
   },
   created() {
     console.log('dataExp', this.dataExp)
+    const teacher = localStorage.getItem('teacher')
+    if (teacher) {
+      this.teacherId = JSON.parse(teacher).id
+    }
     this.getExpressList(this.dataExp.id)
   },
   mounted() {},
   data() {
     return {
+      teacherId: '',
       createDataExp: '',
       // 总页数
       totalPages: 1,
@@ -178,8 +183,13 @@ export default {
       this.getExpressList(this.dataExp.id)
     },
     getExpressList(id) {
-      const query = JSON.stringify(`{"express_status":"${id}"}`)
-      console.log(query)
+      let q = `{"express_status":"${id}"}`
+      if (this.teacherId) {
+        q = `{"express_status":"${id}", "teacher_id": ${this.teacherId}}`
+      }
+
+      const query = JSON.stringify(`${q}`)
+      // console.log(query)
       axios
         .post('/graphql/logisticsList', {
           query: `
