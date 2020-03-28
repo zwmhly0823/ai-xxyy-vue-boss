@@ -1,15 +1,16 @@
 <template>
   <div class="container">
     <el-table
+      highlight-current-row
       ref="multipleTable"
       :data="tableData"
       style="width: 100%"
-      height="600"
       @selection-change="handleSelectionChange"
       @cell-mouse-enter="handleSelectionChangeEnter"
       @cell-mouse-leave="handleSelectionChangeLeave"
       @row-click="handleExpressTo"
       :header-cell-style="headerStyle"
+      :current-row-key="rowKey"
     >
       <el-table-column type="selection" width="25" v-if="!teacherId">
       </el-table-column>
@@ -120,7 +121,7 @@
 <script>
 import MPagination from '@/components/MPagination/index.vue'
 import axios from '@/api/axios'
-import dayjs from 'dayjs'
+import { isToss, formatData } from '@/utils/index'
 export default {
   props: ['dataExp'],
   components: {
@@ -136,15 +137,16 @@ export default {
   },
   created() {
     console.log('dataExp', this.dataExp)
-    const teacher = localStorage.getItem('teacher')
-    if (teacher) {
-      this.teacherId = JSON.parse(teacher).id
+    const teacherId = isToss()
+    if (teacherId) {
+      this.teacherId = teacherId
     }
     this.getExpressList(this.dataExp.id)
   },
   mounted() {},
   data() {
     return {
+      rowKey: '',
       teacherId: '',
       createDataExp: '',
       // 总页数
@@ -177,7 +179,6 @@ export default {
     }
   },
   methods: {
-    // 批量处理事件
     batchProcessing() {
       console.log('批量处理事件')
     },
@@ -244,11 +245,11 @@ export default {
           console.log(res.data.LogisticsListPage.content, 'res123')
           const resData = res.data.LogisticsListPage.content
           resData.forEach((item) => {
-            item.crtime = this.timeFormat(item.ctime)
-            item.detime = this.timeFormat(item.delivery_collect_time)
-            item.uptime = this.timeFormat(item.utime)
-            item.sgtime = this.timeFormat(item.signing_time)
-            item.buytime = this.timeFormat(item.buy_time)
+            item.crtime = formatData(+item.ctime, 's')
+            item.detime = formatData(+item.delivery_collect_time, 's')
+            item.uptime = formatData(+item.utime, 's')
+            item.sgtime = formatData(+item.signing_time, 's')
+            item.buytime = formatData(+item.buy_time, 's')
             return item
           })
           this.tableData = resData
@@ -268,9 +269,6 @@ export default {
           //  = res.data.LogisticsListPage.content
         })
     },
-    timeFormat(time) {
-      return dayjs.unix(Number(time) / 1000).format('YYYY-MM-DD  hh:mm:ss')
-    },
     toggleSelection(rows) {
       if (rows) {
         rows.forEach((row) => {
@@ -284,14 +282,15 @@ export default {
       this.multipleSelection = val
     },
     handleSelectionChangeEnter() {
-      // this.cout++
-      // console.log('鼠标进入', this.cout)
-      // this.enter = true
+      console.log(this.rowKey, 'this.rowKey')
+      this.cout++
+      console.log('鼠标进入', this.cout)
+      this.enter = true
     },
     handleSelectionChangeLeave() {
-      // console.log('鼠标离开', this.cout)
-      // this.cout++
-      // this.enter = false
+      console.log('鼠标离开', this.cout)
+      this.cout++
+      this.enter = false
     },
     // 物流列表信息
     Express(expressNu, company) {

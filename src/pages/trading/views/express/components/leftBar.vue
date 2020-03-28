@@ -15,6 +15,7 @@
 
 <script>
 import axios from '@/api/axios'
+import { isToss } from '@/utils/index'
 export default {
   data() {
     return {
@@ -174,9 +175,9 @@ export default {
     }
   },
   created() {
-    const teacher = localStorage.getItem('teacher')
-    if (teacher) {
-      this.teacherId = JSON.parse(teacher).id
+    const teacherId = isToss()
+    if (teacherId) {
+      this.teacherId = teacherId
     }
     this.getExpressList()
   }
