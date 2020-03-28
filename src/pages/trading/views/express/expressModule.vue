@@ -63,6 +63,8 @@ export default {
     }
   }
   &-right {
+    display: flex;
+    flex-direction: column;
     flex: 1;
     margin: 10px;
     overflow-y: auto;
@@ -70,6 +72,7 @@ export default {
     &-content {
       display: flex;
       flex-direction: column;
+      flex: 1;
     }
   }
 }

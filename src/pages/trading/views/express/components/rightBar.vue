@@ -27,5 +27,14 @@ export default {
 
 <style lang="scss" scoped>
 .container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  .up {
+    margin-bottom: 10px;
+  }
+  .down {
+    flex: 1;
+  }
 }
 </style>

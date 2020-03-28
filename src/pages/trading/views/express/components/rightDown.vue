@@ -3,7 +3,6 @@
     <el-table
       ref="multipleTable"
       :data="tableData"
-      tooltip-effect="dark"
       style="width: 100%"
       @selection-change="handleSelectionChange"
       @cell-mouse-enter="handleSelectionChangeEnter"
@@ -11,8 +10,12 @@
       @row-click="handleExpressTo"
       :header-cell-style="headerStyle"
     >
-      <el-table-column type="selection" width="25"> </el-table-column>
-      <el-table-column width="25">
+      <el-table-column
+        type="selection"
+        width="25"
+        v-if="!teacherId"
+      ></el-table-column>
+      <el-table-column width="25" v-if="!teacherId">
         <div :class="[false, 'trans']">
           <i class="el-icon-more-outline"></i>
         </div>
@@ -279,15 +282,14 @@ export default {
       this.multipleSelection = val
     },
     handleSelectionChangeEnter() {
-      this.cout++
-      console.log('鼠标进入', this.cout)
-      this.enter = true
+      // this.cout++
+      // console.log('鼠标进入', this.cout)
+      // this.enter = true
     },
     handleSelectionChangeLeave() {
-      console.log('鼠标离开', this.cout)
-      this.cout++
-
-      this.enter = false
+      // console.log('鼠标离开', this.cout)
+      // this.cout++
+      // this.enter = false
     },
     // 物流列表信息
     Express(expressNu, company) {
@@ -330,7 +332,6 @@ export default {
 
 <style lang="scss" scoped>
 .container {
-  margin-top: 10px;
   padding-bottom: 50px;
   background-color: #fff;
   color: #666;
