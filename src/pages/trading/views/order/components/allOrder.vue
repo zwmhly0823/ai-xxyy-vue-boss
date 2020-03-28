@@ -104,7 +104,7 @@ export default {
       )
     },
     amountTotal() {
-      return this.experience.value + this.systemClass.value
+      return (this.experience.value + this.systemClass.value).toFixed(2)
     }
   },
   watch: {
@@ -171,7 +171,6 @@ export default {
               this.systemClass = val
             }
           })
-          console.log(res, 'res')
           this.statData = res.data.orderStatistics
         })
     }
