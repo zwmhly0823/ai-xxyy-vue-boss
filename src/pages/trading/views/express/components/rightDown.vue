@@ -86,7 +86,11 @@
       </div>
       <div class="waitFor" v-show="waitFor">快递待揽收</div>
       <el-timeline v-show="timeLine">
-        <el-timeline-item v-for="(value, index) in expressDetail" :key="index">
+        <el-timeline-item
+          v-for="(value, index) in expressDetail"
+          :key="index"
+          :color="activities.color"
+        >
           <div v-if="value != []">
             <div class="statebox" v-for="(item, key) in value" :key="key">
               <div class="state" v-if="key === 0">{{ item.status }}</div>
@@ -156,13 +160,11 @@ export default {
       // 弹出层
       timeline: false,
       // 时间线样式
-      activities: [
-        {
-          size: 'large',
-          type: 'primary',
-          color: '#0bbd87'
-        }
-      ]
+      activities: {
+        size: 'large',
+        type: 'primary',
+        color: '#0bbd87'
+      }
     }
   },
   methods: {
