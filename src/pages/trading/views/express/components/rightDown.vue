@@ -4,20 +4,18 @@
       ref="multipleTable"
       :data="tableData"
       style="width: 100%"
+      height="600"
       @selection-change="handleSelectionChange"
       @cell-mouse-enter="handleSelectionChangeEnter"
       @cell-mouse-leave="handleSelectionChangeLeave"
       @row-click="handleExpressTo"
       :header-cell-style="headerStyle"
     >
-      <el-table-column
-        type="selection"
-        width="25"
-        v-if="!teacherId"
-      ></el-table-column>
+      <el-table-column type="selection" width="25" v-if="!teacherId">
+      </el-table-column>
       <el-table-column width="25" v-if="!teacherId">
-        <div :class="[false, 'trans']">
-          <i class="el-icon-more-outline"></i>
+        <div class="three-dot" @click="batchProcessing">
+          <img src="@/assets/images/icon/icon-three-dot.jpg" />
         </div>
       </el-table-column>
       <el-table-column label="用户及日期">
@@ -179,6 +177,10 @@ export default {
     }
   },
   methods: {
+    // 批量处理事件
+    batchProcessing() {
+      console.log('批量处理事件')
+    },
     // 表头样式
     headerStyle() {
       return 'font-size: 12px;color: #666;font-weight: normal;'
@@ -335,6 +337,14 @@ export default {
   padding-bottom: 50px;
   background-color: #fff;
   color: #666;
+  .three-dot {
+    display: flex;
+    justify-content: center;
+    img {
+      width: 14px;
+      height: 14px;
+    }
+  }
   .user,
   .sign,
   .express,
@@ -344,11 +354,6 @@ export default {
     .name {
       color: #333;
     }
-  }
-
-  .trans {
-    transform: rotate(-90deg);
-    margin-bottom: -8px;
   }
   .express {
     .wait_4 {
