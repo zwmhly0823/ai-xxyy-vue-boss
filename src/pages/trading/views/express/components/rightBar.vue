@@ -1,9 +1,11 @@
 <template>
   <div class="container">
     <div class="up">
-      <right-up></right-up>
+      <right-up @search="search" />
     </div>
-    <div class="down"><right-down :dataExp="dataExp" /></div>
+    <div class="down">
+      <right-down :dataExp="dataExp" :search="searchData" />
+    </div>
   </div>
 </template>
 
@@ -17,10 +19,18 @@ export default {
     rightDown
   },
   data() {
-    return {}
+    return {
+      searchData: ''
+    }
   },
   mounted() {
     console.log(this.dataExp, '00000changer')
+  },
+  methods: {
+    search(search) {
+      this.searchData = search
+      console.log('search', this.searchData)
+    }
   }
 }
 </script>
