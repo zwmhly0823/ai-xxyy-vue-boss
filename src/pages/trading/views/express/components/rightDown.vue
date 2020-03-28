@@ -4,7 +4,6 @@
       ref="multipleTable"
       :data="tableData"
       tooltip-effect="dark"
-      height="680"
       style="width: 100%"
       @selection-change="handleSelectionChange"
       @cell-mouse-enter="handleSelectionChangeEnter"
@@ -107,8 +106,8 @@
       :total="totalElements"
       @current-change="handleSizeChange"
       show-pager
-      open="calc(100vw - 170px - 30px - 180px)"
-      close="calc(100vw - 50px - 30px - 180px)"
+      open="calc(100vw - 170px - 24px - 180px)"
+      close="calc(100vw - 50px - 24px - 180px)"
     ></m-pagination>
   </div>
 </template>
@@ -324,6 +323,7 @@ export default {
 <style lang="scss" scoped>
 .container {
   margin-top: 10px;
+  padding-bottom: 50px;
   background-color: #fff;
   font-size: 12px;
   .trans {
