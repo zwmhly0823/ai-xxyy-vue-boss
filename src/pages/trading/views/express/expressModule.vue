@@ -16,7 +16,7 @@
     <el-col class="express-main-right">
       <div class="express-main-right-content">
         <!-- <el-scrollbar wrap-class="scrollbar-wrapper" id="right-scroll"> -->
-        <right-bar :dataExp="Express" />
+        <right-bar :dataExp="Express" @search="search" />
         <!-- </el-scrollbar> -->
       </div>
     </el-col>
@@ -43,6 +43,9 @@ export default {
   methods: {
     dataExpress(val) {
       this.Express = val ? (this.Express = val) : this.Express
+    },
+    search(val) {
+      console.log(val, 'search')
     }
   },
   created() {},
