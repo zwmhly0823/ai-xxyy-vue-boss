@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-13 16:53:33
  * @LastEditors: zhubaodong
- * @LastEditTime: 2020-03-25 22:20:29
+ * @LastEditTime: 2020-03-28 20:47:08
  -->
 <template>
   <div class="center-container">
@@ -44,7 +44,7 @@
               </span>
               <span class="imgtext2">
                 <img src="@/assets/images/icon/teacher.png" alt="" />
-                <span>{{ item.teacher.realname }}</span>
+                <span>{{ item.teacher && item.teacher.realname }}</span>
               </span>
               <span class="imgtext3">
                 <i class="el-icon-date"></i>
