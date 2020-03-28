@@ -14,7 +14,6 @@
         topicType="topic_id"
         stage="stage"
         sup="sup"
-        level="current_level"
         phone="umobile"
         :timeData="[
           { text: '创建时间', value: 'ectime' },
