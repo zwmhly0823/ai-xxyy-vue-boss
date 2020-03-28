@@ -73,10 +73,10 @@ export default {
       if (this.clicked && hasChildren) return
       this.clicked = hasChildren
 
-      // https://msb-ai.meixiu.mobi/frontend/ai-app-vue-toss/student-team/#/ 测试环境
-      if (pathname.includes('frontend')) {
+      // https://msb-ai.meixiu.mobi/ai-app-vue-toss-test/student-team/#/ 测试环境
+      if (pathname.includes('test')) {
         const pathArr = pathname.split('/')
-        baseUrl = '/' + [pathArr[1], pathArr[2]].join('/')
+        baseUrl = '/' + [pathArr[1]].join('/') // , pathArr[2]
       }
 
       if (this.$route.path === `${path}`) return
