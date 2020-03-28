@@ -59,7 +59,7 @@
             <el-button
               class="trail"
               type="text"
-              @click="Express(scope.row.express_nu)"
+              @click="Express(scope.row.express_nu, scope.row.express_company)"
             >
               追踪
             </el-button>
@@ -79,14 +79,18 @@
     <el-dialog :visible.sync="timeline" width="30%" v-model="expressDetail">
       <div class="line">
         <div class="logistics">
-          <span>物流公司：</span><span>中通物流</span>
+          <span>物流公司：</span><span>{{ expressTitle.company }}</span>
         </div>
         <span>快递单号：</span>
-        <span>{{ expressNu }}</span>
+        <span>{{ expressTitle.nu }}</span>
       </div>
       <div class="waitFor" v-show="waitFor">快递待揽收</div>
       <el-timeline v-show="timeLine">
-        <el-timeline-item v-for="(value, index) in expressDetail" :key="index">
+        <el-timeline-item
+          v-for="(value, index) in expressDetail"
+          :key="index"
+          :color="activities.color"
+        >
           <div v-if="value != []">
             <div class="statebox" v-for="(item, key) in value" :key="key">
               <div class="state" v-if="key === 0">{{ item.status }}</div>
@@ -128,11 +132,16 @@ export default {
   },
   created() {
     console.log('dataExp', this.dataExp)
+    const teacher = localStorage.getItem('teacher')
+    if (teacher) {
+      this.teacherId = JSON.parse(teacher).id
+    }
     this.getExpressList(this.dataExp.id)
   },
   mounted() {},
   data() {
     return {
+      teacherId: '',
       createDataExp: '',
       // 总页数
       totalPages: 1,
@@ -145,7 +154,10 @@ export default {
       waitFor: false,
       // 物流详情
       expressDetail: [],
-      expressNu: '',
+      expressTitle: {
+        nu: '',
+        company: ''
+      },
       tableData: [],
       multipleSelection: [],
       enter: false,
@@ -153,13 +165,11 @@ export default {
       // 弹出层
       timeline: false,
       // 时间线样式
-      activities: [
-        {
-          size: 'large',
-          type: 'primary',
-          color: '#0bbd87'
-        }
-      ]
+      activities: {
+        size: 'large',
+        type: 'primary',
+        color: '#0bbd87'
+      }
     }
   },
   methods: {
@@ -173,8 +183,13 @@ export default {
       this.getExpressList(this.dataExp.id)
     },
     getExpressList(id) {
-      const query = JSON.stringify(`{"express_status":"${id}"}`)
-      console.log(query)
+      let q = `{"express_status":"${id}"}`
+      if (this.teacherId) {
+        q = `{"express_status":"${id}", "teacher_id": ${this.teacherId}}`
+      }
+
+      const query = JSON.stringify(`${q}`)
+      // console.log(query)
       axios
         .post('/graphql/logisticsList', {
           query: `
@@ -268,13 +283,16 @@ export default {
       this.enter = false
     },
     // 物流列表信息
-    Express(expressNu) {
+    Express(expressNu, company) {
       this.timeline = true
-      this.expressNu = expressNu
+      this.expressTitle.nu = expressNu
+      this.expressTitle.company = company
       this.$http.Express.ExpressList({ expressNo: expressNu })
         .catch((err) => console.log(err))
         .then((res) => {
           if (res && res.payload) {
+            this.waitFor = false
+            console.log('ress----', res && res.payload)
             this.timeLine = true
             const lastData = {
               receive: [],
@@ -292,16 +310,9 @@ export default {
               }
               this.expressDetail = lastData
             })
-
-            // res.payload.forEach((item) => {
-            //   this.expressDetail.expressNo = item.expressNo
-            //   this.expressDetail.ctime = item.ctime
-            //   this.expressDetail.utime = item.utime
-            //   item.data.forEach((Dataitem) => {
-
-            //   })
-            // })
           } else {
+            console.log('error    ---------', 123123232)
+            this.expressDetail = []
             this.waitFor = true
           }
         })
