@@ -23,8 +23,12 @@
       />
     </div>
     <div class="search-export">
-      <div><el-button size="small" type="primary">导出物流信息</el-button></div>
-      <div><el-button size="small" type="primary">导入物流信息</el-button></div>
+      <div @click="exportExpress">
+        <el-button size="small" type="primary">导出物流信息</el-button>
+      </div>
+      <div @click="importExpress">
+        <el-button size="small" type="primary">导入物流信息</el-button>
+      </div>
     </div>
   </div>
 </template>
@@ -36,6 +40,12 @@ export default {
     MSearch
   },
   methods: {
+    importExpress() {
+      console.log('导入物流信息')
+    },
+    exportExpress() {
+      console.log('导出物流信息')
+    },
     handleSearch(res) {
       console.log(res, '1111')
     }
