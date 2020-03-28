@@ -61,13 +61,16 @@
         />
       </el-form-item> -->
 
-      <el-form-item size="mini" style="position:relative;top:6px">
+      <el-form-item
+        size="mini"
+        style="position:relative;top:6px"
+        v-if="level || sup || stage"
+      >
         <el-popover width="100%" trigger="click">
           <stage-sup-levels
             @stageCallBack="stageCallBack"
             @supCallBack="supCallBack"
             @levelCallBack="levelCallBack"
-            v-if="level || sup || stage"
             :stageName="stage"
             :supName="sup"
             :levelName="level"
