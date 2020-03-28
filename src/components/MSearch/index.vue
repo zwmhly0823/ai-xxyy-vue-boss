@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-24 18:20:12
  * @LastEditors: zhubaodong
- * @LastEditTime: 2020-03-27 22:32:32
+ * @LastEditTime: 2020-03-28 14:11:36
  -->
 
 <template>
@@ -225,11 +225,19 @@ export default {
       const { must, should } = this
       const temp = name === 'must' ? must : should
       key.forEach((k) => {
+        // temp.forEach((item, index) => {
+        //   if (
+        //     JSON.parse(item[extraKey])[k] &&
+        //     (JSON.parse(item[extraKey])[k] ||
+        //       +JSON.parse(item[extraKey])[k] === 0)
+        //   )
+        //     temp.splice(index, 1)
+        // })
         temp.forEach((item, index) => {
           if (
-            JSON.parse(item[extraKey])[k] &&
-            (JSON.parse(item[extraKey])[k] ||
-              +JSON.parse(item[extraKey])[k] === 0)
+            item[extraKey] &&
+            item[extraKey][k] &&
+            (item[extraKey][k] || +item[extraKey][k] === 0)
           )
             temp.splice(index, 1)
         })

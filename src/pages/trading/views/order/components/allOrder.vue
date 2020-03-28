@@ -120,14 +120,17 @@ export default {
     }
   },
   created() {
+    const teacherStor = JSON.parse(localStorage.getItem('teacher') || '{}')
+    if (teacherStor) {
+      this.teacherStor = teacherStor
+    }
     this.statList()
   },
   methods: {
     statList() {
-      this.teacherStor = JSON.parse(localStorage.getItem('teacher') || '{}')
       const must = []
       if (this.teacherStor.id) {
-        must.push(`{ term: { teacher_id: ${this.teacherStor.id} } }`)
+        must.push(`{ "term": { "teacher_id": ${this.teacherStor.id} } }`)
       }
       // TODO: 切换tab filter
       // "filter":{"bool":{"should":[{"term":{"orderstatus":1}},{"term":{"orderstatus":0}}]}}
@@ -135,6 +138,7 @@ export default {
       // 搜索 must
       const mustArr = this.searchIn.map((item) => JSON.stringify(item))
       must.push(...mustArr)
+
       const should = this.tab ? [`{"terms": {"status": [${this.tab}]}}`] : []
       const queryStr = `{
         "bool": {

@@ -79,7 +79,7 @@ export default {
   methods: {
     getExpressList() {
       const q = `{"teacher_id": ${this.teacherId}}`
-      const query = JSON.stringify(q)
+      const query = JSON.stringify(this.teacherId ? q : '')
       axios
         .post('/graphql/logisticsStatistics', {
           query: `{
