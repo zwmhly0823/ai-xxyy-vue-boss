@@ -159,7 +159,7 @@ export default {
       const should = this.tab ? [`{"terms": {"status": [${this.tab}]}}`] : []
       const queryStr = `{
         "bool": {
-          "must": [${mustArr}],
+          "must": [${must}],
           "filter": {
             "bool": {
               "should": [${should}]
