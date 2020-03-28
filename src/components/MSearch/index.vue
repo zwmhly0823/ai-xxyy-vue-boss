@@ -220,7 +220,7 @@ export default {
     },
     // 选择订单号
     getOutTradeNo(res) {
-      this.setSeachParmas(res, [this.outTradeNo || 'out_trade_no'])
+      this.setSeachParmas(res, [this.outTradeNo || 'out_trade_no'], 'wildcard')
     },
     // 获取下拉时间选择select
     getTimeCallBack(data) {

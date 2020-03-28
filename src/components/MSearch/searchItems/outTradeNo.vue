@@ -56,11 +56,11 @@ export default {
     inputHandler(data) {
       const reg = /^[0-9]*$/
       if (!reg.test(data)) {
-        console.log('进来了')
         this.input = ''
         return
       }
-      this.$emit('result', data ? { [this.name]: this.input } : '')
+      // 模糊搜索
+      this.$emit('result', data ? { [this.name]: `*${this.input}*` } : '')
     }
   },
   created() {},

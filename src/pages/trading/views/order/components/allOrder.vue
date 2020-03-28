@@ -165,24 +165,23 @@ export default {
         })
         .then((res) => {
           const _data = res.data.orderStatistics
-          if (_data.length !== 0) {
-            _data.forEach((val) => {
-              if (val.code === 1) {
-                this.littleBear = val
-              } else if (val.code === 2) {
-                this.recommended = val
-              } else if (val.code === 3) {
-                this.experience = val
-              } else if (val.code === 4) {
-                this.systemClass = val
-              }
-            })
-          } else {
-            this.experience = { count: 0, value: 0 }
-            this.systemClass = { count: 0, value: 0 }
-            this.littleBear = { count: 0, value: 0 }
-            this.recommended = { count: 0, value: 0 }
-          }
+          this.experience = { count: 0, value: 0 }
+          this.systemClass = { count: 0, value: 0 }
+          this.littleBear = { count: 0, value: 0 }
+          this.recommended = { count: 0, value: 0 }
+          // if (_data.length !== 0) {
+          _data.forEach((val) => {
+            if (val.code === 1) {
+              this.littleBear = val
+            } else if (val.code === 2) {
+              this.recommended = val
+            } else if (val.code === 3) {
+              this.experience = val
+            } else if (val.code === 4) {
+              this.systemClass = val
+            }
+          })
+          // }
 
           this.statData = res.data.orderStatistics
         })
