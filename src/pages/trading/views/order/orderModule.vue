@@ -117,7 +117,7 @@ export default {
       top: 0px;
       right: 10px;
       left: 10px;
-      z-index: 10000;
+      z-index: 1001;
     }
   }
 }
@@ -134,4 +134,11 @@ export default {
     padding: 0 !important;
   }
 }
+.el-popper {
+  z-index: 2000 !important;
+}
+// .el-picker-panel {
+//   top: 50px !important;
+//   left: 50px !important;
+// }
 </style>
