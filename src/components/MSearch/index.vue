@@ -4,15 +4,23 @@
  * @Author: zhubaodong
  * @Date: 2020-03-24 18:20:12
  * @LastEditors: zhubaodong
- * @LastEditTime: 2020-03-28 14:11:36
+ * @LastEditTime: 2020-03-28 18:29:42
  -->
 
 <template>
   <el-card class="search-style" shadow="never">
     <el-form :inline="true">
       <el-form-item>
-        <!-- 手机号、订单号搜索 -->
+        <!-- 手机号搜索 -->
         <search-phone @result="getPhoneHander" v-if="phone" :name="phone" />
+      </el-form-item>
+      <el-form-item>
+        <!-- 订单号搜索 -->
+        <out-trade-no
+          @result="getOutTradeNo"
+          v-if="outTradeNo"
+          :name="outTradeNo"
+        />
       </el-form-item>
 
       <el-form-item>
@@ -91,6 +99,7 @@ import ChannelSelect from './searchItems/channel.vue'
 import ProductTopic from './searchItems/productTopic.vue'
 import StageSupLevels from './searchItems/stageSupLevels.vue'
 import SearchPhone from './searchItems/searchPhone.vue'
+import OutTradeNo from './searchItems/outTradeNo.vue'
 import SelectDate from './searchItems/selectDate.vue'
 
 export default {
@@ -139,10 +148,15 @@ export default {
       type: String,
       default: '下单时间'
     },
-    // 手机号、订单号
+    // 手机号
     phone: {
       type: String,
       default: '' // phone
+    },
+    // 订单号
+    outTradeNo: {
+      type: String,
+      default: '' // out_trade_no
     },
     // 下拉时间选择
     timeData: {
@@ -156,7 +170,8 @@ export default {
     StageSupLevels,
     DatePicker,
     SearchPhone,
-    SelectDate
+    SelectDate,
+    OutTradeNo
   },
   data() {
     return {
@@ -198,9 +213,14 @@ export default {
     getDate(res) {
       this.setSeachParmas(res, [this.date || 'octime'], 'range')
     },
-    // 选择手机号、订单号
+    // 选择手机号
     getPhoneHander(res) {
-      this.setSeachParmas(res, [this.phone || 'umobile'], 'wildcard')
+      console.log(res, '回调res')
+      this.setSeachParmas(res, [this.phone || 'umobile'])
+    },
+    // 选择订单号
+    getOutTradeNo(res) {
+      this.setSeachParmas(res, [this.outTradeNo || 'out_trade_no'])
     },
     // 获取下拉时间选择select
     getTimeCallBack(data) {
