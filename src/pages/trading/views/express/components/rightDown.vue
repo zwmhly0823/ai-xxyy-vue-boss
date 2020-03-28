@@ -3,7 +3,6 @@
     <el-table
       ref="multipleTable"
       :data="tableData"
-      tooltip-effect="dark"
       style="width: 100%"
       @selection-change="handleSelectionChange"
       @cell-mouse-enter="handleSelectionChangeEnter"
@@ -11,9 +10,12 @@
       @row-click="handleExpressTo"
       :header-cell-style="headerStyle"
     >
-      <el-table-column type="selection" width="25" v-show="!teacherId">
-      </el-table-column>
-      <el-table-column width="25" v-show="!teacherId">
+      <el-table-column
+        type="selection"
+        width="25"
+        v-if="!teacherId"
+      ></el-table-column>
+      <el-table-column width="25" v-if="!teacherId">
         <div :class="[false, 'trans']">
           <i class="el-icon-more-outline"></i>
         </div>
