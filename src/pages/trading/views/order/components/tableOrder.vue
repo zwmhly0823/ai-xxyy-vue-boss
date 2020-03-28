@@ -148,7 +148,7 @@ export default {
       this.teacherStor = JSON.parse(localStorage.getItem('teacher') || '{}')
       const must = []
       if (this.teacherStor.id) {
-        must.push(`{ term: { teacher_id: ${this.teacherStor.id} } }`)
+        must.push(`{ "term": { "teacher_id": ${this.teacherStor.id} } }`)
       }
       // TODO: 切换tab filter
       // "filter":{"bool":{"should":[{"term":{"orderstatus":1}},{"term":{"orderstatus":0}}]}}
