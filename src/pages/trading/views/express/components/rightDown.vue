@@ -10,6 +10,7 @@
       @cell-mouse-enter="handleSelectionChangeEnter"
       @cell-mouse-leave="handleSelectionChangeLeave"
       @row-click="handleExpressTo"
+      :header-cell-style="headerStyle"
     >
       <el-table-column type="selection" width="25"> </el-table-column>
       <el-table-column width="25">
@@ -20,7 +21,12 @@
       <el-table-column label="用户及日期">
         <template slot-scope="scope">
           <div class="user">
-            <div>{{ scope.row.receipt_tel }}</div>
+            <div
+              class="
+            name"
+            >
+              {{ scope.row.receipt_tel }}
+            </div>
             <div>{{ scope.row.buytime }}</div>
           </div>
         </template>
@@ -173,6 +179,10 @@ export default {
     }
   },
   methods: {
+    // 表头样式
+    headerStyle() {
+      return 'font-size: 12px;color: #666;font-weight: normal;'
+    },
     handleExpressTo(row, column, event) {
       console.log(row, column, event, 'row, column, event')
     },
@@ -325,7 +335,18 @@ export default {
 .container {
   margin-top: 10px;
   background-color: #fff;
-  font-size: 12px;
+  color: #666;
+  .user,
+  .sign,
+  .express,
+  .take,
+  .product {
+    font-size: 14px;
+    .name {
+      color: #333;
+    }
+  }
+
   .trans {
     transform: rotate(-90deg);
     margin-bottom: -8px;
