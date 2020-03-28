@@ -41,6 +41,7 @@ import LeftBar from '../../components/LeftBar'
 import CenterBar from '../../components/CenterBar'
 import RightBar from '../../components/RightBar'
 import axios from '@/api/axios'
+import { isToss } from '@/utils/index'
 
 export default {
   props: [],
@@ -229,9 +230,9 @@ export default {
     }
   },
   async created() {
-    const teacher = localStorage.getItem('teacher')
+    const teacher = isToss()
     if (teacher) {
-      this.teacher_id = JSON.parse(teacher).id
+      this.teacher_id = teacher
     }
     // 请求体验课状态列表
     await this.getExperienceStatusList(0)

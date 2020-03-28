@@ -59,6 +59,7 @@
 <script>
 import tableOrder from './tableOrder'
 import axios from '@/api/axios'
+import { isToss } from '@/utils/index'
 export default {
   components: {
     tableOrder
@@ -79,7 +80,7 @@ export default {
     return {
       statData: [],
       // 获取teacherid
-      teacherStor: '',
+      teacherId: '',
       // 切换tab
       tab: '',
       // 搜索
@@ -120,17 +121,17 @@ export default {
     }
   },
   created() {
-    const teacherStor = JSON.parse(localStorage.getItem('teacher') || '{}')
-    if (teacherStor) {
-      this.teacherStor = teacherStor
+    const teacherId = isToss()
+    if (teacherId) {
+      this.teacherId = teacherId
     }
     this.statList()
   },
   methods: {
     statList() {
       const must = []
-      if (this.teacherStor.id) {
-        must.push(`{ "term": { "teacher_id": ${this.teacherStor.id} } }`)
+      if (this.teacherId) {
+        must.push(`{ "term": { "teacher_id": ${this.teacherId} } }`)
       }
       // TODO: 切换tab filter
       // "filter":{"bool":{"should":[{"term":{"orderstatus":1}},{"term":{"orderstatus":0}}]}}
@@ -164,24 +165,23 @@ export default {
         })
         .then((res) => {
           const _data = res.data.orderStatistics
-          if (_data.length !== 0) {
-            _data.forEach((val) => {
-              if (val.code === 1) {
-                this.littleBear = val
-              } else if (val.code === 2) {
-                this.recommended = val
-              } else if (val.code === 3) {
-                this.experience = val
-              } else if (val.code === 4) {
-                this.systemClass = val
-              }
-            })
-          } else {
-            this.experience = { count: 0, value: 0 }
-            this.systemClass = { count: 0, value: 0 }
-            this.littleBear = { count: 0, value: 0 }
-            this.recommended = { count: 0, value: 0 }
-          }
+          this.experience = { count: 0, value: 0 }
+          this.systemClass = { count: 0, value: 0 }
+          this.littleBear = { count: 0, value: 0 }
+          this.recommended = { count: 0, value: 0 }
+          // if (_data.length !== 0) {
+          _data.forEach((val) => {
+            if (val.code === 1) {
+              this.littleBear = val
+            } else if (val.code === 2) {
+              this.recommended = val
+            } else if (val.code === 3) {
+              this.experience = val
+            } else if (val.code === 4) {
+              this.systemClass = val
+            }
+          })
+          // }
 
           this.statData = res.data.orderStatistics
         })
