@@ -15,7 +15,7 @@
         phone="umobile"
         :timeData="[
           { text: '购买时间', value: 'ctime' },
-          { text: '发货时间', value: 'delivery_collect_time' },
+          { text: '揽收时间', value: 'delivery_collect_time' },
           { text: '签收时间', value: 'signing_time' }
         ]"
       />
@@ -44,8 +44,9 @@ export default {
     exportExpress() {
       console.log('导出物流信息')
     },
-    handleSearch(res) {
-      console.log(res, '1111')
+    handleSearch(search) {
+      console.log(search, '1111')
+      this.$emit('search', search)
     }
   }
 }

@@ -124,11 +124,25 @@ import MPagination from '@/components/MPagination/index.vue'
 import axios from '@/api/axios'
 import { formatData } from '@/utils/index.js'
 export default {
-  props: ['dataExp'],
+  props: ['dataExp', 'search'],
   components: {
     MPagination
   },
   watch: {
+    search(val) {
+      const { range } = val[0]
+      const resKey = Object.keys(range)
+      const { gte, lte } = range[resKey]
+
+      const timeType = {
+        [resKey[0]]: 1,
+        start_time: gte,
+        end_time: lte
+      }
+      const { term } = val[1]
+      const toptic = term.topic_id
+      console.log(toptic, timeType, 'resKedkdkdkdkdky')
+    },
     dataExp(val) {
       this.currentPage = 1
       this.tableData = []
