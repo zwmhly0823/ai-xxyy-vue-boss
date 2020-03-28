@@ -138,8 +138,8 @@ export default {
   },
   created() {
     console.log('dataExp', this.dataExp)
-    // const teacher = localStorage.getItem('teacher')
-    const teacher = ''
+    const teacher = localStorage.getItem('teacher')
+    // const teacher = ''
     if (teacher) {
       this.teacherId = JSON.parse(teacher).id
     }
