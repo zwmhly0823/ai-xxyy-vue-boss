@@ -9,7 +9,7 @@
             <div class="oride-middle">{{ penTotal }}笔</div>
             <div class="oride-bottom">
               <span>{{ amountTotal }}元</span>
-              <span>{{ systemClass.value }}币</span>
+              <span>{{ littleBear.value }}币</span>
               <span>{{ recommended.value }}宝石</span>
             </div>
           </div>
@@ -18,32 +18,32 @@
         <el-col :span="4">
           <div class="grid-content bg-purple experience-order">
             <div class="oride-top">体验课</div>
-            <div class="oride-middle">{{ experience.count || 0 }}笔</div>
-            <div class="oride-bottom">{{ experience.value || 0 }}元</div>
+            <div class="oride-middle">{{ experience.count }}笔</div>
+            <div class="oride-bottom">{{ experience.value }}元</div>
           </div>
         </el-col>
         <!-- 系统课 -->
         <el-col :span="4">
           <div class="grid-content bg-purple system-order">
             <div class="oride-top">系统课</div>
-            <div class="oride-middle">{{ systemClass.count || 0 }}笔</div>
-            <div class="oride-bottom">{{ systemClass.value || 0 }}元</div>
+            <div class="oride-middle">{{ systemClass.count }}笔</div>
+            <div class="oride-bottom">{{ systemClass.value }}元</div>
           </div>
         </el-col>
         <!-- 小熊商城 -->
         <el-col :span="4">
           <div class="grid-content bg-purple bear-order">
             <div class="oride-top">小熊商城</div>
-            <div class="oride-middle">{{ littleBear.count || 0 }}笔</div>
-            <div class="oride-bottom">{{ littleBear.value || 0 }}币</div>
+            <div class="oride-middle">{{ littleBear.count }}笔</div>
+            <div class="oride-bottom">{{ littleBear.value }}币</div>
           </div>
         </el-col>
         <!-- 推荐有礼 -->
         <el-col :span="4">
           <div class="grid-content bg-purple recommended-order">
             <div class="oride-top">推荐有礼</div>
-            <div class="oride-middle">{{ recommended.count || 0 }}笔</div>
-            <div class="oride-bottom">{{ recommended.value || 0 }}宝石</div>
+            <div class="oride-middle">{{ recommended.count }}笔</div>
+            <div class="oride-bottom">{{ recommended.value }}宝石</div>
           </div>
         </el-col>
       </el-row>
@@ -85,13 +85,13 @@ export default {
       // 搜索
       searchIn: [],
       // 体验课
-      experience: {},
+      experience: { count: 0, value: 0 },
       // 系统课
-      systemClass: {},
+      systemClass: { count: 0, value: 0 },
       // 小熊商城
-      littleBear: { count: 0 },
+      littleBear: { count: 0, value: 0 },
       // 推荐有礼
-      recommended: {}
+      recommended: { count: 0, value: 0 }
     }
   },
   computed: {
