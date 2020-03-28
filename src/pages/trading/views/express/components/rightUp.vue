@@ -12,12 +12,10 @@
       <m-search
         @search="handleSearch"
         topicType="topic_id"
-        stage="stage"
-        sup="sup"
         phone="umobile"
         :timeData="[
-          { text: '创建时间', value: 'ectime' },
-          { text: '发货时间', value: 'delivery_time' },
+          { text: '购买时间', value: 'ctime' },
+          { text: '发货时间', value: 'delivery_collect_time' },
           { text: '签收时间', value: 'signing_time' }
         ]"
       />
