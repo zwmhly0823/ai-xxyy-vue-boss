@@ -185,6 +185,7 @@ export default {
 
 <style lang="scss" scoped>
 .container {
+  padding-top: 15px;
   font-size: 14px;
   height: 100%;
   background-color: #fff;
