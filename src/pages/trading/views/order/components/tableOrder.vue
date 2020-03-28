@@ -84,8 +84,8 @@
       :total="totalElements"
       @current-change="handleSizeChange"
       show-pager
-      open="calc(100vw - 170px - 30px)"
-      close="calc(100vw - 50px - 30px)"
+      open="calc(100vw - 170px - 24px)"
+      close="calc(100vw - 50px - 24px)"
     ></m-pagination>
   </div>
 </template>
