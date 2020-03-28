@@ -5,7 +5,6 @@
       ref="multipleTable"
       :data="tableData"
       style="width: 100%"
-      height="620"
       @selection-change="handleSelectionChange"
       @cell-mouse-enter="handleSelectionChangeEnter"
       @cell-mouse-leave="handleSelectionChangeLeave"
@@ -122,7 +121,7 @@
 <script>
 import MPagination from '@/components/MPagination/index.vue'
 import axios from '@/api/axios'
-import { formatData } from '@/utils/index.js'
+import { isToss, formatData } from '@/utils/index'
 export default {
   props: ['dataExp'],
   components: {
@@ -138,10 +137,9 @@ export default {
   },
   created() {
     console.log('dataExp', this.dataExp)
-    const teacher = localStorage.getItem('teacher')
-    // const teacher = ''
-    if (teacher) {
-      this.teacherId = JSON.parse(teacher).id
+    const teacherId = isToss()
+    if (teacherId) {
+      this.teacherId = teacherId
     }
     this.getExpressList(this.dataExp.id)
   },
