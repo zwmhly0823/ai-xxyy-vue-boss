@@ -121,6 +121,7 @@
 import MPagination from '@/components/MPagination/index.vue'
 import axios from '@/api/axios'
 import dayjs from 'dayjs'
+import { isToss } from '@/utils/index'
 export default {
   props: ['dataExp'],
   components: {
@@ -136,9 +137,9 @@ export default {
   },
   created() {
     console.log('dataExp', this.dataExp)
-    const teacher = localStorage.getItem('teacher')
-    if (teacher) {
-      this.teacherId = JSON.parse(teacher).id
+    const teacherId = isToss()
+    if (teacherId) {
+      this.teacherId = teacherId
     }
     this.getExpressList(this.dataExp.id)
   },
