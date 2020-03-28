@@ -4,7 +4,6 @@
       ref="multipleTable"
       :data="tableData"
       tooltip-effect="dark"
-      height="680"
       style="width: 100%"
       @selection-change="handleSelectionChange"
       @cell-mouse-enter="handleSelectionChangeEnter"
@@ -97,12 +96,10 @@
           :key="index"
           :color="activities.color"
         >
-          <div v-if="value != []">
-            <div class="statebox" v-for="(item, key) in value" :key="key">
-              <div class="state" v-if="key === 0">{{ item.status }}</div>
-              <div class="content">{{ item.context }}</div>
-              <div class="time">{{ item.time }}</div>
-            </div>
+          <div class="statebox" v-for="(item, key) in value" :key="key">
+            <div class="state" v-if="key === 0">{{ item.status }}</div>
+            <div class="content">{{ item.context }}</div>
+            <div class="time">{{ item.time }}</div>
           </div>
         </el-timeline-item>
       </el-timeline>
@@ -113,8 +110,8 @@
       :total="totalElements"
       @current-change="handleSizeChange"
       show-pager
-      open="calc(100vw - 170px - 30px - 180px)"
-      close="calc(100vw - 50px - 30px - 180px)"
+      open="calc(100vw - 170px - 24px - 180px)"
+      close="calc(100vw - 50px - 24px - 180px)"
     ></m-pagination>
   </div>
 </template>
@@ -304,18 +301,18 @@ export default {
             this.waitFor = false
             console.log('ress----', res && res.payload)
             this.timeLine = true
-            const lastData = {
-              receive: [],
-              onway: [],
-              begin: []
-            }
+            const lastData = {}
 
             res.payload[0].data.forEach((item) => {
               if (item.status === '揽收') {
+                lastData.begin = lastData.begin == null ? [] : lastData.begin
                 lastData.begin.push(item)
               } else if (item.status === '在途' || item.status === '派件') {
+                lastData.onway = lastData.onway == null ? [] : lastData.onway
                 lastData.onway.push(item)
               } else {
+                lastData.receive =
+                  lastData.receive == null ? [] : lastData.receive
                 lastData.receive.push(item)
               }
               this.expressDetail = lastData
@@ -334,6 +331,7 @@ export default {
 <style lang="scss" scoped>
 .container {
   margin-top: 10px;
+  padding-bottom: 50px;
   background-color: #fff;
   color: #666;
   .user,
