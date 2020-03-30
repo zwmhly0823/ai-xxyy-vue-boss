@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-13 15:24:11
  * @LastEditors: zhubaodong
- * @LastEditTime: 2020-03-30 17:29:07
+ * @LastEditTime: 2020-03-30 17:39:01
  -->
 <template>
   <el-row type="flex" class="app-main height student-team">
@@ -159,21 +159,25 @@ export default {
       if (type === 0) {
         // queryParams = `{"bool":{"must":[{"terms":{"team_state":[${this.classStatus}]}},{"term":{"team_type":${type}}}]}}`
         queryParams = this.teacher_id
-          ? `{"bool":{"must":[{"terms":{"team_state":[${this.classStatus}]}},{"term":{"team_type":${type}}},{"term":{"teacher_id": ${this.teacher_id}}}]}}`
-          : `{"bool":{"must":[{"terms":{"team_state":[${this.classStatus}]}},{"term":{"team_type":${type}}}]}}`
+          ? `{"bool":{"must":[{"terms":{"team_state":${this.classStatus.toString()}}},{"term":{"team_type":${type}}},{"term":{"teacher_id": ${
+              this.teacher_id
+            }}}]}}`
+          : `{"bool":{"must":[{"terms":{"team_state":${this.classStatus.toString()}}},{"term":{"team_type":${type}}}]}}`
       } else {
         // queryParams = `{"bool":{"must":[{"terms":{"team_state":[${this.classStatus}]}},{"range":{"team_type":{"gte":${type}}}}]}}`
         queryParams = this.teacher_id
-          ? `{"bool":{"must":[{"terms":{"team_state":[${this.classStatus}]}},{"range":{"team_type":{"gte":${type}}}},{"term":{"teacher_id": ${this.teacher_id}}}]}}`
-          : `{"bool":{"must":[{"terms":{"team_state":[${this.classStatus}]}},{"range":{"team_type":{"gte":${type}}}}]}}`
+          ? `{"bool":{"must":[{"terms":{"team_state":${this.classStatus.toString()}}},{"range":{"team_type":{"gte":${type}}}},{"term":{"teacher_id": ${
+              this.teacher_id
+            }}}]}}`
+          : `{"bool":{"must":[{"terms":{"team_state":${this.classStatus.toString()}}},{"range":{"team_type":{"gte":${type}}}}]}}`
       }
       await axios
         .get('/graphql/team', {
           params: {
             query: `{
-              teamStatusPage(query:${JSON.stringify(queryParams)},team_state:[${
-              this.classStatus
-            }],page:${page},size:15){
+              teamStatusPage(query:${JSON.stringify(
+                queryParams
+              )},team_state:${this.classStatus.toString()},page:${page},size:15){
                 empty,
                 first,
                 last,
