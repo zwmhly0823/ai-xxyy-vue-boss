@@ -71,7 +71,13 @@
               {{ item.express ? item.express.total || 0 : '-' }}
             </div>
             <div>
-              {{ item.express ? item.express.express_status_text || '-' : '-' }}
+              {{
+                item.express
+                  ? item.express.express_status_text
+                    ? `最后一次${item.express.express_status_text}`
+                    : '-'
+                  : '-'
+              }}
             </div>
           </div>
         </div>
