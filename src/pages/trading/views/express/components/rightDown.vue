@@ -1,15 +1,16 @@
 <template>
   <div class="container">
     <el-table
+      highlight-current-row
       ref="multipleTable"
       :data="tableData"
       style="width: 100%"
-      height="600"
       @selection-change="handleSelectionChange"
       @cell-mouse-enter="handleSelectionChangeEnter"
       @cell-mouse-leave="handleSelectionChangeLeave"
       @row-click="handleExpressTo"
       :header-cell-style="headerStyle"
+      :current-row-key="rowKey"
     >
       <el-table-column type="selection" width="25" v-if="!teacherId">
       </el-table-column>
@@ -20,12 +21,12 @@
       </el-table-column>
       <el-table-column label="用户及日期">
         <template slot-scope="scope">
-          <div class="user">
+          <div class="user" if="scope.row.user">
             <div
               class="
             name"
             >
-              {{ scope.row.receipt_tel }}
+              {{ (scope.row.user && scope.row.user.mobile) || '' }}
             </div>
             <div>{{ scope.row.buytime }}</div>
           </div>
@@ -75,9 +76,9 @@
       <el-table-column label="物流创建·揽收·签收" show-overflow-tooltip>
         <template slot-scope="scope">
           <div class="sign">
-            <div>{{ scope.row.crtime }}</div>
-            <div>{{ scope.row.detime }}</div>
-            <div>{{ scope.row.sgtime }}</div>
+            <div>创建:{{ scope.row.crtime }}</div>
+            <div>揽收:{{ scope.row.detime }}</div>
+            <div>签收:{{ scope.row.sgtime }}</div>
           </div>
         </template>
       </el-table-column>
@@ -120,31 +121,59 @@
 <script>
 import MPagination from '@/components/MPagination/index.vue'
 import axios from '@/api/axios'
-import dayjs from 'dayjs'
+import { isToss, formatData } from '@/utils/index'
 export default {
-  props: ['dataExp'],
+  props: ['dataExp', 'search'],
   components: {
     MPagination
   },
   watch: {
+    search(val) {
+      this.searchIn = val
+      // if (val[0]) {
+      //   const { range } = val[0]
+      //   const resKey = Object.keys(range)
+      //   const { gte, lte } = range[resKey]
+
+      //   const timeType = {
+      //     [resKey[0]]: 1,
+      //     start_time: gte,
+      //     end_time: lte
+      //   }
+      //   console.log(timeType, 'resKedkdkdkdkdky')
+      //   this.searchTime = timeType
+      // }
+      // if (val[1]) {
+      //   const { term } = val[1]
+      //   this.topticId = term
+      // }
+      this.getExpressList(this.dataExp.id)
+      // console.log(toptic, timeType, 'resKedkdkdkdkdky')
+    },
     dataExp(val) {
       this.currentPage = 1
       this.tableData = []
       console.log(val, 'orange')
       this.getExpressList(val.id)
+      this.dataLogitcs = val
     }
   },
   created() {
     console.log('dataExp', this.dataExp)
-    const teacher = localStorage.getItem('teacher')
-    if (teacher) {
-      this.teacherId = JSON.parse(teacher).id
+    const teacherId = isToss()
+    if (teacherId) {
+      this.teacherId = teacherId
     }
     this.getExpressList(this.dataExp.id)
   },
   mounted() {},
   data() {
     return {
+      searchIn: [],
+      dataLogitcs: '',
+      searchTime: '',
+      topticId: '',
+      rowKey: '',
       teacherId: '',
       createDataExp: '',
       // 总页数
@@ -177,7 +206,6 @@ export default {
     }
   },
   methods: {
-    // 批量处理事件
     batchProcessing() {
       console.log('批量处理事件')
     },
@@ -195,18 +223,42 @@ export default {
       this.getExpressList(this.dataExp.id)
     },
     getExpressList(id) {
-      let q = `{"express_status":"${id}"}`
-      if (this.teacherId) {
-        q = `{"express_status":"${id}", "teacher_id": ${this.teacherId}}`
-      }
+      // const searchIn = this.searchIn[0]
+      console.log(this.searchIn, 'searchIn: [],')
+      let timeType = {}
+      // let user_id
+      this.searchIn.forEach((item) => {
+        console.log(item.term, 'item')
+        if (item.term) {
+          timeType.user_id = item.term.user_id || ''
+        }
+        if (item.range) {
+          const { range } = item
+          const resKey = Object.keys(range)
+          const { gte, lte } = range[resKey]
 
-      const query = JSON.stringify(`${q}`)
+          timeType = {
+            ...timeType,
+            [resKey[0]]: 1,
+            start_time: gte,
+            end_time: lte
+          }
+        }
+      })
+      timeType = {
+        ...timeType,
+        express_status: id
+      }
+      this.teacherId && (timeType.teacher_id = this.teacherId)
+
+      const query = JSON.stringify(timeType)
+      console.log(timeType, 'timeType', query)
       // console.log(query)
       axios
         .post('/graphql/logisticsList', {
-          query: `
-          {
-  LogisticsListPage(query:${query}, size: 20, page: ${this.currentPage}) {
+          query: `{LogisticsListPage(query:${JSON.stringify(
+            query
+          )}, size: 20, page: ${this.currentPage}) {
     first
     last
     number
@@ -244,11 +296,11 @@ export default {
           console.log(res.data.LogisticsListPage.content, 'res123')
           const resData = res.data.LogisticsListPage.content
           resData.forEach((item) => {
-            item.crtime = this.timeFormat(item.ctime)
-            item.detime = this.timeFormat(item.delivery_collect_time)
-            item.uptime = this.timeFormat(item.utime)
-            item.sgtime = this.timeFormat(item.signing_time)
-            item.buytime = this.timeFormat(item.buy_time)
+            item.crtime = formatData(+item.ctime, 's')
+            item.detime = formatData(+item.delivery_collect_time, 's')
+            item.uptime = formatData(+item.utime, 's')
+            item.sgtime = formatData(+item.signing_time, 's')
+            item.buytime = formatData(+item.buy_time, 's')
             return item
           })
           this.tableData = resData
@@ -268,9 +320,6 @@ export default {
           //  = res.data.LogisticsListPage.content
         })
     },
-    timeFormat(time) {
-      return dayjs.unix(Number(time) / 1000).format('YYYY-MM-DD  hh:mm:ss')
-    },
     toggleSelection(rows) {
       if (rows) {
         rows.forEach((row) => {
@@ -284,14 +333,15 @@ export default {
       this.multipleSelection = val
     },
     handleSelectionChangeEnter() {
-      // this.cout++
-      // console.log('鼠标进入', this.cout)
-      // this.enter = true
+      console.log(this.rowKey, 'this.rowKey')
+      this.cout++
+      console.log('鼠标进入', this.cout)
+      this.enter = true
     },
     handleSelectionChangeLeave() {
-      // console.log('鼠标离开', this.cout)
-      // this.cout++
-      // this.enter = false
+      console.log('鼠标离开', this.cout)
+      this.cout++
+      this.enter = false
     },
     // 物流列表信息
     Express(expressNu, company) {
