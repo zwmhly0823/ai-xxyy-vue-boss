@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-13 15:24:11
  * @LastEditors: zhubaodong
- * @LastEditTime: 2020-03-30 14:50:18
+ * @LastEditTime: 2020-03-30 15:02:56
  -->
 <template>
   <el-row type="flex" class="app-main height student-team">
@@ -66,12 +66,6 @@ export default {
   computed: {
     // 初始化的班级ID(体验课全部中第一条)
     classIdData() {
-      // if (+this.scrollPage === 1) {
-      //   const data =
-      //     this.classListData.teamStatusPage &&
-      //     this.classListData.teamStatusPage.content[0]
-      //   return { classId: data, type: this.type }
-      // }
       return { classId: this.classId, type: this.type }
     }
   },
