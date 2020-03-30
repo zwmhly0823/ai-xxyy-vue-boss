@@ -19,7 +19,7 @@
           <img src="@/assets/images/icon/icon-three-dot.jpg" />
         </div>
       </el-table-column>
-      <el-table-column label="用户及日期">
+      <el-table-column label="用户及购买日期">
         <template slot-scope="scope">
           <div class="user" if="scope.row.user">
             <div
