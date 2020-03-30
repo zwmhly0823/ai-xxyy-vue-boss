@@ -5,19 +5,40 @@
       ref="multipleTable"
       :data="tableData"
       style="width: 100%"
+      height="700"
       @selection-change="handleSelectionChange"
       @cell-mouse-enter="handleSelectionChangeEnter"
       @cell-mouse-leave="handleSelectionChangeLeave"
       @row-click="handleExpressTo"
       :header-cell-style="headerStyle"
       :current-row-key="rowKey"
+      @select="handleSelect"
+      @select-all="handleAllSelect"
     >
-      <el-table-column type="selection" width="25" v-if="!teacherId">
-      </el-table-column>
-      <el-table-column width="25" v-if="!teacherId">
-        <div class="three-dot" @click="batchProcessing">
-          <img src="@/assets/images/icon/icon-three-dot.jpg" />
-        </div>
+      <el-table-column type="selection" width="25"> </el-table-column>
+      <el-table-column width="25">
+        <template slot-scope="scope" v-if="dataExp.id == 1">
+          <el-dropdown trigger="click" command v-show="scope">
+            <div class="three-dot">
+              <img src="@/assets/images/icon/icon-three-dot.jpg" />
+            </div>
+            <el-dropdown-menu slot="dropdown">
+              <div v-if="selectNum > 1">
+                <div @click="handleBatchPass">
+                  <el-dropdown-item>批量审核通过</el-dropdown-item>
+                </div>
+              </div>
+              <div class="every-one" v-else>
+                <div class="yes" @click="handlePass">
+                  <el-dropdown-item>审核通过</el-dropdown-item>
+                </div>
+                <div class="no" @click="handleFailed">
+                  <el-dropdown-item>失效</el-dropdown-item>
+                </div>
+              </div>
+            </el-dropdown-menu>
+          </el-dropdown>
+        </template>
       </el-table-column>
       <el-table-column label="用户及日期">
         <template slot-scope="scope">
@@ -169,6 +190,7 @@ export default {
   mounted() {},
   data() {
     return {
+      selectNum: '',
       searchIn: [],
       dataLogitcs: '',
       searchTime: '',
@@ -206,9 +228,30 @@ export default {
     }
   },
   methods: {
-    batchProcessing() {
-      console.log('批量处理事件')
+    handleBatchPass(val) {
+      console.log('3')
     },
+    handlePass() {
+      console.log('2')
+    },
+    handleFailed() {
+      console.log('1')
+    },
+    // 全选
+    handleAllSelect(selection) {
+      console.log(selection, 'selection', this.selectNum)
+    },
+    // 手动选择
+    handleSelect(selection, row) {
+      this.selectNum = selection.length
+      console.log(selection, row, this.selectNum, 'selection,row')
+    },
+    handleChange(val) {
+      console.log(val, 'handleChange')
+    },
+    // batchProcessing() {
+    //   console.log('批量处理事件')
+    // },
     // 表头样式
     headerStyle() {
       return 'font-size: 12px;color: #666;font-weight: normal;'
