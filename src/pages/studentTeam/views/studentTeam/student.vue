@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-13 15:24:11
  * @LastEditors: zhubaodong
- * @LastEditTime: 2020-03-30 15:02:56
+ * @LastEditTime: 2020-03-30 17:29:07
  -->
 <template>
   <el-row type="flex" class="app-main height student-team">
@@ -171,9 +171,9 @@ export default {
         .get('/graphql/team', {
           params: {
             query: `{
-              teamStatusPage(query:${JSON.stringify(
-                queryParams
-              )},page:${page},size:15){
+              teamStatusPage(query:${JSON.stringify(queryParams)},team_state:[${
+              this.classStatus
+            }],page:${page},size:15){
                 empty,
                 first,
                 last,
