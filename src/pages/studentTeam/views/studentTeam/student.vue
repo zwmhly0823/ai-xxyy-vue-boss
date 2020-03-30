@@ -124,22 +124,22 @@ export default {
      * @param(team_type) 0为体验课 1为系统课
      */
     async getExperienceStatusList(data = 0) {
-      const queryParams =
-        data === 0
-          ? !this.teacher_id
-            ? `{"bool":{"must":[{"term":{"team_type":${data}}}]}}`
-            : `{"bool":{"must":[{"term":{"team_type":${data}}},{"term":{"teacher_id": ${this.teacher_id}}}]}}`
-          : !this.teacher_id
-          ? `{"bool":{"must":[{"range":{"team_type":{"gte":${data}}}}]}}`
-          : `{"bool":{"must":[{"range":{"team_type":{"gte":${data}}}},{"term":{"teacher_id": ${this.teacher_id}}}]}}`
+      // const queryParams =
+      //   data === 0
+      //     ? !this.teacher_id
+      //       ? `{"bool":{"must":[{"term":{"team_type":${data}}}]}}`
+      //       : `{"bool":{"must":[{"term":{"team_type":${data}}},{"term":{"teacher_id": ${this.teacher_id}}}]}}`
+      //     : !this.teacher_id
+      //     ? `{"bool":{"must":[{"range":{"team_type":{"gte":${data}}}}]}}`
+      //     : `{"bool":{"must":[{"range":{"team_type":{"gte":${data}}}},{"term":{"teacher_id": ${this.teacher_id}}}]}}`
       // const queryParams = `{"bool":{"must":[{"range":{"team_type":{"gt":${data}}}}]}}`
+
       await axios
         .get('/graphql/team', {
           params: {
             query: `{
-              teamStatusCount(field: "team_state",team_type:${data},query:${JSON.stringify(
-              queryParams
-            )}) {
+              teamStatusCount(field: "team_state",team_type:${data}, teacher_id:"${this
+              .teacher_id || ''}") {
                 code,
                 value,
                 name
