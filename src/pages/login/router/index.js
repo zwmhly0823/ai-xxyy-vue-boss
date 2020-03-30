@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-03-16 17:04:26
  * @LastEditors: Shentong
- * @LastEditTime: 2020-03-17 18:51:39
+ * @LastEditTime: 2020-03-30 17:02:03
  */
 import Vue from 'vue'
 import VueRouter from 'vue-router'
@@ -18,7 +18,7 @@ const routes = [
     meta: {
       title: '登录',
       icon: 'el-icon-s-custom',
-      keepAlive: true
+      keepAlive: false
     },
     component: () => import('../views/index.vue')
   }
