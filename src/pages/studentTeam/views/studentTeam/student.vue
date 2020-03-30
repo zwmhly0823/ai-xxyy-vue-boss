@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-13 15:24:11
  * @LastEditors: zhubaodong
- * @LastEditTime: 2020-03-25 22:20:44
+ * @LastEditTime: 2020-03-30 14:50:18
  -->
 <template>
   <el-row type="flex" class="app-main height student-team">
@@ -12,7 +12,7 @@
       <div class="grid-content">
         <left-bar
           @change="getLeftBarSelect"
-          :expressData="experienceStatusList"
+          :experienceData="experienceStatusList"
           :systemData="systemStatusList"
         />
       </div>
