@@ -19,7 +19,7 @@
       </el-table-column>
       <el-table-column width="25" v-if="!teacherId">
         <template slot-scope="scope" v-if="dataExp.id == 6">
-          <div v-show="false">{{ scope }}</div>
+          <!-- <div v-show="false">{{ scope }}</div> -->
           <el-dropdown trigger="click">
             <div class="three-dot">
               <img src="@/assets/images/icon/icon-three-dot.jpg" />
@@ -27,15 +27,21 @@
             <el-dropdown-menu slot="dropdown">
               <div>
                 <div v-if="selectNum > 1">
-                  <div @click="handleBatchPass(expressBatch)">
-                    <el-dropdown-item>批量审核通过</el-dropdown-item>
-                  </div>
+                  <el-dropdown-item>
+                    <div>
+                      <el-button
+                        type="text"
+                        @click="handleBatchPass(expressBatch)"
+                        >批量审核通过
+                      </el-button>
+                    </div>
+                  </el-dropdown-item>
                 </div>
                 <div class="every-one" v-else>
                   <div class="yes" @click="handlePass(expressNu)">
                     <el-dropdown-item>审核通过</el-dropdown-item>
                   </div>
-                  <div class="no" @click="handleFailed(expressNu)">
+                  <div class="no" @click="handleFailed(scope.row.id)">
                     <el-dropdown-item>失效</el-dropdown-item>
                   </div>
                 </div>
@@ -235,6 +241,71 @@ export default {
     }
   },
   methods: {
+    handleBatchPass(val) {
+      console.log('processing-pass')
+      this.$confirm('此操作会将此订单审核通过, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      })
+        .then(() => {
+          this.check(val)
+          this.$message({
+            type: 'success',
+            message: '审核成功!'
+          })
+        })
+        .catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          })
+        })
+    },
+    handleFailed(val) {
+      this.$prompt('请输入其失效的理由', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消'
+      })
+        .then(({ value }) => {
+          axios
+            .post(`/api/o/v1/express/updateExpressToInvalid?expressIds=${val}`)
+            .then((res) => {
+              console.log(res, 'popper__arrow')
+            })
+          this.$message({
+            type: 'success',
+            message: '你的邮箱是: ' + value
+          })
+        })
+        .catch(() => {
+          this.$message({
+            type: 'info',
+            message: '取消输入'
+          })
+        })
+    },
+    handlePass(val) {
+      console.log('processing-pass')
+      this.$confirm('此操作会将此订单审核通过, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      })
+        .then(() => {
+          this.check(val)
+          this.$message({
+            type: 'success',
+            message: '审核成功!'
+          })
+        })
+        .catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          })
+        })
+    },
     handleSelectionChangeCell(row, column, cell, event) {
       this.expressNu = []
       this.expressNu.push(row.id)
@@ -245,22 +316,6 @@ export default {
       axios.post(src, id).then((res) => {
         console.log(res, 'popper__arrow')
       })
-    },
-    handleBatchPass(val) {
-      this.check(val)
-    },
-    handlePass(val) {
-      this.check(val)
-      console.log('2', val || '333', this.selecInformation)
-    },
-    handleFailed(val) {
-      // this.check(val.join(), '/api/o/v1/express/updateExpressToInvalid')
-      // console.log('2', val.join(), val || '333', this.selecInformation)
-      axios
-        .post(`/api/o/v1/express/updateExpressToInvalid?expressIds=${val}`)
-        .then((res) => {
-          console.log(res, 'popper__arrow')
-        })
     },
     // 全选
     handleAllSelect(selection) {
