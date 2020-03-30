@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-13 15:24:11
  * @LastEditors: zhubaodong
- * @LastEditTime: 2020-03-30 14:50:18
+ * @LastEditTime: 2020-03-30 17:39:01
  -->
 <template>
   <el-row type="flex" class="app-main height student-team">
@@ -65,12 +65,6 @@ export default {
   computed: {
     // 初始化的班级ID(体验课全部中第一条)
     classIdData() {
-      // if (+this.scrollPage === 1) {
-      //   const data =
-      //     this.classListData.teamStatusPage &&
-      //     this.classListData.teamStatusPage.content[0]
-      //   return { classId: data, type: this.type }
-      // }
       return { classId: this.classId, type: this.type }
     }
   },
@@ -178,7 +172,9 @@ export default {
             query: `{
               teamStatusPage(query:${JSON.stringify(
                 queryParams
-              )},page:${page},size:15){
+              )},team_state:"${this.classStatus.join()}", team_type: ${type}, teacher_id: "${
+              this.teacher_id ? this.teacher_id : ''
+            }",page:${page},size:15){
                 empty,
                 first,
                 last,

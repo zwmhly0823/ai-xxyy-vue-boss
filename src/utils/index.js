@@ -202,3 +202,46 @@ export function GetAgeByBrithday(birth) {
     return age + '岁' + month + '个月'
   }
 }
+
+/**
+ * 本地存储
+ * @param string { 自定义名称 } name
+ * @param Object { 要存入的对象 } data
+ * @param number { 0--存入 1--读取 2--删除 } type
+ * @param 不加"" { sessionStorage /localStorage } target
+ */
+export function accessStorageData({
+  name,
+  data = {},
+  type = 0,
+  target = sessionStorage
+}) {
+  let res = {}
+  switch (type) {
+    case 0:
+      target.setItem(name, JSON.stringify(data))
+      console.log(`存储成功，已将${name}存入${target}`)
+      break
+    case 1:
+      res = JSON.parse(target.getItem(name))
+      if (res) {
+        console.log(`读出成功，已将${name}从${target}读出`)
+        return res
+      } else {
+        console.log(`${target}中未读取到${name}`)
+        return null
+      }
+    case 2:
+      res = JSON.parse(target.getItem(name))
+      if (res) {
+        target.removeItem(name)
+        console.log(`删除成功，已将${name}从${target}删除`)
+      } else {
+        console.log(`${target}中未读取到${name} 删除失败`)
+      }
+
+      break
+    default:
+      break
+  }
+}
