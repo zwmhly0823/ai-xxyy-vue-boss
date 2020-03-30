@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 20:22:24
  * @LastEditors: panjian
- * @LastEditTime: 2020-03-27 23:07:13
+ * @LastEditTime: 2020-03-28 17:48:43
  -->
 <template>
   <div class="table-box">
@@ -527,13 +527,16 @@ export default {
     },
     // 语音播放
     aplayAudio(item, index, itemss) {
-      if (this.audioIndex !== index) {
-        const audios = this.$refs
-        const audiosList = Object.values(audios)
-        audiosList.forEach((item, index) => {
-          item[0].load()
-        })
+      if (this.audioIndex !== null) {
+        if (this.audioIndex !== index) {
+          const audios = this.$refs
+          const audiosList = Object.values(audios)
+          audiosList.forEach((item, index) => {
+            item[0].load()
+          })
+        }
       }
+
       const audio = this.$refs[itemss][0]
       if (audio.paused) {
         this.audioIndex = index
