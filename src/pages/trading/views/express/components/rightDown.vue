@@ -18,7 +18,7 @@
       <el-table-column type="selection" width="25" v-if="!teacherId">
       </el-table-column>
       <el-table-column width="25" v-if="!teacherId">
-        <template slot-scope="scope" v-show="scope" v-if="dataExp.id == 6">
+        <template slot-scope="scope" v-if="dataExp.id == 6">
           <!-- <div v-show="false">{{ scope }}</div> -->
           <el-dropdown trigger="click">
             <div class="three-dot">
@@ -41,7 +41,7 @@
                   <div class="yes" @click="handlePass(expressNu)">
                     <el-dropdown-item>审核通过</el-dropdown-item>
                   </div>
-                  <div class="no" @click="handleFailed(expressNu)">
+                  <div class="no" @click="handleFailed(scope.row.id)">
                     <el-dropdown-item>失效</el-dropdown-item>
                   </div>
                 </div>
