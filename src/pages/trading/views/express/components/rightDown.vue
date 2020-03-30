@@ -250,10 +250,6 @@ export default {
       })
         .then(() => {
           this.check(val)
-          this.$message({
-            type: 'success',
-            message: '审核成功!'
-          })
         })
         .catch(() => {
           this.$message({
@@ -268,21 +264,25 @@ export default {
         cancelButtonText: '取消'
       })
         .then(({ value }) => {
+          if (!value) {
+            this.$message.error('请输入取消输入失效原因')
+            return
+          }
           axios
             .post(`/api/o/v1/express/updateExpressToInvalid?expressIds=${val}`)
             .then((res) => {
-              console.log(res, 'popper__arrow')
+              this.$message({
+                type: 'success',
+                message: '操作成功'
+              })
+              this.getExpressList(this.dataExp.id)
             })
-          this.$message({
-            type: 'success',
-            message: '你的邮箱是: ' + value
-          })
         })
         .catch(() => {
-          this.$message({
-            type: 'info',
-            message: '取消输入'
-          })
+          // this.$message({
+          //   type: 'info',
+          //   message: '取消输入'
+          // })
         })
     },
     handlePass(val) {
@@ -294,16 +294,12 @@ export default {
       })
         .then(() => {
           this.check(val)
-          this.$message({
-            type: 'success',
-            message: '审核成功!'
-          })
         })
         .catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消删除'
-          })
+          // this.$message({
+          //   type: 'info',
+          //   message: '已取消删除'
+          // })
         })
     },
     handleSelectionChangeCell(row, column, cell, event) {
@@ -312,10 +308,40 @@ export default {
       // console.log(row, column, cell, event, 'row, column, cell, event')
     },
     check(id, src = '/api/o/v1/express/deliveryRequest') {
-      console.log(id, 'prev-month')
-      axios.post(src, id).then((res) => {
-        console.log(res, 'popper__arrow')
-      })
+      axios
+        .post(src, id)
+        .then((res) => {
+          // payload 是数组，错误信息逐个返回.全正确时返回空数组
+          /**
+           * {
+           *  code: 80000210
+              message: "不符合发货条件，expressId：{123552}"
+              }
+           */
+          const { payload } = res
+          if (payload.length === 0) {
+            this.$message({
+              type: 'success',
+              message: '审核成功!'
+            })
+            this.getExpressList(this.dataExp.id)
+          } else {
+            const errorMsg = payload.map((item) => {
+              if (item.code !== 200)
+                return `<p style="margin-top: 5px;">${item.message}</p>`
+            })
+            this.$message({
+              type: 'error',
+              duration: 5000,
+              showClose: 'true',
+              dangerouslyUseHTMLString: true,
+              message: errorMsg.join('')
+            })
+          }
+        })
+        .catch((err) => {
+          console.log(err, 'err')
+        })
     },
     // 全选
     handleAllSelect(selection) {
@@ -432,6 +458,7 @@ export default {
             item.buytime = formatData(+item.buy_time, 's')
             return item
           })
+          this.tableData = []
           this.tableData = resData
           // 总页数
           this.totalPages = +res.data.LogisticsListPage.totalPages
