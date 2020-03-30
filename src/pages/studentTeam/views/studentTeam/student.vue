@@ -159,17 +159,13 @@ export default {
       if (type === 0) {
         // queryParams = `{"bool":{"must":[{"terms":{"team_state":[${this.classStatus}]}},{"term":{"team_type":${type}}}]}}`
         queryParams = this.teacher_id
-          ? `{"bool":{"must":[{"terms":{"team_state":${this.classStatus.toString()}}},{"term":{"team_type":${type}}},{"term":{"teacher_id": ${
-              this.teacher_id
-            }}}]}}`
-          : `{"bool":{"must":[{"terms":{"team_state":${this.classStatus.toString()}}},{"term":{"team_type":${type}}}]}}`
+          ? `{"bool":{"must":[{"terms":{"team_state":[${this.classStatus}]}},{"term":{"team_type":${type}}},{"term":{"teacher_id": ${this.teacher_id}}}]}}`
+          : `{"bool":{"must":[{"terms":{"team_state":[${this.classStatus}]}},{"term":{"team_type":${type}}}]}}`
       } else {
         // queryParams = `{"bool":{"must":[{"terms":{"team_state":[${this.classStatus}]}},{"range":{"team_type":{"gte":${type}}}}]}}`
         queryParams = this.teacher_id
-          ? `{"bool":{"must":[{"terms":{"team_state":${this.classStatus.toString()}}},{"range":{"team_type":{"gte":${type}}}},{"term":{"teacher_id": ${
-              this.teacher_id
-            }}}]}}`
-          : `{"bool":{"must":[{"terms":{"team_state":${this.classStatus.toString()}}},{"range":{"team_type":{"gte":${type}}}}]}}`
+          ? `{"bool":{"must":[{"terms":{"team_state":[${this.classStatus}]}},{"range":{"team_type":{"gte":${type}}}},{"term":{"teacher_id": ${this.teacher_id}}}]}}`
+          : `{"bool":{"must":[{"terms":{"team_state":[${this.classStatus}]}},{"range":{"team_type":{"gte":${type}}}}]}}`
       }
       await axios
         .get('/graphql/team', {
@@ -177,7 +173,9 @@ export default {
             query: `{
               teamStatusPage(query:${JSON.stringify(
                 queryParams
-              )},team_state:${this.classStatus.toString()},page:${page},size:15){
+              )},team_state:"${this.classStatus.join()}", team_type: ${type}, teacher_id: "${
+              this.teacher_id ? this.teacher_id : ''
+            }",page:${page},size:15){
                 empty,
                 first,
                 last,
