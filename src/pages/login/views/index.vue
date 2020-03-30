@@ -4,14 +4,14 @@
  * @Author: Shentong
  * @Date: 2020-03-13 15:24:11
  * @LastEditors: Shentong
- * @LastEditTime: 2020-03-27 22:44:46
+ * @LastEditTime: 2020-03-30 17:02:10
  -->
 <template>
   <div id="login" class="login-container">
     <div class="form-container">
       <!-- logo -->
       <div class="logo-container">
-        <img src="../../../assets/images/toss.png" alt="" />
+        <img src="../../../assets/images/toss.png" alt />
       </div>
       <div class="title-container login-type">
         <div
@@ -228,6 +228,12 @@ export default {
         code: [{ required: true, trigger: 'change', validator: validatecode }]
       }
     }
+  },
+  activated() {
+    console.log('login activated is invoked')
+  },
+  deactivated() {
+    console.log('login deactivated is invoked--')
   },
   computed: {},
   methods: {
