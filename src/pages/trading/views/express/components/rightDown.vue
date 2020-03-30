@@ -5,7 +5,7 @@
       ref="multipleTable"
       :data="tableData"
       style="width: 100%"
-      height="700"
+      @cell-click="handleSelectionChangeCell"
       @selection-change="handleSelectionChange"
       @cell-mouse-enter="handleSelectionChangeEnter"
       @cell-mouse-leave="handleSelectionChangeLeave"
@@ -15,25 +15,29 @@
       @select="handleSelect"
       @select-all="handleAllSelect"
     >
-      <el-table-column type="selection" width="25"> </el-table-column>
-      <el-table-column width="25">
-        <template slot-scope="scope" v-if="dataExp.id == 1">
-          <el-dropdown trigger="click" command v-show="scope">
+      <el-table-column type="selection" width="25" v-if="!teacherId">
+      </el-table-column>
+      <el-table-column width="25" v-if="!teacherId">
+        <template slot-scope="scope" v-if="dataExp.id == 6">
+          <div v-show="false">{{ scope }}</div>
+          <el-dropdown trigger="click">
             <div class="three-dot">
               <img src="@/assets/images/icon/icon-three-dot.jpg" />
             </div>
             <el-dropdown-menu slot="dropdown">
-              <div v-if="selectNum > 1">
-                <div @click="handleBatchPass">
-                  <el-dropdown-item>批量审核通过</el-dropdown-item>
+              <div>
+                <div v-if="selectNum > 1">
+                  <div @click="handleBatchPass(expressBatch)">
+                    <el-dropdown-item>批量审核通过</el-dropdown-item>
+                  </div>
                 </div>
-              </div>
-              <div class="every-one" v-else>
-                <div class="yes" @click="handlePass">
-                  <el-dropdown-item>审核通过</el-dropdown-item>
-                </div>
-                <div class="no" @click="handleFailed">
-                  <el-dropdown-item>失效</el-dropdown-item>
+                <div class="every-one" v-else>
+                  <div class="yes" @click="handlePass(expressNu)">
+                    <el-dropdown-item>审核通过</el-dropdown-item>
+                  </div>
+                  <div class="no" @click="handleFailed(expressNu)">
+                    <el-dropdown-item>失效</el-dropdown-item>
+                  </div>
                 </div>
               </div>
             </el-dropdown-menu>
@@ -78,7 +82,7 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="物流状态" show-overflow-tooltip>
+      <el-table-column label="物流状态">
         <template slot-scope="scope">
           <div class="express">
             <div :class="'wait_' + scope.row.express_status">
@@ -190,6 +194,9 @@ export default {
   mounted() {},
   data() {
     return {
+      expressBatch: [],
+      expressNu: [],
+      selecInformation: '',
       selectNum: '',
       searchIn: [],
       dataLogitcs: '',
@@ -228,26 +235,49 @@ export default {
     }
   },
   methods: {
+    handleSelectionChangeCell(row, column, cell, event) {
+      this.expressNu = []
+      this.expressNu.push(row.id)
+      // console.log(row, column, cell, event, 'row, column, cell, event')
+    },
+    check(id, src = '/api/o/v1/express/deliveryRequest') {
+      console.log(id, 'prev-month')
+      axios.post(src, id).then((res) => {
+        console.log(res, 'popper__arrow')
+      })
+    },
     handleBatchPass(val) {
-      console.log('3')
+      this.check(val)
     },
-    handlePass() {
-      console.log('2')
+    handlePass(val) {
+      this.check(val)
+      console.log('2', val || '333', this.selecInformation)
     },
-    handleFailed() {
-      console.log('1')
+    handleFailed(val) {
+      // this.check(val.join(), '/api/o/v1/express/updateExpressToInvalid')
+      // console.log('2', val.join(), val || '333', this.selecInformation)
+      axios
+        .post(`/api/o/v1/express/updateExpressToInvalid?expressIds=${val}`)
+        .then((res) => {
+          console.log(res, 'popper__arrow')
+        })
     },
     // 全选
     handleAllSelect(selection) {
-      console.log(selection, 'selection', this.selectNum)
+      this.selectNum = selection.length
+      this.expressBatch = selection.map((item) => {
+        return item.id
+      })
+      // console.log(selection, 'selection', this.expressBatch, 'expressBatch')
     },
     // 手动选择
     handleSelect(selection, row) {
       this.selectNum = selection.length
-      console.log(selection, row, this.selectNum, 'selection,row')
+      this.expressBatch = selection.map((item) => item.id)
+      // console.log(selection, this.expressBatch, this.selectNum, 'selection,row')
     },
     handleChange(val) {
-      console.log(val, 'handleChange')
+      // console.log(val, 'handleChange')
     },
     // batchProcessing() {
     //   console.log('批量处理事件')
@@ -257,10 +287,11 @@ export default {
       return 'font-size: 12px;color: #666;font-weight: normal;'
     },
     handleExpressTo(row, column, event) {
+      // this.expressNu.push(row.id)
       console.log(row, column, event, 'row, column, event')
     },
     handleSizeChange(val) {
-      console.log(val, 'handleSizeChange')
+      // console.log(val, 'handleSizeChange')
       this.currentPage = val
       console.log(this.dataExp.id, this.dataExp, 'this.dataExp.id')
       this.getExpressList(this.dataExp.id)
@@ -375,15 +406,12 @@ export default {
     handleSelectionChange(val) {
       this.multipleSelection = val
     },
-    handleSelectionChangeEnter() {
-      console.log(this.rowKey, 'this.rowKey')
-      this.cout++
-      console.log('鼠标进入', this.cout)
-      this.enter = true
+    handleSelectionChangeEnter(row) {
+      // console.log('鼠标进入', row)
     },
     handleSelectionChangeLeave() {
-      console.log('鼠标离开', this.cout)
-      this.cout++
+      // console.log('鼠标离开', this.cout, this.expressNu, 'this.expressNu')
+      // this.cout++
       this.enter = false
     },
     // 物流列表信息
