@@ -29,14 +29,17 @@
         ]"
       />
     </div>
-    <!-- <div class="search-export">
+    <div class="search-export">
       <div @click="exportExpress">
         <el-button size="small" type="primary">导出物流信息</el-button>
       </div>
       <div @click="importExpress">
         <el-button size="small" type="primary">导入物流信息</el-button>
       </div>
-    </div> -->
+      <div @click="importRelAddress">
+        <el-button size="small" type="primary">导入收货信息</el-button>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -56,6 +59,9 @@ export default {
     handleSearch(search) {
       console.log(search, '1111')
       this.$emit('search', search)
+    },
+    importRelAddress() {
+      console.log('1111')
     }
   }
 }
