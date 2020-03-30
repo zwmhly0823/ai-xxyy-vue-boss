@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-13 15:24:11
  * @LastEditors: zhubaodong
- * @LastEditTime: 2020-03-25 22:20:44
+ * @LastEditTime: 2020-03-30 14:50:18
  -->
 <template>
   <el-row type="flex" class="app-main height student-team">
@@ -12,7 +12,7 @@
       <div class="grid-content">
         <left-bar
           @change="getLeftBarSelect"
-          :expressData="experienceStatusList"
+          :experienceData="experienceStatusList"
           :systemData="systemStatusList"
         />
       </div>
@@ -123,22 +123,22 @@ export default {
      * @param(team_type) 0为体验课 1为系统课
      */
     async getExperienceStatusList(data = 0) {
-      const queryParams =
-        data === 0
-          ? !this.teacher_id
-            ? `{"bool":{"must":[{"term":{"team_type":${data}}}]}}`
-            : `{"bool":{"must":[{"term":{"team_type":${data}}},{"term":{"teacher_id": ${this.teacher_id}}}]}}`
-          : !this.teacher_id
-          ? `{"bool":{"must":[{"range":{"team_type":{"gte":${data}}}}]}}`
-          : `{"bool":{"must":[{"range":{"team_type":{"gte":${data}}}},{"term":{"teacher_id": ${this.teacher_id}}}]}}`
+      // const queryParams =
+      //   data === 0
+      //     ? !this.teacher_id
+      //       ? `{"bool":{"must":[{"term":{"team_type":${data}}}]}}`
+      //       : `{"bool":{"must":[{"term":{"team_type":${data}}},{"term":{"teacher_id": ${this.teacher_id}}}]}}`
+      //     : !this.teacher_id
+      //     ? `{"bool":{"must":[{"range":{"team_type":{"gte":${data}}}}]}}`
+      //     : `{"bool":{"must":[{"range":{"team_type":{"gte":${data}}}},{"term":{"teacher_id": ${this.teacher_id}}}]}}`
       // const queryParams = `{"bool":{"must":[{"range":{"team_type":{"gt":${data}}}}]}}`
+
       await axios
         .get('/graphql/team', {
           params: {
             query: `{
-              teamStatusCount(field: "team_state",team_type:${data},query:${JSON.stringify(
-              queryParams
-            )}) {
+              teamStatusCount(field: "team_state",team_type:${data}, teacher_id:"${this
+              .teacher_id || ''}") {
                 code,
                 value,
                 name
