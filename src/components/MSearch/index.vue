@@ -3,8 +3,8 @@
  * @version:
  * @Author: zhubaodong
  * @Date: 2020-03-24 18:20:12
- * @LastEditors: zhubaodong
- * @LastEditTime: 2020-03-28 19:33:24
+ * @LastEditors: Shentong
+ * @LastEditTime: 2020-03-31 19:12:13
  -->
 
 <template>
@@ -15,56 +15,42 @@
         <search-phone @result="getPhoneHander" v-if="phone" :name="phone" />
       </el-form-item>
 
-      <el-form-item>
+      <el-form-item v-if="productName">
         <!-- 商品名称搜索 -->
-        <product-name
-          @result="getProductName"
-          v-if="productName"
-          :name="productName"
-        />
+        <product-name @result="getProductName" :name="productName" />
       </el-form-item>
 
-      <el-form-item>
+      <el-form-item v-if="outTradeNo">
         <!-- 订单号搜索 -->
-        <out-trade-no
-          @result="getOutTradeNo"
-          v-if="outTradeNo"
-          :name="outTradeNo"
-        />
+        <out-trade-no @result="getOutTradeNo" :name="outTradeNo" />
       </el-form-item>
 
-      <el-form-item>
+      <el-form-item v-if="date">
         <!-- 下单时间 -->
         <date-picker
-          v-if="date"
           :name="date"
           @result="getDate"
           :date-placeholder="datePlaceholder"
         />
       </el-form-item>
 
-      <el-form-item>
+      <el-form-item v-if="timeData">
         <!-- 下拉时间选择 -->
         <select-date
-          v-if="timeData"
           :name="timeData"
           @result="getTimeData"
           @timeCallBack="getTimeCallBack"
         />
       </el-form-item>
 
-      <el-form-item>
+      <el-form-item v-if="channel">
         <!-- 渠道 -->
-        <channel-select @result="getChannel" v-if="channel" :name="channel" />
+        <channel-select @result="getChannel" :name="channel" />
       </el-form-item>
 
-      <el-form-item>
+      <el-form-item v-if="topicType">
         <!-- 主题 -->
-        <product-topic
-          @result="getProductTopic"
-          v-if="topicType"
-          :name="topicType"
-        />
+        <product-topic @result="getProductTopic" :name="topicType" />
       </el-form-item>
       <!-- <el-form-item>
         <stage-sup-levels
