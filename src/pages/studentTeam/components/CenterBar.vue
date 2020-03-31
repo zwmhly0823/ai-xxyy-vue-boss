@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-13 16:53:33
  * @LastEditors: zhubaodong
- * @LastEditTime: 2020-03-25 22:20:29
+ * @LastEditTime: 2020-03-28 20:47:08
  -->
 <template>
   <div class="center-container">
@@ -44,7 +44,7 @@
               </span>
               <span class="imgtext2">
                 <img src="@/assets/images/icon/teacher.png" alt="" />
-                <span>{{ item.teacher.realname }}</span>
+                <span>{{ item.teacher && item.teacher.realname }}</span>
               </span>
               <span class="imgtext3">
                 <i class="el-icon-date"></i>
@@ -128,6 +128,9 @@ export default {
     // 是否切换左栏
     showClassData(val, old) {
       if (val.scrollStatus !== old.scrollStatus) {
+        const dom = document.getElementsByClassName('el-scrollbar')
+
+        dom[1].querySelector('.scrollbar-wrapper').scrollTo(0, 0)
         this.showList = []
         this.showList = this.showClassData.datas
         this.noMore = false
@@ -136,6 +139,16 @@ export default {
       } else {
         if (this.showList.length === 0) {
           this.showList = this.showClassData.datas
+          return
+        }
+        if (+val.pageData.nums === 1) return
+        this.loading = false
+        this.showList.push(...this.showClassData.datas)
+        // 列表数据总数等于分页总数时 不再加载
+        if (
+          this.showList.length === +this.showClassData.pageData.totalElements
+        ) {
+          this.noMore = true
         }
       }
     }
@@ -165,18 +178,6 @@ export default {
           page: nums,
           type: this.type
         })
-
-        setTimeout(() => {
-          this.loading = false
-
-          this.showList.push(...this.showClassData.datas)
-          // 列表数据总数等于分页总数时 不再加载
-          if (
-            this.showList.length === +this.showClassData.pageData.totalElements
-          ) {
-            this.noMore = true
-          }
-        }, 1000)
       }
     }
   },

@@ -3,8 +3,8 @@
  * @version: 
  * @Author: zhubaodong
  * @Date: 2020-03-26 16:30:11
- * @LastEditors: zhubaodong
- * @LastEditTime: 2020-03-27 22:27:33
+ * @LastEditors: Shentong
+ * @LastEditTime: 2020-03-31 19:07:15
  -->
 <template>
   <div class="search-item">
@@ -139,6 +139,7 @@ export default {
 .search-item {
   .searchSelect {
     width: 100px !important;
+    margin-right: 10px;
   }
   .el-range__icon {
     display: none;
