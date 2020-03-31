@@ -11,7 +11,6 @@
     <div class="search-up">
       <!-- <m-search
         @search="handleSearch"
-        topicType="topic_id"
         phone="umobile"
         :timeData="[
           { text: '购买时间', value: 'ctime' },
@@ -22,6 +21,8 @@
       <m-search
         @search="handleSearch"
         phone="user_id"
+        stage="stage"
+        sup="sup"
         :timeData="[
           { text: '购买时间', value: 'ctime' },
           { text: '揽收时间', value: 'delivery_collect_time' },
