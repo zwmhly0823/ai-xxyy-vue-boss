@@ -193,6 +193,10 @@ export default {
   },
   created() {
     // console.log('dataExp', this.dataExp)
+    const staff = localStorage.getItem('staff')
+    if (staff) {
+      this.staffId = JSON.parse(staff).id
+    }
     const teacherId = isToss()
     if (teacherId) {
       this.teacherId = teacherId
@@ -239,7 +243,8 @@ export default {
         size: 'large',
         type: 'primary',
         color: '#0bbd87'
-      }
+      },
+      staffId: ''
     }
   },
   methods: {
@@ -273,9 +278,10 @@ export default {
         if (!value) {
           return
         }
+
         axios
           .post(
-            `/api/o/v1/express/updateExpressToInvalid?expressIds=${val}&expressRemark=${value}&operatorId=${this.teacherId}`
+            `/api/o/v1/express/updateExpressToInvalid?expressIds=${val}&expressRemark=${value}&operatorId=${this.staffId}`
           )
           .then(async (res) => {
             this.$message({
@@ -306,7 +312,7 @@ export default {
     },
     check(
       id,
-      src = `/api/o/v1/express/deliveryRequest?operatorId=${this.teacherId}`
+      src = `/api/o/v1/express/deliveryRequest?operatorId=${this.staffId}`
     ) {
       axios
         .post(src, id)
