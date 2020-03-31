@@ -66,7 +66,7 @@ export default {
       // 吸顶tab显示
       suckTop: false,
       // 切换tab
-      status: '',
+      status: '3',
       // 搜索
       search: []
     }
