@@ -160,6 +160,7 @@ export default {
   },
   watch: {
     search(val) {
+      this.currentPage = 1
       this.searchIn = val
       // if (val[0]) {
       //   const { range } = val[0]
@@ -274,7 +275,7 @@ export default {
         }
         axios
           .post(
-            `/api/o/v1/express/updateExpressToInvalid?expressIds=${val}&expressRemark=${value}`
+            `/api/o/v1/express/updateExpressToInvalid?expressIds=${val}&expressRemark=${value}&operatorId=${this.teacherId}`
           )
           .then(async (res) => {
             this.$message({
