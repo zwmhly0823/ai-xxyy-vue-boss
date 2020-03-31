@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 20:22:24
  * @LastEditors: panjian
- * @LastEditTime: 2020-03-28 10:43:12
+ * @LastEditTime: 2020-03-31 22:46:55
  -->
 <template>
   <div class="table-box">
@@ -198,14 +198,66 @@
                 scope.row.product_name
               }}</span>
               <br />
-              <span>{{ scope.row.receipt_name }}</span>
-              <span>{{ scope.row.receipt_tel }}</span>
-              <br />
-              <span>{{ scope.row.province }}</span>
-              <span>{{ scope.row.city }}</span>
-              <span>{{ scope.row.area }}</span>
-              <br />
-              <span>{{ scope.row.address_detail }}</span>
+              <div v-if="scope.row.receipt_name">
+                <span>{{ scope.row.receipt_name }}</span>
+                <span>{{ scope.row.receipt_tel }}</span>
+                <br />
+                <span>{{ scope.row.province }}</span>
+                <span>{{ scope.row.city }}</span>
+                <span>{{ scope.row.area }}</span>
+                <br />
+                <span>{{ scope.row.address_detail }}</span>
+              </div>
+              <div v-else>
+                <el-popover placement="right" width="300" trigger="click">
+                  <el-form :model="formInline" class="demo-form-inline">
+                    <el-form-item label="收货人姓名">
+                      <el-input
+                        v-model="formInline.receiptName"
+                        placeholder="收货人姓名"
+                      ></el-input>
+                    </el-form-item>
+                    <el-form-item label="收货人电话">
+                      <el-input
+                        v-model="formInline.receiptTel"
+                        placeholder="收货人电话"
+                      ></el-input>
+                    </el-form-item>
+                    <div class="cascader-area">
+                      <div
+                        style="font-size: 15px;
+                            margin-bottom: 15px;
+                            font-weight: 500;"
+                      >
+                        收货人地址
+                      </div>
+                      <el-cascader
+                        placeholder="省/市/区"
+                        :options="areaLists"
+                        size="medium"
+                        filterable
+                        @change="handleChange"
+                      >
+                      </el-cascader>
+                    </div>
+                    <el-form-item label="详细地址">
+                      <el-input
+                        v-model="formInline.addressDetail"
+                        placeholder="详细地址"
+                      ></el-input>
+                    </el-form-item>
+                    <el-form-item>
+                      <el-button type="primary" @click="onCancel"
+                        >取消</el-button
+                      >
+                      <el-button type="primary" @click="onSubmit"
+                        >保存</el-button
+                      >
+                    </el-form-item>
+                  </el-form>
+                  <el-button slot="reference">帮他填写</el-button>
+                </el-popover>
+              </div>
             </div>
           </template>
         </el-table-column>
@@ -480,9 +532,9 @@
 </template>
 <script>
 import MPagination from '@/components/MPagination/index.vue'
+import areaLists from '@/utils/area.json'
 export default {
   name: 'detailsTable',
-  // props: ['tables', 'classId'],
   props: {
     classId: {
       type: Object,
@@ -502,14 +554,25 @@ export default {
   },
   data() {
     return {
+      areaLists: areaLists,
       audioIndex: null,
       tableindex: null,
       studentId: null,
       added_group: null,
-      added_wechat: null
+      added_wechat: null,
+      formInline: {
+        receiptName: '',
+        receiptTel: '',
+        addressDetail: ''
+      },
+      province: null,
+      city: null,
+      area: null,
+      areaCode: null
     }
   },
   mounted() {
+    // console.log(this.areaLists, '省市县')
     // console.log(this.audioTabs, ' audioTabs ')
   },
   watch: {
@@ -522,18 +585,49 @@ export default {
   },
   created() {},
   methods: {
+    // 级联城市级联
+    handleChange(data) {
+      const provinces = this.areaLists.filter(
+        (item) => +item.value === +data[0]
+      )
+      const citys = provinces[0].children.filter(
+        (item) => +item.value === +data[1]
+      )
+      const areas = citys[0].children.filter((item) => +item.value === +data[2])
+      this.province = provinces[0].label
+      this.city = citys[0].label
+      this.area = areas[0].label
+      this.areaCode = data[2]
+    },
+    // 表单点击取消
+    onCancel() {},
+    // 表单点击保存
+    onSubmit() {
+      console.log(
+        this.formInline,
+        this.province,
+        this.city,
+        this.area,
+        this.areaCode,
+        'submit!'
+      )
+    },
+    // 音频结束后赋值为空
     audioEnded() {
       this.audioIndex = null
     },
     // 语音播放
     aplayAudio(item, index, itemss) {
-      if (this.audioIndex !== index) {
-        const audios = this.$refs
-        const audiosList = Object.values(audios)
-        audiosList.forEach((item, index) => {
-          item[0].load()
-        })
+      if (this.audioIndex !== null) {
+        if (this.audioIndex !== index) {
+          const audios = this.$refs
+          const audiosList = Object.values(audios)
+          audiosList.forEach((item, index) => {
+            item[0].load()
+          })
+        }
       }
+
       const audio = this.$refs[itemss][0]
       if (audio.paused) {
         this.audioIndex = index
@@ -664,6 +758,13 @@ export default {
     .logistics-address-name {
       margin-left: -8px;
     }
+    .cascader-area {
+      // .cascader-area-text {
+      //   font-size: 15px;
+      //   margin-bottom: 15px;
+      //   font-weight: 500;
+      // }
+    }
   }
   .login-box {
     .login-wx-box {
@@ -791,5 +892,11 @@ export default {
     float: right;
     margin-right: 20px;
   }
+}
+</style>
+<style lang="scss">
+.el-cascader-menu {
+  height: 300px;
+  overflow: scroll;
 }
 </style>
