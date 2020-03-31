@@ -4,14 +4,14 @@
  * @Author: Shentong
  * @Date: 2020-03-13 15:24:11
  * @LastEditors: Shentong
- * @LastEditTime: 2020-03-18 14:03:31
+ * @LastEditTime: 2020-03-30 17:02:10
  -->
 <template>
   <div id="login" class="login-container">
     <div class="form-container">
       <!-- logo -->
       <div class="logo-container">
-        <img src="../../../assets/images/toss.png" alt="" />
+        <img src="../../../assets/images/toss.png" alt />
       </div>
       <div class="title-container login-type">
         <div
@@ -229,12 +229,20 @@ export default {
       }
     }
   },
+  activated() {
+    console.log('login activated is invoked')
+  },
+  deactivated() {
+    console.log('login deactivated is invoked--')
+  },
   computed: {},
   methods: {
     // 切换登录方式点击事件
     loginTypeHandle(loginType) {
-      this.resetForm(loginType)
-      this.tabFirstActive = !this.tabFirstActive
+      if (this.$refs[loginType]) {
+        this.resetForm(loginType)
+        this.tabFirstActive = !this.tabFirstActive
+      }
     },
     // 根据手机号获取验证码
     getCodeHandle() {
@@ -348,7 +356,7 @@ export default {
     },
     resetForm(formName) {
       this.passwordType = 'password'
-      if (this.$refs[formName] !== undefined) this.$refs[formName].resetFields()
+      this.$refs[formName].resetFields()
     },
     startInterval() {
       this.timer = setInterval(() => {

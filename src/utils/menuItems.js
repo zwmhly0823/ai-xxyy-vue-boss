@@ -3,7 +3,7 @@
  * @Email: yangjiyong@meishubao.com
  * @Date: 2019-12-26 17:13:38
  * @Last Modified by: YangJiyong
- * @Last Modified time: 2020-03-25 22:01:17
+ * @Last Modified time: 2020-03-28 11:58:15
  * @Description: (顶部)模块导航 map - 显示对应名称
  * 如果 `src/pages/`下的模板名称是 小骆峰 ，link改为 中线 - 连接
  * TODO: 动态设置
@@ -16,34 +16,14 @@ const menuItems = [
     isShow: true
   },
   {
-    link: 'order',
-    text: '订单',
+    link: 'trading',
+    text: '交易',
     isShow: true
   },
   {
     link: 'student-team',
     text: '班级',
     isShow: true
-  },
-  {
-    link: 'operation',
-    text: '运营',
-    isShow: false
-  },
-  {
-    link: 'teacher',
-    text: '老师',
-    isShow: true
-  },
-  {
-    link: 'product',
-    text: '商品',
-    isShow: false
-  },
-  {
-    link: 'system',
-    text: '系统',
-    isShow: false
   },
   {
     link: 'dashboard',

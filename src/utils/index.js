@@ -3,11 +3,27 @@
  * @Email: yangjiyong@meishubao.com
  * @Date: 2020-03-13 12:10:04
  * @Last Modified by: YangJiyong
- * @Last Modified time: 2020-03-25 21:59:14
+ * @Last Modified time: 2020-03-28 19:01:06
  * @Description: 全局公共方法，添加或改动及时全员通知。 注释一定要写详细！
  */
 
 import dayjs from 'dayjs'
+
+/**
+ * 是否 toss。 是toss返回 teacher_id,否则返回 null
+ * 测试环境同一域名，除localstorage外，根据pathname区别
+ * https://test.meixiu.mobi/ai-app-vue-toss-test/ 测试环境
+ */
+export function isToss() {
+  let teacherId = null
+  const isTestBoss = location.pathname.includes('boss-test')
+  const teacher = localStorage.getItem('teacher')
+  if (teacher) {
+    teacherId = JSON.parse(teacher).id
+  }
+  if (isTestBoss) return null
+  return teacherId
+}
 
 /**
  * 字符串 小驼峰转连接线
@@ -184,5 +200,48 @@ export function GetAgeByBrithday(birth) {
       month = todayMonth - birthdayMonth
     }
     return age + '岁' + month + '个月'
+  }
+}
+
+/**
+ * 本地存储
+ * @param string { 自定义名称 } name
+ * @param Object { 要存入的对象 } data
+ * @param number { 0--存入 1--读取 2--删除 } type
+ * @param 不加"" { sessionStorage /localStorage } target
+ */
+export function accessStorageData({
+  name,
+  data = {},
+  type = 0,
+  target = sessionStorage
+}) {
+  let res = {}
+  switch (type) {
+    case 0:
+      target.setItem(name, JSON.stringify(data))
+      console.log(`存储成功，已将${name}存入${target}`)
+      break
+    case 1:
+      res = JSON.parse(target.getItem(name))
+      if (res) {
+        console.log(`读出成功，已将${name}从${target}读出`)
+        return res
+      } else {
+        console.log(`${target}中未读取到${name}`)
+        return null
+      }
+    case 2:
+      res = JSON.parse(target.getItem(name))
+      if (res) {
+        target.removeItem(name)
+        console.log(`删除成功，已将${name}从${target}删除`)
+      } else {
+        console.log(`${target}中未读取到${name} 删除失败`)
+      }
+
+      break
+    default:
+      break
   }
 }

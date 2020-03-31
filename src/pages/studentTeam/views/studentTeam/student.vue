@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-13 15:24:11
  * @LastEditors: zhubaodong
- * @LastEditTime: 2020-03-25 22:20:44
+ * @LastEditTime: 2020-03-30 17:39:01
  -->
 <template>
   <el-row type="flex" class="app-main height student-team">
@@ -12,7 +12,7 @@
       <div class="grid-content">
         <left-bar
           @change="getLeftBarSelect"
-          :expressData="experienceStatusList"
+          :experienceData="experienceStatusList"
           :systemData="systemStatusList"
         />
       </div>
@@ -41,6 +41,7 @@ import LeftBar from '../../components/LeftBar'
 import CenterBar from '../../components/CenterBar'
 import RightBar from '../../components/RightBar'
 import axios from '@/api/axios'
+import { isToss } from '@/utils/index'
 
 export default {
   props: [],
@@ -65,12 +66,6 @@ export default {
   computed: {
     // 初始化的班级ID(体验课全部中第一条)
     classIdData() {
-      // if (+this.scrollPage === 1) {
-      //   const data =
-      //     this.classListData.teamStatusPage &&
-      //     this.classListData.teamStatusPage.content[0]
-      //   return { classId: data, type: this.type }
-      // }
       return { classId: this.classId, type: this.type }
     }
   },
@@ -123,22 +118,22 @@ export default {
      * @param(team_type) 0为体验课 1为系统课
      */
     async getExperienceStatusList(data = 0) {
-      const queryParams =
-        data === 0
-          ? !this.teacher_id
-            ? `{"bool":{"must":[{"term":{"team_type":${data}}}]}}`
-            : `{"bool":{"must":[{"term":{"team_type":${data}}},{"term":{"teacher_id": ${this.teacher_id}}}]}}`
-          : !this.teacher_id
-          ? `{"bool":{"must":[{"range":{"team_type":{"gte":${data}}}}]}}`
-          : `{"bool":{"must":[{"range":{"team_type":{"gte":${data}}}},{"term":{"teacher_id": ${this.teacher_id}}}]}}`
+      // const queryParams =
+      //   data === 0
+      //     ? !this.teacher_id
+      //       ? `{"bool":{"must":[{"term":{"team_type":${data}}}]}}`
+      //       : `{"bool":{"must":[{"term":{"team_type":${data}}},{"term":{"teacher_id": ${this.teacher_id}}}]}}`
+      //     : !this.teacher_id
+      //     ? `{"bool":{"must":[{"range":{"team_type":{"gte":${data}}}}]}}`
+      //     : `{"bool":{"must":[{"range":{"team_type":{"gte":${data}}}},{"term":{"teacher_id": ${this.teacher_id}}}]}}`
       // const queryParams = `{"bool":{"must":[{"range":{"team_type":{"gt":${data}}}}]}}`
+
       await axios
         .get('/graphql/team', {
           params: {
             query: `{
-              teamStatusCount(field: "team_state",team_type:${data},query:${JSON.stringify(
-              queryParams
-            )}) {
+              teamStatusCount(field: "team_state",team_type:${data}, teacher_id:"${this
+              .teacher_id || ''}") {
                 code,
                 value,
                 name
@@ -178,7 +173,9 @@ export default {
             query: `{
               teamStatusPage(query:${JSON.stringify(
                 queryParams
-              )},page:${page},size:15){
+              )},team_state:"${this.classStatus.join()}", team_type: ${type}, teacher_id: "${
+              this.teacher_id ? this.teacher_id : ''
+            }",page:${page},size:15){
                 empty,
                 first,
                 last,
@@ -229,9 +226,9 @@ export default {
     }
   },
   async created() {
-    const teacher = localStorage.getItem('teacher')
+    const teacher = isToss()
     if (teacher) {
-      this.teacher_id = JSON.parse(teacher).id
+      this.teacher_id = teacher
     }
     // 请求体验课状态列表
     await this.getExperienceStatusList(0)

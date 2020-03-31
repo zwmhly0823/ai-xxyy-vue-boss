@@ -49,7 +49,6 @@ export default {
       type: String,
       default: `calc(100vw - 180px - 240px - 50px - 30px)`
     },
-
     // 是否需要显示页码，设置 pager
     showPager: {
       type: Boolean,
