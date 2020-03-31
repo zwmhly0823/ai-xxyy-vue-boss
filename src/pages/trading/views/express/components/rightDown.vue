@@ -184,13 +184,14 @@ export default {
     dataExp(val) {
       this.currentPage = 1
       this.tableData = []
-      console.log(val, 'orange')
-      this.getExpressList(val.id)
-      this.dataLogitcs = val
+      if (val.id) {
+        this.getExpressList(val.id)
+        this.dataLogitcs = val
+      }
     }
   },
   created() {
-    console.log('dataExp', this.dataExp)
+    // console.log('dataExp', this.dataExp)
     const teacherId = isToss()
     if (teacherId) {
       this.teacherId = teacherId
@@ -208,7 +209,7 @@ export default {
       dataLogitcs: '',
       searchTime: '',
       topticId: '',
-      rowKey: '',
+      rowKey: 0,
       teacherId: '',
       createDataExp: '',
       // 总页数
@@ -258,32 +259,34 @@ export default {
           })
         })
     },
+    inputValidator(val) {
+      return !!(val && val.length > 0)
+    },
     handleFailed(val) {
       this.$prompt('请输入其失效的理由', '提示', {
         confirmButtonText: '确定',
-        cancelButtonText: '取消'
-      })
-        .then(({ value }) => {
-          if (!value) {
-            this.$message.error('请输入取消输入失效原因')
-            return
-          }
-          axios
-            .post(`/api/o/v1/express/updateExpressToInvalid?expressIds=${val}`)
-            .then((res) => {
-              this.$message({
-                type: 'success',
-                message: '操作成功'
-              })
-              this.getExpressList(this.dataExp.id)
+        cancelButtonText: '取消',
+        inputValidator: this.inputValidator,
+        inputErrorMessage: '请输入失效原因'
+      }).then(({ value }) => {
+        if (!value) {
+          return
+        }
+        axios
+          .post(
+            `/api/o/v1/express/updateExpressToInvalid?expressIds=${val}&expressRemark=${value}`
+          )
+          .then(async (res) => {
+            this.$message({
+              type: 'success',
+              message: '操作成功'
             })
-        })
-        .catch(() => {
-          // this.$message({
-          //   type: 'info',
-          //   message: '取消输入'
-          // })
-        })
+            setTimeout(() => {
+              this.getExpressList(this.dataExp.id)
+              // TODO: 成功后同步左侧列表 待审核 数量
+            }, 1000)
+          })
+      })
     },
     handlePass(val) {
       console.log('processing-pass')
@@ -291,23 +294,19 @@ export default {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
+      }).then(() => {
+        this.check(val)
       })
-        .then(() => {
-          this.check(val)
-        })
-        .catch(() => {
-          // this.$message({
-          //   type: 'info',
-          //   message: '已取消删除'
-          // })
-        })
     },
     handleSelectionChangeCell(row, column, cell, event) {
       this.expressNu = []
       this.expressNu.push(row.id)
       // console.log(row, column, cell, event, 'row, column, cell, event')
     },
-    check(id, src = '/api/o/v1/express/deliveryRequest') {
+    check(
+      id,
+      src = `/api/o/v1/express/deliveryRequest?operatorId=${this.teacherId}`
+    ) {
       axios
         .post(src, id)
         .then((res) => {
@@ -369,29 +368,43 @@ export default {
     },
     handleExpressTo(row, column, event) {
       // this.expressNu.push(row.id)
-      console.log(row, column, event, 'row, column, event')
+      console.log(row + column + event, 'row, column, event')
     },
     handleSizeChange(val) {
       // console.log(val, 'handleSizeChange')
       this.currentPage = val
-      console.log(this.dataExp.id, this.dataExp, 'this.dataExp.id')
+      // console.log(this.dataExp.id, this.dataExp, 'this.dataExp.id')
       this.getExpressList(this.dataExp.id)
     },
     getExpressList(id) {
       // const searchIn = this.searchIn[0]
-      console.log(this.searchIn, 'searchIn: [],')
+      console.log(
+        this.searchIn,
+        'searchIn: []searchIn: []searchIn: []searchIn: []searchIn: [],'
+      )
       let timeType = {}
       // let user_id
       this.searchIn.forEach((item) => {
-        console.log(item.term, 'item')
         if (item.term) {
-          timeType.user_id = item.term.user_id || ''
+          if (item.term.user_id) {
+            timeType.user_id = item.term.user_id
+          } else if (item.term.topic_id) {
+            timeType.topic_id = `${item.term.topic_id}`
+          }
         }
+
+        if (item.terms) {
+          if (item.terms.sup) {
+            timeType.sup = `${item.terms.sup}`
+          } else if (item.terms.stage) {
+            timeType.term = `${item.terms.stage}`
+          }
+        }
+
         if (item.range) {
           const { range } = item
           const resKey = Object.keys(range)
           const { gte, lte } = range[resKey]
-
           timeType = {
             ...timeType,
             [resKey[0]]: 1,
@@ -448,31 +461,23 @@ export default {
 }`
         })
         .then((res) => {
-          console.log(res.data.LogisticsListPage.content, 'res123')
-          const resData = res.data.LogisticsListPage.content
-          resData.forEach((item) => {
-            item.crtime = formatData(+item.ctime, 's')
-            item.detime = formatData(+item.delivery_collect_time, 's')
-            item.uptime = formatData(+item.utime, 's')
-            item.sgtime = formatData(+item.signing_time, 's')
-            item.buytime = formatData(+item.buy_time, 's')
-            return item
-          })
           this.tableData = []
-          this.tableData = resData
-          // 总页数
-          this.totalPages = +res.data.LogisticsListPage.totalPages
+          if (res.data.LogisticsListPage) {
+            const resData = res.data.LogisticsListPage.content
+            resData.forEach((item) => {
+              item.crtime = formatData(+item.ctime, 's')
+              item.detime = formatData(+item.delivery_collect_time, 's')
+              item.uptime = formatData(+item.utime, 's')
+              item.sgtime = formatData(+item.signing_time, 's')
+              item.buytime = formatData(+item.buy_time, 's')
+              return item
+            })
+            this.tableData = resData
+            // 总页数
+            this.totalPages = +res.data.LogisticsListPage.totalPages
 
-          this.totalElements = +res.data.LogisticsListPage.totalElements // 总条数
-
-          console.log(
-            resData,
-            ' this.tableData',
-            this.totalElements,
-            ' this.totalElements',
-            this.totalPages,
-            'this.totalPages'
-          )
+            this.totalElements = +res.data.LogisticsListPage.totalElements // 总条数
+          }
           //  = res.data.LogisticsListPage.content
         })
     },
