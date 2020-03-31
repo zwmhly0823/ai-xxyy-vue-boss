@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-26 16:30:11
  * @LastEditors: zhubaodong
- * @LastEditTime: 2020-03-27 21:51:20
+ * @LastEditTime: 2020-03-28 22:57:29
  -->
 <template>
   <div class="search-item">
@@ -17,8 +17,8 @@
       prefix-icon="none"
       :picker-options="pickerOptions"
       range-separator="至"
-      start-placeholder="下单时间start"
-      end-placeholder="下单时间end"
+      :start-placeholder="`${datePlaceholder}start`"
+      :end-placeholder="`${datePlaceholder}end`"
       align="right"
       @change="changeHandler"
     >

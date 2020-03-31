@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-13 16:53:27
  * @LastEditors: zhubaodong
- * @LastEditTime: 2020-03-23 14:01:18
+ * @LastEditTime: 2020-03-30 17:26:19
  -->
 <template>
   <div class="left-container">
@@ -18,7 +18,7 @@
     </el-input>
     <el-tree
       class="left-container-tree"
-      :data="[...showExpressData, ...showSystemData]"
+      :data="[...showExperienceData, ...showSystemData]"
       :props="defaultProps"
       default-expand-all
       node-key="customId"
@@ -33,7 +33,7 @@
 <script>
 export default {
   props: {
-    expressData: {
+    experienceData: {
       type: Object,
       default: () => ({})
     },
@@ -50,7 +50,7 @@ export default {
         children: 'children',
         label: 'showName'
       }, // 定义节点名称
-      expresslist: [
+      experiencelist: [
         {
           showName: '体验课班级',
           value: '',
@@ -112,13 +112,13 @@ export default {
     /**
      * 体验课状态展示数据
      */
-    showExpressData() {
-      const datas = this.expresslist[0].children.map((values, index) => {
+    showExperienceData() {
+      const datas = this.experiencelist[0].children.map((values, index) => {
         values.types = 0
         values.code = values.value
         values.customId = +`${index}0`
-        this.expressData.teamStatusCount &&
-          this.expressData.teamStatusCount.filter((v) => {
+        this.experienceData.teamStatusCount &&
+          this.experienceData.teamStatusCount.filter((v) => {
             if (v.code === values.value) {
               values.showName = `${values.showName.split('（')[0]}（${
                 v.value ? v.value : 0
@@ -127,30 +127,14 @@ export default {
           })
         return values
       })
-      const showExepress = [
+      const showExperience = [
         {
           showName: '体验课班级',
           value: '',
           children: datas
         }
       ]
-      // const datas =
-      //   this.expressData.teamStatusCount &&
-      //   this.expressData.teamStatusCount
-      //     .map((item) => {
-      //       item.types = 0
-      //       item.showName = `${item.name}（${item.value}）`
-      //       return item
-      //     })
-      //     .reverse()
-      // const classData = [
-      //   {
-      //     showName: '体验课班级',
-      //     value: '',
-      //     children: datas
-      //   }
-      // ]
-      return showExepress
+      return showExperience
     },
     /**
      * 系统课状态展示数据
@@ -177,23 +161,6 @@ export default {
           children: datas
         }
       ]
-
-      // const datas =
-      //   this.systemData.teamStatusCount &&
-      //   this.systemData.teamStatusCount
-      //     .map((item) => {
-      //       item.types = 1
-      //       item.showName = `${item.name}（${item.value}）`
-      //       return item
-      //     })
-      //     .reverse()
-      // const classData = [
-      //   {
-      //     showName: '系统课班级',
-      //     value: '',
-      //     children: datas
-      //   }
-      // ]
       return showStstem
     }
   },
