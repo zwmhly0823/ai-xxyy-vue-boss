@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 14:19:58
  * @LastEditors: panjian
- * @LastEditTime: 2020-03-31 15:51:44
+ * @LastEditTime: 2020-03-31 17:53:15
  -->
 <template>
   <div>
@@ -59,21 +59,21 @@
           @keyup.enter.native="enter"
         >
         </el-input> -->
-        <check-box class="checkbox"></check-box>
+        <!-- <check-box class="checkbox"></check-box> -->
       </div>
     </div>
   </div>
 </template>
 <script>
-import checkBox from '@/components/MCheckBox/index'
+// import checkBox from '@/components/MCheckBox/index'
 import detailsTable from './components/detailsTable'
 import axios from '@/api/axios'
 import { timestamp, GetAgeByBrithday } from '@/utils/index'
 import status from '@/utils/status'
 export default {
   components: {
-    detailsTable,
-    checkBox
+    detailsTable
+    // checkBox
   },
   props: {
     classId: {
