@@ -3,8 +3,44 @@
     <el-table
       :data="tableData"
       :header-cell-style="headerStyle"
+      @selection-change="handleSelectionChange"
       class="students-box"
     >
+      <!-- 全选按钮 -->
+      <el-table-column type="selection" width="40px"></el-table-column>
+      <!-- 更多按钮 -->
+      <el-table-column width="20px">
+        <template slot="header" slot-scope="scope">
+          <el-Popover popper-class="batch-btn">
+            <!-- 标题气泡内容 -->
+            <div size="mini" type="text" @click="batchBtn(couponsUid)">
+              批量发放优惠券
+            </div>
+            <!-- 标题点击...图片 -->
+            <div
+              @click="headerPoint(scope.$index, scope)"
+              v-show="moreTitle"
+              slot="reference"
+            >
+              <img src="../../../../assets/images/point.png" />
+            </div>
+          </el-Popover>
+        </template>
+        <template slot-scope="scope">
+          <el-Popover popper-class="batch-btn">
+            <!-- 气泡内容 -->
+            <div size="mini" type="text" @click="batchBtn(couponsUid)">
+              <span v-show="moreTitle === true">批量发放优惠券</span>
+              <span v-show="moreTitle === false">发放优惠券</span>
+            </div>
+            <!-- 点击...图片 -->
+            <div @click="handleEdit(scope.$index, scope.row)" slot="reference">
+              <img src="../../../../assets/images/point.png" />
+            </div>
+          </el-Popover>
+        </template>
+      </el-table-column>
+      <coupon-popover />
       <el-table-column label="基本信息" class="information" width="280px">
         <template slot-scope="scope">
           <img class="information-img" :src="scope.row.head" alt="" />
@@ -85,10 +121,12 @@
 import axios from '@/api/axios'
 import { GetAgeByBrithday } from '@/utils/index'
 import MPagination from '@/components/MPagination/index.vue'
+import CouponPopover from './components/couponPopover'
 
 export default {
   components: {
-    MPagination
+    MPagination,
+    CouponPopover
   },
   props: {
     // 班级传参
@@ -107,7 +145,12 @@ export default {
       // 学员列表
       tableData: [],
       // 用户状态列表
-      statusList: []
+      statusList: [],
+      tableDataEmpty: true,
+      // 标题更多按钮显示
+      moreTitle: false,
+      // 优惠卷用户id
+      couponsUid: [1]
     }
   },
   created() {},
@@ -117,9 +160,11 @@ export default {
       this.scrollTop()
       this.currentPage = 1
       if (value.classId) {
+        this.tableDataEmpty = true
         this.studentsList()
         this.getstatusList()
       } else {
+        this.tableDataEmpty = false
         this.tableData = []
       }
     }
@@ -236,7 +281,11 @@ export default {
               }
             })
           })
-          this.tableData = _data
+          if (this.tableDataEmpty) {
+            this.tableData = _data
+          } else {
+            this.tableData = []
+          }
         })
     },
     // 用户状态接口
@@ -254,6 +303,27 @@ export default {
         .then((res) => {
           this.statusList = res.data.userFollowStateList
         })
+    },
+    // 全选
+    handleSelectionChange(val) {
+      if (val.length > 1) {
+        this.moreTitle = true
+      } else {
+        this.moreTitle = false
+      }
+      console.log(val, '全选')
+    },
+    // 表头优惠卷操作
+    headerPoint(index, scope) {
+      console.log(index, scope)
+    },
+    // 表格优惠卷操作
+    handleEdit(index, row) {
+      console.log(index, row)
+    },
+    // 点击批量发放优惠卷
+    batchBtn(val) {
+      console.log(val, '优惠券用户id')
     },
     // 点击分页
     handleSizeChange(val) {
@@ -333,5 +403,18 @@ export default {
 }
 .el-table td {
   border-bottom: 1px solid #ededed;
+}
+.batch-btn {
+  line-height: 10px;
+  min-width: 110px;
+  font-size: 12px;
+  text-align: center;
+  cursor: pointer;
+}
+.dataStyle {
+  .el-table_1_column_2 {
+    cursor: pointer;
+    font-size: 19px !important;
+  }
 }
 </style>
