@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 20:22:24
  * @LastEditors: panjian
- * @LastEditTime: 2020-03-30 10:39:36
+ * @LastEditTime: 2020-03-31 20:33:17
  -->
 <template>
   <div class="table-box">
@@ -198,6 +198,7 @@
                 scope.row.product_name
               }}</span>
               <br />
+              <!-- <div v-if="scope.row.receipt_name"> -->
               <span>{{ scope.row.receipt_name }}</span>
               <span>{{ scope.row.receipt_tel }}</span>
               <br />
@@ -206,6 +207,42 @@
               <span>{{ scope.row.area }}</span>
               <br />
               <span>{{ scope.row.address_detail }}</span>
+              <!-- </div> -->
+              <!-- <div v-else>
+                <el-popover placement="right" width="300" trigger="click">
+                  <el-form :model="formInline" class="demo-form-inline">
+                    <el-form-item label="收货人姓名">
+                      <el-input
+                        v-model="formInline.receiptName"
+                        placeholder="收货人姓名"
+                      ></el-input>
+                    </el-form-item>
+                    <el-form-item label="收货人电话">
+                      <el-input
+                        v-model="formInline.receiptTel"
+                        placeholder="收货人电话"
+                      ></el-input>
+                    </el-form-item>
+                    <div class="cascader-area">
+                      <el-cascader
+                        placeholder="省/市/区"
+                        :options="areaLists"
+                        filterable
+                        @change="handleChange"
+                      ></el-cascader>
+                    </div>
+                    <el-form-item>
+                      <el-button type="primary" @click="onCancel"
+                        >取消</el-button
+                      >
+                      <el-button type="primary" @click="onSubmit"
+                        >保存</el-button
+                      >
+                    </el-form-item>
+                  </el-form>
+                  <el-button slot="reference">帮他填写</el-button>
+                </el-popover>
+              </div> -->
             </div>
           </template>
         </el-table-column>
@@ -480,6 +517,7 @@
 </template>
 <script>
 import MPagination from '@/components/MPagination/index.vue'
+import areaLists from '@/utils/area'
 export default {
   name: 'detailsTable',
   // props: ['tables', 'classId'],
@@ -502,14 +540,20 @@ export default {
   },
   data() {
     return {
+      areaLists: areaLists,
       audioIndex: null,
       tableindex: null,
       studentId: null,
       added_group: null,
-      added_wechat: null
+      added_wechat: null,
+      formInline: {
+        receiptName: '',
+        receiptTel: ''
+      }
     }
   },
   mounted() {
+    // console.log(this.areaLists, '省市县')
     // console.log(this.audioTabs, ' audioTabs ')
   },
   watch: {
@@ -522,6 +566,20 @@ export default {
   },
   created() {},
   methods: {
+    // 级联城市级联
+    handleChange(value) {
+      console.log(value) // value值为区域码
+      // 用CodeToText转换成中文
+      // console.log(CodeToText[value[0]])
+      // console.log(CodeToText[value[1]])
+    },
+    // 表单点击取消
+    onCancel() {},
+    // 表单点击保存
+    onSubmit() {
+      console.log(this.formInline, 'submit!')
+    },
+    // 音频结束后赋值为空
     audioEnded() {
       this.audioIndex = null
     },
@@ -667,6 +725,10 @@ export default {
     .logistics-address-name {
       margin-left: -8px;
     }
+    .cascader-area {
+      width: 400px;
+      height: 300px;
+    }
   }
   .login-box {
     .login-wx-box {
@@ -794,5 +856,11 @@ export default {
     float: right;
     margin-right: 20px;
   }
+}
+</style>
+<style lang="scss">
+.el-cascader-menu {
+  height: 300px;
+  overflow: scroll;
 }
 </style>
