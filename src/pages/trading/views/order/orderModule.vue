@@ -85,6 +85,7 @@ export default {
       console.log(res, 'res')
 
       this.search = res
+      console.log(res, 'resdkdkskldldskdskldskldskl')
     },
     // 吸顶
     handleScroll() {
