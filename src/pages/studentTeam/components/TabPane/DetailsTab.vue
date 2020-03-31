@@ -4,10 +4,19 @@
  * @Author: panjian
  * @Date: 2020-03-16 14:19:58
  * @LastEditors: panjian
- * @LastEditTime: 2020-03-31 17:53:15
+ * @LastEditTime: 2020-03-31 20:40:34
  -->
 <template>
   <div>
+    <!-- <div class="btnbox">
+      <el-button
+        type="primary"
+        class="btn"
+        v-show="Finish"
+        @click="dialogFormVisible = true"
+        >生成完课榜</el-button
+      >
+    </div> -->
     <div>
       <div class="tabs-tab">
         <el-tabs v-model="activeName" @tab-click="handleClick">
@@ -60,7 +69,35 @@
         >
         </el-input> -->
         <!-- <check-box class="checkbox"></check-box> -->
+        <!-- 弹出框 -->
+        <!-- <el-dialog
+          title="请选择生成的完课榜周数"
+          :visible.sync="dialogFormVisible"
+          width="500px"
+        >
+          <el-radio v-model="radio" label="1">第一周</el-radio>
+          <el-radio v-model="radio" label="2">第二周</el-radio>
+          <div slot="footer" class="dialog-footer">
+            <el-button @click="dialogFormVisible = false">取 消</el-button>
+            <el-button type="primary" @click="clickHandler">确 定</el-button>
+          </div>
+        </el-dialog> -->
       </div>
+      <!-- <img
+        v-show="show"
+        :src="dataURL"
+        alt
+        class="exportImg"
+        finishBox
+        @load="handlePosterLoaded"
+        crossorigin="anonymous"
+      /> -->
+      <!-- <div class="finishBox">
+        <slot> -->
+      <!-- 需要转换的html -->
+      <!-- <finishclass></finishclass>
+        </slot>
+      </div> -->
     </div>
   </div>
 </template>
@@ -70,9 +107,12 @@ import detailsTable from './components/detailsTable'
 import axios from '@/api/axios'
 import { timestamp, GetAgeByBrithday } from '@/utils/index'
 import status from '@/utils/status'
+// import finishclass from './FinishClass'
+import html2canvas from 'html2canvas'
 export default {
   components: {
     detailsTable
+    // finishclass
     // checkBox
   },
   props: {
@@ -83,8 +123,16 @@ export default {
   },
   data() {
     return {
+      // 单选按钮
+      radio: '1',
       type: null,
       input: '',
+      // 完课榜
+      show: false,
+      // 点击生成图片--状态
+      getImg: false,
+      dataURL: '',
+      Finish: true,
       audioTabs: '0',
       table: {
         tabs: 0,
@@ -101,10 +149,27 @@ export default {
       activeName: 'group',
       tablsName: '',
       codeHandle: {},
+      // 弹出框
+      dialogTableVisible: false,
+      dialogFormVisible: false,
+      form: {
+        name: '',
+        region: '',
+        date1: '',
+        date2: '',
+        delivery: false,
+        type: [],
+        resource: '',
+        desc: ''
+      },
+      formLabelWidth: '120px',
       tableDataEmpty: true
     }
   },
   watch: {
+    getQcUrl: function() {
+      this.handlePosterLoad()
+    },
     classId(value) {
       // 切换标签 语音停止
       const audios = this.$refs
@@ -159,6 +224,32 @@ export default {
     this.table.tableLabel = [{ label: '购买时间', prop: 'buytime' }]
   },
   methods: {
+    clickHandler() {
+      console.log(document.getElementsByClassName('finishBox'), 123123)
+      this.dialogFormVisible = false
+      this.handlePosterLoad()
+      this.show = true
+    },
+    // 生成完课榜
+    handlePosterLoad() {
+      this.$nextTick(() => {
+        window.scrollTo(0, 0)
+        html2canvas(document.getElementsByClassName('finishBox')[0], {
+          backgroundColor: 'rgba(0, 0, 0, 0)',
+          useCORS: true,
+          async: true
+        }).then((canvas) => {
+          const data = canvas.toDataURL('image/jpeg')
+          // 执行浏览器下载
+          this.download('aaaa.jpeg', data)
+          // this.dataURL = data
+        })
+      })
+    },
+    handlePosterLoaded() {},
+    // finishQcUrl(data) {
+    //   this.getQcUrl = data
+    // },
     // 加好友进群 修改已加好友 已进群 接口
     getCodeHandle() {
       this.$http.User.updateTeamStudent({
@@ -740,6 +831,32 @@ export default {
       var dom = document.getElementById('right-scroll')
       dom.querySelector('.scrollbar-wrapper').scrollTo(0, 0)
     },
+    // 老师完课 图片下载方法
+    download(fileName, content) {
+      const aLink = document.createElement('a')
+      const blob = this.base64ToBlob(content)
+
+      const evt = document.createEvent('HTMLEvents')
+      evt.initEvent('click', true, true)
+      aLink.download = fileName
+      aLink.href = URL.createObjectURL(blob)
+
+      // aLink.dispatchEvent(evt);
+      aLink.click()
+    },
+    base64ToBlob(code) {
+      const parts = code.split(';base64,')
+      const contentType = parts[0].split(':')[1]
+      const raw = window.atob(parts[1])
+      const rawLength = raw.length
+
+      const uInt8Array = new Uint8Array(rawLength)
+
+      for (var i = 0; i < rawLength; ++i) {
+        uInt8Array[i] = raw.charCodeAt(i)
+      }
+      return new Blob([uInt8Array], { type: contentType })
+    },
     enter(val) {
       console.log('input', val, this.input)
     }
@@ -747,6 +864,15 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+.btnbox {
+  width: 100%;
+  height: 40px;
+  .btn {
+    position: absolute;
+    right: 18px;
+  }
+}
+
 .tabs-tab {
   // padding-left: 20px;
   margin-top: 10px;
@@ -767,12 +893,17 @@ export default {
   /* justify-content: space-between; */
   align-items: center;
 }
-
-.el-button--default {
-  border-radius: 15px;
-}
 .div {
   padding-top: 20px;
+}
+.exportImg {
+  display: flex;
+  align-self: center;
+  width: 550px;
+}
+.finishBox {
+  position: fixed;
+  left: -1000px;
 }
 .checkbox {
   position: absolute;
