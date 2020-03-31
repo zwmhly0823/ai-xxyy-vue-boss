@@ -129,7 +129,7 @@ export default {
       // 搜索
       searchIn: [],
       // 切换tab
-      tab: ''
+      tab: '3' // 默认显示 3 - 已完成
     }
   },
   created() {
