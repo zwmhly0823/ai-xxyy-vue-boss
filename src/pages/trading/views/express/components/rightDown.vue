@@ -50,7 +50,7 @@
           </el-dropdown>
         </template>
       </el-table-column>
-      <el-table-column label="用户及日期">
+      <el-table-column label="用户及购买日期">
         <template slot-scope="scope">
           <div class="user" if="scope.row.user">
             <div
@@ -184,13 +184,14 @@ export default {
     dataExp(val) {
       this.currentPage = 1
       this.tableData = []
-      console.log(val, 'orange')
-      this.getExpressList(val.id)
-      this.dataLogitcs = val
+      if (val.id) {
+        this.getExpressList(val.id)
+        this.dataLogitcs = val
+      }
     }
   },
   created() {
-    console.log('dataExp', this.dataExp)
+    // console.log('dataExp', this.dataExp)
     const teacherId = isToss()
     if (teacherId) {
       this.teacherId = teacherId
@@ -208,7 +209,7 @@ export default {
       dataLogitcs: '',
       searchTime: '',
       topticId: '',
-      rowKey: '',
+      rowKey: 0,
       teacherId: '',
       createDataExp: '',
       // 总页数
@@ -362,28 +363,43 @@ export default {
     },
     handleExpressTo(row, column, event) {
       // this.expressNu.push(row.id)
-      console.log(row, column, event, 'row, column, event')
+      console.log(row + column + event, 'row, column, event')
     },
     handleSizeChange(val) {
       // console.log(val, 'handleSizeChange')
       this.currentPage = val
-      console.log(this.dataExp.id, this.dataExp, 'this.dataExp.id')
+      // console.log(this.dataExp.id, this.dataExp, 'this.dataExp.id')
       this.getExpressList(this.dataExp.id)
     },
     getExpressList(id) {
       // const searchIn = this.searchIn[0]
-      console.log(this.searchIn, 'searchIn: [],')
+      console.log(
+        this.searchIn,
+        'searchIn: []searchIn: []searchIn: []searchIn: []searchIn: [],'
+      )
       let timeType = {}
       // let user_id
       this.searchIn.forEach((item) => {
         if (item.term) {
-          timeType.user_id = item.term.user_id || ''
+          if (item.term.user_id) {
+            timeType.user_id = item.term.user_id
+          } else if (item.term.topic_id) {
+            timeType.topic_id = `${item.term.topic_id}`
+          }
         }
+
+        if (item.terms) {
+          if (item.terms.sup) {
+            timeType.sup = `${item.terms.sup}`
+          } else if (item.terms.stage) {
+            timeType.term = `${item.terms.stage}`
+          }
+        }
+
         if (item.range) {
           const { range } = item
           const resKey = Object.keys(range)
           const { gte, lte } = range[resKey]
-
           timeType = {
             ...timeType,
             [resKey[0]]: 1,
@@ -440,31 +456,23 @@ export default {
 }`
         })
         .then((res) => {
-          console.log(res.data.LogisticsListPage.content, 'res123')
-          const resData = res.data.LogisticsListPage.content
-          resData.forEach((item) => {
-            item.crtime = formatData(+item.ctime, 's')
-            item.detime = formatData(+item.delivery_collect_time, 's')
-            item.uptime = formatData(+item.utime, 's')
-            item.sgtime = formatData(+item.signing_time, 's')
-            item.buytime = formatData(+item.buy_time, 's')
-            return item
-          })
           this.tableData = []
-          this.tableData = resData
-          // 总页数
-          this.totalPages = +res.data.LogisticsListPage.totalPages
+          if (res.data.LogisticsListPage) {
+            const resData = res.data.LogisticsListPage.content
+            resData.forEach((item) => {
+              item.crtime = formatData(+item.ctime, 's')
+              item.detime = formatData(+item.delivery_collect_time, 's')
+              item.uptime = formatData(+item.utime, 's')
+              item.sgtime = formatData(+item.signing_time, 's')
+              item.buytime = formatData(+item.buy_time, 's')
+              return item
+            })
+            this.tableData = resData
+            // 总页数
+            this.totalPages = +res.data.LogisticsListPage.totalPages
 
-          this.totalElements = +res.data.LogisticsListPage.totalElements // 总条数
-
-          console.log(
-            resData,
-            ' this.tableData',
-            this.totalElements,
-            ' this.totalElements',
-            this.totalPages,
-            'this.totalPages'
-          )
+            this.totalElements = +res.data.LogisticsListPage.totalElements // 总条数
+          }
           //  = res.data.LogisticsListPage.content
         })
     },

@@ -3,15 +3,14 @@
  * @version: 
  * @Author: zhubaodong
  * @Date: 2020-03-27 19:04:54
- * @LastEditors: zhubaodong
- * @LastEditTime: 2020-03-27 20:08:57
+ * @LastEditors: Shentong
+ * @LastEditTime: 2020-03-30 21:33:36
  -->
 <template>
   <div class="container">
     <div class="search-up">
       <!-- <m-search
         @search="handleSearch"
-        topicType="topic_id"
         phone="umobile"
         :timeData="[
           { text: '购买时间', value: 'ctime' },
@@ -22,7 +21,11 @@
       <m-search
         @search="handleSearch"
         phone="user_id"
+        topicType="topic_id"
+        stage="stage"
+        sup="sup"
         :timeData="[
+          { text: '购买时间', value: 'ctime' },
           { text: '揽收时间', value: 'delivery_collect_time' },
           { text: '签收时间', value: 'signing_time' }
         ]"
