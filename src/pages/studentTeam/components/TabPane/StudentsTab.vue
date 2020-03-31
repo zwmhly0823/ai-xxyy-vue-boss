@@ -107,7 +107,8 @@ export default {
       // 学员列表
       tableData: [],
       // 用户状态列表
-      statusList: []
+      statusList: [],
+      tableDataEmpty: true
     }
   },
   created() {},
@@ -117,9 +118,11 @@ export default {
       this.scrollTop()
       this.currentPage = 1
       if (value.classId) {
+        this.tableDataEmpty = true
         this.studentsList()
         this.getstatusList()
       } else {
+        this.tableDataEmpty = false
         this.tableData = []
       }
     }
@@ -236,7 +239,11 @@ export default {
               }
             })
           })
-          this.tableData = _data
+          if (this.tableDataEmpty) {
+            this.tableData = _data
+          } else {
+            this.tableData = []
+          }
         })
     },
     // 用户状态接口
