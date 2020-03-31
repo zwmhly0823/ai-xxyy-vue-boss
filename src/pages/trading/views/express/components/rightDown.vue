@@ -258,32 +258,32 @@ export default {
           })
         })
     },
+    inputValidator(val) {
+      return !!(val && val.length > 0)
+    },
     handleFailed(val) {
       this.$prompt('请输入其失效的理由', '提示', {
         confirmButtonText: '确定',
-        cancelButtonText: '取消'
-      })
-        .then(({ value }) => {
-          if (!value) {
-            this.$message.error('请输入取消输入失效原因')
-            return
-          }
-          axios
-            .post(`/api/o/v1/express/updateExpressToInvalid?expressIds=${val}`)
-            .then((res) => {
-              this.$message({
-                type: 'success',
-                message: '操作成功'
-              })
-              this.getExpressList(this.dataExp.id)
+        cancelButtonText: '取消',
+        inputValidator: this.inputValidator,
+        inputErrorMessage: '请输入失效原因'
+      }).then(({ value }) => {
+        if (!value) {
+          return
+        }
+        axios
+          .post(`/api/o/v1/express/updateExpressToInvalid?expressIds=${val}`)
+          .then(async (res) => {
+            this.$message({
+              type: 'success',
+              message: '操作成功'
             })
-        })
-        .catch(() => {
-          // this.$message({
-          //   type: 'info',
-          //   message: '取消输入'
-          // })
-        })
+            setTimeout(() => {
+              this.getExpressList(this.dataExp.id)
+              // TODO: 成功后同步左侧列表 待审核 数量
+            }, 1000)
+          })
+      })
     },
     handlePass(val) {
       console.log('processing-pass')
@@ -291,16 +291,9 @@ export default {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
+      }).then(() => {
+        this.check(val)
       })
-        .then(() => {
-          this.check(val)
-        })
-        .catch(() => {
-          // this.$message({
-          //   type: 'info',
-          //   message: '已取消删除'
-          // })
-        })
     },
     handleSelectionChangeCell(row, column, cell, event) {
       this.expressNu = []
@@ -383,7 +376,6 @@ export default {
       let timeType = {}
       // let user_id
       this.searchIn.forEach((item) => {
-        console.log(item.term, 'item')
         if (item.term) {
           timeType.user_id = item.term.user_id || ''
         }

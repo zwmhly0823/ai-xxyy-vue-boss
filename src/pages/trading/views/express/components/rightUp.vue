@@ -28,7 +28,7 @@
         ]"
       />
     </div>
-    <div class="search-export">
+    <div class="search-export" v-if="!teacherId">
       <div @click="exportExpress">
         <el-button size="small" type="primary">导出物流信息</el-button>
       </div>
@@ -43,10 +43,19 @@
 </template>
 
 <script>
+import { isToss } from '@/utils/index'
 import MSearch from '@/components/MSearch/index.vue'
 export default {
   components: {
     MSearch
+  },
+  data() {
+    return {
+      teacherId: ''
+    }
+  },
+  created() {
+    this.teacherId = isToss()
   },
   methods: {
     importExpress() {
