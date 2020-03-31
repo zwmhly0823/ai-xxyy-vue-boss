@@ -273,7 +273,9 @@ export default {
           return
         }
         axios
-          .post(`/api/o/v1/express/updateExpressToInvalid?expressIds=${val}`)
+          .post(
+            `/api/o/v1/express/updateExpressToInvalid?expressIds=${val}&expressRemark=${value}`
+          )
           .then(async (res) => {
             this.$message({
               type: 'success',
@@ -301,7 +303,10 @@ export default {
       this.expressNu.push(row.id)
       // console.log(row, column, cell, event, 'row, column, cell, event')
     },
-    check(id, src = '/api/o/v1/express/deliveryRequest') {
+    check(
+      id,
+      src = `/api/o/v1/express/deliveryRequest?operatorId=${this.teacherId}`
+    ) {
       axios
         .post(src, id)
         .then((res) => {
