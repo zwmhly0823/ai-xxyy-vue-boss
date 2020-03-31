@@ -21,7 +21,6 @@
       <m-search
         @search="handleSearch"
         phone="user_id"
-        topicType="topic_id"
         stage="stage"
         sup="sup"
         :timeData="[
