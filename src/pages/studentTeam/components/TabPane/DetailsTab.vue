@@ -4,11 +4,11 @@
  * @Author: panjian
  * @Date: 2020-03-16 14:19:58
  * @LastEditors: panjian
- * @LastEditTime: 2020-03-31 15:51:44
+ * @LastEditTime: 2020-03-31 20:40:34
  -->
 <template>
   <div>
-    <div class="btnbox">
+    <!-- <div class="btnbox">
       <el-button
         type="primary"
         class="btn"
@@ -16,7 +16,7 @@
         @click="dialogFormVisible = true"
         >生成完课榜</el-button
       >
-    </div>
+    </div> -->
     <div>
       <div class="tabs-tab">
         <el-tabs v-model="activeName" @tab-click="handleClick">
@@ -68,9 +68,9 @@
           @keyup.enter.native="enter"
         >
         </el-input> -->
-        <check-box class="checkbox"></check-box>
+        <!-- <check-box class="checkbox"></check-box> -->
         <!-- 弹出框 -->
-        <el-dialog
+        <!-- <el-dialog
           title="请选择生成的完课榜周数"
           :visible.sync="dialogFormVisible"
           width="500px"
@@ -81,9 +81,9 @@
             <el-button @click="dialogFormVisible = false">取 消</el-button>
             <el-button type="primary" @click="clickHandler">确 定</el-button>
           </div>
-        </el-dialog>
+        </el-dialog> -->
       </div>
-      <img
+      <!-- <img
         v-show="show"
         :src="dataURL"
         alt
@@ -91,29 +91,29 @@
         finishBox
         @load="handlePosterLoaded"
         crossorigin="anonymous"
-      />
-      <div class="finishBox">
-        <slot>
-          <!-- 需要转换的html -->
-          <finishclass></finishclass>
+      /> -->
+      <!-- <div class="finishBox">
+        <slot> -->
+      <!-- 需要转换的html -->
+      <!-- <finishclass></finishclass>
         </slot>
-      </div>
+      </div> -->
     </div>
   </div>
 </template>
 <script>
-import checkBox from '@/components/MCheckBox/index'
+// import checkBox from '@/components/MCheckBox/index'
 import detailsTable from './components/detailsTable'
 import axios from '@/api/axios'
 import { timestamp, GetAgeByBrithday } from '@/utils/index'
 import status from '@/utils/status'
-import finishclass from './FinishClass'
+// import finishclass from './FinishClass'
 import html2canvas from 'html2canvas'
 export default {
   components: {
-    detailsTable,
-    finishclass,
-    checkBox
+    detailsTable
+    // finishclass
+    // checkBox
   },
   props: {
     classId: {
