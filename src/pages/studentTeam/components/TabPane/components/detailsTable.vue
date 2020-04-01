@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 20:22:24
  * @LastEditors: panjian
- * @LastEditTime: 2020-03-31 22:54:47
+ * @LastEditTime: 2020-04-01 16:11:19
  -->
 <template>
   <div class="table-box">
@@ -209,52 +209,16 @@
                 <span>{{ scope.row.address_detail }}</span>
               </div>
               <div v-else>
-                <el-popover placement="right" width="300" trigger="click">
-                  <el-form :model="formInline" class="demo-form-inline">
-                    <el-form-item label="收货人姓名">
-                      <el-input
-                        v-model="formInline.receiptName"
-                        placeholder="收货人姓名"
-                      ></el-input>
-                    </el-form-item>
-                    <el-form-item label="收货人电话">
-                      <el-input
-                        v-model="formInline.receiptTel"
-                        placeholder="收货人电话"
-                      ></el-input>
-                    </el-form-item>
-                    <div class="cascader-area">
-                      <div
-                        style="font-size: 15px;
-                            margin-bottom: 15px;
-                            font-weight: 500;"
-                      >
-                        收货人地址
-                      </div>
-                      <el-cascader
-                        placeholder="省/市/区"
-                        :options="areaLists"
-                        size="medium"
-                        filterable
-                        @change="handleChange"
-                      >
-                      </el-cascader>
-                    </div>
-                    <el-form-item label="详细地址">
-                      <el-input
-                        v-model="formInline.addressDetail"
-                        placeholder="详细地址"
-                      ></el-input>
-                    </el-form-item>
-                    <el-form-item>
-                      <el-button type="primary" @click="onCancel"
-                        >取消</el-button
-                      >
-                      <el-button type="primary" @click="onSubmit"
-                        >保存</el-button
-                      >
-                    </el-form-item>
-                  </el-form>
+                <el-popover
+                  v-model="showExpress"
+                  placement="right"
+                  width="300"
+                  trigger="click"
+                >
+                  <logistics-form
+                    @addExpress="addExpress"
+                    :formData="formData"
+                  ></logistics-form>
                   <el-button slot="reference">帮他填写</el-button>
                 </el-popover>
               </div>
@@ -532,10 +496,14 @@
 </template>
 <script>
 import MPagination from '@/components/MPagination/index.vue'
-import areaLists from '@/utils/area.json'
+import logisticsForm from '../components/logisticsForm'
 export default {
   name: 'detailsTable',
   props: {
+    experssShow: {
+      type: Boolean,
+      default: false
+    },
     classId: {
       type: Object,
       default: null
@@ -550,29 +518,26 @@ export default {
     }
   },
   components: {
-    MPagination
+    MPagination,
+    logisticsForm
   },
   data() {
     return {
-      areaLists: areaLists,
+      showExpress: false,
+      formData: {},
       audioIndex: null,
       tableindex: null,
       studentId: null,
       added_group: null,
       added_wechat: null,
-      formInline: {
+      ruleForm: {
         receiptName: '',
         receiptTel: '',
         addressDetail: ''
-      },
-      province: null,
-      city: null,
-      area: null,
-      areaCode: null
+      }
     }
   },
   mounted() {
-    // console.log(this.areaLists, '省市县')
     // console.log(this.audioTabs, ' audioTabs ')
   },
   watch: {
@@ -585,32 +550,10 @@ export default {
   },
   created() {},
   methods: {
-    // 级联城市级联
-    handleChange(data) {
-      const provinces = this.areaLists.filter(
-        (item) => +item.value === +data[0]
-      )
-      const citys = provinces[0].children.filter(
-        (item) => +item.value === +data[1]
-      )
-      const areas = citys[0].children.filter((item) => +item.value === +data[2])
-      this.province = provinces[0].label
-      this.city = citys[0].label
-      this.area = areas[0].label
-      this.areaCode = data[2]
-    },
-    // 表单点击取消
-    onCancel() {},
-    // 表单点击保存
-    onSubmit() {
-      console.log(
-        this.formInline,
-        this.province,
-        this.city,
-        this.area,
-        this.areaCode,
-        'submit!'
-      )
+    addExpress(data) {
+      console.log(data, '第一个子组件')
+      this.showExpress = false
+      this.$emit('addExpresss', data)
     },
     // 音频结束后赋值为空
     audioEnded() {
@@ -648,6 +591,11 @@ export default {
       this.added_wechat = row.added_wechat
       this.studentId = row.id
       this.tableindex = row.index
+      console.log(row.id, 'row.id')
+      const id = row.id
+      const userid = row.user_id
+      const orderid = row.order_id
+      this.formData = { id, userid, orderid }
       // console.log(row, column, event, index)
     },
     // 向父组建传值 已加好友
