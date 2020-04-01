@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 20:22:24
  * @LastEditors: panjian
- * @LastEditTime: 2020-03-31 20:33:17
+ * @LastEditTime: 2020-04-01 16:11:19
  -->
 <template>
   <div class="table-box">
@@ -198,51 +198,32 @@
                 scope.row.product_name
               }}</span>
               <br />
-              <!-- <div v-if="scope.row.receipt_name"> -->
-              <span>{{ scope.row.receipt_name }}</span>
-              <span>{{ scope.row.receipt_tel }}</span>
-              <br />
-              <span>{{ scope.row.province }}</span>
-              <span>{{ scope.row.city }}</span>
-              <span>{{ scope.row.area }}</span>
-              <br />
-              <span>{{ scope.row.address_detail }}</span>
-              <!-- </div> -->
-              <!-- <div v-else>
-                <el-popover placement="right" width="300" trigger="click">
-                  <el-form :model="formInline" class="demo-form-inline">
-                    <el-form-item label="收货人姓名">
-                      <el-input
-                        v-model="formInline.receiptName"
-                        placeholder="收货人姓名"
-                      ></el-input>
-                    </el-form-item>
-                    <el-form-item label="收货人电话">
-                      <el-input
-                        v-model="formInline.receiptTel"
-                        placeholder="收货人电话"
-                      ></el-input>
-                    </el-form-item>
-                    <div class="cascader-area">
-                      <el-cascader
-                        placeholder="省/市/区"
-                        :options="areaLists"
-                        filterable
-                        @change="handleChange"
-                      ></el-cascader>
-                    </div>
-                    <el-form-item>
-                      <el-button type="primary" @click="onCancel"
-                        >取消</el-button
-                      >
-                      <el-button type="primary" @click="onSubmit"
-                        >保存</el-button
-                      >
-                    </el-form-item>
-                  </el-form>
-                  <el-button slot="reference">帮他填写</el-button>
+              <div v-if="scope.row.receipt_name">
+                <span>{{ scope.row.receipt_name }}</span>
+                <span>{{ scope.row.receipt_tel }}</span>
+                <br />
+                <span>{{ scope.row.province }}</span>
+                <span>{{ scope.row.city }}</span>
+                <span>{{ scope.row.area }}</span>
+                <br />
+                <span>{{ scope.row.address_detail }}</span>
+              </div>
+              <div v-else>
+                <el-popover
+                  v-model="showExpress"
+                  placement="right"
+                  width="300"
+                  trigger="click"
+                >
+                  <logistics-form
+                    @addExpress="addExpress"
+                    :formData="formData"
+                  ></logistics-form>
+                  <el-button size="mini" type="primary" plain slot="reference"
+                    >帮他填写</el-button
+                  >
                 </el-popover>
-              </div> -->
+              </div>
             </div>
           </template>
         </el-table-column>
@@ -517,11 +498,14 @@
 </template>
 <script>
 import MPagination from '@/components/MPagination/index.vue'
-import areaLists from '@/utils/area'
+import logisticsForm from '../components/logisticsForm'
 export default {
   name: 'detailsTable',
-  // props: ['tables', 'classId'],
   props: {
+    experssShow: {
+      type: Boolean,
+      default: false
+    },
     classId: {
       type: Object,
       default: null
@@ -536,24 +520,26 @@ export default {
     }
   },
   components: {
-    MPagination
+    MPagination,
+    logisticsForm
   },
   data() {
     return {
-      areaLists: areaLists,
+      showExpress: false,
+      formData: {},
       audioIndex: null,
       tableindex: null,
       studentId: null,
       added_group: null,
       added_wechat: null,
-      formInline: {
+      ruleForm: {
         receiptName: '',
-        receiptTel: ''
+        receiptTel: '',
+        addressDetail: ''
       }
     }
   },
   mounted() {
-    // console.log(this.areaLists, '省市县')
     // console.log(this.audioTabs, ' audioTabs ')
   },
   watch: {
@@ -566,18 +552,9 @@ export default {
   },
   created() {},
   methods: {
-    // 级联城市级联
-    handleChange(value) {
-      console.log(value) // value值为区域码
-      // 用CodeToText转换成中文
-      // console.log(CodeToText[value[0]])
-      // console.log(CodeToText[value[1]])
-    },
-    // 表单点击取消
-    onCancel() {},
-    // 表单点击保存
-    onSubmit() {
-      console.log(this.formInline, 'submit!')
+    addExpress(data) {
+      this.showExpress = false
+      if (data === 1) this.$emit('addExpresss', data)
     },
     // 音频结束后赋值为空
     audioEnded() {
@@ -615,6 +592,11 @@ export default {
       this.added_wechat = row.added_wechat
       this.studentId = row.id
       this.tableindex = row.index
+      console.log(row.id, 'row.id')
+      const id = row.id
+      const userid = row.user_id
+      const orderid = row.order_id
+      this.formData = { id, userid, orderid }
       // console.log(row, column, event, index)
     },
     // 向父组建传值 已加好友
@@ -726,8 +708,11 @@ export default {
       margin-left: -8px;
     }
     .cascader-area {
-      width: 400px;
-      height: 300px;
+      // .cascader-area-text {
+      //   font-size: 15px;
+      //   margin-bottom: 15px;
+      //   font-weight: 500;
+      // }
     }
   }
   .login-box {
