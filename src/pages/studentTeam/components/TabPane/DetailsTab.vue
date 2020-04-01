@@ -1060,6 +1060,10 @@ export default {
   position: fixed;
   left: -1000px;
 }
+.exhibitionBox {
+  position: fixed;
+  left: -1000px;
+}
 .checkbox {
   position: absolute;
   right: 20px;
