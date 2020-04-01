@@ -221,7 +221,9 @@
                     @addExpress="addExpress"
                     :formData="formData"
                   ></logistics-form>
-                  <el-button slot="reference">帮他填写</el-button>
+                  <el-button size="mini" type="primary" plain slot="reference"
+                    >帮他填写</el-button
+                  >
                 </el-popover>
               </div>
             </div>
@@ -553,9 +555,8 @@ export default {
   created() {},
   methods: {
     addExpress(data) {
-      console.log(data, '第一个子组件')
       this.showExpress = false
-      this.$emit('addExpresss', data)
+      if (data === 1) this.$emit('addExpresss', data)
     },
     // 音频结束后赋值为空
     audioEnded() {
