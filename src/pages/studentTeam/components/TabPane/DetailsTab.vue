@@ -16,6 +16,13 @@
         @click="finishLessonList"
         >生成完课榜</el-button
       >
+      <el-button
+        type="primary"
+        class="Btn"
+        v-show="exhibition"
+        @click="finishLessonList"
+        >生成作品展</el-button
+      >
     </div>
     <div>
       <div class="tabs-tab">
@@ -69,8 +76,8 @@
         >
         </el-input> -->
         <!-- <check-box class="checkbox"></check-box> -->
-        <!-- 弹出框 -->
-        <!-- <el-dialog
+        <!-- 生成完课榜弹出框 -->
+        <el-dialog
           title="请选择生成的完课榜周数"
           :visible.sync="dialogFormVisible"
           width="500px"
@@ -85,7 +92,24 @@
             <el-button @click="dialogFormVisible = false">取 消</el-button>
             <el-button type="primary" @click="clickHandler">确 定</el-button>
           </div>
-        </el-dialog> -->
+        </el-dialog>
+        <!-- 生成作品展弹出框 -->
+        <el-dialog
+          title="请选择生成的完课榜周数"
+          :visible.sync="dialogFormVisible"
+          width="500px"
+        >
+          <el-radio v-model="finishLessonData.weekNum" label="U1"
+            >第一周</el-radio
+          >
+          <el-radio v-model="finishLessonData.weekNum" label="U2"
+            >第二周</el-radio
+          >
+          <div slot="footer" class="dialog-footer">
+            <el-button @click="dialogFormVisible = false">取 消</el-button>
+            <el-button type="primary" @click="clickHandler">确 定</el-button>
+          </div>
+        </el-dialog>
       </div>
       <!-- <img
         v-show="show"
@@ -96,6 +120,7 @@
         @load="handlePosterLoaded"
         crossorigin="anonymous"
       /> -->
+      <!-- 生成完课榜图片 -->
       <div class="finishBox">
         <slot>
           <!-- 需要转换的html -->
@@ -106,7 +131,13 @@
           ></finishclass>
         </slot>
       </div>
-      -->
+      <!-- 生成作品展图片 -->
+      <div class="exhibitionBox">
+        <slot>
+          <!-- 需要转换的html -->
+          <exhibition @isLoad="canvasStart"></exhibition>
+        </slot>
+      </div>
     </div>
   </div>
 </template>
@@ -116,12 +147,14 @@ import detailsTable from './components/detailsTable'
 import axios from '@/api/axios'
 import { timestamp, GetAgeByBrithday } from '@/utils/index'
 import status from '@/utils/status'
-// import finishclass from './FinishClass'
+import finishclass from './FinishClass'
+import exhibition from './Exhibition'
 import html2canvas from 'html2canvas'
 export default {
   components: {
-    detailsTable
-    // finishclass
+    detailsTable,
+    finishclass,
+    exhibition
     // checkBox
   },
   props: {
@@ -143,6 +176,7 @@ export default {
       // 点击生成图片--状态
       getImg: false,
       dataURL: '',
+      exhibition: true,
       Finish: true,
       audioTabs: '0',
       table: {
@@ -976,6 +1010,10 @@ export default {
     position: absolute;
     right: 18px;
   }
+  .Btn {
+    position: absolute;
+    right: 150px;
+  }
 }
 
 .tabs-tab {
@@ -1007,7 +1045,14 @@ export default {
 //   width: 550px;
 // }
 .finishBox {
-  width: 750px;
+  position: fixed;
+  left: -1000px;
+  // width: 750px;
+}
+.exhibitionBox {
+  position: fixed;
+  left: -1000px;
+  // width: 750px;
 }
 .checkbox {
   position: absolute;
