@@ -41,7 +41,7 @@
                   item.packages_name ? item.packages_name : item.product_name
                 }}
               </div>
-              <div class="card-style1-num">
+              <div class="card-style1-num" v-show="item.sup">
                 {{ item.stage ? item.stage : '-' }}期·S{{
                   item.sup ? item.sup : '-'
                 }}
@@ -129,7 +129,7 @@ export default {
       // 搜索
       searchIn: [],
       // 切换tab
-      tab: ''
+      tab: '3' // 默认显示 3 - 已完成
     }
   },
   created() {
