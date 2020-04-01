@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 14:19:58
  * @LastEditors: panjian
- * @LastEditTime: 2020-04-01 21:16:09
+ * @LastEditTime: 2020-04-01 22:37:00
  -->
 <template>
   <div>
@@ -22,7 +22,8 @@
         class="search-box"
         @search="handleSearch"
         phone="uid"
-        wxSearch="asas"
+        onlyPhone="1"
+        phoneTip="手机号/微信昵称 查询"
       />
       <div class="tabs-tab">
         <el-tabs v-model="activeName" @tab-click="handleClick">
@@ -242,9 +243,33 @@ export default {
       if (res.length === 0) {
         console.log('res传的空')
         this.search = ''
+        this.getGroup()
+        if (this.tabsName === '加好友进群') {
+          this.getGroup()
+        } else if (this.tabsName === '物流') {
+          this.gitLogistics()
+        } else if (this.tabsName === '打开APP') {
+          this.geiLogin()
+        } else if (this.tabsName === '参课和完课') {
+          this.getClassCompPage()
+        } else if (this.tabsName === '作品及点评') {
+          this.getStuComment()
+        }
       } else {
         console.log('res', res[0].term.uid)
-        this.search = res[0].term.uid
+        this.search = `"${res[0].term.uid}"`
+        this.getGroup()
+        if (this.tabsName === '加好友进群') {
+          this.getGroup()
+        } else if (this.tabsName === '物流') {
+          this.gitLogistics()
+        } else if (this.tabsName === '打开APP') {
+          this.geiLogin()
+        } else if (this.tabsName === '参课和完课') {
+          this.getClassCompPage()
+        } else if (this.tabsName === '作品及点评') {
+          this.getStuComment()
+        }
       }
     },
     clickHandler() {
@@ -308,9 +333,6 @@ export default {
           this.querysData = `{"team_id":${this.classId.classId.id},"team_type":${this.classId.type}}`
         }
         console.log(this.search, 'this.search')
-        // const querys = `{"team_id":${this.classId.classId.id},"team_type":${this.classId.type},"uid":${this.search}}`
-        // const querys = `{"team_id":${this.classId.classId.id},"team_type":${this.classId.type},"uid":${this.search}}`
-
         axios
           .post('/graphql/user', {
             query: `{
@@ -394,11 +416,16 @@ export default {
     // 物流接口
     gitLogistics() {
       if (this.classId && this.classId.classId && this.classId.classId.id) {
-        const querys = `{"team_id":${this.classId.classId.id},"team_type":${this.classId.type}}`
+        if (this.search) {
+          this.querysData = `{"team_id":${this.classId.classId.id},"team_type":${this.classId.type},"uid":${this.search}}`
+        } else {
+          this.querysData = `{"team_id":${this.classId.classId.id},"team_type":${this.classId.type}}`
+        }
+        // const querys = `{"team_id":${this.classId.classId.id},"team_type":${this.classId.type}}`
         axios
           .post('/graphql/express', {
             query: `{
-            stuExpressPage(query:${JSON.stringify(querys)} , page: ${
+            stuExpressPage(query:${JSON.stringify(this.querysData)} , page: ${
               this.table.currentPage
             }, size: 20) {
               empty
@@ -493,11 +520,16 @@ export default {
     // 打开APP接口
     geiLogin() {
       if (this.classId && this.classId.classId && this.classId.classId.id) {
-        const querys = `{"team_id":${this.classId.classId.id},"team_type":${this.classId.type}}`
+        if (this.search) {
+          this.querysData = `{"team_id":${this.classId.classId.id},"team_type":${this.classId.type},"uid":${this.search}}`
+        } else {
+          this.querysData = `{"team_id":${this.classId.classId.id},"team_type":${this.classId.type}}`
+        }
+        // const querys = `{"team_id":${this.classId.classId.id},"team_type":${this.classId.type}}`
         axios
           .post('/graphql/getClassLogin', {
             query: `{
-          stuLoginPage(query:${JSON.stringify(querys)}, page: ${
+          stuLoginPage(query:${JSON.stringify(this.querysData)}, page: ${
               this.table.currentPage
             }, size: 20) {
             first
@@ -608,11 +640,16 @@ export default {
     // 参课和完课接口
     getClassCompPage() {
       if (this.classId && this.classId.classId && this.classId.classId.id) {
-        const querys = `{"team_id":${this.classId.classId.id},"team_type":${this.classId.type}}`
+        if (this.search) {
+          this.querysData = `{"team_id":${this.classId.classId.id},"team_type":${this.classId.type},"uid":${this.search}}`
+        } else {
+          this.querysData = `{"team_id":${this.classId.classId.id},"team_type":${this.classId.type}}`
+        }
+        // const querys = `{"team_id":${this.classId.classId.id},"team_type":${this.classId.type}}`
         axios
           .post('/graphql/getClassComplete', {
             query: `{
-            getClassCompPage(query:${JSON.stringify(querys)}, page: ${
+            getClassCompPage(query:${JSON.stringify(this.querysData)}, page: ${
               this.table.currentPage
             }, size: 20) {
               first
@@ -684,11 +721,16 @@ export default {
     // 作品及点评
     getStuComment() {
       if (this.classId && this.classId.classId && this.classId.classId.id) {
-        const querys = `{"team_id":${this.classId.classId.id},"team_type":${this.classId.type}}`
+        if (this.search) {
+          this.querysData = `{"team_id":${this.classId.classId.id},"team_type":${this.classId.type},"uid":${this.search}}`
+        } else {
+          this.querysData = `{"team_id":${this.classId.classId.id},"team_type":${this.classId.type}}`
+        }
+        // const querys = `{"team_id":${this.classId.classId.id},"team_type":${this.classId.type}}`
         axios
           .post('/graphql/getStuComment', {
             query: `{
-            getStuCommentPage(query:${JSON.stringify(querys)}, page: ${
+            getStuCommentPage(query:${JSON.stringify(this.querysData)}, page: ${
               this.table.currentPage
             }, size: 20) {
               empty
