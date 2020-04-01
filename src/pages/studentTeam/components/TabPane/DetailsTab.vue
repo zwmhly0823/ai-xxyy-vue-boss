@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 14:19:58
  * @LastEditors: panjian
- * @LastEditTime: 2020-03-31 20:40:34
+ * @LastEditTime: 2020-04-01 16:03:58
  -->
 <template>
   <div>
@@ -33,7 +33,9 @@
           <el-tab-pane label="物流" name="logistics">
             <details-table
               @onCurrentPage="onCurrentPage"
+              @addExpresss="addExpresss"
               :tables="table"
+              :experssShow="experssShow"
               :audioTabs="audioTabs"
             ></details-table>
           </el-tab-pane>
@@ -123,6 +125,7 @@ export default {
   },
   data() {
     return {
+      experssShow: false,
       // 单选按钮
       radio: '1',
       type: null,
@@ -390,6 +393,8 @@ export default {
                 express_status
                 ctime
                 mobile
+                user_id
+                order_id
                 receipt_tel
                 receipt_name
                 product_name
@@ -398,6 +403,7 @@ export default {
           }`
           })
           .then((res) => {
+            console.log(res, 'experessssssss')
             this.table.tableData = []
             this.table.totalElements = +res.data.stuExpressPage.totalElements
             const _data = res.data.stuExpressPage.content
@@ -743,6 +749,14 @@ export default {
             })
             this.table.tableData = _data
           })
+      }
+    },
+    // 添加物流地址 子组件传值 掉物流接口
+    addExpresss(data) {
+      console.log(data, '父组件')
+      if (data) {
+        this.gitLogistics()
+        // this.experssShow = true
       }
     },
     // 加好友进群 已加好友子组建传值方法
