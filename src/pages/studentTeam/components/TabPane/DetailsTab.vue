@@ -16,11 +16,13 @@
         onlyPhone="1"
         phoneTip="手机号/微信昵称 查询"
         :teamId="classId.classId.id"
+        style="margin-right: 20px;"
       />
       <el-button
         size="mini"
         type="primary"
-        style="height: 42px; margin: 0 20px;"
+        style="height: 42px; margin-right: 20px;"
+        v-if="btnbox"
         @click="finishLessonList"
         >生成完课榜</el-button
       >
@@ -1193,5 +1195,9 @@ export default {
   .el-tabs__item.is-active {
     color: #409eff;
   }
+}
+.el-radio__input {
+  position: relative;
+  top: -8px;
 }
 </style>
