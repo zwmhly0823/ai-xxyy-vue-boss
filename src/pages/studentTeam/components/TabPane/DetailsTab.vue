@@ -8,24 +8,7 @@
  -->
 <template>
   <div>
-    <!-- <div class="btnbox" v-show="btnbox">
-      <el-button
-        size="small"
-        type="primary"
-        class="btn"
-        v-show="Finish"
-        @click="finishLessonList"
-        >生成完课榜</el-button
-      >
-      <el-button
-        type="primary"
-        class="Btn"
-        v-show="exhibition"
-        @click="finishLessonList"
-        >生成作品展</el-button
-      >
-    </div> -->
-    <div>
+    <div class="btnbox">
       <m-search
         class="search-box"
         @search="handleSearch"
@@ -34,6 +17,30 @@
         phoneTip="手机号/微信昵称 查询"
         :teamId="classId.classId.id"
       />
+      <el-button
+        size="mini"
+        type="primary"
+        style="height: 42px; margin: 0 20px;"
+        @click="finishLessonList"
+        >生成完课榜</el-button
+      >
+      <!-- <el-button
+        type="primary"
+        class="Btn"
+        v-show="exhibition"
+        @click="finishLessonList"
+        >生成作品展</el-button
+      > -->
+    </div>
+    <div>
+      <!-- <m-search
+        class="search-box"
+        @search="handleSearch"
+        phone="uid"
+        onlyPhone="1"
+        phoneTip="手机号/微信昵称 查询"
+        :teamId="classId.classId.id"
+      /> -->
 
       <div class="tabs-tab">
         <el-tabs v-model="activeName" @tab-click="handleClick">
@@ -1102,17 +1109,19 @@ export default {
 </script>
 <style lang="scss" scoped>
 .btnbox {
+  display: flex;
+  justify-content: flex-end;
   width: 100%;
-  height: 40px;
+  // height: 40px;
   margin-top: 10px;
-  .btn {
-    position: absolute;
-    right: 18px;
-  }
-  .Btn {
-    position: absolute;
-    right: 150px;
-  }
+  // .btn {
+  //   position: absolute;
+  //   right: 18px;
+  // }
+  // .Btn {
+  //   position: absolute;
+  //   right: 150px;
+  // }
 }
 .search-box {
   display: flex;
