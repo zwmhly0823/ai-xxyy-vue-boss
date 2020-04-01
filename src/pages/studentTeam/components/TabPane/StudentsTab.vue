@@ -3,8 +3,52 @@
     <el-table
       :data="tableData"
       :header-cell-style="headerStyle"
+      @selection-change="handleSelectionChange"
       class="students-box"
     >
+      <!-- 全选按钮 -->
+      <el-table-column type="selection" width="40px"></el-table-column>
+      <!-- 更多按钮 -->
+      <el-table-column width="20px">
+        <template slot="header" slot-scope="scope">
+          <el-Popover popper-class="batch-btn" trigger="hover">
+            <!-- 标题气泡内容 -->
+            <div size="mini" type="text" @click="batchBtn">
+              批量发放优惠券
+            </div>
+            <!-- 标题点击...图片 -->
+            <div
+              @click="headerPoint(scope.$index, scope)"
+              v-show="moreTitle"
+              slot="reference"
+            >
+              <img src="../../../../assets/images/point.png" />
+            </div>
+          </el-Popover>
+        </template>
+        <template slot-scope="scope">
+          <el-Popover popper-class="batch-btn" trigger="hover">
+            <!-- 气泡内容 -->
+            <div size="mini" type="text" @click="batchBtn">
+              <span v-show="moreTitle === true">批量发放优惠券</span>
+              <span v-show="moreTitle === false">发放优惠券</span>
+            </div>
+            <!-- 点击...图片 -->
+            <div
+              @mouseenter="handleEdit(scope.$index, scope.row)"
+              slot="reference"
+            >
+              <img src="../../../../assets/images/point.png" />
+            </div>
+          </el-Popover>
+        </template>
+      </el-table-column>
+      <!-- 弹窗 -->
+      <coupon-popover
+        ref="couponPopover"
+        :couponData="couponData"
+        :selectUserId="selectUserId"
+      />
       <el-table-column label="基本信息" class="information" width="280px">
         <template slot-scope="scope">
           <img class="information-img" :src="scope.row.head" alt="" />
@@ -85,10 +129,12 @@
 import axios from '@/api/axios'
 import { GetAgeByBrithday } from '@/utils/index'
 import MPagination from '@/components/MPagination/index.vue'
+import CouponPopover from './components/couponPopover'
 
 export default {
   components: {
-    MPagination
+    MPagination,
+    CouponPopover
   },
   props: {
     // 班级传参
@@ -99,6 +145,8 @@ export default {
   },
   data() {
     return {
+      visible: false,
+      popoverindex: 0,
       // 总页数
       totalPages: 1,
       totalElements: 0, // 总条数
@@ -108,10 +156,19 @@ export default {
       tableData: [],
       // 用户状态列表
       statusList: [],
-      tableDataEmpty: true
+      tableDataEmpty: true,
+      // 标题更多按钮显示
+      moreTitle: false,
+      // 优惠卷接口数据
+      couponData: [],
+      // 选择按钮用户id
+      selectUserId: []
     }
   },
-  created() {},
+  created() {
+    // 优惠卷列表接口
+    this.couponList()
+  },
   watch: {
     classId(value) {
       if (!value) return
@@ -262,6 +319,42 @@ export default {
           this.statusList = res.data.userFollowStateList
         })
     },
+    // 优惠卷列表接口
+    couponList() {
+      this.$http.Team.getAllCoupons(0).then((res) => {
+        this.couponData = res.payload.content
+      })
+    },
+    // 全选
+    handleSelectionChange(val, index) {
+      console.log(val, index, '全选')
+      this.selectUserId = []
+      if (val.length > 1) {
+        this.moreTitle = true
+      } else {
+        this.moreTitle = false
+      }
+      val.forEach((data) => {
+        this.selectUserId.push(data.id)
+      })
+    },
+    // 表头优惠卷操作
+    headerPoint(index, scope) {
+      console.log(index, scope)
+    },
+    // 表格优惠卷操作
+    handleEdit(index, row) {
+      // 当没有点击选择时点击发放优惠卷气泡
+      if (this.moreTitle === false) {
+        this.selectUserId = []
+        this.selectUserId.push(row.id)
+      }
+    },
+    // 点击批量发放优惠卷
+    batchBtn(val) {
+      console.log(val, '优惠券用户id')
+      this.$refs.couponPopover.issueCoupons = true
+    },
     // 点击分页
     handleSizeChange(val) {
       this.currentPage = val
@@ -340,5 +433,18 @@ export default {
 }
 .el-table td {
   border-bottom: 1px solid #ededed;
+}
+.batch-btn {
+  line-height: 10px;
+  min-width: 110px;
+  font-size: 12px;
+  text-align: center;
+  cursor: pointer;
+}
+.dataStyle {
+  .el-table_1_column_2 {
+    cursor: pointer;
+    font-size: 19px !important;
+  }
 }
 </style>
