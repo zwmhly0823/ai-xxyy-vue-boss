@@ -34,6 +34,7 @@
         phoneTip="手机号/微信昵称 查询"
         :teamId="classId.classId.id"
       />
+
       <div class="tabs-tab">
         <el-tabs v-model="activeName" @tab-click="handleClick">
           <el-tab-pane label="加好友进群" name="group">
@@ -182,6 +183,7 @@ export default {
       teacherId: '',
       search: '',
       querysData: '',
+
       experssShow: false,
       // 单选按钮
       // radio: '',
@@ -566,7 +568,6 @@ export default {
         } else {
           this.querysData = `{"team_id":${this.classId.classId.id},"team_type":${this.classId.type}}`
         }
-        // const querys = `{"team_id":${this.classId.classId.id},"team_type":${this.classId.type}}`
         axios
           .post('/graphql/express', {
             query: `{
