@@ -178,7 +178,7 @@ export default {
 </style>
 <style lang="scss">
 .el-select {
-  width: 60%;
+  width: 70%;
   margin-left: 10px;
 }
 .el-dialog__body {
