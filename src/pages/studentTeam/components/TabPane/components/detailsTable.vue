@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 20:22:24
  * @LastEditors: panjian
- * @LastEditTime: 2020-04-01 16:11:19
+ * @LastEditTime: 2020-04-01 17:52:36
  -->
 <template>
   <div class="table-box">
@@ -17,6 +17,7 @@
         :row-class-name="tableRowClassName"
         :cell-style="cellStyle"
         @row-click="onClick"
+        :default-sort="{ prop: 'added_wechat', order: 'descending' }"
       >
         <!-- 基本信息 -->
         <el-table-column width="280" label="基本信息">
@@ -44,10 +45,11 @@
           :prop="item.prop"
           :width="item.width"
           :label="item.label"
+          :default-sort="{ prop: 'date', order: 'descending' }"
         >
         </el-table-column>
         <!-- 已加好友 -->
-        <el-table-column label="已加好友">
+        <el-table-column prop="added_wechat" sortable label="已加好友">
           <template slot-scope="scope">
             <!-- <span>{{ scope.row.friend }}</span> -->
             <img
@@ -89,7 +91,7 @@
           </template>
         </el-table-column>
         <!-- 已进群 -->
-        <el-table-column label="已进群">
+        <el-table-column prop="added_group" sortable label="已进群">
           <template slot-scope="scope">
             <img
               class="group-img"
@@ -130,7 +132,7 @@
           </template>
         </el-table-column>
         <!-- 关注公众号 -->
-        <el-table-column label="关注公众号">
+        <el-table-column prop="follow" sortable label="关注公众号">
           <template slot-scope="scope">
             <img
               class="group-img"
@@ -219,7 +221,13 @@
                     @addExpress="addExpress"
                     :formData="formData"
                   ></logistics-form>
-                  <el-button size="mini" type="primary" plain slot="reference"
+
+                  <el-button
+                    icon="el-icon-edit"
+                    size="mini"
+                    type="primary"
+                    plain
+                    slot="reference"
                     >帮他填写</el-button
                   >
                 </el-popover>

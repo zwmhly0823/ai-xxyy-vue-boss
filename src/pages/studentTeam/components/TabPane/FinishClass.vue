@@ -6,28 +6,100 @@
     <div class="classconent">
       <img src="@/assets/images/Finishclasslist.png" class="img" alt="" />
       <div class="content">
-        <ul class="title">
-          <li>宝贝信息</li>
-          <li>W1D1</li>
-          <li>W1D2</li>
-          <li>W1D3</li>
-          <li>W1D4</li>
-        </ul>
-        <!-- <ul class="Title">
-          <li>宝贝信息</li>
-          <li>W2D1</li>
-          <li>W2D2</li>
-          <li>W2D3</li>
-          <li>W2D4</li>
-        </ul> -->
-        <ul class="information">
-          <li><img src="@/assets/images/Stars.png" alt="" /></li>
-          <li>哈哈哈</li>
-          <li><img src="@/assets/images/Stars.png" alt="" /></li>
-          <li><img src="@/assets/images/Stars.png" alt="" /></li>
-          <li><img src="@/assets/images/Stars.png" alt="" /></li>
-          <li><img src="@/assets/images/Stars.png" alt="" /></li>
-        </ul>
+        <table>
+          <tr class="title">
+            <td>宝贝信息</td>
+            <td>{{ listTitle }}D1</td>
+            <td>{{ listTitle }}D2</td>
+            <td>{{ listTitle }}D3</td>
+            <td>{{ listTitle }}D4</td>
+          </tr>
+          <tr
+            class="information"
+            v-for="(item, index) in listinfo"
+            :key="index"
+            height="52px;"
+          >
+            <td>
+              <img
+                :src="item.head"
+                alt=""
+                @load="loaded(index)"
+                style="vertical-align:middle;width:51px;height:51px;"
+                crossorigin="anonymous"
+              />
+              <span> {{ item.username }}</span>
+            </td>
+            <td>
+              <img
+                src="@/assets/images/Stars.png"
+                alt=""
+                v-if="item.completeArr[0].is_complete === '1'"
+              />
+              <img
+                src="@/assets/images/starsgrey.png"
+                alt=""
+                v-else-if="item.completeArr[0].is_complete === '0'"
+              />
+              <img
+                src="@/assets/images/lock.png"
+                alt=""
+                v-else-if="item.completeArr[0].is_complete === '2'"
+              />
+            </td>
+            <td>
+              <img
+                src="@/assets/images/Stars.png"
+                alt=""
+                v-if="item.completeArr[1].is_complete === '1'"
+              />
+              <img
+                src="@/assets/images/starsgrey.png"
+                alt=""
+                v-else-if="item.completeArr[1].is_complete === '0'"
+              />
+              <img
+                src="@/assets/images/lock.png"
+                alt=""
+                v-else-if="item.completeArr[1].is_complete === '2'"
+              />
+            </td>
+            <td>
+              <img
+                src="@/assets/images/Stars.png"
+                alt=""
+                v-if="item.completeArr[2].is_complete === '1'"
+              />
+              <img
+                src="@/assets/images/starsgrey.png"
+                alt=""
+                v-else-if="item.completeArr[2].is_complete === '0'"
+              />
+              <img
+                src="@/assets/images/lock.png"
+                alt=""
+                v-else-if="item.completeArr[2].is_complete === '2'"
+              />
+            </td>
+            <td>
+              <img
+                src="@/assets/images/Stars.png"
+                alt=""
+                v-if="item.completeArr[3].is_complete === '1'"
+              />
+              <img
+                src="@/assets/images/starsgrey.png"
+                alt=""
+                v-else-if="item.completeArr[3].is_complete === '0'"
+              />
+              <img
+                src="@/assets/images/lock.png"
+                alt=""
+                v-else-if="item.completeArr[3].is_complete === '2'"
+              />
+            </td>
+          </tr>
+        </table>
       </div>
     </div>
     <div class="classfooter">
@@ -37,15 +109,61 @@
 </template>
 
 <script>
-export default {}
+export default {
+  props: {
+    listData: {
+      type: Object,
+      default: null
+    },
+    weekNum: {
+      type: String,
+      default: ''
+    },
+    finish: {
+      type: Boolean,
+      default: false
+    }
+  },
+
+  data() {
+    return {
+      listinfo: [],
+      listTitle: '',
+      isLoaded: false,
+      num: 0
+    }
+  },
+  watch: {
+    listData(value) {
+      console.log('child - receive ----> res:', value)
+      this.listinfo = value.data.getStuComRankingList
+      console.log('listinfo -------', this.listinfo)
+    },
+    weekNum(value) {
+      this.listTitle = value === 'U1' ? 'W1' : 'W2'
+    }
+  },
+
+  methods: {
+    loaded(i) {
+      this.num++
+      if (this.listinfo.length - 1 === this.num) {
+        this.isLoaded = true
+        this.$emit('isLoad', this.isLoaded)
+      }
+    }
+  }
+}
 </script>
 
 <style scoped lang="scss">
 .app {
   font-size: 0px;
   width: 750px;
-  min-height: 1836px;
+  min-height: 1400px;
   background: #317bc6;
+  box-sizing: border-box;
+  padding-bottom: 60px;
   .classhead {
     width: 100%;
     height: 774.6px;
@@ -75,68 +193,28 @@ export default {}
       padding-right: 33px;
       padding-top: 60px;
       padding-bottom: 66px;
-      .title {
-        list-style: none;
-        margin: 0px;
-        padding: 0px;
-        font-size: 24px;
-        color: #666;
-        li {
-          float: left;
-        }
-        li:nth-child(2) {
-          margin-left: 150px;
-        }
-        li:nth-child(3),
-        li:nth-child(4),
-        li:nth-child(5) {
-          margin-left: 38px;
-        }
+      td {
+        vertical-align: middle;
       }
-      .Title {
-        list-style: none;
-        margin: 0px;
-        padding: 0px;
+      .title {
+        width: 100%;
+        height: 52px;
         font-size: 24px;
         color: #666;
-        li {
-          float: left;
-        }
-        li:nth-child(2) {
-          margin-left: 157px;
-        }
-        li:nth-child(3),
-        li:nth-child(4),
-        li:nth-child(5) {
-          margin-left: 36px;
+        td:nth-child(2) {
+          margin-left: 150px;
         }
       }
       .information {
         font-size: 28px;
         color: #333;
-        margin-top: 50px;
-        list-style: none;
-        margin: 0px;
-        padding: 0px;
-        li {
-          float: left;
+        margin-top: 200px;
+        td {
           img {
             width: 51px;
             height: 51px;
             border-radius: 50%;
           }
-        }
-        li:nth-child(2) {
-          margin-left: 14px;
-          margin-top: 10px;
-        }
-        li:nth-child(3) {
-          margin-left: 110px;
-        }
-        li:nth-child(4),
-        li:nth-child(5),
-        li:nth-child(6) {
-          margin-left: 51px;
         }
       }
     }
@@ -146,7 +224,7 @@ export default {}
     height: 93px;
     margin: 0px auto;
     position: relative;
-    bottom: -370px;
+    margin-top: 40px;
     img {
       width: 100%;
       height: 100%;
