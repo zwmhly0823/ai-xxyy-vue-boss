@@ -41,9 +41,9 @@
                   item.packages_name ? item.packages_name : item.product_name
                 }}
               </div>
-              <div class="card-style1-num">
-                {{ item.stage ? item.stage : '-' }}期·{{
-                  item.sup ? `S${item.sup}` : item.product_name
+              <div class="card-style1-num" v-show!="item.sup === ''">
+                {{ item.stage ? item.stage : '-' }}期·S{{
+                  item.sup ? item.sup : '-'
                 }}
               </div>
             </div>
