@@ -1022,6 +1022,7 @@ export default {
 .btnbox {
   width: 100%;
   height: 40px;
+  margin-top: 10px;
   .btn {
     position: absolute;
     right: 18px;
