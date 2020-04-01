@@ -18,12 +18,12 @@
       >
     </div> -->
     <div>
-      <m-search
+      <!-- <m-search
         class="search-box"
         @search="handleSearch"
         phone="uid"
         wxSearch="asas"
-      />
+      /> -->
       <div class="tabs-tab">
         <el-tabs v-model="activeName" @tab-click="handleClick">
           <el-tab-pane label="加好友进群" name="group">
@@ -105,7 +105,7 @@
 <script>
 // import checkBox from '@/components/MCheckBox/index'
 import detailsTable from './components/detailsTable'
-import MSearch from '@/components/MSearch/index.vue'
+// import MSearch from '@/components/MSearch/index.vue'
 import axios from '@/api/axios'
 import { timestamp, GetAgeByBrithday, isToss } from '@/utils/index'
 import status from '@/utils/status'
@@ -114,8 +114,8 @@ import status from '@/utils/status'
 import html2canvas from 'html2canvas'
 export default {
   components: {
-    detailsTable,
-    MSearch
+    detailsTable
+    // MSearch
     // finishclass
     // checkBox
   },
