@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-26 16:28:45
  * @LastEditors: zhubaodong
- * @LastEditTime: 2020-04-01 21:38:05
+ * @LastEditTime: 2020-04-01 23:20:41
  -->
 <template>
   <div class="search-item small">
@@ -50,6 +50,11 @@ export default {
       type: Boolean,
       default: false
     },
+    // team_id
+    teamId: {
+      type: String,
+      default: ''
+    },
     // 是否只返回值，如果是，父组件获得值后根据实际表达式组装数据
     tip: {
       type: String,
@@ -91,7 +96,7 @@ export default {
       return axios
         .post('/graphql/user', {
           query: `{
-              blurrySearch(mobile:"${queryString}") {
+              blurrySearch(mobile:"${queryString}",team_id:"${this.teamId}") {
                   mobile
                   wechat_nikename
                   id
