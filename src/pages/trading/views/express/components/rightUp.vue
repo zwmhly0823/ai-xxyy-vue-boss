@@ -67,6 +67,13 @@ export default {
       console.log('导出物流信息')
     },
     handleSearch(search) {
+      // 期数 加 S
+      search.forEach((item) => {
+        if (item.terms && item.terms.sup) {
+          const sup = item.terms.sup.map((s) => `S${s}`)
+          item.terms.sup = sup
+        }
+      })
       console.log(search, '1111')
       this.$emit('search', search)
     },

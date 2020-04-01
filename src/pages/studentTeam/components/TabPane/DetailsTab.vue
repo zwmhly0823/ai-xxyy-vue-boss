@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 14:19:58
  * @LastEditors: panjian
- * @LastEditTime: 2020-03-31 20:40:34
+ * @LastEditTime: 2020-04-01 16:03:58
  -->
 <template>
   <div>
@@ -40,7 +40,9 @@
           <el-tab-pane label="物流" name="logistics">
             <details-table
               @onCurrentPage="onCurrentPage"
+              @addExpresss="addExpresss"
               :tables="table"
+              :experssShow="experssShow"
               :audioTabs="audioTabs"
             ></details-table>
           </el-tab-pane>
@@ -131,6 +133,7 @@
           ></finishclass>
         </slot>
       </div>
+
       <!-- 生成作品展图片 -->
       <div class="exhibitionBox">
         <slot>
@@ -165,6 +168,7 @@ export default {
   },
   data() {
     return {
+      experssShow: false,
       // 单选按钮
       // radio: '',
       // finish: false,
@@ -325,14 +329,11 @@ export default {
         // 显示弹框
         console.log('this.classid ------>>>>>', this.classId)
         this.dialogFormVisible = true
-        // ${this.classId.classId.id}
-        this.finishLessonData.teamId = 27
-        const currentLesson = 'S1L1U1'
-        // this.finishLessonData.teamId = this.classId.classId.id
-        // const currentLesson = this.classId.classId.current_lesson.substring(
-        //   0,
-        //   6
-        // )
+        this.finishLessonData.teamId = this.classId.classId.id
+        const currentLesson = this.classId.classId.current_lesson.substring(
+          0,
+          6
+        )
         this.finishLessonData.studentLesson = currentLesson.substring(0, 4)
         this.finishLessonData.weekNum = currentLesson.substring(4, 6)
       } else {
@@ -352,7 +353,7 @@ export default {
         'team_id: ' + teamId + ' , lesson :' + lesson + ' , week : ' + week
       )
       axios
-        .post('/getStuRankingList', {
+        .post('/graphql/getStuRankingList', {
           query: `{
           getStuComRankingList(query : ${JSON.stringify(queryParams)}){
           student_id
@@ -524,6 +525,8 @@ export default {
                 express_status
                 ctime
                 mobile
+                user_id
+                order_id
                 receipt_tel
                 receipt_name
                 product_name
@@ -532,6 +535,7 @@ export default {
           }`
           })
           .then((res) => {
+            console.log(res, 'experessssssss')
             this.table.tableData = []
             this.table.totalElements = +res.data.stuExpressPage.totalElements
             const _data = res.data.stuExpressPage.content
@@ -879,6 +883,14 @@ export default {
           })
       }
     },
+    // 添加物流地址 子组件传值 掉物流接口
+    addExpresss(data) {
+      console.log(data, '父组件')
+      if (data) {
+        this.gitLogistics()
+        // this.experssShow = true
+      }
+    },
     // 加好友进群 已加好友子组建传值方法
     onCommandFriend(data) {
       this.codeHandle = data
@@ -1047,12 +1059,6 @@ export default {
 .finishBox {
   position: fixed;
   left: -1000px;
-  // width: 750px;
-}
-.exhibitionBox {
-  position: fixed;
-  left: -1000px;
-  // width: 750px;
 }
 .checkbox {
   position: absolute;
