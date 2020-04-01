@@ -1020,7 +1020,8 @@ export default {
 //   width: 550px;
 // }
 .finishBox {
-  width: 750px;
+  position: fixed;
+  left: -1000px;
 }
 .checkbox {
   position: absolute;
