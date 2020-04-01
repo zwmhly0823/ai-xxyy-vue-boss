@@ -1061,10 +1061,10 @@ export default {
 //   align-self: center;
 //   width: 550px;
 // }
-// .finishBox {
-//   position: fixed;
-//   left: -1000px;
-// }
+.finishBox {
+  position: fixed;
+  left: -1000px;
+}
 .exhibitionBox {
   position: fixed;
   left: -1000px;
