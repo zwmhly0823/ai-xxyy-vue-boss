@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-26 16:28:45
  * @LastEditors: zhubaodong
- * @LastEditTime: 2020-04-01 23:20:41
+ * @LastEditTime: 2020-04-02 00:20:04
  -->
 <template>
   <div class="search-item small">
@@ -71,6 +71,7 @@ export default {
   computed: {},
   watch: {
     input(val, old) {
+      console.log(val !== old && !val)
       if (val !== old && !val) {
         this.$emit('result', '')
       }
@@ -93,10 +94,11 @@ export default {
       cb(searchUid)
     },
     createFilter(queryString) {
+      const queryParams = `{"mobile":"${queryString}","team_id":"${this.teamId}"}`
       return axios
         .post('/graphql/user', {
           query: `{
-              blurrySearch(mobile:"${queryString}",team_id:"${this.teamId}") {
+              blurrySearch(query: ${JSON.stringify(queryParams)}) {
                   mobile
                   wechat_nikename
                   id
