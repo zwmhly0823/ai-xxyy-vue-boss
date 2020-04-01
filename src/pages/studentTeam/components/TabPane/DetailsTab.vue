@@ -80,6 +80,7 @@
         <!-- <check-box class="checkbox"></check-box> -->
         <!-- 生成完课榜弹出框 -->
         <el-dialog
+          element-loading-text="图片生成中"
           title="请选择生成的完课榜周数"
           :visible.sync="dialogFormVisible"
           width="500px"
@@ -346,6 +347,7 @@ export default {
         console.log('getStuRankingList - error:', ' 缺少毕传信息')
         return
       }
+      this.$loading()
       const queryParams = `{"team_id" : ${teamId}, "week" : "${lesson +
         week}", "sort" : "${this.finishLessonData.finishClassSort}"}`
       console.log(
@@ -368,7 +370,6 @@ export default {
     }`
         })
         .then((res) => {
-          console.log(res.data.getStuComRankingList[0].head, 'header')
           if (res.error) {
             console.log(res.error, '接口错误信息-------------->')
             return
@@ -408,7 +409,9 @@ export default {
     },
     canvasStart(res) {
       if (res) {
-        this.handlePosterLoad()
+        setTimeout(() => {
+          this.handlePosterLoad()
+        }, 1000)
       }
     },
     // 加好友进群接口
@@ -994,6 +997,7 @@ export default {
 
       // aLink.dispatchEvent(evt);
       aLink.click()
+      this.$loading().close()
     },
     base64ToBlob(code) {
       const parts = code.split(';base64,')
