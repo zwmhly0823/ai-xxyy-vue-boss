@@ -198,17 +198,17 @@
                 scope.row.product_name
               }}</span>
               <br />
-              <!-- <div v-if="scope.row.receipt_name"> -->
-              <span>{{ scope.row.receipt_name }}</span>
-              <span>{{ scope.row.receipt_tel }}</span>
-              <br />
-              <span>{{ scope.row.province }}</span>
-              <span>{{ scope.row.city }}</span>
-              <span>{{ scope.row.area }}</span>
-              <br />
-              <span>{{ scope.row.address_detail }}</span>
-              <!-- </div> -->
-              <!-- <div v-else>
+              <div v-if="scope.row.receipt_name">
+                <span>{{ scope.row.receipt_name }}</span>
+                <span>{{ scope.row.receipt_tel }}</span>
+                <br />
+                <span>{{ scope.row.province }}</span>
+                <span>{{ scope.row.city }}</span>
+                <span>{{ scope.row.area }}</span>
+                <br />
+                <span>{{ scope.row.address_detail }}</span>
+              </div>
+              <div v-else>
                 <el-popover placement="right" width="300" trigger="click">
                   <el-form :model="formInline" class="demo-form-inline">
                     <el-form-item label="收货人姓名">
@@ -240,9 +240,11 @@
                       >
                     </el-form-item>
                   </el-form>
-                  <el-button slot="reference">帮他填写</el-button>
+                  <el-button size="mini" type="primary" plain slot="reference"
+                    >帮他填写</el-button
+                  >
                 </el-popover>
-              </div> -->
+              </div>
             </div>
           </template>
         </el-table-column>
