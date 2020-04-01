@@ -8,7 +8,7 @@
  -->
 <template>
   <div>
-    <div class="btnbox" v-show="btnbox">
+    <!-- <div class="btnbox" v-show="btnbox">
       <el-button
         size="small"
         type="primary"
@@ -17,14 +17,14 @@
         @click="finishLessonList"
         >生成完课榜</el-button
       >
-      <!-- <el-button
+      <el-button
         type="primary"
         class="Btn"
         v-show="exhibition"
         @click="finishLessonList"
         >生成作品展</el-button
-      > -->
-    </div>
+      >
+    </div> -->
     <div>
       <m-search
         class="search-box"
