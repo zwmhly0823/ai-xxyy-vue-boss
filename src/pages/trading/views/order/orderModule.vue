@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-24 15:16:26
  * @LastEditors: zhubaodong
- * @LastEditTime: 2020-04-01 21:41:16
+ * @LastEditTime: 2020-04-01 23:18:42
  -->
 <template>
   <el-scrollbar wrap-class="order-wrapper" id="order-scroll">
@@ -18,6 +18,7 @@
         date="ctime"
         date-placeholder="下单时间"
         phone="uid"
+        teamId="1"
         outTradeNo="out_trade_no"
       />
       <el-tabs type="border-card" @tab-click="handleClick" v-model="activeName">
