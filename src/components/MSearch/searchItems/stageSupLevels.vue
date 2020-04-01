@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-24 18:50:54
  * @LastEditors: zhubaodong
- * @LastEditTime: 2020-03-27 22:15:06
+ * @LastEditTime: 2020-04-01 21:49:26
  -->
 <template>
   <div class="search-item small">
@@ -141,6 +141,13 @@ export default {
         })
         .then((res) => {
           this.supList = res.data.courseSupList
+          console.log(
+            this.supList.splice(
+              res.data.courseSupList.filter((item) => +item.id === 0),
+              1
+            ),
+            ' this.supList'
+          )
         })
     },
     // 级别
