@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 14:19:58
  * @LastEditors: panjian
- * @LastEditTime: 2020-04-01 16:03:58
+ * @LastEditTime: 2020-04-01 21:16:09
  -->
 <template>
   <div>
@@ -18,6 +18,12 @@
       >
     </div> -->
     <div>
+      <m-search
+        class="search-box"
+        @search="handleSearch"
+        phone="uid"
+        wxSearch="asas"
+      />
       <div class="tabs-tab">
         <el-tabs v-model="activeName" @tab-click="handleClick">
           <el-tab-pane label="加好友进群" name="group">
@@ -61,15 +67,7 @@
             ></details-table
           ></el-tab-pane>
         </el-tabs>
-        <!-- <el-input
-          class="el-input-search"
-          size="mini"
-          placeholder="昵称、手机号、微信信息"
-          prefix-icon="el-icon-search"
-          v-model="input"
-          @keyup.enter.native="enter"
-        >
-        </el-input> -->
+
         <!-- <check-box class="checkbox"></check-box> -->
         <!-- 弹出框 -->
         <!-- <el-dialog
@@ -85,6 +83,7 @@
           </div>
         </el-dialog> -->
       </div>
+
       <!-- <img
         v-show="show"
         :src="dataURL"
@@ -106,14 +105,17 @@
 <script>
 // import checkBox from '@/components/MCheckBox/index'
 import detailsTable from './components/detailsTable'
+import MSearch from '@/components/MSearch/index.vue'
 import axios from '@/api/axios'
-import { timestamp, GetAgeByBrithday } from '@/utils/index'
+import { timestamp, GetAgeByBrithday, isToss } from '@/utils/index'
 import status from '@/utils/status'
+
 // import finishclass from './FinishClass'
 import html2canvas from 'html2canvas'
 export default {
   components: {
-    detailsTable
+    detailsTable,
+    MSearch
     // finishclass
     // checkBox
   },
@@ -125,6 +127,9 @@ export default {
   },
   data() {
     return {
+      teacherId: '',
+      search: '',
+      querysData: '',
       experssShow: false,
       // 单选按钮
       radio: '1',
@@ -223,10 +228,25 @@ export default {
     }
   },
   mounted() {
+    const teacherId = isToss()
+    if (teacherId) {
+      this.teacherId = teacherId
+    }
     console.log(status, 'status')
     this.table.tableLabel = [{ label: '购买时间', prop: 'buytime' }]
   },
   methods: {
+    // 搜索组件传回来的值
+    handleSearch(res) {
+      console.log(res, 'res[0].term.uid')
+      if (res.length === 0) {
+        console.log('res传的空')
+        this.search = ''
+      } else {
+        console.log('res', res[0].term.uid)
+        this.search = res[0].term.uid
+      }
+    },
     clickHandler() {
       console.log(document.getElementsByClassName('finishBox'), 123123)
       this.dialogFormVisible = false
@@ -282,13 +302,21 @@ export default {
     // 加好友进群接口
     getGroup() {
       if (this.classId && this.classId.classId && this.classId.classId.id) {
-        const querys = `{"team_id":${this.classId.classId.id},"team_type":${this.classId.type}}`
+        if (this.search) {
+          this.querysData = `{"team_id":${this.classId.classId.id},"team_type":${this.classId.type},"uid":${this.search}}`
+        } else {
+          this.querysData = `{"team_id":${this.classId.classId.id},"team_type":${this.classId.type}}`
+        }
+        console.log(this.search, 'this.search')
+        // const querys = `{"team_id":${this.classId.classId.id},"team_type":${this.classId.type},"uid":${this.search}}`
+        // const querys = `{"team_id":${this.classId.classId.id},"team_type":${this.classId.type},"uid":${this.search}}`
+
         axios
           .post('/graphql/user', {
             query: `{
-              userListForTeam(query:${JSON.stringify(querys)} , page: ${
-              this.table.currentPage
-            }, size: 20) {
+              userListForTeam(query:${JSON.stringify(
+                this.querysData
+              )} , page: ${this.table.currentPage}, size: 20) {
                 empty
                 first
                 last
@@ -886,18 +914,15 @@ export default {
     right: 18px;
   }
 }
-
+.search-box {
+  display: flex;
+  flex-direction: row-reverse;
+}
 .tabs-tab {
   // padding-left: 20px;
   margin-top: 10px;
   position: relative;
-  .el-input-search {
-    position: absolute;
-    top: 5px;
-    right: 16px;
-    float: right;
-    width: 180px;
-  }
+
   .el-tabs__nav-scroll {
     background: #fff;
   }
