@@ -115,16 +115,16 @@ module.exports = {
         pathRewrite: {
           '^/graphql': ''
         }
-      },
-      '/getStuRankingList': {
-        target: 'http://47.98.38.59:43401',
-        changeOrigin: true,
-        ws: true,
-        secure: false,
-        pathRewrite: {
-          '^/getStuRankingList': '/getStuRankingList'
-        }
       }
+      // '/getStuRankingList': {
+      //   target: 'http://47.98.38.59:43401',
+      //   changeOrigin: true,
+      //   ws: true,
+      //   secure: false,
+      //   pathRewrite: {
+      //     '^/getStuRankingList': '/getStuRankingList'
+      //   }
+      // }
     }
   }
   // css: {
