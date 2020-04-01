@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 14:19:58
  * @LastEditors: panjian
- * @LastEditTime: 2020-03-31 15:51:44
+ * @LastEditTime: 2020-03-31 20:40:34
  -->
 <template>
   <div>
@@ -68,9 +68,9 @@
           @keyup.enter.native="enter"
         >
         </el-input> -->
-        <check-box class="checkbox"></check-box>
+        <!-- <check-box class="checkbox"></check-box> -->
         <!-- 弹出框 -->
-        <el-dialog
+        <!-- <el-dialog
           title="请选择生成的完课榜周数"
           :visible.sync="dialogFormVisible"
           width="500px"
@@ -85,7 +85,7 @@
             <el-button @click="dialogFormVisible = false">取 消</el-button>
             <el-button type="primary" @click="clickHandler">确 定</el-button>
           </div>
-        </el-dialog>
+        </el-dialog> -->
       </div>
       <!-- <img
         v-show="show"
@@ -106,22 +106,23 @@
           ></finishclass>
         </slot>
       </div>
+      -->
     </div>
   </div>
 </template>
 <script>
-import checkBox from '@/components/MCheckBox/index'
+// import checkBox from '@/components/MCheckBox/index'
 import detailsTable from './components/detailsTable'
 import axios from '@/api/axios'
 import { timestamp, GetAgeByBrithday } from '@/utils/index'
 import status from '@/utils/status'
-import finishclass from './FinishClass'
+// import finishclass from './FinishClass'
 import html2canvas from 'html2canvas'
 export default {
   components: {
-    detailsTable,
-    finishclass,
-    checkBox
+    detailsTable
+    // finishclass
+    // checkBox
   },
   props: {
     classId: {

@@ -82,7 +82,7 @@ export default {
       // 获取teacherid
       teacherId: '',
       // 切换tab
-      tab: '',
+      tab: '3', // 默认显示 3 - 已完成
       // 搜索
       searchIn: [],
       // 体验课
