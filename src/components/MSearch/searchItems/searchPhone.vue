@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-26 16:28:45
  * @LastEditors: zhubaodong
- * @LastEditTime: 2020-04-01 21:24:03
+ * @LastEditTime: 2020-04-01 21:38:05
  -->
 <template>
   <div class="search-item small">
@@ -15,7 +15,7 @@
       class="inline-input"
       v-model="input"
       :fetch-suggestions="querySearch"
-      placeholder="手机号查询"
+      :placeholder="tip"
       :trigger-on-focus="false"
       :popper-class="+onlyPhone ? 'ppName' : ''"
       @select="inputHandler"
@@ -49,6 +49,11 @@ export default {
     onlyValue: {
       type: Boolean,
       default: false
+    },
+    // 是否只返回值，如果是，父组件获得值后根据实际表达式组装数据
+    tip: {
+      type: String,
+      default: '手机号查询'
     }
   },
   components: {},

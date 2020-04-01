@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-24 18:20:12
  * @LastEditors: zhubaodong
- * @LastEditTime: 2020-04-01 21:22:34
+ * @LastEditTime: 2020-04-01 21:39:33
  -->
 
 <template>
@@ -17,6 +17,7 @@
           v-if="phone"
           :name="phone"
           :onlyPhone="onlyPhone"
+          :tip="phoneTip"
         />
       </el-form-item>
 
@@ -174,7 +175,11 @@ export default {
       type: String,
       default: '0' // 0
     },
-
+    // 是否只搜手机号
+    phoneTip: {
+      type: String,
+      default: '手机号查询'
+    },
     // 订单号
     outTradeNo: {
       type: String,
