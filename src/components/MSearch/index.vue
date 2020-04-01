@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-24 18:20:12
  * @LastEditors: zhubaodong
- * @LastEditTime: 2020-03-28 19:33:24
+ * @LastEditTime: 2020-04-01 21:22:34
  -->
 
 <template>
@@ -12,7 +12,12 @@
     <el-form :inline="true">
       <el-form-item>
         <!-- 手机号搜索 -->
-        <search-phone @result="getPhoneHander" v-if="phone" :name="phone" />
+        <search-phone
+          @result="getPhoneHander"
+          v-if="phone"
+          :name="phone"
+          :onlyPhone="onlyPhone"
+        />
       </el-form-item>
 
       <el-form-item>
@@ -164,6 +169,12 @@ export default {
       type: String,
       default: '' // phone
     },
+    // 是否只搜手机号
+    onlyPhone: {
+      type: String,
+      default: '0' // 0
+    },
+
     // 订单号
     outTradeNo: {
       type: String,
