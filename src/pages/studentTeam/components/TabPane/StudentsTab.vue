@@ -11,9 +11,9 @@
       <!-- 更多按钮 -->
       <el-table-column width="20px">
         <template slot="header" slot-scope="scope">
-          <el-Popover popper-class="batch-btn">
+          <el-Popover popper-class="batch-btn" trigger="hover">
             <!-- 标题气泡内容 -->
-            <div size="mini" type="text" @click="batchBtn(couponsUid)">
+            <div size="mini" type="text" @click="batchBtn">
               批量发放优惠券
             </div>
             <!-- 标题点击...图片 -->
@@ -27,20 +27,28 @@
           </el-Popover>
         </template>
         <template slot-scope="scope">
-          <el-Popover popper-class="batch-btn">
+          <el-Popover popper-class="batch-btn" trigger="hover">
             <!-- 气泡内容 -->
-            <div size="mini" type="text" @click="batchBtn(couponsUid)">
+            <div size="mini" type="text" @click="batchBtn">
               <span v-show="moreTitle === true">批量发放优惠券</span>
               <span v-show="moreTitle === false">发放优惠券</span>
             </div>
             <!-- 点击...图片 -->
-            <div @click="handleEdit(scope.$index, scope.row)" slot="reference">
+            <div
+              @mouseenter="handleEdit(scope.$index, scope.row)"
+              slot="reference"
+            >
               <img src="../../../../assets/images/point.png" />
             </div>
           </el-Popover>
         </template>
       </el-table-column>
-      <coupon-popover />
+      <!-- 弹窗 -->
+      <coupon-popover
+        ref="couponPopover"
+        :couponData="couponData"
+        :selectUserId="selectUserId"
+      />
       <el-table-column label="基本信息" class="information" width="280px">
         <template slot-scope="scope">
           <img class="information-img" :src="scope.row.head" alt="" />
@@ -137,6 +145,8 @@ export default {
   },
   data() {
     return {
+      visible: false,
+      popoverindex: 0,
       // 总页数
       totalPages: 1,
       totalElements: 0, // 总条数
@@ -149,11 +159,16 @@ export default {
       tableDataEmpty: true,
       // 标题更多按钮显示
       moreTitle: false,
-      // 优惠卷用户id
-      couponsUid: [1]
+      // 优惠卷接口数据
+      couponData: [],
+      // 选择按钮用户id
+      selectUserId: []
     }
   },
-  created() {},
+  created() {
+    // 优惠卷列表接口
+    this.couponList()
+  },
   watch: {
     classId(value) {
       if (!value) return
@@ -304,14 +319,24 @@ export default {
           this.statusList = res.data.userFollowStateList
         })
     },
+    // 优惠卷列表接口
+    couponList() {
+      this.$http.Team.getAllCoupons(0).then((res) => {
+        this.couponData = res.payload.content
+      })
+    },
     // 全选
-    handleSelectionChange(val) {
+    handleSelectionChange(val, index) {
+      console.log(val, index, '全选')
+      this.selectUserId = []
       if (val.length > 1) {
         this.moreTitle = true
       } else {
         this.moreTitle = false
       }
-      console.log(val, '全选')
+      val.forEach((data) => {
+        this.selectUserId.push(data.id)
+      })
     },
     // 表头优惠卷操作
     headerPoint(index, scope) {
@@ -319,11 +344,16 @@ export default {
     },
     // 表格优惠卷操作
     handleEdit(index, row) {
-      console.log(index, row)
+      // 当没有点击选择时点击发放优惠卷气泡
+      if (this.moreTitle === false) {
+        this.selectUserId = []
+        this.selectUserId.push(row.id)
+      }
     },
     // 点击批量发放优惠卷
     batchBtn(val) {
       console.log(val, '优惠券用户id')
+      this.$refs.couponPopover.issueCoupons = true
     },
     // 点击分页
     handleSizeChange(val) {
