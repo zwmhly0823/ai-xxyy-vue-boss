@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 14:19:58
  * @LastEditors: panjian
- * @LastEditTime: 2020-04-01 22:37:00
+ * @LastEditTime: 2020-04-01 23:22:09
  -->
 <template>
   <div>
@@ -24,6 +24,7 @@
         phone="uid"
         onlyPhone="1"
         phoneTip="手机号/微信昵称 查询"
+        :teamId="classId.classId.id"
       />
       <div class="tabs-tab">
         <el-tabs v-model="activeName" @tab-click="handleClick">
