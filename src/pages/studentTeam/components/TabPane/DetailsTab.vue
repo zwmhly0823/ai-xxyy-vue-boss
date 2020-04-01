@@ -10,19 +10,20 @@
   <div>
     <div class="btnbox" v-show="btnbox">
       <el-button
+        size="small"
         type="primary"
         class="btn"
         v-show="Finish"
         @click="finishLessonList"
         >生成完课榜</el-button
       >
-      <el-button
+      <!-- <el-button
         type="primary"
         class="Btn"
         v-show="exhibition"
         @click="finishLessonList"
         >生成作品展</el-button
-      >
+      > -->
     </div>
     <div>
       <div class="tabs-tab">
@@ -80,7 +81,6 @@
         <!-- <check-box class="checkbox"></check-box> -->
         <!-- 生成完课榜弹出框 -->
         <el-dialog
-          element-loading-text="图片生成中"
           title="请选择生成的完课榜周数"
           :visible.sync="dialogFormVisible"
           width="500px"
@@ -302,7 +302,7 @@ export default {
       // 执行 截图操作并保存
     },
     // 生成完课榜
-    handlePosterLoad() {
+    handlePosterLoad(picname) {
       this.$nextTick(() => {
         window.scrollTo(0, 0)
         html2canvas(document.getElementsByClassName('finishBox')[0], {
@@ -313,7 +313,7 @@ export default {
         }).then((canvas) => {
           const data = canvas.toDataURL('image/jpeg')
           // 执行浏览器下载
-          this.download('完课榜.jpeg', data)
+          this.download(`${picname}.jpeg`, data)
           this.finish = false
           // this.dataURL = data
         })
@@ -410,7 +410,7 @@ export default {
     canvasStart(res) {
       if (res) {
         setTimeout(() => {
-          this.handlePosterLoad()
+          this.handlePosterLoad(this.classId.classId.team_name)
         }, 1000)
       }
     },
@@ -1061,10 +1061,10 @@ export default {
 //   align-self: center;
 //   width: 550px;
 // }
-.finishBox {
-  position: fixed;
-  left: -1000px;
-}
+// .finishBox {
+//   position: fixed;
+//   left: -1000px;
+// }
 .exhibitionBox {
   position: fixed;
   left: -1000px;
