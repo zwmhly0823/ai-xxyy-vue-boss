@@ -117,7 +117,6 @@ export default {
         if (valid) {
           this.$http.Express.editAddressAndExpressForOrder(params).then(
             (res) => {
-              console.log(res, 'ressssss')
               this.$message({
                 message: '地址添加成功',
                 type: 'success'
@@ -128,13 +127,13 @@ export default {
             }
           )
         } else {
-          console.log('error submit!!')
           return false
         }
       })
     },
     resetForm(formName) {
       this.$refs[formName].resetFields()
+      this.$emit('addExpress', 2)
     }
   }
 }
