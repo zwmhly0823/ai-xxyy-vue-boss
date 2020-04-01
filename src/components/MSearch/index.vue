@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-24 18:20:12
  * @LastEditors: zhubaodong
- * @LastEditTime: 2020-04-01 21:39:33
+ * @LastEditTime: 2020-04-01 23:16:56
  -->
 
 <template>
@@ -15,6 +15,7 @@
         <search-phone
           @result="getPhoneHander"
           v-if="phone"
+          :teamId="teamId"
           :name="phone"
           :onlyPhone="onlyPhone"
           :tip="phoneTip"
@@ -179,6 +180,11 @@ export default {
     phoneTip: {
       type: String,
       default: '手机号查询'
+    },
+    // team_id
+    teamId: {
+      type: String,
+      default: ''
     },
     // 订单号
     outTradeNo: {
