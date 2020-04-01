@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 20:22:24
  * @LastEditors: panjian
- * @LastEditTime: 2020-03-30 10:39:36
+ * @LastEditTime: 2020-04-01 16:11:19
  -->
 <template>
   <div class="table-box">
@@ -198,14 +198,32 @@
                 scope.row.product_name
               }}</span>
               <br />
-              <span>{{ scope.row.receipt_name }}</span>
-              <span>{{ scope.row.receipt_tel }}</span>
-              <br />
-              <span>{{ scope.row.province }}</span>
-              <span>{{ scope.row.city }}</span>
-              <span>{{ scope.row.area }}</span>
-              <br />
-              <span>{{ scope.row.address_detail }}</span>
+              <div v-if="scope.row.receipt_name">
+                <span>{{ scope.row.receipt_name }}</span>
+                <span>{{ scope.row.receipt_tel }}</span>
+                <br />
+                <span>{{ scope.row.province }}</span>
+                <span>{{ scope.row.city }}</span>
+                <span>{{ scope.row.area }}</span>
+                <br />
+                <span>{{ scope.row.address_detail }}</span>
+              </div>
+              <div v-else>
+                <el-popover
+                  v-model="showExpress"
+                  placement="right"
+                  width="300"
+                  trigger="click"
+                >
+                  <logistics-form
+                    @addExpress="addExpress"
+                    :formData="formData"
+                  ></logistics-form>
+                  <el-button size="mini" type="primary" plain slot="reference"
+                    >帮他填写</el-button
+                  >
+                </el-popover>
+              </div>
             </div>
           </template>
         </el-table-column>
@@ -480,10 +498,14 @@
 </template>
 <script>
 import MPagination from '@/components/MPagination/index.vue'
+import logisticsForm from '../components/logisticsForm'
 export default {
   name: 'detailsTable',
-  // props: ['tables', 'classId'],
   props: {
+    experssShow: {
+      type: Boolean,
+      default: false
+    },
     classId: {
       type: Object,
       default: null
@@ -498,15 +520,23 @@ export default {
     }
   },
   components: {
-    MPagination
+    MPagination,
+    logisticsForm
   },
   data() {
     return {
+      showExpress: false,
+      formData: {},
       audioIndex: null,
       tableindex: null,
       studentId: null,
       added_group: null,
-      added_wechat: null
+      added_wechat: null,
+      ruleForm: {
+        receiptName: '',
+        receiptTel: '',
+        addressDetail: ''
+      }
     }
   },
   mounted() {
@@ -522,6 +552,11 @@ export default {
   },
   created() {},
   methods: {
+    addExpress(data) {
+      this.showExpress = false
+      if (data === 1) this.$emit('addExpresss', data)
+    },
+    // 音频结束后赋值为空
     audioEnded() {
       this.audioIndex = null
     },
@@ -557,6 +592,11 @@ export default {
       this.added_wechat = row.added_wechat
       this.studentId = row.id
       this.tableindex = row.index
+      console.log(row.id, 'row.id')
+      const id = row.id
+      const userid = row.user_id
+      const orderid = row.order_id
+      this.formData = { id, userid, orderid }
       // console.log(row, column, event, index)
     },
     // 向父组建传值 已加好友
@@ -666,6 +706,13 @@ export default {
     }
     .logistics-address-name {
       margin-left: -8px;
+    }
+    .cascader-area {
+      // .cascader-area-text {
+      //   font-size: 15px;
+      //   margin-bottom: 15px;
+      //   font-weight: 500;
+      // }
     }
   }
   .login-box {
@@ -794,5 +841,11 @@ export default {
     float: right;
     margin-right: 20px;
   }
+}
+</style>
+<style lang="scss">
+.el-cascader-menu {
+  height: 300px;
+  overflow: scroll;
 }
 </style>
