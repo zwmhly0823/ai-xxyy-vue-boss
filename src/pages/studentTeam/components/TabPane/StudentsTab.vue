@@ -325,9 +325,8 @@ export default {
         this.couponData = res.payload.content
       })
     },
-    // 全选
+    // 选择按钮
     handleSelectionChange(val, index) {
-      console.log(val, index, '全选')
       this.selectUserId = []
       if (val.length > 1) {
         this.moreTitle = true
@@ -351,8 +350,7 @@ export default {
       }
     },
     // 点击批量发放优惠卷
-    batchBtn(val) {
-      console.log(val, '优惠券用户id')
+    batchBtn() {
       this.$refs.couponPopover.issueCoupons = true
     },
     // 点击分页

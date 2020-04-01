@@ -161,7 +161,6 @@ export default {
 
       // 搜索 must
       const mustArr = this.searchIn.map((item) => JSON.stringify(item))
-      console.log(this.searchIn, 'overflow-scroll')
       must.push(...mustArr)
       const should = this.tab ? [`{"terms": {"status": [${this.tab}]}}`] : []
       const queryStr = `{
