@@ -534,38 +534,67 @@ export default {
         } else {
           this.radioOne = true
           this.radioTwo = true
-          this.missedClassesOne = false
-          this.missedClassesTwo = false
+          this.MissedClassesOne = false
+          this.MissedClassesTwo = false
         }
       }
     },
     // 生成完作品展图片周按钮显示状态
+    // Btnshow(weekNum, state) {
+    //   console.log('weekNum', weekNum)
+    //   console.log('state', state)
+    //   if (weekNum === 'U1') {
+    //     if (state === 2) {
+    //       this.RadioOne = true
+    //       this.RadioTwo = false
+    //       this.missedClassesOne = false
+    //       this.missedClassesTwo = true
+    //     } else {
+    //       this.RadioOne = false
+    //       this.RadioTwo = false
+    //       this.missedClassesOne = true
+    //       this.missedClassesTwo = true
+    //     }
+    //   } else if (weekNum === 'U2') {
+    //     if (state === 2) {
+    //       this.RadioOne = true
+    //       this.RadioTwo = true
+    //       this.missedClassesOne = false
+    //       this.missedClassesTwo = false
+    //     } else {
+    //       this.RadioOne = true
+    //       this.RadioTwo = false
+    //       this.missedClassesOne = false
+    //       this.missedClassesTwo = true
+    //     }
+    //   }
+    // },
     Btnshow(weekNum, state) {
       console.log('weekNum', weekNum)
       console.log('state', state)
       if (weekNum === 'U1') {
-        if (state === 2) {
-          this.RadioOne = true
-          this.RadioTwo = false
-          this.missedClassesOne = false
-          this.missedClassesTwo = true
-        } else {
+        if (state === 0) {
           this.RadioOne = false
           this.RadioTwo = false
           this.missedClassesOne = true
           this.missedClassesTwo = true
-        }
-      } else if (weekNum === 'U2') {
-        if (state === 2) {
-          this.RadioOne = true
-          this.RadioTwo = true
-          this.missedClassesOne = false
-          this.missedClassesTwo = false
         } else {
           this.RadioOne = true
           this.RadioTwo = false
           this.missedClassesOne = false
           this.missedClassesTwo = true
+        }
+      } else if (weekNum === 'U2') {
+        if (state === 0) {
+          this.RadioOne = true
+          this.RadioTwo = false
+          this.missedClassesOne = false
+          this.missedClassesTwo = true
+        } else {
+          this.RadioOne = true
+          this.RadioTwo = true
+          this.missedClassesOne = false
+          this.missedClassesTwo = false
         }
       }
     },
