@@ -15,8 +15,7 @@
       @select="handleSelect"
       @select-all="handleAllSelect"
     >
-      <el-table-column type="selection" width="25" v-if="!teacherId">
-      </el-table-column>
+      <el-table-column type="selection" width="25"> </el-table-column>
       <el-table-column width="25" v-if="!teacherId">
         <template slot-scope="scope" v-if="dataExp.id == 6">
           <!-- <div v-show="false">{{ scope }}</div> -->
@@ -162,6 +161,11 @@ export default {
     search(val) {
       this.currentPage = 1
       this.searchIn = val
+      if (sessionStorage.getItem('val')) {
+        sessionStorage.removeItem('val')
+      }
+      const timeTypeOne = JSON.stringify(val)
+      sessionStorage.setItem('timeType', timeTypeOne)
       // if (val[0]) {
       //   const { range } = val[0]
       //   const resKey = Object.keys(range)
@@ -355,13 +359,25 @@ export default {
       this.expressBatch = selection.map((item) => {
         return item.id
       })
+      const uid = selection.map((item) => {
+        return item.user.id
+      })
+      sessionStorage.setItem('uid', uid)
+      console.log(selection, 'selection,row')
       // console.log(selection, 'selection', this.expressBatch, 'expressBatch')
     },
     // 手动选择
     handleSelect(selection, row) {
       this.selectNum = selection.length
       this.expressBatch = selection.map((item) => item.id)
-      // console.log(selection, this.expressBatch, this.selectNum, 'selection,row')
+      const uid = selection.map((item) => {
+        return item.user.id
+      })
+      if (sessionStorage.getItem('uid')) {
+        sessionStorage.removeItem('uid')
+      }
+      sessionStorage.setItem('uid', uid)
+      console.log(selection, 'selection,row')
     },
     handleChange(val) {
       // console.log(val, 'handleChange')
@@ -391,20 +407,23 @@ export default {
       )
       let timeType = {}
       // let user_id
+      console.log(this.searchIn)
       this.searchIn.forEach((item) => {
-        if (item.term) {
+        if (item && item.term) {
           if (item.term.user_id) {
             timeType.user_id = item.term.user_id
-          } else if (item.term.topic_id) {
+          }
+          if (item.term.topic_id) {
             timeType.topic_id = `${item.term.topic_id}`
           }
         }
 
-        if (item.terms) {
+        if (item && item.terms) {
           if (item.terms.sup) {
             timeType.sup = `${item.terms.sup}`
-          } else if (item.terms.stage) {
-            timeType.term = `${item.terms.stage}`
+          }
+          if (item.terms.term) {
+            timeType.term = `${item.terms.term}`
           }
         }
 
@@ -420,11 +439,13 @@ export default {
           }
         }
       })
+
+      this.teacherId && (timeType.teacher_id = this.teacherId)
+
       timeType = {
         ...timeType,
         express_status: id
       }
-      this.teacherId && (timeType.teacher_id = this.teacherId)
 
       const query = JSON.stringify(timeType)
       console.log(timeType, 'timeType', query)
