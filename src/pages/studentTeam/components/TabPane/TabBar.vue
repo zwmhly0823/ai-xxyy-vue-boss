@@ -106,7 +106,7 @@ export default {
   z-index: 1000;
 }
 .tab-box {
-  padding: 0 0 20px 0;
+  padding: 0 0 40px 0;
   flex: 1;
 }
 </style>
