@@ -174,7 +174,11 @@ export default {
       // 优惠卷接口数据
       couponData: [],
       // 选择按钮用户id
-      selectUserId: []
+      selectUserId: [],
+      // 搜索
+      search: '',
+      // 请求接口参数
+      queryData: ''
     }
   },
   created() {
@@ -200,13 +204,25 @@ export default {
     // 搜索
     handleSearch(res) {
       console.log(res, '搜所')
+      if (res.length === 0) {
+        this.search = ''
+        this.studentsList()
+      } else {
+        this.search = `"${res[0].term.uid}"`
+        this.studentsList()
+      }
     },
     // 学员列表
     studentsList() {
+      if (this.search) {
+        this.queryData = `type: ${this.classId.type}, team_id: "${this.classId.classId.id}",page:${this.currentPage},id:${this.search}`
+      } else {
+        this.queryData = `type: ${this.classId.type}, team_id: "${this.classId.classId.id}",page:${this.currentPage}`
+      }
       axios
         .post('/graphql/team', {
           query: `{
-          teamUserListPage(type: ${this.classId.type}, team_id: "${this.classId.classId.id}",page:${this.currentPage}) {
+          teamUserListPage(${this.queryData}) {
             empty
             first
             last
