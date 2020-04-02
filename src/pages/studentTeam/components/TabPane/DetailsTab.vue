@@ -1128,7 +1128,7 @@ export default {
 .search-box {
   display: flex;
   border: 0;
-  margin: 0 -60px 0 0;
+  margin: 0;
 }
 
 .tabs-tab {
