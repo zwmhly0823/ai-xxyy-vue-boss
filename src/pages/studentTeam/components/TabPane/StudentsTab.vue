@@ -1,5 +1,15 @@
 <template>
   <div class="dataStyle">
+    <div>
+      <m-search
+        class="search-box"
+        @search="handleSearch"
+        phone="uid"
+        onlyPhone="1"
+        phoneTip="手机号/微信昵称 查询"
+        :teamId="classId.classId.id"
+      />
+    </div>
     <el-table
       :data="tableData"
       :header-cell-style="headerStyle"
@@ -130,11 +140,13 @@ import axios from '@/api/axios'
 import { GetAgeByBrithday } from '@/utils/index'
 import MPagination from '@/components/MPagination/index.vue'
 import CouponPopover from './components/couponPopover'
+import MSearch from '@/components/MSearch/index.vue'
 
 export default {
   components: {
     MPagination,
-    CouponPopover
+    CouponPopover,
+    MSearch
   },
   props: {
     // 班级传参
@@ -185,6 +197,10 @@ export default {
     }
   },
   methods: {
+    // 搜索
+    handleSearch(res) {
+      console.log(res, '搜所')
+    },
     // 学员列表
     studentsList() {
       axios
@@ -443,6 +459,9 @@ export default {
   .el-table_1_column_2 {
     cursor: pointer;
     font-size: 19px !important;
+  }
+  .el-form-item {
+    float: right;
   }
 }
 </style>
