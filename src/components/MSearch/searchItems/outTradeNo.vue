@@ -70,7 +70,7 @@ export default {
 <style lang="scss" scoped>
 .search-item {
   &.small {
-    width: 160px !important;
+    width: 135px !important;
   }
 }
 </style>

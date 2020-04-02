@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-13 15:24:11
  * @LastEditors: zhubaodong
- * @LastEditTime: 2020-03-30 17:39:01
+ * @LastEditTime: 2020-03-30 22:07:07
  -->
 <template>
   <el-row type="flex" class="app-main height student-team">
@@ -40,7 +40,6 @@
 import LeftBar from '../../components/LeftBar'
 import CenterBar from '../../components/CenterBar'
 import RightBar from '../../components/RightBar'
-import axios from '@/api/axios'
 import { isToss } from '@/utils/index'
 
 export default {
@@ -118,29 +117,10 @@ export default {
      * @param(team_type) 0为体验课 1为系统课
      */
     async getExperienceStatusList(data = 0) {
-      // const queryParams =
-      //   data === 0
-      //     ? !this.teacher_id
-      //       ? `{"bool":{"must":[{"term":{"team_type":${data}}}]}}`
-      //       : `{"bool":{"must":[{"term":{"team_type":${data}}},{"term":{"teacher_id": ${this.teacher_id}}}]}}`
-      //     : !this.teacher_id
-      //     ? `{"bool":{"must":[{"range":{"team_type":{"gte":${data}}}}]}}`
-      //     : `{"bool":{"must":[{"range":{"team_type":{"gte":${data}}}},{"term":{"teacher_id": ${this.teacher_id}}}]}}`
-      // const queryParams = `{"bool":{"must":[{"range":{"team_type":{"gt":${data}}}}]}}`
-
-      await axios
-        .get('/graphql/team', {
-          params: {
-            query: `{
-              teamStatusCount(field: "team_state",team_type:${data}, teacher_id:"${this
-              .teacher_id || ''}") {
-                code,
-                value,
-                name
-              }
-            }`
-          }
-        })
+      this.$http.StudentTerm.getTeamStatusCount({
+        data: data,
+        teacherId: this.teacher_id
+      })
         .then((res) => {
           if (data === 0) {
             this.experienceStatusList = res.data
@@ -149,6 +129,7 @@ export default {
             this.systemStatusList = res.data
           }
         })
+        .catch((err) => console.log(err))
     },
     /**
      * 获取班级列表
@@ -167,47 +148,13 @@ export default {
           ? `{"bool":{"must":[{"terms":{"team_state":[${this.classStatus}]}},{"range":{"team_type":{"gte":${type}}}},{"term":{"teacher_id": ${this.teacher_id}}}]}}`
           : `{"bool":{"must":[{"terms":{"team_state":[${this.classStatus}]}},{"range":{"team_type":{"gte":${type}}}}]}}`
       }
-      await axios
-        .get('/graphql/team', {
-          params: {
-            query: `{
-              teamStatusPage(query:${JSON.stringify(
-                queryParams
-              )},team_state:"${this.classStatus.join()}", team_type: ${type}, teacher_id: "${
-              this.teacher_id ? this.teacher_id : ''
-            }",page:${page},size:15){
-                empty,
-                first,
-                last,
-                number,
-                size,
-                numberOfElements,
-                totalElements,
-                totalPages,
-                content {
-                  id,
-                  team_state,
-                  team_type,
-                  team_name,
-                  ctime,
-                  sup,
-                  term,
-                  start_day,
-                  end_day,
-                  enroll_state,
-                  enrolled,
-                  pre_enroll,
-                  teacher_id,
-                  teacher {
-                    realname,
-                  }
-                  current_lesson,
-                  week
-                }
-              }
-            }`
-          }
-        })
+      this.$http.StudentTerm.getTeamStatusPage({
+        queryParams: queryParams,
+        type: type,
+        teacherId: this.teacher_id,
+        page: page,
+        classStatus: this.classStatus
+      })
         .then((res) => {
           res.data.type = type
           res.data.scrollStatus = `${this.scrollStatus}+${type}`
@@ -217,12 +164,8 @@ export default {
               this.classListData.teamStatusPage &&
               this.classListData.teamStatusPage.content[0]
           }
-
-          // sessionStorage.setItem(
-          //   'CenterBarSaveData',
-          //   JSON.stringify(this.classId)
-          // )
         })
+        .catch((err) => console.log(err))
     }
   },
   async created() {

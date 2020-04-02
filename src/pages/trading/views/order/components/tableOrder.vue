@@ -41,7 +41,7 @@
                   item.packages_name ? item.packages_name : item.product_name
                 }}
               </div>
-              <div class="card-style1-num">
+              <div class="card-style1-num" v-show="item.sup !== ''">
                 {{ item.stage ? item.stage : '-' }}期·S{{
                   item.sup ? item.sup : '-'
                 }}
@@ -98,7 +98,7 @@
 <script>
 import MPagination from '@/components/MPagination/index.vue'
 import axios from '@/api/axios'
-import { timestamp } from '@/utils/index.js'
+import { timestamp, isToss } from '@/utils/index.js'
 export default {
   components: {
     MPagination
@@ -129,10 +129,12 @@ export default {
       // 搜索
       searchIn: [],
       // 切换tab
-      tab: ''
+      tab: '3', // 默认显示 3 - 已完成
+      teacherId: ''
     }
   },
   created() {
+    this.teacherId = isToss()
     // 订单列表接口
     this.orderList()
   },
@@ -151,10 +153,10 @@ export default {
   methods: {
     // 订单列表
     orderList() {
-      this.teacherStor = JSON.parse(localStorage.getItem('teacher') || '{}')
+      // this.teacherStor = JSON.parse(localStorage.getItem('teacher') || '{}')
       const must = []
-      if (this.teacherStor.id) {
-        must.push(`{ "term": { "teacher_id": ${this.teacherStor.id} } }`)
+      if (this.teacherId) {
+        must.push(`{ "term": { "teacher_id": ${this.teacherId} } }`)
       }
       // TODO: 切换tab filter
       // "filter":{"bool":{"should":[{"term":{"orderstatus":1}},{"term":{"orderstatus":0}}]}}

@@ -5,21 +5,52 @@
       ref="multipleTable"
       :data="tableData"
       style="width: 100%"
+      @cell-click="handleSelectionChangeCell"
       @selection-change="handleSelectionChange"
       @cell-mouse-enter="handleSelectionChangeEnter"
       @cell-mouse-leave="handleSelectionChangeLeave"
       @row-click="handleExpressTo"
       :header-cell-style="headerStyle"
       :current-row-key="rowKey"
+      @select="handleSelect"
+      @select-all="handleAllSelect"
     >
       <el-table-column type="selection" width="25" v-if="!teacherId">
       </el-table-column>
       <el-table-column width="25" v-if="!teacherId">
-        <div class="three-dot" @click="batchProcessing">
-          <img src="@/assets/images/icon/icon-three-dot.jpg" />
-        </div>
+        <template slot-scope="scope" v-if="dataExp.id == 6">
+          <!-- <div v-show="false">{{ scope }}</div> -->
+          <el-dropdown trigger="click">
+            <div class="three-dot">
+              <img src="@/assets/images/icon/icon-three-dot.jpg" />
+            </div>
+            <el-dropdown-menu slot="dropdown">
+              <div>
+                <div v-if="selectNum > 1">
+                  <el-dropdown-item>
+                    <div>
+                      <el-button
+                        type="text"
+                        @click="handleBatchPass(expressBatch)"
+                        >批量审核通过
+                      </el-button>
+                    </div>
+                  </el-dropdown-item>
+                </div>
+                <div class="every-one" v-else>
+                  <div class="yes" @click="handlePass(expressNu)">
+                    <el-dropdown-item>审核通过</el-dropdown-item>
+                  </div>
+                  <div class="no" @click="handleFailed(scope.row.id)">
+                    <el-dropdown-item>失效</el-dropdown-item>
+                  </div>
+                </div>
+              </div>
+            </el-dropdown-menu>
+          </el-dropdown>
+        </template>
       </el-table-column>
-      <el-table-column label="用户及日期">
+      <el-table-column label="用户及购买日期">
         <template slot-scope="scope">
           <div class="user" if="scope.row.user">
             <div
@@ -57,7 +88,7 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="物流状态" show-overflow-tooltip>
+      <el-table-column label="物流状态">
         <template slot-scope="scope">
           <div class="express">
             <div :class="'wait_' + scope.row.express_status">
@@ -129,6 +160,7 @@ export default {
   },
   watch: {
     search(val) {
+      this.currentPage = 1
       this.searchIn = val
       // if (val[0]) {
       //   const { range } = val[0]
@@ -153,13 +185,18 @@ export default {
     dataExp(val) {
       this.currentPage = 1
       this.tableData = []
-      console.log(val, 'orange')
-      this.getExpressList(val.id)
-      this.dataLogitcs = val
+      if (val.id) {
+        this.getExpressList(val.id)
+        this.dataLogitcs = val
+      }
     }
   },
   created() {
-    console.log('dataExp', this.dataExp)
+    // console.log('dataExp', this.dataExp)
+    const staff = localStorage.getItem('staff')
+    if (staff) {
+      this.staffId = JSON.parse(staff).id
+    }
     const teacherId = isToss()
     if (teacherId) {
       this.teacherId = teacherId
@@ -169,11 +206,15 @@ export default {
   mounted() {},
   data() {
     return {
+      expressBatch: [],
+      expressNu: [],
+      selecInformation: '',
+      selectNum: '',
       searchIn: [],
       dataLogitcs: '',
       searchTime: '',
       topticId: '',
-      rowKey: '',
+      rowKey: 0,
       teacherId: '',
       createDataExp: '',
       // 总页数
@@ -202,41 +243,175 @@ export default {
         size: 'large',
         type: 'primary',
         color: '#0bbd87'
-      }
+      },
+      staffId: ''
     }
   },
   methods: {
-    batchProcessing() {
-      console.log('批量处理事件')
+    handleBatchPass(val) {
+      console.log('processing-pass')
+      this.$confirm('此操作会将此订单审核通过, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      })
+        .then(() => {
+          this.check(val)
+        })
+        .catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          })
+        })
     },
+    inputValidator(val) {
+      return !!(val && val.length > 0)
+    },
+    handleFailed(val) {
+      this.$prompt('请输入其失效的理由', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        inputValidator: this.inputValidator,
+        inputErrorMessage: '请输入失效原因'
+      }).then(({ value }) => {
+        if (!value) {
+          return
+        }
+
+        axios
+          .post(
+            `/api/o/v1/express/updateExpressToInvalid?expressIds=${val}&expressRemark=${value}&operatorId=${this.staffId}`
+          )
+          .then(async (res) => {
+            this.$message({
+              type: 'success',
+              message: '操作成功'
+            })
+            setTimeout(() => {
+              this.getExpressList(this.dataExp.id)
+              // TODO: 成功后同步左侧列表 待审核 数量
+            }, 1000)
+          })
+      })
+    },
+    handlePass(val) {
+      console.log('processing-pass')
+      this.$confirm('此操作会将此订单审核通过, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.check(val)
+      })
+    },
+    handleSelectionChangeCell(row, column, cell, event) {
+      this.expressNu = []
+      this.expressNu.push(row.id)
+      // console.log(row, column, cell, event, 'row, column, cell, event')
+    },
+    check(
+      id,
+      src = `/api/o/v1/express/deliveryRequest?operatorId=${this.staffId}`
+    ) {
+      axios
+        .post(src, id)
+        .then((res) => {
+          // payload 是数组，错误信息逐个返回.全正确时返回空数组
+          /**
+           * {
+           *  code: 80000210
+              message: "不符合发货条件，expressId：{123552}"
+              }
+           */
+          const { payload } = res
+          if (payload.length === 0) {
+            this.$message({
+              type: 'success',
+              message: '审核成功!'
+            })
+            this.getExpressList(this.dataExp.id)
+          } else {
+            const errorMsg = payload.map((item) => {
+              if (item.code !== 200)
+                return `<p style="margin-top: 5px;">${item.message}</p>`
+            })
+            this.$message({
+              type: 'error',
+              duration: 5000,
+              showClose: 'true',
+              dangerouslyUseHTMLString: true,
+              message: errorMsg.join('')
+            })
+          }
+        })
+        .catch((err) => {
+          console.log(err, 'err')
+        })
+    },
+    // 全选
+    handleAllSelect(selection) {
+      this.selectNum = selection.length
+      this.expressBatch = selection.map((item) => {
+        return item.id
+      })
+      // console.log(selection, 'selection', this.expressBatch, 'expressBatch')
+    },
+    // 手动选择
+    handleSelect(selection, row) {
+      this.selectNum = selection.length
+      this.expressBatch = selection.map((item) => item.id)
+      // console.log(selection, this.expressBatch, this.selectNum, 'selection,row')
+    },
+    handleChange(val) {
+      // console.log(val, 'handleChange')
+    },
+    // batchProcessing() {
+    //   console.log('批量处理事件')
+    // },
     // 表头样式
     headerStyle() {
       return 'font-size: 12px;color: #666;font-weight: normal;'
     },
     handleExpressTo(row, column, event) {
-      console.log(row, column, event, 'row, column, event')
+      // this.expressNu.push(row.id)
+      console.log(row + column + event, 'row, column, event')
     },
     handleSizeChange(val) {
-      console.log(val, 'handleSizeChange')
+      // console.log(val, 'handleSizeChange')
       this.currentPage = val
-      console.log(this.dataExp.id, this.dataExp, 'this.dataExp.id')
+      // console.log(this.dataExp.id, this.dataExp, 'this.dataExp.id')
       this.getExpressList(this.dataExp.id)
     },
     getExpressList(id) {
       // const searchIn = this.searchIn[0]
-      console.log(this.searchIn, 'searchIn: [],')
+      console.log(
+        this.searchIn,
+        'searchIn: []searchIn: []searchIn: []searchIn: []searchIn: [],'
+      )
       let timeType = {}
       // let user_id
       this.searchIn.forEach((item) => {
-        console.log(item.term, 'item')
         if (item.term) {
-          timeType.user_id = item.term.user_id || ''
+          if (item.term.user_id) {
+            timeType.user_id = item.term.user_id
+          } else if (item.term.topic_id) {
+            timeType.topic_id = `${item.term.topic_id}`
+          }
         }
+
+        if (item.terms) {
+          if (item.terms.sup) {
+            timeType.sup = `${item.terms.sup}`
+          } else if (item.terms.stage) {
+            timeType.term = `${item.terms.stage}`
+          }
+        }
+
         if (item.range) {
           const { range } = item
           const resKey = Object.keys(range)
           const { gte, lte } = range[resKey]
-
           timeType = {
             ...timeType,
             [resKey[0]]: 1,
@@ -293,30 +468,23 @@ export default {
 }`
         })
         .then((res) => {
-          console.log(res.data.LogisticsListPage.content, 'res123')
-          const resData = res.data.LogisticsListPage.content
-          resData.forEach((item) => {
-            item.crtime = formatData(+item.ctime, 's')
-            item.detime = formatData(+item.delivery_collect_time, 's')
-            item.uptime = formatData(+item.utime, 's')
-            item.sgtime = formatData(+item.signing_time, 's')
-            item.buytime = formatData(+item.buy_time, 's')
-            return item
-          })
-          this.tableData = resData
-          // 总页数
-          this.totalPages = +res.data.LogisticsListPage.totalPages
+          this.tableData = []
+          if (res.data.LogisticsListPage) {
+            const resData = res.data.LogisticsListPage.content
+            resData.forEach((item) => {
+              item.crtime = formatData(+item.ctime, 's')
+              item.detime = formatData(+item.delivery_collect_time, 's')
+              item.uptime = formatData(+item.utime, 's')
+              item.sgtime = formatData(+item.signing_time, 's')
+              item.buytime = formatData(+item.buy_time, 's')
+              return item
+            })
+            this.tableData = resData
+            // 总页数
+            this.totalPages = +res.data.LogisticsListPage.totalPages
 
-          this.totalElements = +res.data.LogisticsListPage.totalElements // 总条数
-
-          console.log(
-            resData,
-            ' this.tableData',
-            this.totalElements,
-            ' this.totalElements',
-            this.totalPages,
-            'this.totalPages'
-          )
+            this.totalElements = +res.data.LogisticsListPage.totalElements // 总条数
+          }
           //  = res.data.LogisticsListPage.content
         })
     },
@@ -332,15 +500,12 @@ export default {
     handleSelectionChange(val) {
       this.multipleSelection = val
     },
-    handleSelectionChangeEnter() {
-      console.log(this.rowKey, 'this.rowKey')
-      this.cout++
-      console.log('鼠标进入', this.cout)
-      this.enter = true
+    handleSelectionChangeEnter(row) {
+      // console.log('鼠标进入', row)
     },
     handleSelectionChangeLeave() {
-      console.log('鼠标离开', this.cout)
-      this.cout++
+      // console.log('鼠标离开', this.cout, this.expressNu, 'this.expressNu')
+      // this.cout++
       this.enter = false
     },
     // 物流列表信息

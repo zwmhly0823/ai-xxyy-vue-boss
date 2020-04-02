@@ -1,14 +1,14 @@
 <template>
   <div class="order-call">
-    <article class="top-box" style="display: none;">
+    <article class="top-box">
       <el-row :gutter="20">
         <!-- 订单总计 -->
         <el-col :span="6">
           <div class="grid-content bg-purple total-order">
             <div class="oride-top">订单总计</div>
-            <div class="oride-middle">{{ penTotal }}笔</div>
+            <div class="oride-middle">{{ totalOrder.count }}笔</div>
             <div class="oride-bottom">
-              <span>{{ amountTotal }}元</span>
+              <span>{{ totalOrder.value }}元</span>
               <span>{{ littleBear.value }}币</span>
               <span>{{ recommended.value }}宝石</span>
             </div>
@@ -82,31 +82,33 @@ export default {
       // 获取teacherid
       teacherId: '',
       // 切换tab
-      tab: '',
+      tab: '3', // 默认显示 3 - 已完成
       // 搜索
       searchIn: [],
       // 体验课
-      experience: { count: 0, value: 0 },
+      experience: {},
       // 系统课
       systemClass: { count: 0, value: 0 },
       // 小熊商城
       littleBear: { count: 0, value: 0 },
       // 推荐有礼
-      recommended: { count: 0, value: 0 }
+      recommended: { count: 0, value: 0 },
+      // 订单总计
+      totalOrder: { count: 0, value: 0 }
     }
   },
   computed: {
-    penTotal() {
-      return (
-        this.experience.count +
-        this.systemClass.count +
-        this.littleBear.count +
-        this.recommended.count
-      )
-    },
-    amountTotal() {
-      return (this.experience.value + this.systemClass.value).toFixed(2)
-    }
+    // penTotal() {
+    //   return (
+    //     this.experience.count +
+    //     this.systemClass.count +
+    //     this.littleBear.count +
+    //     this.recommended.count
+    //   )
+    // },
+    // amountTotal() {
+    //   return (this.experience.value + this.systemClass.value).toFixed(2)
+    // }
   },
   watch: {
     // 切换tab
@@ -125,7 +127,7 @@ export default {
     if (teacherId) {
       this.teacherId = teacherId
     }
-    // this.statList()
+    this.statList()
   },
   methods: {
     statList() {
@@ -155,30 +157,39 @@ export default {
         .post('/graphql/order', {
           query: `{
             orderStatistics(query: ${JSON.stringify(queryStr)}) {
-              code
-              value
-              count
               type
-              desc
+              info {
+                count
+                desc
+                value
+              }
             }
         }`
         })
         .then((res) => {
           const _data = res.data.orderStatistics
+          console.log(_data, '_data')
           this.experience = { count: 0, value: 0 }
           this.systemClass = { count: 0, value: 0 }
           this.littleBear = { count: 0, value: 0 }
           this.recommended = { count: 0, value: 0 }
+          this.totalOrder = { count: 0, value: 0 }
           // if (_data.length !== 0) {
           _data.forEach((val) => {
-            if (val.code === 1) {
-              this.littleBear = val
-            } else if (val.code === 2) {
-              this.recommended = val
-            } else if (val.code === 3) {
-              this.experience = val
-            } else if (val.code === 4) {
-              this.systemClass = val
+            if (val.type === 'bear') {
+              // 小熊商城
+              this.littleBear = val.info
+            } else if (val.type === 'gem') {
+              // 推荐有礼
+              this.recommended = val.info
+            } else if (val.type === 'experience') {
+              // 体验课
+              this.experience = val.info
+            } else if (val.type === 'system') {
+              // 系统课
+              this.systemClass = val.info
+            } else if (val.type === 'total_order') {
+              this.totalOrder = val.info
             }
           })
           // }

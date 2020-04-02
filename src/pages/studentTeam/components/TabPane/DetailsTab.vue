@@ -8,16 +8,41 @@
  -->
 <template>
   <div>
-    <!-- <div class="btnbox">
+    <div class="btnbox">
+      <m-search
+        class="search-box"
+        @search="handleSearch"
+        phone="uid"
+        onlyPhone="1"
+        phoneTip="手机号/微信昵称 查询"
+        :teamId="classId.classId.id"
+      />
       <el-button
+        size="mini"
         type="primary"
-        class="btn"
-        v-show="Finish"
-        @click="dialogFormVisible = true"
+        style="height: 30px; margin-right: 20px;"
+        v-if="btnbox"
+        @click="finishLessonList"
         >生成完课榜</el-button
       >
-    </div> -->
+      <!-- <el-button
+        type="primary"
+        class="Btn"
+        v-show="exhibition"
+        @click="finishLessonList"
+        >生成作品展</el-button
+      > -->
+    </div>
     <div>
+      <!-- <m-search
+        class="search-box"
+        @search="handleSearch"
+        phone="uid"
+        onlyPhone="1"
+        phoneTip="手机号/微信昵称 查询"
+        :teamId="classId.classId.id"
+      /> -->
+
       <div class="tabs-tab">
         <el-tabs v-model="activeName" @tab-click="handleClick">
           <el-tab-pane label="加好友进群" name="group">
@@ -71,19 +96,40 @@
         >
         </el-input> -->
         <!-- <check-box class="checkbox"></check-box> -->
-        <!-- 弹出框 -->
-        <!-- <el-dialog
+        <!-- 生成完课榜弹出框 -->
+        <el-dialog
           title="请选择生成的完课榜周数"
           :visible.sync="dialogFormVisible"
           width="500px"
         >
-          <el-radio v-model="radio" label="1">第一周</el-radio>
-          <el-radio v-model="radio" label="2">第二周</el-radio>
+          <el-radio v-model="finishLessonData.weekNum" label="U1"
+            >第一周</el-radio
+          >
+          <el-radio v-model="finishLessonData.weekNum" label="U2"
+            >第二周</el-radio
+          >
           <div slot="footer" class="dialog-footer">
             <el-button @click="dialogFormVisible = false">取 消</el-button>
             <el-button type="primary" @click="clickHandler">确 定</el-button>
           </div>
-        </el-dialog> -->
+        </el-dialog>
+        <!-- 生成作品展弹出框 -->
+        <el-dialog
+          title="请选择生成的完课榜周数"
+          :visible.sync="dialogFormVisible"
+          width="500px"
+        >
+          <el-radio v-model="finishLessonData.weekNum" label="U1"
+            >第一周</el-radio
+          >
+          <el-radio v-model="finishLessonData.weekNum" label="U2"
+            >第二周</el-radio
+          >
+          <div slot="footer" class="dialog-footer">
+            <el-button @click="dialogFormVisible = false">取 消</el-button>
+            <el-button type="primary" @click="clickHandler">确 定</el-button>
+          </div>
+        </el-dialog>
       </div>
       <!-- <img
         v-show="show"
@@ -94,27 +140,44 @@
         @load="handlePosterLoaded"
         crossorigin="anonymous"
       /> -->
-      <!-- <div class="finishBox">
-        <slot> -->
-      <!-- 需要转换的html -->
-      <!-- <finishclass></finishclass>
+      <!-- 生成完课榜图片 -->
+      <div class="finishBox">
+        <slot>
+          <!-- 需要转换的html -->
+          <finishclass
+            @isLoad="canvasStart"
+            :listData="finishLessonData.childListData"
+            :weekNum="finishLessonData.weekNum"
+          ></finishclass>
         </slot>
-      </div> -->
+      </div>
+
+      <!-- 生成作品展图片 -->
+      <div class="exhibitionBox">
+        <slot>
+          <!-- 需要转换的html -->
+          <exhibition @isLoad="canvasStart"></exhibition>
+        </slot>
+      </div>
     </div>
   </div>
 </template>
 <script>
 // import checkBox from '@/components/MCheckBox/index'
 import detailsTable from './components/detailsTable'
+import MSearch from '@/components/MSearch/index.vue'
 import axios from '@/api/axios'
-import { timestamp, GetAgeByBrithday } from '@/utils/index'
+import { timestamp, GetAgeByBrithday, isToss } from '@/utils/index'
 import status from '@/utils/status'
-// import finishclass from './FinishClass'
+import finishclass from './FinishClass'
+import exhibition from './Exhibition'
 import html2canvas from 'html2canvas'
 export default {
   components: {
-    detailsTable
-    // finishclass
+    detailsTable,
+    finishclass,
+    exhibition,
+    MSearch
     // checkBox
   },
   props: {
@@ -125,9 +188,15 @@ export default {
   },
   data() {
     return {
+      teacherId: '',
+      search: '',
+      querysData: '',
+
       experssShow: false,
       // 单选按钮
-      radio: '1',
+      // radio: '',
+      // finish: false,
+      btnbox: false,
       type: null,
       input: '',
       // 完课榜
@@ -135,6 +204,7 @@ export default {
       // 点击生成图片--状态
       getImg: false,
       dataURL: '',
+      exhibition: true,
       Finish: true,
       audioTabs: '0',
       table: {
@@ -147,6 +217,14 @@ export default {
         totalElements: null,
         // 当前页
         currentPage: 1
+      },
+      // 完课榜相关数据
+      finishLessonData: {
+        teamId: 0,
+        studentLesson: '',
+        finishClassSort: 'asc',
+        weekNum: '',
+        childListData: {}
       },
       // tabs标签默认状态
       activeName: 'group',
@@ -170,9 +248,9 @@ export default {
     }
   },
   watch: {
-    getQcUrl: function() {
-      this.handlePosterLoad()
-    },
+    // getQcUrl: function() {
+    //   this.handlePosterLoad()
+    // },
     classId(value) {
       // 切换标签 语音停止
       const audios = this.$refs
@@ -223,33 +301,146 @@ export default {
     }
   },
   mounted() {
+    const teacherId = isToss()
+    if (teacherId) {
+      this.teacherId = teacherId
+    }
+
     console.log(status, 'status')
     this.table.tableLabel = [{ label: '购买时间', prop: 'buytime' }]
   },
   methods: {
-    clickHandler() {
-      console.log(document.getElementsByClassName('finishBox'), 123123)
+    // 搜索组件传回来的值
+    handleSearch(res) {
+      console.log(res, 'res[0].term.uid')
+      if (res.length === 0) {
+        console.log('res传的空')
+        this.search = ''
+        this.getGroup()
+        if (this.tabsName === '加好友进群') {
+          this.getGroup()
+        } else if (this.tabsName === '物流') {
+          this.gitLogistics()
+        } else if (this.tabsName === '打开APP') {
+          this.geiLogin()
+        } else if (this.tabsName === '参课和完课') {
+          this.getClassCompPage()
+        } else if (this.tabsName === '作品及点评') {
+          this.getStuComment()
+        }
+      } else {
+        console.log('res', res[0].term.uid)
+        this.search = `"${res[0].term.uid}"`
+        this.getGroup()
+        if (this.tabsName === '加好友进群') {
+          this.getGroup()
+        } else if (this.tabsName === '物流') {
+          this.gitLogistics()
+        } else if (this.tabsName === '打开APP') {
+          this.geiLogin()
+        } else if (this.tabsName === '参课和完课') {
+          this.getClassCompPage()
+        } else if (this.tabsName === '作品及点评') {
+          this.getStuComment()
+        }
+      }
+    },
+    async clickHandler() {
+      // 确认第几周
+      console.log(
+        'this.finishLessonData.weekNum -- val ',
+        this.finishLessonData.weekNum
+      )
+
+      // 获取第几周的数据
+      await this.getStuRankingList(
+        this.finishLessonData.teamId,
+        this.finishLessonData.studentLesson,
+        this.finishLessonData.weekNum
+      )
+
+      // 关闭弹框
       this.dialogFormVisible = false
-      this.handlePosterLoad()
       this.show = true
+      // 执行 截图操作并保存
     },
     // 生成完课榜
-    handlePosterLoad() {
+    handlePosterLoad(picname) {
       this.$nextTick(() => {
         window.scrollTo(0, 0)
         html2canvas(document.getElementsByClassName('finishBox')[0], {
           backgroundColor: 'rgba(0, 0, 0, 0)',
           useCORS: true,
-          async: true
+          async: true,
+          allowTaint: false
         }).then((canvas) => {
           const data = canvas.toDataURL('image/jpeg')
           // 执行浏览器下载
-          this.download('aaaa.jpeg', data)
+          this.download(`${picname}.jpeg`, data)
+          this.finish = false
           // this.dataURL = data
         })
       })
     },
-    handlePosterLoaded() {},
+    // 点击显示完课榜
+    finishLessonList(week) {
+      if (
+        this.classId &&
+        this.classId.classId &&
+        this.classId.classId.id &&
+        this.classId.classId.current_lesson
+      ) {
+        // 显示弹框
+        console.log('this.classid ------>>>>>', this.classId)
+        this.dialogFormVisible = true
+        this.finishLessonData.teamId = this.classId.classId.id
+        const currentLesson = this.classId.classId.current_lesson.substring(
+          0,
+          6
+        )
+        this.finishLessonData.studentLesson = currentLesson.substring(0, 4)
+        this.finishLessonData.weekNum = currentLesson.substring(4, 6)
+      } else {
+        console.log('this.classId.classId.id  undefined')
+      }
+    },
+    // 请求完课榜 - 接口数据
+    getStuRankingList(teamId, lesson, week) {
+      if (!teamId || !lesson || !week) {
+        console.log('getStuRankingList - error:', ' 缺少毕传信息')
+        return
+      }
+      this.$loading()
+      const queryParams = `{"team_id" : ${teamId}, "week" : "${lesson +
+        week}", "sort" : "${this.finishLessonData.finishClassSort}"}`
+      console.log(
+        'request - params  -->> ',
+        'team_id: ' + teamId + ' , lesson :' + lesson + ' , week : ' + week
+      )
+      axios
+        .post('/graphql/getStuRankingList', {
+          query: `{
+          getStuComRankingList(query : ${JSON.stringify(queryParams)}){
+          student_id
+          mobile
+          username
+          head
+          completeArr {
+          current_lesson
+          is_complete
+        }
+    }
+    }`
+        })
+        .then((res) => {
+          if (res.error) {
+            console.log(res.error, '接口错误信息-------------->')
+            return
+          }
+          this.finishLessonData.childListData = res
+        })
+    },
+    // handlePosterLoaded() {},
     // finishQcUrl(data) {
     //   this.getQcUrl = data
     // },
@@ -279,16 +470,30 @@ export default {
           })
         })
     },
+    canvasStart(res) {
+      if (res) {
+        setTimeout(() => {
+          this.handlePosterLoad(this.classId.classId.team_name)
+        }, 1000)
+      }
+    },
     // 加好友进群接口
     getGroup() {
       if (this.classId && this.classId.classId && this.classId.classId.id) {
-        const querys = `{"team_id":${this.classId.classId.id},"team_type":${this.classId.type}}`
+        if (this.search) {
+          this.querysData = `{"team_id":${this.classId.classId.id},"team_type":${this.classId.type},"uid":${this.search}}`
+        } else {
+          this.querysData = `{"team_id":${this.classId.classId.id},"team_type":${this.classId.type}}`
+        }
+        console.log(this.search, 'this.search')
+
         axios
           .post('/graphql/user', {
             query: `{
-              userListForTeam(query:${JSON.stringify(querys)} , page: ${
-              this.table.currentPage
-            }, size: 20) {
+                userListForTeam(query:${JSON.stringify(
+                  this.querysData
+                )} , page: ${this.table.currentPage}, size: 20) {
+
                 empty
                 first
                 last
@@ -366,11 +571,15 @@ export default {
     // 物流接口
     gitLogistics() {
       if (this.classId && this.classId.classId && this.classId.classId.id) {
-        const querys = `{"team_id":${this.classId.classId.id},"team_type":${this.classId.type}}`
+        if (this.search) {
+          this.querysData = `{"team_id":${this.classId.classId.id},"team_type":${this.classId.type},"uid":${this.search}}`
+        } else {
+          this.querysData = `{"team_id":${this.classId.classId.id},"team_type":${this.classId.type}}`
+        }
         axios
           .post('/graphql/express', {
             query: `{
-            stuExpressPage(query:${JSON.stringify(querys)} , page: ${
+              stuExpressPage(query:${JSON.stringify(this.querysData)} , page: ${
               this.table.currentPage
             }, size: 20) {
               empty
@@ -465,11 +674,17 @@ export default {
     // 打开APP接口
     geiLogin() {
       if (this.classId && this.classId.classId && this.classId.classId.id) {
-        const querys = `{"team_id":${this.classId.classId.id},"team_type":${this.classId.type}}`
+        if (this.search) {
+          this.querysData = `{"team_id":${this.classId.classId.id},"team_type":${this.classId.type},"uid":${this.search}}`
+        } else {
+          this.querysData = `{"team_id":${this.classId.classId.id},"team_type":${this.classId.type}}`
+        }
+        // const querys = `{"team_id":${this.classId.classId.id},"team_type":${this.classId.type}}`
+
         axios
           .post('/graphql/getClassLogin', {
             query: `{
-          stuLoginPage(query:${JSON.stringify(querys)}, page: ${
+          stuLoginPage(query:${JSON.stringify(this.querysData)}, page: ${
               this.table.currentPage
             }, size: 20) {
             first
@@ -580,11 +795,16 @@ export default {
     // 参课和完课接口
     getClassCompPage() {
       if (this.classId && this.classId.classId && this.classId.classId.id) {
-        const querys = `{"team_id":${this.classId.classId.id},"team_type":${this.classId.type}}`
+        if (this.search) {
+          this.querysData = `{"team_id":${this.classId.classId.id},"team_type":${this.classId.type},"uid":${this.search}}`
+        } else {
+          this.querysData = `{"team_id":${this.classId.classId.id},"team_type":${this.classId.type}}`
+        }
+
         axios
           .post('/graphql/getClassComplete', {
             query: `{
-            getClassCompPage(query:${JSON.stringify(querys)}, page: ${
+            getClassCompPage(query:${JSON.stringify(this.querysData)}, page: ${
               this.table.currentPage
             }, size: 20) {
               first
@@ -656,11 +876,16 @@ export default {
     // 作品及点评
     getStuComment() {
       if (this.classId && this.classId.classId && this.classId.classId.id) {
-        const querys = `{"team_id":${this.classId.classId.id},"team_type":${this.classId.type}}`
+        if (this.search) {
+          this.querysData = `{"team_id":${this.classId.classId.id},"team_type":${this.classId.type},"uid":${this.search}}`
+        } else {
+          this.querysData = `{"team_id":${this.classId.classId.id},"team_type":${this.classId.type}}`
+        }
+
         axios
           .post('/graphql/getStuComment', {
             query: `{
-            getStuCommentPage(query:${JSON.stringify(querys)}, page: ${
+            getStuCommentPage(query:${JSON.stringify(this.querysData)}, page: ${
               this.table.currentPage
             }, size: 20) {
               empty
@@ -781,6 +1006,7 @@ export default {
       })
       // this.table.audioIndex = 10000
       if (tab.index === '0') {
+        this.btnbox = false
         // 加好友进群
         setTimeout(() => {
           this.getGroup()
@@ -789,6 +1015,7 @@ export default {
         this.table.tabs = 0
         this.audioTabs = '0'
       } else if (tab.index === '1') {
+        this.btnbox = false
         // 物流
         setTimeout(() => {
           this.gitLogistics()
@@ -796,6 +1023,7 @@ export default {
         this.table.tabs = 1
         this.audioTabs = '1'
       } else if (tab.index === '2') {
+        this.btnbox = false
         // 登陆
         setTimeout(() => {
           this.geiLogin()
@@ -804,12 +1032,14 @@ export default {
         this.audioTabs = '2'
       } else if (tab.index === '3') {
         // 参课和完课
+        this.btnbox = true
         setTimeout(() => {
           this.getClassCompPage()
         }, 200)
         this.table.tabs = 3
         this.audioTabs = '3'
       } else if (tab.index === '4') {
+        this.btnbox = false
         // 作品及点评
         setTimeout(() => {
           this.getStuComment()
@@ -857,6 +1087,7 @@ export default {
 
       // aLink.dispatchEvent(evt);
       aLink.click()
+      this.$loading().close()
     },
     base64ToBlob(code) {
       const parts = code.split(';base64,')
@@ -879,12 +1110,25 @@ export default {
 </script>
 <style lang="scss" scoped>
 .btnbox {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
   width: 100%;
-  height: 40px;
-  .btn {
-    position: absolute;
-    right: 18px;
-  }
+  // height: 40px;
+  margin-top: 10px;
+  // .btn {
+  //   position: absolute;
+  //   right: 18px;
+  // }
+  // .Btn {
+  //   position: absolute;
+  //   right: 150px;
+  // }
+}
+.search-box {
+  display: flex;
+  border: 0;
+  margin: 0 -60px 0 0;
 }
 
 .tabs-tab {
@@ -910,12 +1154,16 @@ export default {
 .div {
   padding-top: 20px;
 }
-.exportImg {
-  display: flex;
-  align-self: center;
-  width: 550px;
-}
+// .exportImg {
+//   display: flex;
+//   align-self: center;
+//   width: 550px;
+// }
 .finishBox {
+  position: fixed;
+  left: -1000px;
+}
+.exhibitionBox {
   position: fixed;
   left: -1000px;
 }
@@ -948,5 +1196,9 @@ export default {
   .el-tabs__item.is-active {
     color: #409eff;
   }
+}
+.el-radio__input {
+  position: relative;
+  top: -8px;
 }
 </style>
