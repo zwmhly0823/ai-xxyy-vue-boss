@@ -117,16 +117,14 @@ export default {
   mounted() {},
   watch: {
     couponData(val) {
-      console.log(val, 'valvalaval')
       val.forEach((data) => {
         if (data.id === '6') {
           this.dropdownDefault = data
-          console.log(this.dropdownDefault, 'this.dropdownDefault')
         }
       })
     },
     selectUserId(val) {
-      console.log(val, '2354647534654')
+      console.log(val, '用户idprops传参')
     }
   },
   methods: {
@@ -154,7 +152,6 @@ export default {
           this.paidoutNo = res.payload.length
           this.paidOut = 'ALL'
         }
-        console.log(this.selectUserId.length, 'this.selectUserId')
       })
     },
     // 优惠券发放成功弹窗

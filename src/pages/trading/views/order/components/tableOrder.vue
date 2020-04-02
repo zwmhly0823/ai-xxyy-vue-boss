@@ -41,7 +41,7 @@
                   item.packages_name ? item.packages_name : item.product_name
                 }}
               </div>
-              <div class="card-style1-num" v-show="item.sup !== ''">
+              <div class="card-style1-num" v-show="item.sup">
                 {{ item.stage ? item.stage : '-' }}期·S{{
                   item.sup ? item.sup : '-'
                 }}
@@ -141,11 +141,13 @@ export default {
   watch: {
     // 切换tab
     status(val) {
+      this.currentPage = 1
       this.tab = val
       this.orderList()
     },
     // 搜索
     search(val) {
+      this.currentPage = 1
       this.searchIn = val
       this.orderList()
     }
@@ -163,7 +165,6 @@ export default {
 
       // 搜索 must
       const mustArr = this.searchIn.map((item) => JSON.stringify(item))
-      console.log(this.searchIn, 'overflow-scroll')
       must.push(...mustArr)
       const should = this.tab ? [`{"terms": {"status": [${this.tab}]}}`] : []
       const queryStr = `{
