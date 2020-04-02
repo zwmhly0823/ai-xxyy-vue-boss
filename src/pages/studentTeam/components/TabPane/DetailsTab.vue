@@ -263,7 +263,7 @@ export default {
       finishLessonData: {
         teamId: 0,
         studentLesson: '',
-        finishClassSort: 'asc',
+        finishClassSort: 'desc',
         weekNum: '',
         childListData: {}
       },
