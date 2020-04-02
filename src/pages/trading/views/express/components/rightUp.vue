@@ -62,7 +62,7 @@
         ref="upload"
         action=""
         accept=".xls"
-        :data="teacherId"
+        :data="{ teacherId }"
         :on-preview="handlePreview"
         :on-remove="handleRemove"
         :headers="headers"
@@ -131,11 +131,12 @@ export default {
   // },
   methods: {
     uploadFile(params) {
+      console.log(params)
       const formdata = new FormData()
       const file = params.file
       formdata.append('file', file)
       axios
-        .post('/api/o/v1/express/importExpressList?', formdata)
+        .post('/api/o/v1/express/importExpressList?', formdata, this.headers)
         .then((response) => {
           this.$message({
             showClose: true,
