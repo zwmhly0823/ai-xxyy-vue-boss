@@ -28,11 +28,11 @@
           >导出物流信息</el-button
         >
       </div>
-      <!-- <div>
+      <div>
         <el-button size="small" type="primary" @click="dialogVisible = true">
           导入物流信息
         </el-button>
-      </div> -->
+      </div>
     </div>
 
     <el-dialog
