@@ -141,6 +141,7 @@ export default {
   watch: {
     // 切换tab
     status(val) {
+      this.currentPage = 1
       this.tab = val
       this.orderList()
     },
