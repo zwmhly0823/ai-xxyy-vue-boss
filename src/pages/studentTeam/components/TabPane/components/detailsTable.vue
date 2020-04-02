@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 20:22:24
  * @LastEditors: panjian
- * @LastEditTime: 2020-04-02 21:00:35
+ * @LastEditTime: 2020-04-02 21:12:24
  -->
 <template>
   <div class="table-box">
@@ -50,8 +50,8 @@
         <!-- 已加好友 -->
         <el-table-column prop="added_wechat" label="已加好友">
           <template slot="header">
-            <span>已加好友</span>
-            <i @click="onSortWechat" class="el-icon-d-caret" />
+            <span @click="onSortWechat">已加好友</span>
+            <i class="el-icon-d-caret" />
           </template>
           <template slot-scope="scope">
             <!-- <span>{{ scope.row.friend }}</span> -->
@@ -96,8 +96,8 @@
         <!-- 已进群 -->
         <el-table-column prop="added_group" label="已进群">
           <template slot="header">
-            <span>已进群</span>
-            <i @click="onSortGroup" class="el-icon-d-caret" />
+            <span @click="onSortGroup">已进群</span>
+            <i class="el-icon-d-caret" />
           </template>
           <template slot-scope="scope">
             <img
@@ -141,8 +141,8 @@
         <!-- 关注公众号 -->
         <el-table-column prop="follow" label="关注公众号">
           <template slot="header">
-            <span>关注公众号</span>
-            <i @click="onSortFollow" class="el-icon-d-caret" />
+            <span @click="onSortFollow">关注公众号</span>
+            <i class="el-icon-d-caret" />
           </template>
           <template slot-scope="scope">
             <img
