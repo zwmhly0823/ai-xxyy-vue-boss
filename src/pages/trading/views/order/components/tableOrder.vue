@@ -36,7 +36,7 @@
       <div class="card-content">
         <!-- 用户信息 -->
         <div class="content-details">
-          用户信息
+          {{ item.user ? item.user.mobile : '-' }}
         </div>
         <!-- 商品信息 -->
         <div class="content-details card-style1">
@@ -209,6 +209,9 @@ export default {
               bear_integral
               gem_integral
               product_name
+              user{
+                mobile
+              }
               channel {
                 channel_outer_name
               }
@@ -265,7 +268,7 @@ export default {
             }
           })
           this.cardData = _data
-          console.log(this.cardData)
+          console.log(this.cardData, 'this.cardData')
         })
     },
     // 点击分页
