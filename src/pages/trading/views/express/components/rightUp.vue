@@ -82,6 +82,18 @@
         <div slot="tip" class="el-upload__tip">只能上传xls/xlsx文件</div>
       </el-upload>
     </el-dialog>
+    <el-dialog
+      title="文件上传问题"
+      :visible.sync="errorDialog.length > 0"
+      width="500"
+    >
+      <p v-for="(item, index) in errorDialog" :key="index">
+        {{ item.message }}
+      </p>
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="errorDialog = []">关闭</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -97,6 +109,7 @@ export default {
   },
   data() {
     return {
+      errorDialog: [],
       teacherId: '',
       searchIn: [],
       open: false,
@@ -135,21 +148,27 @@ export default {
       const formdata = new FormData()
       const file = params.file
       formdata.append('file', file)
+
       axios
-        .post('/api/o/v1/express/importExpressList?', formdata, this.headers)
-        .then((response) => {
+        .post(
+          `/api/o/v1/express/importExpressList?operatorId=${this.teacherId}`,
+          formdata
+        )
+        .then((res) => {
+          console.log(res.payload)
+
           this.$message({
             showClose: true,
-            message: '恭喜你，邮件上传成功',
+            message: '恭喜你，文件上传成功',
             type: 'success'
           })
+          this.dialogVisible = false
+          this.errorDialog = res.payload
         })
         .catch((error) => {
           // 前端的token留在点击退出按钮那里删除，这里就只是提示过期
           if (error.message !== '') {
-            this.$message.warning('此封一模一样邮件你已经上传过了')
-          } else {
-            this.$message.warning('后端token过期，请重新登录')
+            this.$message.warning('此表你已经上传过了')
           }
         })
     },
@@ -237,6 +256,7 @@ export default {
         id: '物流信息ID',
         user_id: '用户ID',
         out_trade_no: '订单号',
+        packagestype: '课程类型',
         term: '期数',
         sup: '课程难度',
         level: '课程级别',
