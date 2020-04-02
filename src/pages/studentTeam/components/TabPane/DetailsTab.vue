@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 14:19:58
  * @LastEditors: panjian
- * @LastEditTime: 2020-04-01 16:03:58
+ * @LastEditTime: 2020-04-02 21:00:20
  -->
 <template>
   <div>
@@ -52,6 +52,7 @@
               @onCurrentPage="onCurrentPage"
               @commandFriend="onCommandFriend"
               @onGroup="onGroup"
+              @onGroupSort="onGroupSort"
               :tables="table"
               :classId="classId"
               :audioTabs="audioTabs"
@@ -288,7 +289,8 @@ export default {
         desc: ''
       },
       formLabelWidth: '120px',
-      tableDataEmpty: true
+      tableDataEmpty: true,
+      sortGroup: ''
     }
   },
   watch: {
@@ -303,6 +305,7 @@ export default {
         item[0].load()
       })
       // this.table.audioIndex = 10000
+      this.sortGroup = ''
       this.table.currentPage = 1
       console.log(value.classId, 'classId')
       if (value.classId) {
@@ -323,7 +326,7 @@ export default {
           }, 200)
         } else if (this.tabsName === '物流') {
           setTimeout(() => {
-            this.gitLogistics()
+            this.getLogistics()
           }, 200)
         } else if (this.tabsName === '打开APP') {
           setTimeout(() => {
@@ -349,11 +352,17 @@ export default {
     if (teacherId) {
       this.teacherId = teacherId
     }
-
     console.log(status, 'status')
     this.table.tableLabel = [{ label: '购买时间', prop: 'buytime' }]
   },
   methods: {
+    // 排序
+    onGroupSort(data) {
+      // this.sortGroup = `sort:${data}`
+      this.sortGroup = `sort:${JSON.stringify(data)}`
+      console.log(this.sortGroup, 'sort 父组件')
+      this.getGroup()
+    },
     // 搜索组件传回来的值
     handleSearch(res) {
       console.log(res, 'res[0].term.uid')
@@ -364,7 +373,7 @@ export default {
         if (this.tabsName === '加好友进群') {
           this.getGroup()
         } else if (this.tabsName === '物流') {
-          this.gitLogistics()
+          this.getLogistics()
         } else if (this.tabsName === '打开APP') {
           this.geiLogin()
         } else if (this.tabsName === '参课和完课') {
@@ -379,7 +388,7 @@ export default {
         if (this.tabsName === '加好友进群') {
           this.getGroup()
         } else if (this.tabsName === '物流') {
-          this.gitLogistics()
+          this.getLogistics()
         } else if (this.tabsName === '打开APP') {
           this.geiLogin()
         } else if (this.tabsName === '参课和完课') {
@@ -487,7 +496,7 @@ export default {
         )
         this.btnshow(
           this.finishLessonData.weekNum,
-          this.classId.classId.team_type
+          this.classId.classId.team_state
         )
         // const state = '0'
         // const weekNum = 'U1'
@@ -544,7 +553,7 @@ export default {
         this.ExhibitionData.weekNum = currentLesson.substring(4, 6)
         this.btnshow(
           this.ExhibitionData.weekNum,
-          this.classId.classId.team_type
+          this.classId.classId.team_state
         )
       } else {
         console.log('this.classId.classId.id  undefined')
@@ -566,17 +575,17 @@ export default {
       axios
         .post('/graphql/getStuRankingList', {
           query: `{
-          getStuComRankingList(query : ${JSON.stringify(queryParams)}){
-          student_id
-          mobile
-          username
-          head
-          completeArr {
-          current_lesson
-          is_complete
-        }
-    }
-    }`
+                getStuComRankingList(query : ${JSON.stringify(queryParams)}){
+                student_id
+                mobile
+                username
+                head
+                completeArr {
+                current_lesson
+                is_complete
+                }
+            }
+          }`
         })
         .then((res) => {
           if (res.error) {
@@ -671,8 +680,9 @@ export default {
             query: `{
                 userListForTeam(query:${JSON.stringify(
                   this.querysData
-                )} , page: ${this.table.currentPage}, size: 20) {
-
+                )} , page: ${this.table.currentPage}, size: 20,${
+              this.sortGroup
+            }) {
                 empty
                 first
                 last
@@ -748,13 +758,14 @@ export default {
       }
     },
     // 物流接口
-    gitLogistics() {
+    getLogistics() {
       if (this.classId && this.classId.classId && this.classId.classId.id) {
         if (this.search) {
           this.querysData = `{"team_id":${this.classId.classId.id},"team_type":${this.classId.type},"uid":${this.search}}`
         } else {
           this.querysData = `{"team_id":${this.classId.classId.id},"team_type":${this.classId.type}}`
         }
+        // const logisticsSort = '{"login_time":"desc"}}'
         axios
           .post('/graphql/express', {
             query: `{
@@ -1159,7 +1170,7 @@ export default {
     addExpresss(data) {
       console.log(data, '父组件')
       if (data) {
-        this.gitLogistics()
+        this.getLogistics()
         // this.experssShow = true
       }
     },
@@ -1191,14 +1202,16 @@ export default {
           this.getGroup()
         }, 200)
         this.table.tableLabel = [{ label: '购买时间', prop: 'buytime' }]
+        this.sortGroup = ''
         this.table.tabs = 0
         this.audioTabs = '0'
       } else if (tab.index === '1') {
         this.btnbox = false
         // 物流
         setTimeout(() => {
-          this.gitLogistics()
+          this.getLogistics()
         }, 200)
+        this.sortGroup = ''
         this.table.tabs = 1
         this.audioTabs = '1'
       } else if (tab.index === '2') {
@@ -1207,6 +1220,7 @@ export default {
         setTimeout(() => {
           this.geiLogin()
         }, 200)
+        this.sortGroup = ''
         this.table.tabs = 2
         this.audioTabs = '2'
       } else if (tab.index === '3') {
@@ -1215,6 +1229,7 @@ export default {
         setTimeout(() => {
           this.getClassCompPage()
         }, 200)
+        this.sortGroup = ''
         this.table.tabs = 3
         this.audioTabs = '3'
       } else if (tab.index === '4') {
@@ -1223,6 +1238,7 @@ export default {
         setTimeout(() => {
           this.getStuComment()
         }, 200)
+        this.sortGroup = ''
         this.table.tabs = 4
         this.audioTabs = '4'
       }
@@ -1236,7 +1252,7 @@ export default {
         }, 200)
       } else if (this.table.tabs === 1) {
         setTimeout(() => {
-          this.gitLogistics()
+          this.getLogistics()
         }, 200)
       } else if (this.table.tabs === 2) {
         setTimeout(() => {
