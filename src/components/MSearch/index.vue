@@ -3,8 +3,8 @@
  * @version:
  * @Author: zhubaodong
  * @Date: 2020-03-24 18:20:12
- * @LastEditors: Shentong
- * @LastEditTime: 2020-03-31 19:12:13
+ * @LastEditors: zhubaodong
+ * @LastEditTime: 2020-04-01 23:16:56
  -->
 
 <template>
@@ -12,45 +12,66 @@
     <el-form :inline="true">
       <el-form-item>
         <!-- 手机号搜索 -->
-        <search-phone @result="getPhoneHander" v-if="phone" :name="phone" />
+        <search-phone
+          @result="getPhoneHander"
+          v-if="phone"
+          :teamId="teamId"
+          :name="phone"
+          :onlyPhone="onlyPhone"
+          :tip="phoneTip"
+        />
       </el-form-item>
 
-      <el-form-item v-if="productName">
+      <el-form-item>
         <!-- 商品名称搜索 -->
-        <product-name @result="getProductName" :name="productName" />
+        <product-name
+          @result="getProductName"
+          v-if="productName"
+          :name="productName"
+        />
       </el-form-item>
 
-      <el-form-item v-if="outTradeNo">
+      <el-form-item>
         <!-- 订单号搜索 -->
-        <out-trade-no @result="getOutTradeNo" :name="outTradeNo" />
+        <out-trade-no
+          @result="getOutTradeNo"
+          v-if="outTradeNo"
+          :name="outTradeNo"
+        />
       </el-form-item>
 
-      <el-form-item v-if="date">
+      <el-form-item>
         <!-- 下单时间 -->
         <date-picker
+          v-if="date"
           :name="date"
           @result="getDate"
           :date-placeholder="datePlaceholder"
         />
       </el-form-item>
 
-      <el-form-item v-if="timeData">
+      <el-form-item>
         <!-- 下拉时间选择 -->
         <select-date
+          v-if="timeData"
           :name="timeData"
           @result="getTimeData"
           @timeCallBack="getTimeCallBack"
         />
       </el-form-item>
 
-      <el-form-item v-if="channel">
+      <el-form-item>
         <!-- 渠道 -->
-        <channel-select @result="getChannel" :name="channel" />
+        <channel-select @result="getChannel" v-if="channel" :name="channel" />
       </el-form-item>
 
-      <el-form-item v-if="topicType">
+      <el-form-item>
         <!-- 主题 -->
-        <product-topic @result="getProductTopic" :name="topicType" />
+        <product-topic
+          @result="getProductTopic"
+          v-if="topicType"
+          :name="topicType"
+        />
       </el-form-item>
       <!-- <el-form-item>
         <stage-sup-levels
@@ -149,6 +170,21 @@ export default {
     phone: {
       type: String,
       default: '' // phone
+    },
+    // 是否只搜手机号
+    onlyPhone: {
+      type: String,
+      default: '0' // 0
+    },
+    // 是否只搜手机号
+    phoneTip: {
+      type: String,
+      default: '手机号查询'
+    },
+    // team_id
+    teamId: {
+      type: String,
+      default: ''
     },
     // 订单号
     outTradeNo: {

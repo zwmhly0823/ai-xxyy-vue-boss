@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-26 16:28:45
  * @LastEditors: zhubaodong
- * @LastEditTime: 2020-03-28 18:51:06
+ * @LastEditTime: 2020-04-02 00:20:04
  -->
 <template>
   <div class="search-item small">
@@ -15,12 +15,18 @@
       class="inline-input"
       v-model="input"
       :fetch-suggestions="querySearch"
-      placeholder="手机号查询"
+      :placeholder="tip"
       :trigger-on-focus="false"
+      :popper-class="+onlyPhone ? 'ppName' : ''"
       @select="inputHandler"
     >
       <template slot-scope="{ item }">
-        <div class="name">{{ item.mobile }}</div>
+        <div style="display:flex">
+          <div class="name">{{ item.mobile || '-' }}</div>
+          <div class="name" v-if="+onlyPhone">
+            /{{ item.wechat_nikename || '-' }}
+          </div>
+        </div>
       </template></el-autocomplete
     >
   </div>
@@ -35,10 +41,24 @@ export default {
       type: String,
       default: 'out_trade_no'
     },
+    onlyPhone: {
+      type: String,
+      default: '0'
+    },
     // 是否只返回值，如果是，父组件获得值后根据实际表达式组装数据
     onlyValue: {
       type: Boolean,
       default: false
+    },
+    // team_id
+    teamId: {
+      type: String,
+      default: ''
+    },
+    // 是否只返回值，如果是，父组件获得值后根据实际表达式组装数据
+    tip: {
+      type: String,
+      default: '手机号查询'
     }
   },
   components: {},
@@ -51,6 +71,7 @@ export default {
   computed: {},
   watch: {
     input(val, old) {
+      console.log(val !== old && !val)
       if (val !== old && !val) {
         this.$emit('result', '')
       }
@@ -59,10 +80,11 @@ export default {
   methods: {
     async querySearch(queryString, cb) {
       const reg = /^[0-9]*$/
-      if (!reg.test(queryString)) {
-        console.log('进来了')
-        this.input = ''
-        return
+      if (!+this.onlyPhone) {
+        if (!reg.test(queryString)) {
+          this.input = ''
+          return
+        }
       }
       const searchUid = await this.createFilter(queryString)
       console.log(searchUid, '匹配到的数据')
@@ -72,11 +94,13 @@ export default {
       cb(searchUid)
     },
     createFilter(queryString) {
+      const queryParams = `{"mobile":"${queryString}","team_id":"${this.teamId}"}`
       return axios
         .post('/graphql/user', {
           query: `{
-              blurrySearch(mobile:"${queryString}") {
+              blurrySearch(query: ${JSON.stringify(queryParams)}) {
                   mobile
+                  wechat_nikename
                   id
                 }
             }
@@ -84,11 +108,7 @@ export default {
         })
         .then((res) => {
           this.selectData = res.data.blurrySearch
-          const results = this.selectData.filter(
-            (item) =>
-              item.mobile.toLowerCase().indexOf(queryString.toLowerCase()) === 0
-          )
-          return results
+          return this.selectData
         })
     },
     inputHandler(data) {
@@ -104,6 +124,17 @@ export default {
 .search-item {
   &.small {
     width: 135px !important;
+  }
+}
+</style>
+<style lang="scss">
+.ppName {
+  width: 220px !important;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  .el-scrollbar {
+    width: 100%;
   }
 }
 </style>

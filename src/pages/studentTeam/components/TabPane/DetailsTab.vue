@@ -8,23 +8,42 @@
  -->
 <template>
   <div>
-    <div class="btnbox" v-show="btnbox">
+    <div class="btnbox">
+      <m-search
+        class="search-box"
+        @search="handleSearch"
+        phone="uid"
+        onlyPhone="1"
+        phoneTip="手机号/微信昵称 查询"
+        :teamId="classId.classId.id"
+        style="margin-right: 20px;"
+      />
       <el-button
+        size="mini"
         type="primary"
-        class="btn"
-        v-show="Finish"
+        style="height: 42px; margin-right: 20px;"
+        v-if="btnbox"
         @click="finishLessonList"
         >生成完课榜</el-button
       >
-      <el-button
+      <!-- <el-button
         type="primary"
         class="Btn"
         v-show="exhibition"
         @click="finishLessonList"
         >生成作品展</el-button
-      >
+      > -->
     </div>
     <div>
+      <!-- <m-search
+        class="search-box"
+        @search="handleSearch"
+        phone="uid"
+        onlyPhone="1"
+        phoneTip="手机号/微信昵称 查询"
+        :teamId="classId.classId.id"
+      /> -->
+
       <div class="tabs-tab">
         <el-tabs v-model="activeName" @tab-click="handleClick">
           <el-tab-pane label="加好友进群" name="group">
@@ -80,7 +99,6 @@
         <!-- <check-box class="checkbox"></check-box> -->
         <!-- 生成完课榜弹出框 -->
         <el-dialog
-          element-loading-text="图片生成中"
           title="请选择生成的完课榜周数"
           :visible.sync="dialogFormVisible"
           width="500px"
@@ -148,8 +166,9 @@
 <script>
 // import checkBox from '@/components/MCheckBox/index'
 import detailsTable from './components/detailsTable'
+import MSearch from '@/components/MSearch/index.vue'
 import axios from '@/api/axios'
-import { timestamp, GetAgeByBrithday } from '@/utils/index'
+import { timestamp, GetAgeByBrithday, isToss } from '@/utils/index'
 import status from '@/utils/status'
 import finishclass from './FinishClass'
 import exhibition from './Exhibition'
@@ -158,7 +177,8 @@ export default {
   components: {
     detailsTable,
     finishclass,
-    exhibition
+    exhibition,
+    MSearch
     // checkBox
   },
   props: {
@@ -169,6 +189,10 @@ export default {
   },
   data() {
     return {
+      teacherId: '',
+      search: '',
+      querysData: '',
+
       experssShow: false,
       // 单选按钮
       // radio: '',
@@ -278,10 +302,50 @@ export default {
     }
   },
   mounted() {
+    const teacherId = isToss()
+    if (teacherId) {
+      this.teacherId = teacherId
+    }
+
     console.log(status, 'status')
     this.table.tableLabel = [{ label: '购买时间', prop: 'buytime' }]
   },
   methods: {
+    // 搜索组件传回来的值
+    handleSearch(res) {
+      console.log(res, 'res[0].term.uid')
+      if (res.length === 0) {
+        console.log('res传的空')
+        this.search = ''
+        this.getGroup()
+        if (this.tabsName === '加好友进群') {
+          this.getGroup()
+        } else if (this.tabsName === '物流') {
+          this.gitLogistics()
+        } else if (this.tabsName === '打开APP') {
+          this.geiLogin()
+        } else if (this.tabsName === '参课和完课') {
+          this.getClassCompPage()
+        } else if (this.tabsName === '作品及点评') {
+          this.getStuComment()
+        }
+      } else {
+        console.log('res', res[0].term.uid)
+        this.search = `"${res[0].term.uid}"`
+        this.getGroup()
+        if (this.tabsName === '加好友进群') {
+          this.getGroup()
+        } else if (this.tabsName === '物流') {
+          this.gitLogistics()
+        } else if (this.tabsName === '打开APP') {
+          this.geiLogin()
+        } else if (this.tabsName === '参课和完课') {
+          this.getClassCompPage()
+        } else if (this.tabsName === '作品及点评') {
+          this.getStuComment()
+        }
+      }
+    },
     async clickHandler() {
       // 确认第几周
       console.log(
@@ -302,7 +366,7 @@ export default {
       // 执行 截图操作并保存
     },
     // 生成完课榜
-    handlePosterLoad() {
+    handlePosterLoad(picname) {
       this.$nextTick(() => {
         window.scrollTo(0, 0)
         html2canvas(document.getElementsByClassName('finishBox')[0], {
@@ -313,7 +377,7 @@ export default {
         }).then((canvas) => {
           const data = canvas.toDataURL('image/jpeg')
           // 执行浏览器下载
-          this.download('完课榜.jpeg', data)
+          this.download(`${picname}.jpeg`, data)
           this.finish = false
           // this.dataURL = data
         })
@@ -410,20 +474,27 @@ export default {
     canvasStart(res) {
       if (res) {
         setTimeout(() => {
-          this.handlePosterLoad()
+          this.handlePosterLoad(this.classId.classId.team_name)
         }, 1000)
       }
     },
     // 加好友进群接口
     getGroup() {
       if (this.classId && this.classId.classId && this.classId.classId.id) {
-        const querys = `{"team_id":${this.classId.classId.id},"team_type":${this.classId.type}}`
+        if (this.search) {
+          this.querysData = `{"team_id":${this.classId.classId.id},"team_type":${this.classId.type},"uid":${this.search}}`
+        } else {
+          this.querysData = `{"team_id":${this.classId.classId.id},"team_type":${this.classId.type}}`
+        }
+        console.log(this.search, 'this.search')
+
         axios
           .post('/graphql/user', {
             query: `{
-              userListForTeam(query:${JSON.stringify(querys)} , page: ${
-              this.table.currentPage
-            }, size: 20) {
+                userListForTeam(query:${JSON.stringify(
+                  this.querysData
+                )} , page: ${this.table.currentPage}, size: 20) {
+
                 empty
                 first
                 last
@@ -501,11 +572,15 @@ export default {
     // 物流接口
     gitLogistics() {
       if (this.classId && this.classId.classId && this.classId.classId.id) {
-        const querys = `{"team_id":${this.classId.classId.id},"team_type":${this.classId.type}}`
+        if (this.search) {
+          this.querysData = `{"team_id":${this.classId.classId.id},"team_type":${this.classId.type},"uid":${this.search}}`
+        } else {
+          this.querysData = `{"team_id":${this.classId.classId.id},"team_type":${this.classId.type}}`
+        }
         axios
           .post('/graphql/express', {
             query: `{
-            stuExpressPage(query:${JSON.stringify(querys)} , page: ${
+              stuExpressPage(query:${JSON.stringify(this.querysData)} , page: ${
               this.table.currentPage
             }, size: 20) {
               empty
@@ -600,11 +675,17 @@ export default {
     // 打开APP接口
     geiLogin() {
       if (this.classId && this.classId.classId && this.classId.classId.id) {
-        const querys = `{"team_id":${this.classId.classId.id},"team_type":${this.classId.type}}`
+        if (this.search) {
+          this.querysData = `{"team_id":${this.classId.classId.id},"team_type":${this.classId.type},"uid":${this.search}}`
+        } else {
+          this.querysData = `{"team_id":${this.classId.classId.id},"team_type":${this.classId.type}}`
+        }
+        // const querys = `{"team_id":${this.classId.classId.id},"team_type":${this.classId.type}}`
+
         axios
           .post('/graphql/getClassLogin', {
             query: `{
-          stuLoginPage(query:${JSON.stringify(querys)}, page: ${
+          stuLoginPage(query:${JSON.stringify(this.querysData)}, page: ${
               this.table.currentPage
             }, size: 20) {
             first
@@ -715,11 +796,16 @@ export default {
     // 参课和完课接口
     getClassCompPage() {
       if (this.classId && this.classId.classId && this.classId.classId.id) {
-        const querys = `{"team_id":${this.classId.classId.id},"team_type":${this.classId.type}}`
+        if (this.search) {
+          this.querysData = `{"team_id":${this.classId.classId.id},"team_type":${this.classId.type},"uid":${this.search}}`
+        } else {
+          this.querysData = `{"team_id":${this.classId.classId.id},"team_type":${this.classId.type}}`
+        }
+
         axios
           .post('/graphql/getClassComplete', {
             query: `{
-            getClassCompPage(query:${JSON.stringify(querys)}, page: ${
+            getClassCompPage(query:${JSON.stringify(this.querysData)}, page: ${
               this.table.currentPage
             }, size: 20) {
               first
@@ -791,11 +877,16 @@ export default {
     // 作品及点评
     getStuComment() {
       if (this.classId && this.classId.classId && this.classId.classId.id) {
-        const querys = `{"team_id":${this.classId.classId.id},"team_type":${this.classId.type}}`
+        if (this.search) {
+          this.querysData = `{"team_id":${this.classId.classId.id},"team_type":${this.classId.type},"uid":${this.search}}`
+        } else {
+          this.querysData = `{"team_id":${this.classId.classId.id},"team_type":${this.classId.type}}`
+        }
+
         axios
           .post('/graphql/getStuComment', {
             query: `{
-            getStuCommentPage(query:${JSON.stringify(querys)}, page: ${
+            getStuCommentPage(query:${JSON.stringify(this.querysData)}, page: ${
               this.table.currentPage
             }, size: 20) {
               empty
@@ -1020,17 +1111,23 @@ export default {
 </script>
 <style lang="scss" scoped>
 .btnbox {
+  display: flex;
+  justify-content: flex-end;
   width: 100%;
-  height: 40px;
+  // height: 40px;
   margin-top: 10px;
-  .btn {
-    position: absolute;
-    right: 18px;
-  }
-  .Btn {
-    position: absolute;
-    right: 150px;
-  }
+  // .btn {
+  //   position: absolute;
+  //   right: 18px;
+  // }
+  // .Btn {
+  //   position: absolute;
+  //   right: 150px;
+  // }
+}
+.search-box {
+  display: flex;
+  flex-direction: row-reverse;
 }
 
 .tabs-tab {
@@ -1098,5 +1195,9 @@ export default {
   .el-tabs__item.is-active {
     color: #409eff;
   }
+}
+.el-radio__input {
+  position: relative;
+  top: -8px;
 }
 </style>
