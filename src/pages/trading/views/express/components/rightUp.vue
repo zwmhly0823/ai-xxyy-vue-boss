@@ -55,15 +55,19 @@
       width="30%"
       :before-close="handleCloseExport"
     >
+      <!-- action="/api/o/v1/express/importExpressList" -->
+
       <el-upload
         class="upload-demo"
         ref="upload"
-        :data="custom"
-        action="/api/o/v1/express/importExpressList"
+        action=""
+        accept=".xls"
+        :data="teacherId"
         :on-preview="handlePreview"
         :on-remove="handleRemove"
-        :auto-upload="false"
         :headers="headers"
+        :auto-upload="false"
+        :http-request="uploadFile"
       >
         <el-button slot="trigger" size="small" type="primary"
           >选取文件</el-button
@@ -98,9 +102,6 @@ export default {
       open: false,
       dialogVisible: false,
       dickUp: false,
-      custom: {
-        id: '99'
-      },
       headers: { 'Content-Type': 'multipart/form-data' },
       expressStatus: ''
     }
@@ -129,6 +130,28 @@ export default {
   //   ...mapGetters(['token'])
   // },
   methods: {
+    uploadFile(params) {
+      const formdata = new FormData()
+      const file = params.file
+      formdata.append('file', file)
+      axios
+        .post('/api/o/v1/express/importExpressList?', formdata)
+        .then((response) => {
+          this.$message({
+            showClose: true,
+            message: '恭喜你，邮件上传成功',
+            type: 'success'
+          })
+        })
+        .catch((error) => {
+          // 前端的token留在点击退出按钮那里删除，这里就只是提示过期
+          if (error.message !== '') {
+            this.$message.warning('此封一模一样邮件你已经上传过了')
+          } else {
+            this.$message.warning('后端token过期，请重新登录')
+          }
+        })
+    },
     // importESKSKS(file) {
     //   axios({
     //     method: 'POST',
