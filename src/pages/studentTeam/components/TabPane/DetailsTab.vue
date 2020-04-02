@@ -496,7 +496,7 @@ export default {
         )
         this.btnshow(
           this.finishLessonData.weekNum,
-          this.classId.classId.team_type
+          this.classId.classId.team_state
         )
         // const state = '0'
         // const weekNum = 'U1'
@@ -553,7 +553,7 @@ export default {
         this.ExhibitionData.weekNum = currentLesson.substring(4, 6)
         this.btnshow(
           this.ExhibitionData.weekNum,
-          this.classId.classId.team_type
+          this.classId.classId.team_state
         )
       } else {
         console.log('this.classId.classId.id  undefined')
