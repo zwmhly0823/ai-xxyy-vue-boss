@@ -522,6 +522,7 @@ export default {
     btnshow(weekNum, state) {
       console.log('weekNum', weekNum)
       console.log('state', state)
+      this.finishLessonData.isRequest = true
       if (weekNum === 'U1') {
         if (state === 0) {
           this.radioOne = false
@@ -580,6 +581,7 @@ export default {
     //   }
     // },
     Btnshow(weekNum, state) {
+      this.ExhibitionData.isRequest = true
       console.log('weekNum', weekNum)
       console.log('state', state)
       if (weekNum === 'U1') {
