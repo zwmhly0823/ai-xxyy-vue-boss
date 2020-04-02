@@ -211,7 +211,15 @@
                 <span>{{ scope.row.address_detail }}</span>
               </div>
               <div v-else>
-                <el-popover
+                <el-button
+                  icon="el-icon-edit"
+                  size="mini"
+                  type="primary"
+                  plain
+                  @click="handelAddExpress"
+                  >帮他填写</el-button
+                >
+                <!-- <el-popover
                   v-model="showExpress"
                   placement="right"
                   width="300"
@@ -230,7 +238,7 @@
                     slot="reference"
                     >帮他填写</el-button
                   >
-                </el-popover>
+                </el-popover> -->
               </div>
             </div>
           </template>
@@ -502,6 +510,10 @@
         close="calc(100vw - 180px - 240px - 26px - 30px)"
       />
     </div>
+
+    <el-dialog title="填写物流信息" :visible.sync="showExpress" width="30%">
+      <logistics-form @addExpress="addExpress" :formData="formData" />
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -560,6 +572,11 @@ export default {
   },
   created() {},
   methods: {
+    // 添加物流地址按钮
+    handelAddExpress(row) {
+      console.log(row)
+      this.showExpress = true
+    },
     addExpress(data) {
       this.showExpress = false
       if (data === 1) this.$emit('addExpresss', data)
