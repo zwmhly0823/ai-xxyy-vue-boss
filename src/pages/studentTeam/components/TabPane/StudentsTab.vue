@@ -1,6 +1,6 @@
 <template>
   <div class="dataStyle">
-    <div>
+    <div class="search-section">
       <m-search
         class="search-box"
         @search="handleSearch"
@@ -479,5 +479,15 @@ export default {
   .el-form-item {
     float: right;
   }
+}
+.search-section {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+.search-box {
+  display: flex;
+  border: 0;
+  margin-top: 10px;
 }
 </style>

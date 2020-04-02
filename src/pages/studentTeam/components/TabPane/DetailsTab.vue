@@ -20,18 +20,20 @@
       <el-button
         size="mini"
         type="primary"
-        style="height: 30px; margin-right: 20px;"
+        style="height: 30px; margin-right: 16px;"
         v-if="btnbox"
         @click="finishLessonList"
         >生成完课榜</el-button
       >
-      <!-- <el-button
+      <el-button
         type="primary"
-        class="Btn"
+        size="mini"
+        v-if="btnbox"
+        style="height: 30px; margin-right: 10px;"
         v-show="exhibition"
-        @click="finishLessonList"
+        @click="ExhibitionList"
         >生成作品展</el-button
-      > -->
+      >
     </div>
     <div>
       <!-- <m-search
@@ -103,10 +105,22 @@
           :visible.sync="dialogFormVisible"
           width="500px"
         >
-          <el-radio v-model="finishLessonData.weekNum" label="U1"
+          <el-radio label="1" disabled v-show="MissedClassesOne"
+            >第一周未开课</el-radio
+          >
+          <el-radio
+            v-model="finishLessonData.weekNum"
+            label="U1"
+            v-show="radioOne"
             >第一周</el-radio
           >
-          <el-radio v-model="finishLessonData.weekNum" label="U2"
+          <el-radio label="2" disabled v-show="MissedClassesTwo"
+            >第二周未开课</el-radio
+          >
+          <el-radio
+            v-model="finishLessonData.weekNum"
+            label="U2"
+            v-show="radioTwo"
             >第二周</el-radio
           >
           <div slot="footer" class="dialog-footer">
@@ -116,19 +130,31 @@
         </el-dialog>
         <!-- 生成作品展弹出框 -->
         <el-dialog
-          title="请选择生成的完课榜周数"
-          :visible.sync="dialogFormVisible"
+          title="请选择生成的作品展周数"
+          :visible.sync="Exhibition"
           width="500px"
         >
-          <el-radio v-model="finishLessonData.weekNum" label="U1"
+          <el-radio label="1" disabled v-show="MissedClassesOne"
+            >第一周未开课</el-radio
+          >
+          <el-radio
+            v-model="ExhibitionData.weekNum"
+            label="U1"
+            v-show="radioOne"
             >第一周</el-radio
           >
-          <el-radio v-model="finishLessonData.weekNum" label="U2"
+          <el-radio label="2" disabled v-show="MissedClassesTwo"
+            >第二周未开课</el-radio
+          >
+          <el-radio
+            v-model="ExhibitionData.weekNum"
+            label="U2"
+            v-show="radioTwo"
             >第二周</el-radio
           >
           <div slot="footer" class="dialog-footer">
-            <el-button @click="dialogFormVisible = false">取 消</el-button>
-            <el-button type="primary" @click="clickHandler">确 定</el-button>
+            <el-button @click="Exhibition = false">取 消</el-button>
+            <el-button type="primary" @click="exhibitionBtn">确 定</el-button>
           </div>
         </el-dialog>
       </div>
@@ -157,7 +183,11 @@
       <div class="exhibitionBox">
         <slot>
           <!-- 需要转换的html -->
-          <exhibition @isLoad="canvasStart"></exhibition>
+          <exhibition
+            @isload="CanvasStart"
+            :listData="ExhibitionData.childListData"
+            :weekNum="ExhibitionData.weekNum"
+          ></exhibition>
         </slot>
       </div>
     </div>
@@ -189,6 +219,12 @@ export default {
   },
   data() {
     return {
+      // 完课榜隐藏单选框-------作品展隐藏单选框
+      radioOne: true,
+      radioTwo: true,
+      MissedClassesOne: false,
+      MissedClassesTwo: false,
+
       teacherId: '',
       search: '',
       querysData: '',
@@ -227,6 +263,13 @@ export default {
         weekNum: '',
         childListData: {}
       },
+      // 作品展相关数据
+      ExhibitionData: {
+        teamId: 0,
+        weekNum: '',
+        studentLesson: '',
+        childListData: {}
+      },
       // tabs标签默认状态
       activeName: 'group',
       tablsName: '',
@@ -234,6 +277,7 @@ export default {
       // 弹出框
       dialogTableVisible: false,
       dialogFormVisible: false,
+      Exhibition: false,
       form: {
         name: '',
         region: '',
@@ -354,6 +398,7 @@ export default {
         }
       }
     },
+    // 生成完课榜----确定按钮
     async clickHandler() {
       // 确认第几周
       console.log(
@@ -373,11 +418,47 @@ export default {
       this.show = true
       // 执行 截图操作并保存
     },
+    // 生成作品展----确定按钮
+    async exhibitionBtn() {
+      // 确认第几周
+      console.log(
+        'this.ExhibitionData.weekNum -- val ',
+        this.ExhibitionData.weekNum
+      )
+      // 获取第几周的数据
+      await this.getStuTaskRankingList(
+        this.ExhibitionData.teamId,
+        // this.ExhibitionData.studentLesson,
+        this.ExhibitionData.weekNum
+      )
+      // 关闭弹框
+      this.show = true
+      this.Exhibition = false
+      // 执行 截图操作并保存
+    },
     // 生成完课榜
     handlePosterLoad(picname) {
       this.$nextTick(() => {
         window.scrollTo(0, 0)
         html2canvas(document.getElementsByClassName('finishBox')[0], {
+          backgroundColor: 'rgba(0, 0, 0, 0)',
+          useCORS: true,
+          async: true,
+          allowTaint: false
+        }).then((canvas) => {
+          const data = canvas.toDataURL('image/jpeg')
+          // 执行浏览器下载
+          this.download(`${picname}.jpeg`, data)
+          this.finish = false
+          // this.dataURL = data
+        })
+      })
+    },
+    //  生成作品展
+    E_handlePosterLoad(picname) {
+      this.$nextTick(() => {
+        window.scrollTo(0, 0)
+        html2canvas(document.getElementsByClassName('exhibitionBox')[0], {
           backgroundColor: 'rgba(0, 0, 0, 0)',
           useCORS: true,
           async: true,
@@ -409,6 +490,71 @@ export default {
         )
         this.finishLessonData.studentLesson = currentLesson.substring(0, 4)
         this.finishLessonData.weekNum = currentLesson.substring(4, 6)
+        console.log(
+          'this.finishLessonData.weekNum ------>>>>>',
+          this.finishLessonData.weekNum
+        )
+        this.btnshow(
+          this.finishLessonData.weekNum,
+          this.classId.classId.team_type
+        )
+        // const state = '0'
+        // const weekNum = 'U1'
+        // this.btnshow(weekNum, state)
+      } else {
+        console.log('this.classId.classId.id  undefined')
+      }
+    },
+    // 生成图片周按钮显示状态
+    btnshow(weekNum, state) {
+      console.log('weekNum', weekNum)
+      console.log('state', state)
+      if (weekNum === 'U1') {
+        if (state === 0) {
+          this.radioOne = false
+          this.radioTwo = false
+          this.MissedClassesOne = true
+          this.MissedClassesTwo = true
+        } else {
+          this.radioOne = true
+          this.radioTwo = false
+          this.MissedClassesOne = false
+          this.MissedClassesTwo = true
+        }
+      } else if (weekNum === 'U2') {
+        if (state === 0) {
+          this.radioOne = true
+          this.radioTwo = false
+          this.MissedClassesOne = false
+          this.MissedClassesTwo = true
+        } else {
+          this.radioOne = true
+          this.radioTwo = true
+        }
+      }
+    },
+    // 点击显示作品展
+    ExhibitionList(week) {
+      if (
+        this.classId &&
+        this.classId.classId &&
+        this.classId.classId.id &&
+        this.classId.classId.current_lesson
+      ) {
+        this.Exhibition = true
+        this.ExhibitionData.teamId = this.classId.classId.id
+        // this.ExhibitionData.teamId = '100'
+        // this.ExhibitionData.weekNum = 'S1L1U1'
+        const currentLesson = this.classId.classId.current_lesson.substring(
+          0,
+          6
+        )
+        // this.ExhibitionData.studentLesson = currentLesson.substring(0, 4)
+        this.ExhibitionData.weekNum = currentLesson.substring(4, 6)
+        this.btnshow(
+          this.ExhibitionData.weekNum,
+          this.classId.classId.team_type
+        )
       } else {
         console.log('this.classId.classId.id  undefined')
       }
@@ -449,10 +595,50 @@ export default {
           this.finishLessonData.childListData = res
         })
     },
-    // handlePosterLoaded() {},
-    // finishQcUrl(data) {
-    //   this.getQcUrl = data
-    // },
+
+    // 请求作品展-接口数据
+    getStuTaskRankingList(teamId, week) {
+      if (!teamId || !week) {
+        return
+      }
+      this.$loading()
+      const QueryParams = `{"team_id" : ${teamId}, "week" :  "${week}"}`
+      axios
+        .post('/graphql/getStuRankingList', {
+          query: `{
+            getStuTaskRankingList(query : ${JSON.stringify(QueryParams)}){
+            student_id
+            mobile
+            username
+            head
+            completeArr {
+            current_lesson
+            task_image
+                }
+                }
+                  }`
+        })
+        .then((res) => {
+          if (res.error) {
+            console.log(res.error, '接口错误信息-------------->')
+            return
+          }
+          this.ExhibitionData.childListData = res
+          console.log(res, '+_+_+_+_+_+_+_+_')
+        })
+    },
+    // 绘制生成完课榜图片
+    canvasStart(res) {
+      if (res) {
+        this.handlePosterLoad(this.classId.classId.team_name)
+      }
+    },
+    // 绘制生成作品展图片
+    CanvasStart(res) {
+      if (res) {
+        this.E_handlePosterLoad(this.classId.classId.team_name)
+      }
+    },
     // 加好友进群 修改已加好友 已进群 接口
     getCodeHandle() {
       this.$http.User.updateTeamStudent({
@@ -478,13 +664,6 @@ export default {
             type: 'success'
           })
         })
-    },
-    canvasStart(res) {
-      if (res) {
-        setTimeout(() => {
-          this.handlePosterLoad(this.classId.classId.team_name)
-        }, 1000)
-      }
     },
     // 加好友进群接口
     getGroup() {
@@ -1091,7 +1270,7 @@ export default {
       var dom = document.getElementById('right-scroll')
       dom.querySelector('.scrollbar-wrapper').scrollTo(0, 0)
     },
-    // 老师完课 图片下载方法
+    // 生成图片下载方法
     download(fileName, content) {
       const aLink = document.createElement('a')
       const blob = this.base64ToBlob(content)

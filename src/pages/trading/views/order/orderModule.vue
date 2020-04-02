@@ -84,7 +84,6 @@ export default {
     },
     // 点击搜索
     handleSearch(res) {
-      console.log(res, 'res')
       this.search = res
     },
     // 吸顶
