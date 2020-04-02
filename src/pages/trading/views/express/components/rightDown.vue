@@ -407,20 +407,23 @@ export default {
       )
       let timeType = {}
       // let user_id
+      console.log(this.searchIn)
       this.searchIn.forEach((item) => {
-        if (item.term) {
+        if (item && item.term) {
           if (item.term.user_id) {
             timeType.user_id = item.term.user_id
-          } else if (item.term.topic_id) {
+          }
+          if (item.term.topic_id) {
             timeType.topic_id = `${item.term.topic_id}`
           }
         }
 
-        if (item.terms) {
+        if (item && item.terms) {
           if (item.terms.sup) {
             timeType.sup = `${item.terms.sup}`
-          } else if (item.terms.stage) {
-            timeType.term = `${item.terms.stage}`
+          }
+          if (item.terms.term) {
+            timeType.term = `${item.terms.term}`
           }
         }
 

@@ -9,19 +9,10 @@
 <template>
   <div class="container">
     <div class="search-up">
-      <!-- <m-search
-        @search="handleSearch"
-        phone="umobile"
-        :timeData="[
-          { text: '购买时间', value: 'ctime' },
-          { text: '揽收时间', value: 'delivery_collect_time' },
-          { text: '签收时间', value: 'signing_time' }
-        ]"
-      /> -->
       <m-search
         @search="handleSearch"
         phone="user_id"
-        stage="stage"
+        stage="term"
         sup="sup"
         level="level"
         :timeData="[
@@ -32,7 +23,7 @@
       />
     </div>
     <div class="search-export">
-      <div @click="exportExpress">
+      <div>
         <el-button size="small" type="primary" @click="dickUp = true"
           >导出物流信息</el-button
         >
@@ -53,7 +44,9 @@
       <span>你确定导出这选中的数据嘛</span>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dickUp = false">取 消</el-button>
-        <el-button type="primary" @click="dickUp = false">确 定</el-button>
+        <el-button type="primary" @click="exportExpress">
+          确 定
+        </el-button>
       </span>
     </el-dialog>
     <el-dialog
@@ -66,16 +59,12 @@
         class="upload-demo"
         ref="upload"
         :data="custom"
-        action="https://test.meixiu.mobi/api/o/v1/express/importExpressList"
+        action="/api/o/v1/express/importExpressList"
         :on-preview="handlePreview"
         :on-remove="handleRemove"
         :auto-upload="false"
-        @http-request="importESKSKS"
         :headers="headers"
       >
-        <div slot="tip" class="el-upload__tip">
-          请选择Excel文件(后缀名为.xls)
-        </div>
         <el-button slot="trigger" size="small" type="primary"
           >选取文件</el-button
         >
@@ -86,6 +75,7 @@
           @click="submitUpload"
           >上传到服务器</el-button
         >
+        <div slot="tip" class="el-upload__tip">只能上传xls/xlsx文件</div>
       </el-upload>
     </el-dialog>
   </div>
@@ -97,6 +87,7 @@ import { isToss } from '@/utils/index'
 import MSearch from '@/components/MSearch/index.vue'
 import axios from 'axios'
 export default {
+  props: ['dataExp'],
   components: {
     MSearch
   },
@@ -110,11 +101,22 @@ export default {
       custom: {
         id: '99'
       },
-      headers: { 'Content-Type': 'multipart/form-data' }
+      headers: { 'Content-Type': 'multipart/form-data' },
+      expressStatus: ''
+    }
+  },
+  watch: {
+    dataExp(val) {
+      if (val.id) {
+        this.expressStatus = val.id
+        console.log(this.expressStatus, ' this.expressStatus')
+      }
+      console.log(val, 'el-col-xl-push-10')
     }
   },
   created() {
     this.teacherId = isToss()
+    this.expressStatus = '0,1,2,3,6'
   },
   // mounted() {
   //   // console.log('token', this.token)
@@ -127,9 +129,13 @@ export default {
   //   ...mapGetters(['token'])
   // },
   methods: {
-    importESKSKS() {
-      console.log(123)
-    },
+    // importESKSKS(file) {
+    //   axios({
+    //     method: 'POST',
+    //     url: '/api/o/v1/express/importExpressList',
+    //     file
+    //   }).then((res) => console.log(res))
+    // },
     handleRemove(file) {
       console.log(axios, '手动移除上传文件', file)
       // axios.post(`/api/o/v1/express/importExpressList?${val}&${val})
@@ -144,7 +150,7 @@ export default {
       //   .post(`/api/o/v1/express/importExpressList?${1}&${file}`)
       //   .then((res) => {
       //     console.log(res, 'zheshishenme')
-      //   })
+      //   })29510
 
       console.log('提交上传文件')
     },
@@ -173,8 +179,32 @@ export default {
         query = { bool: { must: [{ terms: { user_id: uid } }] } } // 自行通过前端选择的条件进行动态组装
         sessionStorage.removeItem('uid')
       } else {
-        const term = this.searchIn
-        query = { bool: { must: [{ term }] } } // 自行通过前端选择的条件进行动态组装
+        const term = this.searchIn.map((item, index) => {
+          if (item.range && item.range.ctime) {
+            item.range.create_order_time = item.range.ctime
+            delete item.range.ctime
+          }
+          if (item.terms && item.terms.sup) {
+            item.terms['sup.keyword'] = item.terms.sup
+            delete item.terms.sup
+          }
+
+          return item
+        })
+        term.push({ term: { last_teacher_id: this.teacherId } })
+        console.log(term, this.searchIn, 'thsi.searchIN')
+        query = {
+          bool: {
+            must: term,
+            filter: {
+              bool: {
+                should: [
+                  { terms: { express_status: this.expressStatus.split(',') } }
+                ]
+              }
+            }
+          }
+        } // 自行通过前端选择的条件进行动态组装
       }
 
       const sort = { ctime: 'desc' }
@@ -219,15 +249,31 @@ export default {
     },
     handleSearch(search) {
       // 期数 加 S
-      search.forEach((item) => {
+      const tempTem = []
+      const mySearch = search.map((item) => {
         if (item.terms && item.terms.sup) {
-          const sup = item.terms.sup.map((s) => `S${s}`)
+          const sup = item.terms.sup.map((s) => {
+            let str = ''
+            const idx = tempTem.join().indexOf(s)
+            if (idx === -1) {
+              str = `S${s}`
+              tempTem.push(s)
+            } else {
+              tempTem.splice(0, idx)
+            }
+            console.log(str)
+
+            return str
+          })
           item.terms.sup = sup
+          item.terms['sup.keyword'] = JSON.stringify(sup)
         }
+        return item
       })
-      console.log(search, '1111')
+
+      console.log('mySearch---------', mySearch)
+      this.searchIn = mySearch
       this.$emit('search', search)
-      const { range } = (search.this.searchIn = search)
     },
     importRelAddress() {
       console.log('1111')
@@ -245,6 +291,7 @@ export default {
 
       document.body.appendChild(link)
       link.click()
+      this.dickUp = false
     }
   }
 }
