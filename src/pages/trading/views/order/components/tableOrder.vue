@@ -1,6 +1,7 @@
 <template>
   <div class="title-box">
     <el-table style="width: 100%">
+      <el-table-column label="用户信息" min-width="100%"></el-table-column>
       <el-table-column label="商品信息" min-width="100%"></el-table-column>
       <el-table-column label="订单来源" min-width="100%"></el-table-column>
       <el-table-column label="订单状态" min-width="100%"> </el-table-column>
@@ -33,6 +34,11 @@
         </el-row>
       </div>
       <div class="card-content">
+        <!-- 用户信息 -->
+        <div class="content-details user-infor">
+          {{ item.user ? item.user.mobile : '-' }}
+        </div>
+        <!-- 商品信息 -->
         <div class="content-details card-style1">
           <div class="card-style1-left">
             <div>
@@ -59,12 +65,15 @@
             </div>
           </div>
         </div>
+        <!-- 订单来源 -->
         <div class="content-details">
           <div>{{ item.channel ? item.channel.channel_outer_name : '-' }}</div>
         </div>
+        <!-- 订单状态 -->
         <div class="content-details">
           <div>{{ item.order_status ? item.order_status : '-' }}</div>
         </div>
+        <!-- 关联物流 -->
         <div class="content-details card-style4">
           <div>
             <div class="card-style4-num">
@@ -165,7 +174,6 @@ export default {
 
       // 搜索 must
       const mustArr = this.searchIn.map((item) => JSON.stringify(item))
-      console.log(this.searchIn, 'overflow-scroll')
       must.push(...mustArr)
       const should = this.tab ? [`{"terms": {"status": [${this.tab}]}}`] : []
       const queryStr = `{
@@ -200,6 +208,9 @@ export default {
               bear_integral
               gem_integral
               product_name
+              user{
+                mobile
+              }
               channel {
                 channel_outer_name
               }
@@ -256,7 +267,7 @@ export default {
             }
           })
           this.cardData = _data
-          console.log(this.cardData)
+          console.log(this.cardData, 'this.cardData')
         })
     },
     // 点击分页
@@ -289,12 +300,15 @@ export default {
     font-size: 14px;
     color: #000;
     .content-details {
-      width: 25%;
+      width: 20%;
       height: 80px;
       padding: 0 10px;
       float: left;
       display: flex;
       align-items: center;
+    }
+    .user-infor {
+      font-family: 'number_font';
     }
     .card-style1 {
       padding-left: 0 !important;

@@ -16,12 +16,11 @@
         onlyPhone="1"
         phoneTip="手机号/微信昵称 查询"
         :teamId="classId.classId.id"
-        style="margin-right: 20px;"
       />
       <el-button
         size="mini"
         type="primary"
-        style="height: 42px; margin-right: 20px;"
+        style="height: 30px; margin-right: 20px;"
         v-if="btnbox"
         @click="finishLessonList"
         >生成完课榜</el-button
@@ -1112,6 +1111,7 @@ export default {
 <style lang="scss" scoped>
 .btnbox {
   display: flex;
+  align-items: center;
   justify-content: flex-end;
   width: 100%;
   // height: 40px;
@@ -1127,7 +1127,8 @@ export default {
 }
 .search-box {
   display: flex;
-  flex-direction: row-reverse;
+  border: 0;
+  margin: 0 -60px 0 0;
 }
 
 .tabs-tab {
