@@ -3,7 +3,7 @@
  * @Email: yangjiyong@meishubao.com
  * @Date: 2020-03-14 00:39:19
  * @Last Modified by: YangJiyong
- * @Last Modified time: 2020-03-30 21:48:52
+ * @Last Modified time: 2020-04-02 13:52:48
  * @Description: 公共样式
  */
 
@@ -35,7 +35,9 @@
  .el-tabs--border-card{
    border: none !important;
  }
-
+ .el-dialog__body .el-button span{
+   color: inherit !important;
+ }
  .el-message{
    z-index: 10001 !important;
  }

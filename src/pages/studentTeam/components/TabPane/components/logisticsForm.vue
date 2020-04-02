@@ -20,8 +20,8 @@
     <el-form-item label="收货人电话" prop="receiptTel">
       <el-input v-model="ruleForm.receiptTel"></el-input>
     </el-form-item>
-    <span class="areaLists-css">收货人地址</span>
-    <el-form-item>
+    <!-- <span class="areaLists-css">收货人地址</span> -->
+    <el-form-item label="收货人地址">
       <el-cascader
         placeholder="省/市/区"
         :options="areaLists"
@@ -35,8 +35,19 @@
       <el-input v-model="ruleForm.addressDetail"></el-input>
     </el-form-item>
     <el-form-item>
-      <el-button type="primary" @click="submitForm('ruleForm')">保存</el-button>
-      <el-button @click="resetForm('ruleForm')">取消</el-button>
+      <el-button
+        size="small"
+        style="width: 100px;"
+        type="primary"
+        @click="submitForm('ruleForm')"
+        >保存</el-button
+      >
+      <el-button
+        size="small"
+        style="width: 100px;"
+        @click="resetForm('ruleForm')"
+        >取消</el-button
+      >
     </el-form-item>
   </el-form>
 </template>
@@ -63,7 +74,12 @@ export default {
           { required: true, message: '请输入活动名称', trigger: 'blur' }
         ],
         receiptTel: [
-          { required: true, message: '请填写电话', trigger: 'blur' }
+          {
+            required: true,
+            maxlength: 11,
+            message: '请填写电话',
+            trigger: 'blur'
+          }
         ],
         addressDetail: [
           { required: true, message: '请填写详细地址', trigger: 'blur' }
