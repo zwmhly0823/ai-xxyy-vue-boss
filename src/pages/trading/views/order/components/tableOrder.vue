@@ -35,7 +35,7 @@
       </div>
       <div class="card-content">
         <!-- 用户信息 -->
-        <div class="content-details">
+        <div class="content-details user-infor">
           {{ item.user ? item.user.mobile : '-' }}
         </div>
         <!-- 商品信息 -->
@@ -306,6 +306,9 @@ export default {
       float: left;
       display: flex;
       align-items: center;
+    }
+    .user-infor {
+      font-family: 'number_font';
     }
     .card-style1 {
       padding-left: 0 !important;
