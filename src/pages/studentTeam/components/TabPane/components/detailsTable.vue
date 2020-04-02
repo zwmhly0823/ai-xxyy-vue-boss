@@ -50,8 +50,17 @@
         <!-- 已加好友 -->
         <el-table-column prop="added_wechat" label="已加好友">
           <template slot="header">
-            <span @click="onSortWechat">已加好友</span>
-            <i class="el-icon-d-caret" />
+            <span @click="onSortWechat" class="header-sort"
+              >已加好友 <i class="el-icon-d-caret" />
+              <!-- <i
+                class="el-icon-caret-top"
+                :class="{ hover: wechatSort === 'asc' }"
+              />
+              <i
+                class="el-icon-caret-bottom"
+                :class="{ hover: wechatSort === 'desc' }"
+              /> -->
+            </span>
           </template>
           <template slot-scope="scope">
             <!-- <span>{{ scope.row.friend }}</span> -->
@@ -96,8 +105,9 @@
         <!-- 已进群 -->
         <el-table-column prop="added_group" label="已进群">
           <template slot="header">
-            <span @click="onSortGroup">已进群</span>
-            <i class="el-icon-d-caret" />
+            <span class="header-sort" @click="onSortGroup"
+              >已进群 <i class="el-icon-d-caret"
+            /></span>
           </template>
           <template slot-scope="scope">
             <img
@@ -141,8 +151,21 @@
         <!-- 关注公众号 -->
         <el-table-column prop="follow" label="关注公众号">
           <template slot="header">
-            <span @click="onSortFollow">关注公众号</span>
-            <i class="el-icon-d-caret" />
+            <span class="header-sort" @click="onSortFollow"
+              >关注公众号 <i class="el-icon-d-caret" />
+              <!-- <i
+                :class="[
+                  followSort === 'asc' ? 'hover' : '',
+                  'el-icon-caret-top'
+                ]"
+              />
+              <i
+                :class="[
+                  followSort === 'desc' ? 'hover' : '',
+                  'el-icon-caret-bottom'
+                ]"
+              /> -->
+            </span>
           </template>
           <template slot-scope="scope">
             <img
@@ -568,9 +591,9 @@ export default {
         receiptTel: '',
         addressDetail: ''
       },
-      wechatSort: 'desc',
+      wechatSort: '',
       groupSort: 'desc',
-      followSort: 'desc'
+      followSort: ''
     }
   },
   mounted() {
@@ -616,14 +639,13 @@ export default {
       if (this.followSort === 'asc') {
         console.log('wechat_follow_time,公众号排序,desc')
         this.$emit('onGroupSort', '{"wechat_follow_time":"desc"}')
-        // this.$emit('onGroupSort', '{"id":"desc"}')
         this.followSort = 'desc'
       } else {
         console.log('wechat_follow_time,公众号排序,asc')
         this.$emit('onGroupSort', '{"wechat_follow_time":"asc"}')
-        // this.$emit('onGroupSort', '{"id":"asc"}')
         this.followSort = 'asc'
       }
+      console.log(this.followSort)
     },
     // 添加物流地址按钮
     handelAddExpress(row) {
@@ -918,6 +940,12 @@ export default {
     padding-top: 5px;
     float: right;
     margin-right: 20px;
+  }
+  .header-sort {
+    cursor: pointer;
+    .hover {
+      color: #409eff;
+    }
   }
 }
 </style>
