@@ -134,22 +134,22 @@
           :visible.sync="Exhibition"
           width="500px"
         >
-          <el-radio label="1" disabled v-show="MissedClassesOne"
-            >第一周未开课</el-radio
+          <el-radio label="1" disabled v-show="missedClassesOne"
+            >第一周暂无作品</el-radio
           >
           <el-radio
             v-model="ExhibitionData.weekNum"
             label="U1"
-            v-show="radioOne"
+            v-show="RadioOne"
             >第一周</el-radio
           >
-          <el-radio label="2" disabled v-show="MissedClassesTwo"
-            >第二周未开课</el-radio
+          <el-radio label="2" disabled v-show="missedClassesTwo"
+            >第二周暂无作品</el-radio
           >
           <el-radio
             v-model="ExhibitionData.weekNum"
             label="U2"
-            v-show="radioTwo"
+            v-show="RadioTwo"
             >第二周</el-radio
           >
           <div slot="footer" class="dialog-footer">
@@ -219,12 +219,16 @@ export default {
   },
   data() {
     return {
-      // 完课榜隐藏单选框-------作品展隐藏单选框
+      // 完课榜隐藏单选框
       radioOne: true,
       radioTwo: true,
       MissedClassesOne: false,
       MissedClassesTwo: false,
-
+      // 作品展隐藏单选框
+      RadioOne: true,
+      RadioTwo: true,
+      missedClassesOne: false,
+      missedClassesTwo: false,
       teacherId: '',
       search: '',
       querysData: '',
@@ -505,7 +509,7 @@ export default {
         console.log('this.classId.classId.id  undefined')
       }
     },
-    // 生成图片周按钮显示状态
+    // 生成完课榜图片周按钮显示状态
     btnshow(weekNum, state) {
       console.log('weekNum', weekNum)
       console.log('state', state)
@@ -530,6 +534,38 @@ export default {
         } else {
           this.radioOne = true
           this.radioTwo = true
+          this.missedClassesOne = false
+          this.missedClassesTwo = false
+        }
+      }
+    },
+    // 生成完作品展图片周按钮显示状态
+    Btnshow(weekNum, state) {
+      console.log('weekNum', weekNum)
+      console.log('state', state)
+      if (weekNum === 'U1') {
+        if (state === 2) {
+          this.RadioOne = true
+          this.RadioTwo = false
+          this.missedClassesOne = false
+          this.missedClassesTwo = true
+        } else {
+          this.RadioOne = false
+          this.RadioTwo = false
+          this.missedClassesOne = true
+          this.missedClassesTwo = true
+        }
+      } else if (weekNum === 'U2') {
+        if (state === 2) {
+          this.RadioOne = true
+          this.RadioTwo = true
+          this.missedClassesOne = false
+          this.missedClassesTwo = false
+        } else {
+          this.RadioOne = true
+          this.RadioTwo = false
+          this.missedClassesOne = false
+          this.missedClassesTwo = true
         }
       }
     },
@@ -551,7 +587,7 @@ export default {
         )
         // this.ExhibitionData.studentLesson = currentLesson.substring(0, 4)
         this.ExhibitionData.weekNum = currentLesson.substring(4, 6)
-        this.btnshow(
+        this.Btnshow(
           this.ExhibitionData.weekNum,
           this.classId.classId.team_state
         )
@@ -565,7 +601,10 @@ export default {
         console.log('getStuRankingList - error:', ' 缺少毕传信息')
         return
       }
-      this.$loading()
+      this.$loading({
+        lock: true,
+        text: '图片正在生成中'
+      })
       const queryParams = `{"team_id" : ${teamId}, "week" : "${lesson +
         week}", "sort" : "${this.finishLessonData.finishClassSort}"}`
       console.log(
@@ -601,7 +640,11 @@ export default {
       if (!teamId || !week) {
         return
       }
-      this.$loading()
+      // this.$loading()
+      this.$loading({
+        lock: true,
+        text: '图片正在生成中'
+      })
       const QueryParams = `{"team_id" : ${teamId}, "week" :  "${week}"}`
       axios
         .post('/graphql/getStuRankingList', {
