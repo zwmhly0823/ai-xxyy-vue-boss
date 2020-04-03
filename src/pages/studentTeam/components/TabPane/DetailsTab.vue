@@ -134,22 +134,22 @@
           :visible.sync="Exhibition"
           width="500px"
         >
-          <el-radio label="1" disabled v-show="missedClassesOne"
+          <el-radio label="1" disabled v-show="MissedClassesOne"
             >第一周暂无作品</el-radio
           >
           <el-radio
             v-model="ExhibitionData.weekNum"
             label="U1"
-            v-show="RadioOne"
+            v-show="radioOne"
             >第一周</el-radio
           >
-          <el-radio label="2" disabled v-show="missedClassesTwo"
+          <el-radio label="2" disabled v-show="MissedClassesTwo"
             >第二周暂无作品</el-radio
           >
           <el-radio
             v-model="ExhibitionData.weekNum"
             label="U2"
-            v-show="RadioTwo"
+            v-show="radioTwo"
             >第二周</el-radio
           >
           <div slot="footer" class="dialog-footer">
@@ -225,10 +225,10 @@ export default {
       MissedClassesOne: false,
       MissedClassesTwo: false,
       // 作品展隐藏单选框
-      RadioOne: true,
-      RadioTwo: true,
-      missedClassesOne: false,
-      missedClassesTwo: false,
+      // RadioOne: true,
+      // RadioTwo: true,
+      // missedClassesOne: false,
+      // missedClassesTwo: false,
       teacherId: '',
       search: '',
       querysData: '',
@@ -509,6 +509,7 @@ export default {
         )
         this.btnshow(
           this.finishLessonData.weekNum,
+          this.classId.classId.team_type,
           this.classId.classId.team_state
         )
         // const state = '0'
@@ -519,10 +520,11 @@ export default {
       }
     },
     // 生成完课榜图片周按钮显示状态
-    btnshow(weekNum, state) {
+    btnshow(weekNum, type, state) {
       console.log('weekNum', weekNum)
       console.log('state', state)
       this.finishLessonData.isRequest = true
+      this.ExhibitionData.isRequest = true
       if (weekNum === 'U1') {
         if (state === 0) {
           this.radioOne = false
@@ -530,6 +532,7 @@ export default {
           this.MissedClassesOne = true
           this.MissedClassesTwo = true
           this.finishLessonData.isRequest = false
+          this.ExhibitionData.isRequest = false
         } else {
           this.radioOne = true
           this.radioTwo = false
@@ -548,6 +551,14 @@ export default {
           this.MissedClassesOne = false
           this.MissedClassesTwo = false
         }
+      }
+      if (type > 0) {
+        this.finishLessonData.isRequest = false
+        this.ExhibitionData.isRequest = false
+        this.radioOne = false
+        this.radioTwo = false
+        this.MissedClassesOne = true
+        this.MissedClassesTwo = true
       }
     },
     // 生成完作品展图片周按钮显示状态
@@ -580,37 +591,6 @@ export default {
     //     }
     //   }
     // },
-    Btnshow(weekNum, state) {
-      this.ExhibitionData.isRequest = true
-      console.log('weekNum', weekNum)
-      console.log('state', state)
-      if (weekNum === 'U1') {
-        if (state === 0) {
-          this.RadioOne = false
-          this.RadioTwo = false
-          this.missedClassesOne = true
-          this.missedClassesTwo = true
-          this.ExhibitionData.isRequest = false
-        } else {
-          this.RadioOne = true
-          this.RadioTwo = false
-          this.missedClassesOne = false
-          this.missedClassesTwo = true
-        }
-      } else if (weekNum === 'U2') {
-        if (state === 0) {
-          this.RadioOne = true
-          this.RadioTwo = false
-          this.missedClassesOne = false
-          this.missedClassesTwo = true
-        } else {
-          this.RadioOne = true
-          this.RadioTwo = true
-          this.missedClassesOne = false
-          this.missedClassesTwo = false
-        }
-      }
-    },
     // 点击显示作品展
     ExhibitionList(week) {
       if (
@@ -629,8 +609,9 @@ export default {
         )
         // this.ExhibitionData.studentLesson = currentLesson.substring(0, 4)
         this.ExhibitionData.weekNum = currentLesson.substring(4, 6)
-        this.Btnshow(
+        this.btnshow(
           this.ExhibitionData.weekNum,
+          this.classId.classId.team_type,
           this.classId.classId.team_state
         )
       } else {
