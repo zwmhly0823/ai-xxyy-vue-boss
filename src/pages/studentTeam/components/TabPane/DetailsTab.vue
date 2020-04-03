@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 14:19:58
  * @LastEditors: panjian
- * @LastEditTime: 2020-04-02 21:00:20
+ * @LastEditTime: 2020-04-03 16:28:47
  -->
 <template>
   <div>
@@ -303,6 +303,7 @@ export default {
     // getQcUrl: function() {
     //   this.handlePosterLoad()
     // },
+
     classId(value) {
       // 切换标签 语音停止
       const audios = this.$refs

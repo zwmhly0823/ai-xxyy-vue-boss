@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 20:22:24
  * @LastEditors: panjian
- * @LastEditTime: 2020-04-02 21:12:24
+ * @LastEditTime: 2020-04-03 16:46:07
  -->
 <template>
   <div class="table-box">
@@ -17,7 +17,43 @@
         :row-class-name="tableRowClassName"
         :cell-style="cellStyle"
         @row-click="onClick"
+        @selection-change="handleSelectionChange"
       >
+        <el-table-column type="selection" width="40px"></el-table-column>
+        <el-table-column width="20px">
+          <template slot="header" slot-scope="scope">
+            <el-Popover popper-class="batch-btn" trigger="hover">
+              <!-- 标题气泡内容 -->
+              <div size="mini" type="text" @click="batchBtn">
+                批量发送加好友短信
+              </div>
+              <!-- 标题点击...图片 -->
+              <div
+                @click="headerPoint(scope.$index, scope)"
+                v-show="moreTitle"
+                slot="reference"
+              >
+                <img src="../../../../../assets/images/point.png" />
+              </div>
+            </el-Popover>
+          </template>
+          <template slot-scope="scope">
+            <el-Popover popper-class="batch-btn" trigger="hover">
+              <!-- 气泡内容 -->
+              <div size="mini" type="text" @click="batchBtn">
+                <span v-show="moreTitle === true">批量发送加好友短信</span>
+                <span v-show="moreTitle === false">发送加好友短信</span>
+              </div>
+              <!-- 点击...图片 -->
+              <div
+                @mouseenter="handleEdit(scope.$index, scope.row)"
+                slot="reference"
+              >
+                <img src="../../../../../assets/images/point.png" />
+              </div>
+            </el-Popover>
+          </template>
+        </el-table-column>
         <!-- 基本信息 -->
         <el-table-column width="280" label="基本信息">
           <template slot-scope="scope">
@@ -530,6 +566,7 @@
 <script>
 import MPagination from '@/components/MPagination/index.vue'
 import logisticsForm from '../components/logisticsForm'
+import { timestamp } from '@/utils/index'
 export default {
   name: 'detailsTable',
   props: {
@@ -556,6 +593,8 @@ export default {
   },
   data() {
     return {
+      selectUserMobile: [],
+      moreTitle: false,
       showExpress: false,
       formData: {},
       audioIndex: null,
@@ -586,6 +625,49 @@ export default {
   },
   created() {},
   methods: {
+    // 加好友
+    handleEdit(index, row) {
+      // 当没有点击复选框 直接点击加好友
+      if (this.moreTitle === false) {
+        this.selectUserMobile = []
+        this.selectUserMobile.push(row.mobile)
+      }
+      console.log('当没有点击复选框 直接点击加好友')
+    },
+    // 表头加好友操作
+    headerPoint(index, scope) {
+      console.log(index, scope)
+    },
+    batchBtn() {
+      console.log(this.classId, '点击加好友')
+      const mobiles = Object.values(this.selectUserMobile)
+      const type = `${this.classId.classId.sup}${
+        this.classId.classId.team_type ? '系统课' : '体验课'
+      }`
+      const params = {
+        start_day: timestamp(this.classId.classId.start_day, 5),
+        type: 'BUY_COURSE'
+      }
+      console.log(mobiles, type, params, 'params')
+      // this.$http.User.sendBatch(mobiles,type,params).then((res) => {
+      //   console.log(res, '发送短信')
+      // })
+    },
+    // 复选框
+    handleSelectionChange(val) {
+      console.log(val, '复选框')
+      this.selectUserMobile = []
+      if (val.length > 1) {
+        this.moreTitle = true
+      } else {
+        this.moreTitle = false
+      }
+      val.forEach((data) => {
+        this.selectUserMobile.push(data.mobile)
+        console.log(data.mobile, '选中的电话')
+      })
+    },
+    // 排序
     onSortWechat() {
       if (this.wechatSort === 'asc') {
         console.log('added_wechat,好友点击排序,desc')

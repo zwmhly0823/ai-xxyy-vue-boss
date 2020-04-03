@@ -4,7 +4,7 @@
  * @Author: shentong
  * @Date: 2020-03-13 14:38:28
  * @LastEditors: panjian
- * @LastEditTime: 2020-03-23 16:25:07
+ * @LastEditTime: 2020-04-03 15:52:41
  */
 import axios from '../axios'
 
@@ -26,5 +26,8 @@ export default {
       params
     )
     // return axios.put('/api/v1/teacher/manager/team/updateTeamStudent', params)
+  },
+  sendBatch(params) {
+    return axios.post('/api/m/v1/sms/sendBatch', params)
   }
 }
