@@ -242,6 +242,10 @@ export default {
             item.terms['sup.keyword'] = item.terms.sup
             delete item.terms.sup
           }
+          if (item.terms && item.terms.level) {
+            item.terms['level.keyword'] = item.terms.level
+            delete item.terms.level
+          }
 
           return item
         })
