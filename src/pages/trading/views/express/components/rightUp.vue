@@ -123,6 +123,10 @@ export default {
   },
   created() {
     this.teacherId = isToss()
+    if (!this.teacherId) {
+      this.teacherId = JSON.parse(localStorage.getItem('staff')).id
+    }
+
     this.expressStatus = '0,1,2,3,6'
   },
   // mounted() {
@@ -192,7 +196,7 @@ export default {
 
     showExportDialog() {
       // 如果物流状态选择全部，不能导出
-      if (this.expressStatus === '0,1,2,3,6') {
+      if (this.expressStatus === '0,1,2,3,6' && this.searchIn.length < 1) {
         this.$message.error('不能导出全部物流，请选择状态或筛选')
         return
       }
@@ -221,7 +225,6 @@ export default {
 
           return item
         })
-        term.push({ term: { last_teacher_id: this.teacherId } })
         query = {
           bool: {
             must: term,
@@ -242,7 +245,7 @@ export default {
         id: '物流信息ID',
         user_id: '用户ID',
         out_trade_no: '订单号',
-        packagestype: '课程类型',
+        regtype: '商品类型',
         term: '期数',
         sup: '课程难度',
         level: '课程级别',
@@ -273,10 +276,10 @@ export default {
         responseType: 'blob',
         params
       }).then((res) => {
-        console.log(res)
         this.downloadFn(res, '物流下载')
       })
     },
+    dosomething() {},
     handleSearch(search) {
       // 期数 加 S
       const mySearch = search.map((item) => {
@@ -296,6 +299,7 @@ export default {
     // 下载文件
     downloadFn(data, name = '下载') {
       if (!data) return
+      console.log(data, 'data')
       const blob = new Blob([data])
       const fileUrl = window.URL.createObjectURL(blob)
       const link = document.createElement('a')
@@ -307,6 +311,7 @@ export default {
       document.body.appendChild(link)
       link.click()
       this.dickUp = false
+      this.dosomething()
     }
   }
 }
