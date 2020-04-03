@@ -483,7 +483,6 @@ export default {
 .search-section {
   display: flex;
   align-items: center;
-  justify-content: flex-end;
 }
 .search-box {
   display: flex;
