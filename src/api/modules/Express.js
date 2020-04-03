@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-31 22:54:28
  * @LastEditors: panjian
- * @LastEditTime: 2020-04-01 14:05:38
+ * @LastEditTime: 2020-04-03 18:45:50
  */
 import axios from '../axios'
 
@@ -23,10 +23,8 @@ export default {
    * @param {*} param0
    */
   editAddressAndExpressForOrder(params) {
-    return axios.get(`/api/o/v1/express/editAddressAndExpressForOrder?operatorId=${params.operatorId}&orderId=${params.orderId}
-    &addressId=${params.addressId}&expressId=${params.expressId}&userId=${params.userId}&receiptName=${params.receiptName}
-    &receiptTel=${params.receiptTel}&province=${params.province}&city=${params.city}&area=${params.area}
-    &addressDetail=${params.addressDetail}&areaCode=${params.areaCode}&expressNo=${params.expressNo}&expressCompany=${params.expressCompany}
-    &expressCompanyNu=${params.expressCompanyNu}`)
+    return axios.get('/api/o/v1/express/editAddressAndExpressForOrder', {
+      params
+    })
   }
 }

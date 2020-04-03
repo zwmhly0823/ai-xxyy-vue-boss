@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-04-01 13:24:40
  * @LastEditors: panjian
- * @LastEditTime: 2020-04-03 18:16:44
+ * @LastEditTime: 2020-04-03 18:59:02
  -->
 <template>
   <el-form
@@ -121,7 +121,6 @@ export default {
         const staff = JSON.parse(localStorage.getItem('staff'))
         this.operatorId = staff.id
       }
-      console.log(this.formData)
       const params = {
         operatorId: this.operatorId,
         orderId: this.formData.orderid,
@@ -139,12 +138,15 @@ export default {
         expressCompany: '',
         expressCompanyNu: ''
       }
+
       this.$refs[formName].validate((valid) => {
         if (valid) {
           this.$http.Express.editAddressAndExpressForOrder(params)
             .then((res) => {
-              console.log('res222', res)
               if (res.data) {
+                return
+              }
+              if (res.status) {
                 this.$message({
                   message: '地址添加成功',
                   type: 'success'
