@@ -453,6 +453,7 @@ export default {
     handlePosterLoad(picname) {
       this.$nextTick(() => {
         window.scrollTo(0, 0)
+        // 获取要生成图片的dom元素
         html2canvas(document.getElementsByClassName('finishBox')[0], {
           backgroundColor: 'rgba(0, 0, 0, 0)',
           useCORS: true,
@@ -1352,6 +1353,7 @@ export default {
       aLink.click()
       this.$loading().close()
     },
+    // 转换图片为base64
     base64ToBlob(code) {
       const parts = code.split(';base64,')
       const contentType = parts[0].split(':')[1]
