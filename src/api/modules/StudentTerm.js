@@ -23,20 +23,6 @@ export default {
       }`
     })
   },
-  // getTeamStatusCount({ data, teacherId }) {
-  //   return axios.get('/graphql/team', {
-  //     params: {
-  //       query: `{
-  //             teamStatusCount(field: "team_state", team_type:
-  //             ${data}, teacher_id: "${teacherId || ''}") {
-  //               code,
-  //               value,
-  //               name
-  //             }
-  //           }`
-  //     }
-  //   })
-  // },
   // 班级列表中栏数据
   getTeamStatusPage({ queryParams, type, teacherId, page, classStatus }) {
     return axios.get('/graphql/team', {

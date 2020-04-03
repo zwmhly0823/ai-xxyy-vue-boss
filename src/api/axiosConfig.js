@@ -3,8 +3,8 @@
  * @version:
  * @Author: Shentong
  * @Date: 2020-03-17 11:50:18
- * @LastEditors: panjian
- * @LastEditTime: 2020-04-03 19:15:43
+ * @LastEditors: Shentong
+ * @LastEditTime: 2020-04-03 19:20:10
  */
 import axios from './axios'
 import { getToken } from '@/utils/auth'
@@ -29,7 +29,6 @@ export default {
    * @param {Object} params [请求时携带的参数]
    */
   get(url, params) {
-    console.log('个哈哈个哈哈')
     if (this.judgeToken()) {
       return new Promise((resolve, reject) => {
         axios
