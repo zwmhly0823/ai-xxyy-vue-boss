@@ -23,7 +23,7 @@
       />
     </div>
     <!-- v-if="!teacherId" TOSS -->
-    <div class="search-export">
+    <div class="search-export" v-if="!teacherId">
       <div>
         <el-button size="small" type="primary" @click="showExportDialog"
           >导出物流信息</el-button
@@ -124,7 +124,7 @@ export default {
   created() {
     this.teacherId = isToss()
     if (!this.teacherId) {
-      this.teacherId = localStorage.getItem('staff').id
+      this.teacherId = JSON.parse(localStorage.getItem('staff')).id
     }
 
     this.expressStatus = '0,1,2,3,6'
