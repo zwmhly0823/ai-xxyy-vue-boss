@@ -3,8 +3,8 @@
  * @version: 
  * @Author: zhubaodong
  * @Date: 2020-03-27 19:04:54
- * @LastEditors: Shentong
- * @LastEditTime: 2020-03-30 21:33:36
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-04-03 11:33:02
  -->
 <template>
   <div class="container">
@@ -22,7 +22,7 @@
         ]"
       />
     </div>
-    <div class="search-export">
+    <div class="search-export" v-if="!teacherId">
       <div>
         <el-button size="small" type="primary" @click="dickUp = true"
           >导出物流信息</el-button
