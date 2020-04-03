@@ -160,8 +160,11 @@ export default {
             overflow: hidden;
             width: 100%;
             height: 100%;
+            vertical-align: middle;
             .topframe {
               width: 100%;
+              margin: 0px auto;
+              vertical-align: middle;
             }
           }
         }
