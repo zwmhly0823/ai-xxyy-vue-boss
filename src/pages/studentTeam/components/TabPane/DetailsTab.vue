@@ -926,7 +926,7 @@ export default {
                 },
                 {
                   id: '6',
-                  statusName: '待确认'
+                  statusName: '待审核'
                 },
                 {
                   id: '7',
