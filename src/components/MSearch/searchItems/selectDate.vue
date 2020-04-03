@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-26 16:30:11
  * @LastEditors: zhubaodong
- * @LastEditTime: 2020-04-03 16:22:29
+ * @LastEditTime: 2020-04-03 17:52:01
  -->
 <template>
   <div class="search-item">
@@ -29,6 +29,7 @@
       class="small"
       :disabled="selectedInData ? false : true"
       v-model="timeData"
+      :default-time="['00:00:00', '23:59:59']"
       value-format="timestamp"
       type="datetimerange"
       size="mini"

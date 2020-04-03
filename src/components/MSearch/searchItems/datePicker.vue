@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-26 16:30:11
  * @LastEditors: zhubaodong
- * @LastEditTime: 2020-04-03 17:05:46
+ * @LastEditTime: 2020-04-03 17:49:45
  -->
 <template>
   <div class="search-item">
@@ -12,6 +12,7 @@
       class="small"
       size="mini"
       v-model="timeData"
+      :default-time="['00:00:00', '23:59:59']"
       value-format="timestamp"
       type="datetimerange"
       prefix-icon="none"
@@ -85,7 +86,11 @@ export default {
               picker.$emit('pick', [start, end])
             }
           }
-        ]
+        ],
+        disabledDate: (res) => {
+          console.log(res, 'resdata')
+          return false
+        }
       },
       timeData: []
     }
