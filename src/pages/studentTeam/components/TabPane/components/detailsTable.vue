@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 20:22:24
  * @LastEditors: panjian
- * @LastEditTime: 2020-04-01 16:11:19
+ * @LastEditTime: 2020-04-02 21:12:24
  -->
 <template>
   <div class="table-box">
@@ -44,10 +44,24 @@
           :prop="item.prop"
           :width="item.width"
           :label="item.label"
+          :default-sort="{ prop: 'date', order: 'descending' }"
         >
         </el-table-column>
         <!-- 已加好友 -->
-        <el-table-column label="已加好友">
+        <el-table-column prop="added_wechat" label="已加好友">
+          <template slot="header">
+            <span @click="onSortWechat" class="header-sort"
+              >已加好友 <i class="el-icon-d-caret" />
+              <!-- <i
+                class="el-icon-caret-top"
+                :class="{ hover: wechatSort === 'asc' }"
+              />
+              <i
+                class="el-icon-caret-bottom"
+                :class="{ hover: wechatSort === 'desc' }"
+              /> -->
+            </span>
+          </template>
           <template slot-scope="scope">
             <!-- <span>{{ scope.row.friend }}</span> -->
             <img
@@ -89,7 +103,12 @@
           </template>
         </el-table-column>
         <!-- 已进群 -->
-        <el-table-column label="已进群">
+        <el-table-column prop="added_group" label="已进群">
+          <template slot="header">
+            <span class="header-sort" @click="onSortGroup"
+              >已进群 <i class="el-icon-d-caret"
+            /></span>
+          </template>
           <template slot-scope="scope">
             <img
               class="group-img"
@@ -130,7 +149,24 @@
           </template>
         </el-table-column>
         <!-- 关注公众号 -->
-        <el-table-column label="关注公众号">
+        <el-table-column prop="follow" label="关注公众号">
+          <template slot="header">
+            <span class="header-sort" @click="onSortFollow"
+              >关注公众号 <i class="el-icon-d-caret" />
+              <!-- <i
+                :class="[
+                  followSort === 'asc' ? 'hover' : '',
+                  'el-icon-caret-top'
+                ]"
+              />
+              <i
+                :class="[
+                  followSort === 'desc' ? 'hover' : '',
+                  'el-icon-caret-bottom'
+                ]"
+              /> -->
+            </span>
+          </template>
           <template slot-scope="scope">
             <img
               class="group-img"
@@ -209,7 +245,15 @@
                 <span>{{ scope.row.address_detail }}</span>
               </div>
               <div v-else>
-                <el-popover
+                <el-button
+                  icon="el-icon-edit"
+                  size="mini"
+                  type="primary"
+                  plain
+                  @click="handelAddExpress"
+                  >帮他填写</el-button
+                >
+                <!-- <el-popover
                   v-model="showExpress"
                   placement="right"
                   width="300"
@@ -219,10 +263,16 @@
                     @addExpress="addExpress"
                     :formData="formData"
                   ></logistics-form>
-                  <el-button size="mini" type="primary" plain slot="reference"
+
+                  <el-button
+                    icon="el-icon-edit"
+                    size="mini"
+                    type="primary"
+                    plain
+                    slot="reference"
                     >帮他填写</el-button
                   >
-                </el-popover>
+                </el-popover> -->
               </div>
             </div>
           </template>
@@ -494,6 +544,10 @@
         close="calc(100vw - 180px - 240px - 26px - 30px)"
       />
     </div>
+
+    <el-dialog title="填写物流信息" :visible.sync="showExpress" width="30%">
+      <logistics-form @addExpress="addExpress" :formData="formData" />
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -536,7 +590,10 @@ export default {
         receiptName: '',
         receiptTel: '',
         addressDetail: ''
-      }
+      },
+      wechatSort: '',
+      groupSort: 'desc',
+      followSort: ''
     }
   },
   mounted() {
@@ -552,6 +609,49 @@ export default {
   },
   created() {},
   methods: {
+    onSortWechat() {
+      if (this.wechatSort === 'asc') {
+        console.log('added_wechat,好友点击排序,desc')
+        this.$emit('onGroupSort', '{"added_wechat":"asc"}')
+        // this.$emit('onGroupSort', '{"id":"desc"}')
+        this.wechatSort = 'desc'
+      } else {
+        console.log('added_wechat,好友点击排序,asc')
+        // this.$emit('onGroupSort', '{"id":"asc"}')
+        this.$emit('onGroupSort', '{"added_wechat":"desc"}')
+        this.wechatSort = 'asc'
+      }
+    },
+    onSortGroup() {
+      if (this.groupSort === 'asc') {
+        console.log('added_group,进群排序,desc')
+        this.$emit('onGroupSort', '{"added_group":"desc"}')
+        // this.$emit('onGroupSort', '{"id":"desc"}')
+        this.groupSort = 'desc'
+      } else {
+        console.log('added_group,进群排序,asc')
+        this.$emit('onGroupSort', '{"added_group":"asc"}')
+        // this.$emit('onGroupSort', '{"id":"asc"}')
+        this.groupSort = 'asc'
+      }
+    },
+    onSortFollow() {
+      if (this.followSort === 'asc') {
+        console.log('wechat_follow_time,公众号排序,desc')
+        this.$emit('onGroupSort', '{"wechat_follow_time":"desc"}')
+        this.followSort = 'desc'
+      } else {
+        console.log('wechat_follow_time,公众号排序,asc')
+        this.$emit('onGroupSort', '{"wechat_follow_time":"asc"}')
+        this.followSort = 'asc'
+      }
+      console.log(this.followSort)
+    },
+    // 添加物流地址按钮
+    handelAddExpress(row) {
+      console.log(row)
+      this.showExpress = true
+    },
     addExpress(data) {
       this.showExpress = false
       if (data === 1) this.$emit('addExpresss', data)
@@ -840,6 +940,12 @@ export default {
     padding-top: 5px;
     float: right;
     margin-right: 20px;
+  }
+  .header-sort {
+    cursor: pointer;
+    .hover {
+      color: #409eff;
+    }
   }
 }
 </style>

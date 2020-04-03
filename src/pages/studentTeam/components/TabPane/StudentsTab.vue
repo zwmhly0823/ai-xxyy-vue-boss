@@ -1,10 +1,64 @@
 <template>
   <div class="dataStyle">
+    <div class="search-section">
+      <m-search
+        class="search-box"
+        @search="handleSearch"
+        phone="uid"
+        onlyPhone="1"
+        phoneTip="手机号/微信昵称 查询"
+        :teamId="classId.classId.id"
+      />
+    </div>
     <el-table
       :data="tableData"
       :header-cell-style="headerStyle"
+      @selection-change="handleSelectionChange"
       class="students-box"
     >
+      <!-- 全选按钮 -->
+      <el-table-column type="selection" width="40px"></el-table-column>
+      <!-- 更多按钮 -->
+      <el-table-column width="20px">
+        <template slot="header" slot-scope="scope">
+          <el-Popover popper-class="batch-btn" trigger="hover">
+            <!-- 标题气泡内容 -->
+            <div size="mini" type="text" @click="batchBtn">
+              批量发放优惠券
+            </div>
+            <!-- 标题点击...图片 -->
+            <div
+              @click="headerPoint(scope.$index, scope)"
+              v-show="moreTitle"
+              slot="reference"
+            >
+              <img src="../../../../assets/images/point.png" />
+            </div>
+          </el-Popover>
+        </template>
+        <template slot-scope="scope">
+          <el-Popover popper-class="batch-btn" trigger="hover">
+            <!-- 气泡内容 -->
+            <div size="mini" type="text" @click="batchBtn">
+              <span v-show="moreTitle === true">批量发放优惠券</span>
+              <span v-show="moreTitle === false">发放优惠券</span>
+            </div>
+            <!-- 点击...图片 -->
+            <div
+              @mouseenter="handleEdit(scope.$index, scope.row)"
+              slot="reference"
+            >
+              <img src="../../../../assets/images/point.png" />
+            </div>
+          </el-Popover>
+        </template>
+      </el-table-column>
+      <!-- 弹窗 -->
+      <coupon-popover
+        ref="couponPopover"
+        :couponData="couponData"
+        :selectUserId="selectUserId"
+      />
       <el-table-column label="基本信息" class="information" width="280px">
         <template slot-scope="scope">
           <img class="information-img" :src="scope.row.head" alt="" />
@@ -85,10 +139,14 @@
 import axios from '@/api/axios'
 import { GetAgeByBrithday } from '@/utils/index'
 import MPagination from '@/components/MPagination/index.vue'
+import CouponPopover from './components/couponPopover'
+import MSearch from '@/components/MSearch/index.vue'
 
 export default {
   components: {
-    MPagination
+    MPagination,
+    CouponPopover,
+    MSearch
   },
   props: {
     // 班级传参
@@ -99,6 +157,8 @@ export default {
   },
   data() {
     return {
+      visible: false,
+      popoverindex: 0,
       // 总页数
       totalPages: 1,
       totalElements: 0, // 总条数
@@ -108,10 +168,23 @@ export default {
       tableData: [],
       // 用户状态列表
       statusList: [],
-      tableDataEmpty: true
+      tableDataEmpty: true,
+      // 标题更多按钮显示
+      moreTitle: false,
+      // 优惠卷接口数据
+      couponData: [],
+      // 选择按钮用户id
+      selectUserId: [],
+      // 搜索
+      search: '',
+      // 请求接口参数
+      queryData: ''
     }
   },
-  created() {},
+  created() {
+    // 优惠卷列表接口
+    this.couponList()
+  },
   watch: {
     classId(value) {
       if (!value) return
@@ -128,12 +201,28 @@ export default {
     }
   },
   methods: {
+    // 搜索
+    handleSearch(res) {
+      console.log(res, '搜所')
+      if (res.length === 0) {
+        this.search = ''
+        this.studentsList()
+      } else {
+        this.search = `"${res[0].term.uid}"`
+        this.studentsList()
+      }
+    },
     // 学员列表
     studentsList() {
+      if (this.search) {
+        this.queryData = `type: ${this.classId.type}, team_id: "${this.classId.classId.id}",page:${this.currentPage},id:${this.search}`
+      } else {
+        this.queryData = `type: ${this.classId.type}, team_id: "${this.classId.classId.id}",page:${this.currentPage}`
+      }
       axios
         .post('/graphql/team', {
           query: `{
-          teamUserListPage(type: ${this.classId.type}, team_id: "${this.classId.classId.id}",page:${this.currentPage}) {
+          teamUserListPage(${this.queryData}) {
             empty
             first
             last
@@ -262,6 +351,40 @@ export default {
           this.statusList = res.data.userFollowStateList
         })
     },
+    // 优惠卷列表接口
+    couponList() {
+      this.$http.Team.getAllCoupons(0).then((res) => {
+        this.couponData = res.payload.content
+      })
+    },
+    // 选择按钮
+    handleSelectionChange(val, index) {
+      this.selectUserId = []
+      if (val.length > 1) {
+        this.moreTitle = true
+      } else {
+        this.moreTitle = false
+      }
+      val.forEach((data) => {
+        this.selectUserId.push(data.id)
+      })
+    },
+    // 表头优惠卷操作
+    headerPoint(index, scope) {
+      console.log(index, scope)
+    },
+    // 表格优惠卷操作
+    handleEdit(index, row) {
+      // 当没有点击选择时点击发放优惠卷气泡
+      if (this.moreTitle === false) {
+        this.selectUserId = []
+        this.selectUserId.push(row.id)
+      }
+    },
+    // 点击批量发放优惠卷
+    batchBtn() {
+      this.$refs.couponPopover.issueCoupons = true
+    },
     // 点击分页
     handleSizeChange(val) {
       this.currentPage = val
@@ -340,5 +463,31 @@ export default {
 }
 .el-table td {
   border-bottom: 1px solid #ededed;
+}
+.batch-btn {
+  line-height: 10px;
+  min-width: 110px;
+  font-size: 12px;
+  text-align: center;
+  cursor: pointer;
+}
+.dataStyle {
+  .el-table_1_column_2 {
+    cursor: pointer;
+    font-size: 19px !important;
+  }
+  .el-form-item {
+    float: right;
+  }
+}
+.search-section {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+.search-box {
+  display: flex;
+  border: 0;
+  margin-top: 10px;
 }
 </style>

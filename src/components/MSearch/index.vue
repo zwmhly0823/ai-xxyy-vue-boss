@@ -3,16 +3,22 @@
  * @version:
  * @Author: zhubaodong
  * @Date: 2020-03-24 18:20:12
- * @LastEditors: Shentong
- * @LastEditTime: 2020-03-31 19:12:13
+ * @LastEditors: zhubaodong
+ * @LastEditTime: 2020-04-01 23:16:56
  -->
 
 <template>
   <el-card class="search-style" shadow="never">
     <el-form :inline="true">
-      <el-form-item>
+      <el-form-item v-if="phone">
         <!-- 手机号搜索 -->
-        <search-phone @result="getPhoneHander" v-if="phone" :name="phone" />
+        <search-phone
+          @result="getPhoneHander"
+          :teamId="teamId"
+          :name="phone"
+          :onlyPhone="onlyPhone"
+          :tip="phoneTip"
+        />
       </el-form-item>
 
       <el-form-item v-if="productName">
@@ -149,6 +155,21 @@ export default {
     phone: {
       type: String,
       default: '' // phone
+    },
+    // 是否只搜手机号
+    onlyPhone: {
+      type: String,
+      default: '0' // 0
+    },
+    // 是否只搜手机号
+    phoneTip: {
+      type: String,
+      default: '手机号查询'
+    },
+    // team_id
+    teamId: {
+      type: String,
+      default: ''
     },
     // 订单号
     outTradeNo: {

@@ -81,7 +81,8 @@ import {
   Message,
   Scrollbar,
   Notification,
-  InfiniteScroll
+  InfiniteScroll,
+  Popconfirm
 } from 'element-ui'
 
 Vue.use(Pagination)
@@ -159,7 +160,7 @@ Vue.use(PageHeader)
 Vue.use(CascaderPanel)
 Vue.use(Scrollbar)
 Vue.use(InfiniteScroll)
-
+Vue.use(Popconfirm)
 Vue.use(Loading.directive)
 
 // 挂载到Vue实例，组件中 this.$message() 直接调用

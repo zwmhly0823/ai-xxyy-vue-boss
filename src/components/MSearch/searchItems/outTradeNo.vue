@@ -1,6 +1,6 @@
 <!--
- * @Descripttion: 
- * @version: 
+ * @Descripttion:
+ * @version:
  * @Author: zhubaodong
  * @Date: 2020-03-26 16:28:45
  * @LastEditors: zhubaodong
@@ -15,6 +15,7 @@
       clearable
       @input="handleDebounce"
     >
+      <i class="el-icon-search el-input__icon" slot="suffix"></i>
     </el-input>
   </div>
 </template>
