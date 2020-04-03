@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="up">
-      <right-up @search="search" />
+      <right-up @search="search" :dataExp="dataExp" />
     </div>
     <div class="down">
       <right-down :dataExp="dataExp" :search="searchData" />

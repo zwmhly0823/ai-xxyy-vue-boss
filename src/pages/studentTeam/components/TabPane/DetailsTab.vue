@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 14:19:58
  * @LastEditors: panjian
- * @LastEditTime: 2020-04-01 16:03:58
+ * @LastEditTime: 2020-04-02 21:00:20
  -->
 <template>
   <div>
@@ -20,18 +20,20 @@
       <el-button
         size="mini"
         type="primary"
-        style="height: 30px; margin-right: 20px;"
+        style="height: 30px; margin-right: 16px;"
         v-if="btnbox"
         @click="finishLessonList"
         >生成完课榜</el-button
       >
-      <!-- <el-button
+      <el-button
         type="primary"
-        class="Btn"
+        size="mini"
+        v-if="btnbox"
+        style="height: 30px; margin-right: 10px;"
         v-show="exhibition"
-        @click="finishLessonList"
+        @click="ExhibitionList"
         >生成作品展</el-button
-      > -->
+      >
     </div>
     <div>
       <!-- <m-search
@@ -50,6 +52,7 @@
               @onCurrentPage="onCurrentPage"
               @commandFriend="onCommandFriend"
               @onGroup="onGroup"
+              @onGroupSort="onGroupSort"
               :tables="table"
               :classId="classId"
               :audioTabs="audioTabs"
@@ -102,10 +105,22 @@
           :visible.sync="dialogFormVisible"
           width="500px"
         >
-          <el-radio v-model="finishLessonData.weekNum" label="U1"
+          <el-radio label="1" disabled v-show="MissedClassesOne"
+            >第一周未开课</el-radio
+          >
+          <el-radio
+            v-model="finishLessonData.weekNum"
+            label="U1"
+            v-show="radioOne"
             >第一周</el-radio
           >
-          <el-radio v-model="finishLessonData.weekNum" label="U2"
+          <el-radio label="2" disabled v-show="MissedClassesTwo"
+            >第二周未开课</el-radio
+          >
+          <el-radio
+            v-model="finishLessonData.weekNum"
+            label="U2"
+            v-show="radioTwo"
             >第二周</el-radio
           >
           <div slot="footer" class="dialog-footer">
@@ -115,19 +130,31 @@
         </el-dialog>
         <!-- 生成作品展弹出框 -->
         <el-dialog
-          title="请选择生成的完课榜周数"
-          :visible.sync="dialogFormVisible"
+          title="请选择生成的作品展周数"
+          :visible.sync="Exhibition"
           width="500px"
         >
-          <el-radio v-model="finishLessonData.weekNum" label="U1"
+          <el-radio label="1" disabled v-show="missedClassesOne"
+            >第一周暂无作品</el-radio
+          >
+          <el-radio
+            v-model="ExhibitionData.weekNum"
+            label="U1"
+            v-show="RadioOne"
             >第一周</el-radio
           >
-          <el-radio v-model="finishLessonData.weekNum" label="U2"
+          <el-radio label="2" disabled v-show="missedClassesTwo"
+            >第二周暂无作品</el-radio
+          >
+          <el-radio
+            v-model="ExhibitionData.weekNum"
+            label="U2"
+            v-show="RadioTwo"
             >第二周</el-radio
           >
           <div slot="footer" class="dialog-footer">
-            <el-button @click="dialogFormVisible = false">取 消</el-button>
-            <el-button type="primary" @click="clickHandler">确 定</el-button>
+            <el-button @click="Exhibition = false">取 消</el-button>
+            <el-button type="primary" @click="exhibitionBtn">确 定</el-button>
           </div>
         </el-dialog>
       </div>
@@ -156,7 +183,11 @@
       <div class="exhibitionBox">
         <slot>
           <!-- 需要转换的html -->
-          <exhibition @isLoad="canvasStart"></exhibition>
+          <exhibition
+            @isload="CanvasStart"
+            :listData="ExhibitionData.childListData"
+            :weekNum="ExhibitionData.weekNum"
+          ></exhibition>
         </slot>
       </div>
     </div>
@@ -188,6 +219,16 @@ export default {
   },
   data() {
     return {
+      // 完课榜隐藏单选框
+      radioOne: true,
+      radioTwo: true,
+      MissedClassesOne: false,
+      MissedClassesTwo: false,
+      // 作品展隐藏单选框
+      RadioOne: true,
+      RadioTwo: true,
+      missedClassesOne: false,
+      missedClassesTwo: false,
       teacherId: '',
       search: '',
       querysData: '',
@@ -222,8 +263,17 @@ export default {
       finishLessonData: {
         teamId: 0,
         studentLesson: '',
-        finishClassSort: 'asc',
+        finishClassSort: 'desc',
         weekNum: '',
+        isRequest: true,
+        childListData: {}
+      },
+      // 作品展相关数据
+      ExhibitionData: {
+        teamId: 0,
+        weekNum: '',
+        studentLesson: '',
+        isRequest: true,
         childListData: {}
       },
       // tabs标签默认状态
@@ -233,6 +283,7 @@ export default {
       // 弹出框
       dialogTableVisible: false,
       dialogFormVisible: false,
+      Exhibition: false,
       form: {
         name: '',
         region: '',
@@ -244,7 +295,8 @@ export default {
         desc: ''
       },
       formLabelWidth: '120px',
-      tableDataEmpty: true
+      tableDataEmpty: true,
+      sortGroup: ''
     }
   },
   watch: {
@@ -259,6 +311,7 @@ export default {
         item[0].load()
       })
       // this.table.audioIndex = 10000
+      this.sortGroup = ''
       this.table.currentPage = 1
       console.log(value.classId, 'classId')
       if (value.classId) {
@@ -279,7 +332,7 @@ export default {
           }, 200)
         } else if (this.tabsName === '物流') {
           setTimeout(() => {
-            this.gitLogistics()
+            this.getLogistics()
           }, 200)
         } else if (this.tabsName === '打开APP') {
           setTimeout(() => {
@@ -305,11 +358,17 @@ export default {
     if (teacherId) {
       this.teacherId = teacherId
     }
-
     console.log(status, 'status')
     this.table.tableLabel = [{ label: '购买时间', prop: 'buytime' }]
   },
   methods: {
+    // 排序
+    onGroupSort(data) {
+      // this.sortGroup = `sort:${data}`
+      this.sortGroup = `sort:${JSON.stringify(data)}`
+      console.log(this.sortGroup, 'sort 父组件')
+      this.getGroup()
+    },
     // 搜索组件传回来的值
     handleSearch(res) {
       console.log(res, 'res[0].term.uid')
@@ -320,7 +379,7 @@ export default {
         if (this.tabsName === '加好友进群') {
           this.getGroup()
         } else if (this.tabsName === '物流') {
-          this.gitLogistics()
+          this.getLogistics()
         } else if (this.tabsName === '打开APP') {
           this.geiLogin()
         } else if (this.tabsName === '参课和完课') {
@@ -335,7 +394,7 @@ export default {
         if (this.tabsName === '加好友进群') {
           this.getGroup()
         } else if (this.tabsName === '物流') {
-          this.gitLogistics()
+          this.getLogistics()
         } else if (this.tabsName === '打开APP') {
           this.geiLogin()
         } else if (this.tabsName === '参课和完课') {
@@ -345,13 +404,17 @@ export default {
         }
       }
     },
+    // 生成完课榜----确定按钮
     async clickHandler() {
+      if (!this.finishLessonData.isRequest) {
+        this.dialogFormVisible = false
+        return
+      }
       // 确认第几周
       console.log(
         'this.finishLessonData.weekNum -- val ',
         this.finishLessonData.weekNum
       )
-
       // 获取第几周的数据
       await this.getStuRankingList(
         this.finishLessonData.teamId,
@@ -364,11 +427,51 @@ export default {
       this.show = true
       // 执行 截图操作并保存
     },
+    // 生成作品展----确定按钮
+    async exhibitionBtn() {
+      if (!this.ExhibitionData.isRequest) {
+        this.Exhibition = false
+        return
+      }
+      // 确认第几周
+      console.log(
+        'this.ExhibitionData.weekNum -- val ',
+        this.ExhibitionData.weekNum
+      )
+      // 获取第几周的数据
+      await this.getStuTaskRankingList(
+        this.ExhibitionData.teamId,
+        // this.ExhibitionData.studentLesson,
+        this.ExhibitionData.weekNum
+      )
+      // 关闭弹框
+      this.show = true
+      this.Exhibition = false
+      // 执行 截图操作并保存
+    },
     // 生成完课榜
     handlePosterLoad(picname) {
       this.$nextTick(() => {
         window.scrollTo(0, 0)
         html2canvas(document.getElementsByClassName('finishBox')[0], {
+          backgroundColor: 'rgba(0, 0, 0, 0)',
+          useCORS: true,
+          async: true,
+          allowTaint: false
+        }).then((canvas) => {
+          const data = canvas.toDataURL('image/jpeg')
+          // 执行浏览器下载
+          this.download(`${picname}.jpeg`, data)
+          this.finish = false
+          // this.dataURL = data
+        })
+      })
+    },
+    //  生成作品展
+    E_handlePosterLoad(picname) {
+      this.$nextTick(() => {
+        window.scrollTo(0, 0)
+        html2canvas(document.getElementsByClassName('exhibitionBox')[0], {
           backgroundColor: 'rgba(0, 0, 0, 0)',
           useCORS: true,
           async: true,
@@ -400,6 +503,136 @@ export default {
         )
         this.finishLessonData.studentLesson = currentLesson.substring(0, 4)
         this.finishLessonData.weekNum = currentLesson.substring(4, 6)
+        console.log(
+          'this.finishLessonData.weekNum ------>>>>>',
+          this.finishLessonData.weekNum
+        )
+        this.btnshow(
+          this.finishLessonData.weekNum,
+          this.classId.classId.team_state
+        )
+        // const state = '0'
+        // const weekNum = 'U1'
+        // this.btnshow(weekNum, state)
+      } else {
+        console.log('this.classId.classId.id  undefined')
+      }
+    },
+    // 生成完课榜图片周按钮显示状态
+    btnshow(weekNum, state) {
+      console.log('weekNum', weekNum)
+      console.log('state', state)
+      this.finishLessonData.isRequest = true
+      if (weekNum === 'U1') {
+        if (state === 0) {
+          this.radioOne = false
+          this.radioTwo = false
+          this.MissedClassesOne = true
+          this.MissedClassesTwo = true
+          this.finishLessonData.isRequest = false
+        } else {
+          this.radioOne = true
+          this.radioTwo = false
+          this.MissedClassesOne = false
+          this.MissedClassesTwo = true
+        }
+      } else if (weekNum === 'U2') {
+        if (state === 0) {
+          this.radioOne = true
+          this.radioTwo = false
+          this.MissedClassesOne = false
+          this.MissedClassesTwo = true
+        } else {
+          this.radioOne = true
+          this.radioTwo = true
+          this.MissedClassesOne = false
+          this.MissedClassesTwo = false
+        }
+      }
+    },
+    // 生成完作品展图片周按钮显示状态
+    // Btnshow(weekNum, state) {
+    //   console.log('weekNum', weekNum)
+    //   console.log('state', state)
+    //   if (weekNum === 'U1') {
+    //     if (state === 2) {
+    //       this.RadioOne = true
+    //       this.RadioTwo = false
+    //       this.missedClassesOne = false
+    //       this.missedClassesTwo = true
+    //     } else {
+    //       this.RadioOne = false
+    //       this.RadioTwo = false
+    //       this.missedClassesOne = true
+    //       this.missedClassesTwo = true
+    //     }
+    //   } else if (weekNum === 'U2') {
+    //     if (state === 2) {
+    //       this.RadioOne = true
+    //       this.RadioTwo = true
+    //       this.missedClassesOne = false
+    //       this.missedClassesTwo = false
+    //     } else {
+    //       this.RadioOne = true
+    //       this.RadioTwo = false
+    //       this.missedClassesOne = false
+    //       this.missedClassesTwo = true
+    //     }
+    //   }
+    // },
+    Btnshow(weekNum, state) {
+      this.ExhibitionData.isRequest = true
+      console.log('weekNum', weekNum)
+      console.log('state', state)
+      if (weekNum === 'U1') {
+        if (state === 0) {
+          this.RadioOne = false
+          this.RadioTwo = false
+          this.missedClassesOne = true
+          this.missedClassesTwo = true
+          this.ExhibitionData.isRequest = false
+        } else {
+          this.RadioOne = true
+          this.RadioTwo = false
+          this.missedClassesOne = false
+          this.missedClassesTwo = true
+        }
+      } else if (weekNum === 'U2') {
+        if (state === 0) {
+          this.RadioOne = true
+          this.RadioTwo = false
+          this.missedClassesOne = false
+          this.missedClassesTwo = true
+        } else {
+          this.RadioOne = true
+          this.RadioTwo = true
+          this.missedClassesOne = false
+          this.missedClassesTwo = false
+        }
+      }
+    },
+    // 点击显示作品展
+    ExhibitionList(week) {
+      if (
+        this.classId &&
+        this.classId.classId &&
+        this.classId.classId.id &&
+        this.classId.classId.current_lesson
+      ) {
+        this.Exhibition = true
+        this.ExhibitionData.teamId = this.classId.classId.id
+        // this.ExhibitionData.teamId = '100'
+        // this.ExhibitionData.weekNum = 'S1L1U1'
+        const currentLesson = this.classId.classId.current_lesson.substring(
+          0,
+          6
+        )
+        // this.ExhibitionData.studentLesson = currentLesson.substring(0, 4)
+        this.ExhibitionData.weekNum = currentLesson.substring(4, 6)
+        this.Btnshow(
+          this.ExhibitionData.weekNum,
+          this.classId.classId.team_state
+        )
       } else {
         console.log('this.classId.classId.id  undefined')
       }
@@ -410,7 +643,10 @@ export default {
         console.log('getStuRankingList - error:', ' 缺少毕传信息')
         return
       }
-      this.$loading()
+      this.$loading({
+        lock: true,
+        text: '图片正在生成中'
+      })
       const queryParams = `{"team_id" : ${teamId}, "week" : "${lesson +
         week}", "sort" : "${this.finishLessonData.finishClassSort}"}`
       console.log(
@@ -420,17 +656,17 @@ export default {
       axios
         .post('/graphql/getStuRankingList', {
           query: `{
-          getStuComRankingList(query : ${JSON.stringify(queryParams)}){
-          student_id
-          mobile
-          username
-          head
-          completeArr {
-          current_lesson
-          is_complete
-        }
-    }
-    }`
+                getStuComRankingList(query : ${JSON.stringify(queryParams)}){
+                student_id
+                mobile
+                username
+                head
+                completeArr {
+                current_lesson
+                is_complete
+                }
+            }
+          }`
         })
         .then((res) => {
           if (res.error) {
@@ -440,10 +676,54 @@ export default {
           this.finishLessonData.childListData = res
         })
     },
-    // handlePosterLoaded() {},
-    // finishQcUrl(data) {
-    //   this.getQcUrl = data
-    // },
+
+    // 请求作品展-接口数据
+    getStuTaskRankingList(teamId, week) {
+      if (!teamId || !week) {
+        return
+      }
+      // this.$loading()
+      this.$loading({
+        lock: true,
+        text: '图片正在生成中'
+      })
+      const QueryParams = `{"team_id" : ${teamId}, "week" :  "${week}"}`
+      axios
+        .post('/graphql/getStuRankingList', {
+          query: `{
+            getStuTaskRankingList(query : ${JSON.stringify(QueryParams)}){
+            student_id
+            mobile
+            username
+            head
+            completeArr {
+            current_lesson
+            task_image
+                }
+                }
+                  }`
+        })
+        .then((res) => {
+          if (res.error) {
+            console.log(res.error, '接口错误信息-------------->')
+            return
+          }
+          this.ExhibitionData.childListData = res
+          console.log(res, '+_+_+_+_+_+_+_+_')
+        })
+    },
+    // 绘制生成完课榜图片
+    canvasStart(res) {
+      if (res) {
+        this.handlePosterLoad(this.classId.classId.team_name)
+      }
+    },
+    // 绘制生成作品展图片
+    CanvasStart(res) {
+      if (res) {
+        this.E_handlePosterLoad(this.classId.classId.team_name)
+      }
+    },
     // 加好友进群 修改已加好友 已进群 接口
     getCodeHandle() {
       this.$http.User.updateTeamStudent({
@@ -470,13 +750,6 @@ export default {
           })
         })
     },
-    canvasStart(res) {
-      if (res) {
-        setTimeout(() => {
-          this.handlePosterLoad(this.classId.classId.team_name)
-        }, 1000)
-      }
-    },
     // 加好友进群接口
     getGroup() {
       if (this.classId && this.classId.classId && this.classId.classId.id) {
@@ -492,8 +765,9 @@ export default {
             query: `{
                 userListForTeam(query:${JSON.stringify(
                   this.querysData
-                )} , page: ${this.table.currentPage}, size: 20) {
-
+                )} , page: ${this.table.currentPage}, size: 20,${
+              this.sortGroup
+            }) {
                 empty
                 first
                 last
@@ -569,13 +843,14 @@ export default {
       }
     },
     // 物流接口
-    gitLogistics() {
+    getLogistics() {
       if (this.classId && this.classId.classId && this.classId.classId.id) {
         if (this.search) {
           this.querysData = `{"team_id":${this.classId.classId.id},"team_type":${this.classId.type},"uid":${this.search}}`
         } else {
           this.querysData = `{"team_id":${this.classId.classId.id},"team_type":${this.classId.type}}`
         }
+        // const logisticsSort = '{"login_time":"desc"}}'
         axios
           .post('/graphql/express', {
             query: `{
@@ -980,7 +1255,7 @@ export default {
     addExpresss(data) {
       console.log(data, '父组件')
       if (data) {
-        this.gitLogistics()
+        this.getLogistics()
         // this.experssShow = true
       }
     },
@@ -1012,14 +1287,16 @@ export default {
           this.getGroup()
         }, 200)
         this.table.tableLabel = [{ label: '购买时间', prop: 'buytime' }]
+        this.sortGroup = ''
         this.table.tabs = 0
         this.audioTabs = '0'
       } else if (tab.index === '1') {
         this.btnbox = false
         // 物流
         setTimeout(() => {
-          this.gitLogistics()
+          this.getLogistics()
         }, 200)
+        this.sortGroup = ''
         this.table.tabs = 1
         this.audioTabs = '1'
       } else if (tab.index === '2') {
@@ -1028,6 +1305,7 @@ export default {
         setTimeout(() => {
           this.geiLogin()
         }, 200)
+        this.sortGroup = ''
         this.table.tabs = 2
         this.audioTabs = '2'
       } else if (tab.index === '3') {
@@ -1036,6 +1314,7 @@ export default {
         setTimeout(() => {
           this.getClassCompPage()
         }, 200)
+        this.sortGroup = ''
         this.table.tabs = 3
         this.audioTabs = '3'
       } else if (tab.index === '4') {
@@ -1044,6 +1323,7 @@ export default {
         setTimeout(() => {
           this.getStuComment()
         }, 200)
+        this.sortGroup = ''
         this.table.tabs = 4
         this.audioTabs = '4'
       }
@@ -1057,7 +1337,7 @@ export default {
         }, 200)
       } else if (this.table.tabs === 1) {
         setTimeout(() => {
-          this.gitLogistics()
+          this.getLogistics()
         }, 200)
       } else if (this.table.tabs === 2) {
         setTimeout(() => {
@@ -1075,7 +1355,7 @@ export default {
       var dom = document.getElementById('right-scroll')
       dom.querySelector('.scrollbar-wrapper').scrollTo(0, 0)
     },
-    // 老师完课 图片下载方法
+    // 生成图片下载方法
     download(fileName, content) {
       const aLink = document.createElement('a')
       const blob = this.base64ToBlob(content)
@@ -1128,7 +1408,7 @@ export default {
 .search-box {
   display: flex;
   border: 0;
-  margin: 0 -60px 0 0;
+  margin: 0;
 }
 
 .tabs-tab {
