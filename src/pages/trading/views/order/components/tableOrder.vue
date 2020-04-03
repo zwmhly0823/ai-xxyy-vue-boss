@@ -29,8 +29,11 @@
           <el-col :span="6">
             <div>
               支付方式:{{
-                (item.payment ? item.payment.trade_type : '-') ||
-                  (item.regtype ? item.regtype : '-')
+                item.payment
+                  ? item.payment.trade_type
+                  : item.regtype
+                  ? item.regtype
+                  : '-'
               }}
             </div>
           </el-col>
