@@ -147,7 +147,7 @@ export default {
       this.uploading = true
       axios
         .post(
-          `/api/o/v1/express/importExpressList?operatorId=${this.teacherId}`,
+          `/api/o/v1/express/importExpressList?operatorId=${this.operatorId}`,
           formdata
         )
         .then((res) => {
