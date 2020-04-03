@@ -22,15 +22,18 @@
             </div>
           </el-col>
           <el-col :span="6">
-            <div class="grid-content">
+            <div class="grid-content grid-centent">
               下单时间:{{ item.ctime ? item.ctime : '-' }}
             </div>
           </el-col>
           <el-col :span="6">
             <div>
               支付方式:{{
-                (item.payment ? item.payment.trade_type : '-') ||
-                  (item.regtype ? item.regtype : '-')
+                item.payment
+                  ? item.payment.trade_type
+                  : item.regtype
+                  ? item.regtype
+                  : '-'
               }}
             </div>
           </el-col>
@@ -60,7 +63,7 @@
           <div class="card-style1-right">
             <div>
               <div class="card-style1-rmb">
-                {{ item.currency ? item.currency : '人民币' }}:{{
+                {{ item.currency ? item.currency : '¥' }}:{{
                   item.amount ? item.amount : '-'
                 }}
               </div>
@@ -383,11 +386,14 @@ export default {
   }
   .el-card__header {
     padding: 10px;
-    background: #f5f7fa;
+    background: #fafafa;
   }
   // 卡片表头
   .el-row {
     padding: 0 !important;
   }
+  // .grid-centent {
+  //   padding-left: 17%;
+  // }
 }
 </style>
