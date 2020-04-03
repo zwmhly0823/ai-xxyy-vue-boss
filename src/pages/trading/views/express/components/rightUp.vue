@@ -286,7 +286,7 @@ export default {
             return str
           })
           item.terms.sup = sup
-          item.terms['sup.keyword'] = JSON.stringify()
+          item.terms['sup.keyword'] = JSON.stringify(sup)
         }
         return item
       })
