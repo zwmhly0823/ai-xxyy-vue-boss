@@ -320,6 +320,8 @@ export default {
               ele.express.status = '最后一次签收失败'
             } else if (status === 5) {
               ele.express.status = '最后一次已退货'
+            } else if (status === 6) {
+              ele.express.status = '最后一次待审核'
             }
             // 状态匹配
             this.statusList.forEach((value) => {
