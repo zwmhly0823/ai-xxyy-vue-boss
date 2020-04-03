@@ -79,7 +79,7 @@
       title="文件上传问题"
       :visible.sync="errorDialog.length > 0"
       width="500"
-      custom-class="my-dialog"
+      :before-close="handleClose"
     >
       <p v-for="(item, index) in errorDialog" :key="index">
         {{ item.message }}
@@ -105,13 +105,15 @@ export default {
     return {
       errorDialog: [],
       teacherId: '',
+      operatorId: '',
       searchIn: [],
       open: false,
       dialogVisible: false,
       dickUp: false,
       headers: { 'Content-Type': 'multipart/form-data' },
       expressStatus: '',
-      uploading: false
+      uploading: false,
+      close: false
     }
   },
   watch: {
@@ -123,9 +125,8 @@ export default {
   },
   created() {
     this.teacherId = isToss()
-    if (!this.teacherId) {
-      this.teacherId = JSON.parse(localStorage.getItem('staff')).id
-    }
+    this.operatorId =
+      this.teacherId || JSON.parse(localStorage.getItem('staff')).id
 
     this.expressStatus = '0,1,2,3,6'
   },
@@ -140,6 +141,11 @@ export default {
   //   ...mapGetters(['token'])
   // },
   methods: {
+    // 导出物流关闭符号
+    handleClose() {
+      this.errorDialog = false
+      this.$refs.upload.clearFiles()
+    },
     uploadFile(params) {
       const formdata = new FormData()
       const file = params.file
@@ -147,12 +153,12 @@ export default {
       this.uploading = true
       axios
         .post(
-          `/api/o/v1/express/importExpressList?operatorId=${this.teacherId}`,
+          `/api/o/v1/express/importExpressList?operatorId=${this.operatorId}`,
           formdata
         )
         .then((res) => {
           this.uploading = false
-          if (res.code === 0) {
+          if (res.code === 0 && res.payload.length < 1) {
             this.$message({
               showClose: true,
               message: '恭喜你，文件上传成功',
