@@ -3,8 +3,8 @@
  * @version:
  * @Author: shentong
  * @Date: 2020-03-13 14:38:28
- * @LastEditors: Shentong
- * @LastEditTime: 2020-03-17 18:49:56
+ * @LastEditors: panjian
+ * @LastEditTime: 2020-04-03 18:04:08
  */
 import axios from 'axios'
 import _ from 'lodash'
@@ -55,6 +55,7 @@ axios.interceptors.response.use(
     switch (err.response.status) {
       case 400:
         // Utils.removeCookie('token')
+        window._Vue.$message.error('参数错误')
         break
       case 401: {
         break
