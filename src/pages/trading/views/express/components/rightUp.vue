@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-27 19:04:54
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-04-03 11:33:02
+ * @LastEditTime: 2020-04-03 11:53:48
  -->
 <template>
   <div class="container">
@@ -22,9 +22,10 @@
         ]"
       />
     </div>
+    <!-- v-if="!teacherId" TOSS -->
     <div class="search-export" v-if="!teacherId">
       <div>
-        <el-button size="small" type="primary" @click="dickUp = true"
+        <el-button size="small" type="primary" @click="showExportDialog"
           >导出物流信息</el-button
         >
       </div>
@@ -35,12 +36,7 @@
       </div>
     </div>
 
-    <el-dialog
-      title="导出物流消息"
-      :visible.sync="dickUp"
-      width="30%"
-      :before-close="handleClose"
-    >
+    <el-dialog title="导出物流消息" :visible.sync="dickUp" width="30%">
       <span>你确定导出这选中的数据嘛</span>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dickUp = false">取 消</el-button>
@@ -49,24 +45,18 @@
         </el-button>
       </span>
     </el-dialog>
-    <el-dialog
-      title="导入物流信息"
-      :visible.sync="dialogVisible"
-      width="30%"
-      :before-close="handleCloseExport"
-    >
+    <el-dialog title="导入物流信息" :visible.sync="dialogVisible" width="30%">
       <!-- action="/api/o/v1/express/importExpressList" -->
 
       <el-upload
-        class="upload-demo"
         ref="upload"
         action=""
-        accept=".xls"
+        accept=".xls, .xlsx"
         :data="{ teacherId }"
-        :on-preview="handlePreview"
         :on-remove="handleRemove"
         :headers="headers"
         :auto-upload="false"
+        :limit="1"
         :http-request="uploadFile"
       >
         <el-button slot="trigger" size="small" type="primary"
@@ -79,13 +69,17 @@
           @click="submitUpload"
           >上传到服务器</el-button
         >
+        <!-- :loading="uploading" -->
         <div slot="tip" class="el-upload__tip">只能上传xls/xlsx文件</div>
       </el-upload>
     </el-dialog>
+
+    <!-- 上传文件报错提示 -->
     <el-dialog
       title="文件上传问题"
       :visible.sync="errorDialog.length > 0"
       width="500"
+      custom-class="my-dialog"
     >
       <p v-for="(item, index) in errorDialog" :key="index">
         {{ item.message }}
@@ -116,16 +110,15 @@ export default {
       dialogVisible: false,
       dickUp: false,
       headers: { 'Content-Type': 'multipart/form-data' },
-      expressStatus: ''
+      expressStatus: '',
+      uploading: false
     }
   },
   watch: {
     dataExp(val) {
       if (val.id) {
         this.expressStatus = val.id
-        console.log(this.expressStatus, ' this.expressStatus')
       }
-      console.log(val, 'el-col-xl-push-10')
     }
   },
   created() {
@@ -144,24 +137,24 @@ export default {
   // },
   methods: {
     uploadFile(params) {
-      console.log(params)
       const formdata = new FormData()
       const file = params.file
       formdata.append('file', file)
-
+      this.uploading = true
       axios
         .post(
           `/api/o/v1/express/importExpressList?operatorId=${this.teacherId}`,
           formdata
         )
         .then((res) => {
-          console.log(res.payload)
-
-          this.$message({
-            showClose: true,
-            message: '恭喜你，文件上传成功',
-            type: 'success'
-          })
+          this.uploading = false
+          if (res.code === 0) {
+            this.$message({
+              showClose: true,
+              message: '恭喜你，文件上传成功',
+              type: 'success'
+            })
+          }
           this.dialogVisible = false
           this.errorDialog = res.payload
         })
@@ -170,7 +163,14 @@ export default {
           if (error.message !== '') {
             this.$message.warning('此表你已经上传过了')
           }
+          this.uploading = false
         })
+        .finally(() => {
+          this.uploading = false
+        })
+      setTimeout(() => {
+        this.uploading = false
+      }, 2000)
     },
     // importESKSKS(file) {
     //   axios({
@@ -188,32 +188,19 @@ export default {
     },
     submitUpload(file, filelist) {
       this.$refs.upload.submit()
-      // console.log(file, filelist, `/api/o/v1/express/importExpressList?`)
-      // axios
-      //   .post(`/api/o/v1/express/importExpressList?${1}&${file}`)
-      //   .then((res) => {
-      //     console.log(res, 'zheshishenme')
-      //   })29510
+    },
 
-      console.log('提交上传文件')
+    showExportDialog() {
+      // 如果物流状态选择全部，不能导出
+      if (this.expressStatus === '0,1,2,3,6') {
+        this.$message.error('不能导出全部物流，请选择状态或筛选')
+        return
+      }
+      this.dickUp = true
     },
-    handleClose(done) {
-      this.$confirm('确认关闭？')
-        .then((_) => {
-          done()
-        })
-        .catch((_) => {})
-    },
-    handleCloseExport(done) {
-      this.$confirm('确认关闭？')
-        .then((_) => {
-          done()
-        })
-        .catch((_) => {})
-    },
-    handleChange() {},
-
-    importExpress() {},
+    /**
+     * 导出物流信息
+     */
     exportExpress(val) {
       var query
       const tableName = 'o_express'
@@ -235,7 +222,6 @@ export default {
           return item
         })
         term.push({ term: { last_teacher_id: this.teacherId } })
-        console.log(term, this.searchIn, 'thsi.searchIN')
         query = {
           bool: {
             must: term,
@@ -293,34 +279,19 @@ export default {
     },
     handleSearch(search) {
       // 期数 加 S
-      const tempTem = []
       const mySearch = search.map((item) => {
         if (item.terms && item.terms.sup) {
           const sup = item.terms.sup.map((s) => {
-            let str = ''
-            const idx = tempTem.join().indexOf(s)
-            if (idx === -1) {
-              str = `S${s}`
-              tempTem.push(s)
-            } else {
-              tempTem.splice(0, idx)
-            }
-            console.log(str)
-
+            const str = s.toString().includes('S') ? s : `S${s}`
             return str
           })
           item.terms.sup = sup
-          item.terms['sup.keyword'] = JSON.stringify(sup)
+          item.terms['sup.keyword'] = JSON.stringify()
         }
         return item
       })
-
-      console.log('mySearch---------', mySearch)
       this.searchIn = mySearch
       this.$emit('search', search)
-    },
-    importRelAddress() {
-      console.log('1111')
     },
     // 下载文件
     downloadFn(data, name = '下载') {
