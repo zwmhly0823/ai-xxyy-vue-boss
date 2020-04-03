@@ -1390,7 +1390,6 @@ export default {
 .btnbox {
   display: flex;
   align-items: center;
-  justify-content: flex-end;
   width: 100%;
   // height: 40px;
   margin-top: 10px;

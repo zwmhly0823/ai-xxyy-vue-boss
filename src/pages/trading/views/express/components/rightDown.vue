@@ -365,10 +365,10 @@ export default {
         return item.id
       })
       const uid = selection.map((item) => {
-        return item.user.id
+        return item.id
       })
       sessionStorage.setItem('uid', uid)
-      console.log(selection, 'selection,row')
+      console.log(selection, uid, 'selection,row')
       // console.log(selection, 'selection', this.expressBatch, 'expressBatch')
     },
     // 手动选择
@@ -376,7 +376,7 @@ export default {
       this.selectNum = selection.length
       this.expressBatch = selection.map((item) => item.id)
       const uid = selection.map((item) => {
-        return item.user.id
+        return item.id
       })
       if (sessionStorage.getItem('uid')) {
         sessionStorage.removeItem('uid')

@@ -24,6 +24,7 @@
     </div>
     <!-- v-if="!teacherId" TOSS -->
     <div class="search-export" v-if="!teacherId">
+      <!-- <div class="search-export"> -->
       <div>
         <el-button size="small" type="primary" @click="showExportDialog"
           >导出物流信息</el-button
@@ -113,7 +114,8 @@ export default {
       headers: { 'Content-Type': 'multipart/form-data' },
       expressStatus: '',
       uploading: false,
-      close: false
+      close: false,
+      expressId: ''
     }
   },
   watch: {
@@ -201,11 +203,23 @@ export default {
     },
 
     showExportDialog() {
+      this.expressId = sessionStorage.getItem('uid') || []
+
       // 如果物流状态选择全部，不能导出
-      if (this.expressStatus === '0,1,2,3,6' && this.searchIn.length < 1) {
+      console.log(
+        this.expressStatus === '0,1,2,3,6',
+        this.searchIn,
+        this.expressId
+      )
+      if (
+        this.expressStatus === '0,1,2,3,6' &&
+        !this.searchIn.length &&
+        !this.expressId.length
+      ) {
         this.$message.error('不能导出全部物流，请选择状态或筛选')
         return
       }
+
       this.dickUp = true
     },
     /**
@@ -216,7 +230,7 @@ export default {
       const tableName = 'o_express'
       if (sessionStorage.getItem('uid')) {
         var uid = sessionStorage.getItem('uid').split(',')
-        query = { bool: { must: [{ terms: { user_id: uid } }] } } // 自行通过前端选择的条件进行动态组装
+        query = { bool: { must: [{ terms: { id: uid } }] } } // 自行通过前端选择的条件进行动态组装
         sessionStorage.removeItem('uid')
       } else {
         const term = this.searchIn.map((item, index) => {
