@@ -79,7 +79,7 @@
       title="文件上传问题"
       :visible.sync="errorDialog.length > 0"
       width="500"
-      custom-class="my-dialog"
+      :before-close="handleClose"
     >
       <p v-for="(item, index) in errorDialog" :key="index">
         {{ item.message }}
@@ -112,7 +112,8 @@ export default {
       dickUp: false,
       headers: { 'Content-Type': 'multipart/form-data' },
       expressStatus: '',
-      uploading: false
+      uploading: false,
+      close: false
     }
   },
   watch: {
@@ -140,6 +141,11 @@ export default {
   //   ...mapGetters(['token'])
   // },
   methods: {
+    // 导出物流关闭符号
+    handleClose() {
+      this.errorDialog = false
+      this.$refs.upload.clearFiles()
+    },
     uploadFile(params) {
       const formdata = new FormData()
       const file = params.file
@@ -152,7 +158,7 @@ export default {
         )
         .then((res) => {
           this.uploading = false
-          if (res.code === 0) {
+          if (res.code === 0 && res.payload.length < 1) {
             this.$message({
               showClose: true,
               message: '恭喜你，文件上传成功',
