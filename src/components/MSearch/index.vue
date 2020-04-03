@@ -4,17 +4,16 @@
  * @Author: zhubaodong
  * @Date: 2020-03-24 18:20:12
  * @LastEditors: zhubaodong
- * @LastEditTime: 2020-04-01 23:16:56
+ * @LastEditTime: 2020-04-02 17:15:17
  -->
 
 <template>
   <el-card class="search-style" shadow="never">
     <el-form :inline="true">
-      <el-form-item>
+      <el-form-item v-if="phone">
         <!-- 手机号搜索 -->
         <search-phone
           @result="getPhoneHander"
-          v-if="phone"
           :teamId="teamId"
           :name="phone"
           :onlyPhone="onlyPhone"
@@ -22,63 +21,50 @@
         />
       </el-form-item>
 
-      <el-form-item>
+      <el-form-item v-if="productName">
         <!-- 商品名称搜索 -->
-        <product-name
-          @result="getProductName"
-          v-if="productName"
-          :name="productName"
-        />
+        <product-name @result="getProductName" :name="productName" />
       </el-form-item>
 
-      <el-form-item>
+      <el-form-item v-if="outTradeNo">
         <!-- 订单号搜索 -->
-        <out-trade-no
-          @result="getOutTradeNo"
-          v-if="outTradeNo"
-          :name="outTradeNo"
-        />
+        <out-trade-no @result="getOutTradeNo" :name="outTradeNo" />
       </el-form-item>
 
-      <el-form-item>
+      <el-form-item v-if="date">
         <!-- 下单时间 -->
         <date-picker
-          v-if="date"
           :name="date"
           @result="getDate"
           :date-placeholder="datePlaceholder"
         />
       </el-form-item>
 
-      <el-form-item>
+      <el-form-item v-if="timeData">
         <!-- 下拉时间选择 -->
         <select-date
-          v-if="timeData"
           :name="timeData"
           @result="getTimeData"
           @timeCallBack="getTimeCallBack"
         />
       </el-form-item>
 
-      <el-form-item>
+      <el-form-item v-if="channel">
         <!-- 渠道 -->
-        <channel-select @result="getChannel" v-if="channel" :name="channel" />
+        <channel-select @result="getChannel" :name="channel" />
       </el-form-item>
 
-      <el-form-item>
+      <el-form-item v-if="topicType">
         <!-- 主题 -->
-        <product-topic
-          @result="getProductTopic"
-          v-if="topicType"
-          :name="topicType"
-        />
+        <product-topic @result="getProductTopic" :name="topicType" />
       </el-form-item>
-      <!-- <el-form-item>
+
+      <!-- <el-form-item v-if="level || sup || stage">
         <stage-sup-levels
           @stageCallBack="stageCallBack"
           @supCallBack="supCallBack"
           @levelCallBack="levelCallBack"
-          v-if="level || sup || stage"
+         
           :stageName="stage"
           :supName="sup"
           :levelName="level"
@@ -107,7 +93,12 @@
           </el-button>
         </el-popover>
       </el-form-item>
+
+      <el-form-item>
+        <slot name="searchItems"></slot>
+      </el-form-item>
     </el-form>
+    <slot name="otherSearch"></slot>
   </el-card>
 </template>
 <script>
