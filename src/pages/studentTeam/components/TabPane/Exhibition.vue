@@ -4,7 +4,7 @@
       <img src="@/assets/images/FinishClassHead.png" alt="" />
     </div>
     <div class="classconent">
-      <img src="@/assets/images/Finishclasslist.png" class="img" alt="" />
+      <img src="@/assets/images/Exhibition.png" class="img" alt="" />
       <div class="content">
         <div class="allinfo" v-for="(item, index) in listinfo" :key="index">
           <div class="userinfo">
@@ -122,6 +122,9 @@ export default {
       padding-right: 26px;
       padding-top: 30px;
       padding-bottom: 66px;
+      div:nth-child(1) {
+        margin-top: 50px;
+      }
       .allinfo {
         .userinfo {
           width: 100%;

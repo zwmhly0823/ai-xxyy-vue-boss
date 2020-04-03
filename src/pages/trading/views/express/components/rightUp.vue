@@ -105,6 +105,7 @@ export default {
     return {
       errorDialog: [],
       teacherId: '',
+      operatorId: '',
       searchIn: [],
       open: false,
       dialogVisible: false,
@@ -123,9 +124,8 @@ export default {
   },
   created() {
     this.teacherId = isToss()
-    if (!this.teacherId) {
-      this.teacherId = JSON.parse(localStorage.getItem('staff')).id
-    }
+    this.operatorId =
+      this.teacherId || JSON.parse(localStorage.getItem('staff')).id
 
     this.expressStatus = '0,1,2,3,6'
   },
