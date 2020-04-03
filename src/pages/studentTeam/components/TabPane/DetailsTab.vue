@@ -157,6 +157,17 @@
             <el-button type="primary" @click="exhibitionBtn">确 定</el-button>
           </div>
         </el-dialog>
+        <!-- 系统课点击生成完课榜与作品展提示框 -->
+        <el-dialog title="活动未开放" :visible.sync="Tips" width="30%">
+          <span class="warning"
+            ><img src="@/assets/images/warning.png" alt=""
+          /></span>
+          <span>此活动仅限体验课</span>
+          <span slot="footer" class="dialog-footer">
+            <el-button @click="Tips = false">取 消</el-button>
+            <el-button type="primary" @click="Tips = false">确 定</el-button>
+          </span>
+        </el-dialog>
       </div>
       <!-- <img
         v-show="show"
@@ -284,6 +295,7 @@ export default {
       dialogTableVisible: false,
       dialogFormVisible: false,
       Exhibition: false,
+      Tips: false,
       form: {
         name: '',
         region: '',
@@ -562,6 +574,7 @@ export default {
         // this.MissedClassesTwo = true
         this.dialogFormVisible = false
         this.Exhibition = false
+        this.Tips = true
       }
     },
     // 生成完作品展图片周按钮显示状态
@@ -1390,6 +1403,19 @@ export default {
   //   right: 150px;
   // }
 }
+.warning {
+  display: inline-block;
+  width: 28px;
+  height: 22px;
+  position: relative;
+  top: 5px;
+
+  img {
+    width: 100%;
+    height: 100%;
+  }
+}
+
 .search-box {
   display: flex;
   border: 0;
