@@ -198,17 +198,19 @@ export default {
       }
       .title {
         width: 100%;
-        height: 52px;
+        height: 90px;
         font-size: 24px;
         color: #666;
+        // padding-top: 40px;
         td:nth-child(2) {
           margin-left: 150px;
         }
       }
       .information {
+        height: 94px;
         font-size: 28px;
         color: #333;
-        margin-top: 200px;
+        // margin-top: 200px;
         td {
           img {
             width: 51px;
