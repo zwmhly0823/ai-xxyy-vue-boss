@@ -191,7 +191,7 @@ export default {
     },
 
     showExportDialog() {
-      // 如果物流状态选择全部，不能导出
+      // TODO:如果没有搜索，物流状态选择全部时，不能导出
       if (this.expressStatus === '0,1,2,3,6') {
         this.$message.error('不能导出全部物流，请选择状态或筛选')
         return
@@ -221,7 +221,9 @@ export default {
 
           return item
         })
-        term.push({ term: { last_teacher_id: this.teacherId } })
+        if (this.teacherId) {
+          term.push({ term: { last_teacher_id: this.teacherId } })
+        }
         query = {
           bool: {
             must: term,
