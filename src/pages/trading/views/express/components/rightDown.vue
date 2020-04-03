@@ -113,7 +113,12 @@
         </template>
       </el-table-column>
     </el-table>
-    <el-dialog :visible.sync="timeline" width="30%" v-model="expressDetail">
+    <el-dialog
+      custom-class="my-dialog"
+      :visible.sync="timeline"
+      width="40%"
+      v-model="expressDetail"
+    >
       <div class="line">
         <div class="logistics">
           <span>物流公司：</span><span>{{ expressTitle.company }}</span>
@@ -425,6 +430,10 @@ export default {
           if (item.terms.term) {
             timeType.term = `${item.terms.term}`
           }
+          // level
+          if (item.terms.level) {
+            timeType.level = `${item.terms.level}`
+          }
         }
 
         if (item.range) {
@@ -603,7 +612,7 @@ export default {
     width: 100%;
     height: 48px;
     border-bottom: 1px solid gainsboro;
-    margin-top: -40px;
+    // margin-top: -40px;
     margin-bottom: 22px;
     .logistics {
       margin-bottom: 6px;
