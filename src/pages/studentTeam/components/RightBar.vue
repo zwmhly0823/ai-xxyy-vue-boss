@@ -3,8 +3,8 @@
  * @version:
  * @Author: zhubaodong
  * @Date: 2020-03-13 16:53:41
- * @LastEditors: zhubaodong
- * @LastEditTime: 2020-03-23 21:50:41
+ * @LastEditors: panjian
+ * @LastEditTime: 2020-04-03 17:26:25
  -->
 <template>
   <div class="right-container">
@@ -249,7 +249,12 @@ export default {
           //   this.classId.classId.enrolled,
           //   'seeek'
           // )
-
+          /** localstorage teacher 添加 “teacher_wx” 字段 */
+          const teacher = JSON.parse(localStorage.getItem('teacher'))
+          const teacherWx = res.data.detail.teacher_wx
+          teacherWx && (teacher.teacher_wx = teacherWx)
+          localStorage.setItem('teacher', JSON.stringify(teacher))
+          /** localstorage teacher 添加 “teacher_wx” 字段 */
           res.data.detail.todayTrans =
             res.data.detail.statictis.today_order /
             this.classId.classId.enrolled
