@@ -211,7 +211,6 @@ export default {
               bear_integral
               gem_integral
               product_name
-              regtype
               user{
                 mobile
               }
