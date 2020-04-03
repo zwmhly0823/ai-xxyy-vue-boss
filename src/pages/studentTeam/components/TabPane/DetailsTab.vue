@@ -553,12 +553,14 @@ export default {
         }
       }
       if (type > 0) {
-        this.finishLessonData.isRequest = false
-        this.ExhibitionData.isRequest = false
-        this.radioOne = false
-        this.radioTwo = false
-        this.MissedClassesOne = true
-        this.MissedClassesTwo = true
+        // this.finishLessonData.isRequest = false
+        // this.ExhibitionData.isRequest = false
+        // this.radioOne = false
+        // this.radioTwo = false
+        // this.MissedClassesOne = true
+        // this.MissedClassesTwo = true
+        this.dialogFormVisible = false
+        this.Exhibition = false
       }
     },
     // 生成完作品展图片周按钮显示状态
