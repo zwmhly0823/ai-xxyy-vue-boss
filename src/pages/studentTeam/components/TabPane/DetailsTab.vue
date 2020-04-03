@@ -265,6 +265,7 @@ export default {
         studentLesson: '',
         finishClassSort: 'desc',
         weekNum: '',
+        isRequest: true,
         childListData: {}
       },
       // 作品展相关数据
@@ -272,6 +273,7 @@ export default {
         teamId: 0,
         weekNum: '',
         studentLesson: '',
+        isRequest: true,
         childListData: {}
       },
       // tabs标签默认状态
@@ -404,12 +406,15 @@ export default {
     },
     // 生成完课榜----确定按钮
     async clickHandler() {
+      if (!this.finishLessonData.isRequest) {
+        this.dialogFormVisible = false
+        return
+      }
       // 确认第几周
       console.log(
         'this.finishLessonData.weekNum -- val ',
         this.finishLessonData.weekNum
       )
-
       // 获取第几周的数据
       await this.getStuRankingList(
         this.finishLessonData.teamId,
@@ -424,6 +429,10 @@ export default {
     },
     // 生成作品展----确定按钮
     async exhibitionBtn() {
+      if (!this.ExhibitionData.isRequest) {
+        this.Exhibition = false
+        return
+      }
       // 确认第几周
       console.log(
         'this.ExhibitionData.weekNum -- val ',
@@ -513,12 +522,14 @@ export default {
     btnshow(weekNum, state) {
       console.log('weekNum', weekNum)
       console.log('state', state)
+      this.finishLessonData.isRequest = true
       if (weekNum === 'U1') {
         if (state === 0) {
           this.radioOne = false
           this.radioTwo = false
           this.MissedClassesOne = true
           this.MissedClassesTwo = true
+          this.finishLessonData.isRequest = false
         } else {
           this.radioOne = true
           this.radioTwo = false
@@ -570,6 +581,7 @@ export default {
     //   }
     // },
     Btnshow(weekNum, state) {
+      this.ExhibitionData.isRequest = true
       console.log('weekNum', weekNum)
       console.log('state', state)
       if (weekNum === 'U1') {
@@ -578,6 +590,7 @@ export default {
           this.RadioTwo = false
           this.missedClassesOne = true
           this.missedClassesTwo = true
+          this.ExhibitionData.isRequest = false
         } else {
           this.RadioOne = true
           this.RadioTwo = false

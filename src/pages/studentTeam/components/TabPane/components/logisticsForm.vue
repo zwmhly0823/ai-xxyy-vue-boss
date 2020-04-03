@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-04-01 13:24:40
  * @LastEditors: panjian
- * @LastEditTime: 2020-04-01 15:49:55
+ * @LastEditTime: 2020-04-03 11:20:11
  -->
 <template>
   <el-form
@@ -71,7 +71,7 @@ export default {
       },
       rules: {
         receiptName: [
-          { required: true, message: '请输入活动名称', trigger: 'blur' }
+          { required: true, message: '请输入收货人姓名', trigger: 'blur' }
         ],
         receiptTel: [
           {
