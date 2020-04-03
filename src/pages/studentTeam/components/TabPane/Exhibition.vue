@@ -9,7 +9,7 @@
         <div class="allinfo" v-for="(item, index) in listinfo" :key="index">
           <div class="userinfo">
             <span class="userhead">
-              <img :src="item.head" @load="loaded(index)" alt="" />
+              <img :src="item.head" @load="loaded(index)" class="head" alt="" />
             </span>
             <span class="username">{{ item.username }}</span>
           </div>
@@ -136,6 +136,7 @@ export default {
             img {
               width: 100%;
               height: 100%;
+              border-radius: 50%;
             }
           }
           .username {
@@ -159,8 +160,11 @@ export default {
             overflow: hidden;
             width: 100%;
             height: 100%;
+            vertical-align: middle;
             .topframe {
               width: 100%;
+              margin: 0px auto;
+              vertical-align: middle;
             }
           }
         }
