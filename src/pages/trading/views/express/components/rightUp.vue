@@ -23,7 +23,7 @@
       />
     </div>
     <!-- v-if="!teacherId" TOSS -->
-    <div class="search-export">
+    <div class="search-export" v-if="!teacherId">
       <div>
         <el-button size="small" type="primary" @click="showExportDialog"
           >导出物流信息</el-button
@@ -54,7 +54,6 @@
         accept=".xls, .xlsx"
         :data="{ teacherId }"
         :on-remove="handleRemove"
-        :on-error="uploadError"
         :headers="headers"
         :auto-upload="false"
         :limit="1"
@@ -137,9 +136,6 @@ export default {
   //   ...mapGetters(['token'])
   // },
   methods: {
-    uploadError(res) {
-      debugger
-    },
     uploadFile(params) {
       const formdata = new FormData()
       const file = params.file
