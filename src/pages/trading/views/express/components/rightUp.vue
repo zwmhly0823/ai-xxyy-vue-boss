@@ -23,7 +23,7 @@
       />
     </div>
     <!-- v-if="!teacherId" TOSS -->
-    <div class="search-export">
+    <div class="search-export" v-if="!teacherId">
       <div>
         <el-button size="small" type="primary" @click="showExportDialog"
           >导出物流信息</el-button
@@ -105,6 +105,7 @@ export default {
     return {
       errorDialog: [],
       teacherId: '',
+      operatorId: '',
       searchIn: [],
       open: false,
       dialogVisible: false,
@@ -123,9 +124,8 @@ export default {
   },
   created() {
     this.teacherId = isToss()
-    if (!this.teacherId) {
-      this.teacherId = localStorage.getItem('staff').id
-    }
+    this.operatorId =
+      this.teacherId || JSON.parse(localStorage.getItem('staff')).id
 
     this.expressStatus = '0,1,2,3,6'
   },
@@ -147,7 +147,7 @@ export default {
       this.uploading = true
       axios
         .post(
-          `/api/o/v1/express/importExpressList?operatorId=${this.teacherId}`,
+          `/api/o/v1/express/importExpressList?operatorId=${this.operatorId}`,
           formdata
         )
         .then((res) => {
