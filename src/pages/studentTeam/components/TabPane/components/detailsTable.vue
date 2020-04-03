@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 20:22:24
  * @LastEditors: panjian
- * @LastEditTime: 2020-04-02 21:12:24
+ * @LastEditTime: 2020-04-03 19:10:32
  -->
 <template>
   <div class="table-box">
@@ -545,7 +545,12 @@
       />
     </div>
 
-    <el-dialog title="填写物流信息" :visible.sync="showExpress" width="30%">
+    <el-dialog
+      :destroy-on-close="true"
+      title="填写物流信息"
+      :visible.sync="showExpress"
+      width="30%"
+    >
       <logistics-form @addExpress="addExpress" :formData="formData" />
     </el-dialog>
   </div>
