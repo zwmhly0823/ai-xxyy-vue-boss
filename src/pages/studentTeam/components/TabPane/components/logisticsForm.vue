@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-04-01 13:24:40
  * @LastEditors: panjian
- * @LastEditTime: 2020-04-03 11:20:11
+ * @LastEditTime: 2020-04-03 18:16:44
  -->
 <template>
   <el-form
@@ -58,6 +58,17 @@ export default {
   name: 'logisticsForm',
   props: ['formData'],
   data() {
+    var validatePass = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error('请输入手机号'))
+      } else {
+        const reg = /^1[3456789]\d{9}$/
+        if (!reg.test(value)) {
+          callback(new Error('请输入正确手机号'))
+        }
+        callback()
+      }
+    }
     return {
       areaLists: areaLists,
       province: null,
@@ -75,9 +86,8 @@ export default {
         ],
         receiptTel: [
           {
-            required: true,
             maxlength: 11,
-            message: '请填写电话',
+            validator: validatePass,
             trigger: 'blur'
           }
         ],
@@ -131,17 +141,22 @@ export default {
       }
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          this.$http.Express.editAddressAndExpressForOrder(params).then(
-            (res) => {
-              this.$message({
-                message: '地址添加成功',
-                type: 'success'
-              })
-              setTimeout(() => {
-                this.$emit('addExpress', 1)
-              }, 1000)
-            }
-          )
+          this.$http.Express.editAddressAndExpressForOrder(params)
+            .then((res) => {
+              console.log('res222', res)
+              if (res.data) {
+                this.$message({
+                  message: '地址添加成功',
+                  type: 'success'
+                })
+                setTimeout(() => {
+                  this.$emit('addExpress', 1)
+                }, 1000)
+              }
+            })
+            .catch((err) => {
+              console.log('err111', err)
+            })
         } else {
           return false
         }
