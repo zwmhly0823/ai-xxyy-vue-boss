@@ -15,7 +15,8 @@
       @select="handleSelect"
       @select-all="handleAllSelect"
     >
-      <el-table-column type="selection" width="25"> </el-table-column>
+      <el-table-column type="selection" width="25" v-if="!teacherId">
+      </el-table-column>
       <el-table-column width="25" v-if="!teacherId">
         <template slot-scope="scope" v-if="dataExp.id == 6">
           <!-- <div v-show="false">{{ scope }}</div> -->

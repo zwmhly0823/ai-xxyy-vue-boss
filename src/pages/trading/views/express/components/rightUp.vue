@@ -65,6 +65,7 @@
         :auto-upload="false"
         :limit="1"
         :http-request="uploadFile"
+        :on-progress="uploadProgress"
       >
         <el-button slot="trigger" size="small" type="primary"
           >选取文件</el-button
@@ -74,6 +75,7 @@
           size="small"
           type="success"
           @click="submitUpload"
+          :disabled="uploading"
           >上传到服务器</el-button
         >
         <!-- :loading="uploading" -->
@@ -135,7 +137,6 @@ export default {
     this.teacherId = isToss()
     this.operatorId =
       this.teacherId || JSON.parse(localStorage.getItem('staff')).id
-
     this.expressStatus = '0,1,2,3,6'
   },
   // mounted() {
@@ -149,10 +150,20 @@ export default {
   //   ...mapGetters(['token'])
   // },
   methods: {
+    // 上传进度
+    uploadProgress(event, file, fileList) {
+      console.log(
+        event,
+        file,
+        fileList,
+        'event, file, fileList--------------------'
+      )
+    },
     // 上传物流关闭符号
     handleCloseUpdata() {
-      this.errorDialog = false
+      this.dialogVisible = false
       this.$refs.upload.clearFiles()
+      console.log(this.errorDialog, '----------------------')
     },
     // 导出物流关闭符号
     handleClose() {
@@ -170,8 +181,9 @@ export default {
           formdata
         )
         .then((res) => {
+          this.$refs.upload.clearFiles()
           this.uploading = false
-          if (res.code === 0 && res.payload.length < 1) {
+          if (res.code === 0 && res.payload.length < 1 && res.payload) {
             this.$message({
               showClose: true,
               message: '恭喜你，文件上传成功',
@@ -179,7 +191,7 @@ export default {
             })
           }
           this.dialogVisible = false
-          this.errorDialog = res.payload
+          this.errorDialog = !res.errors ? res.payload : []
         })
         .catch((error) => {
           // 前端的token留在点击退出按钮那里删除，这里就只是提示过期
