@@ -413,13 +413,22 @@ export default {
       )
       let timeType = {}
       // let user_id
-      console.log(this.searchIn)
+      console.log(this.searchIn, '-----------------------this')
       this.searchIn.forEach((item) => {
         if (item && item.term) {
           if (item.term.user_id) {
             timeType.user_id = item.term.user_id
           }
-          if (item.term.regtype) {
+          if (item.term && item.term.regtype) {
+            //   if (Number(item.term.regtype) === 1) {
+            //     item.term.regtype = '5'
+            //   } else if (Number(item.term.regtype) === 2) {
+            //     item.term.regtype = '4'
+            //   } else if (Number(item.term.regtype) === 4) {
+            //     item.term.regtype = '1'
+            //   } else if (Number(item.term.regtype) === 5) {
+            //     item.term.regtype = '2,3'
+            //   }
             timeType.regtype = `${item.term.regtype}`
           }
         }
