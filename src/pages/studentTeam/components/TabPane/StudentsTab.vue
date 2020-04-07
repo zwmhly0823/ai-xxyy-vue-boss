@@ -61,7 +61,11 @@
       />
       <el-table-column label="基本信息" class="information" width="280px">
         <template slot-scope="scope">
-          <img class="information-img" :src="scope.row.head" alt="" />
+          <img
+            class="information-img"
+            :src="`${scope.row.head}?x-oss-process=image/resize,l_100`"
+            alt=""
+          />
           <div class="information-right">
             <div class="phone">{{ scope.row.mobile }}</div>
             <div class="age">
