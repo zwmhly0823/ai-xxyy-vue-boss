@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 20:22:24
  * @LastEditors: panjian
- * @LastEditTime: 2020-04-07 14:46:36
+ * @LastEditTime: 2020-04-07 15:52:57
  -->
 <template>
   <div class="table-box">
@@ -19,7 +19,11 @@
         @row-click="onClick"
         @selection-change="handleSelectionChange"
       >
-        <el-table-column type="selection" width="40px"></el-table-column>
+        <el-table-column
+          type="selection"
+          width="40px"
+          v-if="this.tables.tabs == 0"
+        ></el-table-column>
         <el-table-column width="20px">
           <template slot="header" slot-scope="scope">
             <el-Popover popper-class="batch-btn" trigger="hover">
@@ -101,7 +105,6 @@
             </div>
           </template>
           <template slot-scope="scope">
-            <!-- <span>{{ scope.row.friend }}</span> -->
             <img
               class="group-img"
               v-if="scope.row.added_wechat == 0"
@@ -129,11 +132,6 @@
                     alt=""
                   />
                 </el-dropdown-item>
-                <!-- <el-dropdown-item
-                style="font-size:20px"
-                command="0"
-                icon="el-icon-error"
-              ></el-dropdown-item> -->
               </el-dropdown-menu>
             </el-dropdown>
             <div>{{ scope.row.added_wechat_time }}</div>
@@ -185,11 +183,6 @@
                     alt=""
                   />
                 </el-dropdown-item>
-                <!-- <el-dropdown-item
-                style="font-size:20px"
-                command="0"
-                icon="el-icon-error"
-              ></el-dropdown-item> -->
               </el-dropdown-menu>
             </el-dropdown>
             <div>{{ scope.row.added_group_time }}</div>
@@ -330,7 +323,7 @@
         :cell-style="cellStyle"
         @row-click="onClick"
       >
-        <el-table-column label="用户和购买时间">
+        <el-table-column key="l1" label="用户和购买时间">
           <template slot-scope="scope">
             <div>
               <span>{{ scope.row.mobile }}</span>
@@ -339,7 +332,7 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column label="用户微信">
+        <el-table-column key="l2" label="用户微信">
           <template slot-scope="scope">
             <div class="login-wx-box">
               <img
@@ -353,14 +346,14 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column label="状态">
+        <el-table-column key="l3" label="状态">
           <template slot-scope="scope">
             <div>
               <span>{{ scope.row.status }}</span>
             </div>
           </template>
         </el-table-column>
-        <el-table-column label="打开次数">
+        <el-table-column key="l4" label="打开次数">
           <template slot-scope="scope">
             <div>
               <span>{{ scope.row.login_time }}</span>
@@ -389,7 +382,7 @@
         :cell-style="cellStyle"
         @row-click="onClick"
       >
-        <el-table-column label="用户和购买时间">
+        <el-table-column key="p1" label="用户和购买时间">
           <template slot-scope="scope">
             <div>
               <span>{{ scope.row.mobile }}</span>
@@ -398,7 +391,7 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column label="用户微信">
+        <el-table-column key="p2" label="用户微信">
           <template slot-scope="scope">
             <div class="participateIn-wx-box">
               <img
@@ -414,14 +407,14 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column label="状态">
+        <el-table-column key="p3" label="状态">
           <template slot-scope="scope">
             <div>
               <span>{{ scope.row.status }}</span>
             </div>
           </template>
         </el-table-column>
-        <el-table-column label="课程">
+        <el-table-column key="p4" label="课程">
           <template slot-scope="scope">
             <div>
               <span>{{ scope.row.course_current_num }}</span>
@@ -430,7 +423,7 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column label="参课">
+        <el-table-column key="p5" label="参课">
           <template slot-scope="scope">
             <div>
               <span>{{ scope.row.join_course_state }}</span>
@@ -439,7 +432,7 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column label="完课">
+        <el-table-column key="p6" label="完课">
           <template slot-scope="scope">
             <div>
               <span>{{ scope.row.complete_course_state }}</span>
@@ -468,7 +461,7 @@
         :cell-style="cellStyle"
         @row-click="onClick"
       >
-        <el-table-column label="用户和购买时间">
+        <el-table-column key="w1" label="用户和购买时间">
           <template slot-scope="scope">
             <div>
               <span>{{ scope.row.mobile }}</span>
@@ -479,7 +472,7 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column label="用户微信">
+        <el-table-column key="w2" label="用户微信">
           <template slot-scope="scope">
             <div class="works-wx-box">
               <img
@@ -493,7 +486,7 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column label="课程">
+        <el-table-column key="w3" label="课程">
           <template slot-scope="scope">
             <div>
               <span>{{ scope.row.course_current_num }}</span>
@@ -502,7 +495,7 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column label="作品">
+        <el-table-column key="w4" label="作品">
           <template slot-scope="scope">
             <div class="works-task-box">
               <img
@@ -516,7 +509,7 @@
             <div class="works-ctime">{{ scope.row.works_ctime }}</div>
           </template>
         </el-table-column>
-        <el-table-column label="点评">
+        <el-table-column key="w5" label="点评">
           <template slot-scope="scope">
             <div>
               <span>{{ scope.row.has_comment_ctime }}</span>
@@ -673,12 +666,12 @@ export default {
       params.push(timestamp(this.classId.classId.start_day, 5))
       params.push(teacherWx.teacher_wx)
       console.log(mobiles, type, params, 'params')
-      this.$http.User.sendBatch(mobiles, type, params).then((res) => {
-        this.$message({
-          message: '已发送短信',
-          type: 'success'
-        })
-      })
+      // this.$http.User.sendBatch(mobiles, type, params).then((res) => {
+      //   this.$message({
+      //     message: '已发送短信',
+      //     type: 'success'
+      //   })
+      // })
     },
     // 复选框
     handleSelectionChange(val) {
