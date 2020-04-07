@@ -1,6 +1,6 @@
 <!--
- * @Descripttion: 
- * @version: 
+ * @Descripttion:
+ * @version:
  * @Author: zhubaodong
  * @Date: 2020-03-13 16:53:27
  * @LastEditors: zhubaodong
@@ -33,10 +33,10 @@
         >
           <el-card id="menu">
             <div>
-              <div>新建下级部门</div>
-              <div>新建平级部门</div>
-              <div>编辑部门</div>
-              <div>停用部门</div>
+              <p>新建下级部门</p>
+              <p>新建平级部门</p>
+              <p>编辑部门</p>
+              <p>停用部门</p>
             </div>
           </el-card>
         </span>
@@ -116,13 +116,16 @@ export default {
   computed: {},
 
   methods: {
+    // 点击节点
     nodeClick(data) {
       this.$emit('change', data)
     },
+    // 鼠标移入显示icon
     showTools(index) {
       this.toolsCount = +index
       console.log(index)
     },
+    // 右击icon，显示菜单
     menuTools(e) {
       const oMenu = document.getElementById('menu')
 
@@ -138,6 +141,7 @@ export default {
         oMenu.style.top = _y - 50 + 'px'
       }
     },
+    // 鼠标移除隐藏
     outTools() {
       this.toolsCount = null
     },
@@ -168,6 +172,12 @@ export default {
     .el-tree-node__content {
       background: #ebebeb !important;
       // background: rgba(240, 241, 242, 1) !important;
+    }
+  }
+  .el-card__body {
+    padding: 15px 15px 5px 15px !important;
+    p {
+      margin: 0px 0 10px 0;
     }
   }
 }
