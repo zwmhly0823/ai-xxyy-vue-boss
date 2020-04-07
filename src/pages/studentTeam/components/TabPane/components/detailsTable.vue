@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 20:22:24
  * @LastEditors: panjian
- * @LastEditTime: 2020-04-07 12:36:22
+ * @LastEditTime: 2020-04-07 14:46:36
  -->
 <template>
   <div class="table-box">
@@ -675,7 +675,7 @@ export default {
       console.log(mobiles, type, params, 'params')
       this.$http.User.sendBatch(mobiles, type, params).then((res) => {
         this.$message({
-          message: '已发送添加好友短信',
+          message: '已发送短信',
           type: 'success'
         })
       })
