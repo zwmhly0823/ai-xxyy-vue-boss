@@ -412,18 +412,15 @@ export default {
         'searchIn: []searchIn: []searchIn: []searchIn: []searchIn: [],'
       )
       let timeType = {}
-      // let user_id
-      console.log(this.searchIn)
       this.searchIn.forEach((item) => {
         if (item && item.term) {
           if (item.term.user_id) {
             timeType.user_id = item.term.user_id
           }
-          if (item.term.regtype) {
+          if (item.term && item.term.regtype) {
             timeType.regtype = `${item.term.regtype}`
           }
         }
-
         if (item && item.terms) {
           if (item.terms.sup) {
             timeType.sup = `${item.terms.sup}`
