@@ -31,6 +31,11 @@ export default {
       this.searchData = search
       console.log('search', this.searchData)
     }
+  },
+  watch: {
+    search(val) {
+      console.log(val, 'd-flex')
+    }
   }
 }
 </script>
