@@ -331,14 +331,28 @@ export default {
           : (getToken = await this.loginBycode().catch((err) =>
               console.log(err)
             ))
-
         if (getToken && getToken.token) {
+          debugger
           setToken(getToken.token)
           if (getToken.teacher) {
-            localStorage.setItem(
-              'teacher',
-              JSON.stringify(getToken.teacher || '{}')
-            )
+            const {
+              teacher,
+              department,
+              departmentId,
+              duty,
+              dutyId,
+              rank,
+              rankId
+            } = getToken
+            Object.assign(teacher, {
+              department,
+              departmentId,
+              duty,
+              dutyId,
+              rank,
+              rankId
+            })
+            localStorage.setItem('teacher', JSON.stringify(teacher || '{}'))
           }
           if (getToken.staff) {
             localStorage.setItem(
