@@ -109,7 +109,6 @@ module.exports = {
       },
       '/graphql': {
         target: 'http://47.98.38.59:43401',
-        // target: 'http://localhost:3000',
         changeOrigin: true,
         ws: true,
         secure: false,
