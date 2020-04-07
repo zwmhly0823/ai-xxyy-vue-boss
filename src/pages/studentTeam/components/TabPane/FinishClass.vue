@@ -21,9 +21,8 @@
             height="52px;"
           >
             <td>
-              <!-- :src="item.head" -->
               <img
-                src="https://msb-ai.meixiu.mobi/ai-pm/static/touxiang.png"
+                :src="`${item.head}?x-oss-process=image/resize,l_100`"
                 alt=""
                 @load="loaded(index)"
                 style="vertical-align:middle;width:51px;height:51px;"
@@ -137,7 +136,7 @@
 export default {
   props: {
     listData: {
-      type: Object,
+      type: Array,
       default: null
     },
     weekNum: {
@@ -152,20 +151,17 @@ export default {
 
   data() {
     return {
-      listinfo: [],
-      listTitle: '',
       isLoaded: false,
       num: 0
     }
   },
-  watch: {
-    listData(value) {
-      console.log('child - receive ----> res:', value)
-      this.listinfo = value.data.getStuComRankingList
-      console.log('listinfo -------', this.listinfo)
+  computed: {
+    listinfo() {
+      return this.listData || []
     },
-    weekNum(value) {
-      this.listTitle = value === 'U1' ? 'W1' : 'W2'
+    listTitle() {
+      const listTitle = this.weekNum === 'U1' ? 'W1' : 'W2'
+      return listTitle || ''
     }
   },
 
