@@ -15,6 +15,7 @@
         stage="term"
         sup="sup"
         level="level"
+        topicType="topic_id"
         :timeData="[
           { text: '购买时间', value: 'ctime' },
           { text: '揽收时间', value: 'delivery_collect_time' },
@@ -23,7 +24,7 @@
       />
     </div>
     <!-- v-if="!teacherId" TOSS -->
-    <div class="search-export" v-if="!teacherId">
+    <div class="search-export">
       <!-- <div class="search-export"> -->
       <div>
         <el-button size="small" type="primary" @click="showExportDialog"
@@ -46,7 +47,12 @@
         </el-button>
       </span>
     </el-dialog>
-    <el-dialog title="导入物流信息" :visible.sync="dialogVisible" width="30%">
+    <el-dialog
+      title="导入物流信息"
+      :visible.sync="dialogVisible"
+      :before-close="handleCloseUpdata"
+      width="30%"
+    >
       <!-- action="/api/o/v1/express/importExpressList" -->
 
       <el-upload
@@ -143,6 +149,11 @@ export default {
   //   ...mapGetters(['token'])
   // },
   methods: {
+    // 上传物流关闭符号
+    handleCloseUpdata() {
+      this.errorDialog = false
+      this.$refs.upload.clearFiles()
+    },
     // 导出物流关闭符号
     handleClose() {
       this.errorDialog = false
