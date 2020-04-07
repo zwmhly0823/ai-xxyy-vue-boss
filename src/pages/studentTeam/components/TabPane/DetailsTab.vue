@@ -173,7 +173,7 @@
         @load="handlePosterLoaded"
         crossorigin="anonymous"
       /> -->
-      <!-- 生成完课榜图片（一） -->
+      <!-- 生成完课榜图片-->
       <div
         v-for="(item, index) in finishLessonData.childListData"
         :key="index"
@@ -181,9 +181,8 @@
       >
         <slot>
           <!-- 需要转换的html -->
-          <!-- @isLoad="canvasStart" -->
-
           <finishclass
+            @isLoad="canvasStart"
             :listData="item"
             :weekNum="finishLessonData.weekNum"
           ></finishclass>
@@ -695,7 +694,6 @@ export default {
 
           // document.getElementsByClassName('finishBox').forEach((dom, index) => {
           //   console.log('foreach - dom ----->', dom)
-          this.handlePosterLoad(this.classId.classId.team_name)
           // })
         })
     },
@@ -735,11 +733,11 @@ export default {
         })
     },
     // 绘制生成完课榜图片
-    // canvasStart(res) {
-    //   if (res) {
-    //     this.handlePosterLoad(this.classId.classId.team_name)
-    //   }
-    // },
+    canvasStart(res) {
+      if (res) {
+        this.handlePosterLoad(this.classId.classId.team_name)
+      }
+    },
     // 绘制生成作品展图片
     CanvasStart(res) {
       if (res) {
