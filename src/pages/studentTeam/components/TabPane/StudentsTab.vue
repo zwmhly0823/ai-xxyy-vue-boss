@@ -1,5 +1,15 @@
 <template>
   <div class="dataStyle">
+    <div class="search-section">
+      <m-search
+        class="search-box"
+        @search="handleSearch"
+        phone="uid"
+        onlyPhone="1"
+        phoneTip="手机号/微信昵称 查询"
+        :teamId="classId.classId.id"
+      />
+    </div>
     <el-table
       :data="tableData"
       :header-cell-style="headerStyle"
@@ -130,11 +140,13 @@ import axios from '@/api/axios'
 import { GetAgeByBrithday } from '@/utils/index'
 import MPagination from '@/components/MPagination/index.vue'
 import CouponPopover from './components/couponPopover'
+import MSearch from '@/components/MSearch/index.vue'
 
 export default {
   components: {
     MPagination,
-    CouponPopover
+    CouponPopover,
+    MSearch
   },
   props: {
     // 班级传参
@@ -162,7 +174,11 @@ export default {
       // 优惠卷接口数据
       couponData: [],
       // 选择按钮用户id
-      selectUserId: []
+      selectUserId: [],
+      // 搜索
+      search: '',
+      // 请求接口参数
+      queryData: ''
     }
   },
   created() {
@@ -185,12 +201,28 @@ export default {
     }
   },
   methods: {
+    // 搜索
+    handleSearch(res) {
+      console.log(res, '搜所')
+      if (res.length === 0) {
+        this.search = ''
+        this.studentsList()
+      } else {
+        this.search = `"${res[0].term.uid}"`
+        this.studentsList()
+      }
+    },
     // 学员列表
     studentsList() {
+      if (this.search) {
+        this.queryData = `type: ${this.classId.type}, team_id: "${this.classId.classId.id}",page:${this.currentPage},id:${this.search}`
+      } else {
+        this.queryData = `type: ${this.classId.type}, team_id: "${this.classId.classId.id}",page:${this.currentPage}`
+      }
       axios
         .post('/graphql/team', {
           query: `{
-          teamUserListPage(type: ${this.classId.type}, team_id: "${this.classId.classId.id}",page:${this.currentPage}) {
+          teamUserListPage(${this.queryData}) {
             empty
             first
             last
@@ -288,6 +320,8 @@ export default {
               ele.express.status = '最后一次签收失败'
             } else if (status === 5) {
               ele.express.status = '最后一次已退货'
+            } else if (status === 6) {
+              ele.express.status = '最后一次待审核'
             }
             // 状态匹配
             this.statusList.forEach((value) => {
@@ -325,9 +359,8 @@ export default {
         this.couponData = res.payload.content
       })
     },
-    // 全选
+    // 选择按钮
     handleSelectionChange(val, index) {
-      console.log(val, index, '全选')
       this.selectUserId = []
       if (val.length > 1) {
         this.moreTitle = true
@@ -351,8 +384,7 @@ export default {
       }
     },
     // 点击批量发放优惠卷
-    batchBtn(val) {
-      console.log(val, '优惠券用户id')
+    batchBtn() {
       this.$refs.couponPopover.issueCoupons = true
     },
     // 点击分页
@@ -446,5 +478,17 @@ export default {
     cursor: pointer;
     font-size: 19px !important;
   }
+  .el-form-item {
+    float: right;
+  }
+}
+.search-section {
+  display: flex;
+  align-items: center;
+}
+.search-box {
+  display: flex;
+  border: 0;
+  margin-top: 10px;
 }
 </style>

@@ -1,6 +1,6 @@
 <!--
- * @Descripttion: 
- * @version: 
+ * @Descripttion:
+ * @version:
  * @Author: zhubaodong
  * @Date: 2020-03-26 16:28:45
  * @LastEditors: zhubaodong
@@ -8,27 +8,30 @@
  -->
 <template>
   <div class="search-item small">
-    <el-autocomplete
-      size="mini"
-      name="vals"
-      clearable
-      class="inline-input"
-      v-model="input"
-      :fetch-suggestions="querySearch"
-      :placeholder="tip"
-      :trigger-on-focus="false"
-      :popper-class="+onlyPhone ? 'ppName' : ''"
-      @select="inputHandler"
-    >
-      <template slot-scope="{ item }">
-        <div style="display:flex">
-          <div class="name">{{ item.mobile || '-' }}</div>
-          <div class="name" v-if="+onlyPhone">
-            /{{ item.wechat_nikename || '-' }}
+    <el-form @submit.native.prevent>
+      <el-autocomplete
+        size="mini"
+        name="vals"
+        clearable
+        class="inline-input"
+        v-model="input"
+        :fetch-suggestions="querySearch"
+        :placeholder="tip"
+        :trigger-on-focus="false"
+        :popper-class="+onlyPhone ? 'ppName' : ''"
+        @select="inputHandler"
+      >
+        <i class="el-icon-search el-input__icon" slot="suffix"></i>
+        <template slot-scope="{ item }">
+          <div style="display:flex">
+            <div class="name">{{ item.mobile || '-' }}</div>
+            <div class="name" v-if="+onlyPhone">
+              /{{ item.wechat_nikename || '-' }}
+            </div>
           </div>
-        </div>
-      </template></el-autocomplete
-    >
+        </template></el-autocomplete
+      >
+    </el-form>
   </div>
 </template>
 
