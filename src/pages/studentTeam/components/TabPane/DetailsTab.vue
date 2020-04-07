@@ -3,8 +3,8 @@
  * @version:
  * @Author: panjian
  * @Date: 2020-03-16 14:19:58
- * @LastEditors: panjian
- * @LastEditTime: 2020-04-02 21:00:20
+ * @LastEditors: Shentong
+ * @LastEditTime: 2020-04-03 20:53:17
  -->
 <template>
   <div>
@@ -20,7 +20,7 @@
       <el-button
         size="mini"
         type="primary"
-        style="height: 30px; margin-right: 16px;"
+        style="margin-right: 10px;"
         v-if="btnbox"
         @click="finishLessonList"
         >生成完课榜</el-button
@@ -29,7 +29,7 @@
         type="primary"
         size="mini"
         v-if="btnbox"
-        style="height: 30px; margin-right: 10px;"
+        style="margin-right: 10px;"
         v-show="exhibition"
         @click="ExhibitionList"
         >生成作品展</el-button
@@ -134,28 +134,39 @@
           :visible.sync="Exhibition"
           width="500px"
         >
-          <el-radio label="1" disabled v-show="missedClassesOne"
+          <el-radio label="1" disabled v-show="MissedClassesOne"
             >第一周暂无作品</el-radio
           >
           <el-radio
             v-model="ExhibitionData.weekNum"
             label="U1"
-            v-show="RadioOne"
+            v-show="radioOne"
             >第一周</el-radio
           >
-          <el-radio label="2" disabled v-show="missedClassesTwo"
+          <el-radio label="2" disabled v-show="MissedClassesTwo"
             >第二周暂无作品</el-radio
           >
           <el-radio
             v-model="ExhibitionData.weekNum"
             label="U2"
-            v-show="RadioTwo"
+            v-show="radioTwo"
             >第二周</el-radio
           >
           <div slot="footer" class="dialog-footer">
             <el-button @click="Exhibition = false">取 消</el-button>
             <el-button type="primary" @click="exhibitionBtn">确 定</el-button>
           </div>
+        </el-dialog>
+        <!-- 系统课点击生成完课榜与作品展提示框 -->
+        <el-dialog title="活动未开放" :visible.sync="Tips" width="30%">
+          <span class="warning"
+            ><img src="@/assets/images/warning.png" alt=""
+          /></span>
+          <span>此活动仅限体验课</span>
+          <span slot="footer" class="dialog-footer">
+            <el-button @click="Tips = false">取 消</el-button>
+            <el-button type="primary" @click="Tips = false">确 定</el-button>
+          </span>
         </el-dialog>
       </div>
       <!-- <img
@@ -225,10 +236,10 @@ export default {
       MissedClassesOne: false,
       MissedClassesTwo: false,
       // 作品展隐藏单选框
-      RadioOne: true,
-      RadioTwo: true,
-      missedClassesOne: false,
-      missedClassesTwo: false,
+      // RadioOne: true,
+      // RadioTwo: true,
+      // missedClassesOne: false,
+      // missedClassesTwo: false,
       teacherId: '',
       search: '',
       querysData: '',
@@ -284,6 +295,7 @@ export default {
       dialogTableVisible: false,
       dialogFormVisible: false,
       Exhibition: false,
+      Tips: false,
       form: {
         name: '',
         region: '',
@@ -453,6 +465,7 @@ export default {
     handlePosterLoad(picname) {
       this.$nextTick(() => {
         window.scrollTo(0, 0)
+        // 获取要生成图片的dom元素
         html2canvas(document.getElementsByClassName('finishBox')[0], {
           backgroundColor: 'rgba(0, 0, 0, 0)',
           useCORS: true,
@@ -509,6 +522,7 @@ export default {
         )
         this.btnshow(
           this.finishLessonData.weekNum,
+          this.classId.classId.team_type,
           this.classId.classId.team_state
         )
         // const state = '0'
@@ -519,10 +533,11 @@ export default {
       }
     },
     // 生成完课榜图片周按钮显示状态
-    btnshow(weekNum, state) {
+    btnshow(weekNum, type, state) {
       console.log('weekNum', weekNum)
       console.log('state', state)
       this.finishLessonData.isRequest = true
+      this.ExhibitionData.isRequest = true
       if (weekNum === 'U1') {
         if (state === 0) {
           this.radioOne = false
@@ -530,6 +545,7 @@ export default {
           this.MissedClassesOne = true
           this.MissedClassesTwo = true
           this.finishLessonData.isRequest = false
+          this.ExhibitionData.isRequest = false
         } else {
           this.radioOne = true
           this.radioTwo = false
@@ -548,6 +564,17 @@ export default {
           this.MissedClassesOne = false
           this.MissedClassesTwo = false
         }
+      }
+      if (type > 0) {
+        // this.finishLessonData.isRequest = false
+        // this.ExhibitionData.isRequest = false
+        // this.radioOne = false
+        // this.radioTwo = false
+        // this.MissedClassesOne = true
+        // this.MissedClassesTwo = true
+        this.dialogFormVisible = false
+        this.Exhibition = false
+        this.Tips = true
       }
     },
     // 生成完作品展图片周按钮显示状态
@@ -580,37 +607,6 @@ export default {
     //     }
     //   }
     // },
-    Btnshow(weekNum, state) {
-      this.ExhibitionData.isRequest = true
-      console.log('weekNum', weekNum)
-      console.log('state', state)
-      if (weekNum === 'U1') {
-        if (state === 0) {
-          this.RadioOne = false
-          this.RadioTwo = false
-          this.missedClassesOne = true
-          this.missedClassesTwo = true
-          this.ExhibitionData.isRequest = false
-        } else {
-          this.RadioOne = true
-          this.RadioTwo = false
-          this.missedClassesOne = false
-          this.missedClassesTwo = true
-        }
-      } else if (weekNum === 'U2') {
-        if (state === 0) {
-          this.RadioOne = true
-          this.RadioTwo = false
-          this.missedClassesOne = false
-          this.missedClassesTwo = true
-        } else {
-          this.RadioOne = true
-          this.RadioTwo = true
-          this.missedClassesOne = false
-          this.missedClassesTwo = false
-        }
-      }
-    },
     // 点击显示作品展
     ExhibitionList(week) {
       if (
@@ -629,8 +625,9 @@ export default {
         )
         // this.ExhibitionData.studentLesson = currentLesson.substring(0, 4)
         this.ExhibitionData.weekNum = currentLesson.substring(4, 6)
-        this.Btnshow(
+        this.btnshow(
           this.ExhibitionData.weekNum,
+          this.classId.classId.team_type,
           this.classId.classId.team_state
         )
       } else {
@@ -929,7 +926,7 @@ export default {
                 },
                 {
                   id: '6',
-                  statusName: '待确认'
+                  statusName: '待审核'
                 },
                 {
                   id: '7',
@@ -1369,6 +1366,7 @@ export default {
       aLink.click()
       this.$loading().close()
     },
+    // 转换图片为base64
     base64ToBlob(code) {
       const parts = code.split(';base64,')
       const contentType = parts[0].split(':')[1]
@@ -1392,7 +1390,6 @@ export default {
 .btnbox {
   display: flex;
   align-items: center;
-  justify-content: flex-end;
   width: 100%;
   // height: 40px;
   margin-top: 10px;
@@ -1405,6 +1402,19 @@ export default {
   //   right: 150px;
   // }
 }
+.warning {
+  display: inline-block;
+  width: 28px;
+  height: 22px;
+  position: relative;
+  top: 5px;
+
+  img {
+    width: 100%;
+    height: 100%;
+  }
+}
+
 .search-box {
   display: flex;
   border: 0;

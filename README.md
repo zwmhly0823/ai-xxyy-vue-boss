@@ -1,6 +1,6 @@
 # ai-app-vue-toss
 
-### [Graphql测试](http://47.98.38.59:43401/)
+### [Graphql 测试](http://47.98.38.59:43401/)
 
 ### [测试环境](https://msb-ai.meixiu.mobi/frontend/ai-app-vue-toss/student-team/#/)
 
@@ -8,30 +8,34 @@
 
 ### [Search API](http://docker.meixiu.mobi:48767/jsondoc-ui.html?url=/data/search/m1/jsondoc#)
 
-
 ---
 
 ## Project setup
+
 ```
 yarn install
 ```
 
 ### Compiles and hot-reloads for development
+
 ```
 yarn serve
 ```
 
 ### Compiles and minifies for production
+
 ```
 yarn build
 ```
 
 ### Run your unit tests
+
 ```
 yarn test:unit
 ```
 
 ### Lints and fixes files
+
 ```
 yarn lint
 ```
@@ -46,7 +50,7 @@ yarn lint
 ## Git 规范及上线流程
 
 - 分支命名：feature/功能名 feature/版本号 stage/版本号 hotfix/BUG 名称
-- commit 描述：**type必写**：（见/commitlint.config.js）
+- commit 描述：**type 必写**：（见/commitlint.config.js）
 
 ```text
 增加功能时使用  -> feat：功能项描述
@@ -65,16 +69,17 @@ yarn lint
 - 上线后如果出现 bug，紧急严重无法短时间修复的执行回滚 Tags，如果不是紧急不严重的 bug，从 stage/版本号 创建 hotfix/bug 名称 进行 bug 修复，修复完成后合并至 stage/版本号 进行二次上线，测试进行回归测试
 - 上线后定期清理无用的历史分支
 
-
 ## 项目设计
 
 #### 业务模块
-单个业务模块在`src/pages/`的文件夹下。如课程、班级、老师等功能模块划分是单独的一个文件夹，命名方式 `小骆峰`: `studentTeam`
-每个模块的路由、页面、组件正常组织。 
 
-新建模块是，对应完善`src/utils/menuItems.js`文件, 对应模块名称,link属性值为`中线`连接: `student-team` 。 TODO: 待完善。
+单个业务模块在`src/pages/`的文件夹下。如课程、班级、老师等功能模块划分是单独的一个文件夹，命名方式 `小骆峰`: `studentTeam`
+每个模块的路由、页面、组件正常组织。
+
+新建模块是，对应完善`src/utils/menuItems.js`文件, 对应模块名称,link 属性值为`中线`连接: `student-team` 。 TODO: 待完善。
 
 **【参考 `src/pages/dashboard`**】
+
 ```
 |-- moudleName
     |-- components   // 模块内公共组件
@@ -85,18 +90,26 @@ yarn lint
     |-- nav.js       // 左侧导航菜单
 ```
 
-#### UI组件
+#### UI 组件
+
 - `src/components`下是全局组件，各个模块共用，请谨慎修改
 - `src/pages/moduleName/components`下是各个模块的公用组件
 
 #### 布局文件
+
 `src/components/Layout/` 布局组件
+
 - 左侧菜单给 `AppLayout`组件传`props`-navItems。 参考 `src/pages/dashboard`
 
-
 ### Customize configuration
+
 See [Configuration Reference](https://cli.vuejs.org/config/).
 
 ### docs
+
 - [element-ui](https://element.eleme.cn/#/zh-CN/component/quickstart)
 - [sass](https://www.sass.hk/docs/)
+
+### eslint
+
+- [VSCode 使用 ESLint + Prettier 来统一 JS 代码](https://www.cnblogs.com/xjnotxj/p/10828183.html)

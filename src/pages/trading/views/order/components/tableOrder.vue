@@ -22,13 +22,19 @@
             </div>
           </el-col>
           <el-col :span="6">
-            <div class="grid-content">
+            <div class="grid-content grid-centent">
               下单时间:{{ item.ctime ? item.ctime : '-' }}
             </div>
           </el-col>
           <el-col :span="6">
             <div>
-              支付方式:{{ item.payment ? item.payment.trade_type : '-' }}
+              支付方式:{{
+                item.payment
+                  ? item.payment.trade_type
+                  : item.regtype
+                  ? item.regtype
+                  : '-'
+              }}
             </div>
           </el-col>
         </el-row>
@@ -57,7 +63,7 @@
           <div class="card-style1-right">
             <div>
               <div class="card-style1-rmb">
-                {{ item.currency ? item.currency : '人民币' }}:{{
+                {{ item.currency ? item.currency : '¥' }}:{{
                   item.amount ? item.amount : '-'
                 }}
               </div>
@@ -237,21 +243,25 @@ export default {
             item.out_trade_no = item.out_trade_no.split('xiong')[1]
             // 下单时间格式化
             item.ctime = timestamp(item.ctime, 2)
-            // 支付方式
-            if (item.payment) {
-              const tradeType = item.payment.trade_type
+            // 交易方式
+            if (item.regtype) {
               let currency = {}
-              if (tradeType === 4) {
-                item.payment.trade_type = '宝石兑换'
+              if (item.regtype === 4) {
+                item.regtype = '宝石兑换'
                 currency = { currency: '宝石' }
                 Object.assign(item, currency)
                 item.amount = item.gem_integral
-              } else if (tradeType === 5) {
-                item.payment.trade_type = '小熊币兑换'
+              } else if (item.regtype === 5) {
+                item.regtype = '小熊币兑换'
                 currency = { currency: '小熊币' }
                 Object.assign(item, currency)
                 item.amount = item.bear_integral
-              } else if (tradeType === 'WAP') {
+              }
+            }
+            // 支付方式
+            if (item.payment) {
+              const tradeType = item.payment.trade_type
+              if (tradeType === 'WAP') {
                 item.payment.trade_type = '支付宝'
               } else if (tradeType === 'APP') {
                 item.payment.trade_type = 'APP微信'
@@ -376,11 +386,14 @@ export default {
   }
   .el-card__header {
     padding: 10px;
-    background: #f5f7fa;
+    background: #fafafa;
   }
   // 卡片表头
   .el-row {
     padding: 0 !important;
   }
+  // .grid-centent {
+  //   padding-left: 17%;
+  // }
 }
 </style>

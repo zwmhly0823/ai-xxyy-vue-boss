@@ -24,6 +24,7 @@
     </div>
     <!-- v-if="!teacherId" TOSS -->
     <div class="search-export" v-if="!teacherId">
+      <!-- <div class="search-export"> -->
       <div>
         <el-button size="small" type="primary" @click="showExportDialog"
           >导出物流信息</el-button
@@ -79,7 +80,7 @@
       title="文件上传问题"
       :visible.sync="errorDialog.length > 0"
       width="500"
-      custom-class="my-dialog"
+      :before-close="handleClose"
     >
       <p v-for="(item, index) in errorDialog" :key="index">
         {{ item.message }}
@@ -105,13 +106,16 @@ export default {
     return {
       errorDialog: [],
       teacherId: '',
+      operatorId: '',
       searchIn: [],
       open: false,
       dialogVisible: false,
       dickUp: false,
       headers: { 'Content-Type': 'multipart/form-data' },
       expressStatus: '',
-      uploading: false
+      uploading: false,
+      close: false,
+      expressId: ''
     }
   },
   watch: {
@@ -123,6 +127,9 @@ export default {
   },
   created() {
     this.teacherId = isToss()
+    this.operatorId =
+      this.teacherId || JSON.parse(localStorage.getItem('staff')).id
+
     this.expressStatus = '0,1,2,3,6'
   },
   // mounted() {
@@ -136,6 +143,11 @@ export default {
   //   ...mapGetters(['token'])
   // },
   methods: {
+    // 导出物流关闭符号
+    handleClose() {
+      this.errorDialog = false
+      this.$refs.upload.clearFiles()
+    },
     uploadFile(params) {
       const formdata = new FormData()
       const file = params.file
@@ -143,12 +155,12 @@ export default {
       this.uploading = true
       axios
         .post(
-          `/api/o/v1/express/importExpressList?operatorId=${this.teacherId}`,
+          `/api/o/v1/express/importExpressList?operatorId=${this.operatorId}`,
           formdata
         )
         .then((res) => {
           this.uploading = false
-          if (res.code === 0) {
+          if (res.code === 0 && res.payload.length < 1) {
             this.$message({
               showClose: true,
               message: '恭喜你，文件上传成功',
@@ -191,11 +203,23 @@ export default {
     },
 
     showExportDialog() {
+      this.expressId = sessionStorage.getItem('uid') || []
+
       // 如果物流状态选择全部，不能导出
-      if (this.expressStatus === '0,1,2,3,6') {
+      console.log(
+        this.expressStatus === '0,1,2,3,6',
+        this.searchIn,
+        this.expressId
+      )
+      if (
+        this.expressStatus === '0,1,2,3,6' &&
+        !this.searchIn.length &&
+        !this.expressId.length
+      ) {
         this.$message.error('不能导出全部物流，请选择状态或筛选')
         return
       }
+
       this.dickUp = true
     },
     /**
@@ -206,7 +230,7 @@ export default {
       const tableName = 'o_express'
       if (sessionStorage.getItem('uid')) {
         var uid = sessionStorage.getItem('uid').split(',')
-        query = { bool: { must: [{ terms: { user_id: uid } }] } } // 自行通过前端选择的条件进行动态组装
+        query = { bool: { must: [{ terms: { id: uid } }] } } // 自行通过前端选择的条件进行动态组装
         sessionStorage.removeItem('uid')
       } else {
         const term = this.searchIn.map((item, index) => {
@@ -218,10 +242,13 @@ export default {
             item.terms['sup.keyword'] = item.terms.sup
             delete item.terms.sup
           }
+          if (item.terms && item.terms.level) {
+            item.terms['level.keyword'] = item.terms.level
+            delete item.terms.level
+          }
 
           return item
         })
-        term.push({ term: { last_teacher_id: this.teacherId } })
         query = {
           bool: {
             must: term,
@@ -242,7 +269,7 @@ export default {
         id: '物流信息ID',
         user_id: '用户ID',
         out_trade_no: '订单号',
-        packagestype: '课程类型',
+        regtype: '商品类型',
         term: '期数',
         sup: '课程难度',
         level: '课程级别',
@@ -273,10 +300,10 @@ export default {
         responseType: 'blob',
         params
       }).then((res) => {
-        console.log(res)
         this.downloadFn(res, '物流下载')
       })
     },
+    dosomething() {},
     handleSearch(search) {
       // 期数 加 S
       const mySearch = search.map((item) => {
@@ -296,6 +323,7 @@ export default {
     // 下载文件
     downloadFn(data, name = '下载') {
       if (!data) return
+      console.log(data, 'data')
       const blob = new Blob([data])
       const fileUrl = window.URL.createObjectURL(blob)
       const link = document.createElement('a')
@@ -307,6 +335,7 @@ export default {
       document.body.appendChild(link)
       link.click()
       this.dickUp = false
+      this.dosomething()
     }
   }
 }
