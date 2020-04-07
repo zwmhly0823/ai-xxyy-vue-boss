@@ -20,17 +20,14 @@
             :key="index"
             height="52px;"
           >
-            <!-- <td>
-              :src="item.head"
+            <td>
               <img
-                src="https://msb-ai.meixiu.mobi/ai-pm/static/touxiang.png"
+                :src="`${item.head}?x-oss-process=image/resize,l_100`"
                 alt=""
                 @load="loaded(index)"
                 style="vertical-align:middle;width:51px;height:51px;"
                 crossorigin="anonymous"
               />
-            </td> -->
-            <td>
               <span> {{ item.username }}</span>
             </td>
             <td>
@@ -169,13 +166,13 @@ export default {
   },
 
   methods: {
-    // loaded(i) {
-    //   this.num++
-    //   if (this.listinfo.length - 1 === this.num) {
-    //     this.isLoaded = true
-    //     this.$emit('isLoad', this.isLoaded)
-    //   }
-    // }
+    loaded(i) {
+      this.num++
+      if (this.listinfo.length - 1 === this.num) {
+        this.isLoaded = true
+        this.$emit('isLoad', this.isLoaded)
+      }
+    }
   }
 }
 </script>
