@@ -21,8 +21,9 @@
             height="52px;"
           >
             <td>
+              <!-- :src="item.head" -->
               <img
-                :src="item.head"
+                src="https://msb-ai.meixiu.mobi/ai-pm/static/touxiang.png"
                 alt=""
                 @load="loaded(index)"
                 style="vertical-align:middle;width:51px;height:51px;"
@@ -34,68 +35,92 @@
               <img
                 src="@/assets/images/Stars.png"
                 alt=""
-                v-if="item.completeArr[0].is_complete === '1'"
+                v-if="
+                  item.completeArr[0] && item.completeArr[0].is_complete === '1'
+                "
               />
               <img
                 src="@/assets/images/starsgrey.png"
                 alt=""
-                v-else-if="item.completeArr[0].is_complete === '0'"
+                v-else-if="
+                  item.completeArr[0] && item.completeArr[0].is_complete === '0'
+                "
               />
               <img
                 src="@/assets/images/lock.png"
                 alt=""
-                v-else-if="item.completeArr[0].is_complete === '2'"
+                v-else-if="
+                  item.completeArr[0] && item.completeArr[0].is_complete === '2'
+                "
               />
             </td>
             <td>
               <img
                 src="@/assets/images/Stars.png"
                 alt=""
-                v-if="item.completeArr[1].is_complete === '1'"
+                v-if="
+                  item.completeArr[1] && item.completeArr[1].is_complete === '1'
+                "
               />
               <img
                 src="@/assets/images/starsgrey.png"
                 alt=""
-                v-else-if="item.completeArr[1].is_complete === '0'"
+                v-else-if="
+                  item.completeArr[1] && item.completeArr[1].is_complete === '0'
+                "
               />
               <img
                 src="@/assets/images/lock.png"
                 alt=""
-                v-else-if="item.completeArr[1].is_complete === '2'"
+                v-else-if="
+                  item.completeArr[1] && item.completeArr[1].is_complete === '2'
+                "
               />
             </td>
             <td>
               <img
                 src="@/assets/images/Stars.png"
                 alt=""
-                v-if="item.completeArr[2].is_complete === '1'"
+                v-if="
+                  item.completeArr[2] && item.completeArr[2].is_complete === '1'
+                "
               />
               <img
                 src="@/assets/images/starsgrey.png"
                 alt=""
-                v-else-if="item.completeArr[2].is_complete === '0'"
+                v-else-if="
+                  item.completeArr[2] && item.completeArr[2].is_complete === '0'
+                "
               />
               <img
                 src="@/assets/images/lock.png"
                 alt=""
-                v-else-if="item.completeArr[2].is_complete === '2'"
+                v-else-if="
+                  item.completeArr[2] && item.completeArr[2].is_complete === '2'
+                "
               />
             </td>
             <td>
               <img
                 src="@/assets/images/Stars.png"
                 alt=""
-                v-if="item.completeArr[3].is_complete === '1'"
+                v-if="
+                  item.completeArr[3] && item.completeArr[3].is_complete === '1'
+                "
               />
               <img
                 src="@/assets/images/starsgrey.png"
                 alt=""
-                v-else-if="item.completeArr[3].is_complete === '0'"
+                v-else-if="
+                  item.completeArr[3] && item.completeArr[3].is_complete === '0'
+                "
               />
               <img
                 src="@/assets/images/lock.png"
                 alt=""
-                v-else-if="item.completeArr[3].is_complete === '2'"
+                v-else-if="
+                  item.completeArr[3] && item.completeArr[3].is_complete === '2'
+                "
               />
             </td>
           </tr>

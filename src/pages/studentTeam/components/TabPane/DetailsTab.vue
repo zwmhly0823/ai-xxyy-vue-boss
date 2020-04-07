@@ -3,8 +3,8 @@
  * @version:
  * @Author: panjian
  * @Date: 2020-03-16 14:19:58
- * @LastEditors: panjian
- * @LastEditTime: 2020-04-03 16:28:47
+ * @LastEditors: Shentong
+ * @LastEditTime: 2020-04-03 20:53:17
  -->
 <template>
   <div>
@@ -20,7 +20,7 @@
       <el-button
         size="mini"
         type="primary"
-        style="height: 30px; margin-right: 16px;"
+        style="margin-right: 10px;"
         v-if="btnbox"
         @click="finishLessonList"
         >生成完课榜</el-button
@@ -29,7 +29,7 @@
         type="primary"
         size="mini"
         v-if="btnbox"
-        style="height: 30px; margin-right: 10px;"
+        style="margin-right: 10px;"
         v-show="exhibition"
         @click="ExhibitionList"
         >生成作品展</el-button
@@ -927,7 +927,7 @@ export default {
                 },
                 {
                   id: '6',
-                  statusName: '待确认'
+                  statusName: '待审核'
                 },
                 {
                   id: '7',
@@ -1391,7 +1391,6 @@ export default {
 .btnbox {
   display: flex;
   align-items: center;
-  justify-content: flex-end;
   width: 100%;
   // height: 40px;
   margin-top: 10px;
@@ -1420,7 +1419,7 @@ export default {
 .search-box {
   display: flex;
   border: 0;
-  margin: 0 -60px 0 0;
+  margin: 0;
 }
 
 .tabs-tab {

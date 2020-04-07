@@ -161,6 +161,7 @@
 import TabBar from './TabPane/TabBar.vue'
 import axios from '@/api/axios'
 import dayjs from 'dayjs'
+import { isToss } from '@/utils/index'
 export default {
   props: {
     classId: {
@@ -174,12 +175,17 @@ export default {
   data() {
     return {
       classMessage: {},
-      cout: 0
+      cout: 0,
+      teacherId: ''
     }
   },
   computed: {},
   watch: {
     classId(vals) {
+      const teacherId = isToss()
+      if (teacherId) {
+        this.teacherId = teacherId
+      }
       if (vals.classId) {
         this.getClassTeacher(vals.classId.id)
         console.log(vals, this.cout++, 'vals')
@@ -242,19 +248,15 @@ export default {
           } else {
             res.data.detail.state = '今日开课'
           }
-          // console.log(
-          //   this.classId,
-          //   this.classId.week,
-          //   this.classId.formatCtime,
-          //   this.classId.classId.enrolled,
-          //   'seeek'
-          // )
           /** localstorage teacher 添加 “teacher_wx” 字段 */
-          const teacher = JSON.parse(localStorage.getItem('teacher'))
-          const teacherWx = res.data.detail.teacher_wx
-          teacherWx && (teacher.teacher_wx = teacherWx)
-          localStorage.setItem('teacher', JSON.stringify(teacher))
+          if (this.teacherId) {
+            const teacher = JSON.parse(localStorage.getItem('teacher'))
+            const teacherWx = res.data.detail.teacher_wx
+            teacherWx && (teacher.teacher_wx = teacherWx)
+            localStorage.setItem('teacher', JSON.stringify(teacher))
+          }
           /** localstorage teacher 添加 “teacher_wx” 字段 */
+
           res.data.detail.todayTrans =
             res.data.detail.statictis.today_order /
             this.classId.classId.enrolled
