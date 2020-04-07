@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 20:22:24
  * @LastEditors: panjian
- * @LastEditTime: 2020-04-07 11:22:19
+ * @LastEditTime: 2020-04-07 11:23:57
  -->
 <template>
   <div class="table-box">
@@ -589,7 +589,7 @@ export default {
         receiptTel: '',
         addressDetail: ''
       },
-      wechatSort: 'desc',
+      wechatSort: '',
       groupSort: 'desc',
       followSort: 'desc',
       renderHtml: true
@@ -673,6 +673,7 @@ export default {
         })
         this.followSort = 'asc'
       }
+      console.log(this.followSort)
     },
     // 添加物流地址按钮
     handelAddExpress(row) {
@@ -988,6 +989,12 @@ export default {
     padding-top: 5px;
     float: right;
     margin-right: 20px;
+  }
+  .header-sort {
+    cursor: pointer;
+    .hover {
+      color: #409eff;
+    }
   }
 }
 </style>

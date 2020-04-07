@@ -21,6 +21,7 @@
         :popper-class="+onlyPhone ? 'ppName' : ''"
         @select="inputHandler"
       >
+        <i class="el-icon-search el-input__icon" slot="suffix"></i>
         <template slot-scope="{ item }">
           <div style="display:flex">
             <div class="name">{{ item.mobile || '-' }}</div>
