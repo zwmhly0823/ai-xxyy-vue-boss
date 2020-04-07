@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-26 16:30:11
  * @LastEditors: zhubaodong
- * @LastEditTime: 2020-03-28 22:57:29
+ * @LastEditTime: 2020-04-03 17:49:45
  -->
 <template>
   <div class="search-item">
@@ -12,6 +12,7 @@
       class="small"
       size="mini"
       v-model="timeData"
+      :default-time="['00:00:00', '23:59:59']"
       value-format="timestamp"
       type="datetimerange"
       prefix-icon="none"
@@ -44,44 +45,54 @@ export default {
       pickerOptions: {
         shortcuts: [
           {
-            text: '最近一天',
+            text: '今天',
             onClick(picker) {
-              const end = new Date()
-              const start = new Date()
-              start.setTime(start.getTime() - 3600 * 1000 * 24 * 1)
+              const end = new Date().getTime()
+              const start = new Date(new Date().toLocaleDateString()).getTime()
               picker.$emit('pick', [start, end])
             }
           },
           {
-            text: '最近一周',
+            text: '昨天',
             onClick(picker) {
-              const end = new Date()
-              const start = new Date()
-              start.setTime(start.getTime() - 3600 * 1000 * 24 * 7)
+              const end =
+                new Date(new Date().toLocaleDateString()).getTime() - 1
+              const start =
+                new Date(new Date().toLocaleDateString()).getTime() -
+                24 * 60 * 60 * 1000
               picker.$emit('pick', [start, end])
             }
           },
           {
-            text: '最近一个月',
+            text: '本周',
             onClick(picker) {
-              const end = new Date()
-              const start = new Date()
-              start.setTime(start.getTime() - 3600 * 1000 * 24 * 30)
+              var date = new Date()
+              const end = new Date().getTime()
+              const start =
+                new Date(new Date().toLocaleDateString()).getTime() -
+                (date.getDay() - 1) * 86400000
               picker.$emit('pick', [start, end])
             }
           },
           {
-            text: '最近三个月',
+            text: '本月',
             onClick(picker) {
-              const end = new Date()
-              const start = new Date()
-              start.setTime(start.getTime() - 3600 * 1000 * 24 * 90)
+              const date = new Date()
+              date.setDate(1)
+              const end = new Date().getTime()
+              const start = new Date(
+                new Date(date).toLocaleDateString()
+              ).getTime()
               picker.$emit('pick', [start, end])
             }
           }
-        ]
+        ],
+        disabledDate: (res) => {
+          console.log(res, 'resdata')
+          return false
+        }
       },
-      timeData: ''
+      timeData: []
     }
   },
   computed: {},

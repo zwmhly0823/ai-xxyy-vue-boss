@@ -3,8 +3,8 @@
  * @version:
  * @Author: panjian
  * @Date: 2020-03-16 14:19:58
- * @LastEditors: Shentong
- * @LastEditTime: 2020-04-03 20:53:17
+ * @LastEditors: panjian
+ * @LastEditTime: 2020-04-07 20:20:07
  -->
 <template>
   <div>
@@ -34,17 +34,12 @@
         @click="ExhibitionList"
         >生成作品展</el-button
       >
+      <!-- <checkBox
+        :tables="table"
+        v-if="this.table.tabs == 3 || this.table.tabs == 4"
+      ></checkBox> -->
     </div>
     <div>
-      <!-- <m-search
-        class="search-box"
-        @search="handleSearch"
-        phone="uid"
-        onlyPhone="1"
-        phoneTip="手机号/微信昵称 查询"
-        :teamId="classId.classId.id"
-      /> -->
-
       <div class="tabs-tab">
         <el-tabs v-model="activeName" @tab-click="handleClick">
           <el-tab-pane label="加好友进群" name="group">
@@ -210,7 +205,6 @@ import detailsTable from './components/detailsTable'
 import MSearch from '@/components/MSearch/index.vue'
 import axios from '@/api/axios'
 import { timestamp, GetAgeByBrithday, isToss } from '@/utils/index'
-import status from '@/utils/status'
 import finishclass from './FinishClass'
 import exhibition from './Exhibition'
 import html2canvas from 'html2canvas'
@@ -243,7 +237,6 @@ export default {
       teacherId: '',
       search: '',
       querysData: '',
-
       experssShow: false,
       // 单选按钮
       // radio: '',
@@ -315,6 +308,7 @@ export default {
     // getQcUrl: function() {
     //   this.handlePosterLoad()
     // },
+
     classId(value) {
       // 切换标签 语音停止
       const audios = this.$refs
@@ -322,7 +316,6 @@ export default {
       audiosList.forEach((item, index) => {
         item[0].load()
       })
-      // this.table.audioIndex = 10000
       this.sortGroup = ''
       this.table.currentPage = 1
       console.log(value.classId, 'classId')
@@ -370,20 +363,17 @@ export default {
     if (teacherId) {
       this.teacherId = teacherId
     }
-    console.log(status, 'status')
     this.table.tableLabel = [{ label: '购买时间', prop: 'buytime' }]
   },
   methods: {
     // 排序
     onGroupSort(data) {
-      // this.sortGroup = `sort:${data}`
       this.sortGroup = `sort:${JSON.stringify(data)}`
       console.log(this.sortGroup, 'sort 父组件')
       this.getGroup()
     },
     // 搜索组件传回来的值
     handleSearch(res) {
-      console.log(res, 'res[0].term.uid')
       if (res.length === 0) {
         console.log('res传的空')
         this.search = ''
@@ -1276,7 +1266,6 @@ export default {
       audiosList.forEach((item, index) => {
         item[0].load()
       })
-      // this.table.audioIndex = 10000
       if (tab.index === '0') {
         this.btnbox = false
         // 加好友进群
