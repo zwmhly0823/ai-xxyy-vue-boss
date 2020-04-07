@@ -61,7 +61,7 @@
         v-for="item in levelList"
         :key="item.id"
         :label="item.name"
-        :value="item.id"
+        :value="item.name"
       >
       </el-option>
     </el-select>
