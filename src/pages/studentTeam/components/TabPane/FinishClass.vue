@@ -20,8 +20,8 @@
             :key="index"
             height="52px;"
           >
-            <td>
-              <!-- :src="item.head" -->
+            <!-- <td>
+              :src="item.head"
               <img
                 src="https://msb-ai.meixiu.mobi/ai-pm/static/touxiang.png"
                 alt=""
@@ -29,6 +29,8 @@
                 style="vertical-align:middle;width:51px;height:51px;"
                 crossorigin="anonymous"
               />
+            </td> -->
+            <td>
               <span> {{ item.username }}</span>
             </td>
             <td>
@@ -137,7 +139,7 @@
 export default {
   props: {
     listData: {
-      type: Object,
+      type: Array,
       default: null
     },
     weekNum: {
@@ -152,31 +154,28 @@ export default {
 
   data() {
     return {
-      listinfo: [],
-      listTitle: '',
       isLoaded: false,
       num: 0
     }
   },
-  watch: {
-    listData(value) {
-      console.log('child - receive ----> res:', value)
-      this.listinfo = value.data.getStuComRankingList
-      console.log('listinfo -------', this.listinfo)
+  computed: {
+    listinfo() {
+      return this.listData || []
     },
-    weekNum(value) {
-      this.listTitle = value === 'U1' ? 'W1' : 'W2'
+    listTitle() {
+      const listTitle = this.weekNum === 'U1' ? 'W1' : 'W2'
+      return listTitle || ''
     }
   },
 
   methods: {
-    loaded(i) {
-      this.num++
-      if (this.listinfo.length - 1 === this.num) {
-        this.isLoaded = true
-        this.$emit('isLoad', this.isLoaded)
-      }
-    }
+    // loaded(i) {
+    //   this.num++
+    //   if (this.listinfo.length - 1 === this.num) {
+    //     this.isLoaded = true
+    //     this.$emit('isLoad', this.isLoaded)
+    //   }
+    // }
   }
 }
 </script>
