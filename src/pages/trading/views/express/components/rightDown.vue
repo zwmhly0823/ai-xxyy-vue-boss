@@ -419,8 +419,8 @@ export default {
           if (item.term.user_id) {
             timeType.user_id = item.term.user_id
           }
-          if (item.term.topic_id) {
-            timeType.topic_id = `${item.term.topic_id}`
+          if (item.term.regtype) {
+            timeType.regtype = `${item.term.regtype}`
           }
         }
 

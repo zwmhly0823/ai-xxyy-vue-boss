@@ -15,7 +15,7 @@
         stage="term"
         sup="sup"
         level="level"
-        topicType="topic_id"
+        topicType="regtype"
         :timeData="[
           { text: '购买时间', value: 'ctime' },
           { text: '揽收时间', value: 'delivery_collect_time' },
@@ -24,7 +24,7 @@
       />
     </div>
     <!-- v-if="!teacherId" TOSS -->
-    <div class="search-export">
+    <div class="search-export" v-if="!teacherId">
       <!-- <div class="search-export"> -->
       <div>
         <el-button size="small" type="primary" @click="showExportDialog"
@@ -123,7 +123,8 @@ export default {
       expressStatus: '',
       uploading: false,
       close: false,
-      expressId: ''
+      expressId: '',
+      system: ['2', '3']
     }
   },
   watch: {
@@ -265,7 +266,12 @@ export default {
             item.terms['sup.keyword'] = item.terms.sup
             delete item.terms.sup
           }
-
+          if (item.term && item.term.regtype) {
+            item.terms = {
+              regtype: item.term.regtype.split(',')
+            }
+            delete item.term
+          }
           return item
         })
         query = {
@@ -333,6 +339,22 @@ export default {
           })
           item.terms.sup = sup
           item.terms['sup.keyword'] = JSON.stringify(sup)
+        }
+        if (item.term && item.term.regtype) {
+          let regtype = ''
+          if (Number(item.term.regtype) === 1) {
+            regtype = '5'
+          }
+          if (Number(item.term.regtype) === 2) {
+            regtype = '4'
+          }
+          if (Number(item.term.regtype) === 4) {
+            regtype = '1'
+          }
+          if (Number(item.term.regtype) === 5) {
+            regtype = '2,3'
+          }
+          item.term.regtype = regtype
         }
         return item
       })
