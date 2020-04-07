@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 20:22:24
  * @LastEditors: panjian
- * @LastEditTime: 2020-04-07 15:52:57
+ * @LastEditTime: 2020-04-07 21:12:55
  -->
 <template>
   <div class="table-box">
@@ -64,7 +64,7 @@
             <div class="scope-info-box">
               <img
                 class="scope-info-img borders"
-                :src="scope.row.head"
+                :src="`${scope.row.head}?x-oss-process=image/resize,l_100`"
                 alt=""
               />
               <div class="info-telephone">{{ scope.row.mobile }}</div>
@@ -88,7 +88,8 @@
         >
         </el-table-column>
         <!-- 已加好友 -->
-        <el-table-column v-if="renderHtml" prop="added_wechat" label="已加好友">
+        <el-table-column prop="added_wechat" label="已加好友">
+          <!-- <template v-if="renderHtml" slot="header"> -->
           <template slot="header">
             <span @click="onSortWechat">已加好友</span>
             <div v-if="wechatShowIcon === 1" class="added-wechat-icon-box">
@@ -258,7 +259,7 @@
               <img
                 v-if="scope.row.head != ''"
                 class="logistics-wx-img borders"
-                :src="scope.row.head"
+                :src="`${scope.row.head}?x-oss-process=image/resize,l_100`"
                 alt=""
               />
               <span v-else class="logistics-wx-imgs borders"> - </span>
@@ -338,7 +339,7 @@
               <img
                 v-if="scope.row.head != ''"
                 class="login-wx-img borders"
-                :src="scope.row.head"
+                :src="`${scope.row.head}?x-oss-process=image/resize,l_100`"
                 alt=""
               />
               <span v-else class="login-wx-imgs borders"> - </span>
@@ -397,7 +398,7 @@
               <img
                 v-if="scope.row.head != ''"
                 class="participateIn-wx-img borders"
-                :src="scope.row.head"
+                :src="`${scope.row.head}?x-oss-process=image/resize,l_100`"
                 alt=""
               />
               <span v-else class="participateIn-wx-imgs borders"> - </span>
@@ -478,7 +479,7 @@
               <img
                 v-if="scope.row.head != ''"
                 class="works-wx-img borders"
-                :src="scope.row.head"
+                :src="`${scope.row.head}?x-oss-process=image/resize,l_100`"
                 alt=""
               />
               <span v-else class="works-wx-imgs borders"> - </span>
@@ -501,7 +502,9 @@
               <img
                 v-if="scope.row.task_image"
                 class="works-task-img borders"
-                :src="scope.row.task_image"
+                :src="
+                  `${scope.row.task_image}?x-oss-process=image/resize,l_100`
+                "
                 alt=""
               />
               <span v-else>-</span>
@@ -666,12 +669,12 @@ export default {
       params.push(timestamp(this.classId.classId.start_day, 5))
       params.push(teacherWx.teacher_wx)
       console.log(mobiles, type, params, 'params')
-      // this.$http.User.sendBatch(mobiles, type, params).then((res) => {
-      //   this.$message({
-      //     message: '已发送短信',
-      //     type: 'success'
-      //   })
-      // })
+      this.$http.User.sendBatch(mobiles, type, params).then((res) => {
+        this.$message({
+          message: '已发送短信',
+          type: 'success'
+        })
+      })
     },
     // 复选框
     handleSelectionChange(val) {

@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 14:19:58
  * @LastEditors: panjian
- * @LastEditTime: 2020-04-07 15:24:59
+ * @LastEditTime: 2020-04-07 21:13:21
  -->
 <template>
   <div>
@@ -34,17 +34,12 @@
         @click="ExhibitionList"
         >生成作品展</el-button
       >
+      <!-- <checkBox
+        :tables="table"
+        v-if="this.table.tabs == 3 || this.table.tabs == 4"
+      ></checkBox> -->
     </div>
     <div>
-      <!-- <m-search
-        class="search-box"
-        @search="handleSearch"
-        phone="uid"
-        onlyPhone="1"
-        phoneTip="手机号/微信昵称 查询"
-        :teamId="classId.classId.id"
-      /> -->
-
       <div class="tabs-tab">
         <el-tabs v-model="activeName" @tab-click="handleClick">
           <el-tab-pane label="加好友进群" name="group">
