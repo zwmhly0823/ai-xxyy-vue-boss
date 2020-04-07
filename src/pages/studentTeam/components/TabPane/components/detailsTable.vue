@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 20:22:24
  * @LastEditors: panjian
- * @LastEditTime: 2020-04-07 11:30:04
+ * @LastEditTime: 2020-04-07 12:36:22
  -->
 <template>
   <div class="table-box">
@@ -611,6 +611,8 @@ export default {
   },
   data() {
     return {
+      selectUserMobile: [],
+      moreTitle: false,
       wechatShowIcon: 1,
       groupShowIcon: 1,
       followShowIcon: 1,
@@ -626,7 +628,7 @@ export default {
         receiptTel: '',
         addressDetail: ''
       },
-      wechatSort: '',
+      wechatSort: 'desc',
       groupSort: 'desc',
       followSort: 'desc',
       renderHtml: true
@@ -660,18 +662,23 @@ export default {
     },
     batchBtn() {
       console.log(this.classId, '点击加好友')
+      const params = []
       const mobiles = Object.values(this.selectUserMobile)
-      const type = `${this.classId.classId.sup}${
+      const sup = `${this.classId.classId.sup}${
         this.classId.classId.team_type ? '系统课' : '体验课'
       }`
-      const params = {
-        start_day: timestamp(this.classId.classId.start_day, 5),
-        type: 'BUY_COURSE'
-      }
+      const teacherWx = JSON.parse(localStorage.getItem('teacher'))
+      const type = 'BUY_COURSE'
+      params.push(sup)
+      params.push(timestamp(this.classId.classId.start_day, 5))
+      params.push(teacherWx.teacher_wx)
       console.log(mobiles, type, params, 'params')
-      // this.$http.User.sendBatch(mobiles,type,params).then((res) => {
-      //   console.log(res, '发送短信')
-      // })
+      this.$http.User.sendBatch(mobiles, type, params).then((res) => {
+        this.$message({
+          message: '已发送添加好友短信',
+          type: 'success'
+        })
+      })
     },
     // 复选框
     handleSelectionChange(val) {
