@@ -332,7 +332,6 @@ export default {
               console.log(err)
             ))
         if (getToken && getToken.token) {
-          debugger
           setToken(getToken.token)
           if (getToken.teacher) {
             const {
