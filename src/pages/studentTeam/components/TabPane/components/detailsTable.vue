@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 20:22:24
  * @LastEditors: panjian
- * @LastEditTime: 2020-04-07 15:52:57
+ * @LastEditTime: 2020-04-07 20:20:44
  -->
 <template>
   <div class="table-box">
@@ -88,7 +88,8 @@
         >
         </el-table-column>
         <!-- 已加好友 -->
-        <el-table-column v-if="renderHtml" prop="added_wechat" label="已加好友">
+        <el-table-column prop="added_wechat" label="已加好友">
+          <!-- <template v-if="renderHtml" slot="header"> -->
           <template slot="header">
             <span @click="onSortWechat">已加好友</span>
             <div v-if="wechatShowIcon === 1" class="added-wechat-icon-box">
@@ -666,12 +667,12 @@ export default {
       params.push(timestamp(this.classId.classId.start_day, 5))
       params.push(teacherWx.teacher_wx)
       console.log(mobiles, type, params, 'params')
-      // this.$http.User.sendBatch(mobiles, type, params).then((res) => {
-      //   this.$message({
-      //     message: '已发送短信',
-      //     type: 'success'
-      //   })
-      // })
+      this.$http.User.sendBatch(mobiles, type, params).then((res) => {
+        this.$message({
+          message: '已发送短信',
+          type: 'success'
+        })
+      })
     },
     // 复选框
     handleSelectionChange(val) {
