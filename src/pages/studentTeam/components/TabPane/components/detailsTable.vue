@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 20:22:24
  * @LastEditors: panjian
- * @LastEditTime: 2020-04-07 20:20:44
+ * @LastEditTime: 2020-04-07 21:12:55
  -->
 <template>
   <div class="table-box">
@@ -64,7 +64,7 @@
             <div class="scope-info-box">
               <img
                 class="scope-info-img borders"
-                :src="scope.row.head"
+                :src="`${scope.row.head}?x-oss-process=image/resize,l_100`"
                 alt=""
               />
               <div class="info-telephone">{{ scope.row.mobile }}</div>
@@ -259,7 +259,7 @@
               <img
                 v-if="scope.row.head != ''"
                 class="logistics-wx-img borders"
-                :src="scope.row.head"
+                :src="`${scope.row.head}?x-oss-process=image/resize,l_100`"
                 alt=""
               />
               <span v-else class="logistics-wx-imgs borders"> - </span>
@@ -339,7 +339,7 @@
               <img
                 v-if="scope.row.head != ''"
                 class="login-wx-img borders"
-                :src="scope.row.head"
+                :src="`${scope.row.head}?x-oss-process=image/resize,l_100`"
                 alt=""
               />
               <span v-else class="login-wx-imgs borders"> - </span>
@@ -398,7 +398,7 @@
               <img
                 v-if="scope.row.head != ''"
                 class="participateIn-wx-img borders"
-                :src="scope.row.head"
+                :src="`${scope.row.head}?x-oss-process=image/resize,l_100`"
                 alt=""
               />
               <span v-else class="participateIn-wx-imgs borders"> - </span>
@@ -479,7 +479,7 @@
               <img
                 v-if="scope.row.head != ''"
                 class="works-wx-img borders"
-                :src="scope.row.head"
+                :src="`${scope.row.head}?x-oss-process=image/resize,l_100`"
                 alt=""
               />
               <span v-else class="works-wx-imgs borders"> - </span>
@@ -502,7 +502,9 @@
               <img
                 v-if="scope.row.task_image"
                 class="works-task-img borders"
-                :src="scope.row.task_image"
+                :src="
+                  `${scope.row.task_image}?x-oss-process=image/resize,l_100`
+                "
                 alt=""
               />
               <span v-else>-</span>
