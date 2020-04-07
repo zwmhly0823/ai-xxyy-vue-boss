@@ -15,7 +15,8 @@
       @select="handleSelect"
       @select-all="handleAllSelect"
     >
-      <el-table-column type="selection" width="25"> </el-table-column>
+      <el-table-column type="selection" width="25" v-if="!teacherId">
+      </el-table-column>
       <el-table-column width="25" v-if="!teacherId">
         <template slot-scope="scope" v-if="dataExp.id == 6">
           <!-- <div v-show="false">{{ scope }}</div> -->
@@ -418,8 +419,8 @@ export default {
           if (item.term.user_id) {
             timeType.user_id = item.term.user_id
           }
-          if (item.term.topic_id) {
-            timeType.topic_id = `${item.term.topic_id}`
+          if (item.term.regtype) {
+            timeType.regtype = `${item.term.regtype}`
           }
         }
 

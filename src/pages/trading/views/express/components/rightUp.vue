@@ -15,6 +15,7 @@
         stage="term"
         sup="sup"
         level="level"
+        topicType="regtype"
         :timeData="[
           { text: '购买时间', value: 'ctime' },
           { text: '揽收时间', value: 'delivery_collect_time' },
@@ -46,7 +47,12 @@
         </el-button>
       </span>
     </el-dialog>
-    <el-dialog title="导入物流信息" :visible.sync="dialogVisible" width="30%">
+    <el-dialog
+      title="导入物流信息"
+      :visible.sync="dialogVisible"
+      :before-close="handleCloseUpdata"
+      width="30%"
+    >
       <!-- action="/api/o/v1/express/importExpressList" -->
 
       <el-upload
@@ -59,6 +65,7 @@
         :auto-upload="false"
         :limit="1"
         :http-request="uploadFile"
+        :on-progress="uploadProgress"
       >
         <el-button slot="trigger" size="small" type="primary"
           >选取文件</el-button
@@ -68,6 +75,7 @@
           size="small"
           type="success"
           @click="submitUpload"
+          :disabled="uploading"
           >上传到服务器</el-button
         >
         <!-- :loading="uploading" -->
@@ -129,7 +137,6 @@ export default {
     this.teacherId = isToss()
     this.operatorId =
       this.teacherId || JSON.parse(localStorage.getItem('staff')).id
-
     this.expressStatus = '0,1,2,3,6'
   },
   // mounted() {
@@ -143,6 +150,21 @@ export default {
   //   ...mapGetters(['token'])
   // },
   methods: {
+    // 上传进度
+    uploadProgress(event, file, fileList) {
+      console.log(
+        event,
+        file,
+        fileList,
+        'event, file, fileList--------------------'
+      )
+    },
+    // 上传物流关闭符号
+    handleCloseUpdata() {
+      this.dialogVisible = false
+      this.$refs.upload.clearFiles()
+      console.log(this.errorDialog, '----------------------')
+    },
     // 导出物流关闭符号
     handleClose() {
       this.errorDialog = false
@@ -159,8 +181,9 @@ export default {
           formdata
         )
         .then((res) => {
+          this.$refs.upload.clearFiles()
           this.uploading = false
-          if (res.code === 0 && res.payload.length < 1) {
+          if (res.code === 0 && res.payload.length < 1 && res.payload) {
             this.$message({
               showClose: true,
               message: '恭喜你，文件上传成功',
@@ -168,7 +191,7 @@ export default {
             })
           }
           this.dialogVisible = false
-          this.errorDialog = res.payload
+          this.errorDialog = !res.errors ? res.payload : []
         })
         .catch((error) => {
           // 前端的token留在点击退出按钮那里删除，这里就只是提示过期
@@ -247,6 +270,12 @@ export default {
             delete item.terms.level
           }
 
+          if (item.term && item.term.regtype) {
+            item.terms = {
+              regtype: item.term.regtype.split(',')
+            }
+            delete item.term
+          }
           return item
         })
         query = {
@@ -314,6 +343,22 @@ export default {
           })
           item.terms.sup = sup
           item.terms['sup.keyword'] = JSON.stringify(sup)
+        }
+        if (item.term && item.term.regtype) {
+          let regtype = ''
+          if (Number(item.term.regtype) === 1) {
+            regtype = '5'
+          }
+          if (Number(item.term.regtype) === 2) {
+            regtype = '4'
+          }
+          if (Number(item.term.regtype) === 4) {
+            regtype = '1'
+          }
+          if (Number(item.term.regtype) === 5) {
+            regtype = '2,3'
+          }
+          item.term.regtype = regtype
         }
         return item
       })
