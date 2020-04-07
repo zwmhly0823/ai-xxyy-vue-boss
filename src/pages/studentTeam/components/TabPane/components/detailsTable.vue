@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 20:22:24
  * @LastEditors: panjian
- * @LastEditTime: 2020-04-03 19:10:32
+ * @LastEditTime: 2020-04-07 11:22:19
  -->
 <template>
   <div class="table-box">
@@ -48,10 +48,21 @@
         >
         </el-table-column>
         <!-- 已加好友 -->
-        <el-table-column prop="added_wechat" label="已加好友">
+        <el-table-column v-if="renderHtml" prop="added_wechat" label="已加好友">
           <template slot="header">
             <span @click="onSortWechat">已加好友</span>
-            <i class="el-icon-d-caret" />
+            <div v-if="wechatShowIcon === 1" class="added-wechat-icon-box">
+              <i class="el-icon-caret-top top"></i>
+              <i class="el-icon-caret-bottom bottom"></i>
+            </div>
+            <div v-if="wechatShowIcon === 2" class="added-wechat-icon-box">
+              <i class="el-icon-caret-top top"></i>
+              <i class="el-icon-caret-bottom bottom-color"></i>
+            </div>
+            <div v-if="wechatShowIcon === 3" class="added-wechat-icon-box">
+              <i class="el-icon-caret-top top-color"></i>
+              <i class="el-icon-caret-bottom bottom"></i>
+            </div>
           </template>
           <template slot-scope="scope">
             <!-- <span>{{ scope.row.friend }}</span> -->
@@ -97,7 +108,18 @@
         <el-table-column prop="added_group" label="已进群">
           <template slot="header">
             <span @click="onSortGroup">已进群</span>
-            <i class="el-icon-d-caret" />
+            <div v-if="groupShowIcon === 1" class="added-wechat-icon-box">
+              <i class="el-icon-caret-top top"></i>
+              <i class="el-icon-caret-bottom bottom"></i>
+            </div>
+            <div v-if="groupShowIcon === 2" class="added-wechat-icon-box">
+              <i class="el-icon-caret-top top"></i>
+              <i class="el-icon-caret-bottom bottom-color"></i>
+            </div>
+            <div v-if="groupShowIcon === 3" class="added-wechat-icon-box">
+              <i class="el-icon-caret-top top-color"></i>
+              <i class="el-icon-caret-bottom bottom"></i>
+            </div>
           </template>
           <template slot-scope="scope">
             <img
@@ -142,7 +164,18 @@
         <el-table-column prop="follow" label="关注公众号">
           <template slot="header">
             <span @click="onSortFollow">关注公众号</span>
-            <i class="el-icon-d-caret" />
+            <div v-if="followShowIcon === 1" class="added-wechat-icon-box">
+              <i class="el-icon-caret-top top"></i>
+              <i class="el-icon-caret-bottom bottom"></i>
+            </div>
+            <div v-if="followShowIcon === 2" class="added-wechat-icon-box">
+              <i class="el-icon-caret-top top"></i>
+              <i class="el-icon-caret-bottom bottom-color"></i>
+            </div>
+            <div v-if="followShowIcon === 3" class="added-wechat-icon-box">
+              <i class="el-icon-caret-top top-color"></i>
+              <i class="el-icon-caret-bottom bottom"></i>
+            </div>
           </template>
           <template slot-scope="scope">
             <img
@@ -230,26 +263,6 @@
                   @click="handelAddExpress"
                   >帮他填写</el-button
                 >
-                <!-- <el-popover
-                  v-model="showExpress"
-                  placement="right"
-                  width="300"
-                  trigger="click"
-                >
-                  <logistics-form
-                    @addExpress="addExpress"
-                    :formData="formData"
-                  ></logistics-form>
-
-                  <el-button
-                    icon="el-icon-edit"
-                    size="mini"
-                    type="primary"
-                    plain
-                    slot="reference"
-                    >帮他填写</el-button
-                  >
-                </el-popover> -->
               </div>
             </div>
           </template>
@@ -561,6 +574,9 @@ export default {
   },
   data() {
     return {
+      wechatShowIcon: 1,
+      groupShowIcon: 1,
+      followShowIcon: 1,
       showExpress: false,
       formData: {},
       audioIndex: null,
@@ -575,11 +591,12 @@ export default {
       },
       wechatSort: 'desc',
       groupSort: 'desc',
-      followSort: 'desc'
+      followSort: 'desc',
+      renderHtml: true
     }
   },
   mounted() {
-    // console.log(this.audioTabs, ' audioTabs ')
+    console.log(this.audioTabs, ' audioTabs ')
   },
   watch: {
     classId(value) {
@@ -592,47 +609,73 @@ export default {
   created() {},
   methods: {
     onSortWechat() {
+      this.renderHtml = false
       if (this.wechatSort === 'asc') {
-        console.log('added_wechat,好友点击排序,desc')
         this.$emit('onGroupSort', '{"added_wechat":"asc"}')
-        // this.$emit('onGroupSort', '{"id":"desc"}')
+        this.$nextTick(() => {
+          this.wechatShowIcon = 3
+          this.followShowIcon = 1
+          this.groupShowIcon = 1
+          this.renderHtml = true
+        })
         this.wechatSort = 'desc'
       } else {
-        console.log('added_wechat,好友点击排序,asc')
-        // this.$emit('onGroupSort', '{"id":"asc"}')
         this.$emit('onGroupSort', '{"added_wechat":"desc"}')
+        this.$nextTick(() => {
+          this.wechatShowIcon = 2
+          this.followShowIcon = 1
+          this.groupShowIcon = 1
+          this.renderHtml = true
+        })
         this.wechatSort = 'asc'
       }
     },
     onSortGroup() {
+      this.renderHtml = false
       if (this.groupSort === 'asc') {
-        console.log('added_group,进群排序,desc')
         this.$emit('onGroupSort', '{"added_group":"desc"}')
-        // this.$emit('onGroupSort', '{"id":"desc"}')
+        this.$nextTick(() => {
+          this.followShowIcon = 1
+          this.wechatShowIcon = 1
+          this.groupShowIcon = 3
+          this.renderHtml = true
+        })
         this.groupSort = 'desc'
       } else {
-        console.log('added_group,进群排序,asc')
         this.$emit('onGroupSort', '{"added_group":"asc"}')
-        // this.$emit('onGroupSort', '{"id":"asc"}')
+        this.$nextTick(() => {
+          this.followShowIcon = 1
+          this.wechatShowIcon = 1
+          this.groupShowIcon = 2
+          this.renderHtml = true
+        })
         this.groupSort = 'asc'
       }
     },
     onSortFollow() {
+      this.renderHtml = false
       if (this.followSort === 'asc') {
-        console.log('wechat_follow_time,公众号排序,desc')
         this.$emit('onGroupSort', '{"wechat_follow_time":"desc"}')
-        // this.$emit('onGroupSort', '{"id":"desc"}')
+        this.$nextTick(() => {
+          this.wechatShowIcon = 1
+          this.groupShowIcon = 1
+          this.followShowIcon = 3
+          this.renderHtml = true
+        })
         this.followSort = 'desc'
       } else {
-        console.log('wechat_follow_time,公众号排序,asc')
         this.$emit('onGroupSort', '{"wechat_follow_time":"asc"}')
-        // this.$emit('onGroupSort', '{"id":"asc"}')
+        this.$nextTick(() => {
+          this.wechatShowIcon = 1
+          this.groupShowIcon = 1
+          this.followShowIcon = 2
+          this.renderHtml = true
+        })
         this.followSort = 'asc'
       }
     },
     // 添加物流地址按钮
     handelAddExpress(row) {
-      console.log(row)
       this.showExpress = true
     },
     addExpress(data) {
@@ -760,6 +803,28 @@ export default {
       top: -3px;
       margin-left: 2px;
       font-size: 12px;
+    }
+    .added-wechat-icon-box {
+      display: inline-block;
+      position: relative;
+      .top {
+        position: absolute;
+        bottom: 0;
+      }
+      .top-color {
+        position: absolute;
+        bottom: 0;
+        color: #409eff;
+      }
+      .bottom {
+        position: absolute;
+        top: -6px;
+      }
+      .bottom-color {
+        position: absolute;
+        top: -6px;
+        color: #409eff;
+      }
     }
   }
   .logistics-box {
