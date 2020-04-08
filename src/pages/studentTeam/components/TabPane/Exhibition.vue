@@ -48,12 +48,8 @@
 export default {
   props: {
     listData: {
-      type: Object,
+      type: Array,
       default: null
-    },
-    weekNum: {
-      type: String,
-      default: ''
     },
     Exhibition: {
       type: Boolean,
@@ -62,8 +58,6 @@ export default {
   },
   data() {
     return {
-      listinfo: [],
-      listTitle: '',
       isLoaded: false,
       num: 0
     }
@@ -77,11 +71,14 @@ export default {
       }
     }
   },
-  watch: {
-    listData(value) {
-      console.log('child - receive ----> res:', value)
-      this.listinfo = value.data.getStuTaskRankingList
-      console.log('listinfo -------', this.listinfo)
+  computed: {
+    listinfo() {
+      return this.listData || []
+      // console.log('child - receive ----> res:', value)
+      // this.listinfo = value.data.getStuTaskRankingList.concat(
+      //   value.data.getStuTaskRankingList
+      // )
+      // console.log('listinfo -------', this.listinfo)
     }
   }
 }
