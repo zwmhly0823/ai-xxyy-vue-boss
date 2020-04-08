@@ -14,5 +14,50 @@ export default {
    * */
   getDepartmentTree(id) {
     return axios.get(`/api/t/v1/department/getDepartmentTree?Id=${id}`)
+  },
+  // 老师列表
+  getTeacherPage() {
+    return axios.post('/graphql/boss', {
+      query: `{
+        TeacherPage(page: 1) {
+          totalPages
+          content {
+            id
+            realname
+            sex
+            nickname
+            phone
+            status
+            is_login
+            department {
+              id
+            }
+            duty {
+              id
+              name
+            }
+            rank {
+              id
+              name
+            }
+            weixin {
+              id
+              weixin_no
+            }
+          }
+        }
+      }`
+    })
+  },
+  // 老师职务
+  getTeacherDutyList() {
+    return axios.post('/graphql/boss', {
+      query: `{
+          TeacherDutyList{
+            id
+            name
+          }
+        }`
+    })
   }
 }

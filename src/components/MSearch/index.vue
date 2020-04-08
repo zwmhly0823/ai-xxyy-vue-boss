@@ -21,6 +21,17 @@
         />
       </el-form-item>
 
+      <el-form-item v-if="teacherphone">
+        <!-- 老师模块手机号搜索 -->
+        <teacher-phone
+          @result="getteacherPhone"
+          :teamId="teamId"
+          :name="teacherphone"
+          :onlyPhone="onlyPhone"
+          :tip="phoneTip"
+        />
+      </el-form-item>
+
       <el-form-item v-if="productName">
         <!-- 商品名称搜索 -->
         <product-name @result="getProductName" :name="productName" />
@@ -64,7 +75,7 @@
           @stageCallBack="stageCallBack"
           @supCallBack="supCallBack"
           @levelCallBack="levelCallBack"
-         
+
           :stageName="stage"
           :supName="sup"
           :levelName="level"
@@ -107,6 +118,7 @@ import ChannelSelect from './searchItems/channel.vue'
 import ProductTopic from './searchItems/productTopic.vue'
 import StageSupLevels from './searchItems/stageSupLevels.vue'
 import SearchPhone from './searchItems/searchPhone.vue'
+import teacherPhone from './searchItems/teacherPhone.vue'
 import OutTradeNo from './searchItems/outTradeNo.vue'
 import ProductName from './searchItems/productName.vue'
 import SelectDate from './searchItems/selectDate.vue'
@@ -162,6 +174,11 @@ export default {
       type: String,
       default: '' // phone
     },
+    // 老师手机号搜索
+    teacherphone: {
+      type: String,
+      default: '' // phone
+    },
     // 是否只搜手机号
     onlyPhone: {
       type: String,
@@ -201,7 +218,8 @@ export default {
     SearchPhone,
     SelectDate,
     OutTradeNo,
-    ProductName
+    ProductName,
+    teacherPhone
   },
   data() {
     return {
@@ -247,6 +265,11 @@ export default {
     getPhoneHander(res) {
       console.log(res, '回调res')
       this.setSeachParmas(res, [this.phone || 'umobile'])
+    },
+    // 选择老师手机号
+    getteacherPhone(res) {
+      console.log(res, '回调res')
+      this.setSeachParmas(res, [this.teacherphone || 'umobile'])
     },
     // 选择订单号
     getOutTradeNo(res) {

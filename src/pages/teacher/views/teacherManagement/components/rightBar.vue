@@ -8,7 +8,7 @@
  -->
 <template>
   <div>
-    <m-search @search="handleSearch" channel="pay_channel">
+    <m-search @search="handleSearch" teacherphone="12">
       <el-button type="primary" slot="searchItems" size="mini">搜索</el-button>
       <el-button
         type="primary"
@@ -63,16 +63,19 @@
           </template> -->
           <!-- 表格内容操作按钮 -->
           <template slot-scope="scope">
-            <el-dropdown @command="contentOperation">
+            <el-dropdown>
               <div>
                 <img src="../../../../../assets/images/point.png" />
               </div>
               <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item :command="scope.row.id">
+                <el-dropdown-item @click.native="operation(scope.row, 1)">
                   编辑
                 </el-dropdown-item>
-                <el-dropdown-item :command="scope.row">
+                <el-dropdown-item @click.native="operation(scope.row, 2)">
                   详情
+                </el-dropdown-item>
+                <el-dropdown-item @click.native="operation(scope.row, 3)">
+                  关联微信号
                 </el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
@@ -85,52 +88,53 @@
         </el-table-column>
         <el-table-column label="老师姓名">
           <template slot-scope="scope">
-            <div>{{ scope.row.id }}</div>
+            <div>{{ scope.row.realname }}</div>
           </template>
         </el-table-column>
         <el-table-column label="性别">
           <template slot-scope="scope">
-            <div>{{ scope.row.id }}</div>
+            <div>{{ scope.row.sex }}</div>
           </template>
         </el-table-column>
         <el-table-column label="昵称">
           <template slot-scope="scope">
-            <div>{{ scope.row.id }}</div>
+            <div>{{ scope.row.nickname }}</div>
           </template>
         </el-table-column>
         <el-table-column label="手机号">
           <template slot-scope="scope">
-            <div>{{ scope.row.id }}</div>
+            <div>{{ scope.row.phone }}</div>
           </template>
         </el-table-column>
         <el-table-column label="所属部门">
           <template slot-scope="scope">
-            <div>{{ scope.row.id }}</div>
+            <div>{{ scope.row.duty.name }}</div>
           </template>
         </el-table-column>
         <el-table-column label="职务">
           <template slot-scope="scope">
-            <div>{{ scope.row.id }}</div>
+            <div>{{ scope.row.duty.name }}</div>
           </template>
         </el-table-column>
         <el-table-column label="职级">
           <template slot-scope="scope">
-            <div>{{ scope.row.id }}</div>
+            <div>{{ scope.row.rank.name }}</div>
           </template>
         </el-table-column>
         <el-table-column label="在职状态">
           <template slot-scope="scope">
-            <div>{{ scope.row.id }}</div>
+            <div>{{ scope.row.status }}</div>
           </template>
         </el-table-column>
         <el-table-column label="登录状态">
           <template slot-scope="scope">
-            <div>{{ scope.row.id }}</div>
+            <div>{{ scope.row.is_login }}</div>
           </template>
         </el-table-column>
         <el-table-column label="绑定微信号">
           <template slot-scope="scope">
-            <div>{{ scope.row.id }}</div>
+            <div>{{ scope.row.head_image }}</div>
+            <div>{{ scope.row.weixin.weixin_no }}</div>
           </template>
         </el-table-column>
         <!-- <el-table-column label="操作">
@@ -142,6 +146,8 @@
           </template>
         </el-table-column> -->
       </el-table>
+      <!-- 关联微信弹窗 -->
+      <associatedWeChat ref="associated" />
       <!-- 分页 -->
       <m-pagination
         :current-page="currentPage"
@@ -162,10 +168,11 @@
 
 import MSearch from '@/components/MSearch/index.vue'
 import MPagination from '@/components/MPagination/index.vue'
+import associatedWeChat from '../components/associatedWeChat.vue'
 
 export default {
   props: [],
-  components: { MSearch, MPagination },
+  components: { MSearch, MPagination, associatedWeChat },
   data() {
     return {
       // 总页数
@@ -183,12 +190,21 @@ export default {
       // 多选选择项
       checkList: [],
       // 表格数据
-      tableData: [{ id: 1, val: 'enen' }]
+      tableData: []
     }
   },
   computed: {},
   watch: {},
+  created() {
+    this.createdUrl()
+  },
   methods: {
+    createdUrl() {
+      // tab数据
+      this.$http.Teacher.getTeacherPage().then((res) => {
+        this.tableData = res.data.TeacherPage.content
+      })
+    },
     // 搜索
     handleSearch(data) {
       console.log(data)
@@ -208,21 +224,22 @@ export default {
     headerOperation(val) {
       console.log(val, '表头编辑')
     },
-    // 内容操作
-    contentOperation(val) {
-      // if (typeof val === Number) {
-      //   this.$router.push({ path: '/newTeacher', query: { id: 1 } })
-      // }
-      console.log(typeof val, '内容操作')
+    // 点击操作按钮
+    operation(val, index) {
+      if (index === 1 || index === 2) {
+        this.$router.push({
+          path: '/newTeacher',
+          query: { index: index, teacherId: val.id }
+        })
+      } else if (index === 3) {
+        this.$refs.associated.centerDialogVisible = true
+      }
     },
-    // 新建编辑老师
+    // 新建老师
     newTeacher(val) {
-      console.log(this.$router, 'this.$router')
       this.$router.push({ path: '/newTeacher', query: { id: 1 } })
     }
-  },
-  created() {},
-  mounted() {}
+  }
 }
 </script>
 <style lang="scss" scoped>

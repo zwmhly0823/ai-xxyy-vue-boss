@@ -1,9 +1,9 @@
 <template>
   <div class="newteache-style">
     <div class="newteacher-title">
-      <P>新增辅导老师</P>
-      <!-- <P>编辑辅导老师</P> -->
-      <!-- <P>查看辅导老师</P> -->
+      <P v-show="newTitle === ''">新增辅导老师</P>
+      <P v-show="newTitle === 1">编辑辅导老师</P>
+      <P v-show="newTitle === 2">查看辅导老师</P>
     </div>
     <el-form
       :model="ruleForm"
@@ -82,9 +82,9 @@
         >
           <el-option
             v-for="item in position"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
+            :key="item.id"
+            :label="item.name"
+            :value="item.id"
           >
           </el-option>
         </el-select>
@@ -95,8 +95,8 @@
           <el-option
             v-for="(item, index) in rankList"
             :key="index"
-            :label="item.label"
-            :value="item.value"
+            :label="item.name"
+            :value="item.id"
           ></el-option>
         </el-select>
       </el-form-item>
@@ -192,7 +192,12 @@
       </el-form-item>
     </el-form>
     <div style="text-align: center; padding:10px 0">
-      <el-button type="primary" @click="submitForm('ruleForm')">提交</el-button>
+      <el-button
+        type="primary"
+        :disabled="newTitle === 2"
+        @click="submitForm('ruleForm')"
+        >提交</el-button
+      >
       <el-button @click="resetForm('ruleForm')">取消</el-button>
     </div>
   </div>
@@ -230,6 +235,8 @@ export default {
     // }
 
     return {
+      // title
+      newTitle: '',
       // 表单禁用
       formDisabled: false,
       // 离职时间禁止选择
@@ -255,21 +262,9 @@ export default {
         }
       ],
       // 职务
-      position: [
-        {
-          value: '1',
-          label: '系统课老师'
-        },
-        {
-          value: '2',
-          label: '体验课老师'
-        }
-      ],
+      position: [],
       // 职级
-      rankList: [
-        { label: '主管', value: 1 },
-        { label: '组长', value: 2 }
-      ],
+      rankList: [],
       // 带班级别
       shiftList: [
         { label: 's1', value: 1 },
@@ -423,7 +418,21 @@ export default {
       }
     }
   },
+  created() {
+    const query = this.$route.query
+    // query.index ''/新建老师  1/编辑老师 2/查看老师
+    if (query && query.index) this.newTitle = query.index
+    if (query.index === 2) this.formDisabled = true
+    // 接口调用
+    this.createdUrl()
+  },
   methods: {
+    createdUrl() {
+      // 职务接口
+      this.$http.Teacher.getTeacherDutyList().then((res) => {
+        this.position = res.data.TeacherDutyList
+      })
+    },
     // 选择入职时间后禁止离职时间
     DepartureDisabled() {
       const _this = this
@@ -433,7 +442,7 @@ export default {
         }
       }
     },
-
+    // 提交按钮
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
@@ -444,7 +453,9 @@ export default {
         }
       })
     },
+    // 取消按钮
     resetForm(formName) {
+      this.$router.push({ path: '/teacherManagement' })
       this.$refs[formName].resetFields()
     },
     // 头像
