@@ -3,8 +3,8 @@
  * @version:
  * @Author: panjian
  * @Date: 2020-03-16 14:19:58
- * @LastEditors: Shentong
- * @LastEditTime: 2020-04-03 20:53:17
+ * @LastEditors: zhubaodong
+ * @LastEditTime: 2020-04-08 14:19:29
  -->
 <template>
   <div>
@@ -15,7 +15,7 @@
         phone="uid"
         onlyPhone="1"
         phoneTip="手机号/微信昵称 查询"
-        :teamId="classId.classId.id"
+        :teamId="classId.classId && classId.classId.id"
       />
       <el-button
         size="mini"
@@ -325,7 +325,6 @@ export default {
       // this.table.audioIndex = 10000
       this.sortGroup = ''
       this.table.currentPage = 1
-      console.log(value.classId, 'classId')
       if (value.classId) {
         this.tableDataEmpty = true
         if (value.classId.team_type === 0) {
@@ -378,14 +377,11 @@ export default {
     onGroupSort(data) {
       // this.sortGroup = `sort:${data}`
       this.sortGroup = `sort:${JSON.stringify(data)}`
-      console.log(this.sortGroup, 'sort 父组件')
       this.getGroup()
     },
     // 搜索组件传回来的值
     handleSearch(res) {
-      console.log(res, 'res[0].term.uid')
       if (res.length === 0) {
-        console.log('res传的空')
         this.search = ''
         this.getGroup()
         if (this.tabsName === '加好友进群') {
@@ -755,8 +751,6 @@ export default {
         } else {
           this.querysData = `{"team_id":${this.classId.classId.id},"team_type":${this.classId.type}}`
         }
-        console.log(this.search, 'this.search')
-
         axios
           .post('/graphql/user', {
             query: `{
@@ -827,7 +821,6 @@ export default {
                 item.base_painting = '一年以上'
               }
             })
-            console.log(this.tableDataEmpty)
             if (this.tableDataEmpty) {
               this.table.tableData = _data
             } else {

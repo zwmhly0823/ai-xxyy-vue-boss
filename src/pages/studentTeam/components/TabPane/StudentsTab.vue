@@ -7,7 +7,7 @@
         phone="uid"
         onlyPhone="1"
         phoneTip="手机号/微信昵称 查询"
-        :teamId="classId.classId.id"
+        :teamId="classId.classId && classId.classId.id"
       />
     </div>
     <el-table
@@ -183,6 +183,7 @@ export default {
   },
   created() {
     // 优惠卷列表接口
+
     this.couponList()
   },
   watch: {
