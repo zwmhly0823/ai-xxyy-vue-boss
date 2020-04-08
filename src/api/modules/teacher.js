@@ -29,6 +29,7 @@ export default {
             phone
             status
             is_login
+            head_image
             department {
               id
             }

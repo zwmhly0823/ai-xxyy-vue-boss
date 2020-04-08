@@ -133,8 +133,10 @@
         </el-table-column>
         <el-table-column label="绑定微信号">
           <template slot-scope="scope">
-            <div>{{ scope.row.head_image }}</div>
-            <div>{{ scope.row.weixin.weixin_no }}</div>
+            <div><img :src="scope.row.head_image" /></div>
+            <div v-for="item in scope.row.weixin" :key="item.id">
+              {{ item.weixin_no }}
+            </div>
           </template>
         </el-table-column>
         <!-- <el-table-column label="操作">
