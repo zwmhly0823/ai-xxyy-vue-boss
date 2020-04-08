@@ -239,7 +239,7 @@ export default {
     },
     // 新建老师
     newTeacher(val) {
-      this.$router.push({ path: '/newTeacher', query: { id: 1 } })
+      this.$router.push({ path: '/newTeacher' })
     }
   }
 }

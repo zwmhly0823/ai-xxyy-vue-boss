@@ -432,6 +432,14 @@ export default {
       this.$http.Teacher.getTeacherDutyList().then((res) => {
         this.position = res.data.TeacherDutyList
       })
+      if (this.$route.query && this.$route.query.teacherId) {
+        // 教师详情
+        this.$http.Teacher.getTeacherDetail(this.$route.query.teacherId).then(
+          (res) => {
+            console.log(res.payload, '教师详情')
+          }
+        )
+      }
     },
     // 选择入职时间后禁止离职时间
     DepartureDisabled() {

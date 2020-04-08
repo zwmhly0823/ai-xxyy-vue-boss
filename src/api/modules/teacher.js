@@ -60,5 +60,13 @@ export default {
           }
         }`
     })
+  },
+  // 获取教师详情
+  getTeacherDetail(id) {
+    return axios.get(`/api/t/v1/teacher/getTeacherDetail?teacherId=${id}`)
+  },
+  // 上传头像
+  getOSSPubWrite() {
+    return axios.get(`/api/home/v1/ossconfig/getOSSPubWrite`)
   }
 }
