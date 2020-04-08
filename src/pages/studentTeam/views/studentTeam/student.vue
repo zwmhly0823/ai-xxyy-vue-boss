@@ -167,9 +167,13 @@ export default {
       if (type === 0) {
         const config = [
           { terms: { team_state: this.classStatus } },
-          { term: { team_type: type } },
-          { term: { teacher_id: this.teacher_id ? this.teacher_id : '' } }
+          { term: { team_type: type } }
         ]
+        if (this.teacherId) {
+          config.push({
+            term: { teacher_id: this.teacher_id ? this.teacher_id : '' }
+          })
+        }
         this.must = this.filterConditions
           ? config.concat(this.filterConditions)
           : config
@@ -177,9 +181,14 @@ export default {
       } else {
         const config = [
           { terms: { team_state: this.classStatus } },
-          { range: { team_type: { gte: type } } },
-          { term: { teacher_id: this.teacher_id ? this.teacher_id : '' } }
+          { range: { team_type: { gte: type } } }
+          // { term: { teacher_id: this.teacher_id ? this.teacher_id : '' } }
         ]
+        if (this.teacher_id) {
+          config.push({
+            term: { teacher_id: this.teacher_id ? this.teacher_id : '' }
+          })
+        }
         this.must = this.filterConditions
           ? config.concat(this.filterConditions)
           : config
