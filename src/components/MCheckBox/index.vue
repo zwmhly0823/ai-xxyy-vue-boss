@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 20:22:24
  * @LastEditors: panjian
- * @LastEditTime: 2020-04-07 20:53:53
+ * @LastEditTime: 2020-04-08 12:03:32
  -->
 <template>
   <div>
@@ -45,7 +45,7 @@
         <el-autocomplete
           :clearable="true"
           class="inline-input"
-          v-model="state2"
+          v-model="input"
           :fetch-suggestions="querySearch"
           placeholder="请输入内容"
           :trigger-on-focus="false"
@@ -55,7 +55,7 @@
         <el-checkbox-group
           class="check-states-box"
           v-model="checkedCities"
-          @change="handleCheckedCitiesChange"
+          @change="attendClassChange"
         >
           <el-checkbox
             class="check-states"
@@ -66,10 +66,7 @@
           >
         </el-checkbox-group>
         <p>参课情况</p>
-        <el-checkbox-group
-          v-model="checkedCities"
-          @change="handleCheckedCitiesChange"
-        >
+        <el-checkbox-group v-model="checkedCities" @change="attendClassChange">
           <el-checkbox
             v-for="friend in friends"
             :label="friend"
@@ -78,17 +75,16 @@
           >
         </el-checkbox-group>
         <p>完课情况</p>
-        <el-checkbox-group
-          v-model="checkedCities"
-          @change="handleCheckedCitiesChange"
-        >
+        <el-checkbox-group v-model="checkedCities" @change="attendClassChange">
           <el-checkbox v-for="group in groups" :label="group" :key="group">{{
             group
           }}</el-checkbox>
         </el-checkbox-group>
         <div class="check-button">
           <el-button @click="cancel" size="small">清空</el-button>
-          <el-button size="medium" type="primary">过滤</el-button>
+          <el-button @click="onSub" size="medium" type="primary"
+            >过滤</el-button
+          >
           <el-button size="medium" type="primary">取消</el-button>
         </div>
       </el-popover>
@@ -130,7 +126,7 @@
         <el-autocomplete
           :clearable="true"
           class="inline-input"
-          v-model="state2"
+          v-model="input"
           :fetch-suggestions="querySearch"
           placeholder="请输入内容"
           :trigger-on-focus="false"
@@ -140,7 +136,7 @@
         <el-checkbox-group
           class="check-states-box"
           v-model="checkedCities"
-          @change="handleCheckedCitiesChange"
+          @change="worksChange"
         >
           <el-checkbox
             class="check-states"
@@ -151,10 +147,7 @@
           >
         </el-checkbox-group>
         <p>参课情况</p>
-        <el-checkbox-group
-          v-model="checkedCities"
-          @change="handleCheckedCitiesChange"
-        >
+        <el-checkbox-group v-model="checkedCities" @change="worksChange">
           <el-checkbox
             v-for="friend in friends"
             :label="friend"
@@ -163,10 +156,7 @@
           >
         </el-checkbox-group>
         <p>完课情况</p>
-        <el-checkbox-group
-          v-model="checkedCities"
-          @change="handleCheckedCitiesChange"
-        >
+        <el-checkbox-group v-model="checkedCities" @change="worksChange">
           <el-checkbox v-for="group in groups" :label="group" :key="group">{{
             group
           }}</el-checkbox>
@@ -192,9 +182,16 @@ export default {
   components: {},
   data() {
     return {
+      // 接口返回的数据
+      selectData: [],
+      // 参课多选框的值
+      attendClassList: [],
+      // 作品多选框的值
+      worksList: [],
       restaurants: [],
-      state2: '',
+      input: '',
       visible: false,
+      // 选中的多选框 点击取消 赋值为空
       checkedCities: [],
       states: ['已年课', '体验完课'],
       friends: ['已参课', '未参课'],
@@ -207,8 +204,16 @@ export default {
   watch: {},
   created() {},
   methods: {
-    querySearch(queryString, cb) {
+    async querySearch(queryString, cb) {
       console.log(queryString, '第1个事件')
+
+      // const searchUid = await this.createFilter(queryString)
+      // console.log(searchUid, '匹配到的数据')
+      // const results = queryString ? searchUid : this.selectData
+      // // 调用 callback 返回建议列表的数据
+      // console.log(results, '结果')
+      // cb(searchUid)
+
       var restaurants = this.restaurants
       var results = queryString
         ? restaurants.filter(this.createFilter(queryString))
@@ -344,12 +349,22 @@ export default {
         }
       ]
     },
+    onSub() {
+      console.log(this.input, this.attendClassList, this.restaurants)
+    },
     // input 选中的值
     handleSelect(item) {
-      console.log('第3个事件')
+      console.log('第3个事件  选中的值')
       console.log(item)
     },
-    handleCheckedCitiesChange(value) {
+    // 参课完课 多选框选中的值
+    attendClassChange(value) {
+      this.attendClassList = value
+      console.log(value)
+    },
+    // 参课完课 多选框选中的值
+    worksChange(value) {
+      this.worksList = value
       console.log(value)
     },
     // 点击取消

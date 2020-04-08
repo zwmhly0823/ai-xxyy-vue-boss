@@ -3,8 +3,8 @@
  * @version:
  * @Author: panjian
  * @Date: 2020-03-16 14:19:58
- * @LastEditors: zhubaodong
- * @LastEditTime: 2020-04-08 16:32:13
+ * @LastEditors: panjian
+ * @LastEditTime: 2020-04-08 15:18:50
  -->
 <template>
   <div>
@@ -84,17 +84,6 @@
             ></details-table
           ></el-tab-pane>
         </el-tabs>
-        <!-- <el-input
-          class="el-input-search"
-          size="mini"
-          placeholder="昵称、手机号、微信信息"
-          prefix-icon="el-icon-search"
-          v-model="input"
-          @keyup.enter.native="enter"
-        >
-        </el-input> -->
-        <!-- <check-box class="checkbox"></check-box> -->
-        <!-- 生成完课榜弹出框 -->
         <el-dialog
           title="请选择生成的完课榜周数"
           :visible.sync="dialogFormVisible"
@@ -320,7 +309,7 @@ export default {
       })
       this.sortGroup = ''
       this.table.currentPage = 1
-      if (value.classId) {
+      if (value.classId && value.classId.id) {
         this.tableDataEmpty = true
         if (value.classId.team_type === 0) {
           this.type = 'TRAIL'
@@ -370,11 +359,13 @@ export default {
     // 排序
     onGroupSort(data) {
       this.sortGroup = `sort:${JSON.stringify(data)}`
+      console.log(this.sortGroup, 'sort 父组件')
       this.getGroup()
     },
     // 搜索组件传回来的值
     handleSearch(res) {
       if (res.length === 0) {
+        console.log('res传的空')
         this.search = ''
         this.getGroup()
         if (this.tabsName === '加好友进群') {
@@ -907,7 +898,6 @@ export default {
           }`
           })
           .then((res) => {
-            console.log(res, 'experessssssss')
             this.table.tableData = []
             this.table.totalElements = +res.data.stuExpressPage.totalElements
             const _data = res.data.stuExpressPage.content
@@ -1273,7 +1263,6 @@ export default {
     },
     // 添加物流地址 子组件传值 掉物流接口
     addExpresss(data) {
-      console.log(data, '父组件')
       if (data) {
         this.getLogistics()
         // this.experssShow = true
@@ -1403,10 +1392,10 @@ export default {
         uInt8Array[i] = raw.charCodeAt(i)
       }
       return new Blob([uInt8Array], { type: contentType })
-    },
-    enter(val) {
-      console.log('input', val, this.input)
     }
+    // enter(val) {
+    //   console.log('input', val, this.input)
+    // }
   }
 }
 </script>
