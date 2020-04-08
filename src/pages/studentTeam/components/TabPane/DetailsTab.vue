@@ -275,7 +275,8 @@ export default {
         isRequest: true,
         childListData: [],
         imgNum: 0,
-        imgSuccessNum: 0
+        imgSuccessNum: 0,
+        opreaIndex: 0
       },
       // 作品展相关数据
       ExhibitionData: {
@@ -457,27 +458,33 @@ export default {
         window.scrollTo(0, 0)
         // 获取要生成图片的dom元素
         var doms = document.getElementsByClassName('finishBox')
-        const that = this
-        console.log('dom++++++dom ---> ', doms)
-        console.log('doms  length--->', doms[1])
-        for (var h = 0; h < doms.length; h++) {
-          ;(function(i) {
-            html2canvas(doms[i], {
-              backgroundColor: 'rgba(0, 0, 0, 0)',
-              useCORS: true,
-              async: true,
-              allowTaint: false
-            }).then((canvas) => {
-              const data = canvas.toDataURL('image/jpeg')
-              console.log('down - begin ------i', i)
-              console.log('down - begin ------h', h)
-              // 执行浏览器下载
-              const shutdownLoading = i + 1 === h
-              const imgName = picname + '-' + (i * 1 + 1)
-              that.download(`${imgName}.jpeg`, data, that, shutdownLoading)
-              that.finish = false
-            })
-          })(h)
+        this.finishLessonData.opreaIndex++
+        console.log(
+          'this.finishLessonData.opreaIndex -----> ',
+          this.finishLessonData.opreaIndex
+        )
+        if (this.finishLessonData.opreaIndex === doms.length) {
+          const that = this
+          console.log('dom++++++dom ---> ', doms)
+          for (var h = 0; h < doms.length; h++) {
+            ;(function(i) {
+              html2canvas(doms[i], {
+                backgroundColor: 'rgba(0, 0, 0, 0)',
+                useCORS: true,
+                async: true,
+                allowTaint: false
+              }).then((canvas) => {
+                const data = canvas.toDataURL('image/jpeg')
+                console.log('down - begin ------i', i)
+                console.log('down - begin ------h', h)
+                // 执行浏览器下载
+                const shutdownLoading = i + 1 === h
+                const imgName = picname + '-' + (i * 1 + 1)
+                that.download(`${imgName}.jpeg`, data, that, shutdownLoading)
+                that.finish = false
+              })
+            })(h)
+          }
         }
       })
     },
