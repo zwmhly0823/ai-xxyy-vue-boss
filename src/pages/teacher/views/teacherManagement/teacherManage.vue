@@ -29,13 +29,16 @@ export default {
   props: [],
   components: { LeftBar, RightBar },
   data() {
-    return {}
+    return {
+      current: {}
+    }
   },
   computed: {},
   watch: {},
   methods: {
     leftBarHandler(data) {
       console.log(data)
+      this.current = data
     }
   },
   created() {},

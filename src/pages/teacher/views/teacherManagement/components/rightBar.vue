@@ -8,7 +8,7 @@
  -->
 <template>
   <div>
-    <m-search @search="handleSearch" teacherphone="12">
+    <m-search @search="handleSearch" teacherphone="12" v-if="false">
       <el-button type="primary" slot="searchItems" size="mini">搜索</el-button>
       <el-button
         type="primary"
@@ -35,6 +35,15 @@
       </el-checkbox-group> -->
     </m-search>
 
+    <el-button
+      type="primary"
+      slot="searchItems"
+      size="mini"
+      @click="newTeacher"
+      style="margin: 15px;"
+      >新增老师</el-button
+    >
+
     <div class="orderStyle">
       <el-table
         :data="tableData"
@@ -45,24 +54,8 @@
         }"
       >
         <el-table-column width="30px">
-          <!-- 表格header操作按钮 -->
-          <!-- <template slot="header">
-            <el-dropdown @command="headerOperation">
-              <div>
-                <img src="../../../../../assets/images/point.png" />
-              </div>
-              <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item command="headerEditor">
-                  编辑
-                </el-dropdown-item>
-                <el-dropdown-item command="headerDetails">
-                  详情
-                </el-dropdown-item>
-              </el-dropdown-menu>
-            </el-dropdown>
-          </template> -->
           <!-- 表格内容操作按钮 -->
-          <template slot-scope="scope">
+          <!-- <template slot-scope="scope">
             <el-dropdown>
               <div>
                 <img src="../../../../../assets/images/point.png" />
@@ -79,7 +72,7 @@
                 </el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
-          </template>
+          </template> -->
         </el-table-column>
         <el-table-column label="员工ID">
           <template slot-scope="scope">
@@ -101,34 +94,40 @@
             <div>{{ scope.row.nickname }}</div>
           </template>
         </el-table-column>
-        <el-table-column label="手机号">
+        <el-table-column label="手机号" width="120">
           <template slot-scope="scope">
             <div>{{ scope.row.phone }}</div>
           </template>
         </el-table-column>
         <el-table-column label="所属部门">
           <template slot-scope="scope">
-            <div>{{ scope.row.duty.name }}</div>
+            <div>
+              {{ scope.row.department ? scope.row.department.name : '-' }}
+            </div>
           </template>
         </el-table-column>
         <el-table-column label="职务">
           <template slot-scope="scope">
-            <div>{{ scope.row.duty.name }}</div>
+            <div>
+              <p v-for="item in scope.row.duty" :key="item.id">
+                {{ item ? item.name : '-' }}
+              </p>
+            </div>
           </template>
         </el-table-column>
         <el-table-column label="职级">
           <template slot-scope="scope">
-            <div>{{ scope.row.rank.name }}</div>
+            <div>{{ scope.row.rank ? scope.row.rank.name : '-' }}</div>
           </template>
         </el-table-column>
         <el-table-column label="在职状态">
           <template slot-scope="scope">
-            <div>{{ scope.row.status }}</div>
+            <div>{{ scope.row.status == 0 ? '在职' : '离职' }}</div>
           </template>
         </el-table-column>
         <el-table-column label="登录状态">
           <template slot-scope="scope">
-            <div>{{ scope.row.is_login }}</div>
+            <div>{{ scope.row.is_login == 0 ? '允许登录' : '禁止登录' }}</div>
           </template>
         </el-table-column>
         <el-table-column label="绑定微信号">
@@ -204,7 +203,9 @@ export default {
     createdUrl() {
       // tab数据
       this.$http.Teacher.getTeacherPage().then((res) => {
-        this.tableData = res.data.TeacherPage.content
+        this.tableData = res.data.TeacherPage
+          ? res.data.TeacherPage.content
+          : []
       })
     },
     // 搜索
@@ -239,7 +240,7 @@ export default {
     },
     // 新建老师
     newTeacher(val) {
-      this.$router.push({ path: '/newTeacher', query: { id: 1 } })
+      this.$router.push({ path: '/newTeacher' })
     }
   }
 }
