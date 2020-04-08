@@ -477,10 +477,6 @@ export default {
               that.download(`${imgName}.jpeg`, data, that, shutdownLoading)
               that.finish = false
             })
-            // const indexNumber = i++
-            // if (doms.length === indexNumber) {
-            //   console.log(indexNumber, '__+_+_+_+_+_+_+_+_+_+_+_+_+_+_')
-            // }
           })(h)
         }
       })
@@ -678,10 +674,13 @@ export default {
           const childLastData = []
           if (res.data.getStuComRankingList) {
             const stuArrLength = res.data.getStuComRankingList.length
-            const createDefineNum = 70
+            const createDefineNum = 30
+            const arevNum = Math.ceil(
+              stuArrLength / Math.ceil(stuArrLength / createDefineNum)
+            )
             // 重构数组
             for (var j = 0; j < stuArrLength; j++) {
-              const tmpnum = Math.floor(j / createDefineNum)
+              const tmpnum = Math.floor(j / arevNum)
               childLastData[tmpnum] = childLastData[tmpnum]
                 ? childLastData[tmpnum]
                 : []
