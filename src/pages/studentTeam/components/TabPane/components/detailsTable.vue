@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 20:22:24
  * @LastEditors: panjian
- * @LastEditTime: 2020-04-08 16:50:45
+ * @LastEditTime: 2020-04-08 17:39:59
  -->
 <template>
   <div class="table-box">
@@ -91,18 +91,20 @@
         <el-table-column prop="added_wechat" label="已加好友">
           <!-- <template v-if="renderHtml" slot="header"> -->
           <template slot="header">
-            <span @click="onSortWechat">已加好友</span>
-            <div v-if="wechatShowIcon === 1" class="added-wechat-icon-box">
-              <i class="el-icon-caret-top top"></i>
-              <i class="el-icon-caret-bottom bottom"></i>
-            </div>
-            <div v-if="wechatShowIcon === 2" class="added-wechat-icon-box">
-              <i class="el-icon-caret-top top"></i>
-              <i class="el-icon-caret-bottom bottom-color"></i>
-            </div>
-            <div v-if="wechatShowIcon === 3" class="added-wechat-icon-box">
-              <i class="el-icon-caret-top top-color"></i>
-              <i class="el-icon-caret-bottom bottom"></i>
+            <div @click="onSortWechat">
+              <span>已加好友</span>
+              <div v-if="wechatShowIcon === 1" class="added-wechat-icon-box">
+                <i class="el-icon-caret-top top"></i>
+                <i class="el-icon-caret-bottom bottom"></i>
+              </div>
+              <div v-if="wechatShowIcon === 2" class="added-wechat-icon-box">
+                <i class="el-icon-caret-top top"></i>
+                <i class="el-icon-caret-bottom bottom-color"></i>
+              </div>
+              <div v-if="wechatShowIcon === 3" class="added-wechat-icon-box">
+                <i class="el-icon-caret-top top-color"></i>
+                <i class="el-icon-caret-bottom bottom"></i>
+              </div>
             </div>
           </template>
           <template slot-scope="scope">
@@ -142,18 +144,20 @@
         <!-- 已进群 -->
         <el-table-column prop="added_group" label="已进群">
           <template slot="header">
-            <span @click="onSortGroup">已进群</span>
-            <div v-if="groupShowIcon === 1" class="added-wechat-icon-box">
-              <i class="el-icon-caret-top top"></i>
-              <i class="el-icon-caret-bottom bottom"></i>
-            </div>
-            <div v-if="groupShowIcon === 2" class="added-wechat-icon-box">
-              <i class="el-icon-caret-top top"></i>
-              <i class="el-icon-caret-bottom bottom-color"></i>
-            </div>
-            <div v-if="groupShowIcon === 3" class="added-wechat-icon-box">
-              <i class="el-icon-caret-top top-color"></i>
-              <i class="el-icon-caret-bottom bottom"></i>
+            <div @click="onSortGroup">
+              <span>已进群</span>
+              <div v-if="groupShowIcon === 1" class="added-wechat-icon-box">
+                <i class="el-icon-caret-top top"></i>
+                <i class="el-icon-caret-bottom bottom"></i>
+              </div>
+              <div v-if="groupShowIcon === 2" class="added-wechat-icon-box">
+                <i class="el-icon-caret-top top"></i>
+                <i class="el-icon-caret-bottom bottom-color"></i>
+              </div>
+              <div v-if="groupShowIcon === 3" class="added-wechat-icon-box">
+                <i class="el-icon-caret-top top-color"></i>
+                <i class="el-icon-caret-bottom bottom"></i>
+              </div>
             </div>
           </template>
           <template slot-scope="scope">
@@ -193,18 +197,20 @@
         <!-- 关注公众号 -->
         <el-table-column prop="follow" label="关注公众号">
           <template slot="header">
-            <span @click="onSortFollow">关注公众号</span>
-            <div v-if="followShowIcon === 1" class="added-wechat-icon-box">
-              <i class="el-icon-caret-top top"></i>
-              <i class="el-icon-caret-bottom bottom"></i>
-            </div>
-            <div v-if="followShowIcon === 2" class="added-wechat-icon-box">
-              <i class="el-icon-caret-top top"></i>
-              <i class="el-icon-caret-bottom bottom-color"></i>
-            </div>
-            <div v-if="followShowIcon === 3" class="added-wechat-icon-box">
-              <i class="el-icon-caret-top top-color"></i>
-              <i class="el-icon-caret-bottom bottom"></i>
+            <div @click="onSortFollow">
+              <span>关注公众号</span>
+              <div v-if="followShowIcon === 1" class="added-wechat-icon-box">
+                <i class="el-icon-caret-top top"></i>
+                <i class="el-icon-caret-bottom bottom"></i>
+              </div>
+              <div v-if="followShowIcon === 2" class="added-wechat-icon-box">
+                <i class="el-icon-caret-top top"></i>
+                <i class="el-icon-caret-bottom bottom-color"></i>
+              </div>
+              <div v-if="followShowIcon === 3" class="added-wechat-icon-box">
+                <i class="el-icon-caret-top top-color"></i>
+                <i class="el-icon-caret-bottom bottom"></i>
+              </div>
             </div>
           </template>
           <template slot-scope="scope">
@@ -633,7 +639,7 @@ export default {
         receiptTel: '',
         addressDetail: ''
       },
-      wechatSort: 'desc',
+      wechatSort: 'asc',
       groupSort: 'desc',
       followSort: 'desc',
       renderHtml: true
@@ -705,7 +711,7 @@ export default {
       if (this.wechatSort === 'asc') {
         this.$emit('onGroupSort', '{"added_wechat":"asc"}')
         this.$nextTick(() => {
-          this.wechatShowIcon = 3
+          this.wechatShowIcon = 2
           this.followShowIcon = 1
           this.groupShowIcon = 1
           this.renderHtml = true
@@ -714,7 +720,7 @@ export default {
       } else {
         this.$emit('onGroupSort', '{"added_wechat":"desc"}')
         this.$nextTick(() => {
-          this.wechatShowIcon = 2
+          this.wechatShowIcon = 3
           this.followShowIcon = 1
           this.groupShowIcon = 1
           this.renderHtml = true
