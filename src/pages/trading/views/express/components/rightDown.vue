@@ -7,17 +7,14 @@
       style="width: 100%"
       @cell-click="handleSelectionChangeCell"
       @selection-change="handleSelectionChange"
-      @cell-mouse-enter="handleSelectionChangeEnter"
-      @cell-mouse-leave="handleSelectionChangeLeave"
       @row-click="handleExpressTo"
       :header-cell-style="headerStyle"
       :current-row-key="rowKey"
       @select="handleSelect"
       @select-all="handleAllSelect"
     >
-      <el-table-column type="selection" width="25" v-if="!teacherId">
-      </el-table-column>
-      <el-table-column width="25" v-if="!teacherId">
+      <el-table-column type="selection" width="25"> </el-table-column>
+      <el-table-column width="25">
         <template slot-scope="scope" v-if="dataExp.id == 6">
           <!-- <div v-show="false">{{ scope }}</div> -->
           <el-dropdown trigger="click">
@@ -29,16 +26,14 @@
                 <div v-if="selectNum > 1">
                   <el-dropdown-item>
                     <div>
-                      <el-button
-                        type="text"
-                        @click="handleBatchPass(expressBatch)"
+                      <el-button type="text" @click="handleBatchPass()"
                         >批量审核通过
                       </el-button>
                     </div>
                   </el-dropdown-item>
                 </div>
                 <div class="every-one" v-else>
-                  <div class="yes" @click="handlePass(expressNu)">
+                  <div class="yes" @click="handlePass()">
                     <el-dropdown-item>审核通过</el-dropdown-item>
                   </div>
                   <div class="no" @click="handleFailed(scope.row.id)">
@@ -142,6 +137,56 @@
         </el-timeline-item>
       </el-timeline>
     </el-dialog>
+    <div class="dialog-shenhe">
+      <el-dialog
+        title="选择承运商"
+        :visible.sync="dialogVisiblePass"
+        width="30%"
+        :before-close="handleClosePass"
+      >
+        <div class="two-choose">
+          <div class="message-one" v-if="selectNum > 1">
+            <div>物流商品类型：</div>
+            <div class="mess" :key="i" v-for="(item, i) in checkBatchParams">
+              <div class="ms">
+                {{ item.term }}期 {{ item.sup }} {{ item.product_name }}
+              </div>
+            </div>
+          </div>
+          <div class="message" v-else>
+            <div>物流商品类型：</div>
+            <div class="mess" :key="i" v-for="(item, i) in checkParams">
+              <div class="ms">
+                {{ item.term }}期 {{ item.sup }} {{ item.product_name }}
+              </div>
+            </div>
+          </div>
+          <div class="choose-product">
+            <div>选择承运商：</div>
+            <div class="dropdown">
+              <el-select
+                v-model="value1"
+                placeholder="中通云仓"
+                @change="selectExpress"
+              >
+                <el-option
+                  v-for="item in options"
+                  :key="item.value1"
+                  :label="item.label"
+                  :value="item.value1"
+                >
+                </el-option>
+              </el-select>
+            </div>
+          </div>
+        </div>
+
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="dialogVisiblePass = false">取 消</el-button>
+          <el-button type="primary" @click="checkPass">确 定</el-button>
+        </span>
+      </el-dialog>
+    </div>
     <m-pagination
       :current-page="currentPage"
       :page-count="totalPages"
@@ -172,25 +217,7 @@ export default {
       }
       const timeTypeOne = JSON.stringify(val)
       sessionStorage.setItem('timeType', timeTypeOne)
-      // if (val[0]) {
-      //   const { range } = val[0]
-      //   const resKey = Object.keys(range)
-      //   const { gte, lte } = range[resKey]
-
-      //   const timeType = {
-      //     [resKey[0]]: 1,
-      //     start_time: gte,
-      //     end_time: lte
-      //   }
-      //   console.log(timeType, 'resKedkdkdkdkdky')
-      //   this.searchTime = timeType
-      // }
-      // if (val[1]) {
-      //   const { term } = val[1]
-      //   this.topticId = term
-      // }
       this.getExpressList(this.dataExp.id)
-      // console.log(toptic, timeType, 'resKedkdkdkdkdky')
     },
     dataExp(val) {
       this.currentPage = 1
@@ -216,6 +243,21 @@ export default {
   mounted() {},
   data() {
     return {
+      // 审核传参
+      checkBatchParams: [],
+      checkParams: [],
+      options: [
+        {
+          value1: '选项1',
+          label: '中通云仓'
+        },
+        {
+          value1: '选项2',
+          label: '京东云仓'
+        }
+      ],
+      value1: '选项1',
+      dialogVisiblePass: false,
       expressBatch: [],
       expressNu: [],
       selecInformation: '',
@@ -258,22 +300,38 @@ export default {
     }
   },
   methods: {
+    // 审核通过 确定
+    checkPass() {
+      this.dialogVisiblePass = false
+      if (this.selectNum > 1) {
+        const val = this.checkBatchParams.map((item) => {
+          const temp = [item.id, item.sup, item.product_name, item.term]
+          return temp
+        })
+        console.log(val, '-------------------')
+        this.check(val)
+      } else {
+        const val = this.checkParams.map((item) => {
+          const temp = [item.id, item.sup, item.product_name, item.term]
+          return temp
+        })
+        console.log(val, '-------------------')
+
+        this.check(val)
+      }
+
+      console.log('审核通过')
+    },
+    // 审核通过时选择物流承运商
+    selectExpress(val) {
+      console.log(this.value, val, 'this.value')
+    },
+    handleClosePass() {
+      this.dialogVisiblePass = false
+    },
     handleBatchPass(val) {
-      console.log('processing-pass')
-      this.$confirm('此操作会将此订单审核通过, 是否继续?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      })
-        .then(() => {
-          this.check(val)
-        })
-        .catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消删除'
-          })
-        })
+      this.dialogVisiblePass = true
+      this.check(val)
     },
     inputValidator(val) {
       return !!(val && val.length > 0)
@@ -306,16 +364,14 @@ export default {
       })
     },
     handlePass(val) {
-      console.log('processing-pass')
-      this.$confirm('此操作会将此订单审核通过, 是否继续?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        this.check(val)
-      })
+      console.log('processing-pass', val)
+      this.dialogVisiblePass = true
+      this.check(val)
     },
     handleSelectionChangeCell(row, column, cell, event) {
+      this.checkParams = []
+      this.checkParams.push(row)
+      console.log(row, 'row----------------------------')
       this.expressNu = []
       this.expressNu.push(row.id)
       // console.log(row, column, cell, event, 'row, column, cell, event')
@@ -362,6 +418,8 @@ export default {
     // 全选
     handleAllSelect(selection) {
       this.selectNum = selection.length
+      this.checkBatchParams = []
+      this.checkBatchParams = selection
       this.expressBatch = selection.map((item) => {
         return item.id
       })
@@ -369,13 +427,16 @@ export default {
         return item.id
       })
       sessionStorage.setItem('uid', uid)
-      console.log(selection, uid, 'selection,row')
-      // console.log(selection, 'selection', this.expressBatch, 'expressBatch')
     },
     // 手动选择
     handleSelect(selection, row) {
       this.selectNum = selection.length
       this.expressBatch = selection.map((item) => item.id)
+      // if (selection.length > 1) {
+      this.checkBatchParams = []
+      this.checkBatchParams = selection
+      console.log(this.checkBatchParams, 'this.checkBatchParams')
+
       const uid = selection.map((item) => {
         return item.id
       })
@@ -388,47 +449,25 @@ export default {
     handleChange(val) {
       // console.log(val, 'handleChange')
     },
-    // batchProcessing() {
-    //   console.log('批量处理事件')
-    // },
     // 表头样式
     headerStyle() {
       return 'font-size: 12px;color: #666;font-weight: normal;'
     },
     handleExpressTo(row, column, event) {
-      // this.expressNu.push(row.id)
       console.log(row + column + event, 'row, column, event')
     },
     handleSizeChange(val) {
-      // console.log(val, 'handleSizeChange')
       this.currentPage = val
-      // console.log(this.dataExp.id, this.dataExp, 'this.dataExp.id')
       this.getExpressList(this.dataExp.id)
     },
     getExpressList(id) {
-      // const searchIn = this.searchIn[0]
-      console.log(
-        this.searchIn,
-        'searchIn: []searchIn: []searchIn: []searchIn: []searchIn: [],'
-      )
       let timeType = {}
-      // let user_id
-      console.log(this.searchIn, '-----------------------this')
       this.searchIn.forEach((item) => {
         if (item && item.term) {
           if (item.term.user_id) {
             timeType.user_id = item.term.user_id
           }
           if (item.term && item.term.regtype) {
-            //   if (Number(item.term.regtype) === 1) {
-            //     item.term.regtype = '5'
-            //   } else if (Number(item.term.regtype) === 2) {
-            //     item.term.regtype = '4'
-            //   } else if (Number(item.term.regtype) === 4) {
-            //     item.term.regtype = '1'
-            //   } else if (Number(item.term.regtype) === 5) {
-            //     item.term.regtype = '2,3'
-            //   }
             timeType.regtype = `${item.term.regtype}`
           }
         }
@@ -458,14 +497,11 @@ export default {
           }
         }
       })
-
       this.teacherId && (timeType.teacher_id = this.teacherId)
-
       timeType = {
         ...timeType,
         express_status: id
       }
-
       const query = JSON.stringify(timeType)
       console.log(timeType, 'timeType', query)
       // console.log(query)
@@ -498,6 +534,8 @@ export default {
       express_nu
       ctime
       utime
+      sup
+      term
       user{
         id
         birthday
@@ -525,7 +563,6 @@ export default {
 
             this.totalElements = +res.data.LogisticsListPage.totalElements // 总条数
           }
-          //  = res.data.LogisticsListPage.content
         })
     },
     toggleSelection(rows) {
@@ -540,14 +577,6 @@ export default {
     handleSelectionChange(val) {
       this.multipleSelection = val
     },
-    handleSelectionChangeEnter(row) {
-      // console.log('鼠标进入', row)
-    },
-    handleSelectionChangeLeave() {
-      // console.log('鼠标离开', this.cout, this.expressNu, 'this.expressNu')
-      // this.cout++
-      this.enter = false
-    },
     // 物流列表信息
     Express(expressNu, company) {
       this.timeline = true
@@ -561,7 +590,6 @@ export default {
             console.log('ress----', res && res.payload)
             this.timeLine = true
             const lastData = {}
-
             res.payload[0].data.forEach((item) => {
               if (item.status === '揽收') {
                 lastData.begin = lastData.begin == null ? [] : lastData.begin
@@ -577,7 +605,6 @@ export default {
               this.expressDetail = lastData
             })
           } else {
-            console.log('error    ---------', 123123232)
             this.expressDetail = []
             this.waitFor = true
           }
@@ -644,6 +671,29 @@ export default {
     }
     .time {
       line-height: 20px;
+    }
+  }
+  .two-choose {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    align-self: center;
+    justify-content: center;
+    .message {
+      display: flex;
+      font-size: 15px;
+      color: #666;
+      .ms {
+        color: #999;
+      }
+    }
+    .choose-product {
+      margin-top: 5px;
+      font-size: 15px;
+      display: flex;
+      align-self: center;
+      flex-direction: row;
+      align-items: center;
     }
   }
 }

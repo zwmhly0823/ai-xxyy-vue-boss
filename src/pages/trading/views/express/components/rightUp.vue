@@ -24,7 +24,7 @@
       />
     </div>
     <!-- v-if="!teacherId" TOSS -->
-    <div class="search-export" v-if="!teacherId">
+    <div class="search-export">
       <!-- <div class="search-export"> -->
       <div>
         <el-button size="small" type="primary" @click="showExportDialog"
@@ -139,16 +139,6 @@ export default {
       this.teacherId || JSON.parse(localStorage.getItem('staff')).id
     this.expressStatus = '0,1,2,3,6'
   },
-  // mounted() {
-  //   // console.log('token', this.token)
-  //   // setTimeout(() => {
-  //   //   this.$store.commit('SET_TOKEN', 222)
-  //   //   console.log('token', this.token)
-  //   // }, 1000)
-  // },
-  // computed: {
-  //   ...mapGetters(['token'])
-  // },
   methods: {
     // 上传进度
     uploadProgress(event, file, fileList) {

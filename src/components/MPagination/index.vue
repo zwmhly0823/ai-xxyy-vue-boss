@@ -96,9 +96,6 @@ export default {
     totalPage() {
       return this.pageCount || Math.ceil(this.total / this.pageSize) || 1
     },
-    // page() {
-    //   return this.currentPage
-    // }
     page: {
       get() {
         return this.currentPage
