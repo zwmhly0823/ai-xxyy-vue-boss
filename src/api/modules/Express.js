@@ -4,9 +4,10 @@
  * @Author: panjian
  * @Date: 2020-03-31 22:54:28
  * @LastEditors: panjian
- * @LastEditTime: 2020-04-03 18:45:50
+ * @LastEditTime: 2020-04-08 15:53:36
  */
-import axios from '../axios'
+// import axios from '../axios'
+import axios from '../axiosConfig'
 
 export default {
   /**
@@ -23,8 +24,13 @@ export default {
    * @param {*} param0
    */
   editAddressAndExpressForOrder(params) {
-    return axios.get('/api/o/v1/express/editAddressAndExpressForOrder', {
-      params
-    })
+    return axios.get('/api/o/v1/express/editAddressAndExpressForOrder', params)
+  },
+  /**
+   * 催发地址短信
+   * @param {*} param0
+   */
+  pushMsgByOrderId(orderId) {
+    return axios.get(`/api/o/v1/order/pushMsgByOrderId?orderId=${orderId}`)
   }
 }
