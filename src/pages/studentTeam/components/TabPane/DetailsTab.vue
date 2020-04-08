@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 14:19:58
  * @LastEditors: panjian
- * @LastEditTime: 2020-04-07 21:13:21
+ * @LastEditTime: 2020-04-08 15:18:50
  -->
 <template>
   <div>
@@ -84,17 +84,6 @@
             ></details-table
           ></el-tab-pane>
         </el-tabs>
-        <!-- <el-input
-          class="el-input-search"
-          size="mini"
-          placeholder="昵称、手机号、微信信息"
-          prefix-icon="el-icon-search"
-          v-model="input"
-          @keyup.enter.native="enter"
-        >
-        </el-input> -->
-        <!-- <check-box class="checkbox"></check-box> -->
-        <!-- 生成完课榜弹出框 -->
         <el-dialog
           title="请选择生成的完课榜周数"
           :visible.sync="dialogFormVisible"
@@ -319,8 +308,8 @@ export default {
       })
       this.sortGroup = ''
       this.table.currentPage = 1
-      console.log(value.classId, 'classId')
-      if (value.classId) {
+      console.log(value.classId, ' && ')
+      if (value.classId && value.classId.id) {
         this.tableDataEmpty = true
         if (value.classId.team_type === 0) {
           this.type = 'TRAIL'
@@ -778,8 +767,6 @@ export default {
         } else {
           this.querysData = `{"team_id":${this.classId.classId.id},"team_type":${this.classId.type}}`
         }
-        console.log(this.search, 'this.search')
-
         axios
           .post('/graphql/user', {
             query: `{
@@ -850,7 +837,6 @@ export default {
                 item.base_painting = '一年以上'
               }
             })
-            console.log(this.tableDataEmpty)
             if (this.tableDataEmpty) {
               this.table.tableData = _data
             } else {
@@ -907,7 +893,6 @@ export default {
           }`
           })
           .then((res) => {
-            console.log(res, 'experessssssss')
             this.table.tableData = []
             this.table.totalElements = +res.data.stuExpressPage.totalElements
             const _data = res.data.stuExpressPage.content
