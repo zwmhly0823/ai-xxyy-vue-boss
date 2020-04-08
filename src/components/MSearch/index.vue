@@ -70,20 +70,19 @@
         <product-topic @result="getProductTopic" :name="topicType" />
       </el-form-item>
 
-      <!-- <el-form-item v-if="level || sup || stage">
+      <el-form-item v-if="level || sup || stage">
         <stage-sup-levels
           @stageCallBack="stageCallBack"
           @supCallBack="supCallBack"
           @levelCallBack="levelCallBack"
-
           :stageName="stage"
           :supName="sup"
           :levelName="level"
           style="margin-bottom:0px"
         />
-      </el-form-item> -->
+      </el-form-item>
 
-      <el-form-item
+      <!-- <el-form-item
         size="mini"
         style="position:relative;top:6px"
         v-if="level || sup || stage"
@@ -103,7 +102,7 @@
             <i class="el-icon-arrow-down" />
           </el-button>
         </el-popover>
-      </el-form-item>
+      </el-form-item> -->
 
       <el-form-item>
         <slot name="searchItems"></slot>
