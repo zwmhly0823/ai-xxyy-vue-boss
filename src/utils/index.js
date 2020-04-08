@@ -245,3 +245,16 @@ export function accessStorageData({
       break
   }
 }
+/**
+ * js 深度克隆
+ */
+export function deepClone(obj) {
+  const isObject = (obj) =>
+    obj && (typeof obj === 'object' || typeof obj === 'function')
+  if (!isObject) throw new Error('Not Reference Types')
+  const newObj = Array.isArray(obj) ? [...obj] : { ...obj }
+  Reflect.ownKeys(newObj).map((key) => {
+    newObj[key] = isObject(obj[key]) ? deepClone(obj[key]) : obj[key]
+  })
+  return newObj
+}

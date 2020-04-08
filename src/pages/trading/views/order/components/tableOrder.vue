@@ -1,6 +1,7 @@
 <template>
   <div class="title-box">
     <el-table style="width: 100%">
+      <el-table-column label="用户信息" min-width="100%"></el-table-column>
       <el-table-column label="商品信息" min-width="100%"></el-table-column>
       <el-table-column label="订单来源" min-width="100%"></el-table-column>
       <el-table-column label="订单状态" min-width="100%"> </el-table-column>
@@ -21,18 +22,29 @@
             </div>
           </el-col>
           <el-col :span="6">
-            <div class="grid-content">
+            <div class="grid-content grid-centent">
               下单时间:{{ item.ctime ? item.ctime : '-' }}
             </div>
           </el-col>
           <el-col :span="6">
             <div>
-              支付方式:{{ item.payment ? item.payment.trade_type : '-' }}
+              支付方式:{{
+                item.payment
+                  ? item.payment.trade_type
+                  : item.regtype
+                  ? item.regtype
+                  : '-'
+              }}
             </div>
           </el-col>
         </el-row>
       </div>
       <div class="card-content">
+        <!-- 用户信息 -->
+        <div class="content-details user-infor">
+          {{ item.user ? item.user.mobile : '-' }}
+        </div>
+        <!-- 商品信息 -->
         <div class="content-details card-style1">
           <div class="card-style1-left">
             <div>
@@ -41,7 +53,7 @@
                   item.packages_name ? item.packages_name : item.product_name
                 }}
               </div>
-              <div class="card-style1-num" v-show="item.sup !== ''">
+              <div class="card-style1-num" v-show="item.sup">
                 {{ item.stage ? item.stage : '-' }}期·S{{
                   item.sup ? item.sup : '-'
                 }}
@@ -51,7 +63,7 @@
           <div class="card-style1-right">
             <div>
               <div class="card-style1-rmb">
-                {{ item.currency ? item.currency : '人民币' }}:{{
+                {{ item.currency ? item.currency : '¥' }}:{{
                   item.amount ? item.amount : '-'
                 }}
               </div>
@@ -59,12 +71,15 @@
             </div>
           </div>
         </div>
+        <!-- 订单来源 -->
         <div class="content-details">
           <div>{{ item.channel ? item.channel.channel_outer_name : '-' }}</div>
         </div>
+        <!-- 订单状态 -->
         <div class="content-details">
           <div>{{ item.order_status ? item.order_status : '-' }}</div>
         </div>
+        <!-- 关联物流 -->
         <div class="content-details card-style4">
           <div>
             <div class="card-style4-num">
@@ -141,11 +156,13 @@ export default {
   watch: {
     // 切换tab
     status(val) {
+      this.currentPage = 1
       this.tab = val
       this.orderList()
     },
     // 搜索
     search(val) {
+      this.currentPage = 1
       this.searchIn = val
       this.orderList()
     }
@@ -163,7 +180,6 @@ export default {
 
       // 搜索 must
       const mustArr = this.searchIn.map((item) => JSON.stringify(item))
-      console.log(this.searchIn, 'overflow-scroll')
       must.push(...mustArr)
       const should = this.tab ? [`{"terms": {"status": [${this.tab}]}}`] : []
       const queryStr = `{
@@ -198,6 +214,9 @@ export default {
               bear_integral
               gem_integral
               product_name
+              user{
+                mobile
+              }
               channel {
                 channel_outer_name
               }
@@ -224,21 +243,25 @@ export default {
             item.out_trade_no = item.out_trade_no.split('xiong')[1]
             // 下单时间格式化
             item.ctime = timestamp(item.ctime, 2)
-            // 支付方式
-            if (item.payment) {
-              const tradeType = item.payment.trade_type
+            // 交易方式
+            if (item.regtype) {
               let currency = {}
-              if (tradeType === 4) {
-                item.payment.trade_type = '宝石兑换'
+              if (item.regtype === 4) {
+                item.regtype = '宝石兑换'
                 currency = { currency: '宝石' }
                 Object.assign(item, currency)
                 item.amount = item.gem_integral
-              } else if (tradeType === 5) {
-                item.payment.trade_type = '小熊币兑换'
+              } else if (item.regtype === 5) {
+                item.regtype = '小熊币兑换'
                 currency = { currency: '小熊币' }
                 Object.assign(item, currency)
                 item.amount = item.bear_integral
-              } else if (tradeType === 'WAP') {
+              }
+            }
+            // 支付方式
+            if (item.payment) {
+              const tradeType = item.payment.trade_type
+              if (tradeType === 'WAP') {
                 item.payment.trade_type = '支付宝'
               } else if (tradeType === 'APP') {
                 item.payment.trade_type = 'APP微信'
@@ -254,7 +277,7 @@ export default {
             }
           })
           this.cardData = _data
-          console.log(this.cardData)
+          console.log(this.cardData, 'this.cardData')
         })
     },
     // 点击分页
@@ -287,12 +310,15 @@ export default {
     font-size: 14px;
     color: #000;
     .content-details {
-      width: 25%;
+      width: 20%;
       height: 80px;
       padding: 0 10px;
       float: left;
       display: flex;
       align-items: center;
+    }
+    .user-infor {
+      font-family: 'number_font';
     }
     .card-style1 {
       padding-left: 0 !important;
@@ -360,11 +386,14 @@ export default {
   }
   .el-card__header {
     padding: 10px;
-    background: #f5f7fa;
+    background: #fafafa;
   }
   // 卡片表头
   .el-row {
     padding: 0 !important;
   }
+  // .grid-centent {
+  //   padding-left: 17%;
+  // }
 }
 </style>

@@ -3,26 +3,18 @@
  * @version: 
  * @Author: zhubaodong
  * @Date: 2020-03-27 19:04:54
- * @LastEditors: Shentong
- * @LastEditTime: 2020-03-30 21:33:36
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-04-03 11:53:48
  -->
 <template>
   <div class="container">
     <div class="search-up">
-      <!-- <m-search
-        @search="handleSearch"
-        phone="umobile"
-        :timeData="[
-          { text: '购买时间', value: 'ctime' },
-          { text: '揽收时间', value: 'delivery_collect_time' },
-          { text: '签收时间', value: 'signing_time' }
-        ]"
-      /> -->
       <m-search
         @search="handleSearch"
         phone="user_id"
-        stage="stage"
+        stage="term"
         sup="sup"
+        level="level"
         :timeData="[
           { text: '购买时间', value: 'ctime' },
           { text: '揽收时间', value: 'delivery_collect_time' },
@@ -30,55 +22,320 @@
         ]"
       />
     </div>
+    <!-- v-if="!teacherId" TOSS -->
     <div class="search-export" v-if="!teacherId">
-      <div @click="exportExpress">
-        <el-button size="small" type="primary">导出物流信息</el-button>
+      <!-- <div class="search-export"> -->
+      <div>
+        <el-button size="small" type="primary" @click="showExportDialog"
+          >导出物流信息</el-button
+        >
       </div>
-      <div @click="importExpress">
-        <el-button size="small" type="primary">导入物流信息</el-button>
-      </div>
-      <div @click="importRelAddress">
-        <el-button size="small" type="primary">导入收货信息</el-button>
+      <div>
+        <el-button size="small" type="primary" @click="dialogVisible = true">
+          导入物流信息
+        </el-button>
       </div>
     </div>
+
+    <el-dialog title="导出物流消息" :visible.sync="dickUp" width="30%">
+      <span>你确定导出这选中的数据嘛</span>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dickUp = false">取 消</el-button>
+        <el-button type="primary" @click="exportExpress">
+          确 定
+        </el-button>
+      </span>
+    </el-dialog>
+    <el-dialog title="导入物流信息" :visible.sync="dialogVisible" width="30%">
+      <!-- action="/api/o/v1/express/importExpressList" -->
+
+      <el-upload
+        ref="upload"
+        action=""
+        accept=".xls, .xlsx"
+        :data="{ teacherId }"
+        :on-remove="handleRemove"
+        :headers="headers"
+        :auto-upload="false"
+        :limit="1"
+        :http-request="uploadFile"
+      >
+        <el-button slot="trigger" size="small" type="primary"
+          >选取文件</el-button
+        >
+        <el-button
+          style="margin-left: 10px;"
+          size="small"
+          type="success"
+          @click="submitUpload"
+          >上传到服务器</el-button
+        >
+        <!-- :loading="uploading" -->
+        <div slot="tip" class="el-upload__tip">只能上传xls/xlsx文件</div>
+      </el-upload>
+    </el-dialog>
+
+    <!-- 上传文件报错提示 -->
+    <el-dialog
+      title="文件上传问题"
+      :visible.sync="errorDialog.length > 0"
+      width="500"
+      :before-close="handleClose"
+    >
+      <p v-for="(item, index) in errorDialog" :key="index">
+        {{ item.message }}
+      </p>
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="errorDialog = []">关闭</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
 <script>
+// import { mapGetters } from 'vuex'
 import { isToss } from '@/utils/index'
 import MSearch from '@/components/MSearch/index.vue'
+import axios from 'axios'
 export default {
+  props: ['dataExp'],
   components: {
     MSearch
   },
   data() {
     return {
-      teacherId: ''
+      errorDialog: [],
+      teacherId: '',
+      operatorId: '',
+      searchIn: [],
+      open: false,
+      dialogVisible: false,
+      dickUp: false,
+      headers: { 'Content-Type': 'multipart/form-data' },
+      expressStatus: '',
+      uploading: false,
+      close: false,
+      expressId: ''
+    }
+  },
+  watch: {
+    dataExp(val) {
+      if (val.id) {
+        this.expressStatus = val.id
+      }
     }
   },
   created() {
     this.teacherId = isToss()
+    this.operatorId =
+      this.teacherId || JSON.parse(localStorage.getItem('staff')).id
+
+    this.expressStatus = '0,1,2,3,6'
   },
+  // mounted() {
+  //   // console.log('token', this.token)
+  //   // setTimeout(() => {
+  //   //   this.$store.commit('SET_TOKEN', 222)
+  //   //   console.log('token', this.token)
+  //   // }, 1000)
+  // },
+  // computed: {
+  //   ...mapGetters(['token'])
+  // },
   methods: {
-    importExpress() {
-      console.log('导入物流信息')
+    // 导出物流关闭符号
+    handleClose() {
+      this.errorDialog = false
+      this.$refs.upload.clearFiles()
     },
-    exportExpress() {
-      console.log('导出物流信息')
+    uploadFile(params) {
+      const formdata = new FormData()
+      const file = params.file
+      formdata.append('file', file)
+      this.uploading = true
+      axios
+        .post(
+          `/api/o/v1/express/importExpressList?operatorId=${this.operatorId}`,
+          formdata
+        )
+        .then((res) => {
+          this.uploading = false
+          if (res.code === 0 && res.payload.length < 1) {
+            this.$message({
+              showClose: true,
+              message: '恭喜你，文件上传成功',
+              type: 'success'
+            })
+          }
+          this.dialogVisible = false
+          this.errorDialog = res.payload
+        })
+        .catch((error) => {
+          // 前端的token留在点击退出按钮那里删除，这里就只是提示过期
+          if (error.message !== '') {
+            this.$message.warning('此表你已经上传过了')
+          }
+          this.uploading = false
+        })
+        .finally(() => {
+          this.uploading = false
+        })
+      setTimeout(() => {
+        this.uploading = false
+      }, 2000)
     },
+    // importESKSKS(file) {
+    //   axios({
+    //     method: 'POST',
+    //     url: '/api/o/v1/express/importExpressList',
+    //     file
+    //   }).then((res) => console.log(res))
+    // },
+    handleRemove(file) {
+      console.log(axios, '手动移除上传文件', file)
+      // axios.post(`/api/o/v1/express/importExpressList?${val}&${val})
+    },
+    handlePreview(file) {
+      console.log('手动移除传文件', file)
+    },
+    submitUpload(file, filelist) {
+      this.$refs.upload.submit()
+    },
+
+    showExportDialog() {
+      this.expressId = sessionStorage.getItem('uid') || []
+
+      // 如果物流状态选择全部，不能导出
+      console.log(
+        this.expressStatus === '0,1,2,3,6',
+        this.searchIn,
+        this.expressId
+      )
+      if (
+        this.expressStatus === '0,1,2,3,6' &&
+        !this.searchIn.length &&
+        !this.expressId.length
+      ) {
+        this.$message.error('不能导出全部物流，请选择状态或筛选')
+        return
+      }
+
+      this.dickUp = true
+    },
+    /**
+     * 导出物流信息
+     */
+    exportExpress(val) {
+      var query
+      const tableName = 'o_express'
+      if (sessionStorage.getItem('uid')) {
+        var uid = sessionStorage.getItem('uid').split(',')
+        query = { bool: { must: [{ terms: { id: uid } }] } } // 自行通过前端选择的条件进行动态组装
+        sessionStorage.removeItem('uid')
+      } else {
+        const term = this.searchIn.map((item, index) => {
+          if (item.range && item.range.ctime) {
+            item.range.create_order_time = item.range.ctime
+            delete item.range.ctime
+          }
+          if (item.terms && item.terms.sup) {
+            item.terms['sup.keyword'] = item.terms.sup
+            delete item.terms.sup
+          }
+          if (item.terms && item.terms.level) {
+            item.terms['level.keyword'] = item.terms.level
+            delete item.terms.level
+          }
+
+          return item
+        })
+        query = {
+          bool: {
+            must: term,
+            filter: {
+              bool: {
+                should: [
+                  { terms: { express_status: this.expressStatus.split(',') } }
+                ]
+              }
+            }
+          }
+        } // 自行通过前端选择的条件进行动态组装
+      }
+
+      const sort = { ctime: 'desc' }
+      const name = '物流数据'
+      const headers = {
+        id: '物流信息ID',
+        user_id: '用户ID',
+        out_trade_no: '订单号',
+        regtype: '商品类型',
+        term: '期数',
+        sup: '课程难度',
+        level: '课程级别',
+        product_name: '物流商品名称',
+        receipt_name: '收货人姓名',
+        receipt_tel: '收货人手机号',
+        province: '省',
+        city: '市',
+        area: '区',
+        address_detail: '详细地址',
+        express_nu: '快递单号',
+        express_company: '物流公司',
+        express_company_nu: '物流公司编号'
+      }
+
+      const params = {
+        tableName,
+        name,
+        headers,
+        query,
+        sort
+      }
+      // axios
+      //   .post(`/data/search/m1/v1/search/common/export`, params)
+      axios({
+        method: 'POST',
+        url: '/data/search/m1/v1/search/common/export',
+        responseType: 'blob',
+        params
+      }).then((res) => {
+        this.downloadFn(res, '物流下载')
+      })
+    },
+    dosomething() {},
     handleSearch(search) {
       // 期数 加 S
-      search.forEach((item) => {
+      const mySearch = search.map((item) => {
         if (item.terms && item.terms.sup) {
-          const sup = item.terms.sup.map((s) => `S${s}`)
+          const sup = item.terms.sup.map((s) => {
+            const str = s.toString().includes('S') ? s : `S${s}`
+            return str
+          })
           item.terms.sup = sup
+          item.terms['sup.keyword'] = JSON.stringify(sup)
         }
+        return item
       })
-      console.log(search, '1111')
+      this.searchIn = mySearch
       this.$emit('search', search)
     },
-    importRelAddress() {
-      console.log('1111')
+    // 下载文件
+    downloadFn(data, name = '下载') {
+      if (!data) return
+      console.log(data, 'data')
+      const blob = new Blob([data])
+      const fileUrl = window.URL.createObjectURL(blob)
+      const link = document.createElement('a')
+      link.style.display = 'none'
+      link.href = fileUrl
+      // eslint-disable-next-line no-restricted-globals
+      link.setAttribute('download', `${name}.xls`)
+
+      document.body.appendChild(link)
+      link.click()
+      this.dickUp = false
+      this.dosomething()
     }
   }
 }

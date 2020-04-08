@@ -4,10 +4,11 @@
  * @Author: zhubaodong
  * @Date: 2020-03-13 16:53:27
  * @LastEditors: zhubaodong
- * @LastEditTime: 2020-04-03 16:33:19
+ * @LastEditTime: 2020-04-07 14:34:35
  -->
 <template>
   <div class="left-container" @mouseleave="outTools">
+    <div class="title">组织结构</div>
     <el-tree
       class="left-container-tree"
       :data="experiencelist"
@@ -22,14 +23,16 @@
       <span
         class="custom-tree-node"
         slot-scope="{ node, data }"
-        @mouseover="showTools(data.value)"
+        @mouseover="showTools(data.id)"
       >
-        <span :title="data.value">{{ data.showName }}</span>
-        <span
+        <span :title="data.id">{{ data.name }}</span>
+        <!-- （{{ data.id ? data.id : 0 }}） -->
+        <!-- <span
           class="el-icon-s-tools toolsIcon"
           slot="reference"
           @contextmenu.prevent="menuTools"
-          v-if="+toolsCount === +data.value"
+          v-if="+toolsCount === +data.id"
+          style="margin-left:10px"
         >
           <el-card id="menu">
             <div>
@@ -39,7 +42,7 @@
               <p>停用部门</p>
             </div>
           </el-card>
-        </span>
+        </span> -->
       </span>
     </el-tree>
   </div>
@@ -63,67 +66,23 @@ export default {
       input: '',
       defaultProps: {
         children: 'children',
-        label: 'showName'
+        label: 'name'
       }, // 定义节点名称
       toolsCount: null, // 是否显示配置按钮
       toolsMenu: false, // 右键配置显示列表
-      experiencelist: [
-        {
-          showName: '小熊销售部',
-          value: '13',
-          children: [
-            {
-              showName: '小熊销售1部（1）',
-              value: '14',
-              children: [
-                {
-                  showName: '小熊1部S1组（1）',
-                  value: '1'
-                },
-                {
-                  showName: '小熊1部S2组（2）',
-                  value: '2'
-                },
-                {
-                  showName: '小熊1部S3组（222）',
-                  value: '3'
-                }
-              ]
-            },
-            {
-              showName: '小熊先锋战队（9）',
-              value: '15',
-              children: [
-                {
-                  showName: '先锋战队S1组（1）',
-                  value: '4'
-                },
-                {
-                  showName: '先锋战队S2组（2）',
-                  value: '5'
-                },
-                {
-                  showName: '先锋战队S3组（2）',
-                  value: '6'
-                }
-              ]
-            }
-          ]
-        }
-      ]
+      experiencelist: []
     }
   },
   computed: {},
 
   methods: {
     // 点击节点
-    nodeClick(data) {
+    nodeClick(data, e) {
       this.$emit('change', data)
     },
     // 鼠标移入显示icon
     showTools(index) {
       this.toolsCount = +index
-      console.log(index)
     },
     // 右击icon，显示菜单
     menuTools(e) {
@@ -132,10 +91,9 @@ export default {
       this.toolsMenu = true
       if (+e.button === 2) {
         e.preventDefault()
-        console.log(e, 'oMenu')
 
-        var _x = e.clientX
-        var _y = e.clientY
+        const _x = e.clientX
+        const _y = e.clientY
         oMenu.style.display = 'block'
         oMenu.style.left = _x - 175 + 'px'
         oMenu.style.top = _y - 50 + 'px'
@@ -149,11 +107,20 @@ export default {
       console.log('哈哈')
     }
   },
-  created() {}
+  async created() {
+    await this.$http.Teacher.getDepartmentTree(1).then((res) => {
+      this.experiencelist = res.payload
+      console.log(res)
+    })
+  }
 }
 </script>
 <style lang="scss" scoped>
 .left-container {
+  .title {
+    font-size: 18px;
+    padding: 10px 0px 10px 20px;
+  }
   padding: 10px 0px;
 }
 #menu {

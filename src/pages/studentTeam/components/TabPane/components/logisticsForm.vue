@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-04-01 13:24:40
  * @LastEditors: panjian
- * @LastEditTime: 2020-04-01 15:49:55
+ * @LastEditTime: 2020-04-03 18:59:02
  -->
 <template>
   <el-form
@@ -58,6 +58,17 @@ export default {
   name: 'logisticsForm',
   props: ['formData'],
   data() {
+    var validatePass = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error('请输入手机号'))
+      } else {
+        const reg = /^1[3456789]\d{9}$/
+        if (!reg.test(value)) {
+          callback(new Error('请输入正确手机号'))
+        }
+        callback()
+      }
+    }
     return {
       areaLists: areaLists,
       province: null,
@@ -71,13 +82,12 @@ export default {
       },
       rules: {
         receiptName: [
-          { required: true, message: '请输入活动名称', trigger: 'blur' }
+          { required: true, message: '请输入收货人姓名', trigger: 'blur' }
         ],
         receiptTel: [
           {
-            required: true,
             maxlength: 11,
-            message: '请填写电话',
+            validator: validatePass,
             trigger: 'blur'
           }
         ],
@@ -111,7 +121,6 @@ export default {
         const staff = JSON.parse(localStorage.getItem('staff'))
         this.operatorId = staff.id
       }
-      console.log(this.formData)
       const params = {
         operatorId: this.operatorId,
         orderId: this.formData.orderid,
@@ -129,19 +138,27 @@ export default {
         expressCompany: '',
         expressCompanyNu: ''
       }
+
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          this.$http.Express.editAddressAndExpressForOrder(params).then(
-            (res) => {
-              this.$message({
-                message: '地址添加成功',
-                type: 'success'
-              })
-              setTimeout(() => {
-                this.$emit('addExpress', 1)
-              }, 1000)
-            }
-          )
+          this.$http.Express.editAddressAndExpressForOrder(params)
+            .then((res) => {
+              if (res.data) {
+                return
+              }
+              if (res.status) {
+                this.$message({
+                  message: '地址添加成功',
+                  type: 'success'
+                })
+                setTimeout(() => {
+                  this.$emit('addExpress', 1)
+                }, 1000)
+              }
+            })
+            .catch((err) => {
+              console.log('err111', err)
+            })
         } else {
           return false
         }

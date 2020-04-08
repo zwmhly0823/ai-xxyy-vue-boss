@@ -4,31 +4,32 @@
       <img src="@/assets/images/FinishClassHead.png" alt="" />
     </div>
     <div class="classconent">
-      <img src="@/assets/images/Finishclasslist.png" class="img" alt="" />
+      <img src="@/assets/images/Exhibition.png" class="img" alt="" />
       <div class="content">
-        <div class="userinfo">
-          <span class="userhead">
-            <img src="../../../../assets/images/Stars.png" alt="" />
+        <div class="allinfo" v-for="(item, index) in listinfo" :key="index">
+          <div class="userinfo">
+            <span class="userhead">
+              <img :src="item.head" @load="loaded(index)" class="head" alt="" />
+            </span>
+            <span class="username">{{ item.username }}</span>
+          </div>
+          <!-- <div class="framebox" v-for="(item, index) in 4" :key="index"> -->
+          <span
+            class="framebox"
+            v-for="(img, index) in item.completeArr"
+            :key="index + 1"
+          >
+            <span class="img-overflow"
+              ><img
+                class="topframe"
+                :src="img.task_image"
+                alt=""
+                @load="loaded(index)"
+            /></span>
+            <!-- <img class="frame" src="../../../../assets/images/frame.png" alt=""
+          /> -->
           </span>
-          <span class="username">哈哈哈哈</span>
-        </div>
-        <div class="framebox" v-for="(item, index) in 3" :key="index">
-          <span>
-            <img
-              class="topframe"
-              src="../../../../assets/images/FinishClassHead.png"
-              alt=""/>
-            <img class="frame" src="../../../../assets/images/frame.png" alt=""
-          /></span>
-          <span>
-            <img class="frame" src="../../../../assets/images/frame.png" alt=""
-          /></span>
-          <span>
-            <img class="frame" src="../../../../assets/images/frame.png" alt=""
-          /></span>
-          <span>
-            <img class="frame" src="../../../../assets/images/frame.png" alt=""
-          /></span>
+          <!-- </div> -->
         </div>
       </div>
     </div>
@@ -40,10 +41,47 @@
 
 <script>
 export default {
-  data() {
-    return {}
+  props: {
+    listData: {
+      type: Object,
+      default: null
+    },
+    weekNum: {
+      type: String,
+      default: ''
+    },
+    Exhibition: {
+      type: Boolean,
+      default: false
+    }
   },
-  methods: {}
+  data() {
+    return {
+      listinfo: [],
+      listTitle: '',
+      isLoaded: false,
+      num: 0
+    }
+  },
+  methods: {
+    loaded(i) {
+      this.num++
+      if (this.listinfo.length - 1 === this.num) {
+        this.isLoaded = true
+        this.$emit('isload', this.isLoaded)
+      }
+    }
+  },
+  watch: {
+    listData(value) {
+      console.log('child - receive ----> res:', value)
+      this.listinfo = value.data.getStuTaskRankingList
+      console.log('listinfo -------', this.listinfo)
+    }
+    // weekNum(value) {
+    //   this.listTitle = value === 'U1' ? 'W1' : 'W2'
+    // }
+  }
 }
 </script>
 
@@ -82,47 +120,57 @@ export default {
       box-sizing: border-box;
       padding-left: 26px;
       padding-right: 26px;
-      padding-top: 60px;
+      padding-top: 30px;
       padding-bottom: 66px;
-      .userinfo {
-        width: 100%;
-        height: 51px;
-        display: flex;
-        .userhead {
-          display: inline-block;
-          width: 51px;
+      div:nth-child(1) {
+        margin-top: 50px;
+      }
+      .allinfo {
+        .userinfo {
+          width: 100%;
           height: 51px;
-          border-radius: 50%;
-          img {
-            width: 100%;
-            height: 100%;
+          display: flex;
+          margin-top: 30px;
+          .userhead {
+            display: inline-block;
+            width: 51px;
+            height: 51px;
+            border-radius: 50%;
+            img {
+              width: 100%;
+              height: 100%;
+              border-radius: 50%;
+            }
+          }
+          .username {
+            font-size: 28px;
+            color: #333;
+            margin-left: 14px;
+            line-height: 51px;
           }
         }
-        .username {
-          font-size: 28px;
-          color: #333;
-          margin-left: 14px;
-          line-height: 51px;
-        }
-      }
-      .framebox {
-        margin-top: 14px;
-        width: 100%;
-        height: 156px;
-        display: flex;
-        justify-content: space-between;
-        span {
+        .framebox {
+          margin-top: 14px;
+          padding: 20px;
           display: inline-block;
+          margin-left: 4px;
           width: 156px;
           height: 156px;
-          frame {
+          overflow: hidden;
+          background-image: url('../../../../assets/images/frame.png');
+          .img-overflow {
+            display: inline-block;
+            overflow: hidden;
             width: 100%;
             height: 100%;
-          }
-          .topframe {
-            position: absolute;
-            clip: rect(0px, 120px, 120px, 0px);
-            width: 120px;
+            display: flex;
+            align-items: center;
+            // display: table-cell;
+            // vertical-align: middle;
+            .topframe {
+              width: 100%;
+              margin: 0px auto;
+            }
           }
         }
       }

@@ -3,8 +3,8 @@
  * @version:
  * @Author: Shentong
  * @Date: 2020-03-17 11:50:18
- * @LastEditors: panjian
- * @LastEditTime: 2020-03-23 18:43:00
+ * @LastEditors: Shentong
+ * @LastEditTime: 2020-04-03 19:22:25
  */
 import axios from './axios'
 import { getToken } from '@/utils/auth'
@@ -13,8 +13,9 @@ import { getToken } from '@/utils/auth'
 export default {
   // 判断是否需要token
   judgeToken() {
-    const token = this.getHeaders().token
+    const token = this.getHeaders().Authorization
     const needToken = location.href.indexOf('login') === -1
+
     if (needToken && !token) {
       // location.href = `${baseUrl}login/#/`
       location.href = `/login/#/`
@@ -87,7 +88,7 @@ export default {
     }
   },
   getHeaders() {
-    const token = getToken()
+    const token = getToken() || 'authorization-bear'
     const headers = {
       'Content-Type': 'application/json;charset=UTF-8'
     }
