@@ -471,7 +471,6 @@ export default {
             timeType.regtype = `${item.term.regtype}`
           }
         }
-
         if (item && item.terms) {
           if (item.terms.sup) {
             timeType.sup = `${item.terms.sup}`

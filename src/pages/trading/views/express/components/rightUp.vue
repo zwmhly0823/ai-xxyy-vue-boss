@@ -190,16 +190,9 @@ export default {
         this.uploading = false
       }, 2000)
     },
-    // importESKSKS(file) {
-    //   axios({
-    //     method: 'POST',
-    //     url: '/api/o/v1/express/importExpressList',
-    //     file
-    //   }).then((res) => console.log(res))
-    // },
+
     handleRemove(file) {
       console.log(axios, '手动移除上传文件', file)
-      // axios.post(`/api/o/v1/express/importExpressList?${val}&${val})
     },
     handlePreview(file) {
       console.log('手动移除传文件', file)

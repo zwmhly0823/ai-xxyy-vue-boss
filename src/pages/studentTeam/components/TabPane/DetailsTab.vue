@@ -3,8 +3,8 @@
  * @version:
  * @Author: panjian
  * @Date: 2020-03-16 14:19:58
- * @LastEditors: Shentong
- * @LastEditTime: 2020-04-03 20:53:17
+ * @LastEditors: panjian
+ * @LastEditTime: 2020-04-07 21:13:21
  -->
 <template>
   <div>
@@ -34,17 +34,12 @@
         @click="ExhibitionList"
         >生成作品展</el-button
       >
+      <!-- <checkBox
+        :tables="table"
+        v-if="this.table.tabs == 3 || this.table.tabs == 4"
+      ></checkBox> -->
     </div>
     <div>
-      <!-- <m-search
-        class="search-box"
-        @search="handleSearch"
-        phone="uid"
-        onlyPhone="1"
-        phoneTip="手机号/微信昵称 查询"
-        :teamId="classId.classId.id"
-      /> -->
-
       <div class="tabs-tab">
         <el-tabs v-model="activeName" @tab-click="handleClick">
           <el-tab-pane label="加好友进群" name="group">
@@ -178,18 +173,21 @@
         @load="handlePosterLoaded"
         crossorigin="anonymous"
       /> -->
-      <!-- 生成完课榜图片 -->
-      <div class="finishBox">
+      <!-- 生成完课榜图片-->
+      <div
+        v-for="(item, index) in finishLessonData.childListData"
+        :key="index"
+        class="finishBox"
+      >
         <slot>
           <!-- 需要转换的html -->
           <finishclass
             @isLoad="canvasStart"
-            :listData="finishLessonData.childListData"
+            :listData="item"
             :weekNum="finishLessonData.weekNum"
           ></finishclass>
         </slot>
       </div>
-
       <!-- 生成作品展图片 -->
       <div class="exhibitionBox">
         <slot>
@@ -210,7 +208,6 @@ import detailsTable from './components/detailsTable'
 import MSearch from '@/components/MSearch/index.vue'
 import axios from '@/api/axios'
 import { timestamp, GetAgeByBrithday, isToss } from '@/utils/index'
-import status from '@/utils/status'
 import finishclass from './FinishClass'
 import exhibition from './Exhibition'
 import html2canvas from 'html2canvas'
@@ -243,7 +240,6 @@ export default {
       teacherId: '',
       search: '',
       querysData: '',
-
       experssShow: false,
       // 单选按钮
       // radio: '',
@@ -277,7 +273,9 @@ export default {
         finishClassSort: 'desc',
         weekNum: '',
         isRequest: true,
-        childListData: {}
+        childListData: [],
+        imgNum: 0,
+        imgSuccessNum: 0
       },
       // 作品展相关数据
       ExhibitionData: {
@@ -312,9 +310,6 @@ export default {
     }
   },
   watch: {
-    // getQcUrl: function() {
-    //   this.handlePosterLoad()
-    // },
     classId(value) {
       // 切换标签 语音停止
       const audios = this.$refs
@@ -322,7 +317,6 @@ export default {
       audiosList.forEach((item, index) => {
         item[0].load()
       })
-      // this.table.audioIndex = 10000
       this.sortGroup = ''
       this.table.currentPage = 1
       console.log(value.classId, 'classId')
@@ -370,20 +364,17 @@ export default {
     if (teacherId) {
       this.teacherId = teacherId
     }
-    console.log(status, 'status')
     this.table.tableLabel = [{ label: '购买时间', prop: 'buytime' }]
   },
   methods: {
     // 排序
     onGroupSort(data) {
-      // this.sortGroup = `sort:${data}`
       this.sortGroup = `sort:${JSON.stringify(data)}`
       console.log(this.sortGroup, 'sort 父组件')
       this.getGroup()
     },
     // 搜索组件传回来的值
     handleSearch(res) {
-      console.log(res, 'res[0].term.uid')
       if (res.length === 0) {
         console.log('res传的空')
         this.search = ''
@@ -453,7 +444,6 @@ export default {
       // 获取第几周的数据
       await this.getStuTaskRankingList(
         this.ExhibitionData.teamId,
-        // this.ExhibitionData.studentLesson,
         this.ExhibitionData.weekNum
       )
       // 关闭弹框
@@ -466,18 +456,33 @@ export default {
       this.$nextTick(() => {
         window.scrollTo(0, 0)
         // 获取要生成图片的dom元素
-        html2canvas(document.getElementsByClassName('finishBox')[0], {
-          backgroundColor: 'rgba(0, 0, 0, 0)',
-          useCORS: true,
-          async: true,
-          allowTaint: false
-        }).then((canvas) => {
-          const data = canvas.toDataURL('image/jpeg')
-          // 执行浏览器下载
-          this.download(`${picname}.jpeg`, data)
-          this.finish = false
-          // this.dataURL = data
-        })
+        var doms = document.getElementsByClassName('finishBox')
+        const that = this
+        console.log('dom++++++dom ---> ', doms)
+        console.log('doms  length--->', doms[1])
+        for (var h = 0; h < doms.length; h++) {
+          ;(function(i) {
+            html2canvas(doms[i], {
+              backgroundColor: 'rgba(0, 0, 0, 0)',
+              useCORS: true,
+              async: true,
+              allowTaint: false
+            }).then((canvas) => {
+              const data = canvas.toDataURL('image/jpeg')
+              console.log('down - begin ------i', i)
+              console.log('down - begin ------h', h)
+              // 执行浏览器下载
+              const shutdownLoading = i + 1 === h
+              const imgName = picname + '-' + (i * 1 + 1)
+              that.download(`${imgName}.jpeg`, data, that, shutdownLoading)
+              that.finish = false
+            })
+            // const indexNumber = i++
+            // if (doms.length === indexNumber) {
+            //   console.log(indexNumber, '__+_+_+_+_+_+_+_+_+_+_+_+_+_+_')
+            // }
+          })(h)
+        }
       })
     },
     //  生成作品展
@@ -635,7 +640,7 @@ export default {
       }
     },
     // 请求完课榜 - 接口数据
-    getStuRankingList(teamId, lesson, week) {
+    getStuRankingList(teamId, lesson, week, desc) {
       if (!teamId || !lesson || !week) {
         console.log('getStuRankingList - error:', ' 缺少毕传信息')
         return
@@ -670,10 +675,28 @@ export default {
             console.log(res.error, '接口错误信息-------------->')
             return
           }
-          this.finishLessonData.childListData = res
+          const childLastData = []
+          if (res.data.getStuComRankingList) {
+            const stuArrLength = res.data.getStuComRankingList.length
+            const createDefineNum = 70
+            // 重构数组
+            for (var j = 0; j < stuArrLength; j++) {
+              const tmpnum = Math.floor(j / createDefineNum)
+              childLastData[tmpnum] = childLastData[tmpnum]
+                ? childLastData[tmpnum]
+                : []
+              childLastData[tmpnum].push(res.data.getStuComRankingList[j])
+            }
+          }
+          console.log('lastChildData ------> ', childLastData)
+          this.finishLessonData.childListData = childLastData
+          this.finishLessonData.imgNum = childLastData.length
+
+          // document.getElementsByClassName('finishBox').forEach((dom, index) => {
+          //   console.log('foreach - dom ----->', dom)
+          // })
         })
     },
-
     // 请求作品展-接口数据
     getStuTaskRankingList(teamId, week) {
       if (!teamId || !week) {
@@ -1276,7 +1299,6 @@ export default {
       audiosList.forEach((item, index) => {
         item[0].load()
       })
-      // this.table.audioIndex = 10000
       if (tab.index === '0') {
         this.btnbox = false
         // 加好友进群
@@ -1353,7 +1375,7 @@ export default {
       dom.querySelector('.scrollbar-wrapper').scrollTo(0, 0)
     },
     // 生成图片下载方法
-    download(fileName, content) {
+    download(fileName, content, that = null, shutdownLoading = false) {
       const aLink = document.createElement('a')
       const blob = this.base64ToBlob(content)
 
@@ -1364,7 +1386,9 @@ export default {
 
       // aLink.dispatchEvent(evt);
       aLink.click()
-      this.$loading().close()
+      if (shutdownLoading) {
+        that.$loading().close()
+      }
     },
     // 转换图片为base64
     base64ToBlob(code) {

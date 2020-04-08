@@ -3,8 +3,8 @@
  * @version:
  * @Author: shentong
  * @Date: 2020-03-13 14:38:28
- * @LastEditors: panjian
- * @LastEditTime: 2020-04-03 18:04:08
+ * @LastEditors: Shentong
+ * @LastEditTime: 2020-04-07 21:18:41
  */
 import axios from 'axios'
 import _ from 'lodash'
@@ -14,7 +14,7 @@ import _ from 'lodash'
 // const isTest = location.href.indexOf('test.')
 // axios.defaults.baseURL = isTest ? 'http://47.98.38.59:43401' : ''
 // 请求超时时间
-axios.defaults.timeout = 20000
+axios.defaults.timeout = 240000
 
 axios.defaults.headers.post['Content-Type'] =
   'application/x-www-form-urlencoded;charset=UTF-8'
