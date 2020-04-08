@@ -258,3 +258,22 @@ export function deepClone(obj) {
   })
   return newObj
 }
+/**
+ * @description 如果图片路径为空,返回默认图片; 如果图片是阿里云图片,则添加限制
+ * @return {sharpen || Number} 表示进行锐化处理。取值为锐化参数，参数越大，越清晰。
+ * @return { DEFAUTL_URL } DEFAUTL_URL: 'https://msb-ai.meixiu.mobi/ai-pm/static/touxiang.png?', // 默认的图片路径
+ * @example ?x-oss-process=image/sharpen,100
+ */
+export function compressImg(imgPath, width) {
+  const DEFAUTL_URL = 'https://msb-ai.meixiu.mobi/ai-pm/static/touxiang.png?'
+
+  const _ossQuery = `x-oss-process=image/resize,m_lfit,w_${width}/sharpen,100`
+  const _imgHost = imgPath.split('/')[2] /** 取：‘http://s1.meixiu.mobi/’ */
+  const _allowPath = ['s1.meixiu.mobi']
+  if (!imgPath) {
+    imgPath = DEFAUTL_URL + _ossQuery
+  } else if (imgPath && _allowPath.includes(_imgHost)) {
+    return imgPath + '?' + _ossQuery
+  }
+  return imgPath
+}

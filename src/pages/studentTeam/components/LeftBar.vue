@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-13 16:53:27
  * @LastEditors: zhubaodong
- * @LastEditTime: 2020-04-08 15:14:09
+ * @LastEditTime: 2020-04-08 20:52:30
  -->
 <template>
   <div class="left-container">
@@ -38,9 +38,14 @@
             phoneTip="手机号/微信昵称"
           ></m-search>
         </div>
-        <el-button class="item-btn" type="primary" @click="filterHandler"
-          >过滤</el-button
-        >
+        <div class="btn-box">
+          <el-button class="item-btn" type="" @click="closeHandler"
+            >取消</el-button
+          >
+          <el-button class="item-btn" type="primary" @click="filterHandler"
+            >过滤</el-button
+          >
+        </div>
       </div>
 
       <div class="filter-class" slot="reference">
@@ -231,6 +236,9 @@ export default {
     filterHandler() {
       this.popStatus = false
       this.$emit('filter', this.filterItem)
+    },
+    closeHandler() {
+      this.popStatus = false
     }
   },
   created() {}
@@ -272,10 +280,14 @@ export default {
       margin-left: 0px !important;
     }
   }
-  .item-btn {
+  .btn-box {
     align-self: flex-end;
-    width: 60px;
-    padding: 5px 10px !important;
+    display: flex;
+    justify-content: flex-end;
+    width: 150px;
+    .item-btn {
+      padding: 5px 10px !important;
+    }
   }
 }
 

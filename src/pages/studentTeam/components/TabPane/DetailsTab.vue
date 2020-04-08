@@ -472,7 +472,7 @@ export default {
                 const shutdownLoading = i + 1 === h
                 const imgName = picname + '-' + (i * 1 + 1)
                 _this.download(`${imgName}.jpeg`, data, _this, shutdownLoading)
-                _this.finish = false
+                // _this.finish = false
               })
             })(h)
           }
@@ -507,7 +507,6 @@ export default {
                 const shutdownLoading = i + 1 === h
                 const imgName = picname + '-' + (i * 1 + 1)
                 _this.download(`${imgName}.jpeg`, data, _this, shutdownLoading)
-                _this.finish = false
               })
             })(h)
           }
@@ -690,7 +689,7 @@ export default {
           const childLastData = []
           if (res.data.getStuComRankingList) {
             const stuArrLength = res.data.getStuComRankingList.length
-            const createDefineNum = 70
+            const createDefineNum = 20
             const arevNum = Math.ceil(
               stuArrLength / Math.ceil(stuArrLength / createDefineNum)
             )
@@ -713,7 +712,6 @@ export default {
       if (!teamId || !week) {
         return
       }
-      // this.$loading()
       this.$loading({
         lock: true,
         text: '图片正在生成中'
@@ -735,14 +733,15 @@ export default {
                   }`
         })
         .then((res) => {
+          console.log(res, 123456789)
           if (res.error) {
             console.log(res.error, '接口错误信息-------------->')
             return
           }
           // 生成作品展（多页）
           const childLastData = []
-          if (res.data.getStuComRankingList) {
-            const stuArrLength = res.data.getStuComRankingList.length
+          if (res.data.getStuTaskRankingList) {
+            const stuArrLength = res.data.getStuTaskRankingList.length
             const createDefineNum = 28
             const arevNum = Math.ceil(
               stuArrLength / Math.ceil(stuArrLength / createDefineNum)
@@ -753,7 +752,7 @@ export default {
               childLastData[tmpnum] = childLastData[tmpnum]
                 ? childLastData[tmpnum]
                 : []
-              childLastData[tmpnum].push(res.data.getStuComRankingList[j])
+              childLastData[tmpnum].push(res.data.getStuTaskRankingList[j])
             }
           }
           console.log('lastChildData ------> ', childLastData)

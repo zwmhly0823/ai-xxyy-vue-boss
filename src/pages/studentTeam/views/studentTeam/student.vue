@@ -169,7 +169,7 @@ export default {
           { terms: { team_state: this.classStatus } },
           { term: { team_type: type } }
         ]
-        if (this.teacherId) {
+        if (this.teacher_id) {
           config.push({
             term: { teacher_id: this.teacher_id ? this.teacher_id : '' }
           })
