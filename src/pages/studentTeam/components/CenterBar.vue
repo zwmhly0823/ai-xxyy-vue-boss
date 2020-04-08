@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-13 16:53:33
  * @LastEditors: zhubaodong
- * @LastEditTime: 2020-03-28 20:47:08
+ * @LastEditTime: 2020-04-07 22:57:59
  -->
 <template>
   <div class="center-container">
@@ -127,10 +127,14 @@ export default {
   watch: {
     // 是否切换左栏
     showClassData(val, old) {
-      if (val.scrollStatus !== old.scrollStatus) {
-        const dom = document.getElementsByClassName('el-scrollbar')
+      console.log(val, 'val', old, 'old')
 
-        dom[1].querySelector('.scrollbar-wrapper').scrollTo(0, 0)
+      if (val.scrollStatus !== old.scrollStatus) {
+        const dom = document.getElementsByClassName('center-container')
+        dom[0]
+          .querySelector('.el-scrollbar')
+          .querySelector('.scrollbar-wrapper')
+          .scrollTo(0, 0)
         this.showList = []
         this.showList = this.showClassData.datas
         this.noMore = false
@@ -160,8 +164,7 @@ export default {
     },
     // 下拉刷新
     load() {
-      console.log('触发load函数')
-      // 页码总数大于20 并且当前页数小于总页数
+      // 页码总数大于15 并且当前页数小于总页数
       if (
         +this.showClassData.pageData.totalElements > 15 &&
         +this.showClassData.pageData.totalPages >
