@@ -57,6 +57,7 @@ export default {
     overflow-x: hidden;
     flex: 1;
     margin: 10px;
+    padding-bottom: 45px;
   }
   .grid-content {
     background: white;

@@ -74,7 +74,7 @@
             </el-dropdown>
           </template> -->
         </el-table-column>
-        <el-table-column label="员工ID">
+        <el-table-column label="员工ID" width="80">
           <template slot-scope="scope">
             <div>{{ scope.row.id }}</div>
           </template>
@@ -86,7 +86,7 @@
         </el-table-column>
         <el-table-column label="性别">
           <template slot-scope="scope">
-            <div>{{ scope.row.sex }}</div>
+            <div>{{ sex[scope.row.sex] }}</div>
           </template>
         </el-table-column>
         <el-table-column label="昵称">
@@ -132,10 +132,14 @@
         </el-table-column>
         <el-table-column label="绑定微信号">
           <template slot-scope="scope">
-            <div><img :src="scope.row.head_image" /></div>
-            <div v-for="item in scope.row.weixin" :key="item.id">
+            <!-- <div><img :src="scope.row.head_image" /></div> -->
+            <p
+              style="margin: 0;"
+              v-for="item in scope.row.weixin"
+              :key="item.id"
+            >
               {{ item.weixin_no }}
-            </div>
+            </p>
           </template>
         </el-table-column>
         <!-- <el-table-column label="操作">
@@ -155,8 +159,8 @@
         :page-count="totalPages"
         :total="totalElements"
         @current-change="handleSizeChange"
-        open="calc(100vw - 180px - 240px - 147px - 30px)"
-        close="calc(100vw - 180px - 240px - 26px - 30px)"
+        open="calc(100vw - 240px - 145px - 30px)"
+        close="calc(100vw - 240px - 24px - 30px)"
       />
     </div>
   </div>
@@ -176,6 +180,12 @@ export default {
   components: { MSearch, MPagination, associatedWeChat },
   data() {
     return {
+      sex: {
+        0: '-',
+        1: '男',
+        2: '女',
+        3: '保密'
+      },
       // 总页数
       totalPages: 1,
       // 总条数
