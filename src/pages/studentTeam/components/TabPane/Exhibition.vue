@@ -9,7 +9,12 @@
         <div class="allinfo" v-for="(item, index) in listinfo" :key="index">
           <div class="userinfo">
             <span class="userhead">
-              <img :src="item.head" @load="loaded(index)" class="head" alt="" />
+              <img
+                :src="`${item.head}?x-oss-process=image/resize,l_100`"
+                @load="loaded(index)"
+                class="head"
+                alt=""
+              />
             </span>
             <span class="username">{{ item.username }}</span>
           </div>
@@ -22,7 +27,7 @@
             <span class="img-overflow"
               ><img
                 class="topframe"
-                :src="img.task_image"
+                :src="`${img.task_image}?x-oss-process=image/resize,l_100`"
                 alt=""
                 @load="loaded(index)"
             /></span>
@@ -78,9 +83,6 @@ export default {
       this.listinfo = value.data.getStuTaskRankingList
       console.log('listinfo -------', this.listinfo)
     }
-    // weekNum(value) {
-    //   this.listTitle = value === 'U1' ? 'W1' : 'W2'
-    // }
   }
 }
 </script>

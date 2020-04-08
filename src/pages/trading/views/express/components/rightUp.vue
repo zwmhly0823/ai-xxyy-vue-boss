@@ -15,6 +15,7 @@
         stage="term"
         sup="sup"
         level="level"
+        topicType="regtype"
         :timeData="[
           { text: '购买时间', value: 'ctime' },
           { text: '揽收时间', value: 'delivery_collect_time' },
@@ -46,7 +47,12 @@
         </el-button>
       </span>
     </el-dialog>
-    <el-dialog title="导入物流信息" :visible.sync="dialogVisible" width="30%">
+    <el-dialog
+      title="导入物流信息"
+      :visible.sync="dialogVisible"
+      :before-close="handleCloseUpdata"
+      width="30%"
+    >
       <!-- action="/api/o/v1/express/importExpressList" -->
 
       <el-upload
@@ -59,6 +65,7 @@
         :auto-upload="false"
         :limit="1"
         :http-request="uploadFile"
+        :on-progress="uploadProgress"
       >
         <el-button slot="trigger" size="small" type="primary"
           >选取文件</el-button
@@ -68,6 +75,7 @@
           size="small"
           type="success"
           @click="submitUpload"
+          :disabled="uploading"
           >上传到服务器</el-button
         >
         <!-- :loading="uploading" -->
@@ -94,7 +102,7 @@
 
 <script>
 // import { mapGetters } from 'vuex'
-import { isToss } from '@/utils/index'
+import { isToss, deepClone } from '@/utils/index'
 import MSearch from '@/components/MSearch/index.vue'
 import axios from 'axios'
 export default {
@@ -129,20 +137,24 @@ export default {
     this.teacherId = isToss()
     this.operatorId =
       this.teacherId || JSON.parse(localStorage.getItem('staff')).id
-
     this.expressStatus = '0,1,2,3,6'
   },
-  // mounted() {
-  //   // console.log('token', this.token)
-  //   // setTimeout(() => {
-  //   //   this.$store.commit('SET_TOKEN', 222)
-  //   //   console.log('token', this.token)
-  //   // }, 1000)
-  // },
-  // computed: {
-  //   ...mapGetters(['token'])
-  // },
   methods: {
+    // 上传进度
+    uploadProgress(event, file, fileList) {
+      console.log(
+        event,
+        file,
+        fileList,
+        'event, file, fileList--------------------'
+      )
+    },
+    // 上传物流关闭符号
+    handleCloseUpdata() {
+      this.dialogVisible = false
+      this.$refs.upload.clearFiles()
+      console.log(this.errorDialog, '----------------------')
+    },
     // 导出物流关闭符号
     handleClose() {
       this.errorDialog = false
@@ -159,8 +171,9 @@ export default {
           formdata
         )
         .then((res) => {
+          this.$refs.upload.clearFiles()
           this.uploading = false
-          if (res.code === 0 && res.payload.length < 1) {
+          if (res.code === 0 && res.payload.length < 1 && res.payload) {
             this.$message({
               showClose: true,
               message: '恭喜你，文件上传成功',
@@ -168,14 +181,7 @@ export default {
             })
           }
           this.dialogVisible = false
-          this.errorDialog = res.payload
-        })
-        .catch((error) => {
-          // 前端的token留在点击退出按钮那里删除，这里就只是提示过期
-          if (error.message !== '') {
-            this.$message.warning('此表你已经上传过了')
-          }
-          this.uploading = false
+          this.errorDialog = !res.errors ? res.payload : []
         })
         .finally(() => {
           this.uploading = false
@@ -184,16 +190,9 @@ export default {
         this.uploading = false
       }, 2000)
     },
-    // importESKSKS(file) {
-    //   axios({
-    //     method: 'POST',
-    //     url: '/api/o/v1/express/importExpressList',
-    //     file
-    //   }).then((res) => console.log(res))
-    // },
+
     handleRemove(file) {
       console.log(axios, '手动移除上传文件', file)
-      // axios.post(`/api/o/v1/express/importExpressList?${val}&${val})
     },
     handlePreview(file) {
       console.log('手动移除传文件', file)
@@ -247,8 +246,14 @@ export default {
             delete item.terms.level
           }
 
+          if (item.term && item.term.regtype) {
+            item.terms = { regtype: item.term.regtype.split(',') }
+            delete item.term
+          }
+
           return item
         })
+        // console.length(term, 'term')
         query = {
           bool: {
             must: term,
@@ -305,8 +310,8 @@ export default {
     },
     dosomething() {},
     handleSearch(search) {
-      // 期数 加 S
-      const mySearch = search.map((item) => {
+      this.searchIn = deepClone(search)
+      this.searchIn.forEach((item) => {
         if (item.terms && item.terms.sup) {
           const sup = item.terms.sup.map((s) => {
             const str = s.toString().includes('S') ? s : `S${s}`
@@ -315,10 +320,22 @@ export default {
           item.terms.sup = sup
           item.terms['sup.keyword'] = JSON.stringify(sup)
         }
+        // debugger
+        if (item.term && item.term.regtype) {
+          if (Number(item.term.regtype) === 1) {
+            item.term.regtype = '5'
+          } else if (Number(item.term.regtype) === 2) {
+            item.term.regtype = '4'
+          } else if (Number(item.term.regtype) === 4) {
+            item.term.regtype = '1'
+          } else if (Number(item.term.regtype) === 5) {
+            item.term.regtype = '2,3'
+          }
+        }
+        // debugger
         return item
       })
-      this.searchIn = mySearch
-      this.$emit('search', search)
+      this.$emit('search', this.searchIn)
     },
     // 下载文件
     downloadFn(data, name = '下载') {
