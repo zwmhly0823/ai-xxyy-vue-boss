@@ -178,14 +178,14 @@
         </slot>
       </div>
       <!-- 生成作品展图片 -->
-      <div class="exhibitionBox">
+      <div
+        class="exhibitionBox"
+        v-for="(item, index) in ExhibitionData.childListData"
+        :key="index"
+      >
         <slot>
           <!-- 需要转换的html -->
-          <exhibition
-            @isload="CanvasStart"
-            :listData="ExhibitionData.childListData"
-            :weekNum="ExhibitionData.weekNum"
-          ></exhibition>
+          <exhibition @isload="CanvasStart" :listData="item"></exhibition>
         </slot>
       </div>
     </div>
@@ -273,7 +273,10 @@ export default {
         weekNum: '',
         studentLesson: '',
         isRequest: true,
-        childListData: {}
+        childListData: [],
+        imgNum: 0,
+        imgSuccessNum: 0,
+        opreaIndex: 0
       },
       // tabs标签默认状态
       activeName: 'group',
@@ -453,7 +456,7 @@ export default {
           this.finishLessonData.opreaIndex
         )
         if (this.finishLessonData.opreaIndex === doms.length) {
-          const that = this
+          const _this = this
           console.log('dom++++++dom ---> ', doms)
           for (var h = 0; h < doms.length; h++) {
             ;(function(i) {
@@ -469,8 +472,8 @@ export default {
                 // 执行浏览器下载
                 const shutdownLoading = i + 1 === h
                 const imgName = picname + '-' + (i * 1 + 1)
-                that.download(`${imgName}.jpeg`, data, that, shutdownLoading)
-                that.finish = false
+                _this.download(`${imgName}.jpeg`, data, _this, shutdownLoading)
+                _this.finish = false
               })
             })(h)
           }
@@ -481,18 +484,35 @@ export default {
     E_handlePosterLoad(picname) {
       this.$nextTick(() => {
         window.scrollTo(0, 0)
-        html2canvas(document.getElementsByClassName('exhibitionBox')[0], {
-          backgroundColor: 'rgba(0, 0, 0, 0)',
-          useCORS: true,
-          async: true,
-          allowTaint: false
-        }).then((canvas) => {
-          const data = canvas.toDataURL('image/jpeg')
-          // 执行浏览器下载
-          this.download(`${picname}.jpeg`, data)
-          this.finish = false
-          // this.dataURL = data
-        })
+        const Doms = document.getElementsByClassName('exhibitionBox')
+        this.ExhibitionData.opreaIndex++
+        console.log(
+          'this.ExhibitionData.opreaIndex -----> ',
+          this.ExhibitionData.opreaIndex
+        )
+        if (this.ExhibitionData.opreaIndex === Doms.length) {
+          const _this = this
+          console.log('Dom++++++dom ---> ', Doms)
+          for (var h = 0; h < Doms.length; h++) {
+            ;(function(i) {
+              html2canvas(Doms[i], {
+                backgroundColor: 'rgba(0, 0, 0, 0)',
+                useCORS: true,
+                async: true,
+                allowTaint: false
+              }).then((canvas) => {
+                const data = canvas.toDataURL('image/jpeg')
+                console.log('down - begin ------i', i)
+                console.log('down - begin ------h', h)
+                // 执行浏览器下载
+                const shutdownLoading = i + 1 === h
+                const imgName = picname + '-' + (i * 1 + 1)
+                _this.download(`${imgName}.jpeg`, data, _this, shutdownLoading)
+                _this.finish = false
+              })
+            })(h)
+          }
+        }
       })
     },
     // 点击显示完课榜
@@ -667,6 +687,7 @@ export default {
             console.log(res.error, '接口错误信息-------------->')
             return
           }
+          // 生成完课榜（多页）
           const childLastData = []
           if (res.data.getStuComRankingList) {
             const stuArrLength = res.data.getStuComRankingList.length
@@ -686,10 +707,6 @@ export default {
           console.log('lastChildData ------> ', childLastData)
           this.finishLessonData.childListData = childLastData
           this.finishLessonData.imgNum = childLastData.length
-
-          // document.getElementsByClassName('finishBox').forEach((dom, index) => {
-          //   console.log('foreach - dom ----->', dom)
-          // })
         })
     },
     // 请求作品展-接口数据
@@ -723,8 +740,26 @@ export default {
             console.log(res.error, '接口错误信息-------------->')
             return
           }
-          this.ExhibitionData.childListData = res
-          console.log(res, '+_+_+_+_+_+_+_+_')
+          // 生成作品展（多页）
+          const childLastData = []
+          if (res.data.getStuComRankingList) {
+            const stuArrLength = res.data.getStuComRankingList.length
+            const createDefineNum = 28
+            const arevNum = Math.ceil(
+              stuArrLength / Math.ceil(stuArrLength / createDefineNum)
+            )
+            // 重构数组
+            for (var j = 0; j < stuArrLength; j++) {
+              const tmpnum = Math.floor(j / arevNum)
+              childLastData[tmpnum] = childLastData[tmpnum]
+                ? childLastData[tmpnum]
+                : []
+              childLastData[tmpnum].push(res.data.getStuComRankingList[j])
+            }
+          }
+          console.log('lastChildData ------> ', childLastData)
+          this.ExhibitionData.childListData = childLastData
+          this.ExhibitionData.imgNum = childLastData.length
         })
     },
     // 绘制生成完课榜图片
@@ -1366,7 +1401,7 @@ export default {
       dom.querySelector('.scrollbar-wrapper').scrollTo(0, 0)
     },
     // 生成图片下载方法
-    download(fileName, content, that = null, shutdownLoading = false) {
+    download(fileName, content, _this = null, shutdownLoading = false) {
       const aLink = document.createElement('a')
       const blob = this.base64ToBlob(content)
 
@@ -1378,7 +1413,7 @@ export default {
       // aLink.dispatchEvent(evt);
       aLink.click()
       if (shutdownLoading) {
-        that.$loading().close()
+        _this.$loading().close()
       }
     },
     // 转换图片为base64
