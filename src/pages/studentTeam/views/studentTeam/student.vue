@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-13 15:24:11
  * @LastEditors: zhubaodong
- * @LastEditTime: 2020-03-30 22:07:07
+ * @LastEditTime: 2020-04-08 16:23:35
  -->
 <template>
   <el-row type="flex" class="app-main height student-team">
@@ -12,6 +12,7 @@
       <div class="grid-content">
         <left-bar
           @change="getLeftBarSelect"
+          @filter="filterHandler"
           :experienceData="experienceStatusList"
           :systemData="systemStatusList"
         />
@@ -56,15 +57,19 @@ export default {
       classStatus: [0, 1, 2], // 选中的课程状态值（传入中栏，获取班级列表）
       classListData: {}, // 中栏 班级列表
       classId: '', // 班级Id
-      scrollStatus: null,
+      scrollStatus: '',
       type: 0,
       scrollPage: 1,
-      teacher_id: null
+      teacher_id: null,
+      must: null, // 搜索条件
+      filterConditions: null
     }
   },
   computed: {
     // 初始化的班级ID(体验课全部中第一条)
     classIdData() {
+      console.log(this.classId, 'this.classId')
+
       return { classId: this.classId, type: this.type }
     }
   },
@@ -96,6 +101,23 @@ export default {
         this.classListData.teamStatusPage &&
         this.classListData.teamStatusPage.content[0]
     },
+    // 左栏筛选条件
+    async filterHandler(res) {
+      this.scrollStatus = JSON.stringify(...res)
+      console.log(this.scrollStatus, '接口内字段唯一标识')
+      this.filterConditions = res
+      // 请求体验课状态列表
+      await this.getExperienceStatusList(0)
+      setTimeout(() => {
+        // 请求系统课状态列表
+        this.getExperienceStatusList(1)
+      }, 500)
+      await this.getClassList(this.type)
+
+      this.classId =
+        this.classListData.teamStatusPage &&
+        this.classListData.teamStatusPage.content[0]
+    },
     /**
      * 中栏回调函数
      * @param(回调数据) 获得选中内容
@@ -113,13 +135,18 @@ export default {
       await this.getClassList(data.type, data.page)
     },
     /**
-     * 获取体验课状态列表
+     * 获取课程状态列表
      * @param(team_type) 0为体验课 1为系统课
      */
     async getExperienceStatusList(data = 0) {
+      const queryParams = `{"bool":{"must":${JSON.stringify(
+        this.filterConditions ? this.filterConditions : []
+      )}}}`
+
       this.$http.StudentTerm.getTeamStatusCount({
         data: data,
-        teacherId: this.teacher_id
+        teacherId: this.teacher_id,
+        queryParams: queryParams
       })
         .then((res) => {
           if (data === 0) {
@@ -138,15 +165,25 @@ export default {
     async getClassList(type = 0, page = 1) {
       let queryParams
       if (type === 0) {
-        // queryParams = `{"bool":{"must":[{"terms":{"team_state":[${this.classStatus}]}},{"term":{"team_type":${type}}}]}}`
-        queryParams = this.teacher_id
-          ? `{"bool":{"must":[{"terms":{"team_state":[${this.classStatus}]}},{"term":{"team_type":${type}}},{"term":{"teacher_id": ${this.teacher_id}}}]}}`
-          : `{"bool":{"must":[{"terms":{"team_state":[${this.classStatus}]}},{"term":{"team_type":${type}}}]}}`
+        const config = [
+          { terms: { team_state: this.classStatus } },
+          { term: { team_type: type } },
+          { term: { teacher_id: this.teacher_id ? this.teacher_id : '' } }
+        ]
+        this.must = this.filterConditions
+          ? config.concat(this.filterConditions)
+          : config
+        queryParams = `{"bool":{"must":${JSON.stringify(this.must)}}}`
       } else {
-        // queryParams = `{"bool":{"must":[{"terms":{"team_state":[${this.classStatus}]}},{"range":{"team_type":{"gte":${type}}}}]}}`
-        queryParams = this.teacher_id
-          ? `{"bool":{"must":[{"terms":{"team_state":[${this.classStatus}]}},{"range":{"team_type":{"gte":${type}}}},{"term":{"teacher_id": ${this.teacher_id}}}]}}`
-          : `{"bool":{"must":[{"terms":{"team_state":[${this.classStatus}]}},{"range":{"team_type":{"gte":${type}}}}]}}`
+        const config = [
+          { terms: { team_state: this.classStatus } },
+          { range: { team_type: { gte: type } } },
+          { term: { teacher_id: this.teacher_id ? this.teacher_id : '' } }
+        ]
+        this.must = this.filterConditions
+          ? config.concat(this.filterConditions)
+          : config
+        queryParams = `{"bool":{"must":${JSON.stringify(this.must)}}}`
       }
       this.$http.StudentTerm.getTeamStatusPage({
         queryParams: queryParams,
@@ -157,7 +194,7 @@ export default {
       })
         .then((res) => {
           res.data.type = type
-          res.data.scrollStatus = `${this.scrollStatus}+${type}`
+          res.data.scrollStatus = `${this.scrollStatus}${type}`
           this.classListData = res.data
           if (+this.scrollPage === 1) {
             this.classId =

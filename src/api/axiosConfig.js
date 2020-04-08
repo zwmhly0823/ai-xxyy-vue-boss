@@ -75,7 +75,7 @@ export default {
     if (this.judgeToken()) {
       return new Promise((resolve, reject) => {
         axios
-          .post(url, params, {
+          .put(url, params, {
             headers: this.getHeaders()
           })
           .then((res) => {

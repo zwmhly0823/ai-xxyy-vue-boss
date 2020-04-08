@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 20:22:24
  * @LastEditors: panjian
- * @LastEditTime: 2020-04-07 21:12:55
+ * @LastEditTime: 2020-04-08 16:50:45
  -->
 <template>
   <div class="table-box">
@@ -292,6 +292,14 @@
                   plain
                   @click="handelAddExpress"
                   >帮他填写</el-button
+                >
+                <el-button
+                  icon="el-icon-postcard"
+                  size="mini"
+                  type="primary"
+                  plain
+                  @click="onUrgentAddress"
+                  >催发地址</el-button
                 >
               </div>
             </div>
@@ -607,6 +615,7 @@ export default {
   },
   data() {
     return {
+      orderId: '',
       selectUserMobile: [],
       moreTitle: false,
       wechatShowIcon: 1,
@@ -758,6 +767,18 @@ export default {
       }
       console.log(this.followSort)
     },
+    // 催发地址接口
+    onUrgentAddress() {
+      console.log('发送催发短信')
+      setTimeout(() => {
+        this.$http.Express.pushMsgByOrderId(this.orderId).then((res) => {
+          this.$message({
+            message: '已发送短信',
+            type: 'success'
+          })
+        })
+      }, 500)
+    },
     // 添加物流地址按钮
     handelAddExpress(row) {
       this.showExpress = true
@@ -802,6 +823,7 @@ export default {
       this.added_wechat = row.added_wechat
       this.studentId = row.id
       this.tableindex = row.index
+      this.orderId = row.order_id
       console.log(row.id, 'row.id')
       const id = row.id
       const userid = row.user_id

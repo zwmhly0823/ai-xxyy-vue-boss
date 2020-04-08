@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 14:19:58
  * @LastEditors: panjian
- * @LastEditTime: 2020-04-07 21:13:21
+ * @LastEditTime: 2020-04-08 15:18:50
  -->
 <template>
   <div>
@@ -15,7 +15,7 @@
         phone="uid"
         onlyPhone="1"
         phoneTip="手机号/微信昵称 查询"
-        :teamId="classId.classId.id"
+        :teamId="classId.classId && classId.classId.id"
       />
       <el-button
         size="mini"
@@ -84,17 +84,6 @@
             ></details-table
           ></el-tab-pane>
         </el-tabs>
-        <!-- <el-input
-          class="el-input-search"
-          size="mini"
-          placeholder="昵称、手机号、微信信息"
-          prefix-icon="el-icon-search"
-          v-model="input"
-          @keyup.enter.native="enter"
-        >
-        </el-input> -->
-        <!-- <check-box class="checkbox"></check-box> -->
-        <!-- 生成完课榜弹出框 -->
         <el-dialog
           title="请选择生成的完课榜周数"
           :visible.sync="dialogFormVisible"
@@ -189,14 +178,14 @@
         </slot>
       </div>
       <!-- 生成作品展图片 -->
-      <div class="exhibitionBox">
+      <div
+        class="exhibitionBox"
+        v-for="(item, index) in ExhibitionData.childListData"
+        :key="index"
+      >
         <slot>
           <!-- 需要转换的html -->
-          <exhibition
-            @isload="CanvasStart"
-            :listData="ExhibitionData.childListData"
-            :weekNum="ExhibitionData.weekNum"
-          ></exhibition>
+          <exhibition @isload="CanvasStart" :listData="item"></exhibition>
         </slot>
       </div>
     </div>
@@ -275,7 +264,8 @@ export default {
         isRequest: true,
         childListData: [],
         imgNum: 0,
-        imgSuccessNum: 0
+        imgSuccessNum: 0,
+        opreaIndex: 0
       },
       // 作品展相关数据
       ExhibitionData: {
@@ -283,7 +273,10 @@ export default {
         weekNum: '',
         studentLesson: '',
         isRequest: true,
-        childListData: {}
+        childListData: [],
+        imgNum: 0,
+        imgSuccessNum: 0,
+        opreaIndex: 0
       },
       // tabs标签默认状态
       activeName: 'group',
@@ -319,8 +312,7 @@ export default {
       })
       this.sortGroup = ''
       this.table.currentPage = 1
-      console.log(value.classId, 'classId')
-      if (value.classId) {
+      if (value.classId && value.classId.id) {
         this.tableDataEmpty = true
         if (value.classId.team_type === 0) {
           this.type = 'TRAIL'
@@ -457,31 +449,33 @@ export default {
         window.scrollTo(0, 0)
         // 获取要生成图片的dom元素
         var doms = document.getElementsByClassName('finishBox')
-        const that = this
-        console.log('dom++++++dom ---> ', doms)
-        console.log('doms  length--->', doms[1])
-        for (var h = 0; h < doms.length; h++) {
-          ;(function(i) {
-            html2canvas(doms[i], {
-              backgroundColor: 'rgba(0, 0, 0, 0)',
-              useCORS: true,
-              async: true,
-              allowTaint: false
-            }).then((canvas) => {
-              const data = canvas.toDataURL('image/jpeg')
-              console.log('down - begin ------i', i)
-              console.log('down - begin ------h', h)
-              // 执行浏览器下载
-              const shutdownLoading = i + 1 === h
-              const imgName = picname + '-' + (i * 1 + 1)
-              that.download(`${imgName}.jpeg`, data, that, shutdownLoading)
-              that.finish = false
-            })
-            // const indexNumber = i++
-            // if (doms.length === indexNumber) {
-            //   console.log(indexNumber, '__+_+_+_+_+_+_+_+_+_+_+_+_+_+_')
-            // }
-          })(h)
+        this.finishLessonData.opreaIndex++
+        console.log(
+          'this.finishLessonData.opreaIndex -----> ',
+          this.finishLessonData.opreaIndex
+        )
+        if (this.finishLessonData.opreaIndex === doms.length) {
+          const _this = this
+          console.log('dom++++++dom ---> ', doms)
+          for (var h = 0; h < doms.length; h++) {
+            ;(function(i) {
+              html2canvas(doms[i], {
+                backgroundColor: 'rgba(0, 0, 0, 0)',
+                useCORS: true,
+                async: true,
+                allowTaint: false
+              }).then((canvas) => {
+                const data = canvas.toDataURL('image/jpeg')
+                console.log('down - begin ------i', i)
+                console.log('down - begin ------h', h)
+                // 执行浏览器下载
+                const shutdownLoading = i + 1 === h
+                const imgName = picname + '-' + (i * 1 + 1)
+                _this.download(`${imgName}.jpeg`, data, _this, shutdownLoading)
+                _this.finish = false
+              })
+            })(h)
+          }
         }
       })
     },
@@ -489,18 +483,35 @@ export default {
     E_handlePosterLoad(picname) {
       this.$nextTick(() => {
         window.scrollTo(0, 0)
-        html2canvas(document.getElementsByClassName('exhibitionBox')[0], {
-          backgroundColor: 'rgba(0, 0, 0, 0)',
-          useCORS: true,
-          async: true,
-          allowTaint: false
-        }).then((canvas) => {
-          const data = canvas.toDataURL('image/jpeg')
-          // 执行浏览器下载
-          this.download(`${picname}.jpeg`, data)
-          this.finish = false
-          // this.dataURL = data
-        })
+        const Doms = document.getElementsByClassName('exhibitionBox')
+        this.ExhibitionData.opreaIndex++
+        console.log(
+          'this.ExhibitionData.opreaIndex -----> ',
+          this.ExhibitionData.opreaIndex
+        )
+        if (this.ExhibitionData.opreaIndex === Doms.length) {
+          const _this = this
+          console.log('Dom++++++dom ---> ', Doms)
+          for (var h = 0; h < Doms.length; h++) {
+            ;(function(i) {
+              html2canvas(Doms[i], {
+                backgroundColor: 'rgba(0, 0, 0, 0)',
+                useCORS: true,
+                async: true,
+                allowTaint: false
+              }).then((canvas) => {
+                const data = canvas.toDataURL('image/jpeg')
+                console.log('down - begin ------i', i)
+                console.log('down - begin ------h', h)
+                // 执行浏览器下载
+                const shutdownLoading = i + 1 === h
+                const imgName = picname + '-' + (i * 1 + 1)
+                _this.download(`${imgName}.jpeg`, data, _this, shutdownLoading)
+                _this.finish = false
+              })
+            })(h)
+          }
+        }
       })
     },
     // 点击显示完课榜
@@ -675,13 +686,17 @@ export default {
             console.log(res.error, '接口错误信息-------------->')
             return
           }
+          // 生成完课榜（多页）
           const childLastData = []
           if (res.data.getStuComRankingList) {
             const stuArrLength = res.data.getStuComRankingList.length
             const createDefineNum = 70
+            const arevNum = Math.ceil(
+              stuArrLength / Math.ceil(stuArrLength / createDefineNum)
+            )
             // 重构数组
             for (var j = 0; j < stuArrLength; j++) {
-              const tmpnum = Math.floor(j / createDefineNum)
+              const tmpnum = Math.floor(j / arevNum)
               childLastData[tmpnum] = childLastData[tmpnum]
                 ? childLastData[tmpnum]
                 : []
@@ -691,10 +706,6 @@ export default {
           console.log('lastChildData ------> ', childLastData)
           this.finishLessonData.childListData = childLastData
           this.finishLessonData.imgNum = childLastData.length
-
-          // document.getElementsByClassName('finishBox').forEach((dom, index) => {
-          //   console.log('foreach - dom ----->', dom)
-          // })
         })
     },
     // 请求作品展-接口数据
@@ -728,8 +739,26 @@ export default {
             console.log(res.error, '接口错误信息-------------->')
             return
           }
-          this.ExhibitionData.childListData = res
-          console.log(res, '+_+_+_+_+_+_+_+_')
+          // 生成作品展（多页）
+          const childLastData = []
+          if (res.data.getStuComRankingList) {
+            const stuArrLength = res.data.getStuComRankingList.length
+            const createDefineNum = 28
+            const arevNum = Math.ceil(
+              stuArrLength / Math.ceil(stuArrLength / createDefineNum)
+            )
+            // 重构数组
+            for (var j = 0; j < stuArrLength; j++) {
+              const tmpnum = Math.floor(j / arevNum)
+              childLastData[tmpnum] = childLastData[tmpnum]
+                ? childLastData[tmpnum]
+                : []
+              childLastData[tmpnum].push(res.data.getStuComRankingList[j])
+            }
+          }
+          console.log('lastChildData ------> ', childLastData)
+          this.ExhibitionData.childListData = childLastData
+          this.ExhibitionData.imgNum = childLastData.length
         })
     },
     // 绘制生成完课榜图片
@@ -778,8 +807,6 @@ export default {
         } else {
           this.querysData = `{"team_id":${this.classId.classId.id},"team_type":${this.classId.type}}`
         }
-        console.log(this.search, 'this.search')
-
         axios
           .post('/graphql/user', {
             query: `{
@@ -850,7 +877,6 @@ export default {
                 item.base_painting = '一年以上'
               }
             })
-            console.log(this.tableDataEmpty)
             if (this.tableDataEmpty) {
               this.table.tableData = _data
             } else {
@@ -907,7 +933,6 @@ export default {
           }`
           })
           .then((res) => {
-            console.log(res, 'experessssssss')
             this.table.tableData = []
             this.table.totalElements = +res.data.stuExpressPage.totalElements
             const _data = res.data.stuExpressPage.content
@@ -1273,7 +1298,6 @@ export default {
     },
     // 添加物流地址 子组件传值 掉物流接口
     addExpresss(data) {
-      console.log(data, '父组件')
       if (data) {
         this.getLogistics()
         // this.experssShow = true
@@ -1375,7 +1399,7 @@ export default {
       dom.querySelector('.scrollbar-wrapper').scrollTo(0, 0)
     },
     // 生成图片下载方法
-    download(fileName, content, that = null, shutdownLoading = false) {
+    download(fileName, content, _this = null, shutdownLoading = false) {
       const aLink = document.createElement('a')
       const blob = this.base64ToBlob(content)
 
@@ -1387,7 +1411,7 @@ export default {
       // aLink.dispatchEvent(evt);
       aLink.click()
       if (shutdownLoading) {
-        that.$loading().close()
+        _this.$loading().close()
       }
     },
     // 转换图片为base64
@@ -1403,10 +1427,10 @@ export default {
         uInt8Array[i] = raw.charCodeAt(i)
       }
       return new Blob([uInt8Array], { type: contentType })
-    },
-    enter(val) {
-      console.log('input', val, this.input)
     }
+    // enter(val) {
+    //   console.log('input', val, this.input)
+    // }
   }
 }
 </script>
