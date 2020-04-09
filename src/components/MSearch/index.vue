@@ -69,7 +69,6 @@
         <!-- 主题 -->
         <product-topic @result="getProductTopic" :name="topicType" />
       </el-form-item>
-
       <el-form-item v-if="level || sup || stage">
         <stage-sup-levels
           @stageCallBack="stageCallBack"

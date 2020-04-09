@@ -1,9 +1,9 @@
 <template>
   <div class="newteache-style">
     <div class="newteacher-title">
-      <P v-show="newTitle === ''">新增辅导老师</P>
-      <P v-show="newTitle === 1">编辑辅导老师</P>
-      <P v-show="newTitle === 2">查看辅导老师</P>
+      <P v-if="newTitle === ''">新增辅导老师</P>
+      <P v-if="newTitle === '1'">编辑辅导老师</P>
+      <P v-if="newTitle === '2'">查看辅导老师</P>
     </div>
     <el-form
       :model="ruleForm"
@@ -18,10 +18,11 @@
       <el-form-item label="头像" prop="headPortrait">
         <el-upload
           class="avatar-uploader"
-          action="https://jsonplaceholder.typicode.com/posts/"
+          action=""
           :show-file-list="false"
           :on-success="handleAvatarSuccess"
           :before-upload="beforeAvatarUpload"
+          :http-request="uploadFile"
         >
           <img
             v-if="ruleForm.imageUrl"
@@ -203,6 +204,7 @@
   </div>
 </template>
 <script>
+import axios from 'axios'
 export default {
   data() {
     // 手机号正则
@@ -235,8 +237,12 @@ export default {
     // }
 
     return {
+      headers: { 'Content-Type': 'multipart/form-data' },
+      dataOss: {},
       // title
       newTitle: '',
+      // 头像地址
+      httpPath: '',
       // 表单禁用
       formDisabled: false,
       // 离职时间禁止选择
@@ -420,9 +426,10 @@ export default {
   },
   created() {
     const query = this.$route.query
+    console.log(query, 'query')
     // query.index ''/新建老师  1/编辑老师 2/查看老师
     if (query && query.index) this.newTitle = query.index
-    if (query.index === 2) this.formDisabled = true
+    if (query.index === '2') this.formDisabled = true
     // 接口调用
     this.createdUrl()
   },
@@ -432,6 +439,14 @@ export default {
       this.$http.Teacher.getTeacherDutyList().then((res) => {
         this.position = res.data.TeacherDutyList
       })
+      if (this.$route.query && this.$route.query.teacherId) {
+        // 教师详情
+        this.$http.Teacher.getTeacherDetail(this.$route.query.teacherId).then(
+          (res) => {
+            console.log(res.payload, '教师详情')
+          }
+        )
+      }
     },
     // 选择入职时间后禁止离职时间
     DepartureDisabled() {
@@ -458,12 +473,67 @@ export default {
       this.$router.push({ path: '/teacherManagement' })
       this.$refs[formName].resetFields()
     },
-    // 头像
-    handleAvatarSuccess(res, file) {
-      this.ruleForm.imageUrl = URL.createObjectURL(file.raw)
+    // 部门联机选择
+    handleChange(value) {
+      console.log(value)
     },
+    // 头像上传
+    async uploadFile(file) {
+      const getOssToken = await this.getOssToken()
+      console.log('file', file)
+      if (getOssToken) {
+        var getSuffix = function(fileName) {
+          var pos = fileName.lastIndexOf('.')
+          var suffix = ''
+          if (pos !== -1) {
+            suffix = fileName.substring(pos)
+          }
+          return suffix
+        }
+
+        const requestHost = `${getOssToken.bucketName}.${getOssToken.endpoint}`
+        const filename = new Date().getTime() + getSuffix(file.file.name)
+
+        const formData = new FormData()
+        formData.append('key', 'msb-images/' + filename) // 存储在oss的文件路径
+        formData.append('OSSAccessKeyId', getOssToken.accessKeyId) // accessKeyId
+        formData.append('policy', getOssToken.policy) // policy
+        formData.append('Signature', getOssToken.singed) // 签名
+        formData.append('success_action_status', 200) // 成功后返回的操作码
+        formData.append('name', filename)
+        formData.append('file', file.file, filename)
+        const fileUrl = `${requestHost}/msb-images/${filename}`
+
+        axios
+          .post(
+            'https://xiaoxiong-pub.oss-cn-hangzhou.aliyuncs.com',
+            formData,
+            {
+              headers: { 'Content-Type': 'multipart/form-data' }
+            }
+          )
+          .then((res) => {
+            console.log('axios-res', res, fileUrl)
+          })
+          .catch((err) => {
+            console.log('axios-err', err)
+          })
+      }
+    },
+    // 头像上传签名
+    getOssToken() {
+      return new Promise((resolve, reject) => {
+        this.$http.Teacher.getPubWriteSinged()
+          .catch((err) => reject(err))
+          .then((res) => {
+            if (res.payload) {
+              resolve(res.payload)
+            }
+          })
+      })
+    },
+    // 头像上传格式校验
     beforeAvatarUpload(file) {
-      console.log(file, 'file')
       const isJPG = file.type === 'image/jpg'
       const isPNG = file.type === 'image/png'
       const isLt2M = file.size / 1024 / 1024 < 2
@@ -476,9 +546,9 @@ export default {
       }
       return (isJPG || isPNG) && isLt2M
     },
-    // 部门联机选择
-    handleChange(value) {
-      console.log(value)
+    // 头像上传成功回调
+    handleAvatarSuccess(res, file) {
+      this.ruleForm.imageUrl = URL.createObjectURL(file.raw)
     }
   }
 }

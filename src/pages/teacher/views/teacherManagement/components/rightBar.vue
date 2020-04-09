@@ -55,24 +55,24 @@
       >
         <el-table-column width="30px">
           <!-- 表格内容操作按钮 -->
-          <!-- <template slot-scope="scope">
+          <template slot-scope="scope">
             <el-dropdown>
               <div>
                 <img src="../../../../../assets/images/point.png" />
               </div>
               <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item @click.native="operation(scope.row, 1)">
+                <el-dropdown-item @click.native="operation(scope.row, '1')">
                   编辑
                 </el-dropdown-item>
-                <el-dropdown-item @click.native="operation(scope.row, 2)">
+                <el-dropdown-item @click.native="operation(scope.row, '2')">
                   详情
                 </el-dropdown-item>
-                <el-dropdown-item @click.native="operation(scope.row, 3)">
+                <el-dropdown-item @click.native="operation(scope.row, '3')">
                   关联微信号
                 </el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
-          </template> -->
+          </template>
         </el-table-column>
         <el-table-column label="员工ID" width="80">
           <template slot-scope="scope">
@@ -182,7 +182,11 @@ export default {
       default: () => ({})
     }
   },
-  components: { MSearch, MPagination, associatedWeChat },
+  components: {
+    MSearch,
+    MPagination,
+    associatedWeChat
+  },
   data() {
     return {
       sex: {
@@ -268,12 +272,12 @@ export default {
     },
     // 点击操作按钮
     operation(val, index) {
-      if (index === 1 || index === 2) {
+      if (index === '1' || index === '2') {
         this.$router.push({
           path: '/newTeacher',
           query: { index: index, teacherId: val.id }
         })
-      } else if (index === 3) {
+      } else if (index === '3') {
         this.$refs.associated.centerDialogVisible = true
       }
     },

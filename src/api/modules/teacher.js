@@ -13,7 +13,10 @@ export default {
    * 订单列表
    * */
   getDepartmentTree(id) {
-    return axios.get(`/api/t/v1/department/getDepartmentTree?Id=${id}`)
+    return axios.get(`/api/t/v1/department/getDepartmentTree?id=${id}`)
+  },
+  getOssSign() {
+    return axios.get(`/api/home/v1/ossconfig/getStsPubWriteToken`)
   },
   // 老师列表
   getTeacherPage(page = 1, query = '') {
@@ -74,5 +77,13 @@ export default {
           }
         }`
     })
+  },
+  // 获取教师详情
+  getTeacherDetail(id) {
+    return axios.get(`/api/t/v1/teacher/getTeacherDetail?teacherId=${id}`)
+  },
+  // 上传头像
+  getPubWriteSinged() {
+    return axios.get(`/api/home/v1/ossconfig/getPubWriteSinged`)
   }
 }
