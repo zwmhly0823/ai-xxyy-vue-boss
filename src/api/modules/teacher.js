@@ -10,7 +10,7 @@ import axios from '../axiosConfig'
 
 export default {
   /**
-   * 订单列表
+   * 组织机构列表
    * */
   getDepartmentTree(id) {
     return axios.get(`/api/t/v1/department/getDepartmentTree?id=${id}`)
