@@ -15,6 +15,7 @@
       default-expand-all
       node-key="customId"
       :current-node-key="0"
+      :expand-on-click-node="false"
       highlight-current
       style="color:#2F2E31"
       @node-click="nodeClick"
@@ -77,7 +78,7 @@ export default {
 
   methods: {
     // 点击节点
-    nodeClick(data, e) {
+    nodeClick(data) {
       this.$emit('change', data)
     },
     // 鼠标移入显示icon
@@ -136,9 +137,8 @@ export default {
 <style lang="scss">
 .left-container-tree {
   .is-current {
-    .el-tree-node__content {
+    > .el-tree-node__content {
       background: #ebebeb !important;
-      // background: rgba(240, 241, 242, 1) !important;
     }
   }
   .el-card__body {

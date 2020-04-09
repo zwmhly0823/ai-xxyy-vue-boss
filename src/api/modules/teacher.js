@@ -20,9 +20,9 @@ export default {
   },
   // 老师列表
   getTeacherPage(page = 1, query = '') {
-    return axios.post('/graphql/boss', {
+    return axios.post('/graphql/v1/boss', {
       query: `{
-        TeacherManagePage(page: ${page}, query: "${query}") {
+        TeacherManagePage(page: ${page}, query: ${query || null}) {
           number
           totalPages
           totalElements
@@ -38,6 +38,8 @@ export default {
             department {
               id
               name
+              pid
+              pname
             }
             duty {
               id
@@ -57,19 +59,19 @@ export default {
     })
   },
   // 老师部门关系
-  getTeacherDepartmentRelation(query) {
-    return axios.post('/graphql/boss', {
-      query: `{
-        TeacherDepartmentRelation(query: ${query}){
-          id
-          name
-        }
-      }`
-    })
-  },
+  // getTeacherDepartmentRelation(query) {
+  //   return axios.post('/graphql/boss', {
+  //     query: `{
+  //       TeacherDepartmentRelationList(query: ${query}){
+  //         id
+  //         name
+  //       }
+  //     }`
+  //   })
+  // },
   // 老师职务
   getTeacherDutyList() {
-    return axios.post('/graphql/boss', {
+    return axios.post('/graphql/v1/boss', {
       query: `{
           TeacherDutyList{
             id
