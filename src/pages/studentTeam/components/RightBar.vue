@@ -3,8 +3,8 @@
  * @version:
  * @Author: zhubaodong
  * @Date: 2020-03-13 16:53:41
- * @LastEditors: panjian
- * @LastEditTime: 2020-04-03 17:26:25
+ * @LastEditors: zhubaodong
+ * @LastEditTime: 2020-04-08 16:31:29
  -->
 <template>
   <div class="right-container">
@@ -188,7 +188,6 @@ export default {
       }
       if (vals.classId) {
         this.getClassTeacher(vals.classId.id)
-        console.log(vals, this.cout++, 'vals')
       } else {
         this.classMessage = ''
       }
@@ -238,7 +237,6 @@ export default {
           }
         })
         .then((res) => {
-          console.log(res.data.detail.team_state, 'res.data.detail.team_state')
           if (Number(res.data.detail.team_state) === 0) {
             res.data.detail.state = '待开课'
           } else if (Number(res.data.detail.team_state) === 1) {
@@ -249,11 +247,15 @@ export default {
             res.data.detail.state = '今日开课'
           }
           /** localstorage teacher 添加 “teacher_wx” 字段 */
+          const teacherWx = res.data.detail.teacher_wx
           if (this.teacherId) {
             const teacher = JSON.parse(localStorage.getItem('teacher'))
-            const teacherWx = res.data.detail.teacher_wx
             teacherWx && (teacher.teacher_wx = teacherWx)
             localStorage.setItem('teacher', JSON.stringify(teacher))
+          } else {
+            const staff = JSON.parse(localStorage.getItem('staff'))
+            teacherWx && (staff.teacher_wx = teacherWx)
+            localStorage.setItem('staff', JSON.stringify(staff))
           }
           /** localstorage teacher 添加 “teacher_wx” 字段 */
 
@@ -278,13 +280,6 @@ export default {
           res.data.detail.formatEndDay = this.classId.classId.formatEndDay
           this.classMessage = res.data
           // this.classMessage2 = res.dataformatEndDay
-
-          console.log(
-            this.classMessage,
-            this.classMessage.statictis,
-            res.data,
-            'res'
-          )
         })
     }
   },

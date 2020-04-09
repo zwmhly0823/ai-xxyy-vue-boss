@@ -15,7 +15,7 @@
         phone="uid"
         onlyPhone="1"
         phoneTip="手机号/微信昵称 查询"
-        :teamId="classId.classId.id"
+        :teamId="classId.classId && classId.classId.id"
       />
       <el-button
         size="mini"
@@ -312,7 +312,6 @@ export default {
       })
       this.sortGroup = ''
       this.table.currentPage = 1
-      console.log(value.classId, ' && ')
       if (value.classId && value.classId.id) {
         this.tableDataEmpty = true
         if (value.classId.team_type === 0) {
@@ -473,7 +472,7 @@ export default {
                 const shutdownLoading = i + 1 === h
                 const imgName = picname + '-' + (i * 1 + 1)
                 _this.download(`${imgName}.jpeg`, data, _this, shutdownLoading)
-                _this.finish = false
+                // _this.finish = false
               })
             })(h)
           }
@@ -508,7 +507,6 @@ export default {
                 const shutdownLoading = i + 1 === h
                 const imgName = picname + '-' + (i * 1 + 1)
                 _this.download(`${imgName}.jpeg`, data, _this, shutdownLoading)
-                _this.finish = false
               })
             })(h)
           }
@@ -691,7 +689,7 @@ export default {
           const childLastData = []
           if (res.data.getStuComRankingList) {
             const stuArrLength = res.data.getStuComRankingList.length
-            const createDefineNum = 70
+            const createDefineNum = 20
             const arevNum = Math.ceil(
               stuArrLength / Math.ceil(stuArrLength / createDefineNum)
             )
@@ -714,7 +712,6 @@ export default {
       if (!teamId || !week) {
         return
       }
-      // this.$loading()
       this.$loading({
         lock: true,
         text: '图片正在生成中'
@@ -736,14 +733,15 @@ export default {
                   }`
         })
         .then((res) => {
+          console.log(res, 123456789)
           if (res.error) {
             console.log(res.error, '接口错误信息-------------->')
             return
           }
           // 生成作品展（多页）
           const childLastData = []
-          if (res.data.getStuComRankingList) {
-            const stuArrLength = res.data.getStuComRankingList.length
+          if (res.data.getStuTaskRankingList) {
+            const stuArrLength = res.data.getStuTaskRankingList.length
             const createDefineNum = 28
             const arevNum = Math.ceil(
               stuArrLength / Math.ceil(stuArrLength / createDefineNum)
@@ -754,7 +752,7 @@ export default {
               childLastData[tmpnum] = childLastData[tmpnum]
                 ? childLastData[tmpnum]
                 : []
-              childLastData[tmpnum].push(res.data.getStuComRankingList[j])
+              childLastData[tmpnum].push(res.data.getStuTaskRankingList[j])
             }
           }
           console.log('lastChildData ------> ', childLastData)
@@ -1299,7 +1297,6 @@ export default {
     },
     // 添加物流地址 子组件传值 掉物流接口
     addExpresss(data) {
-      console.log(data, '父组件')
       if (data) {
         this.getLogistics()
         // this.experssShow = true
@@ -1430,6 +1427,9 @@ export default {
       }
       return new Blob([uInt8Array], { type: contentType })
     }
+    // enter(val) {
+    //   console.log('input', val, this.input)
+    // }
   }
 }
 </script>

@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-24 18:50:54
  * @LastEditors: zhubaodong
- * @LastEditTime: 2020-04-01 21:49:26
+ * @LastEditTime: 2020-04-08 13:38:11
  -->
 <template>
   <div class="search-item small">
@@ -42,7 +42,7 @@
         v-for="item in supList"
         :key="item.id"
         :label="item.name"
-        :value="item.id"
+        :value="addSupS ? item.name : item.id"
       >
       </el-option>
     </el-select>
@@ -88,6 +88,10 @@ export default {
     onlyValue: {
       type: Boolean,
       default: false
+    },
+    addSupS: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -102,6 +106,9 @@ export default {
   },
   watch: {
     channelData(val) {
+      console.log(val)
+    },
+    addSupS(val) {
       console.log(val)
     }
   },
@@ -141,12 +148,9 @@ export default {
         })
         .then((res) => {
           this.supList = res.data.courseSupList
-          console.log(
-            this.supList.splice(
-              res.data.courseSupList.filter((item) => +item.id === 0),
-              1
-            ),
-            ' this.supList'
+          this.supList.splice(
+            res.data.courseSupList.filter((item) => +item.id === 0),
+            1
           )
         })
     },
@@ -173,6 +177,8 @@ export default {
       )
     },
     supChange(data) {
+      console.log(data, 'ddddaaaa')
+
       this.$emit(
         'supCallBack',
         data.length > 0 ? { [this.supName]: this.supData } : ''
