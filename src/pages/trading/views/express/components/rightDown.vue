@@ -147,9 +147,21 @@
         <div class="two-choose">
           <div class="message-one" v-if="selectNum > 1">
             <div>物流商品类型：</div>
-            <div class="mess" :key="i" v-for="(item, i) in checkBatchParams">
+            <div class="mess">
               <div class="ms">
-                {{ item.term }}期 {{ item.sup }} {{ item.product_name }}
+                <ul
+                  class="infinite-list"
+                  v-infinite-scroll
+                  style="overflow:auto"
+                >
+                  <li
+                    :key="item.id"
+                    v-for="item in checkBatchParams"
+                    class="infinite-list-item"
+                  >
+                    {{ item.term }}期 {{ item.sup }} {{ item.product_name }}
+                  </li>
+                </ul>
               </div>
             </div>
           </div>
@@ -314,10 +326,14 @@ export default {
           }
           return temp
         })
-        const pass = JSON.stringify(deliverys)
-        this.check(pass)
+        const params = {
+          operatorId: this.teacherId,
+          supplierId: this.value1,
+          deliverys: deliverys
+        }
+        this.check(params)
       } else {
-        const val = this.checkParams.map((item) => {
+        const deliverys = this.checkParams.map((item) => {
           const temp = {
             expressId: item.id,
             term: item.term,
@@ -327,9 +343,12 @@ export default {
           }
           return temp
         })
-        console.log(val, '-------------------')
-        const pass = JSON.stringify(val)
-        this.check(pass)
+        const params = {
+          operatorId: this.teacherId,
+          supplierId: this.value1,
+          deliverys: deliverys
+        }
+        this.check(params)
       }
 
       console.log('审核通过')
@@ -384,12 +403,9 @@ export default {
       this.expressNu.push(row.id)
       // console.log(row, column, cell, event, 'row, column, cell, event')
     },
-    check(
-      id,
-      src = `/api/o/v1/express/deliveryRequest?operatorId=${this.teacherId}&supplierId=${this.value1}`
-    ) {
+    check(params, src = `/api/o/v1/express/deliveryRequest`) {
       axios
-        .post(src, id)
+        .post(src, params)
         .then((res) => {
           // payload 是数组，错误信息逐个返回.全正确时返回空数组
           /**
