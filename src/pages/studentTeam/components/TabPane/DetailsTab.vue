@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 14:19:58
  * @LastEditors: panjian
- * @LastEditTime: 2020-04-08 15:18:50
+ * @LastEditTime: 2020-04-08 17:47:16
  -->
 <template>
   <div>
@@ -34,10 +34,10 @@
         @click="ExhibitionList"
         >生成作品展</el-button
       >
-      <!-- <checkBox
+      <checkBox
         :tables="table"
         v-if="this.table.tabs == 3 || this.table.tabs == 4"
-      ></checkBox> -->
+      ></checkBox>
     </div>
     <div>
       <div class="tabs-tab">
@@ -192,7 +192,7 @@
   </div>
 </template>
 <script>
-// import checkBox from '@/components/MCheckBox/index'
+import checkBox from '@/components/MCheckBox/index'
 import detailsTable from './components/detailsTable'
 import MSearch from '@/components/MSearch/index.vue'
 import axios from '@/api/axios'
@@ -205,8 +205,8 @@ export default {
     detailsTable,
     finishclass,
     exhibition,
-    MSearch
-    // checkBox
+    MSearch,
+    checkBox
   },
   props: {
     classId: {
@@ -1429,9 +1429,6 @@ export default {
         uInt8Array[i] = raw.charCodeAt(i)
       }
       return new Blob([uInt8Array], { type: contentType })
-    },
-    enter(val) {
-      console.log('input', val, this.input)
     }
   }
 }
