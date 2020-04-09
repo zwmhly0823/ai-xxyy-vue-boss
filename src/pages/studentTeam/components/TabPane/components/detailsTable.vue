@@ -679,10 +679,11 @@ export default {
         this.classId.classId.team_type ? '系统课' : '体验课'
       }`
       const teacherWx = JSON.parse(localStorage.getItem('teacher'))
+      const staff = JSON.parse(localStorage.getItem('staff'))
       const type = 'BUY_COURSE'
       params.push(sup)
       params.push(timestamp(this.classId.classId.start_day, 5))
-      params.push(teacherWx.teacher_wx)
+      params.push(teacherWx ? teacherWx.teacher_wx : staff.teacher_wx)
       console.log(mobiles, type, params, 'params')
       this.$http.User.sendBatch(mobiles, type, params).then((res) => {
         this.$message({
