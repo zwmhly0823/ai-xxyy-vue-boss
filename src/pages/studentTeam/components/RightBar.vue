@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-13 16:53:41
  * @LastEditors: zhubaodong
- * @LastEditTime: 2020-03-23 21:50:41
+ * @LastEditTime: 2020-04-08 16:31:29
  -->
 <template>
   <div class="right-container">
@@ -188,7 +188,6 @@ export default {
       }
       if (vals.classId) {
         this.getClassTeacher(vals.classId.id)
-        console.log(vals, this.cout++, 'vals')
       } else {
         this.classMessage = ''
       }
@@ -238,7 +237,6 @@ export default {
           }
         })
         .then((res) => {
-          console.log(res.data.detail.team_state, 'res.data.detail.team_state')
           if (Number(res.data.detail.team_state) === 0) {
             res.data.detail.state = '待开课'
           } else if (Number(res.data.detail.team_state) === 1) {
@@ -278,13 +276,6 @@ export default {
           res.data.detail.formatEndDay = this.classId.classId.formatEndDay
           this.classMessage = res.data
           // this.classMessage2 = res.dataformatEndDay
-
-          console.log(
-            this.classMessage,
-            this.classMessage.statictis,
-            res.data,
-            'res'
-          )
         })
     }
   },

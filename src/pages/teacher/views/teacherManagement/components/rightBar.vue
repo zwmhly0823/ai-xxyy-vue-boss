@@ -174,7 +174,11 @@ import associatedWeChat from '../components/associatedWeChat.vue'
 
 export default {
   props: [],
-  components: { MSearch, MPagination, associatedWeChat },
+  components: {
+    MSearch,
+    MPagination,
+    associatedWeChat
+  },
   data() {
     return {
       // 总页数

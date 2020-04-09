@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 20:22:24
  * @LastEditors: panjian
- * @LastEditTime: 2020-04-03 19:10:32
+ * @LastEditTime: 2020-04-08 17:39:59
  -->
 <template>
   <div class="table-box">
@@ -17,14 +17,54 @@
         :row-class-name="tableRowClassName"
         :cell-style="cellStyle"
         @row-click="onClick"
+        @selection-change="handleSelectionChange"
       >
+        <el-table-column
+          type="selection"
+          width="40px"
+          v-if="this.tables.tabs == 0"
+        ></el-table-column>
+        <el-table-column width="20px">
+          <template slot="header" slot-scope="scope">
+            <el-Popover popper-class="batch-btn" trigger="hover">
+              <!-- 标题气泡内容 -->
+              <div size="mini" type="text" @click="batchBtn">
+                批量发送加好友短信
+              </div>
+              <!-- 标题点击...图片 -->
+              <div
+                @click="headerPoint(scope.$index, scope)"
+                v-show="moreTitle"
+                slot="reference"
+              >
+                <img src="../../../../../assets/images/point.png" />
+              </div>
+            </el-Popover>
+          </template>
+          <template slot-scope="scope">
+            <el-Popover popper-class="batch-btn" trigger="hover">
+              <!-- 气泡内容 -->
+              <div size="mini" type="text" @click="batchBtn">
+                <span v-show="moreTitle === true">批量发送加好友短信</span>
+                <span v-show="moreTitle === false">发送加好友短信</span>
+              </div>
+              <!-- 点击...图片 -->
+              <div
+                @mouseenter="handleEdit(scope.$index, scope.row)"
+                slot="reference"
+              >
+                <img src="../../../../../assets/images/point.png" />
+              </div>
+            </el-Popover>
+          </template>
+        </el-table-column>
         <!-- 基本信息 -->
         <el-table-column width="280" label="基本信息">
           <template slot-scope="scope">
             <div class="scope-info-box">
               <img
                 class="scope-info-img borders"
-                :src="scope.row.head"
+                :src="`${scope.row.head}?x-oss-process=image/resize,l_100`"
                 alt=""
               />
               <div class="info-telephone">{{ scope.row.mobile }}</div>
@@ -49,21 +89,25 @@
         </el-table-column>
         <!-- 已加好友 -->
         <el-table-column prop="added_wechat" label="已加好友">
+          <!-- <template v-if="renderHtml" slot="header"> -->
           <template slot="header">
-            <span @click="onSortWechat" class="header-sort"
-              >已加好友 <i class="el-icon-d-caret" />
-              <!-- <i
-                class="el-icon-caret-top"
-                :class="{ hover: wechatSort === 'asc' }"
-              />
-              <i
-                class="el-icon-caret-bottom"
-                :class="{ hover: wechatSort === 'desc' }"
-              /> -->
-            </span>
+            <div @click="onSortWechat">
+              <span>已加好友</span>
+              <div v-if="wechatShowIcon === 1" class="added-wechat-icon-box">
+                <i class="el-icon-caret-top top"></i>
+                <i class="el-icon-caret-bottom bottom"></i>
+              </div>
+              <div v-if="wechatShowIcon === 2" class="added-wechat-icon-box">
+                <i class="el-icon-caret-top top"></i>
+                <i class="el-icon-caret-bottom bottom-color"></i>
+              </div>
+              <div v-if="wechatShowIcon === 3" class="added-wechat-icon-box">
+                <i class="el-icon-caret-top top-color"></i>
+                <i class="el-icon-caret-bottom bottom"></i>
+              </div>
+            </div>
           </template>
           <template slot-scope="scope">
-            <!-- <span>{{ scope.row.friend }}</span> -->
             <img
               class="group-img"
               v-if="scope.row.added_wechat == 0"
@@ -91,11 +135,6 @@
                     alt=""
                   />
                 </el-dropdown-item>
-                <!-- <el-dropdown-item
-                style="font-size:20px"
-                command="0"
-                icon="el-icon-error"
-              ></el-dropdown-item> -->
               </el-dropdown-menu>
             </el-dropdown>
             <div>{{ scope.row.added_wechat_time }}</div>
@@ -105,9 +144,21 @@
         <!-- 已进群 -->
         <el-table-column prop="added_group" label="已进群">
           <template slot="header">
-            <span class="header-sort" @click="onSortGroup"
-              >已进群 <i class="el-icon-d-caret"
-            /></span>
+            <div @click="onSortGroup">
+              <span>已进群</span>
+              <div v-if="groupShowIcon === 1" class="added-wechat-icon-box">
+                <i class="el-icon-caret-top top"></i>
+                <i class="el-icon-caret-bottom bottom"></i>
+              </div>
+              <div v-if="groupShowIcon === 2" class="added-wechat-icon-box">
+                <i class="el-icon-caret-top top"></i>
+                <i class="el-icon-caret-bottom bottom-color"></i>
+              </div>
+              <div v-if="groupShowIcon === 3" class="added-wechat-icon-box">
+                <i class="el-icon-caret-top top-color"></i>
+                <i class="el-icon-caret-bottom bottom"></i>
+              </div>
+            </div>
           </template>
           <template slot-scope="scope">
             <img
@@ -137,11 +188,6 @@
                     alt=""
                   />
                 </el-dropdown-item>
-                <!-- <el-dropdown-item
-                style="font-size:20px"
-                command="0"
-                icon="el-icon-error"
-              ></el-dropdown-item> -->
               </el-dropdown-menu>
             </el-dropdown>
             <div>{{ scope.row.added_group_time }}</div>
@@ -151,21 +197,21 @@
         <!-- 关注公众号 -->
         <el-table-column prop="follow" label="关注公众号">
           <template slot="header">
-            <span class="header-sort" @click="onSortFollow"
-              >关注公众号 <i class="el-icon-d-caret" />
-              <!-- <i
-                :class="[
-                  followSort === 'asc' ? 'hover' : '',
-                  'el-icon-caret-top'
-                ]"
-              />
-              <i
-                :class="[
-                  followSort === 'desc' ? 'hover' : '',
-                  'el-icon-caret-bottom'
-                ]"
-              /> -->
-            </span>
+            <div @click="onSortFollow">
+              <span>关注公众号</span>
+              <div v-if="followShowIcon === 1" class="added-wechat-icon-box">
+                <i class="el-icon-caret-top top"></i>
+                <i class="el-icon-caret-bottom bottom"></i>
+              </div>
+              <div v-if="followShowIcon === 2" class="added-wechat-icon-box">
+                <i class="el-icon-caret-top top"></i>
+                <i class="el-icon-caret-bottom bottom-color"></i>
+              </div>
+              <div v-if="followShowIcon === 3" class="added-wechat-icon-box">
+                <i class="el-icon-caret-top top-color"></i>
+                <i class="el-icon-caret-bottom bottom"></i>
+              </div>
+            </div>
           </template>
           <template slot-scope="scope">
             <img
@@ -219,7 +265,7 @@
               <img
                 v-if="scope.row.head != ''"
                 class="logistics-wx-img borders"
-                :src="scope.row.head"
+                :src="`${scope.row.head}?x-oss-process=image/resize,l_100`"
                 alt=""
               />
               <span v-else class="logistics-wx-imgs borders"> - </span>
@@ -253,26 +299,14 @@
                   @click="handelAddExpress"
                   >帮他填写</el-button
                 >
-                <!-- <el-popover
-                  v-model="showExpress"
-                  placement="right"
-                  width="300"
-                  trigger="click"
+                <el-button
+                  icon="el-icon-postcard"
+                  size="mini"
+                  type="primary"
+                  plain
+                  @click="onUrgentAddress"
+                  >催发地址</el-button
                 >
-                  <logistics-form
-                    @addExpress="addExpress"
-                    :formData="formData"
-                  ></logistics-form>
-
-                  <el-button
-                    icon="el-icon-edit"
-                    size="mini"
-                    type="primary"
-                    plain
-                    slot="reference"
-                    >帮他填写</el-button
-                  >
-                </el-popover> -->
               </div>
             </div>
           </template>
@@ -304,7 +338,7 @@
         :cell-style="cellStyle"
         @row-click="onClick"
       >
-        <el-table-column label="用户和购买时间">
+        <el-table-column key="l1" label="用户和购买时间">
           <template slot-scope="scope">
             <div>
               <span>{{ scope.row.mobile }}</span>
@@ -313,13 +347,13 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column label="用户微信">
+        <el-table-column key="l2" label="用户微信">
           <template slot-scope="scope">
             <div class="login-wx-box">
               <img
                 v-if="scope.row.head != ''"
                 class="login-wx-img borders"
-                :src="scope.row.head"
+                :src="`${scope.row.head}?x-oss-process=image/resize,l_100`"
                 alt=""
               />
               <span v-else class="login-wx-imgs borders"> - </span>
@@ -327,14 +361,14 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column label="状态">
+        <el-table-column key="l3" label="状态">
           <template slot-scope="scope">
             <div>
               <span>{{ scope.row.status }}</span>
             </div>
           </template>
         </el-table-column>
-        <el-table-column label="打开次数">
+        <el-table-column key="l4" label="打开次数">
           <template slot-scope="scope">
             <div>
               <span>{{ scope.row.login_time }}</span>
@@ -363,7 +397,7 @@
         :cell-style="cellStyle"
         @row-click="onClick"
       >
-        <el-table-column label="用户和购买时间">
+        <el-table-column key="p1" label="用户和购买时间">
           <template slot-scope="scope">
             <div>
               <span>{{ scope.row.mobile }}</span>
@@ -372,13 +406,13 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column label="用户微信">
+        <el-table-column key="p2" label="用户微信">
           <template slot-scope="scope">
             <div class="participateIn-wx-box">
               <img
                 v-if="scope.row.head != ''"
                 class="participateIn-wx-img borders"
-                :src="scope.row.head"
+                :src="`${scope.row.head}?x-oss-process=image/resize,l_100`"
                 alt=""
               />
               <span v-else class="participateIn-wx-imgs borders"> - </span>
@@ -388,14 +422,14 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column label="状态">
+        <el-table-column key="p3" label="状态">
           <template slot-scope="scope">
             <div>
               <span>{{ scope.row.status }}</span>
             </div>
           </template>
         </el-table-column>
-        <el-table-column label="课程">
+        <el-table-column key="p4" label="课程">
           <template slot-scope="scope">
             <div>
               <span>{{ scope.row.course_current_num }}</span>
@@ -404,7 +438,7 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column label="参课">
+        <el-table-column key="p5" label="参课">
           <template slot-scope="scope">
             <div>
               <span>{{ scope.row.join_course_state }}</span>
@@ -413,7 +447,7 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column label="完课">
+        <el-table-column key="p6" label="完课">
           <template slot-scope="scope">
             <div>
               <span>{{ scope.row.complete_course_state }}</span>
@@ -442,7 +476,7 @@
         :cell-style="cellStyle"
         @row-click="onClick"
       >
-        <el-table-column label="用户和购买时间">
+        <el-table-column key="w1" label="用户和购买时间">
           <template slot-scope="scope">
             <div>
               <span>{{ scope.row.mobile }}</span>
@@ -453,13 +487,13 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column label="用户微信">
+        <el-table-column key="w2" label="用户微信">
           <template slot-scope="scope">
             <div class="works-wx-box">
               <img
                 v-if="scope.row.head != ''"
                 class="works-wx-img borders"
-                :src="scope.row.head"
+                :src="`${scope.row.head}?x-oss-process=image/resize,l_100`"
                 alt=""
               />
               <span v-else class="works-wx-imgs borders"> - </span>
@@ -467,7 +501,7 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column label="课程">
+        <el-table-column key="w3" label="课程">
           <template slot-scope="scope">
             <div>
               <span>{{ scope.row.course_current_num }}</span>
@@ -476,13 +510,15 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column label="作品">
+        <el-table-column key="w4" label="作品">
           <template slot-scope="scope">
             <div class="works-task-box">
               <img
                 v-if="scope.row.task_image"
                 class="works-task-img borders"
-                :src="scope.row.task_image"
+                :src="
+                  `${scope.row.task_image}?x-oss-process=image/resize,l_100`
+                "
                 alt=""
               />
               <span v-else>-</span>
@@ -490,7 +526,7 @@
             <div class="works-ctime">{{ scope.row.works_ctime }}</div>
           </template>
         </el-table-column>
-        <el-table-column label="点评">
+        <el-table-column key="w5" label="点评">
           <template slot-scope="scope">
             <div>
               <span>{{ scope.row.has_comment_ctime }}</span>
@@ -558,6 +594,7 @@
 <script>
 import MPagination from '@/components/MPagination/index.vue'
 import logisticsForm from '../components/logisticsForm'
+import { timestamp } from '@/utils/index'
 export default {
   name: 'detailsTable',
   props: {
@@ -584,6 +621,12 @@ export default {
   },
   data() {
     return {
+      orderId: '',
+      selectUserMobile: [],
+      moreTitle: false,
+      wechatShowIcon: 1,
+      groupShowIcon: 1,
+      followShowIcon: 1,
       showExpress: false,
       formData: {},
       audioIndex: null,
@@ -596,13 +639,14 @@ export default {
         receiptTel: '',
         addressDetail: ''
       },
-      wechatSort: '',
+      wechatSort: 'asc',
       groupSort: 'desc',
-      followSort: ''
+      followSort: 'desc',
+      renderHtml: true
     }
   },
   mounted() {
-    // console.log(this.audioTabs, ' audioTabs ')
+    console.log(this.audioTabs, ' audioTabs ')
   },
   watch: {
     classId(value) {
@@ -614,47 +658,135 @@ export default {
   },
   created() {},
   methods: {
+    // 加好友
+    handleEdit(index, row) {
+      // 当没有点击复选框 直接点击加好友
+      if (this.moreTitle === false) {
+        this.selectUserMobile = []
+        this.selectUserMobile.push(row.mobile)
+      }
+      console.log('当没有点击复选框 直接点击加好友')
+    },
+    // 表头加好友操作
+    headerPoint(index, scope) {
+      console.log(index, scope)
+    },
+    batchBtn() {
+      console.log(this.classId, '点击加好友')
+      const params = []
+      const mobiles = Object.values(this.selectUserMobile)
+      const sup = `${this.classId.classId.sup}${
+        this.classId.classId.team_type ? '系统课' : '体验课'
+      }`
+      const teacherWx = JSON.parse(localStorage.getItem('teacher'))
+      const type = 'BUY_COURSE'
+      params.push(sup)
+      params.push(timestamp(this.classId.classId.start_day, 5))
+      params.push(teacherWx.teacher_wx)
+      console.log(mobiles, type, params, 'params')
+      this.$http.User.sendBatch(mobiles, type, params).then((res) => {
+        this.$message({
+          message: '已发送短信',
+          type: 'success'
+        })
+      })
+    },
+    // 复选框
+    handleSelectionChange(val) {
+      console.log(val, '复选框')
+      this.selectUserMobile = []
+      if (val.length > 1) {
+        this.moreTitle = true
+      } else {
+        this.moreTitle = false
+      }
+      val.forEach((data) => {
+        this.selectUserMobile.push(data.mobile)
+        console.log(data.mobile, '选中的电话')
+      })
+    },
+    // 排序
     onSortWechat() {
+      this.renderHtml = false
       if (this.wechatSort === 'asc') {
-        console.log('added_wechat,好友点击排序,desc')
         this.$emit('onGroupSort', '{"added_wechat":"asc"}')
-        // this.$emit('onGroupSort', '{"id":"desc"}')
+        this.$nextTick(() => {
+          this.wechatShowIcon = 2
+          this.followShowIcon = 1
+          this.groupShowIcon = 1
+          this.renderHtml = true
+        })
         this.wechatSort = 'desc'
       } else {
-        console.log('added_wechat,好友点击排序,asc')
-        // this.$emit('onGroupSort', '{"id":"asc"}')
         this.$emit('onGroupSort', '{"added_wechat":"desc"}')
+        this.$nextTick(() => {
+          this.wechatShowIcon = 3
+          this.followShowIcon = 1
+          this.groupShowIcon = 1
+          this.renderHtml = true
+        })
         this.wechatSort = 'asc'
       }
     },
     onSortGroup() {
+      this.renderHtml = false
       if (this.groupSort === 'asc') {
-        console.log('added_group,进群排序,desc')
         this.$emit('onGroupSort', '{"added_group":"desc"}')
-        // this.$emit('onGroupSort', '{"id":"desc"}')
+        this.$nextTick(() => {
+          this.followShowIcon = 1
+          this.wechatShowIcon = 1
+          this.groupShowIcon = 3
+          this.renderHtml = true
+        })
         this.groupSort = 'desc'
       } else {
-        console.log('added_group,进群排序,asc')
         this.$emit('onGroupSort', '{"added_group":"asc"}')
-        // this.$emit('onGroupSort', '{"id":"asc"}')
+        this.$nextTick(() => {
+          this.followShowIcon = 1
+          this.wechatShowIcon = 1
+          this.groupShowIcon = 2
+          this.renderHtml = true
+        })
         this.groupSort = 'asc'
       }
     },
     onSortFollow() {
+      this.renderHtml = false
       if (this.followSort === 'asc') {
-        console.log('wechat_follow_time,公众号排序,desc')
         this.$emit('onGroupSort', '{"wechat_follow_time":"desc"}')
+        this.$nextTick(() => {
+          this.wechatShowIcon = 1
+          this.groupShowIcon = 1
+          this.followShowIcon = 3
+          this.renderHtml = true
+        })
         this.followSort = 'desc'
       } else {
-        console.log('wechat_follow_time,公众号排序,asc')
         this.$emit('onGroupSort', '{"wechat_follow_time":"asc"}')
+        this.$nextTick(() => {
+          this.wechatShowIcon = 1
+          this.groupShowIcon = 1
+          this.followShowIcon = 2
+          this.renderHtml = true
+        })
         this.followSort = 'asc'
       }
       console.log(this.followSort)
     },
+    // 催发地址接口
+    onUrgentAddress() {
+      console.log('发送催发短信')
+      setTimeout(() => {
+        this.$http.Express.pushMsgByOrderId(this.orderId).then((res) => {
+          this.$message({
+            message: '已发送短信',
+            type: 'success'
+          })
+        })
+      }, 500)
+    },
     // 添加物流地址按钮
     handelAddExpress(row) {
-      console.log(row)
       this.showExpress = true
     },
     addExpress(data) {
@@ -697,6 +829,7 @@ export default {
       this.added_wechat = row.added_wechat
       this.studentId = row.id
       this.tableindex = row.index
+      this.orderId = row.order_id
       console.log(row.id, 'row.id')
       const id = row.id
       const userid = row.user_id
@@ -782,6 +915,28 @@ export default {
       top: -3px;
       margin-left: 2px;
       font-size: 12px;
+    }
+    .added-wechat-icon-box {
+      display: inline-block;
+      position: relative;
+      .top {
+        position: absolute;
+        bottom: 0;
+      }
+      .top-color {
+        position: absolute;
+        bottom: 0;
+        color: #409eff;
+      }
+      .bottom {
+        position: absolute;
+        top: -6px;
+      }
+      .bottom-color {
+        position: absolute;
+        top: -6px;
+        color: #409eff;
+      }
     }
   }
   .logistics-box {

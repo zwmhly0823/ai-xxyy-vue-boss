@@ -13,7 +13,10 @@ export default {
    * 订单列表
    * */
   getDepartmentTree(id) {
-    return axios.get(`/api/t/v1/department/getDepartmentTree?Id=${id}`)
+    return axios.get(`/api/t/v1/department/getDepartmentTree?id=${id}`)
+  },
+  getOssSign() {
+    return axios.get(`/api/home/v1/ossconfig/getStsPubWriteToken`)
   },
   // 老师列表
   getTeacherPage() {
@@ -66,7 +69,7 @@ export default {
     return axios.get(`/api/t/v1/teacher/getTeacherDetail?teacherId=${id}`)
   },
   // 上传头像
-  getOSSPubWrite() {
-    return axios.get(`/api/home/v1/ossconfig/getOSSPubWrite`)
+  getPubWriteSinged() {
+    return axios.get(`/api/home/v1/ossconfig/getPubWriteSinged`)
   }
 }

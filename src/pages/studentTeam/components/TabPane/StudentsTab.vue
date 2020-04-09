@@ -7,7 +7,7 @@
         phone="uid"
         onlyPhone="1"
         phoneTip="手机号/微信昵称 查询"
-        :teamId="classId.classId.id"
+        :teamId="classId.classId && classId.classId.id"
       />
     </div>
     <el-table
@@ -61,7 +61,11 @@
       />
       <el-table-column label="基本信息" class="information" width="280px">
         <template slot-scope="scope">
-          <img class="information-img" :src="scope.row.head" alt="" />
+          <img
+            class="information-img"
+            :src="`${scope.row.head}?x-oss-process=image/resize,l_100`"
+            alt=""
+          />
           <div class="information-right">
             <div class="phone">{{ scope.row.mobile }}</div>
             <div class="age">
@@ -183,6 +187,7 @@ export default {
   },
   created() {
     // 优惠卷列表接口
+
     this.couponList()
   },
   watch: {
