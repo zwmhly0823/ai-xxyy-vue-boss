@@ -72,5 +72,44 @@ export default {
   // 上传头像
   getPubWriteSinged() {
     return axios.get(`/api/home/v1/ossconfig/getPubWriteSinged`)
+  },
+  // 部门
+  getdepartmentList() {
+    return axios.post('/graphql/boss', {
+      query: `{
+         TeacherDepartmentPage(query: "") {
+            number
+            totalPages
+            totalElements
+            content {
+              id
+              pid
+              name
+            }
+          }
+        }`
+    })
+  },
+  // 职级
+  TeacherRankList() {
+    return axios.post('/graphql/boss', {
+      query: `{
+         TeacherRankList{
+            id
+            name
+          }
+        }`
+    })
+  },
+  // 级别
+  courseSupList() {
+    return axios.post('/graphql/filter', {
+      query: `{
+          courseSupList{
+            id
+            name
+          }
+       }`
+    })
   }
 }

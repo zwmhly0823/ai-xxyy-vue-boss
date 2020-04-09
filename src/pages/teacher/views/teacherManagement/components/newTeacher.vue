@@ -59,9 +59,9 @@
           <el-radio
             v-for="(item, index) in gender"
             :key="index"
-            :label="item.label"
-            :value="item.value"
-          ></el-radio>
+            :label="item.value"
+            >{{ item.label }}</el-radio
+          >
         </el-radio-group>
       </el-form-item>
       <!-- 所属部门 -->
@@ -69,10 +69,14 @@
         <el-cascader
           v-model="ruleForm.region"
           :options="suDepartments"
-          :props="{ expandTrigger: 'hover' }"
           @change="handleChange"
+          :props="optionProps"
           style="width:57.5%"
-        ></el-cascader>
+        >
+          <!-- <template slot-scope="{ node, data }">
+            <span>{{ data.name }}</span>
+          </template> -->
+        </el-cascader>
       </el-form-item>
       <!-- 职务 -->
       <el-form-item label="职务" prop="postVerification">
@@ -107,8 +111,8 @@
           <el-option
             v-for="(item, index) in shiftList"
             :key="index"
-            :label="item.label"
-            :value="item.value"
+            :label="item.name"
+            :value="item.id"
           ></el-option>
         </el-select>
       </el-form-item>
@@ -142,16 +146,16 @@
           <el-radio
             v-for="(item, index) in onJob"
             :key="index"
-            :label="item.label"
-            :value="item.value"
-          ></el-radio>
+            :label="item.value"
+            >{{ item.label }}</el-radio
+          >
         </el-radio-group>
       </el-form-item>
       <!-- 离职时间 -->
       <el-form-item
         label="离职时间"
         required
-        v-show="ruleForm.workingState === '离职'"
+        v-show="ruleForm.workingState === 'LEAVE'"
       >
         <el-form-item prop="departureDate">
           <el-date-picker
@@ -205,6 +209,7 @@
 </template>
 <script>
 import axios from 'axios'
+import Contants from '@/utils/contants'
 export default {
   data() {
     // 手机号正则
@@ -251,40 +256,32 @@ export default {
       timedDisabled: 1,
       // 性别
       gender: [
-        { label: '男', value: 1 },
-        { label: '女', value: 2 }
+        { label: '男', value: 0 },
+        { label: '女', value: 1 }
       ],
       // 所属部门
-      suDepartments: [
-        {
-          label: '小熊销售1部',
-          value: 1,
-          children: [{ label: '小熊销售1部', value: 1 }]
-        },
-        {
-          label: '小熊销售2部',
-          value: 2,
-          children: [{ label: '小熊销售1部', value: 2 }]
-        }
-      ],
+      suDepartments: [],
+      optionProps: {
+        value: 'id',
+        label: 'name',
+        pid: 'pid',
+        children: 'children'
+      },
       // 职务
       position: [],
       // 职级
       rankList: [],
       // 带班级别
-      shiftList: [
-        { label: 's1', value: 1 },
-        { label: 's2', value: 2 }
-      ],
+      shiftList: [],
       // 账号设置
       accountList: [
-        { label: '允许', value: 1 },
-        { label: '禁止', value: 2 }
+        { label: '允许', value: 'YES' },
+        { label: '禁止', value: 'NO' }
       ],
       // 在职状态
       onJob: [
-        { label: '在职', value: 1 },
-        { label: '离职', value: 2 }
+        { label: '在职', value: 'TENURE' },
+        { label: '离职', value: 'LEAVE' }
       ],
       // 微信
       WeChat: [
@@ -322,7 +319,7 @@ export default {
         // 账号设置
         accountSettings: '允许',
         // 在职状态
-        workingState: '在职',
+        workingState: 'TENURE',
         // 分配微信号
         weChat: []
       },
@@ -404,6 +401,7 @@ export default {
   watch: {
     // 监听入职时间,清空离职时间
     'ruleForm.inductionDate'(val) {
+      console.log(val, 'val')
       // 离职时间
       if (
         this.ruleForm.departureDate !== '' &&
@@ -426,7 +424,6 @@ export default {
   },
   created() {
     const query = this.$route.query
-    console.log(query, 'query')
     // query.index ''/新建老师  1/编辑老师 2/查看老师
     if (query && query.index) this.newTitle = query.index
     if (query.index === '2') this.formDisabled = true
@@ -439,10 +436,51 @@ export default {
       this.$http.Teacher.getTeacherDutyList().then((res) => {
         this.position = res.data.TeacherDutyList
       })
+      // 部门接口
+      this.$http.Teacher.getdepartmentList().then((res) => {
+        const departmentData = res.data.TeacherDepartmentPage.content
+        const departmentWith = []
+        departmentData.forEach((val) => {
+          if (val.pid === 0) {
+            departmentWith.push(Object.assign(val, { children: [] }))
+          }
+        })
+        departmentData.forEach((val) => {
+          departmentWith.forEach((data) => {
+            if (val.pid === data.id) {
+              data.children.push(val)
+            }
+          })
+        })
+        this.suDepartments = departmentWith
+      })
+      // 职级
+      this.$http.Teacher.TeacherRankList().then((res) => {
+        this.rankList = res.data.TeacherRankList
+      })
+      // 级别
+      this.$http.Teacher.courseSupList().then((res) => {
+        res.data.courseSupList.forEach((val) => {
+          if (val.id !== 0) {
+            this.shiftList.push(val)
+          }
+        })
+      })
       if (this.$route.query && this.$route.query.teacherId) {
         // 教师详情
         this.$http.Teacher.getTeacherDetail(this.$route.query.teacherId).then(
           (res) => {
+            this.ruleForm.imageUrl = res.payload.teacher.headImage
+            this.ruleForm.phone = res.payload.teacher.phone
+            this.ruleForm.name = res.payload.teacher.realName
+            this.ruleForm.nickname = res.payload.teacher.nickname
+            this.ruleForm.resource = res.payload.teacher.sex
+            // this.ruleForm.positionVal = res.payload.duty
+            // this.ruleForm.rank = res.payload.rank
+            this.ruleForm.inductionDate = new Date(res.payload.teacher.joinDate)
+            this.ruleForm.departureDate = new Date(
+              res.payload.teacher.leaveDate
+            )
             console.log(res.payload, '教师详情')
           }
         )
@@ -480,7 +518,6 @@ export default {
     // 头像上传
     async uploadFile(file) {
       const getOssToken = await this.getOssToken()
-      console.log('file', file)
       if (getOssToken) {
         var getSuffix = function(fileName) {
           var pos = fileName.lastIndexOf('.')
@@ -491,27 +528,23 @@ export default {
           return suffix
         }
 
-        const requestHost = `${getOssToken.bucketName}.${getOssToken.endpoint}`
+        const requestHost = `https://${getOssToken.bucketName}.${getOssToken.endpoint}`
         const filename = new Date().getTime() + getSuffix(file.file.name)
-
+        const dirPath = 'h5/headPic/'
         const formData = new FormData()
-        formData.append('key', 'msb-images/' + filename) // 存储在oss的文件路径
+        formData.append('key', dirPath + filename) // 存储在oss的文件路径
         formData.append('OSSAccessKeyId', getOssToken.accessKeyId) // accessKeyId
         formData.append('policy', getOssToken.policy) // policy
         formData.append('Signature', getOssToken.singed) // 签名
         formData.append('success_action_status', 200) // 成功后返回的操作码
         formData.append('name', filename)
         formData.append('file', file.file, filename)
-        const fileUrl = `${requestHost}/msb-images/${filename}`
+        const fileUrl = `${Contants.OSS_IMG_BASE_URL}/${dirPath}${filename}`
 
         axios
-          .post(
-            'https://xiaoxiong-pub.oss-cn-hangzhou.aliyuncs.com',
-            formData,
-            {
-              headers: { 'Content-Type': 'multipart/form-data' }
-            }
-          )
+          .post(requestHost, formData, {
+            headers: { 'Content-Type': 'multipart/form-data' }
+          })
           .then((res) => {
             console.log('axios-res', res, fileUrl)
           })
