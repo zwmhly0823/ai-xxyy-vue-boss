@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 14:19:58
  * @LastEditors: panjian
- * @LastEditTime: 2020-04-08 15:18:50
+ * @LastEditTime: 2020-04-09 15:34:38
  -->
 <template>
   <div>
@@ -153,19 +153,10 @@
           </span>
         </el-dialog>
       </div>
-      <!-- <img
-        v-show="show"
-        :src="dataURL"
-        alt
-        class="exportImg"
-        finishBox
-        @load="handlePosterLoaded"
-        crossorigin="anonymous"
-      /> -->
       <!-- 生成完课榜图片-->
       <div
         v-for="(item, index) in finishLessonData.childListData"
-        :key="index"
+        :key="index + 1"
         class="finishBox"
       >
         <slot>
@@ -195,7 +186,6 @@
 // import checkBox from '@/components/MCheckBox/index'
 import detailsTable from './components/detailsTable'
 import MSearch from '@/components/MSearch/index.vue'
-import axios from '@/api/axios'
 import { timestamp, GetAgeByBrithday, isToss } from '@/utils/index'
 import finishclass from './FinishClass'
 import exhibition from './Exhibition'
@@ -665,47 +655,34 @@ export default {
         'request - params  -->> ',
         'team_id: ' + teamId + ' , lesson :' + lesson + ' , week : ' + week
       )
-      axios
-        .post('/graphql/getStuRankingList', {
-          query: `{
-                getStuComRankingList(query : ${JSON.stringify(queryParams)}){
-                student_id
-                mobile
-                username
-                head
-                completeArr {
-                current_lesson
-                is_complete
-                }
-            }
-          }`
-        })
-        .then((res) => {
-          if (res.error) {
-            console.log(res.error, '接口错误信息-------------->')
-            return
+      this.$http.Team.finishClassList({
+        queryParams: queryParams
+      }).then((res) => {
+        if (res.error) {
+          console.log(res.error, '接口错误信息-------------->')
+          return
+        }
+        // 生成完课榜（多页）
+        const childLastData = []
+        if (res.data.getStuComRankingList) {
+          const stuArrLength = res.data.getStuComRankingList.length
+          const createDefineNum = 20
+          const arevNum = Math.ceil(
+            stuArrLength / Math.ceil(stuArrLength / createDefineNum)
+          )
+          // 重构数组
+          for (var j = 0; j < stuArrLength; j++) {
+            const tmpnum = Math.floor(j / arevNum)
+            childLastData[tmpnum] = childLastData[tmpnum]
+              ? childLastData[tmpnum]
+              : []
+            childLastData[tmpnum].push(res.data.getStuComRankingList[j])
           }
-          // 生成完课榜（多页）
-          const childLastData = []
-          if (res.data.getStuComRankingList) {
-            const stuArrLength = res.data.getStuComRankingList.length
-            const createDefineNum = 20
-            const arevNum = Math.ceil(
-              stuArrLength / Math.ceil(stuArrLength / createDefineNum)
-            )
-            // 重构数组
-            for (var j = 0; j < stuArrLength; j++) {
-              const tmpnum = Math.floor(j / arevNum)
-              childLastData[tmpnum] = childLastData[tmpnum]
-                ? childLastData[tmpnum]
-                : []
-              childLastData[tmpnum].push(res.data.getStuComRankingList[j])
-            }
-          }
-          console.log('lastChildData ------> ', childLastData)
-          this.finishLessonData.childListData = childLastData
-          this.finishLessonData.imgNum = childLastData.length
-        })
+        }
+        console.log('lastChildData ------> ', childLastData)
+        this.finishLessonData.childListData = childLastData
+        this.finishLessonData.imgNum = childLastData.length
+      })
     },
     // 请求作品展-接口数据
     getStuTaskRankingList(teamId, week) {
@@ -717,48 +694,35 @@ export default {
         text: '图片正在生成中'
       })
       const QueryParams = `{"team_id" : ${teamId}, "week" :  "${week}"}`
-      axios
-        .post('/graphql/getStuRankingList', {
-          query: `{
-            getStuTaskRankingList(query : ${JSON.stringify(QueryParams)}){
-            student_id
-            mobile
-            username
-            head
-            completeArr {
-            current_lesson
-            task_image
-                }
-                }
-                  }`
-        })
-        .then((res) => {
-          console.log(res, 123456789)
-          if (res.error) {
-            console.log(res.error, '接口错误信息-------------->')
-            return
+      this.$http.Team.exhibitionOfWorks({
+        QueryParams: QueryParams
+      }).then((res) => {
+        console.log(res, 123456789)
+        if (res.error) {
+          console.log(res.error, '接口错误信息-------------->')
+          return
+        }
+        // 生成作品展（多页）
+        const childLastData = []
+        if (res.data.getStuTaskRankingList) {
+          const stuArrLength = res.data.getStuTaskRankingList.length
+          const createDefineNum = 28
+          const arevNum = Math.ceil(
+            stuArrLength / Math.ceil(stuArrLength / createDefineNum)
+          )
+          // 重构数组
+          for (var j = 0; j < stuArrLength; j++) {
+            const tmpnum = Math.floor(j / arevNum)
+            childLastData[tmpnum] = childLastData[tmpnum]
+              ? childLastData[tmpnum]
+              : []
+            childLastData[tmpnum].push(res.data.getStuTaskRankingList[j])
           }
-          // 生成作品展（多页）
-          const childLastData = []
-          if (res.data.getStuTaskRankingList) {
-            const stuArrLength = res.data.getStuTaskRankingList.length
-            const createDefineNum = 28
-            const arevNum = Math.ceil(
-              stuArrLength / Math.ceil(stuArrLength / createDefineNum)
-            )
-            // 重构数组
-            for (var j = 0; j < stuArrLength; j++) {
-              const tmpnum = Math.floor(j / arevNum)
-              childLastData[tmpnum] = childLastData[tmpnum]
-                ? childLastData[tmpnum]
-                : []
-              childLastData[tmpnum].push(res.data.getStuTaskRankingList[j])
-            }
-          }
-          console.log('lastChildData ------> ', childLastData)
-          this.ExhibitionData.childListData = childLastData
-          this.ExhibitionData.imgNum = childLastData.length
-        })
+        }
+        console.log('lastChildData ------> ', childLastData)
+        this.ExhibitionData.childListData = childLastData
+        this.ExhibitionData.imgNum = childLastData.length
+      })
     },
     // 绘制生成完课榜图片
     canvasStart(res) {
@@ -806,83 +770,52 @@ export default {
         } else {
           this.querysData = `{"team_id":${this.classId.classId.id},"team_type":${this.classId.type}}`
         }
-        axios
-          .post('/graphql/user', {
-            query: `{
-                userListForTeam(query:${JSON.stringify(
-                  this.querysData
-                )} , page: ${this.table.currentPage}, size: 20,${
-              this.sortGroup
-            }) {
-                empty
-                first
-                last
-                number
-                size
-                numberOfElements
-                totalElements
-                totalPages
-                content {
-                  id
-                  nickname
-                  sex
-                  birthday
-                  head
-                  mobile
-                  base_painting
-                  follow
-                  added_group
-                  added_wechat
-                  buytime
-                  added_wechat_time
-                  added_group_time
-                  follow_time
-                }
-              }
-            }`
-          })
-          .then((res) => {
-            this.table.tableData = []
-            // 0 默认 1 男 2 女 3 保密
-            // 0 默认  1 无基础  2 一年以下 3 一年以上
-            // 0 叉 1 对号
-            this.table.totalElements = +res.data.userListForTeam.totalElements
-            const _data = res.data.userListForTeam.content
-            _data.forEach((item) => {
-              item.birthday = GetAgeByBrithday(item.birthday)
-              if (item.sex === '0') {
-                item.sex = '- ·'
-              } else if (item.sex === '1') {
-                item.sex = '男 ·'
-              } else if (item.sex === '2') {
-                item.sex = '女 ·'
-              } else if (item.sex === '3') {
-                item.sex = '保密 ·'
-              }
-              if (item.birthday.indexOf(50) !== -1) {
-                item.birthday = '-'
-              }
-              item.buytime = timestamp(item.buytime, 6)
-              item.added_wechat_time = timestamp(item.added_wechat_time, 6)
-              item.added_group_time = timestamp(item.added_group_time, 6)
-              item.follow_time = timestamp(item.follow_time, 6)
-              if (item.base_painting === '0') {
-                item.base_painting = ' '
-              } else if (item.base_painting === '1') {
-                item.base_painting = '无基础'
-              } else if (item.base_painting === '2') {
-                item.base_painting = '一年以下'
-              } else if (item.base_painting === '3') {
-                item.base_painting = '一年以上'
-              }
-            })
-            if (this.tableDataEmpty) {
-              this.table.tableData = _data
-            } else {
-              this.table.tableData = []
-              this.tableDataEmpty = true
+        this.$http.Team.getuserListForTeam({
+          querysData: this.querysData,
+          currentPage: this.table.currentPage,
+          sortGroup: this.sortGroup
+        }).then((res) => {
+          this.table.tableData = []
+          // 0 默认 1 男 2 女 3 保密
+          // 0 默认  1 无基础  2 一年以下 3 一年以上
+          // 0 叉 1 对号
+          this.table.totalElements = +res.data.userListForTeam.totalElements
+          const _data = res.data.userListForTeam.content
+          _data.forEach((item) => {
+            item.birthday = GetAgeByBrithday(item.birthday)
+            if (item.sex === '0') {
+              item.sex = '- ·'
+            } else if (item.sex === '1') {
+              item.sex = '男 ·'
+            } else if (item.sex === '2') {
+              item.sex = '女 ·'
+            } else if (item.sex === '3') {
+              item.sex = '保密 ·'
+            }
+            if (item.birthday.indexOf(50) !== -1) {
+              item.birthday = '-'
+            }
+            item.buytime = timestamp(item.buytime, 6)
+            item.added_wechat_time = timestamp(item.added_wechat_time, 6)
+            item.added_group_time = timestamp(item.added_group_time, 6)
+            item.follow_time = timestamp(item.follow_time, 6)
+            if (item.base_painting === '0') {
+              item.base_painting = ' '
+            } else if (item.base_painting === '1') {
+              item.base_painting = '无基础'
+            } else if (item.base_painting === '2') {
+              item.base_painting = '一年以下'
+            } else if (item.base_painting === '3') {
+              item.base_painting = '一年以上'
             }
           })
+          if (this.tableDataEmpty) {
+            this.table.tableData = _data
+          } else {
+            this.table.tableData = []
+            this.tableDataEmpty = true
+          }
+        })
       } else {
         console.log('this.classId.classId.id  undefined')
       }
@@ -895,99 +828,66 @@ export default {
         } else {
           this.querysData = `{"team_id":${this.classId.classId.id},"team_type":${this.classId.type}}`
         }
-        // const logisticsSort = '{"login_time":"desc"}}'
-        axios
-          .post('/graphql/express', {
-            query: `{
-              stuExpressPage(query:${JSON.stringify(this.querysData)} , page: ${
-              this.table.currentPage
-            }, size: 20) {
-              empty
-              first
-              last
-              number
-              size
-              numberOfElements
-              totalElements
-              totalPages
-              content {
-                id
-                head
-                nickname
-                username
-                address_detail
-                province
-                city
-                area
-                express_status
-                ctime
-                mobile
-                user_id
-                order_id
-                receipt_tel
-                receipt_name
-                product_name
+        this.$http.Team.getStuExpressPage({
+          querysData: this.querysData,
+          currentPage: this.table.currentPage
+        }).then((res) => {
+          this.table.tableData = []
+          this.table.totalElements = +res.data.stuExpressPage.totalElements
+          const _data = res.data.stuExpressPage.content
+          _data.forEach((item) => {
+            item.ctime = timestamp(item.ctime, 6)
+            if (!item.nickname) {
+              item.nickname = ''
+              item.head = ''
+            }
+            if (item.product_name) {
+              item.product_name = `「${item.product_name}」`
+            } else {
+              item.product_name = '-'
+            }
+            const experssStatus = [
+              {
+                id: '0',
+                statusName: '-'
+              },
+              {
+                id: '1',
+                statusName: '待发货'
+              },
+              {
+                id: '2',
+                statusName: '已发货'
+              },
+              {
+                id: '3',
+                statusName: '已签收'
+              },
+              {
+                id: '4',
+                statusName: '签收失败'
+              },
+              {
+                id: '5',
+                statusName: '已退货'
+              },
+              {
+                id: '6',
+                statusName: '待审核'
+              },
+              {
+                id: '7',
+                statusName: '无效'
+              }
+            ]
+            for (let i = 0; i < experssStatus.length; i++) {
+              if (item.express_status === experssStatus[i].id) {
+                item.express_status = experssStatus[i].statusName
               }
             }
-          }`
           })
-          .then((res) => {
-            this.table.tableData = []
-            this.table.totalElements = +res.data.stuExpressPage.totalElements
-            const _data = res.data.stuExpressPage.content
-            _data.forEach((item) => {
-              item.ctime = timestamp(item.ctime, 6)
-              if (!item.nickname) {
-                item.nickname = ''
-                item.head = ''
-              }
-              if (item.product_name) {
-                item.product_name = `「${item.product_name}」`
-              } else {
-                item.product_name = '-'
-              }
-              const experssStatus = [
-                {
-                  id: '0',
-                  statusName: '-'
-                },
-                {
-                  id: '1',
-                  statusName: '待发货'
-                },
-                {
-                  id: '2',
-                  statusName: '已发货'
-                },
-                {
-                  id: '3',
-                  statusName: '已签收'
-                },
-                {
-                  id: '4',
-                  statusName: '签收失败'
-                },
-                {
-                  id: '5',
-                  statusName: '已退货'
-                },
-                {
-                  id: '6',
-                  statusName: '待审核'
-                },
-                {
-                  id: '7',
-                  statusName: '无效'
-                }
-              ]
-              for (let i = 0; i < experssStatus.length; i++) {
-                if (item.express_status === experssStatus[i].id) {
-                  item.express_status = experssStatus[i].statusName
-                }
-              }
-            })
-            this.table.tableData = _data
-          })
+          this.table.tableData = _data
+        })
       }
     },
     // 打开APP接口
@@ -998,117 +898,90 @@ export default {
         } else {
           this.querysData = `{"team_id":${this.classId.classId.id},"team_type":${this.classId.type}}`
         }
-        // const querys = `{"team_id":${this.classId.classId.id},"team_type":${this.classId.type}}`
-
-        axios
-          .post('/graphql/getClassLogin', {
-            query: `{
-          stuLoginPage(query:${JSON.stringify(this.querysData)}, page: ${
-              this.table.currentPage
-            }, size: 20) {
-            first
-            last
-            number
-            size
-            totalPages
-            totalElements
-            content {
-              id
-              head
-              username
-              nickname
-              ctime
-              mobile
-              status
-              login_time
-              express_ctime
-              first_login_time
-              page_origin
+        this.$http.Team.getStuLoginPage({
+          querysData: this.querysData,
+          currentPage: this.table.currentPage
+        }).then((res) => {
+          this.table.totalElements = +res.data.stuLoginPage.totalElements
+          const _data = res.data.stuLoginPage.content
+          _data.forEach((item) => {
+            item.express_ctime = timestamp(item.express_ctime, 6)
+            item.first_login_time = timestamp(item.first_login_time, 2)
+            if (!item.nickname) {
+              item.nickname = ''
+              item.head = ''
             }
-          }
-        }`
+            if (!item.login_time || item.login_time === '0') {
+              item.login_time = '-'
+              item.first_login_time = ''
+            } else {
+              item.first_login_time = `首次打开: ${item.first_login_time}`
+            }
+            if (item.page_origin === '') {
+              item.page_origin = ''
+            }
+            const status = [
+              {
+                id: '0',
+                statusName: '已注册'
+              },
+              {
+                id: '1',
+                statusName: '已体验课'
+              },
+              {
+                id: '2',
+                statusName: '体验完课'
+              },
+              {
+                id: '3',
+                statusName: '已月课'
+              },
+              {
+                id: '4',
+                statusName: '月课完课'
+              },
+              {
+                id: '5',
+                statusName: '已年课'
+              },
+              {
+                id: '6',
+                statusName: '年课完课'
+              },
+              {
+                id: '7',
+                statusName: '年课续费'
+              },
+              {
+                id: '8',
+                statusName: '注销失败'
+              },
+              {
+                id: '9',
+                statusName: '已季课'
+              },
+              {
+                id: '10',
+                statusName: '季课完课'
+              },
+              {
+                id: '11',
+                statusName: '已半年课'
+              },
+              {
+                id: '12',
+                statusName: '半年课完课'
+              }
+            ]
+            for (let i = 0; i < status.length; i++) {
+              if (item.status === status[i].id) {
+                item.status = status[i].statusName
+              }
+            }
           })
-          .then((res) => {
-            this.table.totalElements = +res.data.stuLoginPage.totalElements
-            const _data = res.data.stuLoginPage.content
-            _data.forEach((item) => {
-              item.express_ctime = timestamp(item.express_ctime, 6)
-              item.first_login_time = timestamp(item.first_login_time, 2)
-              if (!item.nickname) {
-                item.nickname = ''
-                item.head = ''
-              }
-              if (!item.login_time || item.login_time === '0') {
-                item.login_time = '-'
-                item.first_login_time = ''
-              } else {
-                item.first_login_time = `首次打开: ${item.first_login_time}`
-              }
-              if (item.page_origin === '') {
-                item.page_origin = ''
-              }
-              const status = [
-                {
-                  id: '0',
-                  statusName: '已注册'
-                },
-                {
-                  id: '1',
-                  statusName: '已体验课'
-                },
-                {
-                  id: '2',
-                  statusName: '体验完课'
-                },
-                {
-                  id: '3',
-                  statusName: '已月课'
-                },
-                {
-                  id: '4',
-                  statusName: '月课完课'
-                },
-                {
-                  id: '5',
-                  statusName: '已年课'
-                },
-                {
-                  id: '6',
-                  statusName: '年课完课'
-                },
-                {
-                  id: '7',
-                  statusName: '年课续费'
-                },
-                {
-                  id: '8',
-                  statusName: '注销失败'
-                },
-                {
-                  id: '9',
-                  statusName: '已季课'
-                },
-                {
-                  id: '10',
-                  statusName: '季课完课'
-                },
-                {
-                  id: '11',
-                  statusName: '已半年课'
-                },
-                {
-                  id: '12',
-                  statusName: '半年课完课'
-                }
-              ]
-              for (let i = 0; i < status.length; i++) {
-                if (item.status === status[i].id) {
-                  item.status = status[i].statusName
-                }
-              }
-            })
-            this.table.tableData = _data
-          })
+          this.table.tableData = _data
+        })
       }
     },
     // 参课和完课接口
@@ -1119,77 +992,48 @@ export default {
         } else {
           this.querysData = `{"team_id":${this.classId.classId.id},"team_type":${this.classId.type}}`
         }
-
-        axios
-          .post('/graphql/getClassComplete', {
-            query: `{
-            getClassCompPage(query:${JSON.stringify(this.querysData)}, page: ${
-              this.table.currentPage
-            }, size: 20) {
-              first
-              last
-              number
-              size
-              totalPages
-              totalElements
-              content {
-                mobile
-                buy_time
-                username
-                nickname
-                head
-                status
-                course_id
-                course_title
-                course_begin_time
-                course_current_num
-                join_course_state
-                join_course_time
-                complete_course_state
-                complete_course_time
-              }
+        this.$http.Team.getClassCompPage({
+          querysData: this.querysData,
+          currentPage: this.table.currentPage
+        }).then((res) => {
+          // ctime 已参课 utime 完课
+          // 0 1 已参加课  1 已完课
+          this.table.totalElements = +res.data.getClassCompPage.totalElements
+          const _data = res.data.getClassCompPage.content
+          _data.forEach((item) => {
+            if (item.buy_time) {
+              item.buy_time = timestamp(item.buy_time, 6)
+            } else {
+              item.buy_time = '-'
             }
-          }`
+            if (!item.nickname) {
+              item.nickname = ''
+              item.head = ''
+            }
+            if (item.course_current_num) {
+              item.course_begin_time = timestamp(item.course_begin_time, 7)
+              item.course_current_num = `${item.course_current_num}·${item.course_begin_time}`
+            } else {
+              item.course_current_num = '-'
+            }
+            if (item.join_course_state) {
+              item.join_course_time = timestamp(item.join_course_time, 6)
+            } else {
+              item.join_course_state = '-'
+              item.join_course_time = ''
+            }
+            if (item.complete_course_state) {
+              item.complete_course_time = timestamp(
+                item.complete_course_time,
+                6
+              )
+            } else {
+              item.complete_course_state = '-'
+              item.complete_course_time = ''
+            }
           })
-          .then((res) => {
-            // ctime 已参课 utime 完课
-            // 0 1 已参加课  1 已完课
-            this.table.totalElements = +res.data.getClassCompPage.totalElements
-            const _data = res.data.getClassCompPage.content
-            _data.forEach((item) => {
-              if (item.buy_time) {
-                item.buy_time = timestamp(item.buy_time, 6)
-              } else {
-                item.buy_time = '-'
-              }
-              if (!item.nickname) {
-                item.nickname = ''
-                item.head = ''
-              }
-              if (item.course_current_num) {
-                item.course_begin_time = timestamp(item.course_begin_time, 7)
-                item.course_current_num = `${item.course_current_num}·${item.course_begin_time}`
-              } else {
-                item.course_current_num = '-'
-              }
-              if (item.join_course_state) {
-                item.join_course_time = timestamp(item.join_course_time, 6)
-              } else {
-                item.join_course_state = '-'
-                item.join_course_time = ''
-              }
-              if (item.complete_course_state) {
-                item.complete_course_time = timestamp(
-                  item.complete_course_time,
-                  6
-                )
-              } else {
-                item.complete_course_state = '-'
-                item.complete_course_time = ''
-              }
-            })
-            this.table.tableData = _data
-          })
+          this.table.tableData = _data
+        })
       }
     },
     // 作品及点评
@@ -1200,99 +1044,51 @@ export default {
         } else {
           this.querysData = `{"team_id":${this.classId.classId.id},"team_type":${this.classId.type}}`
         }
-
-        axios
-          .post('/graphql/getStuComment', {
-            query: `{
-            getStuCommentPage(query:${JSON.stringify(this.querysData)}, page: ${
-              this.table.currentPage
-            }, size: 20) {
-              empty
-              first
-              last
-              number
-              size
-              numberOfElements
-              totalElements
-              totalPages
-              content {
-                id
-                team_name
-                current_lesson
-                buytime
-                classTitle
-                course_current_num
-                start_course_date
-                status
-                head
-                mobile
-                username
-                nickname
-                task_image
-                works_ctime
-                task_sound
-                task_video
-                task_video_second
-                task_sound_second
-                has_comment_ctime
-                has_comment_utime
-                has_listen_time
-                sound_comment
-                sound_comment_second
-                listenInfoArr {
-                  task_image
-                  works_ctime
-                  task_sound
-                  task_video
-                  task_video_second
-                  task_sound_second
-                }
-              }
+        this.$http.Team.getStuCommentPage({
+          querysData: this.querysData,
+          currentPage: this.table.currentPage
+        }).then((res) => {
+          // classTitle 课程名字
+          // has_listen_comment_ctime  已听点评的时间
+          // task_sound 点评的音频
+          // task_sound_second 音频多少秒
+          this.table.totalElements = +res.data.getStuCommentPage.totalElements
+          const _data = res.data.getStuCommentPage.content
+          _data.forEach((item, index) => {
+            item.buytime = timestamp(item.buytime, 6)
+            // item.works_ctime = timestamp(item.works_ctime, 6)
+            if (!item.nickname) {
+              item.nickname = ''
+              item.head = ''
             }
-          }`
-          })
-          .then((res) => {
-            // classTitle 课程名字
-            // has_listen_comment_ctime  已听点评的时间
-            // task_sound 点评的音频
-            // task_sound_second 音频多少秒
-            this.table.totalElements = +res.data.getStuCommentPage.totalElements
-            const _data = res.data.getStuCommentPage.content
-            _data.forEach((item, index) => {
-              item.buytime = timestamp(item.buytime, 6)
-              // item.works_ctime = timestamp(item.works_ctime, 6)
-              if (!item.nickname) {
-                item.nickname = ''
-                item.head = ''
-              }
-              if (item.course_current_num) {
-                item.start_course_date = timestamp(item.works_ctime, 7)
-                item.course_current_num = `${item.course_current_num}·${item.start_course_date}`
+            if (item.course_current_num) {
+              item.start_course_date = timestamp(item.works_ctime, 7)
+              item.course_current_num = `${item.course_current_num}·${item.start_course_date}`
+            } else {
+              item.course_current_num = '-'
+            }
+            if (item.works_ctime) {
+              item.works_ctime = timestamp(item.works_ctime, 6)
+            }
+            if (!item.task_image) {
+              item.task_image = ''
+              item.works_ctime = ''
+            }
+            if (item.has_comment_ctime) {
+              item.has_comment_ctime = timestamp(item.has_comment_ctime, 6)
+              item.has_comment_ctime = `已点评·${item.has_comment_ctime}`
+              if (item.has_listen_time) {
+                item.has_listen_time = timestamp(item.has_listen_time, 6)
+                item.has_listen_time = `已听点评·${item.has_listen_time}`
               } else {
-                item.course_current_num = '-'
+                item.has_listen_time = '未听点评'
               }
-              if (item.works_ctime) {
-                item.works_ctime = timestamp(item.works_ctime, 6)
-              }
-              if (!item.task_image) {
-                item.task_image = ''
-                item.works_ctime = ''
-              }
-              if (item.has_comment_ctime) {
-                item.has_comment_ctime = timestamp(item.has_comment_ctime, 6)
-                item.has_comment_ctime = `已点评·${item.has_comment_ctime}`
-                if (item.has_listen_time) {
-                  item.has_listen_time = timestamp(item.has_listen_time, 6)
-                  item.has_listen_time = `已听点评·${item.has_listen_time}`
-                } else {
-                  item.has_listen_time = '未听点评'
-                }
-              } else {
-                item.has_comment_ctime = '-'
-              }
-            })
-            this.table.tableData = _data
+            } else {
+              item.has_comment_ctime = '-'
+            }
           })
+          this.table.tableData = _data
+        })
       }
     },
     // 添加物流地址 子组件传值 掉物流接口
