@@ -102,17 +102,22 @@
         <el-table-column label="所属部门">
           <template slot-scope="scope">
             <div>
-              {{ scope.row.department ? scope.row.department.name : '-' }}
+              {{
+                scope.row.department
+                  ? `${scope.row.department.pname} / ${scope.row.department.name}`
+                  : '-'
+              }}
             </div>
           </template>
         </el-table-column>
         <el-table-column label="职务">
           <template slot-scope="scope">
-            <div>
+            <div v-if="scope.row.duty">
               <p v-for="item in scope.row.duty" :key="item.id">
                 {{ item ? item.name : '-' }}
               </p>
             </div>
+            <div v-else><p>-</p></div>
           </template>
         </el-table-column>
         <el-table-column label="职级">
@@ -132,14 +137,19 @@
         </el-table-column>
         <el-table-column label="绑定微信号">
           <template slot-scope="scope">
-            <!-- <div><img :src="scope.row.head_image" /></div> -->
-            <p
-              style="margin: 0;"
-              v-for="item in scope.row.weixin"
-              :key="item.id"
-            >
-              {{ item.weixin_no }}
-            </p>
+            <div v-if="scope.row.weixin">
+              <!-- <div><img :src="scope.row.head_image" /></div> -->
+              <p
+                style="margin: 0;"
+                v-for="item in scope.row.weixin"
+                :key="item.id"
+              >
+                {{ item.weixin_no }}
+              </p>
+            </div>
+            <div v-else>
+              <p>-</p>
+            </div>
           </template>
         </el-table-column>
         <!-- <el-table-column label="操作">
@@ -176,7 +186,12 @@ import MPagination from '@/components/MPagination/index.vue'
 import associatedWeChat from '../components/associatedWeChat.vue'
 
 export default {
-  props: [],
+  props: {
+    department: {
+      type: Object,
+      default: () => ({})
+    }
+  },
   components: {
     MSearch,
     MPagination,
@@ -208,18 +223,43 @@ export default {
       tableData: []
     }
   },
-  computed: {},
-  watch: {},
+  computed: {
+    currentDept() {
+      return this.department
+    }
+  },
+  watch: {
+    async department(dept = {}) {
+      console.log(dept)
+      // 根据部门ID获取老师ID
+      const { id, pid, children } = dept
+      const query = `{"department":{"id": ${id}, "pid": ${pid}, "children": ${JSON.stringify(
+        children
+      )}}}`
+      this.getData(1, JSON.stringify(query))
+    }
+  },
   created() {
-    this.createdUrl()
+    this.getData()
   },
   methods: {
-    createdUrl() {
+    getData(page = this.currentPage, query = '') {
       // tab数据
-      this.$http.Teacher.getTeacherPage().then((res) => {
-        this.tableData = res.data.TeacherPage
-          ? res.data.TeacherPage.content
-          : []
+      this.$http.Teacher.getTeacherPage(page, query).then((res) => {
+        console.log(res)
+
+        if (res && res.data && res.data.TeacherManagePage) {
+          const {
+            content = [],
+            number,
+            totalPages,
+            totalElements
+          } = res.data.TeacherManagePage
+          this.tableData = content
+          this.totalPages = +totalPages
+          this.currentPage = +number
+          this.totalElements = +totalElements
+        }
       })
     },
     // 搜索
@@ -260,6 +300,9 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+.orderStyle {
+  padding-bottom: 45px;
+}
 .editStyle {
   color: #0401ff;
   cursor: pointer;

@@ -34,17 +34,17 @@
       </el-form-item>
       <!-- 手机号 -->
       <el-form-item label="手机号" prop="phone" style="width:60%;">
-        <el-input v-model.number="ruleForm.phone"></el-input>
+        <el-input v-model.number="ruleForm.phone" :maxlength="11"></el-input>
       </el-form-item>
       <!-- 密码 -->
-      <!-- <el-form-item label="密码" prop="pass" style="width:60%;">
+      <el-form-item label="密码" prop="pass" style="width:60%;">
         <el-input
           type="password"
           v-model="ruleForm.pass"
           autocomplete="off"
           show-password
         ></el-input>
-      </el-form-item> -->
+      </el-form-item>
       <!-- 真实姓名 -->
       <el-form-item label="真实姓名" prop="name" style="width:60%;">
         <el-input v-model="ruleForm.name"></el-input>
@@ -67,6 +67,7 @@
       <!-- 所属部门 -->
       <el-form-item label="所属部门" prop="region">
         <el-cascader
+          :placeholder="ruleForm.region.name"
           v-model="ruleForm.region"
           :options="suDepartments"
           @change="handleChange"
@@ -79,7 +80,7 @@
         </el-cascader>
       </el-form-item>
       <!-- 职务 -->
-      <el-form-item label="职务" prop="postVerification">
+      <el-form-item label="职务" prop="positionVal">
         <el-select
           v-model="ruleForm.positionVal"
           multiple
@@ -96,10 +97,10 @@
       </el-form-item>
       <!-- 职级 -->
       <el-form-item label="职级" prop="rank">
-        <el-select v-model="ruleForm.rank" placeholder="请选择所属部门">
+        <el-select v-model="ruleForm.rank" placeholder="请选择职级">
           <el-option
-            v-for="(item, index) in rankList"
-            :key="index"
+            v-for="item in rankList"
+            :key="item.id"
             :label="item.name"
             :value="item.id"
           ></el-option>
@@ -155,7 +156,7 @@
       <el-form-item
         label="离职时间"
         required
-        v-show="ruleForm.workingState === 'LEAVE'"
+        v-if="ruleForm.workingState === 'LEAVE'"
       >
         <el-form-item prop="departureDate">
           <el-date-picker
@@ -173,9 +174,9 @@
           <el-radio
             v-for="(item, index) in accountList"
             :key="index"
-            :label="item.label"
-            :value="item.value"
-          ></el-radio>
+            :label="item.value"
+            >{{ item.label }}</el-radio
+          >
         </el-radio-group>
       </el-form-item>
       <!-- 分配微信号 -->
@@ -200,7 +201,7 @@
       <el-button
         type="primary"
         :disabled="newTitle === 2"
-        @click="submitForm('ruleForm')"
+        @click="submitHandle('ruleForm')"
         >提交</el-button
       >
       <el-button @click="resetForm('ruleForm')">取消</el-button>
@@ -230,18 +231,26 @@ export default {
       }, 500)
     }
     // 密码
-    // const validatePass = (rule, value, callback) => {
-    //   if (value === '') {
-    //     callback(new Error('请输入密码'))
-    //   } else {
-    //     if (this.ruleForm.checkPass !== '') {
-    //       this.$refs.ruleForm.validateField('checkPass')
-    //     }
-    //     callback()
-    //   }
-    // }
-
+    const validatePass = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error('请输入密码'))
+      } else {
+        if (this.ruleForm.checkPass !== '') {
+          this.$refs.ruleForm.validateField('checkPass')
+        }
+        callback()
+      }
+    }
+    const organizationValidate = (rule, value, callback) => {
+      console.log(value, '000')
+      if (!value.length) {
+        callback(new Error('请选择所属部门'))
+      }
+      callback()
+    }
     return {
+      myregion: [],
+      cansubmit: true,
       headers: { 'Content-Type': 'multipart/form-data' },
       dataOss: {},
       // title
@@ -263,9 +272,7 @@ export default {
       suDepartments: [],
       optionProps: {
         value: 'id',
-        label: 'name',
-        pid: 'pid',
-        children: 'children'
+        label: 'name'
       },
       // 职务
       position: [],
@@ -293,7 +300,7 @@ export default {
         // 手机号
         phone: '',
         // 密码
-        // pass: '',
+        pass: '',
         // 头像
         imageUrl: '',
         // 真实姓名
@@ -303,7 +310,7 @@ export default {
         // 性别
         resource: '',
         // 所属部门
-        region: '',
+        region: [],
         // 职务
         positionVal: [],
         // 职级
@@ -317,7 +324,7 @@ export default {
         // 离职时间
         departureDate: '',
         // 账号设置
-        accountSettings: '允许',
+        accountSettings: 'YES',
         // 在职状态
         workingState: 'TENURE',
         // 分配微信号
@@ -329,11 +336,11 @@ export default {
         // 手机号
         phone: [{ required: true, validator: checkAge, trigger: 'blur' }],
         // 密码
-        // pass: [{ required: true, validator: validatePass, trigger: 'blur' }],
+        pass: [{ required: true, validator: validatePass, trigger: 'blur' }],
         // 头像
-        headPortrait: [
-          { required: true, message: '请上传头像', trigger: 'blur' }
-        ],
+        // headPortrait: [
+        //   { required: true, message: '请上传头像', trigger: 'blur' }
+        // ],
         // 真实姓名
         name: [
           { required: true, message: '请填写真实姓名', trigger: 'blur' },
@@ -350,11 +357,16 @@ export default {
         ],
         // 所属部门
         region: [
-          { required: true, message: '请选择所属部门', trigger: 'change' }
+          {
+            type: 'array',
+            required: true,
+            validator: organizationValidate,
+            trigger: 'change'
+          }
         ],
         // 职务
-        postVerification: [
-          { required: true, message: '请选择职务', trigger: 'blur' }
+        positionVal: [
+          { required: true, message: '请选择职务', trigger: 'change' }
         ],
         // 职级
         rank: [{ required: true, message: '请选择职级', trigger: 'change' }],
@@ -442,7 +454,9 @@ export default {
         const departmentWith = []
         departmentData.forEach((val) => {
           if (val.pid === 0) {
-            departmentWith.push(Object.assign(val, { children: [] }))
+            val.children = []
+            departmentWith.push(val)
+            // departmentWith.push(Object.assign(val, { children: [] }))
           }
         })
         departmentData.forEach((val) => {
@@ -453,6 +467,7 @@ export default {
           })
         })
         this.suDepartments = departmentWith
+        console.log(this.suDepartments, '000')
       })
       // 职级
       this.$http.Teacher.TeacherRankList().then((res) => {
@@ -475,12 +490,15 @@ export default {
             this.ruleForm.name = res.payload.teacher.realName
             this.ruleForm.nickname = res.payload.teacher.nickname
             this.ruleForm.resource = res.payload.teacher.sex
-            // this.ruleForm.positionVal = res.payload.duty
-            // this.ruleForm.rank = res.payload.rank
+            this.ruleForm.region = res.payload.department
+            this.ruleForm.positionVal = res.payload.duty
+            this.ruleForm.rank = res.payload.rank
             this.ruleForm.inductionDate = new Date(res.payload.teacher.joinDate)
             this.ruleForm.departureDate = new Date(
               res.payload.teacher.leaveDate
             )
+            this.ruleForm.groupData = new Date(res.payload.teacher.leaveTrain)
+            this.ruleForm.accountSettings = res.payload.teacher.isLogin
             console.log(res.payload, '教师详情')
           }
         )
@@ -495,14 +513,63 @@ export default {
         }
       }
     },
+    submitHandle(formName) {
+      this.cansubmit && this.submitForm(formName)
+    },
     // 提交按钮
     submitForm(formName) {
+      this.cansubmit = false
+      const positionValId = []
+      this.ruleForm.positionVal.forEach((val) => {
+        positionValId.push({ id: val })
+      })
+      const params = {
+        teacher: {
+          id: this.$route.query.teacherId,
+          headImage: this.ruleForm.imageUrl,
+          phone: this.ruleForm.phone,
+          password: this.ruleForm.pass,
+          realName: this.ruleForm.name,
+          nickname: this.ruleForm.nickname,
+          sex: this.ruleForm.resource,
+          joinDate: this.ruleForm.inductionDate,
+          leaveDate: this.ruleForm.departureDate,
+          leaveTrain: this.ruleForm.groupData,
+          status: this.ruleForm.workingState,
+          isLogin: this.ruleForm.accountSettings
+        },
+        department: { id: this.ruleForm.region.pop() },
+        duty: positionValId,
+        rank: { id: this.ruleForm.rank }
+      }
+
+      console.log(params, 'params')
+      // this.$refs.codeLoginForm.validateField('myregion', (valid) => {
+      //   if (!valid) {
+      //     return false
+      //   }
+      // })
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          alert('submit!')
+          if (!this.$route.query.teacherId) {
+            this.$http.Teacher.createTeacher(params).then((res) => {
+              if (res.code === 4) {
+                this.$message.error(res.erorrs)
+              } else {
+                this.cansubmit = true
+                this.$message({
+                  message: '添加成功',
+                  type: 'success'
+                })
+                setTimeout(() => {
+                  this.$router.push({ path: '/teacherManagement' })
+                }, 500)
+              }
+            })
+          }
         } else {
           console.log('error submit!!')
-          return false
+          this.ruleForm.region = []
         }
       })
     },
