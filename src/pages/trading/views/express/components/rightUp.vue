@@ -24,7 +24,7 @@
       />
     </div>
     <!-- v-if="!teacherId" TOSS -->
-    <div class="search-export">
+    <div class="search-export" v-if="!teacherId">
       <!-- <div class="search-export"> -->
       <div>
         <el-button size="small" type="primary" @click="showExportDialog"

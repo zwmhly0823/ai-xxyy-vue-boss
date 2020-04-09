@@ -28,6 +28,12 @@
         :current-page="currentPage"
         :total="total"
         :pager-count="pagerCount"
+        :page-sizes="
+          pageSizeArr && pageSizeArr.length !== 0
+            ? pageSizeArr
+            : [10, 20, 30, 40, 50, 100]
+        "
+        @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
       >
         <span class="page-slot"> {{ page }} / 共{{ totalPage }}页</span>
@@ -40,6 +46,11 @@
 import { mapGetters } from 'vuex'
 export default {
   props: {
+    // 每页显示条数
+    pageSizeArr: {
+      type: Array,
+      default: null
+    },
     // width动态传参
     open: {
       type: String,
@@ -87,14 +98,17 @@ export default {
     },
     defaultLayout() {
       // 这里是有顺序的 ！！！
-      const layout = this.showPager
+      let layout = this.showPager
         ? 'prev, slot, pager, next, total'
         : 'prev, slot, next, total'
+      if (this.pageSizeArr) {
+        layout = layout.concat(',sizes')
+      }
       return layout
     },
     // 总页数. 如果有 pageCount 用 pageCount, 没有用 total / pageSize
     totalPage() {
-      return this.pageCount || Math.ceil(this.total / this.pageSize) || 1
+      return Math.ceil(this.total / this.sizePage) || 1
     },
     page: {
       get() {
@@ -105,7 +119,17 @@ export default {
       }
     }
   },
+  data() {
+    return {
+      sizePage: this.pageSize
+    }
+  },
   methods: {
+    // 选择不同条数数
+    handleSizeChange(page) {
+      this.sizePage = page
+      this.$emit('current-pagesizes', this.sizePage)
+    },
     handleCurrentChange(page) {
       this.page = page
       // 回调

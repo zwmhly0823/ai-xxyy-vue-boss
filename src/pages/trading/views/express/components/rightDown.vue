@@ -13,8 +13,9 @@
       @select="handleSelect"
       @select-all="handleAllSelect"
     >
-      <el-table-column type="selection" width="25"> </el-table-column>
-      <el-table-column width="25">
+      <el-table-column type="selection" width="25" v-if="!teacherId">
+      </el-table-column>
+      <el-table-column width="25" v-if="!teacherId">
         <template slot-scope="scope" v-if="dataExp.id == 6">
           <!-- <div v-show="false">{{ scope }}</div> -->
           <el-dropdown trigger="click">
@@ -203,7 +204,9 @@
       :current-page="currentPage"
       :page-count="totalPages"
       :total="totalElements"
+      :pageSizeArr="[20, 100, 200, 500, 1000]"
       @current-change="handleSizeChange"
+      @current-pagesizes="handleChangeSize"
       show-pager
       open="calc(100vw - 170px - 24px - 180px)"
       close="calc(100vw - 50px - 24px - 180px)"
@@ -247,6 +250,11 @@ export default {
       this.staffId = JSON.parse(staff).id
     }
     const teacherId = isToss()
+    console.log(
+      teacherId,
+      'v-show="!teacherId"v-show="!teacherId"v-show="!teacherId"'
+    )
+
     if (teacherId) {
       this.teacherId = teacherId
     }
@@ -308,10 +316,16 @@ export default {
         type: 'primary',
         color: '#0bbd87'
       },
-      staffId: ''
+      staffId: '',
+      currentItem: 20
     }
   },
   methods: {
+    // 页数问题
+    handleChangeSize(pageItem) {
+      this.currentItem = pageItem
+      this.getExpressList(this.dataExp.id)
+    },
     // 审核通过 确定
     checkPass() {
       this.dialogVisiblePass = false
@@ -327,7 +341,7 @@ export default {
           return temp
         })
         const params = {
-          operatorId: this.teacherId,
+          operatorId: this.staffId,
           supplierId: this.value1,
           deliverys: deliverys
         }
@@ -398,10 +412,8 @@ export default {
     handleSelectionChangeCell(row, column, cell, event) {
       this.checkParams = []
       this.checkParams.push(row)
-      console.log(row, 'row----------------------------')
       this.expressNu = []
       this.expressNu.push(row.id)
-      // console.log(row, column, cell, event, 'row, column, cell, event')
     },
     check(params, src = `/api/o/v1/express/deliveryRequest`) {
       axios
@@ -530,9 +542,9 @@ export default {
       // console.log(query)
       axios
         .post('/graphql/logisticsList', {
-          query: `{LogisticsListPage(query:${JSON.stringify(
-            query
-          )}, size: 20, page: ${this.currentPage}) {
+          query: `{LogisticsListPage(query:${JSON.stringify(query)}, size: ${
+            this.currentItem
+          }, page: ${this.currentPage}) {
     first
     last
     number
