@@ -24,5 +24,38 @@ export default {
       `/api/s/v1/coupon/send/batch/sendCoupon?couponId=${id}`,
       params
     )
+  },
+  // 生成完课榜 / 生成作品展
+  finishClassList({ queryParams }) {
+    return axios.post('/graphql/getStuRankingList', {
+      query: `{
+                getStuComRankingList(query : ${JSON.stringify(queryParams)}){
+                student_id
+                mobile
+                username
+                head
+                completeArr {
+                current_lesson
+                is_complete
+                }
+            }
+          }`
+    })
+  },
+  exhibitionOfWorks({ QueryParams }) {
+    return axios.post('/graphql/getStuRankingList', {
+      query: `{
+            getStuTaskRankingList(query : ${JSON.stringify(QueryParams)}){
+            student_id
+            mobile
+            username
+            head
+            completeArr {
+            current_lesson
+            task_image
+                }
+                }
+                  }`
+    })
   }
 }
