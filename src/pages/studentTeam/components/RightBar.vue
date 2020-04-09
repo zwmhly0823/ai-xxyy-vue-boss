@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-13 16:53:41
  * @LastEditors: zhubaodong
- * @LastEditTime: 2020-04-08 16:31:29
+ * @LastEditTime: 2020-03-23 21:50:41
  -->
 <template>
   <div class="right-container">
@@ -176,7 +176,8 @@ export default {
     return {
       classMessage: {},
       cout: 0,
-      teacherId: ''
+      teacherId: '',
+      tableDataEmpty: true
     }
   },
   computed: {},
@@ -186,10 +187,11 @@ export default {
       if (teacherId) {
         this.teacherId = teacherId
       }
-      if (vals.classId) {
+      if (vals.classId && vals.classId.id) {
+        this.tableDataEmpty = true
         this.getClassTeacher(vals.classId.id)
       } else {
-        this.classMessage = ''
+        this.tableDataEmpty = false
       }
     }
   },
@@ -237,6 +239,7 @@ export default {
           }
         })
         .then((res) => {
+          console.log(res.data.detail.team_state, 'res.data.detail.team_state')
           if (Number(res.data.detail.team_state) === 0) {
             res.data.detail.state = '待开课'
           } else if (Number(res.data.detail.team_state) === 1) {
@@ -247,44 +250,53 @@ export default {
             res.data.detail.state = '今日开课'
           }
           /** localstorage teacher 添加 “teacher_wx” 字段 */
-          const teacherWx = res.data.detail.teacher_wx
           if (this.teacherId) {
             const teacher = JSON.parse(localStorage.getItem('teacher'))
+            const teacherWx = res.data.detail.teacher_wx
             teacherWx && (teacher.teacher_wx = teacherWx)
             localStorage.setItem('teacher', JSON.stringify(teacher))
-          } else {
-            const staff = JSON.parse(localStorage.getItem('staff'))
-            teacherWx && (staff.teacher_wx = teacherWx)
-            localStorage.setItem('staff', JSON.stringify(staff))
           }
           /** localstorage teacher 添加 “teacher_wx” 字段 */
 
-          res.data.detail.todayTrans =
-            res.data.detail.statictis.today_order /
-            this.classId.classId.enrolled
-          res.data.detail.yesterdayTrans =
-            res.data.detail.statictis.yesterday_order /
-            this.classId.classId.enrolled
-          res.data.detail.allTrans =
-            res.data.detail.statictis.order_all / this.classId.classId.enrolled
+          if (this.classId && this.classId.classId) {
+            res.data.detail.todayTrans =
+              res.data.detail.statictis.today_order /
+              this.classId.classId.enrolled
+            res.data.detail.yesterdayTrans =
+              res.data.detail.statictis.yesterday_order /
+              this.classId.classId.enrolled
+            res.data.detail.allTrans =
+              res.data.detail.statictis.order_all /
+              this.classId.classId.enrolled
 
-          res.data.detail.week = this.classId.classId.week
-          res.data.detail.pre_enroll = this.classId.classId.pre_enroll
-          res.data.detail.timebegin = dayjs
-            .unix(Number(this.classId.classId.ctime) / 1000)
-            .format('MM-DD  hh:mm:ss')
-          res.data.detail.onetime = dayjs
-            .unix(Number(this.classId.classId.start_day) / 1000)
-            .format('YYMMDD')
-          res.data.detail.formatStartDay = this.classId.classId.formatStartDay
-          res.data.detail.formatEndDay = this.classId.classId.formatEndDay
-          this.classMessage = res.data
+            res.data.detail.week = this.classId.classId.week
+            res.data.detail.pre_enroll = this.classId.classId.pre_enroll
+            res.data.detail.timebegin = dayjs
+              .unix(Number(this.classId.classId.ctime) / 1000)
+              .format('MM-DD  hh:mm:ss')
+            res.data.detail.onetime = dayjs
+              .unix(Number(this.classId.classId.start_day) / 1000)
+              .format('YYMMDD')
+            res.data.detail.formatStartDay = this.classId.classId.formatStartDay
+            res.data.detail.formatEndDay = this.classId.classId.formatEndDay
+          }
+          if (this.tableDataEmpty) {
+            this.classMessage = res.data
+          } else {
+            this.tableDataEmpty = false
+            this.classMessage = []
+          }
+
           // this.classMessage2 = res.dataformatEndDay
+
+          console.log(
+            this.classMessage,
+            this.classMessage.statictis,
+            res.data,
+            'res'
+          )
         })
     }
-  },
-  mounted() {
-    console.log(this.classId)
   }
 }
 </script>
