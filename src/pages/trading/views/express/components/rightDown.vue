@@ -358,7 +358,7 @@ export default {
           return temp
         })
         const params = {
-          operatorId: this.teacherId,
+          operatorId: this.staffId,
           supplierId: this.value1,
           deliverys: deliverys
         }
@@ -567,6 +567,7 @@ export default {
       receipt_name
       receipt_tel
       express_nu
+      level
       ctime
       utime
       sup
