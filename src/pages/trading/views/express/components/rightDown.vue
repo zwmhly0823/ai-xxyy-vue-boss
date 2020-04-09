@@ -567,6 +567,7 @@ export default {
       receipt_name
       receipt_tel
       express_nu
+      level
       ctime
       utime
       sup
