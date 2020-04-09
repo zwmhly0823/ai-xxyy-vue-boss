@@ -35,6 +35,7 @@ export default {
             head_image
             department {
               id
+              name
             }
             duty {
               id

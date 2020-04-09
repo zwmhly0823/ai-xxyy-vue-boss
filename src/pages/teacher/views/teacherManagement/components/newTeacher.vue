@@ -1,10 +1,9 @@
 <template>
   <div class="newteache-style">
     <div class="newteacher-title">
-      {{ newTitle }}
-      <P v-show="newTitle === ''">{{ newTitle }}新增辅导老师</P>
-      <P v-show="newTitle === 1">{{ newTitle }}编辑辅导老师</P>
-      <P v-show="newTitle === 2">{{ newTitle }}查看辅导老师</P>
+      <P v-if="newTitle === ''">新增辅导老师</P>
+      <P v-if="newTitle === '1'">编辑辅导老师</P>
+      <P v-if="newTitle === '2'">查看辅导老师</P>
     </div>
     <el-form
       :model="ruleForm"
@@ -430,7 +429,7 @@ export default {
     console.log(query, 'query')
     // query.index ''/新建老师  1/编辑老师 2/查看老师
     if (query && query.index) this.newTitle = query.index
-    if (query.index === 2) this.formDisabled = true
+    if (query.index === '2') this.formDisabled = true
     // 接口调用
     this.createdUrl()
   },

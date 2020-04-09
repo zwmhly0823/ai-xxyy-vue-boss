@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-24 18:20:12
  * @LastEditors: zhubaodong
- * @LastEditTime: 2020-04-07 22:19:08
+ * @LastEditTime: 2020-04-02 17:15:17
  -->
 
 <template>
@@ -18,7 +18,6 @@
           :name="phone"
           :onlyPhone="onlyPhone"
           :tip="phoneTip"
-          :last_team_id="last_team_id"
         />
       </el-form-item>
 
@@ -78,7 +77,6 @@
           :stageName="stage"
           :supName="sup"
           :levelName="level"
-          :addSupS="addSupS"
           style="margin-bottom:0px"
         />
       </el-form-item>
@@ -104,6 +102,10 @@
           </el-button>
         </el-popover>
       </el-form-item> -->
+
+      <el-form-item>
+        <slot name="searchItems"></slot>
+      </el-form-item>
     </el-form>
     <slot name="otherSearch"></slot>
   </el-card>
@@ -150,10 +152,6 @@ export default {
       type: String,
       default: '' // sup
     },
-    addSupS: {
-      type: Boolean,
-      default: false // sup+S ?
-    },
     // 级别
     level: {
       type: String,
@@ -191,11 +189,6 @@ export default {
     },
     // team_id
     teamId: {
-      type: String,
-      default: ''
-    },
-    // 查询班级  搜到用户的最后一个班
-    last_team_id: {
       type: String,
       default: ''
     },
@@ -280,7 +273,7 @@ export default {
     getOutTradeNo(res) {
       this.setSeachParmas(res, [this.outTradeNo || 'out_trade_no'], 'wildcard')
     },
-    // 选择商品名
+    // 选择订单号
     getProductName(res) {
       this.setSeachParmas(res, [this.productName || 'product_name'])
     },

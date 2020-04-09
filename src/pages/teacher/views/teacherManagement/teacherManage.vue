@@ -29,13 +29,16 @@ export default {
   props: [],
   components: { LeftBar, RightBar },
   data() {
-    return {}
+    return {
+      current: {}
+    }
   },
   computed: {},
   watch: {},
   methods: {
     leftBarHandler(data) {
       console.log(data)
+      this.current = data
     }
   },
   created() {},
@@ -54,6 +57,7 @@ export default {
     overflow-x: hidden;
     flex: 1;
     margin: 10px;
+    padding-bottom: 45px;
   }
   .grid-content {
     background: white;
