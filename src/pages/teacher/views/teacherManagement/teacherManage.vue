@@ -15,7 +15,7 @@
     </el-col>
     <el-col class="teacherContainer-right">
       <div class="grid-content">
-        <right-bar />
+        <right-bar :department="currentDept" />
       </div>
     </el-col>
   </el-row>
@@ -30,7 +30,8 @@ export default {
   components: { LeftBar, RightBar },
   data() {
     return {
-      current: {}
+      // 当前选择的机构
+      currentDept: {}
     }
   },
   computed: {},
@@ -38,7 +39,7 @@ export default {
   methods: {
     leftBarHandler(data) {
       console.log(data)
-      this.current = data
+      this.currentDept = data
     }
   },
   created() {},

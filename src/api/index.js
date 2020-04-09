@@ -12,7 +12,7 @@ import Order from './modules/Order' // 订单接口
 import Team from './modules/Team' // 班级接口
 import Express from './modules/Express' // 物流接口
 import StudentTerm from './modules/StudentTerm' // 班级graphql接口
-import Teacher from './modules/teacher' // 老师模块接口
+import Teacher from './modules/Teacher' // 老师模块接口
 
 export default Object.assign(
   {},

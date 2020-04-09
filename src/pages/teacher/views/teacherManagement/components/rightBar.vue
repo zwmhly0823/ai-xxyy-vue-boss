@@ -176,7 +176,12 @@ import MPagination from '@/components/MPagination/index.vue'
 import associatedWeChat from '../components/associatedWeChat.vue'
 
 export default {
-  props: [],
+  props: {
+    department: {
+      type: Object,
+      default: () => ({})
+    }
+  },
   components: { MSearch, MPagination, associatedWeChat },
   data() {
     return {
@@ -204,18 +209,42 @@ export default {
       tableData: []
     }
   },
-  computed: {},
-  watch: {},
+  computed: {
+    currentDept() {
+      return this.department
+    }
+  },
+  watch: {
+    department(dept = {}) {
+      console.log(dept)
+      // 根据部门ID获取老师ID
+      const { id, pid, children } = dept
+      console.log(id, pid, children)
+
+      // if(){}
+    }
+  },
   created() {
-    this.createdUrl()
+    this.getData()
   },
   methods: {
-    createdUrl() {
+    getData() {
       // tab数据
-      this.$http.Teacher.getTeacherPage().then((res) => {
-        this.tableData = res.data.TeacherPage
-          ? res.data.TeacherPage.content
-          : []
+      const page = this.currentPage
+      const query = ''
+      this.$http.Teacher.getTeacherPage(page, query).then((res) => {
+        if (res && res.data && res.data.TeacherManagePage) {
+          const {
+            content = [],
+            number,
+            totalPages,
+            totalElements
+          } = res.data.TeacherManagePage
+          this.tableData = content
+          this.totalPages = +totalPages
+          this.currentPage = +number
+          this.totalElements = +totalElements
+        }
       })
     },
     // 搜索

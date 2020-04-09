@@ -11,7 +11,7 @@
     <div class="title">组织结构</div>
     <el-tree
       class="left-container-tree"
-      :data="experiencelist"
+      :data="departmentList"
       default-expand-all
       node-key="customId"
       :current-node-key="0"
@@ -70,7 +70,7 @@ export default {
       }, // 定义节点名称
       toolsCount: null, // 是否显示配置按钮
       toolsMenu: false, // 右键配置显示列表
-      experiencelist: []
+      departmentList: []
     }
   },
   computed: {},
@@ -109,7 +109,7 @@ export default {
   },
   async created() {
     await this.$http.Teacher.getDepartmentTree(1).then((res) => {
-      this.experiencelist = res.payload
+      this.departmentList = res.payload
       console.log(res)
     })
   }

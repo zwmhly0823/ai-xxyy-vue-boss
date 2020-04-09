@@ -16,11 +16,13 @@ export default {
     return axios.get(`/api/t/v1/department/getDepartmentTree?Id=${id}`)
   },
   // 老师列表
-  getTeacherPage() {
+  getTeacherPage(page = 1, query = '') {
     return axios.post('/graphql/boss', {
       query: `{
-        TeacherPage(page: 1) {
+        TeacherManagePage(page: ${page}, query: "${query}") {
+          number
           totalPages
+          totalElements
           content {
             id
             realname
@@ -47,6 +49,17 @@ export default {
               weixin_no
             }
           }
+        }
+      }`
+    })
+  },
+  // 老师部门关系
+  getTeacherDepartmentRelation(query) {
+    return axios.post('/graphql/boss', {
+      query: `{
+        TeacherDepartmentRelation(query: ${query}){
+          id
+          name
         }
       }`
     })
