@@ -247,11 +247,15 @@ export default {
             res.data.detail.state = '今日开课'
           }
           /** localstorage teacher 添加 “teacher_wx” 字段 */
+          const teacherWx = res.data.detail.teacher_wx
           if (this.teacherId) {
             const teacher = JSON.parse(localStorage.getItem('teacher'))
-            const teacherWx = res.data.detail.teacher_wx
             teacherWx && (teacher.teacher_wx = teacherWx)
             localStorage.setItem('teacher', JSON.stringify(teacher))
+          } else {
+            const staff = JSON.parse(localStorage.getItem('staff'))
+            teacherWx && (staff.teacher_wx = teacherWx)
+            localStorage.setItem('staff', JSON.stringify(staff))
           }
           /** localstorage teacher 添加 “teacher_wx” 字段 */
 
