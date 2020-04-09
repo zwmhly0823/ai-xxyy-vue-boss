@@ -248,15 +248,15 @@ export default {
       checkParams: [],
       options: [
         {
-          value1: '选项1',
+          value1: '2',
           label: '中通云仓'
         },
         {
-          value1: '选项2',
+          value1: '1',
           label: '京东云仓'
         }
       ],
-      value1: '选项1',
+      value1: '2',
       dialogVisiblePass: false,
       expressBatch: [],
       expressNu: [],
@@ -304,34 +304,43 @@ export default {
     checkPass() {
       this.dialogVisiblePass = false
       if (this.selectNum > 1) {
-        const val = this.checkBatchParams.map((item) => {
-          const temp = [item.id, item.sup, item.product_name, item.term]
+        const deliverys = this.checkBatchParams.map((item) => {
+          const temp = {
+            expressId: item.id,
+            term: item.term,
+            sup: item.sup,
+            level: item.level,
+            productName: item.product_name
+          }
           return temp
         })
-        console.log(val, '-------------------')
-        this.check(val)
+        const pass = JSON.stringify(deliverys)
+        this.check(pass)
       } else {
         const val = this.checkParams.map((item) => {
-          const temp = [item.id, item.sup, item.product_name, item.term]
+          const temp = {
+            expressId: item.id,
+            term: item.term,
+            sup: item.sup,
+            level: item.level,
+            productName: item.product_name
+          }
           return temp
         })
         console.log(val, '-------------------')
-
-        this.check(val)
+        const pass = JSON.stringify(val)
+        this.check(pass)
       }
 
       console.log('审核通过')
     },
     // 审核通过时选择物流承运商
-    selectExpress(val) {
-      console.log(this.value, val, 'this.value')
-    },
+    selectExpress(val) {},
     handleClosePass() {
       this.dialogVisiblePass = false
     },
     handleBatchPass(val) {
       this.dialogVisiblePass = true
-      this.check(val)
     },
     inputValidator(val) {
       return !!(val && val.length > 0)
@@ -366,7 +375,6 @@ export default {
     handlePass(val) {
       console.log('processing-pass', val)
       this.dialogVisiblePass = true
-      this.check(val)
     },
     handleSelectionChangeCell(row, column, cell, event) {
       this.checkParams = []
@@ -378,7 +386,7 @@ export default {
     },
     check(
       id,
-      src = `/api/o/v1/express/deliveryRequest?operatorId=${this.staffId}`
+      src = `/api/o/v1/express/deliveryRequest?operatorId=${this.teacherId}&supplierId=${this.value1}`
     ) {
       axios
         .post(src, id)
