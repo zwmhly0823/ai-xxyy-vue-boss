@@ -153,19 +153,10 @@
           </span>
         </el-dialog>
       </div>
-      <!-- <img
-        v-show="show"
-        :src="dataURL"
-        alt
-        class="exportImg"
-        finishBox
-        @load="handlePosterLoaded"
-        crossorigin="anonymous"
-      /> -->
       <!-- 生成完课榜图片-->
       <div
         v-for="(item, index) in finishLessonData.childListData"
-        :key="index"
+        :key="index + 1"
         class="finishBox"
       >
         <slot>
@@ -195,7 +186,6 @@
 // import checkBox from '@/components/MCheckBox/index'
 import detailsTable from './components/detailsTable'
 import MSearch from '@/components/MSearch/index.vue'
-import axios from '@/api/axios'
 import { timestamp, GetAgeByBrithday, isToss } from '@/utils/index'
 import finishclass from './FinishClass'
 import exhibition from './Exhibition'
@@ -665,47 +655,34 @@ export default {
         'request - params  -->> ',
         'team_id: ' + teamId + ' , lesson :' + lesson + ' , week : ' + week
       )
-      axios
-        .post('/graphql/getStuRankingList', {
-          query: `{
-                getStuComRankingList(query : ${JSON.stringify(queryParams)}){
-                student_id
-                mobile
-                username
-                head
-                completeArr {
-                current_lesson
-                is_complete
-                }
-            }
-          }`
-        })
-        .then((res) => {
-          if (res.error) {
-            console.log(res.error, '接口错误信息-------------->')
-            return
+      this.$http.Team.finishClassList({
+        queryParams: queryParams
+      }).then((res) => {
+        if (res.error) {
+          console.log(res.error, '接口错误信息-------------->')
+          return
+        }
+        // 生成完课榜（多页）
+        const childLastData = []
+        if (res.data.getStuComRankingList) {
+          const stuArrLength = res.data.getStuComRankingList.length
+          const createDefineNum = 20
+          const arevNum = Math.ceil(
+            stuArrLength / Math.ceil(stuArrLength / createDefineNum)
+          )
+          // 重构数组
+          for (var j = 0; j < stuArrLength; j++) {
+            const tmpnum = Math.floor(j / arevNum)
+            childLastData[tmpnum] = childLastData[tmpnum]
+              ? childLastData[tmpnum]
+              : []
+            childLastData[tmpnum].push(res.data.getStuComRankingList[j])
           }
-          // 生成完课榜（多页）
-          const childLastData = []
-          if (res.data.getStuComRankingList) {
-            const stuArrLength = res.data.getStuComRankingList.length
-            const createDefineNum = 20
-            const arevNum = Math.ceil(
-              stuArrLength / Math.ceil(stuArrLength / createDefineNum)
-            )
-            // 重构数组
-            for (var j = 0; j < stuArrLength; j++) {
-              const tmpnum = Math.floor(j / arevNum)
-              childLastData[tmpnum] = childLastData[tmpnum]
-                ? childLastData[tmpnum]
-                : []
-              childLastData[tmpnum].push(res.data.getStuComRankingList[j])
-            }
-          }
-          console.log('lastChildData ------> ', childLastData)
-          this.finishLessonData.childListData = childLastData
-          this.finishLessonData.imgNum = childLastData.length
-        })
+        }
+        console.log('lastChildData ------> ', childLastData)
+        this.finishLessonData.childListData = childLastData
+        this.finishLessonData.imgNum = childLastData.length
+      })
     },
     // 请求作品展-接口数据
     getStuTaskRankingList(teamId, week) {
@@ -717,48 +694,35 @@ export default {
         text: '图片正在生成中'
       })
       const QueryParams = `{"team_id" : ${teamId}, "week" :  "${week}"}`
-      axios
-        .post('/graphql/getStuRankingList', {
-          query: `{
-            getStuTaskRankingList(query : ${JSON.stringify(QueryParams)}){
-            student_id
-            mobile
-            username
-            head
-            completeArr {
-            current_lesson
-            task_image
-                }
-                }
-                  }`
-        })
-        .then((res) => {
-          console.log(res, 123456789)
-          if (res.error) {
-            console.log(res.error, '接口错误信息-------------->')
-            return
+      this.$http.Team.exhibitionOfWorks({
+        QueryParams: QueryParams
+      }).then((res) => {
+        console.log(res, 123456789)
+        if (res.error) {
+          console.log(res.error, '接口错误信息-------------->')
+          return
+        }
+        // 生成作品展（多页）
+        const childLastData = []
+        if (res.data.getStuTaskRankingList) {
+          const stuArrLength = res.data.getStuTaskRankingList.length
+          const createDefineNum = 28
+          const arevNum = Math.ceil(
+            stuArrLength / Math.ceil(stuArrLength / createDefineNum)
+          )
+          // 重构数组
+          for (var j = 0; j < stuArrLength; j++) {
+            const tmpnum = Math.floor(j / arevNum)
+            childLastData[tmpnum] = childLastData[tmpnum]
+              ? childLastData[tmpnum]
+              : []
+            childLastData[tmpnum].push(res.data.getStuTaskRankingList[j])
           }
-          // 生成作品展（多页）
-          const childLastData = []
-          if (res.data.getStuTaskRankingList) {
-            const stuArrLength = res.data.getStuTaskRankingList.length
-            const createDefineNum = 28
-            const arevNum = Math.ceil(
-              stuArrLength / Math.ceil(stuArrLength / createDefineNum)
-            )
-            // 重构数组
-            for (var j = 0; j < stuArrLength; j++) {
-              const tmpnum = Math.floor(j / arevNum)
-              childLastData[tmpnum] = childLastData[tmpnum]
-                ? childLastData[tmpnum]
-                : []
-              childLastData[tmpnum].push(res.data.getStuTaskRankingList[j])
-            }
-          }
-          console.log('lastChildData ------> ', childLastData)
-          this.ExhibitionData.childListData = childLastData
-          this.ExhibitionData.imgNum = childLastData.length
-        })
+        }
+        console.log('lastChildData ------> ', childLastData)
+        this.ExhibitionData.childListData = childLastData
+        this.ExhibitionData.imgNum = childLastData.length
+      })
     },
     // 绘制生成完课榜图片
     canvasStart(res) {
