@@ -231,12 +231,16 @@ export default {
   },
   watch: {
     async department(dept = {}) {
-      console.log(dept)
       // 根据部门ID获取老师ID
       const { id, pid, children } = dept
       const query = `{"department":{"id": ${id}, "pid": ${pid}, "children": ${JSON.stringify(
         children
       )}}}`
+      if (id === '0') {
+        this.query = ''
+        this.getData()
+        return
+      }
       this.query = query
       this.getData(1, JSON.stringify(query))
     }

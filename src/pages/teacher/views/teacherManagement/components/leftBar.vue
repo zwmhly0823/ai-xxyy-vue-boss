@@ -21,11 +21,8 @@
       @node-click="nodeClick"
       @contextmenu.prevent="defaultHandler()"
     >
-      <span
-        class="custom-tree-node"
-        slot-scope="{ node, data }"
-        @mouseover="showTools(data.id)"
-      >
+      <span class="custom-tree-node" slot-scope="{ node, data }">
+        <!-- @mouseover="showTools(data.id)" -->
         <span :title="data.id">{{ data.name }}</span>
         <!-- （{{ data.id ? data.id : 0 }}） -->
         <!-- <span
@@ -105,13 +102,20 @@ export default {
       this.toolsCount = null
     },
     defaultHandler() {
-      console.log('哈哈')
+      // console.log('哈哈')
     }
   },
   async created() {
     await this.$http.Teacher.getDepartmentTree(1).then((res) => {
-      this.departmentList = res.payload
-      console.log(res)
+      const department = res.payload
+      // 加一级销售部
+      const tree = {
+        id: '0',
+        name: '销售部',
+        pid: null,
+        children: department
+      }
+      this.departmentList = [tree]
     })
   }
 }
