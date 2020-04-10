@@ -64,12 +64,12 @@
                 <el-dropdown-item @click.native="operation(scope.row, '1')">
                   编辑
                 </el-dropdown-item>
-                <el-dropdown-item @click.native="operation(scope.row, '2')">
+                <!-- <el-dropdown-item @click.native="operation(scope.row, '2')">
                   详情
                 </el-dropdown-item>
                 <el-dropdown-item @click.native="operation(scope.row, '3')">
                   关联微信号
-                </el-dropdown-item>
+                </el-dropdown-item> -->
               </el-dropdown-menu>
             </el-dropdown>
           </template>
