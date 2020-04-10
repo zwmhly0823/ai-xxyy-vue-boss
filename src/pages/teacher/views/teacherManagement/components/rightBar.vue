@@ -199,6 +199,7 @@ export default {
   },
   data() {
     return {
+      query: '',
       sex: {
         0: '-',
         1: '男',
@@ -236,6 +237,7 @@ export default {
       const query = `{"department":{"id": ${id}, "pid": ${pid}, "children": ${JSON.stringify(
         children
       )}}}`
+      this.query = query
       this.getData(1, JSON.stringify(query))
     }
   },
@@ -243,7 +245,7 @@ export default {
     this.getData()
   },
   methods: {
-    getData(page = this.currentPage, query = '') {
+    getData(page = this.currentPage, query = this.query) {
       // tab数据
       this.$http.Teacher.getTeacherPage(page, query).then((res) => {
         console.log(res)
@@ -273,7 +275,7 @@ export default {
     // 分页
     handleSizeChange(val) {
       this.currentPage = val
-      // this.studentsList()
+      this.getData()
       const dom = document.getElementById('right-scroll')
       dom.querySelector('.scrollbar-wrapper').scrollTo(0, 0)
     },

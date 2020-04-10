@@ -15,7 +15,9 @@
     </el-col>
     <el-col class="teacherContainer-right">
       <div class="grid-content">
-        <right-bar :department="currentDept" />
+        <el-scrollbar wrap-class="scrollbar-wrapper" id="right-scroll">
+          <right-bar :department="currentDept" />
+        </el-scrollbar>
       </div>
     </el-col>
   </el-row>
@@ -38,7 +40,6 @@ export default {
   watch: {},
   methods: {
     leftBarHandler(data) {
-      console.log(data)
       this.currentDept = data
     }
   },
