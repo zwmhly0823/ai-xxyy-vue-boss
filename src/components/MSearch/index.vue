@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-24 18:20:12
  * @LastEditors: zhubaodong
- * @LastEditTime: 2020-04-07 22:19:08
+ * @LastEditTime: 2020-04-02 17:15:17
  -->
 
 <template>
@@ -18,7 +18,17 @@
           :name="phone"
           :onlyPhone="onlyPhone"
           :tip="phoneTip"
-          :last_team_id="last_team_id"
+        />
+      </el-form-item>
+
+      <el-form-item v-if="teacherphone">
+        <!-- 老师模块手机号搜索 -->
+        <teacher-phone
+          @result="getteacherPhone"
+          :teamId="teamId"
+          :name="teacherphone"
+          :onlyPhone="onlyPhone"
+          :tip="phoneTip"
         />
       </el-form-item>
 
@@ -67,7 +77,6 @@
           :stageName="stage"
           :supName="sup"
           :levelName="level"
-          :addSupS="addSupS"
           style="margin-bottom:0px"
         />
       </el-form-item>
@@ -93,7 +102,12 @@
           </el-button>
         </el-popover>
       </el-form-item> -->
+
+      <el-form-item>
+        <slot name="searchItems"></slot>
+      </el-form-item>
     </el-form>
+    <slot name="otherSearch"></slot>
   </el-card>
 </template>
 <script>
@@ -102,6 +116,7 @@ import ChannelSelect from './searchItems/channel.vue'
 import ProductTopic from './searchItems/productTopic.vue'
 import StageSupLevels from './searchItems/stageSupLevels.vue'
 import SearchPhone from './searchItems/searchPhone.vue'
+import teacherPhone from './searchItems/teacherPhone.vue'
 import OutTradeNo from './searchItems/outTradeNo.vue'
 import ProductName from './searchItems/productName.vue'
 import SelectDate from './searchItems/selectDate.vue'
@@ -137,10 +152,6 @@ export default {
       type: String,
       default: '' // sup
     },
-    addSupS: {
-      type: Boolean,
-      default: false // sup+S ?
-    },
     // 级别
     level: {
       type: String,
@@ -161,6 +172,11 @@ export default {
       type: String,
       default: '' // phone
     },
+    // 老师手机号搜索
+    teacherphone: {
+      type: String,
+      default: '' // phone
+    },
     // 是否只搜手机号
     onlyPhone: {
       type: String,
@@ -173,11 +189,6 @@ export default {
     },
     // team_id
     teamId: {
-      type: String,
-      default: ''
-    },
-    // 查询班级  搜到用户的最后一个班
-    last_team_id: {
       type: String,
       default: ''
     },
@@ -205,7 +216,8 @@ export default {
     SearchPhone,
     SelectDate,
     OutTradeNo,
-    ProductName
+    ProductName,
+    teacherPhone
   },
   data() {
     return {
@@ -252,11 +264,16 @@ export default {
       console.log(res, '回调res')
       this.setSeachParmas(res, [this.phone || 'umobile'])
     },
+    // 选择老师手机号
+    getteacherPhone(res) {
+      console.log(res, '回调res')
+      this.setSeachParmas(res, [this.teacherphone || 'umobile'])
+    },
     // 选择订单号
     getOutTradeNo(res) {
       this.setSeachParmas(res, [this.outTradeNo || 'out_trade_no'], 'wildcard')
     },
-    // 选择商品名
+    // 选择订单号
     getProductName(res) {
       this.setSeachParmas(res, [this.productName || 'product_name'])
     },

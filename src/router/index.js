@@ -70,6 +70,27 @@ const routes = [
       }
     ]
   },
+  // 老师模块
+  {
+    path: '/teacher',
+    name: 'teacher',
+    // hidden: true,
+    meta: {
+      title: '老师中心',
+      icon: 'el-icon-service',
+      module: 'teacher'
+    },
+    children: [
+      {
+        path: '/teacherManagement',
+        name: 'teacherManagement',
+        meta: {
+          title: '辅导老师管理',
+          module: 'teacher'
+        }
+      }
+    ]
+  },
 
   // demo dashboard
   {
