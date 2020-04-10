@@ -7,7 +7,6 @@
     </div>
     <el-form
       :model="ruleForm"
-      status-icon
       :rules="rules"
       ref="ruleForm"
       label-width="100px"
@@ -40,18 +39,18 @@
       <el-form-item label="密码" prop="pass" style="width:60%;">
         <el-input
           type="password"
-          v-model="ruleForm.pass"
+          v-model.trim="ruleForm.pass"
           autocomplete="off"
           show-password
         ></el-input>
       </el-form-item>
       <!-- 真实姓名 -->
       <el-form-item label="真实姓名" prop="name" style="width:60%;">
-        <el-input v-model="ruleForm.name"></el-input>
+        <el-input v-model.trim="ruleForm.name"></el-input>
       </el-form-item>
       <!-- 对外昵称 -->
       <el-form-item label="对外昵称" prop="nickname" style="width:60%;">
-        <el-input v-model="ruleForm.nickname"></el-input>
+        <el-input v-model.trim="ruleForm.nickname"></el-input>
       </el-form-item>
       <!-- 性别 -->
       <el-form-item label="性别" prop="resource">
@@ -73,6 +72,7 @@
           @change="handleChange"
           :props="optionProps"
           style="width:57.5%"
+          v-if="departmentHidden"
         >
           <!-- <template slot-scope="{ node, data }">
             <span>{{ data.name }}</span>
@@ -233,12 +233,13 @@ export default {
     // 密码
     const validatePass = (rule, value, callback) => {
       if (value === '') {
-        callback(new Error('请输入密码'))
-      } else {
-        if (this.ruleForm.checkPass !== '') {
-          this.$refs.ruleForm.validateField('checkPass')
-        }
         callback()
+      } else {
+        if (!/^[0-9a-zA-Z_./?'";:,=+-_)()*&^%$#@!`~|]*$/.test(value)) {
+          callback(new Error('请输入英文,数字,符号'))
+        } else {
+          callback()
+        }
       }
     }
     const organizationValidate = (rule, value, callback) => {
@@ -249,8 +250,6 @@ export default {
       callback()
     }
     return {
-      myregion: [],
-      cansubmit: true,
       headers: { 'Content-Type': 'multipart/form-data' },
       dataOss: {},
       // title
@@ -269,6 +268,7 @@ export default {
         { label: '女', value: 1 }
       ],
       // 所属部门
+      departmentHidden: true,
       suDepartments: [],
       optionProps: {
         value: 'id',
@@ -336,7 +336,10 @@ export default {
         // 手机号
         phone: [{ required: true, validator: checkAge, trigger: 'blur' }],
         // 密码
-        pass: [{ required: true, validator: validatePass, trigger: 'blur' }],
+        pass: [
+          { validator: validatePass, trigger: 'blur' },
+          { max: 20, message: '请控制在20个字符以内', trigger: 'blur' }
+        ],
         // 头像
         // headPortrait: [
         //   { required: true, message: '请上传头像', trigger: 'blur' }
@@ -513,12 +516,8 @@ export default {
         }
       }
     },
-    submitHandle(formName) {
-      this.cansubmit && this.submitForm(formName)
-    },
     // 提交按钮
-    submitForm(formName) {
-      this.cansubmit = false
+    submitHandle(formName) {
       const positionValId = []
       this.ruleForm.positionVal.forEach((val) => {
         positionValId.push({ id: val })
@@ -544,16 +543,17 @@ export default {
       }
 
       console.log(params, 'params')
-      // this.$refs.codeLoginForm.validateField('myregion', (valid) => {
-      //   if (!valid) {
-      //     return false
-      //   }
-      // })
       this.$refs[formName].validate((valid) => {
         if (valid) {
           if (!this.$route.query.teacherId) {
             this.$http.Teacher.createTeacher(params).then((res) => {
               if (res.code === 4) {
+                this.departmentHidden = false
+                setTimeout(() => {
+                  this.ruleForm.region = []
+                  this.departmentHidden = true
+                  console.log(this.departmentHidden, 'this.departmentHidden')
+                }, 100)
                 this.$message.error(res.erorrs)
               } else {
                 this.cansubmit = true
@@ -568,8 +568,11 @@ export default {
             })
           }
         } else {
-          console.log('error submit!!')
-          this.ruleForm.region = []
+          this.departmentHidden = false
+          setTimeout(() => {
+            this.ruleForm.region = []
+            this.departmentHidden = true
+          }, 100)
         }
       })
     },
@@ -635,16 +638,17 @@ export default {
     // 头像上传格式校验
     beforeAvatarUpload(file) {
       const isJPG = file.type === 'image/jpg'
+      const isJPEG = file.type === 'image/jpeg'
       const isPNG = file.type === 'image/png'
       const isLt2M = file.size / 1024 / 1024 < 2
 
-      if (!isJPG && !isPNG) {
+      if (!isJPG && !isPNG && !isJPEG) {
         this.$message.error('上传头像图片只能是 png/jpg 格式!')
       }
       if (!isLt2M) {
         this.$message.error('上传头像图片大小不能超过 2MB!')
       }
-      return (isJPG || isPNG) && isLt2M
+      return (isJPG || isPNG || isJPEG) && isLt2M
     },
     // 头像上传成功回调
     handleAvatarSuccess(res, file) {
