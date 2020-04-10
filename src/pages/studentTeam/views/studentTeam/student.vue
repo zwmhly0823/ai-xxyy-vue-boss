@@ -125,6 +125,7 @@ export default {
      */
     getCenterBarSelect(data) {
       this.classId = data.datas
+      this.teamDate = data.datas
       this.type = data.type
     },
     /**

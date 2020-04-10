@@ -187,6 +187,9 @@ export default {
     }
   },
   watch: {
+    teamDate(val) {
+      console.log(val)
+    },
     classId(vals) {
       const teacherId = isToss()
       if (teacherId) {
@@ -201,7 +204,7 @@ export default {
     }
   },
   methods: {
-    getClassTeacher(data, star, end) {
+    getClassTeacher(data) {
       const queryParams = `[{id:${data}}]`
       axios
         .get('/graphql/getClassTeacher', {
@@ -282,8 +285,6 @@ export default {
             res.data.detail.onetime = dayjs
               .unix(Number(this.classId.classId.start_day) / 1000)
               .format('YYMMDD')
-            // res.data.detail.formatStartDay = star
-            // res.data.detail.formatEndDay = end
           }
           if (this.tableDataEmpty) {
             this.classMessage = res.data
