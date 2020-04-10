@@ -71,11 +71,7 @@
           @change="handleChange"
           :props="optionProps"
           style="width:57.5%"
-          v-if="departmentHidden"
         >
-          <!-- <template slot-scope="{ node, data }">
-            <span>{{ data.name }}</span>
-          </template> -->
         </el-cascader>
       </el-form-item>
       <!-- 职务 -->
@@ -139,7 +135,6 @@
           ></el-date-picker>
         </el-form-item>
       </el-form-item>
-
       <!-- 在职状态 -->
       <el-form-item label="在职状态" prop="workingState">
         <el-radio-group v-model="ruleForm.workingState">
@@ -245,7 +240,6 @@ export default {
     }
     return {
       headers: { 'Content-Type': 'multipart/form-data' },
-      dataOss: {},
       // title
       newTitle: '',
       // 头像地址
@@ -262,7 +256,6 @@ export default {
         { label: '女', value: 1 }
       ],
       // 所属部门
-      departmentHidden: true,
       suDepartments: [],
       optionProps: {
         value: 'id',
@@ -493,11 +486,15 @@ export default {
               this.ruleForm.positionVal.push(val.id * 1)
             })
             this.ruleForm.rank = res.payload.rank.id * 1
-            this.ruleForm.inductionDate = new Date(res.payload.teacher.joinDate)
-            this.ruleForm.departureDate = new Date(
-              res.payload.teacher.leaveDate
-            )
-            this.ruleForm.groupData = new Date(res.payload.teacher.leaveTrain)
+            this.ruleForm.inductionDate = res.payload.teacher.joinDate
+              ? new Date(res.payload.teacher.joinDate)
+              : new Date()
+            this.ruleForm.departureDate = res.payload.teacher.leaveDate
+              ? new Date(res.payload.teacher.leaveDate)
+              : new Date()
+            this.ruleForm.groupData = res.payload.teacher.leaveTrain
+              ? new Date(res.payload.teacher.leaveTrain)
+              : new Date()
             this.ruleForm.accountSettings = res.payload.teacher.isLogin
             this.ruleForm.workingState = res.payload.teacher.status
           }
@@ -515,8 +512,6 @@ export default {
     },
     // 提交按钮
     submitHandle(formName) {
-      console.log(this.ruleForm)
-
       const positionValId = []
       this.ruleForm.positionVal.forEach((val) => {
         positionValId.push({ id: val })
@@ -543,33 +538,20 @@ export default {
         rank: { id: this.ruleForm.rank }
       }
       this.$refs[formName].validate((valid) => {
-        console.log(valid)
-
         if (valid) {
           // 新建接口请求
           if (!this.$route.query.teacherId) {
             this.$http.Teacher.createTeacher(params).then((res) => {
-              if (res.code === 4) {
-                // this.departmentHidden = false
-                // setTimeout(() => {
-                //   this.ruleForm.region = []
-                //   this.departmentHidden = true
-                // }, 100)
-              } else {
-                this.cansubmit = true
-                this.$message({
-                  message: '添加成功',
-                  type: 'success'
-                })
-                setTimeout(() => {
-                  this.$router.push({ path: '/teacherManagement' })
-                }, 500)
-              }
+              this.cansubmit = true
+              this.$message({
+                message: '添加成功',
+                type: 'success'
+              })
+              setTimeout(() => {
+                this.$router.push({ path: '/teacherManagement' })
+              }, 500)
             })
-          } else if (
-            this.$route.query.teacherId &&
-            this.$route.query.index === '1'
-          ) {
+          } else if (this.$route.query.teacherId) {
             // 编辑接口
             this.$http.Teacher.updateTeacher(params).then((res) => {
               this.cansubmit = true
@@ -582,12 +564,6 @@ export default {
               }, 500)
             })
           }
-        } else {
-          // this.departmentHidden = false
-          // setTimeout(() => {
-          //   this.ruleForm.region = []
-          //   this.departmentHidden = true
-          // }, 100)
         }
       })
     },
@@ -667,10 +643,7 @@ export default {
       return (isJPG || isPNG || isJPEG) && isLt2M
     },
     // 头像上传成功回调
-    handleAvatarSuccess(res, file) {
-      // this.ruleForm.imageUrl = URL.createObjectURL(file.raw)
-      // console.log(res, file, this.ruleForm.imageUrl, 'this.ruleForm.imageUrl ')
-    }
+    handleAvatarSuccess(res, file) {}
   }
 }
 </script>
