@@ -515,6 +515,8 @@ export default {
     },
     // 提交按钮
     submitHandle(formName) {
+      console.log(this.ruleForm)
+
       const positionValId = []
       this.ruleForm.positionVal.forEach((val) => {
         positionValId.push({ id: val })
@@ -534,21 +536,25 @@ export default {
           status: this.ruleForm.workingState,
           isLogin: this.ruleForm.accountSettings
         },
-        department: { id: this.ruleForm.region.pop() },
+        department: {
+          id: this.ruleForm.region[this.ruleForm.region.length - 1]
+        },
         duty: positionValId,
         rank: { id: this.ruleForm.rank }
       }
       this.$refs[formName].validate((valid) => {
+        console.log(valid)
+
         if (valid) {
           // 新建接口请求
           if (!this.$route.query.teacherId) {
             this.$http.Teacher.createTeacher(params).then((res) => {
               if (res.code === 4) {
-                this.departmentHidden = false
-                setTimeout(() => {
-                  this.ruleForm.region = []
-                  this.departmentHidden = true
-                }, 100)
+                // this.departmentHidden = false
+                // setTimeout(() => {
+                //   this.ruleForm.region = []
+                //   this.departmentHidden = true
+                // }, 100)
               } else {
                 this.cansubmit = true
                 this.$message({
@@ -577,11 +583,11 @@ export default {
             })
           }
         } else {
-          this.departmentHidden = false
-          setTimeout(() => {
-            this.ruleForm.region = []
-            this.departmentHidden = true
-          }, 100)
+          // this.departmentHidden = false
+          // setTimeout(() => {
+          //   this.ruleForm.region = []
+          //   this.departmentHidden = true
+          // }, 100)
         }
       })
     },
