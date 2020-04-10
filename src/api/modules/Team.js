@@ -55,6 +55,7 @@ export default {
             added_wechat_time
             added_group_time
             follow_time
+            order_id
           }
         }
       }`

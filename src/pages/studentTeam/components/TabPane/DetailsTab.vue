@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 14:19:58
  * @LastEditors: panjian
- * @LastEditTime: 2020-04-09 15:34:38
+ * @LastEditTime: 2020-04-09 20:01:55
  -->
 <template>
   <div>
@@ -352,13 +352,11 @@ export default {
     // 排序
     onGroupSort(data) {
       this.sortGroup = `sort:${JSON.stringify(data)}`
-      console.log(this.sortGroup, 'sort 父组件')
       this.getGroup()
     },
     // 搜索组件传回来的值
     handleSearch(res) {
       if (res.length === 0) {
-        console.log('res传的空')
         this.search = ''
         this.getGroup()
         if (this.tabsName === '加好友进群') {
@@ -373,7 +371,6 @@ export default {
           this.getStuComment()
         }
       } else {
-        console.log('res', res[0].term.uid)
         this.search = `"${res[0].term.uid}"`
         this.getGroup()
         if (this.tabsName === '加好友进群') {
