@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 20:22:24
  * @LastEditors: panjian
- * @LastEditTime: 2020-04-09 11:41:53
+ * @LastEditTime: 2020-04-09 18:13:19
  -->
 <template>
   <div>
@@ -277,6 +277,14 @@ export default {
         {
           value: '选项5',
           label: '北京烤鸭'
+        },
+        {
+          value: '选项6',
+          label: 'WE567'
+        },
+        {
+          value: '选项7',
+          label: '567ah'
         }
       ],
       attendClassSelect: '',
@@ -287,11 +295,15 @@ export default {
   watch: {},
   created() {},
   methods: {
+    // 点击 参课完课 过滤
     onAttendClass() {
       console.log(this.attendClassCheck, this.attendClassSelect, '参课完课数据')
+      this.attendClassShow = false
     },
+    // 点击 作品及点评 过滤
     onWorks() {
       console.log(this.worksCheck, this.worksSelect, '作品及点评数据')
+      this.worksShow = false
     },
     // 参课完课 多选框选中的值
     attendClassChange(value) {
@@ -299,6 +311,12 @@ export default {
     },
     // 作品 多选框选中的值
     worksChange(value) {
+      // const worksLists = []
+      // console.log(value)
+      // value.forEach((res) => {
+      //   console.log(res)
+      //   worksLists.push(res)
+      // })
       this.worksCheck = value
     },
     // 参课完课 点击清空
@@ -332,8 +350,8 @@ export default {
 }
 .icon-filter {
   font-size: 24px;
-  height: 20px;
-  width: 20px;
+  height: 18px;
+  width: 18px;
 }
 .title-text {
   font-weight: 400;
