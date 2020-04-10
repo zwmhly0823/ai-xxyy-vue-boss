@@ -66,7 +66,6 @@
       <!-- 所属部门 -->
       <el-form-item label="所属部门" prop="region">
         <el-cascader
-          :placeholder="ruleForm.region.name"
           v-model="ruleForm.region"
           :options="suDepartments"
           @change="handleChange"
@@ -87,8 +86,8 @@
           placeholder="请选择职务"
         >
           <el-option
-            v-for="item in position"
-            :key="item.id"
+            v-for="(item, index) in position"
+            :key="index"
             :label="item.name"
             :value="item.id"
           >
@@ -107,7 +106,7 @@
         </el-select>
       </el-form-item>
       <!-- 带班级别 -->
-      <el-form-item label="带班级别" prop="shiftLevel">
+      <!-- <el-form-item label="带班级别" prop="shiftLevel">
         <el-select v-model="ruleForm.shiftLevel" placeholder="请选择带班级别">
           <el-option
             v-for="(item, index) in shiftList"
@@ -116,7 +115,7 @@
             :value="item.id"
           ></el-option>
         </el-select>
-      </el-form-item>
+      </el-form-item> -->
       <!-- 入职时间 -->
       <el-form-item label="入职时间" required>
         <el-form-item prop="inductionDate">
@@ -200,7 +199,7 @@
     <div style="text-align: center; padding:10px 0">
       <el-button
         type="primary"
-        :disabled="newTitle === 2"
+        :disabled="newTitle === '2'"
         @click="submitHandle('ruleForm')"
         >提交</el-button
       >
@@ -219,16 +218,12 @@ export default {
         return callback(new Error('手机号不能为空'))
       }
       setTimeout(() => {
-        if (!Number.isInteger(value)) {
-          callback(new Error('请输入数字值'))
+        if (!/^1[3456789]\d{9}$/.test(value)) {
+          callback(new Error('请输入正确的手机号'))
         } else {
-          if (!/^1[3456789]\d{9}$/.test(value)) {
-            callback(new Error('请输入正确的手机号'))
-          } else {
-            callback()
-          }
+          callback()
         }
-      }, 500)
+      }, 100)
     }
     // 密码
     const validatePass = (rule, value, callback) => {
@@ -243,7 +238,6 @@ export default {
       }
     }
     const organizationValidate = (rule, value, callback) => {
-      console.log(value, '000')
       if (!value.length) {
         callback(new Error('请选择所属部门'))
       }
@@ -316,7 +310,7 @@ export default {
         // 职级
         rank: '',
         // 带班级别
-        shiftLevel: '',
+        // shiftLevel: '',
         // 入职时间
         inductionDate: '',
         // 下组时间
@@ -374,9 +368,9 @@ export default {
         // 职级
         rank: [{ required: true, message: '请选择职级', trigger: 'change' }],
         // 带班级别
-        shiftLevel: [
-          { required: true, message: '请选择带班级别', trigger: 'change' }
-        ],
+        // shiftLevel: [
+        //   { required: true, message: '请选择带班级别', trigger: 'change' }
+        // ],
         // 入职时间
         inductionDate: [
           {
@@ -416,7 +410,6 @@ export default {
   watch: {
     // 监听入职时间,清空离职时间
     'ruleForm.inductionDate'(val) {
-      console.log(val, 'val')
       // 离职时间
       if (
         this.ruleForm.departureDate !== '' &&
@@ -470,7 +463,6 @@ export default {
           })
         })
         this.suDepartments = departmentWith
-        console.log(this.suDepartments, '000')
       })
       // 职级
       this.$http.Teacher.TeacherRankList().then((res) => {
@@ -493,16 +485,21 @@ export default {
             this.ruleForm.name = res.payload.teacher.realName
             this.ruleForm.nickname = res.payload.teacher.nickname
             this.ruleForm.resource = res.payload.teacher.sex
-            this.ruleForm.region = res.payload.department
-            this.ruleForm.positionVal = res.payload.duty
-            this.ruleForm.rank = res.payload.rank
+            this.ruleForm.region = [
+              res.payload.department.pid * 1,
+              res.payload.department.id * 1
+            ]
+            res.payload.duty.forEach((val) => {
+              this.ruleForm.positionVal.push(val.id * 1)
+            })
+            this.ruleForm.rank = res.payload.rank.id * 1
             this.ruleForm.inductionDate = new Date(res.payload.teacher.joinDate)
             this.ruleForm.departureDate = new Date(
               res.payload.teacher.leaveDate
             )
             this.ruleForm.groupData = new Date(res.payload.teacher.leaveTrain)
             this.ruleForm.accountSettings = res.payload.teacher.isLogin
-            console.log(res.payload, '教师详情')
+            this.ruleForm.workingState = res.payload.teacher.status
           }
         )
       }
@@ -526,7 +523,7 @@ export default {
         teacher: {
           id: this.$route.query.teacherId,
           headImage: this.ruleForm.imageUrl,
-          phone: this.ruleForm.phone,
+          phone: this.ruleForm.phone.toString(),
           password: this.ruleForm.pass,
           realName: this.ruleForm.name,
           nickname: this.ruleForm.nickname,
@@ -541,10 +538,9 @@ export default {
         duty: positionValId,
         rank: { id: this.ruleForm.rank }
       }
-
-      console.log(params, 'params')
       this.$refs[formName].validate((valid) => {
         if (valid) {
+          // 新建接口请求
           if (!this.$route.query.teacherId) {
             this.$http.Teacher.createTeacher(params).then((res) => {
               if (res.code === 4) {
@@ -552,9 +548,7 @@ export default {
                 setTimeout(() => {
                   this.ruleForm.region = []
                   this.departmentHidden = true
-                  console.log(this.departmentHidden, 'this.departmentHidden')
                 }, 100)
-                this.$message.error(res.erorrs)
               } else {
                 this.cansubmit = true
                 this.$message({
@@ -565,6 +559,21 @@ export default {
                   this.$router.push({ path: '/teacherManagement' })
                 }, 500)
               }
+            })
+          } else if (
+            this.$route.query.teacherId &&
+            this.$route.query.index === '1'
+          ) {
+            // 编辑接口
+            this.$http.Teacher.updateTeacher(params).then((res) => {
+              this.cansubmit = true
+              this.$message({
+                message: '修改成功',
+                type: 'success'
+              })
+              setTimeout(() => {
+                this.$router.push({ path: '/teacherManagement' })
+              }, 500)
             })
           }
         } else {
@@ -617,6 +626,7 @@ export default {
           })
           .then((res) => {
             console.log('axios-res', res, fileUrl)
+            this.ruleForm.imageUrl = fileUrl
           })
           .catch((err) => {
             console.log('axios-err', err)
@@ -652,7 +662,8 @@ export default {
     },
     // 头像上传成功回调
     handleAvatarSuccess(res, file) {
-      this.ruleForm.imageUrl = URL.createObjectURL(file.raw)
+      // this.ruleForm.imageUrl = URL.createObjectURL(file.raw)
+      // console.log(res, file, this.ruleForm.imageUrl, 'this.ruleForm.imageUrl ')
     }
   }
 }
