@@ -55,7 +55,7 @@
       >
         <el-table-column width="30px">
           <!-- 表格内容操作按钮 -->
-          <!-- <template slot-scope="scope">
+          <template slot-scope="scope">
             <el-dropdown>
               <div>
                 <img src="../../../../../assets/images/point.png" />
@@ -72,7 +72,7 @@
                 </el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
-          </template> -->
+          </template>
         </el-table-column>
         <el-table-column label="员工ID" width="80">
           <template slot-scope="scope">
