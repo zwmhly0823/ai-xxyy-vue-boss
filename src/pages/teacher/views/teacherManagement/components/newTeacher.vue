@@ -179,7 +179,7 @@
         </el-radio-group>
       </el-form-item>
       <!-- 分配微信号 -->
-      <el-form-item label="分配微信号">
+      <!-- <el-form-item label="分配微信号">
         <el-select
           v-model="ruleForm.weChat"
           multiple
@@ -194,7 +194,7 @@
           >
           </el-option>
         </el-select>
-      </el-form-item>
+      </el-form-item> -->
     </el-form>
     <div style="text-align: center; padding:10px 0">
       <el-button
