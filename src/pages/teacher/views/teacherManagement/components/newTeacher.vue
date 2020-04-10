@@ -493,11 +493,15 @@ export default {
               this.ruleForm.positionVal.push(val.id * 1)
             })
             this.ruleForm.rank = res.payload.rank.id * 1
-            this.ruleForm.inductionDate = new Date(res.payload.teacher.joinDate)
-            this.ruleForm.departureDate = new Date(
-              res.payload.teacher.leaveDate
-            )
-            this.ruleForm.groupData = new Date(res.payload.teacher.leaveTrain)
+            this.ruleForm.inductionDate = res.payload.teacher.joinDate
+              ? new Date(res.payload.teacher.joinDate)
+              : new Date()
+            this.ruleForm.departureDate = res.payload.teacher.leaveDate
+              ? new Date(res.payload.teacher.leaveDate)
+              : new Date()
+            this.ruleForm.groupData = res.payload.teacher.leaveTrain
+              ? new Date(res.payload.teacher.leaveTrain)
+              : new Date()
             this.ruleForm.accountSettings = res.payload.teacher.isLogin
             this.ruleForm.workingState = res.payload.teacher.status
           }
