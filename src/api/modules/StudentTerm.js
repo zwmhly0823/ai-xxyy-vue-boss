@@ -66,5 +66,11 @@ export default {
         }
       }`
     })
+  },
+  getCalculationTeamInfo(params) {
+    return axios.post(
+      '/api/tm/v1/teacher/manager/team/calculationTeamInfo',
+      params
+    )
   }
 }
