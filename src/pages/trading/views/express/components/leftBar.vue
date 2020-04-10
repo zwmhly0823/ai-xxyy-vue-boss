@@ -10,12 +10,14 @@
       style="color:#2F2E31"
       @node-click="nodeClick"
     ></el-tree>
-    <div>123 {{ this.$store.state.whackId }}</div>
+    <div>123 {{ whackId }}</div>
   </div>
 </template>
 
 <script>
 import axios from '@/api/axios'
+import { mapState } from 'vuex'
+
 import { isToss } from '@/utils/index'
 export default {
   data() {
@@ -77,6 +79,11 @@ export default {
         }
       ]
     }
+  },
+  computed: {
+    ...mapState({
+      whackId: (state) => state.whackId
+    })
   },
   methods: {
     getExpressList() {
@@ -164,7 +171,7 @@ export default {
         })
     },
     nodeClick(dataExpress) {
-      this.$store.commit('getLeftBarId', dataExpress.id)
+      this.$store.dispatch('getLeftBarId', dataExpress.id)
       this.$emit('change', dataExpress)
       console.log(dataExpress, 'changedata')
     },
