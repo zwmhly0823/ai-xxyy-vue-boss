@@ -81,7 +81,7 @@
         </el-table-column>
         <el-table-column label="老师姓名">
           <template slot-scope="scope">
-            <div>{{ scope.row.realname }}</div>
+            <div>{{ scope.row.realname || '-' }}</div>
           </template>
         </el-table-column>
         <el-table-column label="性别">
@@ -91,7 +91,7 @@
         </el-table-column>
         <el-table-column label="昵称">
           <template slot-scope="scope">
-            <div>{{ scope.row.nickname }}</div>
+            <div>{{ scope.row.nickname || '-' }}</div>
           </template>
         </el-table-column>
         <el-table-column label="手机号" width="120">
@@ -112,9 +112,9 @@
         </el-table-column>
         <el-table-column label="职务">
           <template slot-scope="scope">
-            <div v-if="scope.row.duty">
+            <div v-if="scope.row.duty && scope.row.duty.length > 0">
               <p v-for="item in scope.row.duty" :key="item.id">
-                {{ item ? item.name : '-' }}
+                {{ item ? item.name || '-' : '-' }}
               </p>
             </div>
             <div v-else><p>-</p></div>
@@ -122,7 +122,7 @@
         </el-table-column>
         <el-table-column label="职级">
           <template slot-scope="scope">
-            <div>{{ scope.row.rank ? scope.row.rank.name : '-' }}</div>
+            <div>{{ scope.row.rank ? scope.row.rank.name || '-' : '-' }}</div>
           </template>
         </el-table-column>
         <el-table-column label="在职状态">
