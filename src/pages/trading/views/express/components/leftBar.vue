@@ -10,6 +10,7 @@
       style="color:#2F2E31"
       @node-click="nodeClick"
     ></el-tree>
+    <div>123 {{ this.$store.state.whackId }}</div>
   </div>
 </template>
 
@@ -163,6 +164,7 @@ export default {
         })
     },
     nodeClick(dataExpress) {
+      this.$store.commit('getLeftBarId', dataExpress.id)
       this.$emit('change', dataExpress)
       console.log(dataExpress, 'changedata')
     },

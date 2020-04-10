@@ -12,14 +12,16 @@ import getters from './getters'
 import app from './modules/app'
 import settings from './modules/settings'
 // import user from './modules/user'
+import leftbar from './modules/leftbar'
 
 Vue.use(Vuex)
 
 const store = new Vuex.Store({
   modules: {
     app,
-    settings
+    settings,
     // user
+    leftbar
   },
   getters
 })
