@@ -3,7 +3,7 @@
  * @Email: yangjiyong@meishubao.com
  * @Date: 2020-03-14 15:07:26
  * @Last Modified by: YangJiyong
- * @Last Modified time: 2020-03-24 19:11:51
+ * @Last Modified time: 2020-04-10 20:55:24
  * @Description: 设置左侧导航展示数据
  * 通过导入模块router/index.js判断，规定模块入口文件为 {path: '/', name: 'Home'}
  * TODO: 自动完成
@@ -35,7 +35,7 @@ const routes = [
     path: '/student-team',
     name: 'student-team',
     meta: {
-      title: '班级',
+      title: '班级中心',
       icon: 'el-icon-s-custom',
       module: 'student-team'
     }
@@ -47,24 +47,24 @@ const routes = [
     name: 'trading',
     // hidden: true,
     meta: {
-      title: '交易',
+      title: '交易中心',
       icon: 'el-icon-s-data',
       module: 'trading'
     },
     children: [
       {
-        path: '/express',
-        name: 'express',
+        path: '/order',
+        name: 'order',
         meta: {
-          title: '物流',
+          title: '订单管理',
           module: 'trading'
         }
       },
       {
-        path: '/order',
-        name: 'order',
+        path: '/express',
+        name: 'express',
         meta: {
-          title: '订单',
+          title: '物流管理',
           module: 'trading'
         }
       }
@@ -85,7 +85,7 @@ const routes = [
         path: '/teacherManagement',
         name: 'teacherManagement',
         meta: {
-          title: '辅导老师管理',
+          title: '老师管理',
           module: 'teacher'
         }
       }

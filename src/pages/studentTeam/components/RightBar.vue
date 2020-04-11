@@ -39,8 +39,8 @@
             <span>辅导老师微信: {{ item.teacher_wx }}</span>
             <span style="margin-right:0px">
               <span
-                >开课~结课 &nbsp;{{ item.formatStartDay }}~{{
-                  item.formatEndDay
+                >开课~结课 &nbsp;{{ teamDate.formatStartDay }}~{{
+                  teamDate.formatEndDay
                 }}</span
               >
             </span>
@@ -167,6 +167,10 @@ export default {
     classId: {
       type: Object,
       default: null
+    },
+    teamDate: {
+      type: Object,
+      default: () => ({})
     }
   },
   components: {
@@ -174,14 +178,18 @@ export default {
   },
   data() {
     return {
-      classMessage: {},
+      classMessage: [],
       cout: 0,
       teacherId: '',
-      tableDataEmpty: true
+      tableDataEmpty: true,
+      count: 0,
+      day: {}
     }
   },
-  computed: {},
   watch: {
+    teamDate(val) {
+      console.log(val)
+    },
     classId(vals) {
       const teacherId = isToss()
       if (teacherId) {
@@ -277,8 +285,6 @@ export default {
             res.data.detail.onetime = dayjs
               .unix(Number(this.classId.classId.start_day) / 1000)
               .format('YYMMDD')
-            res.data.detail.formatStartDay = this.classId.classId.formatStartDay
-            res.data.detail.formatEndDay = this.classId.classId.formatEndDay
           }
           if (this.tableDataEmpty) {
             this.classMessage = res.data
@@ -288,13 +294,6 @@ export default {
           }
 
           // this.classMessage2 = res.dataformatEndDay
-
-          console.log(
-            this.classMessage,
-            this.classMessage.statictis,
-            res.data,
-            'res'
-          )
         })
     }
   }

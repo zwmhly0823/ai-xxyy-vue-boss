@@ -293,9 +293,8 @@ export default {
 
 .left-container-tree {
   .is-current {
-    .el-tree-node__content {
+    > .el-tree-node__content {
       background: #ebebeb !important;
-      // background: rgba(240, 241, 242, 1) !important;
     }
   }
 }
