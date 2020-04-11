@@ -3,7 +3,6 @@
     <div class="newteacher-title">
       <P v-if="newTitle === ''">新增辅导老师</P>
       <P v-if="newTitle === '1'">编辑辅导老师</P>
-      <P v-if="newTitle === '2'">查看辅导老师</P>
     </div>
     <el-form
       :model="ruleForm"
@@ -11,7 +10,6 @@
       ref="ruleForm"
       label-width="100px"
       class="demo-ruleForm"
-      :disabled="formDisabled"
     >
       <!-- 头像 -->
       <el-form-item label="头像" prop="headPortrait">
@@ -192,10 +190,7 @@
       </el-form-item> -->
     </el-form>
     <div style="text-align: center; padding:10px 0">
-      <el-button
-        type="primary"
-        :disabled="newTitle === '2'"
-        @click="submitHandle('ruleForm')"
+      <el-button type="primary" @click="submitHandle('ruleForm')"
         >提交</el-button
       >
       <el-button @click="resetForm('ruleForm')">取消</el-button>
@@ -246,8 +241,6 @@ export default {
       newTitle: '',
       // 头像地址
       httpPath: '',
-      // 表单禁用
-      formDisabled: false,
       // 离职时间禁止选择
       pickerOptions: '',
       // 离职时间禁用
@@ -429,7 +422,6 @@ export default {
     const query = this.$route.query
     // query.index ''/新建老师  1/编辑老师 2/查看老师
     if (query && query.index) this.newTitle = query.index
-    if (query.index === '2') this.formDisabled = true
     // 接口调用
     this.createdUrl()
   },

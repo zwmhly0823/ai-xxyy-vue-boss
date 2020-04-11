@@ -161,6 +161,8 @@
           </template>
         </el-table-column> -->
       </el-table>
+      <!-- 查看老师详情 -->
+      <teacher-details ref="detailsHidden" :teacherID="teacherID" />
       <!-- 关联微信弹窗 -->
       <associatedWeChat ref="associated" />
       <!-- 分页 -->
@@ -184,6 +186,7 @@
 import MSearch from '@/components/MSearch/index.vue'
 import MPagination from '@/components/MPagination/index.vue'
 import associatedWeChat from '../components/associatedWeChat.vue'
+import teacherDetails from '../components/teacherDetails.vue'
 
 export default {
   props: {
@@ -195,7 +198,8 @@ export default {
   components: {
     MSearch,
     MPagination,
-    associatedWeChat
+    associatedWeChat,
+    teacherDetails
   },
   data() {
     return {
@@ -221,7 +225,9 @@ export default {
       // 多选选择项
       checkList: [],
       // 表格数据
-      tableData: []
+      tableData: [],
+      // 老师id
+      teacherID: ''
     }
   },
   computed: {
@@ -289,11 +295,14 @@ export default {
     },
     // 点击操作按钮
     operation(val, index) {
-      if (index === '1' || index === '2') {
+      if (index === '1') {
         this.$router.push({
           path: '/newTeacher',
           query: { index: index, teacherId: val.id }
         })
+      } else if (index === '2') {
+        this.$refs.detailsHidden.drawer = true
+        this.teacherID = val.id
       } else if (index === '3') {
         this.$refs.associated.centerDialogVisible = true
       }
