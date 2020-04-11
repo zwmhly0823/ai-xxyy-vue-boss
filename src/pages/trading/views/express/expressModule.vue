@@ -15,9 +15,9 @@
     </el-col>
     <el-col class="express-main-right">
       <div class="express-main-right-content">
-        <!-- <el-scrollbar wrap-class="scrollbar-wrapper" id="right-scroll"> -->
-        <right-bar :dataExp="Express" @search="search" />
-        <!-- </el-scrollbar> -->
+        <el-scrollbar wrap-class="scrollbar-wrapper" id="right-scroll">
+          <right-bar :dataExp="Express" @search="search" />
+        </el-scrollbar>
       </div>
     </el-col>
   </el-row>
@@ -46,6 +46,12 @@ export default {
     },
     search(val) {
       console.log(val, 'search')
+    },
+    handleClick(tab, event) {
+      document
+        .getElementById('order-scroll')
+        .querySelector('.order-wrapper').scrollTop = 0
+      this.status = tab.name
     }
   },
   created() {},

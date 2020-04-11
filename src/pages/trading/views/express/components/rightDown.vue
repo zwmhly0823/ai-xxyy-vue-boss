@@ -15,7 +15,7 @@
     >
       <el-table-column type="selection" width="25" v-if="!teacherId">
       </el-table-column>
-      <el-table-column width="25" v-if="dataExp.id == 6">
+      <el-table-column width="25">
         <template slot-scope="scope">
           <!-- <div v-show="false">{{ scope }}</div> -->
           <el-dropdown trigger="click">
@@ -204,7 +204,7 @@
       :current-page="currentPage"
       :page-count="totalPages"
       :total="totalElements"
-      :pageSizeArr="[20, 100, 200, 500, 1000]"
+      :pageSizeArr="[2, 10, 20, 5]"
       @current-change="handleSizeChange"
       @current-pagesizes="handleChangeSize"
       show-pager
@@ -332,7 +332,9 @@ export default {
   methods: {
     // 页数问题
     handleChangeSize(pageItem) {
+      this.currentPage = 1
       this.currentItem = pageItem
+      this.tableData = []
       this.getExpressList(this.dataExp.id)
     },
     // 审核通过 确定
@@ -429,10 +431,23 @@ export default {
     check(params, src = `/api/o/v1/express/deliveryRequest`) {
       axios
         .post(src, params)
-        .then((res) => {
+        .then(async (res) => {
           // payload 是数组，错误信息逐个返回.全正确时返回空数组
           /**
            * {
+           * .then(async (res) => {
+            this.$message({
+              type: 'success',
+              message: '操作成功'
+            })
+            setTimeout(() => {
+              this.getExpressList(this.dataExp.id)
+              this.$store.commit('bransh', true)
+
+              // TODO: 成功后同步左侧列表 待审核 数量
+            }, 1000)
+          })
+      })
            *  code: 80000210
               message: "不符合发货条件，expressId：{123552}"
               }
@@ -444,8 +459,12 @@ export default {
               type: 'success',
               message: '审核成功!'
             })
-            this.$store.commit('bransh', true)
-            this.getExpressList(this.whackId)
+            setTimeout(() => {
+              this.getExpressList(this.dataExp.id)
+              this.$store.commit('bransh', true)
+
+              // TODO: 成功后同步左侧列表 待审核 数量
+            }, 1000)
           } else {
             const errorMsg = payload.map((item) => {
               if (item.code !== 200)
@@ -484,7 +503,6 @@ export default {
       // if (selection.length > 1) {
       this.checkBatchParams = []
       this.checkBatchParams = selection
-      console.log(this.checkBatchParams, 'this.checkBatchParams')
 
       const uid = selection.map((item) => {
         return item.id
@@ -493,7 +511,6 @@ export default {
         sessionStorage.removeItem('uid')
       }
       sessionStorage.setItem('uid', uid)
-      console.log(selection, 'selection,row')
     },
     handleChange(val) {
       // console.log(val, 'handleChange')
@@ -506,6 +523,7 @@ export default {
       console.log(row + column + event, 'row, column, event')
     },
     handleSizeChange(val) {
+      this.tableData = []
       this.currentPage = val
       this.getExpressList(this.dataExp.id)
     },
