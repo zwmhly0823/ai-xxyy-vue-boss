@@ -13,8 +13,9 @@
       @select="handleSelect"
       @select-all="handleAllSelect"
     >
-      <el-table-column type="selection" width="25"> </el-table-column>
-      <el-table-column width="25">
+      <el-table-column type="selection" width="25" v-if="!teacherId">
+      </el-table-column>
+      <el-table-column width="25" v-if="dataExp.id == 6">
         <template slot-scope="scope">
           <!-- <div v-show="false">{{ scope }}</div> -->
           <el-dropdown trigger="click">
