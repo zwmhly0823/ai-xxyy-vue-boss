@@ -108,8 +108,7 @@ module.exports = {
         }
       },
       '/graphql': {
-        target: 'http://47.98.38.59:43401',
-        // target: 'http://localhost:3000',
+        target: 'http://docker.meixiu.mobi:43401',
         changeOrigin: true,
         ws: true,
         secure: false,
@@ -118,7 +117,7 @@ module.exports = {
         }
       },
       '/getStuRankingList': {
-        target: 'http://47.98.38.59:43401',
+        target: 'http://docker.meixiu.mobi:43401',
         changeOrigin: true,
         ws: true,
         secure: false,

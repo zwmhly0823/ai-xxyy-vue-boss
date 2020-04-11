@@ -1,8 +1,9 @@
 <template>
   <div class="newteache-style">
     <div class="newteacher-title">
-      <P v-if="newTitle === ''">新增辅导老师</P>
-      <P v-if="newTitle === '1'">编辑辅导老师</P>
+      <P v-if="newTitle === ''">新增销售</P>
+      <P v-if="newTitle === '1'">编辑销售</P>
+      <P v-if="newTitle === '2'">查看销售</P>
     </div>
     <el-form
       :model="ruleForm"

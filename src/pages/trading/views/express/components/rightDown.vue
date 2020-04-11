@@ -15,8 +15,8 @@
     >
       <el-table-column type="selection" width="25" v-if="!teacherId">
       </el-table-column>
-      <el-table-column width="25" v-if="!teacherId">
-        <template slot-scope="scope" v-if="dataExp.id == 6">
+      <el-table-column width="25" v-if="dataExp.id == 6 && !teacherId">
+        <template slot-scope="scope">
           <!-- <div v-show="false">{{ scope }}</div> -->
           <el-dropdown trigger="click">
             <div class="three-dot">
@@ -204,7 +204,7 @@
       :current-page="currentPage"
       :page-count="totalPages"
       :total="totalElements"
-      :pageSizeArr="[20, 100, 200, 500, 1000]"
+      :pageSizeArr="[20, 100, 200, 500]"
       @current-change="handleSizeChange"
       @current-pagesizes="handleChangeSize"
       show-pager
@@ -218,10 +218,18 @@
 import MPagination from '@/components/MPagination/index.vue'
 import axios from '@/api/axios'
 import { isToss, formatData } from '@/utils/index'
+import { mapState } from 'vuex'
 export default {
   props: ['dataExp', 'search'],
   components: {
     MPagination
+  },
+  computed: {
+    ...mapState({
+      whackId: (state) => {
+        return state.leftbar.whackId
+      }
+    })
   },
   watch: {
     search(val) {
@@ -237,8 +245,10 @@ export default {
     dataExp(val) {
       this.currentPage = 1
       this.tableData = []
+      this.selectNum = 0
+      console.log(val, '----------')
       if (val.id) {
-        this.getExpressList(val.id)
+        this.getExpressList(this.whackId)
         this.dataLogitcs = val
       }
     }
@@ -274,6 +284,10 @@ export default {
         {
           value1: '1',
           label: '京东云仓'
+        },
+        {
+          value1: '0',
+          label: '不指定承运商'
         }
       ],
       value1: '2',
@@ -323,7 +337,14 @@ export default {
   methods: {
     // 页数问题
     handleChangeSize(pageItem) {
+      this.currentPage = 1
       this.currentItem = pageItem
+      this.scrollToTop()
+      this.getExpressList(this.dataExp.id)
+    },
+    handleSizeChange(val) {
+      this.currentPage = val
+      this.scrollToTop()
       this.getExpressList(this.dataExp.id)
     },
     // 审核通过 确定
@@ -400,6 +421,8 @@ export default {
             })
             setTimeout(() => {
               this.getExpressList(this.dataExp.id)
+              this.$store.commit('bransh', true)
+
               // TODO: 成功后同步左侧列表 待审核 数量
             }, 1000)
           })
@@ -418,21 +441,40 @@ export default {
     check(params, src = `/api/o/v1/express/deliveryRequest`) {
       axios
         .post(src, params)
-        .then((res) => {
+        .then(async (res) => {
           // payload 是数组，错误信息逐个返回.全正确时返回空数组
           /**
            * {
+           * .then(async (res) => {
+            this.$message({
+              type: 'success',
+              message: '操作成功'
+            })
+            setTimeout(() => {
+              this.getExpressList(this.dataExp.id)
+              this.$store.commit('bransh', true)
+
+              // TODO: 成功后同步左侧列表 待审核 数量
+            }, 1000)
+          })
+      })
            *  code: 80000210
               message: "不符合发货条件，expressId：{123552}"
               }
            */
           const { payload } = res
+
           if (payload.length === 0) {
             this.$message({
               type: 'success',
               message: '审核成功!'
             })
-            this.getExpressList(this.dataExp.id)
+            setTimeout(() => {
+              this.getExpressList(this.dataExp.id)
+              this.selectNum = 0
+              this.$store.commit('bransh', true)
+              // TODO: 成功后同步左侧列表 待审核 数量
+            }, 1000)
           } else {
             const errorMsg = payload.map((item) => {
               if (item.code !== 200)
@@ -471,7 +513,6 @@ export default {
       // if (selection.length > 1) {
       this.checkBatchParams = []
       this.checkBatchParams = selection
-      console.log(this.checkBatchParams, 'this.checkBatchParams')
 
       const uid = selection.map((item) => {
         return item.id
@@ -480,7 +521,6 @@ export default {
         sessionStorage.removeItem('uid')
       }
       sessionStorage.setItem('uid', uid)
-      console.log(selection, 'selection,row')
     },
     handleChange(val) {
       // console.log(val, 'handleChange')
@@ -492,10 +532,7 @@ export default {
     handleExpressTo(row, column, event) {
       console.log(row + column + event, 'row, column, event')
     },
-    handleSizeChange(val) {
-      this.currentPage = val
-      this.getExpressList(this.dataExp.id)
-    },
+
     getExpressList(id) {
       let timeType = {}
       this.searchIn.forEach((item) => {
@@ -623,7 +660,6 @@ export default {
         .then((res) => {
           if (res && res.payload) {
             this.waitFor = false
-            console.log('ress----', res && res.payload)
             this.timeLine = true
             const lastData = {}
             res.payload[0].data.forEach((item) => {
@@ -645,6 +681,13 @@ export default {
             this.waitFor = true
           }
         })
+    },
+
+    // scrotop
+    scrollToTop() {
+      document
+        .getElementById('right-scroll')
+        .querySelector('.scrollbar-wrapper').scrollTop = 0
     }
   }
 }

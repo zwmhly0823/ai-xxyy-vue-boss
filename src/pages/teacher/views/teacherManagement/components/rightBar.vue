@@ -15,7 +15,7 @@
         slot="searchItems"
         size="mini"
         @click="newTeacher"
-        >新增老师</el-button
+        >新增销售</el-button
       >
       <!-- <el-checkbox-group
         v-model="checkList"
@@ -41,7 +41,7 @@
       size="mini"
       @click="newTeacher"
       style="margin: 15px;"
-      >新增老师</el-button
+      >新增销售</el-button
     >
 
     <div class="orderStyle">
@@ -64,10 +64,10 @@
                 <el-dropdown-item @click.native="operation(scope.row, '1')">
                   编辑
                 </el-dropdown-item>
-                <el-dropdown-item @click.native="operation(scope.row, '2')">
+                <!-- <el-dropdown-item @click.native="operation(scope.row, '2')">
                   详情
                 </el-dropdown-item>
-                <!-- <el-dropdown-item @click.native="operation(scope.row, '3')">
+                <el-dropdown-item @click.native="operation(scope.row, '3')">
                   关联微信号
                 </el-dropdown-item> -->
               </el-dropdown-menu>
