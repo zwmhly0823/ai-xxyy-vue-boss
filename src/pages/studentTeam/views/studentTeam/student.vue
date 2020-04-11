@@ -160,16 +160,20 @@ export default {
     },
     /**
      * 获取班级列表
-     * @param(team_type) 0为体验课 >=1为系统课
+     * @param(team_type) 0为体验课 >=1为系统课890
      */
     async getClassList(type = 0, page = 1) {
       let queryParams
       if (type === 0) {
         const config = [
           { terms: { team_state: this.classStatus } },
-          { term: { team_type: type } },
-          { term: { teacher_id: this.teacher_id ? this.teacher_id : '' } }
+          { term: { team_type: type } }
         ]
+        if (this.teacher_id) {
+          config.push({
+            term: { teacher_id: this.teacher_id ? this.teacher_id : '' }
+          })
+        }
         this.must = this.filterConditions
           ? config.concat(this.filterConditions)
           : config
@@ -177,9 +181,13 @@ export default {
       } else {
         const config = [
           { terms: { team_state: this.classStatus } },
-          { range: { team_type: { gte: type } } },
-          { term: { teacher_id: this.teacher_id ? this.teacher_id : '' } }
+          { range: { team_type: { gte: type } } }
         ]
+        if (this.teacher_id) {
+          config.push({
+            term: { teacher_id: this.teacher_id ? this.teacher_id : '' }
+          })
+        }
         this.must = this.filterConditions
           ? config.concat(this.filterConditions)
           : config
