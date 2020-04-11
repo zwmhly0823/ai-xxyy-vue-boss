@@ -556,14 +556,16 @@ export default {
           } else if (this.$route.query.teacherId) {
             // 编辑接口
             this.$http.Teacher.updateTeacher(params).then((res) => {
-              this.cansubmit = true
-              this.$message({
-                message: '修改成功',
-                type: 'success'
-              })
-              setTimeout(() => {
-                this.$router.push({ path: '/teacherManagement' })
-              }, 500)
+              if (res.code === 0) {
+                this.cansubmit = true
+                this.$message({
+                  message: '修改成功',
+                  type: 'success'
+                })
+                setTimeout(() => {
+                  this.$router.push({ path: '/teacherManagement' })
+                }, 500)
+              }
             })
           }
         }
