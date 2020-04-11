@@ -234,9 +234,9 @@ export default {
               this.teamDate =
                 this.classListData.teamStatusPage &&
                 this.classListData.teamStatusPage.content[0]
-              // this.classId =
-              //   this.classListData.teamStatusPage &&
-              //   this.classListData.teamStatusPage.content[0]
+              this.classId =
+                this.classListData.teamStatusPage &&
+                this.classListData.teamStatusPage.content[0]
             }
           })
         })

@@ -473,30 +473,30 @@ export default {
         // 教师详情
         this.$http.Teacher.getTeacherDetail(this.$route.query.teacherId).then(
           (res) => {
-            this.ruleForm.imageUrl = res.payload.teacher.headImage
-            this.ruleForm.phone = res.payload.teacher.phone
-            this.ruleForm.name = res.payload.teacher.realName
-            this.ruleForm.nickname = res.payload.teacher.nickname
-            this.ruleForm.resource = res.payload.teacher.sex
-            this.ruleForm.region = [
-              res.payload.department.pid * 1,
-              res.payload.department.id * 1
-            ]
-            res.payload.duty.forEach((val) => {
+            const { payload = {} } = res
+            this.ruleForm.imageUrl = payload.teacher.headImage
+            this.ruleForm.phone = payload.teacher.phone
+            this.ruleForm.name = payload.teacher.realName
+            this.ruleForm.nickname = payload.teacher.nickname
+            this.ruleForm.resource = payload.teacher.sex
+            this.ruleForm.region = payload.department
+              ? [payload.department.pid * 1, payload.department.id * 1]
+              : []
+            payload.duty.forEach((val) => {
               this.ruleForm.positionVal.push(val.id * 1)
             })
-            this.ruleForm.rank = res.payload.rank.id * 1
-            this.ruleForm.inductionDate = res.payload.teacher.joinDate
-              ? new Date(res.payload.teacher.joinDate)
+            this.ruleForm.rank = payload.rank ? payload.rank.id * 1 : ''
+            this.ruleForm.inductionDate = payload.teacher.joinDate
+              ? new Date(payload.teacher.joinDate)
               : new Date()
-            this.ruleForm.departureDate = res.payload.teacher.leaveDate
-              ? new Date(res.payload.teacher.leaveDate)
+            this.ruleForm.departureDate = payload.teacher.leaveDate
+              ? new Date(payload.teacher.leaveDate)
               : this.ruleForm.inductionDate
-            this.ruleForm.groupData = res.payload.teacher.leaveTrain
-              ? new Date(res.payload.teacher.leaveTrain)
+            this.ruleForm.groupData = payload.teacher.leaveTrain
+              ? new Date(payload.teacher.leaveTrain)
               : this.ruleForm.inductionDate
-            this.ruleForm.accountSettings = res.payload.teacher.isLogin
-            this.ruleForm.workingState = res.payload.teacher.status
+            this.ruleForm.accountSettings = payload.teacher.isLogin
+            this.ruleForm.workingState = payload.teacher.status
           }
         )
       }
