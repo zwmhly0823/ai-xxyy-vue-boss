@@ -11,22 +11,15 @@ const mutations = {
       'state.whackId-------------------------------------------id'
     )
   },
-  branshLeft(state, bool) {
+  bransh(state, bool) {
     state.bransh = bool
     console.log(state.bransh, '000')
-    // if (state.bransh) {
-    //   console.log('----------------')
-    //   return fun
-    // }
   }
 }
 const actions = {
   getLeftBarId(context, id) {
     context.commit('getLeftBar', id)
     console.log(context, '-------------id', id)
-  },
-  bransh(context, bool) {
-    context.commit('branshLeft', bool)
   }
 }
 

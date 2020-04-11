@@ -408,6 +408,8 @@ export default {
             })
             setTimeout(() => {
               this.getExpressList(this.dataExp.id)
+              this.$store.commit('bransh', true)
+
               // TODO: 成功后同步左侧列表 待审核 数量
             }, 1000)
           })
@@ -435,13 +437,13 @@ export default {
               }
            */
           const { payload } = res
-          this.$store.commit('bransh', true)
 
           if (payload.length === 0) {
             this.$message({
               type: 'success',
               message: '审核成功!'
             })
+            this.$store.commit('bransh', true)
             this.getExpressList(this.whackId)
           } else {
             const errorMsg = payload.map((item) => {

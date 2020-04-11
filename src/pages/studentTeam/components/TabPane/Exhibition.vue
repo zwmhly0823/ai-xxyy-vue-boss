@@ -9,7 +9,12 @@
         <div class="allinfo" v-for="(item, index) in listinfo" :key="index">
           <div class="userinfo">
             <span class="userhead">
-              <img :src="item.head" @load="loaded(index)" class="head" alt="" />
+              <img
+                :src="`${item.head}?x-oss-process=image/resize,l_100`"
+                @load="loaded(index)"
+                class="head"
+                alt=""
+              />
             </span>
             <span class="username">{{ item.username }}</span>
           </div>
@@ -22,7 +27,7 @@
             <span class="img-overflow"
               ><img
                 class="topframe"
-                :src="img.task_image"
+                :src="`${img.task_image}?x-oss-process=image/resize,l_100`"
                 alt=""
                 @load="loaded(index)"
             /></span>
@@ -43,12 +48,8 @@
 export default {
   props: {
     listData: {
-      type: Object,
+      type: Array,
       default: null
-    },
-    weekNum: {
-      type: String,
-      default: ''
     },
     Exhibition: {
       type: Boolean,
@@ -57,8 +58,6 @@ export default {
   },
   data() {
     return {
-      listinfo: [],
-      listTitle: '',
       isLoaded: false,
       num: 0
     }
@@ -72,15 +71,15 @@ export default {
       }
     }
   },
-  watch: {
-    listData(value) {
-      console.log('child - receive ----> res:', value)
-      this.listinfo = value.data.getStuTaskRankingList
-      console.log('listinfo -------', this.listinfo)
+  computed: {
+    listinfo() {
+      return this.listData || []
+      // console.log('child - receive ----> res:', value)
+      // this.listinfo = value.data.getStuTaskRankingList.concat(
+      //   value.data.getStuTaskRankingList
+      // )
+      // console.log('listinfo -------', this.listinfo)
     }
-    // weekNum(value) {
-    //   this.listTitle = value === 'U1' ? 'W1' : 'W2'
-    // }
   }
 }
 </script>

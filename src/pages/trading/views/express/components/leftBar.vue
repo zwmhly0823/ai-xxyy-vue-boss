@@ -81,12 +81,18 @@ export default {
   computed: {
     ...mapState({
       bransh: (state) => {
-        if (state.leftbar.bransh) {
-          this.getExpressList()
-        }
-        console.log(state.left.bransh, '----------')
+        return state.leftbar.bransh
       }
     })
+  },
+  watch: {
+    bransh(val) {
+      if (val) {
+        console.log(val, 'ppppp----------------')
+        this.getExpressList()
+        this.$store.commit('bransh', false)
+      }
+    }
   },
   methods: {
     getExpressList() {
