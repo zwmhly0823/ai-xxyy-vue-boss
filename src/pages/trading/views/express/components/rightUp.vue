@@ -11,6 +11,7 @@
     <div class="search-up">
       <m-search
         @search="handleSearch"
+        class="clearBorder"
         phone="user_id"
         stage="term"
         sup="sup"
@@ -379,6 +380,13 @@ export default {
         margin-right: 20px;
       }
     }
+  }
+}
+</style>
+<style lang="scss">
+.container {
+  .clearBorder {
+    border: none;
   }
 }
 </style>
