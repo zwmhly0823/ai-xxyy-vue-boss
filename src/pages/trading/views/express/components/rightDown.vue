@@ -286,8 +286,8 @@ export default {
           label: '京东云仓'
         },
         {
-          value1: '',
-          label: '不选择承运商'
+          value1: '0',
+          label: '不指定承运商'
         }
       ],
       value1: '2',
