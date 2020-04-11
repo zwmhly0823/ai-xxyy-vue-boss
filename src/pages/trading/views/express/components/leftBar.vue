@@ -15,6 +15,7 @@
 
 <script>
 import axios from '@/api/axios'
+import { mapState } from 'vuex'
 import { isToss } from '@/utils/index'
 export default {
   data() {
@@ -75,6 +76,22 @@ export default {
           ]
         }
       ]
+    }
+  },
+  computed: {
+    ...mapState({
+      bransh: (state) => {
+        return state.leftbar.bransh
+      }
+    })
+  },
+  watch: {
+    bransh(val) {
+      if (val) {
+        console.log(val, 'ppppp----------------')
+        this.getExpressList()
+        this.$store.commit('bransh', false)
+      }
     }
   },
   methods: {
@@ -163,6 +180,7 @@ export default {
         })
     },
     nodeClick(dataExpress) {
+      this.$store.dispatch('getLeftBarId', dataExpress.id)
       this.$emit('change', dataExpress)
       console.log(dataExpress, 'changedata')
     },
