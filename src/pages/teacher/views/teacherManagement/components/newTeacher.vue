@@ -204,7 +204,9 @@
 </template>
 <script>
 import axios from 'axios'
+import _ from 'lodash'
 import Contants from '@/utils/contants'
+import { sortByKey } from '@/utils/boss'
 export default {
   data() {
     // 手机号正则
@@ -455,11 +457,13 @@ export default {
             }
           })
         })
-        this.suDepartments = departmentWith
+        this.suDepartments = sortByKey(departmentWith, 'id')
+        console.log(this.suDepartments)
       })
       // 职级
       this.$http.Teacher.TeacherRankList().then((res) => {
-        this.rankList = res.data.TeacherRankList
+        const rank = res.data.TeacherRankList || []
+        this.rankList = _.sortBy(rank, 'id')
       })
       // 级别
       this.$http.Teacher.courseSupList().then((res) => {
