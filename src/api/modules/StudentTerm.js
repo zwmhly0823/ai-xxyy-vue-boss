@@ -11,11 +11,15 @@ import axios from '../axiosConfig'
 
 export default {
   // 班级列表左侧状态名称
-  getTeamStatusCount({ data, teacherId }) {
+  getTeamStatusCount({ data, teacherId, queryParams = '' }) {
     return axios.get('/graphql/team', {
       query: `{
-        teamStatusCount(field: "team_state", team_type: 
-        ${data}, teacher_id: "${teacherId || ''}") {
+        teamStatusCount(
+          field: "team_state",
+          team_type:${data},
+          teacher_id: "${teacherId || ''}", 
+          query: ${JSON.stringify(queryParams)}
+        ) {
           code,
           value,
           name
@@ -62,5 +66,11 @@ export default {
         }
       }`
     })
+  },
+  getCalculationTeamInfo(params) {
+    return axios.post(
+      '/api/tm/v1/teacher/manager/team/calculationTeamInfo',
+      params
+    )
   }
 }

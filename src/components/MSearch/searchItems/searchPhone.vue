@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-26 16:28:45
  * @LastEditors: zhubaodong
- * @LastEditTime: 2020-04-02 00:20:04
+ * @LastEditTime: 2020-04-08 13:35:24
  -->
 <template>
   <div class="search-item small">
@@ -62,6 +62,10 @@ export default {
     tip: {
       type: String,
       default: '手机号查询'
+    },
+    last_team_id: {
+      type: String,
+      default: ''
     }
   },
   components: {},
@@ -105,6 +109,7 @@ export default {
                   mobile
                   wechat_nikename
                   id
+                  last_team_id
                 }
             }
           `
@@ -116,7 +121,14 @@ export default {
     },
     inputHandler(data) {
       this.input = data.mobile
-      this.$emit('result', data.mobile ? { [this.name]: data.id } : '')
+      this.$emit(
+        'result',
+        this.last_team_id
+          ? { [this.last_team_id]: data.last_team_id }
+          : data.mobile
+          ? { [this.name]: data.id }
+          : ''
+      )
     }
   },
   created() {},
@@ -126,7 +138,7 @@ export default {
 <style lang="scss" scoped>
 .search-item {
   &.small {
-    width: 135px !important;
+    width: 140px !important;
   }
 }
 </style>

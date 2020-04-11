@@ -4,7 +4,7 @@
  * @Author: shentong
  * @Date: 2020-03-13 14:38:28
  * @LastEditors: panjian
- * @LastEditTime: 2020-04-07 14:51:44
+ * @LastEditTime: 2020-04-09 19:19:17
  */
 // import axios from '../axios'
 import axios from '../axiosConfig'
@@ -25,9 +25,7 @@ export default {
       params
     )
   },
-  sendBatch(mobiles, type, params) {
-    return axios.post(
-      `/api/m/v1/sms/sendBatch?mobiles=${mobiles}&type=${type}&params=${params}`
-    )
+  sendMsgForTeacher(orderId) {
+    return axios.get(`/api/o/v1/order/sendMsgForTeacher?orderIds=${orderId}`)
   }
 }

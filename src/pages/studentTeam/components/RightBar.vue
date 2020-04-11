@@ -3,8 +3,8 @@
  * @version:
  * @Author: zhubaodong
  * @Date: 2020-03-13 16:53:41
- * @LastEditors: panjian
- * @LastEditTime: 2020-04-03 17:26:25
+ * @LastEditors: zhubaodong
+ * @LastEditTime: 2020-03-23 21:50:41
  -->
 <template>
   <div class="right-container">
@@ -39,8 +39,8 @@
             <span>辅导老师微信: {{ item.teacher_wx }}</span>
             <span style="margin-right:0px">
               <span
-                >开课~结课 &nbsp;{{ item.formatStartDay }}~{{
-                  item.formatEndDay
+                >开课~结课 &nbsp;{{ teamDate.formatStartDay }}~{{
+                  teamDate.formatEndDay
                 }}</span
               >
             </span>
@@ -167,6 +167,10 @@ export default {
     classId: {
       type: Object,
       default: null
+    },
+    teamDate: {
+      type: Object,
+      default: () => ({})
     }
   },
   components: {
@@ -174,23 +178,28 @@ export default {
   },
   data() {
     return {
-      classMessage: {},
+      classMessage: [],
       cout: 0,
-      teacherId: ''
+      teacherId: '',
+      tableDataEmpty: true,
+      count: 0,
+      day: {}
     }
   },
-  computed: {},
   watch: {
+    teamDate(val) {
+      console.log(val)
+    },
     classId(vals) {
       const teacherId = isToss()
       if (teacherId) {
         this.teacherId = teacherId
       }
-      if (vals.classId) {
+      if (vals.classId && vals.classId.id) {
+        this.tableDataEmpty = true
         this.getClassTeacher(vals.classId.id)
-        console.log(vals, this.cout++, 'vals')
       } else {
-        this.classMessage = ''
+        this.tableDataEmpty = false
       }
     }
   },
@@ -257,39 +266,36 @@ export default {
           }
           /** localstorage teacher 添加 “teacher_wx” 字段 */
 
-          res.data.detail.todayTrans =
-            res.data.detail.statictis.today_order /
-            this.classId.classId.enrolled
-          res.data.detail.yesterdayTrans =
-            res.data.detail.statictis.yesterday_order /
-            this.classId.classId.enrolled
-          res.data.detail.allTrans =
-            res.data.detail.statictis.order_all / this.classId.classId.enrolled
+          if (this.classId && this.classId.classId) {
+            res.data.detail.todayTrans =
+              res.data.detail.statictis.today_order /
+              this.classId.classId.enrolled
+            res.data.detail.yesterdayTrans =
+              res.data.detail.statictis.yesterday_order /
+              this.classId.classId.enrolled
+            res.data.detail.allTrans =
+              res.data.detail.statictis.order_all /
+              this.classId.classId.enrolled
 
-          res.data.detail.week = this.classId.classId.week
-          res.data.detail.pre_enroll = this.classId.classId.pre_enroll
-          res.data.detail.timebegin = dayjs
-            .unix(Number(this.classId.classId.ctime) / 1000)
-            .format('MM-DD  hh:mm:ss')
-          res.data.detail.onetime = dayjs
-            .unix(Number(this.classId.classId.start_day) / 1000)
-            .format('YYMMDD')
-          res.data.detail.formatStartDay = this.classId.classId.formatStartDay
-          res.data.detail.formatEndDay = this.classId.classId.formatEndDay
-          this.classMessage = res.data
+            res.data.detail.week = this.classId.classId.week
+            res.data.detail.pre_enroll = this.classId.classId.pre_enroll
+            res.data.detail.timebegin = dayjs
+              .unix(Number(this.classId.classId.ctime) / 1000)
+              .format('MM-DD  hh:mm:ss')
+            res.data.detail.onetime = dayjs
+              .unix(Number(this.classId.classId.start_day) / 1000)
+              .format('YYMMDD')
+          }
+          if (this.tableDataEmpty) {
+            this.classMessage = res.data
+          } else {
+            this.tableDataEmpty = false
+            this.classMessage = []
+          }
+
           // this.classMessage2 = res.dataformatEndDay
-
-          console.log(
-            this.classMessage,
-            this.classMessage.statictis,
-            res.data,
-            'res'
-          )
         })
     }
-  },
-  mounted() {
-    console.log(this.classId)
   }
 }
 </script>

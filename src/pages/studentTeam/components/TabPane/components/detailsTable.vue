@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 20:22:24
  * @LastEditors: panjian
- * @LastEditTime: 2020-04-07 21:12:55
+ * @LastEditTime: 2020-04-09 19:36:09
  -->
 <template>
   <div class="table-box">
@@ -91,18 +91,20 @@
         <el-table-column prop="added_wechat" label="已加好友">
           <!-- <template v-if="renderHtml" slot="header"> -->
           <template slot="header">
-            <span @click="onSortWechat">已加好友</span>
-            <div v-if="wechatShowIcon === 1" class="added-wechat-icon-box">
-              <i class="el-icon-caret-top top"></i>
-              <i class="el-icon-caret-bottom bottom"></i>
-            </div>
-            <div v-if="wechatShowIcon === 2" class="added-wechat-icon-box">
-              <i class="el-icon-caret-top top"></i>
-              <i class="el-icon-caret-bottom bottom-color"></i>
-            </div>
-            <div v-if="wechatShowIcon === 3" class="added-wechat-icon-box">
-              <i class="el-icon-caret-top top-color"></i>
-              <i class="el-icon-caret-bottom bottom"></i>
+            <div @click="onSortWechat">
+              <span>已加好友</span>
+              <div v-if="wechatShowIcon === 1" class="added-wechat-icon-box">
+                <i class="el-icon-caret-top top"></i>
+                <i class="el-icon-caret-bottom bottom"></i>
+              </div>
+              <div v-if="wechatShowIcon === 2" class="added-wechat-icon-box">
+                <i class="el-icon-caret-top top"></i>
+                <i class="el-icon-caret-bottom bottom-color"></i>
+              </div>
+              <div v-if="wechatShowIcon === 3" class="added-wechat-icon-box">
+                <i class="el-icon-caret-top top-color"></i>
+                <i class="el-icon-caret-bottom bottom"></i>
+              </div>
             </div>
           </template>
           <template slot-scope="scope">
@@ -142,18 +144,20 @@
         <!-- 已进群 -->
         <el-table-column prop="added_group" label="已进群">
           <template slot="header">
-            <span @click="onSortGroup">已进群</span>
-            <div v-if="groupShowIcon === 1" class="added-wechat-icon-box">
-              <i class="el-icon-caret-top top"></i>
-              <i class="el-icon-caret-bottom bottom"></i>
-            </div>
-            <div v-if="groupShowIcon === 2" class="added-wechat-icon-box">
-              <i class="el-icon-caret-top top"></i>
-              <i class="el-icon-caret-bottom bottom-color"></i>
-            </div>
-            <div v-if="groupShowIcon === 3" class="added-wechat-icon-box">
-              <i class="el-icon-caret-top top-color"></i>
-              <i class="el-icon-caret-bottom bottom"></i>
+            <div @click="onSortGroup">
+              <span>已进群</span>
+              <div v-if="groupShowIcon === 1" class="added-wechat-icon-box">
+                <i class="el-icon-caret-top top"></i>
+                <i class="el-icon-caret-bottom bottom"></i>
+              </div>
+              <div v-if="groupShowIcon === 2" class="added-wechat-icon-box">
+                <i class="el-icon-caret-top top"></i>
+                <i class="el-icon-caret-bottom bottom-color"></i>
+              </div>
+              <div v-if="groupShowIcon === 3" class="added-wechat-icon-box">
+                <i class="el-icon-caret-top top-color"></i>
+                <i class="el-icon-caret-bottom bottom"></i>
+              </div>
             </div>
           </template>
           <template slot-scope="scope">
@@ -193,18 +197,20 @@
         <!-- 关注公众号 -->
         <el-table-column prop="follow" label="关注公众号">
           <template slot="header">
-            <span @click="onSortFollow">关注公众号</span>
-            <div v-if="followShowIcon === 1" class="added-wechat-icon-box">
-              <i class="el-icon-caret-top top"></i>
-              <i class="el-icon-caret-bottom bottom"></i>
-            </div>
-            <div v-if="followShowIcon === 2" class="added-wechat-icon-box">
-              <i class="el-icon-caret-top top"></i>
-              <i class="el-icon-caret-bottom bottom-color"></i>
-            </div>
-            <div v-if="followShowIcon === 3" class="added-wechat-icon-box">
-              <i class="el-icon-caret-top top-color"></i>
-              <i class="el-icon-caret-bottom bottom"></i>
+            <div @click="onSortFollow">
+              <span>关注公众号</span>
+              <div v-if="followShowIcon === 1" class="added-wechat-icon-box">
+                <i class="el-icon-caret-top top"></i>
+                <i class="el-icon-caret-bottom bottom"></i>
+              </div>
+              <div v-if="followShowIcon === 2" class="added-wechat-icon-box">
+                <i class="el-icon-caret-top top"></i>
+                <i class="el-icon-caret-bottom bottom-color"></i>
+              </div>
+              <div v-if="followShowIcon === 3" class="added-wechat-icon-box">
+                <i class="el-icon-caret-top top-color"></i>
+                <i class="el-icon-caret-bottom bottom"></i>
+              </div>
             </div>
           </template>
           <template slot-scope="scope">
@@ -292,6 +298,14 @@
                   plain
                   @click="handelAddExpress"
                   >帮他填写</el-button
+                >
+                <el-button
+                  icon="el-icon-postcard"
+                  size="mini"
+                  type="primary"
+                  plain
+                  @click="onUrgentAddress"
+                  >催发地址</el-button
                 >
               </div>
             </div>
@@ -580,7 +594,6 @@
 <script>
 import MPagination from '@/components/MPagination/index.vue'
 import logisticsForm from '../components/logisticsForm'
-import { timestamp } from '@/utils/index'
 export default {
   name: 'detailsTable',
   props: {
@@ -607,6 +620,7 @@ export default {
   },
   data() {
     return {
+      orderId: '',
       selectUserMobile: [],
       moreTitle: false,
       wechatShowIcon: 1,
@@ -624,15 +638,13 @@ export default {
         receiptTel: '',
         addressDetail: ''
       },
-      wechatSort: 'desc',
+      wechatSort: 'asc',
       groupSort: 'desc',
       followSort: 'desc',
       renderHtml: true
     }
   },
-  mounted() {
-    console.log(this.audioTabs, ' audioTabs ')
-  },
+  mounted() {},
   watch: {
     classId(value) {
       this.audioIndex = null
@@ -648,28 +660,16 @@ export default {
       // 当没有点击复选框 直接点击加好友
       if (this.moreTitle === false) {
         this.selectUserMobile = []
-        this.selectUserMobile.push(row.mobile)
+        this.selectUserMobile.push(row.order_id)
       }
-      console.log('当没有点击复选框 直接点击加好友')
     },
     // 表头加好友操作
     headerPoint(index, scope) {
       console.log(index, scope)
     },
     batchBtn() {
-      console.log(this.classId, '点击加好友')
-      const params = []
-      const mobiles = Object.values(this.selectUserMobile)
-      const sup = `${this.classId.classId.sup}${
-        this.classId.classId.team_type ? '系统课' : '体验课'
-      }`
-      const teacherWx = JSON.parse(localStorage.getItem('teacher'))
-      const type = 'BUY_COURSE'
-      params.push(sup)
-      params.push(timestamp(this.classId.classId.start_day, 5))
-      params.push(teacherWx.teacher_wx)
-      console.log(mobiles, type, params, 'params')
-      this.$http.User.sendBatch(mobiles, type, params).then((res) => {
+      const orderIds = Object.values(this.selectUserMobile).join()
+      this.$http.User.sendMsgForTeacher(orderIds).then((res) => {
         this.$message({
           message: '已发送短信',
           type: 'success'
@@ -678,7 +678,6 @@ export default {
     },
     // 复选框
     handleSelectionChange(val) {
-      console.log(val, '复选框')
       this.selectUserMobile = []
       if (val.length > 1) {
         this.moreTitle = true
@@ -686,8 +685,7 @@ export default {
         this.moreTitle = false
       }
       val.forEach((data) => {
-        this.selectUserMobile.push(data.mobile)
-        console.log(data.mobile, '选中的电话')
+        this.selectUserMobile.push(data.order_id)
       })
     },
     // 排序
@@ -696,7 +694,7 @@ export default {
       if (this.wechatSort === 'asc') {
         this.$emit('onGroupSort', '{"added_wechat":"asc"}')
         this.$nextTick(() => {
-          this.wechatShowIcon = 3
+          this.wechatShowIcon = 2
           this.followShowIcon = 1
           this.groupShowIcon = 1
           this.renderHtml = true
@@ -705,7 +703,7 @@ export default {
       } else {
         this.$emit('onGroupSort', '{"added_wechat":"desc"}')
         this.$nextTick(() => {
-          this.wechatShowIcon = 2
+          this.wechatShowIcon = 3
           this.followShowIcon = 1
           this.groupShowIcon = 1
           this.renderHtml = true
@@ -756,7 +754,17 @@ export default {
         })
         this.followSort = 'asc'
       }
-      console.log(this.followSort)
+    },
+    // 催发地址接口
+    onUrgentAddress() {
+      setTimeout(() => {
+        this.$http.Express.pushMsgByOrderId(this.orderId).then((res) => {
+          this.$message({
+            message: '已发送短信',
+            type: 'success'
+          })
+        })
+      }, 500)
     },
     // 添加物流地址按钮
     handelAddExpress(row) {
@@ -802,7 +810,7 @@ export default {
       this.added_wechat = row.added_wechat
       this.studentId = row.id
       this.tableindex = row.index
-      console.log(row.id, 'row.id')
+      this.orderId = row.order_id
       const id = row.id
       const userid = row.user_id
       const orderid = row.order_id
@@ -938,13 +946,6 @@ export default {
     }
     .logistics-address-name {
       margin-left: -8px;
-    }
-    .cascader-area {
-      // .cascader-area-text {
-      //   font-size: 15px;
-      //   margin-bottom: 15px;
-      //   font-weight: 500;
-      // }
     }
   }
   .login-box {

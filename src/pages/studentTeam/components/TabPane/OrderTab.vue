@@ -266,7 +266,6 @@ export default {
               }
             })
           this.tableData = _data
-          console.log(this.tableData)
         })
     },
     // 点击分页
