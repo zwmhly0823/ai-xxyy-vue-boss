@@ -3,7 +3,7 @@
  * @Email: yangjiyong@meishubao.com
  * @Date: 2019-12-26 17:13:38
  * @Last Modified by: YangJiyong
- * @Last Modified time: 2020-04-03 18:03:54
+ * @Last Modified time: 2020-04-11 21:22:01
  * @Description: (顶部)模块导航 map - 显示对应名称
  * 如果 `src/pages/`下的模板名称是 小骆峰 ，link改为 中线 - 连接
  * TODO: 动态设置
@@ -27,7 +27,7 @@ const menuItems = [
   },
   {
     link: 'teacher',
-    text: '老师中心',
+    text: '社群销售',
     isShow: true
   },
   {
