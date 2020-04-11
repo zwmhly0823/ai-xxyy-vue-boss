@@ -471,8 +471,8 @@ export default {
             })
             setTimeout(() => {
               this.getExpressList(this.dataExp.id)
+              this.selectNum = 0
               this.$store.commit('bransh', true)
-
               // TODO: 成功后同步左侧列表 待审核 数量
             }, 1000)
           } else {
