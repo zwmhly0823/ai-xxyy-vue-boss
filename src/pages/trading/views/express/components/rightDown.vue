@@ -15,7 +15,7 @@
     >
       <el-table-column type="selection" width="25" v-if="!teacherId">
       </el-table-column>
-      <el-table-column width="25">
+      <el-table-column width="25" v-if="dataExp.id == 6 && !teacherId">
         <template slot-scope="scope">
           <!-- <div v-show="false">{{ scope }}</div> -->
           <el-dropdown trigger="click">
@@ -283,6 +283,10 @@ export default {
         {
           value1: '1',
           label: '京东云仓'
+        },
+        {
+          value1: '',
+          label: '不选择承运商'
         }
       ],
       value1: '2',
