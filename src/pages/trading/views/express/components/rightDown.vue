@@ -204,7 +204,7 @@
       :current-page="currentPage"
       :page-count="totalPages"
       :total="totalElements"
-      :pageSizeArr="[20, 100, 200, 500, 1000]"
+      :pageSizeArr="[20, 100, 200, 500]"
       @current-change="handleSizeChange"
       @current-pagesizes="handleChangeSize"
       show-pager
@@ -245,6 +245,7 @@ export default {
     dataExp(val) {
       this.currentPage = 1
       this.tableData = []
+      this.selectNum = 0
       console.log(val, '----------')
       if (val.id) {
         this.getExpressList(this.whackId)
