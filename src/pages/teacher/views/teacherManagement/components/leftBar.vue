@@ -47,6 +47,7 @@
 </template>
 
 <script>
+import { sortByKey } from '@/utils/boss'
 export default {
   props: {
     experienceData: {
@@ -89,7 +90,6 @@ export default {
       this.toolsMenu = true
       if (+e.button === 2) {
         e.preventDefault()
-
         const _x = e.clientX
         const _y = e.clientY
         oMenu.style.display = 'block'
@@ -107,7 +107,9 @@ export default {
   },
   async created() {
     await this.$http.Teacher.getDepartmentTree(1).then((res) => {
-      const department = res.payload
+      const arr = (res && res.payload) || []
+      if (arr.length === 0) return arr
+      const department = sortByKey(arr, 'id')
       // 加一级销售部
       const tree = {
         id: '0',
