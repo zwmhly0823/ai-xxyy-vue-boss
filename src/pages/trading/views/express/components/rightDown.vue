@@ -204,7 +204,7 @@
       :current-page="currentPage"
       :page-count="totalPages"
       :total="totalElements"
-      :pageSizeArr="[2, 10, 20, 5]"
+      :pageSizeArr="[20, 100, 200, 500, 1000]"
       @current-change="handleSizeChange"
       @current-pagesizes="handleChangeSize"
       show-pager
@@ -334,7 +334,12 @@ export default {
     handleChangeSize(pageItem) {
       this.currentPage = 1
       this.currentItem = pageItem
-      this.tableData = []
+      this.scrollToTop()
+      this.getExpressList(this.dataExp.id)
+    },
+    handleSizeChange(val) {
+      this.currentPage = val
+      this.scrollToTop()
       this.getExpressList(this.dataExp.id)
     },
     // 审核通过 确定
@@ -522,11 +527,7 @@ export default {
     handleExpressTo(row, column, event) {
       console.log(row + column + event, 'row, column, event')
     },
-    handleSizeChange(val) {
-      this.tableData = []
-      this.currentPage = val
-      this.getExpressList(this.dataExp.id)
-    },
+
     getExpressList(id) {
       let timeType = {}
       this.searchIn.forEach((item) => {
@@ -654,7 +655,6 @@ export default {
         .then((res) => {
           if (res && res.payload) {
             this.waitFor = false
-            console.log('ress----', res && res.payload)
             this.timeLine = true
             const lastData = {}
             res.payload[0].data.forEach((item) => {
@@ -676,6 +676,13 @@ export default {
             this.waitFor = true
           }
         })
+    },
+
+    // scrotop
+    scrollToTop() {
+      document
+        .getElementById('right-scroll')
+        .querySelector('.scrollbar-wrapper').scrollTop = 0
     }
   }
 }

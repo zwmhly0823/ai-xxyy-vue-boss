@@ -46,12 +46,6 @@ export default {
     },
     search(val) {
       console.log(val, 'search')
-    },
-    handleClick(tab, event) {
-      document
-        .getElementById('order-scroll')
-        .querySelector('.order-wrapper').scrollTop = 0
-      this.status = tab.name
     }
   },
   created() {},
@@ -82,6 +76,7 @@ export default {
       display: flex;
       flex-direction: column;
       flex: 1;
+      overflow: hidden;
     }
   }
 }
