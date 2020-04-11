@@ -287,7 +287,7 @@ export default {
         },
         {
           value1: '0',
-          label: '不选择承运商'
+          label: '不指定承运商'
         }
       ],
       value1: '2',
