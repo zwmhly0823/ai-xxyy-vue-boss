@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-13 15:24:11
  * @LastEditors: zhubaodong
- * @LastEditTime: 2020-04-10 16:00:38
+ * @LastEditTime: 2020-04-08 16:23:35
  -->
 <template>
   <el-row type="flex" class="app-main height student-team">
@@ -30,7 +30,7 @@
     <el-col class="student-team-right ">
       <div class="grid-content right">
         <el-scrollbar wrap-class="scrollbar-wrapper" id="right-scroll">
-          <right-bar :classId="classIdData" :team-date="teamDate" />
+          <right-bar :classId="classIdData" />
         </el-scrollbar>
       </div>
     </el-col>
@@ -62,8 +62,7 @@ export default {
       scrollPage: 1,
       teacher_id: null,
       must: null, // 搜索条件
-      filterConditions: null,
-      teamDate: {}
+      filterConditions: null
     }
   },
   computed: {
@@ -125,7 +124,6 @@ export default {
      */
     getCenterBarSelect(data) {
       this.classId = data.datas
-      this.teamDate = data.datas
       this.type = data.type
     },
     /**
@@ -169,13 +167,9 @@ export default {
       if (type === 0) {
         const config = [
           { terms: { team_state: this.classStatus } },
-          { term: { team_type: type } }
+          { term: { team_type: type } },
+          { term: { teacher_id: this.teacher_id ? this.teacher_id : '' } }
         ]
-        if (this.teacher_id) {
-          config.push({
-            term: { teacher_id: this.teacher_id ? this.teacher_id : '' }
-          })
-        }
         this.must = this.filterConditions
           ? config.concat(this.filterConditions)
           : config
@@ -183,14 +177,9 @@ export default {
       } else {
         const config = [
           { terms: { team_state: this.classStatus } },
-          { range: { team_type: { gte: type } } }
-          // { term: { teacher_id: this.teacher_id ? this.teacher_id : '' } }
+          { range: { team_type: { gte: type } } },
+          { term: { teacher_id: this.teacher_id ? this.teacher_id : '' } }
         ]
-        if (this.teacher_id) {
-          config.push({
-            term: { teacher_id: this.teacher_id ? this.teacher_id : '' }
-          })
-        }
         this.must = this.filterConditions
           ? config.concat(this.filterConditions)
           : config
@@ -212,33 +201,6 @@ export default {
               this.classListData.teamStatusPage &&
               this.classListData.teamStatusPage.content[0]
           }
-          const idArr = res.data.teamStatusPage.content.map((item) => item.id)
-          if (idArr.length === 0) return
-          this.$http.StudentTerm.getCalculationTeamInfo(idArr).then((val) => {
-            const calculationTeam = val.payload || []
-            const objDate = {}
-            calculationTeam.forEach((item) => {
-              objDate[item.id] = {
-                start_day: item.startDay,
-                end_day: item.endDay
-              }
-            })
-            res.data.teamStatusPage.content.forEach((item) => {
-              const temp = objDate[item.id] || { start_day: '', end_day: '' }
-              item.start_day = temp.start_day
-              item.end_day = temp.end_day
-            })
-            this.classListData = res.data
-
-            if (+this.scrollPage === 1) {
-              this.teamDate =
-                this.classListData.teamStatusPage &&
-                this.classListData.teamStatusPage.content[0]
-              // this.classId =
-              //   this.classListData.teamStatusPage &&
-              //   this.classListData.teamStatusPage.content[0]
-            }
-          })
         })
         .catch((err) => console.log(err))
     }
