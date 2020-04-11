@@ -15,7 +15,7 @@
         slot="searchItems"
         size="mini"
         @click="newTeacher"
-        >新增老师</el-button
+        >新增销售</el-button
       >
       <!-- <el-checkbox-group
         v-model="checkList"
@@ -41,7 +41,7 @@
       size="mini"
       @click="newTeacher"
       style="margin: 15px;"
-      >新增老师</el-button
+      >新增销售</el-button
     >
 
     <div class="orderStyle">

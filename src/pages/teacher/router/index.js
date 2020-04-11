@@ -14,7 +14,7 @@ const routes = [
     path: '/',
     name: 'teacher',
     meta: {
-      title: '老师中心',
+      title: '社群销售',
       icon: 'el-icon-s-custom'
     },
     redirect: '/teacherManagement'
@@ -23,7 +23,7 @@ const routes = [
     path: '/teacherManagement',
     name: 'teacherManagement',
     meta: {
-      title: '辅导老师管理',
+      title: '销售管理',
       keepAlive: true
     },
     component: () =>
