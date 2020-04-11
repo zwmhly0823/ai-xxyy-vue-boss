@@ -2,8 +2,8 @@
  * @Author: YangJiyong
  * @Email: yangjiyong@meishubao.com
  * @Date: 2020-03-14 15:07:26
- * @Last Modified by: YangJiyong
- * @Last Modified time: 2020-04-10 20:55:24
+ * @Last Modified by: chengweihua
+ * @Last Modified time: 2020-04-11 14:37:32
  * @Description: 设置左侧导航展示数据
  * 通过导入模块router/index.js判断，规定模块入口文件为 {path: '/', name: 'Home'}
  * TODO: 自动完成
@@ -77,7 +77,7 @@ const routes = [
     // hidden: true,
     meta: {
       title: '老师中心',
-      icon: 'el-icon-service',
+      icon: 'el-icon-user',
       module: 'teacher'
     },
     children: [
