@@ -174,7 +174,7 @@
         </el-radio-group>
       </el-form-item>
       <!-- 分配微信号 -->
-      <el-form-item label="分配微信号">
+      <!-- <el-form-item label="分配微信号">
         <el-select
           v-model="ruleForm.weChat"
           multiple
@@ -189,7 +189,7 @@
           >
           </el-option>
         </el-select>
-      </el-form-item>
+      </el-form-item> -->
     </el-form>
     <div style="text-align: center; padding:10px 0">
       <el-button
@@ -278,10 +278,10 @@ export default {
         { label: '离职', value: 'LEAVE' }
       ],
       // 微信
-      WeChat: [
-        { label: '123', value: 1 },
-        { label: '456', value: 2 }
-      ],
+      // WeChat: [
+      //   { label: '123', value: 1 },
+      //   { label: '456', value: 2 }
+      // ],
       // 表单value
       ruleForm: {
         // 手机号
@@ -313,9 +313,9 @@ export default {
         // 账号设置
         accountSettings: 'YES',
         // 在职状态
-        workingState: 'TENURE',
+        workingState: 'TENURE'
         // 分配微信号
-        weChat: []
+        // weChat: []
       },
 
       // 表单验证
@@ -491,10 +491,10 @@ export default {
               : new Date()
             this.ruleForm.departureDate = res.payload.teacher.leaveDate
               ? new Date(res.payload.teacher.leaveDate)
-              : new Date()
+              : this.ruleForm.inductionDate
             this.ruleForm.groupData = res.payload.teacher.leaveTrain
               ? new Date(res.payload.teacher.leaveTrain)
-              : new Date()
+              : this.ruleForm.inductionDate
             this.ruleForm.accountSettings = res.payload.teacher.isLogin
             this.ruleForm.workingState = res.payload.teacher.status
           }
@@ -542,14 +542,16 @@ export default {
           // 新建接口请求
           if (!this.$route.query.teacherId) {
             this.$http.Teacher.createTeacher(params).then((res) => {
-              this.cansubmit = true
-              this.$message({
-                message: '添加成功',
-                type: 'success'
-              })
-              setTimeout(() => {
-                this.$router.push({ path: '/teacherManagement' })
-              }, 500)
+              if (res.code === 0) {
+                this.cansubmit = true
+                this.$message({
+                  message: '添加成功',
+                  type: 'success'
+                })
+                setTimeout(() => {
+                  this.$router.push({ path: '/teacherManagement' })
+                }, 500)
+              }
             })
           } else if (this.$route.query.teacherId) {
             // 编辑接口
