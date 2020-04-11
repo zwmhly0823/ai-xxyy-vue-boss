@@ -13,10 +13,9 @@
       @select="handleSelect"
       @select-all="handleAllSelect"
     >
-      <el-table-column type="selection" width="25" v-if="!teacherId">
-      </el-table-column>
-      <el-table-column width="25" v-if="!teacherId">
-        <template slot-scope="scope" v-if="dataExp.id == 6">
+      <el-table-column type="selection" width="25"> </el-table-column>
+      <el-table-column width="25">
+        <template slot-scope="scope">
           <!-- <div v-show="false">{{ scope }}</div> -->
           <el-dropdown trigger="click">
             <div class="three-dot">
@@ -218,10 +217,18 @@
 import MPagination from '@/components/MPagination/index.vue'
 import axios from '@/api/axios'
 import { isToss, formatData } from '@/utils/index'
+import { mapState } from 'vuex'
 export default {
   props: ['dataExp', 'search'],
   components: {
     MPagination
+  },
+  computed: {
+    ...mapState({
+      whackId: (state) => {
+        return state.leftbar.whackId
+      }
+    })
   },
   watch: {
     search(val) {
@@ -237,8 +244,9 @@ export default {
     dataExp(val) {
       this.currentPage = 1
       this.tableData = []
+      console.log(val, '----------')
       if (val.id) {
-        this.getExpressList(val.id)
+        this.getExpressList(this.whackId)
         this.dataLogitcs = val
       }
     }
@@ -427,12 +435,14 @@ export default {
               }
            */
           const { payload } = res
+          this.$store.commit('bransh', true)
+
           if (payload.length === 0) {
             this.$message({
               type: 'success',
               message: '审核成功!'
             })
-            this.getExpressList(this.dataExp.id)
+            this.getExpressList(this.whackId)
           } else {
             const errorMsg = payload.map((item) => {
               if (item.code !== 200)

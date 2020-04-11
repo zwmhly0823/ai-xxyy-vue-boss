@@ -10,14 +10,12 @@
       style="color:#2F2E31"
       @node-click="nodeClick"
     ></el-tree>
-    <div>123 {{ whackId }}</div>
   </div>
 </template>
 
 <script>
 import axios from '@/api/axios'
 import { mapState } from 'vuex'
-
 import { isToss } from '@/utils/index'
 export default {
   data() {
@@ -82,7 +80,12 @@ export default {
   },
   computed: {
     ...mapState({
-      whackId: (state) => state.whackId
+      bransh: (state) => {
+        if (state.leftbar.bransh) {
+          this.getExpressList()
+        }
+        console.log(state.left.bransh, '----------')
+      }
     })
   },
   methods: {
