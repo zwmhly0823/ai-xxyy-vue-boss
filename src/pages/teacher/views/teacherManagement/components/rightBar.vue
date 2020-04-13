@@ -64,10 +64,10 @@
                 <el-dropdown-item @click.native="operation(scope.row, '1')">
                   编辑
                 </el-dropdown-item>
-                <!-- <el-dropdown-item @click.native="operation(scope.row, '2')">
+                <el-dropdown-item @click.native="operation(scope.row, '2')">
                   详情
                 </el-dropdown-item>
-                <el-dropdown-item @click.native="operation(scope.row, '3')">
+                <!-- <el-dropdown-item @click.native="operation(scope.row, '3')">
                   关联微信号
                 </el-dropdown-item> -->
               </el-dropdown-menu>
@@ -162,7 +162,11 @@
         </el-table-column> -->
       </el-table>
       <!-- 查看老师详情 -->
-      <teacher-details ref="detailsHidden" :teacherID="teacherID" />
+      <teacher-details
+        ref="detailsHidden"
+        :teacherID="teacherID"
+        :subDepartment="subDepartment"
+      />
       <!-- 关联微信弹窗 -->
       <associatedWeChat ref="associated" />
       <!-- 分页 -->
@@ -227,7 +231,9 @@ export default {
       // 表格数据
       tableData: [],
       // 老师id
-      teacherID: ''
+      teacherID: '',
+      // 所属部门
+      subDepartment: {}
     }
   },
   computed: {
@@ -251,15 +257,13 @@ export default {
       this.getData(1, JSON.stringify(query))
     }
   },
-  created() {
+  activated() {
     this.getData()
   },
   methods: {
-    getData(page = this.currentPage, query = this.query) {
+    getData(page = this.currentPage, query = JSON.stringify(this.query)) {
       // tab数据
       this.$http.Teacher.getTeacherPage(page, query).then((res) => {
-        console.log(res)
-
         if (res && res.data && res.data.TeacherManagePage) {
           const {
             content = [],
@@ -303,6 +307,7 @@ export default {
       } else if (index === '2') {
         this.$refs.detailsHidden.drawer = true
         this.teacherID = val.id
+        this.subDepartment = val.department
       } else if (index === '3') {
         this.$refs.associated.centerDialogVisible = true
       }

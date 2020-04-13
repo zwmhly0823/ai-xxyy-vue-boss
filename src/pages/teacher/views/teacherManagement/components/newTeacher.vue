@@ -451,7 +451,6 @@ export default {
           })
         })
         this.suDepartments = sortByKey(departmentWith, 'id')
-        console.log(this.suDepartments)
       })
       // 职级
       this.$http.Teacher.TeacherRankList().then((res) => {
@@ -513,6 +512,10 @@ export default {
       this.ruleForm.positionVal.forEach((val) => {
         positionValId.push({ id: val })
       })
+      let departureTime = ''
+      if (this.ruleForm.workingState === 'LEAVE') {
+        departureTime = this.ruleForm.departureDate
+      }
       const params = {
         teacher: {
           id: this.$route.query.teacherId,
@@ -523,7 +526,7 @@ export default {
           nickname: this.ruleForm.nickname,
           sex: this.ruleForm.resource,
           joinDate: this.ruleForm.inductionDate,
-          leaveDate: this.ruleForm.departureDate,
+          leaveDate: departureTime,
           leaveTrain: this.ruleForm.groupData,
           status: this.ruleForm.workingState,
           isLogin: this.ruleForm.accountSettings

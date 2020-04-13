@@ -44,8 +44,12 @@
             入职时间:<span>{{ joinDate }} </span>
           </el-col>
           <el-col :span="8">
-            所属部门:<span>{{ department.name || '-' }} </span></el-col
-          >
+            所属部门:<span>
+              {{ departmentData ? departmentData.pname : '-' }}/{{
+                department.name || '-'
+              }}
+            </span>
+          </el-col>
           <el-col :span="8">
             职务:<span>{{
               positionVal.length !== 0 ? positionVal[0].name : '-'
@@ -61,6 +65,9 @@
           <el-col :span="8">
             在职状态:<span>{{ status === 'TENURE' ? '在职' : '离职' }}</span>
           </el-col>
+          <el-col :span="8" v-if="status === 'LEAVE'">
+            离职时间:<span>{{ leaveDate }}</span>
+          </el-col>
           <el-col :span="8">
             账号设置:<span>{{ isLogin === 'YES' ? '允许' : '禁止' }}</span>
           </el-col>
@@ -72,9 +79,11 @@
   </div>
 </template>
 <script>
+import { formatData } from '@/utils/index'
 export default {
   props: {
-    teacherID: String
+    teacherID: String,
+    subDepartment: Object
   },
   data() {
     return {
@@ -95,6 +104,7 @@ export default {
       joinDate: '',
       // 所属部门
       department: {},
+      departmentData: {},
       // 职务
       positionVal: [],
       // 下组时间
@@ -105,6 +115,8 @@ export default {
       shiftLevel: '',
       // 在职状态
       status: '',
+      // 离职时间
+      leaveDate: '',
       // 账号设置
       isLogin: '',
       // 微信号
@@ -116,6 +128,9 @@ export default {
       if (val) {
         this.createdUrl(val)
       }
+    },
+    subDepartment(val) {
+      this.departmentData = val
     }
   },
   methods: {
@@ -130,15 +145,18 @@ export default {
         this.phone = payload.teacher.phone
         this.nickname = payload.teacher.nickname
         this.joinDate = payload.teacher.joinDate
-          ? payload.teacher.joinDate.split('T')[0]
+          ? formatData(new Date(payload.teacher.joinDate).getTime(), 'd')
           : '-'
         this.department = payload.department ? payload.department : ''
         this.positionVal = payload.duty ? payload.duty : ''
         this.leaveTrain = payload.teacher.leaveTrain
-          ? payload.teacher.leaveTrain.split('T')[0]
+          ? formatData(new Date(payload.teacher.leaveTrain).getTime(), 'd')
           : '-'
         this.rank = payload.rank
         this.status = payload.teacher.status
+        this.leaveDate = payload.teacher.leaveDate
+          ? formatData(new Date(payload.teacher.leaveDate).getTime(), 'd')
+          : '-'
         this.isLogin = payload.teacher.isLogin
       })
     },
