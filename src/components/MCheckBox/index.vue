@@ -3,8 +3,8 @@
  * @version:
  * @Author: panjian
  * @Date: 2020-03-16 20:22:24
- * @LastEditors: panjian
- * @LastEditTime: 2020-04-09 18:13:19
+ * @LastEditors: zhubaodong
+ * @LastEditTime: 2020-04-13 17:06:38
  -->
 <template>
   <div>
@@ -48,7 +48,6 @@
         <p>选择课程</p>
         <el-select
           v-model="attendClassSelect"
-          collapse-tags
           multiple
           filterable
           placeholder="请选择"
@@ -148,7 +147,6 @@
         <p>选择课程</p>
         <el-select
           v-model="worksSelect"
-          collapse-tags
           multiple
           filterable
           placeholder="请选择"

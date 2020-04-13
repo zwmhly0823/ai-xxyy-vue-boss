@@ -3,7 +3,7 @@
  * @Email: yangjiyong@meishubao.com
  * @Date: 2020-03-14 15:07:26
  * @Last Modified by: YangJiyong
- * @Last Modified time: 2020-04-10 19:10:55
+ * @Last Modified time: 2020-04-11 21:04:56
  * @Description: 设置左侧导航展示数据
  * 通过导入模块router/index.js判断，规定模块入口文件为 {path: '/', name: 'Home'}
  * TODO: 自动完成
@@ -56,7 +56,7 @@ const routes = [
         path: '/order',
         name: 'order',
         meta: {
-          title: '订单管理',
+          title: '订单',
           module: 'trading'
         }
       },
@@ -64,7 +64,7 @@ const routes = [
         path: '/express',
         name: 'express',
         meta: {
-          title: '物流管理',
+          title: '物流',
           module: 'trading'
         }
       }

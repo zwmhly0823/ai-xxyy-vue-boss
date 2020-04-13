@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-13 15:24:11
  * @LastEditors: zhubaodong
- * @LastEditTime: 2020-04-10 16:00:38
+ * @LastEditTime: 2020-04-08 16:23:35
  -->
 <template>
   <el-row type="flex" class="app-main height student-team">
@@ -30,7 +30,7 @@
     <el-col class="student-team-right ">
       <div class="grid-content right">
         <el-scrollbar wrap-class="scrollbar-wrapper" id="right-scroll">
-          <right-bar :classId="classIdData" :team-date="teamDate" />
+          <right-bar :classId="classIdData" />
         </el-scrollbar>
       </div>
     </el-col>
@@ -60,10 +60,10 @@ export default {
       scrollStatus: '',
       type: 0,
       scrollPage: 1,
-      teacher_id: null,
+      teacher_id: null, // 当前登录老师的ID
+      teacherIds: [], // 当前老师权限，包含本身和权限下的老师ID
       must: null, // 搜索条件
-      filterConditions: null,
-      teamDate: {}
+      filterConditions: null
     }
   },
   computed: {
@@ -81,7 +81,32 @@ export default {
       }
     }
   },
+  async created() {
+    const teacher = isToss()
+    if (teacher) {
+      this.teacher_id = teacher
+    }
+    await this.getTeacherByRole()
+    // 请求体验课状态列表
+    await this.getExperienceStatusList(0)
+    // 请求系统课状态列表
+    await this.getExperienceStatusList(1)
+    // 请求班级列表
+    await this.getClassList()
+  },
   methods: {
+    /**
+     * 老师权限
+     */
+    async getTeacherByRole() {
+      const teacherId = this.teacher_id
+      if (!teacherId) return
+      const teachers = await this.$http.Permission.getAllTeacherByRole({
+        teacherId
+      })
+      this.teacherIds = teachers
+      console.log(teachers)
+    },
     /**
      * 左栏回调函数
      * @param(回调数据) 获得选中内容
@@ -125,7 +150,6 @@ export default {
      */
     getCenterBarSelect(data) {
       this.classId = data.datas
-      this.teamDate = data.datas
       this.type = data.type
     },
     /**
@@ -141,9 +165,16 @@ export default {
      * @param(team_type) 0为体验课 1为系统课
      */
     async getExperienceStatusList(data = 0) {
-      const queryParams = `{"bool":{"must":${JSON.stringify(
-        this.filterConditions ? this.filterConditions : []
-      )}}}`
+      const config = []
+      if (this.teacher_id) {
+        config.push({
+          terms: { teacher_id: this.teacherIds || [] }
+        })
+      }
+      const must = this.filterConditions
+        ? config.concat(this.filterConditions)
+        : config
+      const queryParams = `{"bool":{"must":${JSON.stringify(must)}}}`
 
       this.$http.StudentTerm.getTeamStatusCount({
         data: data,
@@ -173,7 +204,7 @@ export default {
         ]
         if (this.teacher_id) {
           config.push({
-            term: { teacher_id: this.teacher_id ? this.teacher_id : '' }
+            terms: { teacher_id: this.teacherIds || [] }
           })
         }
         this.must = this.filterConditions
@@ -184,11 +215,10 @@ export default {
         const config = [
           { terms: { team_state: this.classStatus } },
           { range: { team_type: { gte: type } } }
-          // { term: { teacher_id: this.teacher_id ? this.teacher_id : '' } }
         ]
         if (this.teacher_id) {
           config.push({
-            term: { teacher_id: this.teacher_id ? this.teacher_id : '' }
+            terms: { teacher_id: this.teacherIds || [] }
           })
         }
         this.must = this.filterConditions
@@ -212,48 +242,9 @@ export default {
               this.classListData.teamStatusPage &&
               this.classListData.teamStatusPage.content[0]
           }
-          const idArr = res.data.teamStatusPage.content.map((item) => item.id)
-          if (idArr.length === 0) return
-          this.$http.StudentTerm.getCalculationTeamInfo(idArr).then((val) => {
-            const calculationTeam = val.payload || []
-            const objDate = {}
-            calculationTeam.forEach((item) => {
-              objDate[item.id] = {
-                start_day: item.startDay,
-                end_day: item.endDay
-              }
-            })
-            res.data.teamStatusPage.content.forEach((item) => {
-              const temp = objDate[item.id] || { start_day: '', end_day: '' }
-              item.start_day = temp.start_day
-              item.end_day = temp.end_day
-            })
-            this.classListData = res.data
-
-            if (+this.scrollPage === 1) {
-              this.teamDate =
-                this.classListData.teamStatusPage &&
-                this.classListData.teamStatusPage.content[0]
-              // this.classId =
-              //   this.classListData.teamStatusPage &&
-              //   this.classListData.teamStatusPage.content[0]
-            }
-          })
         })
         .catch((err) => console.log(err))
     }
-  },
-  async created() {
-    const teacher = isToss()
-    if (teacher) {
-      this.teacher_id = teacher
-    }
-    // 请求体验课状态列表
-    await this.getExperienceStatusList(0)
-    // 请求系统课状态列表
-    await this.getExperienceStatusList(1)
-    // 请求班级列表
-    await this.getClassList()
   }
 }
 </script>
