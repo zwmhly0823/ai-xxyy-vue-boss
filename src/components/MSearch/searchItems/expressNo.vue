@@ -9,7 +9,7 @@
 <template>
   <div class="search-item small">
     <el-input
-      placeholder="物流单号查询"
+      placeholder="快递单号查询"
       size="mini"
       v-model="input"
       clearable
