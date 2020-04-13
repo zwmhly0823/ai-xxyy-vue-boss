@@ -3,7 +3,7 @@
  * @Email: yangjiyong@meishubao.com
  * @Date: 2020-03-21 11:58:33
  * @Last Modified by: YangJiyong
- * @Last Modified time: 2020-03-21 12:05:08
+ * @Last Modified time: 2020-04-13 15:03:58
  * @Description: 班级
  */
 // import axios from '../axios'
@@ -17,7 +17,7 @@ export default {
         teamStatusCount(
           field: "team_state",
           team_type:${data},
-          teacher_id: "${teacherId || ''}", 
+          teacher_id: "${teacherId || []}", 
           query: ${JSON.stringify(queryParams)}
         ) {
           code,
@@ -34,7 +34,7 @@ export default {
         teamStatusPage(query:${JSON.stringify(
           queryParams
         )},team_state:"${classStatus.join()}", team_type: ${type}, teacher_id: "${teacherId ||
-        ''}",page:${page},size:15){
+        []}",page:${page},size:15){
           empty,
           first,
           last,
