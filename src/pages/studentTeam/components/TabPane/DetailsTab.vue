@@ -663,7 +663,7 @@ export default {
         const childLastData = []
         if (res.data.getStuComRankingList) {
           const stuArrLength = res.data.getStuComRankingList.length
-          const createDefineNum = 20
+          const createDefineNum = 70
           const arevNum = Math.ceil(
             stuArrLength / Math.ceil(stuArrLength / createDefineNum)
           )
