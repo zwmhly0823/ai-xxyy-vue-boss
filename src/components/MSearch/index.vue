@@ -32,6 +32,11 @@
         <out-trade-no @result="getOutTradeNo" :name="outTradeNo" />
       </el-form-item>
 
+      <el-form-item v-if="expressNo">
+        <!-- 物流单号搜索 -->
+        <express-no @result="getExpressNo" :name="expressNo" />
+      </el-form-item>
+
       <el-form-item v-if="date">
         <!-- 下单时间 -->
         <date-picker
@@ -105,6 +110,7 @@ import SearchPhone from './searchItems/searchPhone.vue'
 import OutTradeNo from './searchItems/outTradeNo.vue'
 import ProductName from './searchItems/productName.vue'
 import SelectDate from './searchItems/selectDate.vue'
+import expressNo from './searchItems/expressNo'
 
 export default {
   props: {
@@ -195,6 +201,11 @@ export default {
     timeData: {
       type: Array,
       default: null // [ {text:'创建时间',value:'ectime'}]
+    },
+    // 物流单号查询
+    expressNo: {
+      type: String,
+      default: '' // express_nu
     }
   },
   components: {
@@ -205,7 +216,8 @@ export default {
     SearchPhone,
     SelectDate,
     OutTradeNo,
-    ProductName
+    ProductName,
+    expressNo
   },
   data() {
     return {
@@ -273,6 +285,11 @@ export default {
       console.log(this.selectTime, '清除时的this.selectTime')
 
       this.setSeachParmas(res, [this.selectTime || this.oldTime], 'range')
+    },
+    // 选择物流单号
+    getExpressNo(res) {
+      console.log(res, 'res___________', this.expressNo)
+      this.setSeachParmas(res, [this.expressNo || 'express_nu'], 'wildcard')
     },
 
     /**  处理接收到的查询参数
