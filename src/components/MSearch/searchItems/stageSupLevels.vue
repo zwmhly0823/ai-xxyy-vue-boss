@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-24 18:50:54
  * @LastEditors: zhubaodong
- * @LastEditTime: 2020-04-08 13:38:11
+ * @LastEditTime: 2020-04-13 17:05:48
  -->
 <template>
   <div class="search-item small">
@@ -15,7 +15,6 @@
       clearable
       multiple
       size="mini"
-      collapse-tags
       placeholder="期数"
       @change="stageChange"
     >
@@ -34,7 +33,6 @@
       v-if="supName"
       size="mini"
       multiple
-      collapse-tags
       placeholder="难度"
       @change="supChange"
     >
@@ -53,7 +51,6 @@
       v-if="levelName"
       multiple
       size="mini"
-      collapse-tags
       placeholder="级别"
       @change="levelChange"
     >
@@ -205,5 +202,13 @@ export default {
       margin-right: 0px;
     }
   }
+}
+</style>
+<style lang="scss">
+.el-select__tags {
+  flex-wrap: nowrap !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
 }
 </style>
