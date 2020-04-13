@@ -568,7 +568,7 @@ export default {
           }
         }
         if (item && item.wildcard) {
-          timeType.express_nu = item.wildcard.express_nu
+          timeType['express_nu.keyword'] = item.wildcard.express_nu
         }
       })
       this.teacherId && (timeType.teacher_id = this.teacherId)
