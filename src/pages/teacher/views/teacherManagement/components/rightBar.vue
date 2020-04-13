@@ -258,7 +258,9 @@ export default {
     }
   },
   activated() {
-    this.getData()
+    setTimeout(() => {
+      this.getData()
+    }, 500)
   },
   methods: {
     getData(page = this.currentPage, query = JSON.stringify(this.query)) {
