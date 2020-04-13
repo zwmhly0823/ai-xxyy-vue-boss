@@ -196,28 +196,20 @@ export default {
         display: flex;
         align-items: center;
         .title-information {
-          width: 17%;
-          height: 80%;
-          // border: 1px solid red;
+          display: flex;
+          height: 60px;
           .head-Portrait {
-            height: 100%;
-            width: 50%;
+            margin-right: 10px;
+            width: 60px;
             border: 1px solid #ebeef5;
-            float: left;
             img {
               width: 100%;
               height: 100%;
             }
           }
           .information-right {
-            width: 50%;
-            height: 100%;
-            float: left;
-            // border: 1px solid red;
-            div {
-              height: 50%;
-              text-align: center;
-              padding: 9% 0 9% 0;
+            .name {
+              margin: 10px 0;
             }
           }
         }
