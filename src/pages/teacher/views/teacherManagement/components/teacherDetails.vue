@@ -187,10 +187,8 @@ export default {
       margin: 20px 20px 0px 20px;
       height: 100px;
       border-bottom: 1px solid #ebeef5;
-      // border: 1px solid red;
       .el-col {
         height: 100%;
-        // border: 1px solid red;
       }
       .el-col-20 {
         display: flex;
@@ -216,7 +214,6 @@ export default {
       }
       // 编辑按钮
       .editor-btn {
-        // border: 1px solid red;
         float: right;
       }
       // 关闭
@@ -231,12 +228,9 @@ export default {
     .el-row {
       height: 200px;
       margin: 20px 20px 0 20px;
-      // border: 1px solid red;
       .el-col {
-        // text-align: center;
         height: 25%;
         color: #606266;
-        // border: 1px solid red;
         span {
           color: #409eff;
         }
