@@ -60,7 +60,8 @@ export default {
       scrollStatus: '',
       type: 0,
       scrollPage: 1,
-      teacher_id: null,
+      teacher_id: null, // 当前登录老师的ID
+      teacherIds: [], // 当前老师权限，包含本身和权限下的老师ID
       must: null, // 搜索条件
       filterConditions: null
     }
@@ -80,7 +81,32 @@ export default {
       }
     }
   },
+  async created() {
+    const teacher = isToss()
+    if (teacher) {
+      this.teacher_id = teacher
+    }
+    await this.getTeacherByRole()
+    // 请求体验课状态列表
+    await this.getExperienceStatusList(0)
+    // 请求系统课状态列表
+    await this.getExperienceStatusList(1)
+    // 请求班级列表
+    await this.getClassList()
+  },
   methods: {
+    /**
+     * 老师权限
+     */
+    async getTeacherByRole() {
+      const teacherId = this.teacher_id
+      if (!teacherId) return
+      const teachers = await this.$http.Permission.getAllTeacherByRole({
+        teacherId
+      })
+      this.teacherIds = teachers
+      console.log(teachers)
+    },
     /**
      * 左栏回调函数
      * @param(回调数据) 获得选中内容
@@ -139,9 +165,16 @@ export default {
      * @param(team_type) 0为体验课 1为系统课
      */
     async getExperienceStatusList(data = 0) {
-      const queryParams = `{"bool":{"must":${JSON.stringify(
-        this.filterConditions ? this.filterConditions : []
-      )}}}`
+      const config = []
+      if (this.teacher_id) {
+        config.push({
+          terms: { teacher_id: this.teacherIds || [] }
+        })
+      }
+      const must = this.filterConditions
+        ? config.concat(this.filterConditions)
+        : config
+      const queryParams = `{"bool":{"must":${JSON.stringify(must)}}}`
 
       this.$http.StudentTerm.getTeamStatusCount({
         data: data,
@@ -171,7 +204,7 @@ export default {
         ]
         if (this.teacher_id) {
           config.push({
-            term: { teacher_id: this.teacher_id ? this.teacher_id : '' }
+            terms: { teacher_id: this.teacherIds || [] }
           })
         }
         this.must = this.filterConditions
@@ -185,7 +218,7 @@ export default {
         ]
         if (this.teacher_id) {
           config.push({
-            term: { teacher_id: this.teacher_id ? this.teacher_id : '' }
+            terms: { teacher_id: this.teacherIds || [] }
           })
         }
         this.must = this.filterConditions
@@ -212,18 +245,6 @@ export default {
         })
         .catch((err) => console.log(err))
     }
-  },
-  async created() {
-    const teacher = isToss()
-    if (teacher) {
-      this.teacher_id = teacher
-    }
-    // 请求体验课状态列表
-    await this.getExperienceStatusList(0)
-    // 请求系统课状态列表
-    await this.getExperienceStatusList(1)
-    // 请求班级列表
-    await this.getClassList()
   }
 }
 </script>
