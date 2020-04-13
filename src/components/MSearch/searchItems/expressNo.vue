@@ -56,7 +56,7 @@ export default {
   methods: {
     inputHandler(data) {
       const reg = /^[A-Za-z0-9]+$/
-      if (!reg.test(data)) {
+      if (data && !reg.test(data)) {
         this.$message('请输入正确的物流单号!')
         this.input = ''
         return
