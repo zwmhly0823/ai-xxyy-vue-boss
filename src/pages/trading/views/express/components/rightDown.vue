@@ -556,7 +556,6 @@ export default {
             timeType.level = `${item.terms.level}`
           }
         }
-
         if (item.range) {
           const { range } = item
           const resKey = Object.keys(range)
@@ -567,6 +566,9 @@ export default {
             start_time: gte,
             end_time: lte
           }
+        }
+        if (item && item.wildcard) {
+          timeType.express_nu = item.wildcard.express_nu
         }
       })
       this.teacherId && (timeType.teacher_id = this.teacherId)

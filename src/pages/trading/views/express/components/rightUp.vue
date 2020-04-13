@@ -15,6 +15,7 @@
         phone="user_id"
         stage="term"
         sup="sup"
+        expressNo="express_nu"
         level="level"
         topicType="regtype"
         :timeData="[
@@ -246,6 +247,10 @@ export default {
             item.terms['level.keyword'] = item.terms.level
             delete item.terms.level
           }
+          if (item && item.wildcard) {
+            item.wildcard['express_nu.keyword'] = item.wildcard.express_nu
+            delete item.wildcard.express_nu
+          }
 
           if (item.term && item.term.regtype) {
             item.terms = { regtype: item.term.regtype.split(',') }
@@ -311,6 +316,8 @@ export default {
     },
     dosomething() {},
     handleSearch(search) {
+      console.log(search)
+
       this.searchIn = deepClone(search)
       this.searchIn.forEach((item) => {
         if (item.terms && item.terms.sup) {
@@ -336,6 +343,8 @@ export default {
         // debugger
         return item
       })
+      console.log(this.searchIn)
+
       this.$emit('search', this.searchIn)
     },
     // 下载文件
