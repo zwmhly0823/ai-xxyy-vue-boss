@@ -259,7 +259,9 @@ export default {
   },
   activated() {
     setTimeout(() => {
+      console.log(this.teacherID)
       this.getData()
+      if (this.teacherID) this.$refs.detailsHidden.createdUrl(this.teacherID)
     }, 500)
   },
   methods: {
