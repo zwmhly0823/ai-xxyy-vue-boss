@@ -3,8 +3,8 @@
  * @version:
  * @Author: zhubaodong
  * @Date: 2020-03-24 18:20:12
- * @LastEditors: zhubaodong
- * @LastEditTime: 2020-04-07 22:19:08
+ * @LastEditors: Lukun
+ * @LastEditTime: 2020-04-14 16:50:17
  -->
 
 <template>
@@ -20,6 +20,11 @@
           :tip="phoneTip"
           :last_team_id="last_team_id"
         />
+      </el-form-item>
+
+      <el-form-item v-if="groupSell">
+        <!-- 社群销售 -->
+        <group-sell @result="selectSellTeacher" :name="groupSell" />
       </el-form-item>
 
       <el-form-item v-if="productName">
@@ -110,7 +115,8 @@ import SearchPhone from './searchItems/searchPhone.vue'
 import OutTradeNo from './searchItems/outTradeNo.vue'
 import ProductName from './searchItems/productName.vue'
 import SelectDate from './searchItems/selectDate.vue'
-import expressNo from './searchItems/expressNo'
+import ExpressNo from './searchItems/expressNo'
+import GroupSell from './searchItems/groupSell'
 
 export default {
   props: {
@@ -206,6 +212,10 @@ export default {
     expressNo: {
       type: String,
       default: '' // express_nu
+    },
+    groupSell: {
+      type: String,
+      default: '' //
     }
   },
   components: {
@@ -217,7 +227,8 @@ export default {
     SelectDate,
     OutTradeNo,
     ProductName,
-    expressNo
+    ExpressNo,
+    GroupSell
   },
   data() {
     return {
@@ -264,6 +275,11 @@ export default {
       console.log(res, '回调res')
       this.setSeachParmas(res, [this.phone || 'umobile'])
     },
+    // 选择销售老师
+    getTeacherSell(res) {
+      console.log(res, '回调res')
+      this.setSeachParmas(res, [this.phone || 'umobile'])
+    },
     // 选择订单号
     getOutTradeNo(res) {
       this.setSeachParmas(res, [this.outTradeNo || 'out_trade_no'], 'wildcard')
@@ -291,7 +307,11 @@ export default {
       console.log(res, 'res___________', this.expressNo)
       this.setSeachParmas(res, [this.expressNo || 'express_nu'], 'wildcard')
     },
-
+    // 选择销售老师
+    selectSellTeacher(res) {
+      console.log(res, 'res___________', this.groupSell)
+      this.setSeachParmas(res, [this.groupSell || 'teacher_nu'], 'wildcard')
+    },
     /**  处理接收到的查询参数
      * @res: Object, 子筛选组件返回的表达式对象，如 {sup: 2}
      * @key: Array 指定res的key。如课程类型+期数选项，清除课程类型时，期数也清除了，这里要同步清除must的数据

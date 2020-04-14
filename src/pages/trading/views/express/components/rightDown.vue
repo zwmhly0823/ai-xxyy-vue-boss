@@ -587,7 +587,7 @@ export default {
             end_time: lte
           }
         }
-        if (item && item.wildcard) {
+        if (item.wildcard && item.wildcard.express_nu) {
           timeType.express_nu = item.wildcard.express_nu
         }
       })
