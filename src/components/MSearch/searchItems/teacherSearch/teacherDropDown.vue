@@ -20,9 +20,9 @@
     >
       <el-option
         v-for="item in rankList"
-        :key="item.stage"
-        :label="item.stage_text"
-        :value="item.stage"
+        :key="item.id"
+        :label="item.name"
+        :value="item.id"
       >
       </el-option>
     </el-select>
@@ -38,12 +38,13 @@
     >
       <el-option
         v-for="item in inductionList"
-        :key="item.id"
-        :label="item.name"
-        :value="addSupS ? item.name : item.id"
+        :key="item.value"
+        :label="item.label"
+        :value="item.value"
       >
       </el-option>
     </el-select>
+    <!-- 登陆状态 -->
     <el-select
       v-model="landingData"
       class="item-style"
@@ -55,24 +56,25 @@
     >
       <el-option
         v-for="item in landingList"
-        :key="item.id"
-        :label="item.name"
-        :value="item.name"
+        :key="item.value"
+        :label="item.label"
+        :value="item.value"
       >
       </el-option>
     </el-select>
+    <!-- 职务 -->
     <el-select
-      v-model="levelData"
+      v-model="positionData"
       class="item-style"
       clearable
-      v-if="levelName"
+      v-if="positionName"
       multiple
       size="mini"
-      placeholder="选择状态"
-      @change="levelChange"
+      placeholder="选择职务"
+      @change="positionChange"
     >
       <el-option
-        v-for="item in levelList"
+        v-for="item in positionList"
         :key="item.id"
         :label="item.name"
         :value="item.name"
@@ -83,22 +85,28 @@
 </template>
 
 <script>
-import axios from '@/api/axios'
+import _ from 'lodash'
 export default {
   props: {
     // 职级
     rankName: {
       type: String,
-      default: 'rank'
+      default: 'rank_no'
     },
     // 入职状态
     inductionName: {
       type: String,
-      default: 'induction'
+      default: 'induction_no'
     },
+    // 登陆状态
     landingName: {
       type: String,
-      default: 'landing'
+      default: 'landing_no'
+    },
+    // 职务
+    positionName: {
+      type: String,
+      default: 'position_no'
     },
     // 是否只返回值，如果是，父组件获得值后根据实际表达式组装数据
     onlyValue: {
@@ -115,14 +123,25 @@ export default {
       // 职级列表
       rankList: [],
       // 入职状态列表
-      inductionList: [],
+      inductionList: [
+        { label: '在职', value: 'TENURE' },
+        { label: '离职', value: 'LEAVE' }
+      ],
       // 登陆状态
-      landingList: [],
+      landingList: [
+        { label: '允许', value: 'YES' },
+        { label: '禁止', value: 'NO' }
+      ],
+      // 职务列表
+      positionList: [],
       // 职级value
       rankData: null,
       // 入职状态value
       inductionData: null,
-      levelData: null
+      // 登陆状态value
+      landingData: null,
+      // 职务value
+      positionData: null
     }
   },
   watch: {
@@ -137,61 +156,23 @@ export default {
     // 职级
     await this.getrank()
     await this.getSup()
-    await this.getLevel()
   },
   methods: {
     // 职级
     async getrank() {
-      axios
-        .post('/graphql/filter', {
-          query: `{
-              teamStageList{
-                stage
-                stage_text
-              }
-            }
-          `
-        })
-        .then((res) => {
-          this.rankList = res.data.teamStageList
-        })
+      this.$http.Teacher.TeacherRankList().then((res) => {
+        const rank = res.data.TeacherRankList || []
+        this.rankList = _.sortBy(rank, 'id')
+      })
     },
-    // 难度
+
+    // 职务
     async getSup() {
-      axios
-        .post('/graphql/filter', {
-          query: `{
-            courseSupList{
-                id
-                name
-              }
-            }
-          `
-        })
-        .then((res) => {
-          this.supList = res.data.courseSupList
-          this.supList.splice(
-            res.data.courseSupList.filter((item) => +item.id === 0),
-            1
-          )
-        })
+      this.$http.Teacher.getTeacherDutyList().then((res) => {
+        this.positionList = res.data.TeacherDutyList
+      })
     },
-    // 级别
-    async getLevel() {
-      axios
-        .post('/graphql/filter', {
-          query: `{
-              courseLevelList{
-                id,
-                name
-              }
-            }
-          `
-        })
-        .then((res) => {
-          this.levelList = res.data.courseLevelList
-        })
-    },
+
     // 职级
     rankChange(data) {
       this.$emit(
@@ -210,7 +191,14 @@ export default {
     landingChange(data) {
       this.$emit(
         'landingCallBack',
-        data.length > 0 ? { [this.landingName]: this.landingData } : ''
+        data.length > 0 ? { [this.landingData]: this.landingData } : ''
+      )
+    },
+    // 职务
+    positionChange(data) {
+      this.$emit(
+        'positionCallBack',
+        data.length > 0 ? { [this.positionData]: this.positionData } : ''
       )
     }
   }

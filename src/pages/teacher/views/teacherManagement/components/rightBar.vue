@@ -12,16 +12,20 @@
       @search="handleSearch"
       teacherphone="uid"
       teachername="12"
+      rank="34"
+      induction="56"
+      landing="78"
+      position="90"
       v-if="false"
     >
       <!-- <el-button type="primary" slot="searchItems" size="mini">搜索</el-button> -->
-      <el-button
+      <!-- <el-button
         type="primary"
         slot="searchItems"
         size="mini"
         @click="newTeacher"
         >新增销售</el-button
-      >
+      > -->
       <!--  <el-checkbox-group
         v-model="checkList"
         slot="otherSearch"
@@ -69,9 +73,9 @@
                 <el-dropdown-item @click.native="operation(scope.row, '1')">
                   编辑
                 </el-dropdown-item>
-                <el-dropdown-item @click.native="operation(scope.row, '2')">
+                <!-- <el-dropdown-item @click.native="operation(scope.row, '2')">
                   详情
-                </el-dropdown-item>
+                </el-dropdown-item> -->
                 <!-- <el-dropdown-item @click.native="operation(scope.row, '3')">
                   关联微信号
                 </el-dropdown-item> -->
@@ -124,31 +128,30 @@
         <el-table-column label="所属部门">
           <template slot-scope="scope">
             <div>
-              {{
-                scope.row.department
-                  ? `${scope.row.department.pname} / ${scope.row.department.name}`
-                  : '-'
-              }}
+              {{ scope.row.department ? scope.row.department.pname : '-' }}
+              <br />
+              {{ scope.row.department ? scope.row.department.name : '-' }}
             </div>
           </template>
         </el-table-column>
-        <el-table-column label="职务">
+        <el-table-column label="职务/职级">
           <template slot-scope="scope">
             <div v-if="scope.row.duty && scope.row.duty.length > 0">
-              <p v-for="item in scope.row.duty" :key="item.id">
+              <p v-for="item in scope.row.duty" :key="item.id" style="margin:0">
                 {{ item ? item.name || '-' : '-' }}
               </p>
             </div>
             <div v-else><p>-</p></div>
-          </template>
-        </el-table-column>
-
-        <el-table-column label="职级">
-          <template slot-scope="scope">
             <div>{{ scope.row.rank ? scope.row.rank.name || '-' : '-' }}</div>
           </template>
         </el-table-column>
-        <el-table-column label="入职时间">
+
+        <!-- <el-table-column label="职级">
+          <template slot-scope="scope">
+            <div>{{ scope.row.rank ? scope.row.rank.name || '-' : '-' }}</div>
+          </template>
+        </el-table-column> -->
+        <el-table-column label="入职时间" width="150px">
           <template slot-scope="scope">
             <div>
               {{ scope.row.join_date }}
@@ -295,8 +298,8 @@ export default {
     handleSearch(data) {
       console.log(data, '122')
       this.search = data
-      const must = { must: this.search }
-      this.query.push(must)
+      // const must = { must: this.search }
+      // this.query.push(must)
       // this.getData()
     },
     getData(page = this.currentPage, query = JSON.stringify(this.query)) {
