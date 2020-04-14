@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 20:22:24
  * @LastEditors: panjian
- * @LastEditTime: 2020-04-09 18:13:19
+ * @LastEditTime: 2020-04-14 14:47:47
  -->
 <template>
   <div>
@@ -97,11 +97,23 @@
           }}</el-checkbox>
         </el-checkbox-group>
         <div class="check-button">
-          <el-button @click="attendClassEmpty" size="small">清空</el-button>
-          <el-button @click="onAttendClass" size="medium" type="primary"
+          <el-button
+            style="border: none;"
+            @click="attendClassEmpty"
+            size="small"
+            >清空</el-button
+          >
+          <el-button
+            @click="onAttendClass"
+            style="margin-left:40px;width:80px;"
+            size="small"
+            type="primary"
             >过滤</el-button
           >
-          <el-button @click="attendClassCancel" size="medium" type="primary"
+          <el-button
+            @click="attendClassCancel"
+            style="width:80px;color:#409EFF;border:1px solid #409EFF;"
+            size="small"
             >取消</el-button
           >
         </div>
@@ -194,11 +206,20 @@
           >
         </el-checkbox-group>
         <div class="check-button">
-          <el-button @click="worksEmpty" size="small">清空</el-button>
-          <el-button @click="onWorks" size="medium" type="primary"
+          <el-button style="border: none;" @click="worksEmpty" size="small"
+            >清空</el-button
+          >
+          <el-button
+            @click="onWorks"
+            style="margin-left:40px;width:80px;"
+            size="small"
+            type="primary"
             >过滤</el-button
           >
-          <el-button @click="worksCancel" size="medium" type="primary"
+          <el-button
+            @click="worksCancel"
+            style="width:80px;color:#409EFF;border:1px solid #409EFF;"
+            size="small"
             >取消</el-button
           >
         </div>
@@ -297,12 +318,16 @@ export default {
   methods: {
     // 点击 参课完课 过滤
     onAttendClass() {
-      console.log(this.attendClassCheck, this.attendClassSelect, '参课完课数据')
+      const attendClassList = Object.values(this.attendClassCheck)
+      const attendClassSelectList = Object.values(this.attendClassSelect)
+      console.log(attendClassList, attendClassSelectList, '参课完课数据')
       this.attendClassShow = false
     },
     // 点击 作品及点评 过滤
     onWorks() {
-      console.log(this.worksCheck, this.worksSelect, '作品及点评数据')
+      const worksCheckList = Object.values(this.worksCheck)
+      const worksSelectList = Object.values(this.worksSelect)
+      console.log(worksCheckList, worksSelectList, '作品及点评数据')
       this.worksShow = false
     },
     // 参课完课 多选框选中的值

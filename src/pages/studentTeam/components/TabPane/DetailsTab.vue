@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 14:19:58
  * @LastEditors: panjian
- * @LastEditTime: 2020-04-09 20:01:55
+ * @LastEditTime: 2020-04-14 14:50:25
  -->
 <template>
   <div>
@@ -34,10 +34,10 @@
         @click="ExhibitionList"
         >生成作品展</el-button
       >
-      <!-- <checkBox
+      <checkBox
         :tables="table"
         v-if="this.table.tabs == 3 || this.table.tabs == 4"
-      ></checkBox> -->
+      />
     </div>
     <div>
       <div class="tabs-tab">
@@ -183,7 +183,7 @@
   </div>
 </template>
 <script>
-// import checkBox from '@/components/MCheckBox/index'
+import checkBox from '@/components/MCheckBox/index'
 import detailsTable from './components/detailsTable'
 import MSearch from '@/components/MSearch/index.vue'
 import { timestamp, GetAgeByBrithday, isToss } from '@/utils/index'
@@ -195,8 +195,8 @@ export default {
     detailsTable,
     finishclass,
     exhibition,
-    MSearch
-    // checkBox
+    MSearch,
+    checkBox
   },
   props: {
     classId: {
