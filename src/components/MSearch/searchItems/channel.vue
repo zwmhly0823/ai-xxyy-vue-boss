@@ -12,7 +12,6 @@
       v-model="channelData"
       multiple
       size="mini"
-      collapse-tags
       clearable
       filterable
       reserve-keyword

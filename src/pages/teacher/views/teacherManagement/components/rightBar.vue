@@ -274,7 +274,11 @@ export default {
     }
   },
   activated() {
-    this.getData()
+    setTimeout(() => {
+      console.log(this.teacherID)
+      this.getData()
+      if (this.teacherID) this.$refs.detailsHidden.createdUrl(this.teacherID)
+    }, 500)
   },
   methods: {
     getData(page = this.currentPage, query = JSON.stringify(this.query)) {

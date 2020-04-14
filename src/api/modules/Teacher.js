@@ -1,7 +1,7 @@
 /*
- * @Descripttion:
+ * @Descripttion: BOSS - 社群销售
  * @version:
- * @Author: zhubaodong
+ * @Author: Yangjiyong
  * @Date: 2020-04-07 13:52:26
  * @LastEditors: zhubaodong
  * @LastEditTime: 2020-04-07 13:59:18
@@ -131,6 +131,8 @@ export default {
   },
   // 新建老师
   createTeacher(params) {
+    console.log(params)
+
     return axios.post(`/api/t/v1/teacher/createTeacher`, params)
   },
   //  编辑老师
