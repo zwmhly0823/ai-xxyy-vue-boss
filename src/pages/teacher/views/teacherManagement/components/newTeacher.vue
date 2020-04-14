@@ -400,7 +400,6 @@ export default {
     // 监听入职时间,清空离职时间
     'ruleForm.inductionDate'(date) {
       const val = new Date(date)
-      debugger
       // 离职时间
       if (
         this.ruleForm.departureDate !== '' &&
@@ -542,8 +541,6 @@ export default {
         duty: positionValId,
         rank: { id: this.ruleForm.rank }
       }
-      console.log(params)
-      debugger
       this.$refs[formName].validate((valid) => {
         if (valid) {
           // 新建接口请求
@@ -618,7 +615,6 @@ export default {
             headers: { 'Content-Type': 'multipart/form-data' }
           })
           .then((res) => {
-            console.log('axios-res', res, fileUrl)
             this.ruleForm.imageUrl = fileUrl
           })
           .catch((err) => {
