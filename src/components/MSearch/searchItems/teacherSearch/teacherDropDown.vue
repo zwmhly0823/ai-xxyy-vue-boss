@@ -8,39 +8,56 @@
  -->
 <template>
   <div class="search-item small">
+    <!-- 职级 -->
     <el-select
-      v-model="stageData"
+      v-model="rankData"
       class="item-style"
-      v-if="stageName"
+      v-if="rankName"
       clearable
-      multiple
       size="mini"
-      placeholder="期数"
-      @change="stageChange"
+      placeholder="职级"
+      @change="rankChange"
     >
       <el-option
-        v-for="item in stageList"
+        v-for="item in rankList"
         :key="item.stage"
         :label="item.stage_text"
         :value="item.stage"
       >
       </el-option>
     </el-select>
+    <!-- 入职状态 -->
     <el-select
-      v-model="supData"
+      v-model="inductionData"
       class="item-style"
       clearable
-      v-if="supName"
+      v-if="inductionName"
       size="mini"
-      multiple
-      placeholder="难度"
-      @change="supChange"
+      placeholder="入职状态"
+      @change="inductionChange"
     >
       <el-option
-        v-for="item in supList"
+        v-for="item in inductionList"
         :key="item.id"
         :label="item.name"
         :value="addSupS ? item.name : item.id"
+      >
+      </el-option>
+    </el-select>
+    <el-select
+      v-model="landingData"
+      class="item-style"
+      clearable
+      v-if="landingName"
+      size="mini"
+      placeholder="登陆状态"
+      @change="landingChange"
+    >
+      <el-option
+        v-for="item in landingList"
+        :key="item.id"
+        :label="item.name"
+        :value="item.name"
       >
       </el-option>
     </el-select>
@@ -51,7 +68,7 @@
       v-if="levelName"
       multiple
       size="mini"
-      placeholder="级别"
+      placeholder="选择状态"
       @change="levelChange"
     >
       <el-option
@@ -69,17 +86,19 @@
 import axios from '@/api/axios'
 export default {
   props: {
-    stageName: {
+    // 职级
+    rankName: {
       type: String,
-      default: 'stage'
+      default: 'rank'
     },
-    supName: {
+    // 入职状态
+    inductionName: {
       type: String,
-      default: 'sup'
+      default: 'induction'
     },
-    levelName: {
+    landingName: {
       type: String,
-      default: 'current_level'
+      default: 'landing'
     },
     // 是否只返回值，如果是，父组件获得值后根据实际表达式组装数据
     onlyValue: {
@@ -93,11 +112,16 @@ export default {
   },
   data() {
     return {
-      stageList: [],
-      supList: [],
-      levelList: [],
-      stageData: null,
-      supData: null,
+      // 职级列表
+      rankList: [],
+      // 入职状态列表
+      inductionList: [],
+      // 登陆状态
+      landingList: [],
+      // 职级value
+      rankData: null,
+      // 入职状态value
+      inductionData: null,
       levelData: null
     }
   },
@@ -110,13 +134,14 @@ export default {
     }
   },
   async created() {
-    await this.getStage()
+    // 职级
+    await this.getrank()
     await this.getSup()
     await this.getLevel()
   },
   methods: {
-    // 期数
-    async getStage() {
+    // 职级
+    async getrank() {
       axios
         .post('/graphql/filter', {
           query: `{
@@ -128,7 +153,7 @@ export default {
           `
         })
         .then((res) => {
-          this.stageList = res.data.teamStageList
+          this.rankList = res.data.teamStageList
         })
     },
     // 难度
@@ -167,24 +192,25 @@ export default {
           this.levelList = res.data.courseLevelList
         })
     },
-    stageChange(data) {
+    // 职级
+    rankChange(data) {
       this.$emit(
-        'stageCallBack',
-        data.length > 0 ? { [this.stageName]: this.stageData } : ''
+        'rankCallBack',
+        data.length > 0 ? { [this.rankName]: this.rankData } : ''
       )
     },
-    supChange(data) {
-      console.log(data, 'ddddaaaa')
-
+    // 入职状态
+    inductionChange(data) {
       this.$emit(
-        'supCallBack',
-        data.length > 0 ? { [this.supName]: this.supData } : ''
+        'inductionCallBack',
+        data.length > 0 ? { [this.inductionData]: this.inductionData } : ''
       )
     },
-    levelChange(data) {
+    // 登陆状态
+    landingChange(data) {
       this.$emit(
-        'levelCallBack',
-        data.length > 0 ? { [this.levelName]: this.levelData } : ''
+        'landingCallBack',
+        data.length > 0 ? { [this.landingName]: this.landingData } : ''
       )
     }
   }

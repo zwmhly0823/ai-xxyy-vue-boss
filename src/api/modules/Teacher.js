@@ -35,6 +35,8 @@ export default {
             status
             is_login
             head_image
+            join_date
+            leave_train
             department {
               id
               name

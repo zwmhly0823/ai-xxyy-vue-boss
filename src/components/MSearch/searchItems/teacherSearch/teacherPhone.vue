@@ -29,8 +29,8 @@
               /{{ item.wechat_nikename || '-' }}
             </div>
           </div>
-        </template></el-autocomplete
-      >
+        </template>
+      </el-autocomplete>
     </el-form>
   </div>
 </template>
@@ -68,7 +68,8 @@ export default {
   data() {
     return {
       input: '',
-      selectData: []
+      selectData: [],
+      select: '1'
     }
   },
   computed: {},
@@ -97,14 +98,15 @@ export default {
       cb(searchUid)
     },
     createFilter(queryString) {
-      const queryParams = `{"mobile":"${queryString}","team_id":"${this.teamId}"}`
+      // const queryParams = `{"mobile":"${queryString}","team_id":"${this.teamId}"}`
+      const queryParams = `{"bool":{"must":[{"wildcard":{"phone.keyword":"*${queryString}*"}}]}}`
       return axios
-        .post('/graphql/user', {
+        .post('/graphql/v1/boss', {
           query: `{
-              blurrySearch(query: ${JSON.stringify(queryParams)}) {
-                  mobile
-                  wechat_nikename
-                  id
+              TeacherPage(query: ${JSON.stringify(queryParams)}) {
+                  content {
+                    id
+                  }
                 }
             }
           `
@@ -124,11 +126,11 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.search-item {
-  &.small {
-    width: 135px !important;
-  }
-}
+// .search-item {
+//   &.small {
+//     width: 135px !important;
+//   }
+// }
 </style>
 <style lang="scss">
 .ppName {
@@ -139,5 +141,14 @@ export default {
   .el-scrollbar {
     width: 100%;
   }
+}
+// .el-select .el-input {
+//   width: 90px;
+// }
+.input-with-select .el-input-group__prepend {
+  background-color: #fff;
+}
+.el-form-item__content .el-input-group {
+  vertical-align: middle !important;
 }
 </style>
