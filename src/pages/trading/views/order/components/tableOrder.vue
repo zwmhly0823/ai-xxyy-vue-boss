@@ -1,104 +1,70 @@
 <template>
   <div class="title-box">
-    <el-table style="width: 100%">
-      <el-table-column label="用户信息" min-width="100%"></el-table-column>
-      <el-table-column label="商品信息" min-width="100%"></el-table-column>
-      <el-table-column label="订单来源" min-width="100%"></el-table-column>
-      <el-table-column label="订单状态" min-width="100%"> </el-table-column>
-      <el-table-column label="关联物流" min-width="100%"> </el-table-column>
+    <el-table :data="orderList">
+      <el-table-column label="用户信息" prop="user">
+        <template slot-scope="scope">
+          <p>{{ scope.row.user ? scope.row.user.nickname || '-' : '-' }}</p>
+          <p>{{ scope.row.user ? scope.row.user.mobile || '-' : '-' }}</p>
+        </template>
+      </el-table-column>
+      <el-table-column label="商品信息">
+        <template slot-scope="scope">
+          <p>
+            {{
+              scope.row.packages_name
+                ? scope.row.packages_name || '-'
+                : scope.row.product_name || '-'
+            }}
+          </p>
+          <!-- 人民币 ， 宝石，小熊币 -->
+          <p>
+            {{ scope.row.currency ? scope.row.currency : '¥ ' }}
+            {{ scope.row.amount ? scope.row.amount : '-' }}
+          </p>
+        </template>
+      </el-table-column>
+      <el-table-column label="订单来源">
+        <template slot-scope="scope">
+          <p>
+            {{ scope.row.channel ? scope.row.channel.channel_outer_name : '-' }}
+          </p>
+        </template>
+      </el-table-column>
+      <el-table-column label="订单状态">
+        <template slot-scope="scope">
+          {{ scope.row.order_status ? scope.row.order_status : '-' }}
+        </template>
+      </el-table-column>
+      <el-table-column label="班级信息"> </el-table-column>
+      <el-table-column label="社群销售"> </el-table-column>
+      <el-table-column label="销售组"> </el-table-column>
+      <el-table-column label="下单时间" width="160">
+        <template slot-scope="scope">
+          <p>
+            {{ scope.row.ctime ? scope.row.ctime : '-' }}
+          </p>
+        </template>
+      </el-table-column>
+      <el-table-column label="关联物流">
+        <template slot-scope="scope">
+          <p class="primary-color">
+            {{ scope.row.express ? scope.row.express.total || 0 : '-' }}
+          </p>
+          <p>
+            {{
+              scope.row.express
+                ? scope.row.express.express_status_text
+                  ? `最后一次${scope.row.express.express_status_text}`
+                  : '-'
+                : '-'
+            }}
+          </p>
+        </template>
+      </el-table-column>
     </el-table>
-    <!-- 卡片 -->
-    <el-card
-      class="box-card"
-      shadow="never"
-      v-for="(item, index) in cardData"
-      :key="index"
-    >
-      <div slot="header" class="card-title">
-        <el-row :gutter="20">
-          <el-col :span="5">
-            <div class="grid-content">
-              订单号:{{ item.out_trade_no ? item.out_trade_no : '-' }}
-            </div>
-          </el-col>
-          <el-col :span="6">
-            <div class="grid-content grid-centent">
-              下单时间:{{ item.ctime ? item.ctime : '-' }}
-            </div>
-          </el-col>
-          <el-col :span="6">
-            <div>
-              支付方式:{{
-                item.payment
-                  ? item.payment.trade_type
-                  : item.regtype
-                  ? item.regtype
-                  : '-'
-              }}
-            </div>
-          </el-col>
-        </el-row>
-      </div>
-      <div class="card-content">
-        <!-- 用户信息 -->
-        <div class="content-details user-infor">
-          {{ item.user ? item.user.mobile : '-' }}
-        </div>
-        <!-- 商品信息 -->
-        <div class="content-details card-style1">
-          <div class="card-style1-left">
-            <div>
-              <div>
-                {{
-                  item.packages_name ? item.packages_name : item.product_name
-                }}
-              </div>
-              <div class="card-style1-num" v-show="item.sup">
-                {{ item.stage ? item.stage : '-' }}期·S{{
-                  item.sup ? item.sup : '-'
-                }}
-              </div>
-            </div>
-          </div>
-          <div class="card-style1-right">
-            <div>
-              <div class="card-style1-rmb">
-                {{ item.currency ? item.currency : '¥' }}:{{
-                  item.amount ? item.amount : '-'
-                }}
-              </div>
-              <!-- <div class="sign">×<span>1</span></div> -->
-            </div>
-          </div>
-        </div>
-        <!-- 订单来源 -->
-        <div class="content-details">
-          <div>{{ item.channel ? item.channel.channel_outer_name : '-' }}</div>
-        </div>
-        <!-- 订单状态 -->
-        <div class="content-details">
-          <div>{{ item.order_status ? item.order_status : '-' }}</div>
-        </div>
-        <!-- 关联物流 -->
-        <div class="content-details card-style4">
-          <div>
-            <div class="card-style4-num">
-              {{ item.express ? item.express.total || 0 : '-' }}
-            </div>
-            <div>
-              {{
-                item.express
-                  ? item.express.express_status_text
-                    ? `最后一次${item.express.express_status_text}`
-                    : '-'
-                  : '-'
-              }}
-            </div>
-          </div>
-        </div>
-      </div>
-    </el-card>
+
     <div v-if="cardData.length === 0" class="noData">暂无数据</div>
+
     <m-pagination
       :current-page="currentPage"
       :page-count="totalPages"
@@ -139,6 +105,7 @@ export default {
       currentPage: 1,
       // 订单列表
       cardData: [],
+      orderList: [],
       // 获取teacherid
       teacherStor: '',
       // 搜索
@@ -151,25 +118,25 @@ export default {
   created() {
     this.teacherId = isToss()
     // 订单列表接口
-    this.orderList()
+    this.getOrderList()
   },
   watch: {
     // 切换tab
     status(val) {
       this.currentPage = 1
       this.tab = val
-      this.orderList()
+      this.getOrderList()
     },
     // 搜索
     search(val) {
       this.currentPage = 1
       this.searchIn = val
-      this.orderList()
+      this.getOrderList()
     }
   },
   methods: {
     // 订单列表
-    orderList() {
+    getOrderList() {
       // this.teacherStor = JSON.parse(localStorage.getItem('teacher') || '{}')
       const must = []
       if (this.teacherId) {
@@ -215,6 +182,7 @@ export default {
               gem_integral
               product_name
               user{
+                nickname
                 mobile
               }
               channel {
@@ -277,6 +245,7 @@ export default {
             }
           })
           this.cardData = _data
+          this.orderList = _data
           console.log(this.cardData, 'this.cardData')
         })
     },
@@ -360,16 +329,20 @@ export default {
   padding: 20px 0 0 0;
   color: #909399;
 }
+.primary-color {
+  color: #409eff;
+}
 </style>
 <style lang="scss">
 .title-box {
   padding: 0 10px 30px 10px;
+  p {
+    margin: 0;
+  }
   .el-table::before {
     height: 0px;
   }
-  .el-table {
-    font-size: 12px;
-  }
+
   .el-table td,
   .el-table th.is-leaf {
     border: none;

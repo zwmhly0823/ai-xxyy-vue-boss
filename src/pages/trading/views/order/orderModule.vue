@@ -21,16 +21,24 @@
         topic-type="topic_id"
         outTradeNo="out_trade_no"
       />
-      <el-tabs type="border-card" @tab-click="handleClick" v-model="activeName">
-        <!-- <el-tab-pane label="全部订单" name=""> </el-tab-pane> -->
+      <!-- <el-tabs type="border-card" @tab-click="handleClick" v-model="activeName">
         <el-tab-pane label="已完成" name="3"></el-tab-pane>
         <el-tab-pane label="待支付" name="0,1"> </el-tab-pane>
-        <!-- <el-tab-pane label="已支付" name="2"></el-tab-pane> -->
         <el-tab-pane label="退费中" name="5"></el-tab-pane>
         <el-tab-pane label="已退费" name="6,7"></el-tab-pane>
-        <!-- <el-tab-pane label="已关闭" name="8"></el-tab-pane> -->
+        <all-order :status="status" :search="search" />
+      </el-tabs> -->
+      <el-tabs type="border-card" @tab-click="handleClick" v-model="activeName">
+        <!-- 包含全部体验课订单数据（双周体验课、单周体验课） -->
+        <el-tab-pane label="体验课" name="4"></el-tab-pane>
+        <!-- 包含全部系统课订单数据（月系统课、季系统课、半年系统课、年系统课） -->
+        <el-tab-pane label="系统课" name="5"> </el-tab-pane>
+        <!-- 包含小熊商城、邀请有奖、推荐有礼 -->
+        <el-tab-pane label="活动订单" name="1,2"></el-tab-pane>
         <all-order :status="status" :search="search" />
       </el-tabs>
+
+      <!-- 浮动层 -->
       <el-tabs
         type="border-card"
         @tab-click="handleClick"
@@ -38,32 +46,20 @@
         class="tab-top"
         v-show="suckTop"
       >
-        <!-- <el-tab-pane label="全部订单" name=""> </el-tab-pane> -->
-        <el-tab-pane label="已完成" name="3"></el-tab-pane>
-        <el-tab-pane label="待支付" name="0,1"> </el-tab-pane>
-        <!-- <el-tab-pane label="已支付" name="2"></el-tab-pane> -->
-
-        <el-tab-pane label="退费中" name="5"></el-tab-pane>
-        <el-tab-pane label="已退费" name="6,7"></el-tab-pane>
-        <!-- <el-tab-pane label="已关闭" name="8"></el-tab-pane> -->
+        <el-tab-pane label="体验课" name="4"></el-tab-pane>
+        <el-tab-pane label="系统课" name="5"> </el-tab-pane>
+        <el-tab-pane label="活动订单" name="1,2"></el-tab-pane>
 
         <el-table style="font-size:12px;" v-show="orderForm">
-          <el-table-column
-            label="用户信息"
-            label-class-name="top-style1"
-          ></el-table-column>
-          <el-table-column
-            label="商品信息"
-            label-class-name="top-style2"
-          ></el-table-column>
-          <el-table-column
-            label="订单来源"
-            label-class-name="top-style3"
-          ></el-table-column>
-          <el-table-column label="订单状态" label-class-name="top-style4">
-          </el-table-column>
-          <el-table-column label="关联物流" label-class-name="top-style5">
-          </el-table-column>
+          <el-table-column label="用户信息" prop="user"></el-table-column>
+          <el-table-column label="商品信息"></el-table-column>
+          <el-table-column label="订单来源"></el-table-column>
+          <el-table-column label="订单状态"> </el-table-column>
+          <el-table-column label="班级信息"> </el-table-column>
+          <el-table-column label="社群销售"> </el-table-column>
+          <el-table-column label="销售组"> </el-table-column>
+          <el-table-column label="下单时间"> </el-table-column>
+          <el-table-column label="关联物流"> </el-table-column>
         </el-table>
       </el-tabs>
     </div>
@@ -82,7 +78,7 @@ export default {
   data() {
     return {
       // 默认显示tab
-      activeName: '3',
+      activeName: '4',
       // 吸顶tab显示
       suckTop: false,
       // 吸顶表格显示
