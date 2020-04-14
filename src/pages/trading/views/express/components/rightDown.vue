@@ -13,9 +13,8 @@
       @select="handleSelect"
       @select-all="handleAllSelect"
     >
-      <el-table-column type="selection" width="25" v-if="!teacherId">
-      </el-table-column>
-      <el-table-column width="25" v-if="dataExp.id == 6 && !teacherId">
+      <el-table-column type="selection" width="25" fixed> </el-table-column>
+      <el-table-column width="25" v-if="dataExp.id == 1" fixed>
         <template slot-scope="scope">
           <!-- <div v-show="false">{{ scope }}</div> -->
           <el-dropdown trigger="click">
@@ -46,7 +45,7 @@
           </el-dropdown>
         </template>
       </el-table-column>
-      <el-table-column label="用户及购买日期">
+      <el-table-column label="用户及购买日期" width="180" fixed>
         <template slot-scope="scope">
           <div class="user" if="scope.row.user">
             <div
@@ -59,14 +58,14 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="商品信息" width="300">
+      <el-table-column label="商品信息" width="200" fixed>
         <template slot-scope="scope">
           <div class="product">
             <span>{{ scope.row.product_name }}</span>
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="收货信息" width="240">
+      <el-table-column label="收货信息" width="200">
         <template slot-scope="scope">
           <div class="take">
             <div>
@@ -81,6 +80,27 @@
             <div>
               <span>{{ scope.row.address_detail }}</span>
             </div>
+          </div>
+        </template>
+      </el-table-column>
+      <el-table-column label="期数">
+        <template slot-scope="scope">
+          <div class="product">
+            <span>{{ scope.row.term }}期</span>
+          </div>
+        </template>
+      </el-table-column>
+      <el-table-column label="班级名" width="120">
+        <template slot-scope="scope">
+          <div class="product">
+            <span>{{ scope.row.team_name || '0210·S1·10班' }}</span>
+          </div>
+        </template>
+      </el-table-column>
+      <el-table-column label="社群销售">
+        <template slot-scope="scope">
+          <div class="product">
+            <span>{{ scope.row.teacher || '陈实' }}</span>
           </div>
         </template>
       </el-table-column>
@@ -100,7 +120,7 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="物流创建·揽收·签收" show-overflow-tooltip>
+      <el-table-column label="物流创建·揽收·签收" width="200">
         <template slot-scope="scope">
           <div class="sign">
             <div>创建:{{ scope.row.crtime }}</div>
@@ -405,28 +425,29 @@ export default {
         cancelButtonText: '取消',
         inputValidator: this.inputValidator,
         inputErrorMessage: '请输入失效原因'
-      }).then(({ value }) => {
-        if (!value) {
-          return
-        }
-
-        axios
-          .post(
-            `/api/o/v1/express/updateExpressToInvalid?expressIds=${val}&expressRemark=${value}&operatorId=${this.staffId}`
-          )
-          .then(async (res) => {
-            this.$message({
-              type: 'success',
-              message: '操作成功'
-            })
-            setTimeout(() => {
-              this.getExpressList(this.dataExp.id)
-              this.$store.commit('bransh', true)
-
-              // TODO: 成功后同步左侧列表 待审核 数量
-            }, 1000)
-          })
       })
+        .then(({ value }) => {
+          if (!value) {
+            return
+          }
+          this.$http.Express.makeFailed(val, value, this.staffId).then(
+            (res) => {
+              this.$message({
+                type: 'success',
+                message: '操作成功'
+              })
+              setTimeout(() => {
+                this.getExpressList(this.dataExp.id)
+                this.$store.commit('bransh', true)
+
+                // TODO: 成功后同步左侧列表 待审核 数量
+              }, 1000)
+            }
+          )
+        })
+        .catch((err) => {
+          console.log(err)
+        })
     },
     handlePass(val) {
       console.log('processing-pass', val)
@@ -438,9 +459,8 @@ export default {
       this.expressNu = []
       this.expressNu.push(row.id)
     },
-    check(params, src = `/api/o/v1/express/deliveryRequest`) {
-      axios
-        .post(src, params)
+    check(params) {
+      this.$http.Express.checkPass(params)
         .then(async (res) => {
           // payload 是数组，错误信息逐个返回.全正确时返回空数组
           /**
@@ -463,7 +483,7 @@ export default {
               }
            */
           const { payload } = res
-
+          console.log(res, '-----------------res.payload')
           if (payload.length === 0) {
             this.$message({
               type: 'success',

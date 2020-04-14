@@ -3,8 +3,8 @@
  * @version: 
  * @Author: zhubaodong
  * @Date: 2020-03-24 18:50:54
- * @LastEditors: zhubaodong
- * @LastEditTime: 2020-04-13 17:05:48
+ * @LastEditors: Lukun
+ * @LastEditTime: 2020-04-14 13:54:36
  -->
 <template>
   <div class="search-item small">
@@ -15,7 +15,7 @@
       clearable
       multiple
       size="mini"
-      placeholder="期数"
+      placeholder="期"
       @change="stageChange"
     >
       <el-option
