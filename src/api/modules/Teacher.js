@@ -1,7 +1,7 @@
 /*
- * @Descripttion:
+ * @Descripttion: BOSS - 社群销售
  * @version:
- * @Author: zhubaodong
+ * @Author: Yangjiyong
  * @Date: 2020-04-07 13:52:26
  * @LastEditors: zhubaodong
  * @LastEditTime: 2020-04-07 13:59:18

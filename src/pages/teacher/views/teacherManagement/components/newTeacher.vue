@@ -11,7 +11,6 @@
       ref="ruleForm"
       label-width="100px"
       class="demo-ruleForm"
-      :disabled="formDisabled"
     >
       <!-- 头像 -->
       <el-form-item label="头像" prop="headPortrait">
@@ -192,10 +191,7 @@
       </el-form-item> -->
     </el-form>
     <div style="text-align: center; padding:10px 0">
-      <el-button
-        type="primary"
-        :disabled="newTitle === '2'"
-        @click="submitHandle('ruleForm')"
+      <el-button type="primary" @click="submitHandle('ruleForm')"
         >提交</el-button
       >
       <el-button @click="resetForm('ruleForm')">取消</el-button>
@@ -246,8 +242,6 @@ export default {
       newTitle: '',
       // 头像地址
       httpPath: '',
-      // 表单禁用
-      formDisabled: false,
       // 离职时间禁止选择
       pickerOptions: '',
       // 离职时间禁用
@@ -429,7 +423,6 @@ export default {
     const query = this.$route.query
     // query.index ''/新建老师  1/编辑老师 2/查看老师
     if (query && query.index) this.newTitle = query.index
-    if (query.index === '2') this.formDisabled = true
     // 接口调用
     this.createdUrl()
   },
@@ -458,7 +451,6 @@ export default {
           })
         })
         this.suDepartments = sortByKey(departmentWith, 'id')
-        console.log(this.suDepartments)
       })
       // 职级
       this.$http.Teacher.TeacherRankList().then((res) => {
@@ -520,6 +512,10 @@ export default {
       this.ruleForm.positionVal.forEach((val) => {
         positionValId.push({ id: val })
       })
+      let departureTime = ''
+      if (this.ruleForm.workingState === 'LEAVE') {
+        departureTime = this.ruleForm.departureDate
+      }
       const params = {
         teacher: {
           id: this.$route.query.teacherId,
@@ -530,7 +526,7 @@ export default {
           nickname: this.ruleForm.nickname,
           sex: this.ruleForm.resource,
           joinDate: this.ruleForm.inductionDate,
-          leaveDate: this.ruleForm.departureDate,
+          leaveDate: departureTime,
           leaveTrain: this.ruleForm.groupData,
           status: this.ruleForm.workingState,
           isLogin: this.ruleForm.accountSettings

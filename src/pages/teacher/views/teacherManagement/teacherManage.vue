@@ -1,6 +1,6 @@
 <!--
- * @Descripttion: 
- * @version: 
+ * @Descripttion:
+ * @version:
  * @Author: zhubaodong
  * @Date: 2020-04-02 15:35:27
  * @LastEditors: zhubaodong
@@ -42,9 +42,7 @@ export default {
     leftBarHandler(data) {
       this.currentDept = data
     }
-  },
-  created() {},
-  mounted() {}
+  }
 }
 </script>
 <style lang="scss" scoped>

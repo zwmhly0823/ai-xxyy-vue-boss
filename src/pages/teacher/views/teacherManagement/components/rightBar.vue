@@ -64,10 +64,10 @@
                 <el-dropdown-item @click.native="operation(scope.row, '1')">
                   编辑
                 </el-dropdown-item>
-                <!-- <el-dropdown-item @click.native="operation(scope.row, '2')">
+                <el-dropdown-item @click.native="operation(scope.row, '2')">
                   详情
                 </el-dropdown-item>
-                <el-dropdown-item @click.native="operation(scope.row, '3')">
+                <!-- <el-dropdown-item @click.native="operation(scope.row, '3')">
                   关联微信号
                 </el-dropdown-item> -->
               </el-dropdown-menu>
@@ -161,6 +161,12 @@
           </template>
         </el-table-column> -->
       </el-table>
+      <!-- 查看老师详情 -->
+      <teacher-details
+        ref="detailsHidden"
+        :teacherID="teacherID"
+        :subDepartment="subDepartment"
+      />
       <!-- 关联微信弹窗 -->
       <associatedWeChat ref="associated" />
       <!-- 分页 -->
@@ -184,6 +190,7 @@
 import MSearch from '@/components/MSearch/index.vue'
 import MPagination from '@/components/MPagination/index.vue'
 import associatedWeChat from '../components/associatedWeChat.vue'
+import teacherDetails from '../components/teacherDetails.vue'
 
 export default {
   props: {
@@ -195,7 +202,8 @@ export default {
   components: {
     MSearch,
     MPagination,
-    associatedWeChat
+    associatedWeChat,
+    teacherDetails
   },
   data() {
     return {
@@ -221,7 +229,11 @@ export default {
       // 多选选择项
       checkList: [],
       // 表格数据
-      tableData: []
+      tableData: [],
+      // 老师id
+      teacherID: '',
+      // 所属部门
+      subDepartment: {}
     }
   },
   computed: {
@@ -245,15 +257,17 @@ export default {
       this.getData(1, JSON.stringify(query))
     }
   },
-  created() {
-    this.getData()
+  activated() {
+    setTimeout(() => {
+      console.log(this.teacherID)
+      this.getData()
+      if (this.teacherID) this.$refs.detailsHidden.createdUrl(this.teacherID)
+    }, 500)
   },
   methods: {
-    getData(page = this.currentPage, query = this.query) {
+    getData(page = this.currentPage, query = JSON.stringify(this.query)) {
       // tab数据
       this.$http.Teacher.getTeacherPage(page, query).then((res) => {
-        console.log(res)
-
         if (res && res.data && res.data.TeacherManagePage) {
           const {
             content = [],
@@ -289,11 +303,15 @@ export default {
     },
     // 点击操作按钮
     operation(val, index) {
-      if (index === '1' || index === '2') {
+      if (index === '1') {
         this.$router.push({
           path: '/newTeacher',
           query: { index: index, teacherId: val.id }
         })
+      } else if (index === '2') {
+        this.$refs.detailsHidden.drawer = true
+        this.teacherID = val.id
+        this.subDepartment = val.department
       } else if (index === '3') {
         this.$refs.associated.centerDialogVisible = true
       }
