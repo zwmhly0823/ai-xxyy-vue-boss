@@ -68,6 +68,7 @@
           @stageCallBack="stageCallBack"
           @supCallBack="supCallBack"
           @levelCallBack="levelCallBack"
+          @positionCallBack="positionCallBack"
           :stageName="stage"
           :supName="sup"
           :levelName="level"
@@ -93,18 +94,20 @@
           :tip="nameTip"
         />
       </el-form-item>
-      <!-- <el-form-item v-if="rank || induction || landing || position"> -->
-      <!-- 老师模块职级，登陆状态，入职状态，选择职务搜索 -->
-      <!-- <teacher-drop-down
+      <el-form-item v-if="rank || induction || landing || position">
+        <!-- 老师模块职级，登陆状态，入职状态，选择职务搜索 -->
+        <teacher-drop-down
           @rankCallBack="rankCallBack"
           @supCallBack="supCallBack"
           @landingCallBack="landingCallBack"
+          @positionCallBack="positionCallBack"
           :rankName="rank"
-          :supName="induction"
-          :levelName="landing"
+          :inductionName="induction"
+          :landingName="landing"
+          :positionName="position"
           style="margin-bottom:0px"
         />
-      </el-form-item> -->
+      </el-form-item>
 
       <!-- <el-form-item
         size="mini"
@@ -148,7 +151,7 @@ import expressNo from './searchItems/expressNo'
 // 老师
 import teacherPhone from './searchItems/teacherSearch/teacherPhone.vue'
 import teacherName from './searchItems/teacherSearch/teacherName.vue'
-// import teacherDropDown from './searchItems/teacherSearch/teacherDropDown'
+import teacherDropDown from './searchItems/teacherSearch/teacherDropDown'
 
 export default {
   props: {
@@ -239,17 +242,22 @@ export default {
     // 职级
     rank: {
       type: String,
-      default: '职级查询'
+      default: ''
     },
     // 入职状态
     induction: {
       type: String,
-      default: '入职查询'
+      default: ''
     },
     // 登陆状态
     landing: {
       type: String,
-      default: '登陆查询'
+      default: ''
+    },
+    // 职务
+    position: {
+      type: String,
+      default: ''
     },
     // 订单号
     outTradeNo: {
@@ -283,8 +291,8 @@ export default {
     ProductName,
     teacherPhone,
     expressNo,
-    teacherName
-    // teacherDropDown
+    teacherName,
+    teacherDropDown
   },
   data() {
     return {
@@ -353,13 +361,17 @@ export default {
     // 登陆状态
     landingCallBack(res) {
       console.log(res, 'res')
-      this.setSeachParmas(res, [this.rankName || 'rankName'], 'terms')
+      this.setSeachParmas(res, [this.inductionName || 'inductionName'], 'terms')
+    },
+    // 职务
+    positionCallBack(res) {
+      this.setSeachParmas(res, [this.positionName || 'positionName'], 'terms')
     },
     // 选择订单号
     getOutTradeNo(res) {
       this.setSeachParmas(res, [this.outTradeNo || 'out_trade_no'], 'wildcard')
     },
-    // 选择订单号
+    // 选择职务
     getProductName(res) {
       this.setSeachParmas(res, [this.productName || 'product_name'])
     },
