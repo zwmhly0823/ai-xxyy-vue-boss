@@ -18,6 +18,7 @@
           :name="phone"
           :onlyPhone="onlyPhone"
           :tip="phoneTip"
+          :last_team_id="last_team_id"
         />
       </el-form-item>
 
@@ -195,6 +196,10 @@ export default {
     },
     // team_id
     teamId: {
+      type: String,
+      default: ''
+    },
+    last_team_id: {
       type: String,
       default: ''
     },
