@@ -21,6 +21,10 @@
         :popper-class="+onlyPhone ? 'ppName' : ''"
         @select="inputHandler"
       >
+        <el-select v-model="select" slot="prepend" placeholder="请选择">
+          <el-option label="微信号" value="1"></el-option>
+          <el-option label="手机号" value="2"></el-option>
+        </el-select>
         <i class="el-icon-search el-input__icon" slot="suffix"></i>
         <template slot-scope="{ item }">
           <div style="display:flex">
@@ -29,8 +33,8 @@
               /{{ item.wechat_nikename || '-' }}
             </div>
           </div>
-        </template></el-autocomplete
-      >
+        </template>
+      </el-autocomplete>
     </el-form>
   </div>
 </template>
@@ -68,7 +72,8 @@ export default {
   data() {
     return {
       input: '',
-      selectData: []
+      selectData: [],
+      select: '1'
     }
   },
   computed: {},
@@ -124,11 +129,11 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.search-item {
-  &.small {
-    width: 135px !important;
-  }
-}
+// .search-item {
+//   &.small {
+//     width: 135px !important;
+//   }
+// }
 </style>
 <style lang="scss">
 .ppName {
@@ -139,5 +144,14 @@ export default {
   .el-scrollbar {
     width: 100%;
   }
+}
+.el-select .el-input {
+  width: 90px;
+}
+.input-with-select .el-input-group__prepend {
+  background-color: #fff;
+}
+.el-form-item__content .el-input-group {
+  vertical-align: middle !important;
 }
 </style>

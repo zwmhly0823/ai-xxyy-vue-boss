@@ -79,19 +79,36 @@
             <div>{{ scope.row.id }}</div>
           </template>
         </el-table-column>
-        <el-table-column label="老师姓名">
+        <el-table-column label="真实姓名">
           <template slot-scope="scope">
             <div>{{ scope.row.realname || '-' }}</div>
           </template>
         </el-table-column>
-        <el-table-column label="性别">
+        <!-- <el-table-column label="性别">
           <template slot-scope="scope">
             <div>{{ sex[scope.row.sex] }}</div>
           </template>
-        </el-table-column>
-        <el-table-column label="昵称">
+        </el-table-column> -->
+        <el-table-column label="对外昵称">
           <template slot-scope="scope">
             <div>{{ scope.row.nickname || '-' }}</div>
+          </template>
+        </el-table-column>
+        <el-table-column label="绑定微信号">
+          <template slot-scope="scope">
+            <div v-if="scope.row.weixin">
+              <!-- <div><img :src="scope.row.head_image" /></div> -->
+              <p
+                style="margin: 0;"
+                v-for="item in scope.row.weixin"
+                :key="item.id"
+              >
+                {{ item.weixin_no }}
+              </p>
+            </div>
+            <div v-else>
+              <p>-</p>
+            </div>
           </template>
         </el-table-column>
         <el-table-column label="手机号" width="120">
@@ -120,9 +137,24 @@
             <div v-else><p>-</p></div>
           </template>
         </el-table-column>
+
         <el-table-column label="职级">
           <template slot-scope="scope">
             <div>{{ scope.row.rank ? scope.row.rank.name || '-' : '-' }}</div>
+          </template>
+        </el-table-column>
+        <el-table-column label="入职时间">
+          <template slot-scope="scope">
+            <div>
+              {{ scope.row.join_date }}
+            </div>
+          </template>
+        </el-table-column>
+        <el-table-column label="下组时间">
+          <template slot-scope="scope">
+            <div>
+              {{ scope.row.leave_train }}
+            </div>
           </template>
         </el-table-column>
         <el-table-column label="在职状态">
@@ -130,28 +162,12 @@
             <div>{{ scope.row.status == 0 ? '在职' : '离职' }}</div>
           </template>
         </el-table-column>
-        <el-table-column label="登录状态">
+        <!-- <el-table-column label="登录状态">
           <template slot-scope="scope">
             <div>{{ scope.row.is_login == 0 ? '允许登录' : '禁止登录' }}</div>
           </template>
-        </el-table-column>
-        <el-table-column label="绑定微信号">
-          <template slot-scope="scope">
-            <div v-if="scope.row.weixin">
-              <!-- <div><img :src="scope.row.head_image" /></div> -->
-              <p
-                style="margin: 0;"
-                v-for="item in scope.row.weixin"
-                :key="item.id"
-              >
-                {{ item.weixin_no }}
-              </p>
-            </div>
-            <div v-else>
-              <p>-</p>
-            </div>
-          </template>
-        </el-table-column>
+        </el-table-column> -->
+
         <!-- <el-table-column label="操作">
           <template slot-scope="">
             <div class="editStyle">
@@ -186,7 +202,7 @@
 // import dayjs from 'dayjs'
 // import axios from '@/api/axios'
 // import { GetAgeByBrithday, formatData } from '@/utils/index'
-
+import { formatData } from '@/utils/index'
 import MSearch from '@/components/MSearch/index.vue'
 import MPagination from '@/components/MPagination/index.vue'
 import associatedWeChat from '../components/associatedWeChat.vue'
@@ -271,6 +287,14 @@ export default {
             totalPages,
             totalElements
           } = res.data.TeacherManagePage
+          content.forEach((res) => {
+            res.join_date = res.join_date
+              ? formatData(new Date(res.join_date).getTime(), 'd')
+              : ''
+            res.leave_train = res.leave_train
+              ? formatData(new Date(res.leave_train).getTime(), 'd')
+              : ''
+          })
           this.tableData = content
           this.totalPages = +totalPages
           this.currentPage = +number

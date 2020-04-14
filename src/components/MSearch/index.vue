@@ -261,7 +261,6 @@ export default {
     },
     // 选择手机号
     getPhoneHander(res) {
-      console.log(res, '回调res')
       this.setSeachParmas(res, [this.phone || 'umobile'])
     },
     // 选择老师手机号
