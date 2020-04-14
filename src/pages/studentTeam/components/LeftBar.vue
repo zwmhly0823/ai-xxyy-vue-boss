@@ -8,7 +8,7 @@
  -->
 <template>
   <div class="left-container">
-    <!-- <el-input
+    <el-input
       v-model="input"
       placeholder="搜索班级名称"
       prefix-icon="el-icon-search"
@@ -70,7 +70,7 @@
         </svg>
         <span class="text">过滤</span>
       </div>
-    </el-popover> -->
+    </el-popover>
 
     <el-tree
       class="left-container-tree"
@@ -87,7 +87,7 @@
 </template>
 
 <script>
-// import MSearch from '@/components/MSearch/index.vue'
+import MSearch from '@/components/MSearch/index.vue'
 
 export default {
   props: {
@@ -100,7 +100,7 @@ export default {
       default: () => ({})
     }
   },
-  // components: { MSearch },
+  components: { MSearch },
   data() {
     return {
       input: '',

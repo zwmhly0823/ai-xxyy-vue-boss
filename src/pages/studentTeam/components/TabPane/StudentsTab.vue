@@ -361,7 +361,7 @@ export default {
     // 优惠卷列表接口
     couponList() {
       this.$http.Team.getAllCoupons(0).then((res) => {
-        this.couponData = res.payload.content
+        this.couponData = (res.payload && res.payload.content) || []
       })
     },
     // 选择按钮
