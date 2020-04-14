@@ -117,6 +117,7 @@
           <el-date-picker
             type="date"
             placeholder="选择日期"
+            value-format="yyyy-MM-dd HH:mm:ss"
             v-model="ruleForm.inductionDate"
             style="width: 57.5%;"
           ></el-date-picker>
@@ -124,11 +125,12 @@
       </el-form-item>
       <!-- 下组时间 -->
       <el-form-item label="下组时间">
-        <el-form-item prop="groupData">
+        <el-form-item prop="groupDate">
           <el-date-picker
             type="date"
             placeholder="选择日期"
-            v-model="ruleForm.groupData"
+            v-model="ruleForm.groupDate"
+            value-format="yyyy-MM-dd HH:mm:ss"
             :picker-options="pickerOptions"
             style="width: 57.5%;"
           ></el-date-picker>
@@ -157,6 +159,7 @@
             placeholder="选择日期"
             v-model="ruleForm.departureDate"
             :picker-options="pickerOptions"
+            value-format="yyyy-MM-dd HH:mm:ss"
             style="width: 57.5%;"
           ></el-date-picker>
         </el-form-item>
@@ -303,7 +306,7 @@ export default {
         // 入职时间
         inductionDate: '',
         // 下组时间
-        groupData: '',
+        groupDate: '',
         // 离职时间
         departureDate: '',
         // 账号设置
@@ -363,7 +366,6 @@ export default {
         // 入职时间
         inductionDate: [
           {
-            type: 'date',
             required: true,
             message: '请选择入职时间',
             trigger: 'change'
@@ -372,7 +374,6 @@ export default {
         // 离职时间
         departureDate: [
           {
-            type: 'date',
             required: true,
             message: '请选择离职时间',
             trigger: 'change'
@@ -381,7 +382,6 @@ export default {
         // 禁用状态下离职时间
         departureDatedisable: [
           {
-            type: 'date',
             required: true
           }
         ],
@@ -398,11 +398,13 @@ export default {
   },
   watch: {
     // 监听入职时间,清空离职时间
-    'ruleForm.inductionDate'(val) {
+    'ruleForm.inductionDate'(date) {
+      const val = new Date(date)
+      debugger
       // 离职时间
       if (
         this.ruleForm.departureDate !== '' &&
-        val.getTime() > this.ruleForm.departureDate.getTime()
+        val.getTime() > new Date(this.ruleForm.departureDate).getTime()
       ) {
         this.ruleForm.departureDate = ''
       } else {
@@ -410,10 +412,10 @@ export default {
       }
       //  下组时间
       if (
-        this.ruleForm.groupData !== '' &&
-        val.getTime() > this.ruleForm.groupData.getTime()
+        this.ruleForm.groupDate !== '' &&
+        val.getTime() > new Date(this.ruleForm.groupDate).getTime()
       ) {
-        this.ruleForm.groupData = ''
+        this.ruleForm.groupDate = ''
       } else {
         this.pickerOptions = this.DepartureDisabled()
       }
@@ -488,7 +490,7 @@ export default {
             this.ruleForm.departureDate = payload.teacher.leaveDate
               ? new Date(payload.teacher.leaveDate)
               : this.ruleForm.inductionDate
-            this.ruleForm.groupData = payload.teacher.leaveTrain
+            this.ruleForm.groupDate = payload.teacher.leaveTrain
               ? new Date(payload.teacher.leaveTrain)
               : this.ruleForm.inductionDate
             this.ruleForm.accountSettings = payload.teacher.isLogin
@@ -502,7 +504,10 @@ export default {
       const _this = this
       return {
         disabledDate(time) {
-          return time.getTime() < _this.ruleForm.inductionDate.getTime()
+          return (
+            new Date(time).getTime() <
+            new Date(_this.ruleForm.inductionDate).getTime()
+          )
         }
       }
     },
@@ -527,7 +532,7 @@ export default {
           sex: this.ruleForm.resource,
           joinDate: this.ruleForm.inductionDate,
           leaveDate: departureTime,
-          leaveTrain: this.ruleForm.groupData,
+          leaveTrain: this.ruleForm.groupDate,
           status: this.ruleForm.workingState,
           isLogin: this.ruleForm.accountSettings
         },
@@ -537,6 +542,8 @@ export default {
         duty: positionValId,
         rank: { id: this.ruleForm.rank }
       }
+      console.log(params)
+      debugger
       this.$refs[formName].validate((valid) => {
         if (valid) {
           // 新建接口请求

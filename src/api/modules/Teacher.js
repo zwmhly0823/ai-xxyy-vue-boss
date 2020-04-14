@@ -129,6 +129,8 @@ export default {
   },
   // 新建老师
   createTeacher(params) {
+    console.log(params)
+
     return axios.post(`/api/t/v1/teacher/createTeacher`, params)
   },
   //  编辑老师
