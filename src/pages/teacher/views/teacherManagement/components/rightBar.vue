@@ -148,22 +148,20 @@
             <div>{{ scope.row.rank ? scope.row.rank.name || '-' : '-' }}</div>
           </template>
         </el-table-column> -->
-        <el-table-column label="入职/下组时间" width="150px">
+        <el-table-column label="入职时间" width="100px">
           <template slot-scope="scope">
             <div>
               {{ scope.row.join_date }}
-              <br />
+            </div>
+          </template>
+        </el-table-column>
+        <el-table-column label="下组时间">
+          <template slot-scope="scope">
+            <div>
               {{ scope.row.leave_train }}
             </div>
           </template>
         </el-table-column>
-        <!-- <el-table-column label="下组时间">
-          <template slot-scope="scope">
-            <div>
-              {{ scope.row.leave_train }}
-            </div>
-          </template>
-        </el-table-column> -->
         <el-table-column label="在职状态">
           <template slot-scope="scope">
             <div>{{ scope.row.status == 0 ? '在职' : '离职' }}</div>
