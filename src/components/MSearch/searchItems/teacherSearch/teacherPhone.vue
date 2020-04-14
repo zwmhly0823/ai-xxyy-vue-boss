@@ -21,10 +21,6 @@
         :popper-class="+onlyPhone ? 'ppName' : ''"
         @select="inputHandler"
       >
-        <el-select v-model="select" slot="prepend" placeholder="请选择">
-          <el-option label="微信号" value="1"></el-option>
-          <el-option label="手机号" value="2"></el-option>
-        </el-select>
         <i class="el-icon-search el-input__icon" slot="suffix"></i>
         <template slot-scope="{ item }">
           <div style="display:flex">
@@ -102,14 +98,15 @@ export default {
       cb(searchUid)
     },
     createFilter(queryString) {
-      const queryParams = `{"mobile":"${queryString}","team_id":"${this.teamId}"}`
+      // const queryParams = `{"mobile":"${queryString}","team_id":"${this.teamId}"}`
+      const queryParams = `{"bool":{"must":[{"wildcard":{"phone.keyword":"*${queryString}*"}}]}}`
       return axios
-        .post('/graphql/user', {
+        .post('/graphql/v1/boss', {
           query: `{
-              blurrySearch(query: ${JSON.stringify(queryParams)}) {
-                  mobile
-                  wechat_nikename
-                  id
+              TeacherPage(query: ${JSON.stringify(queryParams)}) {
+                  content {
+                    id
+                  }
                 }
             }
           `
@@ -145,9 +142,9 @@ export default {
     width: 100%;
   }
 }
-.el-select .el-input {
-  width: 90px;
-}
+// .el-select .el-input {
+//   width: 90px;
+// }
 .input-with-select .el-input-group__prepend {
   background-color: #fff;
 }

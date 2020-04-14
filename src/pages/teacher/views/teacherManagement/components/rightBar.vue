@@ -8,8 +8,13 @@
  -->
 <template>
   <div>
-    <m-search @search="handleSearch" teacherphone="12" v-if="false">
-      <el-button type="primary" slot="searchItems" size="mini">搜索</el-button>
+    <m-search
+      @search="handleSearch"
+      teacherphone="uid"
+      teachername="12"
+      v-if="false"
+    >
+      <!-- <el-button type="primary" slot="searchItems" size="mini">搜索</el-button> -->
       <el-button
         type="primary"
         slot="searchItems"
@@ -17,7 +22,7 @@
         @click="newTeacher"
         >新增销售</el-button
       >
-      <!-- <el-checkbox-group
+      <!--  <el-checkbox-group
         v-model="checkList"
         slot="otherSearch"
         class="checkBoxStyle"
@@ -32,7 +37,7 @@
           :key="item.value"
           >{{ item.label }}</el-checkbox
         >
-      </el-checkbox-group> -->
+      </el-checkbox-group>-->
     </m-search>
 
     <el-button
@@ -249,7 +254,11 @@ export default {
       // 老师id
       teacherID: '',
       // 所属部门
-      subDepartment: {}
+      subDepartment: {},
+      // 搜索
+      search: [],
+      // 详情传参
+      detailsIndex: ''
     }
   },
   computed: {
@@ -275,12 +284,21 @@ export default {
   },
   activated() {
     setTimeout(() => {
-      console.log(this.teacherID)
       this.getData()
-      if (this.teacherID) this.$refs.detailsHidden.createdUrl(this.teacherID)
+      if (this.teacherID) {
+        this.$refs.detailsHidden.createdUrl(this.teacherID)
+      }
     }, 500)
   },
   methods: {
+    // 搜索
+    handleSearch(data) {
+      console.log(data, '122')
+      this.search = data
+      const must = { must: this.search }
+      this.query.push(must)
+      // this.getData()
+    },
     getData(page = this.currentPage, query = JSON.stringify(this.query)) {
       // tab数据
       this.$http.Teacher.getTeacherPage(page, query).then((res) => {
@@ -300,16 +318,21 @@ export default {
               : ''
           })
           this.tableData = content
+          if (this.detailsIndex === '2') {
+            this.tableData.forEach((val) => {
+              if (this.teacherID === val.id) {
+                this.$refs.detailsHidden.departmentData.pname =
+                  val.department.pname
+              }
+            })
+          }
           this.totalPages = +totalPages
           this.currentPage = +number
           this.totalElements = +totalElements
         }
       })
     },
-    // 搜索
-    handleSearch(data) {
-      console.log(data)
-    },
+
     // 选择按钮
     changeHandler(data) {
       console.log(data)
@@ -333,6 +356,7 @@ export default {
           query: { index: index, teacherId: val.id }
         })
       } else if (index === '2') {
+        this.detailsIndex = index
         this.$refs.detailsHidden.drawer = true
         this.teacherID = val.id
         this.subDepartment = val.department

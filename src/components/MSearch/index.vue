@@ -21,17 +21,6 @@
         />
       </el-form-item>
 
-      <el-form-item v-if="teacherphone">
-        <!-- 老师模块手机号搜索 -->
-        <teacher-phone
-          @result="getteacherPhone"
-          :teamId="teamId"
-          :name="teacherphone"
-          :onlyPhone="onlyPhone"
-          :tip="phoneTip"
-        />
-      </el-form-item>
-
       <el-form-item v-if="productName">
         <!-- 商品名称搜索 -->
         <product-name @result="getProductName" :name="productName" />
@@ -85,6 +74,37 @@
           style="margin-bottom:0px"
         />
       </el-form-item>
+      <el-form-item v-if="teacherphone">
+        <!-- 老师模块手机号搜索 -->
+        <teacher-phone
+          @result="getteacherPhone"
+          :teamId="teamId"
+          :name="teacherphone"
+          :onlyPhone="onlyPhone"
+          :tip="phoneTip"
+        />
+      </el-form-item>
+      <el-form-item v-if="teachername">
+        <!-- 老师模块姓名搜索 -->
+        <teacher-name
+          @result="getteacherName"
+          :name="teachername"
+          :onlyPhone="onlyName"
+          :tip="nameTip"
+        />
+      </el-form-item>
+      <el-form-item v-if="rank || induction || landing || position">
+        <!-- 老师模块职级，登陆状态，入职状态，选择职务搜索 -->
+        <teacher-drop-down
+          @rankCallBack="rankCallBack"
+          @supCallBack="supCallBack"
+          @landingCallBack="landingCallBack"
+          :rankName="rank"
+          :supName="induction"
+          :levelName="landing"
+          style="margin-bottom:0px"
+        />
+      </el-form-item>
 
       <!-- <el-form-item
         size="mini"
@@ -121,11 +141,14 @@ import ChannelSelect from './searchItems/channel.vue'
 import ProductTopic from './searchItems/productTopic.vue'
 import StageSupLevels from './searchItems/stageSupLevels.vue'
 import SearchPhone from './searchItems/searchPhone.vue'
-import teacherPhone from './searchItems/teacherPhone.vue'
 import OutTradeNo from './searchItems/outTradeNo.vue'
 import ProductName from './searchItems/productName.vue'
 import SelectDate from './searchItems/selectDate.vue'
 import expressNo from './searchItems/expressNo'
+// 老师
+import teacherPhone from './searchItems/teacherSearch/teacherPhone.vue'
+import teacherName from './searchItems/teacherSearch/teacherName.vue'
+// import teacherDropDown from './searchItems/teacherSearch/teacherDropDown'
 
 export default {
   props: {
@@ -198,6 +221,36 @@ export default {
       type: String,
       default: ''
     },
+    // 老师姓名搜索
+    teachername: {
+      type: String,
+      default: ''
+    },
+    // 是否只搜老师姓名
+    nameTip: {
+      type: String,
+      default: '姓名查询'
+    },
+    // 是否只搜老师姓名
+    onlyName: {
+      type: String,
+      default: '0' // 0
+    },
+    // 职级
+    rank: {
+      type: String,
+      default: '职级查询'
+    },
+    // 入职状态
+    induction: {
+      type: String,
+      default: '入职查询'
+    },
+    // 登陆状态
+    landing: {
+      type: String,
+      default: '登陆查询'
+    },
     // 订单号
     outTradeNo: {
       type: String,
@@ -229,7 +282,9 @@ export default {
     OutTradeNo,
     ProductName,
     teacherPhone,
-    expressNo
+    expressNo,
+    teacherName
+    // teacherDropDown
   },
   data() {
     return {
@@ -277,8 +332,28 @@ export default {
     },
     // 选择老师手机号
     getteacherPhone(res) {
-      console.log(res, '回调res')
+      console.log(res, '选择老师手机号回调res')
       this.setSeachParmas(res, [this.teacherphone || 'umobile'])
+    },
+    // 老师姓名
+    getteacherName(res) {
+      console.log(res, '选择老师姓名回调res')
+      this.setSeachParmas(res, [this.teachername || 'umobile'])
+    },
+    // 职级
+    rankCallBack(res) {
+      console.log(res, 'res')
+      this.setSeachParmas(res, [this.rankName || 'rankName'], 'terms')
+    },
+    // 入职状态
+    inductionCallBack(res) {
+      console.log(res, 'res')
+      this.setSeachParmas(res, [this.rankName || 'rankName'], 'terms')
+    },
+    // 登陆状态
+    landingCallBack(res) {
+      console.log(res, 'res')
+      this.setSeachParmas(res, [this.rankName || 'rankName'], 'terms')
     },
     // 选择订单号
     getOutTradeNo(res) {

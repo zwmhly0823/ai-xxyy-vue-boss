@@ -1,0 +1,154 @@
+<!--
+ * @Descripttion:
+ * @version:
+ * @Author: zhubaodong
+ * @Date: 2020-03-26 16:28:45
+ * @LastEditors: zhubaodong
+ * @LastEditTime: 2020-04-02 00:20:04
+ -->
+<template>
+  <div class="search-item small">
+    <el-form @submit.native.prevent>
+      <el-autocomplete
+        size="mini"
+        name="vals"
+        clearable
+        class="inline-input"
+        v-model="input"
+        :fetch-suggestions="querySearch"
+        :placeholder="tip"
+        :trigger-on-focus="false"
+        :popper-class="+onlyName ? 'ppName' : ''"
+        @select="inputHandler"
+      >
+        <i class="el-icon-search el-input__icon" slot="suffix"></i>
+        <template slot-scope="{ item }">
+          <div style="display:flex">
+            <div class="name">{{ item.mobile || '-' }}</div>
+            <div class="name" v-if="+onlyName">
+              /{{ item.wechat_nikename || '-' }}
+            </div>
+          </div>
+        </template>
+      </el-autocomplete>
+    </el-form>
+  </div>
+</template>
+
+<script>
+import axios from '@/api/axios'
+
+export default {
+  props: {
+    name: {
+      type: String,
+      default: 'out_trade_no'
+    },
+    onlyName: {
+      type: String,
+      default: '0'
+    },
+    // 是否只返回值，如果是，父组件获得值后根据实际表达式组装数据
+    onlyValue: {
+      type: Boolean,
+      default: false
+    },
+    // team_id
+    teamId: {
+      type: String,
+      default: ''
+    },
+    // 是否只返回值，如果是，父组件获得值后根据实际表达式组装数据
+    tip: {
+      type: String,
+      default: '姓名查询'
+    }
+  },
+  components: {},
+  data() {
+    return {
+      input: '',
+      selectData: [],
+      select: '1'
+    }
+  },
+  computed: {},
+  watch: {
+    input(val, old) {
+      console.log(val !== old && !val)
+      if (val !== old && !val) {
+        this.$emit('result', '')
+      }
+    }
+  },
+  methods: {
+    async querySearch(queryString, cb) {
+      const reg = /^[0-9]*$/
+      if (!+this.onlyName) {
+        if (!reg.test(queryString)) {
+          this.input = ''
+          return
+        }
+      }
+      const searchUid = await this.createFilter(queryString)
+      console.log(searchUid, '匹配到的数据')
+      const results = queryString ? searchUid : this.selectData
+      // 调用 callback 返回建议列表的数据
+      console.log(results, '结果')
+      cb(searchUid)
+    },
+    createFilter(queryString) {
+      // const queryParams = `{"mobile":"${queryString}","team_id":"${this.teamId}"}`
+      const queryParams = `{"bool":{"must":[{"wildcard":{"phone.keyword":"*${queryString}*"}}]}}`
+      return axios
+        .post('/graphql/v1/boss', {
+          query: `{
+              TeacherPage(query: ${JSON.stringify(queryParams)}) {
+                  content {
+                    id
+                  }
+                }
+            }
+          `
+        })
+        .then((res) => {
+          this.selectData = res.data.blurrySearch
+          return this.selectData
+        })
+    },
+    inputHandler(data) {
+      this.input = data.mobile
+      this.$emit('result', data.mobile ? { [this.name]: data.id } : '')
+    }
+  },
+  created() {},
+  mounted() {}
+}
+</script>
+<style lang="scss" scoped>
+// .search-item {
+//   &.small {
+//     width: 135px !important;
+//   }
+// }
+</style>
+<style lang="scss">
+.ppName {
+  width: 220px !important;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  .el-scrollbar {
+    width: 100%;
+  }
+}
+// .el-select .el-input {
+//   width: 90px;
+// }
+.input-with-select .el-input-group__prepend {
+  background-color: #fff;
+}
+.el-form-item__content .el-input-group {
+  vertical-align: middle !important;
+}
+</style>

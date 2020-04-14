@@ -206,6 +206,7 @@ import axios from 'axios'
 import _ from 'lodash'
 import Contants from '@/utils/contants'
 import { sortByKey } from '@/utils/boss'
+import { formatData } from '@/utils/index'
 export default {
   data() {
     // 手机号正则
@@ -484,13 +485,22 @@ export default {
             })
             this.ruleForm.rank = payload.rank ? payload.rank.id * 1 : ''
             this.ruleForm.inductionDate = payload.teacher.joinDate
-              ? new Date(payload.teacher.joinDate)
+              ? formatData(
+                  new Date(payload.teacher.joinDate).getTime(),
+                  'yyyy-MM-dd HH:mm:ss'
+                )
               : new Date()
             this.ruleForm.departureDate = payload.teacher.leaveDate
-              ? new Date(payload.teacher.leaveDate)
+              ? formatData(
+                  new Date(payload.teacher.leaveDate).getTime(),
+                  'yyyy-MM-dd HH:mm:ss'
+                )
               : this.ruleForm.inductionDate
             this.ruleForm.groupDate = payload.teacher.leaveTrain
-              ? new Date(payload.teacher.leaveTrain)
+              ? formatData(
+                  new Date(payload.teacher.leaveTrain).getTime(),
+                  'yyyy-MM-dd HH:mm:ss'
+                )
               : this.ruleForm.inductionDate
             this.ruleForm.accountSettings = payload.teacher.isLogin
             this.ruleForm.workingState = payload.teacher.status
@@ -699,6 +709,6 @@ export default {
 }
 // 下拉框
 .el-select {
-  width: 57.5%;
+  width: 57.5% !important;
 }
 </style>
