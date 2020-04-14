@@ -93,9 +93,9 @@
           :tip="nameTip"
         />
       </el-form-item>
-      <el-form-item v-if="rank || induction || landing || position">
-        <!-- 老师模块职级，登陆状态，入职状态，选择职务搜索 -->
-        <teacher-drop-down
+      <!-- <el-form-item v-if="rank || induction || landing || position"> -->
+      <!-- 老师模块职级，登陆状态，入职状态，选择职务搜索 -->
+      <!-- <teacher-drop-down
           @rankCallBack="rankCallBack"
           @supCallBack="supCallBack"
           @landingCallBack="landingCallBack"
@@ -104,7 +104,7 @@
           :levelName="landing"
           style="margin-bottom:0px"
         />
-      </el-form-item>
+      </el-form-item> -->
 
       <!-- <el-form-item
         size="mini"

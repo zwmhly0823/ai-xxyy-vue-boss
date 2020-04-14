@@ -124,44 +124,46 @@
         <el-table-column label="所属部门">
           <template slot-scope="scope">
             <div>
-              {{
-                scope.row.department
-                  ? `${scope.row.department.pname} / ${scope.row.department.name}`
-                  : '-'
-              }}
+              {{ scope.row.department ? scope.row.department.pname : '-' }}
+              <br />
+              {{ scope.row.department ? scope.row.department.name : '-' }}
             </div>
           </template>
         </el-table-column>
-        <el-table-column label="职务">
+        <el-table-column label="职务/职级">
           <template slot-scope="scope">
             <div v-if="scope.row.duty && scope.row.duty.length > 0">
-              <p v-for="item in scope.row.duty" :key="item.id">
+              <p v-for="item in scope.row.duty" :key="item.id" style="margin:0">
                 {{ item ? item.name || '-' : '-' }}
               </p>
             </div>
-            <div v-else><p>-</p></div>
-          </template>
-        </el-table-column>
+            <!-- <div v-else><p>-</p></div> -->
 
-        <el-table-column label="职级">
-          <template slot-scope="scope">
             <div>{{ scope.row.rank ? scope.row.rank.name || '-' : '-' }}</div>
           </template>
         </el-table-column>
-        <el-table-column label="入职时间">
+
+        <!-- <el-table-column label="职级">
+          <template slot-scope="scope">
+            <div>{{ scope.row.rank ? scope.row.rank.name || '-' : '-' }}</div>
+          </template>
+        </el-table-column> -->
+        <el-table-column label="入职/下组时间" width="150px">
           <template slot-scope="scope">
             <div>
               {{ scope.row.join_date }}
+              <br />
+              {{ scope.row.leave_train }}
             </div>
           </template>
         </el-table-column>
-        <el-table-column label="下组时间">
+        <!-- <el-table-column label="下组时间">
           <template slot-scope="scope">
             <div>
               {{ scope.row.leave_train }}
             </div>
           </template>
-        </el-table-column>
+        </el-table-column> -->
         <el-table-column label="在职状态">
           <template slot-scope="scope">
             <div>{{ scope.row.status == 0 ? '在职' : '离职' }}</div>
