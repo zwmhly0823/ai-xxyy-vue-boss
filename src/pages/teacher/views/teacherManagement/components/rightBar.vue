@@ -10,22 +10,22 @@
   <div>
     <m-search
       @search="handleSearch"
-      teacherphone="uid"
-      teachername="12"
-      rank="34"
-      induction="56"
-      landing="78"
-      position="90"
-      v-if="false"
+      teacherphone="phone.keyword"
+      teachername="realname.keyword"
+      rank="rank_id"
+      induction="status"
+      landing="is_login"
+      position="duty_id"
+      v-if="true"
     >
       <!-- <el-button type="primary" slot="searchItems" size="mini">搜索</el-button> -->
-      <!-- <el-button
+      <el-button
         type="primary"
         slot="searchItems"
         size="mini"
         @click="newTeacher"
         >新增销售</el-button
-      > -->
+      >
       <!--  <el-checkbox-group
         v-model="checkList"
         slot="otherSearch"
@@ -44,14 +44,14 @@
       </el-checkbox-group>-->
     </m-search>
 
-    <el-button
+    <!-- <el-button
       type="primary"
       slot="searchItems"
       size="mini"
       @click="newTeacher"
       style="margin: 15px;"
       >新增销售</el-button
-    >
+    > -->
 
     <div class="orderStyle">
       <el-table
@@ -151,14 +151,14 @@
             <div>{{ scope.row.rank ? scope.row.rank.name || '-' : '-' }}</div>
           </template>
         </el-table-column> -->
-        <el-table-column label="入职时间" width="150px">
+        <el-table-column label="入职时间" width="120px">
           <template slot-scope="scope">
             <div>
               {{ scope.row.join_date }}
             </div>
           </template>
         </el-table-column>
-        <el-table-column label="下组时间">
+        <el-table-column label="下组时间" width="120px">
           <template slot-scope="scope">
             <div>
               {{ scope.row.leave_train }}
@@ -297,10 +297,21 @@ export default {
     // 搜索
     handleSearch(data) {
       console.log(data, '122')
-      this.search = data
-      // const must = { must: this.search }
-      // this.query.push(must)
-      // this.getData()
+      if (data.length > 0) {
+        const term = {}
+        data.forEach((res) => {
+          if (res.term) {
+            Object.assign(term, res.term)
+          } else if (res.terms) {
+            Object.assign(term, res.terms)
+          }
+        })
+        console.log(term, 'term')
+        this.query = JSON.stringify(term)
+      } else {
+        this.query = ''
+      }
+      this.getData()
     },
     getData(page = this.currentPage, query = JSON.stringify(this.query)) {
       // tab数据

@@ -139,6 +139,21 @@ export default {
   updateTeacher(params) {
     return axios.put(`/api/t/v1/teacher/updateTeacher`, params)
   },
+  //  老师手机号，姓名模糊搜索
+  teacherListEx(name, params) {
+    const quer = `{ "bool": { "must": [{ "wildcard": { "${name}": "*${params}*" } }] } }`
+    return axios.post('/graphql/v1/teacher', {
+      query: `
+      {
+        TeacherListEx(query:${JSON.stringify(quer)})
+        {
+          phone
+          realname
+        }
+      }
+      `
+    })
+  },
   // 新增微信 获取老师name id
   TeacherList(query = '') {
     return axios.post('/graphql/v1/teacher', {

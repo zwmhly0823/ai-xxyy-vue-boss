@@ -90,15 +90,14 @@ export default {
       status: [
         { name: '启用', id: '0' },
         {
-          name: '未启用',
+          name: '停用',
           id: '1'
         }
       ],
       concatTeacher: [
-        { name: '微信号', id: '0' },
         {
           name: '老师手机号',
-          id: '1'
+          id: '0'
         },
         {
           name: '老师手机号',
