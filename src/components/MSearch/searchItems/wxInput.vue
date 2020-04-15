@@ -61,11 +61,30 @@
       >
       </el-option>
     </el-select>
+    <el-button
+      type="primary"
+      @click="showNewWeChat = true"
+      size="mini"
+      style="height:30xp;"
+      >主要按钮</el-button
+    >
+    <el-dialog
+      :destroy-on-close="true"
+      title="新增微信"
+      :visible.sync="showNewWeChat"
+      width="30%"
+    >
+      <addWeChat @addWeChat="addWeChat" />
+    </el-dialog>
   </div>
 </template>
 
 <script>
+import addWeChat from '@/pages/teacher/views/weixinManagement/components/addWeChat'
 export default {
+  components: {
+    addWeChat
+  },
   props: {
     name: {
       type: String,
@@ -79,6 +98,7 @@ export default {
   },
   data() {
     return {
+      showNewWeChat: false,
       weixinNumber: [
         { name: '微信号', id: '0' },
         {
@@ -112,6 +132,12 @@ export default {
     onChange(data) {
       this.selectedInput = data
       this.$emit('result', data ? { [this.name]: this.channelData } : '')
+    },
+    // 新增微信关闭弹框
+    addWeChat(data) {
+      if (data === 1) {
+        this.showNewWeChat = false
+      }
     }
   }
 }
