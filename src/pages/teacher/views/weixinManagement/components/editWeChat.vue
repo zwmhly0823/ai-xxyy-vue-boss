@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-04-14 15:15:31
  * @LastEditors: panjian
- * @LastEditTime: 2020-04-15 20:19:57
+ * @LastEditTime: 2020-04-15 21:21:05
  -->
 <template>
   <div>
@@ -114,6 +114,7 @@
 // import { sortByKey } from '@/utils/boss'
 import uploadFile from '@/utils/upload'
 export default {
+  props: ['weixinId'],
   data() {
     return {
       regionOptionsList: [],
@@ -125,11 +126,17 @@ export default {
         label: 'name'
       },
       ruleForm: {
+        // 微信号
         wechatNo: '',
+        // 部门
         associatedTeacher: '',
+        // 启用停用
         resource: '',
+        // 微信头像
         imageUrl: '',
+        // 二维码
         QEcodeUrl: '',
+        // 选择老师的ID
         teacherId: ''
       },
       TeacherListvalue: '',
@@ -155,10 +162,27 @@ export default {
       }
     }
   },
+  mounted() {
+    console.log('asdfhjlaskdfhlsdjkh')
+  },
   created() {
     this.onCreatedSelect()
+    this.onWeChatTeacher()
   },
   methods: {
+    onWeChatTeacher() {
+      const query = `{"id": ${this.weixinId}}`
+      this.$http.Teacher.WeChatTeacher(query).then((res) => {
+        console.log(res, '回显数据')
+        this.ruleForm.wechatNo = res.data.WeChatTeacher.wechat_no
+        this.ruleForm.imageUrl = res.data.WeChatTeacher.head_img_url
+        this.ruleForm.QEcodeUrl = res.data.WeChatTeacher.wechat_qr_code
+      })
+      const weixinId = `{"weixin_id": ${this.weixinId}}`
+      this.$http.Teacher.TeacherWeixinRelation(weixinId).then((res) => {
+        console.log(res, 'fasjkldfhjasdlfjlasdkfjlkasdjfl')
+      })
+    },
     onCreatedSelect() {
       // 关联老师选择部门
       this.$http.Teacher.getDepartmentTree().then((res) => {
@@ -218,7 +242,7 @@ export default {
             teacherId: this.ruleForm.teacherId ? this.ruleForm.teacherId : '',
             weixinId: this.weixinId ? this.weixinId : '',
             weixinNo: this.ruleForm.wechatNo,
-            weixinHeadUrl: this.ruleForm.imageUrl,
+            weixinHead: this.ruleForm.imageUrl,
             weixinQrCode: this.ruleForm.QEcodeUrl,
             isEffective: +this.ruleForm.resource
           }

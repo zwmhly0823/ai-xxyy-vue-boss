@@ -93,29 +93,14 @@
       open="calc(100vw - 170px - 24px)"
       close="calc(100vw - 50px - 24px)"
     ></m-pagination>
-    <el-dialog
-      :destroy-on-close="true"
-      title="编辑信息"
-      :visible.sync="showEditWeChat"
-      width="45%"
-    >
-      <showRelationTeacher :weixinId="weixinId" />
+    <el-dialog title="编辑信息" :visible.sync="showEditWeChat" width="45%">
+      <editWeChat v-if="showEditWeChat" :weixinId="weixinId" />
     </el-dialog>
-    <el-dialog
-      :destroy-on-close="true"
-      title="关联老师"
-      :visible.sync="showRelationTeacher"
-      width="35%"
-    >
-      <showRelationTeacher :weixinId="weixinId" />
+    <el-dialog title="关联老师" :visible.sync="showRelationTeacher" width="35%">
+      <showRelationTeacher v-if="showRelationTeacher" :weixinId="weixinId" />
     </el-dialog>
-    <el-dialog
-      :destroy-on-close="true"
-      title="新增微信"
-      :visible.sync="showNewWeChat"
-      width="45%"
-    >
-      <addWeChat @addWeChat="addWeChat" />
+    <el-dialog title="新增微信" :visible.sync="showNewWeChat" width="45%">
+      <addWeChat v-if="showNewWeChat" @addWeChat="addWeChat" />
     </el-dialog>
   </div>
 </template>
@@ -125,12 +110,14 @@ import MPagination from '@/components/MPagination/index.vue'
 import MSearch from '@/components/MSearch/index.vue'
 import addWeChat from './components/addWeChat'
 import showRelationTeacher from './components/showRelationTeacher'
+import editWeChat from './components/editWeChat'
 export default {
   components: {
     MPagination,
     MSearch,
     addWeChat,
-    showRelationTeacher
+    showRelationTeacher,
+    editWeChat
   },
 
   data() {
@@ -179,6 +166,7 @@ export default {
       timeout: null
     }
   },
+
   mounted() {
     this.weChatPageList()
   },
@@ -192,6 +180,11 @@ export default {
     }
   },
   methods: {
+    // handleClose() {
+    //   console.log(13223, '1231')
+
+    //   // this.showEditWeChat = false
+    // },
     searchHandler(res) {
       console.log(res)
     },
