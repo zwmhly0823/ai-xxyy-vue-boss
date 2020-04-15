@@ -3,8 +3,8 @@
  * @version:
  * @Author: Yangjiyong
  * @Date: 2020-04-07 13:52:26
- * @LastEditors: zhubaodong
- * @LastEditTime: 2020-04-07 13:59:18
+ * @LastEditors: panjian
+ * @LastEditTime: 2020-04-14 21:45:16
  */
 import axios from '../axiosConfig'
 
@@ -138,5 +138,18 @@ export default {
   //  编辑老师
   updateTeacher(params) {
     return axios.put(`/api/t/v1/teacher/updateTeacher`, params)
+  },
+  // 选择老师
+  TeacherDepartmentRelationList(query = '') {
+    return axios.post('/graphql/v1/teacher', {
+      query: `{
+        TeacherDepartmentRelationList(query: "${query}") {
+          id
+          department {
+            name
+          }
+        }
+       }`
+    })
   }
 }
