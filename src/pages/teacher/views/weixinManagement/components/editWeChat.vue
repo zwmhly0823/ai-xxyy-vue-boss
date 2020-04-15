@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-04-14 15:15:31
  * @LastEditors: panjian
- * @LastEditTime: 2020-04-15 22:11:08
+ * @LastEditTime: 2020-04-15 22:37:21
  -->
 <template>
   <div>
@@ -164,9 +164,7 @@ export default {
       }
     }
   },
-  mounted() {
-    console.log('asdfhjlaskdfhlsdjkh')
-  },
+  mounted() {},
   created() {
     this.onCreatedSelect()
     this.onWeChatTeacher()
@@ -175,7 +173,6 @@ export default {
     async onWeChatTeacher() {
       const query = `{"id": ${this.weixinId}}`
       await this.$http.Teacher.WeChatTeacher(query).then((res) => {
-        console.log(res, '回显数据')
         this.ruleForm.wechatNo = res.data.WeChatTeacher.wechat_no
         this.ruleForm.imageUrl = res.data.WeChatTeacher.head_img_url
         this.ruleForm.QEcodeUrl = res.data.WeChatTeacher.wechat_qr_code
@@ -189,7 +186,6 @@ export default {
       this.$http.Teacher.getTeacher(teacherIds).then((res) => {
         this.ruleForm.teacherId = res.data.Teacher.realname
         this.ruleForm.associatedTeacher = res.data.Teacher.department_id
-        console.log(res, 'fasdfasdfasdfasdfasfs')
       })
     },
     onCreatedSelect() {
@@ -200,8 +196,6 @@ export default {
     },
     // 部门联机选择
     handleChange(value) {
-      console.log(value)
-      console.log(Object.values(value))
       switch (value && value.length) {
         case 1:
           this.ruleForm.associatedTeacher = value[0]
@@ -244,20 +238,17 @@ export default {
     },
     // 提交
     submitForm(formName) {
-      console.log(this.ruleForm.associatedTeacher, 'ruleForm.associatedTeacher')
       this.$refs[formName].validate((valid) => {
         if (valid) {
           const params = {
             teacherId: this.ruleForm.teacherId ? this.ruleForm.teacherId : '',
             weixinId: this.weixinId ? this.weixinId : '',
             weixinNo: this.ruleForm.wechatNo,
-            weixinHead: this.ruleForm.imageUrl,
+            weixinHeadUrl: this.ruleForm.imageUrl,
             weixinQrCode: this.ruleForm.QEcodeUrl,
             isEffective: +this.ruleForm.resource
           }
-          console.log(params, 'fasdsafs')
           this.$http.Teacher.relation(params).then((res) => {
-            console.log(res, 'res')
             this.$message({
               message: '添加成功',
               type: 'success'
