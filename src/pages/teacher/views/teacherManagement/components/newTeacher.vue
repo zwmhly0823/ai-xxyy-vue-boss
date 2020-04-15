@@ -486,11 +486,7 @@ export default {
             this.ruleForm.region = payload.department
               ? payload.department.id ||
                 payload.department.pid ||
-                payload.department.cid[
-                  (payload.department.cid,
-                  payload.department.pid,
-                  payload.department.id)
-                ]
+                payload.department.cid
               : []
             payload.duty.forEach((val) => {
               this.ruleForm.positionVal.push(val.id * 1)
