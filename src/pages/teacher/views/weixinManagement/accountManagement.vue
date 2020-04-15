@@ -1,12 +1,19 @@
 <template>
   <div class="weixin">
-    <m-search @search="searchHandler" wxShow="wx"> </m-search>
+    <m-search
+      @search="searchHandler"
+      wxSerch="wx"
+      wxInput="inp"
+      wxStatus="st"
+      wxConcatTeacher="ts"
+    >
+    </m-search>
     <el-button
       type="primary"
       @click="showNewWeChat = true"
       size="mini"
       style="height:30xp;"
-      >主要按钮</el-button
+      >新增微信</el-button
     >
     <!-- 选择框 -->
     <el-table
@@ -17,6 +24,20 @@
       <el-table-column label="微信号">
         <template slot-scope="scope">
           <div class="weixin-box">
+            <el-dropdown>
+              <div>
+                <img src="../../../../assets/images/point.png" alt="" />
+              </div>
+              <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item @click.native="operation(scope.row, '1')">
+                  编辑
+                </el-dropdown-item>
+                <el-dropdown-item @click.native="operation(scope.row, '2')">
+                  关联老师
+                </el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
+
             <img class="weixinHead" :src="scope.row.head_img_url" alt="" />
             <span class="weixinName">{{ scope.row.wechat_no }}</span>
             <!-- 鼠标指向显示二维码 -->
@@ -67,19 +88,16 @@
           <!-- <span else>--</span> -->
         </template>
       </el-table-column>
-      <el-table-column align="center" label="操作">
+      <!-- <el-table-column align="center" label="操作">
         <template>
           <span class="operatingOne public" @click="showExpress = true"
             >详情</span
-          >
-          <span class="operatingTwo public" @click="showExpress = true"
-            >编辑</span
           >
           <span class="operatingThree public" @click="showExpress = true"
             >关联老师</span
           >
         </template>
-      </el-table-column>
+      </el-table-column> -->
     </el-table>
     <!-- 分页 -->
     <m-pagination
@@ -171,6 +189,22 @@ export default {
     }
   },
   methods: {
+    // 点击操作按钮
+    operation(val, index) {
+      if (index === '1') {
+        this.$router.push({
+          path: '/',
+          query: { index: index, teacherId: val.id }
+        })
+      } else if (index === '2') {
+        this.detailsIndex = index
+        this.$refs.detailsHidden.drawer = true
+        this.teacherID = val.id
+        this.subDepartment = val.department
+      } else if (index === '3') {
+        this.$refs.associated.centerDialogVisible = true
+      }
+    },
     searchHandler(res) {
       console.log(res)
     },
@@ -259,11 +293,6 @@ export default {
 .weixin {
   width: 98%;
   margin: 0px auto;
-  .search {
-    width: 100%;
-    height: 80px;
-    line-height: 80px;
-  }
   .weixin-box {
     line-height: 30px;
     display: flex;
@@ -272,6 +301,7 @@ export default {
       width: 30px;
       height: 30px;
       border-radius: 50%;
+      margin-left: 10px;
     }
     span {
       display: inline-block;
@@ -282,7 +312,6 @@ export default {
       cursor: pointer;
     }
   }
-
   .weixinName {
     margin-left: 10px;
   }

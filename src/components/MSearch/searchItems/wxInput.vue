@@ -1,39 +1,36 @@
 <template>
   <div class="search-item small">
-    <!-- 微信号、手机号 -->
-    <el-select
-      v-model="channelData"
+    <!-- 微信号 -->
+    <el-autocomplete
+      v-model="weixinNumberData"
       size="mini"
       clearable
       filterable
       reserve-keyword
-      placeholder="微信搜索"
-      @change="onChange"
+      placeholder="微信号搜索"
+      @change="onWxSerch"
     >
-      <el-option
-        v-for="item in weixinNumber"
-        :key="item.id"
-        :label="item.name"
-        :value="item.id"
-      >
-      </el-option>
-    </el-select>
-    <!-- 输入框 -->
-    <el-input
-      :placeholder="`请输入${weixinNumber[selectedInput].name}`"
+    </el-autocomplete>
+    <!-- 手机号 -->
+    <el-autocomplete
+      v-model="weixinInp"
       size="mini"
       clearable
+      filterable
+      reserve-keyword
+      placeholder="手机号搜索"
+      @change="onPhoneSerch"
     >
-    </el-input>
+    </el-autocomplete>
     <!-- 使用状态 -->
     <el-select
-      v-model="channelData"
+      v-model="statueData"
       size="mini"
       clearable
       filterable
       reserve-keyword
-      placeholder="使用状态"
-      @change="onChange"
+      placeholder="全部状态"
+      @change="onWxStatus"
     >
       <el-option
         v-for="item in status"
@@ -45,13 +42,13 @@
     </el-select>
     <!-- 是否关联老师 -->
     <el-select
-      v-model="channelData"
+      v-model="concatTeacherData"
       size="mini"
       clearable
       filterable
       reserve-keyword
       placeholder="是否已关联老师"
-      @change="onChange"
+      @change="onWxConcatTeacher"
     >
       <el-option
         v-for="item in concatTeacher"
@@ -67,19 +64,27 @@
 <script>
 export default {
   props: {
-    name: {
+    wxSerch: {
       type: String,
-      default: 'wx'
+      default: ''
     },
-    // 是否只返回值，如果是，父组件获得值后根据实际表达式组装数据
-    onlyValue: {
-      type: Boolean,
-      default: false
+    wxInput: {
+      type: String,
+      default: ''
+    },
+    wxStatus: {
+      type: String,
+      default: ''
+    },
+    wxConcatTeacher: {
+      type: String,
+      default: ''
     }
   },
   data() {
     return {
       showNewWeChat: false,
+      weixinInp: '',
       weixinNumber: [
         { name: '微信号', id: '0' },
         {
@@ -88,30 +93,58 @@ export default {
         }
       ],
       status: [
-        { name: '启用', id: '0' },
+        {
+          name: '全部',
+          id: '0'
+        },
+        { name: '启用', id: '1' },
         {
           name: '停用',
-          id: '1'
+          id: '2'
         }
       ],
       concatTeacher: [
         {
-          name: '老师手机号',
+          name: '全部',
           id: '0'
         },
         {
-          name: '老师手机号',
+          name: '是',
           id: '1'
+        },
+        {
+          name: '否',
+          id: '2'
         }
       ],
-      channelData: null,
+      weixinNumberData: null,
+      statueData: null,
+      concatTeacherData: null,
       selectedInput: 0
     }
   },
   methods: {
-    onChange(data) {
+    onWxSerch(data) {
       this.selectedInput = data
-      this.$emit('result', data ? { [this.name]: this.channelData } : '')
+      this.$emit(
+        'getWxSerch',
+        data ? { [this.wxSerch]: this.weixinNumberData } : ''
+      )
+    },
+    onWxStatus(data) {
+      this.$emit(
+        'getWxStatus',
+        data ? { [this.wxStatus]: this.statueData } : ''
+      )
+    },
+    onWxConcatTeacher(data) {
+      this.$emit(
+        'getWxConcatTeacher',
+        data ? { [this.wxConcatTeacher]: this.concatTeacherData } : ''
+      )
+    },
+    onPhoneSerch(data) {
+      this.$emit('getWxInput', data ? { [this.wxInput]: this.weixinInp } : '')
     }
   }
 }

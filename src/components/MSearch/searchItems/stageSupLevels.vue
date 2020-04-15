@@ -175,7 +175,6 @@ export default {
     },
     supChange(data) {
       console.log(data, 'ddddaaaa')
-
       this.$emit(
         'supCallBack',
         data.length > 0 ? { [this.supName]: this.supData } : ''

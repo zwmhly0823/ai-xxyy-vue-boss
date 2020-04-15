@@ -131,10 +131,18 @@
           </el-button>
         </el-popover>
       </el-form-item> -->
-      <el-form-item v-if="wxShow">
-        <wx-list @result="getWxInfo" name="wxShow" />
+      <el-form-item v-if="wxSerch || wxInput || wxStatus || wxConcatTeacher">
+        <wx-list
+          :wxSerch="wxSerch"
+          :wxInput="wxInput"
+          :wxStatus="wxStatus"
+          :wxConcatTeacher="wxConcatTeacher"
+          @getWxSerch="getWxSerch"
+          @getWxInput="getWxInput"
+          @getWxStatus="getWxStatus"
+          @getWxConcatTeacher="getWxConcatTeacher"
+        />
       </el-form-item>
-
       <el-form-item>
         <slot name="searchItems"></slot>
       </el-form-item>
@@ -156,7 +164,6 @@ import expressNo from './searchItems/expressNo'
 import teacherPhone from './searchItems/teacherSearch/teacherPhone.vue'
 import teacherName from './searchItems/teacherSearch/teacherName.vue'
 import teacherDropDown from './searchItems/teacherSearch/teacherDropDown'
-
 import wxList from './searchItems/wxInput'
 
 export default {
@@ -225,6 +232,11 @@ export default {
       type: String,
       default: '手机号查询'
     },
+    // 微信号搜索
+    weixinNumber: {
+      type: String,
+      default: '0'
+    },
     // team_id
     teamId: {
       type: String,
@@ -289,9 +301,21 @@ export default {
       type: String,
       default: '' // express_nu
     },
-    wxShow: {
+    wxSerch: {
       type: String,
-      default: '' // wx
+      default: '' // wxSerch
+    },
+    wxInput: {
+      type: String,
+      default: '' // wxInput
+    },
+    wxStatus: {
+      type: String,
+      default: '' // wxStatus
+    },
+    wxConcatTeacher: {
+      type: String,
+      default: '' // wxConcatTeacher
     }
   },
   components: {
@@ -409,8 +433,17 @@ export default {
       console.log(res, 'res___________', this.expressNo)
       this.setSeachParmas(res, [this.expressNo || 'express_nu'], 'wildcard')
     },
-    getWxInfo(res) {
-      this.setSeachParmas(res, [this.wxShow || 'wx'])
+    getWxSerch(res) {
+      this.setSeachParmas(res, [this.wxSerch])
+    },
+    getWxInput(res) {
+      this.setSeachParmas(res, [this.wxInput], 'wildcard')
+    },
+    getWxStatus(res) {
+      this.setSeachParmas(res, [this.wxStatus])
+    },
+    getWxConcatTeacher(res) {
+      this.setSeachParmas(res, [this.wxConcatTeacher])
     },
 
     /**  处理接收到的查询参数
