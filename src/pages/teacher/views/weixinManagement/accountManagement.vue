@@ -76,15 +76,16 @@
       </el-table-column>
       <el-table-column align="center" label="所在部门">
         <template slot-scope="scope">
-          <span v-if="concatTeacher[scope.row.teacher_id]"
-            >{{
-              concatTeacher[scope.row.teacher_id] &&
-                concatTeacher[scope.row.teacher_id].teamname
-            }}/{{
+          <span v-if="concatTeacher[scope.row.teacher_id]">
+            {{
               concatTeacher[scope.row.teacher_id] &&
                 concatTeacher[scope.row.teacher_id].pteamname
             }}</span
-          >
+          ><br />
+          {{
+            concatTeacher[scope.row.teacher_id] &&
+              concatTeacher[scope.row.teacher_id].teamname
+          }}
           <!-- <span else>--</span> -->
         </template>
       </el-table-column>
@@ -299,6 +300,16 @@ export default {
 .weixin {
   width: 98%;
   margin: 0px auto;
+  .el-button {
+    position: relative;
+    top: -60px;
+    left: 670px;
+  }
+  .el-card {
+    padding-top: 14px;
+    padding-bottom: 14px;
+    box-sizing: border-box;
+  }
   .weixin-box {
     line-height: 30px;
     display: flex;
