@@ -117,6 +117,7 @@
           <el-date-picker
             type="date"
             placeholder="选择日期"
+            value-format="yyyy-MM-dd HH:mm:ss"
             v-model="ruleForm.inductionDate"
             style="width: 57.5%;"
           ></el-date-picker>
@@ -124,11 +125,12 @@
       </el-form-item>
       <!-- 下组时间 -->
       <el-form-item label="下组时间">
-        <el-form-item prop="groupData">
+        <el-form-item prop="groupDate">
           <el-date-picker
             type="date"
             placeholder="选择日期"
-            v-model="ruleForm.groupData"
+            v-model="ruleForm.groupDate"
+            value-format="yyyy-MM-dd HH:mm:ss"
             :picker-options="pickerOptions"
             style="width: 57.5%;"
           ></el-date-picker>
@@ -157,6 +159,7 @@
             placeholder="选择日期"
             v-model="ruleForm.departureDate"
             :picker-options="pickerOptions"
+            value-format="yyyy-MM-dd HH:mm:ss"
             style="width: 57.5%;"
           ></el-date-picker>
         </el-form-item>
@@ -202,7 +205,8 @@
 import axios from 'axios'
 import _ from 'lodash'
 import Contants from '@/utils/contants'
-import { sortByKey } from '@/utils/boss'
+// import { sortByKey } from '@/utils/boss'
+import { formatData } from '@/utils/index'
 export default {
   data() {
     // 手机号正则
@@ -303,7 +307,7 @@ export default {
         // 入职时间
         inductionDate: '',
         // 下组时间
-        groupData: '',
+        groupDate: '',
         // 离职时间
         departureDate: '',
         // 账号设置
@@ -363,7 +367,6 @@ export default {
         // 入职时间
         inductionDate: [
           {
-            type: 'date',
             required: true,
             message: '请选择入职时间',
             trigger: 'change'
@@ -372,7 +375,6 @@ export default {
         // 离职时间
         departureDate: [
           {
-            type: 'date',
             required: true,
             message: '请选择离职时间',
             trigger: 'change'
@@ -381,7 +383,6 @@ export default {
         // 禁用状态下离职时间
         departureDatedisable: [
           {
-            type: 'date',
             required: true
           }
         ],
@@ -398,11 +399,12 @@ export default {
   },
   watch: {
     // 监听入职时间,清空离职时间
-    'ruleForm.inductionDate'(val) {
+    'ruleForm.inductionDate'(date) {
+      const val = new Date(date)
       // 离职时间
       if (
         this.ruleForm.departureDate !== '' &&
-        val.getTime() > this.ruleForm.departureDate.getTime()
+        val.getTime() > new Date(this.ruleForm.departureDate).getTime()
       ) {
         this.ruleForm.departureDate = ''
       } else {
@@ -410,10 +412,10 @@ export default {
       }
       //  下组时间
       if (
-        this.ruleForm.groupData !== '' &&
-        val.getTime() > this.ruleForm.groupData.getTime()
+        this.ruleForm.groupDate !== '' &&
+        val.getTime() > new Date(this.ruleForm.groupDate).getTime()
       ) {
-        this.ruleForm.groupData = ''
+        this.ruleForm.groupDate = ''
       } else {
         this.pickerOptions = this.DepartureDisabled()
       }
@@ -433,24 +435,27 @@ export default {
         this.position = res.data.TeacherDutyList
       })
       // 部门接口
-      this.$http.Teacher.getdepartmentList().then((res) => {
-        const departmentData = res.data.TeacherDepartmentPage.content
-        const departmentWith = []
-        departmentData.forEach((val) => {
-          if (val.pid === 0) {
-            val.children = []
-            departmentWith.push(val)
-            // departmentWith.push(Object.assign(val, { children: [] }))
-          }
-        })
-        departmentData.forEach((val) => {
-          departmentWith.forEach((data) => {
-            if (val.pid === data.id) {
-              data.children.push(val)
-            }
-          })
-        })
-        this.suDepartments = sortByKey(departmentWith, 'id')
+      // this.$http.Teacher.getdepartmentList().then((res) => {
+      //   const departmentData = res.data.TeacherDepartmentPage.content
+      //   const departmentWith = []
+      //   departmentData.forEach((val) => {
+      //     if (val.pid === 0) {
+      //       val.children = []
+      //       departmentWith.push(val)
+      //       // departmentWith.push(Object.assign(val, { children: [] }))
+      //     }
+      //   })
+      //   departmentData.forEach((val) => {
+      //     departmentWith.forEach((data) => {
+      //       if (val.pid === data.id) {
+      //         data.children.push(val)
+      //       }
+      //     })
+      //   })
+      //   this.suDepartments = sortByKey(departmentWith, 'id')
+      // })
+      this.$http.Teacher.getDepartmentTree().then((res) => {
+        this.suDepartments = res.payload
       })
       // 职级
       this.$http.Teacher.TeacherRankList().then((res) => {
@@ -475,21 +480,35 @@ export default {
             this.ruleForm.name = payload.teacher.realName
             this.ruleForm.nickname = payload.teacher.nickname
             this.ruleForm.resource = payload.teacher.sex
+            // this.ruleForm.region = payload.department
+            //   ? [payload.department.id]
+            //   : []
             this.ruleForm.region = payload.department
-              ? [payload.department.pid * 1, payload.department.id * 1]
+              ? payload.department.id ||
+                payload.department.pid ||
+                payload.department.cid
               : []
             payload.duty.forEach((val) => {
               this.ruleForm.positionVal.push(val.id * 1)
             })
             this.ruleForm.rank = payload.rank ? payload.rank.id * 1 : ''
             this.ruleForm.inductionDate = payload.teacher.joinDate
-              ? new Date(payload.teacher.joinDate)
+              ? formatData(
+                  new Date(payload.teacher.joinDate).getTime(),
+                  'yyyy-MM-dd HH:mm:ss'
+                )
               : new Date()
             this.ruleForm.departureDate = payload.teacher.leaveDate
-              ? new Date(payload.teacher.leaveDate)
+              ? formatData(
+                  new Date(payload.teacher.leaveDate).getTime(),
+                  'yyyy-MM-dd HH:mm:ss'
+                )
               : this.ruleForm.inductionDate
-            this.ruleForm.groupData = payload.teacher.leaveTrain
-              ? new Date(payload.teacher.leaveTrain)
+            this.ruleForm.groupDate = payload.teacher.leaveTrain
+              ? formatData(
+                  new Date(payload.teacher.leaveTrain).getTime(),
+                  'yyyy-MM-dd HH:mm:ss'
+                )
               : this.ruleForm.inductionDate
             this.ruleForm.accountSettings = payload.teacher.isLogin
             this.ruleForm.workingState = payload.teacher.status
@@ -502,7 +521,10 @@ export default {
       const _this = this
       return {
         disabledDate(time) {
-          return time.getTime() < _this.ruleForm.inductionDate.getTime()
+          return (
+            new Date(time).getTime() <
+            new Date(_this.ruleForm.inductionDate).getTime()
+          )
         }
       }
     },
@@ -527,7 +549,7 @@ export default {
           sex: this.ruleForm.resource,
           joinDate: this.ruleForm.inductionDate,
           leaveDate: departureTime,
-          leaveTrain: this.ruleForm.groupData,
+          leaveTrain: this.ruleForm.groupDate,
           status: this.ruleForm.workingState,
           isLogin: this.ruleForm.accountSettings
         },
@@ -611,7 +633,6 @@ export default {
             headers: { 'Content-Type': 'multipart/form-data' }
           })
           .then((res) => {
-            console.log('axios-res', res, fileUrl)
             this.ruleForm.imageUrl = fileUrl
           })
           .catch((err) => {
@@ -696,6 +717,6 @@ export default {
 }
 // 下拉框
 .el-select {
-  width: 57.5%;
+  width: 57.5% !important;
 }
 </style>

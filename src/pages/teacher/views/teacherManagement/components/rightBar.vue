@@ -8,8 +8,17 @@
  -->
 <template>
   <div>
-    <m-search @search="handleSearch" teacherphone="12" v-if="false">
-      <el-button type="primary" slot="searchItems" size="mini">搜索</el-button>
+    <m-search
+      @search="handleSearch"
+      teacherphone="phone.keyword"
+      teachername="realname.keyword"
+      rank="rank_id"
+      induction="status"
+      landing="is_login"
+      position="duty_id"
+      v-if="true"
+    >
+      <!-- <el-button type="primary" slot="searchItems" size="mini">搜索</el-button> -->
       <el-button
         type="primary"
         slot="searchItems"
@@ -17,7 +26,7 @@
         @click="newTeacher"
         >新增销售</el-button
       >
-      <!-- <el-checkbox-group
+      <!--  <el-checkbox-group
         v-model="checkList"
         slot="otherSearch"
         class="checkBoxStyle"
@@ -32,17 +41,17 @@
           :key="item.value"
           >{{ item.label }}</el-checkbox
         >
-      </el-checkbox-group> -->
+      </el-checkbox-group>-->
     </m-search>
 
-    <el-button
+    <!-- <el-button
       type="primary"
       slot="searchItems"
       size="mini"
       @click="newTeacher"
       style="margin: 15px;"
       >新增销售</el-button
-    >
+    > -->
 
     <div class="orderStyle">
       <el-table
@@ -64,9 +73,9 @@
                 <el-dropdown-item @click.native="operation(scope.row, '1')">
                   编辑
                 </el-dropdown-item>
-                <el-dropdown-item @click.native="operation(scope.row, '2')">
+                <!-- <el-dropdown-item @click.native="operation(scope.row, '2')">
                   详情
-                </el-dropdown-item>
+                </el-dropdown-item> -->
                 <!-- <el-dropdown-item @click.native="operation(scope.row, '3')">
                   关联微信号
                 </el-dropdown-item> -->
@@ -79,60 +88,19 @@
             <div>{{ scope.row.id }}</div>
           </template>
         </el-table-column>
-        <el-table-column label="老师姓名">
+        <el-table-column label="真实姓名">
           <template slot-scope="scope">
             <div>{{ scope.row.realname || '-' }}</div>
           </template>
         </el-table-column>
-        <el-table-column label="性别">
+        <!-- <el-table-column label="性别">
           <template slot-scope="scope">
             <div>{{ sex[scope.row.sex] }}</div>
           </template>
-        </el-table-column>
-        <el-table-column label="昵称">
+        </el-table-column> -->
+        <el-table-column label="对外昵称">
           <template slot-scope="scope">
             <div>{{ scope.row.nickname || '-' }}</div>
-          </template>
-        </el-table-column>
-        <el-table-column label="手机号" width="120">
-          <template slot-scope="scope">
-            <div>{{ scope.row.phone }}</div>
-          </template>
-        </el-table-column>
-        <el-table-column label="所属部门">
-          <template slot-scope="scope">
-            <div>
-              {{
-                scope.row.department
-                  ? `${scope.row.department.pname} / ${scope.row.department.name}`
-                  : '-'
-              }}
-            </div>
-          </template>
-        </el-table-column>
-        <el-table-column label="职务">
-          <template slot-scope="scope">
-            <div v-if="scope.row.duty && scope.row.duty.length > 0">
-              <p v-for="item in scope.row.duty" :key="item.id">
-                {{ item ? item.name || '-' : '-' }}
-              </p>
-            </div>
-            <div v-else><p>-</p></div>
-          </template>
-        </el-table-column>
-        <el-table-column label="职级">
-          <template slot-scope="scope">
-            <div>{{ scope.row.rank ? scope.row.rank.name || '-' : '-' }}</div>
-          </template>
-        </el-table-column>
-        <el-table-column label="在职状态">
-          <template slot-scope="scope">
-            <div>{{ scope.row.status == 0 ? '在职' : '离职' }}</div>
-          </template>
-        </el-table-column>
-        <el-table-column label="登录状态">
-          <template slot-scope="scope">
-            <div>{{ scope.row.is_login == 0 ? '允许登录' : '禁止登录' }}</div>
           </template>
         </el-table-column>
         <el-table-column label="绑定微信号">
@@ -152,6 +120,62 @@
             </div>
           </template>
         </el-table-column>
+        <el-table-column label="手机号" width="120">
+          <template slot-scope="scope">
+            <div>{{ scope.row.phone }}</div>
+          </template>
+        </el-table-column>
+        <el-table-column label="所属部门">
+          <template slot-scope="scope">
+            <div>
+              {{ scope.row.department ? scope.row.department.pname : '-' }}
+              <br />
+              {{ scope.row.department ? scope.row.department.name : '-' }}
+            </div>
+          </template>
+        </el-table-column>
+        <el-table-column label="职务/职级">
+          <template slot-scope="scope">
+            <div v-if="scope.row.duty && scope.row.duty.length > 0">
+              <p v-for="item in scope.row.duty" :key="item.id" style="margin:0">
+                {{ item ? item.name || '-' : '-' }}
+              </p>
+            </div>
+            <div v-else><p>-</p></div>
+            <div>{{ scope.row.rank ? scope.row.rank.name || '-' : '-' }}</div>
+          </template>
+        </el-table-column>
+
+        <!-- <el-table-column label="职级">
+          <template slot-scope="scope">
+            <div>{{ scope.row.rank ? scope.row.rank.name || '-' : '-' }}</div>
+          </template>
+        </el-table-column> -->
+        <el-table-column label="入职时间" width="120px">
+          <template slot-scope="scope">
+            <div>
+              {{ scope.row.join_date }}
+            </div>
+          </template>
+        </el-table-column>
+        <el-table-column label="下组时间" width="120px">
+          <template slot-scope="scope">
+            <div>
+              {{ scope.row.leave_train }}
+            </div>
+          </template>
+        </el-table-column>
+        <el-table-column label="在职状态">
+          <template slot-scope="scope">
+            <div>{{ scope.row.status == 0 ? '在职' : '离职' }}</div>
+          </template>
+        </el-table-column>
+        <!-- <el-table-column label="登录状态">
+          <template slot-scope="scope">
+            <div>{{ scope.row.is_login == 0 ? '允许登录' : '禁止登录' }}</div>
+          </template>
+        </el-table-column> -->
+
         <!-- <el-table-column label="操作">
           <template slot-scope="">
             <div class="editStyle">
@@ -186,7 +210,7 @@
 // import dayjs from 'dayjs'
 // import axios from '@/api/axios'
 // import { GetAgeByBrithday, formatData } from '@/utils/index'
-
+import { formatData } from '@/utils/index'
 import MSearch from '@/components/MSearch/index.vue'
 import MPagination from '@/components/MPagination/index.vue'
 import associatedWeChat from '../components/associatedWeChat.vue'
@@ -207,6 +231,8 @@ export default {
   },
   data() {
     return {
+      departmentQuery: '',
+      searchQuery: '',
       query: '',
       sex: {
         // 0: '-',
@@ -233,7 +259,11 @@ export default {
       // 老师id
       teacherID: '',
       // 所属部门
-      subDepartment: {}
+      subDepartment: {},
+      // 搜索
+      search: [],
+      // 详情传参
+      detailsIndex: ''
     }
   },
   computed: {
@@ -245,47 +275,90 @@ export default {
     async department(dept = {}) {
       // 根据部门ID获取老师ID
       const { id, pid, children } = dept
-      const query = `{"department":{"id": ${id}, "pid": ${pid}, "children": ${JSON.stringify(
-        children
-      )}}}`
-      if (id === '0') {
-        this.query = ''
-        this.getData()
-        return
+      const query = {
+        department: {
+          id: `${id}`,
+          pid: `${pid}`,
+          children: `${JSON.stringify(children)}`
+        }
       }
-      this.query = query
-      this.getData(1, JSON.stringify(query))
+      this.departmentQuery = query
+      this.getData()
     }
   },
   activated() {
     setTimeout(() => {
-      console.log(this.teacherID)
       this.getData()
-      if (this.teacherID) this.$refs.detailsHidden.createdUrl(this.teacherID)
+      if (this.teacherID) {
+        this.$refs.detailsHidden.createdUrl(this.teacherID)
+      }
     }, 500)
   },
   methods: {
-    getData(page = this.currentPage, query = JSON.stringify(this.query)) {
-      // tab数据
-      this.$http.Teacher.getTeacherPage(page, query).then((res) => {
-        if (res && res.data && res.data.TeacherManagePage) {
-          const {
-            content = [],
-            number,
-            totalPages,
-            totalElements
-          } = res.data.TeacherManagePage
-          this.tableData = content
-          this.totalPages = +totalPages
-          this.currentPage = +number
-          this.totalElements = +totalElements
-        }
-      })
-    },
     // 搜索
     handleSearch(data) {
-      console.log(data)
+      console.log(data, '122')
+      if (data.length > 0) {
+        const term = {}
+        data.forEach((res) => {
+          if (res.term) {
+            Object.assign(term, res.term)
+          } else if (res.terms) {
+            Object.assign(term, res.terms)
+          }
+        })
+        console.log(term, 'term')
+        // this.query = JSON.stringify(term)
+        this.searchQuery = term
+      } else {
+        this.searchQuery = ''
+      }
+      this.getData()
     },
+    getData(page = this.currentPage) {
+      if (this.departmentQuery || this.searchQuery) {
+        this.query = Object.assign(
+          {},
+          this.departmentQuery || {},
+          this.searchQuery || {}
+        )
+      }
+      const query = this.query ? JSON.stringify(this.query) : ''
+      // tab数据
+      this.$http.Teacher.getTeacherPage(page, JSON.stringify(query)).then(
+        (res) => {
+          if (res && res.data && res.data.TeacherManagePage) {
+            const {
+              content = [],
+              number,
+              totalPages,
+              totalElements
+            } = res.data.TeacherManagePage
+            content.forEach((res) => {
+              res.join_date = res.join_date
+                ? formatData(new Date(res.join_date).getTime(), 'd')
+                : ''
+              res.leave_train = res.leave_train
+                ? formatData(new Date(res.leave_train).getTime(), 'd')
+                : ''
+            })
+            this.tableData = content
+            if (this.detailsIndex === '2') {
+              this.tableData.forEach((val) => {
+                if (this.teacherID === val.id) {
+                  this.$refs.detailsHidden.departmentData.pname =
+                    val.department.pname
+                }
+              })
+            }
+            this.totalPages = +totalPages
+            this.currentPage = +number
+            this.totalElements = +totalElements
+          }
+        }
+      )
+    },
+
     // 选择按钮
     changeHandler(data) {
       console.log(data)
@@ -309,6 +382,7 @@ export default {
           query: { index: index, teacherId: val.id }
         })
       } else if (index === '2') {
+        this.detailsIndex = index
         this.$refs.detailsHidden.drawer = true
         this.teacherID = val.id
         this.subDepartment = val.department

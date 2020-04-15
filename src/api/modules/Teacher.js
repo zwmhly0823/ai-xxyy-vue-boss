@@ -3,8 +3,8 @@
  * @version:
  * @Author: Yangjiyong
  * @Date: 2020-04-07 13:52:26
- * @LastEditors: zhubaodong
- * @LastEditTime: 2020-04-07 13:59:18
+ * @LastEditors: panjian
+ * @LastEditTime: 2020-04-15 15:47:07
  */
 import axios from '../axiosConfig'
 
@@ -35,6 +35,8 @@ export default {
             status
             is_login
             head_image
+            join_date
+            leave_train
             department {
               id
               name
@@ -129,10 +131,42 @@ export default {
   },
   // 新建老师
   createTeacher(params) {
+    console.log(params)
+
     return axios.post(`/api/t/v1/teacher/createTeacher`, params)
   },
   //  编辑老师
   updateTeacher(params) {
     return axios.put(`/api/t/v1/teacher/updateTeacher`, params)
+  },
+  //  老师手机号，姓名模糊搜索
+  teacherListEx(name, params) {
+    const quer = `{ "bool": { "must": [{ "wildcard": { "${name}": "*${params}*" } }] } }`
+    return axios.post('/graphql/v1/teacher', {
+      query: `
+      {
+        TeacherListEx(query:${JSON.stringify(quer)})
+        {
+          phone
+          realname
+        }
+      }
+      `
+    })
+  },
+  // 新增微信 获取老师name id
+  TeacherList(query = '') {
+    return axios.post('/graphql/v1/teacher', {
+      query: `{
+        TeacherList(query:${JSON.stringify(query)}) {
+          realname
+          id
+        }
+       }`
+    })
+  },
+  // 新增微信 添加
+  relation(params) {
+    return axios.post(`/api/t/v1/wechat/teacher/create/relation`, params)
   }
 }
