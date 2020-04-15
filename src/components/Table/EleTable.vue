@@ -3,17 +3,21 @@
  * @version: 
  * @Author: shentong
  * @Date: 2020-03-14 15:11:17
- * @LastEditors: shentong
- * @LastEditTime: 2020-03-14 15:12:44
+ * @LastEditors: Shentong
+ * :max-height="maxHeight"
+ * @LastEditTime: 2020-04-14 16:52:11
  -->
 <template>
   <div id="tableList">
     <el-table
       :data="dataList"
-      border
       stripe
       style="width: 100%"
-      :max-height="maxHeight"
+      :header-cell-style="{
+        fontSize: '12px',
+        color: '#666',
+        fontWeight: 'normal'
+      }"
       v-loading="loading"
       element-loading-text="玩命加载中~"
       element-loading-spinner="el-icon-loading"
@@ -86,7 +90,11 @@ export default {
   min-width: 900px;
 }
 .page_box {
-  margin: 30px;
+  margin: 0 20px 20px 0;
   text-align: right;
+  text-align: right;
+  position: fixed;
+  bottom: 0;
+  right: 0;
 }
 </style>

@@ -3,8 +3,8 @@
  * @version:
  * @Author: zhubaodong
  * @Date: 2020-03-24 18:20:12
- * @LastEditors: zhubaodong
- * @LastEditTime: 2020-04-02 17:15:17
+ * @LastEditors: Shentong
+ * @LastEditTime: 2020-04-14 14:56:41
  -->
 
 <template>
@@ -363,7 +363,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 .search-style {
-  margin-bottom: 10px;
+  // margin-bottom: 10px;
 }
 </style>
 <style lang="scss">
