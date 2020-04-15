@@ -14,6 +14,7 @@ import Express from './modules/Express' // 物流接口
 import StudentTerm from './modules/StudentTerm' // 班级graphql接口
 import Teacher from './modules/Teacher'
 import Permission from './modules/Permission' // 班级graphql接口
+import Weixin from './modules/Weixin' // 微信graphql接口
 
 export default Object.assign(
   {},
@@ -24,5 +25,6 @@ export default Object.assign(
   { StudentTerm },
   { Express },
   { Teacher },
-  { Permission }
+  { Permission },
+  { Weixin }
 )
