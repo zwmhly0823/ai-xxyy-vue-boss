@@ -11,6 +11,7 @@
     <!-- 选择框 -->
     <el-table
       :data="table.tableData"
+      @cell-mouse-enter="onClick"
       :cell-style="cellStyle"
       :header-cell-style="headerCss"
     >
@@ -72,10 +73,12 @@
           <span class="operatingOne public" @click="showExpress = true"
             >详情</span
           >
-          <span class="operatingTwo public" @click="showExpress = true"
+          <span class="operatingTwo public" @click="showEditWeChat = true"
             >编辑</span
           >
-          <span class="operatingThree public" @click="showExpress = true"
+          <span
+            class="operatingThree public"
+            @click="showRelationTeacher = true"
             >关联老师</span
           >
         </template>
@@ -92,16 +95,25 @@
     ></m-pagination>
     <el-dialog
       :destroy-on-close="true"
-      title="填写物流信息"
-      :visible.sync="showExpress"
-      width="30%"
+      title="编辑信息"
+      :visible.sync="showEditWeChat"
+      width="45%"
     >
+      <showRelationTeacher :weixinId="weixinId" />
+    </el-dialog>
+    <el-dialog
+      :destroy-on-close="true"
+      title="关联老师"
+      :visible.sync="showRelationTeacher"
+      width="35%"
+    >
+      <showRelationTeacher :weixinId="weixinId" />
     </el-dialog>
     <el-dialog
       :destroy-on-close="true"
       title="新增微信"
       :visible.sync="showNewWeChat"
-      width="30%"
+      width="45%"
     >
       <addWeChat @addWeChat="addWeChat" />
     </el-dialog>
@@ -112,15 +124,24 @@
 import MPagination from '@/components/MPagination/index.vue'
 import MSearch from '@/components/MSearch/index.vue'
 import addWeChat from './components/addWeChat'
+import showRelationTeacher from './components/showRelationTeacher'
 export default {
   components: {
     MPagination,
     MSearch,
-    addWeChat
+    addWeChat,
+    showRelationTeacher
   },
 
   data() {
     return {
+      // 微信ID
+      weixinId: '',
+      // 编辑信息
+      showEditWeChat: false,
+      // 关联老师
+      showRelationTeacher: false,
+      // 新增微信
       showNewWeChat: false,
       showExpress: false,
       // 总页数
@@ -244,6 +265,11 @@ export default {
     handleCurrentChange(val) {
       this.currentPage = val
       this.$emit('onCurrentPage', val)
+    },
+    // 获取表格一行信息
+    onClick(row, column, event) {
+      this.weixinId = row.id
+      // console.log(row, column, event)
     },
     // 新增微信关闭弹框
     addWeChat(data) {
