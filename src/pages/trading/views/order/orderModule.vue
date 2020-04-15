@@ -28,27 +28,30 @@
         <el-tab-pane label="已退费" name="6,7"></el-tab-pane>
         <all-order :status="status" :search="search" />
       </el-tabs> -->
-      <el-tabs type="border-card" @tab-click="handleClick" v-model="activeName">
+      <!-- tab - 商品主题 -->
+      <el-tabs type="border-card" @tab-click="handleClick" v-model="activeTab">
         <!-- 包含全部体验课订单数据（双周体验课、单周体验课） -->
         <el-tab-pane label="体验课" name="4"></el-tab-pane>
         <!-- 包含全部系统课订单数据（月系统课、季系统课、半年系统课、年系统课） -->
-        <el-tab-pane label="系统课" name="5"> </el-tab-pane>
-        <!-- 包含小熊商城、邀请有奖、推荐有礼 -->
-        <el-tab-pane label="活动订单" name="1,2"></el-tab-pane>
-        <all-order :status="status" :search="search" />
+        <el-tab-pane label="系统课" name="5"></el-tab-pane>
+        <!-- 包含小熊商城-1、邀请有奖-6、推荐有礼-2 -->
+        <el-tab-pane label="活动订单" name="1,2,6"></el-tab-pane>
+
+        <!-- 统计模块 + 列表 -->
+        <all-order :tab="activeTab" :search="search" />
       </el-tabs>
 
       <!-- 浮动层 -->
       <el-tabs
         type="border-card"
         @tab-click="handleClick"
-        v-model="activeName"
+        v-model="activeTab"
         class="tab-top"
         v-show="suckTop"
       >
         <el-tab-pane label="体验课" name="4"></el-tab-pane>
         <el-tab-pane label="系统课" name="5"> </el-tab-pane>
-        <el-tab-pane label="活动订单" name="1,2"></el-tab-pane>
+        <el-tab-pane label="活动订单" name="1,2,6"></el-tab-pane>
 
         <el-table style="font-size:12px;" v-show="orderForm">
           <el-table-column label="用户信息" prop="user"></el-table-column>
@@ -78,13 +81,13 @@ export default {
   data() {
     return {
       // 默认显示tab
-      activeName: '4',
+      activeTab: '4',
       // 吸顶tab显示
       suckTop: false,
       // 吸顶表格显示
       orderForm: false,
       // 切换tab
-      status: '3',
+      // tab: '4',
       // 搜索
       search: []
     }
@@ -97,7 +100,7 @@ export default {
       document
         .getElementById('order-scroll')
         .querySelector('.order-wrapper').scrollTop = 0
-      this.status = tab.name
+      this.tab = tab.name
     },
     // 点击搜索
     handleSearch(res) {
@@ -111,10 +114,6 @@ export default {
       const domheight = document
         .getElementById('order-scroll')
         .querySelector('.el-card__body').offsetHeight
-      const formheight = document
-        .getElementById('order-scroll')
-        .querySelector('.title-box').offsetHeight
-      console.log(formheight, 'formheight')
       dom > domheight + 20 ? (this.suckTop = true) : (this.suckTop = false)
       dom > domheight + 175 ? (this.orderForm = true) : (this.orderForm = false)
     }

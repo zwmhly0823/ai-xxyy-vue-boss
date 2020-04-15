@@ -50,6 +50,7 @@
           <p class="primary-color">
             {{ scope.row.express ? scope.row.express.total || 0 : '-' }}
           </p>
+          <!-- 体验课不显示最后一次物流状态 -->
           <p>
             {{
               scope.row.express
@@ -123,6 +124,8 @@ export default {
   watch: {
     // 切换tab
     status(val) {
+      console.log(val, 'team_type')
+
       this.currentPage = 1
       this.tab = val
       this.getOrderList()
@@ -252,7 +255,7 @@ export default {
     // 点击分页
     handleSizeChange(val) {
       this.currentPage = val
-      this.orderList()
+      this.getOrderList()
 
       const dom = document.getElementById('order-scroll')
       dom.querySelector('.order-wrapper').scrollTo(0, 0)

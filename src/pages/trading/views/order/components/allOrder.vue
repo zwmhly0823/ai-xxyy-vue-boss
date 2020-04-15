@@ -10,9 +10,9 @@
 <template>
   <div class="order-call">
     <article class="top-box">
-      <el-row :gutter="20">
+      <el-row :gutter="20" type="flex" justify="center">
         <!-- 订单总计 -->
-        <el-col :span="6">
+        <el-col :span="5">
           <div class="grid-content bg-purple total-order">
             <div class="oride-top">订单总计</div>
             <div class="oride-middle">{{ totalOrder.count }}笔</div>
@@ -23,38 +23,38 @@
             </div>
           </div>
         </el-col>
-        <!-- 体验课 -->
-        <el-col :span="4">
+        <!-- 已完成 -->
+        <el-col :span="5">
           <div class="grid-content bg-purple experience-order">
-            <div class="oride-top">体验课</div>
+            <div class="oride-top">已完成</div>
             <div class="oride-middle">{{ experience.count }}笔</div>
             <div class="oride-bottom">{{ experience.value }}元</div>
           </div>
         </el-col>
-        <!-- 系统课 -->
-        <el-col :span="4">
+        <!-- 未支付 -->
+        <el-col :span="5">
           <div class="grid-content bg-purple system-order">
-            <div class="oride-top">系统课</div>
+            <div class="oride-top">未支付</div>
             <div class="oride-middle">{{ systemClass.count }}笔</div>
             <div class="oride-bottom">{{ systemClass.value }}元</div>
           </div>
         </el-col>
-        <!-- 小熊商城 -->
-        <el-col :span="4">
+        <!-- 退费 -->
+        <el-col :span="5">
           <div class="grid-content bg-purple bear-order">
-            <div class="oride-top">小熊商城</div>
+            <div class="oride-top">退费</div>
             <div class="oride-middle">{{ littleBear.count }}笔</div>
             <div class="oride-bottom">{{ littleBear.value }}币</div>
           </div>
         </el-col>
         <!-- 推荐有礼 -->
-        <el-col :span="4">
+        <!-- <el-col :span="4">
           <div class="grid-content bg-purple recommended-order">
             <div class="oride-top">推荐有礼</div>
             <div class="oride-middle">{{ recommended.count }}笔</div>
             <div class="oride-bottom">{{ recommended.value }}宝石</div>
           </div>
-        </el-col>
+        </el-col> -->
       </el-row>
     </article>
     <!-- 分割线 -->
@@ -74,6 +74,12 @@ export default {
     tableOrder
   },
   props: {
+    // 当前tab - 商品主题
+    tab: {
+      type: String,
+      default: ''
+    },
+    // 支付状态  已完成:3, 待支付:0,1，已退费:6,7
     status: {
       type: String,
       default: ''
@@ -91,7 +97,7 @@ export default {
       // 获取teacherid
       teacherId: '',
       // 切换tab
-      tab: '3', // 默认显示 3 - 已完成
+      // tab: '3', // 默认显示 3 - 已完成
       // 搜索
       searchIn: [],
       // 体验课
@@ -120,11 +126,16 @@ export default {
     // }
   },
   watch: {
-    // 切换tab
-    status(val) {
-      this.tab = val
-      this.statList()
+    // 切换tab - 商品主题
+    tab(val) {
+      console.log(val, 'topic')
     },
+
+    // 切换支付状态
+    // status(val) {
+    //   this.tab = val
+    //   this.statList()
+    // },
     // 搜索
     search(val) {
       this.searchIn = val

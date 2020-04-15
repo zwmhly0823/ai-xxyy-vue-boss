@@ -10,13 +10,11 @@ import axios from '../axios'
 
 export default {
   /**
-   * 订单列表
+   * 获取订单列表 v1
    * */
-  loginIn(params) {
-    return axios.post('/api/admin/login/pass222', params)
-  },
-  orderList(params) {
-    // return this.post(this.API_HOST + '/admin/login/pass/2', params)
-    return axios.post('/data/orderList', params)
+  orderPage(params) {
+    return axios.post('/graphlql/v1/toss', {
+      query: `{}`
+    })
   }
 }
