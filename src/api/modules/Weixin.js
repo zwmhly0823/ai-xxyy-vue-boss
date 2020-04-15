@@ -10,6 +10,7 @@
 import axios from '../axiosConfig'
 
 export default {
+  // 微信管理列表（微信号，手机号）
   getWeChatTeacherPage() {
     return axios.get(`/graphql/v1/boss`, {
       query: `{
@@ -28,6 +29,7 @@ export default {
       }`
     })
   },
+  // 微信管理列表（关联老师，所在部门）
   getTeacherList(params) {
     const obj = JSON.stringify({ id: params })
     return axios.get(`/graphql/v1/boss`, {
@@ -43,5 +45,18 @@ export default {
         }
       }`
     })
+  },
+  // 微信管理列表（使用状态）
+  getTeacherWeixinRelationList(params) {
+    const obj = JSON.stringify({ teacher_id: params })
+    return axios.get(`/graphql/v1/teacher`, {
+      query: `{
+        TeacherWeixinRelationList(query: ${JSON.stringify(obj)}) {
+            teacher_id
+            is_effective
+        }
+      }`
+    })
   }
+  // 搜索接口
 }

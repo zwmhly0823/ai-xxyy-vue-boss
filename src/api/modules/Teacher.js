@@ -3,8 +3,8 @@
  * @version:
  * @Author: Yangjiyong
  * @Date: 2020-04-07 13:52:26
- * @LastEditors: zhubaodong
- * @LastEditTime: 2020-04-07 13:59:18
+ * @LastEditors: panjian
+ * @LastEditTime: 2020-04-15 15:47:07
  */
 import axios from '../axiosConfig'
 
@@ -153,5 +153,20 @@ export default {
       }
       `
     })
+  },
+  // 新增微信 获取老师name id
+  TeacherList(query = '') {
+    return axios.post('/graphql/v1/teacher', {
+      query: `{
+        TeacherList(query:${JSON.stringify(query)}) {
+          realname
+          id
+        }
+       }`
+    })
+  },
+  // 新增微信 添加
+  relation(params) {
+    return axios.post(`/api/t/v1/wechat/teacher/create/relation`, params)
   }
 }

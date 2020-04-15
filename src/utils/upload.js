@@ -3,62 +3,75 @@
  * @version:
  * @Author: shentong
  * @Date: 2019-12-17 15:43:27
- * @LastEditors: shentong
- * @LastEditTime: 2019-12-17 22:54:05
+ * @LastEditors: panjian
+ * @LastEditTime: 2020-04-14 18:39:33
  */
-const uploadFile = function (params, myConfig) {
-  const filePath = params.tempFilePath || params.path
-
-  if (!filePath) {
-    console.error('文件错误')
-    return
+import axios from 'axios'
+import $http from '@/api'
+import Contants from '@/utils/contants'
+const getSuffix = (fileName) => {
+  var pos = fileName.lastIndexOf('.')
+  var suffix = ''
+  if (pos !== -1) {
+    suffix = fileName.substring(pos)
   }
+  return suffix
+}
 
-  const filetime = Date.now()
-  const fileradom = (Math.random() * 10000).toFixed(0)
-  const filearr = filePath.split('.')
-  const fileext = filearr[filearr.length - 1]
-  const filename = `11/${filetime}${fileradom}.${fileext}`
-  const aliyunFileKey = `ai-app-mp-teacher/audio/${filename}`
-  const config = {
-    ...myConfig,
-    ossPath: `https://${myConfig.bucketName}.${myConfig.endpoint}`,
-    urlPath: `https://${myConfig.bucketName}.${myConfig.endpoint}/${aliyunFileKey}`
+// 头像上传签名
+const getOssToken = async () => {
+  let getPubSinged
+  try {
+    getPubSinged = await $http.Teacher.getPubWriteSinged()
+    return Promise.resolve(getPubSinged.payload)
+  } catch (err) {
+    return Promise.reject(err)
   }
+}
 
-  return new Promise((resolve, reject) => {
-    const formData = {
-      key: aliyunFileKey,
-      policy: config.policy,
-      OSSAccessKeyId: config.accessKeyId,
-      success_action_status: '200', // 让服务端返回200,不然，默认会返回204
-      signature: config.singed
-    }
-    mpvue.uploadFile({
-      url: config.ossPath,
-      filePath: filePath,
-      name: 'file',
-      // 参数绑定
-      formData: formData,
-      success: function (res) {
-        if (res.statusCode !== 200) {
-          resolve({
-            res: res,
-            url: config.urlPath
-          })
-        } else {
-          resolve({
-            res: res,
-            url: config.urlPath
-          })
-        }
-      },
-      fail: function (err) {
-        console.error(err)
-        reject(err)
-      }
+const uploadFile = async (file) => {
+  let puhSinged
+  try {
+    puhSinged = await getOssToken()
+  } catch (err) {
+    console.log(err)
+  }
+  if (puhSinged) {
+    const {
+      bucketName = '',
+      endpoint = '',
+      accessKeyId = '',
+      policy = '',
+      singed = ''
+    } = puhSinged
+
+    const requestHost = `https://${bucketName}.${endpoint}`
+    const filename = new Date().getTime() + getSuffix(file.file.name)
+    const dirPath = 'h5/headPic/'
+    const formData = new FormData()
+    const fileUrl = `${Contants.OSS_IMG_BASE_URL}/${dirPath}${filename}`
+
+    formData.append('key', dirPath + filename) // 存储在oss的文件路径
+    formData.append('OSSAccessKeyId', accessKeyId) // accessKeyId
+    formData.append('policy', policy) // policy
+    formData.append('Signature', singed) // 签名
+    formData.append('success_action_status', 200) // 成功后返回的操作码
+    formData.append('name', filename)
+    formData.append('file', file.file, filename)
+
+    return new Promise((resolve, reject) => {
+      axios
+        .post(requestHost, formData, {
+          headers: { 'Content-Type': 'multipart/form-data' }
+        })
+        .then((res) => {
+          resolve(fileUrl)
+        })
+        .catch((err) => {
+          reject(err)
+        })
     })
-  })
+  }
 }
 
 export default uploadFile
