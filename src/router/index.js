@@ -88,15 +88,15 @@ const routes = [
           title: '销售管理',
           module: 'teacher'
         }
+      },
+      {
+        path: '/weixinManagement',
+        name: 'weixinManagement',
+        meta: {
+          title: '微信管理',
+          module: 'teacher'
+        }
       }
-      // {
-      //   path: '/weixinManagement',
-      //   name: 'weixinManagement',
-      //   meta: {
-      //     title: '微信管理',
-      //     module: 'teacher'
-      //   }
-      // }
     ]
   },
 

@@ -1,46 +1,6 @@
 <template>
   <div class="weixin">
-    <!-- 选择框 -->
-    <div class="search">
-      <el-select v-model="value" filterable placeholder="请选择">
-        <el-option
-          v-for="item in options"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value"
-        >
-        </el-option>
-      </el-select>
-      <!-- 输入框 -->
-      <!-- :fetch-suggestions="querySearchAsync" -->
-      <!-- @select="handleSelect" -->
-
-      <el-autocomplete
-        class="select"
-        v-model="state"
-        placeholder="请输入内容"
-      ></el-autocomplete>
-      <el-select v-model="value" filterable placeholder="请选择" class="select">
-        <el-option
-          v-for="item in options"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value"
-        >
-        </el-option>
-      </el-select>
-      <el-select v-model="value" filterable placeholder="请选择" class="select">
-        <el-option
-          v-for="item in options"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value"
-        >
-        </el-option>
-      </el-select>
-      <el-button type="primary" class="select">搜索</el-button>
-      <el-button type="primary">新增微信</el-button>
-    </div>
+    <m-search @search="searchHandler" wxShow="wx"> </m-search>
     <el-table
       :data="table.tableData"
       :cell-style="cellStyle"
@@ -48,28 +8,25 @@
     >
       <el-table-column label="微信号">
         <template slot-scope="scope">
-          <span class="weixinHead">
-            <img :src="scope.row.head_img_url" alt="" />
-          </span>
-          <span class="weixinName">{{ scope.row.wechat_no }}</span>
-          <!-- 鼠标指向显示二维码 -->
-          <el-popover placement="right" trigger="hover">
-            <img
-              :src="scope.row.wechat_qr_code"
-              style="width:150px;height:150px;"
-              alt=""
-            />
-            <span>{{ scope.row.nickname }}</span>
-            <span class="code" slot="reference">二维码</span>
-          </el-popover>
+          <div class="weixin-box">
+            <img class="weixinHead" :src="scope.row.head_img_url" alt="" />
+            <span class="weixinName">{{ scope.row.wechat_no }}</span>
+            <!-- 鼠标指向显示二维码 -->
+            <el-popover placement="right" trigger="hover">
+              <img
+                :src="scope.row.wechat_qr_code"
+                style="width:150px;height:150px;"
+                alt=""
+              />
+              <span class="code" slot="reference">二维码</span>
+            </el-popover>
+          </div>
         </template>
       </el-table-column>
-      <el-table-column
-        align="center"
-        prop="nickname"
-        label="使用状态"
-        width="180"
-      >
+      <el-table-column align="center" label="使用状态" width="180">
+        <template slot-scope="scope">
+          <span>{{ openTeacher[scope.row.teacher_id] | filterStatus }}</span>
+        </template>
       </el-table-column>
       <el-table-column align="center" label="关联老师" width="180">
         <template slot-scope="scope">
@@ -137,10 +94,11 @@
 
 <script>
 import MPagination from '@/components/MPagination/index.vue'
-
+import MSearch from '@/components/MSearch/index.vue'
 export default {
   components: {
-    MPagination
+    MPagination,
+    MSearch
   },
   data() {
     return {
@@ -161,6 +119,7 @@ export default {
       },
       // 关联老师
       concatTeacher: {},
+      openTeacher: {},
       // 搜索
       options: [
         {
@@ -170,18 +129,6 @@ export default {
         {
           value: '选项2',
           label: '双皮奶'
-        },
-        {
-          value: '选项3',
-          label: '蚵仔煎'
-        },
-        {
-          value: '选项4',
-          label: '龙须面'
-        },
-        {
-          value: '选项5',
-          label: '北京烤鸭'
         }
       ],
       value: '',
@@ -194,24 +141,47 @@ export default {
   mounted() {
     this.weChatPageList()
   },
+  filters: {
+    filterStatus(res) {
+      if (res === 0) {
+        return '启用'
+      } else {
+        return '未启用'
+      }
+    }
+  },
   methods: {
+    searchHandler(res) {
+      console.log(res)
+    },
     // 微信管理列表
     weChatPageList() {
       this.$http.Weixin.getWeChatTeacherPage()
         .catch((err) => console.log(err))
         .then((res) => {
-          console.log('微信管理列数据', res)
           this.table.totalElements = +res.data.WeChatTeacherPage.totalElements
           this.table.tableData = res.data.WeChatTeacherPage.content
           const arrayTId = []
           this.table.tableData.forEach((item) => {
             arrayTId.push(item.teacher_id)
           })
+          // 启用
+          this.$http.Weixin.getTeacherWeixinRelationList(arrayTId)
+            .catch((err) => console.log(err))
+            .then((res) => {
+              const jsondata = {}
+              if (res.data.TeacherWeixinRelationList) {
+                res.data.TeacherWeixinRelationList.forEach((item) => {
+                  jsondata[item.teacher_id] = item.is_effective
+                })
+                this.openTeacher = jsondata
+              }
+              console.log('openTeacher', this.openTeacher)
+            })
           // 微信管理列表所在部门
           this.$http.Weixin.getTeacherList(arrayTId)
             .catch((err) => console.log(err))
             .then((res) => {
-              console.log('res', res)
               const jsonData = {}
               if (res.data.TeacherList) {
                 res.data.TeacherList.forEach((item) => {
@@ -232,7 +202,6 @@ export default {
                   item.department.id && (tmp.teamid = item.department.id)
                   jsonData[item.id] = tmp
                 })
-                console.log('jsonData ------', jsonData)
                 this.concatTeacher = jsonData
               }
             })
@@ -247,9 +216,9 @@ export default {
     // 表头回调样式
     headerCss({ row, column, rowIndex, columnIndex }) {
       if (columnIndex === 0) {
-        return 'font-size:16px;color:#666;font-weight:normal;padding-left:50px;'
+        return 'font-size:12px;color:#666;font-weight:normal;padding-left:50px;'
       }
-      return 'font-size:16px;color:#666;font-weight:normal;'
+      return 'font-size:12px;color:#666;font-weight:normal;'
     },
     // 分页
     handleCurrentChange(val) {
@@ -268,30 +237,26 @@ export default {
     width: 100%;
     height: 80px;
     line-height: 80px;
-    .select {
-      margin-left: 12px;
-    }
   }
-  .weixinHead {
-    display: inline-block;
-    position: relative;
-    top: -5px;
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    background: red;
-    img {
-      width: 100%;
-      height: 100%;
+  .weixin-box {
+    line-height: 30px;
+    display: flex;
+    .weixinHead {
+      display: inline-block;
+      width: 30px;
+      height: 30px;
       border-radius: 50%;
     }
+    span {
+      display: inline-block;
+    }
+    .code {
+      display: inline-block;
+      margin-left: 10px;
+      cursor: pointer;
+    }
   }
-  .code {
-    display: inline-block;
-    margin-top: 10px;
-    margin-left: 10px;
-    cursor: pointer;
-  }
+
   .weixinName {
     margin-left: 10px;
   }

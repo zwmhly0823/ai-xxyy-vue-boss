@@ -131,6 +131,9 @@
           </el-button>
         </el-popover>
       </el-form-item> -->
+      <el-form-item v-if="wxShow">
+        <wx-list @result="getWxInfo" name="wxShow" />
+      </el-form-item>
 
       <el-form-item>
         <slot name="searchItems"></slot>
@@ -153,6 +156,8 @@ import expressNo from './searchItems/expressNo'
 import teacherPhone from './searchItems/teacherSearch/teacherPhone.vue'
 import teacherName from './searchItems/teacherSearch/teacherName.vue'
 import teacherDropDown from './searchItems/teacherSearch/teacherDropDown'
+
+import wxList from './searchItems/wxInput'
 
 export default {
   props: {
@@ -283,6 +288,10 @@ export default {
     expressNo: {
       type: String,
       default: '' // express_nu
+    },
+    wxShow: {
+      type: String,
+      default: '' // wx
     }
   },
   components: {
@@ -297,7 +306,8 @@ export default {
     teacherPhone,
     expressNo,
     teacherName,
-    teacherDropDown
+    teacherDropDown,
+    wxList
   },
   data() {
     return {
@@ -398,6 +408,9 @@ export default {
     getExpressNo(res) {
       console.log(res, 'res___________', this.expressNo)
       this.setSeachParmas(res, [this.expressNo || 'express_nu'], 'wildcard')
+    },
+    getWxInfo(res) {
+      this.setSeachParmas(res, [this.wxShow || 'wx'])
     },
 
     /**  处理接收到的查询参数
