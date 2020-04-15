@@ -205,7 +205,7 @@
 import axios from 'axios'
 import _ from 'lodash'
 import Contants from '@/utils/contants'
-import { sortByKey } from '@/utils/boss'
+// import { sortByKey } from '@/utils/boss'
 import { formatData } from '@/utils/index'
 export default {
   data() {
@@ -435,24 +435,27 @@ export default {
         this.position = res.data.TeacherDutyList
       })
       // 部门接口
-      this.$http.Teacher.getdepartmentList().then((res) => {
-        const departmentData = res.data.TeacherDepartmentPage.content
-        const departmentWith = []
-        departmentData.forEach((val) => {
-          if (val.pid === 0) {
-            val.children = []
-            departmentWith.push(val)
-            // departmentWith.push(Object.assign(val, { children: [] }))
-          }
-        })
-        departmentData.forEach((val) => {
-          departmentWith.forEach((data) => {
-            if (val.pid === data.id) {
-              data.children.push(val)
-            }
-          })
-        })
-        this.suDepartments = sortByKey(departmentWith, 'id')
+      // this.$http.Teacher.getdepartmentList().then((res) => {
+      //   const departmentData = res.data.TeacherDepartmentPage.content
+      //   const departmentWith = []
+      //   departmentData.forEach((val) => {
+      //     if (val.pid === 0) {
+      //       val.children = []
+      //       departmentWith.push(val)
+      //       // departmentWith.push(Object.assign(val, { children: [] }))
+      //     }
+      //   })
+      //   departmentData.forEach((val) => {
+      //     departmentWith.forEach((data) => {
+      //       if (val.pid === data.id) {
+      //         data.children.push(val)
+      //       }
+      //     })
+      //   })
+      //   this.suDepartments = sortByKey(departmentWith, 'id')
+      // })
+      this.$http.Teacher.getDepartmentTree().then((res) => {
+        this.suDepartments = res.payload
       })
       // 职级
       this.$http.Teacher.TeacherRankList().then((res) => {
@@ -477,8 +480,13 @@ export default {
             this.ruleForm.name = payload.teacher.realName
             this.ruleForm.nickname = payload.teacher.nickname
             this.ruleForm.resource = payload.teacher.sex
+            // this.ruleForm.region = payload.department
+            //   ? [payload.department.id]
+            //   : []
             this.ruleForm.region = payload.department
-              ? [payload.department.pid * 1, payload.department.id * 1]
+              ? payload.department.id ||
+                payload.department.pid ||
+                payload.department.cid
               : []
             payload.duty.forEach((val) => {
               this.ruleForm.positionVal.push(val.id * 1)

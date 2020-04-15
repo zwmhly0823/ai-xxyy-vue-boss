@@ -12,16 +12,20 @@
       @search="handleSearch"
       teacherphone="uid"
       teachername="12"
+      rank="34"
+      induction="56"
+      landing="78"
+      position="90"
       v-if="false"
     >
       <!-- <el-button type="primary" slot="searchItems" size="mini">搜索</el-button> -->
-      <el-button
+      <!-- <el-button
         type="primary"
         slot="searchItems"
         size="mini"
         @click="newTeacher"
         >新增销售</el-button
-      >
+      > -->
       <!--  <el-checkbox-group
         v-model="checkList"
         slot="otherSearch"
@@ -69,9 +73,9 @@
                 <el-dropdown-item @click.native="operation(scope.row, '1')">
                   编辑
                 </el-dropdown-item>
-                <el-dropdown-item @click.native="operation(scope.row, '2')">
+                <!-- <el-dropdown-item @click.native="operation(scope.row, '2')">
                   详情
-                </el-dropdown-item>
+                </el-dropdown-item> -->
                 <!-- <el-dropdown-item @click.native="operation(scope.row, '3')">
                   关联微信号
                 </el-dropdown-item> -->
@@ -137,8 +141,7 @@
                 {{ item ? item.name || '-' : '-' }}
               </p>
             </div>
-            <!-- <div v-else><p>-</p></div> -->
-
+            <div v-else><p>-</p></div>
             <div>{{ scope.row.rank ? scope.row.rank.name || '-' : '-' }}</div>
           </template>
         </el-table-column>
@@ -148,22 +151,20 @@
             <div>{{ scope.row.rank ? scope.row.rank.name || '-' : '-' }}</div>
           </template>
         </el-table-column> -->
-        <el-table-column label="入职/下组时间" width="150px">
+        <el-table-column label="入职时间" width="150px">
           <template slot-scope="scope">
             <div>
               {{ scope.row.join_date }}
-              <br />
+            </div>
+          </template>
+        </el-table-column>
+        <el-table-column label="下组时间">
+          <template slot-scope="scope">
+            <div>
               {{ scope.row.leave_train }}
             </div>
           </template>
         </el-table-column>
-        <!-- <el-table-column label="下组时间">
-          <template slot-scope="scope">
-            <div>
-              {{ scope.row.leave_train }}
-            </div>
-          </template>
-        </el-table-column> -->
         <el-table-column label="在职状态">
           <template slot-scope="scope">
             <div>{{ scope.row.status == 0 ? '在职' : '离职' }}</div>
@@ -297,8 +298,8 @@ export default {
     handleSearch(data) {
       console.log(data, '122')
       this.search = data
-      const must = { must: this.search }
-      this.query.push(must)
+      // const must = { must: this.search }
+      // this.query.push(must)
       // this.getData()
     },
     getData(page = this.currentPage, query = JSON.stringify(this.query)) {

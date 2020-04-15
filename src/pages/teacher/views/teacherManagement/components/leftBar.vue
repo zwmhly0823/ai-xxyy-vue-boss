@@ -111,13 +111,13 @@ export default {
       if (arr.length === 0) return arr
       const department = sortByKey(arr, 'id')
       // 加一级销售部
-      const tree = {
-        id: '0',
-        name: '销售部',
-        pid: null,
-        children: department
-      }
-      this.departmentList = [tree]
+      // const tree = {
+      //   id: '0',
+      //   name: '销售部',
+      //   pid: null,
+      //   children: department
+      // }
+      this.departmentList = department
     })
   }
 }
