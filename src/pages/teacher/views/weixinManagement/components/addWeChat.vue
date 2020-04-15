@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-04-14 15:15:31
  * @LastEditors: panjian
- * @LastEditTime: 2020-04-14 23:07:25
+ * @LastEditTime: 2020-04-15 12:25:28
  -->
 <template>
   <div>
@@ -88,7 +88,7 @@
           </el-select>
         </el-form-item>
       </div>
-      <el-form-item label="特殊资源" prop="resource">
+      <el-form-item label="启用状态" prop="resource">
         <el-radio-group v-model="ruleForm.resource">
           <el-radio label="启用"></el-radio>
           <el-radio label="停用"></el-radio>
@@ -164,15 +164,15 @@ export default {
         QEcodeUrl: [
           { required: true, message: '请上传微信二维码', trigger: 'blur' }
         ],
-        associatedTeacher: [
-          { required: true, message: '请选择部门', trigger: 'change' }
-        ],
+        // associatedTeacher: [
+        //   { required: true, message: '请选择部门', trigger: 'change' }
+        // ],
         resource: [
           { required: true, message: '请选择启用状态', trigger: 'change' }
-        ],
-        regionList: [
-          { required: true, message: '请选择启用状态', trigger: 'blur' }
         ]
+        // regionList: [
+        //   { required: true, message: '请选择启用状态', trigger: 'blur' }
+        // ]
       }
     }
   },

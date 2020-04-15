@@ -39,7 +39,9 @@
         </el-option>
       </el-select>
       <el-button type="primary" class="select">搜索</el-button>
-      <el-button type="primary">新增微信</el-button>
+      <el-button @click="showNewWeChat = true" type="primary"
+        >新增微信</el-button
+      >
     </div>
     <el-table
       :data="table.tableData"
@@ -132,18 +134,29 @@
       width="30%"
     >
     </el-dialog>
+    <el-dialog
+      :destroy-on-close="true"
+      title="新增微信"
+      :visible.sync="showNewWeChat"
+      width="30%"
+    >
+      <addWeChat />
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import MPagination from '@/components/MPagination/index.vue'
-
+import addWeChat from './components/addWeChat'
 export default {
   components: {
-    MPagination
+    MPagination,
+    addWeChat
   },
   data() {
     return {
+      // 新增微信弹框
+      showNewWeChat: false,
       showExpress: false,
       // 总页数
       totalPages: 1,
