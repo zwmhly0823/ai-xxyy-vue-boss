@@ -18,6 +18,7 @@
     <!-- 选择框 -->
     <el-table
       :data="table.tableData"
+      @cell-mouse-enter="onClick"
       :cell-style="cellStyle"
       :header-cell-style="headerCss"
     >
@@ -108,20 +109,14 @@
       open="calc(100vw - 170px - 24px)"
       close="calc(100vw - 50px - 24px)"
     ></m-pagination>
-    <el-dialog
-      :destroy-on-close="true"
-      title="填写物流信息"
-      :visible.sync="showExpress"
-      width="30%"
-    >
+    <el-dialog title="编辑信息" :visible.sync="showEditWeChat" width="45%">
+      <editWeChat v-if="showEditWeChat" :weixinId="weixinId" />
     </el-dialog>
-    <el-dialog
-      :destroy-on-close="true"
-      title="新增微信"
-      :visible.sync="showNewWeChat"
-      width="30%"
-    >
-      <addWeChat @addWeChat="addWeChat" />
+    <el-dialog title="关联老师" :visible.sync="showRelationTeacher" width="35%">
+      <showRelationTeacher v-if="showRelationTeacher" :weixinId="weixinId" />
+    </el-dialog>
+    <el-dialog title="新增微信" :visible.sync="showNewWeChat" width="45%">
+      <addWeChat v-if="showNewWeChat" @addWeChat="addWeChat" />
     </el-dialog>
   </div>
 </template>
@@ -130,15 +125,26 @@
 import MPagination from '@/components/MPagination/index.vue'
 import MSearch from '@/components/MSearch/index.vue'
 import addWeChat from './components/addWeChat'
+import showRelationTeacher from './components/showRelationTeacher'
+import editWeChat from './components/editWeChat'
 export default {
   components: {
     MPagination,
     MSearch,
-    addWeChat
+    addWeChat,
+    showRelationTeacher,
+    editWeChat
   },
 
   data() {
     return {
+      // 微信ID
+      weixinId: '',
+      // 编辑信息
+      showEditWeChat: false,
+      // 关联老师
+      showRelationTeacher: false,
+      // 新增微信
       showNewWeChat: false,
       showExpress: false,
       // 总页数
@@ -176,6 +182,7 @@ export default {
       timeout: null
     }
   },
+
   mounted() {
     this.weChatPageList()
   },
@@ -192,17 +199,9 @@ export default {
     // 点击操作按钮
     operation(val, index) {
       if (index === '1') {
-        this.$router.push({
-          path: '/',
-          query: { index: index, teacherId: val.id }
-        })
+        this.showEditWeChat = true
       } else if (index === '2') {
-        this.detailsIndex = index
-        this.$refs.detailsHidden.drawer = true
-        this.teacherID = val.id
-        this.subDepartment = val.department
-      } else if (index === '3') {
-        this.$refs.associated.centerDialogVisible = true
+        this.showRelationTeacher = true
       }
     },
     searchHandler(res) {
@@ -278,6 +277,11 @@ export default {
     handleCurrentChange(val) {
       this.currentPage = val
       this.$emit('onCurrentPage', val)
+    },
+    // 获取表格一行信息
+    onClick(row, column, event) {
+      this.weixinId = row.id
+      // console.log(row, column, event)
     },
     // 新增微信关闭弹框
     addWeChat(data) {

@@ -4,7 +4,7 @@
  * @Author: Yangjiyong
  * @Date: 2020-04-07 13:52:26
  * @LastEditors: panjian
- * @LastEditTime: 2020-04-15 15:47:07
+ * @LastEditTime: 2020-04-15 21:18:16
  */
 import axios from '../axiosConfig'
 
@@ -139,6 +139,21 @@ export default {
   updateTeacher(params) {
     return axios.put(`/api/t/v1/teacher/updateTeacher`, params)
   },
+  //  老师手机号，姓名模糊搜索
+  teacherListEx(name, params) {
+    const quer = `{ "bool": { "must": [{ "wildcard": { "${name}": "*${params}*" } }] } }`
+    return axios.post('/graphql/v1/teacher', {
+      query: `
+      {
+        TeacherListEx(query:${JSON.stringify(quer)})
+        {
+          phone
+          realname
+        }
+      }
+      `
+    })
+  },
   // 新增微信 获取老师name id
   TeacherList(query = '') {
     return axios.post('/graphql/v1/teacher', {
@@ -153,5 +168,31 @@ export default {
   // 新增微信 添加
   relation(params) {
     return axios.post(`/api/t/v1/wechat/teacher/create/relation`, params)
+  },
+  // 微信编辑接口
+  WeChatTeacher(query = '') {
+    return axios.post('/graphql/v1/teacher', {
+      query: `{
+        WeChatTeacher(query:${JSON.stringify(query)}) {
+          id
+          wechat_no
+          wechat_qr_code
+          head_img_url
+          teacher_id
+        }
+       }`
+    })
+  },
+  // 微信编辑接口
+  TeacherWeixinRelation(query = '') {
+    return axios.post('/graphql/v1/teacher', {
+      query: `{
+        TeacherWeixinRelation((query:${JSON.stringify(query)}) {
+          teacher_id
+          is_effective
+      
+        }
+       }`
+    })
   }
 }

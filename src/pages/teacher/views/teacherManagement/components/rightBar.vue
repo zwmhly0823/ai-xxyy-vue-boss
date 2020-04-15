@@ -10,22 +10,22 @@
   <div>
     <m-search
       @search="handleSearch"
-      teacherphone="uid"
-      teachername="12"
-      rank="34"
-      induction="56"
-      landing="78"
-      position="90"
-      v-if="false"
+      teacherphone="phone.keyword"
+      teachername="realname.keyword"
+      rank="rank_id"
+      induction="status"
+      landing="is_login"
+      position="duty_id"
+      v-if="true"
     >
       <!-- <el-button type="primary" slot="searchItems" size="mini">搜索</el-button> -->
-      <!-- <el-button
+      <el-button
         type="primary"
         slot="searchItems"
         size="mini"
         @click="newTeacher"
         >新增销售</el-button
-      > -->
+      >
       <!--  <el-checkbox-group
         v-model="checkList"
         slot="otherSearch"
@@ -44,14 +44,14 @@
       </el-checkbox-group>-->
     </m-search>
 
-    <el-button
+    <!-- <el-button
       type="primary"
       slot="searchItems"
       size="mini"
       @click="newTeacher"
       style="margin: 15px;"
       >新增销售</el-button
-    >
+    > -->
 
     <div class="orderStyle">
       <el-table
@@ -151,14 +151,14 @@
             <div>{{ scope.row.rank ? scope.row.rank.name || '-' : '-' }}</div>
           </template>
         </el-table-column> -->
-        <el-table-column label="入职时间" width="150px">
+        <el-table-column label="入职时间" width="120px">
           <template slot-scope="scope">
             <div>
               {{ scope.row.join_date }}
             </div>
           </template>
         </el-table-column>
-        <el-table-column label="下组时间">
+        <el-table-column label="下组时间" width="120px">
           <template slot-scope="scope">
             <div>
               {{ scope.row.leave_train }}
@@ -231,6 +231,8 @@ export default {
   },
   data() {
     return {
+      departmentQuery: '',
+      searchQuery: '',
       query: '',
       sex: {
         // 0: '-',
@@ -273,16 +275,15 @@ export default {
     async department(dept = {}) {
       // 根据部门ID获取老师ID
       const { id, pid, children } = dept
-      const query = `{"department":{"id": ${id}, "pid": ${pid}, "children": ${JSON.stringify(
-        children
-      )}}}`
-      if (id === '0') {
-        this.query = ''
-        this.getData()
-        return
+      const query = {
+        department: {
+          id: `${id}`,
+          pid: `${pid}`,
+          children: `${JSON.stringify(children)}`
+        }
       }
-      this.query = query
-      this.getData(1, JSON.stringify(query))
+      this.departmentQuery = query
+      this.getData()
     }
   },
   activated() {
@@ -297,43 +298,65 @@ export default {
     // 搜索
     handleSearch(data) {
       console.log(data, '122')
-      this.search = data
-      // const must = { must: this.search }
-      // this.query.push(must)
-      // this.getData()
-    },
-    getData(page = this.currentPage, query = JSON.stringify(this.query)) {
-      // tab数据
-      this.$http.Teacher.getTeacherPage(page, query).then((res) => {
-        if (res && res.data && res.data.TeacherManagePage) {
-          const {
-            content = [],
-            number,
-            totalPages,
-            totalElements
-          } = res.data.TeacherManagePage
-          content.forEach((res) => {
-            res.join_date = res.join_date
-              ? formatData(new Date(res.join_date).getTime(), 'd')
-              : ''
-            res.leave_train = res.leave_train
-              ? formatData(new Date(res.leave_train).getTime(), 'd')
-              : ''
-          })
-          this.tableData = content
-          if (this.detailsIndex === '2') {
-            this.tableData.forEach((val) => {
-              if (this.teacherID === val.id) {
-                this.$refs.detailsHidden.departmentData.pname =
-                  val.department.pname
-              }
-            })
+      if (data.length > 0) {
+        const term = {}
+        data.forEach((res) => {
+          if (res.term) {
+            Object.assign(term, res.term)
+          } else if (res.terms) {
+            Object.assign(term, res.terms)
           }
-          this.totalPages = +totalPages
-          this.currentPage = +number
-          this.totalElements = +totalElements
+        })
+        console.log(term, 'term')
+        // this.query = JSON.stringify(term)
+        this.searchQuery = term
+      } else {
+        this.searchQuery = ''
+      }
+      this.getData()
+    },
+    getData(page = this.currentPage) {
+      if (this.departmentQuery || this.searchQuery) {
+        this.query = Object.assign(
+          {},
+          this.departmentQuery || {},
+          this.searchQuery || {}
+        )
+      }
+      const query = this.query ? JSON.stringify(this.query) : ''
+      // tab数据
+      this.$http.Teacher.getTeacherPage(page, JSON.stringify(query)).then(
+        (res) => {
+          if (res && res.data && res.data.TeacherManagePage) {
+            const {
+              content = [],
+              number,
+              totalPages,
+              totalElements
+            } = res.data.TeacherManagePage
+            content.forEach((res) => {
+              res.join_date = res.join_date
+                ? formatData(new Date(res.join_date).getTime(), 'd')
+                : ''
+              res.leave_train = res.leave_train
+                ? formatData(new Date(res.leave_train).getTime(), 'd')
+                : ''
+            })
+            this.tableData = content
+            if (this.detailsIndex === '2') {
+              this.tableData.forEach((val) => {
+                if (this.teacherID === val.id) {
+                  this.$refs.detailsHidden.departmentData.pname =
+                    val.department.pname
+                }
+              })
+            }
+            this.totalPages = +totalPages
+            this.currentPage = +number
+            this.totalElements = +totalElements
+          }
         }
-      })
+      )
     },
 
     // 选择按钮

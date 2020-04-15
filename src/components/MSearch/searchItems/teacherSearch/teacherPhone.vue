@@ -24,10 +24,10 @@
         <i class="el-icon-search el-input__icon" slot="suffix"></i>
         <template slot-scope="{ item }">
           <div style="display:flex">
-            <div class="name">{{ item.mobile || '-' }}</div>
-            <div class="name" v-if="+onlyPhone">
+            <div class="name">{{ item.phone || '-' }}</div>
+            <!-- <div class="name" v-if="+onlyPhone">
               /{{ item.wechat_nikename || '-' }}
-            </div>
+            </div> -->
           </div>
         </template>
       </el-autocomplete>
@@ -36,28 +36,28 @@
 </template>
 
 <script>
-import axios from '@/api/axios'
+// import axios from '@/api/axios'
 
 export default {
   props: {
     name: {
       type: String,
-      default: 'out_trade_no'
+      default: 'teacherphone'
     },
     onlyPhone: {
       type: String,
       default: '0'
     },
     // 是否只返回值，如果是，父组件获得值后根据实际表达式组装数据
-    onlyValue: {
-      type: Boolean,
-      default: false
-    },
+    // onlyValue: {
+    //   type: Boolean,
+    //   default: false
+    // },
     // team_id
-    teamId: {
-      type: String,
-      default: ''
-    },
+    // teamId: {
+    //   type: String,
+    //   default: ''
+    // },
     // 是否只返回值，如果是，父组件获得值后根据实际表达式组装数据
     tip: {
       type: String,
@@ -90,35 +90,24 @@ export default {
           return
         }
       }
-      const searchUid = await this.createFilter(queryString)
-      console.log(searchUid, '匹配到的数据')
-      const results = queryString ? searchUid : this.selectData
+
+      const list = await this.createFilter(queryString)
+      cb(list)
+
       // 调用 callback 返回建议列表的数据
-      console.log(results, '结果')
-      cb(searchUid)
     },
     createFilter(queryString) {
-      // const queryParams = `{"mobile":"${queryString}","team_id":"${this.teamId}"}`
-      const queryParams = `{"bool":{"must":[{"wildcard":{"phone.keyword":"*${queryString}*"}}]}}`
-      return axios
-        .post('/graphql/v1/boss', {
-          query: `{
-              TeacherPage(query: ${JSON.stringify(queryParams)}) {
-                  content {
-                    id
-                  }
-                }
-            }
-          `
-        })
-        .then((res) => {
-          this.selectData = res.data.blurrySearch
-          return this.selectData
-        })
+      return this.$http.Teacher.teacherListEx(
+        'phone.keyword',
+        queryString
+      ).then((res) => {
+        this.selectData = res.data.TeacherListEx || []
+        return this.selectData
+      })
     },
     inputHandler(data) {
-      this.input = data.mobile
-      this.$emit('result', data.mobile ? { [this.name]: data.id } : '')
+      this.input = data.phone
+      this.$emit('result', data.phone ? { [this.name]: data.phone } : '')
     }
   },
   created() {},
