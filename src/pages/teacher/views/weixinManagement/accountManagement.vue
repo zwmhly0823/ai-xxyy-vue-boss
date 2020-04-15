@@ -53,7 +53,7 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="使用状态" width="180">
+      <el-table-column align="left" label="使用状态" width="180">
         <template slot-scope="scope">
           <span>{{ openTeacher[scope.row.teacher_id] | filterStatus }}</span>
         </template>
@@ -66,13 +66,12 @@
           }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="老师手机号" width="180">
+      <el-table-column align="center" label="老师手机号">
         <template slot-scope="scope">
           <span v-if="concatTeacher[scope.row.teacher_id]">{{
             concatTeacher[scope.row.teacher_id] &&
               concatTeacher[scope.row.teacher_id].phone
           }}</span>
-          <!-- <span else>--</span> -->
         </template>
       </el-table-column>
       <el-table-column align="center" label="所在部门">
@@ -263,13 +262,16 @@ export default {
     // 单元格回调样式
     cellStyle({ row, column, rowIndex, columnIndex }) {
       if (columnIndex === 0) {
-        return 'padding-left:25px;'
+        return 'padding-left:55px;'
+      }
+      if (columnIndex === 3) {
+        return 'padding-left:10px;'
       }
     },
     // 表头回调样式
     headerCss({ row, column, rowIndex, columnIndex }) {
       if (columnIndex === 0) {
-        return 'font-size:12px;color:#666;font-weight:normal;padding-left:50px;'
+        return 'font-size:12px;color:#666;font-weight:normal;padding-left:100px;'
       }
       return 'font-size:12px;color:#666;font-weight:normal;'
     },
