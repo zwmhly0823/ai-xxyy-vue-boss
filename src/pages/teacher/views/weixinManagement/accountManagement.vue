@@ -17,6 +17,7 @@
     >
     <!-- 选择框 -->
     <el-table
+      style="padding-bottom:70px;"
       :data="table.tableData"
       @cell-mouse-enter="onClick"
       :cell-style="cellStyle"
@@ -48,7 +49,12 @@
                 style="width:150px;height:150px;"
                 alt=""
               />
-              <span class="code" slot="reference">二维码</span>
+              <span
+                class="code"
+                slot="reference"
+                v-if="scope.row.wechat_qr_code"
+                >二维码</span
+              >
             </el-popover>
           </div>
         </template>
@@ -201,6 +207,11 @@ export default {
       } else {
         return '未启用'
       }
+    },
+    weixinFilterStatus(res) {
+      if (res === '') {
+        return ''
+      }
     }
   },
   methods: {
@@ -220,6 +231,7 @@ export default {
       this.$http.Weixin.getWeChatTeacherPage()
         .catch((err) => console.log(err))
         .then((res) => {
+          console.log(res, 'res+_+_+_+_+_+_+')
           this.table.totalElements = +res.data.WeChatTeacherPage.totalElements
           this.table.tableData = res.data.WeChatTeacherPage.content
           const arrayTId = []
