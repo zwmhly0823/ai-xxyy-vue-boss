@@ -1,6 +1,13 @@
 <template>
   <div class="weixin">
     <m-search @search="searchHandler" wxShow="wx"> </m-search>
+    <el-button
+      type="primary"
+      @click="showNewWeChat = true"
+      size="mini"
+      style="height:30xp;"
+      >主要按钮</el-button
+    >
     <!-- 选择框 -->
     <el-table
       :data="table.tableData"
@@ -90,20 +97,31 @@
       width="30%"
     >
     </el-dialog>
+    <el-dialog
+      :destroy-on-close="true"
+      title="新增微信"
+      :visible.sync="showNewWeChat"
+      width="30%"
+    >
+      <addWeChat @addWeChat="addWeChat" />
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import MPagination from '@/components/MPagination/index.vue'
 import MSearch from '@/components/MSearch/index.vue'
+import addWeChat from './components/addWeChat'
 export default {
   components: {
     MPagination,
-    MSearch
+    MSearch,
+    addWeChat
   },
 
   data() {
     return {
+      showNewWeChat: false,
       showExpress: false,
       // 总页数
       totalPages: 1,
@@ -226,6 +244,12 @@ export default {
     handleCurrentChange(val) {
       this.currentPage = val
       this.$emit('onCurrentPage', val)
+    },
+    // 新增微信关闭弹框
+    addWeChat(data) {
+      if (data === 1) {
+        this.showNewWeChat = false
+      }
     }
   }
 }
