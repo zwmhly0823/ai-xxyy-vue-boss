@@ -4,7 +4,7 @@
  * @Author: Yangjiyong
  * @Date: 2020-04-07 13:52:26
  * @LastEditors: panjian
- * @LastEditTime: 2020-04-14 21:45:16
+ * @LastEditTime: 2020-04-15 15:47:07
  */
 import axios from '../axiosConfig'
 
@@ -139,17 +139,19 @@ export default {
   updateTeacher(params) {
     return axios.put(`/api/t/v1/teacher/updateTeacher`, params)
   },
-  // 选择老师
-  TeacherDepartmentRelationList(query = '') {
+  // 新增微信 获取老师name id
+  TeacherList(query = '') {
     return axios.post('/graphql/v1/teacher', {
       query: `{
-        TeacherDepartmentRelationList(query: "${query}") {
+        TeacherList(query:${JSON.stringify(query)}) {
+          realname
           id
-          department {
-            name
-          }
         }
        }`
     })
+  },
+  // 新增微信 添加
+  relation(params) {
+    return axios.post(`/api/t/v1/wechat/teacher/create/relation`, params)
   }
 }

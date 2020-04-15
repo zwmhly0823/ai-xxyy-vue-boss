@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-04-14 15:15:31
  * @LastEditors: panjian
- * @LastEditTime: 2020-04-14 23:07:25
+ * @LastEditTime: 2020-04-15 16:05:18
  -->
 <template>
   <div>
@@ -15,8 +15,8 @@
       class="demo-ruleForm"
       label-position="top"
     >
-      <el-form-item label="微信号" prop="wechatId">
-        <el-input style="width:230px;" v-model="ruleForm.wechatId"></el-input>
+      <el-form-item label="微信号" prop="wechatNo">
+        <el-input style="width:230px;" v-model="ruleForm.wechatNo"></el-input>
       </el-form-item>
       <el-form-item label="微信头像" prop="imageUrl">
         <el-upload
@@ -54,7 +54,7 @@
       </el-form-item>
       <!-- 关联老师 title -->
       <div style="margin-bottom:25px">
-        <span style="color:red;margin-right:4px;">*</span>
+        <!-- <span style="color:red;margin-right:4px;">*</span> -->
         <span style="font-weight:700">关联老师</span>
       </div>
       <div class="associatedTeacherCss">
@@ -68,9 +68,9 @@
             filterable
           ></el-cascader>
         </el-form-item>
-        <el-form-item style="margin-left:20px;" prop="regionList">
+        <el-form-item style="margin-left:20px;" prop="teacherId">
           <el-select
-            v-model="ruleForm.regionList"
+            v-model="ruleForm.teacherId"
             filterable
             remote
             reserve-keyword
@@ -88,10 +88,10 @@
           </el-select>
         </el-form-item>
       </div>
-      <el-form-item label="特殊资源" prop="resource">
+      <el-form-item label="启用状态" prop="resource">
         <el-radio-group v-model="ruleForm.resource">
-          <el-radio label="启用"></el-radio>
-          <el-radio label="停用"></el-radio>
+          <el-radio label="0">启用</el-radio>
+          <el-radio label="1">停用</el-radio>
         </el-radio-group>
       </el-form-item>
       <el-form-item>
@@ -111,33 +111,11 @@
   </div>
 </template>
 <script>
-import { sortByKey } from '@/utils/boss'
+// import { sortByKey } from '@/utils/boss'
 import uploadFile from '@/utils/upload'
 export default {
   data() {
     return {
-      list: [
-        {
-          value: '选项1',
-          label: '黄金糕'
-        },
-        {
-          value: '选项2',
-          label: '双皮奶'
-        },
-        {
-          value: '选项3',
-          label: '蚵仔煎'
-        },
-        {
-          value: '选项4',
-          label: '龙须面'
-        },
-        {
-          value: '选项5',
-          label: '北京烤鸭'
-        }
-      ],
       regionOptionsList: [],
       loading: false,
       // 关联老师选择部门
@@ -147,15 +125,16 @@ export default {
         label: 'name'
       },
       ruleForm: {
-        wechatId: '',
-        regionList: '',
+        wechatNo: '',
         associatedTeacher: '',
         resource: '',
         imageUrl: '',
-        QEcodeUrl: ''
+        QEcodeUrl: '',
+        teacherId: ''
       },
+      TeacherListvalue: '',
       rules: {
-        wechatId: [
+        wechatNo: [
           { required: true, message: '请输入微信名称', trigger: 'blur' }
         ],
         imageUrl: [
@@ -165,13 +144,13 @@ export default {
           { required: true, message: '请上传微信二维码', trigger: 'blur' }
         ],
         associatedTeacher: [
-          { required: true, message: '请选择部门', trigger: 'change' }
+          { required: false, message: '请选择部门', trigger: 'change' }
         ],
         resource: [
           { required: true, message: '请选择启用状态', trigger: 'change' }
         ],
-        regionList: [
-          { required: true, message: '请选择启用状态', trigger: 'blur' }
+        teacherId: [
+          { required: false, message: '请选择启用状态', trigger: 'blur' }
         ]
       }
     }
@@ -182,44 +161,48 @@ export default {
   methods: {
     onCreatedSelect() {
       // 关联老师选择部门
-      this.$http.Teacher.getdepartmentList().then((res) => {
-        const departmentData = res.data.TeacherDepartmentPage.content
-        const departmentWith = []
-        departmentData.forEach((val) => {
-          if (val.pid === 0) {
-            val.children = []
-            departmentWith.push(val)
-            // departmentWith.push(Object.assign(val, { children: [] }))
-          }
-        })
-        departmentData.forEach((val) => {
-          departmentWith.forEach((data) => {
-            if (val.pid === data.id) {
-              data.children.push(val)
-            }
-          })
-        })
-        this.associatedTeacher = sortByKey(departmentWith, 'id')
+      this.$http.Teacher.getDepartmentTree().then((res) => {
+        this.associatedTeacher = res.payload
       })
     },
     // 部门联机选择
     handleChange(value) {
       console.log(value)
       console.log(Object.values(value))
-      //   this.$http.Teacher.TeacherDepartmentRelationList().then((res) => {
-      //     console.log(res)
-      //   })
+      switch (value && value.length) {
+        case 1:
+          this.ruleForm.associatedTeacher = value[0]
+          break
+        case 2:
+          this.ruleForm.associatedTeacher = value[1]
+          break
+        case 3:
+          this.ruleForm.associatedTeacher = value[2]
+          break
+        default:
+          break
+      }
     },
     remoteMethod(query) {
       if (query !== '') {
         this.loading = true
         setTimeout(() => {
           this.loading = false
-          //   this.$http.Teacher.TeacherDepartmentRelationList().then((res) => {
-          //     console.log(res)
-          //   })
-          this.regionOptionsList = this.list.filter((item) => {
-            return item.label.toLowerCase().indexOf(query.toLowerCase()) > -1
+          if (this.ruleForm.associatedTeacher) {
+            this.TeacherListvalue = `{"department_id": ${this.ruleForm.associatedTeacher}}`
+          }
+          this.$http.Teacher.TeacherList(this.TeacherListvalue).then((res) => {
+            const data = res.data.TeacherList
+            const _data = []
+            data.forEach((res) => {
+              _data.push({
+                value: res.id,
+                label: res.realname
+              })
+            })
+            this.regionOptionsList = _data.filter((item) => {
+              return item.label.toLowerCase().indexOf(query.toLowerCase()) > -1
+            })
           })
         }, 200)
       } else {
@@ -231,6 +214,23 @@ export default {
       console.log(this.ruleForm.associatedTeacher, 'ruleForm.associatedTeacher')
       this.$refs[formName].validate((valid) => {
         if (valid) {
+          const params = {
+            teacherId: this.ruleForm.teacherId ? this.ruleForm.teacherId : '',
+            weixinId: this.weixinId ? this.weixinId : '',
+            weixinNo: this.ruleForm.wechatNo,
+            weixinHead: this.ruleForm.imageUrl,
+            weixinQrCode: this.ruleForm.QEcodeUrl,
+            isEffective: +this.ruleForm.resource
+          }
+          console.log(params, 'fasdsafs')
+          this.$http.Teacher.relation(params).then((res) => {
+            console.log(res, 'res')
+            this.$message({
+              message: '添加成功',
+              type: 'success'
+            })
+            this.$emit('addWeChat', 1)
+          })
           alert('submit!')
         } else {
           console.log('error submit!!')
@@ -240,6 +240,7 @@ export default {
     },
     resetForm(formName) {
       this.$refs[formName].resetFields()
+      this.$emit('addWeChat', 2)
     },
     // 头像上传
     upload(file) {

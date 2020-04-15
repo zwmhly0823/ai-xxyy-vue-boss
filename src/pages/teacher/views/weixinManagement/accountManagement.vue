@@ -1,6 +1,50 @@
 <template>
   <div class="weixin">
     <m-search @search="searchHandler" wxShow="wx"> </m-search>
+    <!-- 选择框 -->
+    <div class="search">
+      <el-select v-model="value" filterable placeholder="请选择">
+        <el-option
+          v-for="item in options"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value"
+        >
+        </el-option>
+      </el-select>
+      <!-- 输入框 -->
+      <!-- :fetch-suggestions="querySearchAsync" -->
+      <!-- @select="handleSelect" -->
+
+      <el-autocomplete
+        class="select"
+        v-model="state"
+        placeholder="请输入内容"
+      ></el-autocomplete>
+      <el-select v-model="value" filterable placeholder="请选择" class="select">
+        <el-option
+          v-for="item in options"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value"
+        >
+        </el-option>
+      </el-select>
+      <el-select v-model="value" filterable placeholder="请选择" class="select">
+        <el-option
+          v-for="item in options"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value"
+        >
+        </el-option>
+      </el-select>
+      <el-button type="primary" class="select">搜索</el-button>
+      <el-button @click="showNewWeChat = true" type="primary"
+        >新增微信</el-button
+      >
+    </div>
+    >>>>>>> fe241d3fe93d9c38773f12cf8b2c24b5fd60d9df
     <el-table
       :data="table.tableData"
       :cell-style="cellStyle"
@@ -89,19 +133,32 @@
       width="30%"
     >
     </el-dialog>
+    <el-dialog
+      :destroy-on-close="true"
+      title="新增微信"
+      :visible.sync="showNewWeChat"
+      width="30%"
+    >
+      <addWeChat @addWeChat="addWeChat" />
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import MPagination from '@/components/MPagination/index.vue'
 import MSearch from '@/components/MSearch/index.vue'
+import addWeChat from './components/addWeChat'
 export default {
   components: {
     MPagination,
-    MSearch
+    MSearch,
+    addWeChat
   },
+
   data() {
     return {
+      // 新增微信弹框
+      showNewWeChat: false,
       showExpress: false,
       // 总页数
       totalPages: 1,
@@ -224,6 +281,12 @@ export default {
     handleCurrentChange(val) {
       this.currentPage = val
       this.$emit('onCurrentPage', val)
+    },
+    // 新增微信关闭弹框
+    addWeChat(data) {
+      if (data === 1) {
+        this.showNewWeChat = false
+      }
     }
   }
 }
