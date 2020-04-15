@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-04-14 15:15:31
  * @LastEditors: panjian
- * @LastEditTime: 2020-04-15 16:00:34
+ * @LastEditTime: 2020-04-15 16:05:18
  -->
 <template>
   <div>
@@ -240,6 +240,7 @@ export default {
     },
     resetForm(formName) {
       this.$refs[formName].resetFields()
+      this.$emit('addWeChat', 2)
     },
     // 头像上传
     upload(file) {
