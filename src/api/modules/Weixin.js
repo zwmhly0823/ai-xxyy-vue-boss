@@ -10,7 +10,7 @@
 import axios from '../axiosConfig'
 
 export default {
-  // 微信管理列表（微信号，手机号）
+  // 微信管理列表（微信号）
   getWeChatTeacherPage() {
     return axios.get(`/graphql/v1/boss`, {
       query: `{
@@ -37,6 +37,7 @@ export default {
         TeacherList(query: ${JSON.stringify(obj)}) {
           id
           realname
+          phone
           department {
             id
             name
