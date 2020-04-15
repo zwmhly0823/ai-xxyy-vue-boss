@@ -65,8 +65,8 @@
       type="primary"
       @click="showNewWeChat = true"
       size="mini"
-      style="height:30xp;"
-      >主要按钮</el-button
+      style="height:28px;margin-left:20px;margin-top:5px;"
+      >新增微信</el-button
     >
     <el-dialog
       :destroy-on-close="true"
@@ -109,15 +109,14 @@ export default {
       status: [
         { name: '启用', id: '0' },
         {
-          name: '未启用',
+          name: '停用',
           id: '1'
         }
       ],
       concatTeacher: [
-        { name: '微信号', id: '0' },
         {
           name: '老师手机号',
-          id: '1'
+          id: '0'
         },
         {
           name: '老师手机号',
