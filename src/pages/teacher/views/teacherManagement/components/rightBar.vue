@@ -231,6 +231,8 @@ export default {
   },
   data() {
     return {
+      departmentQuery: '',
+      searchQuery: '',
       query: '',
       sex: {
         // 0: '-',
@@ -273,16 +275,15 @@ export default {
     async department(dept = {}) {
       // 根据部门ID获取老师ID
       const { id, pid, children } = dept
-      const query = `{"department":{"id": ${id}, "pid": ${pid}, "children": ${JSON.stringify(
-        children
-      )}}}`
-      if (id === '0') {
-        this.query = ''
-        this.getData()
-        return
+      const query = {
+        department: {
+          id: `${id}`,
+          pid: `${pid}`,
+          children: `${JSON.stringify(children)}`
+        }
       }
-      this.query = query
-      this.getData(1, JSON.stringify(query))
+      this.departmentQuery = query
+      this.getData()
     }
   },
   activated() {
@@ -307,44 +308,55 @@ export default {
           }
         })
         console.log(term, 'term')
-        this.query = JSON.stringify(term)
+        // this.query = JSON.stringify(term)
+        this.searchQuery = term
       } else {
-        this.query = ''
+        this.searchQuery = ''
       }
       this.getData()
     },
-    getData(page = this.currentPage, query = JSON.stringify(this.query)) {
+    getData(page = this.currentPage) {
+      if (this.departmentQuery || this.searchQuery) {
+        this.query = Object.assign(
+          {},
+          this.departmentQuery || {},
+          this.searchQuery || {}
+        )
+      }
+      const query = this.query ? JSON.stringify(this.query) : ''
       // tab数据
-      this.$http.Teacher.getTeacherPage(page, query).then((res) => {
-        if (res && res.data && res.data.TeacherManagePage) {
-          const {
-            content = [],
-            number,
-            totalPages,
-            totalElements
-          } = res.data.TeacherManagePage
-          content.forEach((res) => {
-            res.join_date = res.join_date
-              ? formatData(new Date(res.join_date).getTime(), 'd')
-              : ''
-            res.leave_train = res.leave_train
-              ? formatData(new Date(res.leave_train).getTime(), 'd')
-              : ''
-          })
-          this.tableData = content
-          if (this.detailsIndex === '2') {
-            this.tableData.forEach((val) => {
-              if (this.teacherID === val.id) {
-                this.$refs.detailsHidden.departmentData.pname =
-                  val.department.pname
-              }
+      this.$http.Teacher.getTeacherPage(page, JSON.stringify(query)).then(
+        (res) => {
+          if (res && res.data && res.data.TeacherManagePage) {
+            const {
+              content = [],
+              number,
+              totalPages,
+              totalElements
+            } = res.data.TeacherManagePage
+            content.forEach((res) => {
+              res.join_date = res.join_date
+                ? formatData(new Date(res.join_date).getTime(), 'd')
+                : ''
+              res.leave_train = res.leave_train
+                ? formatData(new Date(res.leave_train).getTime(), 'd')
+                : ''
             })
+            this.tableData = content
+            if (this.detailsIndex === '2') {
+              this.tableData.forEach((val) => {
+                if (this.teacherID === val.id) {
+                  this.$refs.detailsHidden.departmentData.pname =
+                    val.department.pname
+                }
+              })
+            }
+            this.totalPages = +totalPages
+            this.currentPage = +number
+            this.totalElements = +totalElements
           }
-          this.totalPages = +totalPages
-          this.currentPage = +number
-          this.totalElements = +totalElements
         }
-      })
+      )
     },
 
     // 选择按钮
