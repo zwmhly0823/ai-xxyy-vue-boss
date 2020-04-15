@@ -109,10 +109,18 @@
       close="calc(100vw - 50px - 24px)"
     ></m-pagination>
     <el-dialog title="编辑信息" :visible.sync="showEditWeChat" width="45%">
-      <editWeChat v-if="showEditWeChat" :weixinId="weixinId" />
+      <editWeChat
+        v-if="showEditWeChat"
+        @editWeChat="editWeChat"
+        :weixinId="weixinId"
+      />
     </el-dialog>
     <el-dialog title="关联老师" :visible.sync="showRelationTeacher" width="35%">
-      <showRelationTeacher v-if="showRelationTeacher" :weixinId="weixinId" />
+      <showRelationTeacher
+        v-if="showRelationTeacher"
+        @relationTeacher="relationTeacher"
+        :weixinId="weixinId"
+      />
     </el-dialog>
     <el-dialog title="新增微信" :visible.sync="showNewWeChat" width="45%">
       <addWeChat v-if="showNewWeChat" @addWeChat="addWeChat" />
@@ -289,6 +297,23 @@ export default {
     addWeChat(data) {
       if (data === 1) {
         this.showNewWeChat = false
+      } else if (data === 2) {
+        this.showNewWeChat = false
+      }
+    },
+    // 修改微信信息关闭弹框
+    editWeChat(data) {
+      if (data === 1) {
+        this.showEditWeChat = false
+      } else if (data === 2) {
+        this.showEditWeChat = false
+      }
+    },
+    relationTeacher(data) {
+      if (data === 1) {
+        this.showRelationTeacher = false
+      } else if (data === 2) {
+        this.showRelationTeacher = false
       }
     }
   }

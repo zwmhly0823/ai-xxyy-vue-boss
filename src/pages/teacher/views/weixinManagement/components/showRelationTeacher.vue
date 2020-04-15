@@ -4,13 +4,12 @@
  * @Author: panjian
  * @Date: 2020-04-15 16:56:59
  * @LastEditors: panjian
- * @LastEditTime: 2020-04-15 17:39:25
+ * @LastEditTime: 2020-04-15 22:14:22
  -->
 <template>
   <div>
     <el-form
       :model="ruleForm"
-      :rules="rules"
       ref="ruleForm"
       class="demo-ruleForm"
       label-position="top"
@@ -72,6 +71,7 @@ export default {
   props: ['weixinId'],
   data() {
     return {
+      loading: false,
       associatedTeacher: [],
       regionOptionsList: [],
       TeacherListvalue: '',
@@ -154,7 +154,7 @@ export default {
               message: '添加成功',
               type: 'success'
             })
-            this.$emit('addWeChat', 1)
+            this.$emit('relationTeacher', 1)
           })
         } else {
           console.log('error submit!!')
@@ -167,7 +167,7 @@ export default {
       this.ruleForm.associatedTeacher = ''
       this.TeacherListvalue = ''
       this.regionOptionsList = []
-      this.$emit('addWeChat', 2)
+      this.$emit('relationTeacher', 2)
     }
   }
 }

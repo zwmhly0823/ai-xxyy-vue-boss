@@ -4,7 +4,7 @@
  * @Author: Yangjiyong
  * @Date: 2020-04-07 13:52:26
  * @LastEditors: panjian
- * @LastEditTime: 2020-04-15 21:18:16
+ * @LastEditTime: 2020-04-15 21:50:30
  */
 import axios from '../axiosConfig'
 
@@ -187,10 +187,21 @@ export default {
   TeacherWeixinRelation(query = '') {
     return axios.post('/graphql/v1/teacher', {
       query: `{
-        TeacherWeixinRelation((query:${JSON.stringify(query)}) {
+        TeacherWeixinRelation(query:${JSON.stringify(query)}) {
           teacher_id
           is_effective
-      
+        }
+       }`
+    })
+  },
+  // 微信编辑接口
+  getTeacher(query = '') {
+    return axios.post('/graphql/v1/teacher', {
+      query: `{
+        Teacher(query:${JSON.stringify(query)}) {
+          department_id
+          realname
+          id
         }
        }`
     })
