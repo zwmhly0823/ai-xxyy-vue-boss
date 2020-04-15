@@ -138,5 +138,20 @@ export default {
   //  编辑老师
   updateTeacher(params) {
     return axios.put(`/api/t/v1/teacher/updateTeacher`, params)
+  },
+  //  老师手机号，姓名模糊搜索
+  teacherListEx(name, params) {
+    const quer = `{ "bool": { "must": [{ "wildcard": { "${name}": "*${params}*" } }] } }`
+    return axios.post('/graphql/v1/teacher', {
+      query: `
+      {
+        TeacherListEx(query:${JSON.stringify(quer)})
+        {
+          phone
+          realname
+        }
+      }
+      `
+    })
   }
 }

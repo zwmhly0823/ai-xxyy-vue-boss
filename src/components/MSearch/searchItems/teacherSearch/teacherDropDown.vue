@@ -77,7 +77,7 @@
         v-for="item in positionList"
         :key="item.id"
         :label="item.name"
-        :value="item.name"
+        :value="item.id"
       >
       </el-option>
     </el-select>
@@ -96,7 +96,7 @@ export default {
     // 入职状态
     inductionName: {
       type: String,
-      default: 'induction_no'
+      default: 'status'
     },
     // 登陆状态
     landingName: {
@@ -124,13 +124,13 @@ export default {
       rankList: [],
       // 入职状态列表
       inductionList: [
-        { label: '在职', value: 'TENURE' },
-        { label: '离职', value: 'LEAVE' }
+        { label: '在职', value: '0' },
+        { label: '离职', value: '1' }
       ],
       // 登陆状态
       landingList: [
-        { label: '允许', value: 'YES' },
-        { label: '禁止', value: 'NO' }
+        { label: '允许', value: '0' },
+        { label: '禁止', value: '1' }
       ],
       // 职务列表
       positionList: [],
@@ -175,30 +175,30 @@ export default {
 
     // 职级
     rankChange(data) {
-      this.$emit(
-        'rankCallBack',
-        data.length > 0 ? { [this.rankName]: this.rankData } : ''
-      )
+      console.log(data, '66666')
+      this.$emit('rankCallBack', data ? { [this.rankName]: this.rankData } : '')
     },
     // 入职状态
     inductionChange(data) {
+      console.log(data, '999999')
+      console.log(this.inductionData)
       this.$emit(
         'inductionCallBack',
-        data.length > 0 ? { [this.inductionData]: this.inductionData } : ''
+        data.length > 0 ? { [this.inductionName]: this.inductionData } : ''
       )
     },
     // 登陆状态
     landingChange(data) {
       this.$emit(
         'landingCallBack',
-        data.length > 0 ? { [this.landingData]: this.landingData } : ''
+        data.length > 0 ? { [this.landingName]: this.landingData } : ''
       )
     },
     // 职务
     positionChange(data) {
       this.$emit(
         'positionCallBack',
-        data.length > 0 ? { [this.positionData]: this.positionData } : ''
+        data.length > 0 ? { [this.positionName]: this.positionData } : ''
       )
     }
   }

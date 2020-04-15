@@ -99,7 +99,7 @@
         <!-- 老师模块职级，登陆状态，入职状态，选择职务搜索 -->
         <teacher-drop-down
           @rankCallBack="rankCallBack"
-          @supCallBack="supCallBack"
+          @inductionCallBack="inductionCallBack"
           @landingCallBack="landingCallBack"
           @positionCallBack="positionCallBack"
           :rankName="rank"
@@ -355,22 +355,22 @@ export default {
     },
     // 职级
     rankCallBack(res) {
-      console.log(res, 'res')
-      this.setSeachParmas(res, [this.rankName || 'rankName'], 'terms')
+      console.log(res, 'res123')
+      this.setSeachParmas(res, [this.rank || 'rankName'])
     },
     // 入职状态
     inductionCallBack(res) {
-      console.log(res, 'res')
-      this.setSeachParmas(res, [this.rankName || 'rankName'], 'terms')
+      console.log(res, 'res456')
+      this.setSeachParmas(res, [this.induction || 'inductionName'])
     },
     // 登陆状态
     landingCallBack(res) {
       console.log(res, 'res')
-      this.setSeachParmas(res, [this.inductionName || 'inductionName'], 'terms')
+      this.setSeachParmas(res, [this.landing || 'inductionName'])
     },
     // 职务
     positionCallBack(res) {
-      this.setSeachParmas(res, [this.positionName || 'positionName'], 'terms')
+      this.setSeachParmas(res, [this.position || 'positionName'], 'terms')
     },
     // 选择订单号
     getOutTradeNo(res) {
