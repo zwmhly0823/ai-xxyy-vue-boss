@@ -140,7 +140,7 @@
       :visible.sync="showNewWeChat"
       width="30%"
     >
-      <addWeChat />
+      <addWeChat @addWeChat="addWeChat" />
     </el-dialog>
   </div>
 </template>
@@ -268,6 +268,12 @@ export default {
     handleCurrentChange(val) {
       this.currentPage = val
       this.$emit('onCurrentPage', val)
+    },
+    // 新增微信关闭弹框
+    addWeChat(data) {
+      if (data === 1) {
+        this.showNewWeChat = false
+      }
     }
   }
 }
