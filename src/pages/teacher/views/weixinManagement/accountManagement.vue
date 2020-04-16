@@ -53,6 +53,7 @@
                 <span
                   class="code"
                   slot="reference"
+                  style="color: #409EFF"
                   v-if="scope.row.wechat_qr_code"
                   >二维码</span
                 >
