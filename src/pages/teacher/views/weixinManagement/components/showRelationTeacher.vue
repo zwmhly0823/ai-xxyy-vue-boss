@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-04-15 16:56:59
  * @LastEditors: panjian
- * @LastEditTime: 2020-04-15 22:14:22
+ * @LastEditTime: 2020-04-16 16:50:28
  -->
 <template>
   <div>
@@ -22,6 +22,7 @@
       <div class="associatedTeacherCss">
         <el-form-item prop="associatedTeacher">
           <el-cascader
+            style="width:270px;"
             @change="handleChange"
             v-model="ruleForm.associatedTeacher"
             placeholder="全部部门"
