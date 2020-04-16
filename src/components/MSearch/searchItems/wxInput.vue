@@ -132,11 +132,11 @@ export default {
       concatTeacher: [
         {
           name: '是',
-          id: '0'
+          id: '1'
         },
         {
           name: '否',
-          id: '1'
+          id: '0'
         }
       ],
       // 使用状态value

@@ -236,6 +236,8 @@ export default {
       }
     },
     searchHandler(res) {
+      console.log(res)
+
       if (res.length > 0) {
         const wildcard = {}
         res.forEach((item) => {
@@ -256,6 +258,9 @@ export default {
       }
       if (res.length === 0) {
         this.weChatPageList()
+      }
+      if (this.querSearch && this.searchQuery) {
+        Object.assign(this.searchQuery, this.querSearch)
       }
       if (this.searchQuery.wechat_no || this.searchQuery.teacher_id) {
         this.weChatPageList(this.searchQuery)
