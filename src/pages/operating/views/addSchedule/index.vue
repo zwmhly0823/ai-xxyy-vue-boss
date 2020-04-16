@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-14 18:28:44
  * @LastEditors: Shentong
- * @LastEditTime: 2020-04-15 21:10:23
+ * @LastEditTime: 2020-04-16 12:18:35
  -->
 <template>
   <div class="app-main height add-schedule-container">
@@ -78,8 +78,9 @@ export default {
   computed: {},
   watch: {},
   methods: {
-    onStepStatus() {
-      this.stepStatus++
+    onStepStatus(type) {
+      if (type) this.stepStatus++
+      else this.stepStatus--
     },
     handleChange() {},
     pageChange_handler() {},
