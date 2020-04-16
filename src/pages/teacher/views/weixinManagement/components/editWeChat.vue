@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-04-14 15:15:31
  * @LastEditors: panjian
- * @LastEditTime: 2020-04-16 20:59:33
+ * @LastEditTime: 2020-04-16 21:01:29
  -->
 <template>
   <div>
@@ -211,6 +211,9 @@ export default {
         default:
           break
       }
+      this.ruleForm.teacherId = ''
+      this.regionOptionsList = []
+      this.remoteMethod()
     },
     remoteMethod(query) {
       if (query !== '') {

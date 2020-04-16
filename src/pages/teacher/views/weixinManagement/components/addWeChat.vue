@@ -183,6 +183,9 @@ export default {
         default:
           break
       }
+      this.ruleForm.teacherId = ''
+      this.regionOptionsList = []
+      this.remoteMethod()
     },
     remoteMethod(query) {
       if (query !== '') {
