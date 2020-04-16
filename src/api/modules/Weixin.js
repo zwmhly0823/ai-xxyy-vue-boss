@@ -10,13 +10,15 @@
 import axios from '../axiosConfig'
 
 export default {
-  // 微信管理列表（微信号，手机号）
-  getWeChatTeacherPage() {
+  // 微信管理列表（微信号）
+  getWeChatTeacherPage(params, currentPage) {
+    const obj = JSON.stringify(params)
     return axios.get(`/graphql/v1/boss`, {
       query: `{
-        WeChatTeacherPage {
+        WeChatTeacherPage(query:${JSON.stringify(obj)},page: ${currentPage}) {
           totalElements
           totalPages
+          number
           content {
             id
             wechat_no
@@ -37,6 +39,7 @@ export default {
         TeacherList(query: ${JSON.stringify(obj)}) {
           id
           realname
+          phone
           department {
             id
             name
@@ -57,6 +60,36 @@ export default {
         }
       }`
     })
+  },
+  // 老师微信号,手机号模糊搜索
+  getTeacherListEx(key, value) {
+    const query = `{ "bool": { "must": [{ "wildcard": { "${key}": "*${value}*" } }] } }`
+    return axios.post('/graphql/v1/teacher', {
+      query: `
+      {
+        TeacherListEx(query:${JSON.stringify(query)})
+        {
+          id
+          phone
+          realname
+        }
+      }
+      `
+    })
+  },
+  // 老师微信号,手机号模糊搜索
+  getWeChatTeacherListEx(weixinkey, value) {
+    const query = `{ "bool": { "must": [{ "wildcard": { "${weixinkey}": "*${value}*" } }] } }`
+    return axios.post('/graphql/v1/boss', {
+      query: `
+      {
+        WeChatTeacherListEx(query:${JSON.stringify(query)})
+        {
+          id
+          wechat_no
+        }
+      }
+      `
+    })
   }
-  // 搜索接口
 }

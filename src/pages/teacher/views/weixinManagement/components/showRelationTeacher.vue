@@ -4,13 +4,12 @@
  * @Author: panjian
  * @Date: 2020-04-15 16:56:59
  * @LastEditors: panjian
- * @LastEditTime: 2020-04-15 17:39:25
+ * @LastEditTime: 2020-04-16 16:50:28
  -->
 <template>
   <div>
     <el-form
       :model="ruleForm"
-      :rules="rules"
       ref="ruleForm"
       class="demo-ruleForm"
       label-position="top"
@@ -23,6 +22,7 @@
       <div class="associatedTeacherCss">
         <el-form-item prop="associatedTeacher">
           <el-cascader
+            style="width:270px;"
             @change="handleChange"
             v-model="ruleForm.associatedTeacher"
             placeholder="全部部门"
@@ -72,6 +72,7 @@ export default {
   props: ['weixinId'],
   data() {
     return {
+      loading: false,
       associatedTeacher: [],
       regionOptionsList: [],
       TeacherListvalue: '',
@@ -154,7 +155,7 @@ export default {
               message: '添加成功',
               type: 'success'
             })
-            this.$emit('addWeChat', 1)
+            this.$emit('relationTeacher', 1)
           })
         } else {
           console.log('error submit!!')
@@ -167,7 +168,7 @@ export default {
       this.ruleForm.associatedTeacher = ''
       this.TeacherListvalue = ''
       this.regionOptionsList = []
-      this.$emit('addWeChat', 2)
+      this.$emit('relationTeacher', 2)
     }
   }
 }
