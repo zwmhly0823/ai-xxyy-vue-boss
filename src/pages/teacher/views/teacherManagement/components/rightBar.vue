@@ -297,7 +297,6 @@ export default {
   methods: {
     // 搜索
     handleSearch(data) {
-      console.log(data, '122')
       if (data.length > 0) {
         const term = {}
         data.forEach((res) => {
@@ -307,7 +306,6 @@ export default {
             Object.assign(term, res.terms)
           }
         })
-        console.log(term, 'term')
         // this.query = JSON.stringify(term)
         this.searchQuery = term
       } else {

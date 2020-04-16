@@ -355,27 +355,22 @@ export default {
     },
     // 选择老师手机号
     getteacherPhone(res) {
-      console.log(res, '选择老师手机号回调res')
       this.setSeachParmas(res, [this.teacherphone || 'umobile'])
     },
     // 老师姓名
     getteacherName(res) {
-      console.log(res, '选择老师姓名回调res')
       this.setSeachParmas(res, [this.teachername || 'umobile'])
     },
     // 职级
     rankCallBack(res) {
-      console.log(res, 'res123')
       this.setSeachParmas(res, [this.rank || 'rankName'])
     },
     // 入职状态
     inductionCallBack(res) {
-      console.log(res, 'res456')
       this.setSeachParmas(res, [this.induction || 'inductionName'])
     },
     // 登陆状态
     landingCallBack(res) {
-      console.log(res, 'res')
       this.setSeachParmas(res, [this.landing || 'inductionName'])
     },
     // 职务
