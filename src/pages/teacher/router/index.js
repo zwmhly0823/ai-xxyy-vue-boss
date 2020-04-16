@@ -33,6 +33,19 @@ const routes = [
       )
   },
   {
+    path: '/weixinManagement',
+    name: 'weixinManagement',
+    meta: {
+      title: '微信管理',
+      keepAlive: true
+    },
+    component: () =>
+      import(
+        /* webpackChunkName: "teacherManagement" */
+        '../views/weixinManagement/accountManagement.vue'
+      )
+  },
+  {
     path: '/newTeacher',
     name: 'newTeacher',
     // meta: {

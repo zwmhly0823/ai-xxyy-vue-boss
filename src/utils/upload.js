@@ -4,10 +4,11 @@
  * @Author: shentong
  * @Date: 2019-12-17 15:43:27
  * @LastEditors: Shentong
- * @LastEditTime: 2020-04-14 17:37:34
+ * @LastEditTime: 2020-04-16 17:43:57
  */
 import axios from 'axios'
 import $http from '@/api'
+import Contants from '@/utils/contants'
 const getSuffix = (fileName) => {
   var pos = fileName.lastIndexOf('.')
   var suffix = ''
@@ -19,11 +20,12 @@ const getSuffix = (fileName) => {
 
 // 头像上传签名
 const getOssToken = async () => {
+  let getPubSinged
   try {
-    const { payload = {} } = await $http.Teacher.getPubWriteSinged()
-    return Promise.resolve(payload)
+    getPubSinged = await $http.Teacher.getPubWriteSinged()
+    return Promise.resolve(getPubSinged.payload)
   } catch (err) {
-    return Promise.reject(payload)
+    return Promise.reject(err)
   }
 }
 
@@ -34,7 +36,6 @@ const uploadFile = async (file) => {
   } catch (err) {
     console.log(err)
   }
-
   if (puhSinged) {
     const {
       bucketName = '',

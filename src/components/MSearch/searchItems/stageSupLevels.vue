@@ -1,6 +1,6 @@
 <!--
- * @Descripttion: 
- * @version: 
+ * @Descripttion:
+ * @version:
  * @Author: zhubaodong
  * @Date: 2020-03-24 18:50:54
  * @LastEditors: zhubaodong
@@ -119,7 +119,7 @@ export default {
     async getStage() {
       axios
         .post('/graphql/filter', {
-          query: `{  
+          query: `{
               teamStageList{
                 stage
                 stage_text
@@ -135,7 +135,7 @@ export default {
     async getSup() {
       axios
         .post('/graphql/filter', {
-          query: `{    
+          query: `{
             courseSupList{
                 id
                 name
@@ -155,7 +155,7 @@ export default {
     async getLevel() {
       axios
         .post('/graphql/filter', {
-          query: `{  
+          query: `{
               courseLevelList{
                 id,
                 name
