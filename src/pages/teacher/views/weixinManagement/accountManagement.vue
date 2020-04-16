@@ -6,7 +6,7 @@
         wxSerch="wechat_no"
         wxTeacherPhone="teacher_id"
         wxStatus="is_effective"
-        wxConcatTeacher="ts"
+        wxConcatTeacher="wechatJud"
       >
         <el-button
           type="primary"
@@ -203,9 +203,9 @@ export default {
       restaurants: [],
       state: '',
       timeout: null,
-      searchQuery: null,
       // 搜索
-      querSearch: ''
+      querSearch: '',
+      searchQuery: null
     }
   },
 
@@ -236,18 +236,26 @@ export default {
       }
     },
     searchHandler(res) {
-      if (res.length === 0) {
-        this.weChatPageList()
-      }
       if (res.length > 0) {
         const wildcard = {}
         res.forEach((item) => {
           Object.assign(wildcard, item.wildcard)
         })
-        // this.query = JSON.stringify(term)
         this.searchQuery = wildcard
+        // 是否关联老师
+        res.forEach((res) => {
+          if (res.term && res.term.wechatJud === '0') {
+            this.querSearch = { teacher_id: { lte: 0 } }
+          } else if (res.term && res.term.wechatJud === '1') {
+            this.querSearch = { teacher_id: { gt: 0 } }
+          }
+        })
       } else {
+        this.querSearch = ''
         this.searchQuery = ''
+      }
+      if (res.length === 0) {
+        this.weChatPageList()
       }
       if (this.searchQuery.wechat_no || this.searchQuery.teacher_id) {
         this.weChatPageList(this.searchQuery)
@@ -258,7 +266,11 @@ export default {
       if (!params) {
         params = ''
       }
-      this.$http.Weixin.getWeChatTeacherPage(params, this.currentPage)
+      this.$http.Weixin.getWeChatTeacherPage(
+        params,
+        this.currentPage,
+        JSON.stringify(this.querSearch)
+      )
         .catch((err) => console.log(err))
         .then((res) => {
           this.totalElements = +res.data.WeChatTeacherPage.totalElements
@@ -339,6 +351,9 @@ export default {
     addWeChat(data) {
       if (data === 1) {
         this.showNewWeChat = false
+        setTimeout(() => {
+          this.weChatPageList()
+        }, 500)
       } else if (data === 2) {
         this.showNewWeChat = false
       }
@@ -347,6 +362,9 @@ export default {
     editWeChat(data) {
       if (data === 1) {
         this.showEditWeChat = false
+        setTimeout(() => {
+          this.weChatPageList()
+        }, 500)
       } else if (data === 2) {
         this.showEditWeChat = false
       }
@@ -354,6 +372,9 @@ export default {
     relationTeacher(data) {
       if (data === 1) {
         this.showRelationTeacher = false
+        setTimeout(() => {
+          this.weChatPageList()
+        }, 500)
       } else if (data === 2) {
         this.showRelationTeacher = false
       }
