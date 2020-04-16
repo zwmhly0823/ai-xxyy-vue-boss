@@ -311,7 +311,7 @@ export default {
         this.searchQuery = term
       } else {
         this.searchQuery = ''
-        this.query = {}
+        this.query = ''
       }
       this.getData()
     },
