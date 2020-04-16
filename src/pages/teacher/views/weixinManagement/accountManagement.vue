@@ -194,7 +194,9 @@ export default {
       restaurants: [],
       state: '',
       timeout: null,
-      searchQuery: null
+      searchQuery: null,
+      // 搜索
+      querSearch: ''
     }
   },
 

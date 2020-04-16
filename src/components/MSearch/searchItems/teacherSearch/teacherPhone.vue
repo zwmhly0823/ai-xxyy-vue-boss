@@ -75,7 +75,6 @@ export default {
   computed: {},
   watch: {
     input(val, old) {
-      console.log(val !== old && !val)
       if (val !== old && !val) {
         this.$emit('result', '')
       }
