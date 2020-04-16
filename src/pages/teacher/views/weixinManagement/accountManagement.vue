@@ -1,101 +1,102 @@
 <template>
-  <div class="weixin">
-    <m-search
-      @search="searchHandler"
-      wxSerch="wechat_no"
-      wxTeacherPhone="teacher_id"
-      wxStatus="is_effective"
-      wxConcatTeacher="ts"
-    >
-    </m-search>
-    <el-button
-      type="primary"
-      @click="showNewWeChat = true"
-      size="mini"
-      style="height:30xp;"
-      >新增微信</el-button
-    >
-    <!-- 选择框 -->
-    <el-table
-      style="padding-bottom:70px;"
-      :data="table.tableData"
-      @cell-mouse-enter="onClick"
-      :cell-style="cellStyle"
-      :header-cell-style="headerCss"
-    >
-      <el-table-column label="微信号">
-        <template slot-scope="scope">
-          <div class="weixin-box">
-            <el-dropdown>
-              <div>
-                <img src="../../../../assets/images/point.png" alt="" />
-              </div>
-              <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item @click.native="operation(scope.row, '1')">
-                  编辑
-                </el-dropdown-item>
-                <el-dropdown-item @click.native="operation(scope.row, '2')">
-                  关联老师
-                </el-dropdown-item>
-              </el-dropdown-menu>
-            </el-dropdown>
+  <el-row class="app-main height weixin">
+    <el-scrollbar wrap-class="scrollbar-wrapper" id="wechat-scroll">
+      <m-search
+        @search="searchHandler"
+        wxSerch="wechat_no"
+        wxTeacherPhone="teacher_id"
+        wxStatus="is_effective"
+        wxConcatTeacher="ts"
+      >
+        <el-button
+          type="primary"
+          @click="showNewWeChat = true"
+          size="mini"
+          slot="searchItems"
+          >新增微信</el-button
+        >
+      </m-search>
+      <!-- 选择框 -->
+      <el-table
+        style="padding-bottom:70px;"
+        :data="table.tableData"
+        @cell-mouse-enter="onClick"
+        :cell-style="cellStyle"
+        :header-cell-style="headerCss"
+      >
+        <el-table-column label="微信号">
+          <template slot-scope="scope">
+            <div class="weixin-box">
+              <el-dropdown>
+                <div>
+                  <img src="../../../../assets/images/point.png" alt="" />
+                </div>
+                <el-dropdown-menu slot="dropdown">
+                  <el-dropdown-item @click.native="operation(scope.row, '1')">
+                    编辑
+                  </el-dropdown-item>
+                  <el-dropdown-item @click.native="operation(scope.row, '2')">
+                    关联老师
+                  </el-dropdown-item>
+                </el-dropdown-menu>
+              </el-dropdown>
 
-            <img class="weixinHead" :src="scope.row.head_img_url" alt="" />
-            <span class="weixinName">{{ scope.row.wechat_no }}</span>
-            <!-- 鼠标指向显示二维码 -->
-            <el-popover placement="right" trigger="hover">
-              <img
-                :src="scope.row.wechat_qr_code"
-                style="width:150px;height:150px;"
-                alt=""
-              />
-              <span
-                class="code"
-                slot="reference"
-                v-if="scope.row.wechat_qr_code"
-                >二维码</span
-              >
-            </el-popover>
-          </div>
-        </template>
-      </el-table-column>
-      <el-table-column align="left" label="使用状态" width="180">
-        <template slot-scope="scope">
-          <span>{{ openTeacher[scope.row.teacher_id] | filterStatus }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column align="center" label="关联老师" width="180">
-        <template slot-scope="scope">
-          <span>{{
-            concatTeacher[scope.row.teacher_id] &&
-              concatTeacher[scope.row.teacher_id].teachername
-          }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column align="center" label="老师手机号">
-        <template slot-scope="scope">
-          <span v-if="concatTeacher[scope.row.teacher_id]">{{
-            concatTeacher[scope.row.teacher_id] &&
-              concatTeacher[scope.row.teacher_id].phone
-          }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column align="center" label="所在部门">
-        <template slot-scope="scope">
-          <span v-if="concatTeacher[scope.row.teacher_id]">
+              <img class="weixinHead" :src="scope.row.head_img_url" alt="" />
+              <span class="weixinName">{{ scope.row.wechat_no }}</span>
+              <!-- 鼠标指向显示二维码 -->
+              <el-popover placement="right" trigger="hover">
+                <img
+                  :src="scope.row.wechat_qr_code"
+                  style="width:150px;height:150px;"
+                  alt=""
+                />
+                <span
+                  class="code"
+                  slot="reference"
+                  v-if="scope.row.wechat_qr_code"
+                  >二维码</span
+                >
+              </el-popover>
+            </div>
+          </template>
+        </el-table-column>
+        <el-table-column align="left" label="使用状态" width="180">
+          <template slot-scope="scope">
+            <span>{{ openTeacher[scope.row.teacher_id] | filterStatus }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column align="center" label="关联老师" width="180">
+          <template slot-scope="scope">
+            <span>{{
+              concatTeacher[scope.row.teacher_id] &&
+                concatTeacher[scope.row.teacher_id].teachername
+            }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column align="center" label="老师手机号">
+          <template slot-scope="scope">
+            <span v-if="concatTeacher[scope.row.teacher_id]">{{
+              concatTeacher[scope.row.teacher_id] &&
+                concatTeacher[scope.row.teacher_id].phone
+            }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column align="center" label="所在部门">
+          <template slot-scope="scope">
+            <span v-if="concatTeacher[scope.row.teacher_id]">
+              {{
+                concatTeacher[scope.row.teacher_id] &&
+                  concatTeacher[scope.row.teacher_id].pteamname
+              }}</span
+            ><br />
             {{
               concatTeacher[scope.row.teacher_id] &&
-                concatTeacher[scope.row.teacher_id].pteamname
-            }}</span
-          ><br />
-          {{
-            concatTeacher[scope.row.teacher_id] &&
-              concatTeacher[scope.row.teacher_id].teamname
-          }}
-          <!-- <span else>--</span> -->
-        </template>
-      </el-table-column>
-      <!-- <el-table-column align="center" label="操作">
+                concatTeacher[scope.row.teacher_id].teamname
+            }}
+            <!-- <span else>--</span> -->
+          </template>
+        </el-table-column>
+        <!-- <el-table-column align="center" label="操作">
         <template>
           <span class="operatingOne public" @click="showExpress = true"
             >详情</span
@@ -105,33 +106,38 @@
           >
         </template>
       </el-table-column> -->
-    </el-table>
-    <!-- 分页 -->
-    <m-pagination
-      :current-page="currentPage"
-      :page-count="totalPages"
-      :total="+table.totalElements"
-      open="calc(100vw - 170px - 24px)"
-      close="calc(100vw - 50px - 24px)"
-    ></m-pagination>
-    <el-dialog title="编辑信息" :visible.sync="showEditWeChat" width="45%">
-      <editWeChat
-        v-if="showEditWeChat"
-        @editWeChat="editWeChat"
-        :weixinId="weixinId"
-      />
-    </el-dialog>
-    <el-dialog title="关联老师" :visible.sync="showRelationTeacher" width="35%">
-      <showRelationTeacher
-        v-if="showRelationTeacher"
-        @relationTeacher="relationTeacher"
-        :weixinId="weixinId"
-      />
-    </el-dialog>
-    <el-dialog title="新增微信" :visible.sync="showNewWeChat" width="45%">
-      <addWeChat v-if="showNewWeChat" @addWeChat="addWeChat" />
-    </el-dialog>
-  </div>
+      </el-table>
+      <!-- 分页 -->
+      <m-pagination
+        :current-page="currentPage"
+        :page-count="totalPages"
+        :total="+table.totalElements"
+        open="calc(100vw - 170px - 30px)"
+        close="calc(100vw - 50px - 30px)"
+      ></m-pagination>
+      <el-dialog title="编辑信息" :visible.sync="showEditWeChat" width="45%">
+        <editWeChat
+          v-if="showEditWeChat"
+          @editWeChat="editWeChat"
+          :weixinId="weixinId"
+        />
+      </el-dialog>
+      <el-dialog
+        title="关联老师"
+        :visible.sync="showRelationTeacher"
+        width="35%"
+      >
+        <showRelationTeacher
+          v-if="showRelationTeacher"
+          @relationTeacher="relationTeacher"
+          :weixinId="weixinId"
+        />
+      </el-dialog>
+      <el-dialog title="新增微信" :visible.sync="showNewWeChat" width="45%">
+        <addWeChat v-if="showNewWeChat" @addWeChat="addWeChat" />
+      </el-dialog>
+    </el-scrollbar>
+  </el-row>
 </template>
 
 <script>
@@ -356,13 +362,9 @@ export default {
 
 <style scoped lang="scss">
 .weixin {
-  width: 98%;
-  margin: 0px auto;
-  .el-button {
-    position: relative;
-    top: -60px;
-    left: 670px;
-  }
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
   .el-card {
     padding-top: 14px;
     padding-bottom: 14px;
@@ -400,5 +402,13 @@ export default {
   .operatingThree {
     margin-left: 10px;
   }
+}
+</style>
+<style lang="scss">
+.weixin .scrollbar-wrapper {
+  overflow-x: hidden;
+}
+.weixin .el-scrollbar {
+  flex: 1;
 }
 </style>
