@@ -96,24 +96,14 @@
             <!-- <span else>--</span> -->
           </template>
         </el-table-column>
-        <!-- <el-table-column align="center" label="操作">
-        <template>
-          <span class="operatingOne public" @click="showExpress = true"
-            >详情</span
-          >
-          <span class="operatingThree public" @click="showExpress = true"
-            >关联老师</span
-          >
-        </template>
-      </el-table-column> -->
       </el-table>
       <!-- 分页 -->
       <m-pagination
         :current-page="currentPage"
         :page-count="totalPages"
         :total="+table.totalElements"
-        open="calc(100vw - 170px - 30px)"
-        close="calc(100vw - 50px - 30px)"
+        open="calc(100vw - 170px - 26px)"
+        close="calc(100vw - 50px - 26px)"
       ></m-pagination>
       <el-dialog title="编辑信息" :visible.sync="showEditWeChat" width="45%">
         <editWeChat
