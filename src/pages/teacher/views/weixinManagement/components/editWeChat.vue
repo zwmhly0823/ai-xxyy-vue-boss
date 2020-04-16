@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-04-14 15:15:31
  * @LastEditors: panjian
- * @LastEditTime: 2020-04-15 22:37:21
+ * @LastEditTime: 2020-04-16 13:43:17
  -->
 <template>
   <div>
@@ -140,6 +140,7 @@ export default {
         // 选择老师的ID
         teacherId: ''
       },
+      oldTeacherId: '',
       teacher_ids: '',
       TeacherListvalue: '',
       rules: {
@@ -185,6 +186,7 @@ export default {
       const teacherIds = `{"id": "${this.teacher_ids}"}`
       this.$http.Teacher.getTeacher(teacherIds).then((res) => {
         this.ruleForm.teacherId = res.data.Teacher.realname
+        this.oldTeacherId = res.data.Teacher.id
         this.ruleForm.associatedTeacher = res.data.Teacher.department_id
       })
     },
@@ -241,13 +243,22 @@ export default {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           const params = {
-            teacherId: this.ruleForm.teacherId ? this.ruleForm.teacherId : '',
+            teacherId: '',
             weixinId: this.weixinId ? this.weixinId : '',
             weixinNo: this.ruleForm.wechatNo,
             weixinHeadUrl: this.ruleForm.imageUrl,
             weixinQrCode: this.ruleForm.QEcodeUrl,
             isEffective: +this.ruleForm.resource
           }
+          if (isNaN(this.ruleForm.teacherId)) {
+            params.teacherId = this.oldTeacherId
+          } else {
+            params.teacherId = this.ruleForm.teacherId
+              ? this.ruleForm.teacherId
+              : ''
+          }
+          console.log(params, 'paramsparamsparams')
+
           this.$http.Teacher.relation(params).then((res) => {
             this.$message({
               message: '添加成功',
