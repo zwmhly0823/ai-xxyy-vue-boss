@@ -5,7 +5,7 @@
       wxSerch="wx"
       wxInput="inp"
       wxStatus="st"
-      wxConcatTeacher="ts"
+      wxConcatTeacher="wechatJud"
     >
     </m-search>
     <el-button
@@ -193,7 +193,9 @@ export default {
       // 输入框
       restaurants: [],
       state: '',
-      timeout: null
+      timeout: null,
+      // 搜索
+      querSearch: ''
     }
   },
 
@@ -224,11 +226,23 @@ export default {
       }
     },
     searchHandler(res) {
-      console.log(res)
+      // 是否关联老师
+      if (res.length > 0) {
+        res.forEach((res) => {
+          if (res.term && res.term.wechatJud === '0') {
+            this.querSearch = { teacher_id: { lte: 0 } }
+          } else if (res.term && res.term.wechatJud === '1') {
+            this.querSearch = { teacher_id: { gt: 0 } }
+          }
+        })
+      } else {
+        this.querSearch = ''
+      }
+      this.weChatPageList()
     },
     // 微信管理列表
     weChatPageList() {
-      this.$http.Weixin.getWeChatTeacherPage()
+      this.$http.Weixin.getWeChatTeacherPage(JSON.stringify(this.querSearch))
         .catch((err) => console.log(err))
         .then((res) => {
           console.log(res, 'res+_+_+_+_+_+_+')

@@ -11,10 +11,10 @@ import axios from '../axiosConfig'
 
 export default {
   // 微信管理列表（微信号）
-  getWeChatTeacherPage() {
+  getWeChatTeacherPage(params) {
     return axios.get(`/graphql/v1/boss`, {
       query: `{
-        WeChatTeacherPage {
+        WeChatTeacherPage(query:${JSON.stringify(params)}) {
           totalElements
           totalPages
           content {

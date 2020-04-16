@@ -104,17 +104,17 @@ export default {
         }
       ],
       concatTeacher: [
-        {
-          name: '全部',
-          id: '0'
-        },
+        // {
+        //   name: '全部',
+        //   id: '0'
+        // },
         {
           name: '是',
           id: '1'
         },
         {
           name: '否',
-          id: '2'
+          id: '0'
         }
       ],
       weixinNumberData: null,
