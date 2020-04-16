@@ -163,17 +163,14 @@ export default {
   methods: {
     // 输入微信号
     async weixinSearch(queryString, cb) {
-      // const reg = /^[a-zA-Z][a-zA-Z0-9_-]{5,19}$/
-      // const reg = /^[0-9]*$/
-      // if (!+this.onlyWeixin) {
-      //   if (!reg.test(queryString)) {
-      //     this.weixinInp = ''
-      //     return
-      //   }
-      // }
+      const reg = /^\w+$/
+      if (!+this.onlyWeixin) {
+        if (!reg.test(queryString)) {
+          this.weixinInp = ''
+          return
+        }
+      }
       const list = await this.weixinCreateFilter(queryString)
-
-      console.log('list --- ', list)
       cb(list)
     },
     // 调用微信号搜索接口
@@ -182,7 +179,6 @@ export default {
         'wechat_no.keyword',
         queryString
       ).then((res) => {
-        console.log(res, '微信号搜索数据')
         this.weixinSelectData = res.data.WeChatTeacherListEx || []
         return this.weixinSelectData
       })
@@ -207,7 +203,6 @@ export default {
         queryString
       ).then((res) => {
         this.phoneSelectData = res.data.TeacherListEx || []
-        console.log('phoneSelectData', this.phoneSelectData)
         return this.phoneSelectData
       })
     },

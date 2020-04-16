@@ -131,7 +131,9 @@
           </el-button>
         </el-popover>
       </el-form-item> -->
-      <el-form-item v-if="wxSerch || phoneSerch || wxStatus || wxConcatTeacher">
+      <el-form-item
+        v-if="wxSerch || wxTeacherPhone || wxStatus || wxConcatTeacher"
+      >
         <wx-list
           :wxSerch="wxSerch"
           :wxTeacherPhone="wxTeacherPhone"

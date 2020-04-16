@@ -107,13 +107,20 @@
       </el-table-column> -->
     </el-table>
     <!-- 分页 -->
-    <m-pagination
+    <!-- <m-pagination
       :current-page="currentPage"
-      :page-count="totalPages"
       :total="+table.totalElements"
+      @current-change="handleCurrentChange"
       open="calc(100vw - 170px - 24px)"
       close="calc(100vw - 50px - 24px)"
-    ></m-pagination>
+    ></m-pagination> -->
+    <m-pagination
+      @current-change="handleCurrentChange"
+      :current-page="+currentPage"
+      :total="+totalElements"
+      open="calc(100vw - 170px - 24px)"
+      close="calc(100vw - 50px - 24px)"
+    />
     <el-dialog title="编辑信息" :visible.sync="showEditWeChat" width="45%">
       <editWeChat
         v-if="showEditWeChat"
@@ -161,6 +168,7 @@ export default {
       showNewWeChat: false,
       showExpress: false,
       // 总页数
+      totalElements: null,
       totalPages: 1,
       // 当前页数
       currentPage: 1,
@@ -168,11 +176,7 @@ export default {
       table: {
         tabs: 0,
         // 列表数据
-        tableData: [],
-        // 总条数
-        totalElements: null,
-        // 当前页
-        currentPage: 1
+        tableData: []
       },
       // 关联老师
       concatTeacher: {},
@@ -226,7 +230,9 @@ export default {
       }
     },
     searchHandler(res) {
-      console.log('res', res)
+      if (res.length === 0) {
+        this.weChatPageList()
+      }
       if (res.length > 0) {
         const wildcard = {}
         res.forEach((item) => {
@@ -237,21 +243,20 @@ export default {
       } else {
         this.searchQuery = ''
       }
-      // if (this.searchQuery.wechat_no || this.searchQuery.teacher_id) {
-      this.weChatPageList(this.searchQuery)
-      // }
+      if (this.searchQuery.wechat_no || this.searchQuery.teacher_id) {
+        this.weChatPageList(this.searchQuery)
+      }
     },
     // 微信管理列表
     weChatPageList(params) {
       if (!params) {
         params = ''
       }
-      console.log('params', params)
-      this.$http.Weixin.getWeChatTeacherPage(params)
+      this.$http.Weixin.getWeChatTeacherPage(params, this.currentPage)
         .catch((err) => console.log(err))
         .then((res) => {
-          console.log(res, 'res+_+_+_+_+_+_+')
-          this.table.totalElements = +res.data.WeChatTeacherPage.totalElements
+          this.totalElements = +res.data.WeChatTeacherPage.totalElements
+          this.currentPage = +res.data.WeChatTeacherPage.number
           this.table.tableData = res.data.WeChatTeacherPage.content
           const arrayTId = []
           this.table.tableData.forEach((item) => {
@@ -268,7 +273,6 @@ export default {
                 })
                 this.openTeacher = jsondata
               }
-              console.log('openTeacher', this.openTeacher)
             })
           // 微信管理列表所在部门
           this.$http.Weixin.getTeacherList(arrayTId)
@@ -318,7 +322,7 @@ export default {
     // 分页
     handleCurrentChange(val) {
       this.currentPage = val
-      this.$emit('onCurrentPage', val)
+      this.weChatPageList()
     },
     // 获取表格一行信息
     onClick(row, column, event) {
@@ -337,7 +341,6 @@ export default {
     editWeChat(data) {
       if (data === 1) {
         this.showEditWeChat = false
-        this.weChatPageList()
       } else if (data === 2) {
         this.showEditWeChat = false
       }
@@ -345,7 +348,6 @@ export default {
     relationTeacher(data) {
       if (data === 1) {
         this.showRelationTeacher = false
-        this.weChatPageList()
       } else if (data === 2) {
         this.showRelationTeacher = false
       }
@@ -356,7 +358,7 @@ export default {
 
 <style scoped lang="scss">
 .weixin {
-  width: 98%;
+  width: 98.5%;
   margin: 0px auto;
   .el-button {
     position: relative;
