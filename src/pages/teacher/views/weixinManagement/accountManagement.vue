@@ -5,7 +5,6 @@
         @search="searchHandler"
         wxSerch="wechat_no"
         wxTeacherPhone="teacher_id"
-        wxStatus="is_effective"
         wxConcatTeacher="ts"
       >
         <el-button

@@ -42,7 +42,7 @@
     </el-autocomplete>
 
     <!-- 使用状态 -->
-    <el-select
+    <!-- <el-select
       v-model="statueData"
       size="mini"
       clearable
@@ -58,7 +58,7 @@
         :value="item.id"
       >
       </el-option>
-    </el-select>
+    </el-select> -->
     <!-- 是否关联老师 -->
     <el-select
       v-model="concatTeacherData"
