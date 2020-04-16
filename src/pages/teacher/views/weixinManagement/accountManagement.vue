@@ -111,7 +111,6 @@
       :current-page="currentPage"
       :page-count="totalPages"
       :total="+table.totalElements"
-      show-pager
       open="calc(100vw - 170px - 24px)"
       close="calc(100vw - 50px - 24px)"
     ></m-pagination>
@@ -330,7 +329,6 @@ export default {
     addWeChat(data) {
       if (data === 1) {
         this.showNewWeChat = false
-        this.weChatPageList()
       } else if (data === 2) {
         this.showNewWeChat = false
       }
