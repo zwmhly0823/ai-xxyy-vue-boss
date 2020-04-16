@@ -4,7 +4,7 @@
  * @Author: Yangjiyong
  * @Date: 2020-04-07 13:52:26
  * @LastEditors: panjian
- * @LastEditTime: 2020-04-15 21:50:30
+ * @LastEditTime: 2020-04-16 20:56:34
  */
 import axios from '../axiosConfig'
 
@@ -158,7 +158,7 @@ export default {
   TeacherList(query = '') {
     return axios.post('/graphql/v1/teacher', {
       query: `{
-        TeacherList(query:${JSON.stringify(query)}) {
+        TeacherList(query:${JSON.stringify(query)},size:100) {
           realname
           id
         }

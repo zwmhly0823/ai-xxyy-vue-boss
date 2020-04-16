@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-04-14 15:15:31
  * @LastEditors: panjian
- * @LastEditTime: 2020-04-15 21:28:32
+ * @LastEditTime: 2020-04-16 20:59:24
  -->
 <template>
   <div>
@@ -60,6 +60,7 @@
       <div class="associatedTeacherCss">
         <el-form-item prop="associatedTeacher">
           <el-cascader
+            style="width:300px;"
             @change="handleChange"
             v-model="ruleForm.associatedTeacher"
             placeholder="全部部门"
@@ -201,7 +202,9 @@ export default {
               })
             })
             this.regionOptionsList = _data.filter((item) => {
-              return item.label.toLowerCase().indexOf(query.toLowerCase()) > -1
+              return query
+                ? item.label.toLowerCase().indexOf(query.toLowerCase()) > -1
+                : item
             })
           })
         }, 200)

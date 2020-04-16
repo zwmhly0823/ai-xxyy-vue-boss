@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-04-14 15:15:31
  * @LastEditors: panjian
- * @LastEditTime: 2020-04-16 13:43:17
+ * @LastEditTime: 2020-04-16 20:59:33
  -->
 <template>
   <div>
@@ -230,7 +230,9 @@ export default {
               })
             })
             this.regionOptionsList = _data.filter((item) => {
-              return item.label.toLowerCase().indexOf(query.toLowerCase()) > -1
+              return query
+                ? item.label.toLowerCase().indexOf(query.toLowerCase()) > -1
+                : item
             })
           })
         }, 200)
