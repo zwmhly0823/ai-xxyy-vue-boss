@@ -138,5 +138,6 @@ export default {
 }
 .el-form-item__content .el-input-group {
   vertical-align: middle !important;
+  position: absolute;
 }
 </style>

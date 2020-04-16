@@ -297,6 +297,7 @@ export default {
   methods: {
     // 搜索
     handleSearch(data) {
+      console.log(data, 'data')
       if (data.length > 0) {
         const term = {}
         data.forEach((res) => {
@@ -310,6 +311,7 @@ export default {
         this.searchQuery = term
       } else {
         this.searchQuery = ''
+        this.query = {}
       }
       this.getData()
     },

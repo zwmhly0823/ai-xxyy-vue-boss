@@ -1,15 +1,23 @@
 <template>
   <div class="weixin">
-    <m-search @search="searchHandler" wxShow="wx"> </m-search>
+    <m-search
+      @search="searchHandler"
+      wxSerch="wx"
+      wxInput="inp"
+      wxStatus="st"
+      wxConcatTeacher="ts"
+    >
+    </m-search>
     <el-button
       type="primary"
       @click="showNewWeChat = true"
       size="mini"
       style="height:30xp;"
-      >主要按钮</el-button
+      >新增微信</el-button
     >
     <!-- 选择框 -->
     <el-table
+      style="padding-bottom:70px;"
       :data="table.tableData"
       @cell-mouse-enter="onClick"
       :cell-style="cellStyle"
@@ -18,6 +26,20 @@
       <el-table-column label="微信号">
         <template slot-scope="scope">
           <div class="weixin-box">
+            <el-dropdown>
+              <div>
+                <img src="../../../../assets/images/point.png" alt="" />
+              </div>
+              <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item @click.native="operation(scope.row, '1')">
+                  编辑
+                </el-dropdown-item>
+                <el-dropdown-item @click.native="operation(scope.row, '2')">
+                  关联老师
+                </el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
+
             <img class="weixinHead" :src="scope.row.head_img_url" alt="" />
             <span class="weixinName">{{ scope.row.wechat_no }}</span>
             <!-- 鼠标指向显示二维码 -->
@@ -27,12 +49,17 @@
                 style="width:150px;height:150px;"
                 alt=""
               />
-              <span class="code" slot="reference">二维码</span>
+              <span
+                class="code"
+                slot="reference"
+                v-if="scope.row.wechat_qr_code"
+                >二维码</span
+              >
             </el-popover>
           </div>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="使用状态" width="180">
+      <el-table-column align="left" label="使用状态" width="180">
         <template slot-scope="scope">
           <span>{{ openTeacher[scope.row.teacher_id] | filterStatus }}</span>
         </template>
@@ -45,44 +72,39 @@
           }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="老师手机号" width="180">
+      <el-table-column align="center" label="老师手机号">
         <template slot-scope="scope">
           <span v-if="concatTeacher[scope.row.teacher_id]">{{
             concatTeacher[scope.row.teacher_id] &&
               concatTeacher[scope.row.teacher_id].phone
           }}</span>
-          <!-- <span else>--</span> -->
         </template>
       </el-table-column>
       <el-table-column align="center" label="所在部门">
         <template slot-scope="scope">
-          <span v-if="concatTeacher[scope.row.teacher_id]"
-            >{{
-              concatTeacher[scope.row.teacher_id] &&
-                concatTeacher[scope.row.teacher_id].teamname
-            }}/{{
+          <span v-if="concatTeacher[scope.row.teacher_id]">
+            {{
               concatTeacher[scope.row.teacher_id] &&
                 concatTeacher[scope.row.teacher_id].pteamname
             }}</span
-          >
+          ><br />
+          {{
+            concatTeacher[scope.row.teacher_id] &&
+              concatTeacher[scope.row.teacher_id].teamname
+          }}
           <!-- <span else>--</span> -->
         </template>
       </el-table-column>
-      <el-table-column align="center" label="操作">
+      <!-- <el-table-column align="center" label="操作">
         <template>
           <span class="operatingOne public" @click="showExpress = true"
             >详情</span
           >
-          <span class="operatingTwo public" @click="showEditWeChat = true"
-            >编辑</span
-          >
-          <span
-            class="operatingThree public"
-            @click="showRelationTeacher = true"
+          <span class="operatingThree public" @click="showExpress = true"
             >关联老师</span
           >
         </template>
-      </el-table-column>
+      </el-table-column> -->
     </el-table>
     <!-- 分页 -->
     <m-pagination
@@ -93,29 +115,22 @@
       open="calc(100vw - 170px - 24px)"
       close="calc(100vw - 50px - 24px)"
     ></m-pagination>
-    <el-dialog
-      :destroy-on-close="true"
-      title="编辑信息"
-      :visible.sync="showEditWeChat"
-      width="45%"
-    >
-      <showRelationTeacher :weixinId="weixinId" />
+    <el-dialog title="编辑信息" :visible.sync="showEditWeChat" width="45%">
+      <editWeChat
+        v-if="showEditWeChat"
+        @editWeChat="editWeChat"
+        :weixinId="weixinId"
+      />
     </el-dialog>
-    <el-dialog
-      :destroy-on-close="true"
-      title="关联老师"
-      :visible.sync="showRelationTeacher"
-      width="35%"
-    >
-      <showRelationTeacher :weixinId="weixinId" />
+    <el-dialog title="关联老师" :visible.sync="showRelationTeacher" width="35%">
+      <showRelationTeacher
+        v-if="showRelationTeacher"
+        @relationTeacher="relationTeacher"
+        :weixinId="weixinId"
+      />
     </el-dialog>
-    <el-dialog
-      :destroy-on-close="true"
-      title="新增微信"
-      :visible.sync="showNewWeChat"
-      width="45%"
-    >
-      <addWeChat @addWeChat="addWeChat" />
+    <el-dialog title="新增微信" :visible.sync="showNewWeChat" width="45%">
+      <addWeChat v-if="showNewWeChat" @addWeChat="addWeChat" />
     </el-dialog>
   </div>
 </template>
@@ -125,12 +140,14 @@ import MPagination from '@/components/MPagination/index.vue'
 import MSearch from '@/components/MSearch/index.vue'
 import addWeChat from './components/addWeChat'
 import showRelationTeacher from './components/showRelationTeacher'
+import editWeChat from './components/editWeChat'
 export default {
   components: {
     MPagination,
     MSearch,
     addWeChat,
-    showRelationTeacher
+    showRelationTeacher,
+    editWeChat
   },
 
   data() {
@@ -179,6 +196,7 @@ export default {
       timeout: null
     }
   },
+
   mounted() {
     this.weChatPageList()
   },
@@ -189,9 +207,22 @@ export default {
       } else {
         return '未启用'
       }
+    },
+    weixinFilterStatus(res) {
+      if (res === '') {
+        return ''
+      }
     }
   },
   methods: {
+    // 点击操作按钮
+    operation(val, index) {
+      if (index === '1') {
+        this.showEditWeChat = true
+      } else if (index === '2') {
+        this.showRelationTeacher = true
+      }
+    },
     searchHandler(res) {
       console.log(res)
     },
@@ -200,6 +231,7 @@ export default {
       this.$http.Weixin.getWeChatTeacherPage()
         .catch((err) => console.log(err))
         .then((res) => {
+          console.log(res, 'res+_+_+_+_+_+_+')
           this.table.totalElements = +res.data.WeChatTeacherPage.totalElements
           this.table.tableData = res.data.WeChatTeacherPage.content
           const arrayTId = []
@@ -251,13 +283,16 @@ export default {
     // 单元格回调样式
     cellStyle({ row, column, rowIndex, columnIndex }) {
       if (columnIndex === 0) {
-        return 'padding-left:25px;'
+        return 'padding-left:55px;'
+      }
+      if (columnIndex === 3) {
+        return 'padding-left:10px;'
       }
     },
     // 表头回调样式
     headerCss({ row, column, rowIndex, columnIndex }) {
       if (columnIndex === 0) {
-        return 'font-size:12px;color:#666;font-weight:normal;padding-left:50px;'
+        return 'font-size:12px;color:#666;font-weight:normal;padding-left:100px;'
       }
       return 'font-size:12px;color:#666;font-weight:normal;'
     },
@@ -275,6 +310,23 @@ export default {
     addWeChat(data) {
       if (data === 1) {
         this.showNewWeChat = false
+      } else if (data === 2) {
+        this.showNewWeChat = false
+      }
+    },
+    // 修改微信信息关闭弹框
+    editWeChat(data) {
+      if (data === 1) {
+        this.showEditWeChat = false
+      } else if (data === 2) {
+        this.showEditWeChat = false
+      }
+    },
+    relationTeacher(data) {
+      if (data === 1) {
+        this.showRelationTeacher = false
+      } else if (data === 2) {
+        this.showRelationTeacher = false
       }
     }
   }
@@ -285,10 +337,15 @@ export default {
 .weixin {
   width: 98%;
   margin: 0px auto;
-  .search {
-    width: 100%;
-    height: 80px;
-    line-height: 80px;
+  .el-button {
+    position: relative;
+    top: -60px;
+    left: 670px;
+  }
+  .el-card {
+    padding-top: 14px;
+    padding-bottom: 14px;
+    box-sizing: border-box;
   }
   .weixin-box {
     line-height: 30px;
@@ -298,6 +355,7 @@ export default {
       width: 30px;
       height: 30px;
       border-radius: 50%;
+      margin-left: 10px;
     }
     span {
       display: inline-block;
@@ -308,7 +366,6 @@ export default {
       cursor: pointer;
     }
   }
-
   .weixinName {
     margin-left: 10px;
   }
