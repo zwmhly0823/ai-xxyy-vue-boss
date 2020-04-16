@@ -131,14 +131,14 @@
           </el-button>
         </el-popover>
       </el-form-item> -->
-      <el-form-item v-if="wxSerch || wxInput || wxStatus || wxConcatTeacher">
+      <el-form-item v-if="wxSerch || phoneSerch || wxStatus || wxConcatTeacher">
         <wx-list
           :wxSerch="wxSerch"
-          :wxInput="wxInput"
+          :wxTeacherPhone="wxTeacherPhone"
           :wxStatus="wxStatus"
           :wxConcatTeacher="wxConcatTeacher"
           @getWxSerch="getWxSerch"
-          @getWxInput="getWxInput"
+          @getPhone="getPhoneData"
           @getWxStatus="getWxStatus"
           @getWxConcatTeacher="getWxConcatTeacher"
         />
@@ -301,18 +301,22 @@ export default {
       type: String,
       default: '' // express_nu
     },
+    // 微信号搜索
     wxSerch: {
       type: String,
       default: '' // wxSerch
     },
-    wxInput: {
+    // 手机号搜索
+    wxTeacherPhone: {
       type: String,
       default: '' // wxInput
     },
+    // 使用状态搜索
     wxStatus: {
       type: String,
       default: '' // wxStatus
     },
+    // 是否关联老师搜索
     wxConcatTeacher: {
       type: String,
       default: '' // wxConcatTeacher
@@ -434,10 +438,10 @@ export default {
       this.setSeachParmas(res, [this.expressNo || 'express_nu'], 'wildcard')
     },
     getWxSerch(res) {
-      this.setSeachParmas(res, [this.wxSerch])
+      this.setSeachParmas(res, [this.wxSerch], 'wildcard')
     },
-    getWxInput(res) {
-      this.setSeachParmas(res, [this.wxInput], 'wildcard')
+    getPhoneData(res) {
+      this.setSeachParmas(res, [this.wxTeacherPhone], 'wildcard')
     },
     getWxStatus(res) {
       this.setSeachParmas(res, [this.wxStatus])

@@ -2,9 +2,9 @@
   <div class="weixin">
     <m-search
       @search="searchHandler"
-      wxSerch="wx"
-      wxInput="inp"
-      wxStatus="st"
+      wxSerch="wechat_no"
+      wxTeacherPhone="teacher_id"
+      wxStatus="is_effective"
       wxConcatTeacher="ts"
     >
     </m-search>
@@ -193,7 +193,8 @@ export default {
       // 输入框
       restaurants: [],
       state: '',
-      timeout: null
+      timeout: null,
+      searchQuery: null
     }
   },
 
@@ -224,11 +225,28 @@ export default {
       }
     },
     searchHandler(res) {
-      console.log(res)
+      console.log('res', res)
+      if (res.length > 0) {
+        const wildcard = {}
+        res.forEach((item) => {
+          Object.assign(wildcard, item.wildcard)
+        })
+        // this.query = JSON.stringify(term)
+        this.searchQuery = wildcard
+      } else {
+        this.searchQuery = ''
+      }
+      // if (this.searchQuery.wechat_no || this.searchQuery.teacher_id) {
+      this.weChatPageList(this.searchQuery)
+      // }
     },
     // 微信管理列表
-    weChatPageList() {
-      this.$http.Weixin.getWeChatTeacherPage()
+    weChatPageList(params) {
+      if (!params) {
+        params = ''
+      }
+      console.log('params', params)
+      this.$http.Weixin.getWeChatTeacherPage(params)
         .catch((err) => console.log(err))
         .then((res) => {
           console.log(res, 'res+_+_+_+_+_+_+')
@@ -310,6 +328,7 @@ export default {
     addWeChat(data) {
       if (data === 1) {
         this.showNewWeChat = false
+        this.weChatPageList()
       } else if (data === 2) {
         this.showNewWeChat = false
       }
@@ -318,6 +337,7 @@ export default {
     editWeChat(data) {
       if (data === 1) {
         this.showEditWeChat = false
+        this.weChatPageList()
       } else if (data === 2) {
         this.showEditWeChat = false
       }
@@ -325,6 +345,7 @@ export default {
     relationTeacher(data) {
       if (data === 1) {
         this.showRelationTeacher = false
+        this.weChatPageList()
       } else if (data === 2) {
         this.showRelationTeacher = false
       }
