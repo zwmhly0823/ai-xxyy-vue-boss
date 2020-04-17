@@ -4,11 +4,12 @@
  * @Author: zhubaodong
  * @Date: 2020-03-24 18:50:54
  * @LastEditors: zhubaodong
- * @LastEditTime: 2020-04-17 19:04:52
+ * @LastEditTime: 2020-04-17 19:14:14
  -->
 <template>
   <div class="search-item small threeSelect">
     <el-cascader
+      placeholder="订单来源"
       size="mini"
       @change="onSelect"
       :options="showDatas"
