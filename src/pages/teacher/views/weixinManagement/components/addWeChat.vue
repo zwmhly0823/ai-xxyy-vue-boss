@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-04-14 15:15:31
  * @LastEditors: panjian
- * @LastEditTime: 2020-04-16 20:59:24
+ * @LastEditTime: 2020-04-17 16:22:36
  -->
 <template>
   <div>
@@ -116,6 +116,20 @@
 import uploadFile from '@/utils/upload'
 export default {
   data() {
+    var wechatNoId = (rule, value, callback) => {
+      if (!value) {
+        return callback(new Error('微信号不能为空'))
+      } else {
+        var regEn = /[`~!@#$%^&*()_+<>?:"{},.\\/;'[\]]/im
+        var regCn = /[·！#￥（——）：；“”‘、，|《。》？、【】[\]]/im
+        var regWn = /^[\u4e00-\u9fa5]+$/
+        if (regEn.test(value) || regCn.test(value) || regWn.test(value)) {
+          return callback(new Error('微信号不能包含文字、特殊字符'))
+        } else {
+          callback()
+        }
+      }
+    }
     return {
       regionOptionsList: [],
       loading: false,
@@ -135,9 +149,7 @@ export default {
       },
       TeacherListvalue: '',
       rules: {
-        wechatNo: [
-          { required: true, message: '请输入微信名称', trigger: 'blur' }
-        ],
+        wechatNo: [{ validator: wechatNoId, trigger: 'blur' }],
         imageUrl: [
           { required: true, message: '请上传微信头像', trigger: 'blur' }
         ],
