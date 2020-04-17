@@ -5,13 +5,12 @@
  * @Date: 2020-03-14 15:11:17
  * @LastEditors: Shentong
  * :max-height="maxHeight"
- * @LastEditTime: 2020-04-14 16:52:11
+ * @LastEditTime: 2020-04-17 17:41:39
  -->
 <template>
   <div id="tableList">
     <el-table
       :data="dataList"
-      stripe
       style="width: 100%"
       :header-cell-style="{
         fontSize: '12px',
@@ -21,7 +20,6 @@
       v-loading="loading"
       element-loading-text="玩命加载中~"
       element-loading-spinner="el-icon-loading"
-      element-loading-background="rgba(0, 0, 0, 0.7)"
       @sort-change="sortChange"
       id="outTable"
     >

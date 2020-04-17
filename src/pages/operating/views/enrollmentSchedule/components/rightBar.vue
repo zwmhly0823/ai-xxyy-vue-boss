@@ -4,13 +4,18 @@
  * @Author: shentong
  * @Date: 2020-04-02 16:08:02
  * @LastEditors: Shentong
- * @LastEditTime: 2020-04-14 18:50:25
+ * @LastEditTime: 2020-04-17 22:02:12
  -->
 <template>
   <div>
     <div class="tabs-operate">
-      <div v-for="(tab, index) in tabs" :key="index">
-        <span :class="{ active: index == tabIndex }">{{ tab }}</span>
+      <div
+        v-for="(tab, index) in tabs"
+        :key="index"
+        :class="{ active: index == tabIndex }"
+        @click="tabs_click(index)"
+      >
+        <span>{{ tab }}</span>
       </div>
     </div>
     <div class="sear-container">
@@ -19,7 +24,7 @@
         type="primary"
         slot="searchItems"
         size="mini"
-        @click="addSchedule"
+        @click="addEditSchedule(0)"
         >新增招生排期</el-button
       >
     </div>
@@ -50,8 +55,10 @@
         <el-table-column label="操作" align="center">
           <template slot-scope="">
             <div class="editStyle">
-              <span style="margin-right:20px">编辑</span>
-              <span>详细</span>
+              <span style="margin-right:20px" @click="addEditSchedule(1)"
+                >编辑</span
+              >
+              <span @click="go_detail">详细</span>
             </div>
           </template>
         </el-table-column>
@@ -127,18 +134,23 @@ export default {
     }
   },
   activated() {
-    setTimeout(() => {
-      console.log(this.teacherID)
-      this.getData()
-      if (this.teacherID) this.$refs.detailsHidden.createdUrl(this.teacherID)
-    }, 500)
+    this.getData()
   },
   methods: {
     /** adolf-start */
-    addSchedule(val) {
+    tabs_click(index) {
+      this.tabIndex = index
+    },
+    // 新增、编辑
+    addEditSchedule(row) {
+      const { period = '13' } = row // TODO:
+
+      this.$router.push({ path: `/addSchedule/${period}/${this.tabIndex}` })
+    },
+    go_detail(row) {
+      const { period = 0 } = row
       this.$router.push({
-        path: '/addSchedule',
-        query: { teacherId: val.id }
+        path: `/scheduleDetail/${period}`
       })
     },
     /**
@@ -184,25 +196,6 @@ export default {
     // 表头操作
     headerOperation(val) {
       console.log(val, '表头编辑')
-    },
-    // 点击操作按钮
-    operation(val, index) {
-      if (index === '1') {
-        this.$router.push({
-          path: '/newTeacher',
-          query: { index: index, teacherId: val.id }
-        })
-      } else if (index === '2') {
-        this.$refs.detailsHidden.drawer = true
-        this.teacherID = val.id
-        this.subDepartment = val.department
-      } else if (index === '3') {
-        this.$refs.associated.centerDialogVisible = true
-      }
-    },
-    // 新建老师
-    newTeacher(val) {
-      this.$router.push({ path: '/newTeacher' })
     }
   }
 }
@@ -217,9 +210,12 @@ export default {
     display: flex;
     justify-content: center;
     align-items: center;
-    span.active {
-      color: #409eff;
+    cursor: pointer;
+    &.active {
       background: #fff;
+      span {
+        color: #409eff;
+      }
     }
   }
 }

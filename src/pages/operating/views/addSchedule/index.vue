@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-14 18:28:44
  * @LastEditors: Shentong
- * @LastEditTime: 2020-04-16 12:18:35
+ * @LastEditTime: 2020-04-17 22:16:00
  -->
 <template>
   <div class="app-main height add-schedule-container">
@@ -24,18 +24,18 @@
           <first-step
             v-show="stepStatus == 1"
             :stepStatus="stepStatus"
-            @listenStepStatus="onStepStatus"
+            @listenStepStatus="oneStepNext"
           ></first-step>
 
           <!-- 第二步 -->
           <second-step
             v-show="stepStatus == 2"
             :stepStatus="stepStatus"
-            @listenStepStatus="onStepStatus"
+            @listenStepStatus="twoStepNext"
           ></second-step>
           <!-- 第三步 -->
           <third-step
-            v-show="stepStatus == 3"
+            v-if="stepStatus == 3"
             :stepStatus="stepStatus"
             @listenStepStatus="onStepStatus"
           ></third-step>
@@ -48,8 +48,10 @@
               <i class="el-icon-success"></i>
               <p>保存成功</p>
               <div class="succ-operate">
-                <el-button size="small" type="info" plain>继续修改</el-button>
-                <el-button size="small" type="success">返回列表</el-button>
+                <el-button size="small" type="info">继续修改</el-button>
+                <el-button size="small" type="success" @click="backList"
+                  >返回列表</el-button
+                >
               </div>
             </div>
           </div>
@@ -67,7 +69,8 @@ export default {
   props: [],
   data() {
     return {
-      stepStatus: 1
+      stepStatus: 1,
+      teacherSelectInfo: {}
     }
   },
   components: {
@@ -78,6 +81,19 @@ export default {
   computed: {},
   watch: {},
   methods: {
+    // 第一步 点击下一步 监听
+    oneStepNext(val) {
+      console.log('oneStepNext', val)
+      if (val) {
+        this.stepStatus++
+      }
+    },
+    // 第二步 点击下一步 监听
+    twoStepNext(type) {
+      //   this.teacherSelectInfo = val
+      if (type) this.stepStatus++
+      else this.stepStatus--
+    },
     onStepStatus(type) {
       if (type) this.stepStatus++
       else this.stepStatus--
@@ -86,6 +102,9 @@ export default {
     pageChange_handler() {},
     nextStep() {
       this.stepStatus++
+    },
+    backList() {
+      this.$router.push({ path: '/' })
     }
   }
 }

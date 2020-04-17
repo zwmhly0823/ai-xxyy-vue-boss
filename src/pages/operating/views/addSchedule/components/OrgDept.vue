@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-13 16:53:27
  * @LastEditors: Shentong
- * @LastEditTime: 2020-04-16 17:31:02
+ * @LastEditTime: 2020-04-16 20:03:00
  -->
 <template>
   <div class="left-container" @mouseleave="outTools">
@@ -16,32 +16,14 @@
       node-key="id"
       :current-node-key="0"
       :expand-on-click-node="false"
-      :default-expanded-keys="[1]"
+      :default-expanded-keys="['1']"
       highlight-current
       style="color:#2F2E31"
       @node-click="nodeClick"
       @contextmenu.prevent="defaultHandler()"
     >
       <span class="custom-tree-node" slot-scope="{ node, data }">
-        <!-- @mouseover="showTools(data.id)" -->
         <span :title="data.id">{{ data.name }}</span>
-        <!-- （{{ data.id ? data.id : 0 }}） -->
-        <!-- <span
-          class="el-icon-s-tools toolsIcon"
-          slot="reference"
-          @contextmenu.prevent="menuTools"
-          v-if="+toolsCount === +data.id"
-          style="margin-left:10px"
-        >
-          <el-card id="menu">
-            <div>
-              <p>新建下级部门</p>
-              <p>新建平级部门</p>
-              <p>编辑部门</p>
-              <p>停用部门</p>
-            </div>
-          </el-card>
-        </span> -->
       </span>
     </el-tree>
   </div>

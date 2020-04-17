@@ -1,7 +1,7 @@
 /*
  * @Date: 2020-03-13 15:20:21
  * @LastEditors: Shentong
- * @LastEditTime: 2020-04-14 18:46:10
+ * @LastEditTime: 2020-04-17 18:24:53
  * @FilePath: /ai-app-vue-toss/src/pages/studentTeam/router/index.js
  */
 import Vue from 'vue'
@@ -23,19 +23,29 @@ const routes = [
     path: '/enrollmentSchedule',
     name: 'enrollmentSchedule',
     meta: {
-      title: '销售管理',
+      title: '招生排期',
       keepAlive: true
     },
     component: () => import('../views/enrollmentSchedule/index.vue')
   },
+  // 新增、编辑
   {
-    path: '/addSchedule',
+    path: '/addSchedule/:period/:courseType/',
     name: 'addSchedule',
     meta: {
-      title: '销售管理',
+      title: '新建排期',
       keepAlive: false
     },
     component: () => import('../views/addSchedule/index.vue')
+  },
+  {
+    path: '/scheduleDetail/:period',
+    name: 'scheduleDetail',
+    meta: {
+      title: '排期详情',
+      keepAlive: false
+    },
+    component: () => import('../views/scheduleDetail/index.vue')
   }
 ]
 
