@@ -63,7 +63,7 @@
         </el-table-column>
         <el-table-column align="left" label="使用状态" width="180">
           <template slot-scope="scope">
-            <span>{{ openTeacher[scope.row.teacher_id] | filterStatus }}</span>
+            <span>{{ openTeacher[scope.row.id] | filterStatus }}</span>
           </template>
         </el-table-column>
         <el-table-column align="center" label="关联老师" width="180">
@@ -199,7 +199,7 @@ export default {
       if (res === 0) {
         return '启用'
       } else {
-        return '未启用'
+        return '停用'
       }
     },
     weixinFilterStatus(res) {
@@ -218,7 +218,7 @@ export default {
       }
     },
     searchHandler(res) {
-      console.log(res)
+      console.log('列表数据渲染', res)
 
       if (res.length > 0) {
         const wildcard = {}
@@ -244,6 +244,7 @@ export default {
       if (this.querSearch && this.searchQuery) {
         Object.assign(this.searchQuery, this.querSearch)
       }
+      console.log('querSearch', this.searchQuery)
       if (this.searchQuery.wechat_no || this.searchQuery.teacher_id) {
         this.weChatPageList(this.searchQuery)
       }
@@ -268,17 +269,19 @@ export default {
           console.log('####this.currentPage###', this.currentPage)
           this.table.tableData = res.data.WeChatTeacherPage.content
           const arrayTId = []
+          const arrayWId = []
           this.table.tableData.forEach((item) => {
             item.teacher_id && arrayTId.push(item.teacher_id)
+            item.id && arrayWId.push(item.id)
           })
           // 启用
-          this.$http.Weixin.getTeacherWeixinRelationList(arrayTId)
+          this.$http.Weixin.getTeacherWeixinRelationList(arrayWId)
             .catch((err) => console.log(err))
             .then((res) => {
               const jsondata = {}
               if (res.data.TeacherWeixinRelationList) {
                 res.data.TeacherWeixinRelationList.forEach((item) => {
-                  jsondata[item.teacher_id] = item.is_effective
+                  jsondata[item.weixin_id] = item.is_effective
                 })
                 this.openTeacher = jsondata
               }
@@ -358,7 +361,7 @@ export default {
         this.showEditWeChat = false
         setTimeout(() => {
           this.weChatPageList()
-        }, 500)
+        }, 1000)
       } else if (data === 2) {
         this.showEditWeChat = false
       }
