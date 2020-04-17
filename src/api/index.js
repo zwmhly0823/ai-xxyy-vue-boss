@@ -13,6 +13,7 @@ import Team from './modules/Team' // 班级接口
 import Express from './modules/Express' // 物流接口
 import StudentTerm from './modules/StudentTerm' // 班级graphql接口
 import Permission from './modules/Permission' // 班级graphql接口
+import Department from './modules/Department' // 班级graphql接口
 
 export default Object.assign(
   {},
@@ -22,5 +23,6 @@ export default Object.assign(
   { Team },
   { StudentTerm },
   { Express },
-  { Permission }
+  { Permission },
+  { Department }
 )

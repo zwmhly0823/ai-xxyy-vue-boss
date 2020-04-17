@@ -28,8 +28,12 @@
         <el-tab-pane label="已退费" name="6,7"></el-tab-pane>
         <all-order :status="status" :search="search" />
       </el-tabs> -->
-      <!-- tab - 商品主题 -->
-      <el-tabs type="border-card" @tab-click="handleClick" v-model="activeTab">
+      <!-- tab - regtype -->
+      <el-tabs
+        type="border-card"
+        @tab-click="handleClick"
+        v-model="activeTopic"
+      >
         <!-- 包含全部体验课订单数据（双周体验课、单周体验课） -->
         <el-tab-pane label="体验课" name="4"></el-tab-pane>
         <!-- 包含全部系统课订单数据（月系统课、季系统课、半年系统课、年系统课） -->
@@ -38,14 +42,14 @@
         <el-tab-pane label="活动订单" name="1,2,6"></el-tab-pane>
 
         <!-- 统计模块 + 列表 -->
-        <all-order :tab="activeTab" :search="search" />
+        <all-order :topic="activeTopic" :search="search" />
       </el-tabs>
 
       <!-- 浮动层 -->
       <el-tabs
         type="border-card"
         @tab-click="handleClick"
-        v-model="activeTab"
+        v-model="activeTopic"
         class="tab-top"
         v-show="suckTop"
       >
@@ -81,7 +85,7 @@ export default {
   data() {
     return {
       // 默认显示tab
-      activeTab: '4',
+      activeTopic: '4',
       // 吸顶tab显示
       suckTop: false,
       // 吸顶表格显示
@@ -100,7 +104,7 @@ export default {
       document
         .getElementById('order-scroll')
         .querySelector('.order-wrapper').scrollTop = 0
-      this.tab = tab.name
+      this.activeTopic = tab.name
     },
     // 点击搜索
     handleSearch(res) {

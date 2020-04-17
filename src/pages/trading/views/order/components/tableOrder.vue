@@ -35,9 +35,32 @@
           {{ scope.row.order_status ? scope.row.order_status : '-' }}
         </template>
       </el-table-column>
-      <el-table-column label="班级信息"> </el-table-column>
-      <el-table-column label="社群销售"> </el-table-column>
-      <el-table-column label="销售组"> </el-table-column>
+      <el-table-column label="班级信息">
+        <template slot-scope="scope">
+          {{ scope.row.team ? scope.row.team.team_name : '-' }}
+        </template>
+      </el-table-column>
+      <el-table-column label="社群销售">
+        <template slot-scope="scope">
+          {{ scope.row.teacher ? scope.row.teacher.realname : '-' }}
+        </template>
+      </el-table-column>
+      <el-table-column label="销售组">
+        <template slot-scope="scope">
+          <p v-if="scope.row.department && scope.row.department.department.pid">
+            {{
+              scope.row.department
+                ? departmentObj[scope.row.department.department.pid].name
+                : '-'
+            }}
+          </p>
+          {{
+            scope.row.department
+              ? departmentObj[scope.row.department.department.id].name
+              : '-'
+          }}
+        </template>
+      </el-table-column>
       <el-table-column label="下单时间" width="160">
         <template slot-scope="scope">
           <p>
@@ -64,7 +87,7 @@
       </el-table-column>
     </el-table>
 
-    <div v-if="cardData.length === 0" class="noData">暂无数据</div>
+    <div v-if="orderList.length === 0" class="noData">暂无数据</div>
 
     <m-pagination
       :current-page="currentPage"
@@ -72,21 +95,23 @@
       :total="totalElements"
       @current-change="handleSizeChange"
       show-pager
-      open="calc(100vw - 170px - 24px)"
-      close="calc(100vw - 50px - 24px)"
+      open="calc(100vw - 170px - 25px)"
+      close="calc(100vw - 50px - 25px)"
     ></m-pagination>
   </div>
 </template>
 <script>
+import _ from 'lodash'
 import MPagination from '@/components/MPagination/index.vue'
-import axios from '@/api/axios'
-import { timestamp, isToss } from '@/utils/index.js'
+// import axios from '@/api/axios'
+import { formatData, isToss } from '@/utils/index.js'
 export default {
   components: {
     MPagination
   },
   props: {
-    status: {
+    // 商品主题
+    topic: {
       type: String,
       default: ''
     },
@@ -105,29 +130,28 @@ export default {
       // 当前页数
       currentPage: 1,
       // 订单列表
-      cardData: [],
       orderList: [],
       // 获取teacherid
-      teacherStor: '',
+      teacherId: '',
       // 搜索
       searchIn: [],
-      // 切换tab
-      tab: '3', // 默认显示 3 - 已完成
-      teacherId: ''
+      // 切换支付状态
+      status: '3', // 默认显示 3 - 已完成
+      departmentObj: {} // 组织机构 obj
     }
   },
   created() {
     this.teacherId = isToss()
     // 订单列表接口
     this.getOrderList()
+
+    this.getDepartment()
   },
   watch: {
     // 切换tab
-    status(val) {
+    topic(val) {
       console.log(val, 'team_type')
-
       this.currentPage = 1
-      this.tab = val
       this.getOrderList()
     },
     // 搜索
@@ -140,80 +164,44 @@ export default {
   methods: {
     // 订单列表
     getOrderList() {
-      // this.teacherStor = JSON.parse(localStorage.getItem('teacher') || '{}')
+      const queryStr = {}
       const must = []
       if (this.teacherId) {
-        must.push(`{ "term": { "teacher_id": ${this.teacherId} } }`)
+        queryStr.teacher_id = { teacher_id: this.teacherId }
       }
-      // TODO: 切换tab filter
-      // "filter":{"bool":{"should":[{"term":{"orderstatus":1}},{"term":{"orderstatus":0}}]}}
 
       // 搜索 must
       const mustArr = this.searchIn.map((item) => JSON.stringify(item))
       must.push(...mustArr)
-      const should = this.tab ? [`{"terms": {"status": [${this.tab}]}}`] : []
-      const queryStr = `{
-        "bool": {
-          "must": [${must}],
-          "filter": {
-            "bool": {
-              "should": [${should}]
-            }
-          }
-        }
-      }`
+      // const should = this.tab ? [`{"terms": {"status": [${this.tab}]}}`] : []
+      // const queryStr = `{
+      //   "bool": {
+      //     "must": [${must}],
+      //     "filter": {
+      //       "bool": {
+      //         "should": [${should}]
+      //       }
+      //     }
+      //   }
+      // }`
 
-      axios
-        .post('/graphql/order', {
-          query: `{
-          orderPage(query: ${JSON.stringify(queryStr)},page:${
-            this.currentPage
-          }) {
-            totalElements
-            totalPages
-            content {
-              id
-              out_trade_no
-              ctime
-              packages_name
-              sup
-              stage
-              regtype
-              amount
-              order_status
-              bear_integral
-              gem_integral
-              product_name
-              user{
-                nickname
-                mobile
-              }
-              channel {
-                channel_outer_name
-              }
-              pay_channel
-              payment {
-                trade_type
-              }
-              express{
-                total
-                express_status_text
+      // 商品主题
+      const topic = {
+        topic_id: this.topic
+      }
+      Object.assign(queryStr, topic)
 
-              }
-            }
-          }
-        }`
-        })
+      this.$http.Order.orderPage(JSON.stringify(topic), this.currentPage)
         .then((res) => {
           console.log(res)
-          this.totalPages = res.data.orderPage.totalPages * 1
-          this.totalElements = +res.data.orderPage.totalElements
-          const _data = res.data.orderPage.content
+          if (!res.data.OrderPage) {
+            return
+          }
+          this.totalElements = +res.data.OrderPage.totalElements
+          const _data = res.data.OrderPage.content
           _data.forEach((item, index) => {
-            // 订单号格式化
-            item.out_trade_no = item.out_trade_no.split('xiong')[1]
             // 下单时间格式化
-            item.ctime = timestamp(item.ctime, 2)
+            item.ctime = formatData(item.ctime, 's')
             // 交易方式
             if (item.regtype) {
               let currency = {}
@@ -229,29 +217,23 @@ export default {
                 item.amount = item.bear_integral
               }
             }
-            // 支付方式
-            if (item.payment) {
-              const tradeType = item.payment.trade_type
-              if (tradeType === 'WAP') {
-                item.payment.trade_type = '支付宝'
-              } else if (tradeType === 'APP') {
-                item.payment.trade_type = 'APP微信'
-              } else if (tradeType === 'MWEB') {
-                item.payment.trade_type = 'WEB微信'
-              } else if (tradeType === 'JSAPI') {
-                item.payment.trade_type = '微信内部'
-              } else if (tradeType) {
-                item.payment.trade_type = tradeType
-              } else {
-                item.payment.trade_type = '-'
-              }
-            }
           })
-          this.cardData = _data
           this.orderList = _data
-          console.log(this.cardData, 'this.cardData')
+          console.log(this.orderList, 'this.orderList')
+        })
+        .catch((err) => {
+          console.log(err)
         })
     },
+
+    // 获取组织机构
+    getDepartment() {
+      this.$http.Department.teacherDepartment().then((res) => {
+        const dpt = (res.data && res.data.TeacherDepartmentList) || []
+        this.departmentObj = _.keyBy(dpt, 'id') || {}
+      })
+    },
+
     // 点击分页
     handleSizeChange(val) {
       this.currentPage = val

@@ -61,7 +61,7 @@
     <el-divider></el-divider>
     <!-- tab列表 -->
     <article class="bottom-box">
-      <table-order :status="status" :search="search" />
+      <table-order :topic="topic" :search="search" />
     </article>
   </div>
 </template>
@@ -75,7 +75,7 @@ export default {
   },
   props: {
     // 当前tab - 商品主题
-    tab: {
+    topic: {
       type: String,
       default: ''
     },
@@ -127,7 +127,7 @@ export default {
   },
   watch: {
     // 切换tab - 商品主题
-    tab(val) {
+    topic(val) {
       console.log(val, 'topic')
     },
 
@@ -155,8 +155,6 @@ export default {
       if (this.teacherId) {
         must.push(`{ "term": { "teacher_id": ${this.teacherId} } }`)
       }
-      // TODO: 切换tab filter
-      // "filter":{"bool":{"should":[{"term":{"orderstatus":1}},{"term":{"orderstatus":0}}]}}
 
       // 搜索 must
       const mustArr = this.searchIn.map((item) => JSON.stringify(item))
