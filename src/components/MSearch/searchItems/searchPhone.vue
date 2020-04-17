@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-26 16:28:45
  * @LastEditors: zhubaodong
- * @LastEditTime: 2020-04-08 13:35:24
+ * @LastEditTime: 2020-04-17 16:19:08
  -->
 <template>
   <div class="search-item small">
@@ -66,6 +66,10 @@ export default {
     last_team_id: {
       type: String,
       default: ''
+    },
+    teamType: {
+      type: String,
+      default: ''
     }
   },
   components: {},
@@ -101,7 +105,7 @@ export default {
       cb(searchUid)
     },
     createFilter(queryString) {
-      const queryParams = `{"mobile":"${queryString}","team_id":"${this.teamId}"}`
+      const queryParams = `{"mobile":"${queryString}","team_id":"${this.teamId}","team_type":"${this.teamType}"}`
       return axios
         .post('/graphql/user', {
           query: `{

@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-24 18:20:12
  * @LastEditors: zhubaodong
- * @LastEditTime: 2020-04-07 22:19:08
+ * @LastEditTime: 2020-04-17 16:21:40
  -->
 
 <template>
@@ -15,6 +15,7 @@
         <search-phone
           @result="getPhoneHander"
           :teamId="teamId"
+          :teamType="teamType"
           :name="phone"
           :onlyPhone="onlyPhone"
           :tip="phoneTip"
@@ -161,6 +162,11 @@ export default {
     datePlaceholder: {
       type: String,
       default: '下单时间'
+    },
+    // 班级内搜索 需要班级类型
+    teamType: {
+      type: String,
+      default: '' // 0
     },
     // 手机号
     phone: {
