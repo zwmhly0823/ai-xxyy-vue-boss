@@ -4,30 +4,23 @@
  * @Author: zhubaodong
  * @Date: 2020-03-24 18:50:54
  * @LastEditors: zhubaodong
- * @LastEditTime: 2020-04-17 15:55:43
+ * @LastEditTime: 2020-04-17 19:04:52
  -->
 <template>
-  <div class="search-item small">
-    <el-select
-      v-model="channelData"
-      multiple
+  <div class="search-item small threeSelect">
+    <el-cascader
       size="mini"
+      @change="onSelect"
+      :options="showDatas"
+      :props="{
+        multiple: true,
+        value: 'id',
+        label: 'channel_outer_name',
+        emitPath: false
+      }"
+      :show-all-levels="false"
       clearable
-      reserve-keyword
-      placeholder="订单来源"
-      @change="onChange"
-    >
-      <!-- remote -->
-      <!-- filterable -->
-      <!-- :remote-method="remoteMethod" -->
-      <el-option
-        v-for="item in channelList"
-        :key="item.id"
-        :label="item.channel_outer_name"
-        :value="item.id"
-      >
-      </el-option>
-    </el-select>
+    ></el-cascader>
   </div>
 </template>
 
@@ -49,7 +42,9 @@ export default {
     return {
       channelList: [],
       channelData: null,
-      channelClassList: null // 分类条件
+      channelClassData: [],
+      channelClassList: null, // 分类条件
+      showDatas: null // 三级列表展示数据
     }
   },
   async created() {
@@ -92,17 +87,73 @@ export default {
           this.channelClassList = res.data.ChannelClassList
         })
     },
-    formatData(data, classifiData) {
-      console.log(data)
-      console.log(classifiData)
+    formatData(classdata, classifiData) {
+      // 第一级目录
+      const arrList = []
+      classifiData.forEach((item) => {
+        item.channel_outer_name = item.channel_class_name
+      })
+      const firstNode =
+        classifiData &&
+        classifiData.filter((item) => {
+          if (+item.channel_class_parent_id !== 0) {
+            arrList.push(item)
+          }
+          return +item.channel_class_parent_id === 0
+        })
+
+      firstNode.forEach((item) => (item.children = []))
+      arrList.forEach((item, index) => {
+        firstNode.forEach((val, idx) => {
+          if (+item.channel_class_parent_id === +val.id) {
+            val.children.push(item)
+          }
+        })
+      })
+      firstNode.forEach(
+        (item) =>
+          item.children && item.children.forEach((vals) => (vals.children = []))
+      )
+
+      classdata.forEach((content, num) => {
+        arrList.forEach((datas, nums) => {
+          if (+content.channel_class_id === +datas.id) {
+            datas.children.push(content)
+          }
+        })
+      })
+      this.showDatas = firstNode
+      // console.log(firstNode, '第一梯队')
+      // console.log(arrList, '分类数减去第一梯队')
+
+      // console.log(classdata, '渠道总数')
+      // console.log(classifiData, '渠道分类总数')
+      // console.log(this.showDatas)
     },
     onChange(data) {
       this.$emit(
         'result',
         data.length > 0 ? { [this.name]: this.channelData } : ''
       )
+    },
+    onSelect(data) {
+      console.log(data)
+      this.$emit('result', data.length > 0 ? { [this.name]: data } : '')
     }
   }
 }
 </script>
-<style lang="scss" scoped></style>
+<style lang="scss">
+.threeSelect {
+  .el-cascader__tags {
+    flex-wrap: nowrap !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+  }
+}
+
+.el-cascader-panel {
+  max-height: 300px !important;
+}
+</style>
