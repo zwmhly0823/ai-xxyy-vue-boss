@@ -8,7 +8,6 @@
  */
 // import axios from '../axios'
 import axios from '../axiosConfig'
-
 export default {
   // 微信管理列表（微信号）
   getWeChatTeacherPage(params, currentPage) {
@@ -61,7 +60,7 @@ export default {
       }`
     })
   },
-  // 老师微信号,手机号模糊搜索
+  // 老师手机号模糊搜索
   getTeacherListEx(key, value) {
     const query = `{ "bool": { "must": [{ "wildcard": { "${key}": "*${value}*" } }] } }`
     return axios.post('/graphql/v1/teacher', {
@@ -77,7 +76,7 @@ export default {
       `
     })
   },
-  // 老师微信号,手机号模糊搜索
+  // 老师微信号模糊搜索
   getWeChatTeacherListEx(weixinkey, value) {
     const query = `{ "bool": { "must": [{ "wildcard": { "${weixinkey}": "*${value}*" } }] } }`
     return axios.post('/graphql/v1/boss', {
