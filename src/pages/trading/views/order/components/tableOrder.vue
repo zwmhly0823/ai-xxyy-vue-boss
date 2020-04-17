@@ -163,35 +163,40 @@ export default {
   },
   methods: {
     // 订单列表
-    getOrderList() {
-      const queryStr = {}
+    async getOrderList() {
+      const queryObj = {}
       const must = []
       if (this.teacherId) {
-        queryStr.teacher_id = { teacher_id: this.teacherId }
+        queryObj.teacher_id = { teacher_id: this.teacherId }
       }
 
       // 搜索 must
       const mustArr = this.searchIn.map((item) => JSON.stringify(item))
       must.push(...mustArr)
-      // const should = this.tab ? [`{"terms": {"status": [${this.tab}]}}`] : []
-      // const queryStr = `{
-      //   "bool": {
-      //     "must": [${must}],
-      //     "filter": {
-      //       "bool": {
-      //         "should": [${should}]
-      //       }
-      //     }
-      //   }
-      // }`
 
       // 商品主题
       const topic = {
         topic_id: this.topic
       }
-      Object.assign(queryStr, topic)
 
-      this.$http.Order.orderPage(JSON.stringify(topic), this.currentPage)
+      /**
+       * this.topic
+       * 体验课(4),系统课(5)去 p_packages_topic表找relation_id
+       */
+      if (this.topic === '4' || this.topic === '5') {
+        const relationIds =
+          (await this.$http.Product.topicRelationId({
+            topic_id: this.topic
+          })) || []
+        queryObj.relation_id = relationIds
+      }
+      // 活动订单
+      if (this.topic === '1,2,6') {
+      }
+
+      Object.assign(queryObj, topic)
+
+      this.$http.Order.orderPage(JSON.stringify(queryObj), this.currentPage)
         .then((res) => {
           console.log(res)
           if (!res.data.OrderPage) {
