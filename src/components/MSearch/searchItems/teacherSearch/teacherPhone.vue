@@ -75,7 +75,6 @@ export default {
   computed: {},
   watch: {
     input(val, old) {
-      console.log(val !== old && !val)
       if (val !== old && !val) {
         this.$emit('result', '')
       }
@@ -139,5 +138,6 @@ export default {
 }
 .el-form-item__content .el-input-group {
   vertical-align: middle !important;
+  position: absolute;
 }
 </style>
