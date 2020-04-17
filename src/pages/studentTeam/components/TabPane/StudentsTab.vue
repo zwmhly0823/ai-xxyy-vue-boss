@@ -357,6 +357,8 @@ export default {
         })
         .then((res) => {
           this.statusList = res.data.userFollowStateList
+            ? res.data.userFollowStateList
+            : []
         })
     },
     // 优惠卷列表接口
