@@ -63,7 +63,7 @@
         </el-table-column>
         <el-table-column align="left" label="使用状态" width="180">
           <template slot-scope="scope">
-            <span>{{ openTeacher[scope.row.teacher_id] | filterStatus }}</span>
+            <span>{{ openTeacher[scope.row.id] | filterStatus }}</span>
           </template>
         </el-table-column>
         <el-table-column align="center" label="关联老师" width="180">
@@ -94,28 +94,9 @@
               concatTeacher[scope.row.teacher_id] &&
                 concatTeacher[scope.row.teacher_id].teamname
             }}
-            <!-- <span else>--</span> -->
           </template>
         </el-table-column>
-        <!-- <el-table-column align="center" label="操作">
-        <template>
-          <span class="operatingOne public" @click="showExpress = true"
-            >详情</span
-          >
-          <span class="operatingThree public" @click="showExpress = true"
-            >关联老师</span
-          >
-        </template>
-      </el-table-column> -->
       </el-table>
-      <!-- 分页 -->
-      <!-- <m-pagination
-      :current-page="currentPage"
-      :total="+table.totalElements"
-      @current-change="handleCurrentChange"
-      open="calc(100vw - 170px - 24px)"
-      close="calc(100vw - 50px - 24px)"
-    ></m-pagination> -->
       <m-pagination
         @current-change="handleCurrentChange"
         :current-page="+currentPage"
@@ -218,7 +199,7 @@ export default {
       if (res === 0) {
         return '启用'
       } else {
-        return '未启用'
+        return '停用'
       }
     },
     weixinFilterStatus(res) {
@@ -237,7 +218,7 @@ export default {
       }
     },
     searchHandler(res) {
-      console.log(res)
+      console.log('列表数据渲染', res)
 
       if (res.length > 0) {
         const wildcard = {}
@@ -263,6 +244,7 @@ export default {
       if (this.querSearch && this.searchQuery) {
         Object.assign(this.searchQuery, this.querSearch)
       }
+      console.log('querSearch', this.searchQuery)
       if (this.searchQuery.wechat_no || this.searchQuery.teacher_id) {
         this.weChatPageList(this.searchQuery)
       }
@@ -279,21 +261,27 @@ export default {
       )
         .catch((err) => console.log(err))
         .then((res) => {
+          // 总条数
           this.totalElements = +res.data.WeChatTeacherPage.totalElements
+          console.log('####this.totalElements###', this.totalElements)
+          // 当前是第几页
           this.currentPage = +res.data.WeChatTeacherPage.number
+          console.log('####this.currentPage###', this.currentPage)
           this.table.tableData = res.data.WeChatTeacherPage.content
           const arrayTId = []
+          const arrayWId = []
           this.table.tableData.forEach((item) => {
-            arrayTId.push(item.teacher_id)
+            item.teacher_id && arrayTId.push(item.teacher_id)
+            item.id && arrayWId.push(item.id)
           })
           // 启用
-          this.$http.Weixin.getTeacherWeixinRelationList(arrayTId)
+          this.$http.Weixin.getTeacherWeixinRelationList(arrayWId)
             .catch((err) => console.log(err))
             .then((res) => {
               const jsondata = {}
               if (res.data.TeacherWeixinRelationList) {
                 res.data.TeacherWeixinRelationList.forEach((item) => {
-                  jsondata[item.teacher_id] = item.is_effective
+                  jsondata[item.weixin_id] = item.is_effective
                 })
                 this.openTeacher = jsondata
               }
@@ -302,6 +290,7 @@ export default {
           this.$http.Weixin.getTeacherList(arrayTId)
             .catch((err) => console.log(err))
             .then((res) => {
+              console.log('微信管理列表所在部门', res)
               const jsonData = {}
               if (res.data.TeacherList) {
                 res.data.TeacherList.forEach((item) => {
@@ -321,6 +310,8 @@ export default {
                     (tmp.pteamname = item.department.pname)
                   item.department.id && (tmp.teamid = item.department.id)
                   jsonData[item.id] = tmp
+                  console.log('+_+_+_tmp+_+_+', tmp)
+                  console.log('+)+)+)+)+)jsonData+(+(+(+(+(+', jsonData)
                 })
                 this.concatTeacher = jsonData
               }
@@ -370,7 +361,7 @@ export default {
         this.showEditWeChat = false
         setTimeout(() => {
           this.weChatPageList()
-        }, 500)
+        }, 1000)
       } else if (data === 2) {
         this.showEditWeChat = false
       }

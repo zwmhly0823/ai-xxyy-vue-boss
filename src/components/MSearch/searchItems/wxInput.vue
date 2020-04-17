@@ -170,15 +170,20 @@ export default {
           return
         }
       }
+      // 输入内容查找到的关联信息（下拉框）
       const list = await this.weixinCreateFilter(queryString)
+      console.log('*****list******', list)
+      // cb 展示列表数据
       cb(list)
     },
     // 调用微信号搜索接口
     weixinCreateFilter(queryString) {
+      // 输入内容匹配到的关联信息（下拉框）
       return this.$http.Weixin.getWeChatTeacherListEx(
         'wechat_no.keyword',
         queryString
       ).then((res) => {
+        console.log('微信搜索调用接口', res)
         this.weixinSelectData = res.data.WeChatTeacherListEx || []
         return this.weixinSelectData
       })
@@ -193,7 +198,6 @@ export default {
         }
       }
       const list = await this.phoneCreateFilter(queryString)
-
       cb(list)
     },
     // 调用手机号搜索接口
@@ -208,11 +212,16 @@ export default {
     },
     // 微信号搜索（给父组件传值）
     onWxSerch(data) {
+      console.log('====data====', data)
+      // 输入文本框的值
       this.weixinInp = data.wechat_no
+      console.log('+_+_+_+_+_this.weixinInp+_+_+_+_+_+_+_+_', this.weixinInp)
       this.$emit(
         'getWxSerch',
         data.wechat_no ? { [this.wxSerch]: data.wechat_no } : ''
       )
+      // this.wxSerch字段名称
+      console.log('$+++wxInput.vue+++$$wxSerch$$$', this.wxSerch)
     },
     // 老师手机号搜索（给父组件传值）
     onPhoneSerch(data) {
