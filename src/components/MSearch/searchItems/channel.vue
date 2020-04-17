@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-24 18:50:54
  * @LastEditors: zhubaodong
- * @LastEditTime: 2020-03-27 19:03:42
+ * @LastEditTime: 2020-04-17 15:55:43
  -->
 <template>
   <div class="search-item small">
@@ -13,13 +13,13 @@
       multiple
       size="mini"
       clearable
-      filterable
       reserve-keyword
-      remote
-      :remote-method="remoteMethod"
       placeholder="订单来源"
       @change="onChange"
     >
+      <!-- remote -->
+      <!-- filterable -->
+      <!-- :remote-method="remoteMethod" -->
       <el-option
         v-for="item in channelList"
         :key="item.id"
@@ -48,54 +48,59 @@ export default {
   data() {
     return {
       channelList: [],
-      channelData: null
+      channelData: null,
+      channelClassList: null // 分类条件
     }
   },
   async created() {
     await this.getChannel()
+    await this.getChannelClassList()
+    this.formatData(this.channelList, this.channelClassList)
   },
   methods: {
     // 获取渠道来源 filter: 过滤关键词  eg：filter:"抖音"
     async getChannel() {
-      axios
-        .post('/graphql/filter', {
+      await axios
+        .post('/graphql/v1/toss', {
           query: `{
-              channelList{
+            ChannelList(size: 200) {
                 id
+                channel_class_id
                 channel_outer_name
               }
             }
           `
         })
         .then((res) => {
-          this.channelList = res.data.channelList
+          this.channelList = res.data.ChannelList
         })
+    },
+    // 获取渠道来源分类 filter: 过滤关键词  eg：filter:"抖音"
+    async getChannelClassList() {
+      await axios
+        .post('/graphql/v1/toss', {
+          query: `{
+              ChannelClassList(size: 500){
+                id
+                channel_class_parent_id
+                channel_class_name
+              }
+            }
+          `
+        })
+        .then((res) => {
+          this.channelClassList = res.data.ChannelClassList
+        })
+    },
+    formatData(data, classifiData) {
+      console.log(data)
+      console.log(classifiData)
     },
     onChange(data) {
       this.$emit(
         'result',
         data.length > 0 ? { [this.name]: this.channelData } : ''
       )
-    },
-    remoteMethod(data) {
-      if (!data) {
-        this.getChannel()
-        return
-      }
-      console.log(data, 'data')
-      axios
-        .post('/graphql/filter', {
-          query: `{
-              channelList(filter:"${data}"){
-                id
-                channel_outer_name
-              }
-            }
-          `
-        })
-        .then((res) => {
-          this.channelList = res.data.channelList
-        })
     }
   }
 }
