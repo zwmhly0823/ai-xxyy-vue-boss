@@ -94,28 +94,9 @@
               concatTeacher[scope.row.teacher_id] &&
                 concatTeacher[scope.row.teacher_id].teamname
             }}
-            <!-- <span else>--</span> -->
           </template>
         </el-table-column>
-        <!-- <el-table-column align="center" label="操作">
-        <template>
-          <span class="operatingOne public" @click="showExpress = true"
-            >详情</span
-          >
-          <span class="operatingThree public" @click="showExpress = true"
-            >关联老师</span
-          >
-        </template>
-      </el-table-column> -->
       </el-table>
-      <!-- 分页 -->
-      <!-- <m-pagination
-      :current-page="currentPage"
-      :total="+table.totalElements"
-      @current-change="handleCurrentChange"
-      open="calc(100vw - 170px - 24px)"
-      close="calc(100vw - 50px - 24px)"
-    ></m-pagination> -->
       <m-pagination
         @current-change="handleCurrentChange"
         :current-page="+currentPage"
@@ -279,12 +260,16 @@ export default {
       )
         .catch((err) => console.log(err))
         .then((res) => {
+          // 总条数
           this.totalElements = +res.data.WeChatTeacherPage.totalElements
+          console.log('####this.totalElements###', this.totalElements)
+          // 当前是第几页
           this.currentPage = +res.data.WeChatTeacherPage.number
+          console.log('####this.currentPage###', this.currentPage)
           this.table.tableData = res.data.WeChatTeacherPage.content
           const arrayTId = []
           this.table.tableData.forEach((item) => {
-            arrayTId.push(item.teacher_id)
+            item.teacher_id && arrayTId.push(item.teacher_id)
           })
           // 启用
           this.$http.Weixin.getTeacherWeixinRelationList(arrayTId)
@@ -302,6 +287,7 @@ export default {
           this.$http.Weixin.getTeacherList(arrayTId)
             .catch((err) => console.log(err))
             .then((res) => {
+              console.log('微信管理列表所在部门', res)
               const jsonData = {}
               if (res.data.TeacherList) {
                 res.data.TeacherList.forEach((item) => {
@@ -321,6 +307,8 @@ export default {
                     (tmp.pteamname = item.department.pname)
                   item.department.id && (tmp.teamid = item.department.id)
                   jsonData[item.id] = tmp
+                  console.log('+_+_+_tmp+_+_+', tmp)
+                  console.log('+)+)+)+)+)jsonData+(+(+(+(+(+', jsonData)
                 })
                 this.concatTeacher = jsonData
               }

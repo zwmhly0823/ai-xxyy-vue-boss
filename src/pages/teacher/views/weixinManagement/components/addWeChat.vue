@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-04-14 15:15:31
  * @LastEditors: panjian
- * @LastEditTime: 2020-04-17 16:22:36
+ * @LastEditTime: 2020-04-17 16:38:05
  -->
 <template>
   <div>
@@ -142,7 +142,7 @@ export default {
       ruleForm: {
         wechatNo: '',
         associatedTeacher: '',
-        resource: '',
+        resource: '0',
         imageUrl: '',
         QEcodeUrl: '',
         teacherId: ''

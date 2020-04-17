@@ -435,7 +435,9 @@ export default {
       this.setSeachParmas(res, [this.expressNo || 'express_nu'], 'wildcard')
     },
     getWxSerch(res) {
+      console.log('微信搜索父组件接收到的res', res)
       this.setSeachParmas(res, [this.wxSerch], 'wildcard')
+      console.log('@+++index.vue+++@@this.wxSerch@@@', this.wxSerch)
     },
     getPhoneData(res) {
       this.setSeachParmas(res, [this.wxTeacherPhone], 'wildcard')
