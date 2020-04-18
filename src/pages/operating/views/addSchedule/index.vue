@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-14 18:28:44
  * @LastEditors: Shentong
- * @LastEditTime: 2020-04-18 13:47:21
+ * @LastEditTime: 2020-04-18 22:07:56
  -->
 <template>
   <div class="app-main height add-schedule-container">
@@ -106,11 +106,13 @@ export default {
       this.stepStatus++
     },
     containerEdit() {
-      const period = 13
-      const courseType = '0'
-      this.$router.push({
-        path: `/addSchedule/${period}/${courseType}`
-      })
+      // const { period = '', courseType = 0 } = this.$route.params
+      // const period = 13
+      // const courseType = '0'
+      // this.$router.replace({
+      //   path: `/addSchedule/${+period}/${+courseType}`
+      // })
+      this.stepStatus = 1
     },
     backList() {
       this.$router.push({ path: '/' })

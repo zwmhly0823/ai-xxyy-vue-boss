@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-15 20:35:57
  * @LastEditors: Shentong
- * @LastEditTime: 2020-04-18 19:06:02
+ * @LastEditTime: 2020-04-18 22:00:22
  -->
 <template>
   <div class="third-step">
@@ -173,8 +173,6 @@ export default {
       courseType,
       period,
       ids: this.scheduleTeacherId
-      // period: 13,
-      // ids: [1, 2, 3]
     }
     this.scheduleTeacherId.length && this.getTeacherConfigList(params)
   },
@@ -241,9 +239,10 @@ export default {
     // 翻页emit
     pageChange_handler() {},
     async stepOpt(type) {
+      const { period = '', courseType = 0 } = this.$route.params
       const params = {
-        courseType: '0',
-        period: 13,
+        courseType,
+        period,
         // ids: scheduleTeacherId,
         body: this.tableData
       }
