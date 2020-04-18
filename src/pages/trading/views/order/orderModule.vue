@@ -34,10 +34,10 @@
         @tab-click="handleClick"
         v-model="activeTopic"
       >
-        <!-- 包含全部体验课订单数据（双周体验课、单周体验课） -->
-        <el-tab-pane label="体验课" name="4"></el-tab-pane>
         <!-- 包含全部系统课订单数据（月系统课、季系统课、半年系统课、年系统课） -->
         <el-tab-pane label="系统课" name="5"></el-tab-pane>
+        <!-- 包含全部体验课订单数据（双周体验课、单周体验课） -->
+        <el-tab-pane label="体验课" name="4"></el-tab-pane>
         <!-- 包含小熊商城-1、邀请有奖-6、推荐有礼-2 -->
         <el-tab-pane label="活动订单" name="1,2,6"></el-tab-pane>
 
@@ -53,18 +53,38 @@
         class="tab-top"
         v-show="suckTop"
       >
-        <el-tab-pane label="体验课" name="4"></el-tab-pane>
         <el-tab-pane label="系统课" name="5"> </el-tab-pane>
+        <el-tab-pane label="体验课" name="4"></el-tab-pane>
         <el-tab-pane label="活动订单" name="1,2,6"></el-tab-pane>
 
         <el-table style="font-size:12px;" v-show="orderForm">
-          <el-table-column label="用户信息" prop="user"></el-table-column>
+          <el-table-column label="用户信息"></el-table-column>
           <el-table-column label="商品信息"></el-table-column>
-          <el-table-column label="订单来源"></el-table-column>
+          <el-table-column
+            label="订单来源"
+            v-if="activeTopic === '4' || activeTopic === '5'"
+          ></el-table-column>
+          <el-table-column
+            label="订单类型"
+            v-if="activeTopic !== '4' && activeTopic !== '5'"
+          >
+          </el-table-column>
           <el-table-column label="订单状态"> </el-table-column>
-          <el-table-column label="班级信息"> </el-table-column>
-          <el-table-column label="社群销售"> </el-table-column>
-          <el-table-column label="销售组"> </el-table-column>
+          <el-table-column
+            label="班级信息"
+            v-if="activeTopic === '4' || activeTopic === '5'"
+          >
+          </el-table-column>
+          <el-table-column
+            label="社群销售"
+            v-if="activeTopic === '4' || activeTopic === '5'"
+          >
+          </el-table-column>
+          <el-table-column
+            label="销售组"
+            v-if="activeTopic === '4' || activeTopic === '5'"
+          >
+          </el-table-column>
           <el-table-column label="下单时间"> </el-table-column>
           <el-table-column label="关联物流"> </el-table-column>
         </el-table>
@@ -85,7 +105,7 @@ export default {
   data() {
     return {
       // 默认显示tab
-      activeTopic: '4',
+      activeTopic: '5',
       // 吸顶tab显示
       suckTop: false,
       // 吸顶表格显示

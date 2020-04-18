@@ -18,16 +18,27 @@
           </p>
           <!-- 人民币 ， 宝石，小熊币 -->
           <p>
-            {{ scope.row.currency ? scope.row.currency : '¥ ' }}
-            {{ scope.row.amount ? scope.row.amount : '-' }}
+            {{ scope.row.currency ? scope.row.currency : '人民币 ' }}
+            {{
+              scope.row.amount
+                ? scope.row.amount
+                : scope.row.regtype === 6
+                ? ''
+                : '-'
+            }}
           </p>
         </template>
       </el-table-column>
-      <el-table-column label="订单来源">
+      <el-table-column label="订单来源" v-if="topic === '4' || topic === '5'">
         <template slot-scope="scope">
           <p>
             {{ scope.row.channel ? scope.row.channel.channel_outer_name : '-' }}
           </p>
+        </template>
+      </el-table-column>
+      <el-table-column label="订单类型" v-if="topic !== '4' && topic !== '5'">
+        <template slot-scope="scope">
+          {{ scope.row.regtype_text ? scope.row.regtype_text : '-' }}
         </template>
       </el-table-column>
       <el-table-column label="订单状态">
@@ -35,28 +46,32 @@
           {{ scope.row.order_status ? scope.row.order_status : '-' }}
         </template>
       </el-table-column>
-      <el-table-column label="班级信息">
+      <el-table-column label="班级信息" v-if="topic === '4' || topic === '5'">
         <template slot-scope="scope">
           {{ scope.row.team ? scope.row.team.team_name : '-' }}
         </template>
       </el-table-column>
-      <el-table-column label="社群销售">
+      <el-table-column label="社群销售" v-if="topic === '4' || topic === '5'">
         <template slot-scope="scope">
           {{ scope.row.teacher ? scope.row.teacher.realname : '-' }}
         </template>
       </el-table-column>
-      <el-table-column label="销售组">
+      <el-table-column label="销售组" v-if="topic === '4' || topic === '5'">
         <template slot-scope="scope">
-          <p v-if="scope.row.department && scope.row.department.department.pid">
+          <p v-if="scope.row.department && scope.row.department.department">
             {{
-              scope.row.department
-                ? departmentObj[scope.row.department.department.pid].name
-                : '-'
+              scope.row.department && scope.row.department.department.pid
+                ? departmentObj[scope.row.department.department.pid]
+                  ? departmentObj[scope.row.department.department.pid].name
+                  : ''
+                : ''
             }}
           </p>
           {{
-            scope.row.department
-              ? departmentObj[scope.row.department.department.id].name
+            scope.row.department && scope.row.department.department
+              ? departmentObj[scope.row.department.department.id]
+                ? departmentObj[scope.row.department.department.id].name
+                : '-'
               : '-'
           }}
         </template>
@@ -103,7 +118,6 @@
 <script>
 import _ from 'lodash'
 import MPagination from '@/components/MPagination/index.vue'
-// import axios from '@/api/axios'
 import { formatData, isToss } from '@/utils/index.js'
 export default {
   components: {
@@ -122,6 +136,16 @@ export default {
       }
     }
   },
+  computed: {
+    topicArr() {
+      if (this.topic === '4' || this.topic === '5') {
+        return [this.topic]
+      } else if (this.topic === '1,2,6') {
+        return this.topic.split(',')
+      }
+      return []
+    }
+  },
   data() {
     return {
       // 总页数
@@ -137,7 +161,8 @@ export default {
       searchIn: [],
       // 切换支付状态
       status: '3', // 默认显示 3 - 已完成
-      departmentObj: {} // 组织机构 obj
+      departmentObj: {}, // 组织机构 obj
+      orderStatisticsResult: [] // 统计结果
     }
   },
   created() {
@@ -163,46 +188,90 @@ export default {
   },
   methods: {
     // 订单列表
-    async getOrderList() {
+    async getOrderList(page = this.currentPage) {
       const queryObj = {}
       const must = []
       if (this.teacherId) {
-        queryObj.teacher_id = { teacher_id: this.teacherId }
+        Object.assign(queryObj, { last_teacher_id: this.teacherId })
       }
 
       // 搜索 must
       const mustArr = this.searchIn.map((item) => JSON.stringify(item))
       must.push(...mustArr)
 
-      // 商品主题
-      const topic = {
-        topic_id: this.topic
-      }
-
+      const topicRelation = await this.$http.Product.topicRelationId(
+        `${JSON.stringify({
+          topic_id: this.topicArr
+        })}`
+      )
+      let relationIds = []
+      if (
+        topicRelation.data.PackagesTopicList &&
+        topicRelation.data.PackagesTopicList.length > 0
+      )
+        relationIds = topicRelation.data.PackagesTopicList.map(
+          (item) => item.relation_id
+        )
       /**
        * this.topic
        * 体验课(4),系统课(5)去 p_packages_topic表找relation_id
        */
       if (this.topic === '4' || this.topic === '5') {
-        const relationIds =
-          (await this.$http.Product.topicRelationId({
-            topic_id: this.topic
-          })) || []
-        queryObj.relation_id = relationIds
+        Object.assign(queryObj, { packages_id: relationIds })
+        this.orderData(queryObj, this.currentPage)
+        // 统计
+        this.$http.Order.orderStatistics(queryObj, 'amount', 'status').then(
+          (res) => {
+            console.log(res)
+            const statistics = res.data.OrderStatistics || []
+            this.$emit('statistics', statistics)
+          }
+        )
       }
-      // 活动订单
+      /*
+       * 活动订单 - (小熊商城1，推荐有礼2，赠送6)
+       * 通过relation_id去o_order_product查询oid,分页
+       * TODO: 先查看全部 - BOSS，TOSS再做处理
+       * */
       if (this.topic === '1,2,6') {
+        // && !this.teacherId
+        Object.assign(queryObj, { pid: relationIds })
+        delete queryObj.last_teacher_id
+        const res =
+          (await this.$http.Product.orderProductPage(
+            `${JSON.stringify(queryObj)}`,
+            page
+          )) || {}
+        const data = (res.data && res.data.OrderProductPage) || {
+          totalElements: 0,
+          content: []
+        }
+        // 分页
+        this.totalElements = +data.totalElements
+        this.currentPage = +data.number
+        // this.orderList = data.content
+
+        // TODO: 根据oid 请求o_order 表
+        const oids = data.content.map((item) => item.oid)
+        const oquery = { id: oids }
+        this.orderData(oquery, 1)
       }
+    },
 
-      Object.assign(queryObj, topic)
-
-      this.$http.Order.orderPage(JSON.stringify(queryObj), this.currentPage)
+    // 订单列表数据
+    orderData(queryObj = {}, page = 1) {
+      this.$http.Order.orderPage(`${JSON.stringify(queryObj)}`, page)
         .then((res) => {
-          console.log(res)
           if (!res.data.OrderPage) {
+            this.totalElements = 0
+            this.currentPage = 1
+            this.orderList = []
             return
           }
-          this.totalElements = +res.data.OrderPage.totalElements
+          if (this.topic === '4' || this.topic === '5') {
+            this.totalElements = +res.data.OrderPage.totalElements
+            this.currentPage = +res.data.OrderPage.number
+          }
           const _data = res.data.OrderPage.content
           _data.forEach((item, index) => {
             // 下单时间格式化
@@ -211,15 +280,20 @@ export default {
             if (item.regtype) {
               let currency = {}
               if (item.regtype === 4) {
-                item.regtype = '宝石兑换'
+                item.regtype_text = '推荐有礼'
                 currency = { currency: '宝石' }
                 Object.assign(item, currency)
                 item.amount = item.gem_integral
               } else if (item.regtype === 5) {
-                item.regtype = '小熊币兑换'
+                item.regtype_text = '小熊商城'
                 currency = { currency: '小熊币' }
                 Object.assign(item, currency)
                 item.amount = item.bear_integral
+              } else if (item.regtype === 6) {
+                item.regtype_text = '邀请有奖'
+                currency = { currency: '赠送' }
+                Object.assign(item, currency)
+                item.amount = 0
               }
             }
           })
@@ -255,64 +329,8 @@ export default {
   font-family: 'number_font';
   src: url('~@/assets/fonts/TG-TYPE-Bold.otf');
 } //引入本地字体数字文件
-.box-card {
-  // 卡片标题
-  .card-title {
-    font-size: 14px;
-    color: #666;
-    .grid-content {
-      font-family: 'number_font';
-    }
-  }
-  // 卡片内容
-  .card-content {
-    font-size: 14px;
-    color: #000;
-    .content-details {
-      width: 20%;
-      height: 80px;
-      padding: 0 10px;
-      float: left;
-      display: flex;
-      align-items: center;
-    }
-    .user-infor {
-      font-family: 'number_font';
-    }
-    .card-style1 {
-      padding-left: 0 !important;
-      &-left {
-        height: 100%;
-        width: 50%;
-        float: left;
-        display: flex;
-        align-items: center;
-      }
-      &-right {
-        height: 100%;
-        width: 50%;
-        float: left;
-        display: flex;
-        align-items: center;
-        .card-style1-rmb {
-          font-family: 'number_font';
-        }
-        .sign {
-          float: right;
-          span {
-            font-family: 'number_font';
-          }
-        }
-      }
-    }
-    .card-style4 {
-      padding-right: 0 !important;
-      .card-style4-num {
-        font-family: 'number_font';
-        color: #409eff;
-      }
-    }
-  }
+.title-box {
+  padding-bottom: 50px;
 }
 .noData {
   text-align: center;
@@ -324,39 +342,10 @@ export default {
 }
 </style>
 <style lang="scss">
-.title-box {
-  padding: 0 10px 30px 10px;
-  p {
-    margin: 0;
-  }
-  .el-table::before {
-    height: 0px;
-  }
-
-  .el-table td,
-  .el-table th.is-leaf {
-    border: none;
-  }
-  .el-table__empty-block {
-    display: none;
-  }
-  .el-card__body {
-    padding: 0 0 10px 10px;
-  }
-  .el-card {
-    border: 1px solid #dcdfe6;
-    margin: 0 0 10px 0;
-  }
-  .el-card__header {
-    padding: 10px;
-    background: #fafafa;
-  }
-  // 卡片表头
-  .el-row {
-    padding: 0 !important;
-  }
-  // .grid-centent {
-  //   padding-left: 17%;
-  // }
+.el-table .cell {
+  padding-left: 15px;
+}
+.el-table .cell p {
+  margin: 0;
 }
 </style>

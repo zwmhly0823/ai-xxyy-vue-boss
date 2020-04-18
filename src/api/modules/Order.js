@@ -18,6 +18,7 @@ export default {
         OrderPage(query: ${JSON.stringify(query)}, page: ${page}) {
           totalPages
           totalElements
+          number
           content {
             id
             ctime
@@ -53,6 +54,37 @@ export default {
               realname
             }
           }
+        }
+      }`
+    })
+  },
+
+  /**
+   * 订单统计, 只能用表达式 {bool:{must:[]}}
+   */
+  orderStatistics(query = '', sumField, termField) {
+    let queryStr = ''
+    // bool 表达式
+    if (query && Object.prototype.toString.call(query) === '[object Object]') {
+      const queryObj = { bool: { must: [] } }
+      let must = []
+      must = Object.keys(query).map((k) => {
+        const item = query[k]
+        const key = Array.isArray(item) ? 'terms' : 'term'
+        return { [key]: { [k]: query[k] } }
+      })
+      queryObj.bool.must = must
+      queryStr = `${JSON.stringify(queryObj)}`
+    }
+    return axios.post('/graphql/v1/toss', {
+      query: `{
+        OrderStatistics(query: ${
+          query ? JSON.stringify(queryStr) : query
+        }, sumField:"${sumField}", termField:"${termField}"){
+          code
+          type
+          count
+          value
         }
       }`
     })

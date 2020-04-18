@@ -15,7 +15,10 @@
         <el-col :span="5">
           <div class="grid-content bg-purple total-order">
             <div class="oride-top">订单总计</div>
-            <div class="oride-middle">{{ totalOrder.count }}笔</div>
+            <div class="oride-middle">
+              <em>{{ totalOrder.count }}</em
+              >笔
+            </div>
             <div class="oride-bottom">
               <span>{{ totalOrder.value }}元</span>
               <span>{{ littleBear.value }}币</span>
@@ -25,43 +28,48 @@
         </el-col>
         <!-- 已完成 -->
         <el-col :span="5">
-          <div class="grid-content bg-purple experience-order">
+          <div class="grid-content bg-purple">
             <div class="oride-top">已完成</div>
-            <div class="oride-middle">{{ experience.count }}笔</div>
+            <div class="oride-middle">
+              <em>{{ experience.count }}</em
+              >笔
+            </div>
             <div class="oride-bottom">{{ experience.value }}元</div>
           </div>
         </el-col>
         <!-- 未支付 -->
         <el-col :span="5">
-          <div class="grid-content bg-purple system-order">
+          <div class="grid-content bg-purple">
             <div class="oride-top">未支付</div>
-            <div class="oride-middle">{{ systemClass.count }}笔</div>
+            <div class="oride-middle">
+              <em>{{ systemClass.count }}</em
+              >笔
+            </div>
             <div class="oride-bottom">{{ systemClass.value }}元</div>
           </div>
         </el-col>
         <!-- 退费 -->
         <el-col :span="5">
-          <div class="grid-content bg-purple bear-order">
+          <div class="grid-content bg-purple">
             <div class="oride-top">退费</div>
-            <div class="oride-middle">{{ littleBear.count }}笔</div>
+            <div class="oride-middle">
+              <em>{{ littleBear.count }}</em
+              >笔
+            </div>
             <div class="oride-bottom">{{ littleBear.value }}币</div>
           </div>
         </el-col>
-        <!-- 推荐有礼 -->
-        <!-- <el-col :span="4">
-          <div class="grid-content bg-purple recommended-order">
-            <div class="oride-top">推荐有礼</div>
-            <div class="oride-middle">{{ recommended.count }}笔</div>
-            <div class="oride-bottom">{{ recommended.value }}宝石</div>
-          </div>
-        </el-col> -->
       </el-row>
     </article>
     <!-- 分割线 -->
     <el-divider></el-divider>
     <!-- tab列表 -->
     <article class="bottom-box">
-      <table-order :topic="topic" :search="search" />
+      <table-order
+        :topic="topic"
+        :search="search"
+        @statistics="getStatistics"
+      />
     </article>
   </div>
 </template>
@@ -150,6 +158,11 @@ export default {
     this.statList()
   },
   methods: {
+    // 获取订单统计
+    getStatistics(res) {
+      console.log(res)
+    },
+
     statList() {
       const must = []
       if (this.teacherId) {
@@ -226,124 +239,34 @@ export default {
 .top-box {
   width: 100%;
   height: 100%;
-  // 订单总计
-  .total-order {
-    span {
-      width: 33.3%;
-      display: inline-block;
-    }
-    .oride-top {
-      font-size: 12px;
-      text-align: center;
-      padding: 10px 0;
-      color: #666666;
-    }
-    .oride-middle {
-      font-family: 'number_font';
+  .grid-content {
+    cursor: pointer;
+  }
+  .oride-top {
+    font-size: 12px;
+    text-align: center;
+    padding: 10px 0;
+    color: #666666;
+  }
+  .oride-middle {
+    font-family: 'number_font';
+    font-size: 14px;
+    color: #4d4d4d;
+    text-align: center;
+    padding: 10px 0;
+    em {
+      margin-right: 5px;
       font-size: 24px;
-      color: #4d4d4d;
-      text-align: center;
-      padding: 10px 0;
-    }
-    .oride-bottom {
-      font-family: 'number_font';
-      color: #666666;
-      font-size: 12px;
-      text-align: center;
-      padding: 10px 0;
+      font-style: normal;
+      color: #409eff;
     }
   }
-  // 体验课
-  .experience-order {
-    .oride-top {
-      font-size: 12px;
-      color: #666666;
-      text-align: center;
-      padding: 10px 0;
-    }
-    .oride-middle {
-      font-family: 'number_font';
-      font-size: 24px;
-      color: #4d4d4d;
-      text-align: center;
-      padding: 10px 0;
-    }
-    .oride-bottom {
-      font-family: 'number_font';
-      color: #666666;
-      font-size: 12px;
-      text-align: center;
-      padding: 10px 0;
-    }
-  }
-  // 系统课
-  .system-order {
-    .oride-top {
-      font-size: 12px;
-      color: #666666;
-      text-align: center;
-      padding: 10px 0;
-    }
-    .oride-middle {
-      font-family: 'number_font';
-      font-size: 24px;
-      color: #4d4d4d;
-      text-align: center;
-      padding: 10px 0;
-    }
-    .oride-bottom {
-      font-family: 'number_font';
-      color: #666666;
-      font-size: 12px;
-      text-align: center;
-      padding: 10px 0;
-    }
-  }
-  // 小熊商城
-  .bear-order {
-    .oride-top {
-      font-size: 12px;
-      color: #666666;
-      text-align: center;
-      padding: 10px 0;
-    }
-    .oride-middle {
-      font-family: 'number_font';
-      font-size: 24px;
-      color: #4d4d4d;
-      text-align: center;
-      padding: 10px 0;
-    }
-    .oride-bottom {
-      font-family: 'number_font';
-      color: #666666;
-      font-size: 12px;
-      text-align: center;
-      padding: 10px 0;
-    }
-  }
-  // 推荐有礼
-  .recommended-order {
-    .oride-top {
-      color: #666666;
-      font-size: 12px;
-      text-align: center;
-      padding: 10px 0;
-    }
-    .oride-middle {
-      font-family: 'number_font';
-      font-size: 24px;
-      color: #4d4d4d;
-      text-align: center;
-      padding: 10px 0;
-    }
-    .oride-bottom {
-      font-family: 'number_font';
-      color: #666666;
-      font-size: 12px;
-      text-align: center;
-      padding: 10px 0;
-    }
+  .oride-bottom {
+    font-family: 'number_font';
+    color: #666666;
+    font-size: 12px;
+    text-align: center;
+    padding: 10px 0;
   }
 }
 // .bottom-box {
