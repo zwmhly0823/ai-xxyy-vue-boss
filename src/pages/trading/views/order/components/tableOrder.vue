@@ -190,14 +190,17 @@ export default {
     // 订单列表
     async getOrderList(page = this.currentPage) {
       const queryObj = {}
-      const must = []
+      // const must = []
       if (this.teacherId) {
         Object.assign(queryObj, { last_teacher_id: this.teacherId })
       }
 
       // 搜索 must
-      const mustArr = this.searchIn.map((item) => JSON.stringify(item))
-      must.push(...mustArr)
+      // const mustArr = this.searchIn.map((item) => JSON.stringify(item))
+      // must.push(...mustArr)
+      this.searchIn.forEach((item) => {
+        Object.assign(queryObj, item)
+      })
 
       const topicRelation = await this.$http.Product.topicRelationId(
         `${JSON.stringify({

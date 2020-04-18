@@ -16,47 +16,49 @@
           <div class="grid-content bg-purple total-order">
             <div class="oride-top">订单总计</div>
             <div class="oride-middle">
-              <em>{{ totalOrder.count }}</em
+              <em>{{ statisticsObj.total.count }}</em
               >笔
             </div>
             <div class="oride-bottom">
-              <span>{{ totalOrder.value }}元</span>
-              <span>{{ littleBear.value }}币</span>
-              <span>{{ recommended.value }}宝石</span>
+              <span>{{ statisticsObj.total.value }}元</span>
+              <!-- <span>{{ littleBear.value }}币</span>
+              <span>{{ recommended.value }}宝石</span> -->
             </div>
           </div>
         </el-col>
-        <!-- 已完成 -->
+        <!-- 已完成 3 -->
         <el-col :span="5">
           <div class="grid-content bg-purple">
             <div class="oride-top">已完成</div>
             <div class="oride-middle">
-              <em>{{ experience.count }}</em
+              <em>{{ statisticsObj.payed.count || 0 }}</em
               >笔
             </div>
-            <div class="oride-bottom">{{ experience.value }}元</div>
+            <div class="oride-bottom">
+              {{ statisticsObj.payed.value || 0 }}元
+            </div>
           </div>
         </el-col>
-        <!-- 未支付 -->
+        <!-- 未支付 0，1 -->
         <el-col :span="5">
           <div class="grid-content bg-purple">
             <div class="oride-top">未支付</div>
             <div class="oride-middle">
-              <em>{{ systemClass.count }}</em
+              <em>{{ statisticsObj.topay.count }}</em
               >笔
             </div>
-            <div class="oride-bottom">{{ systemClass.value }}元</div>
+            <div class="oride-bottom">{{ statisticsObj.topay.value }}元</div>
           </div>
         </el-col>
-        <!-- 退费 -->
+        <!-- 退费： 退费中 5，已退费 6，7 -->
         <el-col :span="5">
           <div class="grid-content bg-purple">
             <div class="oride-top">退费</div>
             <div class="oride-middle">
-              <em>{{ littleBear.count }}</em
+              <em>{{ statisticsObj.refund.count }}</em
               >笔
             </div>
-            <div class="oride-bottom">{{ littleBear.value }}币</div>
+            <div class="oride-bottom">{{ statisticsObj.refund.value }}币</div>
           </div>
         </el-col>
       </el-row>
@@ -75,7 +77,6 @@
 </template>
 <script>
 import tableOrder from './tableOrder'
-import axios from '@/api/axios'
 import { isToss } from '@/utils/index'
 export default {
   components: {
@@ -108,16 +109,14 @@ export default {
       // tab: '3', // 默认显示 3 - 已完成
       // 搜索
       searchIn: [],
-      // 体验课
-      experience: {},
-      // 系统课
-      systemClass: { count: 0, value: 0 },
-      // 小熊商城
-      littleBear: { count: 0, value: 0 },
-      // 推荐有礼
-      recommended: { count: 0, value: 0 },
-      // 订单总计
-      totalOrder: { count: 0, value: 0 }
+      statistics: {
+        '0': { count: 0, value: 0 },
+        '1': { count: 0, value: 0 },
+        '3': { count: 0, value: 0 },
+        '5': { count: 0, value: 0 },
+        '6': { count: 0, value: 0 },
+        '7': { count: 0, value: 0 }
+      }
     }
   },
   computed: {
@@ -129,6 +128,38 @@ export default {
     //     this.recommended.count
     //   )
     // },
+
+    // statistics format
+    statisticsObj() {
+      const { statistics } = this
+      const obj = {}
+      // 未支付 0，1
+      obj.topay = {
+        count: +statistics['0'].count + +statistics['1'].count,
+        value: +statistics['0'].value + +statistics['1'].value
+      }
+      // 退费：5，6，7
+      obj.refund = {
+        count:
+          +statistics['5'].count +
+          +statistics['6'].count +
+          +statistics['7'].count,
+        value:
+          +statistics['5'].value +
+          +statistics['6'].value +
+          +statistics['7'].value
+      }
+      obj.payed = {
+        count: +statistics['3'].count,
+        value: +statistics['3'].value
+      }
+      obj.total = {
+        count: obj.topay.count + obj.refund.count + obj.payed.count,
+        value: obj.topay.value + obj.refund.value + obj.payed.value
+      }
+      return obj
+    }
+
     // amountTotal() {
     //   return (this.experience.value + this.systemClass.value).toFixed(2)
     // }
@@ -147,7 +178,7 @@ export default {
     // 搜索
     search(val) {
       this.searchIn = val
-      this.statList()
+      // this.statList()
     }
   },
   created() {
@@ -155,78 +186,25 @@ export default {
     if (teacherId) {
       this.teacherId = teacherId
     }
-    this.statList()
+    // this.statList()
   },
   methods: {
     // 获取订单统计
     getStatistics(res) {
-      console.log(res)
-    },
-
-    statList() {
-      const must = []
-      if (this.teacherId) {
-        must.push(`{ "term": { "teacher_id": ${this.teacherId} } }`)
-      }
-
-      // 搜索 must
-      const mustArr = this.searchIn.map((item) => JSON.stringify(item))
-      must.push(...mustArr)
-
-      const should = this.tab ? [`{"terms": {"status": [${this.tab}]}}`] : []
-      const queryStr = `{
-        "bool": {
-          "must": [${must}],
-          "filter": {
-            "bool": {
-              "should": [${should}]
-            }
+      const obj = {}
+      if (res && res.length > 0) {
+        res.forEach((item) => {
+          const { code, count, value } = item
+          obj[`${code}`] = {
+            count,
+            value
           }
-        }
-      }`
-      axios
-        .post('/graphql/order', {
-          query: `{
-            orderStatistics(query: ${JSON.stringify(queryStr)}) {
-              type
-              info {
-                count
-                desc
-                value
-              }
-            }
-        }`
         })
-        .then((res) => {
-          const _data = res.data.orderStatistics
-          console.log(_data, '_data')
-          this.experience = { count: 0, value: 0 }
-          this.systemClass = { count: 0, value: 0 }
-          this.littleBear = { count: 0, value: 0 }
-          this.recommended = { count: 0, value: 0 }
-          this.totalOrder = { count: 0, value: 0 }
-          // if (_data.length !== 0) {
-          _data.forEach((val) => {
-            if (val.type === 'bear') {
-              // 小熊商城
-              this.littleBear = val.info
-            } else if (val.type === 'gem') {
-              // 推荐有礼
-              this.recommended = val.info
-            } else if (val.type === 'experience') {
-              // 体验课
-              this.experience = val.info
-            } else if (val.type === 'system') {
-              // 系统课
-              this.systemClass = val.info
-            } else if (val.type === 'total_order') {
-              this.totalOrder = val.info
-            }
-          })
-          // }
-
-          this.statData = res.data.orderStatistics
-        })
+      }
+      this.statistics = {
+        ...this.statistics,
+        ...obj
+      }
     }
   }
 }
