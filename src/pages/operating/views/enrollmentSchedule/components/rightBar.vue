@@ -4,7 +4,7 @@
  * @Author: shentong
  * @Date: 2020-04-02 16:08:02
  * @LastEditors: Shentong
- * @LastEditTime: 2020-04-18 22:09:07
+ * @LastEditTime: 2020-04-18 22:13:23
  -->
 <template>
   <div>
@@ -73,7 +73,7 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="address" label="带班销售人数">
+        <el-table-column prop="address" label="带班销售人数" width="100">
           <template slot-scope="scope">
             <div v-for="(w, l_index) in scope.row.WechatCourse" :key="l_index">
               {{ w.wechatSize || '' }}

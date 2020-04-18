@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-15 20:35:57
  * @LastEditors: Shentong
- * @LastEditTime: 2020-04-18 22:00:22
+ * @LastEditTime: 2020-04-18 22:15:54
  -->
 <template>
   <div class="third-step">
@@ -18,7 +18,7 @@
         @pageChange="pageChange_handler"
         class="mytable"
       >
-        <el-table-column prop="period" label="序号" width="70">
+        <el-table-column type="index" label="序号" width="70">
         </el-table-column>
         <el-table-column prop="teacherRealName" label="真实姓名" width="100">
         </el-table-column>
