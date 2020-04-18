@@ -4,15 +4,15 @@
  * @Author: Shentong
  * @Date: 2020-04-15 20:35:57
  * @LastEditors: Shentong
- * @LastEditTime: 2020-04-17 22:36:14
+ * @LastEditTime: 2020-04-18 19:41:32
  -->
 <template>
   <div class="second-step">
     <div class="step-container step-two-container">
       <el-row :gutter="20">
-        <el-col :span="3" :offset="3"
-          ><org-dept @changeOrgDept="changeOrgDept"></org-dept
-        ></el-col>
+        <el-col :span="4" :offset="3">
+          <org-dept @changeOrgDept="changeOrgDept"></org-dept>
+        </el-col>
         <el-col :span="16">
           <div class="transfer-container">
             <el-transfer
@@ -54,8 +54,10 @@ export default {
   props: ['stepStatus'],
   data() {
     return {
-      period: '',
-      courseType: '0',
+      params: {
+        period: '',
+        courseType: '0'
+      },
       rightDefaultChecked: [],
       transferData: [],
       transferVal: [],
@@ -82,8 +84,7 @@ export default {
   watch: {},
   mounted() {
     const { period = 0, courseType = '0' } = this.$route.params
-    this.period = period
-    this.courseType = courseType
+    Object.assign(this.params, period, courseType)
     this.getData()
   },
   methods: {
@@ -93,13 +94,9 @@ export default {
     },
     // 编辑页获取所 选择的 teacher：TODO:
     async getHasSelectTeacher() {
-      const params = {
-        period: this.period,
-        courseType: this.courseType
-      }
       try {
         const teacherList = await this.$http.Operating.getHasSelectTeacher(
-          params
+          this.params
         )
         const { payload = [] } = teacherList
         return Promise.resolve(payload)
@@ -173,10 +170,9 @@ export default {
       this.department(data)
     },
     handleChange(val) {
-      console.log('transferVal', val)
+      // console.log('transferVal', val)
     },
     stepOperate(type) {
-      console.log('transferVal', this.transferVal)
       if (!type) {
         this.$emit('listenStepStatus', type)
       } else if (!this.transferVal.length) {
@@ -199,6 +195,12 @@ export default {
   box-sizing: border-box;
   display: block;
   width: auto;
+}
+.el-transfer-panel__body {
+  height: 300px;
+}
+.el-transfer-panel__list.is-filterable {
+  height: 270px;
 }
 </style>
 <style lang="scss" scoped>

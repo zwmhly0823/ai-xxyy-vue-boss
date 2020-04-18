@@ -4,13 +4,13 @@
  * @Author: zhubaodong
  * @Date: 2020-04-02 15:35:27
  * @LastEditors: Shentong
- * @LastEditTime: 2020-04-18 15:57:21
+ * @LastEditTime: 2020-04-18 21:06:19
  -->
 <template>
   <el-row type="flex" class="app-main height schedule-container">
     <el-col class="schedule-container-right">
       <div class="grid-content">
-        <el-scrollbar wrap-class="scrollbar-wrapper" id="right-scroll">
+        <el-scrollbar wrap-class="scrollbar-wrapper">
           <right-bar :department="currentDept" />
         </el-scrollbar>
       </div>
@@ -51,7 +51,6 @@ export default {
     overflow-x: hidden;
     flex: 1;
     margin: 10px;
-    padding-bottom: 10px;
   }
   .grid-content {
     background: white;

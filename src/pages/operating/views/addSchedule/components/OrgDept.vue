@@ -4,28 +4,32 @@
  * @Author: zhubaodong
  * @Date: 2020-03-13 16:53:27
  * @LastEditors: Shentong
- * @LastEditTime: 2020-04-16 20:03:00
+ * @LastEditTime: 2020-04-18 19:42:19
  -->
 <template>
   <div class="left-container" @mouseleave="outTools">
     <!-- <div class="title">组织结构</div> -->
-    <el-tree
-      class="left-container-tree"
-      :data="departmentList"
-      :default-expand-all="false"
-      node-key="id"
-      :current-node-key="0"
-      :expand-on-click-node="false"
-      :default-expanded-keys="['1']"
-      highlight-current
-      style="color:#2F2E31"
-      @node-click="nodeClick"
-      @contextmenu.prevent="defaultHandler()"
-    >
-      <span class="custom-tree-node" slot-scope="{ node, data }">
-        <span :title="data.id">{{ data.name }}</span>
-      </span>
-    </el-tree>
+    <el-scrollbar wrap-class="scrollbar-wrapper">
+      <div class="tree-container">
+        <el-tree
+          class="left-container-tree"
+          :data="departmentList"
+          :default-expand-all="false"
+          node-key="id"
+          :current-node-key="0"
+          :expand-on-click-node="false"
+          :default-expanded-keys="['1']"
+          highlight-current
+          style="color:#2F2E31"
+          @node-click="nodeClick"
+          @contextmenu.prevent="defaultHandler()"
+        >
+          <span class="custom-tree-node" slot-scope="{ node, data }">
+            <span :title="data.id">{{ data.name }}</span>
+          </span>
+        </el-tree>
+      </div>
+    </el-scrollbar>
   </div>
 </template>
 
@@ -108,6 +112,15 @@ export default {
 </script>
 <style lang="scss" scoped>
 .left-container {
+  .tree-container {
+    max-height: 350px;
+  }
+  .el-scrollbar .el-scrollbar__wrap .el-scrollbar__view {
+    white-space: nowrap;
+  }
+  // .scrollbar-wrapper {
+  //   overflow-x: hidden;
+  // }
   .title {
     font-size: 18px;
   }

@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-15 20:35:57
  * @LastEditors: Shentong
- * @LastEditTime: 2020-04-18 16:19:51
+ * @LastEditTime: 2020-04-18 17:42:43
  -->
 <template>
   <div class="first-step">
@@ -235,6 +235,7 @@ export default {
           sellCycle,
           robinNum // 接速设置
         }
+        console.log(this.formInfo, '-----')
 
         this.sellCycleTimeChange(this.formInfo.sellCycleTime)
         this.attendClassTimeChange(this.formInfo.attendClassTime)
