@@ -176,7 +176,7 @@
         </el-radio-group>
       </el-form-item>
       <!-- 分配微信号 -->
-      <!-- <el-form-item label="分配微信号">
+      <el-form-item label="分配微信号">
         <el-select
           v-model="ruleForm.weChat"
           multiple
@@ -185,13 +185,13 @@
         >
           <el-option
             v-for="item in WeChat"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
+            :key="item.id"
+            :label="item.wechat_no"
+            :value="item.id"
           >
           </el-option>
         </el-select>
-      </el-form-item> -->
+      </el-form-item>
     </el-form>
     <div style="text-align: center; padding:10px 0">
       <el-button type="primary" @click="submitHandle('ruleForm')"
@@ -278,10 +278,7 @@ export default {
         { label: '离职', value: 'LEAVE' }
       ],
       // 微信
-      // WeChat: [
-      //   { label: '123', value: 1 },
-      //   { label: '456', value: 2 }
-      // ],
+      WeChat: [],
       // 表单value
       ruleForm: {
         // 手机号
@@ -313,9 +310,9 @@ export default {
         // 账号设置
         accountSettings: 'YES',
         // 在职状态
-        workingState: 'TENURE'
+        workingState: 'TENURE',
         // 分配微信号
-        // weChat: []
+        weChat: []
       },
 
       // 表单验证
@@ -470,6 +467,11 @@ export default {
           }
         })
       })
+      // 新建微信
+      this.$http.Teacher.WeChatTeacherList().then((res) => {
+        console.log(res.data.WeChatTeacherList, 'res99999')
+        this.WeChat = res.data.WeChatTeacherList
+      })
       if (this.$route.query && this.$route.query.teacherId) {
         // 教师详情
         this.$http.Teacher.getTeacherDetail(this.$route.query.teacherId).then(
@@ -557,7 +559,8 @@ export default {
           id: this.ruleForm.region[this.ruleForm.region.length - 1]
         },
         duty: positionValId,
-        rank: { id: this.ruleForm.rank }
+        rank: { id: this.ruleForm.rank },
+        weixinList: this.ruleForm.weChat
       }
       this.$refs[formName].validate((valid) => {
         if (valid) {
