@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-15 20:35:57
  * @LastEditors: Shentong
- * @LastEditTime: 2020-04-18 19:41:32
+ * @LastEditTime: 2020-04-18 21:53:03
  -->
 <template>
   <div class="second-step">
@@ -84,7 +84,9 @@ export default {
   watch: {},
   mounted() {
     const { period = 0, courseType = '0' } = this.$route.params
-    Object.assign(this.params, period, courseType)
+    console.log(period, '909999')
+    this.params.period = period
+    this.params.courseType = courseType
     this.getData()
   },
   methods: {
@@ -156,7 +158,8 @@ export default {
         this.totalElements = +totalElements
       }
       // 编辑页面
-      if (this.period) {
+      console.log(this.params, 'this.params')
+      if (this.params.period) {
         const teachers = await this.getHasSelectTeacher()
         teachers &&
           teachers.forEach((item) => {

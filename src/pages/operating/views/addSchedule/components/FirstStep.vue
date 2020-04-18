@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-15 20:35:57
  * @LastEditors: Shentong
- * @LastEditTime: 2020-04-18 17:42:43
+ * @LastEditTime: 2020-04-18 21:46:51
  -->
 <template>
   <div class="first-step">
@@ -207,6 +207,7 @@ export default {
   watch: {},
   async created() {
     const { period = '', courseType = 0 } = this.$route.params
+    this.period = period
     this.courseType = courseType
 
     if (+period) {
@@ -364,7 +365,8 @@ export default {
         ...this.sellCycleObj,
         robinNum: this.formInfo.robinNum,
         sellCycle: this.setSellTimeForm,
-        type: this.courseType
+        type: this.courseType,
+        period: +this.period || ''
       })
       console.log(sendFrom, 'sendform')
       return sendFrom

@@ -4,7 +4,7 @@
  * @Author: shentong
  * @Date: 2020-04-02 16:08:02
  * @LastEditors: Shentong
- * @LastEditTime: 2020-04-18 21:06:41
+ * @LastEditTime: 2020-04-18 22:13:23
  -->
 <template>
   <div>
@@ -43,10 +43,26 @@
         </el-table-column>
         <el-table-column prop="periodName" label="期名" width="80">
         </el-table-column>
-        <el-table-column prop="startDate" label="开始招生"></el-table-column>
-        <el-table-column prop="endDate" label="结束招生"></el-table-column>
-        <el-table-column prop="courseDay" label="开课时间"></el-table-column>
-        <el-table-column prop="endCourseDay" label="结课时间"></el-table-column>
+        <el-table-column
+          prop="startDate"
+          width="100"
+          label="开始招生"
+        ></el-table-column>
+        <el-table-column
+          prop="endDate"
+          width="100"
+          label="结束招生"
+        ></el-table-column>
+        <el-table-column
+          prop="courseDay"
+          width="100"
+          label="开课时间"
+        ></el-table-column>
+        <el-table-column
+          prop="endCourseDay"
+          width="100"
+          label="结课时间"
+        ></el-table-column>
         <el-table-column prop="address" label="招生级别">
           <template slot-scope="scope">
             <div
@@ -57,7 +73,7 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="address" label="带班销售人数">
+        <el-table-column prop="address" label="带班销售人数" width="100">
           <template slot-scope="scope">
             <div v-for="(w, l_index) in scope.row.WechatCourse" :key="l_index">
               {{ w.wechatSize || '' }}
