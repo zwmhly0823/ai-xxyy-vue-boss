@@ -217,7 +217,7 @@ export default {
       }
     },
     searchHandler(res) {
-      console.log('列表数据渲染', res)
+      // console.log('列表数据渲染', res)
 
       if (res.length > 0) {
         const wildcard = {}
@@ -243,7 +243,7 @@ export default {
       if (this.querSearch && this.searchQuery) {
         Object.assign(this.searchQuery, this.querSearch)
       }
-      console.log('querSearch', this.searchQuery)
+      // console.log('querSearch', this.searchQuery)
       if (this.searchQuery.wechat_no || this.searchQuery.teacher_id) {
         this.weChatPageList(this.searchQuery)
       }
@@ -262,10 +262,10 @@ export default {
         .then((res) => {
           // 总条数
           this.totalElements = +res.data.WeChatTeacherPage.totalElements
-          console.log('####this.totalElements###', this.totalElements)
+          // console.log('####this.totalElements###', this.totalElements)
           // 当前是第几页
           this.currentPage = +res.data.WeChatTeacherPage.number
-          console.log('####this.currentPage###', this.currentPage)
+          // console.log('####this.currentPage###', this.currentPage)
           this.table.tableData = res.data.WeChatTeacherPage.content
           const arrayTId = []
           const arrayWId = []
@@ -289,7 +289,7 @@ export default {
           this.$http.Weixin.getTeacherList(arrayTId)
             .catch((err) => console.log(err))
             .then((res) => {
-              console.log('微信管理列表所在部门', res)
+              // console.log('微信管理列表所在部门', res)
               const jsonData = {}
               if (res.data.TeacherList) {
                 res.data.TeacherList.forEach((item) => {
@@ -309,8 +309,8 @@ export default {
                     (tmp.pteamname = item.department.pname)
                   item.department.id && (tmp.teamid = item.department.id)
                   jsonData[item.id] = tmp
-                  console.log('+_+_+_tmp+_+_+', tmp)
-                  console.log('+)+)+)+)+)jsonData+(+(+(+(+(+', jsonData)
+                  // console.log('+_+_+_tmp+_+_+', tmp)
+                  // console.log('+)+)+)+)+)jsonData+(+(+(+(+(+', jsonData)
                 })
                 this.concatTeacher = jsonData
               }
