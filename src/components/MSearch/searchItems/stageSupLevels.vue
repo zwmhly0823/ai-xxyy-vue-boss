@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-24 18:50:54
  * @LastEditors: Lukun
- * @LastEditTime: 2020-04-18 17:26:00
+ * @LastEditTime: 2020-04-18 19:13:20
  -->
 <template>
   <div class="search-item small">
@@ -152,6 +152,7 @@ export default {
     },
     typeStage(val) {
       console.log(val, 'state.leftbar.typeStage')
+      this.schedule = []
       this.getManagementList(val)
     }
   },

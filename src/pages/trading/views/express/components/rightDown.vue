@@ -94,7 +94,7 @@
       <el-table-column label="期数">
         <template slot-scope="scope">
           <div class="product">
-            <span>{{ scope.row.term }}期</span>
+            <span>{{ ManagementList[scope.row.term] }}</span>
           </div>
         </template>
       </el-table-column>
@@ -112,7 +112,7 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="物流状态">
+      <el-table-column label="物流状态" width="120">
         <template slot-scope="scope">
           <div class="express">
             <div :class="'wait_' + scope.row.express_status">
@@ -326,7 +326,8 @@ export default {
       TeacherList: '',
       StudentTeamList: '',
       realnameId: '',
-      teamId: ''
+      teamId: '',
+      ManagementList: []
     }
   },
   methods: {
@@ -559,7 +560,9 @@ export default {
           timeType.express_nu = item.wildcard.express_nu
         }
       })
-      this.teacherId && (timeType.teacher_id = this.teacherId)
+      if (this.teacherId) {
+        this.teacherId && (timeType.teacher_id = this.teacherId)
+      }
       timeType = {
         ...timeType,
         express_status: id
@@ -632,9 +635,11 @@ export default {
             const resData = res.data.LogisticsListPage.content
             const realnameId = [] // 老师Id
             const teamId = [] // 班级Id
+            const schedule = []
             resData.forEach((item) => {
               realnameId.push(item.teacher_id)
               teamId.push(item.last_team_id)
+              schedule.push(item.term)
               item.crtime = formatData(+item.ctime, 's')
               item.detime = formatData(+item.delivery_collect_time, 's')
               item.uptime = formatData(+item.utime, 's')
@@ -650,6 +655,7 @@ export default {
             this.totalElements = +res.data.LogisticsListPage.totalElements // 总条数
             this.getTeacherList(realnameId)
             this.getStudentTeamList(teamId)
+            this.getScheduleList(schedule)
           }
         })
     },
@@ -691,6 +697,27 @@ export default {
             obj[item.id] = item.realname
           })
           this.TeacherList = obj
+        })
+    },
+    // 获取期数
+    getScheduleList(id) {
+      const queryString = JSON.stringify({ id: id })
+      axios
+        .post('/graphql/v1/toss', {
+          query: `{ManagementList(query:${JSON.stringify(queryString)}){
+                      id
+                      period_name
+                    }
+                    }       `
+        })
+        .then((res) => {
+          const obj = {}
+
+          res.data.ManagementList.forEach((item) => {
+            // {`${item.name}`:item.term}
+            obj[item.id] = item.period_name
+          })
+          this.ManagementList = obj
         })
     },
     toggleSelection(rows) {
