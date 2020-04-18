@@ -15,6 +15,7 @@
         <search-phone
           @result="getPhoneHander"
           :teamId="teamId"
+          :teamType="teamType"
           :name="phone"
           :onlyPhone="onlyPhone"
           :tip="phoneTip"
@@ -182,6 +183,11 @@ export default {
     datePlaceholder: {
       type: String,
       default: '下单时间'
+    },
+    // 班级内搜索 需要班级类型
+    teamType: {
+      type: String,
+      default: '' // 0
     },
     // 手机号
     phone: {

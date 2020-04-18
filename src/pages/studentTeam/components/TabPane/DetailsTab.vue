@@ -3,8 +3,8 @@
  * @version:
  * @Author: panjian
  * @Date: 2020-03-16 14:19:58
- * @LastEditors: panjian
- * @LastEditTime: 2020-04-09 20:01:55
+ * @LastEditors: zhubaodong
+ * @LastEditTime: 2020-04-17 16:25:28
  -->
 <template>
   <div>
@@ -15,6 +15,7 @@
         phone="uid"
         onlyPhone="1"
         phoneTip="手机号/微信昵称 查询"
+        :teamType="`${classId.classId && classId.classId.team_type}`"
         :teamId="classId.classId && classId.classId.id"
       />
       <el-button
