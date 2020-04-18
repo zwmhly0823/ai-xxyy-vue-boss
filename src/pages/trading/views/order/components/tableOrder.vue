@@ -159,6 +159,7 @@ export default {
       teacherId: '',
       // 搜索
       searchIn: [],
+      statisticsQuery: [], // 统计需要 bool 表达式
       // 切换支付状态
       status: '3', // 默认显示 3 - 已完成
       departmentObj: {}, // 组织机构 obj
@@ -183,6 +184,7 @@ export default {
     search(val) {
       this.currentPage = 1
       this.searchIn = val
+      this.statisticsQuery = []
       this.getOrderList()
     }
   },
@@ -193,14 +195,8 @@ export default {
       // const must = []
       if (this.teacherId) {
         Object.assign(queryObj, { last_teacher_id: this.teacherId })
+        this.statisticsQuery.push({ term: { last_teacher_id: this.teacherId } })
       }
-
-      // 搜索 must
-      // const mustArr = this.searchIn.map((item) => JSON.stringify(item))
-      // must.push(...mustArr)
-      this.searchIn.forEach((item) => {
-        Object.assign(queryObj, item)
-      })
 
       const topicRelation = await this.$http.Product.topicRelationId(
         `${JSON.stringify({
@@ -215,6 +211,13 @@ export default {
         relationIds = topicRelation.data.PackagesTopicList.map(
           (item) => item.relation_id
         )
+
+      // 组合搜索条件
+      this.searchIn.forEach((item) => {
+        const subObj = item && (item.term || item.terms || item.range)
+        Object.assign(queryObj, subObj || {})
+      })
+
       /**
        * this.topic
        * 体验课(4),系统课(5)去 p_packages_topic表找relation_id
@@ -222,14 +225,20 @@ export default {
       if (this.topic === '4' || this.topic === '5') {
         Object.assign(queryObj, { packages_id: relationIds })
         this.orderData(queryObj, this.currentPage)
-        // 统计
-        this.$http.Order.orderStatistics(queryObj, 'amount', 'status').then(
-          (res) => {
-            console.log(res)
-            const statistics = res.data.OrderStatistics || []
-            this.$emit('statistics', statistics)
-          }
-        )
+
+        // 获取统计数据
+        this.statisticsQuery.push({
+          terms: { packages_id: relationIds }
+        })
+        this.$http.Order.orderStatistics(
+          this.statisticsQuery,
+          'amount',
+          'status'
+        ).then((res) => {
+          console.log(res)
+          const statistics = res.data.OrderStatistics || []
+          this.$emit('statistics', statistics)
+        })
       }
       /*
        * 活动订单 - (小熊商城1，推荐有礼2，赠送6)
