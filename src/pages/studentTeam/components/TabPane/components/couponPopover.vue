@@ -77,6 +77,12 @@
         >
           {{ paidoutNo }}张优惠券发放失败
         </div>
+        <!-- 优惠卷发放失败原因 -->
+        <!-- <div class="failure-why" v-show="paidOut === 'NO' || paidOut === 'ALL'">
+          <div v-for="(item, index) in 100" :key="index">
+            {{ index + 1 }}.用户:失败原因:
+          </div>
+        </div> -->
         <span slot="footer" class="dialog-footer">
           <el-button @click="couponSuccessful = false">取 消</el-button>
           <el-button type="primary" @click="couponsucBtn">
@@ -172,6 +178,16 @@ export default {
   text-align: center;
   color: #f56c6c;
 }
+// 优惠卷发放失败原因
+// .failure-why {
+//   margin: 10px 0 0 0;
+//   height: 100px;
+//   overflow: scroll;
+//   border: 1px solid #eaeefb;
+//   text-align: center;
+//   font-size: 14px;
+//   color: #909399;
+// }
 </style>
 <style lang="scss">
 .el-select {
