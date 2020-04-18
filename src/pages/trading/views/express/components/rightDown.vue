@@ -112,7 +112,7 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="物流状态">
+      <el-table-column label="物流状态" width="120">
         <template slot-scope="scope">
           <div class="express">
             <div :class="'wait_' + scope.row.express_status">
