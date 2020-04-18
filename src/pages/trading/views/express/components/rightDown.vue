@@ -515,6 +515,9 @@ export default {
 
     getExpressList(id) {
       let timeType = {}
+      if (this.teacherId) {
+        this.teacherId && (timeType.teacher_id = this.teacherId)
+      }
       this.searchIn.forEach((item) => {
         if (item && item.term) {
           if (item.term.user_id) {
@@ -525,9 +528,6 @@ export default {
           }
           if (item.term && item.term.last_team_id) {
             timeType.last_team_id = item.term.last_team_id
-          }
-          if (item.term && item.term.teacher_id) {
-            timeType.teacher_id = item.term.teacher_id
           }
           if (item.term && item.term['product_version.keyword']) {
             timeType.product_version = `${item.term['product_version.keyword']}`
@@ -559,10 +559,11 @@ export default {
         if (item.wildcard && item.wildcard.express_nu) {
           timeType.express_nu = item.wildcard.express_nu
         }
+        if (item.wildcard && item.wildcard.teacher_id) {
+          timeType.teacher_id = item.wildcard.teacher_id
+        }
       })
-      if (this.teacherId) {
-        this.teacherId && (timeType.teacher_id = this.teacherId)
-      }
+
       timeType = {
         ...timeType,
         express_status: id
