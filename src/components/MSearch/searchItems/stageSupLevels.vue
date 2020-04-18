@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-24 18:50:54
  * @LastEditors: Lukun
- * @LastEditTime: 2020-04-16 16:28:11
+ * @LastEditTime: 2020-04-18 17:26:00
  -->
 <template>
   <div class="search-item small">
@@ -15,8 +15,7 @@
       clearable
       multiple
       size="mini"
-      placeholder="排期"
-      :disabled="disableClick"
+      placeholder="期数"
       @change="stageChange"
     >
       <el-option
@@ -27,6 +26,28 @@
       >
       </el-option>
     </el-select>
+
+    <!-- 排期 -->
+    <el-select
+      v-model="schedule"
+      class="item-style"
+      v-if="scheduleName"
+      clearable
+      multiple
+      size="mini"
+      placeholder="排期"
+      :disabled="disableClick"
+      @change="scheduleChange"
+    >
+      <el-option
+        v-for="item in scheduleList"
+        :key="item.id"
+        :label="item.period_name"
+        :value="item.period"
+      >
+      </el-option>
+    </el-select>
+    <!-- -->
     <el-select
       v-model="supData"
       class="item-style"
@@ -78,6 +99,10 @@ export default {
       type: String,
       default: 'stage'
     },
+    scheduleName: {
+      type: String,
+      default: 'period'
+    },
     supName: {
       type: String,
       default: 'sup'
@@ -99,9 +124,11 @@ export default {
   data() {
     return {
       stageList: [],
+      scheduleList: [],
       supList: [],
       levelList: [],
       stageData: null,
+      schedule: null,
       supData: null,
       levelData: null
     }
@@ -110,6 +137,9 @@ export default {
     ...mapState({
       disableClick: (state) => {
         return state.leftbar.disableClick
+      },
+      typeStage: (state) => {
+        return state.leftbar.typeStage
       }
     })
   },
@@ -119,19 +149,24 @@ export default {
     },
     addSupS(val) {
       console.log(val)
+    },
+    typeStage(val) {
+      console.log(val, 'state.leftbar.typeStage')
+      this.getManagementList(val)
     }
   },
   async created() {
     await this.getStage()
     await this.getSup()
     await this.getLevel()
+    await this.getManagementList(this.typeStage)
   },
   methods: {
     // 期数
     async getStage() {
       axios
         .post('/graphql/filter', {
-          query: `{  
+          query: `{
               teamStageList{
                 stage
                 stage_text
@@ -143,11 +178,32 @@ export default {
           this.stageList = res.data.teamStageList
         })
     },
+    // 排期
+    async getManagementList() {
+      let typeId = null
+      if (this.typeStage) {
+        typeId = JSON.stringify(`type:"${this.typeStage}"`)
+      }
+      axios
+        .post('/graphql/v1/toss', {
+          query: `{
+               ManagementList(query:${typeId}){
+                    id
+                    period
+                    period_name
+              }
+            }
+          `
+        })
+        .then((res) => {
+          this.scheduleList = res.data.ManagementList
+        })
+    },
     // 难度
     async getSup() {
       axios
         .post('/graphql/filter', {
-          query: `{    
+          query: `{
             courseSupList{
                 id
                 name
@@ -167,7 +223,7 @@ export default {
     async getLevel() {
       axios
         .post('/graphql/filter', {
-          query: `{  
+          query: `{
               courseLevelList{
                 id,
                 name
@@ -185,6 +241,13 @@ export default {
         data.length > 0 ? { [this.stageName]: this.stageData } : ''
       )
     },
+    scheduleChange(data) {
+      this.$emit(
+        'scheduleCallBack',
+        data.length > 0 ? { [this.scheduleName]: this.schedule } : ''
+      )
+    },
+
     supChange(data) {
       console.log(data, 'ddddaaaa')
 

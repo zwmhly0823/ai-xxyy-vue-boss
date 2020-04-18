@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-24 18:20:12
  * @LastEditors: Lukun
- * @LastEditTime: 2020-04-18 11:24:17
+ * @LastEditTime: 2020-04-18 18:00:47
  -->
 
 <template>
@@ -70,13 +70,15 @@
         <more-version-box @result="getVersionNu" :name="moreVersion" />
       </el-form-item>
 
-      <el-form-item v-if="level || sup || stage">
+      <el-form-item v-if="level || sup || stage || schedule">
         <stage-sup-levels
           @stageCallBack="stageCallBack"
           @supCallBack="supCallBack"
           @levelCallBack="levelCallBack"
+          @scheduleCallBack="scheduleCallBack"
           :disabled="true"
           :stageName="stage"
+          :scheduleName="schedule"
           :supName="sup"
           :levelName="level"
           :addSupS="addSupS"
@@ -158,6 +160,11 @@ export default {
     stage: {
       type: String,
       default: '' // stage
+    },
+    // 排期
+    schedule: {
+      type: String,
+      default: '' // schedule
     },
     // 难度
     sup: {
@@ -284,6 +291,11 @@ export default {
       console.log(res, 'res')
       this.setSeachParmas(res, [this.stage || 'stage'], 'terms')
     },
+    // 排期
+    scheduleCallBack(res) {
+      console.log(res, 'res')
+      this.setSeachParmas(res, [this.schedule || 'period'], 'terms')
+    },
     // 难度
     supCallBack(res) {
       console.log(res, 'res')
@@ -334,7 +346,7 @@ export default {
       this.setSeachParmas(res, [this.groupSell || 'teacher_id'], 'wildcard')
     },
     getTeamDetail(res) {
-      this.setSeachParmas(res, [this.teamDetail || 'last_team_id'], 'wildcard')
+      this.setSeachParmas(res, [this.teamDetail || 'last_team_id'])
     },
     getVersionNu(res) {
       this.setSeachParmas(res, [this.moreVersion || 'product_version'])

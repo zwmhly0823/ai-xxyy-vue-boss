@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-27 19:04:54
  * @LastEditors: Lukun
- * @LastEditTime: 2020-04-18 11:12:47
+ * @LastEditTime: 2020-04-18 18:12:18
  -->
 <template>
   <div class="container">
@@ -13,14 +13,14 @@
         @search="handleSearch"
         class="clearBorder"
         phone="user_id"
-        stage="term"
+        schedule="term"
         sup="sup"
         expressNo="express_nu"
         level="level"
         topicType="regtype"
         groupSell="teacher_id"
         teamDetail="last_team_id"
-        moreVersion="product_version"
+        moreVersion="product_version.keyword"
         :timeData="[
           { text: '购买时间', value: 'ctime' },
           { text: '揽收时间', value: 'delivery_collect_time' },
@@ -253,15 +253,23 @@ export default {
             item.wildcard['express_nu.keyword'] = item.wildcard.express_nu
             delete item.wildcard.express_nu
           }
-
+          // if (item.wildcard && item.wildcard.last_team_id) {
+          //   item['term'].team_id = item.wildcard.last_team_id
+          //   delete item.wildcard.last_team_id
+          // }
           if (item.term && item.term.regtype) {
             item.terms = { regtype: item.term.regtype.split(',') }
             delete item.term
           }
+          // if (item.terms && item.terms.term) {
+          //   if (condition) {
+          //   delete item.term.regtype
 
+          //   }
+          // }
           return item
         })
-        // console.length(term, 'term')
+        console.log(term, 'term-----------------')
         query = {
           bool: {
             must: term,
@@ -283,11 +291,11 @@ export default {
         user_id: '用户ID',
         out_trade_no: '订单号',
         regtype: '商品类型',
-        product_version: '随材版本',
-        term: '期数',
+        term: '期名',
         sup: '课程难度',
         level: '课程级别',
         product_name: '物流商品名称',
+        product_version: '随材版本',
         receipt_name: '收货人姓名',
         receipt_tel: '收货人手机号',
         province: '省',
