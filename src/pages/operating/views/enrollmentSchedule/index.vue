@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-04-02 15:35:27
  * @LastEditors: Shentong
- * @LastEditTime: 2020-04-14 16:52:19
+ * @LastEditTime: 2020-04-18 15:57:21
  -->
 <template>
   <el-row type="flex" class="app-main height schedule-container">
@@ -51,7 +51,7 @@ export default {
     overflow-x: hidden;
     flex: 1;
     margin: 10px;
-    padding-bottom: 45px;
+    padding-bottom: 10px;
   }
   .grid-content {
     background: white;

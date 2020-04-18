@@ -4,21 +4,27 @@
  * @Author: Shentong
  * @Date: 2020-03-16 19:46:39
  * @LastEditors: Shentong
- * @LastEditTime: 2020-04-17 21:43:13
+ * @LastEditTime: 2020-04-18 16:04:00
  */
 import axios from '../axiosConfig'
 
 export default {
   /**
+   * 获取体验课、系统课列表
+   */
+  getCourseListByType(params) {
+    return axios.get(
+      `/api/s/v1/management/enroll/sell?courseType=${params.courseType}&period=13`
+    )
+  },
+  /**
    * 新增招生排期第一步-add
-   *
    */
   addScheduleFirstStep(params) {
     return axios.post(`/api/s/v1/management/enroll/sell/save`, params)
   },
   /**
    * 新增招生排期第一步-edit获取数据
-   *
    */
   getScheduleFirstStep(params) {
     return axios.get(
@@ -27,7 +33,6 @@ export default {
   },
   /**
    * 新增招生排期第三步-获取 已选择的老师
-   *
    */
   getHasSelectTeacher(params) {
     return axios.get(
@@ -46,16 +51,16 @@ export default {
   },
   /**
    * 保存 招生排期 设置
-   * */
+   */
   saveScheduleConfig(params) {
     return axios.post(
       `/api/t/v1/teacher/course/enroll/teacher/config/save?courseType=${params.courseType}&period=${params.period}`,
       params.body
     )
   },
-  /**
+  /*
    * 密码登录
-   * */
+   */
   pwdLoginIn(params) {
     return axios.post('/api/b/v1/staff/login', params)
   }

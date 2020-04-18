@@ -4,7 +4,7 @@
  * @Author: shentong
  * @Date: 2020-04-02 16:08:02
  * @LastEditors: Shentong
- * @LastEditTime: 2020-04-17 22:02:12
+ * @LastEditTime: 2020-04-18 17:01:59
  -->
 <template>
   <div>
@@ -34,7 +34,7 @@
         :dataList="tableData"
         :loading="flags.loading"
         :size="tabQuery.size"
-        :page="tabQuery.pageNum"
+        :page="tabQuery.page"
         :total="totalElements"
         @pageChange="pageChange_handler"
         class="mytable"
@@ -83,6 +83,7 @@ export default {
   },
   data() {
     return {
+      canClick: true,
       query: '',
       tabIndex: 0,
       tabs: ['体验课', '系统课'],
@@ -92,7 +93,7 @@ export default {
       },
       tabQuery: {
         size: 2,
-        pageNum: 1
+        page: 1
       },
       sex: {
         // 0: '-',
@@ -112,11 +113,7 @@ export default {
       teacherID: ''
     }
   },
-  computed: {
-    currentDept() {
-      return this.department
-    }
-  },
+  computed: {},
   watch: {
     async department(dept = {}) {
       // 根据部门ID获取老师ID
@@ -156,11 +153,31 @@ export default {
     /**
      * @description 分页 回调事件
      */
-    pageChange_handler(page) {
-      this.query.pageNum = page
-      // this.getList()
+    async pageChange_handler(page) {
+      this.tabQuery.page = page
+      const aa = await this.getCourseListByType()
+
+      console.log(aa, 'aa')
     },
     /** adolf-end */
+    async getCourseListByType() {
+      this.flags.loading = true
+      const params = {
+        courseType: this.tabIndex
+      }
+      // TODO:
+      try {
+        const { payload = [] } = await this.$http.Operating.getCourseListByType(
+          params
+        )
+
+        return payload
+      } catch (err) {}
+
+      this.$nextTick(() => {
+        this.flags.loading = false
+      })
+    },
     getData(page = this.currentPage, query = JSON.stringify(this.query)) {
       // tab数据
       this.$http.Teacher.getTeacherPage(page, query).then((res) => {
@@ -181,21 +198,6 @@ export default {
     // 搜索
     handleSearch(data) {
       console.log(data)
-    },
-    // 选择按钮
-    changeHandler(data) {
-      console.log(data)
-    },
-    // 分页
-    handleSizeChange(val) {
-      this.currentPage = val
-      this.getData()
-      const dom = document.getElementById('right-scroll')
-      dom.querySelector('.scrollbar-wrapper').scrollTo(0, 0)
-    },
-    // 表头操作
-    headerOperation(val) {
-      console.log(val, '表头编辑')
     }
   }
 }

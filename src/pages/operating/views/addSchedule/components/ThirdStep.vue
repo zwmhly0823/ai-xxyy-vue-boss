@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-15 20:35:57
  * @LastEditors: Shentong
- * @LastEditTime: 2020-04-18 12:12:54
+ * @LastEditTime: 2020-04-18 13:34:29
  -->
 <template>
   <div class="third-step">
@@ -77,12 +77,15 @@
               :key="v_index"
               class="select-container"
             >
-              <!-- <div>{{ v.courseVersion || '' }}</div> -->
-              <el-select v-model="value" placeholder="请选择" size="mini">
+              <el-select
+                v-model="v.courseVersion"
+                size="mini"
+                placeholder="随材版本"
+              >
                 <el-option
-                  v-for="item in 5"
-                  :key="item.value"
-                  :label="item.label"
+                  v-for="(item, i) in productVersion"
+                  :key="i"
+                  :label="item.name"
                   :value="item.value"
                 >
                 </el-option>
@@ -94,10 +97,10 @@
 
       <!-- 取消、下一步 -->
       <div class="operate-btn">
-        <el-button size="small" type="primary" @click="preStep"
+        <el-button size="small" type="primary" @click="stepOpt(0)"
           >上一步</el-button
         >
-        <el-button size="small" type="primary" @click="nextStep"
+        <el-button size="small" type="primary" @click="stepOpt(1)"
           >提交保存</el-button
         >
       </div>
@@ -112,33 +115,17 @@ export default {
   props: ['stepStatus'],
   data() {
     return {
-      tableData: [
-        {
-          date: '2016-05-02',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        },
-        {
-          date: '2016-05-04',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1517 弄'
-        },
-        {
-          date: '2016-05-01',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1519 弄'
-        },
-        {
-          date: '2016-05-03',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1516 弄'
-        }
-      ],
+      tableData: [],
       loading: true,
       totalElements: 0,
       flags: {
         loading: true
       },
+      productVersion: [
+        { name: 'V1.4', value: 'V1.4' },
+        { name: 'V1.5', value: 'V1.5' },
+        { name: 'V1.6', value: 'V1.6' }
+      ],
       tabQuery: {
         size: 2,
         pageNum: 1
@@ -154,7 +141,7 @@ export default {
   watch: {},
   created() {
     console.log('scheduleTeacherId', this.scheduleTeacherId)
-    // 根据老师ids获取招生排期设置中老师配置信息
+    // 根据老师ids获取招生排期设置中老师配置信息 TODO:
     const params = {
       courseType: '0',
       period: 13,
@@ -207,7 +194,7 @@ export default {
     },
     // 翻页emit
     pageChange_handler() {},
-    async nextStep() {
+    async stepOpt(type) {
       const params = {
         courseType: '0',
         period: 13,
@@ -215,8 +202,8 @@ export default {
         body: this.tableData
       }
       await this.saveScheduleConfig(params)
-      console.log('table', this.tableData)
-      this.$emit('listenStepStatus', 1)
+
+      this.$emit('listenStepStatus', type)
     }
   }
 }

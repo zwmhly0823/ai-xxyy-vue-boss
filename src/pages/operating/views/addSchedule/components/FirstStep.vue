@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-15 20:35:57
  * @LastEditors: Shentong
- * @LastEditTime: 2020-04-17 20:28:44
+ * @LastEditTime: 2020-04-18 16:19:51
  -->
 <template>
   <div class="first-step">
@@ -75,8 +75,8 @@
             <el-col :span="3"><span class="t-head">已售(对外)</span></el-col>
           </el-row>
           <el-row v-for="(item, index) in diffDay" :key="index" :gutter="10">
-            <el-col :span="2">
-              <el-form-item label="">
+            <el-col :span="3">
+              <el-form-item label="" style="width:80%;">
                 <el-input
                   v-model="formInfo[`sellDate_${index}`]"
                   size="small"
@@ -84,7 +84,7 @@
                   placeholder="售卖日期"
                 ></el-input></el-form-item
             ></el-col>
-            <el-col :span="2" :offset="1">
+            <el-col :span="2">
               <el-form-item
                 label=""
                 :inline="true"
@@ -153,7 +153,7 @@
   </div>
 </template>
 <script>
-// import { GetAgeByBrithday } from '@/utils'
+import { Loading } from 'element-ui'
 export default {
   props: ['stepStatus'],
   data() {
@@ -206,9 +206,9 @@ export default {
   computed: {},
   watch: {},
   async created() {
-    const { period = 0, courseType = 0 } = this.$route.params
+    const { period = '', courseType = 0 } = this.$route.params
     this.courseType = courseType
-    console.log(courseType, '111', period)
+
     if (+period) {
       // 编辑页面 TODO:
       try {
@@ -222,7 +222,7 @@ export default {
           robinNum = '',
           sellCycle = []
         } = _data.payload
-        console.log('sellCycle', sellCycle)
+
         this.formInfo = {
           sellCycleTime: [
             new Date(Number(`${startDate}`)),
@@ -235,7 +235,6 @@ export default {
           sellCycle,
           robinNum // 接速设置
         }
-        console.log(this.formInfo, '-----')
 
         this.sellCycleTimeChange(this.formInfo.sellCycleTime)
         this.attendClassTimeChange(this.formInfo.attendClassTime)
@@ -314,6 +313,12 @@ export default {
     },
     // 新增招生排期第一步-add
     async addScheduleFirstStep(params, cb) {
+      const loadingInstance = Loading.service({
+        target: 'section',
+        lock: true,
+        text: '正在保存...',
+        fullscreen: true
+      })
       try {
         const _res = await this.$http.Operating.addScheduleFirstStep(params)
         if (_res.code === 0) cb()
@@ -323,6 +328,9 @@ export default {
           type: 'warning'
         })
       }
+
+      // 以服务的方式调用的 Loading 需要异步关闭
+      this.$nextTick(() => loadingInstance.close())
     },
     // 新增招生排期第一步-edit获取数据
     async getScheduleFirstStep(params) {

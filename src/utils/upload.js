@@ -4,16 +4,16 @@
  * @Author: shentong
  * @Date: 2019-12-17 15:43:27
  * @LastEditors: Shentong
- * @LastEditTime: 2020-04-16 17:43:57
+ * @LastEditTime: 2020-04-18 16:09:39
  */
 import axios from 'axios'
 import $http from '@/api'
 import Contants from '@/utils/contants'
-const getSuffix = (fileName) => {
-  var pos = fileName.lastIndexOf('.')
+const getSuffix = (_) => {
+  var pos = _.lastIndexOf('.')
   var suffix = ''
   if (pos !== -1) {
-    suffix = fileName.substring(pos)
+    suffix = _.substring(pos)
   }
   return suffix
 }
@@ -48,9 +48,9 @@ const uploadFile = async (file) => {
     const requestHost = `https://${bucketName}.${endpoint}`
     const filename = new Date().getTime() + getSuffix(file.file.name)
     const dirPath = 'h5/headPic/'
-    const formData = new FormData()
     const fileUrl = `${Contants.OSS_IMG_BASE_URL}/${dirPath}${filename}`
 
+    const formData = new FormData()
     formData.append('key', dirPath + filename) // 存储在oss的文件路径
     formData.append('OSSAccessKeyId', accessKeyId) // accessKeyId
     formData.append('policy', policy) // policy

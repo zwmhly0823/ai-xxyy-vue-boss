@@ -5,7 +5,7 @@
  * @Date: 2020-03-14 15:11:17
  * @LastEditors: Shentong
  * :max-height="maxHeight"
- * @LastEditTime: 2020-04-17 17:41:39
+ * @LastEditTime: 2020-04-18 15:59:31
  -->
 <template>
   <div id="tableList">
@@ -25,7 +25,7 @@
     >
       <slot></slot>
     </el-table>
-    <div class="page_box">
+    <div class="page_box" v-if="size <= total">
       <el-pagination
         background
         layout="prev, pager, next"
@@ -86,13 +86,17 @@ export default {
 <style lang="scss" scoped>
 #tableList {
   min-width: 900px;
+  position: relative;
+  padding-bottom: 50px;
 }
 .page_box {
-  margin: 0 20px 20px 0;
+  height: 50px;
+  display: flex;
+  align-items: center;
   text-align: right;
   text-align: right;
-  position: fixed;
+  position: absolute;
   bottom: 0;
-  right: 0;
+  right: 15px;
 }
 </style>
