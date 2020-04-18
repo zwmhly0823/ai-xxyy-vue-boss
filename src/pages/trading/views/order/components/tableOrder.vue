@@ -184,18 +184,19 @@ export default {
     search(val) {
       this.currentPage = 1
       this.searchIn = val
-      this.statisticsQuery = []
+      // this.statisticsQuery = val
       this.getOrderList()
     }
   },
   methods: {
     // 订单列表
     async getOrderList(page = this.currentPage) {
+      const statisticsQuery = []
       const queryObj = {}
       // const must = []
       if (this.teacherId) {
         Object.assign(queryObj, { last_teacher_id: this.teacherId })
-        this.statisticsQuery.push({ term: { last_teacher_id: this.teacherId } })
+        statisticsQuery.push({ term: { last_teacher_id: this.teacherId } })
       }
 
       const topicRelation = await this.$http.Product.topicRelationId(
@@ -227,11 +228,14 @@ export default {
         this.orderData(queryObj, this.currentPage)
 
         // 获取统计数据
-        this.statisticsQuery.push({
+        statisticsQuery.push({
           terms: { packages_id: relationIds }
         })
+        statisticsQuery.push(...this.searchIn)
+        console.log(statisticsQuery)
+
         this.$http.Order.orderStatistics(
-          this.statisticsQuery,
+          statisticsQuery,
           'amount',
           'status'
         ).then((res) => {
@@ -239,6 +243,7 @@ export default {
           const statistics = res.data.OrderStatistics || []
           this.$emit('statistics', statistics)
         })
+        // 统计结束
       }
       /*
        * 活动订单 - (小熊商城1，推荐有礼2，赠送6)

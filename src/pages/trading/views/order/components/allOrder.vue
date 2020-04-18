@@ -20,7 +20,7 @@
               >笔
             </div>
             <div class="oride-bottom">
-              <span>{{ statisticsObj.total.value }}元</span>
+              <span>{{ +statisticsObj.total.value.toFixed(2) }}元</span>
               <!-- <span>{{ littleBear.value }}币</span>
               <span>{{ recommended.value }}宝石</span> -->
             </div>
@@ -35,7 +35,7 @@
               >笔
             </div>
             <div class="oride-bottom">
-              {{ statisticsObj.payed.value || 0 }}元
+              {{ +statisticsObj.payed.value.toFixed(2) || 0 }}元
             </div>
           </div>
         </el-col>
@@ -47,7 +47,9 @@
               <em>{{ statisticsObj.topay.count }}</em
               >笔
             </div>
-            <div class="oride-bottom">{{ statisticsObj.topay.value }}元</div>
+            <div class="oride-bottom">
+              {{ +statisticsObj.topay.value.toFixed(2) }}元
+            </div>
           </div>
         </el-col>
         <!-- 退费： 退费中 5，已退费 6，7 -->
@@ -58,7 +60,9 @@
               <em>{{ statisticsObj.refund.count }}</em
               >笔
             </div>
-            <div class="oride-bottom">{{ statisticsObj.refund.value }}币</div>
+            <div class="oride-bottom">
+              {{ +statisticsObj.refund.value.toFixed(2) }}元
+            </div>
           </div>
         </el-col>
       </el-row>
@@ -69,6 +73,7 @@
     <article class="bottom-box">
       <table-order
         :topic="topic"
+        :status="status"
         :search="search"
         @statistics="getStatistics"
       />
@@ -88,11 +93,6 @@ export default {
       type: String,
       default: ''
     },
-    // 支付状态  已完成:3, 待支付:0,1，已退费:6,7
-    status: {
-      type: String,
-      default: ''
-    },
     search: {
       type: Array,
       default: () => {
@@ -105,8 +105,8 @@ export default {
       statData: [],
       // 获取teacherid
       teacherId: '',
-      // 切换tab
-      // tab: '3', // 默认显示 3 - 已完成
+      // 支付状态  已完成:3, 待支付:0,1，已退费:6,7
+      status: '',
       // 搜索
       searchIn: [],
       statistics: {
@@ -120,49 +120,41 @@ export default {
     }
   },
   computed: {
-    // penTotal() {
-    //   return (
-    //     this.experience.count +
-    //     this.systemClass.count +
-    //     this.littleBear.count +
-    //     this.recommended.count
-    //   )
-    // },
-
     // statistics format
-    statisticsObj() {
-      const { statistics } = this
-      const obj = {}
-      // 未支付 0，1
-      obj.topay = {
-        count: +statistics['0'].count + +statistics['1'].count,
-        value: +statistics['0'].value + +statistics['1'].value
+    statisticsObj: {
+      get() {
+        const { statistics } = this
+        const obj = {}
+        // 未支付 0，1
+        obj.topay = {
+          count: +statistics['0'].count + +statistics['1'].count,
+          value: +statistics['0'].value + +statistics['1'].value
+        }
+        // 退费：5，6，7
+        obj.refund = {
+          count:
+            +statistics['5'].count +
+            +statistics['6'].count +
+            +statistics['7'].count,
+          value:
+            +statistics['5'].value +
+            +statistics['6'].value +
+            +statistics['7'].value
+        }
+        obj.payed = {
+          count: +statistics['3'].count,
+          value: +statistics['3'].value
+        }
+        obj.total = {
+          count: obj.topay.count + obj.refund.count + obj.payed.count,
+          value: obj.topay.value + obj.refund.value + obj.payed.value
+        }
+        return obj
+      },
+      set(val) {
+        return val
       }
-      // 退费：5，6，7
-      obj.refund = {
-        count:
-          +statistics['5'].count +
-          +statistics['6'].count +
-          +statistics['7'].count,
-        value:
-          +statistics['5'].value +
-          +statistics['6'].value +
-          +statistics['7'].value
-      }
-      obj.payed = {
-        count: +statistics['3'].count,
-        value: +statistics['3'].value
-      }
-      obj.total = {
-        count: obj.topay.count + obj.refund.count + obj.payed.count,
-        value: obj.topay.value + obj.refund.value + obj.payed.value
-      }
-      return obj
     }
-
-    // amountTotal() {
-    //   return (this.experience.value + this.systemClass.value).toFixed(2)
-    // }
   },
   watch: {
     // 切换tab - 商品主题
@@ -200,10 +192,19 @@ export default {
             value
           }
         })
-      }
-      this.statistics = {
-        ...this.statistics,
-        ...obj
+        this.statistics = {
+          ...this.statistics,
+          ...obj
+        }
+      } else {
+        this.statistics = {
+          '0': { count: 0, value: 0 },
+          '1': { count: 0, value: 0 },
+          '3': { count: 0, value: 0 },
+          '5': { count: 0, value: 0 },
+          '6': { count: 0, value: 0 },
+          '7': { count: 0, value: 0 }
+        }
       }
     }
   }
