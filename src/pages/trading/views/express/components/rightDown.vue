@@ -65,6 +65,13 @@
           </div>
         </template>
       </el-table-column>
+      <el-table-column label="随材版本">
+        <template slot-scope="scope">
+          <div>
+            <span>{{ scope.row.product_version || '-' }}</span>
+          </div>
+        </template>
+      </el-table-column>
       <el-table-column label="收货信息" width="200">
         <template slot-scope="scope">
           <div class="take">
@@ -93,14 +100,14 @@
       <el-table-column label="班级名" width="120">
         <template slot-scope="scope">
           <div class="product">
-            <span>{{ scope.row.team_name || '0210·S1·10班' }}</span>
+            <span>{{ StudentTeamList[scope.row.last_team_id] }}</span>
           </div>
         </template>
       </el-table-column>
       <el-table-column label="社群销售">
         <template slot-scope="scope">
           <div class="product">
-            <span>{{ scope.row.teacher || '陈实' }}</span>
+            <span>{{ TeacherList[scope.row.teacher_id] }}</span>
           </div>
         </template>
       </el-table-column>
@@ -110,11 +117,7 @@
             <div :class="'wait_' + scope.row.express_status">
               {{ scope.row.express_status_chinese }}
             </div>
-            <el-button
-              class="trail"
-              type="text"
-              @click="Express(scope.row.express_nu, scope.row.express_company)"
-            >
+            <el-button class="trail" type="text" @click="Express(scope.row)">
               追踪
             </el-button>
           </div>
@@ -130,39 +133,16 @@
         </template>
       </el-table-column>
     </el-table>
-    <el-dialog
-      custom-class="my-dialog"
-      :visible.sync="timeline"
-      width="40%"
-      v-model="expressDetail"
-    >
-      <div class="line">
-        <div class="logistics">
-          <span>物流公司：</span><span>{{ expressTitle.company }}</span>
-        </div>
-        <span>快递单号：</span>
-        <span>{{ expressTitle.nu }}</span>
-      </div>
-      <div class="waitFor" v-show="waitFor">快递待揽收</div>
-      <el-timeline v-show="timeLine">
-        <el-timeline-item
-          v-for="(value, index) in expressDetail"
-          :key="index"
-          :color="activities.color"
-        >
-          <div class="statebox" v-for="(item, key) in value" :key="key">
-            <div class="state" v-if="key === 0">{{ item.status }}</div>
-            <div class="content">{{ item.context }}</div>
-            <div class="time">{{ item.time }}</div>
-          </div>
-        </el-timeline-item>
-      </el-timeline>
-    </el-dialog>
+
+    <div class="drawer-body">
+      <express-detail :transferExpress="transferExpress" ref="zi" />
+    </div>
+
     <div class="dialog-shenhe">
       <el-dialog
         title="选择承运商"
         :visible.sync="dialogVisiblePass"
-        width="30%"
+        width="25%"
         :before-close="handleClosePass"
       >
         <div class="two-choose">
@@ -239,10 +219,12 @@ import MPagination from '@/components/MPagination/index.vue'
 import axios from '@/api/axios'
 import { isToss, formatData } from '@/utils/index'
 import { mapState } from 'vuex'
+import expressDetail from '../../components/expressDetail'
 export default {
   props: ['dataExp', 'search'],
   components: {
-    MPagination
+    MPagination,
+    expressDetail
   },
   computed: {
     ...mapState({
@@ -255,6 +237,7 @@ export default {
     search(val) {
       this.currentPage = 1
       this.searchIn = val
+
       if (sessionStorage.getItem('val')) {
         sessionStorage.removeItem('val')
       }
@@ -266,7 +249,6 @@ export default {
       this.currentPage = 1
       this.tableData = []
       this.selectNum = 0
-      console.log(val, '----------')
       if (val.id) {
         this.getExpressList(this.whackId)
         this.dataLogitcs = val
@@ -280,11 +262,6 @@ export default {
       this.staffId = JSON.parse(staff).id
     }
     const teacherId = isToss()
-    console.log(
-      teacherId,
-      'v-show="!teacherId"v-show="!teacherId"v-show="!teacherId"'
-    )
-
     if (teacherId) {
       this.teacherId = teacherId
     }
@@ -293,6 +270,8 @@ export default {
   mounted() {},
   data() {
     return {
+      // regtype 商品类型
+      regtype: '',
       // 审核传参
       checkBatchParams: [],
       checkParams: [],
@@ -340,21 +319,19 @@ export default {
       },
       tableData: [],
       multipleSelection: [],
-      enter: false,
-      cout: 0,
-      // 弹出层
-      timeline: false,
-      // 时间线样式
-      activities: {
-        size: 'large',
-        type: 'primary',
-        color: '#0bbd87'
-      },
       staffId: '',
-      currentItem: 20
+      currentItem: 20,
+      transferExpress: '',
+      TeacherList: '',
+      StudentTeamList: '',
+      realnameId: '',
+      teamId: ''
     }
   },
   methods: {
+    handleCloseDrawer() {
+      this.timeline = false
+    },
     // 页数问题
     handleChangeSize(pageItem) {
       this.currentPage = 1
@@ -463,25 +440,6 @@ export default {
       this.$http.Express.checkPass(params)
         .then(async (res) => {
           // payload 是数组，错误信息逐个返回.全正确时返回空数组
-          /**
-           * {
-           * .then(async (res) => {
-            this.$message({
-              type: 'success',
-              message: '操作成功'
-            })
-            setTimeout(() => {
-              this.getExpressList(this.dataExp.id)
-              this.$store.commit('bransh', true)
-
-              // TODO: 成功后同步左侧列表 待审核 数量
-            }, 1000)
-          })
-      })
-           *  code: 80000210
-              message: "不符合发货条件，expressId：{123552}"
-              }
-           */
           const { payload } = res
           console.log(res, '-----------------res.payload')
           if (payload.length === 0) {
@@ -563,6 +521,9 @@ export default {
           if (item.term && item.term.regtype) {
             timeType.regtype = `${item.term.regtype}`
           }
+          if (item.term && item.term.product_version) {
+            timeType.product_version = `${item.term.product_version}`
+          }
         }
         if (item && item.terms) {
           if (item.terms.sup) {
@@ -590,6 +551,12 @@ export default {
         if (item.wildcard && item.wildcard.express_nu) {
           timeType.express_nu = item.wildcard.express_nu
         }
+        if (item.wildcard && item.wildcard.last_team_id) {
+          timeType.last_team_id = item.wildcard.last_team_id
+        }
+        if (item.wildcard && item.wildcard.teacher_id) {
+          timeType.teacher_id = item.wildcard.teacher_id
+        }
       })
       this.teacherId && (timeType.teacher_id = this.teacherId)
       timeType = {
@@ -597,54 +564,69 @@ export default {
         express_status: id
       }
       const query = JSON.stringify(timeType)
-      console.log(timeType, 'timeType', query)
-      // console.log(query)
+      console.log(timeType, 'timeType')
+      if (timeType.regtype) {
+        this.$store.commit('getShowStatus', false)
+        console.log(this.regtype, 'regtype regtype regtype regtype ')
+        if (timeType.regtype === '4' || timeType.regtype === '5') {
+          this.$store.commit('getShowStatus', true)
+        }
+      } else {
+        this.$store.commit('getShowStatus', false)
+      }
       axios
         .post('/graphql/logisticsList', {
           query: `{LogisticsListPage(query:${JSON.stringify(query)}, size: ${
             this.currentItem
           }, page: ${this.currentPage}) {
-    first
-    last
-    number
-    size
-    totalPages
-    totalElements
-    content {
-      id
-      product_name
-      delivery_collect_time
-      express_status
-      express_status_chinese
-      buy_time
-      province
-      area
-      city
-      address_detail
-      express_company
-      signing_time
-      receipt_name
-      receipt_tel
-      express_nu
-      level
-      ctime
-      utime
-      sup
-      term
-      user{
-        id
-        birthday
-        mobile
-      }
-    }
-  }
-}`
+            first
+            last
+            number
+            size
+            totalPages
+            totalElements
+            content {
+              id
+              product_name
+              delivery_collect_time
+              express_status
+              express_status_chinese
+              buy_time
+              province
+              area
+              city
+              address_detail
+              express_company
+              signing_time
+              receipt_name
+              receipt_tel
+              express_nu
+              level
+              ctime
+              utime
+              sup
+              term
+              product_version
+              last_team_id
+              teacher_id
+              user {
+                id
+                birthday
+                mobile
+              }
+            }
+          }
+        }`
         })
         .then((res) => {
           this.tableData = []
           if (res.data.LogisticsListPage) {
             const resData = res.data.LogisticsListPage.content
+            const realnameId = [] // 老师Id
+            const teamId = [] // 班级Id
             resData.forEach((item) => {
+              realnameId.push(item.teacher_id)
+              teamId.push(item.last_team_id)
               item.crtime = formatData(+item.ctime, 's')
               item.detime = formatData(+item.delivery_collect_time, 's')
               item.uptime = formatData(+item.utime, 's')
@@ -652,12 +634,55 @@ export default {
               item.buytime = formatData(+item.buy_time, 's')
               return item
             })
+
             this.tableData = resData
             // 总页数
             this.totalPages = +res.data.LogisticsListPage.totalPages
 
             this.totalElements = +res.data.LogisticsListPage.totalElements // 总条数
+            this.getTeacherList(realnameId)
+            this.getStudentTeamList(teamId)
           }
+        })
+    },
+    // 异步获取班级期数名称
+    getStudentTeamList(id) {
+      const queryString = JSON.stringify({ id: id })
+      axios
+        .post('/graphql/v1/toss', {
+          query: `{ StudentTeamList(query:${JSON.stringify(queryString)}){
+                      id
+                      team_name
+                    }
+                    }       `
+        })
+        .then((res) => {
+          const obj = {}
+          res.data.StudentTeamList.forEach((item) => {
+            // {`${item.name}`:item.term}
+            obj[item.id] = item.team_name
+          })
+          this.StudentTeamList = obj
+        })
+    },
+    getTeacherList(id) {
+      const queryString = JSON.stringify({ id: id })
+      axios
+        .post('/graphql/v1/toss', {
+          query: `{TeacherList(query:${JSON.stringify(queryString)}){
+                      id
+                      realname
+                    }
+                    }       `
+        })
+        .then((res) => {
+          const obj = {}
+
+          res.data.TeacherList.forEach((item) => {
+            // {`${item.name}`:item.term}
+            obj[item.id] = item.realname
+          })
+          this.TeacherList = obj
         })
     },
     toggleSelection(rows) {
@@ -673,38 +698,12 @@ export default {
       this.multipleSelection = val
     },
     // 物流列表信息
-    Express(expressNu, company) {
-      this.timeline = true
-      this.expressTitle.nu = expressNu
-      this.expressTitle.company = company
-      this.$http.Express.ExpressList({ expressNo: expressNu })
-        .catch((err) => console.log(err))
-        .then((res) => {
-          if (res && res.payload) {
-            this.waitFor = false
-            this.timeLine = true
-            const lastData = {}
-            res.payload[0].data.forEach((item) => {
-              if (item.status === '揽收') {
-                lastData.begin = lastData.begin == null ? [] : lastData.begin
-                lastData.begin.push(item)
-              } else if (item.status === '在途' || item.status === '派件') {
-                lastData.onway = lastData.onway == null ? [] : lastData.onway
-                lastData.onway.push(item)
-              } else {
-                lastData.receive =
-                  lastData.receive == null ? [] : lastData.receive
-                lastData.receive.push(item)
-              }
-              this.expressDetail = lastData
-            })
-          } else {
-            this.expressDetail = []
-            this.waitFor = true
-          }
-        })
+    Express(row) {
+      console.log(this.$refs.zi, 'this.$refs.zi.drawer')
+      this.$refs.zi.drawer = true
+      console.log(row, 'row')
+      this.transferExpress = row
     },
-
     // scrotop
     scrollToTop() {
       document
@@ -746,34 +745,7 @@ export default {
       cursor: pointer;
     }
   }
-  .line {
-    width: 100%;
-    height: 48px;
-    border-bottom: 1px solid gainsboro;
-    // margin-top: -40px;
-    margin-bottom: 22px;
-    .logistics {
-      margin-bottom: 6px;
-    }
-  }
-  .waitFor {
-    font-size: 16px;
-    color: rgb(190, 190, 190);
-    text-align: center;
-  }
-  .statebox {
-    margin-bottom: 20px;
-    .state {
-      font-size: 18px;
-      line-height: 30px;
-    }
-    .content {
-      line-height: 20px;
-    }
-    .time {
-      line-height: 20px;
-    }
-  }
+
   .two-choose {
     display: flex;
     flex-direction: column;

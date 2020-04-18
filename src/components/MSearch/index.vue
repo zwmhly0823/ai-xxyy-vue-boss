@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-24 18:20:12
  * @LastEditors: Lukun
- * @LastEditTime: 2020-04-14 16:50:17
+ * @LastEditTime: 2020-04-18 11:24:17
  -->
 
 <template>
@@ -20,11 +20,6 @@
           :tip="phoneTip"
           :last_team_id="last_team_id"
         />
-      </el-form-item>
-
-      <el-form-item v-if="groupSell">
-        <!-- 社群销售 -->
-        <group-sell @result="selectSellTeacher" :name="groupSell" />
       </el-form-item>
 
       <el-form-item v-if="productName">
@@ -69,17 +64,34 @@
         <!-- 主题 -->
         <product-topic @result="getProductTopic" :name="topicType" />
       </el-form-item>
+
+      <el-form-item v-if="moreVersion">
+        <!-- 随材版本-->
+        <more-version-box @result="getVersionNu" :name="moreVersion" />
+      </el-form-item>
+
       <el-form-item v-if="level || sup || stage">
         <stage-sup-levels
           @stageCallBack="stageCallBack"
           @supCallBack="supCallBack"
           @levelCallBack="levelCallBack"
+          :disabled="true"
           :stageName="stage"
           :supName="sup"
           :levelName="level"
           :addSupS="addSupS"
           style="margin-bottom:0px"
         />
+      </el-form-item>
+
+      <el-form-item v-if="teamDetail">
+        <!-- 班级期数-->
+        <team-detail @result="getTeamDetail" :name="teamDetail" />
+      </el-form-item>
+
+      <el-form-item v-if="groupSell && !teacherId">
+        <!-- 社群销售 -->
+        <group-sell @result="selectSellTeacher" :name="groupSell" />
       </el-form-item>
 
       <!-- <el-form-item
@@ -117,6 +129,9 @@ import ProductName from './searchItems/productName.vue'
 import SelectDate from './searchItems/selectDate.vue'
 import ExpressNo from './searchItems/expressNo'
 import GroupSell from './searchItems/groupSell'
+import TeamDetail from './searchItems/teamDetail'
+import MoreVersionBox from './searchItems/moreVersionBox'
+import { isToss } from '@/utils/index'
 
 export default {
   props: {
@@ -213,7 +228,17 @@ export default {
       type: String,
       default: '' // express_nu
     },
+    // 社群销售查询
     groupSell: {
+      type: String,
+      default: '' //
+    },
+    // 班级信息查询
+    teamDetail: {
+      type: String,
+      default: '' //
+    },
+    moreVersion: {
       type: String,
       default: '' //
     }
@@ -228,7 +253,9 @@ export default {
     OutTradeNo,
     ProductName,
     ExpressNo,
-    GroupSell
+    GroupSell,
+    TeamDetail,
+    MoreVersionBox
   },
   data() {
     return {
@@ -237,7 +264,8 @@ export default {
       must: [],
       should: [],
       selectTime: null, // 物流时间下拉列表_选中项
-      oldTime: '' // 上次时间选择值
+      oldTime: '', // 上次时间选择值
+      teacherId: '' // 判断是否是toss环境还是boss环境
     }
   },
   computed: {},
@@ -275,11 +303,6 @@ export default {
       console.log(res, '回调res')
       this.setSeachParmas(res, [this.phone || 'umobile'])
     },
-    // 选择销售老师
-    getTeacherSell(res) {
-      console.log(res, '回调res')
-      this.setSeachParmas(res, [this.phone || 'umobile'])
-    },
     // 选择订单号
     getOutTradeNo(res) {
       this.setSeachParmas(res, [this.outTradeNo || 'out_trade_no'], 'wildcard')
@@ -304,13 +327,17 @@ export default {
     },
     // 选择物流单号
     getExpressNo(res) {
-      console.log(res, 'res___________', this.expressNo)
       this.setSeachParmas(res, [this.expressNo || 'express_nu'], 'wildcard')
     },
     // 选择销售老师
     selectSellTeacher(res) {
-      console.log(res, 'res___________', this.groupSell)
-      this.setSeachParmas(res, [this.groupSell || 'teacher_nu'], 'wildcard')
+      this.setSeachParmas(res, [this.groupSell || 'teacher_id'], 'wildcard')
+    },
+    getTeamDetail(res) {
+      this.setSeachParmas(res, [this.teamDetail || 'last_team_id'], 'wildcard')
+    },
+    getVersionNu(res) {
+      this.setSeachParmas(res, [this.moreVersion || 'product_version'])
     },
     /**  处理接收到的查询参数
      * @res: Object, 子筛选组件返回的表达式对象，如 {sup: 2}
@@ -360,6 +387,12 @@ export default {
         this.should = temp
       }
       this.$emit('searchShould', temp)
+    }
+  },
+  created() {
+    const teacherId = isToss()
+    if (teacherId) {
+      this.teacherId = teacherId
     }
   }
 }

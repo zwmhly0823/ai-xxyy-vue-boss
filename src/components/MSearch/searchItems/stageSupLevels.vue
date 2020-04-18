@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-24 18:50:54
  * @LastEditors: Lukun
- * @LastEditTime: 2020-04-14 13:54:36
+ * @LastEditTime: 2020-04-16 16:28:11
  -->
 <template>
   <div class="search-item small">
@@ -15,7 +15,8 @@
       clearable
       multiple
       size="mini"
-      placeholder="期"
+      placeholder="排期"
+      :disabled="disableClick"
       @change="stageChange"
     >
       <el-option
@@ -34,6 +35,7 @@
       size="mini"
       multiple
       placeholder="难度"
+      :disabled="disableClick"
       @change="supChange"
     >
       <el-option
@@ -51,6 +53,7 @@
       v-if="levelName"
       multiple
       size="mini"
+      :disabled="disableClick"
       placeholder="级别"
       @change="levelChange"
     >
@@ -67,6 +70,8 @@
 
 <script>
 import axios from '@/api/axios'
+import { mapState } from 'vuex'
+
 export default {
   props: {
     stageName: {
@@ -100,6 +105,13 @@ export default {
       supData: null,
       levelData: null
     }
+  },
+  computed: {
+    ...mapState({
+      disableClick: (state) => {
+        return state.leftbar.disableClick
+      }
+    })
   },
   watch: {
     channelData(val) {

@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-27 19:04:54
  * @LastEditors: Lukun
- * @LastEditTime: 2020-04-14 17:59:12
+ * @LastEditTime: 2020-04-18 11:12:47
  -->
 <template>
   <div class="container">
@@ -18,7 +18,9 @@
         expressNo="express_nu"
         level="level"
         topicType="regtype"
-        groupSell="realname.keyword"
+        groupSell="teacher_id"
+        teamDetail="last_team_id"
+        moreVersion="product_version"
         :timeData="[
           { text: '购买时间', value: 'ctime' },
           { text: '揽收时间', value: 'delivery_collect_time' },
@@ -156,7 +158,6 @@ export default {
     handleCloseUpdata() {
       this.dialogVisible = false
       this.$refs.upload.clearFiles()
-      console.log(this.errorDialog, '----------------------')
     },
     // 导出物流关闭符号
     handleClose() {
@@ -282,6 +283,7 @@ export default {
         user_id: '用户ID',
         out_trade_no: '订单号',
         regtype: '商品类型',
+        product_version: '随材版本',
         term: '期数',
         sup: '课程难度',
         level: '课程级别',
@@ -317,8 +319,6 @@ export default {
     },
     dosomething() {},
     handleSearch(search) {
-      console.log(search, '-----------------')
-
       this.searchIn = deepClone(search)
       this.searchIn.forEach((item) => {
         if (item.terms && item.terms.sup) {
@@ -344,7 +344,6 @@ export default {
         // debugger
         return item
       })
-      console.log(this.searchIn)
 
       this.$emit('search', this.searchIn)
     },
@@ -357,7 +356,6 @@ export default {
       const link = document.createElement('a')
       link.style.display = 'none'
       link.href = fileUrl
-      // eslint-disable-next-line no-restricted-globals
       link.setAttribute('download', `${name}.xls`)
 
       document.body.appendChild(link)

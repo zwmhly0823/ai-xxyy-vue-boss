@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-26 16:28:45
  * @LastEditors: Lukun
- * @LastEditTime: 2020-04-14 17:57:44
+ * @LastEditTime: 2020-04-18 11:21:38
  -->
 <template>
   <div class="search-item small">
@@ -66,16 +66,12 @@ export default {
     async querySearch(queryString, cb) {
       const reg = /^([\u4e00-\u9fa5]){0,7}$/
       if (!reg.test(queryString)) {
-        this.$message('当前只支持汉字查询')
         this.input = ''
         return
       }
-      const searchUid = await this.createFilter(queryString)
-      console.log(searchUid, '匹配到的数据')
-      const results = queryString ? searchUid : this.selectData
+      const teacherName = await this.createFilter(queryString)
       // 调用 callback 返回建议列表的数据
-      console.log(results, '结果')
-      cb(searchUid)
+      cb(teacherName)
     },
     createFilter(queryString) {
       const queryParams = JSON.stringify(`
@@ -112,7 +108,7 @@ export default {
 </style>
 <style lang="scss">
 .ppName {
-  width: 220px !important;
+  width: 140px !important;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
