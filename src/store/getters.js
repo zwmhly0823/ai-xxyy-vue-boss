@@ -1,10 +1,10 @@
 /*
- * @Descripttion: TOSS小熊
- * @version: 1.0.0
- * @Author: Shentong
- * @Date: 2020-04-14 13:06:07
+ * @Descripttion:
+ * @version:
+ * @Author: ShenTong
+ * @Date: 2020-04-11 16:06:42
  * @LastEditors: Shentong
- * @LastEditTime: 2020-04-17 16:35:29
+ * @LastEditTime: 2020-04-18 21:10:59
  */
 const getters = {
   sidebar: (state) => state.app.sidebar,
@@ -14,6 +14,8 @@ const getters = {
   // name: (state) => state.user.name
   leftbar: (state) => state.leftbar.whackId,
   bransh: (state) => state.leftbar.bransh,
+  typeStage: (state) => state.leftbar.typeStage,
+  disableClick: (state) => state.leftbar.disableClick,
   token: (state) => '',
   avatar: (state) => 'https://msb-ai.meixiu.mobi/ai-pm/static/touxiang.png',
   name: (state) => '',

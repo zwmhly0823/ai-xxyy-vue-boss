@@ -245,5 +245,16 @@ export default {
                 }
                   }`
     })
+  },
+  // 获取课程下拉框接口
+  getStuCourseList({ query }) {
+    return axios.post('/graphql/getStuComment', {
+      query: `{
+        getStuCourseList(query:${JSON.stringify(query)}) {
+          course_id
+          classTitle
+        }
+      }`
+    })
   }
 }
