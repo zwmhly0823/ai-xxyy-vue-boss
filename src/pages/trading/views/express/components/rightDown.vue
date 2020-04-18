@@ -13,8 +13,9 @@
       @select="handleSelect"
       @select-all="handleAllSelect"
     >
-      <el-table-column type="selection" width="25" fixed> </el-table-column>
-      <el-table-column width="25" v-if="dataExp.id == 1" fixed>
+      <el-table-column type="selection" width="25" v-if="!teacherId" fixed>
+      </el-table-column>
+      <el-table-column width="25" v-if="dataExp.id == 1 && !teacherId" fixed>
         <template slot-scope="scope">
           <!-- <div v-show="false">{{ scope }}</div> -->
           <el-dropdown trigger="click">
@@ -521,8 +522,14 @@ export default {
           if (item.term && item.term.regtype) {
             timeType.regtype = `${item.term.regtype}`
           }
-          if (item.term && item.term.product_version) {
-            timeType.product_version = `${item.term.product_version}`
+          if (item.term && item.term.last_team_id) {
+            timeType.last_team_id = item.term.last_team_id
+          }
+          if (item.term && item.term.teacher_id) {
+            timeType.teacher_id = item.term.teacher_id
+          }
+          if (item.term && item.term['product_version.keyword']) {
+            timeType.product_version = `${item.term['product_version.keyword']}`
           }
         }
         if (item && item.terms) {
@@ -551,12 +558,6 @@ export default {
         if (item.wildcard && item.wildcard.express_nu) {
           timeType.express_nu = item.wildcard.express_nu
         }
-        if (item.wildcard && item.wildcard.last_team_id) {
-          timeType.last_team_id = item.wildcard.last_team_id
-        }
-        if (item.wildcard && item.wildcard.teacher_id) {
-          timeType.teacher_id = item.wildcard.teacher_id
-        }
       })
       this.teacherId && (timeType.teacher_id = this.teacherId)
       timeType = {
@@ -566,13 +567,20 @@ export default {
       const query = JSON.stringify(timeType)
       console.log(timeType, 'timeType')
       if (timeType.regtype) {
-        this.$store.commit('getShowStatus', false)
-        console.log(this.regtype, 'regtype regtype regtype regtype ')
+        // this.$store.commit('getShowStatus', false)
+        // console.log(this.regtype, 'regtype regtype regtype regtype ')
         if (timeType.regtype === '4' || timeType.regtype === '5') {
-          this.$store.commit('getShowStatus', true)
+          const type = { disableClick: true }
+          this.$store.dispatch('getShowStatus', type)
         }
-      } else {
-        this.$store.commit('getShowStatus', false)
+        if (timeType.regtype === '1') {
+          const type = { stage: '0', disableClick: false }
+          this.$store.dispatch('getShowStatus', type)
+        }
+        if (timeType.regtype === '2,3') {
+          const type = { stage: '1', disableClick: false }
+          this.$store.dispatch('getShowStatus', type)
+        }
       }
       axios
         .post('/graphql/logisticsList', {

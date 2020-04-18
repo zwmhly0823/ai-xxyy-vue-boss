@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-26 16:28:45
  * @LastEditors: Lukun
- * @LastEditTime: 2020-04-16 16:36:00
+ * @LastEditTime: 2020-04-18 13:40:49
  -->
 <template>
   <div class="search-item small">
@@ -39,7 +39,7 @@ export default {
   props: {
     name: {
       type: String,
-      default: 'team_name.keyword'
+      default: 'last_team_name'
     },
     tip: {
       type: String,
