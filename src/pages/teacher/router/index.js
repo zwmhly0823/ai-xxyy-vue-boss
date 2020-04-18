@@ -1,7 +1,7 @@
 /*
  * @Date: 2020-03-13 15:20:21
- * @LastEditors: zhubaodong
- * @LastEditTime: 2020-04-02 16:01:53
+ * @LastEditors: panjian
+ * @LastEditTime: 2020-04-15 20:24:10
  * @FilePath: /ai-app-vue-toss/src/pages/studentTeam/router/index.js
  */
 import Vue from 'vue'
@@ -37,13 +37,9 @@ const routes = [
     name: 'weixinManagement',
     meta: {
       title: '微信管理',
-      keepAlive: true
+      keepAlive: false
     },
-    component: () =>
-      import(
-        /* webpackChunkName: "teacherManagement" */
-        '../views/weixinManagement/accountManagement.vue'
-      )
+    component: () => import('../views/weixinManagement/accountManagement.vue')
   },
   {
     path: '/newTeacher',

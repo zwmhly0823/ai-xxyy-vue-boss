@@ -1,39 +1,55 @@
 <template>
   <div class="search-item small">
-    <!-- 微信号、手机号 -->
-    <el-select
-      v-model="channelData"
+    <!-- 微信号 -->
+    <el-autocomplete
+      v-model="weixinInp"
       size="mini"
       clearable
       filterable
       reserve-keyword
-      placeholder="微信搜索"
-      @change="onChange"
+      :fetch-suggestions="weixinSearch"
+      :trigger-on-focus="false"
+      :popper-class="+onlyWeixin ? 'ppName' : ''"
+      placeholder="微信号搜索"
+      @select="onWxSerch"
     >
-      <el-option
-        v-for="item in weixinNumber"
-        :key="item.id"
-        :label="item.name"
-        :value="item.id"
-      >
-      </el-option>
-    </el-select>
-    <!-- 输入框 -->
-    <el-input
-      :placeholder="`请输入${weixinNumber[selectedInput].name}`"
+      <i class="el-icon-search el-input__icon" slot="suffix"></i>
+      <template slot-scope="{ item }">
+        <div style="display:flex">
+          <div class="name">{{ item.wechat_no || '-' }}</div>
+        </div>
+      </template>
+    </el-autocomplete>
+    <!-- 手机号 -->
+    <el-autocomplete
+      v-model="mobileInp"
       size="mini"
       clearable
+      filterable
+      reserve-keyword
+      :fetch-suggestions="phoneSearch"
+      :trigger-on-focus="false"
+      :popper-class="+onlyPhone ? 'ppName' : ''"
+      placeholder="手机号搜索"
+      @select="onPhoneSerch"
     >
-    </el-input>
+      <i class="el-icon-search el-input__icon" slot="suffix"></i>
+      <template slot-scope="{ item }">
+        <div style="display:flex">
+          <div class="name">{{ item.phone || '-' }}</div>
+        </div>
+      </template>
+    </el-autocomplete>
+
     <!-- 使用状态 -->
-    <el-select
-      v-model="channelData"
+    <!-- <el-select
+      v-model="statueData"
       size="mini"
       clearable
       filterable
       reserve-keyword
-      placeholder="使用状态"
-      @change="onChange"
+      placeholder="全部状态"
+      @change="onWxStatus"
     >
       <el-option
         v-for="item in status"
@@ -42,16 +58,16 @@
         :value="item.id"
       >
       </el-option>
-    </el-select>
+    </el-select> -->
     <!-- 是否关联老师 -->
     <el-select
-      v-model="channelData"
+      v-model="concatTeacherData"
       size="mini"
       clearable
       filterable
       reserve-keyword
       placeholder="是否已关联老师"
-      @change="onChange"
+      @change="onWxConcatTeacher"
     >
       <el-option
         v-for="item in concatTeacher"
@@ -67,26 +83,45 @@
 <script>
 export default {
   props: {
-    name: {
+    // 微信搜索状态
+    wxSerch: {
       type: String,
-      default: 'wx'
+      default: ''
     },
-    // 是否只返回值，如果是，父组件获得值后根据实际表达式组装数据
-    onlyValue: {
-      type: Boolean,
-      default: false
+    // 手机号码搜索状态
+    wxTeacherPhone: {
+      type: String,
+      default: ''
+    },
+    // 使用状态
+    wxStatus: {
+      type: String,
+      default: ''
+    },
+    // 是否关联老师状态
+    wxConcatTeacher: {
+      type: String,
+      default: ''
+    },
+    onlyWeixin: {
+      type: String,
+      default: '0'
+    },
+    onlyPhone: {
+      type: String,
+      default: '0'
     }
   },
   data() {
     return {
+      // 搜索结果数组
+      input: '',
+      weixinSelectData: [],
+      phoneSelectData: [],
+      select: '1',
       showNewWeChat: false,
-      weixinNumber: [
-        { name: '微信号', id: '0' },
-        {
-          name: '老师手机号',
-          id: '1'
-        }
-      ],
+      mobileInp: '',
+      weixinInp: '',
       status: [
         { name: '启用', id: '0' },
         {
@@ -96,22 +131,125 @@ export default {
       ],
       concatTeacher: [
         {
-          name: '老师手机号',
-          id: '0'
+          name: '是',
+          id: '1'
         },
         {
-          name: '老师手机号',
-          id: '1'
+          name: '否',
+          id: '0'
         }
       ],
-      channelData: null,
+      // 使用状态value
+      statueData: null,
+      // 是否关联老师value
+      concatTeacherData: null,
       selectedInput: 0
     }
   },
+  watch: {
+    // 监听微信号输入
+    weixinInp(val, old) {
+      if (val !== old && !val) {
+        this.$emit('getWxSerch', '')
+      }
+    },
+    // 侦听手机号输入
+    mobileInp(val, old) {
+      if (val !== old && !val) {
+        this.$emit('getPhone', '')
+      }
+    }
+  },
   methods: {
-    onChange(data) {
-      this.selectedInput = data
-      this.$emit('result', data ? { [this.name]: this.channelData } : '')
+    // 输入微信号
+    async weixinSearch(queryString, cb) {
+      const reg = /^\w+$/
+      if (!+this.onlyWeixin) {
+        if (!reg.test(queryString)) {
+          this.weixinInp = ''
+          return
+        }
+      }
+      // 输入内容查找到的关联信息（下拉框）
+      const list = await this.weixinCreateFilter(queryString)
+      console.log('*****list******', list)
+      // cb 展示列表数据
+      cb(list)
+    },
+    // 调用微信号搜索接口
+    weixinCreateFilter(queryString) {
+      // 输入内容匹配到的关联信息（下拉框）
+      return this.$http.Weixin.getWeChatTeacherListEx(
+        'wechat_no.keyword',
+        queryString
+      ).then((res) => {
+        console.log('微信搜索调用接口', res)
+        this.weixinSelectData = res.data.WeChatTeacherListEx || []
+        return this.weixinSelectData
+      })
+    },
+    // 输入的手机号
+    async phoneSearch(queryString, cb) {
+      const reg = /^[0-9]*$/
+      if (!+this.onlyPhone) {
+        if (!reg.test(queryString)) {
+          this.mobileInp = ''
+          return
+        }
+      }
+      const list = await this.phoneCreateFilter(queryString)
+      cb(list)
+    },
+    // 调用手机号搜索接口
+    phoneCreateFilter(queryString) {
+      return this.$http.Weixin.getTeacherListEx(
+        'phone.keyword',
+        queryString
+      ).then((res) => {
+        this.phoneSelectData = res.data.TeacherListEx || []
+        return this.phoneSelectData
+      })
+    },
+    // 微信号搜索（给父组件传值）
+    onWxSerch(data) {
+      console.log('====data====', data)
+      // 输入文本框的值
+      this.weixinInp = data.wechat_no
+      console.log('+_+_+_+_+_this.weixinInp+_+_+_+_+_+_+_+_', this.weixinInp)
+      this.$emit(
+        'getWxSerch',
+        data.wechat_no ? { [this.wxSerch]: data.wechat_no } : ''
+      )
+      // this.wxSerch字段名称
+      console.log('$+++wxInput.vue+++$$wxSerch$$$', this.wxSerch)
+    },
+    // 老师手机号搜索（给父组件传值）
+    onPhoneSerch(data) {
+      this.mobileInp = data.phone
+      let teacherId = ''
+      this.phoneSelectData.forEach((item) => {
+        if (item.phone === data.phone) {
+          teacherId = item.id
+        }
+      })
+      this.$emit(
+        'getPhone',
+        data.phone ? { [this.wxTeacherPhone]: teacherId } : ''
+      )
+    },
+    // 使用状态搜索（给父组件传值）
+    onWxStatus(data) {
+      this.$emit(
+        'getWxStatus',
+        data ? { [this.wxStatus]: this.statueData } : ''
+      )
+    },
+    // 是否关联老师（给父组件传值）
+    onWxConcatTeacher(data) {
+      this.$emit(
+        'getWxConcatTeacher',
+        data ? { [this.wxConcatTeacher]: this.concatTeacherData } : ''
+      )
     }
   }
 }

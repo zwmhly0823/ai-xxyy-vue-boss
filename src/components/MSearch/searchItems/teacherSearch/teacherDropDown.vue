@@ -175,13 +175,10 @@ export default {
 
     // 职级
     rankChange(data) {
-      console.log(data, '66666')
       this.$emit('rankCallBack', data ? { [this.rankName]: this.rankData } : '')
     },
     // 入职状态
     inductionChange(data) {
-      console.log(data, '999999')
-      console.log(this.inductionData)
       this.$emit(
         'inductionCallBack',
         data.length > 0 ? { [this.inductionName]: this.inductionData } : ''

@@ -4,13 +4,12 @@
  * @Author: panjian
  * @Date: 2020-04-15 16:56:59
  * @LastEditors: panjian
- * @LastEditTime: 2020-04-15 17:39:25
+ * @LastEditTime: 2020-04-16 20:54:18
  -->
 <template>
   <div>
     <el-form
       :model="ruleForm"
-      :rules="rules"
       ref="ruleForm"
       class="demo-ruleForm"
       label-position="top"
@@ -23,6 +22,7 @@
       <div class="associatedTeacherCss">
         <el-form-item prop="associatedTeacher">
           <el-cascader
+            style="width:270px;"
             @change="handleChange"
             v-model="ruleForm.associatedTeacher"
             placeholder="全部部门"
@@ -36,6 +36,7 @@
             v-model="ruleForm.teacherId"
             filterable
             remote
+            clearable
             reserve-keyword
             placeholder="请选择老师"
             :remote-method="remoteMethod"
@@ -72,6 +73,7 @@ export default {
   props: ['weixinId'],
   data() {
     return {
+      loading: false,
       associatedTeacher: [],
       regionOptionsList: [],
       TeacherListvalue: '',
@@ -112,6 +114,9 @@ export default {
         default:
           break
       }
+      this.ruleForm.teacherId = ''
+      this.regionOptionsList = []
+      this.remoteMethod()
     },
     remoteMethod(query) {
       if (query !== '') {
@@ -131,7 +136,9 @@ export default {
               })
             })
             this.regionOptionsList = _data.filter((item) => {
-              return item.label.toLowerCase().indexOf(query.toLowerCase()) > -1
+              return query
+                ? item.label.toLowerCase().indexOf(query.toLowerCase()) > -1
+                : item
             })
           })
         }, 200)
@@ -154,7 +161,7 @@ export default {
               message: '添加成功',
               type: 'success'
             })
-            this.$emit('addWeChat', 1)
+            this.$emit('relationTeacher', 1)
           })
         } else {
           console.log('error submit!!')
@@ -167,7 +174,7 @@ export default {
       this.ruleForm.associatedTeacher = ''
       this.TeacherListvalue = ''
       this.regionOptionsList = []
-      this.$emit('addWeChat', 2)
+      this.$emit('relationTeacher', 2)
     }
   }
 }

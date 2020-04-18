@@ -131,10 +131,20 @@
           </el-button>
         </el-popover>
       </el-form-item> -->
-      <el-form-item v-if="wxShow">
-        <wx-list @result="getWxInfo" name="wxShow" />
+      <el-form-item
+        v-if="wxSerch || wxTeacherPhone || wxStatus || wxConcatTeacher"
+      >
+        <wx-list
+          :wxSerch="wxSerch"
+          :wxTeacherPhone="wxTeacherPhone"
+          :wxStatus="wxStatus"
+          :wxConcatTeacher="wxConcatTeacher"
+          @getWxSerch="getWxSerch"
+          @getPhone="getPhoneData"
+          @getWxStatus="getWxStatus"
+          @getWxConcatTeacher="getWxConcatTeacher"
+        />
       </el-form-item>
-
       <el-form-item>
         <slot name="searchItems"></slot>
       </el-form-item>
@@ -156,7 +166,6 @@ import expressNo from './searchItems/expressNo'
 import teacherPhone from './searchItems/teacherSearch/teacherPhone.vue'
 import teacherName from './searchItems/teacherSearch/teacherName.vue'
 import teacherDropDown from './searchItems/teacherSearch/teacherDropDown'
-
 import wxList from './searchItems/wxInput'
 
 export default {
@@ -225,6 +234,11 @@ export default {
       type: String,
       default: '手机号查询'
     },
+    // 微信号搜索
+    weixinNumber: {
+      type: String,
+      default: '0'
+    },
     // team_id
     teamId: {
       type: String,
@@ -289,9 +303,25 @@ export default {
       type: String,
       default: '' // express_nu
     },
-    wxShow: {
+    // 微信号搜索
+    wxSerch: {
       type: String,
-      default: '' // wx
+      default: '' // wxSerch
+    },
+    // 手机号搜索
+    wxTeacherPhone: {
+      type: String,
+      default: '' // wxInput
+    },
+    // 使用状态搜索
+    wxStatus: {
+      type: String,
+      default: '' // wxStatus
+    },
+    // 是否关联老师搜索
+    wxConcatTeacher: {
+      type: String,
+      default: '' // wxConcatTeacher
     }
   },
   components: {
@@ -355,27 +385,22 @@ export default {
     },
     // 选择老师手机号
     getteacherPhone(res) {
-      console.log(res, '选择老师手机号回调res')
       this.setSeachParmas(res, [this.teacherphone || 'umobile'])
     },
     // 老师姓名
     getteacherName(res) {
-      console.log(res, '选择老师姓名回调res')
       this.setSeachParmas(res, [this.teachername || 'umobile'])
     },
     // 职级
     rankCallBack(res) {
-      console.log(res, 'res123')
       this.setSeachParmas(res, [this.rank || 'rankName'])
     },
     // 入职状态
     inductionCallBack(res) {
-      console.log(res, 'res456')
       this.setSeachParmas(res, [this.induction || 'inductionName'])
     },
     // 登陆状态
     landingCallBack(res) {
-      console.log(res, 'res')
       this.setSeachParmas(res, [this.landing || 'inductionName'])
     },
     // 职务
@@ -409,8 +434,19 @@ export default {
       console.log(res, 'res___________', this.expressNo)
       this.setSeachParmas(res, [this.expressNo || 'express_nu'], 'wildcard')
     },
-    getWxInfo(res) {
-      this.setSeachParmas(res, [this.wxShow || 'wx'])
+    getWxSerch(res) {
+      console.log('微信搜索父组件接收到的res', res)
+      this.setSeachParmas(res, [this.wxSerch], 'wildcard')
+      console.log('@+++index.vue+++@@this.wxSerch@@@', this.wxSerch)
+    },
+    getPhoneData(res) {
+      this.setSeachParmas(res, [this.wxTeacherPhone], 'wildcard')
+    },
+    getWxStatus(res) {
+      this.setSeachParmas(res, [this.wxStatus])
+    },
+    getWxConcatTeacher(res) {
+      this.setSeachParmas(res, [this.wxConcatTeacher])
     },
 
     /**  处理接收到的查询参数

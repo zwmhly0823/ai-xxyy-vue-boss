@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-04-14 15:15:31
  * @LastEditors: panjian
- * @LastEditTime: 2020-04-17 16:38:05
+ * @LastEditTime: 2020-04-17 16:21:35
  -->
 <template>
   <div>
@@ -115,6 +115,7 @@
 // import { sortByKey } from '@/utils/boss'
 import uploadFile from '@/utils/upload'
 export default {
+  props: ['weixinId'],
   data() {
     var wechatNoId = (rule, value, callback) => {
       if (!value) {
@@ -140,13 +141,21 @@ export default {
         label: 'name'
       },
       ruleForm: {
+        // 微信号
         wechatNo: '',
+        // 部门
         associatedTeacher: '',
-        resource: '0',
+        // 启用停用
+        resource: '',
+        // 微信头像
         imageUrl: '',
+        // 二维码
         QEcodeUrl: '',
+        // 选择老师的ID
         teacherId: ''
       },
+      oldTeacherId: '',
+      teacher_ids: '',
       TeacherListvalue: '',
       rules: {
         wechatNo: [{ validator: wechatNoId, trigger: 'blur' }],
@@ -168,10 +177,31 @@ export default {
       }
     }
   },
+  mounted() {},
   created() {
     this.onCreatedSelect()
+    this.onWeChatTeacher()
   },
   methods: {
+    async onWeChatTeacher() {
+      const query = `{"id": ${this.weixinId}}`
+      await this.$http.Teacher.WeChatTeacher(query).then((res) => {
+        this.ruleForm.wechatNo = res.data.WeChatTeacher.wechat_no
+        this.ruleForm.imageUrl = res.data.WeChatTeacher.head_img_url
+        this.ruleForm.QEcodeUrl = res.data.WeChatTeacher.wechat_qr_code
+        this.teacher_ids = res.data.WeChatTeacher.teacher_id
+      })
+      const weixinId = `{"weixin_id": ${this.weixinId}}`
+      this.$http.Teacher.TeacherWeixinRelation(weixinId).then((res) => {
+        this.ruleForm.resource = `${res.data.TeacherWeixinRelation.is_effective}`
+      })
+      const teacherIds = `{"id": "${this.teacher_ids}"}`
+      this.$http.Teacher.getTeacher(teacherIds).then((res) => {
+        this.ruleForm.teacherId = res.data.Teacher.realname
+        this.oldTeacherId = res.data.Teacher.id
+        this.ruleForm.associatedTeacher = res.data.Teacher.department_id
+      })
+    },
     onCreatedSelect() {
       // 关联老师选择部门
       this.$http.Teacher.getDepartmentTree().then((res) => {
@@ -180,8 +210,6 @@ export default {
     },
     // 部门联机选择
     handleChange(value) {
-      console.log(value)
-      console.log(Object.values(value))
       switch (value && value.length) {
         case 1:
           this.ruleForm.associatedTeacher = value[0]
@@ -229,25 +257,31 @@ export default {
     },
     // 提交
     submitForm(formName) {
-      console.log(this.ruleForm.associatedTeacher, 'ruleForm.associatedTeacher')
       this.$refs[formName].validate((valid) => {
         if (valid) {
           const params = {
-            teacherId: this.ruleForm.teacherId ? this.ruleForm.teacherId : '',
+            teacherId: '',
             weixinId: this.weixinId ? this.weixinId : '',
             weixinNo: this.ruleForm.wechatNo,
             weixinHeadUrl: this.ruleForm.imageUrl,
             weixinQrCode: this.ruleForm.QEcodeUrl,
             isEffective: +this.ruleForm.resource
           }
-          console.log(params, 'fasdsafs')
+          if (isNaN(this.ruleForm.teacherId)) {
+            params.teacherId = this.oldTeacherId
+          } else {
+            params.teacherId = this.ruleForm.teacherId
+              ? this.ruleForm.teacherId
+              : ''
+          }
+          console.log(params, 'paramsparamsparams')
+
           this.$http.Teacher.relation(params).then((res) => {
-            console.log(res, 'res')
             this.$message({
               message: '添加成功',
               type: 'success'
             })
-            this.$emit('addWeChat', 1)
+            this.$emit('editWeChat', 1)
           })
         } else {
           console.log('error submit!!')
@@ -260,7 +294,7 @@ export default {
       this.ruleForm.associatedTeacher = ''
       this.TeacherListvalue = ''
       this.regionOptionsList = []
-      this.$emit('addWeChat', 2)
+      this.$emit('editWeChat', 2)
     },
     // 头像上传
     upload(file) {
