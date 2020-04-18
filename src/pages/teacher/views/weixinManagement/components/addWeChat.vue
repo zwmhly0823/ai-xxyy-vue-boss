@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-04-14 15:15:31
  * @LastEditors: panjian
- * @LastEditTime: 2020-04-18 10:54:59
+ * @LastEditTime: 2020-04-18 16:06:37
  -->
 <template>
   <div>
@@ -120,13 +120,18 @@ export default {
       if (!value) {
         return callback(new Error('微信号不能为空'))
       } else {
-        var regEn = /[`~!@#$%^&*()_+<>?:"{},.\\/;'[\]]/im
+        var regEn = /[`~!@#$%^&*()+<>?:"{},.\\/;'[\]]/im
         var regCn = /[·！#￥（——）：；“”‘、，|《。》？、【】[\]]/im
         var regWn = /^[\u4e00-\u9fa5]+$/
         if (regEn.test(value) || regCn.test(value) || regWn.test(value)) {
           return callback(new Error('微信号不能包含文字、特殊字符'))
         } else {
-          callback()
+          var regAn = /^[a-zA-Z]\S+$/
+          if (regAn.test(value)) {
+            callback()
+          } else {
+            return callback(new Error('微信号必须以字母开头'))
+          }
         }
       }
     }
