@@ -3,8 +3,8 @@
  * @version:
  * @Author: Shentong
  * @Date: 2020-03-17 11:50:18
- * @LastEditors: Shentong
- * @LastEditTime: 2020-04-03 19:22:25
+ * @LastEditors: Lukun
+ * @LastEditTime: 2020-04-14 15:09:55
  */
 import axios from './axios'
 import { getToken } from '@/utils/auth'
@@ -58,6 +58,10 @@ export default {
             headers: this.getHeaders()
           })
           .then((res) => {
+            if (res.status === 500) {
+              reject(res)
+              return
+            }
             resolve(res)
           })
           .catch((err) => {
