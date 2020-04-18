@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-04-14 15:15:31
  * @LastEditors: panjian
- * @LastEditTime: 2020-04-17 16:38:05
+ * @LastEditTime: 2020-04-18 10:54:59
  -->
 <template>
   <div>
@@ -243,11 +243,13 @@ export default {
           console.log(params, 'fasdsafs')
           this.$http.Teacher.relation(params).then((res) => {
             console.log(res, 'res')
-            this.$message({
-              message: '添加成功',
-              type: 'success'
-            })
-            this.$emit('addWeChat', 1)
+            if (res.code === 0) {
+              this.$message({
+                message: '添加成功',
+                type: 'success'
+              })
+              this.$emit('addWeChat', 1)
+            }
           })
         } else {
           console.log('error submit!!')
