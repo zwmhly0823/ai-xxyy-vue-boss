@@ -17,5 +17,22 @@ export default {
         }
       }`
     })
+  },
+
+  // 通过API获取组织机构
+  getDepartmentList() {
+    return axios.get(`/api/t/v1/department/getDepartmentTree`)
+  },
+
+  // 根据选择的部门ID获取老师ID
+  getDepartmentTeacher(query = '') {
+    return axios.post('/graphql/v1/toss', {
+      query: `{
+        TeacherList(query: ${JSON.stringify(query)}, size: 300){
+          id
+          realname
+        }
+      }`
+    })
   }
 }

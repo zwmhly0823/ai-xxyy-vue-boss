@@ -250,10 +250,10 @@ export default {
     async getOrderList(page = this.currentPage, status) {
       const statisticsQuery = []
       const queryObj = {}
-      if (this.teacherId) {
-        Object.assign(queryObj, { last_teacher_id: this.teacherId })
-        statisticsQuery.push({ term: { last_teacher_id: this.teacherId } })
-      }
+      // if (this.teacherId) {
+      //   Object.assign(queryObj, { last_teacher_id: this.teacherId })
+      //   statisticsQuery.push({ term: { last_teacher_id: this.teacherId } })
+      // }
 
       const topicRelation = await this.$http.Product.topicRelationId(
         `${JSON.stringify({
@@ -271,7 +271,8 @@ export default {
 
       // 组合搜索条件
       this.searchIn.forEach((item) => {
-        const subObj = item && (item.term || item.terms || item.range)
+        const subObj =
+          item && (item.term || item.terms || item.range || item.wildcard)
         Object.assign(queryObj, subObj || {})
       })
 

@@ -17,7 +17,8 @@
         multiple: true,
         value: 'id',
         label: 'channel_outer_name',
-        emitPath: false
+        emitPath: false,
+        checkStrictly: false
       }"
       :show-all-levels="false"
       clearable

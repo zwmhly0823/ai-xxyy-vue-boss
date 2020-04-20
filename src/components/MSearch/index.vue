@@ -110,6 +110,12 @@
         />
       </el-form-item>
 
+      <!-- && !teacherId -->
+      <el-form-item v-if="department && !teacherId">
+        <!-- 社群销售组 -->
+        <department @result="getDepartment" :name="department" />
+      </el-form-item>
+
       <!-- <el-form-item
         size="mini"
         style="position:relative;top:6px"
@@ -149,6 +155,7 @@ import TeamDetail from './searchItems/teamDetail'
 import MoreVersionBox from './searchItems/moreVersionBox'
 import OrderType from './searchItems/orderType'
 import SystemCourseType from './searchItems/systemCourseType'
+import Department from './searchItems/department'
 import { isToss } from '@/utils/index'
 
 export default {
@@ -277,6 +284,11 @@ export default {
     systemCourseType: {
       type: String,
       default: ''
+    },
+    // 销售部门
+    department: {
+      type: String,
+      default: ''
     }
   },
   components: {
@@ -293,7 +305,8 @@ export default {
     TeamDetail,
     MoreVersionBox,
     OrderType,
-    SystemCourseType
+    SystemCourseType,
+    Department
   },
   data() {
     return {
@@ -388,6 +401,10 @@ export default {
     getSystemCourseType(res) {
       this.setSeachParmas(res, [this.systemCourseType || 'system-course-type'])
     },
+    getDepartment(res) {
+      this.setSeachParmas(res, [this.department || 'department'], 'terms')
+    },
+
     /**  处理接收到的查询参数
      * @res: Object, 子筛选组件返回的表达式对象，如 {sup: 2}
      * @key: Array 指定res的key。如课程类型+期数选项，清除课程类型时，期数也清除了，这里要同步清除must的数据

@@ -3,7 +3,7 @@
  * @version:
  * @Author: zhubaodong
  * @Date: 2020-03-24 15:16:26
- * @LastEditors: zhubaodong
+ * @LastEditors: yangjiyong
  * @LastEditTime: 2020-03-28 19:34:29
  -->
 <template>
@@ -13,11 +13,13 @@
       <m-search
         @search="handleSearch"
         channel="pay_channel"
-        stage="stage"
         sup="sup"
         date="ctime"
         date-placeholder="下单时间"
         phone="uid"
+        schedule="stage"
+        department="pay_teacher_id"
+        groupSell="pay_teacher_id"
         :order-type="activeTopic === '5' ? 'regtype' : ''"
       />
       <!-- system-course-type="system-course-type" -->
@@ -129,6 +131,7 @@ export default {
     },
     // 点击搜索
     handleSearch(res) {
+      console.log(res)
       this.search = res
     },
     // 吸顶
