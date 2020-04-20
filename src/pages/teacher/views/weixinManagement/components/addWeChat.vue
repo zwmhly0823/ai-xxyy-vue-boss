@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-04-14 15:15:31
  * @LastEditors: panjian
- * @LastEditTime: 2020-04-15 21:28:32
+ * @LastEditTime: 2020-04-18 10:54:59
  -->
 <template>
   <div>
@@ -60,6 +60,7 @@
       <div class="associatedTeacherCss">
         <el-form-item prop="associatedTeacher">
           <el-cascader
+            style="width:300px;"
             @change="handleChange"
             v-model="ruleForm.associatedTeacher"
             placeholder="全部部门"
@@ -115,6 +116,20 @@
 import uploadFile from '@/utils/upload'
 export default {
   data() {
+    var wechatNoId = (rule, value, callback) => {
+      if (!value) {
+        return callback(new Error('微信号不能为空'))
+      } else {
+        var regEn = /[`~!@#$%^&*()_+<>?:"{},.\\/;'[\]]/im
+        var regCn = /[·！#￥（——）：；“”‘、，|《。》？、【】[\]]/im
+        var regWn = /^[\u4e00-\u9fa5]+$/
+        if (regEn.test(value) || regCn.test(value) || regWn.test(value)) {
+          return callback(new Error('微信号不能包含文字、特殊字符'))
+        } else {
+          callback()
+        }
+      }
+    }
     return {
       regionOptionsList: [],
       loading: false,
@@ -127,16 +142,14 @@ export default {
       ruleForm: {
         wechatNo: '',
         associatedTeacher: '',
-        resource: '',
+        resource: '0',
         imageUrl: '',
         QEcodeUrl: '',
         teacherId: ''
       },
       TeacherListvalue: '',
       rules: {
-        wechatNo: [
-          { required: true, message: '请输入微信名称', trigger: 'blur' }
-        ],
+        wechatNo: [{ validator: wechatNoId, trigger: 'blur' }],
         imageUrl: [
           { required: true, message: '请上传微信头像', trigger: 'blur' }
         ],
@@ -182,6 +195,9 @@ export default {
         default:
           break
       }
+      this.ruleForm.teacherId = ''
+      this.regionOptionsList = []
+      this.remoteMethod()
     },
     remoteMethod(query) {
       if (query !== '') {
@@ -201,7 +217,9 @@ export default {
               })
             })
             this.regionOptionsList = _data.filter((item) => {
-              return item.label.toLowerCase().indexOf(query.toLowerCase()) > -1
+              return query
+                ? item.label.toLowerCase().indexOf(query.toLowerCase()) > -1
+                : item
             })
           })
         }, 200)
@@ -225,11 +243,13 @@ export default {
           console.log(params, 'fasdsafs')
           this.$http.Teacher.relation(params).then((res) => {
             console.log(res, 'res')
-            this.$message({
-              message: '添加成功',
-              type: 'success'
-            })
-            this.$emit('addWeChat', 1)
+            if (res.code === 0) {
+              this.$message({
+                message: '添加成功',
+                type: 'success'
+              })
+              this.$emit('addWeChat', 1)
+            }
           })
         } else {
           console.log('error submit!!')

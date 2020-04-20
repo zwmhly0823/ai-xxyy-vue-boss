@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-04-15 16:56:59
  * @LastEditors: panjian
- * @LastEditTime: 2020-04-16 16:50:28
+ * @LastEditTime: 2020-04-16 20:54:18
  -->
 <template>
   <div>
@@ -36,6 +36,7 @@
             v-model="ruleForm.teacherId"
             filterable
             remote
+            clearable
             reserve-keyword
             placeholder="请选择老师"
             :remote-method="remoteMethod"
@@ -113,6 +114,9 @@ export default {
         default:
           break
       }
+      this.ruleForm.teacherId = ''
+      this.regionOptionsList = []
+      this.remoteMethod()
     },
     remoteMethod(query) {
       if (query !== '') {
@@ -132,7 +136,9 @@ export default {
               })
             })
             this.regionOptionsList = _data.filter((item) => {
-              return item.label.toLowerCase().indexOf(query.toLowerCase()) > -1
+              return query
+                ? item.label.toLowerCase().indexOf(query.toLowerCase()) > -1
+                : item
             })
           })
         }, 200)

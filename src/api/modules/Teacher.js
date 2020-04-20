@@ -4,7 +4,7 @@
  * @Author: Yangjiyong
  * @Date: 2020-04-07 13:52:26
  * @LastEditors: panjian
- * @LastEditTime: 2020-04-15 21:50:30
+ * @LastEditTime: 2020-04-16 20:56:34
  */
 import axios from '../axiosConfig'
 
@@ -156,20 +156,36 @@ export default {
   // 新增老师 添加微信
   WeChatTeacherList() {
     const query = `{"teacher_id":{"lte":0}}`
-    return axios.post(`/graphql/v1/teacher`, {
+    return axios.post(`/graphql/v1/toss`, {
       query: `{
           WeChatTeacherList(query: ${JSON.stringify(query)}) {
             id
             wechat_no
+            teacher_id
           }
         }`
+    })
+  },
+  // 老师微信号模糊搜索
+  getWeChatTeacherListEx(weixinkey, value) {
+    const query = `{ "bool": { "must": [{ "wildcard": { "${weixinkey}": "*${value}*" } },{"term":{"teacher_id":0}}] } }`
+    return axios.post('/graphql/v1/toss', {
+      query: `
+      {
+        WeChatTeacherListEx(query:${JSON.stringify(query)})
+        {
+          id
+          wechat_no
+        }
+      }
+      `
     })
   },
   // 新增微信 获取老师name id
   TeacherList(query = '') {
     return axios.post('/graphql/v1/teacher', {
       query: `{
-        TeacherList(query:${JSON.stringify(query)}) {
+        TeacherList(query:${JSON.stringify(query)},size:100) {
           realname
           id
         }

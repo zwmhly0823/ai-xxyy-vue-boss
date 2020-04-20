@@ -95,6 +95,14 @@
           :tip="nameTip"
         />
       </el-form-item>
+      <el-form-item v-if="teacherwx">
+        <!-- 老师模块微信号搜索 -->
+        <teacher-wx
+          :teacherwx="teacherwx"
+          :WeChat="WeChat"
+          @getWxTeacher="getWxTeacher"
+        />
+      </el-form-item>
       <el-form-item v-if="rank || induction || landing || position">
         <!-- 老师模块职级，登陆状态，入职状态，选择职务搜索 -->
         <teacher-drop-down
@@ -131,14 +139,16 @@
           </el-button>
         </el-popover>
       </el-form-item> -->
-      <el-form-item v-if="wxSerch || wxInput || wxStatus || wxConcatTeacher">
+      <el-form-item
+        v-if="wxSerch || wxTeacherPhone || wxStatus || wxConcatTeacher"
+      >
         <wx-list
           :wxSerch="wxSerch"
-          :wxInput="wxInput"
+          :wxTeacherPhone="wxTeacherPhone"
           :wxStatus="wxStatus"
           :wxConcatTeacher="wxConcatTeacher"
           @getWxSerch="getWxSerch"
-          @getWxInput="getWxInput"
+          @getPhone="getPhoneData"
           @getWxStatus="getWxStatus"
           @getWxConcatTeacher="getWxConcatTeacher"
         />
@@ -164,6 +174,7 @@ import expressNo from './searchItems/expressNo'
 import teacherPhone from './searchItems/teacherSearch/teacherPhone.vue'
 import teacherName from './searchItems/teacherSearch/teacherName.vue'
 import teacherDropDown from './searchItems/teacherSearch/teacherDropDown'
+import teacherWx from './searchItems/teacherSearch/teachetWx'
 import wxList from './searchItems/wxInput'
 
 export default {
@@ -222,6 +233,11 @@ export default {
       type: String,
       default: '' // phone
     },
+    // 老师微信号搜索
+    teacherwx: {
+      type: String,
+      default: ''
+    },
     // 是否只搜手机号
     onlyPhone: {
       type: String,
@@ -266,6 +282,11 @@ export default {
       type: String,
       default: ''
     },
+    // 老师微信传参
+    WeChat: {
+      type: Array,
+      default: null
+    },
     // 入职状态
     induction: {
       type: String,
@@ -301,18 +322,22 @@ export default {
       type: String,
       default: '' // express_nu
     },
+    // 微信号搜索
     wxSerch: {
       type: String,
       default: '' // wxSerch
     },
-    wxInput: {
+    // 手机号搜索
+    wxTeacherPhone: {
       type: String,
       default: '' // wxInput
     },
+    // 使用状态搜索
     wxStatus: {
       type: String,
       default: '' // wxStatus
     },
+    // 是否关联老师搜索
     wxConcatTeacher: {
       type: String,
       default: '' // wxConcatTeacher
@@ -331,6 +356,7 @@ export default {
     expressNo,
     teacherName,
     teacherDropDown,
+    teacherWx,
     wxList
   },
   data() {
@@ -397,6 +423,10 @@ export default {
     landingCallBack(res) {
       this.setSeachParmas(res, [this.landing || 'inductionName'])
     },
+    // 老师微信号
+    getWxTeacher(res) {
+      this.setSeachParmas(res, [this.teacherwx], 'wildcard')
+    },
     // 职务
     positionCallBack(res) {
       this.setSeachParmas(res, [this.position || 'positionName'], 'terms')
@@ -429,10 +459,12 @@ export default {
       this.setSeachParmas(res, [this.expressNo || 'express_nu'], 'wildcard')
     },
     getWxSerch(res) {
-      this.setSeachParmas(res, [this.wxSerch])
+      console.log('微信搜索父组件接收到的res', res)
+      this.setSeachParmas(res, [this.wxSerch], 'wildcard')
+      console.log('@+++index.vue+++@@this.wxSerch@@@', this.wxSerch)
     },
-    getWxInput(res) {
-      this.setSeachParmas(res, [this.wxInput], 'wildcard')
+    getPhoneData(res) {
+      this.setSeachParmas(res, [this.wxTeacherPhone], 'wildcard')
     },
     getWxStatus(res) {
       this.setSeachParmas(res, [this.wxStatus])
