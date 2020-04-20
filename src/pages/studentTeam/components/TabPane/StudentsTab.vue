@@ -7,6 +7,9 @@
         phone="uid"
         onlyPhone="1"
         phoneTip="手机号/微信昵称 查询"
+        :teamType="
+          `${classId.classId && +classId.classId.team_type === 0 ? '0' : '1'}`
+        "
         :teamId="classId.classId && classId.classId.id"
       />
     </div>
@@ -356,12 +359,14 @@ export default {
         })
         .then((res) => {
           this.statusList = res.data.userFollowStateList
+            ? res.data.userFollowStateList
+            : []
         })
     },
     // 优惠卷列表接口
     couponList() {
       this.$http.Team.getAllCoupons(0).then((res) => {
-        this.couponData = res.payload.content
+        this.couponData = (res.payload && res.payload.content) || []
       })
     },
     // 选择按钮

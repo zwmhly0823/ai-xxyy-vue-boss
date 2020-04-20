@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-24 18:20:12
  * @LastEditors: Shentong
- * @LastEditTime: 2020-04-14 14:56:41
+ * @LastEditTime: 2020-04-18 21:10:30
  -->
 
 <template>
@@ -15,6 +15,7 @@
         <search-phone
           @result="getPhoneHander"
           :teamId="teamId"
+          :teamType="teamType"
           :name="phone"
           :onlyPhone="onlyPhone"
           :tip="phoneTip"
@@ -64,13 +65,22 @@
         <!-- 主题 -->
         <product-topic @result="getProductTopic" :name="topicType" />
       </el-form-item>
-      <el-form-item v-if="level || sup || stage">
+
+      <el-form-item v-if="moreVersion">
+        <!-- 随材版本-->
+        <more-version-box @result="getVersionNu" :name="moreVersion" />
+      </el-form-item>
+
+      <el-form-item v-if="level || sup || stage || schedule">
         <stage-sup-levels
           @stageCallBack="stageCallBack"
           @supCallBack="supCallBack"
           @levelCallBack="levelCallBack"
           @positionCallBack="positionCallBack"
+          @scheduleCallBack="scheduleCallBack"
+          :disabled="true"
           :stageName="stage"
+          :scheduleName="schedule"
           :supName="sup"
           :levelName="level"
           style="margin-bottom:0px"
@@ -108,6 +118,16 @@
           :positionName="position"
           style="margin-bottom:0px"
         />
+      </el-form-item>
+
+      <el-form-item v-if="teamDetail">
+        <!-- 班级期数-->
+        <team-detail @result="getTeamDetail" :name="teamDetail" />
+      </el-form-item>
+
+      <el-form-item v-if="groupSell && !teacherId">
+        <!-- 社群销售 -->
+        <group-sell @result="selectSellTeacher" :name="groupSell" />
       </el-form-item>
 
       <!-- <el-form-item
@@ -161,12 +181,17 @@ import SearchPhone from './searchItems/searchPhone.vue'
 import OutTradeNo from './searchItems/outTradeNo.vue'
 import ProductName from './searchItems/productName.vue'
 import SelectDate from './searchItems/selectDate.vue'
-import expressNo from './searchItems/expressNo'
+// import expressNo from './searchItems/expressNo'
 // 老师
 import teacherPhone from './searchItems/teacherSearch/teacherPhone.vue'
 import teacherName from './searchItems/teacherSearch/teacherName.vue'
 import teacherDropDown from './searchItems/teacherSearch/teacherDropDown'
 import wxList from './searchItems/wxInput'
+import ExpressNo from './searchItems/expressNo'
+import GroupSell from './searchItems/groupSell'
+import TeamDetail from './searchItems/teamDetail'
+import MoreVersionBox from './searchItems/moreVersionBox'
+import { isToss } from '@/utils/index'
 
 export default {
   props: {
@@ -194,6 +219,11 @@ export default {
       type: String,
       default: '' // stage
     },
+    // 排期
+    schedule: {
+      type: String,
+      default: '' // schedule
+    },
     // 难度
     sup: {
       type: String,
@@ -213,6 +243,11 @@ export default {
     datePlaceholder: {
       type: String,
       default: '下单时间'
+    },
+    // 班级内搜索 需要班级类型
+    teamType: {
+      type: String,
+      default: '' // 0
     },
     // 手机号
     phone: {
@@ -322,6 +357,20 @@ export default {
     wxConcatTeacher: {
       type: String,
       default: '' // wxConcatTeacher
+    },
+    // 社群销售查询
+    groupSell: {
+      type: String,
+      default: '' //
+    },
+    // 班级信息查询
+    teamDetail: {
+      type: String,
+      default: '' //
+    },
+    moreVersion: {
+      type: String,
+      default: '' //
     }
   },
   components: {
@@ -334,10 +383,14 @@ export default {
     OutTradeNo,
     ProductName,
     teacherPhone,
-    expressNo,
+    // expressNo,
     teacherName,
     teacherDropDown,
-    wxList
+    wxList,
+    ExpressNo,
+    GroupSell,
+    TeamDetail,
+    MoreVersionBox
   },
   data() {
     return {
@@ -346,7 +399,8 @@ export default {
       must: [],
       should: [],
       selectTime: null, // 物流时间下拉列表_选中项
-      oldTime: '' // 上次时间选择值
+      oldTime: '', // 上次时间选择值
+      teacherId: '' // 判断是否是toss环境还是boss环境
     }
   },
   computed: {},
@@ -364,6 +418,11 @@ export default {
     stageCallBack(res) {
       console.log(res, 'res')
       this.setSeachParmas(res, [this.stage || 'stage'], 'terms')
+    },
+    // 排期
+    scheduleCallBack(res) {
+      console.log(res, 'res')
+      this.setSeachParmas(res, [this.schedule || 'period'], 'terms')
     },
     // 难度
     supCallBack(res) {
@@ -431,7 +490,6 @@ export default {
     },
     // 选择物流单号
     getExpressNo(res) {
-      console.log(res, 'res___________', this.expressNo)
       this.setSeachParmas(res, [this.expressNo || 'express_nu'], 'wildcard')
     },
     getWxSerch(res) {
@@ -449,6 +507,16 @@ export default {
       this.setSeachParmas(res, [this.wxConcatTeacher])
     },
 
+    // 选择销售老师
+    selectSellTeacher(res) {
+      this.setSeachParmas(res, [this.groupSell || 'teacher_id'], 'wildcard')
+    },
+    getTeamDetail(res) {
+      this.setSeachParmas(res, [this.teamDetail || 'last_team_id'])
+    },
+    getVersionNu(res) {
+      this.setSeachParmas(res, [this.moreVersion || 'product_version'])
+    },
     /**  处理接收到的查询参数
      * @res: Object, 子筛选组件返回的表达式对象，如 {sup: 2}
      * @key: Array 指定res的key。如课程类型+期数选项，清除课程类型时，期数也清除了，这里要同步清除must的数据
@@ -497,6 +565,12 @@ export default {
         this.should = temp
       }
       this.$emit('searchShould', temp)
+    }
+  },
+  created() {
+    const teacherId = isToss()
+    if (teacherId) {
+      this.teacherId = teacherId
     }
   }
 }
