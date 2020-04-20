@@ -1,7 +1,7 @@
 /*
  * @Date: 2020-03-13 15:20:21
  * @LastEditors: Shentong
- * @LastEditTime: 2020-04-18 20:59:21
+ * @LastEditTime: 2020-04-20 13:24:04
  * @FilePath: /ai-app-vue-toss/src/pages/studentTeam/router/index.js
  */
 import Vue from 'vue'
@@ -24,7 +24,7 @@ const routes = [
     name: 'enrollmentSchedule',
     meta: {
       title: '招生排期',
-      keepAlive: false
+      keepAlive: true
     },
     component: () => import('../views/enrollmentSchedule/index.vue')
   },

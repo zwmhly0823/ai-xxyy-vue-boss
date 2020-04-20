@@ -4,14 +4,18 @@
  * @Author: Shentong
  * @Date: 2020-04-17 16:27:27
  * @LastEditors: Shentong
- * @LastEditTime: 2020-04-17 16:28:39
+ * @LastEditTime: 2020-04-20 15:32:52
  */
 const state = {
-  scheduleTeacherId: []
+  scheduleTeacherId: [],
+  schedulePeriod: ''
 }
 const mutations = {
   setScheduleTeacher: (state, teacherIds = []) => {
     state.scheduleTeacherId = teacherIds
+  },
+  setSchedulePeriod: (state, schedulePeriod = '') => {
+    state.schedulePeriod = schedulePeriod
   }
 }
 const actions = {

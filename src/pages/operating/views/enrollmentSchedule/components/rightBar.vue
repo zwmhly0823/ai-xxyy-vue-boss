@@ -4,7 +4,7 @@
  * @Author: shentong
  * @Date: 2020-04-02 16:08:02
  * @LastEditors: Shentong
- * @LastEditTime: 2020-04-18 22:13:23
+ * @LastEditTime: 2020-04-20 15:50:05
  -->
 <template>
   <div>
@@ -41,69 +41,88 @@
       >
         <el-table-column prop="period" label="序号" width="50" align="center">
         </el-table-column>
-        <el-table-column prop="periodName" label="期名" width="80">
+        <el-table-column
+          prop="periodName"
+          label="期名"
+          align="center"
+          width="90"
+        >
         </el-table-column>
         <el-table-column
           prop="startDate"
           width="100"
+          align="center"
           label="开始招生"
         ></el-table-column>
         <el-table-column
           prop="endDate"
           width="100"
+          align="center"
           label="结束招生"
         ></el-table-column>
         <el-table-column
           prop="courseDay"
           width="100"
+          align="center"
           label="开课时间"
         ></el-table-column>
         <el-table-column
           prop="endCourseDay"
           width="100"
+          align="center"
           label="结课时间"
         ></el-table-column>
-        <el-table-column prop="address" label="招生级别">
+        <el-table-column
+          prop="address"
+          label="招生级别"
+          align="center"
+          width="80"
+        >
           <template slot-scope="scope">
             <div
-              v-for="(leve, l_index) in scope.row.WechatCourse"
+              v-for="(leve, l_index) in scope.row.wechatCourse"
               :key="l_index"
             >
-              {{ leve.courseDifficulty || '' }}
+              {{ leve.courseDifficulty || '111' }}
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="address" label="带班销售人数" width="100">
+        <el-table-column
+          prop="address"
+          label="带班销售人数"
+          width="100"
+          align="center"
+        >
           <template slot-scope="scope">
-            <div v-for="(w, l_index) in scope.row.WechatCourse" :key="l_index">
+            <div v-for="(w, l_index) in scope.row.wechatCourse" :key="l_index">
               {{ w.wechatSize || '' }}
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="address" label="计划招生">
+        <el-table-column prop="address" label="计划招生" align="center">
           <template slot-scope="scope">
-            <div v-for="(p, l_index) in scope.row.WechatCourse" :key="l_index">
+            <div v-for="(p, l_index) in scope.row.wechatCourse" :key="l_index">
               {{ p.planSumTeamSize || '' }}
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="address" label="实际招生">
+        <el-table-column prop="address" label="实际招生" align="center">
           <template slot-scope="scope">
-            <div v-for="(r, l_index) in scope.row.WechatCourse" :key="l_index">
+            <div v-for="(r, l_index) in scope.row.wechatCourse" :key="l_index">
               {{ r.realSumTeamSize || '' }}
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="address" label="计划开班">
+        <el-table-column prop="address" label="计划开班" align="center">
           <template slot-scope="scope">
-            <div v-for="(p, l_index) in scope.row.WechatCourse" :key="l_index">
+            <div v-for="(p, l_index) in scope.row.wechatCourse" :key="l_index">
               {{ p.planTeamSize || '' }}
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="address" label="实际开班">
+        <el-table-column prop="address" label="实际开班" align="center">
           <template slot-scope="scope">
-            <div v-for="(r, l_index) in scope.row.WechatCourse" :key="l_index">
+            <div v-for="(r, l_index) in scope.row.wechatCourse" :key="l_index">
               {{ r.realTeamSize || '' }}
             </div>
           </template>
@@ -179,7 +198,7 @@ export default {
   },
   computed: {},
   watch: {},
-  async created() {
+  async activated() {
     await this.getCourseListByType()
   },
   methods: {

@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-14 18:28:44
  * @LastEditors: Shentong
- * @LastEditTime: 2020-04-18 22:07:56
+ * @LastEditTime: 2020-04-20 16:02:37
  -->
 <template>
   <div class="app-main height add-schedule-container">
@@ -86,9 +86,7 @@ export default {
     // 第一步 点击下一步 监听
     oneStepNext(val) {
       console.log('oneStepNext', val)
-      if (val) {
-        this.stepStatus++
-      }
+      if (val) this.stepStatus++
     },
     // 第二步 点击下一步 监听
     twoStepNext(type) {
@@ -115,6 +113,8 @@ export default {
       this.stepStatus = 1
     },
     backList() {
+      this.$store.commit('setSchedulePeriod', '')
+      this.$store.commit('setScheduleTeacher', [])
       this.$router.push({ path: '/' })
     }
   }

@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-15 20:35:57
  * @LastEditors: Shentong
- * @LastEditTime: 2020-04-18 22:15:54
+ * @LastEditTime: 2020-04-20 15:33:53
  -->
 <template>
   <div class="third-step">
@@ -159,7 +159,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['scheduleTeacherId'])
+    ...mapGetters(['scheduleTeacherId', 'schedulePeriod'])
   },
   components: {
     EleTable
@@ -171,7 +171,7 @@ export default {
     // 根据老师ids获取招生排期设置中老师配置信息 TODO:
     const params = {
       courseType,
-      period,
+      period: this.schedulePeriod,
       ids: this.scheduleTeacherId
     }
     this.scheduleTeacherId.length && this.getTeacherConfigList(params)
@@ -238,12 +238,12 @@ export default {
     },
     // 翻页emit
     pageChange_handler() {},
+    // 上一步，下一步
     async stepOpt(type) {
-      const { period = '', courseType = 0 } = this.$route.params
+      const { courseType = 0 } = this.$route.params
       const params = {
         courseType,
-        period,
-        // ids: scheduleTeacherId,
+        period: this.schedulePeriod,
         body: this.tableData
       }
       await this.saveScheduleConfig(params)

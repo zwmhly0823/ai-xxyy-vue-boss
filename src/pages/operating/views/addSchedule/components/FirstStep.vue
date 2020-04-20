@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-15 20:35:57
  * @LastEditors: Shentong
- * @LastEditTime: 2020-04-18 21:46:51
+ * @LastEditTime: 2020-04-20 15:35:21
  -->
 <template>
   <div class="first-step">
@@ -323,7 +323,7 @@ export default {
       })
       try {
         const _res = await this.$http.Operating.addScheduleFirstStep(params)
-        if (_res.code === 0) cb()
+        if (_res.code === 0) cb(_res)
       } catch (err) {
         this.$message({
           message: '获取列表出错',
@@ -375,7 +375,14 @@ export default {
       const sendFrom = this.pacakageFormInfo() // TODO:
       this.$refs.formInfo.validate((valid) => {
         if (valid) {
-          const cb = () => {
+          const cb = (_res) => {
+            const {
+              payload: { period }
+            } = _res
+
+            this.period = period
+
+            this.$store.commit('setSchedulePeriod', period)
             this.$emit('listenStepStatus', sendFrom)
           }
           // 掉接口 TODO:
