@@ -10,6 +10,11 @@
 <template>
   <el-card class="search-style" shadow="never">
     <el-form :inline="true">
+      <el-form-item v-if="orderType">
+        <!-- 订单类型 -->
+        <order-type @result="getOrderType" :name="orderType" />
+      </el-form-item>
+
       <el-form-item v-if="phone">
         <!-- 手机号搜索 -->
         <search-phone
@@ -95,11 +100,6 @@
       <el-form-item v-if="groupSell && !teacherId">
         <!-- 社群销售 -->
         <group-sell @result="selectSellTeacher" :name="groupSell" />
-      </el-form-item>
-
-      <el-form-item v-if="orderType">
-        <!-- 订单类型 -->
-        <order-type @result="getOrderType" :name="orderType" />
       </el-form-item>
 
       <el-form-item v-if="systemCourseType">

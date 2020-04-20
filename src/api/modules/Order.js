@@ -21,6 +21,7 @@ export default {
           number
           content {
             id
+            uid
             ctime
             packages_name
             sup
@@ -51,6 +52,9 @@ export default {
               }
             }
             teacher{
+              realname
+            }
+            salesman{
               realname
             }
             express{

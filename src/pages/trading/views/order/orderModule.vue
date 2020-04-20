@@ -20,6 +20,8 @@
         phone="uid"
         :order-type="activeTopic === '5' ? 'regtype' : ''"
       />
+      <!-- system-course-type="system-course-type" -->
+
       <!-- tab - regtype -->
       <el-tabs
         type="border-card"
@@ -59,8 +61,10 @@
             v-if="activeTopic === '4' || activeTopic === '5'"
           ></el-table-column>
           <el-table-column label="订单状态"> </el-table-column>
+          <!-- <el-table-column label="班级信息" v-if="activeTopic === '4'">
+          </el-table-column> -->
           <el-table-column
-            label="班级信息"
+            label="体验课班级"
             v-if="activeTopic === '4' || activeTopic === '5'"
           >
           </el-table-column>
@@ -70,10 +74,18 @@
           >
           </el-table-column>
           <el-table-column
-            label="销售组"
+            label="销售部门"
             v-if="activeTopic === '4' || activeTopic === '5'"
           >
           </el-table-column>
+          <el-table-column
+            label="系统课班级"
+            v-if="activeTopic === '5'"
+          ></el-table-column>
+          <el-table-column
+            label="服务老师"
+            v-if="activeTopic === '5'"
+          ></el-table-column>
           <el-table-column label="下单时间"> </el-table-column>
           <el-table-column label="关联物流"> </el-table-column>
         </el-table>
