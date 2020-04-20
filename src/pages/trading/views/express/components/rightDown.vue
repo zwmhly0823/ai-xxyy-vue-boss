@@ -5,6 +5,7 @@
       ref="multipleTable"
       :data="tableData"
       style="width: 100%"
+      class="table-all"
       @cell-click="handleSelectionChangeCell"
       @selection-change="handleSelectionChange"
       @row-click="handleExpressTo"
@@ -66,7 +67,7 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="随材版本">
+      <el-table-column label="随材版本" width="120">
         <template slot-scope="scope">
           <div>
             <span>{{ scope.row.product_version || '-' }}</span>
@@ -91,7 +92,7 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="期数">
+      <el-table-column label="期数" width="120">
         <template slot-scope="scope">
           <div class="product">
             <span>{{ ManagementList[scope.row.term] }}</span>
@@ -105,14 +106,14 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="社群销售">
+      <el-table-column label="社群销售" width="120">
         <template slot-scope="scope">
           <div class="product">
             <span>{{ TeacherList[scope.row.teacher_id] }}</span>
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="物流状态">
+      <el-table-column label="物流状态" width="140">
         <template slot-scope="scope">
           <div class="express">
             <div :class="'wait_' + scope.row.express_status">
@@ -134,7 +135,6 @@
         </template>
       </el-table-column>
     </el-table>
-
     <div class="drawer-body">
       <express-detail :transferExpress="transferExpress" ref="zi" />
     </div>
@@ -752,57 +752,59 @@ export default {
 
 <style lang="scss" scoped>
 .container {
-  padding-bottom: 50px;
   background-color: #fff;
   color: #666;
-  .three-dot {
-    display: flex;
-    justify-content: center;
-    img {
-      width: 14px;
-      height: 14px;
-    }
-  }
-  .user,
-  .sign,
-  .express,
-  .take,
-  .product {
-    font-size: 14px;
-    .name {
-      color: #333;
-    }
-  }
-  .express {
-    .wait_4 {
-      color: red;
-    }
-    .trail {
-      cursor: pointer;
-    }
-  }
-
-  .two-choose {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    align-self: center;
-    justify-content: center;
-    .message {
+  .table-all {
+    padding-bottom: 32px;
+    .three-dot {
       display: flex;
-      font-size: 15px;
-      color: #666;
-      .ms {
-        color: #999;
+      justify-content: center;
+      img {
+        width: 14px;
+        height: 14px;
       }
     }
-    .choose-product {
-      margin-top: 5px;
-      font-size: 15px;
+    .user,
+    .sign,
+    .express,
+    .take,
+    .product {
+      font-size: 14px;
+      .name {
+        color: #333;
+      }
+    }
+    .express {
+      .wait_4 {
+        color: red;
+      }
+      .trail {
+        cursor: pointer;
+      }
+    }
+
+    .two-choose {
       display: flex;
-      align-self: center;
-      flex-direction: row;
+      flex-direction: column;
       align-items: center;
+      align-self: center;
+      justify-content: center;
+      .message {
+        display: flex;
+        font-size: 15px;
+        color: #666;
+        .ms {
+          color: #999;
+        }
+      }
+      .choose-product {
+        margin-top: 5px;
+        font-size: 15px;
+        display: flex;
+        align-self: center;
+        flex-direction: row;
+        align-items: center;
+      }
     }
   }
 }
