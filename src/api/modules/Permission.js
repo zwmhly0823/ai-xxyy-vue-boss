@@ -16,7 +16,7 @@ export default {
           teacherId
         }
       )
-      if (res.payload.length > 0) {
+      if (res && res.payload && res.payload.length > 0) {
         return onlyId ? res.payload.map((t) => t.id) : res.payload
       }
       return [teacherId]

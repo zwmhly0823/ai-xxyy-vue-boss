@@ -82,7 +82,8 @@ import {
   Scrollbar,
   Notification,
   InfiniteScroll,
-  Popconfirm
+  Popconfirm,
+  Drawer
 } from 'element-ui'
 
 Vue.use(Pagination)
@@ -162,6 +163,7 @@ Vue.use(Scrollbar)
 Vue.use(InfiniteScroll)
 Vue.use(Popconfirm)
 Vue.use(Loading.directive)
+Vue.use(Drawer)
 
 // 挂载到Vue实例，组件中 this.$message() 直接调用
 Vue.prototype.$loading = Loading.service
