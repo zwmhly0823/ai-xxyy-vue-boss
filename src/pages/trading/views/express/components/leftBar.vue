@@ -152,24 +152,21 @@ export default {
           ]
           this.whack[1].children = [
             {
-              id: '4,5,7,8',
+              id: '4,5,7',
               label: `全部（${this.arrSum(logisticsError)}）`
-            },
-            {
-              id: '4',
-              label: `退签（${Number(x.signed_failed)}）`
-            },
-            {
-              id: '5',
-              label: `退回（${Number(x.has_return)}）`
             },
             {
               id: '7',
               label: `失效（${Number(x.invalid)}）`
             },
             {
-              id: '8',
-              label: `疑难（${Number(x.invalid)}）`
+              id: '5',
+              label: `已退货（${Number(x.has_return)}）`
+            },
+
+            {
+              id: '4',
+              label: `签收失败（${Number(x.signed_failed)}）`
             }
           ]
 
