@@ -13,7 +13,11 @@
       <el-row :gutter="20" type="flex" justify="center">
         <!-- 订单总计 -->
         <el-col :span="5">
-          <div class="grid-content bg-purple total-order">
+          <div
+            class="grid-content"
+            :class="{ current: !status }"
+            @click="chnageStatus('')"
+          >
             <div class="oride-top">订单总计</div>
             <div class="oride-middle">
               <em>{{ statisticsObj.total.count }}</em
@@ -28,7 +32,11 @@
         </el-col>
         <!-- 已完成 3 -->
         <el-col :span="5">
-          <div class="grid-content bg-purple">
+          <div
+            class="grid-content"
+            :class="{ current: status === '3' }"
+            @click="chnageStatus('3')"
+          >
             <div class="oride-top">已完成</div>
             <div class="oride-middle">
               <em>{{ statisticsObj.payed.count || 0 }}</em
@@ -41,7 +49,11 @@
         </el-col>
         <!-- 未支付 0，1 -->
         <el-col :span="5">
-          <div class="grid-content bg-purple">
+          <div
+            class="grid-content"
+            :class="{ current: status === '0,1' }"
+            @click="chnageStatus('0,1')"
+          >
             <div class="oride-top">未支付</div>
             <div class="oride-middle">
               <em>{{ statisticsObj.topay.count }}</em
@@ -54,7 +66,11 @@
         </el-col>
         <!-- 退费： 退费中 5，已退费 6，7 -->
         <el-col :span="5">
-          <div class="grid-content bg-purple">
+          <div
+            class="grid-content"
+            :class="{ current: status === '5,6,7' }"
+            @click="chnageStatus('5,6,7')"
+          >
             <div class="oride-top">退费</div>
             <div class="oride-middle">
               <em>{{ statisticsObj.refund.count }}</em
@@ -197,6 +213,7 @@ export default {
           ...obj
         }
       } else {
+        // if (this.status) return
         this.statistics = {
           '0': { count: 0, value: 0 },
           '1': { count: 0, value: 0 },
@@ -206,6 +223,13 @@ export default {
           '7': { count: 0, value: 0 }
         }
       }
+    },
+
+    /**
+     * 切换
+     */
+    chnageStatus(status) {
+      this.status = status
     }
   }
 }
@@ -220,6 +244,10 @@ export default {
   height: 100%;
   .grid-content {
     cursor: pointer;
+    background: #f5f6f7;
+    &.current {
+      background: #e4e4e4;
+    }
   }
   .oride-top {
     font-size: 12px;
@@ -265,12 +293,6 @@ export default {
   }
   .el-col {
     border-radius: 4px;
-  }
-  .bg-purple-dark {
-    background: #f5f6f7;
-  }
-  .bg-purple {
-    background: #f5f6f7;
   }
   .el-tabs--border-card > .el-tabs__content {
     padding-left: 0;

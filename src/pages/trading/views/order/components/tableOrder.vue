@@ -129,6 +129,11 @@ export default {
       type: String,
       default: ''
     },
+    // 支付状态
+    status: {
+      type: String,
+      default: ''
+    },
     search: {
       type: Array,
       default: () => {
@@ -160,8 +165,6 @@ export default {
       // 搜索
       searchIn: [],
       statisticsQuery: [], // 统计需要 bool 表达式
-      // 切换支付状态
-      status: '3', // 默认显示 3 - 已完成
       departmentObj: {}, // 组织机构 obj
       orderStatisticsResult: [] // 统计结果
     }
@@ -180,6 +183,11 @@ export default {
       this.currentPage = 1
       this.getOrderList()
     },
+    status(status) {
+      console.log(status, 'status')
+      this.currentPage = 1
+      this.getOrderList()
+    },
     // 搜索
     search(val) {
       this.currentPage = 1
@@ -190,10 +198,9 @@ export default {
   },
   methods: {
     // 订单列表
-    async getOrderList(page = this.currentPage) {
+    async getOrderList(page = this.currentPage, status) {
       const statisticsQuery = []
       const queryObj = {}
-      // const must = []
       if (this.teacherId) {
         Object.assign(queryObj, { last_teacher_id: this.teacherId })
         statisticsQuery.push({ term: { last_teacher_id: this.teacherId } })
@@ -218,6 +225,11 @@ export default {
         const subObj = item && (item.term || item.terms || item.range)
         Object.assign(queryObj, subObj || {})
       })
+
+      // 支持状态
+      if (this.status) {
+        Object.assign(queryObj, { status: this.status.split(',') })
+      }
 
       /**
        * this.topic
