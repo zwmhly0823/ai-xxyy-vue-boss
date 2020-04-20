@@ -3,8 +3,8 @@
  * @version: 
  * @Author: panjian
  * @Date: 2020-04-14 15:15:31
- * @LastEditors: panjian
- * @LastEditTime: 2020-04-17 16:38:05
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2020-04-20 17:59:15
  -->
 <template>
   <div>
@@ -15,7 +15,11 @@
       class="demo-ruleForm"
       label-position="top"
     >
-      <el-form-item label="微信号" prop="wechatNo">
+      <div style="margin-bottom:20px;">
+        <span style="color:red;font-weight: 800;">*</span>
+        <span style="font-size:14px;"> 微信号</span>
+      </div>
+      <el-form-item prop="wechatNo">
         <el-input style="width:230px;" v-model="ruleForm.wechatNo"></el-input>
       </el-form-item>
       <el-form-item label="微信头像" prop="imageUrl">
@@ -150,9 +154,9 @@ export default {
       TeacherListvalue: '',
       rules: {
         wechatNo: [{ validator: wechatNoId, trigger: 'blur' }],
-        imageUrl: [
-          { required: true, message: '请上传微信头像', trigger: 'blur' }
-        ],
+        // imageUrl: [
+        //   { required: true, message: '请上传微信头像', trigger: 'blur' }
+        // ],
         QEcodeUrl: [
           { required: true, message: '请上传微信二维码', trigger: 'blur' }
         ],
