@@ -4,7 +4,11 @@
  * @Author: Lukun
  * @Date: 2020-04-15 15:18:49
  * @LastEditors: Lukun
- * @LastEditTime: 2020-04-20 16:09:34
+<<<<<<< HEAD
+ * @LastEditTime: 2020-04-20 17:20:16
+=======
+ * @LastEditTime: 2020-04-18 21:25:17
+>>>>>>> feature/trading
  -->
 <template>
   <div class="container">
@@ -103,9 +107,14 @@ export default {
       ]
     }
   },
+  watch: {
+    transferExpress(val) {
+      this.getexpressInformation(val.expressNu)
+    }
+  },
   methods: {
     // 获取物流id 商品信息
-    getexpressInformation(i) {
+    getexpressInformation() {
       const expressNu = this.transferExpress.express_nu
       this.expressList(expressNu)
     },
@@ -173,7 +182,7 @@ export default {
   mounted() {
     // this.getexpressMess()
     // 获取物流信息
-    this.getexpressInformation()
+    // this.getexpressInformation()
   }
 }
 </script>

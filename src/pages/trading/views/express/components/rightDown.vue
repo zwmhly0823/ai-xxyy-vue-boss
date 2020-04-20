@@ -5,6 +5,7 @@
       ref="multipleTable"
       :data="tableData"
       style="width: 100%"
+      class="table-all"
       @cell-click="handleSelectionChangeCell"
       @selection-change="handleSelectionChange"
       @row-click="handleExpressTo"
@@ -66,7 +67,7 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="随材版本">
+      <el-table-column label="随材版本" width="120">
         <template slot-scope="scope">
           <div>
             <span>{{ scope.row.product_version || '-' }}</span>
@@ -91,10 +92,10 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="期数">
+      <el-table-column label="期数" width="120">
         <template slot-scope="scope">
           <div class="product">
-            <span>{{ scope.row.term }}期</span>
+            <span>{{ ManagementList[scope.row.term] }}</span>
           </div>
         </template>
       </el-table-column>
@@ -105,14 +106,14 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="社群销售">
+      <el-table-column label="社群销售" width="120">
         <template slot-scope="scope">
           <div class="product">
             <span>{{ TeacherList[scope.row.teacher_id] }}</span>
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="物流状态">
+      <el-table-column label="物流状态" width="140">
         <template slot-scope="scope">
           <div class="express">
             <div :class="'wait_' + scope.row.express_status">
@@ -134,7 +135,6 @@
         </template>
       </el-table-column>
     </el-table>
-
     <div class="drawer-body">
       <express-detail :transferExpress="transferExpress" ref="zi" />
     </div>
@@ -326,7 +326,8 @@ export default {
       TeacherList: '',
       StudentTeamList: '',
       realnameId: '',
-      teamId: ''
+      teamId: '',
+      ManagementList: []
     }
   },
   methods: {
@@ -514,6 +515,9 @@ export default {
 
     getExpressList(id) {
       let timeType = {}
+      if (this.teacherId) {
+        this.teacherId && (timeType.teacher_id = this.teacherId)
+      }
       this.searchIn.forEach((item) => {
         if (item && item.term) {
           if (item.term.user_id) {
@@ -524,9 +528,6 @@ export default {
           }
           if (item.term && item.term.last_team_id) {
             timeType.last_team_id = item.term.last_team_id
-          }
-          if (item.term && item.term.teacher_id) {
-            timeType.teacher_id = item.term.teacher_id
           }
           if (item.term && item.term['product_version.keyword']) {
             timeType.product_version = `${item.term['product_version.keyword']}`
@@ -558,8 +559,11 @@ export default {
         if (item.wildcard && item.wildcard.express_nu) {
           timeType.express_nu = item.wildcard.express_nu
         }
+        if (item.wildcard && item.wildcard.teacher_id) {
+          timeType.teacher_id = item.wildcard.teacher_id
+        }
       })
-      this.teacherId && (timeType.teacher_id = this.teacherId)
+
       timeType = {
         ...timeType,
         express_status: id
@@ -632,9 +636,11 @@ export default {
             const resData = res.data.LogisticsListPage.content
             const realnameId = [] // 老师Id
             const teamId = [] // 班级Id
+            const schedule = []
             resData.forEach((item) => {
               realnameId.push(item.teacher_id)
               teamId.push(item.last_team_id)
+              schedule.push(item.term)
               item.crtime = formatData(+item.ctime, 's')
               item.detime = formatData(+item.delivery_collect_time, 's')
               item.uptime = formatData(+item.utime, 's')
@@ -650,6 +656,7 @@ export default {
             this.totalElements = +res.data.LogisticsListPage.totalElements // 总条数
             this.getTeacherList(realnameId)
             this.getStudentTeamList(teamId)
+            this.getScheduleList(schedule)
           }
         })
     },
@@ -693,6 +700,27 @@ export default {
           this.TeacherList = obj
         })
     },
+    // 获取期数
+    getScheduleList(id) {
+      const queryString = JSON.stringify({ id: id })
+      axios
+        .post('/graphql/v1/toss', {
+          query: `{ManagementList(query:${JSON.stringify(queryString)}){
+                      id
+                      period_name
+                    }
+                    }       `
+        })
+        .then((res) => {
+          const obj = {}
+
+          res.data.ManagementList.forEach((item) => {
+            // {`${item.name}`:item.term}
+            obj[item.id] = item.period_name
+          })
+          this.ManagementList = obj
+        })
+    },
     toggleSelection(rows) {
       if (rows) {
         rows.forEach((row) => {
@@ -724,57 +752,59 @@ export default {
 
 <style lang="scss" scoped>
 .container {
-  padding-bottom: 50px;
   background-color: #fff;
   color: #666;
-  .three-dot {
-    display: flex;
-    justify-content: center;
-    img {
-      width: 14px;
-      height: 14px;
-    }
-  }
-  .user,
-  .sign,
-  .express,
-  .take,
-  .product {
-    font-size: 14px;
-    .name {
-      color: #333;
-    }
-  }
-  .express {
-    .wait_4 {
-      color: red;
-    }
-    .trail {
-      cursor: pointer;
-    }
-  }
-
-  .two-choose {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    align-self: center;
-    justify-content: center;
-    .message {
+  .table-all {
+    padding-bottom: 32px;
+    .three-dot {
       display: flex;
-      font-size: 15px;
-      color: #666;
-      .ms {
-        color: #999;
+      justify-content: center;
+      img {
+        width: 14px;
+        height: 14px;
       }
     }
-    .choose-product {
-      margin-top: 5px;
-      font-size: 15px;
+    .user,
+    .sign,
+    .express,
+    .take,
+    .product {
+      font-size: 14px;
+      .name {
+        color: #333;
+      }
+    }
+    .express {
+      .wait_4 {
+        color: red;
+      }
+      .trail {
+        cursor: pointer;
+      }
+    }
+
+    .two-choose {
       display: flex;
-      align-self: center;
-      flex-direction: row;
+      flex-direction: column;
       align-items: center;
+      align-self: center;
+      justify-content: center;
+      .message {
+        display: flex;
+        font-size: 15px;
+        color: #666;
+        .ms {
+          color: #999;
+        }
+      }
+      .choose-product {
+        margin-top: 5px;
+        font-size: 15px;
+        display: flex;
+        align-self: center;
+        flex-direction: row;
+        align-items: center;
+      }
     }
   }
 }
