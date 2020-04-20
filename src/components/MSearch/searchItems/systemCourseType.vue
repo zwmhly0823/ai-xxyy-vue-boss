@@ -4,7 +4,7 @@
  * @Date: 2020-04-20 12:17:21
  * @Last Modified by:   YangJiyong
  * @Last Modified time: 2020-04-20 12:17:21
- * @Description: 订单类型：下拉选择，首单、续费两个维度 regtype: 2-首单，3-续费
+ * @Description: 系统课类型：月系统课-1、季系统课-2、半年系统课-3、年系统课-4
 -->
 <template>
   <div class="search-item small">
@@ -12,12 +12,12 @@
       v-model="result"
       size="mini"
       clearable
-      placeholder="订单类型"
+      placeholder="系统课类型"
       @change="onChange"
       class="item-style"
     >
       <el-option
-        v-for="item in orderTypeList"
+        v-for="item in typeList"
         :key="item.id"
         :value="item.id"
         :label="item.text"
@@ -37,14 +37,22 @@ export default {
   data() {
     return {
       result: null,
-      orderTypeList: [
+      typeList: [
+        {
+          id: '1',
+          text: '月系统课'
+        },
         {
           id: '2',
-          text: '首单'
+          text: '季系统课'
         },
         {
           id: '3',
-          text: '续费'
+          text: '半年系统课'
+        },
+        {
+          id: '4',
+          text: '年系统课'
         }
       ]
     }

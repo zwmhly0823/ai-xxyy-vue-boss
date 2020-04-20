@@ -102,6 +102,14 @@
         <order-type @result="getOrderType" :name="orderType" />
       </el-form-item>
 
+      <el-form-item v-if="systemCourseType">
+        <!-- 系统课类型 -->
+        <system-course-type
+          @result="getSystemCourseType"
+          :name="systemCourseType"
+        />
+      </el-form-item>
+
       <!-- <el-form-item
         size="mini"
         style="position:relative;top:6px"
@@ -140,6 +148,7 @@ import GroupSell from './searchItems/groupSell'
 import TeamDetail from './searchItems/teamDetail'
 import MoreVersionBox from './searchItems/moreVersionBox'
 import OrderType from './searchItems/orderType'
+import SystemCourseType from './searchItems/systemCourseType'
 import { isToss } from '@/utils/index'
 
 export default {
@@ -263,7 +272,11 @@ export default {
     },
     orderType: {
       type: String,
-      default: '' //
+      default: ''
+    },
+    systemCourseType: {
+      type: String,
+      default: ''
     }
   },
   components: {
@@ -279,7 +292,8 @@ export default {
     GroupSell,
     TeamDetail,
     MoreVersionBox,
-    OrderType
+    OrderType,
+    SystemCourseType
   },
   data() {
     return {
@@ -370,6 +384,9 @@ export default {
     },
     getOrderType(res) {
       this.setSeachParmas(res, [this.orderType || 'regtype'])
+    },
+    getSystemCourseType(res) {
+      this.setSeachParmas(res, [this.systemCourseType || 'system-course-type'])
     },
     /**  处理接收到的查询参数
      * @res: Object, 子筛选组件返回的表达式对象，如 {sup: 2}

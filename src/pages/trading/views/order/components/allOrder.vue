@@ -175,18 +175,11 @@ export default {
   watch: {
     // 切换tab - 商品主题
     topic(val) {
-      console.log(val, 'topic')
+      this.reset()
     },
-
-    // 切换支付状态
-    // status(val) {
-    //   this.tab = val
-    //   this.statList()
-    // },
     // 搜索
     search(val) {
       this.searchIn = val
-      // this.statList()
     }
   },
   created() {
@@ -194,13 +187,13 @@ export default {
     if (teacherId) {
       this.teacherId = teacherId
     }
-    // this.statList()
   },
   methods: {
     // 获取订单统计
     getStatistics(res) {
       const obj = {}
       if (res && res.length > 0) {
+        this.reset()
         res.forEach((item) => {
           const { code, count, value } = item
           obj[`${code}`] = {
@@ -213,15 +206,7 @@ export default {
           ...obj
         }
       } else {
-        // if (this.status) return
-        this.statistics = {
-          '0': { count: 0, value: 0 },
-          '1': { count: 0, value: 0 },
-          '3': { count: 0, value: 0 },
-          '5': { count: 0, value: 0 },
-          '6': { count: 0, value: 0 },
-          '7': { count: 0, value: 0 }
-        }
+        this.reset()
       }
     },
 
@@ -230,6 +215,17 @@ export default {
      */
     chnageStatus(status) {
       this.status = status
+    },
+
+    reset() {
+      this.statistics = {
+        '0': { count: 0, value: 0 },
+        '1': { count: 0, value: 0 },
+        '3': { count: 0, value: 0 },
+        '5': { count: 0, value: 0 },
+        '6': { count: 0, value: 0 },
+        '7': { count: 0, value: 0 }
+      }
     }
   }
 }

@@ -29,6 +29,21 @@
           </p>
         </template>
       </el-table-column>
+      <el-table-column label="订单类型" v-if="topic === '5'">
+        <template slot-scope="scope">
+          <p>
+            {{
+              scope.row.regtype
+                ? +scope.row.regtype === 2
+                  ? '首单'
+                  : +scope.row.regtype === 3
+                  ? '续费'
+                  : ''
+                : '-'
+            }}
+          </p>
+        </template>
+      </el-table-column>
       <el-table-column label="订单来源" v-if="topic === '4' || topic === '5'">
         <template slot-scope="scope">
           <p>
@@ -229,6 +244,7 @@ export default {
       // 支持状态
       if (this.status) {
         Object.assign(queryObj, { status: this.status.split(',') })
+        // statisticsQuery.push({ terms: { status: this.status.split(',') } })
       }
 
       /**
@@ -302,7 +318,9 @@ export default {
             this.currentPage = +res.data.OrderPage.number
           }
           const _data = res.data.OrderPage.content
+          const orderIds = []
           _data.forEach((item, index) => {
+            orderIds.push(item.id)
             // 下单时间格式化
             item.ctime = formatData(item.ctime, 's')
             // 交易方式
@@ -327,6 +345,7 @@ export default {
             }
           })
           this.orderList = _data
+          // this.orderExpress(orderIds)
           console.log(this.orderList, 'this.orderList')
         })
         .catch((err) => {
@@ -341,6 +360,19 @@ export default {
         this.departmentObj = _.keyBy(dpt, 'id') || {}
       })
     },
+
+    // 订单关联的物流
+    // orderExpress(ids = []) {
+    //   const q =
+    //     ids.length > 0 ? JSON.stringify({ order_id: ['10755', '10877'] }) : ''
+    //   this.$http.Express.getOderExpress(q).then((res) => {
+    //     console.log(res)
+    //     // const express = {}
+    //     // if(res.data.ExpressPage){
+    //     //   // express[]
+    //     // }
+    //   })
+    // },
 
     // 点击分页
     handleSizeChange(val) {

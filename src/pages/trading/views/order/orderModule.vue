@@ -18,15 +18,8 @@
         date="ctime"
         date-placeholder="下单时间"
         phone="uid"
-        order-type="regtype"
+        :order-type="activeTopic === '5' ? 'regtype' : ''"
       />
-      <!-- <el-tabs type="border-card" @tab-click="handleClick" v-model="activeName">
-        <el-tab-pane label="已完成" name="3"></el-tab-pane>
-        <el-tab-pane label="待支付" name="0,1"> </el-tab-pane>
-        <el-tab-pane label="退费中" name="5"></el-tab-pane>
-        <el-tab-pane label="已退费" name="6,7"></el-tab-pane>
-        <all-order :status="status" :search="search" />
-      </el-tabs> -->
       <!-- tab - regtype -->
       <el-tabs
         type="border-card"
@@ -59,15 +52,12 @@
         <el-table style="font-size:12px;" v-show="orderForm">
           <el-table-column label="用户信息"></el-table-column>
           <el-table-column label="商品信息"></el-table-column>
+          <el-table-column label="订单类型" v-if="activeTopic === '5'">
+          </el-table-column>
           <el-table-column
             label="订单来源"
             v-if="activeTopic === '4' || activeTopic === '5'"
           ></el-table-column>
-          <el-table-column
-            label="订单类型"
-            v-if="activeTopic !== '4' && activeTopic !== '5'"
-          >
-          </el-table-column>
           <el-table-column label="订单状态"> </el-table-column>
           <el-table-column
             label="班级信息"

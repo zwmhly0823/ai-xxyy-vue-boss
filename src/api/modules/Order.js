@@ -53,6 +53,10 @@ export default {
             teacher{
               realname
             }
+            express{
+              express_total
+              last_express_status
+            }
           }
         }
       }`
