@@ -589,6 +589,9 @@ export default {
           const type = { stage: '1', disableClick: false }
           this.$store.dispatch('getShowStatus', type)
         }
+      } else {
+        const type = { disableClick: false, stage: null }
+        this.$store.dispatch('getShowStatus', type)
       }
       axios
         .post('/graphql/logisticsList', {
