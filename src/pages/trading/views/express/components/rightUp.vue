@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-27 19:04:54
  * @LastEditors: Lukun
- * @LastEditTime: 2020-04-18 18:12:18
+ * @LastEditTime: 2020-04-20 17:42:00
  -->
 <template>
   <div class="container">
@@ -18,7 +18,7 @@
         expressNo="express_nu"
         level="level"
         topicType="regtype"
-        groupSell="teacher_id"
+        groupSell="pay_teacher_id"
         teamDetail="last_team_id"
         moreVersion="product_version.keyword"
         :timeData="[
@@ -29,8 +29,8 @@
       />
     </div>
     <!-- v-if="!teacherId" TOSS -->
-    <div class="search-export" v-if="!teacherId">
-      <!-- <div class="search-export"> -->
+    <!-- <div class="search-export" v-if="!teacherId"> -->
+    <div class="search-export">
       <div>
         <el-button size="small" type="primary" @click="showExportDialog"
           >导出物流信息</el-button

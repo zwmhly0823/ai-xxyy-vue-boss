@@ -4,7 +4,7 @@
  * @Author: Lukun
  * @Date: 2020-04-15 15:18:49
  * @LastEditors: Lukun
- * @LastEditTime: 2020-04-18 21:25:17
+ * @LastEditTime: 2020-04-20 17:41:26
  -->
 <template>
   <div class="container">
@@ -113,7 +113,6 @@ export default {
     getexpressInformation() {
       const expressNu = this.transferExpress.express_nu
       this.expressList(expressNu)
-      // console.log(i, '测试一下i-----------')
     },
     handleClose() {
       this.drawer = false
@@ -154,7 +153,11 @@ export default {
               if (item.status === '揽收') {
                 lastData.begin = lastData.begin == null ? [] : lastData.begin
                 lastData.begin.push(item)
-              } else if (item.status === '在途' || item.status === '派件') {
+              } else if (
+                item.status === '在途' ||
+                item.status === '派件' ||
+                item.status === '转投'
+              ) {
                 lastData.onway = lastData.onway == null ? [] : lastData.onway
                 lastData.onway.push(item)
               } else {

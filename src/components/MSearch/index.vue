@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-24 18:20:12
  * @LastEditors: Lukun
- * @LastEditTime: 2020-04-18 18:15:46
+ * @LastEditTime: 2020-04-20 17:42:25
  -->
 
 <template>
@@ -15,7 +15,6 @@
         <search-phone
           @result="getPhoneHander"
           :teamId="teamId"
-          :teamType="teamType"
           :name="phone"
           :onlyPhone="onlyPhone"
           :tip="phoneTip"
@@ -191,11 +190,6 @@ export default {
       type: String,
       default: '下单时间'
     },
-    // 班级内搜索 需要班级类型
-    teamType: {
-      type: String,
-      default: '' // 0
-    },
     // 手机号
     phone: {
       type: String,
@@ -349,7 +343,7 @@ export default {
     },
     // 选择销售老师
     selectSellTeacher(res) {
-      this.setSeachParmas(res, [this.groupSell || 'teacher_id'], 'wildcard')
+      this.setSeachParmas(res, [this.groupSell || 'pay_teacher_id'], 'wildcard')
     },
     getTeamDetail(res) {
       this.setSeachParmas(res, [this.teamDetail || 'last_team_id'])
