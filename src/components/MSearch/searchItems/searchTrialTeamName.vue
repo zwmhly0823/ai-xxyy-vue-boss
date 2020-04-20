@@ -4,7 +4,7 @@
  * @Date: 2020-04-20 21:13:24
  * @Last Modified by:   YangJiyong
  * @Last Modified time: 2020-04-20 21:13:24
- * @Description: 搜索系统课班级名
+ * @Description: 搜索体验课班级名
  -->
 <template>
   <div class="search-item small">
@@ -43,7 +43,7 @@ export default {
     // 需要查询的类型
     teamnameType: {
       type: String,
-      default: '1' // 0：体验课。 >0系统课
+      default: '0' // 0：体验课。 >0系统课
     }
   },
   computed: {

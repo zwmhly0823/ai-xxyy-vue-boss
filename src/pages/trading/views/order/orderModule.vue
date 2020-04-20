@@ -20,6 +20,7 @@
         schedule="stage"
         department="pay_teacher_id"
         groupSell="pay_teacher_id"
+        searchTeamName="last_team_id"
         :order-type="activeTopic === '5' ? 'regtype' : ''"
       />
       <!-- system-course-type="system-course-type" -->

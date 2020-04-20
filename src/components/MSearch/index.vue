@@ -116,6 +116,12 @@
         <department @result="getDepartment" :name="department" />
       </el-form-item>
 
+      <!-- && !teacherId -->
+      <el-form-item v-if="searchTeamName">
+        <!-- 班级名称搜索 -->
+        <search-team-name @result="getTeamName" :name="searchTeamName" />
+      </el-form-item>
+
       <!-- <el-form-item
         size="mini"
         style="position:relative;top:6px"
@@ -156,6 +162,7 @@ import MoreVersionBox from './searchItems/moreVersionBox'
 import OrderType from './searchItems/orderType'
 import SystemCourseType from './searchItems/systemCourseType'
 import Department from './searchItems/department'
+import SearchTeamName from './searchItems/searchTeamName'
 import { isToss } from '@/utils/index'
 
 export default {
@@ -289,6 +296,11 @@ export default {
     department: {
       type: String,
       default: ''
+    },
+    // 搜索班级名称
+    searchTeamName: {
+      type: String,
+      default: ''
     }
   },
   components: {
@@ -306,7 +318,8 @@ export default {
     MoreVersionBox,
     OrderType,
     SystemCourseType,
-    Department
+    Department,
+    SearchTeamName
   },
   data() {
     return {
@@ -399,10 +412,13 @@ export default {
       this.setSeachParmas(res, [this.orderType || 'regtype'])
     },
     getSystemCourseType(res) {
-      this.setSeachParmas(res, [this.systemCourseType || 'system-course-type'])
+      this.setSeachParmas(res, [this.systemCourseType || 'system_course_type'])
     },
     getDepartment(res) {
       this.setSeachParmas(res, [this.department || 'department'], 'terms')
+    },
+    getTeamName(res) {
+      this.setSeachParmas(res, [this.searchTeamName || 'team_name'], 'terms')
     },
 
     /**  处理接收到的查询参数
