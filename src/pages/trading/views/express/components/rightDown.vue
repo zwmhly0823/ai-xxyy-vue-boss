@@ -559,8 +559,8 @@ export default {
         if (item.wildcard && item.wildcard.express_nu) {
           timeType.express_nu = item.wildcard.express_nu
         }
-        if (item.wildcard && item.wildcard.teacher_id) {
-          timeType.teacher_id = item.wildcard.teacher_id
+        if (item.wildcard && item.wildcard.pay_teacher_id) {
+          timeType.pay_teacher_id = item.wildcard.pay_teacher_id
         }
       })
 
