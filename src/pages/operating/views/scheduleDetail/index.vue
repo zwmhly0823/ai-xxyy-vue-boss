@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-14 18:28:44
  * @LastEditors: Shentong
- * @LastEditTime: 2020-04-16 21:37:10
+ * @LastEditTime: 2020-04-20 18:06:24
  -->
 <template>
   <div class="app-main height add-schedule-container">
@@ -34,12 +34,17 @@
               <el-col class="label-name" :span="2">结束上课:</el-col>
               <el-col :span="2">2019-02-02</el-col>
             </el-row>
+            <div class="description">
+              当前结果：社群销售<span>9</span>人，计划招生<span>8992</span>（S1:2020
+              S2:2020 S3:3000） 实际招生<span>9000</span>（S1:2020 S2:2020
+              S3:3000）
+            </div>
           </div>
           <el-tabs type="border-card">
             <el-tab-pane label="招生详情-销售">
               <schedule-market></schedule-market>
             </el-tab-pane>
-            <el-tab-pane label="招生详情-部门" disabled
+            <!-- <el-tab-pane label="招生详情-部门" disabled
               >招生详情-部门</el-tab-pane
             >
             <el-tab-pane label="招生详情-班级" disabled
@@ -50,7 +55,7 @@
             >
             <el-tab-pane label="售卖周期设置" disabled
               >售卖周期设置</el-tab-pane
-            >
+            > -->
           </el-tabs>
         </div>
       </el-scrollbar>
@@ -109,7 +114,6 @@ export default {
       .label-name {
         color: #000;
         font-weight: 500;
-        font-family: cursive;
       }
     }
   }

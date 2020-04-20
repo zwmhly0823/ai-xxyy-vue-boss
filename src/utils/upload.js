@@ -4,16 +4,16 @@
  * @Author: shentong
  * @Date: 2019-12-17 15:43:27
  * @LastEditors: Shentong
- * @LastEditTime: 2020-04-18 21:13:54
+ * @LastEditTime: 2020-04-20 17:49:14
  */
 import axios from 'axios'
 import $http from '@/api'
 import Contants from '@/utils/contants'
-const getSuffix = (fileName) => {
-  var pos = fileName.lastIndexOf('.')
+const getSuffix = (_) => {
+  var pos = _.lastIndexOf('.')
   var suffix = ''
   if (pos !== -1) {
-    suffix = fileName.substring(pos)
+    suffix = _.substring(pos)
   }
   return suffix
 }

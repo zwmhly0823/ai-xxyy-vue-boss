@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-15 20:35:57
  * @LastEditors: Shentong
- * @LastEditTime: 2020-04-20 15:33:53
+ * @LastEditTime: 2020-04-20 18:22:13
  -->
 <template>
   <div class="third-step">
@@ -188,7 +188,7 @@ export default {
         payload.forEach((item) => {
           const { enroll = [] } = item
           // 如果enroll为空，手动添加
-          if (Array.isArray(enroll) && !enroll.length) {
+          if (!enroll.length) {
             for (let i = 1; i <= 3; i++) {
               enroll.push({
                 courseDifficulty: `S${i}`,
