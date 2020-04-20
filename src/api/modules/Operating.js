@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-03-16 19:46:39
  * @LastEditors: Shentong
- * @LastEditTime: 2020-04-18 16:04:00
+ * @LastEditTime: 2020-04-18 20:37:33
  */
 import axios from '../axiosConfig'
 
@@ -13,8 +13,10 @@ export default {
    * 获取体验课、系统课列表
    */
   getCourseListByType(params) {
+    const page = params.page - 1
     return axios.get(
-      `/api/s/v1/management/enroll/sell?courseType=${params.courseType}&period=13`
+      `/api/s/v1/management/enroll/count/page?courseType=${params.courseType}&pageSize=${params.size}&pageNumber=` +
+        page
     )
   },
   /**

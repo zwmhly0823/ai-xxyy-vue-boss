@@ -4,15 +4,15 @@
  * @Author: Shentong
  * @Date: 2020-04-15 20:35:57
  * @LastEditors: Shentong
- * @LastEditTime: 2020-04-17 22:36:14
+ * @LastEditTime: 2020-04-20 15:58:59
  -->
 <template>
   <div class="second-step">
     <div class="step-container step-two-container">
       <el-row :gutter="20">
-        <el-col :span="3" :offset="3"
-          ><org-dept @changeOrgDept="changeOrgDept"></org-dept
-        ></el-col>
+        <el-col :span="4" :offset="3">
+          <org-dept @changeOrgDept="changeOrgDept"></org-dept>
+        </el-col>
         <el-col :span="16">
           <div class="transfer-container">
             <el-transfer
@@ -20,6 +20,10 @@
               v-model="transferVal"
               filterable
               :right-default-checked="rightDefaultChecked"
+              :props="{
+                key: 'id',
+                label: 'realname'
+              }"
               :render-content="renderFunc"
               :titles="['待选择', '已选择']"
               :button-texts="['到左边', '到右边']"
@@ -27,7 +31,6 @@
                 noChecked: '${total}',
                 hasChecked: '${checked}/${total}'
               }"
-              @right-check-change="handleWHRightChange"
               @change="handleChange"
               :data="transferData"
             >
@@ -54,22 +57,20 @@ export default {
   props: ['stepStatus'],
   data() {
     return {
-      period: '',
-      courseType: '0',
+      params: {
+        period: '',
+        courseType: '0'
+      },
       rightDefaultChecked: [],
       transferData: [],
       transferVal: [],
-      currentDept: {},
-      // 总页数
-      totalElements: 0,
-      totalPages: 1,
-      // 总条数
+      teachers: [],
       // 当前页数
       currentPage: 1,
       renderFunc(h, option) {
         return (
           <span>
-            {option.key} - {option.label}
+            {option.id} - {option.realname}
           </span>
         )
       }
@@ -78,34 +79,32 @@ export default {
   components: {
     OrgDept
   },
-  computed: {},
   watch: {},
-  mounted() {
+  async created() {
     const { period = 0, courseType = '0' } = this.$route.params
-    this.period = period
-    this.courseType = courseType
-    this.getData()
+    Object.assign(this.params, { period, courseType })
+
+    await this.getTeacherByDept()
+    if (+period) {
+      const teachers = await this.getTeacherIdArray()
+      teachers.forEach((item) => {
+        this.transferVal.push(item.teacherId)
+        this.rightDefaultChecked.push(item.teacherId)
+      })
+    }
   },
   methods: {
-    // 数据右侧列表元素被用户选中 / 取消选中时触发
-    handleWHRightChange(key, key1) {
-      console.log(key, key1, '00000')
-    },
     // 编辑页获取所 选择的 teacher：TODO:
     async getHasSelectTeacher() {
-      const params = {
-        period: this.period,
-        courseType: this.courseType
-      }
       try {
         const teacherList = await this.$http.Operating.getHasSelectTeacher(
-          params
+          this.params
         )
         const { payload = [] } = teacherList
         return Promise.resolve(payload)
       } catch (err) {
         this.$message({
-          message: '获取列表出错',
+          message: '获取数据出错',
           type: 'warning'
         })
         return Promise.reject(err)
@@ -123,11 +122,17 @@ export default {
         }
       }
       this.departmentQuery = query
-      this.getData(1, JSON.stringify(query))
+      this.getTeacherByDept(1, JSON.stringify(query))
     },
     // 获取老师数据
-
-    async getData(page = this.currentPage) {
+    async getTeacherIdArray() {
+      // 编辑页面
+      if (this.params.period) {
+        const teachers = await this.getHasSelectTeacher()
+        return teachers
+      }
+    },
+    async getTeacherByDept(page = this.currentPage) {
       if (this.departmentQuery) {
         this.query = Object.assign({}, this.departmentQuery || {})
       }
@@ -139,44 +144,19 @@ export default {
         500
       )
       if (res && res.data && res.data.TeacherManagePage) {
-        const {
-          content = [],
-          number,
-          totalPages,
-          totalElements,
-          arr = []
-        } = res.data.TeacherManagePage
+        const { content = [], number } = res.data.TeacherManagePage
 
-        content.forEach((item, index) => {
-          arr.push({
-            label: item.realname,
-            key: item.id
-          })
-        })
-        this.transferData = arr
-        this.totalPages = +totalPages
+        this.transferData = content
         this.currentPage = +number
-        this.totalElements = +totalElements
-      }
-      // 编辑页面
-      if (this.period) {
-        const teachers = await this.getHasSelectTeacher()
-        teachers &&
-          teachers.forEach((item) => {
-            this.transferVal.push(item.teacherId)
-            this.rightDefaultChecked.push(item.teacherId)
-          })
-        console.log(this.rightDefaultChecked)
       }
     },
     changeOrgDept(data) {
       this.department(data)
     },
     handleChange(val) {
-      console.log('transferVal', val)
+      // console.log('transferVal', val)
     },
     stepOperate(type) {
-      console.log('transferVal', this.transferVal)
       if (!type) {
         this.$emit('listenStepStatus', type)
       } else if (!this.transferVal.length) {
@@ -199,6 +179,12 @@ export default {
   box-sizing: border-box;
   display: block;
   width: auto;
+}
+.el-transfer-panel__body {
+  height: 300px;
+}
+.el-transfer-panel__list.is-filterable {
+  height: 270px;
 }
 </style>
 <style lang="scss" scoped>

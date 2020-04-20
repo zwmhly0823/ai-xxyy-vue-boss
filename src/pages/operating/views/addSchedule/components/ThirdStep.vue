@@ -4,21 +4,21 @@
  * @Author: Shentong
  * @Date: 2020-04-15 20:35:57
  * @LastEditors: Shentong
- * @LastEditTime: 2020-04-18 13:34:29
+ * @LastEditTime: 2020-04-20 15:33:53
  -->
 <template>
   <div class="third-step">
     <div class="step-container step-three-container">
       <ele-table
         :dataList="tableData"
-        :loading="loading"
+        :loading="flags.loading"
         :size="tabQuery.size"
         :page="tabQuery.pageNum"
         :total="totalElements"
         @pageChange="pageChange_handler"
         class="mytable"
       >
-        <el-table-column prop="period" label="序号" width="70">
+        <el-table-column type="index" label="序号" width="70">
         </el-table-column>
         <el-table-column prop="teacherRealName" label="真实姓名" width="100">
         </el-table-column>
@@ -93,6 +93,29 @@
             </div>
           </template>
         </el-table-column>
+        <!-- <el-table-column prop="address" label="体验课类型" width="130">
+          <template slot-scope="scope">
+            <div
+              v-for="(v, v_index) in scope.row.enroll"
+              :key="v_index"
+              class="select-container"
+            >
+              <el-select
+                v-model="v.courseVersion"
+                size="mini"
+                placeholder="体验课类型"
+              >
+                <el-option
+                  v-for="(item, i) in productVersion"
+                  :key="i"
+                  :label="item.name"
+                  :value="item.value"
+                >
+                </el-option>
+              </el-select>
+            </div>
+          </template>
+        </el-table-column> -->
       </ele-table>
 
       <!-- 取消、下一步 -->
@@ -108,7 +131,7 @@
   </div>
 </template>
 <script>
-import { Loading } from 'element-ui'
+// import { Loading } from 'element-ui'
 import EleTable from '@/components/Table/EleTable'
 import { mapGetters } from 'vuex'
 export default {
@@ -116,7 +139,6 @@ export default {
   data() {
     return {
       tableData: [],
-      loading: true,
       totalElements: 0,
       flags: {
         loading: true
@@ -126,6 +148,10 @@ export default {
         { name: 'V1.5', value: 'V1.5' },
         { name: 'V1.6', value: 'V1.6' }
       ],
+      trialClass: [
+        { name: '单周体验课', value: '单周体验课' },
+        { name: '双周体验课', value: '双周体验课' }
+      ],
       tabQuery: {
         size: 2,
         pageNum: 1
@@ -133,22 +159,22 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['scheduleTeacherId'])
+    ...mapGetters(['scheduleTeacherId', 'schedulePeriod'])
   },
   components: {
     EleTable
   },
   watch: {},
   created() {
-    console.log('scheduleTeacherId', this.scheduleTeacherId)
+    const { period = '', courseType = 0 } = this.$route.params
+    console.log('third----', period, courseType, this.scheduleTeacherId)
     // 根据老师ids获取招生排期设置中老师配置信息 TODO:
     const params = {
-      courseType: '0',
-      period: 13,
-      // ids: scheduleTeacherId,
-      ids: [1, 2, 3]
+      courseType,
+      period: this.schedulePeriod,
+      ids: this.scheduleTeacherId
     }
-    this.scheduleTeacherId && this.getTeacherConfigList(params)
+    this.scheduleTeacherId.length && this.getTeacherConfigList(params)
   },
   methods: {
     // 根据老师ids获取招生排期设置中老师配置信息
@@ -158,19 +184,37 @@ export default {
           params
         )
         const { payload = [] } = teacherList
+
+        payload.forEach((item) => {
+          const { enroll = [] } = item
+          // 如果enroll为空，手动添加
+          if (Array.isArray(enroll) && !enroll.length) {
+            for (let i = 1; i <= 3; i++) {
+              enroll.push({
+                courseDifficulty: `S${i}`,
+                status: 0,
+                teamSize: '',
+                sumTeamSize: '',
+                courseVersion: ''
+              })
+            }
+          }
+          // payload.enroll = enroll
+        })
+
         this.tableData = payload
-        console.log(teacherList)
+        console.log(payload)
       } catch (err) {
         this.$message({
           message: '获取列表出错',
           type: 'warning'
         })
       }
-      this.loading = false
+      this.flags.loading = false
     },
     //  保存 招生排期 设置
     async saveScheduleConfig(params) {
-      const loadingInstance = Loading.service({
+      const loadingInstance = this.$loading({
         target: 'section',
         lock: true,
         text: '正在保存...',
@@ -180,25 +224,26 @@ export default {
       try {
         const _res = await this.$http.Operating.saveScheduleConfig(params)
         if (_res.code === 0) this.$message.success('保存成功')
+        loadingInstance.close()
       } catch (err) {
+        loadingInstance.close()
         this.$message({
           message: '获取列表出错',
           type: 'warning'
         })
       }
-      // 以服务的方式调用的 Loading 需要异步关闭
-      this.$nextTick(() => loadingInstance.close())
     },
     preStep() {
       this.$emit('listenStepStatus', 0)
     },
     // 翻页emit
     pageChange_handler() {},
+    // 上一步，下一步
     async stepOpt(type) {
+      const { courseType = 0 } = this.$route.params
       const params = {
-        courseType: '0',
-        period: 13,
-        // ids: scheduleTeacherId,
+        courseType,
+        period: this.schedulePeriod,
         body: this.tableData
       }
       await this.saveScheduleConfig(params)

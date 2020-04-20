@@ -1,7 +1,7 @@
 /*
  * @Date: 2020-03-13 15:20:21
  * @LastEditors: Shentong
- * @LastEditTime: 2020-04-17 18:24:53
+ * @LastEditTime: 2020-04-20 13:24:04
  * @FilePath: /ai-app-vue-toss/src/pages/studentTeam/router/index.js
  */
 import Vue from 'vue'

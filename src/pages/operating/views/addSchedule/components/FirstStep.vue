@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-15 20:35:57
  * @LastEditors: Shentong
- * @LastEditTime: 2020-04-18 16:19:51
+ * @LastEditTime: 2020-04-20 15:35:21
  -->
 <template>
   <div class="first-step">
@@ -207,6 +207,7 @@ export default {
   watch: {},
   async created() {
     const { period = '', courseType = 0 } = this.$route.params
+    this.period = period
     this.courseType = courseType
 
     if (+period) {
@@ -235,6 +236,7 @@ export default {
           sellCycle,
           robinNum // 接速设置
         }
+        console.log(this.formInfo, '-----')
 
         this.sellCycleTimeChange(this.formInfo.sellCycleTime)
         this.attendClassTimeChange(this.formInfo.attendClassTime)
@@ -321,7 +323,7 @@ export default {
       })
       try {
         const _res = await this.$http.Operating.addScheduleFirstStep(params)
-        if (_res.code === 0) cb()
+        if (_res.code === 0) cb(_res)
       } catch (err) {
         this.$message({
           message: '获取列表出错',
@@ -363,7 +365,8 @@ export default {
         ...this.sellCycleObj,
         robinNum: this.formInfo.robinNum,
         sellCycle: this.setSellTimeForm,
-        type: this.courseType
+        type: this.courseType,
+        period: +this.period || ''
       })
       console.log(sendFrom, 'sendform')
       return sendFrom
@@ -372,7 +375,14 @@ export default {
       const sendFrom = this.pacakageFormInfo() // TODO:
       this.$refs.formInfo.validate((valid) => {
         if (valid) {
-          const cb = () => {
+          const cb = (_res) => {
+            const {
+              payload: { period }
+            } = _res
+
+            this.period = period
+
+            this.$store.commit('setSchedulePeriod', period)
             this.$emit('listenStepStatus', sendFrom)
           }
           // 掉接口 TODO:
