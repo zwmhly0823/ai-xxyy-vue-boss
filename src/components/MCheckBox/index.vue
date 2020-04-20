@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 20:22:24
  * @LastEditors: panjian
- * @LastEditTime: 2020-04-17 19:16:09
+ * @LastEditTime: 2020-04-20 21:18:48
  -->
 <template>
   <div>
@@ -67,7 +67,16 @@
           </el-option>
         </el-select>
         <p>状态</p>
-        <el-checkbox-group
+        <el-select v-model="attendClassStatus" placeholder="请选择">
+          <el-option
+            v-for="item in states"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          >
+          </el-option>
+        </el-select>
+        <!-- <el-checkbox-group
           class="check-states-box"
           v-model="attendClassStatus"
           @change="attendClassChangeStatus"
@@ -79,9 +88,18 @@
             :key="state.label"
             >{{ state.label }}</el-checkbox
           >
-        </el-checkbox-group>
+        </el-checkbox-group> -->
         <p>参课情况</p>
-        <el-checkbox-group
+        <el-select v-model="attendClassGinseng" placeholder="请选择">
+          <el-option
+            v-for="item in friends"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          >
+          </el-option>
+        </el-select>
+        <!-- <el-checkbox-group
           v-model="attendClassGinseng"
           @change="attendClassChangeGinseng"
         >
@@ -91,9 +109,19 @@
             :key="friend.label"
             >{{ friend.label }}</el-checkbox
           >
-        </el-checkbox-group>
+        </el-checkbox-group> -->
         <p>完课情况</p>
-        <el-checkbox-group
+        <el-select v-model="attendClassFinish" placeholder="请选择">
+          <el-option
+            v-for="item in groups"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          >
+          </el-option>
+        </el-select>
+
+        <!-- <el-checkbox-group
           v-model="attendClassFinish"
           @change="attendClassChangeFinish"
         >
@@ -103,7 +131,7 @@
             :key="group.label"
             >{{ group.label }}</el-checkbox
           >
-        </el-checkbox-group>
+        </el-checkbox-group> -->
         <div class="check-button">
           <el-button
             style="border: none;"
@@ -188,7 +216,18 @@
           </el-option>
         </el-select>
         <p>作品上传</p>
-        <el-checkbox-group
+
+        <el-select v-model="emptyWorksUpload" placeholder="请选择">
+          <el-option
+            v-for="item in uploads"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          >
+          </el-option>
+        </el-select>
+
+        <!-- <el-checkbox-group
           class="check-states-box"
           v-model="emptyWorksUpload"
           @change="worksChangeStatus"
@@ -200,9 +239,19 @@
             :key="upload.label"
             >{{ upload.label }}</el-checkbox
           >
-        </el-checkbox-group>
+        </el-checkbox-group> -->
         <p>作品点评</p>
-        <el-checkbox-group
+
+        <el-select v-model="emptyWorksComment" placeholder="请选择">
+          <el-option
+            v-for="item in comments"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          >
+          </el-option>
+        </el-select>
+        <!-- <el-checkbox-group
           v-model="emptyWorksComment"
           @change="worksChangeAttend"
         >
@@ -212,16 +261,25 @@
             :key="comment.label"
             >{{ comment.label }}</el-checkbox
           >
-        </el-checkbox-group>
+        </el-checkbox-group> -->
         <p>听作品点评</p>
-        <el-checkbox-group v-model="emptyWorksHear" @change="worksChangeFinish">
+        <el-select v-model="emptyWorksHear" placeholder="请选择">
+          <el-option
+            v-for="item in hearWorkss"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          >
+          </el-option>
+        </el-select>
+        <!-- <el-checkbox-group v-model="emptyWorksHear" @change="worksChangeFinish">
           <el-checkbox
             v-for="hearWorks in hearWorkss"
             :label="hearWorks.value"
             :key="hearWorks.label"
             >{{ hearWorks.label }}</el-checkbox
           >
-        </el-checkbox-group>
+        </el-checkbox-group> -->
         <div class="check-button">
           <el-button style="border: none;" @click="worksEmpty" size="small"
             >清空</el-button
@@ -402,7 +460,7 @@ export default {
     onAttendClass() {
       // 选择课程
       const courseId = this.attendClassSelect.toString()
-      const userStatus = this.attendClassStatus.toString()
+      const userStatus = this.attendClassStatus
       const isJoinCourse = this.attendClassGinseng.toString()
       const isCompleteCourse = this.attendClassFinish.toString()
       console.log(
@@ -442,17 +500,17 @@ export default {
       this.worksShow = false
     },
     // 参课完课 状态
-    attendClassChangeStatus(value) {
-      this.attendClassStatus = value
-    },
+    // attendClassChangeStatus(value) {
+    //   this.attendClassStatus = value
+    // },
     // 参课完课 参课情况
-    attendClassChangeGinseng(value) {
-      this.attendClassGinseng = value
-    },
+    // attendClassChangeGinseng(value) {
+    //   this.attendClassGinseng = value
+    // },
     // 参课完课 完课情况
-    attendClassChangeFinish(value) {
-      this.attendClassFinish = value
-    },
+    // attendClassChangeFinish(value) {
+    //   this.attendClassFinish = value
+    // },
     // 参课完课 点击清空
     attendClassEmpty() {
       this.attendClassSelect = ''
@@ -472,17 +530,17 @@ export default {
       this.attendClassShow = false
     },
     // 作品及点评 作品上传
-    worksChangeStatus(value) {
-      this.emptyWorksUpload = value
-    },
+    // worksChangeStatus(value) {
+    //   this.emptyWorksUpload = value
+    // },
     // 作品及点评 作品点评
-    worksChangeAttend(value) {
-      this.emptyWorksComment = value
-    },
+    // worksChangeAttend(value) {
+    //   this.emptyWorksComment = value
+    // },
     // 作品及点评 听作品点评
-    worksChangeFinish(value) {
-      this.emptyWorksHear = value
-    },
+    // worksChangeFinish(value) {
+    //   this.emptyWorksHear = value
+    // },
 
     // 作品及点评 点击清空
     worksEmpty() {

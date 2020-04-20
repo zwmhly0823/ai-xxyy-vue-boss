@@ -532,13 +532,13 @@ export default {
           if (item.term && item.term['product_version.keyword']) {
             timeType.product_version = `${item.term['product_version.keyword']}`
           }
+          if (item.term && item.term.term) {
+            timeType.term = item.term.term
+          }
         }
         if (item && item.terms) {
           if (item.terms.sup) {
             timeType.sup = `${item.terms.sup}`
-          }
-          if (item.terms.term) {
-            timeType.term = `${item.terms.term}`
           }
           // level
           if (item.terms.level) {
@@ -559,8 +559,8 @@ export default {
         if (item.wildcard && item.wildcard.express_nu) {
           timeType.express_nu = item.wildcard.express_nu
         }
-        if (item.wildcard && item.wildcard.teacher_id) {
-          timeType.teacher_id = item.wildcard.teacher_id
+        if (item.wildcard && item.wildcard.pay_teacher_id) {
+          timeType.pay_teacher_id = item.wildcard.pay_teacher_id
         }
       })
 
@@ -573,7 +573,11 @@ export default {
       if (timeType.regtype) {
         // this.$store.commit('getShowStatus', false)
         // console.log(this.regtype, 'regtype regtype regtype regtype ')
-        if (timeType.regtype === '4' || timeType.regtype === '5') {
+        if (
+          timeType.regtype === '4' ||
+          timeType.regtype === '5' ||
+          timeType.regtype === '6'
+        ) {
           const type = { disableClick: true }
           this.$store.dispatch('getShowStatus', type)
         }
@@ -754,8 +758,8 @@ export default {
 .container {
   background-color: #fff;
   color: #666;
+  padding-bottom: 20px;
   .table-all {
-    padding-bottom: 32px;
     .three-dot {
       display: flex;
       justify-content: center;

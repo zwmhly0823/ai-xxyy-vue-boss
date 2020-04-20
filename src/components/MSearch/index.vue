@@ -3,8 +3,8 @@
  * @version:
  * @Author: zhubaodong
  * @Date: 2020-03-24 18:20:12
- * @LastEditors: Shentong
- * @LastEditTime: 2020-04-18 21:10:30
+ * @LastEditors: Lukun
+ * @LastEditTime: 2020-04-20 22:36:37
  -->
 
 <template>
@@ -15,7 +15,6 @@
         <search-phone
           @result="getPhoneHander"
           :teamId="teamId"
-          :teamType="teamType"
           :name="phone"
           :onlyPhone="onlyPhone"
           :tip="phoneTip"
@@ -71,53 +70,23 @@
         <more-version-box @result="getVersionNu" :name="moreVersion" />
       </el-form-item>
 
-      <el-form-item v-if="level || sup || stage || schedule">
+      <el-form-item v-if="level || sup || stage">
         <stage-sup-levels
           @stageCallBack="stageCallBack"
           @supCallBack="supCallBack"
           @levelCallBack="levelCallBack"
-          @positionCallBack="positionCallBack"
-          @scheduleCallBack="scheduleCallBack"
           :disabled="true"
           :stageName="stage"
-          :scheduleName="schedule"
           :supName="sup"
           :levelName="level"
+          :addSupS="addSupS"
           style="margin-bottom:0px"
         />
       </el-form-item>
-      <el-form-item v-if="teacherphone">
-        <!-- 老师模块手机号搜索 -->
-        <teacher-phone
-          @result="getteacherPhone"
-          :teamId="teamId"
-          :name="teacherphone"
-          :onlyPhone="onlyPhone"
-          :tip="phoneTip"
-        />
-      </el-form-item>
-      <el-form-item v-if="teachername">
-        <!-- 老师模块姓名搜索 -->
-        <teacher-name
-          @result="getteacherName"
-          :name="teachername"
-          :onlyPhone="onlyName"
-          :tip="nameTip"
-        />
-      </el-form-item>
-      <el-form-item v-if="rank || induction || landing || position">
-        <!-- 老师模块职级，登陆状态，入职状态，选择职务搜索 -->
-        <teacher-drop-down
-          @rankCallBack="rankCallBack"
-          @inductionCallBack="inductionCallBack"
-          @landingCallBack="landingCallBack"
-          @positionCallBack="positionCallBack"
-          :rankName="rank"
-          :inductionName="induction"
-          :landingName="landing"
-          :positionName="position"
-          style="margin-bottom:0px"
-        />
+
+      <el-form-item v-if="schedule">
+        <!-- 排期 -->
+        <Schedule @result="selectSchedule" :name="schedule" />
       </el-form-item>
 
       <el-form-item v-if="teamDetail">
@@ -151,25 +120,7 @@
           </el-button>
         </el-popover>
       </el-form-item> -->
-      <el-form-item
-        v-if="wxSerch || wxTeacherPhone || wxStatus || wxConcatTeacher"
-      >
-        <wx-list
-          :wxSerch="wxSerch"
-          :wxTeacherPhone="wxTeacherPhone"
-          :wxStatus="wxStatus"
-          :wxConcatTeacher="wxConcatTeacher"
-          @getWxSerch="getWxSerch"
-          @getPhone="getPhoneData"
-          @getWxStatus="getWxStatus"
-          @getWxConcatTeacher="getWxConcatTeacher"
-        />
-      </el-form-item>
-      <el-form-item>
-        <slot name="searchItems"></slot>
-      </el-form-item>
     </el-form>
-    <slot name="otherSearch"></slot>
   </el-card>
 </template>
 <script>
@@ -181,16 +132,11 @@ import SearchPhone from './searchItems/searchPhone.vue'
 import OutTradeNo from './searchItems/outTradeNo.vue'
 import ProductName from './searchItems/productName.vue'
 import SelectDate from './searchItems/selectDate.vue'
-// import expressNo from './searchItems/expressNo'
-// 老师
-import teacherPhone from './searchItems/teacherSearch/teacherPhone.vue'
-import teacherName from './searchItems/teacherSearch/teacherName.vue'
-import teacherDropDown from './searchItems/teacherSearch/teacherDropDown'
-import wxList from './searchItems/wxInput'
 import ExpressNo from './searchItems/expressNo'
 import GroupSell from './searchItems/groupSell'
 import TeamDetail from './searchItems/teamDetail'
 import MoreVersionBox from './searchItems/moreVersionBox'
+import Schedule from './searchItems/schedule'
 import { isToss } from '@/utils/index'
 
 export default {
@@ -229,6 +175,10 @@ export default {
       type: String,
       default: '' // sup
     },
+    addSupS: {
+      type: Boolean,
+      default: false // sup+S ?
+    },
     // 级别
     level: {
       type: String,
@@ -244,18 +194,8 @@ export default {
       type: String,
       default: '下单时间'
     },
-    // 班级内搜索 需要班级类型
-    teamType: {
-      type: String,
-      default: '' // 0
-    },
     // 手机号
     phone: {
-      type: String,
-      default: '' // phone
-    },
-    // 老师手机号搜索
-    teacherphone: {
       type: String,
       default: '' // phone
     },
@@ -269,52 +209,13 @@ export default {
       type: String,
       default: '手机号查询'
     },
-    // 微信号搜索
-    weixinNumber: {
-      type: String,
-      default: '0'
-    },
     // team_id
     teamId: {
       type: String,
       default: ''
     },
+    // 查询班级  搜到用户的最后一个班
     last_team_id: {
-      type: String,
-      default: ''
-    },
-    // 老师姓名搜索
-    teachername: {
-      type: String,
-      default: ''
-    },
-    // 是否只搜老师姓名
-    nameTip: {
-      type: String,
-      default: '姓名查询'
-    },
-    // 是否只搜老师姓名
-    onlyName: {
-      type: String,
-      default: '0' // 0
-    },
-    // 职级
-    rank: {
-      type: String,
-      default: ''
-    },
-    // 入职状态
-    induction: {
-      type: String,
-      default: ''
-    },
-    // 登陆状态
-    landing: {
-      type: String,
-      default: ''
-    },
-    // 职务
-    position: {
       type: String,
       default: ''
     },
@@ -337,26 +238,6 @@ export default {
     expressNo: {
       type: String,
       default: '' // express_nu
-    },
-    // 微信号搜索
-    wxSerch: {
-      type: String,
-      default: '' // wxSerch
-    },
-    // 手机号搜索
-    wxTeacherPhone: {
-      type: String,
-      default: '' // wxInput
-    },
-    // 使用状态搜索
-    wxStatus: {
-      type: String,
-      default: '' // wxStatus
-    },
-    // 是否关联老师搜索
-    wxConcatTeacher: {
-      type: String,
-      default: '' // wxConcatTeacher
     },
     // 社群销售查询
     groupSell: {
@@ -382,15 +263,11 @@ export default {
     SelectDate,
     OutTradeNo,
     ProductName,
-    teacherPhone,
-    // expressNo,
-    teacherName,
-    teacherDropDown,
-    wxList,
     ExpressNo,
     GroupSell,
     TeamDetail,
-    MoreVersionBox
+    MoreVersionBox,
+    Schedule
   },
   data() {
     return {
@@ -420,9 +297,9 @@ export default {
       this.setSeachParmas(res, [this.stage || 'stage'], 'terms')
     },
     // 排期
-    scheduleCallBack(res) {
+    selectSchedule(res) {
       console.log(res, 'res')
-      this.setSeachParmas(res, [this.schedule || 'period'], 'terms')
+      this.setSeachParmas(res, [this.schedule || 'id'])
     },
     // 难度
     supCallBack(res) {
@@ -440,37 +317,14 @@ export default {
     },
     // 选择手机号
     getPhoneHander(res) {
+      console.log(res, '回调res')
       this.setSeachParmas(res, [this.phone || 'umobile'])
-    },
-    // 选择老师手机号
-    getteacherPhone(res) {
-      this.setSeachParmas(res, [this.teacherphone || 'umobile'])
-    },
-    // 老师姓名
-    getteacherName(res) {
-      this.setSeachParmas(res, [this.teachername || 'umobile'])
-    },
-    // 职级
-    rankCallBack(res) {
-      this.setSeachParmas(res, [this.rank || 'rankName'])
-    },
-    // 入职状态
-    inductionCallBack(res) {
-      this.setSeachParmas(res, [this.induction || 'inductionName'])
-    },
-    // 登陆状态
-    landingCallBack(res) {
-      this.setSeachParmas(res, [this.landing || 'inductionName'])
-    },
-    // 职务
-    positionCallBack(res) {
-      this.setSeachParmas(res, [this.position || 'positionName'], 'terms')
     },
     // 选择订单号
     getOutTradeNo(res) {
       this.setSeachParmas(res, [this.outTradeNo || 'out_trade_no'], 'wildcard')
     },
-    // 选择职务
+    // 选择商品名
     getProductName(res) {
       this.setSeachParmas(res, [this.productName || 'product_name'])
     },
@@ -492,24 +346,9 @@ export default {
     getExpressNo(res) {
       this.setSeachParmas(res, [this.expressNo || 'express_nu'], 'wildcard')
     },
-    getWxSerch(res) {
-      console.log('微信搜索父组件接收到的res', res)
-      this.setSeachParmas(res, [this.wxSerch], 'wildcard')
-      console.log('@+++index.vue+++@@this.wxSerch@@@', this.wxSerch)
-    },
-    getPhoneData(res) {
-      this.setSeachParmas(res, [this.wxTeacherPhone], 'wildcard')
-    },
-    getWxStatus(res) {
-      this.setSeachParmas(res, [this.wxStatus])
-    },
-    getWxConcatTeacher(res) {
-      this.setSeachParmas(res, [this.wxConcatTeacher])
-    },
-
     // 选择销售老师
     selectSellTeacher(res) {
-      this.setSeachParmas(res, [this.groupSell || 'teacher_id'], 'wildcard')
+      this.setSeachParmas(res, [this.groupSell || 'pay_teacher_id'], 'wildcard')
     },
     getTeamDetail(res) {
       this.setSeachParmas(res, [this.teamDetail || 'last_team_id'])
@@ -577,7 +416,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 .search-style {
-  // margin-bottom: 10px;
+  margin-bottom: 10px;
 }
 </style>
 <style lang="scss">
