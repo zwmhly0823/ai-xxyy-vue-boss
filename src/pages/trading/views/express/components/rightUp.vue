@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-27 19:04:54
  * @LastEditors: Lukun
- * @LastEditTime: 2020-04-20 17:42:00
+ * @LastEditTime: 2020-04-20 23:14:01
  -->
 <template>
   <div class="container">
@@ -29,8 +29,8 @@
       />
     </div>
     <!-- v-if="!teacherId" TOSS -->
-    <!-- <div class="search-export" v-if="!teacherId"> -->
-    <div class="search-export">
+    <div class="search-export" v-if="!teacherId">
+      <!-- <div class="search-export"> -->
       <div>
         <el-button size="small" type="primary" @click="showExportDialog"
           >导出物流信息</el-button
@@ -249,9 +249,11 @@ export default {
             item.terms['level.keyword'] = item.terms.level
             delete item.terms.level
           }
-          if (item.wildcard && item.wildcard.express_nu) {
-            item.wildcard['express_nu.keyword'] = item.wildcard.express_nu
-            delete item.wildcard.express_nu
+          if (item && item.wildcard) {
+            if (item.wildcard && item.wildcard.express_nu) {
+              item.wildcard['express_nu.keyword'] = item.wildcard.express_nu
+            }
+            delete item.wildcard
           }
           // if (item.wildcard && item.wildcard.last_team_id) {
           //   item['term'].team_id = item.wildcard.last_team_id
@@ -261,12 +263,6 @@ export default {
             item.terms = { regtype: item.term.regtype.split(',') }
             delete item.term
           }
-          // if (item.terms && item.terms.term) {
-          //   if (condition) {
-          //   delete item.term.regtype
-
-          //   }
-          // }
           return item
         })
         console.log(term, 'term-----------------')
