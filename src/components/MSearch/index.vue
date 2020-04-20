@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-24 18:20:12
  * @LastEditors: Lukun
- * @LastEditTime: 2020-04-18 18:15:46
+ * @LastEditTime: 2020-04-20 22:36:37
  -->
 
 <template>
@@ -15,7 +15,6 @@
         <search-phone
           @result="getPhoneHander"
           :teamId="teamId"
-          :teamType="teamType"
           :name="phone"
           :onlyPhone="onlyPhone"
           :tip="phoneTip"
@@ -71,20 +70,23 @@
         <more-version-box @result="getVersionNu" :name="moreVersion" />
       </el-form-item>
 
-      <el-form-item v-if="level || sup || stage || schedule">
+      <el-form-item v-if="level || sup || stage">
         <stage-sup-levels
           @stageCallBack="stageCallBack"
           @supCallBack="supCallBack"
           @levelCallBack="levelCallBack"
-          @scheduleCallBack="scheduleCallBack"
           :disabled="true"
           :stageName="stage"
-          :scheduleName="schedule"
           :supName="sup"
           :levelName="level"
           :addSupS="addSupS"
           style="margin-bottom:0px"
         />
+      </el-form-item>
+
+      <el-form-item v-if="schedule">
+        <!-- 排期 -->
+        <Schedule @result="selectSchedule" :name="schedule" />
       </el-form-item>
 
       <el-form-item v-if="teamDetail">
@@ -134,6 +136,7 @@ import ExpressNo from './searchItems/expressNo'
 import GroupSell from './searchItems/groupSell'
 import TeamDetail from './searchItems/teamDetail'
 import MoreVersionBox from './searchItems/moreVersionBox'
+import Schedule from './searchItems/schedule'
 import { isToss } from '@/utils/index'
 
 export default {
@@ -190,11 +193,6 @@ export default {
     datePlaceholder: {
       type: String,
       default: '下单时间'
-    },
-    // 班级内搜索 需要班级类型
-    teamType: {
-      type: String,
-      default: '' // 0
     },
     // 手机号
     phone: {
@@ -268,7 +266,8 @@ export default {
     ExpressNo,
     GroupSell,
     TeamDetail,
-    MoreVersionBox
+    MoreVersionBox,
+    Schedule
   },
   data() {
     return {
@@ -298,9 +297,9 @@ export default {
       this.setSeachParmas(res, [this.stage || 'stage'], 'terms')
     },
     // 排期
-    scheduleCallBack(res) {
+    selectSchedule(res) {
       console.log(res, 'res')
-      this.setSeachParmas(res, [this.schedule || 'period'], 'terms')
+      this.setSeachParmas(res, [this.schedule || 'id'])
     },
     // 难度
     supCallBack(res) {
@@ -349,7 +348,7 @@ export default {
     },
     // 选择销售老师
     selectSellTeacher(res) {
-      this.setSeachParmas(res, [this.groupSell || 'teacher_id'], 'wildcard')
+      this.setSeachParmas(res, [this.groupSell || 'pay_teacher_id'], 'wildcard')
     },
     getTeamDetail(res) {
       this.setSeachParmas(res, [this.teamDetail || 'last_team_id'])
