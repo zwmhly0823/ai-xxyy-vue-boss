@@ -18,7 +18,7 @@
         date="ctime"
         date-placeholder="下单时间"
         phone="uid"
-        topic-type="topic_id"
+        order-type="regtype"
       />
       <!-- <el-tabs type="border-card" @tab-click="handleClick" v-model="activeName">
         <el-tab-pane label="已完成" name="3"></el-tab-pane>

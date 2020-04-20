@@ -97,6 +97,11 @@
         <group-sell @result="selectSellTeacher" :name="groupSell" />
       </el-form-item>
 
+      <el-form-item v-if="orderType">
+        <!-- 订单类型 -->
+        <order-type @result="getOrderType" :name="orderType" />
+      </el-form-item>
+
       <!-- <el-form-item
         size="mini"
         style="position:relative;top:6px"
@@ -134,6 +139,7 @@ import ExpressNo from './searchItems/expressNo'
 import GroupSell from './searchItems/groupSell'
 import TeamDetail from './searchItems/teamDetail'
 import MoreVersionBox from './searchItems/moreVersionBox'
+import OrderType from './searchItems/orderType'
 import { isToss } from '@/utils/index'
 
 export default {
@@ -254,6 +260,10 @@ export default {
     moreVersion: {
       type: String,
       default: '' //
+    },
+    orderType: {
+      type: String,
+      default: '' //
     }
   },
   components: {
@@ -268,7 +278,8 @@ export default {
     ExpressNo,
     GroupSell,
     TeamDetail,
-    MoreVersionBox
+    MoreVersionBox,
+    OrderType
   },
   data() {
     return {
@@ -356,6 +367,9 @@ export default {
     },
     getVersionNu(res) {
       this.setSeachParmas(res, [this.moreVersion || 'product_version'])
+    },
+    getOrderType(res) {
+      this.setSeachParmas(res, [this.orderType || 'regtype'])
     },
     /**  处理接收到的查询参数
      * @res: Object, 子筛选组件返回的表达式对象，如 {sup: 2}
