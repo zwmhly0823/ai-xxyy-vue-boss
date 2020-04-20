@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-24 18:20:12
  * @LastEditors: Lukun
- * @LastEditTime: 2020-04-18 18:15:46
+ * @LastEditTime: 2020-04-20 17:42:25
  -->
 
 <template>
@@ -15,7 +15,6 @@
         <search-phone
           @result="getPhoneHander"
           :teamId="teamId"
-          :teamType="teamType"
           :name="phone"
           :onlyPhone="onlyPhone"
           :tip="phoneTip"
@@ -92,7 +91,7 @@
         <team-detail @result="getTeamDetail" :name="teamDetail" />
       </el-form-item>
 
-      <el-form-item v-if="groupSell">
+      <el-form-item v-if="groupSell && !teacherId">
         <!-- 社群销售 -->
         <group-sell @result="selectSellTeacher" :name="groupSell" />
       </el-form-item>
@@ -190,11 +189,6 @@ export default {
     datePlaceholder: {
       type: String,
       default: '下单时间'
-    },
-    // 班级内搜索 需要班级类型
-    teamType: {
-      type: String,
-      default: '' // 0
     },
     // 手机号
     phone: {

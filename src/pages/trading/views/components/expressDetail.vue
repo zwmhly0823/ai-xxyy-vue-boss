@@ -4,11 +4,7 @@
  * @Author: Lukun
  * @Date: 2020-04-15 15:18:49
  * @LastEditors: Lukun
-<<<<<<< HEAD
- * @LastEditTime: 2020-04-20 17:20:16
-=======
- * @LastEditTime: 2020-04-18 21:25:17
->>>>>>> feature/trading
+ * @LastEditTime: 2020-04-20 17:41:26
  -->
 <template>
   <div class="container">
