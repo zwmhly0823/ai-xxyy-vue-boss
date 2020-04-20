@@ -35,7 +35,7 @@
         <!-- 包含全部体验课订单数据（双周体验课、单周体验课） -->
         <el-tab-pane label="体验课" name="4"></el-tab-pane>
         <!-- 包含小熊商城-1、邀请有奖-6、推荐有礼-2 -->
-        <el-tab-pane label="活动订单" name="1,2,6"></el-tab-pane>
+        <!-- <el-tab-pane label="活动订单" name="1,2,6"></el-tab-pane> -->
 
         <!-- 统计模块 + 列表 -->
         <all-order :topic="activeTopic" :search="search" />
@@ -51,7 +51,7 @@
       >
         <el-tab-pane label="系统课" name="5"> </el-tab-pane>
         <el-tab-pane label="体验课" name="4"></el-tab-pane>
-        <el-tab-pane label="活动订单" name="1,2,6"></el-tab-pane>
+        <!-- <el-tab-pane label="活动订单" name="1,2,6"></el-tab-pane> -->
 
         <el-table style="font-size:12px;" v-show="orderForm">
           <el-table-column label="用户信息"></el-table-column>
