@@ -250,10 +250,11 @@ export default {
     async getOrderList(page = this.currentPage, status) {
       const statisticsQuery = []
       const queryObj = {}
-      if (this.teacherId) {
-        Object.assign(queryObj, { last_teacher_id: this.teacherId })
-        statisticsQuery.push({ term: { last_teacher_id: this.teacherId } })
-      }
+      // TOSS
+      // if (this.teacherId) {
+      //   Object.assign(queryObj, { last_teacher_id: this.teacherId })
+      //   statisticsQuery.push({ term: { last_teacher_id: this.teacherId } })
+      // }
 
       const topicRelation = await this.$http.Product.topicRelationId(
         `${JSON.stringify({

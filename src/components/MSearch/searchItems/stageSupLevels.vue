@@ -43,7 +43,7 @@
         v-for="item in scheduleList"
         :key="item.id"
         :label="item.period_name"
-        :value="item.period"
+        :value="item.id"
       >
       </el-option>
     </el-select>
@@ -243,9 +243,13 @@ export default {
       )
     },
     scheduleChange(data) {
+      let obj = {}
+      this.scheduleList.forEach((item) => {
+        if (item.id === this.schedule) obj = item
+      })
       this.$emit(
         'scheduleCallBack',
-        data.length > 0 ? { [this.scheduleName]: this.schedule } : ''
+        data.length > 0 ? { [this.scheduleName]: obj.period || '' } : ''
       )
     },
 
