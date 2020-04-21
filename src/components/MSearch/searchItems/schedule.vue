@@ -114,9 +114,8 @@ export default {
         })
     },
     inputHandler(data) {
-      console.log(data)
       this.input = data.period_name
-      this.$emit('result', { [this.name]: data.id })
+      this.$emit('result', { [this.name]: data.period })
     }
   },
   created() {},
