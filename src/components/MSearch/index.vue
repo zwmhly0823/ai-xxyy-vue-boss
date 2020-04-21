@@ -64,17 +64,27 @@
         <!-- 主题 -->
         <product-topic @result="getProductTopic" :name="topicType" />
       </el-form-item>
+      <el-form-item v-if="moreVersion">
+        <!-- 随材版本-->
+        <more-version-box @result="getVersionNu" :name="moreVersion" />
+      </el-form-item>
+
       <el-form-item v-if="level || sup || stage">
         <stage-sup-levels
           @stageCallBack="stageCallBack"
           @supCallBack="supCallBack"
           @levelCallBack="levelCallBack"
-          @positionCallBack="positionCallBack"
+          :disabled="true"
           :stageName="stage"
           :supName="sup"
           :levelName="level"
+          :addSupS="addSupS"
           style="margin-bottom:0px"
         />
+      </el-form-item>
+      <el-form-item v-if="schedule">
+        <!-- 排期 -->
+        <Schedule @result="selectSchedule" :name="schedule" />
       </el-form-item>
       <el-form-item v-if="teacherphone">
         <!-- 老师模块手机号搜索 -->
@@ -86,6 +96,10 @@
           :tip="phoneTip"
         />
       </el-form-item>
+      <el-form-item v-if="teamDetail">
+        <!-- 班级期数-->
+        <team-detail @result="getTeamDetail" :name="teamDetail" />
+      </el-form-item>
       <el-form-item v-if="teachername">
         <!-- 老师模块姓名搜索 -->
         <teacher-name
@@ -94,6 +108,10 @@
           :onlyPhone="onlyName"
           :tip="nameTip"
         />
+      </el-form-item>
+      <el-form-item v-if="groupSell && !teacherId">
+        <!-- 社群销售 -->
+        <group-sell @result="selectSellTeacher" :name="groupSell" />
       </el-form-item>
       <el-form-item v-if="rank || induction || landing || position">
         <!-- 老师模块职级，登陆状态，入职状态，选择职务搜索 -->
@@ -161,12 +179,17 @@ import SearchPhone from './searchItems/searchPhone.vue'
 import OutTradeNo from './searchItems/outTradeNo.vue'
 import ProductName from './searchItems/productName.vue'
 import SelectDate from './searchItems/selectDate.vue'
-import expressNo from './searchItems/expressNo'
+import ExpressNo from './searchItems/expressNo'
+import GroupSell from './searchItems/groupSell'
+import TeamDetail from './searchItems/teamDetail'
+import MoreVersionBox from './searchItems/moreVersionBox'
+import Schedule from './searchItems/schedule'
 // 老师
 import teacherPhone from './searchItems/teacherSearch/teacherPhone.vue'
 import teacherName from './searchItems/teacherSearch/teacherName.vue'
 import teacherDropDown from './searchItems/teacherSearch/teacherDropDown'
 import wxList from './searchItems/wxInput'
+import { isToss } from '@/utils/index'
 
 export default {
   props: {
@@ -194,10 +217,20 @@ export default {
       type: String,
       default: '' // stage
     },
+    // 排期
+    schedule: {
+      type: String,
+      default: '' // schedule
+    },
+
     // 难度
     sup: {
       type: String,
       default: '' // sup
+    },
+    addSupS: {
+      type: Boolean,
+      default: false // sup+S ?
     },
     // 级别
     level: {
@@ -303,6 +336,20 @@ export default {
       type: String,
       default: '' // express_nu
     },
+    // 社群销售查询
+    groupSell: {
+      type: String,
+      default: ''
+    },
+    // 班级信息查询
+    teamDetail: {
+      type: String,
+      default: ''
+    },
+    moreVersion: {
+      type: String,
+      default: ''
+    },
     // 微信号搜索
     wxSerch: {
       type: String,
@@ -333,8 +380,12 @@ export default {
     SelectDate,
     OutTradeNo,
     ProductName,
+    ExpressNo,
+    GroupSell,
+    TeamDetail,
+    MoreVersionBox,
+    Schedule,
     teacherPhone,
-    expressNo,
     teacherName,
     teacherDropDown,
     wxList
@@ -346,10 +397,17 @@ export default {
       must: [],
       should: [],
       selectTime: null, // 物流时间下拉列表_选中项
+      teacherId: '', // 判断是否是toss环境还是boss环境
       oldTime: '' // 上次时间选择值
     }
   },
   computed: {},
+  created() {
+    const teacherId = isToss()
+    if (teacherId) {
+      this.teacherId = teacherId
+    }
+  },
   methods: {
     // 选择渠道
     getChannel(res) {
@@ -364,6 +422,11 @@ export default {
     stageCallBack(res) {
       console.log(res, 'res')
       this.setSeachParmas(res, [this.stage || 'stage'], 'terms')
+    },
+    // 排期
+    selectSchedule(res) {
+      console.log(res, 'res')
+      this.setSeachParmas(res, [this.schedule || 'id'])
     },
     // 难度
     supCallBack(res) {
@@ -434,10 +497,20 @@ export default {
       console.log(res, 'res___________', this.expressNo)
       this.setSeachParmas(res, [this.expressNo || 'express_nu'], 'wildcard')
     },
+    // 选择销售老师
+    selectSellTeacher(res) {
+      this.setSeachParmas(res, [this.groupSell || 'pay_teacher_id'], 'wildcard')
+    },
+    getTeamDetail(res) {
+      this.setSeachParmas(res, [this.teamDetail || 'last_team_id'])
+    },
     getWxSerch(res) {
       console.log('微信搜索父组件接收到的res', res)
       this.setSeachParmas(res, [this.wxSerch], 'wildcard')
       console.log('@+++index.vue+++@@this.wxSerch@@@', this.wxSerch)
+    },
+    getVersionNu(res) {
+      this.setSeachParmas(res, [this.moreVersion || 'product_version'])
     },
     getPhoneData(res) {
       this.setSeachParmas(res, [this.wxTeacherPhone], 'wildcard')
