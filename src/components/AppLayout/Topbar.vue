@@ -5,7 +5,7 @@
  * @Description: topbar 顶部功能区
  -->
 <template>
-  <div class="navbar">
+  <div class="navbar" :class="{ prod: isProd }">
     <hamburger
       :is-active="sidebar.opened"
       class="hamburger-container"
@@ -13,6 +13,18 @@
     />
     <!-- 面包屑 -->
     <breadcrumb class="breadcrumb-container" />
+
+    <!-- 预发布环境提示 -->
+    <div v-if="isProd" style="flex: 1; margin: 0 40px;">
+      <el-alert
+        title="警告：当前是预发布环境，仅供特殊情况下使用！！！"
+        type="error"
+        effect="dark"
+        center
+        :closable="false"
+      >
+      </el-alert>
+    </div>
 
     <div class="right-menu">
       <el-dropdown class="avatar-container" trigger="click">
@@ -58,11 +70,13 @@ export default {
   },
   data() {
     return {
+      isProd: false,
       userInfo: null,
       head: 'https://msb-ai.meixiu.mobi/ai-pm/static/touxiang.png'
     }
   },
   created() {
+    this.isProd = location.origin.indexOf('prod') > -1
     const userInfo = localStorage.getItem('teacher')
     if (!userInfo) {
       this.logout()
@@ -91,6 +105,11 @@ export default {
   position: relative;
   background: #fff;
   box-shadow: 0 1px 4px rgba(0, 21, 41, 0.08);
+  &.prod {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
 
   .hamburger-container {
     line-height: 46px;

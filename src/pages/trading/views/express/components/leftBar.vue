@@ -56,7 +56,7 @@ export default {
           ]
         },
         {
-          label: '异常状态',
+          label: '异常物流',
           children: [
             {
               label: '全部（0）'
@@ -124,13 +124,6 @@ export default {
             x.confirm_wait_send
           ]
           const logisticsError = [x.invalid, x.has_return, x.signed_failed]
-          // arr = res.data.logisticsStatistics.no_address
-          // const s = this.arrSum(logisticsStatus)
-          // this.whack[0].children[1].label = logisticsStatus[0]
-          // this.whack[0].children[2].label = logisticsStatus[1]
-          // this.whack[0].children[3].label = logisticsStatus[2]
-          // this.whack[0].children[4].label = logisticsStatus[3]
-          // this.whack[0].children[5].label = logisticsStatus[4]
           this.whack[0].children = [
             {
               id: '0,1,2,3,6',
@@ -159,7 +152,7 @@ export default {
           ]
           this.whack[1].children = [
             {
-              id: '7,5,4',
+              id: '4,5,7',
               label: `全部（${this.arrSum(logisticsError)}）`
             },
             {
@@ -170,6 +163,7 @@ export default {
               id: '5',
               label: `已退货（${Number(x.has_return)}）`
             },
+
             {
               id: '4',
               label: `签收失败（${Number(x.signed_failed)}）`
