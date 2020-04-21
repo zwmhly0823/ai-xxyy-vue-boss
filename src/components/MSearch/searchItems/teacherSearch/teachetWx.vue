@@ -65,15 +65,16 @@ export default {
     WeChat(val) {
       console.log(val, '000000')
       this.weixinInp = []
-
       if (val && val.length > 0) {
         val.forEach((val) => {
           const obj = {}
           obj[val.weixinNo] = val.id
+          console.log(obj, 'obj')
           this.ids.push(obj)
           this.weixinInp.push(val.weixinNo)
         })
       }
+      console.log(this.weixinInp, 'this.weixinInp')
     }
   },
   methods: {
