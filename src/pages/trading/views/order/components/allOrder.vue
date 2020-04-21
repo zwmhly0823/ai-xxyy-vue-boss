@@ -10,26 +10,7 @@
 <template>
   <div class="order-call">
     <article class="top-box">
-      <el-row :gutter="20" type="flex" justify="center">
-        <!-- 订单总计 -->
-        <el-col :span="5">
-          <div
-            class="grid-content"
-            :class="{ current: !status }"
-            @click="chnageStatus('')"
-          >
-            <div class="oride-top">订单总计</div>
-            <div class="oride-middle">
-              <em>{{ statisticsObj.total.count }}</em
-              >笔
-            </div>
-            <div class="oride-bottom">
-              <span>{{ +statisticsObj.total.value.toFixed(2) }}元</span>
-              <!-- <span>{{ littleBear.value }}币</span>
-              <span>{{ recommended.value }}宝石</span> -->
-            </div>
-          </div>
-        </el-col>
+      <el-row :gutter="20" type="flex" justify="flex-start">
         <!-- 已完成 3 -->
         <el-col :span="5">
           <div
@@ -78,6 +59,25 @@
             </div>
             <div class="oride-bottom">
               {{ +statisticsObj.refund.value.toFixed(2) }}元
+            </div>
+          </div>
+        </el-col>
+        <!-- 全部订单 -->
+        <el-col :span="5">
+          <div
+            class="grid-content"
+            :class="{ current: !status }"
+            @click="chnageStatus('')"
+          >
+            <div class="oride-top">全部订单</div>
+            <div class="oride-middle">
+              <em>{{ statisticsObj.total.count }}</em
+              >笔
+            </div>
+            <div class="oride-bottom">
+              <span>{{ +statisticsObj.total.value.toFixed(2) }}元</span>
+              <!-- <span>{{ littleBear.value }}币</span>
+              <span>{{ recommended.value }}宝石</span> -->
             </div>
           </div>
         </el-col>
