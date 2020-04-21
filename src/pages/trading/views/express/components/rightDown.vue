@@ -628,6 +628,7 @@ export default {
               product_version
               last_team_id
               teacher_id
+              pay_teacher_id
               user {
                 id
                 birthday
@@ -645,7 +646,7 @@ export default {
             const teamId = [] // 班级Id
             const schedule = []
             resData.forEach((item) => {
-              realnameId.push(item.teacher_id)
+              realnameId.push(item.pay_teacher_id)
               teamId.push(item.last_team_id)
               schedule.push(item.term)
               item.crtime = formatData(+item.ctime, 's')
