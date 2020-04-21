@@ -4,23 +4,17 @@
  * @Author: zhubaodong
  * @Date: 2020-03-24 18:20:12
  * @LastEditors: Lukun
- * @LastEditTime: 2020-04-18 18:15:46
+ * @LastEditTime: 2020-04-20 22:36:37
  -->
 
 <template>
   <el-card class="search-style" shadow="never">
     <el-form :inline="true">
-      <el-form-item v-if="orderType">
-        <!-- 订单类型 -->
-        <order-type @result="getOrderType" :name="orderType" />
-      </el-form-item>
-
       <el-form-item v-if="phone">
         <!-- 手机号搜索 -->
         <search-phone
           @result="getPhoneHander"
           :teamId="teamId"
-          :teamType="teamType"
           :name="phone"
           :onlyPhone="onlyPhone"
           :tip="phoneTip"
@@ -76,20 +70,23 @@
         <more-version-box @result="getVersionNu" :name="moreVersion" />
       </el-form-item>
 
-      <el-form-item v-if="level || sup || stage || schedule">
+      <el-form-item v-if="level || sup || stage">
         <stage-sup-levels
           @stageCallBack="stageCallBack"
           @supCallBack="supCallBack"
           @levelCallBack="levelCallBack"
-          @scheduleCallBack="scheduleCallBack"
           :disabled="true"
           :stageName="stage"
-          :scheduleName="schedule"
           :supName="sup"
           :levelName="level"
           :addSupS="addSupS"
           style="margin-bottom:0px"
         />
+      </el-form-item>
+
+      <el-form-item v-if="schedule">
+        <!-- 排期 -->
+        <Schedule @result="selectSchedule" :name="schedule" />
       </el-form-item>
 
       <el-form-item v-if="teamDetail">
@@ -100,26 +97,6 @@
       <el-form-item v-if="groupSell && !teacherId">
         <!-- 社群销售 -->
         <group-sell @result="selectSellTeacher" :name="groupSell" />
-      </el-form-item>
-
-      <el-form-item v-if="systemCourseType">
-        <!-- 系统课类型 -->
-        <system-course-type
-          @result="getSystemCourseType"
-          :name="systemCourseType"
-        />
-      </el-form-item>
-
-      <!-- && !teacherId -->
-      <el-form-item v-if="department && !teacherId">
-        <!-- 社群销售组 -->
-        <department @result="getDepartment" :name="department" />
-      </el-form-item>
-
-      <!-- && !teacherId -->
-      <el-form-item v-if="searchTeamName">
-        <!-- 班级名称搜索 -->
-        <search-team-name @result="getTeamName" :name="searchTeamName" />
       </el-form-item>
 
       <!-- <el-form-item
@@ -159,10 +136,7 @@ import ExpressNo from './searchItems/expressNo'
 import GroupSell from './searchItems/groupSell'
 import TeamDetail from './searchItems/teamDetail'
 import MoreVersionBox from './searchItems/moreVersionBox'
-import OrderType from './searchItems/orderType'
-import SystemCourseType from './searchItems/systemCourseType'
-import Department from './searchItems/department'
-import SearchTeamName from './searchItems/searchTeamName'
+import Schedule from './searchItems/schedule'
 import { isToss } from '@/utils/index'
 
 export default {
@@ -219,11 +193,6 @@ export default {
     datePlaceholder: {
       type: String,
       default: '下单时间'
-    },
-    // 班级内搜索 需要班级类型
-    teamType: {
-      type: String,
-      default: '' // 0
     },
     // 手机号
     phone: {
@@ -283,24 +252,6 @@ export default {
     moreVersion: {
       type: String,
       default: '' //
-    },
-    orderType: {
-      type: String,
-      default: ''
-    },
-    systemCourseType: {
-      type: String,
-      default: ''
-    },
-    // 销售部门
-    department: {
-      type: String,
-      default: ''
-    },
-    // 搜索班级名称
-    searchTeamName: {
-      type: String,
-      default: ''
     }
   },
   components: {
@@ -316,10 +267,7 @@ export default {
     GroupSell,
     TeamDetail,
     MoreVersionBox,
-    OrderType,
-    SystemCourseType,
-    Department,
-    SearchTeamName
+    Schedule
   },
   data() {
     return {
@@ -349,9 +297,9 @@ export default {
       this.setSeachParmas(res, [this.stage || 'stage'], 'terms')
     },
     // 排期
-    scheduleCallBack(res) {
+    selectSchedule(res) {
       console.log(res, 'res')
-      this.setSeachParmas(res, [this.schedule || 'period'], 'terms')
+      this.setSeachParmas(res, [this.schedule || 'id'])
     },
     // 难度
     supCallBack(res) {
@@ -400,7 +348,7 @@ export default {
     },
     // 选择销售老师
     selectSellTeacher(res) {
-      this.setSeachParmas(res, [this.groupSell || 'teacher_id'], 'wildcard')
+      this.setSeachParmas(res, [this.groupSell || 'pay_teacher_id'], 'wildcard')
     },
     getTeamDetail(res) {
       this.setSeachParmas(res, [this.teamDetail || 'last_team_id'])
@@ -408,19 +356,6 @@ export default {
     getVersionNu(res) {
       this.setSeachParmas(res, [this.moreVersion || 'product_version'])
     },
-    getOrderType(res) {
-      this.setSeachParmas(res, [this.orderType || 'regtype'])
-    },
-    getSystemCourseType(res) {
-      this.setSeachParmas(res, [this.systemCourseType || 'system_course_type'])
-    },
-    getDepartment(res) {
-      this.setSeachParmas(res, [this.department || 'department'], 'terms')
-    },
-    getTeamName(res) {
-      this.setSeachParmas(res, [this.searchTeamName || 'team_name'], 'terms')
-    },
-
     /**  处理接收到的查询参数
      * @res: Object, 子筛选组件返回的表达式对象，如 {sup: 2}
      * @key: Array 指定res的key。如课程类型+期数选项，清除课程类型时，期数也清除了，这里要同步清除must的数据

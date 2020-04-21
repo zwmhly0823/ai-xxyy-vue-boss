@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 14:19:58
  * @LastEditors: panjian
- * @LastEditTime: 2020-04-17 19:10:58
+ * @LastEditTime: 2020-04-20 21:13:59
  -->
 <template>
   <div>
@@ -35,6 +35,7 @@
         >生成作品展</el-button
       >
       <checkBox
+        class="check-box"
         :tables="table"
         :classId="classId"
         :audioTabs="audioTabs"
@@ -360,11 +361,13 @@ export default {
     screenAttendClass(data) {
       console.log(data, '参课完课 传给父级的值')
       this.screenAttendClassData = data
+      this.table.currentPage = 1
       this.getClassCompPage()
     },
     screenWorks(data) {
       console.log(data, '作品及点评 传给父级的值')
       this.screenWorksData = data
+      this.table.currentPage = 1
       this.getStuComment()
     },
     // 排序
@@ -1021,14 +1024,22 @@ export default {
               ? `"${this.screenAttendClassData.courseId}"`
               : `""`
             const userStatus = this.screenAttendClassData.userStatus
-              ? this.screenAttendClassData.userStatus
+              ? `"${this.screenAttendClassData.userStatus}"`
               : `""`
             const isJoinCourse = this.screenAttendClassData.isJoinCourse
-              ? this.screenAttendClassData.isJoinCourse
+              ? `"${this.screenAttendClassData.isJoinCourse}"`
               : `""`
             const isCompleteCourse = this.screenAttendClassData.isCompleteCourse
-              ? this.screenAttendClassData.isCompleteCourse
+              ? `"${this.screenAttendClassData.isCompleteCourse}"`
               : `""`
+            console.log(
+              courseId,
+              userStatus,
+              isJoinCourse,
+              isCompleteCourse,
+              '接口请求'
+            )
+
             this.querysData = `{"team_id":${this.classId.classId.id},"team_type":${this.classId.type},"course_id":${courseId},"user_status":${userStatus},"is_join_course":${isJoinCourse},"is_complete_course":${isCompleteCourse}}`
           } else {
             this.querysData = `{"team_id":${this.classId.classId.id},"team_type":${this.classId.type}}`
@@ -1084,12 +1095,6 @@ export default {
         if (this.search) {
           this.querysData = `{"team_id":${this.classId.classId.id},"team_type":${this.classId.type},"uid":${this.search}}`
         } else {
-          console.log(
-            this.screenWorksData.courseId,
-            this.screenWorksData.isTask,
-            this.screenWorksData.isComment,
-            this.screenWorksData.isListen
-          )
           if (
             this.screenWorksData.courseId ||
             this.screenWorksData.isTask ||
@@ -1100,15 +1105,16 @@ export default {
               ? `"${this.screenWorksData.courseId}"`
               : `""`
             const isTask = this.screenWorksData.isTask
-              ? this.screenWorksData.isTask
+              ? `"${this.screenWorksData.isTask}"`
               : `""`
             const isComment = this.screenWorksData.isComment
-              ? this.screenWorksData.isComment
+              ? `"${this.screenWorksData.isComment}"`
               : `""`
             const isListen = this.screenWorksData.isListen
-              ? this.screenWorksData.isListen
+              ? `"${this.screenWorksData.isListen}"`
               : `""`
             this.querysData = `{"team_id":${this.classId.classId.id},"team_type":${this.classId.type},"course_id":${courseId},"is_task":${isTask},"is_comment":${isComment},"is_listen":${isListen}}`
+            console.log(this.screenWorksData, 'this.screenWorksData')
           } else {
             this.querysData = `{"team_id":${this.classId.classId.id},"team_type":${this.classId.type}}`
           }
@@ -1315,6 +1321,9 @@ export default {
   //   position: absolute;
   //   right: 150px;
   // }
+  .check-box {
+    float: right;
+  }
 }
 .warning {
   display: inline-block;

@@ -1,3 +1,11 @@
+<!--
+ * @Descripttion:
+ * @version:
+ * @Author: zhubaodong
+ * @Date: 2020-03-26 16:28:45
+ * @LastEditors: Lukun
+ * @LastEditTime: 2020-04-21 00:02:02
+ -->
 <template>
   <div class="search-item small">
     <el-form @submit.native.prevent>
@@ -6,6 +14,7 @@
         name="vals"
         clearable
         class="inline-input"
+        :disabled="disableClick"
         v-model="input"
         :fetch-suggestions="querySearch"
         :placeholder="tip"
@@ -16,7 +25,7 @@
         <i class="el-icon-search el-input__icon" slot="suffix"></i>
         <template slot-scope="{ item }">
           <div style="display:flex">
-            <div class="name">{{ item.team_name || '-' }}</div>
+            <div class="name">{{ item.period_name || '-' }}</div>
           </div>
         </template></el-autocomplete
       >
@@ -26,27 +35,40 @@
 
 <script>
 import axios from '@/api/axios'
-
+import { mapState } from 'vuex'
 export default {
   props: {
     name: {
       type: String,
-      default: 'last_team_name'
+      default: 'id'
     },
     tip: {
       type: String,
-      default: '班级名'
+      default: '排期'
     }
   },
   components: {},
   data() {
     return {
       input: '',
-      dataDetail: []
+      dataDetail: [],
+      type: ''
     }
   },
-  computed: {},
+  computed: {
+    ...mapState({
+      disableClick: (state) => {
+        return state.leftbar.disableClick
+      },
+      typeStage: (state) => {
+        return state.leftbar.typeStage
+      }
+    })
+  },
   watch: {
+    typeStage(val) {
+      this.type = val
+    },
     input(val, old) {
       console.log(val !== old && !val)
       if (val !== old && !val) {
@@ -56,7 +78,7 @@ export default {
   },
   methods: {
     async querySearch(queryString, cb) {
-      const reg = /^[\s\-\S\0-9_\-\u4e00-\u9fa5]+/
+      const reg = /^[0-9]+/
       if (!reg.test(queryString)) {
         this.input = ''
         return
@@ -67,28 +89,33 @@ export default {
     },
 
     createFilter(queryString) {
-      const st = queryString.toUpperCase()
-      const queryParams = JSON.stringify(`
-      {"bool":{"must":[{"wildcard":{"team_name.keyword":"*${st}*"}}]}}
-      `)
+      const queryParams = {
+        bool: {
+          must: [{ wildcard: { 'period_name.keyword': `*${queryString}*` } }]
+        }
+      }
+      if (this.type) {
+        queryParams.bool.must.push({ term: `{term: ${this.type}}` })
+      }
+      const q = JSON.stringify(queryParams)
       return axios
         .post('/graphql/v1/toss', {
           query: `{
-                  StudentTeamListEx(query: ${queryParams}) {
+                  ManagementListEx(query:${JSON.stringify(q)}){
                     id
-                    team_name
+                    period
+                    period_name
                   }
                 }`
         })
         .then((res) => {
-          this.dataDetail = res.data.StudentTeamListEx
+          this.dataDetail = res.data.ManagementListEx
           return this.dataDetail
         })
     },
     inputHandler(data) {
       console.log(data)
-
-      this.input = data.team_name
+      this.input = data.period_name
       this.$emit('result', { [this.name]: data.id })
     }
   },

@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-24 18:50:54
  * @LastEditors: Lukun
- * @LastEditTime: 2020-04-18 19:13:20
+ * @LastEditTime: 2020-04-20 22:09:41
  -->
 <template>
   <div class="search-item small">
@@ -27,27 +27,6 @@
       </el-option>
     </el-select>
 
-    <!-- 排期 -->
-    <el-select
-      v-model="schedule"
-      class="item-style"
-      v-if="scheduleName"
-      clearable
-      multiple
-      size="mini"
-      placeholder="排期"
-      :disabled="disableClick"
-      @change="scheduleChange"
-    >
-      <el-option
-        v-for="item in scheduleList"
-        :key="item.id"
-        :label="item.period_name"
-        :value="item.id"
-      >
-      </el-option>
-    </el-select>
-    <!-- -->
     <el-select
       v-model="supData"
       class="item-style"
@@ -243,13 +222,9 @@ export default {
       )
     },
     scheduleChange(data) {
-      let obj = {}
-      this.scheduleList.forEach((item) => {
-        if (item.id === this.schedule) obj = item
-      })
       this.$emit(
         'scheduleCallBack',
-        data.length > 0 ? { [this.scheduleName]: obj.period || '' } : ''
+        data.length > 0 ? { [this.scheduleName]: this.schedule } : ''
       )
     },
 
