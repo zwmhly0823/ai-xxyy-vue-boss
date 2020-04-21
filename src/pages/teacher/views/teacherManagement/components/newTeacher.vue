@@ -176,7 +176,7 @@
         </el-radio-group>
       </el-form-item>
       <!-- 分配微信号 -->
-      <el-form-item label="分配微信号">
+      <el-form-item label="分配微信号" v-if="false">
         <!-- <el-select
           v-model="ruleForm.weChat"
           multiple
@@ -613,6 +613,7 @@ export default {
     },
     // 微信搜索
     searchHandler(val) {
+      console.log(val, '搜索')
       const WeChatsear = val[0].wildcard.wechat_no
       if (WeChatsear.length > 0) {
         this.ruleForm.weChat = []

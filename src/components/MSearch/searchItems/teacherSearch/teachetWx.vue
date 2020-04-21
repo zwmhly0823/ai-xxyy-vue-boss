@@ -89,8 +89,14 @@ export default {
         return item === +val1
       })
       this.ids.splice(majorIndex, 1)
+      // this.ids.forEach((val, index) => {
+      //   this.weixinInp.forEach((item) => {
+      //     if (Object.keys(val).toString() === item) {
+      //       this.ids.splice(index, 1)
+      //     }
+      //   })
+      // })
       console.log(this.ids, 'this.ids')
-      // this.weixinSelectData.forEach((item) => {})
     },
     inputFocus(val, ind) {
       if (
@@ -120,6 +126,7 @@ export default {
     },
     // 微信号搜索（给父组件传值）
     onWxSerch(data) {
+      console.log(data, '89898989')
       this.$emit('getWxTeacher', data ? { [this.teacherwx]: data } : '')
     }
   }
