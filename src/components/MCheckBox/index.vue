@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 20:22:24
  * @LastEditors: panjian
- * @LastEditTime: 2020-04-20 21:18:48
+ * @LastEditTime: 2020-04-21 11:13:01
  -->
 <template>
   <div>
@@ -90,7 +90,11 @@
           >
         </el-checkbox-group> -->
         <p>参课情况</p>
-        <el-select v-model="attendClassGinseng" placeholder="请选择">
+        <el-select
+          @change="friendsChange"
+          v-model="attendClassGinseng"
+          placeholder="请选择"
+        >
           <el-option
             v-for="item in friends"
             :key="item.value"
@@ -111,7 +115,11 @@
           >
         </el-checkbox-group> -->
         <p>完课情况</p>
-        <el-select v-model="attendClassFinish" placeholder="请选择">
+        <el-select
+          :disabled="groupsDisabled"
+          v-model="attendClassFinish"
+          placeholder="请选择"
+        >
           <el-option
             v-for="item in groups"
             :key="item.value"
@@ -217,7 +225,11 @@
         </el-select>
         <p>作品上传</p>
 
-        <el-select v-model="emptyWorksUpload" placeholder="请选择">
+        <el-select
+          @change="uploadsChange"
+          v-model="emptyWorksUpload"
+          placeholder="请选择"
+        >
           <el-option
             v-for="item in uploads"
             :key="item.value"
@@ -242,7 +254,12 @@
         </el-checkbox-group> -->
         <p>作品点评</p>
 
-        <el-select v-model="emptyWorksComment" placeholder="请选择">
+        <el-select
+          @change="commentsChange"
+          :disabled="commentsDisabled"
+          v-model="emptyWorksComment"
+          placeholder="请选择"
+        >
           <el-option
             v-for="item in comments"
             :key="item.value"
@@ -263,7 +280,11 @@
           >
         </el-checkbox-group> -->
         <p>听作品点评</p>
-        <el-select v-model="emptyWorksHear" placeholder="请选择">
+        <el-select
+          :disabled="hearWorkssDisabled"
+          v-model="emptyWorksHear"
+          placeholder="请选择"
+        >
           <el-option
             v-for="item in hearWorkss"
             :key="item.value"
@@ -322,23 +343,26 @@ export default {
   components: {},
   data() {
     return {
+      hearWorkssDisabled: true,
+      commentsDisabled: true,
+      groupsDisabled: true,
       loading: false,
       // 点击取消 隐藏弹出框
       attendClassShow: null,
       worksShow: null,
       visible: false,
       // 参课完课 状态
-      attendClassStatus: [],
+      attendClassStatus: '',
       // 参课完课 参课情况
-      attendClassGinseng: [],
+      attendClassGinseng: '',
       // 参课完课 完课状态
-      attendClassFinish: [],
+      attendClassFinish: '',
       // 作品及点评 作品上传
-      emptyWorksUpload: [],
+      emptyWorksUpload: '',
       // 作品及点评 作品点评
-      emptyWorksComment: [],
+      emptyWorksComment: '',
       // 作品及点评 听作品点评
-      emptyWorksHear: [],
+      emptyWorksHear: '',
       states: [
         {
           value: '5',
@@ -407,21 +431,41 @@ export default {
   },
   mounted() {},
   watch: {
+    classId(value) {
+      setTimeout(() => {
+        // 参课完课 重置
+        this.groupsDisabled = true
+        this.attendClassSelect = ''
+        this.attendClassStatus = ''
+        this.attendClassGinseng = ''
+        this.attendClassFinish = ''
+        this.attendClassShow = false
+
+        // 作品及点评 重置
+        this.hearWorkssDisabled = true
+        this.commentsDisabled = true
+        this.worksSelect = ''
+        this.emptyWorksUpload = ''
+        this.emptyWorksComment = ''
+        this.emptyWorksHear = ''
+        this.worksShow = false
+      }, 500)
+    },
     audioTabs(value) {
       // 作品及点评 作品上传
-      this.emptyWorksUpload = []
+      this.emptyWorksUpload = ''
       // 作品及点评 作品点评
-      this.emptyWorksComment = []
+      this.emptyWorksComment = ''
       // 作品及点评 听作品点评
-      this.emptyWorksHear = []
+      this.emptyWorksHear = ''
       this.worksSelect = ''
 
       // 参课完课 状态
-      this.attendClassStatus = []
+      this.attendClassStatus = ''
       // 参课完课 参课情况
-      this.attendClassGinseng = []
+      this.attendClassGinseng = ''
       // 参课完课 完课情况
-      this.attendClassFinish = []
+      this.attendClassFinish = ''
       this.attendClassSelect = ''
     }
   },
@@ -504,6 +548,14 @@ export default {
     //   this.attendClassStatus = value
     // },
     // 参课完课 参课情况
+    friendsChange(value) {
+      if (value === '0') {
+        this.groupsDisabled = true
+        this.attendClassFinish = ''
+      } else {
+        this.groupsDisabled = false
+      }
+    },
     // attendClassChangeGinseng(value) {
     //   this.attendClassGinseng = value
     // },
@@ -513,27 +565,48 @@ export default {
     // },
     // 参课完课 点击清空
     attendClassEmpty() {
+      this.groupsDisabled = true
       this.attendClassSelect = ''
       // 参课完课 状态
-      this.attendClassStatus = []
+      this.attendClassStatus = ''
       // 参课完课 参课情况
-      this.attendClassGinseng = []
+      this.attendClassGinseng = ''
       // 参课完课 完课情况
-      this.attendClassFinish = []
+      this.attendClassFinish = ''
     },
     // 参课完课 点击取消
     attendClassCancel() {
+      this.groupsDisabled = true
       this.attendClassSelect = ''
-      this.attendClassStatus = []
-      this.attendClassGinseng = []
-      this.attendClassFinish = []
+      this.attendClassStatus = ''
+      this.attendClassGinseng = ''
+      this.attendClassFinish = ''
       this.attendClassShow = false
     },
     // 作品及点评 作品上传
+    uploadsChange(value) {
+      if (value === '0') {
+        this.commentsDisabled = true
+        this.hearWorkssDisabled = true
+        this.emptyWorksComment = ''
+        this.emptyWorksHear = ''
+      } else {
+        this.commentsDisabled = false
+      }
+    },
     // worksChangeStatus(value) {
     //   this.emptyWorksUpload = value
     // },
     // 作品及点评 作品点评
+    commentsChange(value) {
+      console.log(value)
+      if (value === '0') {
+        this.hearWorkssDisabled = true
+        this.emptyWorksHear = ''
+      } else {
+        this.hearWorkssDisabled = false
+      }
+    },
     // worksChangeAttend(value) {
     //   this.emptyWorksComment = value
     // },
@@ -544,24 +617,28 @@ export default {
 
     // 作品及点评 点击清空
     worksEmpty() {
+      this.hearWorkssDisabled = true
+      this.commentsDisabled = true
       this.worksSelect = ''
       this.emptyWorks = []
       // 作品及点评 作品上传
-      this.emptyWorksUpload = []
+      this.emptyWorksUpload = ''
       // 作品及点评 作品点评
-      this.emptyWorksComment = []
+      this.emptyWorksComment = ''
       // 作品及点评 听作品点评
-      this.emptyWorksHear = []
+      this.emptyWorksHear = ''
     },
     // 作品及点评 点击取消
     worksCancel() {
+      this.hearWorkssDisabled = true
+      this.commentsDisabled = true
       this.worksSelect = ''
       // 作品及点评 作品上传
-      this.emptyWorksUpload = []
+      this.emptyWorksUpload = ''
       // 作品及点评 作品点评
-      this.emptyWorksComment = []
+      this.emptyWorksComment = ''
       // 作品及点评 听作品点评
-      this.emptyWorksHear = []
+      this.emptyWorksHear = ''
       this.worksShow = false
     }
   }
