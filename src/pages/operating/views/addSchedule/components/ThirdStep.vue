@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-15 20:35:57
  * @LastEditors: Shentong
- * @LastEditTime: 2020-04-20 18:22:13
+ * @LastEditTime: 2020-04-21 21:05:26
  -->
 <template>
   <div class="third-step">
@@ -213,7 +213,7 @@ export default {
       this.flags.loading = false
     },
     //  保存 招生排期 设置
-    async saveScheduleConfig(params) {
+    async saveScheduleConfig(params, cb) {
       const loadingInstance = this.$loading({
         target: 'section',
         lock: true,
@@ -223,8 +223,14 @@ export default {
 
       try {
         const _res = await this.$http.Operating.saveScheduleConfig(params)
-        if (_res.code === 0) this.$message.success('保存成功')
         loadingInstance.close()
+
+        if (_res.code === 0) {
+          this.$message.success('保存成功')
+          cb()
+        } else {
+          return
+        }
       } catch (err) {
         loadingInstance.close()
         this.$message({
@@ -232,9 +238,6 @@ export default {
           type: 'warning'
         })
       }
-    },
-    preStep() {
-      this.$emit('listenStepStatus', 0)
     },
     // 翻页emit
     pageChange_handler() {},
@@ -246,9 +249,10 @@ export default {
         period: this.schedulePeriod,
         body: this.tableData
       }
-      await this.saveScheduleConfig(params)
-
-      this.$emit('listenStepStatus', type)
+      const callback = () => {
+        this.$emit('listenStepStatus', type)
+      }
+      await this.saveScheduleConfig(params, callback)
     }
   }
 }

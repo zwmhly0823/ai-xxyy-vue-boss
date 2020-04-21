@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-15 20:35:57
  * @LastEditors: Shentong
- * @LastEditTime: 2020-04-20 15:35:21
+ * @LastEditTime: 2020-04-21 21:16:38
  -->
 <template>
   <div class="first-step">
@@ -89,11 +89,18 @@
                 label=""
                 :inline="true"
                 :prop="`limit_${index}`"
-                :rules="{
-                  required: true,
-                  message: '不能为空',
-                  trigger: 'blur'
-                }"
+                :rules="[
+                  {
+                    required: true,
+                    message: '不能为空',
+                    trigger: 'blur'
+                  },
+                  {
+                    type: 'number',
+                    message: '必须为数字',
+                    trigger: 'blur'
+                  }
+                ]"
               >
                 <el-input
                   v-model="formInfo[`limit_${index}`]"
