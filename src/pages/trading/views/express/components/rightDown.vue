@@ -95,7 +95,7 @@
       <el-table-column label="期数" width="120">
         <template slot-scope="scope">
           <div class="product">
-            <span>{{ ManagementList[scope.row.term] }}</span>
+            <span>{{ ManagementList[scope.row.term] || '-' }}</span>
           </div>
         </template>
       </el-table-column>
@@ -327,7 +327,7 @@ export default {
       StudentTeamList: '',
       realnameId: '',
       teamId: '',
-      ManagementList: []
+      ManagementList: {}
     }
   },
   methods: {
@@ -709,11 +709,12 @@ export default {
     },
     // 获取期数
     getScheduleList(id) {
-      const queryString = JSON.stringify({ id: id })
+      const queryString = JSON.stringify({ period: id })
       axios
         .post('/graphql/v1/toss', {
           query: `{ManagementList(query:${JSON.stringify(queryString)}){
                       id
+                      period
                       period_name
                     }
                     }       `
@@ -723,7 +724,7 @@ export default {
 
           res.data.ManagementList.forEach((item) => {
             // {`${item.name}`:item.term}
-            obj[item.id] = item.period_name
+            obj[item.period] = item.period_name
           })
           this.ManagementList = obj
         })
