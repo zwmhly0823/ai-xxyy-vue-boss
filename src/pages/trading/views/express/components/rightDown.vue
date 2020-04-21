@@ -537,6 +537,17 @@ export default {
       let timeType = {}
       this.searchIn.forEach((item) => {
         if (item && item.term) {
+          if (item.term.provincesCode) {
+            timeType.province = item.term.provincesCode
+          }
+          if (item.term.citysCode) {
+            timeType.city = item.term.citysCode
+          }
+          if (item.term.areasCode) {
+            timeType.area = item.term.areasCode
+          }
+        }
+        if (item && item.term) {
           if (item.term.user_id) {
             timeType.user_id = item.term.user_id
           }

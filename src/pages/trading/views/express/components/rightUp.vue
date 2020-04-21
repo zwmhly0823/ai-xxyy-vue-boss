@@ -3,8 +3,8 @@
  * @version: 
  * @Author: zhubaodong
  * @Date: 2020-03-27 19:04:54
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-04-03 11:53:48
+ * @LastEditors: panjian
+ * @LastEditTime: 2020-04-21 17:12:19
  -->
 <template>
   <div class="container">
@@ -18,6 +18,7 @@
         expressNo="express_nu"
         level="level"
         topicType="regtype"
+        :selectAddress="selectAddress"
         :timeData="[
           { text: '购买时间', value: 'ctime' },
           { text: '揽收时间', value: 'delivery_collect_time' },
@@ -104,6 +105,7 @@
 
 <script>
 // import { mapGetters } from 'vuex'
+
 import { isToss, deepClone } from '@/utils/index'
 import MSearch from '@/components/MSearch/index.vue'
 import axios from 'axios'
@@ -114,6 +116,7 @@ export default {
   },
   data() {
     return {
+      selectAddress: true,
       errorDialog: [],
       teacherId: '',
       operatorId: '',
@@ -344,7 +347,6 @@ export default {
         return item
       })
       console.log(this.searchIn)
-
       this.$emit('search', this.searchIn)
     },
     // 下载文件
@@ -378,6 +380,7 @@ export default {
     display: flex;
     align-content: center;
     &-up {
+      display: inline-block;
       width: 100%;
     }
     &-export {
@@ -397,5 +400,13 @@ export default {
   .clearBorder {
     border: none;
   }
+  // .cascader-css {
+  //   height: 300px;
+  //   overflow: scroll;
+  // }
+}
+.el-cascader-menu {
+  height: 300px;
+  overflow: scroll;
 }
 </style>

@@ -3,8 +3,8 @@
  * @version:
  * @Author: zhubaodong
  * @Date: 2020-03-24 18:20:12
- * @LastEditors: zhubaodong
- * @LastEditTime: 2020-04-02 17:15:17
+ * @LastEditors: panjian
+ * @LastEditTime: 2020-04-21 17:11:35
  -->
 
 <template>
@@ -145,6 +145,9 @@
           @getWxConcatTeacher="getWxConcatTeacher"
         />
       </el-form-item>
+      <el-form-item v-if="selectAddress">
+        <selectAddress @getAddress="getAddress" :name="selectAddress" />
+      </el-form-item>
       <el-form-item>
         <slot name="searchItems"></slot>
       </el-form-item>
@@ -167,6 +170,7 @@ import teacherPhone from './searchItems/teacherSearch/teacherPhone.vue'
 import teacherName from './searchItems/teacherSearch/teacherName.vue'
 import teacherDropDown from './searchItems/teacherSearch/teacherDropDown'
 import wxList from './searchItems/wxInput'
+import selectAddress from './searchItems/selectAddress.vue'
 
 export default {
   props: {
@@ -322,6 +326,11 @@ export default {
     wxConcatTeacher: {
       type: String,
       default: '' // wxConcatTeacher
+    },
+    // 是否关联老师搜索
+    selectAddress: {
+      type: Boolean,
+      default: false // selectAddress
     }
   },
   components: {
@@ -337,7 +346,8 @@ export default {
     expressNo,
     teacherName,
     teacherDropDown,
-    wxList
+    wxList,
+    selectAddress
   },
   data() {
     return {
@@ -447,6 +457,9 @@ export default {
     },
     getWxConcatTeacher(res) {
       this.setSeachParmas(res, [this.wxConcatTeacher])
+    },
+    getAddress(res) {
+      this.setSeachParmas(res, [this.selectAddress])
     },
 
     /**  处理接收到的查询参数
