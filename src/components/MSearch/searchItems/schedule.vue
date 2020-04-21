@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-26 16:28:45
  * @LastEditors: Lukun
- * @LastEditTime: 2020-04-20 23:11:40
+ * @LastEditTime: 2020-04-21 00:02:02
  -->
 <template>
   <div class="search-item small">
@@ -115,7 +115,6 @@ export default {
     },
     inputHandler(data) {
       console.log(data)
-
       this.input = data.period_name
       this.$emit('result', { [this.name]: data.id })
     }
