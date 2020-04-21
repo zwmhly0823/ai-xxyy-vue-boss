@@ -55,7 +55,11 @@
         <el-tab-pane label="体验课" name="4"></el-tab-pane>
         <!-- <el-tab-pane label="活动订单" name="1,2,6"></el-tab-pane> -->
 
-        <el-table style="font-size:12px;" v-show="orderForm">
+        <el-table
+          style="font-size:12px;"
+          v-show="orderForm"
+          v-if="activeTopic !== '5'"
+        >
           <el-table-column label="用户信息"></el-table-column>
           <el-table-column label="商品信息"></el-table-column>
           <el-table-column label="订单类型" v-if="activeTopic === '5'">
