@@ -125,6 +125,15 @@
         <search-team-name @result="getTeamName" :name="searchTeamName" />
       </el-form-item>
 
+      <!-- && !teacherId -->
+      <el-form-item v-if="searchTrialTeamName">
+        <!-- 班级名称搜索 -->
+        <search-trial-team-name
+          @result="getTrialTeamName"
+          :name="searchTrialTeamName"
+        />
+      </el-form-item>
+
       <!-- <el-form-item
         size="mini"
         style="position:relative;top:6px"
@@ -166,6 +175,7 @@ import OrderType from './searchItems/orderType'
 import SystemCourseType from './searchItems/systemCourseType'
 import Department from './searchItems/department'
 import SearchTeamName from './searchItems/searchTeamName'
+import SearchTrialTeamName from './searchItems/searchTrialTeamName'
 import Schedule from './searchItems/schedule'
 import { isToss } from '@/utils/index'
 
@@ -302,8 +312,13 @@ export default {
       type: String,
       default: ''
     },
-    // 搜索班级名称
+    // 搜索系统课班级名称
     searchTeamName: {
+      type: String,
+      default: ''
+    },
+    // 搜索体验课班级名称
+    searchTrialTeamName: {
       type: String,
       default: ''
     }
@@ -325,6 +340,7 @@ export default {
     SystemCourseType,
     Department,
     SearchTeamName,
+    SearchTrialTeamName,
     Schedule
   },
   data() {
@@ -425,6 +441,13 @@ export default {
     },
     getTeamName(res) {
       this.setSeachParmas(res, [this.searchTeamName || 'team_name'], 'terms')
+    },
+    getTrialTeamName(res) {
+      this.setSeachParmas(
+        res,
+        [this.searchTrialTeamName || 'team_trial_name'],
+        'terms'
+      )
     },
 
     /**  处理接收到的查询参数

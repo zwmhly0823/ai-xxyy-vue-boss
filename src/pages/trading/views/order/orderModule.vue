@@ -20,10 +20,11 @@
         schedule="stage"
         department="pay_teacher_id"
         groupSell="pay_teacher_id"
-        searchTeamName="last_team_id"
+        :search-team-name="activeTopic === '5' ? 'last_team_id' : ''"
+        :search-trial-team-name="activeTopic === '5' ? 'uid' : 'last_team_id'"
         :order-type="activeTopic === '5' ? 'regtype' : ''"
       />
-      <!-- system-course-type="system-course-type" -->
+      <!-- system-course-type="system-course-type" TODO -->
 
       <!-- tab - regtype -->
       <el-tabs
@@ -132,7 +133,7 @@ export default {
     },
     // 点击搜索
     handleSearch(res) {
-      console.log(res)
+      console.log(res, 'search')
       this.search = res
     },
     // 吸顶

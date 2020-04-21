@@ -62,31 +62,30 @@ export default {
     this.getTeam()
   },
   methods: {
-    // inputHandler(data) {
-    //   this.$emit('result', data ? { [this.name]: this.input } : '')
-    // },
     getTeam(query) {
-      if (query !== '') {
-        this.loading = true
-        const teamType =
-          this.teamnameType === '0'
-            ? { term: { team_type: 0 } }
-            : { range: { team_type: { gt: 0 } } }
-        const q = {
-          bool: {
-            must: [{ wildcard: { 'team_name.keyword': `*${query}*` } }]
-          }
+      // if (query !== '') {
+      this.loading = true
+      const teamType =
+        this.teamnameType === '0'
+          ? { term: { team_type: 0 } }
+          : { range: { team_type: { gt: 0 } } }
+      const q = {
+        bool: {
+          must: query
+            ? [{ wildcard: { 'team_name.keyword': `*${query}*` } }]
+            : []
         }
-        q.bool.must.push(teamType)
-        this.$http.Team.getStudentTeamV1Search(JSON.stringify(q))
-          .then((res) => {
-            this.teamList = res.data.StudentTeamListEx || []
-            this.loading = false
-          })
-          .catch(() => {
-            this.loading = false
-          })
       }
+      q.bool.must.push(teamType)
+      this.$http.Team.getStudentTeamV1Search(JSON.stringify(q))
+        .then((res) => {
+          this.teamList = res.data.StudentTeamListEx || []
+          this.loading = false
+        })
+        .catch(() => {
+          this.loading = false
+        })
+      // }
     },
     // 获取选中的
     onChange(data) {
@@ -99,7 +98,7 @@ export default {
 <style lang="scss" scoped>
 .search-item {
   &.small {
-    width: 160px !important;
+    width: 140px !important;
   }
 }
 </style>

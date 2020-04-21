@@ -167,6 +167,7 @@
 import _ from 'lodash'
 import MPagination from '@/components/MPagination/index.vue'
 import { formatData, isToss } from '@/utils/index.js'
+// import axios from '@/api/axiosConfig'
 export default {
   components: {
     MPagination
@@ -277,7 +278,7 @@ export default {
         Object.assign(queryObj, subObj || {})
       })
 
-      // 支持状态
+      // 支付状态
       if (this.status) {
         Object.assign(queryObj, { status: this.status.split(',') })
         // statisticsQuery.push({ terms: { status: this.status.split(',') } })
@@ -383,9 +384,7 @@ export default {
             }
           })
           this.orderList = _data
-          // this.orderExpress(orderIds)
           this.getUserTrialTeam(userIds)
-          console.log(this.orderList, 'this.orderList')
         })
         .catch((err) => {
           console.log(err)
@@ -422,19 +421,6 @@ export default {
       this.trialTeam = result || {}
       // return result
     },
-
-    // 订单关联的物流
-    // orderExpress(ids = []) {
-    //   const q =
-    //     ids.length > 0 ? JSON.stringify({ order_id: ['10755', '10877'] }) : ''
-    //   this.$http.Express.getOderExpress(q).then((res) => {
-    //     console.log(res)
-    //     // const express = {}
-    //     // if(res.data.ExpressPage){
-    //     //   // express[]
-    //     // }
-    //   })
-    // },
 
     // 点击分页
     handleSizeChange(val) {

@@ -90,7 +90,7 @@
       <table-order
         :topic="topic"
         :status="status"
-        :search="search"
+        :search="searchIn"
         @statistics="getStatistics"
       />
     </article>

@@ -34,6 +34,7 @@
 
 <script>
 import { debounce } from 'lodash'
+import axios from '@/api/axiosConfig'
 export default {
   props: {
     name: {
@@ -66,31 +67,53 @@ export default {
     //   this.$emit('result', data ? { [this.name]: this.input } : '')
     // },
     getTeam(query) {
-      if (query !== '') {
-        this.loading = true
-        const teamType =
-          this.teamnameType === '0'
-            ? { term: { team_type: 0 } }
-            : { range: { team_type: { gt: 0 } } }
-        const q = {
-          bool: {
-            must: [{ wildcard: { 'team_name.keyword': `*${query}*` } }]
-          }
+      // if (query !== '') {
+      this.loading = true
+      const teamType =
+        this.teamnameType === '0'
+          ? { term: { team_type: 0 } }
+          : { range: { team_type: { gt: 0 } } }
+      const q = {
+        bool: {
+          must: query
+            ? [{ wildcard: { 'team_name.keyword': `*${query}*` } }]
+            : []
         }
-        q.bool.must.push(teamType)
-        this.$http.Team.getStudentTeamV1Search(JSON.stringify(q))
-          .then((res) => {
-            this.teamList = res.data.StudentTeamListEx || []
-            this.loading = false
-          })
-          .catch(() => {
-            this.loading = false
-          })
       }
+      q.bool.must.push(teamType)
+      this.$http.Team.getStudentTeamV1Search(JSON.stringify(q))
+        .then((res) => {
+          this.teamList = res.data.StudentTeamListEx || []
+          this.loading = false
+        })
+        .catch(() => {
+          this.loading = false
+        })
+      // }
     },
     // 获取选中的
     onChange(data) {
-      this.$emit('result', data.length > 0 ? { [this.name]: data } : '')
+      // 系统课中，查询体验课
+      if (this.name === 'uid') {
+        let uids = []
+        // 系统课订单时，根据筛选的体验课ID，获取班级的学生ID，再根据学生ID查询订单订
+        // 根据班级ID去查班级的学生
+        const q = JSON.stringify({ team_id: data })
+        axios
+          .post('/graphql/v1/toss', {
+            query: `{
+                UserList(query: ${JSON.stringify(q)}, size: 400){
+                  id
+                }
+              }`
+          })
+          .then((res) => {
+            uids = res.data && res.data.UserList.map((u) => u.id)
+            this.$emit('result', data.length > 0 ? { [this.name]: uids } : '')
+          })
+      } else {
+        this.$emit('result', data.length > 0 ? { [this.name]: data } : '')
+      }
     }
   }
 }
@@ -99,7 +122,7 @@ export default {
 <style lang="scss" scoped>
 .search-item {
   &.small {
-    width: 160px !important;
+    width: 140px !important;
   }
 }
 </style>
