@@ -3,8 +3,8 @@
  * @version:
  * @Author: zhubaodong
  * @Date: 2020-03-24 18:50:54
- * @LastEditors: zhubaodong
- * @LastEditTime: 2020-04-17 19:14:14
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-04-22 15:58:14
  -->
 <template>
   <div class="search-item small threeSelect">
@@ -60,7 +60,7 @@ export default {
       await axios
         .post('/graphql/v1/toss', {
           query: `{
-            ChannelList(size: 200) {
+            ChannelList(size: 500) {
                 id
                 channel_class_id
                 channel_outer_name
@@ -124,7 +124,20 @@ export default {
           }
         })
       })
-      this.showDatas = firstNode
+
+      const result = firstNode.map((item) => {
+        if (item.children && item.children.length === 0) {
+          item.children = null
+        }
+        if (item.children) {
+          item.children.forEach((sub) => {
+            if (sub.children && sub.children.length === 0) sub.children = null
+          })
+        }
+        return item
+      })
+
+      this.showDatas = result
       // console.log(firstNode, '第一梯队')
       // console.log(arrList, '分类数减去第一梯队')
 
@@ -133,6 +146,7 @@ export default {
       // console.log(this.showDatas)
     },
     onChange(data) {
+      console.log(data)
       this.$emit(
         'result',
         data.length > 0 ? { [this.name]: this.channelData } : ''

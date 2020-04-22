@@ -81,11 +81,11 @@
             v-if="activeTopic === '4' || activeTopic === '5'"
           >
           </el-table-column>
-          <el-table-column
+          <!-- <el-table-column
             label="销售部门"
             v-if="activeTopic === '4' || activeTopic === '5'"
           >
-          </el-table-column>
+          </el-table-column> -->
           <el-table-column
             label="系统课班级"
             v-if="activeTopic === '5'"
