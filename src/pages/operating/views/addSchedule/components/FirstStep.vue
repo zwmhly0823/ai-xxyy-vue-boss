@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-15 20:35:57
  * @LastEditors: Shentong
- * @LastEditTime: 2020-04-21 21:16:38
+ * @LastEditTime: 2020-04-22 11:50:17
  -->
 <template>
   <div class="first-step">
@@ -97,6 +97,7 @@
                   },
                   {
                     type: 'number',
+                    transform: (value) => Number(value),
                     message: '必须为数字',
                     trigger: 'blur'
                   }
@@ -113,11 +114,19 @@
               <el-form-item
                 label=""
                 :prop="`fakeLimit_${index}`"
-                :rules="{
-                  required: true,
-                  message: '不能为空',
-                  trigger: 'blur'
-                }"
+                :rules="[
+                  {
+                    required: true,
+                    message: '不能为空',
+                    trigger: 'blur'
+                  },
+                  {
+                    type: 'number',
+                    transform: (value) => Number(value),
+                    message: '必须为数字',
+                    trigger: 'blur'
+                  }
+                ]"
               >
                 <el-input
                   v-model="formInfo[`fakeLimit_${index}`]"
@@ -130,11 +139,19 @@
               <el-form-item
                 label=""
                 :prop="`fakeSales_${index}`"
-                :rules="{
-                  required: true,
-                  message: '不能为空',
-                  trigger: 'blur'
-                }"
+                :rules="[
+                  {
+                    required: true,
+                    message: '不能为空',
+                    trigger: 'blur'
+                  },
+                  {
+                    type: 'number',
+                    transform: (value) => Number(value),
+                    message: '必须为数字',
+                    trigger: 'blur'
+                  }
+                ]"
                 ><el-input
                   v-model="formInfo[`fakeSales_${index}`]"
                   size="small"
@@ -375,7 +392,6 @@ export default {
         type: this.courseType,
         period: +this.period || ''
       })
-      console.log(sendFrom, 'sendform')
       return sendFrom
     },
     nextStep() {
@@ -395,7 +411,6 @@ export default {
           // 掉接口 TODO:
           this.addScheduleFirstStep(sendFrom, cb)
         } else {
-          console.log('error submit!!')
           return false
         }
       })

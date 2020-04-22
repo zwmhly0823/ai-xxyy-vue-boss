@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-15 20:35:57
  * @LastEditors: Shentong
- * @LastEditTime: 2020-04-21 21:05:26
+ * @LastEditTime: 2020-04-22 12:01:34
  -->
 <template>
   <div class="third-step">
@@ -50,6 +50,7 @@
           <template slot-scope="scope">
             <div v-for="(t, t_index) in scope.row.enroll" :key="t_index">
               <el-input
+                :disabled="!Boolean(+t.status)"
                 class="table_input"
                 size="mini"
                 v-model="t.teamSize"
@@ -62,6 +63,7 @@
           <template slot-scope="scope">
             <div v-for="(p, t_index) in scope.row.enroll" :key="t_index">
               <el-input
+                :disabled="!Boolean(+p.status)"
                 class="table_input"
                 size="mini"
                 v-model="p.sumTeamSize"
@@ -78,6 +80,7 @@
               class="select-container"
             >
               <el-select
+                :disabled="!Boolean(+v.status)"
                 v-model="v.courseVersion"
                 size="mini"
                 placeholder="随材版本"
@@ -166,8 +169,7 @@ export default {
   },
   watch: {},
   created() {
-    const { period = '', courseType = 0 } = this.$route.params
-    console.log('third----', period, courseType, this.scheduleTeacherId)
+    const { courseType = 0 } = this.$route.params
     // 根据老师ids获取招生排期设置中老师配置信息 TODO:
     const params = {
       courseType,
@@ -199,11 +201,9 @@ export default {
               })
             }
           }
-          // payload.enroll = enroll
         })
 
         this.tableData = payload
-        console.log(payload)
       } catch (err) {
         this.$message({
           message: '获取列表出错',

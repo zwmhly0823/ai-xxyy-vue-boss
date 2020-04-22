@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-13 16:53:27
  * @LastEditors: Shentong
- * @LastEditTime: 2020-04-18 19:42:19
+ * @LastEditTime: 2020-04-22 11:50:46
  -->
 <template>
   <div class="left-container" @mouseleave="outTools">
@@ -88,12 +88,9 @@ export default {
     outTools() {
       this.toolsCount = null
     },
-    defaultHandler() {
-      // console.log('哈哈')
-    }
+    defaultHandler() {}
   },
   created() {
-    console.log('orgdept created')
     this.$http.Teacher.getDepartmentTree(1).then((res) => {
       const arr = (res && res.payload) || []
       if (arr.length === 0) return arr
