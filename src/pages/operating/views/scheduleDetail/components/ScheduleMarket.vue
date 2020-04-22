@@ -4,7 +4,7 @@
  * @Author: shentong
  * @Date: 2020-04-02 16:08:02
  * @LastEditors: Shentong
- * @LastEditTime: 2020-04-16 21:34:49
+ * @LastEditTime: 2020-04-22 17:20:03
  -->
 <template>
   <div>
@@ -63,21 +63,13 @@ export default {
   },
   data() {
     return {
-      query: '',
-      tabIndex: 0,
       totalElements: 0,
       flags: {
         loading: false
       },
       tabQuery: {
-        size: 2,
+        size: 10,
         pageNum: 1
-      },
-      sex: {
-        // 0: '-',
-        0: '男',
-        1: '女'
-        // 3: '保密'
       },
       // 总页数
       totalPages: 1,
@@ -95,6 +87,14 @@ export default {
   watch: {},
   activated() {},
   methods: {
+    // async getStatisticHeader() {
+    //   try {
+    //     const statisticHeader = this.$http.Operating.getStatisticHeader()
+    //     return statisticHeader
+    //   } catch (err) {
+    //     console.log(err)
+    //   }
+    // },
     // 分页
     pageChange_handler(val) {
       console.log(val)

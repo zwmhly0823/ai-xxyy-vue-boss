@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-14 18:28:44
  * @LastEditors: Shentong
- * @LastEditTime: 2020-04-20 18:06:24
+ * @LastEditTime: 2020-04-22 17:45:28
  -->
 <template>
   <div class="app-main height add-schedule-container">
@@ -13,12 +13,17 @@
         <div class="scroll-container">
           <div class="head-info">
             <div class="title">
-              <p><span>体验课</span><span>-</span><span>0401期</span></p>
+              <p>
+                <span v-if="scheduleStatistic.type == '0'">体验课</span>
+                <span v-else>系统课</span>
+                <span>-</span
+                ><span>{{ scheduleStatistic.period_name || '-' }}</span>
+              </p>
               <el-button type="primary" size="mini">修改</el-button>
             </div>
             <el-row :gutter="20">
               <el-col class="label-name" :span="2">排期id:</el-col>
-              <el-col :span="2">15</el-col>
+              <el-col :span="2">{{ scheduleStatistic.period || '-' }}</el-col>
               <el-col class="label-name" :span="2">快速设置:</el-col>
               <el-col :span="2">2</el-col>
             </el-row>
@@ -30,15 +35,19 @@
             </el-row>
             <el-row :gutter="20">
               <el-col class="label-name" :span="2">开始上课:</el-col>
-              <el-col :span="2">2019-02-02</el-col>
+              <el-col :span="2">{{
+                scheduleStatistic.course_day || '-'
+              }}</el-col>
               <el-col class="label-name" :span="2">结束上课:</el-col>
-              <el-col :span="2">2019-02-02</el-col>
+              <el-col :span="2">{{
+                scheduleStatistic.end_course_day || '-'
+              }}</el-col>
             </el-row>
-            <div class="description">
+            <!-- TODO:<div class="description">
               当前结果：社群销售<span>9</span>人，计划招生<span>8992</span>（S1:2020
               S2:2020 S3:3000） 实际招生<span>9000</span>（S1:2020 S2:2020
               S3:3000）
-            </div>
+            </div> -->
           </div>
           <el-tabs type="border-card">
             <el-tab-pane label="招生详情-销售">
@@ -67,7 +76,9 @@
 import ScheduleMarket from './components/ScheduleMarket'
 export default {
   data() {
-    return {}
+    return {
+      scheduleStatistic: {}
+    }
   },
   components: {
     ScheduleMarket
@@ -77,7 +88,16 @@ export default {
     const { id = '' } = this.$route.params
     console.log(id, 'this.$route.params.id')
   },
-  methods: {}
+  methods: {
+    async getStatisticHeader() {
+      try {
+        const statisticHeader = this.$http.Operating.getStatisticHeader()
+        return statisticHeader
+      } catch (err) {
+        console.log(err)
+      }
+    }
+  }
 }
 </script>
 <style lang="scss" scoped>
