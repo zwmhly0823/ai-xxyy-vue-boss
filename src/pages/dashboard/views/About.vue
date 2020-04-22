@@ -33,14 +33,14 @@ export default {
   mounted() {},
   methods: {
     getLogin() {
-      this.$http.User.loginIn()
-        .then((res) => {})
-        .catch((err) => console.log(err))
+      // this.$http.User.loginIn()
+      //   .then((res) => {})
+      //   .catch((err) => console.log(err))
     },
     getLoginOrder() {
-      this.$http.Order.loginIn()
-        .then((res) => {})
-        .catch((err) => console.log(err))
+      // this.$http.Order.loginIn()
+      //   .then((res) => {})
+      //   .catch((err) => console.log(err))
     }
   }
 }

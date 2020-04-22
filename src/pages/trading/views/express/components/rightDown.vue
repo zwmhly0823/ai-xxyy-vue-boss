@@ -109,7 +109,7 @@
       <el-table-column label="社群销售" width="120">
         <template slot-scope="scope">
           <div class="product">
-            <span>{{ TeacherList[scope.row.teacher_id] }}</span>
+            <span>{{ TeacherList[scope.row.pay_teacher_id] }}</span>
           </div>
         </template>
       </el-table-column>
