@@ -122,7 +122,7 @@ export default {
       // 获取teacherid
       teacherId: '',
       // 支付状态  已完成:3, 待支付:0,1，已退费:6,7
-      status: '3',
+      status: '',
       // 搜索
       searchIn: [],
       statistics: {
