@@ -3,8 +3,8 @@
  * @version: 
  * @Author: panjian
  * @Date: 2020-04-14 15:15:31
- * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-04-20 17:59:15
+ * @LastEditors: Shentong
+ * @LastEditTime: 2020-04-22 15:25:43
  -->
 <template>
   <div>
@@ -28,7 +28,6 @@
           action=""
           :show-file-list="false"
           :on-success="handleAvatarSuccess"
-          :before-upload="beforeAvatarUpload"
           :http-request="upload"
         >
           <img
@@ -45,7 +44,6 @@
           action=""
           :show-file-list="false"
           :on-success="handleAvatarSuccess"
-          :before-upload="beforeAvatarUpload"
           :http-request="uploadCode"
         >
           <img
@@ -278,21 +276,21 @@ export default {
         this.ruleForm.QEcodeUrl = res
       })
     },
-    // 头像上传格式校验
-    beforeAvatarUpload(file) {
-      const isJPG = file.type === 'image/jpg'
-      const isJPEG = file.type === 'image/jpeg'
-      const isPNG = file.type === 'image/png'
-      const isLt2M = file.size / 1024 / 1024 < 2
+    // // 头像上传格式校验
+    // beforeAvatarUpload(file) {
+    //   const isJPG = file.type === 'image/jpg'
+    //   const isJPEG = file.type === 'image/jpeg'
+    //   const isPNG = file.type === 'image/png'
+    //   const isLt2M = file.size / 1024 / 1024 < 2
 
-      if (!isJPG && !isPNG && !isJPEG) {
-        this.$message.error('上传头像图片只能是 png/jpg 格式!')
-      }
-      if (!isLt2M) {
-        this.$message.error('上传头像图片大小不能超过 2MB!')
-      }
-      return (isJPG || isPNG || isJPEG) && isLt2M
-    },
+    //   if (!isJPG && !isPNG && !isJPEG) {
+    //     this.$message.error('上传头像图片只能是 png/jpg 格式!')
+    //   }
+    //   if (!isLt2M) {
+    //     this.$message.error('上传头像图片大小不能超过 2MB!')
+    //   }
+    //   return (isJPG || isPNG || isJPEG) && isLt2M
+    // },
     // 头像上传成功回调
     handleAvatarSuccess(res, file) {}
   }
