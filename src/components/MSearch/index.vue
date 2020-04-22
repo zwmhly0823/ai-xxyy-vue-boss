@@ -3,18 +3,24 @@
  * @version:
  * @Author: zhubaodong
  * @Date: 2020-03-24 18:20:12
- * @LastEditors: zhubaodong
- * @LastEditTime: 2020-04-02 17:15:17
+ * @LastEditors: panjian
+ * @LastEditTime: 2020-04-21 17:11:35
  -->
 
 <template>
   <el-card class="search-style" shadow="never">
     <el-form :inline="true">
+      <el-form-item v-if="orderType">
+        <!-- 订单类型 -->
+        <order-type @result="getOrderType" :name="orderType" />
+      </el-form-item>
+
       <el-form-item v-if="phone">
         <!-- 手机号搜索 -->
         <search-phone
           @result="getPhoneHander"
           :teamId="teamId"
+          :teamType="teamType"
           :name="phone"
           :onlyPhone="onlyPhone"
           :tip="phoneTip"
@@ -128,6 +134,35 @@
         />
       </el-form-item>
 
+      <el-form-item v-if="systemCourseType">
+        <!-- 系统课类型 -->
+        <system-course-type
+          @result="getSystemCourseType"
+          :name="systemCourseType"
+        />
+      </el-form-item>
+
+      <!-- && !teacherId -->
+      <el-form-item v-if="department && !teacherId">
+        <!-- 社群销售组 -->
+        <department @result="getDepartment" :name="department" />
+      </el-form-item>
+
+      <!-- && !teacherId -->
+      <el-form-item v-if="searchTeamName">
+        <!-- 班级名称搜索 -->
+        <search-team-name @result="getTeamName" :name="searchTeamName" />
+      </el-form-item>
+
+      <!-- && !teacherId -->
+      <el-form-item v-if="searchTrialTeamName">
+        <!-- 班级名称搜索 -->
+        <search-trial-team-name
+          @result="getTrialTeamName"
+          :name="searchTrialTeamName"
+        />
+      </el-form-item>
+
       <!-- <el-form-item
         size="mini"
         style="position:relative;top:6px"
@@ -163,6 +198,9 @@
           @getWxConcatTeacher="getWxConcatTeacher"
         />
       </el-form-item>
+      <el-form-item v-if="selectAddress">
+        <selectAddress @getAddress="getAddress" :name="selectAddress" />
+      </el-form-item>
       <el-form-item>
         <slot name="searchItems"></slot>
       </el-form-item>
@@ -183,6 +221,11 @@ import ExpressNo from './searchItems/expressNo'
 import GroupSell from './searchItems/groupSell'
 import TeamDetail from './searchItems/teamDetail'
 import MoreVersionBox from './searchItems/moreVersionBox'
+import OrderType from './searchItems/orderType'
+import SystemCourseType from './searchItems/systemCourseType'
+import Department from './searchItems/department'
+import SearchTeamName from './searchItems/searchTeamName'
+import SearchTrialTeamName from './searchItems/searchTrialTeamName'
 import Schedule from './searchItems/schedule'
 // 老师
 import teacherPhone from './searchItems/teacherSearch/teacherPhone.vue'
@@ -190,6 +233,7 @@ import teacherName from './searchItems/teacherSearch/teacherName.vue'
 import teacherDropDown from './searchItems/teacherSearch/teacherDropDown'
 import wxList from './searchItems/wxInput'
 import { isToss } from '@/utils/index'
+import selectAddress from './searchItems/selectAddress.vue'
 
 export default {
   props: {
@@ -247,6 +291,12 @@ export default {
       type: String,
       default: '下单时间'
     },
+    // 班级内搜索 需要班级类型
+    teamType: {
+      type: String,
+      default: '' // 0
+    },
+
     // 手机号
     phone: {
       type: String,
@@ -348,6 +398,29 @@ export default {
     },
     moreVersion: {
       type: String,
+      default: '' //
+    },
+    orderType: {
+      type: String,
+      default: ''
+    },
+    systemCourseType: {
+      type: String,
+      default: ''
+    },
+    // 销售部门
+    department: {
+      type: String,
+      default: ''
+    },
+    // 搜索系统课班级名称
+    searchTeamName: {
+      type: String,
+      default: ''
+    },
+    // 搜索体验课班级名称
+    searchTrialTeamName: {
+      type: String,
       default: ''
     },
     // 微信号搜索
@@ -369,6 +442,11 @@ export default {
     wxConcatTeacher: {
       type: String,
       default: '' // wxConcatTeacher
+    },
+    // 是否关联老师搜索
+    selectAddress: {
+      type: Boolean,
+      default: false // selectAddress
     }
   },
   components: {
@@ -384,11 +462,17 @@ export default {
     GroupSell,
     TeamDetail,
     MoreVersionBox,
+    OrderType,
+    SystemCourseType,
+    Department,
+    SearchTeamName,
+    SearchTrialTeamName,
     Schedule,
     teacherPhone,
     teacherName,
     teacherDropDown,
-    wxList
+    wxList,
+    selectAddress
   },
   data() {
     return {
@@ -426,7 +510,7 @@ export default {
     // 排期
     selectSchedule(res) {
       console.log(res, 'res')
-      this.setSeachParmas(res, [this.schedule || 'id'])
+      this.setSeachParmas(res, [this.schedule || 'id'], 'term')
     },
     // 难度
     supCallBack(res) {
@@ -512,6 +596,25 @@ export default {
     getVersionNu(res) {
       this.setSeachParmas(res, [this.moreVersion || 'product_version'])
     },
+    getOrderType(res) {
+      this.setSeachParmas(res, [this.orderType || 'regtype'])
+    },
+    getSystemCourseType(res) {
+      this.setSeachParmas(res, [this.systemCourseType || 'system_course_type'])
+    },
+    getDepartment(res) {
+      this.setSeachParmas(res, [this.department || 'department'], 'terms')
+    },
+    getTeamName(res) {
+      this.setSeachParmas(res, [this.searchTeamName || 'team_name'], 'terms')
+    },
+    getTrialTeamName(res) {
+      this.setSeachParmas(
+        res,
+        [this.searchTrialTeamName || 'team_trial_name'],
+        'terms'
+      )
+    },
     getPhoneData(res) {
       this.setSeachParmas(res, [this.wxTeacherPhone], 'wildcard')
     },
@@ -520,6 +623,9 @@ export default {
     },
     getWxConcatTeacher(res) {
       this.setSeachParmas(res, [this.wxConcatTeacher])
+    },
+    getAddress(res) {
+      this.setSeachParmas(res, [this.selectAddress])
     },
 
     /**  处理接收到的查询参数

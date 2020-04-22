@@ -2,8 +2,8 @@
  * @Author: YangJiyong
  * @Email: yangjiyong@meishubao.com
  * @Date: 2020-03-21 11:58:33
- * @Last Modified by: chengweihua
- * @Last Modified time: 2020-04-01 16:03:38
+ * @Last Modified by: YangJiyong
+ * @Last Modified time: 2020-04-20 22:21:26
  * @Description: 班级
  */
 import axios from '../axiosConfig'
@@ -255,6 +255,46 @@ export default {
           classTitle
         }
       }`
+    })
+  },
+
+  // 获取体验课列表
+  getTrialCourseList(query = '') {
+    return axios.post('/graphql/v1/toss', {
+      query: `{
+        StudentTrialCourseList(query: ${JSON.stringify(query)}) {
+          student_id
+          team_id
+        }
+      }`
+    })
+  },
+
+  // 获取班级信息
+  getStudentTeamV1(query = '') {
+    return axios.post('/graphql/v1/toss', {
+      query: `\
+        {
+          StudentTeamList(query: ${JSON.stringify(query)}) {
+            id
+            team_name
+          }
+        }
+      `
+    })
+  },
+
+  // 获取班级信息 - 模糊搜索
+  getStudentTeamV1Search(query = '') {
+    return axios.post('/graphql/v1/toss', {
+      query: `\
+        {
+          StudentTeamListEx(query: ${JSON.stringify(query)}) {
+            id
+            team_name
+          }
+        }
+      `
     })
   }
 }

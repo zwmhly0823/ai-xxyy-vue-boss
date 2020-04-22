@@ -1,124 +1,184 @@
 <template>
   <div class="title-box">
-    <el-table style="width: 100%">
-      <el-table-column label="用户信息" min-width="100%"></el-table-column>
-      <el-table-column label="商品信息" min-width="100%"></el-table-column>
-      <el-table-column label="订单来源" min-width="100%"></el-table-column>
-      <el-table-column label="订单状态" min-width="100%"> </el-table-column>
-      <el-table-column label="关联物流" min-width="100%"> </el-table-column>
+    <el-table :data="orderList">
+      <el-table-column label="用户信息" prop="user" width="120">
+        <template slot-scope="scope">
+          <p>{{ scope.row.user ? scope.row.user.nickname || '-' : '-' }}</p>
+          <p>{{ scope.row.user ? scope.row.user.mobile || '-' : '-' }}</p>
+        </template>
+      </el-table-column>
+      <el-table-column label="商品信息" width="160">
+        <template slot-scope="scope">
+          <p>
+            {{
+              scope.row.packages_name
+                ? scope.row.packages_name || '-'
+                : scope.row.product_name || '-'
+            }}
+          </p>
+          <!-- 人民币 ， 宝石，小熊币 -->
+          <p>
+            {{ scope.row.currency ? scope.row.currency : '人民币 ' }}
+            {{
+              scope.row.amount
+                ? scope.row.amount
+                : scope.row.regtype === 6
+                ? ''
+                : '-'
+            }}
+          </p>
+        </template>
+      </el-table-column>
+      <el-table-column label="订单类型" v-if="topic === '5'">
+        <template slot-scope="scope">
+          <p>
+            {{
+              scope.row.regtype
+                ? +scope.row.regtype === 2
+                  ? '首单'
+                  : +scope.row.regtype === 3
+                  ? '续费'
+                  : ''
+                : '-'
+            }}
+          </p>
+        </template>
+      </el-table-column>
+      <el-table-column label="订单来源" v-if="topic === '4' || topic === '5'">
+        <template slot-scope="scope">
+          <p>
+            {{ scope.row.channel ? scope.row.channel.channel_outer_name : '-' }}
+          </p>
+        </template>
+      </el-table-column>
+      <el-table-column label="订单类型" v-if="topic !== '4' && topic !== '5'">
+        <template slot-scope="scope">
+          {{ scope.row.regtype_text ? scope.row.regtype_text : '-' }}
+        </template>
+      </el-table-column>
+      <el-table-column label="订单状态">
+        <template slot-scope="scope">
+          {{ scope.row.order_status ? scope.row.order_status : '-' }}
+        </template>
+      </el-table-column>
+      <!-- <el-table-column label="班级信息" v-if="topic === '4'">
+        <template slot-scope="scope">
+          {{ scope.row.team ? scope.row.team.team_name : '-' }}
+        </template>
+      </el-table-column> -->
+      <el-table-column
+        label="体验课班级"
+        v-if="topic === '5' || topic === '4'"
+        width="150"
+      >
+        <template slot-scope="scope">
+          {{
+            trialTeam[scope.row.uid] ? trialTeam[scope.row.uid].team_name : '-'
+          }}
+        </template>
+      </el-table-column>
+      <el-table-column
+        label="社群销售"
+        v-if="topic === '4' || topic === '5'"
+        width="150"
+      >
+        <template slot-scope="scope">
+          {{ scope.row.salesman ? scope.row.salesman.realname : '-' }}
+        </template>
+      </el-table-column>
+      <el-table-column
+        label="销售部门"
+        v-if="topic === '4' || topic === '5'"
+        width="150"
+      >
+        <template slot-scope="scope">
+          <p v-if="scope.row.department && scope.row.department.department">
+            {{
+              scope.row.department && scope.row.department.department.pid
+                ? departmentObj[scope.row.department.department.pid]
+                  ? departmentObj[scope.row.department.department.pid].name
+                  : ''
+                : ''
+            }}
+          </p>
+          {{
+            scope.row.department && scope.row.department.department
+              ? departmentObj[scope.row.department.department.id]
+                ? departmentObj[scope.row.department.department.id].name
+                : '-'
+              : '-'
+          }}
+        </template>
+      </el-table-column>
+      <el-table-column label="系统课班级" width="150" v-if="topic === '5'">
+        <template slot-scope="scope">
+          <p>
+            {{ scope.row.team ? scope.row.team.team_name : '-' }}
+          </p>
+        </template>
+      </el-table-column>
+      <el-table-column label="服务老师" width="120" v-if="topic === '5'">
+        <template slot-scope="scope">
+          <p>
+            {{ scope.row.teacher ? scope.row.teacher.realname : '-' }}
+          </p>
+        </template>
+      </el-table-column>
+      <el-table-column label="下单时间" width="160">
+        <template slot-scope="scope">
+          <p>
+            {{ scope.row.ctime ? scope.row.ctime : '-' }}
+          </p>
+        </template>
+      </el-table-column>
+      <el-table-column label="关联物流" width="150">
+        <template slot-scope="scope">
+          <p class="primary-color">
+            {{ scope.row.express ? scope.row.express.express_total || 0 : '-' }}
+          </p>
+          <!-- 体验课不显示最后一次物流状态 -->
+          <p>
+            {{
+              scope.row.express
+                ? scope.row.express.last_express_status
+                  ? `最后一次${scope.row.express.last_express_status}`
+                  : '-'
+                : '-'
+            }}
+          </p>
+        </template>
+      </el-table-column>
     </el-table>
-    <!-- 卡片 -->
-    <el-card
-      class="box-card"
-      shadow="never"
-      v-for="(item, index) in cardData"
-      :key="index"
-    >
-      <div slot="header" class="card-title">
-        <el-row :gutter="20">
-          <el-col :span="5">
-            <div class="grid-content">
-              订单号:{{ item.out_trade_no ? item.out_trade_no : '-' }}
-            </div>
-          </el-col>
-          <el-col :span="6">
-            <div class="grid-content grid-centent">
-              下单时间:{{ item.ctime ? item.ctime : '-' }}
-            </div>
-          </el-col>
-          <el-col :span="6">
-            <div>
-              支付方式:{{
-                item.payment
-                  ? item.payment.trade_type
-                  : item.regtype
-                  ? item.regtype
-                  : '-'
-              }}
-            </div>
-          </el-col>
-        </el-row>
-      </div>
-      <div class="card-content">
-        <!-- 用户信息 -->
-        <div class="content-details user-infor">
-          {{ item.user ? item.user.mobile : '-' }}
-        </div>
-        <!-- 商品信息 -->
-        <div class="content-details card-style1">
-          <div class="card-style1-left">
-            <div>
-              <div>
-                {{
-                  item.packages_name ? item.packages_name : item.product_name
-                }}
-              </div>
-              <div class="card-style1-num" v-show="item.sup">
-                {{ item.stage ? item.stage : '-' }}期·S{{
-                  item.sup ? item.sup : '-'
-                }}
-              </div>
-            </div>
-          </div>
-          <div class="card-style1-right">
-            <div>
-              <div class="card-style1-rmb">
-                {{ item.currency ? item.currency : '¥' }}:{{
-                  item.amount ? item.amount : '-'
-                }}
-              </div>
-              <!-- <div class="sign">×<span>1</span></div> -->
-            </div>
-          </div>
-        </div>
-        <!-- 订单来源 -->
-        <div class="content-details">
-          <div>{{ item.channel ? item.channel.channel_outer_name : '-' }}</div>
-        </div>
-        <!-- 订单状态 -->
-        <div class="content-details">
-          <div>{{ item.order_status ? item.order_status : '-' }}</div>
-        </div>
-        <!-- 关联物流 -->
-        <div class="content-details card-style4">
-          <div>
-            <div class="card-style4-num">
-              {{ item.express ? item.express.total || 0 : '-' }}
-            </div>
-            <div>
-              {{
-                item.express
-                  ? item.express.express_status_text
-                    ? `最后一次${item.express.express_status_text}`
-                    : '-'
-                  : '-'
-              }}
-            </div>
-          </div>
-        </div>
-      </div>
-    </el-card>
-    <div v-if="cardData.length === 0" class="noData">暂无数据</div>
+
+    <div v-if="orderList.length === 0" class="noData">暂无数据</div>
+
     <m-pagination
       :current-page="currentPage"
       :page-count="totalPages"
       :total="totalElements"
       @current-change="handleSizeChange"
       show-pager
-      open="calc(100vw - 170px - 24px)"
-      close="calc(100vw - 50px - 24px)"
+      open="calc(100vw - 170px - 25px)"
+      close="calc(100vw - 50px - 25px)"
     ></m-pagination>
   </div>
 </template>
 <script>
+import _ from 'lodash'
 import MPagination from '@/components/MPagination/index.vue'
-import axios from '@/api/axios'
-import { timestamp, isToss } from '@/utils/index.js'
+import { formatData, isToss } from '@/utils/index.js'
+// import axios from '@/api/axiosConfig'
 export default {
   components: {
     MPagination
   },
   props: {
+    // 商品主题
+    topic: {
+      type: String,
+      default: ''
+    },
+    // 支付状态
     status: {
       type: String,
       default: ''
@@ -130,6 +190,16 @@ export default {
       }
     }
   },
+  computed: {
+    topicArr() {
+      if (this.topic === '4' || this.topic === '5') {
+        return [this.topic]
+      } else if (this.topic === '1,2,6') {
+        return this.topic.split(',')
+      }
+      return []
+    }
+  },
   data() {
     return {
       // 总页数
@@ -138,152 +208,224 @@ export default {
       // 当前页数
       currentPage: 1,
       // 订单列表
-      cardData: [],
+      orderList: [],
       // 获取teacherid
-      teacherStor: '',
+      teacherId: '',
       // 搜索
       searchIn: [],
-      // 切换tab
-      tab: '3', // 默认显示 3 - 已完成
-      teacherId: ''
+      statisticsQuery: [], // 统计需要 bool 表达式
+      departmentObj: {}, // 组织机构 obj
+      orderStatisticsResult: [], // 统计结果
+      trialTeam: {} // 学员的体验课班级名称
     }
   },
   created() {
     this.teacherId = isToss()
     // 订单列表接口
-    this.orderList()
+    this.getOrderList()
+
+    this.getDepartment()
   },
   watch: {
     // 切换tab
-    status(val) {
+    topic(val) {
+      console.log(val, 'team_type')
       this.currentPage = 1
-      this.tab = val
-      this.orderList()
+      this.getOrderList()
+    },
+    status(status) {
+      console.log(status, 'status')
+      this.currentPage = 1
+      this.getOrderList()
     },
     // 搜索
     search(val) {
       this.currentPage = 1
       this.searchIn = val
-      this.orderList()
+      // this.statisticsQuery = val
+      this.getOrderList()
     }
   },
   methods: {
     // 订单列表
-    orderList() {
-      // this.teacherStor = JSON.parse(localStorage.getItem('teacher') || '{}')
-      const must = []
+    async getOrderList(page = this.currentPage, status) {
+      const statisticsQuery = []
+      const queryObj = {}
+      // TOSS
       if (this.teacherId) {
-        must.push(`{ "term": { "teacher_id": ${this.teacherId} } }`)
+        Object.assign(queryObj, { last_teacher_id: this.teacherId })
+        statisticsQuery.push({ term: { last_teacher_id: this.teacherId } })
       }
-      // TODO: 切换tab filter
-      // "filter":{"bool":{"should":[{"term":{"orderstatus":1}},{"term":{"orderstatus":0}}]}}
 
-      // 搜索 must
-      const mustArr = this.searchIn.map((item) => JSON.stringify(item))
-      must.push(...mustArr)
-      const should = this.tab ? [`{"terms": {"status": [${this.tab}]}}`] : []
-      const queryStr = `{
-        "bool": {
-          "must": [${must}],
-          "filter": {
-            "bool": {
-              "should": [${should}]
-            }
-          }
-        }
-      }`
+      const topicRelation = await this.$http.Product.topicRelationId(
+        `${JSON.stringify({
+          topic_id: this.topicArr
+        })}`
+      )
+      let relationIds = []
+      if (
+        topicRelation.data.PackagesTopicList &&
+        topicRelation.data.PackagesTopicList.length > 0
+      )
+        relationIds = topicRelation.data.PackagesTopicList.map(
+          (item) => item.relation_id
+        )
 
-      axios
-        .post('/graphql/order', {
-          query: `{
-          orderPage(query: ${JSON.stringify(queryStr)},page:${
-            this.currentPage
-          }) {
-            totalElements
-            totalPages
-            content {
-              id
-              out_trade_no
-              ctime
-              packages_name
-              sup
-              stage
-              regtype
-              amount
-              order_status
-              bear_integral
-              gem_integral
-              product_name
-              user{
-                mobile
-              }
-              channel {
-                channel_outer_name
-              }
-              pay_channel
-              payment {
-                trade_type
-              }
-              express{
-                total
-                express_status_text
+      // 组合搜索条件
+      this.searchIn.forEach((item) => {
+        const subObj =
+          item && (item.term || item.terms || item.range || item.wildcard)
+        Object.assign(queryObj, subObj || {})
+      })
 
-              }
-            }
-          }
-        }`
+      // 支付状态
+      if (this.status) {
+        Object.assign(queryObj, { status: this.status.split(',') })
+        // statisticsQuery.push({ terms: { status: this.status.split(',') } })
+      }
+
+      /**
+       * this.topic
+       * 体验课(4),系统课(5)去 p_packages_topic表找relation_id
+       */
+      if (this.topic === '4' || this.topic === '5') {
+        Object.assign(queryObj, { packages_id: relationIds })
+        this.orderData(queryObj, this.currentPage)
+
+        // 获取统计数据
+        statisticsQuery.push({
+          terms: { packages_id: relationIds }
         })
-        .then((res) => {
+        statisticsQuery.push(...this.searchIn)
+        console.log(statisticsQuery)
+
+        this.$http.Order.orderStatistics(
+          statisticsQuery,
+          'amount',
+          'status'
+        ).then((res) => {
           console.log(res)
-          this.totalPages = res.data.orderPage.totalPages * 1
-          this.totalElements = +res.data.orderPage.totalElements
-          const _data = res.data.orderPage.content
+          const statistics = res.data.OrderStatistics || []
+          this.$emit('statistics', statistics)
+        })
+        // 统计结束
+      }
+      /*
+       * 活动订单 - (小熊商城1，推荐有礼2，赠送6)
+       * 通过relation_id去o_order_product查询oid,分页
+       * TODO: 先查看全部 - BOSS，TOSS再做处理
+       * */
+      if (this.topic === '1,2,6') {
+        // && !this.teacherId
+        Object.assign(queryObj, { pid: relationIds })
+        delete queryObj.last_teacher_id
+        const res =
+          (await this.$http.Product.orderProductPage(
+            `${JSON.stringify(queryObj)}`,
+            page
+          )) || {}
+        const data = (res.data && res.data.OrderProductPage) || {
+          totalElements: 0,
+          content: []
+        }
+        // 分页
+        this.totalElements = +data.totalElements
+        this.currentPage = +data.number
+        // this.orderList = data.content
+
+        // TODO: 根据oid 请求o_order 表
+        const oids = data.content.map((item) => item.oid)
+        const oquery = { id: oids }
+        this.orderData(oquery, 1)
+      }
+    },
+
+    // 订单列表数据
+    orderData(queryObj = {}, page = 1) {
+      this.$http.Order.orderPage(`${JSON.stringify(queryObj)}`, page)
+        .then((res) => {
+          if (!res.data.OrderPage) {
+            this.totalElements = 0
+            this.currentPage = 1
+            this.orderList = []
+            return
+          }
+          if (this.topic === '4' || this.topic === '5') {
+            this.totalElements = +res.data.OrderPage.totalElements
+            this.currentPage = +res.data.OrderPage.number
+          }
+          const _data = res.data.OrderPage.content
+          const orderIds = []
+          const userIds = []
           _data.forEach((item, index) => {
-            // 订单号格式化
-            item.out_trade_no = item.out_trade_no.split('xiong')[1]
+            orderIds.push(item.id)
+            userIds.push(item.uid)
             // 下单时间格式化
-            item.ctime = timestamp(item.ctime, 2)
+            item.ctime = formatData(item.ctime, 's')
             // 交易方式
             if (item.regtype) {
               let currency = {}
               if (item.regtype === 4) {
-                item.regtype = '宝石兑换'
+                item.regtype_text = '推荐有礼'
                 currency = { currency: '宝石' }
                 Object.assign(item, currency)
                 item.amount = item.gem_integral
               } else if (item.regtype === 5) {
-                item.regtype = '小熊币兑换'
+                item.regtype_text = '小熊商城'
                 currency = { currency: '小熊币' }
                 Object.assign(item, currency)
                 item.amount = item.bear_integral
-              }
-            }
-            // 支付方式
-            if (item.payment) {
-              const tradeType = item.payment.trade_type
-              if (tradeType === 'WAP') {
-                item.payment.trade_type = '支付宝'
-              } else if (tradeType === 'APP') {
-                item.payment.trade_type = 'APP微信'
-              } else if (tradeType === 'MWEB') {
-                item.payment.trade_type = 'WEB微信'
-              } else if (tradeType === 'JSAPI') {
-                item.payment.trade_type = '微信内部'
-              } else if (tradeType) {
-                item.payment.trade_type = tradeType
-              } else {
-                item.payment.trade_type = '-'
+              } else if (item.regtype === 6) {
+                item.regtype_text = '邀请有奖'
+                currency = { currency: '赠送' }
+                Object.assign(item, currency)
+                item.amount = 0
               }
             }
           })
-          this.cardData = _data
-          console.log(this.cardData, 'this.cardData')
+          this.orderList = _data
+          this.getUserTrialTeam(userIds)
+        })
+        .catch((err) => {
+          console.log(err)
         })
     },
+
+    // 获取组织机构
+    getDepartment() {
+      this.$http.Department.teacherDepartment().then((res) => {
+        const dpt = (res.data && res.data.TeacherDepartmentList) || []
+        this.departmentObj = _.keyBy(dpt, 'id') || {}
+      })
+    },
+
+    // 获取学员体验课班级
+    // 通过Uid查询对应体验课班级，通过team_id获取
+    async getUserTrialTeam(ids = []) {
+      if (this.topic !== '5' && this.topic !== '4') return {}
+
+      const query = ids.length > 0 ? JSON.stringify({ student_id: ids }) : ''
+      const trial = await this.$http.Team.getTrialCourseList(query)
+
+      const teamIds =
+        trial.data.StudentTrialCourseList &&
+        trial.data.StudentTrialCourseList.map((item) => item.team_id)
+      const teamQuery = teamIds ? JSON.stringify({ id: teamIds }) : ''
+      const team = await this.$http.Team.getStudentTeamV1(teamQuery)
+      const teamArr = team.data.StudentTeamList || []
+      const teamById = _.keyBy(teamArr, 'id')
+      const result = {}
+      trial.data.StudentTrialCourseList.forEach((item) => {
+        result[item.student_id] = teamById[item.team_id]
+      })
+      this.trialTeam = result || {}
+      // return result
+    },
+
     // 点击分页
     handleSizeChange(val) {
       this.currentPage = val
-      this.orderList()
+      this.getOrderList()
 
       const dom = document.getElementById('order-scroll')
       dom.querySelector('.order-wrapper').scrollTo(0, 0)
@@ -296,104 +438,23 @@ export default {
   font-family: 'number_font';
   src: url('~@/assets/fonts/TG-TYPE-Bold.otf');
 } //引入本地字体数字文件
-.box-card {
-  // 卡片标题
-  .card-title {
-    font-size: 14px;
-    color: #666;
-    .grid-content {
-      font-family: 'number_font';
-    }
-  }
-  // 卡片内容
-  .card-content {
-    font-size: 14px;
-    color: #000;
-    .content-details {
-      width: 20%;
-      height: 80px;
-      padding: 0 10px;
-      float: left;
-      display: flex;
-      align-items: center;
-    }
-    .user-infor {
-      font-family: 'number_font';
-    }
-    .card-style1 {
-      padding-left: 0 !important;
-      &-left {
-        height: 100%;
-        width: 50%;
-        float: left;
-        display: flex;
-        align-items: center;
-      }
-      &-right {
-        height: 100%;
-        width: 50%;
-        float: left;
-        display: flex;
-        align-items: center;
-        .card-style1-rmb {
-          font-family: 'number_font';
-        }
-        .sign {
-          float: right;
-          span {
-            font-family: 'number_font';
-          }
-        }
-      }
-    }
-    .card-style4 {
-      padding-right: 0 !important;
-      .card-style4-num {
-        font-family: 'number_font';
-        color: #409eff;
-      }
-    }
-  }
+.title-box {
+  padding-bottom: 50px;
 }
 .noData {
   text-align: center;
   padding: 20px 0 0 0;
   color: #909399;
 }
+.primary-color {
+  color: #409eff;
+}
 </style>
 <style lang="scss">
-.title-box {
-  padding: 0 10px 30px 10px;
-  .el-table::before {
-    height: 0px;
-  }
-  .el-table {
-    font-size: 12px;
-  }
-  .el-table td,
-  .el-table th.is-leaf {
-    border: none;
-  }
-  .el-table__empty-block {
-    display: none;
-  }
-  .el-card__body {
-    padding: 0 0 10px 10px;
-  }
-  .el-card {
-    border: 1px solid #dcdfe6;
-    margin: 0 0 10px 0;
-  }
-  .el-card__header {
-    padding: 10px;
-    background: #fafafa;
-  }
-  // 卡片表头
-  .el-row {
-    padding: 0 !important;
-  }
-  // .grid-centent {
-  //   padding-left: 17%;
-  // }
+.el-table .cell {
+  padding-left: 15px;
+}
+.el-table .cell p {
+  margin: 0;
 }
 </style>

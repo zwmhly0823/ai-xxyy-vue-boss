@@ -109,7 +109,7 @@
       <el-table-column label="社群销售" width="120">
         <template slot-scope="scope">
           <div class="product">
-            <span>{{ TeacherList[scope.row.teacher_id] }}</span>
+            <span>{{ TeacherList[scope.row.pay_teacher_id] }}</span>
           </div>
         </template>
       </el-table-column>
@@ -520,6 +520,17 @@ export default {
       }
       this.searchIn.forEach((item) => {
         if (item && item.term) {
+          if (item.term.provincesCode) {
+            timeType.province = item.term.provincesCode
+          }
+          if (item.term.citysCode) {
+            timeType.city = item.term.citysCode
+          }
+          if (item.term.areasCode) {
+            timeType.area = item.term.areasCode
+          }
+        }
+        if (item && item.term) {
           if (item.term.user_id) {
             timeType.user_id = item.term.user_id
           }
@@ -628,6 +639,7 @@ export default {
               product_version
               last_team_id
               teacher_id
+              pay_teacher_id
               user {
                 id
                 birthday
@@ -645,7 +657,7 @@ export default {
             const teamId = [] // 班级Id
             const schedule = []
             resData.forEach((item) => {
-              realnameId.push(item.teacher_id)
+              realnameId.push(item.pay_teacher_id)
               teamId.push(item.last_team_id)
               schedule.push(item.term)
               item.crtime = formatData(+item.ctime, 's')
