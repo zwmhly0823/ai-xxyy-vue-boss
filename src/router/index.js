@@ -3,7 +3,7 @@
  * @Email: yangjiyong@meishubao.com
  * @Date: 2020-03-14 15:07:26
  * @Last Modified by: YangJiyong
- * @Last Modified time: 2020-04-11 21:04:56
+ * @Last Modified time: 2020-04-16 20:27:10
  * @Description: 设置左侧导航展示数据
  * 通过导入模块router/index.js判断，规定模块入口文件为 {path: '/', name: 'Home'}
  * TODO: 自动完成
@@ -70,7 +70,56 @@ const routes = [
       }
     ]
   },
-
+  // 老师模块
+  {
+    path: '/teacher',
+    name: 'teacher',
+    // hidden: true,
+    meta: {
+      title: '社群销售',
+      icon: 'el-icon-user',
+      module: 'teacher'
+    },
+    children: [
+      {
+        path: '/teacherManagement',
+        name: 'teacherManagement',
+        meta: {
+          title: '销售管理',
+          module: 'teacher'
+        }
+      },
+      {
+        path: '/weixinManagement',
+        name: 'weixinManagement',
+        meta: {
+          title: '微信管理',
+          module: 'teacher'
+        }
+      }
+    ]
+  },
+  // 运营中心
+  {
+    path: '/operating',
+    name: 'operating',
+    // hidden: true,
+    meta: {
+      title: '运营中心',
+      icon: 'el-icon-s-platform',
+      module: 'operating'
+    },
+    children: [
+      {
+        path: '/enrollmentSchedule',
+        name: 'enrollmentSchedule',
+        meta: {
+          title: '招生排期',
+          module: 'operating'
+        }
+      }
+    ]
+  },
   // demo dashboard
   {
     path: '/dashboard',

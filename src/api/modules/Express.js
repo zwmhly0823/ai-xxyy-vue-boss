@@ -45,4 +45,24 @@ export default {
   checkPass(params) {
     return axios.post(`/api/o/v1/express/deliveryRequest`, params)
   }
+
+  /**
+   * v1 订单关联的物流
+   */
+  //   getOderExpress(query = '', page = 1) {
+  //     return axios.post('/graphql/v1/toss', {
+  //       query: `
+  //         {
+  //           ExpressPage(query: ${JSON.stringify(query)}, page: ${page}){
+  //             totalElements
+  //             content{
+  //               id
+  //               express_status
+  //               order_id
+  //             }
+  //           }
+  //         }
+  //       `
+  //     })
+  //   }
 }

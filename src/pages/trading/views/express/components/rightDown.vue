@@ -109,7 +109,7 @@
       <el-table-column label="社群销售" width="120">
         <template slot-scope="scope">
           <div class="product">
-            <span>{{ TeacherList[scope.row.teacher_id] }}</span>
+            <span>{{ TeacherList[scope.row.pay_teacher_id] }}</span>
           </div>
         </template>
       </el-table-column>
@@ -519,6 +519,17 @@ export default {
         this.teacherId && (timeType.teacher_id = this.teacherId)
       }
       this.searchIn.forEach((item) => {
+        if (item && item.term) {
+          if (item.term.provincesCode) {
+            timeType.province = item.term.provincesCode
+          }
+          if (item.term.citysCode) {
+            timeType.city = item.term.citysCode
+          }
+          if (item.term.areasCode) {
+            timeType.area = item.term.areasCode
+          }
+        }
         if (item && item.term) {
           if (item.term.user_id) {
             timeType.user_id = item.term.user_id

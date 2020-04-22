@@ -1,6 +1,6 @@
 <!--
- * @Descripttion: 
- * @version: 
+ * @Descripttion:
+ * @version:
  * @Author: zhubaodong
  * @Date: 2020-03-24 18:50:54
  * @LastEditors: Lukun
@@ -230,7 +230,6 @@ export default {
 
     supChange(data) {
       console.log(data, 'ddddaaaa')
-
       this.$emit(
         'supCallBack',
         data.length > 0 ? { [this.supName]: this.supData } : ''

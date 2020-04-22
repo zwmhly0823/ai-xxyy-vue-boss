@@ -193,7 +193,7 @@ export default {
     },
     /**
      * 获取班级列表
-     * @param(team_type) 0为体验课 >=1为系统课
+     * @param(team_type) 0为体验课 >=1为系统课890
      */
     async getClassList(type = 0, page = 1) {
       let queryParams

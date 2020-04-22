@@ -10,15 +10,6 @@
 import axios from '../axiosConfig'
 
 export default {
-  /**
-   * 用户登录
-   * */
-  loginIn(params) {
-    return axios.post('/data/admin/login/pass111', params)
-  },
-  orderList(params) {
-    return axios.post('/data/orderList', params)
-  },
   updateTeamStudent(params) {
     return axios.put(
       '/api/tm/v1/teacher/manager/team/updateTeamStudent',

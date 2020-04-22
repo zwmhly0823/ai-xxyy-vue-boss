@@ -95,7 +95,7 @@ export default {
         }
       }
       if (this.type) {
-        queryParams.bool.must.push({ term: `{term: ${this.type}}` })
+        queryParams.bool.must.push({ term: { type: this.type } })
       }
       const q = JSON.stringify(queryParams)
       return axios
