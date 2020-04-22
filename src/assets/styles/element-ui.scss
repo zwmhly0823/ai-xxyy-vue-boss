@@ -1,0 +1,23 @@
+/*
+ * @Author: YangJiyong
+ * @Email: yangjiyong@meishubao.com
+ * @Date: 2020-03-12 17:33:15
+ * @Last Modified by: YangJiyong
+ * @Last Modified time: 2020-03-13 11:31:01
+ * @Description: 
+ * 1. 重置 element-ui 主题变量
+ * 2. 重写element-ui样式
+ */
+
+/* 改变主题色变量 */
+$--color-primary: teal;
+
+
+/* cover element-ui styles */
+
+
+
+/* 改变 icon 字体路径变量，必需 */
+$--font-path: '~element-ui/lib/theme-chalk/fonts';
+
+@import "~element-ui/packages/theme-chalk/src/index";

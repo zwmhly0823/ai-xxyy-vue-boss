@@ -1,0 +1,193 @@
+<template>
+  <div class="students-popup">
+    <div>
+      <el-dialog
+        title="发放优惠卷"
+        :visible.sync="issueCoupons"
+        width="30%"
+        :append-to-body="true"
+        top="40vh"
+      >
+        <span>选择优惠卷:</span>
+        <el-select
+          v-model="value"
+          :placeholder="
+            `${dropdownDefault.amount}元  ${dropdownDefault.name}  有效期${dropdownDefault.expire}天`
+          "
+          popper-class="select-sty"
+          no-data-text="没有更多优惠券了"
+        >
+          <el-option
+            v-for="item in couponDropdown"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          >
+          </el-option>
+        </el-select>
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="issueCoupons = false">取 消</el-button>
+          <el-button type="primary" @click="issueCouponsBtn">
+            确 定
+          </el-button>
+        </span>
+      </el-dialog>
+    </div>
+    <div>
+      <el-dialog
+        title="发放优惠券"
+        :visible.sync="couponConf"
+        width="30%"
+        :append-to-body="true"
+        top="40vh"
+      >
+        <i class="el-icon-warning">
+          <span>
+            是否确认向用户发放"{{ dropdownDefault.amount }}元
+            {{ dropdownDefault.name }}"
+            <br />
+            此优惠券有效期{{ dropdownDefault.expire }}天
+          </span>
+        </i>
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="couponConf = false">取 消</el-button>
+          <el-button type="primary" @click="couponconfBtn(dropdownDefault.id)">
+            确 定
+          </el-button>
+        </span>
+      </el-dialog>
+    </div>
+    <div class="paid-out">
+      <el-dialog
+        title="发放完毕"
+        :visible.sync="couponSuccessful"
+        width="30%"
+        :append-to-body="true"
+        top="40vh"
+      >
+        <div
+          class="coupons-successful"
+          v-show="paidOut === 'OK' || paidOut === 'ALL'"
+        >
+          {{ paidoutOk }}张优惠券发放成功
+        </div>
+        <div
+          class="coupons-failure"
+          v-show="paidOut === 'NO' || paidOut === 'ALL'"
+        >
+          {{ paidoutNo }}张优惠券发放失败
+        </div>
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="couponSuccessful = false">取 消</el-button>
+          <el-button type="primary" @click="couponsucBtn">
+            确 定
+          </el-button>
+        </span>
+      </el-dialog>
+    </div>
+  </div>
+</template>
+<script>
+export default {
+  props: {
+    couponData: Array,
+    selectUserId: Array
+  },
+  data() {
+    return {
+      // 发放优惠券弹窗
+      issueCoupons: false,
+      // 发放优惠券弹窗下拉菜单
+      dropdownDefault: {},
+      couponDropdown: [],
+      // 下拉框值
+      value: '',
+      // 优惠券发放确认弹窗
+      couponConf: false,
+      // 优惠券发放成功弹窗
+      couponSuccessful: false,
+      // 优惠券发放显示判断
+      paidOut: '',
+      // 优惠卷发放成功条数
+      paidoutOk: '',
+      // 优惠卷发放失败条数
+      paidoutNo: ''
+    }
+  },
+  mounted() {},
+  watch: {
+    couponData(val) {
+      val.forEach((data) => {
+        if (data.id === '6') {
+          this.dropdownDefault = data
+        }
+      })
+    },
+    selectUserId(val) {
+      console.log(val, '用户idprops传参')
+    }
+  },
+  methods: {
+    // 优惠券下拉弹窗
+    issueCouponsBtn() {
+      this.issueCoupons = false
+      this.couponConf = true
+    },
+    // 优惠券发放确认弹窗
+    couponconfBtn(id) {
+      this.couponConf = false
+      this.couponSuccessful = true
+      this.$http.Team.sendCoupon(id, this.selectUserId).then((res) => {
+        if (res.payload.length === 0) {
+          // 成功
+          this.paidoutOk = this.selectUserId.length
+          this.paidOut = 'OK'
+        } else if (res.payload.length === this.selectUserId.length) {
+          // 失败
+          this.paidoutNo = this.selectUserId.length
+          this.paidOut = 'NO'
+        } else if (res.payload.length !== this.selectUserId.length) {
+          // 都显示
+          this.paidoutOk = this.selectUserId.length - res.payload.length
+          this.paidoutNo = res.payload.length
+          this.paidOut = 'ALL'
+        }
+      })
+    },
+    // 优惠券发放成功弹窗
+    couponsucBtn() {
+      this.couponSuccessful = false
+    }
+  }
+}
+</script>
+<style scoped lang="scss">
+.coupons-successful {
+  font-size: 14px;
+  text-align: center;
+  color: #606266;
+}
+.coupons-failure {
+  font-size: 14px;
+  text-align: center;
+  color: #f56c6c;
+}
+</style>
+<style lang="scss">
+.el-select {
+  width: 70%;
+  margin-left: 10px;
+}
+.el-dialog__body {
+  color: #e6a13c !important;
+  font-size: 18px;
+  padding: 10px 20px;
+  span {
+    color: #606266;
+    font-size: 14px;
+    display: inline-table;
+    padding: 0 0 0 5px;
+    line-height: 20px;
+  }
+}
+</style>

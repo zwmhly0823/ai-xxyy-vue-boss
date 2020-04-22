@@ -1,0 +1,76 @@
+<template>
+  <div :class="{ 'has-logo': showLogo }">
+    <logo v-if="showLogo" :collapse="isCollapse" />
+    <el-scrollbar wrap-class="scrollbar-wrapper">
+      <el-menu
+        :default-active="activeMenu"
+        :collapse="isCollapse"
+        :background-color="variables.menuBg"
+        :text-color="variables.menuText"
+        :unique-opened="false"
+        :active-text-color="variables.menuActiveText"
+        :collapse-transition="false"
+        :default-openeds="defaultOpendIndex"
+        mode="vertical"
+      >
+        <sidebar-item
+          v-for="(route, index) in routes"
+          :key="route.path"
+          :item="route"
+          :index="index"
+          :base-path="route.path"
+        />
+      </el-menu>
+    </el-scrollbar>
+  </div>
+</template>
+
+<script>
+import { mapGetters } from 'vuex'
+import Logo from './Logo'
+import SidebarItem from './SidebarItem'
+import routes from '@/router/index'
+import variables from '@/assets/styles/variables.scss'
+
+export default {
+  components: { SidebarItem, Logo },
+  computed: {
+    ...mapGetters(['sidebar']),
+    routes() {
+      return routes.filter((item) => !item.hidden)
+    },
+    // 高亮选中状态
+    activeMenu() {
+      const { path } = this.$route
+      const { pathname } = location
+      let active = '0'
+      if (this.routes.length === 0) return active
+      this.routes.forEach((item, index) => {
+        if (pathname.includes(item.meta.module)) {
+          active = index.toString()
+          if (item.children) {
+            item.children.forEach((child, cindex) => {
+              if (child.path.includes(path)) active = `${index}-${cindex}`
+            })
+          }
+        }
+      })
+      return active
+    },
+    showLogo() {
+      return this.$store.state.settings.sidebarLogo
+    },
+    variables() {
+      return variables
+    },
+    isCollapse() {
+      return !this.sidebar.opened
+    },
+    // 默认全部展开
+    defaultOpendIndex() {
+      const ids = routes.map((_, index) => index.toString())
+      return ids
+    }
+  }
+}
+</script>
