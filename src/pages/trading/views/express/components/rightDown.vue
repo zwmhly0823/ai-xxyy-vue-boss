@@ -145,6 +145,7 @@
         :visible.sync="dialogVisiblePass"
         width="25%"
         :before-close="handleClosePass"
+        :modal="modal"
       >
         <div class="two-choose">
           <div class="message-one" v-if="selectNum > 1">
@@ -273,6 +274,8 @@ export default {
     return {
       // regtype 商品类型
       regtype: '',
+      // 默认审核时弹出
+      modal: false,
       // 审核传参
       checkBatchParams: [],
       checkParams: [],
