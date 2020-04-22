@@ -133,7 +133,6 @@ export default {
   // 新建老师
   createTeacher(params) {
     console.log(params)
-
     return axios.post(`/api/t/v1/teacher/createTeacher`, params)
   },
   //  编辑老师
@@ -150,6 +149,34 @@ export default {
         {
           phone
           realname
+        }
+      }
+      `
+    })
+  },
+  // 新增老师 添加微信
+  WeChatTeacherList() {
+    const query = `{"teacher_id":{"lte":0}}`
+    return axios.post(`/graphql/v1/toss`, {
+      query: `{
+          WeChatTeacherList(query: ${JSON.stringify(query)}) {
+            id
+            wechat_no
+            teacher_id
+          }
+        }`
+    })
+  },
+  // 老师微信号模糊搜索
+  getWeChatTeacherListEx(weixinkey, value) {
+    const query = `{ "bool": { "must": [{ "wildcard": { "${weixinkey}": "*${value}*" } },{"term":{"teacher_id":0}}] } }`
+    return axios.post('/graphql/v1/toss', {
+      query: `
+      {
+        WeChatTeacherListEx(query:${JSON.stringify(query)})
+        {
+          id
+          wechat_no
         }
       }
       `
