@@ -111,6 +111,15 @@ export default {
         const val2 = b[property]
         return val1 - val2
       }
+    },
+    // 递归排序
+    recursive(value) {
+      value.forEach((item) => {
+        if (item.children && item.children.length > 0) {
+          item.children.sort(this.handle('sort'))
+          this.recursive(item.children)
+        }
+      })
     }
   },
   async created() {
@@ -127,18 +136,8 @@ export default {
       // }
       // 组织结构第一层排序
       department.sort(this.handle('sort'))
-      department.forEach((val) => {
-        if (val.children && val.children.length !== 0) {
-          // 组织结构第二层排序
-          val.children.sort(this.handle('sort'))
-          val.children.forEach((item) => {
-            if (item.children && item.children.length !== 0) {
-              // 组织结构第三层排序
-              item.children.sort(this.handle('sort'))
-            }
-          })
-        }
-      })
+      // 多层排序
+      this.recursive(department)
       this.departmentList = department
     })
   }
