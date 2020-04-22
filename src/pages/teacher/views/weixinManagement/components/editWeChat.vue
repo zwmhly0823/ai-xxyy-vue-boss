@@ -327,6 +327,7 @@ export default {
       }
       return (isJPG || isPNG || isJPEG) && isLt2M
     },
+
     // 头像上传成功回调
     handleAvatarSuccess(res, file) {}
   }

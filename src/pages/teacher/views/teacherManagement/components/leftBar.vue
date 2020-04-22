@@ -103,6 +103,23 @@ export default {
     },
     defaultHandler() {
       // console.log('哈哈')
+    },
+    // 组织结构排序
+    handle(property) {
+      return function(a, b) {
+        const val1 = a[property]
+        const val2 = b[property]
+        return val1 - val2
+      }
+    },
+    // 递归排序
+    recursive(value) {
+      value.forEach((item) => {
+        if (item.children && item.children.length > 0) {
+          item.children.sort(this.handle('sort'))
+          this.recursive(item.children)
+        }
+      })
     }
   },
   async created() {
@@ -117,6 +134,10 @@ export default {
       //   pid: null,
       //   children: department
       // }
+      // 组织结构第一层排序
+      department.sort(this.handle('sort'))
+      // 多层排序
+      this.recursive(department)
       this.departmentList = department
     })
   }
