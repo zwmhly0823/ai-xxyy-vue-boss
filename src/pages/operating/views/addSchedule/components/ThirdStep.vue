@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-15 20:35:57
  * @LastEditors: Shentong
- * @LastEditTime: 2020-04-22 12:01:34
+ * @LastEditTime: 2020-04-22 18:23:02
  -->
 <template>
   <div class="third-step">
@@ -96,7 +96,7 @@
             </div>
           </template>
         </el-table-column>
-        <!-- <el-table-column prop="address" label="体验课类型" width="130">
+        <el-table-column prop="address" label="体验课类型" width="130">
           <template slot-scope="scope">
             <div
               v-for="(v, v_index) in scope.row.enroll"
@@ -104,12 +104,12 @@
               class="select-container"
             >
               <el-select
-                v-model="v.courseVersion"
+                v-model="v.trialClass"
                 size="mini"
                 placeholder="体验课类型"
               >
                 <el-option
-                  v-for="(item, i) in productVersion"
+                  v-for="(item, i) in trialClass"
                   :key="i"
                   :label="item.name"
                   :value="item.value"
@@ -118,7 +118,7 @@
               </el-select>
             </div>
           </template>
-        </el-table-column> -->
+        </el-table-column>
       </ele-table>
 
       <!-- 取消、下一步 -->

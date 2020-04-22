@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-15 20:35:57
  * @LastEditors: Shentong
- * @LastEditTime: 2020-04-22 11:50:17
+ * @LastEditTime: 2020-04-22 20:25:47
  -->
 <template>
   <div class="first-step">
@@ -26,7 +26,7 @@
                   type="datetimerange"
                   start-placeholder="开始日期"
                   end-placeholder="结束日期"
-                  :default-time="['00:00:00', '22:00:00']"
+                  :default-time="['00:00:01', '24:00:00']"
                   @change="sellCycleTimeChange"
                 >
                 </el-date-picker>
@@ -332,7 +332,7 @@ export default {
 
         const m = month <= 9 ? '0' + month : month
         const d = day <= 9 ? '0' + day : day
-        return y + '-' + m + '-' + d
+        return y + '/' + m + '/' + d
       } else {
         return ''
       }
