@@ -163,6 +163,35 @@
         />
       </el-form-item>
 
+      <el-form-item v-if="systemCourseType">
+        <!-- 系统课类型 -->
+        <system-course-type
+          @result="getSystemCourseType"
+          :name="systemCourseType"
+        />
+      </el-form-item>
+
+      <!-- && !teacherId -->
+      <el-form-item v-if="department && !teacherId">
+        <!-- 社群销售组 -->
+        <department @result="getDepartment" :name="department" />
+      </el-form-item>
+
+      <!-- && !teacherId -->
+      <el-form-item v-if="searchTeamName">
+        <!-- 班级名称搜索 -->
+        <search-team-name @result="getTeamName" :name="searchTeamName" />
+      </el-form-item>
+
+      <!-- && !teacherId -->
+      <el-form-item v-if="searchTrialTeamName">
+        <!-- 班级名称搜索 -->
+        <search-trial-team-name
+          @result="getTrialTeamName"
+          :name="searchTrialTeamName"
+        />
+      </el-form-item>
+
       <!-- <el-form-item
         size="mini"
         style="position:relative;top:6px"
