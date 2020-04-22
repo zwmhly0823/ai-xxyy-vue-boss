@@ -34,6 +34,7 @@ export default {
             gem_integral
             product_name
             user{
+              username
               nickname
               mobile
             }
@@ -45,6 +46,13 @@ export default {
             }
             last_teacher_id
             department{
+              department{
+                id
+                pid
+                name
+              }
+            }
+            teacher_department{
               department{
                 id
                 pid

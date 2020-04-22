@@ -3,7 +3,7 @@
     <el-table :data="orderList">
       <el-table-column label="用户信息" prop="user" width="120">
         <template slot-scope="scope">
-          <p>{{ scope.row.user ? scope.row.user.nickname || '-' : '-' }}</p>
+          <p>{{ scope.row.user ? scope.row.user.username || '-' : '-' }}</p>
           <p>{{ scope.row.user ? scope.row.user.mobile || '-' : '-' }}</p>
         </template>
       </el-table-column>
@@ -83,10 +83,11 @@
         width="150"
       >
         <template slot-scope="scope">
-          {{ scope.row.salesman ? scope.row.salesman.realname : '-' }}
+          <p>{{ scope.row.salesman ? scope.row.salesman.realname : '-' }}</p>
+          <p>{{ scope.row.department.department.name || '-' }}</p>
         </template>
       </el-table-column>
-      <el-table-column
+      <!-- <el-table-column
         label="销售部门"
         v-if="topic === '4' || topic === '5'"
         width="150"
@@ -109,7 +110,7 @@
               : '-'
           }}
         </template>
-      </el-table-column>
+      </el-table-column> -->
       <el-table-column label="系统课班级" width="150" v-if="topic === '5'">
         <template slot-scope="scope">
           <p>
@@ -121,6 +122,17 @@
         <template slot-scope="scope">
           <p>
             {{ scope.row.teacher ? scope.row.teacher.realname : '-' }}
+          </p>
+          <p>
+            {{
+              scope.row.teacher_department &&
+              scope.row.teacher_department.department
+                ? departmentObj[scope.row.teacher_department.department.id]
+                  ? departmentObj[scope.row.teacher_department.department.id]
+                      .name
+                  : '-'
+                : '-'
+            }}
           </p>
         </template>
       </el-table-column>
