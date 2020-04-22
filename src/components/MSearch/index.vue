@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-24 18:20:12
  * @LastEditors: Lukun
- * @LastEditTime: 2020-04-18 18:15:46
+ * @LastEditTime: 2020-04-22 19:51:32
  -->
 
 <template>
@@ -373,7 +373,7 @@ export default {
     // 排期
     selectSchedule(res) {
       console.log(res, 'res')
-      this.setSeachParmas(res, [this.schedule || 'id'], 'terms')
+      this.setSeachParmas(res, [this.schedule || 'id'])
     },
     // 难度
     supCallBack(res) {
