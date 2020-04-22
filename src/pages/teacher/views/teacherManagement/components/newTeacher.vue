@@ -270,7 +270,8 @@ export default {
       suDepartments: [],
       optionProps: {
         value: 'id',
-        label: 'name'
+        label: 'name',
+        checkStrictly: true
       },
       // 职务
       position: [],
