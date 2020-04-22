@@ -3,7 +3,7 @@
  * @version:
  * @Author: zhubaodong
  * @Date: 2020-03-24 15:16:26
- * @LastEditors: zhubaodong
+ * @LastEditors: yangjiyong
  * @LastEditTime: 2020-03-28 19:34:29
  -->
 <template>
@@ -13,57 +13,89 @@
       <m-search
         @search="handleSearch"
         channel="pay_channel"
-        stage="stage"
         sup="sup"
         date="ctime"
         date-placeholder="下单时间"
         phone="uid"
-        topic-type="topic_id"
-        outTradeNo="out_trade_no"
+        schedule="stage"
+        department="pay_teacher_id"
+        groupSell="pay_teacher_id"
+        :search-team-name="activeTopic === '5' ? 'last_team_id' : ''"
+        :search-trial-team-name="activeTopic === '5' ? 'uid' : 'last_team_id'"
+        :order-type="activeTopic === '5' ? 'regtype' : ''"
       />
-      <el-tabs type="border-card" @tab-click="handleClick" v-model="activeName">
-        <!-- <el-tab-pane label="全部订单" name=""> </el-tab-pane> -->
-        <el-tab-pane label="已完成" name="3"></el-tab-pane>
-        <el-tab-pane label="待支付" name="0,1"> </el-tab-pane>
-        <!-- <el-tab-pane label="已支付" name="2"></el-tab-pane> -->
-        <el-tab-pane label="退费中" name="5"></el-tab-pane>
-        <el-tab-pane label="已退费" name="6,7"></el-tab-pane>
-        <!-- <el-tab-pane label="已关闭" name="8"></el-tab-pane> -->
-        <all-order :status="status" :search="search" />
-      </el-tabs>
+      <!-- system-course-type="system-course-type" TODO -->
+
+      <!-- tab - regtype -->
       <el-tabs
         type="border-card"
         @tab-click="handleClick"
-        v-model="activeName"
+        v-model="activeTopic"
+      >
+        <!-- 包含全部系统课订单数据（月系统课、季系统课、半年系统课、年系统课） -->
+        <el-tab-pane label="系统课" name="5"></el-tab-pane>
+        <!-- 包含全部体验课订单数据（双周体验课、单周体验课） -->
+        <el-tab-pane label="体验课" name="4"></el-tab-pane>
+        <!-- 包含小熊商城-1、邀请有奖-6、推荐有礼-2 -->
+        <!-- <el-tab-pane label="活动订单" name="1,2,6"></el-tab-pane> -->
+
+        <!-- 统计模块 + 列表 -->
+        <all-order :topic="activeTopic" :search="search" />
+      </el-tabs>
+
+      <!-- 浮动层 -->
+      <el-tabs
+        type="border-card"
+        @tab-click="handleClick"
+        v-model="activeTopic"
         class="tab-top"
         v-show="suckTop"
       >
-        <!-- <el-tab-pane label="全部订单" name=""> </el-tab-pane> -->
-        <el-tab-pane label="已完成" name="3"></el-tab-pane>
-        <el-tab-pane label="待支付" name="0,1"> </el-tab-pane>
-        <!-- <el-tab-pane label="已支付" name="2"></el-tab-pane> -->
+        <el-tab-pane label="系统课" name="5"> </el-tab-pane>
+        <el-tab-pane label="体验课" name="4"></el-tab-pane>
+        <!-- <el-tab-pane label="活动订单" name="1,2,6"></el-tab-pane> -->
 
-        <el-tab-pane label="退费中" name="5"></el-tab-pane>
-        <el-tab-pane label="已退费" name="6,7"></el-tab-pane>
-        <!-- <el-tab-pane label="已关闭" name="8"></el-tab-pane> -->
-
-        <el-table style="font-size:12px;" v-show="orderForm">
-          <el-table-column
-            label="用户信息"
-            label-class-name="top-style1"
-          ></el-table-column>
-          <el-table-column
-            label="商品信息"
-            label-class-name="top-style2"
-          ></el-table-column>
+        <el-table
+          style="font-size:12px;"
+          v-show="orderForm"
+          v-if="activeTopic !== '5'"
+        >
+          <el-table-column label="用户信息"></el-table-column>
+          <el-table-column label="商品信息"></el-table-column>
+          <el-table-column label="订单类型" v-if="activeTopic === '5'">
+          </el-table-column>
           <el-table-column
             label="订单来源"
-            label-class-name="top-style3"
+            v-if="activeTopic === '4' || activeTopic === '5'"
           ></el-table-column>
-          <el-table-column label="订单状态" label-class-name="top-style4">
+          <el-table-column label="订单状态"> </el-table-column>
+          <!-- <el-table-column label="班级信息" v-if="activeTopic === '4'">
+          </el-table-column> -->
+          <el-table-column
+            label="体验课班级"
+            v-if="activeTopic === '4' || activeTopic === '5'"
+          >
           </el-table-column>
-          <el-table-column label="关联物流" label-class-name="top-style5">
+          <el-table-column
+            label="社群销售"
+            v-if="activeTopic === '4' || activeTopic === '5'"
+          >
           </el-table-column>
+          <el-table-column
+            label="销售部门"
+            v-if="activeTopic === '4' || activeTopic === '5'"
+          >
+          </el-table-column>
+          <el-table-column
+            label="系统课班级"
+            v-if="activeTopic === '5'"
+          ></el-table-column>
+          <el-table-column
+            label="服务老师"
+            v-if="activeTopic === '5'"
+          ></el-table-column>
+          <el-table-column label="下单时间"> </el-table-column>
+          <el-table-column label="关联物流"> </el-table-column>
         </el-table>
       </el-tabs>
     </div>
@@ -82,13 +114,13 @@ export default {
   data() {
     return {
       // 默认显示tab
-      activeName: '3',
+      activeTopic: '5',
       // 吸顶tab显示
       suckTop: false,
       // 吸顶表格显示
       orderForm: false,
       // 切换tab
-      status: '3',
+      // tab: '4',
       // 搜索
       search: []
     }
@@ -101,10 +133,11 @@ export default {
       document
         .getElementById('order-scroll')
         .querySelector('.order-wrapper').scrollTop = 0
-      this.status = tab.name
+      this.activeTopic = tab.name
     },
     // 点击搜索
     handleSearch(res) {
+      console.log(res, 'search')
       this.search = res
     },
     // 吸顶
@@ -115,10 +148,6 @@ export default {
       const domheight = document
         .getElementById('order-scroll')
         .querySelector('.el-card__body').offsetHeight
-      const formheight = document
-        .getElementById('order-scroll')
-        .querySelector('.title-box').offsetHeight
-      console.log(formheight, 'formheight')
       dom > domheight + 20 ? (this.suckTop = true) : (this.suckTop = false)
       dom > domheight + 175 ? (this.orderForm = true) : (this.orderForm = false)
     }

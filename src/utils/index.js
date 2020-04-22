@@ -277,19 +277,3 @@ export function compressImg(imgPath, width) {
   }
   return imgPath
 }
-/**
- *
- * @param {Array} arr
- * @param {String} type 需要排序的字段
- */
-export function sortByType(arr, type) {
-  arr.sort((a, b) => {
-    if (a[type] > b[type]) {
-      return -1
-    } else if (a[type] === b[type]) {
-      return 0
-    } else {
-      return 1
-    }
-  })
-}
