@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-15 20:35:57
  * @LastEditors: Shentong
- * @LastEditTime: 2020-04-20 18:22:13
+ * @LastEditTime: 2020-04-22 12:01:34
  -->
 <template>
   <div class="third-step">
@@ -50,6 +50,7 @@
           <template slot-scope="scope">
             <div v-for="(t, t_index) in scope.row.enroll" :key="t_index">
               <el-input
+                :disabled="!Boolean(+t.status)"
                 class="table_input"
                 size="mini"
                 v-model="t.teamSize"
@@ -62,6 +63,7 @@
           <template slot-scope="scope">
             <div v-for="(p, t_index) in scope.row.enroll" :key="t_index">
               <el-input
+                :disabled="!Boolean(+p.status)"
                 class="table_input"
                 size="mini"
                 v-model="p.sumTeamSize"
@@ -78,6 +80,7 @@
               class="select-container"
             >
               <el-select
+                :disabled="!Boolean(+v.status)"
                 v-model="v.courseVersion"
                 size="mini"
                 placeholder="随材版本"
@@ -166,8 +169,7 @@ export default {
   },
   watch: {},
   created() {
-    const { period = '', courseType = 0 } = this.$route.params
-    console.log('third----', period, courseType, this.scheduleTeacherId)
+    const { courseType = 0 } = this.$route.params
     // 根据老师ids获取招生排期设置中老师配置信息 TODO:
     const params = {
       courseType,
@@ -199,11 +201,9 @@ export default {
               })
             }
           }
-          // payload.enroll = enroll
         })
 
         this.tableData = payload
-        console.log(payload)
       } catch (err) {
         this.$message({
           message: '获取列表出错',
@@ -213,7 +213,7 @@ export default {
       this.flags.loading = false
     },
     //  保存 招生排期 设置
-    async saveScheduleConfig(params) {
+    async saveScheduleConfig(params, cb) {
       const loadingInstance = this.$loading({
         target: 'section',
         lock: true,
@@ -223,8 +223,14 @@ export default {
 
       try {
         const _res = await this.$http.Operating.saveScheduleConfig(params)
-        if (_res.code === 0) this.$message.success('保存成功')
         loadingInstance.close()
+
+        if (_res.code === 0) {
+          this.$message.success('保存成功')
+          cb()
+        } else {
+          return
+        }
       } catch (err) {
         loadingInstance.close()
         this.$message({
@@ -232,9 +238,6 @@ export default {
           type: 'warning'
         })
       }
-    },
-    preStep() {
-      this.$emit('listenStepStatus', 0)
     },
     // 翻页emit
     pageChange_handler() {},
@@ -246,9 +249,10 @@ export default {
         period: this.schedulePeriod,
         body: this.tableData
       }
-      await this.saveScheduleConfig(params)
-
-      this.$emit('listenStepStatus', type)
+      const callback = () => {
+        this.$emit('listenStepStatus', type)
+      }
+      await this.saveScheduleConfig(params, callback)
     }
   }
 }
