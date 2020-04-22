@@ -187,7 +187,6 @@ difficult
     nodeClick(dataExpress) {
       this.$store.dispatch('getLeftBarId', dataExpress.id)
       this.$emit('change', dataExpress)
-      console.log(dataExpress, 'changedata')
     },
     arrSum(arr) {
       let val = 0
