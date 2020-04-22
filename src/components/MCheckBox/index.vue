@@ -3,8 +3,8 @@
  * @version:
  * @Author: panjian
  * @Date: 2020-03-16 20:22:24
- * @LastEditors: zhubaodong
- * @LastEditTime: 2020-04-13 17:06:38
+ * @LastEditors: panjian
+ * @LastEditTime: 2020-04-21 11:13:01
  -->
 <template>
   <div>
@@ -48,64 +48,122 @@
         <p>选择课程</p>
         <el-select
           v-model="attendClassSelect"
-          multiple
           filterable
-          placeholder="请选择"
+          remote
+          clearable
+          multiple
+          reserve-keyword
+          collapse-tags
+          placeholder="请选择课程"
+          @visible-change="remoteMethod"
+          :loading="loading"
         >
           <el-option
             v-for="item in attendClassList"
             :key="item.value"
             :label="item.label"
-            :value="item.label"
+            :value="item.value"
           >
           </el-option>
         </el-select>
         <p>状态</p>
-        <el-checkbox-group
+        <el-select v-model="attendClassStatus" placeholder="请选择">
+          <el-option
+            v-for="item in states"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          >
+          </el-option>
+        </el-select>
+        <!-- <el-checkbox-group
           class="check-states-box"
-          v-model="emptyAttendClass"
-          @change="attendClassChange"
+          v-model="attendClassStatus"
+          @change="attendClassChangeStatus"
         >
           <el-checkbox
             class="check-states"
             v-for="state in states"
-            :label="state"
-            :key="state"
-            >{{ state }}</el-checkbox
+            :label="state.value"
+            :key="state.label"
+            >{{ state.label }}</el-checkbox
           >
-        </el-checkbox-group>
+        </el-checkbox-group> -->
         <p>参课情况</p>
-        <el-checkbox-group
-          v-model="emptyAttendClass"
-          @change="attendClassChange"
+        <el-select
+          @change="friendsChange"
+          v-model="attendClassGinseng"
+          placeholder="请选择"
+        >
+          <el-option
+            v-for="item in friends"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          >
+          </el-option>
+        </el-select>
+        <!-- <el-checkbox-group
+          v-model="attendClassGinseng"
+          @change="attendClassChangeGinseng"
         >
           <el-checkbox
             v-for="friend in friends"
-            :label="friend"
-            :key="friend"
-            >{{ friend }}</el-checkbox
+            :label="friend.value"
+            :key="friend.label"
+            >{{ friend.label }}</el-checkbox
           >
-        </el-checkbox-group>
+        </el-checkbox-group> -->
         <p>完课情况</p>
-        <el-checkbox-group
-          v-model="emptyAttendClass"
-          @change="attendClassChange"
+        <el-select
+          :disabled="groupsDisabled"
+          v-model="attendClassFinish"
+          placeholder="请选择"
         >
-          <el-checkbox v-for="group in groups" :label="group" :key="group">{{
-            group
-          }}</el-checkbox>
-        </el-checkbox-group>
+          <el-option
+            v-for="item in groups"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          >
+          </el-option>
+        </el-select>
+
+        <!-- <el-checkbox-group
+          v-model="attendClassFinish"
+          @change="attendClassChangeFinish"
+        >
+          <el-checkbox
+            v-for="group in groups"
+            :label="group.value"
+            :key="group.label"
+            >{{ group.label }}</el-checkbox
+          >
+        </el-checkbox-group> -->
         <div class="check-button">
-          <el-button @click="attendClassEmpty" size="small">清空</el-button>
-          <el-button @click="onAttendClass" size="medium" type="primary"
+          <el-button
+            style="border: none;"
+            @click="attendClassEmpty"
+            size="small"
+            >清空</el-button
+          >
+          <el-button
+            @click="onAttendClass"
+            style="margin-left:40px;width:80px;"
+            size="small"
+            type="primary"
             >过滤</el-button
           >
-          <el-button @click="attendClassCancel" size="medium" type="primary"
+          <el-button
+            @click="attendClassCancel"
+            style="width:80px;color:#409EFF;border:1px solid #409EFF;"
+            size="small"
             >取消</el-button
           >
         </div>
       </el-popover>
     </div>
+    <!-- --------------------------------------- -->
     <div v-if="tables.tabs == 4">
       <el-popover
         v-model="worksShow"
@@ -147,56 +205,117 @@
         <p>选择课程</p>
         <el-select
           v-model="worksSelect"
-          multiple
           filterable
-          placeholder="请选择"
+          remote
+          clearable
+          multiple
+          reserve-keyword
+          collapse-tags
+          placeholder="请选择课程"
+          @visible-change="remoteMethod"
+          :loading="loading"
         >
           <el-option
             v-for="item in worksList"
             :key="item.value"
             :label="item.label"
-            :value="item.label"
+            :value="item.value"
           >
           </el-option>
         </el-select>
-        <p>状态</p>
-        <el-checkbox-group
+        <p>作品上传</p>
+
+        <el-select
+          @change="uploadsChange"
+          v-model="emptyWorksUpload"
+          placeholder="请选择"
+        >
+          <el-option
+            v-for="item in uploads"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          >
+          </el-option>
+        </el-select>
+
+        <!-- <el-checkbox-group
           class="check-states-box"
-          v-model="emptyWorks"
-          @change="worksChange"
+          v-model="emptyWorksUpload"
+          @change="worksChangeStatus"
         >
           <el-checkbox
             class="check-states"
             v-for="upload in uploads"
-            :label="upload"
-            :key="upload"
-            >{{ upload }}</el-checkbox
+            :label="upload.value"
+            :key="upload.label"
+            >{{ upload.label }}</el-checkbox
           >
-        </el-checkbox-group>
-        <p>参课情况</p>
-        <el-checkbox-group v-model="emptyWorks" @change="worksChange">
+        </el-checkbox-group> -->
+        <p>作品点评</p>
+
+        <el-select
+          @change="commentsChange"
+          :disabled="commentsDisabled"
+          v-model="emptyWorksComment"
+          placeholder="请选择"
+        >
+          <el-option
+            v-for="item in comments"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          >
+          </el-option>
+        </el-select>
+        <!-- <el-checkbox-group
+          v-model="emptyWorksComment"
+          @change="worksChangeAttend"
+        >
           <el-checkbox
             v-for="comment in comments"
-            :label="comment"
-            :key="comment"
-            >{{ comment }}</el-checkbox
+            :label="comment.value"
+            :key="comment.label"
+            >{{ comment.label }}</el-checkbox
           >
-        </el-checkbox-group>
-        <p>完课情况</p>
-        <el-checkbox-group v-model="emptyWorks" @change="worksChange">
+        </el-checkbox-group> -->
+        <p>听作品点评</p>
+        <el-select
+          :disabled="hearWorkssDisabled"
+          v-model="emptyWorksHear"
+          placeholder="请选择"
+        >
+          <el-option
+            v-for="item in hearWorkss"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          >
+          </el-option>
+        </el-select>
+        <!-- <el-checkbox-group v-model="emptyWorksHear" @change="worksChangeFinish">
           <el-checkbox
             v-for="hearWorks in hearWorkss"
-            :label="hearWorks"
-            :key="hearWorks"
-            >{{ hearWorks }}</el-checkbox
+            :label="hearWorks.value"
+            :key="hearWorks.label"
+            >{{ hearWorks.label }}</el-checkbox
           >
-        </el-checkbox-group>
+        </el-checkbox-group> -->
         <div class="check-button">
-          <el-button @click="worksEmpty" size="small">清空</el-button>
-          <el-button @click="onWorks" size="medium" type="primary"
+          <el-button style="border: none;" @click="worksEmpty" size="small"
+            >清空</el-button
+          >
+          <el-button
+            @click="onWorks"
+            style="margin-left:40px;width:80px;"
+            size="small"
+            type="primary"
             >过滤</el-button
           >
-          <el-button @click="worksCancel" size="medium" type="primary"
+          <el-button
+            @click="worksCancel"
+            style="width:80px;color:#409EFF;border:1px solid #409EFF;"
+            size="small"
             >取消</el-button
           >
         </div>
@@ -211,132 +330,315 @@ export default {
     tables: {
       type: Object,
       default: null
+    },
+    classId: {
+      type: Object,
+      default: null
+    },
+    audioTabs: {
+      type: String,
+      default: ''
     }
   },
   components: {},
   data() {
     return {
+      hearWorkssDisabled: true,
+      commentsDisabled: true,
+      groupsDisabled: true,
+      loading: false,
       // 点击取消 隐藏弹出框
       attendClassShow: null,
       worksShow: null,
-      // 参课多选框的值
-      attendClassCheck: [],
-      // 作品多选框的值
-      worksCheck: [],
       visible: false,
-      // 选中的多选框 点击取消 赋值为空
-      emptyAttendClass: [],
-      emptyWorks: [],
-      states: ['已年课', '体验完课'],
-      friends: ['已参课', '未参课'],
-      groups: ['已完课', '未完课'],
-      uploads: ['已上传', '未上传'],
-      comments: ['已点评', '未点评'],
-      hearWorkss: ['已听点评', '未听点评'],
-      attendClassList: [
+      // 参课完课 状态
+      attendClassStatus: '',
+      // 参课完课 参课情况
+      attendClassGinseng: '',
+      // 参课完课 完课状态
+      attendClassFinish: '',
+      // 作品及点评 作品上传
+      emptyWorksUpload: '',
+      // 作品及点评 作品点评
+      emptyWorksComment: '',
+      // 作品及点评 听作品点评
+      emptyWorksHear: '',
+      states: [
         {
-          value: '选项1',
-          label: '黄金糕'
+          value: '5',
+          label: '已年课'
         },
         {
-          value: '选项2',
-          label: '双皮奶'
-        },
-        {
-          value: '选项3',
-          label: '蚵仔煎'
-        },
-        {
-          value: '选项4',
-          label: '龙须面'
-        },
-        {
-          value: '选项5',
-          label: '北京烤鸭'
+          value: '2',
+          label: '体验完课'
         }
       ],
-      worksList: [
+      friends: [
         {
-          value: '选项1',
-          label: '黄金糕'
+          value: '0',
+          label: '未参课'
         },
         {
-          value: '选项2',
-          label: '双皮奶'
-        },
-        {
-          value: '选项3',
-          label: '蚵仔煎'
-        },
-        {
-          value: '选项4',
-          label: '龙须面'
-        },
-        {
-          value: '选项5',
-          label: '北京烤鸭'
-        },
-        {
-          value: '选项6',
-          label: 'WE567'
-        },
-        {
-          value: '选项7',
-          label: '567ah'
+          value: '1',
+          label: '已参课'
         }
       ],
+      groups: [
+        {
+          value: '0',
+          label: '未完课'
+        },
+        {
+          value: '1',
+          label: '已完课'
+        }
+      ],
+      uploads: [
+        {
+          value: '0',
+          label: '未上传'
+        },
+        {
+          value: '1',
+          label: '已上传'
+        }
+      ],
+      comments: [
+        {
+          value: '0',
+          label: '未点评'
+        },
+        {
+          value: '1',
+          label: '已点评'
+        }
+      ],
+      hearWorkss: [
+        {
+          value: '0',
+          label: '未听点评'
+        },
+        {
+          value: '1',
+          label: '已听点评'
+        }
+      ],
+      attendClassList: [],
+      worksList: [],
       attendClassSelect: '',
       worksSelect: ''
     }
   },
   mounted() {},
-  watch: {},
-  created() {},
+  watch: {
+    classId(value) {
+      setTimeout(() => {
+        // 参课完课 重置
+        this.groupsDisabled = true
+        this.attendClassSelect = ''
+        this.attendClassStatus = ''
+        this.attendClassGinseng = ''
+        this.attendClassFinish = ''
+        this.attendClassShow = false
+
+        // 作品及点评 重置
+        this.hearWorkssDisabled = true
+        this.commentsDisabled = true
+        this.worksSelect = ''
+        this.emptyWorksUpload = ''
+        this.emptyWorksComment = ''
+        this.emptyWorksHear = ''
+        this.worksShow = false
+      }, 500)
+    },
+    audioTabs(value) {
+      // 作品及点评 作品上传
+      this.emptyWorksUpload = ''
+      // 作品及点评 作品点评
+      this.emptyWorksComment = ''
+      // 作品及点评 听作品点评
+      this.emptyWorksHear = ''
+      this.worksSelect = ''
+
+      // 参课完课 状态
+      this.attendClassStatus = ''
+      // 参课完课 参课情况
+      this.attendClassGinseng = ''
+      // 参课完课 完课情况
+      this.attendClassFinish = ''
+      this.attendClassSelect = ''
+    }
+  },
+  created() {
+    console.log(this.audioTabs, 'this.value.tabs')
+  },
   methods: {
+    // 参课完课 作品及点评 筛选下拉框接口
+    remoteMethod() {
+      this.loading = true
+      setTimeout(() => {
+        this.loading = false
+        const query = `{"team_id":${this.classId.classId.id},"team_type":${this.classId.type}}`
+        this.$http.Team.getStuCourseList({ query }).then((item) => {
+          const data = item.data.getStuCourseList
+          const _data = []
+          data.forEach((res) => {
+            _data.push({
+              value: res.course_id,
+              label: res.classTitle
+            })
+          })
+          if (this.tables.tabs === 3) {
+            this.attendClassList = _data.filter((ele) => {
+              return ele
+            })
+          } else {
+            this.worksList = _data.filter((ele) => {
+              return ele
+            })
+          }
+        })
+      }, 200)
+    },
     // 点击 参课完课 过滤
     onAttendClass() {
-      console.log(this.attendClassCheck, this.attendClassSelect, '参课完课数据')
+      // 选择课程
+      const courseId = this.attendClassSelect.toString()
+      const userStatus = this.attendClassStatus
+      const isJoinCourse = this.attendClassGinseng.toString()
+      const isCompleteCourse = this.attendClassFinish.toString()
+      console.log(
+        courseId,
+        userStatus,
+        isJoinCourse,
+        isCompleteCourse,
+        '参课完课数据'
+      )
+      const data = {
+        courseId: courseId,
+        userStatus: userStatus,
+        isJoinCourse: isJoinCourse,
+        isCompleteCourse: isCompleteCourse
+      }
+      this.$emit('screenAttendClass', data)
       this.attendClassShow = false
     },
     // 点击 作品及点评 过滤
     onWorks() {
-      console.log(this.worksCheck, this.worksSelect, '作品及点评数据')
+      // 上传作品
+      const isTask = this.emptyWorksUpload.toString()
+      // 作品点评
+      const isComment = this.emptyWorksComment.toString()
+      // 听作品点评
+      const isListen = this.emptyWorksHear.toString()
+      // 选择课程
+      const courseId = this.worksSelect.toString()
+      console.log(isTask, isComment, isListen, courseId, '作品及点评数据')
+      const data = {
+        courseId: courseId,
+        isTask: isTask,
+        isComment: isComment,
+        isListen: isListen
+      }
+      this.$emit('screenWorks', data)
       this.worksShow = false
     },
-    // 参课完课 多选框选中的值
-    attendClassChange(value) {
-      this.attendClassCheck = value
+    // 参课完课 状态
+    // attendClassChangeStatus(value) {
+    //   this.attendClassStatus = value
+    // },
+    // 参课完课 参课情况
+    friendsChange(value) {
+      if (value === '0') {
+        this.groupsDisabled = true
+        this.attendClassFinish = ''
+      } else {
+        this.groupsDisabled = false
+      }
     },
-    // 作品 多选框选中的值
-    worksChange(value) {
-      // const worksLists = []
-      // console.log(value)
-      // value.forEach((res) => {
-      //   console.log(res)
-      //   worksLists.push(res)
-      // })
-      this.worksCheck = value
-    },
+    // attendClassChangeGinseng(value) {
+    //   this.attendClassGinseng = value
+    // },
+    // 参课完课 完课情况
+    // attendClassChangeFinish(value) {
+    //   this.attendClassFinish = value
+    // },
     // 参课完课 点击清空
     attendClassEmpty() {
+      this.groupsDisabled = true
       this.attendClassSelect = ''
-      this.emptyAttendClass = []
+      // 参课完课 状态
+      this.attendClassStatus = ''
+      // 参课完课 参课情况
+      this.attendClassGinseng = ''
+      // 参课完课 完课情况
+      this.attendClassFinish = ''
     },
     // 参课完课 点击取消
     attendClassCancel() {
+      this.groupsDisabled = true
       this.attendClassSelect = ''
-      this.emptyAttendClass = []
+      this.attendClassStatus = ''
+      this.attendClassGinseng = ''
+      this.attendClassFinish = ''
       this.attendClassShow = false
     },
+    // 作品及点评 作品上传
+    uploadsChange(value) {
+      if (value === '0') {
+        this.commentsDisabled = true
+        this.hearWorkssDisabled = true
+        this.emptyWorksComment = ''
+        this.emptyWorksHear = ''
+      } else {
+        this.commentsDisabled = false
+      }
+    },
+    // worksChangeStatus(value) {
+    //   this.emptyWorksUpload = value
+    // },
+    // 作品及点评 作品点评
+    commentsChange(value) {
+      console.log(value)
+      if (value === '0') {
+        this.hearWorkssDisabled = true
+        this.emptyWorksHear = ''
+      } else {
+        this.hearWorkssDisabled = false
+      }
+    },
+    // worksChangeAttend(value) {
+    //   this.emptyWorksComment = value
+    // },
+    // 作品及点评 听作品点评
+    // worksChangeFinish(value) {
+    //   this.emptyWorksHear = value
+    // },
+
     // 作品及点评 点击清空
     worksEmpty() {
+      this.hearWorkssDisabled = true
+      this.commentsDisabled = true
       this.worksSelect = ''
       this.emptyWorks = []
+      // 作品及点评 作品上传
+      this.emptyWorksUpload = ''
+      // 作品及点评 作品点评
+      this.emptyWorksComment = ''
+      // 作品及点评 听作品点评
+      this.emptyWorksHear = ''
     },
     // 作品及点评 点击取消
     worksCancel() {
+      this.hearWorkssDisabled = true
+      this.commentsDisabled = true
       this.worksSelect = ''
-      this.emptyWorks = []
+      // 作品及点评 作品上传
+      this.emptyWorksUpload = ''
+      // 作品及点评 作品点评
+      this.emptyWorksComment = ''
+      // 作品及点评 听作品点评
+      this.emptyWorksHear = ''
       this.worksShow = false
     }
   }

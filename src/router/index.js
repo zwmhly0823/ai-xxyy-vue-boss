@@ -99,7 +99,27 @@ const routes = [
       }
     ]
   },
-
+  // 运营中心
+  {
+    path: '/operating',
+    name: 'operating',
+    // hidden: true,
+    meta: {
+      title: '运营中心',
+      icon: 'el-icon-s-platform',
+      module: 'operating'
+    },
+    children: [
+      {
+        path: '/enrollmentSchedule',
+        name: 'enrollmentSchedule',
+        meta: {
+          title: '招生排期',
+          module: 'operating'
+        }
+      }
+    ]
+  },
   // demo dashboard
   {
     path: '/dashboard',

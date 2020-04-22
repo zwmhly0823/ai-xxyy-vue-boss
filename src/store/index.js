@@ -3,8 +3,8 @@
  * @version:
  * @Author: zhubaodong
  * @Date: 2020-03-13 15:05:19
- * @LastEditors: zhubaodong
- * @LastEditTime: 2020-03-18 12:28:54
+ * @LastEditors: Shentong
+ * @LastEditTime: 2020-04-17 16:29:17
  */
 import Vue from 'vue'
 import Vuex from 'vuex'
@@ -13,6 +13,7 @@ import app from './modules/app'
 import settings from './modules/settings'
 // import user from './modules/user'
 import leftbar from './modules/leftbar'
+import schedule from './modules/schedule'
 
 Vue.use(Vuex)
 
@@ -21,7 +22,8 @@ const store = new Vuex.Store({
     app,
     settings,
     // user
-    leftbar
+    leftbar,
+    schedule
   },
   getters
 })

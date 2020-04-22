@@ -56,22 +56,27 @@ export default {
           ]
         },
         {
-          label: '异常状态',
+          label: '异常物流',
+          // 疑难 退签 退回 失效
           children: [
             {
               label: '全部（0）'
             },
             {
-              id: 7,
-              label: '失效（0）'
-            },
-            {
-              id: 5,
-              label: '已退货（0）'
+              id: 8,
+              label: '疑难（0）'
             },
             {
               id: 4,
-              label: '签收失败（0）'
+              label: '退签（0）'
+            },
+            {
+              id: 5,
+              label: '退回（0）'
+            },
+            {
+              id: 7,
+              label: '失效（0）'
             }
           ]
         }
@@ -88,7 +93,6 @@ export default {
   watch: {
     bransh(val) {
       if (val) {
-        console.log(val, 'ppppp----------------')
         this.getExpressList()
         this.$store.commit('bransh', false)
       }
@@ -101,17 +105,18 @@ export default {
       axios
         .post('/graphql/logisticsStatistics', {
           query: `{
-          logisticsStatistics(query:${query}) {
-            no_address
-            wait_send
-            has_send
-            has_signed
-            signed_failed
-            has_return
-            confirm_wait_send
-            invalid
-          }
-        }`
+logisticsStatistics(query:${query}) {
+no_address
+wait_send
+has_send
+has_signed
+signed_failed
+has_return
+confirm_wait_send
+invalid
+difficult
+}
+}`
         })
         .then((res) => {
           console.log(res, 'resList', res.data.logisticsStatistics, this.whack)
@@ -123,14 +128,12 @@ export default {
             x.has_signed,
             x.confirm_wait_send
           ]
-          const logisticsError = [x.invalid, x.has_return, x.signed_failed]
-          // arr = res.data.logisticsStatistics.no_address
-          // const s = this.arrSum(logisticsStatus)
-          // this.whack[0].children[1].label = logisticsStatus[0]
-          // this.whack[0].children[2].label = logisticsStatus[1]
-          // this.whack[0].children[3].label = logisticsStatus[2]
-          // this.whack[0].children[4].label = logisticsStatus[3]
-          // this.whack[0].children[5].label = logisticsStatus[4]
+          const logisticsError = [
+            x.invalid,
+            x.has_return,
+            x.signed_failed,
+            x.difficult
+          ]
           this.whack[0].children = [
             {
               id: '0,1,2,3,6',
@@ -159,24 +162,26 @@ export default {
           ]
           this.whack[1].children = [
             {
-              id: '7,5,4',
+              id: '4,5,7,8',
               label: `全部（${this.arrSum(logisticsError)}）`
+            },
+            {
+              id: '8',
+              label: `疑难（${Number(x.difficult)}）`
+            },
+            {
+              id: '5',
+              label: `退回（${Number(x.has_return)}）`
+            },
+            {
+              id: '4',
+              label: `失败（${Number(x.signed_failed)}）`
             },
             {
               id: '7',
               label: `失效（${Number(x.invalid)}）`
-            },
-            {
-              id: '5',
-              label: `已退货（${Number(x.has_return)}）`
-            },
-            {
-              id: '4',
-              label: `签收失败（${Number(x.signed_failed)}）`
             }
           ]
-
-          console.log(logisticsStatus, logisticsError)
         })
     },
     nodeClick(dataExpress) {

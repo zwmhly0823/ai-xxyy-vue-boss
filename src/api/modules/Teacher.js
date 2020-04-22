@@ -3,8 +3,8 @@
  * @version:
  * @Author: Yangjiyong
  * @Date: 2020-04-07 13:52:26
- * @LastEditors: panjian
- * @LastEditTime: 2020-04-16 20:56:34
+ * @LastEditors: Shentong
+ * @LastEditTime: 2020-04-18 11:56:23
  */
 import axios from '../axiosConfig'
 
@@ -19,10 +19,11 @@ export default {
     return axios.get(`/api/home/v1/ossconfig/getStsPubWriteToken`)
   },
   // 老师列表
-  getTeacherPage(page = 1, query = '') {
+  getTeacherPage(page = 1, query = '', size = '20') {
     return axios.post('/graphql/v1/boss', {
       query: `{
-        TeacherManagePage(page: ${page}, query: ${query || null}) {
+        TeacherManagePage(page: ${page}, query: ${query ||
+        null}, size:${size}) {
           number
           totalPages
           totalElements
