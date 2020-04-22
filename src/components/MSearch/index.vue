@@ -163,6 +163,14 @@
         />
       </el-form-item>
 
+      <el-form-item v-if="systemCourseType">
+        <!-- 系统课类型 -->
+        <system-course-type
+          @result="getSystemCourseType"
+          :name="systemCourseType"
+        />
+      </el-form-item>
+
       <!-- <el-form-item
         size="mini"
         style="position:relative;top:6px"
