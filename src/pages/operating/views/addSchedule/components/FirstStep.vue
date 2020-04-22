@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-15 20:35:57
  * @LastEditors: Shentong
- * @LastEditTime: 2020-04-22 11:50:17
+ * @LastEditTime: 2020-04-22 20:37:49
  -->
 <template>
   <div class="first-step">
@@ -332,7 +332,7 @@ export default {
 
         const m = month <= 9 ? '0' + month : month
         const d = day <= 9 ? '0' + day : day
-        return y + '-' + m + '-' + d
+        return y + '/' + m + '/' + d
       } else {
         return ''
       }
