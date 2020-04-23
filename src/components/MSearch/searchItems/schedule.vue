@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-26 16:28:45
  * @LastEditors: Lukun
- * @LastEditTime: 2020-04-21 21:08:06
+ * @LastEditTime: 2020-04-22 19:38:16
  -->
 <template>
   <div class="search-item small">
@@ -95,7 +95,7 @@ export default {
         }
       }
       if (this.type) {
-        queryParams.bool.must.push({ term: { type: this.type } })
+        queryParams.bool.must.push({ term: { type: ` ${this.type}` } })
       }
       const q = JSON.stringify(queryParams)
       return axios
@@ -115,7 +115,6 @@ export default {
     },
     inputHandler(data) {
       this.input = data.period_name
-      console.log(data.id, '我传的是id---------------', data.period)
       this.$emit('result', { [this.name]: data.period })
     }
   },
