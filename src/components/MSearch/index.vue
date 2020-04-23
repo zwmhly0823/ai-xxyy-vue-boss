@@ -95,6 +95,15 @@
           :tip="nameTip"
         />
       </el-form-item>
+      <el-form-item v-if="teachernickname">
+        <!-- 老师模块昵称搜索 -->
+        <teacher-nickname
+          @result="getteacherNickname"
+          :name="teachernickname"
+          :onlyPhone="onlyNickname"
+          :tip="nicknameTip"
+        />
+      </el-form-item>
       <el-form-item v-if="teacherwx">
         <!-- 老师模块微信号搜索 -->
         <teacher-wx
@@ -173,6 +182,7 @@ import expressNo from './searchItems/expressNo'
 // 老师
 import teacherPhone from './searchItems/teacherSearch/teacherPhone.vue'
 import teacherName from './searchItems/teacherSearch/teacherName.vue'
+import teacherNickname from './searchItems/teacherSearch/teacherNickname.vue'
 import teacherDropDown from './searchItems/teacherSearch/teacherDropDown'
 import teacherWx from './searchItems/teacherSearch/teachetWx'
 import wxList from './searchItems/wxInput'
@@ -267,13 +277,28 @@ export default {
       type: String,
       default: ''
     },
+    // 老师昵称搜索
+    teachernickname: {
+      type: String,
+      default: ''
+    },
     // 是否只搜老师姓名
     nameTip: {
       type: String,
       default: '姓名查询'
     },
+    // 是否只搜老师昵称
+    nicknameTip: {
+      type: String,
+      default: '对外昵称查询'
+    },
     // 是否只搜老师姓名
     onlyName: {
+      type: String,
+      default: '0' // 0
+    },
+    // 是否只搜老师昵称
+    onlyNickname: {
       type: String,
       default: '0' // 0
     },
@@ -355,6 +380,7 @@ export default {
     teacherPhone,
     expressNo,
     teacherName,
+    teacherNickname,
     teacherDropDown,
     teacherWx,
     wxList
@@ -410,6 +436,10 @@ export default {
     // 老师姓名
     getteacherName(res) {
       this.setSeachParmas(res, [this.teachername || 'umobile'])
+    },
+    // 老师昵称
+    getteacherNickname(res) {
+      this.setSeachParmas(res, [this.teachernickname || 'umobile'])
     },
     // 职级
     rankCallBack(res) {
