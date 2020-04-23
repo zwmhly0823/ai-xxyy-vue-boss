@@ -1,7 +1,7 @@
 /*
  * @Date: 2020-03-13 15:20:21
  * @LastEditors: Shentong
- * @LastEditTime: 2020-04-20 13:24:04
+ * @LastEditTime: 2020-04-23 16:13:55
  * @FilePath: /ai-app-vue-toss/src/pages/studentTeam/router/index.js
  */
 import Vue from 'vue'
@@ -39,7 +39,7 @@ const routes = [
     component: () => import('../views/addSchedule/index.vue')
   },
   {
-    path: '/scheduleDetail/:period',
+    path: '/scheduleDetail/:period/:courseType/',
     name: 'scheduleDetail',
     meta: {
       title: '排期详情',

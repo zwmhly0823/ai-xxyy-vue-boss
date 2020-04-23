@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-15 20:35:57
  * @LastEditors: Shentong
- * @LastEditTime: 2020-04-22 12:01:34
+ * @LastEditTime: 2020-04-23 12:22:46
  -->
 <template>
   <div class="third-step">
@@ -18,24 +18,53 @@
         @pageChange="pageChange_handler"
         class="mytable"
       >
-        <el-table-column type="index" label="序号" width="70">
+        <el-table-column type="index" label="序号" width="70" align="center">
         </el-table-column>
-        <el-table-column prop="teacherRealName" label="真实姓名" width="100">
+        <el-table-column
+          prop="teacherRealName"
+          label="真实姓名"
+          width="100"
+          align="center"
+        >
         </el-table-column>
-        <el-table-column prop="departmentName" label="所属部门" width="150">
+        <el-table-column
+          prop="departmentName"
+          label="所属部门"
+          width="150"
+          align="center"
+        >
         </el-table-column>
-        <el-table-column prop="teacherWechatNo" label="绑定微信" width="150">
+        <el-table-column
+          prop="teacherWechatNo"
+          label="绑定微信"
+          width="150"
+          align="center"
+        >
         </el-table-column>
-        <el-table-column prop="address" label="招生级别" width="80">
+        <el-table-column
+          prop="address"
+          label="招生级别"
+          width="80"
+          align="center"
+        >
           <template slot-scope="scope">
             <div v-for="(leve, l_index) in scope.row.enroll" :key="l_index">
               {{ leve.courseDifficulty || '' }}
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="address" label="打开开关" width="100">
+        <el-table-column
+          prop="address"
+          label="打开开关"
+          width="100"
+          align="center"
+        >
           <template slot-scope="scope">
-            <div v-for="(swicth, s_index) in scope.row.enroll" :key="s_index">
+            <div
+              v-for="(swicth, s_index) in scope.row.enroll"
+              :key="s_index"
+              class="select-container"
+            >
               <el-switch
                 v-model="swicth.status"
                 active-color="#13ce66"
@@ -46,7 +75,7 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column label="班级人数" width="120">
+        <el-table-column label="班级人数" width="120" align="center">
           <template slot-scope="scope">
             <div v-for="(t, t_index) in scope.row.enroll" :key="t_index">
               <el-input
@@ -59,7 +88,12 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="address" label="计划招生" width="100">
+        <el-table-column
+          prop="address"
+          label="计划招生"
+          width="100"
+          align="center"
+        >
           <template slot-scope="scope">
             <div v-for="(p, t_index) in scope.row.enroll" :key="t_index">
               <el-input
@@ -72,7 +106,12 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="address" label="课程材料版本" width="130">
+        <el-table-column
+          prop="address"
+          label="课程材料版本"
+          width="130"
+          align="center"
+        >
           <template slot-scope="scope">
             <div
               v-for="(v, v_index) in scope.row.enroll"
@@ -96,7 +135,12 @@
             </div>
           </template>
         </el-table-column>
-        <!-- <el-table-column prop="address" label="体验课类型" width="130">
+        <el-table-column
+          prop="address"
+          label="体验课类型"
+          width="240"
+          align="center"
+        >
           <template slot-scope="scope">
             <div
               v-for="(v, v_index) in scope.row.enroll"
@@ -104,13 +148,16 @@
               class="select-container"
             >
               <el-select
-                v-model="v.courseVersion"
+                multiple
+                :disabled="!Boolean(+v.status)"
+                v-model="v.courseCategory"
+                popper-class="courseCategory"
                 size="mini"
                 placeholder="体验课类型"
               >
                 <el-option
-                  v-for="(item, i) in productVersion"
-                  :key="i"
+                  v-for="item in trialClass"
+                  :key="item.value"
                   :label="item.name"
                   :value="item.value"
                 >
@@ -118,7 +165,7 @@
               </el-select>
             </div>
           </template>
-        </el-table-column> -->
+        </el-table-column>
       </ele-table>
 
       <!-- 取消、下一步 -->
@@ -152,8 +199,8 @@ export default {
         { name: 'V1.6', value: 'V1.6' }
       ],
       trialClass: [
-        { name: '单周体验课', value: '单周体验课' },
-        { name: '双周体验课', value: '双周体验课' }
+        { name: '单周体验课', value: '3' },
+        { name: '双周体验课', value: '0' }
       ],
       tabQuery: {
         size: 2,
@@ -197,14 +244,23 @@ export default {
                 status: 0,
                 teamSize: '',
                 sumTeamSize: '',
-                courseVersion: ''
+                courseVersion: '',
+                courseCategory: []
               })
             }
+          } else {
+            enroll.forEach((item) => {
+              item.courseCategory = item.courseCategory
+                ? item.courseCategory.split(',')
+                : []
+            })
           }
         })
 
         this.tableData = payload
+        console.log('this.tableData ', this.tableData)
       } catch (err) {
+        console.log('222', err)
         this.$message({
           message: '获取列表出错',
           type: 'warning'
@@ -233,6 +289,7 @@ export default {
         }
       } catch (err) {
         loadingInstance.close()
+        console.log('111', err)
         this.$message({
           message: '获取列表出错',
           type: 'warning'
@@ -244,6 +301,12 @@ export default {
     // 上一步，下一步
     async stepOpt(type) {
       const { courseType = 0 } = this.$route.params
+      this.tableData.forEach((item) => {
+        const { enroll = [] } = item
+        enroll.forEach((i) => {
+          i.courseCategory = i.courseCategory ? i.courseCategory.join() : ''
+        })
+      })
       const params = {
         courseType,
         period: this.schedulePeriod,
@@ -264,6 +327,12 @@ export default {
   flex-direction: column;
   .select-container {
     margin-bottom: 5px;
+    .courseCategory {
+      width: 100%;
+    }
+    .el-select {
+      width: 100%;
+    }
   }
   .table_input {
     margin-bottom: 5px;
