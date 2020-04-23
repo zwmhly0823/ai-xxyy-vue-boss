@@ -113,3 +113,40 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 ### eslint
 
 - [VSCode 使用 ESLint + Prettier 来统一 JS 代码](https://www.cnblogs.com/xjnotxj/p/10828183.html)
+
+---
+### 查询表达式说明
+向接口传值用到的表达式:
+``` js
+{bool:{must:[{term:{id: 1}},{terms:{uid:[1,2,3]}}],filter:{bool:{should:[{term:{name:'aaa'}}]}}}}
+```
+``` js
+{
+    "bool": {
+        "must": [
+            {
+                "term": {
+                    "id": 1
+                },
+                "terms": {
+                    "uid": [1,2,3]
+                }
+            }
+        ],
+        "filter": {
+            "bool": {
+                "should": [
+                    {
+                        "term": {
+                            "name": "aaa"
+                        }
+                    }
+                ]
+            }
+        }
+    }
+}
+```
+- `must` 表示 与 查询，`filter`表示 或 查询
+- 每一项查询以`term`或`terms`对象加查询字段。`term`是单条查询，`terms`是多条查询
+ - `{term:{id: 1}},{terms:{uid:[1,2,3]}}`
