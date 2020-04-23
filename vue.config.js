@@ -109,9 +109,9 @@ module.exports = {
       },
       '/graphql': {
         // local - 本地开发环境
-        target: 'http://localhost:3000',
+        // target: 'http://localhost:3000',
         // release - 测试环境
-        // target: 'http://docker.meixiu.mobi:43401',
+        target: 'http://docker.meixiu.mobi:43401',
         // dev - 开发环境
         // target: 'http://docker.meixiu.mobi:33401',
         // product -预发布环境
