@@ -313,7 +313,7 @@ export default {
         this.searchQuery = ''
         this.query = ''
       }
-      this.getData()
+      this.getData(1)
     },
     getData(page = this.currentPage) {
       if (this.departmentQuery || this.searchQuery) {
