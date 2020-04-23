@@ -3,8 +3,8 @@
  * @version:
  * @Author: zhubaodong
  * @Date: 2020-03-24 18:20:12
- * @LastEditors: panjian
- * @LastEditTime: 2020-04-21 17:11:35
+ * @LastEditors: Lukun
+ * @LastEditTime: 2020-04-22 19:51:32
  -->
 
 <template>
@@ -538,7 +538,7 @@ export default {
     // 排期
     selectSchedule(res) {
       console.log(res, 'res')
-      this.setSeachParmas(res, [this.schedule || 'id'], 'term')
+      this.setSeachParmas(res, [this.schedule || 'id'])
     },
     // 难度
     supCallBack(res) {

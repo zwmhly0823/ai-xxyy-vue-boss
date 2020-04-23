@@ -4,7 +4,7 @@
  * @Author: Lukun
  * @Date: 2020-04-11 16:06:42
  * @LastEditors: Lukun
- * @LastEditTime: 2020-04-18 17:03:55
+ * @LastEditTime: 2020-04-22 18:33:16
  */
 const state = {
   whackId: '0,1,2,3,6',
@@ -27,11 +27,9 @@ const mutations = {
 const actions = {
   getLeftBarId(context, id) {
     context.commit('getLeftBar', id)
-    console.log(context, '-------------id', id)
   },
   getShowStatus(context, obj) {
     context.commit('showStatus', obj)
-    console.log(context, '-------------id', obj)
   }
 }
 

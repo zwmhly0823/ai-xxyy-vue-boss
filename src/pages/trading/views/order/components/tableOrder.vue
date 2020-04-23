@@ -151,7 +151,12 @@
       </el-table-column>
       <el-table-column label="关联物流" width="150">
         <template slot-scope="scope">
-          <p class="primary-color">
+          <p
+            :class="{ 'primary-color': scope.row.express.express_total > 0 }"
+            @click="
+              showExpressDetail(scope.row.id, scope.row.express.express_total)
+            "
+          >
             {{ scope.row.express ? scope.row.express.express_total || 0 : '-' }}
           </p>
           <!-- 体验课不显示最后一次物流状态 -->
@@ -169,7 +174,9 @@
     </el-table>
 
     <div v-if="orderList.length === 0" class="noData">暂无数据</div>
-
+    <div class="drawer-body">
+      <express-detail :order_id="order_id" ref="order_id" />
+    </div>
     <m-pagination
       :current-page="currentPage"
       :page-count="totalPages"
@@ -185,10 +192,12 @@
 import _ from 'lodash'
 import MPagination from '@/components/MPagination/index.vue'
 import { formatData, isToss } from '@/utils/index.js'
+import ExpressDetail from '../../components/expressDetail'
 // import axios from '@/api/axiosConfig'
 export default {
   components: {
-    MPagination
+    MPagination,
+    ExpressDetail
   },
   props: {
     // 商品主题
@@ -220,6 +229,8 @@ export default {
   },
   data() {
     return {
+      // 给物流详情组件传递的订单id
+      order_id: '',
       // 总页数
       totalPages: 1,
       totalElements: 0, // 总条数
@@ -265,6 +276,14 @@ export default {
     }
   },
   methods: {
+    // 订单关联物流详情展示
+    showExpressDetail(what, total) {
+      console.log(what, "what's that?")
+      if (total > 0) {
+        this.$refs.order_id.drawer = true
+        this.order_id = what
+      }
+    },
     // 订单列表
     async getOrderList(page = this.currentPage, status) {
       const statisticsQuery = []
@@ -466,6 +485,7 @@ export default {
 }
 .primary-color {
   color: #409eff;
+  cursor: pointer;
 }
 </style>
 <style lang="scss">

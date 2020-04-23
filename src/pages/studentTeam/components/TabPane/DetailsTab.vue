@@ -34,7 +34,7 @@
         @click="ExhibitionList"
         >生成作品展</el-button
       >
-      <!-- <checkBox
+      <checkBox
         class="check-box"
         :tables="table"
         :classId="classId"
@@ -42,7 +42,7 @@
         @screenWorks="screenWorks"
         @screenAttendClass="screenAttendClass"
         v-if="this.table.tabs == 3 || this.table.tabs == 4"
-      /> -->
+      />
     </div>
     <div>
       <div class="tabs-tab">
@@ -188,7 +188,7 @@
   </div>
 </template>
 <script>
-// import checkBox from '@/components/MCheckBox/index'
+import checkBox from '@/components/MCheckBox/index'
 import detailsTable from './components/detailsTable'
 import MSearch from '@/components/MSearch/index.vue'
 import { timestamp, GetAgeByBrithday, isToss } from '@/utils/index'
@@ -200,8 +200,8 @@ export default {
     detailsTable,
     finishclass,
     exhibition,
-    MSearch
-    // checkBox
+    MSearch,
+    checkBox
   },
   props: {
     classId: {
