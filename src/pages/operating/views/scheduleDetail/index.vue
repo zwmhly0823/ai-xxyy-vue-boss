@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-14 18:28:44
  * @LastEditors: Shentong
- * @LastEditTime: 2020-04-22 17:45:28
+ * @LastEditTime: 2020-04-23 17:02:16
  -->
 <template>
   <div class="app-main height add-schedule-container">
@@ -14,34 +14,32 @@
           <div class="head-info">
             <div class="title">
               <p>
-                <span v-if="scheduleStatistic.type == '0'">体验课</span>
+                <span v-if="params.courseType == '0'">体验课</span>
                 <span v-else>系统课</span>
                 <span>-</span
-                ><span>{{ scheduleStatistic.period_name || '-' }}</span>
+                ><span>{{ scheduleStatistic.periodName || '-' }}</span>
               </p>
-              <el-button type="primary" size="mini">修改</el-button>
+              <el-button type="primary" size="mini" @click="modify"
+                >修改</el-button
+              >
             </div>
             <el-row :gutter="20">
               <el-col class="label-name" :span="2">排期id:</el-col>
               <el-col :span="2">{{ scheduleStatistic.period || '-' }}</el-col>
-              <el-col class="label-name" :span="2">快速设置:</el-col>
-              <el-col :span="2">2</el-col>
+              <el-col class="label-name" :span="2">接速设置:</el-col>
+              <el-col :span="2">{{ scheduleStatistic.robinNum || '' }}</el-col>
             </el-row>
             <el-row :gutter="20">
               <el-col class="label-name" :span="2">开始招生:</el-col>
-              <el-col :span="2">2019-02-02</el-col>
+              <el-col :span="2">{{ scheduleStatistic.startDate }}</el-col>
               <el-col class="label-name" :span="2">结束招生:</el-col>
-              <el-col :span="2">2019-02-02</el-col>
+              <el-col :span="2">{{ scheduleStatistic.endDate }}</el-col>
             </el-row>
             <el-row :gutter="20">
               <el-col class="label-name" :span="2">开始上课:</el-col>
-              <el-col :span="2">{{
-                scheduleStatistic.course_day || '-'
-              }}</el-col>
+              <el-col :span="2">{{ scheduleStatistic.courseDay }}</el-col>
               <el-col class="label-name" :span="2">结束上课:</el-col>
-              <el-col :span="2">{{
-                scheduleStatistic.end_course_day || '-'
-              }}</el-col>
+              <el-col :span="2">{{ scheduleStatistic.endCourseDay }}</el-col>
             </el-row>
             <!-- TODO:<div class="description">
               当前结果：社群销售<span>9</span>人，计划招生<span>8992</span>（S1:2020
@@ -73,29 +71,52 @@
 </template>
 
 <script>
+import { formatData } from '@/utils/index'
 import ScheduleMarket from './components/ScheduleMarket'
 export default {
   data() {
     return {
-      scheduleStatistic: {}
+      scheduleStatistic: {},
+      params: {}
     }
   },
   components: {
     ScheduleMarket
   },
   computed: {},
-  created() {
-    const { id = '' } = this.$route.params
-    console.log(id, 'this.$route.params.id')
+  async created() {
+    const { period = '', courseType = '0' } = this.$route.params
+    Object.assign(this.params, { period, courseType })
+
+    const { payload = {} } = await this.getScheduleDetailInfo(this.params) // formatData
+    const {
+      startDate = '',
+      endDate = '',
+      courseDay = '',
+      endCourseDay = ''
+    } = payload
+    Object.assign(payload, {
+      startDate: startDate ? formatData(startDate) : '-',
+      endDate: endDate ? formatData(endDate) : '-',
+      courseDay: courseDay ? formatData(courseDay) : '-',
+      endCourseDay: endCourseDay ? formatData(endCourseDay) : '-'
+    })
+    this.scheduleStatistic = payload
+    console.log(this.scheduleStatistic)
   },
   methods: {
-    async getStatisticHeader() {
+    async getScheduleDetailInfo() {
       try {
-        const statisticHeader = this.$http.Operating.getStatisticHeader()
-        return statisticHeader
+        const info = this.$http.Operating.getScheduleDetailInfo(this.params)
+        return info
       } catch (err) {
         console.log(err)
       }
+    },
+    modify() {
+      const { period = 0, courseType = '0' } = this.params
+
+      this.$router.push({ path: `/addSchedule/${period}/${courseType}` })
     }
   }
 }

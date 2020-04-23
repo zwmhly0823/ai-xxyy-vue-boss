@@ -4,7 +4,7 @@
  * @Author: shentong
  * @Date: 2020-04-02 16:08:02
  * @LastEditors: Shentong
- * @LastEditTime: 2020-04-23 11:53:24
+ * @LastEditTime: 2020-04-23 17:04:10
  -->
 <template>
   <div>
@@ -132,7 +132,7 @@
           label="状态"
           align="center"
         ></el-table-column>
-        <el-table-column label="操作">
+        <el-table-column label="操作" align="center" width="110">
           <template slot-scope="scope">
             <div class="editStyle">
               <span
@@ -140,7 +140,7 @@
                 @click="addEditSchedule(scope.row)"
                 >编辑</span
               >
-              <!-- <span @click="go_detail">详细</span> -->
+              <span @click="go_detail(scope.row)">详细</span>
             </div>
           </template>
         </el-table-column>
@@ -216,9 +216,9 @@ export default {
     },
     // 查看详情
     go_detail(row) {
-      const { period = 0 } = row
+      const { period = '' } = row
       this.$router.push({
-        path: `/scheduleDetail/${period}`
+        path: `/scheduleDetail/${period}/${this.tabIndex}`
       })
     },
     /**

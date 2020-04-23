@@ -4,7 +4,7 @@
  * @Author: shentong
  * @Date: 2020-04-02 16:08:02
  * @LastEditors: Shentong
- * @LastEditTime: 2020-04-22 17:20:03
+ * @LastEditTime: 2020-04-23 16:58:18
  -->
 <template>
   <div>
@@ -19,30 +19,59 @@
           @pageChange="pageChange_handler"
           class="mytable"
         >
-          <el-table-column prop="id" label="序号" width="50"> </el-table-column>
-          <el-table-column prop="realname" label="期名" width="80">
+          <el-table-column prop="id" label="序号" width="50" align="center">
+            <template slot-scope="scope"
+              ><span>{{ scope.$index + calcIndex + 1 }} </span></template
+            >
           </el-table-column>
-          <el-table-column prop="nickname" label="开始招生"></el-table-column>
-          <el-table-column prop="aa" label="结束招生"></el-table-column>
-          <el-table-column prop="address" label="开课时间"></el-table-column>
-          <el-table-column prop="address" label="结课时间"></el-table-column>
-          <el-table-column prop="address" label="招生级别"></el-table-column>
           <el-table-column
-            prop="address"
-            label="带班销售人数"
-          ></el-table-column>
-          <el-table-column prop="address" label="计划招生"></el-table-column>
-          <el-table-column prop="address" label="实际招生"></el-table-column>
-          <el-table-column prop="address" label="计划开班"></el-table-column>
-          <el-table-column prop="address" label="实际开班"></el-table-column>
-          <el-table-column label="操作" align="center">
-            <template slot-scope="">
-              <div class="editStyle">
-                <span style="margin-right:20px">编辑</span>
-                <span>详细</span>
-              </div>
-            </template>
+            prop="departmentName"
+            label="部门"
+            width="80"
+            align="center"
+          >
           </el-table-column>
+          <el-table-column
+            align="center"
+            prop="teacherRealName"
+            label="真实姓名"
+          ></el-table-column>
+          <el-table-column
+            align="center"
+            prop="courseDifficulty"
+            label="招生级别"
+          ></el-table-column>
+          <el-table-column
+            align="center"
+            prop="planSumTeamSize"
+            label="计划招生数"
+          ></el-table-column>
+          <el-table-column
+            align="center"
+            prop="realSumTeamSize"
+            label="实际招生数"
+          ></el-table-column>
+          <el-table-column
+            align="center"
+            prop="enrollRate"
+            label="招生完成率"
+          ></el-table-column>
+          <el-table-column
+            align="center"
+            prop="planTeam"
+            label="计划班级人数"
+          ></el-table-column>
+          <el-table-column prop="realTeam" label="已开班级数"></el-table-column>
+          <el-table-column
+            align="center"
+            prop="teacherWechatNos"
+            label="绑定微信号"
+          ></el-table-column>
+          <el-table-column
+            align="center"
+            prop="courseVersion"
+            label="课程和材料版本"
+          ></el-table-column>
         </ele-table>
       </div>
     </div>
@@ -74,30 +103,52 @@ export default {
       // 总页数
       totalPages: 1,
       // 当前页数
-      currentPage: 1,
-      // 多选选择项
-      checkList: [],
       // 表格数据
-      tableData: [],
-      // 老师id
-      teacherID: ''
+      tableData: []
     }
   },
-  computed: {},
+  computed: {
+    calcIndex() {
+      return this.tabQuery.size * (this.tabQuery.pageNum - 1)
+    }
+  },
   watch: {},
-  activated() {},
+  async created() {
+    const { period = '', courseType = '0' } = this.$route.params
+    Object.assign(this.tabQuery, { period, courseType })
+
+    this.init()
+  },
   methods: {
-    // async getStatisticHeader() {
-    //   try {
-    //     const statisticHeader = this.$http.Operating.getStatisticHeader()
-    //     return statisticHeader
-    //   } catch (err) {
-    //     console.log(err)
-    //   }
-    // },
+    async init() {
+      this.flags.loading = true
+
+      try {
+        const _list = await this.getScheduleDetailList()
+        const { content = [] } = _list
+        this.tableData = content
+
+        this.totalElements = +_list.totalElements
+        this.flags.loading = false
+      } catch (err) {
+        console.log()
+      }
+    },
+    async getScheduleDetailList() {
+      try {
+        const tableList = this.$http.Operating.getScheduleDetailList(
+          this.tabQuery
+        )
+        return tableList
+      } catch (err) {
+        this.flags.loading = false
+        return new Error(err)
+      }
+    },
     // 分页
-    pageChange_handler(val) {
-      console.log(val)
+    pageChange_handler(page) {
+      this.tabQuery.pageNum = page
+      this.init()
     }
   }
 }
