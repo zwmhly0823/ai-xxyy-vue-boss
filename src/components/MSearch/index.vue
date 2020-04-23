@@ -119,6 +119,14 @@
         <!-- 社群销售 -->
         <group-sell @result="selectSellTeacher" :name="groupSell" />
       </el-form-item>
+      <el-form-item v-if="teacherwx">
+        <!-- 老师模块微信号搜索 -->
+        <teacher-wx
+          :teacherwx="teacherwx"
+          :WeChat="WeChat"
+          @getWxTeacher="getWxTeacher"
+        />
+      </el-form-item>
       <el-form-item v-if="rank || induction || landing || position">
         <!-- 老师模块职级，登陆状态，入职状态，选择职务搜索 -->
         <teacher-drop-down
@@ -239,6 +247,7 @@ import Schedule from './searchItems/schedule'
 import teacherPhone from './searchItems/teacherSearch/teacherPhone.vue'
 import teacherName from './searchItems/teacherSearch/teacherName.vue'
 import teacherDropDown from './searchItems/teacherSearch/teacherDropDown'
+import teacherWx from './searchItems/teacherSearch/teachetWx'
 import wxList from './searchItems/wxInput'
 import { isToss } from '@/utils/index'
 import selectAddress from './searchItems/selectAddress.vue'
@@ -315,6 +324,11 @@ export default {
       type: String,
       default: '' // phone
     },
+    // 老师微信号搜索
+    teacherwx: {
+      type: String,
+      default: ''
+    },
     // 是否只搜手机号
     onlyPhone: {
       type: String,
@@ -358,6 +372,11 @@ export default {
     rank: {
       type: String,
       default: ''
+    },
+    // 老师微信传参
+    WeChat: {
+      type: Array,
+      default: null
     },
     // 入职状态
     induction: {
@@ -480,7 +499,8 @@ export default {
     teacherName,
     teacherDropDown,
     wxList,
-    selectAddress
+    selectAddress,
+    teacherWx
   },
   data() {
     return {
@@ -557,6 +577,10 @@ export default {
     // 登陆状态
     landingCallBack(res) {
       this.setSeachParmas(res, [this.landing || 'inductionName'])
+    },
+    // 老师微信号
+    getWxTeacher(res) {
+      this.setSeachParmas(res, [this.teacherwx], 'wildcard')
     },
     // 职务
     positionCallBack(res) {
