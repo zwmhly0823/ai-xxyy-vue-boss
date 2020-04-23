@@ -4,7 +4,7 @@
  * @Author: shentong
  * @Date: 2020-04-02 16:08:02
  * @LastEditors: Shentong
- * @LastEditTime: 2020-04-20 15:50:05
+ * @LastEditTime: 2020-04-23 11:53:24
  -->
 <template>
   <div>
@@ -237,7 +237,8 @@ export default {
         '0': '待开始',
         '1': '招生中',
         '2': '待开课',
-        '3': '已结课'
+        '3': '上课中',
+        '4': '已结课'
       }
       this.tabQuery = {
         ...this.tabQuery,
