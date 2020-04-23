@@ -12,6 +12,7 @@
       @search="handleSearch"
       teacherphone="phone.keyword"
       teachername="realname.keyword"
+      teachernickname="nickname.keyword"
       rank="rank_id"
       induction="status"
       landing="is_login"

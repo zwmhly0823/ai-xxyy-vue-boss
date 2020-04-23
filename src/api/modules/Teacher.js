@@ -149,6 +149,7 @@ export default {
         {
           phone
           realname
+          nickname
         }
       }
       `
