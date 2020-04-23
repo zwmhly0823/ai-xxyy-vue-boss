@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-15 20:35:57
  * @LastEditors: Shentong
- * @LastEditTime: 2020-04-22 22:26:57
+ * @LastEditTime: 2020-04-23 12:22:46
  -->
 <template>
   <div class="third-step">
@@ -250,8 +250,9 @@ export default {
             }
           } else {
             enroll.forEach((item) => {
-              item.courseCategory =
-                item.courseCategory && item.courseCategory.split(',')
+              item.courseCategory = item.courseCategory
+                ? item.courseCategory.split(',')
+                : []
             })
           }
         })
@@ -303,7 +304,7 @@ export default {
       this.tableData.forEach((item) => {
         const { enroll = [] } = item
         enroll.forEach((i) => {
-          i.courseCategory = i.courseCategory.join()
+          i.courseCategory = i.courseCategory ? i.courseCategory.join() : ''
         })
       })
       const params = {
