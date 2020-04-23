@@ -4,7 +4,7 @@
  * @Author: Lukun
  * @Date: 2020-04-15 15:18:49
  * @LastEditors: Lukun
- * @LastEditTime: 2020-04-23 17:09:30
+ * @LastEditTime: 2020-04-23 18:19:37
  -->
 <template>
   <div class="container">
@@ -104,6 +104,7 @@ export default {
     transferExpress(val) {
       this.expressInformation = val
       this.expressNu = this.expressInformation.express_nu
+      this.expressList(this.expressNu)
     },
     order_id(val) {
       this.orderId = val
@@ -177,14 +178,6 @@ export default {
           console.log(this.activities, 'this.activities')
         })
     }
-  },
-  mounted() {
-    if (this.transferExpress) {
-      this.expressList(this.expressNu)
-    }
-
-    // 获取物流信息
-    // this.getexpressInformation()
   }
 }
 </script>
@@ -205,8 +198,10 @@ export default {
       display: flex;
       height: 550px;
       flex-direction: column;
-      overflow-y: scroll;
-      .inactive {
+      <<<<<<<headoverflow-y: scroll;
+      =======overflow-y: auto;
+      overflow: hidden;
+      >>>>>>>22db02a78152ea1a992859b9264e5aeb0aa2698a .inactive {
         text-align: center;
         padding: 4px;
         background-color: #f2f2f2;
@@ -228,7 +223,8 @@ export default {
       margin-left: 10px;
       width: 100%;
       height: 700px;
-      overflow-y: scroll;
+      overflow-y: auto;
+      overflow: hidden;
       .img {
         position: absolute;
         right: 10px;
