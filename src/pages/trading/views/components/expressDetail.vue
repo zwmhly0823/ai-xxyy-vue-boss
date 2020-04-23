@@ -4,7 +4,7 @@
  * @Author: Lukun
  * @Date: 2020-04-15 15:18:49
  * @LastEditors: Lukun
- * @LastEditTime: 2020-04-22 18:11:03
+ * @LastEditTime: 2020-04-23 17:09:30
  -->
 <template>
   <div class="container">
@@ -17,7 +17,7 @@
       size="40%"
     >
       <div class="what">
-        <div class="left-click" v-show="order_id && leftRow.lenght > 1">
+        <div class="left-click" v-if="leftRow.length > 1">
           <div
             @click="getexpressInformation(item, i)"
             :class="[{ active: isActive == i }, 'inactive']"
@@ -27,7 +27,7 @@
             {{ item.product_name }}
           </div>
         </div>
-        <div class="line" v-show="order_id && leftRow.lenght > 1"></div>
+        <div class="line" v-if="leftRow.length > 1"></div>
         <div class="right-detail">
           <div class="img" @click="handleClose">
             <i class="el-icon-close"></i>
@@ -107,7 +107,7 @@ export default {
     },
     order_id(val) {
       this.orderId = val
-      this.getexpressInformation(this.leftRow[0].express_nu, 0)
+      this.getexpressMess(this.orderId)
     }
   },
   methods: {
@@ -121,10 +121,10 @@ export default {
       this.drawer = false
     },
     // 获取订单页面物流信息
-    getexpressMess() {
+    getexpressMess(id) {
       // 这里需要传递用户Id来获取
       const queryParams = JSON.stringify(`
-      {"bool":{"must":[{"term":{"order_id":${this.order_id}}}]}}
+      {"bool":{"must":[{"term":{"order_id":${id}}}]}}
       `)
       return axios
         .post('/graphql/v1/toss', {
@@ -139,6 +139,7 @@ export default {
         })
         .then((res) => {
           this.leftRow = res.data.ExpressList
+          this.getexpressInformation(this.leftRow[0], 0)
         })
     },
     // 物流列表信息
@@ -178,7 +179,9 @@ export default {
     }
   },
   mounted() {
-    this.expressList(this.expressNu)
+    if (this.transferExpress) {
+      this.expressList(this.expressNu)
+    }
 
     // 获取物流信息
     // this.getexpressInformation()
