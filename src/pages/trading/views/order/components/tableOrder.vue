@@ -84,13 +84,7 @@
       >
         <template slot-scope="scope">
           <p>{{ scope.row.salesman ? scope.row.salesman.realname : '-' }}</p>
-          <p>
-            {{
-              scope.row.department
-                ? scope.row.department.department.name || '-'
-                : '-'
-            }}
-          </p>
+          <p>{{ scope.row.department.department.name || '-' }}</p>
         </template>
       </el-table-column>
       <!-- <el-table-column
@@ -151,12 +145,13 @@
       </el-table-column>
       <el-table-column label="关联物流" width="150">
         <template slot-scope="scope">
-          <p
+          <!-- <p
             :class="{ 'primary-color': scope.row.express.express_total > 0 }"
             @click="
               showExpressDetail(scope.row.id, scope.row.express.express_total)
             "
-          >
+          > -->
+          <p>
             {{ scope.row.express ? scope.row.express.express_total || 0 : '-' }}
           </p>
           <!-- 体验课不显示最后一次物流状态 -->
