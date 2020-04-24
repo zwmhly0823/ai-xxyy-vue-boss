@@ -137,7 +137,9 @@ difficult
           this.whack[0].children = [
             {
               id: '0,1,2,3,6',
-              label: `全部（${this.arrSum(logisticsStatus)}）`
+              label: `全部（${logisticsStatus.reduce((prev, cur) => {
+                return +prev + +cur
+              })}）`
             },
             {
               id: '0',
@@ -163,7 +165,9 @@ difficult
           this.whack[1].children = [
             {
               id: '4,5,7,8',
-              label: `全部（${this.arrSum(logisticsError)}）`
+              label: `全部（${logisticsError.reduce((prev, cur) => {
+                return +prev + +cur
+              })}）`
             },
             {
               id: '8',
@@ -189,6 +193,7 @@ difficult
       this.$emit('change', dataExpress)
     },
     arrSum(arr) {
+      // 可以用reduce数组代替
       let val = 0
       arr.forEach((arr) => {
         val += Number(arr)
