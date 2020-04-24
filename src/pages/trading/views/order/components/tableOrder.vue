@@ -84,7 +84,13 @@
       >
         <template slot-scope="scope">
           <p>{{ scope.row.salesman ? scope.row.salesman.realname : '-' }}</p>
-          <p>{{ scope.row.department.department.name || '-' }}</p>
+          <p>
+            {{
+              scope.row.department
+                ? scope.row.department.department.name || '-'
+                : '-'
+            }}
+          </p>
         </template>
       </el-table-column>
       <!-- <el-table-column
