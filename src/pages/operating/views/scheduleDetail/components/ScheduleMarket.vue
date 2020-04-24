@@ -4,7 +4,7 @@
  * @Author: shentong
  * @Date: 2020-04-02 16:08:02
  * @LastEditors: Shentong
- * @LastEditTime: 2020-04-23 16:58:18
+ * @LastEditTime: 2020-04-24 21:25:46
  -->
 <template>
   <div>
@@ -27,7 +27,7 @@
           <el-table-column
             prop="departmentName"
             label="部门"
-            width="80"
+            width="100"
             align="center"
           >
           </el-table-column>

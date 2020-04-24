@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-03-16 19:46:39
  * @LastEditors: Shentong
- * @LastEditTime: 2020-04-23 16:45:30
+ * @LastEditTime: 2020-04-24 20:31:55
  */
 import axios from '../axiosConfig'
 
@@ -83,6 +83,15 @@ export default {
   getScheduleDetailInfo(params) {
     return axios.get(
       `/api/s/v1/management/enroll/getManagement?courseType=${params.courseType}&period=${params.period}`
+    )
+  },
+  /**
+   *
+   *招生排期 详情 基本信息
+   */
+  getScheduleDetailStatistic(params) {
+    return axios.get(
+      `/api/s/v1/management/enroll/calculation/byPeriod?courseType=${params.courseType}&period=${params.period}`
     )
   }
 }
