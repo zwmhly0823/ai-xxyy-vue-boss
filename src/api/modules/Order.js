@@ -33,6 +33,7 @@ export default {
             bear_integral
             gem_integral
             product_name
+            out_trade_no
             user{
               username
               nickname
@@ -68,6 +69,9 @@ export default {
             express{
               express_total
               last_express_status
+            }
+            trial_course{
+              team_category
             }
           }
         }
