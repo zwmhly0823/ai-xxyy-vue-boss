@@ -14,9 +14,8 @@
       @select="handleSelect"
       @select-all="handleAllSelect"
     >
-      <el-table-column type="selection" width="25" v-if="!teacherId" fixed>
-      </el-table-column>
-      <el-table-column width="25" v-if="dataExp.id == 6 && !teacherId" fixed>
+      <el-table-column type="selection" width="25" fixed> </el-table-column>
+      <el-table-column width="25" fixed>
         <template slot-scope="scope">
           <!-- <div v-show="false">{{ scope }}</div> -->
           <el-dropdown trigger="click">
@@ -161,8 +160,10 @@
                     :key="item.id"
                     v-for="item in checkBatchParams"
                     class="infinite-list-item"
+                    style="list-style:none"
                   >
-                    {{ item.term }}期 {{ item.sup }} {{ item.product_name }}
+                    {{ +item.term > 10 ? item.term : `0${item.term}` }}期
+                    {{ item.sup }} {{ item.product_name }}
                   </li>
                 </ul>
               </div>
