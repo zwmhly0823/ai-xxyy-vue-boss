@@ -757,6 +757,11 @@ export default {
         .getElementById('right-scroll')
         .querySelector('.scrollbar-wrapper').scrollTop = 0
     }
+  },
+
+  beforeDestroy() {
+    const type = { disableClick: false }
+    this.$store.dispatch('getShowStatus', type)
   }
 }
 </script>
