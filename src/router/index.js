@@ -70,7 +70,27 @@ const routes = [
       }
     ]
   },
-
+  // 统计分析
+  {
+    path: '/statistics',
+    name: 'statistics',
+    // hidden: true,
+    meta: {
+      title: '统计分析',
+      icon: 'el-icon-s-data',
+      module: 'statistics'
+    },
+    children: [
+      {
+        path: '/salesPerformance',
+        name: 'salesPerformance',
+        meta: {
+          title: '销售业绩排名',
+          module: 'statistics'
+        }
+      }
+    ]
+  },
   // demo dashboard
   {
     path: '/dashboard',

@@ -1,7 +1,24 @@
+<!--
+ * @Descripttion: TOSS小熊
+ * @version: 1.0.0
+ * @Author: Shentong
+ * @Date: 2020-03-14 17:56:29
+ * @LastEditors: Shentong
+ * @LastEditTime: 2020-04-24 17:47:19
+ -->
 <template>
   <section class="app-main">
-    <transition name="fade-transform" mode="out-in">
+    <!-- <transition name="fade-transform" mode="out-in">
       <router-view :key="key" />
+    </transition> -->
+    <transition name="fade-transform" mode="out-in">
+      <keep-alive>
+        <router-view v-if="$route.meta.keepAlive" :key="key" />
+      </keep-alive>
+    </transition>
+
+    <transition name="fade-transform" mode="out-in">
+      <router-view v-if="!$route.meta.keepAlive" :key="key" />
     </transition>
   </section>
 </template>
