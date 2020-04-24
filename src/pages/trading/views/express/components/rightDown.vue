@@ -754,9 +754,14 @@ export default {
     // scrotop
     scrollToTop() {
       document
-        .getElementById('right-scroll')
+        .getElementById('express-right-scroll')
         .querySelector('.scrollbar-wrapper').scrollTop = 0
     }
+  },
+
+  beforeDestroy() {
+    const type = { disableClick: false }
+    this.$store.dispatch('getShowStatus', type)
   }
 }
 </script>
