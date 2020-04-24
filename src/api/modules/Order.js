@@ -33,6 +33,7 @@ export default {
             bear_integral
             gem_integral
             product_name
+            out_trade_no
             user{
               username
               nickname
