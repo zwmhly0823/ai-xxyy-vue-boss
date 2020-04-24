@@ -12,6 +12,7 @@
       :popper-class="+onlyWeixin ? 'ppName' : ''"
       placeholder="微信号搜索"
       @select="onWxSerch"
+      ref="wxnum"
     >
       <i class="el-icon-search el-input__icon" slot="suffix"></i>
       <template slot-scope="{ item }">
@@ -32,6 +33,7 @@
       :popper-class="+onlyPhone ? 'ppName' : ''"
       placeholder="手机号搜索"
       @select="onPhoneSerch"
+      ref="wxphone"
     >
       <i class="el-icon-search el-input__icon" slot="suffix"></i>
       <template slot-scope="{ item }">
@@ -175,6 +177,7 @@ export default {
       // console.log('*****list******', list)
       // cb 展示列表数据
       cb(list)
+      this.$refs.wxnum.handleFocus()
     },
     // 调用微信号搜索接口
     weixinCreateFilter(queryString) {
@@ -199,6 +202,7 @@ export default {
       }
       const list = await this.phoneCreateFilter(queryString)
       cb(list)
+      this.$refs.wxphone.handleFocus()
     },
     // 调用手机号搜索接口
     phoneCreateFilter(queryString) {
