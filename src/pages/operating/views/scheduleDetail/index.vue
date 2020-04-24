@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-14 18:28:44
  * @LastEditors: Shentong
- * @LastEditTime: 2020-04-23 17:02:16
+ * @LastEditTime: 2020-04-24 21:25:16
  -->
 <template>
   <div class="app-main height add-schedule-container">
@@ -41,11 +41,59 @@
               <el-col class="label-name" :span="2">结束上课:</el-col>
               <el-col :span="2">{{ scheduleStatistic.endCourseDay }}</el-col>
             </el-row>
-            <!-- TODO:<div class="description">
-              当前结果：社群销售<span>9</span>人，计划招生<span>8992</span>（S1:2020
-              S2:2020 S3:3000） 实际招生<span>9000</span>（S1:2020 S2:2020
-              S3:3000）
-            </div> -->
+            <!-- TODO: -->
+            <div class="description" v-if="resultStatistics.payload.length">
+              当前结果：社群销售<span>{{ resultStatistics.wechatSize }}</span
+              >人，计划招生<span>{{ resultStatistics.planSumTeamSize }}</span>
+              <span>（</span>
+              <span
+                >S1:{{
+                  (resultStatistics.payload[0] &&
+                    resultStatistics.payload[0].planSumTeamSize) ||
+                    '0'
+                }}
+              </span>
+              <span
+                >S2:{{
+                  (resultStatistics.payload[1] &&
+                    resultStatistics.payload[1].planSumTeamSize) ||
+                    '0'
+                }}
+              </span>
+              <span
+                >S3:{{
+                  (resultStatistics.payload[2] &&
+                    resultStatistics.payload[2].planSumTeamSize) ||
+                    '0'
+                }}
+              </span>
+              <span>）</span>
+
+              实际招生<span>{{ resultStatistics.realSumTeamSize }}</span>
+              <span>（</span>
+              <span
+                >S1:{{
+                  (resultStatistics.payload[0] &&
+                    resultStatistics.payload[0].realSumTeamSize) ||
+                    '0'
+                }}
+              </span>
+              <span
+                >S2:{{
+                  (resultStatistics.payload[1] &&
+                    resultStatistics.payload[1].realSumTeamSize) ||
+                    '0'
+                }}
+              </span>
+              <span
+                >S3:{{
+                  (resultStatistics.payload[2] &&
+                    resultStatistics.payload[2].realSumTeamSize) ||
+                    '0'
+                }}
+              </span>
+              <span>）</span>
+            </div>
           </div>
           <el-tabs type="border-card">
             <el-tab-pane label="招生详情-销售">
@@ -77,7 +125,13 @@ export default {
   data() {
     return {
       scheduleStatistic: {},
-      params: {}
+      params: {},
+      resultStatistics: {
+        wechatSize: 0, // 带班销售总人数
+        planSumTeamSize: 0, // 计划招生总人数
+        realSumTeamSize: 0, // 实际招生总人数
+        payload: []
+      }
     }
   },
   components: {
@@ -88,31 +142,77 @@ export default {
     const { period = '', courseType = '0' } = this.$route.params
     Object.assign(this.params, { period, courseType })
 
-    const { payload = {} } = await this.getScheduleDetailInfo(this.params) // formatData
-    const {
-      startDate = '',
-      endDate = '',
-      courseDay = '',
-      endCourseDay = ''
-    } = payload
-    Object.assign(payload, {
-      startDate: startDate ? formatData(startDate) : '-',
-      endDate: endDate ? formatData(endDate) : '-',
-      courseDay: courseDay ? formatData(courseDay) : '-',
-      endCourseDay: endCourseDay ? formatData(endCourseDay) : '-'
-    })
-    this.scheduleStatistic = payload
-    console.log(this.scheduleStatistic)
+    this.init()
   },
   methods: {
+    // 初始化数据
+    init() {
+      this.getScheduleDetailInfo()
+      this.getScheduleDetailStatistic()
+    },
+    // 获取头部基本信息
     async getScheduleDetailInfo() {
       try {
-        const info = this.$http.Operating.getScheduleDetailInfo(this.params)
-        return info
+        const {
+          payload = {}
+        } = await this.$http.Operating.getScheduleDetailInfo(this.params)
+        const {
+          startDate = '',
+          endDate = '',
+          courseDay = '',
+          endCourseDay = ''
+        } = payload
+        Object.assign(payload, {
+          startDate: startDate ? formatData(startDate) : '-',
+          endDate: endDate ? formatData(endDate) : '-',
+          courseDay: courseDay ? formatData(courseDay) : '-',
+          endCourseDay: endCourseDay ? formatData(endCourseDay) : '-'
+        })
+        this.scheduleStatistic = payload
       } catch (err) {
         console.log(err)
       }
     },
+    async getScheduleDetailStatistic() {
+      try {
+        const info = await this.$http.Operating.getScheduleDetailStatistic(
+          this.params
+        )
+        const { payload = [] } = info
+
+        // const obj = {
+        //   wechatSize: 0, // 带班销售总人数
+        //   planSumTeamSize: 0, // 计划招生总人数
+        //   realSumTeamSize: 0 // 实际招生总人数
+        // }
+
+        payload.forEach((item, index) => {
+          console.log(index)
+          this.resultStatistics.wechatSize += +item.wechatSize
+          this.resultStatistics.planSumTeamSize += +item.planSumTeamSize
+          this.resultStatistics.realSumTeamSize += +item.realSumTeamSize
+
+          // obj.PS1 = index === 0 ? item.planSumTeamSize : ''
+          // obj.RS1 = index === 0 ? item.realSumTeamSize : ''
+
+          // obj.PS2 = index === 1 ? item.planSumTeamSize : ''
+          // obj.RS2 = index === 1 ? item.realSumTeamSize : ''
+
+          // obj.PS3 = index === 2 ? item.planSumTeamSize : ''
+          // obj.RS3 = index === 2 ? item.realSumTeamSize : ''
+
+          // debugger
+        })
+
+        this.resultStatistics.payload = payload
+
+        // return info
+        console.log(this.resultStatistics)
+      } catch (err) {
+        console.log(err)
+      }
+    },
+    // 点击修改按钮
     modify() {
       const { period = 0, courseType = '0' } = this.params
 
