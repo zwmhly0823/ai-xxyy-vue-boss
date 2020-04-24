@@ -20,6 +20,7 @@
         :trigger-on-focus="false"
         :popper-class="+onlyPhone ? 'ppName' : ''"
         @select="inputHandler"
+        ref="elautocomplete"
       >
         <i class="el-icon-search el-input__icon" slot="suffix"></i>
         <template slot-scope="{ item }">
@@ -82,7 +83,6 @@ export default {
   computed: {},
   watch: {
     input(val, old) {
-      console.log(val !== old && !val)
       if (val !== old && !val) {
         this.$emit('result', '')
       }
@@ -98,11 +98,11 @@ export default {
         }
       }
       const searchUid = await this.createFilter(queryString)
-      console.log(searchUid, '匹配到的数据')
       const results = queryString ? searchUid : this.selectData
       // 调用 callback 返回建议列表的数据
       console.log(results, '结果')
       cb(searchUid)
+      this.$refs.elautocomplete.handleFocus()
     },
     createFilter(queryString) {
       const queryParams = `{"mobile":"${queryString}","team_id":"${this.teamId}","team_type":"${this.teamType}"}`

@@ -20,6 +20,7 @@
         :trigger-on-focus="false"
         :popper-class="+onlyName ? 'ppName' : ''"
         @select="inputHandler"
+        ref="elautocomplete"
       >
         <i class="el-icon-search el-input__icon" slot="suffix"></i>
         <template slot-scope="{ item }">
@@ -91,15 +92,19 @@ export default {
       // }
       const list = await this.createFilter(queryString)
       cb(list)
+      this.$refs.elautocomplete.handleFocus()
     },
-    createFilter(queryString) {
-      return this.$http.Teacher.teacherListEx(
-        'realname.keyword',
-        queryString
-      ).then((res) => {
-        this.selectData = res.data.TeacherListEx || []
+    async createFilter(queryString) {
+      try {
+        const selectData = await this.$http.Teacher.teacherListEx(
+          'realname.keyword',
+          queryString
+        )
+        this.selectData = selectData.data.TeacherListEx || []
         return this.selectData
-      })
+      } catch (err) {
+        console.log(err)
+      }
     },
     inputHandler(data) {
       this.input = data.realname

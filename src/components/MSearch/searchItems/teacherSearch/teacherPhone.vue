@@ -20,6 +20,7 @@
         :trigger-on-focus="false"
         :popper-class="+onlyPhone ? 'ppName' : ''"
         @select="inputHandler"
+        ref="elautocomplete"
       >
         <i class="el-icon-search el-input__icon" slot="suffix"></i>
         <template slot-scope="{ item }">
@@ -92,6 +93,7 @@ export default {
 
       const list = await this.createFilter(queryString)
       cb(list)
+      this.$refs.elautocomplete.handleFocus()
 
       // 调用 callback 返回建议列表的数据
     },
