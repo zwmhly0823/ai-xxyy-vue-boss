@@ -29,7 +29,7 @@
           </p>
         </template>
       </el-table-column>
-      <el-table-column label="订单类型" v-if="topic === '5'">
+      <!-- <el-table-column label="订单类型" v-if="topic === '5'">
         <template slot-scope="scope">
           <p>
             {{
@@ -39,6 +39,21 @@
                   : +scope.row.regtype === 3
                   ? '续费'
                   : ''
+                : '-'
+            }}
+          </p>
+        </template>
+      </el-table-column> -->
+      <el-table-column label="体验课类型" v-if="topic === '4'">
+        <template slot-scope="scope">
+          <p>
+            {{
+              scope.row.trial_course
+                ? +scope.row.trial_course.team_category === 0
+                  ? '双周'
+                  : +scope.row.trial_course.team_category === 3
+                  ? '单周'
+                  : '-'
                 : '-'
             }}
           </p>

@@ -62,7 +62,7 @@
         >
           <el-table-column label="用户信息"></el-table-column>
           <el-table-column label="商品信息"></el-table-column>
-          <el-table-column label="订单类型" v-if="activeTopic === '5'">
+          <el-table-column label="体验课类型" v-if="activeTopic === '4'">
           </el-table-column>
           <el-table-column
             label="订单来源"
