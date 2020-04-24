@@ -206,6 +206,7 @@ export default {
         padding: 4px;
         background-color: #f2f2f2;
         margin-bottom: 2px;
+        cursor: pointer;
       }
       .active {
         color: white;

@@ -29,7 +29,7 @@
           </p>
         </template>
       </el-table-column>
-      <el-table-column label="订单类型" v-if="topic === '5'">
+      <!-- <el-table-column label="订单类型" v-if="topic === '5'">
         <template slot-scope="scope">
           <p>
             {{
@@ -39,6 +39,21 @@
                   : +scope.row.regtype === 3
                   ? '续费'
                   : ''
+                : '-'
+            }}
+          </p>
+        </template>
+      </el-table-column> -->
+      <el-table-column label="体验课类型" v-if="topic === '4'">
+        <template slot-scope="scope">
+          <p>
+            {{
+              scope.row.trial_course
+                ? +scope.row.trial_course.team_category === 0
+                  ? '双周'
+                  : +scope.row.trial_course.team_category === 3
+                  ? '单周'
+                  : '-'
                 : '-'
             }}
           </p>
@@ -83,8 +98,34 @@
         width="150"
       >
         <template slot-scope="scope">
-          <p>{{ scope.row.salesman ? scope.row.salesman.realname : '-' }}</p>
-          <p>{{ scope.row.department.department.name || '-' }}</p>
+          <!-- 体验课 -->
+          <div v-if="topic === '4'">
+            <p>
+              {{ scope.row.teacher ? scope.row.teacher.realname : '-' }}
+            </p>
+            <p>
+              {{
+                scope.row.teacher_department &&
+                scope.row.teacher_department.department
+                  ? departmentObj[scope.row.teacher_department.department.id]
+                    ? departmentObj[scope.row.teacher_department.department.id]
+                        .name
+                    : '-'
+                  : '-'
+              }}
+            </p>
+          </div>
+          <!-- 系统课 -->
+          <div v-if="topic === '5'">
+            <p>{{ scope.row.salesman ? scope.row.salesman.realname : '-' }}</p>
+            <p>
+              {{
+                scope.row.department
+                  ? scope.row.department.department.name || '-'
+                  : '-'
+              }}
+            </p>
+          </div>
         </template>
       </el-table-column>
       <!-- <el-table-column
@@ -136,8 +177,15 @@
           </p>
         </template>
       </el-table-column>
-      <el-table-column label="下单时间" width="160">
+      <el-table-column label="订单号·下单时间" width="180">
         <template slot-scope="scope">
+          <p>
+            {{
+              scope.row.out_trade_no
+                ? scope.row.out_trade_no.replace('xiong', '')
+                : '-'
+            }}
+          </p>
           <p>
             {{ scope.row.ctime ? scope.row.ctime : '-' }}
           </p>
