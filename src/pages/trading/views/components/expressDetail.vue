@@ -198,10 +198,9 @@ export default {
       display: flex;
       height: 550px;
       flex-direction: column;
-      <<<<<<<headoverflow-y: scroll;
-      =======overflow-y: auto;
+      overflow-y: auto;
       overflow: hidden;
-      >>>>>>>22db02a78152ea1a992859b9264e5aeb0aa2698a .inactive {
+      .inactive {
         text-align: center;
         padding: 4px;
         background-color: #f2f2f2;

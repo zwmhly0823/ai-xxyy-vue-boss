@@ -163,32 +163,17 @@
         />
       </el-form-item>
 
-      <el-form-item v-if="systemCourseType">
-        <!-- 系统课类型 -->
-        <system-course-type
-          @result="getSystemCourseType"
-          :name="systemCourseType"
-        />
+      <el-form-item v-if="searchStage">
+        <!-- 系统课排期搜索 -->
+        <search-stage @result="getSearchStage" :name="searchStage" />
       </el-form-item>
 
-      <!-- && !teacherId -->
-      <el-form-item v-if="department && !teacherId">
-        <!-- 社群销售组 -->
-        <department @result="getDepartment" :name="department" />
-      </el-form-item>
-
-      <!-- && !teacherId -->
-      <el-form-item v-if="searchTeamName">
-        <!-- 班级名称搜索 -->
-        <search-team-name @result="getTeamName" :name="searchTeamName" />
-      </el-form-item>
-
-      <!-- && !teacherId -->
-      <el-form-item v-if="searchTrialTeamName">
-        <!-- 班级名称搜索 -->
-        <search-trial-team-name
-          @result="getTrialTeamName"
-          :name="searchTrialTeamName"
+      <el-form-item v-if="searchTrialStage">
+        <!-- 体验课排期搜索 -->
+        <search-stage
+          @result="getSearchTrialStage"
+          :name="searchTrialStage"
+          type="0"
         />
       </el-form-item>
 
@@ -261,8 +246,9 @@ import teacherPhone from './searchItems/teacherSearch/teacherPhone.vue'
 import teacherName from './searchItems/teacherSearch/teacherName.vue'
 import teacherDropDown from './searchItems/teacherSearch/teacherDropDown'
 import wxList from './searchItems/wxInput'
-import { isToss } from '@/utils/index'
 import selectAddress from './searchItems/selectAddress.vue'
+import SearchStage from './searchItems/searchStage'
+import { isToss } from '@/utils/index'
 
 export default {
   props: {
@@ -476,6 +462,16 @@ export default {
     selectAddress: {
       type: Boolean,
       default: false // selectAddress
+    },
+    // 系统课排期
+    searchStage: {
+      type: String,
+      default: ''
+    },
+    // 体验课排期
+    searchTrialStage: {
+      type: String,
+      default: ''
     }
   },
   components: {
@@ -501,7 +497,8 @@ export default {
     teacherName,
     teacherDropDown,
     wxList,
-    selectAddress
+    selectAddress,
+    SearchStage
   },
   data() {
     return {
@@ -655,6 +652,16 @@ export default {
     },
     getAddress(res) {
       this.setSeachParmas(res, [this.selectAddress])
+    },
+    getSearchStage(res) {
+      this.setSeachParmas(res, [this.searchStage || 'stage'], 'terms')
+    },
+    getSearchTrialStage(res) {
+      this.setSeachParmas(
+        res,
+        [this.searchTrialStage || 'trial_stage'],
+        'terms'
+      )
     },
 
     /**  处理接收到的查询参数
