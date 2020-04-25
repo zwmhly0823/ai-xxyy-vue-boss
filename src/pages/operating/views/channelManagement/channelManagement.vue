@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-04-25 12:09:03
  * @LastEditors: panjian
- * @LastEditTime: 2020-04-25 19:14:17
+ * @LastEditTime: 2020-04-25 20:06:06
  -->
 <template>
   <div class="channel-box">
@@ -12,28 +12,37 @@
       <el-tabs v-model="activeName" @tab-click="handleClick" type="border-card">
         <el-tab-pane label="渠道查询" name="channelQuery">
           <!-- <channel-search /> -->
-          <m-search @search="handleSearch" />
+          <m-search
+            class="channel-search"
+            @search="handleSearch"
+            channel="channel"
+            channelText="请选择渠道"
+          />
         </el-tab-pane>
       </el-tabs>
     </div>
     <div class="channel-box-medium">
-      <div>
-        数据汇总
-      </div>
       <el-row :gutter="20">
-        <el-col :span="6">
+        <el-col :span="3">
+          <div class="grid-content2 bg-purple2">
+            <span>
+              数据汇总
+            </span>
+          </div>
+        </el-col>
+        <el-col :span="5">
           <div class="grid-content bg-purple">
             <p>累计成单金额</p>
             <span>989897</span>
           </div>
         </el-col>
-        <el-col :span="6">
+        <el-col :span="5">
           <div class="grid-content bg-purple">
             <p>累计转化率</p>
             <span>9%</span>
           </div>
         </el-col>
-        <el-col :span="12">
+        <el-col :span="10">
           <div class="grid-content1 bg-purple1">
             <div class="grid-content1-box1">
               <div>
@@ -189,6 +198,12 @@ export default {
   overflow: scroll;
   .channel-box-top {
     margin: 10px;
+    .el-tabs__content {
+      padding: 0;
+    }
+    .channel-search {
+      border: none;
+    }
   }
   .channel-box-medium {
     background: #fff;
@@ -234,6 +249,19 @@ export default {
         }
       }
     }
+    .bg-purple2 {
+      margin-top: 20px;
+      background: #fff;
+    }
+    .grid-content2 {
+      padding-bottom: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-around;
+      height: 150px;
+      border-radius: 4px;
+    }
   }
   .channel-box-bottom {
     display: flex;
@@ -242,6 +270,13 @@ export default {
     margin-left: 10px;
     margin-right: 10px;
     margin-bottom: 45px;
+  }
+}
+</style>
+<style lang="scss">
+.channel-box-top {
+  .el-tabs__content {
+    padding: 5px;
   }
 }
 </style>

@@ -3,13 +3,13 @@
  * @version:
  * @Author: zhubaodong
  * @Date: 2020-03-24 18:50:54
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-04-22 15:58:14
+ * @LastEditors: panjian
+ * @LastEditTime: 2020-04-25 19:20:18
  -->
 <template>
   <div class="search-item small threeSelect">
     <el-cascader
-      placeholder="订单来源"
+      :placeholder="placeHoldText"
       size="mini"
       @change="onSelect"
       :options="showDatas"
@@ -38,6 +38,10 @@ export default {
     onlyValue: {
       type: Boolean,
       default: false
+    },
+    placeHoldText: {
+      type: String,
+      default: '订单来源'
     }
   },
   data() {
