@@ -4,7 +4,7 @@
  * @Author: shentong
  * @Date: 2020-04-02 16:08:02
  * @LastEditors: Shentong
- * @LastEditTime: 2020-04-25 19:02:41
+ * @LastEditTime: 2020-04-25 20:06:08
  -->
 <template>
   <div>
@@ -109,7 +109,7 @@ export default {
         loading: false
       },
       tabQuery: {
-        size: 10,
+        size: 2,
         pageNum: 1
       },
       // 总页数
@@ -132,7 +132,8 @@ export default {
         console.log(val, 'child-params')
         this.tabQuery = {
           ...this.tabQuery,
-          ...val
+          ...val,
+          pageNum: 1
         }
         this.init()
       }
