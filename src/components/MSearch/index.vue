@@ -127,10 +127,24 @@
 
       <!-- && !teacherId -->
       <el-form-item v-if="searchTrialTeamName">
-        <!-- 班级名称搜索 -->
+        <!-- 体验课班级名称搜索 -->
         <search-trial-team-name
           @result="getTrialTeamName"
           :name="searchTrialTeamName"
+        />
+      </el-form-item>
+
+      <el-form-item v-if="searchStage">
+        <!-- 系统课排期搜索 -->
+        <search-stage @result="getSearchStage" :name="searchStage" />
+      </el-form-item>
+
+      <el-form-item v-if="searchTrialStage">
+        <!-- 体验课排期搜索 -->
+        <search-stage
+          @result="getSearchTrialStage"
+          :name="searchTrialStage"
+          type="0"
         />
       </el-form-item>
 
@@ -177,6 +191,8 @@ import Department from './searchItems/department'
 import SearchTeamName from './searchItems/searchTeamName'
 import SearchTrialTeamName from './searchItems/searchTrialTeamName'
 import Schedule from './searchItems/schedule'
+import SearchStage from './searchItems/searchStage'
+// import SearchTrialStage from './searchItems/searchTrialStage'
 import { isToss } from '@/utils/index'
 
 export default {
@@ -321,6 +337,16 @@ export default {
     searchTrialTeamName: {
       type: String,
       default: ''
+    },
+    // 系统课排期
+    searchStage: {
+      type: String,
+      default: ''
+    },
+    // 体验课排期
+    searchTrialStage: {
+      type: String,
+      default: ''
     }
   },
   components: {
@@ -341,7 +367,9 @@ export default {
     Department,
     SearchTeamName,
     SearchTrialTeamName,
-    Schedule
+    Schedule,
+    SearchStage
+    // SearchTrialStage
   },
   data() {
     return {
@@ -446,6 +474,16 @@ export default {
       this.setSeachParmas(
         res,
         [this.searchTrialTeamName || 'team_trial_name'],
+        'terms'
+      )
+    },
+    getSearchStage(res) {
+      this.setSeachParmas(res, [this.searchStage || 'stage'], 'terms')
+    },
+    getSearchTrialStage(res) {
+      this.setSeachParmas(
+        res,
+        [this.searchTrialStage || 'trial_stage'],
         'terms'
       )
     },
