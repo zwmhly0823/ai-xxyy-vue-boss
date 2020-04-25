@@ -188,6 +188,20 @@
         />
       </el-form-item>
 
+      <el-form-item v-if="searchStage">
+        <!-- 系统课排期搜索 -->
+        <search-stage @result="getSearchStage" :name="searchStage" />
+      </el-form-item>
+
+      <el-form-item v-if="searchTrialStage">
+        <!-- 体验课排期搜索 -->
+        <search-stage
+          @result="getSearchTrialStage"
+          :name="searchTrialStage"
+          type="0"
+        />
+      </el-form-item>
+
       <!-- <el-form-item
         size="mini"
         style="position:relative;top:6px"
@@ -259,8 +273,9 @@ import teacherNickname from './searchItems/teacherSearch/teacherNickname.vue'
 import teacherDropDown from './searchItems/teacherSearch/teacherDropDown'
 import teacherWx from './searchItems/teacherSearch/teachetWx'
 import wxList from './searchItems/wxInput'
-import { isToss } from '@/utils/index'
 import selectAddress from './searchItems/selectAddress.vue'
+import SearchStage from './searchItems/searchStage'
+import { isToss } from '@/utils/index'
 
 export default {
   props: {
@@ -499,6 +514,16 @@ export default {
     selectAddress: {
       type: Boolean,
       default: false // selectAddress
+    },
+    // 系统课排期
+    searchStage: {
+      type: String,
+      default: ''
+    },
+    // 体验课排期
+    searchTrialStage: {
+      type: String,
+      default: ''
     }
   },
   components: {
@@ -526,7 +551,8 @@ export default {
     teacherDropDown,
     wxList,
     selectAddress,
-    teacherWx
+    teacherWx,
+    SearchStage
   },
   data() {
     return {
@@ -688,6 +714,16 @@ export default {
     },
     getAddress(res) {
       this.setSeachParmas(res, [this.selectAddress])
+    },
+    getSearchStage(res) {
+      this.setSeachParmas(res, [this.searchStage || 'stage'], 'terms')
+    },
+    getSearchTrialStage(res) {
+      this.setSeachParmas(
+        res,
+        [this.searchTrialStage || 'trial_stage'],
+        'terms'
+      )
     },
 
     /**  处理接收到的查询参数
