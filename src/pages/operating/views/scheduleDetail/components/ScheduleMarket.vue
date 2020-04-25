@@ -4,7 +4,7 @@
  * @Author: shentong
  * @Date: 2020-04-02 16:08:02
  * @LastEditors: Shentong
- * @LastEditTime: 2020-04-25 13:57:43
+ * @LastEditTime: 2020-04-25 19:02:41
  -->
 <template>
   <div>
@@ -27,7 +27,7 @@
           <el-table-column
             prop="departmentName"
             label="部门"
-            width="100"
+            width="140"
             align="center"
           >
           </el-table-column>
@@ -71,7 +71,19 @@
             align="center"
             prop="courseVersion"
             label="课程和材料版本"
+            width="120"
           ></el-table-column>
+          <el-table-column
+            prop="id"
+            label="课程类型"
+            width="120"
+            align="center"
+          >
+            <template slot-scope="scope">
+              <span v-if="scope.row.courseCategory == '0'">双周体验课</span>
+              <span v-if="scope.row.courseCategory == '3'">单周体验课</span>
+            </template>
+          </el-table-column>
         </ele-table>
       </div>
     </div>
@@ -82,7 +94,7 @@
 import EleTable from '@/components/Table/EleTable'
 export default {
   props: {
-    resultStatistics: {
+    paramsInfo: {
       type: Object,
       default: () => ({})
     }
@@ -112,12 +124,23 @@ export default {
       return this.tabQuery.size * (this.tabQuery.pageNum - 1)
     }
   },
-  watch: {},
+  watch: {
+    paramsInfo: {
+      deep: true,
+      immediate: true,
+      handler(val) {
+        console.log(val, 'child-params')
+        this.tabQuery = {
+          ...this.tabQuery,
+          ...val
+        }
+        this.init()
+      }
+    }
+  },
   async created() {
     const { period = '', courseType = '0' } = this.$route.params
     Object.assign(this.tabQuery, { period, courseType })
-
-    this.init()
   },
   methods: {
     async init() {
