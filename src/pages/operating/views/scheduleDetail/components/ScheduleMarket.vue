@@ -4,7 +4,7 @@
  * @Author: shentong
  * @Date: 2020-04-02 16:08:02
  * @LastEditors: Shentong
- * @LastEditTime: 2020-04-25 20:06:08
+ * @LastEditTime: 2020-04-25 20:07:28
  -->
 <template>
   <div>
@@ -109,7 +109,7 @@ export default {
         loading: false
       },
       tabQuery: {
-        size: 2,
+        size: 10,
         pageNum: 1
       },
       // 总页数
