@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-04-25 12:09:03
  * @LastEditors: panjian
- * @LastEditTime: 2020-04-25 20:06:06
+ * @LastEditTime: 2020-04-25 20:49:52
  -->
 <template>
   <div class="channel-box">
@@ -15,7 +15,9 @@
           <m-search
             class="channel-search"
             @search="handleSearch"
+            date="date"
             channel="channel"
+            searchTrialStage="searchTrialStage"
             channelText="请选择渠道"
           />
         </el-tab-pane>
@@ -87,6 +89,28 @@
     <div class="channel-box-bottom">
       <template>
         <el-table :data="tableData" style="width: 100%;">
+          <el-table-column width="20px">
+            <template slot-scope="scope">
+              <el-Popover
+                class="batchbtn-css"
+                popper-class="batch-btn"
+                trigger="hover"
+              >
+                <!-- 气泡内容 -->
+                <div size="mini" type="text" @click="batchBtn">
+                  <span style="cursor: pointer;">查看详情</span>
+                </div>
+                <!-- 点击...图片 -->
+                <div
+                  @mouseenter="handleEdit(scope.$index, scope.row)"
+                  slot="reference"
+                >
+                  <img src="@/assets/images/point.png" />
+                </div>
+              </el-Popover>
+            </template>
+          </el-table-column>
+
           <el-table-column prop="date" label="日期" width="180">
           </el-table-column>
           <el-table-column prop="name" label="姓名" width="180">
@@ -185,6 +209,15 @@ export default {
     handleCurrentChange(val) {
       this.currentPage = val
       this.$emit('onCurrentPage', val)
+    },
+    handleEdit(index, row) {
+      // 鼠标移入三个点上面触发的事件
+      // 当没有点击复选框 直接点击加好友
+      console.log('点击查看详情11')
+    },
+    batchBtn() {
+      // 点击查看详情
+      console.log('点击查看详情22')
     }
   }
 }
@@ -269,7 +302,10 @@ export default {
     background: #fff;
     margin-left: 10px;
     margin-right: 10px;
-    margin-bottom: 45px;
+    margin-bottom: 50px;
+  }
+  .batchbtn-css {
+    cursor: pointer;
   }
 }
 </style>
