@@ -17,7 +17,8 @@
         date="ctime"
         date-placeholder="下单时间"
         phone="uid"
-        schedule="stage"
+        search-stage="stage"
+        search-trial-stage="trial_stage"
         department="pay_teacher_id"
         groupSell="pay_teacher_id"
         :search-team-name="activeTopic === '5' ? 'last_team_id' : ''"
@@ -138,7 +139,22 @@ export default {
     // 点击搜索
     handleSearch(res) {
       console.log(res, 'search')
-      this.search = res
+      // 体验课排期和系统课排期
+      const stage = []
+      res.forEach((ele, index) => {
+        if (ele.terms) {
+          if (ele.terms.stage) {
+            stage.push(...ele.terms.stage)
+          }
+          if (ele.terms.trial_stage) {
+            stage.push(...ele.terms.trial_stage)
+          }
+          if (Object.keys(ele.terms).length === 0) res.splice(index, 1)
+        }
+      })
+      const search = JSON.parse(JSON.stringify(res))
+      if (stage.length > 0) search.push({ terms: { stage } })
+      this.search = search
     },
     // 吸顶
     handleScroll() {
