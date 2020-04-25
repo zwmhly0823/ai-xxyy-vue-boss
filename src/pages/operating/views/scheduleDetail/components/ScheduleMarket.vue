@@ -4,7 +4,7 @@
  * @Author: shentong
  * @Date: 2020-04-02 16:08:02
  * @LastEditors: Shentong
- * @LastEditTime: 2020-04-24 21:25:46
+ * @LastEditTime: 2020-04-25 13:57:43
  -->
 <template>
   <div>
@@ -82,7 +82,7 @@
 import EleTable from '@/components/Table/EleTable'
 export default {
   props: {
-    department: {
+    resultStatistics: {
       type: Object,
       default: () => ({})
     }
