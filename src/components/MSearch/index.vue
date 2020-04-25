@@ -3,8 +3,8 @@
  * @version:
  * @Author: zhubaodong
  * @Date: 2020-03-24 18:20:12
- * @LastEditors: Lukun
- * @LastEditTime: 2020-04-22 19:51:32
+ * @LastEditors: panjian
+ * @LastEditTime: 2020-04-25 19:31:46
  -->
 
 <template>
@@ -63,7 +63,11 @@
 
       <el-form-item v-if="channel">
         <!-- 渠道 -->
-        <channel-select @result="getChannel" :name="channel" />
+        <channel-select
+          @result="getChannel"
+          :name="channel"
+          :placeHoldText="channelText"
+        />
       </el-form-item>
 
       <el-form-item v-if="topicType">
@@ -292,6 +296,10 @@ export default {
     channel: {
       type: String,
       default: '' // channelid
+    },
+    channelText: {
+      type: String,
+      default: '订单来源' // 订单来源
     },
     // 主题
     topicType: {

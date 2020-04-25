@@ -1,7 +1,7 @@
 /*
  * @Date: 2020-03-13 15:20:21
- * @LastEditors: Shentong
- * @LastEditTime: 2020-04-23 16:13:55
+ * @LastEditors: panjian
+ * @LastEditTime: 2020-04-25 12:12:15
  * @FilePath: /ai-app-vue-toss/src/pages/studentTeam/router/index.js
  */
 import Vue from 'vue'
@@ -27,6 +27,15 @@ const routes = [
       keepAlive: true
     },
     component: () => import('../views/enrollmentSchedule/index.vue')
+  },
+  {
+    path: '/channelManagement',
+    name: 'channelManagement',
+    meta: {
+      title: '渠道管理',
+      keepAlive: false
+    },
+    component: () => import('../views/channelManagement/channelManagement.vue')
   },
   // 新增、编辑
   {
