@@ -117,6 +117,14 @@ const routes = [
           title: '招生排期',
           module: 'operating'
         }
+      },
+      {
+        path: '/channelManagement',
+        name: 'channelManagement',
+        meta: {
+          title: '渠道管理',
+          module: 'operating'
+        }
       }
     ]
   },
