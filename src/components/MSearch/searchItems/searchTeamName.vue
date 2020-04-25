@@ -13,7 +13,7 @@
       multiple
       filterable
       remote
-      reserve-keyword
+      :reserve-keyword="false"
       size="mini"
       clearable
       :placeholder="teamnameType === '0' ? '体验课班级' : '系统课班级'"
