@@ -4,7 +4,7 @@
  * @Author: Lukun
  * @Date: 2020-04-15 15:18:49
  * @LastEditors: Lukun
- * @LastEditTime: 2020-04-20 17:41:26
+ * @LastEditTime: 2020-04-23 18:19:37
  -->
 <template>
   <div class="container">
@@ -17,17 +17,17 @@
       size="40%"
     >
       <div class="what">
-        <div class="left-click" v-show="false">
+        <div class="left-click" v-if="leftRow.length > 1">
           <div
-            @click="getexpressInformation(i)"
-            :class="['leftrow_']"
+            @click="getexpressInformation(item, i)"
+            :class="[{ active: isActive == i }, 'inactive']"
             :key="i"
             v-for="(item, i) in leftRow"
           >
-            {{ item.name }}
+            {{ item.product_name }}
           </div>
         </div>
-        <div class="line" v-show="false"></div>
+        <div class="line" v-if="leftRow.length > 1"></div>
         <div class="right-detail">
           <div class="img" @click="handleClose">
             <i class="el-icon-close"></i>
@@ -35,9 +35,11 @@
 
           <div class="line-time">
             <div class="logistics">
-              <span>商品信息：{{ transferExpress.product_name }}</span>
-              <span>物流公司：{{ transferExpress.express_company }}</span>
-              <span>快递单号：{{ transferExpress.express_nu }}</span>
+              <span>商品信息：{{ this.expressInformation.product_name }}</span>
+              <span
+                >物流公司：{{ this.expressInformation.express_company }}</span
+              >
+              <span>快递单号：{{ this.expressInformation.express_nu }}</span>
             </div>
           </div>
           <div class="horizontal-line"></div>
@@ -80,7 +82,7 @@ import axios from '@/api/axios'
 export default {
   // 传递来源 如 订单使用  物流使用
   // 需要传递的信息  物流单号 物流商品名称
-  props: ['transferExpress', 'user_id'],
+  props: ['transferExpress', 'order_id'],
   data() {
     return {
       drawer: false,
@@ -89,30 +91,32 @@ export default {
       direction: 'rtl',
       timeLine: false,
       waitFor: false,
-      expressNu: '',
-      productName: '',
-      company: '',
+      orderInformation: [],
+      expressInformation: [],
       activities: [],
-      leftRow: [
-        { name: '小熊美术S3系统课Level1{随材)' },
-        { name: '小熊美术S3系统课Level1{随材)' },
-        { name: '小熊美术S3系统课Level1{随材)' },
-        { name: '小熊美术S3系统课Level1{随材)' },
-        { name: '小熊美术S3系统课Level1{随材)' },
-        { name: '小熊美术S3系统课Level1{随材)' }
-      ]
+      isActive: 0,
+      leftRow: [],
+      orderId: '',
+      expressNu: '' // 物流单号
     }
   },
   watch: {
     transferExpress(val) {
-      this.getexpressInformation(val.expressNu)
+      this.expressInformation = val
+      this.expressNu = this.expressInformation.express_nu
+      this.expressList(this.expressNu)
+    },
+    order_id(val) {
+      this.orderId = val
+      this.getexpressMess(this.orderId)
     }
   },
   methods: {
     // 获取物流id 商品信息
-    getexpressInformation() {
-      const expressNu = this.transferExpress.express_nu
-      this.expressList(expressNu)
+    getexpressInformation(item, i) {
+      this.isActive = i
+      this.expressInformation = item
+      this.expressList(item.express_nu)
     },
     handleClose() {
       this.drawer = false
@@ -121,7 +125,7 @@ export default {
     getexpressMess(id) {
       // 这里需要传递用户Id来获取
       const queryParams = JSON.stringify(`
-      {"bool":{"must":[{"wildcard":{"team_name.keyword":"*${id}*"}}]}}
+      {"bool":{"must":[{"term":{"order_id":${id}}}]}}
       `)
       return axios
         .post('/graphql/v1/toss', {
@@ -135,8 +139,8 @@ export default {
                 }`
         })
         .then((res) => {
-          this.dataDetail = res.data.ExpressList
-          return this.dataDetail
+          this.leftRow = res.data.ExpressList
+          this.getexpressInformation(this.leftRow[0], 0)
         })
     },
     // 物流列表信息
@@ -156,7 +160,7 @@ export default {
               } else if (
                 item.status === '在途' ||
                 item.status === '派件' ||
-                item.status === '转投'
+                item.status === '疑难'
               ) {
                 lastData.onway = lastData.onway == null ? [] : lastData.onway
                 lastData.onway.push(item)
@@ -174,11 +178,6 @@ export default {
           console.log(this.activities, 'this.activities')
         })
     }
-  },
-  mounted() {
-    // this.getexpressMess()
-    // 获取物流信息
-    // this.getexpressInformation()
   }
 }
 </script>
@@ -199,22 +198,33 @@ export default {
       display: flex;
       height: 550px;
       flex-direction: column;
-      overflow-y: scroll;
-      .leftrow {
+      overflow-y: auto;
+      overflow: hidden;
+      .inactive {
         text-align: center;
-        margin: 3px;
-        border: 1px solid #999;
+        padding: 4px;
+        background-color: #f2f2f2;
+        margin-bottom: 2px;
+        cursor: pointer;
+      }
+      .active {
+        color: white;
+        text-align: center;
+        padding: 4px;
+        background-color: #409eff;
+        margin-bottom: 2px;
       }
     }
     .line {
       margin-left: 10px;
-      border-right: 2px solid #ddd;
+      border-right: 2px solid #f2f2f2;
     }
     .right-detail {
       margin-left: 10px;
       width: 100%;
       height: 700px;
-      overflow-y: scroll;
+      overflow-y: auto;
+      overflow: hidden;
       .img {
         position: absolute;
         right: 10px;

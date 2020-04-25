@@ -62,7 +62,7 @@
         >
           <el-table-column label="用户信息"></el-table-column>
           <el-table-column label="商品信息"></el-table-column>
-          <el-table-column label="订单类型" v-if="activeTopic === '5'">
+          <el-table-column label="体验课类型" v-if="activeTopic === '4'">
           </el-table-column>
           <el-table-column
             label="订单来源"
@@ -142,21 +142,21 @@ export default {
     },
     // 吸顶
     handleScroll() {
-      const dom = document
-        .getElementById('order-scroll')
-        .querySelector('.order-wrapper').scrollTop
-      const domheight = document
-        .getElementById('order-scroll')
-        .querySelector('.el-card__body').offsetHeight
+      const scroll = document.getElementById('order-scroll')
+      const dom = scroll.querySelector('.order-wrapper').scrollTop
+      const domheight = scroll.querySelector('.el-card__body').offsetHeight
       dom > domheight + 20 ? (this.suckTop = true) : (this.suckTop = false)
       dom > domheight + 175 ? (this.orderForm = true) : (this.orderForm = false)
     }
   },
-  created() {
+  created() {},
+  mounted() {
     // 吸顶
     window.addEventListener('scroll', this.handleScroll, true)
   },
-  mounted() {}
+  destroyed() {
+    window.removeEventListener('scroll', this.handleScroll, true)
+  }
 }
 </script>
 <style lang="scss" scoped>

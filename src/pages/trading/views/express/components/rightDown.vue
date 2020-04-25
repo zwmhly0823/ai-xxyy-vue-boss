@@ -145,6 +145,7 @@
         :visible.sync="dialogVisiblePass"
         width="25%"
         :before-close="handleClosePass"
+        :modal="modal"
       >
         <div class="two-choose">
           <div class="message-one" v-if="selectNum > 1">
@@ -273,6 +274,8 @@ export default {
     return {
       // regtype 商品类型
       regtype: '',
+      // 默认审核时弹出
+      modal: false,
       // 审核传参
       checkBatchParams: [],
       checkParams: [],
@@ -580,7 +583,6 @@ export default {
         express_status: id
       }
       const query = JSON.stringify(timeType)
-      console.log(timeType, 'timeType')
       if (timeType.regtype) {
         // this.$store.commit('getShowStatus', false)
         // console.log(this.regtype, 'regtype regtype regtype regtype ')
@@ -601,7 +603,7 @@ export default {
           this.$store.dispatch('getShowStatus', type)
         }
       } else {
-        const type = { disableClick: false, stage: null }
+        const type = { disableClick: true, stage: null }
         this.$store.dispatch('getShowStatus', type)
       }
       axios
@@ -763,9 +765,14 @@ export default {
     // scrotop
     scrollToTop() {
       document
-        .getElementById('right-scroll')
+        .getElementById('express-right-scroll')
         .querySelector('.scrollbar-wrapper').scrollTop = 0
     }
+  },
+
+  beforeDestroy() {
+    const type = { disableClick: false }
+    this.$store.dispatch('getShowStatus', type)
   }
 }
 </script>

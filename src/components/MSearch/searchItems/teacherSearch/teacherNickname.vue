@@ -25,7 +25,7 @@
         <i class="el-icon-search el-input__icon" slot="suffix"></i>
         <template slot-scope="{ item }">
           <div style="display:flex">
-            <div class="name">{{ item.realname || '-' }}</div>
+            <div class="name">{{ item.nickname || '-' }}</div>
             <!-- <div class="name" v-if="+onlyName">
               /{{ item.wechat_nikename || '-' }}
             </div> -->
@@ -43,7 +43,7 @@ export default {
   props: {
     name: {
       type: String,
-      default: 'realname'
+      default: 'nickname'
     },
     onlyName: {
       type: String,
@@ -62,7 +62,7 @@ export default {
     // 是否只返回值，如果是，父组件获得值后根据实际表达式组装数据
     tip: {
       type: String,
-      default: '姓名查询'
+      default: '对外昵称查询'
     }
   },
   components: {},
@@ -94,21 +94,18 @@ export default {
       cb(list)
       this.$refs.elautocomplete.handleFocus()
     },
-    async createFilter(queryString) {
-      try {
-        const selectData = await this.$http.Teacher.teacherListEx(
-          'realname.keyword',
-          queryString
-        )
-        this.selectData = selectData.data.TeacherListEx || []
+    createFilter(queryString) {
+      return this.$http.Teacher.teacherListEx(
+        'nickname.keyword',
+        queryString
+      ).then((res) => {
+        this.selectData = res.data.TeacherListEx || []
         return this.selectData
-      } catch (err) {
-        console.log(err)
-      }
+      })
     },
     inputHandler(data) {
-      this.input = data.realname
-      this.$emit('result', data.realname ? { [this.name]: data.realname } : '')
+      this.input = data.nickname
+      this.$emit('result', data.nickname ? { [this.name]: data.nickname } : '')
     }
   },
   created() {},

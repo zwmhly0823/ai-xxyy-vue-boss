@@ -4,14 +4,14 @@
  * @Author: zhubaodong
  * @Date: 2020-04-02 15:35:27
  * @LastEditors: Shentong
- * @LastEditTime: 2020-04-18 21:06:19
+ * @LastEditTime: 2020-04-24 18:25:35
  -->
 <template>
   <el-row type="flex" class="app-main height schedule-container">
     <el-col class="schedule-container-right">
       <div class="grid-content">
         <el-scrollbar wrap-class="scrollbar-wrapper">
-          <right-bar :department="currentDept" />
+          <schedule-table :department="currentDept" />
         </el-scrollbar>
       </div>
     </el-col>
@@ -19,11 +19,11 @@
 </template>
 
 <script>
-import RightBar from './components/rightBar.vue'
+import ScheduleTable from './components/index.vue'
 
 export default {
   props: [],
-  components: { RightBar },
+  components: { ScheduleTable },
   data() {
     return {
       // 当前选择的机构

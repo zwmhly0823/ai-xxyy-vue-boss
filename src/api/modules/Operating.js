@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-03-16 19:46:39
  * @LastEditors: Shentong
- * @LastEditTime: 2020-04-18 20:37:33
+ * @LastEditTime: 2020-04-24 20:31:55
  */
 import axios from '../axiosConfig'
 
@@ -65,5 +65,33 @@ export default {
    */
   pwdLoginIn(params) {
     return axios.post('/api/b/v1/staff/login', params)
+  },
+  /**
+   *
+   *招生排期 详情 列表
+   */
+  getScheduleDetailList(params) {
+    return axios.get(
+      `/api/s/v1/management/enroll/getDetail?courseType=${params.courseType}&period=${params.period}&pageSize=${params.size}&pageNumber=` +
+        params.pageNum
+    )
+  },
+  /**
+   *
+   *招生排期 详情 基本信息
+   */
+  getScheduleDetailInfo(params) {
+    return axios.get(
+      `/api/s/v1/management/enroll/getManagement?courseType=${params.courseType}&period=${params.period}`
+    )
+  },
+  /**
+   *
+   *招生排期 详情 基本信息
+   */
+  getScheduleDetailStatistic(params) {
+    return axios.get(
+      `/api/s/v1/management/enroll/calculation/byPeriod?courseType=${params.courseType}&period=${params.period}`
+    )
   }
 }
