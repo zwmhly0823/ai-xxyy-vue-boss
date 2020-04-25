@@ -29,21 +29,6 @@
           </p>
         </template>
       </el-table-column>
-      <!-- <el-table-column label="订单类型" v-if="topic === '5'">
-        <template slot-scope="scope">
-          <p>
-            {{
-              scope.row.regtype
-                ? +scope.row.regtype === 2
-                  ? '首单'
-                  : +scope.row.regtype === 3
-                  ? '续费'
-                  : ''
-                : '-'
-            }}
-          </p>
-        </template>
-      </el-table-column> -->
       <el-table-column label="体验课类型" v-if="topic === '4'">
         <template slot-scope="scope">
           <p>
@@ -64,11 +49,6 @@
           <p>
             {{ scope.row.channel ? scope.row.channel.channel_outer_name : '-' }}
           </p>
-        </template>
-      </el-table-column>
-      <el-table-column label="订单类型">
-        <template slot-scope="scope">
-          {{ scope.row.regtype_text ? scope.row.regtype_text : '-' }}
         </template>
       </el-table-column>
       <el-table-column label="订单状态">
@@ -222,11 +202,6 @@
           <p>
             {{ scope.row.channel ? scope.row.channel.channel_outer_name : '-' }}
           </p>
-        </template>
-      </el-table-column>
-      <el-table-column label="订单类型">
-        <template slot-scope="scope">
-          {{ scope.row.regtype_text ? scope.row.regtype_text : '-' }}
         </template>
       </el-table-column>
       <el-table-column label="订单状态">
