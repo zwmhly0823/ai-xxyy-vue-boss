@@ -58,9 +58,9 @@ export default {
     // 获取渠道来源 filter: 过滤关键词  eg：filter:"抖音"
     async getChannel() {
       await axios
-        .post('/graphql/v1/toss', {
+        .post('/graphql/channel', {
           query: `{
-            ChannelList(size: 500) {
+            channelAllList(size: 500) {
                 id
                 channel_class_id
                 channel_outer_name
@@ -69,7 +69,7 @@ export default {
           `
         })
         .then((res) => {
-          this.channelList = res.data.ChannelList
+          this.channelList = res.data.channelAllList
         })
     },
     // 获取渠道来源分类 filter: 过滤关键词  eg：filter:"抖音"
