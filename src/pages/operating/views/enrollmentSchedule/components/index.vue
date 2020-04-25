@@ -4,7 +4,7 @@
  * @Author: shentong
  * @Date: 2020-04-02 16:08:02
  * @LastEditors: Shentong
- * @LastEditTime: 2020-04-23 17:04:10
+ * @LastEditTime: 2020-04-25 21:18:26
  -->
 <template>
   <div>
@@ -175,7 +175,7 @@ export default {
         loading: false
       },
       tabQuery: {
-        size: 9,
+        size: 20,
         page: 1
       },
       sex: {

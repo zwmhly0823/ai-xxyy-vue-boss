@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-14 18:28:44
  * @LastEditors: Shentong
- * @LastEditTime: 2020-04-25 17:34:02
+ * @LastEditTime: 2020-04-25 21:10:36
  -->
 <template>
   <div class="app-main height add-schedule-container">
@@ -42,12 +42,12 @@
               <el-col :span="2">{{ scheduleStatistic.endCourseDay }}</el-col>
             </el-row>
           </div>
-          <div class="search-container">
-            <!-- TODO: -->
-            <table-search @change="searchChange"></table-search>
-          </div>
           <el-tabs type="border-card">
             <el-tab-pane label="招生详情-销售">
+              <div class="search-container">
+                <!-- TODO: -->
+                <table-search @change="searchChange"></table-search>
+              </div>
               <div class="description" v-if="resultStatistics">
                 当前结果：社群销售<span>{{ resultStatistics.wechatSize }}</span
                 >人，计划招生<span>{{ resultStatistics.planSumTeamSize }}</span>
@@ -221,7 +221,7 @@ export default {
   .scroll-container {
     padding: 0 20px 20px 20px;
     .head-info {
-      // margin-bottom: 20px;
+      margin-bottom: 20px;
       .title {
         display: flex;
         align-items: center;
