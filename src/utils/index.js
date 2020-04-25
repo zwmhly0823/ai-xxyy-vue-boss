@@ -277,3 +277,25 @@ export function compressImg(imgPath, width) {
   }
   return imgPath
 }
+/**
+ * url 转为 key-val形式
+ */
+export function url2KeyVal() {
+  const search = window.location.search
+  const arrObj = []
+
+  if (search.indexOf('?') !== -1) {
+    const params = search.substr(1).split('&')
+    params.forEach((item) => {
+      const obj = {}
+      const pos = item.indexOf('=')
+      if (pos !== -1) {
+        const first = item.substr(0, pos)
+        const last = item.substr(pos + 1)
+        obj[first] = last
+        arrObj.push(obj)
+      }
+    })
+  }
+  return arrObj
+}
