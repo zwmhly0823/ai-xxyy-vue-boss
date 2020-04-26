@@ -3,8 +3,8 @@
  * @version:
  * @Author: huzhifu
  * @Date: 2020-04-25 13:04:27
- * @LastEditors: 
- * @LastEditTime: 
+ * @LastEditors: Shentong
+ * @LastEditTime: 2020-04-26 14:32:10
  -->
 <template>
   <el-row type="flex" class="app-main height process-container">
@@ -138,7 +138,7 @@
 
 <script>
 // import MSearch from '@/components/MSearch/index.vue'
-import MSearch from '../components/staticticsSearch'
+import MSearch from '../../components/staticticsSearch'
 import EleTable from '@/components/Table/EleTable'
 import { formatData } from '@/utils'
 export default {
