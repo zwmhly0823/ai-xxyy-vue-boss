@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-26 16:30:11
  * @LastEditors: liukun
- * @LastEditTime: 2020-04-26 15:03:18
+ * @LastEditTime: 2020-04-29 10:16:06
  -->
 <template>
   <div class="search-item">
@@ -89,7 +89,7 @@ export default {
           }
         ],
         disabledDate: (res) => {
-          console.log(res, 'resdata')
+          // console.log(res, 'resdata')
           return false
         }
       },
@@ -104,13 +104,18 @@ export default {
         const gte = this.timeData[0]
         const lte = this.timeData[1]
         const octime = { gte, lte }
+        console.info(octime)
         this.$emit('result', { [this.name]: octime })
         return
       }
       this.$emit('result', '')
     }
   },
-  created() {},
+  created() {
+    this.$root.$on('fourpoint', (r) => {
+      this.timeData = r
+    })
+  },
   mounted() {}
 }
 </script>

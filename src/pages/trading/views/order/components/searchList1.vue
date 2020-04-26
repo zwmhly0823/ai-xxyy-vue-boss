@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-04-25 17:24:23
  * @LastEditors: liukun
- * @LastEditTime: 2020-04-28 13:52:56
+ * @LastEditTime: 2020-04-29 10:44:15
  -->
 <template>
   <el-card border="false" shadow="never" :class="$style.elard">
@@ -15,18 +15,18 @@
       <br />
 
       <el-form-item label="订单来源:" :class="{ [$style.marginer]: true }">
-        <ChannelSelect />
+        <ChannelSelect @result="getChannel" />
       </el-form-item>
       <br />
 
       <el-form-item label="下单时间:" :class="{ [$style.marginer]: true }">
-        <DatePicker :class="[$style.fourPoint, 'allmini']">
+        <DatePicker :class="[$style.fourPoint, 'allmini']" @result="getDate">
           <template v-slot:buttons>
             <div class="row_colum margin_l10">
-              <el-button size="mini" plain>今日</el-button>
-              <el-button size="mini" plain>何夕</el-button>
-              <el-button size="mini" plain>今朝</el-button>
-              <el-button size="mini" plain>去日</el-button>
+              <el-button size="mini" plain @click="today">今日</el-button>
+              <el-button size="mini" plain @click="yesterday">昨天</el-button>
+              <el-button size="mini" plain @click="thisweek">本周</el-button>
+              <el-button size="mini" plain @click="thismonth">本月</el-button>
             </div>
           </template>
         </DatePicker>
@@ -34,185 +34,71 @@
       <br />
       <el-form-item label="体验课:" :class="{ [$style.marginer]: true }">
         <div class="row_colum">
-          <Department />
-          <Schedule class="margin_l10" />
-          <hardLevel class="margin_l10" />
+          <department placeholder="全部销售组" />
+          <search-stage
+            class="margin_l10"
+            placeholder="全部体验课排期"
+            type="0"
+          />
+          <hardLevel :class="['margin_l10']" style="width:140px" />
+          <search-team-name
+            teamnameType="0"
+            @result="getTeamName"
+            :name="searchTeamName"
+            class="margin_l10"
+          />
+          <group-sell
+            @result="selectSellTeacher"
+            :name="groupSell"
+            class="margin_l10"
+          />
         </div>
       </el-form-item>
       <br />
       <el-form-item label="系统课:" :class="{ [$style.marginer]: true }">
-        <ChannelSelect />
-      </el-form-item>
-
-      <el-form-item v-if="orderType">
-        <!-- 订单类型 -->
-        <order-type @result="getOrderType" :name="orderType" />
-      </el-form-item>
-
-      <el-form-item v-if="phone">
-        <!-- 手机号搜索 -->
-        <search-phone
-          @result="getPhoneHander"
-          :teamId="teamId"
-          :teamType="teamType"
-          :name="phone"
-          :onlyPhone="onlyPhone"
-          :tip="phoneTip"
-          :last_team_id="last_team_id"
-        />
-      </el-form-item>
-
-      <el-form-item v-if="productName">
-        <!-- 商品名称搜索 -->
-        <product-name @result="getProductName" :name="productName" />
-      </el-form-item>
-
-      <el-form-item v-if="outTradeNo">
-        <!-- 订单号搜索 -->
-        <out-trade-no @result="getOutTradeNo" :name="outTradeNo" />
-      </el-form-item>
-
-      <el-form-item v-if="expressNo">
-        <!-- 物流单号搜索 -->
-        <express-no @result="getExpressNo" :name="expressNo" />
-      </el-form-item>
-
-      <el-form-item v-if="date">
-        <!-- 下单时间 -->
-        <date-picker
-          :name="date"
-          @result="getDate"
-          :date-placeholder="datePlaceholder"
-        />
-      </el-form-item>
-
-      <el-form-item v-if="timeData">
-        <!-- 下拉时间选择 -->
-        <select-date
-          :name="timeData"
-          @result="getTimeData"
-          @timeCallBack="getTimeCallBack"
-        />
-      </el-form-item>
-
-      <el-form-item v-if="channel">
-        <!-- 渠道 -->
-        <channel-select @result="getChannel" :name="channel" />
-      </el-form-item>
-
-      <el-form-item v-if="topicType">
-        <!-- 主题 -->
-        <product-topic @result="getProductTopic" :name="topicType" />
-      </el-form-item>
-
-      <el-form-item v-if="moreVersion">
-        <!-- 随材版本-->
-        <more-version-box @result="getVersionNu" :name="moreVersion" />
-      </el-form-item>
-
-      <el-form-item v-if="level || sup || stage">
-        <stage-sup-levels
-          @stageCallBack="stageCallBack"
-          @supCallBack="supCallBack"
-          @levelCallBack="levelCallBack"
-          :disabled="true"
-          :stageName="stage"
-          :supName="sup"
-          :levelName="level"
-          :addSupS="addSupS"
-          style="margin-bottom:0px"
-        />
-      </el-form-item>
-
-      <el-form-item v-if="schedule">
-        <!-- 排期 -->
-        <Schedule @result="selectSchedule" :name="schedule" />
-      </el-form-item>
-
-      <el-form-item v-if="teamDetail">
-        <!-- 班级期数-->
-        <team-detail @result="getTeamDetail" :name="teamDetail" />
-      </el-form-item>
-
-      <el-form-item v-if="groupSell && !teacherId">
-        <!-- 社群销售 -->
-        <group-sell @result="selectSellTeacher" :name="groupSell" />
-      </el-form-item>
-
-      <el-form-item v-if="systemCourseType">
-        <!-- 系统课类型 -->
-        <system-course-type
-          @result="getSystemCourseType"
-          :name="systemCourseType"
-        />
-      </el-form-item>
-
-      <!-- && !teacherId -->
-      <el-form-item v-if="department && !teacherId">
-        <!-- 社群销售组 -->
-        <department @result="getDepartment" :name="department" />
-      </el-form-item>
-
-      <!-- && !teacherId -->
-      <el-form-item v-if="searchTeamName">
-        <!-- 班级名称搜索 -->
-        <search-team-name @result="getTeamName" :name="searchTeamName" />
-      </el-form-item>
-
-      <!-- && !teacherId -->
-      <el-form-item v-if="searchTrialTeamName">
-        <!-- 班级名称搜索 -->
-        <search-trial-team-name
-          @result="getTrialTeamName"
-          :name="searchTrialTeamName"
-        />
-      </el-form-item>
-
-      <!-- <el-form-item
-        size="mini"
-        style="position:relative;top:6px"
-        v-if="level || sup || stage"
-      >
-        <el-popover width="100%" trigger="click">
-          <stage-sup-levels
-            @stageCallBack="stageCallBack"
-            @supCallBack="supCallBack"
-            @levelCallBack="levelCallBack"
-            :stageName="stage"
-            :supName="sup"
-            :levelName="level"
-            style="margin-bottom:0px"
+        <div class="row_colum">
+          <systemCourseType style="width:140px" />
+          <search-stage class="margin_l10" placeholder="全部系统课排期" />
+          <hardLevel :class="['margin_l10']" style="width:140px" />
+          <search-trial-team-name
+            :teamnameType="'1'"
+            @result="getTrialTeamName"
+            :name="searchTrialTeamName"
+            :class="['margin_l10']"
           />
-          <el-button slot="reference" style="color:#c0c4cc ;font-weight: 400;">
-            班级信息
-            <i class="el-icon-arrow-down" />
-          </el-button>
-        </el-popover>
-      </el-form-item> -->
+          <group-sell
+            @result="selectSellTeacher"
+            :name="groupSell"
+            class="margin_l10"
+            tip="服务老师"
+          />
+        </div>
+      </el-form-item>
     </el-form>
   </el-card>
 </template>
 <script>
 import hardLevel from '@/components/MSearch/searchItems/hardLevel.vue' // add
 import orderSearch from '@/components/MSearch/searchItems/orderSearch.vue' // add
+import systemCourseType from '@/components/MSearch/searchItems/systemCourseType.vue'
 import DatePicker from '@/components/MSearch/searchItems/datePicker.vue'
 import ChannelSelect from '@/components/MSearch/searchItems/channel.vue'
-import ProductTopic from '@/components/MSearch/searchItems/productTopic.vue'
-import StageSupLevels from '@/components/MSearch/searchItems/stageSupLevels.vue'
-import SearchPhone from '@/components/MSearch/searchItems/searchPhone.vue'
-import OutTradeNo from '@/components/MSearch/searchItems/outTradeNo.vue'
-import ProductName from '@/components/MSearch/searchItems/productName.vue'
-import SelectDate from '@/components/MSearch/searchItems/selectDate.vue'
-import ExpressNo from '@/components/MSearch/searchItems/expressNo'
+// import ProductTopic from '@/components/MSearch/searchItems/productTopic.vue'
+// import StageSupLevels from '@/components/MSearch/searchItems/stageSupLevels.vue'
+// import SearchPhone from '@/components/MSearch/searchItems/searchPhone.vue'
+// import OutTradeNo from '@/components/MSearch/searchItems/outTradeNo.vue'
+// import ProductName from '@/components/MSearch/searchItems/productName.vue'
+// import SelectDate from '@/components/MSearch/searchItems/selectDate.vue'
+// import ExpressNo from '@/components/MSearch/searchItems/expressNo'
 import GroupSell from '@/components/MSearch/searchItems/groupSell'
-import TeamDetail from '@/components/MSearch/searchItems/teamDetail'
-import MoreVersionBox from '@/components/MSearch/searchItems/moreVersionBox'
-import OrderType from '@/components/MSearch/searchItems/orderType'
-import SystemCourseType from '@/components/MSearch/searchItems/systemCourseType'
+// import TeamDetail from '@/components/MSearch/searchItems/teamDetail'
+// import MoreVersionBox from '@/components/MSearch/searchItems/moreVersionBox'
+// import OrderType from '@/components/MSearch/searchItems/orderType'
 import Department from '@/components/MSearch/searchItems/department'
 import SearchTeamName from '@/components/MSearch/searchItems/searchTeamName'
 import SearchTrialTeamName from '@/components/MSearch/searchItems/searchTrialTeamName'
-import Schedule from '@/components/MSearch/searchItems/schedule'
+// import Schedule from '@/components/MSearch/searchItems/schedule'
+import SearchStage from '@/components/MSearch/searchItems/searchStage'
 import { isToss } from '@/utils/index'
 
 export default {
@@ -357,30 +243,38 @@ export default {
     searchTrialTeamName: {
       type: String,
       default: ''
+    },
+    // 排期
+    searchStage: {
+      type: String,
+      default: ''
     }
   },
+
   components: {
     hardLevel,
+    systemCourseType,
     orderSearch,
     ChannelSelect,
-    ProductTopic,
-    StageSupLevels,
+    // ProductTopic,
+    // StageSupLevels,
     DatePicker,
-    SearchPhone,
-    SelectDate,
-    OutTradeNo,
-    ProductName,
-    ExpressNo,
+    // SearchPhone,
+    // SelectDate,
+    // OutTradeNo,
+    // ProductName,
+    // ExpressNo,
     GroupSell,
-    TeamDetail,
-    MoreVersionBox,
-    OrderType,
-    SystemCourseType,
+    // TeamDetail,
+    // MoreVersionBox,
+    // OrderType,
     Department,
     SearchTeamName,
     SearchTrialTeamName,
-    Schedule
+    // Schedule,
+    SearchStage
   },
+
   data() {
     return {
       showErr: false,
@@ -396,6 +290,7 @@ export default {
   methods: {
     // 选择渠道
     getChannel(res) {
+      console.info(res, 'lll')
       this.setSeachParmas(res, [this.channel || 'channelid'], 'terms')
     },
     // 主题
@@ -425,8 +320,39 @@ export default {
     },
     // 选择订单下单时间
     getDate(res) {
+      console.log(res, 'lll')
       this.setSeachParmas(res, [this.date || 'octime'], 'range')
     },
+    // 4点外移
+    today() {
+      const start = new Date(new Date().toLocaleDateString()).getTime() // 设定日期,时间默认0点
+      const end = Date.now()
+      this.$root.$emit('fourpoint', [start, end])
+      this.setSeachParmas([start, end], [this.date || 'octime'], 'range')
+    },
+    yesterday() {
+      const yester = new Date()
+      yester.setDate(new Date().getDate() - 1)
+      yester.toLocaleDateString()
+      const start = new Date(
+        yester.toLocaleDateString() + ' 00:00:00'
+      ).valueOf()
+      const end = new Date(yester.toLocaleDateString() + ' 23:59:59').valueOf()
+      this.$root.$emit('fourpoint', [start, end])
+      this.setSeachParmas([start, end], [this.date || 'octime'], 'range')
+    },
+    thisweek() {
+      const week = new Date()
+      const reverseDays = week.getDay() ? 6 : week.getDay() - 1
+      const start =
+        new Date(new Date().toLocaleDateString()).getTime() -
+        reverseDays * 86400000
+      const end = new Date().getTime()
+      console.info(start, end)
+      this.$root.$emit('fourpoint', [start, end])
+      this.setSeachParmas([start, end], [this.date || 'octime'], 'range')
+    },
+    thismonth() {},
     // 选择手机号
     getPhoneHander(res) {
       console.log(res, '回调res') // 得到uid
@@ -550,6 +476,9 @@ export default {
 .elard {
   border: none;
   margin-top: 5px;
+}
+.rw100 {
+  width: 140px;
 }
 .marginer {
   margin-bottom: 2px;

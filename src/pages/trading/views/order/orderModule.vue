@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-24 15:16:26
  * @LastEditors: liukun
- * @LastEditTime: 2020-04-25 18:18:50
+ * @LastEditTime: 2020-04-28 20:40:32
  -->
 <template>
   <el-scrollbar wrap-class="order-wrapper" id="order-scroll">
@@ -24,22 +24,31 @@
             date="ctime"
             date-placeholder="下单时间"
             phone="uid"
-            schedule="stage"
+            search-stage="stage"
             department="pay_teacher_id"
             groupSell="pay_teacher_id"
-            :search-team-name="activeTopic === '5' ? 'last_team_id' : ''"
-            :search-trial-team-name="
-              activeTopic === '5' ? 'uid' : 'last_team_id'
-            "
-            :order-type="activeTopic === '5' ? 'regtype' : ''"
+            search-team-name="last_team_id"
+            search-trial-team-name="uid"
           />
           <all-order :topic="activeTopic" :search="search" />
         </el-tab-pane>
 
         <!-- 包含全部体验课订单数据（双周体验课、单周体验课） -->
-        <el-tab-pane label="体验课" name="4">
+        <!-- <el-tab-pane label="体验课" name="4">
+          <searchList1
+            @search="handleSearch"
+            channel="pay_channel"
+            sup="sup"
+            date="ctime"
+            date-placeholder="下单时间"
+            phone="uid"
+            schedule="stage"
+            department="last_teacher_id"
+            groupSell="last_teacher_id"
+            search-trial-team-name="last_team_id"
+          />
           <all-order :topic="activeTopic" :search="search" />
-        </el-tab-pane>
+        </el-tab-pane> -->
         <el-tab-pane label="活动订单" name="1,2,6">
           <all-order :topic="activeTopic" :search="search" />
         </el-tab-pane>

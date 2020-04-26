@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-04-25 17:10:01
  * @LastEditors: liukun
- * @LastEditTime: 2020-04-26 15:31:38
+ * @LastEditTime: 2020-04-28 15:26:04
  -->
 <template>
   <div>
@@ -43,6 +43,6 @@ export default {
 
 <style lang="scss" module>
 .select {
-  width: 125px;
+  width: 140px;
 }
 </style>
