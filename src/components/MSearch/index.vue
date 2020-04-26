@@ -63,7 +63,7 @@
 
       <el-form-item v-if="channel">
         <!-- 渠道 -->
-        <channel-select @result="getChannel" :name="channel" />
+        <channel-select @result="getChannel" :name="channel" ref="channel" />
       </el-form-item>
 
       <el-form-item v-if="topicType">
