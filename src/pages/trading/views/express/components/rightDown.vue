@@ -9,17 +9,21 @@
       @cell-click="handleSelectionChangeCell"
       @selection-change="handleSelectionChange"
       @row-click="handleExpressTo"
+      type="index"
       :header-cell-style="headerStyle"
-      :current-row-key="rowKey"
       @select="handleSelect"
       @select-all="handleAllSelect"
+      @cell-mouse-enter="handleMouseEnter"
+      @cell-mouse-leave="handleMouseLeave"
     >
       <el-table-column type="selection" width="25" fixed> </el-table-column>
       <el-table-column width="25" fixed>
         <template slot-scope="scope">
           <!-- <div v-show="false">{{ scope }}</div> -->
           <el-dropdown trigger="click">
-            <div class="three-dot">
+            <!-- <div :class="'three-dot':isActive="> -->
+
+            <div :class="scope.row.id === current.id ? 'three-dot' : 'disnone'">
               <img src="@/assets/images/icon/icon-three-dot.jpg" />
             </div>
             <el-dropdown-menu slot="dropdown">
@@ -331,10 +335,18 @@ export default {
       StudentTeamList: '',
       realnameId: '',
       teamId: '',
-      ManagementList: {}
+      ManagementList: {},
+      current: {}
     }
   },
   methods: {
+    // 鼠标进入显示操作栏
+    handleMouseEnter(row) {
+      this.current = row
+    },
+    handleMouseLeave(row) {
+      this.current = {}
+    },
     handleCloseDrawer() {
       this.timeline = false
     },
@@ -773,6 +785,9 @@ export default {
   color: #666;
   padding-bottom: 20px;
   .table-all {
+    .disnone {
+      display: none;
+    }
     .three-dot {
       display: flex;
       justify-content: center;
@@ -823,6 +838,9 @@ export default {
         align-items: center;
       }
     }
+  }
+  .showSelect {
+    display: none;
   }
 }
 </style>
