@@ -202,6 +202,14 @@
         />
       </el-form-item>
 
+      <el-form-item v-if="trialCourseType">
+        <!-- 体验课类型选择 -->
+        <trial-course-type
+          @result="getTrialCourseType"
+          :name="trialCourseType"
+        />
+      </el-form-item>
+
       <!-- <el-form-item
         size="mini"
         style="position:relative;top:6px"
@@ -275,6 +283,7 @@ import teacherWx from './searchItems/teacherSearch/teachetWx'
 import wxList from './searchItems/wxInput'
 import selectAddress from './searchItems/selectAddress.vue'
 import SearchStage from './searchItems/searchStage'
+import TrialCourseType from './searchItems/trialCourseType'
 import { isToss } from '@/utils/index'
 
 export default {
@@ -524,6 +533,11 @@ export default {
     searchTrialStage: {
       type: String,
       default: ''
+    },
+    // 体验课类型 0-双周，3-单周
+    trialCourseType: {
+      type: String,
+      default: ''
     }
   },
   components: {
@@ -552,7 +566,8 @@ export default {
     wxList,
     selectAddress,
     teacherWx,
-    SearchStage
+    SearchStage,
+    TrialCourseType
   },
   data() {
     return {
@@ -671,7 +686,7 @@ export default {
     },
     // 选择销售老师
     selectSellTeacher(res) {
-      this.setSeachParmas(res, [this.groupSell || 'pay_teacher_id'], 'wildcard')
+      this.setSeachParmas(res, [this.groupSell || 'pay_teacher_id'])
     },
     getTeamDetail(res) {
       this.setSeachParmas(res, [this.teamDetail || 'last_team_id'])
@@ -724,6 +739,9 @@ export default {
         [this.searchTrialStage || 'trial_stage'],
         'terms'
       )
+    },
+    getTrialCourseType(res) {
+      this.setSeachParmas(res, [this.trialCourseType || 'team_category'])
     },
 
     /**  处理接收到的查询参数
