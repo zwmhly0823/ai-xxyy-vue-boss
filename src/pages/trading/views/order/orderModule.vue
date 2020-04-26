@@ -17,7 +17,7 @@
         date="ctime"
         date-placeholder="下单时间"
         phone="uid"
-        :search-stage="activeTopic === '5' ? 'stage' : ''"
+        :search-stage="activeTopic === '5' ? 'system_stage' : ''"
         search-trial-stage="trial_stage"
         department="pay_teacher_id"
         groupSell="pay_teacher_id"
@@ -104,6 +104,7 @@
 </template>
 
 <script>
+import _ from 'lodash'
 import allOrder from './components/allOrder'
 import MSearch from '@/components/MSearch/index.vue'
 export default {
@@ -141,20 +142,30 @@ export default {
       console.log(res, 'search')
       // 体验课排期和系统课排期
       const stage = []
-      res.forEach((ele, index) => {
+      const arr = []
+      const search = _.cloneDeep(res)
+
+      search.forEach((ele, index) => {
         if (ele.terms) {
-          if (ele.terms.stage) {
-            stage.push(...ele.terms.stage)
+          if (ele.terms.system_stage) {
+            stage.push(...ele.terms.system_stage)
           }
           if (ele.terms.trial_stage) {
             stage.push(...ele.terms.trial_stage)
           }
-          if (Object.keys(ele.terms).length === 0) res.splice(index, 1)
+          if (
+            ele.terms &&
+            !ele.terms.system_stage &&
+            ele.terms &&
+            !ele.terms.trial_stage
+          ) {
+            arr.push(ele)
+          }
+          if (Object.keys(ele.terms).length === 0) search.splice(index, 1)
         }
       })
-      const search = JSON.parse(JSON.stringify(res))
-      if (stage.length > 0) search.push({ terms: { stage } })
-      this.search = search
+      stage.length > 0 && arr.push({ terms: { stage } })
+      this.search = arr
     },
     // 吸顶
     handleScroll() {
