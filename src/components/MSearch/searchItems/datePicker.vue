@@ -3,8 +3,8 @@
  * @version: 
  * @Author: zhubaodong
  * @Date: 2020-03-26 16:30:11
- * @LastEditors: zhubaodong
- * @LastEditTime: 2020-04-03 17:49:45
+ * @LastEditors: liukun
+ * @LastEditTime: 2020-04-26 15:03:18
  -->
 <template>
   <div class="search-item">
@@ -24,6 +24,7 @@
       @change="changeHandler"
     >
     </el-date-picker>
+    <slot name="buttons"></slot>
   </div>
 </template>
 

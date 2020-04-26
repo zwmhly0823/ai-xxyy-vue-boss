@@ -1,15 +1,45 @@
 <!--
- * @Descripttion:
- * @version:
- * @Author: zhubaodong
- * @Date: 2020-03-24 18:20:12
+ * @Descripttion: 系统课搜索栏
+ * @version: 1.0.0
+ * @Author: liukun
+ * @Date: 2020-04-25 17:24:23
  * @LastEditors: liukun
- * @LastEditTime: 2020-04-25 15:21:53
+ * @LastEditTime: 2020-04-26 16:08:46
  -->
-
 <template>
-  <el-card class="search-style" shadow="never">
-    <el-form :inline="true">
+  <el-card border="false" shadow="never" :class="$style.elard">
+    <el-form :inline="true" label-position="right" label-width="80px">
+      <el-form-item label="订单搜索:" :class="{ [$style.marginer]: true }">
+        <orderSearch class="allmini" />
+      </el-form-item>
+      <br />
+
+      <el-form-item label="订单来源:" :class="{ [$style.marginer]: true }">
+        <ChannelSelect />
+      </el-form-item>
+      <br />
+
+      <el-form-item label="下单时间:" :class="{ [$style.marginer]: true }">
+        <DatePicker :class="[$style.fourPoint, 'allmini']">
+          <template v-slot:buttons>
+            <div class="row_colum">
+              <el-button size="mini" plain>今日</el-button>
+              <el-button size="mini" plain>何夕</el-button>
+              <el-button size="mini" plain>今朝</el-button>
+              <el-button size="mini" plain>去日</el-button>
+            </div>
+          </template>
+        </DatePicker>
+      </el-form-item>
+      <br />
+      <el-form-item label="体验课:" :class="{ [$style.marginer]: true }">
+        <ChannelSelect />
+      </el-form-item>
+      <br />
+      <el-form-item label="系统课:" :class="{ [$style.marginer]: true }">
+        <ChannelSelect />
+      </el-form-item>
+
       <el-form-item v-if="orderType">
         <!-- 订单类型 -->
         <order-type @result="getOrderType" :name="orderType" />
@@ -159,24 +189,25 @@
   </el-card>
 </template>
 <script>
-import DatePicker from './searchItems/datePicker.vue'
-import ChannelSelect from './searchItems/channel.vue'
-import ProductTopic from './searchItems/productTopic.vue'
-import StageSupLevels from './searchItems/stageSupLevels.vue'
-import SearchPhone from './searchItems/searchPhone.vue'
-import OutTradeNo from './searchItems/outTradeNo.vue'
-import ProductName from './searchItems/productName.vue'
-import SelectDate from './searchItems/selectDate.vue'
-import ExpressNo from './searchItems/expressNo'
-import GroupSell from './searchItems/groupSell'
-import TeamDetail from './searchItems/teamDetail'
-import MoreVersionBox from './searchItems/moreVersionBox'
-import OrderType from './searchItems/orderType'
-import SystemCourseType from './searchItems/systemCourseType'
-import Department from './searchItems/department'
-import SearchTeamName from './searchItems/searchTeamName'
-import SearchTrialTeamName from './searchItems/searchTrialTeamName'
-import Schedule from './searchItems/schedule'
+import orderSearch from '@/components/MSearch/searchItems/orderSearch.vue' // add
+import DatePicker from '@/components/MSearch/searchItems/datePicker.vue'
+import ChannelSelect from '@/components/MSearch/searchItems/channel.vue'
+import ProductTopic from '@/components/MSearch/searchItems/productTopic.vue'
+import StageSupLevels from '@/components/MSearch/searchItems/stageSupLevels.vue'
+import SearchPhone from '@/components/MSearch/searchItems/searchPhone.vue'
+import OutTradeNo from '@/components/MSearch/searchItems/outTradeNo.vue'
+import ProductName from '@/components/MSearch/searchItems/productName.vue'
+import SelectDate from '@/components/MSearch/searchItems/selectDate.vue'
+import ExpressNo from '@/components/MSearch/searchItems/expressNo'
+import GroupSell from '@/components/MSearch/searchItems/groupSell'
+import TeamDetail from '@/components/MSearch/searchItems/teamDetail'
+import MoreVersionBox from '@/components/MSearch/searchItems/moreVersionBox'
+import OrderType from '@/components/MSearch/searchItems/orderType'
+import SystemCourseType from '@/components/MSearch/searchItems/systemCourseType'
+import Department from '@/components/MSearch/searchItems/department'
+import SearchTeamName from '@/components/MSearch/searchItems/searchTeamName'
+import SearchTrialTeamName from '@/components/MSearch/searchItems/searchTrialTeamName'
+import Schedule from '@/components/MSearch/searchItems/schedule'
 import { isToss } from '@/utils/index'
 
 export default {
@@ -324,6 +355,7 @@ export default {
     }
   },
   components: {
+    orderSearch,
     ChannelSelect,
     ProductTopic,
     StageSupLevels,
@@ -508,18 +540,27 @@ export default {
   }
 }
 </script>
-<style lang="scss" scoped>
-.search-style {
-  margin-bottom: 10px;
+<style lang="scss" module>
+.elard {
+  border: none;
+  margin-top: 5px;
 }
-</style>
-<style lang="scss">
-.search-style {
-  .el-card__body {
-    padding: 0px 10px 0px 10px;
+.marginer {
+  margin-bottom: 2px;
+}
+.fourPoint {
+  display: flex;
+}
+:global {
+  /* 定义多个全局样式 */
+  .allmini {
+    display: flex;
+    align-items: center;
+    height: 40px;
   }
-  .el-form-item {
-    margin-bottom: 0px !important;
+  .row_colum {
+    margin-left: 10px;
+    display: flex;
   }
 }
 </style>
