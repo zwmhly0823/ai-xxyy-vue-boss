@@ -162,9 +162,13 @@ export default {
             arr.push(ele)
           }
           if (Object.keys(ele.terms).length === 0) search.splice(index, 1)
+        } else {
+          arr.push(ele)
         }
       })
       stage.length > 0 && arr.push({ terms: { stage } })
+      console.log(arr, 'arr...........')
+
       this.search = arr
     },
     // 吸顶
