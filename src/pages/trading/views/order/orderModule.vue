@@ -217,6 +217,10 @@ export default {
   },
   created() {},
   mounted() {
+    setTimeout(() => {
+      const type = { disableClick: false }
+      this.$store.dispatch('getShowStatus', type)
+    })
     // 吸顶
     window.addEventListener('scroll', this.handleScroll, true)
   },
