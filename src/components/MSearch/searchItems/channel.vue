@@ -20,8 +20,9 @@
         emitPath: false,
         checkStrictly: false
       }"
-      :show-all-levels="false"
+      :show-all-levels="true"
       clearable
+      filterable
     ></el-cascader>
   </div>
 </template>

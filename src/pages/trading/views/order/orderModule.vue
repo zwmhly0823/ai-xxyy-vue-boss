@@ -17,7 +17,7 @@
         date="ctime"
         date-placeholder="下单时间"
         phone="uid"
-        search-stage="stage"
+        :search-stage="activeTopic === '5' ? 'stage' : ''"
         search-trial-stage="trial_stage"
         department="pay_teacher_id"
         groupSell="pay_teacher_id"
