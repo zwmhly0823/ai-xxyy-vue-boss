@@ -60,15 +60,25 @@
             开课日期：<span class="label-val">4月6日</span> 结课日期：
             <span class="label-val">4月20日</span>开课天数
             <span class="label-val">11天</span>
-            <span class="label-val">当前结果: </span>
-            <span>本期总参课人数:</span>
-            <span class="label-val green">600</span>
-            <span>本期总参课率:</span>
-            <span class="label-val green">60%</span>
-            <span>本日总参课人数:</span>
-            <span class="label-val green">50</span>
-            <span>本日总参课率:</span>
-            <span class="label-val green">30%</span>
+            <span class="label-val">当前结果:</span>
+            <template v-if="activeName == 'conversion'">
+              <span>总订单数:</span>
+              <span class="label-val green">600</span>
+              <span>总转化率:</span>
+              <span class="label-val green">60%</span>
+              <span>总金额:</span>
+              <span class="label-val green">9695</span>
+            </template>
+            <template v-else>
+              <span>本期总{{ despMap[activeName] }}人数:</span>
+              <span class="label-val green">600</span>
+              <span>本期总{{ despMap[activeName] }}率:</span>
+              <span class="label-val green">60%</span>
+              <span>本日总{{ despMap[activeName] }}人数:</span>
+              <span class="label-val green">50</span>
+              <span>本日总{{ despMap[activeName] }}率:</span>
+              <span class="label-val green">30%</span>
+            </template>
           </p>
           <div class="summary-tabs">
             <el-tabs v-model="activeName" @tab-click="handleClick">
@@ -154,6 +164,11 @@ export default {
   },
   data() {
     return {
+      despMap: {
+        conversion: '转化',
+        attendClass: '参课',
+        finishClass: '完课'
+      },
       // tabs标签默认状态
       selectName: '更多',
       activeName: 'conversion',
@@ -184,41 +199,182 @@ export default {
       tableDatasss: [
         {
           label: '总计',
-          children: [{ label: '总参课人数' }, { label: '总参课率' }]
+          children: [
+            { label: '订单数' },
+            { label: '转化率' },
+            { label: '总金额' }
+          ]
         },
         {
           label: 'W1D1',
-          children: [{ label: '当日参课人数' }, { label: '当日参课率' }]
+          children: [
+            { label: '订单数' },
+            { label: '转化率' },
+            { label: '总金额' }
+          ]
         },
         {
           label: 'W1D2',
-          children: [{ label: '当日参课人数' }, { label: '当日参课率' }]
+          children: [
+            { label: '订单数' },
+            { label: '转化率' },
+            { label: '总金额' }
+          ]
         },
         {
           label: 'W1D3',
-          children: [{ label: '当日参课人数' }, { label: '当日参课率' }]
+          children: [
+            { label: '订单数' },
+            { label: '转化率' },
+            { label: '总金额' }
+          ]
         },
         {
           label: 'W1D4',
-          children: [{ label: '当日参课人数' }, { label: '当日参课率' }]
+          children: [
+            { label: '订单数' },
+            { label: '转化率' },
+            { label: '总金额' }
+          ]
         },
         {
           label: 'W1D5',
-          children: [{ label: '当日参课人数' }, { label: '当日参课率' }]
-        },
-        {
-          label: 'W1D6',
-          children: [{ label: '当日参课人数' }, { label: '当日参课率' }]
-        },
-        {
-          label: 'W1D7',
-          children: [{ label: '当日参课人数' }, { label: '当日参课率' }]
+          children: [
+            { label: '订单数' },
+            { label: '转化率' },
+            { label: '总金额' }
+          ]
         }
       ]
     }
   },
   computed: {},
-  watch: {},
+  watch: {
+    activeName(val, oldVal) {
+      if (val === 'attendClass') {
+        this.tableDatasss = [
+          {
+            label: '总计',
+            children: [{ label: '总参课人数' }, { label: '总参课率' }]
+          },
+          {
+            label: 'W1D1',
+            children: [{ label: '当日参课人数' }, { label: '当日参课率' }]
+          },
+          {
+            label: 'W1D2',
+            children: [{ label: '当日参课人数' }, { label: '当日参课率' }]
+          },
+          {
+            label: 'W1D3',
+            children: [{ label: '当日参课人数' }, { label: '当日参课率' }]
+          },
+          {
+            label: 'W1D4',
+            children: [{ label: '当日参课人数' }, { label: '当日参课率' }]
+          },
+          {
+            label: 'W1D5',
+            children: [{ label: '当日参课人数' }, { label: '当日参课率' }]
+          },
+          {
+            label: 'W1D6',
+            children: [{ label: '当日参课人数' }, { label: '当日参课率' }]
+          },
+          {
+            label: 'W1D7',
+            children: [{ label: '当日参课人数' }, { label: '当日参课率' }]
+          }
+        ]
+      } else if (val === 'finishClass') {
+        this.tableDatasss = [
+          {
+            label: '总计',
+            children: [{ label: '总完课人数' }, { label: '总完课率' }]
+          },
+          {
+            label: 'W1D1',
+            children: [{ label: '当日完课人数' }, { label: '当日完课率' }]
+          },
+          {
+            label: 'W1D2',
+            children: [{ label: '当日完课人数' }, { label: '当日完课率' }]
+          },
+          {
+            label: 'W1D3',
+            children: [{ label: '当日完课人数' }, { label: '当日完课率' }]
+          },
+          {
+            label: 'W1D4',
+            children: [{ label: '当日完课人数' }, { label: '当日完课率' }]
+          },
+          {
+            label: 'W1D5',
+            children: [{ label: '当日完课人数' }, { label: '当日完课率' }]
+          },
+          {
+            label: 'W1D6',
+            children: [{ label: '当日完课人数' }, { label: '当日完课率' }]
+          },
+          {
+            label: 'W1D7',
+            children: [{ label: '当日完课人数' }, { label: '当日完课率' }]
+          }
+        ]
+      } else if (val === 'conversion') {
+        this.tableDatasss = [
+          {
+            label: '总计',
+            children: [
+              { label: '订单数' },
+              { label: '转化率' },
+              { label: '总金额' }
+            ]
+          },
+          {
+            label: 'W1D1',
+            children: [
+              { label: '订单数' },
+              { label: '转化率' },
+              { label: '总金额' }
+            ]
+          },
+          {
+            label: 'W1D2',
+            children: [
+              { label: '订单数' },
+              { label: '转化率' },
+              { label: '总金额' }
+            ]
+          },
+          {
+            label: 'W1D3',
+            children: [
+              { label: '订单数' },
+              { label: '转化率' },
+              { label: '总金额' }
+            ]
+          },
+          {
+            label: 'W1D4',
+            children: [
+              { label: '订单数' },
+              { label: '转化率' },
+              { label: '总金额' }
+            ]
+          },
+          {
+            label: 'W1D5',
+            children: [
+              { label: '订单数' },
+              { label: '转化率' },
+              { label: '总金额' }
+            ]
+          }
+        ]
+      }
+    }
+  },
   async activated() {
     this.tabsPriodTabs()
     // await this.getCourseListByType()
@@ -418,7 +574,7 @@ export default {
     color: #333;
     min-width: 800px;
     .label-val {
-      margin-right: 20px;
+      margin-right: 16px;
       &.green {
         color: #409eff;
         margin-left: 10px;
