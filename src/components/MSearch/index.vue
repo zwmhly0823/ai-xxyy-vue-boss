@@ -115,10 +115,7 @@
           :tip="nameTip"
         />
       </el-form-item>
-      <el-form-item v-if="groupSell && !teacherId">
-        <!-- 社群销售 -->
-        <group-sell @result="selectSellTeacher" :name="groupSell" />
-      </el-form-item>
+
       <el-form-item v-if="teachernickname">
         <!-- 老师模块昵称搜索 -->
         <teacher-nickname
@@ -163,6 +160,11 @@
       <el-form-item v-if="department && !teacherId">
         <!-- 社群销售组 -->
         <department @result="getDepartment" :name="department" />
+      </el-form-item>
+
+      <el-form-item v-if="groupSell && !teacherId">
+        <!-- 社群销售 -->
+        <group-sell @result="selectSellTeacher" :name="groupSell" />
       </el-form-item>
 
       <!-- && !teacherId -->

@@ -3,7 +3,7 @@
  * @Email: yangjiyong@meishubao.com
  * @Date: 2020-03-21 11:58:33
  * @Last Modified by: YangJiyong
- * @Last Modified time: 2020-04-26 18:55:05
+ * @Last Modified time: 2020-04-26 23:27:22
  * @Description: 班级
  */
 import axios from '../axiosConfig'
@@ -265,6 +265,7 @@ export default {
         StudentTrialCourseList(query: ${JSON.stringify(query)}) {
           student_id
           team_id
+          order_no
         }
       }`
     })
