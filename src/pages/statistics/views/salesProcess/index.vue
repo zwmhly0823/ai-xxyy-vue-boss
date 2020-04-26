@@ -203,7 +203,15 @@ export default {
           children: [{ label: '当日参课人数' }, { label: '当日参课率' }]
         },
         {
-          label: 'D1W5',
+          label: 'W1D5',
+          children: [{ label: '当日参课人数' }, { label: '当日参课率' }]
+        },
+        {
+          label: 'W1D6',
+          children: [{ label: '当日参课人数' }, { label: '当日参课率' }]
+        },
+        {
+          label: 'W1D7',
           children: [{ label: '当日参课人数' }, { label: '当日参课率' }]
         }
       ]
