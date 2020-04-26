@@ -10,7 +10,7 @@
   <el-scrollbar wrap-class="order-wrapper" id="order-scroll">
     <!-- topicType="topic_id" -->
     <div class="order-box">
-      <m-search
+      <!-- <m-search
         @search="handleSearch"
         channel="pay_channel"
         sup="sup"
@@ -23,6 +23,34 @@
         groupSell="pay_teacher_id"
         :search-team-name="activeTopic === '5' ? 'last_team_id' : ''"
         :search-trial-team-name="activeTopic === '5' ? 'uid' : 'last_team_id'"
+      /> -->
+      <m-search
+        v-if="activeTopic === '5' && showSearch"
+        @search="handleSearch"
+        channel="pay_channel"
+        sup="sup"
+        date="ctime"
+        date-placeholder="下单时间"
+        phone="uid"
+        search-stage="stage"
+        search-trial-stage="trial_stage"
+        department="pay_teacher_id"
+        groupSell="pay_teacher_id"
+        search-team-name="last_team_id"
+        search-trial-team-name="uid"
+      />
+      <m-search
+        v-if="activeTopic === '4' && showSearch"
+        @search="handleSearch"
+        channel="pay_channel"
+        sup="sup"
+        date="ctime"
+        date-placeholder="下单时间"
+        phone="uid"
+        search-trial-stage="trial_stage"
+        department="pay_teacher_id"
+        groupSell="pay_teacher_id"
+        search-trial-team-name="last_team_id"
       />
       <!-- TODO:体验课类型 trial-course-type="team_category" -->
       <!-- system-course-type="system-course-type" TODO -->
@@ -124,7 +152,8 @@ export default {
       // 切换tab
       // tab: '4',
       // 搜索
-      search: []
+      search: [],
+      showSearch: true
     }
   },
   computed: {},
@@ -137,6 +166,11 @@ export default {
         .querySelector('.order-wrapper').scrollTop = 0
       this.activeTopic = tab.name
       this.search = []
+      // 子组件重新渲染
+      this.showSearch = false
+      this.$nextTick(() => {
+        this.showSearch = true
+      })
     },
     // 点击搜索
     handleSearch(res) {

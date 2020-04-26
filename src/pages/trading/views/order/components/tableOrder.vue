@@ -414,7 +414,6 @@ export default {
       this.getOrderList()
     },
     status(status) {
-      console.log(status, 'status')
       this.currentPage = 1
       this.getOrderList()
     },
@@ -492,7 +491,6 @@ export default {
           'amount',
           'status'
         ).then((res) => {
-          console.log(res)
           const statistics = res.data.OrderStatistics || []
           this.$emit('statistics', statistics)
         })
