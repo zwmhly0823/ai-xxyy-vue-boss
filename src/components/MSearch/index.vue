@@ -810,4 +810,9 @@ export default {
     margin-bottom: 0px !important;
   }
 }
+.el-select-dropdown.is-multiple .el-select-dropdown__item.selected:after {
+  right: 5px;
+}
 </style>
+
+<style lang="scss" scope></style>
