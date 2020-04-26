@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-24 18:50:54
  * @LastEditors: Shentong
- * @LastEditTime: 2020-04-26 16:58:10
+ * @LastEditTime: 2020-04-26 23:07:37
  -->
 <template>
   <div class="search-item small">
@@ -107,7 +107,6 @@ export default {
       supList: [],
       levelList: [],
       stageData: null,
-      schedule: null,
       supData: null,
       levelData: null
     }
@@ -128,18 +127,12 @@ export default {
     },
     addSupS(val) {
       console.log(val)
-    },
-    typeStage(val) {
-      console.log(val, 'state.leftbar.typeStage')
-      this.schedule = []
-      this.getManagementList(val)
     }
   },
   async created() {
     await this.getStage()
     await this.getSup()
     await this.getLevel()
-    await this.getManagementList(this.typeStage)
   },
   methods: {
     // 期数
@@ -156,27 +149,6 @@ export default {
         })
         .then((res) => {
           this.stageList = res.data.teamStageList
-        })
-    },
-    // 排期
-    async getManagementList() {
-      let typeId = null
-      if (this.typeStage) {
-        typeId = JSON.stringify(`type:"${this.typeStage}"`)
-      }
-      axios
-        .post('/graphql/v1/toss', {
-          query: `{
-               ManagementList(query:${typeId}){
-                    id
-                    period
-                    period_name
-              }
-            }
-          `
-        })
-        .then((res) => {
-          this.scheduleList = res.data.ManagementList
         })
     },
     // 难度
@@ -219,12 +191,6 @@ export default {
       this.$emit(
         'stageCallBack',
         data.length > 0 ? { [this.stageName]: this.stageData } : ''
-      )
-    },
-    scheduleChange(data) {
-      this.$emit(
-        'scheduleCallBack',
-        data.length > 0 ? { [this.scheduleName]: this.schedule } : ''
       )
     },
 
