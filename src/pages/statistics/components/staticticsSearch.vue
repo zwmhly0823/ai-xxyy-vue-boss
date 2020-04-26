@@ -1,194 +1,77 @@
 <!--
- * @Descripttion: 
- * @version: 
- * @Author: panjian
- * @Date: 2020-04-23 15:06:25
- * @LastEditors: panjian
- * @LastEditTime: 2020-04-23 17:05:16
+ * @Descripttion: TOSS小熊
+ * @version: 1.0.0
+ * @Author: Shentong
+ * @Date: 2020-04-25 14:35:19
+ * @LastEditors: Shentong
+ * @LastEditTime: 2020-04-26 21:50:30
  -->
 <template>
-  <div>
-    <el-cascader
-      clearable
-      size="small"
-      style="width:280px;"
-      @change="handleChange"
-      v-model="strAssociatedTeacher"
-      placeholder="销售部门"
-      :options="associatedTeacher"
-      :props="optionProps"
-      filterable
-    ></el-cascader>
-    <el-select
-      size="small"
-      style="width:150px;margin:15px;"
-      @change="saleChange"
-      v-model="saleId"
-      filterable
-      remote
-      reserve-keyword
-      placeholder="社群销售"
-      :remote-method="remoteMethod"
-      :loading="loading"
-    >
-      <el-option
-        v-for="item in soleList"
-        :key="item.value"
-        :label="item.label"
-        :value="item.value"
-      >
-      </el-option>
-    </el-select>
+  <div class="table-searcher-container">
+    <div class="comp-cell">
+      <department @result="getDepartment" :name="'department'" :deptType="2" />
+    </div>
+    <div class="comp-cell">
+      <group-sell @result="selectSellTeacher" :name="'groupSell'" />
+    </div>
 
-    <el-select
-      size="small"
-      style="width:150px;"
-      v-model="value"
-      placeholder="难度级别"
-      @change="changeSup"
-    >
-      <el-option
-        v-for="item in sup"
-        :key="item.value"
-        :label="item.label"
-        :value="item.value"
-      >
-      </el-option>
-    </el-select>
+    <div class="comp-cell">
+      <stage-sup-levels
+        @supCallBack="supCallBack"
+        :disabled="true"
+        :supName="sup"
+        style="margin-bottom:0px"
+      />
+    </div>
   </div>
 </template>
-
 <script>
+import Department from '@/components/MSearch/searchItems/department'
+import GroupSell from '@/components/MSearch/searchItems/groupSell'
+import StageSupLevels from '@/components/MSearch/searchItems/stageSupLevels.vue'
 export default {
   data() {
     return {
-      saleId: '',
-      soleList: [],
-      loading: false,
-      optionProps: {
-        value: 'id',
-        label: 'name'
-      },
-      associatedTeacher: [],
-      strAssociatedTeacher: '',
-      TeacherListvalue: '',
-      restaurants: [],
-      state2: '',
-      timeout: null,
-      options: [
-        {
-          value: '选项1',
-          label: '黄金糕'
-        },
-        {
-          value: '选项2',
-          label: '双皮奶'
-        },
-        {
-          value: '选项3',
-          label: '蚵仔煎'
-        },
-        {
-          value: '选项4',
-          label: '龙须面'
-        },
-        {
-          value: '选项5',
-          label: '北京烤鸭'
-        }
-      ],
-      sup: [
-        {
-          value: 'S1',
-          label: 'S1'
-        },
-        {
-          value: 'S2',
-          label: 'S2'
-        },
-        {
-          value: 'S3',
-          label: 'S3'
-        },
-        {
-          value: 'S4',
-          label: 'S4'
-        },
-        {
-          value: 'S5',
-          label: 'S5'
-        }
-      ],
-      value: ''
+      emitInfo: {},
+      sup: 'sup'
     }
   },
-  mounted() {
-    this.onCreatedSelect()
+  components: {
+    Department,
+    GroupSell,
+    StageSupLevels
   },
   methods: {
-    onCreatedSelect() {
-      // 关联老师选择部门
-      this.$http.Teacher.getDepartmentTree().then((res) => {
-        this.associatedTeacher = res.payload
-      })
-    },
-    // 难度级别
-    changeSup(value) {
-      this.$emit('searchSup', value)
-    },
     // 社群销售
-    saleChange(value) {
-      this.$emit('searchSale', value)
+    selectSellTeacher(teachers) {
+      this.manageChange(teachers, 'groupSell')
     },
-    handleChange(value) {
-      switch (value && value.length) {
-        case 1:
-          this.strAssociatedTeacher = value[0]
-          break
-        case 2:
-          this.strAssociatedTeacher = value[1]
-          break
-        case 3:
-          this.strAssociatedTeacher = value[2]
-          break
-        default:
-          break
-      }
-      this.$emit('searchDepartment', this.strAssociatedTeacher)
-      this.saleId = ''
-      this.soleList = []
-      this.remoteMethod()
+    // 销售部门
+    getDepartment(depts) {
+      this.manageChange(depts, 'department')
     },
-    remoteMethod(query) {
-      if (query !== '') {
-        this.loading = true
-        setTimeout(() => {
-          this.loading = false
-          if (this.strAssociatedTeacher) {
-            this.TeacherListvalue = `{"department_id": ${this.strAssociatedTeacher}}`
-          }
-          this.$http.Teacher.TeacherList(this.TeacherListvalue).then((res) => {
-            const data = res.data.TeacherList
-            const _data = []
-            data.forEach((res) => {
-              _data.push({
-                value: res.id,
-                label: res.realname
-              })
-            })
-            this.soleList = _data.filter((item) => {
-              return query
-                ? item.label.toLowerCase().indexOf(query.toLowerCase()) > -1
-                : item
-            })
-          })
-        }, 200)
-      } else {
-        this.soleList = []
-      }
+    // 难度
+    supCallBack(res) {
+      this.manageChange(res || { sup: [] }, 'sup')
+    },
+    manageChange(res, key) {
+      this.emitInfo[key] = res[key]
+      console.log('comps-emitInfo', this.emitInfo)
+
+      this.$emit('searchChange', this.emitInfo)
     }
   }
 }
 </script>
 
-<style></style>
+<style lang="scss" scoped>
+.table-searcher-container {
+  // height: 50px;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  .comp-cell {
+    margin-right: 20px;
+  }
+}
+</style>

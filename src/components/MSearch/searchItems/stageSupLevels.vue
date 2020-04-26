@@ -3,8 +3,8 @@
  * @version: 
  * @Author: zhubaodong
  * @Date: 2020-03-24 18:50:54
- * @LastEditors: Lukun
- * @LastEditTime: 2020-04-20 22:09:41
+ * @LastEditors: Shentong
+ * @LastEditTime: 2020-04-26 16:58:10
  -->
 <template>
   <div class="search-item small">
@@ -76,19 +76,19 @@ export default {
   props: {
     stageName: {
       type: String,
-      default: 'stage'
+      default: ''
     },
     scheduleName: {
       type: String,
-      default: 'period'
+      default: ''
     },
     supName: {
       type: String,
-      default: 'sup'
+      default: ''
     },
     levelName: {
       type: String,
-      default: 'current_level'
+      default: ''
     },
     // 是否只返回值，如果是，父组件获得值后根据实际表达式组装数据
     onlyValue: {
@@ -229,8 +229,6 @@ export default {
     },
 
     supChange(data) {
-      console.log(data, 'ddddaaaa')
-
       this.$emit(
         'supCallBack',
         data.length > 0 ? { [this.supName]: this.supData } : ''

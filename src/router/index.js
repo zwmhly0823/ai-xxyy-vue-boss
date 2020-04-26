@@ -81,11 +81,20 @@ const routes = [
       module: 'statistics'
     },
     children: [
+      // {
+      //   path: '/salesPerformance',
+      //   name: 'salesPerformance',
+      //   meta: {
+      //     title: '销售业绩',
+      //     module: 'statistics',
+      //     style: 'line'
+      //   }
+      // },
       {
         path: '/salesPerformance',
         name: 'salesPerformance',
         meta: {
-          title: '销售业绩',
+          title: '销售过程',
           module: 'statistics',
           style: 'line'
         }
@@ -94,7 +103,7 @@ const routes = [
         path: '/salesProcess',
         name: 'salesProcess',
         meta: {
-          title: '销售过程',
+          title: '按期汇总',
           module: 'statistics',
           style: 'line'
         }

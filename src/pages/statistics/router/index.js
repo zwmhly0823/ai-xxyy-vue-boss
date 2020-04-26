@@ -1,7 +1,7 @@
 /*
  * @Date: 2020-03-13 15:20:21
  * @LastEditors: Shentong
- * @LastEditTime: 2020-04-24 17:39:14
+ * @LastEditTime: 2020-04-26 17:03:56
  * @FilePath: /ai-app-vue-toss/src/pages/studentTeam/router/index.js
  */
 import Vue from 'vue'
@@ -23,16 +23,25 @@ const routes = [
     path: '/salesPerformance',
     name: 'salesPerformance',
     meta: {
-      title: '按期情况汇总',
+      title: '销售过程分析',
       keepAlive: true
     },
     component: () => import('../views/salesPerformance/index.vue')
   },
   {
+    path: '/priodPerformance',
+    name: 'priodPerformance',
+    meta: {
+      title: '按期情况汇总',
+      keepAlive: true
+    },
+    component: () => import('../views/priodPerformance/index.vue')
+  },
+  {
     path: '/salesProcess',
     name: 'salesProcess',
     meta: {
-      title: '销售过程分析',
+      title: '销售业绩分析',
       keepAlive: true
     },
     component: () => import('../views/salesProcess/index.vue')
