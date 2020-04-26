@@ -23,8 +23,8 @@
         groupSell="pay_teacher_id"
         :search-team-name="activeTopic === '5' ? 'last_team_id' : ''"
         :search-trial-team-name="activeTopic === '5' ? 'uid' : 'last_team_id'"
-        :order-type="activeTopic === '5' ? 'regtype' : ''"
       />
+      <!-- TODO:体验课类型 trial-course-type="team_category" -->
       <!-- system-course-type="system-course-type" TODO -->
 
       <!-- tab - regtype -->
@@ -104,6 +104,7 @@
 </template>
 
 <script>
+import _ from 'lodash'
 import allOrder from './components/allOrder'
 import MSearch from '@/components/MSearch/index.vue'
 export default {
@@ -135,26 +136,41 @@ export default {
         .getElementById('order-scroll')
         .querySelector('.order-wrapper').scrollTop = 0
       this.activeTopic = tab.name
+      this.search = []
     },
     // 点击搜索
     handleSearch(res) {
       console.log(res, 'search')
       // 体验课排期和系统课排期
       const stage = []
-      res.forEach((ele, index) => {
+      const arr = []
+      const search = _.cloneDeep(res)
+
+      search.forEach((ele, index) => {
         if (ele.terms) {
-          if (ele.terms.stage) {
-            stage.push(...ele.terms.stage)
+          if (ele.terms.system_stage) {
+            stage.push(...ele.terms.system_stage)
           }
           if (ele.terms.trial_stage) {
             stage.push(...ele.terms.trial_stage)
           }
-          if (Object.keys(ele.terms).length === 0) res.splice(index, 1)
+          if (
+            ele.terms &&
+            !ele.terms.system_stage &&
+            ele.terms &&
+            !ele.terms.trial_stage
+          ) {
+            arr.push(ele)
+          }
+          if (Object.keys(ele.terms).length === 0) search.splice(index, 1)
+        } else {
+          arr.push(ele)
         }
       })
-      const search = JSON.parse(JSON.stringify(res))
-      if (stage.length > 0) search.push({ terms: { stage } })
-      this.search = search
+      stage.length > 0 && arr.push({ terms: { stage } })
+      console.log(arr, 'arr...........')
+
+      this.search = arr
     },
     // 吸顶
     handleScroll() {
