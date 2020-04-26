@@ -23,7 +23,7 @@ const routes = [
     path: '/salesPerformance',
     name: 'salesPerformance',
     meta: {
-      title: '按期情况汇总',
+      title: '销售过程分析',
       keepAlive: true
     },
     component: () => import('../views/salesPerformance/index.vue')

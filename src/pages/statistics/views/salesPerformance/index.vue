@@ -11,6 +11,7 @@
     <el-col class="schedule-container-right">
       <div class="grid-content">
         <el-scrollbar wrap-class="scrollbar-wrapper">
+          <!-- 期状态 -->
           <div class="top-tabs">
             <div
               v-for="(btn, index) in btnTabs"
@@ -21,6 +22,7 @@
               {{ btn }}
             </div>
           </div>
+          <!-- 期标签页 -->
           <div class="tabs-operate">
             <div
               v-for="(tab, index) in priodTabs"
@@ -30,14 +32,15 @@
             >
               <span>{{ tab }}</span>
             </div>
+            <!-- 期标签页下拉框 -->
             <el-dropdown
               @command="handleCommand"
               class="activeCommand"
               :class="{ active: '6' == tabIndex }"
             >
               <span class="el-dropdown-link">
-                {{ selectName
-                }}<i class="el-icon-arrow-down el-icon--right"></i>
+                {{ selectName }}
+                <i class="el-icon-arrow-down el-icon--right"></i>
               </span>
               <el-dropdown-menu slot="dropdown">
                 <el-dropdown-item
@@ -49,6 +52,7 @@
               </el-dropdown-menu>
             </el-dropdown>
           </div>
+          <!-- 搜索 -->
           <div class="sear-container">
             <m-search
               @searchDepartment="searchDepartment"
@@ -56,6 +60,7 @@
               @searchSup="searchSup"
             />
           </div>
+          <!-- 数据统计 -->
           <p class="descripte">
             开课日期：<span class="label-val">4月6日</span> 结课日期：
             <span class="label-val">4月20日</span>开课天数
@@ -67,6 +72,7 @@
             <span>总金额:</span>
             <span>9599999988</span>
           </p>
+          <!-- 统计表title -->
           <div>
             <el-tabs v-model="activeName" @tab-click="handleClick">
               <el-tab-pane label="转化统计" name="conversion"> </el-tab-pane>
@@ -74,6 +80,7 @@
               ><el-tab-pane label="完课统计" name="finishClass"> </el-tab-pane>
             </el-tabs>
           </div>
+          <!-- 统计表content -->
           <div class="orderStyle">
             <ele-table
               :dataList="tableDatasss"
@@ -153,14 +160,20 @@ export default {
     return {
       // tabs标签默认状态
       selectName: '更多',
+      // 统计表title
       activeName: 'conversion',
-      btnStatus: 'primary',
+      // btnStatus: 'primary',
       // canClick: true,
-      query: '',
+      // query: '',
+      // 期标签页index
       tabIndex: 0,
+      // 状态index
       btnIndex: 0,
+      // 期状态
       btnTabs: ['进行中', '已结课', '招生中'],
+      // 期标签页
       priodTabs: [],
+      // 期标签页面更多下拉
       priodTabsEnd: [],
       totalElements: 0,
       flags: {
@@ -229,6 +242,7 @@ export default {
   computed: {},
   watch: {},
   async activated() {
+    // 期标签页
     this.tabsPriodTabs()
     // await this.getCourseListByType()
   },
@@ -247,7 +261,7 @@ export default {
     },
     // 点击tabs页签
     handleClick(tab, event) {
-      console.log(tab.index)
+      console.log('点击tabs页', tab.index)
       this.tabQuery.page = 1
       this.getCourseListByType()
     },
@@ -260,6 +274,7 @@ export default {
       this.getCourseListByType()
       // this.$message('click on item ' + command)
     },
+    // 期标签页
     tabsPriodTabs() {
       const priodTabss = [
         '0413期',
@@ -280,24 +295,28 @@ export default {
       this.priodTabs = priodTabsState
       this.priodTabsEnd = priodTabsEnd
     },
+    // 点击期状态
     btn_tabs_click(index) {
+      console.log('期状态', index)
       this.btnIndex = index
     },
+    //  点击期标签
     tabs_click(index) {
+      console.log('点击期标签', index)
       this.tabIndex = index
       this.tabQuery.page = 1
       this.getCourseListByType()
       this.selectName = '更多'
     },
-    tabs_click_end() {
-      console.log('12312312')
-    },
+    // tabs_click_end() {
+    //   console.log('12312312')
+    // },
     // 新增、编辑
-    addEditSchedule(row) {
-      const { period = 0 } = row // TODO:
+    // addEditSchedule(row) {
+    //   const { period = 0 } = row // TODO:
 
-      this.$router.push({ path: `/addSchedule/${period}/${this.tabIndex}` })
-    },
+    //   this.$router.push({ path: `/addSchedule/${period}/${this.tabIndex}` })
+    // },
     /**
      * @description 分页 回调事件
      */
@@ -345,11 +364,11 @@ export default {
         this.flags.loading = false
         return new Error(err)
       }
-    },
-    // 搜索
-    handleSearch(data) {
-      console.log(data)
     }
+    // 搜索
+    // handleSearch(data) {
+    //   console.log(data)
+    // }
   }
 }
 </script>
