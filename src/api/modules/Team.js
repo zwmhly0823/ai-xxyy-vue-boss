@@ -3,7 +3,7 @@
  * @Email: yangjiyong@meishubao.com
  * @Date: 2020-03-21 11:58:33
  * @Last Modified by: YangJiyong
- * @Last Modified time: 2020-04-20 22:21:26
+ * @Last Modified time: 2020-04-26 18:55:05
  * @Description: 班级
  */
 import axios from '../axiosConfig'
@@ -272,10 +272,13 @@ export default {
 
   // 获取班级信息
   getStudentTeamV1(query = '') {
+    const sort = `{"term": "desc", "sup.keyword": "asc", "id": "desc" }`
     return axios.post('/graphql/v1/toss', {
-      query: `\
+      query: `
         {
-          StudentTeamList(query: ${JSON.stringify(query)}) {
+          StudentTeamList(query: ${JSON.stringify(
+            query
+          )}, sort: ${JSON.stringify(sort)}) {
             id
             team_name
           }
@@ -286,10 +289,13 @@ export default {
 
   // 获取班级信息 - 模糊搜索
   getStudentTeamV1Search(query = '') {
+    const sort = `{"term": "desc", "sup.keyword": "asc", "id": "desc" }`
     return axios.post('/graphql/v1/toss', {
-      query: `\
+      query: `
         {
-          StudentTeamListEx(query: ${JSON.stringify(query)}) {
+          StudentTeamListEx(query: ${JSON.stringify(
+            query
+          )}, sort: ${JSON.stringify(sort)}) {
             id
             team_name
           }

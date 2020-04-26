@@ -23,8 +23,8 @@
         groupSell="pay_teacher_id"
         :search-team-name="activeTopic === '5' ? 'last_team_id' : ''"
         :search-trial-team-name="activeTopic === '5' ? 'uid' : 'last_team_id'"
-        :order-type="activeTopic === '5' ? 'regtype' : ''"
       />
+      <!-- TODO:体验课类型 trial-course-type="team_category" -->
       <!-- system-course-type="system-course-type" TODO -->
 
       <!-- tab - regtype -->
@@ -136,6 +136,7 @@ export default {
         .getElementById('order-scroll')
         .querySelector('.order-wrapper').scrollTop = 0
       this.activeTopic = tab.name
+      this.search = []
     },
     // 点击搜索
     handleSearch(res) {
