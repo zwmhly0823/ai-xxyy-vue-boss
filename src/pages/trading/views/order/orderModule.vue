@@ -39,6 +39,7 @@
         search-team-name="last_team_id"
         search-trial-team-name="uid"
       />
+      <!-- 体验课 -->
       <m-search
         v-if="activeTopic === '4' && showSearch"
         @search="handleSearch"
@@ -48,8 +49,8 @@
         date-placeholder="下单时间"
         phone="uid"
         search-trial-stage="trial_stage"
-        department="pay_teacher_id"
-        groupSell="pay_teacher_id"
+        department="last_teacher_id"
+        groupSell="last_teacher_id"
         search-trial-team-name="last_team_id"
       />
       <!-- TODO:体验课类型 trial-course-type="team_category" -->
