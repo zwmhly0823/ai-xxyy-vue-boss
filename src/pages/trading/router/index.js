@@ -24,7 +24,7 @@ const routes = [
     name: 'express',
     meta: {
       title: '物流',
-      keepAlive: true
+      keepAlive: false
     },
     component: () =>
       import(
@@ -37,7 +37,7 @@ const routes = [
     name: 'order',
     meta: {
       title: '订单',
-      keepAlive: true
+      keepAlive: false
     },
     component: () =>
       import(

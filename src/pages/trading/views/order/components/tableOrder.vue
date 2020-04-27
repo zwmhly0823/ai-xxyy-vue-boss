@@ -64,7 +64,7 @@
       <el-table-column label="体验课班级" width="150">
         <template slot-scope="scope">
           {{
-            trialTeam[scope.row.uid] ? trialTeam[scope.row.uid].team_name : '-'
+            trialTeam[scope.row.id] ? trialTeam[scope.row.id].team_name : '-'
           }}
         </template>
       </el-table-column>
@@ -129,13 +129,13 @@
       </el-table-column>
       <el-table-column label="关联物流" width="150">
         <template slot-scope="scope">
-          <!-- <p
+          <p
             :class="{ 'primary-color': scope.row.express.express_total > 0 }"
             @click="
               showExpressDetail(scope.row.id, scope.row.express.express_total)
             "
-          > -->
-          <p>
+          >
+            <!-- <p> -->
             {{ scope.row.express ? scope.row.express.express_total || 0 : '-' }}
           </p>
           <!-- 体验课不显示最后一次物流状态 -->
@@ -216,9 +216,16 @@
       </el-table-column> -->
       <el-table-column label="体验课班级" width="150">
         <template slot-scope="scope">
-          {{
+          <!-- {{
             trialTeam[scope.row.uid] ? trialTeam[scope.row.uid].team_name : '-'
-          }}
+          }} -->
+          <p>
+            {{
+              trialTeamUid[scope.row.uid]
+                ? trialTeamUid[scope.row.uid].team_name
+                : '-'
+            }}
+          </p>
         </template>
       </el-table-column>
       <el-table-column label="社群销售" width="150">
@@ -301,13 +308,13 @@
       </el-table-column>
       <el-table-column label="关联物流" width="150">
         <template slot-scope="scope">
-          <!-- <p
+          <p
             :class="{ 'primary-color': scope.row.express.express_total > 0 }"
             @click="
               showExpressDetail(scope.row.id, scope.row.express.express_total)
             "
-          > -->
-          <p>
+          >
+            <!-- <p> -->
             {{ scope.row.express ? scope.row.express.express_total || 0 : '-' }}
           </p>
           <!-- 体验课不显示最后一次物流状态 -->
@@ -396,7 +403,8 @@ export default {
       statisticsQuery: [], // 统计需要 bool 表达式
       departmentObj: {}, // 组织机构 obj
       orderStatisticsResult: [], // 统计结果
-      trialTeam: {} // 学员的体验课班级名称
+      trialTeam: {}, // 学员的体验课班级名称
+      trialTeamUid: {}
     }
   },
   created() {
@@ -601,10 +609,13 @@ export default {
       const teamArr = team.data.StudentTeamList || []
       const teamById = _.keyBy(teamArr, 'id')
       const result = {}
+      const resultUid = {}
       trial.data.StudentTrialCourseList.forEach((item) => {
-        result[item.student_id] = teamById[item.team_id]
+        result[item.order_no] = teamById[item.team_id]
+        resultUid[item.student_id] = teamById[item.team_id]
       })
       this.trialTeam = result || {}
+      this.trialTeamUid = resultUid || {}
       // return result
     },
 
