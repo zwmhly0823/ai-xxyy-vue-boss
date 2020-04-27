@@ -100,8 +100,8 @@ const routes = [
         }
       },
       {
-        path: '/salesProcess',
-        name: 'salesProcess',
+        path: '/priodPerformance',
+        name: 'priodPerformance',
         meta: {
           title: '按期汇总',
           module: 'statistics',
