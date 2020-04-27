@@ -73,10 +73,13 @@ export default {
         queryParams.bool.must.push({ term: { type: `${this.type}` } })
       }
       const q = JSON.stringify(queryParams)
+      const sort = `{"id":"desc"}`
       axios
         .post('/graphql/v1/toss', {
           query: `{
-                  ManagementListEx(query:${JSON.stringify(q)}){
+                  ManagementListEx(query:${JSON.stringify(
+                    q
+                  )}, sort: ${JSON.stringify(sort)}){
                     id
                     period
                     period_name

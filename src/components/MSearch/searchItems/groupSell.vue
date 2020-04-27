@@ -3,8 +3,8 @@
  * @version:
  * @Author: zhubaodong
  * @Date: 2020-03-26 16:28:45
- * @LastEditors: Lukun
- * @LastEditTime: 2020-04-18 11:21:38
+ * @LastEditors: Shentong
+ * @LastEditTime: 2020-04-25 15:49:08
  -->
 <template>
   <div class="search-item small">
@@ -56,7 +56,6 @@ export default {
   computed: {},
   watch: {
     input(val, old) {
-      console.log(val !== old && !val)
       if (val !== old && !val) {
         this.$emit('result', '')
       }
