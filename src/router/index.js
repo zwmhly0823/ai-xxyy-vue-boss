@@ -98,16 +98,16 @@ const routes = [
           module: 'statistics',
           style: 'line'
         }
-      },
-      {
-        path: '/salesProcess',
-        name: 'salesProcess',
-        meta: {
-          title: '按期汇总',
-          module: 'statistics',
-          style: 'line'
-        }
       }
+      // {
+      //   path: '/salesProcess',
+      //   name: 'salesProcess',
+      //   meta: {
+      //     title: '按期汇总',
+      //     module: 'statistics',
+      //     style: 'line'
+      //   }
+      // }
     ]
   },
   // demo dashboard

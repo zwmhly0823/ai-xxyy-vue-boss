@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-04-02 15:35:27
  * @LastEditors: Shentong
- * @LastEditTime: 2020-04-27 21:22:10
+ * @LastEditTime: 2020-04-27 23:50:01
  -->
 <template>
   <el-row type="flex" class="app-main height schedule-container">
@@ -103,27 +103,27 @@
                 fixed
                 label="难度级别"
                 prop="sup"
-                width="80"
+                width="70"
                 align="center"
               ></el-table-column>
               <el-table-column
                 fixed
                 label="销售组"
-                width="150"
+                width="120"
                 align="center"
                 prop="department"
               ></el-table-column>
               <el-table-column
                 fixed
                 label="社群销售"
-                width="100"
+                width="80"
                 align="center"
                 prop="teacher"
               ></el-table-column>
               <el-table-column
                 fixed
                 label="体验课学生"
-                width="100"
+                width="85"
                 prop="student_total"
                 align="center"
               ></el-table-column>
@@ -161,7 +161,7 @@
                         0 &&
                         scope.row.conversion_rate_daily[i] &&
                         scope.row.conversion_rate_daily[i].order_number) ||
-                        ''
+                        '0'
                     }}</span>
                   </template>
                 </el-table-column>
@@ -172,7 +172,7 @@
                         0 &&
                         scope.row.conversion_rate_daily[i] &&
                         scope.row.conversion_rate_daily[i].conversion) ||
-                        ''
+                        '0'
                     }}</span>
                   </template>
                 </el-table-column>
@@ -183,7 +183,7 @@
                         0 &&
                         scope.row.conversion_rate_daily[i] &&
                         scope.row.conversion_rate_daily[i].amount) ||
-                        ''
+                        '0'
                     }}</span>
                   </template></el-table-column
                 >
@@ -228,12 +228,12 @@ export default {
           label: '进行中'
         },
         {
-          status: 'over',
-          label: '已结课'
-        },
-        {
           status: 'not_start',
           label: '招生中'
+        },
+        {
+          status: 'over',
+          label: '已结课'
         }
       ],
       supStatus: {
@@ -299,6 +299,7 @@ export default {
       const { department = [], groupSell = '', sup = [] } = search
       Object.assign(this.tabQuery, {
         teacher: groupSell,
+        page: 1,
         department: department.join(),
         sup: sup.join()
       })
@@ -332,6 +333,8 @@ export default {
     },
     // 包装 接口返回的数据
     pakageListDate(tabList) {
+      // 初始化
+      this.tableDataChild = []
       // 格式化时间
       tabList.start_date = tabList.start_date
         ? formatData(tabList.start_date)
@@ -341,22 +344,20 @@ export default {
       const teacherConversion = tabList.teacher_conversion_rates || []
 
       // 大表格 遍历
+      let _length = 0
       teacherConversion.forEach((item, index) => {
-        // function sum(m, n) {
-        //   return Math.floor(Math.random() * (m - n) + n)
-        // }
-        // 表格动态生成的部分 ’conversion_rate_daily‘
         const conversionRate = item.conversion_rate_daily || []
-        conversionRate.forEach((c, i) => {
-          c.row_index = ++i
-          // c.amount = sum(1, 10)
-          // c.order_number = sum(1, 1000)
-          // c.conversion = sum(1, 100) + '%'
-        })
 
-        this.tableDataChild = conversionRate
+        const childLength = conversionRate.length
+        if (childLength >= _length) {
+          _length = childLength
+        }
       })
-
+      for (let i = 0; i < _length; i++) {
+        this.tableDataChild.push({
+          row_index: i + 1
+        })
+      }
       this.tableData = teacherConversion
     },
     // 点击tabs页签（转化统计 按钮）
@@ -364,19 +365,6 @@ export default {
       this.tabQuery.page = 1
       this.getChangecListByProid()
     },
-    // 如果返回的 ’conversion_rate_daily‘(this.tableDataChild) 字段为空数组，则：模拟一个列
-    // if (!this.tableDataChild.length) {
-    //   this.tableDataChild = [
-    //     {
-    //       label: `暂无数据`,
-    //       children: [
-    //         { label: '订单数', value: `暂无数据` },
-    //         { label: '转化率', value: `暂无数据` },
-    //         { label: '总金额', value: `暂无数据` }
-    //       ]
-    //     }
-    //   ]
-    // }
     // 更多 下拉框
     handleCommand(command) {
       const { period = '' } = command
@@ -413,6 +401,19 @@ export default {
       this.tabQuery.page = page
       this.getChangecListByProid()
     }
+    // 如果返回的 ’conversion_rate_daily‘(this.tableDataChild) 字段为空数组，则：模拟一个列
+    // if (!this.tableDataChild.length) {
+    //   this.tableDataChild = [
+    //     {
+    //       label: `暂无数据`,
+    //       children: [
+    //         { label: '订单数', value: `暂无数据` },
+    //         { label: '转化率', value: `暂无数据` },
+    //         { label: '总金额', value: `暂无数据` }
+    //       ]
+    //     }
+    //   ]
+    // }
   }
 }
 </script>
