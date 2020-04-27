@@ -33,11 +33,14 @@
       </el-form-item>
       <br />
       <el-form-item label="体验课:" :class="{ [$style.marginer]: true }">
-        <ChannelSelect />
+        <department placeholder="全部销售组" />
+        <search-stage placeholder="全部体验课排期" />
       </el-form-item>
+      <el-form-item v-if="searchStage"> </el-form-item>
       <br />
       <el-form-item label="系统课:" :class="{ [$style.marginer]: true }">
         <ChannelSelect />
+        <search-stage v-if="searchStage" placeholder="全部体验课排期" />
       </el-form-item>
 
       <el-form-item v-if="orderType">
@@ -135,11 +138,6 @@
         <group-sell @result="selectSellTeacher" :name="groupSell" />
       </el-form-item>
 
-      <el-form-item v-if="department && !teacherId">
-        <!-- 社群销售组 -->
-        <department @result="getDepartment" :name="department" />
-      </el-form-item>
-
       <el-form-item v-if="searchTeamName">
         <!-- 班级名称搜索 -->
         <search-team-name @result="getTeamName" :name="searchTeamName" />
@@ -174,6 +172,7 @@ import Department from '@/components/MSearch/searchItems/department'
 import SearchTeamName from '@/components/MSearch/searchItems/searchTeamName'
 import SearchTrialTeamName from '@/components/MSearch/searchItems/searchTrialTeamName'
 import Schedule from '@/components/MSearch/searchItems/schedule'
+import SearchStage from '@/components/MSearch/searchItems/searchStage'
 import { isToss } from '@/utils/index'
 
 export default {
@@ -318,6 +317,11 @@ export default {
     searchTrialTeamName: {
       type: String,
       default: ''
+    },
+    // 排期
+    searchStage: {
+      type: String,
+      default: ''
     }
   },
 
@@ -339,7 +343,8 @@ export default {
     Department,
     SearchTeamName,
     SearchTrialTeamName,
-    Schedule
+    Schedule,
+    SearchStage
   },
 
   data() {

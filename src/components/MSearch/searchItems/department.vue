@@ -10,7 +10,7 @@
   <div class="search-item small threeSelect">
     <el-cascader
       size="mini"
-      placeholder="销售部"
+      :placeholder="placeholder"
       :options="departmentList"
       :props="{
         multiple: true,
@@ -32,6 +32,10 @@ export default {
     name: {
       type: String,
       default: ''
+    },
+    placeholder: {
+      type: String,
+      default: '销售部'
     }
   },
   data() {

@@ -4,7 +4,7 @@
  * @Date: 2020-04-25 14:26:01
  * @Last Modified by:   YangJiyong
  * @Last Modified time: 2020-04-25 14:26:01
- * @Description: 系统课排期
+ * @Description: 系统课、体验课排期
  -->
 <template>
   <div class="search-item small">
@@ -16,7 +16,7 @@
       :reserve-keyword="true"
       size="mini"
       clearable
-      :placeholder="type === '1' ? '系统课排期' : '体验课排期'"
+      :placeholder="placeholderText"
       :remote-method="handleDebounce"
       :loading="loading"
       @change="onChange"
@@ -44,6 +44,10 @@ export default {
     type: {
       type: String,
       default: '1'
+    },
+    placeholder: {
+      type: String,
+      default: ''
     }
   },
   data() {
@@ -56,6 +60,10 @@ export default {
   computed: {
     handleDebounce() {
       return debounce(this.getData, 500)
+    },
+    placeholderText() {
+      if (this.placeholder) return this.placeholder
+      return this.type === '1' ? '系统课排期' : '体验课排期'
     }
   },
   created() {
