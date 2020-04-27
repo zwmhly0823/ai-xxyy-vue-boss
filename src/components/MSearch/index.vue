@@ -3,8 +3,8 @@
  * @version:
  * @Author: zhubaodong
  * @Date: 2020-03-24 18:20:12
- * @LastEditors: liukun
- * @LastEditTime: 2020-04-25 15:21:53
+ * @LastEditors: Lukun
+ * @LastEditTime: 2020-04-26 17:49:31
  -->
 
 <template>
@@ -63,7 +63,7 @@
 
       <el-form-item v-if="channel">
         <!-- 渠道 -->
-        <channel-select @result="getChannel" :name="channel" />
+        <channel-select @result="getChannel" :name="channel" ref="channel" />
       </el-form-item>
 
       <el-form-item v-if="topicType">
@@ -100,11 +100,6 @@
         <team-detail @result="getTeamDetail" :name="teamDetail" />
       </el-form-item>
 
-      <el-form-item v-if="groupSell && !teacherId">
-        <!-- 社群销售 -->
-        <group-sell @result="selectSellTeacher" :name="groupSell" />
-      </el-form-item>
-
       <el-form-item v-if="systemCourseType">
         <!-- 系统课类型 -->
         <system-course-type
@@ -119,6 +114,11 @@
         <department @result="getDepartment" :name="department" />
       </el-form-item>
 
+      <el-form-item v-if="groupSell && !teacherId">
+        <!-- 社群销售 -->
+        <group-sell @result="selectSellTeacher" :name="groupSell" />
+      </el-form-item>
+
       <!-- && !teacherId -->
       <el-form-item v-if="searchTeamName">
         <!-- 班级名称搜索 -->
@@ -127,10 +127,24 @@
 
       <!-- && !teacherId -->
       <el-form-item v-if="searchTrialTeamName">
-        <!-- 班级名称搜索 -->
+        <!-- 体验课班级名称搜索 -->
         <search-trial-team-name
           @result="getTrialTeamName"
           :name="searchTrialTeamName"
+        />
+      </el-form-item>
+
+      <el-form-item v-if="searchStage">
+        <!-- 系统课排期搜索 -->
+        <search-stage @result="getSearchStage" :name="searchStage" />
+      </el-form-item>
+
+      <el-form-item v-if="searchTrialStage">
+        <!-- 体验课排期搜索 -->
+        <search-stage
+          @result="getSearchTrialStage"
+          :name="searchTrialStage"
+          type="0"
         />
       </el-form-item>
 
@@ -177,6 +191,8 @@ import Department from './searchItems/department'
 import SearchTeamName from './searchItems/searchTeamName'
 import SearchTrialTeamName from './searchItems/searchTrialTeamName'
 import Schedule from './searchItems/schedule'
+import SearchStage from './searchItems/searchStage'
+// import SearchTrialStage from './searchItems/searchTrialStage'
 import { isToss } from '@/utils/index'
 
 export default {
@@ -321,6 +337,16 @@ export default {
     searchTrialTeamName: {
       type: String,
       default: ''
+    },
+    // 系统课排期
+    searchStage: {
+      type: String,
+      default: ''
+    },
+    // 体验课排期
+    searchTrialStage: {
+      type: String,
+      default: ''
     }
   },
   components: {
@@ -341,7 +367,9 @@ export default {
     Department,
     SearchTeamName,
     SearchTrialTeamName,
-    Schedule
+    Schedule,
+    SearchStage
+    // SearchTrialStage
   },
   data() {
     return {
@@ -422,7 +450,7 @@ export default {
     },
     // 选择销售老师
     selectSellTeacher(res) {
-      this.setSeachParmas(res, [this.groupSell || 'pay_teacher_id'], 'wildcard')
+      this.setSeachParmas(res, [this.groupSell || 'pay_teacher_id'])
     },
     getTeamDetail(res) {
       this.setSeachParmas(res, [this.teamDetail || 'last_team_id'])
@@ -446,6 +474,16 @@ export default {
       this.setSeachParmas(
         res,
         [this.searchTrialTeamName || 'team_trial_name'],
+        'terms'
+      )
+    },
+    getSearchStage(res) {
+      this.setSeachParmas(res, [this.searchStage || 'stage'], 'terms')
+    },
+    getSearchTrialStage(res) {
+      this.setSeachParmas(
+        res,
+        [this.searchTrialStage || 'trial_stage'],
         'terms'
       )
     },
@@ -521,5 +559,8 @@ export default {
   .el-form-item {
     margin-bottom: 0px !important;
   }
+}
+.el-select-dropdown.is-multiple .el-select-dropdown__item.selected:after {
+  right: 5px;
 }
 </style>
