@@ -38,7 +38,9 @@
         groupSell="pay_teacher_id"
         search-team-name="last_team_id"
         search-trial-team-name="uid"
+        sup-placeholder="系统课难度"
       />
+      <!-- 体验课 -->
       <m-search
         v-if="activeTopic === '4' && showSearch"
         @search="handleSearch"
@@ -48,9 +50,10 @@
         date-placeholder="下单时间"
         phone="uid"
         search-trial-stage="trial_stage"
-        department="pay_teacher_id"
-        groupSell="pay_teacher_id"
+        department="last_teacher_id"
+        groupSell="last_teacher_id"
         search-trial-team-name="last_team_id"
+        sup-placeholder="体验课难度"
       />
       <!-- TODO:体验课类型 trial-course-type="team_category" -->
       <!-- system-course-type="system-course-type" TODO -->
@@ -91,8 +94,8 @@
         >
           <el-table-column label="用户信息"></el-table-column>
           <el-table-column label="商品信息"></el-table-column>
-          <el-table-column label="体验课类型" v-if="activeTopic === '4'">
-          </el-table-column>
+          <!-- <el-table-column label="体验课类型" v-if="activeTopic === '4'">
+          </el-table-column> -->
           <el-table-column
             label="订单来源"
             v-if="activeTopic === '4' || activeTopic === '5'"
