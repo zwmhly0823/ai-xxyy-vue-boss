@@ -3,8 +3,8 @@
  * @version: 1.0.0
  * @Author: liukun
  * @Date: 2020-04-25 17:24:23
- * @LastEditors: liukun
- * @LastEditTime: 2020-04-26 16:08:46
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-04-27 15:50:55
  -->
 <template>
   <el-card border="false" shadow="never" :class="$style.elard">
@@ -135,27 +135,16 @@
         <group-sell @result="selectSellTeacher" :name="groupSell" />
       </el-form-item>
 
-      <el-form-item v-if="systemCourseType">
-        <!-- 系统课类型 -->
-        <system-course-type
-          @result="getSystemCourseType"
-          :name="systemCourseType"
-        />
-      </el-form-item>
-
-      <!-- && !teacherId -->
       <el-form-item v-if="department && !teacherId">
         <!-- 社群销售组 -->
         <department @result="getDepartment" :name="department" />
       </el-form-item>
 
-      <!-- && !teacherId -->
       <el-form-item v-if="searchTeamName">
         <!-- 班级名称搜索 -->
         <search-team-name @result="getTeamName" :name="searchTeamName" />
       </el-form-item>
 
-      <!-- && !teacherId -->
       <el-form-item v-if="searchTrialTeamName">
         <!-- 班级名称搜索 -->
         <search-trial-team-name
@@ -163,28 +152,6 @@
           :name="searchTrialTeamName"
         />
       </el-form-item>
-
-      <!-- <el-form-item
-        size="mini"
-        style="position:relative;top:6px"
-        v-if="level || sup || stage"
-      >
-        <el-popover width="100%" trigger="click">
-          <stage-sup-levels
-            @stageCallBack="stageCallBack"
-            @supCallBack="supCallBack"
-            @levelCallBack="levelCallBack"
-            :stageName="stage"
-            :supName="sup"
-            :levelName="level"
-            style="margin-bottom:0px"
-          />
-          <el-button slot="reference" style="color:#c0c4cc ;font-weight: 400;">
-            班级信息
-            <i class="el-icon-arrow-down" />
-          </el-button>
-        </el-popover>
-      </el-form-item> -->
     </el-form>
   </el-card>
 </template>
@@ -203,7 +170,6 @@ import GroupSell from '@/components/MSearch/searchItems/groupSell'
 import TeamDetail from '@/components/MSearch/searchItems/teamDetail'
 import MoreVersionBox from '@/components/MSearch/searchItems/moreVersionBox'
 import OrderType from '@/components/MSearch/searchItems/orderType'
-import SystemCourseType from '@/components/MSearch/searchItems/systemCourseType'
 import Department from '@/components/MSearch/searchItems/department'
 import SearchTeamName from '@/components/MSearch/searchItems/searchTeamName'
 import SearchTrialTeamName from '@/components/MSearch/searchItems/searchTrialTeamName'
@@ -354,6 +320,7 @@ export default {
       default: ''
     }
   },
+
   components: {
     orderSearch,
     ChannelSelect,
@@ -369,12 +336,12 @@ export default {
     TeamDetail,
     MoreVersionBox,
     OrderType,
-    SystemCourseType,
     Department,
     SearchTeamName,
     SearchTrialTeamName,
     Schedule
   },
+
   data() {
     return {
       showErr: false,
