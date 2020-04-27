@@ -1,17 +1,16 @@
 <!--
  * @Descripttion:
  * @version:
- * @Author: zhubaodong
- * @Date: 2020-04-02 15:35:27
+ * @Author: huzhifu
+ * @Date: 2020-04-25 13:04:27
  * @LastEditors: Shentong
- * @LastEditTime: 2020-04-26 14:30:54
+ * @LastEditTime: 2020-04-26 14:32:10
  -->
 <template>
-  <el-row type="flex" class="app-main height schedule-container">
-    <el-col class="schedule-container-right">
+  <el-row type="flex" class="app-main height process-container">
+    <el-col class="process-container-right">
       <div class="grid-content">
         <el-scrollbar wrap-class="scrollbar-wrapper">
-          <!-- 期状态 -->
           <div class="top-tabs">
             <div
               v-for="(btn, index) in btnTabs"
@@ -22,7 +21,6 @@
               {{ btn }}
             </div>
           </div>
-          <!-- 期标签页 -->
           <div class="tabs-operate">
             <div
               v-for="(tab, index) in priodTabs"
@@ -32,15 +30,14 @@
             >
               <span>{{ tab }}</span>
             </div>
-            <!-- 期标签页下拉框 -->
             <el-dropdown
               @command="handleCommand"
               class="activeCommand"
               :class="{ active: '6' == tabIndex }"
             >
               <span class="el-dropdown-link">
-                {{ selectName }}
-                <i class="el-icon-arrow-down el-icon--right"></i>
+                {{ selectName
+                }}<i class="el-icon-arrow-down el-icon--right"></i>
               </span>
               <el-dropdown-menu slot="dropdown">
                 <el-dropdown-item
@@ -52,7 +49,6 @@
               </el-dropdown-menu>
             </el-dropdown>
           </div>
-          <!-- 搜索 -->
           <div class="sear-container">
             <m-search
               @searchDepartment="searchDepartment"
@@ -60,27 +56,27 @@
               @searchSup="searchSup"
             />
           </div>
-          <!-- 数据统计 -->
           <p class="descripte">
             开课日期：<span class="label-val">4月6日</span> 结课日期：
             <span class="label-val">4月20日</span>开课天数
             <span class="label-val">11天</span>
-            <span>当前结果: 总订单数:</span>
-            <span>600</span>
-            <span>总转化率:</span>
-            <span>60%</span>
-            <span>总金额:</span>
-            <span>9599999988</span>
+            <span class="label-val">当前结果: </span>
+            <span>本期总参课人数:</span>
+            <span class="label-val green">600</span>
+            <span>本期总参课率:</span>
+            <span class="label-val green">60%</span>
+            <span>本日总参课人数:</span>
+            <span class="label-val green">50</span>
+            <span>本日总参课率:</span>
+            <span class="label-val green">30%</span>
           </p>
-          <!-- 统计表title -->
-          <div>
+          <div class="summary-tabs">
             <el-tabs v-model="activeName" @tab-click="handleClick">
               <el-tab-pane label="转化统计" name="conversion"> </el-tab-pane>
               <el-tab-pane label="参课统计" name="attendClass"> </el-tab-pane
               ><el-tab-pane label="完课统计" name="finishClass"> </el-tab-pane>
             </el-tabs>
           </div>
-          <!-- 统计表content -->
           <div class="orderStyle">
             <ele-table
               :dataList="tableDatasss"
@@ -160,31 +156,25 @@ export default {
     return {
       // tabs标签默认状态
       selectName: '更多',
-      // 统计表title
       activeName: 'conversion',
-      // btnStatus: 'primary',
+      btnStatus: 'primary',
       // canClick: true,
-      // query: '',
-      // 期标签页index
+      query: '',
       tabIndex: 0,
-      // 状态index
       btnIndex: 0,
-      // 期状态
-      btnTabs: ['进行中', '已结课', '招生中'],
-      // 期标签页
+      btnTabs: ['进行中', '招生中', '已结课'],
       priodTabs: [],
-      // 期标签页面更多下拉
       priodTabsEnd: [],
       totalElements: 0,
       flags: {
         loading: false
       },
       tabQuery: {
-        size: 9,
+        size: 1,
         page: 1
       },
       // 总页数
-      totalPages: 1,
+      totalPages: 10,
       // 当前页数
       currentPage: 1,
       // 多选选择项
@@ -193,48 +183,28 @@ export default {
       tableData: [],
       tableDatasss: [
         {
-          label: '商务文件评分',
-          children: [{ label: '1' }, { label: '2' }, { label: '管理员' }]
+          label: '总计',
+          children: [{ label: '总参课人数' }, { label: '总参课率' }]
         },
         {
-          label: '商务文件评分1',
-          children: [{ label: '11' }, { label: '22' }, { label: '管理员1' }]
+          label: 'W1D1',
+          children: [{ label: '当日参课人数' }, { label: '当日参课率' }]
         },
         {
-          label: '商务文件评分2',
-          children: [{ label: '11' }, { label: '22' }, { label: '管理员1' }]
+          label: 'W1D2',
+          children: [{ label: '当日参课人数' }, { label: '当日参课率' }]
         },
         {
-          label: '商务文件评分3',
-          children: [{ label: '11' }, { label: '22' }, { label: '管理员1' }]
+          label: 'W1D3',
+          children: [{ label: '当日参课人数' }, { label: '当日参课率' }]
         },
         {
-          label: '商务文件评分4',
-          children: [{ label: '11' }, { label: '22' }, { label: '管理员1' }]
+          label: 'W1D4',
+          children: [{ label: '当日参课人数' }, { label: '当日参课率' }]
         },
         {
-          label: '商务文件评分5',
-          children: [{ label: '11' }, { label: '22' }, { label: '管理员1' }]
-        },
-        {
-          label: '商务文件评分6',
-          children: [{ label: '11' }, { label: '22' }, { label: '管理员1' }]
-        },
-        {
-          label: '商务文件评分7',
-          children: [{ label: '11' }, { label: '22' }, { label: '管理员1' }]
-        },
-        {
-          label: '商务文件评分8',
-          children: [{ label: '11' }, { label: '22' }, { label: '管理员1' }]
-        },
-        {
-          label: '商务文件评分9',
-          children: [{ label: '11' }, { label: '22' }, { label: '管理员1' }]
-        },
-        {
-          label: '商务文件评分10',
-          children: [{ label: '11' }, { label: '22' }, { label: '管理员1' }]
+          label: 'D1W5',
+          children: [{ label: '当日参课人数' }, { label: '当日参课率' }]
         }
       ]
     }
@@ -242,7 +212,6 @@ export default {
   computed: {},
   watch: {},
   async activated() {
-    // 期标签页
     this.tabsPriodTabs()
     // await this.getCourseListByType()
   },
@@ -261,7 +230,7 @@ export default {
     },
     // 点击tabs页签
     handleClick(tab, event) {
-      console.log('点击tabs页', tab.index)
+      console.log(tab.index)
       this.tabQuery.page = 1
       this.getCourseListByType()
     },
@@ -274,7 +243,6 @@ export default {
       this.getCourseListByType()
       // this.$message('click on item ' + command)
     },
-    // 期标签页
     tabsPriodTabs() {
       const priodTabss = [
         '0413期',
@@ -295,28 +263,24 @@ export default {
       this.priodTabs = priodTabsState
       this.priodTabsEnd = priodTabsEnd
     },
-    // 点击期状态
     btn_tabs_click(index) {
-      console.log('期状态', index)
       this.btnIndex = index
     },
-    //  点击期标签
     tabs_click(index) {
-      console.log('点击期标签', index)
       this.tabIndex = index
       this.tabQuery.page = 1
       this.getCourseListByType()
       this.selectName = '更多'
     },
-    // tabs_click_end() {
-    //   console.log('12312312')
-    // },
+    tabs_click_end() {
+      console.log('12312312')
+    },
     // 新增、编辑
-    // addEditSchedule(row) {
-    //   const { period = 0 } = row // TODO:
+    addEditSchedule(row) {
+      const { period = 0 } = row // TODO:
 
-    //   this.$router.push({ path: `/addSchedule/${period}/${this.tabIndex}` })
-    // },
+      this.$router.push({ path: `/addSchedule/${period}/${this.tabIndex}` })
+    },
     /**
      * @description 分页 回调事件
      */
@@ -364,16 +328,16 @@ export default {
         this.flags.loading = false
         return new Error(err)
       }
-    }
+    },
     // 搜索
-    // handleSearch(data) {
-    //   console.log(data)
-    // }
+    handleSearch(data) {
+      console.log(data)
+    }
   }
 }
 </script>
 <style lang="scss" scoped>
-.schedule-container {
+.process-container {
   &-left {
     padding-left: 0px;
     width: 220px;
@@ -447,11 +411,18 @@ export default {
     min-width: 800px;
     .label-val {
       margin-right: 20px;
+      &.green {
+        color: #409eff;
+        margin-left: 10px;
+      }
     }
+  }
+  .summary-tabs {
+    margin-left: 20px;
   }
   .sear-container {
     display: flex;
-    margin: 10px;
+    margin: 20px;
     align-items: center;
     .el-card {
       border: 0;

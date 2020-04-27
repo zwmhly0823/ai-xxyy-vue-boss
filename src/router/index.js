@@ -3,7 +3,7 @@
  * @Email: yangjiyong@meishubao.com
  * @Date: 2020-03-14 15:07:26
  * @Last Modified by: chengweihua
- * @Last Modified time: 2020-04-25 11:38:19
+ * @Last Modified time: 2020-04-26 14:36:38
  * @Description: 设置左侧导航展示数据
  * 通过导入模块router/index.js判断，规定模块入口文件为 {path: '/', name: 'Home'}
  * TODO: 自动完成
@@ -77,7 +77,7 @@ const routes = [
     // hidden: true,
     meta: {
       title: '统计分析',
-      icon: 'el-icon-s-data',
+      icon: 'el-icon-s-marketing',
       module: 'statistics'
     },
     children: [
@@ -85,8 +85,18 @@ const routes = [
         path: '/salesPerformance',
         name: 'salesPerformance',
         meta: {
-          title: '销售过程分析',
-          module: 'statistics'
+          title: '销售业绩',
+          module: 'statistics',
+          style: 'line'
+        }
+      },
+      {
+        path: '/salesProcess',
+        name: 'salesProcess',
+        meta: {
+          title: '销售过程',
+          module: 'statistics',
+          style: 'line'
         }
       }
     ]

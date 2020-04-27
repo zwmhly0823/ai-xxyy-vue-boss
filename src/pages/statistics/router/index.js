@@ -27,6 +27,15 @@ const routes = [
       keepAlive: true
     },
     component: () => import('../views/salesPerformance/index.vue')
+  },
+  {
+    path: '/salesProcess',
+    name: 'salesProcess',
+    meta: {
+      title: '销售过程分析',
+      keepAlive: true
+    },
+    component: () => import('../views/salesProcess/index.vue')
   }
 ]
 
