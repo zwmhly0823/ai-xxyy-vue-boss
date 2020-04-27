@@ -448,8 +448,17 @@ export default {
       const queryObj = {}
       // TOSS
       if (this.teacherId) {
-        Object.assign(queryObj, { last_teacher_id: this.teacherId })
-        statisticsQuery.push({ term: { last_teacher_id: this.teacherId } })
+        Object.assign(
+          queryObj,
+          this.topic === '4'
+            ? { last_teacher_id: this.teacherId }
+            : { pay_teacher_id: this.teacherId }
+        )
+        statisticsQuery.push(
+          this.topic === '4'
+            ? { term: { last_teacher_id: this.teacherId } }
+            : { term: { pay_teacher_id: this.teacherId } }
+        )
       }
 
       const topicRelation = await this.$http.Product.topicRelationId(
