@@ -1,10 +1,10 @@
 <!--
- * @Descripttion:
+ * @Descripttion: 销售过程转化分析
  * @version:
  * @Author: zhubaodong
  * @Date: 2020-04-02 15:35:27
  * @LastEditors: Shentong
- * @LastEditTime: 2020-04-26 14:30:54
+ * @LastEditTime: 2020-04-27 14:32:04
  -->
 <template>
   <el-row type="flex" class="app-main height schedule-container">
@@ -13,12 +13,12 @@
         <el-scrollbar wrap-class="scrollbar-wrapper">
           <div class="top-tabs">
             <div
-              v-for="(btn, index) in btnTabs"
+              v-for="(statusInfo, index) in topStatus"
               :key="index"
               :class="{ active: index == btnIndex }"
-              @click="btn_tabs_click(index)"
+              @click="top_tabs_click(index, statusInfo)"
             >
-              {{ btn }}
+              {{ statusInfo.label }}
             </div>
           </div>
           <div class="tabs-operate">
@@ -26,14 +26,16 @@
               v-for="(tab, index) in priodTabs"
               :key="index"
               :class="{ active: index == tabIndex }"
-              @click="tabs_click(index)"
+              @click="priod_tabs_click(tab, index)"
             >
-              <span>{{ tab }}</span>
+              <span>{{ tab.period_name }}</span>
             </div>
+            <!-- 大于5个 TODO: -->
             <el-dropdown
               @command="handleCommand"
               class="activeCommand"
               :class="{ active: '6' == tabIndex }"
+              v-if="priodTabsEnd.length"
             >
               <span class="el-dropdown-link">
                 {{ selectName
@@ -43,69 +45,83 @@
                 <el-dropdown-item
                   v-for="(tab, index) in priodTabsEnd"
                   :key="index"
-                  :command="tab"
-                  >{{ tab }}</el-dropdown-item
+                  :command="tab.period_name"
+                  >{{ tab.period_name }}</el-dropdown-item
                 >
               </el-dropdown-menu>
             </el-dropdown>
           </div>
           <div class="sear-container">
-            <m-search
-              @searchDepartment="searchDepartment"
-              @searchSale="searchSale"
-              @searchSup="searchSup"
-            />
+            <!-- TODO: -->
+            <statictics-search @searchChange="searchChange"></statictics-search>
           </div>
-          <p class="descripte">
-            开课日期：<span class="label-val">4月6日</span> 结课日期：
-            <span class="label-val">4月20日</span>开课天数
-            <span class="label-val">11天</span>
-            <span>当前结果: 总订单数:</span>
-            <span>600</span>
-            <span>总转化率:</span>
-            <span>60%</span>
-            <span>总金额:</span>
-            <span>9599999988</span>
+          <p class="descripte" v-if="statisticsInfo">
+            开课日期：<span class="label-val">{{
+              statisticsInfo.start_date || '-'
+            }}</span>
+            结课日期：
+            <span class="label-val">{{ statisticsInfo.end_date || '-' }}</span
+            >开课天数：
+            <span class="label-val"
+              >{{ statisticsInfo.course_days || '-' }}天</span
+            >
+            <span>当前结果：总订单数：</span>
+            <span class="label-val for-light">{{
+              statisticsInfo.order_number || '-'
+            }}</span>
+            <span>总转化率：</span>
+            <span class="label-val for-light">{{
+              statisticsInfo.conversion_rate_total || '-'
+            }}</span>
+            <span>总金额：</span>
+            <span class="for-light">{{
+              statisticsInfo.amount_total || '-'
+            }}</span>
           </p>
-          <div>
+          <div style="padding: 0 15px;">
             <el-tabs v-model="activeName" @tab-click="handleClick">
               <el-tab-pane label="转化统计" name="conversion"> </el-tab-pane>
-              <el-tab-pane label="参课统计" name="attendClass"> </el-tab-pane
-              ><el-tab-pane label="完课统计" name="finishClass"> </el-tab-pane>
+              <!-- TODO: -->
+              <!-- <el-tab-pane label="参课统计" name="attendClass"> </el-tab-pane
+              ><el-tab-pane label="完课统计" name="finishClass"> </el-tab-pane> -->
             </el-tabs>
           </div>
-          <div class="orderStyle">
+          <div class="orderStyle" v-if="tableData.length">
             <ele-table
-              :dataList="tableDatasss"
+              :dataList="tableData"
               :loading="flags.loading"
               :size="tabQuery.size"
               :page="tabQuery.page"
-              :total="totalPages"
+              :total="totalElements"
               @pageChange="pageChange_handler"
               class="mytable"
             >
               <el-table-column
                 fixed
                 label="难度级别"
+                prop="sup"
                 width="80"
                 align="center"
               ></el-table-column>
               <el-table-column
                 fixed
                 label="销售组"
-                width="100"
+                width="150"
                 align="center"
+                prop="department"
               ></el-table-column>
               <el-table-column
                 fixed
                 label="社群销售"
                 width="100"
                 align="center"
+                prop="teacher"
               ></el-table-column>
               <el-table-column
                 fixed
                 label="体验课学生"
                 width="100"
+                prop="student_total"
                 align="center"
               ></el-table-column>
               <el-table-column
@@ -115,17 +131,34 @@
                 align="center"
               >
                 <el-table-column
-                  v-for="(item1, index) in item.children"
-                  :label="item1.label"
-                  :key="index"
+                  fixed
+                  label="订单数"
+                  width="100"
+                  prop="label"
                   align="center"
+                  >{{ item.children[0].label }}</el-table-column
                 >
-                  <template slot-scope="scope">
-                    <span>{{ scope.$index }}</span>
-                  </template>
-                </el-table-column>
+                <el-table-column
+                  fixed
+                  label="转化率"
+                  width="100"
+                  prop="label"
+                  align="center"
+                  >{{ item.children[1].label }}</el-table-column
+                >
+                <el-table-column
+                  fixed
+                  label="总金额"
+                  width="100"
+                  prop="label"
+                  align="center"
+                  >{{ item.children[2].label }}</el-table-column
+                >
               </el-table-column>
             </ele-table>
+          </div>
+          <div v-else class="no-data">
+            暂无数据
           </div>
         </el-scrollbar>
       </div>
@@ -135,7 +168,7 @@
 
 <script>
 // import MSearch from '@/components/MSearch/index.vue'
-import MSearch from '../../components/staticticsSearch'
+import staticticsSearch from '../../components/staticticsSearch'
 import EleTable from '@/components/Table/EleTable'
 import { formatData } from '@/utils'
 export default {
@@ -146,7 +179,7 @@ export default {
     }
   },
   components: {
-    MSearch,
+    staticticsSearch,
     EleTable
   },
   data() {
@@ -154,201 +187,179 @@ export default {
       // tabs标签默认状态
       selectName: '更多',
       activeName: 'conversion',
-      btnStatus: 'primary',
-      // canClick: true,
-      query: '',
       tabIndex: 0,
       btnIndex: 0,
-      btnTabs: ['进行中', '已结课', '招生中'],
+      topStatus: [
+        {
+          status: 'on_going',
+          label: '进行中'
+        },
+        {
+          status: 'over',
+          label: '已结课'
+        },
+        {
+          status: 'not_start',
+          label: '招生中'
+        }
+      ],
+      supStatus: {
+        1: 'S1',
+        2: 'S2',
+        3: 'S3',
+        4: 'S4',
+        5: 'S5'
+      },
       priodTabs: [],
       priodTabsEnd: [],
-      totalElements: 0,
       flags: {
         loading: false
       },
       tabQuery: {
-        size: 9,
+        size: 20,
         page: 1
       },
       // 总页数
-      totalPages: 1,
-      // 当前页数
-      currentPage: 1,
-      // 多选选择项
-      checkList: [],
+      totalElements: 0,
       // 表格数据
+      statisticsInfo: {},
       tableData: [],
-      tableDatasss: [
-        {
-          label: '商务文件评分',
-          children: [{ label: '1' }, { label: '2' }, { label: '管理员' }]
-        },
-        {
-          label: '商务文件评分1',
-          children: [{ label: '11' }, { label: '22' }, { label: '管理员1' }]
-        },
-        {
-          label: '商务文件评分2',
-          children: [{ label: '11' }, { label: '22' }, { label: '管理员1' }]
-        },
-        {
-          label: '商务文件评分3',
-          children: [{ label: '11' }, { label: '22' }, { label: '管理员1' }]
-        },
-        {
-          label: '商务文件评分4',
-          children: [{ label: '11' }, { label: '22' }, { label: '管理员1' }]
-        },
-        {
-          label: '商务文件评分5',
-          children: [{ label: '11' }, { label: '22' }, { label: '管理员1' }]
-        },
-        {
-          label: '商务文件评分6',
-          children: [{ label: '11' }, { label: '22' }, { label: '管理员1' }]
-        },
-        {
-          label: '商务文件评分7',
-          children: [{ label: '11' }, { label: '22' }, { label: '管理员1' }]
-        },
-        {
-          label: '商务文件评分8',
-          children: [{ label: '11' }, { label: '22' }, { label: '管理员1' }]
-        },
-        {
-          label: '商务文件评分9',
-          children: [{ label: '11' }, { label: '22' }, { label: '管理员1' }]
-        },
-        {
-          label: '商务文件评分10',
-          children: [{ label: '11' }, { label: '22' }, { label: '管理员1' }]
-        }
-      ]
+      tableDatasss: []
     }
   },
   computed: {},
   watch: {},
-  async activated() {
-    this.tabsPriodTabs()
-    // await this.getCourseListByType()
+  activated() {
+    this.init()
   },
   methods: {
-    // 销售部门
-    searchDepartment(data) {
-      console.log(data)
+    async init(status = 'on_going') {
+      const params = { status }
+
+      const proidList = await this.getPriodByStatus(params)
+      if (proidList.length) {
+        this.priodTabs = proidList.slice(0, 5)
+        this.priodTabsEnd = proidList.slice(5)
+
+        const { period = '' } = proidList[0]
+        this.tabQuery.period = period
+
+        await this.getChangecListByProid()
+      }
     },
-    // 社群销售
-    searchSale(data) {
-      console.log(data)
+    // 通过状态获取期数 ‘进行中’、‘已结课’，‘招生中’
+    async getPriodByStatus(params) {
+      try {
+        const {
+          data: { ManagementStatusList: proidList }
+        } = await this.$http.Statistics.getPriodByStatus(params)
+        return proidList
+      } catch (err) {
+        console.log(err)
+      }
     },
-    // 难度级别
-    searchSup(data) {
-      console.log(data)
+    // 组件emit
+    searchChange(search) {
+      // console.log('searchChange', search)
+      const { department = [], groupSell = '', sup = [] } = search
+      Object.assign(this.tabQuery, {
+        teacher: groupSell,
+        department: department.join(),
+        sup: sup.join()
+      })
+
+      this.getChangecListByProid()
     },
-    // 点击tabs页签
-    handleClick(tab, event) {
-      console.log(tab.index)
+    // table列表
+    async getChangecListByProid() {
+      this.flags.loading = true
+      // TODO:
+      // this.tabQuery.period = 13
+      try {
+        let {
+          data: { ConversionRateStatistics }
+        } = await this.$http.Statistics.getChangecListByProid(this.tabQuery)
+
+        !ConversionRateStatistics && (ConversionRateStatistics = {})
+
+        this.totalElements = ConversionRateStatistics.total_elements || 0
+
+        ConversionRateStatistics.start_date = ConversionRateStatistics.start_date
+          ? formatData(ConversionRateStatistics.start_date)
+          : ''
+        ConversionRateStatistics.end_date = ConversionRateStatistics.end_date
+          ? formatData(ConversionRateStatistics.end_date)
+          : ''
+
+        // 表格上的统计信息
+        this.statisticsInfo = ConversionRateStatistics
+        // table 前四列数据
+        this.tableData = ConversionRateStatistics.teacher_conversion_rates || []
+
+        if (this.tableData.length) {
+          this.tableData.forEach((item, index) => {
+            item.sup = item.sup ? this.supStatus[item.sup] : ''
+            const conversionRate = item.conversion_rate_daily || []
+
+            // 封装table后遍历的数据
+            const conversionArr = []
+            conversionRate.forEach((label, lIndex) => {
+              const _index = lIndex + 1
+              conversionArr.push({
+                label: `W1D${_index}`,
+                children: [
+                  { label: `${label.order_number}` },
+                  { label: `${label.conversion}` },
+                  { label: `${label.amount}` }
+                ]
+              })
+            })
+
+            this.tableDatasss = conversionArr
+          })
+        } else {
+          this.tableDatasss = []
+        }
+
+        this.flags.loading = false
+      } catch (err) {
+        console.log(err)
+        this.flags.loading = false
+      }
+    },
+    // 点击tabs页签（转化统计 按钮）
+    handleClick(tab) {
       this.tabQuery.page = 1
-      this.getCourseListByType()
+      this.getChangecListByProid()
     },
     // 更多 下拉框
     handleCommand(command) {
-      console.log(command)
       this.tabIndex = 6
       this.selectName = command
       this.tabQuery.page = 1
-      this.getCourseListByType()
-      // this.$message('click on item ' + command)
+      this.getChangecListByProid()
     },
-    tabsPriodTabs() {
-      const priodTabss = [
-        '0413期',
-        '0414期',
-        '0415期',
-        '0416期',
-        '0417期',
-        '0418期',
-        '0419期',
-        '0420期',
-        '0421期',
-        '0422期',
-        '0423期',
-        '0424期'
-      ]
-      const priodTabsState = priodTabss.slice(0, 5)
-      const priodTabsEnd = priodTabss.slice(5)
-      this.priodTabs = priodTabsState
-      this.priodTabsEnd = priodTabsEnd
-    },
-    btn_tabs_click(index) {
+    top_tabs_click(index, statusInfo) {
+      this.tabIndex = 0
       this.btnIndex = index
+      const { status } = statusInfo
+      this.init(status)
     },
-    tabs_click(index) {
+    priod_tabs_click(row, index) {
       this.tabIndex = index
       this.tabQuery.page = 1
-      this.getCourseListByType()
+      this.tabQuery.period = row.period
+
+      this.getChangecListByProid()
       this.selectName = '更多'
     },
-    tabs_click_end() {
-      console.log('12312312')
-    },
     // 新增、编辑
-    addEditSchedule(row) {
-      const { period = 0 } = row // TODO:
-
-      this.$router.push({ path: `/addSchedule/${period}/${this.tabIndex}` })
-    },
     /**
      * @description 分页 回调事件
      */
     pageChange_handler(page) {
       this.tabQuery.page = page
-      this.getCourseListByType()
-
-      // console.log(aa, 'aa')
-    },
-    /** adolf-end */
-    async getCourseListByType() {
-      this.flags.loading = true
-      const status = {
-        '0': '待开始',
-        '1': '招生中',
-        '2': '待开课',
-        '3': '已结课'
-      }
-      this.tabQuery = {
-        ...this.tabQuery,
-        // page: --this.tabQuery.page,
-        courseType: this.tabIndex
-      }
-      // TODO:
-      try {
-        const {
-          content = [],
-          totalElements = 0
-        } = await this.$http.Operating.getCourseListByType(this.tabQuery)
-        this.totalPages = Number(totalElements)
-
-        content.forEach((item) => {
-          item.startDate = formatData(item.startDate)
-          item.endDate = formatData(item.endDate)
-          item.courseDay = formatData(item.courseDay)
-          item.endCourseDay = +item.endCourseDay
-            ? formatData(item.endCourseDay)
-            : ''
-          item.status = status[item.status]
-        })
-        this.flags.loading = false
-
-        this.tableData = content
-      } catch (err) {
-        this.flags.loading = false
-        return new Error(err)
-      }
-    },
-    // 搜索
-    handleSearch(data) {
-      console.log(data)
+      this.getChangecListByProid()
     }
   }
 }
@@ -423,12 +434,24 @@ export default {
     }
   }
   .descripte {
-    padding-left: 20px;
+    padding-left: 15px;
     color: #333;
     min-width: 800px;
     .label-val {
       margin-right: 20px;
     }
+    .for-light {
+      color: #409eff;
+    }
+  }
+  .no-data {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #f5f7fa;
+    height: 80px;
+    color: #409eff;
+    font-size: 15px;
   }
   .sear-container {
     display: flex;

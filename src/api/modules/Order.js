@@ -70,6 +70,9 @@ export default {
               express_total
               last_express_status
             }
+            trial_course{
+              team_category
+            }
           }
         }
       }`
