@@ -3,8 +3,8 @@
  * @version:
  * @Author: Yangjiyong
  * @Date: 2020-04-07 13:52:26
- * @LastEditors: panjian
- * @LastEditTime: 2020-04-16 20:56:34
+ * @LastEditors: Shentong
+ * @LastEditTime: 2020-04-18 11:56:23
  */
 import axios from '../axiosConfig'
 
@@ -19,10 +19,11 @@ export default {
     return axios.get(`/api/home/v1/ossconfig/getStsPubWriteToken`)
   },
   // 老师列表
-  getTeacherPage(page = 1, query = '') {
+  getTeacherPage(page = 1, query = '', size = '20') {
     return axios.post('/graphql/v1/boss', {
       query: `{
-        TeacherManagePage(page: ${page}, query: ${query || null}) {
+        TeacherManagePage(page: ${page}, query: ${query ||
+        null}, size:${size}) {
           number
           totalPages
           totalElements
@@ -132,7 +133,6 @@ export default {
   // 新建老师
   createTeacher(params) {
     console.log(params)
-
     return axios.post(`/api/t/v1/teacher/createTeacher`, params)
   },
   //  编辑老师
@@ -149,6 +149,35 @@ export default {
         {
           phone
           realname
+          nickname
+        }
+      }
+      `
+    })
+  },
+  // 新增老师 添加微信
+  WeChatTeacherList() {
+    const query = `{"teacher_id":{"lte":0}}`
+    return axios.post(`/graphql/v1/toss`, {
+      query: `{
+          WeChatTeacherList(query: ${JSON.stringify(query)}) {
+            id
+            wechat_no
+            teacher_id
+          }
+        }`
+    })
+  },
+  // 老师微信号模糊搜索
+  getWeChatTeacherListEx(weixinkey, value) {
+    const query = `{ "bool": { "must": [{ "wildcard": { "${weixinkey}": "*${value}*" } },{"term":{"teacher_id":0}}] } }`
+    return axios.post('/graphql/v1/toss', {
+      query: `
+      {
+        WeChatTeacherListEx(query:${JSON.stringify(query)})
+        {
+          id
+          wechat_no
         }
       }
       `

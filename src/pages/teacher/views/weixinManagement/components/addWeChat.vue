@@ -278,7 +278,7 @@ export default {
         this.ruleForm.QEcodeUrl = res
       })
     },
-    // 头像上传格式校验
+    // // 头像上传格式校验
     beforeAvatarUpload(file) {
       const isJPG = file.type === 'image/jpg'
       const isJPEG = file.type === 'image/jpeg'

@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 14:19:58
  * @LastEditors: panjian
- * @LastEditTime: 2020-04-09 20:01:55
+ * @LastEditTime: 2020-04-20 21:13:59
  -->
 <template>
   <div>
@@ -35,9 +35,14 @@
         >生成作品展</el-button
       >
       <!-- <checkBox
+        class="check-box"
         :tables="table"
+        :classId="classId"
+        :audioTabs="audioTabs"
+        @screenWorks="screenWorks"
+        @screenAttendClass="screenAttendClass"
         v-if="this.table.tabs == 3 || this.table.tabs == 4"
-      ></checkBox> -->
+      /> -->
     </div>
     <div>
       <div class="tabs-tab">
@@ -289,7 +294,9 @@ export default {
       },
       formLabelWidth: '120px',
       tableDataEmpty: true,
-      sortGroup: ''
+      sortGroup: '',
+      screenWorksData: {},
+      screenAttendClassData: {}
     }
   },
   watch: {
@@ -300,6 +307,8 @@ export default {
       audiosList.forEach((item, index) => {
         item[0].load()
       })
+      this.screenWorksData = {}
+      this.screenAttendClassData = {}
       this.sortGroup = ''
       this.table.currentPage = 1
       if (value.classId && value.classId.id) {
@@ -349,6 +358,18 @@ export default {
     this.table.tableLabel = [{ label: '购买时间', prop: 'buytime' }]
   },
   methods: {
+    screenAttendClass(data) {
+      console.log(data, '参课完课 传给父级的值')
+      this.screenAttendClassData = data
+      this.table.currentPage = 1
+      this.getClassCompPage()
+    },
+    screenWorks(data) {
+      console.log(data, '作品及点评 传给父级的值')
+      this.screenWorksData = data
+      this.table.currentPage = 1
+      this.getStuComment()
+    },
     // 排序
     onGroupSort(data) {
       this.sortGroup = `sort:${JSON.stringify(data)}`
@@ -987,7 +1008,42 @@ export default {
         if (this.search) {
           this.querysData = `{"team_id":${this.classId.classId.id},"team_type":${this.classId.type},"uid":${this.search}}`
         } else {
-          this.querysData = `{"team_id":${this.classId.classId.id},"team_type":${this.classId.type}}`
+          console.log(
+            this.screenAttendClassData.courseId,
+            this.screenAttendClassData.userStatus,
+            this.screenAttendClassData.isJoinCourse,
+            this.screenAttendClassData.isCompleteCourse
+          )
+          if (
+            this.screenAttendClassData.courseId ||
+            this.screenAttendClassData.userStatus ||
+            this.screenAttendClassData.isJoinCourse ||
+            this.screenAttendClassData.isCompleteCourse
+          ) {
+            const courseId = this.screenAttendClassData.courseId
+              ? `"${this.screenAttendClassData.courseId}"`
+              : `""`
+            const userStatus = this.screenAttendClassData.userStatus
+              ? `"${this.screenAttendClassData.userStatus}"`
+              : `""`
+            const isJoinCourse = this.screenAttendClassData.isJoinCourse
+              ? `"${this.screenAttendClassData.isJoinCourse}"`
+              : `""`
+            const isCompleteCourse = this.screenAttendClassData.isCompleteCourse
+              ? `"${this.screenAttendClassData.isCompleteCourse}"`
+              : `""`
+            console.log(
+              courseId,
+              userStatus,
+              isJoinCourse,
+              isCompleteCourse,
+              '接口请求'
+            )
+
+            this.querysData = `{"team_id":${this.classId.classId.id},"team_type":${this.classId.type},"course_id":${courseId},"user_status":${userStatus},"is_join_course":${isJoinCourse},"is_complete_course":${isCompleteCourse}}`
+          } else {
+            this.querysData = `{"team_id":${this.classId.classId.id},"team_type":${this.classId.type}}`
+          }
         }
         this.$http.Team.getClassCompPage({
           querysData: this.querysData,
@@ -1039,7 +1095,29 @@ export default {
         if (this.search) {
           this.querysData = `{"team_id":${this.classId.classId.id},"team_type":${this.classId.type},"uid":${this.search}}`
         } else {
-          this.querysData = `{"team_id":${this.classId.classId.id},"team_type":${this.classId.type}}`
+          if (
+            this.screenWorksData.courseId ||
+            this.screenWorksData.isTask ||
+            this.screenWorksData.isComment ||
+            this.screenWorksData.isListen
+          ) {
+            const courseId = this.screenWorksData.courseId
+              ? `"${this.screenWorksData.courseId}"`
+              : `""`
+            const isTask = this.screenWorksData.isTask
+              ? `"${this.screenWorksData.isTask}"`
+              : `""`
+            const isComment = this.screenWorksData.isComment
+              ? `"${this.screenWorksData.isComment}"`
+              : `""`
+            const isListen = this.screenWorksData.isListen
+              ? `"${this.screenWorksData.isListen}"`
+              : `""`
+            this.querysData = `{"team_id":${this.classId.classId.id},"team_type":${this.classId.type},"course_id":${courseId},"is_task":${isTask},"is_comment":${isComment},"is_listen":${isListen}}`
+            console.log(this.screenWorksData, 'this.screenWorksData')
+          } else {
+            this.querysData = `{"team_id":${this.classId.classId.id},"team_type":${this.classId.type}}`
+          }
         }
         this.$http.Team.getStuCommentPage({
           querysData: this.querysData,
@@ -1109,6 +1187,8 @@ export default {
       this.tabsName = tab.label
       this.table.currentPage = 1
       this.table.tableData = []
+      this.screenWorksData = {}
+      this.screenAttendClassData = {}
       // 切换标签 语音停止
       const audios = this.$refs
       const audiosList = Object.values(audios)
@@ -1241,6 +1321,9 @@ export default {
   //   position: absolute;
   //   right: 150px;
   // }
+  .check-box {
+    float: right;
+  }
 }
 .warning {
   display: inline-block;

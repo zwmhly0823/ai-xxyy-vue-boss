@@ -12,6 +12,7 @@
       @search="handleSearch"
       teacherphone="phone.keyword"
       teachername="realname.keyword"
+      teachernickname="nickname.keyword"
       rank="rank_id"
       induction="status"
       landing="is_login"
@@ -312,7 +313,7 @@ export default {
         this.searchQuery = ''
         this.query = ''
       }
-      this.getData()
+      this.getData(1)
     },
     getData(page = this.currentPage) {
       if (this.departmentQuery || this.searchQuery) {

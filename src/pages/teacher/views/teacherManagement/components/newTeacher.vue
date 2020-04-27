@@ -176,8 +176,8 @@
         </el-radio-group>
       </el-form-item>
       <!-- 分配微信号 -->
-      <!-- <el-form-item label="分配微信号">
-        <el-select
+      <el-form-item label="分配微信号" v-if="false">
+        <!-- <el-select
           v-model="ruleForm.weChat"
           multiple
           filterable
@@ -185,13 +185,20 @@
         >
           <el-option
             v-for="item in WeChat"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
+            :key="item.id"
+            :label="item.wechat_no"
+            :value="item.id"
           >
           </el-option>
-        </el-select>
-      </el-form-item> -->
+
+        </el-select> -->
+        <m-search
+          @search="searchHandler"
+          teacherwx="wechat_no"
+          :WeChat="WeChat"
+        >
+        </m-search>
+      </el-form-item>
     </el-form>
     <div style="text-align: center; padding:10px 0">
       <el-button type="primary" @click="submitHandle('ruleForm')"
@@ -207,7 +214,11 @@ import _ from 'lodash'
 import Contants from '@/utils/contants'
 // import { sortByKey } from '@/utils/boss'
 import { formatData } from '@/utils/index'
+import MSearch from '@/components/MSearch/index.vue'
 export default {
+  components: {
+    MSearch
+  },
   data() {
     // 手机号正则
     const checkAge = (rule, value, callback) => {
@@ -259,7 +270,8 @@ export default {
       suDepartments: [],
       optionProps: {
         value: 'id',
-        label: 'name'
+        label: 'name',
+        checkStrictly: true
       },
       // 职务
       position: [],
@@ -278,10 +290,7 @@ export default {
         { label: '离职', value: 'LEAVE' }
       ],
       // 微信
-      // WeChat: [
-      //   { label: '123', value: 1 },
-      //   { label: '456', value: 2 }
-      // ],
+      WeChat: [],
       // 表单value
       ruleForm: {
         // 手机号
@@ -313,9 +322,9 @@ export default {
         // 账号设置
         accountSettings: 'YES',
         // 在职状态
-        workingState: 'TENURE'
+        workingState: 'TENURE',
         // 分配微信号
-        // weChat: []
+        weChat: []
       },
 
       // 表单验证
@@ -428,6 +437,7 @@ export default {
     // 接口调用
     this.createdUrl()
   },
+
   methods: {
     createdUrl() {
       // 职务接口
@@ -470,6 +480,7 @@ export default {
           }
         })
       })
+
       if (this.$route.query && this.$route.query.teacherId) {
         // 教师详情
         this.$http.Teacher.getTeacherDetail(this.$route.query.teacherId).then(
@@ -512,10 +523,12 @@ export default {
               : this.ruleForm.inductionDate
             this.ruleForm.accountSettings = payload.teacher.isLogin
             this.ruleForm.workingState = payload.teacher.status
+            this.WeChat = payload.weixinList
           }
         )
       }
     },
+
     // 选择入职时间后禁止离职时间
     DepartureDisabled() {
       const _this = this
@@ -557,7 +570,8 @@ export default {
           id: this.ruleForm.region[this.ruleForm.region.length - 1]
         },
         duty: positionValId,
-        rank: { id: this.ruleForm.rank }
+        rank: { id: this.ruleForm.rank },
+        weixinList: this.ruleForm.weChat
       }
       this.$refs[formName].validate((valid) => {
         if (valid) {
@@ -597,6 +611,19 @@ export default {
     resetForm(formName) {
       this.$router.push({ path: '/teacherManagement' })
       this.$refs[formName].resetFields()
+    },
+    // 微信搜索
+    searchHandler(val) {
+      console.log(val, '搜索')
+      const WeChatsear = val[0].wildcard.wechat_no
+      if (WeChatsear.length > 0) {
+        this.ruleForm.weChat = []
+        WeChatsear.forEach((val) => {
+          this.ruleForm.weChat.push({ weixinId: val })
+        })
+      } else {
+        this.ruleForm.weChat = []
+      }
     },
     // 部门联机选择
     handleChange(value) {
@@ -689,6 +716,13 @@ export default {
     }
   }
 }
+// 下拉框
+.el-select {
+  width: 57.5% !important;
+}
+.el-card {
+  border: 0px;
+}
 </style>
 <style lang="scss">
 // 上传头像
@@ -714,9 +748,5 @@ export default {
   width: 80px;
   height: 80px;
   display: block;
-}
-// 下拉框
-.el-select {
-  width: 57.5% !important;
 }
 </style>

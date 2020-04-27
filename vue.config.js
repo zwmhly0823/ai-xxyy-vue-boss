@@ -108,15 +108,12 @@ module.exports = {
         }
       },
       '/graphql': {
+        // local - 本地开发环境
+        // target: 'http://localhost:3000',
         // release - 测试环境
         target: 'http://docker.meixiu.mobi:43401',
-        // target: 'http://localhost:3000',
         // dev - 开发环境
         // target: 'http://docker.meixiu.mobi:33401',
-        // product -预发布环境
-        // target: 'http://docker.meixiu.mobi:53401',
-        // live - 生产环境
-        // target: 'http://docker.meixiu.mobi:13401',
         changeOrigin: true,
         ws: true,
         secure: false,

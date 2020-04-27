@@ -15,7 +15,7 @@
     </el-col>
     <el-col class="express-main-right">
       <div class="express-main-right-content">
-        <el-scrollbar wrap-class="scrollbar-wrapper" id="right-scroll">
+        <el-scrollbar wrap-class="scrollbar-wrapper" id="express-right-scroll">
           <right-bar :dataExp="Express" @search="search" />
         </el-scrollbar>
       </div>
