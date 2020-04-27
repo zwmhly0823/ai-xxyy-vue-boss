@@ -34,7 +34,7 @@
       v-if="supName"
       size="mini"
       multiple
-      placeholder="难度"
+      :placeholder="supPlaceholder"
       :disabled="disableClick"
       @change="supChange"
     >
@@ -94,6 +94,10 @@ export default {
     addSupS: {
       type: Boolean,
       default: false
+    },
+    supPlaceholder: {
+      type: String,
+      default: '难度'
     }
   },
   data() {
