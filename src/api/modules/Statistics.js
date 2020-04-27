@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-07 13:52:26
  * @LastEditors: Shentong
- * @LastEditTime: 2020-04-26 22:47:28
+ * @LastEditTime: 2020-04-27 17:14:09
  */
 import axios from '../axiosConfig'
 
@@ -17,7 +17,6 @@ export default {
   },
   // 通过状态 获取 期号list
   getPriodByStatus(params) {
-    console.log('params', params)
     const { status = 'on_going' } = params
     const query = `{"status": "${status}"}`
 
