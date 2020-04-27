@@ -113,17 +113,17 @@
           }}
         </template>
       </el-table-column> -->
-      <el-table-column label="订单号·下单时间" width="180">
+      <el-table-column label="下单时间·订单号" width="180">
         <template slot-scope="scope">
+          <p>
+            {{ scope.row.ctime ? scope.row.ctime : '-' }}
+          </p>
           <p>
             {{
               scope.row.out_trade_no
                 ? scope.row.out_trade_no.replace('xiong', '')
                 : '-'
             }}
-          </p>
-          <p>
-            {{ scope.row.ctime ? scope.row.ctime : '-' }}
           </p>
         </template>
       </el-table-column>
@@ -289,17 +289,17 @@
           </p>
         </template>
       </el-table-column>
-      <el-table-column label="订单号·下单时间" width="180">
+      <el-table-column label="下单时间·订单号" width="180">
         <template slot-scope="scope">
+          <p>
+            {{ scope.row.ctime ? scope.row.ctime : '-' }}
+          </p>
           <p>
             {{
               scope.row.out_trade_no
                 ? scope.row.out_trade_no.replace('xiong', '')
                 : '-'
             }}
-          </p>
-          <p>
-            {{ scope.row.ctime ? scope.row.ctime : '-' }}
           </p>
         </template>
       </el-table-column>
