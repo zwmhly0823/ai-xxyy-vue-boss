@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-04-02 15:35:27
  * @LastEditors: Shentong
- * @LastEditTime: 2020-04-27 23:50:01
+ * @LastEditTime: 2020-04-27 23:55:32
  -->
 <template>
   <el-row type="flex" class="app-main height schedule-container">
@@ -343,7 +343,7 @@ export default {
 
       const teacherConversion = tabList.teacher_conversion_rates || []
 
-      // 大表格 遍历
+      // 大表格 遍历，选择一个‘conversion_rate_daily’最大的值，作为表头
       let _length = 0
       teacherConversion.forEach((item, index) => {
         const conversionRate = item.conversion_rate_daily || []
