@@ -85,6 +85,7 @@
           :supName="sup"
           :levelName="level"
           :addSupS="addSupS"
+          :supPlaceholder="supPlaceholder"
           style="margin-bottom:0px"
         />
       </el-form-item>
@@ -540,6 +541,11 @@ export default {
     trialCourseType: {
       type: String,
       default: ''
+    },
+    // 难度 placeholder
+    supPlaceholder: {
+      type: String,
+      default: '难度'
     }
   },
   components: {

@@ -216,6 +216,9 @@
       </el-table-column> -->
       <el-table-column label="体验课班级" width="150">
         <template slot-scope="scope">
+          <!-- {{
+            trialTeam[scope.row.uid] ? trialTeam[scope.row.uid].team_name : '-'
+          }} -->
           <p>
             {{
               trialTeamUid[scope.row.uid]
@@ -311,6 +314,7 @@
               showExpressDetail(scope.row.id, scope.row.express.express_total)
             "
           >
+            <!-- <p> -->
             {{ scope.row.express ? scope.row.express.express_total || 0 : '-' }}
           </p>
           <!-- 体验课不显示最后一次物流状态 -->
@@ -444,8 +448,17 @@ export default {
       const queryObj = {}
       // TOSS
       if (this.teacherId) {
-        Object.assign(queryObj, { last_teacher_id: this.teacherId })
-        statisticsQuery.push({ term: { last_teacher_id: this.teacherId } })
+        Object.assign(
+          queryObj,
+          this.topic === '4'
+            ? { last_teacher_id: this.teacherId }
+            : { pay_teacher_id: this.teacherId }
+        )
+        statisticsQuery.push(
+          this.topic === '4'
+            ? { term: { last_teacher_id: this.teacherId } }
+            : { term: { pay_teacher_id: this.teacherId } }
+        )
       }
 
       const topicRelation = await this.$http.Product.topicRelationId(
