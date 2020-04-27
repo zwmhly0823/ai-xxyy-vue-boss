@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-04-02 15:35:27
  * @LastEditors: Shentong
- * @LastEditTime: 2020-04-26 23:04:38
+ * @LastEditTime: 2020-04-27 14:32:04
  -->
 <template>
   <el-row type="flex" class="app-main height schedule-container">
@@ -203,7 +203,7 @@ export default {
           label: '招生中'
         }
       ],
-      susStatus: {
+      supStatus: {
         1: 'S1',
         2: 'S2',
         3: 'S3',
@@ -291,14 +291,17 @@ export default {
           ? formatData(ConversionRateStatistics.end_date)
           : ''
 
+        // 表格上的统计信息
         this.statisticsInfo = ConversionRateStatistics
+        // table 前四列数据
         this.tableData = ConversionRateStatistics.teacher_conversion_rates || []
 
         if (this.tableData.length) {
           this.tableData.forEach((item, index) => {
-            item.sup = item.sup ? this.susStatus[item.sup] : ''
+            item.sup = item.sup ? this.supStatus[item.sup] : ''
             const conversionRate = item.conversion_rate_daily || []
 
+            // 封装table后遍历的数据
             const conversionArr = []
             conversionRate.forEach((label, lIndex) => {
               const _index = lIndex + 1
@@ -339,7 +342,6 @@ export default {
     top_tabs_click(index, statusInfo) {
       this.tabIndex = 0
       this.btnIndex = index
-      console.log(statusInfo, 'statusInfo')
       const { status } = statusInfo
       this.init(status)
     },
@@ -358,10 +360,6 @@ export default {
     pageChange_handler(page) {
       this.tabQuery.page = page
       this.getChangecListByProid()
-    },
-    // 搜索
-    handleSearch(data) {
-      console.log(data)
     }
   }
 }
