@@ -29,7 +29,7 @@
           </p>
         </template>
       </el-table-column>
-      <el-table-column label="体验课类型" v-if="topic === '4'">
+      <!-- <el-table-column label="体验课类型" v-if="topic === '4'">
         <template slot-scope="scope">
           <p>
             {{
@@ -43,7 +43,7 @@
             }}
           </p>
         </template>
-      </el-table-column>
+      </el-table-column> -->
       <el-table-column label="订单来源">
         <template slot-scope="scope">
           <p>
