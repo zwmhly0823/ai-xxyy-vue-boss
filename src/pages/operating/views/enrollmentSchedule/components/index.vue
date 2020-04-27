@@ -4,7 +4,7 @@
  * @Author: shentong
  * @Date: 2020-04-02 16:08:02
  * @LastEditors: Shentong
- * @LastEditTime: 2020-04-25 21:18:26
+ * @LastEditTime: 2020-04-27 14:51:08
  -->
 <template>
   <div>
@@ -72,18 +72,13 @@
           align="center"
           label="结课时间"
         ></el-table-column>
-        <el-table-column
-          prop="address"
-          label="招生级别"
-          align="center"
-          width="80"
-        >
+        <el-table-column label="招生级别" align="center" width="80">
           <template slot-scope="scope">
             <div
               v-for="(leve, l_index) in scope.row.wechatCourse"
               :key="l_index"
             >
-              {{ leve.courseDifficulty || '111' }}
+              {{ leve.courseDifficulty || '' }}
             </div>
           </template>
         </el-table-column>
@@ -95,35 +90,35 @@
         >
           <template slot-scope="scope">
             <div v-for="(w, l_index) in scope.row.wechatCourse" :key="l_index">
-              {{ w.wechatSize || '' }}
+              {{ w.wechatSize || '0' }}
             </div>
           </template>
         </el-table-column>
         <el-table-column prop="address" label="计划招生" align="center">
           <template slot-scope="scope">
             <div v-for="(p, l_index) in scope.row.wechatCourse" :key="l_index">
-              {{ p.planSumTeamSize || '' }}
+              {{ p.planSumTeamSize || '0' }}
             </div>
           </template>
         </el-table-column>
         <el-table-column prop="address" label="实际招生" align="center">
           <template slot-scope="scope">
             <div v-for="(r, l_index) in scope.row.wechatCourse" :key="l_index">
-              {{ r.realSumTeamSize || '' }}
+              {{ r.realSumTeamSize || '0' }}
             </div>
           </template>
         </el-table-column>
         <el-table-column prop="address" label="计划开班" align="center">
           <template slot-scope="scope">
             <div v-for="(p, l_index) in scope.row.wechatCourse" :key="l_index">
-              {{ p.planTeamSize || '' }}
+              {{ p.planTeamSize || '0' }}
             </div>
           </template>
         </el-table-column>
         <el-table-column prop="address" label="实际开班" align="center">
           <template slot-scope="scope">
             <div v-for="(r, l_index) in scope.row.wechatCourse" :key="l_index">
-              {{ r.realTeamSize || '' }}
+              {{ r.realTeamSize || '0' }}
             </div>
           </template>
         </el-table-column>
