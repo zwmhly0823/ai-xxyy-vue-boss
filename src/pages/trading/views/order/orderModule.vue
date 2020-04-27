@@ -3,8 +3,8 @@
  * @version:
  * @Author: zhubaodong
  * @Date: 2020-03-24 15:16:26
- * @LastEditors: yangjiyong
- * @LastEditTime: 2020-03-28 19:34:29
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-04-27 23:04:03
  -->
 <template>
   <el-scrollbar wrap-class="order-wrapper" id="order-scroll">
@@ -92,8 +92,8 @@
         >
           <el-table-column label="用户信息"></el-table-column>
           <el-table-column label="商品信息"></el-table-column>
-          <el-table-column label="体验课类型" v-if="activeTopic === '4'">
-          </el-table-column>
+          <!-- <el-table-column label="体验课类型" v-if="activeTopic === '4'">
+          </el-table-column> -->
           <el-table-column
             label="订单来源"
             v-if="activeTopic === '4' || activeTopic === '5'"
