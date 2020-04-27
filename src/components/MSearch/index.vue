@@ -100,11 +100,6 @@
         <team-detail @result="getTeamDetail" :name="teamDetail" />
       </el-form-item>
 
-      <el-form-item v-if="groupSell && !teacherId">
-        <!-- 社群销售 -->
-        <group-sell @result="selectSellTeacher" :name="groupSell" />
-      </el-form-item>
-
       <el-form-item v-if="systemCourseType">
         <!-- 系统课类型 -->
         <system-course-type
@@ -117,6 +112,11 @@
       <el-form-item v-if="department && !teacherId">
         <!-- 社群销售组 -->
         <department @result="getDepartment" :name="department" />
+      </el-form-item>
+
+      <el-form-item v-if="groupSell && !teacherId">
+        <!-- 社群销售 -->
+        <group-sell @result="selectSellTeacher" :name="groupSell" />
       </el-form-item>
 
       <!-- && !teacherId -->
@@ -559,5 +559,8 @@ export default {
   .el-form-item {
     margin-bottom: 0px !important;
   }
+}
+.el-select-dropdown.is-multiple .el-select-dropdown__item.selected:after {
+  right: 5px;
 }
 </style>

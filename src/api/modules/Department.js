@@ -10,7 +10,7 @@ export default {
   teacherDepartment(params = '') {
     return axios.post('/graphql/v1/toss', {
       query: `{
-        TeacherDepartmentList(query: ${JSON.stringify(params)}){
+        TeacherDepartmentList(query: ${JSON.stringify(params)}, size: 300){
           id
           pid
           name
