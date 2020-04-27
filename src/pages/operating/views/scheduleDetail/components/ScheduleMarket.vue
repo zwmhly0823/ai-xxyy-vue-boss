@@ -4,11 +4,27 @@
  * @Author: shentong
  * @Date: 2020-04-02 16:08:02
  * @LastEditors: Shentong
- * @LastEditTime: 2020-04-25 21:12:31
+ * @LastEditTime: 2020-04-27 12:39:22
  -->
 <template>
   <div>
     <div class="sear-container">
+      <div class="description" v-if="resultStatistics">
+        当前结果：社群销售<span>{{ resultStatistics.wechatSize }}</span
+        >人，计划招生<span>{{ resultStatistics.planSumTeamSize }}</span>
+        <span>（</span>
+        <span>S1:{{ resultStatistics.PS1 }} </span>
+        <span>S2:{{ resultStatistics.PS2 }} </span>
+        <span>S3:{{ resultStatistics.PS3 }} </span>
+        <span>）</span>
+
+        实际招生<span>{{ resultStatistics.realSumTeamSize }}</span>
+        <span>（</span>
+        <span>S1:{{ resultStatistics.RS1 }} </span>
+        <span>S2:{{ resultStatistics.RS2 }} </span>
+        <span>S3:{{ resultStatistics.RS3 }} </span>
+        <span>）</span>
+      </div>
       <div class="orderStyle">
         <ele-table
           :dataList="tableData"
@@ -81,6 +97,7 @@
           >
             <template slot-scope="scope">
               <span v-if="scope.row.courseCategory == '0'">双周体验课</span>
+              <span v-if="scope.row.courseCategory == '2'">系统课</span>
               <span v-if="scope.row.courseCategory == '3'">单周体验课</span>
             </template>
           </el-table-column>
@@ -108,6 +125,7 @@ export default {
       flags: {
         loading: false
       },
+      resultStatistics: {},
       tabQuery: {
         size: 20,
         pageNum: 1
@@ -135,12 +153,16 @@ export default {
           pageNum: 1
         }
         this.init()
+        // 表格内统计
+        this.getScheduleDetailStatistic()
       }
     }
   },
   async created() {
     const { period = '', courseType = '0' } = this.$route.params
     Object.assign(this.tabQuery, { period, courseType })
+    // 表格内统计
+    this.getScheduleDetailStatistic()
   },
   methods: {
     async init() {
@@ -157,6 +179,49 @@ export default {
         console.log()
       }
     },
+    // 表格 内 统计数据
+    async getScheduleDetailStatistic() {
+      try {
+        const info = await this.$http.Operating.getScheduleDetailStatistic(
+          this.tabQuery
+        )
+        const { payload = [] } = info
+
+        const obj = {
+          wechatSize: 0, // 带班销售总人数
+          planSumTeamSize: 0, // 计划招生总人数
+          realSumTeamSize: 0, // 实际招生总人数
+          PS1: 0,
+          PS2: 0,
+          PS3: 0,
+          RS1: 0,
+          RS2: 0,
+          RS3: 0
+        }
+
+        payload.forEach((item, index) => {
+          obj.wechatSize += +item.wechatSize
+          obj.planSumTeamSize += +item.planSumTeamSize
+          obj.realSumTeamSize += +item.realSumTeamSize
+
+          if (index === 0) {
+            obj.PS1 = item.planSumTeamSize || '0'
+            obj.RS1 = item.realSumTeamSize || '0'
+          } else if (index === 1) {
+            obj.PS2 = item.planSumTeamSize || '0'
+            obj.RS2 = item.realSumTeamSize || '0'
+          } else if (index === 2) {
+            obj.PS3 = item.planSumTeamSize || '0'
+            obj.RS3 = item.realSumTeamSize || '0'
+          }
+        })
+
+        this.resultStatistics = obj
+      } catch (err) {
+        console.log(err)
+      }
+    },
+    // 表格详情数据
     async getScheduleDetailList() {
       try {
         const tableList = this.$http.Operating.getScheduleDetailList(
@@ -193,8 +258,8 @@ export default {
   }
 }
 .sear-container {
-  display: flex;
-  align-items: center;
+  // display: flex;
+  // align-items: center;
   .el-card {
     border: 0;
   }

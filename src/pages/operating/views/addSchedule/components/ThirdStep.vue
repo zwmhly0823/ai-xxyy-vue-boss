@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-15 20:35:57
  * @LastEditors: Shentong
- * @LastEditTime: 2020-04-23 12:22:46
+ * @LastEditTime: 2020-04-27 12:21:53
  -->
 <template>
   <div class="third-step">
@@ -153,7 +153,7 @@
                 v-model="v.courseCategory"
                 popper-class="courseCategory"
                 size="mini"
-                placeholder="体验课类型"
+                placeholder="课程类型"
               >
                 <el-option
                   v-for="item in trialClass"
@@ -200,7 +200,8 @@ export default {
       ],
       trialClass: [
         { name: '单周体验课', value: '3' },
-        { name: '双周体验课', value: '0' }
+        { name: '双周体验课', value: '0' },
+        { name: '系统课', value: '2' }
       ],
       tabQuery: {
         size: 2,

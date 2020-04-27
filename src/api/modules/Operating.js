@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-03-16 19:46:39
  * @LastEditors: Shentong
- * @LastEditTime: 2020-04-25 17:39:18
+ * @LastEditTime: 2020-04-27 12:36:04
  */
 import axios from '../axiosConfig'
 
@@ -91,7 +91,7 @@ export default {
    */
   getScheduleDetailStatistic(params) {
     return axios.get(
-      `/api/s/v1/management/enroll/calculation/byPeriod?courseType=${params.courseType}&period=${params.period}`
+      `/api/s/v1/management/enroll/calculation/byPeriod?teacherId=${params.teacherId}&departmentIds=${params.departmentIds}&courseType=${params.courseType}&period=${params.period}`
     )
   }
 }
