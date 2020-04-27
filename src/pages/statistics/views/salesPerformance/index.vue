@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-04-02 15:35:27
  * @LastEditors: Shentong
- * @LastEditTime: 2020-04-27 14:32:04
+ * @LastEditTime: 2020-04-27 16:24:06
  -->
 <template>
   <el-row type="flex" class="app-main height schedule-container">
@@ -125,7 +125,7 @@
                 align="center"
               ></el-table-column>
               <el-table-column
-                v-for="item in tableDatasss"
+                v-for="item in tableDataChild"
                 :label="item.label"
                 :key="item.index"
                 align="center"
@@ -224,7 +224,7 @@ export default {
       // 表格数据
       statisticsInfo: {},
       tableData: [],
-      tableDatasss: []
+      tableDataChild: []
     }
   },
   computed: {},
@@ -247,7 +247,10 @@ export default {
         await this.getChangecListByProid()
       }
     },
-    // 通过状态获取期数 ‘进行中’、‘已结课’，‘招生中’
+    /**
+     * @description: 通过状态获取期数 ‘进行中’、‘已结课’，‘招生中’
+     * @param:{ status: 'on_going/over/not_start'}
+     */
     async getPriodByStatus(params) {
       try {
         const {
@@ -274,7 +277,6 @@ export default {
     async getChangecListByProid() {
       this.flags.loading = true
       // TODO:
-      // this.tabQuery.period = 13
       try {
         let {
           data: { ConversionRateStatistics }
@@ -282,8 +284,10 @@ export default {
 
         !ConversionRateStatistics && (ConversionRateStatistics = {})
 
+        // 总数、分页用
         this.totalElements = ConversionRateStatistics.total_elements || 0
 
+        // 格式化时间
         ConversionRateStatistics.start_date = ConversionRateStatistics.start_date
           ? formatData(ConversionRateStatistics.start_date)
           : ''
@@ -296,6 +300,7 @@ export default {
         // table 前四列数据
         this.tableData = ConversionRateStatistics.teacher_conversion_rates || []
 
+        // 判读table使用有数据，否则清空  tableDataChild
         if (this.tableData.length) {
           this.tableData.forEach((item, index) => {
             item.sup = item.sup ? this.supStatus[item.sup] : ''
@@ -315,10 +320,10 @@ export default {
               })
             })
 
-            this.tableDatasss = conversionArr
+            this.tableDataChild = conversionArr
           })
         } else {
-          this.tableDatasss = []
+          this.tableDataChild = []
         }
 
         this.flags.loading = false
@@ -343,6 +348,8 @@ export default {
       this.tabIndex = 0
       this.btnIndex = index
       const { status } = statusInfo
+
+      this.tabQuery.status = status
       this.init(status)
     },
     priod_tabs_click(row, index) {
