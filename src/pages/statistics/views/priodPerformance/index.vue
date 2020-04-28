@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-02 15:35:27
  * @LastEditors: Shentong
- * @LastEditTime: 2020-04-28 20:28:47
+ * @LastEditTime: 2020-04-28 21:56:24
  -->
 <template>
   <el-row type="flex" class="app-main height schedule-container">
@@ -117,6 +117,7 @@
               <el-table-column
                 label="社群销售"
                 prop="realname"
+                width="70"
                 align="center"
               ></el-table-column>
               <el-table-column
@@ -133,19 +134,19 @@
               ></el-table-column>
               <el-table-column
                 label="微信添加率"
-                width="85"
+                width="80"
                 prop="addWechatRate"
                 align="center"
               ></el-table-column>
               <el-table-column
                 label="参课率"
-                width="65"
+                width="80"
                 prop="joinCourseRate"
                 align="center"
               ></el-table-column>
               <el-table-column
                 label="完课率"
-                width="65"
+                width="80"
                 prop="compCourseRate"
                 align="center"
               ></el-table-column>
@@ -192,7 +193,6 @@
               </el-table-column>
               <el-table-column
                 label="支付总金额"
-                width="120"
                 prop="system_order_total_amount"
                 align="center"
               >
