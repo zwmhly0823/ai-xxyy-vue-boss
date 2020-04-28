@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-04-02 15:35:27
  * @LastEditors: Shentong
- * @LastEditTime: 2020-04-27 23:55:32
+ * @LastEditTime: 2020-04-28 21:45:47
  -->
 <template>
   <el-row type="flex" class="app-main height schedule-container">
@@ -151,40 +151,49 @@
               <el-table-column
                 align="center"
                 v-for="(a, i) in tableDataChild"
-                :label="'W1D' + a.row_index"
+                :label="a.weekday"
                 :key="i"
               >
                 <el-table-column fixed label="订单数" align="center">
                   <template slot-scope="scope">
-                    <span>{{
-                      (Object.keys(scope.row.conversion_rate_daily).length >
-                        0 &&
-                        scope.row.conversion_rate_daily[i] &&
-                        scope.row.conversion_rate_daily[i].order_number) ||
-                        '0'
-                    }}</span>
+                    <span
+                      v-if="
+                        Object.keys(scope.row.conversion_rate_daily).length &&
+                          scope.row.conversion_rate_daily[i] &&
+                          !scope.row.conversion_rate_daily[i].is_last
+                      "
+                    >
+                      {{ scope.row.conversion_rate_daily[i].order_number }}
+                    </span>
+                    <span v-else>--</span>
                   </template>
                 </el-table-column>
                 <el-table-column fixed label="转化率" align="center">
                   <template slot-scope="scope">
-                    <span>{{
-                      (Object.keys(scope.row.conversion_rate_daily).length >
-                        0 &&
-                        scope.row.conversion_rate_daily[i] &&
-                        scope.row.conversion_rate_daily[i].conversion) ||
-                        '0'
-                    }}</span>
+                    <span
+                      v-if="
+                        Object.keys(scope.row.conversion_rate_daily).length &&
+                          scope.row.conversion_rate_daily[i] &&
+                          !scope.row.conversion_rate_daily[i].is_last
+                      "
+                    >
+                      {{ scope.row.conversion_rate_daily[i].conversion }}
+                    </span>
+                    <span v-else>--</span>
                   </template>
                 </el-table-column>
                 <el-table-column fixed label="总金额" align="center"
                   ><template slot-scope="scope">
-                    <span>{{
-                      (Object.keys(scope.row.conversion_rate_daily).length >
-                        0 &&
-                        scope.row.conversion_rate_daily[i] &&
-                        scope.row.conversion_rate_daily[i].amount) ||
-                        '0'
-                    }}</span>
+                    <span
+                      v-if="
+                        Object.keys(scope.row.conversion_rate_daily).length &&
+                          scope.row.conversion_rate_daily[i] &&
+                          !scope.row.conversion_rate_daily[i].is_last
+                      "
+                    >
+                      {{ scope.row.conversion_rate_daily[i].amount }}
+                    </span>
+                    <span v-else>--</span>
                   </template></el-table-column
                 >
               </el-table-column>
@@ -308,7 +317,12 @@ export default {
     },
     // table列表
     async getChangecListByProid() {
-      this.flags.loading = true
+      const loadingInstance = this.$loading({
+        target: 'section',
+        lock: true,
+        text: '玩命加载中...',
+        fullscreen: true
+      })
       // TODO:
       // this.tabQuery.period = 13
       try {
@@ -325,10 +339,10 @@ export default {
 
         this.pakageListDate(ConversionRateStatistics)
 
-        this.flags.loading = false
+        loadingInstance.close()
       } catch (err) {
         console.log(err)
-        this.flags.loading = false
+        loadingInstance.close()
       }
     },
     // 包装 接口返回的数据
@@ -344,20 +358,23 @@ export default {
       const teacherConversion = tabList.teacher_conversion_rates || []
 
       // 大表格 遍历，选择一个‘conversion_rate_daily’最大的值，作为表头
-      let _length = 0
+      // let _length = 0
       teacherConversion.forEach((item, index) => {
-        const conversionRate = item.conversion_rate_daily || []
+        const conversionRateArr = item.conversion_rate_daily || []
+        const childLength = conversionRateArr.length
 
-        const childLength = conversionRate.length
-        if (childLength >= _length) {
-          _length = childLength
+        if (this.tableDataChild.length <= childLength) {
+          this.tableDataChild = conversionRateArr
         }
+        // if (childLength >= _length) {
+        //   _length = childLength
+        // }
       })
-      for (let i = 0; i < _length; i++) {
-        this.tableDataChild.push({
-          row_index: i + 1
-        })
-      }
+      // for (let i = 0; i < _length; i++) {
+      //   this.tableDataChild.push({
+      //     row_index: i + 1
+      //   })
+      // }
       this.tableData = teacherConversion
     },
     // 点击tabs页签（转化统计 按钮）
