@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-07 13:52:26
  * @LastEditors: Shentong
- * @LastEditTime: 2020-04-27 17:14:09
+ * @LastEditTime: 2020-04-28 19:34:16
  */
 import axios from '../axiosConfig'
 
@@ -27,6 +27,8 @@ export default {
           end_date
           start_date
           period_name
+          course_day
+          end_course_day
       }}`
     })
   },
@@ -63,10 +65,71 @@ export default {
             conversion_total
             amount_total
             conversion_rate_daily{
+              is_last
+              weekday
               order_number
               amount
               conversion
             }
+          }
+      }}`
+    })
+  },
+  // 按期汇总模块 接口 通过期数、销售部门、社群销售、难度 条件过滤 数量统计接口
+  getCountStatisticBySearch(params) {
+    const { period = '', department = '', sup = '' } = params
+    const query = `{"term": "${period}","departmentId": "${department}", "sup": "${sup}"}`
+
+    return axios.post('/graphql/v1/toss', {
+      query: `{
+        termDepartmentReport(query: ${JSON.stringify(query) || null}) {
+          teacherNum
+          trialStudentNum
+          systemStudentNum
+          systemTotalAmount
+      }}`
+    })
+  },
+  // 按期汇总模块 接口，获取list
+  getStatisticsByProid(params) {
+    const {
+      period = '',
+      page = 1,
+      size = '20',
+      teacher = '',
+      department = '',
+      sup = ''
+    } = params
+    const query = `{"term": "${period}","departmentId": "${department}", "sup": "${sup}","page":"${page}", "size": "${size}", "teacherIds":"${teacher}"}`
+
+    return axios.post('/graphql/v1/toss', {
+      query: `{
+        termDepartmentTeacherReportPage(query: ${JSON.stringify(query) ||
+          null}) {
+          first
+          totalPages
+          totalElements
+          content {
+            trial_stage_name
+            task_comment_count
+            join_course_count
+            send_course_count
+            added_wechat_count
+            listen_comment_count
+            task_count
+            no_address_count
+            sup
+            trial_stage
+            stage_name
+            department_id
+            department_name
+            complete_course_count
+            pay_teacher_id
+            realname
+            system_order_total_amount
+            stage
+            system_order_count
+            trial_course_count
           }
       }}`
     })
