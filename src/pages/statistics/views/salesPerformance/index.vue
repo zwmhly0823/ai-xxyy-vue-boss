@@ -65,18 +65,31 @@
             <span class="label-val"
               >{{ statisticsInfo.course_days || '-' }}天</span
             >
-            <span>当前结果：总订单数：</span>
-            <span class="label-val for-light">{{
-              statisticsInfo.order_number || '-'
-            }}</span>
-            <span>总转化率：</span>
-            <span class="label-val for-light">{{
-              statisticsInfo.conversion_rate_total || '-'
-            }}</span>
-            <span>总金额：</span>
-            <span class="for-light">{{
-              statisticsInfo.amount_total || '-'
-            }}</span>
+            <span>当前结果：</span>
+            <template v-if="activeName == 'conversion'">
+              <span>总订单数：</span>
+              <span class="label-val for-light">{{
+                statisticsInfo.order_number || '-'
+              }}</span>
+              <span>总转化率：</span>
+              <span class="label-val for-light">{{
+                statisticsInfo.conversion_rate_total || '-'
+              }}</span>
+              <span>总金额：</span>
+              <span class="for-light">{{
+                statisticsInfo.amount_total || '-'
+              }}</span>
+            </template>
+            <template v-else>
+              <span>本期总{{ despMap[activeName] }}人数：</span>
+              <span class="label-val for-light">600</span>
+              <span>本期总{{ despMap[activeName] }}率：</span>
+              <span class="label-val for-light">60%</span>
+              <span>本日总{{ despMap[activeName] }}人数：</span>
+              <span class="label-val for-light">50</span>
+              <span>本日总{{ despMap[activeName] }}率：</span>
+              <span class="label-val for-light">30%</span>
+            </template>
           </p>
           <div style="padding: 0 15px;">
             <el-tabs
@@ -85,8 +98,8 @@
             >
               <el-tab-pane label="转化统计" name="conversion"> </el-tab-pane>
               <!-- TODO: -->
-              <!-- <el-tab-pane label="参课统计" name="attendClass"> </el-tab-pane
-              ><el-tab-pane label="完课统计" name="finishClass"> </el-tab-pane> -->
+              <el-tab-pane label="参课统计" name="attendClass"> </el-tab-pane>
+              <el-tab-pane label="完课统计" name="finishClass"> </el-tab-pane>
             </el-tabs>
           </div>
           <div class="orderStyle" v-if="tableData.length">
@@ -217,6 +230,11 @@ export default {
   },
   data() {
     return {
+      despMap: {
+        conversion: '转化',
+        attendClass: '参课',
+        finishClass: '完课'
+      },
       // tabs标签默认状态
       selectName: '更多',
       activeName: 'conversion',
