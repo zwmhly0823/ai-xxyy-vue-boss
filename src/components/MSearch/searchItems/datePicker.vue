@@ -3,8 +3,8 @@
  * @version: 
  * @Author: zhubaodong
  * @Date: 2020-03-26 16:30:11
- * @LastEditors: zhubaodong
- * @LastEditTime: 2020-04-03 17:49:45
+ * @LastEditors: panjian
+ * @LastEditTime: 2020-04-26 10:19:10
  -->
 <template>
   <div class="search-item">
@@ -88,7 +88,6 @@ export default {
           }
         ],
         disabledDate: (res) => {
-          console.log(res, 'resdata')
           return false
         }
       },
