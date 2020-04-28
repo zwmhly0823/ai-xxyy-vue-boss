@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-04-02 15:35:27
  * @LastEditors: Shentong
- * @LastEditTime: 2020-04-27 16:24:06
+ * @LastEditTime: 2020-04-27 23:55:32
  -->
 <template>
   <el-row type="flex" class="app-main height schedule-container">
@@ -45,7 +45,7 @@
                 <el-dropdown-item
                   v-for="(tab, index) in priodTabsEnd"
                   :key="index"
-                  :command="tab.period_name"
+                  :command="tab"
                   >{{ tab.period_name }}</el-dropdown-item
                 >
               </el-dropdown-menu>
@@ -79,7 +79,10 @@
             }}</span>
           </p>
           <div style="padding: 0 15px;">
-            <el-tabs v-model="activeName" @tab-click="handleClick">
+            <el-tabs
+              v-model="activeName"
+              @tab-click="statisticsTypehandleClick"
+            >
               <el-tab-pane label="转化统计" name="conversion"> </el-tab-pane>
               <!-- TODO: -->
               <!-- <el-tab-pane label="参课统计" name="attendClass"> </el-tab-pane
@@ -100,59 +103,89 @@
                 fixed
                 label="难度级别"
                 prop="sup"
-                width="80"
+                width="70"
                 align="center"
               ></el-table-column>
               <el-table-column
                 fixed
                 label="销售组"
-                width="150"
+                width="120"
                 align="center"
                 prop="department"
               ></el-table-column>
               <el-table-column
                 fixed
                 label="社群销售"
-                width="100"
+                width="80"
                 align="center"
                 prop="teacher"
               ></el-table-column>
               <el-table-column
                 fixed
                 label="体验课学生"
-                width="100"
+                width="85"
                 prop="student_total"
                 align="center"
               ></el-table-column>
-              <el-table-column
-                v-for="item in tableDataChild"
-                :label="item.label"
-                :key="item.index"
-                align="center"
-              >
+              <el-table-column align="center" label="总计">
                 <el-table-column
                   fixed
                   label="订单数"
-                  width="100"
-                  prop="label"
+                  prop="order_total"
                   align="center"
-                  >{{ item.children[0].label }}</el-table-column
-                >
+                ></el-table-column>
                 <el-table-column
                   fixed
                   label="转化率"
-                  width="100"
-                  prop="label"
+                  prop="conversion_total"
                   align="center"
-                  >{{ item.children[1].label }}</el-table-column
-                >
+                ></el-table-column>
                 <el-table-column
                   fixed
                   label="总金额"
-                  width="100"
-                  prop="label"
+                  prop="amount_total"
                   align="center"
-                  >{{ item.children[2].label }}</el-table-column
+                ></el-table-column>
+              </el-table-column>
+              <!-- child-table-start -->
+              <el-table-column
+                align="center"
+                v-for="(a, i) in tableDataChild"
+                :label="'W1D' + a.row_index"
+                :key="i"
+              >
+                <el-table-column fixed label="订单数" align="center">
+                  <template slot-scope="scope">
+                    <span>{{
+                      (Object.keys(scope.row.conversion_rate_daily).length >
+                        0 &&
+                        scope.row.conversion_rate_daily[i] &&
+                        scope.row.conversion_rate_daily[i].order_number) ||
+                        '0'
+                    }}</span>
+                  </template>
+                </el-table-column>
+                <el-table-column fixed label="转化率" align="center">
+                  <template slot-scope="scope">
+                    <span>{{
+                      (Object.keys(scope.row.conversion_rate_daily).length >
+                        0 &&
+                        scope.row.conversion_rate_daily[i] &&
+                        scope.row.conversion_rate_daily[i].conversion) ||
+                        '0'
+                    }}</span>
+                  </template>
+                </el-table-column>
+                <el-table-column fixed label="总金额" align="center"
+                  ><template slot-scope="scope">
+                    <span>{{
+                      (Object.keys(scope.row.conversion_rate_daily).length >
+                        0 &&
+                        scope.row.conversion_rate_daily[i] &&
+                        scope.row.conversion_rate_daily[i].amount) ||
+                        '0'
+                    }}</span>
+                  </template></el-table-column
                 >
               </el-table-column>
             </ele-table>
@@ -195,12 +228,12 @@ export default {
           label: '进行中'
         },
         {
-          status: 'over',
-          label: '已结课'
-        },
-        {
           status: 'not_start',
           label: '招生中'
+        },
+        {
+          status: 'over',
+          label: '已结课'
         }
       ],
       supStatus: {
@@ -248,7 +281,7 @@ export default {
       }
     },
     /**
-     * @description: 通过状态获取期数 ‘进行中’、‘已结课’，‘招生中’
+     * @description: 通过状态获取'期数' ‘进行中’、‘已结课’，‘招生中’
      * @param:{ status: 'on_going/over/not_start'}
      */
     async getPriodByStatus(params) {
@@ -263,10 +296,10 @@ export default {
     },
     // 组件emit
     searchChange(search) {
-      // console.log('searchChange', search)
       const { department = [], groupSell = '', sup = [] } = search
       Object.assign(this.tabQuery, {
         teacher: groupSell,
+        page: 1,
         department: department.join(),
         sup: sup.join()
       })
@@ -277,54 +310,20 @@ export default {
     async getChangecListByProid() {
       this.flags.loading = true
       // TODO:
+      // this.tabQuery.period = 13
       try {
         let {
           data: { ConversionRateStatistics }
         } = await this.$http.Statistics.getChangecListByProid(this.tabQuery)
 
         !ConversionRateStatistics && (ConversionRateStatistics = {})
-
         // 总数、分页用
         this.totalElements = ConversionRateStatistics.total_elements || 0
 
-        // 格式化时间
-        ConversionRateStatistics.start_date = ConversionRateStatistics.start_date
-          ? formatData(ConversionRateStatistics.start_date)
-          : ''
-        ConversionRateStatistics.end_date = ConversionRateStatistics.end_date
-          ? formatData(ConversionRateStatistics.end_date)
-          : ''
-
         // 表格上的统计信息
         this.statisticsInfo = ConversionRateStatistics
-        // table 前四列数据
-        this.tableData = ConversionRateStatistics.teacher_conversion_rates || []
 
-        // 判读table使用有数据，否则清空  tableDataChild
-        if (this.tableData.length) {
-          this.tableData.forEach((item, index) => {
-            item.sup = item.sup ? this.supStatus[item.sup] : ''
-            const conversionRate = item.conversion_rate_daily || []
-
-            // 封装table后遍历的数据
-            const conversionArr = []
-            conversionRate.forEach((label, lIndex) => {
-              const _index = lIndex + 1
-              conversionArr.push({
-                label: `W1D${_index}`,
-                children: [
-                  { label: `${label.order_number}` },
-                  { label: `${label.conversion}` },
-                  { label: `${label.amount}` }
-                ]
-              })
-            })
-
-            this.tableDataChild = conversionArr
-          })
-        } else {
-          this.tableDataChild = []
-        }
+        this.pakageListDate(ConversionRateStatistics)
 
         this.flags.loading = false
       } catch (err) {
@@ -332,16 +331,50 @@ export default {
         this.flags.loading = false
       }
     },
+    // 包装 接口返回的数据
+    pakageListDate(tabList) {
+      // 初始化
+      this.tableDataChild = []
+      // 格式化时间
+      tabList.start_date = tabList.start_date
+        ? formatData(tabList.start_date)
+        : ''
+      tabList.end_date = tabList.end_date ? formatData(tabList.end_date) : ''
+
+      const teacherConversion = tabList.teacher_conversion_rates || []
+
+      // 大表格 遍历，选择一个‘conversion_rate_daily’最大的值，作为表头
+      let _length = 0
+      teacherConversion.forEach((item, index) => {
+        const conversionRate = item.conversion_rate_daily || []
+
+        const childLength = conversionRate.length
+        if (childLength >= _length) {
+          _length = childLength
+        }
+      })
+      for (let i = 0; i < _length; i++) {
+        this.tableDataChild.push({
+          row_index: i + 1
+        })
+      }
+      this.tableData = teacherConversion
+    },
     // 点击tabs页签（转化统计 按钮）
-    handleClick(tab) {
+    statisticsTypehandleClick(tab) {
       this.tabQuery.page = 1
       this.getChangecListByProid()
     },
     // 更多 下拉框
     handleCommand(command) {
+      const { period = '' } = command
       this.tabIndex = 6
-      this.selectName = command
-      this.tabQuery.page = 1
+
+      this.selectName = command.period_name
+      Object.assign(this.tabQuery, {
+        page: 1,
+        period
+      })
       this.getChangecListByProid()
     },
     top_tabs_click(index, statusInfo) {
@@ -368,6 +401,19 @@ export default {
       this.tabQuery.page = page
       this.getChangecListByProid()
     }
+    // 如果返回的 ’conversion_rate_daily‘(this.tableDataChild) 字段为空数组，则：模拟一个列
+    // if (!this.tableDataChild.length) {
+    //   this.tableDataChild = [
+    //     {
+    //       label: `暂无数据`,
+    //       children: [
+    //         { label: '订单数', value: `暂无数据` },
+    //         { label: '转化率', value: `暂无数据` },
+    //         { label: '总金额', value: `暂无数据` }
+    //       ]
+    //     }
+    //   ]
+    // }
   }
 }
 </script>
