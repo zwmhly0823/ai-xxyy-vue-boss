@@ -122,7 +122,19 @@
             <div :class="'wait_' + scope.row.express_status">
               {{ scope.row.express_status_chinese }}
             </div>
-            <el-button class="trail" type="text" @click="Express(scope.row)">
+            <div
+              v-if="
+                scope.row.express_status == 0 || scope.row.express_status == 6
+              "
+            >
+              追踪
+            </div>
+            <el-button
+              type="text"
+              class="trail"
+              v-else
+              @click="Express(scope.row)"
+            >
               追踪
             </el-button>
           </div>
