@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-02 15:35:27
  * @LastEditors: Shentong
- * @LastEditTime: 2020-04-28 20:10:08
+ * @LastEditTime: 2020-04-28 20:28:47
  -->
 <template>
   <el-row type="flex" class="app-main height schedule-container">
@@ -418,12 +418,6 @@ export default {
           item.system_order_count,
           item.trial_course_count
         )
-        // const {
-        //   added_wechat_count = 0,
-        //   join_course_count = 0,
-        //   complete_course_count = 0,
-        //   task_count = 0
-        // } = item
       })
     },
     // 计算 xx率
