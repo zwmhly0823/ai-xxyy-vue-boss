@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-04-25 17:24:23
  * @LastEditors: liukun
- * @LastEditTime: 2020-04-26 16:08:46
+ * @LastEditTime: 2020-04-28 13:52:56
  -->
 <template>
   <el-card border="false" shadow="never" :class="$style.elard">
@@ -22,7 +22,7 @@
       <el-form-item label="下单时间:" :class="{ [$style.marginer]: true }">
         <DatePicker :class="[$style.fourPoint, 'allmini']">
           <template v-slot:buttons>
-            <div class="row_colum">
+            <div class="row_colum margin_l10">
               <el-button size="mini" plain>今日</el-button>
               <el-button size="mini" plain>何夕</el-button>
               <el-button size="mini" plain>今朝</el-button>
@@ -33,7 +33,11 @@
       </el-form-item>
       <br />
       <el-form-item label="体验课:" :class="{ [$style.marginer]: true }">
-        <ChannelSelect />
+        <div class="row_colum">
+          <Department />
+          <Schedule class="margin_l10" />
+          <hardLevel class="margin_l10" />
+        </div>
       </el-form-item>
       <br />
       <el-form-item label="系统课:" :class="{ [$style.marginer]: true }">
@@ -189,6 +193,7 @@
   </el-card>
 </template>
 <script>
+import hardLevel from '@/components/MSearch/searchItems/hardLevel.vue' // add
 import orderSearch from '@/components/MSearch/searchItems/orderSearch.vue' // add
 import DatePicker from '@/components/MSearch/searchItems/datePicker.vue'
 import ChannelSelect from '@/components/MSearch/searchItems/channel.vue'
@@ -355,6 +360,7 @@ export default {
     }
   },
   components: {
+    hardLevel,
     orderSearch,
     ChannelSelect,
     ProductTopic,
@@ -559,8 +565,10 @@ export default {
     height: 40px;
   }
   .row_colum {
-    margin-left: 10px;
     display: flex;
+  }
+  .margin_l10 {
+    margin-left: 10px;
   }
 }
 </style>
