@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-04-25 17:24:23
  * @LastEditors: liukun
- * @LastEditTime: 2020-04-29 14:04:13
+ * @LastEditTime: 2020-04-29 16:29:22
  -->
 <template>
   <el-card border="false" shadow="never" :class="$style.elard">
@@ -16,6 +16,11 @@
 
       <el-form-item label="订单来源:" :class="{ [$style.marginer]: true }">
         <ChannelSelect @result="getChannel" />
+      </el-form-item>
+      <br />
+
+      <el-form-item label="物流状态:" :class="{ [$style.marginer]: true }">
+        <orderStatus @result="getorderStatus" />
       </el-form-item>
       <br />
 
@@ -59,41 +64,14 @@
           />
         </div>
       </el-form-item>
-      <br />
-      <el-form-item label="系统课:" :class="{ [$style.marginer]: true }">
-        <div class="row_colum">
-          <systemCourseType style="width:140px" @result="getSystemCourseType" />
-          <search-stage
-            class="margin_l10"
-            @result="selectSchedule"
-            placeholder="全部系统课排期"
-          />
-          <hardLevel
-            :class="['margin_l10']"
-            style="width:140px"
-            @result="supCallBack"
-          />
-          <search-trial-team-name
-            :teamnameType="'1'"
-            @result="getTrialTeamName"
-            :name="searchTrialTeamName"
-            :class="['margin_l10']"
-          />
-          <group-sell
-            @result="selectSellTeacher"
-            :name="groupSell"
-            class="margin_l10"
-            tip="服务老师"
-          />
-        </div>
-      </el-form-item>
     </el-form>
   </el-card>
 </template>
 <script>
 import hardLevel from '@/components/MSearch/searchItems/hardLevel.vue' // add
 import orderSearch from '@/components/MSearch/searchItems/orderSearch.vue' // add
-import systemCourseType from '@/components/MSearch/searchItems/systemCourseType.vue'
+import orderStatus from '@/components/MSearch/searchItems/orderStatus.vue' // add
+// import systemCourseType from '@/components/MSearch/searchItems/systemCourseType.vue'
 import DatePicker from '@/components/MSearch/searchItems/datePicker.vue'
 import ChannelSelect from '@/components/MSearch/searchItems/channel.vue'
 // import ProductTopic from '@/components/MSearch/searchItems/productTopic.vue'
@@ -109,7 +87,7 @@ import GroupSell from '@/components/MSearch/searchItems/groupSell'
 // import OrderType from '@/components/MSearch/searchItems/orderType'
 import Department from '@/components/MSearch/searchItems/department'
 import SearchTeamName from '@/components/MSearch/searchItems/searchTeamName'
-import SearchTrialTeamName from '@/components/MSearch/searchItems/searchTrialTeamName'
+// import SearchTrialTeamName from '@/components/MSearch/searchItems/searchTrialTeamName'
 // import Schedule from '@/components/MSearch/searchItems/schedule'
 import SearchStage from '@/components/MSearch/searchItems/searchStage'
 import { isToss } from '@/utils/index'
@@ -200,6 +178,11 @@ export default {
       type: String,
       default: ''
     },
+    // 订单状态
+    orderStatus: {
+      type: String,
+      default: ''
+    },
     // 订单号
     outTradeNo: {
       type: String,
@@ -265,8 +248,9 @@ export default {
   },
 
   components: {
+    orderStatus,
     hardLevel,
-    systemCourseType,
+    // systemCourseType,
     orderSearch,
     ChannelSelect,
     // ProductTopic,
@@ -283,7 +267,7 @@ export default {
     // OrderType,
     Department,
     SearchTeamName,
-    SearchTrialTeamName,
+    // SearchTrialTeamName,
     // Schedule,
     SearchStage
   },
@@ -418,6 +402,10 @@ export default {
     },
     getSystemCourseType(res) {
       this.setSeachParmas(res, [this.systemCourseType || 'system_course_type'])
+    },
+    // 获取订单状态
+    getorderStatus(res) {
+      this.setSeachParmas(res, [this.orderStatus || 'order_status'])
     },
     getDepartment(res) {
       this.setSeachParmas(res, [this.department || 'department'], 'terms')
