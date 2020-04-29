@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-24 18:50:54
  * @LastEditors: Lukun
- * @LastEditTime: 2020-04-20 22:09:41
+ * @LastEditTime: 2020-04-26 17:45:20
  -->
 <template>
   <div class="search-item small">
@@ -34,7 +34,7 @@
       v-if="supName"
       size="mini"
       multiple
-      placeholder="难度"
+      :placeholder="supPlaceholder"
       :disabled="disableClick"
       @change="supChange"
     >
@@ -76,19 +76,15 @@ export default {
   props: {
     stageName: {
       type: String,
-      default: 'stage'
-    },
-    scheduleName: {
-      type: String,
-      default: 'period'
+      default: ''
     },
     supName: {
       type: String,
-      default: 'sup'
+      default: ''
     },
     levelName: {
       type: String,
-      default: 'current_level'
+      default: ''
     },
     // 是否只返回值，如果是，父组件获得值后根据实际表达式组装数据
     onlyValue: {
@@ -98,6 +94,10 @@ export default {
     addSupS: {
       type: Boolean,
       default: false
+    },
+    supPlaceholder: {
+      type: String,
+      default: '难度'
     }
   },
   data() {
@@ -107,7 +107,6 @@ export default {
       supList: [],
       levelList: [],
       stageData: null,
-      schedule: null,
       supData: null,
       levelData: null
     }
@@ -128,18 +127,12 @@ export default {
     },
     addSupS(val) {
       console.log(val)
-    },
-    typeStage(val) {
-      console.log(val, 'state.leftbar.typeStage')
-      this.schedule = []
-      this.getManagementList(val)
     }
   },
   async created() {
     await this.getStage()
     await this.getSup()
     await this.getLevel()
-    await this.getManagementList(this.typeStage)
   },
   methods: {
     // 期数
@@ -156,27 +149,6 @@ export default {
         })
         .then((res) => {
           this.stageList = res.data.teamStageList
-        })
-    },
-    // 排期
-    async getManagementList() {
-      let typeId = null
-      if (this.typeStage) {
-        typeId = JSON.stringify(`type:"${this.typeStage}"`)
-      }
-      axios
-        .post('/graphql/v1/toss', {
-          query: `{
-               ManagementList(query:${typeId}){
-                    id
-                    period
-                    period_name
-              }
-            }
-          `
-        })
-        .then((res) => {
-          this.scheduleList = res.data.ManagementList
         })
     },
     // 难度
@@ -219,12 +191,6 @@ export default {
       this.$emit(
         'stageCallBack',
         data.length > 0 ? { [this.stageName]: this.stageData } : ''
-      )
-    },
-    scheduleChange(data) {
-      this.$emit(
-        'scheduleCallBack',
-        data.length > 0 ? { [this.scheduleName]: this.schedule } : ''
       )
     },
 

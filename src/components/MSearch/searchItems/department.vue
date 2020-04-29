@@ -12,6 +12,7 @@
       size="mini"
       placeholder="销售部"
       :options="departmentList"
+      :type="deptType"
       :props="{
         multiple: true,
         value: 'id',
@@ -32,6 +33,10 @@ export default {
     name: {
       type: String,
       default: ''
+    },
+    deptType: {
+      type: Number,
+      default: 1 // 1 获取部门下的老师ids，2 只获取部门
     }
   },
   data() {
@@ -46,16 +51,29 @@ export default {
     getDepartment() {
       this.$http.Department.getDepartmentList().then((res) => {
         this.departmentList = res.payload || []
+        console.log(this.departmentList, 'this.departmentList')
       })
     },
     async onSelect(data) {
       // TODO: 根据选择的销售组，获取销售ID
       const ids = { department_id: data || [] }
-      const teacher = await this.$http.Department.getDepartmentTeacher(
-        JSON.stringify(ids)
-      )
-      const teacherIds = teacher.data.TeacherList.map((item) => item.id)
-      this.$emit('result', data.length > 0 ? { [this.name]: teacherIds } : '')
+      console.log(ids, 'ids')
+
+      // 获取老师
+      if (this.deptType === 1) {
+        const teacher = await this.$http.Department.getDepartmentTeacher(
+          JSON.stringify(ids)
+        )
+        const teacherIds = teacher.data.TeacherList.map((item) => item.id)
+        this.$emit('result', data.length > 0 ? { [this.name]: teacherIds } : '')
+      } else {
+        // 获取部门
+
+        this.$emit(
+          'result',
+          data.length > 0 ? { [this.name]: ids.department_id } : ''
+        )
+      }
     }
   }
 }

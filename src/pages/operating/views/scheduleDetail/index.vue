@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-14 18:28:44
  * @LastEditors: Shentong
- * @LastEditTime: 2020-04-25 13:58:27
+ * @LastEditTime: 2020-04-27 12:34:11
  -->
 <template>
   <div class="app-main height add-schedule-container">
@@ -44,24 +44,12 @@
           </div>
           <el-tabs type="border-card">
             <el-tab-pane label="招生详情-销售">
-              <div class="description" v-if="resultStatistics">
-                当前结果：社群销售<span>{{ resultStatistics.wechatSize }}</span
-                >人，计划招生<span>{{ resultStatistics.planSumTeamSize }}</span>
-                <span>（</span>
-                <span>S1:{{ resultStatistics.PS1 }} </span>
-                <span>S2:{{ resultStatistics.PS2 }} </span>
-                <span>S3:{{ resultStatistics.PS3 }} </span>
-                <span>）</span>
-
-                实际招生<span>{{ resultStatistics.realSumTeamSize }}</span>
-                <span>（</span>
-                <span>S1:{{ resultStatistics.RS1 }} </span>
-                <span>S2:{{ resultStatistics.RS2 }} </span>
-                <span>S3:{{ resultStatistics.RS3 }} </span>
-                <span>）</span>
+              <div class="search-container">
+                <!-- TODO: -->
+                <table-search @change="searchChange"></table-search>
               </div>
               <!-- TODO: -->
-              <schedule-market></schedule-market>
+              <schedule-market :paramsInfo="params"></schedule-market>
             </el-tab-pane>
             <!-- <el-tab-pane label="招生详情-部门" disabled
               >招生详情-部门</el-tab-pane
@@ -85,16 +73,20 @@
 <script>
 import { formatData } from '@/utils/index'
 import ScheduleMarket from './components/ScheduleMarket'
+import TableSearch from '../../components/tableSearch/index'
 export default {
   data() {
     return {
       scheduleStatistic: {},
-      params: {},
-      resultStatistics: {}
+      params: {
+        departmentIds: '',
+        teacherId: ''
+      }
     }
   },
   components: {
-    ScheduleMarket
+    ScheduleMarket,
+    TableSearch
   },
   computed: {},
   async created() {
@@ -103,11 +95,11 @@ export default {
 
     this.init()
   },
+  watch: {},
   methods: {
     // 初始化数据
     init() {
       this.getScheduleDetailInfo()
-      this.getScheduleDetailStatistic()
     },
     // 获取头部基本信息
     async getScheduleDetailInfo() {
@@ -132,46 +124,12 @@ export default {
         console.log(err)
       }
     },
-    async getScheduleDetailStatistic() {
-      try {
-        const info = await this.$http.Operating.getScheduleDetailStatistic(
-          this.params
-        )
-        const { payload = [] } = info
-
-        const obj = {
-          wechatSize: 0, // 带班销售总人数
-          planSumTeamSize: 0, // 计划招生总人数
-          realSumTeamSize: 0, // 实际招生总人数
-          PS1: 0,
-          PS2: 0,
-          PS3: 0,
-          RS1: 0,
-          RS2: 0,
-          RS3: 0
-        }
-
-        payload.forEach((item, index) => {
-          obj.wechatSize += +item.wechatSize
-          obj.planSumTeamSize += +item.planSumTeamSize
-          obj.realSumTeamSize += +item.realSumTeamSize
-
-          if (index === 0) {
-            obj.PS1 = item.planSumTeamSize || '0'
-            obj.RS1 = item.realSumTeamSize || '0'
-          } else if (index === 1) {
-            obj.PS2 = item.planSumTeamSize || '0'
-            obj.RS2 = item.realSumTeamSize || '0'
-          } else if (index === 2) {
-            obj.PS3 = item.planSumTeamSize || '0'
-            obj.RS3 = item.realSumTeamSize || '0'
-          }
-        })
-
-        this.resultStatistics = obj
-      } catch (err) {
-        console.log(err)
-      }
+    searchChange(search) {
+      const { department = [], groupSell = '' } = search
+      Object.assign(this.params, {
+        departmentIds: department.join(),
+        teacherId: groupSell
+      })
     },
     // 点击修改按钮
     modify() {

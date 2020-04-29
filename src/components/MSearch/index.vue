@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-24 18:20:12
  * @LastEditors: panjian
- * @LastEditTime: 2020-04-25 19:31:46
+ * @LastEditTime: 2020-04-29 15:07:37
  -->
 
 <template>
@@ -63,11 +63,7 @@
 
       <el-form-item v-if="channel">
         <!-- 渠道 -->
-        <channel-select
-          @result="getChannel"
-          :name="channel"
-          :placeHoldText="channelText"
-        />
+        <channel-select @result="getChannel" :name="channel" ref="channel" />
       </el-form-item>
 
       <el-form-item v-if="topicType">
@@ -89,6 +85,7 @@
           :supName="sup"
           :levelName="level"
           :addSupS="addSupS"
+          :supPlaceholder="supPlaceholder"
           style="margin-bottom:0px"
         />
       </el-form-item>
@@ -119,10 +116,7 @@
           :tip="nameTip"
         />
       </el-form-item>
-      <el-form-item v-if="groupSell && !teacherId">
-        <!-- 社群销售 -->
-        <group-sell @result="selectSellTeacher" :name="groupSell" />
-      </el-form-item>
+
       <el-form-item v-if="teachernickname">
         <!-- 老师模块昵称搜索 -->
         <teacher-nickname
@@ -169,6 +163,11 @@
         <department @result="getDepartment" :name="department" />
       </el-form-item>
 
+      <el-form-item v-if="groupSell && !teacherId">
+        <!-- 社群销售 -->
+        <group-sell @result="selectSellTeacher" :name="groupSell" />
+      </el-form-item>
+
       <!-- && !teacherId -->
       <el-form-item v-if="searchTeamName">
         <!-- 班级名称搜索 -->
@@ -203,6 +202,14 @@
           @result="getSearchTrialStage"
           :name="searchTrialStage"
           type="0"
+        />
+      </el-form-item>
+
+      <el-form-item v-if="trialCourseType">
+        <!-- 体验课类型选择 -->
+        <trial-course-type
+          @result="getTrialCourseType"
+          :name="trialCourseType"
         />
       </el-form-item>
 
@@ -279,6 +286,7 @@ import teacherWx from './searchItems/teacherSearch/teachetWx'
 import wxList from './searchItems/wxInput'
 import selectAddress from './searchItems/selectAddress.vue'
 import SearchStage from './searchItems/searchStage'
+import TrialCourseType from './searchItems/trialCourseType'
 import { isToss } from '@/utils/index'
 
 export default {
@@ -532,6 +540,16 @@ export default {
     searchTrialStage: {
       type: String,
       default: ''
+    },
+    // 体验课类型 0-双周，3-单周
+    trialCourseType: {
+      type: String,
+      default: ''
+    },
+    // 难度 placeholder
+    supPlaceholder: {
+      type: String,
+      default: '难度'
     }
   },
   components: {
@@ -560,7 +578,8 @@ export default {
     wxList,
     selectAddress,
     teacherWx,
-    SearchStage
+    SearchStage,
+    TrialCourseType
   },
   data() {
     return {
@@ -679,7 +698,7 @@ export default {
     },
     // 选择销售老师
     selectSellTeacher(res) {
-      this.setSeachParmas(res, [this.groupSell || 'pay_teacher_id'], 'wildcard')
+      this.setSeachParmas(res, [this.groupSell || 'pay_teacher_id'])
     },
     getTeamDetail(res) {
       this.setSeachParmas(res, [this.teamDetail || 'last_team_id'])
@@ -732,6 +751,9 @@ export default {
         [this.searchTrialStage || 'trial_stage'],
         'terms'
       )
+    },
+    getTrialCourseType(res) {
+      this.setSeachParmas(res, [this.trialCourseType || 'team_category'])
     },
 
     /**  处理接收到的查询参数
@@ -800,4 +822,9 @@ export default {
     margin-bottom: 0px !important;
   }
 }
+.el-select-dropdown.is-multiple .el-select-dropdown__item.selected:after {
+  right: 5px;
+}
 </style>
+
+<style lang="scss" scope></style>

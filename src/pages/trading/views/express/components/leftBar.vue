@@ -174,12 +174,12 @@ difficult
               label: `疑难（${Number(x.difficult)}）`
             },
             {
-              id: '5',
-              label: `退回（${Number(x.has_return)}）`
+              id: '4',
+              label: `退签（${Number(x.signed_failed)}）`
             },
             {
-              id: '4',
-              label: `失败（${Number(x.signed_failed)}）`
+              id: '5',
+              label: `退回（${Number(x.has_return)}）`
             },
             {
               id: '7',

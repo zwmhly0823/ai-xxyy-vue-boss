@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-14 18:28:44
  * @LastEditors: Shentong
- * @LastEditTime: 2020-04-20 16:02:37
+ * @LastEditTime: 2020-04-26 13:43:06
  -->
 <template>
   <div class="app-main height add-schedule-container">
@@ -31,13 +31,13 @@
           <second-step
             v-show="stepStatus == 2"
             :stepStatus="stepStatus"
-            @listenStepStatus="twoStepNext"
+            @listenStepStatus="fSstepStatus"
           ></second-step>
           <!-- 第三步 -->
           <third-step
             v-if="stepStatus == 3"
             :stepStatus="stepStatus"
-            @listenStepStatus="onStepStatus"
+            @listenStepStatus="fSstepStatus"
           ></third-step>
           <!-- 第四步 -->
           <div
@@ -80,36 +80,20 @@ export default {
     SecondStep,
     ThirdStep
   },
-  computed: {},
-  watch: {},
   methods: {
     // 第一步 点击下一步 监听
     oneStepNext(val) {
-      console.log('oneStepNext', val)
       if (val) this.stepStatus++
     },
-    // 第二步 点击下一步 监听
-    twoStepNext(type) {
-      //   this.teacherSelectInfo = val
+    // 第一，二步 点击下一步 监听
+    fSstepStatus(type) {
       if (type) this.stepStatus++
       else this.stepStatus--
     },
-    onStepStatus(type) {
-      if (type) this.stepStatus++
-      else this.stepStatus--
-    },
-    handleChange() {},
-    pageChange_handler() {},
     nextStep() {
       this.stepStatus++
     },
     containerEdit() {
-      // const { period = '', courseType = 0 } = this.$route.params
-      // const period = 13
-      // const courseType = '0'
-      // this.$router.replace({
-      //   path: `/addSchedule/${+period}/${+courseType}`
-      // })
       this.stepStatus = 1
     },
     backList() {
