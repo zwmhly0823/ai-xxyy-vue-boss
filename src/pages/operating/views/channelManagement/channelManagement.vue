@@ -4,16 +4,16 @@
  * @Author: panjian
  * @Date: 2020-04-25 12:09:03
  * @LastEditors: panjian
- * @LastEditTime: 2020-04-26 20:47:45
+ * @LastEditTime: 2020-04-29 10:24:40
  -->
 <template>
   <div>
     <div class="channel-box-top">
       <el-tabs v-model="activeName" @tab-click="handleClick" type="border-card">
         <el-tab-pane label="渠道查询" name="channelQuery">
-          <channel-search />
+          <channel-search :tabIndex="tabIndex" />
         </el-tab-pane>
-        <!-- <el-tab-pane label="渠道信息" name="channleInfo"></el-tab-pane> -->
+        <el-tab-pane label="渠道信息" name="channleInfo"></el-tab-pane>
       </el-tabs>
     </div>
   </div>
@@ -26,11 +26,14 @@ export default {
     channelSearch
   },
   data() {
-    return { activeName: 'channelQuery' }
+    return { tabIndex: '', activeName: 'channelQuery' }
   },
   methods: {
     // tabs 事件
-    handleClick(tab, event) {}
+    handleClick(tab, event) {
+      console.log(tab.index)
+      this.tabIndex = tab.index
+    }
   }
 }
 </script>

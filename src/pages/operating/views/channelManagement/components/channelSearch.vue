@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-04-25 12:09:03
  * @LastEditors: panjian
- * @LastEditTime: 2020-04-28 19:06:21
+ * @LastEditTime: 2020-04-29 10:27:04
  -->
 <template>
   <div class="channel-box">
@@ -219,6 +219,12 @@
 import MPagination from '@/components/MPagination/index.vue'
 import MSearch from '@/components/MSearch/index.vue'
 export default {
+  props: {
+    tabIndex: {
+      type: String,
+      default: ''
+    }
+  },
   components: {
     MPagination,
     MSearch
@@ -280,6 +286,11 @@ export default {
           address: '上海市普陀区金沙江路 1518 弄'
         }
       ]
+    }
+  },
+  watch: {
+    tabIndex(value) {
+      console.log(value, 'watch')
     }
   },
   methods: {
