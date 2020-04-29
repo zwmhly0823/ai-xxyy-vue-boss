@@ -123,7 +123,11 @@
               <el-tab-pane label="完课统计" name="finishClass"> </el-tab-pane>
             </el-tabs>
           </div>
-          <div class="orderStyle" v-if="tableData.length">
+          <!-- 转化统计 table -->
+          <div
+            class="orderStyle"
+            v-if="tableData.length && activeName == 'conversion'"
+          >
             <ele-table
               :dataList="tableData"
               :loading="flags.loading"
@@ -230,6 +234,86 @@
                     <span v-else>--</span>
                   </template></el-table-column
                 >
+              </el-table-column>
+            </ele-table>
+          </div>
+          <!-- 参课统计 table -->
+          <div
+            class="orderStyle"
+            v-if="tableData.length && activeName == 'attendClass'"
+          >
+            <ele-table
+              :dataList="tableData"
+              :loading="flags.loading"
+              :size="tabQuery.size"
+              :page="tabQuery.page"
+              :total="totalElements"
+              @pageChange="pageChange_handler"
+              class="mytable"
+            >
+              <el-table-column
+                fixed
+                label="难度级别"
+                prop="sup"
+                width="70"
+                align="center"
+              ></el-table-column>
+              <el-table-column
+                fixed
+                label="销售组"
+                width="120"
+                align="center"
+                prop="department_name"
+              ></el-table-column>
+              <el-table-column
+                fixed
+                label="社群销售"
+                width="80"
+                align="center"
+                prop="teacher_name"
+              ></el-table-column>
+              <el-table-column
+                fixed
+                label="体验课学生"
+                width="85"
+                prop="student_nums"
+                align="center"
+              ></el-table-column>
+              <el-table-column align="center" label="总计">
+                <el-table-column
+                  fixed
+                  label="总参课人数"
+                  prop="total_join_nums"
+                  align="center"
+                ></el-table-column>
+                <el-table-column
+                  fixed
+                  label="总参课率"
+                  prop="total_join_rate"
+                  align="center"
+                ></el-table-column>
+              </el-table-column>
+              <!-- child-table-start -->
+              <el-table-column
+                align="center"
+                v-for="(a, i) in tableDataChild"
+                :label="a.current_lesson"
+                :key="i"
+              >
+                <el-table-column fixed label="当日参课人数" align="center">
+                  <template slot-scope="scope">
+                    <span>
+                      {{ scope.row.completeArr[i].join_nums }}
+                    </span>
+                  </template>
+                </el-table-column>
+                <el-table-column fixed label="当日参课率" align="center">
+                  <template slot-scope="scope">
+                    <span>
+                      {{ scope.row.completeArr[i].join_rate }}
+                    </span>
+                  </template>
+                </el-table-column>
               </el-table-column>
             </ele-table>
           </div>
@@ -358,18 +442,19 @@ export default {
       this.getChangecListByProid()
     },
     // table列表
-    async getChangecListByProid(tabIndex) {
+    async getChangecListByProid() {
       this.flags.loading = true
       // TODO:
       // this.tabQuery.period = 13
       try {
-        if (tabIndex === '2') {
+        if (this.activeName === 'finishClass') {
           console.log(2)
           let {
             data: { ConversionRateStatistics }
           } = await this.$http.Statistics.getCompeteCourseList(this.tabQuery)
           !ConversionRateStatistics && (ConversionRateStatistics = {})
-        } else if (tabIndex === '1') {
+        } else if (this.activeName === 'attendClass') {
+          // 参课统计tab
           const { period, teacher, department, sup } = this.tabQuery
           const {
             data: { getCompeteCourseList }
@@ -382,6 +467,9 @@ export default {
           })
           // 表格上的统计信息
           this.statisticsInfo = getCompeteCourseList || {}
+          // 总数、分页用
+          this.totalElements = getCompeteCourseList.totalElements || 0
+          this.formatTableData(getCompeteCourseList.completeCourse || [])
         } else {
           let {
             data: { ConversionRateStatistics }
@@ -433,19 +521,104 @@ export default {
       // }
       this.tableData = teacherConversion
     },
+    //  参课统计 数据格式化
+    formatTableData(list) {
+      // list = [
+      //   {
+      //     sup: 'S2',
+      //     teacher_id: '80',
+      //     teacher_name: '周艺达',
+      //     department_id: '19',
+      //     department_name: '3部S2战队',
+      //     student_nums: '95',
+      //     total_nums: '285',
+      //     total_join_nums: '28',
+      //     total_join_rate: '9.82%',
+      //     total_complete_nums: '157',
+      //     total_complete_rate: '55.09%',
+      //     completeArr: [
+      //       {
+      //         current_lesson: 'W1D3',
+      //         sum: '95',
+      //         join_nums: '14',
+      //         join_rate: '14.74%',
+      //         complete_nums: '35',
+      //         complete_rate: '36.84%'
+      //       },
+      //       {
+      //         current_lesson: 'W1D1',
+      //         sum: '95',
+      //         join_nums: '6',
+      //         join_rate: '6.32%',
+      //         complete_nums: '67',
+      //         complete_rate: '70.53%'
+      //       },
+      //       {
+      //         current_lesson: 'W1D2',
+      //         sum: '95',
+      //         join_nums: '8',
+      //         join_rate: '8.42%',
+      //         complete_nums: '55',
+      //         complete_rate: '57.89%'
+      //       }
+      //     ]
+      //   },
+      //   {
+      //     sup: 'S2',
+      //     teacher_id: '79',
+      //     teacher_name: '张晨阳',
+      //     department_id: '19',
+      //     department_name: '3部S2战队',
+      //     student_nums: '94',
+      //     total_nums: '282',
+      //     total_join_nums: '39',
+      //     total_join_rate: '13.83%',
+      //     total_complete_nums: '152',
+      //     total_complete_rate: '53.9%',
+      //     completeArr: [
+      //       {
+      //         current_lesson: 'W1D3',
+      //         sum: '94',
+      //         join_nums: '12',
+      //         join_rate: '12.77%',
+      //         complete_nums: '42',
+      //         complete_rate: '44.68%'
+      //       },
+      //       {
+      //         current_lesson: 'W1D1',
+      //         sum: '94',
+      //         join_nums: '10',
+      //         join_rate: '10.64%',
+      //         complete_nums: '65',
+      //         complete_rate: '69.15%'
+      //       },
+      //       {
+      //         current_lesson: 'W1D2',
+      //         sum: '94',
+      //         join_nums: '17',
+      //         join_rate: '18.09%',
+      //         complete_nums: '45',
+      //         complete_rate: '47.87%'
+      //       }
+      //     ]
+      //   }
+      // ]
+      // 初始化
+      this.tableDataChild = []
+      list.forEach((item, index) => {
+        const completeArr = item.completeArr || []
+        const childLength = completeArr.length
+        if (this.tableDataChild.length <= childLength) {
+          this.tableDataChild = completeArr
+        }
+      })
+      this.tableData = list
+    },
     // 点击tabs页签（转化统计 按钮）
     statisticsTypehandleClick(tab) {
       // console.log(tab.index, 'tab')
       this.tabQuery.page = 1
-      if (tab.index === '2') {
-        console.log(2)
-        this.getChangecListByProid(tab.index)
-      } else if (tab.index === '1') {
-        console.log(1)
-        this.getChangecListByProid(tab.index)
-      } else {
-        this.getChangecListByProid(tab.index)
-      }
+      this.getChangecListByProid()
     },
     // 更多 下拉框
     handleCommand(command) {
