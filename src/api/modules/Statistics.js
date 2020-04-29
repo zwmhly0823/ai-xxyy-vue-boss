@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-07 13:52:26
  * @LastEditors: Shentong
- * @LastEditTime: 2020-04-28 21:50:00
+ * @LastEditTime: 2020-04-29 13:57:29
  */
 import axios from '../axiosConfig'
 
@@ -100,12 +100,13 @@ export default {
       department = '',
       sup = ''
     } = params
-    const query = `{"term": "${period}","departmentId": "${department}", "sup": "${sup}","page":"${page}", "size": "${size}", "teacherIds":"${teacher}"}`
+    const query = `{"term": "${period}","departmentId": "${department}", "sup": "${sup}","teacherIds":"${teacher}"}`
 
     return axios.post('/graphql/v1/toss', {
       query: `{
-        termDepartmentTeacherReportPage(query: ${JSON.stringify(query) ||
-          null}) {
+        termDepartmentTeacherReportPage(page: ${page}, size:${size},query: ${JSON.stringify(
+        query
+      ) || null}) {
           first
           totalPages
           totalElements

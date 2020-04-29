@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-02 15:35:27
  * @LastEditors: Shentong
- * @LastEditTime: 2020-04-28 21:56:24
+ * @LastEditTime: 2020-04-29 15:14:02
  -->
 <template>
   <el-row type="flex" class="app-main height schedule-container">
@@ -97,12 +97,11 @@
               @pageChange="pageChange_handler"
               class="mytable"
             >
-              <el-table-column
-                label="排名"
-                width="60"
-                prop="sup"
-                align="center"
-              ></el-table-column>
+              <el-table-column label="排名" width="60" prop="sup" align="center"
+                ><template slot-scope="scope"
+                  ><span>{{ scope.$index + calcIndex }} </span></template
+                ></el-table-column
+              >
               <el-table-column label="级别" width="50" align="center">
                 <template slot-scope="scope">
                   <span v-if="+scope.row.sup">{{ `S${scope.row.sup}` }}</span>
@@ -117,7 +116,7 @@
               <el-table-column
                 label="社群销售"
                 prop="realname"
-                width="70"
+                width="80"
                 align="center"
               ></el-table-column>
               <el-table-column
@@ -222,6 +221,7 @@
 <script>
 import staticticsSearch from '../../components/staticticsSearch'
 import EleTable from '@/components/Table/EleTable'
+import { formatData } from '@/utils'
 export default {
   props: {
     department: {
@@ -254,13 +254,6 @@ export default {
           label: '已结课'
         }
       ],
-      supStatus: {
-        1: 'S1',
-        2: 'S2',
-        3: 'S3',
-        4: 'S4',
-        5: 'S5'
-      },
       // 默认降序
       conversionStatus: 0,
       amountStatus: 0,
@@ -271,7 +264,9 @@ export default {
       },
       tabQuery: {
         size: 20,
-        page: 1
+        page: 1,
+        rateSort: 'desc',
+        totalSort: 'desc'
       },
       // 总页数
       totalElements: 0,
@@ -285,35 +280,38 @@ export default {
       currentPriodStatistic: {}
     }
   },
-  computed: {},
+  computed: {
+    calcIndex() {
+      return this.tabQuery.size * (this.tabQuery.page - 1) + 1
+    }
+  },
   watch: {},
   activated() {
     this.init()
   },
   methods: {
     onSortConversion() {
+      if (this.tabQuery.rateSort === 'desc') {
+        this.tabQuery.rateSort = 'asc'
+      } else this.tabQuery.rateSort = 'desc'
       this.conversionStatus = !this.conversionStatus
     },
     onSortAmount() {
-      this.amountStatus = !this.amountStatus
+      if (this.tableData.length) {
+        // 添加排序参数TODO:
+        if (this.tabQuery.totalSort === 'desc') {
+          this.tabQuery.totalSort = 'asc'
+        } else this.tabQuery.totalSort = 'desc'
+        debugger
+        this.getStatisticsByProid().then((content) => {
+          if (content.length) this.amountStatus = !this.amountStatus
+        })
+      }
     },
     async init(status = 'on_going') {
       const params = { status }
 
       const proidList = await this.getPriodByStatus(params)
-      proidList.forEach((item, index) => {
-        const now = new Date().getTime()
-        const courseDay = item.course_day || 0
-        let startCourseDay = 0
-        // 当前日期大于开课日期
-        if (+item.course_day && now >= courseDay) {
-          const diffTime = Number(now) - Number(courseDay)
-          startCourseDay = Math.floor(diffTime / (24 * 3600 * 1000)) + 1
-        } else {
-          startCourseDay = 0
-        }
-        item.startCourseDay = startCourseDay
-      })
 
       this.proidList = proidList
 
@@ -331,17 +329,20 @@ export default {
         this.getCountStatisticBySearch()
       }
     },
-    // 通过期数 遍历获取 当前期下的统计
+    // 遍历期数,获取当前期下的统计结果
     getStaByProid(period) {
       const _index = this.proidList.findIndex((item) => item.period === period)
       return this.proidList[_index]
     },
-    // 通过状态获取期数 ‘进行中’、‘已结课’，‘招生中’
+    // 获取期数 ---- 通过状态‘进行中’、‘已结课’，‘招生中’
     async getPriodByStatus(params) {
       try {
         const {
           data: { ManagementStatusList: proidList }
         } = await this.$http.Statistics.getPriodByStatus(params)
+
+        this.calcStartCourseDay(proidList)
+
         return proidList
       } catch (err) {
         console.log(err)
@@ -379,16 +380,18 @@ export default {
         this.totalElements = +totalElements
 
         this.pakageListDate(content)
+
         this.tableData = content
         this.flags.loading = false
+
+        return content
       } catch (err) {
         console.log(err)
         this.flags.loading = false
       }
     },
-    // 包装 接口返回的数据
+    // 包装 table接口返回的数据
     pakageListDate(tableList) {
-      console.log('tableList', tableList)
       tableList.forEach((item, index) => {
         item.addWechatRate = this.calcRate(
           item.added_wechat_count,
@@ -402,10 +405,11 @@ export default {
           item.complete_course_count,
           item.trial_course_count
         )
-        item.uploadTaskRate = this.calcRate(
-          item.task_count,
-          item.trial_course_count
-        )
+        // 人均上传作品
+        const uploadTaskRate = +item.trial_course_count
+          ? +item.task_count / +item.trial_course_count
+          : 0
+        item.uploadTaskRate = uploadTaskRate.toFixed(2)
         item.commentTaskRate = this.calcRate(
           item.task_comment_count,
           item.task_count
@@ -420,6 +424,28 @@ export default {
         )
       })
     },
+    // 计算开课天数
+    calcStartCourseDay(proidList) {
+      proidList.forEach((item, index) => {
+        const now = new Date().getTime()
+        const courseDay = +item.course_day || 0
+        const EndCourseDay = +item.end_course_day
+
+        let startCourseDay = 0
+        // 格式化时间
+        item.course_day = courseDay ? formatData(courseDay) : ''
+        item.end_course_day = EndCourseDay ? formatData(EndCourseDay) : ''
+
+        // 当前日期大于开课日期
+        if (courseDay && now >= courseDay) {
+          const diffTime = Number(now) - Number(courseDay)
+          startCourseDay = Math.floor(diffTime / (24 * 3600 * 1000)) + 1
+        } else {
+          startCourseDay = 0
+        }
+        item.startCourseDay = startCourseDay
+      })
+    },
     // 计算 xx率
     calcRate(num, den) {
       const rate = +den ? ((+num / +den) * 100).toFixed(2) : 0
@@ -432,7 +458,6 @@ export default {
     },
     // 组件emit
     searchChange(search) {
-      // console.log('searchChange', search)
       const { department = [], groupSell = '', sup = [] } = search
       Object.assign(this.tabQuery, {
         teacher: groupSell,
@@ -585,6 +610,7 @@ export default {
       margin-right: 20px;
     }
     .for-light {
+      margin-left: 5px;
       color: #409eff;
     }
   }
