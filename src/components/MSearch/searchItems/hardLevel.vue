@@ -1,5 +1,5 @@
 <!--
- * @Descripttion: 
+ * @Descripttion: 难度级别 S1-S5
  * @version: 
  * @Author: zhubaodong
  * @Date: 2020-03-24 18:50:54
@@ -15,8 +15,7 @@
       v-if="supName"
       size="mini"
       multiple
-      placeholder="难度"
-      :disabled="disableClick"
+      :placeholder="placeholder"
       @change="supChange"
     >
       <el-option
@@ -36,26 +35,13 @@ import { mapState } from 'vuex'
 
 export default {
   props: {
-    stageName: {
+    placeholder: {
       type: String,
-      default: 'stage'
-    },
-    scheduleName: {
-      type: String,
-      default: 'period'
+      default: '难度'
     },
     supName: {
       type: String,
       default: 'sup'
-    },
-    levelName: {
-      type: String,
-      default: 'current_level'
-    },
-    // 是否只返回值，如果是，父组件获得值后根据实际表达式组装数据
-    onlyValue: {
-      type: Boolean,
-      default: false
     },
     addSupS: {
       type: Boolean,
@@ -85,62 +71,14 @@ export default {
     })
   },
   watch: {
-    channelData(val) {
-      console.log(val)
-    },
     addSupS(val) {
       console.log(val)
-    },
-    typeStage(val) {
-      console.log(val, 'state.leftbar.typeStage')
-      this.schedule = []
-      this.getManagementList(val)
     }
   },
   async created() {
-    await this.getStage()
     await this.getSup()
-    await this.getLevel()
-    await this.getManagementList(this.typeStage)
   },
   methods: {
-    // 期数
-    async getStage() {
-      axios
-        .post('/graphql/filter', {
-          query: `{
-              teamStageList{
-                stage
-                stage_text
-              }
-            }
-          `
-        })
-        .then((res) => {
-          this.stageList = res.data.teamStageList
-        })
-    },
-    // 排期
-    async getManagementList() {
-      let typeId = null
-      if (this.typeStage) {
-        typeId = JSON.stringify(`type:"${this.typeStage}"`)
-      }
-      axios
-        .post('/graphql/v1/toss', {
-          query: `{
-               ManagementList(query:${typeId}){
-                    id
-                    period
-                    period_name
-              }
-            }
-          `
-        })
-        .then((res) => {
-          this.scheduleList = res.data.ManagementList
-        })
-    },
     // 难度
     async getSup() {
       axios
@@ -161,34 +99,6 @@ export default {
           )
         })
     },
-    // 级别
-    async getLevel() {
-      axios
-        .post('/graphql/filter', {
-          query: `{
-              courseLevelList{
-                id,
-                name
-              }
-            }
-          `
-        })
-        .then((res) => {
-          this.levelList = res.data.courseLevelList
-        })
-    },
-    stageChange(data) {
-      this.$emit(
-        'stageCallBack',
-        data.length > 0 ? { [this.stageName]: this.stageData } : ''
-      )
-    },
-    scheduleChange(data) {
-      this.$emit(
-        'scheduleCallBack',
-        data.length > 0 ? { [this.scheduleName]: this.schedule } : ''
-      )
-    },
 
     supChange(data) {
       console.log(data, 'ddddaaaa')
@@ -196,12 +106,6 @@ export default {
       this.$emit(
         'supCallBack',
         data.length > 0 ? { [this.supName]: this.supData } : ''
-      )
-    },
-    levelChange(data) {
-      this.$emit(
-        'levelCallBack',
-        data.length > 0 ? { [this.levelName]: this.levelData } : ''
       )
     }
   }
