@@ -596,6 +596,13 @@ export default {
           })
           // 表格上的统计信息
           this.statisticsInfo = getCompeteCourseList || {}
+          // 格式化时间
+          this.statisticsInfo.start_date = this.statisticsInfo.start_date
+            ? formatData(this.statisticsInfo.start_date)
+            : ''
+          this.statisticsInfo.end_date = this.statisticsInfo.end_date
+            ? formatData(this.statisticsInfo.end_date)
+            : ''
           // 总数、分页用
           this.totalElements = getCompeteCourseList.totalElements || 0
           this.formatTableData(getCompeteCourseList.completeCourse || [])
