@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-04-02 15:35:27
  * @LastEditors: Shentong
- * @LastEditTime: 2020-04-28 21:45:47
+ * @LastEditTime: 2020-04-29 17:07:12
  -->
 <template>
   <el-row type="flex" class="app-main height schedule-container">
@@ -160,7 +160,7 @@
                       v-if="
                         Object.keys(scope.row.conversion_rate_daily).length &&
                           scope.row.conversion_rate_daily[i] &&
-                          !scope.row.conversion_rate_daily[i].is_last
+                          !scope.row.conversion_rate_daily[i].is_null
                       "
                     >
                       {{ scope.row.conversion_rate_daily[i].order_number }}
@@ -174,7 +174,7 @@
                       v-if="
                         Object.keys(scope.row.conversion_rate_daily).length &&
                           scope.row.conversion_rate_daily[i] &&
-                          !scope.row.conversion_rate_daily[i].is_last
+                          !scope.row.conversion_rate_daily[i].is_null
                       "
                     >
                       {{ scope.row.conversion_rate_daily[i].conversion }}
@@ -188,7 +188,7 @@
                       v-if="
                         Object.keys(scope.row.conversion_rate_daily).length &&
                           scope.row.conversion_rate_daily[i] &&
-                          !scope.row.conversion_rate_daily[i].is_last
+                          !scope.row.conversion_rate_daily[i].is_null
                       "
                     >
                       {{ scope.row.conversion_rate_daily[i].amount }}
@@ -445,7 +445,7 @@ export default {
   &-right {
     overflow-x: hidden;
     flex: 1;
-    margin: 10px;
+    margin: 0 10px 10px 10px;
   }
   .grid-content {
     background: white;
@@ -460,7 +460,7 @@ export default {
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 60px;
+    height: 50px;
     background: #f0f1f2;
     > div {
       margin-right: 20px;

@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-07 13:52:26
  * @LastEditors: Shentong
- * @LastEditTime: 2020-04-29 13:57:29
+ * @LastEditTime: 2020-04-29 16:52:58
  */
 import axios from '../axiosConfig'
 
@@ -65,7 +65,7 @@ export default {
             conversion_total
             amount_total
             conversion_rate_daily{
-              is_last
+              is_null
               weekday
               order_number
               amount
@@ -75,7 +75,7 @@ export default {
       }}`
     })
   },
-  // 按期汇总模块 接口 通过期数、销售部门、社群销售、难度 条件过滤 数量统计接口
+  // 按期汇总模块接口---->通过期数、销售部门、社群销售、难度 条件过滤 数量统计接口
   getCountStatisticBySearch(params) {
     const { period = '', department = '', sup = '' } = params
     const query = `{"term": "${period}","departmentId": "${department}", "sup": "${sup}"}`
@@ -90,23 +90,25 @@ export default {
       }}`
     })
   },
-  // 按期汇总模块 接口，获取list
+  // 按期汇总模块接口---->获取table_list
   getStatisticsByProid(params) {
     const {
       period = '',
       page = 1,
       size = '20',
       teacher = '',
+      totalSort = 'desc',
       department = '',
       sup = ''
     } = params
+    const _totalSort = `{"system_order_total_amount":"${totalSort}"}`
     const query = `{"term": "${period}","departmentId": "${department}", "sup": "${sup}","teacherIds":"${teacher}"}`
 
     return axios.post('/graphql/v1/toss', {
       query: `{
         termDepartmentTeacherReportPage(page: ${page}, size:${size},query: ${JSON.stringify(
         query
-      ) || null}) {
+      ) || null}, sort: ${JSON.stringify(_totalSort)}) {
           first
           totalPages
           totalElements

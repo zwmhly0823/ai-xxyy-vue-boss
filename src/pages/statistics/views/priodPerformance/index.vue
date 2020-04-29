@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-02 15:35:27
  * @LastEditors: Shentong
- * @LastEditTime: 2020-04-29 15:14:02
+ * @LastEditTime: 2020-04-29 17:10:04
  -->
 <template>
   <el-row type="flex" class="app-main height schedule-container">
@@ -99,8 +99,11 @@
             >
               <el-table-column label="排名" width="60" prop="sup" align="center"
                 ><template slot-scope="scope"
-                  ><span>{{ scope.$index + calcIndex }} </span></template
-                ></el-table-column
+                  ><span v-if="tabQuery.totalSort === 'desc'"
+                    >{{ scope.$index + calcIndex }}
+                  </span>
+                  <span v-else>{{ scope.$index - calcIndex }}</span>
+                </template></el-table-column
               >
               <el-table-column label="级别" width="50" align="center">
                 <template slot-scope="scope">
@@ -302,7 +305,6 @@ export default {
         if (this.tabQuery.totalSort === 'desc') {
           this.tabQuery.totalSort = 'asc'
         } else this.tabQuery.totalSort = 'desc'
-        debugger
         this.getStatisticsByProid().then((content) => {
           if (content.length) this.amountStatus = !this.amountStatus
         })
@@ -367,6 +369,8 @@ export default {
     },
     // table列表
     async getStatisticsByProid() {
+      // TODO:
+      this.tabQuery.period = 10
       this.flags.loading = true
       try {
         let {
@@ -544,7 +548,7 @@ export default {
   &-right {
     overflow-x: hidden;
     flex: 1;
-    margin: 10px;
+    margin: 0 10px 10px 10px;
   }
   .grid-content {
     background: white;
@@ -559,7 +563,7 @@ export default {
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 60px;
+    height: 50px;
     background: #f0f1f2;
     > div {
       margin-right: 20px;
