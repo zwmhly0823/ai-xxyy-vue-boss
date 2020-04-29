@@ -9,7 +9,7 @@
 <template>
   <div class="search-item small threeSelect">
     <el-cascader
-      placeholder="订单来源"
+      :placeholder="placeholder"
       size="mini"
       @change="onSelect"
       :options="showDatas"
@@ -20,8 +20,9 @@
         emitPath: false,
         checkStrictly: false
       }"
-      :show-all-levels="false"
+      :show-all-levels="true"
       clearable
+      filterable
     ></el-cascader>
   </div>
 </template>
@@ -33,6 +34,10 @@ export default {
     name: {
       type: String,
       default: 'channelid'
+    },
+    placeholder: {
+      type: String,
+      default: '订单来源'
     },
     // 是否只返回值，如果是，父组件获得值后根据实际表达式组装数据
     onlyValue: {
@@ -58,9 +63,9 @@ export default {
     // 获取渠道来源 filter: 过滤关键词  eg：filter:"抖音"
     async getChannel() {
       await axios
-        .post('/graphql/v1/toss', {
+        .post('/graphql/channel', {
           query: `{
-            ChannelList(size: 500) {
+            channelAllList(size: 500) {
                 id
                 channel_class_id
                 channel_outer_name
@@ -69,7 +74,7 @@ export default {
           `
         })
         .then((res) => {
-          this.channelList = res.data.ChannelList
+          this.channelList = res.data.channelAllList
         })
     },
     // 获取渠道来源分类 filter: 过滤关键词  eg：filter:"抖音"
@@ -166,6 +171,15 @@ export default {
     white-space: nowrap !important;
     overflow: hidden !important;
     text-overflow: ellipsis !important;
+  }
+  .el-cascader--mini {
+    height: 28px;
+    .el-input--mini {
+      height: inherit;
+      .el-input__inner {
+        height: 28px !important;
+      }
+    }
   }
 }
 

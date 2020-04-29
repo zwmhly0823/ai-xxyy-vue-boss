@@ -1,14 +1,14 @@
 <!--
  * @Descripttion:
  * @version:
- * @Author: huzhifu
- * @Date: 2020-04-25 13:04:27
+ * @Author: zhubaodong
+ * @Date: 2020-04-02 15:35:27
  * @LastEditors: Shentong
- * @LastEditTime: 2020-04-26 17:19:33
+ * @LastEditTime: 2020-04-26 14:30:54
  -->
 <template>
-  <el-row type="flex" class="app-main height process-container">
-    <el-col class="process-container-right">
+  <el-row type="flex" class="app-main height schedule-container">
+    <el-col class="schedule-container-right">
       <div class="grid-content">
         <el-scrollbar wrap-class="scrollbar-wrapper">
           <div class="top-tabs">
@@ -60,27 +60,14 @@
             开课日期：<span class="label-val">4月6日</span> 结课日期：
             <span class="label-val">4月20日</span>开课天数
             <span class="label-val">11天</span>
-            <span class="label-val">当前结果:</span>
-            <template v-if="activeName == 'conversion'">
-              <span>总订单数:</span>
-              <span class="label-val green">600</span>
-              <span>总转化率:</span>
-              <span class="label-val green">60%</span>
-              <span>总金额:</span>
-              <span class="label-val green">9695</span>
-            </template>
-            <template v-else>
-              <span>本期总{{ despMap[activeName] }}人数:</span>
-              <span class="label-val green">600</span>
-              <span>本期总{{ despMap[activeName] }}率:</span>
-              <span class="label-val green">60%</span>
-              <span>本日总{{ despMap[activeName] }}人数:</span>
-              <span class="label-val green">50</span>
-              <span>本日总{{ despMap[activeName] }}率:</span>
-              <span class="label-val green">30%</span>
-            </template>
+            <span>当前结果: 总订单数:</span>
+            <span>600</span>
+            <span>总转化率:</span>
+            <span>60%</span>
+            <span>总金额:</span>
+            <span>9599999988</span>
           </p>
-          <div class="summary-tabs">
+          <div>
             <el-tabs v-model="activeName" @tab-click="handleClick">
               <el-tab-pane label="转化统计" name="conversion"> </el-tab-pane>
               <el-tab-pane label="参课统计" name="attendClass"> </el-tab-pane
@@ -97,7 +84,7 @@
               @pageChange="pageChange_handler"
               class="mytable"
             >
-              <!-- <el-table-column
+              <el-table-column
                 fixed
                 label="难度级别"
                 width="80"
@@ -137,7 +124,7 @@
                     <span>{{ scope.$index }}</span>
                   </template>
                 </el-table-column>
-              </el-table-column> -->
+              </el-table-column>
             </ele-table>
           </div>
         </el-scrollbar>
@@ -164,11 +151,6 @@ export default {
   },
   data() {
     return {
-      despMap: {
-        conversion: '转化',
-        attendClass: '参课',
-        finishClass: '完课'
-      },
       // tabs标签默认状态
       selectName: '更多',
       activeName: 'conversion',
@@ -177,7 +159,7 @@ export default {
       query: '',
       tabIndex: 0,
       btnIndex: 0,
-      btnTabs: ['进行中', '招生中', '已结课'],
+      btnTabs: ['进行中', '已结课', '招生中'],
       priodTabs: [],
       priodTabsEnd: [],
       totalElements: 0,
@@ -185,11 +167,11 @@ export default {
         loading: false
       },
       tabQuery: {
-        size: 1,
+        size: 9,
         page: 1
       },
       // 总页数
-      totalPages: 10,
+      totalPages: 1,
       // 当前页数
       currentPage: 1,
       // 多选选择项
@@ -198,183 +180,54 @@ export default {
       tableData: [],
       tableDatasss: [
         {
-          label: '总计',
-          children: [
-            { label: '订单数' },
-            { label: '转化率' },
-            { label: '总金额' }
-          ]
+          label: '商务文件评分',
+          children: [{ label: '1' }, { label: '2' }, { label: '管理员' }]
         },
         {
-          label: 'W1D1',
-          children: [
-            { label: '订单数' },
-            { label: '转化率' },
-            { label: '总金额' }
-          ]
+          label: '商务文件评分1',
+          children: [{ label: '11' }, { label: '22' }, { label: '管理员1' }]
         },
         {
-          label: 'W1D2',
-          children: [
-            { label: '订单数' },
-            { label: '转化率' },
-            { label: '总金额' }
-          ]
+          label: '商务文件评分2',
+          children: [{ label: '11' }, { label: '22' }, { label: '管理员1' }]
         },
         {
-          label: 'W1D3',
-          children: [
-            { label: '订单数' },
-            { label: '转化率' },
-            { label: '总金额' }
-          ]
+          label: '商务文件评分3',
+          children: [{ label: '11' }, { label: '22' }, { label: '管理员1' }]
         },
         {
-          label: 'W1D4',
-          children: [
-            { label: '订单数' },
-            { label: '转化率' },
-            { label: '总金额' }
-          ]
+          label: '商务文件评分4',
+          children: [{ label: '11' }, { label: '22' }, { label: '管理员1' }]
         },
         {
-          label: 'W1D5',
-          children: [
-            { label: '订单数' },
-            { label: '转化率' },
-            { label: '总金额' }
-          ]
+          label: '商务文件评分5',
+          children: [{ label: '11' }, { label: '22' }, { label: '管理员1' }]
+        },
+        {
+          label: '商务文件评分6',
+          children: [{ label: '11' }, { label: '22' }, { label: '管理员1' }]
+        },
+        {
+          label: '商务文件评分7',
+          children: [{ label: '11' }, { label: '22' }, { label: '管理员1' }]
+        },
+        {
+          label: '商务文件评分8',
+          children: [{ label: '11' }, { label: '22' }, { label: '管理员1' }]
+        },
+        {
+          label: '商务文件评分9',
+          children: [{ label: '11' }, { label: '22' }, { label: '管理员1' }]
+        },
+        {
+          label: '商务文件评分10',
+          children: [{ label: '11' }, { label: '22' }, { label: '管理员1' }]
         }
       ]
     }
   },
   computed: {},
-  watch: {
-    activeName(val, oldVal) {
-      if (val === 'attendClass') {
-        this.tableDatasss = [
-          {
-            label: '总计',
-            children: [{ label: '总参课人数' }, { label: '总参课率' }]
-          },
-          {
-            label: 'W1D1',
-            children: [{ label: '当日参课人数' }, { label: '当日参课率' }]
-          },
-          {
-            label: 'W1D2',
-            children: [{ label: '当日参课人数' }, { label: '当日参课率' }]
-          },
-          {
-            label: 'W1D3',
-            children: [{ label: '当日参课人数' }, { label: '当日参课率' }]
-          },
-          {
-            label: 'W1D4',
-            children: [{ label: '当日参课人数' }, { label: '当日参课率' }]
-          },
-          {
-            label: 'W1D5',
-            children: [{ label: '当日参课人数' }, { label: '当日参课率' }]
-          },
-          {
-            label: 'W1D6',
-            children: [{ label: '当日参课人数' }, { label: '当日参课率' }]
-          },
-          {
-            label: 'W1D7',
-            children: [{ label: '当日参课人数' }, { label: '当日参课率' }]
-          }
-        ]
-      } else if (val === 'finishClass') {
-        this.tableDatasss = [
-          {
-            label: '总计',
-            children: [{ label: '总完课人数' }, { label: '总完课率' }]
-          },
-          {
-            label: 'W1D1',
-            children: [{ label: '当日完课人数' }, { label: '当日完课率' }]
-          },
-          {
-            label: 'W1D2',
-            children: [{ label: '当日完课人数' }, { label: '当日完课率' }]
-          },
-          {
-            label: 'W1D3',
-            children: [{ label: '当日完课人数' }, { label: '当日完课率' }]
-          },
-          {
-            label: 'W1D4',
-            children: [{ label: '当日完课人数' }, { label: '当日完课率' }]
-          },
-          {
-            label: 'W1D5',
-            children: [{ label: '当日完课人数' }, { label: '当日完课率' }]
-          },
-          {
-            label: 'W1D6',
-            children: [{ label: '当日完课人数' }, { label: '当日完课率' }]
-          },
-          {
-            label: 'W1D7',
-            children: [{ label: '当日完课人数' }, { label: '当日完课率' }]
-          }
-        ]
-      } else if (val === 'conversion') {
-        this.tableDatasss = [
-          {
-            label: '总计',
-            children: [
-              { label: '订单数' },
-              { label: '转化率' },
-              { label: '总金额' }
-            ]
-          },
-          {
-            label: 'W1D1',
-            children: [
-              { label: '订单数' },
-              { label: '转化率' },
-              { label: '总金额' }
-            ]
-          },
-          {
-            label: 'W1D2',
-            children: [
-              { label: '订单数' },
-              { label: '转化率' },
-              { label: '总金额' }
-            ]
-          },
-          {
-            label: 'W1D3',
-            children: [
-              { label: '订单数' },
-              { label: '转化率' },
-              { label: '总金额' }
-            ]
-          },
-          {
-            label: 'W1D4',
-            children: [
-              { label: '订单数' },
-              { label: '转化率' },
-              { label: '总金额' }
-            ]
-          },
-          {
-            label: 'W1D5',
-            children: [
-              { label: '订单数' },
-              { label: '转化率' },
-              { label: '总金额' }
-            ]
-          }
-        ]
-      }
-    }
-  },
+  watch: {},
   async activated() {
     this.tabsPriodTabs()
     // await this.getCourseListByType()
@@ -501,7 +354,7 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.process-container {
+.schedule-container {
   &-left {
     padding-left: 0px;
     width: 220px;
@@ -574,19 +427,12 @@ export default {
     color: #333;
     min-width: 800px;
     .label-val {
-      margin-right: 16px;
-      &.green {
-        color: #409eff;
-        margin-left: 10px;
-      }
+      margin-right: 20px;
     }
-  }
-  .summary-tabs {
-    margin-left: 20px;
   }
   .sear-container {
     display: flex;
-    margin: 20px;
+    margin: 10px;
     align-items: center;
     .el-card {
       border: 0;

@@ -10,20 +10,52 @@
   <el-scrollbar wrap-class="order-wrapper" id="order-scroll">
     <!-- topicType="topic_id" -->
     <div class="order-box">
-      <m-search
+      <!-- <m-search
         @search="handleSearch"
         channel="pay_channel"
         sup="sup"
         date="ctime"
         date-placeholder="下单时间"
         phone="uid"
-        schedule="stage"
+        :search-stage="activeTopic === '5' ? 'stage' : ''"
+        search-trial-stage="trial_stage"
         department="pay_teacher_id"
         groupSell="pay_teacher_id"
         :search-team-name="activeTopic === '5' ? 'last_team_id' : ''"
         :search-trial-team-name="activeTopic === '5' ? 'uid' : 'last_team_id'"
-        :order-type="activeTopic === '5' ? 'regtype' : ''"
+      /> -->
+      <m-search
+        v-if="activeTopic === '5' && showSearch"
+        @search="handleSearch"
+        channel="pay_channel"
+        sup="sup"
+        date="ctime"
+        date-placeholder="下单时间"
+        phone="uid"
+        search-stage="stage"
+        search-trial-stage="trial_stage"
+        department="pay_teacher_id"
+        groupSell="pay_teacher_id"
+        search-team-name="last_team_id"
+        search-trial-team-name="uid"
+        sup-placeholder="系统课难度"
       />
+      <!-- 体验课 -->
+      <m-search
+        v-if="activeTopic === '4' && showSearch"
+        @search="handleSearch"
+        channel="pay_channel"
+        sup="sup"
+        date="ctime"
+        date-placeholder="下单时间"
+        phone="uid"
+        search-trial-stage="trial_stage"
+        department="last_teacher_id"
+        groupSell="last_teacher_id"
+        search-trial-team-name="last_team_id"
+        sup-placeholder="体验课难度"
+      />
+      <!-- TODO:体验课类型 trial-course-type="team_category" -->
       <!-- system-course-type="system-course-type" TODO -->
 
       <!-- tab - regtype -->
@@ -62,8 +94,8 @@
         >
           <el-table-column label="用户信息"></el-table-column>
           <el-table-column label="商品信息"></el-table-column>
-          <el-table-column label="订单类型" v-if="activeTopic === '5'">
-          </el-table-column>
+          <!-- <el-table-column label="体验课类型" v-if="activeTopic === '4'">
+          </el-table-column> -->
           <el-table-column
             label="订单来源"
             v-if="activeTopic === '4' || activeTopic === '5'"
@@ -103,6 +135,7 @@
 </template>
 
 <script>
+import _ from 'lodash'
 import allOrder from './components/allOrder'
 import MSearch from '@/components/MSearch/index.vue'
 export default {
@@ -122,7 +155,8 @@ export default {
       // 切换tab
       // tab: '4',
       // 搜索
-      search: []
+      search: [],
+      showSearch: true
     }
   },
   computed: {},
@@ -134,11 +168,46 @@ export default {
         .getElementById('order-scroll')
         .querySelector('.order-wrapper').scrollTop = 0
       this.activeTopic = tab.name
+      this.search = []
+      // 子组件重新渲染
+      this.showSearch = false
+      this.$nextTick(() => {
+        this.showSearch = true
+      })
     },
     // 点击搜索
     handleSearch(res) {
       console.log(res, 'search')
-      this.search = res
+      // 体验课排期和系统课排期
+      const stage = []
+      const arr = []
+      const search = _.cloneDeep(res)
+
+      search.forEach((ele, index) => {
+        if (ele.terms) {
+          if (ele.terms.system_stage) {
+            stage.push(...ele.terms.system_stage)
+          }
+          if (ele.terms.trial_stage) {
+            stage.push(...ele.terms.trial_stage)
+          }
+          if (
+            ele.terms &&
+            !ele.terms.system_stage &&
+            ele.terms &&
+            !ele.terms.trial_stage
+          ) {
+            arr.push(ele)
+          }
+          if (Object.keys(ele.terms).length === 0) search.splice(index, 1)
+        } else {
+          arr.push(ele)
+        }
+      })
+      stage.length > 0 && arr.push({ terms: { stage } })
+      console.log(arr, 'arr...........')
+
+      this.search = arr
     },
     // 吸顶
     handleScroll() {
