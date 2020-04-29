@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 20:22:24
  * @LastEditors: panjian
- * @LastEditTime: 2020-04-21 11:13:01
+ * @LastEditTime: 2020-04-24 10:29:24
  -->
 <template>
   <div>
@@ -15,7 +15,6 @@
         width="300"
         trigger="click"
       >
-        <!-- <el-button slot="reference">筛选</el-button> -->
         <el-button
           class="screen-text"
           slot="reference"
@@ -76,19 +75,6 @@
           >
           </el-option>
         </el-select>
-        <!-- <el-checkbox-group
-          class="check-states-box"
-          v-model="attendClassStatus"
-          @change="attendClassChangeStatus"
-        >
-          <el-checkbox
-            class="check-states"
-            v-for="state in states"
-            :label="state.value"
-            :key="state.label"
-            >{{ state.label }}</el-checkbox
-          >
-        </el-checkbox-group> -->
         <p>参课情况</p>
         <el-select
           @change="friendsChange"
@@ -103,17 +89,6 @@
           >
           </el-option>
         </el-select>
-        <!-- <el-checkbox-group
-          v-model="attendClassGinseng"
-          @change="attendClassChangeGinseng"
-        >
-          <el-checkbox
-            v-for="friend in friends"
-            :label="friend.value"
-            :key="friend.label"
-            >{{ friend.label }}</el-checkbox
-          >
-        </el-checkbox-group> -->
         <p>完课情况</p>
         <el-select
           :disabled="groupsDisabled"
@@ -128,18 +103,6 @@
           >
           </el-option>
         </el-select>
-
-        <!-- <el-checkbox-group
-          v-model="attendClassFinish"
-          @change="attendClassChangeFinish"
-        >
-          <el-checkbox
-            v-for="group in groups"
-            :label="group.value"
-            :key="group.label"
-            >{{ group.label }}</el-checkbox
-          >
-        </el-checkbox-group> -->
         <div class="check-button">
           <el-button
             style="border: none;"
@@ -171,8 +134,6 @@
         width="300"
         trigger="click"
       >
-        <!-- <el-button slot="reference">筛选</el-button> -->
-
         <el-button
           class="screen-text"
           slot="reference"
@@ -238,20 +199,6 @@
           >
           </el-option>
         </el-select>
-
-        <!-- <el-checkbox-group
-          class="check-states-box"
-          v-model="emptyWorksUpload"
-          @change="worksChangeStatus"
-        >
-          <el-checkbox
-            class="check-states"
-            v-for="upload in uploads"
-            :label="upload.value"
-            :key="upload.label"
-            >{{ upload.label }}</el-checkbox
-          >
-        </el-checkbox-group> -->
         <p>作品点评</p>
 
         <el-select
@@ -268,17 +215,6 @@
           >
           </el-option>
         </el-select>
-        <!-- <el-checkbox-group
-          v-model="emptyWorksComment"
-          @change="worksChangeAttend"
-        >
-          <el-checkbox
-            v-for="comment in comments"
-            :label="comment.value"
-            :key="comment.label"
-            >{{ comment.label }}</el-checkbox
-          >
-        </el-checkbox-group> -->
         <p>听作品点评</p>
         <el-select
           :disabled="hearWorkssDisabled"
@@ -293,14 +229,6 @@
           >
           </el-option>
         </el-select>
-        <!-- <el-checkbox-group v-model="emptyWorksHear" @change="worksChangeFinish">
-          <el-checkbox
-            v-for="hearWorks in hearWorkss"
-            :label="hearWorks.value"
-            :key="hearWorks.label"
-            >{{ hearWorks.label }}</el-checkbox
-          >
-        </el-checkbox-group> -->
         <div class="check-button">
           <el-button style="border: none;" @click="worksEmpty" size="small"
             >清空</el-button
@@ -469,9 +397,7 @@ export default {
       this.attendClassSelect = ''
     }
   },
-  created() {
-    console.log(this.audioTabs, 'this.value.tabs')
-  },
+  created() {},
   methods: {
     // 参课完课 作品及点评 筛选下拉框接口
     remoteMethod() {
@@ -507,13 +433,6 @@ export default {
       const userStatus = this.attendClassStatus
       const isJoinCourse = this.attendClassGinseng.toString()
       const isCompleteCourse = this.attendClassFinish.toString()
-      console.log(
-        courseId,
-        userStatus,
-        isJoinCourse,
-        isCompleteCourse,
-        '参课完课数据'
-      )
       const data = {
         courseId: courseId,
         userStatus: userStatus,
@@ -533,7 +452,6 @@ export default {
       const isListen = this.emptyWorksHear.toString()
       // 选择课程
       const courseId = this.worksSelect.toString()
-      console.log(isTask, isComment, isListen, courseId, '作品及点评数据')
       const data = {
         courseId: courseId,
         isTask: isTask,
@@ -543,10 +461,6 @@ export default {
       this.$emit('screenWorks', data)
       this.worksShow = false
     },
-    // 参课完课 状态
-    // attendClassChangeStatus(value) {
-    //   this.attendClassStatus = value
-    // },
     // 参课完课 参课情况
     friendsChange(value) {
       if (value === '0') {
@@ -556,13 +470,6 @@ export default {
         this.groupsDisabled = false
       }
     },
-    // attendClassChangeGinseng(value) {
-    //   this.attendClassGinseng = value
-    // },
-    // 参课完课 完课情况
-    // attendClassChangeFinish(value) {
-    //   this.attendClassFinish = value
-    // },
     // 参课完课 点击清空
     attendClassEmpty() {
       this.groupsDisabled = true
@@ -594,12 +501,8 @@ export default {
         this.commentsDisabled = false
       }
     },
-    // worksChangeStatus(value) {
-    //   this.emptyWorksUpload = value
-    // },
     // 作品及点评 作品点评
     commentsChange(value) {
-      console.log(value)
       if (value === '0') {
         this.hearWorkssDisabled = true
         this.emptyWorksHear = ''
@@ -607,14 +510,6 @@ export default {
         this.hearWorkssDisabled = false
       }
     },
-    // worksChangeAttend(value) {
-    //   this.emptyWorksComment = value
-    // },
-    // 作品及点评 听作品点评
-    // worksChangeFinish(value) {
-    //   this.emptyWorksHear = value
-    // },
-
     // 作品及点评 点击清空
     worksEmpty() {
       this.hearWorkssDisabled = true
