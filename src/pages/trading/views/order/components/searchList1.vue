@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-04-25 17:24:23
  * @LastEditors: liukun
- * @LastEditTime: 2020-04-29 10:44:15
+ * @LastEditTime: 2020-04-29 12:07:26
  -->
 <template>
   <el-card border="false" shadow="never" :class="$style.elard">
@@ -34,7 +34,7 @@
       <br />
       <el-form-item label="体验课:" :class="{ [$style.marginer]: true }">
         <div class="row_colum">
-          <department placeholder="全部销售组" />
+          <department placeholder="全部销售组" @result="getDepartment" />
           <group-sell
             @result="selectSellTeacher"
             :name="groupSell"
@@ -44,8 +44,14 @@
             class="margin_l10"
             placeholder="全部体验课排期"
             type="0"
+            @result="selectSchedule"
           />
-          <hardLevel :class="['margin_l10']" style="width:140px" />
+          <hardLevel
+            :class="['margin_l10']"
+            placeholder="体验课难度"
+            style="width:140px"
+            @result="supCallBack"
+          />
           <search-team-name
             teamnameType="0"
             @result="getTeamName"
@@ -57,15 +63,24 @@
       <br />
       <el-form-item label="系统课:" :class="{ [$style.marginer]: true }">
         <div class="row_colum">
-          <systemCourseType style="width:140px" />
+          <systemCourseType style="width:140px" @result="getSystemCourseType" />
           <group-sell
             @result="selectSellTeacher"
             :name="groupSell"
             class="margin_l10"
             tip="服务老师"
           />
-          <search-stage class="margin_l10" placeholder="全部系统课排期" />
-          <hardLevel :class="['margin_l10']" style="width:140px" />
+          <search-stage
+            class="margin_l10"
+            @result="selectSchedule"
+            placeholder="全部系统课排期"
+          />
+          <hardLevel
+            :class="['margin_l10']"
+            placeholder="系统课难度"
+            style="width:140px"
+            @result="supCallBack"
+          />
           <search-trial-team-name
             :teamnameType="'1'"
             @result="getTrialTeamName"
@@ -348,11 +363,17 @@ export default {
         new Date(new Date().toLocaleDateString()).getTime() -
         reverseDays * 86400000
       const end = new Date().getTime()
-      console.info(start, end)
       this.$root.$emit('fourpoint', [start, end])
       this.setSeachParmas([start, end], [this.date || 'octime'], 'range')
     },
-    thismonth() {},
+    thismonth() {
+      const date = new Date()
+      date.setDate(1)
+      const end = new Date().getTime()
+      const start = new Date(new Date(date).toLocaleDateString()).getTime()
+      this.$root.$emit('fourpoint', [start, end])
+      this.setSeachParmas([start, end], [this.date || 'octime'], 'range')
+    },
     // 选择手机号
     getPhoneHander(res) {
       console.log(res, '回调res') // 得到uid
