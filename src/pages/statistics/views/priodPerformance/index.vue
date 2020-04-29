@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-02 15:35:27
  * @LastEditors: Shentong
- * @LastEditTime: 2020-04-29 22:10:28
+ * @LastEditTime: 2020-04-29 22:45:48
  -->
 <template>
   <el-row type="flex" class="app-main height schedule-container">
@@ -199,6 +199,7 @@
                 label="支付总金额"
                 prop="system_order_total_amount"
                 align="center"
+                width="100"
               >
                 <template slot="header">
                   <div @click="onSortAmount" class="sort-operate-box">
