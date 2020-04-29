@@ -135,10 +135,10 @@
           <!-- 完课统计列表 -->
           <div
             class="orderStyle"
-            v-if="tableData.length && activeName === 'finishClass'"
+            v-if="tableDataAttend.length && activeName === 'finishClass'"
           >
             <ele-table
-              :dataList="tableData"
+              :dataList="tableDataAttend"
               :loading="flags.loading"
               :size="tabQuery.size"
               :page="tabQuery.page"
@@ -191,7 +191,7 @@
               <!-- child-table-start -->
               <el-table-column
                 align="center"
-                v-for="(a, i) in tableDataChild"
+                v-for="(a, i) in tableDataChildAttend"
                 :label="a.current_lesson"
                 :key="i"
               >
@@ -564,7 +564,7 @@ export default {
         if (this.activeName === 'finishClass') {
           // 完课统计
           const { period, teacher, department, sup } = this.tabQuery
-          let {
+          const {
             data: { getCompeteCourseList }
           } = await this.$http.Statistics.getCompeteCourseList({
             ...this.tabQuery,
@@ -573,12 +573,18 @@ export default {
             department_ids: department,
             sups: sup
           })
-          !getCompeteCourseList && (getCompeteCourseList = {})
-          // 总数、分页用
-          this.totalElements = getCompeteCourseList.totalElements || 0
           // 表格上的统计信息
           this.statisticsInfo = getCompeteCourseList || {}
-          this.pakageListDate(getCompeteCourseList)
+          // 格式化时间
+          this.statisticsInfo.start_date = this.statisticsInfo.start_date
+            ? formatData(this.statisticsInfo.start_date)
+            : ''
+          this.statisticsInfo.end_date = this.statisticsInfo.end_date
+            ? formatData(this.statisticsInfo.end_date)
+            : ''
+          // 总数、分页用
+          this.totalElements = getCompeteCourseList.totalElements || 0
+          this.formatTableData(getCompeteCourseList.completeCourse || [])
         } else if (this.activeName === 'attendClass') {
           // 参课统计tab
           const { period, teacher, department, sup } = this.tabQuery
