@@ -192,7 +192,7 @@
               <el-table-column
                 align="center"
                 v-for="(a, i) in tableDataChild"
-                :label="a.weekday"
+                :label="a.current_lesson"
                 :key="i"
               >
                 <el-table-column fixed label="当日完课人数" align="center">
@@ -341,10 +341,10 @@
           <!-- 参课统计 table -->
           <div
             class="orderStyle"
-            v-if="tableData.length && activeName == 'attendClass'"
+            v-if="tableDataAttend.length && activeName == 'attendClass'"
           >
             <ele-table
-              :dataList="tableData"
+              :dataList="tableDataAttend"
               :loading="flags.loading"
               :size="tabQuery.size"
               :page="tabQuery.page"
@@ -394,23 +394,34 @@
                   align="center"
                 ></el-table-column>
               </el-table-column>
-              <!-- child-table-start -->
               <el-table-column
                 align="center"
-                v-for="(a, i) in tableDataChild"
+                v-for="(a, i) in tableDataChildAttend"
                 :label="a.current_lesson"
                 :key="i"
               >
                 <el-table-column fixed label="当日参课人数" align="center">
                   <template slot-scope="scope">
-                    <span>
+                    <span
+                      v-if="
+                        Object.keys(scope.row.completeArr).length &&
+                          scope.row.completeArr[i] &&
+                          !scope.row.completeArr[i].is_null
+                      "
+                    >
                       {{ scope.row.completeArr[i].join_nums }}
                     </span>
                   </template>
                 </el-table-column>
                 <el-table-column fixed label="当日参课率" align="center">
                   <template slot-scope="scope">
-                    <span>
+                    <span
+                      v-if="
+                        Object.keys(scope.row.completeArr).length &&
+                          scope.row.completeArr[i] &&
+                          !scope.row.completeArr[i].is_null
+                      "
+                    >
                       {{ scope.row.completeArr[i].join_rate }}
                     </span>
                   </template>
@@ -493,7 +504,9 @@ export default {
       // 表格数据
       statisticsInfo: {},
       tableData: [],
-      tableDataChild: []
+      tableDataAttend: [],
+      tableDataChild: [],
+      tableDataChildAttend: []
     }
   },
   computed: {},
@@ -724,15 +737,15 @@ export default {
       //   }
       // ]
       // 初始化
-      this.tableDataChild = []
+      this.tableDataChildAttend = []
       list.forEach((item, index) => {
         const completeArr = item.completeArr || []
         const childLength = completeArr.length
-        if (this.tableDataChild.length <= childLength) {
-          this.tableDataChild = completeArr
+        if (this.tableDataChildAttend.length <= childLength) {
+          this.tableDataChildAttend = completeArr
         }
       })
-      this.tableData = list
+      this.tableDataAttend = list
     },
     // 点击tabs页签（转化统计 按钮）
     statisticsTypehandleClick(tab) {
