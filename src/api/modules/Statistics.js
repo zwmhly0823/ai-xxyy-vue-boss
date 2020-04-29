@@ -131,6 +131,7 @@ export default {
       }}`
     })
   },
+  // 完课统计接口
   getCompeteCourseList(params) {
     const {
       term = 13,
@@ -145,12 +146,34 @@ export default {
     const query = `{"term": "${term}", "department_ids": "${department_ids}","department": "${department}", "sups": "${sups}","page":"${page}", "size": "${size}", "teacher_ids":"${teacher_ids}"}`
     return axios.post('/graphql/getDepartmentCourse', {
       query: `{
-        getCompeteCourseList(query: ${JSON.stringify(query) || null}){
+        getCompeteCourseList(query: ${JSON.stringify(query) || null}) {
+          start_date
+          end_date
+          course_days
+          join_nums
+          join_rate
+          now_join_nums
+          now_join_rate
+          totalElements
+          complete_nums
+          complete_rate
+          now_complete_nums
+          now_complete_rate
           completeCourse{
-            id
+            sup
+            department_name
+            teacher_name
+            student_nums
+            total_complete_nums
+            total_complete_rate
+            completeArr{
+              current_lesson
+              sum
+              complete_nums
+              complete_rate
+            }
           }
-        }
-      }`
+      }}`
     })
   }
 }

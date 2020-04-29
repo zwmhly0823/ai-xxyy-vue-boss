@@ -101,15 +101,24 @@
                 statisticsInfo.now_join_rate || '-'
               }}</span>
             </template>
+            <!-- 完课统计数据统计 -->
             <template v-else-if="activeName == 'finishClass'">
               <span>本期总{{ despMap[activeName] }}人数：</span>
-              <span class="label-val for-light"> </span>
+              <span class="label-val for-light"
+                >{{ statisticsInfo.complete_nums || '-' }}
+              </span>
               <span>本期总{{ despMap[activeName] }}率：</span>
-              <span class="label-val for-light"></span>
+              <span class="label-val for-light">
+                {{ statisticsInfo.complete_rate || '-' }}
+              </span>
               <span>本日总{{ despMap[activeName] }}人数：</span>
-              <span class="label-val for-light"></span>
+              <span class="label-val for-light">
+                {{ statisticsInfo.now_complete_nums || '-' }}
+              </span>
               <span>本日总{{ despMap[activeName] }}率：</span>
-              <span class="label-val for-light"></span>
+              <span class="label-val for-light">
+                {{ statisticsInfo.now_complete_rate || '-' }}
+              </span>
             </template>
           </p>
           <div style="padding: 0 15px;">
@@ -123,7 +132,10 @@
               <el-tab-pane label="完课统计" name="finishClass"> </el-tab-pane>
             </el-tabs>
           </div>
-          <div class="orderStyle" v-if="tableData.length">
+          <div
+            class="orderStyle"
+            v-if="tableData.length && activeName === 'conversion'"
+          >
             <ele-table
               :dataList="tableData"
               :loading="flags.loading"
@@ -230,6 +242,114 @@
                     <span v-else>--</span>
                   </template></el-table-column
                 >
+              </el-table-column>
+            </ele-table>
+          </div>
+          <!-- 完课统计列表 -->
+          <div
+            class="orderStyle"
+            v-if="tableData.length && activeName === 'finishClass'"
+          >
+            <ele-table
+              :dataList="tableData"
+              :loading="flags.loading"
+              :size="tabQuery.size"
+              :page="tabQuery.page"
+              :total="totalElements"
+              @pageChange="pageChange_handler"
+              class="mytable"
+            >
+              <el-table-column
+                fixed
+                label="难度级别"
+                prop="sup"
+                width="70"
+                align="center"
+              ></el-table-column>
+              <el-table-column
+                fixed
+                label="销售组"
+                width="120"
+                align="center"
+                prop="department_name"
+              ></el-table-column>
+              <el-table-column
+                fixed
+                label="社群销售"
+                width="80"
+                align="center"
+                prop="teacher_name"
+              ></el-table-column>
+              <el-table-column
+                fixed
+                label="体验课学生"
+                width="85"
+                prop="student_nums"
+                align="center"
+              ></el-table-column>
+              <el-table-column align="center" label="总计">
+                <el-table-column
+                  fixed
+                  label="总完课人数"
+                  prop="total_complete_nums"
+                  align="center"
+                ></el-table-column>
+                <el-table-column
+                  fixed
+                  label="总完课率"
+                  prop="total_complete_rate"
+                  align="center"
+                ></el-table-column>
+              </el-table-column>
+              <!-- child-table-start -->
+              <el-table-column
+                align="center"
+                v-for="(a, i) in tableDataChild"
+                :label="a.weekday"
+                :key="i"
+              >
+                <el-table-column fixed label="当日完课人数" align="center">
+                  <template slot-scope="scope">
+                    <span
+                      v-if="
+                        Object.keys(scope.row.conversion_rate_daily).length &&
+                          scope.row.conversion_rate_daily[i] &&
+                          !scope.row.conversion_rate_daily[i].is_last
+                      "
+                    >
+                      {{ scope.row.conversion_rate_daily[i].order_number }}
+                    </span>
+                    <span v-else>--</span>
+                  </template>
+                </el-table-column>
+                <el-table-column fixed label="当日完课率" align="center">
+                  <template slot-scope="scope">
+                    <span
+                      v-if="
+                        Object.keys(scope.row.conversion_rate_daily).length &&
+                          scope.row.conversion_rate_daily[i] &&
+                          !scope.row.conversion_rate_daily[i].is_last
+                      "
+                    >
+                      {{ scope.row.conversion_rate_daily[i].conversion }}
+                    </span>
+                    <span v-else>--</span>
+                  </template>
+                </el-table-column>
+                <!-- <el-table-column fixed label="总金额" align="center"
+                  ><template slot-scope="scope">
+                    <span
+                      v-if="
+                        Object.keys(scope.row.conversion_rate_daily).length &&
+                          scope.row.conversion_rate_daily[i] &&
+                          !scope.row.conversion_rate_daily[i].is_last
+                      "
+                    >
+                      {{ scope.row.conversion_rate_daily[i].amount }}
+                    </span>
+                    <span v-else>--</span>
+                  </template></el-table-column
+                >-->
               </el-table-column>
             </ele-table>
           </div>
@@ -364,11 +484,23 @@ export default {
       // this.tabQuery.period = 13
       try {
         if (tabIndex === '2') {
-          console.log(2)
+          // 完课统计
+          const { period, teacher, department, sup } = this.tabQuery
           let {
-            data: { ConversionRateStatistics }
-          } = await this.$http.Statistics.getCompeteCourseList(this.tabQuery)
-          !ConversionRateStatistics && (ConversionRateStatistics = {})
+            data: { getCompeteCourseList }
+          } = await this.$http.Statistics.getCompeteCourseList({
+            ...this.tabQuery,
+            term: period,
+            teacher_ids: teacher,
+            department_ids: department,
+            sups: sup
+          })
+          !getCompeteCourseList && (getCompeteCourseList = {})
+          // 总数、分页用
+          this.totalElements = getCompeteCourseList.totalElements || 0
+          // 表格上的统计信息
+          this.statisticsInfo = getCompeteCourseList || {}
+          this.pakageListDate(getCompeteCourseList)
         } else if (tabIndex === '1') {
           const { period, teacher, department, sup } = this.tabQuery
           const {
