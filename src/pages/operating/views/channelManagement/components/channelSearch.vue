@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-04-25 12:09:03
  * @LastEditors: panjian
- * @LastEditTime: 2020-04-28 11:08:12
+ * @LastEditTime: 2020-04-28 19:06:21
  -->
 <template>
   <div class="channel-box">
@@ -88,18 +88,13 @@
           :data="tableData"
           style="width: 100%;"
         >
+          <!-- 查看详情 -->
           <el-table-column width="20px">
             <template slot-scope="scope">
-              <el-Popover
-                class="batchbtn-css"
-                popper-class="batch-btn"
-                trigger="hover"
-              >
-                <!-- 气泡内容 -->
+              <el-Popover popper-class="batch-btn" trigger="hover">
                 <div size="mini" type="text" @click="batchBtn">
-                  <span style="cursor: pointer;">查看详情</span>
+                  <span style="cursor:pointer">查看详情</span>
                 </div>
-                <!-- 点击...图片 -->
                 <div
                   @mouseenter="handleEdit(scope.$index, scope.row)"
                   slot="reference"
@@ -109,7 +104,8 @@
               </el-Popover>
             </template>
           </el-table-column>
-          <el-table-column prop="date" label="渠道分类"> </el-table-column>
+          <el-table-column prop="date" label="渠道分类" align="center">
+          </el-table-column>
           <el-table-column prop="name" label="渠道名称"> </el-table-column>
           <el-table-column prop="address" label="渠道ID"> </el-table-column>
           <el-table-column prop="address" label="渠道线索"> </el-table-column>
@@ -127,6 +123,9 @@
                 </el-tooltip>
               </div>
             </template>
+            <template slot-scope="scope">
+              {{ scope.row }}
+            </template>
           </el-table-column>
           <el-table-column prop="address" width="130px" label="完课数/完课率">
             <template slot="header">
@@ -142,6 +141,9 @@
                 </el-tooltip>
               </div>
             </template>
+            <template slot-scope="scope">
+              {{ scope.row }}
+            </template>
           </el-table-column>
           <el-table-column prop="address" width="130px" label="成单数/转化率">
             <template slot="header">
@@ -154,6 +156,9 @@
                   <span class="bottom-tips">?</span>
                 </el-tooltip>
               </div>
+            </template>
+            <template slot-scope="scope">
+              {{ scope.row }}
             </template>
           </el-table-column>
           <el-table-column prop="address" label="成单金额">
@@ -191,15 +196,15 @@
         <h3>基本信息</h3>
         <p>
           <span>渠道分类: </span>
-          <span> 线上推广 - 推广人</span>
+          <span class="drawer-box-text"> 线上推广 - 推广人</span>
         </p>
         <p>
           <span>渠道名称: </span>
-          <span>推广人</span>
+          <span class="drawer-box-text">推广人</span>
         </p>
         <p>
           <span>渠道ID: </span>
-          <span>43433</span>
+          <span class="drawer-box-text">43433</span>
         </p>
         <p>
           <span>链接地址: </span>
@@ -423,17 +428,24 @@ export default {
       padding-left: 4px;
     }
   }
-  .batchbtn-css {
-    cursor: pointer;
-  }
   .drawer-detail {
     margin: 50px 10px 10px 10px;
 
     .drawer-box {
       padding-left: 20px;
+      .drawer-box-text {
+        margin-left: 20px;
+        font-family: 'number_font';
+        font-size: 14px;
+        color: #949494;
+      }
       p {
         padding-top: 30px;
         padding-left: 30px;
+      }
+      a {
+        margin-left: 10px;
+        color: #409eff;
       }
     }
   }
@@ -449,5 +461,8 @@ export default {
   .el-drawer__header {
     margin-bottom: 5px !important;
   }
+}
+.el-popover {
+  min-width: 50px !important;
 }
 </style>
