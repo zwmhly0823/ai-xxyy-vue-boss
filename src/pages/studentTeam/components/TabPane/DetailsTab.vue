@@ -271,7 +271,8 @@ export default {
         childListData: [],
         imgNum: 0,
         imgSuccessNum: 0,
-        opreaIndex: 0
+        opreaIndex: 0,
+        weekNum1: ''
       },
       // tabs标签默认状态
       activeName: 'group',
@@ -442,7 +443,7 @@ export default {
       // 获取第几周的数据
       await this.getStuTaskRankingList(
         this.ExhibitionData.teamId,
-        this.ExhibitionData.weekNum
+        this.ExhibitionData.weekNum1
       )
       // 关闭弹框
       this.show = true
@@ -645,6 +646,7 @@ export default {
           6
         )
         // this.ExhibitionData.studentLesson = currentLesson.substring(0, 4)
+        this.ExhibitionData.weekNum1 = currentLesson
         this.ExhibitionData.weekNum = currentLesson.substring(4, 6)
         this.btnshow(
           this.ExhibitionData.weekNum,
