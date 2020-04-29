@@ -11,6 +11,7 @@
     <el-col class="schedule-container-right">
       <div class="grid-content">
         <el-scrollbar wrap-class="scrollbar-wrapper">
+          <!-- 期状态 -->
           <div class="top-tabs">
             <div
               v-for="(statusInfo, index) in topStatus"
@@ -21,6 +22,7 @@
               {{ statusInfo.label }}
             </div>
           </div>
+          <!-- 期标签页 -->
           <div class="tabs-operate">
             <div
               v-for="(tab, index) in priodTabs"
@@ -38,8 +40,8 @@
               v-if="priodTabsEnd.length"
             >
               <span class="el-dropdown-link">
-                {{ selectName
-                }}<i class="el-icon-arrow-down el-icon--right"></i>
+                {{ selectName }}
+                <i class="el-icon-arrow-down el-icon--right"></i>
               </span>
               <el-dropdown-menu slot="dropdown">
                 <el-dropdown-item
@@ -51,6 +53,7 @@
               </el-dropdown-menu>
             </el-dropdown>
           </div>
+          <!-- 搜索 -->
           <div class="sear-container">
             <!-- TODO: -->
             <statictics-search @searchChange="searchChange"></statictics-search>
@@ -80,15 +83,33 @@
                 statisticsInfo.amount_total || '-'
               }}</span>
             </template>
-            <template v-else>
+            <template v-else-if="activeName == 'attendClass'">
               <span>本期总{{ despMap[activeName] }}人数：</span>
-              <span class="label-val for-light">600</span>
+              <span class="label-val for-light">
+                {{ statisticsInfo.join_nums || '-' }}
+              </span>
               <span>本期总{{ despMap[activeName] }}率：</span>
-              <span class="label-val for-light">60%</span>
+              <span class="label-val for-light">{{
+                statisticsInfo.join_rate || '-'
+              }}</span>
               <span>本日总{{ despMap[activeName] }}人数：</span>
-              <span class="label-val for-light">50</span>
+              <span class="label-val for-light">{{
+                statisticsInfo.now_join_nums || '-'
+              }}</span>
               <span>本日总{{ despMap[activeName] }}率：</span>
-              <span class="label-val for-light">30%</span>
+              <span class="label-val for-light">{{
+                statisticsInfo.now_join_rate || '-'
+              }}</span>
+            </template>
+            <template v-else-if="activeName == 'finishClass'">
+              <span>本期总{{ despMap[activeName] }}人数：</span>
+              <span class="label-val for-light"> </span>
+              <span>本期总{{ despMap[activeName] }}率：</span>
+              <span class="label-val for-light"></span>
+              <span>本日总{{ despMap[activeName] }}人数：</span>
+              <span class="label-val for-light"></span>
+              <span>本日总{{ despMap[activeName] }}率：</span>
+              <span class="label-val for-light"></span>
             </template>
           </p>
           <div style="padding: 0 15px;">
@@ -246,8 +267,10 @@ export default {
       },
       // tabs标签默认状态
       selectName: '更多',
+      // 统计表title
       activeName: 'conversion',
       tabIndex: 0,
+      // 状态index
       btnIndex: 0,
       topStatus: [
         {
@@ -271,6 +294,7 @@ export default {
         5: 'S5'
       },
       priodTabs: [],
+      // 期标签页面更多下拉
       priodTabsEnd: [],
       flags: {
         loading: false
@@ -334,33 +358,47 @@ export default {
       this.getChangecListByProid()
     },
     // table列表
-    async getChangecListByProid() {
-      const loadingInstance = this.$loading({
-        target: 'section',
-        lock: true,
-        text: '玩命加载中...',
-        fullscreen: true
-      })
+    async getChangecListByProid(tabIndex) {
+      this.flags.loading = true
       // TODO:
       // this.tabQuery.period = 13
       try {
-        let {
-          data: { ConversionRateStatistics }
-        } = await this.$http.Statistics.getChangecListByProid(this.tabQuery)
+        if (tabIndex === '2') {
+          console.log(2)
+          let {
+            data: { ConversionRateStatistics }
+          } = await this.$http.Statistics.getCompeteCourseList(this.tabQuery)
+          !ConversionRateStatistics && (ConversionRateStatistics = {})
+        } else if (tabIndex === '1') {
+          const { period, teacher, department, sup } = this.tabQuery
+          const {
+            data: { getCompeteCourseList }
+          } = await this.$http.Statistics.getAttendClasscListByProid({
+            ...this.tabQuery,
+            term: period,
+            teacher_ids: teacher,
+            department_ids: department,
+            sups: sup
+          })
+          // 表格上的统计信息
+          this.statisticsInfo = getCompeteCourseList || {}
+        } else {
+          let {
+            data: { ConversionRateStatistics }
+          } = await this.$http.Statistics.getChangecListByProid(this.tabQuery)
 
-        !ConversionRateStatistics && (ConversionRateStatistics = {})
-        // 总数、分页用
-        this.totalElements = ConversionRateStatistics.total_elements || 0
+          !ConversionRateStatistics && (ConversionRateStatistics = {})
+          // 总数、分页用
+          this.totalElements = ConversionRateStatistics.total_elements || 0
 
-        // 表格上的统计信息
-        this.statisticsInfo = ConversionRateStatistics
-
-        this.pakageListDate(ConversionRateStatistics)
-
-        loadingInstance.close()
+          // 表格上的统计信息
+          this.statisticsInfo = ConversionRateStatistics
+          this.pakageListDate(ConversionRateStatistics)
+        }
+        this.flags.loading = false
       } catch (err) {
         console.log(err)
-        loadingInstance.close()
+        // loadingInstance.close()
       }
     },
     // 包装 接口返回的数据
@@ -397,8 +435,17 @@ export default {
     },
     // 点击tabs页签（转化统计 按钮）
     statisticsTypehandleClick(tab) {
+      // console.log(tab.index, 'tab')
       this.tabQuery.page = 1
-      this.getChangecListByProid()
+      if (tab.index === '2') {
+        console.log(2)
+        this.getChangecListByProid(tab.index)
+      } else if (tab.index === '1') {
+        console.log(1)
+        this.getChangecListByProid(tab.index)
+      } else {
+        this.getChangecListByProid(tab.index)
+      }
     },
     // 更多 下拉框
     handleCommand(command) {

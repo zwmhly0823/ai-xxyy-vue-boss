@@ -91,10 +91,10 @@ export default {
     })
   },
   // 通过期号，获取table (参课统计接口)
-  getattendClasscListByProid(params) {
+  getAttendClasscListByProid(params) {
     const {
-      status = 'on_going',
-      term = '',
+      // status = 'on_going',
+      term = 1,
       page = 1,
       size = '20',
       teacher_ids = '', // eslint-disable-line
@@ -102,7 +102,7 @@ export default {
       sups = ''
     } = params
     // eslint-disable-next-line
-    const query = `{"status": "${status}", "term": "${term}","department_ids": "${department_ids}", "sups": "${sups}","page":"${page}", "size": "${size}", "teacher_ids":"${teacher_ids}"}`
+    const query = `{"term": "${term}","department_ids": "${department_ids}", "sups": "${sups}","page":"${page}", "size": "${size}", "teacher_ids":"${teacher_ids}"}`
 
     return axios.post('/graphql/getDepartmentCourse', {
       query: `{
@@ -118,19 +118,39 @@ export default {
             sup
             department_name
             teacher_name
-            period_name
             student_nums
             total_join_nums
             total_join_rate
             completeArr{
               current_lesson
               sum
-              order_number
-              amount
-              conversion
+              join_nums
+              join_rate
             }
           }
       }}`
+    })
+  },
+  getCompeteCourseList(params) {
+    const {
+      term = 13,
+      department_ids = '', // eslint-disable-line
+      page = 1,
+      size = '20',
+      teacher_ids = '', // eslint-disable-line
+      department = '',
+      sups = ''
+    } = params
+    // eslint-disable-next-line
+    const query = `{"term": "${term}", "department_ids": "${department_ids}","department": "${department}", "sups": "${sups}","page":"${page}", "size": "${size}", "teacher_ids":"${teacher_ids}"}`
+    return axios.post('/graphql/getDepartmentCourse', {
+      query: `{
+        getCompeteCourseList(query: ${JSON.stringify(query) || null}){
+          completeCourse{
+            id
+          }
+        }
+      }`
     })
   }
 }
