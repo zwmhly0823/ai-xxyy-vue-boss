@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-07 13:52:26
  * @LastEditors: Shentong
- * @LastEditTime: 2020-04-27 17:14:09
+ * @LastEditTime: 2020-04-28 20:45:18
  */
 import axios from '../axiosConfig'
 
@@ -63,6 +63,8 @@ export default {
             conversion_total
             amount_total
             conversion_rate_daily{
+              is_last
+              weekday
               order_number
               amount
               conversion
