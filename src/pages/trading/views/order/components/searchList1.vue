@@ -35,6 +35,11 @@
       <el-form-item label="体验课:" :class="{ [$style.marginer]: true }">
         <div class="row_colum">
           <department placeholder="全部销售组" />
+          <group-sell
+            @result="selectSellTeacher"
+            :name="groupSell"
+            class="margin_l10"
+          />
           <search-stage
             class="margin_l10"
             placeholder="全部体验课排期"
@@ -47,17 +52,18 @@
             :name="searchTeamName"
             class="margin_l10"
           />
-          <group-sell
-            @result="selectSellTeacher"
-            :name="groupSell"
-            class="margin_l10"
-          />
         </div>
       </el-form-item>
       <br />
       <el-form-item label="系统课:" :class="{ [$style.marginer]: true }">
         <div class="row_colum">
           <systemCourseType style="width:140px" />
+          <group-sell
+            @result="selectSellTeacher"
+            :name="groupSell"
+            class="margin_l10"
+            tip="服务老师"
+          />
           <search-stage class="margin_l10" placeholder="全部系统课排期" />
           <hardLevel :class="['margin_l10']" style="width:140px" />
           <search-trial-team-name
@@ -65,12 +71,6 @@
             @result="getTrialTeamName"
             :name="searchTrialTeamName"
             :class="['margin_l10']"
-          />
-          <group-sell
-            @result="selectSellTeacher"
-            :name="groupSell"
-            class="margin_l10"
-            tip="服务老师"
           />
         </div>
       </el-form-item>
