@@ -89,5 +89,48 @@ export default {
           }
         }`
     })
+  },
+  // 通过期号，获取table (参课统计接口)
+  getattendClasscListByProid(params) {
+    const {
+      status = 'on_going',
+      term = '',
+      page = 1,
+      size = '20',
+      teacher_ids = '', // eslint-disable-line
+      department_ids = '', // eslint-disable-line
+      sups = ''
+    } = params
+    // eslint-disable-next-line
+    const query = `{"status": "${status}", "term": "${term}","department_ids": "${department_ids}", "sups": "${sups}","page":"${page}", "size": "${size}", "teacher_ids":"${teacher_ids}"}`
+
+    return axios.post('/graphql/getDepartmentCourse', {
+      query: `{
+        getCompeteCourseList(query: ${JSON.stringify(query) || null}) {
+          start_date
+          end_date
+          course_days
+          join_nums
+          join_rate
+          now_join_nums
+          now_join_rate
+          completeCourse{
+            sup
+            department_name
+            teacher_name
+            period_name
+            student_nums
+            total_join_nums
+            total_join_rate
+            completeArr{
+              current_lesson
+              sum
+              order_number
+              amount
+              conversion
+            }
+          }
+      }}`
+    })
   }
 }
