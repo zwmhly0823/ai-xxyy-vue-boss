@@ -197,30 +197,14 @@
               >
                 <el-table-column fixed label="当日完课人数" align="center">
                   <template slot-scope="scope">
-                    <span
-                      v-if="
-                        Object.keys(scope.row.conversion_rate_daily).length &&
-                          scope.row.conversion_rate_daily[i] &&
-                          !scope.row.conversion_rate_daily[i].is_last
-                      "
-                    >
-                      {{ scope.row.conversion_rate_daily[i].order_number }}
+                    <span>
+                      {{ scope.row.completeArr[i].complete_nums }}
                     </span>
-                    <span v-else>--</span>
                   </template>
                 </el-table-column>
                 <el-table-column fixed label="当日完课率" align="center">
                   <template slot-scope="scope">
-                    <span
-                      v-if="
-                        Object.keys(scope.row.conversion_rate_daily).length &&
-                          scope.row.conversion_rate_daily[i] &&
-                          !scope.row.conversion_rate_daily[i].is_last
-                      "
-                    >
-                      {{ scope.row.conversion_rate_daily[i].conversion }}
-                    </span>
-                    <span v-else>--</span>
+                    <span> {{ scope.row.completeArr[i].complete_rate }}</span>
                   </template>
                 </el-table-column>
                 <!-- <el-table-column fixed label="总金额" align="center"
