@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-02 15:35:27
  * @LastEditors: Shentong
- * @LastEditTime: 2020-04-29 17:10:04
+ * @LastEditTime: 2020-04-29 17:46:03
  -->
 <template>
   <el-row type="flex" class="app-main height schedule-container">
@@ -102,7 +102,7 @@
                   ><span v-if="tabQuery.totalSort === 'desc'"
                     >{{ scope.$index + calcIndex }}
                   </span>
-                  <span v-else>{{ scope.$index - calcIndex }}</span>
+                  <span v-else>{{ Math.abs(scope.$index - calcIndex) }}</span>
                 </template></el-table-column
               >
               <el-table-column label="级别" width="50" align="center">
