@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-02 15:35:27
  * @LastEditors: Shentong
- * @LastEditTime: 2020-04-29 17:46:03
+ * @LastEditTime: 2020-04-29 18:39:04
  -->
 <template>
   <el-row type="flex" class="app-main height schedule-container">
@@ -102,7 +102,9 @@
                   ><span v-if="tabQuery.totalSort === 'desc'"
                     >{{ scope.$index + calcIndex }}
                   </span>
-                  <span v-else>{{ Math.abs(scope.$index - calcIndex) }}</span>
+                  <span v-else>{{
+                    Math.abs(totalElements - scope.$index)
+                  }}</span>
                 </template></el-table-column
               >
               <el-table-column label="级别" width="50" align="center">
@@ -315,7 +317,7 @@ export default {
 
       const proidList = await this.getPriodByStatus(params)
 
-      this.proidList = proidList
+      this.proidList = proidList || []
 
       if (proidList.length) {
         this.priodTabs = proidList.slice(0, 5)
@@ -370,7 +372,6 @@ export default {
     // table列表
     async getStatisticsByProid() {
       // TODO:
-      this.tabQuery.period = 10
       this.flags.loading = true
       try {
         let {
