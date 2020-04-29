@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-02 15:35:27
  * @LastEditors: Shentong
- * @LastEditTime: 2020-04-29 18:39:04
+ * @LastEditTime: 2020-04-29 22:10:28
  -->
 <template>
   <el-row type="flex" class="app-main height schedule-container">
@@ -45,7 +45,7 @@
                 <el-dropdown-item
                   v-for="(tab, index) in priodTabsEnd"
                   :key="index"
-                  :command="tab.period_name"
+                  :command="tab"
                   >{{ tab.period_name }}</el-dropdown-item
                 >
               </el-dropdown-menu>
@@ -178,7 +178,7 @@
                 prop="system_order_count"
                 align="center"
               ></el-table-column>
-              <el-table-column label="转化率" width="70" prop="transferRate">
+              <el-table-column label="转化率" width="80" prop="transferRate">
                 <template slot="header">
                   <div @click="onSortConversion" class="sort-operate-box">
                     <span>转化率</span>
@@ -316,7 +316,6 @@ export default {
       const params = { status }
 
       const proidList = await this.getPriodByStatus(params)
-
       this.proidList = proidList || []
 
       if (proidList.length) {
@@ -433,21 +432,35 @@ export default {
     calcStartCourseDay(proidList) {
       proidList.forEach((item, index) => {
         const now = new Date().getTime()
-        const courseDay = +item.course_day || 0
+        // 开课时间
+        const courseDay = +item.course_day
+          ? new Date(+item.course_day).setHours(0, 0, 0, 0)
+          : 0
+        // 结课时间
         const EndCourseDay = +item.end_course_day
-
+          ? new Date(+item.end_course_day).setHours(0, 0, 0, 0)
+          : 0
         let startCourseDay = 0
-        // 格式化时间
-        item.course_day = courseDay ? formatData(courseDay) : ''
-        item.end_course_day = EndCourseDay ? formatData(EndCourseDay) : ''
-
-        // 当前日期大于开课日期
-        if (courseDay && now >= courseDay) {
+        // 如果当前时间 大于 结课时间，说明本期课已进行完毕
+        if (EndCourseDay && now > EndCourseDay) {
+          const diffTime = Number(EndCourseDay) - Number(courseDay)
+          startCourseDay = Math.floor(diffTime / (24 * 3600 * 1000)) + 1
+        } else if (
+          courseDay &&
+          EndCourseDay &&
+          now > courseDay &&
+          now < EndCourseDay
+        ) {
+          // 当前时间 大于 开课时间，小于结课时间
           const diffTime = Number(now) - Number(courseDay)
           startCourseDay = Math.floor(diffTime / (24 * 3600 * 1000)) + 1
         } else {
           startCourseDay = 0
         }
+        // 格式化时间
+        item.course_day = courseDay ? formatData(courseDay) : ''
+        item.end_course_day = EndCourseDay ? formatData(EndCourseDay) : ''
+
         item.startCourseDay = startCourseDay
       })
     },
@@ -474,11 +487,17 @@ export default {
     },
     // 更多 下拉框
     handleCommand(command) {
+      const { period = '' } = command
+
       this.tabIndex = 6
-      this.selectName = command
+      this.selectName = command.period_name || ''
       this.tabQuery.page = 1
+      this.tabQuery.period = period
 
       this.getListAndSearchSta()
+
+      this.currentPriodStatistic = this.getStaByProid(period)
+      console.log('currentPriodStatistic', this.currentPriodStatistic)
     },
     // 点击  ’进行中、已结课、招生中‘ 按钮
     top_tabs_click(index, statusInfo) {
