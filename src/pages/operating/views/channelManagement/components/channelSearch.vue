@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-04-25 12:09:03
  * @LastEditors: panjian
- * @LastEditTime: 2020-04-30 16:55:14
+ * @LastEditTime: 2020-04-30 17:13:21
  -->
 <template>
   <div class="channel-box">
@@ -283,7 +283,7 @@ export default {
       // 结束时间
       endTime: '',
       // 渠道查询传回来的数组
-      channelList: [],
+      // channelList: [],
       // 总条数
       totalElements: 0,
       // 当前页
@@ -441,11 +441,7 @@ export default {
     // 组件 渠道传的值
     channelSearchValue(data) {
       if (data) {
-        data.forEach((ele) => {
-          console.log(ele, 'ele')
-          this.channelList.push(ele)
-        })
-        this.query = `{"terms":{"id":[${this.channelList}]}}`
+        this.query = `{"terms":{"id":[${data.toString()}]}}`
         this.channelIds = `"${this.channelList}"`
         console.log(this.query, 'this.query')
       } else {
