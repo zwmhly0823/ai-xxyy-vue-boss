@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-04-25 12:09:03
  * @LastEditors: panjian
- * @LastEditTime: 2020-04-29 10:24:40
+ * @LastEditTime: 2020-04-29 18:50:35
  -->
 <template>
   <div>
@@ -13,7 +13,7 @@
         <el-tab-pane label="渠道查询" name="channelQuery">
           <channel-search :tabIndex="tabIndex" />
         </el-tab-pane>
-        <el-tab-pane label="渠道信息" name="channleInfo"></el-tab-pane>
+        <!-- <el-tab-pane label="渠道信息" name="channleInfo"></el-tab-pane> -->
       </el-tabs>
     </div>
   </div>

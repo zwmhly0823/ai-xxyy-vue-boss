@@ -4,19 +4,28 @@
  * @Author: panjian
  * @Date: 2020-04-25 12:09:03
  * @LastEditors: panjian
- * @LastEditTime: 2020-04-29 10:27:04
+ * @LastEditTime: 2020-04-30 12:03:42
  -->
 <template>
   <div class="channel-box">
     <div class="channel-box-top">
-      <m-search
+      <div class="channel-box-top-search">
+        <channel-search
+          @channelSearchValue="channelSearchValue"
+          @schedulingSearch="schedulingSearch"
+          @dateSearch="dateSearch"
+        ></channel-search>
+      </div>
+
+      <!-- <m-search
         class="channel-search"
         @search="handleSearch"
         date="date"
         channel="channel"
         searchTrialStage="searchTrialStage"
+        :isMultiple="false"
         channelText="请选择渠道"
-      />
+      /> -->
     </div>
     <div class="channel-box-medium">
       <el-row :gutter="20">
@@ -30,53 +39,55 @@
         <el-col :span="6">
           <div class="grid-content bg-purple">
             <p>累计成单金额</p>
-            <span>989897</span>
+            <span>{{ allSystemUserAmounts }}</span>
           </div>
         </el-col>
         <el-col :span="6">
           <div class="grid-content bg-purple">
             <p>累计转化率</p>
-            <span>9%</span>
+            <span>{{ conversionRate }}</span>
           </div>
         </el-col>
         <el-col :span="12">
-          <div class="grid-content1 bg-purple1">
-            <div class="grid-content1-box1">
-              <div>
-                <p class="grid-content1-text1">192</p>
-                <span class="grid-content1-text1-text">添加微信</span>
-              </div>
-              <div>
-                <p class="grid-content1-text1">192</p>
-                <span class="grid-content1-text1-text">未支付</span>
-              </div>
-              <div>
-                <p class="grid-content1-text1">192</p>
-                <span class="grid-content1-text1-text">参课数</span>
-              </div>
-              <div>
-                <p class="grid-content1-text1">192</p>
-                <span class="grid-content1-text1-text">完课数</span>
-              </div>
-            </div>
-            <div class="grid-content1-box2">
-              <div style="margin-left:5px;">
-                <p class="grid-content1-text2">192</p>
-                <span class="grid-content1-text2-text">成单数</span>
-              </div>
-              <div style="margin-left:10px;">
-                <p class="grid-content1-text2">192</p>
-                <span class="grid-content1-text2-text">线索数</span>
-              </div>
-              <div>
-                <p class="grid-content1-text2">192</p>
-                <span class="grid-content1-text2-text">参课率</span>
-              </div>
-              <div>
-                <p class="grid-content1-text2">192</p>
-                <span class="grid-content1-text2-text">完课率</span>
-              </div>
-            </div>
+          <div class="grid-content bg-purple">
+            <el-row :gutter="20">
+              <el-col :span="6" style="text-align:center;">
+                <p class="bg-purple-num">{{ allWechatAddNums }}</p>
+                <span class="bg-purple-text">添加微信</span>
+              </el-col>
+              <el-col :span="6" style="text-align:center;">
+                <p class="bg-purple-num">{{ unpaid }}</p>
+                <span class="bg-purple-text">未支付</span>
+              </el-col>
+              <el-col :span="6" style="text-align:center;">
+                <p class="bg-purple-num">{{ allJoinUserNums }}</p>
+                <span class="bg-purple-text">参课数</span>
+              </el-col>
+              <el-col :span="6" style="text-align:center;">
+                <p class="bg-purple-num">{{ allCompleteUserNums }}</p>
+                <span class="bg-purple-text">完课数</span>
+              </el-col>
+              <el-col :span="6" style="text-align:center;">
+                <p class="bg-purple-num">{{ allPayUserNums }}</p>
+                <span class="bg-purple-text">成单数</span>
+              </el-col>
+              <el-col :span="6" style="text-align:center;">
+                <p class="bg-purple-num">{{ allUserNums }}</p>
+                <span class="bg-purple-text">线索数</span>
+              </el-col>
+              <el-col :span="6" style="text-align:center;">
+                <p class="bg-purple-num">
+                  {{ allJoinUserNumsPercent }}
+                </p>
+                <span class="bg-purple-text">参课率</span>
+              </el-col>
+              <el-col :span="6" style="text-align:center;">
+                <p class="bg-purple-num">
+                  {{ allCompleteUserNumsPercent }}
+                </p>
+                <span class="bg-purple-text">完课率</span>
+              </el-col>
+            </el-row>
           </div>
         </el-col>
       </el-row>
@@ -89,7 +100,7 @@
           style="width: 100%;"
         >
           <!-- 查看详情 -->
-          <el-table-column width="20px">
+          <!-- <el-table-column width="20px">
             <template slot-scope="scope">
               <el-Popover popper-class="batch-btn" trigger="hover">
                 <div size="mini" type="text" @click="batchBtn">
@@ -103,15 +114,30 @@
                 </div>
               </el-Popover>
             </template>
+          </el-table-column> -->
+          <el-table-column label="渠道分类" width="200" align="center">
+            <template slot-scope="scope">
+              <span>{{ scope.row.channelParentName }}</span>
+              <span style="margin-left:10px;">{{
+                scope.row.channelClassName
+              }}</span>
+            </template>
           </el-table-column>
-          <el-table-column prop="date" label="渠道分类" align="center">
+          <el-table-column prop="channelName" width="150" label="渠道名称">
           </el-table-column>
-          <el-table-column prop="name" label="渠道名称"> </el-table-column>
-          <el-table-column prop="address" label="渠道ID"> </el-table-column>
-          <el-table-column prop="address" label="渠道线索"> </el-table-column>
-          <el-table-column prop="address" label="未支付"> </el-table-column>
-          <el-table-column prop="address" label="添加微信数"> </el-table-column>
-          <el-table-column prop="address" width="130px" label="参课数/参课率">
+          <el-table-column prop="channelId" label="渠道ID"> </el-table-column>
+          <el-table-column prop="orderUserAllNums" label="渠道线索">
+          </el-table-column>
+          <el-table-column prop="orderUserNoPayNums" label="未支付">
+          </el-table-column>
+          <el-table-column prop="wechatAddNums" label="添加微信数">
+          </el-table-column>
+          <el-table-column
+            prop="address"
+            width="130px"
+            align="conent"
+            label="参课数/参课率"
+          >
             <template slot="header">
               <div>
                 <span>参课数/参课率</span>
@@ -124,7 +150,8 @@
               </div>
             </template>
             <template slot-scope="scope">
-              {{ scope.row }}
+              <div>{{ scope.row.joinCourseNums }}</div>
+              <div>{{ scope.row.joinCourseNumsPercent }}</div>
             </template>
           </el-table-column>
           <el-table-column prop="address" width="130px" label="完课数/完课率">
@@ -142,7 +169,8 @@
               </div>
             </template>
             <template slot-scope="scope">
-              {{ scope.row }}
+              <div>{{ scope.row.completeCourseNums }}</div>
+              <div>{{ scope.row.completeCourseNumsPercent }}</div>
             </template>
           </el-table-column>
           <el-table-column prop="address" width="130px" label="成单数/转化率">
@@ -158,10 +186,15 @@
               </div>
             </template>
             <template slot-scope="scope">
-              {{ scope.row }}
+              <div>{{ scope.row.systemOrderNums }}</div>
+              <div>{{ scope.row.systemOrderNumsPercent }}</div>
             </template>
           </el-table-column>
-          <el-table-column prop="address" label="成单金额">
+          <el-table-column
+            prop="systemOrderAmounts"
+            width="100"
+            label="成单金额"
+          >
             <template slot="header">
               <div>
                 <span>成单金额</span>
@@ -174,12 +207,16 @@
               </div>
             </template>
           </el-table-column>
-          <el-table-column prop="address" label="创建时间"> </el-table-column>
+          <el-table-column label="创建时间">
+            <template slot-scope="scope">
+              {{ scope.row.channelCtime }}
+            </template>
+          </el-table-column>
         </el-table>
         <m-pagination
           @current-change="handleCurrentChange"
-          :current-page="1"
-          :total="50"
+          :current-page="totalNumber"
+          :total="totalElements"
           open="calc(100vw - 95px - 100px)"
           close="calc(100vw - 23px - 50px)"
         />
@@ -217,7 +254,8 @@
 
 <script>
 import MPagination from '@/components/MPagination/index.vue'
-import MSearch from '@/components/MSearch/index.vue'
+import channelSearch from '../components/componentsSearch/search'
+import { timestamp } from '@/utils/index'
 export default {
   props: {
     tabIndex: {
@@ -227,65 +265,47 @@ export default {
   },
   components: {
     MPagination,
-    MSearch
+    channelSearch
   },
   data() {
     return {
       link: 'https://www.baidu.com',
       showClose: true,
       drawer: false,
-      tableData: [
-        {
-          date: '2016-05-02',
-          name: '王小虎1',
-          address: '上海市普陀区金沙江路 1518 弄'
-        },
-        {
-          date: '2016-05-04',
-          name: '王小虎2',
-          address: '上海市普陀区金沙江路 1517 弄'
-        },
-        {
-          date: '2016-05-02',
-          name: '王小虎3',
-          address: '上海市普陀区金沙江路 1518 弄'
-        },
-        {
-          date: '2016-05-02',
-          name: '王小虎4',
-          address: '上海市普陀区金沙江路 1518 弄'
-        },
-        {
-          date: '2016-05-02',
-          name: '王小虎5',
-          address: '上海市普陀区金沙江路 1518 弄'
-        },
-        {
-          date: '2016-05-02',
-          name: '王小虎6',
-          address: '上海市普陀区金沙江路 1518 弄'
-        },
-        {
-          date: '2016-05-02',
-          name: '王小虎7',
-          address: '上海市普陀区金沙江路 1518 弄'
-        },
-        {
-          date: '2016-05-02',
-          name: '王小虎8',
-          address: '上海市普陀区金沙江路 1518 弄'
-        },
-        {
-          date: '2016-05-02',
-          name: '王小虎9',
-          address: '上海市普陀区金沙江路 1518 弄'
-        },
-        {
-          date: '2016-05-02',
-          name: '王小虎10',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }
-      ]
+      tableData: [],
+      querysData: '',
+      // 体验课排期参数
+      querySearchTrialStage: null,
+      // 开始时间
+      stateTime: '',
+      // 结束时间
+      endTime: '',
+      // 渠道查询传回来的数组
+      channelList: [],
+      // 总条数
+      totalElements: 0,
+      // 当前页
+      totalNumber: 1,
+      // 累计成单数
+      allSystemUserAmounts: '',
+      // 累计转化率
+      conversionRate: '',
+      // 添加微信
+      allWechatAddNums: '',
+      // 未支付
+      unpaid: '',
+      // 参课数
+      allJoinUserNums: '',
+      // 参课率
+      allJoinUserNumsPercent: '',
+      // 完课数
+      allCompleteUserNums: '',
+      // 完课率
+      allCompleteUserNumsPercent: '',
+      // 成单数
+      allPayUserNums: '',
+      // 线索数
+      allUserNums: ''
     }
   },
   watch: {
@@ -293,15 +313,154 @@ export default {
       console.log(value, 'watch')
     }
   },
+  created() {
+    this.getChannelDetailPage()
+  },
   methods: {
-    // 搜索传的值
-    handleSearch(res) {
-      console.log(res)
+    getChannelDetailPage() {
+      if (
+        this.query ||
+        this.querySearchTrialStage ||
+        this.stateTime ||
+        this.endTime
+      ) {
+        debugger
+        const queryChannelList = this.query ? this.query : `{"match_all" : {}}`
+        const SearchTrialStage = this.querySearchTrialStage
+          ? this.querySearchTrialStage
+          : 0
+        const trialOrderStartCtime = this.stateTime
+          ? `"${this.stateTime}"`
+          : `"0"`
+        const trialOrderEndCtime = this.endTime ? `"${this.endTime}"` : `"0"`
+        this.querysData = `${JSON.stringify(
+          queryChannelList
+        )},trialStage:${SearchTrialStage},trialOrderEndCtime:${trialOrderEndCtime},trialOrderStartCtime:${trialOrderStartCtime},page:${
+          this.totalNumber
+        }`
+      } else {
+        debugger
+        this.querysData = `"{\\"match_all\\" : {}}",trialStage:0,trialOrderEndCtime:"0",trialOrderStartCtime:"0",page:${this.totalNumber}`
+      }
+      this.$http.Operating.channelDetailPage(this.querysData).then((res) => {
+        const _data = res.data.channelDetailPage
+        console.log(_data, 'resresresres')
+        // 总条数
+        this.totalElements = +_data.totalElements
+        // 当前页
+        this.totalNumber = +_data.number
+        // 表格数据
+        _data.content.forEach((res) => {
+          if (res.channelCtime === '0') {
+            res.channelCtime = '-'
+          } else {
+            res.channelCtime = timestamp(res.channelCtime, 5)
+          }
+          // 线索数
+          const orderUserAllNums = +res.orderUserAllNums
+          // 参课数
+          const joinCourseNums = +res.joinCourseNums
+          // 完课数
+          const completeCourseNums = +res.completeCourseNums
+          // 成单数
+          const systemOrderNums = +res.systemOrderNums
+          // 计算参课率
+          if (joinCourseNums === 0 && orderUserAllNums === 0) {
+            res.joinCourseNumsPercent = '0%'
+          } else {
+            const nums = (joinCourseNums / orderUserAllNums) * 100
+            res.joinCourseNumsPercent = `${nums.toFixed(2)}%`
+          }
+          // 计算完课率
+          if (completeCourseNums === 0 && orderUserAllNums === 0) {
+            res.completeCourseNumsPercent = '0%'
+          } else {
+            const nums = (completeCourseNums / orderUserAllNums) * 100
+            res.completeCourseNumsPercent = `${nums.toFixed(2)}%`
+          }
+          // 计算成单率
+          if (systemOrderNums === 0 && orderUserAllNums === 0) {
+            res.systemOrderNumsPercent = '0%'
+          } else {
+            const nums = (systemOrderNums / orderUserAllNums) * 100
+            res.systemOrderNumsPercent = `${nums.toFixed(2)}%`
+          }
+        })
+        // 模块数据
+        const _datas = _data.counts
+        // 累计成单金额
+        this.allSystemUserAmounts = _datas.allSystemUserAmounts
+        // 累计转化率
+        const conversionRatePercentNums =
+          (_datas.allSystemUserAmounts / _datas.allPayUserNums) * 100
+        this.conversionRate = `${conversionRatePercentNums.toFixed(2)}%`
+        // this.conversionRate = '-'
+        // 添加微信
+        this.allWechatAddNums = _datas.allWechatAddNums
+        // 未支付
+        this.unpaid = _datas.allUserNums - _datas.allPayUserNums
+        // 参课数
+        this.allJoinUserNums = _datas.allJoinUserNums
+        // 参课率
+        const allJoinUserNumsPercentNums =
+          (_datas.allJoinUserNums / _datas.allPayUserNums) * 100
+        this.allJoinUserNumsPercent = `${allJoinUserNumsPercentNums.toFixed(
+          2
+        )}%`
+        // 完课数
+        this.allCompleteUserNums = _datas.allCompleteUserNums
+        // 完课率
+        const allCompleteUserNumsPercentNums =
+          (_datas.allCompleteUserNums / _datas.allPayUserNums) * 100
+        this.allCompleteUserNumsPercent = `${allCompleteUserNumsPercentNums.toFixed(
+          2
+        )}%`
+        // 成单数
+        this.allPayUserNums = _datas.allPayUserNums
+        // 线索数
+        this.allUserNums = _datas.allUserNums
+
+        this.tableData = _data.content
+      })
+    },
+    // 组件 渠道传的值
+    channelSearchValue(data) {
+      if (data) {
+        data.forEach((ele) => {
+          console.log(ele, 'ele')
+          this.channelList.push(ele)
+        })
+        this.query = `{"terms":{"id":[${this.channelList}]}}`
+        console.log(this.query, 'this.query')
+      } else {
+        this.query = ''
+        console.log(this.query, 'channelSearchValue')
+      }
+      this.getChannelDetailPage()
+    },
+    // 组件 排期传的值
+    schedulingSearch(data) {
+      this.querySearchTrialStage = data || 0
+      console.log(this.querySearchTrialStage, 'schedulingSearch')
+      this.getChannelDetailPage()
+    },
+    // 组件 时间回传的值
+    dateSearch(data) {
+      if (data) {
+        this.stateTime = data.gte
+        this.endTime = data.lte
+      } else {
+        this.stateTime = ''
+        this.endTime = ''
+      }
+      console.log(this.stateTime, this.endTime, 'dateSearch')
+      this.getChannelDetailPage()
     },
     // 分页
     handleCurrentChange(val) {
-      this.currentPage = val
-      this.$emit('onCurrentPage', val)
+      this.totalNumber = val
+      this.getChannelDetailPage()
+      // this.$emit('onCurrentPage', val)
     },
     handleEdit(index, row) {
       // 鼠标移入三个点上面触发的事件
@@ -328,17 +487,19 @@ export default {
   height: calc(100vh - 130px);
   overflow: scroll;
   .channel-box-top {
-    margin: 10px 10px 0 10px;
-    .channel-search {
-      border: none;
+    margin: 10px 10px 10px 10px;
+    .channel-box-top-search {
+      background: #fff;
+      padding: 15px;
     }
   }
   .channel-box-medium {
     background: #fff;
     margin: 0 10px 10px 10px;
-    padding: 20px 20px;
+    padding: 20px 20px 20px 30px;
     .bg-purple {
       margin-top: 10px;
+      padding-bottom: 15px;
       background: rgb(240, 241, 242);
       p {
         font-family: 'number_font';
@@ -350,71 +511,22 @@ export default {
         font-weight: 600;
         font-size: 18px;
       }
+      .bg-purple-num {
+        color: #409eff;
+        font-weight: 600;
+        font-size: 18px;
+      }
+      .bg-purple-text {
+        font-family: 'number_font';
+        font-size: 14px;
+        color: #4d4d4d;
+      }
     }
     .grid-content {
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      height: 150px;
-      border-radius: 4px;
-    }
-    .bg-purple1 {
-      margin-top: 10px;
-      background: rgb(240, 241, 242);
-    }
-    .grid-content1 {
-      padding-bottom: 20px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-around;
-      height: 150px;
-      border-radius: 4px;
-      .grid-content1-box1 {
-        display: flex;
-        justify-content: space-around;
-        .grid-content1-text1 {
-          display: flex;
-          justify-content: center;
-          font-style: normal;
-          color: #409eff;
-          font-weight: 600;
-          font-size: 18px;
-        }
-        .grid-content1-text1-text {
-          font-family: 'number_font';
-          font-size: 14px;
-          color: #4d4d4d;
-        }
-      }
-      .grid-content1-box2 {
-        display: flex;
-        justify-content: space-around;
-        .grid-content1-text2 {
-          display: flex;
-          font-weight: 600;
-          font-size: 18px;
-          justify-content: center;
-          font-style: normal;
-          color: #409eff;
-        }
-        .grid-content1-text2-text {
-          font-family: 'number_font';
-          font-size: 14px;
-          color: #4d4d4d;
-        }
-      }
-    }
-    .bg-purple2 {
-      margin-top: 20px;
-      background: #fff;
-    }
-    .grid-content2 {
-      padding-bottom: 20px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: space-around;
       height: 150px;
       border-radius: 4px;
     }

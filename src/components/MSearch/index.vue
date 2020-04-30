@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-24 18:20:12
  * @LastEditors: panjian
- * @LastEditTime: 2020-04-29 15:07:37
+ * @LastEditTime: 2020-04-29 19:59:10
  -->
 
 <template>
@@ -63,7 +63,12 @@
 
       <el-form-item v-if="channel">
         <!-- 渠道 -->
-        <channel-select @result="getChannel" :name="channel" ref="channel" />
+        <channel-select
+          @result="getChannel"
+          :name="channel"
+          :placeholder="channelText"
+          ref="channel"
+        />
       </el-form-item>
 
       <el-form-item v-if="topicType">
@@ -201,6 +206,7 @@
         <search-stage
           @result="getSearchTrialStage"
           :name="searchTrialStage"
+          :isMultiple="isMultiple"
           type="0"
         />
       </el-form-item>
@@ -540,6 +546,11 @@ export default {
     searchTrialStage: {
       type: String,
       default: ''
+    },
+    // 体验课排期 是否多选
+    isMultiple: {
+      type: Boolean,
+      default: true
     },
     // 体验课类型 0-双周，3-单周
     trialCourseType: {

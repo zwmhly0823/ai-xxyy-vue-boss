@@ -10,7 +10,7 @@
   <div class="search-item small">
     <el-select
       v-model="stage"
-      multiple
+      :multiple="isMultiple"
       filterable
       remote
       :reserve-keyword="true"
@@ -44,6 +44,11 @@ export default {
     type: {
       type: String,
       default: '1'
+    },
+    // 是否多选
+    isMultiple: {
+      type: Boolean,
+      default: true
     }
   },
   data() {
