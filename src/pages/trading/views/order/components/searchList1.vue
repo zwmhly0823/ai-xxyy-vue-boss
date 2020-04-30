@@ -20,7 +20,11 @@
       <br />
 
       <el-form-item label="下单时间:" :class="{ [$style.marginer]: true }">
-        <DatePicker :class="[$style.fourPoint, 'allmini']" @result="getDate">
+        <DatePicker
+          :class="[$style.fourPoint, 'allmini']"
+          @result="getDate"
+          name="ctime"
+        >
           <template v-slot:buttons>
             <div class="row_colum margin_l10">
               <el-button size="mini" plain @click="today">今日</el-button>
@@ -34,58 +38,72 @@
       <br />
       <el-form-item label="体验课:" :class="{ [$style.marginer]: true }">
         <div class="row_colum">
-          <department placeholder="全部销售组" @result="getDepartment" />
+          <department
+            name="pay_teacher_id"
+            placeholder="全部销售组"
+            @result="getDepartment"
+          />
           <group-sell
-            @result="selectSellTeacher"
-            :name="groupSell"
+            :teacherscope="teacherscope"
+            @result="selectPayTeacher"
+            name="pay_teacher_id"
             class="margin_l10"
           />
           <search-stage
             class="margin_l10"
+            name="trial_stage"
             placeholder="全部体验课排期"
             type="0"
-            @result="selectSchedule"
+            @result="selectScheduleTrial"
           />
           <hardLevel
             :class="['margin_l10']"
             placeholder="体验课难度"
             style="width:140px"
-            @result="supCallBack"
+            name="trial_sup"
+            @result="supCallBackTrial"
           />
-          <search-team-name
-            teamnameType="0"
-            @result="getTeamName"
-            :name="searchTeamName"
-            class="margin_l10"
+          <search-trial-team-name
+            :teamnameType="'1'"
+            @result="getTrialTeamName"
+            name="trial_team_id"
+            :class="['margin_l10']"
           />
         </div>
       </el-form-item>
       <br />
       <el-form-item label="系统课:" :class="{ [$style.marginer]: true }">
         <div class="row_colum">
-          <systemCourseType style="width:140px" @result="getSystemCourseType" />
+          <systemCourseType
+            style="width:140px"
+            @result="getSystemCourseType"
+            name="system_course_type"
+          />
           <group-sell
-            @result="selectSellTeacher"
-            :name="groupSell"
+            :teacherscope="teacherscope"
+            @result="selectLastTeacher"
+            name="last_teacher_id"
             class="margin_l10"
             tip="服务老师"
           />
           <search-stage
             class="margin_l10"
             @result="selectSchedule"
+            name="stage"
             placeholder="全部系统课排期"
           />
           <hardLevel
             :class="['margin_l10']"
             placeholder="系统课难度"
             style="width:140px"
+            name="sup"
             @result="supCallBack"
           />
-          <search-trial-team-name
-            :teamnameType="'1'"
-            @result="getTrialTeamName"
-            :name="searchTrialTeamName"
-            :class="['margin_l10']"
+          <search-team-name
+            teamnameType="0"
+            @result="getTeamName"
+            name="team_id"
+            class="margin_l10"
           />
         </div>
       </el-form-item>
@@ -164,7 +182,7 @@ export default {
     // 下单时间
     date: {
       type: String,
-      default: '' // octime
+      default: '' // ctime
     },
     // datepicker placeholder
     datePlaceholder: {
@@ -292,6 +310,7 @@ export default {
 
   data() {
     return {
+      teacherscope: null,
       showErr: false,
       errTips: '搜索条件不能为空',
       must: [],
@@ -318,15 +337,25 @@ export default {
       console.log(res, 'res')
       this.setSeachParmas(res, [this.stage || 'stage'], 'terms')
     },
-    // 排期
+    // 系统课排期
     selectSchedule(res) {
       console.log(res, 'res')
-      this.setSeachParmas(res, [this.schedule || 'id'])
+      this.setSeachParmas(res, [this.stage || 'stage'])
     },
-    // 难度
+    // 体验课排期
+    selectScheduleTrial(res) {
+      console.log(res, 'res')
+      this.setSeachParmas(res, [this.trial_stage || 'trial_stage'])
+    },
+    // 系统课难度
     supCallBack(res) {
       console.log(res, 'res')
       this.setSeachParmas(res, [this.sup || 'sup'], 'terms')
+    },
+    // 体验课难度
+    supCallBackTrial(res) {
+      console.log(res, 'res')
+      this.setSeachParmas(res, [this.trial_sup || 'trial_sup'], 'terms')
     },
     // 级别
     levelCallBack(res) {
@@ -336,14 +365,14 @@ export default {
     // 选择订单下单时间
     getDate(res) {
       console.log(res, 'lll')
-      this.setSeachParmas(res, [this.date || 'octime'], 'range')
+      this.setSeachParmas(res, [this.date || 'ctime'], 'range')
     },
     // 4点外移
     today() {
       const start = new Date(new Date().toLocaleDateString()).getTime() // 设定日期,时间默认0点
       const end = Date.now()
       this.$root.$emit('fourpoint', [start, end])
-      this.setSeachParmas([start, end], [this.date || 'octime'], 'range')
+      this.setSeachParmas([start, end], [this.date || 'ctime'], 'range')
     },
     yesterday() {
       const yester = new Date()
@@ -354,7 +383,7 @@ export default {
       ).valueOf()
       const end = new Date(yester.toLocaleDateString() + ' 23:59:59').valueOf()
       this.$root.$emit('fourpoint', [start, end])
-      this.setSeachParmas([start, end], [this.date || 'octime'], 'range')
+      this.setSeachParmas([start, end], [this.date || 'ctime'], 'range')
     },
     thisweek() {
       const week = new Date()
@@ -364,7 +393,7 @@ export default {
         reverseDays * 86400000
       const end = new Date().getTime()
       this.$root.$emit('fourpoint', [start, end])
-      this.setSeachParmas([start, end], [this.date || 'octime'], 'range')
+      this.setSeachParmas([start, end], [this.date || 'ctime'], 'range')
     },
     thismonth() {
       const date = new Date()
@@ -372,7 +401,7 @@ export default {
       const end = new Date().getTime()
       const start = new Date(new Date(date).toLocaleDateString()).getTime()
       this.$root.$emit('fourpoint', [start, end])
-      this.setSeachParmas([start, end], [this.date || 'octime'], 'range')
+      this.setSeachParmas([start, end], [this.date || 'ctime'], 'range')
     },
     // 选择手机号
     getPhoneHander(res) {
@@ -398,16 +427,39 @@ export default {
     // 物流时间
     getTimeData(res) {
       console.log(this.selectTime, '清除时的this.selectTime')
-
       this.setSeachParmas(res, [this.selectTime || this.oldTime], 'range')
     },
     // 选择物流单号
     getExpressNo(res) {
       this.setSeachParmas(res, [this.expressNo || 'express_nu'], 'wildcard')
     },
+    // 选择社群销售
+    selectPayTeacher(res) {
+      if (!res.pay_teacher_id || res.pay_teacher_id.length === 0) {
+        if (this.teacherscope && this.teacherscope.length > 0) {
+          res = {
+            pay_teacher_id: this.teacherscope
+          }
+        } else {
+          res = ''
+        }
+      }
+      this.setSeachParmas(
+        res,
+        [this.pay_teacher_id || 'pay_teacher_id'],
+        'terms'
+      )
+    },
     // 选择销售老师
-    selectSellTeacher(res) {
-      this.setSeachParmas(res, [this.groupSell || 'pay_teacher_id'], 'wildcard')
+    selectLastTeacher(res) {
+      if (!res.last_teacher_id || res.last_teacher_id.length === 0) {
+        res = ''
+      }
+      this.setSeachParmas(
+        res,
+        [this.last_teacher_id || 'last_teacher_id'],
+        'terms'
+      )
     },
     getTeamDetail(res) {
       this.setSeachParmas(res, [this.teamDetail || 'last_team_id'])
@@ -422,17 +474,14 @@ export default {
       this.setSeachParmas(res, [this.systemCourseType || 'system_course_type'])
     },
     getDepartment(res) {
+      this.teacherscope = res.pay_teacher_id || null
       this.setSeachParmas(res, [this.department || 'department'], 'terms')
     },
     getTeamName(res) {
-      this.setSeachParmas(res, [this.searchTeamName || 'team_name'], 'terms')
+      this.setSeachParmas(res, [this.team_id || 'team_id'], 'terms')
     },
     getTrialTeamName(res) {
-      this.setSeachParmas(
-        res,
-        [this.searchTrialTeamName || 'team_trial_name'],
-        'terms'
-      )
+      this.setSeachParmas(res, [this.trial_team_id || 'trial_team_id'], 'terms')
     },
 
     /**  处理接收到的查询参数

@@ -12,7 +12,7 @@
       v-model="supData"
       class="item-style"
       clearable
-      v-if="supName"
+      v-if="name"
       size="mini"
       multiple
       :placeholder="placeholder"
@@ -39,7 +39,7 @@ export default {
       type: String,
       default: '难度'
     },
-    supName: {
+    name: {
       type: String,
       default: 'sup'
     },
@@ -101,12 +101,7 @@ export default {
     },
 
     supChange(data) {
-      console.log(data, 'ddddaaaa')
-
-      this.$emit(
-        'supCallBack',
-        data.length > 0 ? { [this.supName]: this.supData } : ''
-      )
+      this.$emit('result', data.length > 0 ? { [this.name]: this.supData } : '')
     }
   }
 }
