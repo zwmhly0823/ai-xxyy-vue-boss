@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-04-25 17:24:23
  * @LastEditors: liukun
- * @LastEditTime: 2020-04-29 14:04:13
+ * @LastEditTime: 2020-04-29 16:29:22
  -->
 <template>
   <el-card border="false" shadow="never" :class="$style.elard">
@@ -19,12 +19,13 @@
       </el-form-item>
       <br />
 
+      <el-form-item label="物流状态:" :class="{ [$style.marginer]: true }">
+        <orderStatus @result="getorderStatus" />
+      </el-form-item>
+      <br />
+
       <el-form-item label="下单时间:" :class="{ [$style.marginer]: true }">
-        <DatePicker
-          :class="[$style.fourPoint, 'allmini']"
-          @result="getDate"
-          name="ctime"
-        >
+        <DatePicker :class="[$style.fourPoint, 'allmini']" @result="getDate">
           <template v-slot:buttons>
             <div class="row_colum margin_l10">
               <el-button size="mini" plain @click="today">今日</el-button>
@@ -38,71 +39,27 @@
       <br />
       <el-form-item label="体验课:" :class="{ [$style.marginer]: true }">
         <div class="row_colum">
-          <department
-            name="pay_teacher_id"
-            placeholder="全部销售组"
-            @result="getDepartment"
-          />
-          <group-sell
-            :teacherscope="teacherscope"
-            @result="selectPayTeacher"
-            name="pay_teacher_id"
-            class="margin_l10"
-          />
+          <department placeholder="全部销售组" @result="getDepartment" />
           <search-stage
             class="margin_l10"
-            name="trial_stage"
             placeholder="全部体验课排期"
             type="0"
-            @result="selectScheduleTrial"
-          />
-          <hardLevel
-            :class="['margin_l10']"
-            placeholder="体验课难度"
-            style="width:140px"
-            name="trial_sup"
-            @result="supCallBackTrial"
-          />
-          <search-trial-team-name
-            :teamnameType="'1'"
-            @result="getTrialTeamName"
-            name="trial_team_id"
-            :class="['margin_l10']"
-          />
-        </div>
-      </el-form-item>
-      <br />
-      <el-form-item label="系统课:" :class="{ [$style.marginer]: true }">
-        <div class="row_colum">
-          <systemCourseType
-            style="width:140px"
-            @result="getSystemCourseType"
-            name="system_course_type"
-          />
-          <group-sell
-            :teacherscope="teacherscope"
-            @result="selectLastTeacher"
-            name="last_teacher_id"
-            class="margin_l10"
-            tip="服务老师"
-          />
-          <search-stage
-            class="margin_l10"
             @result="selectSchedule"
-            name="stage"
-            placeholder="全部系统课排期"
           />
           <hardLevel
             :class="['margin_l10']"
-            placeholder="系统课难度"
             style="width:140px"
-            name="sup"
             @result="supCallBack"
           />
           <search-team-name
             teamnameType="0"
             @result="getTeamName"
-            name="team_id"
+            :name="searchTeamName"
+            class="margin_l10"
+          />
+          <group-sell
+            @result="selectSellTeacher"
+            :name="groupSell"
             class="margin_l10"
           />
         </div>
@@ -113,7 +70,8 @@
 <script>
 import hardLevel from '@/components/MSearch/searchItems/hardLevel.vue' // add
 import orderSearch from '@/components/MSearch/searchItems/orderSearch.vue' // add
-import systemCourseType from '@/components/MSearch/searchItems/systemCourseType.vue'
+import orderStatus from '@/components/MSearch/searchItems/orderStatus.vue' // add
+// import systemCourseType from '@/components/MSearch/searchItems/systemCourseType.vue'
 import DatePicker from '@/components/MSearch/searchItems/datePicker.vue'
 import ChannelSelect from '@/components/MSearch/searchItems/channel.vue'
 // import ProductTopic from '@/components/MSearch/searchItems/productTopic.vue'
@@ -129,7 +87,7 @@ import GroupSell from '@/components/MSearch/searchItems/groupSell'
 // import OrderType from '@/components/MSearch/searchItems/orderType'
 import Department from '@/components/MSearch/searchItems/department'
 import SearchTeamName from '@/components/MSearch/searchItems/searchTeamName'
-import SearchTrialTeamName from '@/components/MSearch/searchItems/searchTrialTeamName'
+// import SearchTrialTeamName from '@/components/MSearch/searchItems/searchTrialTeamName'
 // import Schedule from '@/components/MSearch/searchItems/schedule'
 import SearchStage from '@/components/MSearch/searchItems/searchStage'
 import { isToss } from '@/utils/index'
@@ -182,7 +140,7 @@ export default {
     // 下单时间
     date: {
       type: String,
-      default: '' // ctime
+      default: '' // octime
     },
     // datepicker placeholder
     datePlaceholder: {
@@ -217,6 +175,11 @@ export default {
     },
     // 查询班级  搜到用户的最后一个班
     last_team_id: {
+      type: String,
+      default: ''
+    },
+    // 订单状态
+    orderStatus: {
       type: String,
       default: ''
     },
@@ -285,8 +248,9 @@ export default {
   },
 
   components: {
+    orderStatus,
     hardLevel,
-    systemCourseType,
+    // systemCourseType,
     orderSearch,
     ChannelSelect,
     // ProductTopic,
@@ -303,14 +267,13 @@ export default {
     // OrderType,
     Department,
     SearchTeamName,
-    SearchTrialTeamName,
+    // SearchTrialTeamName,
     // Schedule,
     SearchStage
   },
 
   data() {
     return {
-      teacherscope: null,
       showErr: false,
       errTips: '搜索条件不能为空',
       must: [],
@@ -337,25 +300,15 @@ export default {
       console.log(res, 'res')
       this.setSeachParmas(res, [this.stage || 'stage'], 'terms')
     },
-    // 系统课排期
+    // 排期
     selectSchedule(res) {
       console.log(res, 'res')
-      this.setSeachParmas(res, [this.stage || 'stage'])
+      this.setSeachParmas(res, [this.schedule || 'id'])
     },
-    // 体验课排期
-    selectScheduleTrial(res) {
-      console.log(res, 'res')
-      this.setSeachParmas(res, [this.trial_stage || 'trial_stage'])
-    },
-    // 系统课难度
+    // 难度
     supCallBack(res) {
       console.log(res, 'res')
       this.setSeachParmas(res, [this.sup || 'sup'], 'terms')
-    },
-    // 体验课难度
-    supCallBackTrial(res) {
-      console.log(res, 'res')
-      this.setSeachParmas(res, [this.trial_sup || 'trial_sup'], 'terms')
     },
     // 级别
     levelCallBack(res) {
@@ -365,14 +318,14 @@ export default {
     // 选择订单下单时间
     getDate(res) {
       console.log(res, 'lll')
-      this.setSeachParmas(res, [this.date || 'ctime'], 'range')
+      this.setSeachParmas(res, [this.date || 'octime'], 'range')
     },
     // 4点外移
     today() {
       const start = new Date(new Date().toLocaleDateString()).getTime() // 设定日期,时间默认0点
       const end = Date.now()
       this.$root.$emit('fourpoint', [start, end])
-      this.setSeachParmas([start, end], [this.date || 'ctime'], 'range')
+      this.setSeachParmas([start, end], [this.date || 'octime'], 'range')
     },
     yesterday() {
       const yester = new Date()
@@ -383,7 +336,7 @@ export default {
       ).valueOf()
       const end = new Date(yester.toLocaleDateString() + ' 23:59:59').valueOf()
       this.$root.$emit('fourpoint', [start, end])
-      this.setSeachParmas([start, end], [this.date || 'ctime'], 'range')
+      this.setSeachParmas([start, end], [this.date || 'octime'], 'range')
     },
     thisweek() {
       const week = new Date()
@@ -393,7 +346,7 @@ export default {
         reverseDays * 86400000
       const end = new Date().getTime()
       this.$root.$emit('fourpoint', [start, end])
-      this.setSeachParmas([start, end], [this.date || 'ctime'], 'range')
+      this.setSeachParmas([start, end], [this.date || 'octime'], 'range')
     },
     thismonth() {
       const date = new Date()
@@ -401,7 +354,7 @@ export default {
       const start = new Date(new Date(date).toLocaleDateString()).getTime()
       const end = new Date().getTime()
       this.$root.$emit('fourpoint', [start, end])
-      this.setSeachParmas([start, end], [this.date || 'ctime'], 'range')
+      this.setSeachParmas([start, end], [this.date || 'octime'], 'range')
     },
     // 选择手机号
     getPhoneHander(res) {
@@ -427,39 +380,16 @@ export default {
     // 物流时间
     getTimeData(res) {
       console.log(this.selectTime, '清除时的this.selectTime')
+
       this.setSeachParmas(res, [this.selectTime || this.oldTime], 'range')
     },
     // 选择物流单号
     getExpressNo(res) {
       this.setSeachParmas(res, [this.expressNo || 'express_nu'], 'wildcard')
     },
-    // 选择社群销售
-    selectPayTeacher(res) {
-      if (!res.pay_teacher_id || res.pay_teacher_id.length === 0) {
-        if (this.teacherscope && this.teacherscope.length > 0) {
-          res = {
-            pay_teacher_id: this.teacherscope
-          }
-        } else {
-          res = ''
-        }
-      }
-      this.setSeachParmas(
-        res,
-        [this.pay_teacher_id || 'pay_teacher_id'],
-        'terms'
-      )
-    },
     // 选择销售老师
-    selectLastTeacher(res) {
-      if (!res.last_teacher_id || res.last_teacher_id.length === 0) {
-        res = ''
-      }
-      this.setSeachParmas(
-        res,
-        [this.last_teacher_id || 'last_teacher_id'],
-        'terms'
-      )
+    selectSellTeacher(res) {
+      this.setSeachParmas(res, [this.groupSell || 'pay_teacher_id'], 'wildcard')
     },
     getTeamDetail(res) {
       this.setSeachParmas(res, [this.teamDetail || 'last_team_id'])
@@ -473,15 +403,22 @@ export default {
     getSystemCourseType(res) {
       this.setSeachParmas(res, [this.systemCourseType || 'system_course_type'])
     },
+    // 获取订单状态
+    getorderStatus(res) {
+      this.setSeachParmas(res, [this.orderStatus || 'order_status'])
+    },
     getDepartment(res) {
-      this.teacherscope = res.pay_teacher_id || null
       this.setSeachParmas(res, [this.department || 'department'], 'terms')
     },
     getTeamName(res) {
-      this.setSeachParmas(res, [this.team_id || 'team_id'], 'terms')
+      this.setSeachParmas(res, [this.searchTeamName || 'team_name'], 'terms')
     },
     getTrialTeamName(res) {
-      this.setSeachParmas(res, [this.trial_team_id || 'trial_team_id'], 'terms')
+      this.setSeachParmas(
+        res,
+        [this.searchTrialTeamName || 'team_trial_name'],
+        'terms'
+      )
     },
 
     /**  处理接收到的查询参数

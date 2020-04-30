@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-24 15:16:26
  * @LastEditors: liukun
- * @LastEditTime: 2020-04-28 20:40:32
+ * @LastEditTime: 2020-04-29 15:15:35
  -->
 <template>
   <el-scrollbar wrap-class="order-wrapper" id="order-scroll">
@@ -34,8 +34,8 @@
         </el-tab-pane>
 
         <!-- 包含全部体验课订单数据（双周体验课、单周体验课） -->
-        <!-- <el-tab-pane label="体验课" name="4">
-          <searchList1
+        <el-tab-pane label="体验课" name="4">
+          <searchList2
             @search="handleSearch"
             channel="pay_channel"
             sup="sup"
@@ -48,7 +48,7 @@
             search-trial-team-name="last_team_id"
           />
           <all-order :topic="activeTopic" :search="search" />
-        </el-tab-pane> -->
+        </el-tab-pane>
         <el-tab-pane label="活动订单" name="1,2,6">
           <all-order :topic="activeTopic" :search="search" />
         </el-tab-pane>
@@ -60,12 +60,14 @@
 <script>
 import allOrder from './components/allOrder'
 import searchList1 from './components/searchList1.vue'
+import searchList2 from './components/searchList2.vue'
 export default {
   name: 'orderModule',
   props: [],
   components: {
     allOrder,
-    searchList1
+    searchList1,
+    searchList2
   },
   data() {
     return {
