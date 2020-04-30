@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-04-25 12:09:03
  * @LastEditors: panjian
- * @LastEditTime: 2020-04-30 18:09:24
+ * @LastEditTime: 2020-04-30 19:36:57
  -->
 <template>
   <div class="channel-box">
@@ -123,10 +123,18 @@
               }}</span>
             </template>
           </el-table-column>
-          <el-table-column prop="channelName" width="150" label="渠道名称">
+          <el-table-column width="150" label="渠道名称">
+            <template slot-scope="scope">
+              <a
+                style="color: #409eff;"
+                :href="scope.row.channelNameLink"
+                target="_blank"
+                >{{ scope.row.channelName }}</a
+              >
+            </template>
           </el-table-column>
           <el-table-column prop="channelId" label="渠道ID"> </el-table-column>
-          <el-table-column prop="orderUserAllNums" label="渠道线索">
+          <el-table-column prop="orderUserPayNums" label="49元购买数">
           </el-table-column>
           <el-table-column prop="orderUserNoPayNums" label="未支付">
           </el-table-column>
@@ -359,6 +367,7 @@ export default {
           } else {
             res.channelCtime = timestamp(res.channelCtime, 5)
           }
+          res.channelNameLink = `https://www.xiaoxiongmeishu.com/activity/newFortyNine?changeImg=1&channelId=${res.channelId}`
           // 线索数
           // const orderUserAllNums = +res.orderUserAllNums
           // 购买体验课数
@@ -452,12 +461,14 @@ export default {
         this.channelIds = ''
         console.log(this.query, 'channelSearchValue')
       }
+      this.totalNumber = 1
       this.getChannelDetailPage()
     },
     // 组件 排期传的值
     schedulingSearch(data) {
       this.querySearchTrialStage = data
       console.log(this.querySearchTrialStage, 'schedulingSearch')
+      this.totalNumber = 1
       this.getChannelDetailPage()
     },
     // 组件 时间回传的值
@@ -470,6 +481,7 @@ export default {
         this.endTime = ''
       }
       console.log(this.stateTime, this.endTime, 'dateSearch')
+      this.totalNumber = 1
       this.getChannelDetailPage()
     },
     // 分页
