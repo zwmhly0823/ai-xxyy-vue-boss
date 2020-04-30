@@ -105,7 +105,6 @@ export default {
         teacherId
       })
       this.teacherIds = teachers
-      console.log(teachers)
     },
     /**
      * 左栏回调函数
@@ -129,7 +128,7 @@ export default {
     },
     // 左栏筛选条件
     async filterHandler(res) {
-      this.scrollStatus = JSON.stringify(...res)
+      this.scrollStatus = JSON.stringify(res)
       console.log(this.scrollStatus, '接口内字段唯一标识')
       this.filterConditions = res
       // 请求体验课状态列表
