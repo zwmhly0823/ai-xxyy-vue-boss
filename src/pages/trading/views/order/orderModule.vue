@@ -49,7 +49,7 @@
         date="ctime"
         date-placeholder="下单时间"
         phone="uid"
-        search-trial-stage="trial_stage"
+        search-trial-stage="stage"
         department="last_teacher_id"
         groupSell="last_teacher_id"
         search-trial-team-name="last_team_id"
@@ -179,32 +179,33 @@ export default {
     handleSearch(res) {
       console.log(res, 'search')
       // 体验课排期和系统课排期
-      const stage = []
+      // const stage = []
       const arr = []
       const search = _.cloneDeep(res)
 
       search.forEach((ele, index) => {
         if (ele.terms) {
-          if (ele.terms.system_stage) {
-            stage.push(...ele.terms.system_stage)
-          }
-          if (ele.terms.trial_stage) {
-            stage.push(...ele.terms.trial_stage)
-          }
-          if (
-            ele.terms &&
-            !ele.terms.system_stage &&
-            ele.terms &&
-            !ele.terms.trial_stage
-          ) {
-            arr.push(ele)
-          }
+          // if (ele.terms.system_stage) {
+          //   stage.push(...ele.terms.system_stage)
+          // }
+          // if (ele.terms.trial_stage) {
+          //   stage.push(...ele.terms.trial_stage)
+          // }
+          // if (
+          //   ele.terms &&
+          //   !ele.terms.system_stage &&
+          //   ele.terms &&
+          //   !ele.terms.trial_stage
+          // ) {
+          //   arr.push(ele)
+          // }
           if (Object.keys(ele.terms).length === 0) search.splice(index, 1)
-        } else {
-          arr.push(ele)
         }
+        // else {
+        //   }
+        arr.push(ele)
       })
-      stage.length > 0 && arr.push({ terms: { stage } })
+      // stage.length > 0 && arr.push({ terms: { stage } })
       console.log(arr, 'arr...........')
 
       this.search = arr
