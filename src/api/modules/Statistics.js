@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-07 13:52:26
  * @LastEditors: Shentong
- * @LastEditTime: 2020-04-29 16:52:58
+ * @LastEditTime: 2020-04-30 21:54:02
  */
 import axios from '../axiosConfig'
 
@@ -77,8 +77,8 @@ export default {
   },
   // 按期汇总模块接口---->通过期数、销售部门、社群销售、难度 条件过滤 数量统计接口
   getCountStatisticBySearch(params) {
-    const { period = '', department = '', sup = '' } = params
-    const query = `{"term": "${period}","departmentId": "${department}", "sup": "${sup}"}`
+    const { period = '', department = '', sup = '', teacher = '' } = params
+    const query = `{"term": "${period}","departmentId": "${department}", "sup": "${sup}", "teacherIds": "${teacher}"}`
 
     return axios.post('/graphql/v1/toss', {
       query: `{
