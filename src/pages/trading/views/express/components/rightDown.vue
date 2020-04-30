@@ -537,6 +537,9 @@ export default {
           if (item.term.user_id) {
             timeType.user_id = item.term.user_id
           }
+          if (item.term && item.term.pay_teacher_id) {
+            timeType.pay_teacher_id = item.term.pay_teacher_id
+          }
           if (item.term && item.term.regtype) {
             timeType.regtype = `${item.term.regtype}`
           }
@@ -572,9 +575,6 @@ export default {
         }
         if (item.wildcard && item.wildcard.express_nu) {
           timeType.express_nu = item.wildcard.express_nu
-        }
-        if (item.wildcard && item.wildcard.pay_teacher_id) {
-          timeType.pay_teacher_id = item.wildcard.pay_teacher_id
         }
       })
 
