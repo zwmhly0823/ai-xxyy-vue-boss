@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-04-25 12:09:03
  * @LastEditors: panjian
- * @LastEditTime: 2020-04-30 16:49:13
+ * @LastEditTime: 2020-04-30 16:55:14
  -->
 <template>
   <div class="channel-box">
@@ -359,7 +359,9 @@ export default {
             res.channelCtime = timestamp(res.channelCtime, 5)
           }
           // 线索数
-          const orderUserAllNums = +res.orderUserAllNums
+          // const orderUserAllNums = +res.orderUserAllNums
+          // 购买体验课数
+          const orderUserPayNums = +res.orderUserPayNums
           // 参课数
           const joinCourseNums = +res.joinCourseNums
           // 完课数
@@ -367,24 +369,24 @@ export default {
           // 成单数
           const systemOrderNums = +res.systemOrderNums
           // 计算参课率
-          if (joinCourseNums === 0 && orderUserAllNums === 0) {
+          if (joinCourseNums === 0 && orderUserPayNums === 0) {
             res.joinCourseNumsPercent = '0%'
           } else {
-            const nums = (joinCourseNums / orderUserAllNums) * 100
+            const nums = (joinCourseNums / orderUserPayNums) * 100
             res.joinCourseNumsPercent = `${nums.toFixed(2)}%`
           }
           // 计算完课率
-          if (completeCourseNums === 0 && orderUserAllNums === 0) {
+          if (completeCourseNums === 0 && orderUserPayNums === 0) {
             res.completeCourseNumsPercent = '0%'
           } else {
-            const nums = (completeCourseNums / orderUserAllNums) * 100
+            const nums = (completeCourseNums / orderUserPayNums) * 100
             res.completeCourseNumsPercent = `${nums.toFixed(2)}%`
           }
           // 计算成单率
-          if (systemOrderNums === 0 && orderUserAllNums === 0) {
+          if (systemOrderNums === 0 && orderUserPayNums === 0) {
             res.systemOrderNumsPercent = '0%'
           } else {
-            const nums = (systemOrderNums / orderUserAllNums) * 100
+            const nums = (systemOrderNums / orderUserPayNums) * 100
             res.systemOrderNumsPercent = `${nums.toFixed(2)}%`
           }
         })
@@ -393,17 +395,13 @@ export default {
         // 累计成单金额
         this.allSystemUserAmounts = _datas.allSystemUserAmounts
         // 累计转化率
-        if (
-          +_datas.allSystemUserAmounts === 0 &&
-          +_datas.allPayUserNums === 0
-        ) {
+        if (+_datas.allSystemUserNums === 0 && +_datas.allPayUserNums === 0) {
           this.conversionRate = `0%`
         } else {
           const conversionRatePercentNums =
             (_datas.allSystemUserNums / _datas.allPayUserNums) * 100
           this.conversionRate = `${conversionRatePercentNums.toFixed(2)}%`
         }
-        // this.conversionRate = '-'
         // 添加微信
         this.allWechatAddNums = _datas.allWechatAddNums
         // 未支付
