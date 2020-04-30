@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-04-25 12:09:03
  * @LastEditors: panjian
- * @LastEditTime: 2020-04-30 17:13:21
+ * @LastEditTime: 2020-04-30 17:22:13
  -->
 <template>
   <div class="channel-box">
@@ -442,7 +442,7 @@ export default {
     channelSearchValue(data) {
       if (data) {
         this.query = `{"terms":{"id":[${data.toString()}]}}`
-        this.channelIds = `"${this.channelList}"`
+        this.channelIds = `"${data.toString()}"`
         console.log(this.query, 'this.query')
       } else {
         this.query = ''
