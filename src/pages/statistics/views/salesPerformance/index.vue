@@ -4,13 +4,14 @@
  * @Author: zhubaodong
  * @Date: 2020-04-02 15:35:27
  * @LastEditors: Shentong
- * @LastEditTime: 2020-04-29 17:07:12
+ * @LastEditTime: 2020-04-30 21:31:39
  -->
 <template>
   <el-row type="flex" class="app-main height schedule-container">
     <el-col class="schedule-container-right">
       <div class="grid-content">
         <el-scrollbar wrap-class="scrollbar-wrapper">
+          <!-- 期状态 -->
           <div class="top-tabs">
             <div
               v-for="(statusInfo, index) in topStatus"
@@ -21,6 +22,7 @@
               {{ statusInfo.label }}
             </div>
           </div>
+          <!-- 期标签页 -->
           <div class="tabs-operate">
             <div
               v-for="(tab, index) in priodTabs"
@@ -38,8 +40,8 @@
               v-if="priodTabsEnd.length"
             >
               <span class="el-dropdown-link">
-                {{ selectName
-                }}<i class="el-icon-arrow-down el-icon--right"></i>
+                {{ selectName }}
+                <i class="el-icon-arrow-down el-icon--right"></i>
               </span>
               <el-dropdown-menu slot="dropdown">
                 <el-dropdown-item
@@ -51,6 +53,7 @@
               </el-dropdown-menu>
             </el-dropdown>
           </div>
+          <!-- 搜索 -->
           <div class="sear-container">
             <!-- TODO: -->
             <statictics-search @searchChange="searchChange"></statictics-search>
@@ -65,31 +68,180 @@
             <span class="label-val"
               >{{ statisticsInfo.course_days || '-' }}天</span
             >
-            <span>当前结果：总订单数：</span>
-            <span class="label-val for-light">{{
-              statisticsInfo.order_number || '-'
-            }}</span>
-            <span>总转化率：</span>
-            <span class="label-val for-light">{{
-              statisticsInfo.conversion_rate_total || '-'
-            }}</span>
-            <span>总金额：</span>
-            <span class="for-light">{{
-              statisticsInfo.amount_total || '-'
-            }}</span>
+            <!-- <span>当前结果：</span> -->
+            <template v-if="activeName == 'conversion'">
+              <span>总订单数：</span>
+              <span class="label-val for-light">{{
+                statisticsInfo.order_number || '-'
+              }}</span>
+              <span>总转化率：</span>
+              <span class="label-val for-light">{{
+                statisticsInfo.conversion_rate_total || '-'
+              }}</span>
+              <span>总金额：</span>
+              <span class="for-light">{{
+                statisticsInfo.amount_total || '-'
+              }}</span>
+            </template>
+            <template v-else-if="activeName == 'attendClass'">
+              <span>本期总{{ despMap[activeName] }}人数：</span>
+              <span class="label-val for-light">
+                {{ statisticsInfo.join_nums || '-' }}
+              </span>
+              <span>本期总{{ despMap[activeName] }}率：</span>
+              <span class="label-val for-light">{{
+                statisticsInfo.join_rate || '-'
+              }}</span>
+              <span>本日总{{ despMap[activeName] }}人数：</span>
+              <span class="label-val for-light">{{
+                statisticsInfo.now_join_nums || '-'
+              }}</span>
+              <span>本日总{{ despMap[activeName] }}率：</span>
+              <span class="label-val for-light">{{
+                statisticsInfo.now_join_rate || '-'
+              }}</span>
+            </template>
+            <!-- 完课统计数据统计 -->
+            <template v-else-if="activeName == 'finishClass'">
+              <span>本期总{{ despMap[activeName] }}人数：</span>
+              <span class="label-val for-light"
+                >{{ statisticsInfo.complete_nums || '-' }}
+              </span>
+              <span>本期总{{ despMap[activeName] }}率：</span>
+              <span class="label-val for-light">
+                {{ statisticsInfo.complete_rate || '-' }}
+              </span>
+              <span>本日总{{ despMap[activeName] }}人数：</span>
+              <span class="label-val for-light">
+                {{ statisticsInfo.now_complete_nums || '-' }}
+              </span>
+              <span>本日总{{ despMap[activeName] }}率：</span>
+              <span class="label-val for-light">
+                {{ statisticsInfo.now_complete_rate || '-' }}
+              </span>
+            </template>
           </p>
           <div style="padding: 0 15px;">
             <el-tabs
               v-model="activeName"
               @tab-click="statisticsTypehandleClick"
             >
-              <el-tab-pane label="转化统计" name="conversion"> </el-tab-pane>
+              <!-- <el-tab-pane label="转化统计" name="conversion"> </el-tab-pane> -->
               <!-- TODO: -->
-              <!-- <el-tab-pane label="参课统计" name="attendClass"> </el-tab-pane
-              ><el-tab-pane label="完课统计" name="finishClass"> </el-tab-pane> -->
+              <el-tab-pane label="参课统计" name="attendClass"> </el-tab-pane>
+              <!-- <el-tab-pane label="完课统计" name="finishClass"> </el-tab-pane> -->
             </el-tabs>
           </div>
-          <div class="orderStyle" v-if="tableData.length">
+          <!-- 完课统计列表 -->
+          <div
+            class="orderStyle"
+            v-if="tableDataAttend.length && activeName === 'finishClass'"
+          >
+            <ele-table
+              :dataList="tableDataAttend"
+              :loading="flags.loading"
+              :size="tabQuery.size"
+              :page="tabQuery.page"
+              :total="totalElements"
+              @pageChange="pageChange_handler"
+              class="mytable"
+            >
+              <el-table-column
+                fixed
+                label="难度级别"
+                prop="sup"
+                width="70"
+                align="center"
+              ></el-table-column>
+              <el-table-column
+                fixed
+                label="销售组"
+                width="120"
+                align="center"
+                prop="department_name"
+              ></el-table-column>
+              <el-table-column
+                fixed
+                label="社群销售"
+                width="80"
+                align="center"
+                prop="teacher_name"
+              ></el-table-column>
+              <el-table-column
+                fixed
+                label="体验课学生"
+                width="85"
+                prop="student_nums"
+                align="center"
+              ></el-table-column>
+              <el-table-column align="center" label="总计">
+                <el-table-column
+                  fixed
+                  label="总完课人数"
+                  prop="total_complete_nums"
+                  align="center"
+                ></el-table-column>
+                <el-table-column
+                  fixed
+                  label="总完课率"
+                  prop="total_complete_rate"
+                  align="center"
+                ></el-table-column>
+              </el-table-column>
+              <!-- child-table-start -->
+              <el-table-column
+                align="center"
+                v-for="(a, i) in tableDataChildAttend"
+                :label="a.current_lesson"
+                :key="i"
+              >
+                <el-table-column fixed label="当日完课人数" align="center">
+                  <template slot-scope="scope">
+                    <span
+                      v-if="
+                        Object.keys(scope.row.completeArr).length &&
+                          scope.row.completeArr[i] &&
+                          !scope.row.completeArr[i].is_null
+                      "
+                    >
+                      {{ scope.row.completeArr[i].complete_nums }}
+                    </span>
+                  </template>
+                </el-table-column>
+                <el-table-column fixed label="当日完课率" align="center">
+                  <template slot-scope="scope">
+                    <span
+                      v-if="
+                        Object.keys(scope.row.completeArr).length &&
+                          scope.row.completeArr[i] &&
+                          !scope.row.completeArr[i].is_null
+                      "
+                      >{{ scope.row.completeArr[i].complete_rate }}</span
+                    >
+                  </template>
+                </el-table-column>
+                <!-- <el-table-column fixed label="总金额" align="center"
+                  ><template slot-scope="scope">
+                    <span
+                      v-if="
+                        Object.keys(scope.row.conversion_rate_daily).length &&
+                          scope.row.conversion_rate_daily[i] &&
+                          !scope.row.conversion_rate_daily[i].is_last
+                      "
+                    >
+                      {{ scope.row.conversion_rate_daily[i].amount }}
+                    </span>
+                    <span v-else>--</span>
+                  </template></el-table-column
+                >-->
+              </el-table-column>
+            </ele-table>
+          </div>
+
+          <div
+            class="orderStyle"
+            v-if="tableData.length && activeName == 'conversion'"
+          >
             <ele-table
               :dataList="tableData"
               :loading="flags.loading"
@@ -199,7 +351,101 @@
               </el-table-column>
             </ele-table>
           </div>
-          <div v-else class="no-data">
+          <!-- 参课统计 table -->
+          <div
+            class="orderStyle"
+            v-if="tableDataAttend.length && activeName == 'attendClass'"
+          >
+            <ele-table
+              :dataList="tableDataAttend"
+              :loading="flags.loading"
+              :size="tabQuery.size"
+              :page="tabQuery.page"
+              :total="totalElements"
+              @pageChange="pageChange_handler"
+              class="mytable"
+            >
+              <el-table-column
+                fixed
+                label="难度级别"
+                prop="sup"
+                width="70"
+                align="center"
+              ></el-table-column>
+              <el-table-column
+                fixed
+                label="销售组"
+                width="120"
+                align="center"
+                prop="department_name"
+              ></el-table-column>
+              <el-table-column
+                fixed
+                label="社群销售"
+                width="80"
+                align="center"
+                prop="teacher_name"
+              ></el-table-column>
+              <el-table-column
+                fixed
+                label="体验课学生"
+                width="85"
+                prop="student_nums"
+                align="center"
+              ></el-table-column>
+              <el-table-column align="center" label="总计">
+                <el-table-column
+                  fixed
+                  label="总参课人数"
+                  prop="total_join_nums"
+                  align="center"
+                ></el-table-column>
+                <el-table-column
+                  fixed
+                  label="总参课率"
+                  prop="total_join_rate"
+                  align="center"
+                ></el-table-column>
+              </el-table-column>
+              <el-table-column
+                align="center"
+                v-for="(a, i) in tableDataChildAttend"
+                :label="a.current_lesson"
+                :key="i"
+              >
+                <el-table-column fixed label="当日参课人数" align="center">
+                  <template slot-scope="scope">
+                    <span
+                      v-if="
+                        Object.keys(scope.row.completeArr).length &&
+                          scope.row.completeArr[i] &&
+                          !scope.row.completeArr[i].is_null
+                      "
+                    >
+                      {{ scope.row.completeArr[i].join_nums }}
+                    </span>
+                  </template>
+                </el-table-column>
+                <el-table-column fixed label="当日参课率" align="center">
+                  <template slot-scope="scope">
+                    <span
+                      v-if="
+                        Object.keys(scope.row.completeArr).length &&
+                          scope.row.completeArr[i] &&
+                          !scope.row.completeArr[i].is_null
+                      "
+                    >
+                      {{ scope.row.completeArr[i].join_rate }}
+                    </span>
+                  </template>
+                </el-table-column>
+              </el-table-column>
+            </ele-table>
+          </div>
+          <div
+            v-if="tableDataAttend.length === 0 && tableData.length === 0"
+            class="no-data"
+          >
             暂无数据
           </div>
         </el-scrollbar>
@@ -226,10 +472,17 @@ export default {
   },
   data() {
     return {
+      despMap: {
+        conversion: '转化',
+        attendClass: '参课',
+        finishClass: '完课'
+      },
       // tabs标签默认状态
       selectName: '更多',
-      activeName: 'conversion',
+      // 统计表title TODO:
+      activeName: 'attendClass',
       tabIndex: 0,
+      // 状态index
       btnIndex: 0,
       topStatus: [
         {
@@ -253,6 +506,7 @@ export default {
         5: 'S5'
       },
       priodTabs: [],
+      // 期标签页面更多下拉
       priodTabsEnd: [],
       flags: {
         loading: false
@@ -266,7 +520,9 @@ export default {
       // 表格数据
       statisticsInfo: {},
       tableData: [],
-      tableDataChild: []
+      tableDataAttend: [],
+      tableDataChild: [],
+      tableDataChildAttend: []
     }
   },
   computed: {},
@@ -317,32 +573,75 @@ export default {
     },
     // table列表
     async getChangecListByProid() {
-      const loadingInstance = this.$loading({
-        target: 'section',
-        lock: true,
-        text: '玩命加载中...',
-        fullscreen: true
-      })
+      this.flags.loading = true
       // TODO:
       // this.tabQuery.period = 13
       try {
-        let {
-          data: { ConversionRateStatistics }
-        } = await this.$http.Statistics.getChangecListByProid(this.tabQuery)
+        if (this.activeName === 'finishClass') {
+          // 完课统计
+          const { period, teacher, department, sup } = this.tabQuery
+          const {
+            data: { getCompeteCourseList }
+          } = await this.$http.Statistics.getCompeteCourseList({
+            ...this.tabQuery,
+            term: period,
+            teacher_ids: teacher,
+            department_ids: department,
+            sups: sup
+          })
+          // 表格上的统计信息
+          this.statisticsInfo = getCompeteCourseList || {}
+          // 格式化时间
+          this.statisticsInfo.start_date = this.statisticsInfo.start_date
+            ? formatData(this.statisticsInfo.start_date)
+            : ''
+          this.statisticsInfo.end_date = this.statisticsInfo.end_date
+            ? formatData(this.statisticsInfo.end_date)
+            : ''
+          // 总数、分页用
+          this.totalElements = +getCompeteCourseList.totalElements || 0
+          this.formatTableData(getCompeteCourseList.completeCourse || [])
+        } else if (this.activeName === 'attendClass') {
+          // 参课统计tab
+          const { period, teacher, department, sup } = this.tabQuery
+          const {
+            data: { getCompeteCourseList }
+          } = await this.$http.Statistics.getAttendClasscListByProid({
+            ...this.tabQuery,
+            term: period,
+            teacher_ids: teacher,
+            department_ids: department,
+            sups: sup
+          })
+          // 表格上的统计信息
+          this.statisticsInfo = getCompeteCourseList || {}
+          // 格式化时间
+          this.statisticsInfo.start_date = this.statisticsInfo.start_date
+            ? formatData(this.statisticsInfo.start_date)
+            : ''
+          this.statisticsInfo.end_date = this.statisticsInfo.end_date
+            ? formatData(this.statisticsInfo.end_date)
+            : ''
+          // 总数、分页用
+          this.totalElements = +getCompeteCourseList.totalElements || 0
+          this.formatTableData(getCompeteCourseList.completeCourse || [])
+        } else {
+          let {
+            data: { ConversionRateStatistics }
+          } = await this.$http.Statistics.getChangecListByProid(this.tabQuery)
 
-        !ConversionRateStatistics && (ConversionRateStatistics = {})
-        // 总数、分页用
-        this.totalElements = ConversionRateStatistics.total_elements || 0
+          !ConversionRateStatistics && (ConversionRateStatistics = {})
+          // 总数、分页用
+          this.totalElements = ConversionRateStatistics.total_elements || 0
 
-        // 表格上的统计信息
-        this.statisticsInfo = ConversionRateStatistics
-
-        this.pakageListDate(ConversionRateStatistics)
-
-        loadingInstance.close()
+          // 表格上的统计信息
+          this.statisticsInfo = ConversionRateStatistics
+          this.pakageListDate(ConversionRateStatistics)
+        }
+        this.flags.loading = false
       } catch (err) {
         console.log(err)
-        loadingInstance.close()
+        // loadingInstance.close()
       }
     },
     // 包装 接口返回的数据
@@ -377,8 +676,105 @@ export default {
       // }
       this.tableData = teacherConversion
     },
-    // 点击tabs页签（转化统计 按钮）
+    //  参课统计 数据格式化
+    formatTableData(list) {
+      // list = [
+      //   {
+      //     sup: 'S2',
+      //     teacher_id: '80',
+      //     teacher_name: '周艺达',
+      //     department_id: '19',
+      //     department_name: '3部S2战队',
+      //     student_nums: '95',
+      //     total_nums: '285',
+      //     total_join_nums: '28',
+      //     total_join_rate: '9.82%',
+      //     total_complete_nums: '157',
+      //     total_complete_rate: '55.09%',
+      //     completeArr: [
+      //       {
+      //         current_lesson: 'W1D3',
+      //         sum: '95',
+      //         join_nums: '14',
+      //         join_rate: '14.74%',
+      //         complete_nums: '35',
+      //         complete_rate: '36.84%'
+      //       },
+      //       {
+      //         current_lesson: 'W1D1',
+      //         sum: '95',
+      //         join_nums: '6',
+      //         join_rate: '6.32%',
+      //         complete_nums: '67',
+      //         complete_rate: '70.53%'
+      //       },
+      //       {
+      //         current_lesson: 'W1D2',
+      //         sum: '95',
+      //         join_nums: '8',
+      //         join_rate: '8.42%',
+      //         complete_nums: '55',
+      //         complete_rate: '57.89%'
+      //       }
+      //     ]
+      //   },
+      //   {
+      //     sup: 'S2',
+      //     teacher_id: '79',
+      //     teacher_name: '张晨阳',
+      //     department_id: '19',
+      //     department_name: '3部S2战队',
+      //     student_nums: '94',
+      //     total_nums: '282',
+      //     total_join_nums: '39',
+      //     total_join_rate: '13.83%',
+      //     total_complete_nums: '152',
+      //     total_complete_rate: '53.9%',
+      //     completeArr: [
+      //       {
+      //         current_lesson: 'W1D3',
+      //         sum: '94',
+      //         join_nums: '12',
+      //         join_rate: '12.77%',
+      //         complete_nums: '42',
+      //         complete_rate: '44.68%'
+      //       },
+      //       {
+      //         current_lesson: 'W1D1',
+      //         sum: '94',
+      //         join_nums: '10',
+      //         join_rate: '10.64%',
+      //         complete_nums: '65',
+      //         complete_rate: '69.15%'
+      //       },
+      //       {
+      //         current_lesson: 'W1D2',
+      //         sum: '94',
+      //         join_nums: '17',
+      //         join_rate: '18.09%',
+      //         complete_nums: '45',
+      //         complete_rate: '47.87%'
+      //       }
+      //     ]
+      //   }
+      // ]
+      // 初始化
+      this.tableDataChildAttend = []
+      list.forEach((item, index) => {
+        item.completeArr = item.completeArr || []
+        const completeArr = item.completeArr
+        const childLength = completeArr.length
+        if (this.tableDataChildAttend.length <= childLength) {
+          this.tableDataChildAttend = completeArr
+        }
+      })
+      this.tableDataAttend = list
+    },
+    // 点击tabs页签（转化统计、参课统计、完课统计 按钮）
     statisticsTypehandleClick(tab) {
+      this.tableDataAttend = []
+      this.tableData = []
+      // console.log(tab.index, 'tab')
       this.tabQuery.page = 1
       this.getChangecListByProid()
     },
@@ -418,19 +814,6 @@ export default {
       this.tabQuery.page = page
       this.getChangecListByProid()
     }
-    // 如果返回的 ’conversion_rate_daily‘(this.tableDataChild) 字段为空数组，则：模拟一个列
-    // if (!this.tableDataChild.length) {
-    //   this.tableDataChild = [
-    //     {
-    //       label: `暂无数据`,
-    //       children: [
-    //         { label: '订单数', value: `暂无数据` },
-    //         { label: '转化率', value: `暂无数据` },
-    //         { label: '总金额', value: `暂无数据` }
-    //       ]
-    //     }
-    //   ]
-    // }
   }
 }
 </script>

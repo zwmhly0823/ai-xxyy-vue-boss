@@ -14,6 +14,7 @@ import settings from './modules/settings'
 // import user from './modules/user'
 import leftbar from './modules/leftbar'
 import schedule from './modules/schedule'
+import team from './modules/team'
 
 Vue.use(Vuex)
 
@@ -23,7 +24,8 @@ const store = new Vuex.Store({
     settings,
     // user
     leftbar,
-    schedule
+    schedule,
+    team
   },
   getters
 })
