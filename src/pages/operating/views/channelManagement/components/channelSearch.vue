@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-04-25 12:09:03
  * @LastEditors: panjian
- * @LastEditTime: 2020-04-30 19:20:25
+ * @LastEditTime: 2020-04-30 19:36:57
  -->
 <template>
   <div class="channel-box">
@@ -134,7 +134,7 @@
             </template>
           </el-table-column>
           <el-table-column prop="channelId" label="渠道ID"> </el-table-column>
-          <el-table-column prop="orderUserPayNums" label="已购线索">
+          <el-table-column prop="orderUserPayNums" label="49元购买数">
           </el-table-column>
           <el-table-column prop="orderUserNoPayNums" label="未支付">
           </el-table-column>
