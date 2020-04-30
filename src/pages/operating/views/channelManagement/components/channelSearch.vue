@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-04-25 12:09:03
  * @LastEditors: Shentong
- * @LastEditTime: 2020-04-30 15:51:44
+ * @LastEditTime: 2020-04-30 16:13:57
  -->
 <template>
   <div class="channel-box">
@@ -277,7 +277,7 @@ export default {
       channelIds: '',
       querysData: '',
       // 体验课排期参数
-      querySearchTrialStage: null,
+      querySearchTrialStage: '',
       // 开始时间
       stateTime: '',
       // 结束时间
@@ -328,10 +328,10 @@ export default {
         this.endTime
       ) {
         const queryChannelList = this.query ? this.query : `{"match_all" : {}}`
-        const channelId = this.channelIds ? this.channelIds : `"0"`
+        const channelId = this.channelIds ? this.channelIds : `""`
         const SearchTrialStage = this.querySearchTrialStage
-          ? this.querySearchTrialStage
-          : 0
+          ? `"${this.querySearchTrialStage}"`
+          : `"0"`
         const trialOrderStartCtime = this.stateTime
           ? `"${this.stateTime}"`
           : `"0"`
@@ -342,7 +342,7 @@ export default {
           this.totalNumber
         }`
       } else {
-        this.querysData = `"{\\"match_all\\" : {}}",trialStage:0,trialOrderEndCtime:"0",trialOrderStartCtime:"0",page:${this.totalNumber}`
+        this.querysData = `"{\\"match_all\\" : {}}",trialStage:"",trialOrderEndCtime:"0",trialOrderStartCtime:"0",page:${this.totalNumber}`
       }
       this.$http.Operating.channelDetailPage(this.querysData).then((res) => {
         const _data = res.data.channelDetailPage
@@ -459,7 +459,7 @@ export default {
     },
     // 组件 排期传的值
     schedulingSearch(data) {
-      this.querySearchTrialStage = data || 0
+      this.querySearchTrialStage = data
       console.log(this.querySearchTrialStage, 'schedulingSearch')
       this.getChannelDetailPage()
     },
