@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-02 15:35:27
  * @LastEditors: Shentong
- * @LastEditTime: 2020-04-30 13:17:17
+ * @LastEditTime: 2020-04-30 14:59:24
  -->
 <template>
   <el-row type="flex" class="app-main height schedule-container">
@@ -406,11 +406,11 @@ export default {
         )
         item.joinCourseRate = this.calcRate(
           item.join_course_count,
-          item.trial_course_count
+          item.send_course_count
         )
         item.compCourseRate = this.calcRate(
           item.complete_course_count,
-          item.trial_course_count
+          item.send_course_count
         )
         // 人均上传作品
         const uploadTaskRate = +item.trial_course_count
