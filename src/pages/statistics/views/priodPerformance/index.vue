@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-02 15:35:27
  * @LastEditors: Shentong
- * @LastEditTime: 2020-04-30 14:59:24
+ * @LastEditTime: 2020-04-30 17:09:13
  -->
 <template>
   <el-row type="flex" class="app-main height schedule-container">
@@ -283,7 +283,8 @@ export default {
       tableData: [],
       proidList: [],
       tableDatasss: [],
-      currentPriodStatistic: {}
+      currentPriodStatistic: {},
+      search: {}
     }
   },
   computed: {
@@ -291,7 +292,11 @@ export default {
       return this.tabQuery.size * (this.tabQuery.page - 1) + 1
     }
   },
-  watch: {},
+  watch: {
+    search(val) {
+      console.log(val)
+    }
+  },
   activated() {
     this.init()
   },
@@ -479,7 +484,9 @@ export default {
     },
     // 组件emit
     searchChange(search) {
-      const { department = [], groupSell = '', sup = [] } = search
+      this.search = search
+
+      const { department = [], groupSell = '', sup = [] } = this.search
       Object.assign(this.tabQuery, {
         teacher: groupSell,
         department: department.join(),
@@ -504,6 +511,7 @@ export default {
     },
     // 点击  ’进行中、已结课、招生中‘ 按钮
     top_tabs_click(index, statusInfo) {
+      this.search = {}
       this.tabIndex = 0
       this.btnIndex = index
       const { status } = statusInfo
