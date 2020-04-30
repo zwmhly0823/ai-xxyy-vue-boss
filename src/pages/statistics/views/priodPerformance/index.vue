@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-02 15:35:27
  * @LastEditors: Shentong
- * @LastEditTime: 2020-04-30 14:59:24
+ * @LastEditTime: 2020-04-30 21:52:06
  -->
 <template>
   <el-row type="flex" class="app-main height schedule-container">
@@ -62,27 +62,27 @@
             <span class="label-val">{{
               currentPriodStatistic.end_course_day || '-'
             }}</span
-            >开课天数：
+            >开课天数
             <span class="label-val"
-              >{{ currentPriodStatistic.startCourseDay }}天</span
+              >{{ currentPriodStatistic.startCourseDay }} 天</span
             >
-            <span>当前结果：社群销售</span>
-            <span class="for-light"
-              >{{ searchStatistic.teacherNum || '-' }}，</span
-            >
-            <span>体验学生</span>
-            <span class="for-light"
-              >{{ searchStatistic.trialStudentNum || '-' }}，</span
-            >
-            <span>系统课转化率</span>
-            <span class="for-light"
-              >{{ searchStatistic.systemConversion || '-' }}，</span
-            >
-            <span>系统课支付学生</span>
-            <span class="for-light"
-              >{{ searchStatistic.systemStudentNum || '-' }}，</span
-            >
-            <span>支付总金额</span>
+            <span> 社群销售 </span>
+            <span class="for-light">{{
+              searchStatistic.teacherNum || '-'
+            }}</span>
+            <span> 体验学生 </span>
+            <span class="for-light">{{
+              searchStatistic.trialStudentNum || '-'
+            }}</span>
+            <span> 总转化率 </span>
+            <span class="for-light">{{
+              searchStatistic.systemConversion || '-'
+            }}</span>
+            <span> 系统课支付学生 </span>
+            <span class="for-light">{{
+              searchStatistic.systemStudentNum || '-'
+            }}</span>
+            <span> 支付总金额 </span>
             <span class="for-light">{{
               searchStatistic.systemTotalAmount || '-'
             }}</span>
@@ -637,7 +637,7 @@ export default {
       margin-right: 20px;
     }
     .for-light {
-      margin-left: 5px;
+      margin-right: 5px;
       color: #409eff;
     }
   }

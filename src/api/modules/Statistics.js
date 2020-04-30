@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-07 13:52:26
  * @LastEditors: Shentong
- * @LastEditTime: 2020-04-29 16:52:58
+ * @LastEditTime: 2020-04-30 21:54:02
  */
 import axios from '../axiosConfig'
 
@@ -77,8 +77,8 @@ export default {
   },
   // 按期汇总模块接口---->通过期数、销售部门、社群销售、难度 条件过滤 数量统计接口
   getCountStatisticBySearch(params) {
-    const { period = '', department = '', sup = '' } = params
-    const query = `{"term": "${period}","departmentId": "${department}", "sup": "${sup}"}`
+    const { period = '', department = '', sup = '', teacher = '' } = params
+    const query = `{"term": "${period}","departmentId": "${department}", "sup": "${sup}", "teacherIds": "${teacher}"}`
 
     return axios.post('/graphql/v1/toss', {
       query: `{
@@ -152,6 +152,112 @@ export default {
             }
           }
         }`
+    })
+  },
+  // 通过期号，获取table (参课统计接口)
+  getAttendClasscListByProid(params) {
+    const {
+      // status = 'on_going',
+      term = 1,
+      page = 1,
+      size = '20',
+      teacher_ids = '', // eslint-disable-line
+      department_ids = '', // eslint-disable-line
+      sups = ''
+    } = params
+    let supStr = ''
+    if (sups) {
+      supStr = sups
+        .split(',')
+        .map((item) => 'S' + item)
+        .join(',')
+    } else {
+      supStr = sups
+    }
+    // eslint-disable-next-line
+    const query = `{"term": "${term}","department_ids": "${department_ids}", "sups": "${supStr}", "teacher_ids":"${teacher_ids}"}` // eslint-disable-line
+
+    return axios.post('/graphql/getDepartmentCourse', {
+      query: `{
+        getCompeteCourseList(query: ${JSON.stringify(query) ||
+          null},page:${page}, size: ${size}) {
+          start_date
+          end_date
+          course_days
+          join_nums
+          join_rate
+          now_join_nums
+          now_join_rate
+          totalElements
+          completeCourse{
+            sup
+            department_name
+            teacher_name
+            student_nums
+            total_join_nums
+            total_join_rate
+            completeArr{
+              current_lesson
+              sum
+              join_nums
+              join_rate
+            }
+          }
+      }}`
+    })
+  },
+  // 完课统计接口
+  getCompeteCourseList(params) {
+    const {
+      term = 1,
+      department_ids = '', // eslint-disable-line
+      page = 1,
+      size = '20',
+      teacher_ids = '', // eslint-disable-line
+      sups = ''
+    } = params
+    let supStr = ''
+    if (sups) {
+      supStr = sups
+        .split(',')
+        .map((item) => 'S' + item)
+        .join(',')
+    } else {
+      supStr = sups
+    }
+    // eslint-disable-next-line
+    const query = `{"term": "${term}", "department_ids": "${department_ids}", "sups": "${supStr}", "teacher_ids":"${teacher_ids}"}` // eslint-disable-line
+    return axios.post('/graphql/getDepartmentCourse', {
+      query: `{
+        getCompeteCourseList(query: ${JSON.stringify(query) ||
+          null},page:${page}, size: ${size}) {
+          start_date
+          end_date
+          course_days
+          join_nums
+          join_rate
+          now_join_nums
+          now_join_rate
+          totalElements
+          complete_nums
+          complete_rate
+          now_complete_nums
+          now_complete_rate
+          completeCourse{
+            sup
+            department_name
+            teacher_name
+            student_nums
+            total_complete_nums
+            total_complete_rate
+            completeArr{
+              current_lesson
+              sum
+              complete_nums
+              complete_rate
+            }
+          }
+      }}`
     })
   }
 }

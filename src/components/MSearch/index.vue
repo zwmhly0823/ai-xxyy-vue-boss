@@ -25,6 +25,7 @@
           :onlyPhone="onlyPhone"
           :tip="phoneTip"
           :last_team_id="last_team_id"
+          ref="searchUserByPhone"
         />
       </el-form-item>
 
