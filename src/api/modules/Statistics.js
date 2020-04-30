@@ -204,11 +204,10 @@ export default {
       page = 1,
       size = '20',
       teacher_ids = '', // eslint-disable-line
-      department = '',
       sups = ''
     } = params
     // eslint-disable-next-line
-    const query = `{"term": "${term}", "department_ids": "${department_ids}","department": "${department}", "sups": "${sups}", "teacher_ids":"${teacher_ids}"}`
+    const query = `{"term": "${term}", "department_ids": "${department_ids}", "sups": "${sups}", "teacher_ids":"${teacher_ids}"}`
     return axios.post('/graphql/getDepartmentCourse', {
       query: `{
         getCompeteCourseList(query: ${JSON.stringify(query) ||

@@ -197,7 +197,13 @@
               >
                 <el-table-column fixed label="当日完课人数" align="center">
                   <template slot-scope="scope">
-                    <span>
+                    <span
+                      v-if="
+                        Object.keys(scope.row.completeArr).length &&
+                          scope.row.completeArr[i] &&
+                          !scope.row.completeArr[i].is_null
+                      "
+                    >
                       {{ scope.row.completeArr[i].complete_nums }}
                     </span>
                   </template>
