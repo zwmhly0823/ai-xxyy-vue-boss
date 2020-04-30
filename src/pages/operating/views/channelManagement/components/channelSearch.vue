@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-04-25 12:09:03
  * @LastEditors: panjian
- * @LastEditTime: 2020-04-30 16:47:36
+ * @LastEditTime: 2020-04-30 16:49:13
  -->
 <template>
   <div class="channel-box">
