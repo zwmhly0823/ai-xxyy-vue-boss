@@ -3,8 +3,8 @@
  * @version: 
  * @Author: panjian
  * @Date: 2020-04-25 12:09:03
- * @LastEditors: panjian
- * @LastEditTime: 2020-04-30 12:03:42
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-04-30 12:13:43
  -->
 <template>
   <div class="channel-box">
@@ -324,7 +324,6 @@ export default {
         this.stateTime ||
         this.endTime
       ) {
-        debugger
         const queryChannelList = this.query ? this.query : `{"match_all" : {}}`
         const SearchTrialStage = this.querySearchTrialStage
           ? this.querySearchTrialStage
@@ -339,7 +338,6 @@ export default {
           this.totalNumber
         }`
       } else {
-        debugger
         this.querysData = `"{\\"match_all\\" : {}}",trialStage:0,trialOrderEndCtime:"0",trialOrderStartCtime:"0",page:${this.totalNumber}`
       }
       this.$http.Operating.channelDetailPage(this.querysData).then((res) => {
