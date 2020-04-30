@@ -210,7 +210,14 @@
                 </el-table-column>
                 <el-table-column fixed label="当日完课率" align="center">
                   <template slot-scope="scope">
-                    <span> {{ scope.row.completeArr[i].complete_rate }}</span>
+                    <span
+                      v-if="
+                        Object.keys(scope.row.completeArr).length &&
+                          scope.row.completeArr[i] &&
+                          !scope.row.completeArr[i].is_null
+                      "
+                      >{{ scope.row.completeArr[i].complete_rate }}</span
+                    >
                   </template>
                 </el-table-column>
                 <!-- <el-table-column fixed label="总金额" align="center"
