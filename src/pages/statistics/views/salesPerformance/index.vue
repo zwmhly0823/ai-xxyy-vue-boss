@@ -430,7 +430,7 @@
             </ele-table>
           </div>
           <div
-            v-if="tableDataAttend.length === 0 || tableData.length === 0"
+            v-if="tableDataAttend.length === 0 && tableData.length === 0"
             class="no-data"
           >
             暂无数据
