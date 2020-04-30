@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-04-25 12:09:03
  * @LastEditors: panjian
- * @LastEditTime: 2020-04-30 16:11:06
+ * @LastEditTime: 2020-04-30 16:47:36
  -->
 <template>
   <div class="channel-box">
@@ -400,7 +400,7 @@ export default {
           this.conversionRate = `0%`
         } else {
           const conversionRatePercentNums =
-            (_datas.allSystemUserAmounts / _datas.allPayUserNums) * 100
+            (_datas.allSystemUserNums / _datas.allPayUserNums) * 100
           this.conversionRate = `${conversionRatePercentNums.toFixed(2)}%`
         }
         // this.conversionRate = '-'
