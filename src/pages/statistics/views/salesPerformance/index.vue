@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-04-02 15:35:27
  * @LastEditors: Shentong
- * @LastEditTime: 2020-04-29 17:07:12
+ * @LastEditTime: 2020-04-30 21:31:39
  -->
 <template>
   <el-row type="flex" class="app-main height schedule-container">
@@ -126,10 +126,10 @@
               v-model="activeName"
               @tab-click="statisticsTypehandleClick"
             >
-              <el-tab-pane label="转化统计" name="conversion"> </el-tab-pane>
+              <!-- <el-tab-pane label="转化统计" name="conversion"> </el-tab-pane> -->
               <!-- TODO: -->
               <el-tab-pane label="参课统计" name="attendClass"> </el-tab-pane>
-              <el-tab-pane label="完课统计" name="finishClass"> </el-tab-pane>
+              <!-- <el-tab-pane label="完课统计" name="finishClass"> </el-tab-pane> -->
             </el-tabs>
           </div>
           <!-- 完课统计列表 -->
@@ -479,8 +479,8 @@ export default {
       },
       // tabs标签默认状态
       selectName: '更多',
-      // 统计表title
-      activeName: 'conversion',
+      // 统计表title TODO:
+      activeName: 'attendClass',
       tabIndex: 0,
       // 状态index
       btnIndex: 0,
@@ -770,7 +770,7 @@ export default {
       })
       this.tableDataAttend = list
     },
-    // 点击tabs页签（转化统计 按钮）
+    // 点击tabs页签（转化统计、参课统计、完课统计 按钮）
     statisticsTypehandleClick(tab) {
       this.tableDataAttend = []
       this.tableData = []
@@ -814,19 +814,6 @@ export default {
       this.tabQuery.page = page
       this.getChangecListByProid()
     }
-    // 如果返回的 ’conversion_rate_daily‘(this.tableDataChild) 字段为空数组，则：模拟一个列
-    // if (!this.tableDataChild.length) {
-    //   this.tableDataChild = [
-    //     {
-    //       label: `暂无数据`,
-    //       children: [
-    //         { label: '订单数', value: `暂无数据` },
-    //         { label: '转化率', value: `暂无数据` },
-    //         { label: '总金额', value: `暂无数据` }
-    //       ]
-    //     }
-    //   ]
-    // }
   }
 }
 </script>

@@ -71,54 +71,54 @@ const routes = [
     ]
   },
   // 统计分析
-  // {
-  //   path: '/statistics',
-  //   name: 'statistics',
-  //   // hidden: true,
-  //   meta: {
-  //     title: '统计分析',
-  //     icon: 'el-icon-s-marketing',
-  //     module: 'statistics'
-  //   },
-  //   children: [
-  //     // {
-  //     //   path: '/salesPerformance',
-  //     //   name: 'salesPerformance',
-  //     //   meta: {
-  //     //     title: '销售业绩',
-  //     //     module: 'statistics',
-  //     //     style: 'line'
-  //     //   }
-  //     // },
-  //     // {
-  //     //   path: '/salesPerformance',
-  //     //   name: 'salesPerformance',
-  //     //   meta: {
-  //     //     title: '销售过程',
-  //     //     module: 'statistics',
-  //     //     style: 'line'
-  //     //   }
-  //     // },
-  //     // {
-  //     //   path: '/priodPerformance',
-  //     //   name: 'priodPerformance',
-  //     //   meta: {
-  //     //     title: '按期汇总',
-  //     //     module: 'statistics',
-  //     //     style: 'line'
-  //     //   }
-  //     // }
-  //     // {
-  //     //   path: '/salesProcess',
-  //     //   name: 'salesProcess',
-  //     //   meta: {
-  //     //     title: '按期汇总',
-  //     //     module: 'statistics',
-  //     //     style: 'line'
-  //     //   }
-  //     // }
-  //   ]
-  // },
+  {
+    path: '/statistics',
+    name: 'statistics',
+    // hidden: true,
+    meta: {
+      title: '统计分析',
+      icon: 'el-icon-s-marketing',
+      module: 'statistics'
+    },
+    children: [
+      // {
+      //   path: '/salesPerformance',
+      //   name: 'salesPerformance',
+      //   meta: {
+      //     title: '销售业绩',
+      //     module: 'statistics',
+      //     style: 'line'
+      //   }
+      // },
+      {
+        path: '/salesPerformance',
+        name: 'salesPerformance',
+        meta: {
+          title: '销售过程',
+          module: 'statistics',
+          style: 'line'
+        }
+      },
+      {
+        path: '/priodPerformance',
+        name: 'priodPerformance',
+        meta: {
+          title: '按期汇总',
+          module: 'statistics',
+          style: 'line'
+        }
+      }
+      // {
+      //   path: '/salesProcess',
+      //   name: 'salesProcess',
+      //   meta: {
+      //     title: '按期汇总',
+      //     module: 'statistics',
+      //     style: 'line'
+      //   }
+      // }
+    ]
+  },
   // demo dashboard
   {
     path: '/dashboard',
