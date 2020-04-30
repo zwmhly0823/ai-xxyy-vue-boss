@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-04-25 12:09:03
  * @LastEditors: panjian
- * @LastEditTime: 2020-04-30 12:22:05
+ * @LastEditTime: 2020-04-30 15:48:41
  -->
 <template>
   <div class="channel-box">
@@ -273,6 +273,8 @@ export default {
       showClose: true,
       drawer: false,
       tableData: [],
+      query: '',
+      channelIds: '',
       querysData: '',
       // 体验课排期参数
       querySearchTrialStage: null,
@@ -320,11 +322,13 @@ export default {
     getChannelDetailPage() {
       if (
         this.query ||
+        this.channelIds ||
         this.querySearchTrialStage ||
         this.stateTime ||
         this.endTime
       ) {
         const queryChannelList = this.query ? this.query : `{"match_all" : {}}`
+        const channelId = this.channelIds ? this.channelIds : `"0"`
         const SearchTrialStage = this.querySearchTrialStage
           ? this.querySearchTrialStage
           : 0
@@ -334,7 +338,7 @@ export default {
         const trialOrderEndCtime = this.endTime ? `"${this.endTime}"` : `"0"`
         this.querysData = `${JSON.stringify(
           queryChannelList
-        )},trialStage:${SearchTrialStage},trialOrderEndCtime:${trialOrderEndCtime},trialOrderStartCtime:${trialOrderStartCtime},page:${
+        )},channelIds:${channelId},trialStage:${SearchTrialStage},trialOrderEndCtime:${trialOrderEndCtime},trialOrderStartCtime:${trialOrderStartCtime},page:${
           this.totalNumber
         }`
       } else {
@@ -389,9 +393,16 @@ export default {
         // 累计成单金额
         this.allSystemUserAmounts = _datas.allSystemUserAmounts
         // 累计转化率
-        const conversionRatePercentNums =
-          (_datas.allSystemUserAmounts / _datas.allPayUserNums) * 100
-        this.conversionRate = `${conversionRatePercentNums.toFixed(2)}%`
+        if (
+          +_datas.allSystemUserAmounts === 0 &&
+          +_datas.allPayUserNums === 0
+        ) {
+          this.conversionRate = `0%`
+        } else {
+          const conversionRatePercentNums =
+            (_datas.allSystemUserAmounts / _datas.allPayUserNums) * 100
+          this.conversionRate = `${conversionRatePercentNums.toFixed(2)}%`
+        }
         // this.conversionRate = '-'
         // 添加微信
         this.allWechatAddNums = _datas.allWechatAddNums
@@ -400,19 +411,27 @@ export default {
         // 参课数
         this.allJoinUserNums = _datas.allJoinUserNums
         // 参课率
-        const allJoinUserNumsPercentNums =
-          (_datas.allJoinUserNums / _datas.allPayUserNums) * 100
-        this.allJoinUserNumsPercent = `${allJoinUserNumsPercentNums.toFixed(
-          2
-        )}%`
+        if (+_datas.allJoinUserNums === 0 && +_datas.allPayUserNums === 0) {
+          this.allJoinUserNumsPercent = `0%`
+        } else {
+          const allJoinUserNumsPercentNums =
+            (_datas.allJoinUserNums / _datas.allPayUserNums) * 100
+          this.allJoinUserNumsPercent = `${allJoinUserNumsPercentNums.toFixed(
+            2
+          )}%`
+        }
         // 完课数
         this.allCompleteUserNums = _datas.allCompleteUserNums
         // 完课率
-        const allCompleteUserNumsPercentNums =
-          (_datas.allCompleteUserNums / _datas.allPayUserNums) * 100
-        this.allCompleteUserNumsPercent = `${allCompleteUserNumsPercentNums.toFixed(
-          2
-        )}%`
+        if (+_datas.allCompleteUserNums === 0 && +_datas.allPayUserNums === 0) {
+          this.allCompleteUserNumsPercent = `0%`
+        } else {
+          const allCompleteUserNumsPercentNums =
+            (_datas.allCompleteUserNums / _datas.allPayUserNums) * 100
+          this.allCompleteUserNumsPercent = `${allCompleteUserNumsPercentNums.toFixed(
+            2
+          )}%`
+        }
         // 成单数
         this.allPayUserNums = _datas.allPayUserNums
         // 线索数
@@ -429,9 +448,11 @@ export default {
           this.channelList.push(ele)
         })
         this.query = `{"terms":{"id":[${this.channelList}]}}`
+        this.channelIds = `"${this.channelList}"`
         console.log(this.query, 'this.query')
       } else {
         this.query = ''
+        this.channelIds = ''
         console.log(this.query, 'channelSearchValue')
       }
       this.getChannelDetailPage()
