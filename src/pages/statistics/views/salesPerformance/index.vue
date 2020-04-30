@@ -429,7 +429,10 @@
               </el-table-column>
             </ele-table>
           </div>
-          <div v-else class="no-data">
+          <div
+            v-if="tableDataAttend.length === 0 || tableData.length === 0"
+            class="no-data"
+          >
             暂无数据
           </div>
         </el-scrollbar>
@@ -755,6 +758,8 @@ export default {
     },
     // 点击tabs页签（转化统计 按钮）
     statisticsTypehandleClick(tab) {
+      this.tableDataAttend = []
+      this.tableData = []
       // console.log(tab.index, 'tab')
       this.tabQuery.page = 1
       this.getChangecListByProid()
