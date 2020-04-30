@@ -166,11 +166,12 @@ export default {
       sups = ''
     } = params
     // eslint-disable-next-line
-    const query = `{"term": "${term}","department_ids": "${department_ids}", "sups": "${sups}","page":"${page}", "size": "${size}", "teacher_ids":"${teacher_ids}"}`
+    const query = `{"term": "${term}","department_ids": "${department_ids}", "sups": "${sups}", "teacher_ids":"${teacher_ids}"}`
 
     return axios.post('/graphql/getDepartmentCourse', {
       query: `{
-        getCompeteCourseList(query: ${JSON.stringify(query) || null}) {
+        getCompeteCourseList(query: ${JSON.stringify(query) ||
+          null},page:${page}, size: ${size}) {
           start_date
           end_date
           course_days
@@ -198,7 +199,7 @@ export default {
   // 完课统计接口
   getCompeteCourseList(params) {
     const {
-      term = 13,
+      term = 1,
       department_ids = '', // eslint-disable-line
       page = 1,
       size = '20',
@@ -207,10 +208,11 @@ export default {
       sups = ''
     } = params
     // eslint-disable-next-line
-    const query = `{"term": "${term}", "department_ids": "${department_ids}","department": "${department}", "sups": "${sups}","page":"${page}", "size": "${size}", "teacher_ids":"${teacher_ids}"}`
+    const query = `{"term": "${term}", "department_ids": "${department_ids}","department": "${department}", "sups": "${sups}", "teacher_ids":"${teacher_ids}"}`
     return axios.post('/graphql/getDepartmentCourse', {
       query: `{
-        getCompeteCourseList(query: ${JSON.stringify(query) || null}) {
+        getCompeteCourseList(query: ${JSON.stringify(query) ||
+          null},page:${page}, size: ${size}) {
           start_date
           end_date
           course_days
