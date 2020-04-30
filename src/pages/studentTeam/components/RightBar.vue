@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-13 16:53:41
  * @LastEditors: zhubaodong
- * @LastEditTime: 2020-04-27 19:44:19
+ * @LastEditTime: 2020-04-30 14:31:58
  -->
 <template>
   <div class="right-container">
@@ -73,7 +73,16 @@
                   <div @click="openAutoAddOpen">开启</div>
                   <div @click="openAutoAddClose">关闭</div>
                 </div>
-                <div @mouseenter="autoAddFriendsIn = true">
+                <div
+                  @mouseenter="
+                    ;+classId.classId.team_state !== 2
+                      ? (autoAddFriendsIn = true)
+                      : ''
+                  "
+                  :class="
+                    +classId.classId.team_state !== 2 ? 'yClick' : 'nClick'
+                  "
+                >
                   自动加好友
                 </div>
               </el-tooltip>
@@ -577,5 +586,11 @@ export default {
 }
 .openBtn div:hover {
   font-weight: 500;
+}
+.yClick:hover {
+  font-weight: 500;
+}
+.nClick {
+  color: #ccc;
 }
 </style>
