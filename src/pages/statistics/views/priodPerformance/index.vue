@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-02 15:35:27
  * @LastEditors: Shentong
- * @LastEditTime: 2020-04-29 22:10:28
+ * @LastEditTime: 2020-04-30 13:17:17
  -->
 <template>
   <el-row type="flex" class="app-main height schedule-container">
@@ -103,7 +103,7 @@
                     >{{ scope.$index + calcIndex }}
                   </span>
                   <span v-else>{{
-                    Math.abs(totalElements - scope.$index)
+                    Math.abs(totalElements - calcIndex - scope.$index + 1)
                   }}</span>
                 </template></el-table-column
               >
@@ -199,6 +199,7 @@
                 label="支付总金额"
                 prop="system_order_total_amount"
                 align="center"
+                width="100"
               >
                 <template slot="header">
                   <div @click="onSortAmount" class="sort-operate-box">
@@ -307,6 +308,8 @@ export default {
         if (this.tabQuery.totalSort === 'desc') {
           this.tabQuery.totalSort = 'asc'
         } else this.tabQuery.totalSort = 'desc'
+
+        this.tabQuery.page = 1
         this.getStatisticsByProid().then((content) => {
           if (content.length) this.amountStatus = !this.amountStatus
         })
