@@ -3,27 +3,29 @@
  * @version: 
  * @Author: shentong
  * @Date: 2020-03-14 15:11:17
- * @LastEditors: shentong
- * @LastEditTime: 2020-03-14 15:12:44
+ * @LastEditors: Shentong
+ * :max-height="maxHeight"
+ * @LastEditTime: 2020-04-24 17:45:51
  -->
 <template>
   <div id="tableList">
     <el-table
       :data="dataList"
-      border
-      stripe
       style="width: 100%"
-      :max-height="maxHeight"
+      :header-cell-style="{
+        fontSize: '12px',
+        color: '#666',
+        fontWeight: 'normal'
+      }"
       v-loading="loading"
       element-loading-text="玩命加载中~"
       element-loading-spinner="el-icon-loading"
-      element-loading-background="rgba(0, 0, 0, 0.7)"
       @sort-change="sortChange"
       id="outTable"
     >
       <slot></slot>
     </el-table>
-    <div class="page_box">
+    <div class="page_box" v-if="size <= total">
       <el-pagination
         background
         layout="prev, pager, next"
@@ -84,9 +86,17 @@ export default {
 <style lang="scss" scoped>
 #tableList {
   min-width: 900px;
+  position: relative;
+  padding-bottom: 50px;
 }
 .page_box {
-  margin: 30px;
+  height: 50px;
+  display: flex;
+  align-items: center;
   text-align: right;
+  text-align: right;
+  position: absolute;
+  bottom: 0;
+  right: 15px;
 }
 </style>
