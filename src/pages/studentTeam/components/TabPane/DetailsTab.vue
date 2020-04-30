@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 14:19:58
  * @LastEditors: panjian
- * @LastEditTime: 2020-04-20 21:13:59
+ * @LastEditTime: 2020-04-24 10:26:06
  -->
 <template>
   <div>
@@ -271,7 +271,8 @@ export default {
         childListData: [],
         imgNum: 0,
         imgSuccessNum: 0,
-        opreaIndex: 0
+        opreaIndex: 0,
+        weekNum1: ''
       },
       // tabs标签默认状态
       activeName: 'group',
@@ -359,13 +360,11 @@ export default {
   },
   methods: {
     screenAttendClass(data) {
-      console.log(data, '参课完课 传给父级的值')
       this.screenAttendClassData = data
       this.table.currentPage = 1
       this.getClassCompPage()
     },
     screenWorks(data) {
-      console.log(data, '作品及点评 传给父级的值')
       this.screenWorksData = data
       this.table.currentPage = 1
       this.getStuComment()
@@ -444,7 +443,7 @@ export default {
       // 获取第几周的数据
       await this.getStuTaskRankingList(
         this.ExhibitionData.teamId,
-        this.ExhibitionData.weekNum
+        this.ExhibitionData.weekNum1
       )
       // 关闭弹框
       this.show = true
@@ -647,6 +646,7 @@ export default {
           6
         )
         // this.ExhibitionData.studentLesson = currentLesson.substring(0, 4)
+        this.ExhibitionData.weekNum1 = currentLesson
         this.ExhibitionData.weekNum = currentLesson.substring(4, 6)
         this.btnshow(
           this.ExhibitionData.weekNum,
@@ -1008,12 +1008,6 @@ export default {
         if (this.search) {
           this.querysData = `{"team_id":${this.classId.classId.id},"team_type":${this.classId.type},"uid":${this.search}}`
         } else {
-          console.log(
-            this.screenAttendClassData.courseId,
-            this.screenAttendClassData.userStatus,
-            this.screenAttendClassData.isJoinCourse,
-            this.screenAttendClassData.isCompleteCourse
-          )
           if (
             this.screenAttendClassData.courseId ||
             this.screenAttendClassData.userStatus ||
@@ -1032,14 +1026,6 @@ export default {
             const isCompleteCourse = this.screenAttendClassData.isCompleteCourse
               ? `"${this.screenAttendClassData.isCompleteCourse}"`
               : `""`
-            console.log(
-              courseId,
-              userStatus,
-              isJoinCourse,
-              isCompleteCourse,
-              '接口请求'
-            )
-
             this.querysData = `{"team_id":${this.classId.classId.id},"team_type":${this.classId.type},"course_id":${courseId},"user_status":${userStatus},"is_join_course":${isJoinCourse},"is_complete_course":${isCompleteCourse}}`
           } else {
             this.querysData = `{"team_id":${this.classId.classId.id},"team_type":${this.classId.type}}`
@@ -1114,7 +1100,6 @@ export default {
               ? `"${this.screenWorksData.isListen}"`
               : `""`
             this.querysData = `{"team_id":${this.classId.classId.id},"team_type":${this.classId.type},"course_id":${courseId},"is_task":${isTask},"is_comment":${isComment},"is_listen":${isListen}}`
-            console.log(this.screenWorksData, 'this.screenWorksData')
           } else {
             this.querysData = `{"team_id":${this.classId.classId.id},"team_type":${this.classId.type}}`
           }
