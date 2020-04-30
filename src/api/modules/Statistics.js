@@ -179,6 +179,7 @@ export default {
           join_rate
           now_join_nums
           now_join_rate
+          totalElements
           completeCourse{
             sup
             department_name

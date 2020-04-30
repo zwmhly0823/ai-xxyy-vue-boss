@@ -68,7 +68,7 @@
             <span class="label-val"
               >{{ statisticsInfo.course_days || '-' }}天</span
             >
-            <span>当前结果：</span>
+            <!-- <span>当前结果：</span> -->
             <template v-if="activeName == 'conversion'">
               <span>总订单数：</span>
               <span class="label-val for-light">{{
@@ -599,7 +599,7 @@ export default {
             ? formatData(this.statisticsInfo.end_date)
             : ''
           // 总数、分页用
-          this.totalElements = getCompeteCourseList.totalElements || 0
+          this.totalElements = +getCompeteCourseList.totalElements || 0
           this.formatTableData(getCompeteCourseList.completeCourse || [])
         } else if (this.activeName === 'attendClass') {
           // 参课统计tab
@@ -623,7 +623,7 @@ export default {
             ? formatData(this.statisticsInfo.end_date)
             : ''
           // 总数、分页用
-          this.totalElements = getCompeteCourseList.totalElements || 0
+          this.totalElements = +getCompeteCourseList.totalElements || 0
           this.formatTableData(getCompeteCourseList.completeCourse || [])
         } else {
           let {
@@ -761,7 +761,8 @@ export default {
       // 初始化
       this.tableDataChildAttend = []
       list.forEach((item, index) => {
-        const completeArr = item.completeArr || []
+        item.completeArr = item.completeArr || []
+        const completeArr = item.completeArr
         const childLength = completeArr.length
         if (this.tableDataChildAttend.length <= childLength) {
           this.tableDataChildAttend = completeArr
