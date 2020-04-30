@@ -3,8 +3,8 @@
  * @version: 
  * @Author: panjian
  * @Date: 2020-04-25 12:09:03
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-04-30 12:13:43
+ * @LastEditors: panjian
+ * @LastEditTime: 2020-04-30 17:30:48
  -->
 <template>
   <div class="channel-box">
@@ -143,7 +143,8 @@
                 <span>参课数/参课率</span>
                 <el-tooltip placement="top">
                   <div slot="content">
-                    参课数：此渠道下所有参课学员汇总（参课定义：学员参加过一次即为参课）<br />参课率：参课率是指渠道中已上课的学生数/线索数（学生数）
+                    参课数：此渠道下所有参课学员汇总（参课定义：学员参加过一次即为参课）<br />参课率：参课率是
+                    学生数 / 已购体验课数
                   </div>
                   <span class="bottom-tips">?</span>
                 </el-tooltip>
@@ -160,9 +161,7 @@
                 <span>完课数/完课率</span>
                 <el-tooltip placement="top">
                   <div slot="content">
-                    完课数：1、视频看完即为本次完课 2、
-                    所选时间范围内的学生，学生完课的数量/学生已放课的数量>=60%即为完课
-                    在当前条件下，所有完课学员汇总<br />完课率：满足完课条件人数/线索数（学生数）
+                    完课数：完课—— 完课人数 / 已购体验课数<br />完课率：满足完课条件人数/线索数（学生数）
                   </div>
                   <span class="bottom-tips">?</span>
                 </el-tooltip>
@@ -179,7 +178,7 @@
                 <span>成单数/转化率</span>
                 <el-tooltip placement="top">
                   <div slot="content">
-                    成单数：当前渠道购买系统课的订单总数量<br />转化率：成单数/线索数
+                    成单数：当前渠道购买系统课的订单总数量<br />转化率：系统课/体验课
                   </div>
                   <span class="bottom-tips">?</span>
                 </el-tooltip>
@@ -273,15 +272,17 @@ export default {
       showClose: true,
       drawer: false,
       tableData: [],
+      query: '',
+      channelIds: '',
       querysData: '',
       // 体验课排期参数
-      querySearchTrialStage: null,
+      querySearchTrialStage: '',
       // 开始时间
       stateTime: '',
       // 结束时间
       endTime: '',
       // 渠道查询传回来的数组
-      channelList: [],
+      // channelList: [],
       // 总条数
       totalElements: 0,
       // 当前页
@@ -320,25 +321,27 @@ export default {
     getChannelDetailPage() {
       if (
         this.query ||
+        this.channelIds ||
         this.querySearchTrialStage ||
         this.stateTime ||
         this.endTime
       ) {
         const queryChannelList = this.query ? this.query : `{"match_all" : {}}`
+        const channelId = this.channelIds ? this.channelIds : `""`
         const SearchTrialStage = this.querySearchTrialStage
-          ? this.querySearchTrialStage
-          : 0
+          ? `"${this.querySearchTrialStage}"`
+          : `"0"`
         const trialOrderStartCtime = this.stateTime
           ? `"${this.stateTime}"`
           : `"0"`
         const trialOrderEndCtime = this.endTime ? `"${this.endTime}"` : `"0"`
         this.querysData = `${JSON.stringify(
           queryChannelList
-        )},trialStage:${SearchTrialStage},trialOrderEndCtime:${trialOrderEndCtime},trialOrderStartCtime:${trialOrderStartCtime},page:${
+        )},channelIds:${channelId},trialStage:${SearchTrialStage},trialOrderEndCtime:${trialOrderEndCtime},trialOrderStartCtime:${trialOrderStartCtime},page:${
           this.totalNumber
         }`
       } else {
-        this.querysData = `"{\\"match_all\\" : {}}",trialStage:0,trialOrderEndCtime:"0",trialOrderStartCtime:"0",page:${this.totalNumber}`
+        this.querysData = `"{\\"match_all\\" : {}}",trialStage:"",trialOrderEndCtime:"0",trialOrderStartCtime:"0",page:${this.totalNumber}`
       }
       this.$http.Operating.channelDetailPage(this.querysData).then((res) => {
         const _data = res.data.channelDetailPage
@@ -355,7 +358,9 @@ export default {
             res.channelCtime = timestamp(res.channelCtime, 5)
           }
           // 线索数
-          const orderUserAllNums = +res.orderUserAllNums
+          // const orderUserAllNums = +res.orderUserAllNums
+          // 购买体验课数
+          const orderUserPayNums = +res.orderUserPayNums
           // 参课数
           const joinCourseNums = +res.joinCourseNums
           // 完课数
@@ -363,24 +368,24 @@ export default {
           // 成单数
           const systemOrderNums = +res.systemOrderNums
           // 计算参课率
-          if (joinCourseNums === 0 && orderUserAllNums === 0) {
+          if (joinCourseNums === 0 && orderUserPayNums === 0) {
             res.joinCourseNumsPercent = '0%'
           } else {
-            const nums = (joinCourseNums / orderUserAllNums) * 100
+            const nums = (joinCourseNums / orderUserPayNums) * 100
             res.joinCourseNumsPercent = `${nums.toFixed(2)}%`
           }
           // 计算完课率
-          if (completeCourseNums === 0 && orderUserAllNums === 0) {
+          if (completeCourseNums === 0 && orderUserPayNums === 0) {
             res.completeCourseNumsPercent = '0%'
           } else {
-            const nums = (completeCourseNums / orderUserAllNums) * 100
+            const nums = (completeCourseNums / orderUserPayNums) * 100
             res.completeCourseNumsPercent = `${nums.toFixed(2)}%`
           }
           // 计算成单率
-          if (systemOrderNums === 0 && orderUserAllNums === 0) {
+          if (systemOrderNums === 0 && orderUserPayNums === 0) {
             res.systemOrderNumsPercent = '0%'
           } else {
-            const nums = (systemOrderNums / orderUserAllNums) * 100
+            const nums = (systemOrderNums / orderUserPayNums) * 100
             res.systemOrderNumsPercent = `${nums.toFixed(2)}%`
           }
         })
@@ -389,10 +394,13 @@ export default {
         // 累计成单金额
         this.allSystemUserAmounts = _datas.allSystemUserAmounts
         // 累计转化率
-        const conversionRatePercentNums =
-          (_datas.allSystemUserAmounts / _datas.allPayUserNums) * 100
-        this.conversionRate = `${conversionRatePercentNums.toFixed(2)}%`
-        // this.conversionRate = '-'
+        if (+_datas.allSystemUserNums === 0 && +_datas.allPayUserNums === 0) {
+          this.conversionRate = `0%`
+        } else {
+          const conversionRatePercentNums =
+            (_datas.allSystemUserNums / _datas.allPayUserNums) * 100
+          this.conversionRate = `${conversionRatePercentNums.toFixed(2)}%`
+        }
         // 添加微信
         this.allWechatAddNums = _datas.allWechatAddNums
         // 未支付
@@ -400,19 +408,27 @@ export default {
         // 参课数
         this.allJoinUserNums = _datas.allJoinUserNums
         // 参课率
-        const allJoinUserNumsPercentNums =
-          (_datas.allJoinUserNums / _datas.allPayUserNums) * 100
-        this.allJoinUserNumsPercent = `${allJoinUserNumsPercentNums.toFixed(
-          2
-        )}%`
+        if (+_datas.allJoinUserNums === 0 && +_datas.allPayUserNums === 0) {
+          this.allJoinUserNumsPercent = `0%`
+        } else {
+          const allJoinUserNumsPercentNums =
+            (_datas.allJoinUserNums / _datas.allPayUserNums) * 100
+          this.allJoinUserNumsPercent = `${allJoinUserNumsPercentNums.toFixed(
+            2
+          )}%`
+        }
         // 完课数
         this.allCompleteUserNums = _datas.allCompleteUserNums
         // 完课率
-        const allCompleteUserNumsPercentNums =
-          (_datas.allCompleteUserNums / _datas.allPayUserNums) * 100
-        this.allCompleteUserNumsPercent = `${allCompleteUserNumsPercentNums.toFixed(
-          2
-        )}%`
+        if (+_datas.allCompleteUserNums === 0 && +_datas.allPayUserNums === 0) {
+          this.allCompleteUserNumsPercent = `0%`
+        } else {
+          const allCompleteUserNumsPercentNums =
+            (_datas.allCompleteUserNums / _datas.allPayUserNums) * 100
+          this.allCompleteUserNumsPercent = `${allCompleteUserNumsPercentNums.toFixed(
+            2
+          )}%`
+        }
         // 成单数
         this.allPayUserNums = _datas.allPayUserNums
         // 线索数
@@ -424,21 +440,19 @@ export default {
     // 组件 渠道传的值
     channelSearchValue(data) {
       if (data) {
-        data.forEach((ele) => {
-          console.log(ele, 'ele')
-          this.channelList.push(ele)
-        })
-        this.query = `{"terms":{"id":[${this.channelList}]}}`
+        this.query = `{"terms":{"id":[${data.toString()}]}}`
+        this.channelIds = `"${data.toString()}"`
         console.log(this.query, 'this.query')
       } else {
         this.query = ''
+        this.channelIds = ''
         console.log(this.query, 'channelSearchValue')
       }
       this.getChannelDetailPage()
     },
     // 组件 排期传的值
     schedulingSearch(data) {
-      this.querySearchTrialStage = data || 0
+      this.querySearchTrialStage = data
       console.log(this.querySearchTrialStage, 'schedulingSearch')
       this.getChannelDetailPage()
     },
