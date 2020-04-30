@@ -17,12 +17,12 @@ const menuItems = [
   },
   {
     link: 'trading',
-    text: '交易',
+    text: '交易中心',
     isShow: true
   },
   {
     link: 'student-team',
-    text: '班级',
+    text: '班级中心',
     isShow: true
   },
   {
