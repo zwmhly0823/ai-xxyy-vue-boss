@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-04-25 12:09:03
  * @LastEditors: panjian
- * @LastEditTime: 2020-04-30 17:54:26
+ * @LastEditTime: 2020-04-30 18:09:24
  -->
 <template>
   <div class="channel-box">
@@ -143,8 +143,8 @@
                 <span>参课数/参课率</span>
                 <el-tooltip placement="top">
                   <div slot="content">
-                    参课数：此渠道下所有参课学员汇总（参课定义：学员参加过一次即为参课）<br />参课率：参课率是
-                    参课学员 / 已购体验课数
+                    参课数：此渠道下所有购买体验课的学员且参课的学员<br />参课率：参课数
+                    / 已购体验课数
                   </div>
                   <span class="bottom-tips">?</span>
                 </el-tooltip>
@@ -161,7 +161,8 @@
                 <span>完课数/完课率</span>
                 <el-tooltip placement="top">
                   <div slot="content">
-                    完课数：完课人数 / 已购体验课数<br />完课率：满足完课条件人数/线索数（学生数）
+                    完课数：此渠道下已购体验课且完成一次体验课即为完课<br />完课率：完课数
+                    / 已购体验课学员数
                   </div>
                   <span class="bottom-tips">?</span>
                 </el-tooltip>
@@ -178,7 +179,8 @@
                 <span>成单数/转化率</span>
                 <el-tooltip placement="top">
                   <div slot="content">
-                    成单数：当前渠道购买系统课的订单总数量<br />转化率：已购系统课/已购体验课
+                    成单数：已购体验课且转化系统课数量<br />转化率：当前系统课成单数
+                    / 当前体验课成单数
                   </div>
                   <span class="bottom-tips">?</span>
                 </el-tooltip>
