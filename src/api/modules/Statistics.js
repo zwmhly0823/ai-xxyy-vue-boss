@@ -165,8 +165,17 @@ export default {
       department_ids = '', // eslint-disable-line
       sups = ''
     } = params
+    let supStr = ''
+    if (sups) {
+      supStr = sups
+        .split(',')
+        .map((item) => 'S' + item)
+        .join(',')
+    } else {
+      supStr = sups
+    }
     // eslint-disable-next-line
-    const query = `{"term": "${term}","department_ids": "${department_ids}", "sups": "${sups}", "teacher_ids":"${teacher_ids}"}`
+    const query = `{"term": "${term}","department_ids": "${department_ids}", "sups": "${supStr}", "teacher_ids":"${teacher_ids}"}` // eslint-disable-line
 
     return axios.post('/graphql/getDepartmentCourse', {
       query: `{
@@ -207,8 +216,17 @@ export default {
       teacher_ids = '', // eslint-disable-line
       sups = ''
     } = params
+    let supStr = ''
+    if (sups) {
+      supStr = sups
+        .split(',')
+        .map((item) => 'S' + item)
+        .join(',')
+    } else {
+      supStr = sups
+    }
     // eslint-disable-next-line
-    const query = `{"term": "${term}", "department_ids": "${department_ids}", "sups": "${sups}", "teacher_ids":"${teacher_ids}"}`
+    const query = `{"term": "${term}", "department_ids": "${department_ids}", "sups": "${supStr}", "teacher_ids":"${teacher_ids}"}` // eslint-disable-line
     return axios.post('/graphql/getDepartmentCourse', {
       query: `{
         getCompeteCourseList(query: ${JSON.stringify(query) ||
