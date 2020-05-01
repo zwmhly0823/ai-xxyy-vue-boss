@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-04-25 12:09:03
  * @LastEditors: panjian
- * @LastEditTime: 2020-04-30 19:36:57
+ * @LastEditTime: 2020-05-01 11:32:43
  -->
 <template>
   <div class="channel-box">
@@ -52,40 +52,40 @@
           <div class="grid-content bg-purple">
             <el-row :gutter="20">
               <el-col :span="6" style="text-align:center;">
-                <p class="bg-purple-num">{{ allWechatAddNums }}</p>
-                <span class="bg-purple-text">添加微信</span>
+                <p class="bg-purple-text">添加微信</p>
+                <span class="bg-purple-num">{{ allWechatAddNums }}</span>
               </el-col>
               <el-col :span="6" style="text-align:center;">
-                <p class="bg-purple-num">{{ unpaid }}</p>
-                <span class="bg-purple-text">未支付</span>
+                <p class="bg-purple-text">未支付</p>
+                <span class="bg-purple-num">{{ unpaid }}</span>
               </el-col>
               <el-col :span="6" style="text-align:center;">
-                <p class="bg-purple-num">{{ allJoinUserNums }}</p>
-                <span class="bg-purple-text">参课数</span>
+                <p class="bg-purple-text">参课数</p>
+                <span class="bg-purple-num">{{ allJoinUserNums }}</span>
               </el-col>
               <el-col :span="6" style="text-align:center;">
-                <p class="bg-purple-num">{{ allCompleteUserNums }}</p>
-                <span class="bg-purple-text">完课数</span>
+                <p class="bg-purple-text">完课数</p>
+                <span class="bg-purple-num">{{ allCompleteUserNums }}</span>
               </el-col>
               <el-col :span="6" style="text-align:center;">
-                <p class="bg-purple-num">{{ allPayUserNums }}</p>
-                <span class="bg-purple-text">成单数</span>
+                <p class="bg-purple-text">成单数</p>
+                <span class="bg-purple-num">{{ allPayUserNums }}</span>
               </el-col>
               <el-col :span="6" style="text-align:center;">
-                <p class="bg-purple-num">{{ allUserNums }}</p>
-                <span class="bg-purple-text">线索数</span>
+                <p class="bg-purple-text">线索数</p>
+                <span class="bg-purple-num">{{ allUserNums }}</span>
               </el-col>
               <el-col :span="6" style="text-align:center;">
-                <p class="bg-purple-num">
+                <p class="bg-purple-text">参课率</p>
+                <span class="bg-purple-num">
                   {{ allJoinUserNumsPercent }}
-                </p>
-                <span class="bg-purple-text">参课率</span>
+                </span>
               </el-col>
               <el-col :span="6" style="text-align:center;">
-                <p class="bg-purple-num">
+                <p class="bg-purple-text">完课率</p>
+                <span class="bg-purple-num">
                   {{ allCompleteUserNumsPercent }}
-                </p>
-                <span class="bg-purple-text">完课率</span>
+                </span>
               </el-col>
             </el-row>
           </div>
