@@ -3,8 +3,8 @@
  * @version: 
  * @Author: zhubaodong
  * @Date: 2020-03-24 18:50:54
- * @LastEditors: zhubaodong
- * @LastEditTime: 2020-04-30 17:54:30
+ * @LastEditors: Shentong
+ * @LastEditTime: 2020-04-30 20:05:43
  -->
 <template>
   <div class="search-item small">
@@ -75,6 +75,10 @@ import { mapState } from 'vuex'
 export default {
   props: {
     stageName: {
+      type: String,
+      default: ''
+    },
+    scheduleName: {
       type: String,
       default: ''
     },
@@ -192,8 +196,6 @@ export default {
     },
 
     supChange(data) {
-      console.log(data, 'ddddaaaa')
-
       this.$emit(
         'supCallBack',
         data.length > 0 ? { [this.supName]: this.supData } : ''

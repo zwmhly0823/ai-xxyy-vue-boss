@@ -32,6 +32,11 @@ export default {
     name: {
       type: String,
       default: ''
+    },
+    // 有时只需获取 deptid，无须获取teacherids
+    onlyDept: {
+      type: Number,
+      default: 0
     }
   },
   data() {
@@ -51,11 +56,16 @@ export default {
     async onSelect(data) {
       // TODO: 根据选择的销售组，获取销售ID
       const ids = { department_id: data || [] }
-      const teacher = await this.$http.Department.getDepartmentTeacher(
-        JSON.stringify(ids)
-      )
-      const teacherIds = teacher.data.TeacherList.map((item) => item.id)
-      this.$emit('result', data.length > 0 ? { [this.name]: teacherIds } : '')
+      if (this.onlyDept === 1) {
+        console.log(data, '0-00')
+        this.$emit('result', { [this.name]: data })
+      } else {
+        const teacher = await this.$http.Department.getDepartmentTeacher(
+          JSON.stringify(ids)
+        )
+        const teacherIds = teacher.data.TeacherList.map((item) => item.id)
+        this.$emit('result', data.length > 0 ? { [this.name]: teacherIds } : '')
+      }
     }
   }
 }

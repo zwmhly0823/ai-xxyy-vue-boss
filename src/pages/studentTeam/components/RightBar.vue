@@ -49,7 +49,7 @@
             </span>
           </div>
         </div>
-        <div class="header-right">
+        <div class="header-right" v-if="false">
           <el-tooltip
             class="item"
             popper-class="headerPop"
