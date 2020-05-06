@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-04-25 12:09:03
  * @LastEditors: panjian
- * @LastEditTime: 2020-05-06 20:22:01
+ * @LastEditTime: 2020-05-06 20:22:29
  -->
 <template>
   <div>
@@ -26,13 +26,13 @@
 
 <script>
 import channelSearch from './components/channelSearch'
-import channelAdd from './components/channelAdd'
-import channelUpload from './components/channelUpload'
+// import channelAdd from './components/channelAdd'
+// import channelUpload from './components/channelUpload'
 export default {
   components: {
-    channelSearch,
-    channelAdd,
-    channelUpload
+    channelSearch
+    // channelAdd,
+    // channelUpload
   },
   data() {
     return { tabIndex: '', activeName: 'channelQuery' }
