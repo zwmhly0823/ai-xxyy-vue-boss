@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-04-02 15:35:27
  * @LastEditors: Shentong
- * @LastEditTime: 2020-05-06 16:52:41
+ * @LastEditTime: 2020-05-06 21:42:58
  -->
 <template>
   <el-row type="flex" class="app-main height schedule-container">
@@ -56,7 +56,10 @@
           <!-- 搜索 -->
           <div class="sear-container">
             <!-- TODO: -->
-            <statictics-search @searchChange="searchChange"></statictics-search>
+            <statictics-search
+              @searchChange="searchChange"
+              v-if="showSearch"
+            ></statictics-search>
           </div>
           <p class="descripte" v-if="statisticsInfo">
             开课日期：<span class="label-val">{{
@@ -121,7 +124,7 @@
               </span>
             </template>
           </p>
-          <div style="padding: 0 15px;">
+          <div style="padding: 0 15px;" ref="tableInner">
             <el-tabs
               v-model="activeName"
               @tab-click="statisticsTypehandleClick"
@@ -138,6 +141,8 @@
             v-if="tableDataAttend.length && activeName === 'finishClass'"
           >
             <ele-table
+              :tableHeight="tableHeight"
+              :tableSize="'mini'"
               :dataList="tableDataAttend"
               :loading="flags.loading"
               :size="tabQuery.size"
@@ -220,29 +225,17 @@
                     >
                   </template>
                 </el-table-column>
-                <!-- <el-table-column fixed label="总金额" align="center"
-                  ><template slot-scope="scope">
-                    <span
-                      v-if="
-                        Object.keys(scope.row.conversion_rate_daily).length &&
-                          scope.row.conversion_rate_daily[i] &&
-                          !scope.row.conversion_rate_daily[i].is_last
-                      "
-                    >
-                      {{ scope.row.conversion_rate_daily[i].amount }}
-                    </span>
-                    <span v-else>--</span>
-                  </template></el-table-column
-                >-->
               </el-table-column>
             </ele-table>
           </div>
-
+          <!-- 转化统计 -->
           <div
             class="orderStyle"
             v-if="tableData.length && activeName == 'conversion'"
           >
             <ele-table
+              :tableHeight="tableHeight"
+              :tableSize="'mini'"
               :dataList="tableData"
               :loading="flags.loading"
               :size="tabQuery.size"
@@ -279,24 +272,42 @@
                 prop="student_total"
                 align="center"
               ></el-table-column>
-              <el-table-column align="center" label="总计">
+              <!-- <el-table-column
+                label="订单数"
+                prop="order_total"
+                align="center"
+                fixed
+              ></el-table-column>
+              <el-table-column
+                label="转化率"
+                prop="conversion_total"
+                align="center"
+                fixed
+              ></el-table-column>
+              <el-table-column
+                label="总金额"
+                prop="amount_total"
+                align="center"
+                fixed
+              ></el-table-column> -->
+              <el-table-column align="center" label="总计" fixed width="240">
                 <el-table-column
-                  fixed
                   label="订单数"
                   prop="order_total"
                   align="center"
+                  fixed
                 ></el-table-column>
                 <el-table-column
-                  fixed
                   label="转化率"
                   prop="conversion_total"
                   align="center"
+                  fixed
                 ></el-table-column>
                 <el-table-column
-                  fixed
                   label="总金额"
                   prop="amount_total"
                   align="center"
+                  fixed
                 ></el-table-column>
               </el-table-column>
               <!-- child-table-start -->
@@ -357,6 +368,8 @@
             v-if="tableDataAttend.length && activeName == 'attendClass'"
           >
             <ele-table
+              :tableHeight="tableHeight"
+              :tableSize="'mini'"
               :dataList="tableDataAttend"
               :loading="flags.loading"
               :size="tabQuery.size"
@@ -455,7 +468,7 @@
 </template>
 
 <script>
-// import MSearch from '@/components/MSearch/index.vue'
+import _ from 'lodash'
 import staticticsSearch from '../../components/staticticsSearch'
 import EleTable from '@/components/Table/EleTable'
 import { formatData } from '@/utils'
@@ -479,7 +492,7 @@ export default {
       },
       // tabs标签默认状态
       selectName: '更多',
-      // 统计表title TODO:
+      // 统计表title
       activeName: 'conversion',
       tabIndex: 0,
       // 状态index
@@ -522,12 +535,21 @@ export default {
       tableData: [],
       tableDataAttend: [],
       tableDataChild: [],
-      tableDataChildAttend: []
+      tableDataChildAttend: [],
+      searchEmit: {},
+      showSearch: true,
+      tableHeight: 'auto'
     }
   },
   computed: {},
   watch: {},
   activated() {
+    const tableHeight =
+      document.body.clientHeight -
+      this.$refs.tableInner.getBoundingClientRect().top -
+      154
+    this.tableHeight = tableHeight + ''
+    console.log('tableInner', this.tableHeight)
     this.init()
   },
   methods: {
@@ -559,15 +581,28 @@ export default {
         console.log(err)
       }
     },
-    // 组件emit
-    searchChange(search) {
-      const { department = [], groupSell = '', sup = [] } = search
+    initSearchData(res, isFromEmit = false) {
+      // 如果是子组件emit而来的数据，则不需要清空
+      if (!isFromEmit) {
+        this.showSearch = false
+        this.$nextTick(() => {
+          this.showSearch = true
+        })
+      }
+
+      this.searchEmit = _.cloneDeep(res)
+
+      const { department = [], groupSell = '', sup = [] } = this.searchEmit
       Object.assign(this.tabQuery, {
         teacher: groupSell,
         page: 1,
         department: department.join(),
         sup: sup.join()
       })
+    },
+    // 组件emit
+    searchChange(res) {
+      this.initSearchData(res, true)
 
       this.getChangecListByProid()
     },
@@ -689,12 +724,13 @@ export default {
     statisticsTypehandleClick(tab) {
       this.tableDataAttend = []
       this.tableData = []
-      // console.log(tab.index, 'tab')
       this.tabQuery.page = 1
       this.getChangecListByProid()
     },
     // 更多 下拉框
     handleCommand(command) {
+      this.initSearchData({})
+
       const { period = '' } = command
       this.tabIndex = 6
 
@@ -706,6 +742,8 @@ export default {
       this.getChangecListByProid()
     },
     top_tabs_click(index, statusInfo) {
+      this.initSearchData({})
+
       this.tabIndex = 0
       this.btnIndex = index
       const { status } = statusInfo
@@ -714,6 +752,8 @@ export default {
       this.init(status)
     },
     priod_tabs_click(row, index) {
+      this.initSearchData({})
+
       this.tabIndex = index
       this.tabQuery.page = 1
       this.tabQuery.period = row.period
@@ -787,7 +827,7 @@ export default {
     background: #f5f7fa;
     display: flex;
     > div {
-      height: 50px;
+      height: 40px;
       padding: 0 20px;
       display: flex;
       justify-content: center;
@@ -803,6 +843,7 @@ export default {
   }
   .descripte {
     padding-left: 15px;
+    margin: 0;
     color: #333;
     min-width: 800px;
     .label-val {
@@ -831,6 +872,7 @@ export default {
   }
   .orderStyle {
     // padding-bottom: 45px;
+    // height: 200px;
   }
   .editStyle {
     color: #0401ff;

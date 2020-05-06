@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-02 15:35:27
  * @LastEditors: Shentong
- * @LastEditTime: 2020-05-06 16:41:52
+ * @LastEditTime: 2020-05-06 21:36:16
  -->
 <template>
   <el-row type="flex" class="app-main height schedule-container">
@@ -91,6 +91,7 @@
           </p>
           <div class="orderStyle">
             <ele-table
+              :tableSize="'small'"
               :dataList="tableData"
               :loading="flags.loading"
               :size="tabQuery.size"
@@ -99,7 +100,7 @@
               @pageChange="pageChange_handler"
               class="mytable"
             >
-              <el-table-column label="排名" width="60" align="center"
+              <el-table-column label="转化总金额排名" width="110" align="center"
                 ><template slot-scope="scope"
                   ><span v-if="tabQuery.totalSort === 'desc'"
                     >{{ scope.$index + calcIndex }}
@@ -184,7 +185,8 @@
                 <template slot="header">
                   <div @click="onSortConversion" class="sort-operate-box">
                     <span>转化率</span>
-                    <div class="sort-icon-arrow">
+                    <!-- TODO: -->
+                    <!-- <div class="sort-icon-arrow">
                       <i
                         class="el-icon-caret-top top-color"
                         :class="{ active: conversionStatus }"
@@ -193,7 +195,7 @@
                         class="el-icon-caret-bottom bottom"
                         :class="{ active: !conversionStatus }"
                       ></i>
-                    </div>
+                    </div> -->
                   </div>
                 </template>
               </el-table-column>
@@ -201,7 +203,7 @@
                 label="支付总金额"
                 prop="system_order_total_amount"
                 align="center"
-                width="100"
+                min-width="100"
               >
                 <template slot="header">
                   <div @click="onSortAmount" class="sort-operate-box">
@@ -300,6 +302,7 @@ export default {
     this.init()
   },
   methods: {
+    // TODO
     onSortConversion() {
       if (this.tabQuery.rateSort === 'desc') {
         this.tabQuery.rateSort = 'asc'
@@ -635,7 +638,7 @@ export default {
     background: #f5f7fa;
     display: flex;
     > div {
-      height: 50px;
+      height: 40px;
       padding: 0 20px;
       display: flex;
       justify-content: center;
