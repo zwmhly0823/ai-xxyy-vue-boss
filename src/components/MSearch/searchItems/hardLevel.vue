@@ -92,7 +92,7 @@ export default {
           `
         })
         .then((res) => {
-          this.supList = res.data.courseSupList
+          this.supList = res.data ? res.data.courseSupList || [] : []
           this.supList.splice(
             res.data.courseSupList.filter((item) => +item.id === 0),
             1

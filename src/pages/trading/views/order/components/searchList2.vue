@@ -12,12 +12,10 @@
       <el-form-item label="订单搜索:" :class="{ [$style.marginer]: true }">
         <orderSearch class="allmini" />
       </el-form-item>
-      <br />
 
       <el-form-item label="订单来源:" :class="{ [$style.marginer]: true }">
         <ChannelSelect @result="getChannel" />
       </el-form-item>
-      <br />
 
       <el-form-item label="物流状态:" :class="{ [$style.marginer]: true }">
         <orderStatus @result="getorderStatus" />
