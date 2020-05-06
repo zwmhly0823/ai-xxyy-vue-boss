@@ -34,7 +34,7 @@
       <el-table-column label="体验课班级" width="150">
         <template slot-scope="scope">
           {{
-            trialTeam[scope.row.id] ? trialTeam[scope.row.id].team_name : '-'
+            trialTeam[scope.row.uid] ? trialTeam[scope.row.uid].team_name : '-'
           }}
         </template>
       </el-table-column>
@@ -59,18 +59,28 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="系统课班级" width="120px">
+      <el-table-column label="系统课班级" width="150">
         <template slot-scope="scope">
-          {{ scope.row.team ? scope.row.team.team_name : '-' }}
+          <p>
+            {{ scope.row.team ? scope.row.team.team_name : '-' }}
+          </p>
         </template>
       </el-table-column>
-      <el-table-column label="服务老师">
+      <el-table-column label="服务老师" width="120">
         <template slot-scope="scope">
           <p>
             {{ scope.row.teacher ? scope.row.teacher.realname : '-' }}
           </p>
           <p>
-            {{ '未知' }}
+            {{
+              scope.row.teacher_department &&
+              scope.row.teacher_department.department
+                ? departmentObj[scope.row.teacher_department.department.id]
+                  ? departmentObj[scope.row.teacher_department.department.id]
+                      .name
+                  : '-'
+                : '-'
+            }}
           </p>
         </template>
       </el-table-column>
@@ -88,6 +98,21 @@
           </p>
         </template>
       </el-table-column>
+      <!-- <el-table-column label="体验课类型" v-if="topic === '4'">
+        <template slot-scope="scope">
+          <p>
+            {{
+              scope.row.trial_course
+                ? +scope.row.trial_course.team_category === 0
+                  ? '双周'
+                  : +scope.row.trial_course.team_category === 3
+                  ? '单周'
+                  : '-'
+                : '-'
+            }}
+          </p>
+        </template>
+      </el-table-column> -->
       <el-table-column label="订单来源">
         <template slot-scope="scope">
           <p>
@@ -100,6 +125,7 @@
           {{ scope.row.order_status ? scope.row.order_status : '-' }}
         </template>
       </el-table-column>
+
       <!-- <el-table-column
         label="销售部门"
         v-if="topic === '4' || topic === '5'"
@@ -133,7 +159,6 @@
               showExpressDetail(scope.row.id, scope.row.express.express_total)
             "
           >
-            <!-- <p> -->
             {{ scope.row.express ? scope.row.express.express_total || 0 : '-' }}
           </p>
           <!-- 体验课不显示最后一次物流状态 -->

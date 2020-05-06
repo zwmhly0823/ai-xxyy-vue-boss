@@ -1,12 +1,3 @@
-<!--
- * @Descripttion: TOSS小熊
- * @version: 1.0.0
- * @Author: liukun
- * @Date: 2020-04-29 12:13:11
- * @LastEditors: liukun
- * @LastEditTime: 2020-05-06 15:42:28
- -->
-
 <template>
   <div class="title-box">
     <el-table :data="orderList">
@@ -40,7 +31,7 @@
           </p>
         </template>
       </el-table-column>
-      <el-table-column label="体验课类型" v-if="topic === '4'">
+      <el-table-column label="体验课类型" width="150px">
         <template slot-scope="scope">
           <p>
             {{
@@ -67,10 +58,11 @@
           {{ scope.row.order_status ? scope.row.order_status : '-' }}
         </template>
       </el-table-column>
+
       <el-table-column label="体验课班级" width="150">
         <template slot-scope="scope">
           {{
-            trialTeam[scope.row.id] ? trialTeam[scope.row.id].team_name : '-'
+            trialTeam[scope.row.uid] ? trialTeam[scope.row.uid].team_name : '-'
           }}
         </template>
       </el-table-column>
@@ -95,6 +87,46 @@
           </div>
         </template>
       </el-table-column>
+      <el-table-column label="订单号·下单时间" width="180">
+        <template slot-scope="scope">
+          <p>
+            {{
+              scope.row.out_trade_no
+                ? scope.row.out_trade_no.replace('xiong', '')
+                : '-'
+            }}
+          </p>
+          <p>
+            {{ scope.row.ctime ? scope.row.ctime : '-' }}
+          </p>
+        </template>
+      </el-table-column>
+      <!-- <el-table-column label="系统课班级" width="150">
+        <template slot-scope="scope">
+          <p>
+            {{ scope.row.team ? scope.row.team.team_name : '-' }}
+          </p>
+        </template>
+      </el-table-column> -->
+      <!-- <el-table-column label="服务老师" width="120">
+        <template slot-scope="scope">
+          <p>
+            {{ scope.row.teacher ? scope.row.teacher.realname : '-' }}
+          </p>
+          <p>
+            {{
+              scope.row.teacher_department &&
+              scope.row.teacher_department.department
+                ? departmentObj[scope.row.teacher_department.department.id]
+                  ? departmentObj[scope.row.teacher_department.department.id]
+                      .name
+                  : '-'
+                : '-'
+            }}
+          </p>
+        </template>
+      </el-table-column> -->
+
       <!-- <el-table-column
         label="销售部门"
         v-if="topic === '4' || topic === '5'"
@@ -119,20 +151,7 @@
           }}
         </template>
       </el-table-column> -->
-      <el-table-column label="下单时间·订单号" width="180">
-        <template slot-scope="scope">
-          <p>
-            {{ scope.row.ctime ? scope.row.ctime : '-' }}
-          </p>
-          <p>
-            {{
-              scope.row.out_trade_no
-                ? scope.row.out_trade_no.replace('xiong', '')
-                : '-'
-            }}
-          </p>
-        </template>
-      </el-table-column>
+
       <el-table-column label="关联物流" width="150">
         <template slot-scope="scope">
           <p
@@ -141,7 +160,6 @@
               showExpressDetail(scope.row.id, scope.row.express.express_total)
             "
           >
-            <!-- <p> -->
             {{ scope.row.express ? scope.row.express.express_total || 0 : '-' }}
           </p>
           <!-- 体验课不显示最后一次物流状态 -->
