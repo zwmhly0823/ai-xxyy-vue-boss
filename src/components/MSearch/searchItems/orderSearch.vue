@@ -40,7 +40,6 @@ export default {
     return {
       value: '',
       select: '0'
-      // keyword: 'out_trade_no'
     }
   },
   computed: {
@@ -59,8 +58,25 @@ export default {
     },
     querySearch(query, cb) {
       console.log(query)
-      const result = []
-      cb(result)
+      let result = []
+      if (!query) {
+        cb(result)
+        return
+      }
+      // 订单号
+      if (this.select === '0') {
+        this.$http.Order.searchOutTradeNo(query).then((res) => {
+          if (res.data && res.data.OrderListEx) {
+            result = res.data.OrderListEx.map((item) => {
+              if (item.out_trade_no)
+                item.value = item.out_trade_no.replace('xiong', '')
+              return item
+            })
+          }
+          console.log(result)
+          cb(result)
+        })
+      }
     },
     handleSelect(val) {
       console.log(val)
