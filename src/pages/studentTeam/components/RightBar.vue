@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-13 16:53:41
  * @LastEditors: zhubaodong
- * @LastEditTime: 2020-05-06 20:16:44
+ * @LastEditTime: 2020-05-06 21:03:01
  -->
 <template>
   <div class="right-container">
@@ -49,7 +49,7 @@
             </span>
           </div>
         </div>
-        <div class="header-right" v-if="false">
+        <div class="header-right">
           <el-tooltip
             class="item"
             popper-class="headerPop"
@@ -59,7 +59,10 @@
             v-model="autoAddFriends"
             placement="left"
           >
-            <i class="el-icon-s-tools" @click="autoAddFriends = true"></i>
+            <i
+              class="el-icon-s-tools toolsIcons"
+              @click="autoAddFriends = true"
+            ></i>
             <div slot="content">
               <el-tooltip
                 popper-class="headerPopIn"
@@ -67,20 +70,48 @@
                 class="item"
                 effect="light"
                 manual
-                placement="left"
+                placement="right-start"
               >
                 <div slot="content" class="openBtn">
                   <div @click="openAutoAddOpen">
-                    开启<i
+                    <span>开启</span>
+                    <svg
                       v-if="switchState === 'ON'"
-                      class="el-icon-check"
-                    ></i>
+                      t="1588769464743"
+                      class="icon"
+                      viewBox="0 0 1024 1024"
+                      version="1.1"
+                      xmlns="http://www.w3.org/2000/svg"
+                      p-id="2161"
+                      width="16"
+                      height="16"
+                    >
+                      <path
+                        d="M395.61216 862.14656a77.84448 77.84448 0 0 1-54.90688-22.67136L30.86336 528.11776C0.63488 497.88928 0.63488 448.512 30.86336 417.792a77.84448 77.84448 0 0 1 109.83424 0l255.42656 256.43008L883.32288 184.5248c30.22848-30.22848 79.09376-30.22848 109.83424 0a77.84448 77.84448 0 0 1 0 109.83424L450.53952 839.4752a77.0048 77.0048 0 0 1-54.92736 22.67136z m0 0"
+                        fill="#66CCFF"
+                        p-id="2162"
+                      ></path>
+                    </svg>
                   </div>
                   <div @click="openAutoAddClose">
-                    关闭<i
+                    <span>关闭</span>
+                    <svg
                       v-if="switchState === 'OFF'"
-                      class="el-icon-check"
-                    ></i>
+                      t="1588769464743"
+                      class="icon"
+                      viewBox="0 0 1024 1024"
+                      version="1.1"
+                      xmlns="http://www.w3.org/2000/svg"
+                      p-id="2161"
+                      width="16"
+                      height="16"
+                    >
+                      <path
+                        d="M395.61216 862.14656a77.84448 77.84448 0 0 1-54.90688-22.67136L30.86336 528.11776C0.63488 497.88928 0.63488 448.512 30.86336 417.792a77.84448 77.84448 0 0 1 109.83424 0l255.42656 256.43008L883.32288 184.5248c30.22848-30.22848 79.09376-30.22848 109.83424 0a77.84448 77.84448 0 0 1 0 109.83424L450.53952 839.4752a77.0048 77.0048 0 0 1-54.92736 22.67136z m0 0"
+                        fill="#66CCFF"
+                        p-id="2162"
+                      ></path>
+                    </svg>
                   </div>
                 </div>
                 <div
@@ -589,10 +620,12 @@ export default {
 }
 
 .headerPop {
+  font-size: 14px;
   padding: 8px;
   border: 1px solid rgb(228, 231, 237) !important;
   border-radius: 0;
-  margin-right: 0px !important;
+  margin-right: 8px !important;
+  box-shadow: #333 4px 4px 3px;
   right: 40px !important;
   background-color: rgb(245, 246, 247) !important;
   cursor: pointer;
@@ -601,22 +634,37 @@ export default {
   }
 }
 .headerPopIn {
+  margin-right: 7px !important;
+  font-size: 14px;
   padding: 5px;
   border: 1px solid rgb(228, 231, 237) !important;
   border-radius: 0;
+  box-shadow: #333 4px 4px 3px;
   cursor: pointer;
   background-color: rgb(245, 246, 247) !important;
   .popper__arrow {
     display: none !important;
   }
 }
+.openBtn div {
+  display: flex;
+  align-items: center;
+}
 .openBtn div:hover {
   font-weight: 500;
+}
+.openBtn div svg {
+  margin-left: 4px;
+  width: 14px;
+  height: 14px;
 }
 .yClick:hover {
   font-weight: 500;
 }
 .nClick {
   color: #ccc;
+}
+.toolsIcons {
+  font-size: 16px;
 }
 </style>
