@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-15 20:35:57
  * @LastEditors: Shentong
- * @LastEditTime: 2020-04-27 12:21:53
+ * @LastEditTime: 2020-05-06 20:27:34
  -->
 <template>
   <div class="third-step">
@@ -196,7 +196,11 @@ export default {
       productVersion: [
         { name: 'V1.4', value: 'V1.4' },
         { name: 'V1.5', value: 'V1.5' },
-        { name: 'V1.6', value: 'V1.6' }
+        { name: 'V1.6', value: 'V1.6' },
+        { name: 'V1.7', value: 'V1.7' },
+        { name: 'V1.8', value: 'V1.8' },
+        { name: 'V1.9', value: 'V1.9' },
+        { name: 'V2.0', value: 'V2.0' }
       ],
       trialClass: [
         { name: '单周体验课', value: '3' },
