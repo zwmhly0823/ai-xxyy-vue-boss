@@ -112,7 +112,7 @@
       <el-table-column label="社群销售" width="120">
         <template slot-scope="scope">
           <div class="product">
-            <span>{{ TeacherList[scope.row.pay_teacher_id] }}</span>
+            <span>{{ TeacherList[scope.row.last_teacher_id] }}</span>
           </div>
         </template>
       </el-table-column>
@@ -587,8 +587,8 @@ export default {
         if (item.wildcard && item.wildcard.express_nu) {
           timeType.express_nu = item.wildcard.express_nu
         }
-        if (item.wildcard && item.wildcard.pay_teacher_id) {
-          timeType.pay_teacher_id = item.wildcard.pay_teacher_id
+        if (item.wildcard && item.wildcard.last_teacher_id) {
+          timeType.teacher_id = item.wildcard.last_teacher_id
         }
       })
 
@@ -655,6 +655,7 @@ export default {
               product_version
               last_team_id
               teacher_id
+              last_teacher_id
               pay_teacher_id
               user {
                 id
@@ -673,7 +674,7 @@ export default {
             const teamId = [] // 班级Id
             const schedule = []
             resData.forEach((item) => {
-              realnameId.push(item.pay_teacher_id)
+              realnameId.push(item.last_teacher_id)
               teamId.push(item.last_team_id)
               schedule.push(item.term)
               item.crtime = formatData(+item.ctime, 's')

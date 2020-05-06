@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-24 18:20:12
  * @LastEditors: Lukun
- * @LastEditTime: 2020-04-22 19:51:32
+ * @LastEditTime: 2020-05-06 21:56:18
  -->
 
 <template>
@@ -100,7 +100,7 @@
         <team-detail @result="getTeamDetail" :name="teamDetail" />
       </el-form-item>
 
-      <el-form-item v-if="groupSell && !teacherId">
+      <el-form-item v-if="groupSell">
         <!-- 社群销售 -->
         <group-sell @result="selectSellTeacher" :name="groupSell" />
       </el-form-item>
@@ -422,7 +422,11 @@ export default {
     },
     // 选择销售老师
     selectSellTeacher(res) {
-      this.setSeachParmas(res, [this.groupSell || 'pay_teacher_id'], 'wildcard')
+      this.setSeachParmas(
+        res,
+        [this.groupSell || 'last_teacher_id'],
+        'wildcard'
+      )
     },
     getTeamDetail(res) {
       this.setSeachParmas(res, [this.teamDetail || 'last_team_id'])
