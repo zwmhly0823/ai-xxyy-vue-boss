@@ -65,7 +65,7 @@
             @result="supCallBackTrial"
           />
           <search-trial-team-name
-            :teamnameType="'0'"
+            teamnameType="0"
             @result="getTrialTeamName"
             name="trial_team_id"
             :class="['margin_l10']"
@@ -311,7 +311,8 @@ export default {
 
   data() {
     return {
-      teacherscope: null,
+      teacherscope: null, // 当前选择的体验课老师范围
+      package_type: null, // 当前选择系统课类型
       showErr: false,
       errTips: '搜索条件不能为空',
       must: [],
@@ -472,6 +473,11 @@ export default {
       this.setSeachParmas(res, [this.orderType || 'regtype'])
     },
     getSystemCourseType(res) {
+      if (res) {
+        this.package_type = res.packages_type
+      } else {
+        this.package_type = null
+      }
       this.setSeachParmas(res, [this.systemCourseType || 'packages_type'])
     },
     getDepartment(res) {
