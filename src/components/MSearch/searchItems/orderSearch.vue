@@ -28,6 +28,7 @@
       :fetch-suggestions="querySearch"
       :maxlength="select !== '0' ? 11 : 50"
       @select="handleSelect"
+      ref="input"
     >
     </el-autocomplete>
   </div>
@@ -46,8 +47,8 @@ export default {
     keyword() {
       let key
       if (this.select === '0') key = 'out_trade_no'
-      if (this.select === '1') key = 'out_trade_no'
-      if (this.select === '2') key = 'out_trade_no'
+      if (this.select === '1') key = 'uid'
+      if (this.select === '2') key = 'uid'
       return key
     }
   },
@@ -61,6 +62,7 @@ export default {
       let result = []
       if (!query) {
         cb(result)
+        this.$emit('result', '', this.keyword)
         return
       }
       // 订单号
@@ -73,13 +75,16 @@ export default {
               return item
             })
           }
-          console.log(result)
           cb(result)
+          // clear输入内容后不能再次显示列表的bug
+          // this.$refs.input.handleBlur()
+          this.$refs.input.activated = true
         })
       }
     },
-    handleSelect(val) {
-      console.log(val)
+    handleSelect(data) {
+      console.log(data)
+      this.$emit('result', { [this.keyword]: data.out_trade_no })
     }
   }
 }

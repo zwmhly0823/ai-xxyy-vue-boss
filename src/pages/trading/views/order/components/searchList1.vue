@@ -10,7 +10,7 @@
   <el-card border="false" shadow="never" :class="$style.elard">
     <el-form :inline="true" label-position="right" label-width="80px">
       <el-form-item label="订单搜索:" :class="{ [$style.marginer]: true }">
-        <orderSearch class="allmini" />
+        <orderSearch class="allmini" @result="getOrderSearch" />
       </el-form-item>
 
       <el-form-item label="订单来源:" :class="{ [$style.marginer]: true }">
@@ -350,6 +350,10 @@ export default {
     }
   },
   methods: {
+    getOrderSearch(res) {
+      console.log(res)
+      this.setSeachParmas(res, ['out_trade_no'])
+    },
     // 选择渠道
     getChannel(res) {
       console.info(res, 'lll')
