@@ -5,12 +5,14 @@
  * @Date: 2020-03-14 15:11:17
  * @LastEditors: Shentong
  * :max-height="maxHeight"
- * @LastEditTime: 2020-04-24 17:45:51
+ * @LastEditTime: 2020-05-06 20:21:20
  -->
 <template>
-  <div id="tableList">
+  <div id="tableList" :class="{ 'no-padding': size > total }">
     <el-table
+      :size="tableSize"
       :data="dataList"
+      :max-height="size > total ? tableHeight : tableHeight + 50"
       style="width: 100%"
       :header-cell-style="{
         fontSize: '12px',
@@ -47,7 +49,31 @@
  * @Description: table 二次封装
  */
 export default {
-  props: ['loading', 'dataList', 'size', 'total', 'page'],
+  // props: ['loading', 'dataList', 'size', 'total', 'page'],
+  props: {
+    loading: {
+      type: Boolean,
+      default: false
+    },
+    dataList: {
+      type: Array,
+      default: () => []
+    },
+    tableSize: {
+      type: String,
+      default: 'medium'
+    },
+    tableHeight: {
+      type: String,
+      default: 'auto'
+    },
+    size: {
+      type: Number,
+      default: 20
+    },
+    page: Number,
+    total: Number
+  },
   components: {},
   data() {
     return {
@@ -69,11 +95,12 @@ export default {
     }
   },
   mounted() {
-    this.maxHeight = `${document.documentElement.clientHeight}` - 250
-    // 然后监听window的resize事件．在浏览器窗口变化时再设置下背景图高度．
-    window.onresize = () => {
-      this.maxHeight = `${document.documentElement.clientHeight}` - 250
-    }
+    // console.log(this.tableHight, 'tableHight')
+    // this.maxHeight = `${document.documentElement.clientHeight}` - 250
+    // // 然后监听window的resize事件．在浏览器窗口变化时再设置下背景图高度．
+    // window.onresize = () => {
+    //   this.maxHeight = `${document.documentElement.clientHeight}` - 250
+    // }
   },
   created() {},
   watch: {
@@ -88,6 +115,9 @@ export default {
   min-width: 900px;
   position: relative;
   padding-bottom: 50px;
+  &.no-padding {
+    padding-bottom: 0;
+  }
 }
 .page_box {
   height: 50px;
