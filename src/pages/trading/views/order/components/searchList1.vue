@@ -50,7 +50,7 @@
             class="margin_l10"
           />
           <search-stage
-            :teacher-id="teacherscope"
+            :teacher-id="teacherscope_trial || teacherscope"
             class="margin_l10"
             name="trial_stage"
             placeholder="全部体验课排期"
@@ -66,6 +66,8 @@
           />
           <search-trial-team-name
             teamnameType="0"
+            :term="term_trial"
+            :teacher-id="teacherscope_trial || teacherscope"
             @result="getTrialTeamName"
             name="trial_team_id"
             :class="['margin_l10']"
@@ -81,13 +83,14 @@
             name="packages_type"
           />
           <group-sell
-            :teacherscope="teacherscope"
+            :teacherscope="teacherscope_s"
             @result="selectLastTeacher"
             name="last_teacher_id"
             class="margin_l10"
             tip="服务老师"
           />
           <search-stage
+            :teacher-id="teacherscope_system || teacherscope_s"
             class="margin_l10"
             @result="selectSchedule"
             name="stage"
@@ -102,6 +105,8 @@
           />
           <search-team-name
             teamnameType="1"
+            :term="term_sys"
+            :teacher-id="teacherscope_system || teacherscope_s"
             @result="getTeamName"
             name="team_id"
             class="margin_l10"
@@ -311,8 +316,13 @@ export default {
 
   data() {
     return {
-      teacherscope: null, // 当前选择的体验课老师范围
-      package_type: null, // 当前选择系统课类型
+      teacherscope: null, // 当前选择的体验课老师范围（销售组查询）
+      teacherscope_s: null, // 当前选择的系统课老师范围（根据类型查询）
+      teacherscope_system: null, // 当前选择的系统课老师范围
+      teacherscope_trial: null, // 当前选择的体验课老师范围
+      packages_type: null, // 当前选择系统课类型
+      term_sys: null, // 当前选择系统课排期
+      term_trial: null, // 当前选择体验课排期
       showErr: false,
       errTips: '搜索条件不能为空',
       must: [],
@@ -323,6 +333,23 @@ export default {
     }
   },
   computed: {},
+  watch: {
+    packages_type(val, old) {
+      const { getTeacherIdByCategory } = this.$http.Teacher
+      if (val) {
+        getTeacherIdByCategory({ category: val }).then((data) => {
+          if (data.data.StudentTeamList && data.data.StudentTeamList.length) {
+            const teacherIds = data.data.StudentTeamList.map(
+              (item) => item.teacher_id
+            )
+            this.teacherscope_s = teacherIds
+          }
+        })
+      } else {
+        this.teacherscope_s = null
+      }
+    }
+  },
   methods: {
     // 选择渠道
     getChannel(res) {
@@ -341,12 +368,20 @@ export default {
     },
     // 系统课排期
     selectSchedule(res) {
-      console.log(res, 'res')
+      if (res) {
+        this.term_sys = res.stage
+      } else {
+        this.term_sys = null
+      }
       this.setSeachParmas(res, [this.stage || 'stage'])
     },
     // 体验课排期
     selectScheduleTrial(res) {
-      console.log(res, 'res')
+      if (res) {
+        this.term_trial = res.trial_stage
+      } else {
+        this.term_trial = null
+      }
       this.setSeachParmas(res, [this.trial_stage || 'trial_stage'])
     },
     // 系统课难度
@@ -438,6 +473,7 @@ export default {
     // 选择社群销售
     selectPayTeacher(res) {
       if (!res.pay_teacher_id || res.pay_teacher_id.length === 0) {
+        this.teacherscope_trial = null
         if (this.teacherscope && this.teacherscope.length > 0) {
           res = {
             pay_teacher_id: this.teacherscope
@@ -445,6 +481,8 @@ export default {
         } else {
           res = ''
         }
+      } else {
+        this.teacherscope_trial = res.pay_teacher_id
       }
       this.setSeachParmas(
         res,
@@ -456,6 +494,9 @@ export default {
     selectLastTeacher(res) {
       if (!res.last_teacher_id || res.last_teacher_id.length === 0) {
         res = ''
+        this.teacherscope_system = null
+      } else {
+        this.teacherscope_system = res.last_teacher_id
       }
       this.setSeachParmas(
         res,
@@ -474,11 +515,11 @@ export default {
     },
     getSystemCourseType(res) {
       if (res) {
-        this.package_type = res.system_course_type
+        this.packages_type = res.packages_type
       } else {
-        this.package_type = null
+        this.packages_type = null
       }
-      this.setSeachParmas(res, [this.systemCourseType || 'system_course_type'])
+      this.setSeachParmas(res, [this.packagesType || 'packages_type'])
     },
     getDepartment(res) {
       this.teacherscope = res.pay_teacher_id || null
