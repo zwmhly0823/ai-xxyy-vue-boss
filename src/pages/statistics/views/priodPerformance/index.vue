@@ -4,11 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-02 15:35:27
  * @LastEditors: Shentong
-<<<<<<< HEAD
- * @LastEditTime: 2020-04-30 21:52:06
-=======
- * @LastEditTime: 2020-04-30 18:54:58
->>>>>>> feature/按期汇总-bug
+ * @LastEditTime: 2020-05-06 16:41:52
  -->
 <template>
   <el-row type="flex" class="app-main height schedule-container">
@@ -34,7 +30,6 @@
             >
               <span>{{ tab.period_name }}</span>
             </div>
-            <!-- 大于5个 TODO: -->
             <el-dropdown
               @command="handleCommand"
               class="activeCommand"
@@ -104,7 +99,7 @@
               @pageChange="pageChange_handler"
               class="mytable"
             >
-              <el-table-column label="排名" width="60" prop="sup" align="center"
+              <el-table-column label="排名" width="60" align="center"
                 ><template slot-scope="scope"
                   ><span v-if="tabQuery.totalSort === 'desc'"
                     >{{ scope.$index + calcIndex }}
@@ -121,67 +116,67 @@
               </el-table-column>
               <el-table-column
                 label="部门"
-                width="140"
+                min-width="140"
                 align="center"
                 prop="department_name"
               ></el-table-column>
               <el-table-column
                 label="社群销售"
                 prop="realname"
-                width="80"
+                min-width="80"
                 align="center"
               ></el-table-column>
               <el-table-column
                 label="体验学生数"
-                width="85"
+                min-width="85"
                 prop="trial_course_count"
                 align="center"
               ></el-table-column>
               <el-table-column
                 label="无收货地址"
-                width="80"
+                min-width="80"
                 prop="no_address_count"
                 align="center"
               ></el-table-column>
               <el-table-column
                 label="微信添加率"
-                width="80"
+                min-width="80"
                 prop="addWechatRate"
                 align="center"
               ></el-table-column>
               <el-table-column
                 label="参课率"
-                width="80"
+                min-width="80"
                 prop="joinCourseRate"
                 align="center"
               ></el-table-column>
               <el-table-column
                 label="完课率"
-                width="80"
+                min-width="80"
                 prop="compCourseRate"
                 align="center"
               ></el-table-column>
               <el-table-column
                 label="人均上传作品"
-                width="100"
+                min-width="100"
                 prop="uploadTaskRate"
                 align="center"
               ></el-table-column>
               <el-table-column
                 label="作品点评率"
-                width="80"
+                min-width="80"
                 prop="commentTaskRate"
                 align="center"
               ></el-table-column>
               <el-table-column
                 label="查看点评率"
-                width="80"
+                min-width="80"
                 prop="lookCommentRate"
                 align="center"
               ></el-table-column>
               <el-table-column
                 label="支付学生数"
-                width="80"
+                min-width="80"
                 prop="system_order_count"
                 align="center"
               ></el-table-column>
