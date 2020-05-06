@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-24 15:16:26
  * @LastEditors: liukun
- * @LastEditTime: 2020-04-29 15:15:35
+ * @LastEditTime: 2020-05-06 11:38:34
  -->
 <template>
   <el-scrollbar wrap-class="order-wrapper" id="order-scroll">
@@ -30,7 +30,7 @@
             search-team-name="last_team_id"
             search-trial-team-name="uid"
           />
-          <all-order :topic="activeTopic" :search="search" />
+          <all-order1 :topic="activeTopic" :search="search" />
         </el-tab-pane>
 
         <!-- 包含全部体验课订单数据（双周体验课、单周体验课） -->
@@ -47,25 +47,27 @@
             groupSell="last_teacher_id"
             search-trial-team-name="last_team_id"
           />
-          <all-order :topic="activeTopic" :search="search" />
+          <all-order2 :topic="activeTopic" :search="search" />
         </el-tab-pane>
-        <el-tab-pane label="活动订单" name="1,2,6">
+        <!-- <el-tab-pane label="活动订单" name="1,2,6">
           <all-order :topic="activeTopic" :search="search" />
-        </el-tab-pane>
+        </el-tab-pane> -->
       </el-tabs>
     </div>
   </el-scrollbar>
 </template>
 
 <script>
-import allOrder from './components/allOrder'
+import allOrder1 from './components/allOrder1'
+import allOrder2 from './components/allOrder2'
 import searchList1 from './components/searchList1.vue'
 import searchList2 from './components/searchList2.vue'
 export default {
   name: 'orderModule',
   props: [],
   components: {
-    allOrder,
+    allOrder1,
+    allOrder2,
     searchList1,
     searchList2
   },
