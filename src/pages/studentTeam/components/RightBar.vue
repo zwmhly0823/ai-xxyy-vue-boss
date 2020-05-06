@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-13 16:53:41
  * @LastEditors: zhubaodong
- * @LastEditTime: 2020-04-30 14:31:58
+ * @LastEditTime: 2020-05-06 20:16:44
  -->
 <template>
   <div class="right-container">
@@ -70,8 +70,18 @@
                 placement="left"
               >
                 <div slot="content" class="openBtn">
-                  <div @click="openAutoAddOpen">开启</div>
-                  <div @click="openAutoAddClose">关闭</div>
+                  <div @click="openAutoAddOpen">
+                    开启<i
+                      v-if="switchState === 'ON'"
+                      class="el-icon-check"
+                    ></i>
+                  </div>
+                  <div @click="openAutoAddClose">
+                    关闭<i
+                      v-if="switchState === 'OFF'"
+                      class="el-icon-check"
+                    ></i>
+                  </div>
                 </div>
                 <div
                   @mouseenter="
@@ -219,7 +229,8 @@ export default {
       count: 0,
       day: {},
       autoAddFriends: false,
-      autoAddFriendsIn: false
+      autoAddFriendsIn: false,
+      switchState: 'OFF' // 默认状态
     }
   },
   mounted() {
@@ -252,6 +263,11 @@ export default {
       })
         .then((res) => {
           if (+res.code === 0) {
+            this.$http.StudentTerm.getStudentTeamById({
+              teamId: this.classId.classId.id || ''
+            }).then((res) => {
+              this.switchState = res.payload.switchState
+            })
             this.$message({
               message: '已开启自动加好友功能',
               type: 'success'
@@ -273,6 +289,11 @@ export default {
       })
         .then((res) => {
           if (+res.code === 0) {
+            this.$http.StudentTerm.getStudentTeamById({
+              teamId: this.classId.classId.id || ''
+            }).then((res) => {
+              this.switchState = res.payload.switchState
+            })
             this.$message({
               message: '已关闭自动加好友功能',
               type: 'success'
@@ -376,6 +397,11 @@ export default {
 
           // this.classMessage2 = res.dataformatEndDay
         })
+      this.$http.StudentTerm.getStudentTeamById({
+        teamId: this.classId.classId.id || ''
+      }).then((res) => {
+        this.switchState = res.payload.switchState
+      })
     }
   }
 }
