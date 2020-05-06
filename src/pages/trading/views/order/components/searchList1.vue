@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-04-25 17:24:23
  * @LastEditors: liukun
- * @LastEditTime: 2020-04-29 14:04:13
+ * @LastEditTime: 2020-04-30 15:41:36
  -->
 <template>
   <el-card border="false" shadow="never" :class="$style.elard">
@@ -443,9 +443,11 @@ export default {
      * @name: String 结果放到上层表达式中的位置，默认must. 可指定 should
      */
     setSeachParmas(res, key = [], extraKey = 'term', name = 'must') {
+      console.info(key)
       const { must, should } = this
       const temp = name === 'must' ? must : should
       key.forEach((k) => {
+        console.info(k)
         // temp.forEach((item, index) => {
         //   if (
         //     JSON.parse(item[extraKey])[k] &&
@@ -473,6 +475,8 @@ export default {
           this.must = temp
         }
         this.$emit('search', temp)
+        console.info('lklkl', temp)
+
         return
       }
       // should

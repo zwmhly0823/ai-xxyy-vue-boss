@@ -39,6 +39,10 @@ export default {
       result: null,
       typeList: [
         {
+          id: '0',
+          text: '体验课'
+        },
+        {
           id: '1',
           text: '月系统课'
         },

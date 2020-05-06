@@ -43,7 +43,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters } from 'vuex' // 帮助方法不省事啊
 export default {
   props: {
     // 每页显示条数

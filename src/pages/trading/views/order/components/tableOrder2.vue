@@ -1,3 +1,12 @@
+<!--
+ * @Descripttion: TOSS小熊
+ * @version: 1.0.0
+ * @Author: liukun
+ * @Date: 2020-04-29 12:13:11
+ * @LastEditors: liukun
+ * @LastEditTime: 2020-05-06 15:42:28
+ -->
+
 <template>
   <div class="title-box">
     <el-table :data="orderList">
@@ -6,6 +15,8 @@
           <p>{{ scope.row.user ? scope.row.user.username || '-' : '-' }}</p>
           <p>{{ scope.row.user ? scope.row.user.mobile || '-' : '-' }}</p>
         </template>
+      </el-table-column>
+      <el-table-column label="地域" prop="QCellCore" width="120">
       </el-table-column>
       <el-table-column label="商品信息" width="160">
         <template slot-scope="scope">
@@ -29,7 +40,7 @@
           </p>
         </template>
       </el-table-column>
-      <!-- <el-table-column label="体验课类型" v-if="topic === '4'">
+      <el-table-column label="体验课类型" v-if="topic === '4'">
         <template slot-scope="scope">
           <p>
             {{
@@ -43,7 +54,7 @@
             }}
           </p>
         </template>
-      </el-table-column> -->
+      </el-table-column>
       <el-table-column label="订单来源">
         <template slot-scope="scope">
           <p>
@@ -56,11 +67,6 @@
           {{ scope.row.order_status ? scope.row.order_status : '-' }}
         </template>
       </el-table-column>
-      <!-- <el-table-column label="班级信息" v-if="topic === '4'">
-        <template slot-scope="scope">
-          {{ scope.row.team ? scope.row.team.team_name : '-' }}
-        </template>
-      </el-table-column> -->
       <el-table-column label="体验课班级" width="150">
         <template slot-scope="scope">
           {{

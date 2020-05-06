@@ -88,7 +88,7 @@
     <el-divider></el-divider>
     <!-- tab列表 -->
     <article class="bottom-box">
-      <table-order
+      <table-order2
         :topic="topic"
         :status="status"
         :search="searchIn"
@@ -98,11 +98,11 @@
   </div>
 </template>
 <script>
-import tableOrder from './tableOrder'
+import tableOrder2 from './tableOrder2'
 import { isToss } from '@/utils/index'
 export default {
   components: {
-    tableOrder
+    tableOrder2
   },
   props: {
     // 当前tab - 商品主题
