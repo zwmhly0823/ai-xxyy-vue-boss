@@ -15,6 +15,7 @@ import StudentTerm from './modules/StudentTerm' // 班级graphql接口
 import Permission from './modules/Permission' // 老师权限接口
 import Department from './modules/Department' // 组织机构接口
 import Product from './modules/Product' // 产品相关接口
+import Teacher from './modules/Teacher' // 产品相关接口
 
 export default Object.assign(
   {},
@@ -26,5 +27,6 @@ export default Object.assign(
   { Express },
   { Permission },
   { Department },
-  { Product }
+  { Product },
+  { Teacher }
 )

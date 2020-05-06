@@ -44,6 +44,16 @@ export default {
     teamnameType: {
       type: String,
       default: '1' // 0：体验课。 >0系统课
+    },
+    // 老师ID
+    teacherId: {
+      type: Array,
+      default: () => null
+    },
+    // 排期id
+    term: {
+      type: Array,
+      default: () => null
     }
   },
   computed: {
@@ -61,6 +71,16 @@ export default {
   created() {
     this.getTeam()
   },
+  watch: {
+    teacherId(val, old) {
+      this.teamName = ''
+      this.getTeam()
+    },
+    term(val, old) {
+      this.teamName = ''
+      this.getTeam()
+    }
+  },
   methods: {
     getTeam(query) {
       // if (query !== '') {
@@ -77,6 +97,9 @@ export default {
         }
       }
       q.bool.must.push(teamType)
+      this.teacherId &&
+        q.bool.must.push({ terms: { teacher_id: this.teacherId } })
+      this.term && q.bool.must.push({ terms: { term: this.term } })
       this.$http.Team.getStudentTeamV1Search(JSON.stringify(q))
         .then((res) => {
           this.teamList = res.data.StudentTeamListEx || []
