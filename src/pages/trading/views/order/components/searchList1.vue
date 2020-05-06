@@ -472,7 +472,7 @@ export default {
       this.setSeachParmas(res, [this.orderType || 'regtype'])
     },
     getSystemCourseType(res) {
-      this.setSeachParmas(res, [this.systemCourseType || 'system_course_type'])
+      this.setSeachParmas(res, [this.systemCourseType || 'packages_type'])
     },
     getDepartment(res) {
       this.teacherscope = res.pay_teacher_id || null

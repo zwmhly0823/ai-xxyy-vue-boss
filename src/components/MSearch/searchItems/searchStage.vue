@@ -92,7 +92,7 @@ export default {
       axios
         .post('/graphql/v1/toss', {
           query: `{
-            StudentTeamList(query: ${JSON.stringify(q)}){
+            StudentTeamList(query: ${JSON.stringify(q)}, size: 500){
               term
             }
           }`
