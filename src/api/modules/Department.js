@@ -34,5 +34,17 @@ export default {
         }
       }`
     })
+  },
+
+  // 模糊查询teacherList
+  getDepartmentTeacherEx(query = '') {
+    return axios.post('/graphql/v1/toss', {
+      query: `{
+        TeacherListEx(query: ${JSON.stringify(query)}, size: 20){
+          id
+          realname
+        }
+      }`
+    })
   }
 }

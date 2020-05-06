@@ -12,7 +12,7 @@
       v-model="result"
       size="mini"
       clearable
-      placeholder="系统课类型"
+      placeholder="全部系统课类型"
       @change="onChange"
       class="item-style"
     >
