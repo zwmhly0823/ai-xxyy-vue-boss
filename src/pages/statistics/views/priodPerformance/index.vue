@@ -4,7 +4,11 @@
  * @Author: Shentong
  * @Date: 2020-04-02 15:35:27
  * @LastEditors: Shentong
+<<<<<<< HEAD
  * @LastEditTime: 2020-04-30 21:52:06
+=======
+ * @LastEditTime: 2020-04-30 18:54:58
+>>>>>>> feature/按期汇总-bug
  -->
 <template>
   <el-row type="flex" class="app-main height schedule-container">
@@ -52,7 +56,10 @@
             </el-dropdown>
           </div>
           <div class="sear-container">
-            <statictics-search @searchChange="searchChange"></statictics-search>
+            <statictics-search
+              @searchChange="searchChange"
+              v-if="showSearch"
+            ></statictics-search>
           </div>
           <p class="descripte" v-if="currentPriodStatistic">
             开课日期：<span class="label-val">{{
@@ -225,6 +232,7 @@
 </template>
 
 <script>
+import _ from 'lodash'
 import staticticsSearch from '../../components/staticticsSearch'
 import EleTable from '@/components/Table/EleTable'
 import { formatData } from '@/utils'
@@ -283,7 +291,9 @@ export default {
       tableData: [],
       proidList: [],
       tableDatasss: [],
-      currentPriodStatistic: {}
+      currentPriodStatistic: {},
+      searchEmit: {},
+      showSearch: true
     }
   },
   computed: {
@@ -291,8 +301,7 @@ export default {
       return this.tabQuery.size * (this.tabQuery.page - 1) + 1
     }
   },
-  watch: {},
-  activated() {
+  created() {
     this.init()
   },
   methods: {
@@ -330,9 +339,7 @@ export default {
 
         this.currentPriodStatistic = this.getStaByProid(period)
 
-        await this.getStatisticsByProid()
-
-        this.getCountStatisticBySearch()
+        this.getListAndSearchSta()
       }
     },
     // 遍历期数,获取当前期下的统计结果
@@ -477,19 +484,35 @@ export default {
       this.getStatisticsByProid()
       this.getCountStatisticBySearch()
     },
+
     // 组件emit
-    searchChange(search) {
-      const { department = [], groupSell = '', sup = [] } = search
+    searchChange(res) {
+      this.initSearchData(res, true)
+
+      this.getListAndSearchSta()
+    },
+    initSearchData(res, isFromEmit = false) {
+      // 如果是子组件emit而来的数据，则不需要清空
+      if (!isFromEmit) {
+        this.showSearch = false
+        this.$nextTick(() => {
+          this.showSearch = true
+        })
+      }
+
+      this.searchEmit = _.cloneDeep(res)
+
+      const { department = [], groupSell = '', sup = [] } = this.searchEmit
       Object.assign(this.tabQuery, {
         teacher: groupSell,
         department: department.join(),
         sup: sup.join()
       })
-
-      this.getListAndSearchSta()
     },
     // 更多 下拉框
     handleCommand(command) {
+      this.initSearchData({})
+
       const { period = '' } = command
 
       this.tabIndex = 6
@@ -500,10 +523,11 @@ export default {
       this.getListAndSearchSta()
 
       this.currentPriodStatistic = this.getStaByProid(period)
-      console.log('currentPriodStatistic', this.currentPriodStatistic)
     },
     // 点击  ’进行中、已结课、招生中‘ 按钮
     top_tabs_click(index, statusInfo) {
+      this.initSearchData({})
+
       this.tabIndex = 0
       this.btnIndex = index
       const { status } = statusInfo
@@ -511,6 +535,8 @@ export default {
     },
     // 点击期数
     priod_tabs_click(row, index) {
+      this.initSearchData({})
+
       const { period = '' } = row
       this.tabIndex = index
       this.tabQuery.page = 1
@@ -519,7 +545,6 @@ export default {
       this.getListAndSearchSta()
 
       this.currentPriodStatistic = this.getStaByProid(period)
-      console.log('currentPriodStatistic', this.currentPriodStatistic)
 
       this.selectName = '更多'
     },

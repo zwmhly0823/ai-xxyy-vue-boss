@@ -1,7 +1,7 @@
 /*
  * @Date: 2020-03-13 15:20:21
  * @LastEditors: Shentong
- * @LastEditTime: 2020-04-26 17:03:56
+ * @LastEditTime: 2020-04-30 18:44:39
  * @FilePath: /ai-app-vue-toss/src/pages/studentTeam/router/index.js
  */
 import Vue from 'vue'
@@ -33,7 +33,7 @@ const routes = [
     name: 'priodPerformance',
     meta: {
       title: '按期情况汇总',
-      keepAlive: true
+      keepAlive: false
     },
     component: () => import('../views/priodPerformance/index.vue')
   },

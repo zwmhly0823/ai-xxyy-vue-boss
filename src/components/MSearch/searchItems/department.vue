@@ -57,7 +57,6 @@ export default {
       // TODO: 根据选择的销售组，获取销售ID
       const ids = { department_id: data || [] }
       if (this.onlyDept === 1) {
-        console.log(data, '0-00')
         this.$emit('result', { [this.name]: data })
       } else {
         const teacher = await this.$http.Department.getDepartmentTeacher(
