@@ -12,10 +12,9 @@
       <el-form-item label="订单搜索:" :class="{ [$style.marginer]: true }">
         <orderSearch class="allmini" />
       </el-form-item>
-      <br />
 
       <el-form-item label="订单来源:" :class="{ [$style.marginer]: true }">
-        <ChannelSelect @result="getChannel" />
+        <ChannelSelect @result="getChannel" name="pay_channel" />
       </el-form-item>
       <br />
 
@@ -327,7 +326,7 @@ export default {
     // 选择渠道
     getChannel(res) {
       console.info(res, 'lll')
-      this.setSeachParmas(res, [this.channel || 'channelid'], 'terms')
+      this.setSeachParmas(res, [this.channel || 'pay_channel'], 'terms')
     },
     // 主题
     getProductTopic(res) {
