@@ -69,6 +69,7 @@
               >{{ statisticsInfo.course_days || '-' }}天</span
             >
             <!-- <span>当前结果：</span> -->
+            <!-- 转化统计 -->
             <template v-if="activeName == 'conversion'">
               <span>总订单数：</span>
               <span class="label-val for-light">{{
@@ -83,6 +84,7 @@
                 statisticsInfo.amount_total || '-'
               }}</span>
             </template>
+            <!-- 参课统计数据统计 -->
             <template v-else-if="activeName == 'attendClass'">
               <span>本期总{{ despMap[activeName] }}人数：</span>
               <span class="label-val for-light">
@@ -120,6 +122,20 @@
                 {{ statisticsInfo.now_complete_rate || '-' }}
               </span>
             </template>
+            <template v-else-if="activeName == 'uploadWorks'">
+              <span>总上传所品：</span>
+              <span class="label-val for-light">0</span>
+              <span>总上传率：</span>
+              <span class="label-val for-light">0</span>
+              <span>人均作品：</span>
+              <span class="label-val for-light">0</span>
+            </template>
+            <template v-else-if="activeName == 'teacherComments'">
+              <span>总点评率：</span>
+              <span class="label-val for-light">0</span>
+              <span>总点评收听率：</span>
+              <span class="label-val for-light">0</span>
+            </template>
           </p>
           <div style="padding: 0 15px;">
             <el-tabs
@@ -127,9 +143,13 @@
               @tab-click="statisticsTypehandleClick"
             >
               <el-tab-pane label="转化统计" name="conversion"> </el-tab-pane>
-              <!-- TODO: -->
               <el-tab-pane label="参课统计" name="attendClass"> </el-tab-pane>
               <el-tab-pane label="完课统计" name="finishClass"> </el-tab-pane>
+              <!-- TODO: -->
+              <el-tab-pane label="上传作品统计" name="uploadWorks">
+              </el-tab-pane>
+              <el-tab-pane label="老师点评统计" name="teacherComments">
+              </el-tab-pane>
             </el-tabs>
           </div>
           <!-- 完课统计列表 -->
