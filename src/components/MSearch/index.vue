@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-24 18:20:12
  * @LastEditors: Lukun
- * @LastEditTime: 2020-05-06 21:56:18
+ * @LastEditTime: 2020-05-06 22:09:44
  -->
 
 <template>
@@ -100,7 +100,7 @@
         <team-detail @result="getTeamDetail" :name="teamDetail" />
       </el-form-item>
 
-      <el-form-item v-if="groupSell">
+      <el-form-item v-if="groupSell && !teacherId">
         <!-- 社群销售 -->
         <group-sell @result="selectSellTeacher" :name="groupSell" />
       </el-form-item>
