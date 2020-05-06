@@ -5,14 +5,14 @@
  * @Date: 2020-03-14 15:11:17
  * @LastEditors: Shentong
  * :max-height="maxHeight"
- * @LastEditTime: 2020-05-06 20:21:20
+ * @LastEditTime: 2020-05-06 20:47:22
  -->
 <template>
   <div id="tableList" :class="{ 'no-padding': size > total }">
     <el-table
       :size="tableSize"
       :data="dataList"
-      :max-height="size > total ? tableHeight : tableHeight + 50"
+      :max-height="size > total ? +tableHeight + 50 : tableHeight"
       style="width: 100%"
       :header-cell-style="{
         fontSize: '12px',

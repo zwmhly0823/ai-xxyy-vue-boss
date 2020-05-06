@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-02 15:35:27
  * @LastEditors: Shentong
- * @LastEditTime: 2020-05-06 18:43:07
+ * @LastEditTime: 2020-05-06 21:36:16
  -->
 <template>
   <el-row type="flex" class="app-main height schedule-container">
@@ -274,7 +274,7 @@ export default {
         loading: false
       },
       tabQuery: {
-        size: 10,
+        size: 20,
         page: 1,
         rateSort: 'desc',
         totalSort: 'desc'

@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-04-02 15:35:27
  * @LastEditors: Shentong
- * @LastEditTime: 2020-05-06 20:16:52
+ * @LastEditTime: 2020-05-06 21:42:58
  -->
 <template>
   <el-row type="flex" class="app-main height schedule-container">
@@ -228,7 +228,7 @@
               </el-table-column>
             </ele-table>
           </div>
-
+          <!-- 转化统计 -->
           <div
             class="orderStyle"
             v-if="tableData.length && activeName == 'conversion'"
@@ -272,24 +272,42 @@
                 prop="student_total"
                 align="center"
               ></el-table-column>
-              <el-table-column align="center" label="总计">
+              <!-- <el-table-column
+                label="订单数"
+                prop="order_total"
+                align="center"
+                fixed
+              ></el-table-column>
+              <el-table-column
+                label="转化率"
+                prop="conversion_total"
+                align="center"
+                fixed
+              ></el-table-column>
+              <el-table-column
+                label="总金额"
+                prop="amount_total"
+                align="center"
+                fixed
+              ></el-table-column> -->
+              <el-table-column align="center" label="总计" fixed width="240">
                 <el-table-column
-                  fixed
                   label="订单数"
                   prop="order_total"
                   align="center"
+                  fixed
                 ></el-table-column>
                 <el-table-column
-                  fixed
                   label="转化率"
                   prop="conversion_total"
                   align="center"
+                  fixed
                 ></el-table-column>
                 <el-table-column
-                  fixed
                   label="总金额"
                   prop="amount_total"
                   align="center"
+                  fixed
                 ></el-table-column>
               </el-table-column>
               <!-- child-table-start -->
