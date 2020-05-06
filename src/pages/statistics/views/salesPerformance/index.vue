@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-04-02 15:35:27
  * @LastEditors: Shentong
- * @LastEditTime: 2020-04-30 21:31:39
+ * @LastEditTime: 2020-05-06 16:52:41
  -->
 <template>
   <el-row type="flex" class="app-main height schedule-container">
@@ -126,10 +126,10 @@
               v-model="activeName"
               @tab-click="statisticsTypehandleClick"
             >
-              <!-- <el-tab-pane label="转化统计" name="conversion"> </el-tab-pane> -->
+              <el-tab-pane label="转化统计" name="conversion"> </el-tab-pane>
               <!-- TODO: -->
               <el-tab-pane label="参课统计" name="attendClass"> </el-tab-pane>
-              <!-- <el-tab-pane label="完课统计" name="finishClass"> </el-tab-pane> -->
+              <el-tab-pane label="完课统计" name="finishClass"> </el-tab-pane>
             </el-tabs>
           </div>
           <!-- 完课统计列表 -->
@@ -480,7 +480,7 @@ export default {
       // tabs标签默认状态
       selectName: '更多',
       // 统计表title TODO:
-      activeName: 'attendClass',
+      activeName: 'conversion',
       tabIndex: 0,
       // 状态index
       btnIndex: 0,
@@ -573,9 +573,12 @@ export default {
     },
     // table列表
     async getChangecListByProid() {
-      this.flags.loading = true
-      // TODO:
-      // this.tabQuery.period = 13
+      const loadingInstance = this.$loading({
+        target: 'section',
+        lock: true,
+        text: '玩命加载中...',
+        fullscreen: true
+      })
       try {
         if (this.activeName === 'finishClass') {
           // 完课统计
@@ -638,10 +641,10 @@ export default {
           this.statisticsInfo = ConversionRateStatistics
           this.pakageListDate(ConversionRateStatistics)
         }
-        this.flags.loading = false
+        loadingInstance.close()
       } catch (err) {
         console.log(err)
-        // loadingInstance.close()
+        loadingInstance.close()
       }
     },
     // 包装 接口返回的数据
@@ -665,99 +668,11 @@ export default {
         if (this.tableDataChild.length <= childLength) {
           this.tableDataChild = conversionRateArr
         }
-        // if (childLength >= _length) {
-        //   _length = childLength
-        // }
       })
-      // for (let i = 0; i < _length; i++) {
-      //   this.tableDataChild.push({
-      //     row_index: i + 1
-      //   })
-      // }
       this.tableData = teacherConversion
     },
     //  参课统计 数据格式化
     formatTableData(list) {
-      // list = [
-      //   {
-      //     sup: 'S2',
-      //     teacher_id: '80',
-      //     teacher_name: '周艺达',
-      //     department_id: '19',
-      //     department_name: '3部S2战队',
-      //     student_nums: '95',
-      //     total_nums: '285',
-      //     total_join_nums: '28',
-      //     total_join_rate: '9.82%',
-      //     total_complete_nums: '157',
-      //     total_complete_rate: '55.09%',
-      //     completeArr: [
-      //       {
-      //         current_lesson: 'W1D3',
-      //         sum: '95',
-      //         join_nums: '14',
-      //         join_rate: '14.74%',
-      //         complete_nums: '35',
-      //         complete_rate: '36.84%'
-      //       },
-      //       {
-      //         current_lesson: 'W1D1',
-      //         sum: '95',
-      //         join_nums: '6',
-      //         join_rate: '6.32%',
-      //         complete_nums: '67',
-      //         complete_rate: '70.53%'
-      //       },
-      //       {
-      //         current_lesson: 'W1D2',
-      //         sum: '95',
-      //         join_nums: '8',
-      //         join_rate: '8.42%',
-      //         complete_nums: '55',
-      //         complete_rate: '57.89%'
-      //       }
-      //     ]
-      //   },
-      //   {
-      //     sup: 'S2',
-      //     teacher_id: '79',
-      //     teacher_name: '张晨阳',
-      //     department_id: '19',
-      //     department_name: '3部S2战队',
-      //     student_nums: '94',
-      //     total_nums: '282',
-      //     total_join_nums: '39',
-      //     total_join_rate: '13.83%',
-      //     total_complete_nums: '152',
-      //     total_complete_rate: '53.9%',
-      //     completeArr: [
-      //       {
-      //         current_lesson: 'W1D3',
-      //         sum: '94',
-      //         join_nums: '12',
-      //         join_rate: '12.77%',
-      //         complete_nums: '42',
-      //         complete_rate: '44.68%'
-      //       },
-      //       {
-      //         current_lesson: 'W1D1',
-      //         sum: '94',
-      //         join_nums: '10',
-      //         join_rate: '10.64%',
-      //         complete_nums: '65',
-      //         complete_rate: '69.15%'
-      //       },
-      //       {
-      //         current_lesson: 'W1D2',
-      //         sum: '94',
-      //         join_nums: '17',
-      //         join_rate: '18.09%',
-      //         complete_nums: '45',
-      //         complete_rate: '47.87%'
-      //       }
-      //     ]
-      //   }
-      // ]
       // 初始化
       this.tableDataChildAttend = []
       list.forEach((item, index) => {
