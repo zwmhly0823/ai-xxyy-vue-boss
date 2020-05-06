@@ -43,6 +43,15 @@ export default {
       // keyword: 'out_trade_no'
     }
   },
+  computed: {
+    keyword() {
+      let key
+      if (this.select === '0') key = 'out_trade_no'
+      if (this.select === '1') key = 'out_trade_no'
+      if (this.select === '2') key = 'out_trade_no'
+      return key
+    }
+  },
   methods: {
     onChange(val) {
       console.info(val)

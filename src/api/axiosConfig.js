@@ -11,8 +11,9 @@ import { getToken } from '@/utils/auth'
 // import { baseUrl } from '@/utils/index'
 // 转json
 function strToJson(str) {
-  var json = (new Function("return " + str))();
-  return json;
+  // eslint-disable-next-line no-new-func
+  var json = new Function('return ' + str)()
+  return json
 }
 export default {
   // 判断是否需要token
@@ -66,11 +67,16 @@ export default {
         const regParam = /\(query:[\w\W]+\)/
         const matchsParam = params.query.match(regParam)
         if (matchsParam && matchsParam.length) {
-          const str = matchsParam[0].replace(/"{/g, '{').replace(/}"/g, '}').replace('(', '{').replace(')', '}').replace(/\\/g, '')
+          const str = matchsParam[0]
+            .replace(/"{/g, '{')
+            .replace(/}"/g, '}')
+            .replace('(', '{')
+            .replace(')', '}')
+            .replace(/\\/g, '')
           try {
             // console.log(strToJson(str))
             const visableData = strToJson(str)
-            params = {...params, data: visableData}
+            params = { ...params, data: visableData }
           } catch (error) {
             console.log(error)
           }
