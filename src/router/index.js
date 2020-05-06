@@ -90,20 +90,21 @@ const routes = [
       //     style: 'line'
       //   }
       // },
-      {
-        path: '/salesPerformance',
-        name: 'salesPerformance',
-        meta: {
-          title: '销售过程',
-          module: 'statistics',
-          style: 'line'
-        }
-      },
+
       {
         path: '/priodPerformance',
         name: 'priodPerformance',
         meta: {
           title: '按期汇总',
+          module: 'statistics',
+          style: 'line'
+        }
+      },
+      {
+        path: '/salesPerformance',
+        name: 'salesPerformance',
+        meta: {
+          title: '销售过程',
           module: 'statistics',
           style: 'line'
         }

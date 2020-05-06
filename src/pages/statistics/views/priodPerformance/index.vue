@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-02 15:35:27
  * @LastEditors: Shentong
- * @LastEditTime: 2020-05-06 21:36:16
+ * @LastEditTime: 2020-05-06 22:16:53
  -->
 <template>
   <el-row type="flex" class="app-main height schedule-container">
@@ -655,6 +655,7 @@ export default {
   .descripte {
     padding-left: 15px;
     color: #333;
+    margin: 0;
     min-width: 800px;
     .label-val {
       margin-right: 20px;

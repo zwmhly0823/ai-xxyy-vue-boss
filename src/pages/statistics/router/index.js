@@ -1,7 +1,7 @@
 /*
  * @Date: 2020-03-13 15:20:21
  * @LastEditors: Shentong
- * @LastEditTime: 2020-04-30 18:44:39
+ * @LastEditTime: 2020-05-06 22:15:46
  * @FilePath: /ai-app-vue-toss/src/pages/studentTeam/router/index.js
  */
 import Vue from 'vue'
@@ -20,15 +20,6 @@ const routes = [
     redirect: '/salesPerformance'
   },
   {
-    path: '/salesPerformance',
-    name: 'salesPerformance',
-    meta: {
-      title: '销售过程分析',
-      keepAlive: true
-    },
-    component: () => import('../views/salesPerformance/index.vue')
-  },
-  {
     path: '/priodPerformance',
     name: 'priodPerformance',
     meta: {
@@ -36,6 +27,15 @@ const routes = [
       keepAlive: false
     },
     component: () => import('../views/priodPerformance/index.vue')
+  },
+  {
+    path: '/salesPerformance',
+    name: 'salesPerformance',
+    meta: {
+      title: '销售过程分析',
+      keepAlive: true
+    },
+    component: () => import('../views/salesPerformance/index.vue')
   },
   {
     path: '/salesProcess',
