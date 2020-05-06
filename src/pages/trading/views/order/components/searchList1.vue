@@ -50,6 +50,7 @@
             class="margin_l10"
           />
           <search-stage
+            :teacher-id="teacherscope"
             class="margin_l10"
             name="trial_stage"
             placeholder="全部体验课排期"
@@ -77,7 +78,7 @@
           <systemCourseType
             style="width:140px"
             @result="getSystemCourseType"
-            name="system_course_type"
+            name="packages_type"
           />
           <group-sell
             :teacherscope="teacherscope"
@@ -100,6 +101,7 @@
             @result="supCallBack"
           />
           <search-team-name
+            teamnameType="1"
             @result="getTeamName"
             name="team_id"
             class="margin_l10"

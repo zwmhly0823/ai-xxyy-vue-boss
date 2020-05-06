@@ -49,13 +49,19 @@ export default {
     placeholder: {
       type: String,
       default: ''
+    },
+    // 老师ID,通过老师获取对应的排期
+    teacherId: {
+      type: Array,
+      default: () => []
     }
   },
   data() {
     return {
       loading: false,
       stage: '',
-      dataList: []
+      dataList: [],
+      period: [] // 期数
     }
   },
   computed: {
@@ -70,6 +76,34 @@ export default {
   created() {
     this.getData()
   },
+  watch: {
+    teacherId(val) {
+      if (!this.teacherId || this.teacherId.length === 0) {
+        this.period = []
+        this.getData()
+        return
+      }
+      // 体验课
+      const query = { teacher_id: this.teacherId }
+      const teamType =
+        this.type === '0' ? { team_type: 0 } : { team_type: { gt: 0 } }
+      Object.assign(query, teamType)
+      const q = JSON.stringify(query)
+      axios
+        .post('/graphql/v1/toss', {
+          query: `{
+            StudentTeamList(query: ${JSON.stringify(q)}){
+              term
+            }
+          }`
+        })
+        .then((res) => {
+          const period = (res.data && res.data.StudentTeamList) || []
+          this.period = period.map((item) => item.term)
+          this.getData()
+        })
+    }
+  },
   methods: {
     getData(queryString = '') {
       this.loading = true
@@ -80,6 +114,9 @@ export default {
       }
       if (this.type) {
         queryParams.bool.must.push({ term: { type: `${this.type}` } })
+      }
+      if (this.period.length > 0) {
+        queryParams.bool.must.push({ terms: { period: this.period } })
       }
       const q = JSON.stringify(queryParams)
       const sort = `{"id":"desc"}`
