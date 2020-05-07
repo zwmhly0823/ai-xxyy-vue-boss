@@ -791,7 +791,7 @@ export default {
     // scrotop
     scrollToTop() {
       document
-        .getElementById('right-scroll')
+        .getElementById('express-right-scroll')
         .querySelector('.scrollbar-wrapper').scrollTop = 0
     }
   },
