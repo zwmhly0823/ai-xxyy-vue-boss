@@ -551,9 +551,6 @@ export default {
           if (item.term.user_id) {
             timeType.user_id = item.term.user_id
           }
-          if (item.term && item.term.pay_teacher_id) {
-            timeType.pay_teacher_id = item.term.pay_teacher_id
-          }
           if (item.term && item.term.regtype) {
             timeType.regtype = `${item.term.regtype}`
           }
@@ -565,6 +562,9 @@ export default {
           }
           if (item.term && item.term.term) {
             timeType.term = item.term.term
+          }
+          if (item.term && item.term.last_teacher_id) {
+            timeType.teacher_id = item.term.last_teacher_id
           }
         }
         if (item && item.terms) {
@@ -589,9 +589,6 @@ export default {
         }
         if (item.wildcard && item.wildcard.express_nu) {
           timeType.express_nu = item.wildcard.express_nu
-        }
-        if (item && item.last_teacher_id) {
-          timeType.teacher_id = item.last_teacher_id
         }
       })
 
@@ -783,7 +780,7 @@ export default {
     // scrotop
     scrollToTop() {
       document
-        .getElementById('express-right-scroll')
+        .getElementById('right-scroll')
         .querySelector('.scrollbar-wrapper').scrollTop = 0
     }
   },
