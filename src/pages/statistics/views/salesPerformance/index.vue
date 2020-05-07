@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-04-02 15:35:27
  * @LastEditors: Shentong
- * @LastEditTime: 2020-05-06 21:42:58
+ * @LastEditTime: 2020-05-07 11:47:57
  -->
 <template>
   <el-row type="flex" class="app-main height schedule-container">
@@ -179,7 +179,7 @@
                 prop="student_nums"
                 align="center"
               ></el-table-column>
-              <el-table-column align="center" label="总计">
+              <el-table-column align="center" label="总计" width="160" fixed>
                 <el-table-column
                   fixed
                   label="总完课人数"
@@ -272,24 +272,6 @@
                 prop="student_total"
                 align="center"
               ></el-table-column>
-              <!-- <el-table-column
-                label="订单数"
-                prop="order_total"
-                align="center"
-                fixed
-              ></el-table-column>
-              <el-table-column
-                label="转化率"
-                prop="conversion_total"
-                align="center"
-                fixed
-              ></el-table-column>
-              <el-table-column
-                label="总金额"
-                prop="amount_total"
-                align="center"
-                fixed
-              ></el-table-column> -->
               <el-table-column align="center" label="总计" fixed width="240">
                 <el-table-column
                   label="订单数"
@@ -406,7 +388,7 @@
                 prop="student_nums"
                 align="center"
               ></el-table-column>
-              <el-table-column align="center" label="总计">
+              <el-table-column align="center" label="总计" width="160" fixed>
                 <el-table-column
                   fixed
                   label="总参课人数"
@@ -549,7 +531,6 @@ export default {
       this.$refs.tableInner.getBoundingClientRect().top -
       154
     this.tableHeight = tableHeight + ''
-    console.log('tableInner', this.tableHeight)
     this.init()
   },
   methods: {

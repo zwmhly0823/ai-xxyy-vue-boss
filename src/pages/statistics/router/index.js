@@ -1,7 +1,7 @@
 /*
  * @Date: 2020-03-13 15:20:21
  * @LastEditors: Shentong
- * @LastEditTime: 2020-05-06 22:15:46
+ * @LastEditTime: 2020-05-07 12:16:07
  * @FilePath: /ai-app-vue-toss/src/pages/studentTeam/router/index.js
  */
 import Vue from 'vue'
@@ -17,14 +17,14 @@ const routes = [
       title: '统计分析',
       icon: 'el-icon-s-platform'
     },
-    redirect: '/salesPerformance'
+    redirect: '/priodPerformance'
   },
   {
     path: '/priodPerformance',
     name: 'priodPerformance',
     meta: {
       title: '按期情况汇总',
-      keepAlive: false
+      keepAlive: true
     },
     component: () => import('../views/priodPerformance/index.vue')
   },
