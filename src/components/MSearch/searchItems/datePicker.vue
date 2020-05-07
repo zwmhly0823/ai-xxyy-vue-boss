@@ -18,8 +18,8 @@
       prefix-icon="none"
       :picker-options="pickerOptions"
       range-separator="至"
-      :start-placeholder="`${datePlaceholder}start`"
-      :end-placeholder="`${datePlaceholder}end`"
+      :start-placeholder="`${startPlaceholder}`"
+      :end-placeholder="`${endPlaceholder}`"
       align="right"
       @change="changeHandler"
     >
@@ -35,9 +35,13 @@ export default {
       type: String,
       default: 'octime'
     },
-    datePlaceholder: {
+    startPlaceholder: {
       type: String,
-      default: '下单时间'
+      default: '开始时间'
+    },
+    endPlaceholder: {
+      type: String,
+      default: '结束时间'
     }
   },
   components: {},

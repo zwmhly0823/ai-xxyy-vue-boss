@@ -29,6 +29,7 @@
             groupSell="pay_teacher_id"
             search-team-name="last_team_id"
             search-trial-team-name="uid"
+            v-if="showSearch && activeTopic === '5'"
           />
           <all-order1 :topic="activeTopic" :search="search" />
         </el-tab-pane>
@@ -46,6 +47,7 @@
             department="last_teacher_id"
             groupSell="last_teacher_id"
             search-trial-team-name="last_team_id"
+            v-if="showSearch && activeTopic === '4'"
           />
           <all-order2 :topic="activeTopic" :search="search" />
         </el-tab-pane>
@@ -76,7 +78,8 @@ export default {
       // 默认显示tab
       activeTopic: '5',
       // 搜索
-      search: []
+      search: [],
+      showSearch: true
     }
   },
   computed: {},
@@ -84,7 +87,12 @@ export default {
   methods: {
     // 点击tab(无用啊已经v-model了)
     handleClick(tab, event) {
-      this.activeTopic = tab.name
+      // this.activeTopic = tab.name
+      // 子组件重新渲染
+      this.showSearch = false
+      this.$nextTick(() => {
+        this.showSearch = true
+      })
     },
     // 点击搜索
     handleSearch(res) {

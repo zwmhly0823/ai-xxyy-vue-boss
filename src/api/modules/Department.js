@@ -20,8 +20,10 @@ export default {
   },
 
   // 通过API获取组织机构
-  getDepartmentList() {
-    return axios.get(`/api/t/v1/department/getDepartmentTree`)
+  getDepartmentList(departmentId = 0) {
+    return axios.get(
+      `/api/t/v1/department/getDepartmentTree?departmentId=${departmentId}`
+    )
   },
 
   // 根据选择的部门ID获取老师ID
