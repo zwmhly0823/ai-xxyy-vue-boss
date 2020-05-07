@@ -10,7 +10,7 @@
   <el-card border="false" shadow="never" :class="$style.elard">
     <el-form :inline="true" label-position="right" label-width="80px">
       <el-form-item label="订单搜索:" :class="{ [$style.marginer]: true }">
-        <orderSearch class="allmini" />
+        <orderSearch class="allmini" @result="getOrderSearch" />
       </el-form-item>
 
       <el-form-item label="订单来源:" :class="{ [$style.marginer]: true }">
@@ -23,7 +23,11 @@
       <br />
 
       <el-form-item label="下单时间:" :class="{ [$style.marginer]: true }">
-        <DatePicker :class="[$style.fourPoint, 'allmini']" @result="getDate">
+        <DatePicker
+          :class="[$style.fourPoint, 'allmini']"
+          @result="getDate"
+          name="ctime"
+        >
           <template v-slot:buttons>
             <div class="row_colum margin_l10">
               <el-button size="mini" plain @click="today">今日</el-button>
@@ -51,7 +55,7 @@
           <search-stage
             :teacher-id="teacherscope_trial || teacherscope"
             class="margin_l10"
-            name="trial_stage"
+            name="stage"
             placeholder="全部体验课排期"
             type="0"
             @result="selectScheduleTrial"
@@ -60,7 +64,7 @@
             :class="['margin_l10']"
             placeholder="体验课难度"
             style="width:140px"
-            name="trial_sup"
+            name="sup"
             @result="supCallBackTrial"
           />
           <search-trial-team-name
@@ -68,7 +72,7 @@
             :term="term_trial"
             :teacher-id="teacherscope_trial || teacherscope"
             @result="getTrialTeamName"
-            name="trial_team_id"
+            name="team_id"
             :class="['margin_l10']"
           />
         </div>
@@ -80,24 +84,11 @@
 import hardLevel from '@/components/MSearch/searchItems/hardLevel.vue' // add
 import orderSearch from '@/components/MSearch/searchItems/orderSearch.vue' // add
 import orderStatus from '@/components/MSearch/searchItems/orderStatus.vue' // add
-// import systemCourseType from '@/components/MSearch/searchItems/systemCourseType.vue'
 import DatePicker from '@/components/MSearch/searchItems/datePicker.vue'
 import ChannelSelect from '@/components/MSearch/searchItems/channel.vue'
-// import ProductTopic from '@/components/MSearch/searchItems/productTopic.vue'
-// import StageSupLevels from '@/components/MSearch/searchItems/stageSupLevels.vue'
-// import SearchPhone from '@/components/MSearch/searchItems/searchPhone.vue'
-// import OutTradeNo from '@/components/MSearch/searchItems/outTradeNo.vue'
-// import ProductName from '@/components/MSearch/searchItems/productName.vue'
-// import SelectDate from '@/components/MSearch/searchItems/selectDate.vue'
-// import ExpressNo from '@/components/MSearch/searchItems/expressNo'
 import GroupSell from '@/components/MSearch/searchItems/groupSell'
-// import TeamDetail from '@/components/MSearch/searchItems/teamDetail'
-// import MoreVersionBox from '@/components/MSearch/searchItems/moreVersionBox'
-// import OrderType from '@/components/MSearch/searchItems/orderType'
 import Department from '@/components/MSearch/searchItems/department'
-// import SearchTeamName from '@/components/MSearch/searchItems/searchTeamName'
 import SearchTrialTeamName from '@/components/MSearch/searchItems/searchTrialTeamName'
-// import Schedule from '@/components/MSearch/searchItems/schedule'
 import SearchStage from '@/components/MSearch/searchItems/searchStage'
 import { isToss } from '@/utils/index'
 
@@ -259,25 +250,12 @@ export default {
   components: {
     orderStatus,
     hardLevel,
-    // systemCourseType,
     orderSearch,
     ChannelSelect,
-    // ProductTopic,
-    // StageSupLevels,
     DatePicker,
-    // SearchPhone,
-    // SelectDate,
-    // OutTradeNo,
-    // ProductName,
-    // ExpressNo,
     GroupSell,
-    // TeamDetail,
-    // MoreVersionBox,
-    // OrderType,
     Department,
-    // SearchTeamName,
     SearchTrialTeamName,
-    // Schedule,
     SearchStage
   },
 
@@ -297,6 +275,12 @@ export default {
   },
   computed: {},
   methods: {
+    // 订单号、手机号
+    getOrderSearch(res) {
+      const key = Object.keys(res || {})[0]
+      const val = res[key] ? res : ''
+      this.setSeachParmas(val, [key])
+    },
     // 选择渠道
     getChannel(res) {
       console.info(res, 'lll')
@@ -337,7 +321,6 @@ export default {
       const start = new Date(new Date().toLocaleDateString()).getTime() // 设定日期,时间默认0点
       const end = Date.now()
       this.$root.$emit('fourpoint', [start, end])
-      this.setSeachParmas([start, end], [this.date || 'octime'], 'range')
     },
     yesterday() {
       const yester = new Date()
@@ -348,7 +331,6 @@ export default {
       ).valueOf()
       const end = new Date(yester.toLocaleDateString() + ' 23:59:59').valueOf()
       this.$root.$emit('fourpoint', [start, end])
-      this.setSeachParmas([start, end], [this.date || 'octime'], 'range')
     },
     thisweek() {
       const week = new Date()
@@ -358,7 +340,6 @@ export default {
         reverseDays * 86400000
       const end = new Date().getTime()
       this.$root.$emit('fourpoint', [start, end])
-      this.setSeachParmas([start, end], [this.date || 'octime'], 'range')
     },
     thismonth() {
       const date = new Date()
@@ -366,51 +347,10 @@ export default {
       const start = new Date(new Date(date).toLocaleDateString()).getTime()
       const end = new Date().getTime()
       this.$root.$emit('fourpoint', [start, end])
-      this.setSeachParmas([start, end], [this.date || 'octime'], 'range')
-    },
-    // 选择手机号
-    getPhoneHander(res) {
-      console.log(res, '回调res') // 得到uid
-      this.setSeachParmas(res, [this.phone || 'umobile'])
-    },
-    // 选择订单号
-    getOutTradeNo(res) {
-      this.setSeachParmas(res, [this.outTradeNo || 'out_trade_no'], 'wildcard')
-    },
-    // 选择商品名
-    getProductName(res) {
-      this.setSeachParmas(res, [this.productName || 'product_name'])
-    },
-    // 获取下拉时间选择select
-    getTimeCallBack(data) {
-      if (data) {
-        this.selectTime = data
-      } else {
-        this.oldTime = data
-      }
-    },
-    // 物流时间
-    getTimeData(res) {
-      console.log(this.selectTime, '清除时的this.selectTime')
-
-      this.setSeachParmas(res, [this.selectTime || this.oldTime], 'range')
-    },
-    // 选择物流单号
-    getExpressNo(res) {
-      this.setSeachParmas(res, [this.expressNo || 'express_nu'], 'wildcard')
     },
     // 选择销售老师
     selectSellTeacher(res) {
       this.setSeachParmas(res, [this.groupSell || 'pay_teacher_id'], 'wildcard')
-    },
-    getTeamDetail(res) {
-      this.setSeachParmas(res, [this.teamDetail || 'last_team_id'])
-    },
-    getVersionNu(res) {
-      this.setSeachParmas(res, [this.moreVersion || 'product_version'])
-    },
-    getOrderType(res) {
-      this.setSeachParmas(res, [this.orderType || 'regtype'])
     },
     getSystemCourseType(res) {
       this.setSeachParmas(res, [this.systemCourseType || 'system_course_type'])
@@ -446,22 +386,19 @@ export default {
     // 体验课排期
     selectScheduleTrial(res) {
       if (res) {
-        this.term_trial = res.trial_stage
+        this.term_trial = res.trial_stage || ''
       } else {
-        this.term_trial = null
+        this.term_trial = ''
       }
-      this.setSeachParmas(res, [this.trial_stage || 'trial_stage'])
+      this.setSeachParmas(res, [this.trial_stage || 'stage'])
     },
     // 体验课难度
     supCallBackTrial(res) {
       console.log(res, 'res')
-      this.setSeachParmas(res, [this.trial_sup || 'trial_sup'], 'terms')
-    },
-    getTeamName(res) {
-      this.setSeachParmas(res, [this.searchTeamName || 'team_name'], 'terms')
+      this.setSeachParmas(res, [this.trial_sup || 'sup'], 'terms')
     },
     getTrialTeamName(res) {
-      this.setSeachParmas(res, [this.trial_team_id || 'trial_team_id'], 'terms')
+      this.setSeachParmas(res, [this.trial_team_id || 'team_id'], 'terms')
     },
 
     /**  处理接收到的查询参数
@@ -549,5 +486,10 @@ export default {
   .margin_l10 {
     margin-left: 10px;
   }
+}
+</style>
+<style scoped>
+.el-select-dropdown.is-multiple .el-select-dropdown__item.selected:after {
+  right: 5px;
 }
 </style>

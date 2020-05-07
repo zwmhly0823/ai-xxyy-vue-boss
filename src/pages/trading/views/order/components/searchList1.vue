@@ -61,7 +61,7 @@
             :class="['margin_l10']"
             placeholder="全部体验课难度"
             style="width:140px"
-            name="trial_sup"
+            name="trial_team_id"
             @result="supCallBackTrial"
           />
           <search-team-name
@@ -337,17 +337,14 @@ export default {
     },
     // 选择渠道
     getChannel(res) {
-      console.info(res, 'lll')
       this.setSeachParmas(res, [this.channel || 'pay_channel'], 'terms')
     },
     // 主题
     getProductTopic(res) {
-      console.log(res, 'res')
       this.setSeachParmas(res, [this.topicType || 'topicType'])
     },
     // 期数
     stageCallBack(res) {
-      console.log(res, 'res')
       this.setSeachParmas(res, [this.stage || 'stage'], 'terms')
     },
     // 系统课排期
@@ -376,7 +373,7 @@ export default {
     // 体验课难度
     supCallBackTrial(res) {
       console.log(res, 'res')
-      this.setSeachParmas(res, [this.trial_sup || 'trial_sup'], 'terms')
+      this.setSeachParmas(res, [this.trial_sup || 'trial_team_id'], 'terms')
     },
     // 级别
     levelCallBack(res) {
@@ -485,15 +482,6 @@ export default {
       const { must, should } = this
       const temp = name === 'must' ? must : should
       key.forEach((k) => {
-        console.info(k)
-        // temp.forEach((item, index) => {
-        //   if (
-        //     JSON.parse(item[extraKey])[k] &&
-        //     (JSON.parse(item[extraKey])[k] ||
-        //       +JSON.parse(item[extraKey])[k] === 0)
-        //   )
-        //     temp.splice(index, 1)
-        // })
         temp.forEach((item, index) => {
           if (
             item[extraKey] &&
@@ -561,5 +549,11 @@ export default {
   .margin_l10 {
     margin-left: 10px;
   }
+}
+</style>
+
+<style scoped>
+.el-select-dropdown.is-multiple .el-select-dropdown__item.selected:after {
+  right: 5px;
 }
 </style>

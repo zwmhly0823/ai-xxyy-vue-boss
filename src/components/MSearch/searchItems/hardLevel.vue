@@ -101,7 +101,28 @@ export default {
     },
 
     supChange(data) {
-      this.$emit('result', data.length > 0 ? { [this.name]: this.supData } : '')
+      console.log(data)
+      // 如果是体验课难度，查询订单的话，需要关联tg_student_team,根据id关联o_order的trial_team_id
+      if (this.name === 'trial_team_id') {
+        const supArr = data.map((item) => `S${item}`)
+        this.$http.StudentTerm.searchTeamBySup(supArr).then((res) => {
+          console.log(res)
+          if (res && res.data && res.data.StudentTeamList) {
+            const result = res.data.StudentTeamList.map((item) => item.id)
+            this.$emit(
+              'result',
+              result.length > 0 ? { [this.name]: result } : ''
+            )
+            return
+          }
+          this.$emit('result', '')
+        })
+      } else {
+        this.$emit(
+          'result',
+          data.length > 0 ? { [this.name]: this.supData } : ''
+        )
+      }
     }
   }
 }
