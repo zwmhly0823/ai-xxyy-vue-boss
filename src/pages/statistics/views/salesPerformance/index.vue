@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-04-02 15:35:27
  * @LastEditors: Shentong
- * @LastEditTime: 2020-04-30 21:31:39
+ * @LastEditTime: 2020-05-06 21:42:58
  -->
 <template>
   <el-row type="flex" class="app-main height schedule-container">
@@ -56,7 +56,10 @@
           <!-- 搜索 -->
           <div class="sear-container">
             <!-- TODO: -->
-            <statictics-search @searchChange="searchChange"></statictics-search>
+            <statictics-search
+              @searchChange="searchChange"
+              v-if="showSearch"
+            ></statictics-search>
           </div>
           <p class="descripte" v-if="statisticsInfo">
             开课日期：<span class="label-val">{{
@@ -121,15 +124,15 @@
               </span>
             </template>
           </p>
-          <div style="padding: 0 15px;">
+          <div style="padding: 0 15px;" ref="tableInner">
             <el-tabs
               v-model="activeName"
               @tab-click="statisticsTypehandleClick"
             >
-              <!-- <el-tab-pane label="转化统计" name="conversion"> </el-tab-pane> -->
+              <el-tab-pane label="转化统计" name="conversion"> </el-tab-pane>
               <!-- TODO: -->
               <el-tab-pane label="参课统计" name="attendClass"> </el-tab-pane>
-              <!-- <el-tab-pane label="完课统计" name="finishClass"> </el-tab-pane> -->
+              <el-tab-pane label="完课统计" name="finishClass"> </el-tab-pane>
             </el-tabs>
           </div>
           <!-- 完课统计列表 -->
@@ -138,6 +141,8 @@
             v-if="tableDataAttend.length && activeName === 'finishClass'"
           >
             <ele-table
+              :tableHeight="tableHeight"
+              :tableSize="'mini'"
               :dataList="tableDataAttend"
               :loading="flags.loading"
               :size="tabQuery.size"
@@ -220,29 +225,17 @@
                     >
                   </template>
                 </el-table-column>
-                <!-- <el-table-column fixed label="总金额" align="center"
-                  ><template slot-scope="scope">
-                    <span
-                      v-if="
-                        Object.keys(scope.row.conversion_rate_daily).length &&
-                          scope.row.conversion_rate_daily[i] &&
-                          !scope.row.conversion_rate_daily[i].is_last
-                      "
-                    >
-                      {{ scope.row.conversion_rate_daily[i].amount }}
-                    </span>
-                    <span v-else>--</span>
-                  </template></el-table-column
-                >-->
               </el-table-column>
             </ele-table>
           </div>
-
+          <!-- 转化统计 -->
           <div
             class="orderStyle"
             v-if="tableData.length && activeName == 'conversion'"
           >
             <ele-table
+              :tableHeight="tableHeight"
+              :tableSize="'mini'"
               :dataList="tableData"
               :loading="flags.loading"
               :size="tabQuery.size"
@@ -279,24 +272,42 @@
                 prop="student_total"
                 align="center"
               ></el-table-column>
-              <el-table-column align="center" label="总计">
+              <!-- <el-table-column
+                label="订单数"
+                prop="order_total"
+                align="center"
+                fixed
+              ></el-table-column>
+              <el-table-column
+                label="转化率"
+                prop="conversion_total"
+                align="center"
+                fixed
+              ></el-table-column>
+              <el-table-column
+                label="总金额"
+                prop="amount_total"
+                align="center"
+                fixed
+              ></el-table-column> -->
+              <el-table-column align="center" label="总计" fixed width="240">
                 <el-table-column
-                  fixed
                   label="订单数"
                   prop="order_total"
                   align="center"
+                  fixed
                 ></el-table-column>
                 <el-table-column
-                  fixed
                   label="转化率"
                   prop="conversion_total"
                   align="center"
+                  fixed
                 ></el-table-column>
                 <el-table-column
-                  fixed
                   label="总金额"
                   prop="amount_total"
                   align="center"
+                  fixed
                 ></el-table-column>
               </el-table-column>
               <!-- child-table-start -->
@@ -357,6 +368,8 @@
             v-if="tableDataAttend.length && activeName == 'attendClass'"
           >
             <ele-table
+              :tableHeight="tableHeight"
+              :tableSize="'mini'"
               :dataList="tableDataAttend"
               :loading="flags.loading"
               :size="tabQuery.size"
@@ -455,7 +468,7 @@
 </template>
 
 <script>
-// import MSearch from '@/components/MSearch/index.vue'
+import _ from 'lodash'
 import staticticsSearch from '../../components/staticticsSearch'
 import EleTable from '@/components/Table/EleTable'
 import { formatData } from '@/utils'
@@ -479,8 +492,8 @@ export default {
       },
       // tabs标签默认状态
       selectName: '更多',
-      // 统计表title TODO:
-      activeName: 'attendClass',
+      // 统计表title
+      activeName: 'conversion',
       tabIndex: 0,
       // 状态index
       btnIndex: 0,
@@ -522,12 +535,21 @@ export default {
       tableData: [],
       tableDataAttend: [],
       tableDataChild: [],
-      tableDataChildAttend: []
+      tableDataChildAttend: [],
+      searchEmit: {},
+      showSearch: true,
+      tableHeight: 'auto'
     }
   },
   computed: {},
   watch: {},
   activated() {
+    const tableHeight =
+      document.body.clientHeight -
+      this.$refs.tableInner.getBoundingClientRect().top -
+      154
+    this.tableHeight = tableHeight + ''
+    console.log('tableInner', this.tableHeight)
     this.init()
   },
   methods: {
@@ -559,23 +581,39 @@ export default {
         console.log(err)
       }
     },
-    // 组件emit
-    searchChange(search) {
-      const { department = [], groupSell = '', sup = [] } = search
+    initSearchData(res, isFromEmit = false) {
+      // 如果是子组件emit而来的数据，则不需要清空
+      if (!isFromEmit) {
+        this.showSearch = false
+        this.$nextTick(() => {
+          this.showSearch = true
+        })
+      }
+
+      this.searchEmit = _.cloneDeep(res)
+
+      const { department = [], groupSell = '', sup = [] } = this.searchEmit
       Object.assign(this.tabQuery, {
         teacher: groupSell,
         page: 1,
         department: department.join(),
         sup: sup.join()
       })
+    },
+    // 组件emit
+    searchChange(res) {
+      this.initSearchData(res, true)
 
       this.getChangecListByProid()
     },
     // table列表
     async getChangecListByProid() {
-      this.flags.loading = true
-      // TODO:
-      // this.tabQuery.period = 13
+      const loadingInstance = this.$loading({
+        target: 'section',
+        lock: true,
+        text: '玩命加载中...',
+        fullscreen: true
+      })
       try {
         if (this.activeName === 'finishClass') {
           // 完课统计
@@ -638,10 +676,10 @@ export default {
           this.statisticsInfo = ConversionRateStatistics
           this.pakageListDate(ConversionRateStatistics)
         }
-        this.flags.loading = false
+        loadingInstance.close()
       } catch (err) {
         console.log(err)
-        // loadingInstance.close()
+        loadingInstance.close()
       }
     },
     // 包装 接口返回的数据
@@ -665,99 +703,11 @@ export default {
         if (this.tableDataChild.length <= childLength) {
           this.tableDataChild = conversionRateArr
         }
-        // if (childLength >= _length) {
-        //   _length = childLength
-        // }
       })
-      // for (let i = 0; i < _length; i++) {
-      //   this.tableDataChild.push({
-      //     row_index: i + 1
-      //   })
-      // }
       this.tableData = teacherConversion
     },
     //  参课统计 数据格式化
     formatTableData(list) {
-      // list = [
-      //   {
-      //     sup: 'S2',
-      //     teacher_id: '80',
-      //     teacher_name: '周艺达',
-      //     department_id: '19',
-      //     department_name: '3部S2战队',
-      //     student_nums: '95',
-      //     total_nums: '285',
-      //     total_join_nums: '28',
-      //     total_join_rate: '9.82%',
-      //     total_complete_nums: '157',
-      //     total_complete_rate: '55.09%',
-      //     completeArr: [
-      //       {
-      //         current_lesson: 'W1D3',
-      //         sum: '95',
-      //         join_nums: '14',
-      //         join_rate: '14.74%',
-      //         complete_nums: '35',
-      //         complete_rate: '36.84%'
-      //       },
-      //       {
-      //         current_lesson: 'W1D1',
-      //         sum: '95',
-      //         join_nums: '6',
-      //         join_rate: '6.32%',
-      //         complete_nums: '67',
-      //         complete_rate: '70.53%'
-      //       },
-      //       {
-      //         current_lesson: 'W1D2',
-      //         sum: '95',
-      //         join_nums: '8',
-      //         join_rate: '8.42%',
-      //         complete_nums: '55',
-      //         complete_rate: '57.89%'
-      //       }
-      //     ]
-      //   },
-      //   {
-      //     sup: 'S2',
-      //     teacher_id: '79',
-      //     teacher_name: '张晨阳',
-      //     department_id: '19',
-      //     department_name: '3部S2战队',
-      //     student_nums: '94',
-      //     total_nums: '282',
-      //     total_join_nums: '39',
-      //     total_join_rate: '13.83%',
-      //     total_complete_nums: '152',
-      //     total_complete_rate: '53.9%',
-      //     completeArr: [
-      //       {
-      //         current_lesson: 'W1D3',
-      //         sum: '94',
-      //         join_nums: '12',
-      //         join_rate: '12.77%',
-      //         complete_nums: '42',
-      //         complete_rate: '44.68%'
-      //       },
-      //       {
-      //         current_lesson: 'W1D1',
-      //         sum: '94',
-      //         join_nums: '10',
-      //         join_rate: '10.64%',
-      //         complete_nums: '65',
-      //         complete_rate: '69.15%'
-      //       },
-      //       {
-      //         current_lesson: 'W1D2',
-      //         sum: '94',
-      //         join_nums: '17',
-      //         join_rate: '18.09%',
-      //         complete_nums: '45',
-      //         complete_rate: '47.87%'
-      //       }
-      //     ]
-      //   }
-      // ]
       // 初始化
       this.tableDataChildAttend = []
       list.forEach((item, index) => {
@@ -774,12 +724,13 @@ export default {
     statisticsTypehandleClick(tab) {
       this.tableDataAttend = []
       this.tableData = []
-      // console.log(tab.index, 'tab')
       this.tabQuery.page = 1
       this.getChangecListByProid()
     },
     // 更多 下拉框
     handleCommand(command) {
+      this.initSearchData({})
+
       const { period = '' } = command
       this.tabIndex = 6
 
@@ -791,6 +742,8 @@ export default {
       this.getChangecListByProid()
     },
     top_tabs_click(index, statusInfo) {
+      this.initSearchData({})
+
       this.tabIndex = 0
       this.btnIndex = index
       const { status } = statusInfo
@@ -799,6 +752,8 @@ export default {
       this.init(status)
     },
     priod_tabs_click(row, index) {
+      this.initSearchData({})
+
       this.tabIndex = index
       this.tabQuery.page = 1
       this.tabQuery.period = row.period
@@ -872,7 +827,7 @@ export default {
     background: #f5f7fa;
     display: flex;
     > div {
-      height: 50px;
+      height: 40px;
       padding: 0 20px;
       display: flex;
       justify-content: center;
@@ -888,6 +843,7 @@ export default {
   }
   .descripte {
     padding-left: 15px;
+    margin: 0;
     color: #333;
     min-width: 800px;
     .label-val {
@@ -916,6 +872,7 @@ export default {
   }
   .orderStyle {
     // padding-bottom: 45px;
+    // height: 200px;
   }
   .editStyle {
     color: #0401ff;
