@@ -99,6 +99,23 @@ export default {
         })
       } else {
         // 收货人手机号
+        // 下单手机号 -> 用户手机号
+        const reg = /^[0-9]*$/
+        if (!reg.test(query)) {
+          this.value = ''
+          return
+        }
+        this.$http.Express.searchExpressByRecieptTel(query).then((res) => {
+          console.log(res)
+          if (res && res.data && res.data.ExpressListEx) {
+            result = res.data.ExpressListEx.map((item) => {
+              item.value = item.receipt_tel
+              return item
+            })
+          }
+          cb(result)
+          this.$refs.input.activated = true
+        })
       }
     },
     handleSelect(data) {
@@ -109,7 +126,7 @@ export default {
       } else if (this.select === '1') {
         Object.assign(obj, { [this.keyword]: data.id })
       } else {
-        Object.assign(obj, { [this.keyword]: data.id })
+        Object.assign(obj, { [this.keyword]: data.user_id })
       }
       this.$emit('result', obj)
     }

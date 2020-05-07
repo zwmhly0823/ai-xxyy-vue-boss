@@ -294,22 +294,11 @@ export default {
     systemCourseType,
     orderSearch,
     ChannelSelect,
-    // ProductTopic,
-    // StageSupLevels,
     DatePicker,
-    // SearchPhone,
-    // SelectDate,
-    // OutTradeNo,
-    // ProductName,
-    // ExpressNo,
     GroupSell,
-    // TeamDetail,
-    // MoreVersionBox,
-    // OrderType,
     Department,
     SearchTeamName,
     SearchTrialTeamName,
-    // Schedule,
     SearchStage
   },
 
@@ -414,7 +403,6 @@ export default {
       const start = new Date(new Date().toLocaleDateString()).getTime() // 设定日期,时间默认0点
       const end = Date.now()
       this.$root.$emit('fourpoint', [start, end])
-      this.setSeachParmas([start, end], [this.date || 'ctime'], 'range')
     },
     yesterday() {
       const yester = new Date()
@@ -425,7 +413,6 @@ export default {
       ).valueOf()
       const end = new Date(yester.toLocaleDateString() + ' 23:59:59').valueOf()
       this.$root.$emit('fourpoint', [start, end])
-      this.setSeachParmas([start, end], [this.date || 'ctime'], 'range')
     },
     thisweek() {
       const week = new Date()
@@ -435,7 +422,6 @@ export default {
         reverseDays * 86400000
       const end = new Date().getTime()
       this.$root.$emit('fourpoint', [start, end])
-      this.setSeachParmas([start, end], [this.date || 'ctime'], 'range')
     },
     thismonth() {
       const date = new Date()
@@ -443,37 +429,6 @@ export default {
       const start = new Date(new Date(date).toLocaleDateString()).getTime()
       const end = new Date().getTime()
       this.$root.$emit('fourpoint', [start, end])
-      this.setSeachParmas([start, end], [this.date || 'ctime'], 'range')
-    },
-    // 选择手机号
-    getPhoneHander(res) {
-      console.log(res, '回调res') // 得到uid
-      this.setSeachParmas(res, [this.phone || 'umobile'])
-    },
-    // 选择订单号
-    getOutTradeNo(res) {
-      this.setSeachParmas(res, [this.outTradeNo || 'out_trade_no'], 'wildcard')
-    },
-    // 选择商品名
-    getProductName(res) {
-      this.setSeachParmas(res, [this.productName || 'product_name'])
-    },
-    // 获取下拉时间选择select
-    getTimeCallBack(data) {
-      if (data) {
-        this.selectTime = data
-      } else {
-        this.oldTime = data
-      }
-    },
-    // 物流时间
-    getTimeData(res) {
-      console.log(this.selectTime, '清除时的this.selectTime')
-      this.setSeachParmas(res, [this.selectTime || this.oldTime], 'range')
-    },
-    // 选择物流单号
-    getExpressNo(res) {
-      this.setSeachParmas(res, [this.expressNo || 'express_nu'], 'wildcard')
     },
     // 选择社群销售
     selectPayTeacher(res) {
@@ -508,15 +463,6 @@ export default {
         [this.last_teacher_id || 'last_teacher_id'],
         'terms'
       )
-    },
-    getTeamDetail(res) {
-      this.setSeachParmas(res, [this.teamDetail || 'last_team_id'])
-    },
-    getVersionNu(res) {
-      this.setSeachParmas(res, [this.moreVersion || 'product_version'])
-    },
-    getOrderType(res) {
-      this.setSeachParmas(res, [this.orderType || 'regtype'])
     },
     getSystemCourseType(res) {
       if (res) {
@@ -577,7 +523,6 @@ export default {
           this.must = temp
         }
         this.$emit('search', temp)
-        console.info('lklkl', temp)
 
         return
       }
