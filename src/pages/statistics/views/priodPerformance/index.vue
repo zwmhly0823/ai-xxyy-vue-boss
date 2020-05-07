@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-02 15:35:27
  * @LastEditors: Shentong
- * @LastEditTime: 2020-05-06 22:16:53
+ * @LastEditTime: 2020-05-07 12:03:45
  -->
 <template>
   <el-row type="flex" class="app-main height schedule-container">
@@ -89,8 +89,9 @@
               searchStatistic.systemTotalAmount || '-'
             }}</span>
           </p>
-          <div class="orderStyle">
+          <div class="orderStyle" ref="tableInner">
             <ele-table
+              :tableHeight="tableHeight"
               :tableSize="'small'"
               :dataList="tableData"
               :loading="flags.loading"
@@ -290,7 +291,8 @@ export default {
       tableDatasss: [],
       currentPriodStatistic: {},
       searchEmit: {},
-      showSearch: true
+      showSearch: true,
+      tableHeight: 'auto'
     }
   },
   computed: {
@@ -300,6 +302,14 @@ export default {
   },
   created() {
     this.init()
+  },
+  mounted() {
+    console.log(this.$refs.tableInner)
+    const tableHeight =
+      document.body.clientHeight -
+      this.$refs.tableInner.getBoundingClientRect().top -
+      114
+    this.tableHeight = tableHeight + ''
   },
   methods: {
     // TODO
