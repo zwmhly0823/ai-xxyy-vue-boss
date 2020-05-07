@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-02 15:35:27
  * @LastEditors: Shentong
- * @LastEditTime: 2020-05-07 12:03:45
+ * @LastEditTime: 2020-05-07 12:11:45
  -->
 <template>
   <el-row type="flex" class="app-main height schedule-container">
@@ -308,7 +308,7 @@ export default {
     const tableHeight =
       document.body.clientHeight -
       this.$refs.tableInner.getBoundingClientRect().top -
-      114
+      104
     this.tableHeight = tableHeight + ''
   },
   methods: {
