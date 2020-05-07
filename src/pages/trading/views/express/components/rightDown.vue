@@ -9,18 +9,21 @@
       @cell-click="handleSelectionChangeCell"
       @selection-change="handleSelectionChange"
       @row-click="handleExpressTo"
+      type="index"
       :header-cell-style="headerStyle"
-      :current-row-key="rowKey"
       @select="handleSelect"
       @select-all="handleAllSelect"
+      @cell-mouse-enter="handleMouseEnter"
+      @cell-mouse-leave="handleMouseLeave"
     >
-      <el-table-column type="selection" width="25" v-if="!teacherId" fixed>
-      </el-table-column>
-      <el-table-column width="25" v-if="dataExp.id == 6 && !teacherId" fixed>
+      <el-table-column type="selection" width="25" fixed> </el-table-column>
+      <el-table-column width="25" fixed>
         <template slot-scope="scope">
           <!-- <div v-show="false">{{ scope }}</div> -->
           <el-dropdown trigger="click">
-            <div class="three-dot">
+            <!-- <div :class="'three-dot':isActive="> -->
+
+            <div :class="scope.row.id === current.id ? 'three-dot' : 'disnone'">
               <img src="@/assets/images/icon/icon-three-dot.jpg" />
             </div>
             <el-dropdown-menu slot="dropdown">
@@ -109,7 +112,7 @@
       <el-table-column label="社群销售" width="120">
         <template slot-scope="scope">
           <div class="product">
-            <span>{{ TeacherList[scope.row.pay_teacher_id] }}</span>
+            <span>{{ TeacherList[scope.row.last_teacher_id] }}</span>
           </div>
         </template>
       </el-table-column>
@@ -119,7 +122,19 @@
             <div :class="'wait_' + scope.row.express_status">
               {{ scope.row.express_status_chinese }}
             </div>
-            <el-button class="trail" type="text" @click="Express(scope.row)">
+            <div
+              v-if="
+                scope.row.express_status == 0 || scope.row.express_status == 6
+              "
+            >
+              追踪
+            </div>
+            <el-button
+              type="text"
+              class="trail"
+              v-else
+              @click="Express(scope.row)"
+            >
               追踪
             </el-button>
           </div>
@@ -161,8 +176,10 @@
                     :key="item.id"
                     v-for="item in checkBatchParams"
                     class="infinite-list-item"
+                    style="list-style:none"
                   >
-                    {{ item.term }}期 {{ item.sup }} {{ item.product_name }}
+                    {{ +item.term > 10 ? item.term : `0${item.term}` }}期
+                    {{ item.sup }} {{ item.product_name }}
                   </li>
                 </ul>
               </div>
@@ -330,10 +347,18 @@ export default {
       StudentTeamList: '',
       realnameId: '',
       teamId: '',
-      ManagementList: {}
+      ManagementList: {},
+      current: {}
     }
   },
   methods: {
+    // 鼠标进入显示操作栏
+    handleMouseEnter(row) {
+      this.current = row
+    },
+    handleMouseLeave(row) {
+      this.current = {}
+    },
     handleCloseDrawer() {
       this.timeline = false
     },
@@ -565,6 +590,9 @@ export default {
         if (item.wildcard && item.wildcard.express_nu) {
           timeType.express_nu = item.wildcard.express_nu
         }
+        if (item && item.last_teacher_id) {
+          timeType.teacher_id = item.last_teacher_id
+        }
       })
 
       timeType = {
@@ -630,6 +658,7 @@ export default {
               product_version
               last_team_id
               teacher_id
+              last_teacher_id
               pay_teacher_id
               user {
                 id
@@ -648,7 +677,7 @@ export default {
             const teamId = [] // 班级Id
             const schedule = []
             resData.forEach((item) => {
-              realnameId.push(item.pay_teacher_id)
+              realnameId.push(item.last_teacher_id)
               teamId.push(item.last_team_id)
               schedule.push(item.term)
               item.crtime = formatData(+item.ctime, 's')
@@ -772,6 +801,9 @@ export default {
   color: #666;
   padding-bottom: 20px;
   .table-all {
+    .disnone {
+      display: none;
+    }
     .three-dot {
       display: flex;
       justify-content: center;
@@ -822,6 +854,9 @@ export default {
         align-items: center;
       }
     }
+  }
+  .showSelect {
+    display: none;
   }
 }
 </style>
