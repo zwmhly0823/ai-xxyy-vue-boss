@@ -1,4 +1,4 @@
-/*
+/**
  * @Descripttion: BOSS - 社群销售
  * @version:
  * @Author: Yangjiyong
@@ -238,6 +238,17 @@ export default {
           id
         }
        }`
+    })
+  },
+  getTeacherIdByCategory({ queryParams = '' }) {
+    return axios.get('/graphql/v1/toss', {
+      query: `{
+        StudentTeamList(
+            query: ${JSON.stringify(queryParams)}
+        ) {
+            teacher_id
+        }
+      }`
     })
   }
 }
