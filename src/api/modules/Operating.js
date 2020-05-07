@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-03-16 19:46:39
  * @LastEditors: panjian
- * @LastEditTime: 2020-04-29 19:52:20
+ * @LastEditTime: 2020-05-07 12:16:28
  */
 import axios from '../axiosConfig'
 
@@ -136,5 +136,14 @@ export default {
         }
       }`
     })
+  },
+  /**
+   * 一级 二级 三级 查询渠道
+   * @param {*} param0
+   */
+  getChannelAndClass(params) {
+    return axios.get(
+      `/api/c/v1/channel/getChannelAndClass?channelClassParentId=${params}`
+    )
   }
 }

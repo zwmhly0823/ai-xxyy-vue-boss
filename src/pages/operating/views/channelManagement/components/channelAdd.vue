@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-05-06 16:33:15
  * @LastEditors: panjian
- * @LastEditTime: 2020-05-06 20:16:22
+ * @LastEditTime: 2020-05-07 12:10:26
  -->
 <template>
   <div class="channelAdd-box">
@@ -14,7 +14,9 @@
       </div>
     </div>
     <div class="channelAdd-table">
-      <el-button class="add-btn" type="primary">添加渠道</el-button>
+      <el-button class="add-btn" @click="onAddChannel" type="primary"
+        >添加渠道</el-button
+      >
       <el-table
         :header-cell-style="headerCss"
         :data="tableData"
@@ -57,35 +59,18 @@
     <el-drawer
       class="drawer-detail"
       :show-close="showClose"
-      :visible.sync="drawer"
+      :visible.sync="addDrawer"
       :modal="false"
-      size="40%"
+      size="35%"
     >
-      <div class="drawer-box">
-        <h3>基本信息</h3>
-        <p>
-          <span>渠道分类: </span>
-          <span class="drawer-box-text"> 线上推广 - 推广人</span>
-        </p>
-        <p>
-          <span>渠道名称: </span>
-          <span class="drawer-box-text">推广人</span>
-        </p>
-        <p>
-          <span>渠道ID: </span>
-          <span class="drawer-box-text">43433</span>
-        </p>
-        <p>
-          <span>链接地址: </span>
-          <a :href="link" target="_blank">{{ link }}</a>
-        </p>
-      </div>
+      <add-cahnnel />
     </el-drawer>
   </div>
 </template>
 
 <script>
 import channelSearch from '../components/componentsSearch/search'
+import addCahnnel from '../components/componentsChannel/addCahnnel'
 import MPagination from '@/components/MPagination/index.vue'
 export default {
   props: {
@@ -96,13 +81,13 @@ export default {
   },
   components: {
     channelSearch,
-    MPagination
+    MPagination,
+    addCahnnel
   },
   data() {
     return {
-      link: 'https://www.baidu.com',
       showClose: true,
-      drawer: false,
+      addDrawer: false,
       tableData: [
         {
           date: '2016-05-02',
@@ -175,6 +160,9 @@ export default {
       // 当没有点击复选框 直接点击加好友
       console.log(index, row, '点击查看详情11')
     },
+    onAddChannel() {
+      this.addDrawer = true
+    },
     batchBtn() {
       // 点击查看详情
       this.drawer = true
@@ -215,23 +203,6 @@ export default {
   }
   .drawer-detail {
     margin: 50px 10px 10px 10px;
-    .drawer-box {
-      padding-left: 20px;
-      .drawer-box-text {
-        margin-left: 20px;
-        font-family: 'number_font';
-        font-size: 14px;
-        color: #949494;
-      }
-      p {
-        padding-top: 30px;
-        padding-left: 30px;
-      }
-      a {
-        margin-left: 10px;
-        color: #409eff;
-      }
-    }
   }
 }
 </style>
