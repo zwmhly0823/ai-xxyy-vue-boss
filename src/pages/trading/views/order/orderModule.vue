@@ -31,7 +31,11 @@
             search-trial-team-name="uid"
             v-if="showSearch && activeTopic === '5'"
           />
-          <all-order1 :topic="activeTopic" :search="search" />
+          <all-order1
+            :topic="activeTopic"
+            :search="search"
+            v-if="showSearch && activeTopic === '5'"
+          />
         </el-tab-pane>
 
         <!-- 包含全部体验课订单数据（双周体验课、单周体验课） -->
@@ -49,7 +53,11 @@
             search-trial-team-name="last_team_id"
             v-if="showSearch && activeTopic === '4'"
           />
-          <all-order2 :topic="activeTopic" :search="search" />
+          <all-order2
+            :topic="activeTopic"
+            :search="search"
+            v-if="showSearch && activeTopic === '4'"
+          />
         </el-tab-pane>
         <!-- <el-tab-pane label="活动订单" name="1,2,6">
           <all-order :topic="activeTopic" :search="search" />
