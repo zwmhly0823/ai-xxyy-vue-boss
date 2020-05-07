@@ -1,18 +1,18 @@
 <!--
- * @Author: YangJiyong
- * @Email: yangjiyong@meishubao.com
- * @Date: 2020-04-20 12:17:21
- * @Last Modified by:   YangJiyong
- * @Last Modified time: 2020-04-20 12:17:21
- * @Description: 系统课类型：月系统课-1、季系统课-2、半年系统课-3、年系统课-4
--->
+ * @Descripttion: TOSS小熊
+ * @version: 1.0.0
+ * @Author: liukun
+ * @Date: 2020-04-29 15:33:10
+ * @LastEditors: liukun
+ * @LastEditTime: 2020-04-29 15:49:11
+ -->
 <template>
   <div class="search-item small">
     <el-select
       v-model="result"
       size="mini"
       clearable
-      placeholder="全部系统课类型"
+      placeholder="物流状态"
       @change="onChange"
       class="item-style"
     >
@@ -38,25 +38,41 @@ export default {
     return {
       result: null,
       typeList: [
-        // {
-        //   id: '0',
-        //   text: '体验课'
-        // },
         {
-          id: '1',
-          text: '月系统课'
+          id: 0,
+          text: '无地址'
         },
         {
-          id: '2',
-          text: '季系统课'
+          id: 1,
+          text: '待发货'
         },
         {
-          id: '3',
-          text: '半年系统课'
+          id: 2,
+          text: '已发货'
         },
         {
-          id: '4',
-          text: '年系统课'
+          id: 3,
+          text: '已签收'
+        },
+        {
+          id: 4,
+          text: '签收失败'
+        },
+        {
+          id: 5,
+          text: '已退货'
+        },
+        {
+          id: 6,
+          text: '确认待发货'
+        },
+        {
+          id: 7,
+          text: '无效'
+        },
+        {
+          id: 8,
+          text: '疑难'
         }
       ]
     }

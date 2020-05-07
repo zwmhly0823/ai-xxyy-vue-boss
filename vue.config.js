@@ -114,6 +114,8 @@ module.exports = {
         target: 'http://docker.meixiu.mobi:43401',
         // dev - 开发环境
         // target: 'http://docker.meixiu.mobi:33401',
+        // product -预发布环境
+        // target: 'http://docker.meixiu.mobi:53401',
         changeOrigin: true,
         ws: true,
         secure: false,
