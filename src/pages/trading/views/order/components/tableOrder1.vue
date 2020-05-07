@@ -7,7 +7,13 @@
           <p>{{ scope.row.user ? scope.row.user.mobile || '-' : '-' }}</p>
         </template>
       </el-table-column>
-      <el-table-column label="下单用户归属地" prop="QCellCore" width="120">
+      <el-table-column label="归属地" prop="QCellCore" width="120">
+        <template slot-scope="scope">
+          <p>
+            {{ scope.row.user ? scope.row.user.mobile_province || '-' : '-' }} ·
+            {{ scope.row.user ? scope.row.user.mobile_city || '-' : '-' }}
+          </p>
+        </template>
       </el-table-column>
       <el-table-column label="商品信息" width="160">
         <template slot-scope="scope">
@@ -40,23 +46,14 @@
       </el-table-column>
       <el-table-column label="社群销售" width="150">
         <template slot-scope="scope">
-          <!-- 体验课 -->
-          <div>
-            <p>
-              {{ scope.row.teacher ? scope.row.teacher.realname : '-' }}
-            </p>
-            <p>
-              {{
-                scope.row.teacher_department &&
-                scope.row.teacher_department.department
-                  ? departmentObj[scope.row.teacher_department.department.id]
-                    ? departmentObj[scope.row.teacher_department.department.id]
-                        .name
-                    : '-'
-                  : '-'
-              }}
-            </p>
-          </div>
+          <p>{{ scope.row.salesman ? scope.row.salesman.realname : '-' }}</p>
+          <p>
+            {{
+              scope.row.department
+                ? scope.row.department.department.name || '-'
+                : '-'
+            }}
+          </p>
         </template>
       </el-table-column>
       <el-table-column label="系统课班级" width="150">
@@ -84,8 +81,11 @@
           </p>
         </template>
       </el-table-column>
-      <el-table-column label="订单号·下单时间" width="180">
+      <el-table-column label="下单时间·订单号" width="180">
         <template slot-scope="scope">
+          <p>
+            {{ scope.row.ctime ? scope.row.ctime : '-' }}
+          </p>
           <p>
             {{
               scope.row.out_trade_no
@@ -93,26 +93,8 @@
                 : '-'
             }}
           </p>
-          <p>
-            {{ scope.row.ctime ? scope.row.ctime : '-' }}
-          </p>
         </template>
       </el-table-column>
-      <!-- <el-table-column label="体验课类型" v-if="topic === '4'">
-        <template slot-scope="scope">
-          <p>
-            {{
-              scope.row.trial_course
-                ? +scope.row.trial_course.team_category === 0
-                  ? '双周'
-                  : +scope.row.trial_course.team_category === 3
-                  ? '单周'
-                  : '-'
-                : '-'
-            }}
-          </p>
-        </template>
-      </el-table-column> -->
       <el-table-column label="订单来源">
         <template slot-scope="scope">
           <p>
@@ -125,31 +107,6 @@
           {{ scope.row.order_status ? scope.row.order_status : '-' }}
         </template>
       </el-table-column>
-
-      <!-- <el-table-column
-        label="销售部门"
-        v-if="topic === '4' || topic === '5'"
-        width="150"
-      >
-        <template slot-scope="scope">
-          <p v-if="scope.row.department && scope.row.department.department">
-            {{
-              scope.row.department && scope.row.department.department.pid
-                ? departmentObj[scope.row.department.department.pid]
-                  ? departmentObj[scope.row.department.department.pid].name
-                  : ''
-                : ''
-            }}
-          </p>
-          {{
-            scope.row.department && scope.row.department.department
-              ? departmentObj[scope.row.department.department.id]
-                ? departmentObj[scope.row.department.department.id].name
-                : '-'
-              : '-'
-          }}
-        </template>
-      </el-table-column> -->
 
       <el-table-column label="关联物流" width="150">
         <template slot-scope="scope">

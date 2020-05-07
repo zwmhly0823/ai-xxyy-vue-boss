@@ -38,6 +38,8 @@ export default {
               username
               nickname
               mobile
+              mobile_province
+              mobile_city
             }
             channel {
               channel_outer_name
