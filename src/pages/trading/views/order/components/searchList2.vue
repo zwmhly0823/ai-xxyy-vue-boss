@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-04-25 17:24:23
  * @LastEditors: liukun
- * @LastEditTime: 2020-04-29 20:53:31
+ * @LastEditTime: 2020-05-07 19:03:05
  -->
 <template>
   <el-card border="false" shadow="never" :class="$style.elard">
@@ -28,10 +28,34 @@
         <DatePicker :class="[$style.fourPoint, 'allmini']" @result="getDate">
           <template v-slot:buttons>
             <div class="row_colum margin_l10">
-              <el-button size="mini" plain @click="today">今日</el-button>
-              <el-button size="mini" plain @click="yesterday">昨天</el-button>
-              <el-button size="mini" plain @click="thisweek">本周</el-button>
-              <el-button size="mini" plain @click="thismonth">本月</el-button>
+              <el-button
+                size="mini"
+                plain
+                :class="{ [$style.cur]: cur0 }"
+                @click="today"
+                >今日</el-button
+              >
+              <el-button
+                size="mini"
+                plain
+                :class="{ [$style.cur]: cur1 }"
+                @click="yesterday"
+                >昨天</el-button
+              >
+              <el-button
+                size="mini"
+                plain
+                :class="{ [$style.cur]: cur2 }"
+                @click="thisweek"
+                >本周</el-button
+              >
+              <el-button
+                size="mini"
+                plain
+                :class="{ [$style.cur]: cur3 }"
+                @click="thismonth"
+                >本月</el-button
+              >
             </div>
           </template>
         </DatePicker>
@@ -274,6 +298,10 @@ export default {
 
   data() {
     return {
+      cur0: false,
+      cur1: false,
+      cur2: false,
+      cur3: false,
       showErr: false,
       errTips: '搜索条件不能为空',
       must: [],
@@ -322,12 +350,20 @@ export default {
     },
     // 4点外移
     today() {
+      for (let i = 0; i < 4; i++) {
+        this['cur' + i] = false
+      }
+      this.cur0 = true
       const start = new Date(new Date().toLocaleDateString()).getTime() // 设定日期,时间默认0点
       const end = Date.now()
       this.$root.$emit('fourpoint', [start, end])
       this.setSeachParmas([start, end], [this.date || 'octime'], 'range')
     },
     yesterday() {
+      for (let i = 0; i < 4; i++) {
+        this['cur' + i] = false
+      }
+      this.cur1 = true
       const yester = new Date()
       yester.setDate(new Date().getDate() - 1)
       yester.toLocaleDateString()
@@ -339,6 +375,10 @@ export default {
       this.setSeachParmas([start, end], [this.date || 'octime'], 'range')
     },
     thisweek() {
+      for (let i = 0; i < 4; i++) {
+        this['cur' + i] = false
+      }
+      this.cur2 = true
       const week = new Date()
       const reverseDays = week.getDay() ? week.getDay() - 1 : 6
       const start =
@@ -349,6 +389,10 @@ export default {
       this.setSeachParmas([start, end], [this.date || 'octime'], 'range')
     },
     thismonth() {
+      for (let i = 0; i < 4; i++) {
+        this['cur' + i] = false
+      }
+      this.cur3 = true
       const date = new Date()
       date.setDate(1)
       const start = new Date(new Date(date).toLocaleDateString()).getTime()
@@ -480,6 +524,9 @@ export default {
 }
 </script>
 <style lang="scss" module>
+.cur {
+  background-color: #ecf5ff;
+}
 .elard {
   border: none;
   margin-top: 5px;
