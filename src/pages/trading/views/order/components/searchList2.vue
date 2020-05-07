@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-04-25 17:24:23
  * @LastEditors: liukun
- * @LastEditTime: 2020-05-07 19:03:05
+ * @LastEditTime: 2020-05-07 19:13:43
  -->
 <template>
   <el-card border="false" shadow="never" :class="$style.elard">
@@ -285,16 +285,13 @@ export default {
 
   data() {
     return {
-<<<<<<< HEAD
       cur0: false,
       cur1: false,
       cur2: false,
       cur3: false,
-=======
       teacherscope: null, // 当前选择的体验课老师范围（销售组查询）
       teacherscope_trial: null, // 当前选择的体验课老师范围
       term_trial: null, // 当前选择体验课排期
->>>>>>> 59ab504389a07f0288eef0630fc452b850f60ce0
       showErr: false,
       errTips: '搜索条件不能为空',
       must: [],
