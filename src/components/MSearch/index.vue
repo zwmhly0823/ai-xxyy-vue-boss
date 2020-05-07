@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-24 18:20:12
  * @LastEditors: Lukun
- * @LastEditTime: 2020-04-26 17:49:31
+ * @LastEditTime: 2020-05-07 12:01:24
  -->
 
 <template>
@@ -25,6 +25,7 @@
           :onlyPhone="onlyPhone"
           :tip="phoneTip"
           :last_team_id="last_team_id"
+          ref="searchUserByPhone"
         />
       </el-form-item>
 

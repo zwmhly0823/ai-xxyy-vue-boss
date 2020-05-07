@@ -3,7 +3,7 @@
  * @Email: yangjiyong@meishubao.com
  * @Date: 2020-03-21 11:58:33
  * @Last Modified by: YangJiyong
- * @Last Modified time: 2020-05-07 18:00:35
+ * @Last Modified time: 2020-05-07 19:07:22
  * @Description: 班级
  */
 // import axios from '../axios'
@@ -95,5 +95,11 @@ export default {
         }
       }`
     })
+  },
+  // 自动加好友默认状态
+  getStudentTeamById(params) {
+    return axios.get(
+      `/api/tm/v1/teacher/manager/team/getStudentTeamById?teamId=${params.teamId}`
+    )
   }
 }

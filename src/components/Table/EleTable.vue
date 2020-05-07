@@ -3,27 +3,33 @@
  * @version: 
  * @Author: shentong
  * @Date: 2020-03-14 15:11:17
- * @LastEditors: shentong
- * @LastEditTime: 2020-03-14 15:12:44
+ * @LastEditors: Shentong
+ * :max-height="maxHeight"
+ * @LastEditTime: 2020-05-06 22:19:42
  -->
 <template>
-  <div id="tableList">
+  <div id="tableList" :class="{ 'no-padding': size > total }">
     <el-table
-      :data="dataList"
-      border
-      stripe
       style="width: 100%"
-      :max-height="maxHeight"
+      :size="tableSize"
+      :data="dataList"
+      :max-height="
+        size > total && tableHeight != 'auto' ? +tableHeight + 50 : tableHeight
+      "
+      :header-cell-style="{
+        fontSize: '12px',
+        color: '#666',
+        fontWeight: 'normal'
+      }"
       v-loading="loading"
       element-loading-text="玩命加载中~"
       element-loading-spinner="el-icon-loading"
-      element-loading-background="rgba(0, 0, 0, 0.7)"
       @sort-change="sortChange"
       id="outTable"
     >
       <slot></slot>
     </el-table>
-    <div class="page_box">
+    <div class="page_box" v-if="size <= total">
       <el-pagination
         background
         layout="prev, pager, next"
@@ -45,7 +51,31 @@
  * @Description: table 二次封装
  */
 export default {
-  props: ['loading', 'dataList', 'size', 'total', 'page'],
+  // props: ['loading', 'dataList', 'size', 'total', 'page'],
+  props: {
+    loading: {
+      type: Boolean,
+      default: false
+    },
+    dataList: {
+      type: Array,
+      default: () => []
+    },
+    tableSize: {
+      type: String,
+      default: 'medium'
+    },
+    tableHeight: {
+      type: String,
+      default: 'auto'
+    },
+    size: {
+      type: Number,
+      default: 20
+    },
+    page: Number,
+    total: Number
+  },
   components: {},
   data() {
     return {
@@ -67,11 +97,12 @@ export default {
     }
   },
   mounted() {
-    this.maxHeight = `${document.documentElement.clientHeight}` - 250
-    // 然后监听window的resize事件．在浏览器窗口变化时再设置下背景图高度．
-    window.onresize = () => {
-      this.maxHeight = `${document.documentElement.clientHeight}` - 250
-    }
+    // console.log(this.tableHight, 'tableHight')
+    // this.maxHeight = `${document.documentElement.clientHeight}` - 250
+    // // 然后监听window的resize事件．在浏览器窗口变化时再设置下背景图高度．
+    // window.onresize = () => {
+    //   this.maxHeight = `${document.documentElement.clientHeight}` - 250
+    // }
   },
   created() {},
   watch: {
@@ -84,9 +115,20 @@ export default {
 <style lang="scss" scoped>
 #tableList {
   min-width: 900px;
+  position: relative;
+  padding-bottom: 50px;
+  &.no-padding {
+    padding-bottom: 0;
+  }
 }
 .page_box {
-  margin: 30px;
+  height: 50px;
+  display: flex;
+  align-items: center;
   text-align: right;
+  text-align: right;
+  position: absolute;
+  bottom: 0;
+  right: 15px;
 }
 </style>

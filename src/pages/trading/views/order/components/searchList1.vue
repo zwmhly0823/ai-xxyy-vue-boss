@@ -322,7 +322,6 @@ export default {
       cur1: false,
       cur2: false,
       cur3: false,
-      teacherscope: null, // 当前选择的体验课老师范围
       package_type: null, // 当前选择系统课类型
       teacherscope: null, // 当前选择的体验课老师范围（销售组查询）
       teacherscope_s: null, // 当前选择的系统课老师范围（根据类型查询）
