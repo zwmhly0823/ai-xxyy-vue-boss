@@ -4,13 +4,14 @@
  * @Author: zhubaodong
  * @Date: 2020-03-24 18:50:54
  * @LastEditors: panjian
- * @LastEditTime: 2020-04-29 22:43:04
+ * @LastEditTime: 2020-05-06 15:14:40
  -->
 <template>
   <div class="search-item small threeSelect">
     <el-cascader
       placeholder="请选择渠道"
       size="mini"
+      v-model="channelName"
       @change="onSelect"
       :options="showDatas"
       :props="{
@@ -70,6 +71,10 @@ import { debounce } from 'lodash'
 import axios from '@/api/axios'
 export default {
   props: {
+    tabIndex: {
+      type: String,
+      default: ''
+    },
     name: {
       type: String,
       default: 'channelid'
@@ -139,12 +144,21 @@ export default {
       isMultiple: false,
       loading: false,
       stage: '',
+      channelName: [],
       dataList: [],
       channelList: [],
       channelData: null,
       channelClassData: [],
       channelClassList: null, // 分类条件
       showDatas: null // 三级列表展示数据
+    }
+  },
+  watch: {
+    tabIndex(value) {
+      console.log(value, 'watch')
+      this.timeData = ''
+      this.stage = ''
+      this.channelName = []
     }
   },
   async created() {

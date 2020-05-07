@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-04-25 12:09:03
  * @LastEditors: panjian
- * @LastEditTime: 2020-04-30 19:36:57
+ * @LastEditTime: 2020-05-06 20:20:37
  -->
 <template>
   <div class="channel-box">
@@ -14,18 +14,9 @@
           @channelSearchValue="channelSearchValue"
           @schedulingSearch="schedulingSearch"
           @dateSearch="dateSearch"
+          :tabIndex="tabIndex"
         ></channel-search>
       </div>
-
-      <!-- <m-search
-        class="channel-search"
-        @search="handleSearch"
-        date="date"
-        channel="channel"
-        searchTrialStage="searchTrialStage"
-        :isMultiple="false"
-        channelText="请选择渠道"
-      /> -->
     </div>
     <div class="channel-box-medium">
       <el-row :gutter="20">
@@ -44,48 +35,48 @@
         </el-col>
         <el-col :span="6">
           <div class="grid-content bg-purple">
-            <p>累计转化率</p>
-            <span>{{ conversionRate }}</span>
+            <p>累计转化率/系统课成单人数</p>
+            <span>{{ conversionRate }} <em>/</em> {{ allSystemUser }}</span>
           </div>
         </el-col>
         <el-col :span="12">
           <div class="grid-content bg-purple">
             <el-row :gutter="20">
               <el-col :span="6" style="text-align:center;">
-                <p class="bg-purple-num">{{ allWechatAddNums }}</p>
-                <span class="bg-purple-text">添加微信</span>
+                <p class="bg-purple-text">添加微信</p>
+                <span class="bg-purple-num">{{ allWechatAddNums }}</span>
               </el-col>
               <el-col :span="6" style="text-align:center;">
-                <p class="bg-purple-num">{{ unpaid }}</p>
-                <span class="bg-purple-text">未支付</span>
+                <p class="bg-purple-text">未支付</p>
+                <span class="bg-purple-num">{{ unpaid }}</span>
               </el-col>
               <el-col :span="6" style="text-align:center;">
-                <p class="bg-purple-num">{{ allJoinUserNums }}</p>
-                <span class="bg-purple-text">参课数</span>
+                <p class="bg-purple-text">参课数</p>
+                <span class="bg-purple-num">{{ allJoinUserNums }}</span>
               </el-col>
               <el-col :span="6" style="text-align:center;">
-                <p class="bg-purple-num">{{ allCompleteUserNums }}</p>
-                <span class="bg-purple-text">完课数</span>
+                <p class="bg-purple-text">完课数</p>
+                <span class="bg-purple-num">{{ allCompleteUserNums }}</span>
               </el-col>
               <el-col :span="6" style="text-align:center;">
-                <p class="bg-purple-num">{{ allPayUserNums }}</p>
-                <span class="bg-purple-text">成单数</span>
+                <p class="bg-purple-text">体验课成单数</p>
+                <span class="bg-purple-num">{{ allPayUserNums }}</span>
               </el-col>
               <el-col :span="6" style="text-align:center;">
-                <p class="bg-purple-num">{{ allUserNums }}</p>
-                <span class="bg-purple-text">线索数</span>
+                <p class="bg-purple-text">线索数</p>
+                <span class="bg-purple-num">{{ allUserNums }}</span>
               </el-col>
               <el-col :span="6" style="text-align:center;">
-                <p class="bg-purple-num">
+                <p class="bg-purple-text">参课率</p>
+                <span class="bg-purple-num">
                   {{ allJoinUserNumsPercent }}
-                </p>
-                <span class="bg-purple-text">参课率</span>
+                </span>
               </el-col>
               <el-col :span="6" style="text-align:center;">
-                <p class="bg-purple-num">
+                <p class="bg-purple-text">完课率</p>
+                <span class="bg-purple-num">
                   {{ allCompleteUserNumsPercent }}
-                </p>
-                <span class="bg-purple-text">完课率</span>
+                </span>
               </el-col>
             </el-row>
           </div>
@@ -134,7 +125,7 @@
             </template>
           </el-table-column>
           <el-table-column prop="channelId" label="渠道ID"> </el-table-column>
-          <el-table-column prop="orderUserPayNums" label="49元购买数">
+          <el-table-column prop="orderUserPayNums" label="体验课成单数">
           </el-table-column>
           <el-table-column prop="orderUserNoPayNums" label="未支付">
           </el-table-column>
@@ -301,6 +292,8 @@ export default {
       allSystemUserAmounts: '',
       // 累计转化率
       conversionRate: '',
+      // 系统课成单人数
+      allSystemUser: '',
       // 添加微信
       allWechatAddNums: '',
       // 未支付
@@ -321,7 +314,13 @@ export default {
   },
   watch: {
     tabIndex(value) {
-      console.log(value, 'watch')
+      this.query = ''
+      this.channelIds = ''
+      this.querySearchTrialStage = ''
+      this.stateTime = ''
+      this.endTime = ''
+      this.totalNumber = 1
+      this.getChannelDetailPage()
     }
   },
   created() {
@@ -355,7 +354,6 @@ export default {
       }
       this.$http.Operating.channelDetailPage(this.querysData).then((res) => {
         const _data = res.data.channelDetailPage
-        console.log(_data, 'resresresres')
         // 总条数
         this.totalElements = +_data.totalElements
         // 当前页
@@ -414,6 +412,8 @@ export default {
             (_datas.allSystemUserNums / _datas.allPayUserNums) * 100
           this.conversionRate = `${conversionRatePercentNums.toFixed(2)}%`
         }
+        // 系统课成单人数
+        this.allSystemUser = _datas.allSystemUserNums
         // 添加微信
         this.allWechatAddNums = _datas.allWechatAddNums
         // 未支付
