@@ -78,5 +78,11 @@ export default {
     return axios.get(
       `/api/tm/v1/teacher/manager/team/updateStudentTeamByState?status=${params.status}&teamId=${params.teamId}`
     )
+  },
+  // 自动加好友默认状态
+  getStudentTeamById(params) {
+    return axios.get(
+      `/api/tm/v1/teacher/manager/team/getStudentTeamById?teamId=${params.teamId}`
+    )
   }
 }
