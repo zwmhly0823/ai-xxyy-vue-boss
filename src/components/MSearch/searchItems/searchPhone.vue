@@ -3,8 +3,8 @@
  * @version:
  * @Author: zhubaodong
  * @Date: 2020-03-26 16:28:45
- * @LastEditors: liukun
- * @LastEditTime: 2020-04-25 16:31:13
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-04-30 11:51:24
  -->
 <template>
   <div class="search-item small">
@@ -34,6 +34,7 @@
 
 <script>
 import axios from '@/api/axios'
+import { mapGetters } from 'vuex'
 
 export default {
   props: {
@@ -76,13 +77,24 @@ export default {
       selectData: []
     }
   },
-  computed: {},
+  computed: {
+    ...mapGetters(['team']),
+    searchPhone() {
+      return (
+        (this.team && this.team.userByPhone && this.team.userByPhone.phone) ||
+        ''
+      )
+    }
+  },
   watch: {
     input(val, old) {
       console.log(val !== old && !val)
       if (val !== old && !val) {
         this.$emit('result', '')
       }
+    },
+    searchPhone(val) {
+      this.input = val
     }
   },
   methods: {

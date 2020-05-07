@@ -188,6 +188,7 @@
   </div>
 </template>
 <script>
+import { mapGetters } from 'vuex'
 import checkBox from '@/components/MCheckBox/index'
 import detailsTable from './components/detailsTable'
 import MSearch from '@/components/MSearch/index.vue'
@@ -207,6 +208,12 @@ export default {
     classId: {
       type: Object,
       default: null
+    }
+  },
+  computed: {
+    ...mapGetters(['team']),
+    searchUser() {
+      return this.team.userByPhone
     }
   },
   data() {
@@ -271,7 +278,8 @@ export default {
         childListData: [],
         imgNum: 0,
         imgSuccessNum: 0,
-        opreaIndex: 0
+        opreaIndex: 0,
+        weekNum1: ''
       },
       // tabs标签默认状态
       activeName: 'group',
@@ -300,6 +308,32 @@ export default {
     }
   },
   watch: {
+    searchUser(user) {
+      console.log(user)
+      let teamId = ''
+      let teamType = ''
+      let mobile = ''
+      if (user && user.phone) mobile = user.phone
+      if (this.classId && this.classId.classId) {
+        teamId = this.classId.classId.id
+        teamType = this.classId.classId.team_type
+      }
+      this.search = ''
+      if (!mobile) {
+        this.getGroup()
+        return
+      }
+      this.$http.User.blurrySearch(mobile, teamType, teamId).then((res) => {
+        console.log(res, '********')
+        const uid =
+          res.data.blurrySearch &&
+          res.data.blurrySearch[0] &&
+          res.data.blurrySearch[0].id
+        console.log(this.search)
+        this.search = `"${uid}"`
+        this.getGroup()
+      })
+    },
     classId(value) {
       // 切换标签 语音停止
       const audios = this.$refs
@@ -442,7 +476,7 @@ export default {
       // 获取第几周的数据
       await this.getStuTaskRankingList(
         this.ExhibitionData.teamId,
-        this.ExhibitionData.weekNum
+        this.ExhibitionData.weekNum1
       )
       // 关闭弹框
       this.show = true
@@ -645,6 +679,7 @@ export default {
           6
         )
         // this.ExhibitionData.studentLesson = currentLesson.substring(0, 4)
+        this.ExhibitionData.weekNum1 = currentLesson
         this.ExhibitionData.weekNum = currentLesson.substring(4, 6)
         this.btnshow(
           this.ExhibitionData.weekNum,

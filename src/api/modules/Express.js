@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-31 22:54:28
  * @LastEditors: Lukun
- * @LastEditTime: 2020-04-14 14:54:04
+ * @LastEditTime: 2020-05-04 17:32:30
  */
 // import axios from '../axios'
 import axios from '../axiosConfig'
@@ -69,8 +69,13 @@ export default {
         }
       `
     })
-  }
+  },
 
+  getExpressDetailJDForAPP(params) {
+    return axios.get(
+      `/api/o/v1/express/ getExpressDetailJDForAPP?expressNo=${params}`
+    )
+  }
   /**
    * v1 订单关联的物流
    */

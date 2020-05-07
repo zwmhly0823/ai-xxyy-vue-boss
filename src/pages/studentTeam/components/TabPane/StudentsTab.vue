@@ -143,6 +143,7 @@
   </div>
 </template>
 <script>
+import { mapGetters } from 'vuex'
 import axios from '@/api/axios'
 import { GetAgeByBrithday } from '@/utils/index'
 import MPagination from '@/components/MPagination/index.vue'
@@ -185,7 +186,14 @@ export default {
       // 搜索
       search: '',
       // 请求接口参数
-      queryData: ''
+      queryData: '',
+      searchUid: ''
+    }
+  },
+  computed: {
+    ...mapGetters(['team']),
+    searchUser() {
+      return this.team.userByPhone
     }
   },
   created() {
@@ -194,6 +202,19 @@ export default {
     this.couponList()
   },
   watch: {
+    searchUser(val) {
+      console.log(val, '--------------team----------')
+      this.search = ''
+      if (val && val.tid) {
+        // 根据手机号获取uid
+        const q = `{"mobile": ${val.phone}}`
+        this.$http.User.getUserInfo(q).then((res) => {
+          this.searchUid = (res.data.User && res.data.User.id) || ''
+          this.search = `"${this.searchUid}"`
+        })
+        this.studentsList()
+      }
+    },
     classId(value) {
       if (!value) return
       this.scrollTop()
@@ -281,6 +302,8 @@ export default {
         }`
         })
         .then((res) => {
+          console.log(res)
+          if (!res.data.teamUserListPage) return
           this.totalPages = res.data.teamUserListPage.totalPages * 1
           this.totalElements = +res.data.teamUserListPage.totalElements
           const _data = res.data.teamUserListPage.content
