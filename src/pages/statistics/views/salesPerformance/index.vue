@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-04-02 15:35:27
  * @LastEditors: Shentong
- * @LastEditTime: 2020-05-07 11:47:57
+ * @LastEditTime: 2020-05-07 15:59:19
  -->
 <template>
   <el-row type="flex" class="app-main height schedule-container">
@@ -124,7 +124,7 @@
               </span>
             </template>
           </p>
-          <div style="padding: 0 15px;" ref="tableInner">
+          <div style="padding: 0 15px;">
             <el-tabs
               v-model="activeName"
               @tab-click="statisticsTypehandleClick"
@@ -135,6 +135,7 @@
               <el-tab-pane label="完课统计" name="finishClass"> </el-tab-pane>
             </el-tabs>
           </div>
+          <div class="tableInner" ref="tableInner"></div>
           <!-- 完课统计列表 -->
           <div
             class="orderStyle"
@@ -525,12 +526,12 @@ export default {
   },
   computed: {},
   watch: {},
-  activated() {
-    const tableHeight =
-      document.body.clientHeight -
-      this.$refs.tableInner.getBoundingClientRect().top -
-      154
-    this.tableHeight = tableHeight + ''
+  created() {
+    this.$nextTick(() => {
+      const tableHeight =
+        document.body.clientHeight - this.$refs.tableInner.offsetTop - 112
+      this.tableHeight = tableHeight + ''
+    })
     this.init()
   },
   methods: {
@@ -807,8 +808,9 @@ export default {
   .tabs-operate {
     background: #f5f7fa;
     display: flex;
+    height: 40px;
     > div {
-      height: 40px;
+      height: 100%;
       padding: 0 20px;
       display: flex;
       justify-content: center;
@@ -824,9 +826,10 @@ export default {
   }
   .descripte {
     padding-left: 15px;
+    min-height: 20px;
     margin: 0;
     color: #333;
-    min-width: 800px;
+    min-width: 1024px;
     .label-val {
       margin-right: 20px;
     }
@@ -844,8 +847,9 @@ export default {
     font-size: 15px;
   }
   .sear-container {
+    height: 40px;
     display: flex;
-    margin: 10px;
+    margin-left: 15px;
     align-items: center;
     .el-card {
       border: 0;
