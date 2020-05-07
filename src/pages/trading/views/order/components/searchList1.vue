@@ -350,9 +350,11 @@ export default {
     }
   },
   methods: {
+    // 订单号、手机号
     getOrderSearch(res) {
-      console.log(res)
-      this.setSeachParmas(res, ['out_trade_no'])
+      const key = Object.keys(res || {})[0]
+      const val = res[key] ? res : ''
+      this.setSeachParmas(val, [key])
     },
     // 选择渠道
     getChannel(res) {

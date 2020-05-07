@@ -62,7 +62,7 @@ export default {
       let result = []
       if (!query) {
         cb(result)
-        this.$emit('result', '', this.keyword)
+        this.$emit('result', { [this.keyword]: '' })
         return
       }
       // 订单号
@@ -77,14 +77,41 @@ export default {
           }
           cb(result)
           // clear输入内容后不能再次显示列表的bug
-          // this.$refs.input.handleBlur()
           this.$refs.input.activated = true
         })
+      } else if (this.select === '1') {
+        // 下单手机号 -> 用户手机号
+        const reg = /^[0-9]*$/
+        if (!reg.test(query)) {
+          this.value = ''
+          return
+        }
+        this.$http.User.searchUserByPhone(query).then((res) => {
+          console.log(res, 'mobile')
+          if (res && res.data && res.data.UserListEx) {
+            result = res.data.UserListEx.map((item) => {
+              item.value = item.mobile
+              return item
+            })
+          }
+          cb(result)
+          this.$refs.input.activated = true
+        })
+      } else {
+        // 收货人手机号
       }
     },
     handleSelect(data) {
       console.log(data)
-      this.$emit('result', { [this.keyword]: data.out_trade_no })
+      const obj = {}
+      if (this.select === '0') {
+        Object.assign(obj, { [this.keyword]: data.out_trade_no })
+      } else if (this.select === '1') {
+        Object.assign(obj, { [this.keyword]: data.id })
+      } else {
+        Object.assign(obj, { [this.keyword]: data.id })
+      }
+      this.$emit('result', obj)
     }
   }
 }

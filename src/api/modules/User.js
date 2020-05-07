@@ -18,5 +18,30 @@ export default {
   },
   sendMsgForTeacher(orderId) {
     return axios.get(`/api/o/v1/order/sendMsgForTeacher?orderIds=${orderId}`)
+  },
+
+  /**
+   * 模糊搜索用户手机号，获取用户信息
+   */
+  searchUserByPhone(queryString = '') {
+    const query = {
+      bool: {
+        must: [
+          {
+            wildcard: { mobile: `*${queryString}*` }
+          }
+        ]
+      }
+    }
+    const q = JSON.stringify(query)
+    return axios.post('/graphql/v1/toss', {
+      query: `{
+        UserListEx(query:${JSON.stringify(q)}){
+          id
+          mobile
+          username
+        }
+      }`
+    })
   }
 }
