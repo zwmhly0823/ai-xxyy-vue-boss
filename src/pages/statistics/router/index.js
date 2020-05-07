@@ -17,7 +17,7 @@ const routes = [
       title: '统计分析',
       icon: 'el-icon-s-platform'
     },
-    redirect: '/salesPerformance'
+    redirect: '/priodPerformance'
   },
   {
     path: '/priodPerformance',
