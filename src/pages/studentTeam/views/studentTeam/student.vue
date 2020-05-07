@@ -105,7 +105,6 @@ export default {
         teacherId
       })
       this.teacherIds = teachers
-      console.log(teachers)
     },
     /**
      * 左栏回调函数

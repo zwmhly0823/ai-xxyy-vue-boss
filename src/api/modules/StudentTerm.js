@@ -3,7 +3,7 @@
  * @Email: yangjiyong@meishubao.com
  * @Date: 2020-03-21 11:58:33
  * @Last Modified by: YangJiyong
- * @Last Modified time: 2020-04-13 15:03:58
+ * @Last Modified time: 2020-05-07 18:00:35
  * @Description: 班级
  */
 // import axios from '../axios'
@@ -78,5 +78,22 @@ export default {
     return axios.get(
       `/api/tm/v1/teacher/manager/team/updateStudentTeamByState?status=${params.status}&teamId=${params.teamId}`
     )
+  },
+
+  /**
+   * 根据难度 sup 搜索班级 TODO: 班级数量大于500时做调整
+   */
+  searchTeamBySup(sup = '') {
+    const query = { 'sup.keyword': sup }
+    const q = JSON.stringify(query)
+    return axios.post('/graphql/v1/toss', {
+      query: `{
+        StudentTeamList(query:${JSON.stringify(q)}, size: 500){
+          id
+          team_name
+          sup
+        }
+      }`
+    })
   }
 }

@@ -80,6 +80,32 @@ export default {
   },
 
   /**
+   * 模糊搜索订单号
+   * @param {*} query 订单号
+   * @param {*} size
+   */
+  searchOutTradeNo(no = '', size = 20) {
+    const query = {
+      bool: {
+        must: [
+          {
+            wildcard: { out_trade_no: `*${no}*` }
+          }
+        ]
+      }
+    }
+    const q = JSON.stringify(query)
+    return axios.post('/graphql/v1/toss', {
+      query: `{
+        OrderListEx(query: ${JSON.stringify(q)}, size: ${size}){
+          id,
+          out_trade_no
+        }
+      }`
+    })
+  },
+
+  /**
    * 订单统计, 只能用表达式 {bool:{must:[]}}
    */
   orderStatistics(must = [], sumField, termField) {

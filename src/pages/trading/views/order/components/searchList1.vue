@@ -10,12 +10,11 @@
   <el-card border="false" shadow="never" :class="$style.elard">
     <el-form :inline="true" label-position="right" label-width="80px">
       <el-form-item label="订单搜索:" :class="{ [$style.marginer]: true }">
-        <orderSearch class="allmini" />
+        <orderSearch class="allmini" @result="getOrderSearch" />
       </el-form-item>
-      <br />
 
       <el-form-item label="订单来源:" :class="{ [$style.marginer]: true }">
-        <ChannelSelect @result="getChannel" />
+        <ChannelSelect @result="getChannel" name="pay_channel" />
       </el-form-item>
       <br />
 
@@ -69,12 +68,13 @@
           />
           <group-sell
             :teacherscope="teacherscope"
+            tip="全部社群销售"
             @result="selectPayTeacher"
             name="pay_teacher_id"
             class="margin_l10"
           />
           <search-stage
-            :teacher-id="teacherscope"
+            :teacher-id="teacherscope_trial || teacherscope"
             class="margin_l10"
             name="trial_stage"
             placeholder="全部体验课排期"
@@ -83,13 +83,15 @@
           />
           <hardLevel
             :class="['margin_l10']"
-            placeholder="体验课难度"
+            placeholder="全部体验课难度"
             style="width:140px"
-            name="trial_sup"
+            name="trial_team_id"
             @result="supCallBackTrial"
           />
-          <search-trial-team-name
+          <search-team-name
             teamnameType="0"
+            :term="term_trial"
+            :teacher-id="teacherscope_trial || teacherscope"
             @result="getTrialTeamName"
             name="trial_team_id"
             :class="['margin_l10']"
@@ -105,13 +107,14 @@
             name="packages_type"
           />
           <group-sell
-            :teacherscope="teacherscope"
+            :teacherscope="teacherscope_s"
             @result="selectLastTeacher"
             name="last_teacher_id"
             class="margin_l10"
-            tip="服务老师"
+            tip="全部服务老师"
           />
           <search-stage
+            :teacher-id="teacherscope_system || teacherscope_s"
             class="margin_l10"
             @result="selectSchedule"
             name="stage"
@@ -119,13 +122,15 @@
           />
           <hardLevel
             :class="['margin_l10']"
-            placeholder="系统课难度"
+            placeholder="全部系统课难度"
             style="width:140px"
             name="sup"
             @result="supCallBack"
           />
           <search-team-name
             teamnameType="1"
+            :term="term_sys"
+            :teacher-id="teacherscope_system || teacherscope_s"
             @result="getTeamName"
             name="team_id"
             class="margin_l10"
@@ -141,21 +146,10 @@ import orderSearch from '@/components/MSearch/searchItems/orderSearch.vue' // ad
 import systemCourseType from '@/components/MSearch/searchItems/systemCourseType.vue'
 import DatePicker from '@/components/MSearch/searchItems/datePicker.vue'
 import ChannelSelect from '@/components/MSearch/searchItems/channel.vue'
-// import ProductTopic from '@/components/MSearch/searchItems/productTopic.vue'
-// import StageSupLevels from '@/components/MSearch/searchItems/stageSupLevels.vue'
-// import SearchPhone from '@/components/MSearch/searchItems/searchPhone.vue'
-// import OutTradeNo from '@/components/MSearch/searchItems/outTradeNo.vue'
-// import ProductName from '@/components/MSearch/searchItems/productName.vue'
-// import SelectDate from '@/components/MSearch/searchItems/selectDate.vue'
-// import ExpressNo from '@/components/MSearch/searchItems/expressNo'
 import GroupSell from '@/components/MSearch/searchItems/groupSell'
-// import TeamDetail from '@/components/MSearch/searchItems/teamDetail'
-// import MoreVersionBox from '@/components/MSearch/searchItems/moreVersionBox'
-// import OrderType from '@/components/MSearch/searchItems/orderType'
 import Department from '@/components/MSearch/searchItems/department'
 import SearchTeamName from '@/components/MSearch/searchItems/searchTeamName'
-import SearchTrialTeamName from '@/components/MSearch/searchItems/searchTrialTeamName'
-// import Schedule from '@/components/MSearch/searchItems/schedule'
+// import SearchTrialTeamName from '@/components/MSearch/searchItems/searchTrialTeamName'
 import SearchStage from '@/components/MSearch/searchItems/searchStage'
 import { isToss } from '@/utils/index'
 
@@ -314,33 +308,32 @@ export default {
     systemCourseType,
     orderSearch,
     ChannelSelect,
-    // ProductTopic,
-    // StageSupLevels,
     DatePicker,
-    // SearchPhone,
-    // SelectDate,
-    // OutTradeNo,
-    // ProductName,
-    // ExpressNo,
     GroupSell,
-    // TeamDetail,
-    // MoreVersionBox,
-    // OrderType,
     Department,
     SearchTeamName,
-    SearchTrialTeamName,
-    // Schedule,
+    // SearchTrialTeamName,
     SearchStage
   },
 
   data() {
     return {
+<<<<<<< HEAD
       cur0: false,
       cur1: false,
       cur2: false,
       cur3: false,
       teacherscope: null, // 当前选择的体验课老师范围
       package_type: null, // 当前选择系统课类型
+=======
+      teacherscope: null, // 当前选择的体验课老师范围（销售组查询）
+      teacherscope_s: null, // 当前选择的系统课老师范围（根据类型查询）
+      teacherscope_system: null, // 当前选择的系统课老师范围
+      teacherscope_trial: null, // 当前选择的体验课老师范围
+      packages_type: null, // 当前选择系统课类型
+      term_sys: null, // 当前选择系统课排期
+      term_trial: null, // 当前选择体验课排期
+>>>>>>> 59ab504389a07f0288eef0630fc452b850f60ce0
       showErr: false,
       errTips: '搜索条件不能为空',
       must: [],
@@ -351,31 +344,59 @@ export default {
     }
   },
   computed: {},
+  watch: {
+    packages_type(val, old) {
+      const { getTeacherIdByCategory } = this.$http.Teacher
+      if (val) {
+        getTeacherIdByCategory({ category: val }).then((data) => {
+          if (data.data.StudentTeamList && data.data.StudentTeamList.length) {
+            const teacherIds = data.data.StudentTeamList.map(
+              (item) => item.teacher_id
+            )
+            this.teacherscope_s = teacherIds
+          }
+        })
+      } else {
+        this.teacherscope_s = null
+      }
+    }
+  },
   methods: {
+    // 订单号、手机号
+    getOrderSearch(res) {
+      const key = Object.keys(res || {})[0]
+      const val = res[key] ? res : ''
+      this.setSeachParmas(val, [key])
+    },
     // 选择渠道
     getChannel(res) {
-      console.info(res, 'lll')
-      this.setSeachParmas(res, [this.channel || 'channelid'], 'terms')
+      this.setSeachParmas(res, [this.channel || 'pay_channel'], 'terms')
     },
     // 主题
     getProductTopic(res) {
-      console.log(res, 'res')
       this.setSeachParmas(res, [this.topicType || 'topicType'])
     },
     // 期数
     stageCallBack(res) {
-      console.log(res, 'res')
       this.setSeachParmas(res, [this.stage || 'stage'], 'terms')
     },
     // 系统课排期
     selectSchedule(res) {
-      console.log(res, 'res')
-      this.setSeachParmas(res, [this.stage || 'stage'])
+      if (res) {
+        this.term_sys = res.stage
+      } else {
+        this.term_sys = null
+      }
+      this.setSeachParmas(res, [this.stage || 'stage'], 'terms')
     },
     // 体验课排期
     selectScheduleTrial(res) {
-      console.log(res, 'res')
-      this.setSeachParmas(res, [this.trial_stage || 'trial_stage'])
+      if (res) {
+        this.term_trial = res.trial_stage
+      } else {
+        this.term_trial = null
+      }
+      this.setSeachParmas(res, [this.trial_stage || 'trial_stage'], 'terms')
     },
     // 系统课难度
     supCallBack(res) {
@@ -385,7 +406,7 @@ export default {
     // 体验课难度
     supCallBackTrial(res) {
       console.log(res, 'res')
-      this.setSeachParmas(res, [this.trial_sup || 'trial_sup'], 'terms')
+      this.setSeachParmas(res, [this.trial_sup || 'trial_team_id'], 'terms')
     },
     // 级别
     levelCallBack(res) {
@@ -406,7 +427,6 @@ export default {
       const start = new Date(new Date().toLocaleDateString()).getTime() // 设定日期,时间默认0点
       const end = Date.now()
       this.$root.$emit('fourpoint', [start, end])
-      this.setSeachParmas([start, end], [this.date || 'ctime'], 'range')
     },
     yesterday() {
       for (let i = 0; i < 4; i++) {
@@ -421,7 +441,6 @@ export default {
       ).valueOf()
       const end = new Date(yester.toLocaleDateString() + ' 23:59:59').valueOf()
       this.$root.$emit('fourpoint', [start, end])
-      this.setSeachParmas([start, end], [this.date || 'ctime'], 'range')
     },
     thisweek() {
       for (let i = 0; i < 4; i++) {
@@ -436,7 +455,6 @@ export default {
         reverseDays * 86400000
       const end = new Date().getTime()
       this.$root.$emit('fourpoint', [start, end])
-      this.setSeachParmas([start, end], [this.date || 'ctime'], 'range')
     },
     thismonth() {
       for (let i = 0; i < 4; i++) {
@@ -448,41 +466,11 @@ export default {
       const start = new Date(new Date(date).toLocaleDateString()).getTime()
       const end = new Date().getTime()
       this.$root.$emit('fourpoint', [start, end])
-      this.setSeachParmas([start, end], [this.date || 'ctime'], 'range')
-    },
-    // 选择手机号
-    getPhoneHander(res) {
-      console.log(res, '回调res') // 得到uid
-      this.setSeachParmas(res, [this.phone || 'umobile'])
-    },
-    // 选择订单号
-    getOutTradeNo(res) {
-      this.setSeachParmas(res, [this.outTradeNo || 'out_trade_no'], 'wildcard')
-    },
-    // 选择商品名
-    getProductName(res) {
-      this.setSeachParmas(res, [this.productName || 'product_name'])
-    },
-    // 获取下拉时间选择select
-    getTimeCallBack(data) {
-      if (data) {
-        this.selectTime = data
-      } else {
-        this.oldTime = data
-      }
-    },
-    // 物流时间
-    getTimeData(res) {
-      console.log(this.selectTime, '清除时的this.selectTime')
-      this.setSeachParmas(res, [this.selectTime || this.oldTime], 'range')
-    },
-    // 选择物流单号
-    getExpressNo(res) {
-      this.setSeachParmas(res, [this.expressNo || 'express_nu'], 'wildcard')
     },
     // 选择社群销售
     selectPayTeacher(res) {
       if (!res.pay_teacher_id || res.pay_teacher_id.length === 0) {
+        this.teacherscope_trial = null
         if (this.teacherscope && this.teacherscope.length > 0) {
           res = {
             pay_teacher_id: this.teacherscope
@@ -490,6 +478,8 @@ export default {
         } else {
           res = ''
         }
+      } else {
+        this.teacherscope_trial = res.pay_teacher_id
       }
       this.setSeachParmas(
         res,
@@ -501,6 +491,9 @@ export default {
     selectLastTeacher(res) {
       if (!res.last_teacher_id || res.last_teacher_id.length === 0) {
         res = ''
+        this.teacherscope_system = null
+      } else {
+        this.teacherscope_system = res.last_teacher_id
       }
       this.setSeachParmas(
         res,
@@ -508,22 +501,13 @@ export default {
         'terms'
       )
     },
-    getTeamDetail(res) {
-      this.setSeachParmas(res, [this.teamDetail || 'last_team_id'])
-    },
-    getVersionNu(res) {
-      this.setSeachParmas(res, [this.moreVersion || 'product_version'])
-    },
-    getOrderType(res) {
-      this.setSeachParmas(res, [this.orderType || 'regtype'])
-    },
     getSystemCourseType(res) {
       if (res) {
-        this.package_type = res.packages_type
+        this.packages_type = res.packages_type
       } else {
-        this.package_type = null
+        this.packages_type = null
       }
-      this.setSeachParmas(res, [this.systemCourseType || 'packages_type'])
+      this.setSeachParmas(res, [this.packagesType || 'packages_type'])
     },
     getDepartment(res) {
       this.teacherscope = res.pay_teacher_id || null
@@ -548,15 +532,6 @@ export default {
       const { must, should } = this
       const temp = name === 'must' ? must : should
       key.forEach((k) => {
-        console.info(k)
-        // temp.forEach((item, index) => {
-        //   if (
-        //     JSON.parse(item[extraKey])[k] &&
-        //     (JSON.parse(item[extraKey])[k] ||
-        //       +JSON.parse(item[extraKey])[k] === 0)
-        //   )
-        //     temp.splice(index, 1)
-        // })
         temp.forEach((item, index) => {
           if (
             item[extraKey] &&
@@ -576,7 +551,6 @@ export default {
           this.must = temp
         }
         this.$emit('search', temp)
-        console.info('lklkl', temp)
 
         return
       }
@@ -628,5 +602,11 @@ export default {
   .margin_l10 {
     margin-left: 10px;
   }
+}
+</style>
+
+<style scoped>
+.el-select-dropdown.is-multiple .el-select-dropdown__item.selected:after {
+  right: 5px;
 }
 </style>

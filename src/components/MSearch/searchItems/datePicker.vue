@@ -104,7 +104,6 @@ export default {
         const gte = this.timeData[0]
         const lte = this.timeData[1]
         const octime = { gte, lte }
-        console.info(octime)
         this.$emit('result', { [this.name]: octime })
         return
       }
@@ -114,6 +113,7 @@ export default {
   created() {
     this.$root.$on('fourpoint', (r) => {
       this.timeData = r
+      this.changeHandler(r)
     })
   },
   mounted() {}

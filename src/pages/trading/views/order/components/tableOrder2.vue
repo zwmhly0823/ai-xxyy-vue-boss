@@ -46,7 +46,7 @@
           </p>
         </template>
       </el-table-column>
-      <el-table-column label="订单来源">
+      <el-table-column label="订单来源" width="100">
         <template slot-scope="scope">
           <p>
             {{ scope.row.channel ? scope.row.channel.channel_outer_name : '-' }}

@@ -78,6 +78,8 @@ export default {
   },
   watch: {
     teacherId(val) {
+      this.stage = ''
+      this.$emit('result', '')
       if (!this.teacherId || this.teacherId.length === 0) {
         this.period = []
         this.getData()
