@@ -13,7 +13,7 @@
       multiple
       filterable
       remote
-      :reserve-keyword="false"
+      :reserve-keyword="true"
       size="mini"
       clearable
       :placeholder="teamnameType === '0' ? '体验课班级' : '系统课班级'"
@@ -123,5 +123,10 @@ export default {
   &.small {
     width: 140px !important;
   }
+}
+</style>
+<style scoped>
+.el-select-dropdown.is-multiple .el-select-dropdown__item.selected:after {
+  right: 5px;
 }
 </style>

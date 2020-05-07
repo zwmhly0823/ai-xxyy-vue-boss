@@ -44,6 +44,7 @@
           />
           <group-sell
             :teacherscope="teacherscope"
+            tip="全部社群销售"
             @result="selectPayTeacher"
             name="pay_teacher_id"
             class="margin_l10"
@@ -58,12 +59,12 @@
           />
           <hardLevel
             :class="['margin_l10']"
-            placeholder="体验课难度"
+            placeholder="全部体验课难度"
             style="width:140px"
             name="trial_sup"
             @result="supCallBackTrial"
           />
-          <search-trial-team-name
+          <search-team-name
             teamnameType="0"
             :term="term_trial"
             :teacher-id="teacherscope_trial || teacherscope"
@@ -86,7 +87,7 @@
             @result="selectLastTeacher"
             name="last_teacher_id"
             class="margin_l10"
-            tip="服务老师"
+            tip="全部服务老师"
           />
           <search-stage
             :teacher-id="teacherscope_system || teacherscope_s"
@@ -97,7 +98,7 @@
           />
           <hardLevel
             :class="['margin_l10']"
-            placeholder="系统课难度"
+            placeholder="全部系统课难度"
             style="width:140px"
             name="sup"
             @result="supCallBack"
@@ -121,21 +122,10 @@ import orderSearch from '@/components/MSearch/searchItems/orderSearch.vue' // ad
 import systemCourseType from '@/components/MSearch/searchItems/systemCourseType.vue'
 import DatePicker from '@/components/MSearch/searchItems/datePicker.vue'
 import ChannelSelect from '@/components/MSearch/searchItems/channel.vue'
-// import ProductTopic from '@/components/MSearch/searchItems/productTopic.vue'
-// import StageSupLevels from '@/components/MSearch/searchItems/stageSupLevels.vue'
-// import SearchPhone from '@/components/MSearch/searchItems/searchPhone.vue'
-// import OutTradeNo from '@/components/MSearch/searchItems/outTradeNo.vue'
-// import ProductName from '@/components/MSearch/searchItems/productName.vue'
-// import SelectDate from '@/components/MSearch/searchItems/selectDate.vue'
-// import ExpressNo from '@/components/MSearch/searchItems/expressNo'
 import GroupSell from '@/components/MSearch/searchItems/groupSell'
-// import TeamDetail from '@/components/MSearch/searchItems/teamDetail'
-// import MoreVersionBox from '@/components/MSearch/searchItems/moreVersionBox'
-// import OrderType from '@/components/MSearch/searchItems/orderType'
 import Department from '@/components/MSearch/searchItems/department'
 import SearchTeamName from '@/components/MSearch/searchItems/searchTeamName'
-import SearchTrialTeamName from '@/components/MSearch/searchItems/searchTrialTeamName'
-// import Schedule from '@/components/MSearch/searchItems/schedule'
+// import SearchTrialTeamName from '@/components/MSearch/searchItems/searchTrialTeamName'
 import SearchStage from '@/components/MSearch/searchItems/searchStage'
 import { isToss } from '@/utils/index'
 
@@ -298,7 +288,7 @@ export default {
     GroupSell,
     Department,
     SearchTeamName,
-    SearchTrialTeamName,
+    // SearchTrialTeamName,
     SearchStage
   },
 
@@ -367,7 +357,7 @@ export default {
       } else {
         this.term_sys = null
       }
-      this.setSeachParmas(res, [this.stage || 'stage'])
+      this.setSeachParmas(res, [this.stage || 'stage'], 'terms')
     },
     // 体验课排期
     selectScheduleTrial(res) {
@@ -376,7 +366,7 @@ export default {
       } else {
         this.term_trial = null
       }
-      this.setSeachParmas(res, [this.trial_stage || 'trial_stage'])
+      this.setSeachParmas(res, [this.trial_stage || 'trial_stage'], 'terms')
     },
     // 系统课难度
     supCallBack(res) {
