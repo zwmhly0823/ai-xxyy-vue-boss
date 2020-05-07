@@ -563,6 +563,9 @@ export default {
           if (item.term && item.term.term) {
             timeType.term = item.term.term
           }
+          if (item.term && item.term.last_teacher_id) {
+            timeType.teacher_id = item.term.last_teacher_id
+          }
         }
         if (item && item.terms) {
           if (item.terms.sup) {
@@ -586,9 +589,6 @@ export default {
         }
         if (item.wildcard && item.wildcard.express_nu) {
           timeType.express_nu = item.wildcard.express_nu
-        }
-        if (item.wildcard && item.wildcard.last_teacher_id) {
-          timeType.teacher_id = item.wildcard.last_teacher_id
         }
       })
 

@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-24 18:20:12
  * @LastEditors: Lukun
- * @LastEditTime: 2020-05-06 22:09:44
+ * @LastEditTime: 2020-05-07 12:01:24
  -->
 
 <template>
@@ -422,11 +422,7 @@ export default {
     },
     // 选择销售老师
     selectSellTeacher(res) {
-      this.setSeachParmas(
-        res,
-        [this.groupSell || 'last_teacher_id'],
-        'wildcard'
-      )
+      this.setSeachParmas(res, [this.groupSell || 'pay_teacher_id'])
     },
     getTeamDetail(res) {
       this.setSeachParmas(res, [this.teamDetail || 'last_team_id'])
