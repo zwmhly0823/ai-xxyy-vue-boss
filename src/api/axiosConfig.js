@@ -9,7 +9,12 @@
 import axios from './axios'
 import { getToken } from '@/utils/auth'
 // import { baseUrl } from '@/utils/index'
-
+// 转json
+function strToJson(str) {
+  // eslint-disable-next-line no-new-func
+  var json = new Function('return ' + str)()
+  return json
+}
 export default {
   // 判断是否需要token
   judgeToken() {
@@ -51,6 +56,33 @@ export default {
    * @param {Object} params [请求时携带的参数]
    */
   post(url, params) {
+    if (process.env.NODE_ENV === 'development') {
+      if (url.match(/graphql/)) {
+        const reg = /[\s][\w]+\(query:/
+        const matchs = params.query.match(reg)
+        if (matchs && matchs.length) {
+          const tail = matchs[0].replace(/\s/, '').replace('(query:', '')
+          url += `/${tail}`
+        }
+        const regParam = /\(query:[\w\W]+\)/
+        const matchsParam = params.query.match(regParam)
+        if (matchsParam && matchsParam.length) {
+          const str = matchsParam[0]
+            .replace(/"{/g, '{')
+            .replace(/}"/g, '}')
+            .replace('(', '{')
+            .replace(')', '}')
+            .replace(/\\/g, '')
+          try {
+            // console.log(strToJson(str))
+            const visableData = strToJson(str)
+            params = { ...params, data: visableData }
+          } catch (error) {
+            console.log(error)
+          }
+        }
+      }
+    }
     if (this.judgeToken()) {
       return new Promise((resolve, reject) => {
         axios

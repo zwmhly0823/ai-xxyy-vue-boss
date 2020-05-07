@@ -10,7 +10,8 @@
   <div class="search-item small threeSelect">
     <el-cascader
       size="mini"
-      placeholder="销售部"
+      class="item-style"
+      :placeholder="placeholder"
       :options="departmentList"
       :props="{
         multiple: true,
@@ -32,6 +33,10 @@ export default {
     name: {
       type: String,
       default: ''
+    },
+    placeholder: {
+      type: String,
+      default: '销售部'
     },
     // 有时只需获取 deptid，无须获取teacherids
     onlyDept: {
@@ -79,7 +84,11 @@ export default {
     text-overflow: ellipsis !important;
   }
 }
-
+.search-item {
+  .item-style {
+    width: 140px;
+  }
+}
 .el-cascader-panel {
   max-height: 300px !important;
 }

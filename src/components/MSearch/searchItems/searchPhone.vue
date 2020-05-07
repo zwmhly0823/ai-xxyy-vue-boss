@@ -8,30 +8,27 @@
  -->
 <template>
   <div class="search-item small">
-    <el-form @submit.native.prevent>
-      <el-autocomplete
-        size="mini"
-        name="vals"
-        clearable
-        class="inline-input"
-        v-model="input"
-        :fetch-suggestions="querySearch"
-        :placeholder="tip"
-        :trigger-on-focus="false"
-        :popper-class="+onlyPhone ? 'ppName' : ''"
-        @select="inputHandler"
-      >
-        <i class="el-icon-search el-input__icon" slot="suffix"></i>
-        <template slot-scope="{ item }">
-          <div style="display:flex">
-            <div class="name">{{ item.mobile || '-' }}</div>
-            <div class="name" v-if="+onlyPhone">
-              /{{ item.wechat_nikename || '-' }}
-            </div>
+    <el-autocomplete
+      size="mini"
+      name="vals"
+      class="inline-input"
+      v-model="input"
+      :fetch-suggestions="querySearch"
+      :placeholder="tip"
+      :trigger-on-focus="false"
+      :popper-class="+onlyPhone ? 'ppName' : ''"
+      @select="inputHandler"
+    >
+      <i class="el-icon-search el-input__icon" slot="suffix"></i>
+      <template slot-scope="{ item }">
+        <div style="display:flex">
+          <div class="name">{{ item.mobile || '-' }}</div>
+          <div class="name" v-if="+onlyPhone">
+            /{{ item.wechat_nikename || '-' }}
           </div>
-        </template></el-autocomplete
-      >
-    </el-form>
+        </div>
+      </template></el-autocomplete
+    >
   </div>
 </template>
 
@@ -118,7 +115,7 @@ export default {
     },
     createFilter(queryString) {
       const queryParams = `{"mobile":"${queryString}","team_id":"${this.teamId}","team_type":"${this.teamType}"}`
-      return axios
+      return axios // 未加工
         .post('/graphql/user', {
           query: `{
               blurrySearch(query: ${JSON.stringify(queryParams)}) {

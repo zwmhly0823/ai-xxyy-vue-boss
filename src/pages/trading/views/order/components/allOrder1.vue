@@ -21,12 +21,12 @@
           >
             <div class="oride-top">已完成</div>
             <div class="oride-middle">
-              <em>{{ statisticsObj.payed.count || 0 }}</em
-              >笔
+              <em>{{ +statisticsObj.payed.value.toFixed(2) || 0 }}</em
+              >元 {{ statisticsObj.payed.count || 0 }}笔
             </div>
-            <div class="oride-bottom">
+            <!-- <div class="oride-bottom">
               {{ +statisticsObj.payed.value.toFixed(2) || 0 }}元
-            </div>
+            </div> -->
           </div>
         </el-col>
         <!-- 未支付 0，1 -->
@@ -38,12 +38,14 @@
           >
             <div class="oride-top">未支付</div>
             <div class="oride-middle">
-              <em>{{ statisticsObj.topay.count }}</em
-              >笔
+              <!-- <em>{{ statisticsObj.topay.count }}</em
+              >笔 -->
+              <em>{{ +statisticsObj.topay.value.toFixed(2) }}</em
+              >元 {{ statisticsObj.topay.count }}笔
             </div>
-            <div class="oride-bottom">
+            <!-- <div class="oride-bottom">
               {{ +statisticsObj.topay.value.toFixed(2) }}元
-            </div>
+            </div> -->
           </div>
         </el-col>
         <!-- 退费： 退费中 5，已退费 6，7 -->
@@ -54,12 +56,16 @@
             @click="chnageStatus('5,6,7')"
           >
             <div class="oride-top">退费</div>
-            <div class="oride-middle">
+            <!-- <div class="oride-middle">
               <em>{{ statisticsObj.refund.count }}</em
               >笔
             </div>
             <div class="oride-bottom">
               {{ +statisticsObj.refund.value.toFixed(2) }}元
+            </div> -->
+            <div class="oride-middle">
+              <em>{{ +statisticsObj.refund.value.toFixed(2) }}</em
+              >元 {{ statisticsObj.refund.count }}笔
             </div>
           </div>
         </el-col>
@@ -72,14 +78,16 @@
           >
             <div class="oride-top">全部订单</div>
             <div class="oride-middle">
+              <em>{{ +statisticsObj.total.value.toFixed(2) }}</em
+              >元 {{ statisticsObj.total.count }}笔
+            </div>
+            <!-- <div class="oride-middle">
               <em>{{ statisticsObj.total.count }}</em
               >笔
             </div>
             <div class="oride-bottom">
               <span>{{ +statisticsObj.total.value.toFixed(2) }}元</span>
-              <!-- <span>{{ littleBear.value }}币</span>
-              <span>{{ recommended.value }}宝石</span> -->
-            </div>
+            </div> -->
           </div>
         </el-col>
       </el-row>
@@ -88,7 +96,7 @@
     <el-divider></el-divider>
     <!-- tab列表 -->
     <article class="bottom-box">
-      <table-order
+      <table-order1
         :topic="topic"
         :status="status"
         :search="searchIn"
@@ -98,11 +106,11 @@
   </div>
 </template>
 <script>
-import tableOrder from './tableOrder'
+import tableOrder1 from './tableOrder1'
 import { isToss } from '@/utils/index'
 export default {
   components: {
-    tableOrder
+    tableOrder1
   },
   props: {
     // 当前tab - 商品主题
@@ -237,6 +245,7 @@ export default {
   src: url('~@/assets/fonts/TG-TYPE-Bold.otf');
 } //引入本地字体数字文件
 .top-box {
+  margin-top: -20px;
   width: 100%;
   height: 100%;
   .grid-content {
@@ -257,7 +266,7 @@ export default {
     font-size: 14px;
     color: #4d4d4d;
     text-align: center;
-    padding: 10px 0;
+    padding: 10px 0 20px;
     em {
       margin-right: 5px;
       font-size: 24px;
@@ -282,12 +291,12 @@ export default {
 </style>
 <style lang="scss">
 .order-call {
-  .el-row {
-    padding: 20px 0 20px 10px;
-    &:last-child {
-      margin-bottom: 0;
-    }
-  }
+  // .el-row {
+  //   padding: 20px 0 20px 10px;
+  //   &:last-child {
+  //     margin-bottom: 0;
+  //   }
+  // }
   .el-col {
     border-radius: 4px;
   }

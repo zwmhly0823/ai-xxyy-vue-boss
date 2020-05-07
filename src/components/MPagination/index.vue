@@ -43,7 +43,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters } from 'vuex' // 帮助方法不省事啊
 export default {
   props: {
     // 每页显示条数
@@ -146,7 +146,7 @@ export default {
   bottom: 10px;
   right: 10px;
   z-index: 1000;
-  padding: 8px 15px;
+  padding: 8px 15px !important;
   color: #4d4d4d;
   transition: width 0.3s;
   // &.opened {

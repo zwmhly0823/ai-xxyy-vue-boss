@@ -3,8 +3,8 @@
  * @version: 
  * @Author: zhubaodong
  * @Date: 2020-03-26 16:30:11
- * @LastEditors: zhubaodong
- * @LastEditTime: 2020-04-03 17:49:45
+ * @LastEditors: liukun
+ * @LastEditTime: 2020-04-29 10:16:06
  -->
 <template>
   <div class="search-item">
@@ -18,12 +18,13 @@
       prefix-icon="none"
       :picker-options="pickerOptions"
       range-separator="至"
-      :start-placeholder="`${datePlaceholder}start`"
-      :end-placeholder="`${datePlaceholder}end`"
+      :start-placeholder="`${startPlaceholder}`"
+      :end-placeholder="`${endPlaceholder}`"
       align="right"
       @change="changeHandler"
     >
     </el-date-picker>
+    <slot name="buttons"></slot>
   </div>
 </template>
 
@@ -34,9 +35,13 @@ export default {
       type: String,
       default: 'octime'
     },
-    datePlaceholder: {
+    startPlaceholder: {
       type: String,
-      default: '下单时间'
+      default: '开始时间'
+    },
+    endPlaceholder: {
+      type: String,
+      default: '结束时间'
     }
   },
   components: {},
@@ -88,7 +93,7 @@ export default {
           }
         ],
         disabledDate: (res) => {
-          console.log(res, 'resdata')
+          // console.log(res, 'resdata')
           return false
         }
       },
@@ -109,7 +114,12 @@ export default {
       this.$emit('result', '')
     }
   },
-  created() {},
+  created() {
+    this.$root.$on('fourpoint', (r) => {
+      this.timeData = r
+      this.changeHandler(r)
+    })
+  },
   mounted() {}
 }
 </script>

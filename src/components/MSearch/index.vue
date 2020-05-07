@@ -426,7 +426,7 @@ export default {
     },
     // 选择手机号
     getPhoneHander(res) {
-      console.log(res, '回调res')
+      console.log(res, '回调res') // 得到uid
       this.setSeachParmas(res, [this.phone || 'umobile'])
     },
     // 选择订单号
