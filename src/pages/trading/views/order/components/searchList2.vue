@@ -37,28 +37,39 @@
       <br />
       <el-form-item label="体验课:" :class="{ [$style.marginer]: true }">
         <div class="row_colum">
-          <department placeholder="全部销售组" @result="getDepartment" />
-          <search-stage
+          <department
+            name="pay_teacher_id"
+            placeholder="全部销售组"
+            @result="getDepartment"
+          />
+          <group-sell
+            :teacherscope="teacherscope"
+            @result="selectPayTeacher"
+            name="pay_teacher_id"
             class="margin_l10"
+          />
+          <search-stage
+            :teacher-id="teacherscope_trial || teacherscope"
+            class="margin_l10"
+            name="trial_stage"
             placeholder="全部体验课排期"
             type="0"
-            @result="selectSchedule"
+            @result="selectScheduleTrial"
           />
           <hardLevel
             :class="['margin_l10']"
+            placeholder="体验课难度"
             style="width:140px"
-            @result="supCallBack"
+            name="trial_sup"
+            @result="supCallBackTrial"
           />
-          <search-team-name
+          <search-trial-team-name
             teamnameType="0"
-            @result="getTeamName"
-            :name="searchTeamName"
-            class="margin_l10"
-          />
-          <group-sell
-            @result="selectSellTeacher"
-            :name="groupSell"
-            class="margin_l10"
+            :term="term_trial"
+            :teacher-id="teacherscope_trial || teacherscope"
+            @result="getTrialTeamName"
+            name="trial_team_id"
+            :class="['margin_l10']"
           />
         </div>
       </el-form-item>
@@ -84,8 +95,8 @@ import GroupSell from '@/components/MSearch/searchItems/groupSell'
 // import MoreVersionBox from '@/components/MSearch/searchItems/moreVersionBox'
 // import OrderType from '@/components/MSearch/searchItems/orderType'
 import Department from '@/components/MSearch/searchItems/department'
-import SearchTeamName from '@/components/MSearch/searchItems/searchTeamName'
-// import SearchTrialTeamName from '@/components/MSearch/searchItems/searchTrialTeamName'
+// import SearchTeamName from '@/components/MSearch/searchItems/searchTeamName'
+import SearchTrialTeamName from '@/components/MSearch/searchItems/searchTrialTeamName'
 // import Schedule from '@/components/MSearch/searchItems/schedule'
 import SearchStage from '@/components/MSearch/searchItems/searchStage'
 import { isToss } from '@/utils/index'
@@ -264,14 +275,17 @@ export default {
     // MoreVersionBox,
     // OrderType,
     Department,
-    SearchTeamName,
-    // SearchTrialTeamName,
+    // SearchTeamName,
+    SearchTrialTeamName,
     // Schedule,
     SearchStage
   },
 
   data() {
     return {
+      teacherscope: null, // 当前选择的体验课老师范围（销售组查询）
+      teacherscope_trial: null, // 当前选择的体验课老师范围
+      term_trial: null, // 当前选择体验课排期
       showErr: false,
       errTips: '搜索条件不能为空',
       must: [],
@@ -406,17 +420,48 @@ export default {
       this.setSeachParmas(res, [this.orderStatus || 'order_status'])
     },
     getDepartment(res) {
+      this.teacherscope = res.pay_teacher_id || null
       this.setSeachParmas(res, [this.department || 'department'], 'terms')
+    },
+    // 选择社群销售
+    selectPayTeacher(res) {
+      if (!res.pay_teacher_id || res.pay_teacher_id.length === 0) {
+        this.teacherscope_trial = null
+        if (this.teacherscope && this.teacherscope.length > 0) {
+          res = {
+            pay_teacher_id: this.teacherscope
+          }
+        } else {
+          res = ''
+        }
+      } else {
+        this.teacherscope_trial = res.pay_teacher_id
+      }
+      this.setSeachParmas(
+        res,
+        [this.pay_teacher_id || 'pay_teacher_id'],
+        'terms'
+      )
+    },
+    // 体验课排期
+    selectScheduleTrial(res) {
+      if (res) {
+        this.term_trial = res.trial_stage
+      } else {
+        this.term_trial = null
+      }
+      this.setSeachParmas(res, [this.trial_stage || 'trial_stage'])
+    },
+    // 体验课难度
+    supCallBackTrial(res) {
+      console.log(res, 'res')
+      this.setSeachParmas(res, [this.trial_sup || 'trial_sup'], 'terms')
     },
     getTeamName(res) {
       this.setSeachParmas(res, [this.searchTeamName || 'team_name'], 'terms')
     },
     getTrialTeamName(res) {
-      this.setSeachParmas(
-        res,
-        [this.searchTrialTeamName || 'team_trial_name'],
-        'terms'
-      )
+      this.setSeachParmas(res, [this.trial_team_id || 'trial_team_id'], 'terms')
     },
 
     /**  处理接收到的查询参数
