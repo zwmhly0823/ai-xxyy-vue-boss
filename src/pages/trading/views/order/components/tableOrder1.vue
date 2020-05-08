@@ -1,13 +1,13 @@
 <template>
   <div class="title-box">
     <el-table :data="orderList">
-      <el-table-column label="用户信息" prop="user" width="120">
+      <el-table-column label="用户信息" prop="user" min-width="120" fixed>
         <template slot-scope="scope">
           <p>{{ scope.row.user ? scope.row.user.username || '-' : '-' }}</p>
           <p>{{ scope.row.user ? scope.row.user.mobile || '-' : '-' }}</p>
         </template>
       </el-table-column>
-      <el-table-column label="归属地" prop="QCellCore" width="120">
+      <el-table-column label="归属地" prop="QCellCore" min-width="120">
         <template slot-scope="scope">
           <p>
             {{ scope.row.user ? scope.row.user.mobile_province || '-' : '-' }} ·
@@ -15,7 +15,7 @@
           </p>
         </template>
       </el-table-column>
-      <el-table-column label="商品信息" width="160">
+      <el-table-column label="商品信息" min-width="200">
         <template slot-scope="scope">
           <p>
             {{
@@ -37,7 +37,7 @@
           </p>
         </template>
       </el-table-column>
-      <el-table-column label="体验课班级" width="150">
+      <el-table-column label="体验课班级" min-width="150">
         <template slot-scope="scope">
           <p>
             {{
@@ -48,7 +48,7 @@
           </p>
         </template>
       </el-table-column>
-      <el-table-column label="社群销售" width="150">
+      <el-table-column label="社群销售" min-width="150">
         <template slot-scope="scope">
           <p>{{ scope.row.salesman ? scope.row.salesman.realname : '-' }}</p>
           <p>
@@ -60,14 +60,14 @@
           </p>
         </template>
       </el-table-column>
-      <el-table-column label="系统课班级" width="150">
+      <el-table-column label="系统课班级" min-width="150">
         <template slot-scope="scope">
           <p>
             {{ scope.row.team ? scope.row.team.team_name : '-' }}
           </p>
         </template>
       </el-table-column>
-      <el-table-column label="服务老师" width="120">
+      <el-table-column label="服务老师" min-width="120">
         <template slot-scope="scope">
           <p>
             {{ scope.row.teacher ? scope.row.teacher.realname : '-' }}
@@ -85,7 +85,7 @@
           </p>
         </template>
       </el-table-column>
-      <el-table-column label="下单时间·订单号" width="180">
+      <el-table-column label="下单时间·订单号" min-width="180">
         <template slot-scope="scope">
           <p>
             {{ scope.row.ctime ? scope.row.ctime : '-' }}
@@ -99,20 +99,20 @@
           </p>
         </template>
       </el-table-column>
-      <el-table-column label="订单来源">
+      <el-table-column label="订单来源" min-width="120">
         <template slot-scope="scope">
           <p>
             {{ scope.row.channel ? scope.row.channel.channel_outer_name : '-' }}
           </p>
         </template>
       </el-table-column>
-      <el-table-column label="订单状态">
+      <el-table-column label="订单状态" min-width="100">
         <template slot-scope="scope">
           {{ scope.row.order_status ? scope.row.order_status : '-' }}
         </template>
       </el-table-column>
 
-      <el-table-column label="关联物流" width="150">
+      <el-table-column label="关联物流" min-width="170">
         <template slot-scope="scope">
           <p
             :class="{ 'primary-color': scope.row.express.express_total > 0 }"
