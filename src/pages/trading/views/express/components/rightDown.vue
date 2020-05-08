@@ -239,6 +239,7 @@ import axios from '@/api/axios'
 import { isToss, formatData } from '@/utils/index'
 import { mapState } from 'vuex'
 import expressDetail from '../../components/expressDetail'
+
 export default {
   props: ['dataExp', 'search'],
   components: {
@@ -348,7 +349,8 @@ export default {
       realnameId: '',
       teamId: '',
       ManagementList: {},
-      current: {}
+      current: {},
+      teacherIds: ''
     }
   },
   methods: {
@@ -540,12 +542,22 @@ export default {
     handleExpressTo(row, column, event) {
       console.log(row + column + event, 'row, column, event')
     },
-
+    async getTeacherByRole() {
+      const teacherId = this.teacherId
+      if (!teacherId) return
+      const teachers = await this.$http.Permission.getAllTeacherByRole({
+        teacherId
+      })
+      this.teacherIds = teachers
+      console.log(teachers, 'app-container')
+    },
     getExpressList(id) {
       let timeType = {}
       if (this.teacherId) {
-        this.teacherId && (timeType.teacher_id = this.teacherId)
+        this.getTeacherByRole()
+        this.teacherId && (timeType.teacher_id = this.teacherIds)
       }
+
       this.searchIn.forEach((item) => {
         if (item && item.term) {
           if (item.term.user_id) {
