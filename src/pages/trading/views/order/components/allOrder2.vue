@@ -21,11 +21,8 @@
           >
             <div class="oride-top">已完成</div>
             <div class="oride-middle">
-              <em>{{ statisticsObj.payed.count || 0 }}</em
-              >笔
-            </div>
-            <div class="oride-bottom">
-              {{ +statisticsObj.payed.value.toFixed(2) || 0 }}元
+              <em>{{ +statisticsObj.payed.value.toFixed(2) || 0 }}</em
+              >元 {{ statisticsObj.payed.count || 0 }}笔
             </div>
           </div>
         </el-col>
@@ -38,11 +35,8 @@
           >
             <div class="oride-top">未支付</div>
             <div class="oride-middle">
-              <em>{{ statisticsObj.topay.count }}</em
-              >笔
-            </div>
-            <div class="oride-bottom">
-              {{ +statisticsObj.topay.value.toFixed(2) }}元
+              <em>{{ +statisticsObj.topay.value.toFixed(2) }}</em
+              >元 {{ statisticsObj.topay.count }}笔
             </div>
           </div>
         </el-col>
@@ -55,11 +49,8 @@
           >
             <div class="oride-top">退费</div>
             <div class="oride-middle">
-              <em>{{ statisticsObj.refund.count }}</em
-              >笔
-            </div>
-            <div class="oride-bottom">
-              {{ +statisticsObj.refund.value.toFixed(2) }}元
+              <em>{{ +statisticsObj.refund.value.toFixed(2) }}</em
+              >元 {{ statisticsObj.refund.count }}笔
             </div>
           </div>
         </el-col>
@@ -72,13 +63,8 @@
           >
             <div class="oride-top">全部订单</div>
             <div class="oride-middle">
-              <em>{{ statisticsObj.total.count }}</em
-              >笔
-            </div>
-            <div class="oride-bottom">
-              <span>{{ +statisticsObj.total.value.toFixed(2) }}元</span>
-              <!-- <span>{{ littleBear.value }}币</span>
-              <span>{{ recommended.value }}宝石</span> -->
+              <em>{{ +statisticsObj.total.value.toFixed(2) }}元</em>
+              {{ statisticsObj.total.count }}笔
             </div>
           </div>
         </el-col>
@@ -237,6 +223,7 @@ export default {
   src: url('~@/assets/fonts/TG-TYPE-Bold.otf');
 } //引入本地字体数字文件
 .top-box {
+  margin-top: -20px;
   width: 100%;
   height: 100%;
   .grid-content {
@@ -282,12 +269,6 @@ export default {
 </style>
 <style lang="scss">
 .order-call {
-  .el-row {
-    padding: 20px 0 20px 10px;
-    &:last-child {
-      margin-bottom: 0;
-    }
-  }
   .el-col {
     border-radius: 4px;
   }
