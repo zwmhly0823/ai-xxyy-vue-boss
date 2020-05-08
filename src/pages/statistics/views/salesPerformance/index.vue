@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-04-02 15:35:27
  * @LastEditors: Shentong
- * @LastEditTime: 2020-05-07 16:56:51
+ * @LastEditTime: 2020-05-07 22:34:28
  -->
 <template>
   <el-row type="flex" class="app-main height schedule-container">
@@ -129,7 +129,7 @@
               v-model="activeName"
               @tab-click="statisticsTypehandleClick"
             >
-              <!-- <el-tab-pane label="转化统计" name="conversion"> </el-tab-pane> -->
+              <el-tab-pane label="转化统计" name="conversion"> </el-tab-pane>
               <!-- TODO: -->
               <el-tab-pane label="参课统计" name="attendClass"> </el-tab-pane>
               <el-tab-pane label="完课统计" name="finishClass"> </el-tab-pane>
@@ -476,7 +476,7 @@ export default {
       // tabs标签默认状态
       selectName: '更多',
       // 统计表title
-      activeName: 'attendClass',
+      activeName: 'conversion',
       tabIndex: 0,
       // 状态index
       btnIndex: 0,
