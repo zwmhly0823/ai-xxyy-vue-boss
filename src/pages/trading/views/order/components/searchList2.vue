@@ -17,9 +17,9 @@
         <ChannelSelect @result="getChannel" />
       </el-form-item>
 
-      <el-form-item label="物流状态:" :class="{ [$style.marginer]: true }">
+      <!-- <el-form-item label="物流状态:" :class="{ [$style.marginer]: true }">
         <orderStatus @result="getorderStatus" />
-      </el-form-item>
+      </el-form-item> -->
       <br />
 
       <el-form-item label="下单时间:" :class="{ [$style.marginer]: true }">
@@ -107,7 +107,7 @@
 <script>
 import hardLevel from '@/components/MSearch/searchItems/hardLevel.vue' // add
 import orderSearch from '@/components/MSearch/searchItems/orderSearch.vue' // add
-import orderStatus from '@/components/MSearch/searchItems/orderStatus.vue' // add
+// import orderStatus from '@/components/MSearch/searchItems/orderStatus.vue' // add
 import DatePicker from '@/components/MSearch/searchItems/datePicker.vue'
 import ChannelSelect from '@/components/MSearch/searchItems/channel.vue'
 import GroupSell from '@/components/MSearch/searchItems/groupSell'
@@ -272,7 +272,7 @@ export default {
   },
 
   components: {
-    orderStatus,
+    // orderStatus,
     hardLevel,
     orderSearch,
     ChannelSelect,

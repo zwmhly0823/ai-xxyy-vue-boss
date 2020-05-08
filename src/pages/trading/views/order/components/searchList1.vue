@@ -561,6 +561,9 @@ export default {
     }
   },
   created() {
+    for (let i = 0; i < 4; i++) {
+      this['cur' + i] = false
+    }
     const teacherId = isToss()
     if (teacherId) {
       this.teacherId = teacherId
