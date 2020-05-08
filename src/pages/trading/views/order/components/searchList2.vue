@@ -14,7 +14,7 @@
       </el-form-item>
 
       <el-form-item label="订单来源:" :class="{ [$style.marginer]: true }">
-        <ChannelSelect @result="getChannel" />
+        <ChannelSelect @result="getChannel" name="pay_channel" />
       </el-form-item>
 
       <!-- <el-form-item label="物流状态:" :class="{ [$style.marginer]: true }">
@@ -312,37 +312,17 @@ export default {
     // 选择渠道
     getChannel(res) {
       console.info(res, 'lll')
-      this.setSeachParmas(res, [this.channel || 'channelid'], 'terms')
-    },
-    // 主题
-    getProductTopic(res) {
-      console.log(res, 'res')
-      this.setSeachParmas(res, [this.topicType || 'topicType'])
-    },
-    // 期数
-    stageCallBack(res) {
-      console.log(res, 'res')
-      this.setSeachParmas(res, [this.stage || 'stage'], 'terms')
-    },
-    // 排期
-    selectSchedule(res) {
-      console.log(res, 'res')
-      this.setSeachParmas(res, [this.schedule || 'id'])
+      this.setSeachParmas(res, [this.channel || 'pay_channel'], 'terms')
     },
     // 难度
     supCallBack(res) {
       console.log(res, 'res')
       this.setSeachParmas(res, [this.sup || 'sup'], 'terms')
     },
-    // 级别
-    levelCallBack(res) {
-      console.log(res, 'res')
-      this.setSeachParmas(res, [this.level || 'current_level'], 'terms')
-    },
     // 选择订单下单时间
     getDate(res) {
       console.log(res, 'lll')
-      this.setSeachParmas(res, [this.date || 'octime'], 'range')
+      this.setSeachParmas(res, [this.date || 'ctime'], 'range')
     },
     // 4点外移
     today() {
@@ -456,14 +436,6 @@ export default {
       const { must, should } = this
       const temp = name === 'must' ? must : should
       key.forEach((k) => {
-        // temp.forEach((item, index) => {
-        //   if (
-        //     JSON.parse(item[extraKey])[k] &&
-        //     (JSON.parse(item[extraKey])[k] ||
-        //       +JSON.parse(item[extraKey])[k] === 0)
-        //   )
-        //     temp.splice(index, 1)
-        // })
         temp.forEach((item, index) => {
           if (
             item[extraKey] &&
