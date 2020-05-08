@@ -11,7 +11,7 @@
     <el-form @submit.native.prevent>
       <el-select
         v-model="teacherId"
-        multiple
+        :multiple="isMultiple"
         filterable
         remote
         :reserve-keyword="true"
@@ -44,6 +44,10 @@ export default {
     tip: {
       type: String,
       default: '社群销售'
+    },
+    isMultiple: {
+      type: Boolean,
+      default: false
     },
     teacherscope: {
       type: Array,
