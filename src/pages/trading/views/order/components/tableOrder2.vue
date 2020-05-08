@@ -71,7 +71,7 @@
       <el-table-column label="体验课班级" width="150">
         <template slot-scope="scope">
           {{
-            trialTeam[scope.row.uid] ? trialTeam[scope.row.uid].team_name : '-'
+            trialTeam[scope.row.id] ? trialTeam[scope.row.id].team_name : '-'
           }}
         </template>
       </el-table-column>
