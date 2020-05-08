@@ -4,7 +4,7 @@
  * @Author: Lukun
  * @Date: 2020-04-15 15:18:49
  * @LastEditors: Lukun
- * @LastEditTime: 2020-05-08 15:33:14
+ * @LastEditTime: 2020-05-08 15:58:32
  -->
 <template>
   <div class="container">
@@ -154,7 +154,9 @@ export default {
       })
         .catch((err) => console.log(err))
         .then((res) => {
-          const isNull = res.payload[0].data.length
+          const isNull = res.payload[0].data.filter((item) => {
+            return Object.keys(item).length > 0
+          })
           if (res && isNull > 0) {
             this.waitFor = false
             const lastData = {}
