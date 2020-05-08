@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-15 20:35:57
  * @LastEditors: Shentong
- * @LastEditTime: 2020-05-06 20:27:34
+ * @LastEditTime: 2020-05-08 16:37:35
  -->
 <template>
   <div class="third-step">
@@ -127,7 +127,7 @@
                 <el-option
                   v-for="(item, i) in productVersion"
                   :key="i"
-                  :label="item.name"
+                  :label="item.value"
                   :value="item.value"
                 >
                 </el-option>
@@ -181,7 +181,7 @@
   </div>
 </template>
 <script>
-// import { Loading } from 'element-ui'
+import _ from 'lodash'
 import EleTable from '@/components/Table/EleTable'
 import { mapGetters } from 'vuex'
 export default {
@@ -189,6 +189,7 @@ export default {
   data() {
     return {
       tableData: [],
+      isValidate: true,
       totalElements: 0,
       flags: {
         loading: true
@@ -220,7 +221,7 @@ export default {
     EleTable
   },
   watch: {},
-  created() {
+  async created() {
     const { courseType = 0 } = this.$route.params
     // 根据老师ids获取招生排期设置中老师配置信息 TODO:
     const params = {
@@ -228,6 +229,7 @@ export default {
       period: this.schedulePeriod,
       ids: this.scheduleTeacherId
     }
+    await this.getCourseVersion()
     this.scheduleTeacherId.length && this.getTeacherConfigList(params)
   },
   methods: {
@@ -263,7 +265,7 @@ export default {
         })
 
         this.tableData = payload
-        console.log('this.tableData ', this.tableData)
+        // console.log('this.tableData ', this.tableData)
       } catch (err) {
         console.log('222', err)
         this.$message({
@@ -272,6 +274,20 @@ export default {
         })
       }
       this.flags.loading = false
+    },
+    // 获取随材版本
+    async getCourseVersion() {
+      try {
+        const { payload = [] } = await this.$http.Operating.getCourseVersion({
+          type: 'courseVersion'
+        })
+        this.productVersion = payload
+      } catch (err) {
+        this.$message({
+          message: '获取随材版本出错',
+          type: 'warning'
+        })
+      }
     },
     //  保存 招生排期 设置
     async saveScheduleConfig(params, cb) {
@@ -303,24 +319,62 @@ export default {
     },
     // 翻页emit
     pageChange_handler() {},
+    // validate
+    validateTableForm(data) {
+      console.log('data', data)
+      this.isValidate = true
+
+      for (var i = 0; i < data.length; i++) {
+        const { enroll = [] } = data[i]
+        for (var j = 0; j < enroll.length; j++) {
+          enroll[j].courseCategory = enroll[j].courseCategory
+            ? enroll[j].courseCategory.join()
+            : ''
+
+          if (enroll[j].status) {
+            if (!enroll[j].teamSize) {
+              this.warningMessage('请输入班级人数')
+              this.isValidate = false
+              break
+            } else if (!enroll[j].sumTeamSize) {
+              this.warningMessage('请输入计划招生人数')
+              this.isValidate = false
+              break
+            } else if (!enroll[j].courseVersion) {
+              this.warningMessage('随材版本为必选项')
+              this.isValidate = false
+              break
+            } else if (!enroll[j].courseCategory) {
+              this.warningMessage('课程类型为必选项')
+              this.isValidate = false
+              break
+            }
+          }
+        }
+      }
+    },
     // 上一步，下一步
     async stepOpt(type) {
       const { courseType = 0 } = this.$route.params
-      this.tableData.forEach((item) => {
-        const { enroll = [] } = item
-        enroll.forEach((i) => {
-          i.courseCategory = i.courseCategory ? i.courseCategory.join() : ''
-        })
+      const tableData = _.cloneDeep(this.tableData)
+      this.validateTableForm(tableData)
+      if (this.isValidate) {
+        const params = {
+          courseType,
+          period: this.schedulePeriod,
+          body: tableData
+        }
+        const callback = () => {
+          this.$emit('listenStepStatus', type)
+        }
+        await this.saveScheduleConfig(params, callback)
+      }
+    },
+    warningMessage(message) {
+      this.$message({
+        message,
+        type: 'warning'
       })
-      const params = {
-        courseType,
-        period: this.schedulePeriod,
-        body: this.tableData
-      }
-      const callback = () => {
-        this.$emit('listenStepStatus', type)
-      }
-      await this.saveScheduleConfig(params, callback)
     }
   }
 }
