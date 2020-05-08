@@ -284,8 +284,10 @@ export default {
     const teacherId = isToss()
     if (teacherId) {
       this.teacherId = teacherId
+      this.getTeacherByRole()
+    } else {
+      this.getExpressList(this.dataExp.id)
     }
-    this.getExpressList(this.dataExp.id)
   },
   mounted() {},
   data() {
@@ -542,20 +544,21 @@ export default {
     handleExpressTo(row, column, event) {
       console.log(row + column + event, 'row, column, event')
     },
-    async getTeacherByRole() {
+    getTeacherByRole() {
       const teacherId = this.teacherId
       if (!teacherId) return
-      const teachers = await this.$http.Permission.getAllTeacherByRole({
+      this.$http.Permission.getAllTeacherByRole({
         teacherId
+      }).then((res) => {
+        this.teacherIds = res
+        this.getExpressList(this.dataExp.id)
       })
-      this.teacherIds = teachers
-      console.log(teachers, 'app-container')
     },
+    // 传的id值为状态
     getExpressList(id) {
       let timeType = {}
       if (this.teacherId) {
-        this.getTeacherByRole()
-        this.teacherId && (timeType.teacher_id = this.teacherIds)
+        this.teacherId && (timeType.teacher_id = this.teacherIds.join())
       }
 
       this.searchIn.forEach((item) => {
