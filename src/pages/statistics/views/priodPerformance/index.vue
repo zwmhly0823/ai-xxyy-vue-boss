@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-02 15:35:27
  * @LastEditors: Shentong
- * @LastEditTime: 2020-05-07 12:16:24
+ * @LastEditTime: 2020-05-07 15:08:41
  -->
 <template>
   <el-row type="flex" class="app-main height schedule-container">
@@ -89,7 +89,7 @@
               searchStatistic.systemTotalAmount || '-'
             }}</span>
           </p>
-          <div class="orderStyle" ref="tableInner">
+          <div class="orderStyle" ref="tableContainer">
             <ele-table
               :tableHeight="tableHeight"
               :tableSize="'small'"
@@ -101,7 +101,7 @@
               @pageChange="pageChange_handler"
               class="mytable"
             >
-              <el-table-column label="转化总金额排名" width="110" align="center"
+              <!-- <el-table-column label="转化总金额排名" width="110" align="center"
                 ><template slot-scope="scope"
                   ><span v-if="tabQuery.totalSort === 'desc'"
                     >{{ scope.$index + calcIndex }}
@@ -110,7 +110,7 @@
                     Math.abs(totalElements - calcIndex - scope.$index + 1)
                   }}</span>
                 </template></el-table-column
-              >
+              > -->
               <el-table-column label="级别" width="50" align="center">
                 <template slot-scope="scope">
                   <span v-if="+scope.row.sup">{{ `S${scope.row.sup}` }}</span>
@@ -206,7 +206,7 @@
                 align="center"
                 min-width="100"
               >
-                <template slot="header">
+                <!-- <template slot="header">
                   <div @click="onSortAmount" class="sort-operate-box">
                     <span>支付总金额</span>
                     <div class="sort-icon-arrow">
@@ -219,8 +219,8 @@
                         :class="{ active: !amountStatus }"
                       ></i>
                     </div>
-                  </div> </template
-              ></el-table-column>
+                  </div> </template> -->
+              </el-table-column>
             </ele-table>
           </div>
         </el-scrollbar>
@@ -300,14 +300,15 @@ export default {
       return this.tabQuery.size * (this.tabQuery.page - 1) + 1
     }
   },
-  activated() {
-    const tableHeight =
-      document.body.clientHeight -
-      this.$refs.tableInner.getBoundingClientRect().top -
-      104
-    this.tableHeight = tableHeight + ''
+  created() {
     this.init()
+    this.$nextTick(() => {
+      const tableHeight =
+        document.body.clientHeight - this.$refs.tableContainer.offsetTop - 115
+      this.tableHeight = tableHeight + ''
+    })
   },
+  mounted() {},
   methods: {
     // TODO
     onSortConversion() {
@@ -642,10 +643,11 @@ export default {
     }
   }
   .tabs-operate {
+    height: 40px;
     background: #f5f7fa;
     display: flex;
     > div {
-      height: 40px;
+      height: 100%;
       padding: 0 20px;
       display: flex;
       justify-content: center;
@@ -663,7 +665,8 @@ export default {
     padding-left: 15px;
     color: #333;
     margin: 0;
-    min-width: 800px;
+    min-width: 1024px;
+    min-height: 20px;
     .label-val {
       margin-right: 20px;
     }
@@ -682,8 +685,9 @@ export default {
     font-size: 15px;
   }
   .sear-container {
+    height: 40px;
     display: flex;
-    margin: 10px;
+    margin-left: 10px;
     align-items: center;
     .el-card {
       border: 0;

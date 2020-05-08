@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-25 14:35:19
  * @LastEditors: Shentong
- * @LastEditTime: 2020-04-30 17:09:37
+ * @LastEditTime: 2020-05-07 14:27:57
  -->
 <template>
   <div class="table-searcher-container">
@@ -67,7 +67,7 @@ export default {
 <style lang="scss" scoped>
 .table-searcher-container {
   // height: 50px;
-  margin-bottom: 10px;
+  // margin-bottom: 10px;
   display: flex;
   align-items: center;
   .comp-cell {

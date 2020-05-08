@@ -1,3 +1,6 @@
+<!--
+  体验课
+-->
 <template>
   <div class="title-box">
     <el-table :data="orderList">
@@ -5,6 +8,14 @@
         <template slot-scope="scope">
           <p>{{ scope.row.user ? scope.row.user.username || '-' : '-' }}</p>
           <p>{{ scope.row.user ? scope.row.user.mobile || '-' : '-' }}</p>
+        </template>
+      </el-table-column>
+      <el-table-column label="归属地" prop="QCellCore" width="120">
+        <template slot-scope="scope">
+          <p>
+            {{ scope.row.user ? scope.row.user.mobile_province || '-' : '-' }} ·
+            {{ scope.row.user ? scope.row.user.mobile_city || '-' : '-' }}
+          </p>
         </template>
       </el-table-column>
       <el-table-column label="商品信息" width="160">
@@ -29,7 +40,7 @@
           </p>
         </template>
       </el-table-column>
-      <!-- <el-table-column label="体验课类型" v-if="topic === '4'">
+      <el-table-column label="体验课类型" width="150px">
         <template slot-scope="scope">
           <p>
             {{
@@ -43,8 +54,8 @@
             }}
           </p>
         </template>
-      </el-table-column> -->
-      <el-table-column label="订单来源">
+      </el-table-column>
+      <el-table-column label="订单来源" width="100">
         <template slot-scope="scope">
           <p>
             {{ scope.row.channel ? scope.row.channel.channel_outer_name : '-' }}
@@ -56,11 +67,7 @@
           {{ scope.row.order_status ? scope.row.order_status : '-' }}
         </template>
       </el-table-column>
-      <!-- <el-table-column label="班级信息" v-if="topic === '4'">
-        <template slot-scope="scope">
-          {{ scope.row.team ? scope.row.team.team_name : '-' }}
-        </template>
-      </el-table-column> -->
+
       <el-table-column label="体验课班级" width="150">
         <template slot-scope="scope">
           {{
@@ -89,30 +96,6 @@
           </div>
         </template>
       </el-table-column>
-      <!-- <el-table-column
-        label="销售部门"
-        v-if="topic === '4' || topic === '5'"
-        width="150"
-      >
-        <template slot-scope="scope">
-          <p v-if="scope.row.department && scope.row.department.department">
-            {{
-              scope.row.department && scope.row.department.department.pid
-                ? departmentObj[scope.row.department.department.pid]
-                  ? departmentObj[scope.row.department.department.pid].name
-                  : ''
-                : ''
-            }}
-          </p>
-          {{
-            scope.row.department && scope.row.department.department
-              ? departmentObj[scope.row.department.department.id]
-                ? departmentObj[scope.row.department.department.id].name
-                : '-'
-              : '-'
-          }}
-        </template>
-      </el-table-column> -->
       <el-table-column label="下单时间·订单号" width="180">
         <template slot-scope="scope">
           <p>
@@ -127,6 +110,7 @@
           </p>
         </template>
       </el-table-column>
+
       <el-table-column label="关联物流" width="150">
         <template slot-scope="scope">
           <p
@@ -135,7 +119,6 @@
               showExpressDetail(scope.row.id, scope.row.express.express_total)
             "
           >
-            <!-- <p> -->
             {{ scope.row.express ? scope.row.express.express_total || 0 : '-' }}
           </p>
           <!-- 体验课不显示最后一次物流状态 -->
@@ -267,19 +250,19 @@ export default {
       const statisticsQuery = []
       const queryObj = {}
       // TOSS
-      // if (this.teacherId) {
-      //   Object.assign(
-      //     queryObj,
-      //     this.topic === '4'
-      //       ? { last_teacher_id: this.teacherId }
-      //       : { pay_teacher_id: this.teacherId }
-      //   )
-      //   statisticsQuery.push(
-      //     this.topic === '4'
-      //       ? { term: { last_teacher_id: this.teacherId } }
-      //       : { term: { pay_teacher_id: this.teacherId } }
-      //   )
-      // }
+      if (this.teacherId) {
+        Object.assign(
+          queryObj,
+          this.topic === '4'
+            ? { last_teacher_id: this.teacherId }
+            : { pay_teacher_id: this.teacherId }
+        )
+        statisticsQuery.push(
+          this.topic === '4'
+            ? { term: { last_teacher_id: this.teacherId } }
+            : { term: { pay_teacher_id: this.teacherId } }
+        )
+      }
 
       const topicRelation = await this.$http.Product.topicRelationId(
         `${JSON.stringify({
@@ -429,7 +412,6 @@ export default {
 
       const query = ids.length > 0 ? JSON.stringify({ student_id: ids }) : ''
       const trial = await this.$http.Team.getTrialCourseList(query)
-      console.log(trial.data.StudentTrialCourseList)
 
       const teamIds =
         trial.data.StudentTrialCourseList &&
@@ -444,8 +426,6 @@ export default {
         result[item.order_no] = teamById[item.team_id]
         resultUid[item.student_id] = teamById[item.team_id]
       })
-      console.log(result, 'sdgasgasgdasgdas')
-
       this.trialTeam = result || {}
       this.trialTeamUid = resultUid || {}
       // return result

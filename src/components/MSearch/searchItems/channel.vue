@@ -3,14 +3,15 @@
  * @version:
  * @Author: zhubaodong
  * @Date: 2020-03-24 18:50:54
- * @LastEditors: panjian
- * @LastEditTime: 2020-04-29 15:08:16
+ * @LastEditors: liukun
+ * @LastEditTime: 2020-04-28 20:54:06
  -->
 <template>
   <div class="search-item small threeSelect">
     <el-cascader
       :placeholder="placeholder"
       size="mini"
+      class="item-style"
       @change="onSelect"
       :options="showDatas"
       :props="{
@@ -51,7 +52,7 @@ export default {
   },
   data() {
     return {
-      channelList: [],
+      channelList: [], // 渠道来源[]
       channelData: null,
       channelClassData: [],
       channelClassList: null, // 分类条件
@@ -66,9 +67,10 @@ export default {
   methods: {
     // 获取渠道来源 filter: 过滤关键词  eg：filter:"抖音"
     async getChannel() {
-      await axios
-        .post('/graphql/channel', {
-          query: `{
+      const {
+        data: { channelAllList }
+      } = await axios.post('/graphql/channel', {
+        query: `{
             channelAllList(size: 500) {
                 id
                 channel_class_id
@@ -76,16 +78,15 @@ export default {
               }
             }
           `
-        })
-        .then((res) => {
-          this.channelList = res.data.channelAllList
-        })
+      })
+      this.channelList = channelAllList
     },
     // 获取渠道来源分类 filter: 过滤关键词  eg：filter:"抖音"
     async getChannelClassList() {
-      await axios
-        .post('/graphql/v1/toss', {
-          query: `{
+      const {
+        data: { ChannelClassList }
+      } = await axios.post('/graphql/v1/toss', {
+        query: `{
               ChannelClassList(size: 500){
                 id
                 channel_class_parent_id
@@ -93,10 +94,8 @@ export default {
               }
             }
           `
-        })
-        .then((res) => {
-          this.channelClassList = res.data.ChannelClassList
-        })
+      })
+      this.channelClassList = ChannelClassList
     },
     formatData(classdata, classifiData) {
       // 第一级目录
@@ -145,7 +144,6 @@ export default {
         }
         return item
       })
-
       this.showDatas = result
       // console.log(firstNode, '第一梯队')
       // console.log(arrList, '分类数减去第一梯队')
@@ -155,6 +153,7 @@ export default {
       // console.log(this.showDatas)
     },
     onChange(data) {
+      // 没用啊🐻弟
       console.log(data)
       this.$emit(
         'result',
@@ -184,6 +183,11 @@ export default {
         height: 28px !important;
       }
     }
+  }
+}
+.search-item {
+  .item-style {
+    width: 140px;
   }
 }
 

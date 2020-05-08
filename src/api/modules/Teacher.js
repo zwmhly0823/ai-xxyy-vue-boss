@@ -1,10 +1,10 @@
-/*
+/**
  * @Descripttion: BOSS - 社群销售
  * @version:
  * @Author: Yangjiyong
  * @Date: 2020-04-07 13:52:26
- * @LastEditors: Shentong
- * @LastEditTime: 2020-04-18 11:56:23
+ * @LastEditors: panjian
+ * @LastEditTime: 2020-05-07 18:19:08
  */
 import axios from '../axiosConfig'
 
@@ -184,10 +184,15 @@ export default {
     })
   },
   // 新增微信 获取老师name id
-  TeacherList(query = '') {
+  TeacherList(query = '', value) {
+    const querys = {
+      bool: { must: [{ wildcard: { realname: `*${value}*` } }] }
+    }
+    if (query) querys.bool.must.push({ term: query })
+    const q = JSON.stringify(querys)
     return axios.post('/graphql/v1/teacher', {
       query: `{
-        TeacherList(query:${JSON.stringify(query)},size:100) {
+        TeacherListEx(query:${JSON.stringify(q)},size:100) {
           realname
           id
         }
@@ -233,6 +238,17 @@ export default {
           id
         }
        }`
+    })
+  },
+  getTeacherIdByCategory({ queryParams = '' }) {
+    return axios.get('/graphql/v1/toss', {
+      query: `{
+        StudentTeamList(
+            query: ${JSON.stringify(queryParams)}
+        ) {
+            teacher_id
+        }
+      }`
     })
   }
 }
