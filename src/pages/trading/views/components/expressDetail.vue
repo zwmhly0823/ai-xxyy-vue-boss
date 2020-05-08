@@ -229,12 +229,12 @@ export default {
       height: 550px;
       flex-direction: column;
       overflow-y: auto;
-      overflow: hidden;
       .inactive {
         text-align: center;
         padding: 4px;
         background-color: #f2f2f2;
         margin-bottom: 2px;
+        cursor: pointer;
       }
       .active {
         color: white;
@@ -253,7 +253,6 @@ export default {
       width: 100%;
       height: 700px;
       overflow-y: auto;
-      overflow: hidden;
       .img {
         position: absolute;
         right: 10px;

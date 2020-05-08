@@ -12,7 +12,7 @@
       v-model="result"
       size="mini"
       clearable
-      placeholder="系统课类型"
+      placeholder="全部系统课类型"
       @change="onChange"
       class="item-style"
     >
@@ -38,6 +38,10 @@ export default {
     return {
       result: null,
       typeList: [
+        // {
+        //   id: '0',
+        //   text: '体验课'
+        // },
         {
           id: '1',
           text: '月系统课'

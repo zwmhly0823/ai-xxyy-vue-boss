@@ -3,7 +3,7 @@
     <el-table :data="orderList">
       <el-table-column label="用户信息" prop="user" width="120">
         <template slot-scope="scope">
-          <p>{{ scope.row.user ? scope.row.user.nickname || '-' : '-' }}</p>
+          <p>{{ scope.row.user ? scope.row.user.username || '-' : '-' }}</p>
           <p>{{ scope.row.user ? scope.row.user.mobile || '-' : '-' }}</p>
         </template>
       </el-table-column>
@@ -29,31 +29,26 @@
           </p>
         </template>
       </el-table-column>
-      <el-table-column label="订单类型" v-if="topic === '5'">
+      <!-- <el-table-column label="体验课类型" v-if="topic === '4'">
         <template slot-scope="scope">
           <p>
             {{
-              scope.row.regtype
-                ? +scope.row.regtype === 2
-                  ? '首单'
-                  : +scope.row.regtype === 3
-                  ? '续费'
-                  : ''
+              scope.row.trial_course
+                ? +scope.row.trial_course.team_category === 0
+                  ? '双周'
+                  : +scope.row.trial_course.team_category === 3
+                  ? '单周'
+                  : '-'
                 : '-'
             }}
           </p>
         </template>
-      </el-table-column>
-      <el-table-column label="订单来源" v-if="topic === '4' || topic === '5'">
+      </el-table-column> -->
+      <el-table-column label="订单来源">
         <template slot-scope="scope">
           <p>
             {{ scope.row.channel ? scope.row.channel.channel_outer_name : '-' }}
           </p>
-        </template>
-      </el-table-column>
-      <el-table-column label="订单类型" v-if="topic !== '4' && topic !== '5'">
-        <template slot-scope="scope">
-          {{ scope.row.regtype_text ? scope.row.regtype_text : '-' }}
         </template>
       </el-table-column>
       <el-table-column label="订单状态">
@@ -66,27 +61,35 @@
           {{ scope.row.team ? scope.row.team.team_name : '-' }}
         </template>
       </el-table-column> -->
-      <el-table-column
-        label="体验课班级"
-        v-if="topic === '5' || topic === '4'"
-        width="150"
-      >
+      <el-table-column label="体验课班级" width="150">
         <template slot-scope="scope">
           {{
-            trialTeam[scope.row.uid] ? trialTeam[scope.row.uid].team_name : '-'
+            trialTeam[scope.row.id] ? trialTeam[scope.row.id].team_name : '-'
           }}
         </template>
       </el-table-column>
-      <el-table-column
-        label="社群销售"
-        v-if="topic === '4' || topic === '5'"
-        width="150"
-      >
+      <el-table-column label="社群销售" width="150">
         <template slot-scope="scope">
-          {{ scope.row.salesman ? scope.row.salesman.realname : '-' }}
+          <!-- 体验课 -->
+          <div>
+            <p>
+              {{ scope.row.teacher ? scope.row.teacher.realname : '-' }}
+            </p>
+            <p>
+              {{
+                scope.row.teacher_department &&
+                scope.row.teacher_department.department
+                  ? departmentObj[scope.row.teacher_department.department.id]
+                    ? departmentObj[scope.row.teacher_department.department.id]
+                        .name
+                    : '-'
+                  : '-'
+              }}
+            </p>
+          </div>
         </template>
       </el-table-column>
-      <el-table-column
+      <!-- <el-table-column
         label="销售部门"
         v-if="topic === '4' || topic === '5'"
         width="150"
@@ -109,25 +112,18 @@
               : '-'
           }}
         </template>
-      </el-table-column>
-      <el-table-column label="系统课班级" width="150" v-if="topic === '5'">
-        <template slot-scope="scope">
-          <p>
-            {{ scope.row.team ? scope.row.team.team_name : '-' }}
-          </p>
-        </template>
-      </el-table-column>
-      <el-table-column label="服务老师" width="120" v-if="topic === '5'">
-        <template slot-scope="scope">
-          <p>
-            {{ scope.row.teacher ? scope.row.teacher.realname : '-' }}
-          </p>
-        </template>
-      </el-table-column>
-      <el-table-column label="下单时间" width="160">
+      </el-table-column> -->
+      <el-table-column label="下单时间·订单号" width="180">
         <template slot-scope="scope">
           <p>
             {{ scope.row.ctime ? scope.row.ctime : '-' }}
+          </p>
+          <p>
+            {{
+              scope.row.out_trade_no
+                ? scope.row.out_trade_no.replace('xiong', '')
+                : '-'
+            }}
           </p>
         </template>
       </el-table-column>
@@ -139,6 +135,7 @@
               showExpressDetail(scope.row.id, scope.row.express.express_total)
             "
           >
+            <!-- <p> -->
             {{ scope.row.express ? scope.row.express.express_total || 0 : '-' }}
           </p>
           <!-- 体验课不显示最后一次物流状态 -->
@@ -154,7 +151,6 @@
         </template>
       </el-table-column>
     </el-table>
-
     <div v-if="orderList.length === 0" class="noData">暂无数据</div>
     <div class="drawer-body">
       <express-detail :order_id="order_id" ref="order_id" />
@@ -227,7 +223,8 @@ export default {
       statisticsQuery: [], // 统计需要 bool 表达式
       departmentObj: {}, // 组织机构 obj
       orderStatisticsResult: [], // 统计结果
-      trialTeam: {} // 学员的体验课班级名称
+      trialTeam: {}, // 学员的体验课班级名称
+      trialTeamUid: {}
     }
   },
   created() {
@@ -245,7 +242,6 @@ export default {
       this.getOrderList()
     },
     status(status) {
-      console.log(status, 'status')
       this.currentPage = 1
       this.getOrderList()
     },
@@ -271,10 +267,19 @@ export default {
       const statisticsQuery = []
       const queryObj = {}
       // TOSS
-      if (this.teacherId) {
-        Object.assign(queryObj, { last_teacher_id: this.teacherId })
-        statisticsQuery.push({ term: { last_teacher_id: this.teacherId } })
-      }
+      // if (this.teacherId) {
+      //   Object.assign(
+      //     queryObj,
+      //     this.topic === '4'
+      //       ? { last_teacher_id: this.teacherId }
+      //       : { pay_teacher_id: this.teacherId }
+      //   )
+      //   statisticsQuery.push(
+      //     this.topic === '4'
+      //       ? { term: { last_teacher_id: this.teacherId } }
+      //       : { term: { pay_teacher_id: this.teacherId } }
+      //   )
+      // }
 
       const topicRelation = await this.$http.Product.topicRelationId(
         `${JSON.stringify({
@@ -323,7 +328,6 @@ export default {
           'amount',
           'status'
         ).then((res) => {
-          console.log(res)
           const statistics = res.data.OrderStatistics || []
           this.$emit('statistics', statistics)
         })
@@ -434,10 +438,13 @@ export default {
       const teamArr = team.data.StudentTeamList || []
       const teamById = _.keyBy(teamArr, 'id')
       const result = {}
+      const resultUid = {}
       trial.data.StudentTrialCourseList.forEach((item) => {
-        result[item.student_id] = teamById[item.team_id]
+        result[item.order_no] = teamById[item.team_id]
+        resultUid[item.student_id] = teamById[item.team_id]
       })
       this.trialTeam = result || {}
+      this.trialTeamUid = resultUid || {}
       // return result
     },
 

@@ -16,6 +16,7 @@ const getters = {
   bransh: (state) => state.leftbar.bransh,
   typeStage: (state) => state.leftbar.typeStage,
   disableClick: (state) => state.leftbar.disableClick,
+  team: (state) => state.team,
   token: (state) => '',
   avatar: (state) => 'https://msb-ai.meixiu.mobi/ai-pm/static/touxiang.png',
   name: (state) => ''
