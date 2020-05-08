@@ -4,13 +4,17 @@
  * @Author: panjian
  * @Date: 2020-05-06 16:33:15
  * @LastEditors: panjian
- * @LastEditTime: 2020-05-07 12:10:26
+ * @LastEditTime: 2020-05-08 19:24:11
  -->
 <template>
   <div class="channelAdd-box">
     <div class="channelAdd-top">
       <div class="channelAdd-top-search">
-        <channel-search></channel-search>
+        <channel-search
+          :tabIndex="tabIndex"
+          @channelSearchValue="channelSearchValue"
+          @channelInputValue="channelInputValue"
+        ></channel-search>
       </div>
     </div>
     <div class="channelAdd-table">
@@ -63,14 +67,24 @@
       :modal="false"
       size="35%"
     >
-      <add-cahnnel />
+      <add-cahnnel @addChannelShow="addChannelShow" />
+    </el-drawer>
+    <el-drawer
+      class="drawer-detail"
+      :show-close="showClose"
+      :visible.sync="modifyDrawer"
+      :modal="false"
+      size="35%"
+    >
+      <modify-cahnnel @modifyChannelShow="modifyChannelShow" />
     </el-drawer>
   </div>
 </template>
 
 <script>
-import channelSearch from '../components/componentsSearch/search'
+import channelSearch from '../components/componentsSearch/channelInforSearch'
 import addCahnnel from '../components/componentsChannel/addCahnnel'
+import modifyCahnnel from '../components/componentsChannel/modifyCahnnel'
 import MPagination from '@/components/MPagination/index.vue'
 export default {
   props: {
@@ -82,12 +96,16 @@ export default {
   components: {
     channelSearch,
     MPagination,
-    addCahnnel
+    addCahnnel,
+    modifyCahnnel
   },
   data() {
     return {
-      showClose: true,
+      channelDate: false,
+      scheduling: false,
+      showClose: false,
       addDrawer: false,
+      modifyDrawer: false,
       tableData: [
         {
           date: '2016-05-02',
@@ -154,19 +172,31 @@ export default {
   },
   created() {},
   methods: {
+    channelSearchValue(data) {
+      console.log(data, 'datassss channel')
+    },
+    channelInputValue(data) {
+      console.log(data, 'datassss input')
+    },
     handleCurrentChange() {},
     handleEdit(index, row) {
       // 鼠标移入三个点上面触发的事件
       // 当没有点击复选框 直接点击加好友
       console.log(index, row, '点击查看详情11')
     },
+    // 点击添加渠道
     onAddChannel() {
       this.addDrawer = true
     },
+    addChannelShow(data) {
+      this.addDrawer = data
+    },
+    // 点击编辑
     batchBtn() {
-      // 点击查看详情
-      this.drawer = true
-      console.log('点击查看详情22')
+      this.modifyDrawer = true
+    },
+    modifyChannelShow(data) {
+      this.modifyDrawer = data
     },
     // 表头回调样式
     headerCss({ row, column, rowIndex, columnIndex }) {

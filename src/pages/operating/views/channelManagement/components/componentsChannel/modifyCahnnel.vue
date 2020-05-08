@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-05-07 10:48:30
  * @LastEditors: panjian
- * @LastEditTime: 2020-05-07 20:11:31
+ * @LastEditTime: 2020-05-07 20:26:58
  -->
 <template>
   <div class="drawer-box">
@@ -15,6 +15,9 @@
       label-width="100px"
       class="demo-ruleForm"
     >
+      <el-form-item label="渠道ID">
+        <span>1231232</span>
+      </el-form-item>
       <el-form-item label="一级渠道" prop="channelOne">
         <el-select
           @change="onChannelOne"
@@ -129,7 +132,13 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          alert('submit!')
+          console.log(
+            this.ruleForm.channelOne,
+            this.ruleForm.channelTwo,
+            this.ruleForm.channelThree,
+            this.ruleForm.sort,
+            this.ruleForm.desc
+          )
         } else {
           console.log('error submit!!')
           return false
@@ -139,7 +148,7 @@ export default {
     // 取消
     resetForm(formName) {
       this.$refs[formName].resetFields()
-      this.$emit('addChannelShow', false)
+      this.$emit('modifyChannelShow', false)
     }
   }
 }
