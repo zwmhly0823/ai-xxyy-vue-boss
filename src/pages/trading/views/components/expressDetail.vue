@@ -4,7 +4,7 @@
  * @Author: Lukun
  * @Date: 2020-04-15 15:18:49
  * @LastEditors: Lukun
- * @LastEditTime: 2020-05-08 15:58:32
+ * @LastEditTime: 2020-05-08 19:00:10
  -->
 <template>
   <div class="container">
@@ -106,11 +106,15 @@ export default {
   },
   watch: {
     transferExpress(val) {
+      this.waitFor = false
+      this.activities = []
       this.expressInformation = val
       this.expressNu = this.expressInformation.express_nu
       this.expressList(this.expressNu)
     },
     order_id(val) {
+      this.waitFor = false
+      this.activities = []
       this.orderId = val
       this.getexpressMess(this.orderId)
     }
@@ -185,6 +189,8 @@ export default {
                 const lastData = {}
                 const tempData = res.payload[0].data
                 if (tempData.length > 0) {
+                  this.waitFor = false
+                  lastData.begin = []
                   tempData.forEach((item) => {
                     lastData.begin.push(item)
                   })
