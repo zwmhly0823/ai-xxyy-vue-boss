@@ -16,9 +16,9 @@
       placeholder="请选择"
       @change="onChange"
     >
-      <el-option label="订单号" value="0"></el-option>
-      <el-option label="下单手机号" value="1"></el-option>
+      <el-option label="用户手机号" value="1"></el-option>
       <el-option label="收货人手机号" value="2"></el-option>
+      <el-option label="订单号" value="0"></el-option>
     </el-select>
     <el-autocomplete
       placeholder="请输入内容"
@@ -40,7 +40,7 @@ export default {
   data() {
     return {
       value: '',
-      select: '0'
+      select: '1'
     }
   },
   computed: {

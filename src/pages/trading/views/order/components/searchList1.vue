@@ -404,11 +404,6 @@ export default {
       console.log(res, 'res')
       this.setSeachParmas(res, [this.trial_sup || 'trial_team_id'], 'terms')
     },
-    // 级别
-    levelCallBack(res) {
-      console.log(res, 'res')
-      this.setSeachParmas(res, [this.level || 'current_level'], 'terms')
-    },
     // 选择订单下单时间
     getDate(res) {
       console.log(res, 'lll')
