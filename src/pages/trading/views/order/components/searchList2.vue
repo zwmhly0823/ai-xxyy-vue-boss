@@ -72,6 +72,7 @@
           />
           <group-sell
             :teacherscope="teacherscope"
+            is-multiple
             @result="selectPayTeacher"
             name="last_teacher_id"
             class="margin_l10"
