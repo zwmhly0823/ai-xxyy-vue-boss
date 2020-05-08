@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-15 20:35:57
  * @LastEditors: Shentong
- * @LastEditTime: 2020-05-07 21:15:02
+ * @LastEditTime: 2020-05-07 22:33:04
  -->
 <template>
   <div class="third-step">
@@ -354,34 +354,6 @@ export default {
         }
         await this.saveScheduleConfig(params, callback)
       }
-      // console.log('this.tableData', this.tableData)
-
-      // console.log('111')
-      // this.tableData.forEach((item) => {
-      //   const { enroll = [] } = item
-      //   enroll.forEach((i) => {
-      //     if (i.status) {
-      //       if (!i.courseVersion) {
-      //         this.$message({
-      //           message: '随材版本为必选项',
-      //           type: 'warning'
-      //         })
-      //         break
-      //       }
-      //     }
-      //     i.courseCategory = i.courseCategory ? i.courseCategory.join() : ''
-      //   })
-      // })
-      // TODO:
-      // const params = {
-      //   courseType,
-      //   period: this.schedulePeriod,
-      //   body: this.tableData
-      // }
-      // const callback = () => {
-      //   this.$emit('listenStepStatus', type)
-      // }
-      // await this.saveScheduleConfig(params, callback)
     },
     warningMessage(message) {
       this.$message({
