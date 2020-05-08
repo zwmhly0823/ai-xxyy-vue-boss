@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-31 22:54:28
  * @LastEditors: Lukun
- * @LastEditTime: 2020-05-04 17:32:30
+ * @LastEditTime: 2020-05-08 14:54:53
  */
 // import axios from '../axios'
 import axios from '../axiosConfig'
@@ -48,7 +48,7 @@ export default {
 
   getExpressDetailJDForAPP(params) {
     return axios.get(
-      `/api/o/v1/express/ getExpressDetailJDForAPP?expressNo=${params}`
+      `/api/o/v1/express/getExpressDetailJDForAPP?expressNo=${params}`
     )
   }
   /**
