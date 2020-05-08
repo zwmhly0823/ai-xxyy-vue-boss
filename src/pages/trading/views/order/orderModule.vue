@@ -1,62 +1,33 @@
 <!--
- * @Descripttion:订单
+ * @Descripttion:订单v1.3
  * @version:
  * @Author: zhubaodong
  * @Date: 2020-03-24 15:16:26
  * @LastEditors: liukun
- * @LastEditTime: 2020-05-06 11:38:34
+ * @LastEditTime: 2020-05-08 15:09:38
  -->
 <template>
   <el-scrollbar wrap-class="order-wrapper" id="order-scroll">
     <!-- topicType="topic_id" -->
     <div class="order-box">
-      <el-tabs
-        type="border-card"
-        @tab-click="handleClick"
-        v-model="activeTopic"
-      >
+      <el-tabs type="border-card" v-model="activeTopic">
         <!-- 包含全部系统课订单数据（月系统课、季系统课、半年系统课、年系统课） -->
         <el-tab-pane label="系统课" name="5">
-          <searchList1
-            @search="handleSearch"
-            channel="pay_channel"
-            sup="sup"
-            date="ctime"
-            date-placeholder="下单时间"
-            phone="uid"
-            search-stage="stage"
-            department="pay_teacher_id"
-            groupSell="pay_teacher_id"
-            search-team-name="last_team_id"
-            search-trial-team-name="uid"
-            v-if="showSearch && activeTopic === '5'"
-          />
+          <search-list1 @search="handleSearch" v-if="activeTopic === '5'" />
           <all-order1
             :topic="activeTopic"
             :search="search"
-            v-if="showSearch && activeTopic === '5'"
+            v-if="activeTopic === '5'"
           />
         </el-tab-pane>
 
         <!-- 包含全部体验课订单数据（双周体验课、单周体验课） -->
         <el-tab-pane label="体验课" name="4">
-          <searchList2
-            @search="handleSearch"
-            channel="pay_channel"
-            sup="sup"
-            date="ctime"
-            date-placeholder="下单时间"
-            phone="uid"
-            schedule="stage"
-            department="last_teacher_id"
-            groupSell="last_teacher_id"
-            search-trial-team-name="last_team_id"
-            v-if="showSearch && activeTopic === '4'"
-          />
+          <search-list2 @search="handleSearch" v-if="activeTopic === '4'" />
           <all-order2
             :topic="activeTopic"
             :search="search"
-            v-if="showSearch && activeTopic === '4'"
+            v-if="activeTopic === '4'"
           />
         </el-tab-pane>
         <!-- <el-tab-pane label="活动订单" name="1,2,6">
@@ -94,17 +65,16 @@ export default {
   watch: {},
   methods: {
     // 点击tab(无用啊已经v-model了)
-    handleClick(tab, event) {
-      // this.activeTopic = tab.name
-      // 子组件重新渲染
-      this.showSearch = false
-      this.$nextTick(() => {
-        this.showSearch = true
-      })
-    },
+    // handleClick(tab, event) {
+    //   // this.activeTopic = tab.name
+    //   // 子组件重新渲染
+    //   this.showSearch = false
+    //   this.$nextTick(() => {
+    //     this.showSearch = true
+    //   })
+    // },
     // 点击搜索
     handleSearch(res) {
-      console.log(res, 'search')
       this.search = res
     }
   },

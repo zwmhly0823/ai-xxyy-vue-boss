@@ -1,3 +1,4 @@
+<!-- 系统课订单列表 topic = '5' -->
 <template>
   <div class="title-box">
     <el-table :data="orderList">
@@ -252,17 +253,8 @@ export default {
       const queryObj = {}
       // TOSS
       if (this.teacherId) {
-        Object.assign(
-          queryObj,
-          this.topic === '4'
-            ? { last_teacher_id: this.teacherId }
-            : { pay_teacher_id: this.teacherId }
-        )
-        statisticsQuery.push(
-          this.topic === '4'
-            ? { term: { last_teacher_id: this.teacherId } }
-            : { term: { pay_teacher_id: this.teacherId } }
-        )
+        Object.assign(queryObj, { pay_teacher_id: this.teacherId })
+        statisticsQuery.push({ term: { pay_teacher_id: this.teacherId } })
       }
 
       const topicRelation = await this.$http.Product.topicRelationId(
@@ -316,34 +308,6 @@ export default {
           this.$emit('statistics', statistics)
         })
         // 统计结束
-      }
-      /*
-       * 活动订单 - (小熊商城1，推荐有礼2，赠送6)
-       * 通过relation_id去o_order_product查询oid,分页
-       * TODO: 先查看全部 - BOSS，TOSS再做处理
-       * */
-      if (this.topic === '1,2,6') {
-        // && !this.teacherId
-        Object.assign(queryObj, { pid: relationIds })
-        delete queryObj.last_teacher_id
-        const res =
-          (await this.$http.Product.orderProductPage(
-            `${JSON.stringify(queryObj)}`,
-            page
-          )) || {}
-        const data = (res.data && res.data.OrderProductPage) || {
-          totalElements: 0,
-          content: []
-        }
-        // 分页
-        this.totalElements = +data.totalElements
-        this.currentPage = +data.number
-        // this.orderList = data.content
-
-        // TODO: 根据oid 请求o_order 表
-        const oids = data.content.map((item) => item.oid)
-        const oquery = { id: oids }
-        this.orderData(oquery, 1)
       }
     },
 
