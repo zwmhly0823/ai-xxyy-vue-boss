@@ -158,10 +158,13 @@ export default {
       })
         .catch((err) => console.log(err))
         .then((res) => {
-          const isNull = res.payload[0].data.filter((item) => {
-            return Object.keys(item).length > 0
-          })
-          if (res && isNull > 0) {
+          const isNull =
+            (res.payload &&
+              res.payload[0].data.filter((item) => {
+                return Object.keys(item).length > 0
+              })) ||
+            []
+          if (res && isNull.length > 0) {
             this.waitFor = false
             const lastData = {}
             res.payload[0].data.forEach((item) => {
@@ -184,10 +187,11 @@ export default {
             })
           } else {
             const jd = id.toString().indexOf('JD')
-            if (jd > -1) {
+            if (jd > -1 && isNull.length === 0) {
               this.$http.Express.getExpressDetailJDForAPP(id).then((res) => {
                 const lastData = {}
-                const tempData = res.payload[0].data
+                const tempData =
+                  (res && res.payload && res.payload[0].data) || []
                 if (tempData.length > 0) {
                   this.waitFor = false
                   lastData.begin = []
