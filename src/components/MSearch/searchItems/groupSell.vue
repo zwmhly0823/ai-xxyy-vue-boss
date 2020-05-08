@@ -14,7 +14,7 @@
         multiple
         filterable
         remote
-        :reserve-keyword="false"
+        :reserve-keyword="true"
         size="mini"
         clearable
         :placeholder="tip"

@@ -154,155 +154,6 @@ import SearchStage from '@/components/MSearch/searchItems/searchStage'
 import { isToss } from '@/utils/index'
 
 export default {
-  props: {
-    // 有无收货地址
-    hasaddress: {
-      type: String,
-      default: '' // hasaddress
-    },
-    changeData: {
-      type: String,
-      default: '' // hasaddress
-    },
-    // 渠道
-    channel: {
-      type: String,
-      default: '' // channelid
-    },
-    // 主题
-    topicType: {
-      type: String,
-      default: '' // topicType
-    },
-    // 期数
-    stage: {
-      type: String,
-      default: '' // stage
-    },
-    // 排期
-    schedule: {
-      type: String,
-      default: '' // schedule
-    },
-    // 难度
-    sup: {
-      type: String,
-      default: '' // sup
-    },
-    addSupS: {
-      type: Boolean,
-      default: false // sup+S ?
-    },
-    // 级别
-    level: {
-      type: String,
-      default: '' // current_level
-    },
-    // 下单时间
-    date: {
-      type: String,
-      default: '' // ctime
-    },
-    // datepicker placeholder
-    datePlaceholder: {
-      type: String,
-      default: '下单时间'
-    },
-    // 班级内搜索 需要班级类型
-    teamType: {
-      type: String,
-      default: '' // 0
-    },
-
-    // 手机号
-    phone: {
-      type: String,
-      default: '' // phone
-    },
-    // 是否只搜手机号
-    onlyPhone: {
-      type: String,
-      default: '0' // 0
-    },
-    // 是否只搜手机号
-    phoneTip: {
-      type: String,
-      default: '手机号查询'
-    },
-    // team_id
-    teamId: {
-      type: String,
-      default: ''
-    },
-    // 查询班级  搜到用户的最后一个班
-    last_team_id: {
-      type: String,
-      default: ''
-    },
-    // 订单号
-    outTradeNo: {
-      type: String,
-      default: '' // out_trade_no
-    },
-    // 商品名称
-    productName: {
-      type: String,
-      default: '' // product_name
-    },
-    // 下拉时间选择
-    timeData: {
-      type: Array,
-      default: null // [ {text:'创建时间',value:'ectime'}]
-    },
-    // 物流单号查询
-    expressNo: {
-      type: String,
-      default: '' // express_nu
-    },
-    // 社群销售查询
-    groupSell: {
-      type: String,
-      default: '' //
-    },
-    // 班级信息查询
-    teamDetail: {
-      type: String,
-      default: '' //
-    },
-    moreVersion: {
-      type: String,
-      default: '' //
-    },
-    orderType: {
-      type: String,
-      default: ''
-    },
-    systemCourseType: {
-      type: String,
-      default: ''
-    },
-    // 销售部门
-    department: {
-      type: String,
-      default: ''
-    },
-    // 搜索系统课班级名称
-    searchTeamName: {
-      type: String,
-      default: ''
-    },
-    // 搜索体验课班级名称
-    searchTrialTeamName: {
-      type: String,
-      default: ''
-    },
-    // 排期
-    searchStage: {
-      type: String,
-      default: ''
-    }
-  },
-
   components: {
     hardLevel,
     systemCourseType,
@@ -322,6 +173,7 @@ export default {
       cur1: false,
       cur2: false,
       cur3: false,
+      currentBtn: null,
       package_type: null, // 当前选择系统课类型
       teacherscope: null, // 当前选择的体验课老师范围（销售组查询）
       teacherscope_s: null, // 当前选择的系统课老师范围（根据类型查询）
@@ -366,15 +218,7 @@ export default {
     },
     // 选择渠道
     getChannel(res) {
-      this.setSeachParmas(res, [this.channel || 'pay_channel'], 'terms')
-    },
-    // 主题
-    getProductTopic(res) {
-      this.setSeachParmas(res, [this.topicType || 'topicType'])
-    },
-    // 期数
-    stageCallBack(res) {
-      this.setSeachParmas(res, [this.stage || 'stage'], 'terms')
+      this.setSeachParmas(res, ['pay_channel'], 'terms')
     },
     // 系统课排期
     selectSchedule(res) {
@@ -383,7 +227,7 @@ export default {
       } else {
         this.term_sys = null
       }
-      this.setSeachParmas(res, [this.stage || 'stage'], 'terms')
+      this.setSeachParmas(res, ['stage'], 'terms')
     },
     // 体验课排期
     selectScheduleTrial(res) {
@@ -392,22 +236,27 @@ export default {
       } else {
         this.term_trial = null
       }
-      this.setSeachParmas(res, [this.trial_stage || 'trial_stage'], 'terms')
+      this.setSeachParmas(res, ['trial_stage'], 'terms')
     },
     // 系统课难度
     supCallBack(res) {
       console.log(res, 'res')
-      this.setSeachParmas(res, [this.sup || 'sup'], 'terms')
+      this.setSeachParmas(res, ['sup'], 'terms')
     },
     // 体验课难度
     supCallBackTrial(res) {
       console.log(res, 'res')
-      this.setSeachParmas(res, [this.trial_sup || 'trial_team_id'], 'terms')
+      this.setSeachParmas(res, ['trial_team_id'], 'terms')
     },
     // 选择订单下单时间
     getDate(res) {
-      console.log(res, 'lll')
-      this.setSeachParmas(res, [this.date || 'ctime'], 'range')
+      for (let i = 0; i < 4; i++) {
+        this['cur' + i] = false
+      }
+      if (!res || !res.quick) this.currentBtn = null
+      if (res.quick && this.currentBtn) this[`cur${this.currentBtn}`] = true
+      delete res.quick
+      this.setSeachParmas(res, ['ctime'], 'range')
     },
     // 4点外移
     today() {
@@ -415,6 +264,7 @@ export default {
         this['cur' + i] = false
       }
       this.cur0 = true
+      this.currentBtn = '0'
       const start = new Date(new Date().toLocaleDateString()).getTime() // 设定日期,时间默认0点
       const end = Date.now()
       this.$root.$emit('fourpoint', [start, end])
@@ -424,6 +274,7 @@ export default {
         this['cur' + i] = false
       }
       this.cur1 = true
+      this.currentBtn = '1'
       const yester = new Date()
       yester.setDate(new Date().getDate() - 1)
       yester.toLocaleDateString()
@@ -438,6 +289,7 @@ export default {
         this['cur' + i] = false
       }
       this.cur2 = true
+      this.currentBtn = '2'
 
       const week = new Date()
       const reverseDays = week.getDay() ? week.getDay() - 1 : 6
@@ -452,6 +304,7 @@ export default {
         this['cur' + i] = false
       }
       this.cur3 = true
+      this.currentBtn = '3'
       const date = new Date()
       date.setDate(1)
       const start = new Date(new Date(date).toLocaleDateString()).getTime()
@@ -472,11 +325,7 @@ export default {
       } else {
         this.teacherscope_trial = res.pay_teacher_id
       }
-      this.setSeachParmas(
-        res,
-        [this.pay_teacher_id || 'pay_teacher_id'],
-        'terms'
-      )
+      this.setSeachParmas(res, ['pay_teacher_id'], 'terms')
     },
     // 选择销售老师
     selectLastTeacher(res) {
@@ -486,11 +335,7 @@ export default {
       } else {
         this.teacherscope_system = res.last_teacher_id
       }
-      this.setSeachParmas(
-        res,
-        [this.last_teacher_id || 'last_teacher_id'],
-        'terms'
-      )
+      this.setSeachParmas(res, ['last_teacher_id'], 'terms')
     },
     getSystemCourseType(res) {
       if (res) {
@@ -498,17 +343,17 @@ export default {
       } else {
         this.packages_type = null
       }
-      this.setSeachParmas(res, [this.packagesType || 'packages_type'])
+      this.setSeachParmas(res, ['packages_type'])
     },
     getDepartment(res) {
       this.teacherscope = res.pay_teacher_id || null
-      this.setSeachParmas(res, [this.department || 'department'], 'terms')
+      this.setSeachParmas(res, ['department'], 'terms')
     },
     getTeamName(res) {
-      this.setSeachParmas(res, [this.team_id || 'team_id'], 'terms')
+      this.setSeachParmas(res, ['team_id'], 'terms')
     },
     getTrialTeamName(res) {
-      this.setSeachParmas(res, [this.trial_team_id || 'trial_team_id'], 'terms')
+      this.setSeachParmas(res, ['trial_team_id'], 'terms')
     },
 
     /**  处理接收到的查询参数

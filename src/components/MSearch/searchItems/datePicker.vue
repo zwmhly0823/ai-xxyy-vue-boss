@@ -103,12 +103,12 @@ export default {
   computed: {},
   watch: {},
   methods: {
-    changeHandler(data) {
+    changeHandler(data, quick = false) {
       if (data) {
         const gte = this.timeData[0]
         const lte = this.timeData[1]
         const octime = { gte, lte }
-        this.$emit('result', { [this.name]: octime })
+        this.$emit('result', { [this.name]: octime, quick })
         return
       }
       this.$emit('result', '')
@@ -117,7 +117,7 @@ export default {
   created() {
     this.$root.$on('fourpoint', (r) => {
       this.timeData = r
-      this.changeHandler(r)
+      this.changeHandler(r, true)
     })
   },
   mounted() {}
