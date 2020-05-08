@@ -3,12 +3,19 @@
  * @version:
  * @Author: Shentong
  * @Date: 2020-03-16 19:46:39
- * @LastEditors: panjian
- * @LastEditTime: 2020-04-29 19:52:20
+ * @LastEditors: Shentong
+ * @LastEditTime: 2020-05-08 16:33:44
  */
 import axios from '../axiosConfig'
 
 export default {
+  /**
+   * @description 获取版本号
+   * @param {type} params
+   */
+  getCourseVersion(params) {
+    return axios.get(`/api/s/v1/data/dictionary/byType?type=${params.type}`)
+  },
   /**
    * 获取体验课、系统课列表
    */

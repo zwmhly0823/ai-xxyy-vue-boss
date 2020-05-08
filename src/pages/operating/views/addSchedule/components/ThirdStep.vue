@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-15 20:35:57
  * @LastEditors: Shentong
- * @LastEditTime: 2020-05-07 22:33:04
+ * @LastEditTime: 2020-05-08 16:37:35
  -->
 <template>
   <div class="third-step">
@@ -127,7 +127,7 @@
                 <el-option
                   v-for="(item, i) in productVersion"
                   :key="i"
-                  :label="item.name"
+                  :label="item.value"
                   :value="item.value"
                 >
                 </el-option>
@@ -221,7 +221,7 @@ export default {
     EleTable
   },
   watch: {},
-  created() {
+  async created() {
     const { courseType = 0 } = this.$route.params
     // 根据老师ids获取招生排期设置中老师配置信息 TODO:
     const params = {
@@ -229,6 +229,7 @@ export default {
       period: this.schedulePeriod,
       ids: this.scheduleTeacherId
     }
+    await this.getCourseVersion()
     this.scheduleTeacherId.length && this.getTeacherConfigList(params)
   },
   methods: {
@@ -273,6 +274,20 @@ export default {
         })
       }
       this.flags.loading = false
+    },
+    // 获取随材版本
+    async getCourseVersion() {
+      try {
+        const { payload = [] } = await this.$http.Operating.getCourseVersion({
+          type: 'courseVersion'
+        })
+        this.productVersion = payload
+      } catch (err) {
+        this.$message({
+          message: '获取随材版本出错',
+          type: 'warning'
+        })
+      }
     },
     //  保存 招生排期 设置
     async saveScheduleConfig(params, cb) {
