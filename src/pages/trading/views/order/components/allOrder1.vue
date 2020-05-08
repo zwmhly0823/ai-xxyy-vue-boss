@@ -274,13 +274,6 @@ export default {
       color: #409eff;
     }
   }
-  .oride-bottom {
-    font-family: 'number_font';
-    color: #666666;
-    font-size: 12px;
-    text-align: center;
-    padding: 10px 0;
-  }
 }
 // .bottom-box {
 //   margin: 20px 0 0 0;
@@ -291,12 +284,12 @@ export default {
 </style>
 <style lang="scss">
 .order-call {
-  // .el-row {
-  //   padding: 20px 0 20px 10px;
-  //   &:last-child {
-  //     margin-bottom: 0;
-  //   }
-  // }
+  .el-row {
+    padding: 20px 0 20px 10px;
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
   .el-col {
     border-radius: 4px;
   }
