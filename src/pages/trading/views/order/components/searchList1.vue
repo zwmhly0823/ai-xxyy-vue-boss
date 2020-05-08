@@ -68,6 +68,7 @@
           />
           <group-sell
             :teacherscope="teacherscope"
+            is-multiple
             tip="全部社群销售"
             @result="selectPayTeacher"
             name="pay_teacher_id"
@@ -108,6 +109,7 @@
           />
           <group-sell
             :teacherscope="teacherscope_s"
+            is-multiple
             @result="selectLastTeacher"
             name="last_teacher_id"
             class="margin_l10"
