@@ -4,17 +4,13 @@
  * @Author: zhubaodong
  * @Date: 2020-03-24 15:16:26
  * @LastEditors: liukun
- * @LastEditTime: 2020-05-06 11:38:34
+ * @LastEditTime: 2020-05-08 15:09:38
  -->
 <template>
   <el-scrollbar wrap-class="order-wrapper" id="order-scroll">
     <!-- topicType="topic_id" -->
     <div class="order-box">
-      <el-tabs
-        type="border-card"
-        @tab-click="handleClick"
-        v-model="activeTopic"
-      >
+      <el-tabs type="border-card" v-model="activeTopic">
         <!-- 包含全部系统课订单数据（月系统课、季系统课、半年系统课、年系统课） -->
         <el-tab-pane label="系统课" name="5">
           <searchList1
@@ -94,14 +90,14 @@ export default {
   watch: {},
   methods: {
     // 点击tab(无用啊已经v-model了)
-    handleClick(tab, event) {
-      // this.activeTopic = tab.name
-      // 子组件重新渲染
-      this.showSearch = false
-      this.$nextTick(() => {
-        this.showSearch = true
-      })
-    },
+    // handleClick(tab, event) {
+    //   // this.activeTopic = tab.name
+    //   // 子组件重新渲染
+    //   this.showSearch = false
+    //   this.$nextTick(() => {
+    //     this.showSearch = true
+    //   })
+    // },
     // 点击搜索
     handleSearch(res) {
       console.log(res, 'search')
