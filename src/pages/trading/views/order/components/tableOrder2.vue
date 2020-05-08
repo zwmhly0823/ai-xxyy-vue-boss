@@ -201,6 +201,8 @@ export default {
       orderList: [],
       // 获取teacherid
       teacherId: '',
+      // 当前老师下属老师ID
+      teacherGroup: [],
       // 搜索
       searchIn: [],
       statisticsQuery: [], // 统计需要 bool 表达式
@@ -212,8 +214,9 @@ export default {
   },
   created() {
     this.teacherId = isToss()
-    // 订单列表接口
-    this.getOrderList()
+    if (this.teacherId) {
+      this.getTeacherPermission()
+    }
 
     this.getDepartment()
   },
@@ -237,6 +240,16 @@ export default {
     }
   },
   methods: {
+    // 老师权限
+    getTeacherPermission() {
+      this.$http.Permission.getAllTeacherByRole({
+        teacherId: this.teacherId
+      }).then((res) => {
+        this.teacherGroup = res || []
+        // 订单列表接口
+        this.getOrderList()
+      })
+    },
     // 订单关联物流详情展示
     showExpressDetail(what, total) {
       console.log(what, "what's that?")
@@ -251,8 +264,18 @@ export default {
       const queryObj = {}
       // TOSS
       if (this.teacherId) {
-        Object.assign(queryObj, { last_teacher_id: this.teacherId })
-        statisticsQuery.push({ term: { last_teacher_id: this.teacherId } })
+        Object.assign(queryObj, {
+          last_teacher_id:
+            this.teacherGroup.length > 0 ? this.teacherGroup : [this.teacherId]
+        })
+        statisticsQuery.push({
+          terms: {
+            last_teacher_id:
+              this.teacherGroup.length > 0
+                ? this.teacherGroup
+                : [this.teacherId]
+          }
+        })
       }
 
       const topicRelation = await this.$http.Product.topicRelationId(
