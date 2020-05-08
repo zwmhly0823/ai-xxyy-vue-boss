@@ -218,6 +218,8 @@ export default {
     this.teacherId = isToss()
     if (this.teacherId) {
       this.getTeacherPermission()
+    } else {
+      this.getOrderList()
     }
 
     this.getDepartment()
