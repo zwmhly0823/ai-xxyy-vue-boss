@@ -1,3 +1,11 @@
+/*
+ * @Descripttion: TOSS小熊
+ * @version: 1.0.0
+ * @Author: liukun
+ * @Date: 2020-04-20 15:59:10
+ * @LastEditors: liukun
+ * @LastEditTime: 2020-04-30 11:59:49
+ */
 import Vue from 'vue'
 import App from './App.vue'
 import router from './router'

@@ -3,8 +3,8 @@
  * @version: 
  * @Author: zhubaodong
  * @Date: 2020-03-24 18:50:54
- * @LastEditors: zhubaodong
- * @LastEditTime: 2020-04-13 17:05:48
+ * @LastEditors: Shentong
+ * @LastEditTime: 2020-04-30 20:05:43
  -->
 <template>
   <div class="search-item small">
@@ -26,6 +26,7 @@
       >
       </el-option>
     </el-select>
+
     <el-select
       v-model="supData"
       class="item-style"
@@ -33,7 +34,8 @@
       v-if="supName"
       size="mini"
       multiple
-      placeholder="难度"
+      :placeholder="supPlaceholder"
+      :disabled="disableClick"
       @change="supChange"
     >
       <el-option
@@ -51,6 +53,7 @@
       v-if="levelName"
       multiple
       size="mini"
+      :disabled="disableClick"
       placeholder="级别"
       @change="levelChange"
     >
@@ -67,19 +70,25 @@
 
 <script>
 import axios from '@/api/axios'
+import { mapState } from 'vuex'
+
 export default {
   props: {
     stageName: {
       type: String,
-      default: 'stage'
+      default: ''
+    },
+    scheduleName: {
+      type: String,
+      default: ''
     },
     supName: {
       type: String,
-      default: 'sup'
+      default: ''
     },
     levelName: {
       type: String,
-      default: 'current_level'
+      default: ''
     },
     // 是否只返回值，如果是，父组件获得值后根据实际表达式组装数据
     onlyValue: {
@@ -89,17 +98,32 @@ export default {
     addSupS: {
       type: Boolean,
       default: false
+    },
+    supPlaceholder: {
+      type: String,
+      default: '难度'
     }
   },
   data() {
     return {
       stageList: [],
+      scheduleList: [],
       supList: [],
       levelList: [],
       stageData: null,
       supData: null,
       levelData: null
     }
+  },
+  computed: {
+    ...mapState({
+      disableClick: (state) => {
+        return state.leftbar.disableClick
+      },
+      typeStage: (state) => {
+        return state.leftbar.typeStage
+      }
+    })
   },
   watch: {
     channelData(val) {
@@ -119,7 +143,7 @@ export default {
     async getStage() {
       axios
         .post('/graphql/filter', {
-          query: `{  
+          query: `{
               teamStageList{
                 stage
                 stage_text
@@ -135,7 +159,7 @@ export default {
     async getSup() {
       axios
         .post('/graphql/filter', {
-          query: `{    
+          query: `{
             courseSupList{
                 id
                 name
@@ -144,18 +168,15 @@ export default {
           `
         })
         .then((res) => {
-          this.supList = res.data.courseSupList
-          this.supList.splice(
-            res.data.courseSupList.filter((item) => +item.id === 0),
-            1
-          )
+          this.supList =
+            res.data && res.data.courseSupList.filter((item) => +item.id !== 0)
         })
     },
     // 级别
     async getLevel() {
       axios
         .post('/graphql/filter', {
-          query: `{  
+          query: `{
               courseLevelList{
                 id,
                 name
@@ -173,9 +194,8 @@ export default {
         data.length > 0 ? { [this.stageName]: this.stageData } : ''
       )
     },
-    supChange(data) {
-      console.log(data, 'ddddaaaa')
 
+    supChange(data) {
       this.$emit(
         'supCallBack',
         data.length > 0 ? { [this.supName]: this.supData } : ''

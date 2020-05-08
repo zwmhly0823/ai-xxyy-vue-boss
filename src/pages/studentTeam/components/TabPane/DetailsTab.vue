@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 14:19:58
  * @LastEditors: panjian
- * @LastEditTime: 2020-04-09 20:01:55
+ * @LastEditTime: 2020-04-24 10:26:06
  -->
 <template>
   <div>
@@ -34,10 +34,15 @@
         @click="ExhibitionList"
         >生成作品展</el-button
       >
-      <!-- <checkBox
+      <checkBox
+        class="check-box"
         :tables="table"
+        :classId="classId"
+        :audioTabs="audioTabs"
+        @screenWorks="screenWorks"
+        @screenAttendClass="screenAttendClass"
         v-if="this.table.tabs == 3 || this.table.tabs == 4"
-      ></checkBox> -->
+      />
     </div>
     <div>
       <div class="tabs-tab">
@@ -183,7 +188,8 @@
   </div>
 </template>
 <script>
-// import checkBox from '@/components/MCheckBox/index'
+import { mapGetters } from 'vuex'
+import checkBox from '@/components/MCheckBox/index'
 import detailsTable from './components/detailsTable'
 import MSearch from '@/components/MSearch/index.vue'
 import { timestamp, GetAgeByBrithday, isToss } from '@/utils/index'
@@ -195,13 +201,19 @@ export default {
     detailsTable,
     finishclass,
     exhibition,
-    MSearch
-    // checkBox
+    MSearch,
+    checkBox
   },
   props: {
     classId: {
       type: Object,
       default: null
+    }
+  },
+  computed: {
+    ...mapGetters(['team']),
+    searchUser() {
+      return this.team.userByPhone
     }
   },
   data() {
@@ -266,7 +278,8 @@ export default {
         childListData: [],
         imgNum: 0,
         imgSuccessNum: 0,
-        opreaIndex: 0
+        opreaIndex: 0,
+        weekNum1: ''
       },
       // tabs标签默认状态
       activeName: 'group',
@@ -289,10 +302,38 @@ export default {
       },
       formLabelWidth: '120px',
       tableDataEmpty: true,
-      sortGroup: ''
+      sortGroup: '',
+      screenWorksData: {},
+      screenAttendClassData: {}
     }
   },
   watch: {
+    searchUser(user) {
+      console.log(user)
+      let teamId = ''
+      let teamType = ''
+      let mobile = ''
+      if (user && user.phone) mobile = user.phone
+      if (this.classId && this.classId.classId) {
+        teamId = this.classId.classId.id
+        teamType = this.classId.classId.team_type
+      }
+      this.search = ''
+      if (!mobile) {
+        this.getGroup()
+        return
+      }
+      this.$http.User.blurrySearch(mobile, teamType, teamId).then((res) => {
+        console.log(res, '********')
+        const uid =
+          res.data.blurrySearch &&
+          res.data.blurrySearch[0] &&
+          res.data.blurrySearch[0].id
+        console.log(this.search)
+        this.search = `"${uid}"`
+        this.getGroup()
+      })
+    },
     classId(value) {
       // 切换标签 语音停止
       const audios = this.$refs
@@ -300,6 +341,8 @@ export default {
       audiosList.forEach((item, index) => {
         item[0].load()
       })
+      this.screenWorksData = {}
+      this.screenAttendClassData = {}
       this.sortGroup = ''
       this.table.currentPage = 1
       if (value.classId && value.classId.id) {
@@ -349,6 +392,16 @@ export default {
     this.table.tableLabel = [{ label: '购买时间', prop: 'buytime' }]
   },
   methods: {
+    screenAttendClass(data) {
+      this.screenAttendClassData = data
+      this.table.currentPage = 1
+      this.getClassCompPage()
+    },
+    screenWorks(data) {
+      this.screenWorksData = data
+      this.table.currentPage = 1
+      this.getStuComment()
+    },
     // 排序
     onGroupSort(data) {
       this.sortGroup = `sort:${JSON.stringify(data)}`
@@ -423,7 +476,7 @@ export default {
       // 获取第几周的数据
       await this.getStuTaskRankingList(
         this.ExhibitionData.teamId,
-        this.ExhibitionData.weekNum
+        this.ExhibitionData.weekNum1
       )
       // 关闭弹框
       this.show = true
@@ -626,6 +679,7 @@ export default {
           6
         )
         // this.ExhibitionData.studentLesson = currentLesson.substring(0, 4)
+        this.ExhibitionData.weekNum1 = currentLesson
         this.ExhibitionData.weekNum = currentLesson.substring(4, 6)
         this.btnshow(
           this.ExhibitionData.weekNum,
@@ -987,7 +1041,28 @@ export default {
         if (this.search) {
           this.querysData = `{"team_id":${this.classId.classId.id},"team_type":${this.classId.type},"uid":${this.search}}`
         } else {
-          this.querysData = `{"team_id":${this.classId.classId.id},"team_type":${this.classId.type}}`
+          if (
+            this.screenAttendClassData.courseId ||
+            this.screenAttendClassData.userStatus ||
+            this.screenAttendClassData.isJoinCourse ||
+            this.screenAttendClassData.isCompleteCourse
+          ) {
+            const courseId = this.screenAttendClassData.courseId
+              ? `"${this.screenAttendClassData.courseId}"`
+              : `""`
+            const userStatus = this.screenAttendClassData.userStatus
+              ? `"${this.screenAttendClassData.userStatus}"`
+              : `""`
+            const isJoinCourse = this.screenAttendClassData.isJoinCourse
+              ? `"${this.screenAttendClassData.isJoinCourse}"`
+              : `""`
+            const isCompleteCourse = this.screenAttendClassData.isCompleteCourse
+              ? `"${this.screenAttendClassData.isCompleteCourse}"`
+              : `""`
+            this.querysData = `{"team_id":${this.classId.classId.id},"team_type":${this.classId.type},"course_id":${courseId},"user_status":${userStatus},"is_join_course":${isJoinCourse},"is_complete_course":${isCompleteCourse}}`
+          } else {
+            this.querysData = `{"team_id":${this.classId.classId.id},"team_type":${this.classId.type}}`
+          }
         }
         this.$http.Team.getClassCompPage({
           querysData: this.querysData,
@@ -1039,7 +1114,28 @@ export default {
         if (this.search) {
           this.querysData = `{"team_id":${this.classId.classId.id},"team_type":${this.classId.type},"uid":${this.search}}`
         } else {
-          this.querysData = `{"team_id":${this.classId.classId.id},"team_type":${this.classId.type}}`
+          if (
+            this.screenWorksData.courseId ||
+            this.screenWorksData.isTask ||
+            this.screenWorksData.isComment ||
+            this.screenWorksData.isListen
+          ) {
+            const courseId = this.screenWorksData.courseId
+              ? `"${this.screenWorksData.courseId}"`
+              : `""`
+            const isTask = this.screenWorksData.isTask
+              ? `"${this.screenWorksData.isTask}"`
+              : `""`
+            const isComment = this.screenWorksData.isComment
+              ? `"${this.screenWorksData.isComment}"`
+              : `""`
+            const isListen = this.screenWorksData.isListen
+              ? `"${this.screenWorksData.isListen}"`
+              : `""`
+            this.querysData = `{"team_id":${this.classId.classId.id},"team_type":${this.classId.type},"course_id":${courseId},"is_task":${isTask},"is_comment":${isComment},"is_listen":${isListen}}`
+          } else {
+            this.querysData = `{"team_id":${this.classId.classId.id},"team_type":${this.classId.type}}`
+          }
         }
         this.$http.Team.getStuCommentPage({
           querysData: this.querysData,
@@ -1109,6 +1205,8 @@ export default {
       this.tabsName = tab.label
       this.table.currentPage = 1
       this.table.tableData = []
+      this.screenWorksData = {}
+      this.screenAttendClassData = {}
       // 切换标签 语音停止
       const audios = this.$refs
       const audiosList = Object.values(audios)
@@ -1241,6 +1339,9 @@ export default {
   //   position: absolute;
   //   right: 150px;
   // }
+  .check-box {
+    float: right;
+  }
 }
 .warning {
   display: inline-block;

@@ -1,49 +1,85 @@
+<!--
+ * @Author: YangJiyong
+ * @Email: yangjiyong@meishubao.com
+ * @Date: 2020-04-14 16:36:27
+ * @Last Modified by:   YangJiyong
+ * @Last Modified time: 2020-04-14 16:36:27
+ * @Description: 统计区域
+ -->
+
 <template>
   <div class="order-call">
+    <!-- 4大块 -->
     <article class="top-box">
-      <el-row :gutter="20">
-        <!-- 订单总计 -->
-        <el-col :span="6">
-          <div class="grid-content bg-purple total-order">
-            <div class="oride-top">订单总计</div>
-            <div class="oride-middle">{{ totalOrder.count }}笔</div>
+      <el-row :gutter="20" type="flex" justify="flex-start">
+        <!-- 已完成 3 -->
+        <el-col :span="5">
+          <div
+            class="grid-content"
+            :class="{ current: status === '3' }"
+            @click="chnageStatus('3')"
+          >
+            <div class="oride-top">已完成</div>
+            <div class="oride-middle">
+              <em>{{ statisticsObj.payed.count || 0 }}</em
+              >笔
+            </div>
             <div class="oride-bottom">
-              <span>{{ totalOrder.value }}元</span>
-              <span>{{ littleBear.value }}币</span>
-              <span>{{ recommended.value }}宝石</span>
+              {{ +statisticsObj.payed.value.toFixed(2) || 0 }}元
             </div>
           </div>
         </el-col>
-        <!-- 体验课 -->
-        <el-col :span="4">
-          <div class="grid-content bg-purple experience-order">
-            <div class="oride-top">体验课</div>
-            <div class="oride-middle">{{ experience.count }}笔</div>
-            <div class="oride-bottom">{{ experience.value }}元</div>
+        <!-- 未支付 0，1 -->
+        <el-col :span="5">
+          <div
+            class="grid-content"
+            :class="{ current: status === '0,1' }"
+            @click="chnageStatus('0,1')"
+          >
+            <div class="oride-top">未支付</div>
+            <div class="oride-middle">
+              <em>{{ statisticsObj.topay.count }}</em
+              >笔
+            </div>
+            <div class="oride-bottom">
+              {{ +statisticsObj.topay.value.toFixed(2) }}元
+            </div>
           </div>
         </el-col>
-        <!-- 系统课 -->
-        <el-col :span="4">
-          <div class="grid-content bg-purple system-order">
-            <div class="oride-top">系统课</div>
-            <div class="oride-middle">{{ systemClass.count }}笔</div>
-            <div class="oride-bottom">{{ systemClass.value }}元</div>
+        <!-- 退费： 退费中 5，已退费 6，7 -->
+        <el-col :span="5">
+          <div
+            class="grid-content"
+            :class="{ current: status === '5,6,7' }"
+            @click="chnageStatus('5,6,7')"
+          >
+            <div class="oride-top">退费</div>
+            <div class="oride-middle">
+              <em>{{ statisticsObj.refund.count }}</em
+              >笔
+            </div>
+            <div class="oride-bottom">
+              {{ +statisticsObj.refund.value.toFixed(2) }}元
+            </div>
           </div>
         </el-col>
-        <!-- 小熊商城 -->
-        <el-col :span="4">
-          <div class="grid-content bg-purple bear-order">
-            <div class="oride-top">小熊商城</div>
-            <div class="oride-middle">{{ littleBear.count }}笔</div>
-            <div class="oride-bottom">{{ littleBear.value }}币</div>
-          </div>
-        </el-col>
-        <!-- 推荐有礼 -->
-        <el-col :span="4">
-          <div class="grid-content bg-purple recommended-order">
-            <div class="oride-top">推荐有礼</div>
-            <div class="oride-middle">{{ recommended.count }}笔</div>
-            <div class="oride-bottom">{{ recommended.value }}宝石</div>
+        <!-- 全部订单 -->
+        <el-col :span="5">
+          <div
+            class="grid-content"
+            :class="{ current: !status }"
+            @click="chnageStatus('')"
+          >
+            <div class="oride-top">全部订单</div>
+            <div class="oride-middle">
+              <em>{{ statisticsObj.total.count }}</em
+              >笔
+            </div>
+            <div class="oride-bottom">
+              <span>{{ +statisticsObj.total.value.toFixed(2) }}元</span>
+              <!-- <span>{{ littleBear.value }}币</span>
+              <span>{{ recommended.value }}宝石</span> -->
+            </div>
           </div>
         </el-col>
       </el-row>
@@ -52,20 +88,25 @@
     <el-divider></el-divider>
     <!-- tab列表 -->
     <article class="bottom-box">
-      <table-order :status="status" :search="search" />
+      <table-order
+        :topic="topic"
+        :status="status"
+        :search="searchIn"
+        @statistics="getStatistics"
+      />
     </article>
   </div>
 </template>
 <script>
 import tableOrder from './tableOrder'
-import axios from '@/api/axios'
 import { isToss } from '@/utils/index'
 export default {
   components: {
     tableOrder
   },
   props: {
-    status: {
+    // 当前tab - 商品主题
+    topic: {
       type: String,
       default: ''
     },
@@ -81,45 +122,65 @@ export default {
       statData: [],
       // 获取teacherid
       teacherId: '',
-      // 切换tab
-      tab: '3', // 默认显示 3 - 已完成
+      // 支付状态  已完成:3, 待支付:0,1，已退费:6,7
+      status: '3',
       // 搜索
       searchIn: [],
-      // 体验课
-      experience: {},
-      // 系统课
-      systemClass: { count: 0, value: 0 },
-      // 小熊商城
-      littleBear: { count: 0, value: 0 },
-      // 推荐有礼
-      recommended: { count: 0, value: 0 },
-      // 订单总计
-      totalOrder: { count: 0, value: 0 }
+      statistics: {
+        '0': { count: 0, value: 0 },
+        '1': { count: 0, value: 0 },
+        '3': { count: 0, value: 0 },
+        '5': { count: 0, value: 0 },
+        '6': { count: 0, value: 0 },
+        '7': { count: 0, value: 0 }
+      }
     }
   },
   computed: {
-    // penTotal() {
-    //   return (
-    //     this.experience.count +
-    //     this.systemClass.count +
-    //     this.littleBear.count +
-    //     this.recommended.count
-    //   )
-    // },
-    // amountTotal() {
-    //   return (this.experience.value + this.systemClass.value).toFixed(2)
-    // }
+    // statistics format
+    statisticsObj: {
+      get() {
+        const { statistics } = this
+        const obj = {}
+        // 未支付 0，1
+        obj.topay = {
+          count: +statistics['0'].count + +statistics['1'].count,
+          value: +statistics['0'].value + +statistics['1'].value
+        }
+        // 退费：5，6，7
+        obj.refund = {
+          count:
+            +statistics['5'].count +
+            +statistics['6'].count +
+            +statistics['7'].count,
+          value:
+            +statistics['5'].value +
+            +statistics['6'].value +
+            +statistics['7'].value
+        }
+        obj.payed = {
+          count: +statistics['3'].count,
+          value: +statistics['3'].value
+        }
+        obj.total = {
+          count: obj.topay.count + obj.refund.count + obj.payed.count,
+          value: obj.topay.value + obj.refund.value + obj.payed.value
+        }
+        return obj
+      },
+      set(val) {
+        return val
+      }
+    }
   },
   watch: {
-    // 切换tab
-    status(val) {
-      this.tab = val
-      this.statList()
+    // 切换tab - 商品主题
+    topic(val) {
+      this.reset()
     },
     // 搜索
     search(val) {
       this.searchIn = val
-      this.statList()
     }
   },
   created() {
@@ -127,75 +188,45 @@ export default {
     if (teacherId) {
       this.teacherId = teacherId
     }
-    this.statList()
   },
   methods: {
-    statList() {
-      const must = []
-      if (this.teacherId) {
-        must.push(`{ "term": { "teacher_id": ${this.teacherId} } }`)
-      }
-      // TODO: 切换tab filter
-      // "filter":{"bool":{"should":[{"term":{"orderstatus":1}},{"term":{"orderstatus":0}}]}}
-
-      // 搜索 must
-      const mustArr = this.searchIn.map((item) => JSON.stringify(item))
-      must.push(...mustArr)
-
-      const should = this.tab ? [`{"terms": {"status": [${this.tab}]}}`] : []
-      const queryStr = `{
-        "bool": {
-          "must": [${must}],
-          "filter": {
-            "bool": {
-              "should": [${should}]
-            }
+    // 获取订单统计
+    getStatistics(res) {
+      const obj = {}
+      if (res && res.length > 0) {
+        this.reset()
+        res.forEach((item) => {
+          const { code, count, value } = item
+          obj[`${code}`] = {
+            count,
+            value
           }
+        })
+        this.statistics = {
+          ...this.statistics,
+          ...obj
         }
-      }`
-      axios
-        .post('/graphql/order', {
-          query: `{
-            orderStatistics(query: ${JSON.stringify(queryStr)}) {
-              type
-              info {
-                count
-                desc
-                value
-              }
-            }
-        }`
-        })
-        .then((res) => {
-          const _data = res.data.orderStatistics
-          console.log(_data, '_data')
-          this.experience = { count: 0, value: 0 }
-          this.systemClass = { count: 0, value: 0 }
-          this.littleBear = { count: 0, value: 0 }
-          this.recommended = { count: 0, value: 0 }
-          this.totalOrder = { count: 0, value: 0 }
-          // if (_data.length !== 0) {
-          _data.forEach((val) => {
-            if (val.type === 'bear') {
-              // 小熊商城
-              this.littleBear = val.info
-            } else if (val.type === 'gem') {
-              // 推荐有礼
-              this.recommended = val.info
-            } else if (val.type === 'experience') {
-              // 体验课
-              this.experience = val.info
-            } else if (val.type === 'system') {
-              // 系统课
-              this.systemClass = val.info
-            } else if (val.type === 'total_order') {
-              this.totalOrder = val.info
-            }
-          })
-          // }
+      } else {
+        this.reset()
+      }
+    },
 
-          this.statData = res.data.orderStatistics
-        })
+    /**
+     * 切换
+     */
+    chnageStatus(status) {
+      this.status = status
+    },
+
+    reset() {
+      this.statistics = {
+        '0': { count: 0, value: 0 },
+        '1': { count: 0, value: 0 },
+        '3': { count: 0, value: 0 },
+        '5': { count: 0, value: 0 },
+        '6': { count: 0, value: 0 },
+        '7': { count: 0, value: 0 }
+      }
     }
   }
 }
@@ -208,124 +239,38 @@ export default {
 .top-box {
   width: 100%;
   height: 100%;
-  // 订单总计
-  .total-order {
-    span {
-      width: 33.3%;
-      display: inline-block;
-    }
-    .oride-top {
-      font-size: 12px;
-      text-align: center;
-      padding: 10px 0;
-      color: #666666;
-    }
-    .oride-middle {
-      font-family: 'number_font';
-      font-size: 24px;
-      color: #4d4d4d;
-      text-align: center;
-      padding: 10px 0;
-    }
-    .oride-bottom {
-      font-family: 'number_font';
-      color: #666666;
-      font-size: 12px;
-      text-align: center;
-      padding: 10px 0;
+  .grid-content {
+    cursor: pointer;
+    background: #f5f6f7;
+    &.current {
+      background: #e4e4e4;
     }
   }
-  // 体验课
-  .experience-order {
-    .oride-top {
-      font-size: 12px;
-      color: #666666;
-      text-align: center;
-      padding: 10px 0;
-    }
-    .oride-middle {
-      font-family: 'number_font';
+  .oride-top {
+    font-size: 12px;
+    text-align: center;
+    padding: 10px 0;
+    color: #666666;
+  }
+  .oride-middle {
+    font-family: 'number_font';
+    font-size: 14px;
+    color: #4d4d4d;
+    text-align: center;
+    padding: 10px 0;
+    em {
+      margin-right: 5px;
       font-size: 24px;
-      color: #4d4d4d;
-      text-align: center;
-      padding: 10px 0;
-    }
-    .oride-bottom {
-      font-family: 'number_font';
-      color: #666666;
-      font-size: 12px;
-      text-align: center;
-      padding: 10px 0;
+      font-style: normal;
+      color: #409eff;
     }
   }
-  // 系统课
-  .system-order {
-    .oride-top {
-      font-size: 12px;
-      color: #666666;
-      text-align: center;
-      padding: 10px 0;
-    }
-    .oride-middle {
-      font-family: 'number_font';
-      font-size: 24px;
-      color: #4d4d4d;
-      text-align: center;
-      padding: 10px 0;
-    }
-    .oride-bottom {
-      font-family: 'number_font';
-      color: #666666;
-      font-size: 12px;
-      text-align: center;
-      padding: 10px 0;
-    }
-  }
-  // 小熊商城
-  .bear-order {
-    .oride-top {
-      font-size: 12px;
-      color: #666666;
-      text-align: center;
-      padding: 10px 0;
-    }
-    .oride-middle {
-      font-family: 'number_font';
-      font-size: 24px;
-      color: #4d4d4d;
-      text-align: center;
-      padding: 10px 0;
-    }
-    .oride-bottom {
-      font-family: 'number_font';
-      color: #666666;
-      font-size: 12px;
-      text-align: center;
-      padding: 10px 0;
-    }
-  }
-  // 推荐有礼
-  .recommended-order {
-    .oride-top {
-      color: #666666;
-      font-size: 12px;
-      text-align: center;
-      padding: 10px 0;
-    }
-    .oride-middle {
-      font-family: 'number_font';
-      font-size: 24px;
-      color: #4d4d4d;
-      text-align: center;
-      padding: 10px 0;
-    }
-    .oride-bottom {
-      font-family: 'number_font';
-      color: #666666;
-      font-size: 12px;
-      text-align: center;
-      padding: 10px 0;
-    }
+  .oride-bottom {
+    font-family: 'number_font';
+    color: #666666;
+    font-size: 12px;
+    text-align: center;
+    padding: 10px 0;
   }
 }
 // .bottom-box {
@@ -345,12 +290,6 @@ export default {
   }
   .el-col {
     border-radius: 4px;
-  }
-  .bg-purple-dark {
-    background: #f5f6f7;
-  }
-  .bg-purple {
-    background: #f5f6f7;
   }
   .el-tabs--border-card > .el-tabs__content {
     padding-left: 0;

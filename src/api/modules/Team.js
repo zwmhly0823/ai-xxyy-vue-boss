@@ -2,8 +2,8 @@
  * @Author: YangJiyong
  * @Email: yangjiyong@meishubao.com
  * @Date: 2020-03-21 11:58:33
- * @Last Modified by: chengweihua
- * @Last Modified time: 2020-04-01 16:03:38
+ * @Last Modified by: YangJiyong
+ * @Last Modified time: 2020-04-27 00:00:47
  * @Description: 班级
  */
 import axios from '../axiosConfig'
@@ -244,6 +244,64 @@ export default {
                 }
                 }
                   }`
+    })
+  },
+  // 获取课程下拉框接口
+  getStuCourseList({ query }) {
+    return axios.post('/graphql/getStuComment', {
+      query: `{
+        getStuCourseList(query:${JSON.stringify(query)}) {
+          course_id
+          classTitle
+        }
+      }`
+    })
+  },
+
+  // 获取体验课列表
+  getTrialCourseList(query = '') {
+    return axios.post('/graphql/v1/toss', {
+      query: `{
+        StudentTrialCourseList(query: ${JSON.stringify(query)}) {
+          student_id
+          team_id
+          order_no
+        }
+      }`
+    })
+  },
+
+  // 获取班级信息
+  getStudentTeamV1(query = '') {
+    const sort = `{"term": "desc", "sup.keyword": "asc", "id": "desc" }`
+    return axios.post('/graphql/v1/toss', {
+      query: `
+        {
+          StudentTeamList(query: ${JSON.stringify(
+            query
+          )}, sort: ${JSON.stringify(sort)}) {
+            id
+            team_name
+          }
+        }
+      `
+    })
+  },
+
+  // 获取班级信息 - 模糊搜索
+  getStudentTeamV1Search(query = '') {
+    const sort = `{"term": "desc", "sup.keyword": "asc", "id": "desc" }`
+    return axios.post('/graphql/v1/toss', {
+      query: `
+        {
+          StudentTeamListEx(query: ${JSON.stringify(
+            query
+          )}, sort: ${JSON.stringify(sort)}) {
+            id
+            team_name
+          }
+        }
+      `
     })
   }
 }

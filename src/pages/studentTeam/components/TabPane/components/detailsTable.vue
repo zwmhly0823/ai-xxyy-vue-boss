@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 20:22:24
  * @LastEditors: panjian
- * @LastEditTime: 2020-04-09 19:36:09
+ * @LastEditTime: 2020-04-24 10:26:38
  -->
 <template>
   <div class="table-box">
@@ -665,7 +665,7 @@ export default {
     },
     // 表头加好友操作
     headerPoint(index, scope) {
-      console.log(index, scope)
+      // console.log(index, scope)
     },
     batchBtn() {
       const orderIds = Object.values(this.selectUserMobile).join()
