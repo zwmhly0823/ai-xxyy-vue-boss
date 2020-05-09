@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-04-01 13:24:40
  * @LastEditors: panjian
- * @LastEditTime: 2020-04-03 18:59:02
+ * @LastEditTime: 2020-05-09 11:46:04
  -->
 <template>
   <el-form
@@ -58,6 +58,17 @@ export default {
   name: 'logisticsForm',
   props: ['formData'],
   data() {
+    var validateName = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error('请输入收货姓名'))
+      } else {
+        const reg = /[^\s]/
+        if (!reg.test(value)) {
+          callback(new Error('收货人姓名，开头不能有空格'))
+        }
+        callback()
+      }
+    }
     var validatePass = (rule, value, callback) => {
       if (value === '') {
         callback(new Error('请输入手机号'))
@@ -82,7 +93,7 @@ export default {
       },
       rules: {
         receiptName: [
-          { required: true, message: '请输入收货人姓名', trigger: 'blur' }
+          { required: true, validator: validateName, trigger: 'blur' }
         ],
         receiptTel: [
           {

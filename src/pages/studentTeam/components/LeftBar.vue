@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-13 16:53:27
  * @LastEditors: zhubaodong
- * @LastEditTime: 2020-04-08 20:52:30
+ * @LastEditTime: 2020-05-09 15:14:36
  -->
 <template>
   <div class="left-container">
@@ -79,7 +79,7 @@
       :props="defaultProps"
       default-expand-all
       node-key="customId"
-      :current-node-key="0"
+      :current-node-key="30"
       highlight-current
       style="color:#2F2E31"
       @node-click="nodeClick"
@@ -229,6 +229,8 @@ export default {
   methods: {
     ...mapActions('team', ['setUser']),
     nodeClick(data) {
+      console.log(data, 'dadadada')
+
       this.$emit('change', data)
     },
     handleSearch(res) {

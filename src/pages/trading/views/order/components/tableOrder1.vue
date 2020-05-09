@@ -55,7 +55,9 @@
           <p>
             {{
               scope.row.department
-                ? scope.row.department.department.name || '-'
+                ? scope.row.department.department
+                  ? scope.row.department.department.name
+                  : '-'
                 : '-'
             }}
           </p>
