@@ -515,7 +515,7 @@ export default {
     teacherDropDown,
     wxList,
     selectAddress,
-    teacherWx,
+    // teacherWx,
     SearchStage
     // SearchTrialStage
   },
