@@ -64,7 +64,7 @@
 
       <el-form-item v-if="channel">
         <!-- 渠道 -->
-        <channel-select @result="getChannel" :name="channel" />
+        <channel-select @result="getChannel" :name="channel" ref="channel" />
       </el-form-item>
 
       <el-form-item v-if="topicType">
@@ -87,6 +87,7 @@
           :supName="sup"
           :levelName="level"
           :addSupS="addSupS"
+          :supPlaceholder="supPlaceholder"
           style="margin-bottom:0px"
         />
       </el-form-item>
@@ -121,9 +122,23 @@
           :tip="nameTip"
         />
       </el-form-item>
-      <el-form-item v-if="groupSell && !teacherId">
-        <!-- 社群销售 -->
-        <group-sell @result="selectSellTeacher" :name="groupSell" />
+
+      <el-form-item v-if="teachernickname">
+        <!-- 老师模块昵称搜索 -->
+        <teacher-nickname
+          @result="getteacherNickname"
+          :name="teachernickname"
+          :onlyPhone="onlyNickname"
+          :tip="nicknameTip"
+        />
+      </el-form-item>
+      <el-form-item v-if="teacherwx">
+        <!-- 老师模块微信号搜索 -->
+        <teacher-wx
+          :teacherwx="teacherwx"
+          :WeChat="WeChat"
+          @getWxTeacher="getWxTeacher"
+        />
       </el-form-item>
       <el-form-item v-if="rank || induction || landing || position">
         <!-- 老师模块职级，登陆状态，入职状态，选择职务搜索 -->
@@ -152,6 +167,11 @@
       <el-form-item v-if="department && !teacherId">
         <!-- 社群销售组 -->
         <department @result="getDepartment" :name="department" />
+      </el-form-item>
+
+      <el-form-item v-if="groupSell && !teacherId">
+        <!-- 社群销售 -->
+        <group-sell @result="selectSellTeacher" :name="groupSell" />
       </el-form-item>
 
       <!-- && !teacherId -->
@@ -250,7 +270,9 @@ import Schedule from './searchItems/schedule'
 // 老师
 import teacherPhone from './searchItems/teacherSearch/teacherPhone.vue'
 import teacherName from './searchItems/teacherSearch/teacherName.vue'
+import teacherNickname from './searchItems/teacherSearch/teacherNickname.vue'
 import teacherDropDown from './searchItems/teacherSearch/teacherDropDown'
+import teacherWx from './searchItems/teacherSearch/teachetWx'
 import wxList from './searchItems/wxInput'
 import selectAddress from './searchItems/selectAddress.vue'
 import SearchStage from './searchItems/searchStage'
@@ -328,6 +350,11 @@ export default {
       type: String,
       default: '' // phone
     },
+    // 老师微信号搜索
+    teacherwx: {
+      type: String,
+      default: ''
+    },
     // 是否只搜手机号
     onlyPhone: {
       type: String,
@@ -358,13 +385,28 @@ export default {
       type: String,
       default: ''
     },
+    // 老师昵称搜索
+    teachernickname: {
+      type: String,
+      default: ''
+    },
     // 是否只搜老师姓名
     nameTip: {
       type: String,
       default: '姓名查询'
     },
+    // 是否只搜老师昵称
+    nicknameTip: {
+      type: String,
+      default: '对外昵称查询'
+    },
     // 是否只搜老师姓名
     onlyName: {
+      type: String,
+      default: '0' // 0
+    },
+    // 是否只搜老师昵称
+    onlyNickname: {
       type: String,
       default: '0' // 0
     },
@@ -372,6 +414,11 @@ export default {
     rank: {
       type: String,
       default: ''
+    },
+    // 老师微信传参
+    WeChat: {
+      type: Array,
+      default: null
     },
     // 入职状态
     induction: {
@@ -512,10 +559,11 @@ export default {
     Schedule,
     teacherPhone,
     teacherName,
+    teacherNickname,
     teacherDropDown,
     wxList,
     selectAddress,
-    // teacherWx,
+    teacherWx,
     SearchStage
     // SearchTrialStage
   },
@@ -549,7 +597,7 @@ export default {
     // 排期
     selectSchedule(res) {
       console.log(res, 'res')
-      this.setSeachParmas(res, [this.schedule || 'id'], 'term')
+      this.setSeachParmas(res, [this.schedule || 'id'])
     },
     // 难度
     supCallBack(res) {
@@ -578,6 +626,10 @@ export default {
     getteacherName(res) {
       this.setSeachParmas(res, [this.teachername || 'umobile'])
     },
+    // 老师昵称
+    getteacherNickname(res) {
+      this.setSeachParmas(res, [this.teachernickname || 'umobile'])
+    },
     // 职级
     rankCallBack(res) {
       this.setSeachParmas(res, [this.rank || 'rankName'])
@@ -589,6 +641,10 @@ export default {
     // 登陆状态
     landingCallBack(res) {
       this.setSeachParmas(res, [this.landing || 'inductionName'])
+    },
+    // 老师微信号
+    getWxTeacher(res) {
+      this.setSeachParmas(res, [this.teacherwx], 'wildcard')
     },
     // 职务
     positionCallBack(res) {
@@ -623,7 +679,7 @@ export default {
     },
     // 选择销售老师
     selectSellTeacher(res) {
-      this.setSeachParmas(res, [this.groupSell || 'pay_teacher_id'], 'wildcard')
+      this.setSeachParmas(res, [this.groupSell || 'pay_teacher_id'])
     },
     getTeamDetail(res) {
       this.setSeachParmas(res, [this.teamDetail || 'last_team_id'])
@@ -749,5 +805,8 @@ export default {
   .el-form-item {
     margin-bottom: 0px !important;
   }
+}
+.el-select-dropdown.is-multiple .el-select-dropdown__item.selected:after {
+  right: 5px;
 }
 </style>
