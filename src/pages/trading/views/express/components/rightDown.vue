@@ -98,7 +98,9 @@
       <el-table-column label="期数" width="120">
         <template slot-scope="scope">
           <div class="product">
-            <span>{{ ManagementList[scope.row.term] || '-' }}</span>
+            <span>{{
+              ManagementList[`${scope.row.newtype}${scope.row.term}`] || '-'
+            }}</span>
           </div>
         </template>
       </el-table-column>
@@ -672,6 +674,7 @@ export default {
               teacher_id
               last_teacher_id
               pay_teacher_id
+              regtype
               user {
                 id
                 birthday
@@ -697,11 +700,24 @@ export default {
               item.uptime = formatData(+item.utime, 's')
               item.sgtime = formatData(+item.signing_time, 's')
               item.buytime = formatData(+item.buy_time, 's')
+              // 套餐类型 regtype 1 -->0  regtype 2,3 -->1
+              switch (+item.regtype) {
+                case 1:
+                  item.newtype = 0
+                  break
+                case 2 || 3:
+                  item.newtype = 1
+                  break
+                default:
+                  break
+              }
+
               return item
             })
 
             this.tableData = resData
             // 总页数
+            console.log(this.tableData, 'this.tableData')
             this.totalPages = +res.data.LogisticsListPage.totalPages
 
             this.totalElements = +res.data.LogisticsListPage.totalElements // 总条数
@@ -760,6 +776,7 @@ export default {
                       id
                       period
                       period_name
+                      type
                     }
                     }       `
         })
@@ -768,7 +785,8 @@ export default {
 
           res.data.ManagementList.forEach((item) => {
             // {`${item.name}`:item.term}
-            obj[item.period] = item.period_name
+            const periodName = `${item.type}${item.period}`
+            obj[periodName] = item.period_name
           })
           this.ManagementList = obj
         })
