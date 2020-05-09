@@ -504,7 +504,7 @@
                 <el-table-column
                   fixed
                   label="作品总数"
-                  prop="total_complete_rate"
+                  prop="totalNumbe"
                   align="center"
                 ></el-table-column>
                 <el-table-column
@@ -551,11 +551,11 @@
                     <span
                       v-if="
                         Object.keys(scope.row.completeArr).length &&
-                          scope.row.completeArr[i] &&
-                          !scope.row.completeArr[i].is_null
+                          scope.row.completeArr[i]
                       "
-                      >{{ scope.row.completeArr[i].complete_rate }}</span
+                      >{{ scope.row.completeArr[i].course_task_count }}</span
                     >
+                    <span v-else>0</span>
                   </template>
                 </el-table-column>
               </el-table-column>
@@ -787,13 +787,43 @@ export default {
             : ''
           // 总数、分页用
           this.totalElements = +totalElements || 0
-          this.formatTableData(content || [])
+          this.uploadStatistical(content || [])
         }
         this.flags.loading = false
       } catch (err) {
         console.log(err)
         // loadingInstance.close()
       }
+    },
+    // 上传统计
+    uploadStatistical(list) {
+      // 初始化
+      this.tableDataChildAttend = []
+      list.forEach((item, index) => {
+        // const uploadJudge =
+        //   this.activeName === 'uploadWorks' &&
+        //   item &&
+        //   item.studentCourseTaskStatisticsList
+        // if (uploadJudge) {
+        //   item.studentCourseTaskStatisticsList.forEach((val) => {
+        //     const totalNumbe = { totalNumbe: val.course_task_count }
+        //     Object.assign(item, totalNumbe)
+        //   })
+        // }
+        const totalNumbe = {
+          totalNumbe: item.studentCourseTaskStatisticsList[0].course_task_count
+        }
+        Object.assign(item, totalNumbe)
+
+        item.completeArr = item.studentCourseTaskStatisticsList || []
+        item.completeArr = item.completeArr.splice(1)
+        const childLength = item.completeArr.length
+        if (this.tableDataChildAttend.length <= childLength) {
+          this.tableDataChildAttend = item.completeArr
+        }
+      })
+
+      this.tableDataAttend = list
     },
     // 包装 接口返回的数据
     pakageListDate(tabList) {
@@ -911,7 +941,6 @@ export default {
       // ]
       // 初始化
       this.tableDataChildAttend = []
-      console.log(list, 'lst')
       list.forEach((item, index) => {
         item.completeArr = item.completeArr || []
         const completeArr = item.completeArr

@@ -288,6 +288,10 @@ export default {
             department_name
             realname
             trial_course_count
+            studentCourseTaskStatisticsList{
+              current_lesson
+              course_task_count
+            }
           }
         }
       }`
