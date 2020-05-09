@@ -37,6 +37,8 @@ export default {
             user{
               nickname
               mobile
+              mobile_province
+              mobile_city
             }
             channel {
               channel_outer_name
@@ -66,6 +68,32 @@ export default {
               team_category
             }
           }
+        }
+      }`
+    })
+  },
+
+  /**
+   * 模糊搜索订单号
+   * @param {*} query 订单号
+   * @param {*} size
+   */
+  searchOutTradeNo(no = '', size = 20) {
+    const query = {
+      bool: {
+        must: [
+          {
+            wildcard: { out_trade_no: `*${no}*` }
+          }
+        ]
+      }
+    }
+    const q = JSON.stringify(query)
+    return axios.post('/graphql/v1/toss', {
+      query: `{
+        OrderListEx(query: ${JSON.stringify(q)}, size: ${size}){
+          id,
+          out_trade_no
         }
       }`
     })

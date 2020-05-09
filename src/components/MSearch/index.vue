@@ -3,8 +3,8 @@
  * @version:
  * @Author: zhubaodong
  * @Date: 2020-03-24 18:20:12
- * @LastEditors: panjian
- * @LastEditTime: 2020-04-21 17:11:35
+ * @LastEditors: Lukun
+ * @LastEditTime: 2020-05-07 12:01:24
  -->
 
 <template>
@@ -25,6 +25,7 @@
           :onlyPhone="onlyPhone"
           :tip="phoneTip"
           :last_team_id="last_team_id"
+          ref="searchUserByPhone"
         />
       </el-form-item>
 
@@ -70,6 +71,7 @@
         <!-- 主题 -->
         <product-topic @result="getProductTopic" :name="topicType" />
       </el-form-item>
+
       <el-form-item v-if="moreVersion">
         <!-- 随材版本-->
         <more-version-box @result="getVersionNu" :name="moreVersion" />
@@ -88,10 +90,12 @@
           style="margin-bottom:0px"
         />
       </el-form-item>
+
       <el-form-item v-if="schedule">
         <!-- 排期 -->
         <Schedule @result="selectSchedule" :name="schedule" />
       </el-form-item>
+
       <el-form-item v-if="teacherphone">
         <!-- 老师模块手机号搜索 -->
         <teacher-phone
@@ -102,10 +106,12 @@
           :tip="phoneTip"
         />
       </el-form-item>
+
       <el-form-item v-if="teamDetail">
         <!-- 班级期数-->
         <team-detail @result="getTeamDetail" :name="teamDetail" />
       </el-form-item>
+
       <el-form-item v-if="teachername">
         <!-- 老师模块姓名搜索 -->
         <teacher-name
@@ -156,10 +162,24 @@
 
       <!-- && !teacherId -->
       <el-form-item v-if="searchTrialTeamName">
-        <!-- 班级名称搜索 -->
+        <!-- 体验课班级名称搜索 -->
         <search-trial-team-name
           @result="getTrialTeamName"
           :name="searchTrialTeamName"
+        />
+      </el-form-item>
+
+      <el-form-item v-if="searchStage">
+        <!-- 系统课排期搜索 -->
+        <search-stage @result="getSearchStage" :name="searchStage" />
+      </el-form-item>
+
+      <el-form-item v-if="searchTrialStage">
+        <!-- 体验课排期搜索 -->
+        <search-stage
+          @result="getSearchTrialStage"
+          :name="searchTrialStage"
+          type="0"
         />
       </el-form-item>
 
@@ -184,6 +204,7 @@
           </el-button>
         </el-popover>
       </el-form-item> -->
+
       <el-form-item
         v-if="wxSerch || wxTeacherPhone || wxStatus || wxConcatTeacher"
       >
@@ -205,7 +226,6 @@
         <slot name="searchItems"></slot>
       </el-form-item>
     </el-form>
-    <slot name="otherSearch"></slot>
   </el-card>
 </template>
 <script>
@@ -232,8 +252,10 @@ import teacherPhone from './searchItems/teacherSearch/teacherPhone.vue'
 import teacherName from './searchItems/teacherSearch/teacherName.vue'
 import teacherDropDown from './searchItems/teacherSearch/teacherDropDown'
 import wxList from './searchItems/wxInput'
-import { isToss } from '@/utils/index'
 import selectAddress from './searchItems/selectAddress.vue'
+import SearchStage from './searchItems/searchStage'
+// import SearchTrialStage from './searchItems/searchTrialStage'
+import { isToss } from '@/utils/index'
 
 export default {
   props: {
@@ -266,7 +288,6 @@ export default {
       type: String,
       default: '' // schedule
     },
-
     // 难度
     sup: {
       type: String,
@@ -327,6 +348,7 @@ export default {
       type: String,
       default: ''
     },
+    // 查询班级  搜到用户的最后一个班
     last_team_id: {
       type: String,
       default: ''
@@ -389,12 +411,12 @@ export default {
     // 社群销售查询
     groupSell: {
       type: String,
-      default: ''
+      default: '' //
     },
     // 班级信息查询
     teamDetail: {
       type: String,
-      default: ''
+      default: '' //
     },
     moreVersion: {
       type: String,
@@ -447,6 +469,26 @@ export default {
     selectAddress: {
       type: Boolean,
       default: false // selectAddress
+    },
+    // 系统课排期
+    searchStage: {
+      type: String,
+      default: ''
+    },
+    // 体验课排期
+    searchTrialStage: {
+      type: String,
+      default: ''
+    },
+    // 体验课排期 是否多选
+    isMultiple: {
+      type: Boolean,
+      default: true
+    },
+    // 难度 placeholder
+    supPlaceholder: {
+      type: String,
+      default: '难度'
     }
   },
   components: {
@@ -472,7 +514,10 @@ export default {
     teacherName,
     teacherDropDown,
     wxList,
-    selectAddress
+    selectAddress,
+    teacherWx,
+    SearchStage
+    // SearchTrialStage
   },
   data() {
     return {
@@ -481,17 +526,11 @@ export default {
       must: [],
       should: [],
       selectTime: null, // 物流时间下拉列表_选中项
-      teacherId: '', // 判断是否是toss环境还是boss环境
-      oldTime: '' // 上次时间选择值
+      oldTime: '', // 上次时间选择值
+      teacherId: '' // 判断是否是toss环境还是boss环境
     }
   },
   computed: {},
-  created() {
-    const teacherId = isToss()
-    if (teacherId) {
-      this.teacherId = teacherId
-    }
-  },
   methods: {
     // 选择渠道
     getChannel(res) {
@@ -528,6 +567,7 @@ export default {
     },
     // 选择手机号
     getPhoneHander(res) {
+      console.log(res, '回调res') // 得到uid
       this.setSeachParmas(res, [this.phone || 'umobile'])
     },
     // 选择老师手机号
@@ -558,7 +598,8 @@ export default {
     getOutTradeNo(res) {
       this.setSeachParmas(res, [this.outTradeNo || 'out_trade_no'], 'wildcard')
     },
-    // 选择职务
+
+    // 选择商品名
     getProductName(res) {
       this.setSeachParmas(res, [this.productName || 'product_name'])
     },
@@ -578,7 +619,6 @@ export default {
     },
     // 选择物流单号
     getExpressNo(res) {
-      console.log(res, 'res___________', this.expressNo)
       this.setSeachParmas(res, [this.expressNo || 'express_nu'], 'wildcard')
     },
     // 选择销售老师
@@ -626,6 +666,16 @@ export default {
     },
     getAddress(res) {
       this.setSeachParmas(res, [this.selectAddress])
+    },
+    getSearchStage(res) {
+      this.setSeachParmas(res, [this.searchStage || 'stage'], 'terms')
+    },
+    getSearchTrialStage(res) {
+      this.setSeachParmas(
+        res,
+        [this.searchTrialStage || 'trial_stage'],
+        'terms'
+      )
     },
 
     /**  处理接收到的查询参数
@@ -676,6 +726,12 @@ export default {
         this.should = temp
       }
       this.$emit('searchShould', temp)
+    }
+  },
+  created() {
+    const teacherId = isToss()
+    if (teacherId) {
+      this.teacherId = teacherId
     }
   }
 }

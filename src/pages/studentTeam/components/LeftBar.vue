@@ -36,6 +36,7 @@
             onlyPhone="1"
             :addSupS="true"
             phoneTip="手机号/微信昵称"
+            ref="search"
           ></m-search>
         </div>
         <div class="btn-box">
@@ -87,6 +88,8 @@
 </template>
 
 <script>
+// import MSearch from '@/components/MSearch/index.vue'
+import { mapActions } from 'vuex'
 // import MSearch from '@/components/MSearch/index.vue'
 
 export default {
@@ -225,6 +228,7 @@ export default {
     }
   },
   methods: {
+    ...mapActions('team', ['setUser']),
     nodeClick(data) {
       this.$emit('change', data)
     },
@@ -235,6 +239,21 @@ export default {
     },
     filterHandler() {
       this.popStatus = false
+      // 获取输入的学员手机号
+      const phone = this.$refs.search.$refs.searchUserByPhone.input
+      let tid = ''
+      if (phone && this.filterItem && this.filterItem.length > 0) {
+        this.filterItem.forEach((item) => {
+          if (item.term && item.term.id) tid = item.term.id
+        })
+        const user = { tid, phone }
+        this.setUser(user)
+      } else {
+        this.setUser({
+          tid: '',
+          phone: ''
+        })
+      }
       this.$emit('filter', this.filterItem)
     },
     closeHandler() {

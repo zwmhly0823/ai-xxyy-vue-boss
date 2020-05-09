@@ -3,7 +3,7 @@
  * @Email: yangjiyong@meishubao.com
  * @Date: 2020-03-14 15:07:26
  * @Last Modified by: YangJiyong
- * @Last Modified time: 2020-04-16 20:27:10
+ * @Last Modified time: 2020-05-07 19:01:55
  * @Description: 设置左侧导航展示数据
  * 通过导入模块router/index.js判断，规定模块入口文件为 {path: '/', name: 'Home'}
  * TODO: 自动完成
@@ -110,43 +110,72 @@ const routes = [
       module: 'operating'
     },
     children: [
+      // {
+      //   path: '/enrollmentSchedule',
+      //   name: 'enrollmentSchedule',
+      //   meta: {
+      //     title: '招生排期',
+      //     module: 'operating'
+      //   }
+      // },
       {
-        path: '/enrollmentSchedule',
-        name: 'enrollmentSchedule',
+        path: '/channelManagement',
+        name: 'channelManagement',
         meta: {
-          title: '招生排期',
+          title: '渠道管理',
           module: 'operating'
         }
       }
     ]
   },
-  // demo dashboard
+  // 统计分析
   {
-    path: '/dashboard',
-    name: 'dashboard',
-    hidden: true,
+    path: '/statistics',
+    name: 'statistics',
+    // hidden: true,
     meta: {
-      title: 'Dashboard',
-      icon: 'el-icon-s-data',
-      module: 'dashboard'
+      title: '统计分析',
+      icon: 'el-icon-s-marketing',
+      module: 'statistics'
     },
     children: [
+      // {
+      //   path: '/salesPerformance',
+      //   name: 'salesPerformance',
+      //   meta: {
+      //     title: '销售业绩',
+      //     module: 'statistics',
+      //     style: 'line'
+      //   }
+      // },
+
       {
-        path: '/components/table',
-        name: 'Table',
+        path: '/priodPerformance',
+        name: 'priodPerformance',
         meta: {
-          title: '全部订单',
-          module: 'dashboard'
+          title: '按期汇总',
+          module: 'statistics',
+          style: 'line'
         }
       },
       {
-        path: '/components/form',
-        name: 'Form',
+        path: '/salesPerformance',
+        name: 'salesPerformance',
         meta: {
-          title: '支付流水',
-          module: 'dashboard'
+          title: '销售过程',
+          module: 'statistics',
+          style: 'line'
         }
       }
+      // {
+      //   path: '/salesProcess',
+      //   name: 'salesProcess',
+      //   meta: {
+      //     title: '按期汇总',
+      //     module: 'statistics',
+      //     style: 'line'
+      //   }
+      // }
     ]
   }
 ]

@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-13 16:53:41
  * @LastEditors: zhubaodong
- * @LastEditTime: 2020-03-23 21:50:41
+ * @LastEditTime: 2020-05-06 21:03:01
  -->
 <template>
   <div class="right-container">
@@ -49,12 +49,87 @@
             </span>
           </div>
         </div>
-        <!-- <div class="header-right">
-          <el-card shadow="never">
-            <i class="el-icon-plus"></i>
-            <span>关联微信群</span>
-          </el-card>
-        </div> -->
+        <div class="header-right" v-if="false">
+          <el-tooltip
+            class="item"
+            popper-class="headerPop"
+            effect="light"
+            content="自动加好友"
+            manual
+            v-model="autoAddFriends"
+            placement="left"
+          >
+            <i
+              class="el-icon-s-tools toolsIcons"
+              @click="autoAddFriends = true"
+            ></i>
+            <div slot="content">
+              <el-tooltip
+                popper-class="headerPopIn"
+                v-model="autoAddFriendsIn"
+                class="item"
+                effect="light"
+                manual
+                placement="right-start"
+              >
+                <div slot="content" class="openBtn">
+                  <div @click="openAutoAddOpen">
+                    <span>开启</span>
+                    <svg
+                      v-if="switchState === 'ON'"
+                      t="1588769464743"
+                      class="icon"
+                      viewBox="0 0 1024 1024"
+                      version="1.1"
+                      xmlns="http://www.w3.org/2000/svg"
+                      p-id="2161"
+                      width="16"
+                      height="16"
+                    >
+                      <path
+                        d="M395.61216 862.14656a77.84448 77.84448 0 0 1-54.90688-22.67136L30.86336 528.11776C0.63488 497.88928 0.63488 448.512 30.86336 417.792a77.84448 77.84448 0 0 1 109.83424 0l255.42656 256.43008L883.32288 184.5248c30.22848-30.22848 79.09376-30.22848 109.83424 0a77.84448 77.84448 0 0 1 0 109.83424L450.53952 839.4752a77.0048 77.0048 0 0 1-54.92736 22.67136z m0 0"
+                        fill="#66CCFF"
+                        p-id="2162"
+                      ></path>
+                    </svg>
+                  </div>
+                  <div @click="openAutoAddClose">
+                    <span>关闭</span>
+                    <svg
+                      v-if="switchState === 'OFF'"
+                      t="1588769464743"
+                      class="icon"
+                      viewBox="0 0 1024 1024"
+                      version="1.1"
+                      xmlns="http://www.w3.org/2000/svg"
+                      p-id="2161"
+                      width="16"
+                      height="16"
+                    >
+                      <path
+                        d="M395.61216 862.14656a77.84448 77.84448 0 0 1-54.90688-22.67136L30.86336 528.11776C0.63488 497.88928 0.63488 448.512 30.86336 417.792a77.84448 77.84448 0 0 1 109.83424 0l255.42656 256.43008L883.32288 184.5248c30.22848-30.22848 79.09376-30.22848 109.83424 0a77.84448 77.84448 0 0 1 0 109.83424L450.53952 839.4752a77.0048 77.0048 0 0 1-54.92736 22.67136z m0 0"
+                        fill="#66CCFF"
+                        p-id="2162"
+                      ></path>
+                    </svg>
+                  </div>
+                </div>
+                <div
+                  @mouseenter="
+                    ;+classId.classId.team_state !== 2
+                      ? (autoAddFriendsIn = true)
+                      : ''
+                  "
+                  :class="
+                    +classId.classId.team_state !== 2 ? 'yClick' : 'nClick'
+                  "
+                >
+                  自动加好友
+                </div>
+              </el-tooltip>
+            </div>
+          </el-tooltip>
+        </div>
       </div>
       <div class="body">
         <div class="body-boxLeft" v-show="item.team_type == 0">
@@ -183,7 +258,16 @@ export default {
       teacherId: '',
       tableDataEmpty: true,
       count: 0,
-      day: {}
+      day: {},
+      autoAddFriends: false,
+      autoAddFriendsIn: false,
+      switchState: 'OFF' // 默认状态
+    }
+  },
+  mounted() {
+    document.onmousedown = () => {
+      this.autoAddFriends = false
+      this.autoAddFriendsIn = false
     }
   },
   watch: {
@@ -201,46 +285,96 @@ export default {
     }
   },
   methods: {
+    openAutoAddOpen() {
+      this.autoAddFriends = false
+      this.autoAddFriendsIn = false
+      this.$http.StudentTerm.updateStudentTeamByState({
+        status: 'ON',
+        teamId: this.classId.classId.id || ''
+      })
+        .then((res) => {
+          if (+res.code === 0) {
+            this.$http.StudentTerm.getStudentTeamById({
+              teamId: this.classId.classId.id || ''
+            }).then((res) => {
+              this.switchState = res.payload.switchState
+            })
+            this.$message({
+              message: '已开启自动加好友功能',
+              type: 'success'
+            })
+          }
+        })
+        .catch((rej) => {
+          this.$message.error('设置失败')
+        })
+    },
+    openAutoAddClose() {
+      console.log(this.classId)
+
+      this.autoAddFriends = false
+      this.autoAddFriendsIn = false
+      this.$http.StudentTerm.updateStudentTeamByState({
+        status: 'OFF',
+        teamId: this.classId.classId.id || ''
+      })
+        .then((res) => {
+          if (+res.code === 0) {
+            this.$http.StudentTerm.getStudentTeamById({
+              teamId: this.classId.classId.id || ''
+            }).then((res) => {
+              this.switchState = res.payload.switchState
+            })
+            this.$message({
+              message: '已关闭自动加好友功能',
+              type: 'success'
+            })
+          }
+        })
+        .catch((rej) => {
+          this.$message.error('设置失败')
+        })
+    },
     getClassTeacher(data) {
       const queryParams = `[{id:${data}}]`
       axios
         .get('/graphql/getClassTeacher', {
           params: {
             query: `{
- detail (query: "${queryParams}"){
-  id
-  team_name
-  team_state
-  team_type
-  teacher_wx
-  enrolled
-  teacher{
-    id
-    nickname
-    weixin_ids
-     weichat_num
-    ctime
-    realname
-          }
-  statictis {
-       today_order
-        yesterday_order
-        order_all
-        wait_sent
-        unadd_wechat
-        unadd_group
-        unlogin
-        today_add_class
-        yesterday_add_class
-        tody_comp_class
-        yesterday_comp_class
-        tody_works
-        yesterday_works
-        tody_comment
-        yesterday_comment
-               }
-                  }
-                    }`
+            detail (query: "${queryParams}"){
+              id
+              team_name
+              team_state
+              team_type
+              teacher_wx
+              enrolled
+                teacher{
+                  id
+                  nickname
+                  weixin_ids
+                  weichat_num
+                  ctime
+                  realname
+                }
+              statictis {
+                today_order
+                  yesterday_order
+                  order_all
+                  wait_sent
+                  unadd_wechat
+                  unadd_group
+                  unlogin
+                  today_add_class
+                  yesterday_add_class
+                  tody_comp_class
+                  yesterday_comp_class
+                  tody_works
+                  yesterday_works
+                  tody_comment
+                  yesterday_comment
+                }
+              }
+            }`
           }
         })
         .then((res) => {
@@ -294,6 +428,11 @@ export default {
 
           // this.classMessage2 = res.dataformatEndDay
         })
+      this.$http.StudentTerm.getStudentTeamById({
+        teamId: this.classId.classId.id || ''
+      }).then((res) => {
+        this.switchState = res.payload.switchState
+      })
     }
   }
 }
@@ -469,16 +608,6 @@ export default {
   .el-card__body {
     padding: 15px;
   }
-  // }
-  // .header-right {
-  //   white-space: nowrap;
-  //   .el-card__body {
-  //     font-size: 14px;
-  //     padding: 10px 15px;
-  //     span {
-  //       cursor: pointer;
-  //     }
-  // }
 }
 .right-bar-empty {
   width: 100%;
@@ -488,5 +617,54 @@ export default {
   color: #808080;
   background-color: #fff;
   border: #ebebeb 10px solid;
+}
+
+.headerPop {
+  font-size: 14px;
+  padding: 8px;
+  border: 1px solid rgb(228, 231, 237) !important;
+  border-radius: 0;
+  margin-right: 8px !important;
+  box-shadow: #333 4px 4px 3px;
+  right: 40px !important;
+  background-color: rgb(245, 246, 247) !important;
+  cursor: pointer;
+  .popper__arrow {
+    display: none !important;
+  }
+}
+.headerPopIn {
+  margin-right: 7px !important;
+  font-size: 14px;
+  padding: 5px;
+  border: 1px solid rgb(228, 231, 237) !important;
+  border-radius: 0;
+  box-shadow: #333 4px 4px 3px;
+  cursor: pointer;
+  background-color: rgb(245, 246, 247) !important;
+  .popper__arrow {
+    display: none !important;
+  }
+}
+.openBtn div {
+  display: flex;
+  align-items: center;
+}
+.openBtn div:hover {
+  font-weight: 500;
+}
+.openBtn div svg {
+  margin-left: 4px;
+  width: 14px;
+  height: 14px;
+}
+.yClick:hover {
+  font-weight: 500;
+}
+.nClick {
+  color: #ccc;
+}
+.toolsIcons {
+  font-size: 16px;
 }
 </style>

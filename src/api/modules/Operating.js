@@ -4,11 +4,18 @@
  * @Author: Shentong
  * @Date: 2020-03-16 19:46:39
  * @LastEditors: Shentong
- * @LastEditTime: 2020-04-27 12:36:04
+ * @LastEditTime: 2020-05-08 16:33:44
  */
 import axios from '../axiosConfig'
 
 export default {
+  /**
+   * @description 获取版本号
+   * @param {type} params
+   */
+  getCourseVersion(params) {
+    return axios.get(`/api/s/v1/data/dictionary/byType?type=${params.type}`)
+  },
   /**
    * 获取体验课、系统课列表
    */
@@ -93,5 +100,48 @@ export default {
     return axios.get(
       `/api/s/v1/management/enroll/calculation/byPeriod?teacherId=${params.teacherId}&departmentIds=${params.departmentIds}&courseType=${params.courseType}&period=${params.period}`
     )
+  },
+  /**
+   *
+   *渠道查询
+   */
+  channelDetailPage(queryParams) {
+    return axios.post('/graphql/channelDetail', {
+      query: `{
+        channelDetailPage(channelQuery:${queryParams},size:20){
+          number
+          size
+          numberOfElements
+          totalElements
+          totalPages
+          content {
+            channelId
+            channelName
+            channelClassId
+            channelClassName
+            channelParentName
+            channelParentId
+            orderUserAllNums
+            orderUserPayNums
+            orderUserNoPayNums
+            wechatAddNums
+            joinCourseNums
+            completeCourseNums
+            systemOrderNums
+            systemOrderAmounts
+            channelCtime
+          }
+          counts {
+            allUserNums
+            allPayUserNums
+            allJoinUserNums
+            allCompleteUserNums
+            allSystemUserNums
+            allSystemUserAmounts
+            allWechatAddNums
+          }
+        }
+      }`
+    })
   }
 }

@@ -1,0 +1,237 @@
+<!--
+ * @Descripttion: 
+ * @version: 
+ * @Author: panjian
+ * @Date: 2020-05-06 16:33:15
+ * @LastEditors: panjian
+ * @LastEditTime: 2020-05-06 20:16:22
+ -->
+<template>
+  <div class="channelAdd-box">
+    <div class="channelAdd-top">
+      <div class="channelAdd-top-search">
+        <channel-search></channel-search>
+      </div>
+    </div>
+    <div class="channelAdd-table">
+      <el-button class="add-btn" type="primary">添加渠道</el-button>
+      <el-table
+        :header-cell-style="headerCss"
+        :data="tableData"
+        style="width: 100%"
+      >
+        <el-table-column width="20px">
+          <template slot-scope="scope">
+            <el-Popover popper-class="batch-btn" trigger="hover">
+              <div size="mini" type="text" @click="batchBtn">
+                <span style="cursor:pointer">编辑</span>
+              </div>
+              <div
+                @mouseenter="handleEdit(scope.$index, scope.row)"
+                slot="reference"
+              >
+                <img src="@/assets/images/point.png" />
+              </div>
+            </el-Popover>
+          </template>
+        </el-table-column>
+        <el-table-column prop="date" label="序号" width="180">
+        </el-table-column>
+        <el-table-column prop="name" label="渠道id" width="180">
+        </el-table-column>
+        <el-table-column prop="address" label="渠道状态"> </el-table-column>
+        <el-table-column prop="address" label="一级渠道"> </el-table-column>
+        <el-table-column prop="address" label="二级渠道"> </el-table-column>
+        <el-table-column prop="address" label="三级渠道"> </el-table-column>
+        <el-table-column prop="address" label="渠道备注"> </el-table-column>
+        <el-table-column prop="address" label="创建时间"> </el-table-column>
+      </el-table>
+      <m-pagination
+        @current-change="handleCurrentChange"
+        :current-page="1"
+        :total="10"
+        open="calc(100vw - 95px - 100px)"
+        close="calc(100vw - 23px - 50px)"
+      />
+    </div>
+    <el-drawer
+      class="drawer-detail"
+      :show-close="showClose"
+      :visible.sync="drawer"
+      :modal="false"
+      size="40%"
+    >
+      <div class="drawer-box">
+        <h3>基本信息</h3>
+        <p>
+          <span>渠道分类: </span>
+          <span class="drawer-box-text"> 线上推广 - 推广人</span>
+        </p>
+        <p>
+          <span>渠道名称: </span>
+          <span class="drawer-box-text">推广人</span>
+        </p>
+        <p>
+          <span>渠道ID: </span>
+          <span class="drawer-box-text">43433</span>
+        </p>
+        <p>
+          <span>链接地址: </span>
+          <a :href="link" target="_blank">{{ link }}</a>
+        </p>
+      </div>
+    </el-drawer>
+  </div>
+</template>
+
+<script>
+import channelSearch from '../components/componentsSearch/search'
+import MPagination from '@/components/MPagination/index.vue'
+export default {
+  props: {
+    tabIndex: {
+      type: String,
+      default: ''
+    }
+  },
+  components: {
+    channelSearch,
+    MPagination
+  },
+  data() {
+    return {
+      link: 'https://www.baidu.com',
+      showClose: true,
+      drawer: false,
+      tableData: [
+        {
+          date: '2016-05-02',
+          name: '王小虎',
+          address: '上海市普陀区金沙江路 1518 弄'
+        },
+        {
+          date: '2016-05-03',
+          name: '王小虎',
+          address: '上海市普陀区金沙江路 1516 弄'
+        },
+        {
+          date: '2016-05-03',
+          name: '王小虎',
+          address: '上海市普陀区金沙江路 1516 弄'
+        },
+        {
+          date: '2016-05-03',
+          name: '王小虎',
+          address: '上海市普陀区金沙江路 1516 弄'
+        },
+        {
+          date: '2016-05-03',
+          name: '王小虎',
+          address: '上海市普陀区金沙江路 1516 弄'
+        },
+        {
+          date: '2016-05-03',
+          name: '王小虎',
+          address: '上海市普陀区金沙江路 1516 弄'
+        },
+        {
+          date: '2016-05-03',
+          name: '王小虎',
+          address: '上海市普陀区金沙江路 1516 弄'
+        },
+        {
+          date: '2016-05-03',
+          name: '王小虎',
+          address: '上海市普陀区金沙江路 1516 弄'
+        },
+        {
+          date: '2016-05-03',
+          name: '王小虎',
+          address: '上海市普陀区金沙江路 1516 弄'
+        },
+        {
+          date: '2016-05-03',
+          name: '王小虎',
+          address: '上海市普陀区金沙江路 1516 弄'
+        },
+        {
+          date: '2016-05-03',
+          name: '王小虎',
+          address: '上海市普陀区金沙江路 1516 弄'
+        },
+        {
+          date: '2016-05-03',
+          name: '王小虎',
+          address: '上海市普陀区金沙江路 1516 弄'
+        }
+      ]
+    }
+  },
+  created() {},
+  methods: {
+    handleCurrentChange() {},
+    handleEdit(index, row) {
+      // 鼠标移入三个点上面触发的事件
+      // 当没有点击复选框 直接点击加好友
+      console.log(index, row, '点击查看详情11')
+    },
+    batchBtn() {
+      // 点击查看详情
+      this.drawer = true
+      console.log('点击查看详情22')
+    },
+    // 表头回调样式
+    headerCss({ row, column, rowIndex, columnIndex }) {
+      return 'font-size:12px;color:#666;font-weight:normal;background:#f0f1f2;'
+    }
+  }
+}
+</script>
+
+<style lang="scss" scoped>
+.channelAdd-box {
+  background: #f0f1f2;
+  padding: 10px 10px 10px 10px;
+  height: calc(100vh - 129px);
+  overflow: scroll;
+  .channelAdd-top {
+    .channelAdd-top-search {
+      background: #fff;
+      padding: 15px;
+    }
+  }
+  .channelAdd-table {
+    padding: 10px;
+    margin-top: 10px;
+    margin-bottom: 20px;
+    background: #fff;
+    .add-btn {
+      margin-top: 10px;
+      margin-left: 10px;
+      margin-bottom: 20px;
+      width: 120px;
+      height: 40px;
+    }
+  }
+  .drawer-detail {
+    margin: 50px 10px 10px 10px;
+    .drawer-box {
+      padding-left: 20px;
+      .drawer-box-text {
+        margin-left: 20px;
+        font-family: 'number_font';
+        font-size: 14px;
+        color: #949494;
+      }
+      p {
+        padding-top: 30px;
+        padding-left: 30px;
+      }
+      a {
+        margin-left: 10px;
+        color: #409eff;
+      }
+    }
+  }
+}
+</style>

@@ -26,7 +26,7 @@
                   type="datetimerange"
                   start-placeholder="开始日期"
                   end-placeholder="结束日期"
-                  :default-time="['00:00:00', '22:00:00']"
+                  :default-time="['00:00:00', '00:00:00']"
                   @change="sellCycleTimeChange"
                 >
                 </el-date-picker>
@@ -214,7 +214,6 @@ export default {
       // 编辑页面 TODO:
       try {
         const _data = await this.getScheduleFirstStep({ period, courseType })
-        console.log(_data, '_data')
         const {
           courseDay = '',
           endCourseDay = '',
@@ -236,7 +235,6 @@ export default {
           sellCycle,
           robinNum // 接速设置
         }
-        console.log(this.formInfo, '-----')
 
         this.sellCycleTimeChange(this.formInfo.sellCycleTime)
         this.attendClassTimeChange(this.formInfo.attendClassTime)
@@ -259,7 +257,6 @@ export default {
     calcSellTimeByDiffDay() {},
     // 售卖周期
     sellCycleTimeChange(val) {
-      console.log(val, 'val')
       const [startDate = '', endDate = ''] = val || []
 
       const diffTime = Number(endDate) - Number(startDate)
@@ -270,7 +267,6 @@ export default {
         : 0
 
       const { sellCycle = new Array(this.diffDay) } = this.formInfo
-
       for (let i = 0; i < this.diffDay; i++) {
         this.$set(
           this.formInfo,
@@ -300,11 +296,14 @@ export default {
       }
     },
     // 计算售卖设置里的 ’售卖日期‘
-    calcSellYear(time, index) {
-      if (time) {
+    calcSellYear(startDay, NumDay) {
+      if (startDay) {
+        var dtTmp = new Date(startDay)
+
+        const time = new Date(Date.parse(dtTmp) + 86400000 * NumDay)
         const y = time.getFullYear()
         const month = time.getMonth() + 1
-        const day = time.getDate() + index
+        const day = time.getDate()
 
         const m = month <= 9 ? '0' + month : month
         const d = day <= 9 ? '0' + day : day
@@ -359,7 +358,10 @@ export default {
         }
         this.setSellTimeForm.push(obj)
       }
-
+      // 时间格式转化：转换为0点时刻
+      this.attendClassObj.courseDay = new Date(
+        this.attendClassObj.courseDay
+      ).setHours(0)
       Object.assign(sendFrom, {
         ...this.attendClassObj,
         ...this.sellCycleObj,
@@ -368,7 +370,6 @@ export default {
         type: this.courseType,
         period: +this.period || ''
       })
-      console.log(sendFrom, 'sendform')
       return sendFrom
     },
     nextStep() {

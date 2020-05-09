@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-04-15 16:56:59
  * @LastEditors: panjian
- * @LastEditTime: 2020-04-16 20:54:18
+ * @LastEditTime: 2020-05-07 18:23:08
  -->
 <template>
   <div>
@@ -124,23 +124,27 @@ export default {
         setTimeout(() => {
           this.loading = false
           if (this.ruleForm.associatedTeacher) {
-            this.TeacherListvalue = `{"department_id": ${this.ruleForm.associatedTeacher}}`
+            this.TeacherListvalue = {
+              department_id: `${this.ruleForm.associatedTeacher}`
+            }
           }
-          this.$http.Teacher.TeacherList(this.TeacherListvalue).then((res) => {
-            const data = res.data.TeacherList
-            const _data = []
-            data.forEach((res) => {
-              _data.push({
-                value: res.id,
-                label: res.realname
+          this.$http.Teacher.TeacherList(this.TeacherListvalue, query).then(
+            (res) => {
+              const data = res.data.TeacherListEx
+              const _data = []
+              data.forEach((res) => {
+                _data.push({
+                  value: res.id,
+                  label: res.realname
+                })
               })
-            })
-            this.regionOptionsList = _data.filter((item) => {
-              return query
-                ? item.label.toLowerCase().indexOf(query.toLowerCase()) > -1
-                : item
-            })
-          })
+              this.regionOptionsList = _data.filter((item) => {
+                return query
+                  ? item.label.toLowerCase().indexOf(query.toLowerCase()) > -1
+                  : item
+              })
+            }
+          )
         }, 200)
       } else {
         this.regionOptionsList = []

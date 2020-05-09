@@ -4,12 +4,12 @@
  * @Author: Shentong
  * @Date: 2020-04-25 14:35:19
  * @LastEditors: Shentong
- * @LastEditTime: 2020-04-25 21:12:12
+ * @LastEditTime: 2020-05-08 18:40:34
  -->
 <template>
   <div class="table-searcher-container">
     <div class="comp-cell">
-      <department @result="getDepartment" :name="'department'" :deptType="2" />
+      <department @result="getDepartment" :name="'department'" :onlyDept="1" />
     </div>
     <div class="comp-cell">
       <group-sell @result="selectSellTeacher" :name="'groupSell'" />

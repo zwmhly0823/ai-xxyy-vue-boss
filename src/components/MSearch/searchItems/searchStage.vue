@@ -4,19 +4,20 @@
  * @Date: 2020-04-25 14:26:01
  * @Last Modified by:   YangJiyong
  * @Last Modified time: 2020-04-25 14:26:01
- * @Description: 系统课排期
+ * @Description: 系统课、体验课排期
  -->
 <template>
   <div class="search-item small">
     <el-select
+      class="item-style"
       v-model="stage"
-      multiple
+      :multiple="isMultiple"
       filterable
       remote
       :reserve-keyword="true"
       size="mini"
       clearable
-      :placeholder="type === '1' ? '系统课排期' : '体验课排期'"
+      :placeholder="placeholderText"
       :remote-method="handleDebounce"
       :loading="loading"
       @change="onChange"
@@ -44,22 +45,71 @@ export default {
     type: {
       type: String,
       default: '1'
+    },
+    // 是否多选
+    isMultiple: {
+      type: Boolean,
+      default: true
+    },
+    placeholder: {
+      type: String,
+      default: ''
+    },
+    // 老师ID,通过老师获取对应的排期
+    teacherId: {
+      type: Array,
+      default: () => []
     }
   },
   data() {
     return {
       loading: false,
       stage: '',
-      dataList: []
+      dataList: [],
+      period: [] // 期数
     }
   },
   computed: {
     handleDebounce() {
       return debounce(this.getData, 500)
+    },
+    placeholderText() {
+      if (this.placeholder) return this.placeholder
+      return this.type === '1' ? '系统课排期' : '体验课排期'
     }
   },
   created() {
     this.getData()
+  },
+  watch: {
+    teacherId(val) {
+      this.stage = ''
+      this.$emit('result', '')
+      if (!this.teacherId || this.teacherId.length === 0) {
+        this.period = []
+        this.getData()
+        return
+      }
+      // 体验课
+      const query = { teacher_id: this.teacherId }
+      const teamType =
+        this.type === '0' ? { team_type: 0 } : { team_type: { gt: 0 } }
+      Object.assign(query, teamType)
+      const q = JSON.stringify(query)
+      axios
+        .post('/graphql/v1/toss', {
+          query: `{
+            StudentTeamList(query: ${JSON.stringify(q)}, size: 500){
+              term
+            }
+          }`
+        })
+        .then((res) => {
+          const period = (res.data && res.data.StudentTeamList) || []
+          this.period = period.map((item) => item.term)
+          this.getData()
+        })
+    }
   },
   methods: {
     getData(queryString = '') {
@@ -71,6 +121,9 @@ export default {
       }
       if (this.type) {
         queryParams.bool.must.push({ term: { type: `${this.type}` } })
+      }
+      if (this.period.length > 0) {
+        queryParams.bool.must.push({ terms: { period: this.period } })
       }
       const q = JSON.stringify(queryParams)
       const sort = `{"id":"desc"}`
@@ -103,8 +156,8 @@ export default {
 </script>
 <style lang="scss" scoped>
 .search-item {
-  &.small {
-    width: 140px !important;
+  .item-style {
+    width: 140px;
   }
 }
 </style>
