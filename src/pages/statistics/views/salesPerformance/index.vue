@@ -3,8 +3,8 @@
  * @version:
  * @Author: zhubaodong
  * @Date: 2020-04-02 15:35:27
- * @LastEditors: Shentong
- * @LastEditTime: 2020-04-29 17:07:12
+ * @LastEditors: chengweihua
+ * @LastEditTime: 2020-05-08 15:58:15
  -->
 <template>
   <el-row type="flex" class="app-main height schedule-container">
@@ -55,34 +55,38 @@
           </div>
           <!-- 搜索 -->
           <div class="sear-container">
-            <!-- TODO: -->
             <statictics-search @searchChange="searchChange"></statictics-search>
           </div>
+          <!-- 数据统计 -->
           <p class="descripte" v-if="statisticsInfo">
-            开课日期：<span class="label-val">{{
-              statisticsInfo.start_date || '-'
-            }}</span>
+            开课日期：
+            <span class="label-val">
+              {{ statisticsInfo.start_date || '-' }}
+            </span>
             结课日期：
-            <span class="label-val">{{ statisticsInfo.end_date || '-' }}</span
-            >开课天数：
-            <span class="label-val"
-              >{{ statisticsInfo.course_days || '-' }}天</span
-            >
-            <!-- <span>当前结果：</span> -->
+            <span class="label-val">
+              {{ statisticsInfo.end_date || '-' }}
+            </span>
+            开课天数：
+            <span class="label-val">
+              {{ statisticsInfo.course_days || '-' }}天
+            </span>
+            <!-- 转化统计 -->
             <template v-if="activeName == 'conversion'">
               <span>总订单数：</span>
-              <span class="label-val for-light">{{
-                statisticsInfo.order_number || '-'
-              }}</span>
+              <span class="label-val for-light">
+                {{ statisticsInfo.order_number || '-' }}
+              </span>
               <span>总转化率：</span>
-              <span class="label-val for-light">{{
-                statisticsInfo.conversion_rate_total || '-'
-              }}</span>
+              <span class="label-val for-light">
+                {{ statisticsInfo.conversion_rate_total || '-' }}
+              </span>
               <span>总金额：</span>
-              <span class="for-light">{{
-                statisticsInfo.amount_total || '-'
-              }}</span>
+              <span class="for-light">
+                {{ statisticsInfo.amount_total || '-' }}
+              </span>
             </template>
+            <!-- 参课统计数据统计 -->
             <template v-else-if="activeName == 'attendClass'">
               <span>本期总{{ despMap[activeName] }}人数：</span>
               <span class="label-val for-light">
@@ -120,16 +124,36 @@
                 {{ statisticsInfo.now_complete_rate || '-' }}
               </span>
             </template>
+            <!-- 上传作品统计 -->
+            <template v-else-if="activeName == 'uploadWorks'">
+              <span>总上传所品：</span>
+              <span class="label-val for-light">0</span>
+              <span>总上传率：</span>
+              <span class="label-val for-light">0</span>
+              <span>人均作品：</span>
+              <span class="label-val for-light">0</span>
+            </template>
+            <!-- 老师点评统计 -->
+            <template v-else-if="activeName == 'teacherComments'">
+              <span>总点评率：</span>
+              <span class="label-val for-light">0</span>
+              <span>总点评收听率：</span>
+              <span class="label-val for-light">0</span>
+            </template>
           </p>
+          <!-- 表头 -->
           <div style="padding: 0 15px;">
             <el-tabs
               v-model="activeName"
               @tab-click="statisticsTypehandleClick"
             >
               <el-tab-pane label="转化统计" name="conversion"> </el-tab-pane>
-              <!-- TODO: -->
               <el-tab-pane label="参课统计" name="attendClass"> </el-tab-pane>
               <el-tab-pane label="完课统计" name="finishClass"> </el-tab-pane>
+              <el-tab-pane label="上传作品统计" name="uploadWorks">
+              </el-tab-pane>
+              <el-tab-pane label="老师点评统计" name="teacherComments">
+              </el-tab-pane>
             </el-tabs>
           </div>
           <!-- 完课统计列表 -->
@@ -220,24 +244,10 @@
                     >
                   </template>
                 </el-table-column>
-                <!-- <el-table-column fixed label="总金额" align="center"
-                  ><template slot-scope="scope">
-                    <span
-                      v-if="
-                        Object.keys(scope.row.conversion_rate_daily).length &&
-                          scope.row.conversion_rate_daily[i] &&
-                          !scope.row.conversion_rate_daily[i].is_last
-                      "
-                    >
-                      {{ scope.row.conversion_rate_daily[i].amount }}
-                    </span>
-                    <span v-else>--</span>
-                  </template></el-table-column
-                >-->
               </el-table-column>
             </ele-table>
           </div>
-
+          <!-- 转换统计tab -->
           <div
             class="orderStyle"
             v-if="tableData.length && activeName == 'conversion'"
@@ -442,6 +452,115 @@
               </el-table-column>
             </ele-table>
           </div>
+          <!-- 上传作品统计 -->
+          <div
+            class="orderStyle"
+            v-if="tableDataAttend.length && activeName === 'uploadWorks'"
+          >
+            <ele-table
+              :dataList="tableDataAttend"
+              :loading="flags.loading"
+              :size="tabQuery.size"
+              :page="tabQuery.page"
+              :total="totalElements"
+              @pageChange="pageChange_handler"
+              class="mytable"
+            >
+              <el-table-column
+                fixed
+                label="难度级别"
+                prop="sup"
+                width="70"
+                align="center"
+              ></el-table-column>
+              <el-table-column
+                fixed
+                label="销售组"
+                width="120"
+                align="center"
+                prop="department_name"
+              ></el-table-column>
+              <el-table-column
+                fixed
+                label="社群销售"
+                width="80"
+                align="center"
+                prop="realname"
+              ></el-table-column>
+              <el-table-column
+                fixed
+                label="体验课学生"
+                width="85"
+                prop="trial_course_count"
+                align="center"
+              ></el-table-column>
+              <el-table-column align="center" label="总计">
+                <el-table-column
+                  fixed
+                  label="总上传率"
+                  prop="total_complete_nums"
+                  align="center"
+                ></el-table-column>
+                <el-table-column
+                  fixed
+                  label="作品总数"
+                  prop="total_complete_rate"
+                  align="center"
+                ></el-table-column>
+                <el-table-column
+                  fixed
+                  label="人均作品数"
+                  prop="total_complete_rate"
+                  align="center"
+                ></el-table-column>
+              </el-table-column>
+              <!-- child-table-start -->
+              <el-table-column
+                align="center"
+                v-for="(a, i) in tableDataChildAttend"
+                :label="a.current_lesson"
+                :key="i"
+              >
+                <el-table-column fixed label="上传人数" align="center">
+                  <template slot-scope="scope">
+                    <span
+                      v-if="
+                        Object.keys(scope.row.completeArr).length &&
+                          scope.row.completeArr[i] &&
+                          !scope.row.completeArr[i].is_null
+                      "
+                    >
+                      {{ scope.row.completeArr[i].complete_nums }}
+                    </span>
+                  </template>
+                </el-table-column>
+                <el-table-column fixed label="上传率" align="center">
+                  <template slot-scope="scope">
+                    <span
+                      v-if="
+                        Object.keys(scope.row.completeArr).length &&
+                          scope.row.completeArr[i] &&
+                          !scope.row.completeArr[i].is_null
+                      "
+                      >{{ scope.row.completeArr[i].complete_rate }}</span
+                    >
+                  </template>
+                </el-table-column>
+                <el-table-column fixed label="作品总数" align="center">
+                  <template slot-scope="scope">
+                    <span
+                      v-if="
+                        Object.keys(scope.row.completeArr).length &&
+                          scope.row.completeArr[i] &&
+                          !scope.row.completeArr[i].is_null
+                      "
+                      >{{ scope.row.completeArr[i].complete_rate }}</span
+                    >
+                  </template>
+                </el-table-column>
+              </el-table-column>
+            </ele-table>
+          </div>
           <div
             v-if="tableDataAttend.length === 0 && tableData.length === 0"
             class="no-data"
@@ -519,9 +638,13 @@ export default {
       totalElements: 0,
       // 表格数据
       statisticsInfo: {},
+      // 转化统计数据列表
       tableData: [],
+      // 参课,完课数据列表
       tableDataAttend: [],
+      // 转化统计，统计数据
       tableDataChild: [],
+      // 参课，完课，统计数据
       tableDataChildAttend: []
     }
   },
@@ -613,6 +736,7 @@ export default {
             department_ids: department,
             sups: sup
           })
+
           // 表格上的统计信息
           this.statisticsInfo = getCompeteCourseList || {}
           // 格式化时间
@@ -625,11 +749,12 @@ export default {
           // 总数、分页用
           this.totalElements = +getCompeteCourseList.totalElements || 0
           this.formatTableData(getCompeteCourseList.completeCourse || [])
-        } else {
+        } else if (this.activeName === 'conversion') {
+          // 转化统计
           let {
             data: { ConversionRateStatistics }
           } = await this.$http.Statistics.getChangecListByProid(this.tabQuery)
-
+          console.log(ConversionRateStatistics)
           !ConversionRateStatistics && (ConversionRateStatistics = {})
           // 总数、分页用
           this.totalElements = ConversionRateStatistics.total_elements || 0
@@ -637,6 +762,32 @@ export default {
           // 表格上的统计信息
           this.statisticsInfo = ConversionRateStatistics
           this.pakageListDate(ConversionRateStatistics)
+        } else if (this.activeName === 'uploadWorks') {
+          // 上传作品统计
+          const { period, teacher, department, sup } = this.tabQuery
+          const {
+            data: {
+              BaseSaleStatisticsPage: { content, totalElements }
+            }
+          } = await this.$http.Statistics.getBaseSaleStatisticsPage({
+            ...this.tabQuery,
+            term: period,
+            teacherIds: teacher,
+            departmentId: department,
+            sups: sup
+          })
+          // 表格上的统计信息
+          this.statisticsInfo = content || {}
+          // 格式化时间
+          this.statisticsInfo.start_date = this.statisticsInfo.start_date
+            ? formatData(this.statisticsInfo.start_date)
+            : ''
+          this.statisticsInfo.end_date = this.statisticsInfo.end_date
+            ? formatData(this.statisticsInfo.end_date)
+            : ''
+          // 总数、分页用
+          this.totalElements = +totalElements || 0
+          this.formatTableData(content || [])
         }
         this.flags.loading = false
       } catch (err) {
@@ -760,6 +911,7 @@ export default {
       // ]
       // 初始化
       this.tableDataChildAttend = []
+      console.log(list, 'lst')
       list.forEach((item, index) => {
         item.completeArr = item.completeArr || []
         const completeArr = item.completeArr
@@ -768,13 +920,13 @@ export default {
           this.tableDataChildAttend = completeArr
         }
       })
+
       this.tableDataAttend = list
     },
     // 点击tabs页签（转化统计 按钮）
     statisticsTypehandleClick(tab) {
       this.tableDataAttend = []
       this.tableData = []
-      // console.log(tab.index, 'tab')
       this.tabQuery.page = 1
       this.getChangecListByProid()
     },

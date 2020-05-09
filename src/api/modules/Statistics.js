@@ -259,5 +259,38 @@ export default {
           }
       }}`
     })
+  },
+  // 上传作品统计接口
+  getBaseSaleStatisticsPage(params) {
+    const {
+      // period = '',
+      page = 1,
+      size = '20',
+      // teacher = '',
+      totalSort = 'desc'
+      // department = '',
+      // sup = ''
+    } = params
+    const _totalSort = `{"id.keyword":"${totalSort}"}`
+    // const query = `{"term": "${period}","departmentId": "${department}", "sup": "${sup}","teacherIds":"${teacher}"}`
+    const query = ''
+    return axios.post('/graphql/v1/toss', {
+      query: `{
+        BaseSaleStatisticsPage(page: ${page}, size:${size},query: ${JSON.stringify(
+        query
+      ) || null}, sort: ${JSON.stringify(_totalSort)}){
+        totalPages
+        totalElements
+        number
+          content{
+            id
+            sup
+            department_name
+            realname
+            trial_course_count
+          }
+        }
+      }`
+    })
   }
 }
