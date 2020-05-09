@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-03-16 19:46:39
  * @LastEditors: panjian
- * @LastEditTime: 2020-05-07 12:16:28
+ * @LastEditTime: 2020-05-09 19:02:02
  */
 import axios from '../axiosConfig'
 
@@ -145,5 +145,19 @@ export default {
     return axios.get(
       `/api/c/v1/channel/getChannelAndClass?channelClassParentId=${params}`
     )
+  },
+  /**
+   * 推广人统计查看
+   * @param {*} param0
+   */
+  getEncode(params) {
+    return axios.get(`/api/o/v1/order/channel/getEncode?channelId=${params}`)
+  },
+  /**
+   * 渠道信息管理 添加渠道
+   * @param {*} param0
+   */
+  createChannel(params) {
+    return axios.post('/api/c/v1/channel/createChannel', params)
   }
 }

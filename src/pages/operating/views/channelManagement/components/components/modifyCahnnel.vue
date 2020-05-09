@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-05-07 10:48:30
  * @LastEditors: panjian
- * @LastEditTime: 2020-05-07 20:26:58
+ * @LastEditTime: 2020-05-09 19:18:41
  -->
 <template>
   <div class="drawer-box">
@@ -15,14 +15,12 @@
       label-width="100px"
       class="demo-ruleForm"
     >
-      <el-form-item label="渠道ID">
-        <span>1231232</span>
-      </el-form-item>
       <el-form-item label="一级渠道" prop="channelOne">
         <el-select
           @change="onChannelOne"
           v-model="ruleForm.channelOne"
           placeholder="请选择"
+          clearable
         >
           <el-option
             v-for="(item, index) in channelOneList"
@@ -36,8 +34,10 @@
         <el-select
           v-model="ruleForm.channelTwo"
           :disabled="channelTwoDisabled"
-          @visible-change="onChannelTwo"
+          @visible-change="channelTwo"
+          @change="onChannelTwo"
           placeholder="请选择"
+          clearable
         >
           <el-option
             v-for="(item, index) in channelTwoList"
@@ -48,14 +48,34 @@
         </el-select>
       </el-form-item>
       <el-form-item label="三级渠道" prop="channelThree">
-        <el-input v-model="ruleForm.channelThree"></el-input>
+        <el-input
+          :disabled="channelThreeDisabled"
+          v-model="ruleForm.channelThree"
+          placeholder="请输入三级渠道"
+        ></el-input>
       </el-form-item>
       <el-form-item label="渠道排序" prop="sort">
-        <el-input v-model="ruleForm.sort"></el-input>
+        <el-input
+          placeholder="请输入渠道排序"
+          v-model="ruleForm.sort"
+        ></el-input>
       </el-form-item>
-
       <el-form-item label="渠道备注" prop="desc">
-        <el-input type="textarea" v-model="ruleForm.desc"></el-input>
+        <el-input
+          placeholder="请输入备注"
+          type="textarea"
+          v-model="ruleForm.desc"
+        ></el-input>
+      </el-form-item>
+      <el-form-item label="渠道状态" prop="status">
+        <el-switch
+          v-model="ruleForm.status"
+          active-text="启用"
+          inactive-text="停用"
+          active-value="1"
+          inactive-value="0"
+        >
+        </el-switch>
       </el-form-item>
       <el-form-item>
         <div style="margin-left:50px;">
@@ -72,9 +92,20 @@
 <script>
 export default {
   data() {
+    var channelSort = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error('请输入渠道排序'))
+      } else {
+        const reg = /^\d+$|^\d+[.]?\d+$/
+        if (!reg.test(value)) {
+          callback(new Error('渠道排序只能输入数字'))
+        }
+        callback()
+      }
+    }
     return {
-      channelTwoDisabled: false,
-      channelThreeDisabled: false,
+      channelTwoDisabled: true,
+      channelThreeDisabled: true,
       channelOneList: [],
       channelTwoList: [],
       ruleForm: {
@@ -82,7 +113,8 @@ export default {
         channelTwo: '',
         channelThree: '',
         sort: '',
-        desc: ''
+        desc: '',
+        status: '1'
       },
       rules: {
         channelOne: [
@@ -91,11 +123,12 @@ export default {
         channelTwo: [
           { required: true, message: '请选择二级渠道', trigger: 'change' }
         ],
-        channelThree: [
-          { required: true, message: '请填写三级渠道', trigger: 'change' }
-        ],
-        sort: [{ required: true, message: '请填写渠道排序', trigger: 'blur' }],
-        desc: [{ required: true, message: '请填写活动形式', trigger: 'blur' }]
+        // channelThree: [
+        //   { required: true, message: '请填写三级渠道', trigger: 'change' }
+        // ],
+        sort: [{ required: true, validator: channelSort, trigger: 'blur' }]
+        // desc: [{ required: true, message: '请填写渠道备注', trigger: 'blur' }]
+        // status: [{ required: true, message: '请选择渠道状态', trigger: 'blur' }]
       }
     }
   },
@@ -103,7 +136,7 @@ export default {
     this.getChannelOne()
   },
   methods: {
-    onChannelTwo() {
+    channelTwo() {
       this.$http.Operating.getChannelAndClass(this.ruleForm.channelOne).then(
         (res) => {
           const data = res.payload.channelClassList
@@ -125,20 +158,39 @@ export default {
         this.channelOneList = data
       })
     },
-    onChannelOne() {
-      console.log(this.ruleForm.channelOne, 'this.ruleForm.channelOne')
+    onChannelOne(data) {
+      console.log(this.ruleForm.channelOne, 'this.ruleForm.channelOne', data)
+      if (data) {
+        this.channelTwoDisabled = false
+      } else {
+        this.channelTwoDisabled = true
+        this.channelThreeDisabled = true
+        this.ruleForm.channelTwo = ''
+        this.ruleForm.channelThree = ''
+      }
+    },
+    onChannelTwo(data) {
+      if (data) {
+        this.channelThreeDisabled = false
+      } else {
+        this.channelThreeDisabled = true
+        this.ruleForm.channelThree = ''
+      }
     },
     //   提交
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          console.log(
-            this.ruleForm.channelOne,
-            this.ruleForm.channelTwo,
-            this.ruleForm.channelThree,
-            this.ruleForm.sort,
-            this.ruleForm.desc
-          )
+          alert('submit!')
+          const props = {
+            channelClassId: this.ruleForm.channelTwo, // 二级渠道分类id
+            channelOuterName: this.ruleForm.channelThree, // 渠道对外名称
+            channelInnerName: this.ruleForm.channelThree, // 渠道对管理员名称默认两者一致
+            channelSort: this.ruleForm.sort, // 渠道排序
+            status: this.ruleForm.status, // 0开启1禁用
+            remarks: this.ruleForm.desc
+          }
+          console.log(props)
         } else {
           console.log('error submit!!')
           return false
@@ -148,6 +200,10 @@ export default {
     // 取消
     resetForm(formName) {
       this.$refs[formName].resetFields()
+      this.channelTwoDisabled = true
+      this.channelThreeDisabled = true
+      this.ruleForm.channelTwo = ''
+      this.ruleForm.channelThree = ''
       this.$emit('modifyChannelShow', false)
     }
   }
