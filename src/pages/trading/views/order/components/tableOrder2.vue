@@ -41,7 +41,7 @@
         </template>
       </el-table-column>
       <!-- 只有boss有 -->
-      <el-table-column label="体验课类型" min-width="100px" v-if="!teacherId">
+      <el-table-column label="体验课类型" min-width="100px" v-if="teacherId">
         <template slot-scope="scope">
           <p>
             {{
