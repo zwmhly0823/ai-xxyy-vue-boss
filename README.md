@@ -1,10 +1,18 @@
-# ai-app-vue-boss
+# ai-app-vue-toss
 
-### [Graphql 测试](http://47.98.38.59:43401/)
+### [Graphql 测试](http://docker.meixiu.mobi:43401/)
 
-### [测试环境](https://msb-ai.meixiu.mobi/frontend/ai-app-vue-boss/student-team/#/)
+### [TOSS测试环境](https://test.meixiu.mobi/ai-app-vue-toss-test/login/#/)
+帐号（验证码登录）：
+18910930251 / 961211(验证码)
 
-### [正式环境](https://boss.xiaoxiongmeishu.com/student-team/#/)
+### [TOSS正式环境](https://toss.xiaoxiongmeishu.com/login/#/)
+
+### [BOSS测试环境](https://test.meixiu.mobi/ai-app-vue-boss-test/login/#/)
+帐号：
+bearboss / bearnb123
+
+### [BOSS正式环境](https://boss.xiaoxiongmeishu.com/login/#/)
 
 ### [Search API](http://docker.meixiu.mobi:48767/jsondoc-ui.html?url=/data/search/m1/jsondoc#)
 
@@ -22,10 +30,29 @@ yarn install
 yarn serve
 ```
 
-### Compiles and minifies for production
+### 打包
 
 ```
-yarn build
+测试环境：
+yarn build:test moduleName
+
+预发布环境：
+yarn build:prod moduleName
+
+生产环境：
+yarn build:live moduleName
+```
+
+### 部署
+```
+测试环境：
+yarn deploy:test
+
+预发布环境：
+yarn deploy:prod
+
+生产环境：
+yarn deploy:live
 ```
 
 ### Run your unit tests
@@ -110,9 +137,6 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 - [element-ui](https://element.eleme.cn/#/zh-CN/component/quickstart)
 - [sass](https://www.sass.hk/docs/)
 
-### eslint
-
-- [VSCode 使用 ESLint + Prettier 来统一 JS 代码](https://www.cnblogs.com/xjnotxj/p/10828183.html)
 
 ---
 ### 查询表达式说明
@@ -150,3 +174,9 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 - `must` 表示 与 查询，`filter`表示 或 查询
 - 每一项查询以`term`或`terms`对象加查询字段。`term`是单条查询，`terms`是多条查询
  - `{term:{id: 1}},{terms:{uid:[1,2,3]}}`
+
+
+---
+### 参考
+
+- [VSCode 使用 ESLint + Prettier 来统一 JS 代码](https://www.cnblogs.com/xjnotxj/p/10828183.html)
