@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-05-06 16:33:15
  * @LastEditors: panjian
- * @LastEditTime: 2020-05-09 18:56:13
+ * @LastEditTime: 2020-05-09 20:48:30
  -->
 <template>
   <div class="channelAdd-box">
@@ -31,6 +31,7 @@
         size="mini"
         type="primary"
         @click="onBulkDownload"
+        :loading="downLoad"
         >批量下载</el-button
       >
       <el-table
@@ -145,6 +146,7 @@ export default {
   },
   data() {
     return {
+      downLoad: false,
       channelDate: false,
       scheduling: false,
       showClose: false,
@@ -300,7 +302,13 @@ export default {
     },
     // 批量下载二维码
     onBulkDownload() {
-      // this.imgList
+      // const loadingInstance = this.$loading({
+      //   target: 'section',
+      //   lock: true,
+      //   text: '批量下载中...',
+      //   fullscreen: true
+      // })
+      this.downLoad = true
       const imgAll = this.imgList
       const imgUrlList = []
       const imgListName = []
@@ -309,6 +317,16 @@ export default {
         imgListName.push(`渠道${res.channelId}`)
       })
       downImgAll(imgListName, imgUrlList)
+        .then((res) => {
+          // loadingInstance.close()
+          console.log(res)
+          this.downLoad = false
+        })
+        .catch((err) => {
+          // loadingInstance.close()
+          this.downLoad = false
+          console.log(err)
+        })
       console.log('批量下载')
     },
     // 点击推广人统计查看
