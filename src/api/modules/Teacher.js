@@ -141,7 +141,7 @@ export default {
   },
   //  老师手机号，姓名模糊搜索
   teacherListEx(name, params) {
-    const quer = `{ "bool": { "must": [{ "wildcard": { "${name}": "*${params}*" } }] } }`
+    const quer = `{ "bool": { "must": [{ "wildcard": { "${name}.keyword": "*${params}*" } }] } }`
     return axios.post('/graphql/v1/teacher', {
       query: `
       {
