@@ -4,7 +4,8 @@
  * @Date: 2020-05-09 19:05:09
  * @Last Modified by:   YangJiyong
  * @Last Modified time: 2020-05-09 19:05:09
- * @Description: 体验课类型选择 关联表：tg_student_trial_course, team_category: 0-双周  3-单周. 
+ * @Description: 体验课类型选择 关联表：tg_student_trial_course, team_category: 0-双周  3-单周.
+ * 更正：通过o_order表的 packages_id 区分体验课单双周类型。 1，11 - 单周；5，6双周   
  -->
 <template>
   <div class="search-item small">
@@ -35,7 +36,7 @@ export default {
     },
     placeholder: {
       type: String,
-      default: '系统课类型'
+      default: '体验课类型'
     }
   },
   data() {
@@ -43,11 +44,11 @@ export default {
       type: null,
       typeList: [
         {
-          id: '0',
+          id: '5,6',
           text: '双周'
         },
         {
-          id: '3',
+          id: '1,11',
           text: '单周'
         }
       ]
@@ -56,17 +57,28 @@ export default {
   methods: {
     onChange(type) {
       console.log(type)
-      let item = []
-      if (type) {
-        const query = JSON.stringify({ team_category: type })
-        this.$http.Team.getTrialCourseList(query).then((res) => {
-          const data =
-            (res && res.data && res.data.StudentTrialCourseList) || []
-          item = data.map((c) => c.order_no)
-          console.log(item)
-        })
+      let item = ['1', '5', '6', '11']
+      // 通过tg_student_trial_course, team_category: 0-双周  3-单周
+      // if (type) {
+      //   const query = JSON.stringify({ team_category: type })
+      //   this.$http.Team.getTrialCourseList(query, 500).then((res) => {
+      //     const data =
+      //       (res && res.data && res.data.StudentTrialCourseList) || []
+      //     item = data.map((c) => c.order_no)
+      //     console.log(item)
+      //     this.$emit('result', { [this.name]: item })
+      //   })
+      //   return
+      // }
+      // this.$emit('result', '')
+
+      // 通过 o_order 表 packages_id 关联
+      if (type === '1,11') {
+        item = ['1', '11']
+      } else if (type === '5,6') {
+        item = ['5', '6']
       }
-      this.$emit('result', item.length > 0 ? { [this.name]: item } : '')
+      this.$emit('result', { [this.name]: item })
     }
   }
 }

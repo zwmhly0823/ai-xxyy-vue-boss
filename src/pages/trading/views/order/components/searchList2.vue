@@ -104,9 +104,9 @@
           />
           <!-- BOSS 显示单双周选择 -->
           <trial-course-type
-            v-if="teacherId"
+            v-if="!teacherId"
             class="margin_l10"
-            name="id"
+            name="packages_id"
             @result="getTrialCourseType"
           />
         </div>
@@ -287,7 +287,7 @@ export default {
 
     // 体验课类型
     getTrialCourseType(res) {
-      this.setSeachParmas(res, ['id'], 'terms')
+      this.setSeachParmas(res, ['packages_id'], 'terms')
     },
 
     /**  处理接收到的查询参数

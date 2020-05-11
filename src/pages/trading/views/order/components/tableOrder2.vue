@@ -41,7 +41,7 @@
         </template>
       </el-table-column>
       <!-- 只有boss有 -->
-      <el-table-column label="体验课类型" min-width="100px" v-if="teacherId">
+      <el-table-column label="体验课类型" min-width="100px" v-if="!teacherId">
         <template slot-scope="scope">
           <p>
             {{
@@ -305,15 +305,16 @@ export default {
       // 支付状态
       if (this.status) {
         Object.assign(queryObj, { status: this.status.split(',') })
-        // statisticsQuery.push({ terms: { status: this.status.split(',') } })
       }
 
       /**
        * this.topic
        * 体验课(4),系统课(5)去 p_packages_topic表找relation_id
        */
-      if (this.topic === '4' || this.topic === '5') {
-        Object.assign(queryObj, { packages_id: relationIds })
+      if (this.topic === '4') {
+        // 如果选择了筛选单双周体验课类型，则不需要packages_id
+        if (!Object.keys(queryObj).includes('packages_id'))
+          Object.assign(queryObj, { packages_id: relationIds })
         this.orderData(queryObj, this.currentPage)
 
         // 获取统计数据
@@ -379,7 +380,7 @@ export default {
             }
           })
           this.orderList = _data
-          this.getUserTrialTeam(userIds)
+          if (userIds.length > 0) this.getUserTrialTeam(userIds)
         })
         .catch((err) => {
           console.log(err)
