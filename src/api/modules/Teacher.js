@@ -141,7 +141,7 @@ export default {
   },
   //  老师手机号，姓名模糊搜索
   teacherListEx(name, params) {
-    const quer = `{ "bool": { "must": [{ "wildcard": { "${name}.keyword": "*${params}*" } }] } }`
+    const quer = `{ "bool": { "must": [{ "wildcard": { "${name}": "*${params}*" } }] } }`
     return axios.post('/graphql/v1/teacher', {
       query: `
       {
@@ -185,8 +185,9 @@ export default {
   },
   // 新增微信 获取老师name id
   TeacherList(query = '', value) {
+    const real = 'realname.keyword'
     const querys = {
-      bool: { must: [{ wildcard: { realname: `*${value}*` } }] }
+      bool: { must: [{ wildcard: { [real]: `*${value}*` } }] }
     }
     if (query) querys.bool.must.push({ term: query })
     const q = JSON.stringify(querys)
