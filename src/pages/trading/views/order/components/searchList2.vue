@@ -76,6 +76,7 @@
             @result="selectPayTeacher"
             name="last_teacher_id"
             class="margin_l10"
+            style="width:140px"
           />
           <search-stage
             :teacher-id="teacherscope_trial || teacherscope"
@@ -99,6 +100,14 @@
             @result="getTrialTeamName"
             name="team_id"
             :class="['margin_l10']"
+            style="width:140px"
+          />
+          <!-- BOSS 显示单双周选择 -->
+          <trial-course-type
+            v-if="!teacherId"
+            class="margin_l10"
+            name="packages_id"
+            @result="getTrialCourseType"
           />
         </div>
       </el-form-item>
@@ -115,6 +124,7 @@ import GroupSell from '@/components/MSearch/searchItems/groupSell'
 import Department from '@/components/MSearch/searchItems/department'
 import SearchTeamName from '@/components/MSearch/searchItems/searchTeamName'
 import SearchStage from '@/components/MSearch/searchItems/searchStage'
+import TrialCourseType from '@/components/MSearch/searchItems/trialCourseType'
 import { isToss } from '@/utils/index'
 
 export default {
@@ -127,7 +137,8 @@ export default {
     GroupSell,
     Department,
     SearchTeamName,
-    SearchStage
+    SearchStage,
+    TrialCourseType
   },
 
   data() {
@@ -272,6 +283,11 @@ export default {
     },
     getTrialTeamName(res) {
       this.setSeachParmas(res, ['team_id'], 'terms')
+    },
+
+    // 体验课类型
+    getTrialCourseType(res) {
+      this.setSeachParmas(res, ['packages_id'], 'terms')
     },
 
     /**  处理接收到的查询参数
