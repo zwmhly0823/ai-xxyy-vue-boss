@@ -186,7 +186,7 @@ export default {
   // 新增微信 获取老师name id
   TeacherList(query = '', value) {
     const querys = {
-      bool: { must: [{ wildcard: { realname: `*${value}*` } }] }
+      bool: { must: [{ wildcard: { 'realname.keyword': `*${value}*` } }] }
     }
     if (query) querys.bool.must.push({ term: query })
     const q = JSON.stringify(querys)
