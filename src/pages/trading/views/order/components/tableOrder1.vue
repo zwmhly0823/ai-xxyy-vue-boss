@@ -382,7 +382,7 @@ export default {
             }
           })
           this.orderList = _data
-          this.getUserTrialTeam(userIds)
+          if (userIds.length > 0) this.getUserTrialTeam(userIds)
         })
         .catch((err) => {
           console.log(err)
