@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-13 15:24:11
  * @LastEditors: zhubaodong
- * @LastEditTime: 2020-04-08 16:23:35
+ * @LastEditTime: 2020-05-09 16:08:47
  -->
 <template>
   <el-row type="flex" class="app-main height student-team">
@@ -54,10 +54,10 @@ export default {
     return {
       experienceStatusList: {}, // 左栏 体验课状态（数量）
       systemStatusList: {}, // 左栏 系统课状态（数量）
-      classStatus: [0, 1, 2], // 选中的课程状态值（传入中栏，获取班级列表）
+      classStatus: [1], // 选中的课程状态值（传入中栏，获取班级列表）
       classListData: {}, // 中栏 班级列表
       classId: '', // 班级Id
-      scrollStatus: '',
+      scrollStatus: '1',
       type: 0,
       scrollPage: 1,
       teacher_id: null, // 当前登录老师的ID
@@ -105,7 +105,6 @@ export default {
         teacherId
       })
       this.teacherIds = teachers
-      console.log(teachers)
     },
     /**
      * 左栏回调函数
@@ -129,7 +128,7 @@ export default {
     },
     // 左栏筛选条件
     async filterHandler(res) {
-      this.scrollStatus = JSON.stringify(...res)
+      this.scrollStatus = JSON.stringify(res)
       console.log(this.scrollStatus, '接口内字段唯一标识')
       this.filterConditions = res
       // 请求体验课状态列表

@@ -4,7 +4,7 @@
  * @Author: Lukun
  * @Date: 2020-04-15 15:18:49
  * @LastEditors: Lukun
- * @LastEditTime: 2020-04-23 18:19:37
+ * @LastEditTime: 2020-05-08 19:00:10
  -->
 <template>
   <div class="container">
@@ -63,9 +63,13 @@
             >
               <div class="statebox">
                 <div class="statebox" v-for="(item, key) in value" :key="key">
-                  <div class="state" v-if="key === 0">{{ item.status }}</div>
-                  <div class="content">{{ item.context }}</div>
-                  <div class="time">{{ item.time }}</div>
+                  <div class="state" v-if="key === 0">
+                    {{ item.status || '揽收' }}
+                  </div>
+                  <div class="content">
+                    {{ item.context || item.opeRemark }}
+                  </div>
+                  <div class="time">{{ item.time || item.opeTime }}</div>
                 </div>
               </div>
             </el-timeline-item>
@@ -102,11 +106,15 @@ export default {
   },
   watch: {
     transferExpress(val) {
+      this.waitFor = false
+      this.activities = []
       this.expressInformation = val
       this.expressNu = this.expressInformation.express_nu
       this.expressList(this.expressNu)
     },
     order_id(val) {
+      this.waitFor = false
+      this.activities = []
       this.orderId = val
       this.getexpressMess(this.orderId)
     }
@@ -150,7 +158,13 @@ export default {
       })
         .catch((err) => console.log(err))
         .then((res) => {
-          if (res && res.payload) {
+          const isNull =
+            (res.payload &&
+              res.payload[0].data.filter((item) => {
+                return Object.keys(item).length > 0
+              })) ||
+            []
+          if (res && isNull.length > 0) {
             this.waitFor = false
             const lastData = {}
             res.payload[0].data.forEach((item) => {
@@ -172,8 +186,28 @@ export default {
               this.activities = lastData
             })
           } else {
-            this.activities = []
-            this.waitFor = true
+            const jd = id.toString().indexOf('JD')
+            if (jd > -1 && isNull.length === 0) {
+              this.$http.Express.getExpressDetailJDForAPP(id).then((res) => {
+                const lastData = {}
+                const tempData =
+                  (res && res.payload && res.payload[0].data) || []
+                if (tempData.length > 0) {
+                  this.waitFor = false
+                  lastData.begin = []
+                  tempData.forEach((item) => {
+                    lastData.begin.push(item)
+                  })
+                  this.activities = lastData
+                } else {
+                  this.activities = []
+                  this.waitFor = true
+                }
+              })
+            } else {
+              this.activities = []
+              this.waitFor = true
+            }
           }
           console.log(this.activities, 'this.activities')
         })

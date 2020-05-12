@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-31 22:54:28
  * @LastEditors: Lukun
- * @LastEditTime: 2020-04-14 14:54:04
+ * @LastEditTime: 2020-05-08 14:54:53
  */
 // import axios from '../axios'
 import axios from '../axiosConfig'
@@ -44,8 +44,38 @@ export default {
   },
   checkPass(params) {
     return axios.post(`/api/o/v1/express/deliveryRequest`, params)
-  }
+  },
 
+  // 模糊搜索收货人手机号
+  searchExpressByRecieptTel(queryString = '') {
+    const query = {
+      bool: {
+        must: [
+          {
+            wildcard: { receipt_tel: `*${queryString}*` }
+          }
+        ]
+      }
+    }
+    const q = JSON.stringify(query)
+    return axios.post('/graphql/v1/toss', {
+      query: `
+        {
+          ExpressListEx(query:${JSON.stringify(q)}){
+            id
+            receipt_tel
+            user_id
+          }
+        }
+      `
+    })
+  },
+
+  getExpressDetailJDForAPP(params) {
+    return axios.get(
+      `/api/o/v1/express/getExpressDetailJDForAPP?expressNo=${params}`
+    )
+  }
   /**
    * v1 订单关联的物流
    */

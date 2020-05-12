@@ -3,41 +3,38 @@
  * @version:
  * @Author: zhubaodong
  * @Date: 2020-03-26 16:28:45
- * @LastEditors: zhubaodong
- * @LastEditTime: 2020-04-17 16:19:08
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-04-30 11:51:24
  -->
 <template>
   <div class="search-item small">
-    <el-form @submit.native.prevent>
-      <el-autocomplete
-        size="mini"
-        name="vals"
-        clearable
-        class="inline-input"
-        v-model="input"
-        :fetch-suggestions="querySearch"
-        :placeholder="tip"
-        :trigger-on-focus="false"
-        :popper-class="+onlyPhone ? 'ppName' : ''"
-        @select="inputHandler"
-        ref="elautocomplete"
-      >
-        <i class="el-icon-search el-input__icon" slot="suffix"></i>
-        <template slot-scope="{ item }">
-          <div style="display:flex">
-            <div class="name">{{ item.mobile || '-' }}</div>
-            <div class="name" v-if="+onlyPhone">
-              /{{ item.wechat_nikename || '-' }}
-            </div>
+    <el-autocomplete
+      size="mini"
+      name="vals"
+      class="inline-input"
+      v-model="input"
+      :fetch-suggestions="querySearch"
+      :placeholder="tip"
+      :trigger-on-focus="false"
+      :popper-class="+onlyPhone ? 'ppName' : ''"
+      @select="inputHandler"
+    >
+      <i class="el-icon-search el-input__icon" slot="suffix"></i>
+      <template slot-scope="{ item }">
+        <div style="display:flex">
+          <div class="name">{{ item.mobile || '-' }}</div>
+          <div class="name" v-if="+onlyPhone">
+            /{{ item.wechat_nikename || '-' }}
           </div>
-        </template></el-autocomplete
-      >
-    </el-form>
+        </div>
+      </template></el-autocomplete
+    >
   </div>
 </template>
 
 <script>
 import axios from '@/api/axios'
+import { mapGetters } from 'vuex'
 
 export default {
   props: {
@@ -80,12 +77,23 @@ export default {
       selectData: []
     }
   },
-  computed: {},
+  computed: {
+    ...mapGetters(['team']),
+    searchPhone() {
+      return (
+        (this.team && this.team.userByPhone && this.team.userByPhone.phone) ||
+        ''
+      )
+    }
+  },
   watch: {
     input(val, old) {
       if (val !== old && !val) {
         this.$emit('result', '')
       }
+    },
+    searchPhone(val) {
+      this.input = val
     }
   },
   methods: {
@@ -102,11 +110,10 @@ export default {
       // 调用 callback 返回建议列表的数据
       console.log(results, '结果')
       cb(searchUid)
-      this.$refs.elautocomplete.handleFocus()
     },
     createFilter(queryString) {
       const queryParams = `{"mobile":"${queryString}","team_id":"${this.teamId}","team_type":"${this.teamType}"}`
-      return axios
+      return axios // 未加工
         .post('/graphql/user', {
           query: `{
               blurrySearch(query: ${JSON.stringify(queryParams)}) {

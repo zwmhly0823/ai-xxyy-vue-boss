@@ -1,6 +1,6 @@
 <template>
   <div class="title-box">
-    <el-table :data="orderList" v-if="topic === '4'">
+    <el-table :data="orderList">
       <el-table-column label="用户信息" prop="user" width="120">
         <template slot-scope="scope">
           <p>{{ scope.row.user ? scope.row.user.username || '-' : '-' }}</p>
@@ -151,186 +151,6 @@
         </template>
       </el-table-column>
     </el-table>
-
-    <el-table :data="orderList" v-if="topic === '5'">
-      <el-table-column label="用户信息" prop="user" width="120">
-        <template slot-scope="scope">
-          <p>{{ scope.row.user ? scope.row.user.username || '-' : '-' }}</p>
-          <p>{{ scope.row.user ? scope.row.user.mobile || '-' : '-' }}</p>
-        </template>
-      </el-table-column>
-      <el-table-column label="商品信息" width="160">
-        <template slot-scope="scope">
-          <p>
-            {{
-              scope.row.packages_name
-                ? scope.row.packages_name || '-'
-                : scope.row.product_name || '-'
-            }}
-          </p>
-          <!-- 人民币 ， 宝石，小熊币 -->
-          <p>
-            {{ scope.row.currency ? scope.row.currency : '人民币 ' }}
-            {{
-              scope.row.amount
-                ? scope.row.amount
-                : scope.row.regtype === 6
-                ? ''
-                : '-'
-            }}
-          </p>
-        </template>
-      </el-table-column>
-      <!-- <el-table-column label="订单类型" v-if="topic === '5'">
-        <template slot-scope="scope">
-          <p>
-            {{
-              scope.row.regtype
-                ? +scope.row.regtype === 2
-                  ? '首单'
-                  : +scope.row.regtype === 3
-                  ? '续费'
-                  : ''
-                : '-'
-            }}
-          </p>
-        </template>
-      </el-table-column> -->
-
-      <el-table-column label="订单来源">
-        <template slot-scope="scope">
-          <p>
-            {{ scope.row.channel ? scope.row.channel.channel_outer_name : '-' }}
-          </p>
-        </template>
-      </el-table-column>
-      <el-table-column label="订单状态">
-        <template slot-scope="scope">
-          {{ scope.row.order_status ? scope.row.order_status : '-' }}
-        </template>
-      </el-table-column>
-      <!-- <el-table-column label="班级信息" v-if="topic === '4'">
-        <template slot-scope="scope">
-          {{ scope.row.team ? scope.row.team.team_name : '-' }}
-        </template>
-      </el-table-column> -->
-      <el-table-column label="体验课班级" width="150">
-        <template slot-scope="scope">
-          <!-- {{
-            trialTeam[scope.row.uid] ? trialTeam[scope.row.uid].team_name : '-'
-          }} -->
-          <p>
-            {{
-              trialTeamUid[scope.row.uid]
-                ? trialTeamUid[scope.row.uid].team_name
-                : '-'
-            }}
-          </p>
-        </template>
-      </el-table-column>
-      <el-table-column label="社群销售" width="150">
-        <template slot-scope="scope">
-          <!-- 系统课 -->
-          <div v-if="topic === '5'">
-            <p>{{ scope.row.salesman ? scope.row.salesman.realname : '-' }}</p>
-            <p>
-              {{
-                scope.row.department
-                  ? scope.row.department.department.name || '-'
-                  : '-'
-              }}
-            </p>
-          </div>
-        </template>
-      </el-table-column>
-      <!-- <el-table-column
-        label="销售部门"
-        v-if="topic === '4' || topic === '5'"
-        width="150"
-      >
-        <template slot-scope="scope">
-          <p v-if="scope.row.department && scope.row.department.department">
-            {{
-              scope.row.department && scope.row.department.department.pid
-                ? departmentObj[scope.row.department.department.pid]
-                  ? departmentObj[scope.row.department.department.pid].name
-                  : ''
-                : ''
-            }}
-          </p>
-          {{
-            scope.row.department && scope.row.department.department
-              ? departmentObj[scope.row.department.department.id]
-                ? departmentObj[scope.row.department.department.id].name
-                : '-'
-              : '-'
-          }}
-        </template>
-      </el-table-column> -->
-      <el-table-column label="系统课班级" width="150">
-        <template slot-scope="scope">
-          <p>
-            {{ scope.row.team ? scope.row.team.team_name : '-' }}
-          </p>
-        </template>
-      </el-table-column>
-      <el-table-column label="服务老师" width="120">
-        <template slot-scope="scope">
-          <p>
-            {{ scope.row.teacher ? scope.row.teacher.realname : '-' }}
-          </p>
-          <p>
-            {{
-              scope.row.teacher_department &&
-              scope.row.teacher_department.department
-                ? departmentObj[scope.row.teacher_department.department.id]
-                  ? departmentObj[scope.row.teacher_department.department.id]
-                      .name
-                  : '-'
-                : '-'
-            }}
-          </p>
-        </template>
-      </el-table-column>
-      <el-table-column label="下单时间·订单号" width="180">
-        <template slot-scope="scope">
-          <p>
-            {{ scope.row.ctime ? scope.row.ctime : '-' }}
-          </p>
-          <p>
-            {{
-              scope.row.out_trade_no
-                ? scope.row.out_trade_no.replace('xiong', '')
-                : '-'
-            }}
-          </p>
-        </template>
-      </el-table-column>
-      <el-table-column label="关联物流" width="150">
-        <template slot-scope="scope">
-          <p
-            :class="{ 'primary-color': scope.row.express.express_total > 0 }"
-            @click="
-              showExpressDetail(scope.row.id, scope.row.express.express_total)
-            "
-          >
-            <!-- <p> -->
-            {{ scope.row.express ? scope.row.express.express_total || 0 : '-' }}
-          </p>
-          <!-- 体验课不显示最后一次物流状态 -->
-          <p>
-            {{
-              scope.row.express
-                ? scope.row.express.last_express_status
-                  ? `最后一次${scope.row.express.last_express_status}`
-                  : '-'
-                : '-'
-            }}
-          </p>
-        </template>
-      </el-table-column>
-    </el-table>
-
     <div v-if="orderList.length === 0" class="noData">暂无数据</div>
     <div class="drawer-body">
       <express-detail :order_id="order_id" ref="order_id" />
@@ -447,19 +267,19 @@ export default {
       const statisticsQuery = []
       const queryObj = {}
       // TOSS
-      if (this.teacherId) {
-        Object.assign(
-          queryObj,
-          this.topic === '4'
-            ? { last_teacher_id: this.teacherId }
-            : { pay_teacher_id: this.teacherId }
-        )
-        statisticsQuery.push(
-          this.topic === '4'
-            ? { term: { last_teacher_id: this.teacherId } }
-            : { term: { pay_teacher_id: this.teacherId } }
-        )
-      }
+      // if (this.teacherId) {
+      //   Object.assign(
+      //     queryObj,
+      //     this.topic === '4'
+      //       ? { last_teacher_id: this.teacherId }
+      //       : { pay_teacher_id: this.teacherId }
+      //   )
+      //   statisticsQuery.push(
+      //     this.topic === '4'
+      //       ? { term: { last_teacher_id: this.teacherId } }
+      //       : { term: { pay_teacher_id: this.teacherId } }
+      //   )
+      // }
 
       const topicRelation = await this.$http.Product.topicRelationId(
         `${JSON.stringify({

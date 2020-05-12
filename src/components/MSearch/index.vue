@@ -3,8 +3,8 @@
  * @version:
  * @Author: zhubaodong
  * @Date: 2020-03-24 18:20:12
- * @LastEditors: panjian
- * @LastEditTime: 2020-04-29 19:59:10
+ * @LastEditors: Lukun
+ * @LastEditTime: 2020-05-07 12:01:24
  -->
 
 <template>
@@ -25,6 +25,7 @@
           :onlyPhone="onlyPhone"
           :tip="phoneTip"
           :last_team_id="last_team_id"
+          ref="searchUserByPhone"
         />
       </el-form-item>
 
@@ -63,18 +64,14 @@
 
       <el-form-item v-if="channel">
         <!-- 渠道 -->
-        <channel-select
-          @result="getChannel"
-          :name="channel"
-          :placeholder="channelText"
-          ref="channel"
-        />
+        <channel-select @result="getChannel" :name="channel" ref="channel" />
       </el-form-item>
 
       <el-form-item v-if="topicType">
         <!-- 主题 -->
         <product-topic @result="getProductTopic" :name="topicType" />
       </el-form-item>
+
       <el-form-item v-if="moreVersion">
         <!-- 随材版本-->
         <more-version-box @result="getVersionNu" :name="moreVersion" />
@@ -94,10 +91,12 @@
           style="margin-bottom:0px"
         />
       </el-form-item>
+
       <el-form-item v-if="schedule">
         <!-- 排期 -->
         <Schedule @result="selectSchedule" :name="schedule" />
       </el-form-item>
+
       <el-form-item v-if="teacherphone">
         <!-- 老师模块手机号搜索 -->
         <teacher-phone
@@ -108,10 +107,12 @@
           :tip="phoneTip"
         />
       </el-form-item>
+
       <el-form-item v-if="teamDetail">
         <!-- 班级期数-->
         <team-detail @result="getTeamDetail" :name="teamDetail" />
       </el-form-item>
+
       <el-form-item v-if="teachername">
         <!-- 老师模块姓名搜索 -->
         <teacher-name
@@ -181,18 +182,10 @@
 
       <!-- && !teacherId -->
       <el-form-item v-if="searchTrialTeamName">
-        <!-- 班级名称搜索 -->
+        <!-- 体验课班级名称搜索 -->
         <search-trial-team-name
           @result="getTrialTeamName"
           :name="searchTrialTeamName"
-        />
-      </el-form-item>
-
-      <el-form-item v-if="systemCourseType">
-        <!-- 系统课类型 -->
-        <system-course-type
-          @result="getSystemCourseType"
-          :name="systemCourseType"
         />
       </el-form-item>
 
@@ -206,16 +199,7 @@
         <search-stage
           @result="getSearchTrialStage"
           :name="searchTrialStage"
-          :isMultiple="isMultiple"
           type="0"
-        />
-      </el-form-item>
-
-      <el-form-item v-if="trialCourseType">
-        <!-- 体验课类型选择 -->
-        <trial-course-type
-          @result="getTrialCourseType"
-          :name="trialCourseType"
         />
       </el-form-item>
 
@@ -240,6 +224,7 @@
           </el-button>
         </el-popover>
       </el-form-item> -->
+
       <el-form-item
         v-if="wxSerch || wxTeacherPhone || wxStatus || wxConcatTeacher"
       >
@@ -261,7 +246,6 @@
         <slot name="searchItems"></slot>
       </el-form-item>
     </el-form>
-    <slot name="otherSearch"></slot>
   </el-card>
 </template>
 <script>
@@ -292,7 +276,7 @@ import teacherWx from './searchItems/teacherSearch/teachetWx'
 import wxList from './searchItems/wxInput'
 import selectAddress from './searchItems/selectAddress.vue'
 import SearchStage from './searchItems/searchStage'
-import TrialCourseType from './searchItems/trialCourseType'
+// import SearchTrialStage from './searchItems/searchTrialStage'
 import { isToss } from '@/utils/index'
 
 export default {
@@ -311,10 +295,6 @@ export default {
       type: String,
       default: '' // channelid
     },
-    channelText: {
-      type: String,
-      default: '订单来源' // 订单来源
-    },
     // 主题
     topicType: {
       type: String,
@@ -330,7 +310,6 @@ export default {
       type: String,
       default: '' // schedule
     },
-
     // 难度
     sup: {
       type: String,
@@ -396,6 +375,7 @@ export default {
       type: String,
       default: ''
     },
+    // 查询班级  搜到用户的最后一个班
     last_team_id: {
       type: String,
       default: ''
@@ -478,12 +458,12 @@ export default {
     // 社群销售查询
     groupSell: {
       type: String,
-      default: ''
+      default: '' //
     },
     // 班级信息查询
     teamDetail: {
       type: String,
-      default: ''
+      default: '' //
     },
     moreVersion: {
       type: String,
@@ -552,11 +532,6 @@ export default {
       type: Boolean,
       default: true
     },
-    // 体验课类型 0-双周，3-单周
-    trialCourseType: {
-      type: String,
-      default: ''
-    },
     // 难度 placeholder
     supPlaceholder: {
       type: String,
@@ -589,8 +564,8 @@ export default {
     wxList,
     selectAddress,
     teacherWx,
-    SearchStage,
-    TrialCourseType
+    SearchStage
+    // SearchTrialStage
   },
   data() {
     return {
@@ -599,17 +574,11 @@ export default {
       must: [],
       should: [],
       selectTime: null, // 物流时间下拉列表_选中项
-      teacherId: '', // 判断是否是toss环境还是boss环境
-      oldTime: '' // 上次时间选择值
+      oldTime: '', // 上次时间选择值
+      teacherId: '' // 判断是否是toss环境还是boss环境
     }
   },
   computed: {},
-  created() {
-    const teacherId = isToss()
-    if (teacherId) {
-      this.teacherId = teacherId
-    }
-  },
   methods: {
     // 选择渠道
     getChannel(res) {
@@ -646,6 +615,7 @@ export default {
     },
     // 选择手机号
     getPhoneHander(res) {
+      console.log(res, '回调res') // 得到uid
       this.setSeachParmas(res, [this.phone || 'umobile'])
     },
     // 选择老师手机号
@@ -684,7 +654,8 @@ export default {
     getOutTradeNo(res) {
       this.setSeachParmas(res, [this.outTradeNo || 'out_trade_no'], 'wildcard')
     },
-    // 选择职务
+
+    // 选择商品名
     getProductName(res) {
       this.setSeachParmas(res, [this.productName || 'product_name'])
     },
@@ -704,7 +675,6 @@ export default {
     },
     // 选择物流单号
     getExpressNo(res) {
-      console.log(res, 'res___________', this.expressNo)
       this.setSeachParmas(res, [this.expressNo || 'express_nu'], 'wildcard')
     },
     // 选择销售老师
@@ -763,9 +733,6 @@ export default {
         'terms'
       )
     },
-    getTrialCourseType(res) {
-      this.setSeachParmas(res, [this.trialCourseType || 'team_category'])
-    },
 
     /**  处理接收到的查询参数
      * @res: Object, 子筛选组件返回的表达式对象，如 {sup: 2}
@@ -816,6 +783,12 @@ export default {
       }
       this.$emit('searchShould', temp)
     }
+  },
+  created() {
+    const teacherId = isToss()
+    if (teacherId) {
+      this.teacherId = teacherId
+    }
   }
 }
 </script>
@@ -837,5 +810,3 @@ export default {
   right: 5px;
 }
 </style>
-
-<style lang="scss" scope></style>

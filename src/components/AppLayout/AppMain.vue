@@ -1,3 +1,11 @@
+<!--
+ * @Descripttion: TOSS小熊
+ * @version: 1.0.0
+ * @Author: Shentong
+ * @Date: 2020-03-14 17:56:29
+ * @LastEditors: Shentong
+ * @LastEditTime: 2020-04-24 17:47:19
+ -->
 <template>
   <section class="app-main">
     <!-- <transition name="fade-transform" mode="out-in">

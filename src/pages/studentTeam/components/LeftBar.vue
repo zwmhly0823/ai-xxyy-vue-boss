@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-13 16:53:27
  * @LastEditors: zhubaodong
- * @LastEditTime: 2020-04-08 20:52:30
+ * @LastEditTime: 2020-05-09 15:14:36
  -->
 <template>
   <div class="left-container">
@@ -36,6 +36,7 @@
             onlyPhone="1"
             :addSupS="true"
             phoneTip="手机号/微信昵称"
+            ref="search"
           ></m-search>
         </div>
         <div class="btn-box">
@@ -78,7 +79,7 @@
       :props="defaultProps"
       default-expand-all
       node-key="customId"
-      :current-node-key="0"
+      :current-node-key="30"
       highlight-current
       style="color:#2F2E31"
       @node-click="nodeClick"
@@ -87,6 +88,8 @@
 </template>
 
 <script>
+// import MSearch from '@/components/MSearch/index.vue'
+import { mapActions } from 'vuex'
 // import MSearch from '@/components/MSearch/index.vue'
 
 export default {
@@ -225,7 +228,10 @@ export default {
     }
   },
   methods: {
+    ...mapActions('team', ['setUser']),
     nodeClick(data) {
+      console.log(data, 'dadadada')
+
       this.$emit('change', data)
     },
     handleSearch(res) {
@@ -235,6 +241,21 @@ export default {
     },
     filterHandler() {
       this.popStatus = false
+      // 获取输入的学员手机号
+      const phone = this.$refs.search.$refs.searchUserByPhone.input
+      let tid = ''
+      if (phone && this.filterItem && this.filterItem.length > 0) {
+        this.filterItem.forEach((item) => {
+          if (item.term && item.term.id) tid = item.term.id
+        })
+        const user = { tid, phone }
+        this.setUser(user)
+      } else {
+        this.setUser({
+          tid: '',
+          phone: ''
+        })
+      }
       this.$emit('filter', this.filterItem)
     },
     closeHandler() {
