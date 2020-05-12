@@ -3,8 +3,8 @@
  * @version:
  * @Author: Shentong
  * @Date: 2020-03-16 19:46:39
- * @LastEditors: Shentong
- * @LastEditTime: 2020-05-08 16:33:44
+ * @LastEditors: panjian
+ * @LastEditTime: 2020-05-12 11:59:10
  */
 import axios from '../axiosConfig'
 
@@ -139,6 +139,69 @@ export default {
             allSystemUserNums
             allSystemUserAmounts
             allWechatAddNums
+          }
+        }
+      }`
+    })
+  },
+  /**
+   * 一级 二级 三级 查询渠道
+   * @param {*} param0
+   */
+  getChannelAndClass(params) {
+    return axios.get(
+      `/api/c/v1/channel/getChannelAndClass?channelClassParentId=${params}`
+    )
+  },
+  /**
+   * 推广人统计查看
+   * @param {*} param0
+   */
+  getEncode(params) {
+    return axios.get(`/api/o/v1/order/channel/getEncode?channelId=${params}`)
+  },
+  /**
+   * 渠道信息管理 添加渠道
+   * @param {*} param0
+   */
+  createChannel(params) {
+    return axios.post('/api/c/v1/channel/createChannel', params)
+  },
+  /**
+   * 渠道信息管理 修改渠道
+   * @param {*} param0
+   */
+  updateChannel(params) {
+    return axios.post('/api/c/v1/channel/updateChannel', params)
+  },
+  /**
+   *
+   *渠道查询
+   */
+  ChannelDetailStatisticsPage(Params = `""`, page = 1) {
+    return axios.post('/graphql/v1/toss', {
+      query: `{
+        ChannelDetailStatisticsPage(query:${Params},page:${page},size:20){
+          totalPages
+          totalElements
+          number
+          content {
+            id
+            channel_inner_name
+            channel_link
+            channel_link_short
+            short_er_code
+            status
+            ctime
+            cdate
+            utime
+            udate
+            remarks
+            channel_sort
+            channel_class_id
+            channel_class_name
+            p_channel_class_name
+            p_channel_class_id
           }
         }
       }`
