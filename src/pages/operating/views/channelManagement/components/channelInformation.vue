@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-05-06 16:33:15
  * @LastEditors: panjian
- * @LastEditTime: 2020-05-12 11:39:56
+ * @LastEditTime: 2020-05-12 20:22:00
  -->
 <template>
   <div class="channelAdd-box">
@@ -387,6 +387,11 @@ export default {
           )
         }
       })
+      debugger
+      if (imgUrlList.length === 0) {
+        this.downLoad = false
+        return
+      }
       console.log(imgUrlList, imgListName)
 
       // imgAll.forEach((res) => {
