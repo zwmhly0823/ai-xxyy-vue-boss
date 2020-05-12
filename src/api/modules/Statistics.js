@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-07 13:52:26
  * @LastEditors: Shentong
- * @LastEditTime: 2020-04-29 16:52:58
+ * @LastEditTime: 2020-04-30 21:54:02
  */
 import axios from '../axiosConfig'
 
@@ -77,8 +77,8 @@ export default {
   },
   // 按期汇总模块接口---->通过期数、销售部门、社群销售、难度 条件过滤 数量统计接口
   getCountStatisticBySearch(params) {
-    const { period = '', department = '', sup = '' } = params
-    const query = `{"term": "${period}","departmentId": "${department}", "sup": "${sup}"}`
+    const { period = '', department = '', sup = '', teacher = '' } = params
+    const query = `{"term": "${period}","departmentId": "${department}", "sup": "${sup}", "teacherIds": "${teacher}"}`
 
     return axios.post('/graphql/v1/toss', {
       query: `{
@@ -262,18 +262,40 @@ export default {
   },
   // 上传作品统计接口
   getBaseSaleStatisticsPage(params) {
-    const {
-      // period = '',
+    let {
+      period = '',
       page = 1,
       size = '20',
-      // teacher = '',
-      totalSort = 'desc'
-      // department = '',
-      // sup = ''
+      teacher = '',
+      totalSort = 'desc',
+      department = '',
+      sup = ''
     } = params
+    department = department ? department.split(',') : ''
+    let supStr = ''
+    if (sup) {
+      supStr = sup
+        .split(',')
+        .map((item) => 'S' + item)
+        .join(',')
+    } else {
+      supStr = sup
+    }
+    sup = supStr ? supStr.split(',') : ''
+
+    teacher = teacher ? teacher.split(',') : ''
     const _totalSort = `{"id.keyword":"${totalSort}"}`
-    // const query = `{"term": "${period}","departmentId": "${department}", "sup": "${sup}","teacherIds":"${teacher}"}`
-    const query = ''
+
+    const getdepartment =
+      department.length > 0
+        ? `,"department_id":${JSON.stringify(department)}`
+        : ''
+    const getsup = sup ? `,"sup.keyword": ${JSON.stringify(sup)}` : ''
+    const getteacherIds = teacher
+      ? `,"pay_teacher_id":${JSON.stringify(teacher)}`
+      : ''
+    const query = `{"trial_stage": "${period}"${getdepartment}${getsup}${getteacherIds}}`
+    // const query = ''
     return axios.post('/graphql/v1/toss', {
       query: `{
         BaseSaleStatisticsPage(page: ${page}, size:${size},query: ${JSON.stringify(
@@ -291,8 +313,44 @@ export default {
             studentCourseTaskStatisticsList{
               current_lesson
               course_task_count
+              task_student_count
             }
+             taskCommentStatisticsList {
+                current_lesson
+                comment_count
+                task_count
+                comment_listened_count
+              }
           }
+        }
+      }`
+    })
+  },
+  // 上传统计数据统计接口
+  getCourseTaskStatistics(params) {
+    const { period = '', teacher = '', department = '', sups = '' } = params
+    const query = `{"term": "${period}","departmentId": "${department}","teacherIds":"${teacher}","sup":"${sups}"}`
+    // const query = ''
+    return axios.post('/graphql/v1/toss', {
+      query: `{
+        courseTaskStatistics(query:${JSON.stringify(query) || null}){
+          student_count
+          course_task_count
+          task_student_count
+        }
+      }`
+    })
+  },
+  // 老师点评统计接口
+  getTaskCommentStatistics(params) {
+    const { period = '', teacher = '', department = '', sups = '' } = params
+    const query = `{"term": "${period}","departmentId": "${department}","teacherIds":"${teacher}","sup":"${sups}"}`
+    return axios.post(`/graphql/v1/toss`, {
+      query: `{
+        taskCommentStatistics(query:${JSON.stringify(query) || null}){
+          comment_count
+          task_count
+          listen_count
         }
       }`
     })

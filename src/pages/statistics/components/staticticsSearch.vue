@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-25 14:35:19
  * @LastEditors: Shentong
- * @LastEditTime: 2020-04-29 14:45:19
+ * @LastEditTime: 2020-05-07 14:27:57
  -->
 <template>
   <div class="table-searcher-container">
@@ -56,7 +56,7 @@ export default {
     },
     manageChange(res, key) {
       this.emitInfo[key] = res[key]
-      console.log('comps-emitInfo', this.emitInfo)
+      // console.log('comps-emitInfo', this.emitInfo)
 
       this.$emit('searchChange', this.emitInfo)
     }
@@ -67,7 +67,7 @@ export default {
 <style lang="scss" scoped>
 .table-searcher-container {
   // height: 50px;
-  margin-bottom: 10px;
+  // margin-bottom: 10px;
   display: flex;
   align-items: center;
   .comp-cell {

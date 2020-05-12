@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-27 19:04:54
  * @LastEditors: Lukun
- * @LastEditTime: 2020-04-22 18:28:20
+ * @LastEditTime: 2020-05-06 21:55:24
  -->
 <template>
   <div class="container">
@@ -18,7 +18,7 @@
         expressNo="express_nu"
         level="level"
         topicType="regtype"
-        groupSell="pay_teacher_id"
+        groupSell="last_teacher_id"
         teamDetail="last_team_id"
         moreVersion="product_version.keyword"
         :timeData="[

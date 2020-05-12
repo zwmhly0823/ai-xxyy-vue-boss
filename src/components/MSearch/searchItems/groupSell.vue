@@ -9,94 +9,106 @@
 <template>
   <div class="search-item small">
     <el-form @submit.native.prevent>
-      <el-autocomplete
+      <el-select
+        v-model="teacherId"
+        :multiple="isMultiple"
+        filterable
+        remote
+        :reserve-keyword="true"
         size="mini"
-        name="vals"
         clearable
-        class="inline-input"
-        v-model="input"
-        :fetch-suggestions="querySearch"
         :placeholder="tip"
-        :trigger-on-focus="false"
-        :popper-class="selectData ? 'ppName' : ''"
-        @select="inputHandler"
+        :remote-method="getTeacher"
+        :loading="loading"
+        @change="onChange"
       >
-        <i class="el-icon-search el-input__icon" slot="suffix"></i>
-        <template slot-scope="{ item }">
-          <div style="display:flex">
-            <div class="name">{{ item.realname || '-' }}</div>
-          </div>
-        </template></el-autocomplete
-      >
+        <el-option
+          v-for="item in teacherList"
+          :key="item.id"
+          :label="item.realname"
+          :value="item.id"
+        >
+        </el-option>
+      </el-select>
     </el-form>
   </div>
 </template>
 
 <script>
-import axios from '@/api/axios'
-
 export default {
   props: {
     name: {
       type: String,
-      default: 'realname.keyword'
+      default: 'pay_teacher_id'
     },
     tip: {
       type: String,
       default: '社群销售'
+    },
+    isMultiple: {
+      type: Boolean,
+      default: false
+    },
+    teacherscope: {
+      type: Array,
+      default: () => {
+        return null
+      }
     }
   },
   components: {},
   data() {
     return {
+      loading: false,
       input: '',
-      selectData: []
+      teacherId: '',
+      teacherList: []
     }
   },
-  computed: {},
+  created() {
+    this.getTeacher()
+  },
   watch: {
-    input(val, old) {
-      console.log(val !== old && !val)
+    teacherscope(val, old) {
+      this.teacherId = ''
+      this.getTeacher()
+    },
+    teacherId(val, old) {
       if (val !== old && !val) {
         this.$emit('result', '')
       }
     }
   },
   methods: {
-    async querySearch(queryString, cb) {
-      const reg = /^([\u4e00-\u9fa5]){0,7}$/
-      if (!reg.test(queryString)) {
-        this.input = ''
-        return
+    selectFocus(e) {
+      this.getTeacher()
+    },
+    getTeacher(query = '') {
+      const { getDepartmentTeacherEx } = this.$http.Department
+      this.loading = true
+      const q = {
+        bool: {
+          must: query
+            ? [{ wildcard: { 'realname.keyword': `*${query}*` } }]
+            : []
+        }
       }
-      const teacherName = await this.createFilter(queryString)
-      // 调用 callback 返回建议列表的数据
-      cb(teacherName)
-    },
-    createFilter(queryString) {
-      const queryParams = JSON.stringify(`
-      {"bool":{"must":[{"wildcard":{"realname.keyword":"*${queryString}*"}}]}}
-      `)
-      return axios
-        .post('/graphql/v1/toss', {
-          query: `{TeacherListEx(query:${queryParams}){
-    id
-    realname
-  }
-   }       `
-        })
+      this.teacherscope &&
+        // this.teacherscope.length &&
+        q.bool.must.push({ terms: { id: this.teacherscope } })
+      getDepartmentTeacherEx(JSON.stringify(q))
         .then((res) => {
-          this.selectData = res.data.TeacherListEx
-          return this.selectData
+          this.teacherList = res.data.TeacherListEx || []
+          this.loading = false
+        })
+        .catch(() => {
+          this.loading = false
         })
     },
-    inputHandler(data) {
-      this.input = data.realname
-      this.$emit('result', { [this.name]: data.id })
+    onChange(item) {
+      this.$emit('result', item ? { [this.name]: item } : '')
     }
-  },
-  created() {},
-  mounted() {}
+  }
 }
 </script>
 <style lang="scss" scoped>

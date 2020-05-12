@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-04-02 15:35:27
  * @LastEditors: chengweihua
- * @LastEditTime: 2020-05-08 15:58:15
+ * @LastEditTime: 2020-05-11 19:39:37
  -->
 <template>
   <el-row type="flex" class="app-main height schedule-container">
@@ -55,7 +55,11 @@
           </div>
           <!-- 搜索 -->
           <div class="sear-container">
-            <statictics-search @searchChange="searchChange"></statictics-search>
+            <!-- TODO: -->
+            <statictics-search
+              @searchChange="searchChange"
+              v-if="showSearch"
+            ></statictics-search>
           </div>
           <!-- 数据统计 -->
           <p class="descripte" v-if="statisticsInfo">
@@ -126,19 +130,29 @@
             </template>
             <!-- 上传作品统计 -->
             <template v-else-if="activeName == 'uploadWorks'">
-              <span>总上传所品：</span>
-              <span class="label-val for-light">0</span>
+              <span>总上传作品：</span>
+              <span class="label-val for-light">{{
+                titleUpload.course_task_count
+              }}</span>
               <span>总上传率：</span>
-              <span class="label-val for-light">0</span>
+              <span class="label-val for-light">{{
+                titleUpload.total_upload_rate
+              }}</span>
               <span>人均作品：</span>
-              <span class="label-val for-light">0</span>
+              <span class="label-val for-light">{{
+                titleUpload.student_count
+              }}</span>
             </template>
             <!-- 老师点评统计 -->
             <template v-else-if="activeName == 'teacherComments'">
               <span>总点评率：</span>
-              <span class="label-val for-light">0</span>
+              <span class="label-val for-light">{{
+                titlereviewStatistical.reviewProbability
+              }}</span>
               <span>总点评收听率：</span>
-              <span class="label-val for-light">0</span>
+              <span class="label-val for-light">{{
+                titlereviewStatistical.listenTo
+              }}</span>
             </template>
           </p>
           <!-- 表头 -->
@@ -147,7 +161,8 @@
               v-model="activeName"
               @tab-click="statisticsTypehandleClick"
             >
-              <el-tab-pane label="转化统计" name="conversion"> </el-tab-pane>
+              <!-- <el-tab-pane label="转化统计" name="conversion"> </el-tab-pane> -->
+              <!-- TODO: -->
               <el-tab-pane label="参课统计" name="attendClass"> </el-tab-pane>
               <el-tab-pane label="完课统计" name="finishClass"> </el-tab-pane>
               <el-tab-pane label="上传作品统计" name="uploadWorks">
@@ -156,12 +171,15 @@
               </el-tab-pane>
             </el-tabs>
           </div>
+          <div class="tableInner" ref="tableInner"></div>
           <!-- 完课统计列表 -->
           <div
             class="orderStyle"
             v-if="tableDataAttend.length && activeName === 'finishClass'"
           >
             <ele-table
+              :tableHeight="tableHeight"
+              :tableSize="'mini'"
               :dataList="tableDataAttend"
               :loading="flags.loading"
               :size="tabQuery.size"
@@ -198,7 +216,7 @@
                 prop="student_nums"
                 align="center"
               ></el-table-column>
-              <el-table-column align="center" label="总计">
+              <el-table-column align="center" label="总计" width="160" fixed>
                 <el-table-column
                   fixed
                   label="总完课人数"
@@ -253,6 +271,8 @@
             v-if="tableData.length && activeName == 'conversion'"
           >
             <ele-table
+              :tableHeight="tableHeight"
+              :tableSize="'mini'"
               :dataList="tableData"
               :loading="flags.loading"
               :size="tabQuery.size"
@@ -289,24 +309,24 @@
                 prop="student_total"
                 align="center"
               ></el-table-column>
-              <el-table-column align="center" label="总计">
+              <el-table-column align="center" label="总计" fixed width="240">
                 <el-table-column
-                  fixed
                   label="订单数"
                   prop="order_total"
                   align="center"
+                  fixed
                 ></el-table-column>
                 <el-table-column
-                  fixed
                   label="转化率"
                   prop="conversion_total"
                   align="center"
+                  fixed
                 ></el-table-column>
                 <el-table-column
-                  fixed
                   label="总金额"
                   prop="amount_total"
                   align="center"
+                  fixed
                 ></el-table-column>
               </el-table-column>
               <!-- child-table-start -->
@@ -367,6 +387,8 @@
             v-if="tableDataAttend.length && activeName == 'attendClass'"
           >
             <ele-table
+              :tableHeight="tableHeight"
+              :tableSize="'mini'"
               :dataList="tableDataAttend"
               :loading="flags.loading"
               :size="tabQuery.size"
@@ -403,7 +425,7 @@
                 prop="student_nums"
                 align="center"
               ></el-table-column>
-              <el-table-column align="center" label="总计">
+              <el-table-column align="center" label="总计" width="160" fixed>
                 <el-table-column
                   fixed
                   label="总参课人数"
@@ -498,7 +520,7 @@
                 <el-table-column
                   fixed
                   label="总上传率"
-                  prop="total_complete_nums"
+                  prop="totalUpload"
                   align="center"
                 ></el-table-column>
                 <el-table-column
@@ -510,7 +532,7 @@
                 <el-table-column
                   fixed
                   label="人均作品数"
-                  prop="total_complete_rate"
+                  prop="averageWorks"
                   align="center"
                 ></el-table-column>
               </el-table-column>
@@ -530,7 +552,7 @@
                           !scope.row.completeArr[i].is_null
                       "
                     >
-                      {{ scope.row.completeArr[i].complete_nums }}
+                      {{ scope.row.completeArr[i].task_student_count }}
                     </span>
                   </template>
                 </el-table-column>
@@ -542,7 +564,7 @@
                           scope.row.completeArr[i] &&
                           !scope.row.completeArr[i].is_null
                       "
-                      >{{ scope.row.completeArr[i].complete_rate }}</span
+                      >{{ scope.row.completeArr[i].uploadRate }}</span
                     >
                   </template>
                 </el-table-column>
@@ -554,6 +576,115 @@
                           scope.row.completeArr[i]
                       "
                       >{{ scope.row.completeArr[i].course_task_count }}</span
+                    >
+                    <span v-else>0</span>
+                  </template>
+                </el-table-column>
+              </el-table-column>
+            </ele-table>
+          </div>
+          <!-- 老师点评 -->
+          <div
+            class="orderStyle"
+            v-if="tableDataAttend.length && activeName === 'teacherComments'"
+          >
+            <ele-table
+              :dataList="tableDataAttend"
+              :loading="flags.loading"
+              :size="tabQuery.size"
+              :page="tabQuery.page"
+              :total="totalElements"
+              @pageChange="pageChange_handler"
+              class="mytable"
+            >
+              <el-table-column
+                fixed
+                label="难度级别"
+                prop="sup"
+                width="70"
+                align="center"
+              ></el-table-column>
+              <el-table-column
+                fixed
+                label="销售组"
+                width="120"
+                align="center"
+                prop="department_name"
+              ></el-table-column>
+              <el-table-column
+                fixed
+                label="社群销售"
+                width="80"
+                align="center"
+                prop="realname"
+              ></el-table-column>
+              <el-table-column
+                fixed
+                label="体验课学生"
+                width="85"
+                prop="trial_course_count"
+                align="center"
+              ></el-table-column>
+              <!-- <el-table-column align="center" label="总计">
+                <el-table-column
+                  fixed
+                  label="点评数"
+                  prop="totalUpload"
+                  align="center"
+                ></el-table-column>
+                <el-table-column
+                  fixed
+                  label="总计点评率"
+                  prop="totalNumbe"
+                  align="center"
+                ></el-table-column>
+                <el-table-column
+                  fixed
+                  label="点评收听率"
+                  prop="averageWorks"
+                  align="center"
+                ></el-table-column>
+              </el-table-column> -->
+              <!-- child-table-start -->
+              <el-table-column
+                align="center"
+                v-for="(a, i) in tableDataChildAttend"
+                :label="a.current_lesson"
+                :key="i"
+              >
+                <el-table-column fixed label="点评数" align="center">
+                  <template slot-scope="scope">
+                    <span
+                      v-if="
+                        Object.keys(scope.row.completeArr).length &&
+                          scope.row.completeArr[i] &&
+                          !scope.row.completeArr[i].is_null
+                      "
+                    >
+                      {{ scope.row.completeArr[i].comment_count }}
+                    </span>
+                  </template>
+                </el-table-column>
+                <el-table-column fixed label="点评率" align="center">
+                  <template slot-scope="scope">
+                    <span
+                      v-if="
+                        Object.keys(scope.row.completeArr).length &&
+                          scope.row.completeArr[i] &&
+                          !scope.row.completeArr[i].is_null
+                      "
+                      >{{ scope.row.completeArr[i].commentRate }}</span
+                    >
+                  </template>
+                </el-table-column>
+                <el-table-column fixed label="点评收听率" align="center">
+                  <template slot-scope="scope">
+                    <span
+                      v-if="
+                        Object.keys(scope.row.completeArr).length &&
+                          scope.row.completeArr[i]
+                      "
+                      >{{ scope.row.completeArr[i].listenReview }}</span
                     >
                     <span v-else>0</span>
                   </template>
@@ -574,7 +705,7 @@
 </template>
 
 <script>
-// import MSearch from '@/components/MSearch/index.vue'
+import _ from 'lodash'
 import staticticsSearch from '../../components/staticticsSearch'
 import EleTable from '@/components/Table/EleTable'
 import { formatData } from '@/utils'
@@ -599,7 +730,7 @@ export default {
       // tabs标签默认状态
       selectName: '更多',
       // 统计表title
-      activeName: 'conversion',
+      activeName: 'attendClass',
       tabIndex: 0,
       // 状态index
       btnIndex: 0,
@@ -644,19 +775,45 @@ export default {
       tableDataAttend: [],
       // 转化统计，统计数据
       tableDataChild: [],
-      // 参课，完课，统计数据
-      tableDataChildAttend: []
+      tableDataChildAttend: [],
+      // 点击选中开课日期，结课日期
+      dataStatisticsBtn: {},
+      // titele上传统计
+      titleUpload: {
+        // 上传作品总数
+        course_task_count: 0,
+        // 学生总数
+        student_count: 0,
+        // 上传学生总数
+        task_student_count: 0,
+        // 总上传率
+        total_upload_rate: 0
+      },
+      // title点评统计
+      titlereviewStatistical: {
+        reviewProbability: 0,
+        listenTo: 0
+      },
+      // 放课天数数组
+      schoolDays: [],
+      searchEmit: {},
+      showSearch: true,
+      tableHeight: 'auto'
     }
   },
   computed: {},
   watch: {},
-  activated() {
+  created() {
+    this.$nextTick(() => {
+      const tableHeight =
+        document.body.clientHeight - this.$refs.tableInner.offsetTop - 112
+      this.tableHeight = tableHeight + ''
+    })
     this.init()
   },
   methods: {
     async init(status = 'on_going') {
       const params = { status }
-
       const proidList = await this.getPriodByStatus(params)
       if (proidList.length) {
         this.priodTabs = proidList.slice(0, 5)
@@ -664,7 +821,6 @@ export default {
 
         const { period = '' } = proidList[0]
         this.tabQuery.period = period
-
         await this.getChangecListByProid()
       }
     },
@@ -682,23 +838,39 @@ export default {
         console.log(err)
       }
     },
-    // 组件emit
-    searchChange(search) {
-      const { department = [], groupSell = '', sup = [] } = search
+    initSearchData(res, isFromEmit = false) {
+      // 如果是子组件emit而来的数据，则不需要清空
+      if (!isFromEmit) {
+        this.showSearch = false
+        this.$nextTick(() => {
+          this.showSearch = true
+        })
+      }
+
+      this.searchEmit = _.cloneDeep(res)
+
+      const { department = [], groupSell = '', sup = [] } = this.searchEmit
       Object.assign(this.tabQuery, {
         teacher: groupSell,
         page: 1,
         department: department.join(),
         sup: sup.join()
       })
+    },
+    // 组件emit
+    searchChange(res) {
+      this.initSearchData(res, true)
 
       this.getChangecListByProid()
     },
     // table列表
     async getChangecListByProid() {
-      this.flags.loading = true
-      // TODO:
-      // this.tabQuery.period = 13
+      const loadingInstance = this.$loading({
+        target: 'section',
+        lock: true,
+        text: '玩命加载中...',
+        fullscreen: true
+      })
       try {
         if (this.activeName === 'finishClass') {
           // 完课统计
@@ -776,44 +948,179 @@ export default {
             departmentId: department,
             sups: sup
           })
-          // 表格上的统计信息
-          this.statisticsInfo = content || {}
+
           // 格式化时间
-          this.statisticsInfo.start_date = this.statisticsInfo.start_date
-            ? formatData(this.statisticsInfo.start_date)
-            : ''
-          this.statisticsInfo.end_date = this.statisticsInfo.end_date
-            ? formatData(this.statisticsInfo.end_date)
-            : ''
+          // 开课日期
+          this.statisticsInfo.start_date =
+            this.dataStatisticsBtn && this.dataStatisticsBtn.course_day
+              ? formatData(this.dataStatisticsBtn.course_day)
+              : formatData(this.priodTabs[0].course_day)
+          // 结课日期
+          this.statisticsInfo.end_date =
+            this.dataStatisticsBtn && this.dataStatisticsBtn.end_course_day
+              ? formatData(this.dataStatisticsBtn.end_course_day)
+              : formatData(this.priodTabs[0].end_course_day)
+          // 开课天数
+          if (this.dataStatisticsBtn && this.dataStatisticsBtn.course_day) {
+            if (+this.dataStatisticsBtn.course_day > new Date().getTime()) {
+              this.statisticsInfo.course_days = '0'
+            } else if (
+              +this.dataStatisticsBtn.course_day < new Date().getTime()
+            ) {
+              this.statisticsInfo.course_days = (
+                (new Date() - this.dataStatisticsBtn.course_day) /
+                1000 /
+                60 /
+                60 /
+                24
+              ).toFixed(0)
+            }
+          } else {
+            if (+this.priodTabs[0].course_day > new Date().getTime()) {
+              this.statisticsInfo.course_days = '0'
+            } else if (+this.priodTabs[0].course_day < new Date().getTime()) {
+              this.statisticsInfo.course_days = (
+                Math.floor(
+                  new Date().getTime() - this.priodTabs[0].course_day
+                ) /
+                1000 /
+                60 /
+                60 /
+                24
+              ).toFixed(0)
+            }
+          }
           // 总数、分页用
           this.totalElements = +totalElements || 0
+          // title统计
+          this.titleStatistical()
           this.uploadStatistical(content || [])
+        } else if (this.activeName === 'teacherComments') {
+          console.log('老师点评')
+          // 上传作品统计
+          const { period, teacher, department, sup } = this.tabQuery
+          const {
+            data: {
+              BaseSaleStatisticsPage: { content, totalElements }
+            }
+          } = await this.$http.Statistics.getBaseSaleStatisticsPage({
+            ...this.tabQuery,
+            term: period,
+            teacherIds: teacher,
+            departmentId: department,
+            sups: sup
+          })
+          // 格式化时间
+          // 开课日期
+          this.statisticsInfo.start_date =
+            this.dataStatisticsBtn && this.dataStatisticsBtn.course_day
+              ? formatData(this.dataStatisticsBtn.course_day)
+              : formatData(this.priodTabs[0].course_day)
+          // 结课日期
+          this.statisticsInfo.end_date =
+            this.dataStatisticsBtn && this.dataStatisticsBtn.end_course_day
+              ? formatData(this.dataStatisticsBtn.end_course_day)
+              : formatData(this.priodTabs[0].end_course_day)
+          // 开课天数
+          if (this.dataStatisticsBtn && this.dataStatisticsBtn.course_day) {
+            if (+this.dataStatisticsBtn.course_day > new Date().getTime()) {
+              this.statisticsInfo.course_days = '0'
+            } else if (
+              +this.dataStatisticsBtn.course_day < new Date().getTime()
+            ) {
+              this.statisticsInfo.course_days = (
+                (new Date() - this.dataStatisticsBtn.course_day) /
+                1000 /
+                60 /
+                60 /
+                24
+              ).toFixed(0)
+            }
+          } else {
+            if (+this.priodTabs[0].course_day > new Date().getTime()) {
+              this.statisticsInfo.course_days = '0'
+            } else if (+this.priodTabs[0].course_day < new Date().getTime()) {
+              this.statisticsInfo.course_days = (
+                Math.floor(
+                  new Date().getTime() - this.priodTabs[0].course_day
+                ) /
+                1000 /
+                60 /
+                60 /
+                24
+              ).toFixed(0)
+            }
+          }
+          // 总数、分页用
+          this.totalElements = +totalElements || 0
+          this.getTeacherComments(content || [])
+          // title统计
+          this.titleReview()
         }
-        this.flags.loading = false
+        loadingInstance.close()
       } catch (err) {
         console.log(err)
-        // loadingInstance.close()
+        loadingInstance.close()
       }
     },
-    // 上传统计
+    // 上传作品统计和老师点评统计
+    titleStatistical() {
+      const { period, teacher, department, sup } = this.tabQuery
+      this.$http.Statistics.getCourseTaskStatistics({
+        ...this.tabQuery,
+        term: period,
+        teacher_ids: teacher,
+        department_ids: department,
+        sups: sup
+      }).then((res) => {
+        this.titleUpload.course_task_count =
+          res.data.courseTaskStatistics.course_task_count
+        // 人均作品
+        this.titleUpload.student_count = (
+          res.data.courseTaskStatistics.course_task_count /
+          res.data.courseTaskStatistics.student_count
+        ).toFixed(2)
+        this.titleUpload.task_student_count =
+          res.data.courseTaskStatistics.task_student_count
+        // 总上传率=所有上传人数相加/（所有体验课学员相加*放课期数）
+        this.titleUpload.total_upload_rate =
+          this.titleUpload.task_student_count &&
+          res.data.courseTaskStatistics.student_count &&
+          this.schoolDays.length > 0
+            ? (
+                (
+                  this.titleUpload.task_student_count /
+                  (res.data.courseTaskStatistics.student_count *
+                    this.schoolDays[this.schoolDays.length - 1])
+                ).toFixed(2) * 100
+              ).toFixed(0) + '%'
+            : 0
+      })
+    },
+    // 上传作品统计
     uploadStatistical(list) {
+      // 总上传率 = （第1天作品总数+第2天作品总数+第n天作品总数）/（体验课学生*已放课总节数）
+      // 已放课总节数 = 上传人数字段&&上传作品数不为空，个数相加
+      // 上传率 = 上传人数/体验课学生
       // 初始化
       this.tableDataChildAttend = []
+      this.schoolDays = []
       list.forEach((item, index) => {
-        // const uploadJudge =
-        //   this.activeName === 'uploadWorks' &&
-        //   item &&
-        //   item.studentCourseTaskStatisticsList
-        // if (uploadJudge) {
-        //   item.studentCourseTaskStatisticsList.forEach((val) => {
-        //     const totalNumbe = { totalNumbe: val.course_task_count }
-        //     Object.assign(item, totalNumbe)
-        //   })
-        // }
+        // 作品总数
         const totalNumbe = {
           totalNumbe: item.studentCourseTaskStatisticsList[0].course_task_count
         }
-        Object.assign(item, totalNumbe)
+        // 人均作品总数
+        let averageWorks = {}
+        if (totalNumbe.totalNumbe !== 0 && item.trial_course_count !== 0) {
+          averageWorks = {
+            averageWorks: (
+              totalNumbe.totalNumbe / item.trial_course_count
+            ).toFixed(2)
+          }
+        } else {
+          averageWorks = { averageWorks: 0 }
+        }
 
         item.completeArr = item.studentCourseTaskStatisticsList || []
         item.completeArr = item.completeArr.splice(1)
@@ -821,9 +1128,107 @@ export default {
         if (this.tableDataChildAttend.length <= childLength) {
           this.tableDataChildAttend = item.completeArr
         }
-      })
 
+        let count = 0
+        const trialCourseCount = item.trial_course_count
+        this.tableDataChildAttend.forEach((res) => {
+          // 已放课节数
+          if (res.task_student_count && res.course_task_count) {
+            count = ++count
+          }
+          // 单个上传率转换成百分比
+          const trialcoursecountCalculate =
+            res.task_student_count && trialCourseCount
+              ? (
+                  (res.task_student_count / trialCourseCount).toFixed(2) * 100
+                ).toFixed(0) + '%'
+              : ''
+          const uploadRate = {
+            uploadRate: trialcoursecountCalculate
+          }
+          Object.assign(res, uploadRate)
+        })
+        // 放课天数数组
+        this.schoolDays.push(count)
+        // 总上传率
+        const toCalculate =
+          totalNumbe.totalNumbe / (item.trial_course_count * count)
+        const treatmenTpercentage = toCalculate
+          ? (toCalculate.toFixed(2) * 100).toFixed(0) + '%'
+          : 0
+        const totalUpload = {
+          totalUpload: treatmenTpercentage
+        }
+        Object.assign(item, totalNumbe, averageWorks, totalUpload)
+      })
+      // 放课天数排序
+      this.schoolDays = this.schoolDays.sort()
       this.tableDataAttend = list
+    },
+    // 老师点评
+    getTeacherComments(list) {
+      this.tableDataChildAttend = []
+      this.schoolDays = []
+      list.forEach((item, index) => {
+        item.completeArr = item.taskCommentStatisticsList || []
+        const childLength = item.completeArr.length
+        if (this.tableDataChildAttend.length <= childLength) {
+          this.tableDataChildAttend = item.completeArr
+        }
+        let commentRate = {}
+        let listenReview = {}
+        this.tableDataChildAttend.forEach((data) => {
+          // 点评数/当前销售在当期所带学员共上传作品数=点评率
+          const calculateCommentRate =
+            data.comment_count && data.task_count
+              ? (
+                  (data.comment_count / data.task_count).toFixed(2) * 100
+                ).toFixed(0) + '%'
+              : ''
+          commentRate = { commentRate: calculateCommentRate }
+          // 点评收听率：听点评数/发布点评数=点评收听率
+          const calculateListenReview =
+            data.comment_listened_count && data.comment_count
+              ? (
+                  (data.comment_listened_count / data.comment_count).toFixed(
+                    2
+                  ) * 100
+                ).toFixed(0) + '%'
+              : ''
+          listenReview = { listenReview: calculateListenReview }
+          Object.assign(data, commentRate, listenReview)
+        })
+      })
+      console.log(this.tableDataChildAttend)
+      this.tableDataAttend = list
+    },
+    // 老师点评title统计
+    titleReview() {
+      const { period, teacher, department, sup } = this.tabQuery
+      this.$http.Statistics.getTaskCommentStatistics({
+        ...this.tabQuery,
+        term: period,
+        teacher_ids: teacher,
+        department_ids: department,
+        sups: sup
+      }).then((res) => {
+        console.log(res, 'res')
+        const _data = res.data.taskCommentStatistics
+        // 总点评率=点评总数/作品总数
+        this.titlereviewStatistical.reviewProbability =
+          _data.comment_count && _data.task_count
+            ? (
+                (_data.comment_count / _data.task_count).toFixed(2) * 100
+              ).toFixed(0) + '%'
+            : ''
+        // 总点评收听率 = 总点评被收听数/总点评数
+        this.titlereviewStatistical.listenTo =
+          _data.listen_count && _data.comment_count
+            ? (
+                (_data.listen_count / _data.comment_count).toFixed(2) * 100
+              ).toFixed(0) + '%'
+            : 0
+      })
     },
     // 包装 接口返回的数据
     pakageListDate(tabList) {
@@ -846,99 +1251,11 @@ export default {
         if (this.tableDataChild.length <= childLength) {
           this.tableDataChild = conversionRateArr
         }
-        // if (childLength >= _length) {
-        //   _length = childLength
-        // }
       })
-      // for (let i = 0; i < _length; i++) {
-      //   this.tableDataChild.push({
-      //     row_index: i + 1
-      //   })
-      // }
       this.tableData = teacherConversion
     },
     //  参课统计 数据格式化
     formatTableData(list) {
-      // list = [
-      //   {
-      //     sup: 'S2',
-      //     teacher_id: '80',
-      //     teacher_name: '周艺达',
-      //     department_id: '19',
-      //     department_name: '3部S2战队',
-      //     student_nums: '95',
-      //     total_nums: '285',
-      //     total_join_nums: '28',
-      //     total_join_rate: '9.82%',
-      //     total_complete_nums: '157',
-      //     total_complete_rate: '55.09%',
-      //     completeArr: [
-      //       {
-      //         current_lesson: 'W1D3',
-      //         sum: '95',
-      //         join_nums: '14',
-      //         join_rate: '14.74%',
-      //         complete_nums: '35',
-      //         complete_rate: '36.84%'
-      //       },
-      //       {
-      //         current_lesson: 'W1D1',
-      //         sum: '95',
-      //         join_nums: '6',
-      //         join_rate: '6.32%',
-      //         complete_nums: '67',
-      //         complete_rate: '70.53%'
-      //       },
-      //       {
-      //         current_lesson: 'W1D2',
-      //         sum: '95',
-      //         join_nums: '8',
-      //         join_rate: '8.42%',
-      //         complete_nums: '55',
-      //         complete_rate: '57.89%'
-      //       }
-      //     ]
-      //   },
-      //   {
-      //     sup: 'S2',
-      //     teacher_id: '79',
-      //     teacher_name: '张晨阳',
-      //     department_id: '19',
-      //     department_name: '3部S2战队',
-      //     student_nums: '94',
-      //     total_nums: '282',
-      //     total_join_nums: '39',
-      //     total_join_rate: '13.83%',
-      //     total_complete_nums: '152',
-      //     total_complete_rate: '53.9%',
-      //     completeArr: [
-      //       {
-      //         current_lesson: 'W1D3',
-      //         sum: '94',
-      //         join_nums: '12',
-      //         join_rate: '12.77%',
-      //         complete_nums: '42',
-      //         complete_rate: '44.68%'
-      //       },
-      //       {
-      //         current_lesson: 'W1D1',
-      //         sum: '94',
-      //         join_nums: '10',
-      //         join_rate: '10.64%',
-      //         complete_nums: '65',
-      //         complete_rate: '69.15%'
-      //       },
-      //       {
-      //         current_lesson: 'W1D2',
-      //         sum: '94',
-      //         join_nums: '17',
-      //         join_rate: '18.09%',
-      //         complete_nums: '45',
-      //         complete_rate: '47.87%'
-      //       }
-      //     ]
-      //   }
-      // ]
       // 初始化
       this.tableDataChildAttend = []
       list.forEach((item, index) => {
@@ -952,7 +1269,7 @@ export default {
 
       this.tableDataAttend = list
     },
-    // 点击tabs页签（转化统计 按钮）
+    // 点击tabs页签（转化统计、参课统计、完课统计 按钮）
     statisticsTypehandleClick(tab) {
       this.tableDataAttend = []
       this.tableData = []
@@ -961,6 +1278,8 @@ export default {
     },
     // 更多 下拉框
     handleCommand(command) {
+      this.initSearchData({})
+
       const { period = '' } = command
       this.tabIndex = 6
 
@@ -972,6 +1291,8 @@ export default {
       this.getChangecListByProid()
     },
     top_tabs_click(index, statusInfo) {
+      this.initSearchData({})
+
       this.tabIndex = 0
       this.btnIndex = index
       const { status } = statusInfo
@@ -980,6 +1301,9 @@ export default {
       this.init(status)
     },
     priod_tabs_click(row, index) {
+      this.dataStatisticsBtn = row
+      this.initSearchData({})
+
       this.tabIndex = index
       this.tabQuery.page = 1
       this.tabQuery.period = row.period
@@ -995,19 +1319,6 @@ export default {
       this.tabQuery.page = page
       this.getChangecListByProid()
     }
-    // 如果返回的 ’conversion_rate_daily‘(this.tableDataChild) 字段为空数组，则：模拟一个列
-    // if (!this.tableDataChild.length) {
-    //   this.tableDataChild = [
-    //     {
-    //       label: `暂无数据`,
-    //       children: [
-    //         { label: '订单数', value: `暂无数据` },
-    //         { label: '转化率', value: `暂无数据` },
-    //         { label: '总金额', value: `暂无数据` }
-    //       ]
-    //     }
-    //   ]
-    // }
   }
 }
 </script>
@@ -1065,8 +1376,9 @@ export default {
   .tabs-operate {
     background: #f5f7fa;
     display: flex;
+    height: 40px;
     > div {
-      height: 50px;
+      height: 100%;
       padding: 0 20px;
       display: flex;
       justify-content: center;
@@ -1082,8 +1394,10 @@ export default {
   }
   .descripte {
     padding-left: 15px;
+    min-height: 20px;
+    margin: 0;
     color: #333;
-    min-width: 800px;
+    min-width: 1024px;
     .label-val {
       margin-right: 20px;
     }
@@ -1101,8 +1415,9 @@ export default {
     font-size: 15px;
   }
   .sear-container {
+    height: 40px;
     display: flex;
-    margin: 10px;
+    margin-left: 15px;
     align-items: center;
     .el-card {
       border: 0;
@@ -1110,6 +1425,7 @@ export default {
   }
   .orderStyle {
     // padding-bottom: 45px;
+    // height: 200px;
   }
   .editStyle {
     color: #0401ff;

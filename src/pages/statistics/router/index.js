@@ -1,7 +1,7 @@
 /*
  * @Date: 2020-03-13 15:20:21
  * @LastEditors: Shentong
- * @LastEditTime: 2020-04-26 17:03:56
+ * @LastEditTime: 2020-05-07 15:58:22
  * @FilePath: /ai-app-vue-toss/src/pages/studentTeam/router/index.js
  */
 import Vue from 'vue'
@@ -17,25 +17,25 @@ const routes = [
       title: '统计分析',
       icon: 'el-icon-s-platform'
     },
-    redirect: '/salesPerformance'
-  },
-  {
-    path: '/salesPerformance',
-    name: 'salesPerformance',
-    meta: {
-      title: '销售过程分析',
-      keepAlive: true
-    },
-    component: () => import('../views/salesPerformance/index.vue')
+    redirect: '/priodPerformance'
   },
   {
     path: '/priodPerformance',
     name: 'priodPerformance',
     meta: {
       title: '按期情况汇总',
-      keepAlive: true
+      keepAlive: false
     },
     component: () => import('../views/priodPerformance/index.vue')
+  },
+  {
+    path: '/salesPerformance',
+    name: 'salesPerformance',
+    meta: {
+      title: '销售过程分析',
+      keepAlive: false
+    },
+    component: () => import('../views/salesPerformance/index.vue')
   },
   {
     path: '/salesProcess',

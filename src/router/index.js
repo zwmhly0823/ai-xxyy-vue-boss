@@ -90,6 +90,16 @@ const routes = [
       //     style: 'line'
       //   }
       // },
+
+      {
+        path: '/priodPerformance',
+        name: 'priodPerformance',
+        meta: {
+          title: '按期汇总',
+          module: 'statistics',
+          style: 'line'
+        }
+      },
       {
         path: '/salesPerformance',
         name: 'salesPerformance',
@@ -99,15 +109,6 @@ const routes = [
           style: 'line'
         }
       }
-      // {
-      //   path: '/priodPerformance',
-      //   name: 'priodPerformance',
-      //   meta: {
-      //     title: '按期汇总',
-      //     module: 'statistics',
-      //     style: 'line'
-      //   }
-      // }
       // {
       //   path: '/salesProcess',
       //   name: 'salesProcess',

@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-02 15:35:27
  * @LastEditors: Shentong
- * @LastEditTime: 2020-04-30 14:40:38
+ * @LastEditTime: 2020-05-07 15:08:41
  -->
 <template>
   <el-row type="flex" class="app-main height schedule-container">
@@ -30,7 +30,6 @@
             >
               <span>{{ tab.period_name }}</span>
             </div>
-            <!-- 大于5个 TODO: -->
             <el-dropdown
               @command="handleCommand"
               class="activeCommand"
@@ -52,7 +51,10 @@
             </el-dropdown>
           </div>
           <div class="sear-container">
-            <statictics-search @searchChange="searchChange"></statictics-search>
+            <statictics-search
+              @searchChange="searchChange"
+              v-if="showSearch"
+            ></statictics-search>
           </div>
           <p class="descripte" v-if="currentPriodStatistic">
             开课日期：<span class="label-val">{{
@@ -62,33 +64,35 @@
             <span class="label-val">{{
               currentPriodStatistic.end_course_day || '-'
             }}</span
-            >开课天数：
+            >开课天数
             <span class="label-val"
-              >{{ currentPriodStatistic.startCourseDay }}天</span
+              >{{ currentPriodStatistic.startCourseDay }} 天</span
             >
-            <span>当前结果：社群销售</span>
-            <span class="for-light"
-              >{{ searchStatistic.teacherNum || '-' }}，</span
-            >
-            <span>体验学生</span>
-            <span class="for-light"
-              >{{ searchStatistic.trialStudentNum || '-' }}，</span
-            >
-            <span>系统课转化率</span>
-            <span class="for-light"
-              >{{ searchStatistic.systemConversion || '-' }}，</span
-            >
-            <span>系统课支付学生</span>
-            <span class="for-light"
-              >{{ searchStatistic.systemStudentNum || '-' }}，</span
-            >
-            <span>支付总金额</span>
+            <span> 社群销售 </span>
+            <span class="for-light">{{
+              searchStatistic.teacherNum || '-'
+            }}</span>
+            <span> 体验学生 </span>
+            <span class="for-light">{{
+              searchStatistic.trialStudentNum || '-'
+            }}</span>
+            <span> 总转化率 </span>
+            <span class="for-light">{{
+              searchStatistic.systemConversion || '-'
+            }}</span>
+            <span> 系统课支付学生 </span>
+            <span class="for-light">{{
+              searchStatistic.systemStudentNum || '-'
+            }}</span>
+            <span> 支付总金额 </span>
             <span class="for-light">{{
               searchStatistic.systemTotalAmount || '-'
             }}</span>
           </p>
-          <div class="orderStyle">
+          <div class="orderStyle" ref="tableContainer">
             <ele-table
+              :tableHeight="tableHeight"
+              :tableSize="'small'"
               :dataList="tableData"
               :loading="flags.loading"
               :size="tabQuery.size"
@@ -97,7 +101,7 @@
               @pageChange="pageChange_handler"
               class="mytable"
             >
-              <el-table-column label="排名" width="60" prop="sup" align="center"
+              <!-- <el-table-column label="转化总金额排名" width="110" align="center"
                 ><template slot-scope="scope"
                   ><span v-if="tabQuery.totalSort === 'desc'"
                     >{{ scope.$index + calcIndex }}
@@ -106,7 +110,7 @@
                     Math.abs(totalElements - calcIndex - scope.$index + 1)
                   }}</span>
                 </template></el-table-column
-              >
+              > -->
               <el-table-column label="级别" width="50" align="center">
                 <template slot-scope="scope">
                   <span v-if="+scope.row.sup">{{ `S${scope.row.sup}` }}</span>
@@ -114,67 +118,67 @@
               </el-table-column>
               <el-table-column
                 label="部门"
-                width="140"
+                min-width="140"
                 align="center"
                 prop="department_name"
               ></el-table-column>
               <el-table-column
                 label="社群销售"
                 prop="realname"
-                width="80"
+                min-width="80"
                 align="center"
               ></el-table-column>
               <el-table-column
                 label="体验学生数"
-                width="85"
+                min-width="85"
                 prop="trial_course_count"
                 align="center"
               ></el-table-column>
               <el-table-column
                 label="无收货地址"
-                width="80"
+                min-width="80"
                 prop="no_address_count"
                 align="center"
               ></el-table-column>
               <el-table-column
                 label="微信添加率"
-                width="80"
+                min-width="80"
                 prop="addWechatRate"
                 align="center"
               ></el-table-column>
               <el-table-column
                 label="参课率"
-                width="80"
+                min-width="80"
                 prop="joinCourseRate"
                 align="center"
               ></el-table-column>
               <el-table-column
                 label="完课率"
-                width="80"
+                min-width="80"
                 prop="compCourseRate"
                 align="center"
               ></el-table-column>
               <el-table-column
                 label="人均上传作品"
-                width="100"
+                min-width="100"
                 prop="uploadTaskRate"
                 align="center"
               ></el-table-column>
               <el-table-column
                 label="作品点评率"
-                width="80"
+                min-width="80"
                 prop="commentTaskRate"
                 align="center"
               ></el-table-column>
               <el-table-column
                 label="查看点评率"
-                width="80"
+                min-width="80"
                 prop="lookCommentRate"
                 align="center"
               ></el-table-column>
               <el-table-column
                 label="支付学生数"
-                width="80"
+                min-width="80"
                 prop="system_order_count"
                 align="center"
               ></el-table-column>
@@ -182,7 +186,8 @@
                 <template slot="header">
                   <div @click="onSortConversion" class="sort-operate-box">
                     <span>转化率</span>
-                    <div class="sort-icon-arrow">
+                    <!-- TODO: -->
+                    <!-- <div class="sort-icon-arrow">
                       <i
                         class="el-icon-caret-top top-color"
                         :class="{ active: conversionStatus }"
@@ -191,7 +196,7 @@
                         class="el-icon-caret-bottom bottom"
                         :class="{ active: !conversionStatus }"
                       ></i>
-                    </div>
+                    </div> -->
                   </div>
                 </template>
               </el-table-column>
@@ -199,9 +204,9 @@
                 label="支付总金额"
                 prop="system_order_total_amount"
                 align="center"
-                width="100"
+                min-width="100"
               >
-                <template slot="header">
+                <!-- <template slot="header">
                   <div @click="onSortAmount" class="sort-operate-box">
                     <span>支付总金额</span>
                     <div class="sort-icon-arrow">
@@ -214,8 +219,8 @@
                         :class="{ active: !amountStatus }"
                       ></i>
                     </div>
-                  </div> </template
-              ></el-table-column>
+                  </div> </template> -->
+              </el-table-column>
             </ele-table>
           </div>
         </el-scrollbar>
@@ -225,6 +230,7 @@
 </template>
 
 <script>
+import _ from 'lodash'
 import staticticsSearch from '../../components/staticticsSearch'
 import EleTable from '@/components/Table/EleTable'
 import { formatData } from '@/utils'
@@ -283,7 +289,10 @@ export default {
       tableData: [],
       proidList: [],
       tableDatasss: [],
-      currentPriodStatistic: {}
+      currentPriodStatistic: {},
+      searchEmit: {},
+      showSearch: true,
+      tableHeight: 'auto'
     }
   },
   computed: {
@@ -291,11 +300,17 @@ export default {
       return this.tabQuery.size * (this.tabQuery.page - 1) + 1
     }
   },
-  watch: {},
-  activated() {
+  created() {
     this.init()
+    this.$nextTick(() => {
+      const tableHeight =
+        document.body.clientHeight - this.$refs.tableContainer.offsetTop - 115
+      this.tableHeight = tableHeight + ''
+    })
   },
+  mounted() {},
   methods: {
+    // TODO
     onSortConversion() {
       if (this.tabQuery.rateSort === 'desc') {
         this.tabQuery.rateSort = 'asc'
@@ -330,9 +345,7 @@ export default {
 
         this.currentPriodStatistic = this.getStaByProid(period)
 
-        await this.getStatisticsByProid()
-
-        this.getCountStatisticBySearch()
+        this.getListAndSearchSta()
       }
     },
     // 遍历期数,获取当前期下的统计结果
@@ -477,19 +490,35 @@ export default {
       this.getStatisticsByProid()
       this.getCountStatisticBySearch()
     },
+
     // 组件emit
-    searchChange(search) {
-      const { department = [], groupSell = '', sup = [] } = search
+    searchChange(res) {
+      this.initSearchData(res, true)
+
+      this.getListAndSearchSta()
+    },
+    initSearchData(res, isFromEmit = false) {
+      // 如果是子组件emit而来的数据，则不需要清空
+      if (!isFromEmit) {
+        this.showSearch = false
+        this.$nextTick(() => {
+          this.showSearch = true
+        })
+      }
+
+      this.searchEmit = _.cloneDeep(res)
+
+      const { department = [], groupSell = '', sup = [] } = this.searchEmit
       Object.assign(this.tabQuery, {
         teacher: groupSell,
         department: department.join(),
         sup: sup.join()
       })
-
-      this.getListAndSearchSta()
     },
     // 更多 下拉框
     handleCommand(command) {
+      this.initSearchData({})
+
       const { period = '' } = command
 
       this.tabIndex = 6
@@ -500,10 +529,11 @@ export default {
       this.getListAndSearchSta()
 
       this.currentPriodStatistic = this.getStaByProid(period)
-      console.log('currentPriodStatistic', this.currentPriodStatistic)
     },
     // 点击  ’进行中、已结课、招生中‘ 按钮
     top_tabs_click(index, statusInfo) {
+      this.initSearchData({})
+
       this.tabIndex = 0
       this.btnIndex = index
       const { status } = statusInfo
@@ -511,6 +541,8 @@ export default {
     },
     // 点击期数
     priod_tabs_click(row, index) {
+      this.initSearchData({})
+
       const { period = '' } = row
       this.tabIndex = index
       this.tabQuery.page = 1
@@ -519,7 +551,6 @@ export default {
       this.getListAndSearchSta()
 
       this.currentPriodStatistic = this.getStaByProid(period)
-      console.log('currentPriodStatistic', this.currentPriodStatistic)
 
       this.selectName = '更多'
     },
@@ -612,10 +643,11 @@ export default {
     }
   }
   .tabs-operate {
+    height: 40px;
     background: #f5f7fa;
     display: flex;
     > div {
-      height: 50px;
+      height: 100%;
       padding: 0 20px;
       display: flex;
       justify-content: center;
@@ -632,12 +664,14 @@ export default {
   .descripte {
     padding-left: 15px;
     color: #333;
-    min-width: 800px;
+    margin: 0;
+    min-width: 1024px;
+    min-height: 20px;
     .label-val {
       margin-right: 20px;
     }
     .for-light {
-      margin-left: 5px;
+      margin-right: 5px;
       color: #409eff;
     }
   }
@@ -651,8 +685,9 @@ export default {
     font-size: 15px;
   }
   .sear-container {
+    height: 40px;
     display: flex;
-    margin: 10px;
+    margin-left: 10px;
     align-items: center;
     .el-card {
       border: 0;

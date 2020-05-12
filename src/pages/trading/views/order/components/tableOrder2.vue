@@ -1,13 +1,24 @@
+<!--
+  体验课 topic= '4'
+-->
 <template>
   <div class="title-box">
     <el-table :data="orderList">
-      <el-table-column label="用户信息" prop="user" width="120">
+      <el-table-column label="用户信息" prop="user" min-width="120" fixed>
         <template slot-scope="scope">
           <p>{{ scope.row.user ? scope.row.user.username || '-' : '-' }}</p>
           <p>{{ scope.row.user ? scope.row.user.mobile || '-' : '-' }}</p>
         </template>
       </el-table-column>
-      <el-table-column label="商品信息" width="160">
+      <el-table-column label="归属地" prop="QCellCore" min-width="120">
+        <template slot-scope="scope">
+          <p>
+            {{ scope.row.user ? scope.row.user.mobile_province || '-' : '-' }} ·
+            {{ scope.row.user ? scope.row.user.mobile_city || '-' : '-' }}
+          </p>
+        </template>
+      </el-table-column>
+      <el-table-column label="商品信息" min-width="160">
         <template slot-scope="scope">
           <p>
             {{
@@ -29,7 +40,8 @@
           </p>
         </template>
       </el-table-column>
-      <!-- <el-table-column label="体验课类型" v-if="topic === '4'">
+      <!-- 只有boss有 -->
+      <el-table-column label="体验课类型" min-width="100px" v-if="!teacherId">
         <template slot-scope="scope">
           <p>
             {{
@@ -43,32 +55,28 @@
             }}
           </p>
         </template>
-      </el-table-column> -->
-      <el-table-column label="订单来源">
+      </el-table-column>
+      <el-table-column label="订单来源" min-width="100">
         <template slot-scope="scope">
           <p>
             {{ scope.row.channel ? scope.row.channel.channel_outer_name : '-' }}
           </p>
         </template>
       </el-table-column>
-      <el-table-column label="订单状态">
+      <el-table-column label="订单状态" min-width="100">
         <template slot-scope="scope">
           {{ scope.row.order_status ? scope.row.order_status : '-' }}
         </template>
       </el-table-column>
-      <!-- <el-table-column label="班级信息" v-if="topic === '4'">
-        <template slot-scope="scope">
-          {{ scope.row.team ? scope.row.team.team_name : '-' }}
-        </template>
-      </el-table-column> -->
-      <el-table-column label="体验课班级" width="150">
+
+      <el-table-column label="体验课班级" min-width="150">
         <template slot-scope="scope">
           {{
             trialTeam[scope.row.id] ? trialTeam[scope.row.id].team_name : '-'
           }}
         </template>
       </el-table-column>
-      <el-table-column label="社群销售" width="150">
+      <el-table-column label="社群销售" min-width="150">
         <template slot-scope="scope">
           <!-- 体验课 -->
           <div>
@@ -89,31 +97,7 @@
           </div>
         </template>
       </el-table-column>
-      <!-- <el-table-column
-        label="销售部门"
-        v-if="topic === '4' || topic === '5'"
-        width="150"
-      >
-        <template slot-scope="scope">
-          <p v-if="scope.row.department && scope.row.department.department">
-            {{
-              scope.row.department && scope.row.department.department.pid
-                ? departmentObj[scope.row.department.department.pid]
-                  ? departmentObj[scope.row.department.department.pid].name
-                  : ''
-                : ''
-            }}
-          </p>
-          {{
-            scope.row.department && scope.row.department.department
-              ? departmentObj[scope.row.department.department.id]
-                ? departmentObj[scope.row.department.department.id].name
-                : '-'
-              : '-'
-          }}
-        </template>
-      </el-table-column> -->
-      <el-table-column label="下单时间·订单号" width="180">
+      <el-table-column label="下单时间·订单号" min-width="180">
         <template slot-scope="scope">
           <p>
             {{ scope.row.ctime ? scope.row.ctime : '-' }}
@@ -127,7 +111,8 @@
           </p>
         </template>
       </el-table-column>
-      <el-table-column label="关联物流" width="150">
+
+      <el-table-column label="关联物流" min-width="170">
         <template slot-scope="scope">
           <p
             :class="{ 'primary-color': scope.row.express.express_total > 0 }"
@@ -135,7 +120,6 @@
               showExpressDetail(scope.row.id, scope.row.express.express_total)
             "
           >
-            <!-- <p> -->
             {{ scope.row.express ? scope.row.express.express_total || 0 : '-' }}
           </p>
           <!-- 体验课不显示最后一次物流状态 -->
@@ -218,6 +202,8 @@ export default {
       orderList: [],
       // 获取teacherid
       teacherId: '',
+      // 当前老师下属老师ID
+      teacherGroup: [],
       // 搜索
       searchIn: [],
       statisticsQuery: [], // 统计需要 bool 表达式
@@ -229,8 +215,11 @@ export default {
   },
   created() {
     this.teacherId = isToss()
-    // 订单列表接口
-    this.getOrderList()
+    if (this.teacherId) {
+      this.getTeacherPermission()
+    } else {
+      this.getOrderList()
+    }
 
     this.getDepartment()
   },
@@ -254,6 +243,16 @@ export default {
     }
   },
   methods: {
+    // 老师权限
+    getTeacherPermission() {
+      this.$http.Permission.getAllTeacherByRole({
+        teacherId: this.teacherId
+      }).then((res) => {
+        this.teacherGroup = res || []
+        // 订单列表接口
+        this.getOrderList()
+      })
+    },
     // 订单关联物流详情展示
     showExpressDetail(what, total) {
       console.log(what, "what's that?")
@@ -267,19 +266,20 @@ export default {
       const statisticsQuery = []
       const queryObj = {}
       // TOSS
-      // if (this.teacherId) {
-      //   Object.assign(
-      //     queryObj,
-      //     this.topic === '4'
-      //       ? { last_teacher_id: this.teacherId }
-      //       : { pay_teacher_id: this.teacherId }
-      //   )
-      //   statisticsQuery.push(
-      //     this.topic === '4'
-      //       ? { term: { last_teacher_id: this.teacherId } }
-      //       : { term: { pay_teacher_id: this.teacherId } }
-      //   )
-      // }
+      if (this.teacherId) {
+        Object.assign(queryObj, {
+          last_teacher_id:
+            this.teacherGroup.length > 0 ? this.teacherGroup : [this.teacherId]
+        })
+        statisticsQuery.push({
+          terms: {
+            last_teacher_id:
+              this.teacherGroup.length > 0
+                ? this.teacherGroup
+                : [this.teacherId]
+          }
+        })
+      }
 
       const topicRelation = await this.$http.Product.topicRelationId(
         `${JSON.stringify({
@@ -332,34 +332,6 @@ export default {
           this.$emit('statistics', statistics)
         })
         // 统计结束
-      }
-      /*
-       * 活动订单 - (小熊商城1，推荐有礼2，赠送6)
-       * 通过relation_id去o_order_product查询oid,分页
-       * TODO: 先查看全部 - BOSS，TOSS再做处理
-       * */
-      if (this.topic === '1,2,6') {
-        // && !this.teacherId
-        Object.assign(queryObj, { pid: relationIds })
-        delete queryObj.last_teacher_id
-        const res =
-          (await this.$http.Product.orderProductPage(
-            `${JSON.stringify(queryObj)}`,
-            page
-          )) || {}
-        const data = (res.data && res.data.OrderProductPage) || {
-          totalElements: 0,
-          content: []
-        }
-        // 分页
-        this.totalElements = +data.totalElements
-        this.currentPage = +data.number
-        // this.orderList = data.content
-
-        // TODO: 根据oid 请求o_order 表
-        const oids = data.content.map((item) => item.oid)
-        const oquery = { id: oids }
-        this.orderData(oquery, 1)
       }
     },
 

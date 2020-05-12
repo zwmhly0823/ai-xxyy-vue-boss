@@ -15,6 +15,9 @@
         phone="uid"
         onlyPhone="1"
         phoneTip="手机号/微信昵称 查询"
+        :teamType="
+          `${classId.classId && +classId.classId.team_type === 0 ? '0' : '1'}`
+        "
         :teamId="classId.classId && classId.classId.id"
       />
       <el-button
@@ -188,6 +191,7 @@
   </div>
 </template>
 <script>
+import { mapGetters } from 'vuex'
 import checkBox from '@/components/MCheckBox/index'
 import detailsTable from './components/detailsTable'
 import MSearch from '@/components/MSearch/index.vue'
@@ -207,6 +211,12 @@ export default {
     classId: {
       type: Object,
       default: null
+    }
+  },
+  computed: {
+    ...mapGetters(['team']),
+    searchUser() {
+      return this.team.userByPhone
     }
   },
   data() {
@@ -301,6 +311,32 @@ export default {
     }
   },
   watch: {
+    searchUser(user) {
+      console.log(user)
+      let teamId = ''
+      let teamType = ''
+      let mobile = ''
+      if (user && user.phone) mobile = user.phone
+      if (this.classId && this.classId.classId) {
+        teamId = this.classId.classId.id
+        teamType = this.classId.classId.team_type
+      }
+      this.search = ''
+      if (!mobile) {
+        this.getGroup()
+        return
+      }
+      this.$http.User.blurrySearch(mobile, teamType, teamId).then((res) => {
+        console.log(res, '********')
+        const uid =
+          res.data.blurrySearch &&
+          res.data.blurrySearch[0] &&
+          res.data.blurrySearch[0].id
+        console.log(this.search)
+        this.search = `"${uid}"`
+        this.getGroup()
+      })
+    },
     classId(value) {
       // 切换标签 语音停止
       const audios = this.$refs
