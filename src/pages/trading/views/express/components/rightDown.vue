@@ -594,6 +594,9 @@ export default {
           if (item.terms.level) {
             timeType.level = `${item.terms.level}`
           }
+          if (item.terms.pay_channel) {
+            timeType.pay_channel = JSON.stringify(item.terms.pay_channel)
+          }
         }
         if (item.range) {
           const { range } = item
@@ -676,6 +679,7 @@ export default {
               teacher_id
               last_teacher_id
               pay_teacher_id
+              pay_channel
               user {
                 id
                 birthday
