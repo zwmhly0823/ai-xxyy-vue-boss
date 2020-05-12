@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-24 18:50:54
  * @LastEditors: panjian
- * @LastEditTime: 2020-05-06 15:14:40
+ * @LastEditTime: 2020-05-07 19:09:58
  -->
 <template>
   <div class="search-item small threeSelect">
@@ -26,6 +26,7 @@
       filterable
     ></el-cascader>
     <el-select
+      v-show="scheduling"
       style="margin-left:20px;"
       v-model="stage"
       :multiple="isMultiple"
@@ -47,6 +48,7 @@
       ></el-option>
     </el-select>
     <el-date-picker
+      v-show="channelDate"
       class="small"
       style="margin-left:20px;"
       size="mini"
@@ -87,6 +89,14 @@ export default {
     datePlaceholder: {
       type: String,
       default: '下单时间'
+    },
+    scheduling: {
+      type: Boolean,
+      default: true
+    },
+    channelDate: {
+      type: Boolean,
+      default: true
     }
   },
   data() {

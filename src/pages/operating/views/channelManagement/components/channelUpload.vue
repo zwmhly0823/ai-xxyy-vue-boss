@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-05-06 16:33:15
  * @LastEditors: panjian
- * @LastEditTime: 2020-05-06 19:06:34
+ * @LastEditTime: 2020-05-08 17:54:49
  -->
 <template>
   <div class="channelUpload-box">
@@ -26,9 +26,8 @@
             当前仅支持CSV格式文件（大小控制在10M内），请使用office2010以上的版本，否则会出现导入异常。
           </div>
         </el-upload>
-        <el-button type="text">下载模板</el-button>
+        <el-button class="upload-mb" type="text">下载模板</el-button>
       </div>
-
       <el-table
         :header-cell-style="headerCss"
         :data="tableData"
@@ -128,12 +127,18 @@ export default {
     margin-bottom: 20px;
     background: #fff;
     .channelUpload-upload-box {
+      position: relative;
       .upload-btn {
         margin-top: 10px;
         margin-left: 10px;
         margin-bottom: 20px;
         width: 120px;
         height: 40px;
+      }
+      .upload-mb {
+        position: absolute;
+        top: 20px;
+        left: 150px;
       }
     }
   }

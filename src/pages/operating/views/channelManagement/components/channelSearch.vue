@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-04-25 12:09:03
  * @LastEditors: panjian
- * @LastEditTime: 2020-05-06 20:20:37
+ * @LastEditTime: 2020-05-09 17:58:30
  -->
 <template>
   <div class="channel-box">
@@ -90,12 +90,14 @@
           :data="tableData"
           style="width: 100%;"
         >
-          <!-- 查看详情 -->
+          <!-- 二维码下载 渠道推广 -->
           <!-- <el-table-column width="20px">
             <template slot-scope="scope">
               <el-Popover popper-class="batch-btn" trigger="hover">
-                <div size="mini" type="text" @click="batchBtn">
-                  <span style="cursor:pointer">查看详情</span>
+                <div size="mini" type="text" @click="onExtension">
+                  <span style="cursor:pointer;color:#409eff;"
+                    >渠道推广统计</span
+                  >
                 </div>
                 <div
                   @mouseenter="handleEdit(scope.$index, scope.row)"
@@ -127,7 +129,7 @@
           <el-table-column prop="channelId" label="渠道ID"> </el-table-column>
           <el-table-column prop="orderUserPayNums" label="体验课成单数">
           </el-table-column>
-          <el-table-column prop="orderUserNoPayNums" label="未支付">
+          <el-table-column prop="orderUserNoPayNums" label="系统课未支付">
           </el-table-column>
           <el-table-column prop="wechatAddNums" label="添加微信数">
           </el-table-column>
@@ -309,7 +311,9 @@ export default {
       // 成单数
       allPayUserNums: '',
       // 线索数
-      allUserNums: ''
+      allUserNums: '',
+      // 获取到列表的一条数据
+      channelIdRow: ''
     }
   },
   watch: {
@@ -490,16 +494,18 @@ export default {
       this.getChannelDetailPage()
       // this.$emit('onCurrentPage', val)
     },
-    handleEdit(index, row) {
-      // 鼠标移入三个点上面触发的事件
-      // 当没有点击复选框 直接点击加好友
-      console.log(index, row, '点击查看详情11')
-    },
-    batchBtn() {
-      // 点击查看详情
-      this.drawer = true
-      console.log('点击查看详情22')
-    },
+    // handleEdit(index, row) {
+    //   // 鼠标移入三个点上面触发的事件
+    //   // 当没有点击复选框 直接点击加好友
+    //   // console.log(index, row, '点击查看详情11')
+    //   this.channelIdRow = row
+    // },
+    // onExtension() {
+    //   // 渠道推广统计
+    //   // this.drawer = true
+    //   console.log('渠道推广统计')
+    //   console.log(this.channelIdRow, 'channelIdRowchannelIdRowchannelIdRow')
+    // },
     // 表头回调样式
     headerCss({ row, column, rowIndex, columnIndex }) {
       return 'font-size:12px;color:#666;font-weight:normal;'
