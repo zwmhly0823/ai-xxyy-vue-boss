@@ -148,6 +148,7 @@
             <div>创建:{{ scope.row.crtime }}</div>
             <div>揽收:{{ scope.row.detime }}</div>
             <div>签收:{{ scope.row.sgtime }}</div>
+            <div>审核:{{ scope.row.cutime }}</div>
           </div>
         </template>
       </el-table-column>
@@ -309,6 +310,14 @@ export default {
         {
           value1: '1',
           label: '京东云仓'
+        },
+        {
+          value1: '3',
+          label: '百世物流'
+        },
+        {
+          value1: '4',
+          label: '京东快递'
         },
         {
           value1: '0',
@@ -603,6 +612,9 @@ export default {
           if (item.terms.level) {
             timeType.level = `${item.terms.level}`
           }
+          if (item.terms.pay_channel) {
+            timeType.pay_channel = JSON.stringify(item.terms.pay_channel)
+          }
         }
         if (item.range) {
           const { range } = item
@@ -673,6 +685,7 @@ export default {
               express_company
               signing_time
               receipt_name
+              center_utime
               receipt_tel
               express_nu
               level
@@ -686,6 +699,7 @@ export default {
               last_teacher_id
               pay_teacher_id
               regtype
+              pay_channel
               user {
                 id
                 birthday
@@ -711,6 +725,7 @@ export default {
               item.uptime = formatData(+item.utime, 's')
               item.sgtime = formatData(+item.signing_time, 's')
               item.buytime = formatData(+item.buy_time, 's')
+              item.cutime = formatData(+item.center_utime, 's')
               // 套餐类型 regtype 1 -->0  regtype 2,3 -->1
               switch (+item.regtype) {
                 case 1:
