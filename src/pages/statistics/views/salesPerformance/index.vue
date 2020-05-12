@@ -480,6 +480,8 @@
             v-if="tableDataAttend.length && activeName === 'uploadWorks'"
           >
             <ele-table
+              :tableHeight="tableHeight"
+              :tableSize="'mini'"
               :dataList="tableDataAttend"
               :loading="flags.loading"
               :size="tabQuery.size"
@@ -552,7 +554,11 @@
                           !scope.row.completeArr[i].is_null
                       "
                     >
-                      {{ scope.row.completeArr[i].task_student_count }}
+                      {{
+                        scope.row.completeArr[i].task_student_count
+                          ? scope.row.completeArr[i].task_student_count
+                          : '-'
+                      }}
                     </span>
                   </template>
                 </el-table-column>
@@ -575,7 +581,11 @@
                         Object.keys(scope.row.completeArr).length &&
                           scope.row.completeArr[i]
                       "
-                      >{{ scope.row.completeArr[i].course_task_count }}</span
+                      >{{
+                        scope.row.completeArr[i].course_task_count
+                          ? scope.row.completeArr[i].course_task_count
+                          : '-'
+                      }}</span
                     >
                     <span v-else>0</span>
                   </template>
@@ -589,6 +599,8 @@
             v-if="tableDataAttend.length && activeName === 'teacherComments'"
           >
             <ele-table
+              :tableHeight="tableHeight"
+              :tableSize="'mini'"
               :dataList="tableDataAttend"
               :loading="flags.loading"
               :size="tabQuery.size"
@@ -625,26 +637,6 @@
                 prop="trial_course_count"
                 align="center"
               ></el-table-column>
-              <!-- <el-table-column align="center" label="总计">
-                <el-table-column
-                  fixed
-                  label="点评数"
-                  prop="totalUpload"
-                  align="center"
-                ></el-table-column>
-                <el-table-column
-                  fixed
-                  label="总计点评率"
-                  prop="totalNumbe"
-                  align="center"
-                ></el-table-column>
-                <el-table-column
-                  fixed
-                  label="点评收听率"
-                  prop="averageWorks"
-                  align="center"
-                ></el-table-column>
-              </el-table-column> -->
               <!-- child-table-start -->
               <el-table-column
                 align="center"
@@ -661,7 +653,11 @@
                           !scope.row.completeArr[i].is_null
                       "
                     >
-                      {{ scope.row.completeArr[i].comment_count }}
+                      {{
+                        scope.row.completeArr[i].comment_count
+                          ? scope.row.completeArr[i].comment_count
+                          : '-'
+                      }}
                     </span>
                   </template>
                 </el-table-column>
@@ -926,7 +922,6 @@ export default {
           let {
             data: { ConversionRateStatistics }
           } = await this.$http.Statistics.getChangecListByProid(this.tabQuery)
-          console.log(ConversionRateStatistics)
           !ConversionRateStatistics && (ConversionRateStatistics = {})
           // 总数、分页用
           this.totalElements = ConversionRateStatistics.total_elements || 0
@@ -996,7 +991,6 @@ export default {
           this.titleStatistical()
           this.uploadStatistical(content || [])
         } else if (this.activeName === 'teacherComments') {
-          console.log('老师点评')
           // 上传作品统计
           const { period, teacher, department, sup } = this.tabQuery
           const {
@@ -1082,6 +1076,7 @@ export default {
         ).toFixed(2)
         this.titleUpload.task_student_count =
           res.data.courseTaskStatistics.task_student_count
+
         // 总上传率=所有上传人数相加/（所有体验课学员相加*放课期数）
         this.titleUpload.total_upload_rate =
           this.titleUpload.task_student_count &&
@@ -1094,7 +1089,7 @@ export default {
                     this.schoolDays[this.schoolDays.length - 1])
                 ).toFixed(2) * 100
               ).toFixed(0) + '%'
-            : 0
+            : '-'
       })
     },
     // 上传作品统计
@@ -1119,7 +1114,7 @@ export default {
             ).toFixed(2)
           }
         } else {
-          averageWorks = { averageWorks: 0 }
+          averageWorks = { averageWorks: '-' }
         }
 
         item.completeArr = item.studentCourseTaskStatisticsList || []
@@ -1142,7 +1137,7 @@ export default {
               ? (
                   (res.task_student_count / trialCourseCount).toFixed(2) * 100
                 ).toFixed(0) + '%'
-              : ''
+              : '-'
           const uploadRate = {
             uploadRate: trialcoursecountCalculate
           }
@@ -1155,7 +1150,7 @@ export default {
           totalNumbe.totalNumbe / (item.trial_course_count * count)
         const treatmenTpercentage = toCalculate
           ? (toCalculate.toFixed(2) * 100).toFixed(0) + '%'
-          : 0
+          : '-'
         const totalUpload = {
           totalUpload: treatmenTpercentage
         }
@@ -1184,7 +1179,7 @@ export default {
               ? (
                   (data.comment_count / data.task_count).toFixed(2) * 100
                 ).toFixed(0) + '%'
-              : ''
+              : '-'
           commentRate = { commentRate: calculateCommentRate }
           // 点评收听率：听点评数/发布点评数=点评收听率
           const calculateListenReview =
@@ -1194,12 +1189,11 @@ export default {
                     2
                   ) * 100
                 ).toFixed(0) + '%'
-              : ''
+              : '-'
           listenReview = { listenReview: calculateListenReview }
           Object.assign(data, commentRate, listenReview)
         })
       })
-      console.log(this.tableDataChildAttend)
       this.tableDataAttend = list
     },
     // 老师点评title统计
@@ -1212,7 +1206,6 @@ export default {
         department_ids: department,
         sups: sup
       }).then((res) => {
-        console.log(res, 'res')
         const _data = res.data.taskCommentStatistics
         // 总点评率=点评总数/作品总数
         this.titlereviewStatistical.reviewProbability =
@@ -1220,14 +1213,14 @@ export default {
             ? (
                 (_data.comment_count / _data.task_count).toFixed(2) * 100
               ).toFixed(0) + '%'
-            : ''
+            : '-'
         // 总点评收听率 = 总点评被收听数/总点评数
         this.titlereviewStatistical.listenTo =
           _data.listen_count && _data.comment_count
             ? (
                 (_data.listen_count / _data.comment_count).toFixed(2) * 100
               ).toFixed(0) + '%'
-            : 0
+            : '-'
       })
     },
     // 包装 接口返回的数据

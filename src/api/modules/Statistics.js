@@ -329,7 +329,16 @@ export default {
   // 上传统计数据统计接口
   getCourseTaskStatistics(params) {
     const { period = '', teacher = '', department = '', sups = '' } = params
-    const query = `{"term": "${period}","departmentId": "${department}","teacherIds":"${teacher}","sup":"${sups}"}`
+    let supStr = ''
+    if (sups) {
+      supStr = sups
+        .split(',')
+        .map((item) => 'S' + item)
+        .join(',')
+    } else {
+      supStr = sups
+    }
+    const query = `{"term": "${period}","departmentId": "${department}","teacherIds":"${teacher}","sup":"${supStr}"}`
     // const query = ''
     return axios.post('/graphql/v1/toss', {
       query: `{
