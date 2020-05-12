@@ -5,6 +5,7 @@
  * @Last Modified by:   YangJiyong
  * @Last Modified time: 2020-05-11 16:16:08
  * @Description: 活动订单 - 统计 及 列表
+ * o_order:  regtype, 4-宝石兑换（推荐有礼），5-积分兑换（小熊商城），6-赠送（邀请有奖）
  -->
 <template>
   <div class="order-call">
@@ -73,10 +74,22 @@
         </el-col>
       </el-row>
     </article>
+    <!-- 分割线 -->
+    <el-divider></el-divider>
+    <section class="bottom-box">
+      <table-order3
+        :topic="topic"
+        :status="status"
+        :search="searchIn"
+        @statistics="getStatistics"
+      />
+    </section>
   </div>
 </template>
 
 <script>
+import TableOrder3 from './tableOrder3.vue'
+import { isToss } from '@/utils/index'
 export default {
   props: {
     // 当前tab - 商品主题
@@ -91,9 +104,32 @@ export default {
       }
     }
   },
+  components: {
+    TableOrder3
+  },
   data() {
     return {
-      status: '3'
+      status: '3',
+      // 搜索条件
+      searchIn: [],
+      teacherId: null,
+      statistics: {}
+    }
+  },
+  watch: {
+    // 切换tab - 商品主题
+    topic(val) {
+      // this.reset()
+    },
+    // 搜索
+    search(val) {
+      this.searchIn = val
+    }
+  },
+  created() {
+    const teacherId = isToss()
+    if (teacherId) {
+      this.teacherId = teacherId
     }
   },
   methods: {
@@ -101,7 +137,7 @@ export default {
       this.status = status
     },
 
-    getOrderList() {}
+    getStatistics() {}
   }
 }
 </script>
