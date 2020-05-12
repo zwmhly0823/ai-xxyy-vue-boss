@@ -4,7 +4,7 @@
  * @Date: 2020-05-11 21:50:19
  * @Last Modified by:   YangJiyong
  * @Last Modified time: 2020-05-11 21:50:19
- * @Description: 体验课订单列表
+ * @Description: 活动订单列表
  * regtype, 4-宝石兑换（推荐有礼），5-积分兑换（小熊商城），6-赠送（邀请有奖）
  -->
 <template>
@@ -166,7 +166,7 @@ export default {
   watch: {
     status(status) {
       this.currentPage = 1
-      this.getOrderList()
+      this.getOrderList(this.currentPage, true)
     }
   },
 
@@ -192,7 +192,7 @@ export default {
       })
     },
     // 订单列表
-    async getOrderList(page = this.currentPage, status) {
+    getOrderList(page = this.currentPage, reloadStatistics = false) {
       const statisticsQuery = [
         {
           terms: { regtype: this.regtype }
@@ -237,26 +237,15 @@ export default {
         // 订单列表
         this.orderData(queryObj, page)
 
-        // 统计
+        // 不需要再次请求统计数据
+        if (reloadStatistics) return
+
         // 获取统计数据
-        // statisticsQuery.push({
-        //   terms: { regtype: this.regtype }
-        // })
-        // statisticsQuery.push({
-        //   terms: { status: this.status.split(',') }
-        // })
         statisticsQuery.push(...this.searchIn)
         console.log(statisticsQuery)
 
-        this.$http.Order.orderStatistics(
-          statisticsQuery,
-          'bear_integral',
-          'status'
-        ).then((res) => {
-          const statistics = (res && res.data && res.data.OrderStatistics) || []
-          this.$emit('statistics', statistics)
-        })
-        // 统计结束
+        // 活动订单 - 小熊币和宝石统计
+        this.orderStatistics(statisticsQuery)
       }
     },
 
@@ -273,11 +262,7 @@ export default {
           this.totalElements = +res.data.OrderPage.totalElements
           this.currentPage = +res.data.OrderPage.number
           const _data = res.data.OrderPage.content
-          const orderIds = []
-          const userIds = []
           _data.forEach((item, index) => {
-            orderIds.push(item.id)
-            userIds.push(item.uid)
             // 下单时间格式化
             item.ctime = formatData(item.ctime, 's')
             // 交易方式
@@ -308,6 +293,90 @@ export default {
         })
     },
 
+    // 订单统计数据
+    async orderStatistics(statisticsQuery = '') {
+      const bearResult = await this.$http.Order.orderStatistics(
+        statisticsQuery,
+        'bear_integral',
+        'status'
+      )
+      const gemResult = await this.$http.Order.orderStatistics(
+        statisticsQuery,
+        'gem_integral',
+        'status'
+      )
+      // [ { code: '3', count: '37', type: 'status', value: 38600 },
+      //     { code: '0', count: '2', type: 'status', value: 0 } ]
+      // status: 0,1-未支付；3-已完成；'5,6,7'-退费；
+      const complete = {
+        count: 0, // 订单笔数
+        bear: 0,
+        gem: 0
+      }
+      const nopay = {
+        count: 0,
+        bear: 0,
+        gem: 0
+      }
+      const refund = {
+        count: 0,
+        bear: 0,
+        gem: 0
+      }
+      const total = {
+        count: 0,
+        bear: 0,
+        gem: 0
+      }
+      const bear =
+        (bearResult && bearResult.data && bearResult.data.OrderStatistics) || []
+      const gem =
+        (gemResult && gemResult.data && gemResult.data.OrderStatistics) || []
+      bear.forEach((item) => {
+        const { code, count, value } = item
+        if (code === '3') {
+          complete.count = +count
+          complete.bear = +value
+        }
+        if (code === '1' || code === '0') {
+          nopay.count += +count
+          nopay.bear += +value
+        }
+        if (code === '5' || code === '6' || code === '7') {
+          refund.count += +count
+          refund.bear += +value
+        }
+      })
+      gem.forEach((item) => {
+        const { code, value } = item
+        if (code === '3') {
+          complete.gem = +value
+        }
+        if (code === '1' || code === '0') {
+          nopay.gem += +value
+        }
+        if (code === '5' || code === '6' || code === '7') {
+          refund.gem += +value
+        }
+      })
+
+      // 总计
+      const statistics = { complete, nopay, refund }
+      for (const key in statistics) {
+        if (Object.keys(statistics).includes(key)) {
+          const item = statistics[key]
+          total.count += item.count
+          total.bear += item.bear
+          total.gem += item.gem
+        }
+      }
+      Object.assign(statistics, { total })
+      console.log(statistics)
+
+      this.$emit('statistics', statistics)
+      // 统计结束
+    },
+
     // 订单关联物流详情展示
     showExpressDetail(what, total) {
       if (total > 0) {
@@ -319,7 +388,7 @@ export default {
     // 点击分页
     handleSizeChange(val) {
       this.currentPage = val
-      this.getOrderList()
+      this.getOrderList(this.currentPage, true)
 
       const dom = document.getElementById('order-scroll')
       dom.querySelector('.order-wrapper').scrollTo(0, 0)

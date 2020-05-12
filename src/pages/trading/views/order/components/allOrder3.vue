@@ -20,10 +20,17 @@
             @click="chnageStatus('3')"
           >
             <div class="oride-top">已完成</div>
-            <div class="oride-middle"><em>123</em>笔</div>
+            <div class="oride-middle">
+              <em>{{ statistics.complete ? statistics.complete.count : 0 }}</em
+              >笔
+            </div>
             <div class="oride-bottom">
-              <p>100 小熊币</p>
-              <p>100 宝石</p>
+              <p>
+                {{ statistics.complete ? statistics.complete.bear : 0 }} 小熊币
+              </p>
+              <p>
+                {{ statistics.complete ? statistics.complete.gem : 0 }} 宝石
+              </p>
             </div>
           </div>
         </el-col>
@@ -35,10 +42,13 @@
             @click="chnageStatus('0,1')"
           >
             <div class="oride-top">未支付</div>
-            <div class="oride-middle"><em>123</em>笔</div>
+            <div class="oride-middle">
+              <em>{{ statistics.nopay ? statistics.nopay.count : 0 }}</em
+              >笔
+            </div>
             <div class="oride-bottom">
-              <p>100 小熊币</p>
-              <p>100 宝石</p>
+              <p>{{ statistics.nopay ? statistics.nopay.bear : 0 }} 小熊币</p>
+              <p>{{ statistics.nopay ? statistics.nopay.gem : 0 }} 宝石</p>
             </div>
           </div>
         </el-col>
@@ -50,10 +60,13 @@
             @click="chnageStatus('5,6,7')"
           >
             <div class="oride-top">退费</div>
-            <div class="oride-middle"><em>123</em>笔</div>
+            <div class="oride-middle">
+              <em>{{ statistics.refun ? statistics.refun.count : 0 }}</em
+              >笔
+            </div>
             <div class="oride-bottom">
-              <p>100 小熊币</p>
-              <p>100 宝石</p>
+              <p>{{ statistics.refun ? statistics.refun.bear : 0 }} 小熊币</p>
+              <p>{{ statistics.refun ? statistics.refun.gem : 0 }} 宝石</p>
             </div>
           </div>
         </el-col>
@@ -65,10 +78,13 @@
             @click="chnageStatus('')"
           >
             <div class="oride-top">订单总计</div>
-            <div class="oride-middle"><em>123</em>笔</div>
+            <div class="oride-middle">
+              <em>{{ statistics.total ? statistics.total.count : 0 }}</em
+              >笔
+            </div>
             <div class="oride-bottom">
-              <p>100 小熊币</p>
-              <p>100 宝石</p>
+              <p>{{ statistics.total ? statistics.total.bear : 0 }} 小熊币</p>
+              <p>{{ statistics.total ? statistics.total.gem : 0 }} 宝石</p>
             </div>
           </div>
         </el-col>
@@ -137,7 +153,9 @@ export default {
       this.status = status
     },
 
-    getStatistics() {}
+    getStatistics(statistics) {
+      this.statistics = statistics
+    }
   }
 }
 </script>
