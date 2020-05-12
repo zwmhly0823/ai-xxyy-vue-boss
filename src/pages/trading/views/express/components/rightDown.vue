@@ -686,6 +686,7 @@ export default {
               signing_time
               receipt_name
               center_utime
+              center_ctime
               receipt_tel
               express_nu
               level
@@ -725,7 +726,11 @@ export default {
               item.uptime = formatData(+item.utime, 's')
               item.sgtime = formatData(+item.signing_time, 's')
               item.buytime = formatData(+item.buy_time, 's')
-              item.cutime = formatData(+item.center_utime, 's')
+              if (timeType.express_status === '1') {
+                item.cutime = formatData(+item.center_ctime, 's')
+              } else {
+                item.cutime = formatData(+item.center_utime, 's')
+              }
               // 套餐类型 regtype 1 -->0  regtype 2,3 -->1
               switch (+item.regtype) {
                 case 1:
