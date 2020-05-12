@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-05-06 16:33:15
  * @LastEditors: panjian
- * @LastEditTime: 2020-05-12 20:22:00
+ * @LastEditTime: 2020-05-12 20:30:14
  -->
 <template>
   <div class="channelAdd-box">
@@ -37,6 +37,7 @@
       <el-table
         :header-cell-style="headerCss"
         :data="tableData"
+        :cell-style="cellStyle"
         style="width: 100%"
       >
         <el-table-column width="20px">
@@ -72,6 +73,7 @@
           prop="channel_inner_name"
           label="渠道名称"
           align="center"
+          show-overflow-tooltip
         >
         </el-table-column>
         <el-table-column prop="status" label="渠道状态" align="center">
@@ -80,7 +82,7 @@
             <span v-else>停用</span>
           </template>
         </el-table-column>
-        <el-table-column label="渠道备注" align="center">
+        <el-table-column label="渠道备注" align="center" show-overflow-tooltip>
           <template slot-scope="scope">
             <span v-if="scope.row.remarks">{{ scope.row.remarks }}</span>
             <span v-else>-</span>
@@ -352,6 +354,10 @@ export default {
     // 表头回调样式
     headerCss({ row, column, rowIndex, columnIndex }) {
       return 'font-size:12px;color:#666;font-weight:normal;background:#f0f1f2;'
+    },
+    // 单元格回调样式
+    cellStyle({ row, column, rowIndex, columnIndex }) {
+      return 'max-height:50px;'
     },
     // 下载单张二维码
     onUpload(row) {
