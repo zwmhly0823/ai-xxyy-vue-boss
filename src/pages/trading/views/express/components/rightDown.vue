@@ -613,7 +613,7 @@ export default {
             timeType.level = `${item.terms.level}`
           }
           if (item.terms.pay_channel) {
-            timeType.pay_channel = JSON.stringify(item.terms.pay_channel)
+            timeType.pay_channel = `${item.terms.pay_channel}`
           }
         }
         if (item.range) {
