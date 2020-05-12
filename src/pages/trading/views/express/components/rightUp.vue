@@ -21,6 +21,7 @@
         groupSell="last_teacher_id"
         teamDetail="last_team_id"
         moreVersion="product_version.keyword"
+        channel="pay_channel"
         :selectAddress="selectAddress"
         :timeData="[
           { text: '购买时间', value: 'ctime' },

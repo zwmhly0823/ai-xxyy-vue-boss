@@ -311,6 +311,14 @@ export default {
           label: '京东云仓'
         },
         {
+          value1: '3',
+          label: '百世物流'
+        },
+        {
+          value1: '4',
+          label: '京东快递'
+        },
+        {
           value1: '0',
           label: '不指定承运商'
         }
@@ -603,6 +611,9 @@ export default {
           if (item.terms.level) {
             timeType.level = `${item.terms.level}`
           }
+          if (item.terms.pay_channel) {
+            timeType.pay_channel = JSON.stringify(item.terms.pay_channel)
+          }
         }
         if (item.range) {
           const { range } = item
@@ -686,6 +697,7 @@ export default {
               last_teacher_id
               pay_teacher_id
               regtype
+              pay_channel
               user {
                 id
                 birthday
