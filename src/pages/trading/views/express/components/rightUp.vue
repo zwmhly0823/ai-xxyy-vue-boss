@@ -25,7 +25,8 @@
         :timeData="[
           { text: '购买时间', value: 'ctime' },
           { text: '揽收时间', value: 'delivery_collect_time' },
-          { text: '签收时间', value: 'signing_time' }
+          { text: '签收时间', value: 'signing_time' },
+          { text: '审核时间', value: 'center_utime' }
         ]"
       />
     </div>
