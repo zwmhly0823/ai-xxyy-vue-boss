@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-03-16 19:46:39
  * @LastEditors: panjian
- * @LastEditTime: 2020-05-09 19:02:02
+ * @LastEditTime: 2020-05-12 11:13:48
  */
 import axios from '../axiosConfig'
 
@@ -159,5 +159,45 @@ export default {
    */
   createChannel(params) {
     return axios.post('/api/c/v1/channel/createChannel', params)
+  },
+  /**
+   * 渠道信息管理 修改渠道
+   * @param {*} param0
+   */
+  updateChannel(params) {
+    return axios.post('/api/c/v1/channel/updateChannel', params)
+  },
+  /**
+   *
+   *渠道查询
+   */
+  ChannelDetailStatisticsPage(Params = `""`, page = 1) {
+    return axios.post('/graphql/v1/toss', {
+      query: `{
+        ChannelDetailStatisticsPage(query:${Params},page:${page},size:20){
+          totalPages
+          totalElements
+          number
+          content {
+            id
+            channel_inner_name
+            channel_link
+            channel_link_short
+            short_er_code
+            status
+            ctime
+            cdate
+            utime
+            udate
+            remarks
+            channel_sort
+            channel_class_id
+            channel_class_name
+            p_channel_class_name
+            p_channel_class_id
+          }
+        }
+      }`
+    })
   }
 }

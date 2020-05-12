@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-05-06 16:33:15
  * @LastEditors: panjian
- * @LastEditTime: 2020-05-09 20:48:30
+ * @LastEditTime: 2020-05-12 11:39:56
  -->
 <template>
   <div class="channelAdd-box">
@@ -23,17 +23,17 @@
           type="primary"
           >添加渠道</el-button
         >
+        <el-button
+          class="bulkDownload"
+          size="mini"
+          type="primary"
+          @click="onBulkDownload"
+          :loading="downLoad"
+          >批量下载</el-button
+        >
       </div>
     </div>
     <div class="channelAdd-table">
-      <el-button
-        class="bulkDownload"
-        size="mini"
-        type="primary"
-        @click="onBulkDownload"
-        :loading="downLoad"
-        >批量下载</el-button
-      >
       <el-table
         :header-cell-style="headerCss"
         :data="tableData"
@@ -42,7 +42,7 @@
         <el-table-column width="20px">
           <template slot-scope="scope">
             <el-Popover popper-class="batch-btn" trigger="hover">
-              <div size="mini" type="text" @click="batchBtn">
+              <div size="mini" type="text" @click="batchBtn(scope.row)">
                 <span style="cursor:pointer">编辑</span>
               </div>
               <div
@@ -54,28 +54,64 @@
             </el-Popover>
           </template>
         </el-table-column>
-        <el-table-column prop="date" label="序号" width="180">
+        <el-table-column type="index" label="序号" align="center">
         </el-table-column>
-        <el-table-column prop="name" label="渠道id" width="180">
+        <el-table-column prop="id" label="渠道id" align="center">
         </el-table-column>
-        <el-table-column prop="address" label="渠道分类"> </el-table-column>
-        <el-table-column prop="address" label="渠道名称"> </el-table-column>
-        <el-table-column prop="address" label="渠道状态"> </el-table-column>
-        <el-table-column prop="address" label="渠道备注"> </el-table-column>
-        <el-table-column prop="address" label="创建时间"> </el-table-column>
-        <el-table-column prop="address" width="300" align="center" label="其他">
+        <el-table-column label="渠道分类" width="180" align="center">
           <template slot-scope="scope">
             <div class="logistics-wx-box">
-              <!-- <el-button size="mini" type="text" @click="onUpload(scope.row)">
-                {{ scope.row.name }}</el-button
-              > -->
+              <span>{{ scope.row.p_channel_class_name }}</span>
+              <span style="margin-left:20px">{{
+                scope.row.channel_class_name
+              }}</span>
+            </div>
+          </template>
+        </el-table-column>
+        <el-table-column
+          prop="channel_inner_name"
+          label="渠道名称"
+          align="center"
+        >
+        </el-table-column>
+        <el-table-column prop="status" label="渠道状态" align="center">
+          <template slot-scope="scope">
+            <span v-if="scope.row.status == 1">启用</span>
+            <span v-else>停用</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="渠道备注" align="center">
+          <template slot-scope="scope">
+            <span v-if="scope.row.remarks">{{ scope.row.remarks }}</span>
+            <span v-else>-</span>
+          </template>
+        </el-table-column>
+        <el-table-column
+          prop="ctime"
+          label="创建时间"
+          width="160"
+          align="center"
+        >
+        </el-table-column>
+        <el-table-column width="300" align="center" label="其他">
+          <template slot-scope="scope">
+            <div
+              v-if="
+                scope.row.channel_link ||
+                  scope.row.short_er_code ||
+                  scope.row.isExtension
+              "
+              class="logistics-wx-box"
+            >
               <a
+                v-if="scope.row.channel_link"
                 style="color:#409EFF;font-size:12px;"
-                href="https://www.baidu.com"
+                @click="onLink(scope.row)"
                 target="_blank"
                 >查看链接</a
               >
               <a
+                v-if="scope.row.short_er_code"
                 style="color:#409EFF;font-size:12px;margin-left:10px;margin-right:10px;"
                 size="mini"
                 type="text"
@@ -84,19 +120,23 @@
                 下载二维码</a
               >
               <a
+                v-if="scope.row.isExtension"
                 style="color:#409EFF;font-size:12px;"
                 @click="onExtension(scope.row)"
                 target="_blank"
-                >推广人统计查看</a
+                >推广人统计</a
               >
+            </div>
+            <div v-else class="logistics-wx-box">
+              <span>-</span>
             </div>
           </template>
         </el-table-column>
       </el-table>
       <m-pagination
         @current-change="handleCurrentChange"
-        :current-page="1"
-        :total="10"
+        :current-page="+currentPage"
+        :total="+totalElements"
         open="calc(100vw - 95px - 100px)"
         close="calc(100vw - 23px - 50px)"
       />
@@ -108,7 +148,10 @@
       :modal="false"
       size="30%"
     >
-      <add-cahnnel @addChannelShow="addChannelShow" />
+      <add-cahnnel
+        @addChannelShowBtn="addChannelShowBtn"
+        @addChannelShow="addChannelShow"
+      />
     </el-drawer>
     <el-drawer
       class="drawer-detail"
@@ -117,7 +160,12 @@
       :modal="false"
       size="30%"
     >
-      <modify-cahnnel @modifyChannelShow="modifyChannelShow" />
+      <modify-cahnnel
+        v-if="modifyDrawer"
+        :modifyRow="modifyRow"
+        @modifyChannelShowBtn="modifyChannelShowBtn"
+        @modifyChannelShow="modifyChannelShow"
+      />
     </el-drawer>
   </div>
 </template>
@@ -127,6 +175,7 @@ import channelSearch from '../components/componentsSearch/channelInforSearch'
 import addCahnnel from '../components/components/addCahnnel'
 import modifyCahnnel from '../components/components/modifyCahnnel'
 import MPagination from '@/components/MPagination/index.vue'
+import { timestamp } from '../../../../../utils/index'
 import {
   downloadByBlob,
   downImgAll
@@ -152,68 +201,12 @@ export default {
       showClose: false,
       addDrawer: false,
       modifyDrawer: false,
-      tableData: [
-        {
-          date: '2016-05-02',
-          name: '王小虎',
-          address: '上海市普陀'
-        },
-        {
-          date: '2016-05-03',
-          name: '王小虎',
-          address: '上海市普陀区'
-        },
-        {
-          date: '2016-05-03',
-          name: '王小虎',
-          address: '上海市普陀区'
-        },
-        {
-          date: '2016-05-03',
-          name: '王小虎',
-          address: '上海市普陀区'
-        },
-        {
-          date: '2016-05-03',
-          name: '王小虎',
-          address: '上海市普陀区'
-        },
-        {
-          date: '2016-05-03',
-          name: '王小虎',
-          address: '上海市普陀区'
-        },
-        {
-          date: '2016-05-03',
-          name: '王小虎',
-          address: '上海市普陀区'
-        },
-        {
-          date: '2016-05-03',
-          name: '王小虎',
-          address: '上海市普陀区'
-        },
-        {
-          date: '2016-05-03',
-          name: '王小虎',
-          address: '上海市普陀区'
-        },
-        {
-          date: '2016-05-03',
-          name: '王小虎',
-          address: '上海市普陀区'
-        },
-        {
-          date: '2016-05-03',
-          name: '王小虎',
-          address: '上海市普陀区'
-        },
-        {
-          date: '2016-05-03',
-          name: '王小虎',
-          address: '上海市普陀区'
-        }
-      ],
+      currentPage: '1',
+      totalElements: '',
+      tableData: [],
+      queryList: [],
+      channelName: [],
+      modifyRow: '',
       imgList: [
         {
           channelId: '21',
@@ -254,19 +247,79 @@ export default {
           img:
             'http://s1.meixiu.mobi/android-images/2020-05-03/4b01192047ef43a9b4377d1a43c85fa8.jpeg'
         }
-      ]
+      ],
+      tableInfoObj: {}
     }
   },
-  created() {},
+  created() {
+    this.getChannelOne()
+  },
   methods: {
-    channelSearchValue(data) {
-      console.log(data, 'datassss channel')
+    // 获取渠道id
+    getChannelOne() {
+      this.$http.Operating.getChannelAndClass(17).then((res) => {
+        const data = res.payload.channelList
+        data.forEach((res) => {
+          this.channelName.push(res.id)
+        })
+        this.getChannelDetailStatisticsPage()
+      })
     },
+    // 列表请求
+    getChannelDetailStatisticsPage() {
+      if (this.queryList.length === 0) {
+        this.queryList = `""`
+      }
+      this.$http.Operating.ChannelDetailStatisticsPage(
+        this.queryList,
+        this.currentPage
+      ).then((res) => {
+        this.currentPage = res.data.ChannelDetailStatisticsPage.number
+        this.totalElements = res.data.ChannelDetailStatisticsPage.totalElements
+        const _data = res.data.ChannelDetailStatisticsPage.content
+        _data.forEach((data) => {
+          // if (data.status === 0) {
+          //   data.status = '停用'
+          // } else {
+          //   data.status = '启用'
+          // }
+          if (+data.ctime) {
+            data.ctime = timestamp(data.ctime, 2)
+          } else {
+            data.ctime = '-'
+          }
+          const majorIndex = this.channelName.findIndex((id) => id === data.id)
+          data.isExtension = majorIndex === -1 ? 0 : 1
+        })
+        this.tableData = _data
+      })
+    },
+    // 渠道下拉框
+    channelSearchValue(data) {
+      this.currentPage = 1
+      if (data) {
+        const id = { id: data }
+        this.queryList = `${JSON.stringify(JSON.stringify(id))}`
+      } else {
+        this.queryList = `""`
+      }
+      this.getChannelDetailStatisticsPage()
+    },
+    // 模糊搜索
     channelInputValue(data) {
-      console.log(data, 'datassss input')
+      this.currentPage = 1
+      if (data) {
+        this.queryList = `"{\\"id\\":[\\"${data}\\"]}"`
+      } else {
+        this.queryList = `""`
+      }
+      this.getChannelDetailStatisticsPage()
     },
     // 分页
-    handleCurrentChange() {},
+    handleCurrentChange(val) {
+      this.currentPage = val
+      this.getChannelDetailStatisticsPage()
+    },
     handleEdit(index, row) {
       // 鼠标移入三个点上面触发的事件
       // 当没有点击复选框 直接点击加好友
@@ -276,13 +329,21 @@ export default {
     onAddChannel() {
       this.addDrawer = true
     },
+    // 添加渠道点击提交刷新页面
+    addChannelShowBtn(data) {
+      this.getChannelDetailStatisticsPage()
+    },
     // 关闭添加渠道页面
     addChannelShow(data) {
       this.addDrawer = data
     },
     // 点击编辑
-    batchBtn() {
+    batchBtn(row) {
       this.modifyDrawer = true
+      this.modifyRow = row
+    },
+    modifyChannelShowBtn(data) {
+      this.getChannelDetailStatisticsPage()
     },
     // 关闭编辑页面
     modifyChannelShow(data) {
@@ -295,9 +356,14 @@ export default {
     // 下载单张二维码
     onUpload(row) {
       console.log(row, 'xiazai')
-      const url = 'https://s1.meixiu.mobi/h5/headPic/1587896513277.jpg'
+      const url = row.short_er_code
+      console.log(url)
+
       setTimeout(() => {
-        downloadByBlob(url, `渠道${row.date}`)
+        downloadByBlob(
+          url,
+          `${row.p_channel_class_name}-${row.channel_class_name}-${row.channel_inner_name}-${row.id}`
+        )
       }, 300)
     },
     // 批量下载二维码
@@ -309,13 +375,25 @@ export default {
       //   fullscreen: true
       // })
       this.downLoad = true
-      const imgAll = this.imgList
+      const imgAll = this.tableData
+      // const imgAll = this.imgList
       const imgUrlList = []
       const imgListName = []
       imgAll.forEach((res) => {
-        imgUrlList.push(res.img)
-        imgListName.push(`渠道${res.channelId}`)
+        if (res.short_er_code) {
+          imgUrlList.push(res.short_er_code)
+          imgListName.push(
+            `${res.p_channel_class_name}-${res.channel_class_name}-${res.channel_inner_name}-${res.id}`
+          )
+        }
       })
+      console.log(imgUrlList, imgListName)
+
+      // imgAll.forEach((res) => {
+      //   imgUrlList.push(res.img)
+      //   imgListName.push(`渠道${res.channelId}`)
+      // })
+
       downImgAll(imgListName, imgUrlList)
         .then((res) => {
           // loadingInstance.close()
@@ -327,12 +405,15 @@ export default {
           this.downLoad = false
           console.log(err)
         })
-      console.log('批量下载')
+    },
+    // 点击查看链接
+    onLink(row) {
+      window.open(row.channel_link)
     },
     // 点击推广人统计查看
     onExtension(row) {
       console.log(row, '推广人链接')
-      this.$http.Operating.getEncode(24).then((res) => {
+      this.$http.Operating.getEncode(row.id).then((res) => {
         // window.location.href = res
         window.open(res)
       })
@@ -357,6 +438,10 @@ export default {
         margin-left: 20px;
         width: 100px;
       }
+      .bulkDownload {
+        width: 100px;
+        float: right;
+      }
     }
   }
   .channelAdd-table {
@@ -364,11 +449,6 @@ export default {
     margin-top: 10px;
     margin-bottom: 20px;
     background: #fff;
-    .bulkDownload {
-      margin-top: 10px;
-      margin-bottom: 20px;
-      width: 100px;
-    }
   }
   .drawer-detail {
     margin: 50px 10px 10px 10px;

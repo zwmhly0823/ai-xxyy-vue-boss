@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-05-07 10:48:30
  * @LastEditors: panjian
- * @LastEditTime: 2020-05-09 19:18:41
+ * @LastEditTime: 2020-05-11 20:55:33
  -->
 <template>
   <div class="drawer-box">
@@ -15,6 +15,9 @@
       label-width="100px"
       class="demo-ruleForm"
     >
+      <el-form-item label="渠道ID">
+        {{ channelId }}
+      </el-form-item>
       <el-form-item label="一级渠道" prop="channelOne">
         <el-select
           @change="onChannelOne"
@@ -91,6 +94,7 @@
 
 <script>
 export default {
+  props: ['modifyRow'],
   data() {
     var channelSort = (rule, value, callback) => {
       if (value === '') {
@@ -104,10 +108,14 @@ export default {
       }
     }
     return {
+      channelId: '',
       channelTwoDisabled: true,
       channelThreeDisabled: true,
       channelOneList: [],
       channelTwoList: [],
+      channelOneId: '',
+      channelTwoId: '',
+      props: {},
       ruleForm: {
         channelOne: '',
         channelTwo: '',
@@ -134,19 +142,56 @@ export default {
   },
   created() {
     this.getChannelOne()
+    this.getChannelDetailStatisticsPage()
   },
   methods: {
-    channelTwo() {
-      this.$http.Operating.getChannelAndClass(this.ruleForm.channelOne).then(
+    getChannelDetailStatisticsPage() {
+      const id = `id:${this.modifyRow.id}`
+      this.$http.Operating.ChannelDetailStatisticsPage(JSON.stringify(id)).then(
         (res) => {
-          const data = res.payload.channelClassList
-          data.forEach((res) => {
-            res.label = res.channelClassName
-            res.value = +res.id
+          const _data = res.data.ChannelDetailStatisticsPage.content
+          _data.forEach((item) => {
+            this.channelId = item.id
+            this.ruleForm.channelOne = item.p_channel_class_name
+            this.channelOneId = item.p_channel_class_id
+            this.channelTwoId = item.channel_class_id
+            if (item.channel_class_name) {
+              this.channelTwoDisabled = false
+              this.channelThreeDisabled = false
+            }
+            this.ruleForm.channelTwo = item.channel_class_name
+            this.ruleForm.channelThree = item.channel_inner_name
+            this.ruleForm.sort = item.channel_sort
+            this.ruleForm.desc = item.remarks
+            this.ruleForm.status = item.status.toString()
           })
-          this.channelTwoList = data
         }
       )
+    },
+    channelTwo() {
+      if (typeof this.ruleForm.channelOne === 'string') {
+        this.$http.Operating.getChannelAndClass(this.channelOneId).then(
+          (res) => {
+            const data = res.payload.channelClassList
+            data.forEach((res) => {
+              res.label = res.channelClassName
+              res.value = +res.id
+            })
+            this.channelTwoList = data
+          }
+        )
+      } else {
+        this.$http.Operating.getChannelAndClass(this.ruleForm.channelOne).then(
+          (res) => {
+            const data = res.payload.channelClassList
+            data.forEach((res) => {
+              res.label = res.channelClassName
+              res.value = +res.id
+            })
+            this.channelTwoList = data
+          }
+        )
+      }
     },
     getChannelOne() {
       this.$http.Operating.getChannelAndClass(0).then((res) => {
@@ -181,18 +226,38 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          alert('submit!')
-          const props = {
-            channelClassId: this.ruleForm.channelTwo, // 二级渠道分类id
-            channelOuterName: this.ruleForm.channelThree, // 渠道对外名称
-            channelInnerName: this.ruleForm.channelThree, // 渠道对管理员名称默认两者一致
-            channelSort: this.ruleForm.sort, // 渠道排序
-            status: this.ruleForm.status, // 0开启1禁用
-            remarks: this.ruleForm.desc
+          if (typeof this.ruleForm.channelTwo === 'string') {
+            this.props = {
+              id: +this.channelId,
+              channelClassId: +this.channelTwoId, // 二级渠道分类id
+              channelOuterName: this.ruleForm.channelThree, // 渠道对外名称
+              channelInnerName: this.ruleForm.channelThree, // 渠道对管理员名称默认两者一致
+              channelSort: this.ruleForm.sort, // 渠道排序
+              status: this.ruleForm.status, // 1开启0禁用
+              remarks: this.ruleForm.desc
+            }
+          } else {
+            this.props = {
+              id: +this.channelId,
+              channelClassId: +this.ruleForm.channelTwo, // 二级渠道分类id
+              channelOuterName: this.ruleForm.channelThree, // 渠道对外名称
+              channelInnerName: this.ruleForm.channelThree, // 渠道对管理员名称默认两者一致
+              channelSort: this.ruleForm.sort, // 渠道排序
+              status: this.ruleForm.status, // 1开启0禁用
+              remarks: this.ruleForm.desc
+            }
           }
-          console.log(props)
+
+          this.$http.Operating.updateChannel(this.props).then((res) => {
+            console.log(res)
+            if (res.code === 0) {
+              this.$message.success('渠道修改成功')
+              this.$refs[formName].resetFields()
+              this.$emit('modifyChannelShow', false)
+              this.$emit('modifyChannelShowBtn', 1)
+            }
+          })
         } else {
-          console.log('error submit!!')
           return false
         }
       })

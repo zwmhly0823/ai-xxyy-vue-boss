@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-05-07 10:48:30
  * @LastEditors: panjian
- * @LastEditTime: 2020-05-09 19:17:40
+ * @LastEditTime: 2020-05-11 20:53:00
  -->
 <template>
   <div class="drawer-box">
@@ -186,12 +186,12 @@ export default {
             channelOuterName: this.ruleForm.channelThree, // 渠道对外名称
             channelInnerName: this.ruleForm.channelThree, // 渠道对管理员名称默认两者一致
             channelSort: this.ruleForm.sort, // 渠道排序
-            status: this.ruleForm.status, // 0开启1禁用
+            status: this.ruleForm.status, // 1开启0禁用
             remarks: this.ruleForm.desc
           }
           console.log(props, '添加渠道传参')
           this.$http.Operating.createChannel(props).then((res) => {
-            if (res.status === 'OK') {
+            if (res.code === 0) {
               this.$message.success('渠道添加成功')
               this.$refs[formName].resetFields()
               this.channelTwoDisabled = true
@@ -199,6 +199,7 @@ export default {
               this.ruleForm.channelTwo = ''
               this.ruleForm.channelThree = ''
               this.$emit('addChannelShow', false)
+              this.$emit('addChannelShowBtn', 1)
             }
           })
         } else {
