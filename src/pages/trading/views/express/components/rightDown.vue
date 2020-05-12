@@ -148,7 +148,7 @@
             <div>创建:{{ scope.row.crtime }}</div>
             <div>揽收:{{ scope.row.detime }}</div>
             <div>签收:{{ scope.row.sgtime }}</div>
-            <div>审核:{{ scope.row.cutime }}</div>
+            <!-- <div>审核:{{ scope.row.cutime }}</div> -->
           </div>
         </template>
       </el-table-column>
