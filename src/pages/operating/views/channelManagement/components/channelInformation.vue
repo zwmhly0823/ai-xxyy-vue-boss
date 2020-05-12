@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-05-06 16:33:15
  * @LastEditors: panjian
- * @LastEditTime: 2020-05-12 20:30:14
+ * @LastEditTime: 2020-05-12 20:43:31
  -->
 <template>
   <div class="channelAdd-box">
@@ -393,7 +393,6 @@ export default {
           )
         }
       })
-      debugger
       if (imgUrlList.length === 0) {
         this.downLoad = false
         return
