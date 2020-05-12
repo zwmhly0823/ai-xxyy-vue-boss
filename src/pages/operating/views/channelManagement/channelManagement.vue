@@ -3,8 +3,8 @@
  * @version: 
  * @Author: panjian
  * @Date: 2020-04-25 12:09:03
- * @LastEditors: panjian
- * @LastEditTime: 2020-05-09 18:29:36
+ * @LastEditors: Shentong
+ * @LastEditTime: 2020-05-12 12:01:35
  -->
 <template>
   <div>
@@ -35,7 +35,7 @@ export default {
     // channelUpload
   },
   data() {
-    return { tabIndex: '', activeName: 'channleInfo' }
+    return { tabIndex: '', activeName: 'channelQuery' }
   },
   methods: {
     // tabs 事件
