@@ -303,6 +303,14 @@ export default {
       checkParams: [],
       options: [
         {
+          value1: '4',
+          label: '京东快递'
+        },
+        {
+          value1: '3',
+          label: '百世物流'
+        },
+        {
           value1: '2',
           label: '中通云仓'
         },
