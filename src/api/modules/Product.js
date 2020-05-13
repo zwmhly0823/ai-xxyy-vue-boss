@@ -40,5 +40,13 @@ export default {
         }
       }`
     })
+  },
+
+  /**
+   * @description 获取版本号
+   * @param {type} params
+   */
+  getCourseVersion(params) {
+    return axios.get(`/api/s/v1/data/dictionary/byType?type=${params.type}`)
   }
 }
