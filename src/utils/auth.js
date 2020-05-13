@@ -1,3 +1,12 @@
+/*
+ * @Descripttion: TOSS小熊
+ * @version: 1.0.0
+ * @Author: Shentong
+ * @Date: 2020-04-24 17:30:50
+ * @LastEditors: Shentong
+ * @LastEditTime: 2020-05-13 20:57:50
+ * @github: https://github.com/js-cookie/js-cookie
+ */
 import Cookies from 'js-cookie'
 
 const TokenKey = 'xiaoxiongmeishu_toss'
@@ -7,7 +16,11 @@ export function getToken() {
 }
 
 export function setToken(token) {
-  return Cookies.set(TokenKey, token)
+  /** 设置过期时间为"15"分钟 */
+  // var expires = new Date(new Date().getTime() + 15 * 60 * 1000)
+  return Cookies.set(TokenKey, token, {
+    expires: 100 // 过期时间为100天
+  })
 }
 
 export function removeToken() {

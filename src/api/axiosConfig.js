@@ -3,8 +3,8 @@
  * @version:
  * @Author: Shentong
  * @Date: 2020-03-17 11:50:18
- * @LastEditors: Lukun
- * @LastEditTime: 2020-04-14 15:09:55
+ * @LastEditors: Shentong
+ * @LastEditTime: 2020-05-13 20:36:00
  */
 import axios from './axios'
 import { getToken } from '@/utils/auth'
@@ -124,7 +124,7 @@ export default {
     }
   },
   getHeaders() {
-    const token = getToken() || 'authorization-bear'
+    const token = getToken() || ''
     const headers = {
       'Content-Type': 'application/json;charset=UTF-8'
     }
