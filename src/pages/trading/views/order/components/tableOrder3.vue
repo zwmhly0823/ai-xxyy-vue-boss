@@ -62,9 +62,15 @@
       <el-table-column label="关联物流" min-width="150">
         <template slot-scope="scope">
           <p
-            :class="{ 'primary-color': scope.row.express.express_total > 0 }"
+            :class="{
+              'primary-color':
+                scope.row.express && scope.row.express.express_total > 0
+            }"
             @click="
-              showExpressDetail(scope.row.id, scope.row.express.express_total)
+              showExpressDetail(
+                scope.row.id,
+                scope.row.express ? scope.row.express.express_total : 0
+              )
             "
           >
             {{ scope.row.express ? scope.row.express.express_total || 0 : '-' }}
@@ -148,16 +154,6 @@ export default {
       statisticsQuery: [] // 统计需要 bool 表达式
     }
   },
-  computed: {
-    topicArr() {
-      if (this.topic === '4' || this.topic === '5') {
-        return [this.topic]
-      } else if (this.topic === '1,2,6') {
-        return this.topic.split(',')
-      }
-      return []
-    }
-  },
   components: {
     MPagination,
     ExpressDetail
@@ -167,6 +163,12 @@ export default {
     status(status) {
       this.currentPage = 1
       this.getOrderList(this.currentPage, true)
+    },
+    topic(val) {
+      if (val === '1,2,6') {
+        this.currentPage = 1
+        this.getOrderList()
+      }
     }
   },
 
