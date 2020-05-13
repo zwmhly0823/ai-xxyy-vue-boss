@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-07 13:52:26
  * @LastEditors: Shentong
- * @LastEditTime: 2020-04-30 21:54:02
+ * @LastEditTime: 2020-05-13 15:51:22
  */
 import axios from '../axiosConfig'
 
@@ -28,6 +28,7 @@ export default {
           start_date
           period_name
           course_day
+          status
           end_course_day
       }}`
     })
