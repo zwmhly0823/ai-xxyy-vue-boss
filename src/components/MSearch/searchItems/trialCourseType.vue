@@ -5,7 +5,7 @@
  * @Last Modified by:   YangJiyong
  * @Last Modified time: 2020-05-09 19:05:09
  * @Description: 体验课类型选择 关联表：tg_student_trial_course, team_category: 0-双周  3-单周.
- * 更正：通过o_order表的 packages_id 区分体验课单双周类型。 1，11 - 单周；5，6双周   
+ * 更正：通过o_order表的 packages_id 区分体验课单双周类型。 11- 单周；5，6双周   1-9.9元课程
  -->
 <template>
   <div class="search-item small">
@@ -48,7 +48,7 @@ export default {
           text: '双周'
         },
         {
-          id: '1,11',
+          id: '11',
           text: '单周'
         }
       ]
@@ -73,8 +73,8 @@ export default {
       // this.$emit('result', '')
 
       // 通过 o_order 表 packages_id 关联
-      if (type === '1,11') {
-        item = ['1', '11']
+      if (type === '11') {
+        item = ['11']
       } else if (type === '5,6') {
         item = ['5', '6']
       }
