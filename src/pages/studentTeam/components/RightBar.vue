@@ -3,8 +3,8 @@
  * @version:
  * @Author: zhubaodong
  * @Date: 2020-03-13 16:53:41
- * @LastEditors: zhubaodong
- * @LastEditTime: 2020-05-06 21:03:01
+ * @LastEditors: Shentong
+ * @LastEditTime: 2020-05-13 21:39:14
  -->
 <template>
   <div class="right-container">
@@ -265,10 +265,10 @@ export default {
     }
   },
   mounted() {
-    document.onmousedown = () => {
-      this.autoAddFriends = false
-      this.autoAddFriendsIn = false
-    }
+    // document.onmousedown = () => {
+    //   this.autoAddFriends = false
+    //   this.autoAddFriendsIn = false
+    // }
   },
   watch: {
     classId(vals) {
@@ -428,11 +428,11 @@ export default {
 
           // this.classMessage2 = res.dataformatEndDay
         })
-      this.$http.StudentTerm.getStudentTeamById({
-        teamId: this.classId.classId.id || ''
-      }).then((res) => {
-        this.switchState = res.payload.switchState
-      })
+      // this.$http.StudentTerm.getStudentTeamById({
+      //   teamId: this.classId.classId.id || ''
+      // }).then((res) => {
+      //   this.switchState = res.payload.switchState
+      // })
     }
   }
 }
