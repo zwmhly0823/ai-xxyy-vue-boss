@@ -31,6 +31,7 @@
           />
         </el-tab-pane>
         <el-tab-pane label="活动订单" name="1,2,6">
+          <search-list3 @search="handleSearch" v-if="activeTopic === '1,2,6'" />
           <all-order3 :topic="activeTopic" :search="search" />
         </el-tab-pane>
       </el-tabs>
@@ -44,6 +45,7 @@ import allOrder2 from './components/allOrder2'
 import allOrder3 from './components/allOrder3'
 import searchList1 from './components/searchList1.vue'
 import searchList2 from './components/searchList2.vue'
+import searchList3 from './components/searchList3.vue'
 export default {
   name: 'orderModule',
   props: [],
@@ -52,7 +54,8 @@ export default {
     allOrder2,
     allOrder3,
     searchList1,
-    searchList2
+    searchList2,
+    searchList3
   },
   data() {
     return {

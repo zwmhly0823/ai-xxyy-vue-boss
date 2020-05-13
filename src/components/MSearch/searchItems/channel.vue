@@ -96,9 +96,10 @@ export default {
     formatData(classdata, classifiData) {
       // 第一级目录
       const arrList = []
-      classifiData.forEach((item) => {
-        item.channel_outer_name = item.channel_class_name
-      })
+      classifiData &&
+        classifiData.forEach((item) => {
+          item.channel_outer_name = item.channel_class_name
+        })
       const firstNode =
         classifiData &&
         classifiData.filter((item) => {
@@ -108,7 +109,7 @@ export default {
           return +item.channel_class_parent_id === 0
         })
 
-      firstNode.forEach((item) => (item.children = []))
+      firstNode && firstNode.forEach((item) => (item.children = []))
       arrList.forEach((item, index) => {
         firstNode.forEach((val, idx) => {
           if (+item.channel_class_parent_id === +val.id) {
@@ -116,30 +117,35 @@ export default {
           }
         })
       })
-      firstNode.forEach(
-        (item) =>
-          item.children && item.children.forEach((vals) => (vals.children = []))
-      )
+      firstNode &&
+        firstNode.forEach(
+          (item) =>
+            item.children &&
+            item.children.forEach((vals) => (vals.children = []))
+        )
 
-      classdata.forEach((content, num) => {
-        arrList.forEach((datas, nums) => {
-          if (+content.channel_class_id === +datas.id) {
-            datas.children.push(content)
-          }
-        })
-      })
-
-      const result = firstNode.map((item) => {
-        if (item.children && item.children.length === 0) {
-          item.children = null
-        }
-        if (item.children) {
-          item.children.forEach((sub) => {
-            if (sub.children && sub.children.length === 0) sub.children = null
+      classdata &&
+        classdata.forEach((content, num) => {
+          arrList.forEach((datas, nums) => {
+            if (+content.channel_class_id === +datas.id) {
+              datas.children.push(content)
+            }
           })
-        }
-        return item
-      })
+        })
+
+      const result =
+        firstNode &&
+        firstNode.map((item) => {
+          if (item.children && item.children.length === 0) {
+            item.children = null
+          }
+          if (item.children) {
+            item.children.forEach((sub) => {
+              if (sub.children && sub.children.length === 0) sub.children = null
+            })
+          }
+          return item
+        })
       this.showDatas = result
       // console.log(firstNode, '第一梯队')
       // console.log(arrList, '分类数减去第一梯队')

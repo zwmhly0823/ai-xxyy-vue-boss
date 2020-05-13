@@ -169,6 +169,12 @@ export default {
         this.currentPage = 1
         this.getOrderList()
       }
+    },
+    // 搜索
+    search(val) {
+      this.currentPage = 1
+      this.searchIn = val
+      this.getOrderList()
     }
   },
 
