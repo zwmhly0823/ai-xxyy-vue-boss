@@ -142,7 +142,7 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="物流创建·揽收·签收" width="200">
+      <el-table-column label="物流创建·揽收·签收·审核" width="200">
         <template slot-scope="scope">
           <div class="sign">
             <div>创建:{{ scope.row.crtime }}</div>

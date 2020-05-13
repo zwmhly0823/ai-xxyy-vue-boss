@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-04-02 15:35:27
  * @LastEditors: Shentong
- * @LastEditTime: 2020-05-07 22:34:28
+ * @LastEditTime: 2020-05-13 16:06:57
  -->
 <template>
   <el-row type="flex" class="app-main height schedule-container">
@@ -30,7 +30,12 @@
               :class="{ active: index == tabIndex }"
               @click="priod_tabs_click(tab, index)"
             >
-              <span>{{ tab.period_name }}</span>
+              <span
+                >{{ tab.period_name
+                }}<span v-if="btnIndex == 1"
+                  >({{ periodStatus[tab.status] || '' }})</span
+                ></span
+              >
             </div>
             <!-- 大于5个 TODO: -->
             <el-dropdown
@@ -48,7 +53,12 @@
                   v-for="(tab, index) in priodTabsEnd"
                   :key="index"
                   :command="tab"
-                  >{{ tab.period_name }}</el-dropdown-item
+                  ><span
+                    >{{ tab.period_name
+                    }}<span v-if="btnIndex == 1"
+                      >({{ periodStatus[tab.status] || '' }})</span
+                    ></span
+                  ></el-dropdown-item
                 >
               </el-dropdown-menu>
             </el-dropdown>
@@ -478,6 +488,13 @@ export default {
       // 统计表title
       activeName: 'conversion',
       tabIndex: 0,
+      periodStatus: {
+        '0': '待开始',
+        '1': '招生中',
+        '2': '待开课',
+        '3': '上课中',
+        '4': '已结课'
+      },
       // 状态index
       btnIndex: 0,
       topStatus: [
