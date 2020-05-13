@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-24 17:30:50
  * @LastEditors: Shentong
- * @LastEditTime: 2020-05-13 20:57:50
+ * @LastEditTime: 2020-05-13 21:30:45
  * @github: https://github.com/js-cookie/js-cookie
  */
 import Cookies from 'js-cookie'
@@ -19,7 +19,7 @@ export function setToken(token) {
   /** 设置过期时间为"15"分钟 */
   // var expires = new Date(new Date().getTime() + 15 * 60 * 1000)
   return Cookies.set(TokenKey, token, {
-    expires: 100 // 过期时间为100天
+    expires: 99 // 过期时间为99天
   })
 }
 
