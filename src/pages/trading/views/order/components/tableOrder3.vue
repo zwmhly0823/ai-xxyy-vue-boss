@@ -180,12 +180,11 @@ export default {
 
   created() {
     this.teacherId = isToss()
-    // if (this.teacherId) {
-    //   this.getTeacherPermission()
-    // } else {
-    //   this.getOrderList()
-    // }
-    this.getOrderList()
+    if (this.teacherId) {
+      this.getTeacherPermission()
+    } else {
+      this.getOrderList()
+    }
   },
 
   methods: {
@@ -208,20 +207,20 @@ export default {
       ]
       const queryObj = { regtype: this.regtype }
       // TOSS
-      // if (this.teacherId) {
-      //   Object.assign(queryObj, {
-      //     last_teacher_id:
-      //       this.teacherGroup.length > 0 ? this.teacherGroup : [this.teacherId]
-      //   })
-      //   statisticsQuery.push({
-      //     terms: {
-      //       last_teacher_id:
-      //         this.teacherGroup.length > 0
-      //           ? this.teacherGroup
-      //           : [this.teacherId]
-      //     }
-      //   })
-      // }
+      if (this.teacherId) {
+        Object.assign(queryObj, {
+          last_teacher_id:
+            this.teacherGroup.length > 0 ? this.teacherGroup : [this.teacherId]
+        })
+        statisticsQuery.push({
+          terms: {
+            last_teacher_id:
+              this.teacherGroup.length > 0
+                ? this.teacherGroup
+                : [this.teacherId]
+          }
+        })
+      }
 
       // 组合搜索条件
       this.searchIn.forEach((item) => {
