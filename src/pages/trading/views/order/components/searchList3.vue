@@ -12,6 +12,9 @@
       <el-form-item label="订单搜索:" :class="{ [$style.marginer]: true }">
         <order-search class="allmini" @result="getOrderSearch" />
       </el-form-item>
+      <el-form-item label="商品类型:" :class="{ [$style.marginer]: true }">
+        <product-type name="regtype" @result="getProductType" />
+      </el-form-item>
       <br />
       <el-form-item label="下单时间:" :class="{ [$style.marginer]: true }">
         <date-picker
@@ -60,11 +63,13 @@
 <script>
 import OrderSearch from '@/components/MSearch/searchItems/orderSearch.vue'
 import DatePicker from '@/components/MSearch/searchItems/datePicker.vue'
+import ProductType from '@/components/MSearch/searchItems/productType.vue'
 import { isToss } from '@/utils/index'
 export default {
   components: {
     OrderSearch,
-    DatePicker
+    DatePicker,
+    ProductType
   },
   data() {
     return {
@@ -154,6 +159,11 @@ export default {
       const start = new Date(new Date(date).toLocaleDateString()).getTime()
       const end = new Date().getTime()
       this.$root.$emit('fourpoint', [start, end])
+    },
+
+    getProductType(res) {
+      if (res.regtype.length === 0) res.regtype = ['4', '5', '6']
+      this.setSeachParmas(res, ['regtype'], 'terms')
     },
 
     /**  处理接收到的查询参数
