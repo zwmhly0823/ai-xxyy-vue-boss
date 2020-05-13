@@ -787,8 +787,8 @@ export default {
       },
       // title点评统计
       titlereviewStatistical: {
-        reviewProbability: 0,
-        listenTo: 0
+        reviewProbability: '-',
+        listenTo: '-'
       },
       // 放课天数数组
       schoolDays: [],
@@ -962,27 +962,25 @@ export default {
             } else if (
               +this.dataStatisticsBtn.course_day < new Date().getTime()
             ) {
-              this.statisticsInfo.course_days = (
+              this.statisticsInfo.course_days = Math.ceil(
                 (new Date() - this.dataStatisticsBtn.course_day) /
-                1000 /
-                60 /
-                60 /
-                24
-              ).toFixed(0)
+                  1000 /
+                  60 /
+                  60 /
+                  24
+              )
             }
           } else {
             if (+this.priodTabs[0].course_day > new Date().getTime()) {
               this.statisticsInfo.course_days = '0'
             } else if (+this.priodTabs[0].course_day < new Date().getTime()) {
-              this.statisticsInfo.course_days = (
-                Math.floor(
-                  new Date().getTime() - this.priodTabs[0].course_day
-                ) /
-                1000 /
-                60 /
-                60 /
-                24
-              ).toFixed(0)
+              this.statisticsInfo.course_days = Math.ceil(
+                (new Date().getTime() - this.priodTabs[0].course_day) /
+                  1000 /
+                  60 /
+                  60 /
+                  24
+              )
             }
           }
           // 总数、分页用
@@ -1016,33 +1014,32 @@ export default {
               ? formatData(this.dataStatisticsBtn.end_course_day)
               : formatData(this.priodTabs[0].end_course_day)
           // 开课天数
+          // 判断是否切换课程期数，如果切换则用传的值，否则用第一个值
           if (this.dataStatisticsBtn && this.dataStatisticsBtn.course_day) {
             if (+this.dataStatisticsBtn.course_day > new Date().getTime()) {
               this.statisticsInfo.course_days = '0'
             } else if (
               +this.dataStatisticsBtn.course_day < new Date().getTime()
             ) {
-              this.statisticsInfo.course_days = (
+              this.statisticsInfo.course_days = Math.ceil(
                 (new Date() - this.dataStatisticsBtn.course_day) /
-                1000 /
-                60 /
-                60 /
-                24
-              ).toFixed(0)
+                  1000 /
+                  60 /
+                  60 /
+                  24
+              )
             }
           } else {
             if (+this.priodTabs[0].course_day > new Date().getTime()) {
               this.statisticsInfo.course_days = '0'
             } else if (+this.priodTabs[0].course_day < new Date().getTime()) {
-              this.statisticsInfo.course_days = (
-                Math.floor(
-                  new Date().getTime() - this.priodTabs[0].course_day
-                ) /
-                1000 /
-                60 /
-                60 /
-                24
-              ).toFixed(0)
+              this.statisticsInfo.course_days = Math.ceil(
+                (new Date().getTime() - this.priodTabs[0].course_day) /
+                  1000 /
+                  60 /
+                  60 /
+                  24
+              )
             }
           }
           // 总数、分页用
@@ -1070,10 +1067,14 @@ export default {
         this.titleUpload.course_task_count =
           res.data.courseTaskStatistics.course_task_count
         // 人均作品
-        this.titleUpload.student_count = (
-          res.data.courseTaskStatistics.course_task_count /
+        this.titleUpload.student_count =
+          res.data.courseTaskStatistics.course_task_count &&
           res.data.courseTaskStatistics.student_count
-        ).toFixed(2)
+            ? (
+                res.data.courseTaskStatistics.course_task_count /
+                res.data.courseTaskStatistics.student_count
+              ).toFixed(2)
+            : 0
         this.titleUpload.task_student_count =
           res.data.courseTaskStatistics.task_student_count
 
@@ -1089,7 +1090,7 @@ export default {
                     this.schoolDays[this.schoolDays.length - 1])
                 ).toFixed(2) * 100
               ).toFixed(0) + '%'
-            : '-'
+            : 0
       })
     },
     // 上传作品统计

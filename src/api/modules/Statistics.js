@@ -328,7 +328,9 @@ export default {
   },
   // 上传统计数据统计接口
   getCourseTaskStatistics(params) {
-    const { period = '', teacher = '', department = '', sups = '' } = params
+    let { period = '', teacher = '', department = '', sups = '' } = params
+    teacher = teacher ? teacher.split(',') : ''
+    department = department ? department.split(',') : ''
     let supStr = ''
     if (sups) {
       supStr = sups
@@ -338,7 +340,10 @@ export default {
     } else {
       supStr = sups
     }
-    const query = `{"term": "${period}","departmentId": "${department}","teacherIds":"${teacher}","sup":"${supStr}"}`
+    sups = supStr ? supStr.split(',') : ''
+    const query = `{"term": "${period}","departmentId": ${JSON.stringify(
+      department
+    )},"teacherIds":${JSON.stringify(teacher)},"sup":${JSON.stringify(sups)}}`
     // const query = ''
     return axios.post('/graphql/v1/toss', {
       query: `{
@@ -352,8 +357,22 @@ export default {
   },
   // 老师点评统计接口
   getTaskCommentStatistics(params) {
-    const { period = '', teacher = '', department = '', sups = '' } = params
-    const query = `{"term": "${period}","departmentId": "${department}","teacherIds":"${teacher}","sup":"${sups}"}`
+    let { period = '', teacher = '', department = '', sups = '' } = params
+    teacher = teacher ? teacher.split(',') : ''
+    department = department ? department.split(',') : ''
+    let supStr = ''
+    if (sups) {
+      supStr = sups
+        .split(',')
+        .map((item) => 'S' + item)
+        .join(',')
+    } else {
+      supStr = sups
+    }
+    sups = supStr ? supStr.split(',') : ''
+    const query = `{"term": "${period}","departmentId": ${JSON.stringify(
+      department
+    )},"teacherIds":${JSON.stringify(teacher)},"sup":${JSON.stringify(sups)}}`
     return axios.post(`/graphql/v1/toss`, {
       query: `{
         taskCommentStatistics(query:${JSON.stringify(query) || null}){
