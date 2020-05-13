@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-05-09 16:02:33
  * @LastEditors: panjian
- * @LastEditTime: 2020-05-12 11:43:30
+ * @LastEditTime: 2020-05-13 11:41:16
  */
 
 import JSZip from 'jszip'
@@ -51,17 +51,17 @@ export function downImgAll(imgListName, imgUrlList) {
       const image = new Image()
       // 解决跨域 Canvas 污染问题
       image.setAttribute('crossOrigin', 'anonymous')
-      const downLoadImg = function(url) {
-        // const canvas = document.createElement('canvas')
-        // canvas.width = image.width
-        // canvas.height = image.height
+      // const downLoadImg = function(url) {
+      image.onload = function() {
+        const canvas = document.createElement('canvas')
+        canvas.width = image.width
+        canvas.height = image.height
 
-        // const context = canvas.getContext('2d')
-        // context.drawImage(image, 0, 0, image.width, image.height)
+        const context = canvas.getContext('2d')
+        context.drawImage(image, 0, 0, image.width, image.height)
 
-        // const url = canvas.toDataURL() // 得到图片的base64编码数据
-        // canvas.toDataURL('image/png')
-
+        const url = canvas.toDataURL() // 得到图片的base64编码数据
+        canvas.toDataURL('image/png')
         baseList.push(url.substring(22)) // 去掉base64编码前的 data:image/png;base64,
         if (baseList.length === arr.length && baseList.length > 0) {
           for (let k = 0; k < baseList.length; k++) {
@@ -79,7 +79,7 @@ export function downImgAll(imgListName, imgUrlList) {
             })
         }
       }
-      image.onload = downLoadImg(arr[i])
+      // image.onload = downLoadImg(arr[i])
       image.src = arr[i]
     }
   })
