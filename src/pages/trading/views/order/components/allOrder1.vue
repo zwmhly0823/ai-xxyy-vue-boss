@@ -240,47 +240,7 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-@font-face {
-  font-family: 'number_font';
-  src: url('~@/assets/fonts/TG-TYPE-Bold.otf');
-} //引入本地字体数字文件
-.top-box {
-  margin-top: -20px;
-  width: 100%;
-  height: 100%;
-  .grid-content {
-    cursor: pointer;
-    background: #f5f6f7;
-    &.current {
-      background: #e4e4e4;
-    }
-  }
-  .oride-top {
-    font-size: 12px;
-    text-align: center;
-    padding: 10px 0;
-    color: #666666;
-  }
-  .oride-middle {
-    font-family: 'number_font';
-    font-size: 14px;
-    color: #4d4d4d;
-    text-align: center;
-    padding: 10px 0 20px;
-    em {
-      margin-right: 5px;
-      font-size: 24px;
-      font-style: normal;
-      color: #409eff;
-    }
-  }
-}
-// .bottom-box {
-//   margin: 20px 0 0 0;
-// }
-.el-divider--horizontal {
-  margin: 0 !important;
-}
+@import './statistics.scss';
 </style>
 <style lang="scss">
 .order-call {
@@ -289,13 +249,6 @@ export default {
     &:last-child {
       margin-bottom: 0;
     }
-  }
-  .el-col {
-    border-radius: 4px;
-  }
-  .el-tabs--border-card > .el-tabs__content {
-    padding-left: 0;
-    padding-right: 0;
   }
 }
 </style>

@@ -260,5 +260,128 @@ export default {
           }
       }}`
     })
+  },
+  // 上传作品统计接口
+  getBaseSaleStatisticsPage(params) {
+    let {
+      period = '',
+      page = 1,
+      size = '20',
+      teacher = '',
+      totalSort = 'desc',
+      department = '',
+      sup = ''
+    } = params
+    department = department ? department.split(',') : ''
+    let supStr = ''
+    if (sup) {
+      supStr = sup
+        .split(',')
+        .map((item) => 'S' + item)
+        .join(',')
+    } else {
+      supStr = sup
+    }
+    sup = supStr ? supStr.split(',') : ''
+
+    teacher = teacher ? teacher.split(',') : ''
+    const _totalSort = `{"id.keyword":"${totalSort}"}`
+
+    const getdepartment =
+      department.length > 0
+        ? `,"department_id":${JSON.stringify(department)}`
+        : ''
+    const getsup = sup ? `,"sup.keyword": ${JSON.stringify(sup)}` : ''
+    const getteacherIds = teacher
+      ? `,"pay_teacher_id":${JSON.stringify(teacher)}`
+      : ''
+    const query = `{"trial_stage": "${period}"${getdepartment}${getsup}${getteacherIds}}`
+    // const query = ''
+    return axios.post('/graphql/v1/toss', {
+      query: `{
+        BaseSaleStatisticsPage(page: ${page}, size:${size},query: ${JSON.stringify(
+        query
+      ) || null}, sort: ${JSON.stringify(_totalSort)}){
+        totalPages
+        totalElements
+        number
+          content{
+            id
+            sup
+            department_name
+            realname
+            trial_course_count
+            studentCourseTaskStatisticsList{
+              current_lesson
+              course_task_count
+              task_student_count
+            }
+             taskCommentStatisticsList {
+                current_lesson
+                comment_count
+                task_count
+                comment_listened_count
+              }
+          }
+        }
+      }`
+    })
+  },
+  // 上传统计数据统计接口
+  getCourseTaskStatistics(params) {
+    let { period = '', teacher = '', department = '', sups = '' } = params
+    teacher = teacher ? teacher.split(',') : ''
+    department = department ? department.split(',') : ''
+    let supStr = ''
+    if (sups) {
+      supStr = sups
+        .split(',')
+        .map((item) => 'S' + item)
+        .join(',')
+    } else {
+      supStr = sups
+    }
+    sups = supStr ? supStr.split(',') : ''
+    const query = `{"term": "${period}","departmentId": ${JSON.stringify(
+      department
+    )},"teacherIds":${JSON.stringify(teacher)},"sup":${JSON.stringify(sups)}}`
+    // const query = ''
+    return axios.post('/graphql/v1/toss', {
+      query: `{
+        courseTaskStatistics(query:${JSON.stringify(query) || null}){
+          student_count
+          course_task_count
+          task_student_count
+        }
+      }`
+    })
+  },
+  // 老师点评统计接口
+  getTaskCommentStatistics(params) {
+    let { period = '', teacher = '', department = '', sups = '' } = params
+    teacher = teacher ? teacher.split(',') : ''
+    department = department ? department.split(',') : ''
+    let supStr = ''
+    if (sups) {
+      supStr = sups
+        .split(',')
+        .map((item) => 'S' + item)
+        .join(',')
+    } else {
+      supStr = sups
+    }
+    sups = supStr ? supStr.split(',') : ''
+    const query = `{"term": "${period}","departmentId": ${JSON.stringify(
+      department
+    )},"teacherIds":${JSON.stringify(teacher)},"sup":${JSON.stringify(sups)}}`
+    return axios.post(`/graphql/v1/toss`, {
+      query: `{
+        taskCommentStatistics(query:${JSON.stringify(query) || null}){
+          comment_count
+          task_count
+          listen_count
+        }
+      }`
+    })
   }
 }
