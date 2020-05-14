@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-02 15:35:27
  * @LastEditors: Shentong
- * @LastEditTime: 2020-05-13 16:09:57
+ * @LastEditTime: 2020-05-13 17:36:27
  -->
 <template>
   <el-row type="flex" class="app-main height schedule-container">
@@ -30,7 +30,7 @@
             >
               <span
                 >{{ tab.period_name
-                }}<span v-if="btnIndex == 1"
+                }}<span v-if="btnIndex == 1 && hasLoadPeriod"
                   >({{ periodStatus[tab.status] || '' }})</span
                 ></span
               >
@@ -257,10 +257,19 @@ export default {
   },
   data() {
     return {
+      // 是否已加载完期数列表
+      hasLoadPeriod: false,
       // tabs标签默认状态
       selectName: '更多',
       activeName: 'conversion',
       tabIndex: 0,
+      periodStatus: {
+        '0': '待开始',
+        '1': '招生中',
+        '2': '待开课',
+        '3': '上课中',
+        '4': '已结课'
+      },
       btnIndex: 0,
       topStatus: [
         {
@@ -382,6 +391,9 @@ export default {
         return proidList
       } catch (err) {
         console.log(err)
+      } finally {
+        // 此处是为了防止->切换顶部状态后 期数显示抖动
+        this.hasLoadPeriod = true
       }
     },
     // 通过期数、销售部门、社群销售、难度条件过滤 数量统计接口
@@ -549,6 +561,7 @@ export default {
     },
     // 点击  ’进行中、已结课、招生中‘ 按钮
     top_tabs_click(index, statusInfo) {
+      this.hasLoadPeriod = false
       this.initSearchData({})
 
       this.tabIndex = 0

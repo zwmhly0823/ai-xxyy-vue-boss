@@ -238,7 +238,7 @@
 
 <script>
 import MPagination from '@/components/MPagination/index.vue'
-import axios from '@/api/axios'
+import axios from '@/api/axiosConfig'
 import { isToss, formatData } from '@/utils/index'
 import { mapState } from 'vuex'
 import expressDetail from '../../components/expressDetail'

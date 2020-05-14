@@ -144,7 +144,7 @@
 </template>
 <script>
 import { mapGetters } from 'vuex'
-import axios from '@/api/axios'
+import axios from '@/api/axiosConfig'
 import { GetAgeByBrithday } from '@/utils/index'
 import MPagination from '@/components/MPagination/index.vue'
 import CouponPopover from './components/couponPopover'
