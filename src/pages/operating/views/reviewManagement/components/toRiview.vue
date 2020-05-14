@@ -198,7 +198,7 @@ export default {
           riviewList[i].flag = false
         }
       }
-      this.list.splice(this.list[listIndex], 1, listItem)
+      this.list.splice(listIndex, 1, listItem)
     },
     async syntheticSpeech(listIndex, row) {
       const _this = this
@@ -249,7 +249,7 @@ export default {
           })
           row.showAudio = true
           row.mp3Url = `https://${res.payload}`
-          _this.list.splice(this.list[listIndex], 1, listItem)
+          _this.list.splice(listIndex, 1, listItem)
         }
       } catch (error) {
         console.log(error)
