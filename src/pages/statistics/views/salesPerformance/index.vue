@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-04-02 15:35:27
  * @LastEditors: Shentong
- * @LastEditTime: 2020-05-13 17:25:18
+ * @LastEditTime: 2020-05-14 17:03:45
  -->
 <template>
   <el-row type="flex" class="app-main height schedule-container">
@@ -756,7 +756,7 @@ export default {
         },
         {
           status: 'not_start',
-          label: '招生中'
+          label: '待开课'
         },
         {
           status: 'over',

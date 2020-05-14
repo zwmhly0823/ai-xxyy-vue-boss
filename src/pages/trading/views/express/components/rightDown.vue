@@ -929,3 +929,8 @@ export default {
   }
 }
 </style>
+<style lang="scss">
+.el-table .cell {
+  padding-left: 10px;
+}
+</style>
