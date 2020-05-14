@@ -28,7 +28,7 @@
 </template>
 
 <script>
-import axios from '@/api/axios'
+import axios from '@/api/axiosConfig'
 export default {
   props: {
     name: {

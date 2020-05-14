@@ -34,7 +34,7 @@
 </template>
 
 <script>
-import axios from '@/api/axios'
+import axios from '@/api/axiosConfig'
 import { mapState } from 'vuex'
 export default {
   props: {
