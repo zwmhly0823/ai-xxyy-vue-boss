@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-05-06 16:33:15
  * @LastEditors: panjian
- * @LastEditTime: 2020-05-14 15:06:45
+ * @LastEditTime: 2020-05-14 15:27:30
  -->
 <template>
   <div class="channelAdd-box">
@@ -281,7 +281,6 @@ export default {
         const _data = res.data.ChannelDetailStatisticsPage.content
         _data.forEach((data) => {
           // `http://${row.short_er_code}`
-          console.log()
           if (data.short_er_code) {
             data.short_er_code = `http://${data.short_er_code}`
           }
