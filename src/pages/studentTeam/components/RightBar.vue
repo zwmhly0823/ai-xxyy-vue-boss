@@ -234,7 +234,7 @@
 
 <script>
 import TabBar from './TabPane/TabBar.vue'
-import axios from '@/api/axios'
+import axios from '@/api/axiosConfig'
 import dayjs from 'dayjs'
 import { isToss } from '@/utils/index'
 export default {
@@ -339,8 +339,8 @@ export default {
       const queryParams = `[{id:${data}}]`
       axios
         .get('/graphql/getClassTeacher', {
-          params: {
-            query: `{
+          // params: {
+          query: `{
             detail (query: "${queryParams}"){
               id
               team_name
@@ -375,7 +375,7 @@ export default {
                 }
               }
             }`
-          }
+          // }
         })
         .then((res) => {
           console.log(res.data.detail.team_state, 'res.data.detail.team_state')
