@@ -3,8 +3,8 @@
  * @version:
  * @Author: shentong
  * @Date: 2020-03-13 14:38:28
- * @LastEditors: Shentong
- * @LastEditTime: 2020-05-13 19:26:15
+ * @LastEditors: Lukun
+ * @LastEditTime: 2020-05-14 14:26:05
  */
 import axios from 'axios'
 import _ from 'lodash'
@@ -52,6 +52,7 @@ axios.interceptors.response.use(
     return _data
   },
   (err) => {
+    console.log('axios err', err)
     switch (err.response.status) {
       case 400:
         // Utils.removeCookie('token')
