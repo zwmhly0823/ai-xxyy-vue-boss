@@ -3,8 +3,8 @@
  * @version:
  * @Author: zhubaodong
  * @Date: 2020-04-02 15:35:27
- * @LastEditors: chengweihua
- * @LastEditTime: 2020-05-11 19:39:37
+ * @LastEditors: Shentong
+ * @LastEditTime: 2020-05-13 17:25:18
  -->
 <template>
   <el-row type="flex" class="app-main height schedule-container">
@@ -30,7 +30,12 @@
               :class="{ active: index == tabIndex }"
               @click="priod_tabs_click(tab, index)"
             >
-              <span>{{ tab.period_name }}</span>
+              <span
+                >{{ tab.period_name
+                }}<span v-if="btnIndex == 1 && hasLoadPeriod"
+                  >({{ periodStatus[tab.status] || '' }})</span
+                ></span
+              >
             </div>
             <!-- 大于5个 TODO: -->
             <el-dropdown
@@ -48,7 +53,12 @@
                   v-for="(tab, index) in priodTabsEnd"
                   :key="index"
                   :command="tab"
-                  >{{ tab.period_name }}</el-dropdown-item
+                  ><span
+                    >{{ tab.period_name
+                    }}<span v-if="btnIndex == 1"
+                      >({{ periodStatus[tab.status] || '' }})</span
+                    ></span
+                  ></el-dropdown-item
                 >
               </el-dropdown-menu>
             </el-dropdown>
@@ -723,11 +733,20 @@ export default {
         attendClass: '参课',
         finishClass: '完课'
       },
+      // 是否已加载完期数列表
+      hasLoadPeriod: false,
       // tabs标签默认状态
       selectName: '更多',
       // 统计表title
       activeName: 'attendClass',
       tabIndex: 0,
+      periodStatus: {
+        '0': '待开始',
+        '1': '招生中',
+        '2': '待开课',
+        '3': '上课中',
+        '4': '已结课'
+      },
       // 状态index
       btnIndex: 0,
       topStatus: [
@@ -832,6 +851,9 @@ export default {
         return proidList
       } catch (err) {
         console.log(err)
+      } finally {
+        // 此处是为了防止->切换顶部状态后 期数显示抖动
+        this.hasLoadPeriod = true
       }
     },
     initSearchData(res, isFromEmit = false) {
@@ -1285,6 +1307,7 @@ export default {
       this.getChangecListByProid()
     },
     top_tabs_click(index, statusInfo) {
+      this.hasLoadPeriod = false
       this.initSearchData({})
 
       this.tabIndex = 0
