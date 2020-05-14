@@ -81,7 +81,7 @@
 </template>
 
 <script>
-import axios from '@/api/axios'
+import axios from '@/api/axiosConfig'
 
 export default {
   // 传递来源 如 订单使用  物流使用

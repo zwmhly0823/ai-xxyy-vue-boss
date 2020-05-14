@@ -158,7 +158,6 @@ import _ from 'lodash'
 import MPagination from '@/components/MPagination/index.vue'
 import { formatData, isToss } from '@/utils/index.js'
 import ExpressDetail from '../../components/expressDetail'
-// import axios from '@/api/axiosConfig'
 export default {
   components: {
     MPagination,

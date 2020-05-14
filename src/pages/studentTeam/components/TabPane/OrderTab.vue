@@ -138,7 +138,7 @@
 </template>
 <script>
 import dayjs from 'dayjs'
-import axios from '@/api/axios'
+import axios from '@/api/axiosConfig'
 import { GetAgeByBrithday, formatData } from '@/utils/index'
 
 import MPagination from '@/components/MPagination/index.vue'
