@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-31 22:54:28
  * @LastEditors: Lukun
- * @LastEditTime: 2020-05-08 14:54:53
+ * @LastEditTime: 2020-05-14 14:42:07
  */
 // import axios from '../axios'
 import axios from '../axiosConfig'
@@ -74,6 +74,13 @@ export default {
   getExpressDetailJDForAPP(params) {
     return axios.get(
       `/api/o/v1/express/getExpressDetailJDForAPP?expressNo=${params}`
+    )
+  },
+  // 物流上传
+  expressUpload(params) {
+    return axios.post(
+      `/api/o/v1/express/importExpressListNew?operatorId=${params.operatorId}`,
+      params
     )
   }
   /**

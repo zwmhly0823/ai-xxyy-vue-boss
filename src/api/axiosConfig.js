@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-03-17 11:50:18
  * @LastEditors: Lukun
- * @LastEditTime: 2020-04-14 15:09:55
+ * @LastEditTime: 2020-05-14 14:02:05
  */
 import axios from './axios'
 import { getToken } from '@/utils/auth'
@@ -87,7 +87,7 @@ export default {
       return new Promise((resolve, reject) => {
         axios
           .post(url, params, {
-            headers: this.getHeaders()
+            headers: params.headers ? params.headers : this.getHeaders()
           })
           .then((res) => {
             if (res.status === 500) {
@@ -124,7 +124,7 @@ export default {
     }
   },
   getHeaders() {
-    const token = getToken() || 'authorization-bear'
+    const token = getToken() || ''
     const headers = {
       'Content-Type': 'application/json;charset=UTF-8'
     }

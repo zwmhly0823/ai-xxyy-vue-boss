@@ -14,7 +14,7 @@
 </template>
 
 <script>
-import axios from '@/api/axios'
+import axios from '@/api/axiosConfig'
 import { mapState } from 'vuex'
 import { isToss } from '@/utils/index'
 export default {
