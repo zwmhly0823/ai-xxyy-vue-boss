@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-05-06 16:33:15
  * @LastEditors: panjian
- * @LastEditTime: 2020-05-12 20:43:31
+ * @LastEditTime: 2020-05-14 15:27:30
  -->
 <template>
   <div class="channelAdd-box">
@@ -280,6 +280,11 @@ export default {
         this.totalElements = res.data.ChannelDetailStatisticsPage.totalElements
         const _data = res.data.ChannelDetailStatisticsPage.content
         _data.forEach((data) => {
+          // `http://${row.short_er_code}`
+          if (data.short_er_code) {
+            data.short_er_code = `http://${data.short_er_code}`
+          }
+
           // if (data.status === 0) {
           //   data.status = '停用'
           // } else {
