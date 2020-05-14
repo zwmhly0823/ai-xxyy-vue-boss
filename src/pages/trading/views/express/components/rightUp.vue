@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-27 19:04:54
  * @LastEditors: Lukun
- * @LastEditTime: 2020-05-06 21:55:24
+ * @LastEditTime: 2020-05-14 15:11:51
  -->
 <template>
   <div class="container">
@@ -111,7 +111,6 @@
 
 import { isToss, deepClone } from '@/utils/index'
 import MSearch from '@/components/MSearch/index.vue'
-import axios from 'axios'
 export default {
   props: ['dataExp'],
   components: {
@@ -143,6 +142,7 @@ export default {
   },
   created() {
     this.teacherId = isToss()
+
     this.operatorId =
       this.teacherId || JSON.parse(localStorage.getItem('staff')).id
     this.expressStatus = '0,1,2,3,6'
@@ -172,11 +172,9 @@ export default {
       const file = params.file
       formdata.append('file', file)
       this.uploading = true
-      axios
-        .post(
-          `/api/o/v1/express/importExpressListNew?operatorId=${this.operatorId}`,
-          formdata
-        )
+      Object.assign(formdata, { operatorId: this.operatorId })
+
+      this.$http.Express.expressUpload(formdata)
         .then((res) => {
           this.$refs.upload.clearFiles()
           this.uploading = false
@@ -198,9 +196,7 @@ export default {
       }, 2000)
     },
 
-    handleRemove(file) {
-      console.log(axios, '手动移除上传文件', file)
-    },
+    handleRemove(file) {},
     handlePreview(file) {
       console.log('手动移除传文件', file)
     },
@@ -313,14 +309,7 @@ export default {
         query,
         sort
       }
-      // axios
-      //   .post(`/data/search/m1/v1/search/common/export`, params)
-      axios({
-        method: 'POST',
-        url: '/data/search/m1/v1/search/common/export',
-        responseType: 'blob',
-        params
-      }).then((res) => {
+      this.$http.DownloadExcel.exportExpress(params).then((res) => {
         this.downloadFn(res, '物流下载')
       })
     },
