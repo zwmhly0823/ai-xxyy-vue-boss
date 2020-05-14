@@ -21,7 +21,12 @@
                   )"
                   :key="index"
                 >
-                  <div class="title">{{ item }}</div>
+                  <div
+                    class="title"
+                    v-if="scope.row.reviewDataList[item] !== undefined"
+                  >
+                    {{ item }}
+                  </div>
                   <div
                     v-for="(_item, _index) of scope.row.reviewDataList[item]"
                     :key="_index"
@@ -52,7 +57,10 @@
                     ref="audioRef"
                   ></audio>
                 </div>
-                <el-button type="primary" @click="generateSpeech(scope.row)"
+                <el-button
+                  type="primary"
+                  :disabled="!scope.row.mp3Url"
+                  @click="generateSpeech(scope.row)"
                   >发送</el-button
                 >
               </div>
@@ -197,13 +205,20 @@ export default {
       const listItem = this.list[listIndex]
       const keysItem = Object.keys(this.list[listIndex].reviewDataList)
       const idx = listItem.reviewDataList
+      const ownArr = Object.values(idx)
+      const ownLength = []
       const voices = {
         voices: row.taskSound
+      }
+      for (const o of ownArr) {
+        if (o) {
+          ownLength.push(o)
+        }
       }
       const arr = []
       for (let i = 0; i < keysItem.length; i++) {
         const _arr = idx[keysItem[i]]
-        if (_arr.length) {
+        if (_arr && _arr.length) {
           for (const _item of _arr) {
             if (_item.flag) {
               arr.push(_item.flag)
@@ -211,7 +226,7 @@ export default {
           }
         }
       }
-      if (arr.length < 5) {
+      if (arr.length < ownLength.length) {
         this.$message({
           message: '请选择评分！',
           type: 'warning'
@@ -261,7 +276,6 @@ export default {
             location.reload()
           }, 2000)
         }
-        console.log('res', res)
       } catch (error) {
         console.log(error)
       }
