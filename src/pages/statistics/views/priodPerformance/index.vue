@@ -288,13 +288,6 @@ export default {
       // 默认降序
       conversionStatus: 0,
       amountStatus: 0,
-      periodStatus: {
-        '0': '待开始',
-        '1': '招生中',
-        '2': '待开课',
-        '3': '上课中',
-        '4': '已结课'
-      },
       priodTabs: [],
       priodTabsEnd: [],
       flags: {
@@ -723,9 +716,9 @@ export default {
       border: 0;
     }
   }
-  .orderStyle {
-    // padding-bottom: 45px;
-  }
+  // .orderStyle {
+  //   padding-bottom: 45px;
+  // }
   .editStyle {
     color: #0401ff;
     cursor: pointer;

@@ -1440,10 +1440,10 @@ export default {
       border: 0;
     }
   }
-  .orderStyle {
-    // padding-bottom: 45px;
-    // height: 200px;
-  }
+  // .orderStyle {
+  //   padding-bottom: 45px;
+  //   height: 200px;
+  // }
   .editStyle {
     color: #0401ff;
     cursor: pointer;
