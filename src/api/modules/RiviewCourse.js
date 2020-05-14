@@ -28,7 +28,7 @@ export default {
    * @params reviewVoice 传入实体
    * */
   audioIsUse(reviewVoice) {
-    return axios.post(`/api/b/v1/reviewVoice/updateReviewVoice`, reviewVoice)
+    return axios.get(`/api/b/v1/reviewVoice/updateReviewVoice`, reviewVoice)
   },
   /**
    * 获取课程
