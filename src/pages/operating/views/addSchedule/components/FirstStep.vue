@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-15 20:35:57
  * @LastEditors: Shentong
- * @LastEditTime: 2020-04-22 21:33:54
+ * @LastEditTime: 2020-04-20 15:35:21
  -->
 <template>
   <div class="first-step">
@@ -89,19 +89,11 @@
                 label=""
                 :inline="true"
                 :prop="`limit_${index}`"
-                :rules="[
-                  {
-                    required: true,
-                    message: '不能为空',
-                    trigger: 'blur'
-                  },
-                  {
-                    type: 'number',
-                    transform: (value) => Number(value),
-                    message: '必须为数字',
-                    trigger: 'blur'
-                  }
-                ]"
+                :rules="{
+                  required: true,
+                  message: '不能为空',
+                  trigger: 'blur'
+                }"
               >
                 <el-input
                   v-model="formInfo[`limit_${index}`]"
@@ -114,19 +106,11 @@
               <el-form-item
                 label=""
                 :prop="`fakeLimit_${index}`"
-                :rules="[
-                  {
-                    required: true,
-                    message: '不能为空',
-                    trigger: 'blur'
-                  },
-                  {
-                    type: 'number',
-                    transform: (value) => Number(value),
-                    message: '必须为数字',
-                    trigger: 'blur'
-                  }
-                ]"
+                :rules="{
+                  required: true,
+                  message: '不能为空',
+                  trigger: 'blur'
+                }"
               >
                 <el-input
                   v-model="formInfo[`fakeLimit_${index}`]"
@@ -139,19 +123,11 @@
               <el-form-item
                 label=""
                 :prop="`fakeSales_${index}`"
-                :rules="[
-                  {
-                    required: true,
-                    message: '不能为空',
-                    trigger: 'blur'
-                  },
-                  {
-                    type: 'number',
-                    transform: (value) => Number(value),
-                    message: '必须为数字',
-                    trigger: 'blur'
-                  }
-                ]"
+                :rules="{
+                  required: true,
+                  message: '不能为空',
+                  trigger: 'blur'
+                }"
                 ><el-input
                   v-model="formInfo[`fakeSales_${index}`]"
                   size="small"
@@ -331,7 +307,7 @@ export default {
 
         const m = month <= 9 ? '0' + month : month
         const d = day <= 9 ? '0' + day : day
-        return y + '/' + m + '/' + d
+        return y + '-' + m + '-' + d
       } else {
         return ''
       }
@@ -394,7 +370,6 @@ export default {
         type: this.courseType,
         period: +this.period || ''
       })
-
       return sendFrom
     },
     nextStep() {
@@ -414,6 +389,7 @@ export default {
           // 掉接口 TODO:
           this.addScheduleFirstStep(sendFrom, cb)
         } else {
+          console.log('error submit!!')
           return false
         }
       })

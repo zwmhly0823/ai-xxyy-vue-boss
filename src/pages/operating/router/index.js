@@ -55,6 +55,24 @@ const routes = [
       keepAlive: false
     },
     component: () => import('../views/scheduleDetail/index.vue')
+  },
+  {
+    path: '/reviewManagement',
+    name: 'reviewManagement',
+    meta: {
+      title: '点评管理',
+      keepAlive: false
+    },
+    component: () => import('../views/reviewManagement/index.vue')
+  },
+  {
+    path: '/audioAdd',
+    name: 'audioAdd',
+    meta: {
+      title: '点评管理',
+      keepAlive: false
+    },
+    component: () => import('../views/reviewManagement/components/audioAdd.vue')
   }
 ]
 
