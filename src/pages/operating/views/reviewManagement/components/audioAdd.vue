@@ -4,7 +4,7 @@
  * @Author: songyanan
  * @Date: 2020-05-11 14:30:00
  * @LastEditors: songyanan
- * @LastEditTime: 2020-05-15 15:29:20
+ * @LastEditTime: 2020-05-15 15:50:10
  */
  -->
 <template>
@@ -230,7 +230,7 @@ export default {
       const params = {
         courseType: type === 0 ? 'EXPERIENCE' : 'SYSTEM',
         courseStrait: courseDifficulty[difficulty],
-        courseLevel: courseDifficulty[level],
+        courseLevel: courseLevel[level],
         courseUnit: courseUnit[unit],
         courseLesson: courseLesson[lesson],
         courseId: courseId,
