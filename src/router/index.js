@@ -125,6 +125,14 @@ const routes = [
           title: '渠道管理',
           module: 'operating'
         }
+      },
+      {
+        path: '/reviewManagement',
+        name: 'reviewManagement',
+        meta: {
+          title: '点评管理',
+          module: 'operating'
+        }
       }
     ]
   },

@@ -320,14 +320,6 @@ export default {
           label: '京东云仓'
         },
         {
-          value1: '3',
-          label: '百世物流'
-        },
-        {
-          value1: '4',
-          label: '京东快递'
-        },
-        {
           value1: '0',
           label: '不指定承运商'
         }
@@ -927,5 +919,10 @@ export default {
   .showSelect {
     display: none;
   }
+}
+</style>
+<style lang="scss">
+.el-table .cell {
+  padding-left: 10px;
 }
 </style>
