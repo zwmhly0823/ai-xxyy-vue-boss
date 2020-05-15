@@ -4,7 +4,7 @@
  * @Author: songyanan
  * @Date: 2020-05-11 10:46:18
  * @LastEditors: songyanan
- * @LastEditTime: 2020-05-15 16:30:40
+ * @LastEditTime: 2020-05-15 20:20:40
  */
  -->
 <template>
@@ -147,6 +147,7 @@ export default {
 
 <style lang="scss" scoped>
 .audio-container {
+  margin: 0 0 30px 0;
   &-button {
     width: 100%;
     height: 60px;

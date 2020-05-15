@@ -4,7 +4,7 @@
  * @Author: songyanan
  * @Date: 2020-05-11 14:30:00
  * @LastEditors: songyanan
- * @LastEditTime: 2020-05-15 18:07:10
+ * @LastEditTime: 2020-05-15 20:24:10
  */
  -->
 <template>
@@ -12,7 +12,12 @@
     <el-table :loading="loading" :data="list">
       <el-table-column label="作品" width="300" align="center">
         <template slot-scope="scope">
-          <img class="works-img" :src="scope.row.taskImage" draggable="false" />
+          <img
+            class="works-img"
+            v-lazy="scope.row.taskImage"
+            lazy="loading"
+            draggable="false"
+          />
         </template>
       </el-table-column>
       <el-table-column label="点评" width="180" align="center">
