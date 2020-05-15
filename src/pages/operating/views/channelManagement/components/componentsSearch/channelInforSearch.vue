@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-24 18:50:54
  * @LastEditors: panjian
- * @LastEditTime: 2020-05-08 21:00:56
+ * @LastEditTime: 2020-05-15 15:55:12
  -->
 <template>
   <div class="search-item small threeSelect">
@@ -26,7 +26,7 @@
         multiple: true,
         value: 'id',
         label: 'channel_outer_name',
-        emitPath: false,
+        emitPath: true,
         checkStrictly: false
       }"
       :show-all-levels="true"
