@@ -3,7 +3,7 @@
  * @Author: songyanan
  * @Date: 2020-05-11 10:10:00
  * @LastEditors: songyanan
- * @LastEditTime: 2020-05-11 10:12:00
+ * @LastEditTime: 2020-05-15 15:30:00
  */
 export const courseType = ['体验课', '系统课']
 export const courseDifficulty = ['S1', 'S2', 'S3', 'S4', 'S5']
@@ -29,7 +29,7 @@ export const courseLesson = [
   'Lesson4',
   'Lesson5'
 ]
-export const reviewDegree = ['开场语', '构图', '造型', '色彩', '创意', '结尾']
+export const reviewDegree = ['构图', '造型', '色彩', '创意', '结尾']
 export const reviewRate = ['优', '良', '一般', '无基础']
 export const scoreObj = {
   EXCELLENT: '优',

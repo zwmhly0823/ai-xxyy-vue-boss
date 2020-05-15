@@ -4,7 +4,7 @@
  * @Author: songyanan
  * @Date: 2020-05-11 10:46:18
  * @LastEditors: songyanan
- * @LastEditTime: 2020-05-11 10:48:18
+ * @LastEditTime: 2020-05-15 15:25:00
  */
  -->
 <template>
@@ -92,7 +92,7 @@ export default {
       totalPages: 0,
       query: {
         size: 10,
-        pageNum: 0
+        pageNum: 1
       },
       scoreObj: scoreObj
     }
