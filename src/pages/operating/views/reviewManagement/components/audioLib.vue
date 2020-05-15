@@ -4,7 +4,7 @@
  * @Author: songyanan
  * @Date: 2020-05-11 10:46:18
  * @LastEditors: songyanan
- * @LastEditTime: 2020-05-15 15:25:00
+ * @LastEditTime: 2020-05-15 15:50:40
  */
  -->
 <template>
@@ -18,7 +18,7 @@
           <div>{{ scope.row.id }}</div>
         </template>
       </el-table-column>
-      <el-table-column label="课程" width="200" align="center">
+      <el-table-column label="课程" width="240" align="center">
         <template slot-scope="scope">
           <span>{{
             scope.row.courseType === 'SYSTEM' ? '系统课' : '体验课'
@@ -27,6 +27,7 @@
             scope.row.courseStrait +
               scope.row.courseLevel +
               scope.row.courseUnit +
+              scope.row.courseLesson +
               scope.row.courseName
           }}</span>
         </template>
@@ -123,7 +124,7 @@ export default {
     },
     async handleItem(type, id) {
       const params = {
-        opreation: type,
+        opreation: type === 'ENABLE' ? 'DISABLE' : 'ENABLE',
         id: id
       }
       try {
