@@ -4,9 +4,10 @@
  * @Author: Shentong
  * @Date: 2020-03-16 19:46:39
  * @LastEditors: Shentong
- * @LastEditTime: 2020-03-17 18:49:23
+ * @LastEditTime: 2020-05-15 23:07:58
  */
 import axios from '../axiosConfig'
+import newAxios from '../axios'
 
 export default {
   /**
@@ -14,7 +15,8 @@ export default {
    *
    */
   getCodeByPhone(params) {
-    return axios.post(`/api/b/v1/staff/sendCode?mobile=${params.mobile}`)
+    // return axios.post(`/api/b/v1/staff/sendCode?mobile=${params.mobile}`)
+    return newAxios.post(`/api/b/v1/staff/sendCode?mobile=${params.mobile}`)
   },
   /**
    * 验证码登录
