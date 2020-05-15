@@ -20,7 +20,7 @@
       <el-table-column label="点评分类" align="center" width="180">
         <template slot-scope="scope">
           <div v-for="(item, index) in scope.row.taskComments" :key="index">
-            {{ item.type === '0' ? '人工点评' : '智能点评' }}
+            {{ item.type === 0 ? '人工点评' : '智能点评' }}
           </div>
         </template>
       </el-table-column>
@@ -72,7 +72,6 @@
 </template>
 
 <script>
-import { reviewDegree, reviewRate } from '@/common/data'
 import { timestamp } from '@/utils/index'
 export default {
   data() {
@@ -85,8 +84,6 @@ export default {
       },
       totalElements: 0,
       totalPages: 0,
-      reviewDegree: reviewDegree,
-      reviewRate: reviewRate,
       radio: '',
       timestamp: timestamp,
       loading: true
