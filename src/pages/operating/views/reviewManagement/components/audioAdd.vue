@@ -4,7 +4,7 @@
  * @Author: songyanan
  * @Date: 2020-05-11 14:30:00
  * @LastEditors: songyanan
- * @LastEditTime: 2020-05-15 15:50:10
+ * @LastEditTime: 2020-05-15 20:05:10
  */
  -->
 <template>
@@ -205,10 +205,6 @@ export default {
       } = this.form
       const { coursePayload, scoreObj } = this
       const fileUrl = this.audioList.join('')
-      const arr = Object.keys(this.form)
-      const check = arr.every((item, index) => {
-        return this.form[item] === null
-      })
       let courseName = null
       let score = null
       for (const item of coursePayload) {
@@ -221,11 +217,22 @@ export default {
           score = key
         }
       }
-      if (check) {
+      if (
+        type === null ||
+        difficulty === null ||
+        degree === null ||
+        level === null ||
+        unit === null ||
+        lesson === null ||
+        courseId === null ||
+        rate === null ||
+        !fileUrl
+      ) {
         this.$message({
           message: '选择项为空，暂时无法提交！',
           type: 'error'
         })
+        return false
       }
       const params = {
         courseType: type === 0 ? 'EXPERIENCE' : 'SYSTEM',

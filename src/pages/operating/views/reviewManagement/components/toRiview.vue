@@ -15,7 +15,8 @@
           <template slot-scope="scope">
             <img
               class="works-img"
-              :src="scope.row.taskImage"
+              v-lazy="scope.row.taskImage"
+              lazy="loading"
               draggable="false"
             />
           </template>
@@ -254,7 +255,6 @@ export default {
           }
         }
       }
-      console.log('arr', arr, '===', ownLength)
       if (arr.length < ownLength.length) {
         this.$message({
           message: '请选择评分！',
