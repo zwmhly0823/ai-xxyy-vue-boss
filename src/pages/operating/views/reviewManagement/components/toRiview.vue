@@ -4,7 +4,7 @@
  * @Author: songyanan
  * @Date: 2020-05-11 14:30:00
  * @LastEditors: songyanan
- * @LastEditTime: 2020-05-15 17:24:10
+ * @LastEditTime: 2020-05-15 18:06:10
  */
  -->
 <template>
@@ -150,7 +150,9 @@ export default {
       try {
         const res = await this.$http.RiviewCourse.getToView(number)
         if (res.code === 0) {
-          this.list = res.payload.content
+          this.list = res.payload.content.sort((a, b) => {
+            return Number.parseInt(b.ctime) - Number.parseInt(a.ctime)
+          })
           this.totalElements = Number.parseInt(res.payload.totalElements)
           this.totalPages = Number.parseInt(res.payload.totalPages)
           await res.payload.content.map((item, index) => {
