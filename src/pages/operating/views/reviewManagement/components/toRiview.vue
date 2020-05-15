@@ -1,3 +1,12 @@
+<!--
+/*
+ * @Descripttion:
+ * @Author: songyanan
+ * @Date: 2020-05-11 14:30:00
+ * @LastEditors: songyanan
+ * @LastEditTime: 2020-05-15 16:43:10
+ */
+ -->
 <template>
   <div class="container">
     <div v-if="!loading">
@@ -166,7 +175,7 @@ export default {
               if (item.id === key) {
                 const keys = reviewList[key]
                 const obj = {}
-                for (let i = 1; i < reviewDegree.length; i++) {
+                for (let i = 0; i < reviewDegree.length; i++) {
                   const current = reviewDegree[i]
                   obj[current] = keys[current]
                 }
