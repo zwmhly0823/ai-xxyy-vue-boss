@@ -4,7 +4,7 @@
  * @Author: songyanan
  * @Date: 2020-05-11 14:30:00
  * @LastEditors: songyanan
- * @LastEditTime: 2020-05-15 16:43:10
+ * @LastEditTime: 2020-05-15 17:24:10
  */
  -->
 <template>
@@ -224,14 +224,11 @@ export default {
       const listItem = this.list[listIndex]
       const keysItem = Object.keys(this.list[listIndex].reviewDataList)
       const idx = listItem.reviewDataList
-      const ownArr = Object.values(idx)
-      const ownLength = []
-      const voices = {
-        voices: row.taskSound
-      }
-      for (const o of ownArr) {
-        if (o) {
-          ownLength.push(o)
+      const ownArr = Object.values(idx).flat()
+      const fileUrl = []
+      for (const item of ownArr) {
+        if (item) {
+          fileUrl.push(item.fileUrl)
         }
       }
       const arr = []
@@ -245,19 +242,22 @@ export default {
           }
         }
       }
-      if (arr.length < ownLength.length) {
+      if (arr.length < ownArr.length) {
         this.$message({
           message: '请选择评分！',
           type: 'warning'
         })
         return false
       }
-      if (row.taskSound === '') {
+      if (fileUrl.join(',') === '') {
         this.$message({
           message: '老师正在努力录制~',
           type: 'warning'
         })
         return false
+      }
+      const voices = {
+        voices: fileUrl.join(',')
       }
       try {
         const res = await this.$http.RiviewCourse.syntheticSpeech(voices)
@@ -292,7 +292,7 @@ export default {
             type: 'success'
           })
           setTimeout(() => {
-            this.$router.push('/reviewManagement')
+            location.reload()
           }, 2000)
         }
       } catch (error) {
