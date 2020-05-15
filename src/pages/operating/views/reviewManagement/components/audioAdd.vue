@@ -4,7 +4,7 @@
  * @Author: songyanan
  * @Date: 2020-05-11 14:30:00
  * @LastEditors: songyanan
- * @LastEditTime: 2020-05-11 19:35:20
+ * @LastEditTime: 2020-05-15 15:50:10
  */
  -->
 <template>
@@ -60,12 +60,12 @@
           >
           </el-option>
         </el-select>
-        <el-select v-model="form.nowLesson" placeholder="请选择对应课程">
+        <el-select v-model="form.courseId" placeholder="请选择对应课程">
           <el-option
             v-for="(item, index) in coursePayload"
             :key="index"
             :label="item.title"
-            :value="item.startDate"
+            :value="item.id"
           >
           </el-option>
         </el-select>
@@ -85,7 +85,7 @@
             v-for="(item, index) in reviewRate"
             :key="index"
             :label="item"
-            :value="index"
+            :value="item"
           >
           </el-option>
         </el-select>
@@ -110,7 +110,8 @@ import {
   courseUnit,
   courseLesson,
   reviewDegree,
-  reviewRate
+  reviewRate,
+  scoreObj
 } from '@/common/data'
 import uploadFile from '@/utils/upload'
 export default {
@@ -124,13 +125,14 @@ export default {
       coursePayload: [],
       reviewDegree: reviewDegree,
       reviewRate: reviewRate,
+      scoreObj: scoreObj,
       form: {
         type: null,
         difficulty: null,
         level: null,
         unit: null,
         lesson: null,
-        nowLesson: null,
+        courseId: null,
         degree: null,
         rate: null
       },
@@ -153,19 +155,16 @@ export default {
           }${this.courseUnit[val.unit]}${this.courseLesson[val.lesson]}`
           this.loadCourseList(params)
         }
-        if (val.degree === 0) {
-          this.reviewRate = []
-          val.rate = null
-          return
-        }
-        this.reviewRate = reviewRate
+        // if (val.degree === 0) {
+        //   this.reviewRate = []
+        //   val.rate = null
+        //   return
+        // }
+        // this.reviewRate = reviewRate
       },
       deep: true,
       immediate: true
     }
-  },
-  mounted() {
-    // this.initData()
   },
   methods: {
     initData() {
@@ -201,14 +200,27 @@ export default {
         level,
         unit,
         lesson,
-        nowLesson,
+        courseId,
         rate
       } = this.form
+      const { coursePayload, scoreObj } = this
       const fileUrl = this.audioList.join('')
       const arr = Object.keys(this.form)
       const check = arr.every((item, index) => {
         return this.form[item] === null
       })
+      let courseName = null
+      let score = null
+      for (const item of coursePayload) {
+        if (item.id === courseId) {
+          courseName = item.title
+        }
+      }
+      for (const key in scoreObj) {
+        if (rate === scoreObj[key]) {
+          score = key
+        }
+      }
       if (check) {
         this.$message({
           message: '选择项为空，暂时无法提交！',
@@ -216,16 +228,17 @@ export default {
         })
       }
       const params = {
-        courseType: type,
-        courseStrait: difficulty,
-        courseLevel: level,
-        courseUnit: unit,
-        courseLesson: lesson,
-        courseName: nowLesson,
-        reviewDimension: degree,
-        score: rate,
+        courseType: type === 0 ? 'EXPERIENCE' : 'SYSTEM',
+        courseStrait: courseDifficulty[difficulty],
+        courseLevel: courseLevel[level],
+        courseUnit: courseUnit[unit],
+        courseLesson: courseLesson[lesson],
+        courseId: courseId,
+        courseName: courseName,
+        reviewDimension: reviewDegree[degree],
+        score: score,
         fileUrl: fileUrl,
-        opreation: 0
+        opreation: 'ENABLE'
       }
       try {
         const res = await this.$http.RiviewCourse.addRiviewInform(params)
@@ -238,7 +251,6 @@ export default {
             this.$router.push('/reviewManagement')
           }, 2000)
         }
-        console.log('res', res)
       } catch (error) {
         console.log(error)
       }

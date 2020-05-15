@@ -43,7 +43,7 @@
                   </div>
                 </div>
               </div>
-              <div class="bottom-container">
+              <div class="bottom-container" v-if="scope.row.reviewDataList">
                 <el-button
                   type="success"
                   @click="syntheticSpeech(scope.$index, scope.row)"
@@ -273,7 +273,7 @@ export default {
             type: 'success'
           })
           setTimeout(() => {
-            location.reload()
+            this.$router.push('/reviewManagement')
           }, 2000)
         }
       } catch (error) {
