@@ -5,14 +5,16 @@
  * @Author: songyanan
  * @Date: 2020-05-11 10:48:18
  * @LastEditors: songyanan
- * @LastEditTime: 2020-05-11 10:48:50
+ * @LastEditTime: 2020-05-11 17:45:30
  */
  -->
 <template>
   <div class="container">
     <el-tabs type="border-card" @tab-click="handleClick">
       <el-tab-pane label="待点评">
-        <ToRiview />
+        <div v-if="tabIndex === '0'">
+          <ToRiview />
+        </div>
       </el-tab-pane>
       <el-tab-pane label="已点评">
         <div v-if="tabIndex === '1'">

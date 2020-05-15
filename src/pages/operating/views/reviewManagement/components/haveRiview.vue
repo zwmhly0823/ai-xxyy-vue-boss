@@ -1,3 +1,12 @@
+<!--
+/*
+ * @Descripttion:
+ * @Author: songyanan
+ * @Date: 2020-05-11 14:30:00
+ * @LastEditors: songyanan
+ * @LastEditTime: 2020-05-15 18:07:10
+ */
+ -->
 <template>
   <div class="container">
     <el-table :loading="loading" :data="list">
@@ -98,7 +107,12 @@ export default {
         const res = await this.$http.RiviewCourse.getHaveRiview(number)
         if (res.code === 0) {
           this.loading = false
-          this.list = res.payload.content
+          this.list = res.payload.content.sort((a, b) => {
+            return (
+              Number.parseInt(b.taskComments[0].ctime) -
+              Number.parseInt(a.taskComments[0].ctime)
+            )
+          })
           this.totalElements = Number.parseInt(res.payload.totalElements)
           this.totalPages = Number.parseInt(res.payload.totalPages)
         }
