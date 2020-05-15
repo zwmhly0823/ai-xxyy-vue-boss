@@ -4,7 +4,7 @@
  * @Author: songyanan
  * @Date: 2020-05-11 14:30:00
  * @LastEditors: songyanan
- * @LastEditTime: 2020-05-15 18:06:10
+ * @LastEditTime: 2020-05-15 18:43:20
  */
  -->
 <template>
@@ -203,6 +203,9 @@ export default {
       return Object.keys(obj)
     },
     getObjValues(obj) {
+      if (obj === undefined) {
+        return false
+      }
       const values = Object.values(obj)
       const isShow = values.every((item, index) => {
         return item !== undefined
@@ -226,11 +229,18 @@ export default {
       const listItem = this.list[listIndex]
       const keysItem = Object.keys(this.list[listIndex].reviewDataList)
       const idx = listItem.reviewDataList
-      const ownArr = Object.values(idx).flat()
+      const ownArr = Object.values(idx)
+      const ownLength = []
+      const ownFils = Object.values(idx).flat()
       const fileUrl = []
       for (const item of ownArr) {
         if (item) {
-          fileUrl.push(item.fileUrl)
+          ownLength.push(item)
+        }
+      }
+      for (const file of ownFils) {
+        if (file) {
+          fileUrl.push(file.fileUrl)
         }
       }
       const arr = []
@@ -244,7 +254,8 @@ export default {
           }
         }
       }
-      if (arr.length < ownArr.length) {
+      console.log('arr', arr, '===', ownLength)
+      if (arr.length < ownLength.length) {
         this.$message({
           message: '请选择评分！',
           type: 'warning'
