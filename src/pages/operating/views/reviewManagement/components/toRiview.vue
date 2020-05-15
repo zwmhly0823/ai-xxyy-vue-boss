@@ -43,7 +43,10 @@
                   </div>
                 </div>
               </div>
-              <div class="bottom-container" v-if="scope.row.reviewDataList">
+              <div
+                class="bottom-container"
+                v-if="getObjValues(scope.row.reviewDataList)"
+              >
                 <el-button
                   type="success"
                   @click="syntheticSpeech(scope.$index, scope.row)"
@@ -187,6 +190,13 @@ export default {
         return false
       }
       return Object.keys(obj)
+    },
+    getObjValues(obj) {
+      const values = Object.values(obj)
+      const isShow = values.every((item, index) => {
+        return item !== undefined
+      })
+      return isShow
     },
     selectNow(listIndex, item, index) {
       const listItem = this.list[listIndex]
