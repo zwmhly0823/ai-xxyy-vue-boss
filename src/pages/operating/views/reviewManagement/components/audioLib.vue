@@ -4,7 +4,7 @@
  * @Author: songyanan
  * @Date: 2020-05-11 10:46:18
  * @LastEditors: songyanan
- * @LastEditTime: 2020-05-15 15:50:40
+ * @LastEditTime: 2020-05-15 16:30:40
  */
  -->
 <template>
@@ -110,7 +110,9 @@ export default {
         const res = await this.$http.RiviewCourse.getAudioList(number)
         if (res.code === 0) {
           this.loading = false
-          this.list = res.payload.content
+          this.list = res.payload.content.sort((a, b) => {
+            return Number.parseInt(b.id) - Number.parseInt(a.id)
+          })
           this.totalElements = Number.parseInt(res.payload.totalElements)
           this.totalPages = Number.parseInt(res.payload.totalPages)
         }
