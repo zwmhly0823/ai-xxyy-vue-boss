@@ -4,7 +4,6 @@ const { NODE_ENV } = process.env
 // TODO: 使用router
 const { getMenuText } = require('./src/utils/menuItems')
 const name = defaultSettings.title || '小熊美术BOSS' // page title
-const url = require('./urlConfig')
 
 let baseUrl = '/'
 if (process.env.BASE_URL === 'ghpageslive') {
@@ -90,7 +89,7 @@ module.exports = {
   devServer: {
     proxy: {
       '/api': {
-        target: url,
+        target: 'https://test.meixiu.mobi',
         changeOrigin: true,
         ws: true,
         secure: false,
