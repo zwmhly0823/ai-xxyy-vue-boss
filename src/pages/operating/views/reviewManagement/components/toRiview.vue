@@ -100,12 +100,11 @@
           width="180"
         >
         </el-table-column>
-        <el-table-column
-          props="teacherRealName"
-          label="辅导老师"
-          align="center"
-          width="180"
-        ></el-table-column>
+        <el-table-column label="辅导老师" align="center" width="180">
+          <template slot-scope="scope">
+            <div>{{ scope.row.teacherRealName }}</div>
+          </template>
+        </el-table-column>
         <el-table-column label="上传日期" align="center" width="180">
           <template slot-scope="scope">
             <div>{{ timestamp(scope.row.ctime, 2) }}</div>
