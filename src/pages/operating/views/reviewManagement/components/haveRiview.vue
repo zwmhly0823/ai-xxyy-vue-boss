@@ -35,7 +35,11 @@
       </el-table-column>
       <el-table-column label="点评分类" align="center" width="180">
         <template slot-scope="scope">
-          <div v-for="(item, index) in scope.row.taskComments" :key="index">
+          <div
+            v-for="(item, index) in scope.row.taskComments"
+            :key="index"
+            class="review-type"
+          >
             {{ item.type === 0 ? '人工点评' : '智能点评' }}
           </div>
         </template>
@@ -156,6 +160,9 @@ export default {
     border-radius: 100%;
     height: 47px;
     margin: 0 auto 20px;
+  }
+  .review-type {
+    margin: 0 0 20px 0;
   }
   .works-img {
     width: 200px;
