@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-15 20:35:57
  * @LastEditors: Shentong
- * @LastEditTime: 2020-04-22 11:50:58
+ * @LastEditTime: 2020-04-20 15:58:59
  -->
 <template>
   <div class="second-step">
@@ -153,7 +153,9 @@ export default {
     changeOrgDept(data) {
       this.department(data)
     },
-    handleChange(val) {},
+    handleChange(val) {
+      // console.log('transferVal', val)
+    },
     stepOperate(type) {
       if (!type) {
         this.$emit('listenStepStatus', type)

@@ -2,8 +2,8 @@
  * @Author: YangJiyong
  * @Email: yangjiyong@meishubao.com
  * @Date: 2020-03-21 11:58:33
- * @Last Modified by: YangJiyong
- * @Last Modified time: 2020-05-11 11:11:44
+ * @Last Modified by: chengweihua
+ * @Last Modified time: 2020-05-16 18:33:56
  * @Description: 班级
  */
 import axios from '../axiosConfig'

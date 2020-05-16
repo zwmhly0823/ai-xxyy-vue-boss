@@ -158,7 +158,6 @@ import _ from 'lodash'
 import MPagination from '@/components/MPagination/index.vue'
 import { formatData, isToss } from '@/utils/index.js'
 import ExpressDetail from '../../components/expressDetail'
-// import axios from '@/api/axiosConfig'
 export default {
   components: {
     MPagination,
@@ -360,26 +359,6 @@ export default {
             userIds.push(item.uid)
             // 下单时间格式化
             item.ctime = formatData(item.ctime, 's')
-            // 交易方式
-            if (item.regtype) {
-              let currency = {}
-              if (item.regtype === 4) {
-                item.regtype_text = '推荐有礼'
-                currency = { currency: '宝石' }
-                Object.assign(item, currency)
-                item.amount = item.gem_integral
-              } else if (item.regtype === 5) {
-                item.regtype_text = '小熊商城'
-                currency = { currency: '小熊币' }
-                Object.assign(item, currency)
-                item.amount = item.bear_integral
-              } else if (item.regtype === 6) {
-                item.regtype_text = '邀请有奖'
-                currency = { currency: '赠送' }
-                Object.assign(item, currency)
-                item.amount = 0
-              }
-            }
           })
           this.orderList = _data
           if (userIds.length > 0) this.getUserTrialTeam(userIds)

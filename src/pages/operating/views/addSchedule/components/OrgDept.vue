@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-13 16:53:27
  * @LastEditors: Shentong
- * @LastEditTime: 2020-04-22 20:32:42
+ * @LastEditTime: 2020-04-18 19:42:19
  -->
 <template>
   <div class="left-container" @mouseleave="outTools">
@@ -34,7 +34,6 @@
 </template>
 
 <script>
-// TODO: 优化 -> 程伟华
 import { sortByKey } from '@/utils/boss'
 export default {
   props: {
@@ -89,9 +88,12 @@ export default {
     outTools() {
       this.toolsCount = null
     },
-    defaultHandler() {}
+    defaultHandler() {
+      // console.log('哈哈')
+    }
   },
   created() {
+    console.log('orgdept created')
     this.$http.Teacher.getDepartmentTree(1).then((res) => {
       const arr = (res && res.payload) || []
       if (arr.length === 0) return arr

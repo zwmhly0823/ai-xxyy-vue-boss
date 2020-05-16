@@ -238,7 +238,7 @@
 
 <script>
 import MPagination from '@/components/MPagination/index.vue'
-import axios from '@/api/axios'
+import axios from '@/api/axiosConfig'
 import { isToss, formatData } from '@/utils/index'
 import { mapState } from 'vuex'
 import expressDetail from '../../components/expressDetail'
@@ -304,20 +304,20 @@ export default {
       checkParams: [],
       options: [
         {
-          value1: '2',
-          label: '中通云仓'
-        },
-        {
-          value1: '1',
-          label: '京东云仓'
+          value1: '4',
+          label: '京东快递'
         },
         {
           value1: '3',
           label: '百世物流'
         },
         {
-          value1: '4',
-          label: '京东快递'
+          value1: '2',
+          label: '中通云仓'
+        },
+        {
+          value1: '1',
+          label: '京东云仓'
         },
         {
           value1: '0',
@@ -919,5 +919,10 @@ export default {
   .showSelect {
     display: none;
   }
+}
+</style>
+<style lang="scss">
+.el-table .cell {
+  padding-left: 10px;
 }
 </style>

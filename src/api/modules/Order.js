@@ -3,8 +3,8 @@
  * @version:
  * @Author: shentong
  * @Date: 2020-03-13 16:20:48
- * @LastEditors: shentong
- * @LastEditTime: 2020-03-13 19:40:26
+ * @LastEditors: zhubaodong
+ * @LastEditTime: 2020-04-07 13:54:19
  */
 import axios from '../axiosConfig'
 
@@ -35,7 +35,6 @@ export default {
             product_name
             out_trade_no
             user{
-              username
               nickname
               mobile
               mobile_province
@@ -49,13 +48,6 @@ export default {
             }
             last_teacher_id
             department{
-              department{
-                id
-                pid
-                name
-              }
-            }
-            teacher_department{
               department{
                 id
                 pid

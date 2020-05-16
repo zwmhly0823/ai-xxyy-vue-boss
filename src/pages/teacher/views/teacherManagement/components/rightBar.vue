@@ -209,7 +209,6 @@
 
 <script>
 // import dayjs from 'dayjs'
-// import axios from '@/api/axios'
 // import { GetAgeByBrithday, formatData } from '@/utils/index'
 import { formatData } from '@/utils/index'
 import MSearch from '@/components/MSearch/index.vue'
