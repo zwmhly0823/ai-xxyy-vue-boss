@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-05-09 16:02:33
  * @LastEditors: panjian
- * @LastEditTime: 2020-05-13 11:41:16
+ * @LastEditTime: 2020-05-16 15:17:49
  */
 
 import JSZip from 'jszip'
@@ -16,8 +16,8 @@ export function downloadByBlob(url, name) {
   image.src = url
   image.onload = () => {
     const canvas = document.createElement('canvas')
-    canvas.width = image.width
-    canvas.height = image.height
+    canvas.width = 150
+    canvas.height = 150
     const ctx = canvas.getContext('2d')
     ctx.drawImage(image, 0, 0, image.width, image.height)
     canvas.toBlob((blob) => {
@@ -45,28 +45,35 @@ export function downImgAll(imgListName, imgUrlList) {
     // let imgNameList = ['图片1', '图片2', '图片3']
     const imgNameList = imgListName
     const arr = imgUrlList
+
     // let arr = ['./img1.png', './img2.png', './img3.png']
 
     for (let i = 0; i < arr.length; i++) {
       const image = new Image()
+      image.src = arr[i]
+      // console.log(arr[i].shortCode)
+
       // 解决跨域 Canvas 污染问题
       image.setAttribute('crossOrigin', 'anonymous')
       // const downLoadImg = function(url) {
-      image.onload = function() {
+      image.onload = async function() {
         const canvas = document.createElement('canvas')
-        canvas.width = image.width
-        canvas.height = image.height
+        canvas.width = 150
+        canvas.height = 150
 
         const context = canvas.getContext('2d')
         context.drawImage(image, 0, 0, image.width, image.height)
 
-        const url = canvas.toDataURL() // 得到图片的base64编码数据
+        const url = await canvas.toDataURL() // 得到图片的base64编码数据
+
         canvas.toDataURL('image/png')
         baseList.push(url.substring(22)) // 去掉base64编码前的 data:image/png;base64,
+
         if (baseList.length === arr.length && baseList.length > 0) {
           for (let k = 0; k < baseList.length; k++) {
             imgs.file(imgNameList[k] + '.png', baseList[k], { base64: true })
           }
+
           zip
             .generateAsync({ type: 'blob' })
             .then(function(content) {
@@ -80,7 +87,6 @@ export function downImgAll(imgListName, imgUrlList) {
         }
       }
       // image.onload = downLoadImg(arr[i])
-      image.src = arr[i]
     }
   })
 }
