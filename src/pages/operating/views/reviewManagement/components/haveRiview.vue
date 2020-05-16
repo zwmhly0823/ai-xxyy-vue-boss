@@ -154,6 +154,7 @@ export default {
 
 <style lang="scss" scoped>
 .container {
+  margin: 0 0 30px 0;
   .audio-container {
     overflow: hidden;
     width: 47px;
