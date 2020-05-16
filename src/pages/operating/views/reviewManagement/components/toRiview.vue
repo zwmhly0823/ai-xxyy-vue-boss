@@ -4,7 +4,7 @@
  * @Author: songyanan
  * @Date: 2020-05-11 14:30:00
  * @LastEditors: songyanan
- * @LastEditTime: 2020-05-15 18:43:20
+ * @LastEditTime: 2020-05-16 12:47:30
  */
  -->
 <template>
@@ -13,12 +13,14 @@
       <el-table :loading="loading" :data="list">
         <el-table-column label="作品" width="300" align="center">
           <template slot-scope="scope">
-            <img
+            <el-image
               class="works-img"
-              v-lazy="scope.row.taskImage"
-              lazy="loading"
-              draggable="false"
-            />
+              :src="scope.row.taskImage"
+              :lazy="true"
+              :preview-src-list="[scope.row.taskImage]"
+              :z-index="1001"
+            >
+            </el-image>
           </template>
         </el-table-column>
         <el-table-column label="点评" width="500" align="center">
