@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-05-06 16:33:15
  * @LastEditors: panjian
- * @LastEditTime: 2020-05-15 16:30:11
+ * @LastEditTime: 2020-05-16 19:02:58
  -->
 <template>
   <div class="channelAdd-box">
@@ -259,12 +259,22 @@ export default {
   methods: {
     // 获取渠道id
     getChannelOne() {
+      const arrOne = []
       this.$http.Operating.getChannelAndClass(17).then((res) => {
         const data = res.payload.channelList
-        data.forEach((res) => {
-          this.channelName.push(res.id)
+        data.forEach((item) => {
+          arrOne.push(item.id)
         })
-        this.getChannelDetailStatisticsPage()
+
+        this.$http.Operating.getChannelAndClass(36).then((res) => {
+          const arrTwo = []
+          const data = res.payload.channelList
+          data.forEach((item) => {
+            arrTwo.push(item.id)
+          })
+          this.getChannelDetailStatisticsPage()
+          this.channelName = arrOne.concat(arrTwo)
+        })
       })
     },
     // 列表请求
@@ -408,21 +418,24 @@ export default {
       const imgAll = this.tableData
       // const imgAll = this.imgList
       const imgUrlList = []
-      const imgListName = []
+      const imgListName = {}
       imgAll.forEach((res) => {
+        // res.short_er_code && (imgUrlList[res.id] = res.short_er_code)
+        // res.short_er_code &&
+        //   (imgListName[
+        //     res.id
+        //   ] = `${res.p_channel_class_name}-${res.channel_class_name}-${res.channel_inner_name}-${res.id}`)
         if (res.short_er_code) {
-          imgUrlList.push(res.short_er_code)
-          imgListName.push(
-            `${res.p_channel_class_name}-${res.channel_class_name}-${res.channel_inner_name}-${res.id}`
-          )
+          imgUrlList.push({ id: res.id, shortCode: res.short_er_code })
+          imgListName[
+            res.id
+          ] = `${res.p_channel_class_name}-${res.channel_class_name}-${res.channel_inner_name}-${res.id}`
         }
       })
       if (imgUrlList.length === 0) {
         this.downLoad = false
         return
       }
-      console.log(imgUrlList, imgListName)
-
       // imgAll.forEach((res) => {
       //   imgUrlList.push(res.img)
       //   imgListName.push(`渠道${res.channelId}`)

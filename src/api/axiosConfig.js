@@ -3,8 +3,8 @@
  * @version:
  * @Author: Shentong
  * @Date: 2020-03-17 11:50:18
- * @LastEditors: Lukun
- * @LastEditTime: 2020-05-14 14:02:05
+ * @LastEditors: Shentong
+ * @LastEditTime: 2020-05-16 13:34:27
  */
 import axios from './axios'
 import { getToken } from '@/utils/auth'
@@ -87,7 +87,8 @@ export default {
       return new Promise((resolve, reject) => {
         axios
           .post(url, params, {
-            headers: params.headers ? params.headers : this.getHeaders()
+            headers:
+              params && params.headers ? params.headers : this.getHeaders()
           })
           .then((res) => {
             if (res.status === 500) {

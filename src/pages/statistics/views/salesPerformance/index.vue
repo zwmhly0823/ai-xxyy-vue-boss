@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-04-02 15:35:27
  * @LastEditors: Shentong
- * @LastEditTime: 2020-05-14 17:03:45
+ * @LastEditTime: 2020-05-14 21:11:22
  -->
 <template>
   <el-row type="flex" class="app-main height schedule-container">
@@ -175,10 +175,10 @@
               <!-- TODO: -->
               <el-tab-pane label="参课统计" name="attendClass"> </el-tab-pane>
               <el-tab-pane label="完课统计" name="finishClass"> </el-tab-pane>
-              <el-tab-pane label="上传作品统计" name="uploadWorks">
+              <!-- <el-tab-pane label="上传作品统计" name="uploadWorks">
               </el-tab-pane>
               <el-tab-pane label="老师点评统计" name="teacherComments">
-              </el-tab-pane>
+              </el-tab-pane> -->
             </el-tabs>
           </div>
           <div class="tableInner" ref="tableInner"></div>
