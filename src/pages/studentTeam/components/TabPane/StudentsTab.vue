@@ -419,6 +419,7 @@ export default {
     // 点击批量发放优惠卷
     batchBtn() {
       this.$refs.couponPopover.issueCoupons = true
+      this.$refs.couponPopover.couponsTime = ''
     },
     // 点击分页
     handleSizeChange(val) {
