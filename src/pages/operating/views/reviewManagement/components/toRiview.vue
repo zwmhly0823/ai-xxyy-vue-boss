@@ -240,7 +240,7 @@ export default {
         }
       }
       for (const file of ownFils) {
-        if (file) {
+        if (file.flag) {
           fileUrl.push(file.fileUrl)
         }
       }
