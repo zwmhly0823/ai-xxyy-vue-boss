@@ -325,6 +325,7 @@ export default {
 
 <style lang="scss" scoped>
 .container {
+  margin: 0 0 30px 0;
   .review-container {
     .top-container {
       display: flex;
