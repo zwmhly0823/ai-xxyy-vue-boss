@@ -4,7 +4,7 @@
  * @Author: songyanan
  * @Date: 2020-05-11 14:30:00
  * @LastEditors: songyanan
- * @LastEditTime: 2020-05-15 20:24:10
+ * @LastEditTime: 2020-05-16 12:44:20
  */
  -->
 <template>
@@ -12,22 +12,24 @@
     <el-table :loading="loading" :data="list">
       <el-table-column label="作品" width="300" align="center">
         <template slot-scope="scope">
-          <img
+          <el-image
             class="works-img"
-            v-lazy="scope.row.taskImage"
-            lazy="loading"
-            draggable="false"
-          />
+            :src="scope.row.taskImage"
+            :lazy="true"
+            :preview-src-list="[scope.row.taskImage]"
+            :z-index="1001"
+          >
+          </el-image>
         </template>
       </el-table-column>
       <el-table-column label="点评" width="180" align="center">
         <template slot-scope="scope">
-          <div class="audio-container">
-            <audio
-              :src="scope.row.taskSound"
-              style="height: 47px"
-              controls
-            ></audio>
+          <div
+            class="audio-container"
+            v-for="(audio, idx) in soundArr(scope.row.taskComments)"
+            :key="idx"
+          >
+            <audio :src="audio" style="height: 47px" controls></audio>
           </div>
         </template>
       </el-table-column>
@@ -125,6 +127,16 @@ export default {
         console.log(error)
       }
     },
+    soundArr(soundComments) {
+      if (soundComments.lenght === 0) return
+      const arr = []
+      for (let i = 0; i < soundComments.length; i++) {
+        if (i < 5) {
+          arr.push(soundComments[i].soundComment)
+        }
+      }
+      return arr
+    },
     pageChange_handler(page) {
       this.query.pageNum = page
       this.initList(page)
@@ -143,7 +155,7 @@ export default {
     width: 47px;
     border-radius: 100%;
     height: 47px;
-    margin: 0 auto;
+    margin: 0 auto 20px;
   }
   .works-img {
     width: 200px;
