@@ -142,12 +142,13 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="物流创建·揽收·签收" width="200">
+      <el-table-column label="物流创建·揽收·签收·审核" width="200">
         <template slot-scope="scope">
           <div class="sign">
             <div>创建:{{ scope.row.crtime }}</div>
             <div>揽收:{{ scope.row.detime }}</div>
             <div>签收:{{ scope.row.sgtime }}</div>
+            <div>审核:{{ scope.row.cutime }}</div>
           </div>
         </template>
       </el-table-column>
@@ -237,7 +238,7 @@
 
 <script>
 import MPagination from '@/components/MPagination/index.vue'
-import axios from '@/api/axios'
+import axios from '@/api/axiosConfig'
 import { isToss, formatData } from '@/utils/index'
 import { mapState } from 'vuex'
 import expressDetail from '../../components/expressDetail'
@@ -302,6 +303,14 @@ export default {
       checkBatchParams: [],
       checkParams: [],
       options: [
+        {
+          value1: '4',
+          label: '京东快递'
+        },
+        {
+          value1: '3',
+          label: '百世物流'
+        },
         {
           value1: '2',
           label: '中通云仓'
@@ -603,6 +612,9 @@ export default {
           if (item.terms.level) {
             timeType.level = `${item.terms.level}`
           }
+          if (item.terms.pay_channel) {
+            timeType.pay_channel = `${item.terms.pay_channel}`
+          }
         }
         if (item.range) {
           const { range } = item
@@ -673,6 +685,8 @@ export default {
               express_company
               signing_time
               receipt_name
+              center_utime
+              center_ctime
               receipt_tel
               express_nu
               level
@@ -686,6 +700,7 @@ export default {
               last_teacher_id
               pay_teacher_id
               regtype
+              pay_channel
               user {
                 id
                 birthday
@@ -711,6 +726,11 @@ export default {
               item.uptime = formatData(+item.utime, 's')
               item.sgtime = formatData(+item.signing_time, 's')
               item.buytime = formatData(+item.buy_time, 's')
+              if (timeType.express_status === '1') {
+                item.cutime = formatData(+item.center_ctime, 's')
+              } else {
+                item.cutime = formatData(+item.center_utime, 's')
+              }
               // 套餐类型 regtype 1 -->0  regtype 2,3 -->1
               switch (+item.regtype) {
                 case 1:
@@ -899,5 +919,10 @@ export default {
   .showSelect {
     display: none;
   }
+}
+</style>
+<style lang="scss">
+.el-table .cell {
+  padding-left: 10px;
 }
 </style>

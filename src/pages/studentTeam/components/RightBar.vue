@@ -3,8 +3,8 @@
  * @version:
  * @Author: zhubaodong
  * @Date: 2020-03-13 16:53:41
- * @LastEditors: zhubaodong
- * @LastEditTime: 2020-05-06 21:03:01
+ * @LastEditors: Shentong
+ * @LastEditTime: 2020-05-13 21:39:14
  -->
 <template>
   <div class="right-container">
@@ -234,7 +234,7 @@
 
 <script>
 import TabBar from './TabPane/TabBar.vue'
-import axios from '@/api/axios'
+import axios from '@/api/axiosConfig'
 import dayjs from 'dayjs'
 import { isToss } from '@/utils/index'
 export default {
@@ -265,10 +265,10 @@ export default {
     }
   },
   mounted() {
-    document.onmousedown = () => {
-      this.autoAddFriends = false
-      this.autoAddFriendsIn = false
-    }
+    // document.onmousedown = () => {
+    //   this.autoAddFriends = false
+    //   this.autoAddFriendsIn = false
+    // }
   },
   watch: {
     classId(vals) {
@@ -339,8 +339,8 @@ export default {
       const queryParams = `[{id:${data}}]`
       axios
         .get('/graphql/getClassTeacher', {
-          params: {
-            query: `{
+          // params: {
+          query: `{
             detail (query: "${queryParams}"){
               id
               team_name
@@ -375,7 +375,7 @@ export default {
                 }
               }
             }`
-          }
+          // }
         })
         .then((res) => {
           console.log(res.data.detail.team_state, 'res.data.detail.team_state')
@@ -428,11 +428,11 @@ export default {
 
           // this.classMessage2 = res.dataformatEndDay
         })
-      this.$http.StudentTerm.getStudentTeamById({
-        teamId: this.classId.classId.id || ''
-      }).then((res) => {
-        this.switchState = res.payload.switchState
-      })
+      // this.$http.StudentTerm.getStudentTeamById({
+      //   teamId: this.classId.classId.id || ''
+      // }).then((res) => {
+      //   this.switchState = res.payload.switchState
+      // })
     }
   }
 }

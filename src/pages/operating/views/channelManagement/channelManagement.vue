@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-04-25 12:09:03
  * @LastEditors: panjian
- * @LastEditTime: 2020-05-06 20:22:29
+ * @LastEditTime: 2020-05-13 10:53:23
  -->
 <template>
   <div>
@@ -13,10 +13,10 @@
         <el-tab-pane label="渠道查询" name="channelQuery">
           <channel-search :tabIndex="tabIndex" />
         </el-tab-pane>
-        <!-- <el-tab-pane label="添加渠道" name="channleInfo">
-          <channel-add />
+        <el-tab-pane label="渠道信息管理" name="channleInfo">
+          <channel-information :tabIndex="tabIndex" />
         </el-tab-pane>
-        <el-tab-pane label="渠道订单信息导入" name="channleUpload">
+        <!-- <el-tab-pane label="渠道订单导入" name="channleUpload">
           <channel-upload />
         </el-tab-pane> -->
       </el-tabs>
@@ -26,12 +26,12 @@
 
 <script>
 import channelSearch from './components/channelSearch'
-// import channelAdd from './components/channelAdd'
+import channelInformation from './components/channelInformation'
 // import channelUpload from './components/channelUpload'
 export default {
   components: {
-    channelSearch
-    // channelAdd,
+    channelSearch,
+    channelInformation
     // channelUpload
   },
   data() {
