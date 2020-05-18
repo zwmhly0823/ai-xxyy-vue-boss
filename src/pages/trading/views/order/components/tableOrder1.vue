@@ -2,10 +2,9 @@
 <template>
   <div class="title-box">
     <el-table :data="orderList">
-      <el-table-column label="用户信息" prop="user" min-width="120" fixed>
+      <el-table-column label="用户信息" prop="user" min-width="180" fixed>
         <template slot-scope="scope">
-          <p>{{ scope.row.user ? scope.row.user.username || '-' : '-' }}</p>
-          <p>{{ scope.row.user ? scope.row.user.mobile || '-' : '-' }}</p>
+          <user :user="scope.row.user" />
         </template>
       </el-table-column>
       <el-table-column label="归属地" prop="QCellCore" min-width="120">
@@ -158,10 +157,12 @@ import _ from 'lodash'
 import MPagination from '@/components/MPagination/index.vue'
 import { formatData, isToss } from '@/utils/index.js'
 import ExpressDetail from '../../components/expressDetail'
+import User from '../../components/User.vue'
 export default {
   components: {
     MPagination,
-    ExpressDetail
+    ExpressDetail,
+    User
   },
   props: {
     // 商品主题
