@@ -38,5 +38,6 @@ export default Object.assign(
   { Operating },
   { Statistics },
   { DownloadExcel },
-  { RiviewCourse }
+  { RiviewCourse },
+  { DownloadExcel }
 )
