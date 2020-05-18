@@ -88,7 +88,7 @@ import { scoreObj } from '@/common/data'
 export default {
   data() {
     return {
-      number: 0,
+      number: 1,
       loading: true,
       list: [],
       totalElements: 0,
