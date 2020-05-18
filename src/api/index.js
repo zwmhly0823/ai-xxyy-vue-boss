@@ -3,8 +3,8 @@
  * @version:
  * @Author: shentong
  * @Date: 2020-03-13 14:38:28
- * @LastEditors: Lukun
- * @LastEditTime: 2020-05-14 14:40:13
+ * @LastEditors: liukun
+ * @LastEditTime: 2020-05-18 17:25:55
  */
 import Login from './modules/Login'
 import User from './modules/User' // 用户接口
@@ -18,6 +18,8 @@ import Product from './modules/Product' // 产品相关接口
 import Teacher from './modules/Teacher' // 老师模块
 import Statistics from './modules/Statistics' // 统计模块
 import DownloadExcel from './modules/DownloadExcel' // 统计模块
+import Backend from './modules/Backend' // 后台相关接口
+import RefundApproval from './modules/refundApproval' // 退款申请表单
 
 import Weixin from './modules/Weixin' // 微信graphql接口
 import Operating from './modules/Operating' // 运营中心
@@ -36,5 +38,7 @@ export default Object.assign(
   { Weixin },
   { Operating },
   { Statistics },
-  { DownloadExcel }
+  { DownloadExcel },
+  { Backend },
+  { RefundApproval }
 )

@@ -41,6 +41,11 @@ const menuItems = [
     isShow: true
   },
   {
+    link: 'approval',
+    text: '审批中心',
+    isShow: true
+  },
+  {
     link: 'dashboard',
     text: 'Dashboard',
     isShow: false
