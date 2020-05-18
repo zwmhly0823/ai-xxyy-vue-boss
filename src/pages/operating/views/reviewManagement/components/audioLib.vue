@@ -112,9 +112,7 @@ export default {
         const res = await this.$http.RiviewCourse.getAudioList(number)
         if (res.code === 0) {
           this.loading = false
-          this.list = res.payload.content.sort((a, b) => {
-            return Number.parseInt(b.id) - Number.parseInt(a.id)
-          })
+          this.list = res.payload.content
           this.totalElements = Number.parseInt(res.payload.totalElements)
           this.totalPages = Number.parseInt(res.payload.totalPages)
         }
@@ -167,6 +165,9 @@ export default {
     border-radius: 100%;
     height: 47px;
     margin: 0 auto;
+  }
+  /deep/ .m-pagination {
+    bottom: 0;
   }
 }
 </style>
