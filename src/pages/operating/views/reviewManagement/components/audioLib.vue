@@ -20,16 +20,17 @@
       </el-table-column>
       <el-table-column label="课程" width="240" align="center">
         <template slot-scope="scope">
-          <span>{{
+          <span style="margin: 0 20px 0 0">{{
             scope.row.courseType === 'SYSTEM' ? '系统课' : '体验课'
           }}</span>
-          <span>{{
-            scope.row.courseStrait +
-              scope.row.courseLevel +
-              scope.row.courseUnit +
-              scope.row.courseLesson +
-              scope.row.courseName
-          }}</span>
+          <span style="margin: 0 20px 0 0"
+            >{{
+              scope.row.courseStrait +
+                scope.row.courseLevel +
+                scope.row.courseUnit
+            }}
+          </span>
+          <span>{{ scope.row.courseName }}</span>
         </template>
       </el-table-column>
       <el-table-column label="点评维度" width="180" align="center">
@@ -74,6 +75,7 @@
       :current-page="query.pageNum"
       :page-count="totalPages"
       :total="totalElements"
+      :showPager="true"
       @current-change="pageChange_handler"
       open="calc(100vw - 95px - 100px)"
       close="calc(100vw - 23px - 50px)"
