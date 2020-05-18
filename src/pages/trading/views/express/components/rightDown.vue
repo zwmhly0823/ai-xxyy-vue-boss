@@ -96,7 +96,7 @@
             </div>
             <!-- v-if="dataLogitcs.id === '6' || dataLogitcs.id === '0'" -->
             <div
-              v-if="false"
+              v-if="dataLogitcs.id === '6' || dataLogitcs.id === '0'"
               :class="{
                 edit_0: dataLogitcs.id === '0',
                 edit_6: dataLogitcs.id === '6'

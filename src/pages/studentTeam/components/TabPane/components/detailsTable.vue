@@ -291,7 +291,11 @@
                       (expressStatus === '待审核' || expressStatus === '无效')
                   " -->
                 <el-button
-                  v-if="false"
+                  v-if="
+                    showModifyAddressBtn &&
+                      scope.row.id == rowId &&
+                      (expressStatus === '待审核' || expressStatus === '无效')
+                  "
                   style="margin-left:20px;"
                   icon="el-icon-edit"
                   size="mini"
