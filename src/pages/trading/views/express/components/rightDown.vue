@@ -763,6 +763,7 @@ export default {
               last_teacher_id
               pay_teacher_id
               regtype
+              order_id
               pay_channel
               user {
                 id
