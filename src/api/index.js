@@ -37,6 +37,6 @@ export default Object.assign(
   { Weixin },
   { Operating },
   { Statistics },
-  { DownloadExcel },
-  { RiviewCourse }
+  { RiviewCourse },
+  { DownloadExcel }
 )
