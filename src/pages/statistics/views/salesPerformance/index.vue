@@ -175,10 +175,10 @@
               <!-- TODO: -->
               <el-tab-pane label="参课统计" name="attendClass"> </el-tab-pane>
               <el-tab-pane label="完课统计" name="finishClass"> </el-tab-pane>
-              <!-- <el-tab-pane label="上传作品统计" name="uploadWorks">
+              <el-tab-pane label="上传作品统计" name="uploadWorks">
               </el-tab-pane>
               <el-tab-pane label="老师点评统计" name="teacherComments">
-              </el-tab-pane> -->
+              </el-tab-pane>
             </el-tabs>
           </div>
           <div class="tableInner" ref="tableInner"></div>
