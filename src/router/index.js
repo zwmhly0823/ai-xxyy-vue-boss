@@ -136,6 +136,16 @@ const routes = [
       }
     ]
   },
+  // 工具类路由
+  {
+    path: '/approval',
+    name: 'approval',
+    meta: {
+      title: '审批中心',
+      icon: 'el-icon-menu',
+      module: 'approval'
+    }
+  },
   // 统计分析
   {
     path: '/statistics',
