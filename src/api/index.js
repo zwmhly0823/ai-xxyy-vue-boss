@@ -21,6 +21,7 @@ import DownloadExcel from './modules/DownloadExcel' // 统计模块
 
 import Weixin from './modules/Weixin' // 微信graphql接口
 import Operating from './modules/Operating' // 运营中心
+import RiviewCourse from './modules/RiviewCourse'
 export default Object.assign(
   {},
   { Login },
@@ -36,5 +37,6 @@ export default Object.assign(
   { Weixin },
   { Operating },
   { Statistics },
+  { RiviewCourse },
   { DownloadExcel }
 )
