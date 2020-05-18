@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 20:22:24
  * @LastEditors: panjian
- * @LastEditTime: 2020-04-24 10:26:38
+ * @LastEditTime: 2020-05-16 20:18:33
  -->
 <template>
   <div class="table-box">
@@ -249,6 +249,8 @@
         :row-class-name="tableRowClassName"
         :cell-style="cellStyle"
         @row-click="onClick"
+        @cell-mouse-leave="showModifyAddressBtn = false"
+        @cell-mouse-enter="onShowModifyAddressBtn"
       >
         <el-table-column key="1" label="用户和购买时间">
           <template slot-scope="scope">
@@ -273,7 +275,7 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column key="3" width="280" label="收货人及地址">
+        <el-table-column key="3" label="收货人及地址" width="300">
           <template slot-scope="scope">
             <div>
               <span class="logistics-address-name">{{
@@ -283,6 +285,20 @@
               <div v-if="scope.row.receipt_name">
                 <span>{{ scope.row.receipt_name }}</span>
                 <span>{{ scope.row.receipt_tel }}</span>
+                <el-button
+                  v-if="
+                    showModifyAddressBtn &&
+                      scope.row.id == rowId &&
+                      (expressStatus === '待审核' || expressStatus === '无效')
+                  "
+                  style="margin-left:20px;"
+                  icon="el-icon-edit"
+                  size="mini"
+                  type="primary"
+                  plain
+                  @click="onModifyAddress"
+                  >修改地址</el-button
+                >
                 <br />
                 <span>{{ scope.row.province }}</span>
                 <span>{{ scope.row.city }}</span>
@@ -589,11 +605,23 @@
     >
       <logistics-form @addExpress="addExpress" :formData="formData" />
     </el-dialog>
+    <el-dialog
+      :destroy-on-close="true"
+      :visible.sync="showModifyAddress"
+      width="30%"
+    >
+      <modify-address
+        @modifyAddressExpress="modifyAddressExpress"
+        v-if="showModifyAddress"
+        :modifyFormData="modifyFormData"
+      />
+    </el-dialog>
   </div>
 </template>
 <script>
 import MPagination from '@/components/MPagination/index.vue'
 import logisticsForm from '../components/logisticsForm'
+import modifyAddress from '../components/modifyAddress'
 export default {
   name: 'detailsTable',
   props: {
@@ -616,10 +644,15 @@ export default {
   },
   components: {
     MPagination,
-    logisticsForm
+    logisticsForm,
+    modifyAddress
   },
   data() {
     return {
+      expressStatus: '',
+      rowId: '', // 判断页面那条数据显示
+      showModifyAddressBtn: false,
+      showModifyAddress: false,
       orderId: '',
       selectUserMobile: [],
       moreTitle: false,
@@ -628,6 +661,7 @@ export default {
       followShowIcon: 1,
       showExpress: false,
       formData: {},
+      modifyFormData: {},
       audioIndex: null,
       tableindex: null,
       studentId: null,
@@ -655,6 +689,19 @@ export default {
   },
   created() {},
   methods: {
+    // 鼠标移入显示修改地址
+    onShowModifyAddressBtn(row) {
+      this.rowId = row.id
+      const id = row.id
+      const userid = row.user_id
+      const orderid = row.order_id
+      this.expressStatus = row.express_status
+      // const addressid = row.address_id
+      // this.modifyFormData = { id, userid, orderid, addressid }
+      this.modifyFormData = { id, userid, orderid, row }
+      this.showModifyAddressBtn = true
+      console.log(row)
+    },
     // 加好友
     handleEdit(index, row) {
       // 当没有点击复选框 直接点击加好友
@@ -773,6 +820,15 @@ export default {
     addExpress(data) {
       this.showExpress = false
       if (data === 1) this.$emit('addExpresss', data)
+    },
+    // 修改地址按钮
+    onModifyAddress(row) {
+      this.showModifyAddress = true
+      console.log(row, '点击修改地址')
+    },
+    modifyAddressExpress(data) {
+      this.showModifyAddress = false
+      if (data === 1) this.$emit('modifyAddressExpresss', data)
     },
     // 音频结束后赋值为空
     audioEnded() {
