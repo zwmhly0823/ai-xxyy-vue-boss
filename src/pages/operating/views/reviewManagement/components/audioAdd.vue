@@ -213,6 +213,9 @@ export default {
       })
     },
     handleRemoveFile(list) {
+      if (list.length === 0) {
+        this.audioList = []
+      }
       this.removeFile = list
     },
     async handleSubmit() {
@@ -235,10 +238,14 @@ export default {
       } = this
       const fileUrlList = []
       for (const item of audioList) {
-        for (const remove of removeFile) {
-          if (item.uid === remove.uid) {
-            fileUrlList.push(item.url)
+        if (removeFile.length !== 0) {
+          for (const remove of removeFile) {
+            if (item.uid === remove.uid) {
+              fileUrlList.push(item.url)
+            }
           }
+        } else {
+          fileUrlList.push(item.url)
         }
       }
       const fileUrl = fileUrlList.join('')

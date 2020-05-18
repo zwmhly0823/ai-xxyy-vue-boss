@@ -40,7 +40,7 @@
             :key="index"
             class="review-type"
           >
-            {{ item.type === 0 ? '人工点评' : '智能点评' }}
+            {{ item.type === 0 ? '手动点评' : '智能点评' }}
           </div>
         </template>
       </el-table-column>
@@ -142,9 +142,10 @@ export default {
       }
       return arr
     },
-    pageChange_handler(page) {
+    async pageChange_handler(page) {
       this.query.pageNum = page
-      this.initList(page)
+      await this.initList(page)
+      document.body.scrollTop = document.documentElement.scrollTop = 0
     }
   },
   components: {

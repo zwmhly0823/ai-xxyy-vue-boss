@@ -199,10 +199,11 @@ export default {
         console.log(error)
       }
     },
-    pageChange_handler(page) {
+    async pageChange_handler(page) {
       this.courseIdList = []
       this.query.pageNum = page
-      this.initList(page)
+      await this.initList(page)
+      document.body.scrollTop = document.documentElement.scrollTop = 0
     },
     conversionArr(obj) {
       if (obj === undefined) {
