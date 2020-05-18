@@ -84,6 +84,7 @@
       :current-page="query.pageNum"
       :page-count="totalPages"
       :total="totalElements"
+      :showPager="true"
       @current-change="pageChange_handler"
       open="calc(100vw - 95px - 100px)"
       close="calc(100vw - 23px - 50px)"
