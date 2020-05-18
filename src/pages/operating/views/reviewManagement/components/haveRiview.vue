@@ -46,13 +46,13 @@
       </el-table-column>
       <el-table-column label="用户信息" align="center" width="180">
         <template slot-scope="scope">
-          <div>{{ scope.row.userMobile }}</div>
-          <div>{{ scope.row.weixinNickname }}</div>
+          <div class="review-type">{{ scope.row.userMobile }}</div>
+          <div class="review-type">{{ scope.row.weixinNickname }}</div>
         </template>
       </el-table-column>
       <el-table-column label="班级" align="center" width="180">
         <template slot-scope="scope">
-          <div>{{ scope.row.teamName }}</div>
+          <div class="review-type">{{ scope.row.teamName }}</div>
         </template>
       </el-table-column>
       <el-table-column
@@ -60,21 +60,26 @@
         label="课程"
         align="center"
         width="180"
+        class="review-type"
       >
       </el-table-column>
       <el-table-column label="辅导老师" align="center" width="180">
         <template slot-scope="scope">
-          <div>{{ scope.row.teacherRealName }}</div>
+          <div class="review-type">{{ scope.row.teacherRealName }}</div>
         </template>
       </el-table-column>
       <el-table-column label="上传日期" align="center" width="180">
         <template slot-scope="scope">
-          <div>{{ timestamp(scope.row.ctime, 2) }}</div>
+          <div class="review-type">{{ timestamp(scope.row.utime, 2) }}</div>
         </template>
       </el-table-column>
       <el-table-column label="点评日期" align="center" width="180">
         <template slot-scope="scope">
-          <div v-for="(item, index) in scope.row.taskComments" :key="index">
+          <div
+            v-for="(item, index) in scope.row.taskComments"
+            :key="index"
+            class="review-type"
+          >
             {{ timestamp(item.ctime, 2) }}
           </div>
         </template>
@@ -119,12 +124,7 @@ export default {
         const res = await this.$http.RiviewCourse.getHaveRiview(number)
         if (res.code === 0) {
           this.loading = false
-          this.list = res.payload.content.sort((a, b) => {
-            return (
-              Number.parseInt(b.taskComments[0].ctime) -
-              Number.parseInt(a.taskComments[0].ctime)
-            )
-          })
+          this.list = res.payload.content
           this.totalElements = Number.parseInt(res.payload.totalElements)
           this.totalPages = Number.parseInt(res.payload.totalPages)
         }
@@ -172,6 +172,9 @@ export default {
     height: 300px;
     display: block;
     margin: 0 auto;
+  }
+  /deep/ .m-pagination {
+    bottom: 0;
   }
 }
 </style>

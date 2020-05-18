@@ -112,7 +112,7 @@
         </el-table-column>
         <el-table-column label="上传日期" align="center" width="180">
           <template slot-scope="scope">
-            <div>{{ timestamp(scope.row.ctime, 2) }}</div>
+            <div>{{ timestamp(scope.row.utime, 2) }}</div>
           </template>
         </el-table-column>
       </el-table>
@@ -158,9 +158,7 @@ export default {
       try {
         const res = await this.$http.RiviewCourse.getToView(number)
         if (res.code === 0) {
-          this.list = res.payload.content.sort((a, b) => {
-            return Number.parseInt(b.ctime) - Number.parseInt(a.ctime)
-          })
+          this.list = res.payload.content
           this.totalElements = Number.parseInt(res.payload.totalElements)
           this.totalPages = Number.parseInt(res.payload.totalPages)
           await res.payload.content.map((item, index) => {
@@ -404,6 +402,9 @@ export default {
     &-title {
       text-align: center;
     }
+  }
+  /deep/ .m-pagination {
+    bottom: 0;
   }
 }
 </style>
