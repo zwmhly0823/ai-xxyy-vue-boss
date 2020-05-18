@@ -64,7 +64,7 @@ export default {
       }
     },
     handleRemove(file, fileList) {
-      console.log('fileList', file, fileList)
+      this.$emit('handle-remove', fileList)
     },
     uploadErr(file, fileList) {
       const _name = fileList.name.split('.')[0]
