@@ -20,8 +20,8 @@ const routes = [
     redirect: '/channelManagement'
   },
   {
-    path: '/scheduleList',
-    name: 'scheduleList',
+    path: '/operatingSchedule',
+    name: 'operatingSchedule',
     meta: {
       title: '招生排期',
       keepAlive: true
