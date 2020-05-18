@@ -17,6 +17,7 @@ const getters = {
   typeStage: (state) => state.leftbar.typeStage,
   disableClick: (state) => state.leftbar.disableClick,
   team: (state) => state.team,
+  tabbed: (state) => state.tabbed,
   token: (state) => '',
   avatar: (state) => 'https://msb-ai.meixiu.mobi/ai-pm/static/touxiang.png',
   name: (state) => '',

@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-05-06 16:33:15
  * @LastEditors: panjian
- * @LastEditTime: 2020-05-16 18:49:55
+ * @LastEditTime: 2020-05-16 19:02:58
  -->
 <template>
   <div class="channelAdd-box">
@@ -472,7 +472,8 @@ export default {
 .channelAdd-box {
   background: #f0f1f2;
   padding: 10px 10px 10px 10px;
-  height: calc(100vh - 129px);
+  height: calc(100vh - 140px);
+  padding-bottom: 30px;
   overflow: scroll;
   .channelAdd-top {
     .channelAdd-top-search {

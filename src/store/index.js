@@ -15,6 +15,7 @@ import settings from './modules/settings'
 import leftbar from './modules/leftbar'
 import schedule from './modules/schedule'
 import team from './modules/team'
+import tabbed from './modules/tabbed'
 
 Vue.use(Vuex)
 
@@ -25,7 +26,8 @@ const store = new Vuex.Store({
     // user
     leftbar,
     schedule,
-    team
+    team,
+    tabbed
   },
   getters
 })

@@ -35,22 +35,27 @@
                 >
                   <div
                     class="title"
-                    v-if="scope.row.reviewDataList[item] !== undefined"
+                    v-if="
+                      scope.row.reviewDataList[item] !== undefined &&
+                        item !== '开场白'
+                    "
                   >
                     {{ item }}
                   </div>
-                  <div
-                    v-for="(_item, _index) of scope.row.reviewDataList[item]"
-                    :key="_index"
-                  >
+                  <div v-if="item !== '开场白'">
                     <div
-                      @click="selectNow(scope.$index, item, _index)"
-                      class="select-container"
+                      v-for="(_item, _index) of scope.row.reviewDataList[item]"
+                      :key="_index"
                     >
-                      <span class="background-round"
-                        ><span :class="[_item.flag ? 'circle' : '111']"></span
-                      ></span>
-                      <span>{{ scoreObj[_item.score] }}</span>
+                      <div
+                        @click="selectNow(scope.$index, item, _index)"
+                        class="select-container"
+                      >
+                        <span class="background-round"
+                          ><span :class="[_item.flag ? 'circle' : '111']"></span
+                        ></span>
+                        <span>{{ scoreObj[_item.score] }}</span>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -256,6 +261,10 @@ export default {
           }
         }
       }
+      if (keysItem.includes('开场白')) {
+        arr.push(true)
+        fileUrl.unshift(idx['开场白'][0].fileUrl)
+      }
       if (arr.length < ownLength.length) {
         this.$message({
           message: '请选择评分！',
@@ -325,6 +334,7 @@ export default {
 
 <style lang="scss" scoped>
 .container {
+  margin: 0 0 30px 0;
   .review-container {
     .top-container {
       display: flex;

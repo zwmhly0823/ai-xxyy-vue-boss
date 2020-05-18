@@ -3,7 +3,7 @@
     <el-table :data="orderList">
       <el-table-column label="用户信息" prop="user" width="120">
         <template slot-scope="scope">
-          <p>{{ scope.row.user ? scope.row.user.nickname || '-' : '-' }}</p>
+          <p>{{ scope.row.user ? scope.row.user.username || '-' : '-' }}</p>
           <p>{{ scope.row.user ? scope.row.user.mobile || '-' : '-' }}</p>
         </template>
       </el-table-column>
@@ -24,21 +24,6 @@
                 ? scope.row.amount
                 : scope.row.regtype === 6
                 ? ''
-                : '-'
-            }}
-          </p>
-        </template>
-      </el-table-column>
-      <el-table-column label="订单类型" v-if="topic === '5'">
-        <template slot-scope="scope">
-          <p>
-            {{
-              scope.row.regtype
-                ? +scope.row.regtype === 2
-                  ? '首单'
-                  : +scope.row.regtype === 3
-                  ? '续费'
-                  : ''
                 : '-'
             }}
           </p>
@@ -167,7 +152,9 @@
       </el-table-column>
     </el-table>
     <div v-if="orderList.length === 0" class="noData">暂无数据</div>
-
+    <div class="drawer-body">
+      <express-detail :order_id="order_id" ref="order_id" />
+    </div>
     <m-pagination
       :current-page="currentPage"
       :page-count="totalPages"
@@ -183,10 +170,12 @@
 import _ from 'lodash'
 import MPagination from '@/components/MPagination/index.vue'
 import { formatData, isToss } from '@/utils/index.js'
+import ExpressDetail from '../../components/expressDetail'
 // import axios from '@/api/axiosConfig'
 export default {
   components: {
-    MPagination
+    MPagination,
+    ExpressDetail
   },
   props: {
     // 商品主题
@@ -218,6 +207,8 @@ export default {
   },
   data() {
     return {
+      // 给物流详情组件传递的订单id
+      order_id: '',
       // 总页数
       totalPages: 1,
       totalElements: 0, // 总条数
@@ -251,7 +242,6 @@ export default {
       this.getOrderList()
     },
     status(status) {
-      console.log(status, 'status')
       this.currentPage = 1
       this.getOrderList()
     },
@@ -264,6 +254,14 @@ export default {
     }
   },
   methods: {
+    // 订单关联物流详情展示
+    showExpressDetail(what, total) {
+      console.log(what, "what's that?")
+      if (total > 0) {
+        this.$refs.order_id.drawer = true
+        this.order_id = what
+      }
+    },
     // 订单列表
     async getOrderList(page = this.currentPage, status) {
       const statisticsQuery = []
@@ -330,7 +328,6 @@ export default {
           'amount',
           'status'
         ).then((res) => {
-          console.log(res)
           const statistics = res.data.OrderStatistics || []
           this.$emit('statistics', statistics)
         })
@@ -432,6 +429,7 @@ export default {
 
       const query = ids.length > 0 ? JSON.stringify({ student_id: ids }) : ''
       const trial = await this.$http.Team.getTrialCourseList(query)
+      console.log(trial.data.StudentTrialCourseList)
 
       const teamIds =
         trial.data.StudentTrialCourseList &&
@@ -443,9 +441,11 @@ export default {
       const result = {}
       const resultUid = {}
       trial.data.StudentTrialCourseList.forEach((item) => {
-        result[item.student_id] = teamById[item.team_id]
+        result[item.order_no] = teamById[item.team_id]
         resultUid[item.student_id] = teamById[item.team_id]
       })
+      console.log(result, 'sdgasgasgdasgdas')
+
       this.trialTeam = result || {}
       this.trialTeamUid = resultUid || {}
       // return result
@@ -477,6 +477,7 @@ export default {
 }
 .primary-color {
   color: #409eff;
+  cursor: pointer;
 }
 </style>
 <style lang="scss">

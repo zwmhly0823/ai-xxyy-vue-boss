@@ -29,7 +29,7 @@ export const courseLesson = [
   'Lesson4',
   'Lesson5'
 ]
-export const reviewDegree = ['构图', '造型', '色彩', '创意', '结尾']
+export const reviewDegree = ['开场白', '构图', '造型', '色彩', '创意', '结尾']
 export const reviewRate = ['优', '良', '一般', '无基础']
 export const scoreObj = {
   EXCELLENT: '优',

@@ -47,6 +47,7 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
 export default {
   name: 'SidebarItem',
   props: {
@@ -65,12 +66,16 @@ export default {
     }
   },
   methods: {
+    ...mapActions('tabbed', ['setCurrentTabbed', 'setTabbedList']),
     // 展开更多
     handleOpen(item, index = 0, hasChildren = false) {
+      console.log(item)
+
       const currentItem = item || this.item
       const { path, meta } = currentItem
       const pathname = location.pathname
       let baseUrl = ''
+      const tabItem = {}
 
       if (this.clicked && hasChildren) return
       this.clicked = hasChildren
@@ -83,19 +88,36 @@ export default {
 
       if (this.$route.path === `${path}`) return
       // 同一模块,hash
+      let pathUrl
+      let pathUrl2
       if (pathname.includes(meta.module)) {
         if (path.split('/')[1] !== meta.module) {
-          this.$router.push(path)
+          pathUrl = path
+          pathUrl2 = `${baseUrl}/${meta.module}/#${path}`
         } else if (this.$route.path !== '/') {
-          this.$router.push('/')
+          pathUrl = '/'
+          pathUrl2 = `${baseUrl}${path}/#/`
         }
+        this.$router.push(pathUrl)
       } else {
         if (path.split('/')[1] !== meta.module) {
-          location.href = `${baseUrl}/${meta.module}/#${path}`
-          return
+          pathUrl2 = `${baseUrl}/${meta.module}/#${path}`
+        } else {
+          pathUrl2 = `${baseUrl}${path}/#/`
         }
-        location.href = `${baseUrl}${path}/#/`
+        location.href = pathUrl2
       }
+      // 多页签打开
+      Object.assign(tabItem, { [`${pathUrl2}`]: { meta } })
+      const multiTabbed =
+        JSON.parse(sessionStorage.getItem('multiTabbed')) || {}
+      if (!Object.keys(multiTabbed).includes(pathUrl2)) {
+        Object.assign(multiTabbed, tabItem)
+        sessionStorage.setItem('multiTabbed', JSON.stringify(multiTabbed))
+        this.setTabbedList(multiTabbed)
+      }
+      sessionStorage.setItem('currentMultiTab', pathUrl2)
+      this.setCurrentTabbed(pathUrl2)
     }
   }
 }
