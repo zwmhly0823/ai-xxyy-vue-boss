@@ -97,6 +97,15 @@ module.exports = {
           '^/api': '/api'
         }
       },
+      '/sapi': {
+        target: 'http://docker.meixiu.mobi:38766',
+        changeOrigin: true,
+        ws: true,
+        secure: false,
+        pathRewrite: {
+          '^/sapi': '/api'
+        }
+      },
       // 查询接口
       '/data': {
         target: 'https://test.meixiu.mobi',

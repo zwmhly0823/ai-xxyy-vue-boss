@@ -4,29 +4,68 @@
  * @Author: panjian
  * @Date: 2020-05-06 16:33:15
  * @LastEditors: panjian
- * @LastEditTime: 2020-05-08 17:54:49
+ * @LastEditTime: 2020-05-18 18:35:53
  -->
 <template>
   <div class="channelUpload-box">
     <div class="channelUpload-table">
       <div class="channelUpload-upload-box">
+        <div>
+          <span>1.请输入导入表格备注</span><br />
+          <el-input
+            style="width:350px;margin-top:20px;"
+            type="textarea"
+            :autosize="{ minRows: 2, maxRows: 4 }"
+            placeholder="请输入表格备注"
+            v-model="remarks"
+          >
+          </el-input>
+        </div>
+        <p>2.请选择需要上传的文件</p>
         <el-upload
-          class="upload-demo"
-          action="https://jsonplaceholder.typicode.com/posts/"
-          :on-preview="handlePreview"
+          ref="upload"
+          action=""
+          accept=".xls, .xlsx"
           :on-remove="handleRemove"
-          :before-remove="beforeRemove"
-          multiple
-          :limit="3"
-          :on-exceed="handleExceed"
-          :file-list="fileList"
+          :headers="headers"
+          :auto-upload="false"
+          :limit="1"
+          :http-request="handleChange"
+          :on-progress="uploadProgress"
         >
-          <el-button class="upload-btn" type="primary">点击上传</el-button>
-          <div slot="tip" class="el-upload__tip">
-            当前仅支持CSV格式文件（大小控制在10M内），请使用office2010以上的版本，否则会出现导入异常。
-          </div>
+          <el-button slot="trigger" size="small" type="primary"
+            >选取文件</el-button
+          >
+          <el-button
+            style="margin-left: 10px;"
+            size="small"
+            type="success"
+            @click="submitUpload"
+            >上传到服务器</el-button
+          >
+          <!-- :loading="uploading" -->
+          <div slot="tip" class="el-upload__tip">只能上传xls/xlsx文件</div>
         </el-upload>
-        <el-button class="upload-mb" type="text">下载模板</el-button>
+        <!-- <el-upload
+          class="upload-demo"
+          action=""
+          :on-change="handleChange"
+          :on-exceed="handleExceed"
+          :on-remove="handleRemove"
+          :headers="headers"
+          :file-list="fileList"
+          :limit="1"
+          accept=".xlsx,.slx"
+          :auto-upload="false"
+        >
+          <el-button class="upload-btn" size="small" type="primary"
+            >点击上传文件</el-button
+          >
+          <div slot="tip" class="el-upload__tip">
+            <span style="color:red;font-size:15px;">*</span>
+            <span style="font-size:15px;"> 文件只能上传xlsx/xls文件</span>
+          </div>
+        </el-upload> -->
       </div>
       <el-table
         :header-cell-style="headerCss"
@@ -37,10 +76,9 @@
         </el-table-column>
         <el-table-column prop="name" label="导入时间" width="180">
         </el-table-column>
-        <el-table-column prop="address" label="导入数"> </el-table-column>
         <el-table-column prop="address" label="实际导入数"> </el-table-column>
-        <el-table-column prop="address" label="导入状态"> </el-table-column>
-        <el-table-column prop="address" label="说明"> </el-table-column>
+        <el-table-column prop="address" label="备注"> </el-table-column>
+        <el-table-column prop="address" label="操作人"> </el-table-column>
       </el-table>
       <m-pagination
         @current-change="handleCurrentChange"
@@ -67,6 +105,9 @@ export default {
   },
   data() {
     return {
+      remarks: '',
+      fileTemp: '',
+      headers: { 'Content-Type': 'multipart/form-data' },
       fileList: [
         // {
         //   name: 'food.jpeg',
@@ -91,13 +132,85 @@ export default {
   created() {},
   methods: {
     handleCurrentChange() {},
+    // 上传进度
+    uploadProgress(event, file, fileList) {
+      console.log(
+        event,
+        file,
+        fileList,
+        'event, file, fileList--------------------'
+      )
+    },
+    submitUpload(file, filelist) {
+      console.log(this.$refs)
+      this.$refs.upload.submit()
+    },
+    // uploadFile(file, filelist) {
+    //   this.$refs.upload.submit()
+    // },
+    handleChange(params) {
+      const formdata = new FormData()
+      console.log(params.file, 'file.raw')
+
+      formdata.append('file', params.file)
+      formdata.append('remark', this.remarks)
+      formdata.append('adminId', '2')
+      console.log(formdata, 'formdata')
+      // const params = {
+      //   headers: 'multipart/form-data',
+      //   adminId: '2',
+      //   remark: this.remarks,
+      //   file: file.raw
+      // }
+      // console.log(params, 'params')
+      this.$http.Operating.channelUpload(formdata).then((res) => {
+        console.log(res)
+      })
+
+      this.fileTemp = params.file
+    },
+    //   uploadFile(params) {
+    //   const formdata = new FormData()
+    //   const file = params.file
+    //   formdata.append('file', file)
+    //   this.uploading = true
+    //   Object.assign(formdata, { operatorId: this.operatorId })
+
+    //   this.$http.Express.expressUpload(formdata)
+    //     .then((res) => {
+    //       this.$refs.upload.clearFiles()
+    //       this.uploading = false
+    //       if (res.code === 0 && res.payload.length < 1 && res.payload) {
+    //         this.$message({
+    //           showClose: true,
+    //           message: '恭喜你，文件上传成功',
+    //           type: 'success'
+    //         })
+    //       }
+    //       this.dialogVisible = false
+    //       this.errorDialog = !res.errors ? res.payload : []
+    //     })
+    //     .finally(() => {
+    //       this.uploading = false
+    //     })
+    //   setTimeout(() => {
+    //     this.uploading = false
+    //   }, 2000)
+    // },
+
     handleRemove(file, fileList) {
-      console.log(file, fileList, '1')
+      console.log('222')
+      this.fileTemp = null
     },
-    handlePreview(file) {
-      console.log(file, '2')
-    },
+    // handleRemove(file, fileList) {
+    //   console.log(file, fileList, '1')
+    // },
+    // handlePreview(file) {
+    //   console.log(file, '2')
+    // },
     handleExceed(files, fileList) {
+      console.log('3333333')
+
       this.$message.warning(
         `当前限制选择 3 个文件，本次选择了 ${
           files.length
@@ -127,18 +240,14 @@ export default {
     margin-bottom: 20px;
     background: #fff;
     .channelUpload-upload-box {
-      position: relative;
-      .upload-btn {
-        margin-top: 10px;
-        margin-left: 10px;
+      .upload-demo {
+        margin-top: 20px;
         margin-bottom: 20px;
-        width: 120px;
-        height: 40px;
       }
-      .upload-mb {
-        position: absolute;
-        top: 20px;
-        left: 150px;
+      .upload-btn {
+        margin-left: 10px;
+        margin-bottom: 10px;
+        width: 120px;
       }
     }
   }
