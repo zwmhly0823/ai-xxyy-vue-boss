@@ -9,6 +9,7 @@
     <div class="main-container">
       <div :class="{ 'fixed-header': fixedHeader }">
         <topbar />
+        <multi-tabbed />
       </div>
       <app-main />
     </div>
@@ -19,13 +20,15 @@
 import Topbar from './Topbar.vue'
 import Sidebar from './Sidebar/index.vue'
 import AppMain from './AppMain.vue'
+import MultiTabbed from './MultiTabbed.vue'
 import ResizeMixin from './mixin/ResizeHandler'
 export default {
   name: 'Layout',
   components: {
     Topbar,
     Sidebar,
-    AppMain
+    AppMain,
+    MultiTabbed
   },
   mixins: [ResizeMixin],
   computed: {
@@ -84,7 +87,7 @@ export default {
   position: fixed;
   top: 0;
   right: 0;
-  z-index: 10000;
+  z-index: 1000;
   width: calc(100% - #{$sideBarWidth});
   transition: width 0.28s;
 }

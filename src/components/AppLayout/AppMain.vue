@@ -38,17 +38,17 @@ export default {
 @import '~@/assets/styles/variables.scss';
 .app-main {
   /*50 = navbar  */
-  min-height: calc(100vh - #{$topBarWidth});
+  min-height: calc(100vh - #{$topBarWidth} - #{$multiTabbedHeight});
   width: 100%;
   position: relative;
   overflow: hidden;
   // 设置app-main的固定高度
   &.height {
-    height: calc(100vh - #{$topBarWidth});
+    height: calc(100vh - #{$topBarWidth} - #{$multiTabbedHeight});
   }
 }
 .fixed-header + .app-main {
-  padding-top: 50px;
+  padding-top: calc(#{$topBarWidth} + #{$multiTabbedHeight});
 }
 </style>
 

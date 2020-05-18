@@ -26,5 +26,8 @@ export function setToken(token) {
 export function removeToken() {
   // localStorage.removeItem('teacher')
   localStorage.removeItem('staff')
+  // 清除multiTabbed
+  sessionStorage.removeItem('multiTabbed')
+  sessionStorage.removeItem('currentMultiTab')
   return Cookies.remove(TokenKey)
 }
