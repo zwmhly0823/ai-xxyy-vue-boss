@@ -144,7 +144,7 @@
 </template>
 <script>
 import { mapGetters } from 'vuex'
-import axios from '@/api/axios'
+import axios from '@/api/axiosConfig'
 import { GetAgeByBrithday } from '@/utils/index'
 import MPagination from '@/components/MPagination/index.vue'
 import CouponPopover from './components/couponPopover'
@@ -419,6 +419,7 @@ export default {
     // 点击批量发放优惠卷
     batchBtn() {
       this.$refs.couponPopover.issueCoupons = true
+      this.$refs.couponPopover.couponsTime = ''
     },
     // 点击分页
     handleSizeChange(val) {

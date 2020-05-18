@@ -2,8 +2,8 @@
  * @Author: YangJiyong
  * @Email: yangjiyong@meishubao.com
  * @Date: 2020-03-21 11:58:33
- * @Last Modified by: YangJiyong
- * @Last Modified time: 2020-04-26 23:27:22
+ * @Last Modified by: chengweihua
+ * @Last Modified time: 2020-05-16 18:34:36
  * @Description: 班级
  */
 import axios from '../axiosConfig'
@@ -19,9 +19,9 @@ export default {
     return newAxios.get(`/api/s/v1/coupon/getAllCoupons?page=${params}`)
   },
   // 批量发放优惠券
-  sendCoupon(id, params) {
+  sendCoupon(id, endDate, params) {
     return newAxios.post(
-      `/api/s/v1/coupon/send/batch/sendCoupon?couponId=${id}`,
+      `/api/s/v1/coupon/send/batch/sendCoupon?couponId=${id}&endDate=${endDate}`,
       params
     )
   },
@@ -259,10 +259,10 @@ export default {
   },
 
   // 获取体验课列表
-  getTrialCourseList(query = '') {
+  getTrialCourseList(query = '', size = 20) {
     return axios.post('/graphql/v1/toss', {
       query: `{
-        StudentTrialCourseList(query: ${JSON.stringify(query)}) {
+        StudentTrialCourseList(query: ${JSON.stringify(query)}, size: ${size}) {
           student_id
           team_id
           order_no

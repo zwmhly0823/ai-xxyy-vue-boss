@@ -3,22 +3,30 @@
  * @version:
  * @Author: zhubaodong
  * @Date: 2020-03-24 18:50:54
- * @LastEditors: liukun
- * @LastEditTime: 2020-04-28 20:54:06
+ * @LastEditors: panjian
+ * @LastEditTime: 2020-05-15 15:55:12
  -->
 <template>
   <div class="search-item small threeSelect">
-    <el-cascader
-      :placeholder="placeholder"
+    <el-input
       size="mini"
-      class="item-style"
+      style="width:160px;margin-right:20px;"
+      v-model="input"
+      @input="channelInput"
+      placeholder="请输入渠道ID"
+      clearable
+    ></el-input>
+    <el-cascader
+      placeholder="请选择渠道"
+      size="mini"
+      v-model="channelName"
       @change="onSelect"
       :options="showDatas"
       :props="{
         multiple: true,
         value: 'id',
         label: 'channel_outer_name',
-        emitPath: false,
+        emitPath: true,
         checkStrictly: false
       }"
       :show-all-levels="true"
@@ -29,34 +37,34 @@
 </template>
 
 <script>
-import axios from '@/api/axiosConfig'
+import axios from '@/api/axios'
 export default {
   props: {
+    tabIndex: {
+      type: String,
+      default: ''
+    },
     name: {
       type: String,
       default: 'channelid'
-    },
-    placeholder: {
-      type: String,
-      default: '订单来源'
-    },
-    // 是否只返回值，如果是，父组件获得值后根据实际表达式组装数据
-    onlyValue: {
-      type: Boolean,
-      default: false
-    },
-    placeHoldText: {
-      type: String,
-      default: '订单来源'
     }
   },
   data() {
     return {
-      channelList: [], // 渠道来源[]
+      input: '',
+      channelName: [],
+      dataList: [],
+      channelList: [],
       channelData: null,
       channelClassData: [],
       channelClassList: null, // 分类条件
       showDatas: null // 三级列表展示数据
+    }
+  },
+  watch: {
+    tabIndex(value) {
+      console.log(value, 'watch')
+      this.channelName = []
     }
   },
   async created() {
@@ -67,10 +75,9 @@ export default {
   methods: {
     // 获取渠道来源 filter: 过滤关键词  eg：filter:"抖音"
     async getChannel() {
-      const {
-        data: { channelAllList }
-      } = await axios.post('/graphql/channel', {
-        query: `{
+      await axios
+        .post('/graphql/channel', {
+          query: `{
             channelAllList(size: 500) {
                 id
                 channel_class_id
@@ -78,15 +85,16 @@ export default {
               }
             }
           `
-      })
-      this.channelList = channelAllList
+        })
+        .then((res) => {
+          this.channelList = res.data.channelAllList
+        })
     },
     // 获取渠道来源分类 filter: 过滤关键词  eg：filter:"抖音"
     async getChannelClassList() {
-      const {
-        data: { ChannelClassList }
-      } = await axios.post('/graphql/v1/toss', {
-        query: `{
+      await axios
+        .post('/graphql/v1/toss', {
+          query: `{
               ChannelClassList(size: 500){
                 id
                 channel_class_parent_id
@@ -94,16 +102,17 @@ export default {
               }
             }
           `
-      })
-      this.channelClassList = ChannelClassList
+        })
+        .then((res) => {
+          this.channelClassList = res.data.ChannelClassList
+        })
     },
     formatData(classdata, classifiData) {
       // 第一级目录
       const arrList = []
-      classifiData &&
-        classifiData.forEach((item) => {
-          item.channel_outer_name = item.channel_class_name
-        })
+      classifiData.forEach((item) => {
+        item.channel_outer_name = item.channel_class_name
+      })
       const firstNode =
         classifiData &&
         classifiData.filter((item) => {
@@ -113,7 +122,7 @@ export default {
           return +item.channel_class_parent_id === 0
         })
 
-      firstNode && firstNode.forEach((item) => (item.children = []))
+      firstNode.forEach((item) => (item.children = []))
       arrList.forEach((item, index) => {
         firstNode.forEach((val, idx) => {
           if (+item.channel_class_parent_id === +val.id) {
@@ -121,54 +130,38 @@ export default {
           }
         })
       })
-      firstNode &&
-        firstNode.forEach(
-          (item) =>
-            item.children &&
-            item.children.forEach((vals) => (vals.children = []))
-        )
-
-      classdata &&
-        classdata.forEach((content, num) => {
-          arrList.forEach((datas, nums) => {
-            if (+content.channel_class_id === +datas.id) {
-              datas.children.push(content)
-            }
-          })
-        })
-
-      const result =
-        firstNode &&
-        firstNode.map((item) => {
-          if (item.children && item.children.length === 0) {
-            item.children = null
-          }
-          if (item.children) {
-            item.children.forEach((sub) => {
-              if (sub.children && sub.children.length === 0) sub.children = null
-            })
-          }
-          return item
-        })
-      this.showDatas = result
-      // console.log(firstNode, '第一梯队')
-      // console.log(arrList, '分类数减去第一梯队')
-
-      // console.log(classdata, '渠道总数')
-      // console.log(classifiData, '渠道分类总数')
-      // console.log(this.showDatas)
-    },
-    onChange(data) {
-      // 没用啊🐻弟
-      console.log(data)
-      this.$emit(
-        'result',
-        data.length > 0 ? { [this.name]: this.channelData } : ''
+      firstNode.forEach(
+        (item) =>
+          item.children && item.children.forEach((vals) => (vals.children = []))
       )
+
+      classdata.forEach((content, num) => {
+        arrList.forEach((datas, nums) => {
+          if (+content.channel_class_id === +datas.id) {
+            datas.children.push(content)
+          }
+        })
+      })
+
+      const result = firstNode.map((item) => {
+        if (item.children && item.children.length === 0) {
+          item.children = null
+        }
+        if (item.children) {
+          item.children.forEach((sub) => {
+            if (sub.children && sub.children.length === 0) sub.children = null
+          })
+        }
+        return item
+      })
+
+      this.showDatas = result
     },
     onSelect(data) {
-      console.log(data)
-      this.$emit('result', data.length > 0 ? { [this.name]: data } : '')
+      this.$emit('channelSearchValue', data.length > 0 ? data : '')
+    },
+    channelInput(data) {
+      this.$emit('channelInputValue', data || '')
     }
   }
 }
@@ -189,11 +182,6 @@ export default {
         height: 28px !important;
       }
     }
-  }
-}
-.search-item {
-  .item-style {
-    width: 140px;
   }
 }
 

@@ -1,29 +1,23 @@
 <!--
- * @Descripttion: 系统课搜索栏
- * @version: 1.0.0
- * @Author: liukun
- * @Date: 2020-04-25 17:24:23
- * @LastEditors: liukun
- * @LastEditTime: 2020-05-08 11:35:59
+ * @Author: YangJiyong
+ * @Email: yangjiyong@meishubao.com
+ * @Date: 2020-05-13 10:26:43
+ * @Last Modified by:   YangJiyong
+ * @Last Modified time: 2020-05-13 10:26:43
+ * @Description: 活动订单搜索
  -->
 <template>
   <el-card border="false" shadow="never" :class="$style.elard">
     <el-form :inline="true" label-position="right" label-width="80px">
       <el-form-item label="订单搜索:" :class="{ [$style.marginer]: true }">
-        <orderSearch class="allmini" @result="getOrderSearch" />
+        <order-search class="allmini" @result="getOrderSearch" />
       </el-form-item>
-
-      <el-form-item label="订单来源:" :class="{ [$style.marginer]: true }">
-        <ChannelSelect @result="getChannel" name="pay_channel" />
+      <el-form-item label="商品类型:" :class="{ [$style.marginer]: true }">
+        <product-type name="regtype" @result="getProductType" />
       </el-form-item>
-
-      <!-- <el-form-item label="物流状态:" :class="{ [$style.marginer]: true }">
-        <orderStatus @result="getExpressStatus" />
-      </el-form-item> -->
       <br />
-
       <el-form-item label="下单时间:" :class="{ [$style.marginer]: true }">
-        <DatePicker
+        <date-picker
           :class="[$style.fourPoint, 'allmini']"
           @result="getDate"
           name="ctime"
@@ -60,87 +54,23 @@
               >
             </div>
           </template>
-        </DatePicker>
-      </el-form-item>
-      <br />
-      <el-form-item label="体验课:" :class="{ [$style.marginer]: true }">
-        <div class="row_colum">
-          <department
-            name="last_teacher_id"
-            placeholder="全部销售组"
-            @result="getDepartment"
-          />
-          <group-sell
-            :teacherscope="teacherscope"
-            is-multiple
-            @result="selectPayTeacher"
-            name="last_teacher_id"
-            class="margin_l10"
-            style="width:140px"
-          />
-          <search-stage
-            :teacher-id="teacherscope_trial || teacherscope"
-            class="margin_l10"
-            name="stage"
-            placeholder="全部体验课排期"
-            type="0"
-            @result="selectScheduleTrial"
-          />
-          <hardLevel
-            :class="['margin_l10']"
-            placeholder="体验课难度"
-            style="width:140px"
-            name="sup"
-            @result="supCallBackTrial"
-          />
-          <search-team-name
-            teamnameType="0"
-            :term="term_trial"
-            :teacher-id="teacherscope_trial || teacherscope"
-            @result="getTrialTeamName"
-            name="team_id"
-            :class="['margin_l10']"
-            style="width:140px"
-          />
-          <!-- BOSS 显示单双周选择 -->
-          <trial-course-type
-            v-if="!teacherId"
-            class="margin_l10"
-            name="packages_id"
-            @result="getTrialCourseType"
-          />
-        </div>
+        </date-picker>
       </el-form-item>
     </el-form>
   </el-card>
 </template>
-<script>
-import hardLevel from '@/components/MSearch/searchItems/hardLevel.vue' // add
-import orderSearch from '@/components/MSearch/searchItems/orderSearch.vue' // add
-// import orderStatus from '@/components/MSearch/searchItems/orderStatus.vue' // add
-import DatePicker from '@/components/MSearch/searchItems/datePicker.vue'
-import ChannelSelect from '@/components/MSearch/searchItems/channel.vue'
-import GroupSell from '@/components/MSearch/searchItems/groupSell'
-import Department from '@/components/MSearch/searchItems/department'
-import SearchTeamName from '@/components/MSearch/searchItems/searchTeamName'
-import SearchStage from '@/components/MSearch/searchItems/searchStage'
-import TrialCourseType from '@/components/MSearch/searchItems/trialCourseType'
-import { isToss } from '@/utils/index'
 
+<script>
+import OrderSearch from '@/components/MSearch/searchItems/orderSearch.vue'
+import DatePicker from '@/components/MSearch/searchItems/datePicker.vue'
+import ProductType from '@/components/MSearch/searchItems/productType.vue'
+import { isToss } from '@/utils/index'
 export default {
   components: {
-    // orderStatus,
-    hardLevel,
-    orderSearch,
-    ChannelSelect,
+    OrderSearch,
     DatePicker,
-    GroupSell,
-    Department,
-    SearchTeamName,
-    SearchStage,
-    TrialCourseType
+    ProductType
   },
-
   data() {
     return {
       cur0: false,
@@ -148,36 +78,27 @@ export default {
       cur2: false,
       cur3: false,
       currentBtn: null,
-      teacherscope: null, // 当前选择的体验课老师范围（销售组查询）
-      teacherscope_trial: null, // 当前选择的体验课老师范围
-      term_trial: null, // 当前选择体验课排期
-      showErr: false,
-      errTips: '搜索条件不能为空',
       must: [],
       should: [],
-      selectTime: null, // 物流时间下拉列表_选中项
-      oldTime: '', // 上次时间选择值
       teacherId: '' // 判断是否是toss环境还是boss环境
     }
   },
-  computed: {},
+  created() {
+    const teacherId = isToss()
+    if (teacherId) {
+      this.teacherId = teacherId
+    }
+  },
   methods: {
-    // 订单号、手机号
+    // 订单号搜索
     getOrderSearch(res) {
+      console.log(res)
       const key = Object.keys(res || {})[0]
       const val = res[key] ? res : ''
       this.setSeachParmas(val, [key])
     },
-    // 选择渠道
-    getChannel(res) {
-      this.setSeachParmas(res, ['pay_channel'], 'terms')
-    },
-    // 难度
-    supCallBack(res) {
-      console.log(res, 'res')
-      this.setSeachParmas(res, ['sup'], 'terms')
-    },
-    // 选择订单下单时间
+
+    // 下单时间
     getDate(res) {
       for (let i = 0; i < 4; i++) {
         this['cur' + i] = false
@@ -239,55 +160,10 @@ export default {
       const end = new Date().getTime()
       this.$root.$emit('fourpoint', [start, end])
     },
-    // 选择销售老师
-    selectSellTeacher(res) {
-      this.setSeachParmas(res, ['last_teacher_id'], 'wildcard')
-    },
-    // 获取订单状态 TODO:
-    getExpressStatus(res) {
-      this.setSeachParmas(res, ['express_status'])
-    },
-    getDepartment(res) {
-      this.teacherscope = res.last_teacher_id || null
-      this.setSeachParmas(res, ['department'], 'terms')
-    },
-    // 选择社群销售
-    selectPayTeacher(res) {
-      if (!res.last_teacher_id || res.last_teacher_id.length === 0) {
-        this.teacherscope_trial = null
-        if (this.teacherscope && this.teacherscope.length > 0) {
-          res = {
-            last_teacher_id: this.teacherscope
-          }
-        } else {
-          res = ''
-        }
-      } else {
-        this.teacherscope_trial = res.last_teacher_id
-      }
-      this.setSeachParmas(res, ['last_teacher_id'], 'terms')
-    },
-    // 体验课排期
-    selectScheduleTrial(res) {
-      if (res) {
-        this.term_trial = res.trial_stage || ''
-      } else {
-        this.term_trial = []
-      }
-      this.setSeachParmas(res, ['stage'], 'terms')
-    },
-    // 体验课难度
-    supCallBackTrial(res) {
-      console.log(res, 'res')
-      this.setSeachParmas(res, ['sup'], 'terms')
-    },
-    getTrialTeamName(res) {
-      this.setSeachParmas(res, ['team_id'], 'terms')
-    },
 
-    // 体验课类型
-    getTrialCourseType(res) {
-      this.setSeachParmas(res, ['packages_id'], 'terms')
+    getProductType(res) {
+      if (res.regtype.length === 0) res.regtype = ['4', '5', '6']
+      this.setSeachParmas(res, ['regtype'], 'terms')
     },
 
     /**  处理接收到的查询参数
@@ -331,15 +207,10 @@ export default {
       }
       this.$emit('searchShould', temp)
     }
-  },
-  created() {
-    const teacherId = isToss()
-    if (teacherId) {
-      this.teacherId = teacherId
-    }
   }
 }
 </script>
+
 <style lang="scss" module>
 .cur {
   background-color: #ecf5ff;

@@ -1,7 +1,7 @@
 /*
  * @Date: 2020-03-13 15:20:21
- * @LastEditors: songyanan
- * @LastEditTime: 2020-05-11 10:42:30
+ * @LastEditors: Shentong
+ * @LastEditTime: 2020-05-12 21:41:40
  * @FilePath: /ai-app-vue-toss/src/pages/studentTeam/router/index.js
  */
 import Vue from 'vue'
@@ -17,11 +17,11 @@ const routes = [
       title: '运营中心',
       icon: 'el-icon-s-platform'
     },
-    redirect: '/enrollmentSchedule'
+    redirect: '/channelManagement'
   },
   {
-    path: '/enrollmentSchedule',
-    name: 'enrollmentSchedule',
+    path: '/operatingSchedule',
+    name: 'operatingSchedule',
     meta: {
       title: '招生排期',
       keepAlive: true
@@ -55,24 +55,6 @@ const routes = [
       keepAlive: false
     },
     component: () => import('../views/scheduleDetail/index.vue')
-  },
-  {
-    path: '/reviewManagement',
-    name: 'reviewManagement',
-    meta: {
-      title: '点评管理',
-      keepAlive: false
-    },
-    component: () => import('../views/reviewManagement/index.vue')
-  },
-  {
-    path: '/audioAdd',
-    name: 'audioAdd',
-    meta: {
-      title: '点评管理',
-      keepAlive: false
-    },
-    component: () => import('../views/reviewManagement/components/audioAdd.vue')
   }
 ]
 

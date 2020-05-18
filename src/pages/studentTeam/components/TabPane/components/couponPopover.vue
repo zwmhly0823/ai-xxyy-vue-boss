@@ -9,11 +9,17 @@
         top="40vh"
       >
         <span>选择优惠卷:</span>
-        <el-select
+        <!-- <el-select
           v-model="value"
           :placeholder="
             `${dropdownDefault.amount}元  ${dropdownDefault.name}  有效期${dropdownDefault.expire}天`
           "
+          popper-class="select-sty"
+          no-data-text="没有更多优惠券了"
+        > -->
+        <el-select
+          v-model="value"
+          :placeholder="`${dropdownDefault.amount}元  ${dropdownDefault.name} `"
           popper-class="select-sty"
           no-data-text="没有更多优惠券了"
         >
@@ -25,9 +31,19 @@
           >
           </el-option>
         </el-select>
+        <div class="coupons-time">
+          <span>设置有效期:</span>
+          <el-date-picker
+            v-model="couponsTime"
+            type="datetime"
+            placeholder="请设置优惠券到期时间"
+            :picker-options="pickerOptions"
+          >
+          </el-date-picker>
+        </div>
         <span slot="footer" class="dialog-footer">
           <el-button @click="issueCoupons = false">取 消</el-button>
-          <el-button type="primary" @click="issueCouponsBtn">
+          <el-button type="primary" :plain="true" @click="issueCouponsBtn">
             确 定
           </el-button>
         </span>
@@ -46,7 +62,8 @@
             是否确认向用户发放"{{ dropdownDefault.amount }}元
             {{ dropdownDefault.name }}"
             <br />
-            此优惠券有效期{{ dropdownDefault.expire }}天
+            <!-- 此优惠券有效期{{ dropdownDefault.expire }}天 -->
+            到期时间:{{ formcouponsTime }}
           </span>
         </i>
         <span slot="footer" class="dialog-footer">
@@ -96,6 +113,7 @@
   </div>
 </template>
 <script>
+import { formatData } from '@/utils'
 export default {
   props: {
     couponData: Array,
@@ -103,6 +121,11 @@ export default {
   },
   data() {
     return {
+      pickerOptions: {
+        disabledDate(time) {
+          return time.getTime() < Date.now() - 8.64e7
+        }
+      },
       // 发放优惠券弹窗
       issueCoupons: false,
       // 发放优惠券弹窗下拉菜单
@@ -110,6 +133,10 @@ export default {
       couponDropdown: [],
       // 下拉框值
       value: '',
+      // 优惠卷时间
+      couponsTime: '',
+      // 格式化优惠券
+      formcouponsTime: '',
       // 优惠券发放确认弹窗
       couponConf: false,
       // 优惠券发放成功弹窗
@@ -124,6 +151,7 @@ export default {
       failureWhy: []
     }
   },
+  created() {},
   mounted() {},
   watch: {
     couponData(val) {
@@ -140,14 +168,36 @@ export default {
   methods: {
     // 优惠券下拉弹窗
     issueCouponsBtn() {
-      this.issueCoupons = false
-      this.couponConf = true
+      if (!this.couponsTime) {
+        this.$message({
+          showClose: true,
+          message: '请设置优惠券到期时间',
+          type: 'warning'
+        })
+      } else if (
+        this.couponsTime &&
+        new Date().getTime() > new Date(this.couponsTime).getTime()
+      ) {
+        this.$message({
+          showClose: true,
+          message: '到期时间应大于当前时间',
+          type: 'warning'
+        })
+      } else {
+        this.issueCoupons = false
+        this.couponConf = true
+        this.formcouponsTime = formatData(this.couponsTime, 's')
+      }
     },
     // 优惠券发放确认弹窗
     couponconfBtn(id) {
       this.couponConf = false
       this.couponSuccessful = true
-      this.$http.Team.sendCoupon(id, this.selectUserId).then((res) => {
+      this.$http.Team.sendCoupon(
+        id,
+        new Date(this.couponsTime).getTime(),
+        this.selectUserId
+      ).then((res) => {
         if (res.payload.length === 0) {
           // 成功
           this.paidoutOk = this.selectUserId.length
@@ -194,8 +244,17 @@ export default {
   font-size: 14px;
   color: #909399;
 }
+
+.el-date-editor {
+  width: 70%;
+  margin: 10px 0 0 10px;
+}
 </style>
 <style lang="scss">
+.el-button--text {
+  display: none !important;
+}
+
 .el-select {
   width: 70%;
   margin-left: 10px;

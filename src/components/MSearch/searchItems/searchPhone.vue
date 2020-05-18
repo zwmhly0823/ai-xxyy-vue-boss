@@ -33,7 +33,7 @@
 </template>
 
 <script>
-import axios from '@/api/axios'
+import axios from '@/api/axiosConfig'
 import { mapGetters } from 'vuex'
 
 export default {
@@ -110,7 +110,6 @@ export default {
       // 调用 callback 返回建议列表的数据
       console.log(results, '结果')
       cb(searchUid)
-      this.$refs.elautocomplete.handleFocus()
     },
     createFilter(queryString) {
       const queryParams = `{"mobile":"${queryString}","team_id":"${this.teamId}","team_type":"${this.teamType}"}`
