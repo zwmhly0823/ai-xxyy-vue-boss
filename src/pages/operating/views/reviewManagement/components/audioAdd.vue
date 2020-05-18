@@ -196,7 +196,7 @@ export default {
       const _this = this
       uploadFile(file).then((res) => {
         _this.$message({
-          message: '上传成功!',
+          message: `${file.file.name}上传成功！`,
           type: 'success'
         })
         this.audioList.push(res)
