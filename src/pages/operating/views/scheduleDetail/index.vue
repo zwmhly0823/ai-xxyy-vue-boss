@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-14 18:28:44
  * @LastEditors: Shentong
- * @LastEditTime: 2020-04-20 18:06:24
+ * @LastEditTime: 2020-04-27 12:34:11
  -->
 <template>
   <div class="app-main height add-schedule-container">
@@ -13,36 +13,43 @@
         <div class="scroll-container">
           <div class="head-info">
             <div class="title">
-              <p><span>体验课</span><span>-</span><span>0401期</span></p>
-              <el-button type="primary" size="mini">修改</el-button>
+              <p>
+                <span v-if="params.courseType == '0'">体验课</span>
+                <span v-else>系统课</span>
+                <span>-</span
+                ><span>{{ scheduleStatistic.periodName || '-' }}</span>
+              </p>
+              <el-button type="primary" size="mini" @click="modify"
+                >修改</el-button
+              >
             </div>
             <el-row :gutter="20">
               <el-col class="label-name" :span="2">排期id:</el-col>
-              <el-col :span="2">15</el-col>
-              <el-col class="label-name" :span="2">快速设置:</el-col>
-              <el-col :span="2">2</el-col>
+              <el-col :span="2">{{ scheduleStatistic.period || '-' }}</el-col>
+              <el-col class="label-name" :span="2">接速设置:</el-col>
+              <el-col :span="2">{{ scheduleStatistic.robinNum || '' }}</el-col>
             </el-row>
             <el-row :gutter="20">
               <el-col class="label-name" :span="2">开始招生:</el-col>
-              <el-col :span="2">2019-02-02</el-col>
+              <el-col :span="2">{{ scheduleStatistic.startDate }}</el-col>
               <el-col class="label-name" :span="2">结束招生:</el-col>
-              <el-col :span="2">2019-02-02</el-col>
+              <el-col :span="2">{{ scheduleStatistic.endDate }}</el-col>
             </el-row>
             <el-row :gutter="20">
               <el-col class="label-name" :span="2">开始上课:</el-col>
-              <el-col :span="2">2019-02-02</el-col>
+              <el-col :span="2">{{ scheduleStatistic.courseDay }}</el-col>
               <el-col class="label-name" :span="2">结束上课:</el-col>
-              <el-col :span="2">2019-02-02</el-col>
+              <el-col :span="2">{{ scheduleStatistic.endCourseDay }}</el-col>
             </el-row>
-            <div class="description">
-              当前结果：社群销售<span>9</span>人，计划招生<span>8992</span>（S1:2020
-              S2:2020 S3:3000） 实际招生<span>9000</span>（S1:2020 S2:2020
-              S3:3000）
-            </div>
           </div>
           <el-tabs type="border-card">
             <el-tab-pane label="招生详情-销售">
-              <schedule-market></schedule-market>
+              <div class="search-container">
+                <!-- TODO: -->
+                <table-search @change="searchChange"></table-search>
+              </div>
+              <!-- TODO: -->
+              <schedule-market :paramsInfo="params"></schedule-market>
             </el-tab-pane>
             <!-- <el-tab-pane label="招生详情-部门" disabled
               >招生详情-部门</el-tab-pane
@@ -64,20 +71,73 @@
 </template>
 
 <script>
+import { formatData } from '@/utils/index'
 import ScheduleMarket from './components/ScheduleMarket'
+import TableSearch from '../../components/tableSearch/index'
 export default {
   data() {
-    return {}
+    return {
+      scheduleStatistic: {},
+      params: {
+        departmentIds: '',
+        teacherId: ''
+      }
+    }
   },
   components: {
-    ScheduleMarket
+    ScheduleMarket,
+    TableSearch
   },
   computed: {},
-  created() {
-    const { id = '' } = this.$route.params
-    console.log(id, 'this.$route.params.id')
+  async created() {
+    const { period = '', courseType = '0' } = this.$route.params
+    Object.assign(this.params, { period, courseType })
+
+    this.init()
   },
-  methods: {}
+  watch: {},
+  methods: {
+    // 初始化数据
+    init() {
+      this.getScheduleDetailInfo()
+    },
+    // 获取头部基本信息
+    async getScheduleDetailInfo() {
+      try {
+        const {
+          payload = {}
+        } = await this.$http.Operating.getScheduleDetailInfo(this.params)
+        const {
+          startDate = '',
+          endDate = '',
+          courseDay = '',
+          endCourseDay = ''
+        } = payload
+        Object.assign(payload, {
+          startDate: startDate ? formatData(startDate) : '-',
+          endDate: endDate ? formatData(endDate) : '-',
+          courseDay: courseDay ? formatData(courseDay) : '-',
+          endCourseDay: endCourseDay ? formatData(endCourseDay) : '-'
+        })
+        this.scheduleStatistic = payload
+      } catch (err) {
+        console.log(err)
+      }
+    },
+    searchChange(search) {
+      const { department = [], groupSell = '' } = search
+      Object.assign(this.params, {
+        departmentIds: department.join(),
+        teacherId: groupSell
+      })
+    },
+    // 点击修改按钮
+    modify() {
+      const { period = 0, courseType = '0' } = this.params
+
+      this.$router.push({ path: `/addSchedule/${period}/${courseType}` })
+    }
+  }
 }
 </script>
 <style lang="scss" scoped>

@@ -218,8 +218,7 @@ export default {
       }
     },
     searchHandler(res) {
-      // console.log('列表数据渲染', res)
-
+      this.currentPage = 1
       if (res.length > 0) {
         const wildcard = {}
         res.forEach((item) => {
@@ -244,21 +243,17 @@ export default {
       if (this.querSearch && this.searchQuery) {
         Object.assign(this.searchQuery, this.querSearch)
       }
-      // console.log('querSearch', this.searchQuery)
       if (this.searchQuery.wechat_no || this.searchQuery.teacher_id) {
         this.weChatPageList(this.searchQuery)
       }
     },
     // 微信管理列表
     weChatPageList(params) {
+      console.log('params哈哈哈哈哈', params)
       if (!params) {
         params = ''
       }
-      this.$http.Weixin.getWeChatTeacherPage(
-        params,
-        this.currentPage,
-        JSON.stringify(this.querSearch)
-      )
+      this.$http.Weixin.getWeChatTeacherPage(params, this.currentPage)
         .catch((err) => console.log(err))
         .then((res) => {
           // 总条数
@@ -337,7 +332,7 @@ export default {
     // 分页
     handleCurrentChange(val) {
       this.currentPage = val
-      this.weChatPageList()
+      this.weChatPageList(this.searchQuery)
     },
     // 获取表格一行信息
     onClick(row, column, event) {
@@ -350,7 +345,7 @@ export default {
         this.showNewWeChat = false
         setTimeout(() => {
           this.weChatPageList()
-        }, 500)
+        }, 1000)
       } else if (data === 2) {
         this.showNewWeChat = false
       }
@@ -371,7 +366,7 @@ export default {
         this.showRelationTeacher = false
         setTimeout(() => {
           this.weChatPageList()
-        }, 500)
+        }, 1000)
       } else if (data === 2) {
         this.showRelationTeacher = false
       }

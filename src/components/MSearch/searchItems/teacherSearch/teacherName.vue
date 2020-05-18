@@ -93,12 +93,16 @@ export default {
       this.$refs.elautocomplete.handleFocus()
     },
     async createFilter(queryString) {
-      const selectData = await this.$http.Teacher.teacherListEx(
-        'realname.keyword',
-        queryString
-      )
-      this.selectData = selectData.data.TeacherListEx || []
-      return this.selectData
+      try {
+        const selectData = await this.$http.Teacher.teacherListEx(
+          'realname.keyword',
+          queryString
+        )
+        this.selectData = selectData.data.TeacherListEx || []
+        return this.selectData
+      } catch (err) {
+        console.log(err)
+      }
     },
     inputHandler(data) {
       this.input = data.realname
