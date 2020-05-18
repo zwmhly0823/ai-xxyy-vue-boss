@@ -84,7 +84,7 @@
     </el-table>
     <m-pagination
       :current-page="query.pageNum"
-      :page-count="totalPages"
+      :page-size="query.size"
       :total="totalElements"
       :showPager="true"
       @current-change="pageChange_handler"
@@ -106,7 +106,6 @@ export default {
         pageNum: 1
       },
       totalElements: 0,
-      totalPages: 0,
       radio: '',
       timestamp: timestamp,
       loading: true
@@ -123,7 +122,6 @@ export default {
           this.loading = false
           this.list = res.payload.content
           this.totalElements = Number.parseInt(res.payload.totalElements)
-          this.totalPages = Number.parseInt(res.payload.totalPages)
         }
       } catch (error) {
         console.log(error)

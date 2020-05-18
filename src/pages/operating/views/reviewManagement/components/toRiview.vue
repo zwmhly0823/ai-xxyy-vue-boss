@@ -119,7 +119,7 @@
     </div>
     <m-pagination
       :current-page="query.pageNum"
-      :page-count="totalPages"
+      :page-size="query.size"
       :total="totalElements"
       :showPager="true"
       @current-change="pageChange_handler"
@@ -142,7 +142,6 @@ export default {
         pageNum: 1
       },
       totalElements: 0,
-      totalPages: 0,
       timestamp: timestamp,
       loading: true,
       courseIdList: [],
@@ -160,7 +159,6 @@ export default {
         if (res.code === 0) {
           this.list = res.payload.content
           this.totalElements = Number.parseInt(res.payload.totalElements)
-          this.totalPages = Number.parseInt(res.payload.totalPages)
           await res.payload.content.map((item, index) => {
             const str = `${item.id}@${item.courseId}`
             this.courseIdList.push(str)
