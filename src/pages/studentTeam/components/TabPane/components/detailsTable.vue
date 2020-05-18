@@ -285,12 +285,13 @@
               <div v-if="scope.row.receipt_name">
                 <span>{{ scope.row.receipt_name }}</span>
                 <span>{{ scope.row.receipt_tel }}</span>
-                <el-button
-                  v-if="
+                <!-- v-if="
                     showModifyAddressBtn &&
                       scope.row.id == rowId &&
                       (expressStatus === '待审核' || expressStatus === '无效')
-                  "
+                  " -->
+                <el-button
+                  v-if="false"
                   style="margin-left:20px;"
                   icon="el-icon-edit"
                   size="mini"

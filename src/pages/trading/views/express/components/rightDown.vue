@@ -94,8 +94,9 @@
                 <span>{{ scope.row.address_detail }}</span>
               </div>
             </div>
+            <!-- v-if="dataLogitcs.id === '6' || dataLogitcs.id === '0'" -->
             <div
-              v-if="dataLogitcs.id === '6' || dataLogitcs.id === '0'"
+              v-if="false"
               :class="{
                 edit_0: dataLogitcs.id === '0',
                 edit_6: dataLogitcs.id === '6'
