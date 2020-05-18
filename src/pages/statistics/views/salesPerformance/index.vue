@@ -806,8 +806,8 @@ export default {
       },
       // title点评统计
       titlereviewStatistical: {
-        reviewProbability: '-',
-        listenTo: '-'
+        reviewProbability: 0,
+        listenTo: 0
       },
       // 放课天数数组
       schoolDays: [],
@@ -1161,7 +1161,8 @@ export default {
         this.titleUpload.total_upload_rate =
           this.titleUpload.task_student_count &&
           res.data.courseTaskStatistics.student_count &&
-          this.schoolDays.length > 0
+          this.schoolDays.length > 0 &&
+          this.schoolDays[this.schoolDays.length - 1] > 0
             ? (
                 (
                   this.titleUpload.task_student_count /
