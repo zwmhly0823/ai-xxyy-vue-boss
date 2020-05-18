@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 14:19:58
  * @LastEditors: panjian
- * @LastEditTime: 2020-04-24 10:26:06
+ * @LastEditTime: 2020-05-14 15:44:06
  -->
 <template>
   <div>
@@ -65,6 +65,7 @@
             <details-table
               @onCurrentPage="onCurrentPage"
               @addExpresss="addExpresss"
+              @modifyAddressExpresss="modifyAddressExpresss"
               :tables="table"
               :experssShow="experssShow"
               :audioTabs="audioTabs"
@@ -1189,6 +1190,12 @@ export default {
     },
     // 添加物流地址 子组件传值 掉物流接口
     addExpresss(data) {
+      if (data) {
+        this.getLogistics()
+        // this.experssShow = true
+      }
+    },
+    modifyAddressExpresss(data) {
       if (data) {
         this.getLogistics()
         // this.experssShow = true
