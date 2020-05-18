@@ -220,7 +220,7 @@
           :current-page="totalNumber"
           :total="totalElements"
           open="calc(100vw - 95px - 100px)"
-          close="calc(100vw - 23px - 50px)"
+          close="calc(100vw - 40px - 50px)"
         />
       </template>
     </div>
@@ -518,8 +518,9 @@ export default {
   display: flex;
   flex-direction: column;
   background: rgb(240, 241, 242);
-  height: calc(100vh - 130px);
+  height: calc(100vh - 140px);
   overflow: scroll;
+  padding-bottom: 30px;
   .channel-box-top {
     margin: 10px 10px 10px 10px;
     .channel-box-top-search {
