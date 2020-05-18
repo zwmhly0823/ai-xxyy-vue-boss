@@ -20,16 +20,17 @@
       </el-table-column>
       <el-table-column label="课程" width="240" align="center">
         <template slot-scope="scope">
-          <span>{{
+          <span style="margin: 0 20px 0 0">{{
             scope.row.courseType === 'SYSTEM' ? '系统课' : '体验课'
           }}</span>
-          <span>{{
-            scope.row.courseStrait +
-              scope.row.courseLevel +
-              scope.row.courseUnit +
-              scope.row.courseLesson +
-              scope.row.courseName
-          }}</span>
+          <span style="margin: 0 20px 0 0"
+            >{{
+              scope.row.courseStrait +
+                scope.row.courseLevel +
+                scope.row.courseUnit
+            }}
+          </span>
+          <span>{{ scope.row.courseName }}</span>
         </template>
       </el-table-column>
       <el-table-column label="点评维度" width="180" align="center">
@@ -74,6 +75,7 @@
       :current-page="query.pageNum"
       :page-count="totalPages"
       :total="totalElements"
+      :showPager="true"
       @current-change="pageChange_handler"
       open="calc(100vw - 95px - 100px)"
       close="calc(100vw - 23px - 50px)"
@@ -110,9 +112,7 @@ export default {
         const res = await this.$http.RiviewCourse.getAudioList(number)
         if (res.code === 0) {
           this.loading = false
-          this.list = res.payload.content.sort((a, b) => {
-            return Number.parseInt(b.id) - Number.parseInt(a.id)
-          })
+          this.list = res.payload.content
           this.totalElements = Number.parseInt(res.payload.totalElements)
           this.totalPages = Number.parseInt(res.payload.totalPages)
         }
@@ -120,9 +120,10 @@ export default {
         console.log(error)
       }
     },
-    pageChange_handler(page) {
+    async pageChange_handler(page) {
       this.query.pageNum = page
-      this.initList(page)
+      await this.initList(page)
+      document.body.scrollTop = document.documentElement.scrollTop = 0
     },
     async handleItem(type, id) {
       const params = {
@@ -164,6 +165,9 @@ export default {
     border-radius: 100%;
     height: 47px;
     margin: 0 auto;
+  }
+  /deep/ .m-pagination {
+    bottom: 0;
   }
 }
 </style>

@@ -97,7 +97,13 @@
       </el-form-item>
     </el-form>
     <div class="upload-container">
-      <Upload :btnWidth="130" format="audio" :upload="upload">
+      <Upload
+        :btnWidth="130"
+        format="audio"
+        :upload="upload"
+        :audioList="audioList"
+        @handle-remove="handleRemoveFile"
+      >
         <div slot="mp3" class="upload-tip">只能上传mp3格式</div>
       </Upload>
     </div>
@@ -142,7 +148,8 @@ export default {
         rate: null
       },
       audioList: [],
-      isShowRate: true
+      isShowRate: true,
+      removeFile: []
     }
   },
   watch: {
@@ -199,8 +206,17 @@ export default {
           message: `${file.file.name}上传成功！`,
           type: 'success'
         })
-        this.audioList.push(res)
+        this.audioList.push({
+          uid: file.file.uid,
+          url: res
+        })
       })
+    },
+    handleRemoveFile(list) {
+      if (list.length === 0) {
+        this.audioList = []
+      }
+      this.removeFile = list
     },
     async handleSubmit() {
       const {
@@ -213,15 +229,33 @@ export default {
         courseId,
         rate
       } = this.form
-      const { coursePayload, scoreObj, isShowRate, audioList } = this
-      const fileUrl = audioList.join('')
+      const {
+        coursePayload,
+        scoreObj,
+        isShowRate,
+        audioList,
+        removeFile
+      } = this
+      const fileUrlList = []
+      for (const item of audioList) {
+        if (removeFile.length !== 0) {
+          for (const remove of removeFile) {
+            if (item.uid === remove.uid) {
+              fileUrlList.push(item.url)
+            }
+          }
+        } else {
+          fileUrlList.push(item.url)
+        }
+      }
+      const fileUrl = fileUrlList.join('')
       let courseName = null
-      let score = null
       for (const item of coursePayload) {
         if (item.id === courseId) {
           courseName = item.title
         }
       }
+      let score = null
       for (const key in scoreObj) {
         if (rate === scoreObj[key]) {
           score = key
