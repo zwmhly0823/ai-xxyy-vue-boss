@@ -55,13 +55,10 @@
           <div class="review-type">{{ scope.row.teamName }}</div>
         </template>
       </el-table-column>
-      <el-table-column
-        prop="courseName"
-        label="课程"
-        align="center"
-        width="180"
-        class="review-type"
-      >
+      <el-table-column label="课程" align="center" width="180">
+        <template slot-scope="scope">
+          <div class="review-type">{{ scope.row.courseName }}</div>
+        </template>
       </el-table-column>
       <el-table-column label="辅导老师" align="center" width="180">
         <template slot-scope="scope">
