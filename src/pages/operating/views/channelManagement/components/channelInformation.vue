@@ -472,7 +472,8 @@ export default {
 .channelAdd-box {
   background: #f0f1f2;
   padding: 10px 10px 10px 10px;
-  height: calc(100vh - 129px);
+  height: calc(100vh - 140px);
+  padding-bottom: 30px;
   overflow: scroll;
   .channelAdd-top {
     .channelAdd-top-search {
