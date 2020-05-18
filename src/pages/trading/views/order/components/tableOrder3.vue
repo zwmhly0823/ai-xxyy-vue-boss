@@ -12,8 +12,7 @@
     <el-table :data="orderList">
       <el-table-column label="用户信息" min-width="120">
         <template slot-scope="scope">
-          <p>{{ scope.row.user ? scope.row.user.username || '-' : '-' }}</p>
-          <p>{{ scope.row.user ? scope.row.user.mobile || '-' : '-' }}</p>
+          <user :user="scope.row.user" />
         </template>
       </el-table-column>
       <el-table-column label="商品信息" min-width="140">
@@ -109,6 +108,7 @@
 import MPagination from '@/components/MPagination/index.vue'
 import { formatData, isToss } from '@/utils/index.js'
 import ExpressDetail from '../../components/expressDetail'
+import User from '../../components/User.vue'
 export default {
   props: {
     // 商品主题
@@ -156,7 +156,8 @@ export default {
   },
   components: {
     MPagination,
-    ExpressDetail
+    ExpressDetail,
+    User
   },
 
   watch: {
