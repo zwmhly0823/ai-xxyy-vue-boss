@@ -193,7 +193,12 @@ export default {
       }
     },
     upload(file) {
+      const _this = this
       uploadFile(file).then((res) => {
+        _this.$message({
+          message: '上传成功!',
+          type: 'success'
+        })
         this.audioList.push(res)
       })
     },
