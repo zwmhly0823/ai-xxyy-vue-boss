@@ -9,6 +9,7 @@
  -->
 <template>
   <div class="audio-add">
+    <el-button type="primary" @click="goBack" class="go-back">返回</el-button>
     <el-form :model="form" class="audio-add-form">
       <el-form-item label="课程" class="audio-add-form-item">
         <el-select
@@ -80,7 +81,11 @@
           >
           </el-option>
         </el-select>
-        <el-select v-model="form.rate" placeholder="请选择评分">
+        <el-select
+          v-model="form.rate"
+          placeholder="请选择评分"
+          v-show="isShowRate"
+        >
           <el-option
             v-for="(item, index) in reviewRate"
             :key="index"
@@ -136,7 +141,8 @@ export default {
         degree: null,
         rate: null
       },
-      audioList: []
+      audioList: [],
+      isShowRate: true
     }
   },
   watch: {
@@ -155,12 +161,11 @@ export default {
           }${this.courseUnit[val.unit]}${this.courseLesson[val.lesson]}`
           this.loadCourseList(params)
         }
-        // if (val.degree === 0) {
-        //   this.reviewRate = []
-        //   val.rate = null
-        //   return
-        // }
-        // this.reviewRate = reviewRate
+        if (val.degree === 0) {
+          this.isShowRate = false
+        } else {
+          this.isShowRate = true
+        }
       },
       deep: true,
       immediate: true
@@ -203,8 +208,8 @@ export default {
         courseId,
         rate
       } = this.form
-      const { coursePayload, scoreObj } = this
-      const fileUrl = this.audioList.join('')
+      const { coursePayload, scoreObj, isShowRate, audioList } = this
+      const fileUrl = audioList.join('')
       let courseName = null
       let score = null
       for (const item of coursePayload) {
@@ -217,6 +222,9 @@ export default {
           score = key
         }
       }
+      if (!isShowRate) {
+        score = 'EXCELLENT'
+      }
       if (
         type === null ||
         difficulty === null ||
@@ -225,7 +233,7 @@ export default {
         unit === null ||
         lesson === null ||
         courseId === null ||
-        rate === null ||
+        score === null ||
         !fileUrl
       ) {
         this.$message({
@@ -254,13 +262,13 @@ export default {
             message: '上传成功！',
             type: 'success'
           })
-          setTimeout(() => {
-            this.$router.push('/reviewManagement')
-          }, 2000)
         }
       } catch (error) {
         console.log(error)
       }
+    },
+    goBack() {
+      this.$router.push('/reviewManagement')
     }
   },
   components: {
@@ -278,8 +286,10 @@ export default {
   width: 100%;
   height: 100vh;
   background: rgb(255, 255, 255);
-  margin: 20px 0 0 0;
   overflow: hidden;
+  .go-back {
+    margin: 10px 0 0 10px;
+  }
   &-form {
     margin: 80px auto 0;
     &-item {
@@ -293,6 +303,10 @@ export default {
     }
     .degree {
       margin-top: 30px;
+    }
+    /deep/ .el-form-item__content {
+      display: flex;
+      justify-content: flex-start;
     }
   }
   .upload-container {
