@@ -7,40 +7,55 @@
  * @LastEditTime: 2020-05-11 19:19:54
  -->
 <template>
-  <el-scrollbar wrap-class="order-wrapper" id="order-scroll">
-    <!-- topicType="topic_id" -->
-    <div class="order-box">
-      <el-tabs type="border-card" v-model="activeTopic">
-        <!-- 包含全部系统课订单数据（月系统课、季系统课、半年系统课、年系统课） -->
-        <el-tab-pane label="系统课" name="5">
-          <search-list1 @search="handleSearch" v-if="activeTopic === '5'" />
-          <all-order1
-            :topic="activeTopic"
-            :search="search"
-            v-if="activeTopic === '5'"
-          />
-        </el-tab-pane>
+  <el-row type="flex" class="app-main height">
+    <div class="order-container">
+      <div class="order-container-content">
+        <el-scrollbar wrap-class="order-wrapper" id="order-scroll">
+          <!-- topicType="topic_id" -->
+          <div class="order-box">
+            <el-tabs type="border-card" v-model="activeTopic">
+              <!-- 包含全部系统课订单数据（月系统课、季系统课、半年系统课、年系统课） -->
+              <el-tab-pane label="系统课" name="5">
+                <search-list1
+                  @search="handleSearch"
+                  v-if="activeTopic === '5'"
+                />
+                <all-order1
+                  :topic="activeTopic"
+                  :search="search"
+                  v-if="activeTopic === '5'"
+                />
+              </el-tab-pane>
 
-        <!-- 包含全部体验课订单数据（双周体验课、单周体验课） -->
-        <el-tab-pane label="体验课" name="4">
-          <search-list2 @search="handleSearch" v-if="activeTopic === '4'" />
-          <all-order2
-            :topic="activeTopic"
-            :search="search"
-            v-if="activeTopic === '4'"
-          />
-        </el-tab-pane>
-        <el-tab-pane label="活动订单" name="1,2,6">
-          <search-list3 @search="handleSearch" v-if="activeTopic === '1,2,6'" />
-          <all-order3
-            :topic="activeTopic"
-            :search="search"
-            v-if="activeTopic === '1,2,6'"
-          />
-        </el-tab-pane>
-      </el-tabs>
+              <!-- 包含全部体验课订单数据（双周体验课、单周体验课） -->
+              <el-tab-pane label="体验课" name="4">
+                <search-list2
+                  @search="handleSearch"
+                  v-if="activeTopic === '4'"
+                />
+                <all-order2
+                  :topic="activeTopic"
+                  :search="search"
+                  v-if="activeTopic === '4'"
+                />
+              </el-tab-pane>
+              <el-tab-pane label="活动订单" name="1,2,6">
+                <search-list3
+                  @search="handleSearch"
+                  v-if="activeTopic === '1,2,6'"
+                />
+                <all-order3
+                  :topic="activeTopic"
+                  :search="search"
+                  v-if="activeTopic === '1,2,6'"
+                />
+              </el-tab-pane>
+            </el-tabs>
+          </div>
+        </el-scrollbar>
+      </div>
     </div>
-  </el-scrollbar>
+  </el-row>
 </template>
 
 <script>
@@ -94,6 +109,19 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.order-container {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  &-content {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    overflow: hidden;
+  }
+}
 #order-scroll {
   height: calc(100vh - 60px);
   position: relative;
@@ -102,6 +130,7 @@ export default {
     width: 100%;
     height: 100%;
     padding: 10px 10px 0 10px;
+    overflow: hidden;
 
     .el-tabs--border-card > .el-tabs__content {
       padding: 15px 0 !important;
