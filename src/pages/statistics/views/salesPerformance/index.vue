@@ -823,7 +823,7 @@ export default {
   created() {
     this.$nextTick(() => {
       const tableHeight =
-        document.body.clientHeight - this.$refs.tableInner.offsetTop - 112
+        document.body.clientHeight - this.$refs.tableInner.offsetTop - 112 - 34
       this.tableHeight = tableHeight + ''
     })
     this.init()
