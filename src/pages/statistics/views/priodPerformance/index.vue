@@ -323,7 +323,10 @@ export default {
     this.init()
     this.$nextTick(() => {
       const tableHeight =
-        document.body.clientHeight - this.$refs.tableContainer.offsetTop - 115
+        document.body.clientHeight -
+        this.$refs.tableContainer.offsetTop -
+        115 -
+        34
       this.tableHeight = tableHeight + ''
     })
   },
