@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-05-06 16:33:15
  * @LastEditors: panjian
- * @LastEditTime: 2020-05-18 18:35:53
+ * @LastEditTime: 2020-05-19 17:02:40
  -->
 <template>
   <div class="channelUpload-box">
@@ -43,29 +43,8 @@
             @click="submitUpload"
             >上传到服务器</el-button
           >
-          <!-- :loading="uploading" -->
           <div slot="tip" class="el-upload__tip">只能上传xls/xlsx文件</div>
         </el-upload>
-        <!-- <el-upload
-          class="upload-demo"
-          action=""
-          :on-change="handleChange"
-          :on-exceed="handleExceed"
-          :on-remove="handleRemove"
-          :headers="headers"
-          :file-list="fileList"
-          :limit="1"
-          accept=".xlsx,.slx"
-          :auto-upload="false"
-        >
-          <el-button class="upload-btn" size="small" type="primary"
-            >点击上传文件</el-button
-          >
-          <div slot="tip" class="el-upload__tip">
-            <span style="color:red;font-size:15px;">*</span>
-            <span style="font-size:15px;"> 文件只能上传xlsx/xls文件</span>
-          </div>
-        </el-upload> -->
       </div>
       <el-table
         :header-cell-style="headerCss"
@@ -108,25 +87,8 @@ export default {
       remarks: '',
       fileTemp: '',
       headers: { 'Content-Type': 'multipart/form-data' },
-      fileList: [
-        // {
-        //   name: 'food.jpeg',
-        //   url:
-        //     'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'
-        // },
-        // {
-        //   name: 'food2.jpeg',
-        //   url:
-        //     'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'
-        // }
-      ],
-      tableData: [
-        // {
-        //   date: '2016-05-02',
-        //   name: '王小虎',
-        //   address: '上海市普陀区金沙江路 1518 弄'
-        // }
-      ]
+      fileList: [],
+      tableData: []
     }
   },
   created() {},
@@ -145,77 +107,22 @@ export default {
       console.log(this.$refs)
       this.$refs.upload.submit()
     },
-    // uploadFile(file, filelist) {
-    //   this.$refs.upload.submit()
-    // },
     handleChange(params) {
       const formdata = new FormData()
-      console.log(params.file, 'file.raw')
-
+      console.log('params', params.file)
       formdata.append('file', params.file)
       formdata.append('remark', this.remarks)
       formdata.append('adminId', '2')
-      console.log(formdata, 'formdata')
-      // const params = {
-      //   headers: 'multipart/form-data',
-      //   adminId: '2',
-      //   remark: this.remarks,
-      //   file: file.raw
-      // }
-      // console.log(params, 'params')
+      console.log(formdata)
+
       this.$http.Operating.channelUpload(formdata).then((res) => {
         console.log(res)
       })
 
       this.fileTemp = params.file
     },
-    //   uploadFile(params) {
-    //   const formdata = new FormData()
-    //   const file = params.file
-    //   formdata.append('file', file)
-    //   this.uploading = true
-    //   Object.assign(formdata, { operatorId: this.operatorId })
-
-    //   this.$http.Express.expressUpload(formdata)
-    //     .then((res) => {
-    //       this.$refs.upload.clearFiles()
-    //       this.uploading = false
-    //       if (res.code === 0 && res.payload.length < 1 && res.payload) {
-    //         this.$message({
-    //           showClose: true,
-    //           message: '恭喜你，文件上传成功',
-    //           type: 'success'
-    //         })
-    //       }
-    //       this.dialogVisible = false
-    //       this.errorDialog = !res.errors ? res.payload : []
-    //     })
-    //     .finally(() => {
-    //       this.uploading = false
-    //     })
-    //   setTimeout(() => {
-    //     this.uploading = false
-    //   }, 2000)
-    // },
-
     handleRemove(file, fileList) {
-      console.log('222')
       this.fileTemp = null
-    },
-    // handleRemove(file, fileList) {
-    //   console.log(file, fileList, '1')
-    // },
-    // handlePreview(file) {
-    //   console.log(file, '2')
-    // },
-    handleExceed(files, fileList) {
-      console.log('3333333')
-
-      this.$message.warning(
-        `当前限制选择 3 个文件，本次选择了 ${
-          files.length
-        } 个文件，共选择了 ${files.length + fileList.length} 个文件`
-      )
     },
     beforeRemove(file, fileList) {
       return this.$confirm(`确定移除 ${file.name}？`)

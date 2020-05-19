@@ -3,8 +3,8 @@
  * @version: 
  * @Author: zhubaodong
  * @Date: 2020-03-27 19:04:54
- * @LastEditors: Lukun
- * @LastEditTime: 2020-05-14 15:11:51
+ * @LastEditors: panjian
+ * @LastEditTime: 2020-05-18 20:25:25
  -->
 <template>
   <div class="container">
@@ -35,7 +35,7 @@
       />
     </div>
     <!-- v-if="!teacherId" TOSS -->
-    <div class="search-export" v-if="!teacherId">
+    <div class="search-export">
       <!-- <div class="search-export"> -->
       <div>
         <el-button size="small" type="primary" @click="showExportDialog"
