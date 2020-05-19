@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-31 22:54:28
  * @LastEditors: panjian
- * @LastEditTime: 2020-05-18 19:40:37
+ * @LastEditTime: 2020-05-18 19:44:13
  */
 // import axios from '../axios'
 import axios from '../axiosConfig'
@@ -84,6 +84,20 @@ export default {
     )
   },
   /**
+   * 带班详情 物流 修改地址 查询地址接口
+   * @param {*} param0
+   */
+  getAddressList(params) {
+    return axios.get(`/api/o/v1/express/getAddressList?userId=${params}`)
+  },
+  /**
+   * 带班详情 物流 修改地址
+   * @param {*} param0
+   */
+  updateExpressAddress(params) {
+    return axios.get('/api/o/v1/express/updateExpressAddress', params)
+  }
+  /**
    * v1 订单关联的物流
    */
   //   getOderExpress(query = '', page = 1) {
@@ -102,18 +116,4 @@ export default {
   //       `
   //     })
   //   }
-  /**
-   * 带班详情 物流 修改地址 查询地址接口
-   * @param {*} param0
-   */
-  getAddressList(params) {
-    return axios.get(`/api/o/v1/express/getAddressList?userId=${params}`)
-  },
-  /**
-   * 带班详情 物流 修改地址
-   * @param {*} param0
-   */
-  updateExpressAddress(params) {
-    return axios.get('/api/o/v1/express/updateExpressAddress', params)
-  }
 }

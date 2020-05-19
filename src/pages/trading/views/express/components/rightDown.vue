@@ -94,6 +94,7 @@
                 <span>{{ scope.row.address_detail }}</span>
               </div>
             </div>
+            <!-- v-if="dataLogitcs.id === '6' || dataLogitcs.id === '0'" -->
             <div
               v-if="dataLogitcs.id === '6' || dataLogitcs.id === '0'"
               :class="{
@@ -763,6 +764,7 @@ export default {
               last_teacher_id
               pay_teacher_id
               regtype
+              order_id
               pay_channel
               user {
                 id
