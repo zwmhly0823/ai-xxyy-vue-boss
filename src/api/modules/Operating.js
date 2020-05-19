@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-03-16 19:46:39
  * @LastEditors: panjian
- * @LastEditTime: 2020-05-19 17:27:19
+ * @LastEditTime: 2020-05-19 18:02:25
  */
 import axios from '../axiosConfig'
 
@@ -211,7 +211,7 @@ export default {
    * 密码登录
    */
   channelUpload(file) {
-    return axios.post(`/sapi/b/v1/import/importCompletedOrder`, file)
+    return axios.post(`/api/b/v1/import/importCompletedOrder`, file)
     // return axios.post(`/api/b/v1/import/importCompletedOrder`, file)
   }
 }
