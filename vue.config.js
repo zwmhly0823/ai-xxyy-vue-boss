@@ -98,7 +98,7 @@ module.exports = {
         }
       },
       '/sapi': {
-        target: 'http://docker.meixiu.mobi:38766',
+        target: 'http://docker.meixiu.mobi:48766',
         changeOrigin: true,
         ws: true,
         secure: false,
