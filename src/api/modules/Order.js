@@ -40,6 +40,7 @@ export default {
               mobile
               mobile_province
               mobile_city
+              birthday
             }
             channel {
               channel_outer_name

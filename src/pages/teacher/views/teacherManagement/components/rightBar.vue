@@ -279,7 +279,7 @@ export default {
         department: {
           id: `${id}`,
           pid: `${pid}`,
-          children: `${JSON.stringify(children)}`
+          children: children
         }
       }
       this.departmentQuery = query

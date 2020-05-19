@@ -353,6 +353,12 @@ export default {
               JSON.stringify(getToken.staff || '{}')
             )
           }
+          // 登录后，设置默认multiTabbed
+          const tabs = {
+            [`${path}#/`]: { meta: { title: '班级中心' } }
+          }
+          sessionStorage.setItem('multiTabbed', JSON.stringify(tabs))
+          sessionStorage.setItem('currentMultiTab', `${path}#/`)
 
           location.href = `${path}#/`
         }

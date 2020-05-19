@@ -4,10 +4,10 @@
  * @Author: panjian
  * @Date: 2020-04-25 12:09:03
  * @LastEditors: panjian
- * @LastEditTime: 2020-05-13 10:53:23
+ * @LastEditTime: 2020-05-16 17:00:57
  -->
 <template>
-  <div>
+  <div class="app-main height">
     <div class="channel-box-top">
       <el-tabs v-model="activeName" @tab-click="handleClick" type="border-card">
         <el-tab-pane label="渠道查询" name="channelQuery">
