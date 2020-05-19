@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-03-17 11:50:18
  * @LastEditors: panjian
- * @LastEditTime: 2020-05-19 15:59:51
+ * @LastEditTime: 2020-05-19 18:57:54
  */
 import axios from './axios'
 import { getToken } from '@/utils/auth'
@@ -41,8 +41,9 @@ export default {
       return new Promise((resolve, reject) => {
         axios
           .get(url, {
-            params: params,
-            headers: this.getHeaders()
+            ...params,
+            params: params
+            // headers: this.getHeaders()
           })
           .then((res) => {
             resolve(res)
