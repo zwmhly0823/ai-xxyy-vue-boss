@@ -177,8 +177,8 @@
               <el-tab-pane label="完课统计" name="finishClass"> </el-tab-pane>
               <el-tab-pane label="上传作品统计" name="uploadWorks">
               </el-tab-pane>
-              <!-- <el-tab-pane label="老师点评统计" name="teacherComments">
-              </el-tab-pane> -->
+              <el-tab-pane label="老师点评统计" name="teacherComments">
+              </el-tab-pane>
             </el-tabs>
           </div>
           <div class="tableInner" ref="tableInner"></div>
@@ -528,7 +528,7 @@
                 prop="trial_course_count"
                 align="center"
               ></el-table-column>
-              <el-table-column align="center" label="总计">
+              <el-table-column align="center" label="总计" width="240" fixed>
                 <el-table-column
                   fixed
                   label="总上传率"
@@ -653,6 +653,8 @@
                 v-for="(a, i) in tableDataChildAttend"
                 :label="a.current_lesson"
                 :key="i"
+                width="240"
+                :fixed="i === 0"
               >
                 <el-table-column fixed label="点评数" align="center">
                   <template slot-scope="scope">
