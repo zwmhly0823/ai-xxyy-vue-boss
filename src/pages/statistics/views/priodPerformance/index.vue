@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-02 15:35:27
  * @LastEditors: Shentong
- * @LastEditTime: 2020-05-20 18:25:19
+ * @LastEditTime: 2020-05-20 20:32:41
  -->
 <template>
   <el-row type="flex" class="app-main height schedule-container">
@@ -328,7 +328,7 @@ export default {
     this.init()
     this.$nextTick(() => {
       const tableHeight =
-        document.body.clientHeight - this.$refs.tableContainer.offsetTop - 115
+        document.body.clientHeight - this.$refs.tableContainer.offsetTop - 148
       this.tableHeight = tableHeight + ''
     })
   },
