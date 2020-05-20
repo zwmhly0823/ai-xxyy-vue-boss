@@ -91,7 +91,7 @@
       class="drawer-approval-detail"
       :title="drawerApprovalDeatail.addressId ? '补发货审批' : '退款审批'"
     >
-      <div v-if="drawerApprovalDeatail.addressId">
+      <div v-if="drawerApprovalDeatail.addressId" class="approval-replenish">
         <el-row>
           <el-col :span="3">申请人:</el-col>
           <el-col :span="20" :offset="1">{{
@@ -582,7 +582,12 @@ export default {
   .approvallk .el-row .el-col-5 {
     text-align: right;
   }
-
+  .approval-replenish {
+    margin: 0 30px;
+    div {
+      margin-bottom: 15px;
+    }
+  }
   // 操作
   .wait-pending {
     cursor: pointer;

@@ -102,7 +102,7 @@
       :modal="false"
       :title="drawerApprovalDeatail.addressId ? '补发货审批' : '退款审批'"
     >
-      <div v-if="drawerApprovalDeatail.addressId">
+      <div v-if="drawerApprovalDeatail.addressId" class="approval-replenish">
         <el-row>
           <el-col :span="3">申请人:</el-col>
           <el-col :span="20" :offset="1">{{
@@ -470,7 +470,7 @@ export default {
     padding-top: 50px;
     display: flex;
     font-size: 13px;
-    flex-direction: column;
+    // flex-direction: column;
   }
   .wait-pending {
     cursor: pointer;
