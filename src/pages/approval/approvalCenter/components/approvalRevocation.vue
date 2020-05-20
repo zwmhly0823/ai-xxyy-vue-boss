@@ -322,7 +322,8 @@ export default {
       drawerApproval: false,
       drawerApprovalDeatail: {},
       currentPage: 1,
-      totalElements: 0
+      totalElements: 0,
+      isStaffId: false
     }
   },
   created() {
@@ -330,7 +331,8 @@ export default {
     const teacher = localStorage.getItem('teacher')
     if (staff) {
       this.staffId = JSON.parse(staff).id
-      this.staffName = JSON.parse(staff).id.realName
+      this.staffName = JSON.parse(staff).id.realName,
+      this.isStaffId = JSON.parse(staff).positionId + 0 === 1 || ''
     }
     if (teacher) {
       this.staffId = JSON.parse(teacher).id
@@ -352,6 +354,7 @@ export default {
       page: 1,
       size: 20
     }
+    this.params.isOperation = this.isStaffId ? this.isStaffId : false
     this.checkPending(this.params)
   },
   methods: {

@@ -23,7 +23,10 @@
       <el-table-column width="50">
         <template slot-scope="scope">
           <el-dropdown placement="bottom-start">
-            <div :class="scope.row.id === current.id ? 'three-dot' : 'disnone'">
+            <div
+              v-if="scope.row.applyId == staffId"
+              :class="scope.row.id === current.id ? 'three-dot' : 'disnone'"
+            >
               <img src="@/assets/images/icon/icon-three-dot.jpg" />
             </div>
             <el-dropdown-menu slot="dropdown">
@@ -374,6 +377,7 @@ export default {
       page: 1,
       size: 20
     }
+    this.params.isOperation = this.isStaffId ? this.isStaffId : false
     this.checkPending(this.params)
   },
 

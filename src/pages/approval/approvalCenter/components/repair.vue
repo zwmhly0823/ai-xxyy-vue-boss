@@ -150,7 +150,7 @@
           </el-radio-group>
         </el-form-item>
         <el-form-item>
-          <el-button>取消</el-button>
+          <el-button @click="cancelButton">取消</el-button>
           <el-button type="primary" @click="confirmButton('ruleForm')"
             >提交</el-button
           >
@@ -163,7 +163,12 @@
       width="40%"
       :modal="false"
     >
-      <logisticsForm @addExpress="getCreateAddress" :userId="userId" />
+      <!-- <logisticsForm @addExpress="getCreateAddress" :userId="userId" /> -->
+      <logisticsForm
+        @addExpress="getCreateAddress"
+        @cancel="cancelAddress"
+        :userId="userId"
+      />
     </el-dialog>
     <el-dialog
       title="选择商品"
@@ -348,6 +353,10 @@ export default {
   },
 
   methods: {
+    cancelAddress(val) {
+      this.addresDialog = false
+      this.$message('您已取消修改地址')
+    },
     // 清空数据
     clearData() {
       this.changeProductText = '选择商品'
@@ -356,7 +365,7 @@ export default {
       this.formRepair.packagesType = ''
       this.formRepair.sup = ''
       this.formRepair.level = ''
-      this.formRepair.mode = ''
+      // this.formRepair.mode = ''
       this.$root.$emit('qingkong', '') // 清空子组件里的值
     },
     // 保存商品
@@ -478,7 +487,6 @@ export default {
           receiptTel: val.receiptTel
         })
       }
-      console.log(val)
     },
     // 通过订单id查询物流信息
     getSeletInput(val) {
@@ -526,7 +534,8 @@ export default {
     // 搜索手机号 获取uid 查询订单信息
     getSearchPhone(val) {
       this.value = ''
-      this.clearData()
+      // this.clearData()
+      this.formRepair = {}
       this.orderDisable = true
       this.changeProductText = '选择商品'
       this.formRepair.name = val.uid
@@ -578,7 +587,7 @@ export default {
                 }
               )
             } else {
-              this.$message('请填完信息')
+              this.$message('请填写完信息')
             }
 
             break
@@ -597,7 +606,7 @@ export default {
                 }
               )
             } else {
-              this.$message('请填完信息')
+              this.$message('请填写完信息')
             }
 
             break
@@ -610,7 +619,8 @@ export default {
       this.addresDialog = true
     },
     cancelButton() {
-      this.addresDialog = false
+      // this.addresDialog = false
+      this.$router.push('/approvalCenter')
     },
     confirmButton(formName) {
       this.$refs[formName].validate((valid) => {

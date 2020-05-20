@@ -150,12 +150,17 @@ export default {
     },
     resetForm(formName) {
       this.$refs.ruleForm.resetFields()
-      this.$emit('addExpress', 'cancel')
+      // this.$emit('addExpress', 'cancel')
+      this.$emit('cancel', '')
       this.chooseAddress = []
-      this.province = ''
-      this.city = ''
-      this.area = ''
-      this.areaCode = ''
+      // this.province = ''
+      // this.city = ''
+      // this.area = ''
+      // this.areaCode = ''
+      this.province = []
+      this.city = []
+      this.area = []
+      this.areaCode = []
     }
   }
 }
