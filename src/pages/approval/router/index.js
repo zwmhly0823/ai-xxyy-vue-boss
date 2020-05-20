@@ -30,7 +30,7 @@ const routes = [
     name: 'approvalCenter',
     meta: {
       title: '审批中心',
-      keepAlive: true
+      keepAlive: false
     },
     component: () => import('../approvalCenter/index.vue')
   },
@@ -39,7 +39,7 @@ const routes = [
     name: 'moneyBack',
     meta: {
       title: '退款审批',
-      keepAlive: true
+      keepAlive: false
     },
     component: () => import('../approvalCenter/components/moneyBack.vue')
   },
@@ -48,7 +48,7 @@ const routes = [
     name: 'repair',
     meta: {
       title: '补发货审批',
-      keepAlive: true
+      keepAlive: false
     },
     component: () => import('../approvalCenter/components/repair.vue')
   },

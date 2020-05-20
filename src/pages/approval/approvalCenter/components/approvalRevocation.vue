@@ -109,7 +109,7 @@
       :modal="false"
       :title="drawerApprovalDeatail.addressId ? '补发货审批' : '退款审批'"
     >
-      <div v-if="drawerApprovalDeatail.addressId">
+      <div v-if="drawerApprovalDeatail.addressId" class="approval-replenish">
         <el-row>
           <el-col :span="3">申请人:</el-col>
           <el-col :span="20" :offset="1">{{
@@ -341,7 +341,8 @@ export default {
       adjustDrawerData: {
         width: '130px',
         loading: false
-      }
+      },
+      isStaffId: false
     }
   },
   created() {
@@ -350,6 +351,7 @@ export default {
     if (staff) {
       this.staffId = JSON.parse(staff).id
       this.staffName = JSON.parse(staff).id.realName
+      this.isStaffId = JSON.parse(staff).positionId + 0 === 1 || ''
     }
     if (teacher) {
       this.staffId = JSON.parse(teacher).id
@@ -371,6 +373,7 @@ export default {
       page: 1,
       size: 20
     }
+    this.params.isOperation = this.isStaffId ? this.isStaffId : false
     this.checkPending(this.params)
   },
   methods: {

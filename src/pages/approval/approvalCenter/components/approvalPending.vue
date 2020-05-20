@@ -23,7 +23,10 @@
       <el-table-column width="50">
         <template slot-scope="scope">
           <el-dropdown placement="bottom-start">
-            <div :class="scope.row.id === current.id ? 'three-dot' : 'disnone'">
+            <div
+              v-if="scope.row.applyId == staffId"
+              :class="scope.row.id === current.id ? 'three-dot' : 'disnone'"
+            >
               <img src="@/assets/images/icon/icon-three-dot.jpg" />
             </div>
             <el-dropdown-menu slot="dropdown">
@@ -100,7 +103,7 @@
       class="drawer-approval-detail"
       :title="drawerApprovalDeatail.addressId ? '补发货审批' : '退款审批'"
     >
-      <div v-if="drawerApprovalDeatail.addressId">
+      <div v-if="drawerApprovalDeatail.addressId" class="approval-replenish">
         <el-row>
           <el-col :span="3">申请人:</el-col>
           <el-col :span="20" :offset="1">{{
@@ -449,6 +452,7 @@ export default {
       page: 1,
       size: 20
     }
+    this.params.isOperation = this.isStaffId ? this.isStaffId : false
     this.checkPending(this.params)
   },
 
@@ -823,7 +827,12 @@ export default {
   .approvallk .el-row .el-col-5 {
     text-align: right;
   }
-
+  .approval-replenish {
+    margin: 0 30px;
+    div {
+      margin-bottom: 15px;
+    }
+  }
   // 操作
   .wait-pending {
     cursor: pointer;
