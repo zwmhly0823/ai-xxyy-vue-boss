@@ -70,6 +70,28 @@ const routes = [
       }
     ]
   },
+
+  // 财务
+  {
+    path: '/finance',
+    name: 'finance',
+    // hidden: true,
+    meta: {
+      title: '财务',
+      icon: 'el-icon-s-finance',
+      module: 'finance'
+    },
+    children: [
+      {
+        path: '/financeRefound',
+        name: 'financeRefound',
+        meta: {
+          title: '退款',
+          module: 'finance'
+        }
+      }
+    ]
+  },
   // 老师模块
   {
     path: '/teacher',
