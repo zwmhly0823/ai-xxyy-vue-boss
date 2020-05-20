@@ -92,8 +92,9 @@ export default {
 <style lang="scss" scoped>
 .container {
   margin: 10px;
+  padding-bottom: 50px;
+  height: calc(100vh - 120px);
+  overflow: auto;
   background-color: #fff;
-  // height: calc(100vh-50px);
-  height: calc(100vh - 70px);
 }
 </style>

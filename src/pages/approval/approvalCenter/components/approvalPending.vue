@@ -366,8 +366,8 @@
       @current-change="handleCurrentChange"
       :current-page="currentPage"
       :total="+totalElements"
-      open="calc(100vw - 210px)"
-      close="calc(100vw - 90px)"
+      open="calc(100vw - 195px)"
+      close="calc(100vw - 75px)"
     />
   </div>
 </template>
@@ -803,11 +803,6 @@ export default {
   }
 }
 </script>
-<style lang="scss" scoped>
-.bottom0 {
-  bottom: 0px;
-}
-</style>
 
 <style lang="scss" module>
 :global {
