@@ -56,6 +56,15 @@
           <div v-show="scope.row.type === 'REFUND'">
             退款
           </div>
+          <div v-if="scope.row.type === 'ADJUSTMENT_STAGE'">
+            调期申请
+          </div>
+          <div v-else-if="scope.row.type === 'ADJUSTMENT_CLASS'">
+            调班申请
+          </div>
+          <div v-if="scope.row.type === 'ADJUSTMENT_SUP'">
+            调级申请
+          </div>
         </template>
       </el-table-column>
       <el-table-column label="审批摘要" width="450">
@@ -283,6 +292,62 @@
         </el-row>
       </div>
     </el-drawer>
+    <adjust-drawer
+      ref="adjustDrawerCom"
+      :adjustDrawerData="adjustDrawerData"
+      @result="adjustDrawerPass"
+    ></adjust-drawer>
+    <el-dialog
+      class="adjust-dialog-class"
+      :title="
+        adjustDialogType === 'reject'
+          ? '审批拒绝'
+          : adjustDialogType === 'pass'
+          ? '审批同意'
+          : ''
+      "
+      :visible.sync="adjustResultDialogShow"
+    >
+      <p class="adjust-dialog-p">
+        请确认是否{{
+          adjustDialogType === 'reject'
+            ? '拒绝'
+            : adjustDialogType === 'pass'
+            ? '同意'
+            : ''
+        }}此条申请
+      </p>
+      <p style="font-size: 14px;">
+        备注 <span style="color:red;font-size: 12px;">必填</span>
+      </p>
+      <el-input
+        class="adjust-dialog-input"
+        type="textarea"
+        :rows="4"
+        placeholder="请输入内容"
+        v-model="adjustDrawerData.checkSuggestion"
+        maxlength="100"
+        show-word-limit
+        @input="adjustDialogErrShow = false"
+      >
+      </el-input>
+      <div v-show="adjustDialogErrShow" class="adjust-dialog-err-p">
+        请输入审批意见
+      </div>
+      <div class="adjust-dialog-button-box">
+        <el-button
+          @click="
+            adjustDrawerData.checkSuggestion = ''
+            adjustResultDialogShow = false
+            adjustDialogErrShow = false
+          "
+          >取消</el-button
+        >
+        <el-button type="primary" @click="adjustResultDialogConfirm"
+          >确定</el-button
+        >
+      </div>
+    </el-dialog>
     <!-- 待审批的撤销 -->
     <el-dialog
       title="撤销申请"
@@ -314,6 +379,7 @@ import moreVersionBox from '@/components/MSearch/searchItems/moreVersionBox.vue'
 import CheckType from './checkType'
 import { timestamp } from '@/utils/index'
 import SearchPart from './searchPart'
+import adjustDrawer from './adjustDrawer'
 export default {
   props: ['typeTime', 'activeName'],
   watch: {
@@ -328,7 +394,8 @@ export default {
     tabTimeSelect,
     moreVersionBox,
     CheckType,
-    SearchPart
+    SearchPart,
+    adjustDrawer
   },
   data() {
     return {
@@ -343,7 +410,15 @@ export default {
       totalElements: 0,
       endback: false,
       isStaffId: false,
-      version: {}
+      version: {},
+      adjustDrawerData: {
+        width: '130px',
+        checkSuggestion: '', // 调期调级调班的dialog数据
+        loading: false
+      },
+      adjustResultDialogShow: false, // drawer同意后的弹窗
+      adjustDialogType: null, // dialog的类型
+      adjustDialogErrShow: false // dialog的错误提示
     }
   },
   created() {
@@ -519,6 +594,137 @@ export default {
           }
         })
       }
+      // 调级调期调班
+      const ADJUST_TYPE = [
+        'ADJUSTMENT_CLASS',
+        'ADJUSTMENT_STAGE',
+        'ADJUSTMENT_SUP'
+      ]
+      if (ADJUST_TYPE.includes(type)) {
+        this.openAdjustDetail(type, id)
+      }
+    },
+    // 打开调x调x调x的审批详情
+    openAdjustDetail(type, id) {
+      this.adjustDrawerData.loading = true
+      this.$refs.adjustDrawerCom.handleDrawerOpen()
+      let typeText = ''
+      switch (type) {
+        case 'ADJUSTMENT_STAGE':
+          typeText = '调期申请'
+          break
+        case 'ADJUSTMENT_SUP':
+          typeText = '调级申请'
+          break
+        case 'ADJUSTMENT_CLASS':
+          typeText = '调班申请'
+          break
+      }
+      this.$http.Approval.getAdjustDetail(id)
+        .then((res) => {
+          if (res && res.payload) {
+            const payData = res.payload
+            // console.log(payData)
+            // 用于显示的和一些杂项
+            // 公共部分
+            Object.assign(this.adjustDrawerData, {
+              type: 'notDone', // notDone是待审批
+              title: typeText,
+              flowApprovalId: payData.flowApprovalId,
+              content: [
+                {
+                  label: '申请人',
+                  value: payData.applyUserName
+                },
+                {
+                  label: '申请人部门',
+                  value: payData.applyUserDeapartmentName
+                },
+                {
+                  label: '用户电话',
+                  value: payData.userTel
+                },
+                {
+                  label: '订单号',
+                  value: payData.outTradeNo
+                },
+                {
+                  label: '审批类型',
+                  value: typeText
+                }
+              ]
+            })
+            // 调期
+            if (type === 'ADJUSTMENT_STAGE') {
+              this.adjustDrawerData.content = this.adjustDrawerData.content.concat(
+                [
+                  {
+                    label: '当前开课时间',
+                    value: payData.currentStartClassDate
+                  },
+                  {
+                    label: '申请开课时间',
+                    value: payData.targetStage
+                  }
+                ]
+              )
+            }
+            // 调级
+            if (type === 'ADJUSTMENT_SUP') {
+              this.adjustDrawerData.content = this.adjustDrawerData.content.concat(
+                [
+                  {
+                    label: '已上课周期',
+                    value: payData.currentPeriod
+                  },
+                  {
+                    label: '调级级别',
+                    value: payData.targetSup
+                  }
+                ]
+              )
+            }
+            // 调班
+            if (type === 'ADJUSTMENT_CLASS') {
+              this.adjustDrawerData.content = this.adjustDrawerData.content.concat(
+                [
+                  {
+                    label: '当前班级',
+                    value: payData.currentClassName
+                  }
+                ]
+              )
+            }
+            const aTime = new Date(payData.applyTime - 0)
+            // 公共数据
+            this.adjustDrawerData.content = this.adjustDrawerData.content.concat(
+              [
+                {
+                  label: '选择班级',
+                  value: payData.targetClassName
+                },
+                {
+                  label: '调级理由',
+                  value: payData.adjustReason
+                },
+                {
+                  label: '发起时间',
+                  value: `${aTime.getFullYear()}-${aTime.getMonth() +
+                    1}-${aTime.getDate()} ${aTime.getHours()}:${aTime.getMinutes()}:${aTime.getSeconds()}`
+                },
+                {
+                  label: '状态',
+                  value: '待审批'
+                }
+              ]
+            )
+          }
+          this.adjustDrawerData.loading = false
+        })
+        .catch(() => {
+          this.adjustDrawerData.loading = false
+          this.$message.error('获取审批详情失败')
+        })
     },
     // 关闭审批详情查看
     handleClose() {
@@ -553,6 +759,46 @@ export default {
           })
         }
       })
+    },
+    // 调期调级调班的drawer同意或拒绝
+    adjustDrawerPass(type) {
+      this.adjustDialogType = type
+      if (type === 'pass') {
+        this.adjustDrawerData.checkSuggestion = '同意'
+      }
+      this.adjustResultDialogShow = true
+    },
+    // adjust-dialog的按钮
+    adjustResultDialogConfirm() {
+      if (!this.adjustDrawerData.checkSuggestion) {
+        this.adjustDialogErrShow = true
+        return
+      }
+      let isConfirm = null
+      if (this.adjustDialogType === 'reject') {
+        isConfirm = false
+      } else if (this.adjustDialogType === 'pass') {
+        isConfirm = true
+      }
+      const params = {
+        approvalRemark: this.adjustDrawerData.checkSuggestion,
+        flowApprovalId: this.adjustDrawerData.flowApprovalId,
+        isConfirm: isConfirm,
+        staffId: this.staffId,
+        staffName: this.staffName
+      }
+      this.$http.Backend.isAggrePass(params)
+        .then((res) => {
+          // console.log(res)
+          this.adjustResultDialogShow = false
+          this.$refs.adjustDrawerCom.handleDrawerClose()
+          this.adjustDrawerData.checkSuggestion = ''
+          this.$emit('approvalDone')
+        })
+        .catch((error) => {
+          console.log(error)
+          this.$message.error('提交出错啦')
+        })
     }
   }
 }
@@ -602,6 +848,22 @@ export default {
     img {
       width: 14px;
       height: 14px;
+    }
+  }
+  .adjust-dialog-class {
+    .el-dialog {
+      padding: 10px 20px;
+      .adjust-dialog-p {
+        font-size: 16px;
+        margin-bottom: 25px;
+      }
+      .adjust-dialog-err-p {
+        color: red;
+      }
+      .adjust-dialog-button-box {
+        margin-top: 50px;
+        text-align: center;
+      }
     }
   }
 }

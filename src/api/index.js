@@ -20,6 +20,7 @@ import Statistics from './modules/Statistics' // 统计模块
 import DownloadExcel from './modules/DownloadExcel' // 统计模块
 import Backend from './modules/Backend' // 后台相关接口
 import RefundApproval from './modules/refundApproval' // 退款申请表单
+import Approval from './modules/Approval' // 审批相关模块
 
 import Weixin from './modules/Weixin' // 微信graphql接口
 import Operating from './modules/Operating' // 运营中心
@@ -40,5 +41,6 @@ export default Object.assign(
   { Statistics },
   { DownloadExcel },
   { Backend },
-  { RefundApproval }
+  { RefundApproval },
+  { Approval }
 )

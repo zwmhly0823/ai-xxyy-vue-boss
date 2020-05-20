@@ -45,6 +45,12 @@
           <div v-show="scope.row.type === 'REFUND'">
             退款
           </div>
+          <div v-if="scope.row.type === 'ADJUSTMENT_STAGE'">
+            调期
+          </div>
+          <div v-if="scope.row.type === 'ADJUSTMENT_CLASS'">
+            调班
+          </div>
         </template>
       </el-table-column>
       <el-table-column label="审批摘要" width="450">
@@ -290,6 +296,10 @@
         </el-row>
       </div>
     </el-drawer>
+    <adjust-drawer
+      ref="adjustDrawerCom"
+      :adjustDrawerData="adjustDrawerData"
+    ></adjust-drawer>
     <m-pagination
       class="bottom0"
       @current-change="handleCurrentChange"
@@ -307,6 +317,7 @@ import { timestamp } from '@/utils/index'
 import TabTimeSelect from './timeSearch'
 import CheckType from './checkType'
 import SearchPart from './searchPart'
+import adjustDrawer from './adjustDrawer'
 
 export default {
   props: ['activeName'],
@@ -314,7 +325,8 @@ export default {
     MPagination,
     TabTimeSelect,
     CheckType,
-    SearchPart
+    SearchPart,
+    adjustDrawer
   },
   watch: {
     activeName(val) {
@@ -333,7 +345,12 @@ export default {
       drawerApproval: false,
       drawerApprovalDeatail: {},
       currentPage: 1,
-      totalElements: 0
+      totalElements: 0,
+      // 调期调级调班的drawer数据
+      adjustDrawerData: {
+        width: '130px',
+        loading: false
+      }
     }
   },
   created() {
@@ -423,6 +440,137 @@ export default {
           }
         })
       }
+      // 调期调级调班
+      // 以下涉及调调调的部分（到openAdjustDetail方法为止）和待审批那边儿基本一毛一样，改个type改个文字
+      const ADJUST_TYPE = [
+        'ADJUSTMENT_CLASS',
+        'ADJUSTMENT_STAGE',
+        'ADJUSTMENT_SUP'
+      ]
+      if (ADJUST_TYPE.includes(type)) {
+        this.openAdjustDetail(type, id)
+      }
+    },
+    openAdjustDetail(type, id) {
+      this.adjustDrawerData.loading = true
+      this.$refs.adjustDrawerCom.handleDrawerOpen()
+      let typeText = ''
+      switch (type) {
+        case 'ADJUSTMENT_STAGE':
+          typeText = '调期申请'
+          break
+        case 'ADJUSTMENT_SUP':
+          typeText = '调级申请'
+          break
+        case 'ADJUSTMENT_CLASS':
+          typeText = '调班申请'
+          break
+      }
+      this.$http.Approval.getAdjustDetail(id)
+        .then((res) => {
+          if (res && res.payload) {
+            const payData = res.payload
+            // console.log(payData)
+            // 用于显示的和一些杂项
+            // 公共部分
+            Object.assign(this.adjustDrawerData, {
+              type: 'Done', // notDone是审批过的
+              title: typeText,
+              flowApprovalId: payData.flowApprovalId,
+              content: [
+                {
+                  label: '申请人',
+                  value: payData.applyUserName
+                },
+                {
+                  label: '申请人部门',
+                  value: payData.applyUserDeapartmentName
+                },
+                {
+                  label: '用户电话',
+                  value: payData.userTel
+                },
+                {
+                  label: '订单号',
+                  value: payData.outTradeNo
+                },
+                {
+                  label: '审批类型',
+                  value: typeText
+                }
+              ]
+            })
+            // 调期
+            if (type === 'ADJUSTMENT_STAGE') {
+              this.adjustDrawerData.content = this.adjustDrawerData.content.concat(
+                [
+                  {
+                    label: '当前开课时间',
+                    value: payData.currentStartClassDate
+                  },
+                  {
+                    label: '申请开课时间',
+                    value: payData.targetStage
+                  }
+                ]
+              )
+            }
+            // 调级
+            if (type === 'ADJUSTMENT_SUP') {
+              this.adjustDrawerData.content = this.adjustDrawerData.content.concat(
+                [
+                  {
+                    label: '已上课周期',
+                    value: payData.currentPeriod
+                  },
+                  {
+                    label: '调级级别',
+                    value: payData.targetSup
+                  }
+                ]
+              )
+            }
+            // 调班
+            if (type === 'ADJUSTMENT_CLASS') {
+              this.adjustDrawerData.content = this.adjustDrawerData.content.concat(
+                [
+                  {
+                    label: '当前班级',
+                    value: payData.currentClassName
+                  }
+                ]
+              )
+            }
+            const aTime = new Date(payData.applyTime - 0)
+            // 公共数据
+            this.adjustDrawerData.content = this.adjustDrawerData.content.concat(
+              [
+                {
+                  label: '选择班级',
+                  value: payData.targetClassName
+                },
+                {
+                  label: '调级理由',
+                  value: payData.adjustReason
+                },
+                {
+                  label: '发起时间',
+                  value: `${aTime.getFullYear()}-${aTime.getMonth() +
+                    1}-${aTime.getDate()} ${aTime.getHours()}:${aTime.getMinutes()}:${aTime.getSeconds()}`
+                },
+                {
+                  label: '状态',
+                  value: '已审批'
+                }
+              ]
+            )
+          }
+          this.adjustDrawerData.loading = false
+        })
+        .catch(() => {
+          this.adjustDrawerData.loading = false
+          this.$message.error('获取审批详情失败')
+        })
     },
     // 关闭审批详情查看
     handleClose() {

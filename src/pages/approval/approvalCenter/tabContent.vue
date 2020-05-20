@@ -18,6 +18,7 @@
           <approval-pending
             :activeName="activeName"
             @result="res"
+            @approvalDone="approvalDone"
           ></approval-pending>
         </el-tab-pane>
         <el-tab-pane label="已审批" name="third">
@@ -79,6 +80,9 @@ export default {
     handleReplenishment() {
       // this.drawNewReapir = true
       this.$router.push('/repair')
+    },
+    approvalDone() {
+      this.activeName = 'third'
     }
   },
   mounted() {}
@@ -89,6 +93,7 @@ export default {
 .container {
   margin: 10px;
   background-color: #fff;
-  height: calc(100vh-50px);
+  // height: calc(100vh-50px);
+  height: calc(100vh - 70px);
 }
 </style>
