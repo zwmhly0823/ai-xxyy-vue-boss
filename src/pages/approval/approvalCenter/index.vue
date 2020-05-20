@@ -23,6 +23,7 @@ export default {
 
 <style lang="scss" scoped>
 .container {
-  width: calc(100vw)-50px;
+  // width: calc(100vw)-50px;
+  overflow: hidden;
 }
 </style>

@@ -292,7 +292,6 @@
       :adjustDrawerData="adjustDrawerData"
     ></adjust-drawer>
     <m-pagination
-      class="bottom0"
       @current-change="handleCurrentChange"
       :current-page="currentPage"
       :total="+totalElements"
@@ -606,9 +605,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.bottom0 {
-  bottom: 0px;
-}
 .container {
   .time {
     display: flex;
