@@ -42,6 +42,15 @@ const routes = [
     component: () => import('../views/weixinManagement/accountManagement.vue')
   },
   {
+    path: '/workHandover',
+    name: 'workHandover',
+    meta: {
+      title: '工作交接',
+      keepAlive: false
+    },
+    component: () => import('../views/workHandover/index.vue')
+  },
+  {
     path: '/newTeacher',
     name: 'newTeacher',
     // meta: {

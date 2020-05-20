@@ -96,6 +96,14 @@ const routes = [
           title: '微信管理',
           module: 'teacher'
         }
+      },
+      {
+        path: '/workHandover',
+        name: 'workHandover',
+        meta: {
+          title: '工作交接',
+          module: 'teacher'
+        }
       }
     ]
   },
