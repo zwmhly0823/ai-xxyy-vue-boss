@@ -45,7 +45,11 @@ export default {
     return {
       productVersion: [
         { name: '退款', value: 'REFUND' },
-        { name: '补发货', value: 'REISSUE' }
+        { name: '补发货', value: 'REISSUE' },
+        { name: '补发货', value: 'REISSUE' },
+        { name: '调期申请', value: 'ADJUSTMENT_STAGE' },
+        { name: '调级申请', value: 'ADJUSTMENT_SUP' },
+        { name: '调班申请', value: 'ADJUSTMENT_CLASS' }
       ],
       packageDataInner: ''
     }

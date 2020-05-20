@@ -51,6 +51,18 @@ const routes = [
       keepAlive: true
     },
     component: () => import('../approvalCenter/components/repair.vue')
+  },
+  {
+    path: '/approvalCenter/adjust',
+    name: 'adjust',
+    meta: {
+      title: '审批中心'
+    },
+    component: () =>
+      import(
+        /* webpackChunkName: "adjust" */
+        '../approvalCenter/components/adjustClass.vue'
+      )
   }
 ]
 const router = new VueRouter({

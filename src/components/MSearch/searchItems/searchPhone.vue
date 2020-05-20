@@ -93,6 +93,8 @@ export default {
   },
   watch: {
     input(val, old) {
+      // 相当于emit出去一个change
+      this.$emit('inputChange')
       console.log(val !== old && !val)
       if (val !== old && !val) {
         this.$emit('result', '')
