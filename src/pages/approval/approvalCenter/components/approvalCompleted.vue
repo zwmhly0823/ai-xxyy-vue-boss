@@ -562,7 +562,12 @@ export default {
                 },
                 {
                   label: '状态',
-                  value: '已审批'
+                  value:
+                    payData.status === 'COMPLETED'
+                      ? '已通过'
+                      : payData.status === 'DECLINE'
+                      ? '已拒绝'
+                      : '已审批'
                 }
               ]
             )
