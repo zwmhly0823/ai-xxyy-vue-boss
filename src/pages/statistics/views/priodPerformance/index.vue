@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-02 15:35:27
  * @LastEditors: Shentong
- * @LastEditTime: 2020-05-20 20:32:41
+ * @LastEditTime: 2020-05-21 16:25:05
  -->
 <template>
   <el-row type="flex" class="app-main height schedule-container">
@@ -456,6 +456,10 @@ export default {
           item.complete_course_count,
           item.send_course_count
         )
+        // 转化率保留一位小数加‘%’
+        item.conversion_rate = +item.conversion_rate
+          ? (+item.conversion_rate).toFixed(1) + '%'
+          : 0
         // 人均上传作品
         const uploadTaskRate = +item.trial_course_count
           ? +item.task_count / +item.trial_course_count
