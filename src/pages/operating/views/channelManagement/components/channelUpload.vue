@@ -4,13 +4,14 @@
  * @Author: panjian
  * @Date: 2020-05-06 16:33:15
  * @LastEditors: panjian
- * @LastEditTime: 2020-05-19 20:37:32
+ * @LastEditTime: 2020-05-20 18:10:20
  -->
 <template>
   <div class="channelUpload-box">
     <div class="channelUpload-table">
       <div class="channelUpload-upload-box">
         <div>
+          <p @click="download">下载</p>
           <span>1.请输入导入表格备注</span><br />
           <el-input
             style="width:350px;margin-top:20px;"
@@ -49,7 +50,7 @@
       <el-table
         :header-cell-style="headerCss"
         :data="tableData"
-        style="width: 100%"
+        style="width: 100%;margin-top:10px;"
       >
         <el-table-column prop="date" label="序号" width="180">
         </el-table-column>
@@ -104,20 +105,68 @@ export default {
       )
     },
     submitUpload(file, filelist) {
-      console.log(this.$refs)
       this.$refs.upload.submit()
     },
+    download() {
+      const params = {
+        eRefundTime: 0,
+        sBuytime: 0,
+        sRefundTime: 0,
+        uid: 0,
+        eCtime: 0,
+        eBuytime: 0,
+        page: 1,
+        regType: -1,
+        sCtime: 0,
+        tradeType: 0,
+        status: -1
+      }
+      this.$http.DownloadExcel.exportChannelss(params)
+        .then((res) => {
+          const blob = new Blob([res])
+          const fileName = '测试表格123.xls'
+          const elink = document.createElement('a')
+          elink.download = fileName
+          elink.style.display = 'none'
+          elink.href = URL.createObjectURL(blob)
+          document.body.appendChild(elink)
+          elink.click()
+          URL.revokeObjectURL(elink.href) // 释放URL 对象
+          document.body.removeChild(elink)
+        })
+        .catch(() => {
+          this.$message.error('无法下载此文件')
+        })
+    },
     handleChange(params) {
-      const formdata = new FormData()
-      console.log('params', params.file)
-      formdata.append('file', params.file)
-      formdata.append('remark', this.remarks)
-      formdata.append('adminId', '2')
-      console.log(formdata)
+      // const formdata = new FormData()
+      // formdata.append('file', params.file)
+      // formdata.append('remark', this.remarks)
+      // formdata.append('adminId', '2')
+      // console.log('formdata:', formdata)
 
-      this.$http.Operating.channelUpload(formdata).then((res) => {
-        console.log(res)
-      })
+      var formData = new FormData()
+      const file = params.file
+      formData.append('file', file)
+      formData.append('adminId', '2')
+      formData.append('remark', this.remarks)
+
+      this.$http.DownloadExcel.exportChannel(formData)
+        .then((res) => {
+          const blob = new Blob([res])
+          const fileName = '测试表格123.xls'
+          const elink = document.createElement('a')
+          elink.download = fileName
+          elink.style.display = 'none'
+          elink.href = URL.createObjectURL(blob)
+          document.body.appendChild(elink)
+          elink.click()
+          URL.revokeObjectURL(elink.href) // 释放URL 对象
+          document.body.removeChild(elink)
+        })
+        .catch(() => {
+          this.$message.error('无法下载此文件')
+        })
 
       this.fileTemp = params.file
     },
@@ -143,7 +192,6 @@ export default {
   overflow: scroll;
   .channelUpload-table {
     padding: 10px;
-    // margin-top: 10px;
     margin-bottom: 20px;
     background: #fff;
     .channelUpload-upload-box {
