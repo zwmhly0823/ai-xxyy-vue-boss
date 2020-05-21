@@ -111,6 +111,21 @@
           ></el-option>
         </el-select>
       </el-form-item> -->
+      <!-- 销售等级 -->
+      <el-form-item label="销售等级" prop="Level">
+        <el-select
+          v-model="ruleForm.level"
+          clearable
+          placeholder="请选择销售等级"
+        >
+          <el-option
+            v-for="(item, key) in Level"
+            :key="key"
+            :label="item"
+            :value="item"
+          ></el-option>
+        </el-select>
+      </el-form-item>
       <!-- 入职时间 -->
       <el-form-item label="入职时间" required>
         <el-form-item prop="inductionDate">
@@ -291,6 +306,8 @@ export default {
       ],
       // 微信
       WeChat: [],
+      // 销售等级
+      Level: [0, 1, 2, 3, 4],
       // 表单value
       ruleForm: {
         // 手机号
@@ -324,7 +341,9 @@ export default {
         // 在职状态
         workingState: 'TENURE',
         // 分配微信号
-        weChat: []
+        weChat: [],
+        // 销售等级
+        level: ''
       },
 
       // 表单验证
@@ -402,7 +421,9 @@ export default {
         // 在职状态
         workingState: [
           { required: true, message: '请选择在职状态', trigger: 'change' }
-        ]
+        ],
+        // 销售等级
+        Level: [{ message: '请选择在职状态', trigger: 'change' }]
       }
     }
   },
@@ -495,9 +516,11 @@ export default {
             //   ? [payload.department.id]
             //   : []
             this.ruleForm.region = payload.department
-              ? payload.department.id ||
-                payload.department.pid ||
-                payload.department.cid
+              ? [
+                  payload.department.id ||
+                    payload.department.pid ||
+                    payload.department.cid
+                ]
               : []
             payload.duty.forEach((val) => {
               this.ruleForm.positionVal.push(val.id * 1)
@@ -524,6 +547,7 @@ export default {
             this.ruleForm.accountSettings = payload.teacher.isLogin
             this.ruleForm.workingState = payload.teacher.status
             this.WeChat = payload.weixinList
+            this.ruleForm.level = payload.teacher.level
           }
         )
       }
@@ -564,7 +588,8 @@ export default {
           leaveDate: departureTime,
           leaveTrain: this.ruleForm.groupDate,
           status: this.ruleForm.workingState,
-          isLogin: this.ruleForm.accountSettings
+          isLogin: this.ruleForm.accountSettings,
+          level: this.ruleForm.level
         },
         department: {
           id: this.ruleForm.region[this.ruleForm.region.length - 1]
