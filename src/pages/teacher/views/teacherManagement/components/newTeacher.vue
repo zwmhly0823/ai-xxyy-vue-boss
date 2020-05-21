@@ -312,7 +312,7 @@ export default {
         // 职级
         rank: '',
         // 带班级别
-        // shiftLevel: '',
+        shiftLevel: '',
         // 入职时间
         inductionDate: '',
         // 下组时间
@@ -370,9 +370,9 @@ export default {
         // 职级
         rank: [{ required: true, message: '请选择职级', trigger: 'change' }],
         // 带班级别
-        // shiftLevel: [
-        //   { required: true, message: '请选择带班级别', trigger: 'change' }
-        // ],
+        shiftLevel: [
+          { required: true, message: '请选择带班级别', trigger: 'change' }
+        ],
         // 入职时间
         inductionDate: [
           {
