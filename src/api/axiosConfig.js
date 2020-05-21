@@ -39,7 +39,8 @@ export default {
         axios
           .get(url, {
             params: params,
-            headers: this.getHeaders()
+            headers:
+              params && params.headers ? params.headers : this.getHeaders()
           })
           .then((res) => {
             resolve(res)
