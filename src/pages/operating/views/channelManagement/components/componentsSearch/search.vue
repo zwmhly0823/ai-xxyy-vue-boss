@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-24 18:50:54
  * @LastEditors: panjian
- * @LastEditTime: 2020-05-07 19:09:58
+ * @LastEditTime: 2020-05-21 19:37:43
  -->
 <template>
   <div class="search-item small threeSelect">
@@ -70,7 +70,7 @@
 
 <script>
 import { debounce } from 'lodash'
-import axios from '@/api/axios'
+import axios from '@/api/axiosConfig'
 export default {
   props: {
     tabIndex: {
