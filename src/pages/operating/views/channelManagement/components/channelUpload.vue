@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-05-06 16:33:15
  * @LastEditors: panjian
- * @LastEditTime: 2020-05-21 15:27:00
+ * @LastEditTime: 2020-05-21 17:28:08
  -->
 <template>
   <div class="channelUpload-box">
@@ -115,16 +115,20 @@ export default {
       formData.append('remark', this.remarks)
       this.$http.DownloadExcel.exportChannel(formData)
         .then((res) => {
-          const blob = new Blob([res])
-          const fileName = '上传反馈表.xls'
-          const elink = document.createElement('a')
-          elink.download = fileName
-          elink.style.display = 'none'
-          elink.href = URL.createObjectURL(blob)
-          document.body.appendChild(elink)
-          elink.click()
-          URL.revokeObjectURL(elink.href) // 释放URL 对象
-          document.body.removeChild(elink)
+          if (res.status === 420) {
+            console.log('无权限执行')
+          } else {
+            const blob = new Blob([res])
+            const fileName = '上传反馈表.xls'
+            const elink = document.createElement('a')
+            elink.download = fileName
+            elink.style.display = 'none'
+            elink.href = URL.createObjectURL(blob)
+            document.body.appendChild(elink)
+            elink.click()
+            URL.revokeObjectURL(elink.href) // 释放URL 对象
+            document.body.removeChild(elink)
+          }
         })
         .catch(() => {
           this.$message.error('无法下载此文件')

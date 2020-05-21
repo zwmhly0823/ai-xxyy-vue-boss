@@ -3,8 +3,8 @@
  * @version:
  * @Author: shentong
  * @Date: 2020-03-13 14:38:28
- * @LastEditors: Lukun
- * @LastEditTime: 2020-05-14 14:26:05
+ * @LastEditors: panjian
+ * @LastEditTime: 2020-05-21 17:27:45
  */
 import axios from 'axios'
 import _ from 'lodash'
@@ -63,6 +63,10 @@ axios.interceptors.response.use(
       }
       case 404: {
         window._Vue.$message.error('接口不存在')
+        break
+      }
+      case 420: {
+        window._Vue.$message.error('无权限执行')
         break
       }
       case 500:
