@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-15 20:35:57
  * @LastEditors: Shentong
- * @LastEditTime: 2020-04-22 21:33:54
+ * @LastEditTime: 2020-05-21 17:44:03
  -->
 <template>
   <div class="first-step">
@@ -21,6 +21,7 @@
               <h4>售卖周期</h4>
               <el-form-item label="" prop="sellCycleTime">
                 <el-date-picker
+                  size="small"
                   v-model="formInfo.sellCycleTime"
                   format="yyyy 年 MM 月 dd 日"
                   type="datetimerange"
@@ -38,6 +39,7 @@
               <h4>上课周期</h4>
               <el-form-item label="" prop="attendClassTime">
                 <el-date-picker
+                  size="small"
                   v-model="formInfo.attendClassTime"
                   format="yyyy 年 MM 月 dd 日"
                   type="datetimerange"
@@ -54,6 +56,7 @@
               <h4>接速设置</h4>
               <el-form-item label="" prop="robinNum">
                 <el-input
+                  size="small"
                   v-model.number="formInfo.robinNum"
                   placeholder="请输入学生数"
                 ></el-input>
@@ -426,6 +429,9 @@ export default {
 </script>
 <style lang="scss" scoped>
 .step-one-container {
+  .el-divider {
+    margin: 10px 0 !important;
+  }
   .tip {
     color: #aaa;
     font-size: 12px;
