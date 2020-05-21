@@ -341,7 +341,7 @@ export default {
       ) {
         const queryChannelList = this.query
           ? this.query
-          : `{\\"bool\\":{\\"must_not\\":{\\"terms\\":{\\"channel_class_id\\":[\\"17\\",\\"36\\"]}}}}`
+          : `{"bool":{"must_not":{"terms":{"channel_class_id":["17","36"]}}}}`
         const channelId = this.channelIds ? this.channelIds : `""`
         const SearchTrialStage = this.querySearchTrialStage
           ? `"${this.querySearchTrialStage}"`
