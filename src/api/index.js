@@ -3,13 +3,8 @@
  * @version:
  * @Author: shentong
  * @Date: 2020-03-13 14:38:28
-<<<<<<< .merge_file_4bamBB
  * @LastEditors: Lukun
  * @LastEditTime: 2020-05-14 14:40:13
-=======
- * @LastEditors: songyanan
- * @LastEditTime: 2020-05-11 14:17: 20
->>>>>>> .merge_file_8zoeE6
  */
 import Login from './modules/Login'
 import User from './modules/User' // 用户接口
@@ -42,6 +37,6 @@ export default Object.assign(
   { Weixin },
   { Operating },
   { Statistics },
-  { DownloadExcel },
-  { RiviewCourse }
+  { RiviewCourse },
+  { DownloadExcel }
 )

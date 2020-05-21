@@ -7,7 +7,7 @@
  * @LastEditTime: 2020-05-18 11:59:52
  -->
 <template>
-  <div>
+  <div class="app-main height">
     <div class="channel-box-top">
       <el-tabs v-model="activeName" @tab-click="handleClick" type="border-card">
         <el-tab-pane label="渠道查询" name="channelQuery">

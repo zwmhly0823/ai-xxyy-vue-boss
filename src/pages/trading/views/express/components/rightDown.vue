@@ -79,18 +79,46 @@
       </el-table-column>
       <el-table-column label="收货信息" width="200">
         <template slot-scope="scope">
-          <div class="take">
-            <div>
-              <span>{{ scope.row.receipt_name }}</span>
-              <span>{{ scope.row.receipt_tel }}</span>
+          <div class="address">
+            <div class="take">
+              <div>
+                <span>{{ scope.row.receipt_name }}</span>
+                <span>{{ scope.row.receipt_tel }}</span>
+              </div>
+              <div>
+                <span>{{ scope.row.province }}</span>
+                <span>{{ scope.row.city }}</span>
+                <span>{{ scope.row.area }}</span>
+              </div>
+              <div>
+                <span>{{ scope.row.address_detail }}</span>
+              </div>
             </div>
-            <div>
-              <span>{{ scope.row.province }}</span>
-              <span>{{ scope.row.city }}</span>
-              <span>{{ scope.row.area }}</span>
-            </div>
-            <div>
-              <span>{{ scope.row.address_detail }}</span>
+            <!-- v-if="dataLogitcs.id === '6' || dataLogitcs.id === '0'" -->
+            <div
+              v-if="dataLogitcs.id === '6' || dataLogitcs.id === '0'"
+              :class="{
+                edit_0: dataLogitcs.id === '0',
+                edit_6: dataLogitcs.id === '6'
+              }"
+              @click="editAddress(scope.row)"
+            >
+              <el-button
+                v-show="scope.row.id === current.id && dataLogitcs.id === '6'"
+                icon="el-icon-edit"
+                size="mini"
+                type="primary"
+                plain
+                >修改地址</el-button
+              >
+              <el-button
+                v-show="dataLogitcs.id === '0'"
+                icon="el-icon-edit"
+                size="mini"
+                type="primary"
+                plain
+                >填写地址</el-button
+              >
             </div>
           </div>
         </template>
@@ -233,6 +261,37 @@
       open="calc(100vw - 170px - 24px - 180px)"
       close="calc(100vw - 50px - 24px - 180px)"
     ></m-pagination>
+    <!-- 待审核修改地址弹框 -->
+    <div v-if="dataLogitcs.id === '6'">
+      <el-dialog
+        :close-on-click-modal="false"
+        :visible.sync="showModifyAddress"
+        width="30%"
+        title="修改收货信息"
+      >
+        <modify-address
+          @modifyAddressExpress="modifyAddressExpress"
+          :modifyFormData="modifyFormData"
+          :showChoiceModel="false"
+          v-if="showModifyAddress"
+        />
+      </el-dialog>
+    </div>
+    <!-- 无地址页面修改地址弹框 -->
+    <div v-if="dataLogitcs.id === '0'">
+      <el-dialog
+        :close-on-click-modal="false"
+        :visible.sync="showModifyAddress"
+        width="30%"
+        title="修改收货信息"
+      >
+        <logisticsForm
+          @addExpress="modifyAddressExpress"
+          :formData="modifyFormData"
+          v-if="showModifyAddress"
+        />
+      </el-dialog>
+    </div>
   </div>
 </template>
 
@@ -242,12 +301,15 @@ import axios from '@/api/axiosConfig'
 import { isToss, formatData } from '@/utils/index'
 import { mapState } from 'vuex'
 import expressDetail from '../../components/expressDetail'
-
+import modifyAddress from '@/pages/studentTeam/components/TabPane/components/modifyAddress'
+import logisticsForm from '@/pages/studentTeam/components/TabPane/components/logisticsForm'
 export default {
   props: ['dataExp', 'search'],
   components: {
     MPagination,
-    expressDetail
+    expressDetail,
+    modifyAddress,
+    logisticsForm
   },
   computed: {
     ...mapState({
@@ -363,7 +425,9 @@ export default {
       teamId: '',
       ManagementList: {},
       current: {},
-      teacherIds: ''
+      teacherIds: '',
+      showModifyAddress: false,
+      modifyFormData: {}
     }
   },
   methods: {
@@ -700,6 +764,7 @@ export default {
               last_teacher_id
               pay_teacher_id
               regtype
+              order_id
               pay_channel
               user {
                 id
@@ -846,6 +911,27 @@ export default {
       document
         .getElementById('express-right-scroll')
         .querySelector('.scrollbar-wrapper').scrollTop = 0
+    },
+    editAddress(rowData) {
+      const id = rowData.id
+      const userid = rowData.user.id
+      const orderid = rowData.order_id
+      const modifyFormData = {
+        id,
+        userid,
+        orderid,
+        row: { ...rowData, mobile: rowData.receipt_tel }
+      }
+      this.modifyFormData = modifyFormData
+      this.showModifyAddress = true
+    },
+    modifyAddressExpress(data) {
+      this.showModifyAddress = false
+      if (data === 1) {
+        this.getExpressList(this.dataExp.id)
+      } else {
+        this.modifyFormData = {}
+      }
     }
   },
 
@@ -881,6 +967,14 @@ export default {
       font-size: 14px;
       .name {
         color: #333;
+      }
+    }
+    .address {
+      position: relative;
+      padding-right: 20px;
+      min-height: 70px;
+      .edit_0 {
+        line-height: 70px;
       }
     }
     .express {

@@ -35,22 +35,27 @@
                 >
                   <div
                     class="title"
-                    v-if="scope.row.reviewDataList[item] !== undefined"
+                    v-if="
+                      scope.row.reviewDataList[item] !== undefined &&
+                        item !== '开场白'
+                    "
                   >
                     {{ item }}
                   </div>
-                  <div
-                    v-for="(_item, _index) of scope.row.reviewDataList[item]"
-                    :key="_index"
-                  >
+                  <div v-if="item !== '开场白'">
                     <div
-                      @click="selectNow(scope.$index, item, _index)"
-                      class="select-container"
+                      v-for="(_item, _index) of scope.row.reviewDataList[item]"
+                      :key="_index"
                     >
-                      <span class="background-round"
-                        ><span :class="[_item.flag ? 'circle' : '111']"></span
-                      ></span>
-                      <span>{{ scoreObj[_item.score] }}</span>
+                      <div
+                        @click="selectNow(scope.$index, item, _index)"
+                        class="select-container"
+                      >
+                        <span class="background-round"
+                          ><span :class="[_item.flag ? 'circle' : '111']"></span
+                        ></span>
+                        <span>{{ scoreObj[_item.score] }}</span>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -107,15 +112,16 @@
         </el-table-column>
         <el-table-column label="上传日期" align="center" width="180">
           <template slot-scope="scope">
-            <div>{{ timestamp(scope.row.ctime, 2) }}</div>
+            <div>{{ timestamp(scope.row.utime, 2) }}</div>
           </template>
         </el-table-column>
       </el-table>
     </div>
     <m-pagination
       :current-page="query.pageNum"
-      :page-count="totalPages"
+      :page-size="query.size"
       :total="totalElements"
+      :showPager="true"
       @current-change="pageChange_handler"
       open="calc(100vw - 95px - 100px)"
       close="calc(100vw - 23px - 50px)"
@@ -136,7 +142,6 @@ export default {
         pageNum: 1
       },
       totalElements: 0,
-      totalPages: 0,
       timestamp: timestamp,
       loading: true,
       courseIdList: [],
@@ -152,11 +157,8 @@ export default {
       try {
         const res = await this.$http.RiviewCourse.getToView(number)
         if (res.code === 0) {
-          this.list = res.payload.content.sort((a, b) => {
-            return Number.parseInt(b.ctime) - Number.parseInt(a.ctime)
-          })
+          this.list = res.payload.content
           this.totalElements = Number.parseInt(res.payload.totalElements)
-          this.totalPages = Number.parseInt(res.payload.totalPages)
           await res.payload.content.map((item, index) => {
             const str = `${item.id}@${item.courseId}`
             this.courseIdList.push(str)
@@ -193,10 +195,11 @@ export default {
         console.log(error)
       }
     },
-    pageChange_handler(page) {
+    async pageChange_handler(page) {
       this.courseIdList = []
       this.query.pageNum = page
-      this.initList(page)
+      await this.initList(page)
+      document.body.scrollTop = document.documentElement.scrollTop = 0
     },
     conversionArr(obj) {
       if (obj === undefined) {
@@ -255,6 +258,10 @@ export default {
             }
           }
         }
+      }
+      if (keysItem.includes('开场白')) {
+        arr.push(true)
+        fileUrl.unshift(idx['开场白'][0].fileUrl)
       }
       if (arr.length < ownLength.length) {
         this.$message({
@@ -325,6 +332,7 @@ export default {
 
 <style lang="scss" scoped>
 .container {
+  margin: 0 0 30px 0;
   .review-container {
     .top-container {
       display: flex;
@@ -392,6 +400,9 @@ export default {
     &-title {
       text-align: center;
     }
+  }
+  /deep/ .m-pagination {
+    bottom: 0;
   }
 }
 </style>

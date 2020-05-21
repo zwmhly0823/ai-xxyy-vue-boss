@@ -40,41 +40,43 @@
             :key="index"
             class="review-type"
           >
-            {{ item.type === 0 ? '人工点评' : '智能点评' }}
+            {{ item.type === 0 ? '手动点评' : '智能点评' }}
           </div>
         </template>
       </el-table-column>
       <el-table-column label="用户信息" align="center" width="180">
         <template slot-scope="scope">
-          <div>{{ scope.row.userMobile }}</div>
-          <div>{{ scope.row.weixinNickname }}</div>
+          <div class="review-type">{{ scope.row.userMobile }}</div>
+          <div class="review-type">{{ scope.row.weixinNickname }}</div>
         </template>
       </el-table-column>
       <el-table-column label="班级" align="center" width="180">
         <template slot-scope="scope">
-          <div>{{ scope.row.teamName }}</div>
+          <div class="review-type">{{ scope.row.teamName }}</div>
         </template>
       </el-table-column>
-      <el-table-column
-        prop="courseName"
-        label="课程"
-        align="center"
-        width="180"
-      >
+      <el-table-column label="课程" align="center" width="180">
+        <template slot-scope="scope">
+          <div class="review-type">{{ scope.row.courseName }}</div>
+        </template>
       </el-table-column>
       <el-table-column label="辅导老师" align="center" width="180">
         <template slot-scope="scope">
-          <div>{{ scope.row.teacherRealName }}</div>
+          <div class="review-type">{{ scope.row.teacherRealName }}</div>
         </template>
       </el-table-column>
       <el-table-column label="上传日期" align="center" width="180">
         <template slot-scope="scope">
-          <div>{{ timestamp(scope.row.ctime, 2) }}</div>
+          <div class="review-type">{{ timestamp(scope.row.utime, 2) }}</div>
         </template>
       </el-table-column>
       <el-table-column label="点评日期" align="center" width="180">
         <template slot-scope="scope">
-          <div v-for="(item, index) in scope.row.taskComments" :key="index">
+          <div
+            v-for="(item, index) in scope.row.taskComments"
+            :key="index"
+            class="review-type"
+          >
             {{ timestamp(item.ctime, 2) }}
           </div>
         </template>
@@ -82,8 +84,9 @@
     </el-table>
     <m-pagination
       :current-page="query.pageNum"
-      :page-count="totalPages"
+      :page-size="query.size"
       :total="totalElements"
+      :showPager="true"
       @current-change="pageChange_handler"
       open="calc(100vw - 95px - 100px)"
       close="calc(100vw - 23px - 50px)"
@@ -103,7 +106,6 @@ export default {
         pageNum: 1
       },
       totalElements: 0,
-      totalPages: 0,
       radio: '',
       timestamp: timestamp,
       loading: true
@@ -118,14 +120,8 @@ export default {
         const res = await this.$http.RiviewCourse.getHaveRiview(number)
         if (res.code === 0) {
           this.loading = false
-          this.list = res.payload.content.sort((a, b) => {
-            return (
-              Number.parseInt(b.taskComments[0].ctime) -
-              Number.parseInt(a.taskComments[0].ctime)
-            )
-          })
+          this.list = res.payload.content
           this.totalElements = Number.parseInt(res.payload.totalElements)
-          this.totalPages = Number.parseInt(res.payload.totalPages)
         }
       } catch (error) {
         console.log(error)
@@ -141,9 +137,10 @@ export default {
       }
       return arr
     },
-    pageChange_handler(page) {
+    async pageChange_handler(page) {
       this.query.pageNum = page
-      this.initList(page)
+      await this.initList(page)
+      document.body.scrollTop = document.documentElement.scrollTop = 0
     }
   },
   components: {
@@ -154,6 +151,7 @@ export default {
 
 <style lang="scss" scoped>
 .container {
+  margin: 0 0 30px 0;
   .audio-container {
     overflow: hidden;
     width: 47px;
@@ -169,6 +167,9 @@ export default {
     height: 300px;
     display: block;
     margin: 0 auto;
+  }
+  /deep/ .m-pagination {
+    bottom: 0;
   }
 }
 </style>

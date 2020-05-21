@@ -41,9 +41,9 @@ export default {
       return new Promise((resolve, reject) => {
         axios
           .get(url, {
-            ...params,
-            params: params
-            // headers: this.getHeaders()
+            params: params,
+            headers:
+              params && params.headers ? params.headers : this.getHeaders()
           })
           .then((res) => {
             resolve(res)
@@ -136,9 +136,7 @@ export default {
       'Content-Type': 'application/json;charset=UTF-8'
     }
     if (token) {
-      headers.Authorization = token
-      // headers.Authorization =
-      //   'eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiI0NTgwNTIyOTY3NzgwNTk3NzYiLCJzdWIiOiI0NTgwNTIyOTY3NzgwNTk3NzYiLCJpYXQiOjE1ODkzNzQ2NDMsImF1ZCI6InVzZXIiLCJleHAiOjE1OTgwMTQ2NDN9.VMeHKQHHOHb_9Hd764BjDGQwYLwHrgbavqHcvisKGeFu5ZWAFGckS60dkNVHo20x_tU8vGlnDS8AC97IKTBFEw'
+      headers.Authorization = `Bearer ${token}`
     }
     return headers
   }

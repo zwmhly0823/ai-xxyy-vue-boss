@@ -4,7 +4,7 @@
  * @Author: shentong
  * @Date: 2019-12-17 15:43:27
  * @LastEditors: Shentong
- * @LastEditTime: 2020-04-20 17:49:14
+ * @LastEditTime: 2020-04-22 15:42:16
  */
 import axios from 'axios'
 import $http from '@/api'
@@ -17,12 +17,31 @@ const getSuffix = (_) => {
   }
   return suffix
 }
+// 头像上传格式校验
+const beforeAvatarUpload = (File) => {
+  const file = File.file
 
+  const isJPG = file.type === 'image/jpg'
+  const isJPEG = file.type === 'image/jpeg'
+  const isPNG = file.type === 'image/png'
+  const isMP3 = file.type === 'audio/mpeg'
+  const isLt5M = file.size / 1024 / 1024 < 5
+  if (!isJPG && !isPNG && !isJPEG && !isMP3) {
+    window._Vue.$message.error(
+      '上传头像图片只能是 png/jpg 格式! 音频只能是audio/mpeg格式！'
+    )
+    return 0
+  }
+  if (!isLt5M) {
+    window._Vue.$message.error('上传头像图片大小不能超过 5MB!')
+    return 0
+  }
+  return (isJPG || isPNG || isJPEG || isMP3) && isLt5M
+}
 // 头像上传签名
 const getOssToken = async () => {
-  let getPubSinged
   try {
-    getPubSinged = await $http.Teacher.getPubWriteSinged()
+    const getPubSinged = await $http.Teacher.getPubWriteSinged()
     return Promise.resolve(getPubSinged.payload)
   } catch (err) {
     return Promise.reject(err)
@@ -30,6 +49,10 @@ const getOssToken = async () => {
 }
 
 const uploadFile = async (file) => {
+  const canUpload = beforeAvatarUpload(file)
+  if (!canUpload) {
+    return
+  }
   let puhSinged
   try {
     puhSinged = await getOssToken()

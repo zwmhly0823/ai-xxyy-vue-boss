@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-04-02 15:35:27
  * @LastEditors: Shentong
- * @LastEditTime: 2020-05-14 21:11:22
+ * @LastEditTime: 2020-05-14 18:33:46
  -->
 <template>
   <el-row type="flex" class="app-main height schedule-container">
@@ -175,10 +175,10 @@
               <!-- TODO: -->
               <el-tab-pane label="参课统计" name="attendClass"> </el-tab-pane>
               <el-tab-pane label="完课统计" name="finishClass"> </el-tab-pane>
-              <!-- <el-tab-pane label="上传作品统计" name="uploadWorks">
+              <el-tab-pane label="上传作品统计" name="uploadWorks">
               </el-tab-pane>
               <el-tab-pane label="老师点评统计" name="teacherComments">
-              </el-tab-pane> -->
+              </el-tab-pane>
             </el-tabs>
           </div>
           <div class="tableInner" ref="tableInner"></div>
@@ -528,7 +528,7 @@
                 prop="trial_course_count"
                 align="center"
               ></el-table-column>
-              <el-table-column align="center" label="总计">
+              <el-table-column align="center" label="总计" width="240" fixed>
                 <el-table-column
                   fixed
                   label="总上传率"
@@ -653,6 +653,8 @@
                 v-for="(a, i) in tableDataChildAttend"
                 :label="a.current_lesson"
                 :key="i"
+                width="240"
+                :fixed="i === 0"
               >
                 <el-table-column fixed label="点评数" align="center">
                   <template slot-scope="scope">
@@ -806,8 +808,8 @@ export default {
       },
       // title点评统计
       titlereviewStatistical: {
-        reviewProbability: '-',
-        listenTo: '-'
+        reviewProbability: 0,
+        listenTo: 0
       },
       // 放课天数数组
       schoolDays: [],
@@ -821,7 +823,7 @@ export default {
   created() {
     this.$nextTick(() => {
       const tableHeight =
-        document.body.clientHeight - this.$refs.tableInner.offsetTop - 112
+        document.body.clientHeight - this.$refs.tableInner.offsetTop - 112 - 34
       this.tableHeight = tableHeight + ''
     })
     this.init()
@@ -982,7 +984,8 @@ export default {
             if (+this.dataStatisticsBtn.course_day > new Date().getTime()) {
               this.statisticsInfo.course_days = '0'
             } else if (
-              +this.dataStatisticsBtn.course_day < new Date().getTime()
+              +this.dataStatisticsBtn.course_day < new Date().getTime() &&
+              new Date().getTime() < +this.dataStatisticsBtn.end_course_day
             ) {
               this.statisticsInfo.course_days = Math.ceil(
                 (new Date() - this.dataStatisticsBtn.course_day) /
@@ -991,11 +994,26 @@ export default {
                   60 /
                   24
               )
+            } else if (
+              new Date().getTime() > +this.dataStatisticsBtn.end_course_day
+            ) {
+              this.statisticsInfo.course_days =
+                Math.ceil(
+                  (+this.dataStatisticsBtn.end_course_day -
+                    +this.dataStatisticsBtn.course_day) /
+                    1000 /
+                    60 /
+                    60 /
+                    24
+                ) + 1
             }
           } else {
             if (+this.priodTabs[0].course_day > new Date().getTime()) {
               this.statisticsInfo.course_days = '0'
-            } else if (+this.priodTabs[0].course_day < new Date().getTime()) {
+            } else if (
+              +this.priodTabs[0].course_day < new Date().getTime() &&
+              new Date().getTime() < +this.priodTabs[0].end_course_day
+            ) {
               this.statisticsInfo.course_days = Math.ceil(
                 (new Date().getTime() - this.priodTabs[0].course_day) /
                   1000 /
@@ -1003,6 +1021,18 @@ export default {
                   60 /
                   24
               )
+            } else if (
+              new Date().getTime() > +this.priodTabs[0].end_course_day
+            ) {
+              this.statisticsInfo.course_days =
+                Math.ceil(
+                  (+this.priodTabs[0].end_course_day -
+                    +this.priodTabs[0].course_day) /
+                    1000 /
+                    60 /
+                    60 /
+                    24
+                ) + 1
             }
           }
           // 总数、分页用
@@ -1037,11 +1067,13 @@ export default {
               : formatData(this.priodTabs[0].end_course_day)
           // 开课天数
           // 判断是否切换课程期数，如果切换则用传的值，否则用第一个值
+          // 开课天数
           if (this.dataStatisticsBtn && this.dataStatisticsBtn.course_day) {
             if (+this.dataStatisticsBtn.course_day > new Date().getTime()) {
               this.statisticsInfo.course_days = '0'
             } else if (
-              +this.dataStatisticsBtn.course_day < new Date().getTime()
+              +this.dataStatisticsBtn.course_day < new Date().getTime() &&
+              new Date().getTime() < +this.dataStatisticsBtn.end_course_day
             ) {
               this.statisticsInfo.course_days = Math.ceil(
                 (new Date() - this.dataStatisticsBtn.course_day) /
@@ -1050,11 +1082,26 @@ export default {
                   60 /
                   24
               )
+            } else if (
+              new Date().getTime() > +this.dataStatisticsBtn.end_course_day
+            ) {
+              this.statisticsInfo.course_days =
+                Math.ceil(
+                  (+this.dataStatisticsBtn.end_course_day -
+                    +this.dataStatisticsBtn.course_day) /
+                    1000 /
+                    60 /
+                    60 /
+                    24
+                ) + 1
             }
           } else {
             if (+this.priodTabs[0].course_day > new Date().getTime()) {
               this.statisticsInfo.course_days = '0'
-            } else if (+this.priodTabs[0].course_day < new Date().getTime()) {
+            } else if (
+              +this.priodTabs[0].course_day < new Date().getTime() &&
+              new Date().getTime() < +this.priodTabs[0].end_course_day
+            ) {
               this.statisticsInfo.course_days = Math.ceil(
                 (new Date().getTime() - this.priodTabs[0].course_day) /
                   1000 /
@@ -1062,6 +1109,18 @@ export default {
                   60 /
                   24
               )
+            } else if (
+              new Date().getTime() > +this.priodTabs[0].end_course_day
+            ) {
+              this.statisticsInfo.course_days =
+                Math.ceil(
+                  (+this.priodTabs[0].end_course_day -
+                    +this.priodTabs[0].course_day) /
+                    1000 /
+                    60 /
+                    60 /
+                    24
+                ) + 1
             }
           }
           // 总数、分页用
@@ -1104,7 +1163,8 @@ export default {
         this.titleUpload.total_upload_rate =
           this.titleUpload.task_student_count &&
           res.data.courseTaskStatistics.student_count &&
-          this.schoolDays.length > 0
+          this.schoolDays.length > 0 &&
+          this.schoolDays[this.schoolDays.length - 1] > 0
             ? (
                 (
                   this.titleUpload.task_student_count /
@@ -1117,7 +1177,7 @@ export default {
     },
     // 上传作品统计
     uploadStatistical(list) {
-      // 总上传率 = （第1天作品总数+第2天作品总数+第n天作品总数）/（体验课学生*已放课总节数）
+      // 总上传率 = （第1天作品总数人数+第2天作品总数人数+第n天作品总数人数）/（体验课学生*已放课总节数）
       // 已放课总节数 = 上传人数字段&&上传作品数不为空，个数相加
       // 上传率 = 上传人数/体验课学生
       // 初始化
@@ -1126,7 +1186,9 @@ export default {
       list.forEach((item, index) => {
         // 作品总数
         const totalNumbe = {
-          totalNumbe: item.studentCourseTaskStatisticsList[0].course_task_count
+          totalNumbe: item.studentCourseTaskStatisticsList[0].course_task_count,
+          task_student_count:
+            item.studentCourseTaskStatisticsList[0].task_student_count
         }
         // 人均作品总数
         let averageWorks = {}
@@ -1170,7 +1232,7 @@ export default {
         this.schoolDays.push(count)
         // 总上传率
         const toCalculate =
-          totalNumbe.totalNumbe / (item.trial_course_count * count)
+          totalNumbe.task_student_count / (item.trial_course_count * count)
         const treatmenTpercentage = toCalculate
           ? (toCalculate.toFixed(2) * 100).toFixed(0) + '%'
           : '-'
@@ -1440,10 +1502,6 @@ export default {
       border: 0;
     }
   }
-  // .orderStyle {
-  //   padding-bottom: 45px;
-  //   height: 200px;
-  // }
   .editStyle {
     color: #0401ff;
     cursor: pointer;

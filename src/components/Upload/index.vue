@@ -17,6 +17,8 @@
     multiple
     :on-exceed="handleExceed"
     :on-error="uploadErr"
+    :on-success="onloadSuccess"
+    :on-progress="uploadProgress"
     :http-request="upload"
   >
     <el-button size="small" :style="{ width: btnWidth + 'px' }" type="primary"
@@ -62,7 +64,7 @@ export default {
       }
     },
     handleRemove(file, fileList) {
-      console.log('fileList', file, fileList)
+      this.$emit('handle-remove', fileList)
     },
     uploadErr(file, fileList) {
       const _name = fileList.name.split('.')[0]
@@ -72,6 +74,17 @@ export default {
           type: 'error'
         })
       }
+    },
+    onloadSuccess(file, fileList) {
+      console.log('hehe', file, fileList)
+    },
+    uploadProgress(event, file, fileList) {
+      console.log(
+        event,
+        file,
+        fileList,
+        'event, file, fileList--------------------'
+      )
     }
   }
 }

@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-07 13:52:26
  * @LastEditors: Shentong
- * @LastEditTime: 2020-05-13 17:09:23
+ * @LastEditTime: 2020-05-20 18:27:23
  */
 import axios from '../axiosConfig'
 
@@ -98,44 +98,47 @@ export default {
       page = 1,
       size = '20',
       teacher = '',
-      totalSort = 'desc',
+      // totalSort = 'desc',
+      conversionRateSort = 'desc',
       department = '',
       sup = ''
     } = params
-    const _totalSort = `{"system_order_total_amount":"${totalSort}"}`
+    // const _totalSort = `{"system_order_total_amount":"${totalSort}"}`
+    const sort = `{"conversion_rate":"${conversionRateSort}"}`
     const query = `{"term": "${period}","departmentId": "${department}", "sup": "${sup}","teacherIds":"${teacher}"}`
 
     return axios.post('/graphql/v1/toss', {
       query: `{
-        termDepartmentTeacherReportPage(page: ${page}, size:${size},query: ${JSON.stringify(
+    termDepartmentTeacherReportPage(page: ${page}, size:${size},query: ${JSON.stringify(
         query
-      ) || null}, sort: ${JSON.stringify(_totalSort)}) {
-          first
-          totalPages
-          totalElements
-          content {
-            trial_stage_name
-            task_comment_count
-            join_course_count
-            send_course_count
-            added_wechat_count
-            listen_comment_count
-            task_count
-            no_address_count
-            sup
-            trial_stage
-            stage_name
-            department_id
-            department_name
-            complete_course_count
-            pay_teacher_id
-            realname
-            system_order_total_amount
-            stage
-            system_order_count
-            trial_course_count
-          }
-      }}`
+      ) || null}, sort: ${JSON.stringify(sort)}) {
+      first
+      totalPages
+      totalElements
+      content {
+        trial_stage_name
+        task_comment_count
+        join_course_count
+        send_course_count
+        added_wechat_count
+        listen_comment_count
+        task_count
+        conversion_rate
+        no_address_count
+        sup
+        trial_stage
+        stage_name
+        department_id
+        department_name
+        complete_course_count
+        pay_teacher_id
+        realname
+        system_order_total_amount
+        stage
+        system_order_count
+        trial_course_count
+      }
+  }}`
     })
   },
   getdepartmentList(params) {

@@ -9,6 +9,7 @@
  -->
 <template>
   <div class="audio-add">
+    <el-button type="primary" @click="goBack" class="go-back">返回</el-button>
     <el-form :model="form" class="audio-add-form">
       <el-form-item label="课程" class="audio-add-form-item">
         <el-select
@@ -80,7 +81,11 @@
           >
           </el-option>
         </el-select>
-        <el-select v-model="form.rate" placeholder="请选择评分">
+        <el-select
+          v-model="form.rate"
+          placeholder="请选择评分"
+          v-show="isShowRate"
+        >
           <el-option
             v-for="(item, index) in reviewRate"
             :key="index"
@@ -92,7 +97,13 @@
       </el-form-item>
     </el-form>
     <div class="upload-container">
-      <Upload :btnWidth="130" format="audio" :upload="upload">
+      <Upload
+        :btnWidth="130"
+        format="audio"
+        :upload="upload"
+        :audioList="audioList"
+        @handle-remove="handleRemoveFile"
+      >
         <div slot="mp3" class="upload-tip">只能上传mp3格式</div>
       </Upload>
     </div>
@@ -136,7 +147,9 @@ export default {
         degree: null,
         rate: null
       },
-      audioList: []
+      audioList: [],
+      isShowRate: true,
+      removeFile: []
     }
   },
   watch: {
@@ -155,12 +168,11 @@ export default {
           }${this.courseUnit[val.unit]}${this.courseLesson[val.lesson]}`
           this.loadCourseList(params)
         }
-        // if (val.degree === 0) {
-        //   this.reviewRate = []
-        //   val.rate = null
-        //   return
-        // }
-        // this.reviewRate = reviewRate
+        if (val.degree === 0) {
+          this.isShowRate = false
+        } else {
+          this.isShowRate = true
+        }
       },
       deep: true,
       immediate: true
@@ -188,9 +200,23 @@ export default {
       }
     },
     upload(file) {
+      const _this = this
       uploadFile(file).then((res) => {
-        this.audioList.push(res)
+        _this.$message({
+          message: `${file.file.name}上传成功！`,
+          type: 'success'
+        })
+        this.audioList.push({
+          uid: file.file.uid,
+          url: res
+        })
       })
+    },
+    handleRemoveFile(list) {
+      if (list.length === 0) {
+        this.audioList = []
+      }
+      this.removeFile = list
     },
     async handleSubmit() {
       const {
@@ -203,19 +229,40 @@ export default {
         courseId,
         rate
       } = this.form
-      const { coursePayload, scoreObj } = this
-      const fileUrl = this.audioList.join('')
+      const {
+        coursePayload,
+        scoreObj,
+        isShowRate,
+        audioList,
+        removeFile
+      } = this
+      const fileUrlList = []
+      for (const item of audioList) {
+        if (removeFile.length !== 0) {
+          for (const remove of removeFile) {
+            if (item.uid === remove.uid) {
+              fileUrlList.push(item.url)
+            }
+          }
+        } else {
+          fileUrlList.push(item.url)
+        }
+      }
+      const fileUrl = fileUrlList.join('')
       let courseName = null
-      let score = null
       for (const item of coursePayload) {
         if (item.id === courseId) {
           courseName = item.title
         }
       }
+      let score = null
       for (const key in scoreObj) {
         if (rate === scoreObj[key]) {
           score = key
         }
+      }
+      if (!isShowRate) {
+        score = 'EXCELLENT'
       }
       if (
         type === null ||
@@ -225,7 +272,7 @@ export default {
         unit === null ||
         lesson === null ||
         courseId === null ||
-        rate === null ||
+        score === null ||
         !fileUrl
       ) {
         this.$message({
@@ -254,13 +301,13 @@ export default {
             message: '上传成功！',
             type: 'success'
           })
-          setTimeout(() => {
-            this.$router.push('/reviewManagement')
-          }, 2000)
         }
       } catch (error) {
         console.log(error)
       }
+    },
+    goBack() {
+      this.$router.push('/reviewManagement')
     }
   },
   components: {
@@ -278,8 +325,10 @@ export default {
   width: 100%;
   height: 100vh;
   background: rgb(255, 255, 255);
-  margin: 20px 0 0 0;
   overflow: hidden;
+  .go-back {
+    margin: 10px 0 0 10px;
+  }
   &-form {
     margin: 80px auto 0;
     &-item {
@@ -293,6 +342,10 @@ export default {
     }
     .degree {
       margin-top: 30px;
+    }
+    /deep/ .el-form-item__content {
+      display: flex;
+      justify-content: flex-start;
     }
   }
   .upload-container {

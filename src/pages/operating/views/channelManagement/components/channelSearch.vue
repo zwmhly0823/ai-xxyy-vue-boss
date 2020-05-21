@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-04-25 12:09:03
  * @LastEditors: panjian
- * @LastEditTime: 2020-05-21 18:09:24
+ * @LastEditTime: 2020-05-21 19:21:51
  -->
 <template>
   <div class="channel-box">
@@ -341,7 +341,7 @@ export default {
       ) {
         const queryChannelList = this.query
           ? this.query
-          : `{\\"bool\\":{\\"must_not\\":{\\"terms\\":{\\"channel_class_id\\":[\\"17\\",\\"36\\"]}}}}`
+          : `{"bool":{"must_not":{"terms":{"channel_class_id":["17","36"]}}}}`
         const channelId = this.channelIds ? this.channelIds : `""`
         const SearchTrialStage = this.querySearchTrialStage
           ? `"${this.querySearchTrialStage}"`
@@ -523,8 +523,9 @@ export default {
   display: flex;
   flex-direction: column;
   background: rgb(240, 241, 242);
-  height: calc(100vh - 130px);
+  height: calc(100vh - 140px);
   overflow: scroll;
+  padding-bottom: 30px;
   .channel-box-top {
     margin: 10px 10px 10px 10px;
     .channel-box-top-search {
