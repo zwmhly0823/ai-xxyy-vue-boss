@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-15 20:35:57
  * @LastEditors: Shentong
- * @LastEditTime: 2020-05-15 12:31:19
+ * @LastEditTime: 2020-05-21 17:26:31
  -->
 <template>
   <div class="third-step">
@@ -38,6 +38,13 @@
           prop="teacherWechatNo"
           label="绑定微信"
           width="150"
+          align="center"
+        >
+        </el-table-column>
+        <el-table-column
+          prop="lastPeriod"
+          label="最近接生期数"
+          width="100"
           align="center"
         >
         </el-table-column>
