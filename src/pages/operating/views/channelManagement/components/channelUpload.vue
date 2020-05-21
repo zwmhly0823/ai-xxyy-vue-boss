@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-05-06 16:33:15
  * @LastEditors: panjian
- * @LastEditTime: 2020-05-19 20:37:32
+ * @LastEditTime: 2020-05-21 15:27:00
  -->
 <template>
   <div class="channelUpload-box">
@@ -41,15 +41,15 @@
             size="small"
             type="success"
             @click="submitUpload"
-            >上传到服务器</el-button
+            >上传文件</el-button
           >
           <div slot="tip" class="el-upload__tip">只能上传xls/xlsx文件</div>
         </el-upload>
       </div>
-      <el-table
+      <!-- <el-table
         :header-cell-style="headerCss"
         :data="tableData"
-        style="width: 100%"
+        style="width: 100%;margin-top:10px;"
       >
         <el-table-column prop="date" label="序号" width="180">
         </el-table-column>
@@ -65,13 +65,13 @@
         :total="10"
         open="calc(100vw - 95px - 100px)"
         close="calc(100vw - 23px - 50px)"
-      />
+      /> -->
     </div>
   </div>
 </template>
 
 <script>
-import MPagination from '@/components/MPagination/index.vue'
+// import MPagination from '@/components/MPagination/index.vue'
 export default {
   props: {
     tabIndex: {
@@ -80,7 +80,7 @@ export default {
     }
   },
   components: {
-    MPagination
+    // MPagination
   },
   data() {
     return {
@@ -104,20 +104,31 @@ export default {
       )
     },
     submitUpload(file, filelist) {
-      console.log(this.$refs)
       this.$refs.upload.submit()
     },
     handleChange(params) {
-      const formdata = new FormData()
-      console.log('params', params.file)
-      formdata.append('file', params.file)
-      formdata.append('remark', this.remarks)
-      formdata.append('adminId', '2')
-      console.log(formdata)
-
-      this.$http.Operating.channelUpload(formdata).then((res) => {
-        console.log(res)
-      })
+      const adminId = localStorage.getItem('staff')
+      var formData = new FormData()
+      const file = params.file
+      formData.append('file', file)
+      formData.append('adminId', JSON.parse(adminId).id)
+      formData.append('remark', this.remarks)
+      this.$http.DownloadExcel.exportChannel(formData)
+        .then((res) => {
+          const blob = new Blob([res])
+          const fileName = '上传反馈表.xls'
+          const elink = document.createElement('a')
+          elink.download = fileName
+          elink.style.display = 'none'
+          elink.href = URL.createObjectURL(blob)
+          document.body.appendChild(elink)
+          elink.click()
+          URL.revokeObjectURL(elink.href) // 释放URL 对象
+          document.body.removeChild(elink)
+        })
+        .catch(() => {
+          this.$message.error('无法下载此文件')
+        })
 
       this.fileTemp = params.file
     },
@@ -143,7 +154,6 @@ export default {
   overflow: scroll;
   .channelUpload-table {
     padding: 10px;
-    // margin-top: 10px;
     margin-bottom: 20px;
     background: #fff;
     .channelUpload-upload-box {
