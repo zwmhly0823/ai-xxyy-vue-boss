@@ -4,7 +4,7 @@
  * @Author: Lukun
  * @Date: 2020-05-14 14:31:42
  * @LastEditors: panjian
- * @LastEditTime: 2020-05-20 18:09:08
+ * @LastEditTime: 2020-05-21 11:30:44
  */
 import axios from '../axios'
 import { getToken } from '@/utils/auth'
@@ -57,22 +57,6 @@ export default {
         //   ...params
         // }
         data: params
-      })
-    }
-  },
-  exportChannelss(params) {
-    console.log('DownloadExcel:', params)
-
-    if (judgeToken()) {
-      return axios({
-        method: 'POST',
-        url: '/api/o/v1/order/exportPayment',
-        responseType: 'blob',
-        headers: getHeaders(),
-        data: {
-          ...params
-        }
-        // data: params
       })
     }
   }

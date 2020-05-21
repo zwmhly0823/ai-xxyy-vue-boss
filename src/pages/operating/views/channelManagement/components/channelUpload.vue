@@ -4,14 +4,13 @@
  * @Author: panjian
  * @Date: 2020-05-06 16:33:15
  * @LastEditors: panjian
- * @LastEditTime: 2020-05-20 18:10:20
+ * @LastEditTime: 2020-05-21 11:32:51
  -->
 <template>
   <div class="channelUpload-box">
     <div class="channelUpload-table">
       <div class="channelUpload-upload-box">
         <div>
-          <p @click="download">下载</p>
           <span>1.请输入导入表格备注</span><br />
           <el-input
             style="width:350px;margin-top:20px;"
@@ -42,12 +41,12 @@
             size="small"
             type="success"
             @click="submitUpload"
-            >上传到服务器</el-button
+            >上传文件</el-button
           >
           <div slot="tip" class="el-upload__tip">只能上传xls/xlsx文件</div>
         </el-upload>
       </div>
-      <el-table
+      <!-- <el-table
         :header-cell-style="headerCss"
         :data="tableData"
         style="width: 100%;margin-top:10px;"
@@ -66,13 +65,13 @@
         :total="10"
         open="calc(100vw - 95px - 100px)"
         close="calc(100vw - 23px - 50px)"
-      />
+      /> -->
     </div>
   </div>
 </template>
 
 <script>
-import MPagination from '@/components/MPagination/index.vue'
+// import MPagination from '@/components/MPagination/index.vue'
 export default {
   props: {
     tabIndex: {
@@ -81,7 +80,7 @@ export default {
     }
   },
   components: {
-    MPagination
+    // MPagination
   },
   data() {
     return {
@@ -107,54 +106,16 @@ export default {
     submitUpload(file, filelist) {
       this.$refs.upload.submit()
     },
-    download() {
-      const params = {
-        eRefundTime: 0,
-        sBuytime: 0,
-        sRefundTime: 0,
-        uid: 0,
-        eCtime: 0,
-        eBuytime: 0,
-        page: 1,
-        regType: -1,
-        sCtime: 0,
-        tradeType: 0,
-        status: -1
-      }
-      this.$http.DownloadExcel.exportChannelss(params)
-        .then((res) => {
-          const blob = new Blob([res])
-          const fileName = '测试表格123.xls'
-          const elink = document.createElement('a')
-          elink.download = fileName
-          elink.style.display = 'none'
-          elink.href = URL.createObjectURL(blob)
-          document.body.appendChild(elink)
-          elink.click()
-          URL.revokeObjectURL(elink.href) // 释放URL 对象
-          document.body.removeChild(elink)
-        })
-        .catch(() => {
-          this.$message.error('无法下载此文件')
-        })
-    },
     handleChange(params) {
-      // const formdata = new FormData()
-      // formdata.append('file', params.file)
-      // formdata.append('remark', this.remarks)
-      // formdata.append('adminId', '2')
-      // console.log('formdata:', formdata)
-
       var formData = new FormData()
       const file = params.file
       formData.append('file', file)
       formData.append('adminId', '2')
       formData.append('remark', this.remarks)
-
       this.$http.DownloadExcel.exportChannel(formData)
         .then((res) => {
           const blob = new Blob([res])
-          const fileName = '测试表格123.xls'
+          const fileName = '上传反馈表.xls'
           const elink = document.createElement('a')
           elink.download = fileName
           elink.style.display = 'none'
