@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-15 20:35:57
  * @LastEditors: Shentong
- * @LastEditTime: 2020-05-21 17:44:03
+ * @LastEditTime: 2020-05-21 17:51:38
  -->
 <template>
   <div class="first-step">
@@ -35,7 +35,7 @@
 
               <h6>建议体验课售卖周期从本周五至下周五</h6>
             </el-col>
-            <el-col :span="8">
+            <el-col :span="8" :offset="1">
               <h4>上课周期</h4>
               <el-form-item label="" prop="attendClassTime">
                 <el-date-picker
@@ -52,7 +52,7 @@
               </el-form-item>
               <h6>开始上课时间必须从星期一开始</h6>
             </el-col>
-            <el-col :span="6">
+            <el-col :span="4" :offset="1">
               <h4>接速设置</h4>
               <el-form-item label="" prop="robinNum">
                 <el-input
