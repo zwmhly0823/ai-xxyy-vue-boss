@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-04-25 12:09:03
  * @LastEditors: panjian
- * @LastEditTime: 2020-05-16 17:00:57
+ * @LastEditTime: 2020-05-18 11:59:52
  -->
 <template>
   <div class="app-main height">
@@ -16,9 +16,9 @@
         <el-tab-pane label="渠道信息管理" name="channleInfo">
           <channel-information :tabIndex="tabIndex" />
         </el-tab-pane>
-        <!-- <el-tab-pane label="渠道订单导入" name="channleUpload">
+        <el-tab-pane label="渠道订单导入" name="channleUpload">
           <channel-upload />
-        </el-tab-pane> -->
+        </el-tab-pane>
       </el-tabs>
     </div>
   </div>
@@ -27,12 +27,12 @@
 <script>
 import channelSearch from './components/channelSearch'
 import channelInformation from './components/channelInformation'
-// import channelUpload from './components/channelUpload'
+import channelUpload from './components/channelUpload'
 export default {
   components: {
     channelSearch,
-    channelInformation
-    // channelUpload
+    channelInformation,
+    channelUpload
   },
   data() {
     return { tabIndex: '', activeName: 'channelQuery' }

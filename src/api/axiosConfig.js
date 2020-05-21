@@ -3,13 +3,16 @@
  * @version:
  * @Author: Shentong
  * @Date: 2020-03-17 11:50:18
- * @LastEditors: Shentong
- * @LastEditTime: 2020-05-16 13:34:27
+ * @LastEditors: panjian
+ * @LastEditTime: 2020-05-19 18:57:54
  */
 import axios from './axios'
 import { getToken } from '@/utils/auth'
 // import { baseUrl } from '@/utils/index'
 // 转json
+
+axios.defaults.withCredentials = true
+
 function strToJson(str) {
   // eslint-disable-next-line no-new-func
   var json = new Function('return ' + str)()
@@ -38,8 +41,9 @@ export default {
       return new Promise((resolve, reject) => {
         axios
           .get(url, {
-            params: params,
-            headers: this.getHeaders()
+            ...params,
+            params: params
+            // headers: this.getHeaders()
           })
           .then((res) => {
             resolve(res)
@@ -91,6 +95,8 @@ export default {
               params && params.headers ? params.headers : this.getHeaders()
           })
           .then((res) => {
+            console.log(res)
+
             if (res.status === 500) {
               reject(res)
               return
@@ -131,6 +137,8 @@ export default {
     }
     if (token) {
       headers.Authorization = token
+      // headers.Authorization =
+      //   'eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiI0NTgwNTIyOTY3NzgwNTk3NzYiLCJzdWIiOiI0NTgwNTIyOTY3NzgwNTk3NzYiLCJpYXQiOjE1ODkzNzQ2NDMsImF1ZCI6InVzZXIiLCJleHAiOjE1OTgwMTQ2NDN9.VMeHKQHHOHb_9Hd764BjDGQwYLwHrgbavqHcvisKGeFu5ZWAFGckS60dkNVHo20x_tU8vGlnDS8AC97IKTBFEw'
     }
     return headers
   }

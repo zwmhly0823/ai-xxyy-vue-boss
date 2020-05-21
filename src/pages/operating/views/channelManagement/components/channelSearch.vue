@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-04-25 12:09:03
  * @LastEditors: panjian
- * @LastEditTime: 2020-05-09 17:58:30
+ * @LastEditTime: 2020-05-21 17:36:26
  -->
 <template>
   <div class="channel-box">
@@ -215,13 +215,13 @@
             </template>
           </el-table-column>
         </el-table>
-        <m-pagination
+        <!-- <m-pagination
           @current-change="handleCurrentChange"
           :current-page="totalNumber"
           :total="totalElements"
           open="calc(100vw - 95px - 100px)"
-          close="calc(100vw - 40px - 50px)"
-        />
+          close="calc(100vw - 23px - 50px)"
+        /> -->
       </template>
     </div>
     <el-drawer
@@ -255,7 +255,7 @@
 </template>
 
 <script>
-import MPagination from '@/components/MPagination/index.vue'
+// import MPagination from '@/components/MPagination/index.vue'
 import channelSearch from '../components/componentsSearch/search'
 import { timestamp } from '@/utils/index'
 export default {
@@ -266,7 +266,7 @@ export default {
     }
   },
   components: {
-    MPagination,
+    // MPagination,
     channelSearch
   },
   data() {
@@ -339,7 +339,9 @@ export default {
         this.stateTime ||
         this.endTime
       ) {
-        const queryChannelList = this.query ? this.query : `{"match_all" : {}}`
+        const queryChannelList = this.query
+          ? this.query
+          : `{\\"bool\\":{\\"must_not\\":{\\"terms\\":{\\"channel_class_id\\":[\\"17\\",\\"36\\"]}}}}`
         const channelId = this.channelIds ? this.channelIds : `""`
         const SearchTrialStage = this.querySearchTrialStage
           ? `"${this.querySearchTrialStage}"`
@@ -354,7 +356,7 @@ export default {
           this.totalNumber
         }`
       } else {
-        this.querysData = `"{\\"match_all\\" : {}}",trialStage:"",trialOrderEndCtime:"0",trialOrderStartCtime:"0",page:${this.totalNumber}`
+        this.querysData = `"{\\"bool\\":{\\"must_not\\":{\\"terms\\":{\\"channel_class_id\\":[\\"17\\",\\"36\\"]}}}}",trialStage:"",trialOrderEndCtime:"0",trialOrderStartCtime:"0",page:${this.totalNumber}`
       }
       this.$http.Operating.channelDetailPage(this.querysData).then((res) => {
         const _data = res.data.channelDetailPage
@@ -457,7 +459,10 @@ export default {
     // 组件 渠道传的值
     channelSearchValue(data) {
       if (data) {
-        this.query = `{"terms":{"id":[${data.toString()}]}}`
+        this.query = `{"bool":{"must_not":{"terms":{"channel_class_id":["17","36"]}},"must":{"terms":{"id":${JSON.stringify(
+          data
+        )}}}}}`
+        // this.query = `{"terms":{"id":[${data.toString()}]}}`
         this.channelIds = `"${data.toString()}"`
         console.log(this.query, 'this.query')
       } else {
@@ -489,11 +494,11 @@ export default {
       this.getChannelDetailPage()
     },
     // 分页
-    handleCurrentChange(val) {
-      this.totalNumber = val
-      this.getChannelDetailPage()
-      // this.$emit('onCurrentPage', val)
-    },
+    // handleCurrentChange(val) {
+    // this.totalNumber = val
+    // this.getChannelDetailPage()
+    // this.$emit('onCurrentPage', val)
+    // },
     // handleEdit(index, row) {
     //   // 鼠标移入三个点上面触发的事件
     //   // 当没有点击复选框 直接点击加好友
