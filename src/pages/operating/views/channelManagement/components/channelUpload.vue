@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-05-06 16:33:15
  * @LastEditors: panjian
- * @LastEditTime: 2020-05-21 11:32:51
+ * @LastEditTime: 2020-05-21 15:27:00
  -->
 <template>
   <div class="channelUpload-box">
@@ -107,10 +107,11 @@ export default {
       this.$refs.upload.submit()
     },
     handleChange(params) {
+      const adminId = localStorage.getItem('staff')
       var formData = new FormData()
       const file = params.file
       formData.append('file', file)
-      formData.append('adminId', '2')
+      formData.append('adminId', JSON.parse(adminId).id)
       formData.append('remark', this.remarks)
       this.$http.DownloadExcel.exportChannel(formData)
         .then((res) => {
