@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-05-19 17:18:39
  * @LastEditors: liukun
- * @LastEditTime: 2020-05-22 23:57:33
+ * @LastEditTime: 2020-05-23 01:17:56
 -->
 <template>
   <section class="bianju10">
@@ -301,11 +301,6 @@ export default {
       if (val === '1' || val === '2') {
         this.searchJson.regType = Number(val)
         this.arrangeParams()
-      } else {
-        this.$message({
-          message: '业务类型下拉boom',
-          type: 'warning'
-        })
       }
     },
     payMethod(val) {
@@ -313,11 +308,6 @@ export default {
       if (val === '1' || val === '2') {
         this.searchJson.tradeType = Number(val)
         this.arrangeParams()
-      } else {
-        this.$message({
-          message: '支付方式下拉boom',
-          type: 'warning'
-        })
       }
     },
     refundStatus(val) {
@@ -325,11 +315,6 @@ export default {
       if (val === '4' || val === '5') {
         this.searchJson.status = Number(val)
         this.arrangeParams()
-      } else {
-        this.$message({
-          message: '退款状态下拉boom',
-          type: 'warning'
-        })
       }
     },
     customerSearch(val) {
@@ -364,11 +349,6 @@ export default {
             type: 'warning'
           })
         }
-      } else {
-        this.$message({
-          message: '订单搜索下拉boom',
-          type: 'warning'
-        })
       }
     },
     intoNumber(val) {
@@ -443,11 +423,6 @@ export default {
             type: 'warning'
           })
         }
-      } else {
-        this.$message({
-          message: '时间查询下拉boom',
-          type: 'warning'
-        })
       }
     },
     chooseTime(val) {
