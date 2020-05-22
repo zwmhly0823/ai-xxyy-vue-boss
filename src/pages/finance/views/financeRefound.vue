@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-05-19 17:18:39
  * @LastEditors: liukun
- * @LastEditTime: 2020-05-22 18:03:31
+ * @LastEditTime: 2020-05-22 22:05:46
 -->
 <template>
   <section class="bianju10">
@@ -167,13 +167,68 @@
       </template>
       <div class="chouti">
         <el-row>
-          <el-col :span="5">订单支付时间:</el-col>
-          <el-col :span="17" :offset="2"
-            >{{
-              new Date(Number(choutidata.buytime)).toLocaleString()
-            }}
-            ></el-col
-          >
+          <el-col :span="4">订单支付时间:</el-col>
+          <el-col :span="18" :offset="2"
+            >{{ new Date(Number(choutidata.buytime)).toLocaleString() }}
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="4">订单号:</el-col>
+          <el-col :span="18" :offset="2">{{ choutidata.outTradeNo }} </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="4">业务类型:</el-col>
+          <el-col :span="18" :offset="2">{{ choutidata.regtypeStr }} </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="4">支付渠道:</el-col>
+          <el-col :span="18" :offset="2">{{ choutidata.tradeTypeStr }} </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="4">支付流水号:</el-col>
+          <el-col :span="18" :offset="2"
+            >{{ choutidata.transactionId }}
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="4">收款人姓名:</el-col>
+          <el-col :span="18" :offset="2">{{ choutidata.payeeName }} </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="4">支付宝账号:</el-col>
+          <el-col :span="18" :offset="2">{{ choutidata.payeeAccount }} </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="4">已上课周期:</el-col>
+          <el-col :span="18" :offset="2"
+            >{{ choutidata.periodAlready }}
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="4">退款月数:</el-col>
+          <el-col :span="18" :offset="2">{{ choutidata.periodRefund }} </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="4">退款金额:</el-col>
+          <el-col :span="18" :offset="2">{{ choutidata.refundFee }} </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="4">退款原因:</el-col>
+          <el-col :span="18" :offset="2">{{ choutidata.refundReason }} </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="4">退款说明:</el-col>
+          <el-col :span="18" :offset="2">{{ choutidata.refundMsg }} </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="4">附件:</el-col>
+          <el-col :span="18" :offset="2">
+            <el-image
+              style="width: 400px"
+              :src="choutidata.attsUrl"
+              fit="cover"
+            ></el-image>
+          </el-col>
         </el-row>
       </div>
     </el-drawer>
@@ -646,8 +701,8 @@ export default {
         })
       })
       if (code === 0) {
-        this.drawer = true
         Object.assign(this.choutidata, payload)
+        this.drawer = true
         console.info(this.choutidata)
         console.info(new Date(this.choutidata.buytime))
       }
@@ -706,5 +761,14 @@ export default {
 .chouti {
   font-size: 16px;
   padding: 0px 20px;
+}
+.chouti .el-row {
+  margin-bottom: 15px;
+}
+.chouti .el-col-4 {
+  text-align: right;
+}
+.chouti .el-row:nth-last-of-type(1) {
+  margin-bottom: 0px;
 }
 </style>
