@@ -3,8 +3,8 @@
  * @version: 
  * @Author: Lukun
  * @Date: 2020-04-27 17:47:58
- * @LastEditors: liukun
- * @LastEditTime: 2020-05-18 16:16:33
+ * @LastEditors: Lukun
+ * @LastEditTime: 2020-05-22 23:22:57
  -->
 <template>
   <div class="container">
@@ -22,11 +22,11 @@
     >
       <el-table-column width="50">
         <template slot-scope="scope">
-          <el-dropdown placement="bottom-start">
-            <div
-              v-if="scope.row.applyId == staffId"
-              :class="scope.row.id === current.id ? 'three-dot' : 'disnone'"
-            >
+          <el-dropdown
+            placement="bottom-start"
+            v-if="scope.row.applyId == staffId"
+          >
+            <div :class="scope.row.id === current.id ? 'three-dot' : 'disnone'">
               <img src="@/assets/images/icon/icon-three-dot.jpg" />
             </div>
             <el-dropdown-menu slot="dropdown">
@@ -101,6 +101,7 @@
       :destroy-on-close="true"
       size="50%"
       class="drawer-approval-detail"
+      :modal="false"
       :title="drawerApprovalDeatail.addressId ? '补发货审批' : '退款审批'"
     >
       <div v-if="drawerApprovalDeatail.addressId" class="approval-replenish">
@@ -151,16 +152,28 @@
         <el-row v-show="+drawerApprovalDeatail.stage !== 0">
           <el-col :span="3">开课期数:</el-col>
           <el-col :span="20" :offset="1">{{
-            drawerApprovalDeatail.stage
+            drawerApprovalDeatail.periodName
           }}</el-col>
         </el-row>
-        <el-row v-if="isStaffId && drawerApprovalDeatail.mode === 'DEFAULT'">
+        <el-row
+          v-if="
+            isStaffId &&
+              drawerApprovalDeatail.mode === 'DEFAULT' &&
+              drawerApprovalDeatail.type === 'MATERIALS'
+          "
+        >
           <el-col :span="3">版本信息:</el-col>
           <el-col :span="20" :offset="1">
-            <moreVersionBox
-              name="version"
+            <versionExprience
+              v-if="drawerApprovalDeatail.courseType == 1"
               @result="getVersion"
-            ></moreVersionBox>
+              name="version"
+            />
+            <versionSystem
+              v-if="drawerApprovalDeatail.courseType == 2"
+              @result="getVersion"
+              name="version"
+            />
           </el-col>
         </el-row>
         <el-row>
@@ -168,8 +181,8 @@
           <el-col :span="20" :offset="1">
             {{
               drawerApprovalDeatail.reason == 'TRANSPORT_BAD'
-                ? '发货漏发'
-                : '运输损坏'
+                ? '运输损坏'
+                : '发货漏发'
             }}
           </el-col>
         </el-row>
@@ -185,7 +198,7 @@
             {{ drawerApprovalDeatail.status == 'PENDING' ? '待审批' : '-' }}
           </el-col>
         </el-row>
-        <el-row v-if="isStaffId" class="BOTTOM">
+        <el-row class="BOTTOM" v-if="isStaffId">
           <el-col :span="20" :offset="1">
             <el-button type="button" @click="refuseReplenish">拒 绝</el-button>
             <el-button type="button" @click="ensureReplenish">同 意</el-button>
@@ -238,7 +251,7 @@
         <el-row>
           <el-col :span="5">退款类型:</el-col>
           <el-col :span="18" :offset="1">{{
-            drawerApprovalDeatail.refundType
+            drawerApprovalDeatail.refundType == '1' ? '课程退款' : '优惠券退款'
           }}</el-col>
         </el-row>
         <el-row>
@@ -250,13 +263,17 @@
         <el-row>
           <el-col :span="5">退款月数:</el-col>
           <el-col :span="18" :offset="1">{{
-            drawerApprovalDeatail.periodRefund
+            `${Math.floor(drawerApprovalDeatail.periodRefund / 4)}月`
           }}</el-col>
         </el-row>
         <el-row>
           <el-col :span="5">剩余可上课周期:</el-col>
           <el-col :span="18" :offset="1">{{
-            drawerApprovalDeatail.periodResidue
+            `
+           ${Math.floor(
+             drawerApprovalDeatail.periodResidue / 4
+           )}月${drawerApprovalDeatail.periodResidue % 4}周
+           `
           }}</el-col>
         </el-row>
         <el-row>
@@ -273,24 +290,20 @@
         </el-row>
         <el-row>
           <el-col :span="5">附件:</el-col>
-          <el-col :span="18" :offset="1">{{
-            drawerApprovalDeatail.attsUr
-          }}</el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="5">状态:</el-col>
           <el-col :span="18" :offset="1">
-            {{
-              drawerApprovalDeatail.status == 'COMPLETED'
-                ? '审批通过'
-                : '审批驳回'
-            }}
+            <img
+              :src="drawerApprovalDeatail.attsUrl"
+              width="220"
+              height="120"
+              alt=""
+              srcset=""
+            />
           </el-col>
         </el-row>
-        <el-row>
-          <el-col :span="5">备注:</el-col>
-          <el-col :span="18" :offset="1">
-            {{ drawerApprovalDeatail.approvalRemark }}
+        <el-row v-if="isStaffId" class="BOTTOM">
+          <el-col :span="20" :offset="1">
+            <el-button type="button" @click="refuseReplenish">拒 绝</el-button>
+            <el-button type="button" @click="ensureReplenish">同 意</el-button>
           </el-col>
         </el-row>
       </div>
@@ -378,7 +391,8 @@
 <script>
 import MPagination from '@/components/MPagination/index.vue'
 import tabTimeSelect from './timeSearch'
-import moreVersionBox from '@/components/MSearch/searchItems/moreVersionBox.vue'
+import versionExprience from './versionExprience'
+import versionSystem from './versionSystem'
 import CheckType from './checkType'
 import { timestamp } from '@/utils/index'
 import SearchPart from './searchPart'
@@ -395,7 +409,8 @@ export default {
   components: {
     MPagination,
     tabTimeSelect,
-    moreVersionBox,
+    versionExprience,
+    versionSystem,
     CheckType,
     SearchPart,
     adjustDrawer
@@ -425,16 +440,19 @@ export default {
     }
   },
   created() {
-    const staff = localStorage.getItem('staff')
-    const teacher = localStorage.getItem('teacher')
-    if (staff) {
-      this.staffId = JSON.parse(staff).id
-      this.staffName = JSON.parse(staff).id.realName
-      this.isStaffId = JSON.parse(staff).positionId + 0 === 1 || ''
-    }
-    if (teacher) {
+    const isTestBoss = location.pathname.includes('boss')
+    const isTestToss = location.pathname.includes('toss')
+
+    if (isTestToss) {
+      const teacher = localStorage.getItem('teacher')
       this.staffId = JSON.parse(teacher).id
       this.staffName = JSON.parse(teacher).realName
+    }
+    if (isTestBoss) {
+      const staff = localStorage.getItem('staff')
+      this.staffId = JSON.parse(staff).id
+      this.staffName = JSON.parse(staff).realName
+      this.isStaffId = JSON.parse(staff).positionId === '1'
     }
     this.resetParams = {
       staffId: this.staffId,
@@ -470,14 +488,26 @@ export default {
     },
     // 获取版本盒子
     getVersion(val) {
-      console.log(val, 'banben')
       this.version = val.version
     },
     // 拒绝申请
     refuseReplenish() {
+      const version = typeof this.version !== 'string'
+      const versionBool =
+        this.isStaffId &&
+        this.drawerApprovalDeatail.mode === 'DEFAULT' &&
+        this.drawerApprovalDeatail.type === 'MATERIALS'
+      if (versionBool && version) {
+        this.$message('请选择版本号')
+        return
+      }
+      if (!versionBool) {
+        this.version = ''
+      }
       this.$prompt('请输入原因', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
+        inputPattern: /\S/,
         inputErrorMessage: '内容不能为空'
       })
         .then(({ value }) => {
@@ -489,16 +519,22 @@ export default {
             staffId: this.staffId,
             staffName: this.staffName
           }
-          this.$http.Backend.isAggrePass(params).then((res) => {
-            console.log(res)
-            this.checkPending(this.params)
-            this.drawerApproval = false
-            this.$message({
-              message: '拒绝审核通过',
-              type: 'success'
+          this.$http.Backend.isAggrePass(params)
+            .then((res) => {
+              console.log(res)
+              this.checkPending(this.params)
+              this.version = ''
+
+              this.drawerApproval = false
+              this.$message({
+                message: '拒绝审核通过',
+                type: 'success'
+              })
+              this.$emit('result', 'third')
             })
-            this.$emit('result', 'third')
-          })
+            .catch((err) => {
+              this.$message(err)
+            })
         })
         .catch((err) => {
           console.log(err)
@@ -506,9 +542,23 @@ export default {
     },
     // 同意申请
     ensureReplenish() {
+      const version = typeof this.version !== 'string'
+      const versionBool =
+        this.isStaffId &&
+        this.drawerApprovalDeatail.mode === 'DEFAULT' &&
+        this.drawerApprovalDeatail.type === 'MATERIALS'
+      if (versionBool && version) {
+        this.$message('请选择版本号')
+        return
+      }
+      if (!versionBool) {
+        this.version = ''
+      }
+
       this.$prompt('请输入原因', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
+        inputPattern: /\S/,
         inputErrorMessage: '内容不能为空'
       })
         .then(({ value }) => {
@@ -520,16 +570,20 @@ export default {
             staffId: this.staffId,
             staffName: this.staffName
           }
-          this.$http.Backend.isAggrePass(params).then((res) => {
-            console.log(res)
-            this.checkPending(this.params)
-            this.drawerApproval = false
-            this.$message({
-              message: '同意审核通过',
-              type: 'success'
+          this.$http.Backend.isAggrePass(params)
+            .then((res) => {
+              this.checkPending(this.params)
+              this.version = ''
+              this.drawerApproval = false
+              this.$message({
+                message: '同意审核通过',
+                type: 'success'
+              })
+              this.$emit('result', 'third')
             })
-            this.$emit('result', 'third')
-          })
+            .catch((err) => {
+              this.$message(err)
+            })
         })
         .catch((err) => {
           console.log(err)
@@ -819,7 +873,7 @@ export default {
     padding-left: 10px;
   }
   .approvallk .el-row {
-    margin-bottom: 20px;
+    margin-bottom: 10px;
   }
   .approvallk .el-row:nth-last-of-type {
     margin-bottom: 0;
@@ -827,12 +881,17 @@ export default {
   .approvallk .el-row .el-col-5 {
     text-align: right;
   }
+
   .approval-replenish {
     margin: 0 30px;
     div {
-      margin-bottom: 15px;
+      margin-bottom: 5px;
     }
   }
+  .BOTTOM {
+    margin-left: 30px;
+  }
+
   // 操作
   .wait-pending {
     cursor: pointer;

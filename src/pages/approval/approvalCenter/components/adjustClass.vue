@@ -1,5 +1,5 @@
 <template>
-  <div class="adjustModule">
+  <div class="adjustModule" v-loading="adjustLoading">
     <div class="title">
       <i class="el-icon-arrow-left back-icon" @click="back"></i>
       <span class="title-text">{{ showData.title }}</span>
@@ -8,7 +8,7 @@
       ref="adjustForm"
       :model="formData"
       :rules="formRules"
-      label-width="120px"
+      label-width="150px"
       class="adjust-form"
     >
       <el-form-item
@@ -34,13 +34,14 @@
           <el-select
             v-model="formData[item.model]"
             :placeholder="item.placeholder || ''"
-            :style="{ width: item.width || '200px' }"
+            :style="{ width: item.width || '300px' }"
             @change="selectChange($event, item)"
             :loading="item.loading"
+            value-key="index"
           >
             <el-option
-              v-for="(option, oKey) in item.options"
-              :key="oKey"
+              v-for="option in item.options"
+              :key="option.index"
               :label="option.label"
               :value="option.value"
               :disabled="option.disabled"
@@ -52,8 +53,9 @@
           <el-input
             v-model="formData[item.model]"
             :disabled="true"
-            :style="{ width: item.width || '200px' }"
+            :style="{ width: item.width || '300px' }"
           ></el-input>
+          <i class="el-icon-loading input-loading" v-show="item.loading"></i>
           <span
             class="supp-text"
             v-if="item.supplementaryInstruction && showSupplementaryInstruction"
@@ -68,7 +70,7 @@
             :placeholder="item.placeholder"
             v-model="formData[item.model]"
             maxlength="200"
-            :style="{ width: item.width || '200px' }"
+            :style="{ width: item.width || '300px' }"
             show-word-limit
           >
           </el-input>
@@ -160,7 +162,8 @@ export default {
         levelDonePeriodicClass: 'getDonePeriodicClass',
         classCurrentClass: 'getDonePeriodicClass',
         classChooseClass: 'getChooseClassList'
-      }
+      },
+      adjustLoading: false
     }
   },
   created() {
@@ -178,7 +181,7 @@ export default {
         {
           labelText: '关联订单:',
           type: 'select',
-          width: '300px',
+          width: '450px',
           placeholder: '请选择订单',
           model: 'orderId',
           loading: false,
@@ -201,6 +204,7 @@ export default {
           labelText: '调整开课日期:',
           type: 'select',
           model: 'targetStage',
+          loading: false,
           options: [
             {
               value: '0',
@@ -213,6 +217,7 @@ export default {
           labelText: '选择班级:',
           type: 'select',
           model: 'targetClassName',
+          loading: false,
           options: [
             {
               value: '0',
@@ -224,7 +229,7 @@ export default {
         {
           labelText: '调期理由:',
           type: 'textarea',
-          width: '300px',
+          width: '450px',
           placeholder: '请输入内容',
           model: 'adjustReason'
         }
@@ -245,9 +250,10 @@ export default {
         {
           labelText: '关联订单:',
           type: 'select',
-          width: '300px',
+          width: '450px',
           placeholder: '请选择订单',
           model: 'orderId',
+          loading: false,
           options: [
             {
               value: '0',
@@ -261,6 +267,7 @@ export default {
           type: 'input',
           supplementaryInstruction: true,
           disabled: true,
+          loading: false,
           model: 'currentPeriod'
         },
         {
@@ -279,6 +286,7 @@ export default {
           labelText: '选择班级:',
           type: 'select',
           model: 'targetClassName',
+          loading: false,
           options: [
             {
               value: '0',
@@ -290,7 +298,7 @@ export default {
         {
           labelText: '调级理由:',
           type: 'textarea',
-          width: '300px',
+          width: '450px',
           placeholder: '请输入内容',
           model: 'adjustReason'
         }
@@ -311,9 +319,10 @@ export default {
         {
           labelText: '关联订单:',
           type: 'select',
-          width: '300px',
+          width: '450px',
           placeholder: '请选择订单',
           model: 'orderId',
+          loading: false,
           options: [
             {
               value: '0',
@@ -326,12 +335,14 @@ export default {
           labelText: '当前班级:',
           type: 'input',
           disabled: true,
+          loading: false,
           model: 'currentClassName'
         },
         {
           labelText: '申请调整班级:',
           type: 'select',
           model: 'targetClassName',
+          loading: false,
           options: [
             {
               value: '0',
@@ -343,7 +354,7 @@ export default {
         {
           labelText: '调班理由:',
           type: 'textarea',
-          width: '300px',
+          width: '450px',
           placeholder: '请输入内容',
           model: 'adjustReason'
         }
@@ -384,7 +395,7 @@ export default {
     },
     // searchPhone的返回值
     getSearchPhoneData(data) {
-      console.log('data')
+      // console.log('data')
       this.formData.userId = data.userId
     },
     // 下拉手机号的校验
@@ -576,8 +587,15 @@ export default {
         })
     },
     // 根据订单获取后续数据的公共方法
+    // name -> 用于对应起来的自定义的key
+    // query -> 需要的参数
+    // msg -> 报错信息
+    // data,event -> 也是后面需要的参数
     async commonSelectHandleFunction(name, query, msg, data, event) {
+      // 选完订单后的loading
+      this.showSelectLoading(name)
       const resData = await this.commonGetDateFunction(name, query, msg)
+      this.hideSelectLoading(name)
       // console.log(resData)
       if (resData === 'error') {
         return
@@ -603,6 +621,68 @@ export default {
           break
       }
     },
+    showSelectLoading(name) {
+      switch (name) {
+        case 'dateStartClassDate':
+          this.showLoadingFun('currentStartClassDate')
+          break
+        case 'dateAdjustClassDate':
+          this.showLoadingFun('targetStage')
+          break
+        case 'dateChooseClass':
+          this.showLoadingFun('targetClassName')
+          break
+        case 'levelDonePeriodicClass':
+          this.showLoadingFun('currentPeriod')
+          break
+        case 'classCurrentClass':
+          this.showLoadingFun('currentClassName')
+          break
+      }
+    },
+    hideSelectLoading(name) {
+      switch (name) {
+        case 'dateStartClassDate':
+          this.hideLoadingFun('currentStartClassDate')
+          break
+        case 'dateAdjustClassDate':
+          this.hideLoadingFun('targetStage')
+          break
+        case 'dateChooseClass':
+          this.hideLoadingFun('targetClassName')
+          break
+        case 'levelDonePeriodicClass':
+          this.hideLoadingFun('currentPeriod')
+          break
+        case 'classCurrentClass':
+          this.hideLoadingFun('currentClassName')
+          break
+      }
+    },
+    showLoadingFun(key) {
+      const selectModel = ['targetStage', 'targetClassName']
+      this.showData.content.forEach((item) => {
+        if (item.model === key) {
+          item.loading = true
+          if (selectModel.includes(key)) {
+            item.options = [
+              {
+                value: '0',
+                label: '加载中..',
+                disabled: true
+              }
+            ]
+          }
+        }
+      })
+    },
+    hideLoadingFun(key) {
+      this.showData.content.forEach((item) => {
+        if (item.model === key) {
+          item.loading = false
+        }
+      })
+    },
     // 当前开课日期
     handleStartDate(resData) {
       // console.log(resData)
@@ -618,15 +698,18 @@ export default {
     },
     // 调整开课日期
     handleAdjustDate(resData) {
+      // 先清空
+      this.formData.targetStage = ''
       this.showData.content.forEach((item) => {
         if (item.model === 'targetStage') {
           item.options = []
-          resData.forEach((adjustItem) => {
+          resData.forEach((adjustItem, adjustKey) => {
             item.options.push({
               label: adjustItem.periodName,
               value: {
                 targetStage: adjustItem.periodName,
-                targetTerm: adjustItem.period
+                targetTerm: adjustItem.period,
+                index: adjustKey
               }
             })
           })
@@ -635,17 +718,19 @@ export default {
     },
     // 选择班级
     handleChooseClass(resData) {
+      this.formData.targetClassName = ''
       this.showData.content.forEach((item) => {
         if (item.model === 'targetClassName') {
           item.options = []
-          resData.forEach((chooseItem) => {
+          resData.forEach((chooseItem, chooseKey) => {
             // 其实只有调班需要做这个判断，但其他的类型没有currentClassId所以无所谓这么判断不会出问题
             if (chooseItem.id !== this.formData.currentClassId) {
               item.options.push({
                 label: `${chooseItem.teamName}-${chooseItem.teacherRealName}`,
                 value: {
                   targetClassName: chooseItem.teamName,
-                  targetClassId: chooseItem.id
+                  targetClassId: chooseItem.id,
+                  index: chooseKey
                 }
               })
             }
@@ -682,6 +767,8 @@ export default {
     },
     // 申请调级级别
     handleAskforLevel() {
+      // 先清空
+      this.formData.targetSup = ''
       const levelList = ['S1', 'S2', 'S3', 'S4', 'S5']
       levelList.splice(levelList.indexOf(this.currentLevel), 1)
       this.showData.content.forEach((item) => {
@@ -698,7 +785,7 @@ export default {
     },
     // 调班-当前班级
     handleCurrentClass(resData, event, data) {
-      console.log('resData', resData)
+      // console.log('resData', resData)
       this.formData.currentClassId = resData.id
       this.formData.currentClassName = `${resData.teamName}-${resData.teacherRealName}`
       // 调班-调整班级列表,需要先获取到currentClassId
@@ -769,7 +856,9 @@ export default {
     },
     // 提交成功后跳转路由
     async handleSubmitNext(subData) {
+      this.adjustLoading = true
       const result = await this.submitFun(subData)
+      this.adjustLoading = false
       if (result === 'success') {
         this.$router.push({
           name: 'approvalCenter',
@@ -798,19 +887,22 @@ export default {
     },
     // 重置部分数据
     resetPartOfFormData() {
-      // console.log('resetPartOfFormData')
       Object.keys(this.formData).forEach((item) => {
         this.formData[item] =
           item === 'userId' || item === 'adjustReason'
             ? this.formData[item]
             : ''
       })
+      // 隐藏提示
+      this.showSupplementaryInstruction = false
     },
     // 重置
     resetForm(formName) {
       this.$refs[formName].resetFields()
       // 手动清空手机号
       this.$refs.searchPhone[0].input = ''
+      // 隐藏提示
+      this.showSupplementaryInstruction = false
     }
   }
 }
@@ -843,7 +935,11 @@ export default {
     }
   }
   .adjust-form {
+    padding: 0 50px;
     margin-top: 30px;
+    /deep/ .el-form-item__content {
+      margin-left: 200px !important;
+    }
     .search-phone-class {
       width: 200px;
       /deep/ .el-input--mini {
@@ -857,6 +953,11 @@ export default {
       margin-left: 15px;
       color: red;
       font-size: 12px;
+    }
+    .input-loading {
+      margin-left: 10px;
+      font-size: 18px;
+      color: #aaa;
     }
   }
 }
