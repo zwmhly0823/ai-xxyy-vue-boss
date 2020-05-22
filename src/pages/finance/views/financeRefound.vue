@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-05-19 17:18:39
  * @LastEditors: liukun
- * @LastEditTime: 2020-05-22 18:03:31
+ * @LastEditTime: 2020-05-22 22:12:23
 -->
 <template>
   <section class="bianju10">
@@ -150,7 +150,7 @@
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
       layout="prev,pager,next,total,sizes,jumper"
-      :page-sizes="[1, 2, 5, 10, 20]"
+      :page-sizes="[5, 10, 20]"
       :current-page="currentPage"
       :total="allDigit"
       :page-size="pageSize"
@@ -167,13 +167,68 @@
       </template>
       <div class="chouti">
         <el-row>
-          <el-col :span="5">订单支付时间:</el-col>
-          <el-col :span="17" :offset="2"
-            >{{
-              new Date(Number(choutidata.buytime)).toLocaleString()
-            }}
-            ></el-col
-          >
+          <el-col :span="4">订单支付时间:</el-col>
+          <el-col :span="18" :offset="2"
+            >{{ new Date(Number(choutidata.buytime)).toLocaleString() }}
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="4">订单号:</el-col>
+          <el-col :span="18" :offset="2">{{ choutidata.outTradeNo }} </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="4">业务类型:</el-col>
+          <el-col :span="18" :offset="2">{{ choutidata.regtypeStr }} </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="4">支付渠道:</el-col>
+          <el-col :span="18" :offset="2">{{ choutidata.tradeTypeStr }} </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="4">支付流水号:</el-col>
+          <el-col :span="18" :offset="2"
+            >{{ choutidata.transactionId }}
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="4">收款人姓名:</el-col>
+          <el-col :span="18" :offset="2">{{ choutidata.payeeName }} </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="4">支付宝账号:</el-col>
+          <el-col :span="18" :offset="2">{{ choutidata.payeeAccount }} </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="4">已上课周期:</el-col>
+          <el-col :span="18" :offset="2"
+            >{{ choutidata.periodAlready }}
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="4">退款月数:</el-col>
+          <el-col :span="18" :offset="2">{{ choutidata.periodRefund }} </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="4">退款金额:</el-col>
+          <el-col :span="18" :offset="2">{{ choutidata.refundFee }} </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="4">退款原因:</el-col>
+          <el-col :span="18" :offset="2">{{ choutidata.refundReason }} </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="4">退款说明:</el-col>
+          <el-col :span="18" :offset="2">{{ choutidata.refundMsg }} </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="4">附件:</el-col>
+          <el-col :span="18" :offset="2">
+            <el-image
+              style="width: 400px"
+              :src="choutidata.attsUrl"
+              fit="cover"
+            ></el-image>
+          </el-col>
         </el-row>
       </div>
     </el-drawer>
@@ -184,7 +239,7 @@
 export default {
   created() {
     // init全量数据展示
-    this.arrangeParams({ page: 1, size: 2 })
+    this.arrangeParams()
   },
   mounted() {},
   data() {
@@ -406,7 +461,7 @@ export default {
       console.info(val, typeof val)
       if (val === '1' || val === '2') {
         this.searchJson.regType = Number(val)
-        this.arrangeParams({ page: 1, size: 2 })
+        this.arrangeParams()
       } else {
         this.$message({
           message: '业务类型下拉boom',
@@ -418,7 +473,7 @@ export default {
       console.info(val, typeof val)
       if (val === '1' || val === '2') {
         this.searchJson.tradeType = Number(val)
-        this.arrangeParams({ page: 1, size: 2 })
+        this.arrangeParams()
       } else {
         this.$message({
           message: '支付方式下拉boom',
@@ -430,7 +485,7 @@ export default {
       console.info(val, typeof val)
       if (val === '4' || val === '5') {
         this.searchJson.status = Number(val)
-        this.arrangeParams({ page: 1, size: 2 })
+        this.arrangeParams()
       } else {
         this.$message({
           message: '退款状态下拉boom',
@@ -441,7 +496,7 @@ export default {
     customerSearch(val) {
       console.info(val, typeof val)
       this.searchJson.uid = val
-      this.arrangeParams({ page: 1, size: 2 })
+      this.arrangeParams()
     },
     // 2组关联
     chooseOrder(val) {
@@ -451,7 +506,7 @@ export default {
         if (this.num1_) {
           this.searchJson.transactionId = ''
           this.searchJson.outTradeNo = this.num1_
-          this.arrangeParams({ page: 1, size: 2 })
+          this.arrangeParams()
         } else {
           this.$message({
             message: '别忘记键入编号,才能给你数据',
@@ -463,7 +518,7 @@ export default {
         if (this.num1_) {
           this.searchJson.outTradeNo = ''
           this.searchJson.transactionId = this.num1_
-          this.arrangeParams({ page: 1, size: 2 })
+          this.arrangeParams()
         } else {
           this.$message({
             message: '别忘记键入编号,才能给你数据',
@@ -483,12 +538,12 @@ export default {
         // 订单号
         this.searchJson.transactionId = ''
         this.searchJson.outTradeNo = val
-        this.arrangeParams({ page: 1, size: 2 })
+        this.arrangeParams()
       } else if (this.num1 === '1') {
         // 流水号
         this.searchJson.outTradeNo = ''
         this.searchJson.transactionId = val
-        this.arrangeParams({ page: 1, size: 2 })
+        this.arrangeParams()
       } else {
         this.$message({
           message: '请先选择订单搜索类型,我再给你数据',
@@ -508,7 +563,7 @@ export default {
           this.searchJson.ectime = '' // 申请退款-结束时间
           this.searchJson.srefundTime = '' // 申请完成-开始时间
           this.searchJson.erefundTime = '' // 申请完成-结束时间
-          this.arrangeParams({ page: 1, size: 2 })
+          this.arrangeParams()
         } else {
           this.$message({
             message: '别忘记选择时间,才能给你数据',
@@ -525,7 +580,7 @@ export default {
           this.searchJson.ebuytime = '' // 订单支付-结束时间
           this.searchJson.srefundTime = '' // 申请完成-开始时间
           this.searchJson.erefundTime = '' // 申请完成-结束时间
-          this.arrangeParams({ page: 1, size: 2 })
+          this.arrangeParams()
         } else {
           this.$message({
             message: '别忘记选择时间,才能给你数据',
@@ -542,7 +597,7 @@ export default {
           this.searchJson.ebuytime = '' // 订单支付-结束时间
           this.searchJson.sctime = '' // 申请退款-开始时间
           this.searchJson.ectime = '' // 申请退款-结束时间
-          this.arrangeParams({ page: 1, size: 2 })
+          this.arrangeParams()
         } else {
           this.$message({
             message: '别忘记选择时间,才能给你数据',
@@ -567,7 +622,7 @@ export default {
         this.searchJson.ectime = '' // 申请退款-结束时间
         this.searchJson.srefundTime = '' // 申请完成-开始时间
         this.searchJson.erefundTime = '' // 申请完成-结束时间
-        this.arrangeParams({ page: 1, size: 2 })
+        this.arrangeParams()
       } else if (this.num2 === '1') {
         // 申请退款时间
         this.searchJson.sctime = val[0] // 申请退款-开始时间
@@ -577,7 +632,7 @@ export default {
         this.searchJson.ebuytime = '' // 订单支付-结束时间
         this.searchJson.srefundTime = '' // 申请完成-开始时间
         this.searchJson.erefundTime = '' // 申请完成-结束时间
-        this.arrangeParams({ page: 1, size: 2 })
+        this.arrangeParams()
       } else if (this.num2 === '2') {
         // 完成退款时间
         this.searchJson.srefundTime = val[0] // 申请完成-开始时间
@@ -587,7 +642,7 @@ export default {
         this.searchJson.ebuytime = '' // 订单支付-结束时间
         this.searchJson.sctime = '' // 申请退款-开始时间
         this.searchJson.ectime = '' // 申请退款-结束时间
-        this.arrangeParams({ page: 1, size: 2 })
+        this.arrangeParams()
       } else {
         this.$message({
           message: '请先选择查询时间类型,我再给你数据',
@@ -646,8 +701,8 @@ export default {
         })
       })
       if (code === 0) {
-        this.drawer = true
         Object.assign(this.choutidata, payload)
+        this.drawer = true
         console.info(this.choutidata)
         console.info(new Date(this.choutidata.buytime))
       }
@@ -706,5 +761,14 @@ export default {
 .chouti {
   font-size: 16px;
   padding: 0px 20px;
+}
+.chouti .el-row {
+  margin-bottom: 15px;
+}
+.chouti .el-col-4 {
+  text-align: right;
+}
+.chouti .el-row:nth-last-of-type(1) {
+  margin-bottom: 0px;
 }
 </style>
