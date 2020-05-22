@@ -495,20 +495,23 @@ export default {
             //   ? [payload.department.id]
             //   : []
             this.ruleForm.region = payload.department
-              ? payload.department.id ||
-                payload.department.pid ||
-                payload.department.cid
+              ? [
+                  payload.department.id ||
+                    payload.department.pid ||
+                    payload.department.cid
+                ]
               : []
             payload.duty.forEach((val) => {
               this.ruleForm.positionVal.push(val.id * 1)
             })
             this.ruleForm.rank = payload.rank ? payload.rank.id * 1 : ''
+            // 0520: fixed-编辑时没有入职时间，不再默认显示当前时间。必填项  By: Yang
             this.ruleForm.inductionDate = payload.teacher.joinDate
               ? formatData(
                   new Date(payload.teacher.joinDate).getTime(),
                   'yyyy-MM-dd HH:mm:ss'
                 )
-              : new Date()
+              : ''
             this.ruleForm.departureDate = payload.teacher.leaveDate
               ? formatData(
                   new Date(payload.teacher.leaveDate).getTime(),
