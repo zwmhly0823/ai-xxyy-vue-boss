@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-15 20:35:57
  * @LastEditors: Shentong
- * @LastEditTime: 2020-05-21 17:51:38
+ * @LastEditTime: 2020-05-22 16:18:51
  -->
 <template>
   <div class="first-step">
@@ -342,7 +342,7 @@ export default {
     // 新增招生排期第一步-add
     async addScheduleFirstStep(params, cb) {
       const loadingInstance = Loading.service({
-        target: 'section',
+        target: '.app-main',
         lock: true,
         text: '正在保存...',
         fullscreen: true
@@ -352,13 +352,13 @@ export default {
         if (_res.code === 0) cb(_res)
       } catch (err) {
         this.$message({
-          message: '获取列表出错',
+          message: '获取数据出错',
           type: 'warning'
         })
+      } finally {
+        // 以服务的方式调用的 Loading 需要异步关闭
+        this.$nextTick(() => loadingInstance.close())
       }
-
-      // 以服务的方式调用的 Loading 需要异步关闭
-      this.$nextTick(() => loadingInstance.close())
     },
     // 新增招生排期第一步-edit获取数据
     async getScheduleFirstStep(params) {
