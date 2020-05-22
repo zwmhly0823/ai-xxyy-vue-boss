@@ -111,6 +111,21 @@
           ></el-option>
         </el-select>
       </el-form-item> -->
+      <!-- 销售等级 -->
+      <el-form-item label="销售等级" prop="Level">
+        <el-select
+          v-model="ruleForm.level"
+          clearable
+          placeholder="请选择销售等级"
+        >
+          <el-option
+            v-for="(item, key) in Level"
+            :key="key"
+            :label="item"
+            :value="item"
+          ></el-option>
+        </el-select>
+      </el-form-item>
       <!-- 入职时间 -->
       <el-form-item label="入职时间" required>
         <el-form-item prop="inductionDate">
@@ -291,6 +306,8 @@ export default {
       ],
       // 微信
       WeChat: [],
+      // 销售等级
+      Level: [0, 1, 2, 3, 4],
       // 表单value
       ruleForm: {
         // 手机号
@@ -312,7 +329,7 @@ export default {
         // 职级
         rank: '',
         // 带班级别
-        // shiftLevel: '',
+        shiftLevel: '',
         // 入职时间
         inductionDate: '',
         // 下组时间
@@ -324,7 +341,9 @@ export default {
         // 在职状态
         workingState: 'TENURE',
         // 分配微信号
-        weChat: []
+        weChat: [],
+        // 销售等级
+        level: ''
       },
 
       // 表单验证
@@ -370,9 +389,9 @@ export default {
         // 职级
         rank: [{ required: true, message: '请选择职级', trigger: 'change' }],
         // 带班级别
-        // shiftLevel: [
-        //   { required: true, message: '请选择带班级别', trigger: 'change' }
-        // ],
+        shiftLevel: [
+          { required: true, message: '请选择带班级别', trigger: 'change' }
+        ],
         // 入职时间
         inductionDate: [
           {
@@ -402,7 +421,9 @@ export default {
         // 在职状态
         workingState: [
           { required: true, message: '请选择在职状态', trigger: 'change' }
-        ]
+        ],
+        // 销售等级
+        Level: [{ message: '请选择在职状态', trigger: 'change' }]
       }
     }
   },
@@ -527,6 +548,7 @@ export default {
             this.ruleForm.accountSettings = payload.teacher.isLogin
             this.ruleForm.workingState = payload.teacher.status
             this.WeChat = payload.weixinList
+            this.ruleForm.level = payload.teacher.level
           }
         )
       }
@@ -567,7 +589,8 @@ export default {
           leaveDate: departureTime,
           leaveTrain: this.ruleForm.groupDate,
           status: this.ruleForm.workingState,
-          isLogin: this.ruleForm.accountSettings
+          isLogin: this.ruleForm.accountSettings,
+          level: this.ruleForm.level
         },
         department: {
           id: this.ruleForm.region[this.ruleForm.region.length - 1]
