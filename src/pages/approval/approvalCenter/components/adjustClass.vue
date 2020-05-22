@@ -55,6 +55,7 @@
             :disabled="true"
             :style="{ width: item.width || '300px' }"
           ></el-input>
+          <i class="el-icon-loading input-loading" v-show="item.loading"></i>
           <span
             class="supp-text"
             v-if="item.supplementaryInstruction && showSupplementaryInstruction"
@@ -203,6 +204,7 @@ export default {
           labelText: '调整开课日期:',
           type: 'select',
           model: 'targetStage',
+          loading: false,
           options: [
             {
               value: '0',
@@ -215,6 +217,7 @@ export default {
           labelText: '选择班级:',
           type: 'select',
           model: 'targetClassName',
+          loading: false,
           options: [
             {
               value: '0',
@@ -250,6 +253,7 @@ export default {
           width: '450px',
           placeholder: '请选择订单',
           model: 'orderId',
+          loading: false,
           options: [
             {
               value: '0',
@@ -263,6 +267,7 @@ export default {
           type: 'input',
           supplementaryInstruction: true,
           disabled: true,
+          loading: false,
           model: 'currentPeriod'
         },
         {
@@ -281,6 +286,7 @@ export default {
           labelText: '选择班级:',
           type: 'select',
           model: 'targetClassName',
+          loading: false,
           options: [
             {
               value: '0',
@@ -316,6 +322,7 @@ export default {
           width: '450px',
           placeholder: '请选择订单',
           model: 'orderId',
+          loading: false,
           options: [
             {
               value: '0',
@@ -328,12 +335,14 @@ export default {
           labelText: '当前班级:',
           type: 'input',
           disabled: true,
-          model: 'currentClassName'
+          model: 'currentClassName',
+          loading: false
         },
         {
           labelText: '申请调整班级:',
           type: 'select',
           model: 'targetClassName',
+          loading: false,
           options: [
             {
               value: '0',
@@ -578,8 +587,15 @@ export default {
         })
     },
     // 根据订单获取后续数据的公共方法
+    // name -> 用于对应起来的自定义的key
+    // query -> 需要的参数
+    // msg -> 报错信息
+    // data,event -> 也是后面需要的参数
     async commonSelectHandleFunction(name, query, msg, data, event) {
+      // 选完订单后的loading
+      this.showSelectLoading(name)
       const resData = await this.commonGetDateFunction(name, query, msg)
+      this.hideSelectLoading(name)
       // console.log(resData)
       if (resData === 'error') {
         return
@@ -605,6 +621,68 @@ export default {
           break
       }
     },
+    showSelectLoading(name) {
+      switch (name) {
+        case 'dateStartClassDate':
+          this.showLoadingFun('currentStartClassDate')
+          break
+        case 'dateAdjustClassDate':
+          this.showLoadingFun('targetStage')
+          break
+        case 'dateChooseClass':
+          this.showLoadingFun('targetClassName')
+          break
+        case 'levelDonePeriodicClass':
+          this.showLoadingFun('currentPeriod')
+          break
+        case 'classCurrentClass':
+          this.showLoadingFun('currentClassName')
+          break
+      }
+    },
+    hideSelectLoading(name) {
+      switch (name) {
+        case 'dateStartClassDate':
+          this.hideLoadingFun('currentStartClassDate')
+          break
+        case 'dateAdjustClassDate':
+          this.hideLoadingFun('targetStage')
+          break
+        case 'dateChooseClass':
+          this.hideLoadingFun('targetClassName')
+          break
+        case 'levelDonePeriodicClass':
+          this.hideLoadingFun('currentPeriod')
+          break
+        case 'classCurrentClass':
+          this.hideLoadingFun('currentClassName')
+          break
+      }
+    },
+    showLoadingFun(key) {
+      const selectModel = ['targetStage', 'targetClassName']
+      this.showData.content.forEach((item) => {
+        if (item.model === key) {
+          item.loading = true
+          if (selectModel.includes(key)) {
+            item.options = [
+              {
+                value: '0',
+                label: '加载中..',
+                disabled: true
+              }
+            ]
+          }
+        }
+      })
+    },
+    hideLoadingFun(key) {
+      this.showData.content.forEach((item) => {
+        if (item.model === key) {
+          item.loading = false
+        }
+      })
+    },
     // 当前开课日期
     handleStartDate(resData) {
       // console.log(resData)
@@ -620,6 +698,8 @@ export default {
     },
     // 调整开课日期
     handleAdjustDate(resData) {
+      // 先清空
+      this.formData.targetStage = ''
       this.showData.content.forEach((item) => {
         if (item.model === 'targetStage') {
           item.options = []
@@ -638,6 +718,7 @@ export default {
     },
     // 选择班级
     handleChooseClass(resData) {
+      this.formData.targetClassName = ''
       this.showData.content.forEach((item) => {
         if (item.model === 'targetClassName') {
           item.options = []
@@ -686,6 +767,8 @@ export default {
     },
     // 申请调级级别
     handleAskforLevel() {
+      // 先清空
+      this.formData.targetSup = ''
       const levelList = ['S1', 'S2', 'S3', 'S4', 'S5']
       levelList.splice(levelList.indexOf(this.currentLevel), 1)
       this.showData.content.forEach((item) => {
@@ -870,6 +953,11 @@ export default {
       margin-left: 15px;
       color: red;
       font-size: 12px;
+    }
+    .input-loading {
+      margin-left: 10px;
+      font-size: 18px;
+      color: #aaa;
     }
   }
 }
