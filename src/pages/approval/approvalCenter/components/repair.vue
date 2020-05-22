@@ -4,7 +4,7 @@
  * @Author: Lukun
  * @Date: 2020-04-28 13:50:45
  * @LastEditors: Lukun
- * @LastEditTime: 2020-05-22 22:39:21
+ * @LastEditTime: 2020-05-23 00:36:20
  -->
 <template>
   <div class="container">
@@ -346,7 +346,7 @@ export default {
           {
             required: true,
             message: '请选择关联补发商品原因',
-            trigger: 'change'
+            trigger: 'blur'
           }
         ]
       }
