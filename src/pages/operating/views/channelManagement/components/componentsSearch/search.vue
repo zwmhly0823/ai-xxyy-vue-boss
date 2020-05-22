@@ -3,13 +3,13 @@
  * @version:
  * @Author: zhubaodong
  * @Date: 2020-03-24 18:50:54
- * @LastEditors: panjian
- * @LastEditTime: 2020-05-21 19:37:43
+ * @LastEditors: Shentong
+ * @LastEditTime: 2020-05-22 23:59:17
  -->
 <template>
   <div class="search-item small threeSelect">
     <el-cascader
-      placeholder="请选择渠道"
+      placeholder="请选择渠道分类"
       size="mini"
       v-model="channelName"
       @change="onSelect"
@@ -25,6 +25,27 @@
       clearable
       filterable
     ></el-cascader>
+    <el-select
+      style="margin-left:20px;"
+      v-model="channels"
+      :multiple="true"
+      filterable
+      remote
+      :reserve-keyword="true"
+      size="mini"
+      clearable
+      placeholder="选择渠道"
+      :remote-method="handleDebounce"
+      @change="changeChannelId"
+    >
+      <el-option
+        v-for="item in channelLeves"
+        :key="item.id"
+        :label="item.channel_outer_name"
+        :value="item.id"
+      >
+      </el-option>
+    </el-select>
     <el-select
       v-show="scheduling"
       style="margin-left:20px;"
@@ -47,6 +68,7 @@
         :value="item.period"
       ></el-option>
     </el-select>
+
     <el-date-picker
       v-show="channelDate"
       class="small"
@@ -101,6 +123,7 @@ export default {
   },
   data() {
     return {
+      channels: '',
       pickerOptions: {
         shortcuts: [
           {
@@ -155,6 +178,7 @@ export default {
       loading: false,
       stage: '',
       channelName: [],
+      channelLeves: [],
       dataList: [],
       channelList: [],
       channelData: null,
@@ -172,7 +196,7 @@ export default {
     }
   },
   async created() {
-    await this.getChannel()
+    await this.getChannelLeves()
     await this.getChannelClassList()
     this.formatData(this.channelList, this.channelClassList)
   },
@@ -186,7 +210,23 @@ export default {
   },
   methods: {
     // 获取渠道来源 filter: 过滤关键词  eg：filter:"抖音"
-    async getChannel() {
+    // async getChannel() {
+    //   await axios
+    //     .post('/graphql/channel', {
+    //       query: `{
+    //         channelAllList(size: 500) {
+    //             id
+    //             channel_class_id
+    //             channel_outer_name
+    //           }
+    //         }
+    //       `
+    //     })
+    //     .then((res) => {
+    //       this.channelList = res.data.channelAllList
+    //     })
+    // },
+    async getChannelLeves() {
       await axios
         .post('/graphql/channel', {
           query: `{
@@ -199,8 +239,11 @@ export default {
           `
         })
         .then((res) => {
-          this.channelList = res.data.channelAllList
+          this.channelLeves = res.data.channelAllList
         })
+    },
+    changeChannelId(res) {
+      this.$emit('getChannelLeves', res)
     },
     // 获取渠道来源分类 filter: 过滤关键词  eg：filter:"抖音"
     async getChannelClassList() {

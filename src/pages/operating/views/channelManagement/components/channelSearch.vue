@@ -3,8 +3,8 @@
  * @version: 
  * @Author: panjian
  * @Date: 2020-04-25 12:09:03
- * @LastEditors: panjian
- * @LastEditTime: 2020-05-21 19:21:51
+ * @LastEditors: Shentong
+ * @LastEditTime: 2020-05-23 00:39:25
  -->
 <template>
   <div class="channel-box">
@@ -14,6 +14,7 @@
           @channelSearchValue="channelSearchValue"
           @schedulingSearch="schedulingSearch"
           @dateSearch="dateSearch"
+          @getChannelLeves="getChannelLeves"
           :tabIndex="tabIndex"
         ></channel-search>
       </div>
@@ -313,13 +314,16 @@ export default {
       // 线索数
       allUserNums: '',
       // 获取到列表的一条数据
-      channelIdRow: ''
+      channelIdRow: '',
+      // 一级渠道emit的数据
+      channelSearchValList: []
+      // 二级渠道emit数据
     }
   },
   watch: {
     tabIndex(value) {
       this.query = ''
-      this.channelIds = ''
+      this.channelIds = []
       this.querySearchTrialStage = ''
       this.stateTime = ''
       this.endTime = ''
@@ -331,10 +335,52 @@ export default {
     this.getChannelDetailPage()
   },
   methods: {
+    // 渠道一级
+    channelSearchValue(data) {
+      this.channelSearchValList = data
+      if (data.length) {
+        this.query = this.channelIds.length
+          ? `{"bool":{"must_not":{"terms":{"channel_class_id":["17","36"]}},"must":[{"terms":{"channel_class_id":${JSON.stringify(
+              data
+            )}}},{"terms":{"id":${JSON.stringify(this.channelIds)}}}]}}`
+          : `{"bool":{"must_not":{"terms":{"channel_class_id":["17","36"]}},"must":[{"terms":{"channel_class_id":${JSON.stringify(
+              data
+            )}}}]}}`
+      } else {
+        this.query = this.channelIds.length
+          ? `{"bool":{"must_not":{"terms":{"channel_class_id":["17","36"]}},"must":[{"terms":{"id":${JSON.stringify(
+              this.channelIds
+            )}}}]}}`
+          : `{"bool":{"must_not":{"terms":{"channel_class_id":["17","36"]}}}}`
+      }
+      this.totalNumber = 1
+      this.getChannelDetailPage()
+    },
+    // TODO:
+    getChannelLeves(data) {
+      this.channelIds = data
+      if (data.length) {
+        this.query = this.channelSearchValList.length
+          ? `{"bool":{"must_not":{"terms":{"channel_class_id":["17","36"]}},"must":[{"terms":{"channel_class_id":${JSON.stringify(
+              this.channelSearchValList
+            )}}},{"terms":{"id":${JSON.stringify(this.channelIds)}}}]}}`
+          : `{"bool":{"must_not":{"terms":{"channel_class_id":["17","36"]}},"must":{"terms":{"id":${JSON.stringify(
+              data
+            )}}}}}`
+      } else {
+        this.query = this.channelSearchValList.length
+          ? `{"bool":{"must_not":{"terms":{"channel_class_id":["17","36"]}},"must":[{"terms":{"channel_class_id":${JSON.stringify(
+              this.channelSearchValList
+            )}}}]}}`
+          : `{"bool":{"must_not":{"terms":{"channel_class_id":["17","36"]}}}}`
+      }
+      this.totalNumber = 1
+      this.getChannelDetailPage()
+    },
     getChannelDetailPage() {
       if (
         this.query ||
-        this.channelIds ||
+        this.channelIds.length ||
         this.querySearchTrialStage ||
         this.stateTime ||
         this.endTime
@@ -342,7 +388,9 @@ export default {
         const queryChannelList = this.query
           ? this.query
           : `{"bool":{"must_not":{"terms":{"channel_class_id":["17","36"]}}}}`
-        const channelId = this.channelIds ? this.channelIds : `""`
+        const channelId = this.channelIds.length
+          ? `${JSON.stringify(this.channelIds.join())}`
+          : `""`
         const SearchTrialStage = this.querySearchTrialStage
           ? `"${this.querySearchTrialStage}"`
           : `"0"`
@@ -350,8 +398,13 @@ export default {
           ? `"${this.stateTime}"`
           : `"0"`
         const trialOrderEndCtime = this.endTime ? `"${this.endTime}"` : `"0"`
+        const channelSearchValList = this.channelSearchValList.length
+          ? this.channelSearchValList.join()
+          : ''
         this.querysData = `${JSON.stringify(
           queryChannelList
+        )},channelClassIds:${JSON.stringify(
+          channelSearchValList
         )},channelIds:${channelId},trialStage:${SearchTrialStage},trialOrderEndCtime:${trialOrderEndCtime},trialOrderStartCtime:${trialOrderStartCtime},page:${
           this.totalNumber
         }`
@@ -455,23 +508,6 @@ export default {
 
         this.tableData = _data.content
       })
-    },
-    // 组件 渠道传的值
-    channelSearchValue(data) {
-      if (data) {
-        this.query = `{"bool":{"must_not":{"terms":{"channel_class_id":["17","36"]}},"must":{"terms":{"id":${JSON.stringify(
-          data
-        )}}}}}`
-        // this.query = `{"terms":{"id":[${data.toString()}]}}`
-        this.channelIds = `"${data.toString()}"`
-        console.log(this.query, 'this.query')
-      } else {
-        this.query = ''
-        this.channelIds = ''
-        console.log(this.query, 'channelSearchValue')
-      }
-      this.totalNumber = 1
-      this.getChannelDetailPage()
     },
     // 组件 排期传的值
     schedulingSearch(data) {
