@@ -37,6 +37,8 @@ export default {
             is_login
             head_image
             join_date
+            leave_date
+            level
             leave_train
             department {
               id
