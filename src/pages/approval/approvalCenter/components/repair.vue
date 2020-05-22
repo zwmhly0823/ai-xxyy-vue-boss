@@ -4,7 +4,7 @@
  * @Author: Lukun
  * @Date: 2020-04-28 13:50:45
  * @LastEditors: Lukun
- * @LastEditTime: 2020-05-23 00:36:20
+ * @LastEditTime: 2020-05-23 00:59:21
  -->
 <template>
   <div class="container">
@@ -339,7 +339,7 @@ export default {
           {
             required: true,
             validator: validateProduct,
-            trigger: 'blur'
+            trigger: 'change'
           }
         ],
         replenishReason: [
@@ -370,6 +370,8 @@ export default {
       this.formRepair.sup = ''
       this.formRepair.level = ''
       this.formRepair.mode = ''
+      this.formRepair.productNames = ''
+      this.formRepair.chooseProductVaidator = ''
       this.$root.$emit('qingkong', '') // 清空子组件里的值
     },
     // 清空全部数据
@@ -502,7 +504,6 @@ export default {
     },
     // 选择补发方式
     chooseMode(val) {
-      console.log(val, 'val')
       this.clearData()
       this.formRepair.mode = val
     },

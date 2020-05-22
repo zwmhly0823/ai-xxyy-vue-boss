@@ -3,8 +3,8 @@
  * @version:
  * @Author: panjian
  * @Date: 2020-03-31 22:54:28
- * @LastEditors: panjian
- * @LastEditTime: 2020-05-18 19:44:13
+ * @LastEditors: Lukun
+ * @LastEditTime: 2020-05-23 00:56:22
  */
 // import axios from '../axios'
 import axios from '../axiosConfig'
@@ -18,6 +18,12 @@ export default {
     return axios.get(
       `/api/o/v1/express/getExpressDetailForAPP?expressNo=${params.expressNo}`
     )
+  },
+  /**
+   * 通过订单id查询物流信息
+   */
+  getExpressByOrderId(params) {
+    return axios.get(`/api/o/v1/express/getExpressByOrderId?orderId=${params}`)
   },
   /**
    * 添加物流收货人信息
@@ -96,6 +102,13 @@ export default {
    */
   updateExpressAddress(params) {
     return axios.get('/api/o/v1/express/updateExpressAddress', params)
+  },
+  /**
+   * 新增地址信息
+   * @param {*} param0
+   */
+  createAddress(params) {
+    return axios.get('/api/o/v1/express/createAddress', params)
   }
   /**
    * v1 订单关联的物流
