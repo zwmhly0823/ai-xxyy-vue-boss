@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-04-25 12:09:03
  * @LastEditors: Shentong
- * @LastEditTime: 2020-05-22 22:05:55
+ * @LastEditTime: 2020-05-22 22:44:04
  -->
 <template>
   <div class="channel-box">
@@ -395,8 +395,13 @@ export default {
           ? `"${this.stateTime}"`
           : `"0"`
         const trialOrderEndCtime = this.endTime ? `"${this.endTime}"` : `"0"`
+        const channelSearchValList = this.channelSearchValList.length
+          ? this.channelSearchValList.join()
+          : ''
         this.querysData = `${JSON.stringify(
           queryChannelList
+        )},channelClassIds:${JSON.stringify(
+          channelSearchValList
         )},channelIds:${channelId},trialStage:${SearchTrialStage},trialOrderEndCtime:${trialOrderEndCtime},trialOrderStartCtime:${trialOrderStartCtime},page:${
           this.totalNumber
         }`
