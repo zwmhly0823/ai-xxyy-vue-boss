@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-04-01 13:24:40
  * @LastEditors: Lukun
- * @LastEditTime: 2020-05-09 14:10:03
+ * @LastEditTime: 2020-05-20 13:25:36
  -->
 <template>
   <el-form
@@ -150,13 +150,8 @@ export default {
     },
     resetForm(formName) {
       this.$refs.ruleForm.resetFields()
-      // this.$emit('addExpress', 'cancel')
       this.$emit('cancel', '')
       this.chooseAddress = []
-      // this.province = ''
-      // this.city = ''
-      // this.area = ''
-      // this.areaCode = ''
       this.province = []
       this.city = []
       this.area = []

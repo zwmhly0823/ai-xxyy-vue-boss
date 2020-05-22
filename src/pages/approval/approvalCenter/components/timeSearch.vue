@@ -45,5 +45,10 @@ export default {
 <style lang="scss" scoped>
 .select-data-box {
   margin: 20px;
+  /deep/ .search-item {
+    .searchSelect {
+      width: 130px !important;
+    }
+  }
 }
 </style>

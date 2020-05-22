@@ -4,16 +4,16 @@
  * @Author: Lukun
  * @Date: 2020-05-06 18:31:51
  * @LastEditors: liukun
- * @LastEditTime: 2020-05-18 17:28:24
+ * @LastEditTime: 2020-05-13 11:42:00
  -->
 <template>
   <div class="container">
     <div class="icon">
-      <!-- <div class="moneyback">
+      <!-- <div class="moneyback" @click="goMoneyBack">
         <span class="text">
           财务
         </span>
-        <div class="icon-text" @click="goMoneyBack">
+        <div class="icon-text">
           <i class="el-icon-edit-outline"></i>
           <span>
             退款审批

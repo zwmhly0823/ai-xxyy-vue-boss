@@ -1,18 +1,18 @@
 <!--
  * @Descripttion: 
  * @version: 
- * @Author: Lukun
- * @Date: 2020-05-08 17:37:00
+ * @Author: zhubaodong
+ * @Date: 2020-03-24 18:50:54
  * @LastEditors: Lukun
- * @LastEditTime: 2020-05-16 14:52:58
+ * @LastEditTime: 2020-05-22 16:56:37
  -->
 <template>
   <div class="search-item small">
     <el-select
-      v-model="packageDataInner"
+      v-model="versionId"
       size="mini"
       clearable
-      placeholder="审批类型"
+      placeholder="随材版本"
       @change="onChange"
       @clear="onClear"
     >
@@ -30,7 +30,7 @@
 <script>
 export default {
   props: {
-    packageData: {
+    name: {
       type: String,
       default: ''
     },
@@ -40,36 +40,44 @@ export default {
       default: false
     }
   },
-  created() {},
   data() {
     return {
       productVersion: [
-        { name: '退款', value: 'REFUND' },
-        { name: '补发货', value: 'REISSUE' },
-        { name: '调期申请', value: 'ADJUSTMENT_STAGE' },
-        { name: '调级申请', value: 'ADJUSTMENT_SUP' },
-        { name: '调班申请', value: 'ADJUSTMENT_CLASS' }
+        { name: 'V1.5', value: 'V1.5' },
+        { name: 'V1.6', value: 'V1.6' },
+        { name: 'V1.7', value: 'V1.7' },
+        { name: 'V1.8', value: 'V1.8' }
       ],
-      packageDataInner: ''
+      versionId: null
     }
   },
   methods: {
+    // 获取多版本盒子
+    // getProductVersion() {
+    //   this.$http.Product.getCourseVersion({ type: 'courseVersion' }).then(
+    //     (res) => {
+    //       if (res && res.payload) {
+    //         this.productVersion = res.payload.map((item) => {
+    //           return { name: item.code, value: item.value }
+    //         })
+    //       }
+    //     }
+    //   )
+    // },
     onChange(data) {
-      console.log(data, 'app-container')
-      this.$emit('result', data)
+      console.log(data, '------------data')
+      this.$emit('result', data ? { [this.name]: data } : '')
     },
     onClear() {
       this.$emit('result', '')
     }
-  },
-  mounted() {}
+  }
 }
 </script>
 <style lang="scss" scoped>
 .search-item {
-  margin-right: 20px;
   &.small {
-    width: 130px !important;
+    width: 108px !important;
   }
 }
 </style>

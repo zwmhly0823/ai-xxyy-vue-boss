@@ -4,7 +4,7 @@
  * @Author: Lukun
  * @Date: 2020-04-28 13:50:45
  * @LastEditors: Lukun
- * @LastEditTime: 2020-05-17 20:54:57
+ * @LastEditTime: 2020-05-23 00:36:20
  -->
 <template>
   <div class="container">
@@ -32,11 +32,12 @@
           />
         </el-form-item>
 
-        <el-form-item label="关联订单" prop="orderId">
+        <el-form-item label="关联订单" prop="showMessage">
           <el-select
-            v-model="formRepair.orderId"
+            v-model="formRepair.showMessage"
             placeholder="请选择订单号"
             :class="$style.chooseinput"
+            value-key="id"
             @change="getSeletInput"
             :disabled="orderDisable"
           >
@@ -44,7 +45,7 @@
               v-for="item in orderList"
               :key="item.id"
               :label="item.showMessage"
-              :value="item.id"
+              :value="item"
             >
             </el-option>
           </el-select>
@@ -95,9 +96,9 @@
         </el-form-item>
         <el-form-item
           label="补发商品"
-          v-model="formRepair.productNames"
+          v-model="formRepair.chooseProductVaidator"
           class="product-repair"
-          prop="productNames"
+          prop="chooseProductVaidator"
         >
           <div class="reapirProduct">
             <div
@@ -163,7 +164,6 @@
       width="40%"
       :modal="false"
     >
-      <!-- <logisticsForm @addExpress="getCreateAddress" :userId="userId" /> -->
       <logisticsForm
         @addExpress="getCreateAddress"
         @cancel="cancelAddress"
@@ -239,6 +239,7 @@ export default {
       this.applyName = JSON.parse(teacher).realName
       this.applyDepartment = JSON.parse(teacher).department
     }
+    console.log(this.formRepair.mode, 'app-container')
   },
   data() {
     var validateName = (rule, value, callback) => {
@@ -252,7 +253,7 @@ export default {
     }
     var validateProduct = (rule, value, callback) => {
       setTimeout(() => {
-        if (this.chooseProductVaidator) {
+        if (this.formRepair.chooseProductVaidator) {
           callback() // 自定义校验-以获取到保存到商品信息
         } else {
           callback(new Error('请完成商品信息的选择'))
@@ -311,34 +312,34 @@ export default {
       changeProductText: '选择商品',
       chooseCompleted: true, // 选择商品完成之后
       rules: {
-        name: [{ required: true, validator: validateName, trigger: 'blur' }],
-        orderId: [
-          { required: true, message: '请选择关联订单', trigger: 'blur' }
+        name: [{ required: true, validator: validateName, trigger: 'change' }],
+        showMessage: [
+          { required: true, message: '请选择关联订单', trigger: 'change' }
         ],
         receiptName: [
-          { required: true, message: '请选择关联收货人姓名', trigger: 'blur' }
+          { required: true, message: '请选择关联收货人姓名', trigger: 'change' }
         ],
         receiptTel: [
-          { required: true, message: '请选择关联收货人电话', trigger: 'blur' }
+          { required: true, message: '请选择关联收货人电话', trigger: 'change' }
         ],
         type: [
           {
             required: true,
             message: '请选择关联补发类别盒子',
-            trigger: 'blur'
+            trigger: 'change'
           }
         ],
         mode: [
-          { required: true, message: '请选择关联补发方式', trigger: 'blur' }
+          { required: true, message: '请选择关联补发方式', trigger: 'change' }
         ],
         totalAddress: [
-          { required: true, message: '请选择关联收货人地址', trigger: 'blur' }
+          { required: true, message: '请选择关联收货人地址', trigger: 'change' }
         ],
-        productNames: [
+        chooseProductVaidator: [
           {
             required: true,
             validator: validateProduct,
-            trigger: 'change'
+            trigger: 'blur'
           }
         ],
         replenishReason: [
@@ -353,6 +354,9 @@ export default {
   },
 
   methods: {
+    getSeletOrder(val) {
+      console.log(val, 'val')
+    },
     cancelAddress(val) {
       this.addresDialog = false
       this.$message('您已取消修改地址')
@@ -365,8 +369,43 @@ export default {
       this.formRepair.packagesType = ''
       this.formRepair.sup = ''
       this.formRepair.level = ''
-      // this.formRepair.mode = ''
+      this.formRepair.mode = ''
       this.$root.$emit('qingkong', '') // 清空子组件里的值
+    },
+    // 清空全部数据
+    clearAllData() {
+      this.formRepair = {
+        userId: '', // 用户id
+        applyDepartment: '', // 申请人所在部门  --非必传
+        applyName: '', // 申请人名称
+        applyId: '', // 申请人id
+        orderId: '', // 订单id
+        packagesId: '', // （非随材商品为0）
+        topicId: '', // （非随材商品为0）
+        outTradeNo: '', // 订单号
+        addressId: 0, // 地址ID非原物流地址为0）
+        receiptName: '', // 收货人名称
+        receiptTel: '', // 收货人电话
+        receiptAddressProvince: '', // 收货人省
+        receiptAddressCity: '', // 收货人市
+        stage: '', // 期数
+        productInfo: '', // 商品信息
+        receiptAddressArea: '', // 收货人地区
+        receiptAddressDetail: '', // 收货人详细地址
+        type: '', // 类型 见下方注解
+        mode: '', // 方式 见下方注解
+        courseType: '', // 课程类型 1体验课 2系统课 --非必传
+        reason: '', // 原因 见下方注解
+        productId: '', // 商品id 多个传0
+        productNames: '', // 商品名称 多个,连接
+        sup: '', // 难度		--非必传
+        level: '',
+        cellPhone: '', // 附加
+        name: '',
+        chooseProductVaidator: '', // 附加校验
+        packagesType: '', // 体验课或者系统课首先默认选择
+        replenishReason: ''
+      }
     },
     // 保存商品
     saveGift() {
@@ -385,7 +424,7 @@ export default {
               return item.id
             }) + ''
         })
-        this.chooseProductVaidator = this.ensureGift
+        console.log(this.ensureGift, 'this.ensureGift')
       }
 
       Object.assign(this.formRepair, {
@@ -395,6 +434,7 @@ export default {
             ? 0
             : this.ensureGift[0].id
       })
+      this.formRepair.chooseProductVaidator = this.formRepair.productNames
 
       this.changeProductText = '更换商品'
       this.chooseCompleted = false
@@ -462,9 +502,9 @@ export default {
     },
     // 选择补发方式
     chooseMode(val) {
+      console.log(val, 'val')
       this.clearData()
-      Object.assign(this.formRepair, { mode: val || 'SINGLE' })
-      console.log(this.formRepair)
+      this.formRepair.mode = val
     },
     // 选择补发原因
     choosereplenishReason(val) {
@@ -477,12 +517,11 @@ export default {
         Object.assign(this.formRepair, {
           totalAddress:
             val.province + val.city + val.area + val.addressDetail || '',
-          addressDetail: val.addressDetail,
-          area: val.area,
-          areaCode: val.areaCode,
-          city: val.city,
+          receiptAddressDetail: val.addressDetail,
+          receiptAddressArea: val.area,
+          receiptAddressCity: val.city,
           addressId: 0,
-          province: val.province,
+          receiptAddressProvince: val.province,
           receiptName: val.receiptName,
           receiptTel: val.receiptTel
         })
@@ -490,14 +529,12 @@ export default {
     },
     // 通过订单id查询物流信息
     getSeletInput(val) {
-      if (val) {
-        this.$http.Express.getExpressByOrderId(val).then((res) => {
+      if (val.id) {
+        this.$http.Express.getExpressByOrderId(val.id).then((res) => {
           if (res && res.payload) {
             const medium = res.payload
             this.levelData = medium.level
-
-            this.formRepair = {
-              userId: medium.userId,
+            Object.assign(this.formRepair, {
               totalAddress:
                 medium.province +
                 medium.city +
@@ -507,39 +544,62 @@ export default {
               addressId: medium.addressId,
               receiptAddressArea: medium.area,
               receiptAddressCity: medium.city,
-              level: medium.level,
-              orderId: medium.orderId,
-              packagesId: medium.packagesId,
-              type: medium.productType,
               receiptAddressProvince: medium.province,
               receiptName: medium.receiptName,
               receiptTel: medium.receiptTel,
               replenishReason: medium.replenishReason,
               reason: medium.replenishReason,
-              sup: medium.sup,
-              topicId: medium.topicId,
-              outTradeNo: medium.outTradeNo,
+              userId: val.uid,
+              stage: val.stage,
+              mode: '',
+              productInfo: val.packagesName,
+              sup: val.sup,
+              level: val.level,
+              orderId: val.id,
+              packagesType: val.packagesType,
               applyId: this.applyId,
               applyName: this.applyName,
               applyDepartment: this.applyDepartment,
-              courseType: 1, // 目前没法判断 先写死
-              productInfo: this.orderList[0].packagesName,
-              stage: this.orderList[0].stage
-            }
+              topicId: val.topicId,
+              outTradeNo: val.outTradeNo,
+              courseType: '', // 目前没法判断 先写死
+              packagesId: val.packagesId,
+              showMessage: val.showMessage
+            })
+          } else {
+            Object.assign(this.formRepair, {
+              userId: val.uid,
+              stage: val.stage,
+              productInfo: val.packagesName,
+              sup: val.sup,
+              level: val.level,
+              orderId: val.id,
+              packagesType: val.packagesType,
+              applyId: this.applyId,
+              applyName: this.applyName,
+              applyDepartment: this.applyDepartment,
+              topicId: val.topicId,
+              outTradeNo: val.outTradeNo,
+              courseType: '', // 目前没法判断 先写死
+              packagesId: val.packagesId,
+              showMessage: val.showMessage,
+              mode: ''
+            })
           }
         })
       }
-      console.log(val, '查询物流的值')
     },
     // 搜索手机号 获取uid 查询订单信息
     getSearchPhone(val) {
       this.value = ''
-      // this.clearData()
-      this.formRepair = {}
+      this.clearAllData()
       this.orderDisable = true
       this.changeProductText = '选择商品'
-      this.formRepair.name = val.uid
+      this.formRepair.userId = val.uid
+      this.formRepair.applyId = this.applyId
+      this.formRepair.applyDepartment = this.applyDepartment
       this.formRepair.cellPhone = this.$refs.toGetPhone.input
+      this.formRepair.applyName = this.applyName
       if (val.uid) {
         this.userId = val.uid
         this.$http.Order.getOrdersByUid(val.uid)
@@ -550,7 +610,6 @@ export default {
                 item.showMessage = item.outTradeNo + ` ${item.packagesName}`
                 return item
               })
-              console.log(this.orderList, 'this.orderList')
             } else {
               this.$message({
                 message: '该手机号未查询到订单',
@@ -565,29 +624,48 @@ export default {
     },
     // 选择商品
     chooseProduct() {
-      console.log('this.formRepair', this.formRepair)
       if (this.formRepair.type && this.formRepair.type !== 'MATERIALS') {
         this.productDialog = true
       }
       if (this.formRepair.type === 'MATERIALS') {
         switch (this.formRepair.mode) {
           case 'DEFAULT':
-            if (this.formRepair.packagesType === 'EXPERIENCE_COURSE') {
-              this.formRepair.level = 'LEVEL1'
-            }
-            if (this.formRepair.sup && this.formRepair.packagesType) {
-              this.$http.Product.getCourseMaterials(this.formRepair).then(
-                (res) => {
-                  this.productDialog = true
-                  this.giftList = []
-                  this.giftList.push({
-                    id: res.payload.id,
-                    name: res.payload.name
-                  })
+            switch (this.formRepair.packagesType) {
+              case 'EXPERIENCE_COURSE':
+                this.formRepair.level = 'LEVEL1'
+                if (this.formRepair.sup) {
+                  this.$http.Product.getCourseMaterials(this.formRepair).then(
+                    (res) => {
+                      this.productDialog = true
+                      this.giftList = []
+                      this.giftList.push({
+                        id: res.payload.id,
+                        name: res.payload.name
+                      })
+                    }
+                  )
+                } else {
+                  this.$message('请填写完信息')
                 }
-              )
-            } else {
-              this.$message('请填写完信息')
+                break
+              case 'SYSTEM_COURSE':
+                if (this.formRepair.sup && this.formRepair.level) {
+                  this.$http.Product.getCourseMaterials(this.formRepair).then(
+                    (res) => {
+                      this.productDialog = true
+                      this.giftList = []
+                      this.giftList.push({
+                        id: res.payload.id,
+                        name: res.payload.name
+                      })
+                    }
+                  )
+                } else {
+                  this.$message('请填写完信息')
+                }
+                break
+              default:
+                break
             }
 
             break
@@ -606,7 +684,7 @@ export default {
                 }
               )
             } else {
-              this.$message('请填写完信息')
+              this.$message('请填完信息')
             }
 
             break
@@ -619,7 +697,6 @@ export default {
       this.addresDialog = true
     },
     cancelButton() {
-      // this.addresDialog = false
       this.$router.push('/approvalCenter')
     },
     confirmButton(formName) {
@@ -631,12 +708,23 @@ export default {
               ''
             )}`
           }
-          if (this.formRepair.packagesType === 'EXPERIENCE_COURSE') {
-            this.formRepair.courseType = 1
-          } else {
-            this.formRepair.courseType = 2
+          if (this.formRepair.packagesType) {
+            switch (this.formRepair.packagesType) {
+              case 'EXPERIENCE_COURSE':
+                this.formRepair.courseType = 1
+                break
+              case 'SYSTEM_COURSE':
+                this.formRepair.courseType = 2
+                break
+              default:
+                break
+            }
           }
+          if (this.formRepair.mode === '') {
+            this.formRepair.packagesType = 0
 
+            delete this.formRepair.mode
+          }
           this.$http.Backend.applyReplenish(this.formRepair).then((res) => {
             if (res) {
               this.clearData()

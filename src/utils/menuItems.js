@@ -21,6 +21,11 @@ const menuItems = [
     isShow: true
   },
   {
+    link: 'finance',
+    text: '财务',
+    isShow: true
+  },
+  {
     link: 'student-team',
     text: '班级中心',
     isShow: true

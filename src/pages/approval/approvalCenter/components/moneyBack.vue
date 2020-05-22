@@ -4,7 +4,7 @@
  * @Author: huzhifu
  * @Date: 2020-05-07 10:50:45
  * @LastEditors: liukun
- * @LastEditTime: 2020-05-16 19:12:00
+ * @LastEditTime: 2020-05-22 17:45:17
  -->
 <template>
   <div class="refund-container">
@@ -291,6 +291,12 @@ export default {
             this.pureWeekZ = StudentSystemCourse.remaining_week
             this.pureWeekY = StudentSystemCourse.reduce_week
             this.pureWeekS = this.pureWeekZ - this.pureWeekY
+            console.info(
+              '选择系统订单后接口得到总-已-剩',
+              this.pureWeekZ,
+              this.pureWeekY,
+              this.pureWeekS
+            )
           } else {
             this.$message({
               message: '课程已上时长未能获取,无法计算退款',
@@ -353,7 +359,7 @@ export default {
     'refundForm.refundType': {
       immediate: true,
       deep: true,
-      handler(newValue) {
+      async handler(newValue) {
         // 初始就触发,执行前确认关联订单已选择
         if (this.selectOrder && Object.keys(this.selectOrder).length) {
           if (!newValue) {
@@ -387,47 +393,92 @@ export default {
             this.refundForm.refundMonths = ''
             this.refundForm.refundAmount = '' // 退款额
             if (this.refundForm.businessType === '系统课') {
-              if (this.backStatus === 2) {
-                if (this.pureWeekS === this.pureWeekZ) {
-                  this.decreaseOne = 1
-                  this.$message({
-                    message: '该订单退款时,需要扣除当月费用',
-                    type: 'warning'
-                  })
-                } else {
+              if (this.pureWeekZ && this.pureWeekY !== '') {
+                // 计算系统课退费,得保证取到总课时和已上课时
+                if (this.backStatus === 2) {
+                  // 扣除当月(前面已经处理了不退款的1)
+                  if (this.pureWeekS === this.pureWeekZ) {
+                    this.decreaseOne = 1
+                    this.$message({
+                      message: '该订单未开课，因盒子需要扣除当月费用',
+                      type: 'warning'
+                    })
+                  } else {
+                    this.decreaseOne = 0
+                    this.$message({
+                      message: '该订单已开课，floor取整月后计算退款',
+                      type: 'warning'
+                    })
+                  }
+                } else if (this.backStatus === 0) {
+                  // 退全款(前面已经处理了不退款的1)
                   this.decreaseOne = 0
                   this.$message({
-                    message: '该订单可退全额费用',
+                    message: '恭喜!可退全款',
                     type: 'success'
                   })
+                } else {
+                  this.$message({
+                    message:
+                      '不退款逻辑误入,this.backStatus:' + this.backStatus,
+                    type: 'error'
+                  })
                 }
-              }
-              const shengYue = Math.floor(this.pureWeekS / 4) - this.decreaseOne
-              console.warn(
-                '可退月份:' + shengYue,
-                '可退周数:' + this.pureWeekS,
-                '是否扣当月:' + this.decreaseOne
-              )
+                // ↑计算出this.decreaseOne
 
-              if (shengYue <= 0) {
-                this.$confirm('该订单剩余课程时间不足1个月, 不支持退款', {
-                  showCancelButton: false,
-                  type: 'error'
-                }).then(() => {
-                  this.onCancel('refundForm')
-                })
-              } else {
-                for (let i = 1; i <= shengYue; i++) {
-                  const item = {}
-                  item.guanzhong = i + '个月'
-                  item.iphone = 4 * i
-                  this.monthOptions.push(item)
+                const shengYue =
+                  Math.floor(this.pureWeekS / 4) - this.decreaseOne
+                console.warn(
+                  '选择退款类型为课程退款,计算所得',
+                  '可退月份:' + shengYue,
+                  '可退周数:' + this.pureWeekS,
+                  '是否扣当月:' + this.decreaseOne
+                )
+                // ↓计算退款单价+退月份[]
+                if (shengYue <= 0) {
+                  this.$confirm('该订单剩余课程时间不足1个月, 不支持退款', {
+                    showCancelButton: false,
+                    type: 'error'
+                  }).then(() => {
+                    this.onCancel('refundForm')
+                  })
+                } else {
+                  for (let i = 1; i <= shengYue; i++) {
+                    const item = {}
+                    item.guanzhong = i + '个月'
+                    item.iphone = i
+                    this.monthOptions.push(item)
+                  }
+                  // 计算出每月单价后,交给change事件算退费
+                  if (this.selectOrder && this.selectOrder.id) {
+                    const {
+                      code,
+                      payload: { price }
+                    } = await this.$http.RefundApproval.getEveryPrice(
+                      this.selectOrder.id
+                    ).catch((err) => {
+                      console.warn('获取订单单价接口报错:', err)
+                      this.$message({
+                        message: '获取订单单价接口报错',
+                        type: 'error'
+                      })
+                    })
+                    // 单价赋值成功
+                    if (code === 0) {
+                      this.everyPrice = price * 4
+                      console.info(
+                        '系统课周单价:',
+                        price,
+                        '换算得到月单价:',
+                        this.everyPrice
+                      )
+                    }
+                  }
+                  // this.everyPrice =
+                  //   this.refundForm.orderAmount / (this.pureWeekZ / 4)
                 }
-                // 算每月单价
-                this.everyPrice = (
-                  this.refundForm.orderAmount /
-                  (this.pureWeekZ / 4)
-                ).toFixed(2)
+              } else {
+                // 课程总课时或已上课时未能获取,怎么计算系统课退费呀
               }
             } else {
               // 体验课直接退全部
@@ -456,8 +507,10 @@ export default {
       deep: true,
       handler(newValue) {
         if (newValue) {
-          this.refundForm.refundAmount =
-            this.refundForm.refundMonths * this.everyPrice
+          // 退款_向上取整
+          this.refundForm.refundAmount = Math.round(
+            Number(this.refundForm.refundMonths * this.everyPrice).toFixed(2)
+          )
         }
       }
     }
@@ -524,11 +577,11 @@ export default {
         refundAmount: [
           { required: true, message: '请输入退款金额', trigger: 'blur' }
         ],
-        explain: [{ required: true, message: '请选择原因', trigger: 'change' }],
-        reason: [
-          { required: true, message: '请输入说明', trigger: 'blur' },
+        explain: [
+          { required: true, message: '请选择原因', trigger: 'change' },
           { min: 0, max: 50, message: '最大长度50个字符', trigger: 'change' }
-        ]
+        ],
+        reason: [{ required: true, message: '请输入说明', trigger: 'blur' }]
       },
       monthOptions: [], // 退款月份项
       orderOptions: [], // 关联订单项
@@ -567,27 +620,34 @@ export default {
   methods: {
     // 选择手机号后获取uid和手机号
     getUid({ uid }) {
-      this.refundForm.name = uid
-      this.refundForm.cellPhone = this.$refs.toGetPhone.input
-      this.$http.Order.getOrdersByUid(uid) // 用uid获取订单
-        .then(({ code, payload: { content } }) => {
-          if (!code && content.length) {
-            this.refundForm.order = ''
-            this.orderOptions = []
-            this.orderOptions = content.map((item) => {
-              item.relationOrder =
-                item.outTradeNo.replace(/[^\d]+/g, '') +
-                `(^_^)${item.packagesName}`
-              return item
-            })
-          } else {
-            this.$message({
-              message: '该手机号未查询到订单',
-              type: 'warning'
-            })
-          }
-        })
-        .catch((err) => console.error(err))
+      if (uid) {
+        this.refundForm.name = uid
+        this.refundForm.cellPhone = this.$refs.toGetPhone.input
+        this.$http.RefundApproval.getOrdersByUid(uid) // 用uid获取订单
+          .then(({ code, payload: { content } }) => {
+            if (!code && content.length) {
+              this.refundForm.order = ''
+              this.orderOptions = []
+              this.orderOptions = content.map((item) => {
+                item.relationOrder =
+                  item.outTradeNo.replace(/[^\d]+/g, '') +
+                  `(^_^)${item.packagesName}`
+                return item
+              })
+            } else {
+              this.$message({
+                message: '该手机号未查询到订单',
+                type: 'warning'
+              })
+            }
+          })
+          .catch((err) => console.error(err))
+      } else {
+        // this.$message({
+        //   message: 'searchPhone组件没有得到uid',
+        //   type: 'warning'
+        // })
+      }
     },
     // 提交表单
     onSubmit(formName) {
@@ -614,7 +674,7 @@ export default {
             periodAll: this.pureWeekZ, // 订单总周期“周”
             periodAlready: this.pureWeekY, // 已上课周期“周”
             periodResidue: this.pureWeekS, // 剩余上课周期“周”
-            periodRefund: this.refundForm.refundMonths, // 选择退款周期“周”
+            periodRefund: this.refundForm.refundMonths * 4, // 选择退款周期“周”
             applyUserId: JSON.parse(localStorage.getItem('teacher')).id,
             applyUserName: JSON.parse(localStorage.getItem('teacher')).realName,
             applyUserDeapartmentId: JSON.parse(localStorage.getItem('teacher'))
