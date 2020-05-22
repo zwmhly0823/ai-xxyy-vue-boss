@@ -4,7 +4,7 @@
  * @Author: Lukun
  * @Date: 2020-04-27 17:47:58
  * @LastEditors: Lukun
- * @LastEditTime: 2020-05-22 23:23:15
+ * @LastEditTime: 2020-05-23 05:26:41
  -->
 <template>
   <div class="container">
@@ -597,8 +597,8 @@ export default {
     // 待审核列表渲染
     checkPending(params) {
       this.$http.Backend.checkListPending(params).then((res) => {
-        this.totalElements = res.payload.totalElements
         if (res && res.payload && res.payload.content) {
+          this.totalElements = res.payload.totalElements
           this.tableData = res.payload.content.map((item) => {
             const zhaiyao = item.abstractContent.split('^')
             item.repiarContent = zhaiyao[0]

@@ -70,7 +70,6 @@ const routes = [
       }
     ]
   },
-
   // 财务
   {
     path: '/finance',
@@ -207,6 +206,7 @@ const routes = [
           style: 'line'
         }
       }
+
       // {
       //   path: '/salesProcess',
       //   name: 'salesProcess',

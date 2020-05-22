@@ -3,8 +3,8 @@
  * @version: 1.0.0
  * @Author: liukun
  * @Date: 2020-05-12 15:22:25
- * @LastEditors: liukun
- * @LastEditTime: 2020-05-16 16:47:12
+ * @LastEditors: Lukun
+ * @LastEditTime: 2020-05-23 05:28:06
  */
 
 import axios from '../axiosConfig'
@@ -32,6 +32,13 @@ export default {
     return axios.get('/api/o/v1/order/getOrderRefundStatus', query)
   },
 
+  // 通过uid查询订单号
+  getOrdersByUid(uid) {
+    return axios.get(
+      `/api/o/v1/order/getOrdersByStatus?userId=${uid}&status=COMPLETED&page=0`
+    )
+  },
+
   getPeriod(query = '') {
     console.warn('我来查系统课已上时长', query)
     return axios.get('/graphql/v1/toss', {
@@ -45,6 +52,11 @@ export default {
         }
       `
     })
+  },
+  // 获取单价
+  getEveryPrice(params) {
+    console.warn('我来取单价')
+    return axios.post(`/api/o/v1/order/getOrderPrice?orderId=${params}`)
   },
 
   // 获取优惠券类型

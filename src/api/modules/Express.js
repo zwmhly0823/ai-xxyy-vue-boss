@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-31 22:54:28
  * @LastEditors: Lukun
- * @LastEditTime: 2020-05-23 00:56:22
+ * @LastEditTime: 2020-05-23 05:31:19
  */
 // import axios from '../axios'
 import axios from '../axiosConfig'
@@ -18,12 +18,6 @@ export default {
     return axios.get(
       `/api/o/v1/express/getExpressDetailForAPP?expressNo=${params.expressNo}`
     )
-  },
-  /**
-   * 通过订单id查询物流信息
-   */
-  getExpressByOrderId(params) {
-    return axios.get(`/api/o/v1/express/getExpressByOrderId?orderId=${params}`)
   },
   /**
    * 添加物流收货人信息
@@ -88,6 +82,12 @@ export default {
       `/api/o/v1/express/importExpressListNew?operatorId=${params.operatorId}`,
       params
     )
+  },
+  /**
+   * 通过订单id查询物流信息
+   */
+  getExpressByOrderId(params) {
+    return axios.get(`/api/o/v1/express/getExpressByOrderId?orderId=${params}`)
   },
   /**
    * 带班详情 物流 修改地址 查询地址接口
