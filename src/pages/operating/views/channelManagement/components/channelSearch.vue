@@ -3,8 +3,8 @@
  * @version: 
  * @Author: panjian
  * @Date: 2020-04-25 12:09:03
- * @LastEditors: panjian
- * @LastEditTime: 2020-05-21 19:21:51
+ * @LastEditors: Shentong
+ * @LastEditTime: 2020-05-22 19:20:15
  -->
 <template>
   <div class="channel-box">
@@ -14,6 +14,7 @@
           @channelSearchValue="channelSearchValue"
           @schedulingSearch="schedulingSearch"
           @dateSearch="dateSearch"
+          @getChannelLeves="getChannelLeves"
           :tabIndex="tabIndex"
         ></channel-search>
       </div>
@@ -331,6 +332,44 @@ export default {
     this.getChannelDetailPage()
   },
   methods: {
+    // 渠道一级
+    channelSearchValue(data) {
+      console.log('data--->', data)
+      if (data) {
+        this.query = `{"bool":{"must_not":{"terms":{"channel_class_id":["17","36"]}},"must":[{"terms":{"channel_class_id":${JSON.stringify(
+          data
+        )}}}]}}`
+        // this.query = `{"bool":{"must_not":{"terms":{"channel_class_id":["17","36"]}},"must":[{"terms":{"id":"1,2"}},{"terms":{"channel_class_id":"1,2"}}]}}`
+        // this.query = `{"bool":{"must_not":{"terms":{"channel_class_id":["17","36"]}},"must":{"terms":{"id":${JSON.stringify(data)}}}}}`
+        // this.query = `{"terms":{"id":[${data.toString()}]}}`
+        this.channelIds = `"${data.toString()}"`
+        console.log(this.query, 'this.query')
+      } else {
+        this.query = ''
+        // this.channelIds = ''
+        console.log(this.query, 'channelSearchValue')
+      }
+      this.totalNumber = 1
+      this.getChannelDetailPage()
+    },
+    // TODO:
+    getChannelLeves(data) {
+      if (data.length) {
+        // this.query = `{"bool":{"must_not":{"terms":{"channel_class_id":["17","36"]}},"must":[{"terms":{"channel_class_id":${JSON.stringify(
+        //   data
+        // )}}}]}}`
+
+        this.query = `{"bool":{"must_not":{"terms":{"channel_class_id":["17","36"]}},"must":{"terms":{"id":${JSON.stringify(
+          data
+        )}}}}}`
+        this.channelIds = `"${data.toString()}"`
+      } else {
+        this.query = ''
+        this.channelIds = ''
+      }
+      this.totalNumber = 1
+      this.getChannelDetailPage()
+    },
     getChannelDetailPage() {
       if (
         this.query ||
@@ -455,23 +494,6 @@ export default {
 
         this.tableData = _data.content
       })
-    },
-    // 组件 渠道传的值
-    channelSearchValue(data) {
-      if (data) {
-        this.query = `{"bool":{"must_not":{"terms":{"channel_class_id":["17","36"]}},"must":{"terms":{"id":${JSON.stringify(
-          data
-        )}}}}}`
-        // this.query = `{"terms":{"id":[${data.toString()}]}}`
-        this.channelIds = `"${data.toString()}"`
-        console.log(this.query, 'this.query')
-      } else {
-        this.query = ''
-        this.channelIds = ''
-        console.log(this.query, 'channelSearchValue')
-      }
-      this.totalNumber = 1
-      this.getChannelDetailPage()
     },
     // 组件 排期传的值
     schedulingSearch(data) {
