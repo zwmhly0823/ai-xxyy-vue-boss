@@ -4,7 +4,7 @@
  * @Author: Lukun
  * @Date: 2020-04-28 13:50:45
  * @LastEditors: Lukun
- * @LastEditTime: 2020-05-23 00:59:21
+ * @LastEditTime: 2020-05-23 01:49:33
  -->
 <template>
   <div class="container">
@@ -366,11 +366,11 @@ export default {
       this.changeProductText = '选择商品'
       this.giftList = []
       this.ensureGift = []
+      this.selectName = []
       this.formRepair.packagesType = ''
       this.formRepair.sup = ''
       this.formRepair.level = ''
       this.formRepair.mode = ''
-      this.formRepair.productNames = ''
       this.formRepair.chooseProductVaidator = ''
       this.$root.$emit('qingkong', '') // 清空子组件里的值
     },
@@ -414,7 +414,6 @@ export default {
       this.ensureGift = []
       if (this.selectName.length) {
         // 校验
-
         this.ensureGift.push({
           name: this.selectName
             .map((item) => {
@@ -426,21 +425,21 @@ export default {
               return item.id
             }) + ''
         })
-        console.log(this.ensureGift, 'this.ensureGift')
+
+        Object.assign(this.formRepair, {
+          productNames: this.ensureGift[0].name,
+          productId:
+            this.ensureGift[0].id.split(',').length > 1
+              ? 0
+              : this.ensureGift[0].id
+        })
+        this.chooseCompleted = false
+        this.formRepair.chooseProductVaidator = this.formRepair.productNames
+        this.changeProductText = '更换商品'
+        this.productDialog = false
+      } else {
+        this.$message('请选择商品')
       }
-
-      Object.assign(this.formRepair, {
-        productNames: this.ensureGift[0].name,
-        productId:
-          this.ensureGift[0].id.split(',').length > 1
-            ? 0
-            : this.ensureGift[0].id
-      })
-      this.formRepair.chooseProductVaidator = this.formRepair.productNames
-
-      this.changeProductText = '更换商品'
-      this.chooseCompleted = false
-      this.productDialog = false
     },
     // 多选选中商品类型
     handleSelectionChange(val) {
