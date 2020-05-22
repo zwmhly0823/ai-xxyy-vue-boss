@@ -335,8 +335,8 @@ export default {
           labelText: '当前班级:',
           type: 'input',
           disabled: true,
-          loading: false,
-          model: 'currentClassName'
+          model: 'currentClassName',
+          loading: false
         },
         {
           labelText: '申请调整班级:',

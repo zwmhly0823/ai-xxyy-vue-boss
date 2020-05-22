@@ -4,7 +4,7 @@
  * @Author: shentong
  * @Date: 2020-03-13 14:38:28
  * @LastEditors: liukun
- * @LastEditTime: 2020-05-18 17:36:54
+ * @LastEditTime: 2020-05-22 18:13:00
  */
 import Login from './modules/Login'
 import User from './modules/User' // 用户接口
@@ -25,6 +25,7 @@ import Approval from './modules/Approval' // 审批相关模块
 import Weixin from './modules/Weixin' // 微信graphql接口
 import Operating from './modules/Operating' // 运营中心
 import RiviewCourse from './modules/RiviewCourse'
+import Finance from './modules/finance' // 财务退款
 export default Object.assign(
   {},
   { Login },
@@ -44,5 +45,6 @@ export default Object.assign(
   { DownloadExcel },
   { Backend },
   { RefundApproval },
-  { Approval }
+  { Approval },
+  { Finance }
 )

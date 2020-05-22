@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-02 15:35:27
  * @LastEditors: Shentong
- * @LastEditTime: 2020-05-14 17:04:07
+ * @LastEditTime: 2020-05-21 16:30:39
  -->
 <template>
   <el-row type="flex" class="app-main height schedule-container">
@@ -111,16 +111,16 @@
               @pageChange="pageChange_handler"
               class="mytable"
             >
-              <!-- <el-table-column label="转化总金额排名" width="110" align="center"
+              <el-table-column label="转化率排名" width="110" align="center"
                 ><template slot-scope="scope"
-                  ><span v-if="tabQuery.totalSort === 'desc'"
+                  ><span v-if="tabQuery.conversionRateSort === 'desc'"
                     >{{ scope.$index + calcIndex }}
                   </span>
                   <span v-else>{{
                     Math.abs(totalElements - calcIndex - scope.$index + 1)
                   }}</span>
                 </template></el-table-column
-              > -->
+              >
               <el-table-column label="级别" width="50" align="center">
                 <template slot-scope="scope">
                   <span v-if="+scope.row.sup">{{ `S${scope.row.sup}` }}</span>
@@ -192,12 +192,17 @@
                 prop="system_order_count"
                 align="center"
               ></el-table-column>
-              <el-table-column label="转化率" width="80" prop="transferRate">
+              <el-table-column
+                label="转化率"
+                width="80"
+                prop="conversion_rate"
+                align="center"
+              >
                 <template slot="header">
                   <div @click="onSortConversion" class="sort-operate-box">
                     <span>转化率</span>
                     <!-- TODO: -->
-                    <!-- <div class="sort-icon-arrow">
+                    <div class="sort-icon-arrow">
                       <i
                         class="el-icon-caret-top top-color"
                         :class="{ active: conversionStatus }"
@@ -206,7 +211,7 @@
                         class="el-icon-caret-bottom bottom"
                         :class="{ active: !conversionStatus }"
                       ></i>
-                    </div> -->
+                    </div>
                   </div>
                 </template>
               </el-table-column>
@@ -296,7 +301,7 @@ export default {
       tabQuery: {
         size: 20,
         page: 1,
-        rateSort: 'desc',
+        conversionRateSort: 'desc',
         totalSort: 'desc'
       },
       // 总页数
@@ -323,21 +328,22 @@ export default {
     this.init()
     this.$nextTick(() => {
       const tableHeight =
-        document.body.clientHeight -
-        this.$refs.tableContainer.offsetTop -
-        115 -
-        34
+        document.body.clientHeight - this.$refs.tableContainer.offsetTop - 148
       this.tableHeight = tableHeight + ''
     })
   },
   mounted() {},
   methods: {
-    // TODO
+    // 转化率排序
     onSortConversion() {
-      if (this.tabQuery.rateSort === 'desc') {
-        this.tabQuery.rateSort = 'asc'
-      } else this.tabQuery.rateSort = 'desc'
-      this.conversionStatus = !this.conversionStatus
+      if (this.tabQuery.conversionRateSort === 'desc') {
+        this.tabQuery.conversionRateSort = 'asc'
+      } else this.tabQuery.conversionRateSort = 'desc'
+
+      this.tabQuery.page = 1
+      this.getStatisticsByProid().then((content) => {
+        if (content.length) this.conversionStatus = !this.conversionStatus
+      })
     },
     onSortAmount() {
       if (this.tableData.length) {
@@ -450,6 +456,10 @@ export default {
           item.complete_course_count,
           item.send_course_count
         )
+        // 转化率保留一位小数加‘%’
+        item.conversion_rate = +item.conversion_rate
+          ? (+item.conversion_rate).toFixed(1) + '%'
+          : 0
         // 人均上传作品
         const uploadTaskRate = +item.trial_course_count
           ? +item.task_count / +item.trial_course_count
@@ -719,9 +729,9 @@ export default {
       border: 0;
     }
   }
-  // .orderStyle {
-  //   padding-bottom: 45px;
-  // }
+  .orderStyle {
+    // padding-bottom: 45px;
+  }
   .editStyle {
     color: #0401ff;
     cursor: pointer;
