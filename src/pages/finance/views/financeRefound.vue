@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-05-19 17:18:39
  * @LastEditors: liukun
- * @LastEditTime: 2020-05-23 01:17:56
+ * @LastEditTime: 2020-05-23 02:26:56
 -->
 <template>
   <section class="bianju10">
@@ -301,6 +301,9 @@ export default {
       if (val === '1' || val === '2') {
         this.searchJson.regType = Number(val)
         this.arrangeParams()
+      } else {
+        this.searchJson.regType = ''
+        this.arrangeParams()
       }
     },
     payMethod(val) {
@@ -308,12 +311,18 @@ export default {
       if (val === '1' || val === '2') {
         this.searchJson.tradeType = Number(val)
         this.arrangeParams()
+      } else {
+        this.searchJson.tradeType = ''
+        this.arrangeParams()
       }
     },
     refundStatus(val) {
       console.info(val, typeof val)
       if (val === '4' || val === '5') {
         this.searchJson.status = Number(val)
+        this.arrangeParams()
+      } else {
+        this.searchJson.status = ''
         this.arrangeParams()
       }
     },
@@ -349,6 +358,10 @@ export default {
             type: 'warning'
           })
         }
+      } else {
+        this.searchJson.outTradeNo = ''
+        this.searchJson.transactionId = ''
+        this.arrangeParams()
       }
     },
     intoNumber(val) {
@@ -423,6 +436,14 @@ export default {
             type: 'warning'
           })
         }
+      } else {
+        this.searchJson.srefundTime = '' // 申请完成-开始时间
+        this.searchJson.erefundTime = '' // 申请完成-结束时间
+        this.searchJson.sbuytime = '' // 订单支付-开始时
+        this.searchJson.ebuytime = '' // 订单支付-结束时间
+        this.searchJson.sctime = '' // 申请退款-开始时间
+        this.searchJson.ectime = '' // 申请退款-结束时间
+        this.arrangeParams()
       }
     },
     chooseTime(val) {
