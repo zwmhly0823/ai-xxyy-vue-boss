@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-05-19 17:18:39
  * @LastEditors: liukun
- * @LastEditTime: 2020-05-22 22:12:23
+ * @LastEditTime: 2020-05-22 23:57:33
 -->
 <template>
   <section class="bianju10">
@@ -13,6 +13,7 @@
         <el-form-item label="订单搜索:">
           <div class="concat">
             <el-select
+              clearable
               v-model="num1"
               placeholder="请选择"
               @change="chooseOrder"
@@ -21,6 +22,7 @@
               <el-option label="交易流水号" value="1"></el-option>
             </el-select>
             <el-input
+              clearable
               v-model="num1_"
               placeholder="请键入编号"
               @change="intoNumber"
@@ -29,6 +31,7 @@
         </el-form-item>
         <el-form-item label="业务类型:">
           <el-select
+            clearable
             placeholder="请键入"
             v-model="fordisplay1"
             @change="businessType"
@@ -39,6 +42,7 @@
         </el-form-item>
         <el-form-item label="支付方式:">
           <el-select
+            clearable
             placeholder="请键入"
             v-model="fordisplay2"
             @change="payMethod"
@@ -49,6 +53,7 @@
         </el-form-item>
         <el-form-item label="退款状态:">
           <el-select
+            clearable
             placeholder="请键入"
             v-model="fordisplay3"
             @change="refundStatus"
@@ -60,6 +65,7 @@
         <el-form-item label="用户搜索:">
           <div class="concat">
             <el-input
+              clearable
               placeholder="请键入用户ID"
               v-model="fordisplay4"
               @change="customerSearch"
@@ -69,8 +75,9 @@
         <el-form-item label="时间查询:">
           <div class="concat">
             <el-select
+              clearable
               v-model="num2"
-              placeholder="活动区域"
+              placeholder="请键入"
               @change="whichTime"
             >
               <el-option label="订单支付时间" value="0"></el-option>
@@ -79,9 +86,10 @@
             </el-select>
             <el-date-picker
               value-format="timestamp"
+              type="datetimerange"
+              clearable
               @change="chooseTime"
               v-model="num2_"
-              type="daterange"
               range-separator="至"
               start-placeholder="开始日期"
               end-placeholder="结束日期"
@@ -96,7 +104,7 @@
     </div>
     <el-divider></el-divider>
     <div>
-      <el-table :data="tableData" style="width: 100%" max-height="580">
+      <el-table :data="tableData" style="width: 100%" max-height="600">
         <el-table-column prop="outTradeNo" label="订单编号" align="center">
         </el-table-column>
         <el-table-column prop="uid" label="用户ID" align="center">
@@ -278,176 +286,7 @@ export default {
       allDigit: 0,
 
       // tableData
-      tableData: [
-        {
-          outTradeNo: '201602',
-          uid: '7897899',
-          regtypeStr: '系统课',
-          tradeTypeStr: '支付宝',
-          transactionId: '22323234433',
-          buytime: '2012/12/12 12:12:32',
-          statusStr: '已退款',
-          refundFee: '90',
-          ctime: '2012/12/12 12:12:32',
-          refundTime: '2012/12/12 12:12:32'
-        },
-        {
-          outTradeNo: '201602',
-          uid: '7897899',
-          regtypeStr: '系统课',
-          tradeTypeStr: '支付宝',
-          transactionId: '22323234433',
-          buytime: '2012/12/12 12:12:32',
-          statusStr: '已退款',
-          refundFee: '90',
-          ctime: '2012/12/12 12:12:32',
-          refundTime: '2012/12/12 12:12:32'
-        },
-        {
-          outTradeNo: '201602',
-          uid: '7897899',
-          regtypeStr: '系统课',
-          tradeTypeStr: '支付宝',
-          transactionId: '22323234433',
-          buytime: '2012/12/12 12:12:32',
-          statusStr: '已退款',
-          refundFee: '90',
-          ctime: '2012/12/12 12:12:32',
-          refundTime: '2012/12/12 12:12:32'
-        },
-        {
-          outTradeNo: '201602',
-          uid: '7897899',
-          regtypeStr: '系统课',
-          tradeTypeStr: '支付宝',
-          transactionId: '22323234433',
-          buytime: '2012/12/12 12:12:32',
-          statusStr: '已退款',
-          refundFee: '90',
-          ctime: '2012/12/12 12:12:32',
-          refundTime: '2012/12/12 12:12:32'
-        },
-        {
-          outTradeNo: '201602',
-          uid: '7897899',
-          regtypeStr: '系统课',
-          tradeTypeStr: '支付宝',
-          transactionId: '22323234433',
-          buytime: '2012/12/12 12:12:32',
-          statusStr: '已退款',
-          refundFee: '90',
-          ctime: '2012/12/12 12:12:32',
-          refundTime: '2012/12/12 12:12:32'
-        },
-        {
-          outTradeNo: '201602',
-          uid: '7897899',
-          regtypeStr: '系统课',
-          tradeTypeStr: '支付宝',
-          transactionId: '22323234433',
-          buytime: '2012/12/12 12:12:32',
-          statusStr: '已退款',
-          refundFee: '90',
-          ctime: '2012/12/12 12:12:32',
-          refundTime: '2012/12/12 12:12:32'
-        },
-        {
-          outTradeNo: '201602',
-          uid: '7897899',
-          regtypeStr: '系统课',
-          tradeTypeStr: '支付宝',
-          transactionId: '22323234433',
-          buytime: '2012/12/12 12:12:32',
-          statusStr: '已退款',
-          refundFee: '90',
-          ctime: '2012/12/12 12:12:32',
-          refundTime: '2012/12/12 12:12:32'
-        },
-        {
-          outTradeNo: '201602',
-          uid: '7897899',
-          regtypeStr: '系统课',
-          tradeTypeStr: '支付宝',
-          transactionId: '22323234433',
-          buytime: '2012/12/12 12:12:32',
-          statusStr: '已退款',
-          refundFee: '90',
-          ctime: '2012/12/12 12:12:32',
-          refundTime: '2012/12/12 12:12:32'
-        },
-        {
-          outTradeNo: '201602',
-          uid: '7897899',
-          regtypeStr: '系统课',
-          tradeTypeStr: '支付宝',
-          transactionId: '22323234433',
-          buytime: '2012/12/12 12:12:32',
-          statusStr: '已退款',
-          refundFee: '90',
-          ctime: '2012/12/12 12:12:32',
-          refundTime: '2012/12/12 12:12:32'
-        },
-        {
-          outTradeNo: '201602',
-          uid: '7897899',
-          regtypeStr: '系统课',
-          tradeTypeStr: '支付宝',
-          transactionId: '22323234433',
-          buytime: '2012/12/12 12:12:32',
-          statusStr: '已退款',
-          refundFee: '90',
-          ctime: '2012/12/12 12:12:32',
-          refundTime: '2012/12/12 12:12:32'
-        },
-        {
-          outTradeNo: '201602',
-          uid: '7897899',
-          regtypeStr: '系统课',
-          tradeTypeStr: '支付宝',
-          transactionId: '22323234433',
-          buytime: '2012/12/12 12:12:32',
-          statusStr: '已退款',
-          refundFee: '90',
-          ctime: '2012/12/12 12:12:32',
-          refundTime: '2012/12/12 12:12:32'
-        },
-        {
-          outTradeNo: '201602',
-          uid: '7897899',
-          regtypeStr: '系统课',
-          tradeTypeStr: '支付宝',
-          transactionId: '22323234433',
-          buytime: '2012/12/12 12:12:32',
-          statusStr: '已退款',
-          refundFee: '90',
-          ctime: '2012/12/12 12:12:32',
-          refundTime: '2012/12/12 12:12:32'
-        },
-        {
-          outTradeNo: '201602',
-          uid: '7897899',
-          regtypeStr: '系统课',
-          tradeTypeStr: '支付宝',
-          transactionId: '22323234433',
-          buytime: '2012/12/12 12:12:32',
-          statusStr: '已退款',
-          refundFee: '90',
-          ctime: '2012/12/12 12:12:32',
-          refundTime: '2012/12/12 12:12:32'
-        },
-        {
-          outTradeNo: '201602',
-          uid: '7897899',
-          regtypeStr: '系统课',
-          tradeTypeStr: '支付宝',
-          transactionId: '22323234433',
-          buytime: '2012/12/12 12:12:32',
-          statusStr: '已退款',
-          refundFee: '90',
-          ctime: '2012/12/12 12:12:32',
-          refundTime: '2012/12/12 12:12:32'
-        }
-      ],
+      tableData: [],
       // 抽屉
       drawer: false,
       choutidata: {}
@@ -618,6 +457,7 @@ export default {
         this.searchJson.sbuytime = val[0] // 订单支付-开始时
         this.searchJson.ebuytime = val[1] // 订单支付-结束时间
 
+        console.info(val)
         this.searchJson.sctime = '' // 申请退款-开始时间
         this.searchJson.ectime = '' // 申请退款-结束时间
         this.searchJson.srefundTime = '' // 申请完成-开始时间
