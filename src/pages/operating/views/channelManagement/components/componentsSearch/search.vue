@@ -4,12 +4,12 @@
  * @Author: zhubaodong
  * @Date: 2020-03-24 18:50:54
  * @LastEditors: Shentong
- * @LastEditTime: 2020-05-22 18:50:31
+ * @LastEditTime: 2020-05-22 23:59:17
  -->
 <template>
   <div class="search-item small threeSelect">
     <el-cascader
-      placeholder="请选择渠道"
+      placeholder="请选择渠道分类"
       size="mini"
       v-model="channelName"
       @change="onSelect"
@@ -34,7 +34,7 @@
       :reserve-keyword="true"
       size="mini"
       clearable
-      placeholder="选择哈哈"
+      placeholder="选择渠道"
       :remote-method="handleDebounce"
       @change="changeChannelId"
     >
