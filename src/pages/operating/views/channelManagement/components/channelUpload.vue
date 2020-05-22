@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-05-06 16:33:15
  * @LastEditors: panjian
- * @LastEditTime: 2020-05-21 17:28:08
+ * @LastEditTime: 2020-05-22 14:32:16
  -->
 <template>
   <div class="channelUpload-box">
@@ -107,6 +107,13 @@ export default {
       this.$refs.upload.submit()
     },
     handleChange(params) {
+      // 添加菊花
+      const loadingInstance = this.$loading({
+        target: '.app-main',
+        lock: true,
+        text: '正在上传...',
+        fullscreen: true
+      })
       const adminId = localStorage.getItem('staff')
       var formData = new FormData()
       const file = params.file
@@ -133,6 +140,9 @@ export default {
         .catch(() => {
           this.$message.error('无法下载此文件')
         })
+        .finally(function() {
+          loadingInstance.close()
+        })
 
       this.fileTemp = params.file
     },
@@ -149,7 +159,6 @@ export default {
   }
 }
 </script>
-
 <style lang="scss" scoped>
 .channelUpload-box {
   background: #f0f1f2;

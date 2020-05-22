@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-04-25 12:09:03
  * @LastEditors: panjian
- * @LastEditTime: 2020-05-21 17:36:26
+ * @LastEditTime: 2020-05-21 19:21:51
  -->
 <template>
   <div class="channel-box">
@@ -129,7 +129,7 @@
           <el-table-column prop="channelId" label="渠道ID"> </el-table-column>
           <el-table-column prop="orderUserPayNums" label="体验课成单数">
           </el-table-column>
-          <el-table-column prop="orderUserNoPayNums" label="系统课未支付">
+          <el-table-column prop="orderUserNoPayNums" label="体验课未支付">
           </el-table-column>
           <el-table-column prop="wechatAddNums" label="添加微信数">
           </el-table-column>
