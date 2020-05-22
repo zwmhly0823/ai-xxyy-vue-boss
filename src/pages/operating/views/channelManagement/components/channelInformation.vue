@@ -3,8 +3,8 @@
  * @version: 
  * @Author: panjian
  * @Date: 2020-05-06 16:33:15
- * @LastEditors: panjian
- * @LastEditTime: 2020-05-16 19:02:58
+ * @LastEditors: Shentong
+ * @LastEditTime: 2020-05-22 16:19:13
  -->
 <template>
   <div class="channelAdd-box">
@@ -409,7 +409,7 @@ export default {
     // 批量下载二维码
     onBulkDownload() {
       // const loadingInstance = this.$loading({
-      //   target: 'section',
+      //   target: '.app-main',
       //   lock: true,
       //   text: '批量下载中...',
       //   fullscreen: true
