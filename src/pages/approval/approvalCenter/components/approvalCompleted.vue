@@ -3,8 +3,8 @@
  * @version: 
  * @Author: Lukun
  * @Date: 2020-04-27 17:47:58
- * @LastEditors: Lukun
- * @LastEditTime: 2020-05-23 05:20:38
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-05-23 06:26:08
  -->
 <template>
   <div class="container">
@@ -352,8 +352,8 @@ export default {
     }
   },
   created() {
-    const isTestBoss = location.pathname.includes('boss')
-    const isTestToss = location.pathname.includes('toss')
+    const isTestBoss = location.href.includes('boss')
+    const isTestToss = location.href.includes('toss')
 
     if (isTestToss) {
       const teacher = localStorage.getItem('teacher')
