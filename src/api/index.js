@@ -3,8 +3,8 @@
  * @version:
  * @Author: shentong
  * @Date: 2020-03-13 14:38:28
- * @LastEditors: Lukun
- * @LastEditTime: 2020-05-14 14:40:13
+ * @LastEditors: liukun
+ * @LastEditTime: 2020-05-22 12:50:09
  */
 import Login from './modules/Login'
 import User from './modules/User' // 用户接口
@@ -22,6 +22,7 @@ import DownloadExcel from './modules/DownloadExcel' // 统计模块
 import Weixin from './modules/Weixin' // 微信graphql接口
 import Operating from './modules/Operating' // 运营中心
 import RiviewCourse from './modules/RiviewCourse'
+import Finance from './modules/finance' // 财务退款
 export default Object.assign(
   {},
   { Login },
@@ -38,5 +39,6 @@ export default Object.assign(
   { Operating },
   { Statistics },
   { RiviewCourse },
-  { DownloadExcel }
+  { DownloadExcel },
+  { Finance }
 )
