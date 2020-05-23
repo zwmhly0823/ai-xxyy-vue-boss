@@ -4,12 +4,12 @@
  * @Author: zhubaodong
  * @Date: 2020-03-26 16:28:45
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-04-30 11:51:24
+ * @LastEditTime: 2020-05-23 18:41:27
  -->
 <template>
   <div class="search-item small">
     <el-autocomplete
-      size="mini"
+      :size="size"
       name="vals"
       class="inline-input"
       v-model="input"
@@ -38,6 +38,10 @@ import { mapGetters } from 'vuex'
 
 export default {
   props: {
+    size: {
+      type: String,
+      default: 'mini'
+    },
     name: {
       type: String,
       default: 'out_trade_no'
@@ -147,9 +151,13 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+.inline-input {
+  width: 100%;
+}
 .search-item {
   &.small {
-    width: 140px !important;
+    // width: 140px !important;
+    width: 140px;
   }
 }
 </style>
