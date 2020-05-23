@@ -3,8 +3,8 @@
  * @version: 
  * @Author: panjian
  * @Date: 2020-05-06 16:33:15
- * @LastEditors: Shentong
- * @LastEditTime: 2020-05-22 16:19:13
+ * @LastEditors: panjian
+ * @LastEditTime: 2020-05-23 17:02:03
  -->
 <template>
   <div class="channelAdd-box">
@@ -251,6 +251,13 @@ export default {
         }
       ],
       tableInfoObj: {}
+    }
+  },
+  watch: {
+    tabIndex(value) {
+      this.queryList = `""`
+      this.currentPage = 1
+      this.getChannelOne()
     }
   },
   created() {
