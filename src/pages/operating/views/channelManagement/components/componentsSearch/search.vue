@@ -3,8 +3,8 @@
  * @version:
  * @Author: zhubaodong
  * @Date: 2020-03-24 18:50:54
- * @LastEditors: Shentong
- * @LastEditTime: 2020-05-22 23:59:17
+ * @LastEditors: panjian
+ * @LastEditTime: 2020-05-23 16:47:03
  -->
 <template>
   <div class="search-item small threeSelect">
@@ -193,6 +193,7 @@ export default {
       this.timeData = ''
       this.stage = ''
       this.channelName = []
+      this.channels = ''
     }
   },
   async created() {
