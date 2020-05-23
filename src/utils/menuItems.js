@@ -41,6 +41,16 @@ const menuItems = [
     isShow: true
   },
   {
+    link: 'approval',
+    text: '审批中心',
+    isShow: true
+  },
+  {
+    link: 'finance',
+    text: '财务',
+    isShow: true
+  },
+  {
     link: 'statistics',
     text: '统计分析',
     isShow: true
