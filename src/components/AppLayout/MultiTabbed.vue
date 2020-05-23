@@ -121,11 +121,11 @@ $gray: #d8dce5;
     margin-left: 5px;
     cursor: pointer;
     &:hover {
-      color: #42b983;
+      color: #409eff;
     }
     &.current {
       color: #fff;
-      background-color: #42b983;
+      background-color: #409eff;
     }
     span {
       flex: 1;

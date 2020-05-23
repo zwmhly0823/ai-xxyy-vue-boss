@@ -3,8 +3,8 @@
  * @version: 
  * @Author: Lukun
  * @Date: 2020-04-28 13:50:45
- * @LastEditors: Lukun
- * @LastEditTime: 2020-05-23 04:55:22
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-05-23 15:31:27
  -->
 <template>
   <div class="container">
@@ -27,6 +27,7 @@
           <SearchPhone
             @result="getSearchPhone"
             name="uid"
+            size="medium"
             :class="$style.searchphonerepair"
             ref="toGetPhone"
           />
@@ -817,17 +818,6 @@ export default {
 <style lang="scss" scoped>
 .el-textarea__inner {
   height: 80px;
-}
-</style>
-<style lang="scss">
-.el-input--mini .el-input__inner {
-  font-size: 14px;
-  height: 40px;
-  line-height: 40px;
-}
-.el-cascader-menu {
-  height: 300px;
-  overflow: scroll;
 }
 </style>
 <style lang="scss" module>
