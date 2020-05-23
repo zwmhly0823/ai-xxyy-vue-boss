@@ -4,7 +4,7 @@
  * @Author: Lukun
  * @Date: 2020-04-27 17:47:58
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-05-23 06:26:24
+ * @LastEditTime: 2020-05-23 15:01:51
  -->
 <template>
   <div class="container">
@@ -305,6 +305,7 @@ import CheckType from './checkType'
 import TabTimeSelect from './timeSearch'
 import SearchPart from './searchPart'
 import adjustDrawer from './adjustDrawer'
+import { getStaffInfo } from '../common'
 
 export default {
   props: ['activeName'],
@@ -343,24 +344,11 @@ export default {
     }
   },
   created() {
-    const isTestBoss = location.href.includes('boss')
-    const isTestToss = location.href.includes('toss')
+    const staff = getStaffInfo()
 
-    if (isTestToss) {
-      const teacher = localStorage.getItem('teacher')
-      this.staffId = JSON.parse(teacher).id
-      this.staffName = JSON.parse(teacher).realName
-    }
-    if (isTestBoss) {
-      const staff = localStorage.getItem('staff')
-      this.staffId = JSON.parse(staff).id
-      this.staffName = JSON.parse(staff).realName
-      this.isStaffId = JSON.parse(staff).positionId === '1'
-    }
-    this.resetParams = {
-      staffId: this.staffId,
-      staffName: this.staffName
-    }
+    this.resetParams = staff
+    this.staffId = staff.staffId
+    this.isStaffId = staff.isStaffId
     // Parameters:
     this.params = {
       type: '',
