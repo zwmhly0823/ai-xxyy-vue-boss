@@ -3,8 +3,8 @@
  * @version: 
  * @Author: panjian
  * @Date: 2020-04-25 12:09:03
- * @LastEditors: Shentong
- * @LastEditTime: 2020-05-23 00:39:25
+ * @LastEditors: panjian
+ * @LastEditTime: 2020-05-23 16:50:10
  -->
 <template>
   <div class="channel-box">
@@ -329,6 +329,7 @@ export default {
       this.endTime = ''
       this.totalNumber = 1
       this.getChannelDetailPage()
+      this.channelSearchValList = []
     }
   },
   created() {
