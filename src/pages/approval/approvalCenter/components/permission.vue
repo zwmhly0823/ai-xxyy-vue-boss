@@ -3,8 +3,8 @@
  * @version: 
  * @Author: Lukun
  * @Date: 2020-05-06 18:31:51
- * @LastEditors: Lukun
- * @LastEditTime: 2020-05-23 05:28:42
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-05-23 15:12:24
  -->
 <template>
   <div class="container">
@@ -44,7 +44,7 @@
             <span class="item-text">补发货审批</span>
           </div>
         </div>
-        <!-- <div class="adjust-box-row">
+        <div class="adjust-box-row">
           <p class="adjust-title">教务</p>
           <div class="adjust-item" @click="jumpAdjustPage(1)">
             <i class="el-icon-s-claim color-3"></i>
@@ -57,8 +57,8 @@
           <div class="adjust-item" @click="jumpAdjustPage(3)">
             <i class="el-icon-s-claim color-3"></i>
             <span class="item-text">调班申请</span>
-          </div> -->
-        <!-- </div> -->
+          </div>
+        </div>
       </div>
     </div>
   </div>
