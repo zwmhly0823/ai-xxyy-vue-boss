@@ -106,7 +106,7 @@
 <script>
 // import _ from 'lodash'
 import MPagination from '@/components/MPagination/index.vue'
-import { formatData, isToss } from '@/utils/index.js'
+import { formatData, isToss, deepClone } from '@/utils/index.js'
 import ExpressDetail from '../../components/expressDetail'
 import User from '../../components/User.vue'
 export default {
@@ -150,8 +150,7 @@ export default {
       //   '6': '邀请有奖'
       // },
       // 搜索
-      searchIn: [],
-      statisticsQuery: [] // 统计需要 bool 表达式
+      searchIn: []
     }
   },
   components: {
@@ -201,25 +200,12 @@ export default {
     },
     // 订单列表
     getOrderList(page = this.currentPage, reloadStatistics = false) {
-      const statisticsQuery = [
-        {
-          terms: { regtype: this.regtype }
-        }
-      ]
       const queryObj = { regtype: this.regtype }
       // TOSS
       if (this.teacherId) {
         Object.assign(queryObj, {
           last_teacher_id:
             this.teacherGroup.length > 0 ? this.teacherGroup : [this.teacherId]
-        })
-        statisticsQuery.push({
-          terms: {
-            last_teacher_id:
-              this.teacherGroup.length > 0
-                ? this.teacherGroup
-                : [this.teacherId]
-          }
         })
       }
 
@@ -248,9 +234,9 @@ export default {
         // 不需要再次请求统计数据
         if (reloadStatistics) return
 
-        // 获取统计数据
-        statisticsQuery.push(...this.searchIn)
-        console.log(statisticsQuery)
+        // 获取统计数据, 不需要 status
+        const statisticsQuery = deepClone(queryObj)
+        delete statisticsQuery.status
 
         // 活动订单 - 小熊币和宝石统计
         this.orderStatistics(statisticsQuery)

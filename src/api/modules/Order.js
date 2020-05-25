@@ -3,8 +3,8 @@
  * @version:
  * @Author: shentong
  * @Date: 2020-03-13 16:20:48
- * @LastEditors: Lukun
- * @LastEditTime: 2020-05-23 04:41:53
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-05-25 14:00:45
  */
 import axios from '../axiosConfig'
 
@@ -110,20 +110,12 @@ export default {
 
   /**
    * 订单统计, 只能用表达式 {bool:{must:[]}}
+   * 更新：求和接口 sum 支持最新的对象传参 05-25 YangJiyong
    */
-  orderStatistics(must = [], sumField, termField) {
+  orderStatistics(must = {}, sumField, termField) {
     // bool 表达式
-    const queryObj = { bool: { must } }
-    // if (query && Object.prototype.toString.call(query) === '[object Object]') {
-    //   let must = []
-    //   must = Object.keys(query).map((k) => {
-    //     const item = query[k]
-    //     const key = Array.isArray(item) ? 'terms' : 'term'
-    //     return { [key]: { [k]: query[k] } }
-    //   })
-    //   queryObj.bool.must = must
-    // }
-    const queryStr = `${JSON.stringify(queryObj)}`
+    // const queryObj = { bool: { must } }
+    const queryStr = `${JSON.stringify(must)}`
     return axios.post('/graphql/v1/toss', {
       query: `{
         OrderStatistics(query: ${JSON.stringify(

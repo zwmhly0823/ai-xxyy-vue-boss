@@ -3,8 +3,8 @@
  * @version:
  * @Author: Lukun
  * @Date: 2020-05-14 14:31:42
- * @LastEditors: panjian
- * @LastEditTime: 2020-05-21 11:30:44
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-05-25 21:02:48
  */
 import axios from '../axios'
 import { getToken } from '@/utils/auth'
@@ -16,7 +16,9 @@ const getHeaders = () => {
     'Content-Type': 'application/json;charset=UTF-8'
   }
   if (token) {
-    headers.Authorization = 'Bearer ' + token
+    headers.Authorization = token.includes('Bearer ')
+      ? token
+      : 'Bearer ' + token
   }
   return headers
 }
