@@ -843,12 +843,18 @@ export default {
       }
       const params = {
         approvalRemark: this.adjustDrawerData.checkSuggestion,
-        flowApprovalId: this.adjustDrawerData.flowApprovalId,
+        flowApprovalId: this.adjustDrawerData.flowApprovalId - 0,
         isConfirm: isConfirm,
         staffId: this.staffId,
         staffName: this.staffName
       }
-      this.$http.Backend.isAggrePass(params)
+      // 特殊字符
+      const reg = new RegExp('[&%#$*^<>]')
+      if (reg.test(params.approvalRemark)) {
+        this.$message('不能包含特殊字符&%#$*^<>哦')
+        return
+      }
+      this.$http.Approval.isAggrePass(params)
         .then((res) => {
           // console.log(res)
           this.adjustResultDialogShow = false

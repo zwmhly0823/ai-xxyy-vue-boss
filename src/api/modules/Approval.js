@@ -34,5 +34,10 @@ export default {
     return axios.get(
       `/api/b/v1/backend/adjustment/flow/info?flowApprovalId=${flowApprovalId}`
     )
+  },
+  isAggrePass(params) {
+    return axios.post(
+      `/api/b/v1/backend/completed/reissue/flow?flowApprovalId=${params.flowApprovalId}&staffName=${params.staffName}&staffId=${params.staffId}&isConfirm=${params.isConfirm}&approvalRemark=${params.approvalRemark}`
+    )
   }
 }
