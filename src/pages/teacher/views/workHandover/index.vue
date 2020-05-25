@@ -3,19 +3,19 @@
  * @Author: songyanan
  * @Date: 2020-05-20 10:10:19
  * @LastEditors: songyanan
- * @LastEditTime: 2020-05-20 10:15:50
+ * @LastEditTime: 2020-05-22 16:26:10
  -->
 <template>
   <div>
     <el-tabs type="border-card" @tab-click="handleTab">
-      <el-tab-pane label="微信号交接">
+      <el-tab-pane label="班级交接">
         <div v-if="tabIndex === '0'">
-          <Wechar />
+          <Class :tabIndex="tabIndex" />
         </div>
       </el-tab-pane>
-      <el-tab-pane label="班级交接">
+      <el-tab-pane label="微信号交接">
         <div v-if="tabIndex === '1'">
-          <Class />
+          <Wechar :tabIndex="tabIndex" />
         </div>
       </el-tab-pane>
     </el-tabs>
