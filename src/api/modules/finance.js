@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-05-22 12:39:14
  * @LastEditors: liukun
- * @LastEditTime: 2020-05-25 15:06:39
+ * @LastEditTime: 2020-05-25 20:39:34
  */
 
 import axios from '../axiosConfig'
@@ -25,7 +25,11 @@ export default {
   // 导出
   exportExcel(params) {
     console.warn('接口-导出excel')
-    return axios.post(`/api/o/v1/order/exportPayment`, params)
+    return axios.post(`/api/o/v1/order/exportPayment`, params, {
+      responseType: 'blob' // 跟headers同级的
+      // 给文件流加个字段,excel就不会有内部错误了
+      // 二进制大对象(表示一个不可变、原始数据的类文件对象)
+    })
   },
   // 获取抽屉详情
   getDetail(params) {

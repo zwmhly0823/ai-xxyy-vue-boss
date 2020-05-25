@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-05-19 17:18:39
  * @LastEditors: liukun
- * @LastEditTime: 2020-05-25 17:14:17
+ * @LastEditTime: 2020-05-25 20:42:17
 -->
 <template>
   <section class="bianju10">
@@ -109,7 +109,7 @@
           </div>
         </el-form-item>
         <el-form-item class="marginL20">
-          <el-button type="primary" size="medium">导出</el-button>
+          <el-button type="primary" @click.stop="exportAll">导出</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -557,6 +557,38 @@ export default {
       this.currentPage = page // 就取本地设订的可以嘛？server也是听本地的传值(统一接口成功再变化分页信息)
       this.allDigit = Number(totalElements)
       this.tableData = content
+    },
+    // 全量导出
+    async exportAll() {
+      const finalJson = {}
+      for (const key in this.searchJson) {
+        if (this.searchJson[key] !== '') {
+          finalJson[key] = this.searchJson[key]
+        } else {
+          console.info(`给青龙大哥剔牙--${key}-因为它是${this.searchJson[key]}`)
+        }
+      }
+      // 再剔除页码与页容量
+      delete finalJson.page
+      delete finalJson.size
+      console.warn('导出按钮-整理完毕,去找接口下载excel', finalJson)
+      const r = await this.$http.Finance.exportExcel(finalJson).catch((err) => {
+        console.info('取数据接口报错,', err)
+        this.$message({
+          message: '导出数据接口失败',
+          type: 'error'
+        })
+      })
+      // 下载去吧
+      var blob = new Blob([r])
+      var downloadElement = document.createElement('a')
+      var href = window.URL.createObjectURL(blob) // 创建下载的链接
+      downloadElement.href = href
+      downloadElement.download = '用户数据.xls' // 下载后文件名
+      document.body.appendChild(downloadElement)
+      downloadElement.click() // 点击下载
+      document.body.removeChild(downloadElement) // 下载完成移除元素
+      window.URL.revokeObjectURL(href) // 释放掉blob对象
     },
     // 分页
     handleSizeChange(val) {
