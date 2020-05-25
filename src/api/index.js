@@ -25,6 +25,8 @@ import Weixin from './modules/Weixin' // 微信graphql接口
 import Operating from './modules/Operating' // 运营中心
 import RiviewCourse from './modules/RiviewCourse'
 import Finance from './modules/finance' // 财务退款
+import WorkerHandover from './modules/WorkerHandover'
+
 export default Object.assign(
   {},
   { Login },
@@ -45,5 +47,6 @@ export default Object.assign(
   { Backend },
   { RefundApproval },
   { Approval },
-  { Finance }
+  { Finance },
+  { WorkerHandover }
 )

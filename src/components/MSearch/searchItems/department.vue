@@ -14,7 +14,7 @@
       :placeholder="placeholder"
       :options="departmentList"
       :props="{
-        multiple: true,
+        multiple: multiple,
         value: 'id',
         label: 'name',
         emitPath: false,
@@ -42,6 +42,10 @@ export default {
     onlyDept: {
       type: Number,
       default: 0
+    },
+    multiple: {
+      type: Boolean,
+      default: true
     }
   },
   data() {
@@ -60,6 +64,7 @@ export default {
       })
     },
     async onSelect(data) {
+      const dataIsArray = Array.isArray(data)
       // TODO: 根据选择的销售组，获取销售ID
       const ids = { department_id: data || [] }
       if (this.onlyDept === 1) {
@@ -69,7 +74,10 @@ export default {
           JSON.stringify(ids)
         )
         const teacherIds = teacher.data.TeacherList.map((item) => item.id)
-        this.$emit('result', data.length > 0 ? { [this.name]: teacherIds } : '')
+        this.$emit(
+          'result',
+          dataIsArray && data.length > 0 ? { [this.name]: teacherIds } : data
+        )
       }
     }
   }
