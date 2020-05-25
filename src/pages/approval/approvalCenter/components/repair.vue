@@ -4,7 +4,7 @@
  * @Author: Lukun
  * @Date: 2020-04-28 13:50:45
  * @LastEditors: Lukun
- * @LastEditTime: 2020-05-25 11:20:53
+ * @LastEditTime: 2020-05-25 19:31:21
  -->
 <template>
   <div class="container-content">
@@ -238,7 +238,7 @@ export default {
     const teacher = localStorage.getItem('teacher') || ''
     if (staff) {
       this.applyId = JSON.parse(staff).id
-      this.applyName = JSON.parse(staff).name
+      this.applyName = JSON.parse(staff).realName
       this.applyDepartment = JSON.parse(staff).department
     }
     if (teacher) {
