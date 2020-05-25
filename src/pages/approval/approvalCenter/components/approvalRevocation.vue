@@ -72,6 +72,19 @@
           <div>{{ scope.row.repiarContent }}</div>
           <div>{{ scope.row.receptContent }}</div>
           <div>{{ scope.row.reason }}</div>
+          <div
+            v-if="
+              scope.row.type === 'ADJUSTMENT_STAGE' ||
+                scope.row.type === 'ADJUSTMENT_CLASS' ||
+                scope.row.type === 'ADJUSTMENT_SUP'
+            "
+          >
+            {{
+              scope.row.abstractContent.substring(
+                scope.row.abstractContent.lastIndexOf('^') + 1
+              )
+            }}
+          </div>
         </template>
       </el-table-column>
       <el-table-column label="发起时间" width="180">
@@ -573,6 +586,22 @@ export default {
       }
       if (type === 'REISSUE') {
         this.$router.push('/repair')
+      }
+      if (type === 'ADJUSTMENT_STAGE') {
+        this.$router.push({
+          path: '/approvalCenter/adjust',
+          query: { adjustType: 1 }
+        })
+      } else if (type === 'ADJUSTMENT_SUP') {
+        this.$router.push({
+          path: '/approvalCenter/adjust',
+          query: { adjustType: 2 }
+        })
+      } else if (type === 'ADJUSTMENT_CLASS') {
+        this.$router.push({
+          path: '/approvalCenter/adjust',
+          query: { adjustType: 3 }
+        })
       }
     },
     // 鼠标进入
