@@ -23,7 +23,7 @@
       </el-form-item>
     </el-form>
     <div
-      v-if="adjustDrawerData.type === 'notDone'"
+      v-if="adjustDrawerData.type === 'notDone' && isStaffId"
       class="adjust-drawer-button-box"
     >
       <el-button @click="adjustDrawerPass('reject')">拒 绝</el-button>
