@@ -324,6 +324,7 @@
     <adjust-drawer
       ref="adjustDrawerCom"
       :adjustDrawerData="adjustDrawerData"
+      :isStaffId="isStaffId"
       @result="adjustDrawerPass"
     ></adjust-drawer>
     <el-dialog
