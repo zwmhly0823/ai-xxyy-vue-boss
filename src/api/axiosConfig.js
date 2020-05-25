@@ -130,7 +130,10 @@ export default {
       'Content-Type': 'application/json;charset=UTF-8'
     }
     if (token) {
-      headers.Authorization = token
+      // headers.Authorization = token
+      headers.Authorization = token.includes('Bearer ')
+        ? token
+        : `Bearer ${token}`
     }
     return headers
   }
