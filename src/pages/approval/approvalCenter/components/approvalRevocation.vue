@@ -75,7 +75,6 @@
           <div
             v-if="
               scope.row.type === 'ADJUSTMENT_STAGE' ||
-                scope.row.type === 'ADJUSTMENT_CLASS' ||
                 scope.row.type === 'ADJUSTMENT_SUP'
             "
           >
