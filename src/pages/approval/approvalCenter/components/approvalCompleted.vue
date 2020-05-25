@@ -3,8 +3,8 @@
  * @version: 
  * @Author: Lukun
  * @Date: 2020-04-27 17:47:58
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-05-23 14:58:47
+ * @LastEditors: Lukun
+ * @LastEditTime: 2020-05-25 21:39:10
  -->
 <template>
   <div class="container">
@@ -357,6 +357,7 @@ export default {
     console.log(staff, 'staff')
 
     this.resetParams = staff
+    this.staffName = staff.staffName
     this.staffId = staff.staffId
     this.isStaffId = staff.isStaffId
     // Parameters:
