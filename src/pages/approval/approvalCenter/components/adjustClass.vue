@@ -89,6 +89,7 @@
 
 <script>
 import SearchPhone from '@/components/MSearch/searchItems/searchPhone'
+import _ from 'lodash'
 export default {
   name: 'AdjustClass',
   components: {
@@ -160,12 +161,18 @@ export default {
         classCurrentClass: 'getDonePeriodicClass',
         classChooseClass: 'getChooseClassList'
       },
-      adjustLoading: false
+      adjustLoading: false,
+      // 调期的模版数据
+      adjustDateDefault: {},
+      // 调级的模版数据
+      adjustLevelDefault: {},
+      // 调班的模版数据
+      adjustClassDefault: {}
     }
   },
   created() {
     // 调期的模版数据
-    const adjustDateDefault = {
+    this.adjustDateDefault = {
       title: '新建调期申请',
       content: [
         {
@@ -232,7 +239,7 @@ export default {
       ]
     }
     // 调级的模版数据
-    const adjustLevelDefault = {
+    this.adjustLevelDefault = {
       title: '新建调级申请',
       content: [
         {
@@ -300,7 +307,7 @@ export default {
       ]
     }
     // 调班的模版数据
-    const adjustClassDefault = {
+    this.adjustClassDefault = {
       title: '新建调班申请',
       content: [
         {
@@ -358,7 +365,7 @@ export default {
       // 调期
       case 1:
         // 显示的数据
-        this.showData = Object.assign({}, adjustDateDefault)
+        this.showData = _.cloneDeep(this.adjustDateDefault)
         // form的数据
         this.formData = Object.assign({}, this.formData, {
           currentStartClassDate: '', // 当前开课日期
@@ -369,7 +376,7 @@ export default {
         break
       // 调级
       case 2:
-        this.showData = Object.assign({}, adjustLevelDefault)
+        this.showData = _.cloneDeep(this.adjustLevelDefault)
         this.formData = Object.assign({}, this.formData, {
           currentPeriod: '',
           targetSup: ''
@@ -379,7 +386,7 @@ export default {
         break
       // 调课
       case 3:
-        this.showData = Object.assign({}, adjustClassDefault)
+        this.showData = _.cloneDeep(this.adjustClassDefault)
         this.formData = Object.assign({}, this.formData, {
           currentClassName: ''
         })
@@ -947,6 +954,23 @@ export default {
       this.$refs.searchPhone[0].input = ''
       // 隐藏提示
       this.showSupplementaryInstruction = false
+      // 清空所有下拉项
+      this.showData = {}
+      switch (this.adjustType) {
+        // 调期
+        case 1:
+          // 显示的数据
+          this.showData = _.cloneDeep(this.adjustDateDefault)
+          break
+        // 调级
+        case 2:
+          this.showData = _.cloneDeep(this.adjustLevelDefault)
+          break
+        // 调课
+        case 3:
+          this.showData = _.cloneDeep(this.adjustClassDefault)
+          break
+      }
     }
   }
 }
