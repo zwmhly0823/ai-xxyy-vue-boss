@@ -64,7 +64,7 @@
       </div>
       <div class="module-table" v-else>
         <el-table
-          :data="classList"
+          :data="wecharList"
           @selection-change="handleSelectionChange"
           :show-header="false"
           height="338"
@@ -177,7 +177,8 @@ export default {
       classLength: [],
       actualClass: [],
       detailList: [],
-      astualWechart: []
+      astualWechart: [],
+      wecharList: []
     }
   },
   watch: {
@@ -231,7 +232,7 @@ export default {
       } else {
         this.handoverTeacherName = ''
       }
-      this.initClassInform(res.pay_teacher_id, 'handover')
+      this.initClassInform(this.form.handoverTeacherId, 'handover')
       this.getWechat(res.pay_teacher_id)
     },
     receiveSelectTeacher(res) {
@@ -239,7 +240,7 @@ export default {
       this.initClassInform(res.pay_teacher_id, 'receive')
     },
     async initClassInform(teacherId, type) {
-      if (teacherId === undefined) {
+      if (teacherId === undefined || teacherId === null) {
         return
       }
       try {
@@ -290,7 +291,7 @@ export default {
     },
     async getWechat(teacherId) {
       const { wechatObj, classLength } = this
-      if (teacherId === undefined) {
+      if (teacherId === undefined || teacherId === null) {
         return
       }
       try {
@@ -300,6 +301,7 @@ export default {
             wechatObj[item.weixinNo] = item.steamModelList
             classLength.push(item.steamModelList)
           }
+          this.wecharList = res.payload
         }
       } catch (error) {
         console.log(error)
@@ -372,8 +374,8 @@ export default {
       }
     }
     &-table {
-      width: 80%;
-      margin: 0 auto;
+      width: 98%;
+      margin: 0 0 0 2%;
     }
     .handover-inform {
       width: 100%;
