@@ -4,7 +4,7 @@
  * @Author: huzhifu
  * @Date: 2020-05-07 10:50:45
  * @LastEditors: liukun
- * @LastEditTime: 2020-05-22 17:45:17
+ * @LastEditTime: 2020-05-25 21:17:18
  -->
 <template>
   <div class="refund-container">
@@ -557,7 +557,12 @@ export default {
           { required: true, message: '请输入支付渠道', trigger: 'blur' }
         ],
         alipayAccount: [
-          { required: true, message: '请输入支付宝账号', trigger: 'blur' }
+          { required: true, message: '请输入支付宝账号', trigger: 'blur' },
+          {
+            pattern: /^[^\u4e00-\u9fa5]+$/,
+            message: '你家支付宝账号能有汉字?',
+            trigger: 'blur'
+          }
         ],
         accountName: [
           { required: true, message: '请输入收款人姓名', trigger: 'blur' }
@@ -603,7 +608,7 @@ export default {
       }
       const item =
         this.pureWeekY / 4 > 1
-          ? `${Math.floor(this.pureWeekY / 4)}个月零${this.pureWeekY % 4}周`
+          ? `${Math.floor(this.pureWeekY / 4)}个月${this.pureWeekY % 4}周`
           : `${this.pureWeekY % 4}周`
       return item
     },
@@ -612,7 +617,7 @@ export default {
       const result = this.pureWeekZ - this.pureWeekY
       const item =
         result / 4 > 1
-          ? `${Math.floor(result / 4)}个月零${result % 4}周`
+          ? `${Math.floor(result / 4)}个月${result % 4}周`
           : `${result % 4}周`
       return item
     }
