@@ -317,6 +317,16 @@ export default {
        */
       if (this.topic === '4' || this.topic === '5') {
         Object.assign(queryObj, { packages_id: relationIds })
+
+        // !!! 如果系统课类型选择 半年系统课 - packages，则packages_id = 10
+        if (
+          Object.keys(queryObj).includes('packages_type') &&
+          +queryObj.packages_type === 3
+        ) {
+          Object.assign(queryObj, { packages_id: ['10'] })
+          delete queryObj.packages_type
+        }
+
         this.orderData(queryObj, this.currentPage)
 
         // 获取统计数据
