@@ -4,7 +4,7 @@
  * @Author: huzhifu
  * @Date: 2020-05-07 10:50:45
  * @LastEditors: liukun
- * @LastEditTime: 2020-05-25 21:17:18
+ * @LastEditTime: 2020-05-25 22:24:24
  -->
 <template>
   <div class="refund-container">
@@ -680,13 +680,12 @@ export default {
             periodAlready: this.pureWeekY, // 已上课周期“周”
             periodResidue: this.pureWeekS, // 剩余上课周期“周”
             periodRefund: this.refundForm.refundMonths * 4, // 选择退款周期“周”
-            applyUserId: JSON.parse(localStorage.getItem('teacher')).id,
-            applyUserName: JSON.parse(localStorage.getItem('teacher')).realName,
-            applyUserDeapartmentId: JSON.parse(localStorage.getItem('teacher'))
+            applyUserId: JSON.parse(localStorage.getItem('staff')).id,
+            applyUserName: JSON.parse(localStorage.getItem('staff')).realName,
+            applyUserDeapartmentId: JSON.parse(localStorage.getItem('staff'))
               .departmentId,
-            applyUserDeapartmentName: JSON.parse(
-              localStorage.getItem('teacher')
-            ).department
+            applyUserDeapartmentName: JSON.parse(localStorage.getItem('staff'))
+              .department
           }
           this.$http.RefundApproval.submito(params1)
             .then(({ code }) => {
@@ -721,6 +720,7 @@ export default {
   },
   created() {
     // console.info(JSON.parse(localStorage.getItem('teacher')).id)
+    console.info('归来去')
   }
 }
 </script>
