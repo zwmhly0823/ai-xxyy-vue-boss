@@ -155,7 +155,7 @@
 <script>
 import _ from 'lodash'
 import MPagination from '@/components/MPagination/index.vue'
-import { formatData, isToss } from '@/utils/index.js'
+import { formatData, isToss, deepClone } from '@/utils/index.js'
 import ExpressDetail from '../../components/expressDetail'
 import User from '../../components/User.vue'
 export default {
@@ -209,7 +209,7 @@ export default {
       teacherGroup: [],
       // 搜索
       searchIn: [],
-      statisticsQuery: [], // 统计需要 bool 表达式
+      // statisticsQuery: [], // 统计需要 bool 表达式
       departmentObj: {}, // 组织机构 obj
       orderStatisticsResult: [], // 统计结果
       trialTeam: {}, // 学员的体验课班级名称
@@ -266,7 +266,7 @@ export default {
     },
     // 订单列表
     async getOrderList(page = this.currentPage, status) {
-      const statisticsQuery = []
+      // const statisticsQuery = []
       const queryObj = {}
       // TOSS
       if (this.teacherId) {
@@ -274,14 +274,14 @@ export default {
           pay_teacher_id:
             this.teacherGroup.length > 0 ? this.teacherGroup : [this.teacherId]
         })
-        statisticsQuery.push({
-          terms: {
-            pay_teacher_id:
-              this.teacherGroup.length > 0
-                ? this.teacherGroup
-                : [this.teacherId]
-          }
-        })
+        // statisticsQuery.push({
+        //   terms: {
+        //     pay_teacher_id:
+        //       this.teacherGroup.length > 0
+        //         ? this.teacherGroup
+        //         : [this.teacherId]
+        //   }
+        // })
       }
 
       const topicRelation = await this.$http.Product.topicRelationId(
@@ -317,14 +317,28 @@ export default {
        */
       if (this.topic === '4' || this.topic === '5') {
         Object.assign(queryObj, { packages_id: relationIds })
+
+        // !!! 如果系统课类型选择 半年系统课 - packages，则packages_id = 10
+        if (
+          Object.keys(queryObj).includes('packages_type') &&
+          +queryObj.packages_type === 3
+        ) {
+          Object.assign(queryObj, { packages_id: ['10'] })
+          delete queryObj.packages_type
+        }
+
         this.orderData(queryObj, this.currentPage)
 
         // 获取统计数据
-        statisticsQuery.push({
-          terms: { packages_id: relationIds }
-        })
-        statisticsQuery.push(...this.searchIn)
-        console.log(statisticsQuery)
+        // statisticsQuery.push({
+        //   terms: { packages_id: relationIds }
+        // })
+        // statisticsQuery.push(...this.searchIn)
+        // console.log(statisticsQuery)
+
+        // 求和统计不需要传当前状态，统计全部状态的值
+        const statisticsQuery = deepClone(queryObj)
+        delete statisticsQuery.status
 
         this.$http.Order.orderStatistics(
           statisticsQuery,
