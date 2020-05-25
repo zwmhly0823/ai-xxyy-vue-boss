@@ -19,7 +19,7 @@ function camel2Line(str) {
 }
 
 // 运行 npm run build [projectFileName] 打包指定模块;  projectName 取到指定的模块;
-const projectName = process.argv[3] || 'dashboard'
+const projectName = process.argv[3] || 'login'
 
 /**
  * 设置入口文件，打包时按模块文件分开独立打包

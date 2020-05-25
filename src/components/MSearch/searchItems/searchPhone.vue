@@ -3,8 +3,13 @@
  * @version:
  * @Author: zhubaodong
  * @Date: 2020-03-26 16:28:45
+<<<<<<< HEAD
  * @LastEditors: liukun
  * @LastEditTime: 2020-05-18 17:31:02
+=======
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-05-23 18:41:27
+>>>>>>> feature/new_approval
  -->
 <template>
   <div class="search-item small">
@@ -162,6 +167,7 @@ export default {
 }
 .search-item {
   &.small {
+    // width: 140px !important;
     width: 140px;
   }
 }

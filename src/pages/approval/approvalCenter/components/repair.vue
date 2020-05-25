@@ -3,13 +3,14 @@
  * @version: 
  * @Author: Lukun
  * @Date: 2020-04-28 13:50:45
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-05-23 15:33:11
+ * @LastEditors: Lukun
+ * @LastEditTime: 2020-05-25 11:20:53
  -->
 <template>
-  <div class="container">
-    <div class="header">
-      <span>新建补发货审批</span>
+  <div class="container-content">
+    <div class="title">
+      <i class="el-icon-arrow-left back-icon" @click="back"></i>
+      <span class="title-text">新建补发货审批</span>
     </div>
     <div class="content">
       <el-form
@@ -61,13 +62,18 @@
             </div>
           </el-form-item>
         </div>
-        <el-form-item label="收货人电话" prop="receiptTel">
+        <el-form-item
+          label="收货人电话"
+          prop="receiptTel"
+          class="address-recept"
+        >
           <el-input disabled v-model="formRepair.receiptTel"></el-input>
         </el-form-item>
         <el-form-item
           v-model="formRepair.totalAddress"
           label="收货人地址"
           prop="totalAddress"
+          class="address-recept"
         >
           <el-input
             type="textarea"
@@ -119,7 +125,7 @@
             </div>
             <div class="content-gift">
               <div class="changeGift" v-if="ensureGift.length > 0">
-                <el-table :data="ensureGift" width="400">
+                <el-table :data="ensureGift" width="400" border>
                   <el-table-column align="center" width="400" label="商品名称">
                     <template slot-scope="scope">
                       <span>
@@ -151,11 +157,11 @@
             <el-radio label="TRANSPORT_BAD">运输损坏</el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item>
-          <el-button @click="cancelButton">取消</el-button>
+        <el-form-item class="box-padding">
           <el-button type="primary" @click="confirmButton('ruleForm')"
             >提交</el-button
           >
+          <el-button @click="cancelButton">重置</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -182,8 +188,8 @@
     >
       <el-table
         :data="giftList"
-        border
         width="100%"
+        border
         @current-change="handleCurrentChange"
         @selection-change="handleSelectionChange"
         align="center"
@@ -355,6 +361,10 @@ export default {
   },
 
   methods: {
+    // 后退
+    back() {
+      this.$router.push('/approvalCenter')
+    },
     getSeletOrder(val) {
       console.log(val, 'val')
     },
@@ -750,33 +760,42 @@ export default {
 </script>
 
 <style lang="scss" scope>
-.container {
+.container-content {
+  background-color: #fff;
+  margin: 10px;
+  height: calc(100vh - 70px);
+  overflow: auto;
+  .title {
+    height: 50px;
+    line-height: 50px;
+    border-bottom: 1px solid #f0f1f2;
+    i.back-icon {
+      display: inline-block;
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      border: 1px solid #ddd;
+      margin: 0 20px;
+      text-align: center;
+      line-height: 19px;
+      color: #ddd;
+      vertical-align: middle;
+      cursor: pointer;
+    }
+    .title-text {
+      margin-left: 10px;
+    }
+  }
   .choose-product-gift {
     padding: 20px;
   }
-  .header {
-    margin: 20px;
-    font-size: 20px;
-    height: 30px;
-    color: #333;
-    font-weight: bold;
-    padding-bottom: 40px;
-  }
-  .choose-input {
-    width: 452px;
-  }
 
   .content {
-    padding: 10px 150px 10px;
+    padding: 10px 50px 0px;
   }
 
-  position: relative;
   .product-repair {
     .reapirProduct {
-      // display: flex;
-
-      // justify-content: flex-start;
-      // align-items: center;
       &-detail {
         display: flex;
       }
@@ -803,15 +822,22 @@ export default {
 
   .address {
     position: relative;
+    width: 55%;
     .repair-address {
+      position: absolute;
       cursor: pointer;
       font-weight: bold;
       font-size: 14px;
-      position: absolute;
       right: -100px;
       bottom: 3px;
       color: #409eff;
     }
+  }
+  .address-recept {
+    width: 55%;
+  }
+  .box-padding {
+    padding-bottom: 20px;
   }
 }
 </style>
@@ -823,6 +849,6 @@ export default {
 <style lang="scss" module>
 .searchphonerepair,
 .chooseinput {
-  width: 100% !important;
+  width: 50% !important;
 }
 </style>
