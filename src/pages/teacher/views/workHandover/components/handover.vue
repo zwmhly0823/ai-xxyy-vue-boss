@@ -3,7 +3,7 @@
  * @Author: songyanan
  * @Date: 2020-05-22 14:01:40
  * @LastEditors: songyanan
- * @LastEditTime: 2020-05-25 15:09:26
+ * @LastEditTime: 2020-05-25 18:18:06
  -->
 <template>
   <div class="container">
@@ -125,7 +125,11 @@
       </div>
       <div class="to-choose-container" v-show="!isShowWX">
         <h3>{{ receiveTeacherName }}</h3>
-        <div class="class-in">接收微信号：{{ receiveTeacher.length }}个</div>
+        <div class="class-in">
+          接收微信号：{{
+            isWechartHandover ? receiveWXNo : `${receiveTeacher.length}个`
+          }}
+        </div>
         <div class="class-in">接收班级数{{ actualClass.length }}个</div>
         <el-button type="text" @click="receiveToChoose">重新选择</el-button>
       </div>
