@@ -471,7 +471,9 @@ export default {
                 value: {
                   orderId: orderItem.id,
                   outTradeNo: orderItem.outTradeNo,
-                  index: index++
+                  index: index++,
+                  tempSatge: orderItem.stage,
+                  tempSup: orderItem.sup
                 }
               })
               // TODO 有多个订单的话是有问题的，取的是最后一项的stage和sup
@@ -497,7 +499,11 @@ export default {
       })
     },
     // select change
+    // 处理所有需要选择后再走的逻辑
     selectChange(event, data) {
+      // 选择班级这儿逻辑稍微复杂一些，调班时用户选完订单后即可渲染班级列表，调级时选完订单后还得选申请调级级别，同理调期时还得选了调整开课日期
+      this.handleStageAndSupChooseClass(event, data)
+
       // 如果当前选择的是关联订单，那么就要根据订单获取后续数据
       if (data.model !== 'orderId') {
         return
@@ -516,12 +522,12 @@ export default {
           { stage: data.stage[event.index] },
           '调整开课日期'
         )
-        // 调期-选择班级
-        this.commonSelectHandleFunction(
-          'dateChooseClass',
-          { stage: data.stage[event.index], sup: data.sup[event.index] },
-          '选择班级列表'
-        )
+        // 修改调期-选择班级的默认提示
+        this.showData.content.forEach((item) => {
+          if (item.model === 'targetClassName') {
+            item.options[0].label = '请先选择调整开课日期'
+          }
+        })
       }
       // 调级
       if (this.adjustType === 2) {
@@ -531,12 +537,12 @@ export default {
           { orderNo: event.orderId },
           '已上课周期'
         )
-        // 调级-选择班级-和调期一样
-        this.commonSelectHandleFunction(
-          'dateChooseClass',
-          { stage: data.stage[event.index], sup: data.sup[event.index] },
-          '选择班级列表'
-        )
+        // 修改调级-选择班级的默认提示
+        this.showData.content.forEach((item) => {
+          if (item.model === 'targetClassName') {
+            item.options[0].label = '请先选择申请调级级别'
+          }
+        })
       }
       // 调班
       if (this.adjustType === 3) {
@@ -547,6 +553,30 @@ export default {
           '当前班级',
           data,
           event
+        )
+      }
+    },
+    handleStageAndSupChooseClass(event, data) {
+      // 调期
+      if (this.adjustType === 1 && data.model === 'targetStage') {
+        this.commonSelectHandleFunction(
+          'dateChooseClass',
+          {
+            stage: this.formData.targetStage.targetTerm,
+            sup: this.formData.orderId.tempSup
+          },
+          '选择班级列表'
+        )
+      }
+      // 调级
+      if (this.adjustType === 2 && data.model === 'targetSup') {
+        this.commonSelectHandleFunction(
+          'dateChooseClass',
+          {
+            stage: this.formData.orderId.tempSatge,
+            sup: this.formData.targetSup
+          },
+          '选择班级列表'
         )
       }
     },
@@ -728,7 +758,7 @@ export default {
               item.options.push({
                 label: `${chooseItem.teamName}-${chooseItem.teacherRealName}`,
                 value: {
-                  targetClassName: chooseItem.teamName,
+                  targetClassName: `${chooseItem.teamName}-${chooseItem.teacherRealName}`,
                   targetClassId: chooseItem.id,
                   index: chooseKey
                 }
@@ -804,8 +834,10 @@ export default {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           const subData = this.prepareData(formName)
-          // index是我自己加的，传给后端之前删掉
+          // 是我自己加的，传给后端之前删掉
           delete subData.index
+          delete subData.tempSatge
+          delete subData.tempSup
           // console.log(subData)
           this.handleSubmitNext(subData)
         } else {
