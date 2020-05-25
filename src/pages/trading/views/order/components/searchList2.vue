@@ -3,8 +3,8 @@
  * @version: 1.0.0
  * @Author: liukun
  * @Date: 2020-04-25 17:24:23
- * @LastEditors: liukun
- * @LastEditTime: 2020-05-08 11:35:59
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-05-25 19:31:37
  -->
 <template>
   <el-card border="false" shadow="never" :class="$style.elard">
@@ -249,7 +249,7 @@ export default {
     },
     getDepartment(res) {
       this.teacherscope = res.last_teacher_id || null
-      this.setSeachParmas(res, ['department'], 'terms')
+      this.setSeachParmas(res, ['last_teacher_id'], 'terms')
     },
     // 选择社群销售
     selectPayTeacher(res) {
