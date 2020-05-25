@@ -16,7 +16,6 @@
         :key="key"
         :label="item.labelText"
         :prop="item.model"
-        :required="item.required"
       >
         <!-- 带有下拉搜索的输入框 -->
         <template v-if="item.type === 'input' && item.autocomplete">
@@ -132,9 +131,7 @@ export default {
         targetClassName: [
           { required: true, message: '请选择班级', trigger: 'change' }
         ],
-        adjustReason: [
-          { required: true, message: '请输入调期理由', trigger: 'change' }
-        ]
+        adjustReason: [{ required: true, message: '', trigger: 'change' }]
       },
       // 公共的formData部分
       formData: {
@@ -175,8 +172,7 @@ export default {
           labelText: '选择用户:',
           type: 'input',
           autocomplete: true,
-          model: 'userId',
-          required: true
+          model: 'userId'
         },
         {
           labelText: '关联订单:',
@@ -244,8 +240,7 @@ export default {
           type: 'input',
           autocomplete: true,
           placeholder: '手机号搜索',
-          model: 'userId',
-          required: true
+          model: 'userId'
         },
         {
           labelText: '关联订单:',
@@ -313,8 +308,7 @@ export default {
           type: 'input',
           autocomplete: true,
           placeholder: '手机号搜索',
-          model: 'userId',
-          required: true
+          model: 'userId'
         },
         {
           labelText: '关联订单:',
@@ -370,6 +364,8 @@ export default {
           currentStartClassDate: '', // 当前开课日期
           targetStage: '' // 调整开课日期
         })
+        // rule
+        this.formRules.adjustReason[0].message = '请输入调期理由'
         break
       // 调级
       case 2:
@@ -378,6 +374,8 @@ export default {
           currentPeriod: '',
           targetSup: ''
         })
+        // rule
+        this.formRules.adjustReason[0].message = '请输入调级理由'
         break
       // 调课
       case 3:
@@ -385,6 +383,8 @@ export default {
         this.formData = Object.assign({}, this.formData, {
           currentClassName: ''
         })
+        // rule
+        this.formRules.adjustReason[0].message = '请输入调班理由'
         break
     }
   },
@@ -400,15 +400,27 @@ export default {
     },
     // 下拉手机号的校验
     validatePhone(rule, value, callback) {
+      const that = this
       var phoneNum = this.$refs.searchPhone[0].input
       if (!phoneNum) {
+        this.formData.userId = ''
         return callback(new Error('手机号不能为空'))
       }
       if (!/^1[3456789]\d{9}$/.test(phoneNum)) {
+        this.formData.userId = ''
         return callback(new Error('请输入正确的手机号'))
       }
-      callback()
-      this.renderOrderList()
+      // 手机号输入正确后需要获取到userId，获取userId的是个异步方法getSearchPhoneData(data)，需要从公共组件传值，没法儿用promise，
+      // 一时没想到啥好办法- -
+      const validateInterval = setInterval(() => {
+        if (this.formData.userId) {
+          callback()
+          that.renderOrderList()
+          clearInterval(validateInterval)
+        } else {
+          callback(new Error('请选择手机号'))
+        }
+      }, 200)
     },
     // 获取订单列表数据
     getOrderList() {
@@ -841,10 +853,10 @@ export default {
           // console.log(subData)
           this.handleSubmitNext(subData)
         } else {
-          this.$message({
-            message: '数据类型检测未通过',
-            type: 'warning'
-          })
+          // this.$message({
+          //   message: '数据类型检测未通过',
+          //   type: 'warning'
+          // })
           return false
         }
       })
