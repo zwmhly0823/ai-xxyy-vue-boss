@@ -3,13 +3,8 @@
  * @version: 
  * @Author: Lukun
  * @Date: 2020-05-06 18:31:51
-<<<<<<< HEAD
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-05-23 15:12:24
-=======
  * @LastEditors: Lukun
- * @LastEditTime: 2020-05-23 18:54:28
->>>>>>> feature/new_approval
+ * @LastEditTime: 2020-05-25 11:26:12
  -->
 <template>
   <div class="container">
