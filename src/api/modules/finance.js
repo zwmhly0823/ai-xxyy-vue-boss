@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-05-22 12:39:14
  * @LastEditors: liukun
- * @LastEditTime: 2020-05-22 16:38:25
+ * @LastEditTime: 2020-05-25 15:06:39
  */
 
 import axios from '../axiosConfig'
@@ -18,7 +18,9 @@ export default {
   // 调取成功同意
   toAgree(params) {
     console.warn('接口-财务同意发出')
-    return axios.post(`/api/o/v1/order/updateRefundComplete`, params)
+    return axios.post(
+      `/api/o/v1/order/updateRefundComplete?refundUid=${params.refundUid}&paymentId=${params.paymentId}`
+    )
   },
   // 导出
   exportExcel(params) {
