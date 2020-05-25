@@ -4,7 +4,7 @@
  * @Author: Lukun
  * @Date: 2020-04-28 13:50:45
  * @LastEditors: Lukun
- * @LastEditTime: 2020-05-25 19:31:21
+ * @LastEditTime: 2020-05-25 20:04:46
  -->
 <template>
   <div class="container-content">
@@ -223,7 +223,7 @@ import LogisticsForm from './logisticsForm'
 import RepairLevel from '@/components/MSearch/searchItems/repairLevel'
 import RepairSup from '@/components/MSearch/searchItems/repairSup'
 import Package from './package'
-
+import { getStaffInfo } from '../common'
 import SearchPhone from '@/components/MSearch/searchItems/searchPhone'
 export default {
   components: {
@@ -234,19 +234,10 @@ export default {
     Package
   },
   created() {
-    const staff = localStorage.getItem('staff')
-    const teacher = localStorage.getItem('teacher') || ''
-    if (staff) {
-      this.applyId = JSON.parse(staff).id
-      this.applyName = JSON.parse(staff).realName
-      this.applyDepartment = JSON.parse(staff).department
-    }
-    if (teacher) {
-      this.applyId = JSON.parse(teacher).id
-      this.applyName = JSON.parse(teacher).realName
-      this.applyDepartment = JSON.parse(teacher).department
-    }
-    console.log(this.formRepair.mode, 'app-container')
+    const staff = getStaffInfo()
+    this.applyId = staff.staffId
+    this.applyName = staff.staffName
+    this.applyDepartment = '运营'
   },
   data() {
     var validateName = (rule, value, callback) => {
