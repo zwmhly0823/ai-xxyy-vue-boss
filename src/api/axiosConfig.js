@@ -39,7 +39,8 @@ export default {
         axios
           .get(url, {
             params: params,
-            headers: this.getHeaders()
+            headers:
+              params && params.headers ? params.headers : this.getHeaders()
           })
           .then((res) => {
             resolve(res)
@@ -130,7 +131,7 @@ export default {
       'Content-Type': 'application/json;charset=UTF-8'
     }
     if (token) {
-      headers.Authorization = token
+      headers.Authorization = `Bearer ${token}`
     }
     return headers
   }

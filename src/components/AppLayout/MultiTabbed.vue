@@ -10,7 +10,6 @@
   <section class="multi-tabbed-container d-flex">
     <div class="tab-list">
       <ul class="d-flex">
-        <!-- <li class="current"><span>订单</span> <i class="el-icon-close"></i></li> -->
         <li
           :class="{ current: k === tabbed.currentTabbed }"
           v-for="(tab, k) in tabbedData"
@@ -96,11 +95,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-$gray: #f0f1f2;
+$gray: #d8dce5;
 .multi-tabbed-container {
   align-items: center;
-  margin: 0 10px;
-  padding: 0 10px 0 0;
+  padding: 0 10px;
   height: 34px;
   border-bottom: 1px solid $gray;
   background-color: #fff;
@@ -116,25 +114,40 @@ $gray: #f0f1f2;
   li {
     display: flex;
     align-items: center;
-    padding: 10px;
-    cursor: pointer;
+    padding: 4px 10px 2px;
     list-style: none;
-    border-right: 1px solid $gray;
+    border: 1px solid $gray;
     max-width: 120px;
+    margin-left: 5px;
+    cursor: pointer;
     &:hover {
-      color: #409eff;
+      color: #42b983;
     }
     &.current {
-      color: #409eff;
-      background-color: $gray;
+      color: #fff;
+      background-color: #42b983;
     }
     span {
-      margin-right: 5px;
       flex: 1;
       display: inline-block;
       text-overflow: ellipsis;
       overflow: hidden;
       white-space: nowrap;
+    }
+    i {
+      margin-left: 5px;
+      width: 16px;
+      height: 16px;
+      border-radius: 16px;
+      line-height: 16px;
+      text-align: center;
+      overflow: hidden;
+      &:hover {
+        background-color: $gray;
+      }
+      &::before {
+        transform: scale(0.6);
+      }
     }
   }
 }
