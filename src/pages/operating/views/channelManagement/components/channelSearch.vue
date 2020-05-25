@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-04-25 12:09:03
  * @LastEditors: panjian
- * @LastEditTime: 2020-05-25 16:54:53
+ * @LastEditTime: 2020-05-25 16:58:41
  -->
 <template>
   <div id="channel-box" class="channel-box">
@@ -673,6 +673,7 @@ export default {
     width: 100%;
     background: #fff;
     line-height: 45px;
+    border-bottom: 1px solid #f0f1f2;
     .channel-fixed-row {
       margin-left: 85px;
       font-size: 12px;
