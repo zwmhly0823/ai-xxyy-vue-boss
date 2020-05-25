@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-04-25 12:09:03
  * @LastEditors: panjian
- * @LastEditTime: 2020-05-25 16:58:41
+ * @LastEditTime: 2020-05-25 17:26:23
  -->
 <template>
   <div id="channel-box" class="channel-box">
@@ -699,7 +699,6 @@ export default {
     background: #fff;
     margin-left: 10px;
     margin-right: 10px;
-    margin-bottom: 30px;
     .bottom-tips {
       color: #fff;
       margin-left: 5px;
