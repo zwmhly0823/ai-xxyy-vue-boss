@@ -461,6 +461,7 @@ export default {
     this.resetParams = staff
     this.staffId = staff.staffId
     this.isStaffId = staff.isStaffId
+    this.staffName = staff.staffName
     // Parameters:
     this.params = {
       type: '',
