@@ -865,6 +865,10 @@ export default {
       }
       this.$refs[formName].validate((valid) => {
         if (valid) {
+          if (!this.formData.adjustReason.trim()) {
+            this.$message.error('申请理由不能为只输入空格～')
+            return
+          }
           const subData = this.prepareData(formName)
           // 是我自己加的，传给后端之前删掉
           delete subData.index
