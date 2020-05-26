@@ -62,7 +62,7 @@
         :couponData="couponData"
         :selectUserId="selectUserId"
       />
-      <el-table-column label="基本信息" class="information" width="280px">
+      <el-table-column label="基本信息" class="information" width="300px">
         <template slot-scope="scope">
           <img
             class="information-img"
@@ -76,9 +76,10 @@
               <span v-show="scope.row.base_painting_text">·</span>
               {{ scope.row.base_painting_text }}
             </div>
-            <!-- <div class="wechatnote">
-              微信备注:<span>{{ scope.row.wechatNote }}</span>
-            </div> -->
+            <div class="age">
+              体验课订单来源:
+              <span>{{ scope.row.pay_channel_outer_name }}</span>
+            </div>
           </div>
         </template>
       </el-table-column>
@@ -297,6 +298,7 @@ export default {
                 total
                 status
               }
+              pay_channel_outer_name
             }
           }
         }`
@@ -452,15 +454,11 @@ export default {
   }
   &-right {
     float: left;
-    width: 140px;
+    // width: 140px;
     color: #333333;
+    line-height: 20px;
     .age {
       color: #666;
-    }
-    .wechatnote {
-      span {
-        color: #606266;
-      }
     }
   }
 }
