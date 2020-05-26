@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-05-19 17:18:39
  * @LastEditors: liukun
- * @LastEditTime: 2020-05-26 23:46:37
+ * @LastEditTime: 2020-05-26 23:55:28
 -->
 <template>
   <section class="bianju10">
@@ -62,6 +62,17 @@
             <el-option label="退款成功" value="5"></el-option>
           </el-select>
         </el-form-item>
+        <el-form-item label="退款类型:">
+          <el-select
+            clearable
+            placeholder="请键入"
+            v-model="fordisplay5"
+            @change="refundType"
+          >
+            <el-option label="优惠券退款" value="0"></el-option>
+            <el-option label="课程退款" value="1"></el-option>
+          </el-select>
+        </el-form-item>
         <el-form-item label="用户搜索:">
           <div class="concat">
             <el-input
@@ -98,7 +109,7 @@
           </div>
         </el-form-item>
         <el-form-item class="marginL20">
-          <el-button type="primary" size="medium">导出</el-button>
+          <el-button type="primary" @click.stop="exportAll">导出</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -129,7 +140,11 @@
         </el-table-column>
         <el-table-column prop="statusStr" label="退款状态" align="center">
         </el-table-column>
+        <el-table-column prop="refundTypeStr" label="退款类型" align="center">
+        </el-table-column>
         <el-table-column prop="refundFee" label="退款金额" align="center">
+        </el-table-column>
+        <el-table-column prop="totoalFee" label="交易金额" align="center">
         </el-table-column>
         <el-table-column
           prop="ctime"
@@ -164,7 +179,12 @@
       :page-size="pageSize"
     >
     </el-pagination>
-    <el-drawer :visible.sync="drawer" size="50%" :destroy-on-close="true">
+    <el-drawer
+      ref="drawerLk"
+      :visible.sync="drawer"
+      size="50%"
+      :destroy-on-close="true"
+    >
       <template v-slot:title>
         <h1>财务审核</h1>
       </template>
@@ -215,6 +235,16 @@
           <el-col :span="4">退款金额:</el-col>
           <el-col :span="18" :offset="2">{{ choutidata.refundFee }} </el-col>
         </el-row>
+        <el-row v-if="choutidata.amount !== ''">
+          <el-col :span="4">交易金额:</el-col>
+          <el-col :span="18" :offset="2">{{ choutidata.amount }} </el-col>
+        </el-row>
+        <el-row v-if="choutidata.refundTypeStr !== ''">
+          <el-col :span="4">退款类型:</el-col>
+          <el-col :span="18" :offset="2"
+            >{{ choutidata.refundTypeStr }}
+          </el-col>
+        </el-row>
         <el-row v-if="choutidata.refundReason !== ''">
           <el-col :span="4">退款原因:</el-col>
           <el-col :span="18" :offset="2">{{ choutidata.refundReason }} </el-col>
@@ -233,8 +263,11 @@
             ></el-image>
           </el-col>
         </el-row>
-        <el-row class="buttonCenter" v-if="true">
+        <el-row class="buttonCenter" v-if="statusStr === '退款中'">
           <el-button type="primary" @click="comfirmRefund">确认退款</el-button>
+        </el-row>
+        <el-row class="buttonCenter" v-else-if="statusStr === '退款成功'">
+          <el-button type="success" :disabled="true">已经退款</el-button>
         </el-row>
       </div>
     </el-drawer>
@@ -254,6 +287,7 @@ export default {
         regType: '', // 业务类型
         tradeType: '', // 支付方式
         status: '', // 退款状态
+        refundType: '', // 退款类型
         uid: '', // 用户id
 
         outTradeNo: '', // 订单号
@@ -275,7 +309,8 @@ export default {
       // 而不是显示数字,所以:searchJson.regType之类不能用
       fordisplay1: '',
       fordisplay2: '',
-      fordisplay3: '',
+      fordisplay3: '', // 退款状态
+      fordisplay5: '', // 退款类型
       fordisplay4: '',
 
       // 分页
@@ -287,7 +322,8 @@ export default {
       tableData: [],
       // 抽屉
       drawer: false,
-      choutidata: {}
+      choutidata: {},
+      statusStr: '' // 该条订单退款状态 显示抽屉按钮用
     }
   },
   provide() {
@@ -321,6 +357,16 @@ export default {
         this.arrangeParams()
       } else {
         this.searchJson.status = ''
+        this.arrangeParams()
+      }
+    },
+    refundType(val) {
+      console.info(val, typeof val)
+      if (val === '0' || val === '1') {
+        this.searchJson.refundType = Number(val)
+        this.arrangeParams()
+      } else {
+        this.searchJson.refundType = ''
         this.arrangeParams()
       }
     },
@@ -512,6 +558,38 @@ export default {
       this.allDigit = Number(totalElements)
       this.tableData = content
     },
+    // 全量导出
+    async exportAll() {
+      const finalJson = {}
+      for (const key in this.searchJson) {
+        if (this.searchJson[key] !== '') {
+          finalJson[key] = this.searchJson[key]
+        } else {
+          console.info(`给青龙大哥剔牙--${key}-因为它是${this.searchJson[key]}`)
+        }
+      }
+      // 再剔除页码与页容量
+      delete finalJson.page
+      delete finalJson.size
+      console.warn('导出按钮-整理完毕,去找接口下载excel', finalJson)
+      const r = await this.$http.Finance.exportExcel(finalJson).catch((err) => {
+        console.info('取数据接口报错,', err)
+        this.$message({
+          message: '导出数据接口失败',
+          type: 'error'
+        })
+      })
+      // 下载去吧
+      var blob = new Blob([r])
+      var downloadElement = document.createElement('a')
+      var href = window.URL.createObjectURL(blob) // 创建下载的链接
+      downloadElement.href = href
+      downloadElement.download = '用户数据.xls' // 下载后文件名
+      document.body.appendChild(downloadElement)
+      downloadElement.click() // 点击下载
+      document.body.removeChild(downloadElement) // 下载完成移除元素
+      window.URL.revokeObjectURL(href) // 释放掉blob对象
+    },
     // 分页
     handleSizeChange(val) {
       console.log(`每页 ${val} 条`)
@@ -534,17 +612,15 @@ export default {
           type: 'error'
         })
       })
+      this.statusStr = arguments[1].statusStr // 该条订单退款状态 显示抽屉按钮用
       if (code === 0) {
-        this.whichListOrderId = payload.id // 存退款流水id给同意退款接口用 不用表现在view层即不用响应式
+        this.whichListOrderId = payload.id // 退款流水id 给同意退款接口用 不用表现在view层即不用响应式
         Object.assign(this.choutidata, payload)
         this.drawer = true
-        console.info(this.choutidata)
-        console.info(new Date(this.choutidata.buytime))
       }
     },
     async comfirmRefund() {
-      // const refundUid = JSON.parse(localStorage.getItem('teacher')).id // 操作人id
-      const { status, code } = await this.$http.Finance.toAgree({
+      const { code } = await this.$http.Finance.toAgree({
         refundUid: JSON.parse(localStorage.getItem('teacher')).id,
         paymentId: this.whichListOrderId
       }).catch((err) => {
@@ -555,12 +631,14 @@ export default {
         })
         return -1
       })
-      if (status === 'ok' && code === 0) {
+      if (code === 0) {
         this.$message({
           message: '操作成功',
           type: 'success'
         })
-        // 跳回列表
+        // 跳回列表并刷新
+        this.$refs.drawerLk.closeDrawer() // 关闭抽屉
+        this.arrangeParams() // 刷新列表数据
       } else {
         this.$message({
           message: '操作失败,稍后再试',
@@ -622,6 +700,8 @@ export default {
 .chouti {
   font-size: 16px;
   padding: 0px 20px;
+  max-height: 75vh;
+  overflow-x: auto;
 }
 .chouti .el-row {
   margin-bottom: 15px;
