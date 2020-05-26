@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-05-19 17:18:39
  * @LastEditors: liukun
- * @LastEditTime: 2020-05-25 20:42:17
+ * @LastEditTime: 2020-05-26 20:26:26
 -->
 <template>
   <section class="bianju10">
@@ -700,6 +700,8 @@ export default {
 .chouti {
   font-size: 16px;
   padding: 0px 20px;
+  max-height: 75vh;
+  overflow-x: auto;
 }
 .chouti .el-row {
   margin-bottom: 15px;
