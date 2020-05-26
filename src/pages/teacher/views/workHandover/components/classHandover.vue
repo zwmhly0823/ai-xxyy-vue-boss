@@ -3,7 +3,7 @@
  * @Author: songyanan
  * @Date: 2020-05-20 10:12:30
  * @LastEditors: songyanan
- * @LastEditTime: 2020-05-20 15:34:20
+ * @LastEditTime: 2020-05-26 11:32:30
  -->
 <template>
   <div class="class">
@@ -22,13 +22,18 @@
       <h2>交接明细</h2>
       <el-table :data="tableList" style="width: 100%">
         <el-table-column
+          prop="teamName"
+          label="班级名称"
+          width="180"
+        ></el-table-column>
+        <el-table-column
           prop="sendWeixinNo"
-          label="微信号"
+          label="交出方微信号"
           width="180"
         ></el-table-column>
         <el-table-column
           prop="sendRealName"
-          label="交出方"
+          label="交出方老师"
           width="180"
         ></el-table-column>
         <el-table-column
@@ -37,8 +42,13 @@
           width="180"
         ></el-table-column>
         <el-table-column
+          prop="receiveWeixinNo"
+          label="接收方微信号"
+          width="180"
+        ></el-table-column>
+        <el-table-column
           prop="receiveRealName"
-          label="接收方"
+          label="接收方老师"
           width="180"
         ></el-table-column>
         <el-table-column
@@ -74,6 +84,7 @@ export default {
       handoverTeacherName: '',
       form: {},
       studentSteams: [],
+      teacherWechatId: [],
       tableList: [],
       showTable: false,
       query: {
@@ -97,18 +108,22 @@ export default {
         return
       }
       this.studentSteams = children.receiveTeacher.map((item, index) => {
-        return item.teamId
+        return item.id
+      })
+      this.teacherWechatId = children.receiveTeacher.map((item, index) => {
+        return item.teacherWechatId
       })
       this.form = Object.assign({}, children.form)
       this.handoverTeacherName = children.handoverTeacherName
       this.dialogVisible = true
     },
     async sureHandover() {
-      const { form, studentSteams } = this
+      const { form, studentSteams, teacherWechatId } = this
       try {
         const res = await this.$http.WorkerHandover.postHandoverSteam(
           studentSteams.join(','),
           form.handoverTeacherId,
+          teacherWechatId.join(','),
           form.receiveTeacherId,
           form.receiveWxId
         )

@@ -3,7 +3,7 @@
  * @Author: songyanan
  * @Date: 2020-05-22 14:01:40
  * @LastEditors: songyanan
- * @LastEditTime: 2020-05-25 18:18:06
+ * @LastEditTime: 2020-05-26 14:20:36
  -->
 <template>
   <div class="container">
@@ -27,13 +27,13 @@
       </div>
       <div class="to-choose-container" v-show="!classListIsNull">
         <h3>{{ handoverTeacherName }}</h3>
-        <div class="class-in" v-show="!isWechartHandover">
+        <div class="class-in" v-show="!isClassHandover">
           微信号{{ computObjKey(wechatObj) }}个
         </div>
-        <div class="class-in" v-show="!isWechartHandover">
+        <div class="class-in" v-show="!isClassHandover">
           带班数{{ classLength.flat().length }}个
         </div>
-        <div class="class-in" v-show="isWechartHandover">
+        <div class="class-in" v-show="isClassHandover">
           带班数{{ classList.length }}个
         </div>
         <el-button type="text" @click="handoverToChoose">重新选择</el-button>
@@ -43,8 +43,8 @@
       <use xlink:href="#iconjiantou-you"></use>
     </svg>
     <div class="container-middle module">
-      <h2>{{ isWechartHandover ? '班级' : '微信号' }}</h2>
-      <div class="module-table" v-if="isWechartHandover">
+      <h2>{{ isClassHandover ? '班级' : '微信号' }}</h2>
+      <div class="module-table" v-if="isClassHandover">
         <el-table
           :data="classList"
           @selection-change="handleSelectionChange"
@@ -104,7 +104,7 @@
             class="margin_l10"
           />
         </div>
-        <div class="module-search-wechart">
+        <div class="module-search-wechart" v-if="isClassHandover">
           <el-select
             v-model="form.receiveWxId"
             size="small"
@@ -114,7 +114,7 @@
             @change="handleWX"
           >
             <el-option
-              v-for="(item, index) in receiveWechartList"
+              v-for="(item, index) in wecharList"
               :key="index"
               :label="item.weixinNo"
               :value="item.weixinId"
@@ -127,10 +127,14 @@
         <h3>{{ receiveTeacherName }}</h3>
         <div class="class-in">
           接收微信号：{{
-            isWechartHandover ? receiveWXNo : `${receiveTeacher.length}个`
+            isClassHandover ? receiveWXNo : `${receiveTeacher.length}个`
           }}
         </div>
-        <div class="class-in">接收班级数{{ actualClass.length }}个</div>
+        <div class="class-in">
+          接收班级数{{
+            isClassHandover ? receiveTeacher.length : actualClass.length
+          }}个
+        </div>
         <el-button type="text" @click="receiveToChoose">重新选择</el-button>
       </div>
     </div>
@@ -163,7 +167,7 @@ export default {
       classList: [],
       classListIsNull: true,
       receiveTeacher: [],
-      isWechartHandover: false,
+      isClassHandover: false,
       receiveWechartList: [],
       isShowWX: true,
       receiveTeacherName: '',
@@ -176,7 +180,6 @@ export default {
       wechatObj: {},
       classLength: [],
       actualClass: [],
-      detailList: [],
       astualWechart: [],
       wecharList: []
     }
@@ -184,7 +187,7 @@ export default {
   watch: {
     tabIndex: {
       handler(val) {
-        this.isWechartHandover = val === '0'
+        this.isClassHandover = val === '0'
       },
       immediate: true
     },
@@ -211,16 +214,19 @@ export default {
     }
   },
   methods: {
+    // 交出方选择部门
     handoverSelectDepartment(res) {
       const { handoverMiddleWareArr } = this
       handoverMiddleWareArr.push(res)
       this.handoverTeacherScope = handoverMiddleWareArr || null
     },
+    // 接收方选择部门
     receiveSelectDepartment(res) {
       const { receiveMiddleWareArr } = this
       receiveMiddleWareArr.push(res)
       this.receiveTeacherScope = receiveMiddleWareArr || null
     },
+    // 交出方选择老师
     handoverSelectTeacher(res) {
       this.form.handoverTeacherId = res.pay_teacher_id || null
       if (res && res.teacherList) {
@@ -233,12 +239,21 @@ export default {
         this.handoverTeacherName = ''
       }
       this.initClassInform(this.form.handoverTeacherId, 'handover')
-      this.getWechat(res.pay_teacher_id)
+      if (!this.isClassHandover) {
+        this.getWechat(this.form.handoverTeacherId)
+      }
     },
+    // 接收方选择老师
     receiveSelectTeacher(res) {
       this.form.receiveTeacherId = res.pay_teacher_id || null
       this.initClassInform(res.pay_teacher_id, 'receive')
+      if (this.isClassHandover) {
+        this.getWechat(res.pay_teacher_id)
+      } else {
+        this.isShowWX = false
+      }
     },
+    // 加载班级list
     async initClassInform(teacherId, type) {
       if (teacherId === undefined || teacherId === null) {
         return
@@ -253,6 +268,7 @@ export default {
         console.log(error)
       }
     },
+    // 班级列表勾选
     handleSelectionChange(val) {
       const arr = []
       this.receiveTeacher = val
@@ -265,16 +281,18 @@ export default {
         this.actualClass = arr.flat()
       }
     },
+    // 交出方重新选择
     handoverToChoose() {
       this.classList.splice(0, this.classList.length)
       this.handoverMiddleWareArr.splice(0, this.handoverMiddleWareArr.length)
     },
+    // 微信号选择
     handleWX(val) {
-      const { receiveWechartList } = this
+      const { wecharList } = this
       this.form.receiveWxId = val
       this.isShowWX = false
-      if (receiveWechartList) {
-        for (const item of receiveWechartList) {
+      if (wecharList) {
+        for (const item of wecharList) {
           if (item.weixinId === val) {
             this.receiveTeacherName = item.realName
             this.receiveWXNo = item.weixinNo
@@ -284,11 +302,13 @@ export default {
         this.receiveTeacherName = ''
       }
     },
+    // 接收方重新选择
     receiveToChoose() {
       this.isShowWX = true
       this.form.receiveWxId = ''
       this.receiveWechartList.splice(0, this.receiveWechartList.length)
     },
+    // 获取微信列表
     async getWechat(teacherId) {
       const { wechatObj, classLength } = this
       if (teacherId === undefined || teacherId === null) {
@@ -307,6 +327,7 @@ export default {
         console.log(error)
       }
     },
+    // 计算obj是否为空
     computObjKey(obj) {
       return Object.keys(obj).length
     }
