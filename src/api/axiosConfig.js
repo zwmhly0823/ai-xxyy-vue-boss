@@ -59,7 +59,7 @@ export default {
    * @param {String} url [请求的url地址]
    * @param {Object} params [请求时携带的参数]
    */
-  post(url, params) {
+  post(url, params, extend = {}) {
     if (process.env.NODE_ENV === 'development') {
       if (url.match(/graphql/)) {
         const reg = /[\s][\w]+\(query:/
@@ -89,10 +89,14 @@ export default {
     }
     if (this.judgeToken()) {
       return new Promise((resolve, reject) => {
+        const extendObj = {
+          headers:
+            params && params.headers ? params.headers : this.getHeaders(),
+          ...extend
+        }
         axios
           .post(url, params, {
-            headers:
-              params && params.headers ? params.headers : this.getHeaders()
+            ...extendObj
           })
           .then((res) => {
             console.log(res)

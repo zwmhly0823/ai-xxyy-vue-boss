@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-05-22 12:39:14
  * @LastEditors: liukun
- * @LastEditTime: 2020-05-22 16:38:25
+ * @LastEditTime: 2020-05-26 23:41:46
  */
 
 import axios from '../axiosConfig'
@@ -18,12 +18,18 @@ export default {
   // 调取成功同意
   toAgree(params) {
     console.warn('接口-财务同意发出')
-    return axios.post(`/api/o/v1/order/updateRefundComplete`, params)
+    return axios.post(
+      `/api/o/v1/order/updateRefundComplete?refundUid=${params.refundUid}&paymentId=${params.paymentId}`
+    )
   },
   // 导出
   exportExcel(params) {
     console.warn('接口-导出excel')
-    return axios.post(`/api/o/v1/order/exportPayment`, params)
+    return axios.post(`/api/o/v1/order/exportPayment`, params, {
+      responseType: 'blob' // 跟headers同级的
+      // 给文件流加个字段,excel就不会有内部错误了
+      // 二进制大对象(表示一个不可变、原始数据的类文件对象)
+    })
   },
   // 获取抽屉详情
   getDetail(params) {

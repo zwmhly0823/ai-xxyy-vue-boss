@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-05-19 17:18:39
  * @LastEditors: liukun
- * @LastEditTime: 2020-05-25 22:27:32
+ * @LastEditTime: 2020-05-26 23:46:37
 -->
 <template>
   <section class="bianju10">
@@ -97,9 +97,9 @@
             </el-date-picker>
           </div>
         </el-form-item>
-        <!-- <el-form-item class="marginL20">
+        <el-form-item class="marginL20">
           <el-button type="primary" size="medium">导出</el-button>
-        </el-form-item> -->
+        </el-form-item>
       </el-form>
     </div>
     <el-divider></el-divider>
@@ -164,79 +164,77 @@
       :page-size="pageSize"
     >
     </el-pagination>
-    <el-drawer
-      title="我是标题"
-      :visible.sync="drawer"
-      size="50%"
-      :destroy-on-close="true"
-    >
+    <el-drawer :visible.sync="drawer" size="50%" :destroy-on-close="true">
       <template v-slot:title>
         <h1>财务审核</h1>
       </template>
       <div class="chouti">
-        <el-row>
+        <el-row v-if="choutidata.buytime !== ''">
           <el-col :span="4">订单支付时间:</el-col>
           <el-col :span="18" :offset="2"
             >{{ new Date(Number(choutidata.buytime)).toLocaleString() }}
           </el-col>
         </el-row>
-        <el-row>
+        <el-row v-if="choutidata.outTradeNo !== ''">
           <el-col :span="4">订单号:</el-col>
           <el-col :span="18" :offset="2">{{ choutidata.outTradeNo }} </el-col>
         </el-row>
-        <el-row>
+        <el-row v-if="choutidata.regtypeStr !== ''">
           <el-col :span="4">业务类型:</el-col>
           <el-col :span="18" :offset="2">{{ choutidata.regtypeStr }} </el-col>
         </el-row>
-        <el-row>
+        <el-row v-if="choutidata.tradeTypeStr !== ''">
           <el-col :span="4">支付渠道:</el-col>
           <el-col :span="18" :offset="2">{{ choutidata.tradeTypeStr }} </el-col>
         </el-row>
-        <el-row>
+        <el-row v-if="choutidata.transactionId !== ''">
           <el-col :span="4">支付流水号:</el-col>
           <el-col :span="18" :offset="2"
             >{{ choutidata.transactionId }}
           </el-col>
         </el-row>
-        <el-row>
+        <el-row v-if="choutidata.payeeName !== ''">
           <el-col :span="4">收款人姓名:</el-col>
           <el-col :span="18" :offset="2">{{ choutidata.payeeName }} </el-col>
         </el-row>
-        <el-row>
+        <el-row v-if="choutidata.payeeAccount !== ''">
           <el-col :span="4">支付宝账号:</el-col>
           <el-col :span="18" :offset="2">{{ choutidata.payeeAccount }} </el-col>
         </el-row>
-        <el-row>
+        <el-row v-if="choutidata.periodAlready !== ''">
           <el-col :span="4">已上课周期:</el-col>
           <el-col :span="18" :offset="2"
             >{{ choutidata.periodAlready }}
           </el-col>
         </el-row>
-        <el-row>
+        <el-row v-if="choutidata.periodRefund !== ''">
           <el-col :span="4">退款月数:</el-col>
           <el-col :span="18" :offset="2">{{ choutidata.periodRefund }} </el-col>
         </el-row>
-        <el-row>
+        <el-row v-if="choutidata.refundFee !== ''">
           <el-col :span="4">退款金额:</el-col>
           <el-col :span="18" :offset="2">{{ choutidata.refundFee }} </el-col>
         </el-row>
-        <el-row>
+        <el-row v-if="choutidata.refundReason !== ''">
           <el-col :span="4">退款原因:</el-col>
           <el-col :span="18" :offset="2">{{ choutidata.refundReason }} </el-col>
         </el-row>
-        <el-row>
+        <el-row v-if="choutidata.refundMsg !== ''">
           <el-col :span="4">退款说明:</el-col>
           <el-col :span="18" :offset="2">{{ choutidata.refundMsg }} </el-col>
         </el-row>
-        <el-row>
+        <el-row v-if="choutidata.attsUrl !== ''">
           <el-col :span="4">附件:</el-col>
           <el-col :span="18" :offset="2">
             <el-image
-              style="width: 400px"
+              style="width: 200px"
               :src="choutidata.attsUrl"
-              fit="cover"
+              fit="contain"
             ></el-image>
           </el-col>
+        </el-row>
+        <el-row class="buttonCenter" v-if="true">
+          <el-button type="primary" @click="comfirmRefund">确认退款</el-button>
         </el-row>
       </div>
     </el-drawer>
@@ -537,10 +535,37 @@ export default {
         })
       })
       if (code === 0) {
+        this.whichListOrderId = payload.id // 存退款流水id给同意退款接口用 不用表现在view层即不用响应式
         Object.assign(this.choutidata, payload)
         this.drawer = true
         console.info(this.choutidata)
         console.info(new Date(this.choutidata.buytime))
+      }
+    },
+    async comfirmRefund() {
+      // const refundUid = JSON.parse(localStorage.getItem('teacher')).id // 操作人id
+      const { status, code } = await this.$http.Finance.toAgree({
+        refundUid: JSON.parse(localStorage.getItem('teacher')).id,
+        paymentId: this.whichListOrderId
+      }).catch((err) => {
+        console.error(err)
+        this.$message({
+          message: '同意退款请求失败,稍后再试',
+          type: 'error'
+        })
+        return -1
+      })
+      if (status === 'ok' && code === 0) {
+        this.$message({
+          message: '操作成功',
+          type: 'success'
+        })
+        // 跳回列表
+      } else {
+        this.$message({
+          message: '操作失败,稍后再试',
+          type: 'warning'
+        })
       }
     }
   },
@@ -606,5 +631,9 @@ export default {
 }
 .chouti .el-row:nth-last-of-type(1) {
   margin-bottom: 0px;
+}
+.buttonCenter {
+  display: flex;
+  justify-content: center;
 }
 </style>
