@@ -1,4 +1,5 @@
 const glob = require('glob')
+const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 const defaultSettings = require('./src/settings.js')
 const { NODE_ENV } = process.env
 // TODO: 使用router
@@ -76,7 +77,7 @@ module.exports = {
   productionSourceMap: true,
   configureWebpack: {
     name,
-    plugins: []
+    plugins: [new CleanWebpackPlugin()]
   },
   chainWebpack(config) {
     config.module
