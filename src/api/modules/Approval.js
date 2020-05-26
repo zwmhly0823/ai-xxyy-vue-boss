@@ -4,7 +4,7 @@ export default {
   // 通过订单查当前开课日期
   getCurrentClassDate(query) {
     return axios.get(
-      `/api/s/v1/management/getManagementsByPeriods?periods=${query.stage}&type=SYSTEMCOURSE`
+      `/api/ts/v1/teaching/findSystemCourseManagementByOrderNo?orderNo=${query.orderNo}`
     )
   },
   // 调期获取调整开课日期列表
