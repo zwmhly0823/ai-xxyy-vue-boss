@@ -3,7 +3,7 @@
  * @Author: songyanan
  * @Date: 2020-05-22 19:12:45
  * @LastEditors: songyanan
- * @LastEditTime: 2020-05-13 20:02:00
+ * @LastEditTime: 2020-05-26 11:22:30
  */
 import axios from '../axiosConfig'
 
@@ -27,9 +27,15 @@ export default {
   /**
    * 班级确认交接
    * */
-  postHandoverSteam(studentSteams, sendTeacherId, receiveTeacherId, weixinId) {
+  postHandoverSteam(
+    studentSteams,
+    sendTeacherId,
+    sendWeixinIds,
+    receiveTeacherId,
+    weixinId
+  ) {
     return axios.post(
-      `/api/t/v1/handover/postHandoverSteam?studentSteamIds=${studentSteams}&sendTeacherId=${sendTeacherId}&receiveTeacherId=${receiveTeacherId}&weixinId=${weixinId}`
+      `/api/t/v1/handover/postHandoverSteam?studentSteamIds=${studentSteams}&sendTeacherId=${sendTeacherId}&sendWeixinIds=${sendWeixinIds}&receiveTeacherId=${receiveTeacherId}&weixinId=${weixinId}`
     )
   },
   /**

@@ -3,7 +3,7 @@
  * @Author: songyanan
  * @Date: 2020-05-20 10:13:39
  * @LastEditors: songyanan
- * @LastEditTime: 2020-05-25 15:34:20
+ * @LastEditTime: 2020-05-26 14:44:05
  -->
 <template>
   <div class="wechar">
@@ -76,6 +76,7 @@ export default {
   methods: {
     handlHandover() {
       const children = this.$refs.handover
+      delete children.form.receiveWxId
       const isNullStr = Object.values(children.form).some((item, index) => {
         return item === ''
       })
@@ -87,7 +88,7 @@ export default {
         return
       }
       this.weixinIds = children.receiveTeacher.map((item, index) => {
-        return item.teamId
+        return item.weixinId
       })
       this.form = Object.assign({}, children.form)
       this.handoverTeacherName = children.handoverTeacherName
