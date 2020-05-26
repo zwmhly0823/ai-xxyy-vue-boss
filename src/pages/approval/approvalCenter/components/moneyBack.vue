@@ -4,12 +4,13 @@
  * @Author: huzhifu
  * @Date: 2020-05-07 10:50:45
  * @LastEditors: liukun
- * @LastEditTime: 2020-05-25 21:17:18
+ * @LastEditTime: 2020-05-26 17:57:44
  -->
 <template>
-  <div class="refund-container">
-    <div class="header">
-      <h2 style="text-indent:1em">新建退款审批</h2>
+  <div class="adjustModule">
+    <div class="title">
+      <i class="el-icon-arrow-left back-icon" @click="back"></i>
+      <span class="title-text">退款审批</span>
     </div>
     <div :class="$style.content">
       <el-form
@@ -46,17 +47,26 @@
           </el-select>
         </el-form-item>
         <el-form-item label="业务类型：" prop="businessType">
-          <el-input v-model="refundForm.businessType" disabled></el-input>
+          <el-input
+            v-model="refundForm.businessType"
+            disabled
+            :class="$style.order100"
+          ></el-input>
         </el-form-item>
         <el-form-item label="支付渠道：" prop="payChannel">
-          <el-input v-model="refundForm.payChannel" disabled></el-input>
+          <el-input
+            v-model="refundForm.payChannel"
+            disabled
+            :class="$style.order100"
+          ></el-input>
         </el-form-item>
         <template v-if="isAlipay">
-          <el-form-item label="支付宝账号" prop="alipayAccount">
+          <el-form-item label="支付宝账号：" prop="alipayAccount">
             <div class="alipayAccount-name">
               <el-input
                 v-model="refundForm.alipayAccount"
                 placeholder="请输入支付宝账号"
+                :class="$style.order100"
               ></el-input>
             </div>
           </el-form-item>
@@ -65,6 +75,7 @@
               <el-input
                 v-model="refundForm.accountName"
                 placeholder="请输入收款人姓名"
+                :class="$style.order100"
               ></el-input>
               <div :class="$style.tip">
                 支付宝原路退回的，需要填写支付宝实名认证的姓名
@@ -73,7 +84,11 @@
           </el-form-item>
         </template>
         <el-form-item label="订单金额：" prop="orderAmount">
-          <el-input v-model="refundForm.orderAmount" disabled></el-input>
+          <el-input
+            v-model="refundForm.orderAmount"
+            disabled
+            :class="$style.order100"
+          ></el-input>
         </el-form-item>
         <el-form-item label="退款类型：" prop="refundType">
           <el-radio-group v-model="refundForm.refundType">
@@ -91,7 +106,11 @@
           v-if="refundForm.refundType && refundForm.businessType === '系统课'"
         >
           <el-form-item label="用户已上课周期：" prop="pureWeekYto">
-            <el-input v-model="pureWeekYto" disabled></el-input>
+            <el-input
+              v-model="pureWeekYto"
+              disabled
+              :class="$style.order100"
+            ></el-input>
           </el-form-item>
           <el-form-item label="选择退款月数：" prop="refundMonths">
             <el-select
@@ -112,8 +131,10 @@
           </el-form-item>
         </template>
         <el-form-item
-          v-if="!refundForm.refundType && refundForm.businessType === '系统课'"
-          label="选择优惠券"
+          v-if="
+            refundForm.refundType === 0 && refundForm.businessType === '系统课'
+          "
+          label="选择优惠券："
           prop="couponType"
         >
           <el-select
@@ -131,7 +152,11 @@
           </el-select>
         </el-form-item>
         <el-form-item label="退款金额：" prop="refundAmount">
-          <el-input v-model="refundForm.refundAmount" disabled></el-input>
+          <el-input
+            v-model="refundForm.refundAmount"
+            disabled
+            :class="$style.order100"
+          ></el-input>
         </el-form-item>
         <el-form-item
           v-if="refundForm.refundType"
@@ -154,6 +179,7 @@
         </el-form-item>
         <el-form-item label="退款说明：" prop="explain">
           <el-input
+            :class="$style.order100"
             type="textarea"
             v-model="refundForm.explain"
             placeholder="请输入"
@@ -237,10 +263,13 @@ export default {
           })
           if (code === 0 && isRefundStatus === 1) {
             // 剥夺退款资格
-            this.$confirm('购课超过30天或盒子已经发出, 不支持退款', {
-              showCancelButton: false,
-              type: 'error'
-            }).then(() => {
+            this.$confirm(
+              '购课超过30天或盒子已经发出或有审批进行时, 不支持退款',
+              {
+                showCancelButton: false,
+                type: 'error'
+              }
+            ).then(() => {
               this.onCancel('refundForm')
             })
           } else if (code === 0 && isRefundStatus !== 1) {
@@ -413,10 +442,6 @@ export default {
                 } else if (this.backStatus === 0) {
                   // 退全款(前面已经处理了不退款的1)
                   this.decreaseOne = 0
-                  this.$message({
-                    message: '恭喜!可退全款',
-                    type: 'success'
-                  })
                 } else {
                   this.$message({
                     message:
@@ -474,8 +499,6 @@ export default {
                       )
                     }
                   }
-                  // this.everyPrice =
-                  //   this.refundForm.orderAmount / (this.pureWeekZ / 4)
                 }
               } else {
                 // 课程总课时或已上课时未能获取,怎么计算系统课退费呀
@@ -605,24 +628,31 @@ export default {
       // 已经上课时间
       if (this.pureWeekY === '') {
         return ''
+      } else if (this.pureWeekY / 4 >= 1) {
+        return `${Math.floor(this.pureWeekY / 4)}个月${
+          this.pureWeekY % 4 ? (this.pureWeekY % 4) + '周' : ''
+        }`
+      } else {
+        return (this.pureWeekY % 4) + '周'
       }
-      const item =
-        this.pureWeekY / 4 > 1
-          ? `${Math.floor(this.pureWeekY / 4)}个月${this.pureWeekY % 4}周`
-          : `${this.pureWeekY % 4}周`
-      return item
     },
     pureWeekSto() {
       // 剩余上课时间
       const result = this.pureWeekZ - this.pureWeekY
-      const item =
-        result / 4 > 1
-          ? `${Math.floor(result / 4)}个月${result % 4}周`
-          : `${result % 4}周`
-      return item
+      if (result / 4 >= 1) {
+        return `${Math.floor(result / 4)}个月${
+          result % 4 ? (result % 4) + '周' : ''
+        }`
+      } else {
+        return (result % 4) + '周'
+      }
     }
   },
   methods: {
+    // 后退
+    back() {
+      this.$router.push('/approvalCenter')
+    },
     // 选择手机号后获取uid和手机号
     getUid({ uid }) {
       if (uid) {
@@ -680,13 +710,12 @@ export default {
             periodAlready: this.pureWeekY, // 已上课周期“周”
             periodResidue: this.pureWeekS, // 剩余上课周期“周”
             periodRefund: this.refundForm.refundMonths * 4, // 选择退款周期“周”
-            applyUserId: JSON.parse(localStorage.getItem('teacher')).id,
-            applyUserName: JSON.parse(localStorage.getItem('teacher')).realName,
-            applyUserDeapartmentId: JSON.parse(localStorage.getItem('teacher'))
+            applyUserId: JSON.parse(localStorage.getItem('staff')).id,
+            applyUserName: JSON.parse(localStorage.getItem('staff')).realName,
+            applyUserDeapartmentId: JSON.parse(localStorage.getItem('staff'))
               .departmentId,
-            applyUserDeapartmentName: JSON.parse(
-              localStorage.getItem('teacher')
-            ).department
+            applyUserDeapartmentName: JSON.parse(localStorage.getItem('staff'))
+              .department
           }
           this.$http.RefundApproval.submito(params1)
             .then(({ code }) => {
@@ -721,6 +750,7 @@ export default {
   },
   created() {
     // console.info(JSON.parse(localStorage.getItem('teacher')).id)
+    console.info('归来去')
   }
 }
 </script>
@@ -730,19 +760,19 @@ export default {
   padding: 10px 20px 10px;
 }
 .tip {
-  color: navy;
+  color: red;
 }
 
 .search_phone100 {
-  width: 100% !important;
+  width: 50% !important;
   // 体外控制手机号组件样式(组件内100%w,根节点别写样式造成局限)
   // 只生效当前显示页面(组件),追加给子组件的全局或局部类名
 }
 .order100 {
-  width: 100%;
+  width: 50%;
 }
 .refundMonths100 {
-  width: 100%;
+  width: 50%;
 }
 
 .refundForm_imageUrl {
@@ -764,5 +794,59 @@ export default {
   height: 178px;
   line-height: 178px;
   text-align: center;
+}
+</style>
+<style lang="scss" scoped>
+.adjustModule {
+  background-color: #fff;
+  margin: 10px;
+  height: calc(100vh - 70px);
+  .title {
+    height: 50px;
+    line-height: 50px;
+    border-bottom: 1px solid #f0f1f2;
+    i.back-icon {
+      display: inline-block;
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      border: 1px solid #ddd;
+      margin: 0 20px;
+      text-align: center;
+      line-height: 19px;
+      color: #ddd;
+      vertical-align: middle;
+      cursor: pointer;
+    }
+    .title-text {
+      margin-left: 10px;
+    }
+  }
+  .adjust-form {
+    padding: 0 50px;
+    margin-top: 30px;
+    /deep/ .el-form-item__content {
+      margin-left: 200px !important;
+    }
+    .search-phone-class {
+      width: 200px;
+      /deep/ .el-input--mini {
+        .el-input__inner {
+          height: 40px;
+          line-height: 40px;
+        }
+      }
+    }
+    .supp-text {
+      margin-left: 15px;
+      color: red;
+      font-size: 12px;
+    }
+    .input-loading {
+      margin-left: 10px;
+      font-size: 18px;
+      color: #aaa;
+    }
+  }
 }
 </style>

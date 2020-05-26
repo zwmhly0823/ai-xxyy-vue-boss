@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-05-19 17:18:39
  * @LastEditors: liukun
- * @LastEditTime: 2020-05-25 20:42:17
+ * @LastEditTime: 2020-05-26 18:03:05
 -->
 <template>
   <section class="bianju10">
@@ -108,9 +108,9 @@
             </el-date-picker>
           </div>
         </el-form-item>
-        <el-form-item class="marginL20">
-          <el-button type="primary" @click.stop="exportAll">导出</el-button>
-        </el-form-item>
+        <!-- <el-form-item class="marginL20">
+          <el-button type="primary" size="medium">导出</el-button>
+        </el-form-item> -->
       </el-form>
     </div>
     <el-divider></el-divider>

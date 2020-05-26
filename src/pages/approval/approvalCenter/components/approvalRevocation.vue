@@ -357,8 +357,8 @@ export default {
   },
   created() {
     const staff = getStaffInfo()
-
     this.resetParams = staff
+    this.staffName = staff.staffName
     this.staffId = staff.staffId
     this.isStaffId = staff.isStaffId
     // Parameters:
