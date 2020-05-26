@@ -4,7 +4,7 @@
  * @Author: huzhifu
  * @Date: 2020-05-07 10:50:45
  * @LastEditors: liukun
- * @LastEditTime: 2020-05-26 17:57:44
+ * @LastEditTime: 2020-05-26 19:21:24
  -->
 <template>
   <div class="adjustModule">
@@ -800,7 +800,6 @@ export default {
 .adjustModule {
   background-color: #fff;
   margin: 10px;
-  height: calc(100vh - 70px);
   .title {
     height: 50px;
     line-height: 50px;
