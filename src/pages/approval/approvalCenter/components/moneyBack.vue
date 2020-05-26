@@ -4,7 +4,7 @@
  * @Author: huzhifu
  * @Date: 2020-05-07 10:50:45
  * @LastEditors: liukun
- * @LastEditTime: 2020-05-25 22:24:24
+ * @LastEditTime: 2020-05-26 16:12:47
  -->
 <template>
   <div class="refund-container">
@@ -474,8 +474,6 @@ export default {
                       )
                     }
                   }
-                  // this.everyPrice =
-                  //   this.refundForm.orderAmount / (this.pureWeekZ / 4)
                 }
               } else {
                 // 课程总课时或已上课时未能获取,怎么计算系统课退费呀
@@ -605,21 +603,24 @@ export default {
       // 已经上课时间
       if (this.pureWeekY === '') {
         return ''
+      } else if (this.pureWeekY / 4 >= 1) {
+        return `${Math.floor(this.pureWeekY / 4)}个月${
+          this.pureWeekY % 4 ? (this.pureWeekY % 4) + '周' : ''
+        }`
+      } else {
+        return (this.pureWeekY % 4) + '周'
       }
-      const item =
-        this.pureWeekY / 4 > 1
-          ? `${Math.floor(this.pureWeekY / 4)}个月${this.pureWeekY % 4}周`
-          : `${this.pureWeekY % 4}周`
-      return item
     },
     pureWeekSto() {
       // 剩余上课时间
       const result = this.pureWeekZ - this.pureWeekY
-      const item =
-        result / 4 > 1
-          ? `${Math.floor(result / 4)}个月${result % 4}周`
-          : `${result % 4}周`
-      return item
+      if (result / 4 >= 1) {
+        return `${Math.floor(result / 4)}个月${
+          result % 4 ? (result % 4) + '周' : ''
+        }`
+      } else {
+        return (result % 4) + '周'
+      }
     }
   },
   methods: {
