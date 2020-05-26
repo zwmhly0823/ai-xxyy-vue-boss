@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-04-25 12:09:03
  * @LastEditors: panjian
- * @LastEditTime: 2020-05-25 17:26:23
+ * @LastEditTime: 2020-05-26 12:23:17
  -->
 <template>
   <div id="channel-box" class="channel-box">
@@ -87,18 +87,12 @@
     <div class="channel-fixed" v-show="tableShow">
       <el-row class="channel-fixed-row">
         <el-col :span="2"><div>渠道分类</div></el-col>
-        <el-col :span="2" style="margin-left:10px;"><div>渠道名称</div></el-col>
-        <el-col :span="1" style="margin-left:20px;"><div>渠道ID</div></el-col>
-        <el-col :span="2" style="margin-left:40px;"
-          ><div>体验课成单数</div></el-col
-        >
-        <el-col :span="2" style="margin-left:-20px;"
-          ><div>体验课未支付</div></el-col
-        >
-        <el-col :span="1" style="margin-left:-25px;"
-          ><div>添加微信数</div></el-col
-        >
-        <el-col :span="2" style="margin-left:35px;"
+        <el-col :span="2" class="row2"><div>渠道名称</div></el-col>
+        <el-col :span="1" class="row3"><div>渠道ID</div></el-col>
+        <el-col :span="2" class="row4"><div>体验课成单数</div></el-col>
+        <el-col :span="2" class="row5"><div>体验课未支付</div></el-col>
+        <el-col :span="1" class="row6"><div>添加微信数</div></el-col>
+        <el-col :span="2" class="row7"
           ><div>
             <span>参课数/参课率</span>
             <el-tooltip placement="top">
@@ -110,7 +104,7 @@
             </el-tooltip>
           </div></el-col
         >
-        <el-col :span="2" style="margin-left:10px;"
+        <el-col :span="2" class="row8"
           ><div>
             <span>完课数/完课率</span>
             <el-tooltip placement="top">
@@ -122,7 +116,7 @@
             </el-tooltip>
           </div></el-col
         >
-        <el-col :span="2"
+        <el-col :span="2" class="row9"
           ><div>
             <span>成单数/转化率</span>
             <el-tooltip placement="top">
@@ -134,7 +128,7 @@
             </el-tooltip>
           </div></el-col
         >
-        <el-col :span="2" style="margin-left:10px;"
+        <el-col :span="2" class="row10"
           ><div>
             <span>成单金额</span>
             <el-tooltip placement="top">
@@ -145,9 +139,7 @@
             </el-tooltip>
           </div></el-col
         >
-        <el-col :span="2" style="margin-left:-30px;"
-          ><div>创建时间</div></el-col
-        >
+        <el-col :span="2" class="row11"><div>创建时间</div></el-col>
       </el-row>
     </div>
     <div class="channel-box-bottom">
@@ -679,6 +671,37 @@ export default {
       font-size: 12px;
       color: #666;
       font-weight: normal;
+      .row1 {
+      }
+      .row2 {
+        margin-left: 20px;
+      }
+      .row3 {
+        margin-left: 30px;
+      }
+      .row4 {
+        margin-left: 30px;
+      }
+      .row5 {
+      }
+      .row6 {
+        width: 5%;
+        margin-left: -20px;
+      }
+      .row7 {
+        margin-left: 20px;
+      }
+      .row8 {
+        margin-left: 20px;
+      }
+      .row9 {
+        margin-left: 20px;
+      }
+      .row10 {
+        margin-left: 20px;
+      }
+      .row11 {
+      }
       .bottom-tips {
         color: #fff;
         margin-left: 5px;
@@ -690,6 +713,66 @@ export default {
         border-radius: 50px;
         line-height: 15px;
         padding-left: 4px;
+      }
+    }
+  }
+  @media (min-width: 1480px) and (max-width: 2880px) {
+    .channel-fixed {
+      position: fixed;
+      z-index: 9090;
+      height: 45px;
+      width: 100%;
+      background: #fff;
+      line-height: 45px;
+      border-bottom: 1px solid #f0f1f2;
+      .channel-fixed-row {
+        margin-left: 85px;
+        font-size: 12px;
+        color: #666;
+        font-weight: normal;
+        .row1 {
+        }
+        .row2 {
+          margin-left: -20px;
+        }
+        .row3 {
+          margin-left: -10px;
+        }
+        .row4 {
+          margin-left: 120px;
+        }
+        .row5 {
+        }
+        .row6 {
+          margin-left: 70px;
+        }
+        .row7 {
+          margin-left: 80px;
+        }
+        .row8 {
+          margin-left: -10px;
+        }
+        .row9 {
+          margin-left: -20px;
+        }
+        .row10 {
+          margin-left: -20px;
+        }
+        .row11 {
+          margin-left: -20px;
+        }
+        .bottom-tips {
+          color: #fff;
+          margin-left: 5px;
+          background: #9c9c9c;
+          display: inline-block;
+          width: 15px;
+          font-weight: 900;
+          height: 15px;
+          border-radius: 50px;
+          line-height: 15px;
+          padding-left: 4px;
+        }
       }
     }
   }
