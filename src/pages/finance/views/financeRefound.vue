@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-05-19 17:18:39
  * @LastEditors: liukun
- * @LastEditTime: 2020-05-26 20:53:12
+ * @LastEditTime: 2020-05-26 21:06:40
 -->
 <template>
   <section class="bianju10">
@@ -109,7 +109,7 @@
           </div>
         </el-form-item>
         <el-form-item class="marginL20">
-          <el-button type="primary">导出</el-button>
+          <el-button type="primary" @click="exportAll">导出</el-button>
         </el-form-item>
       </el-form>
     </div>
