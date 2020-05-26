@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-15 20:35:57
  * @LastEditors: Shentong
- * @LastEditTime: 2020-05-15 12:31:19
+ * @LastEditTime: 2020-05-22 16:24:19
  -->
 <template>
   <div class="third-step">
@@ -12,6 +12,7 @@
       <ele-table
         :dataList="tableData"
         :loading="flags.loading"
+        :tableSize="'small'"
         :size="tabQuery.size"
         :page="tabQuery.pageNum"
         :total="totalElements"
@@ -37,7 +38,14 @@
         <el-table-column
           prop="teacherWechatNo"
           label="绑定微信"
-          width="150"
+          width="120"
+          align="center"
+        >
+        </el-table-column>
+        <el-table-column
+          prop="lastPeriod"
+          label="最近接生期数"
+          width="100"
           align="center"
         >
         </el-table-column>
@@ -292,7 +300,7 @@ export default {
     //  保存 招生排期 设置
     async saveScheduleConfig(params, cb) {
       const loadingInstance = this.$loading({
-        target: 'section',
+        target: '.app-main',
         lock: true,
         text: '正在保存...',
         fullscreen: true
@@ -310,7 +318,6 @@ export default {
         }
       } catch (err) {
         loadingInstance.close()
-        console.log('111', err)
         this.$message({
           message: '获取列表出错',
           type: 'warning'
@@ -381,9 +388,9 @@ export default {
 </script>
 <style lang="scss" scoped>
 .step-three-container {
-  display: flex;
-  align-items: center;
-  flex-direction: column;
+  // display: flex;
+  // align-items: center;
+  // flex-direction: column;
   .select-container {
     margin-bottom: 5px;
     .courseCategory {

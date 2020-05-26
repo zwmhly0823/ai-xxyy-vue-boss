@@ -84,6 +84,12 @@ export default {
     )
   },
   /**
+   * 通过订单id查询物流信息
+   */
+  getExpressByOrderId(params) {
+    return axios.get(`/api/o/v1/express/getExpressByOrderId?orderId=${params}`)
+  },
+  /**
    * 带班详情 物流 修改地址 查询地址接口
    * @param {*} param0
    */
@@ -96,6 +102,13 @@ export default {
    */
   updateExpressAddress(params) {
     return axios.get('/api/o/v1/express/updateExpressAddress', params)
+  },
+  /**
+   * 新增地址信息
+   * @param {*} param0
+   */
+  createAddress(params) {
+    return axios.get('/api/o/v1/express/createAddress', params)
   }
   /**
    * v1 订单关联的物流

@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-05-06 16:33:15
  * @LastEditors: panjian
- * @LastEditTime: 2020-05-23 16:56:50
+ * @LastEditTime: 2020-05-26 13:12:09
  -->
 <template>
   <div class="channelAdd-box">
@@ -416,7 +416,7 @@ export default {
     // 批量下载二维码
     onBulkDownload() {
       // const loadingInstance = this.$loading({
-      //   target: 'section',
+      //   target: '.app-main',
       //   lock: true,
       //   text: '批量下载中...',
       //   fullscreen: true

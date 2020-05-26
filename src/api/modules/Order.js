@@ -3,8 +3,8 @@
  * @version:
  * @Author: shentong
  * @Date: 2020-03-13 16:20:48
- * @LastEditors: shentong
- * @LastEditTime: 2020-03-13 19:40:26
+ * @LastEditors: Lukun
+ * @LastEditTime: 2020-05-23 04:41:53
  */
 import axios from '../axiosConfig'
 
@@ -136,5 +136,13 @@ export default {
         }
       }`
     })
+  },
+  /*
+  通过uid查询订单号
+  */
+  getOrdersByUid(uid) {
+    return axios.get(
+      `/api/o/v1/order/getOrdersByStatus?userId=${uid}&status=COMPLETED&page=0`
+    )
   }
 }

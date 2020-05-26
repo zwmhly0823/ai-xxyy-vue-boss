@@ -70,6 +70,27 @@ const routes = [
       }
     ]
   },
+  // 财务
+  {
+    path: '/finance',
+    name: 'finance',
+    // hidden: true,
+    meta: {
+      title: '财务',
+      icon: 'el-icon-s-finance',
+      module: 'finance'
+    },
+    children: [
+      {
+        path: '/financeRefound',
+        name: 'financeRefound',
+        meta: {
+          title: '退款',
+          module: 'finance'
+        }
+      }
+    ]
+  },
   // 老师模块
   {
     path: '/teacher',
@@ -136,6 +157,16 @@ const routes = [
       }
     ]
   },
+  // 工具类路由
+  {
+    path: '/approval',
+    name: 'approval',
+    meta: {
+      title: '审批中心',
+      icon: 'el-icon-menu',
+      module: 'approval'
+    }
+  },
   // 统计分析
   {
     path: '/statistics',
@@ -175,6 +206,7 @@ const routes = [
           style: 'line'
         }
       }
+
       // {
       //   path: '/salesProcess',
       //   name: 'salesProcess',

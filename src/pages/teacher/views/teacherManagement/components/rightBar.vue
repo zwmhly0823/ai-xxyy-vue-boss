@@ -166,6 +166,20 @@
             </div>
           </template>
         </el-table-column>
+        <el-table-column label="销售等级" width="120px">
+          <template slot-scope="scope">
+            <div>
+              {{ scope.row.level }}
+            </div>
+          </template>
+        </el-table-column>
+        <el-table-column label="离职时间" width="120px">
+          <template slot-scope="scope">
+            <div>
+              {{ scope.row.leave_date }}
+            </div>
+          </template>
+        </el-table-column>
         <el-table-column label="在职状态">
           <template slot-scope="scope">
             <div>{{ scope.row.status == 0 ? '在职' : '离职' }}</div>
@@ -326,6 +340,7 @@ export default {
       // tab数据
       this.$http.Teacher.getTeacherPage(page, JSON.stringify(query)).then(
         (res) => {
+          console.log(res.data.TeacherManagePage.content, '老师列表')
           if (res && res.data && res.data.TeacherManagePage) {
             const {
               content = [],
@@ -339,6 +354,9 @@ export default {
                 : ''
               res.leave_train = res.leave_train
                 ? formatData(new Date(res.leave_train).getTime(), 'd')
+                : ''
+              res.leave_date = res.leave_date
+                ? formatData(new Date(res.leave_date).getTime(), 'd')
                 : ''
             })
             this.tableData = content
