@@ -892,6 +892,7 @@ export default {
         applyDepartment: userinfo.department, // 申请人部门
         applyId: userinfo.id, // 申请人id
         applyName: userinfo.realName || userinfo.name, // 申请人姓名
+        adjustReason: this.formData.adjustReason.trim(),
         flowType:
           this.adjustType === 1
             ? 'ADJUSTMENT_STAGE'
