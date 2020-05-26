@@ -3,7 +3,7 @@
  * @Author: songyanan
  * @Date: 2020-05-22 19:12:45
  * @LastEditors: songyanan
- * @LastEditTime: 2020-05-26 11:22:30
+ * @LastEditTime: 2020-05-26 18:02:50
  */
 import axios from '../axiosConfig'
 
@@ -20,8 +20,15 @@ export default {
    * @params params 老师id或者老师微信号
    * */
   getHandoverWechat(params) {
+    return axios.get(`/api/t/v1/handover/getHandoverWechat?teacherId=${params}`)
+  },
+  /**
+   * 根据部门获取老师微信号
+   * @params params 老师id或者老师微信号
+   * */
+  getWeixinByTeacherId(params) {
     return axios.get(
-      `/api/t//v1/handover/getHandoverWechat?teacherId=${params}`
+      `/api/t/v1/handover/getWeixinByTeacherId?teacherId=${params}`
     )
   },
   /**
