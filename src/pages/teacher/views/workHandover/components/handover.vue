@@ -3,7 +3,7 @@
  * @Author: songyanan
  * @Date: 2020-05-22 14:01:40
  * @LastEditors: songyanan
- * @LastEditTime: 2020-05-26 14:20:36
+ * @LastEditTime: 2020-05-26 18:15:23
  -->
 <template>
   <div class="container">
@@ -114,7 +114,7 @@
             @change="handleWX"
           >
             <el-option
-              v-for="(item, index) in wecharList"
+              v-for="(item, index) in wecharNumList"
               :key="index"
               :label="item.weixinNo"
               :value="item.weixinId"
@@ -168,7 +168,6 @@ export default {
       classListIsNull: true,
       receiveTeacher: [],
       isClassHandover: false,
-      receiveWechartList: [],
       isShowWX: true,
       receiveTeacherName: '',
       receiveWXNo: '',
@@ -181,7 +180,8 @@ export default {
       classLength: [],
       actualClass: [],
       astualWechart: [],
-      wecharList: []
+      wecharList: [],
+      wecharNumList: []
     }
   },
   watch: {
@@ -192,6 +192,12 @@ export default {
       immediate: true
     },
     classList: {
+      handler(val) {
+        this.classListIsNull = val.length === 0
+      },
+      immediate: true
+    },
+    wecharList: {
       handler(val) {
         this.classListIsNull = val.length === 0
       },
@@ -220,12 +226,6 @@ export default {
       handoverMiddleWareArr.push(res)
       this.handoverTeacherScope = handoverMiddleWareArr || null
     },
-    // 接收方选择部门
-    receiveSelectDepartment(res) {
-      const { receiveMiddleWareArr } = this
-      receiveMiddleWareArr.push(res)
-      this.receiveTeacherScope = receiveMiddleWareArr || null
-    },
     // 交出方选择老师
     handoverSelectTeacher(res) {
       this.form.handoverTeacherId = res.pay_teacher_id || null
@@ -238,17 +238,24 @@ export default {
       } else {
         this.handoverTeacherName = ''
       }
-      this.initClassInform(this.form.handoverTeacherId, 'handover')
-      if (!this.isClassHandover) {
+      if (this.isClassHandover) {
+        this.initClassInform(this.form.handoverTeacherId)
+      } else {
         this.getWechat(this.form.handoverTeacherId)
       }
+    },
+    // 接收方选择部门
+    receiveSelectDepartment(res) {
+      const { receiveMiddleWareArr } = this
+      receiveMiddleWareArr.push(res)
+      this.receiveTeacherScope = receiveMiddleWareArr || null
     },
     // 接收方选择老师
     receiveSelectTeacher(res) {
       this.form.receiveTeacherId = res.pay_teacher_id || null
-      this.initClassInform(res.pay_teacher_id, 'receive')
+      this.receiveTeacherName = res.teacherList[0].realname
       if (this.isClassHandover) {
-        this.getWechat(res.pay_teacher_id)
+        this.getWeixinByTeacherId(res.pay_teacher_id)
       } else {
         this.isShowWX = false
       }
@@ -261,8 +268,7 @@ export default {
       try {
         const res = await this.$http.WorkerHandover.getHandoverSteam(teacherId)
         if (res && res.code === 0) {
-          if (type === 'handover') this.classList = res.payload
-          if (type === 'receive') this.receiveWechartList = res.payload
+          this.classList = res.payload
         }
       } catch (error) {
         console.log(error)
@@ -288,25 +294,21 @@ export default {
     },
     // 微信号选择
     handleWX(val) {
-      const { wecharList } = this
+      const { wecharNumList } = this
       this.form.receiveWxId = val
       this.isShowWX = false
-      if (wecharList) {
-        for (const item of wecharList) {
+      if (wecharNumList) {
+        for (const item of wecharNumList) {
           if (item.weixinId === val) {
-            this.receiveTeacherName = item.realName
             this.receiveWXNo = item.weixinNo
           }
         }
-      } else {
-        this.receiveTeacherName = ''
       }
     },
     // 接收方重新选择
     receiveToChoose() {
       this.isShowWX = true
       this.form.receiveWxId = ''
-      this.receiveWechartList.splice(0, this.receiveWechartList.length)
     },
     // 获取微信列表
     async getWechat(teacherId) {
@@ -322,6 +324,22 @@ export default {
             classLength.push(item.steamModelList)
           }
           this.wecharList = res.payload
+        }
+      } catch (error) {
+        console.log(error)
+      }
+    },
+    // 获取微信号列表
+    async getWeixinByTeacherId(teacherId) {
+      if (teacherId === undefined || teacherId === null) {
+        return
+      }
+      try {
+        const res = await this.$http.WorkerHandover.getWeixinByTeacherId(
+          teacherId
+        )
+        if (res.code === 0) {
+          this.wecharNumList = res.payload
         }
       } catch (error) {
         console.log(error)
