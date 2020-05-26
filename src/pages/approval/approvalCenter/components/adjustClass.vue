@@ -155,7 +155,8 @@ export default {
       // 方法集
       functionsList: {
         dateStartClassDate: 'getCurrentClassDate',
-        dateAdjustClassDate: 'getAdjustStartClassDateList',
+        dateAdjustClassDateSecond: 'getAdjustStartClassDateList',
+        dateAdjustClassDateFrist: 'getDonePeriodicClass',
         dateChooseClass: 'getChooseClassList',
         levelDonePeriodicClass: 'getDonePeriodicClass',
         classCurrentClass: 'getDonePeriodicClass',
@@ -404,10 +405,10 @@ export default {
     getSearchPhoneData(data) {
       // console.log('data')
       this.formData.userId = data.userId
+      this.formData.userId && this.renderOrderList()
     },
     // 下拉手机号的校验
     validatePhone(rule, value, callback) {
-      const that = this
       var phoneNum = this.$refs.searchPhone[0].input
       if (!phoneNum) {
         this.formData.userId = ''
@@ -422,7 +423,6 @@ export default {
       const validateInterval = setInterval(() => {
         if (this.formData.userId) {
           callback()
-          that.renderOrderList()
           clearInterval(validateInterval)
         } else {
           callback(new Error('请选择手机号'))
@@ -495,7 +495,6 @@ export default {
                   tempSup: orderItem.sup
                 }
               })
-              // TODO 有多个订单的话是有问题的，取的是最后一项的stage和sup
               item.stage.push(orderItem.stage)
               item.sup.push(orderItem.sup)
               // 有系统课订单则置为true
@@ -532,13 +531,13 @@ export default {
         // 调期-开课日期
         this.commonSelectHandleFunction(
           'dateStartClassDate',
-          { stage: data.stage[event.index] },
+          { orderNo: event.orderId },
           '当前开课日期'
         )
         // 调期-调整日期
         this.commonSelectHandleFunction(
-          'dateAdjustClassDate',
-          { stage: data.stage[event.index] },
+          'dateAdjustClassDateFrist',
+          { orderNo: event.orderId },
           '调整开课日期'
         )
         // 修改调期-选择班级的默认提示
@@ -608,9 +607,7 @@ export default {
           // 这儿返回的payload有时候是数组有时候是对象
           if (res.payload) {
             // 这儿返回的payload有时候是数组有时候是对象
-            if (res.payload instanceof Object) {
-              return res.payload
-            } else if (res.payload instanceof Array) {
+            if (typeof res.payload === 'object') {
               return res.payload
             } else {
               this.$message({
@@ -653,8 +650,11 @@ export default {
         case 'dateStartClassDate':
           this.handleStartDate(resData)
           break
-        case 'dateAdjustClassDate':
+        case 'dateAdjustClassDateFrist':
           this.handleAdjustDate(resData)
+          break
+        case 'dateAdjustClassDateSecond':
+          this.handleAdjustDateSecond(resData)
           break
         case 'dateChooseClass':
         case 'classChooseClass':
@@ -675,7 +675,7 @@ export default {
         case 'dateStartClassDate':
           this.showLoadingFun('currentStartClassDate')
           break
-        case 'dateAdjustClassDate':
+        case 'dateAdjustClassDateFrist':
           this.showLoadingFun('targetStage')
           break
         case 'dateChooseClass':
@@ -694,7 +694,7 @@ export default {
         case 'dateStartClassDate':
           this.hideLoadingFun('currentStartClassDate')
           break
-        case 'dateAdjustClassDate':
+        case 'dateAdjustClassDateSecond':
           this.hideLoadingFun('targetStage')
           break
         case 'dateChooseClass':
@@ -736,7 +736,7 @@ export default {
     handleStartDate(resData) {
       // console.log(resData)
       // 当前开课日期大于当前系统时间才可提交
-      var courseDay = resData[0].courseDay - 0
+      var courseDay = resData.courseDay - 0
       if (courseDay < new Date().getTime()) {
         this.$message.error('用户订单不符合调期条件')
         this.adjustDateError = true
@@ -747,6 +747,17 @@ export default {
     },
     // 调整开课日期
     handleAdjustDate(resData) {
+      // console.log(resData)
+      this.formData.orderId.tempSup = resData.currentSuper
+      // 后期修改调整开课日期分两个接口，接下来走第二个
+      this.commonSelectHandleFunction(
+        'dateAdjustClassDateSecond',
+        { stage: resData.term },
+        '调整开课日期'
+      )
+    },
+    handleAdjustDateSecond(resData) {
+      // console.log(resData)
       // 先清空
       this.formData.targetStage = ''
       this.showData.content.forEach((item) => {
@@ -796,6 +807,8 @@ export default {
     },
     // 已上课周期
     handleDoneClass(resData) {
+      // 记录后面选择班级需要的stage
+      this.formData.orderId.tempSatge = resData.term
       this.formData.currentPeriod = `${resData.currentSuper}${resData.currentLevel}${resData.currentUnit}`
       // 记录当前级别
       this.currentLevel = resData.currentSuper
@@ -840,7 +853,7 @@ export default {
       // 调班-调整班级列表,需要先获取到currentClassId
       this.commonSelectHandleFunction(
         'classChooseClass',
-        { stage: data.stage[event.index], sup: data.sup[event.index] },
+        { stage: resData.term, sup: data.sup[event.index] },
         '选择班级列表'
       )
     },

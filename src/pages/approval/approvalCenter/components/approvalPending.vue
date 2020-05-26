@@ -446,7 +446,7 @@ export default {
       this.staffId = JSON.parse(teacher).id
       this.staffName = JSON.parse(teacher).realName
     }
-    this.staffName = getStaffInfo().staffName
+    // this.staffName = getStaffInfo().staffName
     this.resetParams = {
       staffId: this.staffId,
       staffName: this.staffName
