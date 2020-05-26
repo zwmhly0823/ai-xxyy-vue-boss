@@ -4,10 +4,10 @@
  * @Author: panjian
  * @Date: 2020-04-25 12:09:03
  * @LastEditors: panjian
- * @LastEditTime: 2020-05-23 16:50:10
+ * @LastEditTime: 2020-05-25 17:26:23
  -->
 <template>
-  <div class="channel-box">
+  <div id="channel-box" class="channel-box">
     <div class="channel-box-top">
       <div class="channel-box-top-search">
         <channel-search
@@ -84,6 +84,72 @@
         </el-col>
       </el-row>
     </div>
+    <div class="channel-fixed" v-show="tableShow">
+      <el-row class="channel-fixed-row">
+        <el-col :span="2"><div>渠道分类</div></el-col>
+        <el-col :span="2" style="margin-left:10px;"><div>渠道名称</div></el-col>
+        <el-col :span="1" style="margin-left:20px;"><div>渠道ID</div></el-col>
+        <el-col :span="2" style="margin-left:40px;"
+          ><div>体验课成单数</div></el-col
+        >
+        <el-col :span="2" style="margin-left:-20px;"
+          ><div>体验课未支付</div></el-col
+        >
+        <el-col :span="1" style="margin-left:-25px;"
+          ><div>添加微信数</div></el-col
+        >
+        <el-col :span="2" style="margin-left:35px;"
+          ><div>
+            <span>参课数/参课率</span>
+            <el-tooltip placement="top">
+              <div slot="content">
+                参课数：此渠道下所有购买体验课的学员且参课的学员<br />参课率：参课数
+                / 已购体验课数
+              </div>
+              <span class="bottom-tips">?</span>
+            </el-tooltip>
+          </div></el-col
+        >
+        <el-col :span="2" style="margin-left:10px;"
+          ><div>
+            <span>完课数/完课率</span>
+            <el-tooltip placement="top">
+              <div slot="content">
+                完课数：此渠道下已购体验课且完成一次体验课即为完课<br />完课率：完课数
+                / 已购体验课学员数
+              </div>
+              <span class="bottom-tips">?</span>
+            </el-tooltip>
+          </div></el-col
+        >
+        <el-col :span="2"
+          ><div>
+            <span>成单数/转化率</span>
+            <el-tooltip placement="top">
+              <div slot="content">
+                成单数：已购体验课且转化系统课数量<br />转化率：当前系统课成单数
+                / 当前体验课成单数
+              </div>
+              <span class="bottom-tips">?</span>
+            </el-tooltip>
+          </div></el-col
+        >
+        <el-col :span="2" style="margin-left:10px;"
+          ><div>
+            <span>成单金额</span>
+            <el-tooltip placement="top">
+              <div slot="content">
+                成单金额： 当前渠道购买系统课的订单总金额
+              </div>
+              <span class="bottom-tips">?</span>
+            </el-tooltip>
+          </div></el-col
+        >
+        <el-col :span="2" style="margin-left:-30px;"
+          ><div>创建时间</div></el-col
+        >
+      </el-row>
+    </div>
     <div class="channel-box-bottom">
       <template>
         <el-table
@@ -91,24 +157,6 @@
           :data="tableData"
           style="width: 100%;"
         >
-          <!-- 二维码下载 渠道推广 -->
-          <!-- <el-table-column width="20px">
-            <template slot-scope="scope">
-              <el-Popover popper-class="batch-btn" trigger="hover">
-                <div size="mini" type="text" @click="onExtension">
-                  <span style="cursor:pointer;color:#409eff;"
-                    >渠道推广统计</span
-                  >
-                </div>
-                <div
-                  @mouseenter="handleEdit(scope.$index, scope.row)"
-                  slot="reference"
-                >
-                  <img src="@/assets/images/point.png" />
-                </div>
-              </el-Popover>
-            </template>
-          </el-table-column> -->
           <el-table-column label="渠道分类" width="200" align="center">
             <template slot-scope="scope">
               <span>{{ scope.row.channelParentName }}</span>
@@ -216,13 +264,6 @@
             </template>
           </el-table-column>
         </el-table>
-        <!-- <m-pagination
-          @current-change="handleCurrentChange"
-          :current-page="totalNumber"
-          :total="totalElements"
-          open="calc(100vw - 95px - 100px)"
-          close="calc(100vw - 23px - 50px)"
-        /> -->
       </template>
     </div>
     <el-drawer
@@ -272,6 +313,7 @@ export default {
   },
   data() {
     return {
+      tableShow: false,
       link: 'https://www.baidu.com',
       showClose: true,
       drawer: false,
@@ -335,7 +377,23 @@ export default {
   created() {
     this.getChannelDetailPage()
   },
+  mounted() {
+    window.addEventListener('scroll', this.handleScroll, true)
+  },
   methods: {
+    handleScroll() {
+      // const jump = document.getElementById('el_table').scrollHeight
+      // console.log(jump.offsetTop)
+
+      // this.$nextTick(() => {
+      //   const dom =
+      //     document.documentElement.scrollTop || document.body.scrollTop
+      //   console.log(dom)
+      // })
+      const dom = document.getElementById('channel-box').scrollTop
+      console.log(dom)
+      dom > 289 ? (this.tableShow = true) : (this.tableShow = false)
+    },
     // 渠道一级
     channelSearchValue(data) {
       this.channelSearchValList = data
@@ -608,13 +666,39 @@ export default {
       border-radius: 4px;
     }
   }
+  .channel-fixed {
+    position: fixed;
+    z-index: 9090;
+    height: 45px;
+    width: 100%;
+    background: #fff;
+    line-height: 45px;
+    border-bottom: 1px solid #f0f1f2;
+    .channel-fixed-row {
+      margin-left: 85px;
+      font-size: 12px;
+      color: #666;
+      font-weight: normal;
+      .bottom-tips {
+        color: #fff;
+        margin-left: 5px;
+        background: #9c9c9c;
+        display: inline-block;
+        width: 15px;
+        font-weight: 900;
+        height: 15px;
+        border-radius: 50px;
+        line-height: 15px;
+        padding-left: 4px;
+      }
+    }
+  }
   .channel-box-bottom {
     display: flex;
     flex: 1;
     background: #fff;
     margin-left: 10px;
     margin-right: 10px;
-    margin-bottom: 30px;
     .bottom-tips {
       color: #fff;
       margin-left: 5px;
