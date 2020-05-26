@@ -843,7 +843,7 @@ export default {
         isConfirm = true
       }
       const params = {
-        approvalRemark: this.adjustDrawerData.checkSuggestion,
+        approvalRemark: this.adjustDrawerData.checkSuggestion.trim(),
         flowApprovalId: this.adjustDrawerData.flowApprovalId - 0,
         isConfirm: isConfirm,
         staffId: this.staffId,
