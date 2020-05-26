@@ -877,10 +877,6 @@ export default {
           // console.log(subData)
           this.handleSubmitNext(subData)
         } else {
-          // this.$message({
-          //   message: '数据类型检测未通过',
-          //   type: 'warning'
-          // })
           return false
         }
       })
@@ -888,9 +884,7 @@ export default {
     // 提交前的data处理
     prepareData(formName) {
       // userinfo的取值照搬补发货的
-      const userinfo =
-        JSON.parse(localStorage.getItem('teacher')) ||
-        JSON.parse(localStorage.getItem('staff'))
+      const userinfo = JSON.parse(localStorage.getItem('staff'))
       // 补全缺少的值
       this.submitData = Object.assign({}, this.formData, {
         applyDepartment: userinfo.department, // 申请人部门
