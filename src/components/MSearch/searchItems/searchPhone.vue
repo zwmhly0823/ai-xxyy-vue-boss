@@ -3,13 +3,8 @@
  * @version:
  * @Author: zhubaodong
  * @Date: 2020-03-26 16:28:45
-<<<<<<< HEAD
- * @LastEditors: liukun
- * @LastEditTime: 2020-05-18 17:31:02
-=======
  * @LastEditors: YangJiyong
  * @LastEditTime: 2020-05-23 18:41:27
->>>>>>> feature/new_approval
  -->
 <template>
   <div class="search-item small">
@@ -100,7 +95,6 @@ export default {
     input(val, old) {
       // 相当于emit出去一个change
       this.$emit('inputChange')
-      console.log(val !== old && !val)
       if (val !== old && !val) {
         this.$emit('result', '')
       }
