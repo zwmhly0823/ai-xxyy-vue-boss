@@ -3,8 +3,8 @@
  * @version: 1.0.0
  * @Author: liukun
  * @Date: 2020-05-19 17:18:39
- * @LastEditors: liukun
- * @LastEditTime: 2020-05-26 23:55:28
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-05-27 16:00:50
 -->
 <template>
   <section class="bianju10">
@@ -621,7 +621,7 @@ export default {
     },
     async comfirmRefund() {
       const { code } = await this.$http.Finance.toAgree({
-        refundUid: JSON.parse(localStorage.getItem('teacher')).id,
+        refundUid: JSON.parse(localStorage.getItem('staff')).id,
         paymentId: this.whichListOrderId
       }).catch((err) => {
         console.error(err)
