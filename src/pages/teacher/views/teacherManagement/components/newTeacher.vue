@@ -119,10 +119,10 @@
           placeholder="请选择销售等级"
         >
           <el-option
-            v-for="(item, key) in Level"
-            :key="key"
-            :label="item"
-            :value="item"
+            v-for="item in Level"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
           ></el-option>
         </el-select>
       </el-form-item>
@@ -307,7 +307,16 @@ export default {
       // 微信
       WeChat: [],
       // 销售等级
-      Level: [0, 1, 2, 3, 4],
+      Level: [
+        { label: '新兵培训', value: 0 },
+        { label: '下组待接生', value: 1 },
+        { label: '首次排班', value: 2 },
+        { label: '已接生一次', value: 3 },
+        { label: '1级', value: 4 },
+        { label: '2级', value: 5 },
+        { label: '3级', value: 6 },
+        { label: '4级', value: 7 }
+      ],
       // 表单value
       ruleForm: {
         // 手机号
