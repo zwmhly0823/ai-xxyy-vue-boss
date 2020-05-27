@@ -16,7 +16,6 @@
         :key="key"
         :label="item.labelText"
         :prop="item.model"
-        :required="item.required"
       >
         <!-- 带有下拉搜索的输入框 -->
         <template v-if="item.type === 'input' && item.autocomplete">
@@ -90,6 +89,7 @@
 
 <script>
 import SearchPhone from '@/components/MSearch/searchItems/searchPhone'
+import _ from 'lodash'
 export default {
   name: 'AdjustClass',
   components: {
@@ -132,9 +132,7 @@ export default {
         targetClassName: [
           { required: true, message: '请选择班级', trigger: 'change' }
         ],
-        adjustReason: [
-          { required: true, message: '请输入调期理由', trigger: 'change' }
-        ]
+        adjustReason: [{ required: true, message: '', trigger: 'change' }]
       },
       // 公共的formData部分
       formData: {
@@ -157,26 +155,32 @@ export default {
       // 方法集
       functionsList: {
         dateStartClassDate: 'getCurrentClassDate',
-        dateAdjustClassDate: 'getAdjustStartClassDateList',
+        dateAdjustClassDateSecond: 'getAdjustStartClassDateList',
+        dateAdjustClassDateFrist: 'getDonePeriodicClass',
         dateChooseClass: 'getChooseClassList',
         levelDonePeriodicClass: 'getDonePeriodicClass',
         classCurrentClass: 'getDonePeriodicClass',
         classChooseClass: 'getChooseClassList'
       },
-      adjustLoading: false
+      adjustLoading: false,
+      // 调期的模版数据
+      adjustDateDefault: {},
+      // 调级的模版数据
+      adjustLevelDefault: {},
+      // 调班的模版数据
+      adjustClassDefault: {}
     }
   },
   created() {
     // 调期的模版数据
-    const adjustDateDefault = {
+    this.adjustDateDefault = {
       title: '新建调期申请',
       content: [
         {
           labelText: '选择用户:',
           type: 'input',
           autocomplete: true,
-          model: 'userId',
-          required: true
+          model: 'userId'
         },
         {
           labelText: '关联订单:',
@@ -236,7 +240,7 @@ export default {
       ]
     }
     // 调级的模版数据
-    const adjustLevelDefault = {
+    this.adjustLevelDefault = {
       title: '新建调级申请',
       content: [
         {
@@ -244,8 +248,7 @@ export default {
           type: 'input',
           autocomplete: true,
           placeholder: '手机号搜索',
-          model: 'userId',
-          required: true
+          model: 'userId'
         },
         {
           labelText: '关联订单:',
@@ -305,7 +308,7 @@ export default {
       ]
     }
     // 调班的模版数据
-    const adjustClassDefault = {
+    this.adjustClassDefault = {
       title: '新建调班申请',
       content: [
         {
@@ -313,8 +316,7 @@ export default {
           type: 'input',
           autocomplete: true,
           placeholder: '手机号搜索',
-          model: 'userId',
-          required: true
+          model: 'userId'
         },
         {
           labelText: '关联订单:',
@@ -364,27 +366,33 @@ export default {
       // 调期
       case 1:
         // 显示的数据
-        this.showData = Object.assign({}, adjustDateDefault)
+        this.showData = _.cloneDeep(this.adjustDateDefault)
         // form的数据
         this.formData = Object.assign({}, this.formData, {
           currentStartClassDate: '', // 当前开课日期
           targetStage: '' // 调整开课日期
         })
+        // rule
+        this.formRules.adjustReason[0].message = '请输入调期理由'
         break
       // 调级
       case 2:
-        this.showData = Object.assign({}, adjustLevelDefault)
+        this.showData = _.cloneDeep(this.adjustLevelDefault)
         this.formData = Object.assign({}, this.formData, {
           currentPeriod: '',
           targetSup: ''
         })
+        // rule
+        this.formRules.adjustReason[0].message = '请输入调级理由'
         break
       // 调课
       case 3:
-        this.showData = Object.assign({}, adjustClassDefault)
+        this.showData = _.cloneDeep(this.adjustClassDefault)
         this.formData = Object.assign({}, this.formData, {
           currentClassName: ''
         })
+        // rule
+        this.formRules.adjustReason[0].message = '请输入调班理由'
         break
     }
   },
@@ -397,18 +405,29 @@ export default {
     getSearchPhoneData(data) {
       // console.log('data')
       this.formData.userId = data.userId
+      this.formData.userId && this.renderOrderList()
     },
     // 下拉手机号的校验
     validatePhone(rule, value, callback) {
       var phoneNum = this.$refs.searchPhone[0].input
       if (!phoneNum) {
+        this.formData.userId = ''
         return callback(new Error('手机号不能为空'))
       }
       if (!/^1[3456789]\d{9}$/.test(phoneNum)) {
+        this.formData.userId = ''
         return callback(new Error('请输入正确的手机号'))
       }
-      callback()
-      this.renderOrderList()
+      // 手机号输入正确后需要获取到userId，获取userId的是个异步方法getSearchPhoneData(data)，需要从公共组件传值，没法儿用promise，
+      // 一时没想到啥好办法- -
+      const validateInterval = setInterval(() => {
+        if (this.formData.userId) {
+          callback()
+          clearInterval(validateInterval)
+        } else {
+          callback(new Error('请选择手机号'))
+        }
+      }, 200)
     },
     // 获取订单列表数据
     getOrderList() {
@@ -471,10 +490,11 @@ export default {
                 value: {
                   orderId: orderItem.id,
                   outTradeNo: orderItem.outTradeNo,
-                  index: index++
+                  index: index++,
+                  tempSatge: orderItem.stage,
+                  tempSup: orderItem.sup
                 }
               })
-              // TODO 有多个订单的话是有问题的，取的是最后一项的stage和sup
               item.stage.push(orderItem.stage)
               item.sup.push(orderItem.sup)
               // 有系统课订单则置为true
@@ -497,7 +517,11 @@ export default {
       })
     },
     // select change
+    // 处理所有需要选择后再走的逻辑
     selectChange(event, data) {
+      // 选择班级这儿逻辑稍微复杂一些，调班时用户选完订单后即可渲染班级列表，调级时选完订单后还得选申请调级级别，同理调期时还得选了调整开课日期
+      this.handleStageAndSupChooseClass(event, data)
+
       // 如果当前选择的是关联订单，那么就要根据订单获取后续数据
       if (data.model !== 'orderId') {
         return
@@ -507,21 +531,21 @@ export default {
         // 调期-开课日期
         this.commonSelectHandleFunction(
           'dateStartClassDate',
-          { stage: data.stage[event.index] },
+          { orderNo: event.orderId },
           '当前开课日期'
         )
         // 调期-调整日期
         this.commonSelectHandleFunction(
-          'dateAdjustClassDate',
-          { stage: data.stage[event.index] },
+          'dateAdjustClassDateFrist',
+          { orderNo: event.orderId },
           '调整开课日期'
         )
-        // 调期-选择班级
-        this.commonSelectHandleFunction(
-          'dateChooseClass',
-          { stage: data.stage[event.index], sup: data.sup[event.index] },
-          '选择班级列表'
-        )
+        // 修改调期-选择班级的默认提示
+        this.showData.content.forEach((item) => {
+          if (item.model === 'targetClassName') {
+            item.options[0].label = '请先选择调整开课日期'
+          }
+        })
       }
       // 调级
       if (this.adjustType === 2) {
@@ -531,12 +555,12 @@ export default {
           { orderNo: event.orderId },
           '已上课周期'
         )
-        // 调级-选择班级-和调期一样
-        this.commonSelectHandleFunction(
-          'dateChooseClass',
-          { stage: data.stage[event.index], sup: data.sup[event.index] },
-          '选择班级列表'
-        )
+        // 修改调级-选择班级的默认提示
+        this.showData.content.forEach((item) => {
+          if (item.model === 'targetClassName') {
+            item.options[0].label = '请先选择申请调级级别'
+          }
+        })
       }
       // 调班
       if (this.adjustType === 3) {
@@ -550,6 +574,30 @@ export default {
         )
       }
     },
+    handleStageAndSupChooseClass(event, data) {
+      // 调期
+      if (this.adjustType === 1 && data.model === 'targetStage') {
+        this.commonSelectHandleFunction(
+          'dateChooseClass',
+          {
+            stage: this.formData.targetStage.targetTerm,
+            sup: this.formData.orderId.tempSup
+          },
+          '选择班级列表'
+        )
+      }
+      // 调级
+      if (this.adjustType === 2 && data.model === 'targetSup') {
+        this.commonSelectHandleFunction(
+          'dateChooseClass',
+          {
+            stage: this.formData.orderId.tempSatge,
+            sup: this.formData.targetSup
+          },
+          '选择班级列表'
+        )
+      }
+    },
     // 公共方法的具体请求方法
     commonGetDateFunction(name, query, msg) {
       // 获取请求的方法名
@@ -559,9 +607,7 @@ export default {
           // 这儿返回的payload有时候是数组有时候是对象
           if (res.payload) {
             // 这儿返回的payload有时候是数组有时候是对象
-            if (res.payload instanceof Object) {
-              return res.payload
-            } else if (res.payload instanceof Array) {
+            if (typeof res.payload === 'object') {
               return res.payload
             } else {
               this.$message({
@@ -604,8 +650,11 @@ export default {
         case 'dateStartClassDate':
           this.handleStartDate(resData)
           break
-        case 'dateAdjustClassDate':
+        case 'dateAdjustClassDateFrist':
           this.handleAdjustDate(resData)
+          break
+        case 'dateAdjustClassDateSecond':
+          this.handleAdjustDateSecond(resData)
           break
         case 'dateChooseClass':
         case 'classChooseClass':
@@ -626,7 +675,7 @@ export default {
         case 'dateStartClassDate':
           this.showLoadingFun('currentStartClassDate')
           break
-        case 'dateAdjustClassDate':
+        case 'dateAdjustClassDateFrist':
           this.showLoadingFun('targetStage')
           break
         case 'dateChooseClass':
@@ -645,7 +694,7 @@ export default {
         case 'dateStartClassDate':
           this.hideLoadingFun('currentStartClassDate')
           break
-        case 'dateAdjustClassDate':
+        case 'dateAdjustClassDateSecond':
           this.hideLoadingFun('targetStage')
           break
         case 'dateChooseClass':
@@ -687,7 +736,7 @@ export default {
     handleStartDate(resData) {
       // console.log(resData)
       // 当前开课日期大于当前系统时间才可提交
-      var courseDay = resData[0].courseDay - 0
+      var courseDay = resData.courseDay - 0
       if (courseDay < new Date().getTime()) {
         this.$message.error('用户订单不符合调期条件')
         this.adjustDateError = true
@@ -698,6 +747,17 @@ export default {
     },
     // 调整开课日期
     handleAdjustDate(resData) {
+      // console.log(resData)
+      this.formData.orderId.tempSup = resData.currentSuper
+      // 后期修改调整开课日期分两个接口，接下来走第二个
+      this.commonSelectHandleFunction(
+        'dateAdjustClassDateSecond',
+        { stage: resData.term },
+        '调整开课日期'
+      )
+    },
+    handleAdjustDateSecond(resData) {
+      // console.log(resData)
       // 先清空
       this.formData.targetStage = ''
       this.showData.content.forEach((item) => {
@@ -728,7 +788,7 @@ export default {
               item.options.push({
                 label: `${chooseItem.teamName}-${chooseItem.teacherRealName}`,
                 value: {
-                  targetClassName: chooseItem.teamName,
+                  targetClassName: `${chooseItem.teamName}-${chooseItem.teacherRealName}`,
                   targetClassId: chooseItem.id,
                   index: chooseKey
                 }
@@ -747,6 +807,8 @@ export default {
     },
     // 已上课周期
     handleDoneClass(resData) {
+      // 记录后面选择班级需要的stage
+      this.formData.orderId.tempSatge = resData.term
       this.formData.currentPeriod = `${resData.currentSuper}${resData.currentLevel}${resData.currentUnit}`
       // 记录当前级别
       this.currentLevel = resData.currentSuper
@@ -791,7 +853,7 @@ export default {
       // 调班-调整班级列表,需要先获取到currentClassId
       this.commonSelectHandleFunction(
         'classChooseClass',
-        { stage: data.stage[event.index], sup: data.sup[event.index] },
+        { stage: resData.term, sup: data.sup[event.index] },
         '选择班级列表'
       )
     },
@@ -803,16 +865,18 @@ export default {
       }
       this.$refs[formName].validate((valid) => {
         if (valid) {
+          if (!this.formData.adjustReason.trim()) {
+            this.$message.error('申请理由不能为只输入空格～')
+            return
+          }
           const subData = this.prepareData(formName)
-          // index是我自己加的，传给后端之前删掉
+          // 是我自己加的，传给后端之前删掉
           delete subData.index
+          delete subData.tempSatge
+          delete subData.tempSup
           // console.log(subData)
           this.handleSubmitNext(subData)
         } else {
-          this.$message({
-            message: '数据类型检测未通过',
-            type: 'warning'
-          })
           return false
         }
       })
@@ -820,14 +884,13 @@ export default {
     // 提交前的data处理
     prepareData(formName) {
       // userinfo的取值照搬补发货的
-      const userinfo =
-        JSON.parse(localStorage.getItem('teacher')) ||
-        JSON.parse(localStorage.getItem('staff'))
+      const userinfo = JSON.parse(localStorage.getItem('staff'))
       // 补全缺少的值
       this.submitData = Object.assign({}, this.formData, {
         applyDepartment: userinfo.department, // 申请人部门
         applyId: userinfo.id, // 申请人id
         applyName: userinfo.realName || userinfo.name, // 申请人姓名
+        adjustReason: this.formData.adjustReason.trim(),
         flowType:
           this.adjustType === 1
             ? 'ADJUSTMENT_STAGE'
@@ -903,6 +966,23 @@ export default {
       this.$refs.searchPhone[0].input = ''
       // 隐藏提示
       this.showSupplementaryInstruction = false
+      // 清空所有下拉项
+      this.showData = {}
+      switch (this.adjustType) {
+        // 调期
+        case 1:
+          // 显示的数据
+          this.showData = _.cloneDeep(this.adjustDateDefault)
+          break
+        // 调级
+        case 2:
+          this.showData = _.cloneDeep(this.adjustLevelDefault)
+          break
+        // 调课
+        case 3:
+          this.showData = _.cloneDeep(this.adjustClassDefault)
+          break
+      }
     }
   }
 }

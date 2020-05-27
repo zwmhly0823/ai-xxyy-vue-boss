@@ -44,7 +44,7 @@
             <span class="item-text">补发货审批</span>
           </div>
         </div>
-        <!-- <div class="adjust-box-row">
+        <div class="adjust-box-row">
           <p class="adjust-title">教务</p>
           <div class="adjust-item" @click="jumpAdjustPage(1)">
             <i class="el-icon-s-claim color-3"></i>
@@ -58,7 +58,7 @@
             <i class="el-icon-s-claim color-3"></i>
             <span class="item-text">调班申请</span>
           </div>
-        </div> -->
+        </div>
       </div>
     </div>
   </div>

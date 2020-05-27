@@ -75,6 +75,18 @@
           <div>{{ scope.row.repiarContent }}</div>
           <div>{{ scope.row.receptContent }}</div>
           <div>{{ scope.row.reason }}</div>
+          <div
+            v-if="
+              scope.row.type === 'ADJUSTMENT_STAGE' ||
+                scope.row.type === 'ADJUSTMENT_SUP'
+            "
+          >
+            {{
+              scope.row.abstractContent.substring(
+                scope.row.abstractContent.lastIndexOf('^') + 1
+              )
+            }}
+          </div>
         </template>
       </el-table-column>
       <el-table-column label="发起时间" width="180">
@@ -311,6 +323,7 @@
     <adjust-drawer
       ref="adjustDrawerCom"
       :adjustDrawerData="adjustDrawerData"
+      :isStaffId="isStaffId"
       @result="adjustDrawerPass"
     ></adjust-drawer>
     <el-dialog
@@ -829,13 +842,19 @@ export default {
         isConfirm = true
       }
       const params = {
-        approvalRemark: this.adjustDrawerData.checkSuggestion,
-        flowApprovalId: this.adjustDrawerData.flowApprovalId,
+        approvalRemark: this.adjustDrawerData.checkSuggestion.trim(),
+        flowApprovalId: this.adjustDrawerData.flowApprovalId - 0,
         isConfirm: isConfirm,
         staffId: this.staffId,
         staffName: this.staffName
       }
-      this.$http.Backend.isAggrePass(params)
+      // 特殊字符
+      const reg = new RegExp('[&%#$*^<>]')
+      if (reg.test(params.approvalRemark)) {
+        this.$message('不能包含特殊字符&%#$*^<>哦')
+        return
+      }
+      this.$http.Approval.isAggrePass(params)
         .then((res) => {
           // console.log(res)
           this.adjustResultDialogShow = false

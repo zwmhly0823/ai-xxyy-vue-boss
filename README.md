@@ -4,7 +4,7 @@
 
 ### [TOSS测试环境](https://test.meixiu.mobi/ai-app-vue-toss-test/login/#/)
 帐号（验证码登录）：
-18910930251 / 961211(验证码)
+15591611037 / 961211(验证码)
 
 ### [TOSS正式环境](https://toss.xiaoxiongmeishu.com/login/#/)
 

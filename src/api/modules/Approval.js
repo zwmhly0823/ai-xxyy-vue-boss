@@ -4,7 +4,7 @@ export default {
   // 通过订单查当前开课日期
   getCurrentClassDate(query) {
     return axios.get(
-      `/api/s/v1/management/getManagementsByPeriods?periods=${query.stage}&type=SYSTEMCOURSE`
+      `/api/ts/v1/teaching/findSystemCourseManagementByOrderNo?orderNo=${query.orderNo}`
     )
   },
   // 调期获取调整开课日期列表
@@ -33,6 +33,11 @@ export default {
   getAdjustDetail(flowApprovalId) {
     return axios.get(
       `/api/b/v1/backend/adjustment/flow/info?flowApprovalId=${flowApprovalId}`
+    )
+  },
+  isAggrePass(params) {
+    return axios.post(
+      `/api/b/v1/backend/completed/reissue/flow?flowApprovalId=${params.flowApprovalId}&staffName=${params.staffName}&staffId=${params.staffId}&isConfirm=${params.isConfirm}&approvalRemark=${params.approvalRemark}`
     )
   }
 }
