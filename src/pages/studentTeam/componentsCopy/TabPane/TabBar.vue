@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-19 20:50:40
  * @LastEditors: Shentong
- * @LastEditTime: 2020-05-22 13:49:54
+ * @LastEditTime: 2020-05-18 17:52:16
  -->
 <template>
   <div>
@@ -79,6 +79,7 @@ export default {
   },
   watch: {},
   created() {
+    console.log(this.classObj, 'this.classObj')
     window.addEventListener('scroll', this.handleScroll, true)
   },
   methods: {
@@ -86,6 +87,7 @@ export default {
       document
         .getElementById('right-scroll')
         .querySelector('.scrollbar-wrapper').scrollTop = 0
+      console.log(tab, event)
     },
     handleScroll() {
       const dom = document

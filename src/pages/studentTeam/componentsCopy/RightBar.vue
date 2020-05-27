@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-13 16:53:41
  * @LastEditors: Shentong
- * @LastEditTime: 2020-05-27 21:40:30
+ * @LastEditTime: 2020-05-22 13:06:18
  -->
 <template>
   <div class="right-container">
@@ -64,19 +64,7 @@
             +classObj.teamId === 999 ||
               +classObj.teamId === 1030 ||
               +classObj.teamId === 1029 ||
-              +classObj.teamId === 994 ||
-              +classObj.teamId === 1185 ||
-              +classObj.teamId === 1186 ||
-              +classObj.teamId === 1187 ||
-              +classObj.teamId === 1188 ||
-              +classObj.teamId === 1189 ||
-              +classObj.teamId === 1190 ||
-              +classObj.teamId === 1191 ||
-              +classObj.teamId === 1192 ||
-              +classObj.teamId === 1193 ||
-              +classObj.teamId === 1195 ||
-              +classObj.teamId === 1196 ||
-              +classObj.teamId === 1197
+              +classObj.teamId === 994
           "
         >
           <el-tooltip
@@ -303,7 +291,7 @@ export default {
     this.$http.StudentTerm.getStudentTeamById({
       teamId: this.classObj.teamId || ''
     }).then((res) => {
-      res && res.payload && (this.switchState = res.payload.switchState)
+      this.switchState = res.payload.switchState
     })
     const teacherId = isToss()
     if (teacherId) {
@@ -324,19 +312,7 @@ export default {
         +this.classObj.teamId !== 999 &&
         +this.classObj.teamId !== 1030 &&
         +this.classObj.teamId !== 1029 &&
-        +this.classObj.teamId !== 994 &&
-        +this.classObj.teamId !== 1185 &&
-        +this.classObj.teamId !== 1186 &&
-        +this.classObj.teamId !== 1187 &&
-        +this.classObj.teamId !== 1188 &&
-        +this.classObj.teamId !== 1189 &&
-        +this.classObj.teamId !== 1190 &&
-        +this.classObj.teamId !== 1191 &&
-        +this.classObj.teamId !== 1192 &&
-        +this.classObj.teamId !== 1193 &&
-        +this.classObj.teamId !== 1195 &&
-        +this.classObj.teamId !== 1196 &&
-        +this.classObj.teamId !== 1197
+        +this.classObj.teamId !== 994
       ) {
         return
       }
@@ -350,7 +326,7 @@ export default {
             this.$http.StudentTerm.getStudentTeamById({
               teamId: this.classObj.teamId || ''
             }).then((res) => {
-              res && res.payload && (this.switchState = res.payload.switchState)
+              this.switchState = res.payload.switchState
             })
             this.$message({
               message: '已开启自动加好友功能',
@@ -370,19 +346,7 @@ export default {
         +this.classObj.teamId !== 999 &&
         +this.classObj.teamId !== 1030 &&
         +this.classObj.teamId !== 1029 &&
-        +this.classObj.teamId !== 994 &&
-        +this.classObj.teamId !== 1185 &&
-        +this.classObj.teamId !== 1186 &&
-        +this.classObj.teamId !== 1187 &&
-        +this.classObj.teamId !== 1188 &&
-        +this.classObj.teamId !== 1189 &&
-        +this.classObj.teamId !== 1190 &&
-        +this.classObj.teamId !== 1191 &&
-        +this.classObj.teamId !== 1192 &&
-        +this.classObj.teamId !== 1193 &&
-        +this.classObj.teamId !== 1195 &&
-        +this.classObj.teamId !== 1196 &&
-        +this.classObj.teamId !== 1197
+        +this.classObj.teamId !== 994
       ) {
         return
       }
@@ -449,8 +413,6 @@ export default {
         if (this.classObj.teamId) {
           detail.allTrans = detail.statictis.order_all / this.teamItem.enrolled
         }
-
-        this.classMessage = detail
         /** localstorage teacher 添加 “teacher_wx” 字段 */
         // TODO:
         // if (this.classObj && this.classObj.classId) {
@@ -475,6 +437,8 @@ export default {
         //   res.data.detail.formatStartDay = this.classId.classId.formatStartDay
         //   res.data.detail.formatEndDay = this.classId.classId.formatEndDay
         // }
+
+        this.classMessage = detail
       })
     }
   }

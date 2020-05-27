@@ -3,8 +3,8 @@
  * @version:
  * @Author: panjian
  * @Date: 2020-03-16 20:22:24
- * @LastEditors: panjian
- * @LastEditTime: 2020-05-27 13:57:55
+ * @LastEditors: Shentong
+ * @LastEditTime: 2020-05-18 18:54:47
  -->
 <template>
   <div class="table-box">
@@ -73,9 +73,7 @@
               <span class="info-sex" v-else>女 ·</span> -->
               <span class="info-sex">{{ scope.row.sex }}</span>
               <span class="info-age">{{ scope.row.birthday }}</span>
-              <span class="info-basics">{{
-                scope.row.base_painting_text
-              }}</span>
+              <span class="info-basics">{{ scope.row.base_painting }}</span>
             </div>
           </template>
         </el-table-column>
@@ -228,7 +226,7 @@
               src="@/assets/images/success.png"
               alt=""
             />
-            <div>{{ scope.row.fast_follow_time }}</div>
+            <div>{{ scope.row.follow_time }}</div>
             <span style="display: none;"> {{ scope.row }}</span>
           </template>
         </el-table-column>
@@ -251,8 +249,6 @@
         :row-class-name="tableRowClassName"
         :cell-style="cellStyle"
         @row-click="onClick"
-        @cell-mouse-leave="showModifyAddressBtn = false"
-        @cell-mouse-enter="onShowModifyAddressBtn"
       >
         <el-table-column key="1" label="用户和购买时间">
           <template slot-scope="scope">
@@ -277,7 +273,7 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column key="3" label="收货人及地址" width="300">
+        <el-table-column key="3" width="280" label="收货人及地址">
           <template slot-scope="scope">
             <div>
               <span class="logistics-address-name">{{
@@ -287,23 +283,6 @@
               <div v-if="scope.row.receipt_name">
                 <span>{{ scope.row.receipt_name }}</span>
                 <span>{{ scope.row.receipt_tel }}</span>
-                <!-- showModifyAddressBtn &&
-                      scope.row.id == rowId &&
-                      (expressStatus === '待审核' || expressStatus === '无效') -->
-                <el-button
-                  v-if="
-                    showModifyAddressBtn &&
-                      scope.row.id == rowId &&
-                      (expressStatus === '待审核' || expressStatus === '无效')
-                  "
-                  style="margin-left:20px;"
-                  icon="el-icon-edit"
-                  size="mini"
-                  type="primary"
-                  plain
-                  @click="onModifyAddress"
-                  >修改地址</el-button
-                >
                 <br />
                 <span>{{ scope.row.province }}</span>
                 <span>{{ scope.row.city }}</span>
@@ -610,23 +589,11 @@
     >
       <logistics-form @addExpress="addExpress" :formData="formData" />
     </el-dialog>
-    <el-dialog
-      :destroy-on-close="true"
-      :visible.sync="showModifyAddress"
-      width="30%"
-    >
-      <modify-address
-        @modifyAddressExpress="modifyAddressExpress"
-        v-if="showModifyAddress"
-        :modifyFormData="modifyFormData"
-      />
-    </el-dialog>
   </div>
 </template>
 <script>
 import MPagination from '@/components/MPagination/index.vue'
 import logisticsForm from '../components/logisticsForm'
-import modifyAddress from '../components/modifyAddress'
 export default {
   name: 'detailsTable',
   props: {
@@ -634,9 +601,9 @@ export default {
       type: Boolean,
       default: false
     },
-    classObj: {
+    classId: {
       type: Object,
-      default: () => {}
+      default: null
     },
     tables: {
       type: Object,
@@ -649,15 +616,10 @@ export default {
   },
   components: {
     MPagination,
-    logisticsForm,
-    modifyAddress
+    logisticsForm
   },
   data() {
     return {
-      expressStatus: '',
-      rowId: '', // 判断页面那条数据显示
-      showModifyAddressBtn: false,
-      showModifyAddress: false,
       orderId: '',
       selectUserMobile: [],
       moreTitle: false,
@@ -666,7 +628,6 @@ export default {
       followShowIcon: 1,
       showExpress: false,
       formData: {},
-      modifyFormData: {},
       audioIndex: null,
       tableindex: null,
       studentId: null,
@@ -685,7 +646,7 @@ export default {
   },
   mounted() {},
   watch: {
-    classObj(value) {
+    classId(value) {
       this.audioIndex = null
     },
     audioTabs(value) {
@@ -694,18 +655,6 @@ export default {
   },
   created() {},
   methods: {
-    // 鼠标移入显示修改地址
-    onShowModifyAddressBtn(row) {
-      this.rowId = row.id
-      const id = row.id
-      const userid = row.user_id
-      const orderid = row.order_id
-      this.expressStatus = row.express_status
-      // const addressid = row.address_id
-      // this.modifyFormData = { id, userid, orderid, addressid }
-      this.modifyFormData = { id, userid, orderid, row }
-      this.showModifyAddressBtn = true
-    },
     // 加好友
     handleEdit(index, row) {
       // 当没有点击复选框 直接点击加好友
@@ -715,7 +664,9 @@ export default {
       }
     },
     // 表头加好友操作
-    headerPoint(index, scope) {},
+    headerPoint(index, scope) {
+      // console.log(index, scope)
+    },
     batchBtn() {
       const orderIds = Object.values(this.selectUserMobile).join()
       this.$http.User.sendMsgForTeacher(orderIds).then((res) => {
@@ -785,7 +736,7 @@ export default {
     onSortFollow() {
       this.renderHtml = false
       if (this.followSort === 'asc') {
-        this.$emit('onGroupSort', '{"follow":"desc"}')
+        this.$emit('onGroupSort', '{"wechat_follow_time":"desc"}')
         this.$nextTick(() => {
           this.wechatShowIcon = 1
           this.groupShowIcon = 1
@@ -794,7 +745,7 @@ export default {
         })
         this.followSort = 'desc'
       } else {
-        this.$emit('onGroupSort', '{"follow":"asc"}')
+        this.$emit('onGroupSort', '{"wechat_follow_time":"asc"}')
         this.$nextTick(() => {
           this.wechatShowIcon = 1
           this.groupShowIcon = 1
@@ -822,14 +773,6 @@ export default {
     addExpress(data) {
       this.showExpress = false
       if (data === 1) this.$emit('addExpresss', data)
-    },
-    // 修改地址按钮
-    onModifyAddress(row) {
-      this.showModifyAddress = true
-    },
-    modifyAddressExpress(data) {
-      this.showModifyAddress = false
-      if (data === 1) this.$emit('modifyAddressExpresss', data)
     },
     // 音频结束后赋值为空
     audioEnded() {

@@ -230,6 +230,7 @@ export default {
   methods: {
     // 搜索
     handleSearch(res) {
+      console.log(res, '搜所')
       if (res.length === 0) {
         this.search = ''
         this.studentsList()
@@ -299,6 +300,7 @@ export default {
         }`
         })
         .then((res) => {
+          console.log(res)
           if (!res.data.teamUserListPage) return
           this.totalPages = res.data.teamUserListPage.totalPages * 1
           this.totalElements = +res.data.teamUserListPage.totalElements
@@ -401,7 +403,9 @@ export default {
       })
     },
     // 表头优惠卷操作
-    headerPoint(index, scope) {},
+    headerPoint(index, scope) {
+      console.log(index, scope)
+    },
     // 表格优惠卷操作
     handleEdit(index, row) {
       // 当没有点击选择时点击发放优惠卷气泡
@@ -413,7 +417,6 @@ export default {
     // 点击批量发放优惠卷
     batchBtn() {
       this.$refs.couponPopover.issueCoupons = true
-      this.$refs.couponPopover.couponsTime = ''
     },
     // 点击分页
     handleSizeChange(val) {

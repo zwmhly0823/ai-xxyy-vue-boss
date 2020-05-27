@@ -3,8 +3,8 @@
  * @version:
  * @Author: zhubaodong
  * @Date: 2020-03-19 20:50:40
- * @LastEditors: Shentong
- * @LastEditTime: 2020-05-22 13:49:54
+ * @LastEditors: zhubaodong
+ * @LastEditTime: 2020-03-26 20:19:57
  -->
 <template>
   <div>
@@ -16,17 +16,13 @@
         class="box-shadow-0"
       >
         <el-tab-pane label="学员" name="students">
-          <studens-tab :classObj="classObj" />
+          <studens-tab :classId="classId" />
         </el-tab-pane>
         <el-tab-pane label="带班详情" name="details">
-          <details-tab :classObj="classObj" />
+          <details-tab :classId="classId" />
         </el-tab-pane>
-        <el-tab-pane
-          label="系统课订单"
-          name="order"
-          v-if="+classObj.type === 0"
-        >
-          <order-tab :classObj="classObj" />
+        <el-tab-pane label="系统课订单" name="order" v-if="+classId.type === 0">
+          <order-tab :classId="classId" />
         </el-tab-pane>
 
         <!-- <el-tab-pane label="微信群聊" name="groupChat">
@@ -43,11 +39,7 @@
       >
         <el-tab-pane label="学员" name="students"></el-tab-pane>
         <el-tab-pane label="带班详情" name="details"> </el-tab-pane>
-        <el-tab-pane
-          label="系统课订单"
-          name="order"
-          v-if="+classObj.type === 0"
-        >
+        <el-tab-pane label="系统课订单" name="order" v-if="+classId.type === 0">
         </el-tab-pane>
       </el-tabs>
     </div>
@@ -60,9 +52,9 @@ import OrderTab from './OrderTab'
 // import GroupchatTab from './GroupchatTab'
 export default {
   props: {
-    classObj: {
+    classId: {
       type: Object,
-      default: () => {}
+      default: null
     }
   },
   components: {
@@ -86,6 +78,7 @@ export default {
       document
         .getElementById('right-scroll')
         .querySelector('.scrollbar-wrapper').scrollTop = 0
+      console.log(tab, event)
     },
     handleScroll() {
       const dom = document
