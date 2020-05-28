@@ -460,8 +460,7 @@ export default {
     if (staff) {
       this.staffId = JSON.parse(staff).id
     }
-    const teacherId = isToss()
-    debugger
+    const teacherId = isToss() 
     if (teacherId) {
       this.teacherId = teacherId
       this.getTeacherByRole()
