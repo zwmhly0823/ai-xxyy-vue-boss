@@ -42,8 +42,8 @@ export default {
   },
   methods: {
     getLogisticsStatistics() {
-      const q = `{"teacher_id": [${this.teacherId}],"regtype":[${this.regtype}],"source_type":[${this.source_type}]}`
-      const query = JSON.stringify(this.teacherId ? q : '')
+      const q = `{"regtype":[${this.regtype}],"source_type":[${this.source_type}]}`
+      const query = JSON.stringify(q)
       this.$http.Express.getLogisticsStatistics({
         query: `{
           logisticsStatistics(query:${query}) {
