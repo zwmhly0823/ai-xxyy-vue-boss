@@ -259,11 +259,7 @@ export default {
     showExportDialog() {
       this.expressId = sessionStorage.getItem('uid') || []
       // 如果物流状态选择全部，不能导出
-      if (
-        this.expressStatus === '0,1,2,3,4,5,6,7,8' &&
-        !this.searchIn.length &&
-        !this.expressId.length
-      ) {
+      if (!this.searchIn.length && !this.expressId.length) {
         this.$message.error('不能导出全部物流，请选择状态或筛选')
         return
       }
