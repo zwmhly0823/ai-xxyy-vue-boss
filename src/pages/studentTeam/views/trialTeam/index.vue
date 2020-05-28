@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-05-14 14:11:21
  * @LastEditors: Shentong
- * @LastEditTime: 2020-05-27 22:27:40
+ * @LastEditTime: 2020-05-28 19:00:47
  -->
 <template>
   <el-row type="flex" class="app-main team-container">
@@ -328,7 +328,7 @@ import _ from 'lodash'
 import { calculateWD } from '@/utils/validate'
 import TableSearch from '../../components/tableSearch/index'
 import EleTable from '@/components/Table/EleTable'
-import { formatData, isToss } from '@/utils/index'
+import { formatData } from '@/utils/index'
 // import ScheduleTable from './components/index.vue'
 
 export default {
@@ -398,11 +398,11 @@ export default {
     }
   },
   async created() {
-    const params = {
-      teacherId: isToss() || ''
-    }
+    // const params = {
+    //   teacherId: isToss() || ''
+    // }
 
-    await this.getAllTeacherByRole(params)
+    // await this.getAllTeacherByRole(params)
     this.getTrialTeamList(this.tabQuery)
   },
   computed: {},
@@ -440,15 +440,14 @@ export default {
     // 组件emit
     searchChange(res) {
       // 判断当前社群销售的老师是否属于当前老师权限
-      const { teacherId = '' } = res
-      // console.log(`"${teacherId}"`, this.tabQuery.teacherIdArr)
-      if (teacherId && !this.tabQuery.teacherIdArr.includes(teacherId)) {
-        this.$message({
-          message: '当前社群销售不属于该老师团队',
-          type: 'warning'
-        })
-        return
-      }
+      // const { teacherId = '' } = res
+      // if (teacherId && !this.tabQuery.teacherIdArr.includes(teacherId)) {
+      //   this.$message({
+      //     message: '当前社群销售不属于该老师团队',
+      //     type: 'warning'
+      //   })
+      //   return
+      // }
 
       this.initSearchData(res, true)
       this.getTrialTeamList(this.tabQuery)
@@ -481,10 +480,10 @@ export default {
       })
       // this.getTrialTeamList(this.tabQuery)
     },
-    async getAllTeacherByRole(params) {
-      const teacherIds = await this.$http.Permission.getAllTeacherByRole(params)
-      this.tabQuery.teacherIdArr = teacherIds
-    },
+    // async getAllTeacherByRole(params) {
+    //   const teacherIds = await this.$http.Permission.getAllTeacherByRole(params)
+    //   this.tabQuery.teacherIdArr = teacherIds
+    // },
     // 条件查询列表
     async getTrialTeamList(params) {
       this.flags.loading = true
