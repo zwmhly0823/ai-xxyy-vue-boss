@@ -447,7 +447,6 @@ export default {
 <style lang="scss" scoped>
 .container {
   width: 100%;
-  // height: 100px;
   background-color: #fff;
   padding: 5px;
   .search {
@@ -460,7 +459,7 @@ export default {
     display: flex;
     justify-content: flex-end;
     align-content: center;
-    padding-right: 135px;
+    padding-right: 100px;
     & div {
       padding: 5px;
     }
