@@ -4,7 +4,7 @@
  * @Author: Lukun
  * @Date: 2020-04-28 13:50:45
  * @LastEditors: Lukun
- * @LastEditTime: 2020-05-25 20:04:46
+ * @LastEditTime: 2020-05-28 21:16:48
  -->
 <template>
   <div class="container-content">
@@ -225,6 +225,8 @@ import RepairSup from '@/components/MSearch/searchItems/repairSup'
 import Package from './package'
 import { getStaffInfo } from '../common'
 import SearchPhone from '@/components/MSearch/searchItems/searchPhone'
+import uploadFile from '@/utils/upload' // 上传公共方法
+
 export default {
   components: {
     LogisticsForm,
@@ -296,9 +298,13 @@ export default {
         level: '',
         cellPhone: '', // 附加
         name: '',
+        attsUrl: '',
+        reissueMsg: '',
         chooseProductVaidator: '', // 附加校验
         packagesType: '' // 体验课或者系统课首先默认选择
       },
+      imgShow: false, // 附件图片显示
+      videoShow: false, // 附件视频显示
       addresDialog: false,
       textarea: '',
       productDialog: false,
@@ -346,6 +352,13 @@ export default {
             message: '请选择关联补发商品原因',
             trigger: 'blur'
           }
+        ],
+        reissueMsg: [
+          { required: true, message: '请填写原因', trigger: 'blur' },
+          { min: 0, max: 50, message: '最大长度50个字符', trigger: 'blur' }
+        ],
+        attsUrl: [
+          { required: true, message: '请选择上传的附件', trigger: 'change' }
         ]
       }
     }
@@ -362,6 +375,28 @@ export default {
     cancelAddress(val) {
       this.addresDialog = false
       this.$message('您已取消修改地址')
+    },
+    upload(file) {
+      uploadFile(file).then((res) => {
+        this.formRepair.attsUrl = res // 取来图片remote地址
+        if (
+          res.includes('.mp4') ||
+          res.includes('.mov') ||
+          res.includes('.FLV') ||
+          res.includes('.rmvb')
+        ) {
+          this.videoShow = true
+          this.imgShow = false
+        }
+        if (
+          res.includes('.png') ||
+          res.includes('.jpg') ||
+          res.includes('.jepg')
+        ) {
+          this.videoShow = false
+          this.imgShow = true
+        }
+      })
     },
     // 清空数据
     clearData() {
