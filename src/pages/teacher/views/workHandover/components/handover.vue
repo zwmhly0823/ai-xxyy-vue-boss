@@ -9,7 +9,7 @@
   <div class="container">
     <div class="container-left module">
       <h2>交出方</h2>
-      <div class="module-search" v-show="classListIsNull">
+      <div class="module-search" v-show="flag">
         <Department
           name="pay_teacher_id"
           placeholder="全部部门"
@@ -25,7 +25,7 @@
         />
         <div class="module-search-tip">请先选择部门和老师哦～</div>
       </div>
-      <div class="to-choose-container" v-show="!classListIsNull">
+      <div class="to-choose-container" v-show="!flag">
         <h3>{{ handoverTeacherName }}</h3>
         <div class="class-in" v-show="!isClassHandover">
           微信号{{ computObjKey(wechatObj) }}个
@@ -161,11 +161,9 @@ export default {
       handoverTeacherScope: null,
       receiveTeacherScope: null,
       multiple: false,
-      handoverMiddleWareArr: [],
-      receiveMiddleWareArr: [],
       handoverTeacherName: '',
       classList: [],
-      classListIsNull: true,
+      flag: true,
       receiveTeacher: [],
       isClassHandover: false,
       isShowWX: true,
@@ -191,18 +189,6 @@ export default {
       },
       immediate: true
     },
-    classList: {
-      handler(val) {
-        this.classListIsNull = val.length === 0
-      },
-      immediate: true
-    },
-    wecharList: {
-      handler(val) {
-        this.classListIsNull = val.length === 0
-      },
-      immediate: true
-    },
     tableList: {
       handler(val) {
         if (val.length !== 0) {
@@ -222,14 +208,11 @@ export default {
   methods: {
     // 交出方选择部门
     handoverSelectDepartment(res) {
-      const { handoverMiddleWareArr } = this
-      handoverMiddleWareArr.splice(0, handoverMiddleWareArr.length)
       if (res === null) {
-        this.handoverTeacherScope = null
-        return false
+        return
       }
-      handoverMiddleWareArr.push(res)
-      this.handoverTeacherScope = handoverMiddleWareArr || null
+      this.handoverTeacherScope = null
+      this.handoverTeacherScope = res.pay_teacher_id || null
     },
     // 交出方选择老师
     handoverSelectTeacher(res) {
@@ -251,19 +234,16 @@ export default {
     },
     // 接收方选择部门
     receiveSelectDepartment(res) {
-      const { receiveMiddleWareArr } = this
-      receiveMiddleWareArr.splice(0, receiveMiddleWareArr.length)
       if (res === null) {
-        this.receiveTeacherScope = null
         return false
       }
-      receiveMiddleWareArr.push(res)
-      this.receiveTeacherScope = receiveMiddleWareArr || null
+      this.receiveTeacherScope = res.pay_teacher_id || null
     },
     // 接收方选择老师
     receiveSelectTeacher(res) {
       this.form.receiveTeacherId = res.pay_teacher_id || null
       this.receiveTeacherName = res.teacherList[0].realname
+      this.form.receiveWxId = ''
       if (this.isClassHandover) {
         this.getWeixinByTeacherId(res.pay_teacher_id)
       } else {
@@ -275,10 +255,14 @@ export default {
       if (teacherId === undefined || teacherId === null) {
         return
       }
+      if (this.classList.length !== 0) {
+        this.classList.splice(0, this.classList.length)
+      }
       try {
         const res = await this.$http.WorkerHandover.getHandoverSteam(teacherId)
-        if (res && res.code === 0) {
+        if (res && res.code === 0 && res.payload.length !== 0) {
           this.classList = res.payload
+          this.flag = false
         }
       } catch (error) {
         console.log(error)
@@ -299,8 +283,7 @@ export default {
     },
     // 交出方重新选择
     handoverToChoose() {
-      this.classList.splice(0, this.classList.length)
-      this.handoverMiddleWareArr.splice(0, this.handoverMiddleWareArr.length)
+      this.flag = true
     },
     // 微信号选择
     handleWX(val) {
@@ -318,7 +301,6 @@ export default {
     // 接收方重新选择
     receiveToChoose() {
       this.isShowWX = true
-      this.form.receiveWxId = ''
     },
     // 获取微信列表
     async getWechat(teacherId) {
@@ -328,11 +310,12 @@ export default {
       }
       try {
         const res = await this.$http.WorkerHandover.getHandoverWechat(teacherId)
-        if (res.code === 0) {
+        if (res.code === 0 && res.payload.length !== 0) {
           for (const item of res.payload) {
             wechatObj[item.weixinNo] = item.steamModelList
             classLength.push(item.steamModelList)
           }
+          this.flag = false
           this.wecharList = res.payload
         }
       } catch (error) {
