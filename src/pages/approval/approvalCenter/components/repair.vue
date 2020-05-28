@@ -4,7 +4,7 @@
  * @Author: Lukun
  * @Date: 2020-04-28 13:50:45
  * @LastEditors: Lukun
- * @LastEditTime: 2020-05-28 21:49:14
+ * @LastEditTime: 2020-05-28 22:20:59
  -->
 <template>
   <div class="container-content">
@@ -772,7 +772,7 @@ export default {
       this.addresDialog = true
     },
     cancelButton() {
-      this.$router.push('/approvalCenter')
+      this.clearAllData()
     },
     confirmButton(formName) {
       this.$refs[formName].validate((valid) => {
@@ -897,6 +897,9 @@ export default {
       color: #409eff;
     }
   }
+  .repair-resolve {
+    width: 55%;
+  }
   .address-recept {
     width: 55%;
   }
@@ -914,5 +917,21 @@ export default {
 .searchphonerepair,
 .chooseinput {
   width: 50% !important;
+}
+.refundForm_attsUrl {
+  text-align: center;
+  border: 1px dashed #d9d9d9;
+  border-radius: 6px;
+  cursor: pointer;
+  width: 178px;
+  overflow: hidden;
+}
+.avatar_uploader_icon {
+  font-size: 28px;
+  color: #8c939d;
+  width: 178px;
+  height: 178px;
+  line-height: 178px;
+  text-align: center;
 }
 </style>
