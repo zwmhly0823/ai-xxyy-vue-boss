@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-05-19 17:18:39
  * @LastEditors: liukun
- * @LastEditTime: 2020-05-27 15:28:30
+ * @LastEditTime: 2020-05-28 22:13:23
 -->
 <template>
   <section class="bianju10">
@@ -115,7 +115,7 @@
     </div>
     <el-divider></el-divider>
     <div>
-      <el-table :data="tableData" style="width: 100%" max-height="600">
+      <el-table :data="tableData" style="width: 100%">
         <el-table-column prop="outTradeNo" label="订单编号" align="center">
         </el-table-column>
         <el-table-column prop="uid" label="用户ID" align="center">
@@ -169,16 +169,19 @@
         </el-table-column>
       </el-table>
     </div>
-    <el-pagination
-      @size-change="handleSizeChange"
-      @current-change="handleCurrentChange"
-      layout="prev,pager,next,total,sizes,jumper"
-      :page-sizes="[5, 10, 20]"
-      :current-page="currentPage"
-      :total="allDigit"
-      :page-size="pageSize"
-    >
-    </el-pagination>
+    <div class="paginaWrap" :class="isOpen ? 'openya' : 'closeya'">
+      <el-pagination
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        layout="prev,pager,next,total,sizes,jumper"
+        :page-sizes="[5, 10, 20]"
+        :current-page="currentPage"
+        :total="allDigit"
+        :page-size="pageSize"
+      >
+      </el-pagination>
+    </div>
+
     <el-drawer
       ref="drawerLk"
       :visible.sync="drawer"
@@ -280,7 +283,6 @@ export default {
     // init全量数据展示
     this.arrangeParams()
   },
-  mounted() {},
   data() {
     return {
       searchJson: {
@@ -648,10 +650,11 @@ export default {
     }
   },
   computed: {
-    t3() {
-      return this.data.t1 + 1
+    isOpen() {
+      return this.$store.getters.sidebar.opened
     }
   },
+  mounted() {},
   render(h) {
     return h()
   },
@@ -675,17 +678,17 @@ export default {
 
 <style lang="scss" scoped>
 .bianju10 {
-  margin: 0 10px;
-  background-color: #fff;
+  padding: 10px 10px 0px 10px;
 }
 .bianju10 .el-divider--horizontal {
-  margin: 5px 0px;
+  margin: 0px;
 }
 .bianju10 .el-pagination {
   display: flex;
   justify-content: flex-end;
 }
 .bom10 {
+  background: #fff;
   padding: 20px;
 }
 .bom10 .el-form-item {
@@ -696,6 +699,22 @@ export default {
 }
 .marginL20 {
   margin-left: 20px;
+}
+.paginaWrap {
+  position: fixed;
+  right: 10px;
+  bottom: 0;
+  background-color: #fff;
+  height: 36px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+.openya {
+  width: calc(100% - 174px - 20px);
+}
+.closeya {
+  width: calc(100% - 54px - 20px);
 }
 .chouti {
   font-size: 16px;
