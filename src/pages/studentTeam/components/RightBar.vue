@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-13 16:53:41
  * @LastEditors: Shentong
- * @LastEditTime: 2020-05-27 21:40:30
+ * @LastEditTime: 2020-05-29 00:53:09
  -->
 <template>
   <div class="right-container">
@@ -414,15 +414,17 @@ export default {
         let {
           data: { StudentTeam = {} }
         } = res
+        const { teamId, type } = this.classObj
+        const teamItemVal = this.teamItem[`${teamId}|${type}`]
         StudentTeam = {
           ...StudentTeam,
           teamItem: {
-            ...this.teamItem,
-            course_day: this.teamItem.course_day
-              ? this.teamItem.course_day.replace(/-/g, '').substr(4)
+            ...teamItemVal,
+            course_day: teamItemVal.course_day
+              ? teamItemVal.course_day.replace(/-/g, '').substr(4)
               : '',
-            end_course_day: this.teamItem.end_course_day
-              ? this.teamItem.end_course_day.replace(/-/g, '').substr(4)
+            end_course_day: teamItemVal.end_course_day
+              ? teamItemVal.end_course_day.replace(/-/g, '').substr(4)
               : ''
           }
         }
@@ -447,7 +449,10 @@ export default {
           localStorage.setItem('teacher', JSON.stringify(teacher))
         }
         if (this.classObj.teamId) {
-          detail.allTrans = detail.statictis.order_all / this.teamItem.enrolled
+          const { teamId, type } = this.classObj
+          detail.allTrans =
+            detail.statictis.order_all /
+            this.teamItem[`${teamId}|${type}`].enrolled
         }
 
         this.classMessage = detail

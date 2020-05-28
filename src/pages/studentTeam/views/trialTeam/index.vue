@@ -3,8 +3,8 @@
  * @version: 1.0.0
  * @Author: Shentong
  * @Date: 2020-05-14 14:11:21
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-05-28 22:44:43
+ * @LastEditors: Shentong
+ * @LastEditTime: 2020-05-29 01:03:24
  -->
 <template>
   <el-row type="flex" class="app-main team-container">
@@ -41,7 +41,7 @@
             >
               <el-table-column
                 label="班级名称"
-                min-width="110"
+                min-width="125"
                 align="center"
                 prop="team_name"
               >
