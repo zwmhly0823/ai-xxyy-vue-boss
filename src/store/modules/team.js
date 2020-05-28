@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-05-16 19:12:45
  * @LastEditors: Shentong
- * @LastEditTime: 2020-05-27 22:20:31
+ * @LastEditTime: 2020-05-28 22:32:59
  */
 /**
  * 班级相关
@@ -19,9 +19,17 @@ const mutations = {
   SET_USER: (state, user = {}) => {
     state.userByPhone = user
   },
-  setTeamItem: (state, teamInfo = {}) => {
-    state.teamItem = teamInfo
+  setTeamItem: (state, itemRow) => {
+    const id = itemRow.id
+    const teamType = itemRow.team_type
+    // const { id, team_type } = itemRow
+    const itemKey = `${id}|${teamType}`
+
+    state.teamItem[itemKey] = itemRow
   }
+  // setTeamItem: (state, teamInfo = {}) => {
+  //   state.teamItem = teamInfo
+  // }
 }
 
 const actions = {

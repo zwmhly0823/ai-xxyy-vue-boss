@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 20:22:24
  * @LastEditors: panjian
- * @LastEditTime: 2020-05-27 13:57:55
+ * @LastEditTime: 2020-05-28 20:11:40
  -->
 <template>
   <div class="table-box">
@@ -559,7 +559,7 @@
               >
                 <p class="audio-triangle"></p>
                 <img
-                  v-if="audioIndex === index && studentId == scope.row.id"
+                  v-if="audioIndex === index && rowIdDianping == scope.row.id"
                   class="audio-imgs"
                   src="@/assets/images/sound-active.gif"
                   alt=""
@@ -669,7 +669,7 @@ export default {
       modifyFormData: {},
       audioIndex: null,
       tableindex: null,
-      studentId: null,
+      rowIdDianping: null,
       added_group: null,
       added_wechat: null,
       ruleForm: {
@@ -865,7 +865,8 @@ export default {
     onClick(row, column, event) {
       this.added_group = row.added_group
       this.added_wechat = row.added_wechat
-      this.studentId = row.id
+      this.rowIdDianping = row.id
+      this.student_id = row.student_id
       this.tableindex = row.index
       this.orderId = row.order_id
       const id = row.id
@@ -878,7 +879,7 @@ export default {
     commandFriend(command) {
       const val = {
         type: 'wechat',
-        studentId: this.studentId,
+        studentId: this.student_id,
         addedGroup: this.added_group,
         addedWechat: command,
         index: this.tableindex
@@ -889,7 +890,7 @@ export default {
     onGroup(command) {
       const val = {
         type: 'group',
-        studentId: this.studentId,
+        studentId: this.student_id,
         addedWechat: this.added_wechat,
         addedGroup: command,
         index: this.tableindex
