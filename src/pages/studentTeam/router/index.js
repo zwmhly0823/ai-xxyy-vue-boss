@@ -1,7 +1,7 @@
 /*
  * @Date: 2020-03-13 15:20:21
  * @LastEditors: Shentong
- * @LastEditTime: 2020-05-18 17:07:23
+ * @LastEditTime: 2020-05-28 22:34:17
  * @FilePath: /ai-app-vue-toss/src/pages/studentTeam/router/index.js
  */
 import Vue from 'vue'
@@ -39,7 +39,8 @@ const routes = [
     path: '/trialTeam', // 体验课班级
     name: 'trialTeam',
     meta: {
-      title: '体验课班级'
+      title: '体验课班级',
+      keepAlive: true
     },
     hidden: true,
     component: () =>
@@ -49,7 +50,8 @@ const routes = [
     path: '/systemTeam', // 系统课班级
     name: 'systemTeam',
     meta: {
-      title: '系统课班级'
+      title: '系统课班级',
+      keepAlive: true
     },
     hidden: true,
     component: () =>
