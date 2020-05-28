@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-05-14 14:11:21
  * @LastEditors: Shentong
- * @LastEditTime: 2020-05-27 22:28:03
+ * @LastEditTime: 2020-05-28 16:53:12
  -->
 <template>
   <el-row type="flex" class="app-main team-container">
@@ -444,6 +444,8 @@ export default {
         item.end_course_day = +item.end_course_day
           ? formatData(item.end_course_day)
           : ''
+        item.ctime = +item.ctime ? formatData(item.ctime) : ''
+        item.utime = +item.utime ? formatData(item.utime) : ''
         item.WD = item.current_lesson ? calculateWD(item.current_lesson) : ''
         item.teamStatus = item.team_state
           ? this.teamStatusKeyVal[+item.team_state]
