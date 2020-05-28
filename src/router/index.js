@@ -234,7 +234,7 @@ const routes = [
     // hidden: true,
     meta: {
       title: '物流管理',
-      icon: 'el-icon-s-data',
+      icon: 'el-icon-s-cooperation',
       module: 'express'
     },
     children: [
