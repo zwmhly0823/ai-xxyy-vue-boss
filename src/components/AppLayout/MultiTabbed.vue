@@ -19,7 +19,7 @@
           <i
             class="el-icon-close"
             @click="handleClose(k)"
-            v-if="k !== current"
+            v-if="k !== currentTabbed"
           ></i>
         </li>
       </ul>
@@ -41,6 +41,9 @@ export default {
     ...mapGetters(['tabbed']),
     tabbedData() {
       return this.tabbed.tabbedList || this.tabList
+    },
+    currentTabbed() {
+      return this.tabbed.currentTabbed || this.current
     }
   },
   mounted() {
@@ -117,7 +120,7 @@ $gray: #d8dce5;
     padding: 4px 10px 2px;
     list-style: none;
     border: 1px solid $gray;
-    max-width: 120px;
+    max-width: 140px;
     margin-left: 5px;
     cursor: pointer;
     &:hover {

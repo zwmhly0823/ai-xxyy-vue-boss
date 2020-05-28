@@ -3,8 +3,8 @@
  * @version: 1.0.0
  * @Author: Shentong
  * @Date: 2020-05-14 14:11:21
- * @LastEditors: Shentong
- * @LastEditTime: 2020-05-28 19:01:28
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-05-28 22:45:45
  -->
 <template>
   <el-row type="flex" class="app-main team-container">
@@ -260,7 +260,7 @@ import _ from 'lodash'
 import TableSearch from '../../components/tableSearch/index'
 import { calculateWD } from '@/utils/validate'
 import EleTable from '@/components/Table/EleTable'
-import { formatData } from '@/utils/index'
+import { formatData, openNewTab } from '@/utils/index'
 // import ScheduleTable from './components/index.vue'
 
 export default {
@@ -349,10 +349,15 @@ export default {
       const teamType = row.team_type || '1'
       this.$store.commit('setTeamItem', row)
 
+      // id &&
+      //   this.$router.push({
+      //     path: `/teamDetail/${id}/${teamType}`
+      //   })
       id &&
-        this.$router.push({
-          path: `/teamDetail/${id}/${teamType}`
-        })
+        openNewTab(
+          `/student-team/#/teamDetail/${id}/${teamType}`,
+          `${row.team_name}`
+        )
     },
     onSortSystemCount(sortKey) {
       if (this.tableData.length) {
