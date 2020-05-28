@@ -48,7 +48,7 @@
       </el-table-column>
       <el-table-column
         label="用户及购买日期"
-        width="180"
+        width="200"
         fixed
         v-if="showCol.userAddDate"
       >
@@ -66,7 +66,7 @@
       </el-table-column>
       <el-table-column
         label="补发方式"
-        width="180"
+        width="200"
         v-if="showCol.replenishType"
       >
         <template slot-scope="scope">
@@ -77,7 +77,7 @@
       </el-table-column>
       <el-table-column
         label="补发类别"
-        width="180"
+        width="200"
         v-if="showCol.replenishFamily"
       >
         <template slot-scope="scope">
@@ -88,7 +88,7 @@
       </el-table-column>
       <el-table-column
         :label="+regtype === 1 || regtype === '2,3' ? '难度' : '补发商品'"
-        width="180"
+        width="200"
         v-if="showCol.productType"
       >
         <template slot-scope="scope">
@@ -101,7 +101,7 @@
       </el-table-column>
       <el-table-column
         label="补发原因"
-        width="180"
+        width="200"
         v-if="showCol.replenishReason"
       >
         <template slot-scope="scope">
@@ -133,7 +133,7 @@
       </el-table-column>
       <el-table-column
         label="随材版本"
-        width="120"
+        width="150"
         v-if="showCol.productVersion"
       >
         <template slot-scope="scope">
@@ -187,7 +187,7 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="期数" width="120" v-if="showCol.term">
+      <el-table-column label="期数" width="150" v-if="showCol.term">
         <template slot-scope="scope">
           <div class="product">
             <span>{{
@@ -196,14 +196,14 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="班级名" width="120" v-if="showCol.className">
+      <el-table-column label="班级名" width="150" v-if="showCol.className">
         <template slot-scope="scope">
           <div class="product">
             <span>{{ StudentTeamList[scope.row.last_team_id] }}</span>
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="社群销售" width="120" v-if="showCol.teacher">
+      <el-table-column label="社群销售" width="150" v-if="showCol.teacher">
         <template slot-scope="scope">
           <div class="product">
             <span>{{ TeacherList[scope.row.last_teacher_id] }}</span>
@@ -212,7 +212,7 @@
       </el-table-column>
       <el-table-column
         label="物流状态"
-        width="140"
+        width="200"
         v-if="showCol.expressStatus"
       >
         <template slot-scope="scope">
@@ -253,7 +253,7 @@
       </el-table-column>
       <el-table-column
         label="失败原因"
-        width="120"
+        width="200"
         v-if="showCol.expressRemark"
       >
         <template slot-scope="scope">
@@ -884,7 +884,7 @@ export default {
         this.$store.dispatch('getShowStatus', type)
       }
       this.$http.Express.getLogisticsList({
-        query: `{LogisticsListPage(query:${JSON.stringify(query)}, size: ${
+        query: `{LogisticsListPageNew(query:${JSON.stringify(query)}, size: ${
           this.currentItem
         }, page: ${this.currentPage}) {
             first
@@ -937,8 +937,8 @@ export default {
         }`
       }).then((res) => {
         this.tableData = []
-        if (res.data.LogisticsListPage) {
-          const resData = res.data.LogisticsListPage.content
+        if (res.data.LogisticsListPageNew) {
+          const resData = res.data.LogisticsListPageNew.content
           const realnameId = [] // 老师Id
           const teamId = [] // 班级Id
           const schedule = []
@@ -976,9 +976,9 @@ export default {
 
           this.tableData = resData
           // 总页数
-          this.totalPages = +res.data.LogisticsListPage.totalPages
+          this.totalPages = +res.data.LogisticsListPageNew.totalPages
 
-          this.totalElements = +res.data.LogisticsListPage.totalElements // 总条数
+          this.totalElements = +res.data.LogisticsListPageNew.totalElements // 总条数
           this.getTeacherList(realnameId)
           this.getStudentTeamList(teamId)
           this.getScheduleList(schedule)

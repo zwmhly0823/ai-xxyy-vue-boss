@@ -173,9 +173,13 @@
         <department @result="getDepartment" :name="department" />
       </el-form-item>
 
-      <el-form-item v-if="groupSell && !teacherId">
+      <el-form-item v-if="groupSell">
         <!-- 社群销售 -->
-        <group-sell @result="selectSellTeacher" :name="groupSell" />
+        <group-sell
+          @result="selectSellTeacher"
+          :name="groupSell"
+          :tip="teacherTip"
+        />
       </el-form-item>
 
       <!-- && !teacherId -->
@@ -610,6 +614,10 @@ export default {
     consigneePhone: {
       type: String,
       default: ''
+    },
+    teacherTip: {
+      type: String,
+      default: '社群销售' // topicType
     }
   },
   components: {
