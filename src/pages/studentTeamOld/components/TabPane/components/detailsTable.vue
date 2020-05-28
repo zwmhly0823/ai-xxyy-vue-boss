@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 20:22:24
  * @LastEditors: panjian
- * @LastEditTime: 2020-05-27 13:57:55
+ * @LastEditTime: 2020-05-16 20:18:33
  -->
 <template>
   <div class="table-box">
@@ -73,9 +73,7 @@
               <span class="info-sex" v-else>女 ·</span> -->
               <span class="info-sex">{{ scope.row.sex }}</span>
               <span class="info-age">{{ scope.row.birthday }}</span>
-              <span class="info-basics">{{
-                scope.row.base_painting_text
-              }}</span>
+              <span class="info-basics">{{ scope.row.base_painting }}</span>
             </div>
           </template>
         </el-table-column>
@@ -228,7 +226,7 @@
               src="@/assets/images/success.png"
               alt=""
             />
-            <div>{{ scope.row.fast_follow_time }}</div>
+            <div>{{ scope.row.follow_time }}</div>
             <span style="display: none;"> {{ scope.row }}</span>
           </template>
         </el-table-column>
@@ -238,8 +236,8 @@
         @current-change="handleCurrentChange"
         :current-page="+tables.currentPage"
         :total="+tables.totalElements"
-        open="calc(100vw - 147px - 50px)"
-        close="calc(100vw - 26px - 50px)"
+        open="calc(100vw - 180px - 240px - 147px - 30px)"
+        close="calc(100vw - 180px - 240px - 26px - 30px)"
       />
     </div>
     <!-- 物流 -->
@@ -287,9 +285,11 @@
               <div v-if="scope.row.receipt_name">
                 <span>{{ scope.row.receipt_name }}</span>
                 <span>{{ scope.row.receipt_tel }}</span>
-                <!-- showModifyAddressBtn &&
+                <!-- v-if="
+                    showModifyAddressBtn &&
                       scope.row.id == rowId &&
-                      (expressStatus === '待审核' || expressStatus === '无效') -->
+                      (expressStatus === '待审核' || expressStatus === '无效')
+                  " -->
                 <el-button
                   v-if="
                     showModifyAddressBtn &&
@@ -345,8 +345,8 @@
         @current-change="handleCurrentChange"
         :current-page="+tables.currentPage"
         :total="+tables.totalElements"
-        open="calc(100vw - 147px - 50px)"
-        close="calc(100vw - 26px - 50px)"
+        open="calc(100vw - 180px - 240px - 147px - 30px)"
+        close="calc(100vw - 180px - 240px - 26px - 30px)"
       />
     </div>
     <!-- 打开APP 原 登陆 -->
@@ -404,8 +404,8 @@
         @current-change="handleCurrentChange"
         :current-page="+tables.currentPage"
         :total="+tables.totalElements"
-        open="calc(100vw - 147px - 50px)"
-        close="calc(100vw - 26px - 50px)"
+        open="calc(100vw - 180px - 240px - 147px - 30px)"
+        close="calc(100vw - 180px - 240px - 26px - 30px)"
       />
     </div>
     <!-- 参课和完课 -->
@@ -483,8 +483,8 @@
         @current-change="handleCurrentChange"
         :current-page="+tables.currentPage"
         :total="+tables.totalElements"
-        open="calc(100vw - 147px - 50px)"
-        close="calc(100vw - 26px - 50px)"
+        open="calc(100vw - 180px - 240px - 147px - 30px)"
+        close="calc(100vw - 180px - 240px - 26px - 30px)"
       />
     </div>
     <!-- 作品及点评 -->
@@ -597,8 +597,8 @@
         @current-change="handleCurrentChange"
         :current-page="+tables.currentPage"
         :total="+tables.totalElements"
-        open="calc(100vw - 147px - 50px)"
-        close="calc(100vw - 26px - 50px)"
+        open="calc(100vw - 180px - 240px - 147px - 30px)"
+        close="calc(100vw - 180px - 240px - 26px - 30px)"
       />
     </div>
 
@@ -634,9 +634,9 @@ export default {
       type: Boolean,
       default: false
     },
-    classObj: {
+    classId: {
       type: Object,
-      default: () => {}
+      default: null
     },
     tables: {
       type: Object,
@@ -685,7 +685,7 @@ export default {
   },
   mounted() {},
   watch: {
-    classObj(value) {
+    classId(value) {
       this.audioIndex = null
     },
     audioTabs(value) {
@@ -705,6 +705,7 @@ export default {
       // this.modifyFormData = { id, userid, orderid, addressid }
       this.modifyFormData = { id, userid, orderid, row }
       this.showModifyAddressBtn = true
+      console.log(row)
     },
     // 加好友
     handleEdit(index, row) {
@@ -715,7 +716,9 @@ export default {
       }
     },
     // 表头加好友操作
-    headerPoint(index, scope) {},
+    headerPoint(index, scope) {
+      // console.log(index, scope)
+    },
     batchBtn() {
       const orderIds = Object.values(this.selectUserMobile).join()
       this.$http.User.sendMsgForTeacher(orderIds).then((res) => {
@@ -785,7 +788,7 @@ export default {
     onSortFollow() {
       this.renderHtml = false
       if (this.followSort === 'asc') {
-        this.$emit('onGroupSort', '{"follow":"desc"}')
+        this.$emit('onGroupSort', '{"wechat_follow_time":"desc"}')
         this.$nextTick(() => {
           this.wechatShowIcon = 1
           this.groupShowIcon = 1
@@ -794,7 +797,7 @@ export default {
         })
         this.followSort = 'desc'
       } else {
-        this.$emit('onGroupSort', '{"follow":"asc"}')
+        this.$emit('onGroupSort', '{"wechat_follow_time":"asc"}')
         this.$nextTick(() => {
           this.wechatShowIcon = 1
           this.groupShowIcon = 1
@@ -826,6 +829,7 @@ export default {
     // 修改地址按钮
     onModifyAddress(row) {
       this.showModifyAddress = true
+      console.log(row, '点击修改地址')
     },
     modifyAddressExpress(data) {
       this.showModifyAddress = false
