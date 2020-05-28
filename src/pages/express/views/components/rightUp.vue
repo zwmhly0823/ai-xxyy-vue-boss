@@ -447,23 +447,22 @@ export default {
 <style lang="scss" scoped>
 .container {
   width: 100%;
-  height: 100px;
+  // height: 100px;
   background-color: #fff;
   padding: 5px;
-  display: flex;
   .search {
     display: flex;
     &-up {
       width: 100%;
     }
-    &-export {
-      display: flex;
-      flex-direction: column;
-      // justify-content: flex-end;
-      align-content: center;
-      & div {
-        padding: 5px;
-      }
+  }
+  .search-export {
+    display: flex;
+    justify-content: flex-end;
+    align-content: center;
+    padding-right: 135px;
+    & div {
+      padding: 5px;
     }
   }
 }
