@@ -76,14 +76,6 @@ const routes = [
           title: '订单',
           module: 'trading'
         }
-      },
-      {
-        path: '/express',
-        name: 'express',
-        meta: {
-          title: '物流',
-          module: 'trading'
-        }
       }
     ]
   },
