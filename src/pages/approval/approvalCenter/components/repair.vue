@@ -4,7 +4,7 @@
  * @Author: Lukun
  * @Date: 2020-04-28 13:50:45
  * @LastEditors: Lukun
- * @LastEditTime: 2020-05-28 22:56:42
+ * @LastEditTime: 2020-05-29 01:23:34
  -->
 <template>
   <div class="container-content">
@@ -481,10 +481,12 @@ export default {
         name: '',
         chooseProductVaidator: '', // 附加校验
         packagesType: '', // 体验课或者系统课首先默认选择
-        replenishReason: '',
-        imgShow: false, // 附件图片显示
-        videoShow: false // 附件视频显示
+        replenishReason: '', // 附件图片显示
+        attsUrl: '',
+        reissueMsg: ''
       }
+      this.imgShow = false
+      this.videoShow = false
     },
     // 保存商品
     saveGift() {

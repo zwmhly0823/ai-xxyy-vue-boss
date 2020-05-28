@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-04-01 13:24:40
  * @LastEditors: Lukun
- * @LastEditTime: 2020-05-20 13:25:36
+ * @LastEditTime: 2020-05-29 01:21:55
  -->
 <template>
   <el-form
@@ -23,6 +23,7 @@
     <!-- <span class="areaLists-css">收货人地址</span> -->
     <el-form-item label="收货人地址" prop="area">
       <el-cascader
+        class="cascader-list"
         placeholder="省/市/区"
         :options="areaLists2"
         v-model="ruleForm.area"
@@ -163,6 +164,12 @@ export default {
 <style lang="scss" scoped>
 .demo-ruleForm {
   padding: 30px;
+}
+</style>
+
+<style lang="scss">
+.el-cascader-panel {
+  height: 300px;
 }
 </style>
 <style lang="scss" module>
