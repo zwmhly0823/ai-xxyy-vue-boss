@@ -208,11 +208,8 @@ export default {
   methods: {
     // 交出方选择部门
     handoverSelectDepartment(res) {
-      if (res === null) {
-        return
-      }
-      this.handoverTeacherScope = null
-      this.handoverTeacherScope = res.pay_teacher_id || null
+      this.handoverTeacherScope =
+        res.pay_teacher_id.length !== 0 ? res.pay_teacher_id : null
     },
     // 交出方选择老师
     handoverSelectTeacher(res) {
@@ -234,10 +231,8 @@ export default {
     },
     // 接收方选择部门
     receiveSelectDepartment(res) {
-      if (res === null) {
-        return false
-      }
-      this.receiveTeacherScope = res.pay_teacher_id || null
+      this.receiveTeacherScope =
+        res.pay_teacher_id.length !== 0 ? res.pay_teacher_id : null
     },
     // 接收方选择老师
     receiveSelectTeacher(res) {
