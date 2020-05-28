@@ -525,11 +525,7 @@ export default {
             //   ? [payload.department.id]
             //   : []
             this.ruleForm.region = payload.department
-              ? [
-                  payload.department.id ||
-                    payload.department.pid ||
-                    payload.department.cid
-                ]
+              ? payload.department.id
               : []
             payload.duty.forEach((val) => {
               this.ruleForm.positionVal.push(val.id * 1)
@@ -602,7 +598,10 @@ export default {
           level: this.ruleForm.level
         },
         department: {
-          id: this.ruleForm.region[this.ruleForm.region.length - 1]
+          id:
+            typeof this.ruleForm.region === 'string'
+              ? this.ruleForm.region
+              : this.ruleForm.region[this.ruleForm.region.length - 1]
         },
         duty: positionValId,
         rank: { id: this.ruleForm.rank },
