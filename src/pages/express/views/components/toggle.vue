@@ -42,7 +42,11 @@ export default {
   },
   methods: {
     getLogisticsStatistics() {
-      const q = `{"regtype":[${this.regtype}],"source_type":[${this.source_type}]}`
+      if (this.teacherId || this.teacherId === 0) {
+        const q = `{"teacher_id": [${this.teacherId}],"regtype":[${this.regtype}],"source_type":[${this.source_type}]}`
+      } else {
+        const q = `{"regtype":[${this.regtype}],"source_type":[${this.source_type}]}`
+      }
       const query = JSON.stringify(q)
       this.$http.Express.getLogisticsStatistics({
         query: `{
