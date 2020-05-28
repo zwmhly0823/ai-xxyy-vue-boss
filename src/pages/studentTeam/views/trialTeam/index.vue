@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-05-14 14:11:21
  * @LastEditors: Shentong
- * @LastEditTime: 2020-05-29 01:03:24
+ * @LastEditTime: 2020-05-29 01:13:08
  -->
 <template>
   <el-row type="flex" class="app-main team-container">
@@ -481,7 +481,8 @@ export default {
         teamName,
         sup,
         department,
-        teacherId
+        teacherId,
+        page: 1
       })
       // this.getTrialTeamList(this.tabQuery)
     },
