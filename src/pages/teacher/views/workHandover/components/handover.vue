@@ -222,11 +222,12 @@ export default {
   methods: {
     // 交出方选择部门
     handoverSelectDepartment(res) {
+      const { handoverMiddleWareArr } = this
+      handoverMiddleWareArr.splice(0, handoverMiddleWareArr.length)
       if (res === null) {
         this.handoverTeacherScope = null
         return false
       }
-      const { handoverMiddleWareArr } = this
       handoverMiddleWareArr.push(res)
       this.handoverTeacherScope = handoverMiddleWareArr || null
     },
@@ -250,11 +251,12 @@ export default {
     },
     // 接收方选择部门
     receiveSelectDepartment(res) {
+      const { receiveMiddleWareArr } = this
+      receiveMiddleWareArr.splice(0, receiveMiddleWareArr.length)
       if (res === null) {
         this.receiveTeacherScope = null
         return false
       }
-      const { receiveMiddleWareArr } = this
       receiveMiddleWareArr.push(res)
       this.receiveTeacherScope = receiveMiddleWareArr || null
     },
