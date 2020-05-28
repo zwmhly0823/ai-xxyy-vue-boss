@@ -3,8 +3,8 @@
  * @version: 1.0.0
  * @Author: Shentong
  * @Date: 2020-05-14 14:11:21
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-05-28 22:45:45
+ * @LastEditors: Shentong
+ * @LastEditTime: 2020-05-29 01:18:37
  -->
 <template>
   <el-row type="flex" class="app-main team-container">
@@ -414,7 +414,8 @@ export default {
         teamName,
         sup,
         department,
-        teacherId
+        teacherId,
+        page: 1
       })
       // this.getTrialTeamList(this.tabQuery)
     },
