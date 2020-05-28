@@ -39,6 +39,10 @@
         <out-trade-no @result="getOutTradeNo" :name="outTradeNo" />
       </el-form-item>
 
+      <el-form-item v-if="consigneePhone">
+        <consignee-phone @result="getConsigneePhone" />
+      </el-form-item>
+
       <el-form-item v-if="expressNo">
         <!-- 物流单号搜索 -->
         <express-no @result="getExpressNo" :name="expressNo" />
@@ -306,11 +310,11 @@ import wxList from './searchItems/wxInput'
 import selectAddress from './searchItems/selectAddress.vue'
 import SearchStage from './searchItems/searchStage'
 import operatorName from './searchItems/operatorName'
-import selectAddress from './searchItems/selectAddress.vue'
 import replenishReason from './searchItems/replenishReason.vue'
 import replenishMethod from './searchItems/replenishMethod.vue'
 import replenishProduct from './searchItems/replenishProduct'
 import replenishProductType from './searchItems/replenishProductType'
+import ConsigneePhone from './searchItems/consigneePhone.vue'
 // import SearchTrialStage from './searchItems/searchTrialStage'
 import { isToss } from '@/utils/index'
 
@@ -572,7 +576,7 @@ export default {
       type: String,
       default: '难度'
     },
-     // 补发原因
+    // 补发原因
     replenishReason: {
       type: String,
       default: ''
@@ -599,6 +603,11 @@ export default {
     },
     // 补发商品类别
     replenishProductType: {
+      type: String,
+      default: ''
+    },
+    // 收货人电话
+    consigneePhone: {
       type: String,
       default: ''
     }
@@ -631,7 +640,6 @@ export default {
     teacherWx,
     SearchStage,
     replenishProduct,
-    selectAddress,
     ConsigneePhone,
     replenishReason,
     replenishMethod,
@@ -823,6 +831,10 @@ export default {
         { [this.replenishProductType]: res[this.replenishProductType] },
         [this.replenishProductType || 'product_type']
       )
+    },
+    // 收货人电话
+    getConsigneePhone(res) {
+      this.setSeachParmas(res, [this.consigneePhone || 'receipt_tel'])
     },
 
     /**  处理接收到的查询参数
