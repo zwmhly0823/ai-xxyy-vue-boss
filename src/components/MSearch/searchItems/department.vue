@@ -64,7 +64,6 @@ export default {
       })
     },
     async onSelect(data) {
-      const dataIsArray = Array.isArray(data)
       // TODO: 根据选择的销售组，获取销售ID
       const ids = { department_id: data || [] }
       if (this.onlyDept === 1) {
@@ -76,7 +75,7 @@ export default {
         const teacherIds = teacher.data.TeacherList.map((item) => item.id)
         this.$emit(
           'result',
-          dataIsArray && data.length > 0 ? { [this.name]: teacherIds } : data
+          data === null || data.length > 0 ? { [this.name]: teacherIds } : ''
         )
       }
     }
