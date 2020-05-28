@@ -3,8 +3,8 @@
  * @version:
  * @Author: panjian
  * @Date: 2020-03-16 14:19:58
- * @LastEditors: Shentong
- * @LastEditTime: 2020-05-27 21:47:32
+ * @LastEditors: panjian
+ * @LastEditTime: 2020-05-14 15:44:06
  -->
 <template>
   <div>
@@ -15,8 +15,10 @@
         phone="uid"
         onlyPhone="1"
         phoneTip="手机号/微信昵称 查询"
-        :teamType="`${classObj.type === 0 ? '0' : '1'}`"
-        :teamId="classObj.teamId"
+        :teamType="
+          `${classId.classId && +classId.classId.team_type === 0 ? '0' : '1'}`
+        "
+        :teamId="classId.classId && classId.classId.id"
       />
       <el-button
         size="mini"
@@ -38,7 +40,7 @@
       <checkBox
         class="check-box"
         :tables="table"
-        :classObj="classObj"
+        :classId="classId"
         :audioTabs="audioTabs"
         @screenWorks="screenWorks"
         @screenAttendClass="screenAttendClass"
@@ -55,7 +57,7 @@
               @onGroup="onGroup"
               @onGroupSort="onGroupSort"
               :tables="table"
-              :classObj="classObj"
+              :classId="classId"
               :audioTabs="audioTabs"
             ></details-table>
           </el-tab-pane>
@@ -207,9 +209,9 @@ export default {
     checkBox
   },
   props: {
-    classObj: {
+    classId: {
       type: Object,
-      default: () => {}
+      default: null
     }
   },
   computed: {
@@ -306,70 +308,19 @@ export default {
       tableDataEmpty: true,
       sortGroup: '',
       screenWorksData: {},
-      screenAttendClassData: {},
-      teamDetail: {}
-    }
-  },
-  created() {
-    // 切换标签 语音停止
-    const audios = this.$refs
-    const audiosList = Object.values(audios)
-    audiosList.forEach((item, index) => {
-      item[0].load()
-    })
-    this.screenWorksData = {}
-    this.screenAttendClassData = {}
-    this.sortGroup = ''
-    this.table.currentPage = 1
-
-    if (this.classObj.teamId) {
-      this.tableDataEmpty = true
-      this.getTeamDetailById({ teamId: this.classObj.teamId })
-      if (+this.classObj.type === 0) {
-        this.type = 'TRAIL'
-      } else if (+this.classObj.type === 1) {
-        this.type = 'MONTH'
-      } else if (+this.classObj.type === 2) {
-        this.type = 'YEAR'
-      } else {
-        this.type = ''
-      }
-      this.getGroup()
-      if (this.tabsName === '加好友进群') {
-        setTimeout(() => {
-          this.getGroup()
-        }, 200)
-      } else if (this.tabsName === '物流') {
-        setTimeout(() => {
-          this.getLogistics()
-        }, 200)
-      } else if (this.tabsName === '打开APP') {
-        setTimeout(() => {
-          this.geiLogin()
-        }, 200)
-      } else if (this.tabsName === '参课和完课') {
-        setTimeout(() => {
-          this.getClassCompPage()
-        }, 200)
-      } else if (this.tabsName === '作品及点评') {
-        setTimeout(() => {
-          this.getStuComment()
-        }, 200)
-      }
-    } else {
-      this.tableDataEmpty = false
-      this.table.tableData = []
+      screenAttendClassData: {}
     }
   },
   watch: {
     searchUser(user) {
+      console.log(user)
       let teamId = ''
       let teamType = ''
       let mobile = ''
       if (user && user.phone) mobile = user.phone
-      if (this.classObj.teamId) {
-        teamId = this.classObj.teamId
-        teamType = this.classObj.type
+      if (this.classId && this.classId.classId) {
+        teamId = this.classId.classId.id
+        teamType = this.classId.classId.team_type
       }
       this.search = ''
       if (!mobile) {
@@ -377,63 +328,65 @@ export default {
         return
       }
       this.$http.User.blurrySearch(mobile, teamType, teamId).then((res) => {
+        console.log(res, '********')
         const uid =
           res.data.blurrySearch &&
           res.data.blurrySearch[0] &&
           res.data.blurrySearch[0].id
+        console.log(this.search)
         this.search = `"${uid}"`
         this.getGroup()
       })
+    },
+    classId(value) {
+      // 切换标签 语音停止
+      const audios = this.$refs
+      const audiosList = Object.values(audios)
+      audiosList.forEach((item, index) => {
+        item[0].load()
+      })
+      this.screenWorksData = {}
+      this.screenAttendClassData = {}
+      this.sortGroup = ''
+      this.table.currentPage = 1
+      if (value.classId && value.classId.id) {
+        this.tableDataEmpty = true
+        if (value.classId.team_type === 0) {
+          this.type = 'TRAIL'
+        } else if (value.classId.team_type === 1) {
+          this.type = 'MONTH'
+        } else if (value.classId.team_type === 2) {
+          this.type = 'YEAR'
+        } else {
+          this.type = ''
+        }
+        this.getGroup()
+        if (this.tabsName === '加好友进群') {
+          setTimeout(() => {
+            this.getGroup()
+          }, 200)
+        } else if (this.tabsName === '物流') {
+          setTimeout(() => {
+            this.getLogistics()
+          }, 200)
+        } else if (this.tabsName === '打开APP') {
+          setTimeout(() => {
+            this.geiLogin()
+          }, 200)
+        } else if (this.tabsName === '参课和完课') {
+          setTimeout(() => {
+            this.getClassCompPage()
+          }, 200)
+        } else if (this.tabsName === '作品及点评') {
+          setTimeout(() => {
+            this.getStuComment()
+          }, 200)
+        }
+      } else {
+        this.tableDataEmpty = false
+        this.table.tableData = []
+      }
     }
-    // classObj(value) {
-    // // 切换标签 语音停止
-    // const audios = this.$refs
-    // const audiosList = Object.values(audios)
-    // audiosList.forEach((item, index) => {
-    //   item[0].load()
-    // })
-    // this.screenWorksData = {}
-    // this.screenAttendClassData = {}
-    // this.sortGroup = ''
-    // this.table.currentPage = 1
-    // if (value.teamId && value.classId.id) {
-    //   this.tableDataEmpty = true
-    //   if (+value.type === 0) {
-    //     this.type = 'TRAIL'
-    //   } else if (+value.type === 1) {
-    //     this.type = 'MONTH'
-    //   } else if (+value.type === 2) {
-    //     this.type = 'YEAR'
-    //   } else {
-    //     this.type = ''
-    //   }
-    //   this.getGroup()
-    //   if (this.tabsName === '加好友进群') {
-    //     setTimeout(() => {
-    //       this.getGroup()
-    //     }, 200)
-    //   } else if (this.tabsName === '物流') {
-    //     setTimeout(() => {
-    //       this.getLogistics()
-    //     }, 200)
-    //   } else if (this.tabsName === '打开APP') {
-    //     setTimeout(() => {
-    //       this.geiLogin()
-    //     }, 200)
-    //   } else if (this.tabsName === '参课和完课') {
-    //     setTimeout(() => {
-    //       this.getClassCompPage()
-    //     }, 200)
-    //   } else if (this.tabsName === '作品及点评') {
-    //     setTimeout(() => {
-    //       this.getStuComment()
-    //     }, 200)
-    //   }
-    // } else {
-    //   this.tableDataEmpty = false
-    //   this.table.tableData = []
-    // }
-    // }
   },
   mounted() {
     const teacherId = isToss()
@@ -443,15 +396,6 @@ export default {
     this.table.tableLabel = [{ label: '购买时间', prop: 'buytime' }]
   },
   methods: {
-    // 根据班级id获取班级详情
-    getTeamDetailById(params) {
-      this.$http.Team.getTeamDetailById({ id: params.teamId }).then((res) => {
-        const {
-          data: { StudentTeam = {} }
-        } = res
-        this.teamDetail = StudentTeam
-      })
-    },
     screenAttendClass(data) {
       this.screenAttendClassData = data
       this.table.currentPage = 1
@@ -505,6 +449,11 @@ export default {
         this.dialogFormVisible = false
         return
       }
+      // 确认第几周
+      console.log(
+        'this.finishLessonData.weekNum -- val ',
+        this.finishLessonData.weekNum
+      )
       // 获取第几周的数据
       await this.getStuRankingList(
         this.finishLessonData.teamId,
@@ -523,6 +472,11 @@ export default {
         this.Exhibition = false
         return
       }
+      // 确认第几周
+      console.log(
+        'this.ExhibitionData.weekNum -- val ',
+        this.ExhibitionData.weekNum
+      )
       // 获取第几周的数据
       await this.getStuTaskRankingList(
         this.ExhibitionData.teamId,
@@ -540,8 +494,13 @@ export default {
         // 获取要生成图片的dom元素
         var doms = document.getElementsByClassName('finishBox')
         this.finishLessonData.opreaIndex++
+        console.log(
+          'this.finishLessonData.opreaIndex -----> ',
+          this.finishLessonData.opreaIndex
+        )
         if (this.finishLessonData.opreaIndex === doms.length) {
           const _this = this
+          console.log('dom++++++dom ---> ', doms)
           for (var h = 0; h < doms.length; h++) {
             ;(function(i) {
               html2canvas(doms[i], {
@@ -551,10 +510,13 @@ export default {
                 allowTaint: false
               }).then((canvas) => {
                 const data = canvas.toDataURL('image/jpeg')
+                console.log('down - begin ------i', i)
+                console.log('down - begin ------h', h)
                 // 执行浏览器下载
                 const shutdownLoading = i + 1 === h
                 const imgName = picname + '-' + (i * 1 + 1)
                 _this.download(`${imgName}.jpeg`, data, _this, shutdownLoading)
+                // _this.finish = false
               })
             })(h)
           }
@@ -567,8 +529,13 @@ export default {
         window.scrollTo(0, 0)
         const Doms = document.getElementsByClassName('exhibitionBox')
         this.ExhibitionData.opreaIndex++
+        console.log(
+          'this.ExhibitionData.opreaIndex -----> ',
+          this.ExhibitionData.opreaIndex
+        )
         if (this.ExhibitionData.opreaIndex === Doms.length) {
           const _this = this
+          console.log('Dom++++++dom ---> ', Doms)
           for (var h = 0; h < Doms.length; h++) {
             ;(function(i) {
               html2canvas(Doms[i], {
@@ -578,6 +545,8 @@ export default {
                 allowTaint: false
               }).then((canvas) => {
                 const data = canvas.toDataURL('image/jpeg')
+                console.log('down - begin ------i', i)
+                console.log('down - begin ------h', h)
                 // 执行浏览器下载
                 const shutdownLoading = i + 1 === h
                 const imgName = picname + '-' + (i * 1 + 1)
@@ -588,28 +557,44 @@ export default {
         }
       })
     },
-    // 点击显示完课榜 TODO:
+    // 点击显示完课榜
     finishLessonList(week) {
-      if (this.teamDetail.id && this.teamDetail.current_lesson) {
+      if (
+        this.classId &&
+        this.classId.classId &&
+        this.classId.classId.id &&
+        this.classId.classId.current_lesson
+      ) {
         // 显示弹框
+        console.log('this.classid ------>>>>>', this.classId)
         this.dialogFormVisible = true
-        this.finishLessonData.teamId = this.teamDetail.id
-        const currentLesson = this.teamDetail.current_lesson.substring(0, 6)
+        this.finishLessonData.teamId = this.classId.classId.id
+        const currentLesson = this.classId.classId.current_lesson.substring(
+          0,
+          6
+        )
         this.finishLessonData.studentLesson = currentLesson.substring(0, 4)
         this.finishLessonData.weekNum = currentLesson.substring(4, 6)
+        console.log(
+          'this.finishLessonData.weekNum ------>>>>>',
+          this.finishLessonData.weekNum
+        )
         this.btnshow(
           this.finishLessonData.weekNum,
-          this.classObj.type,
-          // TODO:
-          this.teamDetail.team_state
+          this.classId.classId.team_type,
+          this.classId.classId.team_state
         )
         // const state = '0'
         // const weekNum = 'U1'
         // this.btnshow(weekNum, state)
+      } else {
+        console.log('this.classId.classId.id  undefined')
       }
     },
     // 生成完课榜图片周按钮显示状态
     btnshow(weekNum, type, state) {
+      console.log('weekNum', weekNum)
+      console.log('state', state)
       this.finishLessonData.isRequest = true
       this.ExhibitionData.isRequest = true
       if (weekNum === 'U1') {
@@ -653,6 +638,8 @@ export default {
     },
     // 生成完作品展图片周按钮显示状态
     // Btnshow(weekNum, state) {
+    //   console.log('weekNum', weekNum)
+    //   console.log('state', state)
     //   if (weekNum === 'U1') {
     //     if (state === 2) {
     //       this.RadioOne = true
@@ -681,25 +668,36 @@ export default {
     // },
     // 点击显示作品展
     ExhibitionList(week) {
-      if (this.teamDetail.id && this.teamDetail.current_lesson) {
+      if (
+        this.classId &&
+        this.classId.classId &&
+        this.classId.classId.id &&
+        this.classId.classId.current_lesson
+      ) {
         this.Exhibition = true
-        this.ExhibitionData.teamId = this.teamDetail.id
+        this.ExhibitionData.teamId = this.classId.classId.id
         // this.ExhibitionData.teamId = '100'
         // this.ExhibitionData.weekNum = 'S1L1U1'
-        const currentLesson = this.teamDetail.current_lesson.substring(0, 6)
+        const currentLesson = this.classId.classId.current_lesson.substring(
+          0,
+          6
+        )
         // this.ExhibitionData.studentLesson = currentLesson.substring(0, 4)
         this.ExhibitionData.weekNum1 = currentLesson
         this.ExhibitionData.weekNum = currentLesson.substring(4, 6)
         this.btnshow(
           this.ExhibitionData.weekNum,
-          this.teamDetail.team_type,
-          this.teamDetail.team_state
+          this.classId.classId.team_type,
+          this.classId.classId.team_state
         )
+      } else {
+        console.log('this.classId.classId.id  undefined')
       }
     },
     // 请求完课榜 - 接口数据
     getStuRankingList(teamId, lesson, week, desc) {
       if (!teamId || !lesson || !week) {
+        console.log('getStuRankingList - error:', ' 缺少毕传信息')
         return
       }
       this.$loading({
@@ -716,6 +714,7 @@ export default {
         queryParams: queryParams
       }).then((res) => {
         if (res.error) {
+          console.log(res.error, '接口错误信息-------------->')
           return
         }
         // 生成完课榜（多页）
@@ -735,6 +734,7 @@ export default {
             childLastData[tmpnum].push(res.data.getStuComRankingList[j])
           }
         }
+        console.log('lastChildData ------> ', childLastData)
         this.finishLessonData.childListData = childLastData
         this.finishLessonData.imgNum = childLastData.length
       })
@@ -752,7 +752,9 @@ export default {
       this.$http.Team.exhibitionOfWorks({
         QueryParams: QueryParams
       }).then((res) => {
+        console.log(res, 123456789)
         if (res.error) {
+          console.log(res.error, '接口错误信息-------------->')
           return
         }
         // 生成作品展（多页）
@@ -772,6 +774,7 @@ export default {
             childLastData[tmpnum].push(res.data.getStuTaskRankingList[j])
           }
         }
+        console.log('lastChildData ------> ', childLastData)
         this.ExhibitionData.childListData = childLastData
         this.ExhibitionData.imgNum = childLastData.length
       })
@@ -779,25 +782,26 @@ export default {
     // 绘制生成完课榜图片
     canvasStart(res) {
       if (res) {
-        this.handlePosterLoad(this.teamDetail.team_name)
+        this.handlePosterLoad(this.classId.classId.team_name)
       }
     },
     // 绘制生成作品展图片
     CanvasStart(res) {
       if (res) {
-        this.E_handlePosterLoad(this.teamDetail.team_name)
+        this.E_handlePosterLoad(this.classId.classId.team_name)
       }
     },
     // 加好友进群 修改已加好友 已进群 接口
     getCodeHandle() {
       this.$http.User.updateTeamStudent({
         studentId: this.codeHandle.studentId,
-        teamId: this.classObj.teamId,
+        teamId: this.classId.classId.id,
         courseType: this.type,
         addedGroup: this.codeHandle.addedGroup,
         addedWechat: this.codeHandle.addedWechat
-      }).then((res) => {
-        if (res.code === 0) {
+      })
+        .catch((err) => console.log(err, '修改失败'))
+        .then((res) => {
           if (this.codeHandle.type === 'wechat') {
             this.table.tableData[
               this.codeHandle.index
@@ -811,45 +815,36 @@ export default {
             message: '修改成功',
             type: 'success'
           })
-        }
-      })
+        })
     },
     // 加好友进群接口
     getGroup() {
-      console.log(this.classObj.type, 'classObj.type')
-      const trail = +this.classObj.type
-        ? 'StudentSystemForTeamStatisticsPage'
-        : 'StudentTrialForTeamStatisticsPage'
-
-      if (this.classObj.teamId) {
+      if (this.classId && this.classId.classId && this.classId.classId.id) {
         if (this.search) {
-          this.querysData = `{"team_id":${this.classObj.teamId},"student_id":${this.search}}`
+          this.querysData = `{"team_id":${this.classId.classId.id},"team_type":${this.classId.type},"uid":${this.search}}`
         } else {
-          this.querysData = `{"team_id":${this.classObj.teamId}}`
+          this.querysData = `{"team_id":${this.classId.classId.id},"team_type":${this.classId.type}}`
         }
-        const sortFollow = '{"follow":"desc"}'
-        const cortfollowDesc = `sort:${JSON.stringify(sortFollow)}`
-        const sort = this.sortGroup ? this.sortGroup : cortfollowDesc
-        this.$http.Team[trail]({
+        this.$http.Team.getuserListForTeam({
           querysData: this.querysData,
           currentPage: this.table.currentPage,
-          sortGroup: sort
+          sortGroup: this.sortGroup
         }).then((res) => {
           this.table.tableData = []
           // 0 默认 1 男 2 女 3 保密
           // 0 默认  1 无基础  2 一年以下 3 一年以上
           // 0 叉 1 对号
-          this.table.totalElements = +res.data[trail].totalElements
-          const _data = res.data[trail].content
+          this.table.totalElements = +res.data.userListForTeam.totalElements
+          const _data = res.data.userListForTeam.content
           _data.forEach((item) => {
             item.birthday = GetAgeByBrithday(item.birthday)
-            if (+item.sex === 0) {
+            if (item.sex === '0') {
               item.sex = '- ·'
-            } else if (+item.sex === 1) {
+            } else if (item.sex === '1') {
               item.sex = '男 ·'
-            } else if (+item.sex === 2) {
+            } else if (item.sex === '2') {
               item.sex = '女 ·'
-            } else if (+item.sex === 3) {
+            } else if (item.sex === '3') {
               item.sex = '保密 ·'
             }
             if (item.birthday.indexOf(50) !== -1) {
@@ -858,7 +853,16 @@ export default {
             item.buytime = timestamp(item.buytime, 6)
             item.added_wechat_time = timestamp(item.added_wechat_time, 6)
             item.added_group_time = timestamp(item.added_group_time, 6)
-            item.fast_follow_time = timestamp(item.fast_follow_time, 6)
+            item.follow_time = timestamp(item.follow_time, 6)
+            if (item.base_painting === '0') {
+              item.base_painting = ' '
+            } else if (item.base_painting === '1') {
+              item.base_painting = '无基础'
+            } else if (item.base_painting === '2') {
+              item.base_painting = '一年以下'
+            } else if (item.base_painting === '3') {
+              item.base_painting = '一年以上'
+            }
           })
           if (this.tableDataEmpty) {
             this.table.tableData = _data
@@ -867,15 +871,17 @@ export default {
             this.tableDataEmpty = true
           }
         })
+      } else {
+        console.log('this.classId.classId.id  undefined')
       }
     },
     // 物流接口
     getLogistics() {
-      if (this.classObj.teamId) {
+      if (this.classId && this.classId.classId && this.classId.classId.id) {
         if (this.search) {
-          this.querysData = `{"team_id":${this.classObj.teamId},"team_type":${this.classObj.type},"uid":${this.search}}`
+          this.querysData = `{"team_id":${this.classId.classId.id},"team_type":${this.classId.type},"uid":${this.search}}`
         } else {
-          this.querysData = `{"team_id":${this.classObj.teamId},"team_type":${this.classObj.type}}`
+          this.querysData = `{"team_id":${this.classId.classId.id},"team_type":${this.classId.type}}`
         }
         this.$http.Team.getStuExpressPage({
           querysData: this.querysData,
@@ -941,11 +947,11 @@ export default {
     },
     // 打开APP接口
     geiLogin() {
-      if (this.classObj.teamId) {
+      if (this.classId && this.classId.classId && this.classId.classId.id) {
         if (this.search) {
-          this.querysData = `{"team_id":${this.classObj.teamId},"team_type":${this.classObj.type},"uid":${this.search}}`
+          this.querysData = `{"team_id":${this.classId.classId.id},"team_type":${this.classId.type},"uid":${this.search}}`
         } else {
-          this.querysData = `{"team_id":${this.classObj.teamId},"team_type":${this.classObj.type}}`
+          this.querysData = `{"team_id":${this.classId.classId.id},"team_type":${this.classId.type}}`
         }
         this.$http.Team.getStuLoginPage({
           querysData: this.querysData,
@@ -1035,9 +1041,9 @@ export default {
     },
     // 参课和完课接口
     getClassCompPage() {
-      if (this.classObj.teamId) {
+      if (this.classId && this.classId.classId && this.classId.classId.id) {
         if (this.search) {
-          this.querysData = `{"team_id":${this.classObj.teamId},"team_type":${this.classObj.type},"uid":${this.search}}`
+          this.querysData = `{"team_id":${this.classId.classId.id},"team_type":${this.classId.type},"uid":${this.search}}`
         } else {
           if (
             this.screenAttendClassData.courseId ||
@@ -1057,9 +1063,9 @@ export default {
             const isCompleteCourse = this.screenAttendClassData.isCompleteCourse
               ? `"${this.screenAttendClassData.isCompleteCourse}"`
               : `""`
-            this.querysData = `{"team_id":${this.classObj.teamId},"team_type":${this.classObj.type},"course_id":${courseId},"user_status":${userStatus},"is_join_course":${isJoinCourse},"is_complete_course":${isCompleteCourse}}`
+            this.querysData = `{"team_id":${this.classId.classId.id},"team_type":${this.classId.type},"course_id":${courseId},"user_status":${userStatus},"is_join_course":${isJoinCourse},"is_complete_course":${isCompleteCourse}}`
           } else {
-            this.querysData = `{"team_id":${this.classObj.teamId},"team_type":${this.classObj.type}}`
+            this.querysData = `{"team_id":${this.classId.classId.id},"team_type":${this.classId.type}}`
           }
         }
         this.$http.Team.getClassCompPage({
@@ -1108,9 +1114,9 @@ export default {
     },
     // 作品及点评
     getStuComment() {
-      if (this.classObj.teamId) {
+      if (this.classId && this.classId.classId && this.classId.classId.id) {
         if (this.search) {
-          this.querysData = `{"team_id":${this.classObj.teamId},"team_type":${this.classObj.type},"uid":${this.search}}`
+          this.querysData = `{"team_id":${this.classId.classId.id},"team_type":${this.classId.type},"uid":${this.search}}`
         } else {
           if (
             this.screenWorksData.courseId ||
@@ -1130,9 +1136,9 @@ export default {
             const isListen = this.screenWorksData.isListen
               ? `"${this.screenWorksData.isListen}"`
               : `""`
-            this.querysData = `{"team_id":${this.classObj.teamId},"team_type":${this.classObj.type},"course_id":${courseId},"is_task":${isTask},"is_comment":${isComment},"is_listen":${isListen}}`
+            this.querysData = `{"team_id":${this.classId.classId.id},"team_type":${this.classId.type},"course_id":${courseId},"is_task":${isTask},"is_comment":${isComment},"is_listen":${isListen}}`
           } else {
-            this.querysData = `{"team_id":${this.classObj.teamId},"team_type":${this.classObj.type}}`
+            this.querysData = `{"team_id":${this.classId.classId.id},"team_type":${this.classId.type}}`
           }
         }
         this.$http.Team.getStuCommentPage({
@@ -1306,28 +1312,6 @@ export default {
       aLink.click()
       if (shutdownLoading) {
         _this.$loading().close()
-        this.finishLessonData = {
-          teamId: 0,
-          studentLesson: '',
-          finishClassSort: 'desc',
-          weekNum: '',
-          isRequest: true,
-          childListData: [],
-          imgNum: 0,
-          imgSuccessNum: 0,
-          opreaIndex: 0
-        }
-        this.ExhibitionData = {
-          teamId: 0,
-          weekNum: '',
-          studentLesson: '',
-          isRequest: true,
-          childListData: [],
-          imgNum: 0,
-          imgSuccessNum: 0,
-          opreaIndex: 0,
-          weekNum1: ''
-        }
       }
     },
     // 转换图片为base64
@@ -1344,6 +1328,9 @@ export default {
       }
       return new Blob([uInt8Array], { type: contentType })
     }
+    // enter(val) {
+    //   console.log('input', val, this.input)
+    // }
   }
 }
 </script>
