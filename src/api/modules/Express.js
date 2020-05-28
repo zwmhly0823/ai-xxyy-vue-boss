@@ -109,6 +109,18 @@ export default {
    */
   createAddress(params) {
     return axios.get('/api/o/v1/express/createAddress', params)
+  },
+  // 物流列表
+  getLogisticsList(params) {
+    return axios.post('/graphql/logisticsList', params)
+  },
+  // 获取物流筛选数据
+  getSearchList(params) {
+    return axios.post('/graphql/v1/toss', params)
+  },
+  // 物流统计
+  getLogisticsStatistics(params) {
+    return axios.post('/graphql/logisticsStatistics', params)
   }
   /**
    * v1 订单关联的物流
