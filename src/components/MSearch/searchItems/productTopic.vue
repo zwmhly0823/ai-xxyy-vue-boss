@@ -1,18 +1,19 @@
 <!--
- * @Descripttion: 
+ * @Descripttion:  小熊商城是5  推荐有礼是4 邀请有奖是 6  体验课是1  系统课是2，3
  * @version: 
  * @Author: zhubaodong
  * @Date: 2020-03-24 18:50:54
- * @LastEditors: zhubaodong
- * @LastEditTime: 2020-03-27 21:37:03
+ * @LastEditors: Lukun
+ * @LastEditTime: 2020-05-19 15:15:32
  -->
 <template>
-  <div class="search-item small">
+  <div class="search-item">
     <el-select
       v-model="topicData"
       size="mini"
       clearable
-      placeholder="选择商品类型"
+      multiple
+      placeholder="全部类别"
       @change="onChange"
       @clear="onClear"
     >
@@ -52,9 +53,6 @@ export default {
       console.log(val, 'newTopic')
     }
   },
-  async created() {
-    await this.getProductTopic()
-  },
   methods: {
     // 获取商品主题
     async getProductTopic() {
@@ -69,7 +67,18 @@ export default {
           `
         })
         .then((res) => {
-          this.pruductTopicList = res.data.productTopic
+          res.data.productTopic.map((item) => {
+            if (+item.id === 1) {
+              item.id = '5'
+              this.pruductTopicList.push(item)
+            } else if (+item.id === 2) {
+              item.id = '4'
+              this.pruductTopicList.push(item)
+            } else if (+item.id === 6) {
+              item.id = '6'
+              this.pruductTopicList.push(item)
+            }
+          })
         })
     },
     onChange(data) {
@@ -78,6 +87,9 @@ export default {
     onClear() {
       this.$emit('result', '')
     }
+  },
+  mounted() {
+    this.getProductTopic()
   }
 }
 </script>
