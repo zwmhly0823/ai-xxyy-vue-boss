@@ -42,15 +42,16 @@ export default {
   },
   methods: {
     getLogisticsStatistics() {
+      let q
       if (this.teacherId || this.teacherId === 0) {
-        const q = `{"teacher_id": [${this.teacherId}],"regtype":[${this.regtype}],"source_type":[${this.source_type}]}`
+        q = `{"teacher_id": [${this.teacherId}],"regtype":[${this.regtype}],"source_type":[${this.source_type}]}`
       } else {
-        const q = `{"regtype":[${this.regtype}],"source_type":[${this.source_type}]}`
+        q = `{"regtype":[${this.regtype}],"source_type":[${this.source_type}]}`
       }
       const query = JSON.stringify(q)
       this.$http.Express.getLogisticsStatistics({
         query: `{
-          logisticsStatistics(query:${query}) {
+          logisticsStatisticsNew(query:${query}) {
             no_address
             wait_send
             has_send
@@ -63,7 +64,7 @@ export default {
           }
         }`
       }).then((res) => {
-        const x = res.data.logisticsStatistics
+        const x = res.data.logisticsStatisticsNew
         this.toggleList.map((item) => {
           if (item.id === '0') {
             item.label = x
