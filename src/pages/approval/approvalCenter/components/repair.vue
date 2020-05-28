@@ -4,7 +4,7 @@
  * @Author: Lukun
  * @Date: 2020-04-28 13:50:45
  * @LastEditors: Lukun
- * @LastEditTime: 2020-05-28 21:16:48
+ * @LastEditTime: 2020-05-28 21:49:14
  -->
 <template>
   <div class="container-content">
@@ -155,7 +155,46 @@
           >
             <el-radio label="DELIVERY_MISS">发货漏发</el-radio>
             <el-radio label="TRANSPORT_BAD">运输损坏</el-radio>
+            <el-radio label="OTHER">其他</el-radio>
           </el-radio-group>
+        </el-form-item>
+        <el-form-item label="补发货说明" prop="reissueMsg">
+          <el-input
+            type="textarea"
+            resize="none"
+            class="repair-resolve"
+            v-model="formRepair.reissueMsg"
+            placeholder="请输入"
+          ></el-input>
+        </el-form-item>
+        <el-form-item label="附件" prop="attsUrl">
+          <el-upload
+            action=""
+            :http-request="upload"
+            :class="$style.refundForm_attsUrl"
+            :show-file-list="false"
+          >
+            <div v-if="imgShow && !videoShow">
+              <el-image
+                :src="formRepair.attsUrl"
+                fit="contain"
+                :class="$style.avatar"
+              />
+            </div>
+
+            <div v-else-if="!imgShow && videoShow">
+              <video
+                style="width: 220px; height: 120px"
+                :src="formRepair.attsUrl"
+                controls
+              ></video>
+            </div>
+            <i
+              v-else
+              class="el-icon-plus"
+              :class="$style.avatar_uploader_icon"
+            ></i>
+          </el-upload>
         </el-form-item>
         <el-form-item class="box-padding">
           <el-button type="primary" @click="confirmButton('ruleForm')"
@@ -217,7 +256,6 @@
     </el-dialog>
   </div>
 </template>
-
 <script>
 import LogisticsForm from './logisticsForm'
 import RepairLevel from '@/components/MSearch/searchItems/repairLevel'
