@@ -1,0 +1,141 @@
+<template>
+  <div class="container">
+    <div class="status" :key="index" v-for="(item, index) in toggleList">
+      <span
+        :class="{ 'pitch-up': index == activeIndex }"
+        @click="getToggleClick(index)"
+        >{{ item.label }}</span
+      >
+    </div>
+  </div>
+</template>
+
+<script>
+import { isToss } from '@/utils/index'
+import { expressToggleList } from '@/utils/expressItemConfig'
+export default {
+  props: {
+    hideToggleBtn: {
+      type: Array,
+      default: () => {
+        return []
+      }
+    },
+    tab: {
+      type: String,
+      default: ''
+    },
+    source_type: {
+      type: String,
+      default: ''
+    },
+    regtype: {
+      type: String,
+      default: ''
+    }
+  },
+  data() {
+    return {
+      activeIndex: 0,
+      toggleList: JSON.parse(JSON.stringify(expressToggleList))
+    }
+  },
+  methods: {
+    getLogisticsStatistics() {
+      const q = `{"teacher_id": [${this.teacherId}],"regtype":[${this.regtype}],"source_type":[${this.source_type}]}`
+      const query = JSON.stringify(this.teacherId ? q : '')
+      this.$http.Express.getLogisticsStatistics({
+        query: `{
+          logisticsStatistics(query:${query}) {
+            no_address
+            wait_send
+            has_send
+            has_signed
+            signed_failed
+            has_return
+            confirm_wait_send
+            invalid
+            difficult
+          }
+        }`
+      }).then((res) => {
+        const x = res.data.logisticsStatistics
+        this.toggleList.map((item) => {
+          if (item.id === '0') {
+            item.label = x
+              ? `${item.label}（${Number(x.no_address)}）`
+              : `${item.label}`
+          }
+          if (
+            item.id === '6' &&
+            Object.prototype.hasOwnProperty.call(item.center_express_id, 'lte')
+          ) {
+            item.label = x
+              ? `${item.label}（${Number(x.confirm_wait_send)}）`
+              : `${item.label}`
+          }
+          if (item.id === '1') {
+            item.label = x
+              ? `${item.label}（${Number(x.wait_send)}）`
+              : `${item.label}`
+          }
+        })
+      })
+    },
+    getToggleClick(index) {
+      this.activeIndex = index
+    },
+    hideSomeBtn() {
+      for (let i = 0; i < this.toggleList.length; i++) {
+        if (this.hideToggleBtn.includes(this.toggleList[i].id)) {
+          this.toggleList.splice(i, 1)
+          i--
+        }
+      }
+    },
+    getTeacherId() {
+      const teacherId = isToss()
+      if (teacherId) {
+        this.teacherId = teacherId
+      }
+    },
+    emitStatus() {
+      this.$emit('result', this.toggleList[this.activeIndex])
+    },
+    initToggleList() {
+      this.toggleList = JSON.parse(JSON.stringify(expressToggleList))
+    }
+  },
+  mounted() {
+    this.hideSomeBtn()
+    this.getTeacherId()
+    this.getLogisticsStatistics()
+  },
+  watch: {
+    tab() {
+      this.getLogisticsStatistics()
+      this.initToggleList()
+      this.hideSomeBtn()
+      this.activeIndex = 0
+    },
+    activeIndex() {
+      this.emitStatus()
+    }
+  }
+}
+</script>
+
+<style lang="scss" scoped>
+.container {
+  display: flex;
+  .status {
+    margin-right: 20px;
+    font-weight: 400;
+    padding: 5px;
+    cursor: pointer;
+    .pitch-up {
+      color: #409eff;
+    }
+  }
+}
+</style>
