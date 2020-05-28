@@ -987,8 +987,8 @@ export default {
     },
     handleRegtype(listItem) {
       productTopicList.map((item) => {
-        if (+item.value === +listItem.regtype) {
-          listItem.regtype_text = item.label
+        if (+item.id === +listItem.regtype) {
+          listItem.regtype_text = item.name
         }
       })
     },
