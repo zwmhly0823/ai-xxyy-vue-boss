@@ -30,11 +30,11 @@
     <!-- v-if="!teacherId" TOSS -->
     <!-- <div class="search-export" v-if="!teacherId"> -->
     <div class="search-export">
-      <!-- <div>
+      <div>
         <el-button size="small" type="primary" @click="dialogVisible = true">
           导入物流信息
         </el-button>
-      </div> -->
+      </div>
       <div>
         <el-button size="small" type="primary" @click="showExportDialog"
           >导出物流信息</el-button
