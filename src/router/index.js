@@ -38,9 +38,26 @@ const routes = [
       title: '班级中心',
       icon: 'el-icon-s-custom',
       module: 'student-team'
-    }
+    },
+    children: [
+      {
+        path: '/trialTeam',
+        name: 'trialTeam',
+        meta: {
+          title: '体验课班级',
+          module: 'student-team'
+        }
+      },
+      {
+        path: '/systemTeam',
+        name: 'systemTeam',
+        meta: {
+          title: '系统课班级',
+          module: 'student-team'
+        }
+      }
+    ]
   },
-
   // 交易
   {
     path: '/trading',

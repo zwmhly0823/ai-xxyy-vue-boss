@@ -1,30 +1,37 @@
+/*
+ * @Descripttion: TOSS小熊
+ * @version: 1.0.0
+ * @Author: Shentong
+ * @Date: 2020-05-16 19:12:45
+ * @LastEditors: Shentong
+ * @LastEditTime: 2020-05-27 22:20:31
+ */
 /**
  * 班级相关
  */
 
-const getDefaultState = () => {
-  return {
-    // 通过手机号搜索出的用户
-    userByPhone: null
-  }
+const state = {
+  userByPhone: null,
+  teamItem: {}
 }
-
-const state = getDefaultState()
 
 const mutations = {
   SET_USER: (state, user = {}) => {
     state.userByPhone = user
+  },
+  setTeamItem: (state, teamInfo = {}) => {
+    state.teamItem = teamInfo
   }
 }
 
 const actions = {
-  setUser({ commit, state }, user = {}) {
+  setUser({ commit }, user = {}) {
     commit('SET_USER', user)
   }
 }
 
 export default {
-  namespaced: true,
+  // namespaced: true,
   state,
   mutations,
   actions
