@@ -3,8 +3,8 @@
  * @version: 1.0.0
  * @Author: Shentong
  * @Date: 2020-05-14 14:11:21
- * @LastEditors: Shentong
- * @LastEditTime: 2020-05-29 01:18:37
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-05-30 01:21:31
  -->
 <template>
   <el-row type="flex" class="app-main team-container">
@@ -307,11 +307,11 @@ export default {
           title: '待开课',
           courseDay: ''
         },
-        {
-          teamState: '1',
-          title: '今日开课',
-          courseDay: new Date(new Date().getTime()).setHours(0, 0, 0, 0)
-        },
+        // {
+        //   teamState: '1',
+        //   title: '今日开课',
+        //   courseDay: new Date(new Date().getTime()).setHours(0, 0, 0, 0)
+        // },
         {
           teamState: '1',
           title: '上课中',
