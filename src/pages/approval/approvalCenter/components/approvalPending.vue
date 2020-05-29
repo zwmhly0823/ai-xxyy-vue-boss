@@ -4,7 +4,7 @@
  * @Author: Lukun
  * @Date: 2020-04-27 17:47:58
  * @LastEditors: Lukun
- * @LastEditTime: 2020-05-29 17:13:02
+ * @LastEditTime: 2020-05-29 19:17:58
  -->
 <template>
   <div class="container">
@@ -533,7 +533,7 @@ export default {
         this.isStaffId &&
         this.drawerApprovalDeatail.mode === 'DEFAULT' &&
         this.drawerApprovalDeatail.type === 'MATERIALS'
-      if (versionBool && version) {
+      if (versionBool && (this.version === '' || version)) {
         this.$message('请选择版本号')
         return
       }
@@ -583,7 +583,7 @@ export default {
         this.isStaffId &&
         this.drawerApprovalDeatail.mode === 'DEFAULT' &&
         this.drawerApprovalDeatail.type === 'MATERIALS'
-      if (versionBool && version) {
+      if (versionBool && (this.version === '' || version)) {
         this.$message('请选择版本号')
         return
       }

@@ -4,7 +4,7 @@
  * @Author: Lukun
  * @Date: 2020-04-28 13:50:45
  * @LastEditors: Lukun
- * @LastEditTime: 2020-05-29 17:42:07
+ * @LastEditTime: 2020-05-29 19:20:25
  -->
 <template>
   <div class="container-content">
@@ -436,6 +436,8 @@ export default {
             this.imgShow = true
           }
         } else {
+          this.videoShow = false
+          this.imgShow = false
           this.$message('文件上传失败，请尝试换张图片或者重试')
         }
       })
