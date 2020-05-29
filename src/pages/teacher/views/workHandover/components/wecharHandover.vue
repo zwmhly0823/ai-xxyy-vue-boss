@@ -7,7 +7,12 @@
  -->
 <template>
   <div class="wechar">
-    <Handover :index="index" :tableList="tableList" ref="handover" />
+    <Handover
+      :index="index"
+      :tableList="tableList"
+      :clearData="clearData"
+      ref="handover"
+    />
     <div class="wechar-button">
       <el-button type="primary" @click="handlHandover">开始交接</el-button>
     </div>
@@ -70,7 +75,8 @@ export default {
       form: {},
       weixinIds: [],
       tableList: [],
-      showTable: false
+      showTable: false,
+      clearData: false
     }
   },
   methods: {
@@ -103,9 +109,13 @@ export default {
           weixinIds.join(',')
         )
         if (res.code === 0) {
+          this.clearData = true
           this.dialogVisible = false
           this.showTable = true
           this.tableList = res.payload
+          setTimeout(() => {
+            this.clearData = false
+          }, 3000)
         }
       } catch (error) {
         console.log(error)
