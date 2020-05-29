@@ -135,6 +135,7 @@ export default {
         if (res.code === 0) {
           this.dialogVisible = false
           this.clearSelectData = true
+          this.$message.success('班级交接成功～')
           await this.getList()
         }
       } catch (error) {

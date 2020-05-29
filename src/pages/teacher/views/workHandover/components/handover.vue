@@ -28,13 +28,16 @@
       <div class="to-choose-container" v-show="!flag">
         <h3>{{ handoverTeacherName }}</h3>
         <div class="class-in" v-show="!isClassHandover">
-          微信号{{ computObjKey(wechatObj) }}个
+          微信号<span class="prominent">{{ computObjKey(wechatObj) }}</span
+          >个
         </div>
         <div class="class-in" v-show="!isClassHandover">
-          带班数{{ classLength.length }}个
+          带班数<span class="prominent">{{ classLength.length }}</span
+          >个
         </div>
         <div class="class-in" v-show="isClassHandover">
-          带班数{{ classList.length }}个
+          带班数<span class="prominent">{{ classList.length }}</span
+          >个
         </div>
         <el-button type="text" @click="handoverToChoose">重新选择</el-button>
       </div>
@@ -56,9 +59,11 @@
         </el-table>
         <div class="handover-inform">
           <div class="handover-inform-text" v-if="classList.length">
-            目标交接班级数{{ classList.length }}个；实际接收班级数{{
+            目标交接班级数<span class="prominent">{{ classList.length }}</span
+            >个;实际接收班级数<span class="prominent">{{
               receiveTeacher.length
-            }}个
+            }}</span
+            >个
           </div>
         </div>
       </div>
@@ -73,10 +78,16 @@
           <el-table-column prop="weixinNo"> </el-table-column>
         </el-table>
         <div class="handover-inform">
-          <div class="handover-inform-text" v-if="receiveTeacher.length">
-            目标交接微信数{{ computObjKey(wechatObj) }}个，包含班级数{{
-              classLength.length
-            }}个；
+          <div class="handover-inform-text" v-if="classLength.length">
+            目标交接微信数
+            <span class="prominent">{{ computObjKey(wechatObj) }}</span>
+            个，包含班级数
+            <span class="prominent">{{ classLength.length }}</span>
+            个<br />实际交接微信数
+            <span class="prominent">{{ receiveTeacher.length }}</span>
+            个，包含班级数
+            <span class="prominent">{{ actualClass.length }}</span>
+            个
           </div>
         </div>
       </div>
@@ -124,14 +135,16 @@
       <div class="to-choose-container" v-show="!isShowWX">
         <h3>{{ receiveTeacherName }}</h3>
         <div class="class-in">
-          接收微信号：{{
-            isClassHandover ? receiveWXNo : `${receiveTeacher.length}个`
-          }}
+          接收微信号:<span class="prominent">{{
+            isClassHandover ? receiveWXNo : receiveTeacher.length
+          }}</span>
+          {{ isClassHandover ? '' : '个' }}
         </div>
         <div class="class-in">
-          接收班级数{{
+          接收班级数<span class="prominent">{{
             isClassHandover ? receiveTeacher.length : actualClass.length
-          }}个
+          }}</span
+          >个
         </div>
         <el-button type="text" @click="receiveToChoose">重新选择</el-button>
       </div>
@@ -267,7 +280,7 @@ export default {
     // 接收方选择老师
     receiveSelectTeacher(res) {
       this.form.receiveTeacherId = res.pay_teacher_id || null
-      if (res.teacherList.length !== 0) {
+      if (res && res.teacherList.length !== 0) {
         for (const item of res.teacherList) {
           if (item.id === res.pay_teacher_id) {
             this.receiveTeacherName = item.realname
@@ -459,6 +472,7 @@ export default {
       left: 0;
       &-text {
         font-size: 16px;
+        line-height: 24px;
       }
     }
   }
@@ -466,6 +480,9 @@ export default {
     width: 120px;
     height: 120px;
     fill: rgb(0, 123, 199);
+  }
+  .prominent {
+    color: red;
   }
 }
 </style>
