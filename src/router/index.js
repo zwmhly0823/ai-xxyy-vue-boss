@@ -124,43 +124,6 @@ const routes = [
       }
     ]
   },
-  // 物流管理
-  {
-    path: '/express',
-    name: 'express',
-    // hidden: true,
-    meta: {
-      title: '物流中心',
-      icon: 'el-icon-s-cooperation',
-      module: 'express'
-    },
-    children: [
-      {
-        path: '/experienceClass',
-        name: 'experienceClass',
-        meta: {
-          title: '体验课物流',
-          module: 'express'
-        }
-      },
-      {
-        path: '/systemClass',
-        name: 'systemClass',
-        meta: {
-          title: '系统课物流',
-          module: 'express'
-        }
-      },
-      {
-        path: '/activityClass',
-        name: 'activityClass',
-        meta: {
-          title: '活动物流',
-          module: 'express'
-        }
-      }
-    ]
-  },
   // 财务(该模块先隐藏,丹阳还会回来)
   {
     path: '/finance',
@@ -206,6 +169,14 @@ const routes = [
         name: 'weixinManagement',
         meta: {
           title: '微信管理',
+          module: 'teacher'
+        }
+      },
+      {
+        path: '/workHandover',
+        name: 'workHandover',
+        meta: {
+          title: '工作交接',
           module: 'teacher'
         }
       }
