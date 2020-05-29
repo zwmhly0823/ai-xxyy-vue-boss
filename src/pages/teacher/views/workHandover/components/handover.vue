@@ -215,12 +215,12 @@ export default {
     clearSelectData: {
       handler(val) {
         const classList = this.classList
-        const receiveTeacherId = this.receiveTeacher.map((item, index) => {
-          return item.teacherWechatId
+        const ids = this.receiveTeacher.map((item, index) => {
+          return item.id
         })
         if (val) {
           for (const index in classList) {
-            if (receiveTeacherId.includes(classList[index].teacherWechatId)) {
+            if (ids.includes(classList[index].id)) {
               classList.splice(index, 1)
               this.receiveTeacher.splice(0, this.receiveTeacher.length - 1)
             }
@@ -234,14 +234,13 @@ export default {
       handler(val) {
         const wecharList = this.wecharList
         const weixinIds = this.receiveTeacher.map((item, index) => {
-          return item.weixinId
+          return item.weixinNo
         })
         if (val) {
           for (const index in wecharList) {
-            if (weixinIds.includes(wecharList[index].weixinId)) {
+            if (weixinIds.includes(wecharList[index].weixinNo)) {
               wecharList.splice(index, 1)
               this.receiveTeacher.splice(0, this.receiveTeacher.length - 1)
-              console.log('delete', wecharList[index])
               delete this.wechatObj[wecharList[index].weixinNo]
             }
           }
