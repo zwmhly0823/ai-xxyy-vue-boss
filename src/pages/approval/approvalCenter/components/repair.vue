@@ -4,7 +4,7 @@
  * @Author: Lukun
  * @Date: 2020-04-28 13:50:45
  * @LastEditors: Lukun
- * @LastEditTime: 2020-05-29 16:52:16
+ * @LastEditTime: 2020-05-29 17:42:07
  -->
 <template>
   <div class="container-content">
@@ -417,22 +417,26 @@ export default {
     upload(file) {
       uploadFile(file).then((res) => {
         this.formRepair.attsUrl = res // 取来图片remote地址
-        if (
-          res.includes('.mp4') ||
-          res.includes('.mov') ||
-          res.includes('.FLV') ||
-          res.includes('.rmvb')
-        ) {
-          this.videoShow = true
-          this.imgShow = false
-        }
-        if (
-          res.includes('.png') ||
-          res.includes('.jpg') ||
-          res.includes('.jpeg')
-        ) {
-          this.videoShow = false
-          this.imgShow = true
+        if (res) {
+          if (
+            res.includes('.mp4') ||
+            res.includes('.mov') ||
+            res.includes('.FLV') ||
+            res.includes('.rmvb')
+          ) {
+            this.videoShow = true
+            this.imgShow = false
+          }
+          if (
+            res.includes('.png') ||
+            res.includes('.jpg') ||
+            res.includes('.jpeg')
+          ) {
+            this.videoShow = false
+            this.imgShow = true
+          }
+        } else {
+          this.$message('文件上传失败，请尝试换张图片或者重试')
         }
       })
     },
