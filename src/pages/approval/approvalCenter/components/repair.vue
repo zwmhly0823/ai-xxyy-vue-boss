@@ -4,7 +4,7 @@
  * @Author: Lukun
  * @Date: 2020-04-28 13:50:45
  * @LastEditors: Lukun
- * @LastEditTime: 2020-05-29 01:23:34
+ * @LastEditTime: 2020-05-29 21:02:18
  -->
 <template>
   <div class="container-content">
@@ -417,6 +417,7 @@ export default {
     upload(file) {
       uploadFile(file).then((res) => {
         this.formRepair.attsUrl = res // 取来图片remote地址
+<<<<<<< HEAD
         if (
           res.includes('.mp4') ||
           res.includes('.mov') ||
@@ -433,6 +434,30 @@ export default {
         ) {
           this.videoShow = false
           this.imgShow = true
+=======
+        if (res) {
+          if (
+            res.includes('.mp4') ||
+            res.includes('.mov') ||
+            res.includes('.FLV') ||
+            res.includes('.rmvb')
+          ) {
+            this.videoShow = true
+            this.imgShow = false
+          }
+          if (
+            res.includes('.png') ||
+            res.includes('.jpg') ||
+            res.includes('.jpeg')
+          ) {
+            this.videoShow = false
+            this.imgShow = true
+          }
+        } else {
+          this.videoShow = false
+          this.imgShow = false
+          this.$message('文件上传失败，请尝试换张图片或者重试')
+>>>>>>> origin/newRepair05-29
         }
       })
     },
@@ -487,6 +512,13 @@ export default {
       }
       this.imgShow = false
       this.videoShow = false
+<<<<<<< HEAD
+=======
+      this.changeProductText = '选择商品'
+      this.giftList = []
+      this.ensureGift = []
+      this.selectName = []
+>>>>>>> origin/newRepair05-29
     },
     // 保存商品
     saveGift() {
@@ -781,6 +813,10 @@ export default {
     confirmButton(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
+          if (!this.formData.reissueMsg.trim()) {
+            this.$message.error('申请理由不能为只输入空格～')
+            return
+          }
           if (this.formRepair.level) {
             this.formRepair.level = `L${this.formRepair.level.replace(
               /[^0-9]/gi,

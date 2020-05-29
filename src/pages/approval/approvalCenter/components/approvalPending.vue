@@ -4,7 +4,7 @@
  * @Author: Lukun
  * @Date: 2020-04-27 17:47:58
  * @LastEditors: Lukun
- * @LastEditTime: 2020-05-28 20:19:00
+ * @LastEditTime: 2020-05-29 19:39:44
  -->
 <template>
   <div class="container">
@@ -178,12 +178,12 @@
           <el-col :span="3">版本信息:</el-col>
           <el-col :span="20" :offset="1">
             <versionExprience
-              v-if="drawerApprovalDeatail.courseType == 1"
+              v-if="drawerApprovalDeatail.courseType == 1 && drawerApproval"
               @result="getVersion"
               name="version"
             />
             <versionSystem
-              v-if="drawerApprovalDeatail.courseType == 2"
+              v-if="drawerApprovalDeatail.courseType == 2 && drawerApproval"
               @result="getVersion"
               name="version"
             />
@@ -339,7 +339,7 @@
             </el-image>
           </el-col>
         </el-row>
-        <el-row v-if="isStaffId" class="BOTTOM">
+        <el-row class="BOTTOM" v-if="isStaffId">
           <el-col :span="20" :offset="1">
             <el-button type="button" @click="refuseReplenish">拒 绝</el-button>
             <el-button type="button" @click="ensureReplenish">同 意</el-button>
@@ -469,7 +469,7 @@ export default {
       totalElements: 0,
       endback: false,
       isStaffId: false,
-      version: {},
+      version: '',
       adjustDrawerData: {
         width: '130px',
         checkSuggestion: '', // 调期调级调班的dialog数据
@@ -533,7 +533,7 @@ export default {
         this.isStaffId &&
         this.drawerApprovalDeatail.mode === 'DEFAULT' &&
         this.drawerApprovalDeatail.type === 'MATERIALS'
-      if (versionBool && version) {
+      if (versionBool && (this.version === '' || version)) {
         this.$message('请选择版本号')
         return
       }
@@ -559,13 +559,13 @@ export default {
             .then((res) => {
               console.log(res)
               this.checkPending(this.params)
-              this.version = ''
-
               this.drawerApproval = false
+              this.version = ''
               this.$message({
                 message: '拒绝审核通过',
                 type: 'success'
               })
+
               this.$emit('result', 'third')
             })
             .catch((err) => {
@@ -583,7 +583,7 @@ export default {
         this.isStaffId &&
         this.drawerApprovalDeatail.mode === 'DEFAULT' &&
         this.drawerApprovalDeatail.type === 'MATERIALS'
-      if (versionBool && version) {
+      if (versionBool && (this.version === '' || version)) {
         this.$message('请选择版本号')
         return
       }
@@ -609,8 +609,8 @@ export default {
           this.$http.Backend.isAggrePass(params)
             .then((res) => {
               this.checkPending(this.params)
-              this.version = ''
               this.drawerApproval = false
+              this.version = ''
               this.$message({
                 message: '同意审核通过',
                 type: 'success'
@@ -657,6 +657,7 @@ export default {
     },
     // 应该是当前选择第几页吧
     handleCurrentChange(val) {
+      this.currentPage = val
       Object.assign(this.params, { page: val })
       this.checkPending(this.params)
     },
@@ -819,10 +820,6 @@ export default {
           this.adjustDrawerData.loading = false
           this.$message.error('获取审批详情失败')
         })
-    },
-    // 关闭审批详情查看
-    handleClose() {
-      this.drawerApproval = false
     },
     // 点击下拉操作
     pullDownList(id, type) {

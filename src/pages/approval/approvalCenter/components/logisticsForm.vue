@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-04-01 13:24:40
  * @LastEditors: Lukun
- * @LastEditTime: 2020-05-29 01:21:55
+ * @LastEditTime: 2020-05-29 16:50:09
  -->
 <template>
   <el-form
@@ -166,7 +166,10 @@ export default {
   padding: 30px;
 }
 </style>
+<<<<<<< HEAD
 
+=======
+>>>>>>> origin/newRepair05-29
 <style lang="scss">
 .el-cascader-panel {
   height: 300px;

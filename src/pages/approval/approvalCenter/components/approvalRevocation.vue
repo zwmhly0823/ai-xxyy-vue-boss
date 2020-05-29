@@ -4,7 +4,7 @@
  * @Author: Lukun
  * @Date: 2020-04-27 17:47:58
  * @LastEditors: Lukun
- * @LastEditTime: 2020-05-28 21:23:19
+ * @LastEditTime: 2020-05-29 16:10:40
  -->
 <template>
   <div class="container">
@@ -313,12 +313,13 @@
         <el-row>
           <el-col :span="5">附件:</el-col>
           <el-col :span="18" :offset="1">
-            <img
+            <el-image
+              style="width: 220px; height: 120px"
               :src="drawerApprovalDeatail.attsUrl"
-              width="220"
-              alt=""
-              srcset=""
-            />
+              fit="contain"
+              :preview-src-list="[drawerApprovalDeatail.attsUrl]"
+            >
+            </el-image>
           </el-col>
         </el-row>
       </div>
@@ -438,6 +439,7 @@ export default {
     },
     // 应该是当前选择第几页吧
     handleCurrentChange(val) {
+      this.currentPage = val
       Object.assign(this.params, { page: val })
       this.checkPending(this.params)
     },
