@@ -83,11 +83,11 @@ export default {
     },
 
     handleClose(k) {
-      delete this.tabList[k]
-      this.setTabbedList(this.tabList)
+      delete this.tabbedData[k]
+      this.setTabbedList(this.tabbedData)
       // TODO: 如果删除的是当前选中tab，设置选中的值，并跳转
-      if (Object.keys(this.tabList).length > 0) {
-        sessionStorage.setItem('multiTabbed', JSON.stringify(this.tabList))
+      if (Object.keys(this.tabbedData).length > 0) {
+        sessionStorage.setItem('multiTabbed', JSON.stringify(this.tabbedData))
         this.getTabs()
         return
       }
