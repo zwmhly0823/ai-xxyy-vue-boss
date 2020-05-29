@@ -3,8 +3,8 @@
  * @version: 
  * @Author: Lukun
  * @Date: 2020-04-28 13:50:45
- * @LastEditors: Lukun
- * @LastEditTime: 2020-05-29 01:23:34
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-05-29 23:13:47
  -->
 <template>
   <div class="container-content">
@@ -417,22 +417,28 @@ export default {
     upload(file) {
       uploadFile(file).then((res) => {
         this.formRepair.attsUrl = res // 取来图片remote地址
-        if (
-          res.includes('.mp4') ||
-          res.includes('.mov') ||
-          res.includes('.FLV') ||
-          res.includes('.rmvb')
-        ) {
-          this.videoShow = true
-          this.imgShow = false
-        }
-        if (
-          res.includes('.png') ||
-          res.includes('.jpg') ||
-          res.includes('.jpeg')
-        ) {
+        if (res) {
+          if (
+            res.includes('.mp4') ||
+            res.includes('.mov') ||
+            res.includes('.FLV') ||
+            res.includes('.rmvb')
+          ) {
+            this.videoShow = true
+            this.imgShow = false
+          }
+          if (
+            res.includes('.png') ||
+            res.includes('.jpg') ||
+            res.includes('.jpeg')
+          ) {
+            this.videoShow = false
+            this.imgShow = true
+          }
+        } else {
           this.videoShow = false
-          this.imgShow = true
+          this.imgShow = false
+          this.$message('文件上传失败，请尝试换张图片或者重试')
         }
       })
     },
@@ -487,6 +493,10 @@ export default {
       }
       this.imgShow = false
       this.videoShow = false
+      this.changeProductText = '选择商品'
+      this.giftList = []
+      this.ensureGift = []
+      this.selectName = []
     },
     // 保存商品
     saveGift() {

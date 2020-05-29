@@ -3,8 +3,8 @@
  * @version: 
  * @Author: panjian
  * @Date: 2020-04-01 13:24:40
- * @LastEditors: Lukun
- * @LastEditTime: 2020-05-29 01:21:55
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-05-29 23:12:33
  -->
 <template>
   <el-form
@@ -166,7 +166,6 @@ export default {
   padding: 30px;
 }
 </style>
-
 <style lang="scss">
 .el-cascader-panel {
   height: 300px;
