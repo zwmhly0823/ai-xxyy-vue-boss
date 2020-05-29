@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-05-14 14:11:21
  * @LastEditors: Shentong
- * @LastEditTime: 2020-05-29 01:13:08
+ * @LastEditTime: 2020-05-29 17:09:04
  -->
 <template>
   <el-row type="flex" class="app-main team-container">
@@ -35,6 +35,7 @@
               :loading="flags.loading"
               :size="tabQuery.size"
               :page="tabQuery.page"
+              :showAllTotalNum="true"
               :total="totalElements"
               @pageChange="pageChange_handler"
               class="mytable"
