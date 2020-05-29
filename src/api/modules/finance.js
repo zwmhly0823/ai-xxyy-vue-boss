@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-05-22 12:39:14
  * @LastEditors: liukun
- * @LastEditTime: 2020-05-25 20:39:34
+ * @LastEditTime: 2020-05-29 17:07:04
  */
 
 import axios from '../axiosConfig'
@@ -21,6 +21,11 @@ export default {
     return axios.post(
       `/api/o/v1/order/updateRefundComplete?refundUid=${params.refundUid}&paymentId=${params.paymentId}`
     )
+  },
+  // 调取退款驳回
+  toReject(params) {
+    console.warn('接口-退款驳回发出')
+    return true
   },
   // 导出
   exportExcel(params) {
