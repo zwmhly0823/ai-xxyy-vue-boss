@@ -244,7 +244,6 @@ export default {
               delete this.wechatObj[wecharList[index].weixinNo]
             }
           }
-          console.log('wechatObj', this.wechatObj)
         }
       },
       immediate: true,
