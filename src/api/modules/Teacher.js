@@ -252,5 +252,28 @@ export default {
         }
       }`
     })
+  },
+  // 难度
+  supList() {
+    return axios.post('/graphql/filter', {
+      query: `{
+        courseSupList{
+            id
+            name
+          }
+        }
+      `
+    })
+  },
+  // 商品类型
+  productTopicList() {
+    return axios.post('/graphql/filter', {
+      query: `{
+          productTopic{
+            id
+            name
+          }
+       }`
+    })
   }
 }
