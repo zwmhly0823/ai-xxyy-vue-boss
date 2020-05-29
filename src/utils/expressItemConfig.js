@@ -31,6 +31,6 @@ export const expressToggleList = [
 
 export const productTopicList = [
   { name: '小熊商城', id: '5' },
-  { name: '推荐有礼', id: '6' },
-  { name: '邀请有奖', id: '4' }
+  { name: '推荐有礼', id: '4' },
+  { name: '邀请有奖', id: '6' }
 ]
