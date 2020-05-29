@@ -4,7 +4,7 @@
  * @Author: Lukun
  * @Date: 2020-04-28 13:50:45
  * @LastEditors: Lukun
- * @LastEditTime: 2020-05-29 21:02:18
+ * @LastEditTime: 2020-05-29 19:20:25
  -->
 <template>
   <div class="container-content">
@@ -418,6 +418,7 @@ export default {
       uploadFile(file).then((res) => {
         this.formRepair.attsUrl = res // 取来图片remote地址
 <<<<<<< HEAD
+<<<<<<< HEAD
         if (
           res.includes('.mp4') ||
           res.includes('.mov') ||
@@ -435,6 +436,8 @@ export default {
           this.videoShow = false
           this.imgShow = true
 =======
+=======
+>>>>>>> b4553ef86660e08ff6f06b8232c1e6e79321ced7
         if (res) {
           if (
             res.includes('.mp4') ||
@@ -457,7 +460,10 @@ export default {
           this.videoShow = false
           this.imgShow = false
           this.$message('文件上传失败，请尝试换张图片或者重试')
+<<<<<<< HEAD
 >>>>>>> origin/newRepair05-29
+=======
+>>>>>>> b4553ef86660e08ff6f06b8232c1e6e79321ced7
         }
       })
     },
@@ -513,12 +519,18 @@ export default {
       this.imgShow = false
       this.videoShow = false
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> b4553ef86660e08ff6f06b8232c1e6e79321ced7
       this.changeProductText = '选择商品'
       this.giftList = []
       this.ensureGift = []
       this.selectName = []
+<<<<<<< HEAD
 >>>>>>> origin/newRepair05-29
+=======
+>>>>>>> b4553ef86660e08ff6f06b8232c1e6e79321ced7
     },
     // 保存商品
     saveGift() {

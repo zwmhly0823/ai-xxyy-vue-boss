@@ -1,7 +1,7 @@
 /*
  * @Date: 2020-03-13 15:20:21
- * @LastEditors: liukun
- * @LastEditTime: 2020-05-29 14:37:28
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-05-29 20:16:46
  * @FilePath: /ai-app-vue-toss/src/pages/studentTeam/router/index.js
  */
 import Vue from 'vue'
@@ -17,21 +17,21 @@ const routes = [
       title: '交易',
       icon: 'el-icon-s-custom'
     },
-    redirect: '/express'
+    redirect: '/order'
   },
-  {
-    path: '/express',
-    name: 'express',
-    meta: {
-      title: '物流',
-      keepAlive: false
-    },
-    component: () =>
-      import(
-        /* webpackChunkName: "expressModule" */
-        '../views/express/expressModule.vue'
-      )
-  },
+  // {
+  //   path: '/express',
+  //   name: 'express',
+  //   meta: {
+  //     title: '物流',
+  //     keepAlive: false
+  //   },
+  //   component: () =>
+  //     import(
+  //       /* webpackChunkName: "expressModule" */
+  //       '../views/express/expressModule.vue'
+  //     )
+  // },
   {
     path: '/order',
     name: 'order',

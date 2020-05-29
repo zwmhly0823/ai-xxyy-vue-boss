@@ -92,18 +92,19 @@ export default {
           totalPages
           content {
             mobile
-      nickname
-      sex
-      birthday
-      base_painting
-      buytime
-      base_painting_text
-      added_wechat
-      added_wechat_time
-      added_group
-      added_group_time
-      follow
-      fast_follow_time
+            student_id
+            nickname
+            sex
+            birthday
+            base_painting
+            buytime
+            base_painting_text
+            added_wechat
+            added_wechat_time
+            added_group
+            added_group_time
+            follow
+            fast_follow_time
           }
         }
       }`

@@ -113,10 +113,7 @@ export default {
         })
     },
     onChange(item) {
-      this.$emit(
-        'result',
-        item ? { [this.name]: item, teacherList: this.teacherList } : ''
-      )
+      this.$emit('result', item ? { [this.name]: item } : '')
     }
   }
 }

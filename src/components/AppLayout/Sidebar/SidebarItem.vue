@@ -31,14 +31,17 @@
           }}</span>
         </div>
       </template>
-      <!-- 支持多级的话，此处递归 -->
-      <el-menu-item
-        :index="`${index}-${cIndex}`"
-        v-for="(cItem, cIndex) in item.children"
-        :key="cItem.path"
-        @click="handleOpen(cItem, `${index}-${cIndex}`)"
-        >{{ cItem.meta.title }}</el-menu-item
-      >
+      <el-menu-item-group>
+        <span slot="title">{{ item.meta.title }}</span>
+        <!-- 支持多级的话，此处递归 -->
+        <el-menu-item
+          :index="`${index}-${cIndex}`"
+          v-for="(cItem, cIndex) in item.children"
+          :key="cItem.path"
+          @click="handleOpen(cItem, `${index}-${cIndex}`)"
+          >{{ cItem.meta.title }}</el-menu-item
+        >
+      </el-menu-item-group>
     </el-submenu>
   </div>
 </template>

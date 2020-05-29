@@ -1,7 +1,7 @@
 /*
  * @Date: 2020-03-13 15:20:21
- * @LastEditors: panjian
- * @LastEditTime: 2020-04-15 20:24:10
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-05-29 20:04:17
  * @FilePath: /ai-app-vue-toss/src/pages/studentTeam/router/index.js
  */
 import Vue from 'vue'
@@ -40,15 +40,6 @@ const routes = [
       keepAlive: false
     },
     component: () => import('../views/weixinManagement/accountManagement.vue')
-  },
-  {
-    path: '/workHandover',
-    name: 'workHandover',
-    meta: {
-      title: '工作交接',
-      keepAlive: false
-    },
-    component: () => import('../views/workHandover/index.vue')
   },
   {
     path: '/newTeacher',
