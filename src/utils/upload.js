@@ -3,8 +3,8 @@
  * @version:
  * @Author: shentong
  * @Date: 2019-12-17 15:43:27
- * @LastEditors: Lukun
- * @LastEditTime: 2020-05-28 19:03:54
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-05-29 23:40:14
  */
 import axios from 'axios'
 import $http from '@/api'
@@ -41,7 +41,7 @@ const beforeAvatarUpload = (File) => {
     window._Vue.$message.error('上传文件大小不能超过 5MB!')
     return 0
   }
-  return (isJPG || isPNG || isJPEG || isMP3) && isLt5M
+  return (isJPG || isPNG || isJPEG || isMP3 || isVideo) && isLt5M
 }
 // 头像上传签名
 const getOssToken = async () => {
