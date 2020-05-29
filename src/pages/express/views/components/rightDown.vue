@@ -388,11 +388,11 @@ import logisticsForm from '@/pages/studentTeam/components/TabPane/components/log
 import {
   replenishTypeList,
   replenishReasonSearchList,
-  expressToggleList
+  expressToggleList,
+  productTopicList
 } from '@/utils/expressItemConfig'
 
 let supList = []
-let productTopicList = []
 
 export default {
   props: {
@@ -470,7 +470,7 @@ export default {
   },
   mounted() {
     this.getSupList()
-    this.getProductTopicList()
+    // this.getProductTopicList()
     this.scrollToTop()
   },
   data() {
