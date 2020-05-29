@@ -78,14 +78,6 @@ const routes = [
         }
       },
       {
-        path: '/express',
-        name: 'express',
-        meta: {
-          title: '物流',
-          module: 'trading'
-        }
-      },
-      {
         path: '/financeRefound',
         name: 'financeRefound',
         meta: {
