@@ -4,7 +4,7 @@
  * @Author: Lukun
  * @Date: 2020-04-28 13:50:45
  * @LastEditors: Lukun
- * @LastEditTime: 2020-05-29 01:23:34
+ * @LastEditTime: 2020-05-29 16:52:16
  -->
 <template>
   <div class="container-content">
@@ -487,6 +487,10 @@ export default {
       }
       this.imgShow = false
       this.videoShow = false
+      this.changeProductText = '选择商品'
+      this.giftList = []
+      this.ensureGift = []
+      this.selectName = []
     },
     // 保存商品
     saveGift() {

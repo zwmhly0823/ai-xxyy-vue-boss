@@ -231,6 +231,42 @@
             {{ drawerApprovalDeatail.approvalRemark }}
           </el-col>
         </el-row>
+        <el-row>
+          <el-col :span="3">补货说明:</el-col>
+          <el-col :span="18" :offset="1">{{
+            drawerApprovalDeatail.reissueMsg
+          }}</el-col>
+        </el-row>
+        <el-row v-if="drawerApprovalDeatail.attsUrl.indexOf('mp4') == -1">
+          <el-col :span="3">附件:</el-col>
+          <el-col :span="18" :offset="1">
+            <div class="demo-image__preview">
+              <el-image
+                style="width: 220px; height: 120px"
+                :src="drawerApprovalDeatail.attsUrl"
+                fit="contain"
+                :preview-src-list="[drawerApprovalDeatail.attsUrl]"
+              >
+              </el-image>
+            </div>
+          </el-col>
+        </el-row>
+        <el-row v-else>
+          <el-col :span="3">附件:</el-col>
+          <el-col :span="18" :offset="1">
+            <video
+              style="width: 220px; height: 120px"
+              :src="drawerApprovalDeatail.attsUrl"
+              controls
+            ></video>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="3">备注:</el-col>
+          <el-col :span="20" :offset="1">
+            {{ drawerApprovalDeatail.approvalRemark }}
+          </el-col>
+        </el-row>
       </div>
       <div v-else class="approvallk">
         <el-row>
@@ -322,12 +358,13 @@
         <el-row>
           <el-col :span="5">附件:</el-col>
           <el-col :span="18" :offset="1">
-            <img
+            <el-image
+              style="width: 220px; height: 120px"
               :src="drawerApprovalDeatail.attsUrl"
-              width="220"
-              alt=""
-              srcset=""
-            />
+              fit="contain"
+              :preview-src-list="[drawerApprovalDeatail.attsUrl]"
+            >
+            </el-image>
           </el-col>
         </el-row>
       </div>
@@ -449,6 +486,7 @@ export default {
     },
     // 应该是当前选择第几页吧
     handleCurrentChange(val) {
+      this.currentPage = val
       Object.assign(this.params, { page: val })
       this.checkPending(this.params)
     },
