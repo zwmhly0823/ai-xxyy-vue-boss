@@ -153,6 +153,14 @@ export default {
     tableList: {
       type: Array,
       default: () => []
+    },
+    clearSelectData: {
+      type: Boolean,
+      default: false
+    },
+    clearData: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -203,6 +211,45 @@ export default {
         }
       },
       immediate: true
+    },
+    clearSelectData: {
+      handler(val) {
+        const classList = this.classList
+        const receiveTeacherId = this.receiveTeacher.map((item, index) => {
+          return item.teacherWechatId
+        })
+        if (val) {
+          for (const index in classList) {
+            if (receiveTeacherId.includes(classList[index].teacherWechatId)) {
+              classList.splice(index, 1)
+              this.receiveTeacher.splice(0, this.receiveTeacher.length - 1)
+            }
+          }
+        }
+      },
+      immediate: true,
+      deep: true
+    },
+    clearData: {
+      handler(val) {
+        const wecharList = this.wecharList
+        const weixinIds = this.receiveTeacher.map((item, index) => {
+          return item.weixinId
+        })
+        if (val) {
+          for (const index in wecharList) {
+            if (weixinIds.includes(wecharList[index].weixinId)) {
+              wecharList.splice(index, 1)
+              this.receiveTeacher.splice(0, this.receiveTeacher.length - 1)
+              console.log('delete', wecharList[index])
+              delete this.wechatObj[wecharList[index].weixinNo]
+            }
+          }
+          console.log('wechatObj', this.wechatObj)
+        }
+      },
+      immediate: true,
+      deep: true
     }
   },
   methods: {
@@ -226,6 +273,7 @@ export default {
       if (this.isClassHandover) {
         this.initClassInform(this.form.handoverTeacherId)
       } else {
+        this.wechatObj = {}
         this.getWechat(this.form.handoverTeacherId)
       }
     },
@@ -237,7 +285,13 @@ export default {
     // 接收方选择老师
     receiveSelectTeacher(res) {
       this.form.receiveTeacherId = res.pay_teacher_id || null
-      this.receiveTeacherName = res.teacherList[0].realname
+      if (res.teacherList.length !== 0) {
+        for (const item of res.teacherList) {
+          if (item.id === res.pay_teacher_id) {
+            this.receiveTeacherName = item.realname
+          }
+        }
+      }
       this.form.receiveWxId = ''
       if (this.isClassHandover) {
         this.getWeixinByTeacherId(res.pay_teacher_id)
@@ -255,7 +309,14 @@ export default {
       }
       try {
         const res = await this.$http.WorkerHandover.getHandoverSteam(teacherId)
-        if (res && res.code === 0 && res.payload.length !== 0) {
+        if (res && res.code === 0) {
+          if (res.payload.length === 0) {
+            this.$message({
+              message: '此老师没有班级～',
+              type: 'warning'
+            })
+            return
+          }
           this.classList = res.payload
           this.flag = false
         }

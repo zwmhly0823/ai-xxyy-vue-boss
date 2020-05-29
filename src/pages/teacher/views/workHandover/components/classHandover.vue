@@ -7,7 +7,11 @@
  -->
 <template>
   <div class="class">
-    <Handover :index="index" ref="handover" />
+    <Handover
+      :index="index"
+      :clearSelectData="clearSelectData"
+      ref="handover"
+    />
     <div class="class-button">
       <el-button type="primary" @click="handlHandover">开始交接</el-button>
     </div>
@@ -91,7 +95,8 @@ export default {
         pageSize: 15,
         pageNumber: 1
       },
-      totalElements: 0
+      totalElements: 0,
+      clearSelectData: false
     }
   },
   methods: {
@@ -129,7 +134,8 @@ export default {
         )
         if (res.code === 0) {
           this.dialogVisible = false
-          this.getList()
+          this.clearSelectData = true
+          await this.getList()
         }
       } catch (error) {
         console.log(error)
@@ -146,6 +152,7 @@ export default {
         this.showTable = true
         this.tableList = res.content
         this.totalElements = res.totalElements
+        this.clearSelectData = false
       } catch (error) {
         console.log(error)
       }
