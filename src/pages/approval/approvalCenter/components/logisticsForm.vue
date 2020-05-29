@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-04-01 13:24:40
  * @LastEditors: Lukun
- * @LastEditTime: 2020-05-20 13:25:36
+ * @LastEditTime: 2020-05-29 16:50:09
  -->
 <template>
   <el-form
@@ -163,6 +163,11 @@ export default {
 <style lang="scss" scoped>
 .demo-ruleForm {
   padding: 30px;
+}
+</style>
+<style lang="scss">
+.el-cascader-panel {
+  height: 300px;
 }
 </style>
 <style lang="scss" module>

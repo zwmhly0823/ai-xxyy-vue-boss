@@ -456,6 +456,7 @@ export default {
     },
     // 应该是当前选择第几页吧
     handleCurrentChange(val) {
+      this.currentPage = val
       Object.assign(this.params, { page: val })
       this.checkPending(this.params)
     },

@@ -3,8 +3,8 @@
  * @version: 
  * @Author: Lukun
  * @Date: 2020-04-27 17:47:58
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-05-23 17:56:36
+ * @LastEditors: Lukun
+ * @LastEditTime: 2020-05-29 16:10:40
  -->
 <template>
   <div class="container">
@@ -439,6 +439,7 @@ export default {
     },
     // 应该是当前选择第几页吧
     handleCurrentChange(val) {
+      this.currentPage = val
       Object.assign(this.params, { page: val })
       this.checkPending(this.params)
     },
