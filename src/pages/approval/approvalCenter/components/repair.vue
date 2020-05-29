@@ -4,7 +4,7 @@
  * @Author: Lukun
  * @Date: 2020-04-28 13:50:45
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-05-29 23:13:47
+ * @LastEditTime: 2020-05-29 23:26:28
  -->
 <template>
   <div class="container-content">
@@ -791,6 +791,10 @@ export default {
     confirmButton(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
+          if (!this.formRepair.reissueMsg.trim()) {
+            this.$message('申请理由不能为只输入空格～')
+            return
+          }
           if (this.formRepair.level) {
             this.formRepair.level = `L${this.formRepair.level.replace(
               /[^0-9]/gi,
