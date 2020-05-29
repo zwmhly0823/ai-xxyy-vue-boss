@@ -7,7 +7,9 @@
  * @Description: 全局公共方法，添加或改动及时全员通知。 注释一定要写详细！
  */
 
+import { Message } from 'element-ui'
 import dayjs from 'dayjs'
+import store from '@/store'
 
 /**
  * 是否 toss。 是toss返回 teacher_id,否则返回 null
@@ -150,7 +152,7 @@ export function baseUrl() {
   if (BASE_URL === 'ghpageslive') {
     myBaseUrl = ''
   } else if (BASE_URL === 'ghpagestest' || BASE_URL.indexOf('test') > -1) {
-    myBaseUrl = '/ai-app-vue-toss-test/'
+    myBaseUrl = '/ai-app-vue-boss-test/'
     // myBaseUrl = ''
   }
   return myBaseUrl
@@ -298,4 +300,34 @@ export function url2KeyVal() {
     })
   }
   return arrObj
+}
+
+/**
+ * 打开一个新页签 v1.0
+ * @path: 要跳转的路由，包含模块名和router path.如 '/student-team/#/trialTeam'
+ */
+export function openNewTab(path, title) {
+  if (!path || !title) {
+    Message.error('请填写跳转路径或标题')
+    return
+  }
+  const pathname = location.pathname
+  let baseUrl = ''
+  if (pathname.includes('test')) {
+    const pathArr = pathname.split('/')
+    baseUrl = '/' + [pathArr[1]].join('/')
+  }
+  const pathUrl = `${baseUrl}${path}`
+  // 已打开的页签
+  location.href = pathUrl
+  const multiTabbed = JSON.parse(sessionStorage.getItem('multiTabbed')) || {}
+  const meta = { title }
+
+  if (!Object.keys(multiTabbed).includes(pathUrl)) {
+    Object.assign(multiTabbed, { [`${pathUrl}`]: { meta } })
+    sessionStorage.setItem('multiTabbed', JSON.stringify(multiTabbed))
+    store.dispatch('tabbed/setTabbedList', multiTabbed)
+  }
+  sessionStorage.setItem('currentMultiTab', pathUrl)
+  store.dispatch('tabbed/setCurrentTabbed', pathUrl)
 }

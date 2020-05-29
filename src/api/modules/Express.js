@@ -3,8 +3,8 @@
  * @version:
  * @Author: panjian
  * @Date: 2020-03-31 22:54:28
- * @LastEditors: panjian
- * @LastEditTime: 2020-05-18 19:44:13
+ * @LastEditors: Lukun
+ * @LastEditTime: 2020-05-23 05:31:19
  */
 // import axios from '../axios'
 import axios from '../axiosConfig'
@@ -84,6 +84,12 @@ export default {
     )
   },
   /**
+   * 通过订单id查询物流信息
+   */
+  getExpressByOrderId(params) {
+    return axios.get(`/api/o/v1/express/getExpressByOrderId?orderId=${params}`)
+  },
+  /**
    * 带班详情 物流 修改地址 查询地址接口
    * @param {*} param0
    */
@@ -96,6 +102,25 @@ export default {
    */
   updateExpressAddress(params) {
     return axios.get('/api/o/v1/express/updateExpressAddress', params)
+  },
+  /**
+   * 新增地址信息
+   * @param {*} param0
+   */
+  createAddress(params) {
+    return axios.get('/api/o/v1/express/createAddress', params)
+  },
+  // 物流列表
+  getLogisticsList(params) {
+    return axios.post('/graphql/logisticsList', params)
+  },
+  // 获取物流筛选数据
+  getSearchList(params) {
+    return axios.post('/graphql/v1/toss', params)
+  },
+  // 物流统计
+  getLogisticsStatistics(params) {
+    return axios.post('/graphql/logisticsStatistics', params)
   }
   /**
    * v1 订单关联的物流

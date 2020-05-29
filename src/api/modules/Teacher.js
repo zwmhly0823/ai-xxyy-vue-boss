@@ -37,6 +37,8 @@ export default {
             is_login
             head_image
             join_date
+            leave_date
+            level
             leave_train
             department {
               id
@@ -249,6 +251,29 @@ export default {
             teacher_id
         }
       }`
+    })
+  },
+  // 难度
+  supList() {
+    return axios.post('/graphql/filter', {
+      query: `{
+        courseSupList{
+            id
+            name
+          }
+        }
+      `
+    })
+  },
+  // 商品类型
+  productTopicList() {
+    return axios.post('/graphql/filter', {
+      query: `{
+          productTopic{
+            id
+            name
+          }
+       }`
     })
   }
 }

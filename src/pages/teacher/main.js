@@ -5,6 +5,7 @@ import store from '@/store'
 import '@/plugins/element-ui'
 import 'normalize.css/normalize.css' // A modern alternative to CSS resets
 import '@/assets/styles/index.scss' // global css
+import '@/assets/fonts/iconfont.js'
 
 import $http from '@/api' // global css
 

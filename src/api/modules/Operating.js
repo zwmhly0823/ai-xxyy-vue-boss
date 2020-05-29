@@ -4,9 +4,10 @@
  * @Author: Shentong
  * @Date: 2020-03-16 19:46:39
  * @LastEditors: panjian
- * @LastEditTime: 2020-05-12 11:59:10
+ * @LastEditTime: 2020-05-19 21:30:14
  */
 import axios from '../axiosConfig'
+// import { getToken } from '@/utils/auth'
 
 export default {
   /**
@@ -206,5 +207,22 @@ export default {
         }
       }`
     })
+  },
+  /*
+   * 密码登录
+   */
+  channelUpload(file) {
+    // const token = getToken()
+    const headers = {
+      token:
+        'Bearer ' +
+        'eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiI0NTgwNTIyOTY3NzgwNTk3NzYiLCJzdWIiOiI0NTgwNTIyOTY3NzgwNTk3NzYiLCJpYXQiOjE1ODkzNzQ2NDMsImF1ZCI6InVzZXIiLCJleHAiOjE1OTgwMTQ2NDN9.VMeHKQHHOHb_9Hd764BjDGQwYLwHrgbavqHcvisKGeFu5ZWAFGckS60dkNVHo20x_tU8vGlnDS8AC97IKTBFEw',
+      responseType: 'blob'
+    }
+    return axios.post(`/api/b/v1/import/importCompletedOrder`, file, {
+      headers,
+      params: {}
+    })
+    // return axios.post(`/api/b/v1/import/importCompletedOrder`, file)
   }
 }

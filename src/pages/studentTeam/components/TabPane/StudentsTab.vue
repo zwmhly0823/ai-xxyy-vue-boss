@@ -7,10 +7,8 @@
         phone="uid"
         onlyPhone="1"
         phoneTip="手机号/微信昵称 查询"
-        :teamType="
-          `${classId.classId && +classId.classId.team_type === 0 ? '0' : '1'}`
-        "
-        :teamId="classId.classId && classId.classId.id"
+        :teamType="`${classObj.teamId && +classObj.type === 0 ? '0' : '1'}`"
+        :teamId="classObj.teamId"
       />
     </div>
     <el-table
@@ -62,7 +60,7 @@
         :couponData="couponData"
         :selectUserId="selectUserId"
       />
-      <el-table-column label="基本信息" class="information" width="280px">
+      <el-table-column label="基本信息" class="information" width="300px">
         <template slot-scope="scope">
           <img
             class="information-img"
@@ -76,9 +74,10 @@
               <span v-show="scope.row.base_painting_text">·</span>
               {{ scope.row.base_painting_text }}
             </div>
-            <!-- <div class="wechatnote">
-              微信备注:<span>{{ scope.row.wechatNote }}</span>
-            </div> -->
+            <div class="age">
+              体验课渠道:
+              <span>{{ scope.row.pay_channel_outer_name }}</span>
+            </div>
           </div>
         </template>
       </el-table-column>
@@ -137,8 +136,8 @@
       :page-count="totalPages"
       :total="totalElements"
       @current-change="handleSizeChange"
-      open="calc(100vw - 180px - 240px - 147px - 30px)"
-      close="calc(100vw - 180px - 240px - 26px - 30px)"
+      open="calc(100vw - 147px - 50px)"
+      close="calc(100vw - 26px - 50px)"
     ></m-pagination>
   </div>
 </template>
@@ -158,9 +157,9 @@ export default {
   },
   props: {
     // 班级传参
-    classId: {
+    classObj: {
       type: Object,
-      default: null
+      default: () => {}
     }
   },
   data() {
@@ -198,12 +197,12 @@ export default {
   },
   created() {
     // 优惠卷列表接口
-
+    this.studentsList()
+    this.getstatusList()
     this.couponList()
   },
   watch: {
     searchUser(val) {
-      console.log(val, '--------------team----------')
       this.search = ''
       if (val && val.tid) {
         // 根据手机号获取uid
@@ -214,25 +213,24 @@ export default {
         })
         this.studentsList()
       }
-    },
-    classId(value) {
-      if (!value) return
-      this.scrollTop()
-      this.currentPage = 1
-      if (value.classId) {
-        this.tableDataEmpty = true
-        this.studentsList()
-        this.getstatusList()
-      } else {
-        this.tableDataEmpty = false
-        this.tableData = []
-      }
     }
+    // classId(value) {
+    //   if (!value) return
+    //   this.scrollTop()
+    //   this.currentPage = 1
+    //   if (value.classId) {
+    //     this.tableDataEmpty = true
+    //     this.studentsList()
+    //     this.getstatusList()
+    //   } else {
+    //     this.tableDataEmpty = false
+    //     this.tableData = []
+    //   }
+    // }
   },
   methods: {
     // 搜索
     handleSearch(res) {
-      console.log(res, '搜所')
       if (res.length === 0) {
         this.search = ''
         this.studentsList()
@@ -244,9 +242,9 @@ export default {
     // 学员列表
     studentsList() {
       if (this.search) {
-        this.queryData = `type: ${this.classId.type}, team_id: "${this.classId.classId.id}",page:${this.currentPage},id:${this.search}`
+        this.queryData = `type: ${this.classObj.type}, team_id: "${this.classObj.teamId}",page:${this.currentPage},id:${this.search}`
       } else {
-        this.queryData = `type: ${this.classId.type}, team_id: "${this.classId.classId.id}",page:${this.currentPage}`
+        this.queryData = `type: ${this.classObj.type}, team_id: "${this.classObj.teamId}",page:${this.currentPage}`
       }
       axios
         .post('/graphql/team', {
@@ -297,12 +295,12 @@ export default {
                 total
                 status
               }
+              pay_channel_outer_name
             }
           }
         }`
         })
         .then((res) => {
-          console.log(res)
           if (!res.data.teamUserListPage) return
           this.totalPages = res.data.teamUserListPage.totalPages * 1
           this.totalElements = +res.data.teamUserListPage.totalElements
@@ -405,9 +403,7 @@ export default {
       })
     },
     // 表头优惠卷操作
-    headerPoint(index, scope) {
-      console.log(index, scope)
-    },
+    headerPoint(index, scope) {},
     // 表格优惠卷操作
     handleEdit(index, row) {
       // 当没有点击选择时点击发放优惠卷气泡
@@ -452,15 +448,12 @@ export default {
   }
   &-right {
     float: left;
-    width: 140px;
+    // width: 140px;
+    line-height: 20px;
     color: #333333;
+    line-height: 20px;
     .age {
       color: #666;
-    }
-    .wechatnote {
-      span {
-        color: #606266;
-      }
     }
   }
 }

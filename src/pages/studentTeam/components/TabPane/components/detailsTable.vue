@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 20:22:24
  * @LastEditors: panjian
- * @LastEditTime: 2020-05-16 20:18:33
+ * @LastEditTime: 2020-05-28 20:11:40
  -->
 <template>
   <div class="table-box">
@@ -73,7 +73,9 @@
               <span class="info-sex" v-else>女 ·</span> -->
               <span class="info-sex">{{ scope.row.sex }}</span>
               <span class="info-age">{{ scope.row.birthday }}</span>
-              <span class="info-basics">{{ scope.row.base_painting }}</span>
+              <span class="info-basics">{{
+                scope.row.base_painting_text
+              }}</span>
             </div>
           </template>
         </el-table-column>
@@ -226,7 +228,7 @@
               src="@/assets/images/success.png"
               alt=""
             />
-            <div>{{ scope.row.follow_time }}</div>
+            <div>{{ scope.row.fast_follow_time }}</div>
             <span style="display: none;"> {{ scope.row }}</span>
           </template>
         </el-table-column>
@@ -236,8 +238,8 @@
         @current-change="handleCurrentChange"
         :current-page="+tables.currentPage"
         :total="+tables.totalElements"
-        open="calc(100vw - 180px - 240px - 147px - 30px)"
-        close="calc(100vw - 180px - 240px - 26px - 30px)"
+        open="calc(100vw - 147px - 50px)"
+        close="calc(100vw - 26px - 50px)"
       />
     </div>
     <!-- 物流 -->
@@ -285,11 +287,9 @@
               <div v-if="scope.row.receipt_name">
                 <span>{{ scope.row.receipt_name }}</span>
                 <span>{{ scope.row.receipt_tel }}</span>
-                <!-- v-if="
-                    showModifyAddressBtn &&
+                <!-- showModifyAddressBtn &&
                       scope.row.id == rowId &&
-                      (expressStatus === '待审核' || expressStatus === '无效')
-                  " -->
+                      (expressStatus === '待审核' || expressStatus === '无效') -->
                 <el-button
                   v-if="
                     showModifyAddressBtn &&
@@ -345,8 +345,8 @@
         @current-change="handleCurrentChange"
         :current-page="+tables.currentPage"
         :total="+tables.totalElements"
-        open="calc(100vw - 180px - 240px - 147px - 30px)"
-        close="calc(100vw - 180px - 240px - 26px - 30px)"
+        open="calc(100vw - 147px - 50px)"
+        close="calc(100vw - 26px - 50px)"
       />
     </div>
     <!-- 打开APP 原 登陆 -->
@@ -404,8 +404,8 @@
         @current-change="handleCurrentChange"
         :current-page="+tables.currentPage"
         :total="+tables.totalElements"
-        open="calc(100vw - 180px - 240px - 147px - 30px)"
-        close="calc(100vw - 180px - 240px - 26px - 30px)"
+        open="calc(100vw - 147px - 50px)"
+        close="calc(100vw - 26px - 50px)"
       />
     </div>
     <!-- 参课和完课 -->
@@ -483,8 +483,8 @@
         @current-change="handleCurrentChange"
         :current-page="+tables.currentPage"
         :total="+tables.totalElements"
-        open="calc(100vw - 180px - 240px - 147px - 30px)"
-        close="calc(100vw - 180px - 240px - 26px - 30px)"
+        open="calc(100vw - 147px - 50px)"
+        close="calc(100vw - 26px - 50px)"
       />
     </div>
     <!-- 作品及点评 -->
@@ -559,7 +559,7 @@
               >
                 <p class="audio-triangle"></p>
                 <img
-                  v-if="audioIndex === index && studentId == scope.row.id"
+                  v-if="audioIndex === index && rowIdDianping == scope.row.id"
                   class="audio-imgs"
                   src="@/assets/images/sound-active.gif"
                   alt=""
@@ -597,8 +597,8 @@
         @current-change="handleCurrentChange"
         :current-page="+tables.currentPage"
         :total="+tables.totalElements"
-        open="calc(100vw - 180px - 240px - 147px - 30px)"
-        close="calc(100vw - 180px - 240px - 26px - 30px)"
+        open="calc(100vw - 147px - 50px)"
+        close="calc(100vw - 26px - 50px)"
       />
     </div>
 
@@ -634,9 +634,9 @@ export default {
       type: Boolean,
       default: false
     },
-    classId: {
+    classObj: {
       type: Object,
-      default: null
+      default: () => {}
     },
     tables: {
       type: Object,
@@ -669,7 +669,7 @@ export default {
       modifyFormData: {},
       audioIndex: null,
       tableindex: null,
-      studentId: null,
+      rowIdDianping: null,
       added_group: null,
       added_wechat: null,
       ruleForm: {
@@ -685,7 +685,7 @@ export default {
   },
   mounted() {},
   watch: {
-    classId(value) {
+    classObj(value) {
       this.audioIndex = null
     },
     audioTabs(value) {
@@ -705,7 +705,6 @@ export default {
       // this.modifyFormData = { id, userid, orderid, addressid }
       this.modifyFormData = { id, userid, orderid, row }
       this.showModifyAddressBtn = true
-      console.log(row)
     },
     // 加好友
     handleEdit(index, row) {
@@ -716,9 +715,7 @@ export default {
       }
     },
     // 表头加好友操作
-    headerPoint(index, scope) {
-      // console.log(index, scope)
-    },
+    headerPoint(index, scope) {},
     batchBtn() {
       const orderIds = Object.values(this.selectUserMobile).join()
       this.$http.User.sendMsgForTeacher(orderIds).then((res) => {
@@ -788,7 +785,7 @@ export default {
     onSortFollow() {
       this.renderHtml = false
       if (this.followSort === 'asc') {
-        this.$emit('onGroupSort', '{"wechat_follow_time":"desc"}')
+        this.$emit('onGroupSort', '{"follow":"desc"}')
         this.$nextTick(() => {
           this.wechatShowIcon = 1
           this.groupShowIcon = 1
@@ -797,7 +794,7 @@ export default {
         })
         this.followSort = 'desc'
       } else {
-        this.$emit('onGroupSort', '{"wechat_follow_time":"asc"}')
+        this.$emit('onGroupSort', '{"follow":"asc"}')
         this.$nextTick(() => {
           this.wechatShowIcon = 1
           this.groupShowIcon = 1
@@ -829,7 +826,6 @@ export default {
     // 修改地址按钮
     onModifyAddress(row) {
       this.showModifyAddress = true
-      console.log(row, '点击修改地址')
     },
     modifyAddressExpress(data) {
       this.showModifyAddress = false
@@ -869,7 +865,8 @@ export default {
     onClick(row, column, event) {
       this.added_group = row.added_group
       this.added_wechat = row.added_wechat
-      this.studentId = row.id
+      this.rowIdDianping = row.id
+      this.student_id = row.student_id
       this.tableindex = row.index
       this.orderId = row.order_id
       const id = row.id
@@ -882,7 +879,7 @@ export default {
     commandFriend(command) {
       const val = {
         type: 'wechat',
-        studentId: this.studentId,
+        studentId: this.student_id,
         addedGroup: this.added_group,
         addedWechat: command,
         index: this.tableindex
@@ -893,7 +890,7 @@ export default {
     onGroup(command) {
       const val = {
         type: 'group',
-        studentId: this.studentId,
+        studentId: this.student_id,
         addedWechat: this.added_wechat,
         addedGroup: command,
         index: this.tableindex

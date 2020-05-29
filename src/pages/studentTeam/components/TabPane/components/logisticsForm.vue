@@ -149,7 +149,12 @@ export default {
         expressCompany: '',
         expressCompanyNu: ''
       }
-
+      if (!this.province) {
+        this.$message({
+          message: '请选择收货人地址'
+        })
+        return false
+      }
       this.$refs[formName].validate((valid) => {
         if (valid) {
           this.$http.Express.editAddressAndExpressForOrder(params)

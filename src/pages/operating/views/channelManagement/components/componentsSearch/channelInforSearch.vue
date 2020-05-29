@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-24 18:50:54
  * @LastEditors: panjian
- * @LastEditTime: 2020-05-15 15:55:12
+ * @LastEditTime: 2020-05-23 16:48:00
  -->
 <template>
   <div class="search-item small threeSelect">
@@ -65,6 +65,7 @@ export default {
     tabIndex(value) {
       console.log(value, 'watch')
       this.channelName = []
+      this.input = ''
     }
   },
   async created() {

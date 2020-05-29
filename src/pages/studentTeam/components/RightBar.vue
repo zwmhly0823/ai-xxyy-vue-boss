@@ -4,52 +4,81 @@
  * @Author: zhubaodong
  * @Date: 2020-03-13 16:53:41
  * @LastEditors: Shentong
- * @LastEditTime: 2020-05-13 21:39:14
+ * @LastEditTime: 2020-05-29 00:53:09
  -->
 <template>
   <div class="right-container">
     <el-card
       shadow="never"
       class="box-card1"
-      :key="i"
-      v-for="(item, i) in classMessage"
+      v-if="JSON.stringify(classMessage) != '{}'"
     >
-      <div class="header">
+      <!-- TODO: -->
+      <div class="header" v-if="teamDetail.id">
         <div class="header-left">
           <div class="title">
-            <span class="title-text">{{ item.id }}:{{ item.team_name }}</span>
+            <span class="title-text"
+              >{{ teamDetail.id }}:{{ teamDetail.team_name }}</span
+            >
             <span class="text-iconsY">{{
-              item.team_type == 0 ? '体验课' : '系统课'
+              teamDetail.team_type == 0 ? '体验课' : '系统课'
             }}</span>
-            <span class="text-iconsB">{{ item.week }}</span>
+            <span class="text-iconsB">{{
+              teamDetail.teamItem && teamDetail.teamItem.WD
+            }}</span>
+            <!-- TODO: -->
             <span
               :class="[
-                Number(item.team_state) === 2 || Number(item.team_state) === 0
+                Number(teamDetail.team_state) === 2 ||
+                Number(teamDetail.team_state) === 0
                   ? 'text-iconsGray'
                   : 'text-iconsR'
               ]"
-              >{{ item.state }}</span
+              >{{ classMessage.state }}</span
             >
           </div>
           <div class="info">
-            <span>学员:{{ item.enrolled }}</span>
+            <span>学员:{{ teamDetail.enrolled }}</span>
             <span
-              >辅导老师:{{ item.teacher ? item.teacher.realname : '' }}</span
+              >辅导老师:{{
+                teamDetail.teacher_info ? teamDetail.teacher_info.realname : ''
+              }}</span
             >
-            <span>辅导老师微信: {{ item.teacher_wx }}</span>
-            <span style="margin-right:0px">
+            <span>辅导老师微信: {{ classMessage.teacher_wx }}</span>
+            <!-- TODO: -->
+            <span style="margin-right:0px" v-if="teamDetail.teamItem">
               <span
-                >开课~结课 &nbsp;{{ item.formatStartDay }}~{{
-                  item.formatEndDay
+                >开课~结课 &nbsp;{{ teamDetail.teamItem.course_day }}~{{
+                  teamDetail.teamItem.end_course_day
                 }}</span
               >
             </span>
-            <span style="margin-right:0px">
-              <span>创建 &nbsp;{{ item.timebegin }}</span>
+            <span style="margin-right:0px" v-if="teamDetail.teamItem">
+              <span>创建 &nbsp;{{ teamDetail.teamItem.ctime }}</span>
             </span>
           </div>
         </div>
-        <div class="header-right" v-if="false">
+        <div
+          class="header-right"
+          v-if="
+            +classObj.teamId === 999 ||
+              +classObj.teamId === 1030 ||
+              +classObj.teamId === 1029 ||
+              +classObj.teamId === 994 ||
+              +classObj.teamId === 1185 ||
+              +classObj.teamId === 1186 ||
+              +classObj.teamId === 1187 ||
+              +classObj.teamId === 1188 ||
+              +classObj.teamId === 1189 ||
+              +classObj.teamId === 1190 ||
+              +classObj.teamId === 1191 ||
+              +classObj.teamId === 1192 ||
+              +classObj.teamId === 1193 ||
+              +classObj.teamId === 1195 ||
+              +classObj.teamId === 1196 ||
+              +classObj.teamId === 1197
+          "
+        >
           <el-tooltip
             class="item"
             popper-class="headerPop"
@@ -116,13 +145,11 @@
                 </div>
                 <div
                   @mouseenter="
-                    ;+classId.classId.team_state !== 2
+                    ;+teamDetail.team_state !== 2
                       ? (autoAddFriendsIn = true)
                       : ''
                   "
-                  :class="
-                    +classId.classId.team_state !== 2 ? 'yClick' : 'nClick'
-                  "
+                  :class="+teamDetail.team_state !== 2 ? 'yClick' : 'nClick'"
                 >
                   自动加好友
                 </div>
@@ -131,40 +158,44 @@
           </el-tooltip>
         </div>
       </div>
-      <div class="body">
-        <div class="body-boxLeft" v-show="item.team_type == 0">
+      <!-- TODO: TOP! -->
+      <div class="body" v-if="classMessage.statictis">
+        <div class="body-boxLeft" v-show="classMessage.team_type == 0">
           <div class="order-title">累计系统课订单</div>
-          <div class="order-number">{{ item.statictis.order_all }}</div>
+          <div class="order-number">{{ classMessage.statictis.order_all }}</div>
           <div class="order-count">
             <span
               >今日
-              <span>{{ item.statictis.today_order }}</span>
+              <span>{{ classMessage.statictis.today_order }}</span>
             </span>
             <span
               >昨日
-              <span>{{ item.statictis.yesterday_order }}</span>
+              <span>{{ classMessage.statictis.yesterday_order }}</span>
             </span>
           </div>
         </div>
-        <div class="body-boxCenter" v-show="item.team_type == 0">
+        <div class="body-boxCenter" v-show="classMessage.team_type == 0">
           <div class="Conversion-title">累计转化率</div>
           <div class="Conversion-number">
-            {{ item.allTrans == 'NaN' ? 0 : (item.allTrans * 100).toFixed(2)
+            {{
+              classMessage.allTrans == 'NaN'
+                ? 0
+                : (classMessage.allTrans * 100).toFixed(2)
             }}<span>%</span>
           </div>
           <!-- <div class="Conversion-count">
             <span
               >今日{{
-                item.todayTrans == 'NaN'
+                classMessage.todayTrans == 'NaN'
                   ? 0
-                  : (item.todayTrans * 100).toFixed(2)
+                  : (classMessage.todayTrans * 100).toFixed(2)
               }}%</span
             >
             <span
               >昨日{{
-                item.yesterdayTrans == 'NaN'
+                classMessage.yesterdayTrans == 'NaN'
                   ? 0
-                  : (item.yesterdayTrans * 100).toFixed(2)
+                  : (classMessage.yesterdayTrans * 100).toFixed(2)
               }}%</span
             >
           </div> -->
@@ -172,132 +203,154 @@
         <div class="body-boxRight">
           <div class="params-top">
             <div>
-              <div>{{ item.statictis.wait_sent }}</div>
+              <div>{{ classMessage.statictis.wait_sent }}</div>
               <div>待发货</div>
             </div>
             <div>
-              <div>{{ item.statictis.unadd_wechat }}</div>
+              <div>{{ classMessage.statictis.unadd_wechat }}</div>
               <div>待加好友</div>
             </div>
             <div>
-              <div>{{ item.statictis.unadd_group }}</div>
+              <div>{{ classMessage.statictis.unadd_group }}</div>
               <div>待进群</div>
             </div>
             <div>
-              <div>{{ item.statictis.unlogin }}</div>
+              <div>{{ classMessage.statictis.unlogin }}</div>
               <div>待打开App</div>
             </div>
             <div>
-              <div>{{ item.statictis.today_add_class }}</div>
+              <div>{{ classMessage.statictis.today_add_class }}</div>
               <div>今日课程参课</div>
             </div>
             <div>
-              <div>{{ item.statictis.yesterday_add_class }}</div>
+              <div>{{ classMessage.statictis.yesterday_add_class }}</div>
               <div>昨日课程参课</div>
             </div>
           </div>
           <div class="params-bottom">
             <div>
-              <div>{{ item.statictis.tody_comp_class }}</div>
+              <div>{{ classMessage.statictis.tody_comp_class }}</div>
               <div>今日课程完课</div>
             </div>
             <div>
-              <div>{{ item.statictis.yesterday_comp_class }}</div>
+              <div>{{ classMessage.statictis.yesterday_comp_class }}</div>
               <div>昨日课程完课</div>
             </div>
             <div>
-              <div>{{ item.statictis.tody_works }}</div>
+              <div>{{ classMessage.statictis.tody_works }}</div>
               <div>今日课程作品</div>
             </div>
             <div>
-              <div>{{ item.statictis.yesterday_works }}</div>
+              <div>{{ classMessage.statictis.yesterday_works }}</div>
               <div>昨日课程作品</div>
             </div>
             <div>
-              <div>{{ item.statictis.tody_comment }}</div>
+              <div>{{ classMessage.statictis.tody_comment }}</div>
               <div>今日点评作品</div>
             </div>
             <div>
-              <div>{{ item.statictis.yesterday_comment }}</div>
+              <div>{{ classMessage.statictis.yesterday_comment }}</div>
               <div>昨日点评作品</div>
             </div>
           </div>
         </div>
       </div>
     </el-card>
-    <div class="right-bar-empty" v-if="!classMessage.detail">
+    <div class="right-bar-empty" v-else>
       暂无可用数据
     </div>
-    <tab-bar :classId="classId" />
+    <tab-bar :classObj="classObj" />
   </div>
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 import TabBar from './TabPane/TabBar.vue'
-import axios from '@/api/axiosConfig'
-import dayjs from 'dayjs'
 import { isToss } from '@/utils/index'
 export default {
   props: {
-    classId: {
+    classObj: {
       type: Object,
-      default: null
-    },
-    teamDate: {
-      type: Object,
-      default: () => ({})
+      default: () => {}
     }
   },
   components: {
     TabBar
   },
+  computed: {
+    ...mapGetters(['teamItem'])
+  },
   data() {
     return {
-      classMessage: [],
+      classMessage: {},
       cout: 0,
       teacherId: '',
       tableDataEmpty: true,
       count: 0,
       day: {},
+      teamStatus: {
+        0: '待开课',
+        1: '上课中',
+        2: '已结课'
+      },
       autoAddFriends: false,
+      teamDetail: {},
       autoAddFriendsIn: false,
       switchState: 'OFF' // 默认状态
     }
   },
-  mounted() {
-    // document.onmousedown = () => {
-    //   this.autoAddFriends = false
-    //   this.autoAddFriendsIn = false
-    // }
-  },
-  watch: {
-    classId(vals) {
-      const teacherId = isToss()
-      if (teacherId) {
-        this.teacherId = teacherId
-      }
-      if (vals.classId && vals.classId.id) {
-        this.tableDataEmpty = true
-        this.getClassTeacher(vals.classId.id)
-      } else {
-        this.tableDataEmpty = false
-      }
+  created() {
+    this.$http.StudentTerm.getStudentTeamById({
+      teamId: this.classObj.teamId || ''
+    }).then((res) => {
+      res && res.payload && (this.switchState = res.payload.switchState)
+    })
+    const teacherId = isToss()
+    if (teacherId) {
+      this.teacherId = teacherId
+    }
+    const teamId = this.classObj.teamId
+    if (teamId) {
+      this.getClassTeacher(teamId)
+      this.getTeamDetailById({ teamId })
     }
   },
   methods: {
+    // TOSS助手自动加好友开关
     openAutoAddOpen() {
       this.autoAddFriends = false
       this.autoAddFriendsIn = false
+      if (
+        +this.classObj.teamId !== 999 &&
+        +this.classObj.teamId !== 1030 &&
+        +this.classObj.teamId !== 1029 &&
+        +this.classObj.teamId !== 994 &&
+        +this.classObj.teamId !== 1185 &&
+        +this.classObj.teamId !== 1186 &&
+        +this.classObj.teamId !== 1187 &&
+        +this.classObj.teamId !== 1188 &&
+        +this.classObj.teamId !== 1189 &&
+        +this.classObj.teamId !== 1190 &&
+        +this.classObj.teamId !== 1191 &&
+        +this.classObj.teamId !== 1192 &&
+        +this.classObj.teamId !== 1193 &&
+        +this.classObj.teamId !== 1195 &&
+        +this.classObj.teamId !== 1196 &&
+        +this.classObj.teamId !== 1197
+      ) {
+        return
+      }
+
       this.$http.StudentTerm.updateStudentTeamByState({
         status: 'ON',
-        teamId: this.classId.classId.id || ''
+        teamId: this.classObj.teamId || ''
       })
         .then((res) => {
           if (+res.code === 0) {
             this.$http.StudentTerm.getStudentTeamById({
-              teamId: this.classId.classId.id || ''
+              teamId: this.classObj.teamId || ''
             }).then((res) => {
-              this.switchState = res.payload.switchState
+              res && res.payload && (this.switchState = res.payload.switchState)
             })
             this.$message({
               message: '已开启自动加好友功能',
@@ -310,18 +363,38 @@ export default {
         })
     },
     openAutoAddClose() {
-      console.log(this.classId)
-
       this.autoAddFriends = false
       this.autoAddFriendsIn = false
+
+      if (
+        +this.classObj.teamId !== 999 &&
+        +this.classObj.teamId !== 1030 &&
+        +this.classObj.teamId !== 1029 &&
+        +this.classObj.teamId !== 994 &&
+        +this.classObj.teamId !== 1185 &&
+        +this.classObj.teamId !== 1186 &&
+        +this.classObj.teamId !== 1187 &&
+        +this.classObj.teamId !== 1188 &&
+        +this.classObj.teamId !== 1189 &&
+        +this.classObj.teamId !== 1190 &&
+        +this.classObj.teamId !== 1191 &&
+        +this.classObj.teamId !== 1192 &&
+        +this.classObj.teamId !== 1193 &&
+        +this.classObj.teamId !== 1195 &&
+        +this.classObj.teamId !== 1196 &&
+        +this.classObj.teamId !== 1197
+      ) {
+        return
+      }
+
       this.$http.StudentTerm.updateStudentTeamByState({
         status: 'OFF',
-        teamId: this.classId.classId.id || ''
+        teamId: this.classObj.teamId || ''
       })
         .then((res) => {
           if (+res.code === 0) {
             this.$http.StudentTerm.getStudentTeamById({
-              teamId: this.classId.classId.id || ''
+              teamId: this.classObj.teamId || ''
             }).then((res) => {
               this.switchState = res.payload.switchState
             })
@@ -335,104 +408,79 @@ export default {
           this.$message.error('设置失败')
         })
     },
-    getClassTeacher(data) {
-      const queryParams = `[{id:${data}}]`
-      axios
-        .get('/graphql/getClassTeacher', {
-          // params: {
-          query: `{
-            detail (query: "${queryParams}"){
-              id
-              team_name
-              team_state
-              team_type
-              teacher_wx
-              enrolled
-                teacher{
-                  id
-                  nickname
-                  weixin_ids
-                  weichat_num
-                  ctime
-                  realname
-                }
-              statictis {
-                today_order
-                  yesterday_order
-                  order_all
-                  wait_sent
-                  unadd_wechat
-                  unadd_group
-                  unlogin
-                  today_add_class
-                  yesterday_add_class
-                  tody_comp_class
-                  yesterday_comp_class
-                  tody_works
-                  yesterday_works
-                  tody_comment
-                  yesterday_comment
-                }
-              }
-            }`
-          // }
-        })
-        .then((res) => {
-          console.log(res.data.detail.team_state, 'res.data.detail.team_state')
-          if (Number(res.data.detail.team_state) === 0) {
-            res.data.detail.state = '待开课'
-          } else if (Number(res.data.detail.team_state) === 1) {
-            res.data.detail.state = '开课中'
-          } else if (Number(res.data.detail.team_state) === 2) {
-            res.data.detail.state = '已结课'
-          } else {
-            res.data.detail.state = '今日开课'
+    // 根据班级id获取班级详情
+    getTeamDetailById(params) {
+      this.$http.Team.getTeamDetailById({ id: params.teamId }).then((res) => {
+        let {
+          data: { StudentTeam = {} }
+        } = res
+        const { teamId, type } = this.classObj
+        const teamItemVal = this.teamItem[`${teamId}|${type}`]
+        StudentTeam = {
+          ...StudentTeam,
+          teamItem: {
+            ...teamItemVal,
+            course_day: teamItemVal.course_day
+              ? teamItemVal.course_day.replace(/-/g, '').substr(4)
+              : '',
+            end_course_day: teamItemVal.end_course_day
+              ? teamItemVal.end_course_day.replace(/-/g, '').substr(4)
+              : ''
           }
-          /** localstorage teacher 添加 “teacher_wx” 字段 */
-          if (this.teacherId) {
-            const teacher = JSON.parse(localStorage.getItem('teacher'))
-            const teacherWx = res.data.detail.teacher_wx
-            teacherWx && (teacher.teacher_wx = teacherWx)
-            localStorage.setItem('teacher', JSON.stringify(teacher))
-          }
-          /** localstorage teacher 添加 “teacher_wx” 字段 */
+        }
+        this.teamDetail = StudentTeam
+      })
+    },
+    // 获取班级详情 顶部 统计数据
+    getClassTeacher(teamId) {
+      this.$http.Team.getTeacherStatistic(teamId).then((res) => {
+        const {
+          data: { detail = {} }
+        } = res
+        detail.state =
+          detail && detail.team_state
+            ? this.teamStatus[+detail.team_state] || '今日开课'
+            : ''
+        /** localstorage teacher 添加 “teacher_wx” 字段 */
+        if (this.teacherId) {
+          const teacher = JSON.parse(localStorage.getItem('teacher'))
+          const teacherWx = detail.teacher_wx
+          teacherWx && (teacher.teacher_wx = teacherWx)
+          localStorage.setItem('teacher', JSON.stringify(teacher))
+        }
+        if (this.classObj.teamId) {
+          const { teamId, type } = this.classObj
+          detail.allTrans =
+            detail.statictis.order_all /
+            this.teamItem[`${teamId}|${type}`].enrolled
+        }
 
-          if (this.classId && this.classId.classId) {
-            res.data.detail.todayTrans =
-              res.data.detail.statictis.today_order /
-              this.classId.classId.enrolled
-            res.data.detail.yesterdayTrans =
-              res.data.detail.statictis.yesterday_order /
-              this.classId.classId.enrolled
-            res.data.detail.allTrans =
-              res.data.detail.statictis.order_all /
-              this.classId.classId.enrolled
+        this.classMessage = detail
+        /** localstorage teacher 添加 “teacher_wx” 字段 */
+        // TODO:
+        // if (this.classObj && this.classObj.classId) {
+        //   res.data.detail.todayTrans =
+        //     res.data.detail.statictis.today_order /
+        //     this.classId.classId.enrolled
+        //   res.data.detail.yesterdayTrans =
+        //     res.data.detail.statictis.yesterday_order /
+        //     this.classId.classId.enrolled
+        //   res.data.detail.allTrans =
+        //     res.data.detail.statictis.order_all /
+        //     this.classId.classId.enrolled
 
-            res.data.detail.week = this.classId.classId.week
-            res.data.detail.pre_enroll = this.classId.classId.pre_enroll
-            res.data.detail.timebegin = dayjs
-              .unix(Number(this.classId.classId.ctime) / 1000)
-              .format('MM-DD  hh:mm:ss')
-            res.data.detail.onetime = dayjs
-              .unix(Number(this.classId.classId.start_day) / 1000)
-              .format('YYMMDD')
-            res.data.detail.formatStartDay = this.classId.classId.formatStartDay
-            res.data.detail.formatEndDay = this.classId.classId.formatEndDay
-          }
-          if (this.tableDataEmpty) {
-            this.classMessage = res.data
-          } else {
-            this.tableDataEmpty = false
-            this.classMessage = []
-          }
-
-          // this.classMessage2 = res.dataformatEndDay
-        })
-      // this.$http.StudentTerm.getStudentTeamById({
-      //   teamId: this.classId.classId.id || ''
-      // }).then((res) => {
-      //   this.switchState = res.payload.switchState
-      // })
+        //   res.data.detail.week = this.classId.classId.week
+        //   res.data.detail.pre_enroll = this.classId.classId.pre_enroll
+        //   res.data.detail.timebegin = dayjs
+        //     .unix(Number(this.classId.classId.ctime) / 1000)
+        //     .format('MM-DD  hh:mm:ss')
+        //   res.data.detail.onetime = dayjs
+        //     .unix(Number(this.classId.classId.start_day) / 1000)
+        //     .format('YYMMDD')
+        //   res.data.detail.formatStartDay = this.classId.classId.formatStartDay
+        //   res.data.detail.formatEndDay = this.classId.classId.formatEndDay
+        // }
+      })
     }
   }
 }

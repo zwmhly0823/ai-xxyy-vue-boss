@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-15 20:35:57
  * @LastEditors: Shentong
- * @LastEditTime: 2020-04-22 21:33:54
+ * @LastEditTime: 2020-05-22 16:18:51
  -->
 <template>
   <div class="first-step">
@@ -21,6 +21,7 @@
               <h4>售卖周期</h4>
               <el-form-item label="" prop="sellCycleTime">
                 <el-date-picker
+                  size="small"
                   v-model="formInfo.sellCycleTime"
                   format="yyyy 年 MM 月 dd 日"
                   type="datetimerange"
@@ -34,10 +35,11 @@
 
               <h6>建议体验课售卖周期从本周五至下周五</h6>
             </el-col>
-            <el-col :span="8">
+            <el-col :span="8" :offset="1">
               <h4>上课周期</h4>
               <el-form-item label="" prop="attendClassTime">
                 <el-date-picker
+                  size="small"
                   v-model="formInfo.attendClassTime"
                   format="yyyy 年 MM 月 dd 日"
                   type="datetimerange"
@@ -50,10 +52,11 @@
               </el-form-item>
               <h6>开始上课时间必须从星期一开始</h6>
             </el-col>
-            <el-col :span="6">
+            <el-col :span="4" :offset="1">
               <h4>接速设置</h4>
               <el-form-item label="" prop="robinNum">
                 <el-input
+                  size="small"
                   v-model.number="formInfo.robinNum"
                   placeholder="请输入学生数"
                 ></el-input>
@@ -339,7 +342,7 @@ export default {
     // 新增招生排期第一步-add
     async addScheduleFirstStep(params, cb) {
       const loadingInstance = Loading.service({
-        target: 'section',
+        target: '.app-main',
         lock: true,
         text: '正在保存...',
         fullscreen: true
@@ -349,13 +352,13 @@ export default {
         if (_res.code === 0) cb(_res)
       } catch (err) {
         this.$message({
-          message: '获取列表出错',
+          message: '获取数据出错',
           type: 'warning'
         })
+      } finally {
+        // 以服务的方式调用的 Loading 需要异步关闭
+        this.$nextTick(() => loadingInstance.close())
       }
-
-      // 以服务的方式调用的 Loading 需要异步关闭
-      this.$nextTick(() => loadingInstance.close())
     },
     // 新增招生排期第一步-edit获取数据
     async getScheduleFirstStep(params) {
@@ -426,6 +429,9 @@ export default {
 </script>
 <style lang="scss" scoped>
 .step-one-container {
+  .el-divider {
+    margin: 10px 0 !important;
+  }
   .tip {
     color: #aaa;
     font-size: 12px;

@@ -38,7 +38,7 @@
         </template>
       </div>
     </div>
-    <h3 style="color:#606266;">填写物流信息</h3>
+    <h3 style="color:#606266;" v-show="showChoiceModel">填写物流信息</h3>
     <el-form
       :model="ruleForm"
       :rules="rules"

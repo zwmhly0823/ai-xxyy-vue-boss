@@ -3,11 +3,12 @@
  * @version:
  * @Author: Lukun
  * @Date: 2020-05-14 14:31:42
- * @LastEditors: Lukun
- * @LastEditTime: 2020-05-14 15:09:33
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-05-25 21:02:48
  */
 import axios from '../axios'
 import { getToken } from '@/utils/auth'
+// const Qs = require('qs')
 
 const getHeaders = () => {
   const token = getToken() || ''
@@ -15,7 +16,9 @@ const getHeaders = () => {
     'Content-Type': 'application/json;charset=UTF-8'
   }
   if (token) {
-    headers.Authorization = 'Bearer ' + token
+    headers.Authorization = token.includes('Bearer ')
+      ? token
+      : 'Bearer ' + token
   }
   return headers
 }
@@ -40,6 +43,22 @@ export default {
         responseType: 'blob',
         headers: getHeaders(),
         params
+      })
+    }
+  },
+  exportChannel(params) {
+    console.log('DownloadExcel:', params)
+
+    if (judgeToken()) {
+      return axios({
+        method: 'POST',
+        url: '/api/b/v1/import/importCompletedOrder',
+        responseType: 'blob',
+        headers: getHeaders(),
+        // data: {
+        //   ...params
+        // }
+        data: params
       })
     }
   }

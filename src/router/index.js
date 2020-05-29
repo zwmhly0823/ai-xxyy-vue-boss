@@ -38,9 +38,26 @@ const routes = [
       title: '班级中心',
       icon: 'el-icon-s-custom',
       module: 'student-team'
-    }
+    },
+    children: [
+      {
+        path: '/trialTeam',
+        name: 'trialTeam',
+        meta: {
+          title: '体验课班级',
+          module: 'student-team'
+        }
+      },
+      {
+        path: '/systemTeam',
+        name: 'systemTeam',
+        meta: {
+          title: '系统课班级',
+          module: 'student-team'
+        }
+      }
+    ]
   },
-
   // 交易
   {
     path: '/trading',
@@ -78,7 +95,6 @@ const routes = [
       }
     ]
   },
-
   // 财务(该模块先隐藏,丹阳还会回来)
   {
     path: '/finance',
@@ -126,6 +142,14 @@ const routes = [
           title: '微信管理',
           module: 'teacher'
         }
+      },
+      {
+        path: '/workHandover',
+        name: 'workHandover',
+        meta: {
+          title: '工作交接',
+          module: 'teacher'
+        }
       }
     ]
   },
@@ -166,6 +190,16 @@ const routes = [
       }
     ]
   },
+  // 工具类路由
+  {
+    path: '/approval',
+    name: 'approval',
+    meta: {
+      title: '审批中心',
+      icon: 'el-icon-menu',
+      module: 'approval'
+    }
+  },
   // 统计分析
   {
     path: '/statistics',
@@ -205,6 +239,7 @@ const routes = [
           style: 'line'
         }
       }
+
       // {
       //   path: '/salesProcess',
       //   name: 'salesProcess',
@@ -214,6 +249,43 @@ const routes = [
       //     style: 'line'
       //   }
       // }
+    ]
+  },
+  // 物流管理
+  {
+    path: '/express',
+    name: 'express',
+    // hidden: true,
+    meta: {
+      title: '物流管理',
+      icon: 'el-icon-s-data',
+      module: 'express'
+    },
+    children: [
+      {
+        path: '/experienceClass',
+        name: 'experienceClass',
+        meta: {
+          title: '体验课物流',
+          module: 'express'
+        }
+      },
+      {
+        path: '/systemClass',
+        name: 'systemClass',
+        meta: {
+          title: '系统课物流',
+          module: 'express'
+        }
+      },
+      {
+        path: '/activityClass',
+        name: 'activityClass',
+        meta: {
+          title: '活动物流',
+          module: 'express'
+        }
+      }
     ]
   }
 ]

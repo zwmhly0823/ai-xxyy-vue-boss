@@ -19,7 +19,7 @@
           <i
             class="el-icon-close"
             @click="handleClose(k)"
-            v-if="k !== current"
+            v-if="k !== currentTabbed"
           ></i>
         </li>
       </ul>
@@ -41,6 +41,9 @@ export default {
     ...mapGetters(['tabbed']),
     tabbedData() {
       return this.tabbed.tabbedList || this.tabList
+    },
+    currentTabbed() {
+      return this.tabbed.currentTabbed || this.current
     }
   },
   mounted() {
@@ -80,11 +83,11 @@ export default {
     },
 
     handleClose(k) {
-      delete this.tabList[k]
-      this.setTabbedList(this.tabList)
+      delete this.tabbedData[k]
+      this.setTabbedList(this.tabbedData)
       // TODO: 如果删除的是当前选中tab，设置选中的值，并跳转
-      if (Object.keys(this.tabList).length > 0) {
-        sessionStorage.setItem('multiTabbed', JSON.stringify(this.tabList))
+      if (Object.keys(this.tabbedData).length > 0) {
+        sessionStorage.setItem('multiTabbed', JSON.stringify(this.tabbedData))
         this.getTabs()
         return
       }
@@ -117,15 +120,15 @@ $gray: #d8dce5;
     padding: 4px 10px 2px;
     list-style: none;
     border: 1px solid $gray;
-    max-width: 120px;
+    max-width: 140px;
     margin-left: 5px;
     cursor: pointer;
     &:hover {
-      color: #42b983;
+      color: #409eff;
     }
     &.current {
       color: #fff;
-      background-color: #42b983;
+      background-color: #409eff;
     }
     span {
       flex: 1;

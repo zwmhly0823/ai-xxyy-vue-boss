@@ -39,6 +39,10 @@
         <out-trade-no @result="getOutTradeNo" :name="outTradeNo" />
       </el-form-item>
 
+      <el-form-item v-if="consigneePhone">
+        <consignee-phone @result="getConsigneePhone" />
+      </el-form-item>
+
       <el-form-item v-if="expressNo">
         <!-- 物流单号搜索 -->
         <express-no @result="getExpressNo" :name="expressNo" />
@@ -169,9 +173,13 @@
         <department @result="getDepartment" :name="department" />
       </el-form-item>
 
-      <el-form-item v-if="groupSell && !teacherId">
+      <el-form-item v-if="groupSell">
         <!-- 社群销售 -->
-        <group-sell @result="selectSellTeacher" :name="groupSell" />
+        <group-sell
+          @result="selectSellTeacher"
+          :name="groupSell"
+          :tip="teacherTip"
+        />
       </el-form-item>
 
       <!-- && !teacherId -->
@@ -245,6 +253,35 @@
       <el-form-item>
         <slot name="searchItems"></slot>
       </el-form-item>
+      <!-- 补发原因 -->
+      <el-form-item v-if="replenishReason">
+        <replenish-reason @result="getReplenishReason" />
+      </el-form-item>
+      <!-- 补发方式 -->
+      <el-form-item v-if="replenishMethod">
+        <replenish-method
+          @result="getReplenishMethod"
+          :sourceType="sourceType"
+        />
+      </el-form-item>
+      <el-form-item v-if="replenishProductType">
+        <replenish-product-type
+          @result="getReplenishProductType"
+          :replenishProductType="replenishProductType"
+        />
+      </el-form-item>
+      <!-- 补发商品 -->
+      <el-form-item v-if="replenishProduct">
+        <replenish-product
+          :replenishProduct="replenishProduct"
+          @result="getReplenishProduct"
+          :replenishType="ExpressReplenishType"
+        />
+      </el-form-item>
+      <!-- 申请人 -->
+      <el-form-item v-if="operatorId">
+        <operator-name @result="gerOperatorName" :name="operatorId" />
+      </el-form-item>
     </el-form>
   </el-card>
 </template>
@@ -276,6 +313,12 @@ import teacherWx from './searchItems/teacherSearch/teachetWx'
 import wxList from './searchItems/wxInput'
 import selectAddress from './searchItems/selectAddress.vue'
 import SearchStage from './searchItems/searchStage'
+import operatorName from './searchItems/operatorName'
+import replenishReason from './searchItems/replenishReason.vue'
+import replenishMethod from './searchItems/replenishMethod.vue'
+import replenishProduct from './searchItems/replenishProduct'
+import replenishProductType from './searchItems/replenishProductType'
+import ConsigneePhone from './searchItems/consigneePhone.vue'
 // import SearchTrialStage from './searchItems/searchTrialStage'
 import { isToss } from '@/utils/index'
 
@@ -536,6 +579,45 @@ export default {
     supPlaceholder: {
       type: String,
       default: '难度'
+    },
+    // 补发原因
+    replenishReason: {
+      type: String,
+      default: ''
+    },
+    // 补发方式
+    replenishMethod: {
+      type: String,
+      default: ''
+    },
+    // 申请人
+    operatorId: {
+      type: String,
+      default: ''
+    },
+    // 5 代表活动课物流补发货
+    sourceType: {
+      type: String,
+      default: ''
+    },
+    // 活动课补发商品
+    replenishProduct: {
+      type: String,
+      default: ''
+    },
+    // 补发商品类别
+    replenishProductType: {
+      type: String,
+      default: ''
+    },
+    // 收货人电话
+    consigneePhone: {
+      type: String,
+      default: ''
+    },
+    teacherTip: {
+      type: String,
+      default: '社群销售' // topicType
     }
   },
   components: {
@@ -564,8 +646,13 @@ export default {
     wxList,
     selectAddress,
     teacherWx,
-    SearchStage
-    // SearchTrialStage
+    SearchStage,
+    replenishProduct,
+    ConsigneePhone,
+    replenishReason,
+    replenishMethod,
+    operatorName,
+    replenishProductType
   },
   data() {
     return {
@@ -575,7 +662,8 @@ export default {
       should: [],
       selectTime: null, // 物流时间下拉列表_选中项
       oldTime: '', // 上次时间选择值
-      teacherId: '' // 判断是否是toss环境还是boss环境
+      teacherId: '', // 判断是否是toss环境还是boss环境
+      ExpressReplenishType: '' // 活动课 补发货 补发商品 筛选id
     }
   },
   computed: {},
@@ -733,6 +821,29 @@ export default {
         'terms'
       )
     },
+    getReplenishReason(res) {
+      this.setSeachParmas(res, [this.replenishReason || 'replenish_reason'])
+    },
+    getReplenishMethod(res) {
+      this.setSeachParmas(res, [this.replenishMethod || 'replenish_type'])
+    },
+    gerOperatorName(res) {
+      this.setSeachParmas(res, [this.operatorId])
+    },
+    getReplenishProduct(res) {
+      this.setSeachParmas(res, [this.replenishProduct || 'product_type'])
+    },
+    getReplenishProductType(res) {
+      this.ExpressReplenishType = res.id.join(',')
+      this.setSeachParmas(
+        { [this.replenishProductType]: res[this.replenishProductType] },
+        [this.replenishProductType || 'product_type']
+      )
+    },
+    // 收货人电话
+    getConsigneePhone(res) {
+      this.setSeachParmas(res, [this.consigneePhone || 'receipt_tel'])
+    },
 
     /**  处理接收到的查询参数
      * @res: Object, 子筛选组件返回的表达式对象，如 {sup: 2}
@@ -764,7 +875,23 @@ export default {
       })
       // must
       if (name === 'must') {
-        if (res) {
+        if (res && (res.provincesCode || res.provincesCode === '')) {
+          let hasAddress = false
+          temp.forEach((item) => {
+            if (item.term && item.term.provincesCode) {
+              hasAddress = true
+              item.term = res
+              this.must = temp
+            }
+          })
+          if (!hasAddress) {
+            temp.push({
+              // [`${extraKey}`]: `${JSON.stringify(res)}`
+              [extraKey]: res
+            })
+            this.must = temp
+          }
+        } else if (res) {
           temp.push({
             // [`${extraKey}`]: `${JSON.stringify(res)}`
             [extraKey]: res

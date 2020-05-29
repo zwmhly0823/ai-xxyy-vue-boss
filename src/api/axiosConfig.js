@@ -3,13 +3,16 @@
  * @version:
  * @Author: Shentong
  * @Date: 2020-03-17 11:50:18
- * @LastEditors: liukun
- * @LastEditTime: 2020-05-25 20:35:53
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-05-26 19:45:24
  */
 import axios from './axios'
 import { getToken } from '@/utils/auth'
 // import { baseUrl } from '@/utils/index'
 // 转json
+
+axios.defaults.withCredentials = true
+
 function strToJson(str) {
   // eslint-disable-next-line no-new-func
   var json = new Function('return ' + str)()
@@ -96,6 +99,8 @@ export default {
             ...extendObj
           })
           .then((res) => {
+            console.log(res)
+
             if (res.status === 500) {
               reject(res)
               return
@@ -135,7 +140,9 @@ export default {
       'Content-Type': 'application/json;charset=UTF-8'
     }
     if (token) {
-      headers.Authorization = `Bearer ${token}`
+      headers.Authorization = token.includes('Bearer ')
+        ? token
+        : `Bearer ${token}`
     }
     return headers
   }

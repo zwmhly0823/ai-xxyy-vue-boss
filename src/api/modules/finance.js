@@ -4,7 +4,11 @@
  * @Author: liukun
  * @Date: 2020-05-22 12:39:14
  * @LastEditors: liukun
+<<<<<<< HEAD
  * @LastEditTime: 2020-05-29 17:07:04
+=======
+ * @LastEditTime: 2020-05-26 23:41:46
+>>>>>>> ee06589a0e4711db24cfd7d6efe72eaae0e0cd2e
  */
 
 import axios from '../axiosConfig'

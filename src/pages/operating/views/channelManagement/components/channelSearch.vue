@@ -4,16 +4,17 @@
  * @Author: panjian
  * @Date: 2020-04-25 12:09:03
  * @LastEditors: panjian
- * @LastEditTime: 2020-05-09 17:58:30
+ * @LastEditTime: 2020-05-26 12:23:17
  -->
 <template>
-  <div class="channel-box">
+  <div id="channel-box" class="channel-box">
     <div class="channel-box-top">
       <div class="channel-box-top-search">
         <channel-search
           @channelSearchValue="channelSearchValue"
           @schedulingSearch="schedulingSearch"
           @dateSearch="dateSearch"
+          @getChannelLeves="getChannelLeves"
           :tabIndex="tabIndex"
         ></channel-search>
       </div>
@@ -83,6 +84,64 @@
         </el-col>
       </el-row>
     </div>
+    <div class="channel-fixed" v-show="tableShow">
+      <el-row class="channel-fixed-row">
+        <el-col :span="2"><div>渠道分类</div></el-col>
+        <el-col :span="2" class="row2"><div>渠道名称</div></el-col>
+        <el-col :span="1" class="row3"><div>渠道ID</div></el-col>
+        <el-col :span="2" class="row4"><div>体验课成单数</div></el-col>
+        <el-col :span="2" class="row5"><div>体验课未支付</div></el-col>
+        <el-col :span="1" class="row6"><div>添加微信数</div></el-col>
+        <el-col :span="2" class="row7"
+          ><div>
+            <span>参课数/参课率</span>
+            <el-tooltip placement="top">
+              <div slot="content">
+                参课数：此渠道下所有购买体验课的学员且参课的学员<br />参课率：参课数
+                / 已购体验课数
+              </div>
+              <span class="bottom-tips">?</span>
+            </el-tooltip>
+          </div></el-col
+        >
+        <el-col :span="2" class="row8"
+          ><div>
+            <span>完课数/完课率</span>
+            <el-tooltip placement="top">
+              <div slot="content">
+                完课数：此渠道下已购体验课且完成一次体验课即为完课<br />完课率：完课数
+                / 已购体验课学员数
+              </div>
+              <span class="bottom-tips">?</span>
+            </el-tooltip>
+          </div></el-col
+        >
+        <el-col :span="2" class="row9"
+          ><div>
+            <span>成单数/转化率</span>
+            <el-tooltip placement="top">
+              <div slot="content">
+                成单数：已购体验课且转化系统课数量<br />转化率：当前系统课成单数
+                / 当前体验课成单数
+              </div>
+              <span class="bottom-tips">?</span>
+            </el-tooltip>
+          </div></el-col
+        >
+        <el-col :span="2" class="row10"
+          ><div>
+            <span>成单金额</span>
+            <el-tooltip placement="top">
+              <div slot="content">
+                成单金额： 当前渠道购买系统课的订单总金额
+              </div>
+              <span class="bottom-tips">?</span>
+            </el-tooltip>
+          </div></el-col
+        >
+        <el-col :span="2" class="row11"><div>创建时间</div></el-col>
+      </el-row>
+    </div>
     <div class="channel-box-bottom">
       <template>
         <el-table
@@ -90,24 +149,6 @@
           :data="tableData"
           style="width: 100%;"
         >
-          <!-- 二维码下载 渠道推广 -->
-          <!-- <el-table-column width="20px">
-            <template slot-scope="scope">
-              <el-Popover popper-class="batch-btn" trigger="hover">
-                <div size="mini" type="text" @click="onExtension">
-                  <span style="cursor:pointer;color:#409eff;"
-                    >渠道推广统计</span
-                  >
-                </div>
-                <div
-                  @mouseenter="handleEdit(scope.$index, scope.row)"
-                  slot="reference"
-                >
-                  <img src="@/assets/images/point.png" />
-                </div>
-              </el-Popover>
-            </template>
-          </el-table-column> -->
           <el-table-column label="渠道分类" width="200" align="center">
             <template slot-scope="scope">
               <span>{{ scope.row.channelParentName }}</span>
@@ -129,7 +170,7 @@
           <el-table-column prop="channelId" label="渠道ID"> </el-table-column>
           <el-table-column prop="orderUserPayNums" label="体验课成单数">
           </el-table-column>
-          <el-table-column prop="orderUserNoPayNums" label="系统课未支付">
+          <el-table-column prop="orderUserNoPayNums" label="体验课未支付">
           </el-table-column>
           <el-table-column prop="wechatAddNums" label="添加微信数">
           </el-table-column>
@@ -215,13 +256,6 @@
             </template>
           </el-table-column>
         </el-table>
-        <m-pagination
-          @current-change="handleCurrentChange"
-          :current-page="totalNumber"
-          :total="totalElements"
-          open="calc(100vw - 95px - 100px)"
-          close="calc(100vw - 40px - 50px)"
-        />
       </template>
     </div>
     <el-drawer
@@ -255,7 +289,7 @@
 </template>
 
 <script>
-import MPagination from '@/components/MPagination/index.vue'
+// import MPagination from '@/components/MPagination/index.vue'
 import channelSearch from '../components/componentsSearch/search'
 import { timestamp } from '@/utils/index'
 export default {
@@ -266,11 +300,12 @@ export default {
     }
   },
   components: {
-    MPagination,
+    // MPagination,
     channelSearch
   },
   data() {
     return {
+      tableShow: false,
       link: 'https://www.baidu.com',
       showClose: true,
       drawer: false,
@@ -313,34 +348,100 @@ export default {
       // 线索数
       allUserNums: '',
       // 获取到列表的一条数据
-      channelIdRow: ''
+      channelIdRow: '',
+      // 一级渠道emit的数据
+      channelSearchValList: []
+      // 二级渠道emit数据
     }
   },
   watch: {
     tabIndex(value) {
       this.query = ''
-      this.channelIds = ''
+      this.channelIds = []
       this.querySearchTrialStage = ''
       this.stateTime = ''
       this.endTime = ''
       this.totalNumber = 1
       this.getChannelDetailPage()
+      this.channelSearchValList = []
     }
   },
   created() {
     this.getChannelDetailPage()
   },
+  mounted() {
+    window.addEventListener('scroll', this.handleScroll, true)
+  },
   methods: {
+    handleScroll() {
+      // const jump = document.getElementById('el_table').scrollHeight
+      // console.log(jump.offsetTop)
+
+      // this.$nextTick(() => {
+      //   const dom =
+      //     document.documentElement.scrollTop || document.body.scrollTop
+      //   console.log(dom)
+      // })
+      const dom = document.getElementById('channel-box').scrollTop
+      console.log(dom)
+      dom > 289 ? (this.tableShow = true) : (this.tableShow = false)
+    },
+    // 渠道一级
+    channelSearchValue(data) {
+      this.channelSearchValList = data
+      if (data.length) {
+        this.query = this.channelIds.length
+          ? `{"bool":{"must_not":{"terms":{"channel_class_id":["17","36"]}},"must":[{"terms":{"channel_class_id":${JSON.stringify(
+              data
+            )}}},{"terms":{"id":${JSON.stringify(this.channelIds)}}}]}}`
+          : `{"bool":{"must_not":{"terms":{"channel_class_id":["17","36"]}},"must":[{"terms":{"channel_class_id":${JSON.stringify(
+              data
+            )}}}]}}`
+      } else {
+        this.query = this.channelIds.length
+          ? `{"bool":{"must_not":{"terms":{"channel_class_id":["17","36"]}},"must":[{"terms":{"id":${JSON.stringify(
+              this.channelIds
+            )}}}]}}`
+          : `{"bool":{"must_not":{"terms":{"channel_class_id":["17","36"]}}}}`
+      }
+      this.totalNumber = 1
+      this.getChannelDetailPage()
+    },
+    // TODO:
+    getChannelLeves(data) {
+      this.channelIds = data
+      if (data.length) {
+        this.query = this.channelSearchValList.length
+          ? `{"bool":{"must_not":{"terms":{"channel_class_id":["17","36"]}},"must":[{"terms":{"channel_class_id":${JSON.stringify(
+              this.channelSearchValList
+            )}}},{"terms":{"id":${JSON.stringify(this.channelIds)}}}]}}`
+          : `{"bool":{"must_not":{"terms":{"channel_class_id":["17","36"]}},"must":{"terms":{"id":${JSON.stringify(
+              data
+            )}}}}}`
+      } else {
+        this.query = this.channelSearchValList.length
+          ? `{"bool":{"must_not":{"terms":{"channel_class_id":["17","36"]}},"must":[{"terms":{"channel_class_id":${JSON.stringify(
+              this.channelSearchValList
+            )}}}]}}`
+          : `{"bool":{"must_not":{"terms":{"channel_class_id":["17","36"]}}}}`
+      }
+      this.totalNumber = 1
+      this.getChannelDetailPage()
+    },
     getChannelDetailPage() {
       if (
         this.query ||
-        this.channelIds ||
+        this.channelIds.length ||
         this.querySearchTrialStage ||
         this.stateTime ||
         this.endTime
       ) {
-        const queryChannelList = this.query ? this.query : `{"match_all" : {}}`
-        const channelId = this.channelIds ? this.channelIds : `""`
+        const queryChannelList = this.query
+          ? this.query
+          : `{"bool":{"must_not":{"terms":{"channel_class_id":["17","36"]}}}}`
+        const channelId = this.channelIds.length
+          ? `${JSON.stringify(this.channelIds.join())}`
+          : `""`
         const SearchTrialStage = this.querySearchTrialStage
           ? `"${this.querySearchTrialStage}"`
           : `"0"`
@@ -348,13 +449,18 @@ export default {
           ? `"${this.stateTime}"`
           : `"0"`
         const trialOrderEndCtime = this.endTime ? `"${this.endTime}"` : `"0"`
+        const channelSearchValList = this.channelSearchValList.length
+          ? this.channelSearchValList.join()
+          : ''
         this.querysData = `${JSON.stringify(
           queryChannelList
+        )},channelClassIds:${JSON.stringify(
+          channelSearchValList
         )},channelIds:${channelId},trialStage:${SearchTrialStage},trialOrderEndCtime:${trialOrderEndCtime},trialOrderStartCtime:${trialOrderStartCtime},page:${
           this.totalNumber
         }`
       } else {
-        this.querysData = `"{\\"match_all\\" : {}}",trialStage:"",trialOrderEndCtime:"0",trialOrderStartCtime:"0",page:${this.totalNumber}`
+        this.querysData = `"{\\"bool\\":{\\"must_not\\":{\\"terms\\":{\\"channel_class_id\\":[\\"17\\",\\"36\\"]}}}}",trialStage:"",trialOrderEndCtime:"0",trialOrderStartCtime:"0",page:${this.totalNumber}`
       }
       this.$http.Operating.channelDetailPage(this.querysData).then((res) => {
         const _data = res.data.channelDetailPage
@@ -454,20 +560,6 @@ export default {
         this.tableData = _data.content
       })
     },
-    // 组件 渠道传的值
-    channelSearchValue(data) {
-      if (data) {
-        this.query = `{"terms":{"id":[${data.toString()}]}}`
-        this.channelIds = `"${data.toString()}"`
-        console.log(this.query, 'this.query')
-      } else {
-        this.query = ''
-        this.channelIds = ''
-        console.log(this.query, 'channelSearchValue')
-      }
-      this.totalNumber = 1
-      this.getChannelDetailPage()
-    },
     // 组件 排期传的值
     schedulingSearch(data) {
       this.querySearchTrialStage = data
@@ -489,11 +581,11 @@ export default {
       this.getChannelDetailPage()
     },
     // 分页
-    handleCurrentChange(val) {
-      this.totalNumber = val
-      this.getChannelDetailPage()
-      // this.$emit('onCurrentPage', val)
-    },
+    // handleCurrentChange(val) {
+    // this.totalNumber = val
+    // this.getChannelDetailPage()
+    // this.$emit('onCurrentPage', val)
+    // },
     // handleEdit(index, row) {
     //   // 鼠标移入三个点上面触发的事件
     //   // 当没有点击复选框 直接点击加好友
@@ -566,13 +658,130 @@ export default {
       border-radius: 4px;
     }
   }
+  .channel-fixed {
+    position: fixed;
+    z-index: 9090;
+    height: 45px;
+    width: 100%;
+    background: #fff;
+    line-height: 45px;
+    border-bottom: 1px solid #f0f1f2;
+    .channel-fixed-row {
+      margin-left: 85px;
+      font-size: 12px;
+      color: #666;
+      font-weight: normal;
+      .row1 {
+      }
+      .row2 {
+        margin-left: 20px;
+      }
+      .row3 {
+        margin-left: 30px;
+      }
+      .row4 {
+        margin-left: 30px;
+      }
+      .row5 {
+      }
+      .row6 {
+        width: 5%;
+        margin-left: -20px;
+      }
+      .row7 {
+        margin-left: 20px;
+      }
+      .row8 {
+        margin-left: 20px;
+      }
+      .row9 {
+        margin-left: 20px;
+      }
+      .row10 {
+        margin-left: 20px;
+      }
+      .row11 {
+      }
+      .bottom-tips {
+        color: #fff;
+        margin-left: 5px;
+        background: #9c9c9c;
+        display: inline-block;
+        width: 15px;
+        font-weight: 900;
+        height: 15px;
+        border-radius: 50px;
+        line-height: 15px;
+        padding-left: 4px;
+      }
+    }
+  }
+  @media (min-width: 1480px) and (max-width: 2880px) {
+    .channel-fixed {
+      position: fixed;
+      z-index: 9090;
+      height: 45px;
+      width: 100%;
+      background: #fff;
+      line-height: 45px;
+      border-bottom: 1px solid #f0f1f2;
+      .channel-fixed-row {
+        margin-left: 85px;
+        font-size: 12px;
+        color: #666;
+        font-weight: normal;
+        .row1 {
+        }
+        .row2 {
+          margin-left: -20px;
+        }
+        .row3 {
+          margin-left: -10px;
+        }
+        .row4 {
+          margin-left: 120px;
+        }
+        .row5 {
+        }
+        .row6 {
+          margin-left: 70px;
+        }
+        .row7 {
+          margin-left: 80px;
+        }
+        .row8 {
+          margin-left: -10px;
+        }
+        .row9 {
+          margin-left: -20px;
+        }
+        .row10 {
+          margin-left: -20px;
+        }
+        .row11 {
+          margin-left: -20px;
+        }
+        .bottom-tips {
+          color: #fff;
+          margin-left: 5px;
+          background: #9c9c9c;
+          display: inline-block;
+          width: 15px;
+          font-weight: 900;
+          height: 15px;
+          border-radius: 50px;
+          line-height: 15px;
+          padding-left: 4px;
+        }
+      }
+    }
+  }
   .channel-box-bottom {
     display: flex;
     flex: 1;
     background: #fff;
     margin-left: 10px;
     margin-right: 10px;
-    margin-bottom: 30px;
     .bottom-tips {
       color: #fff;
       margin-left: 5px;

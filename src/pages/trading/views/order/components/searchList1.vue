@@ -3,8 +3,8 @@
  * @version: 1.0.0
  * @Author: liukun
  * @Date: 2020-04-25 17:24:23
- * @LastEditors: liukun
- * @LastEditTime: 2020-05-08 11:35:45
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-05-25 19:29:05
  -->
 <template>
   <el-card border="false" shadow="never" :class="$style.elard">
@@ -349,7 +349,7 @@ export default {
     },
     getDepartment(res) {
       this.teacherscope = res.pay_teacher_id || null
-      this.setSeachParmas(res, ['department'], 'terms')
+      this.setSeachParmas(res, ['pay_teacher_id'], 'terms')
     },
     getTeamName(res) {
       this.setSeachParmas(res, ['team_id'], 'terms')

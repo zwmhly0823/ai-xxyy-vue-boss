@@ -3,8 +3,8 @@
  * @version: 
  * @Author: panjian
  * @Date: 2020-05-06 16:33:15
- * @LastEditors: panjian
- * @LastEditTime: 2020-05-16 19:02:58
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-05-26 20:20:15
  -->
 <template>
   <div class="channelAdd-box">
@@ -253,6 +253,13 @@ export default {
       tableInfoObj: {}
     }
   },
+  watch: {
+    tabIndex(value) {
+      this.queryList = `""`
+      this.currentPage = 1
+      this.getChannelOne()
+    }
+  },
   created() {
     this.getChannelOne()
   },
@@ -409,7 +416,7 @@ export default {
     // 批量下载二维码
     onBulkDownload() {
       // const loadingInstance = this.$loading({
-      //   target: 'section',
+      //   target: '.app-main',
       //   lock: true,
       //   text: '批量下载中...',
       //   fullscreen: true

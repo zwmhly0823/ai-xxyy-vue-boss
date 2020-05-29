@@ -21,7 +21,21 @@ export default {
       }`
     })
   },
-
+  /**
+   * /v1/product/TopicDetail 商品主题id查询
+   */
+  getTopicDetail(params) {
+    return axios.get(`/api/p/v1/product/TopicDetail?topicId=${params}`)
+  },
+  /**
+   * 散件商品信息
+   * @param {Object} params
+   */
+  getCourseMaterialsParts(params) {
+    return axios.get(
+      `/api/p/v1/product/getCourseMaterialsParts?courseType=${params.packagesType}&courseDifficulty=${params.sup}&courseLevel=${params.level}`
+    )
+  },
   /**
    *  o_order_product
    */
@@ -41,7 +55,15 @@ export default {
       }`
     })
   },
-
+  /**
+    v1/product/getCourseMaterials?courseType=EXPERIENCE_COURSE&proVersion=&courseDifficulty=S1&courseLevel=LEVEL1
+   * 盒子商品信息 
+   */
+  getCourseMaterials(params) {
+    return axios.get(
+      `/api/p/v1/product/getCourseMaterials?courseType=${params.packagesType}&proVersion=&courseDifficulty=${params.sup}&courseLevel=${params.level}`
+    )
+  },
   /**
    * @description 获取版本号
    * @param {type} params

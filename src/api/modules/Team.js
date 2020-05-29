@@ -10,6 +10,293 @@ import axios from '../axiosConfig'
 // import newAxios from '../axios.js'
 
 export default {
+  // 加好友进群 新接口  体验课
+  StudentTrialForTeamStatisticsPage({ querysData, currentPage, sortGroup }) {
+    return axios.post('/graphql/v1/toss', {
+      query: `{
+        StudentTrialForTeamStatisticsPage(query:${JSON.stringify(
+          querysData
+        )} , page: ${currentPage}, size: 20,${sortGroup}) {
+          empty
+          first
+          last
+          number
+          size
+          numberOfElements
+          totalElements
+          totalPages
+          content {
+            id
+            student_id
+            ctime
+            utime
+            added_group          
+            added_group_time
+            added_wechat          
+            added_wechat_time
+            team_id
+            teacher_id
+            sup
+            term          
+            current_lesson
+            course_state
+            team_category
+            remaining_week
+            birthday
+            channel
+            country
+            head
+            join_date
+            mobile
+            nickname
+            page_origin
+            page_origin_id
+            send_id
+            sex           
+            status
+            username
+            weixin_openid
+            weixin_unionid
+            user_num
+            base_painting           
+            base_painting_text
+            import_remark
+            import_time
+            mobile_city
+            mobile_province
+            buytime
+            out_trade_no
+            order_id
+            fast_follow_time
+            follow          
+            wechat_nickname
+          }
+        }
+      }`
+    })
+  },
+  // 加好友进群 新接口  系统课
+  StudentSystemForTeamStatisticsPage({ querysData, currentPage, sortGroup }) {
+    return axios.post('/graphql/v1/toss', {
+      query: `{
+        StudentSystemForTeamStatisticsPage(query:${JSON.stringify(
+          querysData
+        )} , page: ${currentPage}, size: 20,${sortGroup}) {
+          empty
+          first
+          last
+          number
+          size
+          numberOfElements
+          totalElements
+          totalPages
+          content {
+            mobile
+      nickname
+      sex
+      birthday
+      base_painting
+      buytime
+      base_painting_text
+      added_wechat
+      added_wechat_time
+      added_group
+      added_group_time
+      follow
+      fast_follow_time
+          }
+        }
+      }`
+    })
+  },
+  // 新版班级详情
+  getTeamDetailById(params) {
+    const query = { id: params.id }
+    return axios.post('/graphql/v1/toss', {
+      query: `{
+        StudentTeam(query: ${JSON.stringify(JSON.stringify(query)) || null}) {
+          id
+          ctime
+          utime
+          team_name
+          team_type
+          teacher_id
+          teacher_wechat_id
+          pre_enroll
+          enrolled
+          added_wechat
+          unadd_wechat
+          added_group
+          unadd_group
+          enroll_state
+          team_state
+          current_lesson
+          progress
+          sup
+          term
+          category
+          teacher_info{
+            realname
+          }
+        }
+      }`
+    })
+  },
+  // 获取系统课班级列表
+  getSystemTeamList(params = {}) {
+    const {
+      term = [],
+      department = [],
+      teacherId = '',
+      teacherIdArr = [],
+      sup = [],
+      teamName = '',
+      teamState = '0',
+      courseDay = '',
+      page = 1,
+      size = '20',
+      sort = `{"ctime":"desc"}`
+    } = params
+    const query = { team_state: teamState.split(',') }
+    teamName &&
+      Object.assign(query, {
+        'team_name.like': { 'team_name.keyword': `*${teamName}*` }
+      })
+    courseDay && Object.assign(query, { courseDay })
+    term.length && Object.assign(query, { term })
+    department.length && Object.assign(query, { department_id: department })
+    sup.length && Object.assign(query, { 'sup.keyword': sup })
+    // 社群销售下的过滤
+    teacherId && Object.assign(query, { teacher_id: teacherId })
+    console.log(teacherIdArr)
+    // 老师权限下的过滤 TODO:
+    !teacherId &&
+      teacherIdArr.length &&
+      Object.assign(query, { teacher_id: teacherIdArr })
+    return axios.post('/graphql/v1/toss', {
+      query: `{
+        StudentSystemTeamStatisticsPage(page: ${page}, size:${size},query: ${JSON.stringify(
+        JSON.stringify(query)
+      ) || null}, sort: ${JSON.stringify(sort)}) {
+          first
+          totalPages
+          totalElements
+          content {
+            id
+            ctime
+            utime
+            team_name
+            team_type
+            teacher_id
+            teacher_wechat_id
+            pre_enroll
+            enrolled
+            added_wechat
+            unadd_wechat
+            added_group
+            unadd_group
+            enroll_state
+            team_state
+            current_lesson
+            progress
+            sup
+            term
+            category
+            teacher_realname
+            teacher_nickname
+            teacher_username
+            teacher_wechat_no
+            department_id
+            department_name
+            student_count
+            pre_enroll
+            today_complete_course_count
+            yesterday_complete_course_count
+            to_be_delivered_count
+            course_day
+            end_course_day
+          }
+      }}`
+    })
+  },
+  // 获取体验课班级列表
+  getTrialTeamList(params = {}) {
+    const {
+      term = [],
+      department = [],
+      teacherId = '',
+      teacherIdArr = [],
+      sup = [],
+      teamName = '',
+      teamState = '0',
+      courseDay = '',
+      page = 1,
+      size = '20',
+      sort = `{"ctime":"desc"}`
+    } = params
+    const query = { team_state: teamState.split(',') }
+    teamName &&
+      Object.assign(query, {
+        'team_name.like': { 'team_name.keyword': `*${teamName}*` }
+      })
+    courseDay && Object.assign(query, { courseDay })
+    term.length && Object.assign(query, { term })
+    department.length && Object.assign(query, { department_id: department })
+    sup.length && Object.assign(query, { 'sup.keyword': sup })
+    // 社群销售下的过滤
+    teacherId && Object.assign(query, { teacher_id: teacherId })
+    // 老师权限下的过滤 TODO:
+    !teacherId &&
+      teacherIdArr.length &&
+      Object.assign(query, { teacher_id: teacherIdArr })
+    return axios.post('/graphql/v1/toss', {
+      query: `{
+        StudentTrialTeamStatisticsPage(page: ${page}, size:${size},query: ${JSON.stringify(
+        JSON.stringify(query)
+      ) || null}, sort: ${JSON.stringify(sort)}) {
+          first
+          totalPages
+          totalElements
+          content {
+            id
+            ctime
+            utime
+            team_name
+            team_type
+            teacher_id
+            teacher_wechat_id
+            pre_enroll
+            enrolled
+            added_wechat
+            unadd_wechat
+            added_group
+            unadd_group
+            enroll_state
+            team_state
+            current_lesson
+            progress
+            sup
+            term
+            category
+            teacher_realname
+            teacher_nickname
+            teacher_username
+            teacher_wechat_no
+            department_id
+            department_name
+            student_count
+            pre_enroll
+            system_order_count
+            order_conversion_rate
+            today_complete_course_count
+            yesterday_complete_course_count
+            to_be_delivered_count
+            course_day
+            end_course_day
+          }
+      }}`
+    })
+  },
   // 获取体验课状态列表
   getExperienceStatusList(params) {
     return axios.post(`/graphql/team`, params)
@@ -302,6 +589,47 @@ export default {
           }
         }
       `
+    })
+  },
+  // 获取班级详情 顶部 统计数据
+  getTeacherStatistic(teamId) {
+    const queryParams = `[{id:${teamId}}]`
+    return axios.get('/graphql/getClassTeacher', {
+      query: `{
+            detail (query: "${queryParams}"){
+              id
+              team_name
+              team_state
+              team_type
+              teacher_wx
+              enrolled
+                teacher{
+                  id
+                  nickname
+                  weixin_ids
+                  weichat_num
+                  ctime
+                  realname
+                }
+              statictis {
+                today_order
+                  yesterday_order
+                  order_all
+                  wait_sent
+                  unadd_wechat
+                  unadd_group
+                  unlogin
+                  today_add_class
+                  yesterday_add_class
+                  tody_comp_class
+                  yesterday_comp_class
+                  tody_works
+                  yesterday_works
+                  tody_comment
+                  yesterday_comment
+                }
+              }
+            }`
     })
   }
 }

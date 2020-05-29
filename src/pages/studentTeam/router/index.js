@@ -1,7 +1,7 @@
 /*
  * @Date: 2020-03-13 15:20:21
- * @LastEditors: zhubaodong
- * @LastEditTime: 2020-03-24 15:56:38
+ * @LastEditors: Shentong
+ * @LastEditTime: 2020-05-28 22:34:17
  * @FilePath: /ai-app-vue-toss/src/pages/studentTeam/router/index.js
  */
 import Vue from 'vue'
@@ -18,20 +18,54 @@ const routes = [
       icon: 'el-icon-s-custom',
       keepAlive: true
     },
-    component: () => import('../views/studentTeam/student.vue')
+    redirect: '/trialTeam'
+    // component: () => import('../views/studentTeam/student.vue')
   },
   {
     path: '/student-team', // 班级模块
     name: 'student',
     meta: {
       title: '班级详情',
-      icon: 'el-icon-s-custom'
+      icon: 'el-icon-s-custom',
+      keepAlive: true
     },
     hidden: true,
     component: () =>
       import(
         /* webpackChunkName: "student" */ '../views/studentTeam/student.vue'
       )
+  },
+  {
+    path: '/trialTeam', // 体验课班级
+    name: 'trialTeam',
+    meta: {
+      title: '体验课班级',
+      keepAlive: true
+    },
+    hidden: true,
+    component: () =>
+      import(/* webpackChunkName: "student" */ '../views/trialTeam/index.vue')
+  },
+  {
+    path: '/systemTeam', // 系统课班级
+    name: 'systemTeam',
+    meta: {
+      title: '系统课班级',
+      keepAlive: true
+    },
+    hidden: true,
+    component: () =>
+      import(/* webpackChunkName: "student" */ '../views/systemTeam/index.vue')
+  },
+  {
+    path: '/teamDetail/:id/:type', // 班级详情
+    name: 'teamDetail',
+    meta: {
+      title: '班级中心'
+    },
+    hidden: true,
+    component: () =>
+      import(/* webpackChunkName: "student" */ '../views/teamDetail/index.vue')
   }
 ]
 

@@ -14,7 +14,7 @@
       :placeholder="placeholder"
       :options="departmentList"
       :props="{
-        multiple: true,
+        multiple: multiple,
         value: 'id',
         label: 'name',
         emitPath: false,
@@ -42,6 +42,10 @@ export default {
     onlyDept: {
       type: Number,
       default: 0
+    },
+    multiple: {
+      type: Boolean,
+      default: true
     }
   },
   data() {
@@ -69,7 +73,10 @@ export default {
           JSON.stringify(ids)
         )
         const teacherIds = teacher.data.TeacherList.map((item) => item.id)
-        this.$emit('result', data.length > 0 ? { [this.name]: teacherIds } : '')
+        this.$emit(
+          'result',
+          data === null || data.length > 0 ? { [this.name]: teacherIds } : ''
+        )
       }
     }
   }

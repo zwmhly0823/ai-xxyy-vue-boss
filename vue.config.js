@@ -1,4 +1,5 @@
 const glob = require('glob')
+const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 const defaultSettings = require('./src/settings.js')
 const { NODE_ENV } = process.env
 // TODO: 使用router
@@ -19,7 +20,7 @@ function camel2Line(str) {
 }
 
 // 运行 npm run build [projectFileName] 打包指定模块;  projectName 取到指定的模块;
-const projectName = process.argv[3] || 'dashboard'
+const projectName = process.argv[3] || 'login'
 
 /**
  * 设置入口文件，打包时按模块文件分开独立打包
@@ -76,7 +77,7 @@ module.exports = {
   productionSourceMap: true,
   configureWebpack: {
     name,
-    plugins: []
+    plugins: [new CleanWebpackPlugin()]
   },
   chainWebpack(config) {
     config.module
@@ -95,6 +96,15 @@ module.exports = {
         secure: false,
         pathRewrite: {
           '^/api': '/api'
+        }
+      },
+      '/sapi': {
+        target: 'http://docker.meixiu.mobi:48766',
+        changeOrigin: true,
+        ws: true,
+        secure: false,
+        pathRewrite: {
+          '^/sapi': '/api'
         }
       },
       // 查询接口

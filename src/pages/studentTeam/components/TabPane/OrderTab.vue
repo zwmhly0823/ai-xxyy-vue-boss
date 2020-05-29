@@ -131,8 +131,8 @@
       :page-count="totalPages"
       :total="totalElements"
       @current-change="handleSizeChange"
-      open="calc(100vw - 180px - 240px - 147px - 30px)"
-      close="calc(100vw - 180px - 240px - 26px - 30px)"
+      open="calc(100vw - 147px - 50px)"
+      close="calc(100vw - 26px - 50px)"
     />
   </div>
 </template>
@@ -149,9 +149,9 @@ export default {
   },
   props: {
     // 班级传参
-    classId: {
+    classObj: {
       type: Object,
-      default: null
+      default: () => {}
     }
   },
   data() {
@@ -167,21 +167,23 @@ export default {
       statusList: []
     }
   },
-  created() {},
-  watch: {
-    classId(value) {
-      this.currentPage = 1
-      if (value.classId) {
-        this.studentsList()
-      } else {
-        this.tableData = []
-      }
-    }
+  created() {
+    this.classObj.teamId && this.studentsList()
   },
+  // watch: {
+  //   classId(value) {
+  //     this.currentPage = 1
+  //     if (value.classId) {
+  //       this.studentsList()
+  //     } else {
+  //       this.tableData = []
+  //     }
+  //   }
+  // },
   methods: {
     // 学员列表
     studentsList() {
-      const queryParams = `{"bool":{"must":[{"term":{"team_id":${this.classId.classId.id}}}]}}`
+      const queryParams = `{"bool":{"must":[{"term":{"team_id":${this.classObj.teamId}}}]}}`
       axios
         .post('/graphql/order', {
           query: `{
