@@ -112,6 +112,7 @@ export default {
           this.clearData = true
           this.dialogVisible = false
           this.showTable = true
+          this.$message.success('微信交接成功～')
           this.tableList = res.payload
           setTimeout(() => {
             this.clearData = false
