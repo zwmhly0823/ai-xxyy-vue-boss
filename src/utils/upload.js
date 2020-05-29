@@ -3,8 +3,8 @@
  * @version:
  * @Author: shentong
  * @Date: 2019-12-17 15:43:27
- * @LastEditors: Shentong
- * @LastEditTime: 2020-04-22 15:42:16
+ * @LastEditors: Lukun
+ * @LastEditTime: 2020-05-28 19:03:54
  */
 import axios from 'axios'
 import $http from '@/api'
@@ -25,15 +25,20 @@ const beforeAvatarUpload = (File) => {
   const isJPEG = file.type === 'image/jpeg'
   const isPNG = file.type === 'image/png'
   const isMP3 = file.type === 'audio/mpeg'
+  const isVideo =
+    file.type === 'video/mp4' ||
+    file.type === 'video/mov' ||
+    file.type === 'video/FLV' ||
+    file.type === 'video/rmvb'
   const isLt5M = file.size / 1024 / 1024 < 5
-  if (!isJPG && !isPNG && !isJPEG && !isMP3) {
+  if (!isJPG && !isPNG && !isJPEG && !isMP3 && !isVideo) {
     window._Vue.$message.error(
-      '上传头像图片只能是 png/jpg 格式! 音频只能是audio/mpeg格式！'
+      '上传头像图片只能是 png/jpg 格式! 音频只能是audio/mpeg格式！ 视频只能是mp4/flv/mov格式!'
     )
     return 0
   }
   if (!isLt5M) {
-    window._Vue.$message.error('上传头像图片大小不能超过 5MB!')
+    window._Vue.$message.error('上传文件大小不能超过 5MB!')
     return 0
   }
   return (isJPG || isPNG || isJPEG || isMP3) && isLt5M

@@ -138,7 +138,7 @@
     }
     // 隐藏二级目录下拉箭头
     .el-submenu__icon-arrow {
-      display: none;
+      color: $subMenuActiveText;
     }
   }
 

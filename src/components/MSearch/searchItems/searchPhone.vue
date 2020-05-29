@@ -13,6 +13,7 @@
       name="vals"
       class="inline-input"
       v-model="input"
+      clearable
       :fetch-suggestions="querySearch"
       :placeholder="tip"
       :trigger-on-focus="false"
@@ -44,7 +45,7 @@ export default {
     },
     name: {
       type: String,
-      default: 'out_trade_no'
+      default: ''
     },
     onlyPhone: {
       type: String,
@@ -112,6 +113,7 @@ export default {
         }
       }
       const searchUid = await this.createFilter(queryString)
+      console.log(searchUid, '匹配到的数据')
       const results = queryString ? searchUid : this.selectData
       // 调用 callback 返回建议列表的数据
       console.log(results, '结果')
@@ -127,6 +129,7 @@ export default {
                   wechat_nikename
                   id
                   last_team_id
+
                 }
             }
           `

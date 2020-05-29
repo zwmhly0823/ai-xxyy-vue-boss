@@ -1,7 +1,7 @@
 /*
  * @Date: 2020-03-13 15:20:21
- * @LastEditors: zhubaodong
- * @LastEditTime: 2020-03-24 16:29:26
+ * @LastEditors: liukun
+ * @LastEditTime: 2020-05-29 14:37:28
  * @FilePath: /ai-app-vue-toss/src/pages/studentTeam/router/index.js
  */
 import Vue from 'vue'
@@ -44,6 +44,15 @@ const routes = [
         /* webpackChunkName: "orderModule" */
         '../views/order/orderModule.vue'
       )
+  },
+  {
+    path: '/financeRefound',
+    name: 'financeRefound',
+    meta: {
+      title: '财务退款',
+      keepAlive: true
+    },
+    component: () => import('../views/financeRefound/financeRefound.vue')
   }
 ]
 

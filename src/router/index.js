@@ -84,14 +84,22 @@ const routes = [
           title: '物流',
           module: 'trading'
         }
+      },
+      {
+        path: '/financeRefound',
+        name: 'financeRefound',
+        meta: {
+          title: '财务退款',
+          module: 'trading'
+        }
       }
     ]
   },
-  // 财务
+  // 财务(该模块先隐藏,丹阳还会回来)
   {
     path: '/finance',
     name: 'finance',
-    // hidden: true,
+    hidden: true, // 原封不动,丹阳还会回来
     meta: {
       title: '财务',
       icon: 'el-icon-s-finance',
@@ -132,6 +140,14 @@ const routes = [
         name: 'weixinManagement',
         meta: {
           title: '微信管理',
+          module: 'teacher'
+        }
+      },
+      {
+        path: '/workHandover',
+        name: 'workHandover',
+        meta: {
+          title: '工作交接',
           module: 'teacher'
         }
       }
@@ -233,6 +249,43 @@ const routes = [
       //     style: 'line'
       //   }
       // }
+    ]
+  },
+  // 物流管理
+  {
+    path: '/express',
+    name: 'express',
+    // hidden: true,
+    meta: {
+      title: '物流管理',
+      icon: 'el-icon-s-data',
+      module: 'express'
+    },
+    children: [
+      {
+        path: '/experienceClass',
+        name: 'experienceClass',
+        meta: {
+          title: '体验课物流',
+          module: 'express'
+        }
+      },
+      {
+        path: '/systemClass',
+        name: 'systemClass',
+        meta: {
+          title: '系统课物流',
+          module: 'express'
+        }
+      },
+      {
+        path: '/activityClass',
+        name: 'activityClass',
+        meta: {
+          title: '活动物流',
+          module: 'express'
+        }
+      }
     ]
   }
 ]

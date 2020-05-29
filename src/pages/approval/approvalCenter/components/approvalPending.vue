@@ -4,7 +4,7 @@
  * @Author: Lukun
  * @Date: 2020-04-27 17:47:58
  * @LastEditors: Lukun
- * @LastEditTime: 2020-05-25 21:40:23
+ * @LastEditTime: 2020-05-28 20:19:00
  -->
 <template>
   <div class="container">
@@ -73,6 +73,7 @@
       <el-table-column label="审批摘要" width="450">
         <template slot-scope="scope">
           <div>{{ scope.row.repiarContent }}</div>
+          <div>{{ scope.row.period }}</div>
           <div>{{ scope.row.receptContent }}</div>
           <div>{{ scope.row.reason }}</div>
           <div
@@ -191,11 +192,7 @@
         <el-row>
           <el-col :span="3">补发原因:</el-col>
           <el-col :span="20" :offset="1">
-            {{
-              drawerApprovalDeatail.reason == 'TRANSPORT_BAD'
-                ? '运输损坏'
-                : '发货漏发'
-            }}
+            {{ reasonList[drawerApprovalDeatail.reason] }}
           </el-col>
         </el-row>
         <el-row>
@@ -208,6 +205,36 @@
           <el-col :span="3">状态:</el-col>
           <el-col :span="20" :offset="1">
             {{ drawerApprovalDeatail.status == 'PENDING' ? '待审批' : '-' }}
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="3">补货说明:</el-col>
+          <el-col :span="18" :offset="1">{{
+            drawerApprovalDeatail.reissueMsg
+          }}</el-col>
+        </el-row>
+        <el-row v-if="drawerApprovalDeatail.attsUrl.indexOf('mp4') == -1">
+          <el-col :span="3">附件:</el-col>
+          <el-col :span="18" :offset="1">
+            <div class="demo-image__preview">
+              <el-image
+                style="width: 220px; height: 120px"
+                :src="drawerApprovalDeatail.attsUrl"
+                fit="contain"
+                :preview-src-list="[drawerApprovalDeatail.attsUrl]"
+              >
+              </el-image>
+            </div>
+          </el-col>
+        </el-row>
+        <el-row v-else>
+          <el-col :span="3">附件:</el-col>
+          <el-col :span="18" :offset="1">
+            <video
+              style="width: 220px; height: 120px"
+              :src="drawerApprovalDeatail.attsUrl"
+              controls
+            ></video>
           </el-col>
         </el-row>
         <el-row class="BOTTOM" v-if="isStaffId">
@@ -303,13 +330,13 @@
         <el-row>
           <el-col :span="5">附件:</el-col>
           <el-col :span="18" :offset="1">
-            <img
+            <el-image
+              style="width: 220px; height: 120px"
               :src="drawerApprovalDeatail.attsUrl"
-              width="220"
-              height="120"
-              alt=""
-              srcset=""
-            />
+              fit="contain"
+              :preview-src-list="[drawerApprovalDeatail.attsUrl]"
+            >
+            </el-image>
           </el-col>
         </el-row>
         <el-row v-if="isStaffId" class="BOTTOM">
@@ -450,7 +477,12 @@ export default {
       },
       adjustResultDialogShow: false, // drawer同意后的弹窗
       adjustDialogType: null, // dialog的类型
-      adjustDialogErrShow: false // dialog的错误提示
+      adjustDialogErrShow: false, // dialog的错误提示
+      reasonList: {
+        OTHER: '其他',
+        DELIVERY_MISS: '发货漏发',
+        TRANSPORT_BAD: '运输损坏'
+      }
     }
   },
   created() {
@@ -461,6 +493,7 @@ export default {
     this.staffId = staff.staffId
     this.staffName = staff.staffName
     this.isStaffId = staff.isStaffId
+    this.staffName = staff.staffName
     // Parameters:
     this.params = {
       type: '',
@@ -812,8 +845,9 @@ export default {
           this.tableData = res.payload.content.map((item) => {
             const zhaiyao = item.abstractContent.split('^')
             item.repiarContent = zhaiyao[0]
-            item.receptContent = zhaiyao[1]
-            item.reason = zhaiyao[2]
+            item.period = zhaiyao[1]
+            item.receptContent = zhaiyao[2]
+            item.reason = zhaiyao[3]
             item.openTime = timestamp(item.ctime, 2)
             item.approveTime = timestamp(item.endTime, 2)
             return item
