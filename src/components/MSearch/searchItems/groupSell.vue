@@ -98,13 +98,6 @@ export default {
         q.bool.must.push({ terms: { id: this.teacherscope } })
       getDepartmentTeacherEx(JSON.stringify(q))
         .then((res) => {
-          if (res.data.TeacherListEx.length === 0) {
-            this.$message({
-              message: '对不起，部门没有老师哦，请重新选择～',
-              type: 'warning'
-            })
-            return
-          }
           this.teacherList = res.data.TeacherListEx || []
           this.loading = false
         })
