@@ -3,8 +3,8 @@
  * @version: 1.0.0
  * @Author: liukun
  * @Date: 2020-05-19 17:18:39
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-05-29 14:01:14
+ * @LastEditors: liukun
+ * @LastEditTime: 2020-05-28 22:13:23
 -->
 <template>
   <section class="bianju10">
@@ -678,7 +678,7 @@ export default {
 
 <style lang="scss" scoped>
 .bianju10 {
-  padding: 10px 10px 35px 10px;
+  padding: 10px 10px 0px 10px;
 }
 .bianju10 .el-divider--horizontal {
   margin: 0px;
