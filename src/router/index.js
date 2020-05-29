@@ -76,6 +76,14 @@ const routes = [
           title: '订单',
           module: 'trading'
         }
+      },
+      {
+        path: '/financeRefound',
+        name: 'financeRefound',
+        meta: {
+          title: '财务退款',
+          module: 'trading'
+        }
       }
     ]
   },
@@ -113,13 +121,42 @@ const routes = [
           title: '活动物流',
           module: 'express'
         }
+      }
+    ]
+  },
+  // 物流管理
+  {
+    path: '/express',
+    name: 'express',
+    // hidden: true,
+    meta: {
+      title: '物流中心',
+      icon: 'el-icon-s-cooperation',
+      module: 'express'
+    },
+    children: [
+      {
+        path: '/experienceClass',
+        name: 'experienceClass',
+        meta: {
+          title: '体验课物流',
+          module: 'express'
+        }
       },
       {
-        path: '/financeRefound',
-        name: 'financeRefound',
+        path: '/systemClass',
+        name: 'systemClass',
         meta: {
-          title: '财务退款',
-          module: 'trading'
+          title: '系统课物流',
+          module: 'express'
+        }
+      },
+      {
+        path: '/activityClass',
+        name: 'activityClass',
+        meta: {
+          title: '活动物流',
+          module: 'express'
         }
       }
     ]
