@@ -4,7 +4,7 @@
  * @Author: Lukun
  * @Date: 2020-04-27 17:47:58
  * @LastEditors: Lukun
- * @LastEditTime: 2020-05-29 19:39:44
+ * @LastEditTime: 2020-05-29 21:35:09
  -->
 <template>
   <div class="container">
@@ -115,6 +115,7 @@
       size="50%"
       class="drawer-approval-detail"
       :modal="false"
+      @close="handleCloseDraw"
       :title="drawerApprovalDeatail.addressId ? '补发货审批' : '退款审批'"
     >
       <div v-if="drawerApprovalDeatail.addressId" class="approval-replenish">
@@ -511,6 +512,10 @@ export default {
   },
 
   methods: {
+    // 销毁
+    handleCloseDraw() {
+      this.version = ''
+    },
     // 销售部门搜索
     getSeachePart(val) {
       Object.assign(this.params, { keyword: val })
