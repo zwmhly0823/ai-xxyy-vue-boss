@@ -3,8 +3,8 @@
  * @version: 1.0.0
  * @Author: liukun
  * @Date: 2020-05-19 17:18:39
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-05-29 14:01:14
+ * @LastEditors: liukun
+ * @LastEditTime: 2020-05-29 18:28:45
 -->
 <template>
   <section class="bianju10">
@@ -58,6 +58,7 @@
             v-model="fordisplay3"
             @change="refundStatus"
           >
+            <el-option label="退款驳回" value="3"></el-option>
             <el-option label="退款中" value="4"></el-option>
             <el-option label="退款成功" value="5"></el-option>
           </el-select>
@@ -266,12 +267,16 @@
             ></el-image>
           </el-col>
         </el-row>
-        <el-row class="buttonCenter" v-if="statusStr === '退款中'">
+        <el-row class="buttonBetween" v-if="statusStr === '退款中'">
+          <!-- <el-button type="warning" @click="rejectRefund">退款驳回</el-button> -->
           <el-button type="primary" @click="comfirmRefund">确认退款</el-button>
         </el-row>
         <el-row class="buttonCenter" v-else-if="statusStr === '退款成功'">
           <el-button type="success" :disabled="true">已经退款</el-button>
         </el-row>
+        <!-- <el-row class="buttonCenter" v-else-if="statusStr === '退款驳回'">
+          <el-button type="danger" :disabled="true">已驳回</el-button>
+        </el-row> -->
       </div>
     </el-drawer>
   </section>
@@ -354,7 +359,7 @@ export default {
     },
     refundStatus(val) {
       console.info(val, typeof val)
-      if (val === '4' || val === '5') {
+      if (val === '3' || val === '4' || val === '5') {
         this.searchJson.status = Number(val)
         this.arrangeParams()
       } else {
@@ -647,6 +652,37 @@ export default {
           type: 'warning'
         })
       }
+    },
+    rejectRefund() {
+      this.$prompt('请告知您的驳回理由', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        inputPattern: /[\s\S]{6,}/, // 最少6个字符
+        inputErrorMessage: '这么短？再写点！'
+      }).then(async ({ value }) => {
+        const { code } = await this.$http.Finance.toReject().catch((err) => {
+          console.error(err)
+          this.$message({
+            message: '驳回操作失败,请稍后再试',
+            type: 'error'
+          })
+          return -1
+        })
+        if (code === 0) {
+          this.$message({
+            message: '操作成功',
+            type: 'success'
+          })
+          // 跳回列表并刷新
+          this.$refs.drawerLk.closeDrawer() // 关闭抽屉
+          this.arrangeParams() // 刷新列表数据
+        } else {
+          this.$message({
+            message: '驳回操作失败,稍后再试',
+            type: 'warning'
+          })
+        }
+      })
     }
   },
   computed: {
@@ -678,7 +714,7 @@ export default {
 
 <style lang="scss" scoped>
 .bianju10 {
-  padding: 10px 10px 35px 10px;
+  padding: 10px 10px 0px 10px;
 }
 .bianju10 .el-divider--horizontal {
   margin: 0px;
@@ -734,5 +770,9 @@ export default {
 .buttonCenter {
   display: flex;
   justify-content: center;
+}
+.buttonBetween {
+  display: flex;
+  justify-content: space-around;
 }
 </style>

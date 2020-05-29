@@ -152,7 +152,7 @@ export function baseUrl() {
   if (BASE_URL === 'ghpageslive') {
     myBaseUrl = ''
   } else if (BASE_URL === 'ghpagestest' || BASE_URL.indexOf('test') > -1) {
-    myBaseUrl = '/ai-app-vue-toss-test/'
+    myBaseUrl = '/ai-app-vue-boss-test/'
     // myBaseUrl = ''
   }
   return myBaseUrl

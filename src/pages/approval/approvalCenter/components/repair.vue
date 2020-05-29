@@ -4,7 +4,7 @@
  * @Author: Lukun
  * @Date: 2020-04-28 13:50:45
  * @LastEditors: Lukun
- * @LastEditTime: 2020-05-25 20:04:46
+ * @LastEditTime: 2020-05-29 01:23:34
  -->
 <template>
   <div class="container-content">
@@ -155,7 +155,46 @@
           >
             <el-radio label="DELIVERY_MISS">发货漏发</el-radio>
             <el-radio label="TRANSPORT_BAD">运输损坏</el-radio>
+            <el-radio label="OTHER">其他</el-radio>
           </el-radio-group>
+        </el-form-item>
+        <el-form-item label="补发货说明" prop="reissueMsg">
+          <el-input
+            type="textarea"
+            resize="none"
+            class="repair-resolve"
+            v-model="formRepair.reissueMsg"
+            placeholder="请输入"
+          ></el-input>
+        </el-form-item>
+        <el-form-item label="附件" prop="attsUrl">
+          <el-upload
+            action=""
+            :http-request="upload"
+            :class="$style.refundForm_attsUrl"
+            :show-file-list="false"
+          >
+            <div v-if="imgShow && !videoShow">
+              <el-image
+                :src="formRepair.attsUrl"
+                fit="contain"
+                :class="$style.avatar"
+              />
+            </div>
+
+            <div v-else-if="!imgShow && videoShow">
+              <video
+                style="width: 220px; height: 120px"
+                :src="formRepair.attsUrl"
+                controls
+              ></video>
+            </div>
+            <i
+              v-else
+              class="el-icon-plus"
+              :class="$style.avatar_uploader_icon"
+            ></i>
+          </el-upload>
         </el-form-item>
         <el-form-item class="box-padding">
           <el-button type="primary" @click="confirmButton('ruleForm')"
@@ -217,7 +256,6 @@
     </el-dialog>
   </div>
 </template>
-
 <script>
 import LogisticsForm from './logisticsForm'
 import RepairLevel from '@/components/MSearch/searchItems/repairLevel'
@@ -225,6 +263,8 @@ import RepairSup from '@/components/MSearch/searchItems/repairSup'
 import Package from './package'
 import { getStaffInfo } from '../common'
 import SearchPhone from '@/components/MSearch/searchItems/searchPhone'
+import uploadFile from '@/utils/upload' // 上传公共方法
+
 export default {
   components: {
     LogisticsForm,
@@ -296,9 +336,13 @@ export default {
         level: '',
         cellPhone: '', // 附加
         name: '',
+        attsUrl: '',
+        reissueMsg: '',
         chooseProductVaidator: '', // 附加校验
         packagesType: '' // 体验课或者系统课首先默认选择
       },
+      imgShow: false, // 附件图片显示
+      videoShow: false, // 附件视频显示
       addresDialog: false,
       textarea: '',
       productDialog: false,
@@ -346,6 +390,13 @@ export default {
             message: '请选择关联补发商品原因',
             trigger: 'blur'
           }
+        ],
+        reissueMsg: [
+          { required: true, message: '请填写原因', trigger: 'blur' },
+          { min: 0, max: 50, message: '最大长度50个字符', trigger: 'blur' }
+        ],
+        attsUrl: [
+          { required: true, message: '请选择上传的附件', trigger: 'change' }
         ]
       }
     }
@@ -362,6 +413,28 @@ export default {
     cancelAddress(val) {
       this.addresDialog = false
       this.$message('您已取消修改地址')
+    },
+    upload(file) {
+      uploadFile(file).then((res) => {
+        this.formRepair.attsUrl = res // 取来图片remote地址
+        if (
+          res.includes('.mp4') ||
+          res.includes('.mov') ||
+          res.includes('.FLV') ||
+          res.includes('.rmvb')
+        ) {
+          this.videoShow = true
+          this.imgShow = false
+        }
+        if (
+          res.includes('.png') ||
+          res.includes('.jpg') ||
+          res.includes('.jpeg')
+        ) {
+          this.videoShow = false
+          this.imgShow = true
+        }
+      })
     },
     // 清空数据
     clearData() {
@@ -408,8 +481,12 @@ export default {
         name: '',
         chooseProductVaidator: '', // 附加校验
         packagesType: '', // 体验课或者系统课首先默认选择
-        replenishReason: ''
+        replenishReason: '', // 附件图片显示
+        attsUrl: '',
+        reissueMsg: ''
       }
+      this.imgShow = false
+      this.videoShow = false
     },
     // 保存商品
     saveGift() {
@@ -699,7 +776,7 @@ export default {
       this.addresDialog = true
     },
     cancelButton() {
-      this.$router.push('/approvalCenter')
+      this.clearAllData()
     },
     confirmButton(formName) {
       this.$refs[formName].validate((valid) => {
@@ -824,6 +901,9 @@ export default {
       color: #409eff;
     }
   }
+  .repair-resolve {
+    width: 55%;
+  }
   .address-recept {
     width: 55%;
   }
@@ -841,5 +921,21 @@ export default {
 .searchphonerepair,
 .chooseinput {
   width: 50% !important;
+}
+.refundForm_attsUrl {
+  text-align: center;
+  border: 1px dashed #d9d9d9;
+  border-radius: 6px;
+  cursor: pointer;
+  width: 178px;
+  overflow: hidden;
+}
+.avatar_uploader_icon {
+  font-size: 28px;
+  color: #8c939d;
+  width: 178px;
+  height: 178px;
+  line-height: 178px;
+  text-align: center;
 }
 </style>
