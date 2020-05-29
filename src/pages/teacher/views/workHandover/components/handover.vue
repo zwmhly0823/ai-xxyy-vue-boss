@@ -31,7 +31,7 @@
           微信号{{ computObjKey(wechatObj) }}个
         </div>
         <div class="class-in" v-show="!isClassHandover">
-          带班数{{ classLength.flat().length }}个
+          带班数{{ classLength.length }}个
         </div>
         <div class="class-in" v-show="isClassHandover">
           带班数{{ classList.length }}个
@@ -75,7 +75,7 @@
         <div class="handover-inform">
           <div class="handover-inform-text" v-if="receiveTeacher.length">
             目标交接微信数{{ computObjKey(wechatObj) }}个，包含班级数{{
-              classLength.flat().length
+              classLength.length
             }}个；
           </div>
         </div>
@@ -220,6 +220,10 @@ export default {
         if (val) {
           for (const index in wecharList) {
             if (weixinIds.includes(wecharList[index].weixinNo)) {
+              this.classLength.splice(
+                0,
+                wecharList[index].steamModelList.length
+              )
               this.receiveTeacher.splice(0, this.receiveTeacher.length - 1)
               delete this.wechatObj[wecharList[index].weixinNo]
               wecharList.splice(index, 1)
@@ -346,7 +350,11 @@ export default {
         if (res.code === 0 && res.payload.length !== 0) {
           for (const item of res.payload) {
             wechatObj[item.weixinNo] = item.steamModelList
-            classLength.push(item.steamModelList)
+            if (item.steamModelList.length !== 0) {
+              for (const _item of item.steamModelList) {
+                classLength.push(_item)
+              }
+            }
           }
           this.flag = false
           this.wecharList = res.payload
