@@ -4,7 +4,7 @@
  * @Author: Lukun
  * @Date: 2020-04-27 17:47:58
  * @LastEditors: Lukun
- * @LastEditTime: 2020-05-29 19:17:58
+ * @LastEditTime: 2020-05-29 19:39:44
  -->
 <template>
   <div class="container">
@@ -560,7 +560,7 @@ export default {
               console.log(res)
               this.checkPending(this.params)
               this.drawerApproval = false
-
+              this.version = ''
               this.$message({
                 message: '拒绝审核通过',
                 type: 'success'
@@ -610,6 +610,7 @@ export default {
             .then((res) => {
               this.checkPending(this.params)
               this.drawerApproval = false
+              this.version = ''
               this.$message({
                 message: '同意审核通过',
                 type: 'success'
