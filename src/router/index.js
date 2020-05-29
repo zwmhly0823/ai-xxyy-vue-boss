@@ -67,15 +67,23 @@ const routes = [
           title: '物流',
           module: 'trading'
         }
+      },
+      {
+        path: '/financeRefound',
+        name: 'financeRefound',
+        meta: {
+          title: '财务退款',
+          module: 'trading'
+        }
       }
     ]
   },
 
-  // 财务
+  // 财务(该模块先隐藏,丹阳还会回来)
   {
     path: '/finance',
     name: 'finance',
-    // hidden: true,
+    hidden: true, // 原封不动,丹阳还会回来
     meta: {
       title: '财务',
       icon: 'el-icon-s-finance',
