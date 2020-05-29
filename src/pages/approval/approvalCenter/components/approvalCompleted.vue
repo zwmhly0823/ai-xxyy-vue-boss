@@ -4,7 +4,7 @@
  * @Author: Lukun
  * @Date: 2020-04-27 17:47:58
  * @LastEditors: Lukun
- * @LastEditTime: 2020-05-25 21:39:10
+ * @LastEditTime: 2020-05-29 19:37:52
  -->
 <template>
   <div class="container">
@@ -193,42 +193,6 @@
                 ? '审批通过'
                 : '审批驳回'
             }}
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="3">备注:</el-col>
-          <el-col :span="20" :offset="1">
-            {{ drawerApprovalDeatail.approvalRemark }}
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="3">补货说明:</el-col>
-          <el-col :span="18" :offset="1">{{
-            drawerApprovalDeatail.reissueMsg
-          }}</el-col>
-        </el-row>
-        <el-row v-if="drawerApprovalDeatail.attsUrl.indexOf('mp4') == -1">
-          <el-col :span="3">附件:</el-col>
-          <el-col :span="18" :offset="1">
-            <div class="demo-image__preview">
-              <el-image
-                style="width: 220px; height: 120px"
-                :src="drawerApprovalDeatail.attsUrl"
-                fit="contain"
-                :preview-src-list="[drawerApprovalDeatail.attsUrl]"
-              >
-              </el-image>
-            </div>
-          </el-col>
-        </el-row>
-        <el-row v-else>
-          <el-col :span="3">附件:</el-col>
-          <el-col :span="18" :offset="1">
-            <video
-              style="width: 220px; height: 120px"
-              :src="drawerApprovalDeatail.attsUrl"
-              controls
-            ></video>
           </el-col>
         </el-row>
         <el-row>
