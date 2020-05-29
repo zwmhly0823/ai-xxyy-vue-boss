@@ -74,7 +74,7 @@
         </el-table>
         <div class="handover-inform">
           <div class="handover-inform-text" v-if="receiveTeacher.length">
-            目标交接班级数{{ computObjKey(wechatObj) }}个，包含班级数{{
+            目标交接微信数{{ computObjKey(wechatObj) }}个，包含班级数{{
               classLength.flat().length
             }}个；实际交接微信数{{ astualWechart.length }}个，接收班级数{{
               tableList.length
@@ -359,6 +359,7 @@ export default {
     // 获取微信列表
     async getWechat(teacherId) {
       const { wechatObj, classLength } = this
+      classLength.splice(0, classLength.length - 1)
       if (teacherId === undefined || teacherId === null) {
         return
       }
