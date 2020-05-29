@@ -4,7 +4,7 @@
  * @Author: Lukun
  * @Date: 2020-04-27 17:47:58
  * @LastEditors: Lukun
- * @LastEditTime: 2020-05-29 16:46:44
+ * @LastEditTime: 2020-05-29 17:13:02
  -->
 <template>
   <div class="container">
@@ -339,7 +339,7 @@
             </el-image>
           </el-col>
         </el-row>
-        <el-row class="BOTTOM">
+        <el-row class="BOTTOM" v-if="isStaffId">
           <el-col :span="20" :offset="1">
             <el-button type="button" @click="refuseReplenish">拒 绝</el-button>
             <el-button type="button" @click="ensureReplenish">同 意</el-button>
