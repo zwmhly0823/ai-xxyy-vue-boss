@@ -1,7 +1,7 @@
 /*
  * @Date: 2020-03-13 15:20:21
- * @LastEditors: Shentong
- * @LastEditTime: 2020-05-18 15:07:07
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-05-29 20:38:08
  * @FilePath: /ai-app-vue-toss/src/pages/studentTeam/router/index.js
  */
 import Vue from 'vue'
@@ -20,8 +20,8 @@ const routes = [
     redirect: '/channelManagement'
   },
   {
-    path: '/scheduleList',
-    name: 'scheduleList',
+    path: '/operatingSchedule',
+    name: 'operatingSchedule',
     meta: {
       title: '招生排期',
       keepAlive: true
