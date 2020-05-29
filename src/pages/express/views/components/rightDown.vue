@@ -388,11 +388,11 @@ import logisticsForm from '@/pages/studentTeam/components/TabPane/components/log
 import {
   replenishTypeList,
   replenishReasonSearchList,
-  expressToggleList
+  expressToggleList,
+  productTopicList
 } from '@/utils/expressItemConfig'
 
 let supList = []
-let productTopicList = []
 
 export default {
   props: {
@@ -470,7 +470,7 @@ export default {
   },
   mounted() {
     this.getSupList()
-    this.getProductTopicList()
+    // this.getProductTopicList()
     this.scrollToTop()
   },
   data() {
@@ -987,8 +987,8 @@ export default {
     },
     handleRegtype(listItem) {
       productTopicList.map((item) => {
-        if (+item.value === +listItem.regtype) {
-          listItem.regtype_text = item.label
+        if (+item.id === +listItem.regtype) {
+          listItem.regtype_text = item.name
         }
       })
     },

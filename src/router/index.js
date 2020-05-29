@@ -76,13 +76,42 @@ const routes = [
           title: '订单',
           module: 'trading'
         }
+      }
+    ]
+  },
+  // 物流管理
+  {
+    path: '/express',
+    name: 'express',
+    // hidden: true,
+    meta: {
+      title: '物流管理',
+      icon: 'el-icon-s-cooperation',
+      module: 'express'
+    },
+    children: [
+      {
+        path: '/experienceClass',
+        name: 'experienceClass',
+        meta: {
+          title: '体验课物流',
+          module: 'express'
+        }
       },
       {
-        path: '/express',
-        name: 'express',
+        path: '/systemClass',
+        name: 'systemClass',
         meta: {
-          title: '物流',
-          module: 'trading'
+          title: '系统课物流',
+          module: 'express'
+        }
+      },
+      {
+        path: '/activityClass',
+        name: 'activityClass',
+        meta: {
+          title: '活动物流',
+          module: 'express'
         }
       },
       {
@@ -249,43 +278,6 @@ const routes = [
       //     style: 'line'
       //   }
       // }
-    ]
-  },
-  // 物流管理
-  {
-    path: '/express',
-    name: 'express',
-    // hidden: true,
-    meta: {
-      title: '物流管理',
-      icon: 'el-icon-s-data',
-      module: 'express'
-    },
-    children: [
-      {
-        path: '/experienceClass',
-        name: 'experienceClass',
-        meta: {
-          title: '体验课物流',
-          module: 'express'
-        }
-      },
-      {
-        path: '/systemClass',
-        name: 'systemClass',
-        meta: {
-          title: '系统课物流',
-          module: 'express'
-        }
-      },
-      {
-        path: '/activityClass',
-        name: 'activityClass',
-        meta: {
-          title: '活动物流',
-          module: 'express'
-        }
-      }
     ]
   }
 ]
