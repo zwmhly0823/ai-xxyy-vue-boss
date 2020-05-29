@@ -165,15 +165,6 @@ export default {
 .demo-ruleForm {
   padding: 30px;
 }
-</style>
-<<<<<<< HEAD
-<<<<<<< HEAD
-
-=======
->>>>>>> origin/newRepair05-29
-=======
->>>>>>> b4553ef86660e08ff6f06b8232c1e6e79321ced7
-<style lang="scss">
 .el-cascader-panel {
   height: 300px;
 }

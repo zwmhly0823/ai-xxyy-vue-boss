@@ -218,13 +218,11 @@ export default {
           return item.weixinNo
         })
         if (val) {
-          if (wecharList.length !== 0) {
-            for (const index in wecharList) {
-              if (weixinIds.includes(wecharList[index].weixinNo)) {
-                wecharList.splice(index, 1)
-                this.receiveTeacher.splice(0, this.receiveTeacher.length - 1)
-                delete this.wechatObj[wecharList[index].weixinNo]
-              }
+          for (const index in wecharList) {
+            if (weixinIds.includes(wecharList[index].weixinNo)) {
+              this.receiveTeacher.splice(0, this.receiveTeacher.length - 1)
+              delete this.wechatObj[wecharList[index].weixinNo]
+              wecharList.splice(index, 1)
             }
           }
         }
@@ -240,7 +238,6 @@ export default {
     },
     // 交出方选择老师
     handoverSelectTeacher(res) {
-      console.log('res', res)
       this.form.handoverTeacherId = res.pay_teacher_id || null
       if (res && res.teacherList) {
         for (const item of res.teacherList) {
@@ -309,7 +306,6 @@ export default {
     handleSelectionChange(val) {
       const arr = []
       this.receiveTeacher = val
-      console.log('xxx', this.wechatObj)
       if (Object.keys(this.wechatObj).length !== 0) {
         for (const item of val) {
           arr.push(this.wechatObj[item.weixinNo])
@@ -341,7 +337,7 @@ export default {
     // 获取微信列表
     async getWechat(teacherId) {
       const { wechatObj, classLength } = this
-      classLength.splice(0, classLength.length - 1)
+      classLength.length = 0
       if (teacherId === undefined || teacherId === null) {
         return
       }
