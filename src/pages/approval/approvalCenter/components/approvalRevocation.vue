@@ -73,18 +73,6 @@
           <div>{{ scope.row.period }}</div>
           <div>{{ scope.row.receptContent }}</div>
           <div>{{ scope.row.reason }}</div>
-          <div
-            v-if="
-              scope.row.type === 'ADJUSTMENT_STAGE' ||
-                scope.row.type === 'ADJUSTMENT_SUP'
-            "
-          >
-            {{
-              scope.row.abstractContent.substring(
-                scope.row.abstractContent.lastIndexOf('^') + 1
-              )
-            }}
-          </div>
         </template>
       </el-table-column>
       <el-table-column label="发起时间" width="180">
