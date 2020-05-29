@@ -76,9 +76,7 @@
           <div class="handover-inform-text" v-if="receiveTeacher.length">
             目标交接微信数{{ computObjKey(wechatObj) }}个，包含班级数{{
               classLength.flat().length
-            }}个；实际交接微信数{{ astualWechart.length }}个，接收班级数{{
-              tableList.length
-            }}个
+            }}个；
           </div>
         </div>
       </div>
@@ -185,7 +183,6 @@ export default {
       wechatObj: {},
       classLength: [],
       actualClass: [],
-      astualWechart: [],
       wecharList: [],
       wecharNumList: []
     }
@@ -194,21 +191,6 @@ export default {
     tabIndex: {
       handler(val) {
         this.isClassHandover = val === '0'
-      },
-      immediate: true
-    },
-    tableList: {
-      handler(val) {
-        if (val.length !== 0) {
-          for (const item of val) {
-            if (
-              item.sendWeixinNo !== '' &&
-              this.astualWechart.indexOf(item.sendWeixinNo) === -1
-            ) {
-              this.astualWechart.push(item.sendWeixinNo)
-            }
-          }
-        }
       },
       immediate: true
     },
@@ -227,8 +209,7 @@ export default {
           }
         }
       },
-      immediate: true,
-      deep: true
+      immediate: true
     },
     clearData: {
       handler(val) {
@@ -237,17 +218,18 @@ export default {
           return item.weixinNo
         })
         if (val) {
-          for (const index in wecharList) {
-            if (weixinIds.includes(wecharList[index].weixinNo)) {
-              wecharList.splice(index, 1)
-              this.receiveTeacher.splice(0, this.receiveTeacher.length - 1)
-              delete this.wechatObj[wecharList[index].weixinNo]
+          if (wecharList.length !== 0) {
+            for (const index in wecharList) {
+              if (weixinIds.includes(wecharList[index].weixinNo)) {
+                wecharList.splice(index, 1)
+                this.receiveTeacher.splice(0, this.receiveTeacher.length - 1)
+                delete this.wechatObj[wecharList[index].weixinNo]
+              }
             }
           }
         }
       },
-      immediate: true,
-      deep: true
+      immediate: true
     }
   },
   methods: {
@@ -258,6 +240,7 @@ export default {
     },
     // 交出方选择老师
     handoverSelectTeacher(res) {
+      console.log('res', res)
       this.form.handoverTeacherId = res.pay_teacher_id || null
       if (res && res.teacherList) {
         for (const item of res.teacherList) {
@@ -326,11 +309,10 @@ export default {
     handleSelectionChange(val) {
       const arr = []
       this.receiveTeacher = val
+      console.log('xxx', this.wechatObj)
       if (Object.keys(this.wechatObj).length !== 0) {
         for (const item of val) {
-          if (this.wechatObj[item.weixinNo].length !== 0) {
-            arr.push(this.wechatObj[item.weixinNo])
-          }
+          arr.push(this.wechatObj[item.weixinNo])
         }
         this.actualClass = arr.flat()
       }
