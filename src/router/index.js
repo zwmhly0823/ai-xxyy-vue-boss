@@ -85,7 +85,7 @@ const routes = [
     name: 'express',
     // hidden: true,
     meta: {
-      title: '物流管理',
+      title: '物流中心',
       icon: 'el-icon-s-cooperation',
       module: 'express'
     },
