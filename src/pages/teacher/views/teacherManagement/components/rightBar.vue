@@ -358,6 +358,24 @@ export default {
               res.leave_date = res.leave_date
                 ? formatData(new Date(res.leave_date).getTime(), 'd')
                 : ''
+              // 销售等级
+              if (res.level === 0) {
+                res.level = '新兵培训'
+              } else if (res.level === 1) {
+                res.level = '下组待接生'
+              } else if (res.level === 2) {
+                res.level = '首次排班'
+              } else if (res.level === 3) {
+                res.level = '已接生一次'
+              } else if (res.level === 4) {
+                res.level = '1级'
+              } else if (res.level === 5) {
+                res.level = '2级'
+              } else if (res.level === 6) {
+                res.level = '3级'
+              } else if (res.level === 7) {
+                res.level = '4级'
+              }
             })
             this.tableData = content
             if (this.detailsIndex === '2') {
