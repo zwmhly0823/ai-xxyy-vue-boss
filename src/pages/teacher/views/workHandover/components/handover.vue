@@ -236,18 +236,20 @@ export default {
         if (val) {
           for (const index in wecharList) {
             for (const idx in weixinIds) {
-              if (weixinIds[idx] === wecharList[index].weixinNo) {
-                this.classLength.splice(
-                  0,
-                  wecharList[index].steamModelList.length
-                )
-                this.receiveTeacher.splice(0, this.receiveTeacher.length - 1)
-                this.actualClass.splice(
-                  0,
-                  wecharList[index].steamModelList.length
-                )
-                delete this.wechatObj[wecharList[index].weixinNo]
-                wecharList.splice(index, 1)
+              if (wecharList[index]) {
+                if (weixinIds[idx] === wecharList[index].weixinNo) {
+                  this.classLength.splice(
+                    0,
+                    wecharList[index].steamModelList.length
+                  )
+                  this.receiveTeacher.splice(0, this.receiveTeacher.length - 1)
+                  this.actualClass.splice(
+                    0,
+                    wecharList[index].steamModelList.length
+                  )
+                  delete this.wechatObj[wecharList[index].weixinNo]
+                  wecharList.splice(index, 1)
+                }
               }
             }
           }
