@@ -209,15 +209,18 @@ export default {
     },
     clearSelectData: {
       handler(val) {
-        const classList = this.classList
         const ids = this.receiveTeacher.map((item, index) => {
           return item.id
         })
         if (val) {
-          for (const index in classList) {
-            if (ids.includes(classList[index].id)) {
-              classList.splice(index, 1)
-              this.receiveTeacher.splice(0, this.receiveTeacher.length - 1)
+          for (const index in this.classList) {
+            for (const id of ids) {
+              if (this.classList[index]) {
+                if (id === this.classList[index].id) {
+                  this.classList.splice(index, this.receiveTeacher.length)
+                  this.receiveTeacher.splice(0, this.receiveTeacher.length - 1)
+                }
+              }
             }
           }
         }
@@ -305,9 +308,6 @@ export default {
       if (teacherId === undefined || teacherId === null) {
         return
       }
-      if (this.classList.length !== 0) {
-        this.classList.splice(0, this.classList.length)
-      }
       try {
         const res = await this.$http.WorkerHandover.getHandoverSteam(teacherId)
         if (res && res.code === 0) {
@@ -366,6 +366,10 @@ export default {
       }
       try {
         const res = await this.$http.WorkerHandover.getHandoverWechat(teacherId)
+        if (res.payload.length === 0) {
+          this.$message.warning('老师名下没有微信号~')
+          return
+        }
         if (res.code === 0 && res.payload.length !== 0) {
           for (const item of res.payload) {
             wechatObj[item.weixinNo] = item.steamModelList
@@ -392,6 +396,10 @@ export default {
           teacherId
         )
         if (res.code === 0) {
+          if (res.payload.length === 0) {
+            this.$message.warning('老师没有微信号~')
+            return
+          }
           this.wecharNumList = res.payload
         }
       } catch (error) {
