@@ -57,6 +57,18 @@
                 </template>
               </el-table-column>
               <el-table-column
+                label="服务组"
+                min-width="120"
+                prop="department_name"
+                align="center"
+              ></el-table-column>
+              <el-table-column
+                label="辅导老师"
+                width="80"
+                prop="teacher_realname"
+                align="center"
+              ></el-table-column>
+              <el-table-column
                 label="班级人数"
                 min-width="80"
                 align="center"
@@ -141,6 +153,7 @@
                 min-width="70"
                 prop="today_complete_course_count"
                 align="center"
+                v-if="teamIndex != 0 && teamIndex != 3"
               >
                 <template slot="header">
                   <div
@@ -174,6 +187,7 @@
                 min-width="70"
                 prop="yesterday_complete_course_count"
                 align="center"
+                v-if="teamIndex != 0 && teamIndex != 3"
               >
                 <template slot="header">
                   <div
@@ -206,18 +220,6 @@
                   </div>
                 </template>
               </el-table-column>
-              <el-table-column
-                label="辅导老师"
-                width="80"
-                prop="teacher_realname"
-                align="center"
-              ></el-table-column>
-              <el-table-column
-                label="服务组"
-                min-width="120"
-                prop="department_name"
-                align="center"
-              ></el-table-column>
               <el-table-column
                 label="老师微信"
                 min-width="120"
