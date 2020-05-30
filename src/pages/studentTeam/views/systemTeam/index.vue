@@ -39,7 +39,7 @@
               :total="totalElements"
               :showAllTotalNum="true"
               @pageChange="pageChange_handler"
-              class="mytable"
+              class="mytable add-first-cell-bg"
             >
               <el-table-column
                 label="班级名称"
@@ -561,6 +561,12 @@ export default {
 }
 </style>
 <style lang="scss">
+.add-first-cell-bg > .el-table tbody tr:hover > td:first-child {
+  background-color: #409eff !important;
+  .team-name-pointer {
+    color: #ffffff;
+  }
+}
 .grid-content .scrollbar-wrapper {
   overflow-x: hidden;
 }
