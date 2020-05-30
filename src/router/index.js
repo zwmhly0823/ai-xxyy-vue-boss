@@ -232,16 +232,6 @@ const routes = [
       module: 'statistics'
     },
     children: [
-      // {
-      //   path: '/salesPerformance',
-      //   name: 'salesPerformance',
-      //   meta: {
-      //     title: '销售业绩',
-      //     module: 'statistics',
-      //     style: 'line'
-      //   }
-      // },
-
       {
         path: '/priodPerformance',
         name: 'priodPerformance',
@@ -260,16 +250,28 @@ const routes = [
           style: 'line'
         }
       }
-
-      // {
-      //   path: '/salesProcess',
-      //   name: 'salesProcess',
-      //   meta: {
-      //     title: '按期汇总',
-      //     module: 'statistics',
-      //     style: 'line'
-      //   }
-      // }
+    ]
+  },
+  // 工具
+  {
+    path: '/toolsManage',
+    name: 'toolsManage',
+    // hidden: true,
+    meta: {
+      title: '工具',
+      icon: 'el-icon-s-marketing',
+      module: 'toolsManage'
+    },
+    children: [
+      {
+        path: '/manage',
+        name: 'manage',
+        meta: {
+          title: '按期汇总',
+          module: 'toolsManage',
+          style: 'line'
+        }
+      }
     ]
   }
 ]
