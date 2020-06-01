@@ -3,8 +3,8 @@
  * @version: 
  * @Author: Lukun
  * @Date: 2020-04-27 17:47:58
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-05-29 23:12:41
+ * @LastEditors: Lukun
+ * @LastEditTime: 2020-06-01 17:03:58
  -->
 <template>
   <div class="container">
@@ -12,6 +12,7 @@
       <tabTimeSelect @result="getSeacherTime" />
       <CheckType @result="getcheckType" />
       <SearchPart @result="getSeachePart" />
+      <courseTeam @result="getTeamId" />
     </div>
     <el-table
       :data="tableData"
@@ -64,6 +65,16 @@
           </div>
           <div v-else-if="scope.row.type === 'ADJUSTMENT_STAGE'">
             调期
+          </div>
+        </template>
+      </el-table-column>
+      <el-table-column label="开课日期" width="120">
+        <template slot-scope="scope">
+          <div>
+            <span>
+              {{ courseOptions[scope.row.managementType] }}
+              {{ scope.row.periodName }}
+            </span>
           </div>
         </template>
       </el-table-column>
@@ -334,6 +345,7 @@ import TabTimeSelect from './timeSearch'
 import SearchPart from './searchPart'
 import adjustDrawer from './adjustDrawer'
 import { getStaffInfo } from '../common'
+import courseTeam from './courseTeam'
 
 export default {
   props: ['activeName'],
@@ -343,7 +355,8 @@ export default {
     TabTimeSelect,
     CheckType,
     SearchPart,
-    adjustDrawer
+    adjustDrawer,
+    courseTeam
   },
   watch: {
     activeName(val) {
@@ -373,7 +386,8 @@ export default {
         OTHER: '其他',
         DELIVERY_MISS: '发货漏发',
         TRANSPORT_BAD: '运输损坏'
-      }
+      },
+      courseOptions: { TESTCOURSE: '体验课', SYSTEMCOURSE: '系统课' }
     }
   },
   created() {
@@ -399,6 +413,20 @@ export default {
     this.checkPending(this.params)
   },
   methods: {
+    // 期数查询
+    getTeamId(val) {
+      if (val) {
+        Object.assign(this.params, {
+          managementType: val.teamSchedule.managementType,
+          period: val.teamSchedule.period
+        })
+        this.checkPending(this.params)
+      } else {
+        this.params.managementType = ''
+        this.params.period = ''
+        this.checkPending(this.params)
+      }
+    },
     // 销售部门搜索
     getSeachePart(val) {
       Object.assign(this.params, { keyword: val })
