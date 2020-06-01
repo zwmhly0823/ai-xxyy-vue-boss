@@ -3,8 +3,8 @@
  * @version: 1.0.0
  * @Author: Shentong
  * @Date: 2020-03-14 17:56:29
- * @LastEditors: Shentong
- * @LastEditTime: 2020-04-24 17:47:19
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-06-01 19:40:10
  -->
 <template>
   <section class="app-main">
@@ -34,7 +34,7 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 @import '~@/assets/styles/variables.scss';
 .app-main {
   /*50 = navbar  */
@@ -45,6 +45,25 @@ export default {
   // 设置app-main的固定高度
   &.height {
     height: calc(100vh - #{$topBarWidth} - #{$multiTabbedHeight});
+  }
+  &-container {
+    margin: 10px;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    width: 100%;
+    background-color: #fff;
+    .el-scrollbar {
+      height: 100%;
+      .app-main-container-scrollbar {
+        width: 100%;
+        height: 100%;
+        padding: 10px 10px 0 10px;
+        overflow: hidden;
+      }
+    }
   }
 }
 .fixed-header + .app-main {
