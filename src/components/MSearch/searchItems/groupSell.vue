@@ -3,8 +3,8 @@
  * @version:
  * @Author: zhubaodong
  * @Date: 2020-03-26 16:28:45
- * @LastEditors: Shentong
- * @LastEditTime: 2020-04-25 15:49:08
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-06-01 20:20:52
  -->
 <template>
   <div class="search-item small">
@@ -54,6 +54,11 @@ export default {
       default: () => {
         return null
       }
+    },
+    // 是否需要返回 teacherList 列表
+    returnList: {
+      type: Boolean,
+      default: false
     }
   },
   components: {},
@@ -106,10 +111,15 @@ export default {
         })
     },
     onChange(item) {
-      this.$emit(
-        'result',
-        item ? { [this.name]: item, teacherList: this.teacherList } : ''
-      )
+      const obj = {
+        [this.name]: item
+      }
+      if (this.returnList) {
+        Object.assign(obj, {
+          teacherList: this.teacherList
+        })
+      }
+      this.$emit('result', item ? obj : '')
     }
   }
 }
