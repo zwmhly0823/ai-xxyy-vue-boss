@@ -4,7 +4,7 @@
  * @Author: huzhifu
  * @Date: 2020-05-07 10:50:45
  * @LastEditors: liukun
- * @LastEditTime: 2020-06-01 18:27:21
+ * @LastEditTime: 2020-06-01 19:06:16
  -->
 <template>
   <div class="adjustModule">
@@ -301,10 +301,10 @@ export default {
             // ).then(() => {
             //   this.onCancel('refundForm')
             // })
-            this.refundForm.isRules = false
+            this.refundForm.isRules = '不符合'
           } else if (code === 0 && isRefundStatus !== 1) {
             // this.backStatus = isRefundStatus
-            this.refundForm.isRules = true
+            this.refundForm.isRules = '符合'
           } else {
             this.$message({
               message: '未能获取退款规则',
