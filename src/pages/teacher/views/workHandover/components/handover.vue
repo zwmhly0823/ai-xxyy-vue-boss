@@ -2,8 +2,8 @@
  * @Descripttion:
  * @Author: songyanan
  * @Date: 2020-05-22 14:01:40
- * @LastEditors: songyanan
- * @LastEditTime: 2020-05-26 18:15:23
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-06-01 20:21:35
  -->
 <template>
   <div class="container">
@@ -19,6 +19,7 @@
         <GroupSell
           tip="请选择老师"
           :teacherscope="handoverTeacherScope"
+          return-list
           @result="handoverSelectTeacher"
           name="pay_teacher_id"
           class="margin_l10"
@@ -108,6 +109,7 @@
           <GroupSell
             tip="请选择老师"
             :teacherscope="receiveTeacherScope"
+            :return-list="true"
             @result="receiveSelectTeacher"
             name="pay_teacher_id"
             class="margin_l10"
@@ -290,8 +292,10 @@ export default {
     },
     // 接收方选择老师
     receiveSelectTeacher(res) {
+      console.log(res)
+
       this.form.receiveTeacherId = res.pay_teacher_id || null
-      if (res && res.teacherList.length !== 0) {
+      if (res && res.teacherList && res.teacherList.length !== 0) {
         for (const item of res.teacherList) {
           if (item.id === res.pay_teacher_id) {
             this.receiveTeacherName = item.realname

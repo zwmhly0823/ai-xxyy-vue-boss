@@ -58,6 +58,35 @@ const routes = [
       }
     ]
   },
+  // 用户。体验课老师只能查看体验课学员，系统课只系统课学员
+  {
+    path: '/users',
+    name: 'users',
+    hidden: false,
+    meta: {
+      title: '学员中心',
+      icon: 'el-icon-medal-1',
+      module: 'users'
+    },
+    children: [
+      {
+        path: '/trial',
+        name: 'trial',
+        meta: {
+          title: '体验课学员',
+          module: 'users'
+        }
+      }
+      // {
+      //   path: '/system',
+      //   name: 'system',
+      //   meta: {
+      //     title: '系统课学员',
+      //     module: 'users'
+      //   }
+      // }
+    ]
+  },
   // 交易
   {
     path: '/trading',
