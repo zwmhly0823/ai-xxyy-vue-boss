@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-24 18:20:12
  * @LastEditors: Lukun
- * @LastEditTime: 2020-05-07 12:01:24
+ * @LastEditTime: 2020-06-01 11:59:07
  -->
 
 <template>
@@ -98,7 +98,11 @@
 
       <el-form-item v-if="schedule">
         <!-- 排期 -->
-        <Schedule @result="selectSchedule" :name="schedule" />
+        <Schedule
+          @result="selectSchedule"
+          :name="schedule"
+          :teamClass="teamClass"
+        />
       </el-form-item>
 
       <el-form-item v-if="teacherphone">
@@ -350,6 +354,11 @@ export default {
     },
     // 排期
     schedule: {
+      type: String,
+      default: '' // schedule
+    },
+    // teamClass 排期类别
+    teamClass: {
       type: String,
       default: '' // schedule
     },
