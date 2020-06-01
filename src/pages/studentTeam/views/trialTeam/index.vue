@@ -299,6 +299,7 @@
                 min-width="70"
                 prop="teamStatus"
                 align="center"
+                v-if="teamIndex == 4"
               ></el-table-column>
               <el-table-column
                 label="课程进度"
