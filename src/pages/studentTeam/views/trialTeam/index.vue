@@ -3,8 +3,13 @@
  * @version: 1.0.0
  * @Author: Shentong
  * @Date: 2020-05-14 14:11:21
+<<<<<<< HEAD
  * @LastEditors: YangJiyong
  * @LastEditTime: 2020-05-30 01:22:08
+=======
+ * @LastEditors: Shentong
+ * @LastEditTime: 2020-05-29 17:09:04
+>>>>>>> feature/new-teams-0527
  -->
 <template>
   <el-row type="flex" class="app-main team-container">
@@ -35,9 +40,10 @@
               :loading="flags.loading"
               :size="tabQuery.size"
               :page="tabQuery.page"
+              :showAllTotalNum="true"
               :total="totalElements"
               @pageChange="pageChange_handler"
-              class="mytable"
+              class="mytable add-first-cell-bg"
             >
               <el-table-column
                 label="班级名称"
@@ -54,6 +60,18 @@
                   </span>
                 </template>
               </el-table-column>
+              <el-table-column
+                label="销售组"
+                min-width="120"
+                prop="department_name"
+                align="center"
+              ></el-table-column>
+              <el-table-column
+                label="社群销售"
+                width="80"
+                prop="teacher_realname"
+                align="center"
+              ></el-table-column>
               <el-table-column
                 label="班级人数"
                 min-width="80"
@@ -208,6 +226,7 @@
                 min-width="70"
                 prop="today_complete_course_count"
                 align="center"
+                v-if="teamIndex != 0 && teamIndex != 3"
               >
                 <template slot="header">
                   <div
@@ -241,6 +260,7 @@
                 min-width="70"
                 prop="yesterday_complete_course_count"
                 align="center"
+                v-if="teamIndex != 0 && teamIndex != 3"
               >
                 <template slot="header">
                   <div
@@ -274,18 +294,6 @@
                 </template>
               </el-table-column>
               <el-table-column
-                label="社群销售"
-                width="80"
-                prop="teacher_realname"
-                align="center"
-              ></el-table-column>
-              <el-table-column
-                label="销售组"
-                min-width="120"
-                prop="department_name"
-                align="center"
-              ></el-table-column>
-              <el-table-column
                 label="老师微信"
                 min-width="120"
                 prop="teacher_wechat_no"
@@ -296,6 +304,7 @@
                 min-width="70"
                 prop="teamStatus"
                 align="center"
+                v-if="teamIndex == 4"
               ></el-table-column>
               <el-table-column
                 label="课程进度"
@@ -631,6 +640,12 @@ export default {
 }
 </style>
 <style lang="scss">
+.add-first-cell-bg > .el-table tbody tr:hover > td:first-child {
+  background-color: #409eff !important;
+  .team-name-pointer {
+    color: #ffffff;
+  }
+}
 .grid-content .scrollbar-wrapper {
   overflow-x: hidden;
 }
