@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-05-27 18:43:42
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-06-01 17:26:38
+ * @LastEditTime: 2020-06-01 21:52:08
 -->
 <template>
   <div class="search-container">
@@ -71,7 +71,7 @@
                 name="isTask"
                 placeholder="是否上传作品"
                 :multiple="false"
-                :data-list="courseTaskStatusList"
+                :data-list="courseTaskStatus"
                 @result="getSearchData('isTask', arguments)"
                 class="search-group-item"
               />
@@ -157,18 +157,7 @@ export default {
   data() {
     return {
       ...enums,
-      searchQuery: {},
-      // 体验课未上传作品的值是 -1。这里单独拿出来写
-      courseTaskStatusList: [
-        {
-          id: 1,
-          text: '已上传作品'
-        },
-        {
-          id: 0,
-          text: '未上传作品'
-        }
-      ]
+      searchQuery: {}
     }
   },
   methods: {

@@ -55,7 +55,7 @@ const enums = {
       text: '已上传作品'
     },
     {
-      id: -1,
+      id: 0,
       text: '未上传作品'
     }
   ],
