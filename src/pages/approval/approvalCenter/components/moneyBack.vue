@@ -4,7 +4,7 @@
  * @Author: huzhifu
  * @Date: 2020-05-07 10:50:45
  * @LastEditors: liukun
- * @LastEditTime: 2020-05-26 19:21:24
+ * @LastEditTime: 2020-06-01 14:24:25
  -->
 <template>
   <div class="adjustModule">
@@ -607,7 +607,12 @@ export default {
         ],
         explain: [
           { required: true, message: '请选择原因', trigger: 'change' },
-          { min: 0, max: 50, message: '最大长度50个字符', trigger: 'change' }
+          {
+            min: 0,
+            max: 200,
+            message: '口吐芬芳?200个字符是上限',
+            trigger: 'change'
+          }
         ],
         reason: [{ required: true, message: '请输入说明', trigger: 'blur' }]
       },
