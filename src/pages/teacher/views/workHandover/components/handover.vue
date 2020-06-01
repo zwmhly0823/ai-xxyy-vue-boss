@@ -487,7 +487,7 @@ export default {
       bottom: -60px;
       left: 0;
       &-text {
-        font-size: 16px;
+        font-size: 15px;
         line-height: 24px;
       }
     }
