@@ -1,7 +1,7 @@
 /*
  * @Date: 2020-03-13 15:20:21
  * @LastEditors: panjian
- * @LastEditTime: 2020-05-30 17:42:34
+ * @LastEditTime: 2020-05-30 18:10:16
  * @FilePath: /ai-app-vue-toss/src/pages/studentTeam/router/index.js
  */
 import Vue from 'vue'
@@ -12,9 +12,9 @@ Vue.use(VueRouter)
 const routes = [
   {
     path: '/',
-    name: 'toolsManage',
+    name: 'tools-manage',
     meta: {
-      title: '运营中心',
+      title: '工具',
       icon: 'el-icon-s-platform'
     },
     redirect: '/manage'
@@ -23,7 +23,7 @@ const routes = [
     path: '/manage',
     name: 'manage',
     meta: {
-      title: '招生排期',
+      title: '标签管理',
       keepAlive: true
     },
     component: () => import('../views/manage/index.vue')

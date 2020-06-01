@@ -1,67 +1,41 @@
 <!--
- * @Descripttion:
- * @version:
- * @Author: zhubaodong
- * @Date: 2020-04-02 15:35:27
+ * @Descripttion: 
+ * @version: 
+ * @Author: panjian
+ * @Date: 2020-05-30 17:21:58
  * @LastEditors: panjian
- * @LastEditTime: 2020-05-30 17:23:35
- -->
+ * @LastEditTime: 2020-06-01 17:04:06
+-->
 <template>
-  <el-row type="flex" class="app-main height schedule-container">
-    <el-col class="schedule-container-right">
-      <div class="grid-content">
-        tools
-      </div>
-    </el-col>
-  </el-row>
+  <div class="app-main height">
+    <!-- <div class="channel-box-top"> -->
+    <el-tabs v-model="activeName" type="border-card" @tab-click="handleClick">
+      <el-tab-pane label="系统标签" name="systemLabel">
+        <system-labels />
+      </el-tab-pane>
+      <!-- <el-tab-pane label="自定义标签" name="customLabel"
+        >自定义标签</el-tab-pane
+      > -->
+    </el-tabs>
+    <!-- </div> -->
+  </div>
 </template>
 
 <script>
+import systemLabels from '../../components/systemLabels'
 export default {
+  components: {
+    systemLabels
+  },
   data() {
     return {
-      // 当前选择的机构
-      currentDept: {}
+      activeName: 'systemLabel'
     }
   },
-  computed: {},
-  watch: {},
   methods: {
-    leftBarHandler(data) {
-      this.currentDept = data
-    }
+    handleClick(tab, event) {}
   }
 }
 </script>
-<style lang="scss" scoped>
-.schedule-container {
-  &-left {
-    padding-left: 0px;
-    width: 220px;
-    min-width: 220px;
-    border-right: 1px solid #e3e3e3;
-  }
-  &-right {
-    overflow-x: hidden;
-    flex: 1;
-    margin: 10px;
-  }
-  .grid-content {
-    background: white;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    &.right {
-      padding: 0;
-    }
-  }
-}
-</style>
-<style lang="scss">
-.grid-content .scrollbar-wrapper {
-  overflow-x: hidden;
-}
-.grid-content .el-scrollbar {
-  flex: 1;
-}
-</style>
+
+<style></style>

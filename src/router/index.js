@@ -254,21 +254,21 @@ const routes = [
   },
   // 工具
   {
-    path: '/toolsManage',
-    name: 'toolsManage',
+    path: '/tools-manage',
+    name: 'tools-manage',
     // hidden: true,
     meta: {
       title: '工具',
-      icon: 'el-icon-s-marketing',
-      module: 'toolsManage'
+      icon: 'el-icon-s-tools',
+      module: 'tools-manage'
     },
     children: [
       {
         path: '/manage',
         name: 'manage',
         meta: {
-          title: '按期汇总',
-          module: 'toolsManage',
+          title: '标签管理',
+          module: 'tools-manage',
           style: 'line'
         }
       }

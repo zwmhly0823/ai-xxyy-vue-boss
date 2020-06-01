@@ -3,8 +3,8 @@
  * @version:
  * @Author: shentong
  * @Date: 2020-03-13 14:38:28
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-05-29 20:03:38
+ * @LastEditors: panjian
+ * @LastEditTime: 2020-06-01 11:12:23
  */
 import Login from './modules/Login'
 import User from './modules/User' // 用户接口
@@ -25,6 +25,7 @@ import Weixin from './modules/Weixin' // 微信graphql接口
 import Operating from './modules/Operating' // 运营中心
 import RiviewCourse from './modules/RiviewCourse'
 import Finance from './modules/finance' // 财务退款
+import ToolsManage from './modules/ToolsManage' // 工具标签
 
 export default Object.assign(
   {},
@@ -46,5 +47,6 @@ export default Object.assign(
   { Backend },
   { RefundApproval },
   { Approval },
-  { Finance }
+  { Finance },
+  { ToolsManage }
 )
