@@ -109,7 +109,8 @@ const allExpressHideSearchItem = {
   replenishMethod: ''
 }
 const replenishHideCol = {
-  productName: false,
+  level: true,
+  productName: true,
   productVersion: false,
   term: false,
   className: false,

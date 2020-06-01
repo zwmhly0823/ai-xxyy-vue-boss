@@ -110,7 +110,8 @@ const allExpressHideSearchItem = {
   teacherTip: '辅导老师'
 }
 const replenishHideCol = {
-  productName: false,
+  level: true,
+  productName: true,
   productVersion: false,
   term: false,
   className: false,
