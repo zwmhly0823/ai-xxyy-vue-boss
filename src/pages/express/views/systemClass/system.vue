@@ -104,7 +104,8 @@ const allExpressHideCol = {
   courseType: false
 }
 const allExpressHideSearchItem = {
-  level: '',
+  // 系统课物流需要显示级别
+  level: 'level',
   replenishReason: '',
   replenishMethod: '',
   teacherTip: '辅导老师'

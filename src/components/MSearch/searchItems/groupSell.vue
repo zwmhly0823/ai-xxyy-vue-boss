@@ -106,7 +106,10 @@ export default {
         })
     },
     onChange(item) {
-      this.$emit('result', item ? { [this.name]: item } : '')
+      this.$emit(
+        'result',
+        item ? { [this.name]: item, teacherList: this.teacherList } : ''
+      )
     }
   }
 }
