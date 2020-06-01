@@ -39,6 +39,7 @@
           :source_type="source_type"
           :hideCol="hideCol"
           :hideSearchItem="hideSearchItem"
+          :teamClass="teamClass"
         />
         <el-scrollbar
           wrap-class="scrollbar-wrapper-first"
@@ -70,6 +71,7 @@
           :source_type="source_type"
           :hideCol="hideCol"
           :hideSearchItem="hideSearchItem"
+          :teamClass="teamClass"
         />
         <el-scrollbar
           wrap-class="scrollbar-wrapper-first"
@@ -143,7 +145,8 @@ export default {
       regtype: '2,3', // 体验课是1  系统课是2，3
       hideToggleBtn: ['9', '0'],
       source_type: allExpressSourceType,
-      hideCol: allExpressHideCol
+      hideCol: allExpressHideCol,
+      teamClass: '1' // 排期组件添加类别区分 系统课传1 体验课传0
     }
   },
   methods: {

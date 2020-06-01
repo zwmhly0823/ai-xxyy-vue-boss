@@ -25,6 +25,7 @@
         :replenishType="showItem.replenishType"
         :replenishProductType="showItem.replenishProductType"
         :teacherTip="showItem.teacherTip"
+        :teamClass="teamClass"
       />
     </div>
     <!-- v-if="!teacherId" TOSS -->
@@ -134,6 +135,10 @@ export default {
       default: () => {
         return {}
       }
+    },
+    teamClass: {
+      type: String,
+      default: '' // 系统课是1  体验课是0
     }
   },
   computed: {
