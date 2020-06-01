@@ -1,10 +1,10 @@
 <!--
- * @Descripttion:
+ * @Descripttion:课程类型的班级排期 需要传课程类型 teamClass 0是体验课 1是系统课
  * @version:
  * @Author: zhubaodong
  * @Date: 2020-03-26 16:28:45
  * @LastEditors: Lukun
- * @LastEditTime: 2020-04-23 19:27:22
+ * @LastEditTime: 2020-06-01 11:58:42
  -->
 <template>
   <div class="search-item small">
@@ -14,7 +14,6 @@
         name="vals"
         clearable
         class="inline-input"
-        :disabled="disableClick"
         v-model="input"
         :fetch-suggestions="querySearch"
         :placeholder="tip"
@@ -35,7 +34,6 @@
 
 <script>
 import axios from '@/api/axiosConfig'
-import { mapState } from 'vuex'
 export default {
   props: {
     name: {
@@ -45,6 +43,10 @@ export default {
     tip: {
       type: String,
       default: '排期'
+    },
+    teamClass: {
+      type: String,
+      default: '' // 获取组件传来的课程类型来获取排期
     }
   },
   components: {},
@@ -55,20 +57,7 @@ export default {
       type: ''
     }
   },
-  computed: {
-    ...mapState({
-      disableClick: (state) => {
-        return state.leftbar.disableClick
-      },
-      typeStage: (state) => {
-        return state.leftbar.typeStage
-      }
-    })
-  },
   watch: {
-    typeStage(val) {
-      this.type = val
-    },
     input(val, old) {
       console.log(val !== old && !val)
       if (val !== old && !val) {
@@ -94,8 +83,8 @@ export default {
           must: [{ wildcard: { 'period_name.keyword': `*${queryString}*` } }]
         }
       }
-      if (this.type) {
-        queryParams.bool.must.push({ term: { type: `${this.type}` } })
+      if (this.teamClass) {
+        queryParams.bool.must.push({ term: { type: `${this.teamClass}` } })
       }
       const q = JSON.stringify(queryParams)
       return axios
@@ -118,7 +107,6 @@ export default {
       this.$emit('result', { [this.name]: data.period })
     }
   },
-  created() {},
   mounted() {}
 }
 </script>
