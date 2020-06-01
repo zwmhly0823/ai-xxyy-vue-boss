@@ -129,7 +129,9 @@ export default {
    * @param {String} params.type - AUTOMATIC-自动发货；COUNTRY-全国发货
    */
   updateSwitchStatus(params) {
-    return axios.get(`/api/ex/v1/switch/updateSwitchStatus?status=${params.status}&type=${params.type}`)
+    return axios.get(
+      `/api/ex/v1/switch/updateSwitchStatus?status=${params.status}&type=${params.type}`
+    )
   }
   /**
    * v1 订单关联的物流
