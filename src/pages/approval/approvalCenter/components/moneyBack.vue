@@ -4,7 +4,7 @@
  * @Author: huzhifu
  * @Date: 2020-05-07 10:50:45
  * @LastEditors: liukun
- * @LastEditTime: 2020-06-01 19:08:25
+ * @LastEditTime: 2020-06-02 18:10:19
  -->
 <template>
   <div class="adjustModule">
@@ -89,7 +89,7 @@
             </div>
           </el-form-item>
         </template>
-        <el-form-item label="订单金额：" prop="orderAmount">
+        <el-form-item label="交易金额：" prop="orderAmount">
           <el-input
             v-model="refundForm.orderAmount"
             disabled
@@ -226,7 +226,6 @@
 // prop 与绑定的form model字段要一致
 import SearchPhone from '@/components/MSearch/searchItems/searchPhone'
 import uploadFile from '@/utils/upload' // 上传公共方法
-
 export default {
   components: {
     SearchPhone
@@ -703,6 +702,12 @@ export default {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           const params1 = {
+            refundRule:
+              this.refundForm.isRules === '符合'
+                ? 0
+                : this.refundForm.isRules === '不符合'
+                ? 1
+                : null, // 符合规则
             userId: this.refundForm.name, // userId(选择用户取)
             customerPhone: this.refundForm.cellPhone, // 客户手机(选择用户取)
             orderId: this.refundForm.orderId, // 订单id(关联订单取)
