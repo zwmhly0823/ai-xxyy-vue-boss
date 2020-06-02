@@ -31,6 +31,11 @@ const menuItems = [
     isShow: true
   },
   {
+    link: 'users',
+    text: '学员中心',
+    isShow: true
+  },
+  {
     link: 'teacher',
     text: '社群销售',
     isShow: true

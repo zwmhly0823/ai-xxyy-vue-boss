@@ -57,19 +57,6 @@ export default {
   created() {
     const { name } = this.$route
     this.type = name
-    // 根据登录老师的dutyId判断是否是对应的班级类型 dutyId: 1-体验课老师， 2-系统课老师
-    const teacher = localStorage.getItem('teacher')
-    if (teacher) {
-      const teacherInfo = JSON.parse(teacher) || {}
-      const { dutyId } = teacherInfo
-      if (name === 'trialUsers' && +dutyId !== 1) {
-        this.$router.push('/system')
-        return
-      }
-      if (name === 'systemUsers' && +dutyId !== 2) {
-        this.$router.push('/trial')
-      }
-    }
   },
   methods: {
     getSearchQuery(res) {
