@@ -4,19 +4,13 @@
  * @Author: YangJiyong
  * @Date: 2020-05-25 15:25:13
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-06-01 19:42:09
+ * @LastEditTime: 2020-06-02 16:06:24
  */
 
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 
 Vue.use(VueRouter)
-
-let teacherInfo = {}
-const teacher = localStorage.getItem('teacher')
-if (teacher) {
-  teacherInfo = JSON.parse(teacher) || {} // dutyId: 1-体验课老师， 2-系统课老师
-}
 
 const routes = [
   {
@@ -28,7 +22,7 @@ const routes = [
       keepAlive: true
     },
     // TOSS,根据老师角色跳转
-    redirect: teacherInfo.dutyId === '1' ? '/trial' : '/system'
+    redirect: '/trial'
   },
   {
     path: '/trial',
@@ -38,16 +32,16 @@ const routes = [
       keepAlive: true
     },
     component: () => import('../views/usersModule.vue')
+  },
+  {
+    path: '/system',
+    name: 'systemUsers',
+    meta: {
+      title: '系统课学员',
+      keepAlive: true
+    },
+    component: () => import('../views/usersModule.vue')
   }
-  // {
-  //   path: '/system',
-  //   name: 'systemUsers',
-  //   meta: {
-  //     title: '系统课学员',
-  //     keepAlive: true
-  //   },
-  //   component: () => import('../views/usersModule.vue')
-  // }
 ]
 
 const router = new VueRouter({

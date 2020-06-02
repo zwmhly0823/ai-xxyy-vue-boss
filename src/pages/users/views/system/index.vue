@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-05-25 15:34:04
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-06-01 18:13:18
+ * @LastEditTime: 2020-06-02 16:07:50
 -->
 <template>
   <div class="user-list">
@@ -240,20 +240,7 @@ export default {
         this.tableHeight = tableHeight + ''
       })
       this.teacherId = isToss()
-      // this.getData()
-      // 临时只传当前登录老师ID
-      this.getTeachersById()
-    },
-    // TOSS, 老师权限
-    getTeachersById() {
-      if (!this.teacherId) return
-
-      this.$http.Permission.getAllTeacherByRole({
-        teacherId: this.teacherId
-      }).then((res) => {
-        this.teacherIds = res || [this.teacherId]
-        this.getData()
-      })
+      this.getData()
     },
     getData() {
       const loading = this.$loading({
@@ -262,14 +249,7 @@ export default {
         spinner: 'el-icon-loading',
         background: 'rgba(0, 0, 0, 0.1)'
       })
-      // 如果搜索销售，用获取的老师id替换权限老师id
-      const teacher = {}
-      if (!Object.keys(this.searchParams).includes('teacherid')) {
-        Object.assign(teacher, {
-          teacherid: this.teacherIds
-        })
-      }
-      const query = Object.assign({}, this.searchParams, teacher)
+      const query = Object.assign({}, this.searchParams)
       console.log(query)
 
       const page = this.currentPage

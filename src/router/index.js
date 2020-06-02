@@ -76,15 +76,15 @@ const routes = [
           title: '体验课学员',
           module: 'users'
         }
+      },
+      {
+        path: '/system',
+        name: 'system',
+        meta: {
+          title: '系统课学员',
+          module: 'users'
+        }
       }
-      // {
-      //   path: '/system',
-      //   name: 'system',
-      //   meta: {
-      //     title: '系统课学员',
-      //     module: 'users'
-      //   }
-      // }
     ]
   },
   // 交易
