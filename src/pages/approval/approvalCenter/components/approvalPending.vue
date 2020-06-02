@@ -1,15 +1,8 @@
 <!--
  * @Descripttion: 
  * @version: 
- * @Author: Lukun
- * @Date: 2020-04-27 17:47:58
-<<<<<<< HEAD
- * @LastEditors: Lukun
- * @LastEditTime: 2020-06-01 16:41:43
-=======
  * @LastEditors: liukun
- * @LastEditTime: 2020-06-02 18:41:34
->>>>>>> feature/approval_lk
+ * @LastEditTime: 2020-06-02 19:00:36
  -->
 <template>
   <div class="container">

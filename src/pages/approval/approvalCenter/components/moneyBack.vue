@@ -1,14 +1,8 @@
 <!--
  * @Descripttion: 
  * @version: 
- * @Author: huzhifu
- * @Date: 2020-05-07 10:50:45
  * @LastEditors: liukun
-<<<<<<< HEAD
- * @LastEditTime: 2020-06-01 19:06:16
-=======
- * @LastEditTime: 2020-06-02 18:10:19
->>>>>>> feature/approval_lk
+ * @LastEditTime: 2020-06-02 19:01:10
  -->
 <template>
   <div class="adjustModule">
