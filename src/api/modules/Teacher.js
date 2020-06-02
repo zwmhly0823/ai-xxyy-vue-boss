@@ -275,5 +275,9 @@ export default {
           }
        }`
     })
+  },
+  // 根據期數和課程類型獲取版本信息
+  getVersionByCourseVersion(params) {
+    return axios.get('/api/t/v1/teacher/course/enroll/courseVersion', params)
   }
 }

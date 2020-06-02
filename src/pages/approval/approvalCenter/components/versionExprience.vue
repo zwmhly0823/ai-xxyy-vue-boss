@@ -38,34 +38,35 @@ export default {
     onlyValue: {
       type: Boolean,
       default: false
+    },
+    params: {
+      type: Object,
+      default: null
     }
   },
   data() {
     return {
-      productVersion: [
-        { name: 'V1.5', value: 'V1.5' },
-        { name: 'V1.6', value: 'V1.6' },
-        { name: 'V1.7', value: 'V1.7' },
-        { name: 'V1.8', value: 'V1.8' },
-        { name: 'V1.9', value: 'V1.9' },
-        { name: 'V2.0', value: 'V2.0' }
-      ],
+      productVersion: [],
       versionId: null
     }
   },
+  created() {
+    this.getProductVersion(this.params)
+  },
   methods: {
     // 获取多版本盒子
-    // getProductVersion() {
-    //   this.$http.Product.getCourseVersion({ type: 'courseVersion' }).then(
-    //     (res) => {
-    //       if (res && res.payload) {
-    //         this.productVersion = res.payload.map((item) => {
-    //           return { name: item.code, value: item.value }
-    //         })
-    //       }
-    //     }
-    //   )
-    // },
+    getProductVersion(params) {
+      this.$http.Teacher.getVersionByCourseVersion({
+        courseType: params.courseType,
+        period: params.period
+      }).then((res) => {
+        if (res && res.payload) {
+          this.productVersion = res.payload.map((item) => {
+            return { name: item.code, value: item.value }
+          })
+        }
+      })
+    },
     onChange(data) {
       console.log(data, '------------data')
       this.$emit('result', data ? { [this.name]: data } : '')

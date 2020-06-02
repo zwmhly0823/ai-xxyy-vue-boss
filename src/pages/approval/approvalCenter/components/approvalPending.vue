@@ -180,11 +180,20 @@
             <versionExprience
               v-if="drawerApprovalDeatail.courseType == 1 && drawerApproval"
               @result="getVersion"
+              :params="{
+                params: { courseType: 0, period: drawerApprovalDeatail.period }
+              }"
               name="version"
             />
             <versionSystem
               v-if="drawerApprovalDeatail.courseType == 2 && drawerApproval"
               @result="getVersion"
+              :params="{
+                params: {
+                  courseType: 2,
+                  period: drawerApprovalDeatail.period
+                }
+              }"
               name="version"
             />
           </el-col>
