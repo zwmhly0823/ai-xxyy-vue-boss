@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-05-25 15:25:13
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-06-01 20:47:04
+ * @LastEditTime: 2020-06-02 16:06:24
  */
 
 import Vue from 'vue'
@@ -32,16 +32,16 @@ const routes = [
       keepAlive: true
     },
     component: () => import('../views/usersModule.vue')
+  },
+  {
+    path: '/system',
+    name: 'systemUsers',
+    meta: {
+      title: '系统课学员',
+      keepAlive: true
+    },
+    component: () => import('../views/usersModule.vue')
   }
-  // {
-  //   path: '/system',
-  //   name: 'systemUsers',
-  //   meta: {
-  //     title: '系统课学员',
-  //     keepAlive: true
-  //   },
-  //   component: () => import('../views/usersModule.vue')
-  // }
 ]
 
 const router = new VueRouter({
