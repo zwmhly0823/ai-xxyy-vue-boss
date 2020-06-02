@@ -50,16 +50,14 @@ export default {
       versionId: null
     }
   },
-  created() {
+  mounted() {
     this.getProductVersion(this.params)
   },
   methods: {
     // 获取多版本盒子
     getProductVersion(params) {
-      this.$http.Teacher.getVersionByCourseVersion({
-        courseType: params.courseType,
-        period: params.period
-      }).then((res) => {
+      console.log(params, '---------------------------------')
+      this.$http.Teacher.getVersionByCourseVersion(params).then((res) => {
         if (res && res.payload) {
           this.productVersion = res.payload.map((item) => {
             return { name: item.code, value: item.value }

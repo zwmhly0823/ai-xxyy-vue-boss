@@ -181,7 +181,8 @@
               v-if="drawerApprovalDeatail.courseType == 1 && drawerApproval"
               @result="getVersion"
               :params="{
-                params: { courseType: 0, period: drawerApprovalDeatail.period }
+                courseType: 0,
+                period: drawerApprovalDeatail.stage
               }"
               name="version"
             />
@@ -189,10 +190,8 @@
               v-if="drawerApprovalDeatail.courseType == 2 && drawerApproval"
               @result="getVersion"
               :params="{
-                params: {
-                  courseType: 2,
-                  period: drawerApprovalDeatail.period
-                }
+                courseType: 2,
+                period: drawerApprovalDeatail.stage
               }"
               name="version"
             />
