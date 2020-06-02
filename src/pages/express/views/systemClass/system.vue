@@ -45,7 +45,7 @@
           wrap-class="scrollbar-wrapper-first"
           id="express-right-scroll-first"
         >
-          <div class="scroll" style="height:500px">
+          <div class="scroll" ref="scroll" :style="{ height: scrollHeight }">
             <rightDown
               :search="search"
               :sortItem="sortItem"
@@ -138,6 +138,7 @@ export default {
   },
   data() {
     return {
+      scrollHeight: 'auto', // scroll高度
       AUTOMATIC: 'OFF', // 自动发货 默认关闭
       COUNTRY: 'OFF', // 全国发货 默认关闭
       activeName: '0',
@@ -151,7 +152,18 @@ export default {
       teamClass: '1' // 排期组件添加类别区分 系统课传1 体验课传0
     }
   },
+  mounted() {
+    this.$nextTick(() => {
+      this.calcSrollHeight()
+    })
+  },
   methods: {
+    // 计算滚动区域高度
+    calcSrollHeight() {
+      const topH = this.$refs.scroll.getBoundingClientRect().y
+      const scrollH = document.body.clientHeight - topH - 60
+      this.scrollHeight = scrollH + 'px'
+    },
     // 开关处理
     switchHandle(status, type) {
       const isOpen = status === 'ON' ? '开启' : '关闭'
