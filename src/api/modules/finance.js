@@ -4,12 +4,12 @@
  * @Author: liukun
  * @Date: 2020-05-22 12:39:14
  * @LastEditors: liukun
- * @LastEditTime: 2020-05-30 20:06:48
+ * @LastEditTime: 2020-06-02 19:05:58
  */
 
 import axios from '../axiosConfig'
 // 听青龙的提出来_不侧漏
-const change = '/tapi'
+const change = '/api'
 export default {
   // 查询表单数据
   getTable(params) {
