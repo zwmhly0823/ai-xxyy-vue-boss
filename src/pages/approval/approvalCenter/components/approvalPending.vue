@@ -3,8 +3,8 @@
  * @version: 
  * @Author: Lukun
  * @Date: 2020-04-27 17:47:58
- * @LastEditors: Lukun
- * @LastEditTime: 2020-06-01 16:41:43
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-06-02 19:25:37
  -->
 <template>
   <div class="container">
@@ -279,6 +279,12 @@
           <el-col :span="5">商品信息:</el-col>
           <el-col :span="18" :offset="1">{{
             drawerApprovalDeatail.productMsg
+          }}</el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="5">退款规则:</el-col>
+          <el-col :span="18" :offset="1">{{
+            drawerApprovalDeatail.refundRule ? '不符合' : '符合'
           }}</el-col>
         </el-row>
         <el-row>
