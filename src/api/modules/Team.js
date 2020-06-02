@@ -139,6 +139,10 @@ export default {
           teacher_info{
             realname
           }
+          managementInfo{
+            course_day
+            end_course_day
+          }
         }
       }`
     })
