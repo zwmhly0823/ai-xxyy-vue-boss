@@ -194,6 +194,17 @@
           </div>
         </template>
       </el-table-column>
+      <el-table-column
+        label="失败原因"
+        width="200"
+        v-if="showCol.expressRemark"
+      >
+        <template slot-scope="scope">
+          <div class="product">
+            <span>{{ scope.row.express_remark || '--' }}</span>
+          </div>
+        </template>
+      </el-table-column>
       <el-table-column label="期数" width="150" v-if="showCol.term">
         <template slot-scope="scope">
           <div class="product">
@@ -255,17 +266,6 @@
             <div>创建:{{ scope.row.crtime }}</div>
             <div>揽收:{{ scope.row.detime }}</div>
             <div>签收:{{ scope.row.sgtime }}</div>
-          </div>
-        </template>
-      </el-table-column>
-      <el-table-column
-        label="失败原因"
-        width="200"
-        v-if="showCol.expressRemark"
-      >
-        <template slot-scope="scope">
-          <div class="product">
-            <span>{{ TeacherList[scope.row.express_remark] || '--' }}</span>
           </div>
         </template>
       </el-table-column>
