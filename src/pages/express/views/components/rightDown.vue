@@ -64,6 +64,33 @@
           </div>
         </template>
       </el-table-column>
+      <el-table-column label="商品信息" width="200" v-if="showCol.productName">
+        <template slot-scope="scope">
+          <div class="product">
+            <span>{{ scope.row.product_name }}</span>
+          </div>
+        </template>
+      </el-table-column>
+      <el-table-column
+        :label="+regtype === 1 || regtype === '2,3' ? '难度' : '补发商品'"
+        :width="+regtype === 1 || regtype === '2,3' ? '80' : '200'"
+        v-if="showCol.productType"
+      >
+        <template slot-scope="scope">
+          <div class="product">
+            <span>{{
+              +regtype === 1 ? scope.row.sup : scope.row.product_name
+            }}</span>
+          </div>
+        </template>
+      </el-table-column>
+      <el-table-column v-if="showCol.level" label="级别" width="80">
+        <template slot-scope="scope">
+          <div class="product">
+            <span>{{ scope.row.level || '--' }}</span>
+          </div>
+        </template>
+      </el-table-column>
       <el-table-column
         label="补发方式"
         width="200"
@@ -83,19 +110,6 @@
         <template slot-scope="scope">
           <div class="product">
             <span>{{ scope.row.regtype_text || '--' }}</span>
-          </div>
-        </template>
-      </el-table-column>
-      <el-table-column
-        :label="+regtype === 1 || regtype === '2,3' ? '难度' : '补发商品'"
-        width="200"
-        v-if="showCol.productType"
-      >
-        <template slot-scope="scope">
-          <div class="product">
-            <span>{{
-              +regtype === 1 ? scope.row.sup : scope.row.product_name
-            }}</span>
           </div>
         </template>
       </el-table-column>
@@ -121,13 +135,6 @@
         <template slot-scope="scope">
           <div class="product">
             <span>{{ scope.row.regtype_text }}</span>
-          </div>
-        </template>
-      </el-table-column>
-      <el-table-column label="商品信息" width="200" v-if="showCol.productName">
-        <template slot-scope="scope">
-          <div class="product">
-            <span>{{ scope.row.product_name }}</span>
           </div>
         </template>
       </el-table-column>
@@ -184,6 +191,17 @@
                 >填写地址</el-button
               >
             </div>
+          </div>
+        </template>
+      </el-table-column>
+      <el-table-column
+        label="失败原因"
+        width="200"
+        v-if="showCol.expressRemark"
+      >
+        <template slot-scope="scope">
+          <div class="product">
+            <span>{{ scope.row.express_remark || '--' }}</span>
           </div>
         </template>
       </el-table-column>
@@ -248,17 +266,6 @@
             <div>创建:{{ scope.row.crtime }}</div>
             <div>揽收:{{ scope.row.detime }}</div>
             <div>签收:{{ scope.row.sgtime }}</div>
-          </div>
-        </template>
-      </el-table-column>
-      <el-table-column
-        label="失败原因"
-        width="200"
-        v-if="showCol.expressRemark"
-      >
-        <template slot-scope="scope">
-          <div class="product">
-            <span>{{ TeacherList[scope.row.express_remark] || '--' }}</span>
           </div>
         </template>
       </el-table-column>
@@ -541,6 +548,7 @@ export default {
       current: {},
       teacherIds: [],
       defaultCol: {
+        level: false,
         userAddDate: true,
         productName: true,
         productVersion: true,

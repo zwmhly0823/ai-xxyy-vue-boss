@@ -1,5 +1,29 @@
 <template>
   <div class="container">
+    <div class="switch-area">
+      <div class="switch-btn">
+        <span>自动发货</span>
+        <el-switch
+          v-model="AUTOMATIC"
+          @change="switchHandle($event, 'AUTOMATIC')"
+          active-color="#409eff"
+          :active-value="'ON'"
+          :inactive-value="'OFF'"
+        >
+        </el-switch>
+      </div>
+      <div class="switch-btn">
+        <span>全国发货</span>
+        <el-switch
+          v-model="COUNTRY"
+          @change="switchHandle($event, 'COUNTRY')"
+          active-color="#409eff"
+          :active-value="'ON'"
+          :inactive-value="'OFF'"
+        >
+        </el-switch>
+      </div>
+    </div>
     <el-tabs v-model="activeName" type="border-card" @tab-click="switchTab">
       <el-tab-pane label="全部物流" name="0">
         <toggle
@@ -21,7 +45,7 @@
           wrap-class="scrollbar-wrapper-first"
           id="express-right-scroll-first"
         >
-          <div class="scroll" style="height:500px">
+          <div class="scroll" ref="scroll" :style="{ height: scrollHeight }">
             <rightDown
               :search="search"
               :sortItem="sortItem"
@@ -87,7 +111,8 @@ const allExpressHideSearchItem = {
   teacherTip: '辅导老师'
 }
 const replenishHideCol = {
-  productName: false,
+  level: true,
+  productName: true,
   productVersion: false,
   term: false,
   className: false,
@@ -113,6 +138,9 @@ export default {
   },
   data() {
     return {
+      scrollHeight: 'auto', // scroll高度
+      AUTOMATIC: 'OFF', // 自动发货 默认关闭
+      COUNTRY: 'OFF', // 全国发货 默认关闭
       activeName: '0',
       sortItem: {},
       search: '',
@@ -124,7 +152,48 @@ export default {
       teamClass: '1' // 排期组件添加类别区分 系统课传1 体验课传0
     }
   },
+  mounted() {
+    this.$nextTick(() => {
+      this.calcSrollHeight()
+    })
+  },
   methods: {
+    // 计算滚动区域高度
+    calcSrollHeight() {
+      const topH = this.$refs.scroll.getBoundingClientRect().y
+      const scrollH = document.body.clientHeight - topH - 60
+      this.scrollHeight = scrollH + 'px'
+    },
+    // 开关处理
+    switchHandle(status, type) {
+      const isOpen = status === 'ON' ? '开启' : '关闭'
+      const typeName = type === 'AUTOMATIC' ? '自动发货' : '全国发货'
+      this.$confirm(`是否${isOpen}${typeName}?`, {
+        showCancelButton: true
+      })
+        .then(() => {
+          this.updateSwitchStatus({ status, type })
+        })
+        .catch(() => {
+          this[type] = status === 'ON' ? 'OFF' : 'ON'
+        })
+    },
+    // 更新开关状态
+    updateSwitchStatus(params) {
+      this.$http.Express.updateSwitchStatus(params)
+        .then((res) => {
+          if (res.status === 'OK') {
+            this.$message.success('更新成功')
+          } else {
+            this.$message.error('更新失败')
+            this[params.type] = params.status === 'ON' ? 'OFF' : 'ON'
+          }
+        })
+        .catch(() => {
+          this.$message.error('更新失败')
+          this[params.type] = params.status === 'ON' ? 'OFF' : 'ON'
+        })
+    },
     // 获取物流搜索的条件值
     getSearch(val) {
       this.search = val
@@ -159,8 +228,28 @@ export default {
 <style lang="scss" scoped>
 .container {
   margin: 10px;
+  position: relative;
   .fixed-tabs {
     position: fixed;
+  }
+  .switch-area {
+    height: 40px;
+    line-height: 40px;
+    display: flex;
+    align-items: center;
+    position: absolute;
+    right: 15px;
+    top: 0px;
+    z-index: 2;
+    .switch-btn {
+      margin-left: 10px;
+      span {
+        padding-right: 5px;
+        font-size: 14px;
+        font-weight: 500;
+        color: #909399;
+      }
+    }
   }
 }
 </style>
