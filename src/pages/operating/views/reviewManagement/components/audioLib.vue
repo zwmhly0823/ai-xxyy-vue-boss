@@ -12,7 +12,11 @@
     <div class="audio-container-button">
       <el-button type="primary" @click="addPage">新增语音</el-button>
     </div>
-    <el-table :loading="loading" :data="list">
+    <el-table
+      v-loading="loading"
+      element-loading-text="拼命加载中"
+      :data="list"
+    >
       <el-table-column label="语音ID" width="180" align="center">
         <template slot-scope="scope">
           <div>{{ scope.row.id }}</div>
@@ -110,9 +114,9 @@ export default {
       try {
         const res = await this.$http.RiviewCourse.getAudioList(number)
         if (res.code === 0) {
-          this.loading = false
           this.list = res.payload.content
           this.totalElements = Number.parseInt(res.payload.totalElements)
+          this.loading = false
         }
       } catch (error) {
         console.log(error)
@@ -149,10 +153,10 @@ export default {
   margin: 0 0 30px 0;
   &-button {
     width: 100%;
-    height: 60px;
+    height: 50px;
     background: rgb(255, 255, 255);
-    line-height: 60px;
-    margin: 5px 0 10px 10px;
+    line-height: 50px;
+    margin: 10px 0 10px 0;
     button {
       margin: 0 0 0 20px;
     }
@@ -166,6 +170,10 @@ export default {
   }
   /deep/ .m-pagination {
     bottom: 0;
+  }
+  /deep/ button {
+    height: 35px;
+    line-height: 0;
   }
 }
 </style>

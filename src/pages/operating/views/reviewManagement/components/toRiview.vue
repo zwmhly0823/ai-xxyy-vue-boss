@@ -9,114 +9,114 @@
  -->
 <template>
   <div class="container">
-    <div v-if="!loading">
-      <el-table :loading="loading" :data="list">
-        <el-table-column label="作品" width="300" align="center">
-          <template slot-scope="scope">
-            <el-image
-              class="works-img"
-              :src="scope.row.taskImage"
-              :lazy="true"
-              :preview-src-list="[scope.row.taskImage]"
-              :z-index="1001"
-            >
-            </el-image>
-          </template>
-        </el-table-column>
-        <el-table-column label="点评" width="500" align="center">
-          <template slot-scope="scope">
-            <div class="review-container">
-              <div class="top-container">
+    <el-table
+      v-loading="loading"
+      element-loading-text="拼命加载中"
+      :data="list"
+    >
+      <el-table-column label="作品" width="300" align="center">
+        <template slot-scope="scope">
+          <el-image
+            class="works-img"
+            :src="scope.row.taskImage"
+            :lazy="true"
+            :preview-src-list="[scope.row.taskImage]"
+            :z-index="1001"
+          >
+          </el-image>
+        </template>
+      </el-table-column>
+      <el-table-column label="点评" width="500" align="center">
+        <template slot-scope="scope">
+          <div class="review-container">
+            <div class="top-container">
+              <div
+                v-for="(item, index) in conversionArr(scope.row.reviewDataList)"
+                :key="index"
+              >
                 <div
-                  v-for="(item, index) in conversionArr(
-                    scope.row.reviewDataList
-                  )"
-                  :key="index"
+                  class="title"
+                  v-if="
+                    scope.row.reviewDataList[item] !== undefined &&
+                      item !== '开场白'
+                  "
                 >
+                  {{ item }}
+                </div>
+                <div v-if="item !== '开场白'">
                   <div
-                    class="title"
-                    v-if="
-                      scope.row.reviewDataList[item] !== undefined &&
-                        item !== '开场白'
-                    "
+                    v-for="(_item, _index) of scope.row.reviewDataList[item]"
+                    :key="_index"
                   >
-                    {{ item }}
-                  </div>
-                  <div v-if="item !== '开场白'">
                     <div
-                      v-for="(_item, _index) of scope.row.reviewDataList[item]"
-                      :key="_index"
+                      @click="selectNow(scope.$index, item, _index)"
+                      class="select-container"
                     >
-                      <div
-                        @click="selectNow(scope.$index, item, _index)"
-                        class="select-container"
-                      >
-                        <span class="background-round"
-                          ><span :class="[_item.flag ? 'circle' : '111']"></span
-                        ></span>
-                        <span>{{ scoreObj[_item.score] }}</span>
-                      </div>
+                      <span class="background-round"
+                        ><span :class="[_item.flag ? 'circle' : '111']"></span
+                      ></span>
+                      <span>{{ scoreObj[_item.score] }}</span>
                     </div>
                   </div>
                 </div>
               </div>
-              <div
-                class="bottom-container"
-                v-if="getObjValues(scope.row.reviewDataList)"
-              >
-                <el-button
-                  type="success"
-                  @click="syntheticSpeech(scope.$index, scope.row)"
-                  >生成</el-button
-                >
-                <div class="audio-container">
-                  <audio
-                    v-if="scope.row.showAudio"
-                    :src="scope.row.mp3Url"
-                    controls
-                    ref="audioRef"
-                  ></audio>
-                </div>
-                <el-button
-                  type="primary"
-                  :disabled="!scope.row.mp3Url"
-                  @click="generateSpeech(scope.row)"
-                  >发送</el-button
-                >
-              </div>
             </div>
-          </template>
-        </el-table-column>
-        <el-table-column label="用户信息" align="center" width="180">
-          <template slot-scope="scope">
-            <div>{{ scope.row.userMobile }}</div>
-            <div>{{ scope.row.weixinNickname }}</div>
-          </template>
-        </el-table-column>
-        <el-table-column label="班级" align="center" width="180">
-          <template slot-scope="scope">
-            <div>{{ scope.row.teamName }}</div>
-          </template>
-        </el-table-column>
-        <el-table-column
-          prop="courseName"
-          label="课程"
-          align="center"
-          width="180"
-        >
-        </el-table-column>
-        <el-table-column label="辅导老师" align="center" width="180">
-          <template slot-scope="scope">
-            <div>{{ scope.row.teacherRealName }}</div>
-          </template>
-        </el-table-column>
-        <el-table-column label="上传日期" align="center" width="180">
-          <template slot-scope="scope">
-            <div>{{ timestamp(scope.row.utime, 2) }}</div>
-          </template>
-        </el-table-column>
-      </el-table>
-    </div>
+            <div
+              class="bottom-container"
+              v-if="getObjValues(scope.row.reviewDataList)"
+            >
+              <el-button
+                type="success"
+                @click="syntheticSpeech(scope.$index, scope.row)"
+                >生成</el-button
+              >
+              <div class="audio-container">
+                <audio
+                  v-if="scope.row.showAudio"
+                  :src="scope.row.mp3Url"
+                  controls
+                  ref="audioRef"
+                ></audio>
+              </div>
+              <el-button
+                type="primary"
+                :disabled="!scope.row.mp3Url"
+                @click="generateSpeech(scope.row)"
+                >发送</el-button
+              >
+            </div>
+          </div>
+        </template>
+      </el-table-column>
+      <el-table-column label="用户信息" align="center" width="180">
+        <template slot-scope="scope">
+          <div>{{ scope.row.userMobile }}</div>
+          <div>{{ scope.row.weixinNickname }}</div>
+        </template>
+      </el-table-column>
+      <el-table-column label="班级" align="center" width="180">
+        <template slot-scope="scope">
+          <div>{{ scope.row.teamName }}</div>
+        </template>
+      </el-table-column>
+      <el-table-column
+        prop="courseName"
+        label="课程"
+        align="center"
+        width="180"
+      >
+      </el-table-column>
+      <el-table-column label="辅导老师" align="center" width="180">
+        <template slot-scope="scope">
+          <div>{{ scope.row.teacherRealName }}</div>
+        </template>
+      </el-table-column>
+      <el-table-column label="上传日期" align="center" width="180">
+        <template slot-scope="scope">
+          <div>{{ timestamp(scope.row.utime, 2) }}</div>
+        </template>
+      </el-table-column>
+    </el-table>
     <m-pagination
       :current-page="query.pageNum"
       :page-size="query.size"
