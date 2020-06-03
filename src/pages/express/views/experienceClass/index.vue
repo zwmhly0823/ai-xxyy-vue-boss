@@ -77,7 +77,7 @@
           wrap-class="scrollbar-wrapper-first"
           id="express-right-scroll-first"
         >
-          <div class="scroll" style="height:500px">
+          <div class="scroll" :style="{ height: scrollHeight }">
             <rightDown
               :search="search"
               :sortItem="sortItem"
@@ -109,7 +109,6 @@ const allExpressHideSearchItem = {
   replenishMethod: ''
 }
 const replenishHideCol = {
-  level: true,
   productName: true,
   productVersion: false,
   term: false,
@@ -208,7 +207,6 @@ export default {
       }
     },
     switchTab(tab) {
-      console.log('=====', tab)
       if (this.activeName === '1') {
         this.hideSearchItem = replenishHideSearchItem
         this.hideCol = replenishHideCol

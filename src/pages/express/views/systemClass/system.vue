@@ -77,7 +77,7 @@
           wrap-class="scrollbar-wrapper-first"
           id="express-right-scroll-first"
         >
-          <div class="scroll" style="height:500px">
+          <div class="scroll" :style="{ height: scrollHeight }">
             <rightDown
               :search="search"
               :sortItem="sortItem"
@@ -120,7 +120,7 @@ const replenishHideCol = {
   courseType: false
 }
 const replenishHideSearchItem = {
-  level: '',
+  level: 'level',
   moreVersion: '',
   schedule: '',
   sup: 'product_type',
@@ -161,6 +161,7 @@ export default {
     // 计算滚动区域高度
     calcSrollHeight() {
       const topH = this.$refs.scroll.getBoundingClientRect().y
+      console.log(this.$refs.scroll)
       const scrollH = document.body.clientHeight - topH - 60
       this.scrollHeight = scrollH + 'px'
     },
