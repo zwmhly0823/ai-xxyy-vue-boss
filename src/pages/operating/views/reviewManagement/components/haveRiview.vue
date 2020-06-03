@@ -9,7 +9,11 @@
  -->
 <template>
   <div class="container">
-    <el-table :loading="loading" :data="list">
+    <el-table
+      v-loading="loading"
+      element-loading-text="拼命加载中"
+      :data="list"
+    >
       <el-table-column label="作品" width="300" align="center">
         <template slot-scope="scope">
           <el-image
@@ -119,9 +123,9 @@ export default {
       try {
         const res = await this.$http.RiviewCourse.getHaveRiview(number)
         if (res.code === 0) {
-          this.loading = false
           this.list = res.payload.content
           this.totalElements = Number.parseInt(res.payload.totalElements)
+          this.loading = false
         }
       } catch (error) {
         console.log(error)

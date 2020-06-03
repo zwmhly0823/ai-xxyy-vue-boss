@@ -41,7 +41,7 @@ export default {
    * @params number 第几页
    * @params size 每页展示多少条
    * */
-  getToView(number, size = 10) {
+  getToView(number, size = 5) {
     return axios.get(
       `/api/tm/v1/teacher/manager/courseTask/all/notCommentTask?pageNumber=${number}&pageSize=${size}`
     )
@@ -70,7 +70,7 @@ export default {
    * @params number 第几页
    * @params size 每页展示多少条
    * */
-  getHaveRiview(number, size = 10) {
+  getHaveRiview(number, size = 5) {
     return axios.get(
       `/api/tm/v1/teacher/manager/courseTask/all/commentTask?pageNumber=${number}&pageSize=${size}`
     )

@@ -44,4 +44,9 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.container {
+  margin: -10px;
+  padding: 15px;
+}
+</style>
