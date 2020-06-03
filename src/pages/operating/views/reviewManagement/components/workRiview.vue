@@ -10,7 +10,7 @@
  -->
 <template>
   <div class="container">
-    <el-tabs type="card" @tab-click="handleClick">
+    <el-tabs type="border-card" @tab-click="handleClick">
       <el-tab-pane label="待点评">
         <div v-if="tabIndex === '0'">
           <ToRiview />
@@ -48,15 +48,5 @@ export default {
 .container {
   margin: -10px;
   padding: 15px;
-  /deep/ .el-tabs__nav {
-    border: none !important;
-    .el-tabs__item {
-      border: none;
-    }
-  }
-  /deep/ .el-tabs__header {
-    border: none;
-    margin: 0;
-  }
 }
 </style>
