@@ -52,7 +52,7 @@
           wrap-class="scrollbar-wrapper-first"
           id="express-right-scroll-first"
         >
-          <div class="scroll" style="height:500px">
+          <div class="scroll" :style="{ height: scrollHeight }">
             <rightDown
               :search="search"
               :sortItem="sortItem"
