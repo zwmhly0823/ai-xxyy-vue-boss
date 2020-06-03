@@ -208,6 +208,14 @@ const routes = [
           title: '点评管理',
           module: 'operating'
         }
+      },
+      {
+        path: '/labelManage',
+        name: 'labelManage',
+        meta: {
+          title: '标签管理',
+          module: 'operating'
+        }
       }
     ]
   },
@@ -247,28 +255,6 @@ const routes = [
         meta: {
           title: '销售过程',
           module: 'statistics',
-          style: 'line'
-        }
-      }
-    ]
-  },
-  // 工具
-  {
-    path: '/tools-manage',
-    name: 'tools-manage',
-    // hidden: true,
-    meta: {
-      title: '工具',
-      icon: 'el-icon-s-tools',
-      module: 'tools-manage'
-    },
-    children: [
-      {
-        path: '/manage',
-        name: 'manage',
-        meta: {
-          title: '标签管理',
-          module: 'tools-manage',
           style: 'line'
         }
       }

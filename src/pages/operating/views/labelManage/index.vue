@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-05-30 17:21:58
  * @LastEditors: panjian
- * @LastEditTime: 2020-06-01 17:04:06
+ * @LastEditTime: 2020-06-03 13:01:11
 -->
 <template>
   <div class="app-main height">
@@ -22,8 +22,9 @@
 </template>
 
 <script>
-import systemLabels from '../../components/systemLabels'
+import systemLabels from '../labelManage/components/systemLabels/index.vue'
 export default {
+  name: 'index',
   components: {
     systemLabels
   },
