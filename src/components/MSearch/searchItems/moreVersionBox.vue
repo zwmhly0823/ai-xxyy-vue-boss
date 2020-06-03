@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-24 18:50:54
  * @LastEditors: Lukun
- * @LastEditTime: 2020-05-12 12:36:15
+ * @LastEditTime: 2020-06-03 15:57:08
  -->
 <template>
   <div class="search-item small">
@@ -62,6 +62,9 @@ export default {
   },
   created() {
     this.getProductVersion()
+    this.$root.$on('lk', (r) => {
+      this.versionId = '' // 补发货清空数据
+    })
   },
   methods: {
     // 获取多版本盒子
