@@ -27,6 +27,9 @@
         <el-tab-pane label="已撤销" name="forth">
           <ApprovalRevocation @result="res" :activeName="activeName" />
         </el-tab-pane>
+        <el-tab-pane label="财务拒绝" name="fifth">
+          <account-rejected ref="accountRejected"></account-rejected>
+        </el-tab-pane>
       </el-tabs>
     </div>
   </div>
@@ -38,12 +41,14 @@ import ApprovalCompleted from './components/approvalCompleted'
 import ApprovalRevocation from './components/approvalRevocation'
 
 import permission from './components/permission'
+import accountRejected from './components/accountRejected'
 export default {
   components: {
     permission,
     ApprovalPending,
     ApprovalRevocation,
-    ApprovalCompleted
+    ApprovalCompleted,
+    accountRejected
   },
   created() {
     this.getRouterData()
@@ -75,7 +80,10 @@ export default {
       console.log(this.activeName, 'this.activeName')
     },
     handleClick(tab, event) {
-      console.log(tab, event)
+      // console.log(tab, event)
+      if (tab.index - 0 === 4) {
+        this.$refs.accountRejected.initListData()
+      }
     },
     handleReplenishment() {
       // this.drawNewReapir = true

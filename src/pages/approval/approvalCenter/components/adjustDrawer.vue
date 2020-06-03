@@ -12,14 +12,41 @@
     element-loading-spinner="el-icon-loading"
     element-loading-background="rgba(0, 0, 0, 0.8)"
   >
-    <el-form :model="adjustDrawerData" class="adjust-drawer-form">
+    <el-form :model="adjustDrawerData" class="adjust-drawer-form" v-if="reload">
       <el-form-item
         v-for="(dItem, dKey) in adjustDrawerData.content"
         :key="dKey"
         :label="dItem.label"
         :label-width="adjustDrawerData.width"
       >
-        <span>{{ dItem.value }}</span>
+        <template v-if="dItem.type === 'img'">
+          <template
+            v-if="
+              dItem.value.indexOf('mp4') > -1 ||
+                dItem.value.indexOf('mov') > -1 ||
+                dItem.value.indexOf('flv') > -1 ||
+                dItem.value.indexOf('rmvb') > -1
+            "
+          >
+            <video
+              style="width: 220px; height: 120px"
+              :src="dItem.value"
+              controls
+            ></video>
+          </template>
+          <template v-else>
+            <el-image
+              style="width: 220px; height: 120px"
+              :src="dItem.value"
+              fit="contain"
+              :preview-src-list="[dItem.value]"
+            >
+            </el-image>
+          </template>
+        </template>
+        <template v-else>
+          <span>{{ dItem.value }}</span>
+        </template>
       </el-form-item>
     </el-form>
     <div
@@ -31,6 +58,21 @@
         >同 意</el-button
       >
     </div>
+    <div
+      v-if="adjustDrawerData.financeStatus === 'DECLINE'"
+      class="adjust-drawer-button-box"
+    >
+      <el-button @click="rejectedDrawerPass('left')">
+        {{ adjustDrawerData.leftButtonText }}
+      </el-button>
+      <el-button
+        type="primary"
+        v-show="adjustDrawerData.hasEdit"
+        @click="rejectedDrawerPass('right')"
+      >
+        {{ adjustDrawerData.rightButtonText }}
+      </el-button>
+    </div>
   </el-drawer>
 </template>
 
@@ -40,7 +82,8 @@ export default {
   props: ['adjustDrawerData', 'isStaffId'],
   data() {
     return {
-      adjustDrawerShow: false
+      adjustDrawerShow: false,
+      reload: true
     }
   },
   methods: {
@@ -52,6 +95,15 @@ export default {
     },
     handleDrawerClose() {
       this.adjustDrawerShow = false
+    },
+    reloadFun() {
+      this.reload = false
+      this.$nextTick(() => {
+        this.reload = true
+      })
+    },
+    rejectedDrawerPass(data) {
+      this.$emit('drawButtonEmit', data)
     }
   }
 }
@@ -75,6 +127,16 @@ export default {
   }
   .adjust-drawer-form {
     margin-bottom: 60px;
+  }
+  .adjust-drawer-button-box {
+    text-align: center;
+    height: 60px;
+    line-height: 60px;
+    width: 100%;
+    background-color: #fff;
+    position: absolute;
+    bottom: 0;
+    right: 0;
   }
   .adjust-drawer-button-box {
     text-align: center;
