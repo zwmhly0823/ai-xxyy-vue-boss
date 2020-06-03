@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-05-19 17:18:39
  * @LastEditors: liukun
- * @LastEditTime: 2020-06-03 16:02:53
+ * @LastEditTime: 2020-06-03 17:38:52
 -->
 <template>
   <section class="bianju10">
@@ -692,8 +692,8 @@ export default {
       this.$prompt('请告知您的驳回理由', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
-        inputPattern: /[\s\S]{6,}/,
-        inputErrorMessage: '这么短？再写点！'
+        inputPattern: /[\s\S]+/, // least 1
+        inputErrorMessage: '不能为空！好歹敲个space'
       }).then(async ({ value }) => {
         const { code } = await this.$http.Finance.toAgree({
           refundUid: JSON.parse(localStorage.getItem('staff')).id,
