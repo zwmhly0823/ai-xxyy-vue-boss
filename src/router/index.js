@@ -245,6 +245,14 @@ const routes = [
           title: '点评管理',
           module: 'operating'
         }
+      },
+      {
+        path: '/labelManage',
+        name: 'labelManage',
+        meta: {
+          title: '标签管理',
+          module: 'operating'
+        }
       }
     ]
   },
@@ -269,16 +277,6 @@ const routes = [
       module: 'statistics'
     },
     children: [
-      // {
-      //   path: '/salesPerformance',
-      //   name: 'salesPerformance',
-      //   meta: {
-      //     title: '销售业绩',
-      //     module: 'statistics',
-      //     style: 'line'
-      //   }
-      // },
-
       {
         path: '/priodPerformance',
         name: 'priodPerformance',
@@ -297,16 +295,6 @@ const routes = [
           style: 'line'
         }
       }
-
-      // {
-      //   path: '/salesProcess',
-      //   name: 'salesProcess',
-      //   meta: {
-      //     title: '按期汇总',
-      //     module: 'statistics',
-      //     style: 'line'
-      //   }
-      // }
     ]
   }
 ]

@@ -1,7 +1,7 @@
 /*
  * @Date: 2020-03-13 15:20:21
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-05-29 20:38:08
+ * @LastEditors: panjian
+ * @LastEditTime: 2020-06-03 12:59:09
  * @FilePath: /ai-app-vue-toss/src/pages/studentTeam/router/index.js
  */
 import Vue from 'vue'
@@ -73,6 +73,15 @@ const routes = [
       keepAlive: false
     },
     component: () => import('../views/reviewManagement/components/audioAdd.vue')
+  },
+  {
+    path: '/labelManage',
+    name: 'labelManage',
+    meta: {
+      title: '标签管理',
+      keepAlive: true
+    },
+    component: () => import('../views/labelManage/index.vue')
   }
 ]
 
