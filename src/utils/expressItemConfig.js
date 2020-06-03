@@ -5,8 +5,8 @@ export const replenishProductTypeList = [
 ]
 
 export const replenishTypeList = [
-  { label: '单件补发', value: '0' },
-  { label: '整盒补发', value: '1' }
+  { label: '整盒补发', value: '0' },
+  { label: '单件补发', value: '1' }
 ]
 
 export const replenishReasonSearchList = [
