@@ -1,7 +1,7 @@
 /*
  * @Date: 2020-03-13 15:20:21
  * @LastEditors: panjian
- * @LastEditTime: 2020-06-03 12:59:09
+ * @LastEditTime: 2020-06-03 16:46:54
  * @FilePath: /ai-app-vue-toss/src/pages/studentTeam/router/index.js
  */
 import Vue from 'vue'
@@ -79,7 +79,7 @@ const routes = [
     name: 'labelManage',
     meta: {
       title: '标签管理',
-      keepAlive: true
+      keepAlive: false
     },
     component: () => import('../views/labelManage/index.vue')
   }
