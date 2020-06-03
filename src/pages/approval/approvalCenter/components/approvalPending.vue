@@ -4,7 +4,7 @@
  * @Author: Lukun
  * @Date: 2020-04-27 17:47:58
  * @LastEditors: Lukun
- * @LastEditTime: 2020-06-03 17:22:25
+ * @LastEditTime: 2020-06-03 18:22:11
  -->
 <template>
   <div class="container">
@@ -516,15 +516,18 @@ export default {
   methods: {
     // 期数查询
     getTeamId(val) {
+      this.currentPage = 1
       if (val) {
         Object.assign(this.params, {
           managementType: val.managementType,
-          period: val.period
+          period: val.period,
+          page: 1
         })
         this.checkPending(this.params)
       } else {
         this.params.managementType = ''
         this.params.period = ''
+        this.params.page = 1
         this.checkPending(this.params)
       }
     },
@@ -535,12 +538,15 @@ export default {
     // 销售部门搜索
     getSeachePart(val) {
       Object.assign(this.params, { keyword: val })
-      console.log(val, 'app-container')
+      this.params.page = 1
+      this.currentPage = 1
       this.checkPending(this.params)
     },
     // 查询审批类型判断
     getcheckType(val) {
       Object.assign(this.params, { type: val })
+      this.currentPage = 1
+      this.params.page = 1
       this.checkPending(this.params)
     },
     // 获取版本盒子
@@ -654,6 +660,9 @@ export default {
     },
     // 时间筛选
     getSeacherTime(val) {
+      this.params.page = 1
+      this.currentPage = 1
+
       if (val) {
         Object.assign(this.params, {
           startTime: val.ctime.gte,
