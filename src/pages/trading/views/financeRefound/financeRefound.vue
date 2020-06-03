@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-05-19 17:18:39
  * @LastEditors: liukun
- * @LastEditTime: 2020-05-30 17:06:50
+ * @LastEditTime: 2020-06-03 16:02:53
 -->
 <template>
   <section class="bianju10">
@@ -285,6 +285,7 @@
               style="width: 200px"
               :src="choutidata.attsUrl"
               fit="contain"
+              :preview-src-list="[choutidata.attsUrl]"
             ></el-image>
           </el-col>
         </el-row>
