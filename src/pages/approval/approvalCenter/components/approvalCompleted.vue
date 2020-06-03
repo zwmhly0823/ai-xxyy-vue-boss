@@ -427,8 +427,8 @@ export default {
     getTeamId(val) {
       if (val) {
         Object.assign(this.params, {
-          managementType: val.teamSchedule.managementType,
-          period: val.teamSchedule.period
+          managementType: val.managementType,
+          period: val.period
         })
         this.checkPending(this.params)
       } else {

@@ -3,8 +3,8 @@
  * @version: 
  * @Author: Lukun
  * @Date: 2020-04-27 17:47:58
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-06-02 19:25:37
+ * @LastEditors: Lukun
+ * @LastEditTime: 2020-06-03 16:06:13
  -->
 <template>
   <div class="container">
@@ -177,24 +177,7 @@
         >
           <el-col :span="3">版本信息:</el-col>
           <el-col :span="20" :offset="1">
-            <versionExprience
-              v-if="drawerApprovalDeatail.courseType == 1 && drawerApproval"
-              @result="getVersion"
-              :params="{
-                courseType: 0,
-                period: drawerApprovalDeatail.stage
-              }"
-              name="version"
-            />
-            <versionSystem
-              v-if="drawerApprovalDeatail.courseType == 2 && drawerApproval"
-              @result="getVersion"
-              :params="{
-                courseType: 2,
-                period: drawerApprovalDeatail.stage
-              }"
-              name="version"
-            />
+            <VersionBox @result="getVersion" name="version" />
           </el-col>
         </el-row>
         <el-row>
@@ -445,14 +428,13 @@
 <script>
 import MPagination from '@/components/MPagination/index.vue'
 import tabTimeSelect from './timeSearch'
-import versionExprience from './versionExprience'
-import versionSystem from './versionSystem'
 import CheckType from './checkType'
 import { timestamp } from '@/utils/index'
 import SearchPart from './searchPart'
 import adjustDrawer from './adjustDrawer'
 import { getStaffInfo } from '../common'
 import courseTeam from './courseTeam'
+import VersionBox from '../../../../components/MSearch/searchItems/moreVersionBox'
 
 export default {
   props: ['typeTime', 'activeName'],
@@ -466,8 +448,7 @@ export default {
   components: {
     MPagination,
     tabTimeSelect,
-    versionExprience,
-    versionSystem,
+    VersionBox,
     CheckType,
     SearchPart,
     adjustDrawer,
@@ -533,8 +514,8 @@ export default {
     getTeamId(val) {
       if (val) {
         Object.assign(this.params, {
-          managementType: val.teamSchedule.managementType,
-          period: val.teamSchedule.period
+          managementType: val.managementType,
+          period: val.period
         })
         this.checkPending(this.params)
       } else {
@@ -564,18 +545,6 @@ export default {
     },
     // 拒绝申请
     refuseReplenish() {
-      const version = typeof this.version !== 'string'
-      const versionBool =
-        this.isStaffId &&
-        this.drawerApprovalDeatail.mode === 'DEFAULT' &&
-        this.drawerApprovalDeatail.type === 'MATERIALS'
-      if (versionBool && (this.version === '' || version)) {
-        this.$message('请选择版本号')
-        return
-      }
-      if (!versionBool) {
-        this.version = ''
-      }
       this.$prompt('请输入原因', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
@@ -596,7 +565,7 @@ export default {
               console.log(res)
               this.checkPending(this.params)
               this.drawerApproval = false
-              this.version = ''
+              this.handleCloseDraw()
               this.$message({
                 message: '拒绝审核通过',
                 type: 'success'
@@ -626,7 +595,6 @@ export default {
       if (!versionBool) {
         this.version = ''
       }
-
       this.$prompt('请输入原因', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
@@ -644,17 +612,21 @@ export default {
           }
           this.$http.Backend.isAggrePass(params)
             .then((res) => {
-              this.checkPending(this.params)
-              this.drawerApproval = false
-              this.version = ''
-              this.$message({
-                message: '同意审核通过',
-                type: 'success'
-              })
-              this.$emit('result', 'third')
+              if (res && res.payload) {
+                this.checkPending(this.params)
+                this.drawerApproval = false
+                this.$root.$emit('lk', '')
+                this.$message({
+                  message: '同意审核通过',
+                  type: 'success'
+                })
+                this.$emit('result', 'third')
+              } else {
+                this.$root.$emit('lk', '')
+              }
             })
             .catch((err) => {
-              this.$message(err)
+              this.$message(`${err},请重选！`)
             })
         })
         .catch((err) => {

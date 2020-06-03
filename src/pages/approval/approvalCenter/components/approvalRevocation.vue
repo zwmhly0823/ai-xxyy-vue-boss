@@ -4,7 +4,7 @@
  * @Author: Lukun
  * @Date: 2020-04-27 17:47:58
  * @LastEditors: Lukun
- * @LastEditTime: 2020-06-01 16:41:53
+ * @LastEditTime: 2020-06-03 16:06:51
  -->
 <template>
   <div class="container">
@@ -417,8 +417,8 @@ export default {
     getTeamId(val) {
       if (val) {
         Object.assign(this.params, {
-          managementType: val.teamSchedule.managementType,
-          period: val.teamSchedule.period
+          managementType: val.managementType,
+          period: val.period
         })
         this.checkPending(this.params)
       } else {
