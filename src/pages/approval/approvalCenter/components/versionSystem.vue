@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-24 18:50:54
  * @LastEditors: Lukun
- * @LastEditTime: 2020-05-22 16:57:08
+ * @LastEditTime: 2020-06-02 11:20:19
  -->
 <template>
   <div class="search-item small">
@@ -42,7 +42,10 @@ export default {
   },
   data() {
     return {
-      productVersion: [{ name: 'V1.1', value: 'V1.1' }],
+      productVersion: [
+        { name: 'V1.1', value: 'V1.1' },
+        { name: 'V1.2', value: 'V1.2' }
+      ],
       versionId: null
     }
   },
