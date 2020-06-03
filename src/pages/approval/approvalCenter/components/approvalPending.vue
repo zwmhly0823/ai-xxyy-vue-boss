@@ -4,7 +4,7 @@
  * @Author: Lukun
  * @Date: 2020-04-27 17:47:58
  * @LastEditors: Lukun
- * @LastEditTime: 2020-06-03 16:06:13
+ * @LastEditTime: 2020-06-03 17:22:25
  -->
 <template>
   <div class="container">
@@ -115,8 +115,12 @@
       class="drawer-approval-detail"
       :modal="false"
       @close="handleCloseDraw"
-      :title="drawerApprovalDeatail.addressId ? '补发货审批' : '退款审批'"
     >
+      <template v-slot:title>
+        <h2>
+          {{ drawerApprovalDeatail.addressId ? '补发货审批' : '退款审批' }}
+        </h2>
+      </template>
       <div v-if="drawerApprovalDeatail.addressId" class="approval-replenish">
         <el-row>
           <el-col :span="3">申请人:</el-col>
