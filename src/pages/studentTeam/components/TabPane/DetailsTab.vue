@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 14:19:58
  * @LastEditors: Shentong
- * @LastEditTime: 2020-05-27 21:47:32
+ * @LastEditTime: 2020-06-03 20:53:10
  -->
 <template>
   <div>
@@ -15,7 +15,7 @@
         phone="uid"
         onlyPhone="1"
         phoneTip="手机号/微信昵称 查询"
-        :teamType="`${classObj.type === 0 ? '0' : '1'}`"
+        :teamType="`${classObj.type == 0 ? '0' : '1'}`"
         :teamId="classObj.teamId"
       />
       <el-button
