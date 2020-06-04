@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-04-25 17:24:23
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-06-04 21:55:47
+ * @LastEditTime: 2020-06-04 22:53:51
  -->
 <template>
   <el-card border="false" shadow="never" :class="$style.elard">
@@ -413,21 +413,25 @@ export default {
     // 导出
     exportOrderHandle() {
       console.log(this.searchParams)
+      console.log(this.$parent.$children[1].finalParams)
       if (this.searchParams.length === 0) {
         this.$message.error('请选择筛选条件')
         return
       }
+
+      const query = this.$parent.$children[1].finalParams
+
       // 导出条件为 v1 对象方式
-      const query = {
-        status: 3
-      }
-      const search = this.searchParams[0]
-      for (const key in search) {
-        if (Object.keys(search).includes(key)) {
-          const item = search[key]
-          Object.assign(query, item)
-        }
-      }
+      // const query = {
+      //   status: 3
+      // }
+      // const search = this.searchParams[0]
+      // for (const key in search) {
+      //   if (Object.keys(search).includes(key)) {
+      //     const item = search[key]
+      //     Object.assign(query, item)
+      //   }
+      // }
 
       const loading = this.$loading({
         lock: true,
