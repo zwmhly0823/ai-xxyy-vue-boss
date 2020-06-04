@@ -3,8 +3,8 @@
  * @version: 
  * @Author: Lukun
  * @Date: 2020-04-27 17:47:58
- * @LastEditors: liukun
- * @LastEditTime: 2020-06-03 17:11:41
+ * @LastEditors: Lukun
+ * @LastEditTime: 2020-06-03 18:23:43
  -->
 <template>
   <div class="container">
@@ -119,8 +119,12 @@
       size="50%"
       class="drawer-approval-detail"
       :modal="false"
-      :title="drawerApprovalDeatail.addressId ? '补发货审批' : '退款审批'"
     >
+      <template v-slot:title>
+        <h2>
+          {{ drawerApprovalDeatail.addressId ? '补发货审批' : '退款审批' }}
+        </h2>
+      </template>
       <div v-if="drawerApprovalDeatail.addressId" class="approval-replenish">
         <el-row>
           <el-col :span="3">申请人:</el-col>
@@ -310,12 +314,6 @@
           }}</el-col>
         </el-row>
         <el-row>
-          <el-col :span="5">退款说明:</el-col>
-          <el-col :span="18" :offset="1">{{
-            drawerApprovalDeatail.refundMsg
-          }}</el-col>
-        </el-row>
-        <el-row>
           <el-col :span="5">附件:</el-col>
           <el-col :span="18" :offset="1">
             <el-image
@@ -421,10 +419,12 @@ export default {
   methods: {
     // 期数查询
     getTeamId(val) {
+      this.params.page = 1
+      this.currentPage = 1
       if (val) {
         Object.assign(this.params, {
-          managementType: val.teamSchedule.managementType,
-          period: val.teamSchedule.period
+          managementType: val.managementType,
+          period: val.period
         })
         this.checkPending(this.params)
       } else {
@@ -436,16 +436,21 @@ export default {
     // 销售部门搜索
     getSeachePart(val) {
       Object.assign(this.params, { keyword: val })
-      console.log(val, 'app-container')
+      this.params.page = 1
+      this.currentPage = 1
       this.checkPending(this.params)
     },
     // 审批类型判断
     getcheckType(val) {
       Object.assign(this.params, { type: val })
+      this.params.page = 1
+      this.currentPage = 1
       this.checkPending(this.params)
     },
     // 筛选时间
     getSeacherTime(val) {
+      this.params.page = 1
+      this.currentPage = 1
       if (val) {
         Object.assign(this.params, {
           startTime: val.ctime.gte,

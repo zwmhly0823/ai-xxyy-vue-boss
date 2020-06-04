@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-24 18:50:54
  * @LastEditors: Lukun
- * @LastEditTime: 2020-05-12 12:36:15
+ * @LastEditTime: 2020-06-03 16:44:02
  -->
 <template>
   <div class="search-item small">
@@ -62,16 +62,27 @@ export default {
   },
   created() {
     this.getProductVersion()
+    this.$root.$on('lk', (r) => {
+      this.versionId = '' // 补发货清空数据
+    })
   },
   methods: {
+    compare(property) {
+      return function(a, b) {
+        const value1 = a[property].replace(/[^0-9]/gi, '')
+        const value2 = b[property].replace(/[^0-9]/gi, '')
+        if (value1 < value2) {
+          return -1
+        }
+      }
+    },
     // 获取多版本盒子
     getProductVersion() {
       this.$http.Product.getCourseVersion({ type: 'courseVersion' }).then(
         (res) => {
           if (res && res.payload) {
-            this.productVersion = res.payload.map((item) => {
-              return { name: item.code, value: item.value }
-            })
+            this.productVersion = res.payload.sort(this.compare('code'))
+            console.log(this.productVersion, 'this.productVersion')
           }
         }
       )

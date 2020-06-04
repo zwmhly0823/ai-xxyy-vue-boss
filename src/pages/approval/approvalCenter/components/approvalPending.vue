@@ -3,8 +3,8 @@
  * @version: 
  * @Author: Lukun
  * @Date: 2020-04-27 17:47:58
- * @LastEditors: liukun
- * @LastEditTime: 2020-06-03 15:48:44
+ * @LastEditors: Lukun
+ * @LastEditTime: 2020-06-03 18:22:11
  -->
 <template>
   <div class="container">
@@ -115,8 +115,12 @@
       class="drawer-approval-detail"
       :modal="false"
       @close="handleCloseDraw"
-      :title="drawerApprovalDeatail.addressId ? '补发货审批' : '退款审批'"
     >
+      <template v-slot:title>
+        <h2>
+          {{ drawerApprovalDeatail.addressId ? '补发货审批' : '退款审批' }}
+        </h2>
+      </template>
       <div v-if="drawerApprovalDeatail.addressId" class="approval-replenish">
         <el-row>
           <el-col :span="3">申请人:</el-col>
@@ -177,16 +181,7 @@
         >
           <el-col :span="3">版本信息:</el-col>
           <el-col :span="20" :offset="1">
-            <versionExprience
-              v-if="drawerApprovalDeatail.courseType == 1 && drawerApproval"
-              @result="getVersion"
-              name="version"
-            />
-            <versionSystem
-              v-if="drawerApprovalDeatail.courseType == 2 && drawerApproval"
-              @result="getVersion"
-              name="version"
-            />
+            <VersionBox @result="getVersion" name="version" />
           </el-col>
         </el-row>
         <el-row>
@@ -334,12 +329,6 @@
           }}</el-col>
         </el-row>
         <el-row>
-          <el-col :span="5">退款说明:</el-col>
-          <el-col :span="18" :offset="1">{{
-            drawerApprovalDeatail.refundMsg
-          }}</el-col>
-        </el-row>
-        <el-row>
           <el-col :span="5">附件:</el-col>
           <el-col :span="18" :offset="1">
             <el-image
@@ -443,14 +432,13 @@
 <script>
 import MPagination from '@/components/MPagination/index.vue'
 import tabTimeSelect from './timeSearch'
-import versionExprience from './versionExprience'
-import versionSystem from './versionSystem'
 import CheckType from './checkType'
 import { timestamp } from '@/utils/index'
 import SearchPart from './searchPart'
 import adjustDrawer from './adjustDrawer'
 import { getStaffInfo } from '../common'
 import courseTeam from './courseTeam'
+import VersionBox from '../../../../components/MSearch/searchItems/moreVersionBox'
 
 export default {
   props: ['typeTime', 'activeName'],
@@ -464,8 +452,7 @@ export default {
   components: {
     MPagination,
     tabTimeSelect,
-    versionExprience,
-    versionSystem,
+    VersionBox,
     CheckType,
     SearchPart,
     adjustDrawer,
@@ -529,15 +516,18 @@ export default {
   methods: {
     // 期数查询
     getTeamId(val) {
+      this.currentPage = 1
       if (val) {
         Object.assign(this.params, {
-          managementType: val.teamSchedule.managementType,
-          period: val.teamSchedule.period
+          managementType: val.managementType,
+          period: val.period,
+          page: 1
         })
         this.checkPending(this.params)
       } else {
         this.params.managementType = ''
         this.params.period = ''
+        this.params.page = 1
         this.checkPending(this.params)
       }
     },
@@ -548,12 +538,15 @@ export default {
     // 销售部门搜索
     getSeachePart(val) {
       Object.assign(this.params, { keyword: val })
-      console.log(val, 'app-container')
+      this.params.page = 1
+      this.currentPage = 1
       this.checkPending(this.params)
     },
     // 查询审批类型判断
     getcheckType(val) {
       Object.assign(this.params, { type: val })
+      this.currentPage = 1
+      this.params.page = 1
       this.checkPending(this.params)
     },
     // 获取版本盒子
@@ -562,18 +555,6 @@ export default {
     },
     // 拒绝申请
     refuseReplenish() {
-      const version = typeof this.version !== 'string'
-      const versionBool =
-        this.isStaffId &&
-        this.drawerApprovalDeatail.mode === 'DEFAULT' &&
-        this.drawerApprovalDeatail.type === 'MATERIALS'
-      if (versionBool && (this.version === '' || version)) {
-        this.$message('请选择版本号')
-        return
-      }
-      if (!versionBool) {
-        this.version = ''
-      }
       this.$prompt('请输入原因', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
@@ -594,7 +575,7 @@ export default {
               console.log(res)
               this.checkPending(this.params)
               this.drawerApproval = false
-              this.version = ''
+              this.handleCloseDraw()
               this.$message({
                 message: '拒绝审核通过',
                 type: 'success'
@@ -624,7 +605,6 @@ export default {
       if (!versionBool) {
         this.version = ''
       }
-
       this.$prompt('请输入原因', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
@@ -642,17 +622,21 @@ export default {
           }
           this.$http.Backend.isAggrePass(params)
             .then((res) => {
-              this.checkPending(this.params)
-              this.drawerApproval = false
-              this.version = ''
-              this.$message({
-                message: '同意审核通过',
-                type: 'success'
-              })
-              this.$emit('result', 'third')
+              if (res && res.payload) {
+                this.checkPending(this.params)
+                this.drawerApproval = false
+                this.$root.$emit('lk', '')
+                this.$message({
+                  message: '同意审核通过',
+                  type: 'success'
+                })
+                this.$emit('result', 'third')
+              } else {
+                this.$root.$emit('lk', '')
+              }
             })
             .catch((err) => {
-              this.$message(err)
+              this.$message(`${err},请重选！`)
             })
         })
         .catch((err) => {
@@ -676,6 +660,9 @@ export default {
     },
     // 时间筛选
     getSeacherTime(val) {
+      this.params.page = 1
+      this.currentPage = 1
+
       if (val) {
         Object.assign(this.params, {
           startTime: val.ctime.gte,

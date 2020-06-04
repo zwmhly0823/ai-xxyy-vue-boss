@@ -4,7 +4,7 @@
  * @Author: Lukun
  * @Date: 2020-05-16 17:43:36
  * @LastEditors: Lukun
- * @LastEditTime: 2020-06-01 17:01:18
+ * @LastEditTime: 2020-06-03 16:04:06
 -->
 <template>
   <div class="container">
@@ -90,16 +90,13 @@ export default {
       value: '',
       chooseTeam: true,
       type: '', // 1-系统课，0-体验课
-      addList: []
+      addList: {}
     }
   },
   computed: {
     handleDebounce() {
       return debounce(this.getData, 500)
     }
-  },
-  created() {
-    this.getData()
   },
   watch: {
     teacherId(val) {
@@ -137,20 +134,26 @@ export default {
       this.value = ''
       this.stage = ''
       this.chooseTeam = true
-      this.onChange('')
+      this.$emit('result', '')
     },
     selectTeam(val) {
       if (val) {
         switch (val) {
           case 'TESTCOURSE':
             this.type = '0'
+            this.addList.period = ''
+            this.stage = ''
             this.getData()
-
+            this.addList.managementType = 'TESTCOURSE'
+            this.$emit('result', this.addList)
             break
           case 'SYSTEMCOURSE':
             this.type = '1'
+            this.addList.period = ''
+            this.stage = ''
             this.getData()
-
+            this.addList.managementType = 'SYSTEMCOURSE'
+            this.$emit('result', this.addList)
             break
           default:
             break
@@ -158,11 +161,13 @@ export default {
         this.chooseTeam = false
       } else {
         this.type = ''
+        this.$emit('result', '')
       }
     },
     clearSelect() {
       this.value = ''
       this.chooseTeam = true
+      this.$emit('result', '')
     },
     getData(queryString = '') {
       this.loading = true
@@ -201,17 +206,8 @@ export default {
     },
     // 获取选中的
     onChange(data) {
-      this.$emit(
-        'result',
-        data.length > 0
-          ? {
-              teamSchedule: {
-                managementType: this.course[this.type],
-                period: data.join()
-              }
-            }
-          : ''
-      )
+      this.addList.period = data.join()
+      this.$emit('result', this.addList)
     }
   }
 }
