@@ -7,13 +7,27 @@
  * @Description: 活动订单搜索
  -->
 <template>
-  <el-card border="false" shadow="never" :class="$style.elard">
-    <el-form :inline="true" label-position="right" label-width="80px">
+  <el-card
+    border="false"
+    shadow="never"
+    :class="$style.elard"
+    class="search-section"
+  >
+    <el-form :inline="true" label-position="right" label-width="100px">
       <el-form-item label="订单搜索:" :class="{ [$style.marginer]: true }">
         <order-search class="allmini" @result="getOrderSearch" />
       </el-form-item>
       <el-form-item label="商品类型:" :class="{ [$style.marginer]: true }">
         <product-type name="regtype" @result="getProductType" />
+      </el-form-item>
+      <el-form-item label="转介绍用户:" :class="{ [$style.marginer]: true }">
+        <SearchPhoneAndUsername
+          @result="getSendUser"
+          :custom-style="{ width: '200px' }"
+          placeholder="转介绍人手机号/用户名称"
+          name="pay_channel_user"
+          type="2"
+        />
       </el-form-item>
       <br />
       <el-form-item label="下单时间:" :class="{ [$style.marginer]: true }">
@@ -64,12 +78,14 @@
 import OrderSearch from '@/components/MSearch/searchItems/orderSearch.vue'
 import DatePicker from '@/components/MSearch/searchItems/datePicker.vue'
 import ProductType from '@/components/MSearch/searchItems/productType.vue'
+import SearchPhoneAndUsername from '@/components/MSearch/searchItems/searchPhoneAndUsername'
 import { isToss } from '@/utils/index'
 export default {
   components: {
     OrderSearch,
     DatePicker,
-    ProductType
+    ProductType,
+    SearchPhoneAndUsername
   },
   data() {
     return {
@@ -166,6 +182,11 @@ export default {
       this.setSeachParmas(res, ['regtype'], 'terms')
     },
 
+    getSendUser(res) {
+      const data = res === '0' ? '' : res
+      this.setSeachParmas(data, ['pay_channel_user'])
+    },
+
     /**  处理接收到的查询参数
      * @res: Object, 子筛选组件返回的表达式对象，如 {sup: 2}
      * @key: Array 指定res的key。如课程类型+期数选项，清除课程类型时，期数也清除了，这里要同步清除must的数据
@@ -240,6 +261,13 @@ export default {
   }
   .margin_l10 {
     margin-left: 10px;
+  }
+}
+</style>
+<style lang="scss" scoped>
+.search-section {
+  ::v-deep .el-icon-search {
+    top: 14px;
   }
 }
 </style>

@@ -4,17 +4,32 @@
  * @Author: liukun
  * @Date: 2020-04-25 17:24:23
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-05-25 19:29:05
+ * @LastEditTime: 2020-06-04 15:36:11
  -->
 <template>
-  <el-card border="false" shadow="never" :class="$style.elard">
-    <el-form :inline="true" label-position="right" label-width="80px">
+  <el-card
+    border="false"
+    shadow="never"
+    :class="$style.elard"
+    class="search-section"
+  >
+    <el-form :inline="true" label-position="right" label-width="100px">
       <el-form-item label="订单搜索:" :class="{ [$style.marginer]: true }">
         <orderSearch class="allmini" @result="getOrderSearch" />
       </el-form-item>
 
       <el-form-item label="订单来源:" :class="{ [$style.marginer]: true }">
         <ChannelSelect @result="getChannel" name="pay_channel" />
+      </el-form-item>
+
+      <el-form-item label="转介绍用户:" :class="{ [$style.marginer]: true }">
+        <SearchPhoneAndUsername
+          @result="getSendUser"
+          :custom-style="{ width: '200px' }"
+          placeholder="转介绍人手机号/用户名称"
+          name="uid"
+          type="2"
+        />
       </el-form-item>
       <br />
 
@@ -153,7 +168,9 @@ import Department from '@/components/MSearch/searchItems/department'
 import SearchTeamName from '@/components/MSearch/searchItems/searchTeamName'
 // import SearchTrialTeamName from '@/components/MSearch/searchItems/searchTrialTeamName'
 import SearchStage from '@/components/MSearch/searchItems/searchStage'
+import SearchPhoneAndUsername from '@/components/MSearch/searchItems/searchPhoneAndUsername'
 import { isToss } from '@/utils/index'
+import axios from '@/api/axiosConfig'
 
 export default {
   components: {
@@ -166,7 +183,8 @@ export default {
     Department,
     SearchTeamName,
     // SearchTrialTeamName,
-    SearchStage
+    SearchStage,
+    SearchPhoneAndUsername
   },
 
   data() {
@@ -357,6 +375,32 @@ export default {
     getTrialTeamName(res) {
       this.setSeachParmas(res, ['trial_team_id'], 'terms')
     },
+    async getSendUser(res) {
+      let data = res === '0' ? '' : res
+      console.log(res)
+
+      // 根据user id请求当前用户转化来的用户list
+      if (data && data.uid) {
+        const query = {
+          first_order_send_id: data.uid
+        }
+        const sendList = await axios.post('/graphql/v1/toss', {
+          query: `{
+            UserList(query: ${JSON.stringify(JSON.stringify(query))}){
+              id
+              first_order_send_id
+            }
+          }`
+        })
+        console.log(sendList)
+        if (sendList && sendList.data && sendList.data.UserList.length > 0) {
+          const uids = sendList.data.UserList.map((item) => item.id)
+          data = uids
+        }
+      }
+
+      this.setSeachParmas(data, ['uid'])
+    },
 
     /**  处理接收到的查询参数
      * @res: Object, 子筛选组件返回的表达式对象，如 {sup: 2}
@@ -442,6 +486,14 @@ export default {
   }
   .margin_l10 {
     margin-left: 10px;
+  }
+}
+</style>
+
+<style lang="scss" scoped>
+.search-section {
+  ::v-deep .el-icon-search {
+    top: 14px;
   }
 }
 </style>

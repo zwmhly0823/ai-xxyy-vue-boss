@@ -136,6 +136,22 @@
           </p>
         </template>
       </el-table-column>
+      <el-table-column label="转介绍用户信息" min-width="160">
+        <template slot-scope="scope">
+          <p>
+            {{
+              scope.row.first_send_user
+                ? scope.row.first_send_user.username
+                : '-'
+            }}
+          </p>
+          <p>
+            {{
+              scope.row.first_send_user ? scope.row.first_send_user.mobile : '-'
+            }}
+          </p>
+        </template>
+      </el-table-column>
     </el-table>
     <div v-if="orderList.length === 0" class="noData">暂无数据</div>
     <div class="drawer-body">
