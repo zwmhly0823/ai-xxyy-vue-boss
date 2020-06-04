@@ -4,7 +4,7 @@
  * @Author: shentong
  * @Date: 2020-03-13 16:20:48
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-05-25 14:36:48
+ * @LastEditTime: 2020-06-04 20:41:38
  */
 import axios from '../axiosConfig'
 
@@ -34,6 +34,7 @@ export default {
             gem_integral
             product_name
             out_trade_no
+            total_amount
             user{
               username
               nickname
@@ -72,6 +73,12 @@ export default {
             express{
               express_total
               last_express_status
+              address_detail
+              province
+              city
+              area
+              product_name
+              product_type
             }
             trial_course{
               team_category
