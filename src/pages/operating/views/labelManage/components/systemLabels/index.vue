@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-05-30 18:37:24
  * @LastEditors: panjian
- * @LastEditTime: 2020-06-04 13:54:57
+ * @LastEditTime: 2020-06-04 14:02:09
 -->
 <template>
   <div class="system-label">
@@ -123,7 +123,7 @@ export default {
     },
     // 表头回调样式
     headerCss({ row, column, rowIndex, columnIndex }) {
-      // return 'font-size:12px;color:#666;font-weight:normal;background:#f0f1f2;'
+      return 'font-size:12px;color:#666;font-weight:normal;'
     }
   }
 }
