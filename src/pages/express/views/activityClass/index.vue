@@ -103,6 +103,7 @@ const replenishHideCol = {
   courseType: false
 }
 const replenishHideSearchItem = {
+  productName: 'product_name',
   level: '',
   moreVersion: '',
   schedule: '',

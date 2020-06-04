@@ -26,6 +26,7 @@
         :replenishProductType="showItem.replenishProductType"
         :teacherTip="showItem.teacherTip"
         :teamClass="teamClass"
+        :productName="showItem.productName"
       />
     </div>
     <!-- v-if="!teacherId" TOSS -->
@@ -264,7 +265,12 @@ export default {
     showExportDialog() {
       this.expressId = sessionStorage.getItem('uid') || []
       // 如果物流状态选择全部，不能导出
-      if (!this.searchIn.length && !this.expressId.length) {
+      // 状态标签选择全部时 ，搜索条件为空或者用户选择条目为空 则给出弹窗提示不能导出
+      if (
+        this.status.length > 1 &&
+        this.searchIn.length === 0 &&
+        this.expressId.length === 0
+      ) {
         this.$message.error('不能导出全部物流，请选择状态或筛选')
         return
       }
