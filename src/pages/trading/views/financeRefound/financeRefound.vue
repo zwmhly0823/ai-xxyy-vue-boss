@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-05-19 17:18:39
  * @LastEditors: liukun
- * @LastEditTime: 2020-05-29 21:09:39
+ * @LastEditTime: 2020-06-03 17:38:52
 -->
 <template>
   <section class="bianju10">
@@ -58,11 +58,24 @@
             v-model="fordisplay3"
             @change="refundStatus"
           >
-            <!-- <el-option label="退款驳回" value="3"></el-option> -->
+            <el-option label="退款驳回" value="7"></el-option>
             <el-option label="退款中" value="4"></el-option>
             <el-option label="退款成功" value="5"></el-option>
           </el-select>
         </el-form-item>
+
+        <el-form-item label="退款规则:">
+          <el-select
+            clearable
+            placeholder="请键入"
+            v-model="fordisplay6"
+            @change="refundRule"
+          >
+            <el-option label="不符合" value="1"></el-option>
+            <el-option label="符合" value="0"></el-option>
+          </el-select>
+        </el-form-item>
+
         <el-form-item label="退款类型:">
           <el-select
             clearable
@@ -142,6 +155,8 @@
         <el-table-column prop="statusStr" label="退款状态" align="center">
         </el-table-column>
         <el-table-column prop="refundTypeStr" label="退款类型" align="center">
+        </el-table-column>
+        <el-table-column prop="refundRuleStr" label="退款规则" align="center">
         </el-table-column>
         <el-table-column prop="refundFee" label="退款金额" align="center">
         </el-table-column>
@@ -249,6 +264,12 @@
             >{{ choutidata.refundTypeStr }}
           </el-col>
         </el-row>
+        <el-row v-if="choutidata.refundRuleStr !== ''">
+          <el-col :span="4">退款规则:</el-col>
+          <el-col :span="18" :offset="2"
+            >{{ choutidata.refundRuleStr }}
+          </el-col>
+        </el-row>
         <el-row v-if="choutidata.refundReason !== ''">
           <el-col :span="4">退款原因:</el-col>
           <el-col :span="18" :offset="2">{{ choutidata.refundReason }} </el-col>
@@ -264,19 +285,25 @@
               style="width: 200px"
               :src="choutidata.attsUrl"
               fit="contain"
+              :preview-src-list="[choutidata.attsUrl]"
             ></el-image>
           </el-col>
         </el-row>
         <el-row class="buttonBetween" v-if="statusStr === '退款中'">
-          <!-- <el-button type="warning" @click="rejectRefund">退款驳回</el-button> -->
+          <el-button
+            v-if="choutidata.payeeAccount !== ''"
+            type="warning"
+            @click="rejectRefund"
+            >退款驳回</el-button
+          >
           <el-button type="primary" @click="comfirmRefund">确认退款</el-button>
         </el-row>
         <el-row class="buttonCenter" v-else-if="statusStr === '退款成功'">
           <el-button type="success" :disabled="true">已经退款</el-button>
         </el-row>
-        <!-- <el-row class="buttonCenter" v-else-if="statusStr === '退款驳回'">
+        <el-row class="buttonCenter" v-else-if="statusStr === '退款驳回'">
           <el-button type="danger" :disabled="true">已驳回</el-button>
-        </el-row> -->
+        </el-row>
       </div>
     </el-drawer>
   </section>
@@ -294,6 +321,7 @@ export default {
         regType: '', // 业务类型
         tradeType: '', // 支付方式
         status: '', // 退款状态
+        refundRule: '', // 退款规则
         refundType: '', // 退款类型
         uid: '', // 用户id
 
@@ -319,6 +347,7 @@ export default {
       fordisplay3: '', // 退款状态
       fordisplay5: '', // 退款类型
       fordisplay4: '',
+      fordisplay6: '', // 退款规则
 
       // 分页
       currentPage: 0,
@@ -359,11 +388,21 @@ export default {
     },
     refundStatus(val) {
       console.info(val, typeof val)
-      if (val === '3' || val === '4' || val === '5') {
+      if (val === '7' || val === '4' || val === '5') {
         this.searchJson.status = Number(val)
         this.arrangeParams()
       } else {
         this.searchJson.status = ''
+        this.arrangeParams()
+      }
+    },
+    refundRule(val) {
+      console.info(val, typeof val)
+      if (val === '1' || val === '0') {
+        this.searchJson.refundRule = Number(val)
+        this.arrangeParams()
+      } else {
+        this.searchJson.refundRule = ''
         this.arrangeParams()
       }
     },
@@ -630,10 +669,11 @@ export default {
       const { code } = await this.$http.Finance.toAgree({
         refundUid: JSON.parse(localStorage.getItem('staff')).id,
         paymentId: this.whichListOrderId
+        // 默认不传就是1 审核通过
       }).catch((err) => {
         console.error(err)
         this.$message({
-          message: '同意退款请求失败,稍后再试',
+          message: '通过操作失败,稍后再试',
           type: 'error'
         })
         return -1
@@ -648,7 +688,7 @@ export default {
         this.arrangeParams() // 刷新列表数据
       } else {
         this.$message({
-          message: '操作失败,稍后再试',
+          message: '通过操作失败,稍后再试',
           type: 'warning'
         })
       }
@@ -657,10 +697,15 @@ export default {
       this.$prompt('请告知您的驳回理由', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
-        inputPattern: /[\s\S]{6,}/, // 最少6个字符
-        inputErrorMessage: '这么短？再写点！'
+        inputPattern: /[\s\S]+/, // least 1
+        inputErrorMessage: '不能为空！好歹敲个space'
       }).then(async ({ value }) => {
-        const { code } = await this.$http.Finance.toReject().catch((err) => {
+        const { code } = await this.$http.Finance.toAgree({
+          refundUid: JSON.parse(localStorage.getItem('staff')).id,
+          paymentId: this.whichListOrderId,
+          auditType: 2,
+          rejectReason: value
+        }).catch((err) => {
           console.error(err)
           this.$message({
             message: '驳回操作失败,请稍后再试',
