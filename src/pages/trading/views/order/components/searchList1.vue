@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-04-25 17:24:23
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-06-04 22:53:51
+ * @LastEditTime: 2020-06-04 23:24:38
  -->
 <template>
   <el-card border="false" shadow="never" :class="$style.elard">
@@ -148,6 +148,7 @@
   </el-card>
 </template>
 <script>
+import dayjs from 'dayjs'
 import hardLevel from '@/components/MSearch/searchItems/hardLevel.vue' // add
 import orderSearch from '@/components/MSearch/searchItems/orderSearch.vue' // add
 import systemCourseType from '@/components/MSearch/searchItems/systemCourseType.vue'
@@ -419,19 +420,10 @@ export default {
         return
       }
 
+      // 获取查询条件
       const query = this.$parent.$children[1].finalParams
-
-      // 导出条件为 v1 对象方式
-      // const query = {
-      //   status: 3
-      // }
-      // const search = this.searchParams[0]
-      // for (const key in search) {
-      //   if (Object.keys(search).includes(key)) {
-      //     const item = search[key]
-      //     Object.assign(query, item)
-      //   }
-      // }
+      const fileTitle = dayjs(new Date()).format('YYYY-MM-DD')
+      const fileTitleTime = dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss')
 
       const loading = this.$loading({
         lock: true,
@@ -468,7 +460,7 @@ export default {
           // order_status: '状态'
           // 'team.type': '退费金额'
         },
-        fileName: 'OrderPage', // 文件名称
+        fileName: `系统课订单导出-${fileTitleTime}`, // 文件名称
         query: JSON.stringify(query)
         // query: '{"status":3}'
       }
@@ -477,7 +469,7 @@ export default {
       this.$http.DownloadExcel.exportOrder(params)
         .then((res) => {
           console.log(res)
-          downloadHandle(res, '订单', () => {
+          downloadHandle(res, `系统课订单导出-${fileTitle}`, () => {
             loading.close()
           })
         })

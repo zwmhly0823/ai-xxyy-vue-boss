@@ -4,7 +4,7 @@
  * @Author: Lukun
  * @Date: 2020-05-14 14:31:42
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-06-04 16:58:09
+ * @LastEditTime: 2020-06-04 23:21:58
  */
 import axios from '../axios'
 import { getToken } from '@/utils/auth'
@@ -47,8 +47,6 @@ export default {
     }
   },
   exportChannel(params) {
-    console.log('DownloadExcel:', params)
-
     if (judgeToken()) {
       return axios({
         method: 'POST',
