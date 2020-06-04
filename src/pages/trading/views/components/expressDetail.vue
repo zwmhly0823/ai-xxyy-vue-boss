@@ -63,7 +63,7 @@
             >
               <div class="statebox">
                 <div class="statebox" v-for="(item, key) in value" :key="key">
-                  <div class="state" v-if="key === 0">
+                  <div class="state" v-if="key === 0 && !isNeedHideStatus">
                     {{ item.status || '揽收' }}
                   </div>
                   <div class="content">
@@ -101,7 +101,8 @@ export default {
       isActive: 0,
       leftRow: [],
       orderId: '',
-      expressNu: '' // 物流单号
+      expressNu: '', // 物流单号
+      isNeedHideStatus: false // 京东且物流状态为2时需要隐藏内容的标记
     }
   },
   watch: {
@@ -110,7 +111,7 @@ export default {
       this.activities = []
       this.expressInformation = val
       this.expressNu = this.expressInformation.express_nu
-      this.expressList(this.expressNu)
+      this.expressList(this.expressNu, val.express_status)
     },
     order_id(val) {
       this.waitFor = false
@@ -124,7 +125,7 @@ export default {
     getexpressInformation(item, i) {
       this.isActive = i
       this.expressInformation = item
-      this.expressList(item.express_nu)
+      this.expressList(item.express_nu, item.express_status)
     },
     handleClose() {
       this.drawer = false
@@ -143,6 +144,7 @@ export default {
                       product_name
                       express_company
                       express_nu
+                      express_status
                   }
                 }`
         })
@@ -152,7 +154,7 @@ export default {
         })
     },
     // 物流列表信息
-    expressList(id) {
+    expressList(id, expressStatus) {
       this.$http.Express.ExpressList({
         expressNo: id
       })
@@ -167,35 +169,16 @@ export default {
           if (res && isNull.length > 0) {
             this.waitFor = false
             const lastData = {}
-            res.payload[0].data.forEach((item) => {
-              if (item.status === '揽收') {
-                lastData.begin = lastData.begin == null ? [] : lastData.begin
-                lastData.begin.push(item)
-              } else if (
-                item.status === '在途' ||
-                item.status === '派件' ||
-                item.status === '疑难'
-              ) {
-                lastData.onway = lastData.onway == null ? [] : lastData.onway
-                lastData.onway.push(item)
-              } else {
-                lastData.receive =
-                  lastData.receive == null ? [] : lastData.receive
-                lastData.receive.push(item)
-              }
-              this.activities = lastData
-            })
-          } else {
-            const jd = id.toString().indexOf('JD')
-            if (jd > -1 && isNull.length === 0) {
-              this.$http.Express.getExpressDetailJDForAPP(id).then((res) => {
-                const lastData = {}
+            if (id.toString().indexOf('JD') > -1 && expressStatus === '2') {
+              this.isNeedHideStatus = true
+              this.$http.Express.getExpressDetailJDForAPP(id).then((jdRes) => {
                 const tempData =
-                  (res && res.payload && res.payload[0].data) || []
+                  (jdRes && jdRes.payload && jdRes.payload[0].data) || []
+                console.log(jdRes)
                 if (tempData.length > 0) {
-                  this.waitFor = false
                   lastData.begin = []
                   tempData.forEach((item) => {
+                    item.status = ''
                     lastData.begin.push(item)
                   })
                   this.activities = lastData
@@ -205,11 +188,27 @@ export default {
                 }
               })
             } else {
-              this.activities = []
-              this.waitFor = true
+              this.isNeedHideStatus = false
+              res.payload[0].data.forEach((item) => {
+                if (item.status === '揽收') {
+                  lastData.begin = lastData.begin == null ? [] : lastData.begin
+                  lastData.begin.push(item)
+                } else if (
+                  item.status === '在途' ||
+                  item.status === '派件' ||
+                  item.status === '疑难'
+                ) {
+                  lastData.onway = lastData.onway == null ? [] : lastData.onway
+                  lastData.onway.push(item)
+                } else {
+                  lastData.receive =
+                    lastData.receive == null ? [] : lastData.receive
+                  lastData.receive.push(item)
+                }
+                this.activities = lastData
+              })
             }
           }
-          console.log(this.activities, 'this.activities')
         })
     }
   }
