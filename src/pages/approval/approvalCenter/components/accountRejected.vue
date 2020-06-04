@@ -149,10 +149,15 @@ export default {
       },
       editInfoDialogRules: {
         name: [
-          { required: true, message: '请输入收款人姓名', trigger: 'change' }
+          { required: true, message: '请输入收款人姓名', trigger: 'blur' }
         ],
         aliPayAccount: [
-          { required: true, message: '请输入支付宝账号', trigger: 'change' }
+          { required: true, message: '请输入支付宝账号', trigger: 'blur' },
+          {
+            pattern: /^[^\u4e00-\u9fa5]+$/,
+            message: '支付宝账号不能有汉字哦',
+            trigger: 'blur'
+          }
         ]
       },
       curFlowApprovalId: '',
