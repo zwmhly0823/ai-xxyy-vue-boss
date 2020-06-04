@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-05-30 18:37:24
  * @LastEditors: panjian
- * @LastEditTime: 2020-06-03 15:48:18
+ * @LastEditTime: 2020-06-04 13:54:57
 -->
 <template>
   <div class="system-label">
@@ -18,6 +18,7 @@
     <div class="table-bottom">
       <el-table
         :data="tableData"
+        :header-cell-style="headerCss"
         style="width: 100%;border-top:1px solid #EBEEF5"
         @cell-mouse-enter="hoverow"
       >
@@ -116,7 +117,13 @@ export default {
     },
     // 分页
     handleCurrentChange(val) {
+      this.currentPage = val
+      this.getFindLabelByPage()
       console.log(val)
+    },
+    // 表头回调样式
+    headerCss({ row, column, rowIndex, columnIndex }) {
+      // return 'font-size:12px;color:#666;font-weight:normal;background:#f0f1f2;'
     }
   }
 }
