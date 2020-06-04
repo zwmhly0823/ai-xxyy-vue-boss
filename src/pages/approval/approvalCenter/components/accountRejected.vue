@@ -82,7 +82,7 @@
           <el-input v-model="editInfoDialogData.aliPayAccount"></el-input>
         </el-form-item>
         <el-form-item class="rejected-dialog-button">
-          <el-button size="small" @click="rejectedDialogShow = false">
+          <el-button size="small" @click="cancelSubmit">
             取消
           </el-button>
           <el-button
@@ -104,6 +104,7 @@ import MPagination from '@/components/MPagination/index.vue'
 import { getStaffInfo } from '../common'
 import { timestamp } from '@/utils/index'
 import adjustDrawer from './adjustDrawer'
+import _ from 'lodash'
 export default {
   name: 'accountRejected',
   components: {
@@ -154,7 +155,8 @@ export default {
           { required: true, message: '请输入支付宝账号', trigger: 'change' }
         ]
       },
-      curFlowApprovalId: ''
+      curFlowApprovalId: '',
+      tempDialog: {}
     }
   },
   created() {
@@ -278,8 +280,6 @@ export default {
               title: '退款申请',
               hasEdit: false,
               financeStatus: val.financeStatus,
-              channel:
-                payData.channel.indexOf('支付宝') !== -1 ? 'alipay' : 'wx',
               leftButtonText: '修改信息',
               rightButtonText: '重新提交',
               content: [
@@ -394,6 +394,7 @@ export default {
       // console.log(data)
       if (data === 'left') {
         this.rejectedDialogShow = true
+        this.tempDialog = _.cloneDeep(this.editInfoDialogData)
       } else if (data === 'right') {
         const params = {
           flowApprovalId: this.curFlowApprovalId,
@@ -412,6 +413,10 @@ export default {
             this.$message.error('重新提交失败')
           })
       }
+    },
+    cancelSubmit() {
+      Object.assign(this.editInfoDialogData, this.tempDialog)
+      this.rejectedDialogShow = false
     },
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
