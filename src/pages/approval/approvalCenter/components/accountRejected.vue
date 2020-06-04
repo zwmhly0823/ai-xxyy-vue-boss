@@ -1,6 +1,10 @@
 <template>
   <div class="container" v-loading="pageLoading">
     <div class="filter-box">
+      <tab-time-select
+        @result="getSeacherTime"
+        class="filter-item"
+      ></tab-time-select>
       <el-select
         clearable
         class="filter-status-select-class"
@@ -17,10 +21,7 @@
         >
         </el-option>
       </el-select>
-      <tab-time-select
-        @result="getSeacherTime"
-        class="filter-item"
-      ></tab-time-select>
+      <search-part class="filter-item" @result="getSeachePart" />
     </div>
     <el-table :data="tableData" style="width: 100%" highlight-current-row>
       <el-table-column
@@ -100,6 +101,7 @@
 
 <script>
 import tabTimeSelect from './timeSearch'
+import searchPart from './searchPart'
 import MPagination from '@/components/MPagination/index.vue'
 import { getStaffInfo } from '../common'
 import { timestamp } from '@/utils/index'
@@ -110,7 +112,8 @@ export default {
   components: {
     tabTimeSelect,
     adjustDrawer,
-    MPagination
+    MPagination,
+    searchPart
   },
   data() {
     return {
@@ -271,6 +274,14 @@ export default {
       }
       this.initListData(this.params)
     },
+    getSeachePart: _.debounce(function(val) {
+      if (!val) {
+        this.params.keyword = ''
+      } else {
+        this.params.keyword = val
+      }
+      this.initListData(this.params)
+    }, 500),
     clickStatusButton(val) {
       // console.log(val)
       this.adjustDrawerData.loading = true
