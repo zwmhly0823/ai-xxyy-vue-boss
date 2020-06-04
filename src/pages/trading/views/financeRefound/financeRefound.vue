@@ -290,7 +290,12 @@
           </el-col>
         </el-row>
         <el-row class="buttonBetween" v-if="statusStr === '退款中'">
-          <el-button type="warning" @click="rejectRefund">退款驳回</el-button>
+          <el-button
+            v-if="choutidata.payeeAccount !== ''"
+            type="warning"
+            @click="rejectRefund"
+            >退款驳回</el-button
+          >
           <el-button type="primary" @click="comfirmRefund">确认退款</el-button>
         </el-row>
         <el-row class="buttonCenter" v-else-if="statusStr === '退款成功'">
