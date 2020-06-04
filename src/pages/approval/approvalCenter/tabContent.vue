@@ -3,8 +3,8 @@
  * @version: 
  * @Author: Lukun
  * @Date: 2020-04-27 00:10:22
- * @LastEditors: Lukun
- * @LastEditTime: 2020-05-16 17:16:48
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-06-04 22:31:50
  -->
 <template>
   <div class="container">
@@ -101,7 +101,7 @@ export default {
 .container {
   margin: 10px;
   padding-bottom: 50px;
-  height: calc(100vh - 120px);
+  height: calc(100vh - 120px - 34px);
   overflow: auto;
   background-color: #fff;
 }

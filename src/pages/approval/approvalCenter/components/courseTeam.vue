@@ -8,7 +8,7 @@
 -->
 <template>
   <div class="container">
-    <div>
+    <div class="course-item">
       <el-select
         v-model="value"
         @change="selectTeam"
@@ -27,7 +27,7 @@
         </el-option>
       </el-select>
     </div>
-    <div>
+    <div class="course-item">
       <el-select
         class="item-style"
         v-model="stage"
@@ -218,9 +218,12 @@ export default {
   display: flex;
   margin-left: 20px;
   height: 30px !important;
-
-  .courseTeam {
-    width: 135px !important;
+  .course-item {
+    display: inline-block;
+    margin-right: 10px;
+    .courseTeam {
+      width: 135px !important;
+    }
   }
 }
 </style>

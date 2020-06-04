@@ -1,6 +1,10 @@
 <template>
   <div class="container" v-loading="pageLoading">
     <div class="filter-box">
+      <tab-time-select
+        @result="getSeacherTime"
+        class="filter-item"
+      ></tab-time-select>
       <el-select
         clearable
         class="filter-status-select-class"
@@ -17,10 +21,8 @@
         >
         </el-option>
       </el-select>
-      <tab-time-select
-        @result="getSeacherTime"
-        class="filter-item"
-      ></tab-time-select>
+      <search-part class="filter-item" @result="getSeachePart" />
+      <!-- <course-team class="filter-item" @result="getTeamId" /> -->
     </div>
     <el-table :data="tableData" style="width: 100%" highlight-current-row>
       <el-table-column
@@ -100,6 +102,8 @@
 
 <script>
 import tabTimeSelect from './timeSearch'
+import searchPart from './searchPart'
+// import courseTeam from './courseTeam'
 import MPagination from '@/components/MPagination/index.vue'
 import { getStaffInfo } from '../common'
 import { timestamp } from '@/utils/index'
@@ -110,7 +114,9 @@ export default {
   components: {
     tabTimeSelect,
     adjustDrawer,
-    MPagination
+    MPagination,
+    searchPart
+    // courseTeam
   },
   data() {
     return {
@@ -271,6 +277,26 @@ export default {
       }
       this.initListData(this.params)
     },
+    getSeachePart: _.debounce(function(val) {
+      if (!val) {
+        this.params.keyword = ''
+      } else {
+        this.params.keyword = val
+      }
+      this.initListData(this.params)
+    }, 500),
+    // getTeamId(val) {
+    //   if (val) {
+    //     Object.assign(this.params, {
+    //       managementType: val.teamSchedule.managementType,
+    //       period: val.teamSchedule.period
+    //     })
+    //   } else {
+    //     this.params.managementType = ''
+    //     this.params.period = ''
+    //   }
+    //   this.initListData(this.params)
+    // },
     clickStatusButton(val) {
       // console.log(val)
       this.adjustDrawerData.loading = true
@@ -466,7 +492,7 @@ export default {
   .filter-item {
     display: inline-block;
     margin: 0;
-    margin-right: 20px;
+    margin-right: 30px;
   }
   .filter-status-select-class {
     width: 130px;
