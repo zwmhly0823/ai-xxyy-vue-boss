@@ -22,7 +22,7 @@
         </el-option>
       </el-select>
       <search-part class="filter-item" @result="getSeachePart" />
-      <course-team class="filter-item" @result="getTeamId" />
+      <!-- <course-team class="filter-item" @result="getTeamId" /> -->
     </div>
     <el-table :data="tableData" style="width: 100%" highlight-current-row>
       <el-table-column
@@ -103,7 +103,7 @@
 <script>
 import tabTimeSelect from './timeSearch'
 import searchPart from './searchPart'
-import courseTeam from './courseTeam'
+// import courseTeam from './courseTeam'
 import MPagination from '@/components/MPagination/index.vue'
 import { getStaffInfo } from '../common'
 import { timestamp } from '@/utils/index'
@@ -115,8 +115,8 @@ export default {
     tabTimeSelect,
     adjustDrawer,
     MPagination,
-    searchPart,
-    courseTeam
+    searchPart
+    // courseTeam
   },
   data() {
     return {
@@ -285,18 +285,18 @@ export default {
       }
       this.initListData(this.params)
     }, 500),
-    getTeamId(val) {
-      if (val) {
-        Object.assign(this.params, {
-          managementType: val.teamSchedule.managementType,
-          period: val.teamSchedule.period
-        })
-      } else {
-        this.params.managementType = ''
-        this.params.period = ''
-      }
-      this.initListData(this.params)
-    },
+    // getTeamId(val) {
+    //   if (val) {
+    //     Object.assign(this.params, {
+    //       managementType: val.teamSchedule.managementType,
+    //       period: val.teamSchedule.period
+    //     })
+    //   } else {
+    //     this.params.managementType = ''
+    //     this.params.period = ''
+    //   }
+    //   this.initListData(this.params)
+    // },
     clickStatusButton(val) {
       // console.log(val)
       this.adjustDrawerData.loading = true
