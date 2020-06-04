@@ -4,7 +4,7 @@
  * @Author: Lukun
  * @Date: 2020-04-27 17:47:58
  * @LastEditors: liukun
- * @LastEditTime: 2020-06-03 15:48:44
+ * @LastEditTime: 2020-06-05 00:20:34
  -->
 <template>
   <div class="container">
@@ -271,6 +271,18 @@
           }}</el-col>
         </el-row>
         <el-row>
+          <el-col :span="5">交易金额:</el-col>
+          <el-col :span="18" :offset="1">{{
+            drawerApprovalDeatail.orderFee
+          }}</el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="5">剩余支付金额:</el-col>
+          <el-col :span="18" :offset="1">{{
+            drawerApprovalDeatail.residueFee
+          }}</el-col>
+        </el-row>
+        <el-row>
           <el-col :span="5">退款规则:</el-col>
           <el-col :span="18" :offset="1">{{
             drawerApprovalDeatail.refundRule ? '不符合' : '符合'
@@ -310,11 +322,16 @@
            `
           }}</el-col>
         </el-row>
-        <el-row>
+        <el-row :class="$style.align_items">
           <el-col :span="5">退款金额:</el-col>
-          <el-col :span="18" :offset="1">{{
+          <el-col :span="4" :offset="1">{{
             drawerApprovalDeatail.refundFee
           }}</el-col>
+          <el-col v-if="isPositionId" :span="13" :offset="1">
+            <el-button type="text" @click="dialogFormVisible = true"
+              >修改金额</el-button
+            >
+          </el-col>
         </el-row>
         <el-row>
           <el-col :span="5">退款原因:</el-col>
@@ -426,6 +443,37 @@
       open="calc(100vw - 195px)"
       close="calc(100vw - 75px)"
     />
+    <!-- destroy-on-close不好用没生效-->
+    <el-dialog
+      title="修改金额"
+      :visible.sync="dialogFormVisible"
+      :destroy-on-close="true"
+      :before-close="destroylk"
+    >
+      <el-form
+        :model="form"
+        label-position="top"
+        :rules="rules"
+        ref="refundForm"
+      >
+        <el-form-item label="键入修改金额" prop="cash">
+          <el-input v-model.number="form.cash"></el-input>
+        </el-form-item>
+        <el-form-item label="特殊说明" prop="explain">
+          <el-input
+            type="textarea"
+            :rows="4"
+            placeholder="请输入修改金额的理由"
+            v-model="form.explain"
+          >
+          </el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer">
+        <el-button @click="quxiao">取 消</el-button>
+        <el-button type="primary" @click="confirm">确 定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -440,6 +488,13 @@ import SearchPart from './searchPart'
 import adjustDrawer from './adjustDrawer'
 import { getStaffInfo } from '../common'
 export default {
+  computed: {
+    isPositionId() {
+      return JSON.parse(localStorage.getItem('staff')).positionId === '1'
+        ? 1
+        : false
+    }
+  },
   props: ['typeTime', 'activeName'],
   watch: {
     activeName(val) {
@@ -458,7 +513,29 @@ export default {
     adjustDrawer
   },
   data() {
+    var validateName = (rule, value, callback) => {
+      if (!Number.isInteger(value)) {
+        callback(new Error('金额里有杂质!'))
+      } else {
+        if (Number(value) > Number(this.drawerApprovalDeatail.residueFee)) {
+          callback(new Error('当心！你已超过剩余支付金额!'))
+        } else {
+          callback()
+        }
+      }
+    }
     return {
+      rules: {
+        cash: [{ required: true, validator: validateName, trigger: 'blur' }],
+        explain: [
+          { required: true, message: '不能闷声改金额', trigger: 'change' }
+        ]
+      },
+      form: {
+        cash: '',
+        explain: ''
+      },
+      dialogFormVisible: false, // ↑修改金额表单lk
       params: {}, // 列表的参数
       resetParams: {}, // 撤销的参数
       staffId: '',
@@ -512,6 +589,48 @@ export default {
   },
 
   methods: {
+    // 用于清空修改金额的弹窗内容
+    destroylk(done) {
+      this.$refs.refundForm.resetFields()
+      done()
+    },
+    quxiao() {
+      this.$refs.refundForm.resetFields()
+      this.dialogFormVisible = false
+    },
+    confirm() {
+      this.$refs.refundForm.validate(async (valid) => {
+        if (valid) {
+          const { code } = await this.$http.Backend.changeCash({
+            flowApprovalId: this.drawerApprovalDeatail.flowApprovalId,
+            refundFee: this.form.cash,
+            refundMsg: this.form.explain
+          }).catch((err) => {
+            this.$message({
+              message: '修改金额失败',
+              type: 'error'
+            })
+            console.info(err)
+          })
+          if (code === 0) {
+            this.$message({
+              message: '修改金额成功',
+              type: 'success'
+            })
+            this.drawerApprovalDeatail.refundFee = this.form.cash // 退款金额更新
+            this.dialogFormVisible = false
+          } else {
+            this.$message({
+              message: '修改金额失败',
+              type: 'warning'
+            })
+          }
+        } else {
+          return false
+        }
+      })
+    },
+
     // 销毁
     handleCloseDraw() {
       this.version = ''
@@ -908,6 +1027,10 @@ export default {
 </script>
 
 <style lang="scss" module>
+.align_items {
+  display: flex;
+  align-items: center;
+}
 :global {
   .drawer-approval-detail {
     padding-top: 50px;

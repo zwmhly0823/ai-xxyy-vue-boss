@@ -4,7 +4,7 @@
  * @Author: huzhifu
  * @Date: 2020-05-07 10:50:45
  * @LastEditors: liukun
- * @LastEditTime: 2020-06-02 18:10:19
+ * @LastEditTime: 2020-06-04 23:29:36
  -->
 <template>
   <div class="adjustModule">
@@ -92,6 +92,13 @@
         <el-form-item label="交易金额：" prop="orderAmount">
           <el-input
             v-model="refundForm.orderAmount"
+            disabled
+            :class="$style.order100"
+          ></el-input>
+        </el-form-item>
+        <el-form-item label="剩余支付金额：" prop="residueFee">
+          <el-input
+            v-model="refundForm.residueFee"
             disabled
             :class="$style.order100"
           ></el-input>
@@ -242,6 +249,7 @@ export default {
         this.refundForm.accountName = ''
         this.refundForm.alipayAccount = ''
         this.refundForm.orderAmount = ''
+        this.refundForm.residueFee = '' // 剩余支付金额
         this.refundForm.refundType = ''
         this.refundForm.couponType = ''
         this.refundForm.refundMonths = ''
@@ -274,6 +282,30 @@ export default {
         // primary->存起来方便公用
         this.selectOrder = targetItem
         console.info('选择关联订单是我,大家快来公用--', targetItem)
+
+        // 获取该订单剩余支付金额
+        if (targetItem && targetItem.id) {
+          const {
+            code,
+            payload
+          } = await this.$http.RefundApproval.getResidueFee({
+            orderId: targetItem.id
+          }).catch((err) => {
+            console.warn(err)
+            this.$message({
+              message: '该订单剩余支付金额获取失败',
+              type: 'error'
+            })
+          })
+          if (!code) {
+            this.refundForm.residueFee = payload
+          } else {
+            this.$message({
+              message: '该订单剩余支付金额获取失败',
+              type: 'warning'
+            })
+          }
+        }
 
         // 查询订单退款规则状态
         if (targetItem && targetItem.id) {
@@ -510,7 +542,7 @@ export default {
               }
             } else {
               // 体验课直接退全部
-              this.refundForm.refundAmount = this.refundForm.orderAmount
+              this.refundForm.refundAmount = this.refundForm.residueFee
             }
           }
         }
@@ -563,6 +595,7 @@ export default {
         accountName: '',
         alipayAccount: '',
         orderAmount: '',
+        residueFee: '', // 剩余支付金额
         refundType: '',
         couponType: '', // 优惠券类型
         refundMonths: '', // 退款周数(给接口)
@@ -602,6 +635,7 @@ export default {
         orderAmount: [
           { required: true, message: '请输入订单金额', trigger: 'blur' }
         ],
+        residueFee: [{ required: true, message: '该项必填', trigger: 'blur' }],
         refundType: [
           { required: true, message: '请选择退款类型', trigger: 'change' }
         ],
@@ -718,6 +752,7 @@ export default {
             payeeName: this.refundForm.accountName, // 收款人姓名
             payeeAccount: this.refundForm.alipayAccount, // 支付宝账号
             orderFee: this.refundForm.orderAmount, // 订单金额
+            residueFee: this.refundForm.residueFee, // 剩余支付金额
             refundType: this.refundForm.refundType, // 退款类型:课程退款-1，优惠券退款-0
             refundFee: this.refundForm.refundAmount, // 退款金额
             refundReason: this.refundForm.reason, // 退款原因

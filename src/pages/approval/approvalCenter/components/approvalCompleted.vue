@@ -4,7 +4,7 @@
  * @Author: Lukun
  * @Date: 2020-04-27 17:47:58
  * @LastEditors: liukun
- * @LastEditTime: 2020-06-03 17:09:50
+ * @LastEditTime: 2020-06-04 17:51:56
  -->
 <template>
   <div class="container">
@@ -255,6 +255,18 @@
           <el-col :span="5">商品信息:</el-col>
           <el-col :span="18" :offset="1">{{
             drawerApprovalDeatail.productMsg
+          }}</el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="5">交易金额:</el-col>
+          <el-col :span="18" :offset="1">{{
+            drawerApprovalDeatail.orderFee
+          }}</el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="5">剩余支付金额:</el-col>
+          <el-col :span="18" :offset="1">{{
+            drawerApprovalDeatail.residueFee
           }}</el-col>
         </el-row>
         <el-row>

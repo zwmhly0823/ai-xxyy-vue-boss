@@ -3,8 +3,8 @@
  * @version:
  * @Author: Lukun
  * @Date: 2020-05-10 16:17:21
- * @LastEditors: Lukun
- * @LastEditTime: 2020-05-14 23:43:09
+ * @LastEditors: liukun
+ * @LastEditTime: 2020-06-04 23:57:17
  */
 import axios from '../axiosConfig'
 export default {
@@ -41,5 +41,8 @@ export default {
     return axios.post(
       `/api/b/v1/backend/completed/reissue/flow?flowApprovalId=${params.flowApprovalId}&staffName=${params.staffName}&staffId=${params.staffId}&version=${params.version}&isConfirm=${params.isConfirm}&approvalRemark=${params.approvalRemark}`
     )
+  },
+  changeCash(params) {
+    return axios.post(`/api/b/v1/backend/refund/detail/updateRefundFee`, params)
   }
 }
