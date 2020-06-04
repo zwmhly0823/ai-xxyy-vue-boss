@@ -59,10 +59,7 @@
       >
     </div>
     <div
-      v-if="
-        adjustDrawerData.financeStatus === 'DECLINE' &&
-          adjustDrawerData.channel === 'alipay'
-      "
+      v-if="adjustDrawerData.financeStatus === 'DECLINE'"
       class="adjust-drawer-button-box"
     >
       <el-button @click="rejectedDrawerPass('left')">

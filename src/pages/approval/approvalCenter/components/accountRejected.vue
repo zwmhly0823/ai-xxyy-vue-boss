@@ -280,8 +280,6 @@ export default {
               title: '退款申请',
               hasEdit: false,
               financeStatus: val.financeStatus,
-              channel:
-                payData.channel.indexOf('支付宝') !== -1 ? 'alipay' : 'wx',
               leftButtonText: '修改信息',
               rightButtonText: '重新提交',
               content: [
