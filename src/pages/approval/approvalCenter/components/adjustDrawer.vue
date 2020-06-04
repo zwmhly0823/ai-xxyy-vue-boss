@@ -29,14 +29,14 @@
             "
           >
             <video
-              style="width: 220px; height: 120px"
+              style="width: 220px; height: 120px;"
               :src="dItem.value"
               controls
             ></video>
           </template>
           <template v-else>
             <el-image
-              style="width: 220px; height: 120px"
+              style="width: 220px; height: 120px;"
               :src="dItem.value"
               fit="contain"
               :preview-src-list="[dItem.value]"
@@ -59,7 +59,10 @@
       >
     </div>
     <div
-      v-if="adjustDrawerData.financeStatus === 'DECLINE'"
+      v-if="
+        adjustDrawerData.financeStatus === 'DECLINE' &&
+          adjustDrawerData.channel === 'alipay'
+      "
       class="adjust-drawer-button-box"
     >
       <el-button @click="rejectedDrawerPass('left')">
