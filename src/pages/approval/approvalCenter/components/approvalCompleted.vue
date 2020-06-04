@@ -608,7 +608,6 @@ export default {
                 ]
               )
             }
-            const aTime = new Date(payData.applyTime - 0)
             // 公共数据
             this.adjustDrawerData.content = this.adjustDrawerData.content.concat(
               [
@@ -622,8 +621,7 @@ export default {
                 },
                 {
                   label: '发起时间',
-                  value: `${aTime.getFullYear()}-${aTime.getMonth() +
-                    1}-${aTime.getDate()} ${aTime.getHours()}:${aTime.getMinutes()}:${aTime.getSeconds()}`
+                  value: timestamp(payData.applyTime, 2)
                 },
                 {
                   label: '状态',
