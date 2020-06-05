@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-04-25 17:24:23
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-06-04 23:24:38
+ * @LastEditTime: 2020-06-05 23:42:51
  -->
 <template>
   <el-card border="false" shadow="never" :class="$style.elard">
@@ -436,10 +436,10 @@ export default {
         apiName: 'OrderPage',
         header: {
           buydate: '缴费时间',
-          id: '订单号',
+          out_trade_no: '订单号',
           uid: '用户ID',
           'user.username': '用户昵称',
-          out_trade_no: '交易流水号',
+          'paymentPay.transaction_id': '交易流水号',
           'paymentPay.trade_type': '支付方式',
           amount: '交易金额',
           'packagesType.name': '套餐类型',
