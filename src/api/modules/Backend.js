@@ -41,5 +41,9 @@ export default {
     return axios.post(
       `/api/b/v1/backend/completed/reissue/flow?flowApprovalId=${params.flowApprovalId}&staffName=${params.staffName}&staffId=${params.staffId}&version=${params.version}&isConfirm=${params.isConfirm}&approvalRemark=${params.approvalRemark}`
     )
+  },
+  // 财务驳回的重新提交
+  rejectedUpdate(params) {
+    return axios.post(`/api/b/v1/backend/refund/detail/update`, params)
   }
 }
