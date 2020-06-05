@@ -4,7 +4,7 @@
  * @Author: huzhifu
  * @Date: 2020-05-07 10:50:45
  * @LastEditors: liukun
- * @LastEditTime: 2020-06-05 20:56:44
+ * @LastEditTime: 2020-06-05 21:57:17
  -->
 <template>
   <div class="adjustModule">
@@ -276,6 +276,8 @@ export default {
       immediate: true,
       deep: true,
       async handler(newValue, oldValue) {
+        this.refundForm.payChannel = '' // 支付渠道
+        this.refundForm.refundType = '' // 退款类型
         this.refundForm.orderAmount = '' // 交易金额
         this.refundForm.residueFee = '' // 剩余支付金额
         this.refundForm.refundAmount = '' // 退款金额(给女测试)
@@ -300,13 +302,14 @@ export default {
               type: 'error'
             })
           })
-          if (!code) {
+          if (!code && payload > 0) {
             this.refundForm.residueFee = payload
           } else {
             this.$message({
-              message: '该订单剩余支付金额获取失败',
+              message: '该订单剩余支付金额获取失败或为0',
               type: 'warning'
             })
+            this.$refs.refundForm.resetFields()
           }
         }
 
