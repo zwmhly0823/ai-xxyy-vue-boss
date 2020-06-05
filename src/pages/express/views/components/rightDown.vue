@@ -284,13 +284,14 @@
         </template>
       </el-table-column>
       <el-table-column
-        label="物流创建·揽收·签收"
+        label="物流创建·审核·揽收·签收"
         width="200"
         v-if="showCol.expressInfo"
       >
         <template slot-scope="scope">
           <div class="sign">
             <div>创建:{{ scope.row.crtime }}</div>
+            <div>审核:{{ scope.row.center_ctime }}</div>
             <div>揽收:{{ scope.row.detime }}</div>
             <div>签收:{{ scope.row.sgtime }}</div>
           </div>
@@ -957,6 +958,7 @@ export default {
               level
               ctime
               utime
+              center_ctime
               sup
               term
               product_version
@@ -989,6 +991,7 @@ export default {
             item.uptime = formatData(+item.utime, 's')
             item.sgtime = formatData(+item.signing_time, 's')
             item.buytime = formatData(+item.buy_time, 's')
+            item.center_ctime = formatData(+item.center_ctime, 's')
             // 处理补发类型
             this.handleRegtype(item)
             // 处理补发方式
