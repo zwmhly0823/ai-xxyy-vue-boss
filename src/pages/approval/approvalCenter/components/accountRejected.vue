@@ -352,8 +352,8 @@ export default {
                   value: payData.orderFee
                 },
                 {
-                  label: '剩余支付金额',
-                  value: payData.periodResidue
+                  label: '剩余金额',
+                  value: payData.residueFee
                 },
                 {
                   label: '支付渠道',
