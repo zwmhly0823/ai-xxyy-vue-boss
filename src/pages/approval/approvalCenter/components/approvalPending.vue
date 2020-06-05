@@ -4,7 +4,7 @@
  * @Author: Lukun
  * @Date: 2020-04-27 17:47:58
  * @LastEditors: liukun
- * @LastEditTime: 2020-06-05 00:20:34
+ * @LastEditTime: 2020-06-05 16:41:43
  -->
 <template>
   <div class="container">
@@ -457,7 +457,7 @@
         ref="refundForm"
       >
         <el-form-item label="键入修改金额" prop="cash">
-          <el-input v-model.number="form.cash"></el-input>
+          <el-input type="number" v-model.number="form.cash"></el-input>
         </el-form-item>
         <el-form-item label="特殊说明" prop="explain">
           <el-input
@@ -515,10 +515,12 @@ export default {
   },
   data() {
     var validateName = (rule, value, callback) => {
-      if (!Number.isInteger(value)) {
+      console.info(typeof value)
+      if (typeof value !== 'number') {
+        // 防一手科学计数法e
         callback(new Error('金额里有杂质!'))
       } else {
-        if (Number(value) > Number(this.drawerApprovalDeatail.residueFee)) {
+        if (value > Number(this.drawerApprovalDeatail.residueFee)) {
           callback(new Error('当心！你已超过剩余支付金额!'))
         } else {
           callback()
