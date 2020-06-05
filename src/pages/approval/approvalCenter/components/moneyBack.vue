@@ -4,7 +4,7 @@
  * @Author: huzhifu
  * @Date: 2020-05-07 10:50:45
  * @LastEditors: liukun
- * @LastEditTime: 2020-06-05 21:57:17
+ * @LastEditTime: 2020-06-05 22:29:00
  -->
 <template>
   <div class="adjustModule">
@@ -276,6 +276,7 @@ export default {
       immediate: true,
       deep: true,
       async handler(newValue, oldValue) {
+        this.isAlipay = false
         this.refundForm.payChannel = '' // 支付渠道
         this.refundForm.refundType = '' // 退款类型
         this.refundForm.orderAmount = '' // 交易金额
