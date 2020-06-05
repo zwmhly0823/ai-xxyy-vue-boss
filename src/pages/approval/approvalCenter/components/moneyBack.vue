@@ -4,7 +4,7 @@
  * @Author: huzhifu
  * @Date: 2020-05-07 10:50:45
  * @LastEditors: liukun
- * @LastEditTime: 2020-06-05 20:08:24
+ * @LastEditTime: 2020-06-05 20:56:44
  -->
 <template>
   <div class="adjustModule">
@@ -377,7 +377,7 @@ export default {
           ).catch((err) => {
             console.warn(err)
             this.$message({
-              message: '系统课课时信息未获得,无法计算退款',
+              message: '系统课剩余信息未获能获取,无法计算退款',
               type: 'error'
             })
           })
@@ -389,7 +389,7 @@ export default {
             )
           } else {
             this.$message({
-              message: '系统课课时信息未获得,无法计算退款',
+              message: '系统课剩余信息未获取或为0,无法计算退款',
               type: 'warning'
             })
           }
@@ -515,29 +515,39 @@ export default {
                     this.monthOptions.push(item)
                   }
                   // 计算出每月单价后,交给change事件算退费
-                  if (this.selectOrder && this.selectOrder.id) {
-                    const {
-                      code,
-                      payload: { price }
-                    } = await this.$http.RefundApproval.getEveryPrice(
-                      this.selectOrder.id
-                    ).catch((err) => {
-                      console.warn('获取订单单价接口报错:', err)
-                      this.$message({
-                        message: '获取订单单价接口报错',
-                        type: 'error'
-                      })
+                  // if (this.selectOrder && this.selectOrder.id) {
+                  //   const {
+                  //     code,
+                  //     payload: { price }
+                  //   } = await this.$http.RefundApproval.getEveryPrice(
+                  //     this.selectOrder.id
+                  //   ).catch((err) => {
+                  //     console.warn('获取订单单价接口报错:', err)
+                  //     this.$message({
+                  //       message: '获取订单单价接口报错',
+                  //       type: 'error'
+                  //     })
+                  //   })
+                  //   // 单价赋值成功
+                  //   if (code === 0) {
+                  //     this.everyPrice = price * 4
+                  //     console.info(
+                  //       '接口拿到系统课周单价:',
+                  //       price,
+                  //       '换算得到月单价:',
+                  //       this.everyPrice
+                  //     )
+                  //   }
+                  // }
+                  if (this.refundForm.residueFee && this.pureWeekS) {
+                    this.everyPrice = (
+                      Number(this.refundForm.residueFee / this.pureWeekS) * 4
+                    ).toFixed(2)
+                  } else {
+                    this.$message({
+                      message: `周单价无法计算${this.refundForm.residueFee}-${this.pureWeekS}`,
+                      type: 'warning'
                     })
-                    // 单价赋值成功
-                    if (code === 0) {
-                      this.everyPrice = price * 4
-                      console.info(
-                        '接口拿到系统课周单价:',
-                        price,
-                        '换算得到月单价:',
-                        this.everyPrice
-                      )
-                    }
                   }
                 }
               } else {
