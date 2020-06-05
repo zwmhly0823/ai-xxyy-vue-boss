@@ -82,6 +82,7 @@ const allExpressHideCol = {
   teacher: false
 }
 const allExpressHideSearchItem = {
+  productName: 'product_name',
   level: '',
   replenishReason: '',
   replenishMethod: '',

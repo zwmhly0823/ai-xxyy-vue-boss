@@ -63,7 +63,7 @@
             >
               <div class="statebox">
                 <div class="statebox" v-for="(item, key) in value" :key="key">
-                  <div class="state" v-if="key === 0 && !isNeedHideStatus">
+                  <div class="state" v-if="key === 0">
                     {{ item.status || '揽收' }}
                   </div>
                   <div class="content">
@@ -101,8 +101,7 @@ export default {
       isActive: 0,
       leftRow: [],
       orderId: '',
-      expressNu: '', // 物流单号
-      isNeedHideStatus: false // 京东且物流状态为2时需要隐藏内容的标记
+      expressNu: '' // 物流单号
     }
   },
   watch: {
@@ -155,6 +154,27 @@ export default {
     },
     // 物流列表信息
     expressList(id, expressStatus) {
+      const lastData = {}
+      // 如果是京东物流 且物流状态 expressStatus 为2 请求京东物流接口
+      if (id.toString().indexOf('JD') > -1 && expressStatus === '2') {
+        this.$http.Express.getExpressDetailJDForAPP(id).then((jdRes) => {
+          const tempData =
+            (jdRes && jdRes.payload && jdRes.payload[0].data) || []
+          if (tempData.length > 0) {
+            // lastData.begin = []
+            tempData.forEach((item, index) => {
+              item.status = item.opeTitle
+              lastData[index] = []
+              lastData[index].push(item)
+            })
+            this.activities = lastData
+          } else {
+            this.activities = []
+            this.waitFor = true
+          }
+        })
+        return
+      }
       this.$http.Express.ExpressList({
         expressNo: id
       })
@@ -168,46 +188,27 @@ export default {
             []
           if (res && isNull.length > 0) {
             this.waitFor = false
-            const lastData = {}
-            if (id.toString().indexOf('JD') > -1 && expressStatus === '2') {
-              this.isNeedHideStatus = true
-              this.$http.Express.getExpressDetailJDForAPP(id).then((jdRes) => {
-                const tempData =
-                  (jdRes && jdRes.payload && jdRes.payload[0].data) || []
-                console.log(jdRes)
-                if (tempData.length > 0) {
-                  lastData.begin = []
-                  tempData.forEach((item) => {
-                    item.status = ''
-                    lastData.begin.push(item)
-                  })
-                  this.activities = lastData
-                } else {
-                  this.activities = []
-                  this.waitFor = true
-                }
-              })
-            } else {
-              this.isNeedHideStatus = false
-              res.payload[0].data.forEach((item) => {
-                if (item.status === '揽收') {
-                  lastData.begin = lastData.begin == null ? [] : lastData.begin
-                  lastData.begin.push(item)
-                } else if (
-                  item.status === '在途' ||
-                  item.status === '派件' ||
-                  item.status === '疑难'
-                ) {
-                  lastData.onway = lastData.onway == null ? [] : lastData.onway
-                  lastData.onway.push(item)
-                } else {
-                  lastData.receive =
-                    lastData.receive == null ? [] : lastData.receive
-                  lastData.receive.push(item)
-                }
-                this.activities = lastData
-              })
-            }
+            res.payload[0].data.forEach((item) => {
+              if (item.status === '揽收') {
+                lastData.begin = lastData.begin == null ? [] : lastData.begin
+                lastData.begin.push(item)
+              } else if (
+                item.status === '在途' ||
+                item.status === '派件' ||
+                item.status === '疑难'
+              ) {
+                lastData.onway = lastData.onway == null ? [] : lastData.onway
+                lastData.onway.push(item)
+              } else {
+                lastData.receive =
+                  lastData.receive == null ? [] : lastData.receive
+                lastData.receive.push(item)
+              }
+              this.activities = lastData
+            })
+          } else {
+            this.activities = []
+            this.waitFor = true
           }
         })
     }
