@@ -169,7 +169,7 @@ export default {
           if (res && isNull.length > 0) {
             this.waitFor = false
             const lastData = {}
-            if (id.toString().indexOf('JD') > -1 && expressStatus === '3') {
+            if (id.toString().indexOf('JD') > -1 && expressStatus === '2') {
               this.isNeedHideStatus = true
               this.$http.Express.getExpressDetailJDForAPP(id).then((jdRes) => {
                 const tempData =

@@ -123,7 +123,6 @@ const replenishHideSearchItem = {
   level: 'level',
   moreVersion: '',
   schedule: '',
-  sup: 'product_type',
   groupSell: '',
   teamDetail: '',
   operatorId: 'operator_id'

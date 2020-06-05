@@ -815,6 +815,9 @@ export default {
           if (item.term.operator_id) {
             timeType.operator_id = item.term.operator_id
           }
+          if (item.term.product_name) {
+            timeType.product_name = item.term.product_name
+          }
           if (item.term.product_type && item.term.product_type.length) {
             timeType.product_type = item.term.product_type.join(',')
           }
