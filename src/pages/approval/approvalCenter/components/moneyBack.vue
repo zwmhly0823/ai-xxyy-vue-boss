@@ -2,7 +2,11 @@
  * @Descripttion: 
  * @version: 
  * @LastEditors: liukun
+<<<<<<< HEAD
  * @LastEditTime: 2020-06-05 13:58:52
+=======
+ * @LastEditTime: 2020-06-05 20:08:24
+>>>>>>> feature/approval_lk
  -->
 <template>
   <div class="adjustModule">
@@ -251,7 +255,7 @@ export default {
         this.refundForm.refundType = ''
         this.refundForm.couponType = ''
         this.refundForm.refundMonths = ''
-        this.refundForm.refundAmount = ''
+        this.refundForm.refundAmount = '' // 退款金额
         this.refundForm.reason = ''
         this.refundForm.explain = ''
         this.refundForm.imageUrl = ''
@@ -274,6 +278,9 @@ export default {
       immediate: true,
       deep: true,
       async handler(newValue, oldValue) {
+        this.refundForm.orderAmount = '' // 交易金额
+        this.refundForm.residueFee = '' // 剩余支付金额
+        this.refundForm.refundAmount = '' // 退款金额(给女测试)
         const targetItem = this.orderOptions.filter((item) => {
           return item.outTradeNo === newValue
         })[0]
