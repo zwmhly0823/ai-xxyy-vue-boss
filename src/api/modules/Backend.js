@@ -3,8 +3,8 @@
  * @version:
  * @Author: Lukun
  * @Date: 2020-05-10 16:17:21
- * @LastEditors: Lukun
- * @LastEditTime: 2020-05-14 23:43:09
+ * @LastEditors: liukun
+ * @LastEditTime: 2020-06-05 13:57:15
  */
 import axios from '../axiosConfig'
 export default {
@@ -45,5 +45,8 @@ export default {
   // 财务驳回的重新提交
   rejectedUpdate(params) {
     return axios.post(`/api/b/v1/backend/refund/detail/update`, params)
+  },
+  changeCash(params) {
+    return axios.post(`/api/b/v1/backend/refund/detail/updateRefundFee`, params)
   }
 }
