@@ -38,7 +38,9 @@
           <div>
             {{
               scope.row.studentCompleteCourseLog &&
-              scope.row.studentCompleteCourseLog.complete_time
+              scope.row.studentCompleteCourseLog.complete_time &&
+              scope.row.studentCompleteCourseLog.complete_time !==
+                '1970-01-01 08:00:00'
                 ? scope.row.studentCompleteCourseLog.complete_time
                 : '未完课'
             }}
@@ -88,34 +90,33 @@
       <el-table-column label="老师点评·点评时间">
         <template slot-scope="scope">
           <div class="comment-time" v-if="scope.row.taskComment">
-            <div @click="playBtn(scope.row)">
-              <i
-                :class="
-                  scope.row.serNum === play
-                    ? 'el-icon-video-pause img-play'
-                    : 'el-icon-video-play img-play'
-                "
-              ></i>
-              <audio
-                :id="`audio${[scope.row.serNum]}`"
-                :src="scope.row.taskComment.sound_comment"
-              ></audio>
-              <!-- <i
-                v-if="scope.row.serNum === play"
-                class=" el-icon-video-pause img-play"
-              ></i>
-              <i v-else class=" el-icon-video-play img-play"></i> -->
-            </div>
-            <img class="img-play" :src="scope.row.imgWorks" />
-            <div>
-              {{
-                scope.row.taskComment && scope.row.taskComment.type === 0
-                  ? '人工点评'
-                  : '智能点评'
-              }}<br />{{ scope.row.taskComment.ctime }}
-            </div>
-            <div class="listening-status">
-              {{ scope.row.listenComment ? '已收听' : '' }}
+            <div v-for="(aItem, aKey) in scope.row.taskComment" :key="aKey">
+              <div @click="playBtn(scope.row, aItem)" class="comment-time-item">
+                <i
+                  :class="
+                    aItem.id === play
+                      ? 'el-icon-video-pause img-play'
+                      : 'el-icon-video-play img-play'
+                  "
+                ></i>
+                <audio
+                  :id="`audio${[aItem.id]}`"
+                  :src="aItem.sound_comment"
+                ></audio>
+                <!-- <i
+                  v-if="scope.row.serNum === play"
+                  class=" el-icon-video-pause img-play"
+                ></i>
+                <i v-else class=" el-icon-video-play img-play"></i> -->
+              </div>
+              <img class="img-play" :src="scope.row.imgWorks" />
+              <div>
+                {{ aItem && aItem.type === 0 ? '人工点评' : '智能点评'
+                }}<br />{{ aItem.ctime }}
+              </div>
+              <div class="listening-status">
+                {{ aItem.hadListened ? '已收听' : '' }}
+              </div>
             </div>
           </div>
           <div v-else>未点评</div>
@@ -296,16 +297,17 @@ export default {
       this.currentVideo = ''
       this.videoDialog = false
     },
-    playBtn(val) {
-      const audio = document.getElementById(`audio${val.serNum}`)
+    playBtn(val, aItem) {
+      const audio = document.getElementById(`audio${aItem.id}`)
       const audioLast = document.getElementById(this.audioId)
-      this.play = this.play === val.serNum ? -1 : val.serNum
+      this.play = this.play === aItem.id ? -1 : aItem.id
       if (this.play !== -1) {
         audioLast && audioLast.load()
         audio.play()
         let time = 0
-        time = this.studyTableData[val.serNum - 1].taskComment
-          .sound_comment_second
+        // time = this.studyTableData[val.serNum - 1].taskComment
+        //   .sound_comment_second
+        time = aItem.sound_comment_second
         setTimeout(() => {
           this.play = -1
         }, time * 1000)
@@ -341,22 +343,24 @@ export default {
 
 // 老师点评播放img
 .comment-time {
-  display: flex;
-  align-items: center;
-
+  // display: flex;
+  // align-items: center;
   .img-play {
     font-size: 24px;
     float: left;
     height: 100%;
     cursor: pointer;
   }
-  div {
-    height: 100%;
-    float: left;
-    margin: 0 0 0 10px;
+  &-item {
+    margin-bottom: 10px;
+    > * {
+      height: 100%;
+      float: left;
+      margin: 7px 7px 0 5px;
+    }
   }
   .listening-status {
-    padding: 0 0 0 20px;
+    padding: 0 0 0 35px;
   }
 }
 .enlarge-box {
