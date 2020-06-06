@@ -296,6 +296,15 @@ const routes = [
           module: 'statistics',
           style: 'line'
         }
+      },
+      {
+        path: '/behavior',
+        name: 'behavior',
+        meta: {
+          title: '行为轨迹',
+          module: 'statistics',
+          style: 'line'
+        }
       }
 
       // {
