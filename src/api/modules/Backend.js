@@ -3,8 +3,8 @@
  * @version:
  * @Author: Lukun
  * @Date: 2020-05-10 16:17:21
- * @LastEditors: liukun
- * @LastEditTime: 2020-06-05 13:57:15
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-06-05 22:48:39
  */
 import axios from '../axiosConfig'
 export default {

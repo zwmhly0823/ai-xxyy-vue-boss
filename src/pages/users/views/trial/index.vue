@@ -24,7 +24,10 @@
       <!-- <el-table-column type="selection" width="55"> </el-table-column> -->
       <el-table-column label="用户信息" min-width="270" fixed>
         <template slot-scope="scope">
-          <base-user-info :user="scope.row" @handle-click="userHandle" />
+          <base-user-info
+            :user="scope.row"
+            @handle-click="userHandle(scope.row)"
+          />
         </template>
       </el-table-column>
       <el-table-column label="是否转化" min-width="180">
@@ -320,8 +323,11 @@ export default {
     },
 
     // 点击用户信息回调事件
-    userHandle(uid) {
-      console.log(uid, '点击用户信息')
+    userHandle(user) {
+      // console.log(user, '点击用户信息')
+      const { username, id, mobile } = user
+      // 新标签打开详情页
+      id && openNewTab(`/users/#/details/${id}`, `学员：${username || mobile}`)
     },
 
     expressStatus(status) {

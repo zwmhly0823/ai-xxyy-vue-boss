@@ -354,6 +354,8 @@ export default {
 
     // 订单列表数据
     orderData(queryObj = {}, page = 1) {
+      // 最终搜索条件
+      this.$emit('get-params', queryObj)
       this.$http.Order.orderPage(`${JSON.stringify(queryObj)}`, page)
         .then((res) => {
           if (!res.data.OrderPage) {

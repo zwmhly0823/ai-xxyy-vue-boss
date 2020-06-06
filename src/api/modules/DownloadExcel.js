@@ -4,7 +4,7 @@
  * @Author: Lukun
  * @Date: 2020-05-14 14:31:42
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-05-25 21:02:48
+ * @LastEditTime: 2020-06-04 23:21:58
  */
 import axios from '../axios'
 import { getToken } from '@/utils/auth'
@@ -47,8 +47,6 @@ export default {
     }
   },
   exportChannel(params) {
-    console.log('DownloadExcel:', params)
-
     if (judgeToken()) {
       return axios({
         method: 'POST',
@@ -58,6 +56,44 @@ export default {
         // data: {
         //   ...params
         // }
+        data: params
+      })
+    }
+  },
+
+  /**
+   * 订单导出
+   * @param {*} params 
+   * {
+      "apiName": "OrderPage",
+      "header": {
+        "id": "订单ID",
+          "packages_name":"套餐名称",
+          "team.team_name": "班级名称",
+          "out_trade_no": "订单编号",
+          "buytime":"下单时间",
+          "order_status": "订单状态",
+          "user.mobile_city":"城市",
+          "user.mobile_province":"省份",
+          "user.mobile":"用户手机号",
+          "user.sex":"性别",
+          "user.birthday":"生日",
+          "channel.channel_outer_name":"订单来源",
+          "express.last_express_status":"最后一次物流状态"
+      },
+      "fileName":"OrderPage",
+      "query": "{\"status\":1}"
+      }
+   */
+  exportOrder(params) {
+    console.log(params)
+
+    if (judgeToken()) {
+      return axios({
+        method: 'POST',
+        url: '/graphql/export',
+        responseType: 'blob',
+        headers: getHeaders(),
         data: params
       })
     }
