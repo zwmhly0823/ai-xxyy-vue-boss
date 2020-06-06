@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-04-25 17:24:23
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-06-04 15:36:11
+ * @LastEditTime: 2020-06-06 14:52:28
  -->
 <template>
   <el-card
@@ -386,7 +386,9 @@ export default {
         }
         const sendList = await axios.post('/graphql/v1/toss', {
           query: `{
-            UserList(query: ${JSON.stringify(JSON.stringify(query))}){
+            UserList(query: ${JSON.stringify(
+              JSON.stringify(query)
+            )}, size: 500){
               id
               first_order_send_id
             }
