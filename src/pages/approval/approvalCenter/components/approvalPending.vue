@@ -1061,6 +1061,9 @@ export default {
   .drawer-approval-detail {
     padding-top: 50px;
     font-size: 16px;
+    .el-drawer {
+      overflow: auto;
+    }
   }
   // el原类名追加样式
   .approvallk .el-drawer__body {
