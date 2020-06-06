@@ -41,6 +41,15 @@ const routes = [
       keepAlive: true
     },
     component: () => import('../views/usersModule.vue')
+  },
+  {
+    path: '/details/:id',
+    name: 'detailsUsers',
+    meta: {
+      title: '学员详情',
+      keepAlive: false
+    },
+    component: () => import('../views/details/index.vue')
   }
 ]
 
