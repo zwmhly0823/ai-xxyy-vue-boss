@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-04-25 17:24:23
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-06-06 14:52:28
+ * @LastEditTime: 2020-06-06 17:36:40
  -->
 <template>
   <el-card
@@ -376,8 +376,8 @@ export default {
       this.setSeachParmas(res, ['trial_team_id'], 'terms')
     },
     async getSendUser(res) {
-      let data = res === '0' ? '' : res
-      console.log(res)
+      let uids = []
+      const data = res === '0' ? '' : res
 
       // 根据user id请求当前用户转化来的用户list
       if (data && data.uid) {
@@ -394,14 +394,16 @@ export default {
             }
           }`
         })
-        console.log(sendList)
         if (sendList && sendList.data && sendList.data.UserList.length > 0) {
-          const uids = sendList.data.UserList.map((item) => item.id)
-          data = uids
+          const ids = sendList.data.UserList.map((item) => item.id)
+          uids = ids
         }
       }
-
-      this.setSeachParmas(data, ['uid'])
+      this.setSeachParmas(
+        uids.length > 0 ? { uid: uids } : '',
+        ['uid'],
+        'terms'
+      )
     },
 
     /**  处理接收到的查询参数

@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-04-25 17:24:23
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-06-04 14:04:29
+ * @LastEditTime: 2020-06-06 17:45:15
  -->
 <template>
   <el-card
@@ -31,7 +31,7 @@
           @result="getSendUser"
           :custom-style="{ width: '200px' }"
           placeholder="转介绍人手机号/用户名称"
-          name="pay_channel_user"
+          name="uid"
           type="2"
         />
       </el-form-item>
@@ -142,6 +142,7 @@ import SearchStage from '@/components/MSearch/searchItems/searchStage'
 import TrialCourseType from '@/components/MSearch/searchItems/trialCourseType'
 import SearchPhoneAndUsername from '@/components/MSearch/searchItems/searchPhoneAndUsername'
 import { isToss } from '@/utils/index'
+import axios from '@/api/axiosConfig'
 
 export default {
   components: {
@@ -307,9 +308,35 @@ export default {
       this.setSeachParmas(res, ['packages_id'], 'terms')
     },
 
-    getSendUser(res) {
+    async getSendUser(res) {
+      let uids = []
       const data = res === '0' ? '' : res
-      this.setSeachParmas(data, ['pay_channel_user'])
+
+      // 根据user id请求当前用户转化来的用户list
+      if (data && data.uid) {
+        const query = {
+          first_order_send_id: data.uid
+        }
+        const sendList = await axios.post('/graphql/v1/toss', {
+          query: `{
+            UserList(query: ${JSON.stringify(
+              JSON.stringify(query)
+            )}, size: 500){
+              id
+              first_order_send_id
+            }
+          }`
+        })
+        if (sendList && sendList.data && sendList.data.UserList.length > 0) {
+          const ids = sendList.data.UserList.map((item) => item.id)
+          uids = ids
+        }
+      }
+      this.setSeachParmas(
+        uids.length > 0 ? { uid: uids } : '',
+        ['uid'],
+        'terms'
+      )
     },
 
     /**  处理接收到的查询参数
