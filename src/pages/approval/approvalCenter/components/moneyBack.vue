@@ -4,7 +4,7 @@
  * @Author: huzhifu
  * @Date: 2020-05-07 10:50:45
  * @LastEditors: liukun
- * @LastEditTime: 2020-06-05 22:29:00
+ * @LastEditTime: 2020-06-06 14:37:03
  -->
 <template>
   <div class="adjustModule">
@@ -96,7 +96,7 @@
             :class="$style.order100"
           ></el-input>
         </el-form-item>
-        <el-form-item label="剩余支付金额：" prop="residueFee">
+        <el-form-item label="剩余金额：" prop="residueFee">
           <el-input
             v-model="refundForm.residueFee"
             disabled
@@ -249,7 +249,7 @@ export default {
         this.refundForm.accountName = ''
         this.refundForm.alipayAccount = ''
         this.refundForm.orderAmount = ''
-        this.refundForm.residueFee = '' // 剩余支付金额
+        this.refundForm.residueFee = '' // 剩余金额
         this.refundForm.refundType = ''
         this.refundForm.couponType = ''
         this.refundForm.refundMonths = ''
@@ -280,7 +280,7 @@ export default {
         this.refundForm.payChannel = '' // 支付渠道
         this.refundForm.refundType = '' // 退款类型
         this.refundForm.orderAmount = '' // 交易金额
-        this.refundForm.residueFee = '' // 剩余支付金额
+        this.refundForm.residueFee = '' // 剩余金额
         this.refundForm.refundAmount = '' // 退款金额(给女测试)
         const targetItem = this.orderOptions.filter((item) => {
           return item.outTradeNo === newValue
@@ -289,7 +289,7 @@ export default {
         this.selectOrder = targetItem
         console.info('选择关联订单是我,大家快来公用--', targetItem)
 
-        // 获取该订单剩余支付金额
+        // 获取该订单剩余金额
         if (targetItem && targetItem.id) {
           const {
             code,
@@ -299,7 +299,7 @@ export default {
           }).catch((err) => {
             console.warn(err)
             this.$message({
-              message: '该订单剩余支付金额获取失败',
+              message: '该订单剩余金额获取失败',
               type: 'error'
             })
           })
@@ -307,7 +307,7 @@ export default {
             this.refundForm.residueFee = payload
           } else {
             this.$message({
-              message: '该订单剩余支付金额获取失败或为0',
+              message: '该订单剩余金额获取失败或为0',
               type: 'warning'
             })
             this.$refs.refundForm.resetFields()
@@ -460,32 +460,39 @@ export default {
       async handler(newValue) {
         // 初始就触发,执行前确认关联订单已选择
         if (this.selectOrder && Object.keys(this.selectOrder).length) {
-          if (!newValue) {
-            // newValue:0 选中优惠券时-获取优惠券列表
-            this.couponTypeOptions = []
-            this.refundForm.couponType = ''
-            this.refundForm.refundAmount = '' // 退款额
-            this.$http.RefundApproval.getCoupon({
-              packageId: this.selectOrder.packagesId
-            })
-              .then(({ code, payload }) => {
-                if (!code && payload.length) {
-                  this.couponTypeOptions = payload
-                } else {
+          if (newValue === 0) {
+            if (this.refundForm.residueFee >= 200) {
+              // newValue:0 选中优惠券时-获取优惠券列表
+              this.couponTypeOptions = []
+              this.refundForm.couponType = ''
+              this.refundForm.refundAmount = '' // 退款额
+              this.$http.RefundApproval.getCoupon({
+                packageId: this.selectOrder.packagesId
+              })
+                .then(({ code, payload }) => {
+                  if (!code && payload.length) {
+                    this.couponTypeOptions = payload
+                  } else {
+                    this.$message({
+                      message: '优惠券类型未能获取',
+                      type: 'warning'
+                    })
+                  }
+                })
+                .catch((err) => {
+                  console.warn(err)
                   this.$message({
                     message: '优惠券类型未能获取',
-                    type: 'warning'
+                    type: 'error'
                   })
-                }
-              })
-              .catch((err) => {
-                console.warn(err)
-                this.$message({
-                  message: '优惠券类型未能获取',
-                  type: 'error'
                 })
+            } else {
+              this.$message({
+                message: '当前剩余金额小于200元,不能选择优惠券退款昂',
+                type: 'warning'
               })
-          } else {
+            }
+          } else if (newValue === 1) {
             // newValue:1 选中课程退款时-创建退款周期数组(依赖接口数据async↓↓)
             this.monthOptions = []
             this.refundForm.refundMonths = ''
@@ -612,7 +619,7 @@ export default {
         accountName: '',
         alipayAccount: '',
         orderAmount: '',
-        residueFee: '', // 剩余支付金额
+        residueFee: '', // 剩余金额
         refundType: '',
         couponType: '', // 优惠券类型
         refundMonths: '', // 退款周数(给接口)
@@ -769,7 +776,7 @@ export default {
             payeeName: this.refundForm.accountName, // 收款人姓名
             payeeAccount: this.refundForm.alipayAccount, // 支付宝账号
             orderFee: this.refundForm.orderAmount, // 订单金额
-            residueFee: this.refundForm.residueFee, // 剩余支付金额
+            residueFee: this.refundForm.residueFee, // 剩余金额
             refundType: this.refundForm.refundType, // 退款类型:课程退款-1，优惠券退款-0
             refundFee: this.refundForm.refundAmount, // 退款金额
             refundReason: this.refundForm.reason, // 退款原因

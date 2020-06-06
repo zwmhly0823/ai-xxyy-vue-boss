@@ -4,7 +4,7 @@
  * @Author: Lukun
  * @Date: 2020-04-27 17:47:58
  * @LastEditors: liukun
- * @LastEditTime: 2020-06-04 17:54:51
+ * @LastEditTime: 2020-06-06 14:38:09
  -->
 <template>
   <div class="container">
@@ -255,7 +255,7 @@
           }}</el-col>
         </el-row>
         <el-row>
-          <el-col :span="5">剩余支付金额:</el-col>
+          <el-col :span="5">剩余金额:</el-col>
           <el-col :span="18" :offset="1">{{
             drawerApprovalDeatail.residueFee
           }}</el-col>
