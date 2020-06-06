@@ -397,6 +397,10 @@ export default {
                   value: payData.refundReason
                 },
                 {
+                  label: '退款说明',
+                  value: payData.refundMsg
+                },
+                {
                   label: '附件',
                   type: 'img',
                   value: payData.attsUrl
