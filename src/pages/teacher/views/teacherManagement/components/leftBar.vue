@@ -68,9 +68,9 @@ export default {
   data() {
     return {
       departmentList: [],
-      isShowEditIcon: true,
+      isShowEditIcon: false,
       nowId: null,
-      showMenu: true,
+      showMenu: false,
       editMenuList: [
         {
           lable: '新建同级',
