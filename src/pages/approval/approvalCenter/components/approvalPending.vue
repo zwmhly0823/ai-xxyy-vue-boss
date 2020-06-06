@@ -4,7 +4,7 @@
  * @Author: Lukun
  * @Date: 2020-04-27 17:47:58
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-06-06 16:23:46
+ * @LastEditTime: 2020-06-06 20:35:43
  -->
 <template>
   <div class="container">
@@ -1061,6 +1061,9 @@ export default {
   .drawer-approval-detail {
     padding-top: 50px;
     font-size: 16px;
+    .el-drawer {
+      overflow: auto;
+    }
   }
   // el原类名追加样式
   .approvallk .el-drawer__body {
