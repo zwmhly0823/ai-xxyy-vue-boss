@@ -4,7 +4,7 @@
  * @Author: Lukun
  * @Date: 2020-04-27 17:47:58
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-06-05 22:49:34
+ * @LastEditTime: 2020-06-06 16:01:40
  -->
 <template>
   <div class="container">
@@ -343,6 +343,12 @@
           <el-col :span="5">退款原因:</el-col>
           <el-col :span="18" :offset="1">{{
             drawerApprovalDeatail.refundReason
+          }}</el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="5">退款说明:</el-col>
+          <el-col :span="18" :offset="1">{{
+            drawerApprovalDeatail.refundMsg
           }}</el-col>
         </el-row>
         <el-row>
