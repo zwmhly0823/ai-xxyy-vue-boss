@@ -4,7 +4,7 @@
  * @Author: Lukun
  * @Date: 2020-04-27 17:47:58
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-06-06 16:23:46
+ * @LastEditTime: 2020-06-06 20:35:43
  -->
 <template>
   <div class="container">
@@ -283,7 +283,7 @@
           }}</el-col>
         </el-row>
         <el-row>
-          <el-col :span="5">剩余支付金额:</el-col>
+          <el-col :span="5">剩余金额:</el-col>
           <el-col :span="18" :offset="1">{{
             drawerApprovalDeatail.residueFee
           }}</el-col>
@@ -531,7 +531,7 @@ export default {
         callback(new Error('金额里有杂质!'))
       } else {
         if (Number(value) > Number(this.drawerApprovalDeatail.residueFee)) {
-          callback(new Error('当心！你已超过剩余支付金额!'))
+          callback(new Error('当心！你已超过剩余金额!'))
         } else {
           callback()
         }
