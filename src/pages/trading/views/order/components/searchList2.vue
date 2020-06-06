@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-04-25 17:24:23
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-05-25 19:31:37
+ * @LastEditTime: 2020-06-05 23:43:16
  -->
 <template>
   <el-card border="false" shadow="never" :class="$style.elard">
@@ -112,9 +112,15 @@
         </div>
       </el-form-item>
     </el-form>
+    <div class="export-order">
+      <el-button size="small" type="primary" @click="exportOrderHandle"
+        >订单导出</el-button
+      >
+    </div>
   </el-card>
 </template>
 <script>
+import dayjs from 'dayjs'
 import hardLevel from '@/components/MSearch/searchItems/hardLevel.vue' // add
 import orderSearch from '@/components/MSearch/searchItems/orderSearch.vue' // add
 // import orderStatus from '@/components/MSearch/searchItems/orderStatus.vue' // add
@@ -125,6 +131,7 @@ import Department from '@/components/MSearch/searchItems/department'
 import SearchTeamName from '@/components/MSearch/searchItems/searchTeamName'
 import SearchStage from '@/components/MSearch/searchItems/searchStage'
 import TrialCourseType from '@/components/MSearch/searchItems/trialCourseType'
+import { downloadHandle } from '@/utils/download'
 import { isToss } from '@/utils/index'
 
 export default {
@@ -157,7 +164,8 @@ export default {
       should: [],
       selectTime: null, // 物流时间下拉列表_选中项
       oldTime: '', // 上次时间选择值
-      teacherId: '' // 判断是否是toss环境还是boss环境
+      teacherId: '', // 判断是否是toss环境还是boss环境
+      searchParams: []
     }
   },
   computed: {},
@@ -319,6 +327,7 @@ export default {
           })
           this.must = temp
         }
+        this.searchParams = temp
         this.$emit('search', temp)
         return
       }
@@ -330,6 +339,68 @@ export default {
         this.should = temp
       }
       this.$emit('searchShould', temp)
+    },
+
+    // 导出
+    exportOrderHandle() {
+      console.log(this.searchParams)
+      console.log(this.$parent.$children[1].finalParams)
+      if (this.searchParams.length === 0) {
+        this.$message.error('请选择筛选条件')
+        return
+      }
+
+      const query = this.$parent.$children[1].finalParams
+      const fileTitle = dayjs(new Date()).format('YYYY-MM-DD')
+      const fileTitleTime = dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss')
+
+      // 导出条件为 v1 对象方式
+      // const query = {
+      //   status: 3
+      // }
+      // const search = this.searchParams[0]
+      // for (const key in search) {
+      //   if (Object.keys(search).includes(key)) {
+      //     const item = search[key]
+      //     Object.assign(query, item)
+      //   }
+      // }
+
+      const loading = this.$loading({
+        lock: true,
+        text: '正在导出，请耐心等待……',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.1)'
+      })
+
+      const params = {
+        apiName: 'OrderPage',
+        header: {
+          buydate: '缴费时间',
+          out_trade_no: '订单号',
+          uid: '用户ID',
+          'user.username': '用户昵称',
+          'paymentPay.transaction_id': '交易流水号',
+          'paymentPay.trade_type': '支付方式',
+          amount: '交易金额',
+          'packagesType.name': '套餐类型',
+          'stageInfo.period_name': '期数',
+          'channel.channel_outer_name': '线索渠道',
+          sup_text: '课程难度'
+        },
+        fileName: `体验课订单导出-${fileTitleTime}`, // 文件名称
+        query: JSON.stringify(query)
+      }
+      // console.log(exportExcel)
+
+      this.$http.DownloadExcel.exportOrder(params)
+        .then((res) => {
+          console.log(res)
+          downloadHandle(res, `体验课订单导出-${fileTitle}`, () => {
+            loading.close()
+          })
+        })
+        .catch(() => loading.close())
     }
   },
   created() {
@@ -373,6 +444,11 @@ export default {
 }
 </style>
 <style scoped>
+.export-order {
+  position: absolute;
+  top: 20px;
+  right: 10px;
+}
 .el-select-dropdown.is-multiple .el-select-dropdown__item.selected:after {
   right: 5px;
 }

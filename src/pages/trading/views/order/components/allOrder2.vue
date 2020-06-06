@@ -79,6 +79,7 @@
         :status="status"
         :search="searchIn"
         @statistics="getStatistics"
+        @get-params="getParams"
       />
     </article>
   </div>
@@ -119,7 +120,8 @@ export default {
         '5': { count: 0, value: 0 },
         '6': { count: 0, value: 0 },
         '7': { count: 0, value: 0 }
-      }
+      },
+      finalParams: {}
     }
   },
   computed: {
@@ -195,6 +197,10 @@ export default {
       } else {
         this.reset()
       }
+    },
+
+    getParams(res) {
+      this.finalParams = res
     },
 
     /**
