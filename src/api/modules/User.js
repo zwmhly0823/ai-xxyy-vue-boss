@@ -226,5 +226,231 @@ export default {
         }
       `
     })
+  },
+
+  /**
+   * 学员详情
+   */
+
+  // 学员基本信息
+  getUser(query = '') {
+    const formattingQuery = JSON.stringify({ id: query })
+    return axios.post('/graphql/v1/toss', {
+      query: `{
+        User(query:${JSON.stringify(formattingQuery)}){
+
+          id
+          head
+          sex
+          nickname
+          username
+          mobile
+          send_id
+          weixinUser {
+            follow
+            nickname
+            uid
+          }
+          coupon {
+            id
+          }
+          account {
+            balance
+          }
+          mobile_province
+          mobile_city
+          channelInfo {
+            channel_inner_name
+          }
+          loginData {
+            device_type
+            device_model
+          }
+          birthday
+          sender{
+            username
+            mobile
+          }
+          base_painting_text
+          address {
+            receipt_name
+            receipt_tel
+            province
+            city
+            area
+            address_detail
+          }
+          trialCourse{
+            team_id
+            added_group
+            added_wechat
+          }
+          systemCourse{
+            team_id
+            added_group
+            added_wechat
+          }
+          teams{
+             id
+             team_type
+             team_name
+             team_state
+             wd_info
+             teacher_info{
+                realname
+                nickname
+            }
+            teacher_wechat_info{
+                wechat_no
+            }
+            course_count
+            send_course_count
+            day_join_course_count
+            day_complete_course_count
+            course_task_count
+            task_comment_count
+            listen_comment_count
+          }
+          join_date
+          status_text
+        }
+      }`
+    })
+  },
+
+  // 学习记录
+  getSendCourseLogPage(
+    query = '',
+    teamId = '',
+    page = 1,
+    lessonType = 0,
+    del = 0,
+    sort = 'asc',
+    size = '20'
+  ) {
+    const formattingQuery = JSON.stringify({
+      student_id: query,
+      team_id: +teamId,
+      del: del,
+      lesson_type: +lessonType
+    })
+    const formattingSort = JSON.stringify({ id: sort })
+    return axios.post(`/graphql/v1/toss`, {
+      query: `{
+        SendCourseLogPage(
+          query:${JSON.stringify(formattingQuery)},
+          sort:${JSON.stringify(formattingSort)},
+          page: ${page},
+          size:${size})
+          {
+            totalPages
+            totalElements
+            content{
+              wd_info
+              title
+              ctime
+              studentCompleteCourseLog{
+                ctime
+                is_today_join_course
+                complete_time
+                is_today_complete_course
+              }
+            }
+          }
+        }`
+    })
+  },
+  // 作品集
+  getStudentCourseTaskPage(
+    query = '',
+    teamId = '',
+    page = 1,
+    size = '20',
+    del = 0
+  ) {
+    const formattingQuery = JSON.stringify({
+      student_id: query,
+      team_id: +teamId,
+      del: del
+    })
+    const sort = `{ "ctime": "asc" }`
+    return axios.post(`/graphql/v1/toss`, {
+      query: `{
+        StudentCourseTaskPage(query:${JSON.stringify(formattingQuery)},
+        sort: ${JSON.stringify(sort)},
+          page: ${page},
+          size:${size}){
+            totalPages
+            totalElements
+            content{
+              student_id
+              task_image
+              task_video
+              taskComment{
+                sound_comment
+                sound_comment_second
+                type
+                ctime
+              }
+              listenComment{
+                id
+              }
+              sendCourseLog{
+              wd_info
+              title
+            }
+             is_day_upload_task
+             ctime
+          }
+        }
+      }`
+    })
+  },
+  // del\": 0
+  // team_id\":班级id
+  // lesson_type 体验课 0 系统课 大于0
+  // status\": 3
+  // teams》
+  // team_state 0 开课中 1代开课 2已结课
+  // team_type  判断返回几个对象展示几个标签 0 体验课 大于0 系统课
+  // wd_info  课程进度
+  // 订单·物流数据
+  getOrderPage(query = '', page = 1, size = '20', status = 3) {
+    const formattingQuery = JSON.stringify({
+      uid: query,
+      status: status
+    })
+    return axios.post(`/graphql/v1/toss`, {
+      query: `{
+        OrderPage(query:${JSON.stringify(formattingQuery)},
+          page: ${page},
+          size:${size}){
+          totalPages
+          totalElements
+          content{
+            id
+            packages_name
+            amount
+            order_status
+            out_trade_no
+            ctime
+            express{
+              express_total
+              last_express_status
+            }
+            team{
+              team_name
+              teacher_info{
+                realname
+                departmentInfo{
+                  id
+                  name
+                }
+              }
+            }
+          }
+        }
+      }`
+    })
   }
 }
