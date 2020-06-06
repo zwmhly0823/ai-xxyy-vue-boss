@@ -387,6 +387,7 @@ export default {
               task_image
               task_video
               taskComment{
+                id
                 sound_comment
                 sound_comment_second
                 type
@@ -394,6 +395,7 @@ export default {
               }
               listenComment{
                 id
+                flag_id
               }
               sendCourseLog{
               wd_info

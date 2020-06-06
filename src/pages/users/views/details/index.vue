@@ -545,8 +545,19 @@ export default {
         const _data = res.data.StudentCourseTaskPage.content
         _data.forEach((item, index) => {
           item.serNum = ++index
-          if (item.taskComment && item.taskComment.ctime) {
-            item.taskComment.ctime = formatData(item.taskComment.ctime, 's')
+          // if (item.taskComment && item.taskComment.ctime) {
+          //   item.taskComment.ctime = formatData(item.taskComment.ctime, 's')
+          // }
+          if (item.taskComment && item.taskComment.length) {
+            item.taskComment.forEach((tItem) => {
+              tItem.ctime = formatData(tItem.ctime, 's')
+              for (let i = 0, len = item.listenComment.length; i < len; i++) {
+                if (item.listenComment[i].flag_id === tItem.id) {
+                  tItem.hadListened = true
+                  break
+                }
+              }
+            })
           }
           item.ctime = item.ctime ? formatData(item.ctime, 's') : ''
         })
