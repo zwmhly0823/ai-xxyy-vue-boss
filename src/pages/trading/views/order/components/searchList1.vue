@@ -3,8 +3,8 @@
  * @version: 1.0.0
  * @Author: liukun
  * @Date: 2020-04-25 17:24:23
- * @LastEditors: liukun
- * @LastEditTime: 2020-06-06 14:42:27
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-06-06 16:33:53
  -->
 <template>
   <el-card border="false" shadow="never" :class="$style.elard">
@@ -440,7 +440,7 @@ export default {
           uid: '用户ID',
           'user.username': '用户昵称',
           'paymentPay.transaction_id': '交易流水号',
-          'paymentPay.trade_type': '支付方式',
+          'paymentPay.trade_type_text': '支付方式',
           amount: '交易金额',
           'packagesType.name': '套餐类型',
           'stageInfo.period_name': '期数',
