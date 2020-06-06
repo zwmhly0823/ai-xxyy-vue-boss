@@ -136,7 +136,9 @@
       <el-table-column label="作品上传时间">
         <template slot-scope="scope">
           <div>{{ scope.row.ctime }}</div>
-          <div>{{ scope.row.is_day_upload_task === 0 ? '' : '当日上传' }}</div>
+          <div class="course-btn">
+            {{ scope.row.is_day_upload_task === 0 ? '' : '当日上传' }}
+          </div>
         </template>
       </el-table-column>
     </el-table>
