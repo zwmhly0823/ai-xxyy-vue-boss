@@ -55,7 +55,7 @@
           </p>
         </template>
       </el-table-column>
-      <el-table-column label="订单来源" min-width="100">
+      <el-table-column label="订单来源" min-width="140">
         <template slot-scope="scope">
           <p>
             {{ scope.row.channel ? scope.row.channel.channel_outer_name : '-' }}
@@ -96,6 +96,22 @@
           </div>
         </template>
       </el-table-column>
+      <el-table-column label="转介绍用户信息" min-width="160">
+        <template slot-scope="scope">
+          <p>
+            {{
+              scope.row.first_send_user
+                ? scope.row.first_send_user.username
+                : '-'
+            }}
+          </p>
+          <p>
+            {{
+              scope.row.first_send_user ? scope.row.first_send_user.mobile : '-'
+            }}
+          </p>
+        </template>
+      </el-table-column>
       <el-table-column label="下单时间·订单号" min-width="180">
         <template slot-scope="scope">
           <p>
@@ -129,22 +145,6 @@
                   ? `${scope.row.express.last_express_status}`
                   : '-'
                 : '-'
-            }}
-          </p>
-        </template>
-      </el-table-column>
-      <el-table-column label="转介绍用户信息" min-width="160">
-        <template slot-scope="scope">
-          <p>
-            {{
-              scope.row.first_send_user
-                ? scope.row.first_send_user.username
-                : '-'
-            }}
-          </p>
-          <p>
-            {{
-              scope.row.first_send_user ? scope.row.first_send_user.mobile : '-'
             }}
           </p>
         </template>
