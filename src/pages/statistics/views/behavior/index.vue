@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-06-06 14:18:35
  * @LastEditors: panjian
- * @LastEditTime: 2020-06-08 14:06:22
+ * @LastEditTime: 2020-06-08 16:32:57
 -->
 <template>
   <article>
@@ -118,8 +118,8 @@
       <!-- 分页 -->
       <m-pagination
         @current-change="handleCurrentChange"
-        :current-page="+1"
-        :total="+10"
+        :current-page="+currentPage"
+        :total="+totalElements"
         open="calc(100vw - 147px - 50px)"
         close="calc(100vw - 26px - 50px)"
       />
@@ -138,7 +138,9 @@ export default {
   },
   data() {
     return {
-      tableData: []
+      tableData: [],
+      currentPage: 1,
+      totalElements: ''
     }
   },
   mounted() {
@@ -149,7 +151,12 @@ export default {
   },
   methods: {
     getUserBehaviorLogPage() {
-      this.$http.Statistics.UserBehaviorLogPage().then((res) => {
+      const params = {
+        currentPage: this.currentPage
+      }
+      this.$http.Statistics.UserBehaviorLogPage(params).then((res) => {
+        this.currentPage = res.data.UserBehaviorLogPage.number
+        this.totalElements = res.data.UserBehaviorLogPage.totalElements
         const _data = res.data.UserBehaviorLogPage.content
         _data.forEach((item) => {
           item.birthday = GetAgeByBrithday(item.birthday)
