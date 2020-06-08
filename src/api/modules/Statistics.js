@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-07 13:52:26
  * @LastEditors: panjian
- * @LastEditTime: 2020-06-06 17:40:59
+ * @LastEditTime: 2020-06-08 11:35:12
  */
 import axios from '../axiosConfig'
 
@@ -450,6 +450,8 @@ export default {
               birthday
               head
               mobile
+              status
+              status_text
             }
             firstOrderSend {
               nickname

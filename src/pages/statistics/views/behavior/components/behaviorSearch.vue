@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-26 16:30:11
  * @LastEditors: panjian
- * @LastEditTime: 2020-06-06 17:43:19
+ * @LastEditTime: 2020-06-08 11:00:04
  -->
 <template>
   <el-card border="false" shadow="never" :class="$style.elard">
@@ -200,6 +200,8 @@ export default {
   methods: {
     getActionTypeList() {
       this.$http.Statistics.actionTypeList().then((res) => {
+        console.log(res)
+
         const _data = res.data.actionTypeList
         _data.forEach((item) => {
           item.label = item.name
