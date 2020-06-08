@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-05-30 18:37:24
  * @LastEditors: panjian
- * @LastEditTime: 2020-06-04 14:02:09
+ * @LastEditTime: 2020-06-08 16:34:55
 -->
 <template>
   <div class="system-label">
@@ -70,6 +70,7 @@ export default {
   methods: {
     getFindLabelByPage() {
       const params = {
+        type: 'SYSTEM',
         name: (this.tableName = this.tableName ? this.tableName : ''),
         labelAttr: (this.tableAttribute = this.tableAttribute
           ? this.tableAttribute
