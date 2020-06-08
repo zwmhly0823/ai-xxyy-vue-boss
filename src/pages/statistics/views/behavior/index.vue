@@ -4,12 +4,16 @@
  * @Author: panjian
  * @Date: 2020-06-06 14:18:35
  * @LastEditors: panjian
- * @LastEditTime: 2020-06-08 18:03:18
+ * @LastEditTime: 2020-06-08 19:40:54
 -->
 <template>
   <article>
     <div>
-      <behaviorSearch @onInputValue="onInputValue" @fourpoints="fourpoints" />
+      <behaviorSearch
+        @onBehavior="onBehavior"
+        @onInputValue="onInputValue"
+        @fourpoints="fourpoints"
+      />
     </div>
     <div class="bottom-table">
       <el-table :data="tableData" style="width: 100%">
@@ -143,7 +147,9 @@ export default {
       tableData: [],
       currentPage: '1',
       totalElements: '',
-      valueInput: ''
+      valueInput: '',
+      valueBehavior: '',
+      paramsValue: ''
     }
   },
   mounted() {
@@ -154,16 +160,21 @@ export default {
   },
   methods: {
     getUserBehaviorLogPage() {
-      const params = {}
-      if (this.valueInput) {
-        // params = this.valueInput
-      }
-      console.log(params)
+      // if (this.valueInput || this.valueBehavior) {
+      //   this.paramsValue = `{${this.valueInput}${this.valueBehavior}}`
+      // } else {
+      //   this.paramsValue = ''
+      // }
+      console.log(this.paramsValue)
 
-      this.$http.Statistics.UserBehaviorLogPage({
-        params,
-        currentPage: this.currentPage
-      }).then((res) => {
+      if (!this.paramsValue) {
+        this.paramsValue = ''
+      }
+      const currentPage = this.currentPage
+      this.$http.Statistics.UserBehaviorLogPage(
+        this.paramsValue,
+        currentPage
+      ).then((res) => {
         this.currentPage = res.data.UserBehaviorLogPage.number
         this.totalElements = res.data.UserBehaviorLogPage.totalElements
         const _data = res.data.UserBehaviorLogPage.content
@@ -188,7 +199,22 @@ export default {
     },
     // 手机号搜索
     onInputValue(data) {
-      this.valueInput = `"mobile.like": {"mobile.keyword":"*${data}*"}`
+      if (data) {
+        this.valueInput = `"mobile.like": {"mobile.keyword":"*${data}*"}`
+        this.paramsValue.push(this.valueInput)
+      } else {
+        this.valueInput = ''
+      }
+      this.getUserBehaviorLogPage()
+    },
+    // 用户行为下拉框
+    onBehavior(data) {
+      if (data) {
+        this.valueBehavior = `"action_type":["${data}"]`
+        this.paramsValue.push(this.valueBehavior)
+      } else {
+        this.valueBehavior = ''
+      }
       this.getUserBehaviorLogPage()
     },
     // 下单时间

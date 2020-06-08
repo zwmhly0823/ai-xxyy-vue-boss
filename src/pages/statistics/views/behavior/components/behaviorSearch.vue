@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-26 16:30:11
  * @LastEditors: panjian
- * @LastEditTime: 2020-06-08 17:30:10
+ * @LastEditTime: 2020-06-08 18:49:47
  -->
 <template>
   <el-card border="false" shadow="never" :class="$style.elard">
@@ -282,7 +282,7 @@ export default {
     },
     // 用户行为
     onUserBehavior(data) {
-      console.log(data, 'data')
+      this.$emit('onBehavior', data.toString())
     },
     // 是否转化
     onConversion(data) {
