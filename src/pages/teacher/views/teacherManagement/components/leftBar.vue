@@ -183,12 +183,15 @@ export default {
           pid = ''
       }
       let params = {
-        name: form.sameLevel.name || form.childLevel.name || form.edit.name,
-        sort: form.sameLevel.sort || form.childLevel.sort || form.edit.sort,
+        name: form[menuType].name,
+        sort: form[menuType].sort,
         id: menuType === 'edit' ? editCurrentData.id : '',
         pid: pid
       }
-      console.log('params', params)
+      if (params.name === '') {
+        this.$message.warning('名称是必填项哦～')
+        return
+      }
       try {
         const res = await this.$http.Teacher.createDepartment(params)
         if (res.code === 0) {
@@ -201,7 +204,6 @@ export default {
           this.initProps()
           this.initTree()
         }
-        console.log('res', res)
       } catch (error) {
         params = {}
         console.log(error)
