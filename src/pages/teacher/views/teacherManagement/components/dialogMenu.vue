@@ -34,13 +34,25 @@ import ProductType from '@/components/MSearch/searchItems/productType.vue';
           <el-input v-model="childLevel.name" maxlength="10" />
         </el-form-item>
         <el-form-item v-if="currentItem.type === 'childLevel'" label="排序">
-          <el-input v-model="childLevel.sort" maxlength="5" />
+          <el-input
+            type="number"
+            v-model="childLevel.sort"
+            maxlength="5"
+            onkeypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))"
+            oninput="if(value.length>5)value=value.slice(0,5)"
+          />
         </el-form-item>
         <el-form-item v-if="currentItem.type === 'edit'" label="名称">
           <el-input v-model="edit.name" maxlength="10" />
         </el-form-item>
         <el-form-item v-if="currentItem.type === 'edit'" label="排序">
-          <el-input type="number" v-model="edit.sort" maxlength="5" />
+          <el-input
+            type="number"
+            v-model="edit.sort"
+            maxlength="5"
+            onkeypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))"
+            oninput="if(value.length>5)value=value.slice(0,5)"
+          />
         </el-form-item>
         <el-form-item v-if="currentItem.type === 'delete'">
           <i class="el-icon-warning"></i
