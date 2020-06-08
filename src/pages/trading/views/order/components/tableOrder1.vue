@@ -343,7 +343,14 @@ export default {
           delete queryObj.packages_type
         }
 
-        this.orderData(queryObj, this.currentPage)
+        // 如果有转介绍用户搜索条件，则请求宽表
+        console.log(queryObj)
+
+        if (Object.keys(queryObj).includes('first_order_send_id')) {
+          this.orderWideData(queryObj, this.currentPage)
+        } else {
+          this.orderData(queryObj, this.currentPage)
+        }
 
         // 获取统计数据
         // statisticsQuery.push({
@@ -371,6 +378,37 @@ export default {
     // 订单列表数据
     orderData(queryObj = {}, page = 1) {
       this.$http.Order.orderPage(`${JSON.stringify(queryObj)}`, page)
+        .then((res) => {
+          if (!res.data.OrderPage) {
+            this.totalElements = 0
+            this.currentPage = 1
+            this.orderList = []
+            return
+          }
+          if (this.topic === '4' || this.topic === '5') {
+            this.totalElements = +res.data.OrderPage.totalElements
+            this.currentPage = +res.data.OrderPage.number
+          }
+          const _data = res.data.OrderPage.content
+          const orderIds = []
+          const userIds = []
+          _data.forEach((item, index) => {
+            orderIds.push(item.id)
+            userIds.push(item.uid)
+            // 下单时间格式化
+            item.ctime = formatData(item.ctime, 's')
+          })
+          this.orderList = _data
+          if (userIds.length > 0) this.getUserTrialTeam(userIds)
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+    },
+
+    // 请求订单宽表
+    orderWideData(queryObj = {}, page = 1) {
+      this.$http.Order.orderWidePage(`${JSON.stringify(queryObj)}`, page)
         .then((res) => {
           if (!res.data.OrderPage) {
             this.totalElements = 0
