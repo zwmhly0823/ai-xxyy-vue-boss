@@ -16,25 +16,31 @@ import ProductType from '@/components/MSearch/searchItems/productType.vue';
     >
       <el-form label-width="20%">
         <el-form-item v-if="currentItem.type === 'sameLevel'" label="名称">
-          <el-input v-model="sameLevel.name" />
+          <el-input v-model="sameLevel.name" maxlength="10" />
         </el-form-item>
         <el-form-item v-if="currentItem.type === 'sameLevel'" label="排序">
-          <el-input v-model="sameLevel.sort" />
+          <el-input
+            type="number"
+            v-model="sameLevel.sort"
+            maxlength="5"
+            onkeypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))"
+            oninput="if(value.length>5)value=value.slice(0,5)"
+          />
         </el-form-item>
         <el-form-item v-if="currentItem.type === 'childLevel'" label="归属上级">
           <el-input :disabled="true" v-model="editCurrentData.name" />
         </el-form-item>
         <el-form-item v-if="currentItem.type === 'childLevel'" label="子级名称">
-          <el-input v-model="childLevel.name" />
+          <el-input v-model="childLevel.name" maxlength="10" />
         </el-form-item>
         <el-form-item v-if="currentItem.type === 'childLevel'" label="排序">
-          <el-input v-model="childLevel.sort" />
+          <el-input v-model="childLevel.sort" maxlength="5" />
         </el-form-item>
         <el-form-item v-if="currentItem.type === 'edit'" label="名称">
-          <el-input v-model="edit.name" />
+          <el-input v-model="edit.name" maxlength="10" />
         </el-form-item>
         <el-form-item v-if="currentItem.type === 'edit'" label="排序">
-          <el-input type="number" v-model="edit.sort" />
+          <el-input type="number" v-model="edit.sort" maxlength="5" />
         </el-form-item>
         <el-form-item v-if="currentItem.type === 'delete'">
           <i class="el-icon-warning"></i
@@ -99,5 +105,14 @@ export default {
   font-size: 18px;
   color: rgb(176, 176, 176);
   margin: 0 0 0 20px;
+}
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  appearance: none;
+  margin: 0;
+}
+input {
+  -moz-appearance: textfield;
 }
 </style>
