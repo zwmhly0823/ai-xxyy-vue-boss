@@ -108,7 +108,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .el-icon-warning {
   font-size: 18px;
   color: rgb(219, 163, 88);
@@ -118,13 +118,14 @@ export default {
   color: rgb(176, 176, 176);
   margin: 0 0 0 20px;
 }
-input::-webkit-outer-spin-button,
-input::-webkit-inner-spin-button {
+/deep/ .el-input__inner {
+  line-height: 20px;
+  -moz-appearance: textfield;
+}
+/deep/ .el-input__inner::-webkit-outer-spin-button,
+/deep/ .el-input__inner::-webkit-inner-spin-button {
   -webkit-appearance: none;
   appearance: none;
   margin: 0;
-}
-input {
-  -moz-appearance: textfield;
 }
 </style>
