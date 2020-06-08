@@ -26,7 +26,10 @@
         @mouseover="showTools(data)"
         @mouseleave="hiddenTools(data)"
       >
-        <span :title="data.id">{{ `${data.name}(${data.size})` }}</span>
+        <span class="menu-box">
+          <span :title="data.id" class="menu-name">{{ `${data.name}` }}</span>
+          <span>{{ `(${data.size})` }}</span>
+        </span>
         <span
           v-show="nowId == data.id && isShowEditIcon"
           class="el-icon-more"
@@ -279,6 +282,15 @@ export default {
     display: flex;
     justify-content: space-between;
     position: relative;
+    .menu-box {
+      display: flex;
+      .menu-name {
+        width: 60px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+    }
   }
   .el-icon-more {
     transform: rotate(90deg);
