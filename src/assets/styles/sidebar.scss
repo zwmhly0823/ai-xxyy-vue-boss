@@ -36,6 +36,7 @@
 
     .el-scrollbar {
       height: 100%;
+      padding: 0 0 10px 0;
     }
 
     &.has-logo {
@@ -58,14 +59,41 @@
       margin-right: 16px;
     }
 
+    @mixin main-title {
+      font-size: 16px !important;
+      font-weight: 500;
+      color: #ccc;
+    }
+
     .el-menu {
       border: none;
       height: 100%;
       width: 100% !important;
-      .el-menu-item {
-        > span {
-          font-size: 16px;
+      // 每一个group的间距
+      > div {
+        margin-top: 10px;
+        > .el-menu-item {
+          // 选中状态
+          &.is-active {
+            background-color: #fff !important;
+            i,
+            span {
+              color: #2b2f3d !important;
+            }
+          }
         }
+      }
+      .el-menu-item {
+        // 无二级菜单的模块title
+        > span {
+          @include main-title();
+        }
+        &:hover {
+          background-color: $menuHover !important;
+        }
+      }
+      em {
+        font-style: normal;
       }
     }
 
@@ -75,8 +103,9 @@
       &:hover {
         background-color: $menuHover !important;
       }
+      // 有二级工菜单的模块title
       span {
-        font-size: 16px;
+        @include main-title();
       }
     }
 
@@ -87,6 +116,7 @@
       }
     }
 
+    // 二级菜单样式
     .el-submenu {
       .el-menu-item-group__title {
         display: none;
@@ -100,10 +130,21 @@
         .el-menu-item {
           width: 50% !important;
           min-width: 50% !important;
-          padding: 0 10px !important;
+          padding: 0 0 0 15px !important;
           text-align: left;
           height: 30px;
           line-height: 30px;
+          font-size: 13px;
+          // 二级导航选中状态
+          &.is-active {
+            em {
+              margin-left: -10px;
+              padding: 2px 5px !important;
+              border-radius: 4px;
+              color: #2b2f3d !important;
+              background-color: $subMenuActiveBg !important;
+            }
+          }
         }
       }
     }
@@ -117,23 +158,23 @@
       }
     }
 
+    .el-menu-item,
+    .el-submenu__title {
+      height: 42px;
+      line-height: 42px;
+    }
+
     & .nest-menu .el-submenu > .el-submenu__title,
     & .el-submenu .el-menu-item {
-      // display: flex;
-      // justify-content: center;
-      // padding: 10px 0 !important;
-      // min-width: 100% !important;
-      // height: inherit;
-      // line-height: inherit;
-      // background-color: $subMenuBg !important;
       .item {
-        font-size: 14px;
+        font-size: 13px;
         font-weight: normal;
       }
-
       &:hover {
         background-color: $subMenuHover !important;
+        color: $subMenuHoverText !important;
       }
+      // 自定义一级导航箭头
     }
     // 隐藏二级目录下拉箭头
     .el-submenu__icon-arrow {
@@ -247,6 +288,9 @@
 
 // when menu collapsed
 .el-menu--vertical {
+  em {
+    font-style: normal;
+  }
   & > .el-menu {
     .svg-icon {
       margin-right: 16px;
@@ -255,16 +299,24 @@
 
   .nest-menu .el-submenu > .el-submenu__title,
   .el-menu-item {
-    &:hover {
-      // you can use $subMenuHover
-      background-color: $menuHover !important;
-    }
+    height: 30px;
+    line-height: 30px;
+    font-size: 13px;
+    background-color: #fff !important;
+    color: #292f41 !important;
   }
 
   // the scroll bar appears when the subMenu is too long
   > .el-menu--popup {
     max-height: 100vh;
+    min-width: inherit;
+    padding: 10px 0 !important;
     overflow-y: auto;
+    background-color: #fff !important;
+
+    // .el-menu-item-group__title {
+    //   color: #292f41 !important;
+    // }
 
     &::-webkit-scrollbar-track-piece {
       background: #d3dce6;

@@ -1,12 +1,11 @@
 <!--
+ * @Descripttion: sidebar item
+ * @version: 2.0.0
  * @Author: YangJiyong
- * @Email: yangjiyong@meishubao.com
  * @Date: 2020-03-24 12:49:53
- * @Last Modified by:   YangJiyong
- * @Last Modified time: 2020-03-24 12:49:53
- * @Description: TODO: 目前只支持二级
- -->
-
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-06-08 16:11:33
+-->
 <template>
   <div v-if="!item.hidden">
     <!-- 只有一级的情况 -->
@@ -22,9 +21,9 @@
     <!-- 有二级目录的 -->
     <el-submenu :index="index.toString()" v-else>
       <template slot="title">
-        <div
-          @click.prevent.stop="handleOpen(item, `${index.toString()}`, true)"
-        >
+        <!-- @click.prevent.stop="handleOpen(item, `${index.toString()}`, true)" -->
+        <!-- 有二级导航的，点击一级导航不跳转 -->
+        <div @click.stop.prevent="() => {}" @mouseenter="handleMouseEndter">
           <i :class="item.meta.icon"></i>
           <span slot="title" style="font-size: 16px;">{{
             item.meta.title
@@ -39,7 +38,7 @@
           v-for="(cItem, cIndex) in item.children"
           :key="cItem.path"
           @click="handleOpen(cItem, `${index}-${cIndex}`)"
-          >{{ cItem.meta.title }}</el-menu-item
+          ><em>{{ cItem.meta.title }}</em></el-menu-item
         >
       </el-menu-item-group>
     </el-submenu>
@@ -118,6 +117,11 @@ export default {
       }
       sessionStorage.setItem('currentMultiTab', pathUrl2)
       this.setCurrentTabbed(pathUrl2)
+    },
+
+    // 弹出二级导航的浮层
+    handleMouseEndter(e) {
+      console.log(e, 'right')
     }
   }
 }

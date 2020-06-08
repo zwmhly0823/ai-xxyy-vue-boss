@@ -44,7 +44,7 @@ const routes = [
         path: '/trialTeam',
         name: 'trialTeam',
         meta: {
-          title: '体验课班级',
+          title: '体验课',
           module: 'student-team'
         }
       },
@@ -52,7 +52,7 @@ const routes = [
         path: '/systemTeam',
         name: 'systemTeam',
         meta: {
-          title: '系统课班级',
+          title: '系统课',
           module: 'student-team'
         }
       }
@@ -73,7 +73,7 @@ const routes = [
         path: '/trial',
         name: 'trial',
         meta: {
-          title: '体验课学员',
+          title: '体验课',
           module: 'users'
         }
       },
@@ -81,7 +81,7 @@ const routes = [
         path: '/system',
         name: 'system',
         meta: {
-          title: '系统课学员',
+          title: '系统课',
           module: 'users'
         }
       }
@@ -102,7 +102,7 @@ const routes = [
         path: '/order',
         name: 'order',
         meta: {
-          title: '订单',
+          title: '订单管理',
           module: 'trading'
         }
       },
@@ -110,7 +110,7 @@ const routes = [
         path: '/financeRefound',
         name: 'financeRefound',
         meta: {
-          title: '财务退款',
+          title: '订单退款',
           module: 'trading'
         }
       }
@@ -131,7 +131,7 @@ const routes = [
         path: '/experienceClass',
         name: 'experienceClass',
         meta: {
-          title: '体验课物流',
+          title: '体验课',
           module: 'express'
         }
       },
@@ -139,7 +139,7 @@ const routes = [
         path: '/systemClass',
         name: 'systemClass',
         meta: {
-          title: '系统课物流',
+          title: '系统课',
           module: 'express'
         }
       },
@@ -147,7 +147,7 @@ const routes = [
         path: '/activityClass',
         name: 'activityClass',
         meta: {
-          title: '活动物流',
+          title: '活动商品',
           module: 'express'
         }
       }
@@ -269,16 +269,6 @@ const routes = [
       module: 'statistics'
     },
     children: [
-      // {
-      //   path: '/salesPerformance',
-      //   name: 'salesPerformance',
-      //   meta: {
-      //     title: '销售业绩',
-      //     module: 'statistics',
-      //     style: 'line'
-      //   }
-      // },
-
       {
         path: '/priodPerformance',
         name: 'priodPerformance',
@@ -292,21 +282,11 @@ const routes = [
         path: '/salesPerformance',
         name: 'salesPerformance',
         meta: {
-          title: '销售过程',
+          title: '过程分析',
           module: 'statistics',
           style: 'line'
         }
       }
-
-      // {
-      //   path: '/salesProcess',
-      //   name: 'salesProcess',
-      //   meta: {
-      //     title: '按期汇总',
-      //     module: 'statistics',
-      //     style: 'line'
-      //   }
-      // }
     ]
   }
 ]

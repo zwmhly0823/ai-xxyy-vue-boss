@@ -4,18 +4,17 @@
 
 /* colors 颜色相关变量 */
 // sidebar
-$menuText:#bfcbd9;
-$menuActiveText:#fff;
-$subMenuActiveText:#f4f4f5; //https://github.com/ElemeFE/element/issues/12951
+$menuText: rgba(255, 255, 255, 0.5);
+$menuActiveText: #fff;
+$subMenuActiveText: #f4f4f5; //https://github.com/ElemeFE/element/issues/12951
 
-$menuBg:#2a2e3a;
-// $menuHover:#3a3a3a;
-$menuHover:transparent;
+$menuBg: #293042;
+$menuHover: #373e52;
 
-// $subMenuBg:#3a3a3a;
-// $subMenuHover: #333;
-$subMenuBg:transparent;
+$subMenuBg: transparent;
 $subMenuHover: transparent;
+$subMenuHoverText: #f5f5f9;
+$subMenuActiveBg: #f5f5f9;
 
 $gray-e3: #e3e3e3;
 /* colors end */
@@ -29,7 +28,6 @@ $topBarWidth: 50px;
 
 // multiTabbed 页签高度
 $multiTabbedHeight: 34px;
-
 
 // the :export directive is the magic sauce for webpack
 // https://www.bluematador.com/blog/how-to-share-variables-between-js-and-sass

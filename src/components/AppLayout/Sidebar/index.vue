@@ -7,9 +7,7 @@
         :collapse="isCollapse"
         :background-color="variables.menuBg"
         :text-color="variables.menuText"
-        :unique-opened="false"
         :active-text-color="variables.menuActiveText"
-        :collapse-transition="false"
         :default-openeds="defaultOpendIndex"
         mode="vertical"
       >
@@ -70,6 +68,11 @@ export default {
     defaultOpendIndex() {
       const ids = routes.map((_, index) => index.toString())
       return ids
+    }
+  },
+  watch: {
+    activeMenu(val) {
+      console.log(val, 'activeMenu')
     }
   }
 }
