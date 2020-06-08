@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-07 13:52:26
  * @LastEditors: panjian
- * @LastEditTime: 2020-06-08 16:32:22
+ * @LastEditTime: 2020-06-08 17:32:38
  */
 import axios from '../axiosConfig'
 
@@ -398,10 +398,12 @@ export default {
     })
   },
   // 获取用户行为下拉接口
-  UserBehaviorLogPage(currentPage) {
+  UserBehaviorLogPage({ params = {}, currentPage }) {
     return axios.post('/graphql/v1/toss', {
       query: `{
-        UserBehaviorLogPage(query:"",, page: ${currentPage}, size: 20) {
+        UserBehaviorLogPage(query:"${JSON.stringify(
+          params
+        )}",page:${currentPage}, size: 20) {
           number
           totalElements
           content {

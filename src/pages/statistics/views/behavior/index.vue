@@ -4,11 +4,13 @@
  * @Author: panjian
  * @Date: 2020-06-06 14:18:35
  * @LastEditors: panjian
- * @LastEditTime: 2020-06-08 16:32:57
+ * @LastEditTime: 2020-06-08 18:03:18
 -->
 <template>
   <article>
-    <div><behaviorSearch @fourpoints="fourpoints" /></div>
+    <div>
+      <behaviorSearch @onInputValue="onInputValue" @fourpoints="fourpoints" />
+    </div>
     <div class="bottom-table">
       <el-table :data="tableData" style="width: 100%">
         <el-table-column label="用户信息" width="280">
@@ -139,8 +141,9 @@ export default {
   data() {
     return {
       tableData: [],
-      currentPage: 1,
-      totalElements: ''
+      currentPage: '1',
+      totalElements: '',
+      valueInput: ''
     }
   },
   mounted() {
@@ -151,10 +154,16 @@ export default {
   },
   methods: {
     getUserBehaviorLogPage() {
-      const params = {
-        currentPage: this.currentPage
+      const params = {}
+      if (this.valueInput) {
+        // params = this.valueInput
       }
-      this.$http.Statistics.UserBehaviorLogPage(params).then((res) => {
+      console.log(params)
+
+      this.$http.Statistics.UserBehaviorLogPage({
+        params,
+        currentPage: this.currentPage
+      }).then((res) => {
         this.currentPage = res.data.UserBehaviorLogPage.number
         this.totalElements = res.data.UserBehaviorLogPage.totalElements
         const _data = res.data.UserBehaviorLogPage.content
@@ -176,6 +185,11 @@ export default {
         })
         this.tableData = _data
       })
+    },
+    // 手机号搜索
+    onInputValue(data) {
+      this.valueInput = `"mobile.like": {"mobile.keyword":"*${data}*"}`
+      this.getUserBehaviorLogPage()
     },
     // 下单时间
     fourpoints(data) {

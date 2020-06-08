@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-26 16:30:11
  * @LastEditors: panjian
- * @LastEditTime: 2020-06-08 11:00:04
+ * @LastEditTime: 2020-06-08 17:30:10
  -->
 <template>
   <el-card border="false" shadow="never" :class="$style.elard">
@@ -278,7 +278,7 @@ export default {
     },
     // 手机号搜索返回值
     onInput(data) {
-      console.log(data)
+      this.$emit('onInputValue', data)
     },
     // 用户行为
     onUserBehavior(data) {
