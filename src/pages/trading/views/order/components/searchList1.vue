@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-04-25 17:24:23
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-06-08 20:17:58
+ * @LastEditTime: 2020-06-08 21:00:32
  -->
 <template>
   <el-card
@@ -437,10 +437,11 @@ export default {
       // this.setSeachParmas(res, ['is_first_order_send_id'])
       const sendId = res.is_first_order_send_id
       if (sendId === 0) {
-        this.setSeachParmas('', ['first_order_send_id'])
+        this.setSeachParmas('0', ['first_order_send_id'], 'terms')
         this.hasSendId = false
       } else {
         this.hasSendId = true
+        this.setSeachParmas('', ['first_order_send_id'], 'terms')
       }
       console.log(res)
     },
