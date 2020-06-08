@@ -2,7 +2,7 @@
  * @Descripttion: 
  * @version: 
  * @LastEditors: liukun
- * @LastEditTime: 2020-06-08 14:54:30
+ * @LastEditTime: 2020-06-08 15:21:27
  -->
 <template>
   <div class="adjustModule">
@@ -547,6 +547,8 @@ export default {
                         this.everyPrice
                       )
                     }
+                  } else {
+                    console.info(this.selectOrder)
                   }
                   // if (this.refundForm.residueFee && this.pureWeekS) {
                   //   this.everyPrice = (
