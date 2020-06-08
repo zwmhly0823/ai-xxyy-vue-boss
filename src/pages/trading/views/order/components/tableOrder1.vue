@@ -410,17 +410,17 @@ export default {
     orderWideData(queryObj = {}, page = 1) {
       this.$http.Order.orderWidePage(`${JSON.stringify(queryObj)}`, page)
         .then((res) => {
-          if (!res.data.OrderPage) {
+          if (!res.data.OrderWideStatisticsPage) {
             this.totalElements = 0
             this.currentPage = 1
             this.orderList = []
             return
           }
           if (this.topic === '4' || this.topic === '5') {
-            this.totalElements = +res.data.OrderPage.totalElements
-            this.currentPage = +res.data.OrderPage.number
+            this.totalElements = +res.data.OrderWideStatisticsPage.totalElements
+            this.currentPage = +res.data.OrderWideStatisticsPage.number
           }
-          const _data = res.data.OrderPage.content
+          const _data = res.data.OrderWideStatisticsPage.content
           const orderIds = []
           const userIds = []
           _data.forEach((item, index) => {

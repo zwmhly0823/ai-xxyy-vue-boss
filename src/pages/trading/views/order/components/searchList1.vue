@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-04-25 17:24:23
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-06-08 21:00:32
+ * @LastEditTime: 2020-06-08 21:21:02
  -->
 <template>
   <el-card
@@ -25,7 +25,7 @@
       <el-form-item label="推荐人信息:" :class="{ [$style.marginer]: true }">
         <div class="row_colum">
           <simple-select
-            name="is_first_order_send_id"
+            name="first_order_send_id"
             @result="getFirstOrder"
             :multiple="false"
             :data-list="firstOrderList"
@@ -434,14 +434,14 @@ export default {
       // )
     },
     getFirstOrder(res) {
-      // this.setSeachParmas(res, ['is_first_order_send_id'])
-      const sendId = res.is_first_order_send_id
+      // this.setSeachParmas(res, ['first_order_send_id'])
+      const sendId = res.first_order_send_id
       if (sendId === 0) {
-        this.setSeachParmas('0', ['first_order_send_id'], 'terms')
+        this.setSeachParmas(res, ['first_order_send_id'], 'terms')
         this.hasSendId = false
       } else {
         this.hasSendId = true
-        this.setSeachParmas('', ['first_order_send_id'], 'terms')
+        this.setSeachParmas(res, ['first_order_send_id'], 'terms')
       }
       console.log(res)
     },
