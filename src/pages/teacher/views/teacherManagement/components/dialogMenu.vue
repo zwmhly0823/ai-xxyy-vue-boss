@@ -118,6 +118,13 @@ export default {
   color: rgb(176, 176, 176);
   margin: 0 0 0 20px;
 }
+/deep/ .el-form {
+  width: 100%;
+  margin: 0 0 0 -30px;
+}
+/deep/ .el-dialog__body {
+  padding-bottom: 0;
+}
 /deep/ .el-input__inner {
   line-height: 20px;
   -moz-appearance: textfield;
