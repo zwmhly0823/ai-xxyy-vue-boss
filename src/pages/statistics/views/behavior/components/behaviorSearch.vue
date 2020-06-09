@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-26 16:30:11
  * @LastEditors: panjian
- * @LastEditTime: 2020-06-08 18:49:47
+ * @LastEditTime: 2020-06-09 15:13:50
  -->
 <template>
   <el-card border="false" shadow="never" :class="$style.elard">
@@ -76,13 +76,13 @@
       <!-- 课程期数 -->
       <el-form-item :class="{ [$style.marginer]: true }">
         <searchStage
-          @result="result"
+          @result="onStage"
           :placeholder="placeholder"
           :type="curriculumType"
         />
       </el-form-item>
       <br />
-      <el-form-item label="下单时间:" :class="{ [$style.marginer]: true }">
+      <el-form-item label="行为时间:" :class="{ [$style.marginer]: true }">
         <date-picker
           :class="[$style.fourPoint, 'allmini']"
           @result="getDate"
@@ -142,47 +142,26 @@ export default {
       cur3: false,
       currentBtn: null,
       input: '',
-      userBehaviorList: [
-        {
-          value: '选项1',
-          label: '黄金糕'
-        },
-        {
-          value: '选项2',
-          label: '双皮奶'
-        },
-        {
-          value: '选项3',
-          label: '蚵仔煎'
-        },
-        {
-          value: '选项4',
-          label: '龙须面'
-        },
-        {
-          value: '选项5',
-          label: '北京烤鸭'
-        }
-      ],
+      userBehaviorList: [],
       userBehavior: [],
       conversionList: [
         {
-          value: '0',
+          value: '1',
           label: '未转化'
         },
         {
-          value: '1',
+          value: '2',
           label: '已转化'
         }
       ],
       conversion: '',
       curriculumList: [
         {
-          value: '1',
+          value: '2',
           label: '系统课排期'
         },
         {
-          value: '0',
+          value: '1',
           label: '体验课排期'
         }
       ],
@@ -200,12 +179,10 @@ export default {
   methods: {
     getActionTypeList() {
       this.$http.Statistics.actionTypeList().then((res) => {
-        console.log(res)
-
         const _data = res.data.actionTypeList
         _data.forEach((item) => {
           item.label = item.name
-          item.value = item.id
+          item.value = item.id.toString()
         })
         this.userBehaviorList = _data
       })
@@ -229,7 +206,6 @@ export default {
       this.currentBtn = '0'
       const start = new Date(new Date().toLocaleDateString()).getTime() // 设定日期,时间默认0点
       const end = Date.now()
-      console.log([start, end])
       this.$root.$emit('fourpoint', [start, end])
     },
     // 昨日
@@ -282,19 +258,20 @@ export default {
     },
     // 用户行为
     onUserBehavior(data) {
-      this.$emit('onBehavior', data.toString())
+      this.$emit('onBehavior', data)
     },
     // 是否转化
     onConversion(data) {
-      console.log(data)
+      this.$emit('onConversionValue', +data)
     },
     // 选择课程排期
     onCurriculum(data) {
       this.curriculumType = data
+      this.$emit('onCurriculumValue', data)
     },
     // 课程选择的期数
-    result(data) {
-      console.log(data)
+    onStage(data) {
+      this.$emit('onStageValue', data)
     }
   }
 }

@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-06-06 14:18:35
  * @LastEditors: panjian
- * @LastEditTime: 2020-06-08 19:40:54
+ * @LastEditTime: 2020-06-09 15:34:07
 -->
 <template>
   <article>
@@ -13,6 +13,9 @@
         @onBehavior="onBehavior"
         @onInputValue="onInputValue"
         @fourpoints="fourpoints"
+        @onConversionValue="onConversionValue"
+        @onCurriculumValue="onCurriculumValue"
+        @onStageValue="onStageValue"
       />
     </div>
     <div class="bottom-table">
@@ -148,31 +151,56 @@ export default {
       currentPage: '1',
       totalElements: '',
       valueInput: '',
-      valueBehavior: '',
-      paramsValue: ''
+      valueBehavior: [],
+      valueConversion: '',
+      valueCurriculum: '',
+      valueStage: '',
+      valueFourpoints: '',
+      paramsValues: ''
     }
   },
   mounted() {
     this.getUserBehaviorLogPage()
-    this.$root.$on('fourpoint', function(data) {
-      console.log(data)
-    })
+    // this.$root.$on('fourpoint', function(data) {
+    //   console.log(data, 'mounted')
+    // })
   },
   methods: {
     getUserBehaviorLogPage() {
-      // if (this.valueInput || this.valueBehavior) {
-      //   this.paramsValue = `{${this.valueInput}${this.valueBehavior}}`
-      // } else {
-      //   this.paramsValue = ''
-      // }
-      console.log(this.paramsValue)
-
-      if (!this.paramsValue) {
-        this.paramsValue = ''
+      const paramsValue = []
+      // 用户搜索
+      if (this.valueInput) {
+        paramsValue.push(
+          `"mobile.like": {"mobile.keyword":"*${this.valueInput}*"}`
+        )
       }
+      // 用户行为
+      if (this.valueBehavior.length !== 0) {
+        paramsValue.push(`"action_type":${JSON.stringify(this.valueBehavior)}`)
+      }
+      // 是否转化
+      if (this.valueConversion) {
+        paramsValue.push(`"status":${this.valueConversion}`)
+      }
+      // 选择体验课系统课
+      if (this.valueCurriculum) {
+        paramsValue.push(
+          `"order_regtype":${JSON.stringify(this.valueCurriculum)}`
+        )
+      }
+      // 选择期数
+      if (this.valueStage) {
+        paramsValue.push(`"stage":${JSON.stringify(this.valueStage)}`)
+      }
+      // 行为时间
+      if (this.valueFourpoints) {
+        paramsValue.push(`"action_time":${this.valueFourpoints}`)
+      }
+      this.paramsValues = paramsValue && `{${paramsValue.join(',')}}`
+
       const currentPage = this.currentPage
       this.$http.Statistics.UserBehaviorLogPage(
-        this.paramsValue,
+        this.paramsValues,
         currentPage
       ).then((res) => {
         this.currentPage = res.data.UserBehaviorLogPage.number
@@ -200,29 +228,72 @@ export default {
     // 手机号搜索
     onInputValue(data) {
       if (data) {
-        this.valueInput = `"mobile.like": {"mobile.keyword":"*${data}*"}`
-        this.paramsValue.push(this.valueInput)
+        this.valueInput = data
       } else {
         this.valueInput = ''
       }
+      this.currentPage = '1'
       this.getUserBehaviorLogPage()
     },
     // 用户行为下拉框
     onBehavior(data) {
       if (data) {
-        this.valueBehavior = `"action_type":["${data}"]`
-        this.paramsValue.push(this.valueBehavior)
+        this.valueBehavior = data
       } else {
         this.valueBehavior = ''
       }
+      this.currentPage = '1'
+      this.getUserBehaviorLogPage()
+    },
+    // 是否转换 下拉框
+    onConversionValue(data) {
+      if (data === 1) {
+        this.valueConversion = `{"lt":2}`
+      } else if (data === 2) {
+        this.valueConversion = `{"gt":2}`
+      } else {
+        this.valueConversion = ''
+      }
+      this.currentPage = '1'
+      this.getUserBehaviorLogPage()
+    },
+    // 选择体验课 系统课
+    onCurriculumValue(data) {
+      if (data === '1') {
+        this.valueCurriculum = ['1']
+      } else if (data === '2') {
+        this.valueCurriculum = ['2', '3']
+      } else {
+        this.valueCurriculum = ''
+      }
+      this.currentPage = '1'
+      this.getUserBehaviorLogPage()
+    },
+    // 选择期数
+    onStageValue(data) {
+      if (data) {
+        for (const key in data) {
+          this.valueStage = data[key]
+        }
+      } else {
+        this.valueStage = ''
+      }
+      this.currentPage = '1'
       this.getUserBehaviorLogPage()
     },
     // 下单时间
     fourpoints(data) {
-      console.log(data)
+      if (data) {
+        this.valueFourpoints = `{"gt":${data.ctime.gte},"lt":${data.ctime.lte}}`
+      } else {
+        this.valueFourpoints = ''
+      }
+      this.currentPage = '1'
+      this.getUserBehaviorLogPage()
     },
     handleCurrentChange(val) {
-      console.log(val)
+      this.currentPage = val
+      this.getUserBehaviorLogPage()
     }
   }
 }
