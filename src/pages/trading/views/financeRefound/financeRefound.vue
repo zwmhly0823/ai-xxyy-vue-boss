@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-05-19 17:18:39
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-06-04 22:21:06
+ * @LastEditTime: 2020-06-09 21:13:15
 -->
 <template>
   <section class="bianju10">
@@ -248,7 +248,9 @@
         </el-row>
         <el-row v-if="choutidata.periodRefund !== ''">
           <el-col :span="4">退款月数:</el-col>
-          <el-col :span="18" :offset="2">{{ choutidata.periodRefund }} </el-col>
+          <el-col :span="18" :offset="2"
+            >{{ Math.floor(choutidata.periodRefund / 4) + '个月' }}
+          </el-col>
         </el-row>
         <el-row v-if="choutidata.refundFee !== ''">
           <el-col :span="4">退款金额:</el-col>
