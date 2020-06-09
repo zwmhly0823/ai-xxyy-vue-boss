@@ -4,7 +4,7 @@
  * @Author: shentong
  * @Date: 2020-03-13 16:20:48
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-06-08 19:34:19
+ * @LastEditTime: 2020-06-09 17:56:00
  */
 import axios from '../axiosConfig'
 
@@ -16,86 +16,6 @@ export default {
     return axios.post('/graphql/v1/toss', {
       query: `{
         OrderPage(query: ${JSON.stringify(query)}, page: ${page}) {
-          totalPages
-          totalElements
-          number
-          content {
-            id
-            uid
-            ctime
-            packages_name
-            sup
-            stage
-            regtype
-            amount
-            status
-            order_status
-            bear_integral
-            gem_integral
-            product_name
-            out_trade_no
-            user{
-              username
-              nickname
-              mobile
-              mobile_province
-              mobile_city
-              birthday
-            }
-            channel {
-              channel_outer_name
-            }
-            team {
-              team_name
-            }
-            last_teacher_id
-            department{
-              department{
-                id
-                pid
-                name
-              }
-            }
-            teacher_department{
-              department{
-                id
-                pid
-                name
-              }
-            }
-            teacher{
-              realname
-            }
-            salesman{
-              realname
-            }
-            express{
-              express_total
-              last_express_status
-            }
-            trial_course{
-              team_category
-            }
-            first_send_user{
-              id
-              username
-              nickname
-              mobile
-            }
-          }
-        }
-      }`
-    })
-  },
-  /**
-   * 获取订单列表 v1
-   * */
-  orderWidePage(query, page = 1) {
-    return axios.post('/graphql/v1/toss', {
-      query: `{
-        OrderWideStatisticsPage(query: ${JSON.stringify(
-          query
-        )}, page: ${page}) {
           totalPages
           totalElements
           number

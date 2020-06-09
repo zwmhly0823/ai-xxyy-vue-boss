@@ -96,7 +96,7 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="转介绍用户信息" min-width="160">
+      <el-table-column label="推荐人信息" min-width="160">
         <template slot-scope="scope">
           <p>
             {{

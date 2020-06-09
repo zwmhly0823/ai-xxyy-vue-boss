@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-04-25 17:24:23
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-06-08 21:21:02
+ * @LastEditTime: 2020-06-09 18:34:37
  -->
 <template>
   <el-card
@@ -34,7 +34,7 @@
           <SearchPhoneAndUsername
             @result="getSendUser"
             :custom-style="{ width: '200px' }"
-            placeholder="转介绍人手机号/用户名称"
+            placeholder="推荐人手机号/用户名称"
             name="first_order_send_id"
             type="2"
             v-if="hasSendId"
@@ -441,7 +441,10 @@ export default {
         this.hasSendId = false
       } else {
         this.hasSendId = true
-        this.setSeachParmas(res, ['first_order_send_id'], 'terms')
+        const range = {
+          first_order_send_id: { gt: 0 }
+        }
+        this.setSeachParmas(range, ['first_order_send_id'], 'range')
       }
       console.log(res)
     },

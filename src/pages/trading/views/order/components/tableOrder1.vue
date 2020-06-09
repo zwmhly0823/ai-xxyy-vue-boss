@@ -87,7 +87,7 @@
           </p>
         </template>
       </el-table-column>
-      <el-table-column label="转介绍用户信息" min-width="160">
+      <el-table-column label="推荐人信息" min-width="160">
         <template slot-scope="scope">
           <p>
             {{
@@ -343,14 +343,9 @@ export default {
           delete queryObj.packages_type
         }
 
-        // 如果有转介绍用户搜索条件，则请求宽表
+        // 如果有推荐人搜索条件，则请求宽表
         console.log(queryObj)
-
-        if (Object.keys(queryObj).includes('first_order_send_id')) {
-          this.orderWideData(queryObj, this.currentPage)
-        } else {
-          this.orderData(queryObj, this.currentPage)
-        }
+        this.orderData(queryObj, this.currentPage)
 
         // 获取统计数据
         // statisticsQuery.push({
@@ -390,37 +385,6 @@ export default {
             this.currentPage = +res.data.OrderPage.number
           }
           const _data = res.data.OrderPage.content
-          const orderIds = []
-          const userIds = []
-          _data.forEach((item, index) => {
-            orderIds.push(item.id)
-            userIds.push(item.uid)
-            // 下单时间格式化
-            item.ctime = formatData(item.ctime, 's')
-          })
-          this.orderList = _data
-          if (userIds.length > 0) this.getUserTrialTeam(userIds)
-        })
-        .catch((err) => {
-          console.log(err)
-        })
-    },
-
-    // 请求订单宽表
-    orderWideData(queryObj = {}, page = 1) {
-      this.$http.Order.orderWidePage(`${JSON.stringify(queryObj)}`, page)
-        .then((res) => {
-          if (!res.data.OrderWideStatisticsPage) {
-            this.totalElements = 0
-            this.currentPage = 1
-            this.orderList = []
-            return
-          }
-          if (this.topic === '4' || this.topic === '5') {
-            this.totalElements = +res.data.OrderWideStatisticsPage.totalElements
-            this.currentPage = +res.data.OrderWideStatisticsPage.number
-          }
-          const _data = res.data.OrderWideStatisticsPage.content
           const orderIds = []
           const userIds = []
           _data.forEach((item, index) => {

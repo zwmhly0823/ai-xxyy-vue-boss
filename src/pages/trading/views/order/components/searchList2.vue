@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-04-25 17:24:23
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-06-06 17:45:15
+ * @LastEditTime: 2020-06-09 18:33:35
  -->
 <template>
   <el-card
@@ -26,14 +26,24 @@
         <orderStatus @result="getExpressStatus" />
       </el-form-item> -->
 
-      <el-form-item label="转介绍用户:" :class="{ [$style.marginer]: true }">
-        <SearchPhoneAndUsername
-          @result="getSendUser"
-          :custom-style="{ width: '200px' }"
-          placeholder="转介绍人手机号/用户名称"
-          name="uid"
-          type="2"
-        />
+      <el-form-item label="推荐人信息:" :class="{ [$style.marginer]: true }">
+        <div class="row_colum">
+          <simple-select
+            name="first_order_send_id"
+            @result="getFirstOrder"
+            :multiple="false"
+            :data-list="firstOrderList"
+            placeholder="全部"
+          ></simple-select>
+          <SearchPhoneAndUsername
+            @result="getSendUser"
+            :custom-style="{ width: '200px' }"
+            placeholder="推荐人手机号/用户名称"
+            name="first_order_send_id"
+            type="2"
+            v-if="hasSendId"
+          />
+        </div>
       </el-form-item>
       <br />
 
@@ -141,8 +151,8 @@ import SearchTeamName from '@/components/MSearch/searchItems/searchTeamName'
 import SearchStage from '@/components/MSearch/searchItems/searchStage'
 import TrialCourseType from '@/components/MSearch/searchItems/trialCourseType'
 import SearchPhoneAndUsername from '@/components/MSearch/searchItems/searchPhoneAndUsername'
+import SimpleSelect from '@/components/MSearch/searchItems/simpleSelect'
 import { isToss } from '@/utils/index'
-import axios from '@/api/axiosConfig'
 
 export default {
   components: {
@@ -156,7 +166,8 @@ export default {
     SearchTeamName,
     SearchStage,
     TrialCourseType,
-    SearchPhoneAndUsername
+    SearchPhoneAndUsername,
+    SimpleSelect
   },
 
   data() {
@@ -175,7 +186,18 @@ export default {
       should: [],
       selectTime: null, // 物流时间下拉列表_选中项
       oldTime: '', // 上次时间选择值
-      teacherId: '' // 判断是否是toss环境还是boss环境
+      teacherId: '', // 判断是否是toss环境还是boss环境
+      firstOrderList: [
+        {
+          id: 1,
+          text: '有推荐人'
+        },
+        {
+          id: 0,
+          text: '无推荐人'
+        }
+      ],
+      hasSendId: true
     }
   },
   computed: {},
@@ -309,34 +331,20 @@ export default {
     },
 
     async getSendUser(res) {
-      let uids = []
-      const data = res === '0' ? '' : res
-
-      // 根据user id请求当前用户转化来的用户list
-      if (data && data.uid) {
-        const query = {
-          first_order_send_id: data.uid
+      this.setSeachParmas(res, ['first_order_send_id'], 'terms')
+    },
+    getFirstOrder(res) {
+      const sendId = res.first_order_send_id
+      if (sendId === 0) {
+        this.setSeachParmas(res, ['first_order_send_id'], 'terms')
+        this.hasSendId = false
+      } else {
+        this.hasSendId = true
+        const range = {
+          first_order_send_id: { gt: 0 }
         }
-        const sendList = await axios.post('/graphql/v1/toss', {
-          query: `{
-            UserList(query: ${JSON.stringify(
-              JSON.stringify(query)
-            )}, size: 500){
-              id
-              first_order_send_id
-            }
-          }`
-        })
-        if (sendList && sendList.data && sendList.data.UserList.length > 0) {
-          const ids = sendList.data.UserList.map((item) => item.id)
-          uids = ids
-        }
+        this.setSeachParmas(range, ['first_order_send_id'], 'range')
       }
-      this.setSeachParmas(
-        uids.length > 0 ? { uid: uids } : '',
-        ['uid'],
-        'terms'
-      )
     },
 
     /**  处理接收到的查询参数

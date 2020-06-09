@@ -20,15 +20,6 @@
       <el-form-item label="商品类型:" :class="{ [$style.marginer]: true }">
         <product-type name="regtype" @result="getProductType" />
       </el-form-item>
-      <el-form-item label="转介绍用户:" :class="{ [$style.marginer]: true }">
-        <SearchPhoneAndUsername
-          @result="getSendUser"
-          :custom-style="{ width: '200px' }"
-          placeholder="转介绍人手机号/用户名称"
-          name="pay_channel_user"
-          type="2"
-        />
-      </el-form-item>
       <br />
       <el-form-item label="下单时间:" :class="{ [$style.marginer]: true }">
         <date-picker
@@ -78,14 +69,12 @@
 import OrderSearch from '@/components/MSearch/searchItems/orderSearch.vue'
 import DatePicker from '@/components/MSearch/searchItems/datePicker.vue'
 import ProductType from '@/components/MSearch/searchItems/productType.vue'
-import SearchPhoneAndUsername from '@/components/MSearch/searchItems/searchPhoneAndUsername'
 import { isToss } from '@/utils/index'
 export default {
   components: {
     OrderSearch,
     DatePicker,
-    ProductType,
-    SearchPhoneAndUsername
+    ProductType
   },
   data() {
     return {
