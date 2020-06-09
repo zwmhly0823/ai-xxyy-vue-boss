@@ -87,6 +87,22 @@
           </p>
         </template>
       </el-table-column>
+      <el-table-column label="推荐人信息" min-width="160">
+        <template slot-scope="scope">
+          <p>
+            {{
+              scope.row.first_send_user
+                ? scope.row.first_send_user.username
+                : '-'
+            }}
+          </p>
+          <p>
+            {{
+              scope.row.first_send_user ? scope.row.first_send_user.mobile : '-'
+            }}
+          </p>
+        </template>
+      </el-table-column>
       <el-table-column label="下单时间·订单号" min-width="180">
         <template slot-scope="scope">
           <p>
@@ -327,6 +343,8 @@ export default {
           delete queryObj.packages_type
         }
 
+        // 如果有推荐人搜索条件，则请求宽表
+        console.log(queryObj)
         this.orderData(queryObj, this.currentPage)
 
         // 获取统计数据

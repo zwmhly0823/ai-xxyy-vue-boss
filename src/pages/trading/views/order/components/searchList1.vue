@@ -4,17 +4,42 @@
  * @Author: liukun
  * @Date: 2020-04-25 17:24:23
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-06-06 20:36:05
+ * @LastEditTime: 2020-06-09 18:55:46
  -->
 <template>
-  <el-card border="false" shadow="never" :class="$style.elard">
-    <el-form :inline="true" label-position="right" label-width="80px">
+  <el-card
+    border="false"
+    shadow="never"
+    :class="$style.elard"
+    class="search-section"
+  >
+    <el-form :inline="true" label-position="right" label-width="100px">
       <el-form-item label="订单搜索:" :class="{ [$style.marginer]: true }">
         <orderSearch class="allmini" @result="getOrderSearch" />
       </el-form-item>
 
       <el-form-item label="订单来源:" :class="{ [$style.marginer]: true }">
         <ChannelSelect @result="getChannel" name="pay_channel" />
+      </el-form-item>
+
+      <el-form-item label="推荐人信息:" :class="{ [$style.marginer]: true }">
+        <div class="row_colum">
+          <simple-select
+            name="first_order_send_id"
+            @result="getFirstOrder"
+            :multiple="false"
+            :data-list="firstOrderList"
+            placeholder="全部"
+          ></simple-select>
+          <SearchPhoneAndUsername
+            @result="getSendUser"
+            :custom-style="{ width: '200px' }"
+            placeholder="推荐人手机号/用户名称"
+            name="first_order_send_id"
+            type="2"
+            v-if="hasSendId"
+          />
+        </div>
       </el-form-item>
       <br />
 
@@ -159,8 +184,11 @@ import Department from '@/components/MSearch/searchItems/department'
 import SearchTeamName from '@/components/MSearch/searchItems/searchTeamName'
 // import SearchTrialTeamName from '@/components/MSearch/searchItems/searchTrialTeamName'
 import SearchStage from '@/components/MSearch/searchItems/searchStage'
+import SearchPhoneAndUsername from '@/components/MSearch/searchItems/searchPhoneAndUsername'
+import SimpleSelect from '@/components/MSearch/searchItems/simpleSelect'
 import { isToss } from '@/utils/index'
 import { downloadHandle } from '@/utils/download'
+// import axios from '@/api/axiosConfig'
 
 export default {
   components: {
@@ -173,7 +201,9 @@ export default {
     Department,
     SearchTeamName,
     // SearchTrialTeamName,
-    SearchStage
+    SearchStage,
+    SearchPhoneAndUsername,
+    SimpleSelect
   },
 
   data() {
@@ -198,7 +228,22 @@ export default {
       selectTime: null, // 物流时间下拉列表_选中项
       oldTime: '', // 上次时间选择值
       teacherId: '', // 判断是否是toss环境还是boss环境
-      searchParams: []
+      searchParams: [],
+      firstOrderList: [
+        // {
+        //   id: 1,
+        //   text: '全部'
+        // },
+        {
+          id: 1,
+          text: '有推荐人'
+        },
+        {
+          id: 0,
+          text: '无推荐人'
+        }
+      ],
+      hasSendId: true
     }
   },
   computed: {},
@@ -365,6 +410,52 @@ export default {
     getTrialTeamName(res) {
       this.setSeachParmas(res, ['trial_team_id'], 'terms')
     },
+    async getSendUser(res) {
+      // let uids = []
+      // const data = res === '0' ? '' : res
+      this.setSeachParmas(res, ['first_order_send_id'], 'terms')
+
+      // 根据user id请求当前用户转化来的用户list
+      // if (data && data.uid) {
+      //   const query = {
+      //     first_order_send_id: data.uid
+      //   }
+      //   const sendList = await axios.post('/graphql/v1/toss', {
+      //     query: `{
+      //       UserList(query: ${JSON.stringify(
+      //         JSON.stringify(query)
+      //       )}, size: 500){
+      //         id
+      //         first_order_send_id
+      //       }
+      //     }`
+      //   })
+      //   if (sendList && sendList.data && sendList.data.UserList.length > 0) {
+      //     const ids = sendList.data.UserList.map((item) => item.id)
+      //     uids = ids
+      //   }
+      // }
+      // this.setSeachParmas(
+      //   uids.length > 0 ? { uid: uids } : '',
+      //   ['uid'],
+      //   'terms'
+      // )
+    },
+    getFirstOrder(res) {
+      // this.setSeachParmas(res, ['first_order_send_id'])
+      const sendId = res.first_order_send_id
+      if (sendId === 0) {
+        this.setSeachParmas(res, ['first_order_send_id'], 'terms')
+        this.hasSendId = false
+      } else {
+        this.hasSendId = true
+        const range = {
+          first_order_send_id: { gt: 0 }
+        }
+        this.setSeachParmas(range, ['first_order_send_id'], 'range')
+      }
+      console.log(res)
+    },
 
     /**  处理接收到的查询参数
      * @res: Object, 子筛选组件返回的表达式对象，如 {sup: 2}
@@ -413,8 +504,6 @@ export default {
 
     // 导出
     exportOrderHandle() {
-      console.log(this.searchParams)
-      console.log(this.$parent.$children[1].finalParams)
       if (this.searchParams.length === 0) {
         this.$message.error('请选择筛选条件')
         return
@@ -516,6 +605,14 @@ export default {
   }
   .margin_l10 {
     margin-left: 10px;
+  }
+}
+</style>
+
+<style lang="scss" scoped>
+.search-section {
+  ::v-deep .el-icon-search {
+    top: 14px;
   }
 }
 </style>
