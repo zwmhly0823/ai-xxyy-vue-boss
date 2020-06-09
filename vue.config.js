@@ -15,7 +15,16 @@ module.exports = {
   productionSourceMap: NODE_ENV !== 'production',
   configureWebpack: {
     name,
-    plugins: []
+    plugins: [],
+    // 解决build log日志warning
+    performance: {
+      hints: 'warning',
+      maxEntrypointSize: 50000000,
+      maxAssetSize: 30000000,
+      assetFilter: function(assetFilename) {
+        return assetFilename.endsWith('.js')
+      }
+    }
   },
   chainWebpack(config) {
     config.plugins.delete('prefetch')
