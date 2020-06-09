@@ -3,13 +3,8 @@
  * @version: 1.0.0
  * @Author: liukun
  * @Date: 2020-05-19 17:18:39
-<<<<<<< HEAD
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-06-04 22:21:06
-=======
  * @LastEditors: liukun
- * @LastEditTime: 2020-06-09 17:44:54
->>>>>>> feature/finance_lk
+ * @LastEditTime: 2020-06-09 17:52:29
 -->
 <template>
   <section class="bianju10">
