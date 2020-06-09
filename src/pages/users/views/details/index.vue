@@ -314,9 +314,13 @@
             label="订单·物流记录"
             name="orderLogistics"
           ></el-tab-pane>
+          <el-tab-pane label="用户资产" name="userAsset"></el-tab-pane>
         </el-tabs>
       </div>
-      <div class="course-sty" v-if="tabData !== 'orderLogistics'">
+      <div
+        class="course-sty"
+        v-if="['learningRecord', 'collectionOf'].includes(tabData)"
+      >
         <el-tabs v-model="courseData" @tab-click="courseBtn">
           <el-tab-pane
             v-for="item in stuInfor.teams"
@@ -396,7 +400,16 @@
 
       <!-- tab列表 -->
       <div class="tab-content">
-        <details-list :tabData="tabData" :tabList="tabList" />
+        <details-list
+          :tabData="tabData"
+          :tabList="tabList"
+          :tabTwoList="tabTwoList"
+          :couponDone="assetCouponDone"
+          :coinDone="assetCoinDone"
+          :userId="stuInfor.id"
+          :assetNumData="assetNumData"
+          @changePagenation="changePagenation"
+        />
       </div>
       <m-pagination
         :current-page="currentPage"
@@ -431,6 +444,7 @@ export default {
       // 学习记录tab
       tabData: 'learningRecord',
       tabList: [],
+      tabTwoList: [],
       // 学习记录>课程tab
       courseData: '',
       // loading
@@ -439,7 +453,20 @@ export default {
       stuInfor: {},
       // 课程tab下标
       courseIndex: 0,
-      lessonType: null
+      lessonType: null,
+      assetCouponDone: false,
+      assetCoinDone: false,
+      assetPageInfo: {
+        coupon: {
+          totalElements: 0,
+          totalPages: 0
+        },
+        coin: {
+          totalElements: 0,
+          totalPages: 0
+        }
+      },
+      assetNumData: {}
     }
   },
   created() {
@@ -451,7 +478,7 @@ export default {
     // 学员信息接口
     reqUser() {
       this.$http.User.getUser(this.studentId).then((res) => {
-        console.log('学员基本信息', res.data.User)
+        // console.log('学员基本信息', res.data.User)
         this.sendId =
           res.data.User && res.data.User.send_id ? res.data.User.send_id : '0'
         // 年龄格式化
@@ -494,6 +521,9 @@ export default {
         } else if (this.tabData === 'orderLogistics') {
           // 订单·物流数据接口
           this.reqgetOrderPage()
+        } else if (this.tabData === 'userAsset') {
+          // 用户资产
+          this.reqGetUserAssets()
         }
       })
     },
@@ -584,9 +614,50 @@ export default {
         }
       )
     },
+    reqGetUserAssets(next) {
+      // 先获取优惠券
+      this.$http.User.getUserAssetsCoupon(this.studentId, this.currentPage)
+        .then((res) => {
+          // console.log(res)
+          this.tabList = []
+          const _data = res.data.CouponUserPage.content
+          this.totalPages = +res.data.CouponUserPage.totalPages
+          this.totalElements = +res.data.CouponUserPage.totalElements
+          this.assetNumData.couponUserCollect = this.stuInfor.couponUserCollect
+          this.tabList = _data
+          this.assetCouponDone = true
+
+          this.assetPageInfo.coupon.totalPages = +res.data.CouponUserPage
+            .totalPages
+          this.assetPageInfo.coupon.totalElements = +res.data.CouponUserPage
+            .totalElements
+          // 再获取小熊币
+          if (!next) {
+            this.reqGetUserCoin()
+          }
+        })
+        .catch(() => {
+          this.$message.error('获取用户资产失败')
+        })
+    },
+    reqGetUserCoin() {
+      this.$http.User.getUserAssetsCoin(this.studentId, this.currentPage)
+        .then((res) => {
+          // console.log(res)
+          this.tabTwoList = res.data.AccountPage.content
+          this.assetNumData.accountUserCollect = this.stuInfor.accountUserCollect
+          this.assetCoinDone = true
+          this.assetPageInfo.coin.totalPages = +res.data.AccountPage.totalPages
+          this.assetPageInfo.coin.totalElements = +res.data.AccountPage
+            .totalElements
+        })
+        .catch(() => {
+          this.$message.error('获取用户资产失败')
+        })
+    },
     // 点击分页
     handleSizeChange(page) {
-      console.log(this.page)
+      // console.log(this.page)
       this.currentPage = +page
       if (this.tabData === 'learningRecord') {
         this.reqSendCourseLogPage(this.stuInfor.teams[this.courseIndex].id)
@@ -594,6 +665,8 @@ export default {
         this.reqStudentCourseTaskPage(this.stuInfor.teams[this.courseIndex].id)
       } else if (this.tabData === 'orderLogistics') {
         this.reqgetOrderPage()
+      } else if (this.tabData === 'userAsset') {
+        this.reqGetUserAssets(true)
       }
     },
     // 收起
@@ -605,7 +678,9 @@ export default {
       this.aFold = true
     },
     tabBtn(tab, event) {
-      console.log(tab, event, '学习记录')
+      // console.log(tab, event, '学习记录')
+      this.assetCouponDone = false
+      this.assetCoinDone = false
       this.courseIndex = 0
       this.reqUser()
     },
@@ -631,6 +706,15 @@ export default {
           `学员:${username || mobile}`
         )
       // this.$router.push({ path: '/details', query: { id: '123' } })
+    },
+    changePagenation(data) {
+      if (data === 'assetBearCoin') {
+        this.totalPages = this.assetPageInfo.coin.totalPages
+        this.totalElements = this.assetPageInfo.coin.totalElements
+      } else if (data === 'assetCoupon') {
+        this.totalPages = this.assetPageInfo.coupon.totalPages
+        this.totalElements = this.assetPageInfo.coupon.totalElements
+      }
     }
   }
 }
