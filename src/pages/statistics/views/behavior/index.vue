@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-06-06 14:18:35
  * @LastEditors: panjian
- * @LastEditTime: 2020-06-09 15:34:07
+ * @LastEditTime: 2020-06-09 15:46:15
 -->
 <template>
   <article>
@@ -126,6 +126,7 @@
       </el-table>
       <!-- 分页 -->
       <m-pagination
+        style="bottom:0;"
         @current-change="handleCurrentChange"
         :current-page="+currentPage"
         :total="+totalElements"
@@ -300,7 +301,8 @@ export default {
 </script>
 <style lang="scss" scoped>
 .bottom-table {
-  margin-bottom: 65px;
+  background: #fff;
+  padding-bottom: 60px;
   .info-box {
     display: flex;
     flex-wrap: nowrap;
