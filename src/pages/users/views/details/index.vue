@@ -466,7 +466,8 @@ export default {
           totalPages: 0
         }
       },
-      assetNumData: {}
+      assetNumData: {},
+      assetCur: 'assetCoupon' // 用户资产选的是优惠券还是小熊币，默认是优惠券
     }
   },
   created() {
@@ -666,7 +667,11 @@ export default {
       } else if (this.tabData === 'orderLogistics') {
         this.reqgetOrderPage()
       } else if (this.tabData === 'userAsset') {
-        this.reqGetUserAssets(true)
+        if (this.assetCur === 'assetCoupon') {
+          this.reqGetUserAssets(true)
+        } else if (this.assetCur === 'assetBearCoin') {
+          this.reqGetUserCoin()
+        }
       }
     },
     // 收起
@@ -708,6 +713,7 @@ export default {
       // this.$router.push({ path: '/details', query: { id: '123' } })
     },
     changePagenation(data) {
+      this.assetCur = data
       if (data === 'assetBearCoin') {
         this.totalPages = this.assetPageInfo.coin.totalPages
         this.totalElements = this.assetPageInfo.coin.totalElements
