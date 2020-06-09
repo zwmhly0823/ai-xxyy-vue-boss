@@ -231,8 +231,7 @@ export default {
         operatorId
       }
       this.$http.Express.updateExpressStatus(params).then((res) => {
-        console.log('res:', res)
-        if (res.code === 0) {
+        if (res.payload) {
           this.editResult = true
           this.isShowEditStatus = false
           this.$message.success('状态修改成功')

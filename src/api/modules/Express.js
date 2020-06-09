@@ -146,7 +146,7 @@ export default {
    */
   updateExpressStatus(params) {
     return axios.post(
-      '/api/ex/v1/express/updateExpressStatusForBackend',
+      `/api/ex/v1/express/updateExpressStatusForBackend?expressId=${params.expressId}&expressStatus=${params.expressStatus}&expressRemark=${params.expressRemark}&operatorId=${params.operatorId}`,
       params
     )
   }
