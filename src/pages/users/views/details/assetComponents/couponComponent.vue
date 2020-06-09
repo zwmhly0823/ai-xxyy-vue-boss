@@ -176,7 +176,6 @@ export default {
       })
     },
     presentCoupon() {
-      // console.log(this.userId)
       this.selectUserId = [this.userId]
       this.$refs.couponPopover.issueCoupons = true
       this.$refs.couponPopover.couponsTime = ''

@@ -70,7 +70,6 @@ export default {
       if (!this.renderTableData.length) {
         return
       }
-      // console.log(this.assetNumData)
       this.assetNumData.accountUserCollect.forEach((nItem) => {
         switch (nItem.code - 0) {
           case 4:
@@ -86,29 +85,6 @@ export default {
         this.coinNumList[0].value - this.coinNumList[1].value
       this.renderTableData.forEach((item) => {
         item.update_date = item.update_date ? formatData(item.update_date) : '-'
-        // switch(item.trans_type - 0) {
-        //   case 0:
-        //     item.trans_type_name = '默认'
-        //     break
-        //   case 1:
-        //     item.trans_type_name = '邀请有奖或推荐有礼'
-        //     break
-        //   case 2:
-        //     item.trans_type_name = '完成任务'
-        //     break
-        //   case 3:
-        //     item.trans_type_name = '邀请有奖红包'
-        //     break
-        //   case 4:
-        //     item.trans_type_name = '提现'
-        //     break
-        //   case 5:
-        //     item.trans_type_name = '小熊币兑换 宝石兑换'
-        //     break
-        //   case 6:
-        //     item.trans_type_name = '学习奖励'
-        //     break
-        // }
       })
     }
   }
