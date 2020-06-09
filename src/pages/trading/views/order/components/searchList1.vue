@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-04-25 17:24:23
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-06-09 18:55:46
+ * @LastEditTime: 2020-06-09 19:02:03
  -->
 <template>
   <el-card
@@ -166,7 +166,7 @@
       </el-form-item>
     </el-form>
     <div class="export-order">
-      <el-button size="small" type="primary" @click="exportOrderHandle"
+      <el-button size="mini" type="primary" @click="exportOrderHandle"
         >订单导出</el-button
       >
     </div>
