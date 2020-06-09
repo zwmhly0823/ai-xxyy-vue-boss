@@ -17,9 +17,11 @@
           :item="route"
           :index="index"
           :base-path="route.path"
+          :opened="defaultOpendIndex"
         />
       </el-menu>
     </el-scrollbar>
+    <custom-pop />
   </div>
 </template>
 
@@ -27,13 +29,17 @@
 import { mapGetters } from 'vuex'
 import Logo from './Logo'
 import SidebarItem from './SidebarItem'
+import CustomPop from './CustomPop.vue'
 import routes from '@/router/index'
 import variables from '@/assets/styles/variables.scss'
 
 export default {
-  components: { SidebarItem, Logo },
+  components: { SidebarItem, Logo, CustomPop },
   computed: {
     ...mapGetters(['sidebar']),
+    sidebar() {
+      return this.$store.state.app.sidebar
+    },
     routes() {
       return routes.filter((item) => !item.hidden)
     },
@@ -70,10 +76,13 @@ export default {
       return ids
     }
   },
-  watch: {
-    activeMenu(val) {
-      console.log(val, 'activeMenu')
-    }
+  mounted() {
+    document
+      .querySelector('.sidebar-container')
+      .addEventListener('mouseout', (e) => {
+        // console.log(e.target.parentElement, 'target')
+        // console.log(e.srcElement, 'srcElement')
+      })
   }
 }
 </script>

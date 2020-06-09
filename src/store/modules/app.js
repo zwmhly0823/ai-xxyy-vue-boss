@@ -1,11 +1,27 @@
+/*
+ * @Descripttion:
+ * @version: 1.0.0
+ * @Author: YangJiyong
+ * @Date: 2020-05-18 18:52:36
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-06-09 13:56:15
+ */
+
 import Cookies from 'js-cookie'
 
 const state = {
   sidebar: {
+    test: '',
     opened: Cookies.get('sidebarStatus')
       ? !!+Cookies.get('sidebarStatus')
       : true,
     withoutAnimation: false
+  },
+  popMenu: {
+    show: false,
+    item: {},
+    left: 0,
+    top: 0
   },
   device: 'desktop'
 }
@@ -27,6 +43,9 @@ const mutations = {
   },
   TOGGLE_DEVICE: (state, device) => {
     state.device = device
+  },
+  TOGGLE_POPMENU: (state, obj = {}) => {
+    state.popMenu = obj
   }
 }
 

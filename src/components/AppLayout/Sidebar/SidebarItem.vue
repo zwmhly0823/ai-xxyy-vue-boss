@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-03-24 12:49:53
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-06-08 16:11:33
+ * @LastEditTime: 2020-06-09 16:48:02
 -->
 <template>
   <div v-if="!item.hidden">
@@ -23,7 +23,11 @@
       <template slot="title">
         <!-- @click.prevent.stop="handleOpen(item, `${index.toString()}`, true)" -->
         <!-- 有二级导航的，点击一级导航不跳转 -->
-        <div @click.stop.prevent="() => {}" @mouseenter="handleMouseEndter">
+        <div
+          @click.stop.prevent="() => {}"
+          @mouseenter="handleMouseEndter"
+          @mouseleave="handleMouseLeave"
+        >
           <i :class="item.meta.icon"></i>
           <span slot="title" style="font-size: 16px;">{{
             item.meta.title
@@ -57,6 +61,10 @@ export default {
     index: {
       type: Number,
       default: 0
+    },
+    opened: {
+      type: Array,
+      default: () => []
     }
   },
   data() {
@@ -120,8 +128,26 @@ export default {
     },
 
     // 弹出二级导航的浮层
-    handleMouseEndter(e) {
-      console.log(e, 'right')
+    handleMouseEndter() {
+      // console.log(this.$el.getBoundingClientRect(), 'right')
+      // console.log(this.item)
+      const { right, top, width } = this.$el.getBoundingClientRect()
+      this.$store.commit('app/TOGGLE_POPMENU', {
+        show: true,
+        itemMenu: this.item,
+        left: (right || width) - 6,
+        top
+      })
+    },
+    // 隐藏二级浮层
+    handleMouseLeave(e) {
+      console.log(e)
+      this.$store.commit('app/TOGGLE_POPMENU', {
+        show: false
+        // itemMenu: {},
+        // left: 0,
+        // top: 0
+      })
     }
   }
 }
