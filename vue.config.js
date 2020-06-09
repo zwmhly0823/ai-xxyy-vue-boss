@@ -1,5 +1,11 @@
 const defaultSettings = require('./src/settings.js')
-const { getEntry, camel2Line, baseUrl, editOperation } = require('./util')
+const {
+  getEntry,
+  camel2Line,
+  baseUrl,
+  editOperation,
+  dllReference
+} = require('./util')
 const { NODE_ENV } = process.env
 const projectName = process.argv[3] || 'dashboard'
 const name = defaultSettings.title || '小熊美术BOSS'
@@ -27,6 +33,9 @@ module.exports = {
     }
   },
   chainWebpack(config) {
+    if (NODE_ENV === 'production') {
+      dllReference(config)
+    }
     config.plugins.delete('prefetch')
     config.module
       .rule('md')

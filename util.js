@@ -10,14 +10,14 @@ const glob = require('glob')
 const path = require('path')
 const chalk = require('chalk')
 const { execSync } = require('child_process')
+const webpack = require('webpack')
+const AddAssetHtmlPlugin = require('add-asset-html-webpack-plugin')
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
   .BundleAnalyzerPlugin
 const { getMenuText } = require('./src/utils/menuItems')
 const { NODE_ENV, BASE_URL } = process.env
 const plugins = []
 const entries = {}
-
-const resolve = (dir) => path.resolve(__dirname, dir)
 
 const camel2Line = function(str) {
   return str.replace(/([A-Z])/g, '-$1').toLowerCase()
@@ -76,11 +76,47 @@ const editOperation = function(text) {
   }
 }
 
+const dllReference = function(config) {
+  config.plugin('vendorDll').use(webpack.DllReferencePlugin, [
+    {
+      context: __dirname,
+      manifest: require('./dll/vendor.manifest.json')
+    }
+  ])
+
+  config.plugin('utilDll').use(webpack.DllReferencePlugin, [
+    {
+      context: __dirname,
+      manifest: require('./dll/util.manifest.json')
+    }
+  ])
+
+  config
+    .plugin('addAssetHtml')
+    .use(AddAssetHtmlPlugin, [
+      [
+        {
+          filepath: require.resolve(
+            path.resolve(__dirname, `dll/vendor.dll.js`)
+          ),
+          outputPath: 'dll',
+          publicPath: `${baseUrl()}dll`
+        },
+        {
+          filepath: require.resolve(path.resolve(__dirname, `dll/util.dll.js`)),
+          outputPath: 'dll',
+          publicPath: `${baseUrl()}dll`
+        }
+      ]
+    ])
+    .after('html')
+}
+
 module.exports = {
   camel2Line,
   getEntry,
   baseUrl,
   dynamicPlugin,
-  resolve,
-  editOperation
+  editOperation,
+  dllReference
 }
