@@ -278,17 +278,17 @@ export default {
   }
   padding: 10px 0px;
   .custom-tree-node {
-    width: 80%;
+    width: 100%;
     display: flex;
     justify-content: space-between;
     position: relative;
     .menu-box {
       display: flex;
       .menu-name {
-        width: 60px;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
+        // width: 60px;
+        // overflow: hidden;
+        // text-overflow: ellipsis;
+        // white-space: nowrap;
       }
     }
   }
