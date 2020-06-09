@@ -271,7 +271,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 .left-container {
-  overflow-y: auto;
+  overflow: auto;
   .title {
     font-size: 18px;
     padding: 10px 0px 10px 20px;
