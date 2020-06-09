@@ -50,7 +50,7 @@ const getEntry = function() {
       template: 'public/index.html',
       filename: `${fileNameStr}/index.html`,
       title: `${getMenuText(fileNameStr)}`,
-      chunks: ['chunk-vendors', 'chunk-common', fileName]
+      chunks: ['chunk-vendors', 'chunk-common', fileNameStr]
     }
   })
   return entries
@@ -67,7 +67,10 @@ const dynamicPlugin = function() {
 }
 
 const editOperation = function(text) {
-  if (NODE_ENV === 'production' && execSync('git status -s', { encoding: 'utf-8' }) !== '') {
+  if (
+    NODE_ENV === 'production' &&
+    execSync('git status -s', { encoding: 'utf-8' }) !== ''
+  ) {
     console.log(chalk.red(`同学，请先提交代码再${text}哦~`), '\n')
     process.exit(1)
   }

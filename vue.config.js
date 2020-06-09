@@ -13,11 +13,10 @@ module.exports = {
     NODE_ENV === 'production' ? `${baseUrl()}` : `/${camel2Line(projectName)}`,
   pages: getEntry(),
   productionSourceMap: NODE_ENV !== 'production',
-  configureWebpack:
-    {
-      name,
-      plugins: []
-    },
+  configureWebpack: {
+    name,
+    plugins: []
+  },
   chainWebpack(config) {
     config.plugins.delete('prefetch')
     config.module
