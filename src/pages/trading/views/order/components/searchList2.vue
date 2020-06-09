@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-04-25 17:24:23
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-06-09 18:33:35
+ * @LastEditTime: 2020-06-09 22:16:07
  -->
 <template>
   <el-card
@@ -29,7 +29,7 @@
       <el-form-item label="推荐人信息:" :class="{ [$style.marginer]: true }">
         <div class="row_colum">
           <simple-select
-            name="first_order_send_id"
+            name="is_first_order_send_id"
             @result="getFirstOrder"
             :multiple="false"
             :data-list="firstOrderList"
@@ -189,11 +189,11 @@ export default {
       teacherId: '', // 判断是否是toss环境还是boss环境
       firstOrderList: [
         {
-          id: 1,
+          id: '1',
           text: '有推荐人'
         },
         {
-          id: 0,
+          id: '0',
           text: '无推荐人'
         }
       ],
@@ -334,17 +334,12 @@ export default {
       this.setSeachParmas(res, ['first_order_send_id'], 'terms')
     },
     getFirstOrder(res) {
-      const sendId = res.first_order_send_id
-      if (sendId === 0) {
-        this.setSeachParmas(res, ['first_order_send_id'], 'terms')
+      if (res && res.is_first_order_send_id === '0') {
         this.hasSendId = false
       } else {
         this.hasSendId = true
-        const range = {
-          first_order_send_id: { gt: 0 }
-        }
-        this.setSeachParmas(range, ['first_order_send_id'], 'range')
       }
+      this.setSeachParmas(res, ['is_first_order_send_id'])
     },
 
     /**  处理接收到的查询参数

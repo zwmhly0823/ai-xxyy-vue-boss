@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-04-25 17:24:23
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-06-09 18:34:37
+ * @LastEditTime: 2020-06-09 22:17:55
  -->
 <template>
   <el-card
@@ -25,7 +25,7 @@
       <el-form-item label="推荐人信息:" :class="{ [$style.marginer]: true }">
         <div class="row_colum">
           <simple-select
-            name="first_order_send_id"
+            name="is_first_order_send_id"
             @result="getFirstOrder"
             :multiple="false"
             :data-list="firstOrderList"
@@ -227,11 +227,11 @@ export default {
         //   text: '全部'
         // },
         {
-          id: 1,
+          id: '1',
           text: '有推荐人'
         },
         {
-          id: 0,
+          id: '0',
           text: '无推荐人'
         }
       ],
@@ -403,50 +403,15 @@ export default {
       this.setSeachParmas(res, ['trial_team_id'], 'terms')
     },
     async getSendUser(res) {
-      // let uids = []
-      // const data = res === '0' ? '' : res
       this.setSeachParmas(res, ['first_order_send_id'], 'terms')
-
-      // 根据user id请求当前用户转化来的用户list
-      // if (data && data.uid) {
-      //   const query = {
-      //     first_order_send_id: data.uid
-      //   }
-      //   const sendList = await axios.post('/graphql/v1/toss', {
-      //     query: `{
-      //       UserList(query: ${JSON.stringify(
-      //         JSON.stringify(query)
-      //       )}, size: 500){
-      //         id
-      //         first_order_send_id
-      //       }
-      //     }`
-      //   })
-      //   if (sendList && sendList.data && sendList.data.UserList.length > 0) {
-      //     const ids = sendList.data.UserList.map((item) => item.id)
-      //     uids = ids
-      //   }
-      // }
-      // this.setSeachParmas(
-      //   uids.length > 0 ? { uid: uids } : '',
-      //   ['uid'],
-      //   'terms'
-      // )
     },
     getFirstOrder(res) {
-      // this.setSeachParmas(res, ['first_order_send_id'])
-      const sendId = res.first_order_send_id
-      if (sendId === 0) {
-        this.setSeachParmas(res, ['first_order_send_id'], 'terms')
+      if (res && res.is_first_order_send_id === '0') {
         this.hasSendId = false
       } else {
         this.hasSendId = true
-        const range = {
-          first_order_send_id: { gt: 0 }
-        }
-        this.setSeachParmas(range, ['first_order_send_id'], 'range')
       }
-      console.log(res)
+      this.setSeachParmas(res, ['is_first_order_send_id'])
     },
 
     /**  处理接收到的查询参数

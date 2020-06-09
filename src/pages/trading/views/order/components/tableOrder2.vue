@@ -331,14 +331,27 @@ export default {
         // 如果选择了筛选单双周体验课类型，则不需要packages_id
         if (!Object.keys(queryObj).includes('packages_id'))
           Object.assign(queryObj, { packages_id: relationIds })
-        this.orderData(queryObj, this.currentPage)
 
-        // 获取统计数据
-        // statisticsQuery.push({
-        //   terms: { packages_id: relationIds }
-        // })
-        // statisticsQuery.push(...this.searchIn)
-        // console.log(statisticsQuery)
+        // 如果有推荐人搜索条件
+        if (
+          queryObj.is_first_order_send_id &&
+          queryObj.is_first_order_send_id === '0'
+        ) {
+          Object.assign(queryObj, {
+            first_order_send_id: '0'
+          })
+        }
+        if (
+          queryObj.is_first_order_send_id &&
+          queryObj.is_first_order_send_id === '1' &&
+          !queryObj.first_order_send_id
+        ) {
+          Object.assign(queryObj, {
+            first_order_send_id: { gt: '0' }
+          })
+        }
+        delete queryObj.is_first_order_send_id
+        this.orderData(queryObj, this.currentPage)
 
         const statisticsQuery = deepClone(queryObj)
         delete statisticsQuery.status
