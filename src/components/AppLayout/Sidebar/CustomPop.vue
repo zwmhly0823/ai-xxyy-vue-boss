@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-06-09 10:52:48
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-06-10 18:55:04
+ * @LastEditTime: 2020-06-11 00:17:54
 -->
 <template>
   <div
@@ -123,6 +123,9 @@ export default {
         }
         location.href = pathUrl2
       }
+
+      this.handleLeave()
+
       // 多页签打开
       // Object.assign(tabItem, { [`${pathUrl2}`]: { meta } })
       // const multiTabbed =
