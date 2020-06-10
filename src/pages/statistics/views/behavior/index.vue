@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-06-06 14:18:35
  * @LastEditors: panjian
- * @LastEditTime: 2020-06-09 15:46:15
+ * @LastEditTime: 2020-06-10 17:13:09
 -->
 <template>
   <article>
@@ -223,7 +223,9 @@ export default {
             item.user.status = '未转化'
           }
         })
-        this.tableData = _data
+        setTimeout(() => {
+          this.tableData = _data
+        }, 300)
       })
     },
     // 手机号搜索
