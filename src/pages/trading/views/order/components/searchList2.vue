@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-04-25 17:24:23
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-06-10 15:02:38
+ * @LastEditTime: 2020-06-10 15:18:48
  -->
 <template>
   <el-card
@@ -138,7 +138,7 @@
       </el-form-item>
     </el-form>
     <div class="export-order">
-      <el-button size="small" type="primary" @click="exportOrderHandle"
+      <el-button size="mini" type="primary" @click="exportOrderHandle"
         >订单导出</el-button
       >
     </div>
@@ -497,6 +497,7 @@ export default {
 </style>
 <style lang="scss" scoped>
 .search-section {
+  position: relative;
   ::v-deep .el-icon-search {
     top: 14px;
   }
@@ -505,8 +506,8 @@ export default {
 <style scoped>
 .export-order {
   position: absolute;
-  top: 20px;
-  right: 10px;
+  bottom: 25px;
+  right: 20px;
 }
 .el-select-dropdown.is-multiple .el-select-dropdown__item.selected:after {
   right: 5px;
