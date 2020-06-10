@@ -76,14 +76,6 @@ export default {
       const ids = routes.map((_, index) => index.toString())
       return ids
     }
-  },
-  mounted() {
-    document
-      .querySelector('.sidebar-container')
-      .addEventListener('mouseout', (e) => {
-        // console.log(e.target.parentElement, 'target')
-        // console.log(e.srcElement, 'srcElement')
-      })
   }
 }
 </script>

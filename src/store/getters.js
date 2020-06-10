@@ -4,11 +4,10 @@
  * @Author: ShenTong
  * @Date: 2020-04-11 16:06:42
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-06-09 13:53:41
+ * @LastEditTime: 2020-06-10 20:37:04
  */
 const getters = {
   sidebar: (state) => state.app.sidebar,
-  aa: (state) => state.app.aa,
   popMenu: (state) => state.app.popMenu,
   device: (state) => state.app.device,
   // token: (state) => state.user.token,
