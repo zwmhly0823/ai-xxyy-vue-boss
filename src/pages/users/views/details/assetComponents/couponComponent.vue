@@ -64,6 +64,7 @@
       ref="couponPopover"
       :couponData="couponData"
       :selectUserId="selectUserId"
+      @couponSendSucc="couponSendSucc"
     />
   </div>
 </template>
@@ -179,6 +180,10 @@ export default {
       this.selectUserId = [this.userId]
       this.$refs.couponPopover.issueCoupons = true
       this.$refs.couponPopover.couponsTime = ''
+    },
+    // 优惠券发放成功
+    couponSendSucc() {
+      this.$emit('couponSendSucc')
     }
   }
 }

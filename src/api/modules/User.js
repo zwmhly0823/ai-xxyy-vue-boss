@@ -502,7 +502,8 @@ export default {
   },
   getUserAssetsCoin(query = '', page = 1, size = 20) {
     const formattingQuery = JSON.stringify({
-      uid: query
+      uid: query,
+      account_type: 2
     })
     const sort = `{ "ctime": "asc" }`
     return axios.post(`/graphql/v1/toss`, {
