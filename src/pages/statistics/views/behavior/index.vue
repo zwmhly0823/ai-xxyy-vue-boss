@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-06-06 14:18:35
  * @LastEditors: panjian
- * @LastEditTime: 2020-06-10 17:13:09
+ * @LastEditTime: 2020-06-10 17:58:24
 -->
 <template>
   <article>
@@ -210,9 +210,11 @@ export default {
         _data.forEach((item) => {
           item.birthday = GetAgeByBrithday(item.birthday)
 
-          item.order.buytime = item.order.buytime
-            ? timestamp(item.order.buytime, 2)
-            : '-'
+          if (item.order && item.order.buytime) {
+            item.order.buytime = timestamp(item.order.buytime, 2)
+          } else {
+            item.order.buytime = '-'
+          }
 
           item.action_time = item.action_time
             ? timestamp(item.action_time, 2)
