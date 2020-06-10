@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-06-09 10:52:48
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-06-09 17:09:55
+ * @LastEditTime: 2020-06-10 15:47:01
 -->
 <template>
   <div
@@ -85,6 +85,7 @@ export default {
       // color: #292f41;
       &:hover {
         background-color: transparent !important;
+        color: #2a75ed !important;
       }
     }
   }

@@ -710,7 +710,7 @@ export default {
   }
   .wait-pending {
     cursor: pointer;
-    color: #409eff;
+    color: #2a75ed;
   }
   .disnone {
     display: none;

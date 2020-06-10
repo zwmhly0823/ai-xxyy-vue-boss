@@ -84,7 +84,7 @@ export default {
       border-radius: 20px;
       font-size: 12px;
       &.active {
-        background: #409eff;
+        background: #2a75ed;
         color: #fff;
       }
     }

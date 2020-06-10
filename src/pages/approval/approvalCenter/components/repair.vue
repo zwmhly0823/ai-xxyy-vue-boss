@@ -912,7 +912,7 @@ export default {
       font-size: 14px;
       right: -100px;
       bottom: 3px;
-      color: #409eff;
+      color: #2a75ed;
     }
   }
   .repair-resolve {

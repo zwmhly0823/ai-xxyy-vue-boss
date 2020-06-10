@@ -444,7 +444,7 @@ export default {
   color: #909399;
 }
 .primary-color {
-  color: #409eff;
+  color: #2a75ed;
   cursor: pointer;
 }
 </style>
