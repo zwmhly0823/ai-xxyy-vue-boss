@@ -292,6 +292,9 @@ export default {
       }
     }
   }
+  /deep/ .el-tree-node__children {
+    overflow: initial;
+  }
   .el-icon-more {
     transform: rotate(90deg);
   }
