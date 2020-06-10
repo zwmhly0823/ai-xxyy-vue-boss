@@ -45,8 +45,7 @@ const routes = [
         name: 'trialTeam',
         meta: {
           title: '体验课',
-          module: 'student-team',
-          show: true
+          module: 'student-team'
         }
       },
       {
@@ -54,8 +53,7 @@ const routes = [
         name: 'systemTeam',
         meta: {
           title: '系统课',
-          module: 'student-team',
-          show: true
+          module: 'student-team'
         }
       }
     ]
@@ -76,8 +74,7 @@ const routes = [
         name: 'trial',
         meta: {
           title: '体验课',
-          module: 'users',
-          show: true
+          module: 'users'
         }
       },
       {
@@ -85,8 +82,7 @@ const routes = [
         name: 'system',
         meta: {
           title: '系统课',
-          module: 'users',
-          show: true
+          module: 'users'
         }
       }
     ]
@@ -107,8 +103,7 @@ const routes = [
         name: 'order',
         meta: {
           title: '订单管理',
-          module: 'trading',
-          show: true
+          module: 'trading'
         }
       },
       {
@@ -116,8 +111,7 @@ const routes = [
         name: 'financeRefound',
         meta: {
           title: '订单退款',
-          module: 'trading',
-          show: true
+          module: 'trading'
         }
       }
     ]
@@ -138,8 +132,7 @@ const routes = [
         name: 'experienceClass',
         meta: {
           title: '体验课',
-          module: 'express',
-          show: false
+          module: 'express'
         }
       },
       {
@@ -147,8 +140,7 @@ const routes = [
         name: 'systemClass',
         meta: {
           title: '系统课',
-          module: 'express',
-          show: false
+          module: 'express'
         }
       },
       {
@@ -156,8 +148,7 @@ const routes = [
         name: 'activityClass',
         meta: {
           title: '活动商品',
-          module: 'express',
-          show: false
+          module: 'express'
         }
       }
     ]
@@ -183,14 +174,50 @@ const routes = [
       }
     ]
   },
-
+  // 老师模块
+  {
+    path: '/teacher',
+    name: 'teacher',
+    // hidden: true,
+    meta: {
+      title: '销售管理',
+      icon: 'iconxiaoshouguanli',
+      module: 'teacher'
+    },
+    children: [
+      {
+        path: '/teacherManagement',
+        name: 'teacherManagement',
+        meta: {
+          title: '销售管理',
+          module: 'teacher'
+        }
+      },
+      {
+        path: '/weixinManagement',
+        name: 'weixinManagement',
+        meta: {
+          title: '微信管理',
+          module: 'teacher'
+        }
+      },
+      {
+        path: '/workHandover',
+        name: 'workHandover',
+        meta: {
+          title: '工作交接',
+          module: 'teacher'
+        }
+      }
+    ]
+  },
   // 运营中心
   {
     path: '/operating',
     name: 'operating',
     // hidden: true,
     meta: {
-      title: '运营管理',
+      title: '运营中心',
       icon: 'iconyunyingzhongxin',
       module: 'operating'
     },
@@ -231,13 +258,13 @@ const routes = [
       module: 'approval'
     }
   },
-  // 数据中心
+  // 统计分析
   {
     path: '/statistics',
     name: 'statistics',
     // hidden: true,
     meta: {
-      title: '数据中心',
+      title: '统计分析',
       icon: 'icontongjifenxi',
       module: 'statistics'
     },
@@ -258,43 +285,6 @@ const routes = [
           title: '过程分析',
           module: 'statistics',
           style: 'line'
-        }
-      }
-    ]
-  },
-  // 设置 - 老师模块
-  {
-    path: '/teacher',
-    name: 'teacher',
-    // hidden: true,
-    meta: {
-      title: '设置',
-      icon: 'iconiconset',
-      module: 'teacher'
-    },
-    children: [
-      {
-        path: '/teacherManagement',
-        name: 'teacherManagement',
-        meta: {
-          title: '员工帐号',
-          module: 'teacher'
-        }
-      },
-      {
-        path: '/weixinManagement',
-        name: 'weixinManagement',
-        meta: {
-          title: '员工微信',
-          module: 'teacher'
-        }
-      },
-      {
-        path: '/workHandover',
-        name: 'workHandover',
-        meta: {
-          title: '离职交接',
-          module: 'teacher'
         }
       }
     ]

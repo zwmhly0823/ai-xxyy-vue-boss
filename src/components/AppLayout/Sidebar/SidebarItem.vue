@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-03-24 12:49:53
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-06-10 19:07:21
+ * @LastEditTime: 2020-06-10 22:26:08
 -->
 <template>
   <div v-if="!item.hidden">
@@ -45,7 +45,7 @@
         <!-- 支持多级的话，此处递归 -->
         <el-menu-item
           :index="`${index}-${cIndex}`"
-          v-for="(cItem, cIndex) in item.children"
+          v-for="(cItem, cIndex) in item.children.filter((m) => m.meta.show)"
           :key="cItem.path"
           @click="handleOpen(cItem, `${index}-${cIndex}`)"
           ><em>{{ cItem.meta.title }}</em></el-menu-item
