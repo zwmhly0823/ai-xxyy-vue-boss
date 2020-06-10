@@ -60,7 +60,7 @@
     }
 
     @mixin main-title {
-      font-size: 16px !important;
+      font-size: 14px !important;
       font-weight: 500;
       color: #ccc;
     }
@@ -134,7 +134,7 @@
           text-align: left;
           height: 30px;
           line-height: 30px;
-          font-size: 13px;
+          font-size: 12px;
           // 二级导航选中状态
           &.is-active {
             em {
@@ -168,7 +168,7 @@
     & .nest-menu .el-submenu > .el-submenu__title,
     & .el-submenu .el-menu-item {
       .item {
-        font-size: 13px;
+        font-size: 12px;
         font-weight: normal;
       }
       &:hover {
@@ -302,7 +302,7 @@
   .el-menu-item {
     height: 30px;
     line-height: 30px;
-    font-size: 13px;
+    font-size: 12px;
     background-color: #fff !important;
     color: #292f41 !important;
   }
@@ -332,4 +332,12 @@
       border-radius: 20px;
     }
   }
+}
+
+/** icon */
+.iconfont {
+  margin-right: 5px;
+  width: 24px;
+  height: 16px;
+  fill: $menuText;
 }

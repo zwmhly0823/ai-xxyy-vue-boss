@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-03-24 12:49:53
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-06-09 16:48:02
+ * @LastEditTime: 2020-06-10 14:10:06
 -->
 <template>
   <div v-if="!item.hidden">
@@ -15,7 +15,10 @@
       v-if="!item.children"
     >
       <!-- 自定义icon类 -->
-      <i :class="item.meta.icon"></i>
+      <!-- <i :class="item.meta.icon"></i> -->
+      <svg class="iconfont" :class="item.meta.icon" aria-hidden="true">
+        <use :xlink:href="`#${item.meta.icon}`"></use>
+      </svg>
       <span slot="title">{{ item.meta.title }}</span>
     </el-menu-item>
     <!-- 有二级目录的 -->
@@ -28,7 +31,10 @@
           @mouseenter="handleMouseEndter"
           @mouseleave="handleMouseLeave"
         >
-          <i :class="item.meta.icon"></i>
+          <!-- <i :class="item.meta.icon"></i> -->
+          <svg class="iconfont" :class="item.meta.icon" aria-hidden="true">
+            <use :xlink:href="`#${item.meta.icon}`"></use>
+          </svg>
           <span slot="title" style="font-size: 16px;">{{
             item.meta.title
           }}</span>
@@ -50,6 +56,7 @@
 </template>
 
 <script>
+import '@/assets/fonts/iconfont.js' // iconfont 图标
 import { mapActions } from 'vuex'
 export default {
   name: 'SidebarItem',

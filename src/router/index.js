@@ -35,8 +35,8 @@ const routes = [
     path: '/student-team',
     name: 'student-team',
     meta: {
-      title: '班级中心',
-      icon: 'el-icon-s-custom',
+      title: '班级管理',
+      icon: 'iconbanjiguanli',
       module: 'student-team'
     },
     children: [
@@ -64,8 +64,8 @@ const routes = [
     name: 'users',
     hidden: false,
     meta: {
-      title: '学员中心',
-      icon: 'el-icon-medal-1',
+      title: '学员管理',
+      icon: 'iconxueyuanguanli',
       module: 'users'
     },
     children: [
@@ -93,8 +93,8 @@ const routes = [
     name: 'trading',
     // hidden: true,
     meta: {
-      title: '交易中心',
-      icon: 'el-icon-s-data',
+      title: '交易管理',
+      icon: 'iconjianyiguanli',
       module: 'trading'
     },
     children: [
@@ -122,8 +122,8 @@ const routes = [
     name: 'express',
     // hidden: true,
     meta: {
-      title: '物流中心',
-      icon: 'el-icon-s-cooperation',
+      title: '物流管理',
+      icon: 'iconwuliuguanli',
       module: 'express'
     },
     children: [
@@ -180,8 +180,8 @@ const routes = [
     name: 'teacher',
     // hidden: true,
     meta: {
-      title: '社群销售',
-      icon: 'el-icon-user',
+      title: '销售管理',
+      icon: 'iconxiaoshouguanli',
       module: 'teacher'
     },
     children: [
@@ -218,7 +218,7 @@ const routes = [
     // hidden: true,
     meta: {
       title: '运营中心',
-      icon: 'el-icon-s-platform',
+      icon: 'iconyunyingzhongxin',
       module: 'operating'
     },
     children: [
@@ -254,7 +254,7 @@ const routes = [
     name: 'approval',
     meta: {
       title: '审批中心',
-      icon: 'el-icon-menu',
+      icon: 'iconshenpizhongxin',
       module: 'approval'
     }
   },
@@ -265,7 +265,7 @@ const routes = [
     // hidden: true,
     meta: {
       title: '统计分析',
-      icon: 'el-icon-s-marketing',
+      icon: 'icontongjifenxi',
       module: 'statistics'
     },
     children: [
