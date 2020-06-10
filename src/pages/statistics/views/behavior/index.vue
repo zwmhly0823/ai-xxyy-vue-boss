@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-06-06 14:18:35
  * @LastEditors: panjian
- * @LastEditTime: 2020-06-09 15:46:15
+ * @LastEditTime: 2020-06-10 18:32:58
 -->
 <template>
   <article>
@@ -210,9 +210,13 @@ export default {
         _data.forEach((item) => {
           item.birthday = GetAgeByBrithday(item.birthday)
 
-          item.order.buytime = item.order.buytime
-            ? timestamp(item.order.buytime, 2)
-            : '-'
+          if (item.order) {
+            item.order.buytime = timestamp(item.order.buytime, 2)
+          } else {
+            item.order = {
+              buytime: '-'
+            }
+          }
 
           item.action_time = item.action_time
             ? timestamp(item.action_time, 2)
@@ -223,7 +227,9 @@ export default {
             item.user.status = '未转化'
           }
         })
-        this.tableData = _data
+        setTimeout(() => {
+          this.tableData = _data
+        }, 300)
       })
     },
     // 手机号搜索
