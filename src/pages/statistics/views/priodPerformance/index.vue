@@ -613,7 +613,7 @@ export default {
         bottom: 0;
       }
       .active {
-        color: #409eff;
+        color: #2a75ed;
       }
       .top-color {
         position: absolute;
@@ -673,7 +673,7 @@ export default {
       border-radius: 20px;
       font-size: 12px;
       &.active {
-        background: #409eff;
+        background: #2a75ed;
         color: #fff;
       }
     }
@@ -692,7 +692,7 @@ export default {
       &.active {
         background: #fff;
         span {
-          color: #409eff;
+          color: #2a75ed;
         }
       }
     }
@@ -708,7 +708,7 @@ export default {
     }
     .for-light {
       margin-right: 5px;
-      color: #409eff;
+      color: #2a75ed;
     }
   }
   .no-data {
@@ -717,7 +717,7 @@ export default {
     align-items: center;
     background: #f5f7fa;
     height: 80px;
-    color: #409eff;
+    color: #2a75ed;
     font-size: 15px;
   }
   .sear-container {
@@ -740,12 +740,12 @@ export default {
     background: #fff;
     .el-dropdown-link {
       cursor: pointer;
-      color: #409eff;
+      color: #2a75ed;
     }
   }
   .el-dropdown-link.active {
     cursor: pointer;
-    color: #409eff;
+    color: #2a75ed;
   }
 }
 </style>

@@ -6,7 +6,7 @@
         <el-switch
           v-model="AUTOMATIC"
           @change="switchHandle($event, 'AUTOMATIC')"
-          active-color="#409eff"
+          active-color="#2a75ed"
           :active-value="'ON'"
           :inactive-value="'OFF'"
         >
@@ -17,7 +17,7 @@
         <el-switch
           v-model="COUNTRY"
           @change="switchHandle($event, 'COUNTRY')"
-          active-color="#409eff"
+          active-color="#2a75ed"
           :active-value="'ON'"
           :inactive-value="'OFF'"
         >

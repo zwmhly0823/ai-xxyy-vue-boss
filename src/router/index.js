@@ -35,8 +35,8 @@ const routes = [
     path: '/student-team',
     name: 'student-team',
     meta: {
-      title: '班级中心',
-      icon: 'el-icon-s-custom',
+      title: '班级管理',
+      icon: 'iconbanjiguanli',
       module: 'student-team'
     },
     children: [
@@ -44,7 +44,7 @@ const routes = [
         path: '/trialTeam',
         name: 'trialTeam',
         meta: {
-          title: '体验课班级',
+          title: '体验课',
           module: 'student-team'
         }
       },
@@ -52,7 +52,7 @@ const routes = [
         path: '/systemTeam',
         name: 'systemTeam',
         meta: {
-          title: '系统课班级',
+          title: '系统课',
           module: 'student-team'
         }
       }
@@ -64,8 +64,8 @@ const routes = [
     name: 'users',
     hidden: false,
     meta: {
-      title: '学员中心',
-      icon: 'el-icon-medal-1',
+      title: '学员管理',
+      icon: 'iconxueyuanguanli',
       module: 'users'
     },
     children: [
@@ -73,7 +73,7 @@ const routes = [
         path: '/trial',
         name: 'trial',
         meta: {
-          title: '体验课学员',
+          title: '体验课',
           module: 'users'
         }
       },
@@ -81,7 +81,7 @@ const routes = [
         path: '/system',
         name: 'system',
         meta: {
-          title: '系统课学员',
+          title: '系统课',
           module: 'users'
         }
       }
@@ -93,8 +93,8 @@ const routes = [
     name: 'trading',
     // hidden: true,
     meta: {
-      title: '交易中心',
-      icon: 'el-icon-s-data',
+      title: '交易管理',
+      icon: 'iconjianyiguanli',
       module: 'trading'
     },
     children: [
@@ -102,7 +102,7 @@ const routes = [
         path: '/order',
         name: 'order',
         meta: {
-          title: '订单',
+          title: '订单管理',
           module: 'trading'
         }
       },
@@ -110,7 +110,7 @@ const routes = [
         path: '/financeRefound',
         name: 'financeRefound',
         meta: {
-          title: '财务退款',
+          title: '订单退款',
           module: 'trading'
         }
       }
@@ -122,8 +122,8 @@ const routes = [
     name: 'express',
     // hidden: true,
     meta: {
-      title: '物流中心',
-      icon: 'el-icon-s-cooperation',
+      title: '物流管理',
+      icon: 'iconwuliuguanli',
       module: 'express'
     },
     children: [
@@ -131,7 +131,7 @@ const routes = [
         path: '/experienceClass',
         name: 'experienceClass',
         meta: {
-          title: '体验课物流',
+          title: '体验课',
           module: 'express'
         }
       },
@@ -139,7 +139,7 @@ const routes = [
         path: '/systemClass',
         name: 'systemClass',
         meta: {
-          title: '系统课物流',
+          title: '系统课',
           module: 'express'
         }
       },
@@ -147,7 +147,7 @@ const routes = [
         path: '/activityClass',
         name: 'activityClass',
         meta: {
-          title: '活动物流',
+          title: '活动商品',
           module: 'express'
         }
       }
@@ -180,8 +180,8 @@ const routes = [
     name: 'teacher',
     // hidden: true,
     meta: {
-      title: '社群销售',
-      icon: 'el-icon-user',
+      title: '销售管理',
+      icon: 'iconxiaoshouguanli',
       module: 'teacher'
     },
     children: [
@@ -218,7 +218,7 @@ const routes = [
     // hidden: true,
     meta: {
       title: '运营中心',
-      icon: 'el-icon-s-platform',
+      icon: 'iconyunyingzhongxin',
       module: 'operating'
     },
     children: [
@@ -262,7 +262,7 @@ const routes = [
     name: 'approval',
     meta: {
       title: '审批中心',
-      icon: 'el-icon-menu',
+      icon: 'iconshenpizhongxin',
       module: 'approval'
     }
   },
@@ -273,7 +273,7 @@ const routes = [
     // hidden: true,
     meta: {
       title: '统计分析',
-      icon: 'el-icon-s-marketing',
+      icon: 'icontongjifenxi',
       module: 'statistics'
     },
     children: [
@@ -290,7 +290,7 @@ const routes = [
         path: '/salesPerformance',
         name: 'salesPerformance',
         meta: {
-          title: '销售过程',
+          title: '过程分析',
           module: 'statistics',
           style: 'line'
         }

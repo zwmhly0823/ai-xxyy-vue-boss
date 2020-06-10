@@ -1,21 +1,13 @@
-<!-- 系统课订单列表 topic = '5' -->
 <template>
   <div class="title-box">
     <el-table :data="orderList">
-      <el-table-column label="用户信息" prop="user" min-width="180" fixed>
+      <el-table-column label="用户信息" prop="user" width="120">
         <template slot-scope="scope">
-          <user :user="scope.row.user" />
+          <p>{{ scope.row.user ? scope.row.user.username || '-' : '-' }}</p>
+          <p>{{ scope.row.user ? scope.row.user.mobile || '-' : '-' }}</p>
         </template>
       </el-table-column>
-      <el-table-column label="归属地" prop="QCellCore" min-width="120">
-        <template slot-scope="scope">
-          <p>
-            {{ scope.row.user ? scope.row.user.mobile_province || '-' : '-' }} ·
-            {{ scope.row.user ? scope.row.user.mobile_city || '-' : '-' }}
-          </p>
-        </template>
-      </el-table-column>
-      <el-table-column label="商品信息" min-width="200">
+      <el-table-column label="商品信息" width="160">
         <template slot-scope="scope">
           <p>
             {{
@@ -37,73 +29,91 @@
           </p>
         </template>
       </el-table-column>
-      <el-table-column label="体验课班级" min-width="150">
+      <!-- <el-table-column label="体验课类型" v-if="topic === '4'">
         <template slot-scope="scope">
           <p>
             {{
-              trialTeamUid[scope.row.uid]
-                ? trialTeamUid[scope.row.uid].team_name
-                : '-'
-            }}
-          </p>
-        </template>
-      </el-table-column>
-      <el-table-column label="社群销售" min-width="150">
-        <template slot-scope="scope">
-          <p>{{ scope.row.salesman ? scope.row.salesman.realname : '-' }}</p>
-          <p>
-            {{
-              scope.row.department
-                ? scope.row.department.department
-                  ? scope.row.department.department.name
+              scope.row.trial_course
+                ? +scope.row.trial_course.team_category === 0
+                  ? '双周'
+                  : +scope.row.trial_course.team_category === 3
+                  ? '单周'
                   : '-'
                 : '-'
             }}
           </p>
         </template>
-      </el-table-column>
-      <el-table-column label="系统课班级" min-width="150">
+      </el-table-column> -->
+      <el-table-column label="订单来源">
         <template slot-scope="scope">
           <p>
-            {{ scope.row.team ? scope.row.team.team_name : '-' }}
+            {{ scope.row.channel ? scope.row.channel.channel_outer_name : '-' }}
           </p>
         </template>
       </el-table-column>
-      <el-table-column label="服务老师" min-width="120">
+      <el-table-column label="订单状态">
         <template slot-scope="scope">
-          <p>
-            {{ scope.row.teacher ? scope.row.teacher.realname : '-' }}
-          </p>
-          <p>
-            {{
-              scope.row.teacher_department &&
-              scope.row.teacher_department.department
-                ? departmentObj[scope.row.teacher_department.department.id]
+          {{ scope.row.order_status ? scope.row.order_status : '-' }}
+        </template>
+      </el-table-column>
+      <!-- <el-table-column label="班级信息" v-if="topic === '4'">
+        <template slot-scope="scope">
+          {{ scope.row.team ? scope.row.team.team_name : '-' }}
+        </template>
+      </el-table-column> -->
+      <el-table-column label="体验课班级" width="150">
+        <template slot-scope="scope">
+          {{
+            trialTeam[scope.row.id] ? trialTeam[scope.row.id].team_name : '-'
+          }}
+        </template>
+      </el-table-column>
+      <el-table-column label="社群销售" width="150">
+        <template slot-scope="scope">
+          <!-- 体验课 -->
+          <div>
+            <p>
+              {{ scope.row.teacher ? scope.row.teacher.realname : '-' }}
+            </p>
+            <p>
+              {{
+                scope.row.teacher_department &&
+                scope.row.teacher_department.department
                   ? departmentObj[scope.row.teacher_department.department.id]
-                      .name
+                    ? departmentObj[scope.row.teacher_department.department.id]
+                        .name
+                    : '-'
                   : '-'
-                : '-'
-            }}
-          </p>
+              }}
+            </p>
+          </div>
         </template>
       </el-table-column>
-      <el-table-column label="推荐人信息" min-width="160">
+      <!-- <el-table-column
+        label="销售部门"
+        v-if="topic === '4' || topic === '5'"
+        width="150"
+      >
         <template slot-scope="scope">
-          <p>
+          <p v-if="scope.row.department && scope.row.department.department">
             {{
-              scope.row.first_send_user
-                ? scope.row.first_send_user.username
+              scope.row.department && scope.row.department.department.pid
+                ? departmentObj[scope.row.department.department.pid]
+                  ? departmentObj[scope.row.department.department.pid].name
+                  : ''
+                : ''
+            }}
+          </p>
+          {{
+            scope.row.department && scope.row.department.department
+              ? departmentObj[scope.row.department.department.id]
+                ? departmentObj[scope.row.department.department.id].name
                 : '-'
-            }}
-          </p>
-          <p>
-            {{
-              scope.row.first_send_user ? scope.row.first_send_user.mobile : '-'
-            }}
-          </p>
+              : '-'
+          }}
         </template>
-      </el-table-column>
-      <el-table-column label="下单时间·订单号" min-width="180">
+      </el-table-column> -->
+      <el-table-column label="下单时间·订单号" width="180">
         <template slot-scope="scope">
           <p>
             {{ scope.row.ctime ? scope.row.ctime : '-' }}
@@ -117,20 +127,7 @@
           </p>
         </template>
       </el-table-column>
-      <el-table-column label="订单来源" min-width="120">
-        <template slot-scope="scope">
-          <p>
-            {{ scope.row.channel ? scope.row.channel.channel_outer_name : '-' }}
-          </p>
-        </template>
-      </el-table-column>
-      <el-table-column label="订单状态" min-width="100">
-        <template slot-scope="scope">
-          {{ scope.row.order_status ? scope.row.order_status : '-' }}
-        </template>
-      </el-table-column>
-
-      <el-table-column label="关联物流" min-width="170">
+      <el-table-column label="关联物流" width="150">
         <template slot-scope="scope">
           <p
             :class="{ 'primary-color': scope.row.express.express_total > 0 }"
@@ -138,6 +135,7 @@
               showExpressDetail(scope.row.id, scope.row.express.express_total)
             "
           >
+            <!-- <p> -->
             {{ scope.row.express ? scope.row.express.express_total || 0 : '-' }}
           </p>
           <!-- 体验课不显示最后一次物流状态 -->
@@ -171,14 +169,13 @@
 <script>
 import _ from 'lodash'
 import MPagination from '@/components/MPagination/index.vue'
-import { formatData, isToss, deepClone } from '@/utils/index.js'
+import { formatData, isToss } from '@/utils/index.js'
 import ExpressDetail from '../../components/expressDetail'
-import User from '../../components/User.vue'
+// import axios from '@/api/axiosConfig'
 export default {
   components: {
     MPagination,
-    ExpressDetail,
-    User
+    ExpressDetail
   },
   props: {
     // 商品主题
@@ -221,11 +218,9 @@ export default {
       orderList: [],
       // 获取teacherid
       teacherId: '',
-      // 当前老师下属老师ID
-      teacherGroup: [],
       // 搜索
       searchIn: [],
-      // statisticsQuery: [], // 统计需要 bool 表达式
+      statisticsQuery: [], // 统计需要 bool 表达式
       departmentObj: {}, // 组织机构 obj
       orderStatisticsResult: [], // 统计结果
       trialTeam: {}, // 学员的体验课班级名称
@@ -234,11 +229,8 @@ export default {
   },
   created() {
     this.teacherId = isToss()
-    if (this.teacherId) {
-      this.getTeacherPermission()
-    } else {
-      this.getOrderList()
-    }
+    // 订单列表接口
+    this.getOrderList()
 
     this.getDepartment()
   },
@@ -262,16 +254,6 @@ export default {
     }
   },
   methods: {
-    // 老师权限
-    getTeacherPermission() {
-      this.$http.Permission.getAllTeacherByRole({
-        teacherId: this.teacherId
-      }).then((res) => {
-        this.teacherGroup = res || []
-        // 订单列表接口
-        this.getOrderList()
-      })
-    },
     // 订单关联物流详情展示
     showExpressDetail(what, total) {
       console.log(what, "what's that?")
@@ -282,23 +264,22 @@ export default {
     },
     // 订单列表
     async getOrderList(page = this.currentPage, status) {
-      // const statisticsQuery = []
+      const statisticsQuery = []
       const queryObj = {}
       // TOSS
-      if (this.teacherId) {
-        Object.assign(queryObj, {
-          pay_teacher_id:
-            this.teacherGroup.length > 0 ? this.teacherGroup : [this.teacherId]
-        })
-        // statisticsQuery.push({
-        //   terms: {
-        //     pay_teacher_id:
-        //       this.teacherGroup.length > 0
-        //         ? this.teacherGroup
-        //         : [this.teacherId]
-        //   }
-        // })
-      }
+      // if (this.teacherId) {
+      //   Object.assign(
+      //     queryObj,
+      //     this.topic === '4'
+      //       ? { last_teacher_id: this.teacherId }
+      //       : { pay_teacher_id: this.teacherId }
+      //   )
+      //   statisticsQuery.push(
+      //     this.topic === '4'
+      //       ? { term: { last_teacher_id: this.teacherId } }
+      //       : { term: { pay_teacher_id: this.teacherId } }
+      //   )
+      // }
 
       const topicRelation = await this.$http.Product.topicRelationId(
         `${JSON.stringify({
@@ -313,8 +294,6 @@ export default {
         relationIds = topicRelation.data.PackagesTopicList.map(
           (item) => item.relation_id
         )
-
-      console.log(this.searchIn)
 
       // 组合搜索条件
       this.searchIn.forEach((item) => {
@@ -335,47 +314,14 @@ export default {
        */
       if (this.topic === '4' || this.topic === '5') {
         Object.assign(queryObj, { packages_id: relationIds })
-
-        // !!! 如果系统课类型选择 半年系统课 - packages，则packages_id = 10
-        if (
-          Object.keys(queryObj).includes('packages_type') &&
-          +queryObj.packages_type === 3
-        ) {
-          Object.assign(queryObj, { packages_id: ['10'] })
-          delete queryObj.packages_type
-        }
-
-        // 如果有推荐人搜索条件
-        if (
-          queryObj.is_first_order_send_id &&
-          queryObj.is_first_order_send_id === '0'
-        ) {
-          Object.assign(queryObj, {
-            first_order_send_id: '0'
-          })
-        }
-        if (
-          queryObj.is_first_order_send_id &&
-          queryObj.is_first_order_send_id === '1' &&
-          !queryObj.first_order_send_id
-        ) {
-          Object.assign(queryObj, {
-            first_order_send_id: { gt: '0' }
-          })
-        }
-        delete queryObj.is_first_order_send_id
         this.orderData(queryObj, this.currentPage)
 
         // 获取统计数据
-        // statisticsQuery.push({
-        //   terms: { packages_id: relationIds }
-        // })
-        // statisticsQuery.push(...this.searchIn)
-        // console.log(statisticsQuery)
-
-        // 求和统计不需要传当前状态，统计全部状态的值
-        const statisticsQuery = deepClone(queryObj)
-        delete statisticsQuery.status
+        statisticsQuery.push({
+          terms: { packages_id: relationIds }
+        })
+        statisticsQuery.push(...this.searchIn)
+        console.log(statisticsQuery)
 
         this.$http.Order.orderStatistics(
           statisticsQuery,
@@ -387,14 +333,38 @@ export default {
         })
         // 统计结束
       }
+      /*
+       * 活动订单 - (小熊商城1，推荐有礼2，赠送6)
+       * 通过relation_id去o_order_product查询oid,分页
+       * TODO: 先查看全部 - BOSS，TOSS再做处理
+       * */
+      if (this.topic === '1,2,6') {
+        // && !this.teacherId
+        Object.assign(queryObj, { pid: relationIds })
+        delete queryObj.last_teacher_id
+        const res =
+          (await this.$http.Product.orderProductPage(
+            `${JSON.stringify(queryObj)}`,
+            page
+          )) || {}
+        const data = (res.data && res.data.OrderProductPage) || {
+          totalElements: 0,
+          content: []
+        }
+        // 分页
+        this.totalElements = +data.totalElements
+        this.currentPage = +data.number
+        // this.orderList = data.content
+
+        // TODO: 根据oid 请求o_order 表
+        const oids = data.content.map((item) => item.oid)
+        const oquery = { id: oids }
+        this.orderData(oquery, 1)
+      }
     },
 
     // 订单列表数据
     orderData(queryObj = {}, page = 1) {
-      // 最终搜索条件
-      this.$emit('get-params', queryObj)
-      console.log(queryObj)
-
       this.$http.Order.orderPage(`${JSON.stringify(queryObj)}`, page)
         .then((res) => {
           if (!res.data.OrderPage) {
@@ -415,9 +385,29 @@ export default {
             userIds.push(item.uid)
             // 下单时间格式化
             item.ctime = formatData(item.ctime, 's')
+            // 交易方式
+            if (item.regtype) {
+              let currency = {}
+              if (item.regtype === 4) {
+                item.regtype_text = '推荐有礼'
+                currency = { currency: '宝石' }
+                Object.assign(item, currency)
+                item.amount = item.gem_integral
+              } else if (item.regtype === 5) {
+                item.regtype_text = '小熊商城'
+                currency = { currency: '小熊币' }
+                Object.assign(item, currency)
+                item.amount = item.bear_integral
+              } else if (item.regtype === 6) {
+                item.regtype_text = '邀请有奖'
+                currency = { currency: '赠送' }
+                Object.assign(item, currency)
+                item.amount = 0
+              }
+            }
           })
           this.orderList = _data
-          if (userIds.length > 0) this.getUserTrialTeam(userIds)
+          this.getUserTrialTeam(userIds)
         })
         .catch((err) => {
           console.log(err)
@@ -439,6 +429,7 @@ export default {
 
       const query = ids.length > 0 ? JSON.stringify({ student_id: ids }) : ''
       const trial = await this.$http.Team.getTrialCourseList(query)
+      console.log(trial.data.StudentTrialCourseList)
 
       const teamIds =
         trial.data.StudentTrialCourseList &&
@@ -453,6 +444,8 @@ export default {
         result[item.order_no] = teamById[item.team_id]
         resultUid[item.student_id] = teamById[item.team_id]
       })
+      console.log(result, 'sdgasgasgdasgdas')
+
       this.trialTeam = result || {}
       this.trialTeamUid = resultUid || {}
       // return result

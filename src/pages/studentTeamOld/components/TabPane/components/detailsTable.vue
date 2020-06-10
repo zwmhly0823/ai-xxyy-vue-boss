@@ -967,7 +967,7 @@ export default {
       .top-color {
         position: absolute;
         bottom: 0;
-        color: #409eff;
+        color: #2a75ed;
       }
       .bottom {
         position: absolute;
@@ -976,7 +976,7 @@ export default {
       .bottom-color {
         position: absolute;
         top: -6px;
-        color: #409eff;
+        color: #2a75ed;
       }
     }
   }
@@ -1138,7 +1138,7 @@ export default {
   .header-sort {
     cursor: pointer;
     .hover {
-      color: #409eff;
+      color: #2a75ed;
     }
   }
 }
