@@ -3,8 +3,8 @@
  * @version:
  * @Author: Shentong
  * @Date: 2020-03-16 19:46:39
- * @LastEditors: panjian
- * @LastEditTime: 2020-05-19 21:30:14
+ * @LastEditors: liukun
+ * @LastEditTime: 2020-06-10 16:15:36
  */
 import axios from '../axiosConfig'
 // import { getToken } from '@/utils/auth'
@@ -224,5 +224,9 @@ export default {
       params: {}
     })
     // return axios.post(`/api/b/v1/import/importCompletedOrder`, file)
+  },
+  // 查询验证码
+  getVerification(parmas) {
+    return axios.get(`/api/m/v1/sms/getCodeByMobile?mobile=${parmas}`)
   }
 }

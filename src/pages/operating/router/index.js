@@ -1,7 +1,7 @@
 /*
  * @Date: 2020-03-13 15:20:21
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-05-29 20:38:08
+ * @LastEditors: liukun
+ * @LastEditTime: 2020-06-10 14:37:03
  * @FilePath: /ai-app-vue-toss/src/pages/studentTeam/router/index.js
  */
 import Vue from 'vue'
@@ -73,6 +73,16 @@ const routes = [
       keepAlive: false
     },
     component: () => import('../views/reviewManagement/components/audioAdd.vue')
+  },
+  {
+    path: '/verificationCode',
+    name: 'verificationCode',
+    meta: {
+      title: '验证码查询',
+      keepAlive: false
+    },
+    component: () =>
+      import('../views/reviewManagement/components/verificationCode.vue')
   }
 ]
 

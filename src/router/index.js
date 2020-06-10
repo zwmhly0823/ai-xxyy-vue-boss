@@ -245,6 +245,14 @@ const routes = [
           title: '点评管理',
           module: 'operating'
         }
+      },
+      {
+        path: '/verificationCode',
+        name: 'verificationCode',
+        meta: {
+          title: '验证码查询',
+          module: 'operating'
+        }
       }
     ]
   },
