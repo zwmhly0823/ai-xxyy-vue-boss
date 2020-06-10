@@ -3,14 +3,13 @@
     <logo v-if="showLogo" :collapse="isCollapse" />
     <el-scrollbar wrap-class="scrollbar-wrapper">
       <el-menu
-        :default-active="activeMenu"
+        :default-active="currentMenu"
         :collapse="isCollapse"
         :background-color="variables.menuBg"
         :text-color="variables.menuText"
-        :unique-opened="false"
         :active-text-color="variables.menuActiveText"
-        :collapse-transition="false"
         :default-openeds="defaultOpendIndex"
+        menu-trigger="click"
         mode="vertical"
       >
         <sidebar-item
@@ -19,9 +18,11 @@
           :item="route"
           :index="index"
           :base-path="route.path"
+          :opened="defaultOpendIndex"
         />
       </el-menu>
     </el-scrollbar>
+    <custom-pop />
   </div>
 </template>
 
@@ -29,13 +30,17 @@
 import { mapGetters } from 'vuex'
 import Logo from './Logo'
 import SidebarItem from './SidebarItem'
+import CustomPop from './CustomPop.vue'
 import routes from '@/router/index'
 import variables from '@/assets/styles/variables.scss'
 
 export default {
-  components: { SidebarItem, Logo },
+  components: { SidebarItem, Logo, CustomPop },
   computed: {
     ...mapGetters(['sidebar']),
+    sidebar() {
+      return this.$store.state.app.sidebar
+    },
     routes() {
       return routes.filter((item) => !item.hidden)
     },
@@ -71,6 +76,16 @@ export default {
       const ids = routes.map((_, index) => index.toString())
       return ids
     }
+  },
+  data() {
+    return {
+      currentMenu: 0
+    }
+  },
+  mounted() {
+    setTimeout(() => {
+      this.currentMenu = this.activeMenu
+    }, 250)
   }
 }
 </script>

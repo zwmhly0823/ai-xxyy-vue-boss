@@ -3,8 +3,8 @@
  * @version: 
  * @Author: zhubaodong
  * @Date: 2020-03-17 11:22:08
- * @LastEditors: zhubaodong
- * @LastEditTime: 2020-03-20 19:38:23
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-06-08 14:45:30
  -->
 <template>
   <div class="sidebar-logo-container" :class="{ collapse: collapse }">
@@ -66,7 +66,7 @@ export default {
   width: 100%;
   height: 50px;
   line-height: 50px;
-  background: #2a2e3a;
+  background: #293042;
   text-align: center;
   overflow: hidden;
 

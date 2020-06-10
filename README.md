@@ -182,6 +182,15 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 - 每一项查询以`term`或`terms`对象加查询字段。`term`是单条查询，`terms`是多条查询
 - `{term:{id: 1}},{terms:{uid:[1,2,3]}}`
 
+### 菜单导航
+
+- 体验课
+  - 班级
+  - 学员
+- 系统课
+  - 班级
+  - 学员
+
 ---
 
 ### 参考

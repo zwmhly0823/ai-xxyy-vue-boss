@@ -141,7 +141,7 @@ export default {
           cursor: pointer;
           i {
             vertical-align: top;
-            background-color: #409eff;
+            background-color: #2a75ed;
             width: 48px;
             height: 48px;
             font-size: 22px;
@@ -161,7 +161,7 @@ export default {
             background-color: #303133;
           }
           .color-3 {
-            background-color: #409eff;
+            background-color: #2a75ed;
           }
         }
       }

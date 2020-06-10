@@ -1448,7 +1448,7 @@ export default {
     color: #999;
   }
   .el-tabs__item.is-active {
-    color: #409eff;
+    color: #2a75ed;
   }
 }
 .el-radio__input {

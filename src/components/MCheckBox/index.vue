@@ -119,7 +119,7 @@
           >
           <el-button
             @click="attendClassCancel"
-            style="width:80px;color:#409EFF;border:1px solid #409EFF;"
+            style="width:80px;color:#2a75ed;border:1px solid #2a75ed;"
             size="small"
             >取消</el-button
           >
@@ -242,7 +242,7 @@
           >
           <el-button
             @click="worksCancel"
-            style="width:80px;color:#409EFF;border:1px solid #409EFF;"
+            style="width:80px;color:#2a75ed;border:1px solid #2a75ed;"
             size="small"
             >取消</el-button
           >

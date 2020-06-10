@@ -232,7 +232,7 @@ export default {
         height: 25%;
         color: #606266;
         span {
-          color: #409eff;
+          color: #2a75ed;
         }
       }
     }

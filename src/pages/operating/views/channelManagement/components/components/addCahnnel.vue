@@ -230,7 +230,7 @@ export default {
   }
   a {
     margin-left: 10px;
-    color: #409eff;
+    color: #2a75ed;
   }
 }
 </style>
