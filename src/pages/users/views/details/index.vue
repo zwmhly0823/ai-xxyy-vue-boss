@@ -732,6 +732,7 @@ export default {
       }
     },
     couponSendSucc() {
+      this.assetCouponDone = false
       this.reqGetUserAssets(true)
     }
   }
