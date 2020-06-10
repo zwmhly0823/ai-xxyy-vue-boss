@@ -9,6 +9,7 @@
         :text-color="variables.menuText"
         :active-text-color="variables.menuActiveText"
         :default-openeds="defaultOpendIndex"
+        menu-trigger="click"
         mode="vertical"
       >
         <sidebar-item

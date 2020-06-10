@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-05-18 18:52:36
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-06-09 13:56:15
+ * @LastEditTime: 2020-06-10 18:57:32
  */
 
 import Cookies from 'js-cookie'
@@ -21,7 +21,8 @@ const state = {
     show: false,
     item: {},
     left: 0,
-    top: 0
+    top: 0,
+    bottom: 0
   },
   device: 'desktop'
 }
@@ -45,7 +46,10 @@ const mutations = {
     state.device = device
   },
   TOGGLE_POPMENU: (state, obj = {}) => {
-    state.popMenu = obj
+    state.popMenu = {
+      ...state.popMenu,
+      ...obj
+    }
   }
 }
 

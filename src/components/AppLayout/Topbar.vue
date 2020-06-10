@@ -10,6 +10,7 @@
       :is-active="sidebar.opened"
       class="hamburger-container"
       @toggleClick="toggleSideBar"
+      v-if="false"
     />
     <!-- 面包屑 -->
     <breadcrumb class="breadcrumb-container" />
@@ -126,6 +127,7 @@ export default {
 
   .breadcrumb-container {
     float: left;
+    margin-left: 15px;
   }
 
   .right-menu {

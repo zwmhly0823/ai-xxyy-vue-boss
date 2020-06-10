@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-03-24 12:49:53
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-06-10 14:10:06
+ * @LastEditTime: 2020-06-10 19:07:21
 -->
 <template>
   <div v-if="!item.hidden">
@@ -35,7 +35,7 @@
           <svg class="iconfont" :class="item.meta.icon" aria-hidden="true">
             <use :xlink:href="`#${item.meta.icon}`"></use>
           </svg>
-          <span slot="title" style="font-size: 16px;">{{
+          <span slot="title" style="font-size: 14px;">{{
             item.meta.title
           }}</span>
         </div>
@@ -136,24 +136,28 @@ export default {
 
     // 弹出二级导航的浮层
     handleMouseEndter() {
-      // console.log(this.$el.getBoundingClientRect(), 'right')
-      // console.log(this.item)
-      const { right, top, width } = this.$el.getBoundingClientRect()
-      this.$store.commit('app/TOGGLE_POPMENU', {
+      // TODO: 兼容性完善
+      const { right, top, width, bottom } = this.$el.getBoundingClientRect()
+      const height =
+        document.body.clientHeight || document.documentElement.clientHeight
+      const payload = {
         show: true,
         itemMenu: this.item,
         left: (right || width) - 6,
-        top
-      })
+        top,
+        bottom: 0
+      }
+      if (bottom > height - 20) {
+        Object.assign(payload, {
+          bottom: 10
+        })
+      }
+      this.$store.commit('app/TOGGLE_POPMENU', payload)
     },
     // 隐藏二级浮层
     handleMouseLeave(e) {
-      console.log(e)
       this.$store.commit('app/TOGGLE_POPMENU', {
         show: false
-        // itemMenu: {},
-        // left: 0,
-        // top: 0
       })
     }
   }

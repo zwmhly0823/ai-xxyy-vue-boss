@@ -1,3 +1,21 @@
+@mixin main-title {
+  font-size: 14px !important;
+  // font-weight: 500;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+@mixin arrow {
+  content: '';
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 8px;
+  height: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-top: 0;
+  border-left: 0;
+  transform: rotate(-45deg);
+}
 #app {
   .main-container {
     min-height: 100%;
@@ -59,12 +77,6 @@
       margin-right: 16px;
     }
 
-    @mixin main-title {
-      font-size: 14px !important;
-      font-weight: 500;
-      color: #ccc;
-    }
-
     .el-menu {
       border: none;
       height: 100%;
@@ -78,7 +90,10 @@
             background-color: #fff !important;
             i,
             span {
-              color: #2b2f3d !important;
+              color: $menuBg !important;
+            }
+            .iconfont {
+              fill: $menuBg !important;
             }
           }
         }
@@ -118,6 +133,10 @@
 
     // 二级菜单样式
     .el-submenu {
+      position: relative;
+      &::after {
+        @include arrow();
+      }
       .el-menu-item-group__title {
         display: none;
       }
@@ -163,6 +182,11 @@
       height: 42px;
       line-height: 42px;
       padding: 0 0 0 20px;
+      // hack 箭头 hover 事件
+      > div {
+        position: relative;
+        z-index: 10;
+      }
     }
 
     & .nest-menu .el-submenu > .el-submenu__title,
@@ -340,4 +364,11 @@
   width: 24px;
   height: 16px;
   fill: $menuText;
+}
+.el-menu {
+  > .el-menu-item.is-active {
+    .iconfont {
+      fill: $menuBg !important;
+    }
+  }
 }
