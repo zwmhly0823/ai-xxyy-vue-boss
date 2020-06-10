@@ -235,6 +235,7 @@ export default {
           this.editResult = true
           this.isShowEditStatus = false
           this.$message.success('状态修改成功')
+          console.log(res)
         } else {
           this.editResult = false
           this.$message.error('状态修改失败')
