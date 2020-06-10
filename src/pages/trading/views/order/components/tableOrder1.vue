@@ -87,6 +87,22 @@
           </p>
         </template>
       </el-table-column>
+      <el-table-column label="推荐人信息" min-width="160">
+        <template slot-scope="scope">
+          <p>
+            {{
+              scope.row.first_send_user
+                ? scope.row.first_send_user.username
+                : '-'
+            }}
+          </p>
+          <p>
+            {{
+              scope.row.first_send_user ? scope.row.first_send_user.mobile : '-'
+            }}
+          </p>
+        </template>
+      </el-table-column>
       <el-table-column label="下单时间·订单号" min-width="180">
         <template slot-scope="scope">
           <p>
@@ -298,6 +314,8 @@ export default {
           (item) => item.relation_id
         )
 
+      console.log(this.searchIn)
+
       // 组合搜索条件
       this.searchIn.forEach((item) => {
         const subObj =
@@ -327,6 +345,25 @@ export default {
           delete queryObj.packages_type
         }
 
+        // 如果有推荐人搜索条件
+        if (
+          queryObj.is_first_order_send_id &&
+          queryObj.is_first_order_send_id === '0'
+        ) {
+          Object.assign(queryObj, {
+            first_order_send_id: '0'
+          })
+        }
+        if (
+          queryObj.is_first_order_send_id &&
+          queryObj.is_first_order_send_id === '1' &&
+          !queryObj.first_order_send_id
+        ) {
+          Object.assign(queryObj, {
+            first_order_send_id: { gt: '0' }
+          })
+        }
+        delete queryObj.is_first_order_send_id
         this.orderData(queryObj, this.currentPage)
 
         // 获取统计数据
@@ -356,6 +393,8 @@ export default {
     orderData(queryObj = {}, page = 1) {
       // 最终搜索条件
       this.$emit('get-params', queryObj)
+      console.log(queryObj)
+
       this.$http.Order.orderPage(`${JSON.stringify(queryObj)}`, page)
         .then((res) => {
           if (!res.data.OrderPage) {
