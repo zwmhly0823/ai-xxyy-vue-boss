@@ -295,9 +295,6 @@ export default {
   .el-icon-more {
     transform: rotate(90deg);
   }
-  /deep/ .el-tree-node__children {
-    overflow: visible !important;
-  }
   /deep/ .el-card {
     position: absolute;
     top: 15px;
