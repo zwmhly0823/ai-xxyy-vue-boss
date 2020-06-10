@@ -3,8 +3,8 @@
  * @version:
  * @Author: Shentong
  * @Date: 2020-04-07 13:52:26
- * @LastEditors: Shentong
- * @LastEditTime: 2020-05-20 18:27:23
+ * @LastEditors: panjian
+ * @LastEditTime: 2020-06-08 20:25:34
  */
 import axios from '../axiosConfig'
 
@@ -385,6 +385,109 @@ export default {
           listen_count
         }
       }`
+    })
+  },
+  // 获取用户行为下拉接口
+  actionTypeList() {
+    return axios.post('/graphql/filter', {
+      query: `{
+        actionTypeList(query:"") {
+          id
+          name
+      }}`
+    })
+  },
+  // 获取用户行为下拉接口
+  UserBehaviorLogPage(params, currentPage) {
+    // const {
+    //   valueInput = '',
+    //   valueBehavior = [],
+    //   currentPage = 1,
+    //   size = '20'
+    // } = params
+    // const query = {}
+    // valueInput &&
+    //   Object.assign(query, {
+    //     'mobile.like': { 'mobile.keyword': `*${valueInput}*` }
+    //   })
+    // valueBehavior &&
+    //   Object.assign(query, {
+    //     action_type: `['${valueBehavior}']`
+    //   })
+    return axios.post('/graphql/v1/toss', {
+      query: `{
+        UserBehaviorLogPage(query:${JSON.stringify(
+          params
+        )},page:${currentPage}, size: 20) {
+          number
+          totalElements
+          content {
+            uid
+            username
+            nickname
+            weixin_nick_name
+            head
+            birthday
+            sex
+            status
+            status_text
+            base_painting
+            base_painting_text
+            channel
+            first_order_send_id
+            join_date
+            mobile
+            mobile_province
+            mobile_city
+            device_model
+            team_id
+            team_name
+            current_lesson
+            teacher_id
+            teacher_name
+            teacher_department_id
+            teacher_department_name
+            order_id
+            stage
+            out_trade_no
+            order_status
+            order_regtype
+            task_id
+            comment_id
+            course_id
+            course_title
+            team_state
+            action_time
+            action_type
+            action_type_text
+            user {
+              id
+              username
+              nickname
+              birthday
+              head
+              mobile
+              status
+              status_text
+            }
+            firstOrderSend {
+              nickname
+              username
+              mobile
+            }
+            team {
+              term
+              team_name
+              team_type
+            }
+            order {
+              buytime
+            }
+            task {
+              ctime
+            }
+          }
+      }}`
     })
   }
 }

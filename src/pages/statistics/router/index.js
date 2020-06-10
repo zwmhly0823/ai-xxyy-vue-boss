@@ -1,7 +1,7 @@
 /*
  * @Date: 2020-03-13 15:20:21
- * @LastEditors: Shentong
- * @LastEditTime: 2020-05-07 15:58:22
+ * @LastEditors: panjian
+ * @LastEditTime: 2020-06-06 14:19:08
  * @FilePath: /ai-app-vue-toss/src/pages/studentTeam/router/index.js
  */
 import Vue from 'vue'
@@ -45,6 +45,15 @@ const routes = [
       keepAlive: true
     },
     component: () => import('../views/salesProcess/index.vue')
+  },
+  {
+    path: '/behavior',
+    name: 'behavior',
+    meta: {
+      title: '行为轨迹',
+      keepAlive: true
+    },
+    component: () => import('../views/behavior/index.vue')
   }
 ]
 
