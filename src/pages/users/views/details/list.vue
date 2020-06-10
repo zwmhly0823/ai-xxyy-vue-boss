@@ -235,6 +235,7 @@
               :assetNumData="assetNumData"
               :propData="studyTableData"
               :userId="userId"
+              @couponSendSucc="couponSendSucc"
             ></coupon-component>
           </template>
           <template v-else>
@@ -379,6 +380,9 @@ export default {
     },
     tabAsset(tab) {
       this.$emit('changePagenation', tab.name)
+    },
+    couponSendSucc() {
+      this.$emit('couponSendSucc')
     }
   }
 }

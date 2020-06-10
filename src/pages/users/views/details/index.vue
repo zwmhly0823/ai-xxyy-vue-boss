@@ -409,6 +409,7 @@
           :userId="stuInfor.id"
           :assetNumData="assetNumData"
           @changePagenation="changePagenation"
+          @couponSendSucc="couponSendSucc"
         />
       </div>
       <m-pagination
@@ -458,10 +459,12 @@ export default {
       assetCoinDone: false,
       assetPageInfo: {
         coupon: {
+          currentPage: 0,
           totalElements: 0,
           totalPages: 0
         },
         coin: {
+          currentPage: 0,
           totalElements: 0,
           totalPages: 0
         }
@@ -628,6 +631,7 @@ export default {
           this.tabList = _data
           this.assetCouponDone = true
 
+          this.assetPageInfo.coupon.currentPage = this.currentPage
           this.assetPageInfo.coupon.totalPages = +res.data.CouponUserPage
             .totalPages
           this.assetPageInfo.coupon.totalElements = +res.data.CouponUserPage
@@ -648,6 +652,7 @@ export default {
           this.tabTwoList = res.data.AccountPage.content
           this.assetNumData.accountUserCollect = this.stuInfor.accountUserCollect
           this.assetCoinDone = true
+          this.assetPageInfo.coin.currentPage = this.currentPage
           this.assetPageInfo.coin.totalPages = +res.data.AccountPage.totalPages
           this.assetPageInfo.coin.totalElements = +res.data.AccountPage
             .totalElements
@@ -668,8 +673,10 @@ export default {
         this.reqgetOrderPage()
       } else if (this.tabData === 'userAsset') {
         if (this.assetCur === 'assetCoupon') {
+          this.assetCouponDone = false
           this.reqGetUserAssets(true)
         } else if (this.assetCur === 'assetBearCoin') {
+          this.assetCoinDone = false
           this.reqGetUserCoin()
         }
       }
@@ -715,12 +722,17 @@ export default {
     changePagenation(data) {
       this.assetCur = data
       if (data === 'assetBearCoin') {
+        this.currentPage = this.assetPageInfo.coin.currentPage
         this.totalPages = this.assetPageInfo.coin.totalPages
         this.totalElements = this.assetPageInfo.coin.totalElements
       } else if (data === 'assetCoupon') {
+        this.currentPage = this.assetPageInfo.coupon.currentPage
         this.totalPages = this.assetPageInfo.coupon.totalPages
         this.totalElements = this.assetPageInfo.coupon.totalElements
       }
+    },
+    couponSendSucc() {
+      this.reqGetUserAssets(true)
     }
   }
 }
