@@ -1,7 +1,7 @@
 /*
  * @Date: 2020-03-13 15:20:21
- * @LastEditors: panjian
- * @LastEditTime: 2020-06-03 16:46:54
+ * @LastEditors: liukun
+ * @LastEditTime: 2020-06-10 20:45:07
  * @FilePath: /ai-app-vue-toss/src/pages/studentTeam/router/index.js
  */
 import Vue from 'vue'
@@ -82,6 +82,16 @@ const routes = [
       keepAlive: false
     },
     component: () => import('../views/labelManage/index.vue')
+  },
+  {
+    path: '/verificationCode',
+    name: 'verificationCode',
+    meta: {
+      title: '验证码查询',
+      keepAlive: false
+    },
+    component: () =>
+      import('../views/reviewManagement/components/verificationCode.vue')
   }
 ]
 
