@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-06-06 14:18:35
  * @LastEditors: panjian
- * @LastEditTime: 2020-06-11 21:14:30
+ * @LastEditTime: 2020-06-11 21:40:25
 -->
 <template>
   <div class="app-main height">
@@ -107,9 +107,9 @@
         <el-table-column label="是否转化">
           <template slot-scope="scope">
             <div>
-              <span>{{ scope.row.user.status }}</span>
+              <span>{{ scope.row.status }}</span>
               <br />
-              <span v-if="scope.row.user.status == '已转化'">{{
+              <span v-if="scope.row.status == '已转化'">{{
                 scope.row.order.buytime
               }}</span>
             </div>
