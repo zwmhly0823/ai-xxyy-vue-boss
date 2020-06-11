@@ -15,13 +15,17 @@
       <el-table-column prop="desc" label="操作"></el-table-column>
       <el-table-column label="金额">
         <template slot-scope="scope">
-          <span v-if="scope.row.amount - 0 > 0" class="green-text-color">
-            + ¥:{{ scope.row.amount }}</span
+          <span
+            v-if="
+              scope.row.trans_type - 0 === 4 || scope.row.trans_type - 0 === 5
+            "
+            class="red-text-color"
           >
-          <span v-else-if="scope.row.amount - 0 < 0" class="red-text-color">
             - ¥:{{ scope.row.amount }}</span
           >
-          <span v-else> 0 </span>
+          <span v-else class="green-text-color">
+            + ¥:{{ scope.row.amount }}</span
+          >
         </template>
       </el-table-column>
       <el-table-column prop="update_date" label="操作时间"></el-table-column>
