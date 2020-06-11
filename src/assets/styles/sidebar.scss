@@ -264,9 +264,18 @@
       }
     }
 
+    // 收起时状态
     .el-menu--collapse {
+      .el-menu-item {
+        position: relative;
+        left: -5px;
+      }
       .el-submenu {
+        &::after {
+          display: none;
+        }
         & > .el-submenu__title {
+          padding-left: 15px !important;
           & > span {
             height: 0;
             width: 0;

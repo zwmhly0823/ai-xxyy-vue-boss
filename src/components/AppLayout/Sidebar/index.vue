@@ -3,7 +3,7 @@
     <logo v-if="showLogo" :collapse="isCollapse" />
     <el-scrollbar wrap-class="scrollbar-wrapper">
       <el-menu
-        :default-active="currentMenu"
+        :default-active="activeMenu"
         :collapse="isCollapse"
         :background-color="variables.menuBg"
         :text-color="variables.menuText"
@@ -79,13 +79,13 @@ export default {
   },
   data() {
     return {
-      currentMenu: 0
+      currentMenu: null
     }
-  },
-  mounted() {
-    setTimeout(() => {
-      this.currentMenu = this.activeMenu
-    }, 250)
   }
+  // mounted() {
+  //   setTimeout(() => {
+  //     this.currentMenu = this.activeMenu
+  //   }, 300)
+  // }
 }
 </script>

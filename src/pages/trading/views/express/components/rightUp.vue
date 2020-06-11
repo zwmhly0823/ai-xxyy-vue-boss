@@ -3,8 +3,8 @@
  * @version: 
  * @Author: zhubaodong
  * @Date: 2020-03-27 19:04:54
- * @LastEditors: panjian
- * @LastEditTime: 2020-05-18 20:25:25
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-06-11 11:30:25
  -->
 <template>
   <div class="container">
@@ -404,8 +404,8 @@ export default {
   //   overflow: scroll;
   // }
 }
-.el-cascader-menu {
-  height: 300px;
-  overflow: scroll;
-}
+// .el-cascader-menu {
+//   height: 300px;
+//   overflow: scroll;
+// }
 </style>

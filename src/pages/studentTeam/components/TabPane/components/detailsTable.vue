@@ -1141,8 +1141,8 @@ export default {
 }
 </style>
 <style lang="scss">
-.el-cascader-menu {
-  height: 300px;
-  overflow: scroll;
-}
+// .el-cascader-menu {
+//   height: 300px;
+//   overflow: scroll;
+// }
 </style>
