@@ -9,7 +9,6 @@
     "build:prod": "cross-env BASE_URL=ghpagesprod node npm run build && cross-env BASE_URL=ghpagesprod node ghpages.js",
     "build:test": "cross-env BASE_URL=ghpagestest npm run build && cross-env BASE_URL=ghpagestest node ghpages.js",
     "build:dev": "cross-env BASE_URL=ghpagesdev npm run build && cross-env BASE_URL=ghpagesdev node ghpages.js",
-    "deploy:dev": "cross-env BASE_URL=ghpagesdev node ghpages.js",
     "test:unit": "vue-cli-service test:unit",
     "lint": "eslint --fix --ext .js,.vue src",
     "dll": "webpack -p --progress --config ./webpack.dll.conf.js"
