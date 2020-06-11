@@ -110,7 +110,7 @@ export default {
   }
   p {
     margin: 0;
-    color: #409eff;
+    color: #2a75ed;
   }
 }
 </style>

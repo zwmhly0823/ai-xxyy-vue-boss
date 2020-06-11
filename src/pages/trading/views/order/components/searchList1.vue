@@ -4,17 +4,42 @@
  * @Author: liukun
  * @Date: 2020-04-25 17:24:23
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-06-06 20:36:05
+ * @LastEditTime: 2020-06-10 15:17:31
  -->
 <template>
-  <el-card border="false" shadow="never" :class="$style.elard">
-    <el-form :inline="true" label-position="right" label-width="80px">
+  <el-card
+    border="false"
+    shadow="never"
+    :class="$style.elard"
+    class="search-section"
+  >
+    <el-form :inline="true" label-position="right" label-width="100px">
       <el-form-item label="订单搜索:" :class="{ [$style.marginer]: true }">
         <orderSearch class="allmini" @result="getOrderSearch" />
       </el-form-item>
 
       <el-form-item label="订单来源:" :class="{ [$style.marginer]: true }">
         <ChannelSelect @result="getChannel" name="pay_channel" />
+      </el-form-item>
+
+      <el-form-item label="推荐人信息:" :class="{ [$style.marginer]: true }">
+        <div class="row_colum">
+          <simple-select
+            name="is_first_order_send_id"
+            @result="getFirstOrder"
+            :multiple="false"
+            :data-list="firstOrderList"
+            placeholder="全部"
+          ></simple-select>
+          <SearchPhoneAndUsername
+            @result="getSendUser"
+            :custom-style="{ width: '200px' }"
+            placeholder="推荐人手机号/用户名称"
+            name="first_order_send_id"
+            type="2"
+            v-if="hasSendId"
+          />
+        </div>
       </el-form-item>
       <br />
 
@@ -141,7 +166,7 @@
       </el-form-item>
     </el-form>
     <div class="export-order">
-      <el-button size="small" type="primary" @click="exportOrderHandle"
+      <el-button size="mini" type="primary" @click="exportOrderHandle"
         >订单导出</el-button
       >
     </div>
@@ -159,8 +184,11 @@ import Department from '@/components/MSearch/searchItems/department'
 import SearchTeamName from '@/components/MSearch/searchItems/searchTeamName'
 // import SearchTrialTeamName from '@/components/MSearch/searchItems/searchTrialTeamName'
 import SearchStage from '@/components/MSearch/searchItems/searchStage'
+import SearchPhoneAndUsername from '@/components/MSearch/searchItems/searchPhoneAndUsername'
+import SimpleSelect from '@/components/MSearch/searchItems/simpleSelect'
 import { isToss } from '@/utils/index'
 import { downloadHandle } from '@/utils/download'
+// import axios from '@/api/axiosConfig'
 
 export default {
   components: {
@@ -173,7 +201,9 @@ export default {
     Department,
     SearchTeamName,
     // SearchTrialTeamName,
-    SearchStage
+    SearchStage,
+    SearchPhoneAndUsername,
+    SimpleSelect
   },
 
   data() {
@@ -198,7 +228,22 @@ export default {
       selectTime: null, // 物流时间下拉列表_选中项
       oldTime: '', // 上次时间选择值
       teacherId: '', // 判断是否是toss环境还是boss环境
-      searchParams: []
+      searchParams: [],
+      firstOrderList: [
+        // {
+        //   id: 1,
+        //   text: '全部'
+        // },
+        {
+          id: '1',
+          text: '有推荐人'
+        },
+        {
+          id: '0',
+          text: '无推荐人'
+        }
+      ],
+      hasSendId: true
     }
   },
   computed: {},
@@ -365,6 +410,17 @@ export default {
     getTrialTeamName(res) {
       this.setSeachParmas(res, ['trial_team_id'], 'terms')
     },
+    async getSendUser(res) {
+      this.setSeachParmas(res, ['first_order_send_id'], 'terms')
+    },
+    getFirstOrder(res) {
+      if (res && res.is_first_order_send_id === '0') {
+        this.hasSendId = false
+      } else {
+        this.hasSendId = true
+      }
+      this.setSeachParmas(res, ['is_first_order_send_id'])
+    },
 
     /**  处理接收到的查询参数
      * @res: Object, 子筛选组件返回的表达式对象，如 {sup: 2}
@@ -520,11 +576,20 @@ export default {
 }
 </style>
 
+<style lang="scss" scoped>
+.search-section {
+  position: relative;
+  ::v-deep .el-icon-search {
+    top: 14px;
+  }
+}
+</style>
+
 <style scoped>
 .export-order {
   position: absolute;
-  top: 20px;
-  right: 10px;
+  bottom: 25px;
+  right: 20px;
 }
 .el-select-dropdown.is-multiple .el-select-dropdown__item.selected:after {
   right: 5px;

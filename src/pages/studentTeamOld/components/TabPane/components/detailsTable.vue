@@ -3,8 +3,8 @@
  * @version:
  * @Author: panjian
  * @Date: 2020-03-16 20:22:24
- * @LastEditors: panjian
- * @LastEditTime: 2020-05-16 20:18:33
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-06-11 11:30:17
  -->
 <template>
   <div class="table-box">
@@ -967,7 +967,7 @@ export default {
       .top-color {
         position: absolute;
         bottom: 0;
-        color: #409eff;
+        color: #2a75ed;
       }
       .bottom {
         position: absolute;
@@ -976,7 +976,7 @@ export default {
       .bottom-color {
         position: absolute;
         top: -6px;
-        color: #409eff;
+        color: #2a75ed;
       }
     }
   }
@@ -1138,14 +1138,14 @@ export default {
   .header-sort {
     cursor: pointer;
     .hover {
-      color: #409eff;
+      color: #2a75ed;
     }
   }
 }
 </style>
 <style lang="scss">
-.el-cascader-menu {
-  height: 300px;
-  overflow: scroll;
-}
+// .el-cascader-menu {
+//   height: 300px;
+//   overflow: scroll;
+// }
 </style>

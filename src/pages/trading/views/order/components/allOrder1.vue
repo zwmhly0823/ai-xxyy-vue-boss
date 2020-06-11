@@ -190,6 +190,8 @@ export default {
     },
     // 搜索
     search(val) {
+      console.log(val, 'val')
+
       this.searchIn = val
     }
   },

@@ -509,7 +509,7 @@ $light_gray: #eee;
       div {
         cursor: pointer;
         &.active {
-          color: #409eff;
+          color: #2a75ed;
         }
       }
     }

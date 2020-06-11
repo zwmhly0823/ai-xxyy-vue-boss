@@ -1092,7 +1092,7 @@ export default {
   // 操作
   .wait-pending {
     cursor: pointer;
-    color: #409eff;
+    color: #2a75ed;
   }
   .time {
     display: flex;

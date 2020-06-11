@@ -4,7 +4,7 @@
  * @Author: shentong
  * @Date: 2020-03-13 16:20:48
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-06-04 20:41:38
+ * @LastEditTime: 2020-06-09 17:56:00
  */
 import axios from '../axiosConfig'
 
@@ -82,6 +82,13 @@ export default {
             }
             trial_course{
               team_category
+            }
+            first_order_send_id
+            first_send_user{
+              id
+              username
+              nickname
+              mobile
             }
           }
         }

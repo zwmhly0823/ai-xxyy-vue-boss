@@ -3,13 +3,8 @@
  * @version: 1.0.0
  * @Author: Shentong
  * @Date: 2020-05-14 14:11:21
-<<<<<<< HEAD
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-05-30 01:22:08
-=======
- * @LastEditors: Shentong
- * @LastEditTime: 2020-05-29 17:09:04
->>>>>>> feature/new-teams-0527
+ * @LastEditTime: 2020-06-10 16:03:02
  -->
 <template>
   <el-row type="flex" class="app-main team-container">
@@ -576,7 +571,7 @@ export default {
   }
   .team-name-pointer {
     cursor: pointer;
-    color: #409eff;
+    color: #2a75ed;
   }
   // 排序css
   .sort-operate-box {
@@ -590,7 +585,7 @@ export default {
         bottom: 0;
       }
       .active {
-        color: #409eff;
+        color: #2a75ed;
       }
       .top-color {
         position: absolute;
@@ -631,7 +626,7 @@ export default {
         &.active {
           background: #fff;
           span {
-            color: #409eff;
+            color: #2a75ed;
           }
         }
       }
@@ -641,7 +636,7 @@ export default {
 </style>
 <style lang="scss">
 .add-first-cell-bg > .el-table tbody tr:hover > td:first-child {
-  background-color: #409eff !important;
+  background-color: #2a75ed !important;
   .team-name-pointer {
     color: #ffffff;
   }

@@ -386,7 +386,7 @@ export default {
         color: white;
         text-align: center;
         padding: 4px;
-        background-color: #409eff;
+        background-color: #2a75ed;
         margin-bottom: 2px;
       }
     }

@@ -3,11 +3,11 @@
  * @version:
  * @Author: zhubaodong
  * @Date: 2020-03-13 16:53:27
- * @LastEditors: zhubaodong
- * @LastEditTime: 2020-04-07 14:34:35
+ * @LastEditors: songyanan
+ * @LastEditTime: 2020-06-06 17:57:10
  -->
 <template>
-  <div class="left-container" @mouseleave="outTools">
+  <div class="left-container">
     <div class="title">组织结构</div>
     <el-tree
       class="left-container-tree"
@@ -19,30 +19,39 @@
       highlight-current
       style="color:#2F2E31"
       @node-click="nodeClick"
-      @contextmenu.prevent="defaultHandler()"
     >
-      <span class="custom-tree-node" slot-scope="{ node, data }">
-        <!-- @mouseover="showTools(data.id)" -->
-        <span :title="data.id">{{ data.name }}</span>
-        <!-- （{{ data.id ? data.id : 0 }}） -->
-        <!-- <span
-          class="el-icon-s-tools toolsIcon"
-          slot="reference"
-          @contextmenu.prevent="menuTools"
-          v-if="+toolsCount === +data.id"
-          style="margin-left:10px"
-        >
-          <el-card id="menu">
-            <div>
-              <p>新建下级部门</p>
-              <p>新建平级部门</p>
-              <p>编辑部门</p>
-              <p>停用部门</p>
+      <span
+        class="custom-tree-node"
+        slot-scope="{ node, data }"
+        @mouseover="showTools(data)"
+        @mouseleave="hiddenTools(data)"
+      >
+        <span class="menu-box">
+          <span :title="data.id" class="menu-name">{{ `${data.name}` }}</span>
+          <span>{{ `(${data.size})` }}</span>
+        </span>
+        <span
+          v-show="nowId == data.id && isShowEditIcon"
+          class="el-icon-more"
+          @click.stop="editTools(data)"
+        ></span>
+        <el-card v-show="nowId == data.id && showMenu">
+          <div v-for="(item, index) in editMenuList" :key="index">
+            <div @click.stop="handleMenuItem(data, item)">
+              {{ item.lable }}
             </div>
-          </el-card>
-        </span> -->
+          </div>
+        </el-card>
       </span>
     </el-tree>
+    <DialogMenu
+      v-if="dialogVisible"
+      :editCurrentData="editCurrentData"
+      :currentItem="editCurrentItem"
+      :dialogVisible="dialogVisible"
+      @handleDialog="handleDialog"
+      ref="dialogRef"
+    />
   </div>
 </template>
 
@@ -59,35 +68,175 @@ export default {
       default: () => ({})
     }
   },
-  components: {},
   data() {
     return {
-      input: '',
-      defaultProps: {
-        children: 'children',
-        label: 'name'
-      }, // 定义节点名称
-      toolsCount: null, // 是否显示配置按钮
-      toolsMenu: false, // 右键配置显示列表
-      departmentList: []
+      departmentList: [],
+      isShowEditIcon: false,
+      nowId: null,
+      showMenu: false,
+      editMenuList: [
+        {
+          lable: '新建同级',
+          type: 'sameLevel'
+        },
+        {
+          lable: '新建子级',
+          type: 'childLevel'
+        },
+        {
+          lable: '修改',
+          type: 'edit'
+        },
+        {
+          lable: '删除',
+          type: 'delete'
+        }
+      ],
+      dialogVisible: false,
+      editCurrentItem: {},
+      editCurrentData: {},
+      menuType: null
     }
   },
-  computed: {},
-
+  async created() {
+    this.initTree()
+  },
   methods: {
+    async initTree() {
+      try {
+        await this.$http.Teacher.getDepartmentTree(1).then((res) => {
+          const arr = (res && res.payload) || []
+          if (arr.length === 0) return arr
+          const department = sortByKey(arr, 'id')
+          // 组织结构第一层排序
+          department.sort(this.handle('sort'))
+          // 多层排序
+          this.recursive(department)
+          this.departmentList = department
+        })
+      } catch (error) {
+        console.log(error)
+      }
+    },
     // 点击节点
     nodeClick(data) {
+      console.log('点击节点', data)
       this.$emit('change', data)
     },
     // 鼠标移入显示icon
-    showTools(index) {
-      this.toolsCount = +index
+    showTools(item) {
+      this.isShowEditIcon = true
+      this.nowId = item.id
+    },
+    // 鼠标移出消失icon
+    hiddenTools(item) {
+      this.isShowEditIcon = false
+      this.nowId = null
+      this.showMenu = false
+    },
+    // 点击icon
+    editTools(item) {
+      this.showMenu = true
+    },
+    // 点击菜单item
+    handleMenuItem(data, item) {
+      this.showMenu = false
+      this.dialogVisible = true
+      this.editCurrentItem = JSON.parse(JSON.stringify(item))
+      this.editCurrentData = JSON.parse(JSON.stringify(data))
+      this.menuType = item.type
+    },
+    handleDialog(type) {
+      const { menuType } = this
+      if (type === 'submit') {
+        switch (menuType) {
+          case 'delete':
+            this.deleMenu()
+            break
+          case 'sameLevel':
+            this.addMenu()
+            break
+          case 'childLevel':
+            this.addMenu()
+            break
+          case 'edit':
+            this.addMenu()
+            break
+          default:
+            return ''
+        }
+      } else {
+        this.initProps()
+      }
+    },
+    // 增加菜单
+    async addMenu() {
+      const { menuType, editCurrentData } = this
+      const form = this.$refs.dialogRef
+      let pid = ''
+      // 创建栏目时,一级创建同级时为0，创建子栏目时为当前id;二级、三级创建同级时为当前数据的pid,创建子级时为当前id
+      switch (menuType) {
+        case 'sameLevel':
+          pid = editCurrentData.flag === 1 ? '0' : editCurrentData.pid
+          break
+        case 'childLevel':
+          pid = editCurrentData.id
+          break
+        default:
+          pid = ''
+      }
+      let params = {
+        name: form[menuType].name,
+        sort: form[menuType].sort,
+        id: menuType === 'edit' ? editCurrentData.id : '',
+        pid: pid
+      }
+      if (params.name === '') {
+        this.$message.warning('名称是必填项哦～')
+        return
+      }
+      try {
+        const res = await this.$http.Teacher.createDepartment(params)
+        if (res.code === 0) {
+          if (menuType === 'sameLevel' || menuType === 'childLevel') {
+            this.$message.success(`新增栏目"${params.name}"成功`)
+          } else {
+            this.$message.success(`更改栏目"${params.name}"成功`)
+          }
+          params = {}
+          this.initProps()
+          this.initTree()
+        }
+      } catch (error) {
+        params = {}
+        console.log(error)
+      }
+    },
+    // 删除菜单
+    async deleMenu() {
+      try {
+        const res = await this.$http.Teacher.deleteDepartmentById(
+          this.editCurrentData.id
+        )
+        if (res.code === 0) {
+          this.$message.success(`已成功删除${this.editCurrentData.name}`)
+          this.initProps()
+          this.initTree()
+        }
+      } catch (error) {
+        console.log(error)
+      }
+    },
+    initProps() {
+      this.dialogVisible = false
+      this.editCurrentItem = {}
+      this.editCurrentData = {}
+      this.menuType = null
     },
     // 右击icon，显示菜单
     menuTools(e) {
       const oMenu = document.getElementById('menu')
 
-      this.toolsMenu = true
       if (+e.button === 2) {
         e.preventDefault()
         const _x = e.clientX
@@ -96,13 +245,6 @@ export default {
         oMenu.style.left = _x - 175 + 'px'
         oMenu.style.top = _y - 50 + 'px'
       }
-    },
-    // 鼠标移除隐藏
-    outTools() {
-      this.toolsCount = null
-    },
-    defaultHandler() {
-      // console.log('哈哈')
     },
     // 组织结构排序
     handle(property) {
@@ -122,35 +264,47 @@ export default {
       })
     }
   },
-  async created() {
-    await this.$http.Teacher.getDepartmentTree(1).then((res) => {
-      const arr = (res && res.payload) || []
-      if (arr.length === 0) return arr
-      const department = sortByKey(arr, 'id')
-      // 加一级销售部
-      // const tree = {
-      //   id: '0',
-      //   name: '销售部',
-      //   pid: null,
-      //   children: department
-      // }
-      // 组织结构第一层排序
-      department.sort(this.handle('sort'))
-      // 多层排序
-      this.recursive(department)
-      this.departmentList = department
-    })
+  components: {
+    DialogMenu: () => import('./dialogMenu')
   }
 }
 </script>
 <style lang="scss" scoped>
 .left-container {
-  overflow-y: auto;
+  overflow: auto;
   .title {
     font-size: 18px;
     padding: 10px 0px 10px 20px;
   }
   padding: 10px 0px;
+  .custom-tree-node {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+    .menu-box {
+      display: flex;
+      .menu-name {
+        // width: 60px;
+        // overflow: hidden;
+        // text-overflow: ellipsis;
+        // white-space: nowrap;
+      }
+    }
+  }
+  /deep/ .el-tree-node__children {
+    overflow: initial;
+  }
+  .el-icon-more {
+    transform: rotate(90deg);
+  }
+  /deep/ .el-card {
+    position: absolute;
+    top: 15px;
+    right: 0px;
+    z-index: 999;
+    line-height: 30px;
+  }
 }
 #menu {
   display: none;
