@@ -585,8 +585,8 @@ export default {
 <style scoped>
 .export-order {
   position: absolute;
-  top: 20px;
-  right: 10px;
+  bottom: 25px;
+  right: 20px;
 }
 .el-select-dropdown.is-multiple .el-select-dropdown__item.selected:after {
   right: 5px;
