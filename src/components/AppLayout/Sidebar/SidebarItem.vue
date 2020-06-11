@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-03-24 12:49:53
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-06-10 22:26:08
+ * @LastEditTime: 2020-06-11 12:30:19
 -->
 <template>
   <div v-if="!item.hidden">
@@ -43,13 +43,27 @@
       <el-menu-item-group>
         <span slot="title">{{ item.meta.title }}</span>
         <!-- 支持多级的话，此处递归 -->
-        <el-menu-item
-          :index="`${index}-${cIndex}`"
-          v-for="(cItem, cIndex) in item.children.filter((m) => m.meta.show)"
-          :key="cItem.path"
-          @click="handleOpen(cItem, `${index}-${cIndex}`)"
-          ><em>{{ cItem.meta.title }}</em></el-menu-item
-        >
+        <!-- 根据children meta的show，是否显示在导航里，false的话，只展示在popmenu里 -->
+        <!-- 如果菜单是展开状态 -->
+        <template v-if="sidebar.opened">
+          <el-menu-item
+            :index="`${index}-${cIndex}`"
+            v-for="(cItem, cIndex) in item.children.filter((m) => m.meta.show)"
+            :key="cItem.path"
+            @click="handleOpen(cItem, `${index}-${cIndex}`)"
+            ><em>{{ cItem.meta.title }}</em></el-menu-item
+          >
+        </template>
+        <!-- 菜单是关闭状态，用elment自身pop -->
+        <template v-else>
+          <el-menu-item
+            :index="`${index}-${cIndex}`"
+            v-for="(cItem, cIndex) in item.children"
+            :key="cItem.path"
+            @click="handleOpen(cItem, `${index}-${cIndex}`)"
+            ><em>{{ cItem.meta.title }}</em></el-menu-item
+          >
+        </template>
       </el-menu-item-group>
     </el-submenu>
   </div>
@@ -57,7 +71,7 @@
 
 <script>
 import '@/assets/fonts/iconfont.js' // iconfont 图标
-import { mapActions } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 export default {
   name: 'SidebarItem',
   props: {
@@ -73,6 +87,9 @@ export default {
       type: Array,
       default: () => []
     }
+  },
+  computed: {
+    ...mapGetters(['sidebar'])
   },
   data() {
     return {
@@ -136,6 +153,9 @@ export default {
 
     // 弹出二级导航的浮层
     handleMouseEndter() {
+      // 如果菜单是收起状态，不执行此逻辑
+      if (!this.sidebar.opened) return
+
       // TODO: 兼容性完善
       const { right, top, width, bottom } = this.$el.getBoundingClientRect()
       const height =

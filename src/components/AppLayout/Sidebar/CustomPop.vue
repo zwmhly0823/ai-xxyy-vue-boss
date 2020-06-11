@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-06-09 10:52:48
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-06-11 00:21:12
+ * @LastEditTime: 2020-06-11 12:16:28
 -->
 <template>
   <div
@@ -103,6 +103,7 @@ export default {
       }
 
       if (this.$route.path === `${path}`) return
+      this.handleLeave()
       // 同一模块,hash
       let pathUrl
       let pathUrl2
@@ -123,8 +124,6 @@ export default {
         }
         location.href = pathUrl2
       }
-
-      this.handleLeave()
 
       // 多页签打开
       // Object.assign(tabItem, { [`${pathUrl2}`]: { meta } })
