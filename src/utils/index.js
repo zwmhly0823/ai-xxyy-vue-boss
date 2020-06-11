@@ -180,6 +180,9 @@ export function startToEndTime(startTime, endTime) {
  * 通过班级的当前课程计算当前开课周数及节次
  **/
 export function GetAgeByBrithday(birth) {
+  if (!birth || +birth === 0) {
+    return '-'
+  }
   var age = 0
   var month = 0
   var today = new Date()
