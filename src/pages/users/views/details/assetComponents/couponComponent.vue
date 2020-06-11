@@ -192,6 +192,8 @@ export default {
 <style lang="scss" scoped>
 .coupon-content {
   .coupon-num-box {
+    height: 40px;
+    line-height: 40px;
     margin-bottom: 10px;
     .coupon-item {
       display: inline-block;
@@ -203,7 +205,8 @@ export default {
       }
     }
     .send-coupon-button {
-      margin-left: 20px;
+      float: right;
+      margin-right: 20px;
     }
   }
   .green-text-color {
