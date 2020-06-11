@@ -3,8 +3,8 @@
  * @version:
  * @Author: panjian
  * @Date: 2020-03-16 20:22:24
- * @LastEditors: panjian
- * @LastEditTime: 2020-05-16 20:18:33
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-06-11 11:30:17
  -->
 <template>
   <div class="table-box">
@@ -1144,8 +1144,8 @@ export default {
 }
 </style>
 <style lang="scss">
-.el-cascader-menu {
-  height: 300px;
-  overflow: scroll;
-}
+// .el-cascader-menu {
+//   height: 300px;
+//   overflow: scroll;
+// }
 </style>

@@ -77,13 +77,15 @@ export default {
       return ids
     }
   },
-  mounted() {
-    document
-      .querySelector('.sidebar-container')
-      .addEventListener('mouseout', (e) => {
-        // console.log(e.target.parentElement, 'target')
-        // console.log(e.srcElement, 'srcElement')
-      })
+  data() {
+    return {
+      currentMenu: null
+    }
   }
+  // mounted() {
+  //   setTimeout(() => {
+  //     this.currentMenu = this.activeMenu
+  //   }, 300)
+  // }
 }
 </script>

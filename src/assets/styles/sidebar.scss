@@ -7,7 +7,7 @@
 @mixin arrow {
   content: '';
   position: absolute;
-  top: 20px;
+  top: 15px;
   right: 20px;
   width: 8px;
   height: 8px;
@@ -159,7 +159,7 @@
             em {
               margin-left: -5px;
               padding: 2px 5px !important;
-              border-radius: 4px;
+              border-radius: 2px;
               color: #2b2f3d !important;
               background-color: $subMenuActiveBg !important;
             }
@@ -179,8 +179,8 @@
 
     .el-menu-item,
     .el-submenu__title {
-      height: 42px;
-      line-height: 42px;
+      height: 34px;
+      line-height: 34px;
       padding: 0 0 0 20px;
       // hack 箭头 hover 事件
       > div {
@@ -264,9 +264,18 @@
       }
     }
 
+    // 收起时状态
     .el-menu--collapse {
+      .el-menu-item {
+        position: relative;
+        left: -5px;
+      }
       .el-submenu {
+        &::after {
+          display: none;
+        }
         & > .el-submenu__title {
+          padding-left: 15px !important;
           & > span {
             height: 0;
             width: 0;
