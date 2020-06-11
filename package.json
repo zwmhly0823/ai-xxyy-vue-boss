@@ -5,14 +5,10 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "build:live": "cross-env BASE_URL=ghpageslive npm run build",
-    "deploy:live": "cross-env BASE_URL=ghpageslive node ghpages.js",
-    "build:prod": "cross-env BASE_URL=ghpagesprod node npm run build",
-    "deploy:prod": "cross-env BASE_URL=ghpagesprod node ghpages.js",
-    "build:test": "cross-env BASE_URL=ghpagestest npm run build",
-    "deploy:test": "cross-env BASE_URL=ghpagestest node ghpages.js",
-    "build:dev": "cross-env BASE_URL=ghpagesdev npm run build",
-    "deploy:dev": "cross-env BASE_URL=ghpagesdev node ghpages.js",
+    "build:live": "cross-env BASE_URL=ghpageslive npm run build && cross-env BASE_URL=ghpageslive node ghpages.js",
+    "build:prod": "cross-env BASE_URL=ghpagesprod node npm run build && cross-env BASE_URL=ghpagesprod node ghpages.js",
+    "build:test": "cross-env BASE_URL=ghpagestest npm run build && cross-env BASE_URL=ghpagestest node ghpages.js",
+    "build:dev": "cross-env BASE_URL=ghpagesdev npm run build && cross-env BASE_URL=ghpagesdev node ghpages.js",
     "test:unit": "vue-cli-service test:unit",
     "lint": "eslint --fix --ext .js,.vue src",
     "dll": "webpack -p --progress --config ./webpack.dll.conf.js"
@@ -20,7 +16,6 @@
   "dependencies": {
     "ali-oss": "^6.6.0",
     "axios": "^0.19.2",
-    "colors": "^1.4.0",
     "core-js": "^3.6.4",
     "dayjs": "^1.8.22",
     "element-ui": "^2.13.0",
