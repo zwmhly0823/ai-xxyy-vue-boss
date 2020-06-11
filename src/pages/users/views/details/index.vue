@@ -78,7 +78,7 @@
           <el-col :span="7">
             <template v-if="stuInfor.teams && stuInfor.teams.length > 0">
               <!-- 开课状态 -->
-              <!-- 逻辑：当前班级状态 0: 开课中 1:带开课 2:已结课-->
+              <!-- 逻辑：当前班级状态 0: 待开课 1:开课中 2:已结课-->
               <el-tag
                 :disable-transitions="true"
                 type="info"
@@ -109,7 +109,12 @@
                     : 'info'
                 "
               >
-                {{ stuInfor.teams[courseIndex].wd_info }}
+                <span v-if="+stuInfor.teams[courseIndex].team_type > 0">
+                  {{ stuInfor.teams[courseIndex].current_lesson }}
+                </span>
+                <span v-else>
+                  {{ stuInfor.teams[courseIndex].wd_info }}
+                </span>
               </el-tag>
               <!-- 添加好友状态，进群状态 -->
               <!-- 体验课-->
@@ -513,6 +518,17 @@ export default {
         this.loading = false
         // init lessonType
         this.lessonType = this.stuInfor.teams[0].team_type - 0 > 0 ? 1 : 0
+        // 在不能自己选系统课体验课的页面，用户在有多个系统课的情况下，右上角的tag页签展示优先级开课中>待开课>已开课>已退费
+        // 目前学习记录和作品集里能自己切换班级固排除
+        if (
+          !(
+            this.tabData === 'learningRecord' || this.tabData === 'collectionOf'
+          ) &&
+          this.stuInfor.teams.length
+        ) {
+          this.tagsPriorityLevel()
+        }
+
         if (this.tabData === 'learningRecord') {
           // 学习记录接口
           this.reqSendCourseLogPage(
@@ -530,6 +546,28 @@ export default {
           this.reqGetUserAssets()
         }
       })
+    },
+    tagsPriorityLevel() {
+      const sortArr = []
+      // team_state: 0: 待开课 1:开课中 2:已结课
+      for (let i = 0, len = this.stuInfor.teams.length; i < len; i++) {
+        const item = this.stuInfor.teams[i]
+        if (+item.team_type > 0) {
+          sortArr.push({
+            index: i,
+            team_state:
+              item.team_state - 0 === 1
+                ? item.team_state - 0 + 2
+                : item.team_state - 0 // 这样开课中的值就是最大的
+          })
+        }
+      }
+      // 这样顺序就是开课中 - 待开课 - 已结课
+      sortArr.sort(function(a, b) {
+        return b.team_state - a.team_state
+      })
+      // courseIndex控制显示哪个
+      this.courseIndex = sortArr[0].index
     },
     // 学习记录接口
     reqSendCourseLogPage(id) {
