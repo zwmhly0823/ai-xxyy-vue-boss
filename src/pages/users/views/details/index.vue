@@ -61,17 +61,22 @@
               <div class="coupons">
                 <img
                   src="../../../../../src/assets/images/coupons.png"
-                />优惠券: {{ stuInfor.coupon && stuInfor.coupon.length }}
+                />优惠券:
+                <span @click="jumpToAsset" class="jump-class">
+                  {{ stuInfor.coupon && stuInfor.coupon.length }}
+                </span>
               </div>
               <div class="gold-conins">
                 <img
                   src="../../../../../src/assets/images/gold-conins.png"
                 />小熊币:
-                {{
-                  stuInfor.account &&
-                    stuInfor.account[0] &&
-                    stuInfor.account[0].balance
-                }}
+                <span @click="jumpToAsset" class="jump-class">
+                  {{
+                    stuInfor.account &&
+                      stuInfor.account[0] &&
+                      stuInfor.account[0].balance
+                  }}
+                </span>
               </div>
             </div>
           </el-col>
@@ -110,7 +115,11 @@
                 "
               >
                 <span v-if="+stuInfor.teams[courseIndex].team_type > 0">
-                  {{ stuInfor.teams[courseIndex].current_lesson }}
+                  {{
+                    stuInfor.teams[courseIndex].current_lesson.substring(
+                      stuInfor.teams[courseIndex].current_lesson.indexOf('L')
+                    )
+                  }}
                 </span>
                 <span v-else>
                   {{ stuInfor.teams[courseIndex].wd_info }}
@@ -564,6 +573,9 @@ export default {
           })
         }
       }
+      if (!sortArr.length) {
+        return
+      }
       // 这样顺序就是开课中 - 待开课 - 已结课
       sortArr.sort(function(a, b) {
         return b.team_state - a.team_state
@@ -773,6 +785,10 @@ export default {
     couponSendSucc() {
       this.assetCouponDone = false
       this.reqGetUserAssets(true)
+    },
+    jumpToAsset() {
+      this.tabData = 'userAsset'
+      this.tabBtn()
     }
   }
 }
@@ -893,6 +909,10 @@ export default {
             height: 20px;
             margin-right: 5px;
           }
+          .jump-class {
+            color: #409eff;
+            cursor: pointer;
+          }
         }
         .gold-conins {
           display: flex;
@@ -901,6 +921,10 @@ export default {
             width: 20px;
             height: 20px;
             margin-right: 5px;
+          }
+          .jump-class {
+            color: #409eff;
+            cursor: pointer;
           }
         }
       }
