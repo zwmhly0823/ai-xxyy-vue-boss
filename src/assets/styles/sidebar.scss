@@ -37,6 +37,7 @@
     left: 0;
     z-index: 1001;
     overflow: hidden;
+    user-select: none;
 
     // reset element-ui css
     .horizontal-collapse-transition {

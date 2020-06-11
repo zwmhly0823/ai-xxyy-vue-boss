@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-03-24 12:49:53
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-06-11 12:30:19
+ * @LastEditTime: 2020-06-11 16:38:14
 -->
 <template>
   <div v-if="!item.hidden">
@@ -12,6 +12,7 @@
     <el-menu-item
       :index="index.toString()"
       @click="handleOpen(item, `${index.toString()}`)"
+      @contextmenu.prevent="handleRight(item)"
       v-if="!item.children"
     >
       <!-- 自定义icon类 -->
@@ -51,7 +52,9 @@
             v-for="(cItem, cIndex) in item.children.filter((m) => m.meta.show)"
             :key="cItem.path"
             @click="handleOpen(cItem, `${index}-${cIndex}`)"
-            ><em>{{ cItem.meta.title }}</em></el-menu-item
+            ><em @contextmenu.prevent="handleRight(item)">{{
+              cItem.meta.title
+            }}</em></el-menu-item
           >
         </template>
         <!-- 菜单是关闭状态，用elment自身pop -->
@@ -66,14 +69,18 @@
         </template>
       </el-menu-item-group>
     </el-submenu>
+
+    <right-pop :position="popPosition" :item="popItem" />
   </div>
 </template>
 
 <script>
-import '@/assets/fonts/iconfont.js' // iconfont 图标
 import { mapActions, mapGetters } from 'vuex'
+import '@/assets/fonts/iconfont.js' // iconfont 图标
+import RightPop from '@/components/RightPop/index.vue'
 export default {
   name: 'SidebarItem',
+  components: { RightPop },
   props: {
     item: {
       type: Object,
@@ -93,7 +100,9 @@ export default {
   },
   data() {
     return {
-      clicked: false
+      clicked: false,
+      popPosition: {},
+      popItem: {}
     }
   },
   methods: {
@@ -179,6 +188,16 @@ export default {
       this.$store.commit('app/TOGGLE_POPMENU', {
         show: false
       })
+    },
+
+    // 右键事件
+    handleRight(item) {
+      const position = {
+        top: event.clientY || event.y,
+        left: event.clientX || event.x
+      }
+      this.popPosition = position
+      this.popItem = item
     }
   }
 }

@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-05-18 18:52:36
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-06-10 18:57:32
+ * @LastEditTime: 2020-06-11 16:45:20
  */
 
 import Cookies from 'js-cookie'
@@ -23,6 +23,12 @@ const state = {
     left: 0,
     top: 0,
     bottom: 0
+  },
+  rightpop: {
+    show: false,
+    item: {},
+    left: 0,
+    top: 0
   },
   device: 'desktop'
 }
@@ -50,6 +56,12 @@ const mutations = {
       ...state.popMenu,
       ...obj
     }
+  },
+  SET_RIGHTPOP: (state, obj = {}) => {
+    state.rightpop = {
+      ...state.rightpop,
+      ...obj
+    }
   }
 }
 
@@ -62,6 +74,9 @@ const actions = {
   },
   toggleDevice({ commit }, device) {
     commit('TOGGLE_DEVICE', device)
+  },
+  setRightPop({ commit }, obj) {
+    commit('SET_RIGHTPOP', obj)
   }
 }
 
