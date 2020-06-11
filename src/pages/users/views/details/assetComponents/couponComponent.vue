@@ -48,14 +48,19 @@
       <el-table-column prop="start_date" label="获得时间"></el-table-column>
       <el-table-column label="使用时间·方式">
         <template slot-scope="scope">
-          <div v-if="!scope.row.order.ctime && !scope.row.order.packages_name">
-            -
-          </div>
-          <div v-else>
+          <template
+            v-if="
+              !scope.row.order ||
+                (!scope.row.order.ctime && !scope.row.order.packages_name)
+            "
+          >
+            \
+          </template>
+          <template v-else>
             {{ scope.row.order.packages_name }}
             <br />
             {{ scope.row.order.ctime }}
-          </div>
+          </template>
         </template>
       </el-table-column>
     </el-table>
@@ -167,7 +172,13 @@ export default {
         }
         pItem.end_date = formatData(pItem.end_date, 's')
         pItem.start_date = formatData(pItem.start_date, 's')
-        pItem.order.ctime = formatData(pItem.order.ctime, 's')
+        if (pItem.order) {
+          pItem.order.ctime = formatData(pItem.order.ctime, 's')
+        } else {
+          pItem.order = {
+            ctime: '\\'
+          }
+        }
       })
     },
     // 优惠卷列表接口

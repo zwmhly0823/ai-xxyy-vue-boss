@@ -35,7 +35,7 @@
 
 <script>
 import { cloneDeep } from 'lodash'
-import { formatData } from '@/utils/index'
+// import { formatData } from '@/utils/index'
 export default {
   name: 'coinComponent',
   props: {
@@ -88,7 +88,7 @@ export default {
       this.coinNumList[2].value =
         this.coinNumList[0].value - this.coinNumList[1].value
       this.renderTableData.forEach((item) => {
-        item.update_date = item.update_date ? formatData(item.update_date) : '-'
+        item.update_date = item.update_date ? item.update_date : '-'
       })
     }
   }
