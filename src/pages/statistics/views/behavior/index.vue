@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-06-06 14:18:35
  * @LastEditors: panjian
- * @LastEditTime: 2020-06-10 18:32:58
+ * @LastEditTime: 2020-06-11 10:56:04
 -->
 <template>
   <article>
@@ -25,8 +25,14 @@
             <div class="info-box">
               <div class="user-info-box">
                 <img
+                  v-if="scope.row.head"
                   class="user-info-img"
                   :src="`${scope.row.head}?x-oss-process=image/resize,l_100`"
+                />
+                <img
+                  v-else
+                  class="user-info-img"
+                  src="https://msb-ai.meixiu.mobi/ai-pm/static/touxiang.png?x-oss-process=image/resize,l_100"
                 />
                 <img
                   class="user-info-img-sex"
@@ -54,7 +60,17 @@
         <el-table-column label="微信信息">
           <template slot-scope="scope">
             <div class="weixin-box">
-              <img class="weixin-img" :src="scope.row.head" alt="" />
+              <img
+                v-if="scope.row.head"
+                class="weixin-img"
+                :src="scope.row.head"
+                alt=""
+              />
+              <img
+                v-else
+                class="weixin-img"
+                src="https://msb-ai.meixiu.mobi/ai-pm/static/touxiang.png?x-oss-process=image/resize,l_100"
+              />
               <span class="weixin-text">{{ scope.row.weixin_nick_name }}</span>
             </div>
           </template>
@@ -208,7 +224,11 @@ export default {
         this.totalElements = res.data.UserBehaviorLogPage.totalElements
         const _data = res.data.UserBehaviorLogPage.content
         _data.forEach((item) => {
-          item.birthday = GetAgeByBrithday(item.birthday)
+          if (item.birthday !== '0') {
+            item.birthday = GetAgeByBrithday(+item.birthday)
+          } else {
+            item.birthday = '-'
+          }
 
           if (item.order) {
             item.order.buytime = timestamp(item.order.buytime, 2)
