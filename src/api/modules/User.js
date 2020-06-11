@@ -310,6 +310,7 @@ export default {
             course_task_count
             task_comment_count
             listen_comment_count
+            current_lesson
           }
           join_date
           status_text
