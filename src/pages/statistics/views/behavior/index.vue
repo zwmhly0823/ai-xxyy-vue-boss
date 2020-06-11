@@ -4,10 +4,10 @@
  * @Author: panjian
  * @Date: 2020-06-06 14:18:35
  * @LastEditors: panjian
- * @LastEditTime: 2020-06-11 14:43:24
+ * @LastEditTime: 2020-06-11 21:14:30
 -->
 <template>
-  <article>
+  <div class="app-main height">
     <div>
       <behaviorSearch
         @onBehavior="onBehavior"
@@ -150,7 +150,7 @@
         close="calc(100vw - 26px - 50px)"
       />
     </div>
-  </article>
+  </div>
 </template>
 
 <script>
@@ -270,10 +270,10 @@ export default {
           item.action_time = item.action_time
             ? timestamp(item.action_time, 2)
             : '-'
-          if (+item.user.status > 2) {
-            item.user.status = '已转化'
+          if (+item.status > 2) {
+            item.status = '已转化'
           } else {
-            item.user.status = '未转化'
+            item.status = '未转化'
           }
         })
         setTimeout(() => {
@@ -355,48 +355,50 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.bottom-table {
-  background: #fff;
-  padding-bottom: 60px;
-  .info-box {
-    display: flex;
-    flex-wrap: nowrap;
-    .user-info-box {
+.app-main {
+  padding: 15px;
+  .bottom-table {
+    padding-bottom: 60px;
+    .info-box {
+      display: flex;
+      flex-wrap: nowrap;
+      .user-info-box {
+        position: relative;
+        .user-info-img {
+          height: 50px;
+          width: 50px;
+          border: 1px solid #f0f0f0;
+          border-radius: 50%;
+        }
+        .user-info-img-sex {
+          position: absolute;
+          left: 40px;
+          bottom: 0px;
+          width: 20px;
+          height: 20px;
+        }
+      }
+      .user-info-text-box {
+        margin-left: 20px;
+      }
+    }
+    .weixin-box {
       position: relative;
-      .user-info-img {
-        height: 50px;
+      .weixin-img {
         width: 50px;
-        border: 1px solid #f0f0f0;
+        height: 50px;
         border-radius: 50%;
       }
-      .user-info-img-sex {
+      .weixin-text {
         position: absolute;
-        left: 40px;
-        bottom: 0px;
-        width: 20px;
-        height: 20px;
+        top: 15px;
+        left: 70px;
       }
     }
-    .user-info-text-box {
-      margin-left: 20px;
-    }
-  }
-  .weixin-box {
-    position: relative;
-    .weixin-img {
-      width: 50px;
-      height: 50px;
-      border-radius: 50%;
-    }
-    .weixin-text {
-      position: absolute;
-      top: 15px;
-      left: 70px;
-    }
-  }
-  .behavior-box {
-    .behavior-text {
-      margin-left: 10px;
+    .behavior-box {
+      .behavior-text {
+        margin-left: 10px;
+      }
     }
   }
 }
