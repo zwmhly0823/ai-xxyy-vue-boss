@@ -2,8 +2,8 @@
  * @Author: YangJiyong
  * @Email: yangjiyong@meishubao.com
  * @Date: 2020-03-13 12:10:04
- * @Last Modified by: YangJiyong
- * @Last Modified time: 2020-03-28 19:01:06
+ * @Last Modified by: songyanan
+ * @Last Modified time: 2020-06-09 15:51:46
  * @Description: 全局公共方法，添加或改动及时全员通知。 注释一定要写详细！
  */
 
@@ -147,14 +147,19 @@ export function sortArrObject(arr, field) {
 }
 
 export function baseUrl() {
-  let myBaseUrl = '/'
-  const { BASE_URL } = process.env // location.pathname
-  if (BASE_URL === 'ghpageslive') {
-    myBaseUrl = ''
-  } else if (BASE_URL === 'ghpagestest' || BASE_URL.indexOf('test') > -1) {
-    myBaseUrl = '/ai-app-vue-boss-test/'
-    // myBaseUrl = ''
+  let myBaseUrl = ''
+  const pathname = location.pathname
+  const environment = ['dev', 'test']
+  const enFlag = environment.some((item, index) => {
+    return pathname.includes(item)
+  })
+  const pathArr = pathname.split('/')
+  if (enFlag) {
+    myBaseUrl = '/' + [pathArr[1]].join('/')
+  } else {
+    myBaseUrl = '/'
   }
+
   return myBaseUrl
 }
 

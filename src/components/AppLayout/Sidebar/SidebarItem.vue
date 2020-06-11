@@ -3,9 +3,11 @@
  * @version: 2.0.0
  * @Author: YangJiyong
  * @Date: 2020-03-24 12:49:53
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-06-11 12:30:19
--->
+ * @Last Modified by:   songyanan
+ * @Last Modified time: 2020-006-09 15:53:20
+ * @Description: TODO: 目前只支持二级
+ -->
+
 <template>
   <div v-if="!item.hidden">
     <!-- 只有一级的情况 -->
@@ -107,12 +109,15 @@ export default {
       const pathname = location.pathname
       let baseUrl = ''
       const tabItem = {}
+      const environment = ['dev', 'test']
+      const enFlag = environment.some((item, index) => {
+        return pathname.includes(item)
+      })
 
       if (this.clicked && hasChildren) return
       this.clicked = hasChildren
 
-      // https://msb-ai.meixiu.mobi/ai-app-vue-toss-test/student-team/#/ 测试环境
-      if (pathname.includes('test')) {
+      if (enFlag) {
         const pathArr = pathname.split('/')
         baseUrl = '/' + [pathArr[1]].join('/') // , pathArr[2]
       }

@@ -1,90 +1,58 @@
-const glob = require('glob')
-const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 const defaultSettings = require('./src/settings.js')
+const {
+  getEntry,
+  camel2Line,
+  baseUrl,
+  editOperation,
+  dllReference
+} = require('./util')
 const { NODE_ENV } = process.env
-// TODO: 使用router
-const { getMenuText } = require('./src/utils/menuItems')
-const name = defaultSettings.title || '小熊美术BOSS' // page title
+const projectName = process.argv[3] || 'dashboard'
+const name = defaultSettings.title || '小熊美术BOSS'
+// const SpeedMeasurePlugin = require('speed-measure-webpack-plugin')
+// const smp = new SpeedMeasurePlugin()
 
-let baseUrl = '/'
-if (process.env.BASE_URL === 'ghpageslive') {
-  baseUrl = '/'
-} else if (process.env.BASE_URL === 'ghpagesdev') {
-  baseUrl = '/frontend/ai-app-vue-boss-dev/'
-} else if (process.env.BASE_URL === 'ghpagestest') {
-  baseUrl = '/ai-app-vue-boss-test/'
-}
-
-function camel2Line(str) {
-  return str.replace(/([A-Z])/g, '-$1').toLowerCase()
-}
-
-// 运行 npm run build [projectFileName] 打包指定模块;  projectName 取到指定的模块;
-const projectName = process.argv[3] || 'login'
-
-/**
- * 设置入口文件，打包时按模块文件分开独立打包
- */
-function getEntry() {
-  let entries = {}
-  if (NODE_ENV === 'production' && projectName) {
-    const projectNameStr = camel2Line(projectName)
-    entries = {
-      index: {
-        // page的入口
-        entry: `src/pages/${projectName}/main.js`,
-        // 模板来源
-        template: 'public/index.html',
-        // 在 dist/index.html 的输出
-        filename: 'index.html',
-        title: `${getMenuText(projectNameStr)}`,
-        chunks: ['chunk-vendors', 'chunk-common', 'index']
-      }
-    }
-  } else {
-    const items = glob.sync('./src/pages/*/*.js')
-
-    items.forEach((item) => {
-      const filepath = item
-      const fileList = filepath.split('/')
-      const fileName = fileList[fileList.length - 2]
-      const fileNameStr = camel2Line(fileName)
-      entries[fileNameStr] = {
-        entry: `src/pages/${fileName}/main.js`,
-        // 模板来源
-        template: 'public/index.html',
-        // 在 dist/index.html 的输出
-        filename: `${fileNameStr}.html`,
-        title: `${getMenuText(fileNameStr)}`,
-        // 提取出来的通用 chunk 和 vendor chunk。
-        chunks: ['chunk-vendors', 'chunk-common', fileNameStr]
-      }
-    })
-  }
-  return entries
-}
-
-const pages = getEntry()
+editOperation('构建')
 
 module.exports = {
   publicPath:
-    NODE_ENV === 'production'
-      ? `${baseUrl}${camel2Line(projectName)}/`
-      : `/${camel2Line(projectName)}`,
-  outputDir: `dist/${camel2Line(projectName)}`,
-  // 页面入口
-  pages,
-  productionSourceMap: true,
+    NODE_ENV === 'production' ? `${baseUrl()}` : `/${camel2Line(projectName)}`,
+  pages: getEntry(),
+  productionSourceMap: NODE_ENV !== 'production',
   configureWebpack: {
     name,
-    plugins: [new CleanWebpackPlugin()]
+    plugins: [],
+    // 解决build log日志warning
+    performance: {
+      hints: 'warning',
+      maxEntrypointSize: 50000000,
+      maxAssetSize: 30000000,
+      assetFilter: function(assetFilename) {
+        return assetFilename.endsWith('.js')
+      }
+    }
   },
   chainWebpack(config) {
+    if (NODE_ENV === 'production') {
+      dllReference(config)
+    }
+    config.plugins.delete('prefetch')
     config.module
       .rule('md')
       .test(/\.md$/)
       .use('html-loader')
       .loader('html-loader')
+      .end()
+      .rule('images')
+      .use('image-webpack-loader')
+      .loader('image-webpack-loader')
+      .options({
+        mozjpeg: { progressive: true, quality: 65 },
+        optipng: { enabled: false },
+        pngquant: { quality: '65-90', speed: 4 },
+        gifsicle: { interlaced: false },
+        webp: { quality: 75 }
+      })
       .end()
   },
   devServer: {
@@ -96,25 +64,6 @@ module.exports = {
         secure: false,
         pathRewrite: {
           '^/api': '/api'
-        }
-      },
-      '/sapi': {
-        target: 'http://docker.meixiu.mobi:48766',
-        changeOrigin: true,
-        ws: true,
-        secure: false,
-        pathRewrite: {
-          '^/sapi': '/api'
-        }
-      },
-      // 开发环境_lk
-      '/tapi': {
-        target: 'http://docker.meixiu.mobi:38766',
-        changeOrigin: true,
-        ws: true,
-        secure: false,
-        pathRewrite: {
-          '^/tapi': '/api'
         }
       },
       // 查询接口
@@ -156,13 +105,4 @@ module.exports = {
       }
     }
   }
-  // css: {
-  //   loaderOptions: {
-  //     // 给 sass-loader 传递选项。
-  //     // @/ 是 src/ 的别名
-  //     scss: {
-  //       prependData: '@import "~@/assets/scss/element-variables.scss";'
-  //     }
-  //   }
-  // }
 }
