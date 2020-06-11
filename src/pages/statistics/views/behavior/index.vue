@@ -3,8 +3,8 @@
  * @version: 
  * @Author: panjian
  * @Date: 2020-06-06 14:18:35
- * @LastEditors: panjian
- * @LastEditTime: 2020-06-11 21:40:25
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-06-11 22:33:18
 -->
 <template>
   <div class="app-main height">
@@ -356,9 +356,10 @@ export default {
 </script>
 <style lang="scss" scoped>
 .app-main {
-  padding: 15px;
+  padding: 10px;
+  overflow: auto;
   .bottom-table {
-    padding-bottom: 60px;
+    padding-bottom: 40px;
     .info-box {
       display: flex;
       flex-wrap: nowrap;
