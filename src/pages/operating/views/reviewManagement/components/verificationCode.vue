@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-06-10 14:38:58
  * @LastEditors: liukun
- * @LastEditTime: 2020-06-10 18:00:10
+ * @LastEditTime: 2020-06-11 20:03:04
 -->
 <template>
   <section class="bianju10">
@@ -44,17 +44,7 @@
           align="center"
         >
         </el-table-column>
-        <el-table-column label="验证码" align="center">
-          <template slot-scope="scope">
-            {{
-              scope.row.content
-                ? scope.row.content.substring(
-                    4,
-                    scope.row.content.indexOf('，')
-                  )
-                : '(^_^)'
-            }}
-          </template>
+        <el-table-column label="验证码" prop="code" align="center">
         </el-table-column>
         <el-table-column label="发送时间" align="center">
           <template slot-scope="scope">
