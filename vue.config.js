@@ -9,8 +9,6 @@ const {
 const { NODE_ENV } = process.env
 const projectName = process.argv[3] || 'dashboard'
 const name = defaultSettings.title || '小熊美术BOSS'
-// const SpeedMeasurePlugin = require('speed-measure-webpack-plugin')
-// const smp = new SpeedMeasurePlugin()
 
 editOperation('构建')
 

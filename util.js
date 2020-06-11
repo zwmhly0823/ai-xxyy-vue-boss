@@ -3,7 +3,7 @@
  * @Email: songyanan@meishubao.com
  * @Date: 2020-06-09 14:42:08
  * @LastEditors: songyanan
- * @LastEditTime: 2020-06-09 18:28:20
+ * @LastEditTime: 2020-06-11 16:12:40
  */
 
 const glob = require('glob')
@@ -12,11 +12,8 @@ const chalk = require('chalk')
 const { execSync } = require('child_process')
 const webpack = require('webpack')
 const AddAssetHtmlPlugin = require('add-asset-html-webpack-plugin')
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
-  .BundleAnalyzerPlugin
 const { getMenuText } = require('./src/utils/menuItems')
-const { NODE_ENV, BASE_URL } = process.env
-const plugins = []
+const { BASE_URL } = process.env
 const entries = {}
 
 const camel2Line = function(str) {
@@ -56,21 +53,8 @@ const getEntry = function() {
   return entries
 }
 
-const dynamicPlugin = function() {
-  if (NODE_ENV === 'production') {
-  }
-  // 性能优化分析插件
-  if (process.env.npm_config_report) {
-    plugins.push(new BundleAnalyzerPlugin())
-  }
-  return plugins
-}
-
 const editOperation = function(text) {
-  if (
-    NODE_ENV === 'production' &&
-    execSync('git status -s', { encoding: 'utf-8' }) !== ''
-  ) {
+  if (BASE_URL && execSync('git status -s', { encoding: 'utf-8' }) !== '') {
     console.log(chalk.red(`同学，请先提交代码再${text}哦~`), '\n')
     process.exit(1)
   }
@@ -116,7 +100,6 @@ module.exports = {
   camel2Line,
   getEntry,
   baseUrl,
-  dynamicPlugin,
   editOperation,
   dllReference
 }
