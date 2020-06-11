@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-05-18 18:52:36
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-06-11 16:45:20
+ * @LastEditTime: 2020-06-11 20:35:38
  */
 
 import Cookies from 'js-cookie'
@@ -77,6 +77,10 @@ const actions = {
   },
   setRightPop({ commit }, obj) {
     commit('SET_RIGHTPOP', obj)
+  },
+  resetSidebar({ commit }) {
+    commit('SET_RIGHTPOP', { show: false })
+    commit('TOGGLE_POPMENU', { show: false })
   }
 }
 

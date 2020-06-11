@@ -4,13 +4,13 @@
  * @Author: YangJiyong
  * @Date: 2020-06-11 16:06:24
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-06-11 16:52:29
+ * @LastEditTime: 2020-06-11 19:58:52
 -->
 <template>
-  <div class="right-pop" :style="myPosition">
+  <div class="right-pop" v-if="rightpop.show" :style="myPosition">
     <ul>
-      <li @click="openTab">
-        新标签打开
+      <li @click.stop="openTab" @mouseleave="handleRightLeave">
+        新标签页打开
       </li>
     </ul>
   </div>
@@ -19,23 +19,11 @@
 <script>
 import { mapGetters } from 'vuex'
 export default {
-  props: {
-    //   事件获取元素坐标
-    position: {
-      type: Object,
-      default: () => {}
-    },
-    // 当前路由内容
-    item: {
-      type: Object,
-      default: () => {}
-    }
-  },
   computed: {
     ...mapGetters(['rightpop']),
     myPosition() {
-      const top = `${this.rightpop.top}px`
-      const left = `${this.rightpop.left}px`
+      const top = `${this.rightpop.top + 10}px`
+      const left = `${this.rightpop.left + 10}px`
       return {
         top,
         left
@@ -44,9 +32,35 @@ export default {
   },
   methods: {
     openTab() {
-      console.log(this.rightpop.item)
+      this.handleReset()
 
-      // window.open(path, '_blank')
+      const currentItem = this.rightpop.item
+      const { path, meta } = currentItem
+      const { pathname, origin } = location
+      let baseUrl = ''
+
+      if (pathname.includes('test')) {
+        const pathArr = pathname.split('/')
+        baseUrl = '/' + [pathArr[1]].join('/') // , pathArr[2]
+      }
+      const pathUrl = `${origin}${baseUrl}/${meta.module}/#${path}`
+      console.log(pathUrl)
+
+      window.open(pathUrl, '_blank')
+    },
+    handleRightLeave() {
+      if (!this.rightpop.show) return
+      this.$store.dispatch('app/setRightPop', {
+        show: false
+      })
+    },
+    handleReset() {
+      this.$store.dispatch('app/setRightPop', {
+        show: false
+      })
+      this.$store.commit('app/TOGGLE_POPMENU', {
+        show: false
+      })
     }
   }
 }
@@ -58,5 +72,15 @@ export default {
   border-radius: 4px;
   background-color: #fff;
   box-shadow: 0 0 4px rgba($color: #000000, $alpha: 0.2);
+  z-index: 3000;
+  ul {
+    margin: 0;
+    padding: 10px;
+  }
+  li {
+    list-style: none;
+    font-size: 12px;
+    cursor: pointer;
+  }
 }
 </style>

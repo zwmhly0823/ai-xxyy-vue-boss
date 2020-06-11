@@ -1,5 +1,5 @@
 <template>
-  <div :class="{ 'has-logo': showLogo }">
+  <div :class="{ 'has-logo': showLogo }" @mouseleave="handleLeave">
     <logo v-if="showLogo" :collapse="isCollapse" />
     <el-scrollbar wrap-class="scrollbar-wrapper">
       <el-menu
@@ -81,11 +81,11 @@ export default {
     return {
       currentMenu: null
     }
+  },
+  methods: {
+    handleLeave() {
+      // this.$store.dispatch('app/resetSidebar')
+    }
   }
-  // mounted() {
-  //   setTimeout(() => {
-  //     this.currentMenu = this.activeMenu
-  //   }, 300)
-  // }
 }
 </script>
