@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-06-06 14:18:35
  * @LastEditors: panjian
- * @LastEditTime: 2020-06-11 10:56:04
+ * @LastEditTime: 2020-06-11 14:43:24
 -->
 <template>
   <article>
@@ -228,6 +228,35 @@ export default {
             item.birthday = GetAgeByBrithday(+item.birthday)
           } else {
             item.birthday = '-'
+          }
+
+          if (!item.weixin_nick_name || item.weixin_nick_name === '0') {
+            if (!item.weixinUser) {
+              item.weixin_nick_name = '-'
+            } else {
+              item.weixin_nick_name = item.weixinUser.nickname
+            }
+          }
+
+          if (!item.team_name) {
+            if (item.teacher) {
+              item.teacher_name = item.teacher.realname
+              if (item.teacher.departmentInfo) {
+                item.teacher_department_name = item.teacher.departmentInfo.name
+              } else {
+                item.teacher_department_name = '-'
+              }
+            } else {
+              item.teacher_name = '-'
+            }
+          }
+
+          if (!item.team_name) {
+            if (item.team) {
+              item.team_name = item.team.team_name
+            } else {
+              item.team_name = '-'
+            }
           }
 
           if (item.order) {
