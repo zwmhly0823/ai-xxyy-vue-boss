@@ -527,6 +527,8 @@ export default {
           this.stuInfor.teams.length
         ) {
           this.tagsPriorityLevel()
+        } else {
+          this.courseIndex = 0
         }
 
         if (this.tabData === 'learningRecord') {
@@ -556,9 +558,9 @@ export default {
           sortArr.push({
             index: i,
             team_state:
-              item.team_state - 0 === 1
-                ? item.team_state - 0 + 2
-                : item.team_state - 0 // 这样开课中的值就是最大的
+              item.team_state - 0 !== 2
+                ? item.team_state - 0 + 3
+                : item.team_state - 0
           })
         }
       }
@@ -731,7 +733,6 @@ export default {
       // console.log(tab, event, '学习记录')
       this.assetCouponDone = false
       this.assetCoinDone = false
-      this.courseIndex = 0
       this.reqUser()
     },
     // 学习记录课程
