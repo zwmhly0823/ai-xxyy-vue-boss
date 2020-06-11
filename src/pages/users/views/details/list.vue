@@ -226,6 +226,43 @@
       </el-table-column>
     </el-table>
 
+    <!--用户资产 Start-->
+    <div class="course-sty" v-if="tabData === 'userAsset'">
+      <el-tabs v-model="assetCurPane" @tab-click="tabAsset">
+        <el-tab-pane label="优惠券" name="assetCoupon">
+          <template v-if="couponDone">
+            <coupon-component
+              :assetNumData="assetNumData"
+              :propData="studyTableData"
+              :userId="userId"
+              @couponSendSucc="couponSendSucc"
+            ></coupon-component>
+          </template>
+          <template v-else>
+            <div class="asset-loading">
+              <i class="el-icon-loading"></i>
+              <span class="loading-text">加载中请稍后..</span>
+            </div>
+          </template>
+        </el-tab-pane>
+        <el-tab-pane label="小熊币" name="assetBearCoin">
+          <template v-if="coinDone">
+            <coin-component
+              :assetNumData="assetNumData"
+              :propData="tabTwoList"
+            ></coin-component>
+          </template>
+          <template v-else>
+            <div class="asset-loading">
+              <i class="el-icon-loading"></i>
+              <span class="loading-text">加载中请稍后..</span>
+            </div>
+          </template>
+        </el-tab-pane>
+      </el-tabs>
+    </div>
+    <!--用户资产 End-->
+
     <!-- 作品集视频播放 -->
     <el-dialog
       title
@@ -245,10 +282,21 @@
 </template>
 <script>
 // import imges from '../../../../src/assets/images/FinishClassHead.png'
+import couponComponent from './assetComponents/couponComponent'
+import coinComponent from './assetComponents/coinComponent'
 export default {
   props: {
     tabData: String,
-    tabList: Array
+    tabList: Array,
+    tabTwoList: Array,
+    couponDone: Boolean,
+    coinDone: Boolean,
+    userId: String,
+    assetNumData: Object
+  },
+  components: {
+    couponComponent,
+    coinComponent
   },
   data() {
     return {
@@ -263,14 +311,26 @@ export default {
       // 播放id
       audioId: '',
       currentVideo: '',
-      videoDialog: false
+      videoDialog: false,
+      assetCurPane: '',
+      preCouponDone: false,
+      preCoinDone: false
     }
   },
-  created() {},
+  created() {
+    this.assetCurPane = 'assetCoupon'
+  },
   watch: {
     tabList(val) {
-      console.log(val, 'watch')
+      // console.log(val, 'watch')
+      this.assetCurPane = 'assetCoupon'
       this.studyTableData = val
+    },
+    couponDone(val) {
+      this.preCouponDone = val
+    },
+    coinDone(val) {
+      this.preCoinDone = val
     }
   },
   methods: {
@@ -317,6 +377,12 @@ export default {
         audio.load()
       }
       this.audioId = audio.id
+    },
+    tabAsset(tab) {
+      this.$emit('changePagenation', tab.name)
+    },
+    couponSendSucc() {
+      this.$emit('couponSendSucc')
     }
   }
 }
@@ -393,5 +459,11 @@ export default {
     padding: 0;
     font-size: 0;
   }
+}
+.asset-loading {
+  text-align: center;
+  color: #409eff;
+  font-size: 13px;
+  margin-top: 20px;
 }
 </style>

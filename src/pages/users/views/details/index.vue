@@ -61,24 +61,29 @@
               <div class="coupons">
                 <img
                   src="../../../../../src/assets/images/coupons.png"
-                />优惠券: {{ stuInfor.coupon && stuInfor.coupon.length }}
+                />优惠券:
+                <span @click="jumpToAsset" class="jump-class">
+                  {{ stuInfor.coupon && stuInfor.coupon.length }}
+                </span>
               </div>
               <div class="gold-conins">
                 <img
                   src="../../../../../src/assets/images/gold-conins.png"
                 />小熊币:
-                {{
-                  stuInfor.account &&
-                    stuInfor.account[0] &&
-                    stuInfor.account[0].balance
-                }}
+                <span @click="jumpToAsset" class="jump-class">
+                  {{
+                    stuInfor.account &&
+                      stuInfor.account[0] &&
+                      stuInfor.account[0].balance
+                  }}
+                </span>
               </div>
             </div>
           </el-col>
           <el-col :span="7">
             <template v-if="stuInfor.teams && stuInfor.teams.length > 0">
               <!-- 开课状态 -->
-              <!-- 逻辑：当前班级状态 0: 开课中 1:带开课 2:已结课-->
+              <!-- 逻辑：当前班级状态 0: 待开课 1:开课中 2:已结课-->
               <el-tag
                 :disable-transitions="true"
                 type="info"
@@ -109,7 +114,16 @@
                     : 'info'
                 "
               >
-                {{ stuInfor.teams[courseIndex].wd_info }}
+                <span v-if="+stuInfor.teams[courseIndex].team_type > 0">
+                  {{
+                    stuInfor.teams[courseIndex].current_lesson.substring(
+                      stuInfor.teams[courseIndex].current_lesson.indexOf('L')
+                    )
+                  }}
+                </span>
+                <span v-else>
+                  {{ stuInfor.teams[courseIndex].wd_info }}
+                </span>
               </el-tag>
               <!-- 添加好友状态，进群状态 -->
               <!-- 体验课-->
@@ -314,9 +328,13 @@
             label="订单·物流记录"
             name="orderLogistics"
           ></el-tab-pane>
+          <el-tab-pane label="用户资产" name="userAsset"></el-tab-pane>
         </el-tabs>
       </div>
-      <div class="course-sty" v-if="tabData !== 'orderLogistics'">
+      <div
+        class="course-sty"
+        v-if="['learningRecord', 'collectionOf'].includes(tabData)"
+      >
         <el-tabs v-model="courseData" @tab-click="courseBtn">
           <el-tab-pane
             v-for="item in stuInfor.teams"
@@ -396,7 +414,17 @@
 
       <!-- tab列表 -->
       <div class="tab-content">
-        <details-list :tabData="tabData" :tabList="tabList" />
+        <details-list
+          :tabData="tabData"
+          :tabList="tabList"
+          :tabTwoList="tabTwoList"
+          :couponDone="assetCouponDone"
+          :coinDone="assetCoinDone"
+          :userId="stuInfor.id"
+          :assetNumData="assetNumData"
+          @changePagenation="changePagenation"
+          @couponSendSucc="couponSendSucc"
+        />
       </div>
       <m-pagination
         :current-page="currentPage"
@@ -431,6 +459,7 @@ export default {
       // 学习记录tab
       tabData: 'learningRecord',
       tabList: [],
+      tabTwoList: [],
       // 学习记录>课程tab
       courseData: '',
       // loading
@@ -439,7 +468,23 @@ export default {
       stuInfor: {},
       // 课程tab下标
       courseIndex: 0,
-      lessonType: null
+      lessonType: null,
+      assetCouponDone: false,
+      assetCoinDone: false,
+      assetPageInfo: {
+        coupon: {
+          currentPage: 0,
+          totalElements: 0,
+          totalPages: 0
+        },
+        coin: {
+          currentPage: 0,
+          totalElements: 0,
+          totalPages: 0
+        }
+      },
+      assetNumData: {},
+      assetCur: 'assetCoupon' // 用户资产选的是优惠券还是小熊币，默认是优惠券
     }
   },
   created() {
@@ -451,7 +496,7 @@ export default {
     // 学员信息接口
     reqUser() {
       this.$http.User.getUser(this.studentId).then((res) => {
-        console.log('学员基本信息', res.data.User)
+        // console.log('学员基本信息', res.data.User)
         this.sendId =
           res.data.User && res.data.User.send_id ? res.data.User.send_id : '0'
         // 年龄格式化
@@ -482,6 +527,19 @@ export default {
         this.loading = false
         // init lessonType
         this.lessonType = this.stuInfor.teams[0].team_type - 0 > 0 ? 1 : 0
+        // 在不能自己选系统课体验课的页面，用户在有多个系统课的情况下，右上角的tag页签展示优先级开课中>待开课>已开课>已退费
+        // 目前学习记录和作品集里能自己切换班级固排除
+        if (
+          !(
+            this.tabData === 'learningRecord' || this.tabData === 'collectionOf'
+          ) &&
+          this.stuInfor.teams.length
+        ) {
+          this.tagsPriorityLevel()
+        } else {
+          this.courseIndex = 0
+        }
+
         if (this.tabData === 'learningRecord') {
           // 学习记录接口
           this.reqSendCourseLogPage(
@@ -494,8 +552,36 @@ export default {
         } else if (this.tabData === 'orderLogistics') {
           // 订单·物流数据接口
           this.reqgetOrderPage()
+        } else if (this.tabData === 'userAsset') {
+          // 用户资产
+          this.reqGetUserAssets()
         }
       })
+    },
+    tagsPriorityLevel() {
+      const sortArr = []
+      // team_state: 0: 待开课 1:开课中 2:已结课
+      for (let i = 0, len = this.stuInfor.teams.length; i < len; i++) {
+        const item = this.stuInfor.teams[i]
+        if (+item.team_type > 0) {
+          sortArr.push({
+            index: i,
+            team_state:
+              item.team_state - 0 !== 2
+                ? item.team_state - 0 + 3
+                : item.team_state - 0
+          })
+        }
+      }
+      if (!sortArr.length) {
+        return
+      }
+      // 这样顺序就是开课中 - 待开课 - 已结课
+      sortArr.sort(function(a, b) {
+        return b.team_state - a.team_state
+      })
+      // courseIndex控制显示哪个
+      this.courseIndex = sortArr[0].index
     },
     // 学习记录接口
     reqSendCourseLogPage(id) {
@@ -584,9 +670,52 @@ export default {
         }
       )
     },
+    reqGetUserAssets(next) {
+      // 先获取优惠券
+      this.$http.User.getUserAssetsCoupon(this.studentId, this.currentPage)
+        .then((res) => {
+          // console.log(res)
+          this.tabList = []
+          const _data = res.data.CouponUserPage.content
+          this.totalPages = +res.data.CouponUserPage.totalPages
+          this.totalElements = +res.data.CouponUserPage.totalElements
+          this.assetNumData.couponUserCollect = this.stuInfor.couponUserCollect
+          this.tabList = _data
+          this.assetCouponDone = true
+
+          this.assetPageInfo.coupon.currentPage = this.currentPage
+          this.assetPageInfo.coupon.totalPages = +res.data.CouponUserPage
+            .totalPages
+          this.assetPageInfo.coupon.totalElements = +res.data.CouponUserPage
+            .totalElements
+          // 再获取小熊币
+          if (!next) {
+            this.reqGetUserCoin()
+          }
+        })
+        .catch(() => {
+          this.$message.error('获取用户资产失败')
+        })
+    },
+    reqGetUserCoin() {
+      this.$http.User.getUserAssetsCoin(this.studentId, this.currentPage)
+        .then((res) => {
+          // console.log(res)
+          this.tabTwoList = res.data.AccountPage.content
+          this.assetNumData.accountUserCollect = this.stuInfor.accountUserCollect
+          this.assetCoinDone = true
+          this.assetPageInfo.coin.currentPage = this.currentPage
+          this.assetPageInfo.coin.totalPages = +res.data.AccountPage.totalPages
+          this.assetPageInfo.coin.totalElements = +res.data.AccountPage
+            .totalElements
+        })
+        .catch(() => {
+          this.$message.error('获取用户资产失败')
+        })
+    },
     // 点击分页
     handleSizeChange(page) {
-      console.log(this.page)
+      // console.log(this.page)
       this.currentPage = +page
       if (this.tabData === 'learningRecord') {
         this.reqSendCourseLogPage(this.stuInfor.teams[this.courseIndex].id)
@@ -594,6 +723,14 @@ export default {
         this.reqStudentCourseTaskPage(this.stuInfor.teams[this.courseIndex].id)
       } else if (this.tabData === 'orderLogistics') {
         this.reqgetOrderPage()
+      } else if (this.tabData === 'userAsset') {
+        if (this.assetCur === 'assetCoupon') {
+          this.assetCouponDone = false
+          this.reqGetUserAssets(true)
+        } else if (this.assetCur === 'assetBearCoin') {
+          this.assetCoinDone = false
+          this.reqGetUserCoin()
+        }
       }
     },
     // 收起
@@ -605,8 +742,9 @@ export default {
       this.aFold = true
     },
     tabBtn(tab, event) {
-      console.log(tab, event, '学习记录')
-      this.courseIndex = 0
+      // console.log(tab, event, '学习记录')
+      this.assetCouponDone = false
+      this.assetCoinDone = false
       this.reqUser()
     },
     // 学习记录课程
@@ -631,6 +769,26 @@ export default {
           `学员:${username || mobile}`
         )
       // this.$router.push({ path: '/details', query: { id: '123' } })
+    },
+    changePagenation(data) {
+      this.assetCur = data
+      if (data === 'assetBearCoin') {
+        this.currentPage = this.assetPageInfo.coin.currentPage
+        this.totalPages = this.assetPageInfo.coin.totalPages
+        this.totalElements = this.assetPageInfo.coin.totalElements
+      } else if (data === 'assetCoupon') {
+        this.currentPage = this.assetPageInfo.coupon.currentPage
+        this.totalPages = this.assetPageInfo.coupon.totalPages
+        this.totalElements = this.assetPageInfo.coupon.totalElements
+      }
+    },
+    couponSendSucc() {
+      this.assetCouponDone = false
+      this.reqGetUserAssets(true)
+    },
+    jumpToAsset() {
+      this.tabData = 'userAsset'
+      this.tabBtn()
     }
   }
 }
@@ -751,6 +909,10 @@ export default {
             height: 20px;
             margin-right: 5px;
           }
+          .jump-class {
+            color: #409eff;
+            cursor: pointer;
+          }
         }
         .gold-conins {
           display: flex;
@@ -759,6 +921,10 @@ export default {
             width: 20px;
             height: 20px;
             margin-right: 5px;
+          }
+          .jump-class {
+            color: #409eff;
+            cursor: pointer;
           }
         }
       }

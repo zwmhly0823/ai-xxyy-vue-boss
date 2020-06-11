@@ -310,9 +310,18 @@ export default {
             course_task_count
             task_comment_count
             listen_comment_count
+            current_lesson
           }
           join_date
           status_text
+          couponUserCollect{
+            code
+            value
+          }
+          accountUserCollect{
+            code
+            value
+          }
         }
       }`
     })
@@ -450,6 +459,72 @@ export default {
                 }
               }
             }
+          }
+        }
+      }`
+    })
+  },
+  // 优惠券
+  getUserAssetsCoupon(query = '', page = 1, size = 20) {
+    const formattingQuery = JSON.stringify({
+      uid: query
+    })
+    const sort = `{ "ctime": "asc" }`
+    return axios.post(`/graphql/v1/toss`, {
+      query: `{
+        CouponUserPage(query:${JSON.stringify(formattingQuery)},
+          sort: ${JSON.stringify(sort)},
+          page: ${page},
+          size:${size}) {
+            totalElements
+            totalPages
+            content{
+              id
+              status
+              start_date
+              end_date
+              notity_date
+              ctime
+              utime
+              coupon {
+                name
+                type
+                amount
+              }
+              order {
+                ctime
+                packages_type
+                packages_name
+              }
+            }
+          }
+      }`
+    })
+  },
+  getUserAssetsCoin(query = '', page = 1, size = 20) {
+    const formattingQuery = JSON.stringify({
+      uid: query,
+      account_type: 2
+    })
+    const sort = `{ "ctime": "asc" }`
+    return axios.post(`/graphql/v1/toss`, {
+      query: `{
+        AccountPage(query:${JSON.stringify(formattingQuery)},
+        sort: ${JSON.stringify(sort)},
+        page: ${page},
+        size:${size}) {
+          totalElements
+          totalPages
+          content {
+            id
+            uid
+            trans_type
+            desc
+            account_type
+            amount
+            balance
+            expected_amount
+            update_date
           }
         }
       }`
