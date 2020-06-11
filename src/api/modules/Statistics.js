@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-07 13:52:26
  * @LastEditors: panjian
- * @LastEditTime: 2020-06-08 20:25:34
+ * @LastEditTime: 2020-06-11 14:42:57
  */
 import axios from '../axiosConfig'
 
@@ -397,23 +397,8 @@ export default {
       }}`
     })
   },
-  // 获取用户行为下拉接口
+  // 获取用户行为列表接口
   UserBehaviorLogPage(params, currentPage) {
-    // const {
-    //   valueInput = '',
-    //   valueBehavior = [],
-    //   currentPage = 1,
-    //   size = '20'
-    // } = params
-    // const query = {}
-    // valueInput &&
-    //   Object.assign(query, {
-    //     'mobile.like': { 'mobile.keyword': `*${valueInput}*` }
-    //   })
-    // valueBehavior &&
-    //   Object.assign(query, {
-    //     action_type: `['${valueBehavior}']`
-    //   })
     return axios.post('/graphql/v1/toss', {
       query: `{
         UserBehaviorLogPage(query:${JSON.stringify(
@@ -460,6 +445,15 @@ export default {
             action_time
             action_type
             action_type_text
+            weixinUser{
+              nickname
+            }
+            teacher {
+              realname
+              departmentInfo{
+                name
+              }
+            }
             user {
               id
               username
