@@ -79,40 +79,16 @@ export default {
       callStatus: '',
       callStatusOptions: [
         {
-          label: 'webcall, TTS合成失败',
-          value: 20
-        },
-        {
-          label: 'webcall, 客户未接',
+          label: '未接听',
           value: 21
         },
         {
-          label: 'webcall, 客户接听',
+          label: '已接听',
           value: 22
         },
         {
-          label: 'webcall, 已呼叫',
+          label: '异常',
           value: 23
-        },
-        {
-          label: 'webcall, 双方接听',
-          value: 24
-        },
-        {
-          label: '预测外呼,客户未接听',
-          value: 40
-        },
-        {
-          label: '预测外呼,客户接听',
-          value: 41
-        },
-        {
-          label: '预测外呼,已呼叫',
-          value: 42
-        },
-        {
-          label: '预测外呼,双方接听',
-          value: 43
         }
       ],
       ivrSwitch: 'OFF',
@@ -146,6 +122,9 @@ export default {
   methods: {
     initData() {
       this.tableData = cloneDeep(this.data)
+      if (!this.tableData.length) {
+        return
+      }
       this.tableData.forEach((tItem, tKey) => {
         switch (tItem.eventType) {
           case 0:
