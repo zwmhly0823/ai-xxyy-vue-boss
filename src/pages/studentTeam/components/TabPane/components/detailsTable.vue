@@ -3,8 +3,8 @@
  * @version:
  * @Author: panjian
  * @Date: 2020-03-16 20:22:24
- * @LastEditors: panjian
- * @LastEditTime: 2020-06-08 16:28:24
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-06-12 17:06:41
  -->
 <template>
   <div class="table-box">
@@ -61,16 +61,18 @@
         <!-- 基本信息 -->
         <el-table-column width="280" label="基本信息">
           <template slot-scope="scope">
-            <div class="scope-info-box">
+            <div
+              class="scope-info-box primary-text"
+              @click="openUserDetail(scope.row.student_id)"
+            >
               <img
                 class="scope-info-img borders"
                 :src="`${scope.row.head}?x-oss-process=image/resize,l_100`"
                 alt=""
               />
-              <div class="info-telephone">{{ scope.row.mobile }}</div>
-              <!-- <span class="info-sex" v-if="scope.row.sex == 0">- ·</span>
-              <span class="info-sex" v-else-if="scope.row.sex == 1">男 ·</span>
-              <span class="info-sex" v-else>女 ·</span> -->
+              <div class="info-telephone">
+                {{ scope.row.mobile }}
+              </div>
               <span class="info-sex">{{ scope.row.sex }}</span>
               <span class="info-age">{{ scope.row.birthday }}</span>
               <span class="info-basics">{{
@@ -257,7 +259,11 @@
         <el-table-column key="1" label="用户和购买时间">
           <template slot-scope="scope">
             <div>
-              <span>{{ scope.row.mobile }}</span>
+              <span
+                class="primary-text"
+                @click="openUserDetail(scope.row.user_id)"
+                >{{ scope.row.mobile }}</span
+              >
               <br />
               <span>{{ scope.row.ctime }}</span>
             </div>
@@ -362,7 +368,11 @@
         <el-table-column key="l1" label="用户和购买时间">
           <template slot-scope="scope">
             <div>
-              <span>{{ scope.row.mobile }}</span>
+              <span
+                class="primary-text"
+                @click="openUserDetail(scope.row.id)"
+                >{{ scope.row.mobile }}</span
+              >
               <br />
               <span>{{ scope.row.express_ctime }}</span>
             </div>
@@ -421,7 +431,11 @@
         <el-table-column key="p1" label="用户和购买时间">
           <template slot-scope="scope">
             <div>
-              <span>{{ scope.row.mobile }}</span>
+              <span
+                class="primary-text"
+                @click="openUserDetail(scope.row.student_id)"
+                >{{ scope.row.mobile }}</span
+              >
               <br />
               <span>{{ scope.row.buy_time }}</span>
             </div>
@@ -500,7 +514,11 @@
         <el-table-column key="w1" label="用户和购买时间">
           <template slot-scope="scope">
             <div>
-              <span>{{ scope.row.mobile }}</span>
+              <span
+                class="primary-text"
+                @click="openUserDetail(scope.row.student_id)"
+                >{{ scope.row.mobile }}</span
+              >
               <br />
               <span>{{ scope.row.buytime }}</span>
               <br />
@@ -627,6 +645,7 @@
 import MPagination from '@/components/MPagination/index.vue'
 import logisticsForm from '../components/logisticsForm'
 import modifyAddress from '../components/modifyAddress'
+import { openBrowserTab } from '@/utils/index'
 export default {
   name: 'detailsTable',
   props: {
@@ -914,6 +933,11 @@ export default {
     handleCurrentChange(val) {
       this.currentPage = val
       this.$emit('onCurrentPage', val)
+    },
+    // 打开用户详情
+    openUserDetail(uid, row) {
+      console.log(row)
+      uid && openBrowserTab(`/users/#/details/${uid}`)
     }
   }
 }

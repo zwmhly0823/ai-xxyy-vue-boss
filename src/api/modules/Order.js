@@ -4,7 +4,7 @@
  * @Author: shentong
  * @Date: 2020-03-13 16:20:48
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-06-09 18:52:52
+ * @LastEditTime: 2020-06-12 18:55:42
  */
 import axios from '../axiosConfig'
 
@@ -36,6 +36,7 @@ export default {
             out_trade_no
             total_amount
             user{
+              id
               username
               nickname
               mobile
@@ -47,6 +48,7 @@ export default {
               channel_outer_name
             }
             team {
+              id
               team_name
             }
             last_teacher_id
