@@ -195,6 +195,7 @@ export function GetAgeByBrithday(birth) {
 
   if (today.getTime() < birthday.getTime()) {
     console.log('无法计算')
+    return '-'
   } else {
     age = todayYear - birthdayYear
 
