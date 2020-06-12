@@ -1,11 +1,3 @@
-<!--
- * @Descripttion: 
- * @version: 
- * @Author: panjian
- * @Date: 2020-05-06 16:33:15
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-05-26 20:20:15
- -->
 <template>
   <div class="channelAdd-box">
     <div class="channelAdd-top">
@@ -16,21 +8,6 @@
           @channelSearchValue="channelSearchValue"
           @channelInputValue="channelInputValue"
         ></channel-search>
-        <el-button
-          class="add-btn"
-          @click="onAddChannel"
-          size="mini"
-          type="primary"
-          >添加渠道</el-button
-        >
-        <el-button
-          class="bulkDownload"
-          size="mini"
-          type="primary"
-          @click="onBulkDownload"
-          :loading="downLoad"
-          >批量下载</el-button
-        >
       </div>
     </div>
     <div class="channelAdd-table">
@@ -94,45 +71,6 @@
           width="160"
           align="center"
         >
-        </el-table-column>
-        <el-table-column width="300" align="center" label="其他">
-          <template slot-scope="scope">
-            <div
-              v-if="
-                scope.row.channel_link ||
-                  scope.row.short_er_code ||
-                  scope.row.isExtension
-              "
-              class="logistics-wx-box"
-            >
-              <a
-                v-if="scope.row.channel_link"
-                style="color:#2a75ed;font-size:12px;"
-                @click="onLink(scope.row)"
-                target="_blank"
-                >查看链接</a
-              >
-              <a
-                v-if="scope.row.short_er_code"
-                style="color:#2a75ed;font-size:12px;margin-left:10px;margin-right:10px;"
-                size="mini"
-                type="text"
-                @click="onUpload(scope.row)"
-              >
-                下载二维码</a
-              >
-              <a
-                v-if="scope.row.isExtension"
-                style="color:#2a75ed;font-size:12px;"
-                @click="onExtension(scope.row)"
-                target="_blank"
-                >推广人统计</a
-              >
-            </div>
-            <div v-else class="logistics-wx-box">
-              <span>-</span>
-            </div>
-          </template>
         </el-table-column>
       </el-table>
       <m-pagination
@@ -255,7 +193,7 @@ export default {
   },
   watch: {
     tabIndex(value) {
-      if (value === '1') {
+      if (value === '2') {
         this.queryList = `""`
         this.currentPage = 1
         this.getChannelOne()
@@ -263,6 +201,7 @@ export default {
     }
   },
   created() {
+    console.log('secchannelInfomation 被创建')
     // this.getChannelOne()
   },
   methods: {
@@ -295,7 +234,7 @@ export default {
         this.queryList,
         this.currentPage
       ).then((res) => {
-        console.log('res:', res)
+        console.log('sec res: ', res)
         this.currentPage = res.data.ChannelDetailStatisticsPage.number
         this.totalElements = res.data.ChannelDetailStatisticsPage.totalElements
         const _data = res.data.ChannelDetailStatisticsPage.content
