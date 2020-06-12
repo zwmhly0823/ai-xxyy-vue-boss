@@ -340,17 +340,17 @@ export function openNewTab(path, title) {
  * 浏览器新标签打开页面
  * @path: 要跳转的路由，包含模块名和router path.如 '/student-team/#/trialTeam'
  */
-export function openBrowserTab(path) {
+export function openBrowserTab(path, out = false) {
   if (!path) {
     Message.error('请填写跳转路径')
     return
   }
   const { pathname, origin } = location
   // 如果是外链接, 直接打开
-  // if (origin.includes('http:') || origin.includes('https:')) {
-  //   window.open(path, '_blank')
-  //   return
-  // }
+  if (out) {
+    window.open(path, '_blank')
+    return
+  }
   let baseUrl = ''
   if (pathname.includes('test')) {
     const pathArr = pathname.split('/')

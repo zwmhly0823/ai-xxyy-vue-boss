@@ -70,9 +70,16 @@
 
       <el-table-column label="体验课班级" min-width="150">
         <template slot-scope="scope">
-          {{
-            trialTeam[scope.row.id] ? trialTeam[scope.row.id].team_name : '-'
-          }}
+          <p
+            :class="{ 'primary-text': trialTeam[scope.row.id] }"
+            @click="
+              openDetail(trialTeam[scope.row.id] && trialTeam[scope.row.id].id)
+            "
+          >
+            {{
+              trialTeam[scope.row.id] ? trialTeam[scope.row.id].team_name : '-'
+            }}
+          </p>
         </template>
       </el-table-column>
       <el-table-column label="社群销售" min-width="150">
@@ -168,7 +175,7 @@
 <script>
 import _ from 'lodash'
 import MPagination from '@/components/MPagination/index.vue'
-import { formatData, isToss, deepClone } from '@/utils/index.js'
+import { formatData, isToss, deepClone, openBrowserTab } from '@/utils/index.js'
 import ExpressDetail from '../../components/expressDetail'
 import User from '../../components/User.vue'
 export default {
@@ -442,6 +449,11 @@ export default {
 
       const dom = document.getElementById('order-scroll')
       dom.querySelector('.order-wrapper').scrollTo(0, 0)
+    },
+    // 打开班级详情
+    openDetail(id, row) {
+      row && console.log(row)
+      id && openBrowserTab(`/student-team/#/teamDetail/${id}/0`)
     }
   }
 }

@@ -64,7 +64,10 @@
       </el-table-column>
       <el-table-column label="系统课班级" min-width="150">
         <template slot-scope="scope">
-          <p>
+          <p
+            :class="{ 'primary-text': scope.row.team }"
+            @click="openDetail(scope.row.team.id)"
+          >
             {{ scope.row.team ? scope.row.team.team_name : '-' }}
           </p>
         </template>
@@ -171,7 +174,7 @@
 <script>
 import _ from 'lodash'
 import MPagination from '@/components/MPagination/index.vue'
-import { formatData, isToss, deepClone } from '@/utils/index.js'
+import { formatData, isToss, deepClone, openBrowserTab } from '@/utils/index.js'
 import ExpressDetail from '../../components/expressDetail'
 import User from '../../components/User.vue'
 export default {
@@ -465,6 +468,12 @@ export default {
 
       const dom = document.getElementById('order-scroll')
       dom.querySelector('.order-wrapper').scrollTo(0, 0)
+    },
+    // /student-team/#/teamDetail/280/0
+    // 打开班级详情
+    openDetail(id, row) {
+      row && console.log(row)
+      id && openBrowserTab(`/student-team/#/teamDetail/${id}/2`)
     }
   }
 }

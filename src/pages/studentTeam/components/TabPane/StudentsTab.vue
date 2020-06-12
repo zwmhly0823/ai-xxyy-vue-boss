@@ -68,11 +68,13 @@
             alt=""
           />
           <div class="information-right">
-            <div class="phone primary-text">{{ scope.row.mobile }}</div>
-            <div class="age primary-text">
-              {{ scope.row.sex }} · {{ scope.row.birthday }}
-              <span v-show="scope.row.base_painting_text">·</span>
-              {{ scope.row.base_painting_text }}
+            <div @click="openUserDetail(scope.row)">
+              <div class="phone primary-text">{{ scope.row.mobile }}</div>
+              <div class="age primary-text">
+                {{ scope.row.sex }} · {{ scope.row.birthday }}
+                <span v-show="scope.row.base_painting_text">·</span>
+                {{ scope.row.base_painting_text }}
+              </div>
             </div>
             <div class="age">
               体验课渠道:
@@ -144,7 +146,7 @@
 <script>
 import { mapGetters } from 'vuex'
 import axios from '@/api/axiosConfig'
-import { GetAgeByBrithday } from '@/utils/index'
+import { GetAgeByBrithday, openBrowserTab } from '@/utils/index'
 import MPagination from '@/components/MPagination/index.vue'
 import CouponPopover from './components/couponPopover'
 import MSearch from '@/components/MSearch/index.vue'
@@ -431,6 +433,11 @@ export default {
     // 表头样式
     headerStyle() {
       return 'font-size: 12px;color: #666;font-weight: normal;'
+    },
+
+    // 打开用户详情
+    openUserDetail(row) {
+      row.id && openBrowserTab(`/users/#/details/${row.id}`)
     }
   }
 }
