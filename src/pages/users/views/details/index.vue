@@ -422,6 +422,8 @@
           :coinDone="assetCoinDone"
           :userId="stuInfor.id"
           :assetNumData="assetNumData"
+          :wholeData="wholeData"
+          @ivrBubbleData="ivrBubbleData"
           @changePagenation="changePagenation"
           @couponSendSucc="couponSendSucc"
         />
@@ -484,7 +486,8 @@ export default {
         }
       },
       assetNumData: {},
-      assetCur: 'assetCoupon' // 用户资产选的是优惠券还是小熊币，默认是优惠券
+      assetCur: 'assetCoupon', // 用户资产选的是优惠券还是小熊币，默认是优惠券
+      wholeData: {}
     }
   },
   created() {
@@ -555,6 +558,8 @@ export default {
         } else if (this.tabData === 'userAsset') {
           // 用户资产
           this.reqGetUserAssets()
+        } else if (this.tabData === 'notifyRecord') {
+          this.reqNotifyPage()
         }
       })
     },
@@ -713,6 +718,34 @@ export default {
           this.$message.error('获取用户资产失败')
         })
     },
+    reqNotifyPage(data) {
+      const query = {
+        userId: this.studentId,
+        pageSize: 20,
+        pageNum: this.currentPage - 1,
+        sjstime: '',
+        ejstime: '',
+        cdrStatus: '',
+        stime: '',
+        etime: ''
+      }
+      Object.assign(query, data)
+      this.$http.User.getNotifyPage(query)
+        .then((res) => {
+          // console.log(res)
+          if (res.code === 0 && res.status === 'OK') {
+            this.wholeData = res
+            this.wholeData.studentId = this.studentId
+            this.totalPages = +res.payload.totalPages
+            this.totalElements = +res.payload.totalElements
+          } else {
+            this.$message.error('获取用户通知事件记录失败')
+          }
+        })
+        .catch(() => {
+          this.$message.error('获取用户通知事件记录失败')
+        })
+    },
     // 点击分页
     handleSizeChange(page) {
       // console.log(this.page)
@@ -731,6 +764,8 @@ export default {
           this.assetCoinDone = false
           this.reqGetUserCoin()
         }
+      } else if (this.tabData === 'notifyRecord') {
+        this.reqNotifyPage()
       }
     },
     // 收起
@@ -742,6 +777,7 @@ export default {
       this.aFold = true
     },
     tabBtn(tab, event) {
+      this.currentPage = 1
       // console.log(tab, event, '学习记录')
       this.assetCouponDone = false
       this.assetCoinDone = false
@@ -789,6 +825,9 @@ export default {
     jumpToAsset() {
       this.tabData = 'userAsset'
       this.tabBtn()
+    },
+    ivrBubbleData(data) {
+      this.reqNotifyPage(data)
     }
   }
 }
