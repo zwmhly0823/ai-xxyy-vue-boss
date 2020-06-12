@@ -91,6 +91,7 @@ export default {
     },
     logout() {
       removeToken()
+      console.log('baseUrl:', baseUrl())
       location.href = `${baseUrl()}login/#/`
       // await this.$store.dispatch('user/logout')
       // this.$router.push(`/login?redirect=${this.$route.fullPath}`)
