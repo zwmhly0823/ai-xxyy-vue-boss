@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-06-06 14:18:35
  * @LastEditors: panjian
- * @LastEditTime: 2020-06-11 21:40:25
+ * @LastEditTime: 2020-06-12 11:12:02
 -->
 <template>
   <div class="app-main height">
@@ -77,13 +77,13 @@
         </el-table-column>
         <el-table-column label="用户行为" width="200">
           <template slot-scope="scope">
-            <div class="behavior-box" v-if="+scope.row.action_type === 1">
-              <span>{{ scope.row.action_type_text }}</span>
-              <span class="behavior-text">{{ scope.row.device_model }}</span>
-              <br />
-              <span>{{ scope.row.action_time }}</span>
-            </div>
-            <div class="behavior-box" v-if="+scope.row.action_type === 2">
+            <!-- <div class="behavior-box" v-if="+scope.row.action_type === 1"> -->
+            <span>{{ scope.row.action_type_text }} </span>
+            <span class="behavior-text">{{ scope.row.device_model }}</span>
+            <br />
+            <span>{{ scope.row.action_time }}</span>
+            <!-- </div> -->
+            <!-- <div class="behavior-box" v-if="+scope.row.action_type === 2">
               <span>{{ scope.row.action_type_text }}</span>
               <br />
               <span>{{ scope.row.action_time }}</span>
@@ -101,7 +101,7 @@
               <span>《{{ scope.row.course_title }}》</span>
               <br />
               <span>{{ scope.row.action_time }}</span>
-            </div>
+            </div> -->
           </template>
         </el-table-column>
         <el-table-column label="是否转化">
@@ -237,6 +237,19 @@ export default {
               item.weixin_nick_name = item.weixinUser.nickname
             }
           }
+          if (item.action_type === 1) {
+            item.action_type_text = '打开APP'
+          } else if (item.action_type === 2) {
+            item.action_type_text = '已支付'
+          } else if (item.action_type === 3) {
+            item.action_type_text = '参课'
+          } else if (item.action_type === 4) {
+            item.action_type_text = '完课'
+          } else if (item.action_type === 5) {
+            item.action_type_text = '听点评'
+          } else if (item.action_type === 6) {
+            item.action_type_text = '上传作品'
+          }
 
           if (!item.team_name) {
             if (item.teacher) {
@@ -356,9 +369,10 @@ export default {
 </script>
 <style lang="scss" scoped>
 .app-main {
-  padding: 15px;
+  padding: 10px;
+  overflow: auto;
   .bottom-table {
-    padding-bottom: 60px;
+    padding-bottom: 40px;
     .info-box {
       display: flex;
       flex-wrap: nowrap;

@@ -3,8 +3,8 @@
  * @version: 
  * @Author: zhubaodong
  * @Date: 2020-03-26 16:30:11
- * @LastEditors: panjian
- * @LastEditTime: 2020-06-09 15:13:50
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-06-11 22:32:38
  -->
 <template>
   <el-card border="false" shadow="never" :class="$style.elard">
@@ -279,7 +279,7 @@ export default {
 <style lang="scss" module>
 .elard {
   border: none;
-  margin-top: 5px;
+  // margin-top: 5px;
   margin-bottom: 5px;
 }
 .marginer {
