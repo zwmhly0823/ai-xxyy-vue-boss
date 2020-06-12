@@ -9,7 +9,7 @@
     <div class="main-container">
       <div :class="{ 'fixed-header': fixedHeader }">
         <topbar />
-        <multi-tabbed />
+        <!-- <multi-tabbed /> -->
       </div>
       <app-main />
     </div>
@@ -21,7 +21,7 @@
 import Topbar from './Topbar.vue'
 import Sidebar from './Sidebar/index.vue'
 import AppMain from './AppMain.vue'
-import MultiTabbed from './MultiTabbed.vue'
+// import MultiTabbed from './MultiTabbed.vue'
 import RightPop from '@/components/RightPop/index.vue'
 import ResizeMixin from './mixin/ResizeHandler'
 export default {
@@ -30,7 +30,7 @@ export default {
     Topbar,
     Sidebar,
     AppMain,
-    MultiTabbed,
+    // MultiTabbed,
     RightPop
   },
   mixins: [ResizeMixin],

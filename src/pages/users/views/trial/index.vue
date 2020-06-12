@@ -234,7 +234,7 @@ export default {
   created() {
     this.$nextTick(() => {
       const tableHeight =
-        document.body.clientHeight - this.$refs.tableInner.offsetTop - 112 - 30
+        document.body.clientHeight - this.$refs.tableInner.offsetTop - 112
       this.tableHeight = tableHeight + ''
     })
     this.getData()

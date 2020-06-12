@@ -445,7 +445,7 @@
 <script>
 import MPagination from '@/components/MPagination/index.vue'
 import DetailsList from './list.vue'
-import { GetAgeByBrithday, formatData, openNewTab } from '@/utils/index'
+import { GetAgeByBrithday, formatData, openBrowserTab } from '@/utils/index'
 export default {
   components: { DetailsList, MPagination },
   data() {
@@ -799,12 +799,8 @@ export default {
     // 点击推荐人
     refereesBtn() {
       console.log('推荐人')
-      const { username, mobile } = this.stuInfor.sender
-      this.sendId &&
-        openNewTab(
-          `/users/#/details/${this.sendId}`,
-          `学员:${username || mobile}`
-        )
+      // const { username, mobile } = this.stuInfor.sender
+      this.sendId && openBrowserTab(`/users/#/details/${this.sendId}`)
       // this.$router.push({ path: '/details', query: { id: '123' } })
     },
     changePagenation(data) {
@@ -836,7 +832,7 @@ export default {
 <style scoped lang="scss">
 .details-body {
   width: 100%;
-  height: calc(100vh - 50px - 34px);
+  height: calc(100vh - 50px);
   display: flex;
   .datails-content {
     width: 100%;
