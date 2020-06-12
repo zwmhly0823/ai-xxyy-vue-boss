@@ -3,8 +3,8 @@
  * @version:
  * @Author: Shentong
  * @Date: 2020-03-16 19:46:39
- * @LastEditors: liukun
- * @LastEditTime: 2020-06-10 16:15:36
+ * @LastEditors: panjian
+ * @LastEditTime: 2020-06-12 11:56:56
  */
 import axios from '../axiosConfig'
 // import { getToken } from '@/utils/auth'

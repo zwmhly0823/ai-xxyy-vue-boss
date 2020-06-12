@@ -220,17 +220,18 @@ const routes = [
         }
       },
       {
-        path: '/labelManage',
-        name: 'labelManage',
-        meta: {
-          title: '标签管理'
-        }
-      },
-      {
         path: '/verificationCode',
         name: 'verificationCode',
         meta: {
           title: '验证码查询',
+          module: 'operating'
+        }
+      },
+      {
+        path: '/labelManage',
+        name: 'labelManage',
+        meta: {
+          title: '标签管理',
           module: 'operating'
         }
       }

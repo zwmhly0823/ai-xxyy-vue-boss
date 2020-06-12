@@ -75,15 +75,6 @@ const routes = [
     component: () => import('../views/reviewManagement/components/audioAdd.vue')
   },
   {
-    path: '/labelManage',
-    name: 'labelManage',
-    meta: {
-      title: '标签管理',
-      keepAlive: false
-    },
-    component: () => import('../views/labelManage/index.vue')
-  },
-  {
     path: '/verificationCode',
     name: 'verificationCode',
     meta: {
@@ -92,6 +83,15 @@ const routes = [
     },
     component: () =>
       import('../views/reviewManagement/components/verificationCode.vue')
+  },
+  {
+    path: '/labelManage',
+    name: 'labelManage',
+    meta: {
+      title: '标签管理',
+      keepAlive: false
+    },
+    component: () => import('../views/labelManage/index.vue')
   }
 ]
 

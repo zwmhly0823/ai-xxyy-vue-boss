@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-04-25 17:24:23
  * @LastEditors: panjian
- * @LastEditTime: 2020-06-10 10:56:28
+ * @LastEditTime: 2020-06-12 11:58:02
  -->
 <template>
   <el-card
@@ -576,6 +576,7 @@ export default {
 
 <style lang="scss" scoped>
 .search-section {
+  position: relative;
   ::v-deep .el-icon-search {
     top: 14px;
   }

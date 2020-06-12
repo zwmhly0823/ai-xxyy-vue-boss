@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-05-30 18:37:24
  * @LastEditors: panjian
- * @LastEditTime: 2020-06-10 10:56:11
+ * @LastEditTime: 2020-06-12 11:52:20
 -->
 <template>
   <div class="system-label">
