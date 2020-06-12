@@ -329,6 +329,7 @@
             name="orderLogistics"
           ></el-tab-pane>
           <el-tab-pane label="用户资产" name="userAsset"></el-tab-pane>
+          <el-tab-pane label="通知事件记录" name="notifyRecord"></el-tab-pane>
         </el-tabs>
       </div>
       <div
