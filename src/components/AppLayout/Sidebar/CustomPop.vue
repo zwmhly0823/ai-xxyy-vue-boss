@@ -4,7 +4,11 @@
  * @Author: YangJiyong
  * @Date: 2020-06-09 10:52:48
  * @LastEditors: YangJiyong
+<<<<<<< HEAD
  * @LastEditTime: 2020-06-11 13:04:07
+=======
+ * @LastEditTime: 2020-06-11 19:50:55
+>>>>>>> feature/new-sidebar
 -->
 <template>
   <div
@@ -26,7 +30,8 @@
             class="el-menu-item"
             v-for="(item, index) in menu.list"
             :key="item.path"
-            @click="handleOpen(item, `${index.toString()}`)"
+            @click.left="handleOpen(item, `${index.toString()}`)"
+            @contextmenu.prevent="handleRight(item)"
           >
             <em data-v-1c22e290="">{{ item.meta.title }}</em>
           </li>
@@ -40,7 +45,7 @@
 import { mapGetters } from 'vuex'
 export default {
   computed: {
-    ...mapGetters(['popMenu']),
+    ...mapGetters(['popMenu', 'rightpop']),
     myStyle() {
       const obj = {
         left: this.popMenu.left + 'px'
@@ -76,12 +81,23 @@ export default {
       })
     },
     handleLeave(e) {
+      if (this.rightpop.show && this.popMenu.show) return
       this.$store.commit('app/TOGGLE_POPMENU', {
         show: false,
         itemMenu: {},
         left: 0,
         top: 0
       })
+    },
+
+    handleRight(item) {
+      const option = {
+        top: event.clientY || event.y,
+        left: event.clientX || event.x,
+        item,
+        show: true
+      }
+      this.$store.dispatch('app/setRightPop', option)
     },
 
     handleOpen(item, index = 0, hasChildren = false) {
@@ -91,10 +107,6 @@ export default {
       const { path, meta } = currentItem
       const pathname = location.pathname
       let baseUrl = ''
-      // const tabItem = {}
-
-      if (this.clicked && hasChildren) return
-      this.clicked = hasChildren
 
       // https://msb-ai.meixiu.mobi/ai-app-vue-toss-test/student-team/#/ 测试环境
       if (pathname.includes('test')) {
@@ -124,18 +136,6 @@ export default {
         }
         location.href = pathUrl2
       }
-
-      // 多页签打开
-      // Object.assign(tabItem, { [`${pathUrl2}`]: { meta } })
-      // const multiTabbed =
-      //   JSON.parse(sessionStorage.getItem('multiTabbed')) || {}
-      // if (!Object.keys(multiTabbed).includes(pathUrl2)) {
-      //   Object.assign(multiTabbed, tabItem)
-      //   sessionStorage.setItem('multiTabbed', JSON.stringify(multiTabbed))
-      //   this.setTabbedList(multiTabbed)
-      // }
-      // sessionStorage.setItem('currentMultiTab', pathUrl2)
-      // this.setCurrentTabbed(pathUrl2)
     }
   }
 }
