@@ -155,7 +155,7 @@ export function baseUrl() {
   })
   const pathArr = pathname.split('/')
   if (enFlag) {
-    myBaseUrl = '/' + [pathArr[1]].join('/')
+    myBaseUrl = `/${pathArr[1]}/`
   } else {
     myBaseUrl = '/'
   }
