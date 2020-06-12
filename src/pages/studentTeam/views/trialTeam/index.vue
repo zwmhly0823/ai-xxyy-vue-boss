@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-05-14 14:11:21
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-06-10 16:03:02
+ * @LastEditTime: 2020-06-12 15:09:11
  -->
 <template>
   <el-row type="flex" class="app-main team-container">
@@ -332,7 +332,7 @@ import _ from 'lodash'
 import { calculateWD } from '@/utils/validate'
 import TableSearch from '../../components/tableSearch/index'
 import EleTable from '@/components/Table/EleTable'
-import { formatData, openNewTab } from '@/utils/index'
+import { formatData, openBrowserTab } from '@/utils/index'
 // import ScheduleTable from './components/index.vue'
 
 export default {
@@ -425,7 +425,7 @@ export default {
       //     path: `/teamDetail/${id}/${teamType}`
       //   })
       id &&
-        openNewTab(
+        openBrowserTab(
           `/student-team/#/teamDetail/${id}/${teamType}`,
           `${row.team_name}`
         )

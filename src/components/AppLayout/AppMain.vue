@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-03-14 17:56:29
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-06-01 19:40:10
+ * @LastEditTime: 2020-06-12 15:52:18
  -->
 <template>
   <section class="app-main">
@@ -68,6 +68,10 @@ export default {
 }
 .fixed-header + .app-main {
   padding-top: calc(#{$topBarWidth} + #{$multiTabbedHeight});
+}
+
+.primary-text {
+  color: $blueTextColor !important;
 }
 </style>
 

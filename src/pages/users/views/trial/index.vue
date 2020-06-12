@@ -183,7 +183,7 @@ import ItemStatus from '../../components/ItemStatus.vue'
 import HandleItemStatus from '../../components/HandleItemStatus.vue'
 import ModifyAddress from '../../components/ModifyAddress.vue'
 import enums from '../../components/searchData'
-import { formatData, openNewTab } from '@/utils/index'
+import { formatData, openBrowserTab } from '@/utils/index'
 import { FOLLOW_EXPRESS_STATUS } from '@/utils/enums'
 export default {
   name: 'trialUsers',
@@ -327,7 +327,8 @@ export default {
       // console.log(user, '点击用户信息')
       const { username, id, mobile } = user
       // 新标签打开详情页
-      id && openNewTab(`/users/#/details/${id}`, `学员：${username || mobile}`)
+      id &&
+        openBrowserTab(`/users/#/details/${id}`, `学员：${username || mobile}`)
     },
 
     expressStatus(status) {
@@ -351,7 +352,7 @@ export default {
         teamName = row.system_team_name
       }
       teamId &&
-        openNewTab(
+        openBrowserTab(
           `/student-team/#/teamDetail/${teamId}/${teamType}`,
           `${teamName}`
         )
