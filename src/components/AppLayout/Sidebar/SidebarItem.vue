@@ -4,14 +4,14 @@
  * @Author: YangJiyong
  * @Date: 2020-03-24 12:49:53
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-06-11 20:11:27
+ * @LastEditTime: 2020-06-12 20:49:19
 -->
 <template>
   <div v-if="!item.hidden">
     <!-- 只有一级的情况 -->
     <el-menu-item
       :index="index.toString()"
-      @click.left="handleOpen(item, `${index.toString()}`)"
+      @click="handleOpen(item, `${index.toString()}`)"
       v-if="!item.children"
     >
       <!-- 自定义icon类 -->
