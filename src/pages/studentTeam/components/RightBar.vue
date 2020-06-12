@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-13 16:53:41
  * @LastEditors: Shentong
- * @LastEditTime: 2020-05-29 00:53:09
+ * @LastEditTime: 2020-05-30 17:12:13
  -->
 <template>
   <div class="right-container">
@@ -23,9 +23,7 @@
             <span class="text-iconsY">{{
               teamDetail.team_type == 0 ? '体验课' : '系统课'
             }}</span>
-            <span class="text-iconsB">{{
-              teamDetail.teamItem && teamDetail.teamItem.WD
-            }}</span>
+            <span class="text-iconsB">{{ teamDetail.WD }}</span>
             <!-- TODO: -->
             <span
               :class="[
@@ -46,15 +44,15 @@
             >
             <span>辅导老师微信: {{ classMessage.teacher_wx }}</span>
             <!-- TODO: -->
-            <span style="margin-right:0px" v-if="teamDetail.teamItem">
+            <span style="margin-right:0px">
               <span
-                >开课~结课 &nbsp;{{ teamDetail.teamItem.course_day }}~{{
-                  teamDetail.teamItem.end_course_day
+                >开课~结课 &nbsp;{{ teamDetail.course_day }}~{{
+                  teamDetail.end_course_day
                 }}</span
               >
             </span>
-            <span style="margin-right:0px" v-if="teamDetail.teamItem">
-              <span>创建 &nbsp;{{ teamDetail.teamItem.ctime }}</span>
+            <span style="margin-right:0px">
+              <span>创建 &nbsp;{{ teamDetail.ctime }}</span>
             </span>
           </div>
         </div>
@@ -264,9 +262,9 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
 import TabBar from './TabPane/TabBar.vue'
-import { isToss } from '@/utils/index'
+import { calculateWD } from '@/utils/validate'
+import { isToss, formatData } from '@/utils/index'
 export default {
   props: {
     classObj: {
@@ -276,9 +274,6 @@ export default {
   },
   components: {
     TabBar
-  },
-  computed: {
-    ...mapGetters(['teamItem'])
   },
   data() {
     return {
@@ -409,31 +404,43 @@ export default {
         })
     },
     // 根据班级id获取班级详情
-    getTeamDetailById(params) {
-      this.$http.Team.getTeamDetailById({ id: params.teamId }).then((res) => {
-        let {
+    async getTeamDetailById(params) {
+      const loadingInstance = this.$loading({
+        target: '.app-main',
+        lock: true,
+        text: '玩命加载中...',
+        fullscreen: true
+      })
+      try {
+        const {
           data: { StudentTeam = {} }
-        } = res
-        const { teamId, type } = this.classObj
-        const teamItemVal = this.teamItem[`${teamId}|${type}`]
-        StudentTeam = {
-          ...StudentTeam,
-          teamItem: {
-            ...teamItemVal,
-            course_day: teamItemVal.course_day
-              ? teamItemVal.course_day.replace(/-/g, '').substr(4)
-              : '',
-            end_course_day: teamItemVal.end_course_day
-              ? teamItemVal.end_course_day.replace(/-/g, '').substr(4)
-              : ''
-          }
+        } = await this.$http.Team.getTeamDetailById({ id: params.teamId })
+
+        const managementInfo = StudentTeam.managementInfo
+
+        StudentTeam.ctime = +StudentTeam.ctime
+          ? formatData(StudentTeam.ctime)
+          : ''
+        StudentTeam.WD = StudentTeam.current_lesson
+          ? calculateWD(StudentTeam.current_lesson)
+          : ''
+        if (managementInfo) {
+          StudentTeam.course_day = this.packeTime(managementInfo.course_day)
+          StudentTeam.end_course_day = this.packeTime(
+            managementInfo.end_course_day
+          )
         }
         this.teamDetail = StudentTeam
-      })
+      } catch (err) {
+        console.error(err)
+      } finally {
+        loadingInstance.close()
+      }
     },
     // 获取班级详情 顶部 统计数据
     getClassTeacher(teamId) {
       this.$http.Team.getTeacherStatistic(teamId).then((res) => {
+        const enrolled = this.teamDetail.enrolled
         const {
           data: { detail = {} }
         } = res
@@ -448,39 +455,21 @@ export default {
           teacherWx && (teacher.teacher_wx = teacherWx)
           localStorage.setItem('teacher', JSON.stringify(teacher))
         }
-        if (this.classObj.teamId) {
-          const { teamId, type } = this.classObj
-          detail.allTrans =
-            detail.statictis.order_all /
-            this.teamItem[`${teamId}|${type}`].enrolled
+        if (enrolled) {
+          detail.allTrans = detail.statictis.order_all / enrolled
         }
 
         this.classMessage = detail
-        /** localstorage teacher 添加 “teacher_wx” 字段 */
-        // TODO:
-        // if (this.classObj && this.classObj.classId) {
-        //   res.data.detail.todayTrans =
-        //     res.data.detail.statictis.today_order /
-        //     this.classId.classId.enrolled
-        //   res.data.detail.yesterdayTrans =
-        //     res.data.detail.statictis.yesterday_order /
-        //     this.classId.classId.enrolled
-        //   res.data.detail.allTrans =
-        //     res.data.detail.statictis.order_all /
-        //     this.classId.classId.enrolled
-
-        //   res.data.detail.week = this.classId.classId.week
-        //   res.data.detail.pre_enroll = this.classId.classId.pre_enroll
-        //   res.data.detail.timebegin = dayjs
-        //     .unix(Number(this.classId.classId.ctime) / 1000)
-        //     .format('MM-DD  hh:mm:ss')
-        //   res.data.detail.onetime = dayjs
-        //     .unix(Number(this.classId.classId.start_day) / 1000)
-        //     .format('YYMMDD')
-        //   res.data.detail.formatStartDay = this.classId.classId.formatStartDay
-        //   res.data.detail.formatEndDay = this.classId.classId.formatEndDay
-        // }
       })
+    },
+    packeTime(time) {
+      if (+time) {
+        return formatData(time)
+          .replace(/-/g, '')
+          .substr(4)
+      } else {
+        return ''
+      }
     }
   }
 }

@@ -5,7 +5,7 @@
  * @Date: 2020-03-14 15:11:17
  * @LastEditors: Shentong
  * :max-height="maxHeight"
- * @LastEditTime: 2020-05-06 22:19:42
+ * @LastEditTime: 2020-05-29 17:10:55
  -->
 <template>
   <div id="tableList" :class="{ 'no-padding': size > total }">
@@ -32,7 +32,7 @@
     <div class="page_box" v-if="size <= total">
       <el-pagination
         background
-        layout="prev, pager, next"
+        :layout="layOut"
         @current-change="pageChange_handler"
         :current-page="page"
         :page-size.sync="size"
@@ -74,12 +74,22 @@ export default {
       default: 20
     },
     page: Number,
-    total: Number
+    total: Number,
+    showAllTotalNum: {
+      type: Boolean,
+      default: false
+    }
   },
   components: {},
   data() {
     return {
-      maxHeight: null
+      maxHeight: null,
+      layOut: 'prev, pager, next'
+    }
+  },
+  created() {
+    if (this.showAllTotalNum) {
+      this.layOut = 'prev, pager, next, total'
     }
   },
   methods: {
@@ -103,12 +113,6 @@ export default {
     // window.onresize = () => {
     //   this.maxHeight = `${document.documentElement.clientHeight}` - 250
     // }
-  },
-  created() {},
-  watch: {
-    page() {
-      console.log(this.page, 'page------')
-    }
   }
 }
 </script>

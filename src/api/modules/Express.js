@@ -71,6 +71,9 @@ export default {
     })
   },
 
+  /**
+   * 京东物流明细查询
+   */
   getExpressDetailJDForAPP(params) {
     return axios.get(
       `/api/o/v1/express/getExpressDetailJDForAPP?expressNo=${params}`
@@ -121,6 +124,31 @@ export default {
   // 物流统计
   getLogisticsStatistics(params) {
     return axios.post('/graphql/logisticsStatistics', params)
+  },
+  /**
+   * 自动发货/全国发货 开关控制
+   * @param {Object} params
+   * @param {String} params.status - OFF-关闭；ON-开启
+   * @param {String} params.type - AUTOMATIC-自动发货；COUNTRY-全国发货
+   */
+  updateSwitchStatus(params) {
+    return axios.get(
+      `/api/ex/v1/switch/updateSwitchStatus?status=${params.status}&type=${params.type}`
+    )
+  },
+  /**
+   * 物流状态修改
+   * @param {Object} params
+   * @param {String} params.expressId - 物流ID
+   * @param {String} params.expressStatus - 需要改成的状态：下单失败：DELIVER_WAIT_CONFIRM、无效：INVALID、已签收：DELIVER_SING
+   * @param {String} params.expressRemark - 修改备注原因
+   * @param {String} params.operatorId - 操作人ID
+   */
+  updateExpressStatus(params) {
+    return axios.post(
+      `/api/ex/v1/express/updateExpressStatusForBackend?expressId=${params.expressId}&expressStatus=${params.expressStatus}&expressRemark=${params.expressRemark}&operatorId=${params.operatorId}`,
+      params
+    )
   }
   /**
    * v1 订单关联的物流

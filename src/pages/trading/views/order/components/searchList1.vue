@@ -4,17 +4,42 @@
  * @Author: liukun
  * @Date: 2020-04-25 17:24:23
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-05-25 19:29:05
+ * @LastEditTime: 2020-06-11 22:24:38
  -->
 <template>
-  <el-card border="false" shadow="never" :class="$style.elard">
-    <el-form :inline="true" label-position="right" label-width="80px">
+  <el-card
+    border="false"
+    shadow="never"
+    :class="$style.elard"
+    class="search-section"
+  >
+    <el-form :inline="true" label-position="right" label-width="100px">
       <el-form-item label="订单搜索:" :class="{ [$style.marginer]: true }">
         <orderSearch class="allmini" @result="getOrderSearch" />
       </el-form-item>
 
       <el-form-item label="订单来源:" :class="{ [$style.marginer]: true }">
         <ChannelSelect @result="getChannel" name="pay_channel" />
+      </el-form-item>
+
+      <el-form-item label="推荐人信息:" :class="{ [$style.marginer]: true }">
+        <div class="row_colum">
+          <simple-select
+            name="is_first_order_send_id"
+            @result="getFirstOrder"
+            :multiple="false"
+            :data-list="firstOrderList"
+            placeholder="全部"
+          ></simple-select>
+          <SearchPhoneAndUsername
+            @result="getSendUser"
+            :custom-style="{ width: '200px' }"
+            placeholder="推荐人手机号/用户名称"
+            name="first_order_send_id"
+            type="2"
+            v-if="hasSendId"
+          />
+        </div>
       </el-form-item>
       <br />
 
@@ -140,9 +165,15 @@
         </div>
       </el-form-item>
     </el-form>
+    <div class="export-order">
+      <el-button size="mini" type="primary" @click="exportOrderHandle"
+        >订单导出</el-button
+      >
+    </div>
   </el-card>
 </template>
 <script>
+import dayjs from 'dayjs'
 import hardLevel from '@/components/MSearch/searchItems/hardLevel.vue' // add
 import orderSearch from '@/components/MSearch/searchItems/orderSearch.vue' // add
 import systemCourseType from '@/components/MSearch/searchItems/systemCourseType.vue'
@@ -153,7 +184,11 @@ import Department from '@/components/MSearch/searchItems/department'
 import SearchTeamName from '@/components/MSearch/searchItems/searchTeamName'
 // import SearchTrialTeamName from '@/components/MSearch/searchItems/searchTrialTeamName'
 import SearchStage from '@/components/MSearch/searchItems/searchStage'
+import SearchPhoneAndUsername from '@/components/MSearch/searchItems/searchPhoneAndUsername'
+import SimpleSelect from '@/components/MSearch/searchItems/simpleSelect'
 import { isToss } from '@/utils/index'
+import { downloadHandle } from '@/utils/download'
+// import axios from '@/api/axiosConfig'
 
 export default {
   components: {
@@ -166,7 +201,9 @@ export default {
     Department,
     SearchTeamName,
     // SearchTrialTeamName,
-    SearchStage
+    SearchStage,
+    SearchPhoneAndUsername,
+    SimpleSelect
   },
 
   data() {
@@ -190,7 +227,23 @@ export default {
       should: [],
       selectTime: null, // 物流时间下拉列表_选中项
       oldTime: '', // 上次时间选择值
-      teacherId: '' // 判断是否是toss环境还是boss环境
+      teacherId: '', // 判断是否是toss环境还是boss环境
+      searchParams: [],
+      firstOrderList: [
+        // {
+        //   id: 1,
+        //   text: '全部'
+        // },
+        {
+          id: '1',
+          text: '有推荐人'
+        },
+        {
+          id: '0',
+          text: '无推荐人'
+        }
+      ],
+      hasSendId: true
     }
   },
   computed: {},
@@ -357,6 +410,17 @@ export default {
     getTrialTeamName(res) {
       this.setSeachParmas(res, ['trial_team_id'], 'terms')
     },
+    async getSendUser(res) {
+      this.setSeachParmas(res, ['first_order_send_id'], 'terms')
+    },
+    getFirstOrder(res) {
+      if (res && res.is_first_order_send_id === '0') {
+        this.hasSendId = false
+      } else {
+        this.hasSendId = true
+      }
+      this.setSeachParmas(res, ['is_first_order_send_id'])
+    },
 
     /**  处理接收到的查询参数
      * @res: Object, 子筛选组件返回的表达式对象，如 {sup: 2}
@@ -388,6 +452,7 @@ export default {
           })
           this.must = temp
         }
+        this.searchParams = temp
         this.$emit('search', temp)
 
         return
@@ -400,6 +465,71 @@ export default {
         this.should = temp
       }
       this.$emit('searchShould', temp)
+    },
+
+    // 导出
+    exportOrderHandle() {
+      console.log(this.searchParams)
+      console.log(this.$parent.$children[1].finalParams)
+      if (this.searchParams.length === 0) {
+        this.$message.error('请选择筛选条件')
+        return
+      }
+
+      // 获取查询条件
+      const query = this.$parent.$children[1].finalParams
+      const fileTitle = dayjs(new Date()).format('YYYY-MM-DD')
+      const fileTitleTime = dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss')
+
+      const loading = this.$loading({
+        lock: true,
+        text: '正在导出，请耐心等待……',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.1)'
+      })
+
+      const params = {
+        apiName: 'OrderPage',
+        header: {
+          buydate: '缴费时间',
+          out_trade_no: '订单号',
+          uid: '用户ID',
+          'user.username': '用户昵称',
+          'paymentPay.transaction_id': '交易流水号',
+          'paymentPay.trade_type_text': '支付方式',
+          amount: '交易金额',
+          'packagesType.name': '套餐类型',
+          'stageInfo.period_name': '期数',
+          'channel.channel_outer_name': '线索渠道',
+          sup_text: '课程难度'
+          // paymentPayOut 退款流水
+          // 'team.team_name': '班级',
+          // 'team.team_type': '课程类型',
+          // // 'salesman.realname': '社群销售',
+          // // 'department.department.name': '社群战队',
+          // // 'teacher.realname': '后端服务老师',
+          // 'express.product_type': '商品类型',
+          // 'express.product_name': '商品信息',
+          // total_amount: '商品总额',
+          // // 'express.address_detail': '详细地址',
+          // // 'express.last_express_status': '物流状态',
+          // order_status: '状态'
+          // 'team.type': '退费金额'
+        },
+        fileName: `系统课订单导出-${fileTitleTime}`, // 文件名称
+        query: JSON.stringify(query)
+        // query: '{"status":3}'
+      }
+      // console.log(exportExcel)
+
+      this.$http.DownloadExcel.exportOrder(params)
+        .then((res) => {
+          console.log(res)
+          downloadHandle(res, `系统课订单导出-${fileTitle}`, () => {
+            loading.close()
+          })
+        })
+        .catch(() => loading.close())
     }
   },
   created() {
@@ -446,7 +576,21 @@ export default {
 }
 </style>
 
+<style lang="scss" scoped>
+.search-section {
+  position: relative;
+  ::v-deep .el-icon-search {
+    top: 14px;
+  }
+}
+</style>
+
 <style scoped>
+.export-order {
+  position: absolute;
+  bottom: 25px;
+  right: 20px;
+}
 .el-select-dropdown.is-multiple .el-select-dropdown__item.selected:after {
   right: 5px;
 }

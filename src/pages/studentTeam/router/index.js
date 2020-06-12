@@ -22,20 +22,6 @@ const routes = [
     // component: () => import('../views/studentTeam/student.vue')
   },
   {
-    path: '/student-team', // 班级模块
-    name: 'student',
-    meta: {
-      title: '班级详情',
-      icon: 'el-icon-s-custom',
-      keepAlive: true
-    },
-    hidden: true,
-    component: () =>
-      import(
-        /* webpackChunkName: "student" */ '../views/studentTeam/student.vue'
-      )
-  },
-  {
     path: '/trialTeam', // 体验课班级
     name: 'trialTeam',
     meta: {

@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-03-16 19:46:39
  * @LastEditors: panjian
- * @LastEditTime: 2020-06-03 15:02:37
+ * @LastEditTime: 2020-06-12 11:53:58
  */
 import axios from '../axiosConfig'
 // import { getToken } from '@/utils/auth'
@@ -231,5 +231,9 @@ export default {
    */
   findLabelByPage(params) {
     return axios.post('/api/toss/v1/toss-api/label/findLabelByPage', params)
+  },
+  // 查询验证码
+  getVerification(parmas) {
+    return axios.get(`/api/m/v1/sms/getCodeByMobile?mobile=${parmas}`)
   }
 }

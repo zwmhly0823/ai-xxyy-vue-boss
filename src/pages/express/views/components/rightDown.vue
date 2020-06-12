@@ -64,10 +64,45 @@
           </div>
         </template>
       </el-table-column>
+      <el-table-column label="商品信息" width="200" v-if="showCol.productName">
+        <template slot-scope="scope">
+          <div class="product">
+            <span>{{ scope.row.product_name }}</span>
+          </div>
+        </template>
+      </el-table-column>
+      <el-table-column
+        :label="+regtype === 1 || regtype === '2,3' ? '难度' : '补发商品'"
+        :width="+regtype === 1 || regtype === '2,3' ? '120' : '200'"
+        v-if="showCol.productType"
+      >
+        <template slot-scope="scope">
+          <div class="product">
+            <span>{{
+              +regtype === 1 || regtype === '2,3'
+                ? scope.row.sup
+                : scope.row.product_name
+            }}</span>
+          </div>
+        </template>
+      </el-table-column>
+      <el-table-column
+        v-if="showCol.level"
+        label="级别"
+        width="120"
+        :key="Math.random()"
+      >
+        <template slot-scope="scope">
+          <div class="product">
+            <span>{{ scope.row.level || '--' }}</span>
+          </div>
+        </template>
+      </el-table-column>
       <el-table-column
         label="补发方式"
         width="200"
         v-if="showCol.replenishType"
+        :key="Math.random()"
       >
         <template slot-scope="scope">
           <div class="product">
@@ -79,6 +114,7 @@
         label="补发类别"
         width="200"
         v-if="showCol.replenishFamily"
+        :key="Math.random()"
       >
         <template slot-scope="scope">
           <div class="product">
@@ -87,22 +123,10 @@
         </template>
       </el-table-column>
       <el-table-column
-        :label="+regtype === 1 || regtype === '2,3' ? '难度' : '补发商品'"
-        width="200"
-        v-if="showCol.productType"
-      >
-        <template slot-scope="scope">
-          <div class="product">
-            <span>{{
-              +regtype === 1 ? scope.row.sup : scope.row.product_name
-            }}</span>
-          </div>
-        </template>
-      </el-table-column>
-      <el-table-column
         label="补发原因"
         width="200"
         v-if="showCol.replenishReason"
+        :key="Math.random()"
       >
         <template slot-scope="scope">
           <div class="product">
@@ -110,24 +134,27 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="申请人" width="180" v-if="showCol.applicant">
+      <el-table-column
+        label="申请人"
+        width="180"
+        v-if="showCol.applicant"
+        :key="Math.random()"
+      >
         <template slot-scope="scope">
           <div class="product">
             <span>{{ scope.row.operator_name }}</span>
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="类别" width="180" v-if="showCol.courseType">
+      <el-table-column
+        label="类别"
+        width="180"
+        v-if="showCol.courseType"
+        :key="Math.random()"
+      >
         <template slot-scope="scope">
           <div class="product">
             <span>{{ scope.row.regtype_text }}</span>
-          </div>
-        </template>
-      </el-table-column>
-      <el-table-column label="商品信息" width="200" v-if="showCol.productName">
-        <template slot-scope="scope">
-          <div class="product">
-            <span>{{ scope.row.product_name }}</span>
           </div>
         </template>
       </el-table-column>
@@ -135,6 +162,7 @@
         label="随材版本"
         width="150"
         v-if="showCol.productVersion"
+        :key="Math.random()"
       >
         <template slot-scope="scope">
           <div>
@@ -142,7 +170,12 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="收货信息" width="200" v-if="showCol.receiptInfo">
+      <el-table-column
+        label="收货信息"
+        width="200"
+        v-if="showCol.receiptInfo"
+        :key="Math.random()"
+      >
         <template slot-scope="scope">
           <div class="address">
             <div class="take">
@@ -184,6 +217,18 @@
                 >填写地址</el-button
               >
             </div>
+          </div>
+        </template>
+      </el-table-column>
+      <el-table-column
+        label="失败原因"
+        width="200"
+        v-if="showCol.expressRemark"
+        :key="Math.random()"
+      >
+        <template slot-scope="scope">
+          <div class="product">
+            <span>{{ scope.row.express_remark || '--' }}</span>
           </div>
         </template>
       </el-table-column>
@@ -239,26 +284,16 @@
         </template>
       </el-table-column>
       <el-table-column
-        label="物流创建·揽收·签收"
+        label="物流创建·审核·揽收·签收"
         width="200"
         v-if="showCol.expressInfo"
       >
         <template slot-scope="scope">
           <div class="sign">
             <div>创建:{{ scope.row.crtime }}</div>
+            <div>审核:{{ scope.row.center_ctime }}</div>
             <div>揽收:{{ scope.row.detime }}</div>
             <div>签收:{{ scope.row.sgtime }}</div>
-          </div>
-        </template>
-      </el-table-column>
-      <el-table-column
-        label="失败原因"
-        width="200"
-        v-if="showCol.expressRemark"
-      >
-        <template slot-scope="scope">
-          <div class="product">
-            <span>{{ TeacherList[scope.row.express_remark] || '--' }}</span>
           </div>
         </template>
       </el-table-column>
@@ -541,6 +576,7 @@ export default {
       current: {},
       teacherIds: [],
       defaultCol: {
+        level: false,
         userAddDate: true,
         productName: true,
         productVersion: true,
@@ -780,6 +816,9 @@ export default {
           if (item.term.operator_id) {
             timeType.operator_id = item.term.operator_id
           }
+          if (item.term.product_name) {
+            timeType.product_name = item.term.product_name
+          }
           if (item.term.product_type && item.term.product_type.length) {
             timeType.product_type = item.term.product_type.join(',')
           }
@@ -919,6 +958,7 @@ export default {
               level
               ctime
               utime
+              center_ctime
               sup
               term
               product_version
@@ -951,6 +991,7 @@ export default {
             item.uptime = formatData(+item.utime, 's')
             item.sgtime = formatData(+item.signing_time, 's')
             item.buytime = formatData(+item.buy_time, 's')
+            item.center_ctime = formatData(+item.center_ctime, 's')
             // 处理补发类型
             this.handleRegtype(item)
             // 处理补发方式

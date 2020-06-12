@@ -1,0 +1,1038 @@
+<template>
+  <div class="details-body">
+    <div
+      class="datails-content"
+      v-loading="loading"
+      element-loading-background="transparent"
+    >
+      <!-- 用户信息 -->
+      <template>
+        <el-row class="personal">
+          <el-col :span="2">
+            <div class="img-box">
+              <img class="head-portrait " :src="stuInfor.head" />
+              <!-- 男：1 女：2 -->
+              <i v-show="stuInfor.sex === '2'" class="female el-icon-female " />
+              <i v-show="stuInfor.sex === '1'" class="gender el-icon-male" />
+            </div>
+          </el-col>
+          <el-col :span="15">
+            <div class="text-oneline">
+              <div>
+                {{ stuInfor.username ? stuInfor.username : '-' }}
+                ·
+                {{ stuInfor.mobile }}
+              </div>
+
+              <div
+                :class="
+                  stuInfor.weixinUser && stuInfor.weixinUser.follow === '1'
+                    ? `the-public`
+                    : `not-bound`
+                "
+              >
+                <!-- if follow === 1 绑定    else 没绑定 -->
+                <template
+                  v-if="
+                    stuInfor.weixinUser && stuInfor.weixinUser.follow === '1'
+                  "
+                >
+                  <img
+                    src="../../../../../src/assets/images/WeChat.png"
+                  />公众号已绑定 ·
+                  {{
+                    stuInfor.weixinUser.nickname
+                      ? stuInfor.weixinUser.nickname
+                      : '-'
+                  }}
+                </template>
+                <template v-else>
+                  <img
+                    src="../../../../../src/assets/images/WeChat-no.png"
+                  />公众号未绑定
+                </template>
+              </div>
+            </div>
+            <div class="text-twoline">
+              <div>
+                用户ID:
+                {{ stuInfor.id || '-' }}
+              </div>
+              <div class="coupons">
+                <img
+                  src="../../../../../src/assets/images/coupons.png"
+                />优惠券:
+                <span @click="jumpToAsset" class="jump-class">
+                  {{ stuInfor.coupon && stuInfor.coupon.length }}
+                </span>
+              </div>
+              <div class="gold-conins">
+                <img
+                  src="../../../../../src/assets/images/gold-conins.png"
+                />小熊币:
+                <span @click="jumpToAsset" class="jump-class">
+                  {{
+                    stuInfor.account &&
+                      stuInfor.account[0] &&
+                      stuInfor.account[0].balance
+                  }}
+                </span>
+              </div>
+            </div>
+          </el-col>
+          <el-col :span="7">
+            <template v-if="stuInfor.teams && stuInfor.teams.length > 0">
+              <!-- 开课状态 -->
+              <!-- 逻辑：当前班级状态 0: 待开课 1:开课中 2:已结课-->
+              <el-tag
+                :disable-transitions="true"
+                type="info"
+                v-if="stuInfor.teams[courseIndex].team_state === '0'"
+              >
+                待开课
+              </el-tag>
+              <el-tag
+                :disable-transitions="true"
+                type="success"
+                v-if="stuInfor.teams[courseIndex].team_state === '1'"
+              >
+                开课中
+              </el-tag>
+              <el-tag
+                :disable-transitions="true"
+                type="info"
+                v-if="stuInfor.teams[courseIndex].team_state === '2'"
+              >
+                已结课
+              </el-tag>
+              <!-- 课程进度 -->
+              <el-tag
+                :disable-transitions="true"
+                :type="
+                  stuInfor.teams[courseIndex].team_state === '1'
+                    ? 'success'
+                    : 'info'
+                "
+              >
+                <span v-if="+stuInfor.teams[courseIndex].team_type > 0">
+                  {{
+                    stuInfor.teams[courseIndex].current_lesson.substring(
+                      stuInfor.teams[courseIndex].current_lesson.indexOf('L')
+                    )
+                  }}
+                </span>
+                <span v-else>
+                  {{ stuInfor.teams[courseIndex].wd_info }}
+                </span>
+              </el-tag>
+              <!-- 添加好友状态，进群状态 -->
+              <!-- 体验课-->
+              <template
+                v-if="
+                  stuInfor.teams &&
+                    stuInfor.teams[courseIndex].team_type === '0'
+                "
+              >
+                <!-- 已加微信数 > 0:已加好友  else 未加好友 -->
+                <el-tag
+                  :disable-transitions="true"
+                  type="success"
+                  v-if="stuInfor.trialCourse.added_wechat > 0"
+                >
+                  已加好友
+                </el-tag>
+                <el-tag :disable-transitions="true" type="danger" v-else>
+                  未加好友
+                </el-tag>
+                <el-tag
+                  :disable-transitions="true"
+                  type="success"
+                  v-if="stuInfor.trialCourse.added_group > 0"
+                  >已进群</el-tag
+                >
+                <el-tag :disable-transitions="true" type="danger" v-else
+                  >未进群</el-tag
+                >
+              </template>
+              <!-- 系统课 -->
+              <template
+                v-else-if="
+                  stuInfor.systemCourse && stuInfor.systemCourse.length > 0
+                "
+              >
+                <!-- 当前课程teams.id === systemCourse.team_id -->
+                <span
+                  v-for="item in stuInfor.systemCourse"
+                  :key="item.team_id"
+                  v-show="item.team_id === stuInfor.teams[courseIndex].id"
+                >
+                  <el-tag
+                    :disable-transitions="true"
+                    type="success"
+                    v-if="item.added_wechat > 0"
+                  >
+                    已加好友
+                  </el-tag>
+                  <el-tag :disable-transitions="true" type="danger" v-else>
+                    未加好友
+                  </el-tag>
+                  <el-tag
+                    :disable-transitions="true"
+                    type="success"
+                    v-if="item.added_group > 0"
+                    >已进群</el-tag
+                  >
+                  <el-tag :disable-transitions="true" type="danger" v-else
+                    >未进群</el-tag
+                  >
+                </span>
+              </template>
+              <!-- 展开 -->
+              <div class="open-the" v-if="!aFold">
+                <div @click="openThe">
+                  展开<i class="el-icon-caret-bottom"></i>
+                </div>
+              </div>
+            </template>
+          </el-col>
+        </el-row>
+        <el-row class="specific" v-if="aFold">
+          <el-col :span="16">
+            <el-row>
+              <el-col :span="8">
+                <span>区域</span>：
+                {{ stuInfor.mobile_province ? stuInfor.mobile_province : '-' }}
+                · {{ stuInfor.mobile_city ? stuInfor.mobile_city : '-' }}
+              </el-col>
+              <el-col :span="8"
+                ><span>注册渠道</span>：
+                {{
+                  stuInfor.channelInfo &&
+                  stuInfor.channelInfo.channel_inner_name
+                    ? stuInfor.channelInfo.channel_inner_name
+                    : '-'
+                }}</el-col
+              >
+              <el-col :span="8"
+                ><span>最近登陆设备</span>：
+                {{
+                  stuInfor.loginData &&
+                  stuInfor.loginData.length > 0 &&
+                  stuInfor.loginData[0].device_model
+                    ? stuInfor.loginData[0].device_model
+                    : '-'
+                }}
+              </el-col>
+              <el-col :span="8"
+                ><span>年龄</span>：
+                {{ stuInfor.birthday ? stuInfor.age : '-' }}</el-col
+              >
+              <el-col :span="8">
+                <span>美术基础</span>：
+                {{
+                  stuInfor.base_painting_text
+                    ? stuInfor.base_painting_text
+                    : '-'
+                }}
+              </el-col>
+              <el-col :span="8">
+                <span>推荐人</span>
+                ：
+                <span
+                  v-if="
+                    stuInfor.sender &&
+                      (stuInfor.sender.username || stuInfor.sender.mobile)
+                  "
+                  class="referees"
+                  @click="refereesBtn"
+                >
+                  {{ stuInfor.sender.username }} - {{ stuInfor.sender.mobile }}
+                </span>
+                <span v-else>-</span>
+              </el-col>
+              <el-col :span="8"
+                ><span>生日</span>：{{
+                  stuInfor.birthday ? stuInfor.birthday : '-'
+                }}</el-col
+              >
+              <el-col :span="8"
+                ><span>用户状态</span>：{{ stuInfor.status_text }}
+              </el-col>
+              <el-col :span="8">
+                <span>注册时间</span>：{{ stuInfor.join_date }}
+              </el-col>
+            </el-row>
+          </el-col>
+          <el-col :span="6">
+            <el-row>
+              <el-col :span="6" style="color: #aeaeae;">默认地址：</el-col>
+              <el-col :span="18">
+                {{
+                  stuInfor.address &&
+                  stuInfor.address.length > 0 &&
+                  stuInfor.address[0].receipt_name
+                    ? stuInfor.address[0].receipt_name
+                    : '-'
+                }}
+                {{
+                  stuInfor.address &&
+                  stuInfor.address.length > 0 &&
+                  stuInfor.address[0].receipt_tel
+                    ? stuInfor.address[0].receipt_tel
+                    : '-'
+                }}
+                <br />
+                {{
+                  stuInfor.address &&
+                  stuInfor.address.length > 0 &&
+                  stuInfor.address[0].province
+                    ? stuInfor.address[0].province
+                    : '-'
+                }}
+                {{
+                  stuInfor.address &&
+                  stuInfor.address.length > 0 &&
+                  stuInfor.address[0].city
+                    ? stuInfor.address[0].city
+                    : '-'
+                }}
+                {{
+                  stuInfor.address &&
+                  stuInfor.address.length > 0 &&
+                  stuInfor.address[0].area
+                    ? stuInfor.address[0].area
+                    : '-'
+                }}
+                <br />
+                {{
+                  stuInfor.address &&
+                  stuInfor.address.length > 0 &&
+                  stuInfor.address[0].address_detail
+                    ? stuInfor.address[0].address_detail
+                    : '-'
+                }}
+              </el-col>
+            </el-row>
+          </el-col>
+          <el-col :span="2">
+            <div @click="packUp">收起<i class="el-icon-caret-top"></i></div>
+          </el-col>
+        </el-row>
+      </template>
+      <!-- tab标签页 -->
+      <div class="tab-sty">
+        <el-tabs type="border-card" v-model="tabData" @tab-click="tabBtn">
+          <el-tab-pane label="学习记录" name="learningRecord"></el-tab-pane>
+          <el-tab-pane label="作品集" name="collectionOf"></el-tab-pane>
+          <el-tab-pane
+            label="订单·物流记录"
+            name="orderLogistics"
+          ></el-tab-pane>
+          <el-tab-pane label="用户资产" name="userAsset"></el-tab-pane>
+        </el-tabs>
+      </div>
+      <div
+        class="course-sty"
+        v-if="['learningRecord', 'collectionOf'].includes(tabData)"
+      >
+        <el-tabs v-model="courseData" @tab-click="courseBtn">
+          <el-tab-pane
+            v-for="item in stuInfor.teams"
+            :key="item.id"
+            :label="`${item.team_type_formatting}:${item.team_name}`"
+            :name="item.id"
+          >
+            <div class="statistical">
+              <div>
+                <span>社群销售</span>:
+                {{ item.teacher_info && item.teacher_info.realname }}
+              </div>
+              <div>
+                <span>微信昵称</span>:
+                {{ item.teacher_info && item.teacher_info.nickname }}
+              </div>
+              <div>
+                <span>微信号</span>:
+                {{
+                  item.teacher_wechat_info && item.teacher_wechat_info.wechat_no
+                }}
+              </div>
+            </div>
+            <div
+              class="statistical class-statistical"
+              v-if="tabData === 'learningRecord'"
+            >
+              <!-- <div>
+                <span>课程总数</span>:
+                <span class="tatistical-span">{{ item.course_count }}</span>
+              </div> -->
+              <div>
+                <span>已放课</span>:
+                <span class="tatistical-span">
+                  {{ item.send_course_count }}
+                </span>
+              </div>
+              <div>
+                <span>当日参课</span>:
+                <span class="tatistical-span">
+                  {{ item.day_join_course_count }}
+                </span>
+              </div>
+              <div>
+                <span>当日完课</span>:
+                <span class="tatistical-span">
+                  {{ item.day_complete_course_count }}
+                </span>
+              </div>
+            </div>
+            <div
+              class="statistical class-statistical"
+              v-if="tabData === 'collectionOf'"
+            >
+              <div>
+                <span>作品总数</span>:
+                <span class="tatistical-span">{{
+                  item.course_task_count
+                }}</span>
+              </div>
+              <div>
+                <span>收到点评</span>:
+                <span class="tatistical-span">
+                  {{ item.task_comment_count }}
+                </span>
+              </div>
+              <div>
+                <span>已听点评</span>:
+                <span class="tatistical-span">
+                  {{ item.listen_comment_count }}
+                </span>
+              </div>
+            </div>
+          </el-tab-pane>
+        </el-tabs>
+      </div>
+
+      <!-- tab列表 -->
+      <div class="tab-content">
+        <details-list
+          :tabData="tabData"
+          :tabList="tabList"
+          :tabTwoList="tabTwoList"
+          :couponDone="assetCouponDone"
+          :coinDone="assetCoinDone"
+          :userId="stuInfor.id"
+          :assetNumData="assetNumData"
+          @changePagenation="changePagenation"
+          @couponSendSucc="couponSendSucc"
+        />
+      </div>
+      <m-pagination
+        :current-page="currentPage"
+        :page-count="totalPages"
+        :total="totalElements"
+        @current-change="handleSizeChange"
+        show-pager
+        open="calc(100vw - 170px - 25px)"
+        close="calc(100vw - 50px - 25px)"
+      ></m-pagination>
+    </div>
+  </div>
+</template>
+
+<script>
+import MPagination from '@/components/MPagination/index.vue'
+import DetailsList from './list.vue'
+import { GetAgeByBrithday, formatData, openNewTab } from '@/utils/index'
+export default {
+  components: { DetailsList, MPagination },
+  data() {
+    return {
+      currentPage: 1,
+      totalElements: 0,
+      totalPages: 1,
+      // 学员id
+      studentId: '456179524149972992',
+      // 推荐人id
+      sendId: '0',
+      // 展开收起
+      aFold: true,
+      // 学习记录tab
+      tabData: 'learningRecord',
+      tabList: [],
+      tabTwoList: [],
+      // 学习记录>课程tab
+      courseData: '',
+      // loading
+      loading: false,
+      // 学员信息
+      stuInfor: {},
+      // 课程tab下标
+      courseIndex: 0,
+      lessonType: null,
+      assetCouponDone: false,
+      assetCoinDone: false,
+      assetPageInfo: {
+        coupon: {
+          currentPage: 0,
+          totalElements: 0,
+          totalPages: 0
+        },
+        coin: {
+          currentPage: 0,
+          totalElements: 0,
+          totalPages: 0
+        }
+      },
+      assetNumData: {},
+      assetCur: 'assetCoupon' // 用户资产选的是优惠券还是小熊币，默认是优惠券
+    }
+  },
+  created() {
+    this.studentId = this.$route.params.id
+    // 学员信息接口
+    this.reqUser()
+  },
+  methods: {
+    // 学员信息接口
+    reqUser() {
+      this.$http.User.getUser(this.studentId).then((res) => {
+        // console.log('学员基本信息', res.data.User)
+        this.sendId =
+          res.data.User && res.data.User.send_id ? res.data.User.send_id : '0'
+        // 年龄格式化
+        res.data.User.age =
+          res.data.User.birthday !== '0'
+            ? GetAgeByBrithday(res.data.User.birthday)
+            : '-'
+        // 生日格式化
+        res.data.User.birthday = res.data.User.birthday
+          ? formatData(res.data.User.birthday * 1000)
+          : '-'
+        // 注册时间格式化
+        res.data.User.join_date = res.data.User.join_date
+          ? formatData(res.data.User.join_date)
+          : '-'
+        // 课程tab默认显示
+        this.courseData = res.data.User.teams[0].id
+        res.data.User.teams.length > 0 &&
+          res.data.User.teams.forEach((item) => {
+            // 课程名称格式化 0:体验课   >0:系统课
+            if (item.team_type === '0') {
+              item.team_type_formatting = '体验课'
+            } else {
+              item.team_type_formatting = '系统课'
+            }
+          })
+        this.stuInfor = res.data.User
+        this.loading = false
+        // init lessonType
+        this.lessonType = this.stuInfor.teams[0].team_type - 0 > 0 ? 1 : 0
+        // 在不能自己选系统课体验课的页面，用户在有多个系统课的情况下，右上角的tag页签展示优先级开课中>待开课>已开课>已退费
+        // 目前学习记录和作品集里能自己切换班级固排除
+        if (
+          !(
+            this.tabData === 'learningRecord' || this.tabData === 'collectionOf'
+          ) &&
+          this.stuInfor.teams.length
+        ) {
+          this.tagsPriorityLevel()
+        } else {
+          this.courseIndex = 0
+        }
+
+        if (this.tabData === 'learningRecord') {
+          // 学习记录接口
+          this.reqSendCourseLogPage(
+            res.data.User.teams[0].id,
+            res.data.User.teams[0].team_type
+          )
+        } else if (this.tabData === 'collectionOf') {
+          // 作品集接口
+          this.reqStudentCourseTaskPage(res.data.User.teams[0].id)
+        } else if (this.tabData === 'orderLogistics') {
+          // 订单·物流数据接口
+          this.reqgetOrderPage()
+        } else if (this.tabData === 'userAsset') {
+          // 用户资产
+          this.reqGetUserAssets()
+        }
+      })
+    },
+    tagsPriorityLevel() {
+      const sortArr = []
+      // team_state: 0: 待开课 1:开课中 2:已结课
+      for (let i = 0, len = this.stuInfor.teams.length; i < len; i++) {
+        const item = this.stuInfor.teams[i]
+        if (+item.team_type > 0) {
+          sortArr.push({
+            index: i,
+            team_state:
+              item.team_state - 0 !== 2
+                ? item.team_state - 0 + 3
+                : item.team_state - 0
+          })
+        }
+      }
+      if (!sortArr.length) {
+        return
+      }
+      // 这样顺序就是开课中 - 待开课 - 已结课
+      sortArr.sort(function(a, b) {
+        return b.team_state - a.team_state
+      })
+      // courseIndex控制显示哪个
+      this.courseIndex = sortArr[0].index
+    },
+    // 学习记录接口
+    reqSendCourseLogPage(id) {
+      this.$http.User.getSendCourseLogPage(
+        this.studentId,
+        id,
+        this.currentPage,
+        this.lessonType
+      ).then((res) => {
+        // console.log('学习记录接口', res.data.SendCourseLogPage.content)
+        const _data = res.data.SendCourseLogPage.content
+        _data.forEach((item) => {
+          this.tabList = []
+          // 课程计划时间
+          item.ctime = item.ctime ? formatData(item.ctime, 's') : '-'
+          if (item.studentCompleteCourseLog) {
+            // 参课时间
+            if (item.studentCompleteCourseLog.ctime) {
+              item.studentCompleteCourseLog.ctime = formatData(
+                item.studentCompleteCourseLog.ctime,
+                's'
+              )
+            }
+            // 完课时间
+            if (item.studentCompleteCourseLog.complete_time) {
+              item.studentCompleteCourseLog.complete_time = formatData(
+                item.studentCompleteCourseLog.complete_time,
+                's'
+              )
+            }
+          }
+        })
+        this.totalPages = +res.data.SendCourseLogPage.totalPages
+        this.totalElements = +res.data.SendCourseLogPage.totalElements
+        this.tabList = _data
+      })
+    },
+    // 作品集
+    reqStudentCourseTaskPage(id) {
+      this.$http.User.getStudentCourseTaskPage(
+        this.studentId,
+        id,
+        this.currentPage
+      ).then((res) => {
+        // console.log('作品集', res.data.StudentCourseTaskPage.content)
+        this.tabList = []
+        const _data = res.data.StudentCourseTaskPage.content
+        _data.forEach((item, index) => {
+          item.serNum = ++index
+          // if (item.taskComment && item.taskComment.ctime) {
+          //   item.taskComment.ctime = formatData(item.taskComment.ctime, 's')
+          // }
+          if (item.taskComment && item.taskComment.length) {
+            item.taskComment.forEach((tItem) => {
+              tItem.ctime = formatData(tItem.ctime, 's')
+              for (let i = 0, len = item.listenComment.length; i < len; i++) {
+                if (item.listenComment[i].flag_id === tItem.id) {
+                  tItem.hadListened = true
+                  break
+                }
+              }
+            })
+          }
+          item.ctime = item.ctime ? formatData(item.ctime, 's') : ''
+        })
+        this.totalPages = +res.data.StudentCourseTaskPage.totalPages
+        this.totalElements = +res.data.StudentCourseTaskPage.totalElements
+        this.tabList = _data
+      })
+    },
+    // 订单·物流数据接口
+    reqgetOrderPage() {
+      this.$http.User.getOrderPage(this.studentId, this.currentPage).then(
+        (res) => {
+          // console.log('订单·物流数据接口', res)
+          this.tabList = []
+          const _data = res.data.OrderPage.content
+          _data.forEach((item) => {
+            item.ctime = item.ctime ? formatData(item.ctime, 's') : ''
+          })
+          this.totalPages = +res.data.OrderPage.totalPages
+
+          this.totalElements = +res.data.OrderPage.totalElements
+
+          this.tabList = _data
+        }
+      )
+    },
+    reqGetUserAssets(next) {
+      // 先获取优惠券
+      this.$http.User.getUserAssetsCoupon(this.studentId, this.currentPage)
+        .then((res) => {
+          // console.log(res)
+          this.tabList = []
+          const _data = res.data.CouponUserPage.content
+          this.totalPages = +res.data.CouponUserPage.totalPages
+          this.totalElements = +res.data.CouponUserPage.totalElements
+          this.assetNumData.couponUserCollect = this.stuInfor.couponUserCollect
+          this.tabList = _data
+          this.assetCouponDone = true
+
+          this.assetPageInfo.coupon.currentPage = this.currentPage
+          this.assetPageInfo.coupon.totalPages = +res.data.CouponUserPage
+            .totalPages
+          this.assetPageInfo.coupon.totalElements = +res.data.CouponUserPage
+            .totalElements
+          // 再获取小熊币
+          if (!next) {
+            this.reqGetUserCoin()
+          }
+        })
+        .catch(() => {
+          this.$message.error('获取用户资产失败')
+        })
+    },
+    reqGetUserCoin() {
+      this.$http.User.getUserAssetsCoin(this.studentId, this.currentPage)
+        .then((res) => {
+          // console.log(res)
+          this.tabTwoList = res.data.AccountPage.content
+          this.assetNumData.accountUserCollect = this.stuInfor.accountUserCollect
+          this.assetCoinDone = true
+          this.assetPageInfo.coin.currentPage = this.currentPage
+          this.assetPageInfo.coin.totalPages = +res.data.AccountPage.totalPages
+          this.assetPageInfo.coin.totalElements = +res.data.AccountPage
+            .totalElements
+        })
+        .catch(() => {
+          this.$message.error('获取用户资产失败')
+        })
+    },
+    // 点击分页
+    handleSizeChange(page) {
+      // console.log(this.page)
+      this.currentPage = +page
+      if (this.tabData === 'learningRecord') {
+        this.reqSendCourseLogPage(this.stuInfor.teams[this.courseIndex].id)
+      } else if (this.tabData === 'collectionOf') {
+        this.reqStudentCourseTaskPage(this.stuInfor.teams[this.courseIndex].id)
+      } else if (this.tabData === 'orderLogistics') {
+        this.reqgetOrderPage()
+      } else if (this.tabData === 'userAsset') {
+        if (this.assetCur === 'assetCoupon') {
+          this.assetCouponDone = false
+          this.reqGetUserAssets(true)
+        } else if (this.assetCur === 'assetBearCoin') {
+          this.assetCoinDone = false
+          this.reqGetUserCoin()
+        }
+      }
+    },
+    // 收起
+    packUp() {
+      this.aFold = false
+    },
+    // 展开
+    openThe() {
+      this.aFold = true
+    },
+    tabBtn(tab, event) {
+      // console.log(tab, event, '学习记录')
+      this.assetCouponDone = false
+      this.assetCoinDone = false
+      this.reqUser()
+    },
+    // 学习记录课程
+    courseBtn(tab, event) {
+      this.courseIndex = tab.index
+      // console.log('team_type', this.stuInfor.teams[this.courseIndex].team_type)
+      this.lessonType =
+        this.stuInfor.teams[this.courseIndex].team_type > 0 ? 1 : 0
+      if (this.tabData === 'learningRecord') {
+        this.reqSendCourseLogPage(this.stuInfor.teams[tab.index].id)
+      } else if (this.tabData === 'collectionOf') {
+        this.reqStudentCourseTaskPage(this.stuInfor.teams[tab.index].id)
+      }
+    },
+    // 点击推荐人
+    refereesBtn() {
+      console.log('推荐人')
+      const { username, mobile } = this.stuInfor.sender
+      this.sendId &&
+        openNewTab(
+          `/users/#/details/${this.sendId}`,
+          `学员:${username || mobile}`
+        )
+      // this.$router.push({ path: '/details', query: { id: '123' } })
+    },
+    changePagenation(data) {
+      this.assetCur = data
+      if (data === 'assetBearCoin') {
+        this.currentPage = this.assetPageInfo.coin.currentPage
+        this.totalPages = this.assetPageInfo.coin.totalPages
+        this.totalElements = this.assetPageInfo.coin.totalElements
+      } else if (data === 'assetCoupon') {
+        this.currentPage = this.assetPageInfo.coupon.currentPage
+        this.totalPages = this.assetPageInfo.coupon.totalPages
+        this.totalElements = this.assetPageInfo.coupon.totalElements
+      }
+    },
+    couponSendSucc() {
+      this.assetCouponDone = false
+      this.reqGetUserAssets(true)
+    },
+    jumpToAsset() {
+      this.tabData = 'userAsset'
+      this.tabBtn()
+    }
+  }
+}
+</script>
+<style scoped lang="scss">
+.details-body {
+  width: 100%;
+  height: calc(100vh - 50px - 34px);
+  display: flex;
+  .datails-content {
+    width: 100%;
+    margin: 10px;
+    background-color: #fff;
+    display: flex;
+    flex-direction: column;
+  }
+  // 头像行
+  .personal {
+    height: 70px;
+    margin: 20px 0 0 0;
+    // background: gold;
+    .el-col-2 {
+      display: flex;
+      justify-content: center;
+
+      .img-box {
+        height: 70px;
+        width: 70px;
+        position: relative;
+        .head-portrait {
+          height: 70px;
+          width: 70px;
+          border-radius: 50%;
+        }
+        i {
+          position: absolute;
+          top: 50px;
+          right: 5px;
+          display: block;
+          width: 20px;
+          height: 20px;
+          line-height: 20px;
+          border-radius: 100%;
+          overflow: hidden;
+          color: #fff;
+          text-align: center;
+        }
+        .gender {
+          background-color: #369bff;
+        }
+        .female {
+          background-color: #f23589;
+        }
+      }
+    }
+    .el-col-15 {
+      div {
+        line-height: 35px;
+      }
+      .text-oneline {
+        width: 100%;
+        font-size: 16px;
+        color: #555555;
+        float: left;
+        display: flex;
+        align-items: center;
+        // background: red;
+        div {
+          float: left;
+          margin: 0 20px 0 0;
+        }
+        .the-public {
+          line-height: 25px;
+          background-color: #d8f4d3;
+          color: #67c23a;
+          padding: 0px 15px 0px 10px;
+          border-radius: 25px;
+          font-size: 13px;
+          display: flex;
+          align-items: center;
+          img {
+            width: 17px;
+            height: 17px;
+            margin-right: 5px;
+          }
+        }
+        .not-bound {
+          line-height: 25px;
+          background-color: #e2e2e2;
+          color: #808080;
+          padding: 0px 15px 0px 10px;
+          border-radius: 25px;
+          font-size: 13px;
+          display: flex;
+          align-items: center;
+          img {
+            width: 17px;
+            height: 17px;
+            margin-right: 5px;
+          }
+        }
+      }
+      .text-twoline {
+        // background: green;
+        width: 100%;
+        float: left;
+        font-size: 14px;
+        div {
+          float: left;
+          margin: 0 40px 0 0;
+          color: #424242;
+        }
+        .coupons {
+          display: flex;
+          align-items: center;
+          img {
+            width: 20px;
+            height: 20px;
+            margin-right: 5px;
+          }
+          .jump-class {
+            color: #409eff;
+            cursor: pointer;
+          }
+        }
+        .gold-conins {
+          display: flex;
+          align-items: center;
+          img {
+            width: 20px;
+            height: 20px;
+            margin-right: 5px;
+          }
+          .jump-class {
+            color: #409eff;
+            cursor: pointer;
+          }
+        }
+      }
+    }
+    .el-col-7 {
+      .el-tag {
+        line-height: 25px;
+        height: 25px;
+        // background: #d8f4d3;
+        margin: 0 10px 0 0;
+        font-size: 14px;
+      }
+    }
+  }
+  // 详情行
+  .specific {
+    margin: 10px 0 0 40px;
+    height: 90px;
+    // background: #67c23a;
+    .el-col {
+      line-height: 30px;
+      span {
+        color: #aeaeae;
+      }
+      .referees {
+        color: #5ea0f5;
+        cursor: pointer;
+      }
+    }
+    // 默认地址
+    .el-col-8 {
+      .el-col-4 {
+        color: #aeaeae;
+      }
+    }
+    // 收起
+    .el-col-2 {
+      height: 100%;
+      display: flex;
+      justify-content: flex-end;
+      align-items: flex-end;
+      div {
+        float: right;
+        margin: 0 20px 0 0;
+        cursor: pointer;
+        color: #aeaeae;
+      }
+    }
+  }
+  // 展开
+  .open-the {
+    width: 100%;
+    div {
+      margin: 20px 20px 0 0;
+      float: right;
+      color: #aeaeae;
+      cursor: pointer;
+    }
+  }
+  // tab样式
+  .tab-sty {
+    margin: 5px 10px 10px 10px;
+    .el-tabs--border-card {
+      box-shadow: none;
+    }
+  }
+  // 课程tab+统计
+  .course-sty {
+    margin: 0px 10px 10px 10px;
+    .statistical {
+      div {
+        float: left;
+        margin: 0 15px 0 0;
+        span {
+          color: #aeaeae;
+        }
+      }
+    }
+    .class-statistical {
+      margin: 0 15px 0 0;
+      float: left;
+      margin: 0 0 0 25px;
+      .tatistical-span {
+        color: #5ea0f5;
+      }
+    }
+  }
+  // tab列表
+  .tab-content {
+    flex: 1;
+    overflow: scroll;
+    display: flex;
+    flex-direction: column;
+    padding: 0px 10px 35px 10px;
+  }
+}
+</style>
+<style lang="scss">
+.el-tabs__header {
+  border: 0 !important;
+}
+.el-tabs__item {
+  border: 0 !important;
+}
+.el-tabs__content {
+  padding: 0px !important;
+}
+.el-tabs__nav-wrap::after {
+  height: 0px;
+}
+</style>

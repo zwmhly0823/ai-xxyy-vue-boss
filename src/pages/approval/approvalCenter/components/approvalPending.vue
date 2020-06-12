@@ -4,7 +4,7 @@
  * @Author: Lukun
  * @Date: 2020-04-27 17:47:58
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-05-29 23:26:16
+ * @LastEditTime: 2020-06-06 20:35:43
  -->
 <template>
   <div class="container">
@@ -12,6 +12,7 @@
       <tabTimeSelect @result="getSeacherTime" />
       <CheckType @result="getcheckType" />
       <SearchPart @result="getSeachePart" />
+      <courseTeam @result="getTeamId" />
     </div>
     <el-table
       :data="tableData"
@@ -70,6 +71,16 @@
           </div>
         </template>
       </el-table-column>
+      <el-table-column label="开课日期" width="120">
+        <template slot-scope="scope">
+          <div>
+            <span>
+              {{ courseOptions[scope.row.managementType] }}
+              {{ scope.row.periodName }}
+            </span>
+          </div>
+        </template>
+      </el-table-column>
       <el-table-column label="审批摘要" width="450">
         <template slot-scope="scope">
           <div>{{ scope.row.repiarContent }}</div>
@@ -104,8 +115,12 @@
       class="drawer-approval-detail"
       :modal="false"
       @close="handleCloseDraw"
-      :title="drawerApprovalDeatail.addressId ? '补发货审批' : '退款审批'"
     >
+      <template v-slot:title>
+        <h2>
+          {{ drawerApprovalDeatail.addressId ? '补发货审批' : '退款审批' }}
+        </h2>
+      </template>
       <div v-if="drawerApprovalDeatail.addressId" class="approval-replenish">
         <el-row>
           <el-col :span="3">申请人:</el-col>
@@ -166,16 +181,7 @@
         >
           <el-col :span="3">版本信息:</el-col>
           <el-col :span="20" :offset="1">
-            <versionExprience
-              v-if="drawerApprovalDeatail.courseType == 1 && drawerApproval"
-              @result="getVersion"
-              name="version"
-            />
-            <versionSystem
-              v-if="drawerApprovalDeatail.courseType == 2 && drawerApproval"
-              @result="getVersion"
-              name="version"
-            />
+            <VersionBox @result="getVersion" name="version" />
           </el-col>
         </el-row>
         <el-row>
@@ -271,6 +277,24 @@
           }}</el-col>
         </el-row>
         <el-row>
+          <el-col :span="5">交易金额:</el-col>
+          <el-col :span="18" :offset="1">{{
+            drawerApprovalDeatail.orderFee
+          }}</el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="5">剩余金额:</el-col>
+          <el-col :span="18" :offset="1">{{
+            drawerApprovalDeatail.residueFee
+          }}</el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="5">退款规则:</el-col>
+          <el-col :span="18" :offset="1">{{
+            drawerApprovalDeatail.refundRule ? '不符合' : '符合'
+          }}</el-col>
+        </el-row>
+        <el-row>
           <el-col :span="5">支付渠道:</el-col>
           <el-col :span="18" :offset="1">{{
             drawerApprovalDeatail.channel
@@ -304,16 +328,27 @@
            `
           }}</el-col>
         </el-row>
-        <el-row>
+        <el-row :class="$style.align_items">
           <el-col :span="5">退款金额:</el-col>
-          <el-col :span="18" :offset="1">{{
+          <el-col :span="4" :offset="1">{{
             drawerApprovalDeatail.refundFee
           }}</el-col>
+          <el-col v-if="isPositionId" :span="13" :offset="1">
+            <el-button type="text" @click="dialogFormVisible = true"
+              >修改金额</el-button
+            >
+          </el-col>
         </el-row>
         <el-row>
           <el-col :span="5">退款原因:</el-col>
           <el-col :span="18" :offset="1">{{
             drawerApprovalDeatail.refundReason
+          }}</el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="5">退款说明:</el-col>
+          <el-col :span="18" :offset="1">{{
+            drawerApprovalDeatail.refundMsg
           }}</el-col>
         </el-row>
         <el-row>
@@ -414,20 +449,64 @@
       open="calc(100vw - 195px)"
       close="calc(100vw - 75px)"
     />
+    <!-- destroy-on-close不好用没生效-->
+    <el-dialog
+      title="修改金额"
+      :visible.sync="dialogFormVisible"
+      :destroy-on-close="true"
+      :before-close="destroylk"
+    >
+      <el-form
+        :model="form"
+        label-position="top"
+        :rules="rules"
+        ref="refundForm"
+      >
+        <el-form-item label="键入修改金额" prop="cash">
+          <el-input
+            type="number"
+            step="0.01"
+            :value="form.cash"
+            @input="form.cash = $event.replace(/[^0-9.]/g, '')"
+          ></el-input>
+        </el-form-item>
+        <el-form-item label="特殊说明" prop="explain">
+          <el-input
+            type="textarea"
+            :rows="4"
+            placeholder="请输入修改金额的理由"
+            v-model="form.explain"
+          >
+          </el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer">
+        <el-button @click="quxiao">取 消</el-button>
+        <el-button type="primary" @click="confirm">确 定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import MPagination from '@/components/MPagination/index.vue'
 import tabTimeSelect from './timeSearch'
-import versionExprience from './versionExprience'
-import versionSystem from './versionSystem'
 import CheckType from './checkType'
 import { timestamp } from '@/utils/index'
 import SearchPart from './searchPart'
 import adjustDrawer from './adjustDrawer'
 import { getStaffInfo } from '../common'
+import courseTeam from './courseTeam'
+import VersionBox from '../../../../components/MSearch/searchItems/moreVersionBox'
+
 export default {
+  computed: {
+    isPositionId() {
+      return JSON.parse(localStorage.getItem('staff')).positionId === '1'
+        ? 1
+        : false
+    }
+  },
   props: ['typeTime', 'activeName'],
   watch: {
     activeName(val) {
@@ -439,14 +518,37 @@ export default {
   components: {
     MPagination,
     tabTimeSelect,
-    versionExprience,
-    versionSystem,
+    VersionBox,
     CheckType,
     SearchPart,
-    adjustDrawer
+    adjustDrawer,
+    courseTeam
   },
   data() {
+    var validateName = (rule, value, callback) => {
+      if (Number(value) !== parseFloat(value)) {
+        // 防一手科学计数法e(事件里处理了负号)
+        callback(new Error('金额里有杂质!'))
+      } else {
+        if (Number(value) > Number(this.drawerApprovalDeatail.residueFee)) {
+          callback(new Error('当心！你已超过剩余金额!'))
+        } else {
+          callback()
+        }
+      }
+    }
     return {
+      rules: {
+        cash: [{ required: true, validator: validateName, trigger: 'blur' }],
+        explain: [
+          { required: true, message: '不能闷声改金额', trigger: 'change' }
+        ]
+      },
+      form: {
+        cash: '',
+        explain: ''
+      },
+      dialogFormVisible: false, // ↑修改金额表单lk
       params: {}, // 列表的参数
       resetParams: {}, // 撤销的参数
       staffId: '',
@@ -471,7 +573,8 @@ export default {
         OTHER: '其他',
         DELIVERY_MISS: '发货漏发',
         TRANSPORT_BAD: '运输损坏'
-      }
+      },
+      courseOptions: { TESTCOURSE: '体验课', SYSTEMCOURSE: '系统课' }
     }
   },
   created() {
@@ -500,6 +603,65 @@ export default {
   },
 
   methods: {
+    // 期数查询
+    getTeamId(val) {
+      this.currentPage = 1
+      if (val) {
+        Object.assign(this.params, {
+          managementType: val.managementType,
+          period: val.period,
+          page: 1
+        })
+        this.checkPending(this.params)
+      } else {
+        this.params.managementType = ''
+        this.params.period = ''
+        this.params.page = 1
+        this.checkPending(this.params)
+      }
+    },
+    // 用于清空修改金额的弹窗内容
+    destroylk(done) {
+      this.$refs.refundForm.resetFields()
+      done()
+    },
+    quxiao() {
+      this.$refs.refundForm.resetFields()
+      this.dialogFormVisible = false
+    },
+    confirm() {
+      this.$refs.refundForm.validate(async (valid) => {
+        if (valid) {
+          const { code } = await this.$http.Backend.changeCash({
+            flowApprovalId: this.drawerApprovalDeatail.flowApprovalId,
+            refundFee: this.form.cash,
+            refundMsg: this.form.explain
+          }).catch((err) => {
+            this.$message({
+              message: '修改金额失败',
+              type: 'error'
+            })
+            console.info(err)
+          })
+          if (code === 0) {
+            this.$message({
+              message: '修改金额成功',
+              type: 'success'
+            })
+            this.drawerApprovalDeatail.refundFee = this.form.cash // 退款金额更新
+            this.dialogFormVisible = false
+          } else {
+            this.$message({
+              message: '修改金额失败',
+              type: 'warning'
+            })
+          }
+        } else {
+          return false
+        }
+      })
+    },
+
     // 销毁
     handleCloseDraw() {
       this.version = ''
@@ -507,12 +669,15 @@ export default {
     // 销售部门搜索
     getSeachePart(val) {
       Object.assign(this.params, { keyword: val })
-      console.log(val, 'app-container')
+      this.params.page = 1
+      this.currentPage = 1
       this.checkPending(this.params)
     },
     // 查询审批类型判断
     getcheckType(val) {
       Object.assign(this.params, { type: val })
+      this.currentPage = 1
+      this.params.page = 1
       this.checkPending(this.params)
     },
     // 获取版本盒子
@@ -521,18 +686,6 @@ export default {
     },
     // 拒绝申请
     refuseReplenish() {
-      const version = typeof this.version !== 'string'
-      const versionBool =
-        this.isStaffId &&
-        this.drawerApprovalDeatail.mode === 'DEFAULT' &&
-        this.drawerApprovalDeatail.type === 'MATERIALS'
-      if (versionBool && (this.version === '' || version)) {
-        this.$message('请选择版本号')
-        return
-      }
-      if (!versionBool) {
-        this.version = ''
-      }
       this.$prompt('请输入原因', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
@@ -553,7 +706,7 @@ export default {
               console.log(res)
               this.checkPending(this.params)
               this.drawerApproval = false
-              this.version = ''
+              this.handleCloseDraw()
               this.$message({
                 message: '拒绝审核通过',
                 type: 'success'
@@ -583,7 +736,6 @@ export default {
       if (!versionBool) {
         this.version = ''
       }
-
       this.$prompt('请输入原因', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
@@ -601,17 +753,21 @@ export default {
           }
           this.$http.Backend.isAggrePass(params)
             .then((res) => {
-              this.checkPending(this.params)
-              this.drawerApproval = false
-              this.version = ''
-              this.$message({
-                message: '同意审核通过',
-                type: 'success'
-              })
-              this.$emit('result', 'third')
+              if (res && res.payload) {
+                this.checkPending(this.params)
+                this.drawerApproval = false
+                this.$root.$emit('lk', '')
+                this.$message({
+                  message: '同意审核通过',
+                  type: 'success'
+                })
+                this.$emit('result', 'third')
+              } else {
+                this.$root.$emit('lk', '')
+              }
             })
             .catch((err) => {
-              this.$message(err)
+              this.$message(`${err},请重选！`)
             })
         })
         .catch((err) => {
@@ -635,6 +791,9 @@ export default {
     },
     // 时间筛选
     getSeacherTime(val) {
+      this.params.page = 1
+      this.currentPage = 1
+
       if (val) {
         Object.assign(this.params, {
           startTime: val.ctime.gte,
@@ -783,7 +942,6 @@ export default {
                 ]
               )
             }
-            const aTime = new Date(payData.applyTime - 0)
             // 公共数据
             this.adjustDrawerData.content = this.adjustDrawerData.content.concat(
               [
@@ -797,8 +955,7 @@ export default {
                 },
                 {
                   label: '发起时间',
-                  value: `${aTime.getFullYear()}-${aTime.getMonth() +
-                    1}-${aTime.getDate()} ${aTime.getHours()}:${aTime.getMinutes()}:${aTime.getSeconds()}`
+                  value: timestamp(payData.applyTime, 2)
                 },
                 {
                   label: '状态',
@@ -896,10 +1053,17 @@ export default {
 </script>
 
 <style lang="scss" module>
+.align_items {
+  display: flex;
+  align-items: center;
+}
 :global {
   .drawer-approval-detail {
     padding-top: 50px;
     font-size: 16px;
+    .el-drawer {
+      overflow: auto;
+    }
   }
   // el原类名追加样式
   .approvallk .el-drawer__body {
@@ -928,7 +1092,7 @@ export default {
   // 操作
   .wait-pending {
     cursor: pointer;
-    color: #409eff;
+    color: #2a75ed;
   }
   .time {
     display: flex;

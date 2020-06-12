@@ -21,7 +21,7 @@
           wrap-class="scrollbar-wrapper-first"
           id="express-right-scroll-first"
         >
-          <div class="scroll" style="height:500px">
+          <div class="scroll" ref="scroll" :style="{ height: scrollHeight }">
             <rightDown
               :search="search"
               :sortItem="sortItem"
@@ -52,7 +52,7 @@
           wrap-class="scrollbar-wrapper-first"
           id="express-right-scroll-first"
         >
-          <div class="scroll" style="height:500px">
+          <div class="scroll" :style="{ height: scrollHeight }">
             <rightDown
               :search="search"
               :sortItem="sortItem"
@@ -82,6 +82,7 @@ const allExpressHideCol = {
   teacher: false
 }
 const allExpressHideSearchItem = {
+  productName: 'product_name',
   level: '',
   replenishReason: '',
   replenishMethod: '',
@@ -103,6 +104,7 @@ const replenishHideCol = {
   courseType: false
 }
 const replenishHideSearchItem = {
+  productName: 'product_name',
   level: '',
   moreVersion: '',
   schedule: '',
@@ -126,6 +128,7 @@ export default {
   },
   data() {
     return {
+      scrollHeight: 'auto', // scroll高度
       activeName: '0',
       sortItem: {},
       search: '',
@@ -137,7 +140,18 @@ export default {
       hideCol: allExpressHideCol
     }
   },
+  mounted() {
+    this.$nextTick(() => {
+      this.calcSrollHeight()
+    })
+  },
   methods: {
+    // 计算滚动区域高度
+    calcSrollHeight() {
+      const topH = this.$refs.scroll.getBoundingClientRect().y
+      const scrollH = document.body.clientHeight - topH - 60
+      this.scrollHeight = scrollH + 'px'
+    },
     // 获取物流搜索的条件值
     getSearch(val) {
       this.search = val

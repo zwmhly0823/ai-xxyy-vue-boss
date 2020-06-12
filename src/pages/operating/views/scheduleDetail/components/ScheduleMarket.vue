@@ -252,7 +252,7 @@ export default {
     justify-content: center;
     align-items: center;
     span.active {
-      color: #409eff;
+      color: #2a75ed;
       background: #fff;
     }
   }

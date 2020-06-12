@@ -3,8 +3,8 @@
  * @version: 
  * @Author: Lukun
  * @Date: 2020-04-28 13:50:45
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-05-29 23:26:28
+ * @LastEditors: liukun
+ * @LastEditTime: 2020-06-08 20:38:25
  -->
 <template>
   <div class="container-content">
@@ -129,7 +129,7 @@
                   <el-table-column align="center" width="400" label="商品名称">
                     <template slot-scope="scope">
                       <span>
-                        {{ scope.row.name }}
+                        {{ scope.row.name.split(',').join('&&') }}
                       </span>
                     </template>
                   </el-table-column>
@@ -912,7 +912,7 @@ export default {
       font-size: 14px;
       right: -100px;
       bottom: 3px;
-      color: #409eff;
+      color: #2a75ed;
     }
   }
   .repair-resolve {

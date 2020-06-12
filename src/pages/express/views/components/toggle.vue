@@ -139,7 +139,7 @@ export default {
     padding: 5px;
     cursor: pointer;
     .pitch-up {
-      color: #409eff;
+      color: #2a75ed;
     }
   }
 }

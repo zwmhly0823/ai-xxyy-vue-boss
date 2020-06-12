@@ -31,6 +31,11 @@ const menuItems = [
     isShow: true
   },
   {
+    link: 'users',
+    text: '学员中心',
+    isShow: true
+  },
+  {
     link: 'teacher',
     text: '社群销售',
     isShow: true
@@ -69,6 +74,11 @@ const menuItems = [
     link: 'login',
     text: '登录',
     isShow: false
+  },
+  {
+    link: 'express',
+    text: '物流中心',
+    isShow: true
   }
 ]
 

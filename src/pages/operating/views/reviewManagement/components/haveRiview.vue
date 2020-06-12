@@ -9,7 +9,11 @@
  -->
 <template>
   <div class="container">
-    <el-table :loading="loading" :data="list">
+    <el-table
+      v-loading="loading"
+      element-loading-text="拼命加载中"
+      :data="list"
+    >
       <el-table-column label="作品" width="300" align="center">
         <template slot-scope="scope">
           <el-image
@@ -67,7 +71,7 @@
       </el-table-column>
       <el-table-column label="上传日期" align="center" width="180">
         <template slot-scope="scope">
-          <div class="review-type">{{ timestamp(scope.row.utime, 2) }}</div>
+          <div class="review-type">{{ timestamp(scope.row.ctime, 2) }}</div>
         </template>
       </el-table-column>
       <el-table-column label="点评日期" align="center" width="180">
@@ -119,9 +123,9 @@ export default {
       try {
         const res = await this.$http.RiviewCourse.getHaveRiview(number)
         if (res.code === 0) {
-          this.loading = false
           this.list = res.payload.content
           this.totalElements = Number.parseInt(res.payload.totalElements)
+          this.loading = false
         }
       } catch (error) {
         console.log(error)

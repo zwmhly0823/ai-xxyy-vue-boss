@@ -1,0 +1,40 @@
+.user-list {
+  // padding-bottom: 30px;
+  p {
+    margin: 0;
+  }
+  .btn-text {
+    color: #2a75ed;
+    text-decoration: none;
+    cursor: pointer;
+  }
+  .icon-status {
+    font-size: 20px;
+    &.el-icon-success {
+      color: #42b983;
+    }
+    &.el-icon-error {
+      color: rgb(151, 151, 151);
+    }
+  }
+  /deep/ {
+    .el-tabs--border-card {
+      box-shadow: none;
+    }
+    .el-tabs--border-card > .el-tabs__header {
+      border: 1px solid #e4e7ed;
+    }
+    .el-tabs--border-card > .el-tabs__content {
+      padding: 0;
+    }
+  }
+  .empty-text {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 330px;
+    z-index: 100;
+    text-align: center;
+    color: #999;
+  }
+}

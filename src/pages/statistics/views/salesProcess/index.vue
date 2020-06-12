@@ -546,7 +546,7 @@ export default {
       border-radius: 20px;
       font-size: 12px;
       &.active {
-        background: #409eff;
+        background: #2a75ed;
         color: #fff;
       }
     }
@@ -564,7 +564,7 @@ export default {
       &.active {
         background: #fff;
         span {
-          color: #409eff;
+          color: #2a75ed;
         }
       }
     }
@@ -576,7 +576,7 @@ export default {
     .label-val {
       margin-right: 16px;
       &.green {
-        color: #409eff;
+        color: #2a75ed;
         margin-left: 10px;
       }
     }
@@ -603,12 +603,12 @@ export default {
     background: #fff;
     .el-dropdown-link {
       cursor: pointer;
-      color: #409eff;
+      color: #2a75ed;
     }
   }
   .el-dropdown-link.active {
     cursor: pointer;
-    color: #409eff;
+    color: #2a75ed;
   }
 }
 </style>

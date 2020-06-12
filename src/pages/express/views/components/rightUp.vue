@@ -25,6 +25,8 @@
         :replenishType="showItem.replenishType"
         :replenishProductType="showItem.replenishProductType"
         :teacherTip="showItem.teacherTip"
+        :teamClass="teamClass"
+        :productName="showItem.productName"
       />
     </div>
     <!-- v-if="!teacherId" TOSS -->
@@ -134,6 +136,10 @@ export default {
       default: () => {
         return {}
       }
+    },
+    teamClass: {
+      type: String,
+      default: '' // 系统课是1  体验课是0
     }
   },
   computed: {
@@ -259,7 +265,12 @@ export default {
     showExportDialog() {
       this.expressId = sessionStorage.getItem('uid') || []
       // 如果物流状态选择全部，不能导出
-      if (!this.searchIn.length && !this.expressId.length) {
+      // 状态标签选择全部时 ，搜索条件为空或者用户选择条目为空 则给出弹窗提示不能导出
+      if (
+        !this.searchIn.length &&
+        !this.expressId.length &&
+        this.expressStatus === '0,1,2,3,4,5,6,7,8'
+      ) {
         this.$message.error('不能导出全部物流，请选择状态或筛选')
         return
       }
@@ -343,25 +354,29 @@ export default {
         //   ])
         // }
 
-        const finaTerm = term.concat([
+        // term数组有空对象的，删除掉
+        const newTerm = term.filter((item) => Object.keys(item).length > 0)
+
+        const finaTerm = newTerm.concat([
           {
-            terms: { 'source_type.keyword': this.source_type.split(',') }
+            terms: { source_type: this.source_type.split(',') }
           },
           {
             terms: { regtype: this.regtype.split(',') }
-          }
+          },
+          { terms: { express_status: this.expressStatus.split(',') } }
         ])
 
         query = {
           bool: {
-            must: finaTerm,
-            filter: {
-              bool: {
-                should: [
-                  { terms: { express_status: this.expressStatus.split(',') } }
-                ]
-              }
-            }
+            must: finaTerm
+            // filter: {
+            //   bool: {
+            //     should: [
+            //       { terms: { express_status: this.expressStatus.split(',') } }
+            //     ]
+            //   }
+            // }
           }
         } // 自行通过前端选择的条件进行动态组装
       }

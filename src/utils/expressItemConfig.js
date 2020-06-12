@@ -5,13 +5,14 @@ export const replenishProductTypeList = [
 ]
 
 export const replenishTypeList = [
-  { label: '单件补发', value: '0' },
-  { label: '整盒补发', value: '1' }
+  { label: '整盒补发', value: '0' },
+  { label: '单件补发', value: '1' }
 ]
 
 export const replenishReasonSearchList = [
   { label: '发货漏发', value: '0' },
-  { label: '运输损坏', value: '1' }
+  { label: '运输损坏', value: '1' },
+  { label: '其它', value: '2' }
 ]
 
 export const expressToggleList = [

@@ -3,8 +3,8 @@
  * @version:
  * @Author: Yangjiyong
  * @Date: 2020-04-07 13:52:26
- * @LastEditors: panjian
- * @LastEditTime: 2020-05-07 18:19:08
+ * @LastEditors: songyanan
+ * @LastEditTime: 2020-06-06 14:17:10
  */
 import axios from '../axiosConfig'
 
@@ -14,6 +14,20 @@ export default {
    * */
   getDepartmentTree(id) {
     return axios.get(`/api/t/v1/department/getDepartmentTree?id=${id}`)
+  },
+  /**
+   * 新增、编辑组织结构
+   * */
+  createDepartment(params) {
+    return axios.post(`/api/t/v1/department/createDepartment`, params)
+  },
+  /**
+   * 删除组织结构
+   * */
+  deleteDepartmentById(departmentId) {
+    return axios.post(
+      `/api/t/v1/department/deleteDepartmentById?departmentId=${departmentId}`
+    )
   },
   getOssSign() {
     return axios.get(`/api/home/v1/ossconfig/getStsPubWriteToken`)
@@ -275,5 +289,11 @@ export default {
           }
        }`
     })
+  },
+  // 根據期數和課程類型獲取版本信息
+  getVersionByCourseVersion(params) {
+    return axios.get(
+      `/api/t/v1/teacher/course/enroll/courseVersion?period=${params.period}&courseType=${params.courseType}`
+    )
   }
 }

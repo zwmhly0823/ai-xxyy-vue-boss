@@ -4,11 +4,16 @@
  * @Author: liukun
  * @Date: 2020-04-25 17:24:23
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-05-25 19:31:37
+ * @LastEditTime: 2020-06-10 15:18:48
  -->
 <template>
-  <el-card border="false" shadow="never" :class="$style.elard">
-    <el-form :inline="true" label-position="right" label-width="80px">
+  <el-card
+    border="false"
+    shadow="never"
+    :class="$style.elard"
+    class="search-section"
+  >
+    <el-form :inline="true" label-position="right" label-width="100px">
       <el-form-item label="订单搜索:" :class="{ [$style.marginer]: true }">
         <orderSearch class="allmini" @result="getOrderSearch" />
       </el-form-item>
@@ -20,6 +25,26 @@
       <!-- <el-form-item label="物流状态:" :class="{ [$style.marginer]: true }">
         <orderStatus @result="getExpressStatus" />
       </el-form-item> -->
+
+      <el-form-item label="推荐人信息:" :class="{ [$style.marginer]: true }">
+        <div class="row_colum">
+          <simple-select
+            name="is_first_order_send_id"
+            @result="getFirstOrder"
+            :multiple="false"
+            :data-list="firstOrderList"
+            placeholder="全部"
+          ></simple-select>
+          <SearchPhoneAndUsername
+            @result="getSendUser"
+            :custom-style="{ width: '200px' }"
+            placeholder="推荐人手机号/用户名称"
+            name="first_order_send_id"
+            type="2"
+            v-if="hasSendId"
+          />
+        </div>
+      </el-form-item>
       <br />
 
       <el-form-item label="下单时间:" :class="{ [$style.marginer]: true }">
@@ -112,9 +137,15 @@
         </div>
       </el-form-item>
     </el-form>
+    <div class="export-order">
+      <el-button size="mini" type="primary" @click="exportOrderHandle"
+        >订单导出</el-button
+      >
+    </div>
   </el-card>
 </template>
 <script>
+import dayjs from 'dayjs'
 import hardLevel from '@/components/MSearch/searchItems/hardLevel.vue' // add
 import orderSearch from '@/components/MSearch/searchItems/orderSearch.vue' // add
 // import orderStatus from '@/components/MSearch/searchItems/orderStatus.vue' // add
@@ -125,6 +156,9 @@ import Department from '@/components/MSearch/searchItems/department'
 import SearchTeamName from '@/components/MSearch/searchItems/searchTeamName'
 import SearchStage from '@/components/MSearch/searchItems/searchStage'
 import TrialCourseType from '@/components/MSearch/searchItems/trialCourseType'
+import { downloadHandle } from '@/utils/download'
+import SearchPhoneAndUsername from '@/components/MSearch/searchItems/searchPhoneAndUsername'
+import SimpleSelect from '@/components/MSearch/searchItems/simpleSelect'
 import { isToss } from '@/utils/index'
 
 export default {
@@ -138,7 +172,9 @@ export default {
     Department,
     SearchTeamName,
     SearchStage,
-    TrialCourseType
+    TrialCourseType,
+    SearchPhoneAndUsername,
+    SimpleSelect
   },
 
   data() {
@@ -157,7 +193,19 @@ export default {
       should: [],
       selectTime: null, // 物流时间下拉列表_选中项
       oldTime: '', // 上次时间选择值
-      teacherId: '' // 判断是否是toss环境还是boss环境
+      teacherId: '', // 判断是否是toss环境还是boss环境
+      searchParams: [],
+      firstOrderList: [
+        {
+          id: '1',
+          text: '有推荐人'
+        },
+        {
+          id: '0',
+          text: '无推荐人'
+        }
+      ],
+      hasSendId: true
     }
   },
   computed: {},
@@ -290,6 +338,18 @@ export default {
       this.setSeachParmas(res, ['packages_id'], 'terms')
     },
 
+    async getSendUser(res) {
+      this.setSeachParmas(res, ['first_order_send_id'], 'terms')
+    },
+    getFirstOrder(res) {
+      if (res && res.is_first_order_send_id === '0') {
+        this.hasSendId = false
+      } else {
+        this.hasSendId = true
+      }
+      this.setSeachParmas(res, ['is_first_order_send_id'])
+    },
+
     /**  处理接收到的查询参数
      * @res: Object, 子筛选组件返回的表达式对象，如 {sup: 2}
      * @key: Array 指定res的key。如课程类型+期数选项，清除课程类型时，期数也清除了，这里要同步清除must的数据
@@ -319,6 +379,7 @@ export default {
           })
           this.must = temp
         }
+        this.searchParams = temp
         this.$emit('search', temp)
         return
       }
@@ -330,6 +391,68 @@ export default {
         this.should = temp
       }
       this.$emit('searchShould', temp)
+    },
+
+    // 导出
+    exportOrderHandle() {
+      console.log(this.searchParams)
+      console.log(this.$parent.$children[1].finalParams)
+      if (this.searchParams.length === 0) {
+        this.$message.error('请选择筛选条件')
+        return
+      }
+
+      const query = this.$parent.$children[1].finalParams
+      const fileTitle = dayjs(new Date()).format('YYYY-MM-DD')
+      const fileTitleTime = dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss')
+
+      // 导出条件为 v1 对象方式
+      // const query = {
+      //   status: 3
+      // }
+      // const search = this.searchParams[0]
+      // for (const key in search) {
+      //   if (Object.keys(search).includes(key)) {
+      //     const item = search[key]
+      //     Object.assign(query, item)
+      //   }
+      // }
+
+      const loading = this.$loading({
+        lock: true,
+        text: '正在导出，请耐心等待……',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.1)'
+      })
+
+      const params = {
+        apiName: 'OrderPage',
+        header: {
+          buydate: '缴费时间',
+          out_trade_no: '订单号',
+          uid: '用户ID',
+          'user.username': '用户昵称',
+          'paymentPay.transaction_id': '交易流水号',
+          'paymentPay.trade_type_text': '支付方式',
+          amount: '交易金额',
+          'packagesType.name': '套餐类型',
+          'stageInfo.period_name': '期数',
+          'channel.channel_outer_name': '线索渠道',
+          sup_text: '课程难度'
+        },
+        fileName: `体验课订单导出-${fileTitleTime}`, // 文件名称
+        query: JSON.stringify(query)
+      }
+      // console.log(exportExcel)
+
+      this.$http.DownloadExcel.exportOrder(params)
+        .then((res) => {
+          console.log(res)
+          downloadHandle(res, `体验课订单导出-${fileTitle}`, () => {
+            loading.close()
+          })
+        })
+        .catch(() => loading.close())
     }
   },
   created() {
@@ -372,7 +495,20 @@ export default {
   }
 }
 </style>
+<style lang="scss" scoped>
+.search-section {
+  position: relative;
+  ::v-deep .el-icon-search {
+    top: 14px;
+  }
+}
+</style>
 <style scoped>
+.export-order {
+  position: absolute;
+  bottom: 25px;
+  right: 20px;
+}
 .el-select-dropdown.is-multiple .el-select-dropdown__item.selected:after {
   right: 5px;
 }

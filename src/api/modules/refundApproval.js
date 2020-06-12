@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-05-12 15:22:25
  * @LastEditors: liukun
- * @LastEditTime: 2020-05-25 21:30:24
+ * @LastEditTime: 2020-06-06 14:37:11
  */
 
 import axios from '../axiosConfig'
@@ -59,6 +59,13 @@ export default {
     return axios.post(`/api/o/v1/order/getOrderPrice?orderId=${params}`)
   },
 
+  // 获取剩余金额
+  getResidueFee({ orderId }) {
+    return axios.get(`/api/o/v1/order/getRemainingAmount?orderId=${orderId}`)
+    // return new Promise((resolve, reject) => {
+    //   resolve({ code: 0, data: { bala: 54188 } })
+    // })
+  },
   // 获取优惠券类型
   getCoupon(params) {
     return axios.get('/api/s/v1/coupon/getUserCouponByPackageId', params)

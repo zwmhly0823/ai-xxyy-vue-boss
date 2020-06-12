@@ -119,10 +119,10 @@
           placeholder="请选择销售等级"
         >
           <el-option
-            v-for="(item, key) in Level"
-            :key="key"
-            :label="item"
-            :value="item"
+            v-for="item in Level"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
           ></el-option>
         </el-select>
       </el-form-item>
@@ -307,7 +307,16 @@ export default {
       // 微信
       WeChat: [],
       // 销售等级
-      Level: [0, 1, 2, 3, 4],
+      Level: [
+        { label: '新兵培训', value: 0 },
+        { label: '下组待接生', value: 1 },
+        { label: '首次排班', value: 2 },
+        { label: '已接生一次', value: 3 },
+        { label: '1级', value: 4 },
+        { label: '2级', value: 5 },
+        { label: '3级', value: 6 },
+        { label: '4级', value: 7 }
+      ],
       // 表单value
       ruleForm: {
         // 手机号
@@ -516,11 +525,7 @@ export default {
             //   ? [payload.department.id]
             //   : []
             this.ruleForm.region = payload.department
-              ? [
-                  payload.department.id ||
-                    payload.department.pid ||
-                    payload.department.cid
-                ]
+              ? payload.department.id
               : []
             payload.duty.forEach((val) => {
               this.ruleForm.positionVal.push(val.id * 1)
@@ -593,7 +598,10 @@ export default {
           level: this.ruleForm.level
         },
         department: {
-          id: this.ruleForm.region[this.ruleForm.region.length - 1]
+          id:
+            typeof this.ruleForm.region === 'string'
+              ? this.ruleForm.region
+              : this.ruleForm.region[this.ruleForm.region.length - 1]
         },
         duty: positionValId,
         rank: { id: this.ruleForm.rank },
@@ -760,7 +768,7 @@ export default {
   overflow: hidden;
 }
 .avatar-uploader .el-upload:hover {
-  border-color: #409eff;
+  border-color: #2a75ed;
 }
 .avatar-uploader-icon {
   font-size: 28px;

@@ -1,0 +1,73 @@
+<!--
+ * @Author: YangJiyong
+ * @Email: yangjiyong@meishubao.com
+ * @Date: 2020-05-20 15:22:37
+ * @Last Modified by:   YangJiyong
+ * @Last Modified time: 2020-05-20 15:22:37
+ * @Description: 简单 select 组件
+ -->
+<template>
+  <div class="search-item small">
+    <el-select
+      v-model="value"
+      @change="onChange"
+      clearable
+      :multiple="multiple"
+      :placeholder="placeholder"
+      size="mini"
+      class="item-style"
+    >
+      <el-option
+        v-for="item in dataList"
+        :key="item.id"
+        :label="item.text"
+        :value="item.id"
+      ></el-option>
+    </el-select>
+  </div>
+</template>
+
+<script>
+export default {
+  props: {
+    // 希望返回的字段名
+    name: {
+      type: String,
+      default: ''
+    },
+    // placeholder
+    placeholder: {
+      type: String,
+      default: ''
+    },
+    dataList: {
+      type: Array,
+      default: () => []
+    },
+    multiple: {
+      type: Boolean,
+      default: true
+    }
+  },
+  data() {
+    return {
+      value: []
+      // dataList: []
+    }
+  },
+  methods: {
+    onChange(data) {
+      console.log(data, `${this.name} - ${this.placeholder}`)
+
+      this.$emit('result', data !== '' ? { [this.name]: data } : '')
+    }
+  }
+}
+</script>
+<style lang="scss" scoped>
+.search-item {
+  .item-style {
+    width: 140px;
+  }
+}
+</style>

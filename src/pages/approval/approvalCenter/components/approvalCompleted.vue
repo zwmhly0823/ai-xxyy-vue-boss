@@ -4,7 +4,7 @@
  * @Author: Lukun
  * @Date: 2020-04-27 17:47:58
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-05-29 23:12:02
+ * @LastEditTime: 2020-06-06 20:35:33
  -->
 <template>
   <div class="container">
@@ -12,6 +12,7 @@
       <tabTimeSelect @result="getSeacherTime" />
       <CheckType @result="getcheckType" />
       <SearchPart @result="getSeachePart" />
+      <courseTeam @result="getTeamId" />
     </div>
     <el-table
       :data="tableData"
@@ -50,6 +51,16 @@
           </div>
           <div v-if="scope.row.type === 'ADJUSTMENT_CLASS'">
             调班
+          </div>
+        </template>
+      </el-table-column>
+      <el-table-column label="开课日期" width="120">
+        <template slot-scope="scope">
+          <div>
+            <span>
+              {{ courseOptions[scope.row.managementType] }}
+              {{ scope.row.periodName }}
+            </span>
           </div>
         </template>
       </el-table-column>
@@ -107,8 +118,12 @@
       size="50%"
       class="drawer-approval-detail"
       :modal="false"
-      :title="drawerApprovalDeatail.addressId ? '补发货审批' : '退款审批'"
     >
+      <template v-slot:title>
+        <h2>
+          {{ drawerApprovalDeatail.addressId ? '补发货审批' : '退款审批' }}
+        </h2>
+      </template>
       <div v-if="drawerApprovalDeatail.addressId" class="approval-replenish">
         <el-row>
           <el-col :span="3">申请人:</el-col>
@@ -258,6 +273,18 @@
           }}</el-col>
         </el-row>
         <el-row>
+          <el-col :span="5">交易金额:</el-col>
+          <el-col :span="18" :offset="1">{{
+            drawerApprovalDeatail.orderFee
+          }}</el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="5">剩余金额:</el-col>
+          <el-col :span="18" :offset="1">{{
+            drawerApprovalDeatail.residueFee
+          }}</el-col>
+        </el-row>
+        <el-row>
           <el-col :span="5">支付渠道:</el-col>
           <el-col :span="18" :offset="1">{{
             drawerApprovalDeatail.channel
@@ -308,6 +335,12 @@
           }}</el-col>
         </el-row>
         <el-row>
+          <el-col :span="5">退款说明:</el-col>
+          <el-col :span="18" :offset="1">{{
+            drawerApprovalDeatail.refundMsg
+          }}</el-col>
+        </el-row>
+        <el-row>
           <el-col :span="5">附件:</el-col>
           <el-col :span="18" :offset="1">
             <el-image
@@ -339,7 +372,7 @@
 import MPagination from '@/components/MPagination/index.vue'
 import { timestamp } from '@/utils/index'
 import { getStaffInfo } from '../common'
-
+import courseTeam from './courseTeam'
 import TabTimeSelect from './timeSearch'
 import CheckType from './checkType'
 import SearchPart from './searchPart'
@@ -352,7 +385,8 @@ export default {
     TabTimeSelect,
     CheckType,
     SearchPart,
-    adjustDrawer
+    adjustDrawer,
+    courseTeam
   },
   watch: {
     activeName(val) {
@@ -382,7 +416,8 @@ export default {
         OTHER: '其他',
         DELIVERY_MISS: '发货漏发',
         TRANSPORT_BAD: '运输损坏'
-      }
+      },
+      courseOptions: { TESTCOURSE: '体验课', SYSTEMCOURSE: '系统课' }
     }
   },
   created() {
@@ -410,19 +445,41 @@ export default {
     this.checkPending(this.params)
   },
   methods: {
+    // 期数查询
+    getTeamId(val) {
+      this.params.page = 1
+      this.currentPage = 1
+      if (val) {
+        Object.assign(this.params, {
+          managementType: val.managementType,
+          period: val.period,
+          page: 1
+        })
+        this.checkPending(this.params)
+      } else {
+        this.params.managementType = ''
+        this.params.period = ''
+        this.checkPending(this.params)
+      }
+    },
     // 销售部门搜索
     getSeachePart(val) {
       Object.assign(this.params, { keyword: val })
-      console.log(val, 'app-container')
+      this.params.page = 1
+      this.currentPage = 1
       this.checkPending(this.params)
     },
     // 审批类型判断
     getcheckType(val) {
+      this.params.page = 1
+      this.currentPage = 1
       Object.assign(this.params, { type: val })
       this.checkPending(this.params)
     },
     // 筛选时间
     getSeacherTime(val) {
+      this.params.page = 1
+      this.currentPage = 1
       if (val) {
         Object.assign(this.params, {
           startTime: val.ctime.gte,
@@ -569,7 +626,6 @@ export default {
                 ]
               )
             }
-            const aTime = new Date(payData.applyTime - 0)
             // 公共数据
             this.adjustDrawerData.content = this.adjustDrawerData.content.concat(
               [
@@ -583,8 +639,7 @@ export default {
                 },
                 {
                   label: '发起时间',
-                  value: `${aTime.getFullYear()}-${aTime.getMonth() +
-                    1}-${aTime.getDate()} ${aTime.getHours()}:${aTime.getMinutes()}:${aTime.getSeconds()}`
+                  value: timestamp(payData.applyTime, 2)
                 },
                 {
                   label: '状态',
@@ -665,7 +720,7 @@ export default {
   }
   .wait-pending {
     cursor: pointer;
-    color: #409eff;
+    color: #2a75ed;
   }
   .disnone {
     display: none;
