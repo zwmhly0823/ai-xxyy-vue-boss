@@ -4,11 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-06-09 10:52:48
  * @LastEditors: YangJiyong
-<<<<<<< HEAD
- * @LastEditTime: 2020-06-11 13:04:07
-=======
- * @LastEditTime: 2020-06-11 19:50:55
->>>>>>> feature/new-sidebar
+ * @LastEditTime: 2020-06-12 14:43:23
 -->
 <template>
   <div
