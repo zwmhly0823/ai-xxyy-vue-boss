@@ -307,7 +307,7 @@ export function url2KeyVal() {
 }
 
 /**
- * 打开一个新页签 v1.0
+ * 打开一个新页签 v1.0  - 弃用！！
  * @path: 要跳转的路由，包含模块名和router path.如 '/student-team/#/trialTeam'
  */
 export function openNewTab(path, title) {
@@ -347,7 +347,7 @@ export function openBrowserTab(path, out = false) {
   }
   const { pathname, origin } = location
   // 如果是外链接, 直接打开
-  if (out) {
+  if (out === true) {
     window.open(path, '_blank')
     return
   }
@@ -357,5 +357,7 @@ export function openBrowserTab(path, out = false) {
     baseUrl = '/' + [pathArr[1]].join('/')
   }
   const pathUrl = `${origin}${baseUrl}${path}`
+  console.log(pathUrl, 'pathUrl')
+
   window.open(pathUrl, '_blank')
 }

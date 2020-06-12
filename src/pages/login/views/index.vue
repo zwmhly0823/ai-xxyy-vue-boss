@@ -3,8 +3,8 @@
  * @version:
  * @Author: Shentong
  * @Date: 2020-03-13 15:24:11
- * @LastEditors: Shentong
- * @LastEditTime: 2020-03-27 22:44:46
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-06-12 19:18:50
  -->
 <template>
   <div id="login" class="login-container">
@@ -354,11 +354,11 @@ export default {
             )
           }
           // 登录后，设置默认multiTabbed
-          const tabs = {
-            [`${path}#/`]: { meta: { title: '班级中心' } }
-          }
-          sessionStorage.setItem('multiTabbed', JSON.stringify(tabs))
-          sessionStorage.setItem('currentMultiTab', `${path}#/`)
+          // const tabs = {
+          //   [`${path}#/`]: { meta: { title: '班级中心' } }
+          // }
+          // sessionStorage.setItem('multiTabbed', JSON.stringify(tabs))
+          // sessionStorage.setItem('currentMultiTab', `${path}#/`)
 
           location.href = `${path}#/`
         }

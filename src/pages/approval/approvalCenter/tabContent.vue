@@ -4,7 +4,7 @@
  * @Author: Lukun
  * @Date: 2020-04-27 00:10:22
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-06-04 22:31:50
+ * @LastEditTime: 2020-06-12 19:16:04
  -->
 <template>
   <div class="container">
@@ -101,7 +101,7 @@ export default {
 .container {
   margin: 10px;
   padding-bottom: 50px;
-  height: calc(100vh - 120px - 34px);
+  height: calc(100vh - 120px);
   overflow: auto;
   background-color: #fff;
 }
