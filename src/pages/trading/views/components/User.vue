@@ -2,7 +2,7 @@
 <template>
   <section>
     <p v-if="!user">-</p>
-    <div v-else>
+    <div v-else class="primary-text" @click="openUserDetail(user.id, user)">
       <p>
         {{ user.username || '-' }}
         {{
@@ -18,7 +18,7 @@
   </section>
 </template>
 <script>
-import { GetAgeByBrithday } from '@/utils/index'
+import { GetAgeByBrithday, openBrowserTab } from '@/utils/index'
 export default {
   props: {
     user: {
@@ -29,6 +29,11 @@ export default {
   methods: {
     getAgeByBrithday(birthday) {
       return '- ' + GetAgeByBrithday(birthday)
+    },
+    // 打开用户详情
+    openUserDetail(uid, row) {
+      row && console.log(row)
+      uid && openBrowserTab(`/users/#/details/${uid}`)
     }
   }
 }

@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-03-24 12:49:53
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-06-11 12:30:19
+ * @LastEditTime: 2020-06-12 20:49:19
 -->
 <template>
   <div v-if="!item.hidden">
@@ -19,7 +19,9 @@
       <svg class="iconfont" :class="item.meta.icon" aria-hidden="true">
         <use :xlink:href="`#${item.meta.icon}`"></use>
       </svg>
-      <span slot="title">{{ item.meta.title }}</span>
+      <span @contextmenu.prevent="handleRight(item)" slot="title">{{
+        item.meta.title
+      }}</span>
     </el-menu-item>
     <!-- 有二级目录的 -->
     <el-submenu :index="index.toString()" v-else>
@@ -51,7 +53,10 @@
             v-for="(cItem, cIndex) in item.children.filter((m) => m.meta.show)"
             :key="cItem.path"
             @click="handleOpen(cItem, `${index}-${cIndex}`)"
-            ><em>{{ cItem.meta.title }}</em></el-menu-item
+            @mouseleave="handleRightLeave"
+            ><em @contextmenu.prevent="handleRight(cItem)">{{
+              cItem.meta.title
+            }}</em></el-menu-item
           >
         </template>
         <!-- 菜单是关闭状态，用elment自身pop -->
@@ -70,8 +75,8 @@
 </template>
 
 <script>
-import '@/assets/fonts/iconfont.js' // iconfont 图标
 import { mapActions, mapGetters } from 'vuex'
+import '@/assets/fonts/iconfont.js' // iconfont 图标
 export default {
   name: 'SidebarItem',
   props: {
@@ -89,7 +94,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['sidebar'])
+    ...mapGetters(['sidebar', 'rightpop'])
   },
   data() {
     return {
@@ -106,7 +111,7 @@ export default {
       const { path, meta } = currentItem
       const pathname = location.pathname
       let baseUrl = ''
-      const tabItem = {}
+      // const tabItem = {}
 
       if (this.clicked && hasChildren) return
       this.clicked = hasChildren
@@ -139,16 +144,16 @@ export default {
         location.href = pathUrl2
       }
       // 多页签打开
-      Object.assign(tabItem, { [`${pathUrl2}`]: { meta } })
-      const multiTabbed =
-        JSON.parse(sessionStorage.getItem('multiTabbed')) || {}
-      if (!Object.keys(multiTabbed).includes(pathUrl2)) {
-        Object.assign(multiTabbed, tabItem)
-        sessionStorage.setItem('multiTabbed', JSON.stringify(multiTabbed))
-        this.setTabbedList(multiTabbed)
-      }
-      sessionStorage.setItem('currentMultiTab', pathUrl2)
-      this.setCurrentTabbed(pathUrl2)
+      // Object.assign(tabItem, { [`${pathUrl2}`]: { meta } })
+      // const multiTabbed =
+      //   JSON.parse(sessionStorage.getItem('multiTabbed')) || {}
+      // if (!Object.keys(multiTabbed).includes(pathUrl2)) {
+      //   Object.assign(multiTabbed, tabItem)
+      //   sessionStorage.setItem('multiTabbed', JSON.stringify(multiTabbed))
+      //   this.setTabbedList(multiTabbed)
+      // }
+      // sessionStorage.setItem('currentMultiTab', pathUrl2)
+      // this.setCurrentTabbed(pathUrl2)
     },
 
     // 弹出二级导航的浮层
@@ -173,10 +178,30 @@ export default {
         })
       }
       this.$store.commit('app/TOGGLE_POPMENU', payload)
+      this.$store.dispatch('app/setRightPop', {
+        show: false
+      })
     },
     // 隐藏二级浮层
     handleMouseLeave(e) {
       this.$store.commit('app/TOGGLE_POPMENU', {
+        show: false
+      })
+    },
+
+    // 右键事件
+    handleRight(item) {
+      const option = {
+        top: event.clientY || event.y,
+        left: event.clientX || event.x,
+        item,
+        show: true
+      }
+      this.$store.dispatch('app/setRightPop', option)
+    },
+    handleRightLeave() {
+      if (!this.rightpop.show) return
+      this.$store.dispatch('app/setRightPop', {
         show: false
       })
     }
