@@ -307,7 +307,7 @@ export function url2KeyVal() {
 }
 
 /**
- * 打开一个新页签 v1.0
+ * 打开一个新页签 v1.0  - 弃用！！
  * @path: 要跳转的路由，包含模块名和router path.如 '/student-team/#/trialTeam'
  */
 export function openNewTab(path, title) {
@@ -334,4 +334,30 @@ export function openNewTab(path, title) {
   }
   sessionStorage.setItem('currentMultiTab', pathUrl)
   store.dispatch('tabbed/setCurrentTabbed', pathUrl)
+}
+
+/**
+ * 浏览器新标签打开页面
+ * @path: 要跳转的路由，包含模块名和router path.如 '/student-team/#/trialTeam'
+ */
+export function openBrowserTab(path, out = false) {
+  if (!path) {
+    Message.error('请填写跳转路径')
+    return
+  }
+  const { pathname, origin } = location
+  // 如果是外链接, 直接打开
+  if (out === true) {
+    window.open(path, '_blank')
+    return
+  }
+  let baseUrl = ''
+  if (pathname.includes('test')) {
+    const pathArr = pathname.split('/')
+    baseUrl = '/' + [pathArr[1]].join('/')
+  }
+  const pathUrl = `${origin}${baseUrl}${path}`
+  console.log(pathUrl, 'pathUrl')
+
+  window.open(pathUrl, '_blank')
 }

@@ -3,8 +3,8 @@
  * @version: 
  * @Author: panjian
  * @Date: 2020-06-06 14:18:35
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-06-11 22:33:18
+ * @LastEditors: panjian
+ * @LastEditTime: 2020-06-12 15:05:25
 -->
 <template>
   <div class="app-main height">
@@ -78,7 +78,7 @@
         <el-table-column label="用户行为" width="200">
           <template slot-scope="scope">
             <div class="behavior-box" v-if="+scope.row.action_type === 1">
-              <span>{{ scope.row.action_type_text }}</span>
+              <span>{{ scope.row.action_type_text }} </span>
               <span class="behavior-text">{{ scope.row.device_model }}</span>
               <br />
               <span>{{ scope.row.action_time }}</span>
@@ -237,6 +237,19 @@ export default {
               item.weixin_nick_name = item.weixinUser.nickname
             }
           }
+          // if (item.action_type === 1) {
+          //   item.action_type_text = '打开APP'
+          // } else if (item.action_type === 2) {
+          //   item.action_type_text = '已支付'
+          // } else if (item.action_type === 3) {
+          //   item.action_type_text = '参课'
+          // } else if (item.action_type === 4) {
+          //   item.action_type_text = '完课'
+          // } else if (item.action_type === 5) {
+          //   item.action_type_text = '听点评'
+          // } else if (item.action_type === 6) {
+          //   item.action_type_text = '上传作品'
+          // }
 
           if (!item.team_name) {
             if (item.teacher) {

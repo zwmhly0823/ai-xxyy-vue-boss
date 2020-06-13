@@ -9,10 +9,11 @@
     <div class="main-container">
       <div :class="{ 'fixed-header': fixedHeader }">
         <topbar />
-        <multi-tabbed />
+        <!-- <multi-tabbed /> -->
       </div>
       <app-main />
     </div>
+    <right-pop :item="rightpopParams" />
   </div>
 </template>
 
@@ -20,7 +21,8 @@
 import Topbar from './Topbar.vue'
 import Sidebar from './Sidebar/index.vue'
 import AppMain from './AppMain.vue'
-import MultiTabbed from './MultiTabbed.vue'
+// import MultiTabbed from './MultiTabbed.vue'
+import RightPop from '@/components/RightPop/index.vue'
 import ResizeMixin from './mixin/ResizeHandler'
 export default {
   name: 'Layout',
@@ -28,7 +30,8 @@ export default {
     Topbar,
     Sidebar,
     AppMain,
-    MultiTabbed
+    // MultiTabbed,
+    RightPop
   },
   mixins: [ResizeMixin],
   computed: {
@@ -48,6 +51,9 @@ export default {
         withoutAnimation: this.sidebar.withoutAnimation,
         mobile: this.device === 'mobile'
       }
+    },
+    rightpopParams() {
+      return this.$store.state.app.rightpop
     }
   },
   created() {
