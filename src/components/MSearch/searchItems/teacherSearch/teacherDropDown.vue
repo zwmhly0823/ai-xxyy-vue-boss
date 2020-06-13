@@ -81,6 +81,25 @@
       >
       </el-option>
     </el-select>
+    <!-- 销售等级 -->
+    <el-select
+      v-model="sellerLevelData"
+      class="item-style"
+      clearable
+      v-if="sellerLevelName"
+      multiple
+      size="mini"
+      placeholder="选择销售等级"
+      @change="sellerLevelChange"
+    >
+      <el-option
+        v-for="item in sellerLevelList"
+        :key="item.value"
+        :label="item.label"
+        :value="item.value"
+      >
+      </el-option>
+    </el-select>
   </div>
 </template>
 
@@ -108,6 +127,11 @@ export default {
       type: String,
       default: 'position_no'
     },
+    // 销售等级
+    sellerLevelName: {
+      type: String,
+      default: 'sellerLevel'
+    },
     // 是否只返回值，如果是，父组件获得值后根据实际表达式组装数据
     onlyValue: {
       type: Boolean,
@@ -134,6 +158,13 @@ export default {
       ],
       // 职务列表
       positionList: [],
+      // 销售等级
+      sellerLevelList: [
+        { label: '1级社群销售', value: 0 },
+        { label: '2级社群销售', value: 1 },
+        { label: '3级社群销售', value: 2 },
+        { label: '新兵营', value: 3 }
+      ],
       // 职级value
       rankData: null,
       // 入职状态value
@@ -141,7 +172,9 @@ export default {
       // 登陆状态value
       landingData: null,
       // 职务value
-      positionData: null
+      positionData: null,
+      // 销售等级value
+      sellerLevelData: null
     }
   },
   watch: {
@@ -196,6 +229,13 @@ export default {
       this.$emit(
         'positionCallBack',
         data.length > 0 ? { [this.positionName]: this.positionData } : ''
+      )
+    },
+    // 销售等级
+    sellerLevelChange(data) {
+      this.$emit(
+        'sellerLevelCallBack',
+        data.length > 0 ? { [this.sellerLevelName]: this.sellerLevelData } : ''
       )
     }
   }

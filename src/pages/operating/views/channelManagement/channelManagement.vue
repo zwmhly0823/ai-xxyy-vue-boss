@@ -45,7 +45,6 @@ export default {
   methods: {
     // tabs 事件
     handleClick(tab, event) {
-      console.log('tav', tab, event)
       this.tabIndex = tab.index
     }
   }
