@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-06-06 14:18:35
  * @LastEditors: panjian
- * @LastEditTime: 2020-06-13 20:23:30
+ * @LastEditTime: 2020-06-13 22:00:54
 -->
 <template>
   <div class="app-main height">
@@ -246,7 +246,7 @@ export default {
             item.birthday = '-'
           }
 
-          if (!item.weixin_nick_name || item.weixin_nick_name === '0') {
+          if (item.weixin_nick_name) {
             if (!item.weixinUser) {
               item.weixin_nick_name = '-'
               item.weixin_avatar =
