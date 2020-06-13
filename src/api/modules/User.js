@@ -4,7 +4,7 @@
  * @Author: shentong
  * @Date: 2020-03-13 14:38:28
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-06-01 19:08:45
+ * @LastEditTime: 2020-06-13 21:17:35
  */
 // import axios from '../axios'
 import axios from '../axiosConfig'
@@ -87,6 +87,7 @@ export default {
             content{
               id
               username
+              user_num
               nickname
               head
               sex
@@ -173,6 +174,7 @@ export default {
             content {
               studentid
               username
+              usernum
               nickname
               ctime
               utime
