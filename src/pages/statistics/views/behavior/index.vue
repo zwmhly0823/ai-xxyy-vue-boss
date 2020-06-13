@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-06-06 14:18:35
  * @LastEditors: panjian
- * @LastEditTime: 2020-06-12 15:05:25
+ * @LastEditTime: 2020-06-13 15:09:10
 -->
 <template>
   <div class="app-main height">
@@ -60,17 +60,7 @@
         <el-table-column label="微信信息">
           <template slot-scope="scope">
             <div class="weixin-box">
-              <img
-                v-if="scope.row.head"
-                class="weixin-img"
-                :src="scope.row.head"
-                alt=""
-              />
-              <img
-                v-else
-                class="weixin-img"
-                src="https://msb-ai.meixiu.mobi/ai-pm/static/touxiang.png?x-oss-process=image/resize,l_100"
-              />
+              <img class="weixin-img" :src="scope.row.weixin_avatar" alt="" />
               <span class="weixin-text">{{ scope.row.weixin_nick_name }}</span>
             </div>
           </template>
@@ -233,8 +223,11 @@ export default {
           if (!item.weixin_nick_name || item.weixin_nick_name === '0') {
             if (!item.weixinUser) {
               item.weixin_nick_name = '-'
+              item.weixin_avatar =
+                'https://msb-ai.meixiu.mobi/ai-pm/static/touxiang.png?x-oss-process=image/resize,l_100'
             } else {
               item.weixin_nick_name = item.weixinUser.nickname
+              item.weixin_avatar = item.weixinUser.avatar
             }
           }
           // if (item.action_type === 1) {
