@@ -207,12 +207,20 @@
         <template slot-scope="scope">
           <div>
             <div>
-              共<span class="logistics">{{
-                scope.row.express && scope.row.express.express_total
-                  ? scope.row.express.express_total
-                  : '0'
-              }}</span
-              >条物流记录
+              共
+              <span
+                v-if="scope.row.express && scope.row.express.express_total"
+                class="logistics"
+                @click="
+                  showExpressDetail(
+                    scope.row.id,
+                    scope.row.express.express_total
+                  )
+                "
+                >{{ scope.row.express.express_total }}</span
+              >
+              <span v-else>0</span>
+              条物流记录
             </div>
             <div>
               最后一次已{{
@@ -225,6 +233,7 @@
         </template>
       </el-table-column>
     </el-table>
+    <express-detail :order_id="order_id" ref="order_id" />
 
     <!--用户资产 Start-->
     <div class="course-sty" v-if="tabData === 'userAsset'">
@@ -309,6 +318,7 @@
 import couponComponent from './assetComponents/couponComponent'
 import coinComponent from './assetComponents/coinComponent'
 import ivrCon from './ivrComponents/ivrCon'
+import ExpressDetail from '../../../trading/views/components/expressDetail'
 export default {
   props: {
     tabData: String,
@@ -321,7 +331,8 @@ export default {
   components: {
     couponComponent,
     coinComponent,
-    ivrCon
+    ivrCon,
+    ExpressDetail
   },
   data() {
     return {
@@ -339,7 +350,8 @@ export default {
       videoDialog: false,
       assetCurPane: '',
       couponReload: true,
-      coinReload: true
+      coinReload: true,
+      order_id: ''
     }
   },
   created() {
@@ -422,6 +434,12 @@ export default {
     },
     jumpToCoin(data) {
       this.assetCurPane = data
+    },
+    showExpressDetail(id, total) {
+      if (total > 0) {
+        this.$refs.order_id.drawer = true
+        this.order_id = id
+      }
     }
   }
 }
@@ -479,6 +497,8 @@ export default {
 }
 .logistics {
   color: #5ea0f5;
+  text-decoration: underline;
+  cursor: pointer;
 }
 </style>
 <style lang="scss">
