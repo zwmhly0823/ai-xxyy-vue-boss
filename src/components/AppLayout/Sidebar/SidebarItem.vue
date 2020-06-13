@@ -3,17 +3,15 @@
  * @version: 2.0.0
  * @Author: YangJiyong
  * @Date: 2020-03-24 12:49:53
- * @Last Modified by:   songyanan
- * @Last Modified time: 2020-006-09 15:53:20
- * @Description: TODO: 目前只支持二级
- -->
-
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-06-12 20:49:19
+-->
 <template>
   <div v-if="!item.hidden">
     <!-- 只有一级的情况 -->
     <el-menu-item
       :index="index.toString()"
-      @click.left="handleOpen(item, `${index.toString()}`)"
+      @click="handleOpen(item, `${index.toString()}`)"
       v-if="!item.children"
     >
       <!-- 自定义icon类 -->
