@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-06-06 14:18:35
  * @LastEditors: panjian
- * @LastEditTime: 2020-06-13 22:11:00
+ * @LastEditTime: 2020-06-13 22:21:09
 -->
 <template>
   <div class="app-main height">
@@ -246,15 +246,13 @@ export default {
             item.birthday = '-'
           }
 
-          if (item.weixin_nick_name) {
-            if (item.weixinUser) {
-              item.weixin_nick_name = item.weixinUser.nickname
-              item.weixin_avatar = item.weixinUser.avatar
-            } else {
-              item.weixin_nick_name = '-'
-              item.weixin_avatar =
-                'https://msb-ai.meixiu.mobi/ai-pm/static/touxiang.png'
-            }
+          if (item.weixinUser || item.weixin_nick_name) {
+            item.weixin_nick_name = item.weixinUser.nickname
+            item.weixin_avatar = item.weixinUser.avatar
+          } else {
+            item.weixin_nick_name = '-'
+            item.weixin_avatar =
+              'https://msb-ai.meixiu.mobi/ai-pm/static/touxiang.png'
           }
           // if (item.action_type === 1) {
           //   item.action_type_text = '打开APP'
