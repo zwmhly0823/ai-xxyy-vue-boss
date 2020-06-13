@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-06-06 14:18:35
  * @LastEditors: panjian
- * @LastEditTime: 2020-06-13 22:00:54
+ * @LastEditTime: 2020-06-13 22:11:00
 -->
 <template>
   <div class="app-main height">
@@ -247,13 +247,13 @@ export default {
           }
 
           if (item.weixin_nick_name) {
-            if (!item.weixinUser) {
+            if (item.weixinUser) {
+              item.weixin_nick_name = item.weixinUser.nickname
+              item.weixin_avatar = item.weixinUser.avatar
+            } else {
               item.weixin_nick_name = '-'
               item.weixin_avatar =
                 'https://msb-ai.meixiu.mobi/ai-pm/static/touxiang.png'
-            } else {
-              item.weixin_nick_name = item.weixinUser.nickname
-              item.weixin_avatar = item.weixinUser.avatar
             }
           }
           // if (item.action_type === 1) {
