@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-06-06 14:18:35
  * @LastEditors: panjian
- * @LastEditTime: 2020-06-13 19:29:58
+ * @LastEditTime: 2020-06-13 20:26:26
 -->
 <template>
   <div class="app-main height">
@@ -27,12 +27,12 @@
                 <img
                   v-if="scope.row.head"
                   class="user-info-img"
-                  :src="`${scope.row.head}?x-oss-process=image/resize,l_100`"
+                  :src="`${scope.row.head}`"
                 />
                 <img
                   v-else
                   class="user-info-img"
-                  src="https://msb-ai.meixiu.mobi/ai-pm/static/touxiang.png?x-oss-process=image/resize,l_100"
+                  src="https://msb-ai.meixiu.mobi/ai-pm/static/touxiang.png"
                 />
                 <img
                   class="user-info-img-sex"
@@ -250,7 +250,7 @@ export default {
             if (!item.weixinUser) {
               item.weixin_nick_name = '-'
               item.weixin_avatar =
-                'https://msb-ai.meixiu.mobi/ai-pm/static/touxiang.png?x-oss-process=image/resize,l_100'
+                'https://msb-ai.meixiu.mobi/ai-pm/static/touxiang.png'
             } else {
               item.weixin_nick_name = item.weixinUser.nickname
               item.weixin_avatar = item.weixinUser.avatar
