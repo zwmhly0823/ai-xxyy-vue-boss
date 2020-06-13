@@ -22,7 +22,9 @@
     </div>
     <div>
       <p>
-        {{ user.user_num || user.usernum }}：{{ user.username || '-' }} -
+        {{ user.user_num ? `${user.user_num}：` : ''
+        }}{{ user.username || '-' }}
+        -
         {{ user.mobile || '' }}
       </p>
       <p>{{ birthday }} · {{ basePainting || '' }}</p>
