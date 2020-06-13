@@ -317,8 +317,8 @@
 // import imges from '../../../../src/assets/images/FinishClassHead.png'
 import couponComponent from './assetComponents/couponComponent'
 import coinComponent from './assetComponents/coinComponent'
-import ivrCon from './ivrComponents/ivrCon'
 import ExpressDetail from '../../../trading/views/components/expressDetail'
+import ivrCon from './ivrComponents/ivrCon'
 export default {
   props: {
     tabData: String,
@@ -331,8 +331,8 @@ export default {
   components: {
     couponComponent,
     coinComponent,
-    ivrCon,
-    ExpressDetail
+    ExpressDetail,
+    ivrCon
   },
   data() {
     return {
