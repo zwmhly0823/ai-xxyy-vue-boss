@@ -498,7 +498,8 @@ export default {
       assetNumData: {},
       assetCur: 'assetCoupon', // 用户资产选的是优惠券还是小熊币，默认是优惠券
       defaultHead: 'https://msb-ai.meixiu.mobi/ai-pm/static/touxiang.png',
-      wholeData: {}
+      wholeData: {},
+      linkToCoin: false
     }
   },
   created() {
@@ -714,8 +715,8 @@ export default {
       this.$http.User.getUserAssetsCoupon(this.studentId, this.currentPage)
         .then((res) => {
           // console.log(res)
-          this.totalPages = +res.data.CouponUserPage.totalPages
-          this.totalElements = +res.data.CouponUserPage.totalElements
+          // this.totalPages = +res.data.CouponUserPage.totalPages
+          // this.totalElements = +res.data.CouponUserPage.totalElements
           this.assetNumData.couponUserCollect = this.stuInfor.couponUserCollect
           this.wholeData = res.data
 
@@ -724,6 +725,8 @@ export default {
             .totalPages
           this.assetPageInfo.coupon.totalElements = +res.data.CouponUserPage
             .totalElements
+
+          this.changePagenation('assetCoupon')
           // 再获取小熊币
           if (!next) {
             this.reqGetUserCoin()
@@ -744,6 +747,9 @@ export default {
           this.assetPageInfo.coin.totalPages = +res.data.AccountPage.totalPages
           this.assetPageInfo.coin.totalElements = +res.data.AccountPage
             .totalElements
+          if (this.linkToCoin) {
+            this.changePagenation('assetBearCoin')
+          }
         })
         .catch(() => {
           this.$message.error('获取用户资产失败')
@@ -846,6 +852,21 @@ export default {
       this.reqGetUserAssets(true)
     },
     jumpToAsset(type) {
+      if (
+        type === 1 &&
+        this.tabData === 'userAsset' &&
+        this.assetCur === 'assetCoupon'
+      ) {
+        return
+      }
+      if (
+        type === 2 &&
+        this.tabData === 'userAsset' &&
+        this.assetCur === 'assetBearCoin'
+      ) {
+        return
+      }
+      this.linkToCoin = false
       this.tabData = 'userAsset'
       this.currentPage = 1
       this.tagsPriorityLevel()
@@ -854,8 +875,8 @@ export default {
         this.$refs.detailsList.jumpToCoin('assetCoupon')
       } else if (type === 2) {
         this.$refs.detailsList.jumpToCoin('assetBearCoin')
+        this.linkToCoin = true
       }
-      this.tabBtn()
     },
     ivrBubbleData(data) {
       this.reqNotifyPage(data)
