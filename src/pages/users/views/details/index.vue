@@ -62,15 +62,15 @@
                 <img
                   src="../../../../../src/assets/images/coupons.png"
                 />优惠券:
-                <span @click="jumpToAsset" class="jump-class">
-                  {{ stuInfor.coupon && stuInfor.coupon.length }}
-                </span>
+                <span @click="jumpToAsset(1)" class="jump-class">{{
+                  stuInfor.coupon && stuInfor.coupon.length
+                }}</span>
               </div>
               <div class="gold-conins">
                 <img
                   src="../../../../../src/assets/images/gold-conins.png"
                 />小熊币:
-                <span @click="jumpToAsset" class="jump-class">
+                <span @click="jumpToAsset(2)" class="jump-class">
                   {{
                     stuInfor.account &&
                       stuInfor.account[0] &&
@@ -84,27 +84,34 @@
             <template v-if="stuInfor.teams && stuInfor.teams.length > 0">
               <!-- 开课状态 -->
               <!-- 逻辑：当前班级状态 0: 待开课 1:开课中 2:已结课-->
-              <el-tag
-                :disable-transitions="true"
-                type="info"
-                v-if="stuInfor.teams[courseIndex].team_state === '0'"
-              >
-                待开课
-              </el-tag>
-              <el-tag
-                :disable-transitions="true"
-                type="success"
-                v-if="stuInfor.teams[courseIndex].team_state === '1'"
-              >
-                开课中
-              </el-tag>
-              <el-tag
-                :disable-transitions="true"
-                type="info"
-                v-if="stuInfor.teams[courseIndex].team_state === '2'"
-              >
-                已结课
-              </el-tag>
+              <template v-if="stuInfor.teams[courseIndex].isRefund === 1">
+                <el-tag :disable-transitions="true" type="danger">
+                  已退费
+                </el-tag>
+              </template>
+              <template v-else>
+                <el-tag
+                  :disable-transitions="true"
+                  type="info"
+                  v-if="stuInfor.teams[courseIndex].team_state === '0'"
+                >
+                  待开课
+                </el-tag>
+                <el-tag
+                  :disable-transitions="true"
+                  type="success"
+                  v-if="stuInfor.teams[courseIndex].team_state === '1'"
+                >
+                  开课中
+                </el-tag>
+                <el-tag
+                  :disable-transitions="true"
+                  type="info"
+                  v-if="stuInfor.teams[courseIndex].team_state === '2'"
+                >
+                  已结课
+                </el-tag>
+              </template>
               <!-- 课程进度 -->
               <el-tag
                 :disable-transitions="true"
@@ -416,15 +423,14 @@
       <!-- tab列表 -->
       <div class="tab-content">
         <details-list
+          ref="detailsList"
           :tabData="tabData"
           :tabList="tabList"
-          :tabTwoList="tabTwoList"
-          :couponDone="assetCouponDone"
-          :coinDone="assetCoinDone"
           :userId="stuInfor.id"
           :assetNumData="assetNumData"
           :wholeData="wholeData"
           @ivrBubbleData="ivrBubbleData"
+          :wholeSecondData="wholeSecondData"
           @changePagenation="changePagenation"
           @couponSendSucc="couponSendSucc"
         />
@@ -462,7 +468,7 @@ export default {
       // 学习记录tab
       tabData: 'learningRecord',
       tabList: [],
-      tabTwoList: [],
+      wholeSecondData: {},
       // 学习记录>课程tab
       courseData: '',
       // loading
@@ -472,8 +478,6 @@ export default {
       // 课程tab下标
       courseIndex: 0,
       lessonType: null,
-      assetCouponDone: false,
-      assetCoinDone: false,
       assetPageInfo: {
         coupon: {
           currentPage: 0,
@@ -500,7 +504,7 @@ export default {
     // 学员信息接口
     reqUser() {
       this.$http.User.getUser(this.studentId).then((res) => {
-        // console.log('学员基本信息', res.data.User)
+        console.log('学员基本信息', res.data.User)
         this.sendId =
           res.data.User && res.data.User.send_id ? res.data.User.send_id : '0'
         // 年龄格式化
@@ -531,6 +535,8 @@ export default {
         this.loading = false
         // init lessonType
         this.lessonType = this.stuInfor.teams[0].team_type - 0 > 0 ? 1 : 0
+        // 判断是不是已退费
+        this.checkBack()
         // 在不能自己选系统课体验课的页面，用户在有多个系统课的情况下，右上角的tag页签展示优先级开课中>待开课>已开课>已退费
         // 目前学习记录和作品集里能自己切换班级固排除
         if (
@@ -543,7 +549,6 @@ export default {
         } else {
           this.courseIndex = 0
         }
-
         if (this.tabData === 'learningRecord') {
           // 学习记录接口
           this.reqSendCourseLogPage(
@@ -563,6 +568,28 @@ export default {
           this.reqNotifyPage()
         }
       })
+    },
+    // 已退费模块
+    checkBack() {
+      // 把体验课和系统课中的id和状态都抽出来，isrefund=1是退费的
+      const classObj = new Map()
+      // console.log(this.stuInfor)
+      if (this.stuInfor.trialCourse.team_id) {
+        classObj.set(
+          +this.stuInfor.trialCourse.team_id,
+          this.stuInfor.trialCourse.orderInfo.isrefund
+        )
+      }
+      if (this.stuInfor.systemCourse.length) {
+        this.stuInfor.systemCourse.forEach((sItem) => {
+          classObj.set(+sItem.team_id, sItem.orderInfo.isrefund)
+        })
+      }
+      if (classObj.size !== 0) {
+        this.stuInfor.teams.forEach((tItem) => {
+          tItem.isRefund = classObj.get(+tItem.id)
+        })
+      }
     },
     tagsPriorityLevel() {
       const sortArr = []
@@ -681,13 +708,10 @@ export default {
       this.$http.User.getUserAssetsCoupon(this.studentId, this.currentPage)
         .then((res) => {
           // console.log(res)
-          this.tabList = []
-          const _data = res.data.CouponUserPage.content
           this.totalPages = +res.data.CouponUserPage.totalPages
           this.totalElements = +res.data.CouponUserPage.totalElements
           this.assetNumData.couponUserCollect = this.stuInfor.couponUserCollect
-          this.tabList = _data
-          this.assetCouponDone = true
+          this.wholeData = res.data
 
           this.assetPageInfo.coupon.currentPage = this.currentPage
           this.assetPageInfo.coupon.totalPages = +res.data.CouponUserPage
@@ -707,9 +731,9 @@ export default {
       this.$http.User.getUserAssetsCoin(this.studentId, this.currentPage)
         .then((res) => {
           // console.log(res)
-          this.tabTwoList = res.data.AccountPage.content
+          this.wholeSecondData = res.data
           this.assetNumData.accountUserCollect = this.stuInfor.accountUserCollect
-          this.assetCoinDone = true
+
           this.assetPageInfo.coin.currentPage = this.currentPage
           this.assetPageInfo.coin.totalPages = +res.data.AccountPage.totalPages
           this.assetPageInfo.coin.totalElements = +res.data.AccountPage
@@ -759,10 +783,8 @@ export default {
         this.reqgetOrderPage()
       } else if (this.tabData === 'userAsset') {
         if (this.assetCur === 'assetCoupon') {
-          this.assetCouponDone = false
           this.reqGetUserAssets(true)
         } else if (this.assetCur === 'assetBearCoin') {
-          this.assetCoinDone = false
           this.reqGetUserCoin()
         }
       } else if (this.tabData === 'notifyRecord') {
@@ -779,15 +801,11 @@ export default {
     },
     tabBtn(tab, event) {
       this.currentPage = 1
-      // console.log(tab, event, '学习记录')
-      this.assetCouponDone = false
-      this.assetCoinDone = false
       this.reqUser()
     },
     // 学习记录课程
     courseBtn(tab, event) {
       this.courseIndex = tab.index
-      // console.log('team_type', this.stuInfor.teams[this.courseIndex].team_type)
       this.lessonType =
         this.stuInfor.teams[this.courseIndex].team_type > 0 ? 1 : 0
       if (this.tabData === 'learningRecord') {
@@ -816,12 +834,18 @@ export default {
       }
     },
     couponSendSucc() {
-      this.assetCouponDone = false
       this.reqGetUserAssets(true)
     },
-    jumpToAsset() {
+    jumpToAsset(type) {
       this.tabData = 'userAsset'
-      this.tabBtn()
+      this.currentPage = 1
+      this.tagsPriorityLevel()
+      this.reqGetUserAssets()
+      if (type === 1) {
+        this.$refs.detailsList.jumpToCoin('assetCoupon')
+      } else if (type === 2) {
+        this.$refs.detailsList.jumpToCoin('assetBearCoin')
+      }
     },
     ivrBubbleData(data) {
       this.reqNotifyPage(data)
@@ -946,8 +970,10 @@ export default {
             margin-right: 5px;
           }
           .jump-class {
+            margin-left: 10px;
             color: #409eff;
             cursor: pointer;
+            text-decoration: underline;
           }
         }
         .gold-conins {
@@ -959,8 +985,10 @@ export default {
             margin-right: 5px;
           }
           .jump-class {
+            margin-left: 10px;
             color: #409eff;
             cursor: pointer;
+            text-decoration: underline;
           }
         }
       }

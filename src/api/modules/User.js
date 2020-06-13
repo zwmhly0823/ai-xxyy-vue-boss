@@ -284,11 +284,17 @@ export default {
             team_id
             added_group
             added_wechat
+            orderInfo {
+              isrefund
+            }
           }
           systemCourse{
             team_id
             added_group
             added_wechat
+            orderInfo {
+              isrefund
+            }
           }
           teams{
              id

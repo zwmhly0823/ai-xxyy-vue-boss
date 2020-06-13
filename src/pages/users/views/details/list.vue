@@ -230,8 +230,11 @@
     <div class="course-sty" v-if="tabData === 'userAsset'">
       <el-tabs v-model="assetCurPane" @tab-click="tabAsset">
         <el-tab-pane label="优惠券" name="assetCoupon">
-          <template v-if="couponDone">
+          <template
+            v-if="wholeData.CouponUserPage && wholeData.CouponUserPage.content"
+          >
             <coupon-component
+              v-if="couponReload"
               :assetNumData="assetNumData"
               :propData="studyTableData"
               :userId="userId"
@@ -246,10 +249,15 @@
           </template>
         </el-tab-pane>
         <el-tab-pane label="小熊币" name="assetBearCoin">
-          <template v-if="coinDone">
+          <template
+            v-if="
+              wholeSecondData.AccountPage && wholeSecondData.AccountPage.content
+            "
+          >
             <coin-component
+              v-if="coinReload"
               :assetNumData="assetNumData"
-              :propData="tabTwoList"
+              :propData="studyTableData"
             ></coin-component>
           </template>
           <template v-else>
@@ -305,12 +313,10 @@ export default {
   props: {
     tabData: String,
     tabList: Array,
-    tabTwoList: Array,
-    couponDone: Boolean,
-    coinDone: Boolean,
     userId: String,
     assetNumData: Object,
-    wholeData: Object
+    wholeData: Object,
+    wholeSecondData: Object
   },
   components: {
     couponComponent,
@@ -332,8 +338,8 @@ export default {
       currentVideo: '',
       videoDialog: false,
       assetCurPane: '',
-      preCouponDone: false,
-      preCoinDone: false
+      couponReload: true,
+      coinReload: true
     }
   },
   created() {
@@ -345,11 +351,19 @@ export default {
       this.assetCurPane = 'assetCoupon'
       this.studyTableData = val
     },
-    couponDone(val) {
-      this.preCouponDone = val
+    'wholeData.CouponUserPage.content'(val) {
+      this.studyTableData = val
+      this.couponReload = false
+      this.$nextTick(() => {
+        this.couponReload = true
+      })
     },
-    coinDone(val) {
-      this.preCoinDone = val
+    'wholeSecondData.AccountPage.content'(val) {
+      this.studyTableData = val
+      this.coinReload = false
+      this.$nextTick(() => {
+        this.coinReload = true
+      })
     }
   },
   methods: {
@@ -405,6 +419,9 @@ export default {
     },
     ivrBubbleData(data) {
       this.$emit('ivrBubbleData', data)
+    },
+    jumpToCoin(data) {
+      this.assetCurPane = data
     }
   }
 }
@@ -435,6 +452,7 @@ export default {
 .comment-time {
   // display: flex;
   // align-items: center;
+
   .img-play {
     font-size: 24px;
     float: left;
@@ -450,7 +468,7 @@ export default {
     }
   }
   .listening-status {
-    padding: 0 0 0 35px;
+    padding: 0 0 0 20px;
   }
 }
 .enlarge-box {
