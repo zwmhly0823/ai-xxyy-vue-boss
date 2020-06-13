@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-06-06 14:18:35
  * @LastEditors: panjian
- * @LastEditTime: 2020-06-13 22:27:58
+ * @LastEditTime: 2020-06-13 23:06:18
 -->
 <template>
   <div class="app-main height">
@@ -347,7 +347,7 @@ export default {
     // 是否转换 下拉框
     onConversionValue(data) {
       if (data === 1) {
-        this.valueConversion = `{"lt":2}`
+        this.valueConversion = `{"lte":2}`
       } else if (data === 2) {
         this.valueConversion = `{"gt":2}`
       } else {
