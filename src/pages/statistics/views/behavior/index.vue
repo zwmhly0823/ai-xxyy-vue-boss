@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-06-06 14:18:35
  * @LastEditors: panjian
- * @LastEditTime: 2020-06-13 15:09:10
+ * @LastEditTime: 2020-06-13 19:29:58
 -->
 <template>
   <div class="app-main height">
@@ -22,7 +22,7 @@
       <el-table :data="tableData" style="width: 100%">
         <el-table-column label="用户信息" width="280">
           <template slot-scope="scope">
-            <div class="info-box">
+            <div @click="userHandle(scope.row)" class="info-box">
               <div class="user-info-box">
                 <img
                   v-if="scope.row.head"
@@ -115,8 +115,15 @@
         </el-table-column>
         <el-table-column label="班级名称">
           <template slot-scope="scope">
-            <div>
-              <span>{{ scope.row.team_name || '-' }}</span>
+            <div v-if="scope.row.team_name_type">
+              <span
+                @click="openTeam(scope.row)"
+                style="color: #409eff;cursor: pointer;"
+                >{{ scope.row.team_name }}</span
+              >
+            </div>
+            <div v-else>
+              <span>-</span>
             </div>
           </template>
         </el-table-column>
@@ -146,7 +153,8 @@
 <script>
 import behaviorSearch from '../behavior/components/behaviorSearch'
 import MPagination from '@/components/MPagination/index.vue'
-import { GetAgeByBrithday, timestamp } from '@/utils/index'
+import { openBrowserTab, GetAgeByBrithday, timestamp } from '@/utils/index'
+
 export default {
   components: {
     behaviorSearch,
@@ -173,6 +181,24 @@ export default {
     // })
   },
   methods: {
+    // 跳转到班级
+    openTeam(row) {
+      const teamname = row.team.team_name
+      const teamtype = row.team.team_type
+      const teamid = row.team_id
+      teamid &&
+        openBrowserTab(
+          `/student-team/#/teamDetail/${teamid}/${teamtype}`,
+          `${teamname}`
+        )
+    },
+    // 跳转详情页
+    userHandle(user) {
+      // console.log(user, '点击用户信息')
+      const userId = user.user.id
+      // 新标签打开详情页
+      userId && openBrowserTab(`/users/#/details/${userId}`)
+    },
     getUserBehaviorLogPage() {
       const paramsValue = []
       // 用户搜索
@@ -260,7 +286,9 @@ export default {
           if (!item.team_name) {
             if (item.team) {
               item.team_name = item.team.team_name
+              item.team_name_type = 1
             } else {
+              item.team_name_type = 0
               item.team_name = '-'
             }
           }
@@ -386,7 +414,11 @@ export default {
         }
       }
       .user-info-text-box {
+        cursor: pointer;
         margin-left: 20px;
+        span {
+          color: #409eff;
+        }
       }
     }
     .weixin-box {
