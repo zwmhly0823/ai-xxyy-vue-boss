@@ -535,5 +535,20 @@ export default {
         }
       }`
     })
+  },
+  getNotifyPage(query) {
+    return axios.get(
+      `/api/toss/v1/toss-api/iCode/student/course/task/findIvrCallRecordByWhere?stime=${query.stime}&etime=${query.etime}&cdrStatus=${query.cdrStatus}&sjstime=${query.sjstime}&ejstime=${query.ejstime}&pageNum=${query.pageNum}&pageSize=${query.pageSize}&userId=${query.userId}`
+    )
+  },
+  getSwitchStatus(query) {
+    return axios.get(
+      `/api/u/v1/user/getUserNotifySwitch?userId=${query.userId}`
+    )
+  },
+  changeSwitchStatus(query) {
+    return axios.get(
+      `/api/u/v1/user/updateUserNotifySwitch?userId=${query.userId}&status=${query.status}`
+    )
   }
 }

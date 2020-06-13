@@ -280,6 +280,22 @@
     </div>
     <!--用户资产 End-->
 
+    <template v-if="tabData === 'notifyRecord'">
+      <template v-if="wholeData.payload">
+        <ivr-con
+          :data="wholeData.payload.content"
+          :studentId="wholeData.studentId"
+          @ivrBubbleData="ivrBubbleData"
+        ></ivr-con>
+      </template>
+      <template v-else>
+        <div class="asset-loading">
+          <i class="el-icon-loading"></i>
+          <span class="loading-text">加载中请稍后..</span>
+        </div>
+      </template>
+    </template>
+
     <!-- 作品集视频播放 -->
     <el-dialog
       title
@@ -302,6 +318,7 @@
 import couponComponent from './assetComponents/couponComponent'
 import coinComponent from './assetComponents/coinComponent'
 import ExpressDetail from '../../../trading/views/components/expressDetail'
+import ivrCon from './ivrComponents/ivrCon'
 export default {
   props: {
     tabData: String,
@@ -314,7 +331,8 @@ export default {
   components: {
     couponComponent,
     coinComponent,
-    ExpressDetail
+    ExpressDetail,
+    ivrCon
   },
   data() {
     return {
@@ -419,6 +437,9 @@ export default {
         this.$refs.order_id.drawer = true
         this.order_id = id
       }
+    },
+    ivrBubbleData(data) {
+      this.$emit('ivrBubbleData', data)
     }
   }
 }

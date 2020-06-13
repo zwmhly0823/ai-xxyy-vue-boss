@@ -340,7 +340,8 @@
             label="订单·物流记录"
             name="orderLogistics"
           ></el-tab-pane>
-          <el-tab-pane label="用户资产 " name="userAsset"></el-tab-pane>
+          <el-tab-pane label="用户资产" name="userAsset"></el-tab-pane>
+          <el-tab-pane label="通知事件记录" name="notifyRecord"></el-tab-pane>
         </el-tabs>
       </div>
       <div
@@ -434,6 +435,7 @@
           :assetNumData="assetNumData"
           :wholeData="wholeData"
           :wholeSecondData="wholeSecondData"
+          @ivrBubbleData="ivrBubbleData"
           @changePagenation="changePagenation"
           @couponSendSucc="couponSendSucc"
         />
@@ -568,6 +570,8 @@ export default {
         } else if (this.tabData === 'userAsset') {
           // 用户资产
           this.reqGetUserAssets()
+        } else if (this.tabData === 'notifyRecord') {
+          this.reqNotifyPage()
         }
       })
     },
@@ -745,6 +749,34 @@ export default {
           this.$message.error('获取用户资产失败')
         })
     },
+    reqNotifyPage(data) {
+      const query = {
+        userId: this.studentId,
+        pageSize: 20,
+        pageNum: this.currentPage - 1,
+        sjstime: '',
+        ejstime: '',
+        cdrStatus: '',
+        stime: '',
+        etime: ''
+      }
+      Object.assign(query, data)
+      this.$http.User.getNotifyPage(query)
+        .then((res) => {
+          // console.log(res)
+          if (res.code === 0 && res.status === 'OK') {
+            this.wholeData = res
+            this.wholeData.studentId = this.studentId
+            this.totalPages = +res.payload.totalPages
+            this.totalElements = +res.payload.totalElements
+          } else {
+            this.$message.error('获取用户通知事件记录失败')
+          }
+        })
+        .catch(() => {
+          this.$message.error('获取用户通知事件记录失败')
+        })
+    },
     // 点击分页
     handleSizeChange(page) {
       // console.log(this.page)
@@ -761,6 +793,8 @@ export default {
         } else if (this.assetCur === 'assetBearCoin') {
           this.reqGetUserCoin()
         }
+      } else if (this.tabData === 'notifyRecord') {
+        this.reqNotifyPage()
       }
     },
     // 收起
@@ -773,6 +807,9 @@ export default {
     },
     tabBtn(tab, event) {
       this.currentPage = 1
+      // console.log(tab, event, '学习记录')
+      this.assetCouponDone = false
+      this.assetCoinDone = false
       this.reqUser()
     },
     // 学习记录课程
@@ -818,6 +855,10 @@ export default {
       } else if (type === 2) {
         this.$refs.detailsList.jumpToCoin('assetBearCoin')
       }
+      this.tabBtn()
+    },
+    ivrBubbleData(data) {
+      this.reqNotifyPage(data)
     }
   }
 }
