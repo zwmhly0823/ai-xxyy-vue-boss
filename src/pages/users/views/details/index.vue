@@ -10,7 +10,7 @@
         <el-row class="personal">
           <el-col :span="2">
             <div class="img-box">
-              <img class="head-portrait " :src="stuInfor.head" />
+              <img class="head-portrait " :src="stuInfor.head || defaultHead" />
               <!-- 男：1 女：2 -->
               <i v-show="stuInfor.sex === '2'" class="female el-icon-female " />
               <i v-show="stuInfor.sex === '1'" class="gender el-icon-male" />
@@ -484,7 +484,8 @@ export default {
         }
       },
       assetNumData: {},
-      assetCur: 'assetCoupon' // 用户资产选的是优惠券还是小熊币，默认是优惠券
+      assetCur: 'assetCoupon', // 用户资产选的是优惠券还是小熊币，默认是优惠券
+      defaultHead: 'https://msb-ai.meixiu.mobi/ai-pm/static/touxiang.png'
     }
   },
   created() {
