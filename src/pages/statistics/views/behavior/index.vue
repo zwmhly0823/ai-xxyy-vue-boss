@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-06-06 14:18:35
  * @LastEditors: panjian
- * @LastEditTime: 2020-06-13 20:23:30
+ * @LastEditTime: 2020-06-13 23:06:18
 -->
 <template>
   <div class="app-main height">
@@ -246,14 +246,23 @@ export default {
             item.birthday = '-'
           }
 
-          if (!item.weixin_nick_name || item.weixin_nick_name === '0') {
-            if (!item.weixinUser) {
+          if (item.weixin_nick_name) {
+            if (item.weixinUser) {
+              item.weixin_nick_name = item.weixinUser.nickname
+              item.weixin_avatar = item.weixinUser.avatar
+            } else {
               item.weixin_nick_name = '-'
               item.weixin_avatar =
                 'https://msb-ai.meixiu.mobi/ai-pm/static/touxiang.png'
-            } else {
+            }
+          } else {
+            if (item.weixinUser) {
               item.weixin_nick_name = item.weixinUser.nickname
               item.weixin_avatar = item.weixinUser.avatar
+            } else {
+              item.weixin_nick_name = '-'
+              item.weixin_avatar =
+                'https://msb-ai.meixiu.mobi/ai-pm/static/touxiang.png'
             }
           }
           // if (item.action_type === 1) {
@@ -338,7 +347,7 @@ export default {
     // 是否转换 下拉框
     onConversionValue(data) {
       if (data === 1) {
-        this.valueConversion = `{"lt":2}`
+        this.valueConversion = `{"lte":2}`
       } else if (data === 2) {
         this.valueConversion = `{"gt":2}`
       } else {
