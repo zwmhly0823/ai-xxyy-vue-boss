@@ -3,12 +3,12 @@
  * @version:
  * @Author: Shentong
  * @Date: 2020-03-17 11:50:18
- * @LastEditors: panjian
- * @LastEditTime: 2020-06-03 15:08:16
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-06-13 23:06:33
  */
 import axios from './axios'
 import { getToken } from '@/utils/auth'
-// import { baseUrl } from '@/utils/index'
+import { baseUrl } from '@/utils/index'
 // 转json
 
 axios.defaults.withCredentials = true
@@ -25,8 +25,8 @@ export default {
     const needToken = location.href.indexOf('login') === -1
 
     if (needToken && !token) {
-      // location.href = `${baseUrl}login/#/`
-      location.href = `/login/#/`
+      location.href = `${baseUrl}/login/#/`
+      // location.href = `/login/#/`
       return 0
     }
     return 1
