@@ -3,8 +3,8 @@
  * @version:
  * @Author: Shentong
  * @Date: 2020-03-17 11:50:18
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-05-26 19:45:24
+ * @LastEditors: panjian
+ * @LastEditTime: 2020-06-03 15:08:16
  */
 import axios from './axios'
 import { getToken } from '@/utils/auth'
@@ -99,8 +99,6 @@ export default {
             ...extendObj
           })
           .then((res) => {
-            console.log(res)
-
             if (res.status === 500) {
               reject(res)
               return

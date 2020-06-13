@@ -1,7 +1,7 @@
 /*
  * @Date: 2020-03-13 15:20:21
- * @LastEditors: liukun
- * @LastEditTime: 2020-06-10 14:37:03
+ * @LastEditors: panjian
+ * @LastEditTime: 2020-06-12 11:53:11
  * @FilePath: /ai-app-vue-toss/src/pages/studentTeam/router/index.js
  */
 import Vue from 'vue'
@@ -83,6 +83,15 @@ const routes = [
     },
     component: () =>
       import('../views/reviewManagement/components/verificationCode.vue')
+  },
+  {
+    path: '/labelManage',
+    name: 'labelManage',
+    meta: {
+      title: '标签管理',
+      keepAlive: false
+    },
+    component: () => import('../views/labelManage/index.vue')
   }
 ]
 

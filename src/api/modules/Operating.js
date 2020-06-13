@@ -3,8 +3,8 @@
  * @version:
  * @Author: Shentong
  * @Date: 2020-03-16 19:46:39
- * @LastEditors: liukun
- * @LastEditTime: 2020-06-10 16:15:36
+ * @LastEditors: panjian
+ * @LastEditTime: 2020-06-12 11:53:58
  */
 import axios from '../axiosConfig'
 // import { getToken } from '@/utils/auth'
@@ -224,6 +224,13 @@ export default {
       params: {}
     })
     // return axios.post(`/api/b/v1/import/importCompletedOrder`, file)
+  },
+  /**
+   * 系统标签 列表查询
+   * @param {*} param0
+   */
+  findLabelByPage(params) {
+    return axios.post('/api/toss/v1/toss-api/label/findLabelByPage', params)
   },
   // 查询验证码
   getVerification(parmas) {
