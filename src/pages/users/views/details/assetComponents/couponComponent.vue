@@ -12,6 +12,7 @@
       <el-button
         class="send-coupon-button"
         type="primary"
+        size="small"
         @click="presentCoupon"
         >发券</el-button
       >
@@ -54,7 +55,7 @@
                 (!scope.row.order.ctime && !scope.row.order.packages_name)
             "
           >
-            \
+            -
           </template>
           <template v-else>
             {{ scope.row.order.packages_name }}
@@ -176,7 +177,7 @@ export default {
           pItem.order.ctime = formatData(pItem.order.ctime, 's')
         } else {
           pItem.order = {
-            ctime: '\\'
+            ctime: '-'
           }
         }
       })
@@ -188,6 +189,7 @@ export default {
       })
     },
     presentCoupon() {
+      // console.log(this.userId)
       this.selectUserId = [this.userId]
       this.$refs.couponPopover.issueCoupons = true
       this.$refs.couponPopover.couponsTime = ''

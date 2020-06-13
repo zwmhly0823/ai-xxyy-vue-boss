@@ -207,12 +207,20 @@
         <template slot-scope="scope">
           <div>
             <div>
-              共<span class="logistics">{{
-                scope.row.express && scope.row.express.express_total
-                  ? scope.row.express.express_total
-                  : '0'
-              }}</span
-              >条物流记录
+              共
+              <span
+                v-if="scope.row.express && scope.row.express.express_total"
+                class="logistics"
+                @click="
+                  showExpressDetail(
+                    scope.row.id,
+                    scope.row.express.express_total
+                  )
+                "
+                >{{ scope.row.express.express_total }}</span
+              >
+              <span v-else>0</span>
+              条物流记录
             </div>
             <div>
               最后一次已{{
@@ -225,13 +233,17 @@
         </template>
       </el-table-column>
     </el-table>
+    <express-detail :order_id="order_id" ref="order_id" />
 
     <!--用户资产 Start-->
     <div class="course-sty" v-if="tabData === 'userAsset'">
       <el-tabs v-model="assetCurPane" @tab-click="tabAsset">
         <el-tab-pane label="优惠券" name="assetCoupon">
-          <template v-if="couponDone">
+          <template
+            v-if="wholeData.CouponUserPage && wholeData.CouponUserPage.content"
+          >
             <coupon-component
+              v-if="couponReload"
               :assetNumData="assetNumData"
               :propData="studyTableData"
               :userId="userId"
@@ -246,10 +258,15 @@
           </template>
         </el-tab-pane>
         <el-tab-pane label="小熊币" name="assetBearCoin">
-          <template v-if="coinDone">
+          <template
+            v-if="
+              wholeSecondData.AccountPage && wholeSecondData.AccountPage.content
+            "
+          >
             <coin-component
+              v-if="coinReload"
               :assetNumData="assetNumData"
-              :propData="tabTwoList"
+              :propData="studyTableData"
             ></coin-component>
           </template>
           <template v-else>
@@ -284,19 +301,20 @@
 // import imges from '../../../../src/assets/images/FinishClassHead.png'
 import couponComponent from './assetComponents/couponComponent'
 import coinComponent from './assetComponents/coinComponent'
+import ExpressDetail from '../../../trading/views/components/expressDetail'
 export default {
   props: {
     tabData: String,
     tabList: Array,
-    tabTwoList: Array,
-    couponDone: Boolean,
-    coinDone: Boolean,
     userId: String,
-    assetNumData: Object
+    assetNumData: Object,
+    wholeData: Object,
+    wholeSecondData: Object
   },
   components: {
     couponComponent,
-    coinComponent
+    coinComponent,
+    ExpressDetail
   },
   data() {
     return {
@@ -313,8 +331,9 @@ export default {
       currentVideo: '',
       videoDialog: false,
       assetCurPane: '',
-      preCouponDone: false,
-      preCoinDone: false
+      couponReload: true,
+      coinReload: true,
+      order_id: ''
     }
   },
   created() {
@@ -326,11 +345,19 @@ export default {
       this.assetCurPane = 'assetCoupon'
       this.studyTableData = val
     },
-    couponDone(val) {
-      this.preCouponDone = val
+    'wholeData.CouponUserPage.content'(val) {
+      this.studyTableData = val
+      this.couponReload = false
+      this.$nextTick(() => {
+        this.couponReload = true
+      })
     },
-    coinDone(val) {
-      this.preCoinDone = val
+    'wholeSecondData.AccountPage.content'(val) {
+      this.studyTableData = val
+      this.coinReload = false
+      this.$nextTick(() => {
+        this.coinReload = true
+      })
     }
   },
   methods: {
@@ -383,6 +410,15 @@ export default {
     },
     couponSendSucc() {
       this.$emit('couponSendSucc')
+    },
+    jumpToCoin(data) {
+      this.assetCurPane = data
+    },
+    showExpressDetail(id, total) {
+      if (total > 0) {
+        this.$refs.order_id.drawer = true
+        this.order_id = id
+      }
     }
   }
 }
@@ -413,6 +449,7 @@ export default {
 .comment-time {
   // display: flex;
   // align-items: center;
+
   .img-play {
     font-size: 24px;
     float: left;
@@ -428,7 +465,7 @@ export default {
     }
   }
   .listening-status {
-    padding: 0 0 0 35px;
+    padding: 0 0 0 20px;
   }
 }
 .enlarge-box {
@@ -439,6 +476,8 @@ export default {
 }
 .logistics {
   color: #5ea0f5;
+  text-decoration: underline;
+  cursor: pointer;
 }
 </style>
 <style lang="scss">

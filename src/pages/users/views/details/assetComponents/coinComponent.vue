@@ -21,11 +21,9 @@
             "
             class="red-text-color"
           >
-            - ¥:{{ scope.row.amount }}</span
+            - {{ scope.row.amount }}</span
           >
-          <span v-else class="green-text-color">
-            + ¥:{{ scope.row.amount }}</span
-          >
+          <span v-else class="green-text-color"> + {{ scope.row.amount }}</span>
         </template>
       </el-table-column>
       <el-table-column prop="update_date" label="操作时间"></el-table-column>
