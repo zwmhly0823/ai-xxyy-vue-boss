@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-07 13:52:26
  * @LastEditors: panjian
- * @LastEditTime: 2020-06-11 14:42:57
+ * @LastEditTime: 2020-06-13 15:06:32
  */
 import axios from '../axiosConfig'
 
@@ -447,6 +447,7 @@ export default {
             action_type_text
             weixinUser{
               nickname
+              avatar
             }
             teacher {
               realname
