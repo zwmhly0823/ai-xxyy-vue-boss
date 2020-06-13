@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-05-25 15:34:04
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-06-02 16:07:50
+ * @LastEditTime: 2020-06-12 15:23:46
 -->
 <template>
   <div class="user-list">
@@ -24,7 +24,10 @@
       <!-- <el-table-column type="selection" width="55"> </el-table-column> -->
       <el-table-column label="用户信息" min-width="270" fixed>
         <template slot-scope="scope">
-          <base-user-info :user="scope.row" @handle-click="userHandle" />
+          <base-user-info
+            :user="scope.row"
+            @handle-click="userHandle(scope.row)"
+          />
         </template>
       </el-table-column>
       <el-table-column label="系统课类型" min-width="180">
@@ -180,7 +183,7 @@ import ItemStatus from '../../components/ItemStatus.vue'
 import HandleItemStatus from '../../components/HandleItemStatus.vue'
 import ModifyAddress from '../../components/ModifyAddress.vue'
 import enums from '../../components/searchData'
-import { formatData, isToss, openNewTab } from '@/utils/index'
+import { formatData, isToss, openBrowserTab } from '@/utils/index'
 import { FOLLOW_EXPRESS_STATUS, ISREFUND } from '@/utils/enums'
 export default {
   name: 'systemUsers',
@@ -319,8 +322,15 @@ export default {
     },
 
     // 点击用户信息回调事件
-    userHandle(uid) {
-      console.log(uid, '点击用户信息')
+    userHandle(user) {
+      // console.log(user, '点击用户信息')
+      const { username, studentid, mobile } = user
+      // 新标签打开详情页
+      studentid &&
+        openBrowserTab(
+          `/users/#/details/${studentid}`,
+          `学员：${username || mobile}`
+        )
     },
 
     expressStatus(status) {
@@ -361,7 +371,7 @@ export default {
     openTeam(row) {
       const { teamid, teamname, teamtype = '1' } = row
       teamid &&
-        openNewTab(
+        openBrowserTab(
           `/student-team/#/teamDetail/${teamid}/${teamtype}`,
           `${teamname}`
         )

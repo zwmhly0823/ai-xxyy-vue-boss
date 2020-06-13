@@ -103,7 +103,7 @@
           </div>
         </div>
         <span slot="footer" class="dialog-footer">
-          <el-button @click="couponSuccessful = false">取 消</el-button>
+          <el-button @click="couponsucBtn">取 消</el-button>
           <el-button type="primary" @click="couponsucBtn">
             确 定
           </el-button>
@@ -219,6 +219,7 @@ export default {
     // 优惠券发放成功弹窗
     couponsucBtn() {
       this.couponSuccessful = false
+      this.$emit('couponSendSucc')
     }
   }
 }

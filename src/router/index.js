@@ -35,8 +35,8 @@ const routes = [
     path: '/student-team',
     name: 'student-team',
     meta: {
-      title: '班级中心',
-      icon: 'el-icon-s-custom',
+      title: '班级管理',
+      icon: 'iconbanjiguanli',
       module: 'student-team'
     },
     children: [
@@ -44,16 +44,18 @@ const routes = [
         path: '/trialTeam',
         name: 'trialTeam',
         meta: {
-          title: '体验课班级',
-          module: 'student-team'
+          title: '体验课',
+          module: 'student-team',
+          show: true
         }
       },
       {
         path: '/systemTeam',
         name: 'systemTeam',
         meta: {
-          title: '系统课班级',
-          module: 'student-team'
+          title: '系统课',
+          module: 'student-team',
+          show: true
         }
       }
     ]
@@ -64,8 +66,8 @@ const routes = [
     name: 'users',
     hidden: false,
     meta: {
-      title: '学员中心',
-      icon: 'el-icon-medal-1',
+      title: '学员管理',
+      icon: 'iconxueyuanguanli',
       module: 'users'
     },
     children: [
@@ -73,16 +75,18 @@ const routes = [
         path: '/trial',
         name: 'trial',
         meta: {
-          title: '体验课学员',
-          module: 'users'
+          title: '体验课',
+          module: 'users',
+          show: true
         }
       },
       {
         path: '/system',
         name: 'system',
         meta: {
-          title: '系统课学员',
-          module: 'users'
+          title: '系统课',
+          module: 'users',
+          show: true
         }
       }
     ]
@@ -93,8 +97,8 @@ const routes = [
     name: 'trading',
     // hidden: true,
     meta: {
-      title: '交易中心',
-      icon: 'el-icon-s-data',
+      title: '交易管理',
+      icon: 'iconjianyiguanli',
       module: 'trading'
     },
     children: [
@@ -102,16 +106,18 @@ const routes = [
         path: '/order',
         name: 'order',
         meta: {
-          title: '订单',
-          module: 'trading'
+          title: '订单管理',
+          module: 'trading',
+          show: true
         }
       },
       {
         path: '/financeRefound',
         name: 'financeRefound',
         meta: {
-          title: '财务退款',
-          module: 'trading'
+          title: '订单退款',
+          module: 'trading',
+          show: true
         }
       }
     ]
@@ -122,8 +128,8 @@ const routes = [
     name: 'express',
     // hidden: true,
     meta: {
-      title: '物流中心',
-      icon: 'el-icon-s-cooperation',
+      title: '物流管理',
+      icon: 'iconwuliuguanli',
       module: 'express'
     },
     children: [
@@ -131,24 +137,27 @@ const routes = [
         path: '/experienceClass',
         name: 'experienceClass',
         meta: {
-          title: '体验课物流',
-          module: 'express'
+          title: '体验课',
+          module: 'express',
+          show: false
         }
       },
       {
         path: '/systemClass',
         name: 'systemClass',
         meta: {
-          title: '系统课物流',
-          module: 'express'
+          title: '系统课',
+          module: 'express',
+          show: false
         }
       },
       {
         path: '/activityClass',
         name: 'activityClass',
         meta: {
-          title: '活动物流',
-          module: 'express'
+          title: '活动商品',
+          module: 'express',
+          show: false
         }
       }
     ]
@@ -174,51 +183,15 @@ const routes = [
       }
     ]
   },
-  // 老师模块
-  {
-    path: '/teacher',
-    name: 'teacher',
-    // hidden: true,
-    meta: {
-      title: '社群销售',
-      icon: 'el-icon-user',
-      module: 'teacher'
-    },
-    children: [
-      {
-        path: '/teacherManagement',
-        name: 'teacherManagement',
-        meta: {
-          title: '销售管理',
-          module: 'teacher'
-        }
-      },
-      {
-        path: '/weixinManagement',
-        name: 'weixinManagement',
-        meta: {
-          title: '微信管理',
-          module: 'teacher'
-        }
-      },
-      {
-        path: '/workHandover',
-        name: 'workHandover',
-        meta: {
-          title: '工作交接',
-          module: 'teacher'
-        }
-      }
-    ]
-  },
+
   // 运营中心
   {
     path: '/operating',
     name: 'operating',
     // hidden: true,
     meta: {
-      title: '运营中心',
-      icon: 'el-icon-s-platform',
+      title: '运营管理',
+      icon: 'iconyunyingzhongxin',
       module: 'operating'
     },
     children: [
@@ -245,6 +218,22 @@ const routes = [
           title: '点评管理',
           module: 'operating'
         }
+      },
+      {
+        path: '/verificationCode',
+        name: 'verificationCode',
+        meta: {
+          title: '验证码查询',
+          module: 'operating'
+        }
+      },
+      {
+        path: '/labelManage',
+        name: 'labelManage',
+        meta: {
+          title: '标签管理',
+          module: 'operating'
+        }
       }
     ]
   },
@@ -254,31 +243,21 @@ const routes = [
     name: 'approval',
     meta: {
       title: '审批中心',
-      icon: 'el-icon-menu',
+      icon: 'iconshenpizhongxin',
       module: 'approval'
     }
   },
-  // 统计分析
+  // 数据中心
   {
     path: '/statistics',
     name: 'statistics',
     // hidden: true,
     meta: {
-      title: '统计分析',
-      icon: 'el-icon-s-marketing',
+      title: '数据中心',
+      icon: 'icontongjifenxi',
       module: 'statistics'
     },
     children: [
-      // {
-      //   path: '/salesPerformance',
-      //   name: 'salesPerformance',
-      //   meta: {
-      //     title: '销售业绩',
-      //     module: 'statistics',
-      //     style: 'line'
-      //   }
-      // },
-
       {
         path: '/priodPerformance',
         name: 'priodPerformance',
@@ -292,7 +271,7 @@ const routes = [
         path: '/salesPerformance',
         name: 'salesPerformance',
         meta: {
-          title: '销售过程',
+          title: '过程分析',
           module: 'statistics',
           style: 'line'
         }
@@ -306,16 +285,43 @@ const routes = [
           style: 'line'
         }
       }
-
-      // {
-      //   path: '/salesProcess',
-      //   name: 'salesProcess',
-      //   meta: {
-      //     title: '按期汇总',
-      //     module: 'statistics',
-      //     style: 'line'
-      //   }
-      // }
+    ]
+  },
+  // 设置 - 老师模块
+  {
+    path: '/teacher',
+    name: 'teacher',
+    // hidden: true,
+    meta: {
+      title: '设置',
+      icon: 'iconiconset',
+      module: 'teacher'
+    },
+    children: [
+      {
+        path: '/teacherManagement',
+        name: 'teacherManagement',
+        meta: {
+          title: '员工帐号',
+          module: 'teacher'
+        }
+      },
+      {
+        path: '/weixinManagement',
+        name: 'weixinManagement',
+        meta: {
+          title: '员工微信',
+          module: 'teacher'
+        }
+      },
+      {
+        path: '/workHandover',
+        name: 'workHandover',
+        meta: {
+          title: '离职交接',
+          module: 'teacher'
+        }
+      }
     ]
   }
 ]

@@ -4,7 +4,7 @@
  * @Author: Lukun
  * @Date: 2020-04-27 17:47:58
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-06-05 22:49:34
+ * @LastEditTime: 2020-06-06 20:35:43
  -->
 <template>
   <div class="container">
@@ -283,7 +283,7 @@
           }}</el-col>
         </el-row>
         <el-row>
-          <el-col :span="5">剩余支付金额:</el-col>
+          <el-col :span="5">剩余金额:</el-col>
           <el-col :span="18" :offset="1">{{
             drawerApprovalDeatail.residueFee
           }}</el-col>
@@ -343,6 +343,12 @@
           <el-col :span="5">退款原因:</el-col>
           <el-col :span="18" :offset="1">{{
             drawerApprovalDeatail.refundReason
+          }}</el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="5">退款说明:</el-col>
+          <el-col :span="18" :offset="1">{{
+            drawerApprovalDeatail.refundMsg
           }}</el-col>
         </el-row>
         <el-row>
@@ -525,7 +531,7 @@ export default {
         callback(new Error('金额里有杂质!'))
       } else {
         if (Number(value) > Number(this.drawerApprovalDeatail.residueFee)) {
-          callback(new Error('当心！你已超过剩余支付金额!'))
+          callback(new Error('当心！你已超过剩余金额!'))
         } else {
           callback()
         }
@@ -1055,6 +1061,9 @@ export default {
   .drawer-approval-detail {
     padding-top: 50px;
     font-size: 16px;
+    .el-drawer {
+      overflow: auto;
+    }
   }
   // el原类名追加样式
   .approvallk .el-drawer__body {
@@ -1083,7 +1092,7 @@ export default {
   // 操作
   .wait-pending {
     cursor: pointer;
-    color: #409eff;
+    color: #2a75ed;
   }
   .time {
     display: flex;

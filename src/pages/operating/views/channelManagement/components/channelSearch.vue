@@ -160,7 +160,7 @@
           <el-table-column width="150" label="渠道名称">
             <template slot-scope="scope">
               <a
-                style="color: #409eff;"
+                style="color: #2a75ed;"
                 :href="scope.row.channelNameLink"
                 target="_blank"
                 >{{ scope.row.channelName }}</a
@@ -634,12 +634,12 @@ export default {
         color: #4d4d4d;
       }
       span {
-        color: #409eff;
+        color: #2a75ed;
         font-weight: 600;
         font-size: 18px;
       }
       .bg-purple-num {
-        color: #409eff;
+        color: #2a75ed;
         font-weight: 600;
         font-size: 18px;
       }
@@ -812,7 +812,7 @@ export default {
       }
       a {
         margin-left: 10px;
-        color: #409eff;
+        color: #2a75ed;
       }
     }
   }

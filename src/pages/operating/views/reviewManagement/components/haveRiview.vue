@@ -71,7 +71,7 @@
       </el-table-column>
       <el-table-column label="上传日期" align="center" width="180">
         <template slot-scope="scope">
-          <div class="review-type">{{ timestamp(scope.row.utime, 2) }}</div>
+          <div class="review-type">{{ timestamp(scope.row.ctime, 2) }}</div>
         </template>
       </el-table-column>
       <el-table-column label="点评日期" align="center" width="180">

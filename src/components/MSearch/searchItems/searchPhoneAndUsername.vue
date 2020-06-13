@@ -49,7 +49,7 @@ export default {
       type: String,
       default: ''
     },
-    // 1-系统课，0-体验课
+    // 1-系统课，0-体验课 2-全部
     type: {
       type: String,
       default: '0'
@@ -78,11 +78,19 @@ export default {
     getData(value = '') {
       if (!value) return
       this.loading = true
+      // 系统课
       let range = {
         range: { status: { gt: 2 } }
       }
+      // 体验课
       if (this.type === '0') {
         range = { terms: { status: ['1', '2'] } }
+      }
+      // 全部
+      if (this.type === '2') {
+        range = {
+          range: { status: { gt: 0 } }
+        }
       }
       const query = `{"bool":{"must":[${JSON.stringify(
         range

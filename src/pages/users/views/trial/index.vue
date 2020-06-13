@@ -24,7 +24,10 @@
       <!-- <el-table-column type="selection" width="55"> </el-table-column> -->
       <el-table-column label="用户信息" min-width="270" fixed>
         <template slot-scope="scope">
-          <base-user-info :user="scope.row" @handle-click="userHandle" />
+          <base-user-info
+            :user="scope.row"
+            @handle-click="userHandle(scope.row)"
+          />
         </template>
       </el-table-column>
       <el-table-column label="是否转化" min-width="180">
@@ -180,7 +183,7 @@ import ItemStatus from '../../components/ItemStatus.vue'
 import HandleItemStatus from '../../components/HandleItemStatus.vue'
 import ModifyAddress from '../../components/ModifyAddress.vue'
 import enums from '../../components/searchData'
-import { formatData, openNewTab } from '@/utils/index'
+import { formatData, openBrowserTab } from '@/utils/index'
 import { FOLLOW_EXPRESS_STATUS } from '@/utils/enums'
 export default {
   name: 'trialUsers',
@@ -231,7 +234,7 @@ export default {
   created() {
     this.$nextTick(() => {
       const tableHeight =
-        document.body.clientHeight - this.$refs.tableInner.offsetTop - 112 - 30
+        document.body.clientHeight - this.$refs.tableInner.offsetTop - 112
       this.tableHeight = tableHeight + ''
     })
     this.getData()
@@ -320,8 +323,12 @@ export default {
     },
 
     // 点击用户信息回调事件
-    userHandle(uid) {
-      console.log(uid, '点击用户信息')
+    userHandle(user) {
+      // console.log(user, '点击用户信息')
+      const { username, id, mobile } = user
+      // 新标签打开详情页
+      id &&
+        openBrowserTab(`/users/#/details/${id}`, `学员：${username || mobile}`)
     },
 
     expressStatus(status) {
@@ -345,7 +352,7 @@ export default {
         teamName = row.system_team_name
       }
       teamId &&
-        openNewTab(
+        openBrowserTab(
           `/student-team/#/teamDetail/${teamId}/${teamType}`,
           `${teamName}`
         )

@@ -448,6 +448,7 @@ export default {
           join_course_time
           complete_course_state
           complete_course_time
+          student_id
         }
       }
     }`
@@ -492,6 +493,7 @@ export default {
           has_listen_time
           sound_comment
           sound_comment_second
+          student_id
           listenInfoArr {
             task_image
             works_ctime

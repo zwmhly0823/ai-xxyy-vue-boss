@@ -55,7 +55,7 @@
           </p>
         </template>
       </el-table-column>
-      <el-table-column label="订单来源" min-width="100">
+      <el-table-column label="订单来源" min-width="140">
         <template slot-scope="scope">
           <p>
             {{ scope.row.channel ? scope.row.channel.channel_outer_name : '-' }}
@@ -70,9 +70,16 @@
 
       <el-table-column label="体验课班级" min-width="150">
         <template slot-scope="scope">
-          {{
-            trialTeam[scope.row.id] ? trialTeam[scope.row.id].team_name : '-'
-          }}
+          <p
+            :class="{ 'primary-text': trialTeam[scope.row.id] }"
+            @click="
+              openDetail(trialTeam[scope.row.id] && trialTeam[scope.row.id].id)
+            "
+          >
+            {{
+              trialTeam[scope.row.id] ? trialTeam[scope.row.id].team_name : '-'
+            }}
+          </p>
         </template>
       </el-table-column>
       <el-table-column label="社群销售" min-width="150">
@@ -94,6 +101,22 @@
               }}
             </p>
           </div>
+        </template>
+      </el-table-column>
+      <el-table-column label="推荐人信息" min-width="160">
+        <template slot-scope="scope">
+          <p>
+            {{
+              scope.row.first_send_user
+                ? scope.row.first_send_user.username
+                : '-'
+            }}
+          </p>
+          <p>
+            {{
+              scope.row.first_send_user ? scope.row.first_send_user.mobile : '-'
+            }}
+          </p>
         </template>
       </el-table-column>
       <el-table-column label="下单时间·订单号" min-width="180">
@@ -152,7 +175,7 @@
 <script>
 import _ from 'lodash'
 import MPagination from '@/components/MPagination/index.vue'
-import { formatData, isToss, deepClone } from '@/utils/index.js'
+import { formatData, isToss, deepClone, openBrowserTab } from '@/utils/index.js'
 import ExpressDetail from '../../components/expressDetail'
 import User from '../../components/User.vue'
 export default {
@@ -315,14 +338,27 @@ export default {
         // 如果选择了筛选单双周体验课类型，则不需要packages_id
         if (!Object.keys(queryObj).includes('packages_id'))
           Object.assign(queryObj, { packages_id: relationIds })
-        this.orderData(queryObj, this.currentPage)
 
-        // 获取统计数据
-        // statisticsQuery.push({
-        //   terms: { packages_id: relationIds }
-        // })
-        // statisticsQuery.push(...this.searchIn)
-        // console.log(statisticsQuery)
+        // 如果有推荐人搜索条件
+        if (
+          queryObj.is_first_order_send_id &&
+          queryObj.is_first_order_send_id === '0'
+        ) {
+          Object.assign(queryObj, {
+            first_order_send_id: '0'
+          })
+        }
+        if (
+          queryObj.is_first_order_send_id &&
+          queryObj.is_first_order_send_id === '1' &&
+          !queryObj.first_order_send_id
+        ) {
+          Object.assign(queryObj, {
+            first_order_send_id: { gt: '0' }
+          })
+        }
+        delete queryObj.is_first_order_send_id
+        this.orderData(queryObj, this.currentPage)
 
         const statisticsQuery = deepClone(queryObj)
         delete statisticsQuery.status
@@ -413,6 +449,11 @@ export default {
 
       const dom = document.getElementById('order-scroll')
       dom.querySelector('.order-wrapper').scrollTo(0, 0)
+    },
+    // 打开班级详情
+    openDetail(id, row) {
+      row && console.log(row)
+      id && openBrowserTab(`/student-team/#/teamDetail/${id}/0`)
     }
   }
 }
@@ -431,7 +472,7 @@ export default {
   color: #909399;
 }
 .primary-color {
-  color: #409eff;
+  color: #2a75ed;
   cursor: pointer;
 }
 </style>

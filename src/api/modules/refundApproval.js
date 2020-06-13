@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-05-12 15:22:25
  * @LastEditors: liukun
- * @LastEditTime: 2020-06-04 20:41:25
+ * @LastEditTime: 2020-06-06 14:37:11
  */
 
 import axios from '../axiosConfig'
@@ -59,7 +59,7 @@ export default {
     return axios.post(`/api/o/v1/order/getOrderPrice?orderId=${params}`)
   },
 
-  // 获取剩余支付金额
+  // 获取剩余金额
   getResidueFee({ orderId }) {
     return axios.get(`/api/o/v1/order/getRemainingAmount?orderId=${orderId}`)
     // return new Promise((resolve, reject) => {

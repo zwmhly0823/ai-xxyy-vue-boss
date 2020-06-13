@@ -4,7 +4,7 @@
  * @Author: Lukun
  * @Date: 2020-04-27 17:47:58
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-06-05 22:52:04
+ * @LastEditTime: 2020-06-06 20:35:54
  -->
 <template>
   <div class="container">
@@ -270,7 +270,7 @@
           }}</el-col>
         </el-row>
         <el-row>
-          <el-col :span="5">剩余支付金额:</el-col>
+          <el-col :span="5">剩余金额:</el-col>
           <el-col :span="18" :offset="1">{{
             drawerApprovalDeatail.residueFee
           }}</el-col>
@@ -323,6 +323,12 @@
           <el-col :span="5">退款原因:</el-col>
           <el-col :span="18" :offset="1">{{
             drawerApprovalDeatail.refundReason
+          }}</el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="5">退款说明:</el-col>
+          <el-col :span="18" :offset="1">{{
+            drawerApprovalDeatail.refundMsg
           }}</el-col>
         </el-row>
         <el-row>
@@ -710,7 +716,7 @@ export default {
   }
   .wait-pending {
     cursor: pointer;
-    color: #409eff;
+    color: #2a75ed;
   }
   .disnone {
     display: none;

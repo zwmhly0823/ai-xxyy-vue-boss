@@ -64,7 +64,10 @@
       </el-table-column>
       <el-table-column label="系统课班级" min-width="150">
         <template slot-scope="scope">
-          <p>
+          <p
+            :class="{ 'primary-text': scope.row.team }"
+            @click="openDetail(scope.row.team.id)"
+          >
             {{ scope.row.team ? scope.row.team.team_name : '-' }}
           </p>
         </template>
@@ -83,6 +86,22 @@
                       .name
                   : '-'
                 : '-'
+            }}
+          </p>
+        </template>
+      </el-table-column>
+      <el-table-column label="推荐人信息" min-width="160">
+        <template slot-scope="scope">
+          <p>
+            {{
+              scope.row.first_send_user
+                ? scope.row.first_send_user.username
+                : '-'
+            }}
+          </p>
+          <p>
+            {{
+              scope.row.first_send_user ? scope.row.first_send_user.mobile : '-'
             }}
           </p>
         </template>
@@ -155,7 +174,7 @@
 <script>
 import _ from 'lodash'
 import MPagination from '@/components/MPagination/index.vue'
-import { formatData, isToss, deepClone } from '@/utils/index.js'
+import { formatData, isToss, deepClone, openBrowserTab } from '@/utils/index.js'
 import ExpressDetail from '../../components/expressDetail'
 import User from '../../components/User.vue'
 export default {
@@ -298,6 +317,8 @@ export default {
           (item) => item.relation_id
         )
 
+      console.log(this.searchIn)
+
       // 组合搜索条件
       this.searchIn.forEach((item) => {
         const subObj =
@@ -327,6 +348,25 @@ export default {
           delete queryObj.packages_type
         }
 
+        // 如果有推荐人搜索条件
+        if (
+          queryObj.is_first_order_send_id &&
+          queryObj.is_first_order_send_id === '0'
+        ) {
+          Object.assign(queryObj, {
+            first_order_send_id: '0'
+          })
+        }
+        if (
+          queryObj.is_first_order_send_id &&
+          queryObj.is_first_order_send_id === '1' &&
+          !queryObj.first_order_send_id
+        ) {
+          Object.assign(queryObj, {
+            first_order_send_id: { gt: '0' }
+          })
+        }
+        delete queryObj.is_first_order_send_id
         this.orderData(queryObj, this.currentPage)
 
         // 获取统计数据
@@ -356,6 +396,8 @@ export default {
     orderData(queryObj = {}, page = 1) {
       // 最终搜索条件
       this.$emit('get-params', queryObj)
+      console.log(queryObj)
+
       this.$http.Order.orderPage(`${JSON.stringify(queryObj)}`, page)
         .then((res) => {
           if (!res.data.OrderPage) {
@@ -426,6 +468,12 @@ export default {
 
       const dom = document.getElementById('order-scroll')
       dom.querySelector('.order-wrapper').scrollTo(0, 0)
+    },
+    // /student-team/#/teamDetail/280/0
+    // 打开班级详情
+    openDetail(id, row) {
+      row && console.log(row)
+      id && openBrowserTab(`/student-team/#/teamDetail/${id}/2`)
     }
   }
 }
@@ -444,7 +492,7 @@ export default {
   color: #909399;
 }
 .primary-color {
-  color: #409eff;
+  color: #2a75ed;
   cursor: pointer;
 }
 </style>

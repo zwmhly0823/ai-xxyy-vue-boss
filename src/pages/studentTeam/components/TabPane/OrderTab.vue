@@ -11,11 +11,14 @@
       <el-table-column fixed label="购买用户" class="bugUser" width="220px">
         <template slot-scope="scope" v-if="scope.row.user">
           <img class="bugUser-img" :src="scope.row.user.head" alt="" />
-          <div class="bugUser-right">
+          <div
+            class="bugUser-right primary-text"
+            @click="openUserDetail(scope.row.user && scope.row.user.id)"
+          >
             <div class="phone">
               {{ scope.row.user.mobile ? scope.row.user.mobile : '-' }}
             </div>
-            <div class="age">
+            <div class="age primary-text">
               {{ scope.row.sex }} ·
               {{ scope.row.user.birthday }}
             </div>
@@ -139,7 +142,7 @@
 <script>
 import dayjs from 'dayjs'
 import axios from '@/api/axiosConfig'
-import { GetAgeByBrithday, formatData } from '@/utils/index'
+import { GetAgeByBrithday, formatData, openBrowserTab } from '@/utils/index'
 
 import MPagination from '@/components/MPagination/index.vue'
 
@@ -278,6 +281,12 @@ export default {
       this.studentsList()
       const dom = document.getElementById('right-scroll')
       dom.querySelector('.scrollbar-wrapper').scrollTo(0, 0)
+    },
+
+    // 打开用户详情
+    openUserDetail(uid, row) {
+      row && console.log(row)
+      uid && openBrowserTab(`/users/#/details/${uid}`)
     }
   }
 }

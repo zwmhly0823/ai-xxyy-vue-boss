@@ -286,7 +286,7 @@ export default {
     &.active {
       background: #fff;
       span {
-        color: #409eff;
+        color: #2a75ed;
       }
     }
   }

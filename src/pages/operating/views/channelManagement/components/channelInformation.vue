@@ -107,14 +107,14 @@
             >
               <a
                 v-if="scope.row.channel_link"
-                style="color:#409EFF;font-size:12px;"
+                style="color:#2a75ed;font-size:12px;"
                 @click="onLink(scope.row)"
                 target="_blank"
                 >查看链接</a
               >
               <a
                 v-if="scope.row.short_er_code"
-                style="color:#409EFF;font-size:12px;margin-left:10px;margin-right:10px;"
+                style="color:#2a75ed;font-size:12px;margin-left:10px;margin-right:10px;"
                 size="mini"
                 type="text"
                 @click="onUpload(scope.row)"
@@ -123,7 +123,7 @@
               >
               <a
                 v-if="scope.row.isExtension"
-                style="color:#409EFF;font-size:12px;"
+                style="color:#2a75ed;font-size:12px;"
                 @click="onExtension(scope.row)"
                 target="_blank"
                 >推广人统计</a

@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-05-30 18:37:24
  * @LastEditors: panjian
- * @LastEditTime: 2020-06-06 14:26:56
+ * @LastEditTime: 2020-06-12 11:52:20
 -->
 <template>
   <div class="system-label">
@@ -70,6 +70,7 @@ export default {
   methods: {
     getFindLabelByPage() {
       const params = {
+        type: 'SYSTEM',
         name: (this.tableName = this.tableName ? this.tableName : ''),
         labelAttr: (this.tableAttribute = this.tableAttribute
           ? this.tableAttribute
@@ -85,12 +86,8 @@ export default {
             item.labelAttr === 'CONSTANT' ? '恒量标签' : '变量标签'
           if (item.changeRule === 'ASSIGN') {
             item.changeRule = '用户购课后分到所属班级事件触发'
-          } else if (item.changeRule === 'TRAIL') {
-            item.changeRule = '用户购买体验课事件触发'
-          } else if (item.changeRule === 'HARF_YEAR') {
-            item.changeRule = '用户购买半年系统课事件触发'
-          } else if (item.changeRule === 'YEAR') {
-            item.changeRule = '用户购买年系统课事件触发'
+          } else if (item.changeRule === 'BUY_COURSE') {
+            item.changeRule = '用户购课事件触发'
           }
         })
         this.tableData = _data

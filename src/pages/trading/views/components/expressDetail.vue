@@ -7,7 +7,7 @@
  * @LastEditTime: 2020-05-08 19:00:10
  -->
 <template>
-  <div class="container">
+  <div class="container express-detail">
     <el-drawer
       class="drawer-detail "
       :visible.sync="drawer"
@@ -36,25 +36,25 @@
           <div class="line-time">
             <div class="logistics">
               <span>商品信息：{{ this.expressInformation.product_name }}</span>
-              <span
-                >物流公司：{{ this.expressInformation.express_company }}</span
-              >
+              <span>
+                物流公司：{{ this.expressInformation.express_company }}
+              </span>
               <span>快递单号：{{ this.expressInformation.express_nu }}</span>
+              <!-- 仅从物流页面进入详情是显示修改按钮 -->
+              <el-button
+                v-if="transferExpress"
+                class="edit-btn"
+                size="mini"
+                type="info"
+                plain
+                @click="isShowEditStatus = true"
+              >
+                修改
+              </el-button>
             </div>
           </div>
           <div class="horizontal-line"></div>
           <div class="waitFor" v-if="waitFor">快递待揽收</div>
-          <!-- 
-<el-timeline v-show="timeLine">
-        <el-timeline-item
-          v-for="(value, index) in expressDetail"
-          :key="index"
-          :color="activities.color"
-        >
-        
-        </el-timeline-item>
-      </el-timeline> -->
-
           <el-timeline class="right-timeline">
             <el-timeline-item
               v-for="(value, index) in activities"
@@ -77,18 +77,88 @@
         </div>
       </div>
     </el-drawer>
+    <!-- 修改物流状态弹窗 -->
+    <el-dialog
+      title="修改物流状态"
+      :visible.sync="isShowEditStatus"
+      @close="editClose"
+      width="500px"
+    >
+      <div class="express-info">
+        <span>商品信息：{{ this.expressInformation.product_name }}</span>
+        <span>物流公司：{{ this.expressInformation.express_company }}</span>
+        <span>快递单号：{{ this.expressInformation.express_nu }}</span>
+      </div>
+      <el-form
+        ref="form"
+        class="edit-area"
+        :model="editInfo"
+        label-width="85px"
+      >
+        <el-form-item>
+          <span slot="label" class="must">更改为:</span>
+          <el-radio-group
+            v-model="editInfo.editExpressStatus"
+            size="small"
+            @change="changeStatus"
+          >
+            <el-radio label="DELIVER_WAIT_CONFIRM">下单失败</el-radio>
+            <el-radio label="DELIVER_SING">已签收</el-radio>
+            <el-radio label="INVALID">设为无效</el-radio>
+          </el-radio-group>
+        </el-form-item>
+        <el-form-item>
+          <span slot="label" class="must">修改原因:</span>
+          <el-select v-model="editInfo.editReason" placeholder="请选择活动区域">
+            <el-option
+              v-for="(item, index) in editReasons"
+              :key="index"
+              :value="item"
+            >
+              {{ item }}
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="" v-if="editInfo.editReason == '其它原因'">
+          <el-input type="textarea" v-model="editInfo.otherDesc"></el-input>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="edit">
+          确 定
+        </el-button>
+        <el-button @click="isShowEditStatus = false">取 消</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import axios from '@/api/axiosConfig'
-
+// 物流状态修改原因下拉列表数据
+const orderFailed = [
+  '用户地址异常需重新修改',
+  '显示签收实际未签收',
+  '用户拒收',
+  '派送不成功站点退回',
+  '其它原因'
+]
+const signedIn = ['用户已签收或站点代收', '已转发其他快递', '其它原因']
+const setInvalid = ['用户因退费拦截', '其它原因']
 export default {
   // 传递来源 如 订单使用  物流使用
   // 需要传递的信息  物流单号 物流商品名称
   props: ['transferExpress', 'order_id'],
   data() {
     return {
+      editInfo: {
+        editExpressStatus: '',
+        editReason: '',
+        otherDesc: ''
+      },
+      editResult: false, // 修改结果
+      editReasons: [], // 原因列表
+      isShowEditStatus: false, // 是否展示修改状态
       drawer: false,
       color: '#0bbd87',
       modal: false,
@@ -120,6 +190,78 @@ export default {
     }
   },
   methods: {
+    // 物流修改弹窗关闭时处理函数
+    editClose() {
+      // 关闭时初始化修改数据
+      this.editInfo.editExpressStatus = ''
+      this.editInfo.editReason = ''
+      this.editInfo.otherDesc = ''
+      if (!this.editResult) {
+        this.$message.error('当前状态未发生变更')
+      } else {
+        this.editResult = false
+      }
+    },
+    // 修改物流状态
+    edit() {
+      if (this.editInfo.editExpressStatus === '') {
+        this.$message.error('请选择物流状态')
+        return
+      }
+      if (this.editInfo.editReason === '') {
+        this.$message.error('请选择修改原因')
+        return
+      }
+      if (
+        this.editInfo.editReason === '其它原因' &&
+        this.editInfo.otherDesc === ''
+      ) {
+        this.$message.error('请填写修改原因')
+        return
+      }
+      const expressRemark =
+        this.editInfo.editReason === '其它原因'
+          ? this.editInfo.otherDesc
+          : this.editInfo.editReason
+      const operatorId = JSON.parse(localStorage.getItem('staff')).id
+      const params = {
+        expressId: this.transferExpress.id,
+        expressStatus: this.editInfo.editExpressStatus,
+        expressRemark,
+        operatorId
+      }
+      this.$http.Express.updateExpressStatus(params).then((res) => {
+        if (res.payload) {
+          this.editResult = true
+          this.isShowEditStatus = false
+          this.$message.success('状态修改成功')
+          console.log(res)
+        } else {
+          this.editResult = false
+          this.$message.error('状态修改失败')
+          this.isShowEditStatus = false
+        }
+      })
+    },
+    // 点击状态单选按钮时修改修改原因列表
+    changeStatus(val) {
+      this.editInfo.editReason = ''
+      this.editInfo.otherDesc = ''
+      switch (val) {
+        case 'DELIVER_WAIT_CONFIRM': {
+          this.editReasons = orderFailed
+          break
+        }
+        case 'DELIVER_SING': {
+          this.editReasons = signedIn
+          break
+        }
+        case 'INVALID': {
+          this.editReasons = setInvalid
+          break
+        }
+      }
+    },
     // 获取物流id 商品信息
     getexpressInformation(item, i) {
       this.isActive = i
@@ -244,7 +386,7 @@ export default {
         color: white;
         text-align: center;
         padding: 4px;
-        background-color: #409eff;
+        background-color: #2a75ed;
         margin-bottom: 2px;
       }
     }
@@ -264,11 +406,17 @@ export default {
       }
       .line-time {
         .logistics {
+          position: relative;
           display: flex;
           flex-direction: column;
           font-size: 16px;
           span:nth-child(2) {
             margin: 3px 0 3px 0;
+          }
+          .edit-btn {
+            position: absolute;
+            right: 0;
+            bottom: 0;
           }
         }
       }
@@ -300,6 +448,28 @@ export default {
         margin-bottom: 20px;
       }
     }
+  }
+  .express-info {
+    border: 1px solid #d9d9d9;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+  }
+  .edit-area {
+    margin-top: 20px;
+    span.must::before {
+      content: '* ';
+      color: red;
+    }
+  }
+}
+</style>
+<style lang="scss">
+.express-detail {
+  .el-dialog__body {
+    padding-top: 15px;
   }
 }
 </style>

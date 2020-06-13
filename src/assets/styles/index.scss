@@ -2,7 +2,7 @@
 @import './mixin.scss';
 @import './transition.scss';
 @import './common.scss';
-// @import './element-ui.scss';
+@import './element-ui.scss';
 @import './sidebar.scss';
 
 body {
@@ -10,7 +10,8 @@ body {
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
-  font-family: Helvetica Neue, Helvetica, PingFang SC, Hiragino Sans GB, Microsoft YaHei, Arial, sans-serif;
+  font-family: Helvetica Neue, Helvetica, PingFang SC, Hiragino Sans GB,
+    Microsoft YaHei, Arial, sans-serif;
   font-size: 14px;
 }
 
@@ -55,7 +56,7 @@ div:focus {
     visibility: hidden;
     display: block;
     font-size: 0;
-    content: " ";
+    content: ' ';
     clear: both;
     height: 0;
   }
