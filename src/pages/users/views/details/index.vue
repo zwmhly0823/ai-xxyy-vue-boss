@@ -84,7 +84,12 @@
             <template v-if="stuInfor.teams && stuInfor.teams.length > 0">
               <!-- 开课状态 -->
               <!-- 逻辑：当前班级状态 0: 待开课 1:开课中 2:已结课-->
-              <template v-if="stuInfor.teams[courseIndex].isRefund === 1">
+              <template
+                v-if="
+                  stuInfor.teams[courseIndex].isRefund === 1 &&
+                    ['learningRecord', 'collectionOf'].includes(tabData)
+                "
+              >
                 <el-tag :disable-transitions="true" type="danger">
                   已退费
                 </el-tag>
@@ -592,7 +597,7 @@ export default {
       // team_state: 0: 待开课 1:开课中 2:已结课
       for (let i = 0, len = this.stuInfor.teams.length; i < len; i++) {
         const item = this.stuInfor.teams[i]
-        if (+item.team_type > 0) {
+        if (+item.team_type > 0 && !item.isRefund) {
           sortArr.push({
             index: i,
             team_state:
