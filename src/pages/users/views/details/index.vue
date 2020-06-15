@@ -56,7 +56,7 @@
             <div class="text-twoline">
               <div>
                 用户ID:
-                {{ stuInfor.id || '-' }}
+                {{ stuInfor.user_num || '-' }}
               </div>
               <div class="coupons">
                 <img

@@ -4,7 +4,7 @@
  * @Author: shentong
  * @Date: 2020-03-13 14:38:28
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-06-13 21:17:35
+ * @LastEditTime: 2020-06-15 14:05:06
  */
 // import axios from '../axios'
 import axios from '../axiosConfig'
@@ -246,6 +246,7 @@ export default {
           sex
           nickname
           username
+          user_num
           mobile
           send_id
           weixinUser {
