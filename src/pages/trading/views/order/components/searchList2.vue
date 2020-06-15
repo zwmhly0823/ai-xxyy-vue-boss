@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-04-25 17:24:23
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-06-10 15:18:48
+ * @LastEditTime: 2020-06-15 20:10:12
  -->
 <template>
   <el-card
@@ -450,6 +450,7 @@ export default {
           console.log(res)
           downloadHandle(res, `体验课订单导出-${fileTitle}`, () => {
             loading.close()
+            this.$message.success('导出成功')
           })
         })
         .catch(() => loading.close())
