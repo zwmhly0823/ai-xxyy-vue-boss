@@ -28,7 +28,11 @@
       <el-option
         v-for="item in dataList"
         :key="item.id"
-        :label="`${item.mobile} / ${item.username}`"
+        :label="
+          `${item.mobile}/${
+            item.user_num_text ? item.user_num_text + '/' : ''
+          }${item.username}`
+        "
         :value="item.id"
       ></el-option>
     </el-select>
@@ -57,6 +61,11 @@ export default {
     placeholder: {
       type: String,
       default: '请输入学员手机号或昵称'
+    },
+    // 默认搜索u_user表。特殊情况传入对应graphql表, 如体验课学员列表：‘StudentTrialStatisticsList’
+    tablename: {
+      type: String,
+      default: 'UserListEx'
     }
   },
   data() {
@@ -77,6 +86,8 @@ export default {
   methods: {
     getData(value = '') {
       if (!value) return
+      const val = value.replace(/\s*/g, '')
+
       this.loading = true
       // 系统课
       let range = {
@@ -94,23 +105,24 @@ export default {
       }
       const query = `{"bool":{"must":[${JSON.stringify(
         range
-      )}],"filter":{"bool":{"should":[{"wildcard":{"username.keyword":"*${value}*"}},{"wildcard":{"mobile.keyword":"*${value}*"}}]}}}}`
+      )}],"filter":{"bool":{"should":[{"wildcard":{"username.keyword":"*${val}*"}},{"wildcard":{"mobile.keyword":"*${val}*"}},{"wildcard":{"user_num_text.keyword":"*${val}*"}}]}}}}`
       const q = JSON.stringify(query)
 
       const sort = `{"id":"desc"}`
       axios
         .post('/graphql/v1/toss', {
           query: `{
-                  UserListEx(query: ${q}, sort: ${JSON.stringify(sort)}){
+                  ${this.tablename}(query: ${q}, sort: ${JSON.stringify(sort)}){
                     id
                     username
+                    user_num_text
                     mobile
                   }
                 }`
         })
         .then((res) => {
           this.loading = false
-          this.dataList = res.data.UserListEx
+          this.dataList = res.data[`${this.tablename}`]
         })
         .catch(() => {
           this.loading = false
