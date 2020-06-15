@@ -525,13 +525,9 @@ export default {
           totalPages
           content {
             id
-            uid
             trans_type
             desc
-            account_type
             amount
-            balance
-            expected_amount
             update_date
           }
         }
