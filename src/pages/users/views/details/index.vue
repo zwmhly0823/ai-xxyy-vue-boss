@@ -55,7 +55,7 @@
             </div>
             <div class="text-twoline">
               <div>
-                用户ID:
+                用户编号:
                 {{ stuInfor.user_num || '-' }}
               </div>
               <div class="coupons">
