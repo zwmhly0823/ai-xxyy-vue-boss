@@ -3,8 +3,8 @@
  * @version: 1.0.0
  * @Author: liukun
  * @Date: 2020-04-25 17:24:23
- * @LastEditors: panjian
- * @LastEditTime: 2020-06-12 11:58:10
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-06-15 20:11:49
  -->
 <template>
   <el-card
@@ -450,6 +450,7 @@ export default {
           console.log(res)
           downloadHandle(res, `体验课订单导出-${fileTitle}`, () => {
             loading.close()
+            this.$message.success('导出成功')
           })
         })
         .catch(() => loading.close())
