@@ -139,13 +139,13 @@ export default {
             tItem.statusName = 'webcall, TTS合成失败'
             break
           case 21:
-            tItem.statusName = 'webcall, 客户未接'
+            tItem.statusName = '未接听'
             break
           case 22:
-            tItem.statusName = 'webcall, 客户接听'
+            tItem.statusName = '已接听'
             break
           case 23:
-            tItem.statusName = 'webcall, 已呼叫'
+            tItem.statusName = '异常'
             break
           case 24:
             tItem.statusName = 'webcall, 双方接听'
