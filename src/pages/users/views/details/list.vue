@@ -237,17 +237,15 @@
 
     <!--用户资产 Start-->
     <div class="course-sty" v-if="tabData === 'userAsset'">
-      <el-tabs v-model="assetCurPane" @tab-click="tabAsset">
+      <el-tabs v-model="assetCurPane">
         <el-tab-pane label="优惠券" name="assetCoupon">
           <template
             v-if="wholeData.CouponUserPage && wholeData.CouponUserPage.content"
           >
             <coupon-component
-              v-if="couponReload"
-              :assetNumData="assetNumData"
-              :propData="studyTableData"
-              :userId="userId"
+              :propData="wholeData"
               @couponSendSucc="couponSendSucc"
+              @changePagenation="changePagenation"
             ></coupon-component>
           </template>
           <template v-else>
@@ -264,9 +262,8 @@
             "
           >
             <coin-component
-              v-if="coinReload"
-              :assetNumData="assetNumData"
-              :propData="studyTableData"
+              :propData="wholeSecondData"
+              @changePagenation="changePagenation"
             ></coin-component>
           </template>
           <template v-else>
@@ -323,8 +320,6 @@ export default {
   props: {
     tabData: String,
     tabList: Array,
-    userId: String,
-    assetNumData: Object,
     wholeData: Object,
     wholeSecondData: Object
   },
@@ -349,8 +344,6 @@ export default {
       currentVideo: '',
       videoDialog: false,
       assetCurPane: '',
-      couponReload: true,
-      coinReload: true,
       order_id: ''
     }
   },
@@ -362,20 +355,6 @@ export default {
       // console.log(val, 'watch')
       this.assetCurPane = 'assetCoupon'
       this.studyTableData = val
-    },
-    'wholeData.CouponUserPage.content'(val) {
-      this.studyTableData = val
-      this.couponReload = false
-      this.$nextTick(() => {
-        this.couponReload = true
-      })
-    },
-    'wholeSecondData.AccountPage.content'(val) {
-      this.studyTableData = val
-      this.coinReload = false
-      this.$nextTick(() => {
-        this.coinReload = true
-      })
     }
   },
   methods: {
@@ -423,9 +402,6 @@ export default {
       }
       this.audioId = audio.id
     },
-    tabAsset(tab) {
-      this.$emit('changePagenation', tab.name)
-    },
     couponSendSucc() {
       this.$emit('couponSendSucc')
     },
@@ -440,6 +416,9 @@ export default {
         this.$refs.order_id.drawer = true
         this.order_id = id
       }
+    },
+    changePagenation(data) {
+      this.$emit('changePagenation', data)
     }
   }
 }

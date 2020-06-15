@@ -29,21 +29,31 @@
       </el-table-column>
       <el-table-column prop="update_date" label="操作时间"></el-table-column>
     </el-table>
+    <m-pagination
+      :current-page="currentPage"
+      :page-count="totalPages"
+      :total="totalElements"
+      @current-change="handleSizeChange"
+      show-pager
+    ></m-pagination>
   </div>
 </template>
 
 <script>
 import { cloneDeep } from 'lodash'
+import MPagination from '@/components/MPagination/index.vue'
 // import { formatData } from '@/utils/index'
 export default {
   name: 'coinComponent',
+  components: {
+    MPagination
+  },
   props: {
-    propData: Array,
-    assetNumData: Object
+    propData: Object
   },
   created() {
-    this.renderTableData = cloneDeep(this.propData)
-    this.initData()
+    this.initRenderData()
+    this.initNum()
   },
   data() {
     return {
@@ -65,15 +75,32 @@ export default {
       rowStyle: {
         height: '57px',
         lineHeight: '57px'
-      }
+      },
+      currentPage: 1,
+      totalPages: 0,
+      totalElements: 0
+    }
+  },
+  watch: {
+    propData() {
+      this.initRenderData()
     }
   },
   methods: {
-    initData() {
+    initRenderData() {
+      this.renderTableData = cloneDeep(this.propData.AccountPage.content)
+      // console.log(this.propData)
       if (!this.renderTableData.length) {
         return
       }
-      this.assetNumData.accountUserCollect.forEach((nItem) => {
+      this.renderTableData.forEach((item, key) => {
+        item.update_date = item.update_date ? item.update_date : '-'
+      })
+    },
+    initNum() {
+      this.totalPages = +this.propData.AccountPage.totalPages
+      this.totalElements = +this.propData.AccountPage.totalElements
+      this.propData.accountUserCollect.forEach((nItem) => {
         switch (nItem.code - 0) {
           case 4:
           case 5:
@@ -101,8 +128,12 @@ export default {
       })
       this.coinNumList[2].value =
         this.coinNumList[0].value - this.coinNumList[1].value
-      this.renderTableData.forEach((item) => {
-        item.update_date = item.update_date ? item.update_date : '-'
+    },
+    handleSizeChange(page) {
+      this.currentPage = page
+      this.$emit('changePagenation', {
+        curPane: 'coin',
+        page: this.currentPage
       })
     }
   }
