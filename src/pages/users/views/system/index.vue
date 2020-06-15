@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-05-25 15:34:04
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-06-12 15:23:46
+ * @LastEditTime: 2020-06-13 21:46:55
 -->
 <template>
   <div class="user-list">
@@ -22,7 +22,7 @@
       empty-text=" "
     >
       <!-- <el-table-column type="selection" width="55"> </el-table-column> -->
-      <el-table-column label="用户信息" min-width="270" fixed>
+      <el-table-column label="用户信息" min-width="290" fixed>
         <template slot-scope="scope">
           <base-user-info
             :user="scope.row"

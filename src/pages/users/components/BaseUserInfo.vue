@@ -21,7 +21,12 @@
       <i class="el-icon-female female" v-if="user.sex === 2"></i>
     </div>
     <div>
-      <p>{{ user.username || '-' }} - {{ user.mobile || '' }}</p>
+      <p>
+        {{ user.user_num ? `${user.user_num}：` : ''
+        }}{{ user.username || '-' }}
+        -
+        {{ user.mobile || '' }}
+      </p>
       <p>{{ birthday }} · {{ basePainting || '' }}</p>
     </div>
   </div>
