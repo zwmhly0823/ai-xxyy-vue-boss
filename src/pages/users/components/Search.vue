@@ -107,7 +107,9 @@
       <div class="extra-up">
         <search-phone-and-username
           name="id"
+          type="2"
           :custom-style="{ width: '195px !important' }"
+          tablename="StudentTrialStatisticsListEx"
           @result="getSearchData('id', arguments)"
         />
       </div>
