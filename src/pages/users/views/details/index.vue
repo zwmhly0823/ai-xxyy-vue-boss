@@ -431,8 +431,6 @@
           ref="detailsList"
           :tabData="tabData"
           :tabList="tabList"
-          :userId="stuInfor.id"
-          :assetNumData="assetNumData"
           :wholeData="wholeData"
           :wholeSecondData="wholeSecondData"
           @ivrBubbleData="ivrBubbleData"
@@ -441,6 +439,14 @@
         />
       </div>
       <m-pagination
+        v-if="
+          [
+            'learningRecord',
+            'collectionOf',
+            'orderLogistics',
+            'notifyRecord'
+          ].includes(tabData)
+        "
         :current-page="currentPage"
         :page-count="totalPages"
         :total="totalElements"
@@ -483,20 +489,6 @@ export default {
       // 课程tab下标
       courseIndex: 0,
       lessonType: null,
-      assetPageInfo: {
-        coupon: {
-          currentPage: 0,
-          totalElements: 0,
-          totalPages: 0
-        },
-        coin: {
-          currentPage: 0,
-          totalElements: 0,
-          totalPages: 0
-        }
-      },
-      assetNumData: {},
-      assetCur: 'assetCoupon', // 用户资产选的是优惠券还是小熊币，默认是优惠券
       defaultHead: 'https://msb-ai.meixiu.mobi/ai-pm/static/touxiang.png',
       wholeData: {}
     }
@@ -709,23 +701,16 @@ export default {
         }
       )
     },
-    reqGetUserAssets(next) {
+    reqGetUserAssets(page) {
       // 先获取优惠券
-      this.$http.User.getUserAssetsCoupon(this.studentId, this.currentPage)
+      this.$http.User.getUserAssetsCoupon(this.studentId, page || 1)
         .then((res) => {
           // console.log(res)
-          this.totalPages = +res.data.CouponUserPage.totalPages
-          this.totalElements = +res.data.CouponUserPage.totalElements
-          this.assetNumData.couponUserCollect = this.stuInfor.couponUserCollect
           this.wholeData = res.data
-
-          this.assetPageInfo.coupon.currentPage = this.currentPage
-          this.assetPageInfo.coupon.totalPages = +res.data.CouponUserPage
-            .totalPages
-          this.assetPageInfo.coupon.totalElements = +res.data.CouponUserPage
-            .totalElements
+          this.wholeData.couponUserCollect = this.stuInfor.couponUserCollect
+          this.wholeData.userId = this.stuInfor.id
           // 再获取小熊币
-          if (!next) {
+          if (!page) {
             this.reqGetUserCoin()
           }
         })
@@ -733,17 +718,12 @@ export default {
           this.$message.error('获取用户资产失败')
         })
     },
-    reqGetUserCoin() {
-      this.$http.User.getUserAssetsCoin(this.studentId, this.currentPage)
+    reqGetUserCoin(page) {
+      this.$http.User.getUserAssetsCoin(this.studentId, page || 1)
         .then((res) => {
           // console.log(res)
           this.wholeSecondData = res.data
-          this.assetNumData.accountUserCollect = this.stuInfor.accountUserCollect
-
-          this.assetPageInfo.coin.currentPage = this.currentPage
-          this.assetPageInfo.coin.totalPages = +res.data.AccountPage.totalPages
-          this.assetPageInfo.coin.totalElements = +res.data.AccountPage
-            .totalElements
+          this.wholeSecondData.accountUserCollect = this.stuInfor.accountUserCollect
         })
         .catch(() => {
           this.$message.error('获取用户资产失败')
@@ -787,12 +767,6 @@ export default {
         this.reqStudentCourseTaskPage(this.stuInfor.teams[this.courseIndex].id)
       } else if (this.tabData === 'orderLogistics') {
         this.reqgetOrderPage()
-      } else if (this.tabData === 'userAsset') {
-        if (this.assetCur === 'assetCoupon') {
-          this.reqGetUserAssets(true)
-        } else if (this.assetCur === 'assetBearCoin') {
-          this.reqGetUserCoin()
-        }
       } else if (this.tabData === 'notifyRecord') {
         this.reqNotifyPage()
       }
@@ -831,31 +805,26 @@ export default {
       // this.$router.push({ path: '/details', query: { id: '123' } })
     },
     changePagenation(data) {
-      this.assetCur = data
-      if (data === 'assetBearCoin') {
-        this.currentPage = this.assetPageInfo.coin.currentPage
-        this.totalPages = this.assetPageInfo.coin.totalPages
-        this.totalElements = this.assetPageInfo.coin.totalElements
-      } else if (data === 'assetCoupon') {
-        this.currentPage = this.assetPageInfo.coupon.currentPage
-        this.totalPages = this.assetPageInfo.coupon.totalPages
-        this.totalElements = this.assetPageInfo.coupon.totalElements
+      if (data.curPane === 'coupon') {
+        this.reqGetUserAssets(data.page)
+      } else if (data.curPane === 'coin') {
+        this.reqGetUserCoin(data.page)
       }
     },
     couponSendSucc() {
-      this.reqGetUserAssets(true)
+      this.reqGetUserAssets()
     },
     jumpToAsset(type) {
       this.tabData = 'userAsset'
-      this.currentPage = 1
       this.tagsPriorityLevel()
       this.reqGetUserAssets()
-      if (type === 1) {
-        this.$refs.detailsList.jumpToCoin('assetCoupon')
-      } else if (type === 2) {
-        this.$refs.detailsList.jumpToCoin('assetBearCoin')
-      }
-      this.tabBtn()
+      setTimeout(() => {
+        if (type === 1) {
+          this.$refs.detailsList.jumpToCoin('assetCoupon')
+        } else if (type === 2) {
+          this.$refs.detailsList.jumpToCoin('assetBearCoin')
+        }
+      }, 0)
     },
     ivrBubbleData(data) {
       this.reqNotifyPage(data)
