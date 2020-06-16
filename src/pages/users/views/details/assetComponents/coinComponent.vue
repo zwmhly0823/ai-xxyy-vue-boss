@@ -96,6 +96,21 @@ export default {
       this.renderTableData.forEach((item, key) => {
         item.update_date = item.update_date ? item.update_date : '-'
       })
+      const transTypeNameArr = [
+        '默认',
+        '邀请有奖或推荐有礼',
+        '完成任务',
+        '邀请有奖红包',
+        '提现',
+        '小熊币兑换',
+        '学习奖励',
+        '用户注册',
+        '运营活动',
+        '投诉补偿'
+      ]
+      this.renderTableData.forEach((nItem) => {
+        nItem.transTypeName = transTypeNameArr[+nItem.trans_type]
+      })
     },
     initNum() {
       this.totalPages = +this.propData.AccountPage.totalPages
