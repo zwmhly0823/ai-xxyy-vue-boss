@@ -58,6 +58,15 @@ const routes = [
     // },
     component: () =>
       import('../views/teacherManagement/components/newTeacher.vue')
+  },
+  {
+    path: '/systemAccount',
+    name: 'systemAccount',
+    meta: {
+      title: '系统账号',
+      keepAlive: false
+    },
+    component: () => import('../views/systemAccount/index.vue')
   }
 ]
 
