@@ -185,7 +185,10 @@ export default {
         })
         // 参课时间一样就合起来
         if (curVal.addTime !== preVal.addTime) {
-          this.mergeAddTimeTable.push(index)
+          this.mergeAddTimeTable.push({
+            index: index,
+            length: 1
+          })
         } else {
           this.mergeAddTimeTable[this.mergeAddTimeTable.length - 1].length++
         }
