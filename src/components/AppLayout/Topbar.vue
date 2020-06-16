@@ -3,6 +3,8 @@
  * @Email: yangjiyong@meishubao.com
  * @Date: 2020-03-13 15:13:34
  * @Description: topbar 顶部功能区
+ * @LastEditors: songyanan
+ * @LastEditTime: 2020-06-16 14:26:20
  -->
 <template>
   <div class="navbar" :class="{ prod: isProd }">
@@ -48,9 +50,30 @@
           <el-dropdown-item @click.native="logout">
             <span style="display:block;">退出登录</span>
           </el-dropdown-item>
+          <el-dropdown-item @click.native="replacePassword">
+            <span style="display:block;">修改密码</span>
+          </el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
     </div>
+    <el-dialog
+      title="修改密码"
+      :visible.sync="dialogVisible"
+      width="22%"
+      :append-to-body="true"
+    >
+      <el-form>
+        <el-form-item label="新密码" label-width="15%">
+          <el-input size="medium" v-model="newPassword" />
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="handleSureReplacePassword"
+          >确 定</el-button
+        >
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -69,11 +92,20 @@ export default {
   computed: {
     ...mapGetters(['sidebar', 'avatar'])
   },
+  watch: {
+    dialogVisible(val) {
+      if (!val) {
+        this.newPassword = ''
+      }
+    }
+  },
   data() {
     return {
       isProd: false,
       userInfo: null,
-      head: 'https://msb-ai.meixiu.mobi/ai-pm/static/touxiang.png'
+      head: 'https://msb-ai.meixiu.mobi/ai-pm/static/touxiang.png',
+      dialogVisible: false,
+      newPassword: ''
     }
   },
   created() {
@@ -94,6 +126,25 @@ export default {
       location.href = `${baseUrl()}login/#/`
       // await this.$store.dispatch('user/logout')
       // this.$router.push(`/login?redirect=${this.$route.fullPath}`)
+    },
+    replacePassword() {
+      this.dialogVisible = true
+    },
+    async handleSureReplacePassword() {
+      const { userInfo, newPassword } = this
+      if (newPassword === '') {
+        this.$message.warning('请填写密码～')
+        return
+      }
+      try {
+        const res = await this.$http.Login.resetPwd(userInfo.id, newPassword)
+        if (res.code === 0) {
+          this.$message.success('密码修改成功～')
+          this.dialogVisible = false
+        }
+      } catch (error) {
+        console.log(error)
+      }
     }
   }
 }
