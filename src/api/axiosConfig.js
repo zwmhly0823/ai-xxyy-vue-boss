@@ -99,8 +99,6 @@ export default {
             ...extendObj
           })
           .then((res) => {
-            console.log(res)
-
             if (res.status === 500) {
               reject(res)
               return
