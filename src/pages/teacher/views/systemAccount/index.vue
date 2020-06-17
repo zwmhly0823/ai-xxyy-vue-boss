@@ -3,14 +3,14 @@
  * @Author: songyanan
  * @Date: 2020-06-13 10:35:39
  * @LastEditors: songyanan
- * @LastEditTime: 2020-06-16 18:26:10
+ * @LastEditTime: 2020-06-17 16:13:00
  -->
 <template>
   <div class="system-container">
     <div class="content-top">
       <m-search
         @search="handleSearch"
-        teachername="real_name"
+        staffname="real_name.keyword"
         class="search-container"
       />
       <employees-role
@@ -98,10 +98,6 @@
 export default {
   data() {
     return {
-      form: {
-        name: '',
-        id: ''
-      },
       title: '',
       dialogVisible: false,
       tableData: [],
@@ -125,6 +121,7 @@ export default {
     this.getStaffList()
   },
   methods: {
+    // 获取员工列表
     async getStaffList() {
       let query = {}
       if (this.departmentQuery || this.searchQuery) {
@@ -137,7 +134,7 @@ export default {
       const queryParams = query ? JSON.stringify(query) : ''
       this.loading = true
       try {
-        const res = await this.$http.Teacher.getStaffList(
+        const res = await this.$http.Staff.getStaffList(
           this.tabQuery.page,
           queryParams
         )
@@ -152,6 +149,7 @@ export default {
         this.loading = false
       }
     },
+    // 按名字搜索
     handleSearch(data) {
       if (data.length > 0) {
         const term = {}
@@ -166,6 +164,7 @@ export default {
       }
       this.getStaffList()
     },
+    // 员工身份搜索
     handleSearchEmployees(data) {
       if (data.length > 0) {
         const term = {}
@@ -180,17 +179,20 @@ export default {
       }
       this.getStaffList()
     },
+    // 新增、编辑员工
     handleAddEmployees(item = '', type) {
       this.editItem = Object.assign({}, item)
       this.handleType = type
       this.title = type === 'add' ? '新增员工' : '编辑员工'
       this.dialogVisible = true
     },
+    // 取消dialog
     cancleDialog() {
       this.dialogVisible = false
       this.editItem = {}
       this.handleType = ''
     },
+    // 提交表单
     async handleSubmit() {
       const form = this.$refs.dialogForm.form
       const userInfo =
@@ -202,12 +204,13 @@ export default {
       params.role = {}
       params.role.id = form.id
       try {
-        const res = await this.$http.Teacher.addStaff(params)
+        const res = await this.$http.Staff.addStaff(params)
         if (res.code === 0) {
           this.$message.success(`${this.title}成功~`)
           this.dialogVisible = false
           this.editItem = {}
           this.handleType = ''
+          this.getStaffList()
         }
       } catch (error) {
         console.log(error)
@@ -243,6 +246,9 @@ export default {
       float: right;
       margin: 10px 0 0 0;
     }
+  }
+  .m-pagination {
+    bottom: 0 !important;
   }
 }
 </style>

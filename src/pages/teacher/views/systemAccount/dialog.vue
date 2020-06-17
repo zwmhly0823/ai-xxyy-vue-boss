@@ -42,7 +42,7 @@
         />
       </el-form-item>
       <el-form-item label="账号状态" :rules="{ required: true }" class="status">
-        <el-radio-group v-model="form.accountStatus">
+        <el-radio-group v-model="form.isLogin">
           <el-radio label="YES">启用</el-radio>
           <el-radio label="NO">禁用</el-radio>
         </el-radio-group>
@@ -90,7 +90,7 @@ export default {
         mobile: '' || this.editItem.mobile,
         realName: '' || this.editItem.real_name,
         id: '', // 员工角色id
-        accountStatus:
+        isLogin:
           '' || this.editItem.is_login === '0'
             ? 'YES'
             : this.editItem.is_login === '1'
@@ -107,6 +107,7 @@ export default {
     },
     handleSubmit() {
       const { form } = this
+      console.log('form', form)
       const flag = Object.keys(form).some((item) => {
         return form[item] === ''
       })
