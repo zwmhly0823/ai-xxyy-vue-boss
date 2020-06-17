@@ -199,7 +199,9 @@ export default {
           this.dialogVisible = false
           this.editItem = {}
           this.handleType = ''
-          location.reload()
+          setTimeout(() => {
+            location.reload()
+          }, 2000)
         }
       } catch (error) {
         console.log(error)
