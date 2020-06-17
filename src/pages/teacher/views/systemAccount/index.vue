@@ -139,7 +139,7 @@ export default {
       try {
         const res = await this.$http.Teacher.getStaffList(
           this.tabQuery.page,
-          JSON.stringify(queryParams)
+          queryParams
         )
         this.tableData =
           res.data.StaffPage.content.length !== 0
