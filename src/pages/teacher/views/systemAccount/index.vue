@@ -26,15 +26,7 @@
         >新增员工</el-button
       >
     </div>
-    <ele-table
-      :dataList="tableData"
-      :loading="loading"
-      :size="tabQuery.size"
-      :page="tabQuery.page"
-      :total="totalElements"
-      @pageChange="pageChange_handler"
-      class="mytable"
-    >
+    <ele-table :dataList="tableData" :loading="loading" class="mytable">
       <el-table-column type="index" label="序号" align="center">
       </el-table-column>
       <el-table-column
@@ -62,7 +54,7 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="员工角色" min-width="80" align="center">
+      <el-table-column label="状态" min-width="80" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.is_login === '0' ? '启用' : '禁用' }}</span>
         </template>
@@ -207,7 +199,7 @@ export default {
           this.dialogVisible = false
           this.editItem = {}
           this.handleType = ''
-          this.getStaffList()
+          location.reload()
         }
       } catch (error) {
         console.log(error)
