@@ -4,7 +4,7 @@
  * @Date: 2020-03-13 15:13:34
  * @Description: topbar 顶部功能区
  * @LastEditors: songyanan
- * @LastEditTime: 2020-06-16 14:26:20
+ * @LastEditTime: 2020-06-17 16:08:30
  -->
 <template>
   <div class="navbar" :class="{ prod: isProd }">
@@ -59,7 +59,7 @@
     <el-dialog
       title="修改密码"
       :visible.sync="dialogVisible"
-      width="22%"
+      width="430px"
       :append-to-body="true"
     >
       <el-form>

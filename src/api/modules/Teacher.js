@@ -295,43 +295,5 @@ export default {
     return axios.get(
       `/api/t/v1/teacher/course/enroll/courseVersion?period=${params.period}&courseType=${params.courseType}`
     )
-  },
-  // 获取角色
-  getRoleList(query = '') {
-    return axios.post('/graphql/v1/toss', {
-      query: `{
-        RoleList(query: ${JSON.stringify(query)}){
-          id
-          name
-        }
-      }`
-    })
-  },
-  // 添加/编辑员工
-  addStaff(params) {
-    return axios.post('/api/b/v1/staff/addStaff', params)
-  },
-  // 获取员工列表
-  getStaffList(page = 1, query = '', size = '20') {
-    return axios.post('/graphql/v1/toss', {
-      query: `{
-        StaffPage(page: ${page}, query: ${JSON.stringify(
-        query
-      )}, size: ${size}){
-          totalPages
-          totalElements
-          content {
-            id
-            real_name
-            user_name
-            mobile
-            status
-            role_id
-            is_login,
-            password
-          }
-        }
-      }`
-    })
   }
 }
