@@ -89,7 +89,7 @@ export default {
         password: '',
         mobile: '' || this.editItem.mobile,
         realName: '' || this.editItem.real_name,
-        id: '', // 员工角色id
+        id: '' || this.editItem.role_id, // 员工角色id
         isLogin:
           '' || this.editItem.is_login === '0'
             ? 'YES'
