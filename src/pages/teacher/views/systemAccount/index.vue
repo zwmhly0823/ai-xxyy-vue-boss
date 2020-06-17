@@ -3,7 +3,7 @@
  * @Author: songyanan
  * @Date: 2020-06-13 10:35:39
  * @LastEditors: songyanan
- * @LastEditTime: 2020-06-17 16:13:00
+ * @LastEditTime: 2020-06-17 17:13:00
  -->
 <template>
   <div class="system-container">
@@ -195,12 +195,9 @@ export default {
     // 提交表单
     async handleSubmit() {
       const form = this.$refs.dialogForm.form
-      const userInfo =
-        localStorage.getItem('staff') &&
-        JSON.parse(localStorage.getItem('staff'))
       let params = {}
       params.staff = Object.assign({}, form)
-      params.staff.id = this.handleType === 'add' ? '' : userInfo.id
+      params.staff.id = this.handleType === 'add' ? '' : this.editItem.id
       params.role = {}
       params.role.id = form.id
       try {
@@ -246,9 +243,6 @@ export default {
       float: right;
       margin: 10px 0 0 0;
     }
-  }
-  .m-pagination {
-    bottom: 0 !important;
   }
 }
 </style>

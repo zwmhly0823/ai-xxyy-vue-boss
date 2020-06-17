@@ -3,7 +3,7 @@
  * @Author: songyanan
  * @Date: 2020-06-13 16:47:20
  * @LastEditors: songyanan
- * @LastEditTime: 2020-06-16 20:36:10
+ * @LastEditTime: 2020-06-17 17:08:00
  -->
 <template>
   <el-dialog
@@ -27,6 +27,7 @@
           maxlength="11"
           onkeypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))"
           oninput="if(value.length>11)value=value.slice(0,11)"
+          @wheel.native.prevent="stopScrollFun($event)"
         />
       </el-form-item>
       <el-form-item label="真实名字" :rules="{ required: true }">
@@ -128,6 +129,17 @@ export default {
           form[keyArr[key]] = ''
         }
       }
+    },
+    stopScrollFun(evt) {
+      evt = evt || window.event
+      if (evt.preventDefault) {
+        evt.preventDefault()
+        evt.stopPropagation()
+      } else {
+        evt.cancelBubble = true
+        evt.returnValue = false
+      }
+      return false
     }
   },
   components: {
