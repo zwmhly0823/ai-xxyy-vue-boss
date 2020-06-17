@@ -9,12 +9,12 @@
   <div class="system-container">
     <div class="content-top">
       <m-search
-        @search="handleSearchName"
-        teachername="name"
+        @search="handleSearch"
+        teachername="real_name"
         class="search-container"
       />
       <employees-role
-        employees="name"
+        employees="role_id"
         @search="handleSearchEmployees"
         class="search-container"
       />
@@ -22,7 +22,7 @@
         type="primary"
         class="button"
         size="mini"
-        @click="handleAddEmployees('add')"
+        @click="handleAddEmployees('', 'add')"
         >新增员工</el-button
       >
     </div>
@@ -113,7 +113,9 @@ export default {
       totalElements: 0,
       handleType: '',
       queryList: [],
-      editItem: {}
+      editItem: {},
+      searchQuery: '',
+      departmentQuery: ''
     }
   },
   created() {
@@ -124,14 +126,20 @@ export default {
   },
   methods: {
     async getStaffList() {
-      if (this.queryList.length === 0) {
-        this.queryList = `""`
+      let query = {}
+      if (this.departmentQuery || this.searchQuery) {
+        query = Object.assign(
+          {},
+          this.departmentQuery || {},
+          this.searchQuery || {}
+        )
       }
+      const queryParams = query ? JSON.stringify(query) : ''
       this.loading = true
       try {
         const res = await this.$http.Teacher.getStaffList(
           this.tabQuery.page,
-          this.queryList
+          JSON.stringify(queryParams)
         )
         this.tableData =
           res.data.StaffPage.content.length !== 0
@@ -144,26 +152,32 @@ export default {
         this.loading = false
       }
     },
-    handleSearchName(res) {
-      this.form.name = res.length !== 0 ? res[0].term.name : ''
-      const channelClassid = {
-        real_name: this.form.name
+    handleSearch(data) {
+      if (data.length > 0) {
+        const term = {}
+        data.forEach((res) => {
+          if (res.term) {
+            Object.assign(term, res.term)
+          }
+        })
+        this.searchQuery = term
+      } else {
+        this.searchQuery = ''
       }
-      this.queryList =
-        res.length !== 0
-          ? `${JSON.stringify(JSON.stringify(channelClassid))}`
-          : []
       this.getStaffList()
     },
-    handleSearchEmployees(res) {
-      this.form.id = res.length !== 0 && res[0].term
-      const channelClassid = {
-        role_id: this.form.id
+    handleSearchEmployees(data) {
+      if (data.length > 0) {
+        const term = {}
+        data.forEach((res) => {
+          if (res.term) {
+            term.role_id = res.term
+          }
+        })
+        this.departmentQuery = term
+      } else {
+        this.departmentQuery = ''
       }
-      this.queryList =
-        res.length !== 0
-          ? `${JSON.stringify(JSON.stringify(channelClassid))}`
-          : []
       this.getStaffList()
     },
     handleAddEmployees(item = '', type) {
@@ -175,6 +189,7 @@ export default {
     cancleDialog() {
       this.dialogVisible = false
       this.editItem = {}
+      this.handleType = ''
     },
     async handleSubmit() {
       const form = this.$refs.dialogForm.form
@@ -191,6 +206,8 @@ export default {
         if (res.code === 0) {
           this.$message.success(`${this.title}成功~`)
           this.dialogVisible = false
+          this.editItem = {}
+          this.handleType = ''
         }
       } catch (error) {
         console.log(error)
@@ -204,7 +221,7 @@ export default {
   },
   components: {
     MSearch: () => import('@/components/MSearch/index.vue'),
-    employeesRole: () => import('@/components/MSearch/index.vue'),
+    EmployeesRole: () => import('@/components/MSearch/index.vue'),
     Dialog: () => import('./dialog.vue'),
     EleTable: () => import('@/components/Table/EleTable'),
     MPagination: () => import('@/components/MPagination/index.vue')
@@ -218,7 +235,6 @@ export default {
   .content-top {
     overflow: hidden;
     .search-container {
-      width: 200px;
       background: none !important;
       display: inline-block;
       vertical-align: top;

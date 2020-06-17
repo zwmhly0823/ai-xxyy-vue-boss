@@ -9,7 +9,7 @@
   <el-dialog
     :title="title"
     :visible.sync="isShowDialog"
-    width="24%"
+    width="450px"
     @close="cacleHandle"
   >
     <el-form label-width="20%" ref="form">
@@ -41,7 +41,7 @@
           class="search-container"
         />
       </el-form-item>
-      <el-form-item label="账号状态" :rules="{ required: true }">
+      <el-form-item label="账号状态" :rules="{ required: true }" class="status">
         <el-radio-group v-model="form.accountStatus">
           <el-radio label="YES">启用</el-radio>
           <el-radio label="NO">禁用</el-radio>
@@ -155,6 +155,10 @@ export default {
   -webkit-appearance: none;
   appearance: none;
   margin: 0;
+}
+.status {
+  margin-bottom: 0 !important;
+  margin-top: -40px;
 }
 .dialog-footer {
   text-align: center;
