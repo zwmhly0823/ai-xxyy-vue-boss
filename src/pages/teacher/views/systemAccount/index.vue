@@ -200,8 +200,8 @@ export default {
           this.editItem = {}
           this.handleType = ''
           setTimeout(() => {
-            location.reload()
-          }, 2000)
+            this.getStaffList()
+          }, 1000)
         }
       } catch (error) {
         console.log(error)
