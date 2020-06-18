@@ -77,6 +77,7 @@
     <Dialog
       v-if="dialogVisible"
       :title="title"
+      :handleType="handleType"
       :dialogVisible="dialogVisible"
       @submit="handleSubmit"
       @cancleDialog="cancleDialog"

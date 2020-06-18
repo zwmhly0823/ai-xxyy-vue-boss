@@ -159,6 +159,7 @@ export function baseUrl() {
   } else {
     myBaseUrl = '/'
   }
+
   return myBaseUrl
 }
 
