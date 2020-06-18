@@ -126,6 +126,21 @@ export default {
             break
         }
       })
+      const transTypeNameArr = [
+        '默认',
+        '邀请有奖或推荐有礼',
+        '完成任务',
+        '邀请有奖红包',
+        '提现',
+        '小熊币兑换',
+        '学习奖励',
+        '用户注册',
+        '运营活动',
+        '投诉补偿'
+      ]
+      this.renderTableData.forEach((nItem) => {
+        nItem.transTypeName = transTypeNameArr[+nItem.trans_type]
+      })
       this.coinNumList[2].value =
         this.coinNumList[0].value - this.coinNumList[1].value
     },

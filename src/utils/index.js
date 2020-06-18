@@ -159,7 +159,6 @@ export function baseUrl() {
   } else {
     myBaseUrl = '/'
   }
-  console.log('myBaseUrl', myBaseUrl)
   return myBaseUrl
 }
 
