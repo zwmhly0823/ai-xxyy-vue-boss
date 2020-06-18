@@ -99,12 +99,14 @@ export default {
       tableData: [],
       bubbleData: {},
       ivrLoading: false,
+      mergeNameTableIndexArr: [],
       mergeNameTable: [
         {
           index: 0,
           length: 1
         }
       ],
+      mergeAddTimeTableIndexArr: [],
       mergeAddTimeTable: [
         {
           index: 0,
@@ -139,13 +141,13 @@ export default {
             tItem.statusName = 'webcall, TTS合成失败'
             break
           case 21:
-            tItem.statusName = 'webcall, 客户未接'
+            tItem.statusName = '未接听'
             break
           case 22:
-            tItem.statusName = 'webcall, 客户接听'
+            tItem.statusName = '已接听'
             break
           case 23:
-            tItem.statusName = 'webcall, 已呼叫'
+            tItem.statusName = '异常'
             break
           case 24:
             tItem.statusName = 'webcall, 双方接听'
@@ -171,16 +173,28 @@ export default {
       this.tableData.reduce((preVal, curVal, index) => {
         // 课程名称一样就合起来
         if (curVal.courseName !== preVal.courseName) {
-          this.mergeNameTable.push(index)
+          this.mergeNameTable.push({
+            index: index,
+            length: 1
+          })
         } else {
           this.mergeNameTable[this.mergeNameTable.length - 1].length++
         }
+        this.mergeNameTable.forEach((item) => {
+          this.mergeNameTableIndexArr.push(item.index)
+        })
         // 参课时间一样就合起来
         if (curVal.addTime !== preVal.addTime) {
-          this.mergeAddTimeTable.push(index)
+          this.mergeAddTimeTable.push({
+            index: index,
+            length: 1
+          })
         } else {
           this.mergeAddTimeTable[this.mergeAddTimeTable.length - 1].length++
         }
+        this.mergeAddTimeTable.forEach((item) => {
+          this.mergeAddTimeTableIndexArr.push(item.index)
+        })
         return curVal
       })
     },
@@ -263,32 +277,28 @@ export default {
     },
     objectSpanMethod({ row, column, rowIndex, columnIndex }) {
       if (column.label === '课程名称') {
-        for (let i = 0, len = this.mergeNameTable.length; i < len; i++) {
-          if (rowIndex === this.mergeNameTable[i].index) {
-            return {
-              rowspan: this.mergeNameTable[i].length,
-              colspan: 1
-            }
-          } else {
-            return {
-              rowspan: 0,
-              colspan: 0
-            }
+        if (this.mergeNameTableIndexArr.includes(rowIndex)) {
+          return {
+            rowspan: this.mergeNameTable[rowIndex].length,
+            colspan: 1
+          }
+        } else {
+          return {
+            rowspan: 0,
+            colspan: 0
           }
         }
       }
       if (column.label === '参课时间') {
-        for (let i = 0, len = this.mergeAddTimeTable.length; i < len; i++) {
-          if (rowIndex === this.mergeAddTimeTable[i].index) {
-            return {
-              rowspan: this.mergeAddTimeTable[i].length,
-              colspan: 1
-            }
-          } else {
-            return {
-              rowspan: 0,
-              colspan: 0
-            }
+        if (this.mergeAddTimeTableIndexArr.includes(rowIndex)) {
+          return {
+            rowspan: this.mergeAddTimeTable[rowIndex].length,
+            colspan: 1
+          }
+        } else {
+          return {
+            rowspan: 0,
+            colspan: 0
           }
         }
       }
