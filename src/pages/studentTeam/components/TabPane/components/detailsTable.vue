@@ -3,8 +3,8 @@
  * @version:
  * @Author: panjian
  * @Date: 2020-03-16 20:22:24
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-06-12 17:06:41
+ * @LastEditors: panjian
+ * @LastEditTime: 2020-06-18 15:20:31
  -->
 <template>
   <div class="table-box">
@@ -22,9 +22,15 @@
         <el-table-column
           type="selection"
           width="40px"
-          v-if="this.tables.tabs == 0"
+          v-if="
+            this.tables.tabs == 0 &&
+              (this.tables.courseState == 1 || this.tables.courseState == 0)
+          "
         ></el-table-column>
-        <el-table-column width="20px">
+        <el-table-column
+          v-if="this.tables.courseState == 1 || this.tables.courseState == 0"
+          width="20px"
+        >
           <template slot="header" slot-scope="scope">
             <el-Popover popper-class="batch-btn" trigger="hover">
               <!-- 标题气泡内容 -->
