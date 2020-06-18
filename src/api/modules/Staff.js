@@ -25,11 +25,12 @@ export default {
   },
   // 获取员工列表
   getStaffList(page = 1, query = '', size = '20') {
+    const sort = JSON.stringify({ id: 'desc' })
     return axios.post('/graphql/v1/toss', {
       query: `{
         StaffPage(page: ${page}, query: ${JSON.stringify(
         query
-      )}, size: ${size}){
+      )}, sort: ${JSON.stringify(sort)}, size: ${size}){
           totalPages
           totalElements
           content {
