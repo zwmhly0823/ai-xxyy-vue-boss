@@ -151,6 +151,7 @@ export default {
           }
         })
         this.searchQuery = term
+        this.tabQuery.page = 1
       } else {
         this.searchQuery = ''
       }
@@ -166,6 +167,7 @@ export default {
           }
         })
         this.departmentQuery = term
+        this.tabQuery.page = 1
       } else {
         this.departmentQuery = ''
       }
