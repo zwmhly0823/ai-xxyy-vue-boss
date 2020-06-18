@@ -14,10 +14,17 @@
   >
     <el-form label-width="20%" ref="form">
       <el-form-item label="登录账号" :rules="{ required: true }">
-        <el-input size="medium" v-model="form.userName" />
+        <el-input size="medium" v-model="form.userName" :disabled="true" />
       </el-form-item>
       <el-form-item label="登录密码" :rules="{ required: true }">
-        <el-input size="medium" v-model="form.password" />
+        <el-input
+          size="medium"
+          placeholder="请输入新密码"
+          v-model="form.password"
+        />
+        <span class="input-tip"
+          >输入新密码并保存，对应员工登录密码即将被更新</span
+        >
       </el-form-item>
       <el-form-item label="手机号" :rules="{ required: true }">
         <el-input
@@ -168,6 +175,13 @@ export default {
   -webkit-appearance: none;
   appearance: none;
   margin: 0;
+}
+.input-tip {
+  position: absolute;
+  left: 0;
+  top: 30px;
+  font-size: 12px;
+  color: red;
 }
 .status {
   margin-bottom: 0 !important;
