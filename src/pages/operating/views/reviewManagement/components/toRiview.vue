@@ -170,6 +170,7 @@ export default {
       }
     },
     async iniToViewInform() {
+      if (this.courseIdList.length < 0) return
       const courseIds = this.courseIdList.join(',')
       const { list } = this
       try {
@@ -403,6 +404,9 @@ export default {
   }
   /deep/ .m-pagination {
     bottom: 0;
+  }
+  /deep/ .el-icon-circle-close {
+    color: rgb(255, 255, 255);
   }
 }
 </style>
