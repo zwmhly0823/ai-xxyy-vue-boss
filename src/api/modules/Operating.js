@@ -42,6 +42,23 @@ export default {
     )
   },
   /**
+   * 招生排期第一步，第二步之间 分配占比设置-add
+   */
+  addLeads(params, period) {
+    return axios.post(
+      `/api/t/v1/teacher/course/enroll/teacher/channel/config/save?period=${period}`,
+      params
+    )
+  },
+  /**
+   * 招生排期第一步，第二步之间 分配占比-edit获取数据
+   */
+  getLeads(params) {
+    return axios.get(
+      `/api/t/v1/teacher/course/enroll/teacher/channel/config?courseType=${params.courseType}&period=${params.period}`
+    )
+  },
+  /**
    * 新增招生排期第三步-获取 已选择的老师
    */
   getHasSelectTeacher(params) {
@@ -80,7 +97,7 @@ export default {
    */
   getScheduleDetailList(params) {
     return axios.get(
-      `/api/s/v1/management/enroll/getDetail?teacherId=${params.teacherId}&departmentIds=${params.departmentIds}&courseType=${params.courseType}&period=${params.period}&pageSize=${params.size}&pageNumber=` +
+      `/api/s/v1/management/enroll/getDetail?teacherId=${params.teacherId}&departmentIds=${params.departmentIds}&level=${params.level}&courseType=${params.courseType}&period=${params.period}&pageSize=${params.size}&pageNumber=` +
         params.pageNum
     )
   },

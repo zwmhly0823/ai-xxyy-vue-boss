@@ -17,7 +17,7 @@
       induction="status"
       landing="is_login"
       position="duty_id"
-      seller-level="seller_level"
+      seller-level="level"
       v-if="true"
     >
       <!-- <el-button type="primary" slot="searchItems" size="mini">搜索</el-button> -->
