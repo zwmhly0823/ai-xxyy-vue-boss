@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 20:22:24
  * @LastEditors: panjian
- * @LastEditTime: 2020-06-18 15:20:31
+ * @LastEditTime: 2020-06-19 18:48:14
  -->
 <template>
   <div class="table-box">
@@ -566,7 +566,7 @@
                 "
                 alt=""
               />
-              <span v-else>-</span>
+              <span v-else>未上传</span>
             </div>
             <div class="works-ctime">{{ scope.row.works_ctime }}</div>
           </template>
