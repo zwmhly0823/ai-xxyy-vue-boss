@@ -207,6 +207,7 @@ export default {
             id
             channel_inner_name
             channel_link
+            channel_level
             channel_link_short
             short_er_code
             status
@@ -224,6 +225,38 @@ export default {
         }
       }`
     })
+  },
+  /**
+   *
+   * 二级渠道查询
+   */
+  ChannelClassPage(Params, page = 1) {
+    return axios.post('/graphql/v1/toss', {
+      query: `{
+        ChannelClassPage(query:${Params},page:${page},size:20){
+          content{
+            channel_class_name
+            channel_level
+            id
+            channel_class_parent_id
+            channelClassParent{
+              channel_class_name
+              id
+            }
+          }
+          number
+          totalElements
+          totalPages
+        }
+      }`
+    })
+  },
+  /**
+   * 二级渠道信息管理 修改渠道
+   * @param {*} param0
+   */
+  updateChannelClassV2(params) {
+    return axios.get('/api/c/v1/channel/updateChannelClassV2', params)
   },
   /*
    * 密码登录

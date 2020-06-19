@@ -33,6 +33,19 @@
       clearable
       filterable
     ></el-cascader>
+    <el-select
+      style="margin-left:20px;"
+      v-model="channelLevel"
+      @change="onChangeChannelLevel"
+      size="mini"
+      placeholder="请选择"
+      clearable
+      multiple
+    >
+      <el-option label="S" :value="2">S</el-option>
+      <el-option label="A" :value="1">A</el-option>
+      <el-option label="B" :value="0">B</el-option>
+    </el-select>
   </div>
 </template>
 
@@ -52,6 +65,7 @@ export default {
   data() {
     return {
       input: '',
+      channelLevel: '', // 渠道等级
       channelName: [],
       dataList: [],
       channelList: [],
@@ -63,7 +77,6 @@ export default {
   },
   watch: {
     tabIndex(value) {
-      console.log(value, 'watch')
       this.channelName = []
       this.input = ''
     }
@@ -160,6 +173,9 @@ export default {
     },
     onSelect(data) {
       this.$emit('channelSearchValue', data.length > 0 ? data : '')
+    },
+    onChangeChannelLevel(data) {
+      this.$emit('channelLevelValue', data.length > 0 ? data : '')
     },
     channelInput(data) {
       this.$emit('channelInputValue', data || '')

@@ -1,11 +1,3 @@
-<!--
- * @Descripttion:
- * @version:
- * @Author: zhubaodong
- * @Date: 2020-03-24 18:50:54
- * @LastEditors: panjian
- * @LastEditTime: 2020-05-23 16:47:03
- -->
 <template>
   <div class="search-item small threeSelect">
     <el-cascader
@@ -27,66 +19,17 @@
     ></el-cascader>
     <el-select
       style="margin-left:20px;"
-      v-model="channels"
-      :multiple="true"
-      filterable
-      remote
-      :reserve-keyword="true"
+      v-model="channelLevel"
+      @change="onChangeChannelLevel"
       size="mini"
+      placeholder="请选择"
       clearable
-      placeholder="选择渠道"
-      :remote-method="handleDebounce"
-      @change="changeChannelId"
+      multiple
     >
-      <el-option
-        v-for="item in channelLeves"
-        :key="item.id"
-        :label="item.channel_outer_name"
-        :value="item.id"
-      >
-      </el-option>
+      <el-option label="S" :value="2">S</el-option>
+      <el-option label="A" :value="1">A</el-option>
+      <el-option label="B" :value="0">B</el-option>
     </el-select>
-    <el-select
-      v-show="scheduling"
-      style="margin-left:20px;"
-      v-model="stage"
-      :multiple="isMultiple"
-      filterable
-      remote
-      :reserve-keyword="true"
-      size="mini"
-      clearable
-      :placeholder="type === '1' ? '系统课排期' : '体验课排期'"
-      :remote-method="handleDebounce"
-      :loading="loading"
-      @change="onChange"
-    >
-      <el-option
-        v-for="item in dataList"
-        :key="item.id"
-        :label="item.period_name"
-        :value="item.period"
-      ></el-option>
-    </el-select>
-
-    <el-date-picker
-      v-show="channelDate"
-      class="small"
-      style="margin-left:20px;"
-      size="mini"
-      v-model="timeData"
-      :default-time="['00:00:00', '23:59:59']"
-      value-format="timestamp"
-      type="datetimerange"
-      prefix-icon="none"
-      :picker-options="pickerOptions"
-      range-separator="至"
-      :start-placeholder="`${datePlaceholder}start`"
-      :end-placeholder="`${datePlaceholder}end`"
-      align="right"
-      @change="changeHandler"
-    >
-    </el-date-picker>
   </div>
 </template>
 
@@ -124,56 +67,7 @@ export default {
   data() {
     return {
       channels: '',
-      pickerOptions: {
-        shortcuts: [
-          {
-            text: '今天',
-            onClick(picker) {
-              const end = new Date().getTime()
-              const start = new Date(new Date().toLocaleDateString()).getTime()
-              picker.$emit('pick', [start, end])
-            }
-          },
-          {
-            text: '昨天',
-            onClick(picker) {
-              const end =
-                new Date(new Date().toLocaleDateString()).getTime() - 1
-              const start =
-                new Date(new Date().toLocaleDateString()).getTime() -
-                24 * 60 * 60 * 1000
-              picker.$emit('pick', [start, end])
-            }
-          },
-          {
-            text: '本周',
-            onClick(picker) {
-              var date = new Date()
-              const end = new Date().getTime()
-              const start =
-                new Date(new Date().toLocaleDateString()).getTime() -
-                (date.getDay() - 1) * 86400000
-              picker.$emit('pick', [start, end])
-            }
-          },
-          {
-            text: '本月',
-            onClick(picker) {
-              const date = new Date()
-              date.setDate(1)
-              const end = new Date().getTime()
-              const start = new Date(
-                new Date(date).toLocaleDateString()
-              ).getTime()
-              picker.$emit('pick', [start, end])
-            }
-          }
-        ],
-        disabledDate: (res) => {
-          return false
-        }
-      },
-      timeData: [],
+      channelLevel: '', // 渠道等级
       isMultiple: false,
       loading: false,
       stage: '',
@@ -189,7 +83,6 @@ export default {
   },
   watch: {
     tabIndex(value) {
-      this.timeData = ''
       this.stage = ''
       this.channelName = []
       this.channels = ''
@@ -209,23 +102,6 @@ export default {
     this.getData()
   },
   methods: {
-    // 获取渠道来源 filter: 过滤关键词  eg：filter:"抖音"
-    // async getChannel() {
-    //   await axios
-    //     .post('/graphql/channel', {
-    //       query: `{
-    //         channelAllList(size: 500) {
-    //             id
-    //             channel_class_id
-    //             channel_outer_name
-    //           }
-    //         }
-    //       `
-    //     })
-    //     .then((res) => {
-    //       this.channelList = res.data.channelAllList
-    //     })
-    // },
     async getChannelLeves() {
       await axios
         .post('/graphql/channel', {
@@ -241,9 +117,6 @@ export default {
         .then((res) => {
           this.channelLeves = res.data.channelAllList
         })
-    },
-    changeChannelId(res) {
-      this.$emit('getChannelLeves', res)
     },
     // 获取渠道来源分类 filter: 过滤关键词  eg：filter:"抖音"
     async getChannelClassList() {
@@ -313,8 +186,11 @@ export default {
       this.showDatas = result
     },
     onSelect(data) {
-      console.log(data)
+      console.error('data', data)
       this.$emit('channelSearchValue', data.length > 0 ? data : '')
+    },
+    onChangeChannelLevel(data) {
+      this.$emit('channelLevelValue', data.length > 0 ? data : '')
     },
     getData(queryString = '') {
       this.loading = true
@@ -351,17 +227,6 @@ export default {
     // 获取选中的体验课排期
     onChange(data) {
       this.$emit('schedulingSearch', data.length > 0 ? data : '')
-    },
-    // 获取时间选中的值
-    changeHandler(data) {
-      if (data) {
-        const gte = this.timeData[0]
-        const lte = this.timeData[1]
-        const octime = { gte, lte }
-        this.$emit('dateSearch', octime)
-        return
-      }
-      this.$emit('dateSearch', '')
     }
   }
 }
