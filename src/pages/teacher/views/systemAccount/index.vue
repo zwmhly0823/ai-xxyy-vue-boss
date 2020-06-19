@@ -92,7 +92,7 @@
       title="重置密码"
       :visible.sync="resetPassword"
       width="450px"
-      @close="resetPassword = false"
+      @close="handleSure"
     >
       <div v-if="showTip">
         <svg class="iconhj1" aria-hidden="true">
@@ -271,6 +271,9 @@ export default {
           this.resetCurrentId = ''
           this.showTip = false
           this.resetTip = true
+          setTimeout(() => {
+            this.getStaffList()
+          }, 1000)
         }
       } catch (error) {
         console.log(error)
@@ -280,9 +283,6 @@ export default {
       this.showTip = false
       this.resetTip = false
       this.resetPassword = false
-      setTimeout(() => {
-        this.getStaffList()
-      }, 1000)
     }
   },
   components: {
