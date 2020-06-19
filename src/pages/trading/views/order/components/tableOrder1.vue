@@ -348,6 +348,15 @@ export default {
           delete queryObj.packages_type
         }
 
+        // 如果选择年系统课，把半年课去掉 10
+        if (
+          Object.keys(queryObj).includes('packages_type') &&
+          +queryObj.packages_type === 4
+        ) {
+          const type = relationIds.filter((item) => item !== '10')
+          queryObj.packages_id = type
+        }
+
         // 如果有推荐人搜索条件
         if (
           queryObj.is_first_order_send_id &&
