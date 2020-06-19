@@ -20,9 +20,21 @@
           :disabled="handleType !== 'add'"
         />
       </el-form-item>
-      <el-form-item label="登录密码" :rules="{ required: true }">
+      <el-form-item
+        v-if="handleType === 'add'"
+        label="登录密码"
+        :rules="{ required: true }"
+      >
         <el-input size="medium" v-model="form.password" />
-        <span v-if="handleType !== 'add'" class="input-tip"
+      </el-form-item>
+      <el-form-item v-else label="登录密码">
+        <el-input
+          type="password"
+          size="medium"
+          show-password
+          v-model="editItem.password"
+        />
+        <span class="input-tip"
           >输入新密码并保存，对应员工登录密码即将被更新</span
         >
       </el-form-item>
@@ -98,7 +110,7 @@ export default {
     return {
       form: {
         userName: '' || this.editItem.user_name,
-        password: '',
+        password: this.handleType === 'add' ? '' : this.editItem.password,
         mobile: '' || this.editItem.mobile,
         realName: '' || this.editItem.real_name,
         id: '' || this.editItem.role_id, // 员工角色id
