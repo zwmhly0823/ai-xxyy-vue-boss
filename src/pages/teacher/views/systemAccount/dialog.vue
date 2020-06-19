@@ -3,7 +3,7 @@
  * @Author: songyanan
  * @Date: 2020-06-13 16:47:20
  * @LastEditors: songyanan
- * @LastEditTime: 2020-06-17 17:08:00
+ * @LastEditTime: 2020-06-19 16:03:00
  -->
 <template>
   <el-dialog
@@ -26,17 +26,6 @@
         :rules="{ required: true }"
       >
         <el-input size="medium" v-model="form.password" />
-      </el-form-item>
-      <el-form-item v-else label="登录密码">
-        <el-input
-          type="password"
-          size="medium"
-          show-password
-          v-model="editItem.password"
-        />
-        <span class="input-tip"
-          >输入新密码并保存，对应员工登录密码即将被更新</span
-        >
       </el-form-item>
       <el-form-item label="手机号" :rules="{ required: true }">
         <el-input

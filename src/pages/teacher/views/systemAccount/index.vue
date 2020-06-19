@@ -3,7 +3,7 @@
  * @Author: songyanan
  * @Date: 2020-06-13 10:35:39
  * @LastEditors: songyanan
- * @LastEditTime: 2020-06-17 17:13:00
+ * @LastEditTime: 2020-06-19 16:34:00
  -->
 <template>
   <div class="system-container">
@@ -64,6 +64,9 @@
           <el-button type="text" @click="handleAddEmployees(scope.row, 'edit')"
             >编辑</el-button
           >
+          <el-button type="text" @click="handleResetPassword(scope.row)"
+            >重置密码</el-button
+          >
         </template>
       </el-table-column>
     </ele-table>
@@ -84,6 +87,35 @@
       :editItem="editItem"
       ref="dialogForm"
     />
+    <!-- 密码重置弹框 -->
+    <el-dialog
+      title="重置密码"
+      :visible.sync="resetPassword"
+      width="450px"
+      @close="resetPassword = false"
+    >
+      <div v-if="showTip">
+        <svg class="iconhj1" aria-hidden="true">
+          <use xlink:href="#iconhj1"></use>
+        </svg>
+        <span class="reset-name"
+          >是否确认重置员工“{{ resetCurrentName }}”的 密码</span
+        >
+        <div slot="footer" class="dialog-footer">
+          <el-button type="primary" @click="handleSureReset">确 定</el-button>
+          <el-button @click="resetPassword = false">取 消</el-button>
+        </div>
+      </div>
+      <div v-if="resetTip">
+        <span class="reset-name"
+          >重置成功，默认密码为“{{ defaultPassword }}”</span
+        >
+        <div slot="footer" class="dialog-footer">
+          <el-button type="primary" @click="handleSure">确 定</el-button>
+          <el-button @click="handleSure">取 消</el-button>
+        </div>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -104,7 +136,13 @@ export default {
       queryList: [],
       editItem: {},
       searchQuery: '',
-      departmentQuery: ''
+      departmentQuery: '',
+      resetPassword: false,
+      defaultPassword: 'msb123456',
+      resetCurrentName: '',
+      resetCurrentId: '',
+      showTip: false,
+      resetTip: false
     }
   },
   created() {
@@ -214,6 +252,37 @@ export default {
     pageChange_handler(page) {
       this.tabQuery.page = page
       this.getStaffList()
+    },
+    handleResetPassword(item) {
+      this.resetPassword = true
+      this.showTip = true
+      this.resetCurrentName = item.real_name
+      this.resetCurrentId = item.id
+    },
+    // 重置密码
+    async handleSureReset() {
+      try {
+        const res = await this.$http.Login.resetPwd(
+          this.resetCurrentId,
+          this.defaultPassword
+        )
+        if (res.code === 0) {
+          this.resetCurrentName = ''
+          this.resetCurrentId = ''
+          this.showTip = false
+          this.resetTip = true
+        }
+      } catch (error) {
+        console.log(error)
+      }
+    },
+    handleSure() {
+      this.showTip = false
+      this.resetTip = false
+      this.resetPassword = false
+      setTimeout(() => {
+        this.getStaffList()
+      }, 1000)
     }
   },
   components: {
@@ -240,6 +309,21 @@ export default {
       float: right;
       margin: 10px 0 0 0;
     }
+  }
+  .iconhj1 {
+    width: 30px;
+    height: 30px;
+    fill: rgb(219, 154, 79);
+    vertical-align: middle;
+    margin: 0 0 30px 40px;
+  }
+  .reset-name {
+    display: inline-block;
+    vertical-align: middle;
+    margin: 0 0 30px 20px;
+  }
+  .dialog-footer {
+    text-align: right;
   }
 }
 </style>
