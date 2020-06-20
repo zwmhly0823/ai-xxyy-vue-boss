@@ -3,8 +3,8 @@
  * @version:
  * @Author: panjian
  * @Date: 2020-03-16 14:19:58
- * @LastEditors: Shentong
- * @LastEditTime: 2020-06-03 20:53:10
+ * @LastEditors: panjian
+ * @LastEditTime: 2020-06-18 15:20:00
  -->
 <template>
   <div>
@@ -249,6 +249,7 @@ export default {
       Finish: true,
       audioTabs: '0',
       table: {
+        courseState: '',
         tabs: 0,
         // 表头信息
         tableLabel: [],
@@ -859,6 +860,7 @@ export default {
             item.added_wechat_time = timestamp(item.added_wechat_time, 6)
             item.added_group_time = timestamp(item.added_group_time, 6)
             item.fast_follow_time = timestamp(item.fast_follow_time, 6)
+            this.table.courseState = item.course_state
           })
           if (this.tableDataEmpty) {
             this.table.tableData = _data

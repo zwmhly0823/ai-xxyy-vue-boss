@@ -23,6 +23,7 @@
       :show-all-levels="false"
       clearable
       @change="onSelect"
+      ref="dept"
     ></el-cascader>
   </div>
 </template>
@@ -67,7 +68,12 @@ export default {
       // TODO: 根据选择的销售组，获取销售ID
       const ids = { department_id: data || [] }
       if (this.onlyDept === 1) {
-        this.$emit('result', { [this.name]: data })
+        // 返回选择的节点本身及其包含的了节点
+        const allNodes = this.$refs.dept.getCheckedNodes()
+        const allNodesId = allNodes.map((item) => item.value)
+
+        this.$emit('result', { [this.name]: allNodesId })
+        // this.$emit('result', { [this.name]: data })
       } else {
         const teacher = await this.$http.Department.getDepartmentTeacher(
           JSON.stringify(ids)

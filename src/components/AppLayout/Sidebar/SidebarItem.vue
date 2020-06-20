@@ -112,12 +112,15 @@ export default {
       const pathname = location.pathname
       let baseUrl = ''
       // const tabItem = {}
+      const environment = ['dev', 'test']
+      const enFlag = environment.some((item, index) => {
+        return pathname.includes(item)
+      })
 
       if (this.clicked && hasChildren) return
       this.clicked = hasChildren
 
-      // https://msb-ai.meixiu.mobi/ai-app-vue-toss-test/student-team/#/ 测试环境
-      if (pathname.includes('test')) {
+      if (enFlag) {
         const pathArr = pathname.split('/')
         baseUrl = '/' + [pathArr[1]].join('/') // , pathArr[2]
       }

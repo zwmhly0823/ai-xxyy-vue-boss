@@ -131,6 +131,20 @@
         />
       </el-form-item>
 
+      <el-form-item v-if="staffname">
+        <!-- 员工模块姓名搜索 -->
+        <staff-name @result="getstaffName" :name="staffname" :tip="nameTip" />
+      </el-form-item>
+
+      <!-- 员工角色 -->
+      <el-form-item v-if="employees">
+        <employees-role
+          :size="size"
+          :devalueValue="devalueValue"
+          @result="gerEmployeesName"
+        />
+      </el-form-item>
+
       <el-form-item v-if="teachernickname">
         <!-- 老师模块昵称搜索 -->
         <teacher-nickname
@@ -327,6 +341,9 @@ import replenishProductType from './searchItems/replenishProductType'
 import ConsigneePhone from './searchItems/consigneePhone.vue'
 // import SearchTrialStage from './searchItems/searchTrialStage'
 import { isToss } from '@/utils/index'
+// 员工角色
+import employeesRole from './searchItems/role.vue'
+import staffName from './searchItems/staffName.vue'
 
 export default {
   props: {
@@ -634,6 +651,23 @@ export default {
     teacherTip: {
       type: String,
       default: '社群销售' // topicType
+    },
+    // 员工姓名搜索
+    staffname: {
+      type: String,
+      default: ''
+    },
+    employees: {
+      type: String,
+      default: ''
+    },
+    size: {
+      type: String,
+      default: 'mini'
+    },
+    devalueValue: {
+      type: String,
+      default: ''
     }
   },
   components: {
@@ -668,7 +702,9 @@ export default {
     replenishReason,
     replenishMethod,
     operatorName,
-    replenishProductType
+    replenishProductType,
+    employeesRole,
+    staffName
   },
   data() {
     return {
@@ -850,6 +886,9 @@ export default {
     gerOperatorName(res) {
       this.setSeachParmas(res, [this.operatorId])
     },
+    gerEmployeesName(res) {
+      this.setSeachParmas(res, [this.employees])
+    },
     getReplenishProduct(res) {
       this.setSeachParmas(res, [this.replenishProduct || 'product_type'])
     },
@@ -859,6 +898,10 @@ export default {
         { [this.replenishProductType]: res[this.replenishProductType] },
         [this.replenishProductType || 'product_type']
       )
+    },
+    // 员工姓名
+    getstaffName(res) {
+      this.setSeachParmas(res, [this.staffname || 'umobile'])
     },
     // 收货人电话
     getConsigneePhone(res) {
@@ -918,7 +961,7 @@ export default {
           })
           this.must = temp
         }
-        this.$emit('search', temp)
+        this.$emit('search', res === '' ? '' : temp)
         return
       }
       // should

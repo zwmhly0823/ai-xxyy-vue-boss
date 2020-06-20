@@ -3,8 +3,8 @@
  * @version:
  * @Author: shentong
  * @Date: 2020-03-13 14:38:28
- * @LastEditors: panjian
- * @LastEditTime: 2020-06-03 14:57:48
+ * @LastEditors: songyanan
+ * @LastEditTime: 2020-06-17 15:33:00
  */
 import Login from './modules/Login'
 import User from './modules/User' // 用户接口
@@ -26,6 +26,7 @@ import Operating from './modules/Operating' // 运营中心
 import RiviewCourse from './modules/RiviewCourse'
 import Finance from './modules/finance' // 财务退款
 import WorkerHandover from './modules/WorkerHandover'
+import Staff from './modules/Staff' // 员工
 
 export default Object.assign(
   {},
@@ -48,5 +49,6 @@ export default Object.assign(
   { RefundApproval },
   { Approval },
   { Finance },
-  { WorkerHandover }
+  { WorkerHandover },
+  { Staff }
 )

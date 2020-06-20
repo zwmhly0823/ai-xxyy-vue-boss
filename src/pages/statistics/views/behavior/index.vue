@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-06-06 14:18:35
  * @LastEditors: panjian
- * @LastEditTime: 2020-06-12 15:05:25
+ * @LastEditTime: 2020-06-13 23:06:18
 -->
 <template>
   <div class="app-main height">
@@ -22,17 +22,17 @@
       <el-table :data="tableData" style="width: 100%">
         <el-table-column label="用户信息" width="280">
           <template slot-scope="scope">
-            <div class="info-box">
+            <div @click="userHandle(scope.row)" class="info-box">
               <div class="user-info-box">
                 <img
                   v-if="scope.row.head"
                   class="user-info-img"
-                  :src="`${scope.row.head}?x-oss-process=image/resize,l_100`"
+                  :src="`${scope.row.head}`"
                 />
                 <img
                   v-else
                   class="user-info-img"
-                  src="https://msb-ai.meixiu.mobi/ai-pm/static/touxiang.png?x-oss-process=image/resize,l_100"
+                  src="https://msb-ai.meixiu.mobi/ai-pm/static/touxiang.png"
                 />
                 <img
                   class="user-info-img-sex"
@@ -60,17 +60,7 @@
         <el-table-column label="微信信息">
           <template slot-scope="scope">
             <div class="weixin-box">
-              <img
-                v-if="scope.row.head"
-                class="weixin-img"
-                :src="scope.row.head"
-                alt=""
-              />
-              <img
-                v-else
-                class="weixin-img"
-                src="https://msb-ai.meixiu.mobi/ai-pm/static/touxiang.png?x-oss-process=image/resize,l_100"
-              />
+              <img class="weixin-img" :src="scope.row.weixin_avatar" alt="" />
               <span class="weixin-text">{{ scope.row.weixin_nick_name }}</span>
             </div>
           </template>
@@ -125,8 +115,15 @@
         </el-table-column>
         <el-table-column label="班级名称">
           <template slot-scope="scope">
-            <div>
-              <span>{{ scope.row.team_name || '-' }}</span>
+            <div v-if="scope.row.team_name_type">
+              <span
+                @click="openTeam(scope.row)"
+                style="color: #409eff;cursor: pointer;"
+                >{{ scope.row.team_name }}</span
+              >
+            </div>
+            <div v-else>
+              <span>-</span>
             </div>
           </template>
         </el-table-column>
@@ -156,7 +153,8 @@
 <script>
 import behaviorSearch from '../behavior/components/behaviorSearch'
 import MPagination from '@/components/MPagination/index.vue'
-import { GetAgeByBrithday, timestamp } from '@/utils/index'
+import { openBrowserTab, GetAgeByBrithday, timestamp } from '@/utils/index'
+
 export default {
   components: {
     behaviorSearch,
@@ -183,6 +181,24 @@ export default {
     // })
   },
   methods: {
+    // 跳转到班级
+    openTeam(row) {
+      const teamname = row.team.team_name
+      const teamtype = row.team.team_type
+      const teamid = row.team_id
+      teamid &&
+        openBrowserTab(
+          `/student-team/#/teamDetail/${teamid}/${teamtype}`,
+          `${teamname}`
+        )
+    },
+    // 跳转详情页
+    userHandle(user) {
+      // console.log(user, '点击用户信息')
+      const userId = user.user.id
+      // 新标签打开详情页
+      userId && openBrowserTab(`/users/#/details/${userId}`)
+    },
     getUserBehaviorLogPage() {
       const paramsValue = []
       // 用户搜索
@@ -230,11 +246,23 @@ export default {
             item.birthday = '-'
           }
 
-          if (!item.weixin_nick_name || item.weixin_nick_name === '0') {
-            if (!item.weixinUser) {
-              item.weixin_nick_name = '-'
-            } else {
+          if (item.weixin_nick_name) {
+            if (item.weixinUser) {
               item.weixin_nick_name = item.weixinUser.nickname
+              item.weixin_avatar = item.weixinUser.avatar
+            } else {
+              item.weixin_nick_name = '-'
+              item.weixin_avatar =
+                'https://msb-ai.meixiu.mobi/ai-pm/static/touxiang.png'
+            }
+          } else {
+            if (item.weixinUser) {
+              item.weixin_nick_name = item.weixinUser.nickname
+              item.weixin_avatar = item.weixinUser.avatar
+            } else {
+              item.weixin_nick_name = '-'
+              item.weixin_avatar =
+                'https://msb-ai.meixiu.mobi/ai-pm/static/touxiang.png'
             }
           }
           // if (item.action_type === 1) {
@@ -267,7 +295,9 @@ export default {
           if (!item.team_name) {
             if (item.team) {
               item.team_name = item.team.team_name
+              item.team_name_type = 1
             } else {
+              item.team_name_type = 0
               item.team_name = '-'
             }
           }
@@ -317,7 +347,7 @@ export default {
     // 是否转换 下拉框
     onConversionValue(data) {
       if (data === 1) {
-        this.valueConversion = `{"lt":2}`
+        this.valueConversion = `{"lte":2}`
       } else if (data === 2) {
         this.valueConversion = `{"gt":2}`
       } else {
@@ -393,7 +423,11 @@ export default {
         }
       }
       .user-info-text-box {
+        cursor: pointer;
         margin-left: 20px;
+        span {
+          color: #409eff;
+        }
       }
     }
     .weixin-box {

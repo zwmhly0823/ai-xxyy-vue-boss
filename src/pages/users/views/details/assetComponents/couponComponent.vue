@@ -12,6 +12,7 @@
       <el-button
         class="send-coupon-button"
         type="primary"
+        size="small"
         @click="presentCoupon"
         >发券</el-button
       >
@@ -54,7 +55,7 @@
                 (!scope.row.order.ctime && !scope.row.order.packages_name)
             "
           >
-            \
+            -
           </template>
           <template v-else>
             {{ scope.row.order.packages_name }}
@@ -64,6 +65,13 @@
         </template>
       </el-table-column>
     </el-table>
+    <m-pagination
+      :current-page="currentPage"
+      :page-count="totalPages"
+      :total="totalElements"
+      @current-change="handleSizeChange"
+      show-pager
+    ></m-pagination>
     <!-- 弹窗 -->
     <coupon-popover
       ref="couponPopover"
@@ -77,20 +85,20 @@
 <script>
 import { cloneDeep } from 'lodash'
 import { formatData } from '@/utils/index'
+import MPagination from '@/components/MPagination/index.vue'
 import CouponPopover from '../../../../studentTeam/components/TabPane/components/couponPopover'
 export default {
   name: 'couponComponent',
   components: {
-    CouponPopover
+    CouponPopover,
+    MPagination
   },
   props: {
-    propData: Array,
-    userId: String,
-    assetNumData: Object
+    propData: Object
   },
   created() {
-    this.renderTableData = cloneDeep(this.propData)
-    this.initData()
+    this.initRenderData()
+    this.initNum()
     this.couponList()
   },
   data() {
@@ -117,32 +125,24 @@ export default {
       // 优惠卷接口数据
       couponData: [],
       // 选择按钮用户id
-      selectUserId: []
+      selectUserId: [],
+      currentPage: 1,
+      totalPages: 0,
+      totalElements: 0
+    }
+  },
+  watch: {
+    propData() {
+      this.initRenderData()
     }
   },
   methods: {
-    initData() {
+    initRenderData() {
+      // console.log(this.propData)
+      this.renderTableData = cloneDeep(this.propData.CouponUserPage.content)
       if (!this.renderTableData.length) {
         return
       }
-      // console.log(this.assetNumData)
-      this.assetNumData.couponUserCollect.forEach((nItem) => {
-        if (nItem.code === '_all') {
-          this.couponNumList[0].value = nItem.value - 0
-        } else if (nItem.code - 0 === 0) {
-          // 不可用
-          this.couponNumList[2].value += nItem.value - 0
-        } else if (nItem.code - 0 === 1) {
-          // 可用
-          this.couponNumList[1].value = nItem.value - 0
-        } else if (nItem.code - 0 === 2) {
-          // 已使用
-          this.couponNumList[3].value = nItem.value - 0
-        } else if (nItem.code - 0 === 3) {
-          // 已过期
-          this.couponNumList[2].value += nItem.value - 0
-        }
-      })
       this.renderTableData.forEach((pItem) => {
         switch (pItem.coupon.type - 0) {
           case 0:
@@ -176,8 +176,29 @@ export default {
           pItem.order.ctime = formatData(pItem.order.ctime, 's')
         } else {
           pItem.order = {
-            ctime: '\\'
+            ctime: '-'
           }
+        }
+      })
+    },
+    initNum() {
+      this.totalPages = +this.propData.CouponUserPage.totalPages
+      this.totalElements = +this.propData.CouponUserPage.totalElements
+      this.propData.couponUserCollect.forEach((nItem) => {
+        if (nItem.code === '_all') {
+          this.couponNumList[0].value = nItem.value - 0
+        } else if (nItem.code - 0 === 0) {
+          // 不可用
+          this.couponNumList[2].value += nItem.value - 0
+        } else if (nItem.code - 0 === 1) {
+          // 可用
+          this.couponNumList[1].value = nItem.value - 0
+        } else if (nItem.code - 0 === 2) {
+          // 已使用
+          this.couponNumList[3].value = nItem.value - 0
+        } else if (nItem.code - 0 === 3) {
+          // 已过期
+          this.couponNumList[2].value += nItem.value - 0
         }
       })
     },
@@ -188,13 +209,20 @@ export default {
       })
     },
     presentCoupon() {
-      this.selectUserId = [this.userId]
+      this.selectUserId = [this.propData.userId]
       this.$refs.couponPopover.issueCoupons = true
       this.$refs.couponPopover.couponsTime = ''
     },
     // 优惠券发放成功
     couponSendSucc() {
       this.$emit('couponSendSucc')
+    },
+    handleSizeChange(page) {
+      this.currentPage = page
+      this.$emit('changePagenation', {
+        curPane: 'coupon',
+        page: this.currentPage
+      })
     }
   }
 }

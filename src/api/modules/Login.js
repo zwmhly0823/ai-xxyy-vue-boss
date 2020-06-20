@@ -3,8 +3,8 @@
  * @version:
  * @Author: Shentong
  * @Date: 2020-03-16 19:46:39
- * @LastEditors: Shentong
- * @LastEditTime: 2020-05-16 13:33:42
+ * @LastEditors: songyanan
+ * @LastEditTime: 2020-06-16 14:16:20
  */
 import axios from '../axiosConfig'
 
@@ -27,5 +27,11 @@ export default {
    * */
   pwdLoginIn(params) {
     return axios.post('/api/b/v1/staff/login', params)
+  },
+  /**
+   * 修改密码
+   * */
+  resetPwd(staffId, pwd) {
+    return axios.put(`/api/b/v1/staff/resetPwd?staffId=${staffId}&pwd=${pwd}`)
   }
 }

@@ -4,7 +4,7 @@
  * @Author: shentong
  * @Date: 2020-03-13 14:38:28
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-06-01 19:08:45
+ * @LastEditTime: 2020-06-15 14:05:06
  */
 // import axios from '../axios'
 import axios from '../axiosConfig'
@@ -87,6 +87,7 @@ export default {
             content{
               id
               username
+              user_num
               nickname
               head
               sex
@@ -173,6 +174,7 @@ export default {
             content {
               studentid
               username
+              usernum
               nickname
               ctime
               utime
@@ -244,6 +246,7 @@ export default {
           sex
           nickname
           username
+          user_num
           mobile
           send_id
           weixinUser {
@@ -284,11 +287,17 @@ export default {
             team_id
             added_group
             added_wechat
+            orderInfo {
+              isrefund
+            }
           }
           systemCourse{
             team_id
             added_group
             added_wechat
+            orderInfo {
+              isrefund
+            }
           }
           teams{
              id
@@ -469,7 +478,7 @@ export default {
     const formattingQuery = JSON.stringify({
       uid: query
     })
-    const sort = `{ "ctime": "asc" }`
+    const sort = `{ "ctime": "desc" }`
     return axios.post(`/graphql/v1/toss`, {
       query: `{
         CouponUserPage(query:${JSON.stringify(formattingQuery)},
@@ -504,9 +513,10 @@ export default {
   getUserAssetsCoin(query = '', page = 1, size = 20) {
     const formattingQuery = JSON.stringify({
       uid: query,
+      trans_type: ['1', '2', '3', '4', '5', '6', '8', '9'], // 经和后端确认前端滤掉0和7
       account_type: 2
     })
-    const sort = `{ "ctime": "asc" }`
+    const sort = `{ "ctime": "desc" }`
     return axios.post(`/graphql/v1/toss`, {
       query: `{
         AccountPage(query:${JSON.stringify(formattingQuery)},
@@ -517,17 +527,28 @@ export default {
           totalPages
           content {
             id
-            uid
             trans_type
             desc
-            account_type
             amount
-            balance
-            expected_amount
             update_date
           }
         }
       }`
     })
+  },
+  getNotifyPage(query) {
+    return axios.get(
+      `/api/toss/v1/toss-api/iCode/student/course/task/findIvrCallRecordByWhere?stime=${query.stime}&etime=${query.etime}&cdrStatus=${query.cdrStatus}&sjstime=${query.sjstime}&ejstime=${query.ejstime}&pageNum=${query.pageNum}&pageSize=${query.pageSize}&userId=${query.userId}`
+    )
+  },
+  getSwitchStatus(query) {
+    return axios.get(
+      `/api/u/v1/user/getUserNotifySwitch?userId=${query.userId}`
+    )
+  },
+  changeSwitchStatus(query) {
+    return axios.get(
+      `/api/u/v1/user/updateUserNotifySwitch?userId=${query.userId}&status=${query.status}`
+    )
   }
 }

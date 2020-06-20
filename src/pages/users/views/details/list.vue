@@ -207,12 +207,20 @@
         <template slot-scope="scope">
           <div>
             <div>
-              共<span class="logistics">{{
-                scope.row.express && scope.row.express.express_total
-                  ? scope.row.express.express_total
-                  : '0'
-              }}</span
-              >条物流记录
+              共
+              <span
+                v-if="scope.row.express && scope.row.express.express_total"
+                class="logistics"
+                @click="
+                  showExpressDetail(
+                    scope.row.id,
+                    scope.row.express.express_total
+                  )
+                "
+                >{{ scope.row.express.express_total }}</span
+              >
+              <span v-else>0</span>
+              条物流记录
             </div>
             <div>
               最后一次已{{
@@ -225,17 +233,19 @@
         </template>
       </el-table-column>
     </el-table>
+    <express-detail :order_id="order_id" ref="order_id" />
 
     <!--用户资产 Start-->
     <div class="course-sty" v-if="tabData === 'userAsset'">
-      <el-tabs v-model="assetCurPane" @tab-click="tabAsset">
+      <el-tabs v-model="assetCurPane">
         <el-tab-pane label="优惠券" name="assetCoupon">
-          <template v-if="couponDone">
+          <template
+            v-if="wholeData.CouponUserPage && wholeData.CouponUserPage.content"
+          >
             <coupon-component
-              :assetNumData="assetNumData"
-              :propData="studyTableData"
-              :userId="userId"
+              :propData="wholeData"
               @couponSendSucc="couponSendSucc"
+              @changePagenation="changePagenation"
             ></coupon-component>
           </template>
           <template v-else>
@@ -246,10 +256,14 @@
           </template>
         </el-tab-pane>
         <el-tab-pane label="小熊币" name="assetBearCoin">
-          <template v-if="coinDone">
+          <template
+            v-if="
+              wholeSecondData.AccountPage && wholeSecondData.AccountPage.content
+            "
+          >
             <coin-component
-              :assetNumData="assetNumData"
-              :propData="tabTwoList"
+              :propData="wholeSecondData"
+              @changePagenation="changePagenation"
             ></coin-component>
           </template>
           <template v-else>
@@ -262,6 +276,22 @@
       </el-tabs>
     </div>
     <!--用户资产 End-->
+
+    <template v-if="tabData === 'notifyRecord'">
+      <template v-if="wholeData.payload">
+        <ivr-con
+          :data="wholeData.payload.content"
+          :studentId="wholeData.studentId"
+          @ivrBubbleData="ivrBubbleData"
+        ></ivr-con>
+      </template>
+      <template v-else>
+        <div class="asset-loading">
+          <i class="el-icon-loading"></i>
+          <span class="loading-text">加载中请稍后..</span>
+        </div>
+      </template>
+    </template>
 
     <!-- 作品集视频播放 -->
     <el-dialog
@@ -284,19 +314,20 @@
 // import imges from '../../../../src/assets/images/FinishClassHead.png'
 import couponComponent from './assetComponents/couponComponent'
 import coinComponent from './assetComponents/coinComponent'
+import ExpressDetail from '../../../trading/views/components/expressDetail'
+import ivrCon from './ivrComponents/ivrCon'
 export default {
   props: {
     tabData: String,
     tabList: Array,
-    tabTwoList: Array,
-    couponDone: Boolean,
-    coinDone: Boolean,
-    userId: String,
-    assetNumData: Object
+    wholeData: Object,
+    wholeSecondData: Object
   },
   components: {
     couponComponent,
-    coinComponent
+    coinComponent,
+    ExpressDetail,
+    ivrCon
   },
   data() {
     return {
@@ -313,8 +344,7 @@ export default {
       currentVideo: '',
       videoDialog: false,
       assetCurPane: '',
-      preCouponDone: false,
-      preCoinDone: false
+      order_id: ''
     }
   },
   created() {
@@ -325,12 +355,6 @@ export default {
       // console.log(val, 'watch')
       this.assetCurPane = 'assetCoupon'
       this.studyTableData = val
-    },
-    couponDone(val) {
-      this.preCouponDone = val
-    },
-    coinDone(val) {
-      this.preCoinDone = val
     }
   },
   methods: {
@@ -378,11 +402,23 @@ export default {
       }
       this.audioId = audio.id
     },
-    tabAsset(tab) {
-      this.$emit('changePagenation', tab.name)
-    },
     couponSendSucc() {
       this.$emit('couponSendSucc')
+    },
+    jumpToCoin(data) {
+      this.assetCurPane = data
+    },
+    showExpressDetail(id, total) {
+      if (total > 0) {
+        this.$refs.order_id.drawer = true
+        this.order_id = id
+      }
+    },
+    ivrBubbleData(data) {
+      this.$emit('ivrBubbleData', data)
+    },
+    changePagenation(data) {
+      this.$emit('changePagenation', data)
     }
   }
 }
@@ -413,6 +449,7 @@ export default {
 .comment-time {
   // display: flex;
   // align-items: center;
+
   .img-play {
     font-size: 24px;
     float: left;
@@ -428,7 +465,7 @@ export default {
     }
   }
   .listening-status {
-    padding: 0 0 0 35px;
+    padding: 0 0 0 20px;
   }
 }
 .enlarge-box {
@@ -439,6 +476,8 @@ export default {
 }
 .logistics {
   color: #5ea0f5;
+  text-decoration: underline;
+  cursor: pointer;
 }
 </style>
 <style lang="scss">

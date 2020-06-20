@@ -12,6 +12,7 @@
       :row-style="rowStyle"
       header-row-class-name="learning-record-sty"
     >
+      <el-table-column prop="transTypeName" label="类型"></el-table-column>
       <el-table-column prop="desc" label="操作"></el-table-column>
       <el-table-column label="金额">
         <template slot-scope="scope">
@@ -21,30 +22,38 @@
             "
             class="red-text-color"
           >
-            - ¥:{{ scope.row.amount }}</span
+            - {{ scope.row.amount }}</span
           >
-          <span v-else class="green-text-color">
-            + ¥:{{ scope.row.amount }}</span
-          >
+          <span v-else class="green-text-color"> + {{ scope.row.amount }}</span>
         </template>
       </el-table-column>
       <el-table-column prop="update_date" label="操作时间"></el-table-column>
     </el-table>
+    <m-pagination
+      :current-page="currentPage"
+      :page-count="totalPages"
+      :total="totalElements"
+      @current-change="handleSizeChange"
+      show-pager
+    ></m-pagination>
   </div>
 </template>
 
 <script>
 import { cloneDeep } from 'lodash'
+import MPagination from '@/components/MPagination/index.vue'
 // import { formatData } from '@/utils/index'
 export default {
   name: 'coinComponent',
+  components: {
+    MPagination
+  },
   props: {
-    propData: Array,
-    assetNumData: Object
+    propData: Object
   },
   created() {
-    this.renderTableData = cloneDeep(this.propData)
-    this.initData()
+    this.initRenderData()
+    this.initNum()
   },
   data() {
     return {
@@ -66,15 +75,47 @@ export default {
       rowStyle: {
         height: '57px',
         lineHeight: '57px'
-      }
+      },
+      currentPage: 1,
+      totalPages: 0,
+      totalElements: 0
+    }
+  },
+  watch: {
+    propData() {
+      this.initRenderData()
     }
   },
   methods: {
-    initData() {
+    initRenderData() {
+      this.renderTableData = cloneDeep(this.propData.AccountPage.content)
+      // console.log(this.propData)
       if (!this.renderTableData.length) {
         return
       }
-      this.assetNumData.accountUserCollect.forEach((nItem) => {
+      this.renderTableData.forEach((item, key) => {
+        item.update_date = item.update_date ? item.update_date : '-'
+      })
+      const transTypeNameArr = [
+        '默认',
+        '邀请有奖或推荐有礼',
+        '完成任务',
+        '邀请有奖红包',
+        '提现',
+        '小熊币兑换',
+        '学习奖励',
+        '用户注册',
+        '运营活动',
+        '投诉补偿'
+      ]
+      this.renderTableData.forEach((nItem) => {
+        nItem.transTypeName = transTypeNameArr[+nItem.trans_type]
+      })
+    },
+    initNum() {
+      this.totalPages = +this.propData.AccountPage.totalPages
+      this.totalElements = +this.propData.AccountPage.totalElements
+      this.propData.accountUserCollect.forEach((nItem) => {
         switch (nItem.code - 0) {
           case 4:
           case 5:
@@ -85,10 +126,29 @@ export default {
             break
         }
       })
+      const transTypeNameArr = [
+        '默认',
+        '邀请有奖或推荐有礼',
+        '完成任务',
+        '邀请有奖红包',
+        '提现',
+        '小熊币兑换',
+        '学习奖励',
+        '用户注册',
+        '运营活动',
+        '投诉补偿'
+      ]
+      this.renderTableData.forEach((nItem) => {
+        nItem.transTypeName = transTypeNameArr[+nItem.trans_type]
+      })
       this.coinNumList[2].value =
         this.coinNumList[0].value - this.coinNumList[1].value
-      this.renderTableData.forEach((item) => {
-        item.update_date = item.update_date ? item.update_date : '-'
+    },
+    handleSizeChange(page) {
+      this.currentPage = page
+      this.$emit('changePagenation', {
+        curPane: 'coin',
+        page: this.currentPage
       })
     }
   }

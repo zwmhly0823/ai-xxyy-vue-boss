@@ -12,7 +12,7 @@
     3: '保密'
  -->
 <template>
-  <div class="user-info" @click="onClick">
+  <div class="user-info">
     <div class="user-info-l">
       <div class="user-info-head">
         <img :src="head" alt="" />
@@ -21,8 +21,14 @@
       <i class="el-icon-female female" v-if="user.sex === 2"></i>
     </div>
     <div>
-      <p>{{ user.username || '-' }} - {{ user.mobile || '' }}</p>
-      <p>{{ birthday }} · {{ basePainting || '' }}</p>
+      <p>
+        <span @click="onClick">{{
+          user.user_num ? `${user.user_num}：` : ''
+        }}</span>
+        <span @click="onClick">{{ user.username || '-' }}</span> -
+        <span @click="onClick">{{ user.mobile || '' }}</span>
+      </p>
+      <p @click="onClick">{{ birthday }} · {{ basePainting || '' }}</p>
     </div>
   </div>
 </template>

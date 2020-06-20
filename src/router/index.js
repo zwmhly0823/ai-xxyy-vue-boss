@@ -2,8 +2,8 @@
  * @Author: YangJiyong
  * @Email: yangjiyong@meishubao.com
  * @Date: 2020-03-14 15:07:26
- * @Last Modified by: YangJiyong
- * @Last Modified time: 2020-05-18 11:32:42
+ * @Last Modified by: songyanan
+ * @Last Modified time: 2020-06-13 10:32:02
  * @Description: 设置左侧导航展示数据
  * 通过导入模块router/index.js判断，规定模块入口文件为 {path: '/', name: 'Home'}
  * TODO: 自动完成
@@ -319,6 +319,14 @@ const routes = [
         name: 'workHandover',
         meta: {
           title: '离职交接',
+          module: 'teacher'
+        }
+      },
+      {
+        path: '/systemAccount',
+        name: 'systemAccount',
+        meta: {
+          title: '系统账号',
           module: 'teacher'
         }
       }

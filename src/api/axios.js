@@ -3,11 +3,12 @@
  * @version:
  * @Author: shentong
  * @Date: 2020-03-13 14:38:28
- * @LastEditors: panjian
- * @LastEditTime: 2020-05-21 17:27:45
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-06-13 23:05:05
  */
 import axios from 'axios'
 import _ from 'lodash'
+import { removeToken } from '@/utils/auth'
 
 // 测试环境配置
 // const isTest = process.env.BASE_URL === 'ghpagestest'
@@ -59,6 +60,15 @@ axios.interceptors.response.use(
         window._Vue.$message.error('参数错误')
         break
       case 401: {
+        // 有登录状态的token, 但已离职的老师会提示
+        if (document.getElementsByClassName('el-message').length === 0) {
+          window._Vue.$message.error('没有权限，禁止登录')
+        }
+        // 退出登录
+        setTimeout(() => {
+          removeToken()
+          location.href = `/login/#/`
+        }, 1000)
         break
       }
       case 404: {
