@@ -116,7 +116,7 @@ export default {
    */
   getScheduleDetailStatistic(params) {
     return axios.get(
-      `/api/s/v1/management/enroll/calculation/byPeriod?teacherId=${params.teacherId}&departmentIds=${params.departmentIds}&courseType=${params.courseType}&period=${params.period}`
+      `/api/s/v1/management/enroll/calculation/byPeriod?teacherId=${params.teacherId}&departmentIds=${params.departmentIds}&level=${params.level}&courseType=${params.courseType}&period=${params.period}`
     )
   },
   /**
