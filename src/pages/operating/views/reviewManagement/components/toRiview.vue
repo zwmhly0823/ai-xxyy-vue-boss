@@ -31,7 +31,7 @@
           <div class="review-container">
             <div class="top-container">
               <div
-                v-for="(item, index) in conversionArr(scope.row.reviewDataList)"
+                v-for="(item, index) in getObjValues(scope.row.reviewDataList)"
                 :key="index"
               >
                 <div
@@ -203,12 +203,6 @@ export default {
       await this.initList(page)
       document.body.scrollTop = document.documentElement.scrollTop = 0
     },
-    conversionArr(obj) {
-      if (obj === undefined) {
-        return false
-      }
-      return Object.keys(obj)
-    },
     getObjValues(obj) {
       if (obj === undefined) {
         return false
@@ -324,8 +318,8 @@ export default {
             type: 'success'
           })
           setTimeout(() => {
-            location.reload()
-          }, 2000)
+            this.initList(this.number)
+          }, 1500)
         }
       } catch (error) {
         console.log(error)
