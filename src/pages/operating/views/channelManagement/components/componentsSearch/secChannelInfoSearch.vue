@@ -19,7 +19,7 @@
     ></el-cascader>
     <el-select
       style="margin-left:20px;"
-      v-model="channelLevel"
+      v-model="channelLevels"
       @change="onChangeChannelLevel"
       size="mini"
       placeholder="请选择"
@@ -34,7 +34,6 @@
 </template>
 
 <script>
-import { debounce } from 'lodash'
 import axios from '@/api/axiosConfig'
 export default {
   props: {
@@ -42,82 +41,31 @@ export default {
       type: String,
       default: ''
     },
-    name: {
-      type: String,
-      default: 'channelid'
-    },
     // 1-系统课，0-体验课
     type: {
       type: String,
       default: '0'
-    },
-    datePlaceholder: {
-      type: String,
-      default: '下单时间'
-    },
-    scheduling: {
-      type: Boolean,
-      default: true
-    },
-    channelDate: {
-      type: Boolean,
-      default: true
     }
   },
   data() {
     return {
-      channels: '',
-      channelLevel: '', // 渠道等级
-      isMultiple: false,
-      loading: false,
-      stage: '',
+      channelLevels: [], // 渠道等级
       channelName: [],
-      channelLeves: [],
-      dataList: [],
-      channelList: [],
-      channelData: null,
-      channelClassData: [],
       channelClassList: null, // 分类条件
       showDatas: null // 三级列表展示数据
     }
   },
   watch: {
     tabIndex(value) {
-      this.stage = ''
       this.channelName = []
-      this.channels = ''
+      this.channelLevels = []
     }
   },
   async created() {
-    await this.getChannelLeves()
     await this.getChannelClassList()
-    this.formatData(this.channelList, this.channelClassList)
-  },
-  computed: {
-    handleDebounce() {
-      return debounce(this.getData, 500)
-    }
-  },
-  mounted() {
-    this.getData()
+    this.formatData(this.channelClassList)
   },
   methods: {
-    async getChannelLeves() {
-      await axios
-        .post('/graphql/channel', {
-          query: `{
-            channelAllList(size: 500) {
-                id
-                channel_class_id
-                channel_outer_name
-              }
-            }
-          `
-        })
-        .then((res) => {
-          this.channelLeves = res.data.channelAllList
-        })
-    },
     // 获取渠道来源分类 filter: 过滤关键词  eg：filter:"抖音"
     async getChannelClassList() {
       await axios
@@ -135,7 +83,8 @@ export default {
           this.channelClassList = res.data.ChannelClassList
         })
     },
-    formatData(classdata, classifiData) {
+    // 查询下拉列表
+    formatData(classifiData) {
       // 第一级目录
       const arrList = []
       classifiData.forEach((item) => {
@@ -163,14 +112,6 @@ export default {
           item.children && item.children.forEach((vals) => (vals.children = []))
       )
 
-      classdata.forEach((content, num) => {
-        arrList.forEach((datas, nums) => {
-          if (+content.channel_class_id === +datas.id) {
-            datas.children.push(content)
-          }
-        })
-      })
-
       const result = firstNode.map((item) => {
         if (item.children && item.children.length === 0) {
           item.children = null
@@ -185,48 +126,13 @@ export default {
 
       this.showDatas = result
     },
+    // 渠道筛选列表变化时调用
     onSelect(data) {
-      console.error('data', data)
       this.$emit('channelSearchValue', data.length > 0 ? data : '')
     },
+    // 渠道等级下拉框变化时调用
     onChangeChannelLevel(data) {
       this.$emit('channelLevelValue', data.length > 0 ? data : '')
-    },
-    getData(queryString = '') {
-      this.loading = true
-      const queryParams = {
-        bool: {
-          must: [{ wildcard: { 'period_name.keyword': `*${queryString}*` } }]
-        }
-      }
-      if (this.type) {
-        queryParams.bool.must.push({ term: { type: `${this.type}` } })
-      }
-      const q = JSON.stringify(queryParams)
-      const sort = `{"id":"desc"}`
-      axios
-        .post('/graphql/v1/toss', {
-          query: `{
-                  ManagementListEx(query:${JSON.stringify(
-                    q
-                  )}, sort: ${JSON.stringify(sort)}){
-                    id
-                    period
-                    period_name
-                  }
-                }`
-        })
-        .then((res) => {
-          this.loading = false
-          this.dataList = res.data.ManagementListEx
-        })
-        .catch(() => {
-          this.loading = false
-        })
-    },
-    // 获取选中的体验课排期
-    onChange(data) {
-      this.$emit('schedulingSearch', data.length > 0 ? data : '')
     }
   }
 }
