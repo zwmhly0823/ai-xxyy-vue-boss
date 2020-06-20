@@ -145,8 +145,7 @@ export default {
       timestamp: timestamp,
       loading: true,
       courseIdList: [],
-      scoreObj: scoreObj,
-      switch: false
+      scoreObj: scoreObj
     }
   },
   mounted() {
@@ -298,6 +297,11 @@ export default {
     },
     async generateSpeech(item) {
       const describe = Math.ceil(this.$refs.audioRef.duration)
+      if (isNaN(describe)) {
+        console.log('生成失败')
+        this.$message.error('发送失败，请重新发送')
+        return false
+      }
       const params = {
         studentId: item.studentId,
         taskId: item.id,
