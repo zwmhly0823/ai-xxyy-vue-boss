@@ -51,6 +51,10 @@
       <el-form-item label="对外昵称" prop="nickname" style="width:60%;">
         <el-input v-model.trim="ruleForm.nickname"></el-input>
       </el-form-item>
+      <!-- 钉钉工号 -->
+      <el-form-item label="钉钉工号" prop="dingUserid" style="width:60%;">
+        <el-input v-model.trim="ruleForm.dingUserid"></el-input>
+      </el-form-item>
       <!-- 性别 -->
       <el-form-item label="性别" prop="resource">
         <el-radio-group v-model="ruleForm.resource">
@@ -335,6 +339,8 @@ export default {
         name: '',
         // 对外昵称
         nickname: '',
+        // 钉钉工号
+        dingUserid: '',
         // 性别
         resource: '',
         // 所属部门
@@ -382,6 +388,11 @@ export default {
         // 对外昵称
         nickname: [
           { required: true, message: '请填写对外昵称', trigger: 'blur' },
+          { max: 20, message: '请控制在20个字符以内', trigger: 'blur' }
+        ],
+        // 钉钉工号
+        dingUserid: [
+          { required: true, message: '请填写钉钉工号', trigger: 'blur' },
           { max: 20, message: '请控制在20个字符以内', trigger: 'blur' }
         ],
         // 性别
@@ -526,6 +537,7 @@ export default {
             this.ruleForm.phone = payload.teacher.phone
             this.ruleForm.name = payload.teacher.realName
             this.ruleForm.nickname = payload.teacher.nickname
+            this.ruleForm.dingUserid = payload.teacher.dingUserid
             this.ruleForm.resource = payload.teacher.sex
             // this.ruleForm.region = payload.department
             //   ? [payload.department.id]
@@ -595,6 +607,7 @@ export default {
           password: this.ruleForm.pass,
           realName: this.ruleForm.name,
           nickname: this.ruleForm.nickname,
+          dingUserid: this.ruleForm.dingUserid,
           sex: this.ruleForm.resource,
           joinDate: this.ruleForm.inductionDate,
           leaveDate: departureTime,
