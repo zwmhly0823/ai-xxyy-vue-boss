@@ -356,14 +356,16 @@ export default {
   },
   watch: {
     tabIndex(value) {
-      this.query = ''
-      this.channelIds = []
-      this.querySearchTrialStage = ''
-      this.stateTime = ''
-      this.endTime = ''
-      this.totalNumber = 1
-      this.getChannelDetailPage()
-      this.channelSearchValList = []
+      if (value === '0') {
+        this.query = ''
+        this.channelIds = []
+        this.querySearchTrialStage = ''
+        this.stateTime = ''
+        this.endTime = ''
+        this.totalNumber = 1
+        this.getChannelDetailPage()
+        this.channelSearchValList = []
+      }
     }
   },
   created() {

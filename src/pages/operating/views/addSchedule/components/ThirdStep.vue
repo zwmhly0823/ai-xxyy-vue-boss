@@ -36,6 +36,16 @@
         >
         </el-table-column>
         <el-table-column
+          prop="levelName"
+          label="销售等级"
+          width="120"
+          align="center"
+        >
+          <template slot-scope="scope">
+            {{ scope.row.levelName || '' }}
+          </template>
+        </el-table-column>
+        <el-table-column
           prop="teacherWechatNo"
           label="绑定微信"
           width="120"

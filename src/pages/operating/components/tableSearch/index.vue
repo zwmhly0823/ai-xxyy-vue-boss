@@ -14,15 +14,43 @@
     <div class="comp-cell">
       <group-sell @result="selectSellTeacher" :name="'groupSell'" />
     </div>
+    <div class="comp-cell">
+      <el-select
+        v-if="isShowLevel"
+        v-model="level"
+        clearable
+        size="mini"
+        multiple
+        placeholder="销售等级"
+        @change="sellerLevelChange"
+      >
+        <el-option
+          v-for="item in sellerLevelList"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value"
+        >
+        </el-option>
+      </el-select>
+    </div>
   </div>
 </template>
 <script>
 import Department from '@/components/MSearch/searchItems/department'
 import GroupSell from '@/components/MSearch/searchItems/groupSell'
 export default {
+  props: ['isShowLevel'],
   data() {
     return {
-      emitInfo: {}
+      emitInfo: {},
+      level: '',
+      // 销售等级
+      sellerLevelList: [
+        { label: '1级社群销售', value: 1 },
+        { label: '2级社群销售', value: 2 },
+        { label: '3级社群销售', value: 3 },
+        { label: '新兵营', value: 0 }
+      ]
     }
   },
   components: {
@@ -30,6 +58,10 @@ export default {
     GroupSell
   },
   methods: {
+    // 销售等级
+    sellerLevelChange(level) {
+      this.manageChange({ level }, 'level')
+    },
     // 社群销售
     selectSellTeacher(teachers) {
       this.manageChange(teachers, 'groupSell')

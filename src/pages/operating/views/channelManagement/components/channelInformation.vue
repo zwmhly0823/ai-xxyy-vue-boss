@@ -15,6 +15,7 @@
           :tabIndex="tabIndex"
           @channelSearchValue="channelSearchValue"
           @channelInputValue="channelInputValue"
+          @channelLevelValue="channelLevelValue"
         ></channel-search>
         <el-button
           class="add-btn"
@@ -75,6 +76,16 @@
           align="center"
           show-overflow-tooltip
         >
+        </el-table-column>
+        <el-table-column
+          prop="channel_level"
+          label="渠道等级"
+          align="center"
+          show-overflow-tooltip
+        >
+          <template slot-scope="scope">
+            {{ scope.row.channel_level | channelLevelFilter }}
+          </template>
         </el-table-column>
         <el-table-column prop="status" label="渠道状态" align="center">
           <template slot-scope="scope">
@@ -195,6 +206,15 @@ export default {
     addCahnnel,
     modifyCahnnel
   },
+  filters: {
+    channelLevelFilter(val) {
+      var levelNames = { 0: 'B', 1: 'A', 2: 'S' }
+      if (Object.prototype.hasOwnProperty.call(levelNames, val)) {
+        return levelNames[val]
+      }
+      return '-'
+    }
+  },
   data() {
     return {
       downLoad: false,
@@ -255,13 +275,15 @@ export default {
   },
   watch: {
     tabIndex(value) {
-      this.queryList = `""`
-      this.currentPage = 1
-      this.getChannelOne()
+      if (value === '1') {
+        this.queryList = `""`
+        this.currentPage = 1
+        this.getChannelOne()
+      }
     }
   },
   created() {
-    this.getChannelOne()
+    // this.getChannelOne()
   },
   methods: {
     // 获取渠道id
@@ -293,6 +315,7 @@ export default {
         this.queryList,
         this.currentPage
       ).then((res) => {
+        console.log('res:', res)
         this.currentPage = res.data.ChannelDetailStatisticsPage.number
         this.totalElements = res.data.ChannelDetailStatisticsPage.totalElements
         const _data = res.data.ChannelDetailStatisticsPage.content
@@ -353,6 +376,16 @@ export default {
       this.currentPage = 1
       if (data) {
         this.queryList = `"{\\"id\\":[\\"${data}\\"]}"`
+      } else {
+        this.queryList = `""`
+      }
+      this.getChannelDetailStatisticsPage()
+    },
+    // 渠道等级下拉框搜索
+    channelLevelValue(data) {
+      if (data) {
+        const query = { channel_level: Array.from(new Set(data)) }
+        this.queryList = JSON.stringify(JSON.stringify(query))
       } else {
         this.queryList = `""`
       }

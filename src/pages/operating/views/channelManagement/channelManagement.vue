@@ -16,6 +16,9 @@
         <el-tab-pane label="渠道信息管理" name="channleInfo">
           <channel-information :tabIndex="tabIndex" />
         </el-tab-pane>
+        <el-tab-pane label="二级渠道管理" name="SecChannleInfo">
+          <sec-channel-information :tabIndex="tabIndex" />
+        </el-tab-pane>
         <el-tab-pane label="渠道订单导入" name="channleUpload">
           <channel-upload />
         </el-tab-pane>
@@ -27,11 +30,13 @@
 <script>
 import channelSearch from './components/channelSearch'
 import channelInformation from './components/channelInformation'
+import secChannelInformation from './components/secChannelInformation'
 import channelUpload from './components/channelUpload'
 export default {
   components: {
     channelSearch,
     channelInformation,
+    secChannelInformation,
     channelUpload
   },
   data() {

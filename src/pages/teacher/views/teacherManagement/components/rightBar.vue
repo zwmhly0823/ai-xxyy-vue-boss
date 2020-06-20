@@ -17,6 +17,7 @@
       induction="status"
       landing="is_login"
       position="duty_id"
+      seller-level="level"
       v-if="true"
     >
       <!-- <el-button type="primary" slot="searchItems" size="mini">搜索</el-button> -->
@@ -360,13 +361,13 @@ export default {
                 : ''
               // 销售等级
               if (res.level === 0) {
-                res.level = '新兵培训'
+                res.level = '新兵营'
               } else if (res.level === 1) {
-                res.level = '下组待接生'
+                res.level = '1级社群销售'
               } else if (res.level === 2) {
-                res.level = '首次排班'
+                res.level = '2级社群销售'
               } else if (res.level === 3) {
-                res.level = '已接生一次'
+                res.level = '3级社群销售'
               } else if (res.level === 4) {
                 res.level = '1级'
               } else if (res.level === 5) {
