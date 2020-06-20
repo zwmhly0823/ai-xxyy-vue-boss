@@ -8,7 +8,7 @@
  */
  -->
 <template>
-  <div class="container">
+  <div class="container" v-if="renderFlag">
     <el-table
       v-loading="loading"
       element-loading-text="拼命加载中"
@@ -63,7 +63,7 @@
             </div>
             <div
               class="bottom-container"
-              v-if="getObjValues(scope.row.reviewDataList)"
+              v-if="getObjValues(scope.row.reviewDataList).length > 0"
             >
               <el-button
                 type="success"
@@ -145,7 +145,8 @@ export default {
       timestamp: timestamp,
       loading: true,
       courseIdList: [],
-      scoreObj: scoreObj
+      scoreObj: scoreObj,
+      renderFlag: false
     }
   },
   mounted() {
@@ -189,6 +190,7 @@ export default {
               }
             }
           }
+          this.renderFlag = true
           this.loading = false
         }
       } catch (error) {
@@ -211,11 +213,13 @@ export default {
       if (obj === undefined) {
         return false
       }
-      const values = Object.values(obj)
-      const isShow = values.every((item, index) => {
-        return item !== undefined
-      })
-      return isShow
+      const newarr = []
+      for (const key in obj) {
+        if (obj[key]) {
+          newarr.push(key)
+        }
+      }
+      return newarr
     },
     selectNow(listIndex, item, index) {
       const listItem = this.list[listIndex]
@@ -244,7 +248,7 @@ export default {
         }
       }
       for (const file of ownFils) {
-        if (file.flag) {
+        if (file !== undefined && file.flag) {
           fileUrl.push(file.fileUrl)
         }
       }
@@ -261,7 +265,9 @@ export default {
       }
       if (keysItem.includes('开场白')) {
         arr.push(true)
-        fileUrl.unshift(idx['开场白'][0].fileUrl)
+        if (fileUrl.length > 0 && idx['开场白'] !== undefined) {
+          fileUrl.unshift(idx['开场白'][0].fileUrl)
+        }
       }
       if (arr.length < ownLength.length) {
         this.$message({
