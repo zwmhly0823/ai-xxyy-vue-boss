@@ -20,7 +20,7 @@
           ></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="二级渠道" prop="channelTwo">
+      <el-form-item style="width:293px" label="二级渠道" prop="channelTwo">
         <el-input
           v-model="ruleForm.channelTwo"
           placeholder="请输入二级渠道"
@@ -32,6 +32,9 @@
           <el-option label="A" :value="1">A</el-option>
           <el-option label="B" :value="0">B</el-option>
         </el-select>
+        <span class="channel-level-desc">
+          注：二级渠道等级保存后，其下所有三级渠道需同步该等级
+        </span>
       </el-form-item>
       <el-form-item>
         <div style="margin-left:50px;">
@@ -96,9 +99,7 @@ export default {
     },
     // 提交
     submitForm(formName) {
-      console.log('sumbit:', this.ruleForm)
       this.$refs[formName].validate((valid) => {
-        console.log('valid', valid)
         if (valid) {
           const params = {
             channelClassId: this.channelId,
@@ -148,6 +149,12 @@ export default {
   a {
     margin-left: 10px;
     color: #2a75ed;
+  }
+  .channel-level-desc {
+    display: block;
+    font-size: 12px;
+    line-height: 24px;
+    color: red;
   }
 }
 </style>
