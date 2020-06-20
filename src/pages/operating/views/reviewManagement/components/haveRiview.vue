@@ -175,5 +175,8 @@ export default {
   /deep/ .m-pagination {
     bottom: 0;
   }
+  /deep/ .el-icon-circle-close {
+    color: rgb(255, 255, 255);
+  }
 }
 </style>

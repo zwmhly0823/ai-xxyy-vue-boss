@@ -8,7 +8,7 @@
  */
  -->
 <template>
-  <div class="container">
+  <div class="container" v-if="renderFlag">
     <el-table
       v-loading="loading"
       element-loading-text="拼命加载中"
@@ -31,7 +31,7 @@
           <div class="review-container">
             <div class="top-container">
               <div
-                v-for="(item, index) in conversionArr(scope.row.reviewDataList)"
+                v-for="(item, index) in getObjValues(scope.row.reviewDataList)"
                 :key="index"
               >
                 <div
@@ -63,7 +63,7 @@
             </div>
             <div
               class="bottom-container"
-              v-if="getObjValues(scope.row.reviewDataList)"
+              v-if="getObjValues(scope.row.reviewDataList).length > 0"
             >
               <el-button
                 type="success"
@@ -146,7 +146,7 @@ export default {
       loading: true,
       courseIdList: [],
       scoreObj: scoreObj,
-      switch: false
+      renderFlag: false
     }
   },
   mounted() {
@@ -170,6 +170,7 @@ export default {
       }
     },
     async iniToViewInform() {
+      if (this.courseIdList.length < 0) return
       const courseIds = this.courseIdList.join(',')
       const { list } = this
       try {
@@ -189,6 +190,7 @@ export default {
               }
             }
           }
+          this.renderFlag = true
           this.loading = false
         }
       } catch (error) {
@@ -201,21 +203,17 @@ export default {
       await this.initList(page)
       document.body.scrollTop = document.documentElement.scrollTop = 0
     },
-    conversionArr(obj) {
-      if (obj === undefined) {
-        return false
-      }
-      return Object.keys(obj)
-    },
     getObjValues(obj) {
       if (obj === undefined) {
         return false
       }
-      const values = Object.values(obj)
-      const isShow = values.every((item, index) => {
-        return item !== undefined
-      })
-      return isShow
+      const newarr = []
+      for (const key in obj) {
+        if (obj[key]) {
+          newarr.push(key)
+        }
+      }
+      return newarr
     },
     selectNow(listIndex, item, index) {
       const listItem = this.list[listIndex]
@@ -244,7 +242,7 @@ export default {
         }
       }
       for (const file of ownFils) {
-        if (file.flag) {
+        if (file !== undefined && file.flag) {
           fileUrl.push(file.fileUrl)
         }
       }
@@ -261,7 +259,9 @@ export default {
       }
       if (keysItem.includes('开场白')) {
         arr.push(true)
-        fileUrl.unshift(idx['开场白'][0].fileUrl)
+        if (fileUrl.length > 0 && idx['开场白'] !== undefined) {
+          fileUrl.unshift(idx['开场白'][0].fileUrl)
+        }
       }
       if (arr.length < ownLength.length) {
         this.$message({
@@ -297,6 +297,11 @@ export default {
     },
     async generateSpeech(item) {
       const describe = Math.ceil(this.$refs.audioRef.duration)
+      if (isNaN(describe)) {
+        console.log('生成失败')
+        this.$message.error('发送失败，请重新发送')
+        return false
+      }
       const params = {
         studentId: item.studentId,
         taskId: item.id,
@@ -313,8 +318,8 @@ export default {
             type: 'success'
           })
           setTimeout(() => {
-            location.reload()
-          }, 2000)
+            this.initList(this.number)
+          }, 1500)
         }
       } catch (error) {
         console.log(error)
@@ -403,6 +408,9 @@ export default {
   }
   /deep/ .m-pagination {
     bottom: 0;
+  }
+  /deep/ .el-icon-circle-close {
+    color: rgb(255, 255, 255);
   }
 }
 </style>
