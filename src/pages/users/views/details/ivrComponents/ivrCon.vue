@@ -183,9 +183,6 @@ export default {
         } else {
           this.mergeNameTable[this.mergeNameTable.length - 1].length++
         }
-        this.mergeNameTable.forEach((item) => {
-          this.mergeNameTableIndexArr.push(item.index)
-        })
         // 参课时间一样就合起来
         if (curVal.addTime !== preVal.addTime) {
           this.mergeAddTimeTable.push({
@@ -195,10 +192,13 @@ export default {
         } else {
           this.mergeAddTimeTable[this.mergeAddTimeTable.length - 1].length++
         }
-        this.mergeAddTimeTable.forEach((item) => {
-          this.mergeAddTimeTableIndexArr.push(item.index)
-        })
         return curVal
+      })
+      this.mergeNameTable.forEach((item) => {
+        this.mergeNameTableIndexArr.push(item.index)
+      })
+      this.mergeAddTimeTable.forEach((item) => {
+        this.mergeAddTimeTableIndexArr.push(item.index)
       })
     },
     initSwitch() {
