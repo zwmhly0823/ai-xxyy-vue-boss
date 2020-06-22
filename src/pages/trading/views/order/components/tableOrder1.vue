@@ -39,50 +39,91 @@
       </el-table-column>
       <el-table-column label="社群销售·体验课班级" min-width="200">
         <template slot-scope="scope">
-          <p>
-            {{ scope.row.salesman ? scope.row.salesman.realname : '-' }}
-            <span
-              v-if="trialTeamUid[scope.row.uid]"
-              :class="{ 'primary-text': trialTeamUid[scope.row.uid].team_name }"
-              @click="openDetail(trialTeamUid[scope.row.uid].id, scope.row, 0)"
-            >
-              （{{ trialTeamUid[scope.row.uid].team_name }}）
-            </span>
-            <span v-else>-</span>
-          </p>
-          <p>
-            {{
-              scope.row.department
-                ? scope.row.department.department
-                  ? scope.row.department.department.name
+          <!-- 续费情况 -->
+          <div v-if="scope.row.regtype && scope.row.regtype !== 3">
+            <p>
+              {{ scope.row.salesman ? scope.row.salesman.realname : '-' }}
+              <span
+                v-if="trialTeamUid[scope.row.uid]"
+                :class="{
+                  'primary-text': trialTeamUid[scope.row.uid].team_name
+                }"
+                @click="
+                  openDetail(trialTeamUid[scope.row.uid].id, scope.row, 0)
+                "
+              >
+                （{{ trialTeamUid[scope.row.uid].team_name }}）
+              </span>
+              <span v-else>-</span>
+            </p>
+            <p>
+              {{
+                scope.row.department
+                  ? scope.row.department.department
+                    ? scope.row.department.department.name
+                    : '-'
                   : '-'
-                : '-'
-            }}
-          </p>
+              }}
+            </p>
+          </div>
+          <div v-else>
+            <p>-</p>
+            <p>-</p>
+          </div>
         </template>
       </el-table-column>
       <el-table-column label="服务老师·系统课班级" min-width="200">
         <template slot-scope="scope">
-          <p>
-            {{ scope.row.teacher ? scope.row.teacher.realname : '-' }}
-            <span
-              :class="{ 'primary-text': scope.row.team }"
-              @click="openDetail(scope.row.team.id, scope.row, 2)"
-            >
-              ({{ scope.row.team ? scope.row.team.team_name : '-' }})
-            </span>
-          </p>
-          <p>
-            {{
-              scope.row.teacher_department &&
-              scope.row.teacher_department.department
-                ? departmentObj[scope.row.teacher_department.department.id]
+          <!-- 非续费 -->
+          <div v-if="scope.row.regtype !== 3">
+            <p>
+              {{ scope.row.teacher ? scope.row.teacher.realname : '-' }}
+              <span
+                :class="{ 'primary-text': scope.row.team }"
+                @click="openDetail(scope.row.team.id, scope.row, 2)"
+              >
+                ({{ scope.row.team ? scope.row.team.team_name : '-' }})
+              </span>
+            </p>
+            <p>
+              {{
+                scope.row.teacher_department &&
+                scope.row.teacher_department.department
                   ? departmentObj[scope.row.teacher_department.department.id]
-                      .name
+                    ? departmentObj[scope.row.teacher_department.department.id]
+                        .name
+                    : '-'
                   : '-'
-                : '-'
-            }}
-          </p>
+              }}
+            </p>
+          </div>
+          <!-- 续费 -->
+          <div v-else>
+            <p>
+              {{ scope.row.salesman ? scope.row.salesman.realname : '-' }}
+              <span
+                v-if="trialTeamUid[scope.row.uid]"
+                :class="{
+                  'primary-text': trialTeamUid[scope.row.uid].team_name
+                }"
+                @click="
+                  openDetail(trialTeamUid[scope.row.uid].id, scope.row, 0)
+                "
+              >
+                （{{ trialTeamUid[scope.row.uid].team_name }}）
+              </span>
+              <span v-else>-</span>
+            </p>
+            <p>
+              {{
+                scope.row.department
+                  ? scope.row.department.department
+                    ? scope.row.department.department.name
+                    : '-'
+                  : '-'
+              }}
+            </p>
+          </div>
         </template>
       </el-table-column>
 
