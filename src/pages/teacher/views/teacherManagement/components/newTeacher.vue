@@ -312,10 +312,10 @@ export default {
       WeChat: [],
       // 销售等级
       Level: [
-        { label: '1级社群销售', value: 0 },
-        { label: '2级社群销售', value: 1 },
-        { label: '3级社群销售', value: 2 },
-        { label: '新兵营', value: 3 }
+        { label: '1级社群销售', value: 1 },
+        { label: '2级社群销售', value: 2 },
+        { label: '3级社群销售', value: 3 },
+        { label: '新兵营', value: 0 }
       ],
       // Level: [
       //   { label: '新兵培训', value: 0 },
