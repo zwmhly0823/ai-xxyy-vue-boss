@@ -326,7 +326,7 @@ const routes = [
         path: '/systemAccount',
         name: 'systemAccount',
         meta: {
-          title: '系统账号',
+          title: '系统帐号',
           module: 'teacher'
         }
       }
