@@ -961,7 +961,8 @@ export default {
           })
           this.must = temp
         }
-        this.$emit('search', res === '' ? '' : temp)
+        // this.$emit('search', res === '' ? '' : temp)
+        this.$emit('search', temp)
         return
       }
       // should

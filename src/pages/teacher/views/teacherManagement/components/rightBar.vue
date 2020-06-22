@@ -341,7 +341,6 @@ export default {
       // tab数据
       this.$http.Teacher.getTeacherPage(page, JSON.stringify(query)).then(
         (res) => {
-          console.log(res.data.TeacherManagePage.content, '老师列表')
           if (res && res.data && res.data.TeacherManagePage) {
             const {
               content = [],
