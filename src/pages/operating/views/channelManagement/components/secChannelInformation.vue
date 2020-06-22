@@ -188,7 +188,7 @@ export default {
     },
     // 修改完成后刷洗列表
     modifyChannelShowBtn(data) {
-      this.getSecChannelList()
+      window.setTimeout(this.getSecChannelList, 800)
     },
     // 关闭编辑页面
     modifyChannelShow(data) {

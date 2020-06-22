@@ -38,7 +38,7 @@
       v-model="channelLevel"
       @change="onChangeChannelLevel"
       size="mini"
-      placeholder="请选择"
+      placeholder="渠道等级"
       clearable
       multiple
     >
