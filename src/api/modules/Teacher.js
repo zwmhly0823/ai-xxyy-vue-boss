@@ -46,6 +46,7 @@ export default {
             realname
             sex
             nickname
+            ding_userid
             phone
             status
             is_login

@@ -18,10 +18,6 @@
         <orderSearch class="allmini" @result="getOrderSearch" />
       </el-form-item>
 
-      <el-form-item label="订单来源:" :class="{ [$style.marginer]: true }">
-        <ChannelSelect @result="getChannel" name="pay_channel" />
-      </el-form-item>
-
       <el-form-item label="推荐人信息:" :class="{ [$style.marginer]: true }">
         <div class="row_colum">
           <simple-select
@@ -122,6 +118,11 @@
             name="trial_team_id"
             :class="['margin_l10']"
           />
+          <ChannelSelect
+            class="margin_l10"
+            @result="getTrialChannel"
+            name="trial_pay_channel"
+          />
         </div>
       </el-form-item>
       <br />
@@ -161,6 +162,11 @@
             @result="getTeamName"
             name="team_id"
             class="margin_l10"
+          />
+          <ChannelSelect
+            class="margin_l10"
+            @result="getChannel"
+            name="pay_channel"
           />
         </div>
       </el-form-item>
@@ -274,6 +280,9 @@ export default {
     // 选择渠道
     getChannel(res) {
       this.setSeachParmas(res, ['pay_channel'], 'terms')
+    },
+    getTrialChannel(res) {
+      this.setSeachParmas(res, ['trial_pay_channel'], 'terms')
     },
     // 系统课排期
     selectSchedule(res) {

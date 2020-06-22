@@ -37,20 +37,19 @@
           </p>
         </template>
       </el-table-column>
-      <el-table-column label="体验课班级" min-width="150">
+      <el-table-column label="社群销售·体验课班级" min-width="200">
         <template slot-scope="scope">
           <p>
-            {{
-              trialTeamUid[scope.row.uid]
-                ? trialTeamUid[scope.row.uid].team_name
-                : '-'
-            }}
+            {{ scope.row.salesman ? scope.row.salesman.realname : '-' }}
+            <span
+              v-if="trialTeamUid[scope.row.uid]"
+              :class="{ 'primary-text': trialTeamUid[scope.row.uid].team_name }"
+              @click="openDetail(trialTeamUid[scope.row.uid].id, scope.row, 0)"
+            >
+              （{{ trialTeamUid[scope.row.uid].team_name }}）
+            </span>
+            <span v-else>-</span>
           </p>
-        </template>
-      </el-table-column>
-      <el-table-column label="社群销售" min-width="150">
-        <template slot-scope="scope">
-          <p>{{ scope.row.salesman ? scope.row.salesman.realname : '-' }}</p>
           <p>
             {{
               scope.row.department
@@ -62,20 +61,16 @@
           </p>
         </template>
       </el-table-column>
-      <el-table-column label="系统课班级" min-width="150">
-        <template slot-scope="scope">
-          <p
-            :class="{ 'primary-text': scope.row.team }"
-            @click="openDetail(scope.row.team.id)"
-          >
-            {{ scope.row.team ? scope.row.team.team_name : '-' }}
-          </p>
-        </template>
-      </el-table-column>
-      <el-table-column label="服务老师" min-width="120">
+      <el-table-column label="服务老师·系统课班级" min-width="200">
         <template slot-scope="scope">
           <p>
             {{ scope.row.teacher ? scope.row.teacher.realname : '-' }}
+            <span
+              :class="{ 'primary-text': scope.row.team }"
+              @click="openDetail(scope.row.team.id, scope.row, 2)"
+            >
+              ({{ scope.row.team ? scope.row.team.team_name : '-' }})
+            </span>
           </p>
           <p>
             {{
@@ -90,9 +85,31 @@
           </p>
         </template>
       </el-table-column>
+
+      <el-table-column label="订单状态" min-width="100">
+        <template slot-scope="scope">
+          {{ scope.row.order_status ? scope.row.order_status : '-' }}
+        </template>
+      </el-table-column>
+
+      <el-table-column label="订单来源" min-width="200">
+        <template slot-scope="scope">
+          <p>体验课:{{ scope.row.trial_pay_channel_text || '-' }}</p>
+          <p>
+            系统课:{{
+              scope.row.channel ? scope.row.channel.channel_outer_name : '-'
+            }}
+          </p>
+        </template>
+      </el-table-column>
+
       <el-table-column label="推荐人信息" min-width="160">
         <template slot-scope="scope">
-          <p>
+          <p
+            v-if="scope.row.first_send_user"
+            :class="{ 'primary-text': scope.row.first_send_user }"
+            @click="openUserDetail(scope.row.first_send_user.id)"
+          >
             {{
               scope.row.first_send_user
                 ? scope.row.first_send_user.username
@@ -118,18 +135,6 @@
                 : '-'
             }}
           </p>
-        </template>
-      </el-table-column>
-      <el-table-column label="订单来源" min-width="120">
-        <template slot-scope="scope">
-          <p>
-            {{ scope.row.channel ? scope.row.channel.channel_outer_name : '-' }}
-          </p>
-        </template>
-      </el-table-column>
-      <el-table-column label="订单状态" min-width="100">
-        <template slot-scope="scope">
-          {{ scope.row.order_status ? scope.row.order_status : '-' }}
         </template>
       </el-table-column>
 
@@ -467,6 +472,9 @@ export default {
       })
       this.trialTeam = result || {}
       this.trialTeamUid = resultUid || {}
+      console.log(this.trialTeam)
+      console.log(this.trialTeamUid)
+
       // return result
     },
 
@@ -480,9 +488,14 @@ export default {
     },
     // /student-team/#/teamDetail/280/0
     // 打开班级详情
-    openDetail(id, row) {
+    openDetail(id, row, type) {
+      // type 0体验课 2系统课
       row && console.log(row)
-      id && openBrowserTab(`/student-team/#/teamDetail/${id}/2`)
+      id && openBrowserTab(`/student-team/#/teamDetail/${id}/${type}`)
+    },
+    // 用户详情
+    openUserDetail(id) {
+      id && openBrowserTab(`/users/#/details/${id}`)
     }
   }
 }
