@@ -170,6 +170,9 @@ export default {
         }
       })
       // 合并单元格
+      // 最终拿到的数据：
+      // index: 下标,length:这个下标上的数据要占几个格子
+      // ***IndexArr 表示那些下标有长度，不在这个数组中的，占格数为0
       this.tableData.reduce((preVal, curVal, index) => {
         // 课程名称一样就合起来
         if (curVal.courseName !== preVal.courseName) {
@@ -278,8 +281,15 @@ export default {
     objectSpanMethod({ row, column, rowIndex, columnIndex }) {
       if (column.label === '课程名称') {
         if (this.mergeNameTableIndexArr.includes(rowIndex)) {
+          let mIndex = null
+          // 这里的循环是为了拿到当前项的下标位于我们自己创建的数组中的位置，以方面后面取length的值
+          this.mergeNameTable.forEach((mItem, mKey) => {
+            if (mItem.index === rowIndex) {
+              mIndex = mKey
+            }
+          })
           return {
-            rowspan: this.mergeNameTable[rowIndex].length,
+            rowspan: this.mergeNameTable[mIndex].length,
             colspan: 1
           }
         } else {
