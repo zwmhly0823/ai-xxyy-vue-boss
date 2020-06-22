@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-03-24 12:49:53
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-06-12 20:49:19
+ * @LastEditTime: 2020-06-22 22:24:45
 -->
 <template>
   <div v-if="!item.hidden">
@@ -106,6 +106,11 @@ export default {
     // 展开更多
     handleOpen(item, index = 0, hasChildren = false) {
       console.log(item)
+      // 外链情况
+      if (item.path.includes('http')) {
+        window.open(item.path, '_blank')
+        return
+      }
 
       const currentItem = item || this.item
       const { path, meta } = currentItem

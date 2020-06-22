@@ -3,8 +3,8 @@
  * @Email: yangjiyong@meishubao.com
  * @Date: 2020-03-13 15:13:34
  * @Description: topbar 顶部功能区
- * @LastEditors: songyanan
- * @LastEditTime: 2020-06-17 16:08:30
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-06-22 22:50:43
  -->
 <template>
   <div class="navbar" :class="{ prod: isProd }">
@@ -30,6 +30,12 @@
     </div>
 
     <div class="right-menu">
+      <a
+        class="talk-btn"
+        href="https://wgjkf.xiaoxiongmeishu.com"
+        target="_blank"
+        >进入聊天工作台</a
+      >
       <el-dropdown class="avatar-container" trigger="click">
         <div class="user-info">
           <div class="avatar-wrapper">
@@ -185,6 +191,20 @@ export default {
     float: right;
     height: 100%;
     line-height: 50px;
+
+    .talk-btn {
+      margin-right: 20px;
+      padding: 5px 10px;
+      height: 20px;
+      border: 1px solid #2a75ed;
+      color: #2a75ed;
+      border-radius: 20px;
+      font-size: 12px;
+      &:hover {
+        background-color: #2a75ed;
+        color: #fff;
+      }
+    }
 
     &:focus {
       outline: none;

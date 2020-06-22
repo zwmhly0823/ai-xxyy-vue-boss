@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-06-09 10:52:48
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-06-12 14:43:23
+ * @LastEditTime: 2020-06-22 22:25:35
 -->
 <template>
   <div
@@ -98,6 +98,12 @@ export default {
 
     handleOpen(item, index = 0, hasChildren = false) {
       console.log(item)
+      // 外链情况
+      if (item.path.includes('http')) {
+        this.handleLeave()
+        window.open(item.path, '_blank')
+        return
+      }
 
       const currentItem = item || this.item
       const { path, meta } = currentItem
