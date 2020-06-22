@@ -105,6 +105,11 @@
             <div>{{ scope.row.nickname || '-' }}</div>
           </template>
         </el-table-column>
+        <el-table-column label="钉钉工号">
+          <template slot-scope="scope">
+            <div>{{ scope.row.ding_userid || '-' }}</div>
+          </template>
+        </el-table-column>
         <el-table-column label="绑定微信号">
           <template slot-scope="scope">
             <div v-if="scope.row.weixin">

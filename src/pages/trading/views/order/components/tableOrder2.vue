@@ -55,20 +55,39 @@
           </p>
         </template>
       </el-table-column> -->
-      <el-table-column label="订单来源" min-width="140">
+      <el-table-column label="社群销售·体验课班级" min-width="200">
         <template slot-scope="scope">
           <p>
-            {{ scope.row.channel ? scope.row.channel.channel_outer_name : '-' }}
+            {{ scope.row.teacher ? scope.row.teacher.realname : '-' }}
+            <span
+              :class="{ 'primary-text': trialTeam[scope.row.id] }"
+              @click="
+                openDetail(
+                  trialTeam[scope.row.id] && trialTeam[scope.row.id].id
+                )
+              "
+            >
+              ({{
+                trialTeam[scope.row.id]
+                  ? trialTeam[scope.row.id].team_name
+                  : '-'
+              }})
+            </span>
+          </p>
+          <p>
+            {{
+              scope.row.teacher_department &&
+              scope.row.teacher_department.department
+                ? departmentObj[scope.row.teacher_department.department.id]
+                  ? departmentObj[scope.row.teacher_department.department.id]
+                      .name
+                  : '-'
+                : '-'
+            }}
           </p>
         </template>
       </el-table-column>
-      <el-table-column label="订单状态" min-width="100">
-        <template slot-scope="scope">
-          {{ scope.row.order_status ? scope.row.order_status : '-' }}
-        </template>
-      </el-table-column>
-
-      <el-table-column label="体验课班级" min-width="150">
+      <!-- <el-table-column label="体验课班级" min-width="150">
         <template slot-scope="scope">
           <p
             :class="{ 'primary-text': trialTeam[scope.row.id] }"
@@ -84,7 +103,6 @@
       </el-table-column>
       <el-table-column label="社群销售" min-width="150">
         <template slot-scope="scope">
-          <!-- 体验课 -->
           <div>
             <p>
               {{ scope.row.teacher ? scope.row.teacher.realname : '-' }}
@@ -102,10 +120,26 @@
             </p>
           </div>
         </template>
+      </el-table-column> -->
+      <el-table-column label="订单状态" min-width="100">
+        <template slot-scope="scope">
+          {{ scope.row.order_status ? scope.row.order_status : '-' }}
+        </template>
+      </el-table-column>
+      <el-table-column label="订单来源" min-width="140">
+        <template slot-scope="scope">
+          <p>
+            {{ scope.row.channel ? scope.row.channel.channel_outer_name : '-' }}
+          </p>
+        </template>
       </el-table-column>
       <el-table-column label="推荐人信息" min-width="160">
         <template slot-scope="scope">
-          <p>
+          <p
+            v-if="scope.row.first_send_user"
+            :class="{ 'primary-text': scope.row.first_send_user }"
+            @click="openUserDetail(scope.row.first_send_user.id)"
+          >
             {{
               scope.row.first_send_user
                 ? scope.row.first_send_user.username
@@ -454,6 +488,10 @@ export default {
     openDetail(id, row) {
       row && console.log(row)
       id && openBrowserTab(`/student-team/#/teamDetail/${id}/0`)
+    },
+    // 用户详情
+    openUserDetail(id) {
+      id && openBrowserTab(`/users/#/details/${id}`)
     }
   }
 }
