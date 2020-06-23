@@ -14,6 +14,7 @@
       clearable
       :multiple="multiple"
       :placeholder="placeholder"
+      :style="myStyle"
       size="mini"
       class="item-style"
     >
@@ -47,6 +48,11 @@ export default {
     multiple: {
       type: Boolean,
       default: true
+    },
+    // 自定义style样式
+    myStyle: {
+      type: Object,
+      default: () => {}
     }
   },
   data() {
