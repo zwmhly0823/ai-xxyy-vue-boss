@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-06-16 16:27:14
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-06-23 20:58:46
+ * @LastEditTime: 2020-06-23 22:03:24
 -->
 <template>
   <div class="user-list">
@@ -108,6 +108,12 @@
             <i
               class="el-icon-circle-plus-outline intention-icon"
               @click="createIntention(scope.$index, scope.row.id)"
+            ></i>
+          </template>
+          <template v-else-if="!scope.row.userIntention.describe">
+            <i
+              class="el-icon-circle-plus-outline intention-icon"
+              @click="intentDescribeChange(scope.$index, scope.row.id)"
             ></i>
           </template>
           <template v-else>

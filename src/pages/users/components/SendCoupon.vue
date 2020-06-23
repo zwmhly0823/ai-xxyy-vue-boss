@@ -4,52 +4,52 @@
  * @Author: YangJiyong
  * @Date: 2020-06-20 15:27:12
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-06-20 18:13:12
+ * @LastEditTime: 2020-06-23 22:26:13
 -->
 <template>
   <div class="students-popup">
     <div>
       <el-dialog
+        class="students-popup-dialog"
         title="发放优惠卷"
         :visible.sync="issueCoupons"
         width="30%"
         :append-to-body="true"
       >
-        <span>选择优惠卷:</span>
-        <el-select
-          v-model="value"
-          :placeholder="`${dropdownDefault.amount}元  ${dropdownDefault.name} `"
-          popper-class="select-sty"
-          no-data-text="没有更多优惠券了"
-          size="mini"
-        >
-          <el-option
-            v-for="item in couponDropdown"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
-          >
-          </el-option>
-        </el-select>
-        <div class="coupons-time">
-          <span>设置有效期:</span>
-          <el-date-picker
-            v-model="couponsTime"
-            type="datetime"
-            placeholder="请设置优惠券到期时间"
-            :picker-options="pickerOptions"
-            size="mini"
-          >
-          </el-date-picker>
-        </div>
+        <el-form label-width="100px">
+          <el-form-item label="选择优惠卷:">
+            <el-select
+              v-model="value"
+              :placeholder="
+                `${dropdownDefault.amount}元  ${dropdownDefault.name} `
+              "
+              popper-class="select-sty"
+              no-data-text="没有更多优惠券了"
+              size="mini"
+            >
+              <el-option
+                v-for="item in couponDropdown"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              >
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="设置有效期:">
+            <el-date-picker
+              v-model="couponsTime"
+              type="datetime"
+              placeholder="请设置优惠券到期时间"
+              :picker-options="pickerOptions"
+              size="mini"
+            >
+            </el-date-picker>
+          </el-form-item>
+        </el-form>
         <span slot="footer" class="dialog-footer">
           <el-button size="mini" @click="issueCoupons = false">取 消</el-button>
-          <el-button
-            size="mini"
-            type="primary"
-            :plain="true"
-            @click="issueCouponsBtn"
-          >
+          <el-button size="mini" type="primary" @click="issueCouponsBtn">
             确 定
           </el-button>
         </span>
@@ -252,22 +252,14 @@ export default {
   font-size: 14px;
   color: #909399;
 }
-</style>
-<style lang="scss">
-.el-button--text {
-  display: none !important;
-}
-
-.el-dialog__body {
-  color: #e6a13c !important;
-  font-size: 18px;
-  padding: 10px 20px;
-  span {
-    color: #606266;
-    font-size: 14px;
-    display: inline-table;
-    padding: 0 0 0 5px;
-    line-height: 20px;
+.students-popup-dialog {
+  ::v-deep {
+    .el-form-item {
+      margin-bottom: 0;
+    }
+    .el-select--mini {
+      width: 220px;
+    }
   }
 }
 </style>
