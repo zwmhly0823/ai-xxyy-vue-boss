@@ -12,19 +12,9 @@
       <!-- <el-scrollbar wrap-class="user-wrapper" id="users-scroll"> -->
       <div class="app-main-container-scrollbar">
         <!-- 搜索 -->
-        <search @search="getSearchQuery" v-if="type === 'trialUsers'">
-          <!-- 第一版发短信功能先不做 -->
-          <!-- <div slot="down">
-              <el-button type="primary" size="mini">发送填写地址短信</el-button>
-              /api/o/v1/order/sendMsgForTeacher?orderIds=151
-
-              <el-button type="primary" size="mini">发送添加好友短信</el-button>
-              http://docker.meixiu.mobi:48766/jsondoc-ui.html?url=/api/o/jsondoc#
-              OrderControllerV1 - /v1/order/pushMsgByOrderId
-            </div> -->
-        </search>
+        <!-- <search @search="getSearchQuery" v-if="type === 'trialUsers'"> </search> -->
         <!-- 体验课列表 -->
-        <trial-list :search="searchResult" v-if="type === 'trialUsers'" />
+        <trial-list v-if="type === 'trialUsers'" />
 
         <!-- 系统课 -->
         <search-system @search="getSearchQuery" v-if="type === 'systemUsers'" />
@@ -36,14 +26,14 @@
   </el-row>
 </template>
 <script>
-import Search from '../components/Search.vue'
+// import Search from '../components/Search.vue'
 import SearchSystem from '../components/SearchSystem.vue'
-import TrialList from './trial/index.vue'
+import TrialList from './trial-v2/index.vue'
 import SystemList from './system/index.vue'
 
 export default {
   components: {
-    Search,
+    // Search,
     SearchSystem,
     TrialList,
     SystemList

@@ -3,8 +3,8 @@
  * @version:
  * @Author: zhubaodong
  * @Date: 2020-03-24 18:50:54
- * @LastEditors: liukun
- * @LastEditTime: 2020-04-28 20:54:06
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-06-23 17:59:56
  -->
 <template>
   <div class="search-item small threeSelect">
@@ -22,6 +22,7 @@
         checkStrictly: false
       }"
       :show-all-levels="true"
+      :style="myStyle"
       clearable
       filterable
     ></el-cascader>
@@ -48,6 +49,11 @@ export default {
     placeHoldText: {
       type: String,
       default: '订单来源'
+    },
+    // 自定义style样式
+    myStyle: {
+      type: Object,
+      default: () => {}
     }
   },
   data() {

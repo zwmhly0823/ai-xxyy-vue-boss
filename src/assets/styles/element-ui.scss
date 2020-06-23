@@ -18,3 +18,46 @@ $--color-primary: #2a75ed;
 $--font-path: '~element-ui/lib/theme-chalk/fonts';
 
 @import '~element-ui/packages/theme-chalk/src/index';
+
+/* 重写 table 样式 */
+.el-table {
+  font-size: 12px;
+  //   thead {
+  //   }
+  //   固定列默认样式，显示box-shadow
+  //   .el-table__body-wrapper.is-scrolling-left ~ .el-table__fixed
+  //   左固定
+  &__fixed {
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.12) !important;
+  }
+  //   右固定
+  &__fixed-right {
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.12) !important;
+  }
+  .el-button {
+    font-size: 12px;
+  }
+}
+
+// reset scrollbar
+::-webkit-scrollbar-thumb {
+  height: 10px;
+  background-color: rgba(0, 0, 0, 0.2);
+  -webkit-border-radius: 0;
+  border-radius: 0;
+  &:hover {
+    background-color: rgba($color: $--color-primary, $alpha: 0.8);
+  }
+}
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+  background-color: rgba(0, 0, 0, 0.1);
+}
+::-webkit-scrollbar-corner {
+  background: 0 0;
+}
+::-webkit-scrollbar-button {
+  height: 0;
+  width: 0;
+}

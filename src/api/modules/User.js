@@ -1,10 +1,11 @@
+/* eslint-disable camelcase */
 /*
  * @Descripttion:
  * @version:
  * @Author: shentong
  * @Date: 2020-03-13 14:38:28
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-06-15 14:05:06
+ * @LastEditTime: 2020-06-23 19:03:22
  */
 // import axios from '../axios'
 import axios from '../axiosConfig'
@@ -134,6 +135,93 @@ export default {
           }
         }
       `
+    })
+  },
+
+  trialCourseUsersV2(query = {}, page = 1, sortRules) {
+    const q = JSON.stringify(JSON.stringify(query))
+    const sort =
+      Object.keys(sortRules).length === 0
+        ? JSON.stringify(JSON.stringify({ ctime: 'desc' }))
+        : JSON.stringify(JSON.stringify(sortRules))
+    return axios.post('/graphql/v1/toss', {
+      query: `{
+        StudentTrialV2StatisticsPage(query: ${q},page: ${page}, sort: ${sort}){
+          totalPages
+          totalElements
+          number
+          content {
+            id
+            user_label
+            team_id
+            order_no
+            teacher_id
+            term
+            express_id
+            express_status
+            last_login_time
+            user_intention_type
+            user_intention_describe
+            send_course_count
+            join_course_count
+            all_join_course_count
+            complete_course_count
+            all_complete_course_count
+            task_count
+            comment_count
+            listen_comment_count
+            last_join_time
+            last_complete_time
+            added_group
+            added_wechat
+            follow
+            user_status
+            userInfo {
+              id
+              nickname
+              username
+              user_num
+              sex
+              birthday
+              head
+              mobile
+              base_painting
+              mobile_city
+              mobile_province
+            }
+            teamInfo {
+              team_name
+              team_type
+              team_state
+            }
+            teacherInfo {
+              realname
+              departmentInfo {
+                name
+              }
+            }
+            orderInfo {
+              trial_course {
+                order_no
+              }
+            }
+            userLoginDataInfo {
+              device_type
+            }
+            userIntention {
+              type
+              describe
+            }
+            payChannelInfo {
+              channel_inner_name
+              channel_outer_name
+            }
+            expressInfo{
+              express_status
+            }
+          }
+        }
+      }`
     })
   },
 
@@ -549,6 +637,74 @@ export default {
   changeSwitchStatus(query) {
     return axios.get(
       `/api/u/v1/user/updateUserNotifySwitch?userId=${query.userId}&status=${query.status}`
+    )
+  },
+  // 搜索老师自定义的标签
+  getDefineLabelListEx(query = '') {
+    // const query = {
+    //   name,
+    //   teacher_id: ''
+    // }
+    const q = query ? JSON.stringify(query) : ''
+    const sort = `{ "id": "desc" }`
+    return axios.post('/graphql/v1/toss', {
+      query: `{
+        DefineLabelListEx(query: ${JSON.stringify(q)}, sort: ${JSON.stringify(
+        sort
+      )}){
+          id
+          name
+          teacher_id
+        }
+      }`
+    })
+  },
+
+  /**
+   * 获取当前登录老师（及下属老师）开课中或待开课的期数
+   * {
+   * teacher_id:[],
+   * team_state: [0,1], 0-待开课，1-开课中，2-已结课
+   * team_type: 0, 0-体验课，1-系统课
+   * }
+   * @return {
+   *  status // '1 招生中   2待开课   3 开课中  4 已结课',
+   * }
+   **/
+  ManagementForTeacherList({
+    teacher_id = [],
+    team_state = [0, 1],
+    team_type = 0
+  } = {}) {
+    const query = {
+      teacher_id,
+      team_state,
+      team_type
+    }
+    const params = JSON.stringify(query)
+    // const sort = `{"id": "desc"}`
+    return axios.post('/graphql/v1/toss', {
+      query: `{
+        ManagementForTeacherList(query: ${JSON.stringify(params)}){
+           management{
+            period_name
+            period
+            status
+          }
+        }
+      }`
+    })
+  },
+  // 创建用户意向度
+  createUserInetention(query) {
+    return axios.get(
+      `/api/u/v1/user/userintention/create?uid=${query.uid}&type=${query.type}&describe=${query.describe}`
+    )
+  },
+  // 更新用户意向度
+  updateUserInetention(query) {
+    return axios.get(
+      `/api/u/v1/user/userintention/update?uid=${query.uid}&type=${query.type}&describe=${query.describe}`
     )
   }
 }
