@@ -192,7 +192,7 @@ export default {
   components: {},
   data() {
     var checkFun = (rule, value, callback) => {
-      if (!value) {
+      if (!value && value !== 0) {
         return callback(new Error('请输入分配占比'))
       }
       if (!Number.isInteger(value)) {
@@ -203,10 +203,10 @@ export default {
       const A = Number(this.percent[rule.level].A)
       const B = Number(this.percent[rule.level].B)
       const sum = S + A + B
-      if (sum > 100) {
-        return callback(new Error('请填写正确的数字'))
-      }
-      if (S !== 0 && A !== 0 && B !== 0 && sum !== 100) {
+      // if (sum > 100) {
+      //   return callback(new Error('请填写正确的数字'))
+      // }
+      if (sum !== 100) {
         return callback(new Error('请填写正确的数字'))
       }
       callback()
