@@ -69,7 +69,9 @@ export default {
       return variables
     },
     isCollapse() {
-      return !this.sidebar.opened
+      // TODO: 默认展开菜单，调整时修改此处
+      // return !this.sidebar.opened
+      return false
     },
     // 默认全部展开
     defaultOpendIndex() {
