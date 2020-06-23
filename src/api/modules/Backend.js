@@ -3,8 +3,8 @@
  * @version:
  * @Author: Lukun
  * @Date: 2020-05-10 16:17:21
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-06-05 22:48:39
+ * @LastEditors: songyanan
+ * @LastEditTime: 2020-06-23 15:41:00
  */
 import axios from '../axiosConfig'
 export default {
@@ -20,10 +20,19 @@ export default {
   },
   /**
    * 获取补发货流程详情 /v1/backend/reissue/flow/info
+   *
    */
   getReplenishDetail(params) {
     return axios.get(
       `/api/b/v1/backend/reissue/flow/info?flowApprovalId=${params}`
+    )
+  },
+  /**
+   * 获取无归属订单审批详情
+   */
+  getNoAttributionDetail(params) {
+    return axios.get(
+      `/api/b/v1/backend/uncredited/detail/get?flowApprovalId=${params}`
     )
   },
   /**

@@ -4,7 +4,7 @@
  * @Author: Lukun
  * @Date: 2020-05-08 17:37:00
  * @LastEditors: Lukun
- * @LastEditTime: 2020-05-16 14:52:58
+ * @LastEditTime: 2020-06-23 17:12:58
  -->
 <template>
   <div class="search-item small">
@@ -48,7 +48,8 @@ export default {
         { name: '补发货', value: 'REISSUE' },
         { name: '调期申请', value: 'ADJUSTMENT_STAGE' },
         { name: '调级申请', value: 'ADJUSTMENT_SUP' },
-        { name: '调班申请', value: 'ADJUSTMENT_CLASS' }
+        { name: '调班申请', value: 'ADJUSTMENT_CLASS' },
+        { name: '无归属订单审批', value: 'UNCREDITED' }
       ],
       packageDataInner: ''
     }
