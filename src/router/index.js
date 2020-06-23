@@ -172,13 +172,13 @@ const routes = [
           show: true
         }
       },
-      {
-        path: 'https://wgj.xiaoxiongmeishu.com/Equipment/Material/MaterialList',
-        meta: {
-          title: '素材库',
-          show: true
-        }
-      },
+      // {
+      //   path: 'https://wgj.xiaoxiongmeishu.com/Equipment/Material/MaterialList',
+      //   meta: {
+      //     title: '素材库',
+      //     show: true
+      //   }
+      // },
       {
         path: 'https://wgj.xiaoxiongmeishu.com/WeiXin/Cluster/ClusterList',
         meta: {
