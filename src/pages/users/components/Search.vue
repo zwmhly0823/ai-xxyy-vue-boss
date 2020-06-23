@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-06-20 20:23:28
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-06-23 17:22:38
+ * @LastEditTime: 2020-06-23 20:53:20
  @ApiModel(description = "用户跟进状态")
     public enum STATUS {
 
@@ -139,7 +139,7 @@
                 placeholder="关注公众号"
                 :multiple="false"
                 :data-list="followWechatStatus"
-                :my-style="{ width: '100px' }"
+                :my-style="{ width: '120px' }"
                 @result="getSearchData('follow', arguments)"
                 class="search-group-item"
               />

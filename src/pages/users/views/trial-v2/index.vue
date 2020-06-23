@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-06-16 16:27:14
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-06-23 19:06:43
+ * @LastEditTime: 2020-06-23 20:58:46
 -->
 <template>
   <div class="user-list">
@@ -156,7 +156,7 @@
                 class="el-icon-caret-top top-color"
                 :class="{
                   active:
-                    sortKeys['all_join_course_count'] == 'asc' &&
+                    sortKeys['all_join_course_count'] != 'asc' &&
                     sortActive == 'all_join_course_count'
                 }"
               ></i>
@@ -164,7 +164,7 @@
                 class="el-icon-caret-bottom bottom"
                 :class="{
                   active:
-                    sortKeys['all_join_course_count'] != 'asc' &&
+                    sortKeys['all_join_course_count'] == 'asc' &&
                     sortActive == 'all_join_course_count'
                 }"
               ></i>
@@ -200,7 +200,7 @@
                 class="el-icon-caret-top top-color"
                 :class="{
                   active:
-                    sortKeys['all_complete_course_count'] == 'asc' &&
+                    sortKeys['all_complete_course_count'] != 'asc' &&
                     sortActive == 'all_complete_course_count'
                 }"
               ></i>
@@ -208,7 +208,7 @@
                 class="el-icon-caret-bottom bottom"
                 :class="{
                   active:
-                    sortKeys['all_complete_course_count'] != 'asc' &&
+                    sortKeys['all_complete_course_count'] == 'asc' &&
                     sortActive == 'all_complete_course_count'
                 }"
               ></i>
@@ -242,7 +242,7 @@
                 class="el-icon-caret-top top-color"
                 :class="{
                   active:
-                    sortKeys['task_count'] == 'asc' &&
+                    sortKeys['task_count'] != 'asc' &&
                     sortActive == 'task_count'
                 }"
               ></i>
@@ -250,7 +250,7 @@
                 class="el-icon-caret-bottom bottom"
                 :class="{
                   active:
-                    sortKeys['task_count'] != 'asc' &&
+                    sortKeys['task_count'] == 'asc' &&
                     sortActive == 'task_count'
                 }"
               ></i>
@@ -276,7 +276,7 @@
                 class="el-icon-caret-top top-color"
                 :class="{
                   active:
-                    sortKeys['listen_comment_count'] == 'asc' &&
+                    sortKeys['listen_comment_count'] != 'asc' &&
                     sortActive == 'listen_comment_count'
                 }"
               ></i>
@@ -284,7 +284,7 @@
                 class="el-icon-caret-bottom bottom"
                 :class="{
                   active:
-                    sortKeys['listen_comment_count'] != 'asc' &&
+                    sortKeys['listen_comment_count'] == 'asc' &&
                     sortActive == 'listen_comment_count'
                 }"
               ></i>
@@ -339,7 +339,13 @@
       <el-table-column label="盒子物流" min-width="80">
         <template slot-scope="scope">
           <div class="d-flex align-center space-between">
-            <p>
+            <p
+              :class="{
+                'red-color':
+                  scope.row.expressInfo &&
+                  +scope.row.expressInfo.express_status === 0
+              }"
+            >
               {{
                 expressStatus(
                   scope.row.expressInfo && scope.row.expressInfo.express_status
@@ -598,10 +604,10 @@ export default {
       teacherInfo: {},
       couponData: [],
       sortKeys: {
-        all_join_course_count: 'asc',
-        all_complete_course_count: 'asc',
-        task_count: 'asc',
-        listen_comment_count: 'asc'
+        all_join_course_count: 'desc',
+        all_complete_course_count: 'desc',
+        task_count: 'desc',
+        listen_comment_count: 'desc'
       },
       sortActive: '',
       // 1 招生中   2待开课   3 开课中  4 已结课'
@@ -624,10 +630,10 @@ export default {
     this.teacherInfo = isToss(true)
     this.$nextTick(() => {
       const tableHeight =
-        document.body.clientHeight - this.$refs.tableInner.offsetTop - 90
+        document.body.clientHeight - this.$refs.tableInner.offsetTop - 110
       this.tableHeight = tableHeight + ''
     })
-    this.getTeachersById()
+    this.init()
   },
   mounted() {
     this.getCouponList()
@@ -639,7 +645,7 @@ export default {
     },
     onRefresh(data) {
       setTimeout(() => {
-        this.getTeachersById()
+        this.init()
       }, 1000)
     },
     // 添加标签
@@ -652,27 +658,16 @@ export default {
       this.labelRowValue = row
       this.showDialogFormVisible = true
     },
-    // TOSS, 老师权限
-    getTeachersById() {
-      this.teacherId = isToss()
-      if (!this.teacherId) return
-      // console.log(this.teacherId)
-
-      this.$http.Permission.getAllTeacherByRole({
-        teacherId: this.teacherId
-      }).then(async (res) => {
-        console.log(res)
-        this.teacherIds = res || [this.teacherId]
-        await this.getManagement()
-        await this.getData()
-      })
+    async init() {
+      await this.getManagement()
+      await this.getData()
     },
     // 获取排期期数
     getManagement() {
       const params = {
         teacher_id: this.teacherIds
       }
-      this.$http.User.ManagementForTeacherList(params).then((res) => {
+      return this.$http.User.ManagementForTeacherList(params).then((res) => {
         console.log(res)
         if (res && res.data && res.data.ManagementForTeacherList) {
           // 只显示开课中和待开课的期数 status // 1 招生中   2待开课   3 开课中  4 已结课',
@@ -724,7 +719,7 @@ export default {
       if (this.sortActive) {
         sort[this.sortActive] = this.sortKeys[this.sortActive]
       }
-      this.$http.User.trialCourseUsersV2(query, page, sort)
+      return this.$http.User.trialCourseUsersV2(query, page, sort)
         .then((res) => {
           // console.log(res)
           var defTotalElements = 0
