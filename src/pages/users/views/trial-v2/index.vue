@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-06-16 16:27:14
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-06-24 15:33:45
+ * @LastEditTime: 2020-06-24 16:18:54
 -->
 <template>
   <div class="user-list">
@@ -537,6 +537,7 @@
 </template>
 
 <script>
+import _ from 'lodash'
 import MPagination from '@/components/MPagination/index.vue'
 import BaseUserInfo from '../../components/BaseUserInfo.vue'
 import ModifyAddress from '../../components/ModifyAddress.vue'
@@ -685,8 +686,9 @@ export default {
             return item.management
           })
 
-          this.manageMentList = list
-          this.term = list.length > 0 ? list[0].period : '0'
+          this.manageMentList = _.orderBy(list, ['status'], ['desc'])
+          this.term =
+            this.manageMentList.length > 0 ? this.manageMentList[0].period : '0'
         }
       })
     },
@@ -1065,7 +1067,11 @@ export default {
       switch (command) {
         // 沟通备注
         case '1':
-          this.createIntention(index, user.id)
+          if (!user.userIntention || +user.userIntention.type === 0) {
+            this.createIntention(index, user.id)
+          } else {
+            this.intentDescribeChange(index, user.id)
+          }
           break
         // 催发地址短信
         case '2':
