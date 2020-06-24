@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-06-16 16:27:14
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-06-24 16:18:54
+ * @LastEditTime: 2020-06-24 18:12:13
 -->
 <template>
   <div class="user-list">
@@ -118,10 +118,7 @@
           </template>
           <template v-else>
             <div class="remarks-content">
-              <div
-                class="remarks-text"
-                :title="scope.row.userIntention.describe"
-              >
+              <div class="remarks-text">
                 {{ scope.row.userIntention.describe }}
               </div>
               <i
@@ -143,10 +140,7 @@
             ></i>
           </template> -->
           <div class="remarks-content">
-            <div
-              class="remarks-text"
-              :title="scope.row.user_label && scope.row.user_label !== '-'"
-            >
+            <div class="remarks-text">
               {{ scope.row.user_label || '-' }}
             </div>
             <!-- <i class="el-icon-edit" @click="onLabel"></i> -->
