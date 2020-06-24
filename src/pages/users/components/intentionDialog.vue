@@ -15,8 +15,8 @@
       >
         <el-form-item label="意向度" prop="radio">
           <el-radio-group v-model="formData.radio" size="small">
-            <el-radio-button label="中"></el-radio-button>
             <el-radio-button label="高"></el-radio-button>
+            <el-radio-button label="中"></el-radio-button>
             <el-radio-button label="低"></el-radio-button>
           </el-radio-group>
         </el-form-item>

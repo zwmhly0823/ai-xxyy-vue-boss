@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-24 18:50:54
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-06-23 17:59:56
+ * @LastEditTime: 2020-06-24 11:34:29
  -->
 <template>
   <div class="search-item small threeSelect">
@@ -186,6 +186,9 @@ export default {
     white-space: nowrap !important;
     overflow: hidden !important;
     text-overflow: ellipsis !important;
+    .el-cascader__search-input {
+      display: none;
+    }
   }
   .el-cascader--mini {
     height: 28px;

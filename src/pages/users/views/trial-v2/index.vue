@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-06-16 16:27:14
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-06-23 22:03:24
+ * @LastEditTime: 2020-06-24 12:08:39
 -->
 <template>
   <div class="user-list">
@@ -71,10 +71,11 @@
               !scope.row.userIntention || +scope.row.userIntention.type === 0
             "
           >
-            <i
+            -
+            <!-- <i
               class="el-icon-circle-plus-outline intention-icon"
               @click="createIntention(scope.$index, scope.row.id)"
-            ></i>
+            ></i> -->
           </template>
           <template v-else>
             <el-select
@@ -118,7 +119,10 @@
           </template>
           <template v-else>
             <div class="remarks-content">
-              <div class="remarks-text">
+              <div
+                class="remarks-text"
+                :title="scope.row.userIntention.describe"
+              >
                 {{ scope.row.userIntention.describe }}
               </div>
               <i
@@ -131,22 +135,23 @@
       </el-table-column>
       <el-table-column label="标签" min-width="150">
         <template slot-scope="scope">
-          <template
+          <!-- <template
             v-if="!scope.row.user_label || scope.row.user_label === '-'"
           >
             <i
               class="el-icon-circle-plus-outline intention-icon"
               @click="onLabel"
             ></i>
-          </template>
-          <template v-else>
-            <div class="remarks-content">
-              <div class="remarks-text">
-                {{ scope.row.user_label }}
-              </div>
-              <i class="el-icon-edit" @click="onLabel"></i>
+          </template> -->
+          <div class="remarks-content">
+            <div
+              class="remarks-text"
+              :title="scope.row.user_label && scope.row.user_label !== '-'"
+            >
+              {{ scope.row.user_label || '-' }}
             </div>
-          </template>
+            <!-- <i class="el-icon-edit" @click="onLabel"></i> -->
+          </div>
         </template>
       </el-table-column>
 
@@ -443,11 +448,7 @@
         </template>
       </el-table-column>
       <!-- 渠道：TOSS端 组员 rankId="3"不显示 -->
-      <el-table-column
-        label="渠道"
-        min-width="100"
-        v-if="teacherInfo && +teacherInfo.rankId !== 3"
-      >
+      <el-table-column label="渠道" min-width="100">
         <template slot-scope="scope">
           <span v-if="scope.row.payChannelInfo">
             {{ scope.row.payChannelInfo.channel_outer_name }}
@@ -489,7 +490,7 @@
                 >催发地址短信</el-dropdown-item
               >
               <el-dropdown-item command="3">发优惠券</el-dropdown-item>
-              <el-dropdown-item command="4">添加标签</el-dropdown-item>
+              <!-- <el-dropdown-item command="4">添加标签</el-dropdown-item> -->
             </el-dropdown-menu>
           </el-dropdown>
         </template>
@@ -521,12 +522,12 @@
         v-if="showModifyAddress"
       />
     </el-dialog>
-    <label-checkbox
+    <!-- <label-checkbox
       v-if="showDialogFormVisible"
       :labelRowValue="labelRowValue"
       @onRefresh="onRefresh"
       ref="labelCheckbox"
-    />
+    /> -->
     <intention-dialog
       ref="intentionDialog"
       @intentConfirm="intentConfirm"
@@ -546,8 +547,8 @@ import MPagination from '@/components/MPagination/index.vue'
 import BaseUserInfo from '../../components/BaseUserInfo.vue'
 import ModifyAddress from '../../components/ModifyAddress.vue'
 import enums from '../../components/searchData'
-import { formatData, isToss, openBrowserTab } from '@/utils/index'
-import labelCheckbox from '../../components/labelCheckbox'
+import { formatData, openBrowserTab } from '@/utils/index'
+// import labelCheckbox from '../../components/labelCheckbox'
 import intentionDialog from '../../components/intentionDialog'
 import { FOLLOW_EXPRESS_STATUS } from '@/utils/enums'
 import Search from '../../components/Search.vue'
@@ -559,7 +560,7 @@ export default {
     MPagination,
     BaseUserInfo,
     ModifyAddress,
-    labelCheckbox,
+    // labelCheckbox,
     intentionDialog,
     Search,
     ToolTip,
@@ -606,8 +607,6 @@ export default {
       curModifyItem: {},
       selectUsers: [], // 批量选择的用户
       currentUser: {}, // 当前选择用户
-      // TOSS当前登录老师信息。rankId. "1"-经理，"2"-组长，"3"-组员
-      teacherInfo: {},
       couponData: [],
       sortKeys: {
         all_join_course_count: 'desc',
@@ -633,7 +632,6 @@ export default {
     }
   },
   created() {
-    this.teacherInfo = isToss(true)
     this.$nextTick(() => {
       const tableHeight =
         document.body.clientHeight - this.$refs.tableInner.offsetTop - 110
@@ -655,10 +653,10 @@ export default {
       }, 1000)
     },
     // 添加标签
-    onLabel() {
-      this.$refs.labelCheckbox.dialogFormVisible = true
-      this.$refs.labelCheckbox.getAllTeacherByRoleIds()
-    },
+    // onLabel() {
+    //   this.$refs.labelCheckbox.dialogFormVisible = true
+    //   this.$refs.labelCheckbox.getAllTeacherByRoleIds()
+    // },
     // 获取一行数据
     hoverRow(row, column, cell, event) {
       this.labelRowValue = row
