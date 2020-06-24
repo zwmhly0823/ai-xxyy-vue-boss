@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-06-16 16:27:14
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-06-24 12:08:39
+ * @LastEditTime: 2020-06-24 15:33:45
 -->
 <template>
   <div class="user-list">
@@ -71,11 +71,10 @@
               !scope.row.userIntention || +scope.row.userIntention.type === 0
             "
           >
-            -
-            <!-- <i
+            <i
               class="el-icon-circle-plus-outline intention-icon"
               @click="createIntention(scope.$index, scope.row.id)"
-            ></i> -->
+            ></i>
           </template>
           <template v-else>
             <el-select
@@ -99,7 +98,7 @@
           </template>
         </template>
       </el-table-column>
-      <el-table-column label="备注" min-width="150">
+      <el-table-column label="备注" min-width="150" show-overflow-tooltip>
         <template slot-scope="scope">
           <template
             v-if="
@@ -133,7 +132,7 @@
           </template>
         </template>
       </el-table-column>
-      <el-table-column label="标签" min-width="150">
+      <el-table-column label="标签" min-width="150" show-overflow-tooltip>
         <template slot-scope="scope">
           <!-- <template
             v-if="!scope.row.user_label || scope.row.user_label === '-'"
@@ -185,13 +184,11 @@
         <template slot-scope="scope">
           <p>
             总次数:
-            <span class="red-color fts-14">{{
+            <span class="red-color ">{{
               scope.row.all_join_course_count
             }}</span>
             节数:
-            <span class="red-color fts-14">{{
-              scope.row.join_course_count
-            }}</span
+            <span>{{ scope.row.join_course_count }}</span
             >/{{ scope.row.send_course_count }}
           </p>
           <p>
@@ -229,12 +226,11 @@
         <template slot-scope="scope">
           <p>
             总次数:
-            <span class="red-color fts-14">
+            <span class="red-color ">
               {{ scope.row.all_complete_course_count }}
             </span>
             节数:
-            <span class="red-color fts-14">
-              {{ scope.row.complete_course_count }}</span
+            <span> {{ scope.row.complete_course_count }}</span
             >/{{ scope.row.send_course_count }}
           </p>
           <p>
@@ -270,7 +266,7 @@
         </template>
         <template slot-scope="scope">
           <p v-if="scope.row.task_count > 0">
-            <span class="red-color fts-14">{{ scope.row.task_count }}</span>
+            <span>{{ scope.row.task_count }}</span>
           </p>
           <span v-else>-</span>
         </template>
@@ -305,9 +301,7 @@
         <template slot-scope="scope">
           <p>
             已听作品:
-            <span class="red-color fts-14">{{
-              scope.row.listen_comment_count
-            }}</span>
+            <span>{{ scope.row.listen_comment_count }}</span>
           </p>
           <p>点评作品: {{ scope.row.comment_count }}</p>
         </template>
@@ -317,7 +311,7 @@
         <template slot-scope="scope">
           <el-switch
             v-model="scope.row.added_wechat"
-            active-color="#13ce66"
+            active-color="#3582fb"
             inactive-color="#DCDFE6"
             :active-value="1"
             :inactive-value="0"
@@ -330,7 +324,7 @@
         <template slot-scope="scope">
           <el-switch
             v-model="scope.row.added_group"
-            active-color="#13ce66"
+            active-color="#3582fb"
             inactive-color="#DCDFE6"
             :active-value="1"
             :inactive-value="0"
@@ -664,12 +658,12 @@ export default {
     },
     async init() {
       await this.getManagement()
-      await this.getData()
+      // await this.getData()
     },
     // 获取排期期数
     getManagement() {
       const params = {
-        teacher_id: this.teacherIds
+        // teacher_id: this.teacherIds
       }
       return this.$http.User.ManagementForTeacherList(params).then((res) => {
         console.log(res)

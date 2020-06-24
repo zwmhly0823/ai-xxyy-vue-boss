@@ -5,7 +5,7 @@
  * @Author: shentong
  * @Date: 2020-03-13 14:38:28
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-06-23 19:03:22
+ * @LastEditTime: 2020-06-24 14:34:39
  */
 // import axios from '../axios'
 import axios from '../axiosConfig'
@@ -672,12 +672,12 @@ export default {
    * }
    **/
   ManagementForTeacherList({
-    teacher_id = [],
+    // teacher_id = [],
     team_state = [0, 1],
     team_type = 0
   } = {}) {
     const query = {
-      teacher_id,
+      // teacher_id,
       team_state,
       team_type
     }
