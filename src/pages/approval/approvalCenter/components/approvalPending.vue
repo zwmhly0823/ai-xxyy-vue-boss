@@ -683,7 +683,7 @@ export default {
       page: 1,
       size: 20
     }
-    this.params.isOperation = this.isStaffId ? this.isStaffId : false
+    this.params.isOperation = this.isStaffId
     this.checkPending(this.params)
   },
 
