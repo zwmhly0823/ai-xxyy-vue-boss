@@ -439,7 +439,7 @@
         <div
           v-if="
             currentType === 'UNCREDITED' &&
-              resetParams.staffId === '470676591924613120'
+              resetParams.staffId === '455930731630301184'
           "
         >
           <el-row class="BOTTOM">
