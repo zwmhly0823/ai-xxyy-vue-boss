@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-03-16 19:46:39
  * @LastEditors: panjian
- * @LastEditTime: 2020-06-12 11:53:58
+ * @LastEditTime: 2020-06-24 11:33:05
  */
 import axios from '../axiosConfig'
 // import { getToken } from '@/utils/auth'
@@ -235,5 +235,25 @@ export default {
   // 查询验证码
   getVerification(parmas) {
     return axios.get(`/api/m/v1/sms/getCodeByMobile?mobile=${parmas}`)
+  },
+  // 推送配置 创建
+  pushNotificationsAdd(params) {
+    return axios.post(`/api/b/v1/backend/PushNotifications/add`, params)
+  },
+  // 推送配置 修改保存
+  pushNotificationsUpdate(params) {
+    return axios.post(`/api/b/v1/backend/PushNotifications/update`, params)
+  },
+  // 推送配置列表
+  getPushNotificationsList(currentPage) {
+    return axios.get(
+      `/api/b/v1/backend/PushNotifications/list?page=${currentPage}&size=20`
+    )
+  },
+  // 推送配置 推送
+  pushNotificationsExecute(id, operatorId, operatorName) {
+    return axios.get(
+      `/api/b/v1/backend/PushNotifications/execute?id=${id}&operatorId=${operatorId}&operatorName=${operatorName}`
+    )
   }
 }

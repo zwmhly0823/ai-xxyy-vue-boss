@@ -327,6 +327,14 @@ const routes = [
           title: '标签管理',
           module: 'operating'
         }
+      },
+      {
+        path: '/pushConfig',
+        name: 'pushConfig',
+        meta: {
+          title: '推送配置',
+          module: 'operating'
+        }
       }
     ]
   },
