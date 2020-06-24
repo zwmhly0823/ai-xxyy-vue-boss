@@ -172,10 +172,42 @@
       </el-form-item>
     </el-form>
     <div class="export-order">
-      <el-button size="mini" type="primary" @click="exportOrderHandle"
+      <el-button size="mini" type="primary" @click="showChooseDialog = true"
         >订单导出</el-button
       >
     </div>
+    <el-dialog title="导出订单" :visible.sync="showChooseDialog" width="30%">
+      <el-radio-group v-model="chooseExport" class="chooseExpBox">
+        <el-radio label="1"
+          ><span>财务订单导出</span
+          ><el-tooltip
+            class="item"
+            effect="dark"
+            content="财务人员核对小熊业务流水专用"
+            placement="top"
+            ><i
+              class="el-icon-question"
+              style="padding-left:5px;"
+            ></i></el-tooltip
+        ></el-radio>
+        <el-radio label="2"
+          ><span>薪资核算订单导出</span
+          ><el-tooltip
+            class="item"
+            effect="dark"
+            content="薪资核算人员专业"
+            placement="top"
+            ><i
+              class="el-icon-question"
+              style="padding-left:5px;"
+            ></i></el-tooltip
+        ></el-radio>
+      </el-radio-group>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="showChooseDialog = false">取 消</el-button>
+        <el-button type="primary" @click="exportOrderHandle">确 定</el-button>
+      </span>
+    </el-dialog>
   </el-card>
 </template>
 <script>
@@ -249,7 +281,9 @@ export default {
           text: '无推荐人'
         }
       ],
-      hasSendId: true
+      hasSendId: true,
+      showChooseDialog: false,
+      chooseExport: '1'
     }
   },
   computed: {},
@@ -478,6 +512,9 @@ export default {
 
     // 导出
     exportOrderHandle() {
+      console.log(this.searchParams)
+      console.log(this.$parent.$children[1].finalParams)
+      const chooseExport = this.chooseExport
       if (this.searchParams.length === 0) {
         this.$message.error('请选择筛选条件')
         return
@@ -485,6 +522,9 @@ export default {
 
       // 获取查询条件
       const query = this.$parent.$children[1].finalParams
+      console.log('query======')
+      console.log(query)
+
       const fileTitle = dayjs(new Date()).format('YYYY-MM-DD')
       const fileTitleTime = dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss')
 
@@ -494,50 +534,87 @@ export default {
         spinner: 'el-icon-loading',
         background: 'rgba(0, 0, 0, 0.1)'
       })
+      if (chooseExport === '1') {
+        const params = {
+          apiName: 'OrderPage',
+          header: {
+            buydate: '缴费时间',
+            out_trade_no: '订单号',
+            uid: '用户ID',
+            'user.username': '用户昵称',
+            'paymentPay.transaction_id': '交易流水号',
+            'paymentPay.trade_type_text': '支付方式',
+            amount: '交易金额',
+            'packagesType.name': '套餐类型',
+            'stageInfo.period_name': '期数',
+            'channel.channel_outer_name': '线索渠道',
+            sup_text: '课程难度'
+            // paymentPayOut 退款流水
+            // 'team.team_name': '班级',
+            // 'team.team_type': '课程类型',
+            // // 'salesman.realname': '社群销售',
+            // // 'department.department.name': '社群战队',
+            // // 'teacher.realname': '后端服务老师',
+            // 'express.product_type': '商品类型',
+            // 'express.product_name': '商品信息',
+            // total_amount: '商品总额',
+            // // 'express.address_detail': '详细地址',
+            // // 'express.last_express_status': '物流状态',
+            // order_status: '状态'
+            // 'team.type': '退费金额'
+          },
+          fileName: `系统课订单导出-${fileTitleTime}`, // 文件名称
+          query: JSON.stringify(query)
+          // query: '{"status":3}'
+        }
+        // console.log(exportExcel)
 
-      const params = {
-        apiName: 'OrderPage',
-        header: {
-          buydate: '缴费时间',
-          out_trade_no: '订单号',
-          uid: '用户ID',
-          'user.username': '用户昵称',
-          'paymentPay.transaction_id': '交易流水号',
-          'paymentPay.trade_type_text': '支付方式',
-          amount: '交易金额',
-          'packagesType.name': '套餐类型',
-          'stageInfo.period_name': '期数',
-          'channel.channel_outer_name': '线索渠道',
-          sup_text: '课程难度'
-          // paymentPayOut 退款流水
-          // 'team.team_name': '班级',
-          // 'team.team_type': '课程类型',
-          // // 'salesman.realname': '社群销售',
-          // // 'department.department.name': '社群战队',
-          // // 'teacher.realname': '后端服务老师',
-          // 'express.product_type': '商品类型',
-          // 'express.product_name': '商品信息',
-          // total_amount: '商品总额',
-          // // 'express.address_detail': '详细地址',
-          // // 'express.last_express_status': '物流状态',
-          // order_status: '状态'
-          // 'team.type': '退费金额'
-        },
-        fileName: `系统课订单导出-${fileTitleTime}`, // 文件名称
-        query: JSON.stringify(query)
-        // query: '{"status":3}'
-      }
-      // console.log(exportExcel)
-
-      this.$http.DownloadExcel.exportOrder(params)
-        .then((res) => {
-          console.log(res)
-          downloadHandle(res, `系统课订单导出-${fileTitle}`, () => {
-            loading.close()
-            this.$message.success('导出成功')
+        this.$http.DownloadExcel.exportOrder(params)
+          .then((res) => {
+            console.log(res)
+            downloadHandle(res, `系统课订单导出-${fileTitle}`, () => {
+              loading.close()
+              this.showChooseDialog = false
+              this.$message.success('导出成功')
+            })
           })
-        })
-        .catch(() => loading.close())
+          .catch(() => loading.close())
+      } else {
+        const query = this.$parent.$children[1].finalParams
+        query.trial_team_id = 0
+        console.log(query)
+        const params = {
+          apiName: 'OrderPage',
+          header: {
+            id: '订单ID',
+            uid: '学员ID',
+            'payTeacherInfo.realname': '真实姓名',
+            'payTeacherInfo.ding_userid': '钉钉员工号',
+            'enrolledInfo.enrolled_amount': '报名金额',
+            'enrolledInfo.enrolled_time': '报名时间',
+            'enrolledInfo.group_name': '战队',
+            'enrolledInfo.department_name': '部门',
+            'enrolledInfo.department_area_name': '区',
+            'channelDetail.channel_class_name': '二级渠道',
+            'channelDetail.p_channel_class_name': '一级渠道'
+          },
+          fileName: `系统课订单薪资核算表-${fileTitleTime}`, // 文件名称
+          query: JSON.stringify(query)
+          // query: '{"status":3}'
+        }
+        // console.log(exportExcel)
+
+        this.$http.DownloadExcel.exportOrder(params)
+          .then((res) => {
+            console.log(res)
+            downloadHandle(res, `系统课订单薪资核算表-${fileTitle}`, () => {
+              loading.close()
+              this.showChooseDialog = false
+              this.$message.success('导出成功')
+            })
+          })
+          .catch(() => loading.close())
+      }
     }
   },
   created() {
