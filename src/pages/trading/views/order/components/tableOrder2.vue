@@ -55,7 +55,7 @@
           </p>
         </template>
       </el-table-column> -->
-      <el-table-column label="社群销售·体验课班级" min-width="200">
+      <el-table-column label="社群销售·体验课班级" min-width="220">
         <template slot-scope="scope">
           <p>
             {{ scope.row.teacher ? scope.row.teacher.realname : '-' }}
@@ -87,41 +87,7 @@
           </p>
         </template>
       </el-table-column>
-      <!-- <el-table-column label="体验课班级" min-width="150">
-        <template slot-scope="scope">
-          <p
-            :class="{ 'primary-text': trialTeam[scope.row.id] }"
-            @click="
-              openDetail(trialTeam[scope.row.id] && trialTeam[scope.row.id].id)
-            "
-          >
-            {{
-              trialTeam[scope.row.id] ? trialTeam[scope.row.id].team_name : '-'
-            }}
-          </p>
-        </template>
-      </el-table-column>
-      <el-table-column label="社群销售" min-width="150">
-        <template slot-scope="scope">
-          <div>
-            <p>
-              {{ scope.row.teacher ? scope.row.teacher.realname : '-' }}
-            </p>
-            <p>
-              {{
-                scope.row.teacher_department &&
-                scope.row.teacher_department.department
-                  ? departmentObj[scope.row.teacher_department.department.id]
-                    ? departmentObj[scope.row.teacher_department.department.id]
-                        .name
-                    : '-'
-                  : '-'
-              }}
-            </p>
-          </div>
-        </template>
-      </el-table-column> -->
-      <el-table-column label="订单状态" min-width="100">
+      <el-table-column label="订单状态" min-width="220">
         <template slot-scope="scope">
           {{ scope.row.order_status ? scope.row.order_status : '-' }}
         </template>

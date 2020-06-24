@@ -37,7 +37,7 @@
           </p>
         </template>
       </el-table-column>
-      <el-table-column label="社群销售·体验课班级" min-width="200">
+      <el-table-column label="社群销售·体验课班级" min-width="220">
         <template slot-scope="scope">
           <!-- 续费情况 -->
           <div v-if="scope.row.regtype && scope.row.regtype !== 3">
@@ -72,7 +72,7 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="服务老师·系统课班级" min-width="200">
+      <el-table-column label="服务老师·系统课班级" min-width="220">
         <template slot-scope="scope">
           <!-- 非续费 -->
           <div v-if="scope.row.regtype !== 3">
