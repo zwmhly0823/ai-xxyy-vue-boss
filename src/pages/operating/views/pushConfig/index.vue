@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-06-23 15:23:48
  * @LastEditors: panjian
- * @LastEditTime: 2020-06-24 17:39:49
+ * @LastEditTime: 2020-06-24 17:42:56
 -->
 <template>
   <div class="push-config-box">
@@ -38,7 +38,7 @@
         <el-table-column prop="name" label="操作" align="center">
           <template slot-scope="scope">
             <div style="display:none">{{ scope.row }}</div>
-            <div v-if="scope.row.operatorName">
+            <div v-if="scope.row.executeTime && scope.row.executeTime !== '-'">
               <el-button type="text" disabled>修改</el-button>
               <el-button type="text" disabled>执行推送</el-button>
             </div>
@@ -144,6 +144,8 @@ export default {
             res.pushDates = res.pushDate
             res.type = res.type === 0 ? '体验课' : '系统课'
             res.pushDate = timestamp(res.pushDate, 5)
+            res.pushUrl = res.pushUrl ? res.pushUrl : '-'
+            res.operatorName = res.operatorName ? res.operatorName : '-'
             if (!res.executeTime || res.executeTime === '0') {
               res.executeTime = '-'
             } else {
