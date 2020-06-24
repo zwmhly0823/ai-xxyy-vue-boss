@@ -161,7 +161,7 @@
           ><el-tooltip
             class="item"
             effect="dark"
-            content="薪资核算人员专业"
+            content="薪资核算人员专用"
             placement="top"
             ><i
               class="el-icon-question"
