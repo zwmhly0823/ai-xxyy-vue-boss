@@ -3,13 +3,8 @@
  * @version: 
  * @Author: Lukun
  * @Date: 2020-04-27 17:47:58
-<<<<<<< HEAD
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-06-24 15:24:00
-=======
  * @LastEditors: liukun
  * @LastEditTime: 2020-06-24 14:47:56
->>>>>>> feature/userTel
  -->
 <template>
   <div class="container">
