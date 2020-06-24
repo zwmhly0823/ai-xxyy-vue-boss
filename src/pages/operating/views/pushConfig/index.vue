@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-06-23 15:23:48
  * @LastEditors: panjian
- * @LastEditTime: 2020-06-24 16:59:01
+ * @LastEditTime: 2020-06-24 17:39:49
 -->
 <template>
   <div class="push-config-box">
@@ -49,13 +49,13 @@
           </template>
         </el-table-column>
       </el-table>
-      <!-- <m-pagination
+      <m-pagination
         @current-change="handleCurrentChange"
-        :current-page="+tables.currentPage"
-        :total="+tables.totalElements"
+        :current-page="+currentPage"
+        :total="+totalElements"
         open="calc(100vw - 147px - 50px)"
         close="calc(100vw - 26px - 50px)"
-      /> -->
+      />
     </div>
     <el-dialog
       title="修改推送信息"
@@ -88,15 +88,17 @@
 import pushConfigSelect from '../pushConfig/components/pushConfigSelect'
 import updateForm from '../pushConfig/components/updateForm'
 import { timestamp } from '@/utils/index'
-// import MPagination from '@/components/MPagination/index.vue'
+import MPagination from '@/components/MPagination/index.vue'
 export default {
   components: {
     pushConfigSelect,
-    updateForm
-    // MPagination
+    updateForm,
+    MPagination
   },
   data() {
     return {
+      currentPage: '1',
+      totalElements: '',
       num: '',
       pushTest: '',
       tableRow: {},
@@ -122,7 +124,7 @@ export default {
           address: '上海市普陀区金沙江路 1516 弄'
         }
       ],
-      currentPage: '1',
+
       dialogFormVisible: false,
       centerDialogVisible: false
     }
@@ -135,6 +137,8 @@ export default {
     getPushNotificationsList() {
       this.$http.Operating.getPushNotificationsList(this.currentPage).then(
         (res) => {
+          this.currentPage = res.payload.number + 1
+          this.totalElements = res.payload.totalElements
           const _data = res.payload.content
           _data.forEach((res) => {
             res.pushDates = res.pushDate
@@ -170,6 +174,10 @@ export default {
           this.num = _data
         })
       }
+    },
+    handleCurrentChange(val) {
+      this.currentPage = val
+      this.getPushNotificationsList()
     },
     onPushDetermine() {
       const teacher = JSON.parse(localStorage.getItem('teacher'))
@@ -214,11 +222,10 @@ export default {
 <style lang="scss" scoped>
 .push-config-box {
   margin: 10px;
-  .push-select-box {
-  }
   .push-table-box {
     margin-top: 10px;
     background: #ffffff;
+    margin-bottom: 70px;
   }
 }
 </style>

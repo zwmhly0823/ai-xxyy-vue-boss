@@ -336,6 +336,14 @@ const routes = [
           module: 'operating'
         }
       }
+      // {
+      //   path: '/problem',
+      //   name: 'problem',
+      //   meta: {
+      //     title: '问卷管理',
+      //     module: 'operating'
+      //   }
+      // }
     ]
   },
   // 工具类路由
