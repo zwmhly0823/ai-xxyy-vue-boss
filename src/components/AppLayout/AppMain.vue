@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-03-14 17:56:29
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-06-12 16:42:37
+ * @LastEditTime: 2020-06-23 18:52:12
  -->
 <template>
   <section class="app-main">
@@ -73,6 +73,9 @@ export default {
 .primary-text {
   color: $blueTextColor !important;
   cursor: pointer;
+}
+.danger-text {
+  color: $dangerColor !important;
 }
 </style>
 

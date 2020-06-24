@@ -3,8 +3,8 @@
  * @version: 
  * @Author: zhubaodong
  * @Date: 2020-03-24 18:50:54
- * @LastEditors: liukun
- * @LastEditTime: 2020-04-28 13:48:02
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-06-23 18:00:24
  -->
 <template>
   <div class="search-item small">
@@ -16,6 +16,7 @@
       size="mini"
       multiple
       :placeholder="placeholder"
+      :style="myStyle"
       @change="supChange"
     >
       <el-option
@@ -46,6 +47,11 @@ export default {
     addSupS: {
       type: Boolean,
       default: false
+    },
+    // 自定义style样式
+    myStyle: {
+      type: Object,
+      default: () => {}
     }
   },
   data() {

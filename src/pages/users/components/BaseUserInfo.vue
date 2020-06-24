@@ -13,22 +13,25 @@
  -->
 <template>
   <div class="user-info">
-    <div class="user-info-l">
+    <!-- <div class="user-info-l">
       <div class="user-info-head">
         <img :src="head" alt="" />
       </div>
-      <i class="el-icon-male" v-if="user.sex === 1"></i>
-      <i class="el-icon-female female" v-if="user.sex === 2"></i>
-    </div>
+      <i class="el-icon-male" v-if="user && +user.sex === 1"></i>
+      <i class="el-icon-female female" v-if="user && +user.sex === 2"></i>
+    </div> -->
     <div>
-      <p>
-        <span @click="onClick">{{
-          user.user_num ? `${user.user_num}：` : ''
+      <p class="primary-text">
+        <span @click="onClick">{{ (user && user.mobile) || '' }}</span> -
+        <span @click="onClick" class="username">{{
+          (user && user.username) || '-'
         }}</span>
-        <span @click="onClick">{{ user.username || '-' }}</span> -
-        <span @click="onClick">{{ user.mobile || '' }}</span>
       </p>
-      <p @click="onClick">{{ birthday }} · {{ basePainting || '' }}</p>
+      <p>
+        <i class="el-icon-male" v-if="user && +user.sex === 1"></i>
+        <i class="el-icon-female female" v-if="user && +user.sex === 2"></i>
+        {{ birthday }} · {{ basePainting || '' }}
+      </p>
     </div>
   </div>
 </template>
@@ -57,7 +60,9 @@ export default {
 
     // 生日
     birthday() {
-      return this.user.birthday ? GetAgeByBrithday(this.user.birthday) : '-'
+      return this.user && this.user.birthday
+        ? GetAgeByBrithday(this.user.birthday)
+        : '-'
     },
     // 绘画基础
     basePainting() {
@@ -70,13 +75,15 @@ export default {
   methods: {
     // 点击用户信息事件回调, 参数是用户ID
     onClick() {
-      this.$emit('handle-click', this.user.id)
+      // this.$emit('handle-click', this.user.id || this.user.studentid)
+      this.$emit('handle-click', this.user)
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
+@import '../../../assets/styles/mixin.scss';
 .user-info {
   display: flex;
   align-items: center;
@@ -89,9 +96,9 @@ export default {
       bottom: 0;
       background-color: #369bff;
       display: block;
-      width: 20px;
-      height: 20px;
-      line-height: 20px;
+      width: 18px;
+      height: 18px;
+      line-height: 18px;
       border-radius: 100%;
       overflow: hidden;
       color: #fff;
@@ -104,8 +111,8 @@ export default {
   }
   &-head {
     margin-right: 16px;
-    width: 40px;
-    height: 40px;
+    width: 36px;
+    height: 36px;
     border-radius: 100%;
     overflow: hidden;
     background-color: #eee;
@@ -116,7 +123,29 @@ export default {
   }
   p {
     margin: 0;
-    color: #2a75ed;
+    // position: relative;
+    i {
+      position: relative;
+      top: 5px;
+      width: 18px;
+      height: 18px;
+      line-height: 18px;
+      border-radius: 100%;
+      overflow: hidden;
+      text-align: center;
+      font-weight: bolder;
+      color: #369bff;
+      &.female {
+        color: #f23589;
+      }
+    }
+    .username {
+      position: relative;
+      top: 4px;
+      width: 60px !important;
+      display: inline-block;
+      @include ellipsis();
+    }
   }
 }
 </style>
