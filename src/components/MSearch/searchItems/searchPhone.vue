@@ -3,8 +3,8 @@
  * @version:
  * @Author: zhubaodong
  * @Date: 2020-03-26 16:28:45
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-05-23 18:41:27
+ * @LastEditors: liukun
+ * @LastEditTime: 2020-06-23 19:22:07
  -->
 <template>
   <div class="search-item small">
@@ -93,10 +93,13 @@ export default {
   },
   watch: {
     input(val, old) {
-      // 相当于emit出去一个change
+      // 相当于emit出去一个change(clear事件)
       this.$emit('inputChange')
       if (val !== old && !val) {
         this.$emit('result', '')
+      }
+      if (val !== old && !val && this.name === 'userTel') {
+        this.$emit('result_lk', { [this.name]: '' })
       }
     },
     searchPhone(val) {
@@ -149,6 +152,9 @@ export default {
           ? { [this.name]: data.id }
           : ''
       )
+      if (this.name === 'userTel') {
+        this.$emit('result_lk', { [this.name]: data.mobile })
+      }
     }
   },
   created() {},

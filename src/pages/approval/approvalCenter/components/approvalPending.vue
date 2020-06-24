@@ -3,17 +3,25 @@
  * @version: 
  * @Author: Lukun
  * @Date: 2020-04-27 17:47:58
+<<<<<<< HEAD
  * @LastEditors: YangJiyong
  * @LastEditTime: 2020-06-24 15:24:00
+=======
+ * @LastEditors: liukun
+ * @LastEditTime: 2020-06-24 14:47:56
+>>>>>>> feature/userTel
  -->
 <template>
   <div class="container">
+    <!-- 搜索框 -->
     <div class="time">
       <tabTimeSelect @result="getSeacherTime" />
       <CheckType @result="getcheckType" />
       <SearchPart @result="getSeachePart" />
       <courseTeam @result="getTeamId" />
+      <searchPhone name="userTel" @result_lk="getPhone" />
     </div>
+    <!-- 数据table -->
     <el-table
       :data="tableData"
       style="width: 100%"
@@ -74,6 +82,8 @@
           </div>
         </template>
       </el-table-column>
+      <el-table-column label="用户电话" width="180" prop="userTel">
+      </el-table-column>
       <el-table-column label="开课日期" width="120">
         <template slot-scope="scope">
           <div>
@@ -111,6 +121,7 @@
         </template>
       </el-table-column>
     </el-table>
+    <!-- 退款补发货抽屉 -->
     <el-drawer
       :visible.sync="drawerApproval"
       :destroy-on-close="true"
@@ -138,6 +149,12 @@
           <el-col :span="3">申请部门:</el-col>
           <el-col :span="20" :offset="1">{{
             drawerApprovalDeatail.applyUserDeapartmentName
+          }}</el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="3">用户电话:</el-col>
+          <el-col :span="20" :offset="1">{{
+            drawerApprovalDeatail.userTel
           }}</el-col>
         </el-row>
         <el-row>
@@ -455,12 +472,14 @@
         </div>
       </div>
     </el-drawer>
+    <!-- 调味品抽屉 -->
     <adjust-drawer
       ref="adjustDrawerCom"
       :adjustDrawerData="adjustDrawerData"
       :isStaffId="isStaffId"
       @result="adjustDrawerPass"
     ></adjust-drawer>
+    <!-- 调班调级备注弹窗 -->
     <el-dialog
       class="adjust-dialog-class"
       :title="
@@ -512,7 +531,7 @@
         >
       </div>
     </el-dialog>
-    <!-- 待审批的撤销 -->
+    <!-- 数据table里首个展示的三个点用来撤销自己的申请-弹窗 -->
     <el-dialog
       title="撤销申请"
       :visible.sync="endback"
@@ -525,6 +544,7 @@
         <el-button type="primary" @click="ensureBackend">确 定</el-button>
       </span>
     </el-dialog>
+    <!-- 页码组件 -->
     <m-pagination
       class="bottom0"
       @current-change="handleCurrentChange"
@@ -533,7 +553,7 @@
       open="calc(100vw - 195px)"
       close="calc(100vw - 75px)"
     />
-    <!-- destroy-on-close不好用没生效-->
+    <!-- 修改金额弹窗-->
     <el-dialog
       title="修改金额"
       :visible.sync="dialogFormVisible"
@@ -573,6 +593,7 @@
 </template>
 
 <script>
+import searchPhone from '@/components/MSearch/searchItems/searchPhone.vue'
 import MPagination from '@/components/MPagination/index.vue'
 import tabTimeSelect from './timeSearch'
 import CheckType from './checkType'
@@ -600,6 +621,7 @@ export default {
     }
   },
   components: {
+    searchPhone,
     MPagination,
     tabTimeSelect,
     VersionBox,
@@ -762,6 +784,14 @@ export default {
     // 查询审批类型判断
     getcheckType(val) {
       Object.assign(this.params, { type: val })
+      this.currentPage = 1
+      this.params.page = 1
+      this.checkPending(this.params)
+    },
+    // 新加手机号
+    getPhone(val) {
+      console.info(val)
+      Object.assign(this.params, val)
       this.currentPage = 1
       this.params.page = 1
       this.checkPending(this.params)

@@ -3,8 +3,8 @@
  * @version: 
  * @Author: Lukun
  * @Date: 2020-04-27 17:47:58
- * @LastEditors: songyanan
- * @LastEditTime: 2020-06-24 15:27:00
+ * @LastEditors: liukun
+ * @LastEditTime: 2020-06-24 14:52:22
  -->
 <template>
   <div class="container">
@@ -13,6 +13,7 @@
       <CheckType @result="getcheckType" />
       <SearchPart @result="getSeachePart" />
       <courseTeam @result="getTeamId" />
+      <searchPhone name="userTel" @result_lk="getPhone" />
     </div>
     <el-table
       :data="tableData"
@@ -56,6 +57,8 @@
             无归属订单审批
           </div>
         </template>
+      </el-table-column>
+      <el-table-column label="用户电话" width="180" prop="userTel">
       </el-table-column>
       <el-table-column label="开课日期" width="120">
         <template slot-scope="scope">
@@ -141,6 +144,12 @@
           <el-col :span="3">申请部门:</el-col>
           <el-col :span="20" :offset="1">{{
             drawerApprovalDeatail.applyUserDeapartmentName
+          }}</el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="3">用户电话:</el-col>
+          <el-col :span="20" :offset="1">{{
+            drawerApprovalDeatail.userTel
           }}</el-col>
         </el-row>
         <el-row>
@@ -429,6 +438,7 @@
 </template>
 
 <script>
+import searchPhone from '@/components/MSearch/searchItems/searchPhone.vue'
 import MPagination from '@/components/MPagination/index.vue'
 import { timestamp } from '@/utils/index'
 import { getStaffInfo } from '../common'
@@ -441,6 +451,7 @@ import adjustDrawer from './adjustDrawer'
 export default {
   props: ['activeName'],
   components: {
+    searchPhone,
     MPagination,
     TabTimeSelect,
     CheckType,
@@ -540,6 +551,14 @@ export default {
       this.params.page = 1
       this.currentPage = 1
       Object.assign(this.params, { type: val })
+      this.checkPending(this.params)
+    },
+    // 新加手机号
+    getPhone(val) {
+      console.info(val)
+      Object.assign(this.params, val)
+      this.currentPage = 1
+      this.params.page = 1
       this.checkPending(this.params)
     },
     // 筛选时间
