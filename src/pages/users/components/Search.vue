@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-06-20 20:23:28
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-06-23 20:53:20
+ * @LastEditTime: 2020-06-24 10:51:54
  @ApiModel(description = "用户跟进状态")
     public enum STATUS {
 
@@ -156,10 +156,7 @@
             </div>
           </el-form-item>
 
-          <el-form-item
-            label="渠道选择:"
-            v-if="teacherInfo && +teacherInfo.rankId !== 3"
-          >
+          <el-form-item label="渠道选择:">
             <div class="search-group">
               <channel
                 placeholder="请选择"
@@ -221,7 +218,6 @@ import DefineLabel from '@/components/MSearch/searchItems/defineLabel.vue'
 import SearchPhoneOrUsernum from '@/components/MSearch/searchItems/searchPhoneOrUsernum.vue'
 import SimpleSelect from '@/components/MSearch/searchItems/simpleSelect.vue'
 import enums from '../components/searchData'
-import { isToss } from '@/utils/index'
 export default {
   components: {
     FollowExpressStatus,
@@ -245,7 +241,6 @@ export default {
       labelName: '',
       ...enums,
       searchQuery: {},
-      teacherInfo: {},
       nowDate: new Date().getTime()
     }
   },
@@ -254,9 +249,6 @@ export default {
       console.log(this.nowDate, 'this.nowDate')
       return this.nowDate
     }
-  },
-  created() {
-    this.teacherInfo = isToss(true)
   },
   methods: {
     /**

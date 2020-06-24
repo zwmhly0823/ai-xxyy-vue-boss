@@ -4,12 +4,12 @@
  * @Author: YangJiyong
  * @Date: 2020-06-19 21:20:49
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-06-20 11:29:00
+ * @LastEditTime: 2020-06-24 11:47:51
 -->
 <template>
   <el-tooltip placement="bottom-end">
     <div slot="content">
-      <h3>列表数据说明</h3>
+      <h3>列表数据说明 <span>（数据更新延时1～3分钟）</span></h3>
       <p>【参课】参课指用户在APP点击某节课进入上课界面的行为</p>
       <ol>
         <li>
@@ -42,3 +42,10 @@
     <i class="el-icon-warning-outline"></i>
   </el-tooltip>
 </template>
+
+<style lang="scss" scoped>
+h3 span {
+  font-weight: normal;
+  font-size: 12px;
+}
+</style>
