@@ -187,7 +187,6 @@ export default {
                 this.$emit('onRefreshForm')
               }, 500)
             }
-            console.log()
           })
         } else {
           console.log('error submit!!')

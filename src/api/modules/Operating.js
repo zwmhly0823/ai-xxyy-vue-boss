@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-03-16 19:46:39
  * @LastEditors: panjian
- * @LastEditTime: 2020-06-24 11:33:05
+ * @LastEditTime: 2020-06-24 16:55:42
  */
 import axios from '../axiosConfig'
 // import { getToken } from '@/utils/auth'
@@ -255,5 +255,31 @@ export default {
     return axios.get(
       `/api/b/v1/backend/PushNotifications/execute?id=${id}&operatorId=${operatorId}&operatorName=${operatorName}`
     )
+  },
+  /**
+   *
+   *通过期数 获取期数下人员总数 (体验课)
+   */
+  StudentTrialCoursePage(Params) {
+    return axios.post('/graphql/v1/toss', {
+      query: `{
+        StudentTrialCoursePage(query:${Params}){
+          totalElements
+        }
+      }`
+    })
+  },
+  /**
+   *
+   *通过期数 获取期数下人员总数 (系统课)
+   */
+  StudentSystemCoursePage(Params) {
+    return axios.post('/graphql/v1/toss', {
+      query: `{
+        StudentSystemCoursePage(query:${Params}){
+          totalElements
+        }
+      }`
+    })
   }
 }

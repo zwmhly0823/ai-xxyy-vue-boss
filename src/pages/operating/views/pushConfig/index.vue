@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-06-23 15:23:48
  * @LastEditors: panjian
- * @LastEditTime: 2020-06-24 16:46:17
+ * @LastEditTime: 2020-06-24 16:59:01
 -->
 <template>
   <div class="push-config-box">
@@ -71,7 +71,7 @@
     </el-dialog>
     <el-dialog :visible.sync="centerDialogVisible" width="30%" center>
       <span>
-        当前任务将推送 XXX，将在此条线<span style="color:red;">{{
+        当前任务将推送 {{ num }}人，将在此条线<span style="color:red;">{{
           pushTest
         }}</span
         >下执行，确认推送？
@@ -97,6 +97,7 @@ export default {
   },
   data() {
     return {
+      num: '',
       pushTest: '',
       tableRow: {},
       tableData: [
@@ -153,6 +154,22 @@ export default {
       this.centerDialogVisible = true
       const date = timestamp(this.tableRow.pushDates, 7)
       this.pushTest = `"${this.tableRow.type}、${this.tableRow.term}、${date}、${this.tableRow.pushUrl}"`
+      const query = `"term"=${this.tableRow.period}`
+      if (this.tableRow.type === '体验课') {
+        this.$http.Operating.StudentTrialCoursePage(JSON.stringify(query)).then(
+          (res) => {
+            const _data = res.data.StudentTrialCoursePage.totalElements
+            this.num = _data
+          }
+        )
+      } else {
+        this.$http.Operating.StudentSystemCoursePage(
+          JSON.stringify(query)
+        ).then((res) => {
+          const _data = res.data.StudentTrialCoursePage.totalElements
+          this.num = _data
+        })
+      }
     },
     onPushDetermine() {
       const teacher = JSON.parse(localStorage.getItem('teacher'))
@@ -172,7 +189,6 @@ export default {
     },
     hoverRow(row) {
       this.tableRow = row
-      console.log(row)
     },
     onRefresh() {
       this.getPushNotificationsList()
