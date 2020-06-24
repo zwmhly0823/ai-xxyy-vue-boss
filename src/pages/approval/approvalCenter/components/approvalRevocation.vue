@@ -383,9 +383,9 @@
             <el-col :span="18" :offset="1">
               <el-image
                 style="width: 220px; height: 120px"
-                :src="drawerApprovalDeatail.chatUrl"
+                :src="drawerApprovalDeatail.chat_url"
                 fit="contain"
-                :preview-src-list="[drawerApprovalDeatail.chatUrl]"
+                :preview-src-list="drawerApprovalDeatail.chatUrl"
               >
               </el-image>
             </el-col>
@@ -395,9 +395,9 @@
             <el-col :span="18" :offset="1">
               <el-image
                 style="width: 220px; height: 120px"
-                :src="drawerApprovalDeatail.paymentUrl"
+                :src="drawerApprovalDeatail.pay_url"
                 fit="contain"
-                :preview-src-list="[drawerApprovalDeatail.paymentUrl]"
+                :preview-src-list="drawerApprovalDeatail.paymentUrl"
               >
               </el-image>
             </el-col>
@@ -584,14 +584,12 @@ export default {
       if (type === 'UNCREDITED') {
         this.$http.Backend.getNoAttributionDetail(id).then((res) => {
           if (res && res.payload) {
-            res.payload.ctimeFormdate = timestamp(res.payload.ctime, 2)
+            res.payload.orderTime = timestamp(res.payload.orderTime, 2)
+            res.payload.chatUrl = res.payload.chatUrl.split('(^_^)')
+            res.payload.paymentUrl = res.payload.paymentUrl.split('(^_^)')
             this.drawerApprovalDeatail = res.payload
-            if (this.drawerApprovalDeatail.orderTime) {
-              this.drawerApprovalDeatail.orderTime = timestamp(
-                this.drawerApprovalDeatail.orderTime,
-                2
-              )
-            }
+            this.drawerApprovalDeatail.chat_url = res.payload.chatUrl[0]
+            this.drawerApprovalDeatail.pay_url = res.payload.paymentUrl[0]
             this.drawerApproval = true
           }
         })
