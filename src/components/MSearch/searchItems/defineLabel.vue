@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-06-18 12:15:49
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-06-23 17:18:07
+ * @LastEditTime: 2020-06-24 14:14:27
 -->
 <template>
   <div class="search-item small">
@@ -36,7 +36,6 @@
 </template>
 
 <script>
-import { isToss } from '@/utils/index'
 export default {
   props: {
     placeholder: {
@@ -61,34 +60,16 @@ export default {
     return {
       loading: false,
       label: '',
-      labelList: [],
-      teacherIds: []
+      labelList: []
     }
   },
   created() {
-    this.getAllTeacherByRoleIds()
+    this.getData()
   },
   methods: {
-    // toss
-    getAllTeacherByRoleIds() {
-      const teacherid = isToss()
-      this.$http.Permission.getAllTeacherByRole({
-        teacherId: teacherid
-      }).then((res) => {
-        this.teacherIds = res
-        setTimeout(() => {
-          this.getData()
-        }, 200)
-      })
-    },
     getData(query = '') {
       this.loading = true
-      const q = [
-        {
-          terms: { teacher_id: this.teacherIds }
-        },
-        { wildcard: { 'name.keyword': `*${query}*` } }
-      ]
+      const q = [{ wildcard: { 'name.keyword': `*${query}*` } }]
       const params = {
         bool: {
           must: q
