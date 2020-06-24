@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-06-20 20:23:28
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-06-24 10:51:54
+ * @LastEditTime: 2020-06-24 17:53:05
  @ApiModel(description = "用户跟进状态")
     public enum STATUS {
 
@@ -315,6 +315,7 @@ export default {
     },
     handleClear() {
       this.nowDate = new Date().getTime()
+      this.searchQuery = {}
       this.$emit('search', {})
     }
   }
