@@ -39,6 +39,14 @@ $--font-path: '~element-ui/lib/theme-chalk/fonts';
   }
 }
 
+.el-popover {
+  max-width: 400px;
+  font-size: 12px;
+  &--plain {
+    padding: 10px;
+  }
+}
+
 // reset scrollbar
 ::-webkit-scrollbar-thumb {
   height: 10px;

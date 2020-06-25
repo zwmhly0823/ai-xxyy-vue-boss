@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-06-16 16:27:14
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-06-24 18:12:13
+ * @LastEditTime: 2020-06-25 11:48:15
 -->
 <template>
   <div class="user-list">
@@ -98,7 +98,7 @@
           </template>
         </template>
       </el-table-column>
-      <el-table-column label="备注" min-width="150" show-overflow-tooltip>
+      <el-table-column label="备注" min-width="150">
         <template slot-scope="scope">
           <template
             v-if="
@@ -118,9 +118,15 @@
           </template>
           <template v-else>
             <div class="remarks-content">
-              <div class="remarks-text">
-                {{ scope.row.userIntention.describe }}
-              </div>
+              <el-popover
+                placement="top-start"
+                trigger="hover"
+                :content="scope.row.userIntention.describe"
+              >
+                <div slot="reference" class="remarks-text">
+                  {{ scope.row.userIntention.describe }}
+                </div>
+              </el-popover>
               <i
                 class="el-icon-edit"
                 @click="intentDescribeChange(scope.$index, scope.row.id)"
@@ -129,7 +135,7 @@
           </template>
         </template>
       </el-table-column>
-      <el-table-column label="标签" min-width="150" show-overflow-tooltip>
+      <el-table-column label="标签" min-width="150">
         <template slot-scope="scope">
           <!-- <template
             v-if="!scope.row.user_label || scope.row.user_label === '-'"
@@ -140,8 +146,18 @@
             ></i>
           </template> -->
           <div class="remarks-content">
-            <div class="remarks-text">
-              {{ scope.row.user_label || '-' }}
+            <el-popover
+              placement="top-start"
+              trigger="hover"
+              :content="scope.row.user_label"
+              v-if="scope.row.user_label"
+            >
+              <div slot="reference" class="remarks-text">
+                {{ scope.row.user_label }}
+              </div>
+            </el-popover>
+            <div v-else class="remarks-text">
+              -
             </div>
             <!-- <i class="el-icon-edit" @click="onLabel"></i> -->
           </div>
