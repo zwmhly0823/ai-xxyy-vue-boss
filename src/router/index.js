@@ -327,6 +327,14 @@ const routes = [
           title: '标签管理',
           module: 'operating'
         }
+      },
+      {
+        path: '/changePhoneNumber',
+        name: 'changePhoneNumber',
+        meta: {
+          title: '手机号替换',
+          module: 'operating'
+        }
       }
     ]
   },
