@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-04-25 17:24:23
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-06-15 20:11:49
+ * @LastEditTime: 2020-06-25 14:35:30
  -->
 <template>
   <el-card
@@ -161,7 +161,7 @@
           ><el-tooltip
             class="item"
             effect="dark"
-            content="薪资核算人员专业"
+            content="薪资核算人员专用"
             placement="top"
             ><i
               class="el-icon-question"
@@ -499,7 +499,7 @@ export default {
             packages_name: '类型',
             'stageInfo.course_day_text': '开课时间',
             'team.team_name': '班级',
-            'team.team_type_text': '班级类型',
+            class_type: '班级类型',
             'before_teacher.realname': '真实姓名',
             'before_teacher.ding_userid': '钉钉员工号',
             'after_teacher.realname': '接班老师',
