@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-04-25 17:24:23
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-06-25 15:09:49
+ * @LastEditTime: 2020-06-25 15:38:37
  -->
 <template>
   <el-card
@@ -580,7 +580,10 @@ export default {
           .catch(() => loading.close())
       } else {
         const query = this.$parent.$children[1].finalParams
-        const queryF = Object.assign({}, query, { trial_team_id: 0 })
+        const queryF = Object.assign({}, query, {
+          trial_team_id: 0,
+          pay_teacher_id: { gt: 0 }
+        })
         console.log(queryF)
         const params = {
           apiName: 'OrderPage',
