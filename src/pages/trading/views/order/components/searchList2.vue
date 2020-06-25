@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-04-25 17:24:23
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-06-25 14:31:27
+ * @LastEditTime: 2020-06-25 15:11:04
  -->
 <template>
   <el-card
@@ -456,8 +456,7 @@ export default {
       const loading = this.$loading({
         lock: true,
         text: '正在导出，请耐心等待……',
-        spinner: 'el-icon-loading',
-        background: 'rgba(0, 0, 0, 0.1)'
+        spinner: 'el-icon-loading'
       })
       if (chooseExport === '1') {
         const params = {
