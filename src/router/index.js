@@ -166,7 +166,7 @@ const routes = [
         }
       },
       {
-        path: 'https://wgj.xiaoxiongmeishu.com/Weixin/Tag/FriendsTagList',
+        path: 'https://wgj.xiaoxiongmeishu.com/WeiXin/Tag/WeiXinTagList',
         meta: {
           title: '微信标签',
           show: true
