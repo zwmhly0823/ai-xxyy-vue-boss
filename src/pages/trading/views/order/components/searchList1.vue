@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-04-25 17:24:23
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-06-25 14:35:19
+ * @LastEditTime: 2020-06-25 15:12:44
  -->
 <template>
   <el-card
@@ -531,8 +531,7 @@ export default {
       const loading = this.$loading({
         lock: true,
         text: '正在导出，请耐心等待……',
-        spinner: 'el-icon-loading',
-        background: 'rgba(0, 0, 0, 0.1)'
+        spinner: 'el-icon-loading'
       })
       if (chooseExport === '1') {
         const params = {
@@ -581,8 +580,8 @@ export default {
           .catch(() => loading.close())
       } else {
         const query = this.$parent.$children[1].finalParams
-        query.trial_team_id = 0
-        console.log(query)
+        const queryF = Object.assign({}, query, { trial_team_id: 0 })
+        console.log(queryF)
         const params = {
           apiName: 'OrderPage',
           header: {
@@ -599,7 +598,7 @@ export default {
             'channelDetail.p_channel_class_name': '一级渠道'
           },
           fileName: `系统课订单薪资核算表-${fileTitleTime}`, // 文件名称
-          query: JSON.stringify(query)
+          query: JSON.stringify(queryF)
           // query: '{"status":3}'
         }
         // console.log(exportExcel)
