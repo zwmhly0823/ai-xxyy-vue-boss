@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-06-25 16:48:38
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-06-25 18:12:55
+ * @LastEditTime: 2020-06-25 18:20:16
 -->
 <template>
   <el-row type="flex" class="app-main height">
@@ -43,7 +43,13 @@
 
         <div class="record-list">
           <h3>替换记录</h3>
-          <el-table :data="recordList" style="width: 100%">
+          <!-- dom -->
+          <div class="tableInner" ref="tableInner"></div>
+          <el-table
+            :data="recordList"
+            :height="tableHeight"
+            style="width: 100%"
+          >
             <el-table-column prop="date" label="用户ID"> </el-table-column>
             <el-table-column prop="name" label="原手机号"> </el-table-column>
             <el-table-column prop="name" label="新手机号"> </el-table-column>
@@ -55,8 +61,8 @@
           @current-change="handleCurrentChange"
           :current-page="+currentPage"
           :total="+totalElements"
-          open="calc(100vw - 55px - 100px)"
-          close="calc(100vw - 50px)"
+          open="calc(100vw - 170px - 25px)"
+          close="calc(100vw - 50px - 25px)"
         />
       </div>
       <!-- </el-scrollbar> -->
@@ -65,6 +71,7 @@
 </template>
 
 <script>
+import { openBrowserTab } from '@/utils/index'
 import MPagination from '@/components/MPagination/index.vue'
 const valid = {
   isPhoneNum(str) {
@@ -93,6 +100,7 @@ export default {
     return {
       currentPage: 1,
       totalElements: 0,
+      tableHeight: 0,
       phoneForm: {
         oldPhone: '',
         newPhone: ''
@@ -106,6 +114,13 @@ export default {
       recordList: []
     }
   },
+  created() {
+    this.$nextTick(() => {
+      const tableHeight =
+        document.body.clientHeight - this.$refs.tableInner.offsetTop - 110
+      this.tableHeight = tableHeight + ''
+    })
+  },
   methods: {
     onSubmit(formName) {
       this.$refs[formName].validate((valid) => {
@@ -118,6 +133,17 @@ export default {
           return false
         }
       })
+    },
+
+    // 跳转用户详情
+    userHandle(row) {
+      if (!row || !row.id) {
+        this.$message.error('缺少用户信息')
+        return
+      }
+      const { id } = row
+      // 新标签打开详情页
+      id && openBrowserTab(`/users/#/details/${id}`)
     },
 
     handleCurrentChange(page) {
