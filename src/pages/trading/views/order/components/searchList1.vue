@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-04-25 17:24:23
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-06-15 20:02:28
+ * @LastEditTime: 2020-06-25 14:31:16
  -->
 <template>
   <el-card
@@ -195,7 +195,7 @@
           ><el-tooltip
             class="item"
             effect="dark"
-            content="薪资核算人员专业"
+            content="薪资核算人员专用"
             placement="top"
             ><i
               class="el-icon-question"
