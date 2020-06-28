@@ -330,7 +330,23 @@ const routes = [
           title: '招生排期',
           module: 'operating'
         }
+      },
+      {
+        path: '/pushConfig',
+        name: 'pushConfig',
+        meta: {
+          title: '推送配置',
+          module: 'operating'
+        }
       }
+      // {
+      //   path: '/problem',
+      //   name: 'problem',
+      //   meta: {
+      //     title: '问卷管理',
+      //     module: 'operating'
+      //   }
+      // }
     ]
   },
   // 工具类路由

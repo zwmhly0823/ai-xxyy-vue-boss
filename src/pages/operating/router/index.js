@@ -1,7 +1,7 @@
 /*
  * @Date: 2020-03-13 15:20:21
- * @LastEditors: liukun
- * @LastEditTime: 2020-06-10 20:45:07
+ * @LastEditors: panjian
+ * @LastEditTime: 2020-06-28 16:16:44
  * @FilePath: /ai-app-vue-toss/src/pages/studentTeam/router/index.js
  */
 import Vue from 'vue'
@@ -92,6 +92,24 @@ const routes = [
       keepAlive: false
     },
     component: () => import('../views/labelManage/index.vue')
+  },
+  {
+    path: '/pushConfig',
+    name: 'pushConfig',
+    meta: {
+      title: '推送配置',
+      keepAlive: false
+    },
+    component: () => import('../views/pushConfig/index.vue')
+  },
+  {
+    path: '/problem',
+    name: 'problem',
+    meta: {
+      title: '问卷管理',
+      keepAlive: false
+    },
+    component: () => import('../views/problem/index.vue')
   }
 ]
 
