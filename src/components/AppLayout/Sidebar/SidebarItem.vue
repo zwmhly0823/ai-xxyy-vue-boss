@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-03-24 12:49:53
  * @LastEditors: liukun
- * @LastEditTime: 2020-06-28 15:38:17
+ * @LastEditTime: 2020-06-28 18:06:13
 -->
 <template>
   <div v-if="!item.hidden">
@@ -180,7 +180,7 @@ export default {
         top,
         bottom: 0
       }
-      if (bottom > height - 150) {
+      if (bottom > height - 120) {
         Object.assign(payload, {
           bottom: 10
         })
