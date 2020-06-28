@@ -91,7 +91,6 @@
               </el-input>
               <el-switch
                 v-model="item.status"
-                @change="switchHandle"
                 :width="45"
                 active-color="#13ce66"
                 active-value="ON"
@@ -111,6 +110,7 @@
           <span class="label">开启全国调拨:</span>
           <el-switch
             v-model="automaticParams[0].status"
+            @change="switchHandle"
             :width="45"
             active-color="#13ce66"
             active-value="ON"
@@ -130,7 +130,7 @@
           启用定时发货
         </el-button>
         <el-button disabled v-else>定时发货已开启</el-button>
-        <el-button :disabled="isDisabledPause" @click="isShowSetUp = false">
+        <el-button :disabled="isDisabledPause" @click="pauseAll">
           暂停
         </el-button>
       </span>
@@ -190,8 +190,8 @@ export default {
         },
         {
           type: 'AUTOMATIC',
-          tag: '10:01',
-          status: 'ON'
+          tag: '10:00',
+          status: 'OFF'
         },
         {
           type: 'AUTOMATIC',
@@ -205,9 +205,7 @@ export default {
         }
       ],
       taskStatus: false, // 定时发货任务是否开启 true/false
-      isDisabledPause: false, // 自动发货弹窗暂停按钮是否可用 true/false
-      AUTOMATIC: 'ON', // 自动发货 默认关闭
-      COUNTRY: 'OFF', // 全国发货 默认关闭
+      isDisabledPause: true, // 自动发货弹窗暂停按钮是否可用 true/false
       activeName: '0',
       sortItem: {},
       search: '',
@@ -219,18 +217,6 @@ export default {
       teamClass: '0' // 排期组件添加类别区分 系统课传1 体验课传0
     }
   },
-  // computed: {
-  //   // 定时发货任务是否开启 true/false
-  //   taskStatus() {
-  //     let flag = false
-  //     this.automaticParams.forEach((item, index) => {
-  //       if (index > 0 && item.status === 'ON') {
-  //         flag = true
-  //       }
-  //     })
-  //     return flag
-  //   }
-  // },
   mounted() {
     this.$nextTick(() => {
       this.calcSrollHeight()
@@ -243,26 +229,27 @@ export default {
       const scrollH = document.body.clientHeight - topH - 60
       this.scrollHeight = scrollH + 'px'
     },
-    // 获取开关数据
+    // 获取自动发货所有开关数据
     getSwitchByType() {
       const types = 'AUTOMATIC,COUNTRY'
       this.$http.Express.getSwitchByType(types).then((res) => {
-        console.log(res.payload)
         // 初始化按钮状态
+        this.taskStatus = false
+        this.isDisabledPause = true
         res.payload.forEach((item, index) => {
           if (index > 0 && item.status === 'ON') {
             this.taskStatus = true
           }
           if (item.status === 'ON') {
-            this.isDisabledPause = true
+            this.isDisabledPause = false
           }
         })
         this.automaticParams = res.payload
       })
     },
-    // 定时任务
+    // 开启定时任务
     timedTask() {
-      // TODO 开启定时任务校验
+      // 开启定时任务校验
       let flag = false
       this.automaticParams.forEach((item, index) => {
         if (index > 0 && item.status === 'ON') {
@@ -287,13 +274,14 @@ export default {
         }
       )
         .then(() => {
-          // TODO 立即发货
           const params = this.automaticParams.filter(
             (item, index) => item.type === 'AUTOMATIC'
           )
-          this.updateSwitchStatus(params)
-          console.log(params)
-          console.log('ddd')
+          const msg = {
+            success: '定时发货任务启用成功',
+            error: '定时发货任务启用失败'
+          }
+          this.updateSwitchStatus(params, msg)
         })
         .catch(() => {
           this.$message.warning('没有发生变化')
@@ -317,9 +305,43 @@ export default {
         .then(() => {
           // 立即发货接口
           this.$http.Express.immediately().then((res) => {
-            this.$message.success('自动发货任务启动成功')
-            this.isShowSetUp = false
+            if (res.payload) {
+              this.$message.success('自动发货任务启动成功')
+            } else {
+              this.$message.error('自动发货任务启动失败')
+            }
           })
+        })
+        .catch(() => {
+          this.$message.warning('没有发生变化')
+        })
+    },
+    // 暂停所有自动任务
+    pauseAll() {
+      const h = this.$createElement
+      const title = `你确定要暂停所有自动发货任务吗?`
+      const content = `暂停后将所有已开启的发货任务将暂停`
+      this.$confirm(
+        h('div', null, [
+          h('p', { style: 'font-weight: 600;' }, title),
+          h('p', null, content)
+        ]),
+        {
+          showCancelButton: true,
+          type: 'warning'
+        }
+      )
+        .then(() => {
+          const params = this.automaticParams.map((item, index) => {
+            let { type, tag, status } = item
+            status = 'OFF'
+            return { type, tag, status }
+          })
+          const msg = {
+            success: '全部任务已暂停',
+            error: '暂停失败'
+          }
+          this.updateSwitchStatus(params, msg)
         })
         .catch(() => {
           this.$message.warning('没有发生变化')
@@ -328,7 +350,6 @@ export default {
     // 自动发货配置弹窗关闭
     setUpClose() {
       this.isShowSetUp = false
-      // TODO 关闭弹窗的一些处理
     },
     // 打开物流开关设置弹窗
     showSetUp() {
@@ -336,32 +357,50 @@ export default {
       this.isShowSetUp = true
     },
     // 开关处理
-    switchHandle(status, type) {
-      this.isShowSetUp = true
+    switchHandle(status) {
       const isOpen = status === 'ON' ? '开启' : '关闭'
-      const typeName = type === 'AUTOMATIC' ? '自动发货' : '全国发货'
-      this.$confirm(`是否${isOpen}${typeName}?`, {
-        showCancelButton: true
-      })
+      const h = this.$createElement
+      const title = `你确定要${isOpen}全国调拨吗?`
+      const content =
+        status === 'ON' ? `开启后将不考虑物流成本，实现全国仓有货即发！` : ''
+      this.$confirm(
+        h('div', null, [
+          h('p', { style: 'font-weight: 600;' }, title),
+          h('p', null, content)
+        ]),
+        {
+          showCancelButton: true,
+          type: 'warning'
+        }
+      )
         .then(() => {
-          this.updateSwitchStatus({ status, type })
+          const params = this.automaticParams.filter(
+            (item, index) => item.type === 'COUNTRY'
+          )
+          const msg = {
+            success: `全国自动调拨${isOpen}成功`,
+            error: `全国自动调拨${isOpen}失败`
+          }
+          this.updateSwitchStatus(params, msg)
         })
         .catch(() => {
-          this[type] = status === 'ON' ? 'OFF' : 'ON'
+          this.$message.warning('没有发生变化')
+          this.automaticParams[0].status = status === 'ON' ? 'OFF' : 'ON'
         })
     },
     // 更新自动发货状态
-    updateSwitchStatus(params) {
+    updateSwitchStatus(params, msg) {
       this.$http.Express.updateSwitchStatus(params)
         .then((res) => {
           if (res.status === 'OK') {
-            this.$message.success('更新成功')
+            this.$message.success(msg.success)
+            this.getSwitchByType()
           } else {
-            this.$message.error('更新失败')
+            this.$message.error(msg.error)
           }
         })
         .catch(() => {
-          this.$message.error('更新失败')
+          this.$message.error(msg.error)
         })
     },
     // 获取物流搜索的条件值

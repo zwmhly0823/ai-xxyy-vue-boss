@@ -125,23 +125,12 @@ export default {
   getLogisticsStatistics(params) {
     return axios.post('/graphql/logisticsStatistics', params)
   },
-  // /**
-  //  * 自动发货/全国发货 开关控制
-  //  * @param {Object} params
-  //  * @param {String} params.status - OFF-关闭；ON-开启
-  //  * @param {String} params.type - AUTOMATIC-自动发货；COUNTRY-全国发货
-  //  */
-  // updateSwitchStatus(params) {
-  //   return axios.get(
-  //     `/api/ex/v1/switch/updateSwitchStatus?status=${params.status}&type=${params.type}`
-  //   )
-  // },
   /**
    * 自动发货/全国发货 开关控制
    * @param {Array} params
    */
   updateSwitchStatus(params) {
-    return axios.post(`/api/ex/v1/switch/updateSwitchStatus`, params)
+    return axios.post(`/api/ex/v1/switch/updateSwitchStatus`, { list: params })
   },
   /**
    * 自动发货/全国发货 获取开关数据
