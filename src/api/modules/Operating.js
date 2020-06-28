@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-03-16 19:46:39
  * @LastEditors: panjian
- * @LastEditTime: 2020-06-24 16:55:42
+ * @LastEditTime: 2020-06-28 11:08:09
  */
 import axios from '../axiosConfig'
 // import { getToken } from '@/utils/auth'
@@ -254,6 +254,12 @@ export default {
   pushNotificationsExecute(id, operatorId, operatorName) {
     return axios.get(
       `/api/b/v1/backend/PushNotifications/execute?id=${id}&operatorId=${operatorId}&operatorName=${operatorName}`
+    )
+  },
+  // 推送配置 推送
+  queryQuestionnaire(page, size) {
+    return axios.get(
+      `/api/f/v1/questionnaire/queryQuestionnaire/execute?page=${page}&pagesize=${size}`
     )
   },
   /**
