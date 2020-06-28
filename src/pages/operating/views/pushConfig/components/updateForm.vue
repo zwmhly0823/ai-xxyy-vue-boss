@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-06-23 18:50:41
  * @LastEditors: panjian
- * @LastEditTime: 2020-06-28 16:15:23
+ * @LastEditTime: 2020-06-28 16:44:21
 -->
 <template>
   <div>
@@ -145,12 +145,7 @@ export default {
     this.ruleForm.stageValue = this.tableRow.term
     this.period = this.tableRow.period
     this.ruleForm.timeDate = +this.tableRow.pushDates
-    this.questionnaireList.forEach((res) => {
-      if (+res.value === +this.tableRow.titleId) {
-        this.ruleForm.questionnaire = res.label
-        this.questionnaires = res.value
-      }
-    })
+
     this.getQuestionnaireList()
   },
   methods: {
@@ -166,6 +161,12 @@ export default {
         _data.forEach((ele) => {
           ele.value = ele.id
           ele.label = ele.title
+        })
+        _data.forEach((res) => {
+          if (+res.value === +this.tableRow.titleId) {
+            this.ruleForm.questionnaire = res.label
+            this.questionnaires = res.value
+          }
         })
         this.questionnaireList = _data
         this.page++
