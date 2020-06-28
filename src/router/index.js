@@ -28,6 +28,7 @@
 // }
 // const routes = [getRoutes(studentTeamdRouter)]
 // console.log(routes)
+const staff = JSON.parse(localStorage.getItem('staff'))
 
 const routes = [
   // 班级
@@ -288,14 +289,6 @@ const routes = [
       module: 'operating'
     },
     children: [
-      // {
-      //   path: '/enrollmentSchedule',
-      //   name: 'enrollmentSchedule',
-      //   meta: {
-      //     title: '招生排期',
-      //     module: 'operating'
-      //   }
-      // },
       {
         path: '/channelManagement',
         name: 'channelManagement',
@@ -325,6 +318,16 @@ const routes = [
         name: 'labelManage',
         meta: {
           title: '标签管理',
+          module: 'operating'
+        }
+      },
+      {
+        path: '/operatingSchedule',
+        name: 'operatingSchedule',
+        hidden: staff.roleId !== '1' && staff.roleId !== '7',
+        meta: {
+          show: staff.roleId === '1' || staff.roleId === '7',
+          title: '招生排期',
           module: 'operating'
         }
       }
