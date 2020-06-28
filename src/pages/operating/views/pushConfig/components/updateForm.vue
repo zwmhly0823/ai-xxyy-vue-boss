@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-06-23 18:50:41
  * @LastEditors: panjian
- * @LastEditTime: 2020-06-28 16:44:21
+ * @LastEditTime: 2020-06-28 17:31:58
 -->
 <template>
   <div>
@@ -96,7 +96,7 @@ export default {
         stageValue: ''
       },
       page: 0,
-      pageSize: 20,
+      pageSize: 500,
       questionnaires: '',
       period: '',
       term: '',
