@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-06-23 15:26:34
  * @LastEditors: panjian
- * @LastEditTime: 2020-06-28 16:12:11
+ * @LastEditTime: 2020-06-28 17:31:03
 -->
 <template>
   <div class="select-box">
@@ -191,7 +191,13 @@ export default {
           ele.value = ele.id
           ele.label = ele.title
         })
-        this.questionnaireList = _data
+        if (this.questionnaireList.length === 0) {
+          this.questionnaireList = _data
+        } else {
+          for (let i = 0; i < _data.length; i++) {
+            this.questionnaireList.push(_data[i])
+          }
+        }
         this.page++
       })
     },
