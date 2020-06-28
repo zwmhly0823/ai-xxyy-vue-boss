@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-06-23 18:50:41
  * @LastEditors: panjian
- * @LastEditTime: 2020-06-24 15:32:27
+ * @LastEditTime: 2020-06-28 16:15:23
 -->
 <template>
   <div>
@@ -49,6 +49,7 @@
           @change="onQuestionnaire"
           placeholder="请选择问卷"
           size="mini"
+          v-loadmore="loadMore"
         >
           <el-option
             v-for="item in questionnaireList"
@@ -86,20 +87,7 @@ export default {
     return {
       type: '0',
       isMultiple: false,
-      questionnaireList: [
-        {
-          value: '1',
-          label: '请选择问卷1'
-        },
-        {
-          value: '2',
-          label: '请选择问卷2'
-        },
-        {
-          value: '3',
-          label: '请选择问卷3'
-        }
-      ],
+      questionnaireList: [],
       ruleForm: {
         timeDate: '',
         curriculum: '0',
@@ -107,6 +95,8 @@ export default {
         questionnaire: '',
         stageValue: ''
       },
+      page: 0,
+      pageSize: 20,
       questionnaires: '',
       period: '',
       term: '',
@@ -161,8 +151,26 @@ export default {
         this.questionnaires = res.value
       }
     })
+    this.getQuestionnaireList()
   },
   methods: {
+    loadMore() {
+      this.getQuestionnaireList()
+    },
+    getQuestionnaireList() {
+      this.$http.Operating.queryQuestionnairePage(
+        this.page,
+        this.pageSize
+      ).then((res) => {
+        const _data = res.payload.content
+        _data.forEach((ele) => {
+          ele.value = ele.id
+          ele.label = ele.title
+        })
+        this.questionnaireList = _data
+        this.page++
+      })
+    },
     result(data) {
       this.period = Object.values(data).toString()
       this.term = Object.keys(data).toString()

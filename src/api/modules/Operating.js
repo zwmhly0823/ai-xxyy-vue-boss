@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-03-16 19:46:39
  * @LastEditors: panjian
- * @LastEditTime: 2020-06-28 11:08:09
+ * @LastEditTime: 2020-06-28 14:26:05
  */
 import axios from '../axiosConfig'
 // import { getToken } from '@/utils/auth'
@@ -257,9 +257,9 @@ export default {
     )
   },
   // 推送配置 推送
-  queryQuestionnaire(page, size) {
+  queryQuestionnairePage(page, size) {
     return axios.get(
-      `/api/f/v1/questionnaire/queryQuestionnaire/execute?page=${page}&pagesize=${size}`
+      `/api/f/v1/questionnaire/queryQuestionnairePage?page=${page}&pagesize=${size}`
     )
   },
   /**

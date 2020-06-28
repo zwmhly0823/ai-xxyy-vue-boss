@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-06-23 15:26:34
  * @LastEditors: panjian
- * @LastEditTime: 2020-06-24 12:22:23
+ * @LastEditTime: 2020-06-28 16:12:11
 -->
 <template>
   <div class="select-box">
@@ -70,6 +70,7 @@
             @change="onQuestionnaireList"
             placeholder="请选择问卷"
             size="mini"
+            v-loadmore="loadMore"
           >
             <el-option
               v-for="item in questionnaireList"
@@ -116,22 +117,11 @@ export default {
           label: '问卷调查'
         }
       ],
-      questionnaireList: [
-        {
-          value: '1',
-          label: '请选择问卷1'
-        },
-        {
-          value: '2',
-          label: '请选择问卷2'
-        },
-        {
-          value: '3',
-          label: '请选择问卷3'
-        }
-      ],
+      questionnaireList: [],
       term: '',
       period: 0,
+      page: 0,
+      pageSize: 20,
       ruleForm: {
         timeDate: '',
         curriculum: '0',
@@ -179,13 +169,31 @@ export default {
       }
     }
   },
-  created() {},
+  created() {
+    this.getQuestionnaireList()
+  },
   methods: {
+    loadMore() {
+      this.getQuestionnaireList()
+    },
     result(data) {
       this.ruleForm.stageValue = data
       this.period = Object.values(data).toString()
       this.term = Object.keys(data).toString()
-      console.log(this.period, this.term)
+    },
+    getQuestionnaireList() {
+      this.$http.Operating.queryQuestionnairePage(
+        this.page,
+        this.pageSize
+      ).then((res) => {
+        const _data = res.payload.content
+        _data.forEach((ele) => {
+          ele.value = ele.id
+          ele.label = ele.title
+        })
+        this.questionnaireList = _data
+        this.page++
+      })
     },
     onCurriculumList(data) {
       console.log(data)
