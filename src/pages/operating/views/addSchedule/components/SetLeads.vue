@@ -175,12 +175,15 @@
     </div>
     <!-- 取消、下一步 -->
     <div class="operate-btn">
-      <el-button size="small" type="primary" @click="stepOperate(0)"
-        >上一步</el-button
-      >
-      <el-button size="small" type="primary" @click="stepOperate(1)"
-        >下一步</el-button
-      >
+      <el-button size="small" type="primary" @click="stepOperate(0)">
+        上一步
+      </el-button>
+      <el-button size="small" type="primary" @click="stepOperate(1)">
+        下一步
+      </el-button>
+      <el-button size="small" type="info" @click="skip">
+        跳过此步
+      </el-button>
     </div>
   </div>
 </template>
@@ -397,6 +400,10 @@ export default {
           }
         )
       }
+    },
+    // 跳过这一步 产品临时需求
+    skip() {
+      this.$emit('listenStepStatus', 1)
     }
   }
 }
