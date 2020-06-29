@@ -46,7 +46,10 @@
             <el-tab-pane label="招生详情-销售">
               <div class="search-container">
                 <!-- TODO: -->
-                <table-search @change="searchChange"></table-search>
+                <table-search
+                  @change="searchChange"
+                  :isShowLevel="courseType == '0'"
+                ></table-search>
               </div>
               <!-- TODO: -->
               <schedule-market :paramsInfo="params"></schedule-market>
@@ -78,9 +81,11 @@ export default {
   data() {
     return {
       scheduleStatistic: {},
+      courseType: '0',
       params: {
         departmentIds: '',
-        teacherId: ''
+        teacherId: '',
+        level: ''
       }
     }
   },
@@ -91,6 +96,7 @@ export default {
   computed: {},
   async created() {
     const { period = '', courseType = '0' } = this.$route.params
+    this.courseType = courseType
     Object.assign(this.params, { period, courseType })
 
     this.init()
@@ -125,10 +131,11 @@ export default {
       }
     },
     searchChange(search) {
-      const { department = [], groupSell = '' } = search
+      const { department = [], groupSell = '', level = '' } = search
       Object.assign(this.params, {
         departmentIds: department.join(),
-        teacherId: groupSell
+        teacherId: groupSell,
+        level: level.join()
       })
     },
     // 点击修改按钮

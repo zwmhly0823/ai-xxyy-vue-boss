@@ -36,6 +36,16 @@
         >
         </el-table-column>
         <el-table-column
+          prop="levelName"
+          label="销售等级"
+          width="120"
+          align="center"
+        >
+          <template slot-scope="scope">
+            {{ scope.row.levelName || '' }}
+          </template>
+        </el-table-column>
+        <el-table-column
           prop="teacherWechatNo"
           label="绑定微信"
           width="120"
@@ -214,7 +224,8 @@ export default {
       trialClass: [
         { name: '单周体验课', value: '3' },
         { name: '双周体验课', value: '0' },
-        { name: '系统课', value: '2' }
+        { name: '年系统课', value: '2' },
+        { name: '半年系统课', value: '4' }
       ],
       tabQuery: {
         size: 2,

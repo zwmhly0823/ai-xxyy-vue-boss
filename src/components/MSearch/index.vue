@@ -169,10 +169,12 @@
           @inductionCallBack="inductionCallBack"
           @landingCallBack="landingCallBack"
           @positionCallBack="positionCallBack"
+          @sellerLevelCallBack="sellerLevelCallBack"
           :rankName="rank"
           :inductionName="induction"
           :landingName="landing"
           :positionName="position"
+          :sellerLevelName="sellerLevel"
           style="margin-bottom:0px"
         />
       </el-form-item>
@@ -504,6 +506,11 @@ export default {
       type: String,
       default: ''
     },
+    // 销售等级
+    sellerLevel: {
+      type: String,
+      default: ''
+    },
     // 订单号
     outTradeNo: {
       type: String,
@@ -783,6 +790,10 @@ export default {
     positionCallBack(res) {
       this.setSeachParmas(res, [this.position || 'positionName'], 'terms')
     },
+    // 销售等级
+    sellerLevelCallBack(res) {
+      this.setSeachParmas(res, [this.sellerLevel || 'sellerLevelName'], 'terms')
+    },
     // 选择订单号
     getOutTradeNo(res) {
       this.setSeachParmas(res, [this.outTradeNo || 'out_trade_no'], 'wildcard')
@@ -950,7 +961,8 @@ export default {
           })
           this.must = temp
         }
-        this.$emit('search', res === '' ? '' : temp)
+        // this.$emit('search', res === '' ? '' : temp)
+        this.$emit('search', temp)
         return
       }
       // should

@@ -53,11 +53,11 @@ export default {
       default: '1'
     }
   },
-  computed: {
-    courseType() {
-      return this.row.team_type === 0 ? 'TRAIL' : 'YEAR'
-    }
-  },
+  // computed: {
+  //   courseType() {
+  //     return this.row.team_type === 0 ? 'TRAIL' : 'YEAR'
+  //   }
+  // },
   methods: {
     handleDropdown(command) {
       /**
@@ -70,7 +70,7 @@ export default {
       const { row } = this
       const params = {
         teamId: row.team_id,
-        courseType: this.courseType,
+        courseType: 'YEAR',
         studentId: row.id
       }
       if (this.type === '1' && +command !== row.added_wechat) {

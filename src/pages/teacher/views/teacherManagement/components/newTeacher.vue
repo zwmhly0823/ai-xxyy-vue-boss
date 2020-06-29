@@ -51,6 +51,10 @@
       <el-form-item label="对外昵称" prop="nickname" style="width:60%;">
         <el-input v-model.trim="ruleForm.nickname"></el-input>
       </el-form-item>
+      <!-- 钉钉工号 -->
+      <el-form-item label="钉钉工号" prop="dingUserid" style="width:60%;">
+        <el-input v-model.trim="ruleForm.dingUserid"></el-input>
+      </el-form-item>
       <!-- 性别 -->
       <el-form-item label="性别" prop="resource">
         <el-radio-group v-model="ruleForm.resource">
@@ -112,14 +116,14 @@
         </el-select>
       </el-form-item> -->
       <!-- 销售等级 -->
-      <el-form-item label="销售等级" prop="Level">
+      <el-form-item label="销售等级" prop="level">
         <el-select
           v-model="ruleForm.level"
           clearable
           placeholder="请选择销售等级"
         >
           <el-option
-            v-for="item in Level"
+            v-for="item in levels"
             :key="item.value"
             :label="item.label"
             :value="item.value"
@@ -307,16 +311,22 @@ export default {
       // 微信
       WeChat: [],
       // 销售等级
-      Level: [
-        { label: '新兵培训', value: 0 },
-        { label: '下组待接生', value: 1 },
-        { label: '首次排班', value: 2 },
-        { label: '已接生一次', value: 3 },
-        { label: '1级', value: 4 },
-        { label: '2级', value: 5 },
-        { label: '3级', value: 6 },
-        { label: '4级', value: 7 }
+      levels: [
+        { label: '1级社群销售', value: 1 },
+        { label: '2级社群销售', value: 2 },
+        { label: '3级社群销售', value: 3 },
+        { label: '新兵营', value: 0 }
       ],
+      // Level: [
+      //   { label: '新兵培训', value: 0 },
+      //   { label: '下组待接生', value: 1 },
+      //   { label: '首次排班', value: 2 },
+      //   { label: '已接生一次', value: 3 },
+      //   { label: '1级', value: 4 },
+      //   { label: '2级', value: 5 },
+      //   { label: '3级', value: 6 },
+      //   { label: '4级', value: 7 }
+      // ],
       // 表单value
       ruleForm: {
         // 手机号
@@ -329,6 +339,8 @@ export default {
         name: '',
         // 对外昵称
         nickname: '',
+        // 钉钉工号
+        dingUserid: '',
         // 性别
         resource: '',
         // 所属部门
@@ -376,6 +388,11 @@ export default {
         // 对外昵称
         nickname: [
           { required: true, message: '请填写对外昵称', trigger: 'blur' },
+          { max: 20, message: '请控制在20个字符以内', trigger: 'blur' }
+        ],
+        // 钉钉工号
+        dingUserid: [
+          { required: true, message: '请填写钉钉工号', trigger: 'blur' },
           { max: 20, message: '请控制在20个字符以内', trigger: 'blur' }
         ],
         // 性别
@@ -432,7 +449,7 @@ export default {
           { required: true, message: '请选择在职状态', trigger: 'change' }
         ],
         // 销售等级
-        Level: [{ message: '请选择在职状态', trigger: 'change' }]
+        level: [{ required: true, message: '请选择销售等级', trigger: 'blur' }]
       }
     }
   },
@@ -520,6 +537,7 @@ export default {
             this.ruleForm.phone = payload.teacher.phone
             this.ruleForm.name = payload.teacher.realName
             this.ruleForm.nickname = payload.teacher.nickname
+            this.ruleForm.dingUserid = payload.teacher.dingUserid
             this.ruleForm.resource = payload.teacher.sex
             // this.ruleForm.region = payload.department
             //   ? [payload.department.id]
@@ -589,6 +607,7 @@ export default {
           password: this.ruleForm.pass,
           realName: this.ruleForm.name,
           nickname: this.ruleForm.nickname,
+          dingUserid: this.ruleForm.dingUserid,
           sex: this.ruleForm.resource,
           joinDate: this.ruleForm.inductionDate,
           leaveDate: departureTime,

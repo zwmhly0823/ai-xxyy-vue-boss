@@ -3,8 +3,8 @@
  * @version:
  * @Author: zhubaodong
  * @Date: 2020-04-02 16:08:02
- * @LastEditors: zhubaodong
- * @LastEditTime: 2020-04-02 18:31:34
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-06-23 11:36:03
  -->
 <template>
   <div>
@@ -17,6 +17,7 @@
       induction="status"
       landing="is_login"
       position="duty_id"
+      seller-level="level"
       v-if="true"
     >
       <!-- <el-button type="primary" slot="searchItems" size="mini">搜索</el-button> -->
@@ -104,6 +105,11 @@
             <div>{{ scope.row.nickname || '-' }}</div>
           </template>
         </el-table-column>
+        <el-table-column label="钉钉工号">
+          <template slot-scope="scope">
+            <div>{{ scope.row.ding_userid || '-' }}</div>
+          </template>
+        </el-table-column>
         <el-table-column label="绑定微信号">
           <template slot-scope="scope">
             <div v-if="scope.row.weixin">
@@ -121,12 +127,12 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column label="手机号" width="120">
+        <el-table-column label="手机号" min-width="120">
           <template slot-scope="scope">
             <div>{{ scope.row.phone }}</div>
           </template>
         </el-table-column>
-        <el-table-column label="所属部门">
+        <el-table-column label="所属部门" min-width="120px">
           <template slot-scope="scope">
             <div>
               {{ scope.row.department ? scope.row.department.pname : '-' }}
@@ -135,7 +141,7 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column label="职务/职级">
+        <el-table-column label="职务/职级" min-width="100px">
           <template slot-scope="scope">
             <div v-if="scope.row.duty && scope.row.duty.length > 0">
               <p v-for="item in scope.row.duty" :key="item.id" style="margin:0">
@@ -152,28 +158,28 @@
             <div>{{ scope.row.rank ? scope.row.rank.name || '-' : '-' }}</div>
           </template>
         </el-table-column> -->
-        <el-table-column label="入职时间" width="120px">
+        <el-table-column label="入职时间" min-width="120px">
           <template slot-scope="scope">
             <div>
               {{ scope.row.join_date }}
             </div>
           </template>
         </el-table-column>
-        <el-table-column label="下组时间" width="120px">
+        <el-table-column label="下组时间" min-width="120px">
           <template slot-scope="scope">
             <div>
               {{ scope.row.leave_train }}
             </div>
           </template>
         </el-table-column>
-        <el-table-column label="销售等级" width="120px">
+        <el-table-column label="销售等级" min-width="120px">
           <template slot-scope="scope">
             <div>
               {{ scope.row.level }}
             </div>
           </template>
         </el-table-column>
-        <el-table-column label="离职时间" width="120px">
+        <el-table-column label="离职时间" min-width="120px">
           <template slot-scope="scope">
             <div>
               {{ scope.row.leave_date }}
@@ -338,8 +344,14 @@ export default {
       }
       const query = this.query ? JSON.stringify(this.query) : ''
       // tab数据
-      this.$http.Teacher.getTeacherPage(page, JSON.stringify(query)).then(
-        (res) => {
+      const loading = this.$loading({
+        lock: true,
+        text: '加载中……',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.1)'
+      })
+      this.$http.Teacher.getTeacherPage(page, JSON.stringify(query))
+        .then((res) => {
           console.log(res.data.TeacherManagePage.content, '老师列表')
           if (res && res.data && res.data.TeacherManagePage) {
             const {
@@ -360,13 +372,13 @@ export default {
                 : ''
               // 销售等级
               if (res.level === 0) {
-                res.level = '新兵培训'
+                res.level = '新兵营'
               } else if (res.level === 1) {
-                res.level = '下组待接生'
+                res.level = '1级社群销售'
               } else if (res.level === 2) {
-                res.level = '首次排班'
+                res.level = '2级社群销售'
               } else if (res.level === 3) {
-                res.level = '已接生一次'
+                res.level = '3级社群销售'
               } else if (res.level === 4) {
                 res.level = '1级'
               } else if (res.level === 5) {
@@ -390,8 +402,11 @@ export default {
             this.currentPage = +number
             this.totalElements = +totalElements
           }
-        }
-      )
+          loading.close()
+        })
+        .catch(() => {
+          loading.close()
+        })
     },
 
     // 选择按钮
@@ -433,9 +448,9 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.orderStyle {
-  padding-bottom: 45px;
-}
+// .orderStyle {
+//   padding-bottom: 30px;
+// }
 .editStyle {
   color: #0401ff;
   cursor: pointer;

@@ -568,9 +568,7 @@ export default {
         this.commonSelectHandleFunction(
           'classCurrentClass',
           { orderNo: event.orderId },
-          '当前班级',
-          data,
-          event
+          '当前班级'
         )
       }
     },
@@ -637,7 +635,7 @@ export default {
     // query -> 需要的参数
     // msg -> 报错信息
     // data,event -> 也是后面需要的参数
-    async commonSelectHandleFunction(name, query, msg, data, event) {
+    async commonSelectHandleFunction(name, query, msg) {
       // 选完订单后的loading
       this.showSelectLoading(name)
       const resData = await this.commonGetDateFunction(name, query, msg)
@@ -666,7 +664,7 @@ export default {
           this.handleAskforLevel()
           break
         case 'classCurrentClass':
-          this.handleCurrentClass(resData, event, data)
+          this.handleCurrentClass(resData)
           break
       }
     },
@@ -846,14 +844,14 @@ export default {
       })
     },
     // 调班-当前班级
-    handleCurrentClass(resData, event, data) {
+    handleCurrentClass(resData) {
       // console.log('resData', resData)
       this.formData.currentClassId = resData.id
       this.formData.currentClassName = `${resData.teamName}-${resData.teacherRealName}`
       // 调班-调整班级列表,需要先获取到currentClassId
       this.commonSelectHandleFunction(
         'classChooseClass',
-        { stage: resData.term, sup: data.sup[event.index] },
+        { stage: resData.term, sup: resData.currentSuper },
         '选择班级列表'
       )
     },

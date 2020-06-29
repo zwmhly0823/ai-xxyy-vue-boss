@@ -63,6 +63,13 @@
           v-model="ruleForm.sort"
         ></el-input>
       </el-form-item>
+      <el-form-item label="渠道等级" prop="channelLevel">
+        <el-select v-model="ruleForm.channelLevel" placeholder="请选择">
+          <el-option label="S" :value="2">S</el-option>
+          <el-option label="A" :value="1">A</el-option>
+          <el-option label="B" :value="0">B</el-option>
+        </el-select>
+      </el-form-item>
       <el-form-item label="渠道备注" prop="desc">
         <el-input
           placeholder="请输入备注"
@@ -122,7 +129,8 @@ export default {
         channelThree: '',
         sort: '',
         desc: '',
-        status: '1'
+        status: '1',
+        channelLevel: ''
       },
       rules: {
         channelOne: [
@@ -130,6 +138,9 @@ export default {
         ],
         channelTwo: [
           { required: true, message: '请选择二级渠道', trigger: 'change' }
+        ],
+        channelLevel: [
+          { required: true, message: '请选择渠道等级', trigger: 'change' }
         ],
         // channelThree: [
         //   { required: true, message: '请填写三级渠道', trigger: 'change' }
@@ -164,6 +175,7 @@ export default {
             this.ruleForm.sort = item.channel_sort
             this.ruleForm.desc = item.remarks
             this.ruleForm.status = item.status.toString()
+            this.ruleForm.channelLevel = item.channel_level
           })
         }
       )
@@ -234,7 +246,8 @@ export default {
               channelInnerName: this.ruleForm.channelThree, // 渠道对管理员名称默认两者一致
               channelSort: this.ruleForm.sort, // 渠道排序
               status: this.ruleForm.status, // 1开启0禁用
-              remarks: this.ruleForm.desc
+              remarks: this.ruleForm.desc,
+              channelLevel: this.getLevel(this.ruleForm.channelLevel) // 渠道等级
             }
           } else {
             this.props = {
@@ -244,7 +257,8 @@ export default {
               channelInnerName: this.ruleForm.channelThree, // 渠道对管理员名称默认两者一致
               channelSort: this.ruleForm.sort, // 渠道排序
               status: this.ruleForm.status, // 1开启0禁用
-              remarks: this.ruleForm.desc
+              remarks: this.ruleForm.desc,
+              channelLevel: this.getLevel(this.ruleForm.channelLevel) // 渠道等级
             }
           }
 
@@ -269,7 +283,16 @@ export default {
       this.channelThreeDisabled = true
       this.ruleForm.channelTwo = ''
       this.ruleForm.channelThree = ''
+      this.ruleForm.channelLevel = ''
       this.$emit('modifyChannelShow', false)
+    },
+    // 转换渠道级别为S、A、B
+    getLevel(val) {
+      var levelNames = { 0: 'B', 1: 'A', 2: 'S' }
+      if (Object.prototype.hasOwnProperty.call(levelNames, val)) {
+        return levelNames[val]
+      }
+      return ''
     }
   }
 }

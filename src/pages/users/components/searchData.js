@@ -2,11 +2,11 @@ const enums = {
   addedWechatStatus: [
     {
       id: 1,
-      text: '已添加老师微信'
+      text: '已加微信'
     },
     {
       id: 0,
-      text: '未添加老师微信'
+      text: '未加微信'
     }
   ],
   addedGroupStatus: [
@@ -63,11 +63,11 @@ const enums = {
   conversionStatus: [
     {
       id: 2,
-      text: '已购半年系统课'
+      text: '已购半年课'
     },
     {
       id: 3,
-      text: '已购年系统课'
+      text: '已购年课'
     },
     {
       id: 0,
@@ -76,9 +76,9 @@ const enums = {
   ],
   conversionType: {
     0: '未转化',
-    1: '已购月系统课',
-    2: '已购半年系统课',
-    3: '已购年系统课'
+    1: '已购月课',
+    2: '已购半年课',
+    3: '已购年课'
   },
 
   /**
@@ -104,6 +104,27 @@ const enums = {
     //   id: 0,
     //   text: '未退费'
     // }
+  ],
+  /**
+   * 体验课学员意向度 {0: 默认 1: 低 2: 中 3: 高}
+   */
+  intentionList: [
+    {
+      id: 0,
+      text: '未添加'
+    },
+    {
+      id: 3,
+      text: '高意向'
+    },
+    {
+      id: 2,
+      text: '中意向'
+    },
+    {
+      id: 1,
+      text: '低意向'
+    }
   ]
 }
 

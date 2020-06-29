@@ -92,6 +92,8 @@ export default {
               nickname
               mobile
             }
+            trial_pay_channel
+            trial_pay_channel_text
           }
         }
       }`

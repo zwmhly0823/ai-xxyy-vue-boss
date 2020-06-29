@@ -42,6 +42,23 @@ export default {
     )
   },
   /**
+   * 招生排期第一步，第二步之间 分配占比设置-add
+   */
+  addLeads(params, period) {
+    return axios.post(
+      `/api/t/v1/teacher/course/enroll/teacher/channel/config/save?period=${period}`,
+      params
+    )
+  },
+  /**
+   * 招生排期第一步，第二步之间 分配占比-edit获取数据
+   */
+  getLeads(params) {
+    return axios.get(
+      `/api/t/v1/teacher/course/enroll/teacher/channel/config?courseType=${params.courseType}&period=${params.period}`
+    )
+  },
+  /**
    * 新增招生排期第三步-获取 已选择的老师
    */
   getHasSelectTeacher(params) {
@@ -80,7 +97,7 @@ export default {
    */
   getScheduleDetailList(params) {
     return axios.get(
-      `/api/s/v1/management/enroll/getDetail?teacherId=${params.teacherId}&departmentIds=${params.departmentIds}&courseType=${params.courseType}&period=${params.period}&pageSize=${params.size}&pageNumber=` +
+      `/api/s/v1/management/enroll/getDetail?teacherId=${params.teacherId}&departmentIds=${params.departmentIds}&level=${params.level}&courseType=${params.courseType}&period=${params.period}&pageSize=${params.size}&pageNumber=` +
         params.pageNum
     )
   },
@@ -99,7 +116,7 @@ export default {
    */
   getScheduleDetailStatistic(params) {
     return axios.get(
-      `/api/s/v1/management/enroll/calculation/byPeriod?teacherId=${params.teacherId}&departmentIds=${params.departmentIds}&courseType=${params.courseType}&period=${params.period}`
+      `/api/s/v1/management/enroll/calculation/byPeriod?teacherId=${params.teacherId}&departmentIds=${params.departmentIds}&level=${params.level}&courseType=${params.courseType}&period=${params.period}`
     )
   },
   /**
@@ -190,6 +207,7 @@ export default {
             id
             channel_inner_name
             channel_link
+            channel_level
             channel_link_short
             short_er_code
             status
@@ -207,6 +225,38 @@ export default {
         }
       }`
     })
+  },
+  /**
+   *
+   * 二级渠道查询
+   */
+  ChannelClassPage(Params, page = 1) {
+    return axios.post('/graphql/v1/toss', {
+      query: `{
+        ChannelClassPage(query:${Params},page:${page},size:20){
+          content{
+            channel_class_name
+            channel_level
+            id
+            channel_class_parent_id
+            channelClassParent{
+              channel_class_name
+              id
+            }
+          }
+          number
+          totalElements
+          totalPages
+        }
+      }`
+    })
+  },
+  /**
+   * 二级渠道信息管理 修改渠道
+   * @param {*} param0
+   */
+  updateChannelClassV2(params) {
+    return axios.get('/api/c/v1/channel/updateChannelClassV2', params)
   },
   /*
    * 密码登录
