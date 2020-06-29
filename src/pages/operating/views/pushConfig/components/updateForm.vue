@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-06-23 18:50:41
  * @LastEditors: panjian
- * @LastEditTime: 2020-06-29 16:40:20
+ * @LastEditTime: 2020-06-29 17:55:41
 -->
 <template>
   <div>
@@ -174,7 +174,13 @@ export default {
             this.questionnaires = res.value
           }
         })
-        this.questionnaireList = _data
+        if (this.questionnaireList.length === 0) {
+          this.questionnaireList = _data
+        } else {
+          for (let i = 0; i < _data.length; i++) {
+            this.questionnaireList.push(_data[i])
+          }
+        }
         this.page++
       })
     },
