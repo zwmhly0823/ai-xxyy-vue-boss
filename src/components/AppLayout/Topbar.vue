@@ -30,7 +30,11 @@
     </div>
 
     <div class="right-menu">
-      <el-badge :value="12" class="notices-content">
+      <el-badge
+        :value="noticeBadge"
+        :hidden="!noticeBadge"
+        class="notices-content"
+      >
         <el-button type="text" @click="clickNoticeTop">通知中心</el-button>
       </el-badge>
       <el-dropdown class="avatar-container" trigger="click">
@@ -111,7 +115,8 @@ export default {
       userInfo: null,
       head: 'https://msb-ai.meixiu.mobi/ai-pm/static/touxiang.png',
       dialogVisible: false,
-      newPassword: ''
+      newPassword: '',
+      noticeBadge: 0
     }
   },
   created() {
@@ -122,6 +127,8 @@ export default {
       return
     }
     this.userInfo = JSON.parse(userInfo)
+    // 通知的角标数字
+    this.getNoticeBadge()
   },
   methods: {
     toggleSideBar() {
@@ -155,6 +162,17 @@ export default {
     },
     clickNoticeTop() {
       this.$refs.noticeCenter.openDrawer()
+    },
+    getNoticeBadge() {
+      this.$http.NoticeCenter.getBadgeBoss({ staffId: this.userInfo.id })
+        .then((res) => {
+          if (res.code === 0 && res.status === 'OK') {
+            this.noticeBadge = res.payload
+          }
+        })
+        .catch(() => {
+          console.log('获取消息数量角标失败')
+        })
     }
   }
 }
