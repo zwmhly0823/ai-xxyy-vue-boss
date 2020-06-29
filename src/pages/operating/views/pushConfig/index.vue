@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-06-23 15:23:48
  * @LastEditors: panjian
- * @LastEditTime: 2020-06-29 17:53:29
+ * @LastEditTime: 2020-06-29 18:12:10
 -->
 <template>
   <div class="push-config-box">
@@ -182,11 +182,11 @@ export default {
       this.getPushNotificationsList()
     },
     onPushDetermine() {
-      const teacher = JSON.parse(localStorage.getItem('teacher'))
+      const staff = JSON.parse(localStorage.getItem('staff'))
       this.$http.Operating.pushNotificationsExecute(
         this.tableRow.id,
-        teacher.id,
-        teacher.realName
+        staff.id,
+        staff.userName
       ).then((res) => {
         if (res.code === 0) {
           this.$message.success('推送成功')
