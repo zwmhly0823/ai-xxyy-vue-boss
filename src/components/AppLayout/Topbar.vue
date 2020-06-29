@@ -30,6 +30,9 @@
     </div>
 
     <div class="right-menu">
+      <el-badge :value="12" class="notices-content">
+        <el-button type="text" @click="clickNoticeTop">通知中心</el-button>
+      </el-badge>
       <el-dropdown class="avatar-container" trigger="click">
         <div class="user-info">
           <div class="avatar-wrapper">
@@ -56,6 +59,7 @@
         </el-dropdown-menu>
       </el-dropdown>
     </div>
+    <notice-center ref="noticeCenter"></notice-center>
     <el-dialog
       title="修改密码"
       :visible.sync="dialogVisible"
@@ -83,11 +87,13 @@ import Breadcrumb from './Breadcrumb'
 import Hamburger from './Hamburger'
 import { removeToken } from '@/utils/auth'
 import { baseUrl } from '@/utils/index'
+import noticeCenter from './noticeCenter/noticeCenter'
 
 export default {
   components: {
     Breadcrumb,
-    Hamburger
+    Hamburger,
+    noticeCenter
   },
   computed: {
     ...mapGetters(['sidebar', 'avatar'])
@@ -145,6 +151,9 @@ export default {
       } catch (error) {
         console.log(error)
       }
+    },
+    clickNoticeTop() {
+      this.$refs.noticeCenter.openDrawer()
     }
   }
 }
@@ -239,6 +248,12 @@ export default {
       right: -20px;
       top: 22px;
       font-size: 12px;
+    }
+    .notices-content {
+      margin-right: 30px;
+      /deep/ .el-badge__content.is-fixed {
+        top: 12px;
+      }
     }
   }
 }
