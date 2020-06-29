@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-06-28 18:37:21
  * @LastEditors: panjian
- * @LastEditTime: 2020-06-29 15:20:28
+ * @LastEditTime: 2020-06-29 16:21:12
 -->
 <template>
   <div class="experience-box">
@@ -18,11 +18,18 @@
       <br />
     </div>
 
-    <div class="experience-problem-box">
+    <div
+      v-if="inputForm.inputRadioList.length <= 0"
+      class="experience-problem-box"
+    >
       <div class="experience-problem-text">体验课调查问卷</div>
-      <!-- <div style="color:#c2c2c2;">从左侧选择需要添加的题型</div> -->
-
-      <el-form ref="form" :inline="true" :model="inputForm" label-width="100px">
+      <div style="color:#c2c2c2;">从左侧选择需要添加的题型</div>
+    </div>
+    <div v-else class="experience-problem-box1">
+      <div class="experience-problem-text-box">
+        <div class="experience-problem-text">体验课调查问卷</div>
+      </div>
+      <el-form ref="form" :inline="true" :model="inputForm" label-width="50px">
         <!-- <div v-for="(item, index) in summaryList" :key="index"> -->
         <div v-for="(item, index) in inputForm.inputRadioList" :key="index">
           <el-form-item
@@ -114,6 +121,24 @@ export default {
       font-size: 24px;
       font-weight: 700;
       top: 20px;
+    }
+  }
+  .experience-problem-box1 {
+    width: 100%;
+    .experience-problem-text-box {
+      display: flex;
+      justify-content: center;
+      .experience-problem-text {
+        text-align: center;
+        width: 200px;
+        border-bottom-style: solid;
+        border-bottom-color: #c2c2c2;
+        border-bottom-width: 1px;
+        position: absolute;
+        font-size: 24px;
+        font-weight: 700;
+        top: 20px;
+      }
     }
   }
 }
