@@ -79,6 +79,11 @@ const menuItems = [
     link: 'express',
     text: '物流中心',
     isShow: true
+  },
+  {
+    link: 'community',
+    text: '社群工具',
+    isShow: true
   }
 ]
 

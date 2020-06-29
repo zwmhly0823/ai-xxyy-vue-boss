@@ -3,8 +3,8 @@
  * @version:
  * @Author: shentong
  * @Date: 2020-03-13 14:38:28
- * @LastEditors: songyanan
- * @LastEditTime: 2020-06-17 15:33:00
+ * @LastEditors: Shentong
+ * @LastEditTime: 2020-06-29 18:43:36
  */
 import Login from './modules/Login'
 import User from './modules/User' // 用户接口
@@ -27,6 +27,7 @@ import RiviewCourse from './modules/RiviewCourse'
 import Finance from './modules/finance' // 财务退款
 import WorkerHandover from './modules/WorkerHandover'
 import Staff from './modules/Staff' // 员工
+import Community from './modules/Community' // 社群工具
 
 export default Object.assign(
   {},
@@ -50,5 +51,6 @@ export default Object.assign(
   { Approval },
   { Finance },
   { WorkerHandover },
-  { Staff }
+  { Staff },
+  { Community }
 )
