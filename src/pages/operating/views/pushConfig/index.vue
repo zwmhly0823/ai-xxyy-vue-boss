@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-06-23 15:23:48
  * @LastEditors: panjian
- * @LastEditTime: 2020-06-29 18:12:10
+ * @LastEditTime: 2020-06-29 18:13:13
 -->
 <template>
   <div class="push-config-box">
@@ -199,7 +199,6 @@ export default {
     },
     hoverRow(row) {
       this.tableRow = row
-      console.log(row)
     },
     onRefresh() {
       this.getPushNotificationsList()
