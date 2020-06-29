@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-06-24 17:01:54
  * @LastEditors: panjian
- * @LastEditTime: 2020-06-24 17:16:33
+ * @LastEditTime: 2020-06-28 19:55:31
 -->
 <template>
   <div class="problem-box">
@@ -40,39 +40,55 @@
         </el-table-column>
       </el-table>
     </div>
+    <el-dialog
+      title="创建"
+      :visible.sync="dialogVisible"
+      width="40%"
+      :before-close="handleClose"
+    >
+      <newForm ref="newForm" @closeDialogVisible="closeDialogVisible" />
+    </el-dialog>
   </div>
 </template>
 
 <script>
+import newForm from './components/newForm'
 export default {
+  components: {
+    newForm
+  },
   data() {
     return {
+      dialogVisible: false,
       tableData: [
         {
           date: '2016-05-02',
           name: '王小虎',
           address: '上海市普陀区金沙江路 1518 弄'
-        },
-        {
-          date: '2016-05-04',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1517 弄'
-        },
-        {
-          date: '2016-05-01',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1519 弄'
-        },
-        {
-          date: '2016-05-03',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1516 弄'
         }
       ]
     }
   },
   methods: {
-    onNewWenjuan() {}
+    onNewWenjuan() {
+      this.dialogVisible = true
+    },
+    closeDialogVisible() {
+      this.$refs.newForm.ruleForm.name = ''
+      this.$refs.newForm.ruleForm.desc = ''
+      this.$refs.newForm.ruleForm.imageUrl = ''
+      this.dialogVisible = false
+    },
+    handleClose(done) {
+      this.$confirm('确认关闭？')
+        .then((_) => {
+          this.$refs.newForm.ruleForm.name = ''
+          this.$refs.newForm.ruleForm.desc = ''
+          this.$refs.newForm.ruleForm.imageUrl = ''
+          done()
+        })
+        .catch((_) => {})
+    }
   }
 }
 </script>

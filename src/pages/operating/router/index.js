@@ -1,7 +1,7 @@
 /*
  * @Date: 2020-03-13 15:20:21
  * @LastEditors: panjian
- * @LastEditTime: 2020-06-28 17:09:56
+ * @LastEditTime: 2020-06-28 20:09:35
  * @FilePath: /ai-app-vue-toss/src/pages/studentTeam/router/index.js
  */
 import Vue from 'vue'
@@ -97,7 +97,7 @@ const routes = [
     path: '/problem',
     name: 'problem',
     meta: {
-      title: '标签管理',
+      title: '问卷管理',
       keepAlive: false
     },
     component: () => import('../views/problem/index.vue')
