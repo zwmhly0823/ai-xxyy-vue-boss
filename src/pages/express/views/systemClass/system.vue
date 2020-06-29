@@ -9,6 +9,7 @@
           :source_type="source_type"
         />
         <rightUp
+          :tab="activeName"
           @result="getSearch"
           :regtype="regtype"
           :status="sortItem.id"
@@ -41,6 +42,7 @@
           :source_type="source_type"
         />
         <rightUp
+          :tab="activeName"
           @result="getSearch"
           :regtype="regtype"
           :status="sortItem.id"
@@ -90,7 +92,7 @@ const replenishHideCol = {
   level: true,
   productName: true,
   productVersion: false,
-  term: false,
+  term: true,
   className: false,
   teacher: false,
   courseType: false
@@ -98,7 +100,7 @@ const replenishHideCol = {
 const replenishHideSearchItem = {
   level: 'level',
   moreVersion: '',
-  schedule: '',
+  // schedule: '',
   groupSell: '',
   teamDetail: '',
   operatorId: 'operator_id'

@@ -75,6 +75,7 @@
         :label="+regtype === 1 || regtype === '2,3' ? '难度' : '补发商品'"
         :width="+regtype === 1 || regtype === '2,3' ? '120' : '200'"
         v-if="showCol.productType"
+        :key="0"
       >
         <template slot-scope="scope">
           <div class="product">
@@ -86,12 +87,7 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column
-        v-if="showCol.level"
-        label="级别"
-        width="120"
-        :key="Math.random()"
-      >
+      <el-table-column v-if="showCol.level" label="级别" width="120" :key="1">
         <template slot-scope="scope">
           <div class="product">
             <span>{{ scope.row.level || '--' }}</span>
@@ -102,7 +98,7 @@
         label="补发方式"
         width="200"
         v-if="showCol.replenishType"
-        :key="Math.random()"
+        :key="2"
       >
         <template slot-scope="scope">
           <div class="product">
@@ -114,7 +110,7 @@
         label="补发类别"
         width="200"
         v-if="showCol.replenishFamily"
-        :key="Math.random()"
+        :key="3"
       >
         <template slot-scope="scope">
           <div class="product">
@@ -126,7 +122,7 @@
         label="补发原因"
         width="200"
         v-if="showCol.replenishReason"
-        :key="Math.random()"
+        :key="4"
       >
         <template slot-scope="scope">
           <div class="product">
@@ -138,7 +134,7 @@
         label="申请人"
         width="180"
         v-if="showCol.applicant"
-        :key="Math.random()"
+        :key="5"
       >
         <template slot-scope="scope">
           <div class="product">
@@ -150,7 +146,7 @@
         label="类别"
         width="180"
         v-if="showCol.courseType"
-        :key="Math.random()"
+        :key="6"
       >
         <template slot-scope="scope">
           <div class="product">
@@ -162,7 +158,7 @@
         label="随材版本"
         width="150"
         v-if="showCol.productVersion"
-        :key="Math.random()"
+        :key="7"
       >
         <template slot-scope="scope">
           <div>
@@ -174,7 +170,7 @@
         label="收货信息"
         width="200"
         v-if="showCol.receiptInfo"
-        :key="Math.random()"
+        :key="8"
       >
         <template slot-scope="scope">
           <div class="address">
@@ -224,7 +220,7 @@
         label="失败原因"
         width="200"
         v-if="showCol.expressRemark"
-        :key="Math.random()"
+        :key="9"
       >
         <template slot-scope="scope">
           <div class="product">
@@ -232,7 +228,7 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="期数" width="150" v-if="showCol.term">
+      <el-table-column label="期数" width="150" v-if="showCol.term" :key="10">
         <template slot-scope="scope">
           <div class="product">
             <span>{{
@@ -241,14 +237,24 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="班级名" width="150" v-if="showCol.className">
+      <el-table-column
+        label="班级名"
+        width="150"
+        v-if="showCol.className"
+        :key="11"
+      >
         <template slot-scope="scope">
           <div class="product">
             <span>{{ StudentTeamList[scope.row.last_team_id] }}</span>
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="社群销售" width="150" v-if="showCol.teacher">
+      <el-table-column
+        label="社群销售"
+        width="150"
+        v-if="showCol.teacher"
+        :key="12"
+      >
         <template slot-scope="scope">
           <div class="product">
             <span>{{ TeacherList[scope.row.last_teacher_id] }}</span>
@@ -259,6 +265,7 @@
         label="物流状态"
         width="200"
         v-if="showCol.expressStatus"
+        :key="13"
       >
         <template slot-scope="scope">
           <div class="express">
@@ -287,6 +294,7 @@
         label="物流创建·审核·揽收·签收"
         width="200"
         v-if="showCol.expressInfo"
+        :key="14"
       >
         <template slot-scope="scope">
           <div class="sign">

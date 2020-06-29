@@ -12,6 +12,7 @@
           :source_type="source_type"
         />
         <rightUp
+          :tab="activeName"
           @result="getSearch"
           :regtype="regtype"
           :status="sortItem.id"
@@ -44,6 +45,7 @@
           :source_type="source_type"
         />
         <rightUp
+          :tab="activeName"
           @result="getSearch"
           :regtype="regtype"
           :status="sortItem.id"
@@ -157,7 +159,7 @@ const allExpressHideSearchItem = {
 const replenishHideCol = {
   productName: true,
   productVersion: false,
-  term: false,
+  term: true,
   className: false,
   teacher: false,
   courseType: false
@@ -165,7 +167,7 @@ const replenishHideCol = {
 const replenishHideSearchItem = {
   level: '',
   moreVersion: '',
-  schedule: '',
+  // schedule: '',
   groupSell: '',
   teamDetail: '',
   operatorId: 'operator_id'
