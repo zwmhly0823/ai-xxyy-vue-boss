@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-06-23 15:26:34
  * @LastEditors: panjian
- * @LastEditTime: 2020-06-28 17:31:03
+ * @LastEditTime: 2020-06-29 15:30:02
 -->
 <template>
   <div class="select-box">
@@ -45,6 +45,7 @@
             type="datetime"
             placeholder="请选择推送时间"
             value-format="timestamp"
+            :picker-options="expireTimeOption"
           >
           </el-date-picker>
         </el-form-item>
@@ -103,6 +104,11 @@ export default {
   },
   data() {
     return {
+      expireTimeOption: {
+        disabledDate(date) {
+          return date.getTime() <= Date.now() - 8.64e7
+        }
+      },
       type: '0',
       isMultiple: false,
       curriculumList: [
