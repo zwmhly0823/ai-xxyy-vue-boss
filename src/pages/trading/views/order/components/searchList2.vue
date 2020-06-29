@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-04-25 17:24:23
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-06-25 15:11:04
+ * @LastEditTime: 2020-06-29 18:04:50
  -->
 <template>
   <el-card
@@ -499,6 +499,7 @@ export default {
             'stageInfo.course_day_text': '开课时间',
             'team.team_name': '班级',
             class_type: '班级类型',
+            sup_text: '课程难度',
             'before_teacher.realname': '真实姓名',
             'before_teacher.ding_userid': '钉钉员工号',
             'after_teacher.realname': '接班老师',
