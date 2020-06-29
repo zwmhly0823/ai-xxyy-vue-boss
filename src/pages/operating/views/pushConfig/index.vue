@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-06-23 15:23:48
  * @LastEditors: panjian
- * @LastEditTime: 2020-06-24 17:42:56
+ * @LastEditTime: 2020-06-29 11:03:25
 -->
 <template>
   <div class="push-config-box">
@@ -160,7 +160,7 @@ export default {
       this.centerDialogVisible = true
       const date = timestamp(this.tableRow.pushDates, 7)
       this.pushTest = `"${this.tableRow.type}、${this.tableRow.term}、${date}、${this.tableRow.pushUrl}"`
-      const query = `"term"=${this.tableRow.period}`
+      const query = `{"term":${this.tableRow.period}}`
       if (this.tableRow.type === '体验课') {
         this.$http.Operating.StudentTrialCoursePage(JSON.stringify(query)).then(
           (res) => {
@@ -172,7 +172,7 @@ export default {
         this.$http.Operating.StudentSystemCoursePage(
           JSON.stringify(query)
         ).then((res) => {
-          const _data = res.data.StudentTrialCoursePage.totalElements
+          const _data = res.data.StudentSystemCoursePage.totalElements
           this.num = _data
         })
       }
