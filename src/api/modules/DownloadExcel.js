@@ -4,7 +4,7 @@
  * @Author: Lukun
  * @Date: 2020-05-14 14:31:42
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-06-04 23:21:58
+ * @LastEditTime: 2020-06-28 18:40:43
  */
 import axios from '../axios'
 import { getToken } from '@/utils/auth'
@@ -94,6 +94,7 @@ export default {
         url: '/graphql/export',
         responseType: 'blob',
         headers: getHeaders(),
+        timeout: 300000,
         data: params
       })
     }
