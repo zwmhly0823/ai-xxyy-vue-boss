@@ -1,23 +1,7 @@
-<!--
- * @Descripttion:
- * @version:
- * @Author: zhubaodong
- * @Date: 2020-03-24 18:50:54
- * @LastEditors: panjian
- * @LastEditTime: 2020-05-23 16:48:00
- -->
 <template>
   <div class="search-item small threeSelect">
-    <el-input
-      size="mini"
-      style="width:160px;margin-right:20px;"
-      v-model="input"
-      @input="channelInput"
-      placeholder="请输入渠道ID"
-      clearable
-    ></el-input>
     <el-cascader
-      placeholder="请选择渠道"
+      placeholder="请选择渠道分类"
       size="mini"
       v-model="channelName"
       @change="onSelect"
@@ -26,7 +10,7 @@
         multiple: true,
         value: 'id',
         label: 'channel_outer_name',
-        emitPath: true,
+        emitPath: false,
         checkStrictly: false
       }"
       :show-all-levels="true"
@@ -35,7 +19,7 @@
     ></el-cascader>
     <el-select
       style="margin-left:20px;"
-      v-model="channelLevel"
+      v-model="channelLevels"
       @change="onChangeChannelLevel"
       size="mini"
       placeholder="渠道等级"
@@ -57,20 +41,16 @@ export default {
       type: String,
       default: ''
     },
-    name: {
+    // 1-系统课，0-体验课
+    type: {
       type: String,
-      default: 'channelid'
+      default: '0'
     }
   },
   data() {
     return {
-      input: '',
-      channelLevel: '', // 渠道等级
+      channelLevels: [], // 渠道等级
       channelName: [],
-      dataList: [],
-      channelList: [],
-      channelData: null,
-      channelClassData: [],
       channelClassList: null, // 分类条件
       showDatas: null // 三级列表展示数据
     }
@@ -78,32 +58,14 @@ export default {
   watch: {
     tabIndex(value) {
       this.channelName = []
-      this.input = ''
+      this.channelLevels = []
     }
   },
   async created() {
-    await this.getChannel()
     await this.getChannelClassList()
-    this.formatData(this.channelList, this.channelClassList)
+    this.formatData(this.channelClassList)
   },
   methods: {
-    // 获取渠道来源 filter: 过滤关键词  eg：filter:"抖音"
-    async getChannel() {
-      await axios
-        .post('/graphql/channel', {
-          query: `{
-            channelAllList(size: 500) {
-                id
-                channel_class_id
-                channel_outer_name
-              }
-            }
-          `
-        })
-        .then((res) => {
-          this.channelList = res.data.channelAllList
-        })
-    },
     // 获取渠道来源分类 filter: 过滤关键词  eg：filter:"抖音"
     async getChannelClassList() {
       await axios
@@ -121,7 +83,8 @@ export default {
           this.channelClassList = res.data.ChannelClassList
         })
     },
-    formatData(classdata, classifiData) {
+    // 查询下拉列表
+    formatData(classifiData) {
       // 第一级目录
       const arrList = []
       classifiData.forEach((item) => {
@@ -149,14 +112,6 @@ export default {
           item.children && item.children.forEach((vals) => (vals.children = []))
       )
 
-      classdata.forEach((content, num) => {
-        arrList.forEach((datas, nums) => {
-          if (+content.channel_class_id === +datas.id) {
-            datas.children.push(content)
-          }
-        })
-      })
-
       const result = firstNode.map((item) => {
         if (item.children && item.children.length === 0) {
           item.children = null
@@ -171,14 +126,13 @@ export default {
 
       this.showDatas = result
     },
+    // 渠道筛选列表变化时调用
     onSelect(data) {
       this.$emit('channelSearchValue', data.length > 0 ? data : '')
     },
+    // 渠道等级下拉框变化时调用
     onChangeChannelLevel(data) {
       this.$emit('channelLevelValue', data.length > 0 ? data : '')
-    },
-    channelInput(data) {
-      this.$emit('channelInputValue', data || '')
     }
   }
 }

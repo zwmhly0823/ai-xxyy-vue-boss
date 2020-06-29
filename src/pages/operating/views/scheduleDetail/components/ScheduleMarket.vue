@@ -53,6 +53,12 @@
             label="真实姓名"
           ></el-table-column>
           <el-table-column
+            v-if="courseType == '0'"
+            align="center"
+            prop="levelName"
+            label="销售等级"
+          ></el-table-column>
+          <el-table-column
             align="center"
             prop="courseDifficulty"
             label="招生级别"
@@ -121,6 +127,7 @@ export default {
   },
   data() {
     return {
+      courseType: '0',
       totalElements: 0,
       flags: {
         loading: false
@@ -160,6 +167,7 @@ export default {
   },
   async created() {
     const { period = '', courseType = '0' } = this.$route.params
+    this.courseType = courseType
     Object.assign(this.tabQuery, { period, courseType })
     // 表格内统计
     this.getScheduleDetailStatistic()

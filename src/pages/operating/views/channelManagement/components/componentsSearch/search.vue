@@ -189,7 +189,6 @@ export default {
   },
   watch: {
     tabIndex(value) {
-      console.log(value, 'watch')
       this.timeData = ''
       this.stage = ''
       this.channelName = []
