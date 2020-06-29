@@ -324,9 +324,11 @@ const routes = [
       {
         path: '/operatingSchedule',
         name: 'operatingSchedule',
-        hidden: staff.roleId !== '1' && staff.roleId !== '7',
+        // hidden: staff.roleId !== '1' && staff.roleId !== '7',
+        hidden: staff.roleId !== '7',
         meta: {
-          show: staff.roleId === '1' || staff.roleId === '7',
+          // show: staff.roleId === '1' || staff.roleId === '7',
+          show: staff.roleId === '7',
           title: '招生排期',
           module: 'operating'
         }
