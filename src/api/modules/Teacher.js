@@ -34,10 +34,11 @@ export default {
   },
   // 老师列表
   getTeacherPage(page = 1, query = '', size = '20') {
+    const sort = `{"id": "desc"}`
     return axios.post('/graphql/v1/boss', {
       query: `{
         TeacherManagePage(page: ${page}, query: ${query ||
-        null}, size:${size}) {
+        null}, size:${size}, sort: ${JSON.stringify(sort)}) {
           number
           totalPages
           totalElements
@@ -46,6 +47,7 @@ export default {
             realname
             sex
             nickname
+            ding_userid
             phone
             status
             is_login

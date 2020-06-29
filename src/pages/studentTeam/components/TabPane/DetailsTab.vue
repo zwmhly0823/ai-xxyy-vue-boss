@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 14:19:58
  * @LastEditors: panjian
- * @LastEditTime: 2020-06-18 15:20:00
+ * @LastEditTime: 2020-06-19 18:49:21
  -->
 <template>
   <div>
@@ -1091,7 +1091,7 @@ export default {
             if (item.join_course_state) {
               item.join_course_time = timestamp(item.join_course_time, 6)
             } else {
-              item.join_course_state = '-'
+              item.join_course_state = '未参课'
               item.join_course_time = ''
             }
             if (item.complete_course_state) {
@@ -1100,7 +1100,7 @@ export default {
                 6
               )
             } else {
-              item.complete_course_state = '-'
+              item.complete_course_state = '未完课'
               item.complete_course_time = ''
             }
           })
@@ -1177,7 +1177,7 @@ export default {
                 item.has_listen_time = '未听点评'
               }
             } else {
-              item.has_comment_ctime = '-'
+              item.has_comment_ctime = '未点评'
             }
           })
           this.table.tableData = _data

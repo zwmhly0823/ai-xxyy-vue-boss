@@ -17,7 +17,18 @@
       color: rgb(151, 151, 151);
     }
   }
-  /deep/ {
+
+  .empty-text {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 330px;
+    z-index: 100;
+    text-align: center;
+    color: #999;
+  }
+
+  ::v-deep {
     .el-tabs--border-card {
       box-shadow: none;
     }
@@ -27,14 +38,5 @@
     .el-tabs--border-card > .el-tabs__content {
       padding: 0;
     }
-  }
-  .empty-text {
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: 330px;
-    z-index: 100;
-    text-align: center;
-    color: #999;
   }
 }

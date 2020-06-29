@@ -1,18 +1,18 @@
 // 定义常用样式方法
 // 具体文件中使用 @include 调用
 
-// 圆形 radius 半径. 
-@mixin circle($radius: 50px){
+// 圆形 radius 半径.
+@mixin circle($radius: 50px) {
   width: $radius;
   height: $radius;
   border-radius: 50%;
   overflow: hidden;
-  // @content; 
+  // @content;
 }
 
 @mixin clearfix {
   &:after {
-    content: "";
+    content: '';
     display: table;
     clear: both;
   }
@@ -37,4 +37,21 @@
   position: relative;
   width: 100%;
   height: 100%;
+}
+
+// 单行文本超出，显示...
+@mixin ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis; //文本溢出显示省略号
+  white-space: nowrap; //文本不会换行（单行文本溢出）
+  width: 100%;
+}
+// 显示多行文字，超出...
+@mixin multi-line-ellipsis($num: 2) {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: $num;
+  -webkit-box-orient: vertical;
+  width: 100%;
 }

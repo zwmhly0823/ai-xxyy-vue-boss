@@ -3,8 +3,8 @@
  * @version: 2.0.0
  * @Author: YangJiyong
  * @Date: 2020-03-24 12:49:53
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-06-12 20:49:19
+ * @LastEditors: liukun
+ * @LastEditTime: 2020-06-28 18:06:13
 -->
 <template>
   <div v-if="!item.hidden">
@@ -106,6 +106,11 @@ export default {
     // 展开更多
     handleOpen(item, index = 0, hasChildren = false) {
       console.log(item)
+      // 外链情况
+      if (item.path.includes('http')) {
+        window.open(item.path, '_blank')
+        return
+      }
 
       const currentItem = item || this.item
       const { path, meta } = currentItem
@@ -175,7 +180,7 @@ export default {
         top,
         bottom: 0
       }
-      if (bottom > height - 20) {
+      if (bottom > height - 120) {
         Object.assign(payload, {
           bottom: 10
         })

@@ -1,0 +1,1135 @@
+<!--
+ * @Descripttion: 体验课学员列表 v2.0
+ * @version: 2.0.0
+ * @Author: YangJiyong
+ * @Date: 2020-06-16 16:27:14
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-06-25 11:48:15
+-->
+<template>
+  <div class="user-list">
+    <div class="trial-header">
+      <el-tabs v-model="term">
+        <el-tab-pane
+          :label="mg.period_label"
+          :name="mg.period"
+          :key="mg.period"
+          v-for="mg in manageMentList"
+        ></el-tab-pane>
+        <el-tab-pane label="全部期学员" name="0"></el-tab-pane>
+      </el-tabs>
+
+      <!-- search section -->
+      <search @search="getSearchQuery" />
+    </div>
+
+    <!-- 操作区 -->
+    <div class="handle-section">
+      <el-button size="mini" @click="sendMessage(false)"
+        >地址催发短信</el-button
+      >
+    </div>
+    <!-- 数据统计 -->
+    <div class="statistics-section d-flex justify-between align-center">
+      <div class="statistics-section-left">
+        当前结果：学员共计 {{ totalElements }} 名
+      </div>
+      <div class="statistics-section-right">
+        <tool-tip />
+      </div>
+    </div>
+    <!-- dom -->
+    <div class="tableInner" ref="tableInner"></div>
+    <!-- table -->
+    <el-table
+      :height="tableHeight"
+      :data="dataList"
+      empty-text=" "
+      @selection-change="handleSelectionChange"
+      @cell-mouse-enter="hoverRow"
+    >
+      <el-table-column type="selection" width="30"> </el-table-column>
+      <el-table-column label="ID" min-width="55" fixed>
+        <template slot-scope="scope">
+          <p v-if="scope.row.userInfo && scope.row.userInfo.user_num">
+            {{ scope.row.userInfo.user_num }}
+          </p>
+        </template>
+      </el-table-column>
+      <el-table-column label="用户" min-width="165" fixed>
+        <template slot-scope="scope">
+          <base-user-info
+            :user="scope.row.userInfo"
+            @handle-click="userHandle"
+          />
+        </template>
+      </el-table-column>
+      <el-table-column label="意向度" min-width="70" class-name="pdl-10">
+        <template slot-scope="scope">
+          <template
+            v-if="
+              !scope.row.userIntention || +scope.row.userIntention.type === 0
+            "
+          >
+            <i
+              class="el-icon-circle-plus-outline intention-icon"
+              @click="createIntention(scope.$index, scope.row.id)"
+            ></i>
+          </template>
+          <template v-else>
+            <el-select
+              v-model="scope.row.userIntention.type_name"
+              size="mini"
+              class="intent-select"
+              @change="intentChange($event, scope.$index)"
+              :class="[
+                {
+                  'intent-select-high': +scope.row.userIntention.type === 3,
+                  'intent-select-middle': +scope.row.userIntention.type === 2,
+                  'intent-select-low': +scope.row.userIntention.type === 1
+                }
+              ]"
+              popper-class="intent-option"
+            >
+              <el-option label="低" value="LOW"></el-option>
+              <el-option label="中" value="MIDDLE"></el-option>
+              <el-option label="高" value="HIGH"></el-option>
+            </el-select>
+          </template>
+        </template>
+      </el-table-column>
+      <el-table-column label="备注" min-width="150">
+        <template slot-scope="scope">
+          <template
+            v-if="
+              !scope.row.userIntention || scope.row.userIntention.type === 0
+            "
+          >
+            <i
+              class="el-icon-circle-plus-outline intention-icon"
+              @click="createIntention(scope.$index, scope.row.id)"
+            ></i>
+          </template>
+          <template v-else-if="!scope.row.userIntention.describe">
+            <i
+              class="el-icon-circle-plus-outline intention-icon"
+              @click="intentDescribeChange(scope.$index, scope.row.id)"
+            ></i>
+          </template>
+          <template v-else>
+            <div class="remarks-content">
+              <el-popover
+                placement="top-start"
+                trigger="hover"
+                :content="scope.row.userIntention.describe"
+              >
+                <div slot="reference" class="remarks-text">
+                  {{ scope.row.userIntention.describe }}
+                </div>
+              </el-popover>
+              <i
+                class="el-icon-edit"
+                @click="intentDescribeChange(scope.$index, scope.row.id)"
+              ></i>
+            </div>
+          </template>
+        </template>
+      </el-table-column>
+      <el-table-column label="标签" min-width="150">
+        <template slot-scope="scope">
+          <!-- <template
+            v-if="!scope.row.user_label || scope.row.user_label === '-'"
+          >
+            <i
+              class="el-icon-circle-plus-outline intention-icon"
+              @click="onLabel"
+            ></i>
+          </template> -->
+          <div class="remarks-content">
+            <el-popover
+              placement="top-start"
+              trigger="hover"
+              :content="scope.row.user_label"
+              v-if="scope.row.user_label"
+            >
+              <div slot="reference" class="remarks-text">
+                {{ scope.row.user_label }}
+              </div>
+            </el-popover>
+            <div v-else class="remarks-text">
+              -
+            </div>
+            <!-- <i class="el-icon-edit" @click="onLabel"></i> -->
+          </div>
+        </template>
+      </el-table-column>
+
+      <el-table-column label="参课" min-width="130">
+        <template slot="header">
+          <div
+            class="sort-operate-box"
+            @click="sortRules('all_join_course_count')"
+          >
+            <span>参课</span>
+            <div class="sort-icon-arrow">
+              <i
+                class="el-icon-caret-top top-color"
+                :class="{
+                  active:
+                    sortKeys['all_join_course_count'] != 'asc' &&
+                    sortActive == 'all_join_course_count'
+                }"
+              ></i>
+              <i
+                class="el-icon-caret-bottom bottom"
+                :class="{
+                  active:
+                    sortKeys['all_join_course_count'] == 'asc' &&
+                    sortActive == 'all_join_course_count'
+                }"
+              ></i>
+            </div>
+          </div>
+        </template>
+        <template slot-scope="scope">
+          <p>
+            总次数:
+            <span class="red-color ">{{
+              scope.row.all_join_course_count
+            }}</span>
+            节数:
+            <span>{{ scope.row.join_course_count }}</span
+            >/{{ scope.row.send_course_count }}
+          </p>
+          <p>
+            最近：{{ formatDate(scope.row.last_join_time, 'shortDay') || '-' }}
+          </p>
+        </template>
+      </el-table-column>
+      <el-table-column label="完课" min-width="130">
+        <template slot="header">
+          <div
+            class="sort-operate-box"
+            @click="sortRules('all_complete_course_count')"
+          >
+            <span>完课</span>
+            <div class="sort-icon-arrow">
+              <i
+                class="el-icon-caret-top top-color"
+                :class="{
+                  active:
+                    sortKeys['all_complete_course_count'] != 'asc' &&
+                    sortActive == 'all_complete_course_count'
+                }"
+              ></i>
+              <i
+                class="el-icon-caret-bottom bottom"
+                :class="{
+                  active:
+                    sortKeys['all_complete_course_count'] == 'asc' &&
+                    sortActive == 'all_complete_course_count'
+                }"
+              ></i>
+            </div>
+          </div>
+        </template>
+        <template slot-scope="scope">
+          <p>
+            总次数:
+            <span class="red-color ">
+              {{ scope.row.all_complete_course_count }}
+            </span>
+            节数:
+            <span> {{ scope.row.complete_course_count }}</span
+            >/{{ scope.row.send_course_count }}
+          </p>
+          <p>
+            最近：{{
+              formatDate(scope.row.last_complete_time, 'shortDay') || '-'
+            }}
+          </p>
+        </template>
+      </el-table-column>
+      <el-table-column label="传作品" min-width="70">
+        <template slot="header">
+          <div class="sort-operate-box" @click="sortRules('task_count')">
+            <span>传作品</span>
+            <div class="sort-icon-arrow">
+              <i
+                class="el-icon-caret-top top-color"
+                :class="{
+                  active:
+                    sortKeys['task_count'] != 'asc' &&
+                    sortActive == 'task_count'
+                }"
+              ></i>
+              <i
+                class="el-icon-caret-bottom bottom"
+                :class="{
+                  active:
+                    sortKeys['task_count'] == 'asc' &&
+                    sortActive == 'task_count'
+                }"
+              ></i>
+            </div>
+          </div>
+        </template>
+        <template slot-scope="scope">
+          <p v-if="scope.row.task_count > 0">
+            <span>{{ scope.row.task_count }}</span>
+          </p>
+          <span v-else>-</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="点评" min-width="100">
+        <template slot="header">
+          <div
+            class="sort-operate-box"
+            @click="sortRules('listen_comment_count')"
+          >
+            <span>点评</span>
+            <div class="sort-icon-arrow">
+              <i
+                class="el-icon-caret-top top-color"
+                :class="{
+                  active:
+                    sortKeys['listen_comment_count'] != 'asc' &&
+                    sortActive == 'listen_comment_count'
+                }"
+              ></i>
+              <i
+                class="el-icon-caret-bottom bottom"
+                :class="{
+                  active:
+                    sortKeys['listen_comment_count'] == 'asc' &&
+                    sortActive == 'listen_comment_count'
+                }"
+              ></i>
+            </div>
+          </div>
+        </template>
+        <template slot-scope="scope">
+          <p>
+            已听作品:
+            <span>{{ scope.row.listen_comment_count }}</span>
+          </p>
+          <p>点评作品: {{ scope.row.comment_count }}</p>
+        </template>
+      </el-table-column>
+
+      <el-table-column label="添加微信" min-width="60">
+        <template slot-scope="scope">
+          <el-switch
+            v-model="scope.row.added_wechat"
+            active-color="#3582fb"
+            inactive-color="#DCDFE6"
+            :active-value="1"
+            :inactive-value="0"
+            @change="changeSwitch($event, scope.row, scope.$index, 'wechat')"
+          >
+          </el-switch>
+        </template>
+      </el-table-column>
+      <el-table-column label="进群" min-width="60">
+        <template slot-scope="scope">
+          <el-switch
+            v-model="scope.row.added_group"
+            active-color="#3582fb"
+            inactive-color="#DCDFE6"
+            :active-value="1"
+            :inactive-value="0"
+            @change="changeSwitch($event, scope.row, scope.$index, 'group')"
+          >
+          </el-switch>
+        </template>
+      </el-table-column>
+      <el-table-column label="公众号" min-width="60">
+        <template slot-scope="scope">
+          <span v-if="!scope.row.follow || +scope.row.follow === 0">
+            -
+          </span>
+          <i v-else class="el-icon-check"></i>
+        </template>
+      </el-table-column>
+      <el-table-column label="盒子物流" min-width="80">
+        <template slot-scope="scope">
+          <div class="d-flex align-center space-between">
+            <p
+              :class="{
+                'red-color':
+                  scope.row.expressInfo &&
+                  +scope.row.expressInfo.express_status === 0
+              }"
+            >
+              {{
+                expressStatus(
+                  scope.row.expressInfo && scope.row.expressInfo.express_status
+                )
+              }}
+            </p>
+            <!-- 待审核状态需要编辑物流地址，这版先不做 -->
+            <!--  +scope.row.expressInfo.express_status === 6 -->
+            <i
+              class="el-icon-edit"
+              v-if="
+                scope.row.expressInfo &&
+                  +scope.row.expressInfo.express_status === 0
+              "
+              @click="modifyAddress(scope.row)"
+            ></i>
+          </div>
+        </template>
+      </el-table-column>
+      <el-table-column label="归属地" min-width="100">
+        <template slot-scope="scope">
+          <p
+            v-if="
+              scope.row.userInfo &&
+                scope.row.userInfo.mobile_province &&
+                scope.row.userInfo.mobile_city
+            "
+          >
+            {{ scope.row.userInfo.mobile_province }} ·
+            {{ scope.row.userInfo.mobile_city }}
+          </p>
+          <p
+            v-else-if="
+              (scope.row.userInfo && scope.row.userInfo.mobile_province) ||
+                (scope.row.userInfo && scope.row.userInfo.mobile_city)
+            "
+          >
+            {{
+              scope.row.userInfo.mobile_province ||
+                scope.row.userInfo.mobile_city
+            }}
+          </p>
+          <p v-else>-</p>
+        </template>
+      </el-table-column>
+      <el-table-column label="APP登录" min-width="140">
+        <template slot-scope="scope">
+          <p v-if="scope.row.userLoginDataInfo">
+            {{ scope.row.userLoginDataInfo.device_type }}
+          </p>
+          <p>
+            {{
+              scope.row.last_login_time !== '0'
+                ? formatDate(scope.row.last_login_time)
+                : '-'
+            }}
+          </p>
+        </template>
+      </el-table-column>
+      <el-table-column label="体验课班级·销售" min-width="120">
+        <template slot-scope="scope">
+          <p v-if="!scope.row.teamInfo">
+            -
+          </p>
+          <p
+            v-else-if="
+              scope.row.teamInfo && scope.row.teamInfo.team_name === '-'
+            "
+          >
+            -
+          </p>
+          <p class="btn-text " v-else @click="openTeam(scope.row)">
+            {{ scope.row.teamInfo.team_name }}
+          </p>
+          <p>
+            {{
+              scope.row.teacherInfo && scope.row.teacherInfo.realname
+                ? scope.row.teacherInfo.realname
+                : '-'
+            }}
+            {{
+              scope.row.teacherInfo &&
+              scope.row.teacherInfo.departmentInfo &&
+              scope.row.teacherInfo.departmentInfo.name
+                ? scope.row.teacherInfo.departmentInfo.name
+                : '-'
+            }}
+          </p>
+        </template>
+      </el-table-column>
+      <!-- 渠道：TOSS端 组员 rankId="3"不显示 -->
+      <el-table-column label="渠道" min-width="100">
+        <template slot-scope="scope">
+          <span v-if="scope.row.payChannelInfo">
+            {{ scope.row.payChannelInfo.channel_outer_name }}
+          </span>
+        </template>
+      </el-table-column>
+      <el-table-column label="转化" min-width="60" fixed="right">
+        <template slot-scope="scope">
+          <span
+            :class="[
+              {
+                'red-color': scope.row.user_status_name === '未转化'
+              }
+            ]"
+          >
+            {{ scope.row.user_status_name }}
+          </span>
+        </template>
+      </el-table-column>
+      <el-table-column label="操作" min-width="60" fixed="right">
+        <template slot-scope="scope">
+          <el-dropdown
+            size="mini"
+            @command="handleColumnCommand($event, scope.row, scope.$index)"
+            @visible-change="handleCommandChange"
+          >
+            <span class="el-dropdown-link primary-text">
+              操作<i class="el-icon-arrow-down el-icon--right"></i>
+            </span>
+            <el-dropdown-menu slot="dropdown">
+              <el-dropdown-item command="1">沟通备注</el-dropdown-item>
+              <!-- 只有无地址状态的才可以催发地址短信 -->
+              <el-dropdown-item
+                command="2"
+                v-if="
+                  scope.row.expressInfo &&
+                    +scope.row.expressInfo.express_status === 0
+                "
+                >催发地址短信</el-dropdown-item
+              >
+              <el-dropdown-item command="3">发优惠券</el-dropdown-item>
+              <!-- <el-dropdown-item command="4">添加标签</el-dropdown-item> -->
+            </el-dropdown-menu>
+          </el-dropdown>
+        </template>
+      </el-table-column>
+    </el-table>
+
+    <div class="empty-text" v-if="dataList.length === 0">暂无数据</div>
+
+    <m-pagination
+      :current-page="currentPage"
+      :page-count="totalPages"
+      :total="totalElements"
+      @current-change="handleSizeChange"
+      show-pager
+      open="calc(100vw - 170px - 25px)"
+      close="calc(100vw - 50px - 25px)"
+    ></m-pagination>
+
+    <!-- 无地址页面修改地址弹框 -->
+    <el-dialog
+      :close-on-click-modal="false"
+      :visible.sync="showModifyAddress"
+      width="30%"
+      title="修改收货信息"
+    >
+      <modify-address
+        @addExpress="handleModifyAddress"
+        :formData="modifyFormData"
+        v-if="showModifyAddress"
+      />
+    </el-dialog>
+    <!-- <label-checkbox
+      v-if="showDialogFormVisible"
+      :labelRowValue="labelRowValue"
+      @onRefresh="onRefresh"
+      ref="labelCheckbox"
+    /> -->
+    <intention-dialog
+      ref="intentionDialog"
+      @intentConfirm="intentConfirm"
+    ></intention-dialog>
+
+    <!-- 发送优惠券 -->
+    <send-coupon
+      ref="couponDialog"
+      :coupon-data="couponData"
+      :select-user-id="[currentUser.id]"
+    />
+  </div>
+</template>
+
+<script>
+import _ from 'lodash'
+import MPagination from '@/components/MPagination/index.vue'
+import BaseUserInfo from '../../components/BaseUserInfo.vue'
+import ModifyAddress from '../../components/ModifyAddress.vue'
+import enums from '../../components/searchData'
+import { formatData, openBrowserTab } from '@/utils/index'
+// import labelCheckbox from '../../components/labelCheckbox'
+import intentionDialog from '../../components/intentionDialog'
+import { FOLLOW_EXPRESS_STATUS } from '@/utils/enums'
+import Search from '../../components/Search.vue'
+import ToolTip from '../../components/ToolTip.vue'
+import SendCoupon from '../../components/SendCoupon.vue'
+export default {
+  name: 'trialUsers',
+  components: {
+    MPagination,
+    BaseUserInfo,
+    ModifyAddress,
+    // labelCheckbox,
+    intentionDialog,
+    Search,
+    ToolTip,
+    SendCoupon
+  },
+  props: {
+    // 查询条件
+    // search: {
+    //   type: Object,
+    //   default: () => ({})
+    // }
+  },
+  computed: {
+    searchParams() {
+      const search = this.search
+      console.log(this.term)
+
+      if (this.term && +this.term !== 0) {
+        Object.assign(search, { term: this.term })
+      }
+      if (+this.term === 0) {
+        delete search.term
+      }
+      return search
+    }
+  },
+  data() {
+    return {
+      // 查询条件
+      search: [],
+      term: '',
+      currentPage: 1,
+      totalElements: 0,
+      totalPages: 1,
+      dataList: [],
+      manageMentList: [], // 排期列表
+      conversionType: enums.conversionType,
+      showModifyAddress: false,
+      showDialogFormVisible: false,
+      modifyFormData: {},
+      teacherIds: [],
+      tableHeight: 0,
+      labelRowValue: {},
+      curModifyItem: {},
+      selectUsers: [], // 批量选择的用户
+      currentUser: {}, // 当前选择用户
+      couponData: [],
+      sortKeys: {
+        all_join_course_count: 'desc',
+        all_complete_course_count: 'desc',
+        task_count: 'desc',
+        listen_comment_count: 'desc'
+      },
+      sortActive: '',
+      // 1 招生中   2待开课   3 开课中  4 已结课'
+      period: {
+        1: '招生中',
+        2: '待开课 ',
+        3: '上课中',
+        4: '已结课'
+      }
+    }
+  },
+  watch: {
+    searchParams(params) {
+      console.log(params)
+      this.currentPage = 1
+      this.getData()
+    }
+  },
+  created() {
+    this.$nextTick(() => {
+      const tableHeight =
+        document.body.clientHeight - this.$refs.tableInner.offsetTop - 110
+      this.tableHeight = tableHeight + ''
+    })
+    this.init()
+  },
+  mounted() {
+    this.getCouponList()
+  },
+  methods: {
+    getSearchQuery(res) {
+      // console.log(res, 'search result')
+      this.search = res
+    },
+    onRefresh(data) {
+      setTimeout(() => {
+        this.init()
+      }, 1000)
+    },
+    // 添加标签
+    // onLabel() {
+    //   this.$refs.labelCheckbox.dialogFormVisible = true
+    //   this.$refs.labelCheckbox.getAllTeacherByRoleIds()
+    // },
+    // 获取一行数据
+    hoverRow(row, column, cell, event) {
+      this.labelRowValue = row
+      this.showDialogFormVisible = true
+    },
+    async init() {
+      await this.getManagement()
+      // await this.getData()
+    },
+    // 获取排期期数
+    getManagement() {
+      const params = {
+        // teacher_id: this.teacherIds
+      }
+      return this.$http.User.ManagementForTeacherList(params).then((res) => {
+        console.log(res)
+        if (res && res.data && res.data.ManagementForTeacherList) {
+          // 只显示开课中和待开课的期数 status // 1 招生中   2待开课   3 开课中  4 已结课',
+          const arr = res.data.ManagementForTeacherList.filter(
+            (item) =>
+              item.management &&
+              (+item.management.status === 1 ||
+                +item.management.status === 2 ||
+                +item.management.status === 3)
+          )
+          console.log(arr)
+          const list = arr.map((item) => {
+            item.management.period_label = `${item.management.period_name}(${
+              this.period[item.management.status]
+            })`
+
+            return item.management
+          })
+
+          this.manageMentList = _.orderBy(list, ['status'], ['desc'])
+          this.term =
+            this.manageMentList.length > 0 ? this.manageMentList[0].period : '0'
+        }
+      })
+    },
+    getData() {
+      const loading = this.$loading({
+        lock: true,
+        text: '加载中',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.1)'
+      })
+
+      // 标签处理
+      const obj = {}
+      let label = {}
+      if (Object.keys(this.searchParams).includes('user_label')) {
+        label = {
+          'user_label.like': {
+            'user_label.keyword': `*${this.searchParams.user_label}*`
+          }
+        }
+        delete obj.user_label
+      }
+      Object.assign(obj, this.searchParams, label)
+      const query = Object.assign({}, obj)
+
+      const page = this.currentPage
+      const sort = {}
+      if (this.sortActive) {
+        sort[this.sortActive] = this.sortKeys[this.sortActive]
+      }
+      return this.$http.User.trialCourseUsersV2(query, page, sort)
+        .then((res) => {
+          // console.log(res)
+          var defTotalElements = 0
+          var defTotalPages = 1
+          var defContent = []
+          if (res && res.data && res.data.StudentTrialV2StatisticsPage) {
+            const {
+              totalElements,
+              totalPages,
+              content
+            } = res.data.StudentTrialV2StatisticsPage
+            defTotalElements = totalElements
+            defTotalPages = totalPages
+            // defContent = content
+            defContent = this.initName(content)
+          }
+          this.dataList = defContent
+          // console.log('dataList', this.dataList)
+          this.totalPages = +defTotalPages
+          this.totalElements = +defTotalElements
+          loading.close()
+        })
+        .catch(() => {
+          loading.close()
+        })
+    },
+    initName(data) {
+      const intentionArr = ['低', '中', '高']
+      data.forEach((item) => {
+        if (item.userIntention && item.userIntention.type) {
+          item.userIntention.type_name =
+            intentionArr[item.userIntention.type - 1]
+        }
+        switch (+item.user_status) {
+          case 0:
+          case 1:
+          case 2:
+            item.user_status_name = '未转化'
+            break
+          case 3:
+          case 4:
+            item.user_status_name = '已购月课'
+            break
+          case 5:
+          case 6:
+          case 7:
+            item.user_status_name = '已购年课'
+            break
+          case 8:
+            item.user_status_name = '注销失效'
+            break
+          case 9:
+          case 10:
+            item.user_status_name = '已购季度课'
+            break
+          case 11:
+          case 12:
+            item.user_status_name = '已购半年课'
+            break
+        }
+      })
+      return data
+    },
+    handleSizeChange(page) {
+      console.log(page)
+
+      // console.log(this.page)
+      this.currentPage = page
+      this.getData()
+    },
+
+    changeStatus(res) {
+      // console.log(res)
+      const list = this.dataList.map((item) => {
+        if (item.id === res.id) {
+          item = res
+        }
+        return item
+      })
+      this.dataList = list
+    },
+
+    // 填写地址
+    modifyAddress(row) {
+      // console.log(row)
+      /**
+        orderId: this.formData.orderid,
+        expressId: this.formData.id,
+        userId: this.formData.userid,
+       */
+      const params = {
+        userid: row.id,
+        orderid: row.orderInfo.trial_course.order_no,
+        id: row.express_id
+      }
+      this.modifyFormData = params
+      this.showModifyAddress = true
+    },
+
+    handleModifyAddress(res) {
+      this.showModifyAddress = false
+      if (res === 1) {
+        this.getData()
+      }
+    },
+
+    // 多选
+    handleSelectionChange(data) {
+      console.log(data)
+      this.selectUsers = data
+    },
+
+    // 点击用户信息回调事件
+    userHandle(user) {
+      if (!user || !user.id) {
+        this.$message.error('缺少用户信息')
+        return
+      }
+      const { id } = user
+      // 新标签打开详情页
+      id && openBrowserTab(`/users/#/details/${id}`)
+    },
+
+    expressStatus(status) {
+      if (!status && +status !== 0) {
+        return '-'
+      }
+      // 异常物流
+      if ('4,5,7,8'.includes(status)) {
+        return '异常物流'
+      }
+      return FOLLOW_EXPRESS_STATUS[status]
+    },
+
+    // 点击班级名称，打开班级详情
+    openTeam(row) {
+      if (!row.teacherInfo || !row.teamInfo || !row.team_id) return
+      const teamId = row.team_id
+      const teamType = row.teamInfo.team_type || '0'
+      teamId &&
+        openBrowserTab(`/student-team/#/teamDetail/${teamId}/${teamType}`)
+    },
+
+    formatDate(date, flag = 's') {
+      return formatData(date, flag)
+    },
+    createIntention(index, uid) {
+      // 当前修改项
+      this.curModifyItem.index = index
+      this.curModifyItem.uid = uid
+      this.curModifyItem.type = 'create'
+      this.$refs.intentionDialog.showDialog()
+    },
+    // 意向度dialog过来的数据
+    intentConfirm(data) {
+      const loading = this.$loading({
+        lock: true,
+        text: '加载中',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.1)'
+      })
+      const IntentionMap1 = new Map()
+      IntentionMap1.set('低', 'LOW')
+      IntentionMap1.set('中', 'MIDDLE')
+      IntentionMap1.set('高', 'HIGH')
+      const IntentionMap2 = new Map()
+      IntentionMap2.set('低', 1)
+      IntentionMap2.set('中', 2)
+      IntentionMap2.set('高', 3)
+      const urlMap = new Map()
+      // 是新增还是修改
+      urlMap.set('create', 'createUserInetention')
+      urlMap.set('update', 'updateUserInetention')
+
+      const query = {
+        uid: this.curModifyItem.uid,
+        type: IntentionMap1.get(data.radio),
+        describe: data.textarea
+      }
+      this.$http.User[urlMap.get(this.curModifyItem.type)](query)
+        .then((res) => {
+          if (res.code === 0 && res.status === 'OK') {
+            const singleData = Object.assign(
+              {},
+              this.dataList[this.curModifyItem.index].userIntention,
+              {
+                type: IntentionMap2.get(data.radio),
+                type_name: data.radio,
+                describe: data.textarea
+              }
+            )
+            this.$set(
+              this.dataList[this.curModifyItem.index],
+              'userIntention',
+              singleData
+            )
+            this.$message.success('提交成功')
+          } else {
+            this.$message.error('提交失败')
+          }
+          loading.close()
+        })
+        .catch(() => {
+          loading.close()
+          this.$message.error('更新用户意向度失败')
+        })
+    },
+    // 意向下拉框发生修改
+    intentChange(tar, index) {
+      const IntentionMap1 = new Map()
+      IntentionMap1.set('LOW', '低')
+      IntentionMap1.set('MIDDLE', '中')
+      IntentionMap1.set('HIGH', '高')
+      const IntentionMap2 = new Map()
+      IntentionMap2.set('LOW', 1)
+      IntentionMap2.set('MIDDLE', 2)
+      IntentionMap2.set('HIGH', 3)
+      if (IntentionMap2.get(tar) === this.dataList[index].userIntention.type) {
+        return
+      }
+      const loading = this.$loading({
+        lock: true,
+        text: '加载中',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.1)'
+      })
+      const query = {
+        uid: this.dataList[index].id,
+        type: tar,
+        describe: this.dataList[index].userIntention.describe
+      }
+      this.$http.User.updateUserInetention(query)
+        .then((res) => {
+          if (res.code === 0 && res.status === 'OK') {
+            const singleData = Object.assign(
+              {},
+              this.dataList[index].userIntention,
+              {
+                type: IntentionMap2.get(tar),
+                type_name: IntentionMap1.get(tar)
+              }
+            )
+            this.$set(this.dataList[index], 'userIntention', singleData)
+          } else {
+            this.$message.error('更新用户意向度失败')
+          }
+          loading.close()
+        })
+        .catch(() => {
+          loading.close()
+          this.$message.error('更新用户意向度失败')
+        })
+    },
+    intentDescribeChange(index, uid) {
+      this.curModifyItem.index = index
+      this.curModifyItem.uid = uid
+      this.curModifyItem.type = 'update'
+      this.$refs.intentionDialog.showDialog(this.dataList[index].userIntention)
+    },
+    // 修改开关
+    changeSwitch(val, data, index, type) {
+      const params = {
+        teamId: data.team_id,
+        courseType:
+          data.teamInfo && +data.teamInfo.team_type === 0 ? 'TRAIL' : 'YEAR',
+        studentId: data.id
+      }
+      if (type === 'wechat') {
+        params.addedWechat = val
+      } else if (type === 'group') {
+        params.addedGroup = val
+      }
+      this.$http.User.updateTeamStudent(params).then((res) => {
+        if (res && res.code === 0) {
+          this.$message({
+            message: '修改成功',
+            type: 'success'
+          })
+        } else {
+          // 换成原值
+          if (type === 'wechat') {
+            // 这么写的原因是值不是0就是1
+            this.dataList[index].added_wechat = Math.abs(val - 1)
+          } else if (type === 'group') {
+            this.dataList[index].added_group = Math.abs(val - 1)
+          }
+        }
+      })
+    },
+
+    // 地址催发短信 @isSingle Boolean， 是否单条发
+    sendMessage(isSingle = false) {
+      let orderNo = []
+      // 批量发送
+      if (!isSingle) {
+        if (this.selectUsers.length === 0) {
+          this.$message.error('请选择学员')
+          return
+        }
+        // 如果选择的学员物流已有地址，则中断并提示
+        for (let index = 0; index < this.selectUsers.length; index++) {
+          const item = this.selectUsers[index]
+          if (item.expressInfo && +item.expressInfo.express_status > 0) {
+            this.$message.error('不支持发送给已添加物流地址的学员')
+            orderNo = []
+            break
+          }
+          orderNo.push(item.order_no)
+        }
+      }
+      // 单条发送
+      else {
+        this.currentUser.order_no && orderNo.push(this.currentUser.order_no)
+      }
+      console.log(orderNo)
+
+      if (orderNo.length === 0) return
+      this.$confirm(
+        `您即将给用户发送【催发地址短信】，发送人数：${orderNo.length}人`,
+        '催发地址短信',
+        {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }
+      ).then(() => {
+        const orderIds = orderNo.join(',')
+        console.log(orderIds, 'orderIds')
+        this.$http.Order.pushMsgByOrderIds(orderIds)
+          .then((res) => {
+            if (res.errors) {
+              this.$message.error(res.errors)
+              return
+            }
+            this.$message.success('提交成功')
+          })
+          .catch(() => {
+            this.$message.error('提交失败')
+          })
+      })
+    },
+    // 操作列的下拉
+    handleColumnCommand(command, user = {}, index) {
+      this.currentUser = user
+      switch (command) {
+        // 沟通备注
+        case '1':
+          if (!user.userIntention || +user.userIntention.type === 0) {
+            this.createIntention(index, user.id)
+          } else {
+            this.intentDescribeChange(index, user.id)
+          }
+          break
+        // 催发地址短信
+        case '2':
+          this.sendMessage(true)
+          break
+        // 优惠券
+        case '3':
+          this.$refs.couponDialog.issueCoupons = true
+          this.$refs.couponDialog.couponsTime = ''
+          break
+        // 加标签
+        case '4':
+          this.onLabel()
+          break
+      }
+    },
+
+    handleCommandChange(visible) {
+      if (visible) {
+        this.resetCurrentUser()
+      }
+    },
+
+    // 重置当前选择用户
+    resetCurrentUser() {
+      this.currentUser = {}
+    },
+
+    // 获取优惠券列表
+    getCouponList() {
+      this.$http.Team.getAllCoupons(0).then((res) => {
+        this.couponData = (res.payload && res.payload.content) || []
+      })
+    },
+    // 改变排序规则
+    sortRules(sortKey) {
+      // let sort = ''
+      if (this.sortActive) {
+        this.sortKeys[this.sortActive] =
+          this.sortKeys[this.sortActive] === 'asc' ? 'desc' : 'asc'
+      }
+      this.sortActive = sortKey
+      this.getData()
+    }
+  }
+}
+</script>
+
+<style lang="scss" scoped>
+@import '../../styles/trial-list.scss';
+</style>

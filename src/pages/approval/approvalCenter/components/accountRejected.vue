@@ -23,7 +23,9 @@
       </el-select>
       <search-part class="filter-item" @result="getSeachePart" />
       <!-- <course-team class="filter-item" @result="getTeamId" /> -->
+      <searchPhone name="userTel" @result_lk="getPhone" class="filter-item" />
     </div>
+
     <el-table :data="tableData" style="width: 100%" highlight-current-row>
       <el-table-column
         v-for="(item, key) in showData"
@@ -101,6 +103,7 @@
 </template>
 
 <script>
+import searchPhone from '@/components/MSearch/searchItems/searchPhone.vue'
 import tabTimeSelect from './timeSearch'
 import searchPart from './searchPart'
 // import courseTeam from './courseTeam'
@@ -112,6 +115,7 @@ import _ from 'lodash'
 export default {
   name: 'accountRejected',
   components: {
+    searchPhone,
     tabTimeSelect,
     adjustDrawer,
     MPagination,
@@ -142,6 +146,7 @@ export default {
         page: 1,
         size: 20,
         isFinance: 1,
+        userTel: '',
         financeStatus: ''
       },
       adjustDrawerData: {
@@ -199,6 +204,11 @@ export default {
         {
           prop: 'type',
           label: '审批类型'
+        },
+        {
+          prop: 'userTel',
+          label: '用户电话',
+          width: '200'
         },
         {
           prop: 'abstractContent',
@@ -260,6 +270,11 @@ export default {
     },
     filterStatusSelectChange(val) {
       this.params.financeStatus = val
+      this.initListData(this.params)
+    },
+    // 新加手机号
+    getPhone(val) {
+      this.params.userTel = val
       this.initListData(this.params)
     },
     paginationChange(val) {
