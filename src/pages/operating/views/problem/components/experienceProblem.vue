@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-06-28 18:37:21
  * @LastEditors: panjian
- * @LastEditTime: 2020-06-29 16:21:12
+ * @LastEditTime: 2020-06-29 17:32:57
 -->
 <template>
   <div class="experience-box">
@@ -18,10 +18,7 @@
       <br />
     </div>
 
-    <div
-      v-if="inputForm.inputRadioList.length <= 0"
-      class="experience-problem-box"
-    >
+    <div v-if="summaryList.length <= 0" class="experience-problem-box">
       <div class="experience-problem-text">体验课调查问卷</div>
       <div style="color:#c2c2c2;">从左侧选择需要添加的题型</div>
     </div>
@@ -30,11 +27,26 @@
         <div class="experience-problem-text">体验课调查问卷</div>
       </div>
       <el-form ref="form" :inline="true" :model="inputForm" label-width="50px">
-        <!-- <div v-for="(item, index) in summaryList" :key="index"> -->
-        <div v-for="(item, index) in inputForm.inputRadioList" :key="index">
+        <div v-for="(item, index) in summaryList" :key="index">
+          <!-- <div v-for="(item, index) in inputForm.inputRadioList" :key="index">
+            <el-form-item
+              :label="index + 1 + '.'"
+              :prop="'inputRadioList.' + index + '.name'"
+              placeholder="标题"
+              :rules="{
+                required: true,
+                message: '标题不能为空',
+                trigger: 'blur'
+              }"
+            >
+              <el-input v-model="item.name"></el-input>
+            </el-form-item>
+            <el-form-item>
+              <i class="el-icon-delete" @click="deleteItem(item, index)"></i>
+            </el-form-item>
+          </div> -->
           <el-form-item
             :label="index + 1 + '.'"
-            :prop="'inputRadioList.' + index + '.name'"
             placeholder="标题"
             :rules="{
               required: true,
@@ -42,13 +54,12 @@
               trigger: 'blur'
             }"
           >
-            <el-input v-model="item.name"></el-input>
+            <el-input v-model="item.title"></el-input>
           </el-form-item>
           <el-form-item>
             <i class="el-icon-delete" @click="deleteItem(item, index)"></i>
           </el-form-item>
         </div>
-        <!-- </div> -->
       </el-form>
     </div>
   </div>
@@ -71,19 +82,37 @@ export default {
         name: '',
         phone: '',
         inputRadioList: []
+      },
+      radioType: {
+        questionType: 'RADIO',
+        title: '',
+        questionOptionList: [
+          {
+            optionNo: 'A',
+            optionContent: '',
+            optionSort: '1'
+          },
+          {
+            optionNo: 'B',
+            optionContent: '',
+            optionSort: '2'
+          }
+        ]
       }
     }
   },
   methods: {
     addItem() {
-      this.inputForm.inputRadioList.push({
-        // name: '',
-        // phone: ''
-      })
-      // this.summaryList.push(this.inputForm)
+      // this.inputForm.inputRadioList.push({
+      //   // name: '',
+      //   // phone: ''
+      // })
+      const radio = Object.assign({}, this.radioType)
+      this.summaryList.push(radio)
+      console.log(this.summaryList)
     },
     deleteItem(item, index) {
-      this.inputForm.inputRadioList.splice(index, 1)
+      this.summaryList.splice(index, 1)
     }
   }
 }
