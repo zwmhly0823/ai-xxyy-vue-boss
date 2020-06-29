@@ -115,6 +115,7 @@
                 :multiple="false"
                 :data-list="addedWechatStatus"
                 :my-style="{ width: '100px' }"
+                :searchProp="searchProp"
                 @result="getSearchData('added_wechat', arguments)"
                 class="search-group-item"
               />
@@ -124,6 +125,7 @@
                 :multiple="false"
                 :data-list="addedGroupStatus"
                 :my-style="{ width: '100px' }"
+                :searchProp="searchProp"
                 @result="getSearchData('added_group', arguments)"
                 class="search-group-item"
               />
@@ -131,6 +133,7 @@
                 name="express_status"
                 placeholder="盒子物流"
                 :my-style="{ width: '100px' }"
+                :searchProp="searchProp"
                 @result="getSearchData('express_status', arguments)"
                 class="search-group-item"
               />
@@ -234,6 +237,12 @@ export default {
     teamType: {
       type: String,
       default: '0'
+    },
+    searchProp: {
+      type: Object,
+      default: () => {
+        return {}
+      }
     }
   },
   data() {

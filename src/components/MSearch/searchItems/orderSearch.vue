@@ -37,10 +37,22 @@
 <script>
 export default {
   name: 'orderSearch',
+  props: {
+    searchProp: {
+      type: Object,
+      default: () => {}
+    }
+  },
   data() {
     return {
       value: '',
       select: '1'
+    }
+  },
+  created() {
+    if (this.searchProp.name) {
+      this.value = this.searchProp.value
+      this.getUidByPhone(this.searchProp.value)
     }
   },
   computed: {
@@ -117,6 +129,16 @@ export default {
           this.$refs.input.activated = true
         })
       }
+    },
+    getUidByPhone(num) {
+      this.$http.User.searchUserByPhone(num).then((res) => {
+        if (res && res.data && res.data.UserListEx) {
+          this.$emit('result', { uid: res.data.UserListEx[0].id })
+        }
+        setTimeout(() => {
+          localStorage.removeItem('noticeParams')
+        }, 0)
+      })
     },
     handleSelect(data) {
       console.log(data)

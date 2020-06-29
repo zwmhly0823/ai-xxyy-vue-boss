@@ -15,7 +15,11 @@
   >
     <el-form :inline="true" label-position="right" label-width="100px">
       <el-form-item label="订单搜索:" :class="{ [$style.marginer]: true }">
-        <orderSearch class="allmini" @result="getOrderSearch" />
+        <orderSearch
+          class="allmini"
+          :searchProp="searchProp"
+          @result="getOrderSearch"
+        />
       </el-form-item>
 
       <el-form-item label="订单来源:" :class="{ [$style.marginer]: true }">
@@ -194,6 +198,12 @@ import SimpleSelect from '@/components/MSearch/searchItems/simpleSelect'
 import { isToss } from '@/utils/index'
 
 export default {
+  props: {
+    searchProp: {
+      type: Object,
+      default: () => {}
+    }
+  },
   components: {
     // orderStatus,
     hardLevel,
