@@ -214,7 +214,8 @@ export default {
       trialClass: [
         { name: '单周体验课', value: '3' },
         { name: '双周体验课', value: '0' },
-        { name: '系统课', value: '2' }
+        { name: '年系统课', value: '2' },
+        { name: '半年系统课', value: '4' }
       ],
       tabQuery: {
         size: 2,
