@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-06-23 15:23:48
  * @LastEditors: panjian
- * @LastEditTime: 2020-06-29 11:03:25
+ * @LastEditTime: 2020-06-29 17:39:05
 -->
 <template>
   <div class="push-config-box">
@@ -71,7 +71,7 @@
     </el-dialog>
     <el-dialog :visible.sync="centerDialogVisible" width="30%" center>
       <span>
-        当前任务将推送 {{ num }}人，将在此条线<span style="color:red;">{{
+        当前任务将推送 {{ num }}用户，将在此条件<span style="color:red;">{{
           pushTest
         }}</span
         >下执行，确认推送？
