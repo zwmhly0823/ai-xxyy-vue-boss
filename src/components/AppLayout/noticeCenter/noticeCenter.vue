@@ -30,7 +30,7 @@
               <span
                 v-show="item.hoverStatus"
                 class="has-read"
-                @click="hasRead(item.id)"
+                @click="hasRead(item.id, key)"
                 >标为已读</span
               >
               <span v-show="!item.hoverStatus" class="title-time">
@@ -143,7 +143,7 @@ export default {
         })
     },
     // 标为已读
-    hasRead(id) {
+    hasRead(id, index) {
       this.noticeLoading = true
       const query = {
         staffId: +this.staffId,
@@ -152,6 +152,7 @@ export default {
       this.$http.NoticeCenter.updateNotifyIsReadByStaffId(query)
         .then((res) => {
           if (res.code === 0 && res.status === 'OK') {
+            this.listData.splice(index, 1)
             this.$message({
               message: '修改成功',
               type: 'success'
