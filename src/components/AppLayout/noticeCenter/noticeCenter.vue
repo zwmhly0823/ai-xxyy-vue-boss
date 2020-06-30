@@ -110,6 +110,7 @@ export default {
     },
     // 通往消息中心
     clickNoticeCenter() {
+      let testUrlAppend = ''
       if (location.hostname.split('.')[0] === 'test') {
         testUrlAppend = 'ai-app-vue-boss-test/'
       }
