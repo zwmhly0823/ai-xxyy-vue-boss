@@ -19,5 +19,10 @@ export function noticeLinkTo(type, val) {
   // 目前只有单个搜索条件
   const searchQuery = val.split(':')
   localStorage.setItem('noticeParams', searchQuery)
-  location.href = `${location.protocol}//${location.host}/${hrefUrl}`
+  // 测试环境url多了点东西
+  let testUrlAppend = ''
+  if (location.hostname.split('.')[0] === 'test') {
+    testUrlAppend = 'ai-app-vue-boss-test/'
+  }
+  location.href = `${location.protocol}//${location.host}/${testUrlAppend}${hrefUrl}`
 }
