@@ -110,7 +110,10 @@ export default {
     },
     // 通往消息中心
     clickNoticeCenter() {
-      location.href = `${location.protocol}//${location.host}/notice-center/#/`
+      if (location.hostname.split('.')[0] === 'test') {
+        testUrlAppend = 'ai-app-vue-boss-test/'
+      }
+      location.href = `${location.protocol}//${location.host}/${testUrlAppend}notice-center/#/`
     },
     clickDetail(type, val) {
       noticeLinkTo(type, val)
