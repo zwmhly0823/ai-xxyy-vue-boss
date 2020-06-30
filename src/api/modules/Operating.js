@@ -3,8 +3,8 @@
  * @version:
  * @Author: Shentong
  * @Date: 2020-03-16 19:46:39
- * @LastEditors: panjian
- * @LastEditTime: 2020-06-12 11:53:58
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-06-30 17:05:57
  */
 import axios from '../axiosConfig'
 // import { getToken } from '@/utils/auth'
@@ -235,5 +235,13 @@ export default {
   // 查询验证码
   getVerification(parmas) {
     return axios.get(`/api/m/v1/sms/getCodeByMobile?mobile=${parmas}`)
+  },
+
+  /**
+   * 替换用户手机号
+   * v1/user/replaceMobile?staffId=1&oldMobile=13012345670&newMobile=13012345672
+   *  */
+  replaceMobile(param = {}) {
+    return axios.get(`/api/u/v1/user/replaceMobile?staffId`)
   }
 }
