@@ -50,7 +50,7 @@ export default {
     }
   },
   created() {
-    if (this.searchProp.name) {
+    if (this.searchProp && this.searchProp.name) {
       this.value = this.searchProp.value
       this.getUidByPhone(this.searchProp.value)
     }
@@ -132,7 +132,12 @@ export default {
     },
     getUidByPhone(num) {
       this.$http.User.searchUserByPhone(num).then((res) => {
-        if (res && res.data && res.data.UserListEx) {
+        if (
+          res &&
+          res.data &&
+          res.data.UserListEx &&
+          res.data.UserListEx.length
+        ) {
           this.$emit('result', { uid: res.data.UserListEx[0].id })
         }
         setTimeout(() => {

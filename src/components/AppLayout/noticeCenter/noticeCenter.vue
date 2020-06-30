@@ -7,7 +7,7 @@
       :modal-append-to-body="false"
     >
       <ul
-        class="drawer-list"
+        class="drawer-list infinite-list"
         v-loading="noticeLoading"
         v-if="noticeData.hasOwnProperty('code')"
       >
@@ -20,7 +20,7 @@
           <li
             v-for="(item, key) in listData"
             :key="key"
-            class="drawer-item"
+            class="drawer-item infinite-list-item"
             :class="[{ 'drawer-item-hover': item.hoverStatus }]"
             @mouseenter="mouseIn(key)"
             @mouseleave="mouseOut(key)"
@@ -89,7 +89,6 @@ export default {
     }
   },
   created() {
-    // console.log('打开了消息中心侧边栏')
     this.staffId = JSON.parse(localStorage.getItem('staff')).id
   },
   methods: {
@@ -131,7 +130,7 @@ export default {
               lItem.notifyTimeFormatted = formatData(lItem.notifyTime, 's')
             })
             this.noticeData = res
-            this.listData = res.payload.content
+            this.listData = this.listData.concat(res.payload.content)
           } else {
             this.$message.error('获取消息列表失败')
           }
@@ -166,6 +165,10 @@ export default {
           this.noticeLoading = false
           this.$message.error('修改失败')
         })
+    },
+    getNextPageData() {
+      this.curPage++
+      this.getListData()
     }
   }
 }
@@ -187,6 +190,7 @@ li {
     .drawer-list {
       border-top: 1px solid #f8f8f8;
       margin-bottom: 60px;
+      overflow: auto;
       .drawer-item {
         padding: 15px;
         .item-title {
