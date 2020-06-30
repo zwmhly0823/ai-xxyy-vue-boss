@@ -7,7 +7,7 @@
       :modal-append-to-body="false"
     >
       <ul
-        class="drawer-list infinite-list"
+        class="drawer-list"
         v-loading="noticeLoading"
         v-if="noticeData.hasOwnProperty('code')"
       >
@@ -20,7 +20,7 @@
           <li
             v-for="(item, key) in listData"
             :key="key"
-            class="drawer-item infinite-list-item"
+            class="drawer-item"
             :class="[{ 'drawer-item-hover': item.hoverStatus }]"
             @mouseenter="mouseIn(key)"
             @mouseleave="mouseOut(key)"
@@ -31,8 +31,9 @@
                 v-show="item.hoverStatus"
                 class="has-read"
                 @click="hasRead(item.id, key)"
-                >标为已读</span
               >
+                标为已读
+              </span>
               <span v-show="!item.hoverStatus" class="title-time">
                 {{ item.notifyTimeFormatted }}
               </span>
@@ -58,6 +59,9 @@
                 查看详情
               </el-button>
             </div>
+          </li>
+          <li>
+            <div ref="lazyLoadingBox" class="lazy-loading-box"></div>
           </li>
         </template>
       </ul>
@@ -95,16 +99,20 @@ export default {
     openDrawer() {
       this.showNoticeDrawer = true
       this.getListData()
+      // 滚动懒加载
+      this.$nextTick(() => {
+        this.initListener()
+      })
     },
     closeDrawer() {
       this.showNoticeDrawer = false
     },
-    mouseIn: debounce(function(index) {
+    mouseIn(index) {
       this.$set(this.listData[index], 'hoverStatus', true)
-    }, 100),
-    mouseOut: debounce(function(index) {
+    },
+    mouseOut(index) {
       this.$set(this.listData[index], 'hoverStatus', false)
-    }, 100),
+    },
     clickContent(index, val) {
       this.$set(this.listData[index], 'expand', val)
     },
@@ -135,6 +143,7 @@ export default {
             })
             this.noticeData = res
             this.listData = this.listData.concat(res.payload.content)
+            this.listData.length < 20 && this.removeListener()
           } else {
             this.$message.error('获取消息列表失败')
           }
@@ -173,7 +182,31 @@ export default {
     getNextPageData() {
       this.curPage++
       this.getListData()
-    }
+    },
+    initListener() {
+      document
+        .getElementsByClassName('el-drawer__body')[0]
+        .addEventListener('scroll', this.scrollEvent)
+    },
+    removeListener() {
+      document
+        .getElementsByClassName('el-drawer__body')[0]
+        .removeEventListener('scroll', this.scrollEvent)
+    },
+    scrollEvent: debounce(function() {
+      // 可视区域高度
+      const clientHeight =
+        document.documentElement.clientHeight || document.body.clientHeight
+      // 判定元素距离顶部的距离
+      const itemToTop = this.$refs.lazyLoadingBox.offsetTop
+      // 滚动距离
+      const scrollLong = document.getElementsByClassName('el-drawer__body')[0]
+        .scrollTop
+      // console.log(clientHeight, itemToTop, scrollLong)
+      if (clientHeight + scrollLong >= itemToTop + 60) {
+        this.getNextPageData()
+      }
+    }, 100)
   }
 }
 </script>
@@ -188,13 +221,15 @@ li {
 /deep/ .el-drawer__header span[role='heading']:focus {
   outline: 0;
 }
+/deep/ .el-drawer__body {
+  overflow: auto;
+}
 .notice-box {
   .notice-drawer {
     position: relative;
     .drawer-list {
       border-top: 1px solid #f8f8f8;
       margin-bottom: 60px;
-      overflow: auto;
       .drawer-item {
         padding: 15px;
         .item-title {
@@ -227,6 +262,10 @@ li {
         color: #b2b2b2;
         margin-top: 15px;
       }
+      .lazy-loading-box {
+        height: 10px;
+        background-color: #fff;
+      }
     }
     .drawer-bottom-button {
       position: absolute;
@@ -234,6 +273,7 @@ li {
       border-top: 1px solid #f8f8f8;
       width: 100%;
       height: 60px;
+      background-color: #fff;
     }
   }
 }
