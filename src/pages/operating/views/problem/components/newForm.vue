@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-06-28 17:11:05
  * @LastEditors: panjian
- * @LastEditTime: 2020-06-28 19:58:59
+ * @LastEditTime: 2020-06-30 16:08:24
 -->
 <template>
   <div class="new-form">
@@ -15,8 +15,8 @@
       label-width="100px"
       class="demo-ruleForm"
     >
-      <el-form-item label="问卷名称" prop="name">
-        <el-input v-model="ruleForm.name"></el-input>
+      <el-form-item label="问卷名称" prop="title">
+        <el-input v-model="ruleForm.title"></el-input>
       </el-form-item>
       <el-form-item label="问卷说明" prop="desc">
         <el-input type="textarea" v-model="ruleForm.desc"></el-input>
@@ -63,12 +63,13 @@ export default {
     return {
       dialogFormVisible: false,
       ruleForm: {
-        name: '',
+        title: '',
         desc: '',
-        imageUrl: ''
+        imageUrl: '',
+        questionState: 'DEFAULT'
       },
       rules: {
-        name: [{ required: true, message: '请输入活动名称', trigger: 'blur' }],
+        title: [{ required: true, message: '请输入活动名称', trigger: 'blur' }],
         desc: [{ required: true, message: '请填写活动形式', trigger: 'blur' }]
       }
     }
