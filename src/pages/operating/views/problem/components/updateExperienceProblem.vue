@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-06-28 18:37:21
  * @LastEditors: panjian
- * @LastEditTime: 2020-07-01 21:00:16
+ * @LastEditTime: 2020-07-01 21:17:00
 -->
 <template>
   <div class="experience-box">
@@ -30,7 +30,7 @@
     <div v-else style="width:100%">
       <div class="experience-problem-box1">
         <div class="experience-problem-text-box">
-          <div class="experience-problem-text">体验课调查问卷</div>
+          <div class="experience-problem-text">修改体验课调查问卷</div>
         </div>
         <el-form
           ref="ruleForms"
@@ -406,7 +406,7 @@ export default {
     align-items: center;
     .experience-problem-text {
       text-align: center;
-      width: 200px;
+      width: 250px;
       border-bottom-style: solid;
       border-bottom-color: #c2c2c2;
       border-bottom-width: 1px;
@@ -425,7 +425,7 @@ export default {
       justify-content: center;
       .experience-problem-text {
         text-align: center;
-        width: 200px;
+        width: 250px;
         border-bottom-style: solid;
         border-bottom-color: #c2c2c2;
         border-bottom-width: 1px;
