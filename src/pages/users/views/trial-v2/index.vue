@@ -628,7 +628,9 @@ export default {
         4: '已结课'
       },
       // 传给search的值
-      searchProp: {}
+      searchProp: {},
+      // 消息中心传过来的期数值
+      propTerm: ''
     }
   },
   watch: {
@@ -654,11 +656,20 @@ export default {
   methods: {
     paramsFromUrl() {
       const urlParams = localStorage.getItem('noticeParams')
-      urlParams &&
-        (this.searchProp = {
+      if (urlParams) {
+        this.searchProp = {
           name: urlParams.split(',')[0],
           value: urlParams.split(',')[1]
+        }
+        // 期数
+        let termIndex
+        urlParams.split(',').forEach((uItem, uKey) => {
+          if (uItem === 'period') {
+            termIndex = uKey
+          }
         })
+        this.propTerm = urlParams.split(',')[termIndex + 1]
+      }
     },
     getSearchQuery(res) {
       // console.log(res, 'search result')
@@ -709,8 +720,14 @@ export default {
           })
 
           this.manageMentList = _.orderBy(list, ['status'], ['desc'])
-          this.term =
-            this.manageMentList.length > 0 ? this.manageMentList[0].period : '0'
+          if (this.propTerm) {
+            this.term = this.propTerm
+          } else {
+            this.term =
+              this.manageMentList.length > 0
+                ? this.manageMentList[0].period
+                : '0'
+          }
         }
       })
     },
