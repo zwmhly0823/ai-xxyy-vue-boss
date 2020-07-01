@@ -77,15 +77,15 @@ export default {
         {
           name: '订单提醒',
           value: 4
-        },
-        {
-          name: '审批提醒',
-          value: 5
-        },
-        {
-          name: '营销提醒',
-          value: 6
         }
+        // {
+        //   name: '审批提醒',
+        //   value: 5
+        // },
+        // {
+        //   name: '营销提醒',
+        //   value: 6
+        // }
       ],
       actionBusiness: [
         {

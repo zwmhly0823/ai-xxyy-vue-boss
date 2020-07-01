@@ -29,6 +29,6 @@ export function noticeLinkTo(type, val) {
   if (location.href === targetHref) {
     location.reload()
   } else {
-    location.href = `${location.protocol}//${location.host}/${testUrlAppend}${hrefUrl}`
+    location.href = targetHref
   }
 }

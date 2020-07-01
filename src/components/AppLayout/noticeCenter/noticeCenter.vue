@@ -30,7 +30,7 @@
               <span
                 v-show="item.hoverStatus"
                 class="has-read"
-                @click="hasRead(item.id, key)"
+                @click="hasRead(item.id, key, true)"
               >
                 标为已读
               </span>
@@ -54,7 +54,7 @@
               <div class="small-text">{{ item.content }}</div>
               <el-button
                 type="text"
-                @click="clickDetail(item.typeId, item.jumpLink)"
+                @click="clickDetail(item.typeId, item.jumpLink, item.id, key)"
               >
                 查看详情
               </el-button>
@@ -98,6 +98,7 @@ export default {
   methods: {
     openDrawer() {
       this.showNoticeDrawer = true
+      this.listData = []
       this.getListData()
       // 滚动懒加载
       this.$nextTick(() => {
@@ -124,7 +125,9 @@ export default {
       }
       location.href = `${location.protocol}//${location.host}/${testUrlAppend}notice-center/#/`
     },
-    clickDetail(type, val) {
+    clickDetail(type, val, id, index) {
+      // 查看详情要触发标为已读
+      this.hasRead(id, index, false)
       noticeLinkTo(type, val)
     },
     getListData() {
@@ -155,7 +158,8 @@ export default {
         })
     },
     // 标为已读
-    hasRead(id, index) {
+    // clicked用户点击标为已读（true）还是从其他地方连带着触发的（false）
+    hasRead(id, index, clicked) {
       this.noticeLoading = true
       const query = {
         staffId: +this.staffId,
@@ -165,18 +169,23 @@ export default {
         .then((res) => {
           if (res.code === 0 && res.status === 'OK') {
             this.listData.splice(index, 1)
-            this.$message({
-              message: '修改成功',
-              type: 'success'
-            })
+            clicked &&
+              this.$message({
+                message: '修改成功',
+                type: 'success'
+              })
+            // 通过查看详情过来的话隐藏掉侧边栏
+            !clicked && this.closeDrawer()
+            // 角标消息数-1
+            this.$emit('reduceBadge')
           } else {
-            this.$message.error('修改失败')
+            clicked && this.$message.error('修改失败')
           }
           this.noticeLoading = false
         })
         .catch(() => {
           this.noticeLoading = false
-          this.$message.error('修改失败')
+          clicked && this.$message.error('修改失败')
         })
     },
     getNextPageData() {
