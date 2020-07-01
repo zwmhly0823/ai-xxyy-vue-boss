@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-06-16 16:27:14
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-06-25 11:48:15
+ * @LastEditTime: 2020-07-01 22:11:34
 -->
 <template>
   <div class="user-list">
@@ -18,507 +18,565 @@
         ></el-tab-pane>
         <el-tab-pane label="全部期学员" name="0"></el-tab-pane>
       </el-tabs>
-
-      <!-- search section -->
-      <search :searchProp="searchProp" @search="getSearchQuery" />
     </div>
 
-    <!-- 操作区 -->
-    <div class="handle-section">
-      <el-button size="mini" @click="sendMessage(false)"
-        >地址催发短信</el-button
+    <!-- container -->
+    <div class="trial-container d-flex">
+      <div
+        class="trial-container-sidebar d-flex"
+        :class="{ closed: !isOpened }"
       >
-    </div>
-    <!-- 数据统计 -->
-    <div class="statistics-section d-flex justify-between align-center">
-      <div class="statistics-section-left">
-        当前结果：学员共计 {{ totalElements }} 名
+        <!-- 体验课左侧快捷切换 -->
+        <trial-sidebar
+          :key="currentDate"
+          :todayTotal="todayTotal"
+          :tomorrowTotal="tomorrowTotal"
+          @filter="getFilter"
+          @toggle="handleToggle"
+        />
       </div>
-      <div class="statistics-section-right">
-        <tool-tip />
-      </div>
-    </div>
-    <!-- dom -->
-    <div class="tableInner" ref="tableInner"></div>
-    <!-- table -->
-    <el-table
-      :height="tableHeight"
-      :data="dataList"
-      empty-text=" "
-      @selection-change="handleSelectionChange"
-      @cell-mouse-enter="hoverRow"
-    >
-      <el-table-column type="selection" width="30"> </el-table-column>
-      <el-table-column label="ID" min-width="55" fixed>
-        <template slot-scope="scope">
-          <p v-if="scope.row.userInfo && scope.row.userInfo.user_num">
-            {{ scope.row.userInfo.user_num }}
-          </p>
-        </template>
-      </el-table-column>
-      <el-table-column label="用户" min-width="165" fixed>
-        <template slot-scope="scope">
-          <base-user-info
-            :user="scope.row.userInfo"
-            @handle-click="userHandle"
-          />
-        </template>
-      </el-table-column>
-      <el-table-column label="意向度" min-width="70" class-name="pdl-10">
-        <template slot-scope="scope">
-          <template
-            v-if="
-              !scope.row.userIntention || +scope.row.userIntention.type === 0
-            "
+      <div class="trial-container-body">
+        <!-- search section -->
+        <search
+          @search="getSearchQuery"
+          :key="currentDate"
+          :searchProp="searchProp"
+        />
+
+        <!-- 操作区 -->
+        <div class="handle-section">
+          <el-button size="mini" @click="sendMessage(false)"
+            >地址催发短信</el-button
           >
-            <i
-              class="el-icon-circle-plus-outline intention-icon"
-              @click="createIntention(scope.$index, scope.row.id)"
-            ></i>
-          </template>
-          <template v-else>
-            <el-select
-              v-model="scope.row.userIntention.type_name"
-              size="mini"
-              class="intent-select"
-              @change="intentChange($event, scope.$index)"
-              :class="[
-                {
-                  'intent-select-high': +scope.row.userIntention.type === 3,
-                  'intent-select-middle': +scope.row.userIntention.type === 2,
-                  'intent-select-low': +scope.row.userIntention.type === 1
-                }
-              ]"
-              popper-class="intent-option"
-            >
-              <el-option label="低" value="LOW"></el-option>
-              <el-option label="中" value="MIDDLE"></el-option>
-              <el-option label="高" value="HIGH"></el-option>
-            </el-select>
-          </template>
-        </template>
-      </el-table-column>
-      <el-table-column label="备注" min-width="150">
-        <template slot-scope="scope">
-          <template
-            v-if="
-              !scope.row.userIntention || scope.row.userIntention.type === 0
-            "
-          >
-            <i
-              class="el-icon-circle-plus-outline intention-icon"
-              @click="createIntention(scope.$index, scope.row.id)"
-            ></i>
-          </template>
-          <template v-else-if="!scope.row.userIntention.describe">
-            <i
-              class="el-icon-circle-plus-outline intention-icon"
-              @click="intentDescribeChange(scope.$index, scope.row.id)"
-            ></i>
-          </template>
-          <template v-else>
-            <div class="remarks-content">
-              <el-popover
-                placement="top-start"
-                trigger="hover"
-                :content="scope.row.userIntention.describe"
+        </div>
+        <!-- 数据统计 -->
+        <div class="statistics-section d-flex justify-between align-center">
+          <div class="statistics-section-left">
+            当前结果：学员共计 {{ totalElements }} 名
+          </div>
+          <div class="statistics-section-right">
+            <tool-tip />
+          </div>
+        </div>
+        <!-- dom -->
+        <div class="tableInner" ref="tableInner"></div>
+        <!-- table -->
+        <el-table
+          :height="tableHeight"
+          :data="dataList"
+          empty-text=" "
+          @selection-change="handleSelectionChange"
+          @cell-mouse-enter="hoverRow"
+        >
+          <el-table-column type="selection" width="30"> </el-table-column>
+          <el-table-column label="用户" min-width="165" fixed>
+            <template slot-scope="scope">
+              <base-user-info
+                :user="scope.row.userInfo"
+                @handle-click="userHandle"
+              />
+            </template>
+          </el-table-column>
+          <el-table-column label="意向度" min-width="70" class-name="pdl-10">
+            <template slot-scope="scope">
+              <template
+                v-if="
+                  !scope.row.userIntention ||
+                    +scope.row.userIntention.type === 0
+                "
               >
-                <div slot="reference" class="remarks-text">
-                  {{ scope.row.userIntention.describe }}
+                <i
+                  class="el-icon-circle-plus-outline intention-icon"
+                  @click="createIntention(scope.$index, scope.row.id)"
+                ></i>
+              </template>
+              <template v-else>
+                <el-select
+                  v-model="scope.row.userIntention.type_name"
+                  size="mini"
+                  class="intent-select"
+                  @change="intentChange($event, scope.$index)"
+                  :class="[
+                    {
+                      'intent-select-none': +scope.row.userIntention.type === 4,
+                      'intent-select-high': +scope.row.userIntention.type === 3,
+                      'intent-select-middle':
+                        +scope.row.userIntention.type === 2,
+                      'intent-select-low': +scope.row.userIntention.type === 1
+                    }
+                  ]"
+                  popper-class="intent-option"
+                >
+                  <el-option label="无" value="NONE"></el-option>
+                  <el-option label="低" value="LOW"></el-option>
+                  <el-option label="中" value="MIDDLE"></el-option>
+                  <el-option label="高" value="HIGH"></el-option>
+                </el-select>
+              </template>
+            </template>
+          </el-table-column>
+          <el-table-column label="沟通备注" min-width="150">
+            <template slot-scope="scope">
+              <template
+                v-if="
+                  !scope.row.userIntention ||
+                    +scope.row.userIntention.type === 0
+                "
+              >
+                <i
+                  class="el-icon-circle-plus-outline intention-icon"
+                  @click="createIntention(scope.$index, scope.row.id)"
+                ></i>
+              </template>
+              <template
+                v-else-if="
+                  !scope.row.userIntention.describe &&
+                    +scope.row.userIntention.is_track === 0
+                "
+              >
+                <i
+                  class="el-icon-circle-plus-outline intention-icon"
+                  @click="intentDescribeChange(scope.$index, scope.row.id)"
+                ></i>
+              </template>
+              <template v-else>
+                <div class="remarks-content">
+                  <div class="d-flex flex-1 align-center">
+                    <span
+                      class="time-icon-text"
+                      v-if="
+                        +scope.row.userIntention.today === today &&
+                          +scope.row.userIntention.is_track === 1
+                      "
+                      ><span class="time-icon-text-t red-color">今</span
+                      ><svg class="iconfont" aria-hidden="true">
+                        <use xlink:href="#iconnaozhong"></use></svg
+                    ></span>
+                    <span
+                      class="time-icon-text"
+                      v-if="
+                        +scope.row.userIntention.today === tomorrow &&
+                          +scope.row.userIntention.is_track === 1
+                      "
+                      ><span class="time-icon-text-t red-color">明</span
+                      ><svg class="iconfont" aria-hidden="true">
+                        <use xlink:href="#iconnaozhong"></use></svg
+                    ></span>
+                    <el-popover
+                      class="flex-1"
+                      placement="top-start"
+                      trigger="hover"
+                      :content="scope.row.userIntention.describe"
+                    >
+                      <div slot="reference" class="remarks-text">
+                        {{ scope.row.userIntention.describe }}
+                      </div>
+                    </el-popover>
+                  </div>
+                  <i
+                    class="el-icon-edit"
+                    @click="intentDescribeChange(scope.$index, scope.row.id)"
+                  ></i>
                 </div>
-              </el-popover>
-              <i
-                class="el-icon-edit"
-                @click="intentDescribeChange(scope.$index, scope.row.id)"
-              ></i>
-            </div>
-          </template>
-        </template>
-      </el-table-column>
-      <el-table-column label="标签" min-width="150">
-        <template slot-scope="scope">
-          <!-- <template
-            v-if="!scope.row.user_label || scope.row.user_label === '-'"
-          >
-            <i
+              </template>
+            </template>
+          </el-table-column>
+
+          <el-table-column label="参课" min-width="150">
+            <template slot="header">
+              <div
+                class="sort-operate-box"
+                @click="sortRules('join_course_count')"
+              >
+                <span>参课</span>
+                <div class="sort-icon-arrow">
+                  <i
+                    class="el-icon-caret-top top-color"
+                    :class="{
+                      active:
+                        sortKeys['join_course_count'] != 'asc' &&
+                        sortActive == 'join_course_count'
+                    }"
+                  ></i>
+                  <i
+                    class="el-icon-caret-bottom bottom"
+                    :class="{
+                      active:
+                        sortKeys['join_course_count'] == 'asc' &&
+                        sortActive == 'join_course_count'
+                    }"
+                  ></i>
+                </div>
+              </div>
+            </template>
+            <template slot-scope="scope">
+              <p>
+                次数:
+                <span>{{ scope.row.all_join_course_count }}</span>
+                节数:
+                <span class="red-color">{{ scope.row.join_course_count }}</span
+                >/{{ scope.row.send_course_count }}
+              </p>
+              <p>
+                最近：{{
+                  formatDate(scope.row.last_join_time, 'shortDay') || '-'
+                }}
+              </p>
+            </template>
+          </el-table-column>
+          <el-table-column label="完课" min-width="140">
+            <template slot="header">
+              <div
+                class="sort-operate-box"
+                @click="sortRules('complete_course_count')"
+              >
+                <span>完课</span>
+                <div class="sort-icon-arrow">
+                  <i
+                    class="el-icon-caret-top top-color"
+                    :class="{
+                      active:
+                        sortKeys['complete_course_count'] != 'asc' &&
+                        sortActive == 'complete_course_count'
+                    }"
+                  ></i>
+                  <i
+                    class="el-icon-caret-bottom bottom"
+                    :class="{
+                      active:
+                        sortKeys['complete_course_count'] == 'asc' &&
+                        sortActive == 'complete_course_count'
+                    }"
+                  ></i>
+                </div>
+              </div>
+            </template>
+            <template slot-scope="scope">
+              <p>
+                次数:
+                <span>
+                  {{ scope.row.all_complete_course_count }}
+                </span>
+                节数:
+                <span class="red-color">
+                  {{ scope.row.complete_course_count }}</span
+                >/{{ scope.row.send_course_count }}
+              </p>
+              <p>
+                最近：{{
+                  formatDate(scope.row.last_complete_time, 'shortDay') || '-'
+                }}
+              </p>
+            </template>
+          </el-table-column>
+          <el-table-column label="传作品" min-width="70">
+            <template slot="header">
+              <div class="sort-operate-box" @click="sortRules('task_count')">
+                <span>传作品</span>
+                <div class="sort-icon-arrow">
+                  <i
+                    class="el-icon-caret-top top-color"
+                    :class="{
+                      active:
+                        sortKeys['task_count'] != 'asc' &&
+                        sortActive == 'task_count'
+                    }"
+                  ></i>
+                  <i
+                    class="el-icon-caret-bottom bottom"
+                    :class="{
+                      active:
+                        sortKeys['task_count'] == 'asc' &&
+                        sortActive == 'task_count'
+                    }"
+                  ></i>
+                </div>
+              </div>
+            </template>
+            <template slot-scope="scope">
+              <p v-if="scope.row.task_count > 0">
+                <span>{{ scope.row.task_count }}</span>
+              </p>
+              <span v-else>-</span>
+            </template>
+          </el-table-column>
+          <el-table-column label="点评" min-width="100">
+            <template slot="header">
+              <div
+                class="sort-operate-box"
+                @click="sortRules('listen_comment_count')"
+              >
+                <span>点评</span>
+                <div class="sort-icon-arrow">
+                  <i
+                    class="el-icon-caret-top top-color"
+                    :class="{
+                      active:
+                        sortKeys['listen_comment_count'] != 'asc' &&
+                        sortActive == 'listen_comment_count'
+                    }"
+                  ></i>
+                  <i
+                    class="el-icon-caret-bottom bottom"
+                    :class="{
+                      active:
+                        sortKeys['listen_comment_count'] == 'asc' &&
+                        sortActive == 'listen_comment_count'
+                    }"
+                  ></i>
+                </div>
+              </div>
+            </template>
+            <template slot-scope="scope">
+              <p>
+                已听作品:
+                <span>{{ scope.row.listen_comment_count }}</span>
+              </p>
+              <p>点评作品: {{ scope.row.comment_count }}</p>
+            </template>
+          </el-table-column>
+
+          <el-table-column label="标签" min-width="150">
+            <template slot-scope="scope">
+              <template
+                v-if="!scope.row.user_label || scope.row.user_label === '-'"
+              >
+                <!-- <i
               class="el-icon-circle-plus-outline intention-icon"
               @click="onLabel"
-            ></i>
-          </template> -->
-          <div class="remarks-content">
-            <el-popover
-              placement="top-start"
-              trigger="hover"
-              :content="scope.row.user_label"
-              v-if="scope.row.user_label"
-            >
-              <div slot="reference" class="remarks-text">
-                {{ scope.row.user_label }}
-              </div>
-            </el-popover>
-            <div v-else class="remarks-text">
-              -
-            </div>
-            <!-- <i class="el-icon-edit" @click="onLabel"></i> -->
-          </div>
-        </template>
-      </el-table-column>
+            ></i> -->
+                <p>-</p>
+              </template>
+              <template v-else>
+                <div class="remarks-content">
+                  <el-popover
+                    placement="top-start"
+                    trigger="hover"
+                    :content="scope.row.user_label"
+                  >
+                    <div slot="reference" class="remarks-text">
+                      {{ scope.row.user_label }}
+                    </div>
+                  </el-popover>
+                  <!-- <i class="el-icon-edit" @click="onLabel"></i> -->
+                </div>
+              </template>
+            </template>
+          </el-table-column>
 
-      <el-table-column label="参课" min-width="130">
-        <template slot="header">
-          <div
-            class="sort-operate-box"
-            @click="sortRules('all_join_course_count')"
-          >
-            <span>参课</span>
-            <div class="sort-icon-arrow">
-              <i
-                class="el-icon-caret-top top-color"
-                :class="{
-                  active:
-                    sortKeys['all_join_course_count'] != 'asc' &&
-                    sortActive == 'all_join_course_count'
-                }"
-              ></i>
-              <i
-                class="el-icon-caret-bottom bottom"
-                :class="{
-                  active:
-                    sortKeys['all_join_course_count'] == 'asc' &&
-                    sortActive == 'all_join_course_count'
-                }"
-              ></i>
-            </div>
-          </div>
-        </template>
-        <template slot-scope="scope">
-          <p>
-            总次数:
-            <span class="red-color ">{{
-              scope.row.all_join_course_count
-            }}</span>
-            节数:
-            <span>{{ scope.row.join_course_count }}</span
-            >/{{ scope.row.send_course_count }}
-          </p>
-          <p>
-            最近：{{ formatDate(scope.row.last_join_time, 'shortDay') || '-' }}
-          </p>
-        </template>
-      </el-table-column>
-      <el-table-column label="完课" min-width="130">
-        <template slot="header">
-          <div
-            class="sort-operate-box"
-            @click="sortRules('all_complete_course_count')"
-          >
-            <span>完课</span>
-            <div class="sort-icon-arrow">
-              <i
-                class="el-icon-caret-top top-color"
-                :class="{
-                  active:
-                    sortKeys['all_complete_course_count'] != 'asc' &&
-                    sortActive == 'all_complete_course_count'
-                }"
-              ></i>
-              <i
-                class="el-icon-caret-bottom bottom"
-                :class="{
-                  active:
-                    sortKeys['all_complete_course_count'] == 'asc' &&
-                    sortActive == 'all_complete_course_count'
-                }"
-              ></i>
-            </div>
-          </div>
-        </template>
-        <template slot-scope="scope">
-          <p>
-            总次数:
-            <span class="red-color ">
-              {{ scope.row.all_complete_course_count }}
-            </span>
-            节数:
-            <span> {{ scope.row.complete_course_count }}</span
-            >/{{ scope.row.send_course_count }}
-          </p>
-          <p>
-            最近：{{
-              formatDate(scope.row.last_complete_time, 'shortDay') || '-'
-            }}
-          </p>
-        </template>
-      </el-table-column>
-      <el-table-column label="传作品" min-width="70">
-        <template slot="header">
-          <div class="sort-operate-box" @click="sortRules('task_count')">
-            <span>传作品</span>
-            <div class="sort-icon-arrow">
-              <i
-                class="el-icon-caret-top top-color"
-                :class="{
-                  active:
-                    sortKeys['task_count'] != 'asc' &&
-                    sortActive == 'task_count'
-                }"
-              ></i>
-              <i
-                class="el-icon-caret-bottom bottom"
-                :class="{
-                  active:
-                    sortKeys['task_count'] == 'asc' &&
-                    sortActive == 'task_count'
-                }"
-              ></i>
-            </div>
-          </div>
-        </template>
-        <template slot-scope="scope">
-          <p v-if="scope.row.task_count > 0">
-            <span>{{ scope.row.task_count }}</span>
-          </p>
-          <span v-else>-</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="点评" min-width="100">
-        <template slot="header">
-          <div
-            class="sort-operate-box"
-            @click="sortRules('listen_comment_count')"
-          >
-            <span>点评</span>
-            <div class="sort-icon-arrow">
-              <i
-                class="el-icon-caret-top top-color"
-                :class="{
-                  active:
-                    sortKeys['listen_comment_count'] != 'asc' &&
-                    sortActive == 'listen_comment_count'
-                }"
-              ></i>
-              <i
-                class="el-icon-caret-bottom bottom"
-                :class="{
-                  active:
-                    sortKeys['listen_comment_count'] == 'asc' &&
-                    sortActive == 'listen_comment_count'
-                }"
-              ></i>
-            </div>
-          </div>
-        </template>
-        <template slot-scope="scope">
-          <p>
-            已听作品:
-            <span>{{ scope.row.listen_comment_count }}</span>
-          </p>
-          <p>点评作品: {{ scope.row.comment_count }}</p>
-        </template>
-      </el-table-column>
-
-      <el-table-column label="添加微信" min-width="60">
-        <template slot-scope="scope">
-          <el-switch
-            v-model="scope.row.added_wechat"
-            active-color="#3582fb"
-            inactive-color="#DCDFE6"
-            :active-value="1"
-            :inactive-value="0"
-            @change="changeSwitch($event, scope.row, scope.$index, 'wechat')"
-          >
-          </el-switch>
-        </template>
-      </el-table-column>
-      <el-table-column label="进群" min-width="60">
-        <template slot-scope="scope">
-          <el-switch
-            v-model="scope.row.added_group"
-            active-color="#3582fb"
-            inactive-color="#DCDFE6"
-            :active-value="1"
-            :inactive-value="0"
-            @change="changeSwitch($event, scope.row, scope.$index, 'group')"
-          >
-          </el-switch>
-        </template>
-      </el-table-column>
-      <el-table-column label="公众号" min-width="60">
-        <template slot-scope="scope">
-          <span v-if="!scope.row.follow || +scope.row.follow === 0">
-            -
-          </span>
-          <i v-else class="el-icon-check"></i>
-        </template>
-      </el-table-column>
-      <el-table-column label="盒子物流" min-width="80">
-        <template slot-scope="scope">
-          <div class="d-flex align-center space-between">
-            <p
-              :class="{
-                'red-color':
-                  scope.row.expressInfo &&
-                  +scope.row.expressInfo.express_status === 0
-              }"
-            >
-              {{
-                expressStatus(
-                  scope.row.expressInfo && scope.row.expressInfo.express_status
-                )
-              }}
-            </p>
-            <!-- 待审核状态需要编辑物流地址，这版先不做 -->
-            <!--  +scope.row.expressInfo.express_status === 6 -->
-            <i
-              class="el-icon-edit"
-              v-if="
-                scope.row.expressInfo &&
-                  +scope.row.expressInfo.express_status === 0
-              "
-              @click="modifyAddress(scope.row)"
-            ></i>
-          </div>
-        </template>
-      </el-table-column>
-      <el-table-column label="归属地" min-width="100">
-        <template slot-scope="scope">
-          <p
-            v-if="
-              scope.row.userInfo &&
-                scope.row.userInfo.mobile_province &&
-                scope.row.userInfo.mobile_city
-            "
-          >
-            {{ scope.row.userInfo.mobile_province }} ·
-            {{ scope.row.userInfo.mobile_city }}
-          </p>
-          <p
-            v-else-if="
-              (scope.row.userInfo && scope.row.userInfo.mobile_province) ||
-                (scope.row.userInfo && scope.row.userInfo.mobile_city)
-            "
-          >
-            {{
-              scope.row.userInfo.mobile_province ||
-                scope.row.userInfo.mobile_city
-            }}
-          </p>
-          <p v-else>-</p>
-        </template>
-      </el-table-column>
-      <el-table-column label="APP登录" min-width="140">
-        <template slot-scope="scope">
-          <p v-if="scope.row.userLoginDataInfo">
-            {{ scope.row.userLoginDataInfo.device_type }}
-          </p>
-          <p>
-            {{
-              scope.row.last_login_time !== '0'
-                ? formatDate(scope.row.last_login_time)
-                : '-'
-            }}
-          </p>
-        </template>
-      </el-table-column>
-      <el-table-column label="体验课班级·销售" min-width="120">
-        <template slot-scope="scope">
-          <p v-if="!scope.row.teamInfo">
-            -
-          </p>
-          <p
-            v-else-if="
-              scope.row.teamInfo && scope.row.teamInfo.team_name === '-'
-            "
-          >
-            -
-          </p>
-          <p class="btn-text " v-else @click="openTeam(scope.row)">
-            {{ scope.row.teamInfo.team_name }}
-          </p>
-          <p>
-            {{
-              scope.row.teacherInfo && scope.row.teacherInfo.realname
-                ? scope.row.teacherInfo.realname
-                : '-'
-            }}
-            {{
-              scope.row.teacherInfo &&
-              scope.row.teacherInfo.departmentInfo &&
-              scope.row.teacherInfo.departmentInfo.name
-                ? scope.row.teacherInfo.departmentInfo.name
-                : '-'
-            }}
-          </p>
-        </template>
-      </el-table-column>
-      <!-- 渠道：TOSS端 组员 rankId="3"不显示 -->
-      <el-table-column label="渠道" min-width="100">
-        <template slot-scope="scope">
-          <span v-if="scope.row.payChannelInfo">
-            {{ scope.row.payChannelInfo.channel_outer_name }}
-          </span>
-        </template>
-      </el-table-column>
-      <el-table-column label="转化" min-width="60" fixed="right">
-        <template slot-scope="scope">
-          <span
-            :class="[
-              {
-                'red-color': scope.row.user_status_name === '未转化'
-              }
-            ]"
-          >
-            {{ scope.row.user_status_name }}
-          </span>
-        </template>
-      </el-table-column>
-      <el-table-column label="操作" min-width="60" fixed="right">
-        <template slot-scope="scope">
-          <el-dropdown
-            size="mini"
-            @command="handleColumnCommand($event, scope.row, scope.$index)"
-            @visible-change="handleCommandChange"
-          >
-            <span class="el-dropdown-link primary-text">
-              操作<i class="el-icon-arrow-down el-icon--right"></i>
-            </span>
-            <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item command="1">沟通备注</el-dropdown-item>
-              <!-- 只有无地址状态的才可以催发地址短信 -->
-              <el-dropdown-item
-                command="2"
-                v-if="
-                  scope.row.expressInfo &&
-                    +scope.row.expressInfo.express_status === 0
+          <el-table-column label="添加微信" min-width="60">
+            <template slot-scope="scope">
+              <el-switch
+                v-model="scope.row.added_wechat"
+                active-color="#3582fb"
+                inactive-color="#DCDFE6"
+                :active-value="1"
+                :inactive-value="0"
+                @change="
+                  changeSwitch($event, scope.row, scope.$index, 'wechat')
                 "
-                >催发地址短信</el-dropdown-item
               >
-              <el-dropdown-item command="3">发优惠券</el-dropdown-item>
-              <!-- <el-dropdown-item command="4">添加标签</el-dropdown-item> -->
-            </el-dropdown-menu>
-          </el-dropdown>
-        </template>
-      </el-table-column>
-    </el-table>
+              </el-switch>
+            </template>
+          </el-table-column>
+          <el-table-column label="进群" min-width="60">
+            <template slot-scope="scope">
+              <el-switch
+                v-model="scope.row.added_group"
+                active-color="#3582fb"
+                inactive-color="#DCDFE6"
+                :active-value="1"
+                :inactive-value="0"
+                @change="changeSwitch($event, scope.row, scope.$index, 'group')"
+              >
+              </el-switch>
+            </template>
+          </el-table-column>
+          <el-table-column label="公众号" min-width="60">
+            <template slot-scope="scope">
+              <span v-if="!scope.row.follow || +scope.row.follow === 0">
+                -
+              </span>
+              <i v-else class="el-icon-check"></i>
+            </template>
+          </el-table-column>
+          <el-table-column label="盒子物流" min-width="80">
+            <template slot-scope="scope">
+              <div class="d-flex align-center space-between">
+                <p
+                  :class="{
+                    'red-color':
+                      scope.row.expressInfo &&
+                      +scope.row.expressInfo.express_status === 0
+                  }"
+                >
+                  {{
+                    expressStatus(
+                      scope.row.expressInfo &&
+                        scope.row.expressInfo.express_status
+                    )
+                  }}
+                </p>
+                <!-- 待审核状态需要编辑物流地址，这版先不做 -->
+                <!--  +scope.row.expressInfo.express_status === 6 -->
+                <i
+                  class="el-icon-edit"
+                  v-if="
+                    scope.row.expressInfo &&
+                      +scope.row.expressInfo.express_status === 0
+                  "
+                  @click="modifyAddress(scope.row)"
+                ></i>
+              </div>
+            </template>
+          </el-table-column>
+          <el-table-column label="归属地" min-width="100">
+            <template slot-scope="scope">
+              <p
+                v-if="
+                  scope.row.userInfo &&
+                    scope.row.userInfo.mobile_province &&
+                    scope.row.userInfo.mobile_city
+                "
+              >
+                {{ scope.row.userInfo.mobile_province }} ·
+                {{ scope.row.userInfo.mobile_city }}
+              </p>
+              <p
+                v-else-if="
+                  (scope.row.userInfo && scope.row.userInfo.mobile_province) ||
+                    (scope.row.userInfo && scope.row.userInfo.mobile_city)
+                "
+              >
+                {{
+                  scope.row.userInfo.mobile_province ||
+                    scope.row.userInfo.mobile_city
+                }}
+              </p>
+              <p v-else>-</p>
+            </template>
+          </el-table-column>
+          <el-table-column label="APP登录" min-width="140">
+            <template slot-scope="scope">
+              <p v-if="scope.row.userLoginDataInfo">
+                {{ scope.row.userLoginDataInfo.device_type }}
+              </p>
+              <p>
+                {{
+                  scope.row.last_login_time !== '0'
+                    ? formatDate(scope.row.last_login_time)
+                    : '-'
+                }}
+              </p>
+            </template>
+          </el-table-column>
+          <el-table-column label="体验课班级·销售" min-width="120">
+            <template slot-scope="scope">
+              <p v-if="!scope.row.teamInfo">
+                -
+              </p>
+              <p
+                v-else-if="
+                  scope.row.teamInfo && scope.row.teamInfo.team_name === '-'
+                "
+              >
+                -
+              </p>
+              <p class="btn-text " v-else @click="openTeam(scope.row)">
+                {{ scope.row.teamInfo.team_name }}
+              </p>
+              <p>
+                {{
+                  scope.row.teacherInfo && scope.row.teacherInfo.realname
+                    ? scope.row.teacherInfo.realname
+                    : '-'
+                }}
+                {{
+                  scope.row.teacherInfo &&
+                  scope.row.teacherInfo.departmentInfo &&
+                  scope.row.teacherInfo.departmentInfo.name
+                    ? scope.row.teacherInfo.departmentInfo.name
+                    : '-'
+                }}
+              </p>
+            </template>
+          </el-table-column>
+          <el-table-column label="渠道" min-width="100">
+            <template slot-scope="scope">
+              <span v-if="scope.row.payChannelInfo">
+                {{ scope.row.payChannelInfo.channel_outer_name }}
+              </span>
+            </template>
+          </el-table-column>
+          <el-table-column label="ID" min-width="55">
+            <template slot-scope="scope">
+              <p v-if="scope.row.userInfo && scope.row.userInfo.user_num">
+                {{ scope.row.userInfo.user_num }}
+              </p>
+            </template>
+          </el-table-column>
+          <el-table-column label="转化" min-width="60" fixed="right">
+            <template slot-scope="scope">
+              <span
+                :class="[
+                  {
+                    'red-color': scope.row.user_status_name === '未转化'
+                  }
+                ]"
+              >
+                {{ scope.row.user_status_name }}
+              </span>
+            </template>
+          </el-table-column>
+          <el-table-column label="操作" min-width="60" fixed="right">
+            <template slot-scope="scope">
+              <el-dropdown
+                size="mini"
+                @command="handleColumnCommand($event, scope.row, scope.$index)"
+                @visible-change="handleCommandChange"
+              >
+                <span class="el-dropdown-link primary-text">
+                  操作<i class="el-icon-arrow-down el-icon--right"></i>
+                </span>
+                <el-dropdown-menu slot="dropdown">
+                  <el-dropdown-item command="1">沟通备注</el-dropdown-item>
+                  <!-- 只有无地址状态的才可以催发地址短信 -->
+                  <el-dropdown-item
+                    command="2"
+                    v-if="
+                      scope.row.expressInfo &&
+                        +scope.row.expressInfo.express_status === 0
+                    "
+                    >催发地址短信</el-dropdown-item
+                  >
+                  <el-dropdown-item command="3">发优惠券</el-dropdown-item>
+                  <!-- <el-dropdown-item command="4">添加标签</el-dropdown-item> -->
+                </el-dropdown-menu>
+              </el-dropdown>
+            </template>
+          </el-table-column>
+        </el-table>
 
-    <div class="empty-text" v-if="dataList.length === 0">暂无数据</div>
+        <div class="empty-text" v-if="dataList.length === 0">暂无数据</div>
 
-    <m-pagination
-      :current-page="currentPage"
-      :page-count="totalPages"
-      :total="totalElements"
-      @current-change="handleSizeChange"
-      show-pager
-      open="calc(100vw - 170px - 25px)"
-      close="calc(100vw - 50px - 25px)"
-    ></m-pagination>
+        <m-pagination
+          :current-page="currentPage"
+          :page-count="totalPages"
+          :total="totalElements"
+          @current-change="handleSizeChange"
+          show-pager
+          open="calc(100vw - 170px - 25px)"
+          close="calc(100vw - 50px - 25px)"
+        ></m-pagination>
+      </div>
+    </div>
 
     <!-- 无地址页面修改地址弹框 -->
     <el-dialog
       :close-on-click-modal="false"
       :visible.sync="showModifyAddress"
       width="30%"
-      title="修改收货信息"
+      title="添加收货信息"
     >
       <modify-address
         @addExpress="handleModifyAddress"
@@ -548,6 +606,7 @@
 
 <script>
 import _ from 'lodash'
+import { todayTimestamp, tomorrowTimestamp } from '../../utils'
 import MPagination from '@/components/MPagination/index.vue'
 import BaseUserInfo from '../../components/BaseUserInfo.vue'
 import ModifyAddress from '../../components/ModifyAddress.vue'
@@ -559,6 +618,7 @@ import { FOLLOW_EXPRESS_STATUS } from '@/utils/enums'
 import Search from '../../components/Search.vue'
 import ToolTip from '../../components/ToolTip.vue'
 import SendCoupon from '../../components/SendCoupon.vue'
+import TrialSidebar from '../../components/trial/TrialSidebar.vue'
 export default {
   name: 'trialUsers',
   components: {
@@ -569,19 +629,13 @@ export default {
     intentionDialog,
     Search,
     ToolTip,
-    SendCoupon
-  },
-  props: {
-    // 查询条件
-    // search: {
-    //   type: Object,
-    //   default: () => ({})
-    // }
+    SendCoupon,
+    TrialSidebar
   },
   computed: {
     searchParams() {
-      const search = this.search
-      console.log(this.term)
+      const search = Object.assign({}, this.search)
+      console.log(search)
 
       if (this.term && +this.term !== 0) {
         Object.assign(search, { term: this.term })
@@ -589,7 +643,40 @@ export default {
       if (+this.term === 0) {
         delete search.term
       }
+      // filter 与 search params 组合
+      Object.assign(search, this.filterParams)
+      // 系统课转化学员条件冲突，处理交互 TODO: 待优化
+      if (this.filterParams) {
+        if (this.filterParams.user_status) {
+          // 已转化学员
+          if (
+            this.search.user_status &&
+            this.filterParams.user_status.gte === 3
+          ) {
+            if (this.search.user_status.lte !== 2) {
+              Object.assign(search, { user_status: this.search.user_status })
+            } else {
+              Object.assign(search, { user_status: { gte: 3, lte: 2 } })
+            }
+          }
+          // 未转化学员
+          if (
+            this.search.user_status &&
+            this.filterParams.user_status.lte === 2
+          ) {
+            if (this.search.user_status.lte !== 2) {
+              Object.assign(search, { user_status: { gte: 3, lte: 2 } })
+            }
+          }
+        }
+      }
       return search
+    },
+    today() {
+      return todayTimestamp()
+    },
+    tomorrow() {
+      return tomorrowTimestamp()
     }
   },
   data() {
@@ -614,8 +701,8 @@ export default {
       currentUser: {}, // 当前选择用户
       couponData: [],
       sortKeys: {
-        all_join_course_count: 'desc',
-        all_complete_course_count: 'desc',
+        join_course_count: 'desc',
+        complete_course_count: 'desc',
         task_count: 'desc',
         listen_comment_count: 'desc'
       },
@@ -630,14 +717,32 @@ export default {
       // 传给search的值
       searchProp: {},
       // 消息中心传过来的期数值
-      propTerm: ''
+      propTerm: '',
+      filterParams: {},
+      isOpened: true,
+      currentDate: '',
+      todayTotal: 0,
+      tomorrowTotal: 0
     }
   },
   watch: {
+    // 切换期数，清空搜索及筛选项
+    term(val, old) {
+      console.log(val, old)
+      this.currentDate = new Date().getTime()
+      this.search = []
+      this.filterParams = {}
+    },
+
     searchParams(params) {
       console.log(params)
       this.currentPage = 1
       this.getData()
+      // 获取今日、明日待跟进数量
+      setTimeout(() => {
+        this.getTodayCount()
+        this.getTodayCount('tomorrow')
+      }, 500)
     }
   },
   created() {
@@ -702,6 +807,17 @@ export default {
       return this.$http.User.ManagementForTeacherList(params).then((res) => {
         console.log(res)
         if (res && res.data && res.data.ManagementForTeacherList) {
+          if (res.data.ManagementForTeacherList.length === 0) {
+            this.term = '0'
+            this.getData()
+            // 获取今日、明日待跟进数量
+            setTimeout(() => {
+              this.getTodayCount()
+              this.getTodayCount('tomorrow')
+            }, 500)
+            return
+          }
+
           // 只显示开课中和待开课的期数 status // 1 招生中   2待开课   3 开课中  4 已结课',
           const arr = res.data.ManagementForTeacherList.filter(
             (item) =>
@@ -785,8 +901,9 @@ export default {
           loading.close()
         })
     },
+    // 格式化数据
     initName(data) {
-      const intentionArr = ['低', '中', '高']
+      const intentionArr = ['低', '中', '高', '无']
       data.forEach((item) => {
         if (item.userIntention && item.userIntention.type) {
           item.userIntention.type_name =
@@ -851,7 +968,9 @@ export default {
        */
       const params = {
         userid: row.id,
-        orderid: row.orderInfo.trial_course.order_no,
+        orderid:
+          (row.orderInfo.trial_course && row.orderInfo.trial_course.order_no) ||
+          row.order_no,
         id: row.express_id
       }
       this.modifyFormData = params
@@ -924,10 +1043,12 @@ export default {
       IntentionMap1.set('低', 'LOW')
       IntentionMap1.set('中', 'MIDDLE')
       IntentionMap1.set('高', 'HIGH')
+      IntentionMap1.set('无', 'NONE')
       const IntentionMap2 = new Map()
       IntentionMap2.set('低', 1)
       IntentionMap2.set('中', 2)
       IntentionMap2.set('高', 3)
+      IntentionMap2.set('无', 4)
       const urlMap = new Map()
       // 是新增还是修改
       urlMap.set('create', 'createUserInetention')
@@ -936,7 +1057,8 @@ export default {
       const query = {
         uid: this.curModifyItem.uid,
         type: IntentionMap1.get(data.radio),
-        describe: data.textarea
+        describe: data.textarea,
+        ...data.track
       }
       this.$http.User[urlMap.get(this.curModifyItem.type)](query)
         .then((res) => {
@@ -947,7 +1069,9 @@ export default {
               {
                 type: IntentionMap2.get(data.radio),
                 type_name: data.radio,
-                describe: data.textarea
+                describe: data.textarea || '',
+                is_track: data.track.isTrack,
+                today: data.track.today
               }
             )
             this.$set(
@@ -972,10 +1096,14 @@ export default {
       IntentionMap1.set('LOW', '低')
       IntentionMap1.set('MIDDLE', '中')
       IntentionMap1.set('HIGH', '高')
+      IntentionMap1.set('NONE', '无')
+
       const IntentionMap2 = new Map()
       IntentionMap2.set('LOW', 1)
       IntentionMap2.set('MIDDLE', 2)
       IntentionMap2.set('HIGH', 3)
+      IntentionMap2.set('NONE', 4)
+
       if (IntentionMap2.get(tar) === this.dataList[index].userIntention.type) {
         return
       }
@@ -988,7 +1116,9 @@ export default {
       const query = {
         uid: this.dataList[index].id,
         type: tar,
-        describe: this.dataList[index].userIntention.describe
+        describe: this.dataList[index].userIntention.describe,
+        isTrack: this.dataList[index].userIntention.is_track,
+        today: this.dataList[index].userIntention.today
       }
       this.$http.User.updateUserInetention(query)
         .then((res) => {
@@ -1122,9 +1252,9 @@ export default {
           this.$refs.couponDialog.couponsTime = ''
           break
         // 加标签
-        case '4':
-          this.onLabel()
-          break
+        // case '4':
+        //   this.onLabel()
+        //   break
       }
     },
 
@@ -1154,6 +1284,42 @@ export default {
       }
       this.sortActive = sortKey
       this.getData()
+    },
+    /**
+     * 左侧快速切换回调 */
+    getFilter(data) {
+      console.log(data, 'filter')
+      this.filterParams = data || {}
+
+      // 组合搜索条件
+      // Object.assign(this.searchParams, this.filterParams)
+    },
+    handleToggle(data) {
+      this.isOpened = data
+    },
+
+    // 待跟进数量
+    getTodayCount(type = 'today') {
+      const params = {
+        is_track: 1,
+        today: type === 'today' ? this.today : this.tomorrow
+      }
+      if (+this.term !== 0) {
+        Object.assign(params, { term: this.term })
+      }
+      console.log(params)
+
+      this.$http.User.trialCourseUsersV2(params, 1, {}).then((res) => {
+        console.log(res, 'todaycount')
+
+        if (res && res.data && res.data.StudentTrialV2StatisticsPage) {
+          const { totalElements = 0 } = res.data.StudentTrialV2StatisticsPage
+          console.log(totalElements)
+
+          if (type === 'today') this.todayTotal = totalElements
+          if (type === 'tomorrow') this.tomorrowTotal = totalElements
+        }
+      })
     }
   }
 }
@@ -1161,4 +1327,16 @@ export default {
 
 <style lang="scss" scoped>
 @import '../../styles/trial-list.scss';
+.user-list {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  overflow: hidden;
+  background-color: #f0f1f2;
+}
+.trial-container-body {
+  flex: 1;
+  overflow: hidden;
+  background-color: #fff;
+}
 </style>

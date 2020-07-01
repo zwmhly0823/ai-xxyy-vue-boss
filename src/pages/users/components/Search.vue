@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-06-20 20:23:28
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-07-01 18:23:54
+ * @LastEditTime: 2020-07-01 21:36:11
  @ApiModel(description = "用户跟进状态")
     public enum STATUS {
 
@@ -346,12 +346,15 @@ export default {
   ::v-deep {
     .el-card {
       border: 0;
+      border-radius: 0;
+      border-bottom: 1px solid #ddd;
       .el-card__body {
-        padding: 0 0 10px 0;
+        padding: 0 0 10px 10px;
       }
     }
     .el-form-item__label {
       font-size: inherit;
+      font-weight: normal;
     }
     .el-form--inline .el-form-item {
       margin-bottom: -10px;

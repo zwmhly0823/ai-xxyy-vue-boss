@@ -26,6 +26,10 @@
   }
 }
 
+.clearfix {
+  @include clearfix();
+}
+
 .el-input--small {
   font-size: 12px;
 }

@@ -5,7 +5,7 @@
  * @Author: shentong
  * @Date: 2020-03-13 14:38:28
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-06-24 14:34:39
+ * @LastEditTime: 2020-07-01 21:29:47
  */
 // import axios from '../axios'
 import axios from '../axiosConfig'
@@ -176,6 +176,9 @@ export default {
             added_wechat
             follow
             user_status
+            is_track
+            today
+            tomorrow
             userInfo {
               id
               nickname
@@ -211,6 +214,9 @@ export default {
             userIntention {
               type
               describe
+              is_track
+              today
+              tomorrow
             }
             payChannelInfo {
               channel_inner_name
@@ -697,14 +703,16 @@ export default {
   },
   // 创建用户意向度
   createUserInetention(query) {
-    return axios.get(
-      `/api/u/v1/user/userintention/create?uid=${query.uid}&type=${query.type}&describe=${query.describe}`
-    )
+    let q = `uid=${query.uid}&type=${query.type}&describe=${query.describe}&isTrack=${query.isTrack}`
+    q += `&today=${query.today || ''}`
+    q += `&tomorrow=${query.tomorrow || ''}`
+    return axios.get(`/api/u/v1/user/userintention/create?${q}`)
   },
   // 更新用户意向度
   updateUserInetention(query) {
-    return axios.get(
-      `/api/u/v1/user/userintention/update?uid=${query.uid}&type=${query.type}&describe=${query.describe}`
-    )
+    let q = `uid=${query.uid}&type=${query.type}&describe=${query.describe}&isTrack=${query.isTrack}`
+    q += `&today=${query.today || ''}`
+    q += `&tomorrow=${query.tomorrow || ''}`
+    return axios.get(`/api/u/v1/user/userintention/update?${q}`)
   }
 }
