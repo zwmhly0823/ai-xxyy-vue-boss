@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-06-20 20:23:28
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-06-24 17:53:05
+ * @LastEditTime: 2020-07-01 18:23:54
  @ApiModel(description = "用户跟进状态")
     public enum STATUS {
 
@@ -84,7 +84,7 @@
             <div class="search-group">
               <search-phone-or-usernum
                 style="margin-right: 10px;"
-                type="0"
+                type="2"
                 tablename="StudentTrialV2StatisticsList"
                 @result="getSearchData('user', arguments)"
               />
