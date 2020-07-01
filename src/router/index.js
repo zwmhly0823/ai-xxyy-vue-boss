@@ -329,7 +329,14 @@ const routes = [
         meta: {
           // show: staff.roleId === '1' || staff.roleId === '7',
           show: staff.roleId === '7',
-          title: '招生排期',
+          title: '招生排期'
+        }
+      },
+      {
+        path: '/pushConfig',
+        name: 'pushConfig',
+        meta: {
+          title: '推送配置',
           module: 'operating'
         }
       }
