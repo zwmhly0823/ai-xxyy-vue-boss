@@ -13,7 +13,7 @@
       >
         <template v-if="!listData || !listData.length">
           <li class="drawer-item-empty">
-            暂无数据
+            暂时没有未读消息
           </li>
         </template>
         <template v-else>
@@ -169,23 +169,16 @@ export default {
         .then((res) => {
           if (res.code === 0 && res.status === 'OK') {
             this.listData.splice(index, 1)
-            clicked &&
-              this.$message({
-                message: '修改成功',
-                type: 'success'
-              })
             // 通过查看详情过来的话隐藏掉侧边栏
+            // 先能用然后上线，以后有机会再优化流程，把clicked这个参数去掉
             !clicked && this.closeDrawer()
             // 角标消息数-1
             this.$emit('reduceBadge')
-          } else {
-            clicked && this.$message.error('修改失败')
           }
           this.noticeLoading = false
         })
         .catch(() => {
           this.noticeLoading = false
-          clicked && this.$message.error('修改失败')
         })
     },
     getNextPageData() {
