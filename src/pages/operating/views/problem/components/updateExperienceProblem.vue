@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-06-28 18:37:21
  * @LastEditors: panjian
- * @LastEditTime: 2020-07-01 20:58:18
+ * @LastEditTime: 2020-07-01 21:00:16
 -->
 <template>
   <div class="experience-box">
@@ -24,7 +24,7 @@
       v-if="ruleForms.summaryList.length <= 0"
       class="experience-problem-box"
     >
-      <div class="experience-problem-text">体验课调查问卷</div>
+      <div class="experience-problem-text">修改体验课调查问卷</div>
       <div style="color:#c2c2c2;">从左侧选择需要添加的题型</div>
     </div>
     <div v-else style="width:100%">
@@ -163,39 +163,24 @@
         />
       </el-dialog>
     </div>
-    <div>
-      <el-dialog
-        :visible.sync="updateDialogFormVisibles"
-        width="750px"
-        append-to-body
-      >
-        <updateExperienceProblem
-          v-if="updateDialogFormVisibles"
-          :updateRuleForms="ruleForms"
-        />
-      </el-dialog>
-    </div>
   </div>
 </template>
 
 <script>
 import lookForm from './lookForm'
-import updateExperienceProblem from './updateExperienceProblem'
 import { deepClone } from '@/utils/index'
 export default {
   components: {
-    lookForm,
-    updateExperienceProblem
+    lookForm
   },
   props: {
-    ruleForm: {
+    updateRuleForms: {
       type: Object,
       default: () => {}
     }
   },
   data() {
     return {
-      updateDialogFormVisibles: false,
       dialogFormVisibles: false,
       moreNotifyOjbectRules: {
         title: [
@@ -277,6 +262,10 @@ export default {
       summaryListValue: true
     }
   },
+  created() {
+    console.log(this.updateRuleForms)
+    this.ruleForms.summaryList = this.updateRuleForms.summaryList
+  },
   methods: {
     onClose() {
       this.dialogFormVisibles = false
@@ -309,7 +298,6 @@ export default {
       console.log(this.ruleForms.summaryList)
       if (this.summaryListValue) {
         // this.dialogFormVisibles = true
-        this.updateDialogFormVisibles = true
       } else {
         this.$message.error('请填写问卷')
       }
