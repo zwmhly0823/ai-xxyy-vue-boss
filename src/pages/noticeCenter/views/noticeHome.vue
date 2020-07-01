@@ -4,9 +4,9 @@
       <el-tab-pane label="重点业务" name="first" :lazy="true">
         <notice-list type="buss"></notice-list>
       </el-tab-pane>
-      <el-tab-pane label="产品动态" name="second" :lazy="true">
+      <!-- <el-tab-pane label="产品动态" name="second" :lazy="true">
         <notice-list type="action"></notice-list>
-      </el-tab-pane>
+      </el-tab-pane> -->
     </el-tabs>
   </div>
 </template>

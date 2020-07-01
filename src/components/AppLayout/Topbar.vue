@@ -63,7 +63,10 @@
         </el-dropdown-menu>
       </el-dropdown>
     </div>
-    <notice-center ref="noticeCenter"></notice-center>
+    <notice-center
+      ref="noticeCenter"
+      @reduceBadge="reduceBadge"
+    ></notice-center>
     <el-dialog
       title="修改密码"
       :visible.sync="dialogVisible"
@@ -173,6 +176,9 @@ export default {
         .catch(() => {
           console.log('获取消息数量角标失败')
         })
+    },
+    reduceBadge() {
+      this.noticeBadge--
     }
   }
 }
