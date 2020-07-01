@@ -150,6 +150,8 @@ export default {
             })
             this.noticeData = res
             this.listData = res.payload.content
+            this.totalPages = +res.payload.totalPages
+            this.totalElements = +res.payload.totalElements
             if (this.listData.length) {
               this.showEmpty = false
             } else {

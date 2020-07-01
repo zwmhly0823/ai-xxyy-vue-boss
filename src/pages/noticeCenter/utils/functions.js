@@ -24,5 +24,11 @@ export function noticeLinkTo(type, val) {
   if (location.hostname.split('.')[0] === 'test') {
     testUrlAppend = 'ai-app-vue-boss-test/'
   }
-  location.href = `${location.protocol}//${location.host}/${testUrlAppend}${hrefUrl}`
+  // 如果已经在目标页面就刷新
+  const targetHref = `${location.protocol}//${location.host}/${testUrlAppend}${hrefUrl}`
+  if (location.href === targetHref) {
+    location.reload()
+  } else {
+    location.href = `${location.protocol}//${location.host}/${testUrlAppend}${hrefUrl}`
+  }
 }
