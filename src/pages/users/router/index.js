@@ -43,7 +43,7 @@ const routes = [
     component: () => import('../views/usersModule.vue')
   },
   {
-    path: '/details/:id',
+    path: '/details/:id/:isrefund',
     name: 'detailsUsers',
     meta: {
       title: '学员详情',

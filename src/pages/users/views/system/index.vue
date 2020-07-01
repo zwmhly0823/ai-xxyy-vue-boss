@@ -321,11 +321,11 @@ export default {
     // 点击用户信息回调事件
     userHandle(user) {
       // console.log(user, '点击用户信息')
-      const { username, studentid, mobile } = user
+      const { username, studentid, mobile, isrefund } = user
       // 新标签打开详情页
       studentid &&
         openBrowserTab(
-          `/users/#/details/${studentid}`,
+          `/users/#/details/${studentid}/${isrefund}`,
           `学员：${username || mobile}`
         )
     },
