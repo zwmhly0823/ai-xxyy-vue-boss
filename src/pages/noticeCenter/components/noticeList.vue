@@ -155,17 +155,17 @@ export default {
             if (this.listData.length) {
               this.showEmpty = false
             } else {
-              this.emptyText = '暂无数据'
+              this.emptyText = '暂时没有未读消息'
             }
           } else {
-            this.emptyText = '暂无数据'
+            this.emptyText = '暂时没有未读消息'
             this.$message.error('获取消息列表失败')
           }
           this.noticeLoading = false
         })
         .catch(() => {
           this.noticeLoading = false
-          this.emptyText = '暂无数据'
+          this.emptyText = '暂时没有未读消息'
           this.$message.error('获取消息列表失败')
         })
     },
