@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-06-28 17:11:05
  * @LastEditors: panjian
- * @LastEditTime: 2020-06-30 16:08:24
+ * @LastEditTime: 2020-07-01 14:40:52
 -->
 <template>
   <div class="new-form">
@@ -45,7 +45,7 @@
       </el-form-item>
     </el-form>
     <div>
-      <el-dialog :visible.sync="dialogFormVisible" append-to-body>
+      <el-dialog :visible.sync="dialogFormVisible" width="750px" append-to-body>
         <experienceProblem :ruleForm="ruleForm" />
       </el-dialog>
     </div>

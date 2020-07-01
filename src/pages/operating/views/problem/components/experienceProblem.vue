@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-06-28 18:37:21
  * @LastEditors: panjian
- * @LastEditTime: 2020-06-30 21:09:41
+ * @LastEditTime: 2020-07-01 16:35:33
 -->
 <template>
   <div class="experience-box">
@@ -48,7 +48,12 @@
               :prop="'summaryList.' + index + '.title'"
               :rules="moreNotifyOjbectRules.title"
             >
-              <el-input placeholder="标题" v-model="item.title"></el-input>
+              <el-input
+                style="width:450px;"
+                placeholder="标题"
+                v-model="item.title"
+              ></el-input>
+
               <el-form
                 v-if="
                   item.questionType == 'RADIO' ||
@@ -82,6 +87,7 @@
                     :rules="moreNotifyOjbectRules.describe"
                   >
                     <el-input
+                      style="width:200px"
                       placeholder="选项描述"
                       size="mini"
                       v-model="val.optionContent"
@@ -107,20 +113,62 @@
             <el-form-item>
               <i class="el-icon-delete" @click="deleteItem(item, index)"></i>
             </el-form-item>
+            <!-- <el-form-item>
+              <el-checkbox
+                v-if="item.questionType == 'SUBJECTIVE'"
+                v-model="item.questionState"
+                >是否必填</el-checkbox
+              >
+            </el-form-item> -->
           </div>
         </el-form>
       </div>
       <div class="experience-box-btn">
-        <el-button type="primary" @click="submitForm">立即创建</el-button>
-        <el-button @click="resetForm">重置</el-button>
+        <el-button type="text" @click="lookResetForm">
+          <svg
+            style="position:relative;top:5px;"
+            t="1593575369481"
+            class="icon"
+            viewBox="0 0 1536 1024"
+            version="1.1"
+            xmlns="http://www.w3.org/2000/svg"
+            p-id="1773"
+            width="20"
+            height="20"
+          >
+            <path
+              d="M768 0C260.5056 0 0 479.9488 0 479.9488s196.608 480.0512 768 480.0512c517.4272 0 768-478.208 768-478.208S1283.4816 0 768 0z m0 768c-167.1168 0-288.0512-125.952-288.0512-288.0512 0-161.9968 120.832-287.9488 288.0512-287.9488 167.1168 0 288.0512 125.952 288.0512 287.9488C1056.0512 642.048 935.2192 768 768 768z m0-480.0512a194.1504 194.1504 0 0 0-192 192.1024c0 102.7072 85.8112 192 192 192s192-89.2928 192-192c0-102.912-85.8112-192.2048-192-192z"
+              p-id="1774"
+              fill="#2a75ed"
+            ></path>
+          </svg>
+          预览</el-button
+        >
+        <el-button style="height:40px;" type="primary" @click="submitForm">
+          <i style="font-size:15px;" class="el-icon-check"></i>
+          立即创建</el-button
+        >
       </div>
+    </div>
+    <div>
+      <el-dialog
+        :visible.sync="dialogFormVisibles"
+        width="750px"
+        append-to-body
+      >
+        <look-form :lookFormValue="ruleForms" />
+      </el-dialog>
     </div>
   </div>
 </template>
 
 <script>
+import lookForm from './lookForm'
 import { deepClone } from '@/utils/index'
 export default {
+  components: {
+    lookForm
+  },
   props: {
     ruleForm: {
       type: Object,
@@ -129,6 +177,7 @@ export default {
   },
   data() {
     return {
+      dialogFormVisibles: false,
       moreNotifyOjbectRules: {
         title: [
           { required: true, message: '标题不能为空', trigger: 'blur' },
@@ -210,7 +259,7 @@ export default {
     }
   },
   methods: {
-    submitForm(formNames) {
+    submitForm() {
       // console.log(this.$refs.ruleForms.model.summaryList)
       try {
         const _summaryList = this.ruleForms.summaryList
@@ -236,8 +285,41 @@ export default {
       }
       console.log(this.summaryListValue)
       console.log(this.ruleForms.summaryList)
+      if (this.summaryListValue) {
+        this.dialogFormVisibles = true
+      } else {
+        this.$message.error('请填写问卷')
+      }
     },
-    resetForm() {},
+    lookResetForm() {
+      try {
+        const _summaryList = this.ruleForms.summaryList
+        _summaryList.forEach((res) => {
+          if (res.title) {
+            if (res.questionOptionList) {
+              res.questionOptionList.forEach((ele) => {
+                if (ele.optionContent) {
+                  this.summaryListValue = true
+                } else {
+                  this.summaryListValue = false
+                  throw new Error('EndIterative')
+                }
+              })
+            }
+          } else {
+            this.summaryListValue = false
+            throw new Error('EndIterative')
+          }
+        })
+      } catch (e) {
+        if (e.message !== 'EndIterative') throw e
+      }
+      if (this.summaryListValue) {
+        this.dialogFormVisibles = true
+      } else {
+        this.$message.error('请填写问卷')
+      }
+    },
     // 新增单选提
     addItemRadio() {
       const radio = deepClone(this.radioType)
@@ -259,13 +341,13 @@ export default {
     },
     // 新增单选项
     addItemRadios(val, index) {
-      const sort = this.radioType.questionOptionList.length
+      const sort = this.ruleForms.summaryList[index].questionOptionList.length
       const obj = {
         optionNo: 'C',
         optionContent: '',
         optionSort: sort
       }
-      for (var i = 0; i < this.radioType.questionOptionList.length + 1; i++) {
+      for (var i = 0; i < sort + 1; i++) {
         obj.optionNo = String.fromCharCode(65 + i)
       }
       const arr = [obj]
@@ -374,6 +456,7 @@ export default {
     padding-top: 15px;
     display: flex;
     justify-content: center;
+    align-items: center;
   }
 }
 </style>
