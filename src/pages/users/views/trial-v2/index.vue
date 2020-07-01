@@ -20,7 +20,7 @@
       </el-tabs>
 
       <!-- search section -->
-      <search @search="getSearchQuery" />
+      <search :searchProp="searchProp" @search="getSearchQuery" />
     </div>
 
     <!-- 操作区 -->
@@ -626,7 +626,11 @@ export default {
         2: '待开课 ',
         3: '上课中',
         4: '已结课'
-      }
+      },
+      // 传给search的值
+      searchProp: {},
+      // 消息中心传过来的期数值
+      propTerm: ''
     }
   },
   watch: {
@@ -642,12 +646,31 @@ export default {
         document.body.clientHeight - this.$refs.tableInner.offsetTop - 110
       this.tableHeight = tableHeight + ''
     })
+    // 消息中心传递过来的预设参数
+    this.paramsFromUrl()
     this.init()
   },
   mounted() {
     this.getCouponList()
   },
   methods: {
+    paramsFromUrl() {
+      const urlParams = localStorage.getItem('noticeParams')
+      if (urlParams) {
+        this.searchProp = {
+          name: urlParams.split(',')[0],
+          value: urlParams.split(',')[1]
+        }
+        // 期数
+        let termIndex
+        urlParams.split(',').forEach((uItem, uKey) => {
+          if (uItem === 'period') {
+            termIndex = uKey
+          }
+        })
+        this.propTerm = urlParams.split(',')[termIndex + 1]
+      }
+    },
     getSearchQuery(res) {
       // console.log(res, 'search result')
       this.search = res
@@ -697,8 +720,14 @@ export default {
           })
 
           this.manageMentList = _.orderBy(list, ['status'], ['desc'])
-          this.term =
-            this.manageMentList.length > 0 ? this.manageMentList[0].period : '0'
+          if (this.propTerm) {
+            this.term = this.propTerm
+          } else {
+            this.term =
+              this.manageMentList.length > 0
+                ? this.manageMentList[0].period
+                : '0'
+          }
         }
       })
     },
