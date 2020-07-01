@@ -86,7 +86,7 @@
               <!-- 逻辑：当前班级状态 0: 待开课 1:开课中 2:已结课-->
               <template
                 v-if="
-                  +isrefund === 1 &&
+                  stuInfor.teams[courseIndex].isRefund === 1 &&
                     ['learningRecord', 'collectionOf'].includes(tabData)
                 "
               >
@@ -490,14 +490,12 @@ export default {
       courseIndex: 0,
       lessonType: null,
       defaultHead: 'https://msb-ai.meixiu.mobi/ai-pm/static/touxiang.png',
-      wholeData: {},
-      // 从上个界面过来的是否退费
-      isrefund: ''
+      wholeData: {}
     }
   },
   created() {
     this.studentId = this.$route.params.id
-    this.isrefund = this.$route.params.isrefund
+
     // 学员信息接口
     this.reqUser()
   },
@@ -564,13 +562,6 @@ export default {
             item.team_type_formatting = '系统课'
           }
         })
-      // 系统课如果买-退-买，systemCourse就会有多个，标签就会显示多个
-      // 根据前面页面传过来的值判断去掉哪个
-      if (data.systemCourse.length > 1) {
-        data.systemCourse = data.systemCourse.filter((item) => {
-          return +item.orderInfo.isrefund === +this.isrefund
-        })
-      }
       return data
     },
     // 已退费模块
