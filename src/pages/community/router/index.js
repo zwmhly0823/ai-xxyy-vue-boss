@@ -40,6 +40,16 @@ const routes = [
       keepAlive: false
     },
     component: () => import('../views/newSopTmp/index.vue')
+  },
+  {
+    path: '/newPlantask',
+    name: 'newPlantask',
+    meta: {
+      title: 'sop管理',
+      icon: 'el-icon-s-custom',
+      keepAlive: false
+    },
+    component: () => import('../views/newPlanTask/index.vue')
   }
 ]
 

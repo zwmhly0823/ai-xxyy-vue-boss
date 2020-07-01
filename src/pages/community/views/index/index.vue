@@ -39,7 +39,7 @@ export default {
           title: 'SOP模板'
         },
         {
-          title: '计划任务'
+          title: 'SOP任务'
         }
       ]
     }
