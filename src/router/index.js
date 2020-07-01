@@ -329,7 +329,8 @@ const routes = [
         meta: {
           // show: staff.roleId === '1' || staff.roleId === '7',
           show: staff.roleId === '7',
-          title: '招生排期'
+          title: '招生排期',
+          module: 'operating'
         }
       },
       {
