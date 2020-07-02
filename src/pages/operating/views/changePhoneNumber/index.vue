@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-06-25 16:48:38
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-07-02 15:17:30
+ * @LastEditTime: 2020-07-02 18:58:01
 -->
 <template>
   <el-row type="flex" class="app-main height">
@@ -54,7 +54,9 @@
           >
             <el-table-column label="用户ID">
               <template slot-scope="scope">
-                {{ scope.row.user && scope.row.user.user_num }}
+                <p @click="userHandle(scope.row.user)" class="primary-text">
+                  {{ scope.row.user && scope.row.user.user_num }}
+                </p>
               </template>
             </el-table-column>
             <el-table-column prop="old_mobile" label="原手机号">
@@ -156,7 +158,10 @@ export default {
             if (res && +res.code === 0) {
               this.$message.success('替换成功！')
               this.currentPage = 1
-              this.getLogData()
+              this.resetForm(formName)
+              setTimeout(() => {
+                this.getLogData()
+              }, 1500)
             }
           })
         } else {
@@ -164,6 +169,10 @@ export default {
           return false
         }
       })
+    },
+
+    resetForm(formName) {
+      this.$refs[formName].resetFields()
     },
 
     // 跳转用户详情
@@ -183,22 +192,30 @@ export default {
     },
 
     getLogData() {
+      const loading = this.$loading({
+        lock: true,
+        text: '加载中',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.1)'
+      })
       const query = {}
       const params = JSON.stringify(JSON.stringify(query))
-      this.$http.Operating.getUserReplaceMobileLog(
-        params,
-        this.currentPage
-      ).then((res) => {
-        const data = res.data && res.data.UserReplaceMobileLogPage
-        if (data) {
-          const { totalElements, content = [] } = data
-          this.totalElements = totalElements
-          this.recordList = content.map((item) => {
-            item.utime_text = formatData(item.utime, 's')
-            return item
-          })
-        }
-      })
+      this.$http.Operating.getUserReplaceMobileLog(params, this.currentPage)
+        .then((res) => {
+          const data = res.data && res.data.UserReplaceMobileLogPage
+          if (data) {
+            const { totalElements, content = [] } = data
+            this.totalElements = totalElements
+            this.recordList = content.map((item) => {
+              item.utime_text = formatData(item.utime, 's')
+              return item
+            })
+          }
+          loading.close()
+        })
+        .catch(() => {
+          loading.close()
+        })
     }
   }
 }
