@@ -55,7 +55,7 @@
           </div>
           <div class="horizontal-line"></div>
           <div class="waitFor" v-if="waitFor">快递待揽收</div>
-          <el-timeline class="right-timeline">
+          <el-timeline v-if="activities" class="right-timeline">
             <el-timeline-item
               v-for="(value, index) in activities"
               :key="index"
@@ -70,6 +70,29 @@
                     {{ item.context || item.opeRemark }}
                   </div>
                   <div class="time">{{ item.time || item.opeTime }}</div>
+                </div>
+              </div>
+            </el-timeline-item>
+          </el-timeline>
+          <el-timeline class="right-timeline">
+            <el-timeline-item
+              v-for="(items, index) in expressDetailsInfo"
+              :key="index"
+              :color="color"
+            >
+              <div class="status">
+                {{ items.centerStatus }}
+              </div>
+              <div class="statebox">
+                <div
+                  class="statebox"
+                  v-for="(item, key) in items.data"
+                  :key="key"
+                >
+                  <div class="content">
+                    {{ item.context }}
+                  </div>
+                  <div class="time">{{ item.time }}</div>
                 </div>
               </div>
             </el-timeline-item>
@@ -168,6 +191,7 @@ export default {
       orderInformation: [],
       expressInformation: [],
       activities: [],
+      expressDetailsInfo: [],
       isActive: 0,
       leftRow: [],
       orderId: '',
@@ -180,7 +204,8 @@ export default {
       this.activities = []
       this.expressInformation = val
       this.expressNu = this.expressInformation.express_nu
-      this.expressList(this.expressNu, val.express_status)
+      this.getExpressDetails('WL11127200499586')
+      // this.expressList(this.expressNu, val.express_status)
     },
     order_id(val) {
       this.waitFor = false
@@ -292,6 +317,14 @@ export default {
         .then((res) => {
           this.leftRow = res.data.ExpressList
           this.getexpressInformation(this.leftRow[0], 0)
+        })
+    },
+    // 获取物流中台物流详情
+    getExpressDetails(expressNo) {
+      this.$http.Express.getExpressDetails({ expressNo })
+        .catch((err) => console.log(err))
+        .then((res) => {
+          this.expressDetailsInfo = res.payload[0].data
         })
     },
     // 物流列表信息
@@ -430,6 +463,9 @@ export default {
         font-size: 20px;
       }
       .right-timeline {
+        .status {
+          font-size: 20px;
+        }
         .statebox {
           .state {
             font-size: 20px;
