@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-06-29 16:50:58
  * @LastEditors: Shentong
- * @LastEditTime: 2020-06-30 20:45:04
+ * @LastEditTime: 2020-07-01 14:02:42
 -->
 <template>
   <el-row type="flex" class="new-sop app-main">
@@ -200,7 +200,7 @@ export default {
       ],
       sendTime: [new Date(2019, 9, 10, 8, 40), new Date(2019, 9, 10, 9, 40)],
       stepNum: 0,
-      centerDialogVisible: false
+      centerDialogVisible: true
     }
   },
   components: { AddContent },

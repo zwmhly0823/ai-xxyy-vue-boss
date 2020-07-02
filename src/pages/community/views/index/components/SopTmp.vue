@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-06-29 17:02:32
  * @LastEditors: Shentong
- * @LastEditTime: 2020-06-29 18:54:30
+ * @LastEditTime: 2020-07-01 14:26:07
 -->
 <template>
   <div class="soptmp-container">
@@ -186,7 +186,7 @@ export default {
   }
 }
 </script>
-<style rel="stylesheet/scss" lang="scss">
+<style rel="stylesheet/scss" lang="scss" scoped>
 .operete-row {
   display: flex;
   padding: 10px;
