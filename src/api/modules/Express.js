@@ -143,7 +143,7 @@ export default {
    * 立即发货
    */
   immediately() {
-    return axios.get(`/api/ex/v1/express/taskDeliveryTrialCourseByCenter`)
+    return axios.get(`/api/ex/v1/express/deliveryTrialCourseByCenterNow`)
   },
   /**
    * 物流状态修改
