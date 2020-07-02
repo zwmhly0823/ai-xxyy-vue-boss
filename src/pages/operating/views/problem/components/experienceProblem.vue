@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-06-28 18:37:21
  * @LastEditors: panjian
- * @LastEditTime: 2020-07-02 15:59:34
+ * @LastEditTime: 2020-07-02 18:06:42
 -->
 <template>
   <div class="experience-box">
@@ -143,7 +143,11 @@
           </svg>
           预览</el-button
         >
-        <el-button style="height:40px;" type="primary" @click="submitForm">
+        <el-button
+          style="height:40px;margin-left:30px;"
+          type="primary"
+          @click="submitForm"
+        >
           <i style="font-size:15px;" class="el-icon-check"></i>
           立即创建</el-button
         >

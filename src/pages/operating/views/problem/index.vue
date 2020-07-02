@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-06-24 17:01:54
  * @LastEditors: panjian
- * @LastEditTime: 2020-07-02 17:05:31
+ * @LastEditTime: 2020-07-02 18:39:09
 -->
 <template>
   <div class="problem-box">
@@ -53,7 +53,7 @@
             <div style="display:none;">{{ scope.row }}</div>
             <div v-if="scope.row.questionState == 'DEFAULT'">
               <el-button @click="onUpdate" type="text">修改</el-button
-              ><el-button type="text">发布</el-button
+              ><el-button @click="onRelease" type="text">发布</el-button
               ><el-button type="text" disabled>复制地址</el-button>
             </div>
             <div v-else-if="scope.row.questionState == 'PUBLISH'">
@@ -90,6 +90,7 @@
         append-to-body
       >
         <updateExperienceProblem
+          @onCloseUpdateSaveQuestionnaire="onCloseUpdateSaveQuestionnaire"
           v-if="updateDialogFormVisibles"
           :questionnaireId="questionnaireId"
         />
@@ -125,6 +126,24 @@ export default {
     onUpdate() {
       this.updateDialogFormVisibles = true
     },
+    onRelease() {
+      const params = {
+        id: this.questionnaireId,
+        questionState: 'PUBLISH'
+      }
+      this.$http.Operating.saveQuestionnaire(params).then((res) => {
+        if (res.code === 0) {
+          this.$message({
+            showClose: true,
+            message: '发布成功',
+            type: 'success'
+          })
+          setTimeout(() => {
+            this.onQueryQuestionnairePage()
+          }, 200)
+        }
+      })
+    },
     onHoverRow(row) {
       this.questionnaireId = row.id
     },
@@ -137,7 +156,6 @@ export default {
           res.address = `https://test.meixiu.mobi/ai-app-h5-test/question?id=${res.id}`
         })
         this.tableData = _data
-        console.log(_data)
       })
     },
     onNewWenjuan() {
@@ -145,6 +163,10 @@ export default {
     },
     handleCurrentChange(val) {
       this.pageNum = val
+      this.onQueryQuestionnairePage()
+    },
+    onCloseUpdateSaveQuestionnaire() {
+      this.updateDialogFormVisibles = false
       this.onQueryQuestionnairePage()
     },
     closeDialogVisible() {

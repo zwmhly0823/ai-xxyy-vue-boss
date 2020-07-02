@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-06-28 18:37:21
  * @LastEditors: panjian
- * @LastEditTime: 2020-07-02 16:59:24
+ * @LastEditTime: 2020-07-02 18:31:06
 -->
 <template>
   <div class="experience-box">
@@ -143,7 +143,11 @@
           </svg>
           预览</el-button
         >
-        <el-button style="height:40px;" type="primary" @click="submitForm">
+        <el-button
+          style="height:40px;margin-left:30px;"
+          type="primary"
+          @click="submitForm"
+        >
           <i style="font-size:15px;" class="el-icon-check"></i>
           立即创建</el-button
         >
@@ -272,8 +276,7 @@ export default {
         (res) => {
           const _data = res.payload.questionList
           _data.forEach((ele) => {
-            // ele.isMust
-            console.log(ele)
+            ele.isMusts = !ele.isMust
           })
           this.ruleForms.summaryList = _data
         }
@@ -308,8 +311,6 @@ export default {
       } catch (e) {
         if (e.message !== 'EndIterative') throw e
       }
-      console.log(this.summaryListValue)
-      console.log(this.ruleForms.summaryList)
       if (this.summaryListValue) {
         const _data = this.ruleForms.summaryList
         _data.forEach((res) => {
@@ -317,14 +318,9 @@ export default {
           delete res.isMusts
         })
         const params = {
-          title: this.ruleForm.title,
-          desc: this.ruleForm.desc,
-          image: this.ruleForm.imageUrl,
-          questionState: this.ruleForm.questionState,
+          id: this.questionnaireId,
           questionList: _data
         }
-        console.log(params)
-
         this.$http.Operating.saveQuestionnaire(params).then((res) => {
           if (res.code === 0) {
             this.$message({
@@ -333,7 +329,7 @@ export default {
               type: 'success'
             })
             setTimeout(() => {
-              this.$emit('onCloseSaveQuestionnaire')
+              this.$emit('onCloseUpdateSaveQuestionnaire')
             }, 200)
           }
         })
