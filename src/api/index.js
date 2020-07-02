@@ -27,6 +27,7 @@ import RiviewCourse from './modules/RiviewCourse'
 import Finance from './modules/finance' // 财务退款
 import WorkerHandover from './modules/WorkerHandover'
 import Staff from './modules/Staff' // 员工
+import NoticeCenter from './modules/NoticeCenter'
 
 export default Object.assign(
   {},
@@ -50,5 +51,6 @@ export default Object.assign(
   { Approval },
   { Finance },
   { WorkerHandover },
-  { Staff }
+  { Staff },
+  { NoticeCenter }
 )

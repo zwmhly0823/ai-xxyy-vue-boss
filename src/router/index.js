@@ -332,6 +332,14 @@ const routes = [
           title: '招生排期',
           module: 'operating'
         }
+      },
+      {
+        path: '/pushConfig',
+        name: 'pushConfig',
+        meta: {
+          title: '推送配置',
+          module: 'operating'
+        }
       }
     ]
   },

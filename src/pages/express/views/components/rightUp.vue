@@ -113,6 +113,10 @@ import MSearch from '@/components/MSearch/index.vue'
 let switchTabSearchIn = {}
 export default {
   props: {
+    tab: {
+      type: String,
+      default: '0'
+    },
     status: {
       type: String,
       default: '0'
@@ -402,6 +406,10 @@ export default {
         express_nu: '快递单号',
         express_company: '物流公司',
         express_company_nu: '物流公司编号'
+      }
+      // 补发货列表新增补发原因表头
+      if (this.tab === '1') {
+        headers.replenish_reason = '补发原因'
       }
 
       const params = {
