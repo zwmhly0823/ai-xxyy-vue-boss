@@ -55,7 +55,7 @@
           </div>
           <div class="horizontal-line"></div>
           <div class="waitFor" v-if="waitFor">快递待揽收</div>
-          <el-timeline class="right-timeline">
+          <el-timeline v-if="!isShowNew" class="right-timeline">
             <el-timeline-item
               v-for="(value, index) in activities"
               :key="index"
@@ -70,6 +70,29 @@
                     {{ item.context || item.opeRemark }}
                   </div>
                   <div class="time">{{ item.time || item.opeTime }}</div>
+                </div>
+              </div>
+            </el-timeline-item>
+          </el-timeline>
+          <el-timeline v-if="isShowNew" class="right-timeline">
+            <el-timeline-item
+              v-for="(items, index) in expressDetailsInfo"
+              :key="index"
+              :color="color"
+            >
+              <div class="status">
+                {{ items.centerStatus }}
+              </div>
+              <div class="statebox">
+                <div
+                  class="statebox"
+                  v-for="(item, key) in items.data"
+                  :key="key"
+                >
+                  <div class="content">
+                    {{ item.context }}
+                  </div>
+                  <div class="time">{{ item.time }}</div>
                 </div>
               </div>
             </el-timeline-item>
@@ -168,19 +191,32 @@ export default {
       orderInformation: [],
       expressInformation: [],
       activities: [],
+      expressDetailsInfo: [], // 从物流中台获取的物流信息
       isActive: 0,
       leftRow: [],
       orderId: '',
-      expressNu: '' // 物流单号
+      expressNu: '', // 物流单号
+      isShowNew: true // 是否展示新物流中台获取的物流数据
     }
   },
   watch: {
     transferExpress(val) {
       this.waitFor = false
       this.activities = []
+      this.expressDetailsInfo = []
       this.expressInformation = val
       this.expressNu = this.expressInformation.express_nu
-      this.expressList(this.expressNu, val.express_status)
+      const timeNodes = new Date('2020-07-01').getTime()
+      // 2020-07-01之后且center_express_id 不等于0 且不是中通快递 取中台数据
+      if (
+        +val.center_ctime > timeNodes &&
+        val.center_express_id !== '0' &&
+        String(val.express_company).indexOf('中通') === -1
+      ) {
+        this.getExpressDetails(this.expressNu)
+      } else {
+        this.expressList(this.expressNu, val.express_status)
+      }
     },
     order_id(val) {
       this.waitFor = false
@@ -235,7 +271,6 @@ export default {
           this.editResult = true
           this.isShowEditStatus = false
           this.$message.success('状态修改成功')
-          console.log(res)
         } else {
           this.editResult = false
           this.$message.error('状态修改失败')
@@ -266,7 +301,17 @@ export default {
     getexpressInformation(item, i) {
       this.isActive = i
       this.expressInformation = item
-      this.expressList(item.express_nu, item.express_status)
+      const timeNodes = new Date('2020-07-01').getTime()
+      // 2020-07-01之后且center_express_id 不等于0 且不是中通快递 取中台数据
+      if (
+        +item.center_ctime > timeNodes &&
+        item.center_express_id !== '0' &&
+        String(item.express_company).indexOf('中通') === -1
+      ) {
+        this.getExpressDetails(item.express_nu)
+      } else {
+        this.expressList(item.express_nu, item.express_status)
+      }
     },
     handleClose() {
       this.drawer = false
@@ -286,6 +331,8 @@ export default {
                       express_company
                       express_nu
                       express_status
+                      center_ctime
+                      center_express_id
                   }
                 }`
         })
@@ -294,8 +341,24 @@ export default {
           this.getexpressInformation(this.leftRow[0], 0)
         })
     },
+    // 获取物流中台物流详情
+    getExpressDetails(expressNo) {
+      this.$http.Express.getExpressDetails({ expressNo })
+        .catch((err) => console.log(err))
+        .then((res) => {
+          this.isShowNew = true
+          if (res.payload && res.payload[0].data.length > 0) {
+            this.waitFor = false
+            this.expressDetailsInfo = res.payload[0].data
+          } else {
+            this.expressDetailsInfo = []
+            this.waitFor = true
+          }
+        })
+    },
     // 物流列表信息
     expressList(id, expressStatus) {
+      this.isShowNew = false
       const lastData = {}
       // 如果是京东物流 且物流状态 expressStatus 为2 请求京东物流接口
       if (id.toString().indexOf('JD') > -1 && expressStatus === '2') {
@@ -303,7 +366,7 @@ export default {
           const tempData =
             (jdRes && jdRes.payload && jdRes.payload[0].data) || []
           if (tempData.length > 0) {
-            // lastData.begin = []
+            this.waitFor = false
             tempData.forEach((item, index) => {
               item.status = item.opeTitle
               lastData[index] = []
@@ -430,6 +493,9 @@ export default {
         font-size: 20px;
       }
       .right-timeline {
+        .status {
+          font-size: 20px;
+        }
         .statebox {
           .state {
             font-size: 20px;

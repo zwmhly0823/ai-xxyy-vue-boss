@@ -299,7 +299,7 @@
         <template slot-scope="scope">
           <div class="sign">
             <div>创建:{{ scope.row.crtime }}</div>
-            <div>审核:{{ scope.row.center_ctime }}</div>
+            <div>审核:{{ scope.row.center_ctime_str }}</div>
             <div>揽收:{{ scope.row.detime }}</div>
             <div>签收:{{ scope.row.sgtime }}</div>
           </div>
@@ -945,6 +945,7 @@ export default {
               order_id
               product_name
               delivery_collect_time
+              center_express_id
               express_status
               express_status_chinese
               buy_time
@@ -999,7 +1000,7 @@ export default {
             item.uptime = formatData(+item.utime, 's')
             item.sgtime = formatData(+item.signing_time, 's')
             item.buytime = formatData(+item.buy_time, 's')
-            item.center_ctime = formatData(+item.center_ctime, 's')
+            item.center_ctime_str = formatData(+item.center_ctime, 's')
             // 处理补发类型
             this.handleRegtype(item)
             // 处理补发方式
