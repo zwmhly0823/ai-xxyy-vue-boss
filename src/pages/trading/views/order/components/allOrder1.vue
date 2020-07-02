@@ -49,26 +49,26 @@
           </div>
         </el-col>
         <!-- 退费： 退费中 5，已退费 6，7 -->
-        <el-col :span="5">
+        <!-- <el-col :span="5">
           <div
             class="grid-content"
             :class="{ current: status === '5,6,7' }"
             @click="chnageStatus('5,6,7')"
           >
-            <div class="oride-top">退费</div>
-            <!-- <div class="oride-middle">
+            <div class="oride-top">退费</div> -->
+        <!-- <div class="oride-middle">
               <em>{{ statisticsObj.refund.count }}</em
               >笔
             </div>
             <div class="oride-bottom">
               {{ +statisticsObj.refund.value.toFixed(2) }}元
             </div> -->
-            <div class="oride-middle">
+        <!-- <div class="oride-middle">
               <em>{{ +statisticsObj.refund.value.toFixed(2) }}</em
               >元 {{ statisticsObj.refund.count }}笔
             </div>
           </div>
-        </el-col>
+        </el-col> -->
         <!-- 全部订单 -->
         <el-col :span="5">
           <div

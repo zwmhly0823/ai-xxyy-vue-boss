@@ -53,7 +53,7 @@
           </div>
         </el-col>
         <!-- 退费： 退费中 5，已退费 6，7 -->
-        <el-col :span="5">
+        <!-- <el-col :span="5">
           <div
             class="grid-content"
             :class="{ current: status === '5,6,7' }"
@@ -69,7 +69,7 @@
               <p>{{ statistics.refun ? statistics.refun.gem : 0 }} 宝石</p>
             </div>
           </div>
-        </el-col>
+        </el-col> -->
         <!-- 订单总计 3 -->
         <el-col :span="5">
           <div
