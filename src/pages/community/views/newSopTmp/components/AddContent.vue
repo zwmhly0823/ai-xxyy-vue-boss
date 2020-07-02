@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-06-30 19:21:08
  * @LastEditors: Shentong
- * @LastEditTime: 2020-07-02 18:05:45
+ * @LastEditTime: 2020-07-02 20:47:07
 -->
 <template>
   <el-dialog
@@ -60,7 +60,7 @@
             type="textarea"
             :rows="6"
             placeholder="请输入内容"
-            v-model="textarea"
+            v-model="addContentForm.textarea"
             id="textarea"
           >
           </el-input>
@@ -79,54 +79,7 @@
               class="avatar"
             />
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-            <!-- <span class="el-upload-list__item-actions">
-              <span
-                class="el-upload-list__item-preview"
-                @click="handlePictureCardPreview(addContentForm.imgUrl)"
-              >
-                <i class="el-icon-zoom-in"></i>
-              </span>
-              <span
-                v-if="!disabled"
-                class="el-upload-list__item-delete"
-                @click="handleRemove(file)"
-              >
-                <i class="el-icon-delete"></i>
-              </span>
-            </span> -->
           </el-upload>
-
-          <!-- <el-upload
-            action=""
-            :http-request="uploadHandle"
-            list-type="picture-card"
-            :multiple="false"
-            :limit="1"
-          >
-            <i slot="default" class="el-icon-plus"></i>
-            <div slot="file" slot-scope="{ file }" v-if="addContentForm.imgUrl">
-              <img
-                class="el-upload-list__item-thumbnail"
-                :src="addContentForm.imgUrl"
-                alt=""
-              />
-              <span class="el-upload-list__item-actions">
-                <span
-                  class="el-upload-list__item-preview"
-                  @click="handlePictureCardPreview(addContentForm.imgUrl)"
-                >
-                  <i class="el-icon-zoom-in"></i>
-                </span>
-                <span
-                  v-if="!disabled"
-                  class="el-upload-list__item-delete"
-                  @click="handleRemove(file)"
-                >
-                  <i class="el-icon-delete"></i>
-                </span>
-              </span>
-            </div>
-          </el-upload> -->
           <el-dialog :visible.sync="dialogVisible" append-to-body>
             <img width="100%" :src="dialogImageUrl" alt="" />
           </el-dialog>
@@ -150,12 +103,12 @@ export default {
   data() {
     return {
       addContentForm: {
-        imgUrl: ''
+        imgUrl: '',
+        textarea: ''
       },
       faceList: [],
       changeEmojiToggle: false,
       tabIndex: 0,
-      textarea: '',
       dialogImageUrl: '',
       dialogVisible: false,
       isShaky: false,
@@ -184,6 +137,7 @@ export default {
     }
   },
   methods: {
+    /** */
     topTabClick: debounce(function(index) {
       this.tabIndex = index
       // 图片格式
@@ -215,14 +169,22 @@ export default {
       this.$emit('dialogOperate', 'cancel')
     },
     dialogOperate(type) {
-      if (!this.textarea) {
+      if (!this.validateAddForn()) {
         this.isShaky = true
         setTimeout(() => {
           this.isShaky = false
         }, 250)
       }
-      console.log(this.textarea, 'textarea')
       //   this.$emit('dialogOperate', type)
+    },
+    /** 验证新增内容的信息 */
+    validateAddForn() {
+      if (!this.tabIndex) {
+        // 文本模式
+        return Boolean(this.addContentForm.textarea)
+      } else {
+        return Boolean(this.addContentForm.imgUrl)
+      }
     },
     getEmo(index) {
       var textArea = document.getElementById('textarea')
@@ -294,6 +256,9 @@ export default {
       cursor: pointer;
       span {
         margin-left: 5px;
+      }
+      &:first-child {
+        border-radius: 5px 0 0 0;
       }
       &.active {
         background: #fff;
@@ -367,7 +332,8 @@ export default {
   -ms-animation-play-state: running;
   animation-play-state: running;
   &.dialog-center {
-    border-color: #2a75ed;
+    border-color: #e4393c;
+    box-shadow: 0 2px 12px 0 rgba(255, 255, 0, 0.1);
   }
 }
 @-webkit-keyframes shaky-slow {
