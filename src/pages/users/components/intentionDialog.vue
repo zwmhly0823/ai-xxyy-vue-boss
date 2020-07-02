@@ -141,7 +141,7 @@ export default {
   methods: {
     showDialog(data) {
       console.log(data, 'data')
-
+      this.currentTag = 0
       this.showIntentDialog = true
       this.$nextTick(() => {
         if (data) {
