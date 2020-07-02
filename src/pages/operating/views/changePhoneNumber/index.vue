@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-06-25 16:48:38
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-07-02 12:21:52
+ * @LastEditTime: 2020-07-02 15:17:30
 -->
 <template>
   <el-row type="flex" class="app-main height">
@@ -52,11 +52,22 @@
             :height="tableHeight"
             style="width: 100%"
           >
-            <el-table-column prop="date" label="用户ID"> </el-table-column>
-            <el-table-column prop="name" label="原手机号"> </el-table-column>
-            <el-table-column prop="name" label="新手机号"> </el-table-column>
-            <el-table-column prop="name" label="修改人"> </el-table-column>
-            <el-table-column prop="address" label="修改时间"> </el-table-column>
+            <el-table-column label="用户ID">
+              <template slot-scope="scope">
+                {{ scope.row.user && scope.row.user.user_num }}
+              </template>
+            </el-table-column>
+            <el-table-column prop="old_mobile" label="原手机号">
+            </el-table-column>
+            <el-table-column prop="new_mobile" label="新手机号">
+            </el-table-column>
+            <el-table-column prop="name" label="修改人">
+              <template slot-scope="scope">
+                {{ (scope.row.staff && scope.row.staff.real_name) || '-' }}
+              </template>
+            </el-table-column>
+            <el-table-column prop="utime_text" label="修改时间">
+            </el-table-column>
           </el-table>
         </div>
         <m-pagination
@@ -73,7 +84,7 @@
 </template>
 
 <script>
-import { openBrowserTab } from '@/utils/index'
+import { openBrowserTab, formatData } from '@/utils/index'
 import MPagination from '@/components/MPagination/index.vue'
 const valid = {
   isPhoneNum(str) {
@@ -133,10 +144,7 @@ export default {
   methods: {
     onSubmit(formName) {
       this.$refs[formName].validate((valid) => {
-        console.log(valid)
-
         if (valid) {
-          console.log(this.phoneForm)
           const { newMobile, oldMobile } = this.phoneForm
           const params = {
             newMobile,
@@ -145,6 +153,11 @@ export default {
           }
           this.$http.Operating.replaceMobile(params).then((res) => {
             console.log(res)
+            if (res && +res.code === 0) {
+              this.$message.success('替换成功！')
+              this.currentPage = 1
+              this.getLogData()
+            }
           })
         } else {
           console.log('error submit!!')
@@ -176,12 +189,14 @@ export default {
         params,
         this.currentPage
       ).then((res) => {
-        console.log(res, 'log-list')
         const data = res.data && res.data.UserReplaceMobileLogPage
         if (data) {
-          const { totalElements, content } = data
+          const { totalElements, content = [] } = data
           this.totalElements = totalElements
-          this.recordList = content || []
+          this.recordList = content.map((item) => {
+            item.utime_text = formatData(item.utime, 's')
+            return item
+          })
         }
       })
     }

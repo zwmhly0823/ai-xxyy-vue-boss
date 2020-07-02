@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-03-16 19:46:39
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-07-02 12:15:26
+ * @LastEditTime: 2020-07-02 15:13:53
  */
 import axios from '../axiosConfig'
 // import { getToken } from '@/utils/auth'
@@ -270,6 +270,16 @@ export default {
             uid
             staff_id
             remark
+            user{
+              id
+              user_num
+              username
+            }
+            staff{
+              id
+              real_name
+              user_name
+            }
           }
         }
       }`
