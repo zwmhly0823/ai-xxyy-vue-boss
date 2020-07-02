@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-06-25 16:48:38
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-06-25 18:20:16
+ * @LastEditTime: 2020-07-02 12:21:52
 -->
 <template>
   <el-row type="flex" class="app-main height">
@@ -19,18 +19,20 @@
             :rules="rules"
             ref="phoneForm"
           >
-            <el-form-item label="原手机号" prop="oldPhone" required>
+            <el-form-item label="原手机号" prop="oldMobile">
               <el-input
-                v-model="phoneForm.oldPhone"
+                v-model="phoneForm.oldMobile"
                 placeholder="请输入学员手机号"
                 maxlength="11"
+                clearable
               ></el-input>
             </el-form-item>
-            <el-form-item label="新手机号" prop="newPhone" required>
+            <el-form-item label="新手机号" prop="newMobile">
               <el-input
-                v-model="phoneForm.newPhone"
+                v-model="phoneForm.newMobile"
                 placeholder="请输入新手机号"
                 maxlength="11"
+                clearable
               ></el-input>
             </el-form-item>
             <el-form-item>
@@ -88,7 +90,7 @@ export default {
   data() {
     var checkPhone = (rule, value, callback) => {
       console.log(rule)
-      const type = rule.field === 'oldPhone' ? '原手机号' : '新手机号'
+      const type = rule.field === 'oldMobile' ? '原手机号' : '新手机号'
       if (!value) {
         return callback(new Error(`请输入${type}`))
       } else if (!valid.isPhoneNum(value)) {
@@ -102,16 +104,19 @@ export default {
       totalElements: 0,
       tableHeight: 0,
       phoneForm: {
-        oldPhone: '',
-        newPhone: ''
+        oldMobile: '',
+        newMobile: ''
       },
       rules: {
-        oldPhone: [
+        oldMobile: [
           { required: true, validator: checkPhone, trigger: 'change' }
         ],
-        newPhone: [{ required: true, validator: checkPhone, trigger: 'change' }]
+        newMobile: [
+          { required: true, validator: checkPhone, trigger: 'change' }
+        ]
       },
-      recordList: []
+      recordList: [],
+      staff: {}
     }
   },
   created() {
@@ -120,6 +125,10 @@ export default {
         document.body.clientHeight - this.$refs.tableInner.offsetTop - 110
       this.tableHeight = tableHeight + ''
     })
+    const staff = JSON.parse(localStorage.getItem('staff') || '{}')
+    this.staff = staff
+
+    this.getLogData()
   },
   methods: {
     onSubmit(formName) {
@@ -127,7 +136,16 @@ export default {
         console.log(valid)
 
         if (valid) {
-          alert('submit!')
+          console.log(this.phoneForm)
+          const { newMobile, oldMobile } = this.phoneForm
+          const params = {
+            newMobile,
+            oldMobile,
+            staffId: this.staff.id
+          }
+          this.$http.Operating.replaceMobile(params).then((res) => {
+            console.log(res)
+          })
         } else {
           console.log('error submit!!')
           return false
@@ -148,6 +166,24 @@ export default {
 
     handleCurrentChange(page) {
       console.log(page)
+      this.currentPage = page
+    },
+
+    getLogData() {
+      const query = {}
+      const params = JSON.stringify(JSON.stringify(query))
+      this.$http.Operating.getUserReplaceMobileLog(
+        params,
+        this.currentPage
+      ).then((res) => {
+        console.log(res, 'log-list')
+        const data = res.data && res.data.UserReplaceMobileLogPage
+        if (data) {
+          const { totalElements, content } = data
+          this.totalElements = totalElements
+          this.recordList = content || []
+        }
+      })
     }
   }
 }

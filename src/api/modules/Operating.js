@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-03-16 19:46:39
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-06-30 17:05:57
+ * @LastEditTime: 2020-07-02 12:15:26
  */
 import axios from '../axiosConfig'
 // import { getToken } from '@/utils/auth'
@@ -241,7 +241,38 @@ export default {
    * 替换用户手机号
    * v1/user/replaceMobile?staffId=1&oldMobile=13012345670&newMobile=13012345672
    *  */
-  replaceMobile(param = {}) {
-    return axios.get(`/api/u/v1/user/replaceMobile?staffId`)
+  replaceMobile({ newMobile, oldMobile, staffId } = {}) {
+    return axios.post(
+      `/api/u/v1/user/replaceMobile?staffId=${staffId}&oldMobile=${oldMobile}&newMobile=${newMobile}`
+    )
+  },
+
+  /**
+   * 获取手机号替换记录
+   */
+  getUserReplaceMobileLog(params = '', page = 1) {
+    return axios.post('/graphql/v1/toss', {
+      query: `{
+        UserReplaceMobileLogPage(query: ${params}, page:${page}){
+          totalElements
+          totalPages
+          number
+          content{
+            id
+            cid
+            ctime
+            del
+            mid
+            utime
+            new_mobile
+            old_mobile
+            new_uid
+            uid
+            staff_id
+            remark
+          }
+        }
+      }`
+    })
   }
 }
