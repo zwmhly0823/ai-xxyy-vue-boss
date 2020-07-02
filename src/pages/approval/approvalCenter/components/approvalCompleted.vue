@@ -3,8 +3,8 @@
  * @version: 
  * @Author: Lukun
  * @Date: 2020-04-27 17:47:58
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-06-24 20:19:38
+ * @LastEditors: liukun
+ * @LastEditTime: 2020-07-02 20:25:53
  -->
 <template>
   <div class="container">
@@ -271,8 +271,17 @@
         </el-row>
         <el-row>
           <el-col :span="5">订单号:</el-col>
+          <el-col :span="18" :offset="1"
+            >{{ drawerApprovalDeatail.outTradeNo
+            }}<span style="color:red" v-if="drawerApprovalDeatail.isImport"
+              >(此为第三方导入订单)</span
+            ></el-col
+          >
+        </el-row>
+        <el-row v-if="drawerApprovalDeatail.channelOuterName">
+          <el-col :span="5">订单来源:</el-col>
           <el-col :span="18" :offset="1">{{
-            drawerApprovalDeatail.outTradeNo
+            drawerApprovalDeatail.channelOuterName
           }}</el-col>
         </el-row>
         <div v-if="currentType !== 'UNCREDITED'">
@@ -324,7 +333,7 @@
            `
             }}</el-col>
           </el-row>
-          <el-row>
+          <!-- <el-row>
             <el-col :span="5">退款月数:</el-col>
             <el-col :span="18" :offset="1">{{
               `${Math.floor(drawerApprovalDeatail.periodRefund / 4)}月`
@@ -339,7 +348,7 @@
            )}月${drawerApprovalDeatail.periodResidue % 4}周
            `
             }}</el-col>
-          </el-row>
+          </el-row> -->
           <el-row>
             <el-col :span="5">退款金额:</el-col>
             <el-col :span="18" :offset="1">{{
