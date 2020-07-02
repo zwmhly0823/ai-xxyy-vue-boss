@@ -60,10 +60,15 @@ export function param2Obj(url) {
  * @str: 时间戳 @type: String 'd'：天 'm':分 's': 秒
  */
 export function formatData(str, type = 'd') {
-  if (!str) return ''
+  if (!str || +str === 0) return ''
   let ft = 'YYYY-MM-DD'
   if (type !== 'd') {
-    ft = type === 'm' ? 'YYYY-MM-DD HH:mm' : 'YYYY-MM-DD HH:mm:ss'
+    if (type === 'shortDay') {
+      // 06-18 15:00
+      ft = 'MM-DD HH:mm'
+    } else {
+      ft = type === 'm' ? 'YYYY-MM-DD HH:mm' : 'YYYY-MM-DD HH:mm:ss'
+    }
   }
   return dayjs.unix(Number(str) / 1000).format(ft)
 }
@@ -119,6 +124,8 @@ export function timestamp(stamp, type) {
     const months = month <= 9 ? '0' + month : month
     const days = day <= 9 ? '0' + day : day
     return months + '-' + days
+  } else if (type === 8) {
+    return year + '-' + _mouth + '-' + _day + ' ' + _hour + ':' + _minute
   }
 }
 

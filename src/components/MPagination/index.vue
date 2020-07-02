@@ -145,7 +145,7 @@ export default {
   position: fixed;
   bottom: 10px;
   right: 10px;
-  z-index: 1000;
+  z-index: 999;
   padding: 8px 15px !important;
   color: #4d4d4d;
   transition: width 0.3s;

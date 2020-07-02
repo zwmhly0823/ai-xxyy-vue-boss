@@ -4,7 +4,7 @@
  * @Author: shentong
  * @Date: 2020-03-13 16:20:48
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-06-12 18:01:03
+ * @LastEditTime: 2020-06-30 14:59:16
  */
 import axios from '../axiosConfig'
 
@@ -92,6 +92,8 @@ export default {
               nickname
               mobile
             }
+            trial_pay_channel
+            trial_pay_channel_text
           }
         }
       }`
@@ -152,5 +154,14 @@ export default {
     return axios.get(
       `/api/o/v1/order/getOrdersByStatus?userId=${uid}&status=COMPLETED&page=0`
     )
+  },
+
+  /**
+   * 批量发送 地址催发短信
+   * get
+   * @orderIds: String, '1,2,4'
+   */
+  pushMsgByOrderIds(orderIds) {
+    return axios.get(`/api/o/v1/order/pushMsgByOrderIds?orderIds=${orderIds}`)
   }
 }

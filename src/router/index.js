@@ -28,6 +28,7 @@
 // }
 // const routes = [getRoutes(studentTeamdRouter)]
 // console.log(routes)
+const staff = JSON.parse(localStorage.getItem('staff'))
 
 const routes = [
   // 班级
@@ -122,6 +123,99 @@ const routes = [
       }
     ]
   },
+  // 社群工具
+  {
+    path: '/community',
+    name: 'community',
+    // hidden: true,
+    meta: {
+      title: '社群工具',
+      icon: 'icongongju1',
+      module: 'community'
+    },
+    children: [
+      {
+        path:
+          'https://wgj.xiaoxiongmeishu.com/Site/AccuratePush/accuratePush.html',
+        meta: {
+          title: '群发消息',
+          show: true
+        }
+      },
+      {
+        path:
+          'https://wgj.xiaoxiongmeishu.com/Marketing/FriendsCircle/FriendsCircleList',
+        meta: {
+          title: '发朋友圈',
+          show: true
+        }
+      },
+      {
+        path:
+          'https://wgj.xiaoxiongmeishu.com/Equipment/QuickReply/QuickReplyList',
+        meta: {
+          title: '快捷回复',
+          show: true
+        }
+      },
+      {
+        path:
+          'https://wgj.xiaoxiongmeishu.com/Equipment/AutoCreateCluster/KeyClusterList',
+        meta: {
+          title: '自动拉群',
+          show: true
+        }
+      },
+      {
+        path: 'https://wgj.xiaoxiongmeishu.com/WeiXin/Tag/WeiXinTagList',
+        meta: {
+          title: '微信标签',
+          show: true
+        }
+      },
+      // {
+      //   path: 'https://wgj.xiaoxiongmeishu.com/Equipment/Material/MaterialList',
+      //   meta: {
+      //     title: '素材库',
+      //     show: true
+      //   }
+      // },
+      {
+        path: 'https://wgj.xiaoxiongmeishu.com/WeiXin/Cluster/ClusterList',
+        meta: {
+          title: '微信群',
+          show: true
+        }
+      },
+      {
+        path:
+          'https://wgj.xiaoxiongmeishu.com/Marketing/AutoPassFriend/AutoPassFriendList',
+        meta: {
+          title: '被动通过添加好友设置'
+        }
+      },
+      {
+        path:
+          'https://wgj.xiaoxiongmeishu.com/Equipment/MsgRule/UserAddRuleList',
+        meta: {
+          title: '通过好友自动回复设置'
+        }
+      },
+      {
+        path: 'https://wgj.xiaoxiongmeishu.com/Equipment/MsgRule/KeyRuleList',
+        meta: {
+          title: '单聊关键词自动回复设置'
+        }
+      },
+      {
+        path:
+          'https://wgj.xiaoxiongmeishu.com/Equipment/MsgRule/ClusterKeyRuleList?menuType=1',
+        meta: {
+          title: '群聊关键词自动回复设置'
+        }
+      }
+    ]
+  },
   // 物流管理
   {
     path: '/express',
@@ -195,14 +289,6 @@ const routes = [
       module: 'operating'
     },
     children: [
-      // {
-      //   path: '/enrollmentSchedule',
-      //   name: 'enrollmentSchedule',
-      //   meta: {
-      //     title: '招生排期',
-      //     module: 'operating'
-      //   }
-      // },
       {
         path: '/channelManagement',
         name: 'channelManagement',
@@ -232,6 +318,26 @@ const routes = [
         name: 'labelManage',
         meta: {
           title: '标签管理',
+          module: 'operating'
+        }
+      },
+      {
+        path: '/operatingSchedule',
+        name: 'operatingSchedule',
+        // hidden: staff.roleId !== '1' && staff.roleId !== '7',
+        hidden: staff.roleId !== '7',
+        meta: {
+          // show: staff.roleId === '1' || staff.roleId === '7',
+          show: staff.roleId === '7',
+          title: '招生排期',
+          module: 'operating'
+        }
+      },
+      {
+        path: '/pushConfig',
+        name: 'pushConfig',
+        meta: {
+          title: '推送配置',
           module: 'operating'
         }
       }

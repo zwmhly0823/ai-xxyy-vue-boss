@@ -14,6 +14,7 @@
       clearable
       :multiple="multiple"
       :placeholder="placeholder"
+      :style="myStyle"
       size="mini"
       class="item-style"
     >
@@ -47,12 +48,37 @@ export default {
     multiple: {
       type: Boolean,
       default: true
+    },
+    // 自定义style样式
+    myStyle: {
+      type: Object,
+      default: () => {}
+    },
+    searchProp: {
+      type: Object,
+      default: () => {}
     }
   },
   data() {
     return {
       value: []
       // dataList: []
+    }
+  },
+  created() {
+    // search有默认值时
+    if (this.searchProp && this.name === this.searchProp.name) {
+      let index
+      this.dataList.forEach((dItem, dKey) => {
+        if (+dItem.id === +this.searchProp.value) {
+          index = dKey
+        }
+      })
+      this.value = this.dataList[index].id
+      this.onChange(this.searchProp.value)
+      setTimeout(() => {
+        localStorage.removeItem('noticeParams')
+      }, 0)
     }
   },
   methods: {

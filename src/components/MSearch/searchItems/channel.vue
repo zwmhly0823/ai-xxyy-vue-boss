@@ -3,8 +3,8 @@
  * @version:
  * @Author: zhubaodong
  * @Date: 2020-03-24 18:50:54
- * @LastEditors: liukun
- * @LastEditTime: 2020-04-28 20:54:06
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-06-24 11:34:29
  -->
 <template>
   <div class="search-item small threeSelect">
@@ -22,6 +22,7 @@
         checkStrictly: false
       }"
       :show-all-levels="true"
+      :style="myStyle"
       clearable
       filterable
     ></el-cascader>
@@ -48,6 +49,11 @@ export default {
     placeHoldText: {
       type: String,
       default: '订单来源'
+    },
+    // 自定义style样式
+    myStyle: {
+      type: Object,
+      default: () => {}
     }
   },
   data() {
@@ -180,6 +186,9 @@ export default {
     white-space: nowrap !important;
     overflow: hidden !important;
     text-overflow: ellipsis !important;
+    .el-cascader__search-input {
+      display: none;
+    }
   }
   .el-cascader--mini {
     height: 28px;

@@ -1,7 +1,7 @@
 /*
  * @Date: 2020-03-13 15:20:21
  * @LastEditors: panjian
- * @LastEditTime: 2020-06-12 11:53:11
+ * @LastEditTime: 2020-06-28 17:16:59
  * @FilePath: /ai-app-vue-toss/src/pages/studentTeam/router/index.js
  */
 import Vue from 'vue'
@@ -92,6 +92,15 @@ const routes = [
       keepAlive: false
     },
     component: () => import('../views/labelManage/index.vue')
+  },
+  {
+    path: '/pushConfig',
+    name: 'pushConfig',
+    meta: {
+      title: '推送配置',
+      keepAlive: false
+    },
+    component: () => import('../views/pushConfig/index.vue')
   }
 ]
 

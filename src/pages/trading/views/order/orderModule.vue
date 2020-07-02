@@ -31,6 +31,7 @@
               <el-tab-pane label="体验课" name="4">
                 <search-list2
                   @search="handleSearch"
+                  :searchProp="searchProp"
                   v-if="activeTopic === '4'"
                 />
                 <all-order2
@@ -82,7 +83,8 @@ export default {
       activeTopic: '5',
       // 搜索
       search: [],
-      showSearch: true
+      showSearch: true,
+      searchProp: {}
     }
   },
   computed: {},
@@ -102,9 +104,17 @@ export default {
       this.search = res
     }
   },
-  created() {},
-  mounted() {},
-  destroyed() {}
+  created() {
+    const urlParams = localStorage.getItem('noticeParams')
+    if (urlParams) {
+      // 本期消息中心跳转只做体验课的
+      this.activeTopic = '4'
+      this.searchProp = {
+        name: urlParams.split(',')[0],
+        value: urlParams.split(',')[1]
+      }
+    }
+  }
 }
 </script>
 

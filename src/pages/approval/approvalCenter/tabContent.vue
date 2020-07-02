@@ -68,7 +68,8 @@ export default {
         resource: '',
         desc: ''
       },
-      timer: null
+      timer: null,
+      activeNameBySearch: ''
     }
   },
   methods: {
@@ -76,7 +77,8 @@ export default {
       this.activeName = val
     },
     getRouterData() {
-      this.activeName = this.$route.params.activeApprove || 'first'
+      this.activeName =
+        this.$route.params.activeApprove || this.activeNameBySearch || 'first'
       console.log(this.activeName, 'this.activeName')
     },
     handleClick(tab, event) {
@@ -91,9 +93,28 @@ export default {
     },
     approvalDone() {
       this.activeName = 'third'
+    },
+    getNoticeLinkParams() {
+      if (localStorage.getItem('noticeParams')) {
+        const params = localStorage.getItem('noticeParams').split(',')
+        switch (+params[1]) {
+          case 0:
+            this.activeNameBySearch = 'second'
+            break
+          case 1:
+            this.activeNameBySearch = 'third'
+            break
+          case 2:
+            this.activeNameBySearch = 'forth'
+            break
+          case 3:
+            this.activeNameBySearch = 'fifth'
+            break
+        }
+        localStorage.removeItem('noticeParams')
+      }
     }
-  },
-  mounted() {}
+  }
 }
 </script>
 

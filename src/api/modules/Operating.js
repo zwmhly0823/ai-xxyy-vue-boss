@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-03-16 19:46:39
  * @LastEditors: panjian
- * @LastEditTime: 2020-06-12 11:53:58
+ * @LastEditTime: 2020-06-28 14:26:05
  */
 import axios from '../axiosConfig'
 // import { getToken } from '@/utils/auth'
@@ -39,6 +39,23 @@ export default {
   getScheduleFirstStep(params) {
     return axios.get(
       `/api/s/v1/management/enroll/sell?courseType=${params.courseType}&period=${params.period}`
+    )
+  },
+  /**
+   * 招生排期第一步，第二步之间 分配占比设置-add
+   */
+  addLeads(params, period) {
+    return axios.post(
+      `/api/t/v1/teacher/course/enroll/teacher/channel/config/save?period=${period}`,
+      params
+    )
+  },
+  /**
+   * 招生排期第一步，第二步之间 分配占比-edit获取数据
+   */
+  getLeads(params) {
+    return axios.get(
+      `/api/t/v1/teacher/course/enroll/teacher/channel/config?courseType=${params.courseType}&period=${params.period}`
     )
   },
   /**
@@ -80,7 +97,7 @@ export default {
    */
   getScheduleDetailList(params) {
     return axios.get(
-      `/api/s/v1/management/enroll/getDetail?teacherId=${params.teacherId}&departmentIds=${params.departmentIds}&courseType=${params.courseType}&period=${params.period}&pageSize=${params.size}&pageNumber=` +
+      `/api/s/v1/management/enroll/getDetail?teacherId=${params.teacherId}&departmentIds=${params.departmentIds}&level=${params.level}&courseType=${params.courseType}&period=${params.period}&pageSize=${params.size}&pageNumber=` +
         params.pageNum
     )
   },
@@ -99,7 +116,7 @@ export default {
    */
   getScheduleDetailStatistic(params) {
     return axios.get(
-      `/api/s/v1/management/enroll/calculation/byPeriod?teacherId=${params.teacherId}&departmentIds=${params.departmentIds}&courseType=${params.courseType}&period=${params.period}`
+      `/api/s/v1/management/enroll/calculation/byPeriod?teacherId=${params.teacherId}&departmentIds=${params.departmentIds}&level=${params.level}&courseType=${params.courseType}&period=${params.period}`
     )
   },
   /**
@@ -190,6 +207,7 @@ export default {
             id
             channel_inner_name
             channel_link
+            channel_level
             channel_link_short
             short_er_code
             status
@@ -207,6 +225,38 @@ export default {
         }
       }`
     })
+  },
+  /**
+   *
+   * 二级渠道查询
+   */
+  ChannelClassPage(Params, page = 1) {
+    return axios.post('/graphql/v1/toss', {
+      query: `{
+        ChannelClassPage(query:${Params},page:${page},size:20){
+          content{
+            channel_class_name
+            channel_level
+            id
+            channel_class_parent_id
+            channelClassParent{
+              channel_class_name
+              id
+            }
+          }
+          number
+          totalElements
+          totalPages
+        }
+      }`
+    })
+  },
+  /**
+   * 二级渠道信息管理 修改渠道
+   * @param {*} param0
+   */
+  updateChannelClassV2(params) {
+    return axios.get('/api/c/v1/channel/updateChannelClassV2', params)
   },
   /*
    * 密码登录
@@ -235,5 +285,57 @@ export default {
   // 查询验证码
   getVerification(parmas) {
     return axios.get(`/api/m/v1/sms/getCodeByMobile?mobile=${parmas}`)
+  },
+  // 推送配置 创建
+  pushNotificationsAdd(params) {
+    return axios.post(`/api/b/v1/backend/PushNotifications/add`, params)
+  },
+  // 推送配置 修改保存
+  pushNotificationsUpdate(params) {
+    return axios.post(`/api/b/v1/backend/PushNotifications/update`, params)
+  },
+  // 推送配置列表
+  getPushNotificationsList(currentPage) {
+    return axios.get(
+      `/api/b/v1/backend/PushNotifications/list?page=${currentPage}&size=20`
+    )
+  },
+  // 推送配置 推送
+  pushNotificationsExecute(id, operatorId, operatorName) {
+    return axios.get(
+      `/api/b/v1/backend/PushNotifications/execute?id=${id}&operatorId=${operatorId}&operatorName=${operatorName}`
+    )
+  },
+  // 推送配置 推送
+  queryQuestionnairePage(page, size) {
+    return axios.get(
+      `/api/f/v1/questionnaire/queryQuestionnairePage?page=${page}&pagesize=${size}`
+    )
+  },
+  /**
+   *
+   *通过期数 获取期数下人员总数 (体验课)
+   */
+  StudentTrialCoursePage(Params) {
+    return axios.post('/graphql/v1/toss', {
+      query: `{
+        StudentTrialCoursePage(query:${Params}){
+          totalElements
+        }
+      }`
+    })
+  },
+  /**
+   *
+   *通过期数 获取期数下人员总数 (系统课)
+   */
+  StudentSystemCoursePage(Params) {
+    return axios.post('/graphql/v1/toss', {
+      query: `{
+        StudentSystemCoursePage(query:${Params}){
+          totalElements
+        }
+      }`
+    })
   }
 }

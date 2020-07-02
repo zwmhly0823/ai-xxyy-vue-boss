@@ -11,10 +11,15 @@
     <div class="grid-content">
       <el-scrollbar wrap-class="scrollbar-wrapper">
         <div class="scroll-container">
-          <h3 class="title-todo">新建体验课招生排期</h3>
+          <h3 class="title-todo">新建{{ courseName }}招生排期</h3>
           <div class="step-container-status">
             <el-steps :active="stepStatus">
               <el-step title="设置基本信息" icon="el-icon-edit"></el-step>
+              <el-step
+                v-if="courseType == '0'"
+                title="设置分配线索规则"
+                icon="el-icon-s-tools"
+              ></el-step>
               <el-step title="选择带班销售" icon="el-icon-s-flag"></el-step>
               <el-step title="设置招生容量" icon="el-icon-s-check"></el-step>
               <el-step title="完成" icon="el-icon-success"></el-step>
@@ -27,22 +32,28 @@
             @listenStepStatus="oneStepNext"
           ></first-step>
 
+          <!-- 插入一步 设置分配线索 仅体验课显示 -->
+          <set-leads
+            v-if="courseType == '0' && stepStatus == 2"
+            @listenStepStatus="fSstepStatus"
+          ></set-leads>
+
           <!-- 第二步 -->
           <second-step
-            v-show="stepStatus == 2"
+            v-show="isShowSecondStep"
             :stepStatus="stepStatus"
             @listenStepStatus="fSstepStatus"
           ></second-step>
           <!-- 第三步 -->
           <third-step
-            v-if="stepStatus == 3"
+            v-if="isShowThirdStep"
             :stepStatus="stepStatus"
             @listenStepStatus="fSstepStatus"
           ></third-step>
           <!-- 第四步 -->
           <div
             class="step-container step-four-container"
-            v-show="stepStatus == 4"
+            v-show="isShowLastStep"
           >
             <div class="complete-container">
               <i class="el-icon-success"></i>
@@ -67,18 +78,56 @@
 import FirstStep from './components/FirstStep'
 import SecondStep from './components/SecondStep'
 import ThirdStep from './components/ThirdStep'
+import SetLeads from './components/SetLeads'
 export default {
   props: [],
   data() {
     return {
       stepStatus: 1,
-      teacherSelectInfo: {}
+      teacherSelectInfo: {},
+      courseType: '0',
+      courseName: '体验课'
     }
   },
   components: {
     FirstStep,
     SecondStep,
-    ThirdStep
+    ThirdStep,
+    SetLeads
+  },
+  computed: {
+    isShowSecondStep() {
+      if (
+        (this.courseType === '0' && this.stepStatus === 3) ||
+        (this.courseType === '1' && this.stepStatus === 2)
+      ) {
+        return true
+      }
+      return false
+    },
+    isShowThirdStep() {
+      if (
+        (this.courseType === '0' && this.stepStatus === 4) ||
+        (this.courseType === '1' && this.stepStatus === 3)
+      ) {
+        return true
+      }
+      return false
+    },
+    isShowLastStep() {
+      if (
+        (this.courseType === '0' && this.stepStatus === 5) ||
+        (this.courseType === '1' && this.stepStatus === 4)
+      ) {
+        return true
+      }
+      return false
+    }
+  },
+  created() {
+    const { courseType = '0' } = this.$route.params
+    this.courseType = courseType
+    this.courseName = courseType === '0' ? '体验课' : '系统课'
   },
   methods: {
     // 第一步 点击下一步 监听
