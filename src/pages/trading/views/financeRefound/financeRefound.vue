@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-05-19 17:18:39
  * @LastEditors: liukun
- * @LastEditTime: 2020-06-10 16:01:41
+ * @LastEditTime: 2020-07-02 20:15:09
 -->
 <template>
   <section class="bianju10">
@@ -83,18 +83,27 @@
             v-model="fordisplay5"
             @change="refundType"
           >
-            <el-option label="优惠券退款" value="0"></el-option>
+            <el-option
+              v-for="(item, index) of [
+                { label: '优惠券退款' },
+                { label: '课程退款' },
+                { label: '降为半年包' },
+                { label: '补偿' }
+              ]"
+              :label="item.label"
+              :value="index"
+              :key="index"
+            ></el-option>
+
+            <!-- <el-option label="优惠券退款" value="0"></el-option>
             <el-option label="课程退款" value="1"></el-option>
+            <el-option label="降为半年包" value="2"></el-option>
+            <el-option label="补偿" value="3"></el-option> -->
           </el-select>
         </el-form-item>
-        <el-form-item label="用户搜索:">
+        <el-form-item label="申请人搜索:">
           <div class="concat">
-            <el-input
-              clearable
-              placeholder="请键入用户ID"
-              v-model="fordisplay4"
-              @change="customerSearch"
-            ></el-input>
+            <applicant @result="applicantSearch" placeholder="申请人" />
           </div>
         </el-form-item>
         <el-form-item label="时间查询:">
@@ -130,21 +139,31 @@
     <el-divider></el-divider>
     <div>
       <el-table :data="tableData" style="width: 100%">
-        <el-table-column prop="outTradeNo" label="订单编号" align="center">
+        <el-table-column label="订单编号-订单交易流水号" width="220">
+          <template slot-scope="scope">
+            <div>
+              {{
+                scope.row.outTradeNo &&
+                  scope.row.outTradeNo.replace(/[a-z]*/g, '')
+              }}<br />{{ scope.row.transactionId }}
+            </div>
+          </template>
         </el-table-column>
-        <el-table-column prop="uid" label="用户ID" align="center">
+        <el-table-column prop="uid" label="用户ID" align="center" width="180">
         </el-table-column>
         <el-table-column prop="regtypeStr" label="业务类型" align="center">
         </el-table-column>
+        <el-table-column prop="applyName" label="申请人" align="center">
+        </el-table-column>
         <el-table-column prop="tradeTypeStr" label="支付方式" align="center">
         </el-table-column>
-        <el-table-column
+        <!-- <el-table-column
           prop="transactionId"
           label="订单交易流水号"
           align="center"
           width="120"
         >
-        </el-table-column>
+        </el-table-column> -->
         <el-table-column
           prop="buytime"
           label="订单支付时间"
@@ -163,7 +182,7 @@
         <el-table-column prop="totoalFee" label="交易金额" align="center">
         </el-table-column>
         <el-table-column
-          prop="ctime"
+          prop="applyTime"
           label="申请退款时间"
           align="center"
           width="155"
@@ -216,7 +235,22 @@
         </el-row>
         <el-row v-if="choutidata.outTradeNo !== ''">
           <el-col :span="4">订单号:</el-col>
-          <el-col :span="18" :offset="2">{{ choutidata.outTradeNo }} </el-col>
+          <el-col :span="18" :offset="2"
+            >{{
+              choutidata.outTradeNo &&
+                choutidata.outTradeNo.replace(/[a-z]*/g, '')
+            }}<span
+              style="color:red"
+              v-if="Number(choutidata.importTime) > 0 && choutidata.importTime"
+              >(此为第三方导入订单)</span
+            >
+          </el-col>
+        </el-row>
+        <el-row v-if="choutidata.channelOuterName !== ''">
+          <el-col :span="4">第三方订单来源:</el-col>
+          <el-col :span="18" :offset="2"
+            >{{ choutidata.channelOuterName }}
+          </el-col>
         </el-row>
         <el-row v-if="choutidata.regtypeStr !== ''">
           <el-col :span="4">业务类型:</el-col>
@@ -312,7 +346,11 @@
 </template>
 
 <script>
+import applicant from './applicant.vue'
 export default {
+  components: {
+    applicant
+  },
   created() {
     // init全量数据展示
     this.arrangeParams()
@@ -334,7 +372,8 @@ export default {
         sctime: '', // 申请退款-开始时间
         ectime: '', // 申请退款-结束时间
         srefundTime: '', // 申请完成-开始时间
-        erefundTime: '' // 申请完成-结束时间
+        erefundTime: '', // 申请完成-结束时间
+        applyName: ''
       },
       // 被动关联事件_断值(用于赋值↑下半段)
       num1: '',
@@ -348,7 +387,6 @@ export default {
       fordisplay2: '',
       fordisplay3: '', // 退款状态
       fordisplay5: '', // 退款类型
-      fordisplay4: '',
       fordisplay6: '', // 退款规则
 
       // 分页
@@ -418,9 +456,10 @@ export default {
         this.arrangeParams()
       }
     },
-    customerSearch(val) {
+    // 申请人
+    applicantSearch(val) {
       console.info(val, typeof val)
-      this.searchJson.uid = val
+      this.searchJson.applyName = val
       this.arrangeParams()
     },
     // 2组关联
@@ -430,7 +469,7 @@ export default {
         // 订单号
         if (this.num1_) {
           this.searchJson.transactionId = ''
-          this.searchJson.outTradeNo = this.num1_
+          this.searchJson.outTradeNo = 'xiong' + this.num1_
           this.arrangeParams()
         } else {
           this.$message({
@@ -461,7 +500,7 @@ export default {
       if (this.num1 === '0') {
         // 订单号
         this.searchJson.transactionId = ''
-        this.searchJson.outTradeNo = val
+        this.searchJson.outTradeNo = 'xiong' + val
         this.arrangeParams()
       } else if (this.num1 === '1') {
         // 流水号
