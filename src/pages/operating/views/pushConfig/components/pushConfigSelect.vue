@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-06-23 15:26:34
  * @LastEditors: panjian
- * @LastEditTime: 2020-06-29 15:30:02
+ * @LastEditTime: 2020-07-02 17:34:15
 -->
 <template>
   <div class="select-box">
@@ -126,7 +126,7 @@ export default {
       questionnaireList: [],
       term: '',
       period: 0,
-      page: 0,
+      page: 1,
       pageSize: 20,
       ruleForm: {
         timeDate: '',
