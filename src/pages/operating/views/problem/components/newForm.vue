@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-06-28 17:11:05
  * @LastEditors: panjian
- * @LastEditTime: 2020-07-01 14:40:52
+ * @LastEditTime: 2020-07-02 15:57:13
 -->
 <template>
   <div class="new-form">
@@ -46,7 +46,10 @@
     </el-form>
     <div>
       <el-dialog :visible.sync="dialogFormVisible" width="750px" append-to-body>
-        <experienceProblem :ruleForm="ruleForm" />
+        <experienceProblem
+          @onCloseSaveQuestionnaire="onCloseSaveQuestionnaire"
+          :ruleForm="ruleForm"
+        />
       </el-dialog>
     </div>
   </div>
@@ -75,11 +78,14 @@ export default {
     }
   },
   methods: {
+    onCloseSaveQuestionnaire() {
+      this.dialogFormVisible = false
+      this.$emit('closeDialogVisible')
+    },
     submitForm(formName) {
-      this.dialogFormVisible = true
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          this.$emit('closeDialogVisible')
+          this.dialogFormVisible = true
         } else {
           console.log('error submit!!')
           return false

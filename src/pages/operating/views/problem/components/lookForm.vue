@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-07-01 15:10:26
  * @LastEditors: panjian
- * @LastEditTime: 2020-07-01 20:13:27
+ * @LastEditTime: 2020-07-02 15:52:02
 -->
 <template>
   <div class="look-form-box">
@@ -16,7 +16,16 @@
         <div v-for="(item, index) in lookValueList" :key="index">
           <el-form-item>
             <span>{{ index + 1 }}. {{ item.title }}</span>
-            <span v-if="item.questionType == 'CHECKBOX'">(多选)</span>
+            <span
+              style="margin-left:10px;"
+              v-if="item.questionType == 'CHECKBOX'"
+              >(多选)</span
+            >
+            <span
+              style="margin-left:10px;"
+              v-if="item.isMusts && item.questionType == 'SUBJECTIVE'"
+              >(必填)</span
+            >
             <div v-if="item.questionType == 'RADIO'">
               <el-radio-group v-model="radio[index]">
                 <el-radio

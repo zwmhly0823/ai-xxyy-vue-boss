@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-06-28 18:37:21
  * @LastEditors: panjian
- * @LastEditTime: 2020-07-01 20:58:18
+ * @LastEditTime: 2020-07-02 15:59:34
 -->
 <template>
   <div class="experience-box">
@@ -113,13 +113,12 @@
             <el-form-item>
               <i class="el-icon-delete" @click="deleteItem(item, index)"></i>
             </el-form-item>
-            <!-- <el-form-item>
-              <el-checkbox
-                v-if="item.questionType == 'SUBJECTIVE'"
-                v-model="item.questionState"
-                >是否必填</el-checkbox
-              >
-            </el-form-item> -->
+            <el-form-item
+              v-if="item.questionType == 'SUBJECTIVE'"
+              style="margin-left:50px;"
+            >
+              <el-checkbox v-model="item.isMusts">是否必填</el-checkbox>
+            </el-form-item>
           </div>
         </el-form>
       </div>
@@ -163,29 +162,16 @@
         />
       </el-dialog>
     </div>
-    <div>
-      <el-dialog
-        :visible.sync="updateDialogFormVisibles"
-        width="750px"
-        append-to-body
-      >
-        <updateExperienceProblem
-          v-if="updateDialogFormVisibles"
-          :updateRuleForms="ruleForms"
-        />
-      </el-dialog>
-    </div>
   </div>
 </template>
 
 <script>
 import lookForm from './lookForm'
-import updateExperienceProblem from './updateExperienceProblem'
+
 import { deepClone } from '@/utils/index'
 export default {
   components: {
-    lookForm,
-    updateExperienceProblem
+    lookForm
   },
   props: {
     ruleForm: {
@@ -195,7 +181,6 @@ export default {
   },
   data() {
     return {
-      updateDialogFormVisibles: false,
       dialogFormVisibles: false,
       moreNotifyOjbectRules: {
         title: [
@@ -272,15 +257,21 @@ export default {
         questionClass: 'PUBLIC',
         questionType: 'SUBJECTIVE',
         title: '',
-        questionState: 'DEFAULT'
+        questionState: 'DEFAULT',
+        isMusts: false
       },
       summaryListValue: true
     }
   },
+  created() {
+    console.log(this.ruleForm)
+  },
   methods: {
+    // 关闭预览
     onClose() {
       this.dialogFormVisibles = false
     },
+    // 保存
     submitForm() {
       // console.log(this.$refs.ruleForms.model.summaryList)
       try {
@@ -305,15 +296,37 @@ export default {
       } catch (e) {
         if (e.message !== 'EndIterative') throw e
       }
-      console.log(this.summaryListValue)
-      console.log(this.ruleForms.summaryList)
       if (this.summaryListValue) {
-        // this.dialogFormVisibles = true
-        this.updateDialogFormVisibles = true
+        const _data = this.ruleForms.summaryList
+        _data.forEach((res) => {
+          res.isMust = res.isMusts ? 0 : 1
+          delete res.isMusts
+        })
+        const params = {
+          title: this.ruleForm.title,
+          desc: this.ruleForm.desc,
+          image: this.ruleForm.imageUrl,
+          questionState: this.ruleForm.questionState,
+          questionList: _data
+        }
+        console.log(params)
+        this.$http.Operating.saveQuestionnaire(params).then((res) => {
+          if (res.code === 0) {
+            this.$message({
+              showClose: true,
+              message: '保存成功',
+              type: 'success'
+            })
+            setTimeout(() => {
+              this.$emit('onCloseSaveQuestionnaire')
+            }, 200)
+          }
+        })
       } else {
-        this.$message.error('请填写问卷')
+        this.$message.error('请将问卷填写完成！')
       }
     },
+    // 预览
     lookResetForm() {
       try {
         const _summaryList = this.ruleForms.summaryList
@@ -340,7 +353,7 @@ export default {
       if (this.summaryListValue) {
         this.dialogFormVisibles = true
       } else {
-        this.$message.error('请填写问卷')
+        this.$message.error('请将问卷填写完成！')
       }
     },
     // 新增单选提
