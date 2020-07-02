@@ -340,6 +340,14 @@ const routes = [
           title: '推送配置',
           module: 'operating'
         }
+      },
+      {
+        path: '/changePhoneNumber',
+        name: 'changePhoneNumber',
+        meta: {
+          title: '手机号替换',
+          module: 'operating'
+        }
       }
     ]
   },

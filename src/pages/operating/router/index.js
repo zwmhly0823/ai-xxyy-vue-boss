@@ -1,7 +1,7 @@
 /*
  * @Date: 2020-03-13 15:20:21
- * @LastEditors: panjian
- * @LastEditTime: 2020-06-28 17:33:09
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-07-02 15:24:43
  * @FilePath: /ai-app-vue-toss/src/pages/studentTeam/router/index.js
  */
 import Vue from 'vue'
@@ -101,6 +101,15 @@ const routes = [
       keepAlive: false
     },
     component: () => import('../views/pushConfig/index.vue')
+  },
+  {
+    path: '/changePhoneNumber',
+    name: 'changePhoneNumber',
+    meta: {
+      title: '手机号替换',
+      keepAlive: false
+    },
+    component: () => import('../views/changePhoneNumber/index.vue')
   }
 ]
 
