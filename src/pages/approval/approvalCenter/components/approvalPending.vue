@@ -4,7 +4,7 @@
  * @Author: Lukun
  * @Date: 2020-04-27 17:47:58
  * @LastEditors: liukun
- * @LastEditTime: 2020-07-02 20:25:41
+ * @LastEditTime: 2020-07-03 16:50:47
  -->
 <template>
   <div class="container">
@@ -338,19 +338,19 @@
                 : '优惠券退款'
             }}</el-col>
           </el-row>
-          <!-- <el-row>
+          <el-row>
             <el-col :span="5">已上课周期:</el-col>
             <el-col :span="18" :offset="1">{{
               drawerApprovalDeatail.periodAlready
             }}</el-col>
           </el-row>
-          <el-row>
+          <!-- <el-row>
             <el-col :span="5">退款月数:</el-col>
             <el-col :span="18" :offset="1">{{
               `${Math.floor(drawerApprovalDeatail.periodRefund / 4)}月`
             }}</el-col>
           </el-row> -->
-          <el-row>
+          <!-- <el-row>
             <el-col :span="5">剩余可上课周期:</el-col>
             <el-col :span="18" :offset="1">{{
               `
@@ -359,7 +359,7 @@
            )}月${drawerApprovalDeatail.periodResidue % 4}周
            `
             }}</el-col>
-          </el-row>
+          </el-row> -->
           <el-row :class="$style.align_items">
             <el-col :span="5">退款金额:</el-col>
             <el-col :span="4" :offset="1">{{

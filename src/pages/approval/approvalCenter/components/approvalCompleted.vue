@@ -4,7 +4,7 @@
  * @Author: Lukun
  * @Date: 2020-04-27 17:47:58
  * @LastEditors: liukun
- * @LastEditTime: 2020-07-02 20:25:53
+ * @LastEditTime: 2020-07-03 19:44:47
  -->
 <template>
   <div class="container">
@@ -365,6 +365,19 @@
             <el-col :span="5">退款说明:</el-col>
             <el-col :span="18" :offset="1">{{
               drawerApprovalDeatail.refundMsg
+            }}</el-col>
+          </el-row>
+          <el-row
+            v-if="
+              drawerApprovalDeatail.isRecover === 1 ||
+                drawerApprovalDeatail.isRecover === 0
+            "
+          >
+            <el-col :span="5">课程与物流恢复状态:</el-col>
+            <el-col :span="18" :offset="1">{{
+              Number(drawerApprovalDeatail.isRecover)
+                ? '已恢复'
+                : '未恢复请处理'
             }}</el-col>
           </el-row>
           <el-row>
