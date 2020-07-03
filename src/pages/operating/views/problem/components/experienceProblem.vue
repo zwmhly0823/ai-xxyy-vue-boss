@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-06-28 18:37:21
  * @LastEditors: panjian
- * @LastEditTime: 2020-07-02 18:06:42
+ * @LastEditTime: 2020-07-03 11:25:08
 -->
 <template>
   <div class="experience-box">
@@ -321,6 +321,7 @@ export default {
               message: '保存成功',
               type: 'success'
             })
+            this.ruleForms.summaryList = []
             setTimeout(() => {
               this.$emit('onCloseSaveQuestionnaire')
             }, 200)

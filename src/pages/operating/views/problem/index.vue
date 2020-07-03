@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-06-24 17:01:54
  * @LastEditors: panjian
- * @LastEditTime: 2020-07-02 18:39:09
+ * @LastEditTime: 2020-07-03 11:45:55
 -->
 <template>
   <div class="problem-box">
@@ -59,7 +59,11 @@
             <div v-else-if="scope.row.questionState == 'PUBLISH'">
               <el-button type="text" disabled>修改</el-button
               ><el-button type="text" disabled>发布</el-button
-              ><el-button type="text">复制地址</el-button>
+              ><el-button
+                @click="handLeCopy(scope.$index, scope.row)"
+                type="text"
+                >复制地址</el-button
+              >
             </div>
           </template>
         </el-table-column>
@@ -95,6 +99,20 @@
           :questionnaireId="questionnaireId"
         />
       </el-dialog>
+      <el-dialog
+        title="发布问卷"
+        :visible.sync="centerDialogVisible"
+        width="30%"
+        center
+      >
+        <div style="text-align:center;font-size:20px;">
+          <span>是否发布问卷</span>
+        </div>
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="centerDialogVisible = false">取 消</el-button>
+          <el-button type="primary" @click="onReleases">确 定</el-button>
+        </span>
+      </el-dialog>
     </div>
   </div>
 </template>
@@ -111,6 +129,7 @@ export default {
   },
   data() {
     return {
+      centerDialogVisible: false,
       updateDialogFormVisibles: false,
       dialogVisible: false,
       pageNum: '1',
@@ -123,10 +142,28 @@ export default {
     this.onQueryQuestionnairePage()
   },
   methods: {
+    handLeCopy(index, row) {
+      const url = row.address
+      const oInput = document.createElement('input')
+      oInput.value = url
+      document.body.appendChild(oInput)
+      oInput.select()
+      document.execCommand('Copy')
+      this.$message({
+        message: '复制成功',
+        type: 'success'
+      })
+      oInput.remove()
+    },
+    // 打开修改
     onUpdate() {
       this.updateDialogFormVisibles = true
     },
+    // 打开发布提示框
     onRelease() {
+      this.centerDialogVisible = true
+    },
+    onReleases() {
       const params = {
         id: this.questionnaireId,
         questionState: 'PUBLISH'
@@ -138,6 +175,7 @@ export default {
             message: '发布成功',
             type: 'success'
           })
+          this.centerDialogVisible = false
           setTimeout(() => {
             this.onQueryQuestionnairePage()
           }, 200)
