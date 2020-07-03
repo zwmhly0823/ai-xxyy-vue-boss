@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-06-24 17:01:54
  * @LastEditors: panjian
- * @LastEditTime: 2020-07-03 11:50:21
+ * @LastEditTime: 2020-07-03 12:05:50
 -->
 <template>
   <div class="problem-box">
@@ -222,6 +222,7 @@ export default {
           this.$refs.newForm.ruleForm.title = ''
           this.$refs.newForm.ruleForm.desc = ''
           this.$refs.newForm.ruleForm.imageUrl = ''
+          this.$refs.newForm.$refs.experienceProblem.ruleForms.summaryList = []
           done()
         })
         .catch((_) => {})
