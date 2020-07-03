@@ -93,7 +93,7 @@ export default {
       },
       rules: {
         receiptName: [
-          { required: true, validator: validateName, trigger: 'blur' }
+          { required: false, validator: validateName, trigger: 'blur' }
         ],
         receiptTel: [
           {
@@ -194,10 +194,5 @@ export default {
   left: 18px;
   font-size: 14px;
   font-weight: 600;
-}
-</style>
-<style lang="scss">
-.el-form-item.is-required:not(.is-no-asterisk) > .el-form-item__label:before {
-  content: '';
 }
 </style>
