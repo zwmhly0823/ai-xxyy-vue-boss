@@ -3,8 +3,8 @@
  * @version:
  * @Author: Shentong
  * @Date: 2020-03-16 19:46:39
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-07-02 15:23:56
+ * @LastEditors: panjian
+ * @LastEditTime: 2020-07-03 11:49:25
  */
 import axios from '../axiosConfig'
 // import { getToken } from '@/utils/auth'
@@ -386,5 +386,21 @@ export default {
         }
       }`
     })
+  },
+  // 问卷管理 查询问卷列表数据
+  queryQuestionnairePages(page) {
+    return axios.get(
+      `/api/f/v1/questionnaire/queryQuestionnairePage?page=${page}&pagesize=20`
+    )
+  },
+  // 问卷管理 根据id 查询问卷
+  queryQuestionnaire(questionnaireId) {
+    return axios.get(
+      `/api/f/v1/questionnaire/queryQuestionnaire?questionnaireId=${questionnaireId}`
+    )
+  },
+  // 问卷管理 保存 修改
+  saveQuestionnaire(params) {
+    return axios.post(`/api/f/v1/questionnaire/saveQuestionnaire`, params)
   }
 }
