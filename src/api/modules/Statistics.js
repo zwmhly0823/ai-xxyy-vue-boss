@@ -3,8 +3,8 @@
  * @version:
  * @Author: Shentong
  * @Date: 2020-04-07 13:52:26
- * @LastEditors: panjian
- * @LastEditTime: 2020-06-13 15:06:32
+ * @LastEditors: songyanan
+ * @LastEditTime: 2020-07-03 14:08:32
  */
 import axios from '../axiosConfig'
 
@@ -78,8 +78,10 @@ export default {
   },
   // 按期汇总模块接口---->通过期数、销售部门、社群销售、难度 条件过滤 数量统计接口
   getCountStatisticBySearch(params) {
-    const { period = '', department = '', sup = '', teacher = '' } = params
-    const query = `{"term": "${period}","departmentId": "${department}", "sup": "${sup}", "teacherIds": "${teacher}"}`
+    const { period = '' } = params
+    // , department = '', sup = '', teacher = ''
+    // const query = `{"term": "${period}","departmentId": "${department}", "sup": "${sup}", "teacherIds": "${teacher}"}`
+    const query = `{"term": "${period}"}`
 
     return axios.post('/graphql/v1/toss', {
       query: `{
@@ -88,6 +90,7 @@ export default {
           trialStudentNum
           systemStudentNum
           systemTotalAmount
+          convertRate
       }}`
     })
   },
@@ -137,6 +140,8 @@ export default {
         stage
         system_order_count
         trial_course_count
+        conversion_self_rate
+        conversion_receive_rate
       }
   }}`
     })
