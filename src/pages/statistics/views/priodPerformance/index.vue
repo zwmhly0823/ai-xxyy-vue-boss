@@ -3,8 +3,8 @@
  * @version:
  * @Author: Shentong
  * @Date: 2020-04-02 15:35:27
- * @LastEditors: Shentong
- * @LastEditTime: 2020-05-21 16:30:39
+ * @LastEditors: songyanan
+ * @LastEditTime: 2020-07-30 14:08:00
  -->
 <template>
   <el-row type="flex" class="app-main height schedule-container">
@@ -193,14 +193,37 @@
                 align="center"
               ></el-table-column>
               <el-table-column
-                label="转化率"
-                width="80"
-                prop="conversion_rate"
+                label="自有班转化率"
+                width="100"
+                prop="conversion_self_rate"
                 align="center"
               >
                 <template slot="header">
                   <div @click="onSortConversion" class="sort-operate-box">
-                    <span>转化率</span>
+                    <span>自有班转化率</span>
+                    <!-- TODO: -->
+                    <div class="sort-icon-arrow">
+                      <i
+                        class="el-icon-caret-top top-color"
+                        :class="{ active: conversionStatus }"
+                      ></i>
+                      <i
+                        class="el-icon-caret-bottom bottom"
+                        :class="{ active: !conversionStatus }"
+                      ></i>
+                    </div>
+                  </div>
+                </template>
+              </el-table-column>
+              <el-table-column
+                label="交接班转化率"
+                width="100"
+                prop="conversion_receive_rate"
+                align="center"
+              >
+                <template slot="header">
+                  <div @click="onSortConversion" class="sort-operate-box">
+                    <span>交接班转化率</span>
                     <!-- TODO: -->
                     <div class="sort-icon-arrow">
                       <i
@@ -457,8 +480,11 @@ export default {
           item.send_course_count
         )
         // 转化率保留一位小数加‘%’
-        item.conversion_rate = +item.conversion_rate
-          ? (+item.conversion_rate).toFixed(1) + '%'
+        item.conversion_self_rate = +item.conversion_self_rate
+          ? (+item.conversion_self_rate).toFixed(1) + '%'
+          : 0
+        item.conversion_receive_rate = +item.conversion_receive_rate
+          ? (+item.conversion_receive_rate).toFixed(1) + '%'
           : 0
         // 人均上传作品
         const uploadTaskRate = +item.trial_course_count
