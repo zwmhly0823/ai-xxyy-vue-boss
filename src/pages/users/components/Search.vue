@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-06-20 20:23:28
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-06-24 17:53:05
+ * @LastEditTime: 2020-07-01 21:36:11
  @ApiModel(description = "用户跟进状态")
     public enum STATUS {
 
@@ -84,7 +84,7 @@
             <div class="search-group">
               <search-phone-or-usernum
                 style="margin-right: 10px;"
-                type="0"
+                type="2"
                 tablename="StudentTrialV2StatisticsList"
                 @result="getSearchData('user', arguments)"
               />
@@ -115,6 +115,7 @@
                 :multiple="false"
                 :data-list="addedWechatStatus"
                 :my-style="{ width: '100px' }"
+                :searchProp="searchProp"
                 @result="getSearchData('added_wechat', arguments)"
                 class="search-group-item"
               />
@@ -124,6 +125,7 @@
                 :multiple="false"
                 :data-list="addedGroupStatus"
                 :my-style="{ width: '100px' }"
+                :searchProp="searchProp"
                 @result="getSearchData('added_group', arguments)"
                 class="search-group-item"
               />
@@ -131,6 +133,7 @@
                 name="express_status"
                 placeholder="盒子物流"
                 :my-style="{ width: '100px' }"
+                :searchProp="searchProp"
                 @result="getSearchData('express_status', arguments)"
                 class="search-group-item"
               />
@@ -234,6 +237,12 @@ export default {
     teamType: {
       type: String,
       default: '0'
+    },
+    searchProp: {
+      type: Object,
+      default: () => {
+        return {}
+      }
     }
   },
   data() {
@@ -337,12 +346,15 @@ export default {
   ::v-deep {
     .el-card {
       border: 0;
+      border-radius: 0;
+      border-bottom: 1px solid #ddd;
       .el-card__body {
-        padding: 0 0 10px 0;
+        padding: 0 0 10px 10px;
       }
     }
     .el-form-item__label {
       font-size: inherit;
+      font-weight: normal;
     }
     .el-form--inline .el-form-item {
       margin-bottom: -10px;

@@ -3,8 +3,8 @@
  * @version:
  * @Author: Shentong
  * @Date: 2020-03-16 19:46:39
- * @LastEditors: panjian
- * @LastEditTime: 2020-06-12 11:53:58
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-07-03 18:33:42
  */
 import axios from '../axiosConfig'
 // import { getToken } from '@/utils/auth'
@@ -285,5 +285,106 @@ export default {
   // 查询验证码
   getVerification(parmas) {
     return axios.get(`/api/m/v1/sms/getCodeByMobile?mobile=${parmas}`)
+  },
+  // 推送配置 创建
+  pushNotificationsAdd(params) {
+    return axios.post(`/api/b/v1/backend/PushNotifications/add`, params)
+  },
+  // 推送配置 修改保存
+  pushNotificationsUpdate(params) {
+    return axios.post(`/api/b/v1/backend/PushNotifications/update`, params)
+  },
+  // 推送配置列表
+  getPushNotificationsList(currentPage) {
+    return axios.get(
+      `/api/b/v1/backend/PushNotifications/list?page=${currentPage}&size=20`
+    )
+  },
+  // 推送配置 推送
+  pushNotificationsExecute(id, operatorId, operatorName) {
+    return axios.get(
+      `/api/b/v1/backend/PushNotifications/execute?id=${id}&operatorId=${operatorId}&operatorName=${operatorName}`
+    )
+  },
+  // 推送配置 推送
+  queryQuestionnairePage(page, size) {
+    return axios.get(
+      `/api/f/v1/questionnaire/queryQuestionnairePage?page=${page}&pagesize=${size}`
+    )
+  },
+  /**
+   *
+   *通过期数 获取期数下人员总数 (体验课)
+   */
+  StudentTrialCoursePage(Params) {
+    return axios.post('/graphql/v1/toss', {
+      query: `{
+        StudentTrialCoursePage(query:${Params}){
+          totalElements
+        }
+      }`
+    })
+  },
+  /**
+   *
+   *通过期数 获取期数下人员总数 (系统课)
+   */
+  StudentSystemCoursePage(Params) {
+    return axios.post('/graphql/v1/toss', {
+      query: `{
+        StudentSystemCoursePage(query:${Params}){
+          totalElements
+        }
+      }`
+    })
+  },
+
+  /**
+   * 替换用户手机号
+   * v1/user/replaceMobile?staffId=1&oldMobile=13012345670&newMobile=13012345672
+   *  */
+  replaceMobile({ newMobile, oldMobile, staffId } = {}) {
+    return axios.post(
+      `/api/u/v1/user/replaceMobile?staffId=${staffId}&oldMobile=${oldMobile}&newMobile=${newMobile}`
+    )
+  },
+
+  /**
+   * 获取手机号替换记录
+   */
+  getUserReplaceMobileLog(params = '', page = 1) {
+    return axios.post('/graphql/v1/toss', {
+      query: `{
+        UserReplaceMobileLogPage(query: ${params}, page:${page}){
+          totalElements
+          totalPages
+          number
+          content{
+            id
+            cid
+            ctime
+            del
+            mid
+            utime
+            new_mobile
+            old_mobile
+            new_uid
+            uid
+            staff_id
+            remark
+            user{
+              id
+              user_num
+              username
+            }
+            staff{
+              id
+              real_name
+              user_name
+            }
+          }
+        }
+      }`
+    })
   }
 }

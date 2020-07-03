@@ -124,6 +124,10 @@ const enums = {
     {
       id: 1,
       text: '低意向'
+    },
+    {
+      id: 4,
+      text: '无意向'
     }
   ]
 }
