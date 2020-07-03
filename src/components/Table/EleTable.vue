@@ -25,6 +25,7 @@
       element-loading-text="玩命加载中~"
       element-loading-spinner="el-icon-loading"
       @sort-change="sortChange"
+      @selection-change="handleSelectionChange"
       id="outTable"
     >
       <slot></slot>
@@ -104,6 +105,12 @@ export default {
      */
     sortChange(column) {
       this.$emit('sort-change', column)
+    },
+    /**
+     * @description 勾选 回调事件
+     */
+    handleSelectionChange(val) {
+      this.$emit('selection-change', val)
     }
   },
   mounted() {
