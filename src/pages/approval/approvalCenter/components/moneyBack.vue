@@ -2,7 +2,7 @@
  * @Descripttion: 
  * @version: 
  * @LastEditors: liukun
- * @LastEditTime: 2020-07-02 22:01:41
+ * @LastEditTime: 2020-07-03 15:57:04
  -->
 <template>
   <div class="adjustModule">
@@ -389,7 +389,7 @@ export default {
           targetItem.regtype === 'EXPERIENCE'
         ) {
           const { code, payload } = await this.$http.RefundApproval.getChannel(
-            targetItem.id
+            targetItem.payChannel
           ).catch((err) => {
             console.error(err)
             this.$message({
