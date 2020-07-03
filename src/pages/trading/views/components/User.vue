@@ -24,6 +24,10 @@ export default {
     user: {
       type: Object,
       default: () => ({})
+    },
+    singleData: {
+      type: Object,
+      default: () => ({})
     }
   },
   methods: {
@@ -33,7 +37,15 @@ export default {
     // 打开用户详情
     openUserDetail(uid, row) {
       row && console.log(row)
-      uid && openBrowserTab(`/users/#/details/${uid}`)
+      console.log(this.singleData && this.singleData.isrefund)
+      if (Object.keys(this.singleData).length) {
+        uid &&
+          openBrowserTab(
+            `/users/#/details/${uid}?isrefund=${this.singleData.isrefund}`
+          )
+      } else {
+        uid && openBrowserTab(`/users/#/details/${uid}`)
+      }
     }
   }
 }
