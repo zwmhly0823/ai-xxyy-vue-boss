@@ -354,7 +354,7 @@
             <div class="dropdown">
               <el-select
                 v-model="value1"
-                placeholder="中通云仓"
+                placeholder="请选择承运商"
                 @change="selectExpress"
               >
                 <el-option
@@ -525,27 +525,31 @@ export default {
       checkParams: [],
       options: [
         {
+          value1: '0',
+          label: '不指定承运商'
+        },
+        {
           value1: '4',
           label: '京东快递'
         },
         {
-          value1: '3',
-          label: '百世物流'
-        },
-        {
-          value1: '2',
-          label: '中通云仓'
+          value1: '5',
+          label: '圆通云仓'
         },
         {
           value1: '1',
           label: '京东云仓'
         },
         {
-          value1: '0',
-          label: '不指定承运商'
+          value1: '2',
+          label: '中通云仓'
+        },
+        {
+          value1: '3',
+          label: '百世物流'
         }
       ],
-      value1: '2',
+      value1: '0',
       dialogVisiblePass: false,
       expressBatch: [],
       expressNu: [],
@@ -689,6 +693,7 @@ export default {
     // 审核通过时选择物流承运商
     selectExpress(val) {},
     handleClosePass() {
+      this.value1 = '0'
       this.dialogVisiblePass = false
     },
     handleBatchPass(val) {
