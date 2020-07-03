@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-06-25 16:48:38
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-07-02 18:58:01
+ * @LastEditTime: 2020-07-03 16:15:37
 -->
 <template>
   <el-row type="flex" class="app-main height">
@@ -189,6 +189,7 @@ export default {
     handleCurrentChange(page) {
       console.log(page)
       this.currentPage = page
+      this.getLogData()
     },
 
     getLogData() {
