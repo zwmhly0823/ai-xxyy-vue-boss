@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-06-28 17:11:05
  * @LastEditors: panjian
- * @LastEditTime: 2020-07-02 15:57:13
+ * @LastEditTime: 2020-07-03 12:04:25
 -->
 <template>
   <div class="new-form">
@@ -47,6 +47,7 @@
     <div>
       <el-dialog :visible.sync="dialogFormVisible" width="750px" append-to-body>
         <experienceProblem
+          ref="experienceProblem"
           @onCloseSaveQuestionnaire="onCloseSaveQuestionnaire"
           :ruleForm="ruleForm"
         />
