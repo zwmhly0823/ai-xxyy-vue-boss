@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-03-16 19:46:39
  * @LastEditors: panjian
- * @LastEditTime: 2020-07-02 15:06:41
+ * @LastEditTime: 2020-07-03 11:50:28
  */
 import axios from '../axiosConfig'
 // import { getToken } from '@/utils/auth'
@@ -237,7 +237,7 @@ export default {
     return axios.get(`/api/m/v1/sms/getCodeByMobile?mobile=${parmas}`)
   },
   // 问卷管理 查询问卷列表数据
-  queryQuestionnairePage(page) {
+  queryQuestionnairePages(page) {
     return axios.get(
       `/api/f/v1/questionnaire/queryQuestionnairePage?page=${page}&pagesize=20`
     )

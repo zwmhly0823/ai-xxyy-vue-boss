@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-06-24 17:01:54
  * @LastEditors: panjian
- * @LastEditTime: 2020-07-03 11:45:55
+ * @LastEditTime: 2020-07-03 11:50:21
 -->
 <template>
   <div class="problem-box">
@@ -186,7 +186,7 @@ export default {
       this.questionnaireId = row.id
     },
     onQueryQuestionnairePage() {
-      this.$http.Operating.queryQuestionnairePage(this.pageNum).then((res) => {
+      this.$http.Operating.queryQuestionnairePages(this.pageNum).then((res) => {
         // this.pageNum = res.payload.number
         this.totalElements = res.payload.totalElements
         const _data = res.payload.content
