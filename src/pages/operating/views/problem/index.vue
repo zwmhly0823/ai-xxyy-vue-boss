@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-06-24 17:01:54
  * @LastEditors: panjian
- * @LastEditTime: 2020-07-03 12:05:50
+ * @LastEditTime: 2020-07-03 14:59:57
 -->
 <template>
   <div class="problem-box">
@@ -106,7 +106,7 @@
         center
       >
         <div style="text-align:center;font-size:20px;">
-          <span>是否发布问卷</span>
+          <span>确认发布此问卷？</span>
         </div>
         <span slot="footer" class="dialog-footer">
           <el-button @click="centerDialogVisible = false">取 消</el-button>
