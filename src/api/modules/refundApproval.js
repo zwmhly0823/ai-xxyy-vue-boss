@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-05-12 15:22:25
  * @LastEditors: liukun
- * @LastEditTime: 2020-06-30 18:08:43
+ * @LastEditTime: 2020-07-03 15:53:38
  */
 
 import axios from '../axiosConfig'
@@ -94,8 +94,8 @@ export default {
   },
   // 获取第三方渠道来源
   // channelOuterName
-  getChannel(id) {
+  getChannel(payChannel) {
     console.warn('获取第三方渠道来源')
-    return axios.get(`/api/c/v1/channel/getChannelById?id=${id}`)
+    return axios.get(`/api/c/v1/channel/getChannelById?id=${payChannel}`)
   }
 }
