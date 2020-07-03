@@ -39,7 +39,7 @@
           </div>
         </el-col>
         <!-- 退费： 退费中 5，已退费 6，7 -->
-        <el-col :span="5">
+        <!-- <el-col :span="5">
           <div
             class="grid-content"
             :class="{ current: status === '5,6,7' }"
@@ -51,7 +51,7 @@
               >元 {{ statisticsObj.refund.count }}笔
             </div>
           </div>
-        </el-col>
+        </el-col> -->
         <!-- 全部订单 -->
         <el-col :span="5">
           <div
