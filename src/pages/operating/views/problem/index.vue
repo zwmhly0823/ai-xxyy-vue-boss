@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-06-24 17:01:54
  * @LastEditors: panjian
- * @LastEditTime: 2020-07-03 14:59:57
+ * @LastEditTime: 2020-07-03 16:00:56
 -->
 <template>
   <div class="problem-box">
@@ -36,9 +36,9 @@
             <div>{{ scope.row.desc || '-' }}</div>
           </template>
         </el-table-column>
-        <el-table-column label="封面图" align="center" min-width="300">
+        <el-table-column label="封面图" align="center" min-width="200">
           <template slot-scope="scope">
-            <img style="width:250px;" :src="scope.row.image" alt="" />
+            <img style="width:100px;" :src="scope.row.image" alt="" />
           </template>
         </el-table-column>
         <el-table-column

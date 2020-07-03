@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-06-28 18:37:21
  * @LastEditors: panjian
- * @LastEditTime: 2020-07-02 18:31:06
+ * @LastEditTime: 2020-07-03 16:03:54
 -->
 <template>
   <div class="experience-box">
@@ -146,6 +146,7 @@
         <el-button
           style="height:40px;margin-left:30px;"
           type="primary"
+          size="mini"
           @click="submitForm"
         >
           <i style="font-size:15px;" class="el-icon-check"></i>
