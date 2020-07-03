@@ -149,6 +149,25 @@ export default {
       `/api/ex/v1/express/updateExpressStatusForBackend?expressId=${params.expressId}&expressStatus=${params.expressStatus}&expressRemark=${params.expressRemark}&operatorId=${params.operatorId}`,
       params
     )
+  },
+  /**
+   * 获取物流单号
+   */
+  getExpressNuByCenter(expressId) {
+    return axios.get(
+      `/api/ex/v1/express/getExpressNuByCenter?expressId=${expressId}`
+    )
+  },
+  /**
+   * 回填快递单号:
+   * @param {Object} params
+   * @param {String} params.expressId // 物流id
+   * @param {String} params.expressNu // 物流单号
+   * @param {String} params.expressCompany // 物流公司名称
+   * @param {String} params.expressCompanyNu // 物流公司编号
+   */
+  createExpressNu(params) {
+    return axios.get(`/api/ex/v1/express/createExpressNu`, params)
   }
   /**
    * v1 订单关联的物流

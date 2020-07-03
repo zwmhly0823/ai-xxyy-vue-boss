@@ -51,8 +51,9 @@
               >
                 修改
               </el-button>
+              <!-- 仅从物流页面进入详情时 且 物流状态为待发货时(express_status为'1')的情况显示回填单号按钮 -->
               <el-button
-                v-if="transferExpress"
+                v-if="transferExpress && transferExpress.express_status == '1'"
                 class="edit-no-btn"
                 size="mini"
                 type="info"
@@ -159,8 +160,11 @@
         label-width="100px"
         :rules="rules"
       >
-        <el-form-item label="快递公司：" prop="company">
-          <el-select v-model="expressNoInfo.company" placeholder="请选择">
+        <el-form-item label="快递公司：" prop="expressCompanyNu">
+          <el-select
+            v-model="expressNoInfo.expressCompanyNu"
+            placeholder="请选择"
+          >
             <el-option
               v-for="(item, index) in expressCompanyList"
               :key="index"
@@ -176,9 +180,9 @@
             <el-form-item
               style="width:293px"
               label="快递单号："
-              prop="expressNo"
+              prop="expressNu"
             >
-              <el-input v-model="expressNoInfo.expressNo" placeholder="请输入">
+              <el-input v-model="expressNoInfo.expressNu" placeholder="请输入">
               </el-input>
             </el-form-item>
           </el-col>
@@ -225,30 +229,29 @@ export default {
         otherDesc: ''
       },
       expressNoInfo: {
-        company: '',
-        expressNo: ''
+        expressId: '', // 物流id
+        expressNu: '', // 物流单号
+        expressCompany: '', // 物流公司名称
+        expressCompanyNu: '' // 物流公司编号
       },
       editResult: false, // 修改结果
       editReasons: [], // 原因列表
       expressCompanyList: [
-        {
-          label: '京东快递',
-          value: '0'
-        },
-        {
-          label: '顺丰速运',
-          value: '1'
-        },
-        {
-          label: '申通快递',
-          value: '2'
-        }
+        { label: '中通快递', value: 'zhongtong' },
+        { label: '京东物流', value: 'jd' },
+        { label: '圆通快递', value: 'yuantong' },
+        { label: '申通快递', value: 'shentong' },
+        { label: '百世快递', value: 'huitongkuaidi' },
+        { label: '邮政快递包裹', value: 'youzhengguonei' },
+        { label: 'EMS', value: 'ems' },
+        { label: '邮政标准快递', value: 'youzhengbk' },
+        { label: '顺丰速运', value: 'shunfeng' }
       ],
       rules: {
-        company: [
+        expressCompanyNu: [
           { required: true, message: '请选择快递公司', trigger: 'change' }
         ],
-        expressNo: [
+        expressNu: [
           { required: true, message: '请输入快递单号', trigger: 'blur' }
         ]
       },
@@ -287,23 +290,43 @@ export default {
   methods: {
     // 自动获取物流单号
     autoGetExpressNo() {
-      // TODO 自动获取物流单号接口
+      const expressId = this.expressInformation.id
+      this.$http.Express.getExpressNuByCenter(expressId)
+        .catch((err) => console.log(err))
+        .then((res) => {
+          // 将获取来的物流信息回显到弹窗 ，如果返回为空则弹窗获取失败
+          if (Object.keys(res.payload).length !== 0) {
+            this.expressNoInfo = res.payload
+          } else {
+            this.$message.error('获取失败')
+          }
+        })
     },
     // 修改物流单号
     editExpressNo() {
       this.$refs.expressNoForm.validate((valid) => {
         if (valid) {
-          console.log('校验成功')
-          // TODO 调用修改物流单号接口
-        } else {
-          console.error('校验失败')
+          this.expressNoInfo.expressId = this.expressInformation.id
+          this.expressNoInfo.expressCompany = this.expressCompanyList.find(
+            (item) => item.value === this.expressNoInfo.expressCompanyNu
+          ).label
+          this.$http.Express.createExpressNu(this.expressNoInfo)
+            .catch((err) => console.log(err))
+            .then((res) => {
+              if (res.payload) {
+                this.$message.success('物流信息更新成功')
+                this.isShowEditNo = false
+              } else {
+                this.$message.error('物流信息更新失败')
+              }
+            })
         }
       })
     },
     // 关闭回填物流单号弹窗时处理函数
     editExpressNoClose() {
-      this.expressNoInfo.company = ''
-      this.expressNoInfo.expressNo = ''
+      this.expressNoInfo.expressCompanyNu = ''
+      this.expressNoInfo.expressNu = ''
       this.$refs.expressNoForm.resetFields()
     },
     // 物流修改弹窗关闭时处理函数
