@@ -58,9 +58,13 @@
             </p>
             <p>
               {{
-                scope.row.department
-                  ? scope.row.department.department
-                    ? scope.row.department.department.name
+                scope.row.salesman
+                  ? scope.row.salesman.area_name ||
+                    scope.row.salesman.department_name ||
+                    scope.row.salesman.group_name
+                    ? scope.row.salesman.group_name ||
+                      scope.row.salesman.department_name ||
+                      scope.row.salesman.area_name
                     : '-'
                   : '-'
               }}
@@ -87,11 +91,13 @@
             </p>
             <p>
               {{
-                scope.row.teacher_department &&
-                scope.row.teacher_department.department
-                  ? departmentObj[scope.row.teacher_department.department.id]
-                    ? departmentObj[scope.row.teacher_department.department.id]
-                        .name
+                scope.row.teacher
+                  ? scope.row.teacher.area_name ||
+                    scope.row.teacher.department_name ||
+                    scope.row.teacher.group_name
+                    ? scope.row.teacher.group_name ||
+                      scope.row.teacher.department_name ||
+                      scope.row.teacher.area_name
                     : '-'
                   : '-'
               }}
@@ -116,9 +122,13 @@
             </p>
             <p>
               {{
-                scope.row.department
-                  ? scope.row.department.department
-                    ? scope.row.department.department.name
+                scope.row.salesman
+                  ? scope.row.salesman.area_name ||
+                    scope.row.salesman.department_name ||
+                    scope.row.salesman.group_name
+                    ? scope.row.salesman.group_name ||
+                      scope.row.salesman.department_name ||
+                      scope.row.salesman.area_name
                     : '-'
                   : '-'
               }}
@@ -289,7 +299,7 @@ export default {
       this.getOrderList()
     }
 
-    this.getDepartment()
+    // this.getDepartment()
   },
   watch: {
     // 切换tab
@@ -483,12 +493,12 @@ export default {
     },
 
     // 获取组织机构
-    getDepartment() {
-      this.$http.Department.teacherDepartment().then((res) => {
-        const dpt = (res.data && res.data.TeacherDepartmentList) || []
-        this.departmentObj = _.keyBy(dpt, 'id') || {}
-      })
-    },
+    // getDepartment() {
+    //   this.$http.Department.teacherDepartment().then((res) => {
+    //     const dpt = (res.data && res.data.TeacherDepartmentList) || []
+    //     this.departmentObj = _.keyBy(dpt, 'id') || {}
+    //   })
+    // },
 
     // 获取学员体验课班级
     // 通过Uid查询对应体验课班级，通过team_id获取

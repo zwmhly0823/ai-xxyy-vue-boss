@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-24 18:50:54
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-06-24 11:34:29
+ * @LastEditTime: 2020-07-03 14:13:50
  -->
 <template>
   <div class="search-item small threeSelect">
@@ -74,10 +74,10 @@ export default {
     // 获取渠道来源 filter: 过滤关键词  eg：filter:"抖音"
     async getChannel() {
       const {
-        data: { channelAllList }
-      } = await axios.post('/graphql/channel', {
+        data: { ChannelAllList }
+      } = await axios.post('/graphql/v1/toss', {
         query: `{
-            channelAllList(size: 500) {
+            ChannelAllList {
                 id
                 channel_class_id
                 channel_outer_name
@@ -85,7 +85,7 @@ export default {
             }
           `
       })
-      this.channelList = channelAllList
+      this.channelList = ChannelAllList
     },
     // 获取渠道来源分类 filter: 过滤关键词  eg：filter:"抖音"
     async getChannelClassList() {

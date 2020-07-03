@@ -4,7 +4,7 @@
  * @Author: shentong
  * @Date: 2020-03-13 16:20:48
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-06-30 15:03:39
+ * @LastEditTime: 2020-07-03 15:59:06
  */
 import axios from '../axiosConfig'
 
@@ -52,25 +52,17 @@ export default {
               team_name
             }
             last_teacher_id
-            department{
-              department{
-                id
-                pid
-                name
-              }
-            }
-            teacher_department{
-              department{
-                id
-                pid
-                name
-              }
-            }
             teacher{
               realname
+              area_name
+              department_name
+              group_name 
             }
             salesman{
               realname
+              area_name
+              department_name
+              group_name
             }
             express{
               express_total
