@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-06-29 16:50:58
  * @LastEditors: Shentong
- * @LastEditTime: 2020-07-01 14:02:42
+ * @LastEditTime: 2020-07-03 19:09:29
 -->
 <template>
   <el-row type="flex" class="new-sop app-main">
@@ -53,26 +53,28 @@
           <el-card class="section">
             <div class="task-container">
               <div class="task-group">
-                <div class="item">
-                  <span>第一天任务</span>
+                <div
+                  class="item"
+                  :class="{ active: currenTask == t_index }"
+                  v-for="(task, t_index) in tmpInfo"
+                  @click="tasksClickHandle(t_index)"
+                  :key="t_index"
+                >
+                  <span>第{{ t_index }}天任务</span>
                   <i>×</i>
                 </div>
-                <div class="add-task-btn-circle">
-                  <el-button
-                    type="primary"
-                    icon="el-icon-plus"
-                    circle
-                  ></el-button>
-                </div>
-                <!-- <div class="add-task-btn">
+                <div class="add-task-btn">
                   <b>＋</b>
                   <span>添加一天任务</span>
-                </div> -->
+                </div>
               </div>
-              <div class="task-detail">
+              <div class="task-detail" v-if="currenContent.length">
                 <div class="label">发送时间</div>
                 <div class="send-time">
-                  <div class="day">第<span>1</span>天</div>
+                  <div class="day">
+                    第<span>{{ currenContent[0].day }}</span
+                    >天
+                  </div>
                   <el-time-picker
                     size="mini"
                     is-range
@@ -120,7 +122,7 @@
                           class="step-num"
                         ></el-input-number>
                         <el-select
-                          v-model="timeScale"
+                          v-model="intervalType"
                           class="time-scale"
                           placeholder="请选择"
                           size="mini"
@@ -183,36 +185,134 @@ export default {
         name: '',
         status: 0
       },
-      timeScale: '',
+      intervalType: 'SECONDS',
+      currenTask: 1,
+      currenContent: [],
+      mockList: {
+        '1': [
+          {
+            id: 1,
+            cid: '0',
+            mid: '0',
+            ctime: '0',
+            utime: '0',
+            del: '0',
+            templateId: 1,
+            day: 1,
+            strip: 1,
+            startTime: '8:23:00',
+            endTime: '9:00:00',
+            intervalTime: 0,
+            intervalType: 'HOUR',
+            msgType: '1',
+            msgContent: '第一天第一条的内容'
+          },
+          {
+            id: 2,
+            cid: '0',
+            mid: '0',
+            ctime: '0',
+            utime: '0',
+            del: '0',
+            templateId: 1,
+            day: 1,
+            strip: 2,
+            startTime: '8:30:00',
+            endTime: '9:00:00',
+            intervalTime: 0,
+            intervalType: 'HOUR',
+            msgType: '3',
+            msgContent:
+              'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg'
+          }
+        ],
+        '2': [
+          {
+            id: 3,
+            cid: '0',
+            mid: '0',
+            ctime: '0',
+            utime: '0',
+            del: '0',
+            templateId: 1,
+            day: 2,
+            strip: 1,
+            startTime: '14:30:00',
+            endTime: '9:00:00',
+            intervalTime: 0,
+            intervalType: 'HOUR',
+            msgType: '1',
+            msgContent: '第二天第一条的内容'
+          }
+        ]
+      },
+      tmpInfo: {},
       timeScaleSelect: [
         {
           label: '秒',
-          value: '0'
+          value: 'SECONDS'
         },
         {
           label: '分钟',
-          value: '1'
+          value: 'MINITES'
         },
         {
           label: '小时',
-          value: '2'
+          value: 'HOUR'
         }
       ],
       sendTime: [new Date(2019, 9, 10, 8, 40), new Date(2019, 9, 10, 9, 40)],
       stepNum: 0,
-      centerDialogVisible: true
+      centerDialogVisible: false,
+      params: {
+        id: ''
+      }
     }
   },
   components: { AddContent },
+  async created() {
+    const { id = '' } = this.$route.params
+    this.params.id = id
+    if (id) {
+      const tmpInfo = await this.getSopTemplate(id)
+      console.log('tmpInfo', tmpInfo)
+      // TODO:
+      this.tmpInfo = this.mockList
+      // 判断数据是否为空对象
+      const keyArr = Object.getOwnPropertyNames(this.tmpInfo)
+
+      keyArr.length && this.tasksClickHandle(keyArr[0])
+    }
+  },
   computed: {},
   methods: {
-    stepNumHandleChange() {},
-    dialogOperate(type) {
-      if (type === 'cancel') {
-        this.centerDialogVisible = false
-      } else {
-        // TODO:
+    /** 点击第几天任务事件 */
+    tasksClickHandle(index) {
+      this.currenTask = index
+      this.currenContent = this.tmpInfo[index]
+      console.log(this.currenContent, index)
+    },
+    /** 通过模板id获取模板信息 */
+    async getSopTemplate(templateId) {
+      try {
+        const tmpInfo = await this.$http.Community.getSopTemplate({
+          templateId
+        })
+        return tmpInfo
+      } catch (err) {
+        console.log(err)
       }
+    },
+    stepNumHandleChange() {},
+    dialogOperate(args) {
+      // msgType: 1--->文本；3--->图片
+      const { close = true, msgType = '1', textarea = '', imgUrl = '' } = args
+      this.centerDialogVisible = !close
+      const content = {
+        msgType,
+        msgContent: msgType === '1' ? textarea : imgUrl
+      }
+      console.log('add-content', content)
     }
   }
 }
@@ -247,6 +347,7 @@ export default {
       .section {
         .task-container {
           display: flex;
+          min-height: 450px;
           .task-group {
             width: 180px;
             margin-right: 20px;
@@ -254,7 +355,7 @@ export default {
             .item {
               width: 100%;
               border: 1px solid #dcdfe6;
-              color: #2a75ed;
+
               height: 30px;
               border-radius: 5px;
               display: flex;
@@ -263,6 +364,7 @@ export default {
               justify-content: center;
               transition: box-shadow 0.2s;
               position: relative;
+              margin-bottom: 10px;
               i {
                 cursor: pointer;
                 height: 100%;
@@ -274,7 +376,12 @@ export default {
                 right: 10px;
                 top: 0;
               }
-              &:hover {
+              &:last-child {
+                margin-bottom: 0;
+              }
+              &:hover,
+              &.active {
+                color: #2a75ed;
                 box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
               }
             }

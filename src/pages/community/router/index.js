@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-03-16 17:04:26
  * @LastEditors: Shentong
- * @LastEditTime: 2020-06-29 18:50:11
+ * @LastEditTime: 2020-07-03 15:40:04
  */
 import Vue from 'vue'
 import VueRouter from 'vue-router'
@@ -32,7 +32,7 @@ const routes = [
     component: () => import('../views/index/index.vue')
   },
   {
-    path: '/newSoptmp',
+    path: '/newSoptmp/:id',
     name: 'newSoptmp',
     meta: {
       title: '群sop',

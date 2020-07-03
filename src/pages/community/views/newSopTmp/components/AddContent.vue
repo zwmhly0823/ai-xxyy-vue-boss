@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-06-30 19:21:08
  * @LastEditors: Shentong
- * @LastEditTime: 2020-07-02 20:47:07
+ * @LastEditTime: 2020-07-03 14:23:07
 -->
 <template>
   <el-dialog
@@ -87,8 +87,8 @@
       </div>
     </div>
     <span slot="footer" class="dialog-footer">
-      <el-button @click="dialogOperate('confirm')" size="mini">提交</el-button>
-      <el-button type="primary" @click="dialogOperate('confirm')" size="mini"
+      <el-button @click="dialogOperate('submit')" size="mini">提交</el-button>
+      <el-button type="primary" @click="dialogOperate('continue')" size="mini"
         >提交并继续添加</el-button
       >
     </span>
@@ -137,7 +137,7 @@ export default {
     }
   },
   methods: {
-    /** */
+    /** 此处不可使用箭头函数 */
     topTabClick: debounce(function(index) {
       this.tabIndex = index
       // 图片格式
@@ -166,16 +166,22 @@ export default {
     },
     /** img-upload */
     dialogClose() {
-      this.$emit('dialogOperate', 'cancel')
+      this.$emit('dialogOperate', { close: true })
     },
+    /** 新增内容底部按钮操作 */
     dialogOperate(type) {
       if (!this.validateAddForn()) {
         this.isShaky = true
         setTimeout(() => {
           this.isShaky = false
         }, 250)
+      } else {
+        this.$emit('dialogOperate', {
+          ...this.addContentForm,
+          msgType: !this.tabIndex ? '1' : '3',
+          close: type !== 'continue'
+        })
       }
-      //   this.$emit('dialogOperate', type)
     },
     /** 验证新增内容的信息 */
     validateAddForn() {

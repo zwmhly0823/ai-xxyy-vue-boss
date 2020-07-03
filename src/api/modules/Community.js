@@ -4,17 +4,19 @@
  * @Author: Shentong
  * @Date: 2020-06-29 18:42:38
  * @LastEditors: Shentong
- * @LastEditTime: 2020-06-29 18:42:54
+ * @LastEditTime: 2020-07-03 17:22:55
  */
 import axios from '../axiosConfig'
 
 export default {
   /**
-   * 根据手机号获取code
+   * 查询模版信息
    *
    */
-  getCodeByPhone(params) {
-    return axios.post(`/api/b/v1/staff/sendCode?mobile=${params.mobile}`)
+  getSopTemplate(params) {
+    return axios.get(
+      `/api/toss/v1/toss-api/soptemplate/getTemplate?templateId=${params.templateId}`
+    )
   },
   /**
    * 验证码登录
