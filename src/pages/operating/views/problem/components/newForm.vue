@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-06-28 17:11:05
  * @LastEditors: panjian
- * @LastEditTime: 2020-07-03 12:04:25
+ * @LastEditTime: 2020-07-03 15:03:27
 -->
 <template>
   <div class="new-form">
@@ -73,8 +73,14 @@ export default {
         questionState: 'DEFAULT'
       },
       rules: {
-        title: [{ required: true, message: '请输入活动名称', trigger: 'blur' }],
-        desc: [{ required: true, message: '请填写活动形式', trigger: 'blur' }]
+        title: [
+          { required: true, message: '请输入问卷名称', trigger: 'blur' },
+          { max: 10, message: '长度在10 个字符', trigger: 'blur' }
+        ],
+        desc: [
+          { required: true, message: '请填写问卷详情', trigger: 'blur' },
+          { max: 48, message: '长度在48个字符', trigger: 'blur' }
+        ]
       }
     }
   },
