@@ -4,7 +4,7 @@
     <el-table :data="orderList">
       <el-table-column label="用户信息" prop="user" min-width="180" fixed>
         <template slot-scope="scope">
-          <user :user="scope.row.user" />
+          <user :user="scope.row.user" :singleData="scope.row" />
         </template>
       </el-table-column>
       <el-table-column label="归属地" prop="QCellCore" min-width="120">
@@ -451,7 +451,7 @@ export default {
     orderData(queryObj = {}, page = 1) {
       // 最终搜索条件
       this.$emit('get-params', queryObj)
-      console.log(queryObj)
+      // console.log(queryObj)
 
       this.$http.Order.orderPage(`${JSON.stringify(queryObj)}`, page)
         .then((res) => {

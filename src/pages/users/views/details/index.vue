@@ -565,10 +565,18 @@ export default {
         })
       // 判断是否有多个系统课的情况
       this.isrefund = this.$route.query.isrefund
-      if (data.systemCourse.length > 1 && this.isrefund) {
-        data.systemCourse = data.systemCourse.filter((item) => {
-          return +item.orderInfo.isrefund === +this.isrefund
-        })
+      if (data.systemCourse.length > 1) {
+        if (this.isrefund) {
+          // 前面有传过来值就用前面的值
+          data.systemCourse = data.systemCourse.filter((item) => {
+            return +item.orderInfo.isrefund === +this.isrefund
+          })
+        } else {
+          // 没有传过来值的话就把已退费的筛掉
+          data.systemCourse = data.systemCourse.filter((item) => {
+            return +item.orderInfo.isrefund === 0
+          })
+        }
       }
       return data
     },
