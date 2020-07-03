@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-06-28 17:11:05
  * @LastEditors: panjian
- * @LastEditTime: 2020-07-03 15:03:27
+ * @LastEditTime: 2020-07-03 16:02:25
 -->
 <template>
   <div class="new-form">
@@ -16,10 +16,14 @@
       class="demo-ruleForm"
     >
       <el-form-item label="问卷名称" prop="title">
-        <el-input v-model="ruleForm.title"></el-input>
+        <el-input size="mini" v-model="ruleForm.title"></el-input>
       </el-form-item>
       <el-form-item label="问卷说明" prop="desc">
-        <el-input type="textarea" v-model="ruleForm.desc"></el-input>
+        <el-input
+          size="mini"
+          type="textarea"
+          v-model="ruleForm.desc"
+        ></el-input>
       </el-form-item>
       <el-form-item label="封面图" prop="imageUrl">
         <el-upload
@@ -38,7 +42,7 @@
         </el-upload>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="submitForm('ruleForm')"
+        <el-button size="mini" type="primary" @click="submitForm('ruleForm')"
           >立即创建</el-button
         >
         <!-- <el-button @click="resetForm('ruleForm')">重置</el-button> -->
