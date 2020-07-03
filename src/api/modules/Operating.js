@@ -3,8 +3,8 @@
  * @version:
  * @Author: Shentong
  * @Date: 2020-03-16 19:46:39
- * @LastEditors: panjian
- * @LastEditTime: 2020-06-28 14:26:05
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-07-03 18:33:42
  */
 import axios from '../axiosConfig'
 // import { getToken } from '@/utils/auth'
@@ -334,6 +334,55 @@ export default {
       query: `{
         StudentSystemCoursePage(query:${Params}){
           totalElements
+        }
+      }`
+    })
+  },
+
+  /**
+   * 替换用户手机号
+   * v1/user/replaceMobile?staffId=1&oldMobile=13012345670&newMobile=13012345672
+   *  */
+  replaceMobile({ newMobile, oldMobile, staffId } = {}) {
+    return axios.post(
+      `/api/u/v1/user/replaceMobile?staffId=${staffId}&oldMobile=${oldMobile}&newMobile=${newMobile}`
+    )
+  },
+
+  /**
+   * 获取手机号替换记录
+   */
+  getUserReplaceMobileLog(params = '', page = 1) {
+    return axios.post('/graphql/v1/toss', {
+      query: `{
+        UserReplaceMobileLogPage(query: ${params}, page:${page}){
+          totalElements
+          totalPages
+          number
+          content{
+            id
+            cid
+            ctime
+            del
+            mid
+            utime
+            new_mobile
+            old_mobile
+            new_uid
+            uid
+            staff_id
+            remark
+            user{
+              id
+              user_num
+              username
+            }
+            staff{
+              id
+              real_name
+              user_name
+            }
+          }
         }
       }`
     })
