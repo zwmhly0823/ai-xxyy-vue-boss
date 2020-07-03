@@ -3,10 +3,25 @@
  * @version:
  * @Author: shentong
  * @Date: 2020-03-13 16:20:48
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-06-30 14:59:16
+ * @LastEditors: songyanan
+ * @LastEditTime: 2020-07-03 18:01:00
  */
 import axios from '../axiosConfig'
+// 素质课的时候，测试环境暂时删除
+// department{
+//   department{
+//     id
+//     pid
+//     name
+//   }
+// }
+// teacher_department{
+//   department{
+//     id
+//     pid
+//     name
+//   }
+// }
 
 export default {
   /**
@@ -52,20 +67,6 @@ export default {
               team_name
             }
             last_teacher_id
-            department{
-              department{
-                id
-                pid
-                name
-              }
-            }
-            teacher_department{
-              department{
-                id
-                pid
-                name
-              }
-            }
             teacher{
               realname
             }

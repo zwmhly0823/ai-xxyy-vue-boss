@@ -3,7 +3,7 @@
  * @Email: songyanan@meishubao.com
  * @Date: 2020-07-01 11:19:27
  * @Last Modified by:   songyanan
- * @Last Modified time: 2020-07-01 15:24:50
+ * @Last Modified time: 2020-07-03 18:04:00
  -->
 <template>
   <div class="title-box">
@@ -42,7 +42,7 @@
           </p>
         </template>
       </el-table-column>
-      <el-table-column label="社群销售·体验课班级" min-width="220">
+      <el-table-column label="社群销售·素质课班级" min-width="220">
         <template slot-scope="scope">
           <p>
             {{ scope.row.teacher ? scope.row.teacher.realname : '-' }}
@@ -216,7 +216,7 @@ export default {
       // statisticsQuery: [], // 统计需要 bool 表达式
       departmentObj: {}, // 组织机构 obj
       orderStatisticsResult: [], // 统计结果
-      trialTeam: {}, // 学员的体验课班级名称
+      trialTeam: {}, // 学员的素质课班级名称
       trialTeamUid: {}
     }
   },
@@ -272,35 +272,6 @@ export default {
     async getOrderList(page = this.currentPage, status) {
       // const statisticsQuery = []
       const queryObj = {}
-      // TOSS
-      if (this.teacherId) {
-        Object.assign(queryObj, {
-          last_teacher_id:
-            this.teacherGroup.length > 0 ? this.teacherGroup : [this.teacherId]
-        })
-        // statisticsQuery.push({
-        //   terms: {
-        //     last_teacher_id:
-        //       this.teacherGroup.length > 0
-        //         ? this.teacherGroup
-        //         : [this.teacherId]
-        //   }
-        // })
-      }
-
-      const topicRelation = await this.$http.Product.topicRelationId(
-        `${JSON.stringify({
-          topic_id: this.topicArr
-        })}`
-      )
-      let relationIds = []
-      if (
-        topicRelation.data.PackagesTopicList &&
-        topicRelation.data.PackagesTopicList.length > 0
-      )
-        relationIds = topicRelation.data.PackagesTopicList.map(
-          (item) => item.relation_id
-        )
 
       // 组合搜索条件
       this.searchIn.forEach((item) => {
@@ -314,10 +285,7 @@ export default {
         Object.assign(queryObj, { status: this.status.split(',') })
       }
       if (this.topic === '7') {
-        // 如果选择了筛选单双周体验课类型，则不需要packages_id
-        if (!Object.keys(queryObj).includes('packages_id'))
-          Object.assign(queryObj, { packages_id: relationIds })
-
+        queryObj.regtype = this.topic
         // 如果有推荐人搜索条件
         if (
           queryObj.is_first_order_send_id &&
