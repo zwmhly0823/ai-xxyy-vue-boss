@@ -18,6 +18,7 @@
               <el-tab-pane label="系统课" name="5">
                 <search-list1
                   @search="handleSearch"
+                  :searchProp="searchProp"
                   v-if="activeTopic === '5'"
                 />
                 <all-order1
@@ -31,7 +32,6 @@
               <el-tab-pane label="体验课" name="4">
                 <search-list2
                   @search="handleSearch"
-                  :searchProp="searchProp"
                   v-if="activeTopic === '4'"
                 />
                 <all-order2
@@ -108,7 +108,8 @@ export default {
     const urlParams = localStorage.getItem('noticeParams')
     if (urlParams) {
       // 本期消息中心跳转只做体验课的
-      this.activeTopic = '4'
+      // 更新:本期虽然但是，都要往系统课跳，默认就是系统课
+      // this.activeTopic = '4'
       this.searchProp = {
         name: urlParams.split(',')[0],
         value: urlParams.split(',')[1]
