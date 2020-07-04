@@ -42,7 +42,7 @@
           </p>
         </template>
       </el-table-column>
-      <el-table-column label="社群销售·素质课班级" min-width="220">
+      <!-- <el-table-column label="社群销售·素质课班级" min-width="220">
         <template slot-scope="scope">
           <p>
             {{ scope.row.teacher ? scope.row.teacher.realname : '-' }}
@@ -73,7 +73,7 @@
             }}
           </p>
         </template>
-      </el-table-column>
+      </el-table-column> -->
       <el-table-column label="订单状态" min-width="220">
         <template slot-scope="scope">
           {{ scope.row.order_status ? scope.row.order_status : '-' }}
@@ -121,7 +121,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="关联物流" min-width="170">
+      <!-- <el-table-column label="关联物流" min-width="170">
         <template slot-scope="scope">
           <p
             :class="{ 'primary-color': scope.row.express.express_total > 0 }"
@@ -141,7 +141,7 @@
             }}
           </p>
         </template>
-      </el-table-column>
+      </el-table-column> -->
     </el-table>
     <div v-if="orderList.length === 0" class="noData">暂无数据</div>
     <div class="drawer-body">
