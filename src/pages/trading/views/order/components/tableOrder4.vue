@@ -3,7 +3,7 @@
  * @Email: songyanan@meishubao.com
  * @Date: 2020-07-01 11:19:27
  * @Last Modified by:   songyanan
- * @Last Modified time: 2020-07-04 17:17:00
+ * @Last Modified time: 2020-07-04 17:45:00
  -->
 <template>
   <div class="title-box">
@@ -366,7 +366,6 @@ export default {
               for (const _item of res.data.OrderProductList) {
                 if (_item.oid === item.id) {
                   item.packages_name = _item.name
-                  item.amount = _item.price
                 }
               }
             }
