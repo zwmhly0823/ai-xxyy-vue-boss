@@ -4,7 +4,7 @@
  * @Author: Lukun
  * @Date: 2020-04-27 17:47:58
  * @LastEditors: liukun
- * @LastEditTime: 2020-07-03 16:50:47
+ * @LastEditTime: 2020-07-04 17:31:20
  -->
 <template>
   <div class="container">
@@ -148,9 +148,14 @@
         </el-row>
         <el-row>
           <el-col :span="3">用户电话:</el-col>
-          <el-col :span="20" :offset="1">{{
-            drawerApprovalDeatail.userTel
-          }}</el-col>
+          <el-col :span="20" :offset="1"
+            ><el-link
+              type="primary"
+              :href="'/users/#/details/' + drawerApprovalDeatail.userId"
+              target="_blank"
+              >{{ drawerApprovalDeatail.userTel }}</el-link
+            ></el-col
+          >
         </el-row>
         <el-row>
           <el-col :span="3">补发商品:</el-col>
@@ -274,9 +279,14 @@
         </el-row>
         <el-row>
           <el-col :span="5">用户电话:</el-col>
-          <el-col :span="18" :offset="1">{{
-            drawerApprovalDeatail.customerPhone
-          }}</el-col>
+          <el-col :span="18" :offset="1"
+            ><el-link
+              type="primary"
+              :href="'/users/#/details/' + drawerApprovalDeatail.userId"
+              target="_blank"
+              >{{ drawerApprovalDeatail.customerPhone }}</el-link
+            ></el-col
+          >
         </el-row>
         <el-row>
           <el-col :span="5">订单号:</el-col>
@@ -484,6 +494,7 @@
     </el-drawer>
     <!-- 调味品抽屉 -->
     <adjust-drawer
+      :is3d="1"
       ref="adjustDrawerCom"
       :adjustDrawerData="adjustDrawerData"
       :isStaffId="isStaffId"
@@ -1120,7 +1131,8 @@ export default {
                 },
                 {
                   label: '用户电话',
-                  value: payData.userTel
+                  value: payData.userTel,
+                  valueId: payData.userId
                 },
                 {
                   label: '订单号',

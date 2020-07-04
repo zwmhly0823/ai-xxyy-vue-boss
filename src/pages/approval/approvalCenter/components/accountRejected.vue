@@ -339,7 +339,8 @@ export default {
                 },
                 {
                   label: '用户电话',
-                  value: payData.customerPhone
+                  value: payData.customerPhone,
+                  valueId: payData.userId
                 },
                 {
                   label: '订单号',

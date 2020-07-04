@@ -2,7 +2,7 @@
  * @Descripttion: 
  * @version: 
  * @LastEditors: liukun
- * @LastEditTime: 2020-07-03 15:57:04
+ * @LastEditTime: 2020-07-04 17:56:15
  -->
 <template>
   <div class="adjustModule">
@@ -261,7 +261,7 @@ export default {
         this.refundForm.residueFee = '' // 剩余金额
         this.refundForm.refundType = ''
         this.refundForm.couponType = ''
-        // this.refundForm.refundMonths = ''
+        this.refundForm.refundMonths = ''
         this.refundForm.refundAmount = '' // 退款金额
         this.refundForm.reason = ''
         this.refundForm.explain = ''
@@ -532,6 +532,8 @@ export default {
           if (newValue === 0) {
             // newValue:0 选中优惠券时-获取优惠券列表
             this.refundForm.refundAmount = '' // 退款额
+            this.refundForm.refundMonths = ''
+
             if (this.refundForm.residueFee >= 200) {
               this.couponTypeOptions = []
               this.refundForm.couponType = ''
@@ -564,7 +566,7 @@ export default {
           } else if (newValue === 1) {
             // newValue:1 选中课程退款时-创建退款周期数组(依赖接口数据async↓↓)
             // this.monthOptions = []
-            // this.refundForm.refundMonths = ''
+            this.refundForm.refundMonths = ''
             this.refundForm.refundAmount = '' // 退款额
             if (this.refundForm.businessType === '系统课') {
               if (this.pureWeekS && this.pureWeekY !== '') {
@@ -593,7 +595,7 @@ export default {
                       ((2600 / 12) * shengYue).toFixed(2)
                     )
                   }
-
+                  this.refundForm.refundMonths = shengYue
                   // for (let i = 1; i <= shengYue; i++) {
                   //   const item = {}
                   //   item.guanzhong = i + '个月'
@@ -638,6 +640,7 @@ export default {
           } else if (newValue === 2) {
             // 降为半年包
             this.refundForm.refundAmount = '' // 退款额
+            this.refundForm.refundMonths = ''
             const shengYue = Math.floor(this.pureWeekS / 4)
             if (
               this.half === 365 &&
@@ -645,6 +648,7 @@ export default {
               this.refundForm.residueFee >= 1101
             ) {
               this.refundForm.refundAmount = 1101
+              this.refundForm.refundMonths = 6
             } else {
               this.$message({
                 message: '该订单课余量低于6或不是全年课,不支持降包类型',
@@ -654,6 +658,7 @@ export default {
           } else if (newValue === 3) {
             // 补偿
             this.refundForm.refundAmount = '' // 退款额
+            this.refundForm.refundMonths = ''
             if (this.refundForm.residueFee >= 1101) {
               this.refundForm.refundAmount = 1101
             } else {
@@ -716,7 +721,7 @@ export default {
         residueFee: '', // 剩余金额
         refundType: '',
         couponType: '', // 优惠券类型
-        // refundMonths: '', // 退款周数(给接口)
+        refundMonths: '', // 退款周数(给接口)
         refundAmount: '', // 退款金额(给接口)
         reason: '',
         explain: '',
@@ -791,7 +796,7 @@ export default {
       everyPrice: '', // 月单价
       pureWeekY: '', // 已周数(给接口)
       pureWeekS: '', // 剩周数(给接口)
-      isThird: '', // 是第三方订单麽+
+      isThird: 0, // 是第三方订单麽+
       half: ''
     }
   },
