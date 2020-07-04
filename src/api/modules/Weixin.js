@@ -3,8 +3,8 @@
  * @version:
  * @Author: shentong
  * @Date: 2020-03-13 14:38:28
- * @LastEditors: panjian
- * @LastEditTime: 2020-04-09 19:19:17
+ * @LastEditors: songyanan
+ * @LastEditTime: 2020-07-04 15:10:00
  */
 // import axios from '../axios'
 import axios from '../axiosConfig'
@@ -25,6 +25,8 @@ export default {
             nickname
             teacher_id
             head_img_url
+            wechat_id
+            wechat_record_id
           }
         }
       }`
@@ -87,6 +89,20 @@ export default {
         {
           id
           wechat_no
+        }
+      }
+      `
+    })
+  },
+  // wechat_id模糊搜索
+  getWechatIdListEx(id, query) {
+    return axios.post('/graphql/v1/toss', {
+      query: `
+      {
+        WeChatTeacherList(query:${JSON.stringify(query)})
+        {
+          id
+          ${id}
         }
       }
       `

@@ -61,6 +61,20 @@
             </div>
           </template>
         </el-table-column>
+        <el-table-column
+          align="left"
+          label="wXId"
+          width="100"
+          props="wechat_id"
+        >
+        </el-table-column>
+        <el-table-column
+          align="left"
+          label="艾客微信ID"
+          width="100"
+          props="wechat_record_id"
+        >
+        </el-table-column>
         <el-table-column align="left" label="使用状态" width="180">
           <template slot-scope="scope">
             <span>{{ openTeacher[scope.row.id] | filterStatus }}</span>

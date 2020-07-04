@@ -79,6 +79,26 @@
       >
       </el-option>
     </el-select>
+    <!-- wxid搜索 -->
+    <el-autocomplete
+      v-model="wechatId"
+      size="mini"
+      clearable
+      filterable
+      reserve-keyword
+      :fetch-suggestions="wxIdSerch"
+      :trigger-on-focus="false"
+      placeholder="微信号搜索"
+      @select="onWxSerch"
+      ref="wxid"
+    >
+      <i class="el-icon-search el-input__icon" slot="suffix"></i>
+      <template slot-scope="{ item }">
+        <div style="display:flex">
+          <div class="name">{{ item.wechat_no || '-' }}</div>
+        </div>
+      </template>
+    </el-autocomplete>
   </div>
 </template>
 
@@ -112,6 +132,11 @@ export default {
     onlyPhone: {
       type: String,
       default: '0'
+    },
+    // wechat_id
+    wxId: {
+      type: String,
+      default: ''
     }
   },
   data() {
@@ -124,6 +149,7 @@ export default {
       showNewWeChat: false,
       mobileInp: '',
       weixinInp: '',
+      wechatId: '',
       status: [
         { name: '启用', id: '0' },
         {
@@ -159,6 +185,12 @@ export default {
     mobileInp(val, old) {
       if (val !== old && !val) {
         this.$emit('getPhone', '')
+      }
+    },
+    // 监听输入wechat_id
+    wechatId(val, old) {
+      if (val !== old && !val) {
+        this.$emit('getWxIdSerch', '')
       }
     }
   },
@@ -254,6 +286,27 @@ export default {
         'getWxConcatTeacher',
         data ? { [this.wxConcatTeacher]: this.concatTeacherData } : ''
       )
+    },
+    // 输入wxid
+    async wxIdSerch(queryString, cb) {
+      // 输入内容查找到的关联信息（下拉框）
+      const list = await this.weixinidCreateFilter(queryString)
+      // console.log('*****list******', list)
+      // cb 展示列表数据
+      cb(list)
+      this.$refs.wxid.handleFocus()
+    },
+    // 调用微信号搜索接口
+    weixinidCreateFilter(queryString) {
+      // 输入内容匹配到的关联信息（下拉框）
+      return this.$http.Weixin.getWechatIdListEx(
+        'wechat_no.keyword',
+        queryString
+      ).then((res) => {
+        // console.log('微信搜索调用接口', res)
+        this.weixinSelectData = res.data.WeChatTeacherListEx || []
+        return this.weixinSelectData
+      })
     }
   }
 }
