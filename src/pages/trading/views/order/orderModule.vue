@@ -51,6 +51,17 @@
                   v-if="activeTopic === '1,2,6'"
                 />
               </el-tab-pane>
+              <el-tab-pane label="素质课" name="7">
+                <search-list4
+                  @search="handleSearch"
+                  v-if="activeTopic === '7'"
+                />
+                <all-order4
+                  :topic="activeTopic"
+                  :search="search"
+                  v-if="activeTopic === '7'"
+                />
+              </el-tab-pane>
             </el-tabs>
           </div>
         </el-scrollbar>
@@ -63,9 +74,11 @@
 import allOrder1 from './components/allOrder1'
 import allOrder2 from './components/allOrder2'
 import allOrder3 from './components/allOrder3'
+import allOrder4 from './components/allOrder4'
 import searchList1 from './components/searchList1.vue'
 import searchList2 from './components/searchList2.vue'
 import searchList3 from './components/searchList3.vue'
+import searchList4 from './components/searchList4.vue'
 export default {
   name: 'orderModule',
   props: [],
@@ -73,9 +86,11 @@ export default {
     allOrder1,
     allOrder2,
     allOrder3,
+    allOrder4,
     searchList1,
     searchList2,
-    searchList3
+    searchList3,
+    searchList4
   },
   data() {
     return {
