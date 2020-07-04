@@ -3,14 +3,14 @@
  * @Email: songyanan@meishubao.com
  * @Date: 2020-07-01 11:19:27
  * @Last Modified by:   songyanan
- * @Last Modified time: 2020-07-03 18:04:00
+ * @Last Modified time: 2020-07-04 14:36:00
  -->
 <template>
   <div class="title-box">
     <el-table :data="orderList">
       <el-table-column label="用户信息" prop="user" min-width="180" fixed>
         <template slot-scope="scope">
-          <user :user="scope.row.user" />
+          <user :user="scope.row.user" :flag="true" />
         </template>
       </el-table-column>
       <el-table-column label="归属地" prop="QCellCore" min-width="120">
