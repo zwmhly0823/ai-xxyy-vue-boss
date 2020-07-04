@@ -4,7 +4,7 @@
  * @Author: Lukun
  * @Date: 2020-04-27 17:47:58
  * @LastEditors: liukun
- * @LastEditTime: 2020-07-04 19:23:57
+ * @LastEditTime: 2020-07-04 20:37:59
  -->
 <template>
   <div class="container">
@@ -376,9 +376,7 @@
               drawerApprovalDeatail.refundFee
             }}</el-col>
             <el-col v-if="isPositionId" :span="13" :offset="1">
-              <el-button type="text" @click="dialogFormVisible = true"
-                >修改金额</el-button
-              >
+              <mark @click="dialogFormVisible = true">修改金额</mark>
             </el-col>
           </el-row>
           <el-row>
@@ -868,7 +866,7 @@ export default {
                 type: 'success'
               })
 
-              this.$emit('result', 'third')
+              // this.$emit('result', 'third')
             })
             .catch((err) => {
               this.$message(err)
@@ -987,7 +985,7 @@ export default {
                   message: '同意审核通过',
                   type: 'success'
                 })
-                this.$emit('result', 'third')
+                // this.$emit('result', 'third')
               } else {
                 this.$root.$emit('lk', '')
               }
