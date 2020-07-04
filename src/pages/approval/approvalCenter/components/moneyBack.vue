@@ -4,7 +4,7 @@
  * @Author: huzhifu
  * @Date: 2020-05-07 10:50:45
  * @LastEditors: liukun
- * @LastEditTime: 2020-07-04 15:25:33
+ * @LastEditTime: 2020-07-04 18:08:54
  -->
 <template>
   <div class="adjustModule">
@@ -838,11 +838,11 @@ export default {
         this.refundForm.name = uid
         this.refundForm.cellPhone = this.$refs.toGetPhone.input
         this.$http.RefundApproval.getOrdersByUid(uid) // 用uid获取订单
-          .then(({ code, payload: { content } }) => {
-            if (!code && content.length) {
+          .then(({ code, payload }) => {
+            if (!code && payload.length) {
               this.refundForm.order = ''
               this.orderOptions = []
-              this.orderOptions = content.map((item) => {
+              this.orderOptions = payload.map((item) => {
                 item.relationOrder =
                   item.outTradeNo.replace(/[^\d]+/g, '') +
                   `(^_^)${item.packagesName}`
