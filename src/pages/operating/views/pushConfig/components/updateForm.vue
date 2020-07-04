@@ -3,8 +3,8 @@
  * @version: 
  * @Author: panjian
  * @Date: 2020-06-23 18:50:41
- * @LastEditors: panjian
- * @LastEditTime: 2020-06-29 17:55:41
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-07-03 18:39:26
 -->
 <template>
   <div>
@@ -101,7 +101,7 @@ export default {
         questionnaire: '',
         stageValue: ''
       },
-      page: 0,
+      page: 1,
       pageSize: 500,
       questionnaires: '',
       period: '',
