@@ -28,6 +28,10 @@ export default {
     singleData: {
       type: Object,
       default: () => ({})
+    },
+    flag: {
+      type: Boolean,
+      default: false
     }
   },
   methods: {
@@ -36,6 +40,9 @@ export default {
     },
     // 打开用户详情
     openUserDetail(uid, row) {
+      if (this.flag) {
+        return false
+      }
       row && console.log(row)
       console.log(this.singleData && this.singleData.isrefund)
       if (Object.keys(this.singleData).length) {
