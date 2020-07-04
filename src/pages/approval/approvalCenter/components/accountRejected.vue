@@ -385,8 +385,12 @@ export default {
                 },
                 {
                   label: '退款类型',
-                  value:
-                    payData.refundType - 0 === 1 ? '课程退款' : '优惠券退款'
+                  value: {
+                    0: '优惠券退款',
+                    1: '课程退款',
+                    2: '降半年包',
+                    3: '补偿'
+                  }[payData.refundType]
                 },
                 {
                   label: '已上课周期',

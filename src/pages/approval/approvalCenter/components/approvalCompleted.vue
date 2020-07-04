@@ -4,7 +4,7 @@
  * @Author: Lukun
  * @Date: 2020-04-27 17:47:58
  * @LastEditors: liukun
- * @LastEditTime: 2020-07-04 17:31:59
+ * @LastEditTime: 2020-07-04 19:26:40
  -->
 <template>
   <div class="container">
@@ -328,9 +328,9 @@
           <el-row>
             <el-col :span="5">退款类型:</el-col>
             <el-col :span="18" :offset="1">{{
-              drawerApprovalDeatail.refundType == '1'
-                ? '课程退款'
-                : '优惠券退款'
+              { 0: '优惠券退款', 1: '课程退款', 2: '降半年包', 3: '补偿' }[
+                drawerApprovalDeatail.refundType
+              ]
             }}</el-col>
           </el-row>
           <el-row>
