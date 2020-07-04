@@ -49,7 +49,6 @@
                   class="speed-input"
                   v-model.number="percent[1].SRobinNum"
                   size="mini"
-                  placeholder="请输入内容"
                 ></el-input>
               </el-form-item>
             </el-col>
@@ -70,7 +69,6 @@
                   class="speed-input"
                   v-model.number="percent[1].ARobinNum"
                   size="mini"
-                  placeholder="请输入内容"
                 ></el-input>
               </el-form-item>
             </el-col>
@@ -91,7 +89,6 @@
                   class="speed-input"
                   v-model.number="percent[1].BRobinNum"
                   size="mini"
-                  placeholder="请输入内容"
                 ></el-input>
               </el-form-item>
             </el-col>
@@ -117,7 +114,6 @@
                   class="speed-input"
                   v-model.number="percent[2].SRobinNum"
                   size="mini"
-                  placeholder="请输入内容"
                 ></el-input>
               </el-form-item>
             </el-col>
@@ -138,7 +134,6 @@
                   class="speed-input"
                   v-model.number="percent[2].ARobinNum"
                   size="mini"
-                  placeholder="请输入内容"
                 ></el-input>
               </el-form-item>
             </el-col>
@@ -159,7 +154,6 @@
                   class="speed-input"
                   v-model.number="percent[2].BRobinNum"
                   size="mini"
-                  placeholder="请输入内容"
                 ></el-input>
               </el-form-item>
             </el-col>
@@ -185,7 +179,6 @@
                   class="speed-input"
                   v-model.number="percent[3].SRobinNum"
                   size="mini"
-                  placeholder="请输入内容"
                 ></el-input>
               </el-form-item>
             </el-col>
@@ -206,7 +199,6 @@
                   class="speed-input"
                   v-model.number="percent[3].ARobinNum"
                   size="mini"
-                  placeholder="请输入内容"
                 ></el-input>
               </el-form-item>
             </el-col>
@@ -227,7 +219,6 @@
                   class="speed-input"
                   v-model.number="percent[3].BRobinNum"
                   size="mini"
-                  placeholder="请输入内容"
                 ></el-input>
               </el-form-item>
             </el-col>
@@ -253,7 +244,6 @@
                   class="speed-input"
                   v-model.number="percent[0].SRobinNum"
                   size="mini"
-                  placeholder="请输入内容"
                 ></el-input>
               </el-form-item>
             </el-col>
@@ -274,7 +264,6 @@
                   class="speed-input"
                   v-model.number="percent[0].ARobinNum"
                   size="mini"
-                  placeholder="请输入内容"
                 ></el-input>
               </el-form-item>
             </el-col>
@@ -295,7 +284,6 @@
                   class="speed-input"
                   v-model.number="percent[0].BRobinNum"
                   size="mini"
-                  placeholder="请输入内容"
                 ></el-input>
               </el-form-item>
             </el-col>
