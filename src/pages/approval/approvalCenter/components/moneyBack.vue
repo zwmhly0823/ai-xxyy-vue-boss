@@ -4,7 +4,7 @@
  * @Author: huzhifu
  * @Date: 2020-05-07 10:50:45
  * @LastEditors: liukun
- * @LastEditTime: 2020-07-04 18:08:54
+ * @LastEditTime: 2020-07-04 18:32:29
  -->
 <template>
   <div class="adjustModule">
@@ -282,7 +282,7 @@ export default {
         this.everyPrice = '' // 月单价
         this.pureWeekY = '' // 已周数(给接口)
         this.pureWeekS = '' // 剩周数(给接口)
-        this.isThird = '' // 是否第三方
+        this.isThird = 0 // 是否第三方
       }
     },
     // 关联订单改变~巴拉巴拉
