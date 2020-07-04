@@ -3,11 +3,11 @@
  * @Email: songyanan@meishubao.com
  * @Date: 2020-07-01 11:19:27
  * @Last Modified by:   songyanan
- * @Last Modified time: 2020-07-04 14:36:00
+ * @Last Modified time: 2020-07-04 17:17:00
  -->
 <template>
   <div class="title-box">
-    <el-table :data="orderList">
+    <el-table :data="orderList" v-loading="loading">
       <el-table-column label="用户信息" prop="user" min-width="180" fixed>
         <template slot-scope="scope">
           <user :user="scope.row.user" :flag="true" />
@@ -217,7 +217,8 @@ export default {
       departmentObj: {}, // 组织机构 obj
       orderStatisticsResult: [], // 统计结果
       trialTeam: {}, // 学员的素质课班级名称
-      trialTeamUid: {}
+      trialTeamUid: {},
+      loading: true
     }
   },
   created() {
@@ -323,38 +324,62 @@ export default {
     },
 
     // 订单列表数据
-    orderData(queryObj = {}, page = 1) {
-      // 最终搜索条件
-      this.$emit('get-params', queryObj)
-      this.$http.Order.orderPage(`${JSON.stringify(queryObj)}`, page)
+    async orderData(queryObj = {}, page = 1) {
+      try {
+        // 最终搜索条件
+        this.$emit('get-params', queryObj)
+        const res = await this.$http.Order.orderPage(
+          `${JSON.stringify(queryObj)}`,
+          page
+        )
+        if (!res.data.OrderPage) {
+          this.totalElements = 0
+          this.currentPage = 1
+          this.orderList = []
+          return
+        }
+        if (this.topic === '7') {
+          this.totalElements = +res.data.OrderPage.totalElements
+          this.currentPage = +res.data.OrderPage.number
+        }
+        const _data = res.data.OrderPage.content
+        const orderIds = []
+        const userIds = []
+        _data.forEach((item, index) => {
+          orderIds.push(item.id)
+          userIds.push(item.uid)
+          // 下单时间格式化
+          item.ctime = formatData(item.ctime, 's')
+        })
+        await this.getQualityClassProductDetail(orderIds, _data)
+        // this.orderList = _data
+        if (userIds.length > 0) this.getUserTrialTeam(userIds)
+      } catch (error) {
+        console.log(error)
+      }
+    },
+    getQualityClassProductDetail(ids, data) {
+      this.$http.Order.getQualityClassProductDetail(ids)
         .then((res) => {
-          if (!res.data.OrderPage) {
-            this.totalElements = 0
-            this.currentPage = 1
-            this.orderList = []
-            return
+          if (res.data.OrderProductList.length > 0) {
+            for (const item of data) {
+              for (const _item of res.data.OrderProductList) {
+                if (_item.oid === item.id) {
+                  item.packages_name = _item.name
+                  item.amount = _item.price
+                }
+              }
+            }
+            setTimeout(() => {
+              this.orderList = data
+              this.loading = false
+            }, 0)
           }
-          if (this.topic === '7') {
-            this.totalElements = +res.data.OrderPage.totalElements
-            this.currentPage = +res.data.OrderPage.number
-          }
-          const _data = res.data.OrderPage.content
-          const orderIds = []
-          const userIds = []
-          _data.forEach((item, index) => {
-            orderIds.push(item.id)
-            userIds.push(item.uid)
-            // 下单时间格式化
-            item.ctime = formatData(item.ctime, 's')
-          })
-          this.orderList = _data
-          if (userIds.length > 0) this.getUserTrialTeam(userIds)
         })
         .catch((err) => {
           console.log(err)
         })
     },
-
     // 获取组织机构
     getDepartment() {
       this.$http.Department.teacherDepartment().then((res) => {
