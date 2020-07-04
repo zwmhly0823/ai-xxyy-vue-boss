@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-06-29 17:02:32
  * @LastEditors: Shentong
- * @LastEditTime: 2020-07-03 15:50:37
+ * @LastEditTime: 2020-07-04 18:33:50
 -->
 <template>
   <div class="soptmp-container">
@@ -179,7 +179,7 @@ export default {
     },
     /** 新建sop按钮 */
     new_sop_handle() {
-      const id = '1'
+      const id = '-1'
       this.$router.push({
         path: `/newSoptmp/${id}`
       })

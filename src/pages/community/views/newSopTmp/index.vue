@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-06-29 16:50:58
  * @LastEditors: Shentong
- * @LastEditTime: 2020-07-03 19:09:29
+ * @LastEditTime: 2020-07-04 22:10:09
 -->
 <template>
   <el-row type="flex" class="new-sop app-main">
@@ -63,57 +63,69 @@
                   <span>第{{ t_index }}天任务</span>
                   <i>×</i>
                 </div>
-                <div class="add-task-btn">
+                <div class="no-task" v-if="!Object.keys(tmpInfo).length">
+                  暂无任务
+                </div>
+                <div class="add-task-btn" @click="addTask">
                   <b>＋</b>
                   <span>添加一天任务</span>
                 </div>
               </div>
-              <div class="task-detail" v-if="currenContent.length">
+              <div class="task-detail" v-if="currenContentArr.length">
                 <div class="label">发送时间</div>
                 <div class="send-time">
                   <div class="day">
-                    第<span>{{ currenContent[0].day }}</span
+                    第<span>{{ currenContentArr[0].day }}</span
                     >天
                   </div>
+                  <!-- <el-time-picker
+                    size="mini"
+                    v-model="currenContentArr[0].startTime"
+                    :picker-options="{
+                      selectableRange: '18:30:00 - 20:30:00'
+                    }"
+                    placeholder="任意时间点"
+                  >
+                  </el-time-picker>
+                  <span>至</span>
+                  <el-time-picker
+                    size="mini"
+                    arrow-control
+                    v-model="currenContentArr[0].endTime"
+                    :picker-options="{
+                      selectableRange: '18:30:00 - 20:30:00'
+                    }"
+                    placeholder="任意时间点"
+                  >
+                  </el-time-picker> -->
                   <el-time-picker
                     size="mini"
                     is-range
-                    v-model="sendTime"
+                    v-model="currenContentArr[0].firstSendTime"
+                    value-format="HH:mm:ss"
                     range-separator="至"
                     start-placeholder="开始时间"
                     end-placeholder="结束时间"
                     placeholder="选择时间范围"
                     class="time-picker"
+                    @change="firstSendTimeChange"
                   >
                   </el-time-picker>
                   <span class="tip">第一条信息在时间段内随机发送</span>
                 </div>
                 <div class="label content">发送内容</div>
                 <div class="send-content">
-                  <div class="text-type common">
+                  <div
+                    class="common"
+                    :class="content.msgType == '1' ? 'text-type' : 'img-type'"
+                    v-for="(content, index) in currenContentArr"
+                    :key="index"
+                  >
                     <div class="content">
-                      <div class="text-img-box">
-                        <div class="desc">文案：</div>
-                        <div class="info">
-                          Lorem ipsum dolor sit, amet consectetur adipisicing
-                          elit. Quaerat vel nesciunt placeat alias repellendus
-                          non aspernatur eum adipisci distinctio accusamus porro
-                          veritatis, veniam a corporis vitae eligendi delectus
-                          dolore. Ipsam?
-                        </div>
-                      </div>
-                    </div>
-                    <div class="operate">
-                      <i class="el-icon-edit"></i>
-                      <i class="el-icon-delete"></i>
-                    </div>
-                  </div>
-                  <div class="img-type common">
-                    <div class="content">
-                      <div class="gap-time">
+                      <div class="gap-time" v-if="index != 0">
                         <span>间隔</span>
                         <el-input-number
-                          v-model="stepNum"
+                          v-model="currenContentArr[index].intervalTime"
                           controls-position="right"
                           size="mini"
                           @change="stepNumHandleChange"
@@ -122,7 +134,7 @@
                           class="step-num"
                         ></el-input-number>
                         <el-select
-                          v-model="intervalType"
+                          v-model="currenContentArr[index].intervalType"
                           class="time-scale"
                           placeholder="请选择"
                           size="mini"
@@ -138,11 +150,17 @@
                         <span>发送</span>
                       </div>
                       <div class="text-img-box">
-                        <div class="desc">图片：</div>
+                        <div class="desc">
+                          {{ content.msgType == '1' ? '文案：' : '图片：' }}
+                        </div>
                         <div class="info">
+                          <div v-if="content.msgType == '1'">
+                            {{ content.msgContent }}
+                          </div>
                           <el-image
+                            v-else
                             style="width: 100px; height: 100px"
-                            src="https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg"
+                            :src="content.msgContent"
                             fit="fill"
                           ></el-image>
                         </div>
@@ -165,6 +183,18 @@
                 </div>
               </div>
             </div>
+            <div class="operate-btn">
+              <el-button size="mini" style="width:150px" @click="saveForm"
+                >取消</el-button
+              >
+              <el-button
+                type="primary"
+                style="width:150px"
+                size="mini"
+                @click="saveForm"
+                >确认</el-button
+              >
+            </div>
           </el-card>
         </el-scrollbar>
       </div>
@@ -186,8 +216,9 @@ export default {
         status: 0
       },
       intervalType: 'SECONDS',
+      intervalTime: 0,
       currenTask: 1,
-      currenContent: [],
+      currenContentArr: [],
       mockList: {
         '1': [
           {
@@ -205,7 +236,8 @@ export default {
             intervalTime: 0,
             intervalType: 'HOUR',
             msgType: '1',
-            msgContent: '第一天第一条的内容'
+            msgContent:
+              '第一天第一条的内容:Lorem, ipsum dolor sit amet consectetur adipisicing elit. Eaque ducimus est debitis ex harum similique praesentium. Dolores, deserunt impedit architecto distinctio beatae eius delectus accusantium corporis, qui officiis necessitatibus maxime!'
           },
           {
             id: 2,
@@ -220,7 +252,7 @@ export default {
             startTime: '8:30:00',
             endTime: '9:00:00',
             intervalTime: 0,
-            intervalType: 'HOUR',
+            intervalType: 'MINITES',
             msgType: '3',
             msgContent:
               'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg'
@@ -228,7 +260,7 @@ export default {
         ],
         '2': [
           {
-            id: 3,
+            id: 2,
             cid: '0',
             mid: '0',
             ctime: '0',
@@ -238,13 +270,75 @@ export default {
             day: 2,
             strip: 1,
             startTime: '14:30:00',
-            endTime: '9:00:00',
+            endTime: '9:00:01',
             intervalTime: 0,
             intervalType: 'HOUR',
             msgType: '1',
             msgContent: '第二天第一条的内容'
           }
+        ],
+        '3': [
+          {
+            id: 1,
+            cid: '0',
+            mid: '0',
+            ctime: '0',
+            utime: '0',
+            del: '0',
+            templateId: 1,
+            day: 2,
+            strip: 1,
+            startTime: '14:30:00',
+            endTime: '9:00:01',
+            intervalTime: 0,
+            intervalType: 'HOUR',
+            msgType: '1',
+            msgContent: '第三天第一条的内容'
+          },
+          {
+            id: 1,
+            cid: '0',
+            mid: '0',
+            ctime: '0',
+            utime: '0',
+            del: '0',
+            templateId: 1,
+            day: 2,
+            strip: 1,
+            startTime: '14:30:00',
+            endTime: '9:00:01',
+            intervalTime: 0,
+            intervalType: 'MINITES',
+            msgType: '3',
+            msgContent:
+              'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg'
+          },
+          {
+            id: 1,
+            cid: '0',
+            mid: '0',
+            ctime: '0',
+            utime: '0',
+            del: '0',
+            templateId: 1,
+            day: 2,
+            strip: 1,
+            startTime: '14:30:00',
+            endTime: '9:00:01',
+            intervalTime: 0,
+            intervalType: 'HOUR',
+            msgType: '1',
+            msgContent: '第三天第三条的内容'
+          }
         ]
+      },
+      emptyContentTmp: {
+        day: 1,
+        startTime: '',
+        endTime: '',
+        msgType: '1',
+        msgContent: '',
+        firstSendTime: ['', '']
       },
       tmpInfo: {},
       timeScaleSelect: [
@@ -261,8 +355,6 @@ export default {
           value: 'HOUR'
         }
       ],
-      sendTime: [new Date(2019, 9, 10, 8, 40), new Date(2019, 9, 10, 9, 40)],
-      stepNum: 0,
       centerDialogVisible: false,
       params: {
         id: ''
@@ -273,24 +365,46 @@ export default {
   async created() {
     const { id = '' } = this.$route.params
     this.params.id = id
-    if (id) {
-      const tmpInfo = await this.getSopTemplate(id)
-      console.log('tmpInfo', tmpInfo)
+    if (id !== '-1') {
+      // const tmpInfo = await this.getSopTemplate(id)
+
       // TODO:
       this.tmpInfo = this.mockList
+      for (var i in this.tmpInfo) {
+        const curTask = this.tmpInfo[i]
+        console.log(curTask)
+        curTask.forEach((task, index) => {
+          const [startTime, endTime] = this.tmpInfo[i]
+          curTask[0].firstSendTime = [startTime, endTime]
+        })
+      }
+      console.log('this.tmpInfo', this.tmpInfo)
       // 判断数据是否为空对象
-      const keyArr = Object.getOwnPropertyNames(this.tmpInfo)
-
-      keyArr.length && this.tasksClickHandle(keyArr[0])
+    } else {
+      this.tmpInfo['1'] = [this.emptyContentTmp]
+      console.log(this.tmpInfo, '111')
     }
+
+    const taskArr = Object.getOwnPropertyNames(this.tmpInfo)
+
+    taskArr.length && this.tasksClickHandle(taskArr[0])
   },
   computed: {},
   methods: {
+    firstSendTimeChange() {
+      console.log(this.tmpInfo, 'firstSendTimeChange')
+    },
     /** 点击第几天任务事件 */
     tasksClickHandle(index) {
       this.currenTask = index
-      this.currenContent = this.tmpInfo[index]
-      console.log(this.currenContent, index)
+      this.currenContentArr = this.tmpInfo[index]
+      if (this.currenContentArr.length) {
+        // 每项任务的第一条信息发送时间
+        // const { startTime = '', endTime = '' } = this.currenContentArr[0]
+        // this.FirstSendTime = [startTime, endTime]
+        // console.log(this.FirstSendTime, 'this.FirstSendTime')
+      }
+      // console.log(this.currenContentArr, this.FirstSendTime)
     },
     /** 通过模板id获取模板信息 */
     async getSopTemplate(templateId) {
@@ -302,6 +416,22 @@ export default {
       } catch (err) {
         console.log(err)
       }
+    },
+    /** 添加一天的 任务 */
+    addTask() {
+      console.log(this.tmpInfo, 'this.tmpInfo')
+      const taskArr = Object.getOwnPropertyNames(this.tmpInfo)
+      if (taskArr.length) {
+        this.tmpInfo = {
+          ...this.tmpInfo,
+          [taskArr.length]: [{ ...this.emptyContentTmp }]
+        }
+        console.log(this.tmpInfo, 'this.tmpInfo--->')
+      }
+    },
+    /** 保存（更新）模板信息 */
+    saveForm() {
+      console.log(this.tmpInfo, 'tmpInfo')
     },
     stepNumHandleChange() {},
     dialogOperate(args) {
@@ -355,7 +485,6 @@ export default {
             .item {
               width: 100%;
               border: 1px solid #dcdfe6;
-
               height: 30px;
               border-radius: 5px;
               display: flex;
@@ -365,8 +494,8 @@ export default {
               transition: box-shadow 0.2s;
               position: relative;
               margin-bottom: 10px;
+              cursor: pointer;
               i {
-                cursor: pointer;
                 height: 100%;
                 width: 30px;
                 display: flex;
@@ -405,6 +534,14 @@ export default {
               align-items: center;
               position: absolute;
               bottom: 10px;
+              cursor: pointer;
+              &:hover {
+                box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+              }
+            }
+            .no-task {
+              display: flex;
+              justify-content: center;
             }
           }
           .task-detail {
@@ -424,8 +561,12 @@ export default {
               .day {
                 span {
                   color: #2a75ed;
-                  padding: 0 20px;
+                  padding: 0 15px;
                   font-weight: 500;
+                  width: 50px;
+                  background: #fff;
+                  margin: 0 5px;
+                  border-radius: 3px;
                 }
               }
               .time-picker {
@@ -478,6 +619,14 @@ export default {
                 }
               }
             }
+          }
+        }
+        .operate-btn {
+          display: flex;
+          justify-content: center;
+          margin-top: 20px;
+          button:first-child {
+            margin-right: 20px;
           }
         }
       }
