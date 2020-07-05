@@ -61,7 +61,9 @@
                   :key="t_index"
                 >
                   <span>第{{ t_index }}天任务</span>
-                  <i>×</i>
+                  <i v-if="currenTask != t_index" @click.stop="delTask(t_index)"
+                    >×</i
+                  >
                 </div>
                 <div class="no-task" v-if="!Object.keys(tmpInfo).length">
                   暂无任务
@@ -338,8 +340,9 @@ export default {
         endTime: '',
         msgType: '1',
         msgContent: '',
-        firstSendTime: ['', '']
+        firstSendTime: ['06:00:00', '23:00:00']
       },
+      firstSendTime: ['06:00:00', '23:00:00'],
       tmpInfo: {},
       timeScaleSelect: [
         {
@@ -381,7 +384,10 @@ export default {
       console.log('this.tmpInfo', this.tmpInfo)
       // 判断数据是否为空对象
     } else {
-      this.tmpInfo['1'] = [this.emptyContentTmp]
+      // this.tmpInfo['1'] = [this.emptyContentTmp]
+      this.tmpInfo = {
+        1: [this.emptyContentTmp]
+      }
       console.log(this.tmpInfo, '111')
     }
 
@@ -394,10 +400,36 @@ export default {
     firstSendTimeChange() {
       console.log(this.tmpInfo, 'firstSendTimeChange')
     },
+    /** 删除某一天任务 */
+    delTask(index) {
+      delete this.tmpInfo[index]
+      this.tmpInfo = {
+        ...this.tmpInfo
+      }
+      console.log(index, this.tmpInfo)
+    },
+    /** 添加一天的 任务 */
+    addTask() {
+      console.log(this.tmpInfo, 'this.tmpInfo')
+      /** vue中数组出现了__ob__: Observer，使用下标取不到值 */
+      const tmpInfo = JSON.parse(JSON.stringify(this.tmpInfo))
+      const taskArr = Object.getOwnPropertyNames(tmpInfo)
+      const lastTask = +taskArr[taskArr.length - 1] + 1
+      if (taskArr.length) {
+        this.tmpInfo = {
+          ...this.tmpInfo,
+          [lastTask]: [
+            { ...this.emptyContentTmp, firstSendTime: this.firstSendTime }
+          ]
+        }
+        console.log(this.tmpInfo, 'this.tmpInfo--->')
+      }
+    },
     /** 点击第几天任务事件 */
     tasksClickHandle(index) {
       this.currenTask = index
       this.currenContentArr = this.tmpInfo[index]
+      console.log('this.currenContentArr', this.currenContentArr)
       if (this.currenContentArr.length) {
         // 每项任务的第一条信息发送时间
         // const { startTime = '', endTime = '' } = this.currenContentArr[0]
@@ -415,18 +447,6 @@ export default {
         return tmpInfo
       } catch (err) {
         console.log(err)
-      }
-    },
-    /** 添加一天的 任务 */
-    addTask() {
-      console.log(this.tmpInfo, 'this.tmpInfo')
-      const taskArr = Object.getOwnPropertyNames(this.tmpInfo)
-      if (taskArr.length) {
-        this.tmpInfo = {
-          ...this.tmpInfo,
-          [taskArr.length]: [{ ...this.emptyContentTmp }]
-        }
-        console.log(this.tmpInfo, 'this.tmpInfo--->')
       }
     },
     /** 保存（更新）模板信息 */
