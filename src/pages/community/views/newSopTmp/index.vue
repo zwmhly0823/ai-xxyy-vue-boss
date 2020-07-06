@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-06-29 16:50:58
  * @LastEditors: Shentong
- * @LastEditTime: 2020-07-06 18:53:56
+ * @LastEditTime: 2020-07-06 22:07:10
 -->
 <template>
   <el-row type="flex" class="new-sop app-main">
@@ -14,8 +14,8 @@
           <el-card class="header">
             <div class="tip">新建SOP模板</div>
             <el-form
-              :model="sopFrom"
-              ref="sopFrom"
+              :model="sopForm"
+              ref="sopForm"
               label-width="100px"
               size="mini"
               class="sop-form"
@@ -27,23 +27,19 @@
                 :rules="[
                   {
                     required: true,
-                    message: '请输入邮箱地址',
+                    message: '请输入模板名称',
                     trigger: 'blur'
-                  },
-                  {
-                    type: 'name',
-                    message: '请输入正确的邮箱地址',
-                    trigger: ['blur', 'change']
                   }
                 ]"
               >
                 <el-input
-                  v-model="sopFrom.name"
+                  v-model="sopForm.name"
                   placeholder="请输入模板名称"
+                  maxlength="30"
                 ></el-input>
               </el-form-item>
               <el-form-item label="模板状态" prop="status">
-                <el-radio-group v-model="sopFrom.status">
+                <el-radio-group v-model="sopForm.status">
                   <el-radio :label="0">启用</el-radio>
                   <el-radio :label="1">禁用</el-radio>
                 </el-radio-group>
@@ -221,7 +217,7 @@ import AddContent from './components/AddContent'
 export default {
   data() {
     return {
-      sopFrom: {
+      sopForm: {
         name: '',
         status: 0
       },
@@ -279,8 +275,8 @@ export default {
             templateId: 1,
             day: 2,
             strip: 1,
-            startTime: '14:30:00',
-            endTime: '9:00:01',
+            startTime: '06:30:00',
+            endTime: '09:00:01',
             intervalTime: 0,
             intervalType: 'HOUR',
             msgType: '1',
@@ -298,8 +294,8 @@ export default {
             templateId: 1,
             day: 2,
             strip: 1,
-            startTime: '14:30:00',
-            endTime: '9:00:01',
+            startTime: '05:30:00',
+            endTime: '09:00:01',
             intervalTime: 0,
             intervalType: 'HOUR',
             msgType: '1',
@@ -315,8 +311,8 @@ export default {
             templateId: 1,
             day: 2,
             strip: 1,
-            startTime: '14:30:00',
-            endTime: '9:00:01',
+            startTime: '04:30:00',
+            endTime: '12:00:01',
             intervalTime: 0,
             intervalType: 'MINITES',
             msgType: '3',
@@ -386,20 +382,18 @@ export default {
       this.tmpInfo = this.mockList
       for (var i in this.tmpInfo) {
         const curTask = this.tmpInfo[i]
-        console.log(curTask)
+        console.log(curTask, 'curTask')
         curTask.forEach((task, index) => {
-          const [startTime, endTime] = this.tmpInfo[i]
-          curTask[0].firstSendTime = [startTime, endTime]
+          const { startTime, endTime } = task
+          task.firstSendTime = [startTime, endTime]
         })
       }
       console.log('this.tmpInfo', this.tmpInfo)
       // 判断数据是否为空对象
     } else {
-      // this.tmpInfo['1'] = [this.emptyContentTmp]
       this.tmpInfo = {
         1: [this.emptyContentTmp]
       }
-      console.log(this.tmpInfo, '111')
     }
 
     const taskArr = Object.getOwnPropertyNames(this.tmpInfo)
@@ -413,6 +407,12 @@ export default {
     },
     /** 删除某一天任务 */
     delTask(index) {
+      // console.log('index', index)
+      // this.currenTask = index
+      delete this.tmpInfo[index]
+      this.tmpInfo = { ...this.tmpInfo }
+    },
+    confirmDelTask(index) {
       delete this.tmpInfo[index]
       this.tmpInfo = { ...this.tmpInfo }
     },
@@ -430,31 +430,27 @@ export default {
             { ...this.emptyContentTmp, firstSendTime: this.firstSendTime }
           ]
         }
-        console.log(this.tmpInfo, 'this.tmpInfo--->')
       }
     },
     /** 点击第几天任务事件 */
     tasksClickHandle(index) {
       this.currenTask = index
       this.currenContentArr = this.tmpInfo[index]
-      console.log('this.currenContentArr', this.currenContentArr)
-      if (this.currenContentArr.length) {
-        // 每项任务的第一条信息发送时间
-        // const { startTime = '', endTime = '' } = this.currenContentArr[0]
-        // this.FirstSendTime = [startTime, endTime]
-        // console.log(this.FirstSendTime, 'this.FirstSendTime')
-      }
-      // console.log(this.currenContentArr, this.FirstSendTime)
+      // console.log('this.currenContentArr', this.currenContentArr)
+      // if (this.currenContentArr.length) {
+      // 每项任务的第一条信息发送时间
+      // const { startTime = '', endTime = '' } = this.currenContentArr[0]
+      // this.FirstSendTime = [startTime, endTime]
+      // console.log(this.FirstSendTime, 'this.FirstSendTime')
+      // }
     },
     /** 新增一条内容 */
-
     newContent() {
       this.curCtnt = {}
       this.centerDialogVisible = true
     },
     /** 删除当前任务下的某条内容 */
     delCurrContent(index) {
-      console.log(index, 'del-index')
       this.currenContentArr.splice(index, 1)
     },
     /** 编辑当前任务下的某条内容 */
@@ -479,12 +475,22 @@ export default {
     },
     /** 保存（更新）模板信息 */
     saveForm() {
-      console.log(this.tmpInfo, 'tmpInfo')
+      console.log(this.tmpInfo, this.sopForm, 'tmpInfo')
+      this.$refs.sopForm.validate((valid) => {
+        if (valid) {
+          alert('submit!')
+        } else {
+          console.log('error submit!!')
+          return false
+        }
+      })
     },
     stepNumHandleChange() {},
-    /** diolog模态框emit回来的事件 */
+    /**
+     * @description diolog模态框emit回来的事件
+     * @tip { msgType } 1: 文本；3: 图片
+     */
     dialogOperate(args) {
-      // msgType: 1--->文本；3--->图片
       const {
         close = true,
         closeOnly = true,
@@ -494,7 +500,6 @@ export default {
         curIndex,
         isEdit = false
       } = args
-      console.log('args', args)
       this.centerDialogVisible = !close
       if (!closeOnly) {
         const content = {
@@ -502,8 +507,6 @@ export default {
           msgContent: msgType === '1' ? textarea : imgUrl
         }
         if (isEdit) {
-          // 更新点前 内容中的字段
-          // cosnt curCtn = this.currenContentArr[curIndex]
           this.currenContentArr[curIndex] = {
             ...this.currenContentArr[curIndex],
             ...content
