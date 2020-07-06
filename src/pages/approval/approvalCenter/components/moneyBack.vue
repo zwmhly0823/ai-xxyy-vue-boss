@@ -4,7 +4,7 @@
  * @Author: huzhifu
  * @Date: 2020-05-07 10:50:45
  * @LastEditors: liukun
- * @LastEditTime: 2020-07-06 18:38:29
+ * @LastEditTime: 2020-07-06 18:50:00
  -->
 <template>
   <div class="adjustModule">
@@ -504,10 +504,10 @@ export default {
           if (
             this.refundForm.businessType === '系统课' &&
             (newValue === 1 || newValue === 2) &&
-            (this.selectOrder.courseCategory === '2' ||
-              this.selectOrder.courseCategory === '4')
+            (this.selectOrder.courseCategory === 2 ||
+              this.selectOrder.courseCategory === 4)
           ) {
-            this.half = this.selectOrder.courseCategory === '4' ? 180 : 365
+            this.half = this.selectOrder.courseCategory === 4 ? 180 : 365
             // const {
             //   code,
             //   payload
