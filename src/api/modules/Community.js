@@ -19,21 +19,31 @@ export default {
     )
   },
   /**
-   * 验证码登录
-   * */
-  codeLoginIn(params) {
-    return axios.post(`/api/b/v1/staff/mobileLogin`, params)
+   * 编辑或者添加任务
+   *
+   */
+  getToSaveOrUpdate(params) {
+    return axios.get(
+      `/api/toss/v1/toss-api/sopJobTask/toSaveOrUpdate?id=${params.id}&teacherId=${params.teacherId}`
+    )
   },
   /**
-   * 密码登录
-   * */
-  pwdLoginIn(params) {
-    return axios.post('/api/b/v1/staff/login', params)
+   * 获取群信息
+   *
+   */
+  getWeChatCluster(params) {
+    return axios.get(
+      `/api/toss/v1/toss-api/sopJobTask/getWeChatCluster?wechatNo=${params.wechatNo}&taskstatus=${params.taskstatus}&name=${params.name}`
+    )
   },
   /**
-   * 修改密码
-   * */
-  resetPwd(staffId, pwd) {
-    return axios.put(`/api/b/v1/staff/resetPwd?staffId=${staffId}&pwd=${pwd}`)
+   * 保存或者更新任务
+   *
+   */
+  saveOrUpdateSopJobTask(data) {
+    return axios.post(
+      '/api/toss/v1/toss-api/sopJobTask/saveOrUpdateSopJobTask',
+      data
+    )
   }
 }

@@ -42,7 +42,7 @@ const routes = [
     component: () => import('../views/newSopTmp/index.vue')
   },
   {
-    path: '/newPlantask',
+    path: '/newPlantask/:id',
     name: 'newPlantask',
     meta: {
       title: 'sop管理',

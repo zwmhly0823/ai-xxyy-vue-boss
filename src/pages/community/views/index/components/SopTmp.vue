@@ -187,7 +187,7 @@ export default {
   }
 }
 </script>
-<style rel="stylesheet/scss" lang="scss" scoped>
+<style rel="stylesheet/scss" lang="scss">
 .operete-row {
   display: flex;
   padding: 10px;

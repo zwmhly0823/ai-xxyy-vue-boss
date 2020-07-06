@@ -3,8 +3,8 @@
  * @version: 1.0.0
  * @Author: Shentong
  * @Date: 2020-06-29 17:10:10
- * @LastEditors: Shentong
- * @LastEditTime: 2020-06-29 18:18:31
+ * @LastEditors: shasen
+ * @LastEditTime: 2020-07-04 18:29:22
 -->
 <!--
  * @Descripttion: TOSS小熊
@@ -21,7 +21,7 @@
         <div class="search-item small">
           <el-select
             class="item-style"
-            v-model="taskname"
+            v-model="search_term.taskname"
             filterable
             remote
             :reserve-keyword="true"
@@ -40,7 +40,7 @@
           </el-select>
           <el-select
             class="item-style margin_l10"
-            v-model="templatename"
+            v-model="search_term.templatename"
             filterable
             remote
             :reserve-keyword="true"
@@ -59,7 +59,7 @@
           </el-select>
           <el-select
             class="item-style margin_l10"
-            v-model="creater"
+            v-model="search_term.creater"
             filterable
             remote
             :reserve-keyword="true"
@@ -76,6 +76,16 @@
               :value="item.value"
             ></el-option>
           </el-select>
+          <el-date-picker
+            v-model="search_term.timefw"
+            size="mini"
+            type="datetimerange"
+            range-separator="至"
+            start-placeholder="开始日期"
+            end-placeholder="结束日期"
+            class="margin_l10"
+          >
+          </el-date-picker>
           <b class="el-icon-search"></b>
         </div>
       </div>
@@ -138,8 +148,18 @@
         <el-table-column label="操作" align="center">
           <template slot-scope="scope">
             <div class="editStyle">
-              <span @click="taskDetails(scope.row, '1')">详情</span>
-              <span @click="tableRowOperate(scope.row, '2')">修改</span>
+              <el-button
+                class="editStyle_btn"
+                type="text"
+                @click="taskDetails(scope.row, '1')"
+                >详情</el-button
+              >
+              <el-button
+                class="editStyle_btn"
+                type="text"
+                @click="tableRowOperate(scope.row, '2')"
+                >修改</el-button
+              >
               <el-popconfirm
                 confirmButtonText="YES"
                 cancelButtonText="算了"
@@ -148,8 +168,13 @@
                 title="你确定要删除该项内容吗？"
                 @onConfirm="confirmDelRow"
               >
-                <span @click="tableRowOperate(scope.row, '3')" slot="reference"
-                  >取消</span
+                <el-button
+                  type="text"
+                  @click="tableRowOperate(scope.row, '3')"
+                  slot="reference"
+                  class="editStyle_unbtn"
+                  disabled
+                  >取消</el-button
                 >
               </el-popconfirm>
             </div>
@@ -294,9 +319,12 @@ import EleTable from '@/components/Table/EleTable'
 export default {
   data() {
     return {
-      taskname: '',
-      templatename: '',
-      creater: '',
+      search_term: {
+        taskname: '',
+        templatename: '',
+        creater: '',
+        timefw: ''
+      },
       taskList: [],
       templateList: [],
       createrList: [],
@@ -332,6 +360,17 @@ export default {
   computed: {
     handleDebounce() {
       return debounce(this.getTaskList, 500)
+    },
+    search_term_new() {
+      return JSON.parse(JSON.stringify(this.search_term))
+    }
+  },
+  watch: {
+    search_term_new: {
+      handler: (val, olVal) => {
+        console.log('我变化了', val, olVal) // 但是val和olVal值一样
+      },
+      deep: true
     }
   },
   methods: {
@@ -437,8 +476,9 @@ export default {
     },
     /** 新建sop按钮 */
     new_sop_handle() {
+      const id = '-1'
       this.$router.push({
-        path: '/newPlantask'
+        path: `/newPlantask/${id}`
       })
     }
   }
@@ -496,5 +536,17 @@ li {
 }
 .margin_l10 {
   margin-left: 10px;
+}
+.editStyle {
+  display: flex;
+  justify-content: space-around;
+  .editStyle_btn span {
+    color: #2a75ed;
+    cursor: pointer;
+  }
+  .editStyle_unbtn span {
+    color: #c0c4cc !important;
+    cursor: not-allowed;
+  }
 }
 </style>
