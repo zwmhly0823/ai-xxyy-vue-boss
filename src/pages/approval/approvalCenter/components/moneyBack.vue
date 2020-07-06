@@ -4,7 +4,7 @@
  * @Author: huzhifu
  * @Date: 2020-05-07 10:50:45
  * @LastEditors: liukun
- * @LastEditTime: 2020-07-06 18:50:00
+ * @LastEditTime: 2020-07-06 21:44:42
  -->
 <template>
   <div class="adjustModule">
@@ -574,11 +574,14 @@ export default {
             if (this.refundForm.businessType === '系统课') {
               if (this.pureWeekS && this.pureWeekY !== '') {
                 // 计算系统课退费,得保证取到剩总课时和已上课时
+                const yiYue = Math.floor(this.pureWeekY / 4)
                 const shengYue = Math.floor(this.pureWeekS / 4)
                 console.warn(
                   '选择退款类型为课程退款-系统课,计算所得',
-                  '可退月份:' + shengYue,
-                  '剩余可退总周数:' + this.pureWeekS
+                  '已上月份:' + yiYue,
+                  '已上周数:' + this.pureWeekY,
+                  '剩余月份:' + shengYue,
+                  '剩余周数:' + this.pureWeekS
                 )
                 // 计算系统课退费
                 if (shengYue <= 0) {
@@ -591,14 +594,34 @@ export default {
                 } else {
                   if (this.half === 180) {
                     this.refundForm.refundAmount = Math.round(
-                      ((1499 / 6) * shengYue).toFixed(2)
+                      this.refundForm.residueFee -
+                        ((1499 / 6) * yiYue).toFixed(2)
                     )
+                    if (
+                      this.refundForm.refundAmount > this.refundForm.residueFee
+                    ) {
+                      this.$message({
+                        message: '退款金额不能大于剩余金额',
+                        type: 'error'
+                      })
+                      this.onCancel('refundForm')
+                    }
                   } else if (this.half === 365) {
                     this.refundForm.refundAmount = Math.round(
-                      ((2600 / 12) * shengYue).toFixed(2)
+                      this.refundForm.residueFee -
+                        ((2600 / 12) * yiYue).toFixed(2)
                     )
+                    if (
+                      this.refundForm.refundAmount > this.refundForm.residueFee
+                    ) {
+                      this.$message({
+                        message: '退款金额不能大于剩余金额',
+                        type: 'error'
+                      })
+                      this.onCancel('refundForm')
+                    }
                   }
-                  this.refundForm.refundMonths = shengYue
+                  this.refundForm.refundMonths = shengYue // 退了几个月的课
                   // for (let i = 1; i <= shengYue; i++) {
                   //   const item = {}
                   //   item.guanzhong = i + '个月'
@@ -657,6 +680,7 @@ export default {
                 message: '该订单课余量低于6或不是全年课,不支持降包类型',
                 type: 'warning'
               })
+              this.onCancel('refundForm')
             }
           } else if (newValue === 3) {
             // 补偿
@@ -669,6 +693,7 @@ export default {
                 message: '退款金额不能大于剩余金额',
                 type: 'warning'
               })
+              this.onCancel('refundForm')
             }
           }
         }
@@ -684,6 +709,13 @@ export default {
             return item.name === newValue
           })[0]
           this.refundForm.refundAmount = targetItem.amount
+          if (this.refundForm.refundAmount > this.refundForm.residueFee) {
+            this.$message({
+              message: '退款金额不能大于剩余金额',
+              type: 'error'
+            })
+            this.onCancel('refundForm')
+          }
         }
       }
     }
