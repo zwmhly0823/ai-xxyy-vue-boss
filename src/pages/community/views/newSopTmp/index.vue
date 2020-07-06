@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-06-29 16:50:58
  * @LastEditors: Shentong
- * @LastEditTime: 2020-07-04 22:10:09
+ * @LastEditTime: 2020-07-06 18:53:56
 -->
 <template>
   <el-row type="flex" class="new-sop app-main">
@@ -169,8 +169,15 @@
                       </div>
                     </div>
                     <div class="operate">
-                      <i class="el-icon-edit"></i>
-                      <i class="el-icon-delete"></i>
+                      <i
+                        class="el-icon-edit"
+                        @click.stop="editCurrContent(index, content)"
+                      ></i>
+                      <i
+                        v-if="currenContentArr.length > 1"
+                        class="el-icon-delete"
+                        @click.stop="delCurrContent(index)"
+                      ></i>
                     </div>
                   </div>
                   <div class="add-content-btn">
@@ -178,7 +185,7 @@
                       type="primary"
                       size="mini"
                       icon="el-icon-plus"
-                      @click="centerDialogVisible = true"
+                      @click="newContent"
                       >添加内容</el-button
                     >
                   </div>
@@ -203,6 +210,7 @@
     </el-col>
     <add-content
       :centerDialogVisible="centerDialogVisible"
+      :content="curCtnt"
       @dialogOperate="dialogOperate"
       v-if="centerDialogVisible"
     ></add-content>
@@ -338,6 +346,8 @@ export default {
         day: 1,
         startTime: '',
         endTime: '',
+        intervalTime: 0,
+        intervalType: 'HOUR',
         msgType: '1',
         msgContent: '',
         firstSendTime: ['06:00:00', '23:00:00']
@@ -359,6 +369,7 @@ export default {
         }
       ],
       centerDialogVisible: false,
+      curCtnt: {},
       params: {
         id: ''
       }
@@ -403,10 +414,7 @@ export default {
     /** 删除某一天任务 */
     delTask(index) {
       delete this.tmpInfo[index]
-      this.tmpInfo = {
-        ...this.tmpInfo
-      }
-      console.log(index, this.tmpInfo)
+      this.tmpInfo = { ...this.tmpInfo }
     },
     /** 添加一天的 任务 */
     addTask() {
@@ -438,6 +446,26 @@ export default {
       }
       // console.log(this.currenContentArr, this.FirstSendTime)
     },
+    /** 新增一条内容 */
+
+    newContent() {
+      this.curCtnt = {}
+      this.centerDialogVisible = true
+    },
+    /** 删除当前任务下的某条内容 */
+    delCurrContent(index) {
+      console.log(index, 'del-index')
+      this.currenContentArr.splice(index, 1)
+    },
+    /** 编辑当前任务下的某条内容 */
+    editCurrContent(index, ctnt) {
+      this.centerDialogVisible = true
+      this.curCtnt = {
+        ...ctnt,
+        isEdit: true,
+        curIndex: index
+      }
+    },
     /** 通过模板id获取模板信息 */
     async getSopTemplate(templateId) {
       try {
@@ -454,15 +482,36 @@ export default {
       console.log(this.tmpInfo, 'tmpInfo')
     },
     stepNumHandleChange() {},
+    /** diolog模态框emit回来的事件 */
     dialogOperate(args) {
       // msgType: 1--->文本；3--->图片
-      const { close = true, msgType = '1', textarea = '', imgUrl = '' } = args
+      const {
+        close = true,
+        closeOnly = true,
+        msgType = '1',
+        textarea = '',
+        imgUrl = '',
+        curIndex,
+        isEdit = false
+      } = args
+      console.log('args', args)
       this.centerDialogVisible = !close
-      const content = {
-        msgType,
-        msgContent: msgType === '1' ? textarea : imgUrl
+      if (!closeOnly) {
+        const content = {
+          msgType,
+          msgContent: msgType === '1' ? textarea : imgUrl
+        }
+        if (isEdit) {
+          // 更新点前 内容中的字段
+          // cosnt curCtn = this.currenContentArr[curIndex]
+          this.currenContentArr[curIndex] = {
+            ...this.currenContentArr[curIndex],
+            ...content
+          }
+        } else {
+          this.currenContentArr.push({ ...this.emptyContentTmp, ...content })
+        }
       }
-      console.log('add-content', content)
     }
   }
 }
@@ -626,7 +675,7 @@ export default {
                   }
                 }
                 .operate {
-                  width: 50px;
+                  // width: 50px;
                   font-size: 20px;
                   display: flex;
                   justify-content: space-between;
@@ -634,6 +683,9 @@ export default {
                     cursor: pointer;
                     &:hover {
                       color: #2a75ed;
+                    }
+                    &:first-child {
+                      margin-right: 5px;
                     }
                   }
                 }

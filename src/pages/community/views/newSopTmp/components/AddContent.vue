@@ -4,15 +4,15 @@
  * @Author: Shentong
  * @Date: 2020-06-30 19:21:08
  * @LastEditors: Shentong
- * @LastEditTime: 2020-07-03 14:23:07
+ * @LastEditTime: 2020-07-06 19:04:54
 -->
 <template>
   <el-dialog
-    title="添加内容"
+    :title="isEdit ? '编辑内容' : '添加内容'"
     :visible.sync="centerDialog"
     width="60%"
     top="20vh"
-    center
+    :center="!content.isEdit"
     :before-close="dialogClose"
     :close-on-click-modal="false"
     custom-class="dialog-custom"
@@ -87,8 +87,17 @@
       </div>
     </div>
     <span slot="footer" class="dialog-footer">
-      <el-button @click="dialogOperate('submit')" size="mini">提交</el-button>
-      <el-button type="primary" @click="dialogOperate('continue')" size="mini"
+      <el-button
+        @click="dialogOperate('submit')"
+        :type="isEdit ? 'primary' : ''"
+        size="mini"
+        >提交</el-button
+      >
+      <el-button
+        type="primary"
+        @click="dialogOperate('continue')"
+        size="mini"
+        v-if="!isEdit"
         >提交并继续添加</el-button
       >
     </span>
@@ -99,7 +108,16 @@ import { debounce } from 'lodash'
 // import uploadFile from '@/utils/upload' // 上传公共方法 TODO:
 const appData = require('@/utils/emoji.json')
 export default {
-  props: ['centerDialogVisible'],
+  props: {
+    centerDialogVisible: {
+      type: Boolean,
+      default: false
+    },
+    content: {
+      type: Object,
+      default: () => {}
+    }
+  },
   data() {
     return {
       addContentForm: {
@@ -107,6 +125,7 @@ export default {
         textarea: ''
       },
       faceList: [],
+      isEdit: false,
       changeEmojiToggle: false,
       tabIndex: 0,
       dialogImageUrl: '',
@@ -130,6 +149,18 @@ export default {
     centerDialog() {
       return this.centerDialogVisible
     }
+  },
+  created() {
+    const { msgType = '1', msgContent = '', isEdit = false } = this.content
+    this.isEdit = isEdit
+    // console.log(msgType, 'msgType')
+    if (msgType === '1') {
+      this.addContentForm.textarea = msgContent
+    } else {
+      this.tabIndex = 1
+      this.addContentForm.imgUrl = msgContent
+    }
+    console.log(this.content, 'props')
   },
   mounted() {
     for (const i in appData) {
@@ -176,10 +207,15 @@ export default {
           this.isShaky = false
         }, 250)
       } else {
+        const { isEdit = false, curIndex = 0 } = this.content
+        console.log('this.addContentForm', this.addContentForm)
         this.$emit('dialogOperate', {
           ...this.addContentForm,
           msgType: !this.tabIndex ? '1' : '3',
-          close: type !== 'continue'
+          close: type !== 'continue',
+          closeOnly: false,
+          isEdit,
+          curIndex
         })
       }
     },
@@ -210,7 +246,7 @@ export default {
         }
       }
       changeSelectedText(textArea, this.faceList[index])
-      this.textarea = textArea.value // 要同步data中的数据
+      this.addContentForm.textarea = textArea.value // 要同步data中的数据
     }
   }
 }
@@ -313,6 +349,10 @@ export default {
   .edit-content {
     padding: 15px;
     min-height: 180px;
+  }
+}
+.dialog-footer {
+  &.is-edit {
   }
 }
 .shaky {
