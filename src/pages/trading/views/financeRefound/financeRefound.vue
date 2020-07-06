@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-05-19 17:18:39
  * @LastEditors: liukun
- * @LastEditTime: 2020-07-06 15:44:30
+ * @LastEditTime: 2020-07-06 21:59:19
 -->
 <template>
   <section class="bianju10">
@@ -374,7 +374,7 @@ export default {
         applyName: ''
       },
       // 被动关联事件_断值(用于赋值↑下半段)
-      num1: '',
+      num1: '0',
       num1_: '',
       num2: '',
       num2_: '',
