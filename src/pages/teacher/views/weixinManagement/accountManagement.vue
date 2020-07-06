@@ -248,7 +248,9 @@ export default {
         const wildcard = {}
         res.forEach((item) => {
           item.wildcard && Object.assign(wildcard, item.wildcard)
-          item.term && Object.assign(wildcard, item.term)
+          item.term &&
+            !Object.keys(item.term).includes('wechatJud') &&
+            Object.assign(wildcard, item.term)
         })
         this.searchQuery = wildcard
         // 是否关联老师
