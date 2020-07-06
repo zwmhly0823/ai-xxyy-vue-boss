@@ -3,7 +3,7 @@
     <el-scrollbar wrap-class="scrollbar-wrapper" id="wechat-scroll">
       <m-search
         @search="searchHandler"
-        wxSerch="wechat_no"
+        wxSerch="wechat_no.keyword"
         wxTeacherPhone="teacher_id"
         wxStatus="is_effective"
         wxConcatTeacher="wechatJud"
@@ -21,7 +21,6 @@
         style="padding-bottom:70px;"
         :data="table.tableData"
         @cell-mouse-enter="onClick"
-        :header-cell-style="headerCss"
       >
         <el-table-column width="50">
           <template slot-scope="scope">
@@ -65,17 +64,26 @@
         </el-table-column>
         <el-table-column
           align="left"
-          label="wXId"
+          label="微信ID"
           min-width="100"
-          props="wechat_id"
+          prop="wechat_id"
         >
+          <template slot-scope="scope">
+            <span>{{
+              scope.row.wechat_id && scope.row.wechat_id > 0
+                ? scope.row.wechat_id
+                : '-'
+            }}</span>
+          </template>
         </el-table-column>
-        <el-table-column
-          align="left"
-          label="艾客微信ID"
-          min-width="100"
-          props="wechat_record_id"
-        >
+        <el-table-column align="left" label="艾客微信ID" min-width="100">
+          <template slot-scope="scope">
+            <span>{{
+              scope.row.wechat_record_id && scope.row.wechat_record_id > 0
+                ? scope.row.wechat_record_id
+                : '-'
+            }}</span>
+          </template>
         </el-table-column>
         <el-table-column align="left" label="使用状态" min-width="100">
           <template slot-scope="scope">
@@ -85,8 +93,9 @@
         <el-table-column align="center" label="关联老师" min-width="150">
           <template slot-scope="scope">
             <span>{{
-              concatTeacher[scope.row.teacher_id] &&
-                concatTeacher[scope.row.teacher_id].teachername
+              (concatTeacher[scope.row.teacher_id] &&
+                concatTeacher[scope.row.teacher_id].teachername) ||
+                '-'
             }}</span>
           </template>
         </el-table-column>
@@ -238,7 +247,8 @@ export default {
       if (res.length > 0) {
         const wildcard = {}
         res.forEach((item) => {
-          Object.assign(wildcard, item.wildcard)
+          item.wildcard && Object.assign(wildcard, item.wildcard)
+          item.term && Object.assign(wildcard, item.term)
         })
         this.searchQuery = wildcard
         // 是否关联老师
@@ -255,13 +265,12 @@ export default {
       }
       if (res.length === 0) {
         this.weChatPageList()
+        return
       }
       if (this.querSearch && this.searchQuery) {
         Object.assign(this.searchQuery, this.querSearch)
       }
-      if (this.searchQuery.wechat_no || this.searchQuery.teacher_id) {
-        this.weChatPageList(this.searchQuery)
-      }
+      this.weChatPageList(this.searchQuery)
     },
     // 微信管理列表
     weChatPageList(params) {
@@ -328,19 +337,6 @@ export default {
               }
             })
         })
-    },
-    // 单元格回调样式
-    cellStyle({ row, column, rowIndex, columnIndex }) {
-      if (columnIndex === 3) {
-        return 'padding-left:10px;'
-      }
-    },
-    // 表头回调样式
-    headerCss({ row, column, rowIndex, columnIndex }) {
-      if (columnIndex === 0) {
-        return 'font-size:12px;color:#666;font-weight:normal;padding-left:100px;'
-      }
-      return 'font-size:12px;color:#666;font-weight:normal;'
     },
     // 分页
     handleCurrentChange(val) {

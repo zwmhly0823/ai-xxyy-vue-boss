@@ -88,14 +88,34 @@
       reserve-keyword
       :fetch-suggestions="wxIdSerch"
       :trigger-on-focus="false"
-      placeholder="微信号搜索"
-      @select="onWxSerch"
+      placeholder="微信ID搜索"
+      @select="onWxIdSerch"
       ref="wxid"
     >
       <i class="el-icon-search el-input__icon" slot="suffix"></i>
       <template slot-scope="{ item }">
         <div style="display:flex">
-          <div class="name">{{ item.wechat_no || '-' }}</div>
+          <div class="name">{{ item.wechat_id || '-' }}</div>
+        </div>
+      </template>
+    </el-autocomplete>
+    <!-- 艾客wxid搜索 -->
+    <el-autocomplete
+      v-model="wechatRecordId"
+      size="mini"
+      clearable
+      filterable
+      reserve-keyword
+      :fetch-suggestions="wxRecordIdSerch"
+      :trigger-on-focus="false"
+      placeholder="艾客微信ID搜索"
+      @select="onWxRecordSerch"
+      ref="wxrid"
+    >
+      <i class="el-icon-search el-input__icon" slot="suffix"></i>
+      <template slot-scope="{ item }">
+        <div style="display:flex">
+          <div class="name">{{ item.wechat_record_id || '-' }}</div>
         </div>
       </template>
     </el-autocomplete>
@@ -136,7 +156,12 @@ export default {
     // wechat_id
     wxId: {
       type: String,
-      default: ''
+      default: 'wechat_id'
+    },
+    // wechat_id
+    wxRecordId: {
+      type: String,
+      default: 'wechat_record_id'
     }
   },
   data() {
@@ -150,6 +175,7 @@ export default {
       mobileInp: '',
       weixinInp: '',
       wechatId: '',
+      wechatRecordId: '',
       status: [
         { name: '启用', id: '0' },
         {
@@ -191,6 +217,12 @@ export default {
     wechatId(val, old) {
       if (val !== old && !val) {
         this.$emit('getWxIdSerch', '')
+      }
+    },
+    // 监听输入wechat_record_id
+    wechatRecordId(val, old) {
+      if (val !== old && !val) {
+        this.$emit('getWechatRecordIdSearch', '')
       }
     }
   },
@@ -248,13 +280,32 @@ export default {
     },
     // 微信号搜索（给父组件传值）
     onWxSerch(data) {
-      // console.log('====data====', data)
       // 输入文本框的值
       this.weixinInp = data.wechat_no
-      // console.log('+_+_+_+_+_this.weixinInp+_+_+_+_+_+_+_+_', this.weixinInp)
       this.$emit(
         'getWxSerch',
         data.wechat_no ? { [this.wxSerch]: data.wechat_no } : ''
+      )
+    },
+    // 微信ID搜索（给父组件传值）
+    onWxIdSerch(data) {
+      console.log('====data====', data)
+      // 输入文本框的值
+      this.wechatId = data.wechat_id
+      this.$emit(
+        'getWxIdSerch',
+        data.wechat_id ? { [this.wxId]: data.wechat_id } : ''
+      )
+    },
+    // 艾客微信号搜索（给父组件传值）
+    onWxRecordSerch(data) {
+      // console.log('+_+_+_+_+_this.weixinInp+_+_+_+_+_+_+_+_', this.weixinInp)
+      this.wechatRecordId = data.wechat_record_id
+      this.$emit(
+        'getWechatRecordIdSearch',
+        data.wechat_record_id
+          ? { [this.wxRecordId]: data.wechat_record_id }
+          : ''
       )
       // this.wxSerch字段名称
       // console.log('$+++wxInput.vue+++$$wxSerch$$$', this.wxSerch)
@@ -290,23 +341,32 @@ export default {
     // 输入wxid
     async wxIdSerch(queryString, cb) {
       // 输入内容查找到的关联信息（下拉框）
-      const list = await this.weixinidCreateFilter(queryString)
-      // console.log('*****list******', list)
+      const list = await this.weixinidCreateFilter('wechat_id', queryString)
       // cb 展示列表数据
       cb(list)
       this.$refs.wxid.handleFocus()
     },
-    // 调用微信号搜索接口
-    weixinidCreateFilter(queryString) {
-      // 输入内容匹配到的关联信息（下拉框）
-      return this.$http.Weixin.getWechatIdListEx(
-        'wechat_no.keyword',
+    // 输入wxid
+    async wxRecordIdSerch(queryString, cb) {
+      // 输入内容查找到的关联信息（下拉框）
+      const list = await this.weixinidCreateFilter(
+        'wechat_record_id',
         queryString
-      ).then((res) => {
-        // console.log('微信搜索调用接口', res)
-        this.weixinSelectData = res.data.WeChatTeacherListEx || []
-        return this.weixinSelectData
-      })
+      )
+      // cb 展示列表数据
+      cb(list)
+      this.$refs.wxrid.handleFocus()
+    },
+    // 调用微信ID搜索接口
+    weixinidCreateFilter(id, queryString) {
+      // 输入内容匹配到的关联信息（下拉框）
+      return this.$http.Weixin.getWechatIdListEx(id, queryString).then(
+        (res) => {
+          console.log('微信搜索调用接口', res)
+          this.weixinSelectData = res.data.WeChatTeacherListEx || []
+          return this.weixinSelectData
+        }
+      )
     }
   }
 }
