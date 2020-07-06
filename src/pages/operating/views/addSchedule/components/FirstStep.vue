@@ -52,17 +52,8 @@
               </el-form-item>
               <h6>开始上课时间必须从星期一开始</h6>
             </el-col>
-            <el-col :span="4" :offset="1">
-              <h4>接速设置</h4>
-              <el-form-item label="" prop="robinNum">
-                <el-input
-                  size="small"
-                  v-model.number="formInfo.robinNum"
-                  placeholder="请输入学生数"
-                ></el-input>
-              </el-form-item>
-              <h6>轮询分配的学生数设置</h6>
-            </el-col>
+            <!-- 原接速位置 -->
+            <el-col :span="4" :offset="1"></el-col>
           </el-row>
         </div>
         <!-- 售卖周期设置 -->
@@ -184,21 +175,11 @@ import { Loading } from 'element-ui'
 export default {
   props: ['stepStatus'],
   data() {
-    var checkNumber = (rule, value, callback) => {
-      if (!value) {
-        return callback(new Error('请输入学生数'))
-      } else if (!Number.isInteger(value)) {
-        callback(new Error('请输入数字值'))
-      } else {
-        callback()
-      }
-    }
     return {
       courseType: 0, // 课程类型；0 体验课；1系统课
       formInfo: {
         sellCycleTime: '',
-        attendClassTime: '',
-        robinNum: '' // 接速设置
+        attendClassTime: ''
       },
       setSellTimeForm: [],
       attendClassObj: {
@@ -225,8 +206,7 @@ export default {
             message: '请选择上课周期',
             trigger: 'change'
           }
-        ],
-        robinNum: [{ validator: checkNumber, required: true, trigger: 'blur' }]
+        ]
       }
     }
   },
@@ -246,7 +226,6 @@ export default {
           endCourseDay = '',
           startDate = '',
           endDate = '',
-          robinNum = '',
           sellCycle = []
         } = _data.payload
 
@@ -259,8 +238,7 @@ export default {
             new Date(Number(`${courseDay}`)),
             new Date(Number(`${endCourseDay}`))
           ],
-          sellCycle,
-          robinNum // 接速设置
+          sellCycle
         }
 
         this.sellCycleTimeChange(this.formInfo.sellCycleTime)
@@ -392,7 +370,6 @@ export default {
       Object.assign(sendFrom, {
         ...this.attendClassObj,
         ...this.sellCycleObj,
-        robinNum: this.formInfo.robinNum,
         sellCycle: this.setSellTimeForm,
         type: this.courseType,
         period: +this.period || ''
