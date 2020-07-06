@@ -2,7 +2,7 @@
  * @Descripttion: 
  * @version: 
  * @LastEditors: liukun
- * @LastEditTime: 2020-07-06 18:42:07
+ * @LastEditTime: 2020-07-06 18:52:43
  -->
 <template>
   <div class="adjustModule">
@@ -502,10 +502,10 @@ export default {
           if (
             this.refundForm.businessType === '系统课' &&
             (newValue === 1 || newValue === 2) &&
-            (this.selectOrder.courseCategory === '2' ||
-              this.selectOrder.courseCategory === '4')
+            (this.selectOrder.courseCategory === 2 ||
+              this.selectOrder.courseCategory === 4)
           ) {
-            this.half = this.selectOrder.courseCategory === '4' ? 180 : 365
+            this.half = this.selectOrder.courseCategory === 4 ? 180 : 365
             // const {
             //   code,
             //   payload
