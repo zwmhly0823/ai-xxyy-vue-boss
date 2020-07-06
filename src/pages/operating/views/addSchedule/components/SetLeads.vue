@@ -457,7 +457,7 @@ export default {
     getLeads(params) {
       this.$http.Operating.getLeads(params).then((res) => {
         if (res.code === 0 && Object.keys(res.payload).length > 0) {
-          // Object.assign(this.percent, res.payload)
+          Object.assign(this.percent, res.payload)
         } else {
           this.$message({
             message: '获取数据失败',
