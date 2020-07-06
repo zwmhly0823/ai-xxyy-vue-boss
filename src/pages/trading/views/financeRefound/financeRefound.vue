@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-05-19 17:18:39
  * @LastEditors: liukun
- * @LastEditTime: 2020-07-02 20:15:09
+ * @LastEditTime: 2020-07-06 15:44:30
 -->
 <template>
   <section class="bianju10">
@@ -149,8 +149,8 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="uid" label="用户ID" align="center" width="180">
-        </el-table-column>
+        <!-- <el-table-column prop="uid" label="用户ID" align="center" width="180">
+        </el-table-column> -->
         <el-table-column prop="regtypeStr" label="业务类型" align="center">
         </el-table-column>
         <el-table-column prop="applyName" label="申请人" align="center">
@@ -181,12 +181,10 @@
         </el-table-column>
         <el-table-column prop="totoalFee" label="交易金额" align="center">
         </el-table-column>
-        <el-table-column
-          prop="applyTime"
-          label="申请退款时间"
-          align="center"
-          width="155"
-        >
+        <el-table-column label="申请退款时间" align="center" width="155">
+          <template slot-scope="scope">
+            {{ scope.row.applyTime || scope.row.ctime }}
+          </template>
         </el-table-column>
         <el-table-column
           prop="refundTime"
