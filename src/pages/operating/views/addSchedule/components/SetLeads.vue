@@ -310,7 +310,17 @@
 import { mapGetters } from 'vuex'
 const robinNumRuls = [
   { required: true, message: '接速不能为空' },
-  { type: 'number', message: '接速必须为数字值' }
+  { type: 'number', message: '接速必须为数字值' },
+  {
+    validator: (rule, value, callback) => {
+      if (value > 0) {
+        callback()
+      } else {
+        return callback(new Error('接速需大于0'))
+      }
+    },
+    trigger: 'change'
+  }
 ]
 export default {
   props: {},
@@ -328,11 +338,11 @@ export default {
       const A = Number(this.percent[rule.level].A)
       const B = Number(this.percent[rule.level].B)
       const sum = S + A + B
-      // if (sum > 100) {
-      //   return callback(new Error('请填写正确的数字'))
-      // }
-      if (sum !== 100) {
+      if (S !== 0 && A !== 0 && B !== 0 && sum !== 100) {
         return callback(new Error('请填写正确的数字'))
+      }
+      if (value > 100 || sum > 100) {
+        return callback(new Error('不能超过100'))
       }
       callback()
     }
@@ -373,13 +383,13 @@ export default {
       },
       rules_1: {
         S: [
-          { validator: checkFun, required: true, trigger: 'blur', level: '1' }
+          { validator: checkFun, required: true, trigger: 'change', level: '1' }
         ],
         A: [
-          { validator: checkFun, required: true, trigger: 'blur', level: '1' }
+          { validator: checkFun, required: true, trigger: 'change', level: '1' }
         ],
         B: [
-          { validator: checkFun, required: true, trigger: 'blur', level: '1' }
+          { validator: checkFun, required: true, trigger: 'change', level: '1' }
         ],
         SRobinNum: robinNumRuls,
         ARobinNum: robinNumRuls,
@@ -387,13 +397,13 @@ export default {
       },
       rules_2: {
         S: [
-          { validator: checkFun, required: true, trigger: 'blur', level: '2' }
+          { validator: checkFun, required: true, trigger: 'change', level: '2' }
         ],
         A: [
-          { validator: checkFun, required: true, trigger: 'blur', level: '2' }
+          { validator: checkFun, required: true, trigger: 'change', level: '2' }
         ],
         B: [
-          { validator: checkFun, required: true, trigger: 'blur', level: '2' }
+          { validator: checkFun, required: true, trigger: 'change', level: '2' }
         ],
         SRobinNum: robinNumRuls,
         ARobinNum: robinNumRuls,
@@ -401,13 +411,13 @@ export default {
       },
       rules_3: {
         S: [
-          { validator: checkFun, required: true, trigger: 'blur', level: '3' }
+          { validator: checkFun, required: true, trigger: 'change', level: '3' }
         ],
         A: [
-          { validator: checkFun, required: true, trigger: 'blur', level: '3' }
+          { validator: checkFun, required: true, trigger: 'change', level: '3' }
         ],
         B: [
-          { validator: checkFun, required: true, trigger: 'blur', level: '3' }
+          { validator: checkFun, required: true, trigger: 'change', level: '3' }
         ],
         SRobinNum: robinNumRuls,
         ARobinNum: robinNumRuls,
@@ -415,13 +425,13 @@ export default {
       },
       rules_0: {
         S: [
-          { validator: checkFun, required: true, trigger: 'blur', level: '0' }
+          { validator: checkFun, required: true, trigger: 'change', level: '0' }
         ],
         A: [
-          { validator: checkFun, required: true, trigger: 'blur', level: '0' }
+          { validator: checkFun, required: true, trigger: 'change', level: '0' }
         ],
         B: [
-          { validator: checkFun, required: true, trigger: 'blur', level: '0' }
+          { validator: checkFun, required: true, trigger: 'change', level: '0' }
         ],
         SRobinNum: robinNumRuls,
         ARobinNum: robinNumRuls,
@@ -447,7 +457,7 @@ export default {
     getLeads(params) {
       this.$http.Operating.getLeads(params).then((res) => {
         if (res.code === 0 && Object.keys(res.payload).length > 0) {
-          Object.assign(this.percent, res.payload)
+          // Object.assign(this.percent, res.payload)
         } else {
           this.$message({
             message: '获取数据失败',
