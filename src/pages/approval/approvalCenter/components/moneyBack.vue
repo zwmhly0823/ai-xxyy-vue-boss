@@ -4,7 +4,7 @@
  * @Author: huzhifu
  * @Date: 2020-05-07 10:50:45
  * @LastEditors: liukun
- * @LastEditTime: 2020-07-04 18:32:29
+ * @LastEditTime: 2020-07-06 18:38:29
  -->
 <template>
   <div class="adjustModule">
@@ -504,31 +504,32 @@ export default {
           if (
             this.refundForm.businessType === '系统课' &&
             (newValue === 1 || newValue === 2) &&
-            this.selectOrder.packagesId
+            (this.selectOrder.courseCategory === '2' ||
+              this.selectOrder.courseCategory === '4')
           ) {
-            this.half = '' // 全年、半年
-            const {
-              code,
-              payload
-            } = await this.$http.RefundApproval.getPackages(
-              this.selectOrder.packagesId
-            ).catch((err) => {
-              console.error(err)
-              this.$message({
-                message: '系统课分类失败,无法计算退款',
-                type: 'error'
-              })
-            })
-            if (!code && payload.type === 'SYSTEM_COURSE_HALFYEAR') {
-              this.half = 180
-            } else if (!code && payload.type === 'SYSTEM_COURSE_YEAR') {
-              this.half = 365
-            } else {
-              this.$message({
-                message: '系统课分类失败,无法计算退款',
-                type: 'warning'
-              })
-            }
+            this.half = this.selectOrder.courseCategory === '4' ? 180 : 365
+            // const {
+            //   code,
+            //   payload
+            // } = await this.$http.RefundApproval.getPackages(
+            //   this.selectOrder.packagesId
+            // ).catch((err) => {
+            //   console.error(err)
+            //   this.$message({
+            //     message: '系统课分类失败,无法计算退款',
+            //     type: 'error'
+            //   })
+            // })
+            // if (!code && payload.type === 'SYSTEM_COURSE_HALFYEAR') {
+            //   this.half = 180
+            // } else if (!code && payload.type === 'SYSTEM_COURSE_YEAR') {
+            //   this.half = 365
+            // } else {
+            //   this.$message({
+            //     message: '系统课分类失败,无法计算退款',
+            //     type: 'warning'
+            //   })
+            // }
           }
 
           if (newValue === 0) {
