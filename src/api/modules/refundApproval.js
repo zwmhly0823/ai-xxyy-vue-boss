@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-05-12 15:22:25
  * @LastEditors: liukun
- * @LastEditTime: 2020-07-04 15:42:26
+ * @LastEditTime: 2020-07-06 18:12:37
  */
 
 import axios from '../axiosConfig'
@@ -88,10 +88,10 @@ export default {
   // SYSTEM_COURSE_YEAR 年课
   // SYSTEM_COURSE_HALFYEAR 半年课
 
-  getPackages(packagesId) {
-    console.warn('获取系统课全年/半年')
-    return axios.get(`/api/p/v1/product/getPackages?packagesId=${packagesId}`)
-  },
+  // getPackages(packagesId) {
+  //   console.warn('获取系统课全年/半年')
+  //   return axios.get(`/api/p/v1/product/getPackages?packagesId=${packagesId}`)
+  // },
   // 获取第三方渠道来源
   // channelOuterName
   getChannel(payChannel) {
