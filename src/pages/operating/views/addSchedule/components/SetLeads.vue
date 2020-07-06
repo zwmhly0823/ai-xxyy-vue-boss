@@ -5,6 +5,14 @@
         type="primary"
         size="small"
         class="btn-directed"
+        @click="exportExcel"
+      >
+        导入数据
+      </el-button>
+      <el-button
+        type="primary"
+        size="small"
+        class="btn-directed"
         @click="toSetChannelLeads"
       >
         渠道线索定向分配
@@ -185,6 +193,41 @@
         跳过此步
       </el-button>
     </div>
+    <!-- 导入数据模态框 -->
+    <el-dialog
+      title="导入物流信息"
+      :visible.sync="dialogVisible"
+      :before-close="handleCloseUpdata"
+      width="30%"
+    >
+      <!-- action="/api/o/v1/express/importExpressList" -->
+
+      <el-upload
+        ref="upload"
+        action=""
+        accept=".xls, .xlsx"
+        :data="{ teacherId: '' }"
+        :headers="headers"
+        :auto-upload="false"
+        :limit="1"
+        :http-request="uploadFile"
+        :on-progress="uploadProgress"
+      >
+        <el-button slot="trigger" size="small" type="primary"
+          >选取文件</el-button
+        >
+        <el-button
+          style="margin-left: 10px;"
+          size="small"
+          type="success"
+          @click="submitUpload"
+          :disabled="uploading"
+          >上传到服务器</el-button
+        >
+        <!-- :loading="uploading" -->
+        <div slot="tip" class="el-upload__tip">只能上传xls/xlsx文件</div>
+      </el-upload>
+    </el-dialog>
   </div>
 </template>
 
@@ -215,6 +258,9 @@ export default {
       callback()
     }
     return {
+      uploading: false,
+      dialogVisible: false,
+      headers: { 'Content-Type': 'multipart/form-data' },
       percent: {
         0: {
           S: null,
@@ -353,6 +399,57 @@ export default {
     }
   },
   methods: {
+    submitUpload(file, filelist) {
+      this.$refs.upload.submit()
+    },
+    /** 导入数据 关闭事件 */
+    handleCloseUpdata() {
+      this.dialogVisible = false
+      this.$refs.upload.clearFiles()
+    },
+    /** 导入数据上传 */
+    uploadFile(params) {
+      const formdata = new FormData()
+      const file = params.file
+      formdata.append('file', file)
+      this.uploading = true
+      Object.assign(formdata, { operatorId: this.operatorId })
+
+      this.$http.Express.expressUpload(formdata)
+        .then((res) => {
+          this.$refs.upload.clearFiles()
+          this.uploading = false
+          if (res.code === 0 && res.payload.length < 1 && res.payload) {
+            this.$message({
+              showClose: true,
+              message: '恭喜你，文件上传成功',
+              type: 'success'
+            })
+          }
+          this.dialogVisible = false
+          this.errorDialog = !res.errors ? res.payload : []
+        })
+        .finally(() => {
+          this.$emit('setExcelStatus', 'complete')
+          this.uploading = false
+        })
+      setTimeout(() => {
+        this.uploading = false
+      }, 2000)
+    },
+    /** 上传进度 */
+    uploadProgress(event, file, fileList) {
+      console.log(
+        event,
+        file,
+        fileList,
+        'event, file, fileList--------------------'
+      )
+    },
+    /** 导入数据 */
+    exportExcel() {
+      this.dialogVisible = true
+    },
     toSetChannelLeads() {
       // TODO 渠道线索定向分配
       console.log('渠道线索定向分配')
