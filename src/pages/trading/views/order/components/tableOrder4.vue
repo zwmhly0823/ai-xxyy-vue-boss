@@ -1,12 +1,16 @@
 <!--
-  体验课 topic= '4'
--->
+ * @Author: songyanan
+ * @Email: songyanan@meishubao.com
+ * @Date: 2020-07-01 11:19:27
+ * @Last Modified by:   songyanan
+ * @Last Modified time: 2020-07-04 17:45:00
+ -->
 <template>
   <div class="title-box">
-    <el-table :data="orderList">
+    <el-table :data="orderList" v-loading="loading">
       <el-table-column label="用户信息" prop="user" min-width="180" fixed>
         <template slot-scope="scope">
-          <user :user="scope.row.user" />
+          <user :user="scope.row.user" :flag="true" />
         </template>
       </el-table-column>
       <el-table-column label="归属地" prop="QCellCore" min-width="120">
@@ -26,7 +30,6 @@
                 : scope.row.product_name || '-'
             }}
           </p>
-          <!-- 人民币 ， 宝石，小熊币 -->
           <p>
             {{ scope.row.currency ? scope.row.currency : '人民币 ' }}
             {{
@@ -39,23 +42,7 @@
           </p>
         </template>
       </el-table-column>
-      <!-- 只有boss有 -->
-      <!-- <el-table-column label="体验课类型" min-width="100px" v-if="!teacherId">
-        <template slot-scope="scope">
-          <p>
-            {{
-              scope.row.trial_course
-                ? +scope.row.trial_course.team_category === 0
-                  ? '双周'
-                  : +scope.row.trial_course.team_category === 3
-                  ? '单周'
-                  : '-'
-                : '-'
-            }}
-          </p>
-        </template>
-      </el-table-column> -->
-      <el-table-column label="社群销售·体验课班级" min-width="220">
+      <!-- <el-table-column label="社群销售·素质课班级" min-width="220">
         <template slot-scope="scope">
           <p>
             {{ scope.row.teacher ? scope.row.teacher.realname : '-' }}
@@ -75,7 +62,7 @@
             </span>
           </p>
           <p>
-            <!-- {{
+            {{
               scope.row.teacher_department &&
               scope.row.teacher_department.department
                 ? departmentObj[scope.row.teacher_department.department.id]
@@ -83,21 +70,10 @@
                       .name
                   : '-'
                 : '-'
-            }} -->
-            {{
-              scope.row.teacher
-                ? scope.row.teacher.area_name ||
-                  scope.row.teacher.department_name ||
-                  scope.row.teacher.group_name
-                  ? scope.row.teacher.group_name ||
-                    scope.row.teacher.department_name ||
-                    scope.row.teacher.area_name
-                  : '-'
-                : '-'
             }}
           </p>
         </template>
-      </el-table-column>
+      </el-table-column> -->
       <el-table-column label="订单状态" min-width="220">
         <template slot-scope="scope">
           {{ scope.row.order_status ? scope.row.order_status : '-' }}
@@ -145,7 +121,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="关联物流" min-width="170">
+      <!-- <el-table-column label="关联物流" min-width="170">
         <template slot-scope="scope">
           <p
             :class="{ 'primary-color': scope.row.express.express_total > 0 }"
@@ -155,7 +131,6 @@
           >
             {{ scope.row.express ? scope.row.express.express_total || 0 : '-' }}
           </p>
-          <!-- 体验课不显示最后一次物流状态 -->
           <p>
             {{
               scope.row.express
@@ -166,7 +141,7 @@
             }}
           </p>
         </template>
-      </el-table-column>
+      </el-table-column> -->
     </el-table>
     <div v-if="orderList.length === 0" class="noData">暂无数据</div>
     <div class="drawer-body">
@@ -215,10 +190,8 @@ export default {
   },
   computed: {
     topicArr() {
-      if (this.topic === '4' || this.topic === '5') {
+      if (this.topic === '7') {
         return [this.topic]
-      } else if (this.topic === '1,2,6') {
-        return this.topic.split(',')
       }
       return []
     }
@@ -243,8 +216,9 @@ export default {
       // statisticsQuery: [], // 统计需要 bool 表达式
       departmentObj: {}, // 组织机构 obj
       orderStatisticsResult: [], // 统计结果
-      trialTeam: {}, // 学员的体验课班级名称
-      trialTeamUid: {}
+      trialTeam: {}, // 学员的素质课班级名称
+      trialTeamUid: {},
+      loading: true
     }
   },
   created() {
@@ -255,7 +229,7 @@ export default {
       this.getOrderList()
     }
 
-    // this.getDepartment()
+    this.getDepartment()
   },
   watch: {
     // 切换tab
@@ -299,35 +273,6 @@ export default {
     async getOrderList(page = this.currentPage, status) {
       // const statisticsQuery = []
       const queryObj = {}
-      // TOSS
-      if (this.teacherId) {
-        Object.assign(queryObj, {
-          last_teacher_id:
-            this.teacherGroup.length > 0 ? this.teacherGroup : [this.teacherId]
-        })
-        // statisticsQuery.push({
-        //   terms: {
-        //     last_teacher_id:
-        //       this.teacherGroup.length > 0
-        //         ? this.teacherGroup
-        //         : [this.teacherId]
-        //   }
-        // })
-      }
-
-      const topicRelation = await this.$http.Product.topicRelationId(
-        `${JSON.stringify({
-          topic_id: this.topicArr
-        })}`
-      )
-      let relationIds = []
-      if (
-        topicRelation.data.PackagesTopicList &&
-        topicRelation.data.PackagesTopicList.length > 0
-      )
-        relationIds = topicRelation.data.PackagesTopicList.map(
-          (item) => item.relation_id
-        )
 
       // 组合搜索条件
       this.searchIn.forEach((item) => {
@@ -340,16 +285,8 @@ export default {
       if (this.status) {
         Object.assign(queryObj, { status: this.status.split(',') })
       }
-
-      /**
-       * this.topic
-       * 体验课(4),系统课(5)去 p_packages_topic表找relation_id
-       */
-      if (this.topic === '4') {
-        // 如果选择了筛选单双周体验课类型，则不需要packages_id
-        if (!Object.keys(queryObj).includes('packages_id'))
-          Object.assign(queryObj, { packages_id: relationIds })
-
+      if (this.topic === '7') {
+        queryObj.regtype = this.topic
         // 如果有推荐人搜索条件
         if (
           queryObj.is_first_order_send_id &&
@@ -387,50 +324,70 @@ export default {
     },
 
     // 订单列表数据
-    orderData(queryObj = {}, page = 1) {
-      // 最终搜索条件
-      this.$emit('get-params', queryObj)
-      this.$http.Order.orderPage(`${JSON.stringify(queryObj)}`, page)
+    async orderData(queryObj = {}, page = 1) {
+      try {
+        // 最终搜索条件
+        this.$emit('get-params', queryObj)
+        const res = await this.$http.Order.orderPage(
+          `${JSON.stringify(queryObj)}`,
+          page
+        )
+        if (!res.data.OrderPage) {
+          this.totalElements = 0
+          this.currentPage = 1
+          this.orderList = []
+          return
+        }
+        if (this.topic === '7') {
+          this.totalElements = +res.data.OrderPage.totalElements
+          this.currentPage = +res.data.OrderPage.number
+        }
+        const _data = res.data.OrderPage.content
+        const orderIds = []
+        const userIds = []
+        _data.forEach((item, index) => {
+          orderIds.push(item.id)
+          userIds.push(item.uid)
+          // 下单时间格式化
+          item.ctime = formatData(item.ctime, 's')
+        })
+        await this.getQualityClassProductDetail(orderIds, _data)
+        // this.orderList = _data
+        if (userIds.length > 0) this.getUserTrialTeam(userIds)
+      } catch (error) {
+        console.log(error)
+      }
+    },
+    getQualityClassProductDetail(ids, data) {
+      this.$http.Order.getQualityClassProductDetail(ids)
         .then((res) => {
-          if (!res.data.OrderPage) {
-            this.totalElements = 0
-            this.currentPage = 1
-            this.orderList = []
-            return
+          if (res.data.OrderProductList.length > 0) {
+            for (const item of data) {
+              for (const _item of res.data.OrderProductList) {
+                if (_item.oid === item.id) {
+                  item.packages_name = _item.name
+                }
+              }
+            }
+            setTimeout(() => {
+              this.orderList = data
+              this.loading = false
+            }, 0)
           }
-          if (this.topic === '4' || this.topic === '5') {
-            this.totalElements = +res.data.OrderPage.totalElements
-            this.currentPage = +res.data.OrderPage.number
-          }
-          const _data = res.data.OrderPage.content
-          const orderIds = []
-          const userIds = []
-          _data.forEach((item, index) => {
-            orderIds.push(item.id)
-            userIds.push(item.uid)
-            // 下单时间格式化
-            item.ctime = formatData(item.ctime, 's')
-          })
-          this.orderList = _data
-          if (userIds.length > 0) this.getUserTrialTeam(userIds)
         })
         .catch((err) => {
           console.log(err)
         })
     },
-
     // 获取组织机构
-    // getDepartment() {
-    //   this.$http.Department.teacherDepartment().then((res) => {
-    //     const dpt = (res.data && res.data.TeacherDepartmentList) || []
-    //     this.departmentObj = _.keyBy(dpt, 'id') || {}
-    //   })
-    // },
-
-    // 获取学员体验课班级
-    // 通过Uid查询对应体验课班级，通过team_id获取
+    getDepartment() {
+      this.$http.Department.teacherDepartment().then((res) => {
+        const dpt = (res.data && res.data.TeacherDepartmentList) || []
+        this.departmentObj = _.keyBy(dpt, 'id') || {}
+      })
+    },
     async getUserTrialTeam(ids = []) {
-      if (this.topic !== '5' && this.topic !== '4') return {}
+      if (this.topic !== '7') return {}
 
       const query = ids.length > 0 ? JSON.stringify({ student_id: ids }) : ''
       const trial = await this.$http.Team.getTrialCourseList(query)
