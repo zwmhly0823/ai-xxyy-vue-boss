@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-06-24 17:01:54
  * @LastEditors: panjian
- * @LastEditTime: 2020-07-03 16:00:56
+ * @LastEditTime: 2020-07-07 16:45:58
 -->
 <template>
   <div class="problem-box">
@@ -219,11 +219,11 @@ export default {
     handleClose(done) {
       this.$confirm('确认关闭？')
         .then((_) => {
+          done()
           this.$refs.newForm.ruleForm.title = ''
           this.$refs.newForm.ruleForm.desc = ''
           this.$refs.newForm.ruleForm.imageUrl = ''
           this.$refs.newForm.$refs.experienceProblem.ruleForms.summaryList = []
-          done()
         })
         .catch((_) => {})
     }

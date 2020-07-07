@@ -278,6 +278,11 @@
           <el-col :span="6">
             <el-row>
               <el-col :span="6" style="color: #aeaeae;">默认地址：</el-col>
+              <div @click="onUpdataAddress" class="updateAddress">
+                <div>
+                  修改
+                </div>
+              </div>
               <el-col :span="18">
                 {{
                   stuInfor.address &&
@@ -456,6 +461,18 @@
         close="calc(100vw - 50px - 25px)"
       ></m-pagination>
     </div>
+    <div>
+      <el-dialog
+        width="500px"
+        title="修改收货信息"
+        :visible.sync="dialogTableVisible"
+      >
+        <modifyAddress
+          :modifyFormData="stuInfor"
+          @modifyAddressExpress="modifyAddressExpress"
+        />
+      </el-dialog>
+    </div>
   </div>
 </template>
 
@@ -463,10 +480,12 @@
 import MPagination from '@/components/MPagination/index.vue'
 import DetailsList from './list.vue'
 import { GetAgeByBrithday, formatData, openBrowserTab } from '@/utils/index'
+import modifyAddress from './addressComponetns/modifyAddress'
 export default {
-  components: { DetailsList, MPagination },
+  components: { DetailsList, MPagination, modifyAddress },
   data() {
     return {
+      dialogTableVisible: false,
       currentPage: 1,
       totalElements: 0,
       totalPages: 1,
@@ -501,10 +520,17 @@ export default {
     this.reqUser()
   },
   methods: {
+    modifyAddressExpress() {
+      this.dialogTableVisible = false
+      this.reqUser()
+    },
+    onUpdataAddress() {
+      this.dialogTableVisible = true
+    },
     // 学员信息接口
     reqUser() {
       this.$http.User.getUser(this.studentId).then((res) => {
-        // console.log('学员基本信息', res.data.User)
+        console.log('学员基本信息', res.data.User)
         this.sendId =
           res.data.User && res.data.User.send_id ? res.data.User.send_id : '0'
         // 课程tab默认显示
@@ -585,7 +611,7 @@ export default {
       // 把体验课和系统课中的id和状态都抽出来，isrefund=1是退费的
       const classObj = new Map()
       // console.log(this.stuInfor)
-      if (this.stuInfor.trialCourse.team_id) {
+      if (this.stuInfor.trialCourse && this.stuInfor.trialCourse.team_id) {
         classObj.set(
           +this.stuInfor.trialCourse.team_id,
           this.stuInfor.trialCourse.orderInfo.isrefund
@@ -1024,6 +1050,22 @@ export default {
         margin: 0 20px 0 0;
         cursor: pointer;
         color: #aeaeae;
+      }
+    }
+    .updateAddress {
+      width: 40px;
+      height: 20px;
+      position: absolute;
+      top: 35px;
+      left: 15px;
+      color: #fff;
+      background: #409eff;
+      border-radius: 50px;
+      line-height: 20px;
+      cursor: pointer;
+      div {
+        text-align: center;
+        font-size: 12px;
       }
     }
   }

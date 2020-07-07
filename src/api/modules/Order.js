@@ -3,10 +3,25 @@
  * @version:
  * @Author: shentong
  * @Date: 2020-03-13 16:20:48
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-07-03 15:59:06
+ * @LastEditors: songyanan
+ * @LastEditTime: 2020-07-04 16:29:00
  */
 import axios from '../axiosConfig'
+// 素质课的时候，测试环境暂时删除
+// department{
+//   department{
+//     id
+//     pid
+//     name
+//   }
+// }
+// teacher_department{
+//   department{
+//     id
+//     pid
+//     name
+//   }
+// }
 
 export default {
   /**
@@ -156,5 +171,24 @@ export default {
    */
   pushMsgByOrderIds(orderIds) {
     return axios.get(`/api/o/v1/order/pushMsgByOrderIds?orderIds=${orderIds}`)
+  },
+  /**
+   * 素质课批量获取商品信息
+   */
+  getQualityClassProductDetail(ids) {
+    const query = {
+      oid: ids,
+      is_gifts: '1'
+    }
+    const q = JSON.stringify(query)
+    return axios.post('/graphql/v1/toss', {
+      query: `{
+        OrderProductList(query: ${JSON.stringify(q)}){
+          oid
+          name
+          price
+        }
+      }`
+    })
   }
 }

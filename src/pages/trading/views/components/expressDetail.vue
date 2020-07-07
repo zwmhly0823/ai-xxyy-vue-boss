@@ -51,6 +51,17 @@
               >
                 修改
               </el-button>
+              <!-- 仅从物流页面进入详情时 且 物流状态为待发货时(express_status为'1')的情况显示回填单号按钮 -->
+              <el-button
+                v-if="transferExpress && transferExpress.express_status == '1'"
+                class="edit-no-btn"
+                size="mini"
+                type="info"
+                plain
+                @click="isShowEditNo = true"
+              >
+                回填单号
+              </el-button>
             </div>
           </div>
           <div class="horizontal-line"></div>
@@ -153,6 +164,67 @@
         <el-button @click="isShowEditStatus = false">取 消</el-button>
       </span>
     </el-dialog>
+    <!-- 获取物流单号弹窗 -->
+    <el-dialog
+      title="回填单号"
+      :visible.sync="isShowEditNo"
+      @close="editExpressNoClose"
+      width="550px"
+    >
+      <div class="express-info">
+        <span>商品信息：{{ this.expressInformation.product_name }}</span>
+        <span>物流公司：{{ this.expressInformation.express_company }}</span>
+        <span>快递单号：{{ this.expressInformation.express_nu }}</span>
+      </div>
+      <el-form
+        ref="expressNoForm"
+        class="edit-area demo-ruleForm"
+        :model="expressNoInfo"
+        label-width="100px"
+        :rules="rules"
+      >
+        <el-form-item label="快递公司：" prop="expressCompanyNu">
+          <el-select
+            v-model="expressNoInfo.expressCompanyNu"
+            placeholder="请选择"
+          >
+            <el-option
+              v-for="(item, index) in expressCompanyList"
+              :key="index"
+              :label="item.label"
+              :value="item.value"
+            >
+              {{ item.label }}
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-row>
+          <el-col :span="18">
+            <el-form-item
+              style="width:293px"
+              label="快递单号："
+              prop="expressNu"
+            >
+              <el-input v-model="expressNoInfo.expressNu" placeholder="请输入">
+              </el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label-width="0">
+              <el-button type="info" size="mini" @click="autoGetExpressNo">
+                自动获取
+              </el-button>
+            </el-form-item>
+          </el-col>
+        </el-row>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="editExpressNo">
+          确 定
+        </el-button>
+        <el-button @click="isShowEditNo = false">取 消</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -179,9 +251,35 @@ export default {
         editReason: '',
         otherDesc: ''
       },
+      expressNoInfo: {
+        expressId: '', // 物流id
+        expressNu: '', // 物流单号
+        expressCompany: '', // 物流公司名称
+        expressCompanyNu: '' // 物流公司编号
+      },
       editResult: false, // 修改结果
       editReasons: [], // 原因列表
+      expressCompanyList: [
+        { label: '中通快递', value: 'zhongtong' },
+        { label: '京东物流', value: 'jd' },
+        { label: '圆通快递', value: 'yuantong' },
+        { label: '申通快递', value: 'shentong' },
+        { label: '百世快递', value: 'huitongkuaidi' },
+        { label: '邮政快递包裹', value: 'youzhengguonei' },
+        { label: 'EMS', value: 'ems' },
+        { label: '邮政标准快递', value: 'youzhengbk' },
+        { label: '顺丰速运', value: 'shunfeng' }
+      ],
+      rules: {
+        expressCompanyNu: [
+          { required: true, message: '请选择快递公司', trigger: 'change' }
+        ],
+        expressNu: [
+          { required: true, message: '请输入快递单号', trigger: 'blur' }
+        ]
+      },
       isShowEditStatus: false, // 是否展示修改状态
+      isShowEditNo: false, // 是否展示回填物流单号弹窗
       drawer: false,
       color: '#0bbd87',
       modal: false,
@@ -226,6 +324,47 @@ export default {
     }
   },
   methods: {
+    // 自动获取物流单号
+    autoGetExpressNo() {
+      const expressId = this.expressInformation.id
+      this.$http.Express.getExpressNuByCenter(expressId)
+        .catch((err) => console.log(err))
+        .then((res) => {
+          // 将获取来的物流信息回显到弹窗 ，如果返回为空则弹窗获取失败
+          if (Object.keys(res.payload).length !== 0) {
+            this.expressNoInfo = res.payload
+          } else {
+            this.$message.error('获取失败')
+          }
+        })
+    },
+    // 修改物流单号
+    editExpressNo() {
+      this.$refs.expressNoForm.validate((valid) => {
+        if (valid) {
+          this.expressNoInfo.expressId = this.expressInformation.id
+          this.expressNoInfo.expressCompany = this.expressCompanyList.find(
+            (item) => item.value === this.expressNoInfo.expressCompanyNu
+          ).label
+          this.$http.Express.createExpressNu(this.expressNoInfo)
+            .catch((err) => console.log(err))
+            .then((res) => {
+              if (res.payload) {
+                this.$message.success('物流信息更新成功')
+                this.isShowEditNo = false
+              } else {
+                this.$message.error('物流信息更新失败')
+              }
+            })
+        }
+      })
+    },
+    // 关闭回填物流单号弹窗时处理函数
+    editExpressNoClose() {
+      this.expressNoInfo.expressCompanyNu = ''
+      this.expressNoInfo.expressNu = ''
+      this.$refs.expressNoForm.resetFields()
+    },
     // 物流修改弹窗关闭时处理函数
     editClose() {
       // 关闭时初始化修改数据
@@ -481,6 +620,11 @@ export default {
             right: 0;
             bottom: 0;
           }
+          .edit-no-btn {
+            position: absolute;
+            right: 70px;
+            bottom: 0;
+          }
         }
       }
       .horizontal-line {
@@ -536,6 +680,9 @@ export default {
 .express-detail {
   .el-dialog__body {
     padding-top: 15px;
+  }
+  .el-form-item.is-required:not(.is-no-asterisk) > .el-form-item__label:before {
+    content: '*';
   }
 }
 </style>

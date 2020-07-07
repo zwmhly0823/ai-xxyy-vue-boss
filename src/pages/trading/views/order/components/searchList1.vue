@@ -15,7 +15,11 @@
   >
     <el-form :inline="true" label-position="right" label-width="100px">
       <el-form-item label="订单搜索:" :class="{ [$style.marginer]: true }">
-        <orderSearch class="allmini" @result="getOrderSearch" />
+        <orderSearch
+          class="allmini"
+          :searchProp="searchProp"
+          @result="getOrderSearch"
+        />
       </el-form-item>
 
       <el-form-item label="推荐人信息:" :class="{ [$style.marginer]: true }">
@@ -229,6 +233,12 @@ import { downloadHandle } from '@/utils/download'
 // import axios from '@/api/axiosConfig'
 
 export default {
+  props: {
+    searchProp: {
+      type: Object,
+      default: () => {}
+    }
+  },
   components: {
     hardLevel,
     systemCourseType,

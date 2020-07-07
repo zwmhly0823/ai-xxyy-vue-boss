@@ -4,7 +4,7 @@
  * @Author: Lukun
  * @Date: 2020-04-27 17:47:58
  * @LastEditors: liukun
- * @LastEditTime: 2020-07-02 20:25:41
+ * @LastEditTime: 2020-07-04 20:37:59
  -->
 <template>
   <div class="container">
@@ -148,9 +148,14 @@
         </el-row>
         <el-row>
           <el-col :span="3">用户电话:</el-col>
-          <el-col :span="20" :offset="1">{{
-            drawerApprovalDeatail.userTel
-          }}</el-col>
+          <el-col :span="20" :offset="1"
+            ><el-link
+              type="primary"
+              :href="'/users/#/details/' + drawerApprovalDeatail.userId"
+              target="_blank"
+              >{{ drawerApprovalDeatail.userTel }}</el-link
+            ></el-col
+          >
         </el-row>
         <el-row>
           <el-col :span="3">补发商品:</el-col>
@@ -274,9 +279,14 @@
         </el-row>
         <el-row>
           <el-col :span="5">用户电话:</el-col>
-          <el-col :span="18" :offset="1">{{
-            drawerApprovalDeatail.customerPhone
-          }}</el-col>
+          <el-col :span="18" :offset="1"
+            ><el-link
+              type="primary"
+              :href="'/users/#/details/' + drawerApprovalDeatail.userId"
+              target="_blank"
+              >{{ drawerApprovalDeatail.customerPhone }}</el-link
+            ></el-col
+          >
         </el-row>
         <el-row>
           <el-col :span="5">订单号:</el-col>
@@ -333,24 +343,24 @@
           <el-row>
             <el-col :span="5">退款类型:</el-col>
             <el-col :span="18" :offset="1">{{
-              drawerApprovalDeatail.refundType == '1'
-                ? '课程退款'
-                : '优惠券退款'
+              { 0: '优惠券退款', 1: '课程退款', 2: '降半年包', 3: '补偿' }[
+                drawerApprovalDeatail.refundType
+              ]
             }}</el-col>
           </el-row>
-          <!-- <el-row>
+          <el-row>
             <el-col :span="5">已上课周期:</el-col>
             <el-col :span="18" :offset="1">{{
               drawerApprovalDeatail.periodAlready
             }}</el-col>
           </el-row>
-          <el-row>
+          <!-- <el-row>
             <el-col :span="5">退款月数:</el-col>
             <el-col :span="18" :offset="1">{{
               `${Math.floor(drawerApprovalDeatail.periodRefund / 4)}月`
             }}</el-col>
           </el-row> -->
-          <el-row>
+          <!-- <el-row>
             <el-col :span="5">剩余可上课周期:</el-col>
             <el-col :span="18" :offset="1">{{
               `
@@ -359,16 +369,14 @@
            )}月${drawerApprovalDeatail.periodResidue % 4}周
            `
             }}</el-col>
-          </el-row>
+          </el-row> -->
           <el-row :class="$style.align_items">
             <el-col :span="5">退款金额:</el-col>
             <el-col :span="4" :offset="1">{{
               drawerApprovalDeatail.refundFee
             }}</el-col>
             <el-col v-if="isPositionId" :span="13" :offset="1">
-              <el-button type="text" @click="dialogFormVisible = true"
-                >修改金额</el-button
-              >
+              <mark @click="dialogFormVisible = true">修改金额</mark>
             </el-col>
           </el-row>
           <el-row>
@@ -484,6 +492,7 @@
     </el-drawer>
     <!-- 调味品抽屉 -->
     <adjust-drawer
+      :is3d="1"
       ref="adjustDrawerCom"
       :adjustDrawerData="adjustDrawerData"
       :isStaffId="isStaffId"
@@ -857,7 +866,7 @@ export default {
                 type: 'success'
               })
 
-              this.$emit('result', 'third')
+              // this.$emit('result', 'third')
             })
             .catch((err) => {
               this.$message(err)
@@ -976,7 +985,7 @@ export default {
                   message: '同意审核通过',
                   type: 'success'
                 })
-                this.$emit('result', 'third')
+                // this.$emit('result', 'third')
               } else {
                 this.$root.$emit('lk', '')
               }
@@ -1120,7 +1129,8 @@ export default {
                 },
                 {
                   label: '用户电话',
-                  value: payData.userTel
+                  value: payData.userTel,
+                  valueId: payData.userId
                 },
                 {
                   label: '订单号',

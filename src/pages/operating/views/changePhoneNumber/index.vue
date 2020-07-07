@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-06-25 16:48:38
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-07-03 16:15:37
+ * @LastEditTime: 2020-07-03 19:00:12
 -->
 <template>
   <el-row type="flex" class="app-main height">
@@ -199,7 +199,8 @@ export default {
         spinner: 'el-icon-loading',
         background: 'rgba(0, 0, 0, 0.1)'
       })
-      const query = {}
+      // const query = {}
+      const query = ''
       const params = JSON.stringify(JSON.stringify(query))
       this.$http.Operating.getUserReplaceMobileLog(params, this.currentPage)
         .then((res) => {

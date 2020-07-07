@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-25 14:35:19
  * @LastEditors: Shentong
- * @LastEditTime: 2020-05-08 18:40:34
+ * @LastEditTime: 2020-07-07 18:18:56
  -->
 <template>
   <div class="table-searcher-container">
@@ -33,6 +33,25 @@
         </el-option>
       </el-select>
     </div>
+    <div class="comp-cell">
+      <el-select
+        v-if="isShowLevel"
+        v-model="courseDifficulties"
+        clearable
+        size="mini"
+        multiple
+        placeholder="招生级别"
+        @change="scheduleLevel"
+      >
+        <el-option
+          v-for="item in scheduleLevelList"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value"
+        >
+        </el-option>
+      </el-select>
+    </div>
   </div>
 </template>
 <script>
@@ -44,12 +63,29 @@ export default {
     return {
       emitInfo: {},
       level: '',
+      courseDifficulties: '',
       // 销售等级
       sellerLevelList: [
         { label: '1级社群销售', value: 1 },
         { label: '2级社群销售', value: 2 },
         { label: '3级社群销售', value: 3 },
         { label: '新兵营', value: 0 }
+      ],
+      // 招生级别
+      scheduleLevelList: [
+        {
+          label: 'S1',
+          value: 'S1'
+        },
+        {
+          label: 'S2',
+          value: 'S2'
+        },
+        {
+          label: 'S3',
+          value: 'S3'
+        },
+        { label: 'S4', value: 'S4' }
       ]
     }
   },
@@ -58,6 +94,10 @@ export default {
     GroupSell
   },
   methods: {
+    // 招生级别 TODO:
+    scheduleLevel(courseDifficulties) {
+      this.manageChange({ courseDifficulties }, 'courseDifficulties')
+    },
     // 销售等级
     sellerLevelChange(level) {
       this.manageChange({ level }, 'level')
@@ -72,7 +112,6 @@ export default {
     },
     manageChange(res, key) {
       this.emitInfo[key] = res[key]
-      console.log(this.emitInfo, 'deptType')
       this.$emit('change', this.emitInfo)
     }
   }

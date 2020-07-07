@@ -2,7 +2,7 @@
  * @Descripttion: 
  * @version: 
  * @LastEditors: liukun
- * @LastEditTime: 2020-07-03 15:57:04
+ * @LastEditTime: 2020-07-06 21:50:05
  -->
 <template>
   <div class="adjustModule">
@@ -261,7 +261,7 @@ export default {
         this.refundForm.residueFee = '' // 剩余金额
         this.refundForm.refundType = ''
         this.refundForm.couponType = ''
-        // this.refundForm.refundMonths = ''
+        this.refundForm.refundMonths = ''
         this.refundForm.refundAmount = '' // 退款金额
         this.refundForm.reason = ''
         this.refundForm.explain = ''
@@ -280,7 +280,7 @@ export default {
         this.everyPrice = '' // 月单价
         this.pureWeekY = '' // 已周数(给接口)
         this.pureWeekS = '' // 剩周数(给接口)
-        this.isThird = '' // 是否第三方
+        this.isThird = 0 // 是否第三方
       }
     },
     // 关联订单改变~巴拉巴拉
@@ -502,36 +502,39 @@ export default {
           if (
             this.refundForm.businessType === '系统课' &&
             (newValue === 1 || newValue === 2) &&
-            this.selectOrder.packagesId
+            (this.selectOrder.courseCategory === 2 ||
+              this.selectOrder.courseCategory === 4)
           ) {
-            this.half = '' // 全年、半年
-            const {
-              code,
-              payload
-            } = await this.$http.RefundApproval.getPackages(
-              this.selectOrder.packagesId
-            ).catch((err) => {
-              console.error(err)
-              this.$message({
-                message: '系统课分类失败,无法计算退款',
-                type: 'error'
-              })
-            })
-            if (!code && payload.type === 'SYSTEM_COURSE_HALFYEAR') {
-              this.half = 180
-            } else if (!code && payload.type === 'SYSTEM_COURSE_YEAR') {
-              this.half = 365
-            } else {
-              this.$message({
-                message: '系统课分类失败,无法计算退款',
-                type: 'warning'
-              })
-            }
+            this.half = this.selectOrder.courseCategory === 4 ? 180 : 365
+            // const {
+            //   code,
+            //   payload
+            // } = await this.$http.RefundApproval.getPackages(
+            //   this.selectOrder.packagesId
+            // ).catch((err) => {
+            //   console.error(err)
+            //   this.$message({
+            //     message: '系统课分类失败,无法计算退款',
+            //     type: 'error'
+            //   })
+            // })
+            // if (!code && payload.type === 'SYSTEM_COURSE_HALFYEAR') {
+            //   this.half = 180
+            // } else if (!code && payload.type === 'SYSTEM_COURSE_YEAR') {
+            //   this.half = 365
+            // } else {
+            //   this.$message({
+            //     message: '系统课分类失败,无法计算退款',
+            //     type: 'warning'
+            //   })
+            // }
           }
 
           if (newValue === 0) {
             // newValue:0 选中优惠券时-获取优惠券列表
             this.refundForm.refundAmount = '' // 退款额
+            this.refundForm.refundMonths = ''
+
             if (this.refundForm.residueFee >= 200) {
               this.couponTypeOptions = []
               this.refundForm.couponType = ''
@@ -564,16 +567,19 @@ export default {
           } else if (newValue === 1) {
             // newValue:1 选中课程退款时-创建退款周期数组(依赖接口数据async↓↓)
             // this.monthOptions = []
-            // this.refundForm.refundMonths = ''
+            this.refundForm.refundMonths = ''
             this.refundForm.refundAmount = '' // 退款额
             if (this.refundForm.businessType === '系统课') {
               if (this.pureWeekS && this.pureWeekY !== '') {
                 // 计算系统课退费,得保证取到剩总课时和已上课时
+                const yiYue = Math.floor(this.pureWeekY / 4)
                 const shengYue = Math.floor(this.pureWeekS / 4)
                 console.warn(
                   '选择退款类型为课程退款-系统课,计算所得',
-                  '可退月份:' + shengYue,
-                  '剩余可退总周数:' + this.pureWeekS
+                  '已上月份:' + yiYue,
+                  '已上周数:' + this.pureWeekY,
+                  '剩余月份:' + shengYue,
+                  '剩余周数:' + this.pureWeekS
                 )
                 // 计算系统课退费
                 if (shengYue <= 0) {
@@ -586,14 +592,34 @@ export default {
                 } else {
                   if (this.half === 180) {
                     this.refundForm.refundAmount = Math.round(
-                      ((1499 / 6) * shengYue).toFixed(2)
+                      this.refundForm.residueFee -
+                        ((1499 / 6) * yiYue).toFixed(2)
                     )
+                    if (
+                      this.refundForm.refundAmount > this.refundForm.residueFee
+                    ) {
+                      this.$message({
+                        message: '退款金额不能大于剩余金额',
+                        type: 'error'
+                      })
+                      this.onCancel('refundForm')
+                    }
                   } else if (this.half === 365) {
                     this.refundForm.refundAmount = Math.round(
-                      ((2600 / 12) * shengYue).toFixed(2)
+                      this.refundForm.residueFee -
+                        ((2600 / 12) * yiYue).toFixed(2)
                     )
+                    if (
+                      this.refundForm.refundAmount > this.refundForm.residueFee
+                    ) {
+                      this.$message({
+                        message: '退款金额不能大于剩余金额',
+                        type: 'error'
+                      })
+                      this.onCancel('refundForm')
+                    }
                   }
-
+                  this.refundForm.refundMonths = shengYue // 退了几个月的课
                   // for (let i = 1; i <= shengYue; i++) {
                   //   const item = {}
                   //   item.guanzhong = i + '个月'
@@ -638,6 +664,7 @@ export default {
           } else if (newValue === 2) {
             // 降为半年包
             this.refundForm.refundAmount = '' // 退款额
+            this.refundForm.refundMonths = ''
             const shengYue = Math.floor(this.pureWeekS / 4)
             if (
               this.half === 365 &&
@@ -645,15 +672,18 @@ export default {
               this.refundForm.residueFee >= 1101
             ) {
               this.refundForm.refundAmount = 1101
+              this.refundForm.refundMonths = 6
             } else {
               this.$message({
                 message: '该订单课余量低于6或不是全年课,不支持降包类型',
                 type: 'warning'
               })
+              this.onCancel('refundForm')
             }
           } else if (newValue === 3) {
             // 补偿
             this.refundForm.refundAmount = '' // 退款额
+            this.refundForm.refundMonths = ''
             if (this.refundForm.residueFee >= 1101) {
               this.refundForm.refundAmount = 1101
             } else {
@@ -661,6 +691,7 @@ export default {
                 message: '退款金额不能大于剩余金额',
                 type: 'warning'
               })
+              this.onCancel('refundForm')
             }
           }
         }
@@ -676,6 +707,13 @@ export default {
             return item.name === newValue
           })[0]
           this.refundForm.refundAmount = targetItem.amount
+          if (this.refundForm.refundAmount > this.refundForm.residueFee) {
+            this.$message({
+              message: '退款金额不能大于剩余金额',
+              type: 'error'
+            })
+            this.onCancel('refundForm')
+          }
         }
       }
     }
@@ -716,7 +754,7 @@ export default {
         residueFee: '', // 剩余金额
         refundType: '',
         couponType: '', // 优惠券类型
-        // refundMonths: '', // 退款周数(给接口)
+        refundMonths: '', // 退款周数(给接口)
         refundAmount: '', // 退款金额(给接口)
         reason: '',
         explain: '',
@@ -791,7 +829,7 @@ export default {
       everyPrice: '', // 月单价
       pureWeekY: '', // 已周数(给接口)
       pureWeekS: '', // 剩周数(给接口)
-      isThird: '', // 是第三方订单麽+
+      isThird: 0, // 是第三方订单麽+
       half: ''
     }
   },
@@ -831,11 +869,11 @@ export default {
         this.refundForm.name = uid
         this.refundForm.cellPhone = this.$refs.toGetPhone.input
         this.$http.RefundApproval.getOrdersByUid(uid) // 用uid获取订单
-          .then(({ code, payload: { content } }) => {
-            if (!code && content.length) {
+          .then(({ code, payload }) => {
+            if (!code && payload.length) {
               this.refundForm.order = ''
               this.orderOptions = []
-              this.orderOptions = content.map((item) => {
+              this.orderOptions = payload.map((item) => {
                 item.relationOrder =
                   item.outTradeNo.replace(/[^\d]+/g, '') +
                   `(^_^)${item.packagesName}`

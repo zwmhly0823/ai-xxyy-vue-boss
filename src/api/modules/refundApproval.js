@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-05-12 15:22:25
  * @LastEditors: liukun
- * @LastEditTime: 2020-07-03 15:53:38
+ * @LastEditTime: 2020-07-06 18:12:37
  */
 
 import axios from '../axiosConfig'
@@ -32,11 +32,11 @@ export default {
     return axios.get('/api/o/v1/order/getOrderRefundStatus', query)
   },
 
-  // 通过uid查询订单号
+  // 通过uid查询订单list
   getOrdersByUid(uid) {
     console.warn('我来查名下订单list')
     return axios.get(
-      `/api/o/v1/order/getOrdersByStatus?userId=${uid}&status=COMPLETED&page=0`
+      `/api/o/v1/order/getOrderByRegtypesAndStatus?userId=${uid}&status=COMPLETED&regtypes=DEFAULT,EXPERIENCE,FIRST_ORDER,RENEW`
     )
   },
 
@@ -88,10 +88,10 @@ export default {
   // SYSTEM_COURSE_YEAR 年课
   // SYSTEM_COURSE_HALFYEAR 半年课
 
-  getPackages(packagesId) {
-    console.warn('获取系统课全年/半年')
-    return axios.get(`/api/p/v1/product/getPackages?packagesId=${packagesId}`)
-  },
+  // getPackages(packagesId) {
+  //   console.warn('获取系统课全年/半年')
+  //   return axios.get(`/api/p/v1/product/getPackages?packagesId=${packagesId}`)
+  // },
   // 获取第三方渠道来源
   // channelOuterName
   getChannel(payChannel) {

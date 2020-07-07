@@ -3,8 +3,13 @@
  * @version:
  * @Author: Shentong
  * @Date: 2020-03-16 19:46:39
- * @LastEditors: panjian
- * @LastEditTime: 2020-07-03 11:51:10
+<<<<<<< HEAD
+ * @LastEditors: Shentong
+ * @LastEditTime: 2020-07-07 21:06:58
+=======
+ * @LastEditors: Shentong
+ * @LastEditTime: 2020-07-07 18:51:33
+>>>>>>> operatingSchedule-0706
  */
 import axios from '../axiosConfig'
 // import { getToken } from '@/utils/auth'
@@ -97,7 +102,7 @@ export default {
    */
   getScheduleDetailList(params) {
     return axios.get(
-      `/api/s/v1/management/enroll/getDetail?teacherId=${params.teacherId}&departmentIds=${params.departmentIds}&level=${params.level}&courseType=${params.courseType}&period=${params.period}&pageSize=${params.size}&pageNumber=` +
+      `/api/s/v1/management/enroll/getDetail?teacherId=${params.teacherId}&departmentIds=${params.departmentIds}&level=${params.level}&courseType=${params.courseType}&period=${params.period}&courseDifficulties=${params.courseDifficulties}&pageSize=${params.size}&pageNumber=` +
         params.pageNum
     )
   },
@@ -116,7 +121,7 @@ export default {
    */
   getScheduleDetailStatistic(params) {
     return axios.get(
-      `/api/s/v1/management/enroll/calculation/byPeriod?teacherId=${params.teacherId}&departmentIds=${params.departmentIds}&level=${params.level}&courseType=${params.courseType}&period=${params.period}`
+      `/api/s/v1/management/enroll/calculation/byPeriod?teacherId=${params.teacherId}&departmentIds=${params.departmentIds}&level=${params.level}&courseType=${params.courseType}&period=${params.period}&courseDifficulties=${params.courseDifficulties}`
     )
   },
   /**
@@ -402,5 +407,14 @@ export default {
   // 问卷管理 保存 修改
   saveQuestionnaire(params) {
     return axios.post(`/api/f/v1/questionnaire/saveQuestionnaire`, params)
+  },
+  /**
+   * @description 招生排期上传excel
+   */
+  updateScheduleExcel(parmas) {
+    return axios.post(
+      `/api/t/v1/enroll/import?courseType=${parmas.courseType}`,
+      parmas
+    )
   }
 }

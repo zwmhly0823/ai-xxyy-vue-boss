@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-15 20:35:57
  * @LastEditors: Shentong
- * @LastEditTime: 2020-05-22 16:24:19
+ * @LastEditTime: 2020-07-06 15:10:32
  -->
 <template>
   <div class="third-step">
@@ -286,7 +286,6 @@ export default {
         this.tableData = payload
         // console.log('this.tableData ', this.tableData)
       } catch (err) {
-        console.log('222', err)
         this.$message({
           message: '获取列表出错',
           type: 'warning'
@@ -319,20 +318,17 @@ export default {
 
       try {
         const _res = await this.$http.Operating.saveScheduleConfig(params)
-        loadingInstance.close()
-
         if (_res.code === 0) {
           this.$message.success('保存成功')
           cb()
-        } else {
-          return
         }
       } catch (err) {
-        loadingInstance.close()
         this.$message({
           message: '获取列表出错',
           type: 'warning'
         })
+      } finally {
+        loadingInstance.close()
       }
     },
     // 翻页emit
@@ -353,19 +349,19 @@ export default {
             if (!enroll[j].teamSize) {
               this.warningMessage('请输入班级人数')
               this.isValidate = false
-              break
+              return
             } else if (!enroll[j].sumTeamSize) {
               this.warningMessage('请输入计划招生人数')
               this.isValidate = false
-              break
+              return
             } else if (!enroll[j].courseVersion) {
               this.warningMessage('随材版本为必选项')
               this.isValidate = false
-              break
+              return
             } else if (!enroll[j].courseCategory) {
               this.warningMessage('课程类型为必选项')
               this.isValidate = false
-              break
+              return
             }
           }
         }
