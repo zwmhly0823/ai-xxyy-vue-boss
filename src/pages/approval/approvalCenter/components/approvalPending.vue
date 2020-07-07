@@ -3,8 +3,8 @@
  * @version: 
  * @Author: Lukun
  * @Date: 2020-04-27 17:47:58
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-06-24 20:20:12
+ * @LastEditors: liukun
+ * @LastEditTime: 2020-07-04 20:37:59
  -->
 <template>
   <div class="container">
@@ -148,9 +148,14 @@
         </el-row>
         <el-row>
           <el-col :span="3">用户电话:</el-col>
-          <el-col :span="20" :offset="1">{{
-            drawerApprovalDeatail.userTel
-          }}</el-col>
+          <el-col :span="20" :offset="1"
+            ><el-link
+              type="primary"
+              :href="'/users/#/details/' + drawerApprovalDeatail.userId"
+              target="_blank"
+              >{{ drawerApprovalDeatail.userTel }}</el-link
+            ></el-col
+          >
         </el-row>
         <el-row>
           <el-col :span="3">补发商品:</el-col>
@@ -252,7 +257,9 @@
         </el-row>
         <el-row class="BOTTOM" v-if="isStaffId">
           <el-col :span="20" :offset="1">
-            <el-button type="button" @click="refuseReplenish">拒 绝</el-button>
+            <el-button type="button" @click="dialogFormVisible_checkbox = true"
+              >拒 绝</el-button
+            >
             <el-button type="button" @click="ensureReplenish">同 意</el-button>
           </el-col>
         </el-row>
@@ -272,14 +279,28 @@
         </el-row>
         <el-row>
           <el-col :span="5">用户电话:</el-col>
-          <el-col :span="18" :offset="1">{{
-            drawerApprovalDeatail.customerPhone
-          }}</el-col>
+          <el-col :span="18" :offset="1"
+            ><el-link
+              type="primary"
+              :href="'/users/#/details/' + drawerApprovalDeatail.userId"
+              target="_blank"
+              >{{ drawerApprovalDeatail.customerPhone }}</el-link
+            ></el-col
+          >
         </el-row>
         <el-row>
           <el-col :span="5">订单号:</el-col>
+          <el-col :span="18" :offset="1"
+            >{{ drawerApprovalDeatail.outTradeNo
+            }}<span style="color:red" v-if="drawerApprovalDeatail.isImport"
+              >(此为第三方导入订单)</span
+            ></el-col
+          >
+        </el-row>
+        <el-row v-if="drawerApprovalDeatail.channelOuterName">
+          <el-col :span="5">订单来源:</el-col>
           <el-col :span="18" :offset="1">{{
-            drawerApprovalDeatail.outTradeNo
+            drawerApprovalDeatail.channelOuterName
           }}</el-col>
         </el-row>
         <div v-if="currentType !== 'UNCREDITED'">
@@ -322,9 +343,9 @@
           <el-row>
             <el-col :span="5">退款类型:</el-col>
             <el-col :span="18" :offset="1">{{
-              drawerApprovalDeatail.refundType == '1'
-                ? '课程退款'
-                : '优惠券退款'
+              { 0: '优惠券退款', 1: '课程退款', 2: '降半年包', 3: '补偿' }[
+                drawerApprovalDeatail.refundType
+              ]
             }}</el-col>
           </el-row>
           <el-row>
@@ -333,13 +354,13 @@
               drawerApprovalDeatail.periodAlready
             }}</el-col>
           </el-row>
-          <el-row>
+          <!-- <el-row>
             <el-col :span="5">退款月数:</el-col>
             <el-col :span="18" :offset="1">{{
               `${Math.floor(drawerApprovalDeatail.periodRefund / 4)}月`
             }}</el-col>
-          </el-row>
-          <el-row>
+          </el-row> -->
+          <!-- <el-row>
             <el-col :span="5">剩余可上课周期:</el-col>
             <el-col :span="18" :offset="1">{{
               `
@@ -348,16 +369,14 @@
            )}月${drawerApprovalDeatail.periodResidue % 4}周
            `
             }}</el-col>
-          </el-row>
+          </el-row> -->
           <el-row :class="$style.align_items">
             <el-col :span="5">退款金额:</el-col>
             <el-col :span="4" :offset="1">{{
               drawerApprovalDeatail.refundFee
             }}</el-col>
             <el-col v-if="isPositionId" :span="13" :offset="1">
-              <el-button type="text" @click="dialogFormVisible = true"
-                >修改金额</el-button
-              >
+              <mark @click="dialogFormVisible = true">修改金额</mark>
             </el-col>
           </el-row>
           <el-row>
@@ -438,7 +457,9 @@
         <div v-if="currentType !== 'UNCREDITED'">
           <el-row class="BOTTOM" v-if="isStaffId">
             <el-col :span="20" :offset="1">
-              <el-button type="button" @click="refuseReplenish"
+              <el-button
+                type="button"
+                @click="dialogFormVisible_checkbox = true"
                 >拒 绝</el-button
               >
               <el-button type="button" @click="ensureReplenish"
@@ -456,7 +477,9 @@
         >
           <el-row class="BOTTOM">
             <el-col :span="20" :offset="1">
-              <el-button type="button" @click="refuseReplenish"
+              <el-button
+                type="button"
+                @click="dialogFormVisible_checkbox = true"
                 >拒 绝</el-button
               >
               <el-button type="primary" @click="ensureReplenish"
@@ -469,6 +492,7 @@
     </el-drawer>
     <!-- 调味品抽屉 -->
     <adjust-drawer
+      :is3d="1"
       ref="adjustDrawerCom"
       :adjustDrawerData="adjustDrawerData"
       :isStaffId="isStaffId"
@@ -584,6 +608,40 @@
         <el-button type="primary" @click="confirm">确 定</el-button>
       </div>
     </el-dialog>
+    <!-- 拒绝后的dialog_with_checkbox -->
+    <el-dialog
+      title="提示"
+      :visible.sync="dialogFormVisible_checkbox"
+      :destroy-on-close="true"
+      :before-close="destroylkCheckbox"
+    >
+      <el-form
+        :model="form_checkbox"
+        label-position="top"
+        :rules="rules_checkbox"
+        ref="refundForm_checkbox"
+      >
+        <el-form-item label="请输入原因" prop="reason">
+          <el-input v-model="form_checkbox.reason"></el-input>
+        </el-form-item>
+        <el-form-item
+          v-if="!drawerApprovalDeatail.addressId"
+          label="恢复学生放课与随材物流"
+          prop="isRecover"
+        >
+          <el-switch
+            v-model="form_checkbox.isRecover"
+            active-color="#13ce66"
+            inactive-color="#ff4949"
+          >
+          </el-switch>
+        </el-form-item>
+      </el-form>
+      <div slot="footer">
+        <el-button @click="quxiaoCheckbox">取 消</el-button>
+        <el-button type="primary" @click="confirmCheckbox">确 定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -649,7 +707,16 @@ export default {
         cash: '',
         explain: ''
       },
+      rules_checkbox: {
+        reason: [{ required: true, message: '请填写原因', trigger: 'blur' }],
+        isRecover: [{ required: true, message: '是否恢复', trigger: 'change' }]
+      },
+      form_checkbox: {
+        reason: '',
+        isRecover: true
+      },
       dialogFormVisible: false, // ↑修改金额表单lk
+      dialogFormVisible_checkbox: false, // 拒绝checkbox
       params: {}, // 列表的参数
       resetParams: {}, // 撤销的参数
       staffId: '',
@@ -727,9 +794,17 @@ export default {
       this.$refs.refundForm.resetFields()
       done()
     },
+    destroylkCheckbox(done) {
+      this.$refs.refundForm_checkbox.resetFields()
+      done()
+    },
     quxiao() {
       this.$refs.refundForm.resetFields()
       this.dialogFormVisible = false
+    },
+    quxiaoCheckbox() {
+      this.$refs.refundForm_checkbox.resetFields()
+      this.dialogFormVisible_checkbox = false
     },
     confirm() {
       this.$refs.refundForm.validate(async (valid) => {
@@ -758,6 +833,44 @@ export default {
               type: 'warning'
             })
           }
+        } else {
+          return false
+        }
+      })
+    },
+    confirmCheckbox() {
+      this.$refs.refundForm_checkbox.validate(async (valid) => {
+        if (valid) {
+          console.info(this.drawerApprovalDeatail.addressId)
+          const params = {
+            isRecover: this.form_checkbox.isRecover ? 1 : 0,
+            approvalRemark: this.form_checkbox.reason,
+            flowApprovalId: this.drawerApprovalDeatail.flowApprovalId,
+            isConfirm: false,
+            version: this.version,
+            staffId: this.staffId,
+            staffName: this.staffName
+          }
+          if (this.drawerApprovalDeatail.addressId) {
+            delete params.isRecover
+          }
+          this.$http.Backend.isAggrePass(params)
+            .then((res) => {
+              console.log(res)
+              this.checkPending(this.params)
+              this.dialogFormVisible_checkbox = false // 关闭弹窗
+              this.drawerApproval = false // 关闭抽屉
+              this.handleCloseDraw()
+              this.$message({
+                message: '拒绝审核通过',
+                type: 'success'
+              })
+
+              // this.$emit('result', 'third')
+            })
+            .catch((err) => {
+              this.$message(err)
+            })
         } else {
           return false
         }
@@ -795,7 +908,7 @@ export default {
     getVersion(val) {
       this.version = val.version
     },
-    // 拒绝申请
+    // 拒绝申请(暂留,该方法已经已经不用了昂)
     refuseReplenish() {
       this.$prompt('请输入原因', '提示', {
         confirmButtonText: '确定',
@@ -872,7 +985,7 @@ export default {
                   message: '同意审核通过',
                   type: 'success'
                 })
-                this.$emit('result', 'third')
+                // this.$emit('result', 'third')
               } else {
                 this.$root.$emit('lk', '')
               }
@@ -1016,7 +1129,8 @@ export default {
                 },
                 {
                   label: '用户电话',
-                  value: payData.userTel
+                  value: payData.userTel,
+                  valueId: payData.userId
                 },
                 {
                   label: '订单号',

@@ -46,6 +46,23 @@
           </el-dropdown>
         </template>
       </el-table-column>
+      <!-- 无地址状态 sortItem.id 为 0 的情况 -->
+      <el-table-column width="25" fixed v-if="sortItem.id == 0">
+        <template slot-scope="scope">
+          <el-dropdown trigger="click">
+            <div :class="scope.row.id === current.id ? 'three-dot' : 'disnone'">
+              <img src="@/assets/images/icon/icon-three-dot.jpg" />
+            </div>
+            <el-dropdown-menu slot="dropdown">
+              <div class="every-one">
+                <div class="no" @click="handleFailed(scope.row.id)">
+                  <el-dropdown-item>失效</el-dropdown-item>
+                </div>
+              </div>
+            </el-dropdown-menu>
+          </el-dropdown>
+        </template>
+      </el-table-column>
       <el-table-column
         label="用户及购买日期"
         width="200"
@@ -354,7 +371,7 @@
             <div class="dropdown">
               <el-select
                 v-model="value1"
-                placeholder="中通云仓"
+                placeholder="请选择承运商"
                 @change="selectExpress"
               >
                 <el-option
@@ -525,27 +542,31 @@ export default {
       checkParams: [],
       options: [
         {
+          value1: '0',
+          label: '不指定承运商'
+        },
+        {
           value1: '4',
           label: '京东快递'
         },
         {
-          value1: '3',
-          label: '百世物流'
-        },
-        {
-          value1: '2',
-          label: '中通云仓'
+          value1: '5',
+          label: '圆通云仓'
         },
         {
           value1: '1',
           label: '京东云仓'
         },
         {
-          value1: '0',
-          label: '不指定承运商'
+          value1: '2',
+          label: '中通云仓'
+        },
+        {
+          value1: '3',
+          label: '百世物流'
         }
       ],
-      value1: '2',
+      value1: '0',
       dialogVisiblePass: false,
       expressBatch: [],
       expressNu: [],
@@ -689,6 +710,7 @@ export default {
     // 审核通过时选择物流承运商
     selectExpress(val) {},
     handleClosePass() {
+      this.value1 = '0'
       this.dialogVisiblePass = false
     },
     handleBatchPass(val) {
