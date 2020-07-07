@@ -91,6 +91,7 @@
       placeholder="微信ID搜索"
       @select="onWxIdSerch"
       ref="wxid"
+      class="custom-width"
     >
       <i class="el-icon-search el-input__icon" slot="suffix"></i>
       <template slot-scope="{ item }">
@@ -383,6 +384,12 @@ export default {
     /deep/.el-input__inner {
       width: 140px !important;
       margin-left: 20px;
+    }
+    .custom-width {
+      /deep/.el-input__inner {
+        width: 180px !important;
+        margin-left: 20px;
+      }
     }
   }
 }
