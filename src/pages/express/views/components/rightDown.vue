@@ -46,6 +46,23 @@
           </el-dropdown>
         </template>
       </el-table-column>
+      <!-- 无地址状态 sortItem.id 为 0 的情况 -->
+      <el-table-column width="25" fixed v-if="sortItem.id == 0">
+        <template slot-scope="scope">
+          <el-dropdown trigger="click">
+            <div :class="scope.row.id === current.id ? 'three-dot' : 'disnone'">
+              <img src="@/assets/images/icon/icon-three-dot.jpg" />
+            </div>
+            <el-dropdown-menu slot="dropdown">
+              <div class="every-one">
+                <div class="no" @click="handleFailed(scope.row.id)">
+                  <el-dropdown-item>失效</el-dropdown-item>
+                </div>
+              </div>
+            </el-dropdown-menu>
+          </el-dropdown>
+        </template>
+      </el-table-column>
       <el-table-column
         label="用户及购买日期"
         width="200"
