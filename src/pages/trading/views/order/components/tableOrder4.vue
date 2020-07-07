@@ -361,19 +361,17 @@ export default {
     getQualityClassProductDetail(ids, data) {
       this.$http.Order.getQualityClassProductDetail(ids)
         .then((res) => {
-          if (res.data.OrderProductList.length > 0) {
-            for (const item of data) {
-              for (const _item of res.data.OrderProductList) {
-                if (_item.oid === item.id) {
-                  item.packages_name = _item.name
-                }
+          for (const item of data) {
+            for (const _item of res.data.OrderProductList) {
+              if (_item.oid === item.id) {
+                item.packages_name = _item.name
               }
             }
-            setTimeout(() => {
-              this.orderList = data
-              this.loading = false
-            }, 0)
           }
+          setTimeout(() => {
+            this.orderList = data
+            this.loading = false
+          }, 0)
         })
         .catch((err) => {
           console.log(err)
