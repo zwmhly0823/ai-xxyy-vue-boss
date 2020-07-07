@@ -85,6 +85,7 @@
             ></i>
             <el-button
               round
+              v-if="scope.row.task_image"
               class="down-btn"
               @click="downImg(scope.row)"
               size="mini"
@@ -389,28 +390,31 @@ export default {
     },
     // 下载图片
     downImg(val) {
-      // debugger
+      const that = this
       console.log('下载', val)
       const canvas = document.createElement('canvas')
       const typeName = val.task_image.lastIndexOf('.')
       const type = val.task_image.substr(typeName + 1)
       const image = new Image()
       image.setAttribute('crossOrigin', 'anonymous')
+
       image.src = val.task_image
-      const link = document.createElement('a')
-      canvas.width = image.width
-      canvas.height = image.height
-      const context = canvas.getContext('2d')
-      context.drawImage(image, 0, 0, image.width, image.height)
-      const url = canvas.toDataURL('image/' + type)
-      const blob = this.dataUrlToBold(url)
-      const objUrl = URL.createObjectURL(blob)
-      link.style.display = 'none'
-      link.href = objUrl
-      link.download = `${val.sendCourseLog.wd_info}${val.sendCourseLog.title}.jpg`
-      link.target = '_blank'
-      document.body.appendChild(link)
-      link.click()
+      image.onload = function() {
+        const link = document.createElement('a')
+        canvas.width = image.width
+        canvas.height = image.height
+        const context = canvas.getContext('2d')
+        context.drawImage(image, 0, 0, image.width, image.height)
+        const url = canvas.toDataURL('image/' + type)
+        const blob = that.dataUrlToBold(url)
+        const objUrl = URL.createObjectURL(blob)
+        link.style.display = 'none'
+        link.href = objUrl
+        link.download = `${val.sendCourseLog.wd_info}${val.sendCourseLog.title}.jpg`
+        link.target = '_blank'
+        document.body.appendChild(link)
+        link.click()
+      }
     },
     dataUrlToBold(url) {
       const arr = url.split(',')
