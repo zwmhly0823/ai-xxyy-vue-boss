@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-04-01 13:24:40
  * @LastEditors: panjian
- * @LastEditTime: 2020-05-15 12:03:16
+ * @LastEditTime: 2020-07-06 19:22:00
  -->
 <template>
   <div>
@@ -61,6 +61,8 @@
           size="medium"
           filterable
           @change="handleChange"
+          :props="{ expandTrigger: 'hover' }"
+          @active-item-change="handleItemChange"
         >
         </el-cascader>
       </el-form-item>
@@ -87,7 +89,7 @@
 </template>
 <script>
 import areaLists from '@/utils/area.json'
-import { isToss } from '@/utils/index'
+import { isToss, deepClone } from '@/utils/index'
 export default {
   name: 'logisticsForm',
   props: {
@@ -132,6 +134,7 @@ export default {
       city: null,
       area: null,
       areaCode: null,
+      street: null,
       addressVal: '',
       ruleForm: {
         receiptName: '',
@@ -168,6 +171,35 @@ export default {
     this.createdEcho()
   },
   methods: {
+    handleItemChange(data) {
+      const addressList = deepClone(this.areaLists)
+      addressList.forEach((res) => {
+        if (res.value === data[0]) {
+          res.children.forEach((ele) => {
+            if (ele.value === data[1]) {
+              ele.children.forEach((val) => {
+                val.children = [{ label: '暂不选择', value: '' }]
+                if (val.value === data[2]) {
+                  this.$http.Express.getCenterAddressTownList(val.value).then(
+                    (vlaue) => {
+                      const _data = vlaue.payload
+                      _data.forEach((codeVal) => {
+                        const add = {
+                          label: codeVal.townName,
+                          value: codeVal.townCode
+                        }
+                        val.children.push(add)
+                      })
+                    }
+                  )
+                }
+              })
+            }
+          })
+        }
+      })
+      this.areaLists = addressList
+    },
     createdEcho() {
       // this.addressVal = this.modifyFormData.id
       console.log(this.modifyFormData)
@@ -259,6 +291,7 @@ export default {
       this.city = citys[0].label
       this.area = areas[0].label
       this.areaCode = data[2]
+      this.street = data[3]
     },
     submitForm(formName) {
       const teacher = isToss()
@@ -269,33 +302,27 @@ export default {
         this.operatorId = staff.id
       }
       const params = {
-        // operatorId: this.operatorId,
-        // orderId: this.modifyFormData.orderid,
-        // addressId: '',
+        operatorId: this.operatorId,
         expressId: this.modifyFormData.id,
-        // userId: this.modifyFormData.userid,
         receiptName: this.ruleForm.receiptName,
         receiptTel: this.ruleForm.receiptTel,
         province: this.province,
         city: this.city,
         area: this.area,
+        code: this.street,
         addressDetail: this.ruleForm.addressDetail
-        // areaCode: this.areaCode,
-        // expressNo: '',
-        // expressCompany: '',
-        // expressCompanyNu: ''
       }
 
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          this.$http.Express.updateExpressAddress(params)
+          this.$http.Express.updateExpressAddressNew(params)
             .then((res) => {
               if (res.data) {
                 return
               }
               if (res.code === 0) {
                 this.$message({
-                  message: '地址添加成功',
+                  message: '地址修改成功',
                   type: 'success'
                 })
                 setTimeout(() => {

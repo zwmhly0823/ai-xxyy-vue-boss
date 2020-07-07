@@ -4,8 +4,8 @@
  * @version:
  * @Author: shentong
  * @Date: 2020-03-13 14:38:28
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-07-01 21:29:47
+ * @LastEditors: panjian
+ * @LastEditTime: 2020-07-06 17:43:06
  */
 // import axios from '../axios'
 import axios from '../axiosConfig'
@@ -370,6 +370,7 @@ export default {
           }
           base_painting_text
           address {
+            id
             receipt_name
             receipt_tel
             province
@@ -714,5 +715,9 @@ export default {
     q += `&today=${query.today || ''}`
     q += `&tomorrow=${query.tomorrow || ''}`
     return axios.get(`/api/u/v1/user/userintention/update?${q}`)
+  },
+  // 学员详情 修改地址
+  updateExpressAddressNew(query) {
+    return axios.get(`/api/ex/v1/express/updateExpressAddressNew`, query)
   }
 }

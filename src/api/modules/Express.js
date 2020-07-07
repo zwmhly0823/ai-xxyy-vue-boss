@@ -3,8 +3,8 @@
  * @version:
  * @Author: panjian
  * @Date: 2020-03-31 22:54:28
- * @LastEditors: Lukun
- * @LastEditTime: 2020-05-23 05:31:19
+ * @LastEditors: panjian
+ * @LastEditTime: 2020-07-06 19:23:30
  */
 // import axios from '../axios'
 import axios from '../axiosConfig'
@@ -23,8 +23,8 @@ export default {
    * 添加物流收货人信息
    * @param {*} param0
    */
-  editAddressAndExpressForOrder(params) {
-    return axios.get('/api/o/v1/express/editAddressAndExpressForOrder', params)
+  createExpressAddressNew(params) {
+    return axios.get('/api/ex/v1/express/createExpressAddressNew', params)
   },
   /**
    * 催发地址短信
@@ -103,8 +103,8 @@ export default {
    * 带班详情 物流 修改地址
    * @param {*} param0
    */
-  updateExpressAddress(params) {
-    return axios.get('/api/o/v1/express/updateExpressAddress', params)
+  updateExpressAddressNew(params) {
+    return axios.get('/api/ex/v1/express/updateExpressAddressNew', params)
   },
   /**
    * 新增地址信息
@@ -158,7 +158,7 @@ export default {
       `/api/ex/v1/express/updateExpressStatusForBackend?expressId=${params.expressId}&expressStatus=${params.expressStatus}&expressRemark=${params.expressRemark}&operatorId=${params.operatorId}`,
       params
     )
-  }
+  },
   /**
    * v1 订单关联的物流
    */
@@ -178,4 +178,8 @@ export default {
   //       `
   //     })
   //   }
+  // 获取第四级地址
+  getCenterAddressTownList(code) {
+    return axios.get(`/api/ex/v1/express/getCenterAddressTownList?code=${code}`)
+  }
 }
