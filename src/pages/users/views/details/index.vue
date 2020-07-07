@@ -611,7 +611,7 @@ export default {
       // 把体验课和系统课中的id和状态都抽出来，isrefund=1是退费的
       const classObj = new Map()
       // console.log(this.stuInfor)
-      if (this.stuInfor.trialCourse.team_id) {
+      if (this.stuInfor.trialCourse && this.stuInfor.trialCourse.team_id) {
         classObj.set(
           +this.stuInfor.trialCourse.team_id,
           this.stuInfor.trialCourse.orderInfo.isrefund
