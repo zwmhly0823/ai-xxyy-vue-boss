@@ -541,12 +541,21 @@ export default {
 
       this.$http.DownloadExcel.updateScheduleExcel(formdata)
         .then((res) => {
+          console.log(res)
+          // 有可能下载失败，返回{code: '500'},但responseType: 'blob'会把data强制转为blob，导致下载undefined.excel
+          // 解决：将已转为blob类型的data转回json格式，判断是否下载成功
+          //  let r = new FileReader()
+          //   r.onload = function () {
+
+          //   }
           if (res && Object.prototype.toString.call(res) === '[object Blob]') {
             this.$refs.upload.clearFiles()
             this.dialogVisible = false
             this.downloadFn(res, file.name, () => {
               this.$emit('setExcelStatus', 'complete')
             })
+          } else {
+            this.$message.error('上传失败')
           }
         })
         .finally(() => {
