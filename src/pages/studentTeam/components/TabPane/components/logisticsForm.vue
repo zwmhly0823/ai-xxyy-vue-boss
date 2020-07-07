@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-04-01 13:24:40
  * @LastEditors: panjian
- * @LastEditTime: 2020-05-09 11:46:04
+ * @LastEditTime: 2020-07-06 19:10:13
  -->
 <template>
   <el-form
@@ -28,6 +28,8 @@
         size="medium"
         filterable
         @change="handleChange"
+        :props="{ expandTrigger: 'hover' }"
+        @active-item-change="handleItemChange"
       >
       </el-cascader>
     </el-form-item>
@@ -53,7 +55,7 @@
 </template>
 <script>
 import areaLists from '@/utils/area.json'
-import { isToss } from '@/utils/index'
+import { isToss, deepClone } from '@/utils/index'
 export default {
   name: 'logisticsForm',
   props: ['formData'],
@@ -86,6 +88,7 @@ export default {
       city: null,
       area: null,
       areaCode: null,
+      street: null,
       ruleForm: {
         receiptName: '',
         receiptTel: '',
@@ -110,6 +113,35 @@ export default {
     }
   },
   methods: {
+    handleItemChange(data) {
+      const addressList = deepClone(this.areaLists)
+      addressList.forEach((res) => {
+        if (res.value === data[0]) {
+          res.children.forEach((ele) => {
+            if (ele.value === data[1]) {
+              ele.children.forEach((val) => {
+                val.children = [{ label: '暂不选择', value: '' }]
+                if (val.value === data[2]) {
+                  this.$http.Express.getCenterAddressTownList(val.value).then(
+                    (vlaue) => {
+                      const _data = vlaue.payload
+                      _data.forEach((codeVal) => {
+                        const add = {
+                          label: codeVal.townName,
+                          value: codeVal.townCode
+                        }
+                        val.children.push(add)
+                      })
+                    }
+                  )
+                }
+              })
+            }
+          })
+        }
+      })
+      this.areaLists = addressList
+    },
     // 级联城市级联
     handleChange(data) {
       const provinces = this.areaLists.filter(
@@ -123,6 +155,7 @@ export default {
       this.city = citys[0].label
       this.area = areas[0].label
       this.areaCode = data[2]
+      this.street = data[3]
     },
     submitForm(formName) {
       const teacher = isToss()
@@ -134,20 +167,21 @@ export default {
       }
       const params = {
         operatorId: this.operatorId,
-        orderId: this.formData.orderid,
-        addressId: '',
+        // orderId: this.formData.orderid,
+        // addressId: '',
         expressId: this.formData.id,
-        userId: this.formData.userid,
+        // userId: this.formData.userid,
         receiptName: this.ruleForm.receiptName,
         receiptTel: this.ruleForm.receiptTel,
         province: this.province,
         city: this.city,
         area: this.area,
-        addressDetail: this.ruleForm.addressDetail,
-        areaCode: this.areaCode,
-        expressNo: '',
-        expressCompany: '',
-        expressCompanyNu: ''
+        code: this.street,
+        addressDetail: this.ruleForm.addressDetail
+        // areaCode: this.areaCode,
+        // expressNo: '',
+        // expressCompany: '',
+        // expressCompanyNu: ''
       }
       if (!this.province) {
         this.$message({
@@ -157,7 +191,7 @@ export default {
       }
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          this.$http.Express.editAddressAndExpressForOrder(params)
+          this.$http.Express.createExpressAddressNew(params)
             .then((res) => {
               if (res.data) {
                 return
