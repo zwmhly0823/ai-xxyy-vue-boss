@@ -3,8 +3,8 @@
  * @version:
  * @Author: Lukun
  * @Date: 2020-05-10 16:17:21
- * @LastEditors: songyanan
- * @LastEditTime: 2020-06-23 15:41:00
+ * @LastEditors: liukun
+ * @LastEditTime: 2020-07-02 16:34:55
  */
 import axios from '../axiosConfig'
 export default {
@@ -48,7 +48,13 @@ export default {
    */
   isAggrePass(params) {
     return axios.post(
-      `/api/b/v1/backend/completed/reissue/flow?flowApprovalId=${params.flowApprovalId}&staffName=${params.staffName}&staffId=${params.staffId}&version=${params.version}&isConfirm=${params.isConfirm}&approvalRemark=${params.approvalRemark}`
+      `/api/b/v1/backend/completed/reissue/flow?flowApprovalId=${
+        params.flowApprovalId
+      }&staffName=${params.staffName}&staffId=${params.staffId}&version=${
+        params.version
+      }&isConfirm=${params.isConfirm}&approvalRemark=${params.approvalRemark}&${
+        'isRecover' in params ? 'isRecover=' + params.isRecover : ''
+      }`
     )
   },
   // 财务驳回的重新提交

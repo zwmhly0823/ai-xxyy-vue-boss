@@ -3,8 +3,8 @@
  * @version: 
  * @Author: panjian
  * @Date: 2020-06-23 15:26:34
- * @LastEditors: panjian
- * @LastEditTime: 2020-06-29 15:30:02
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-07-03 18:38:44
 -->
 <template>
   <div class="select-box">
@@ -126,7 +126,7 @@ export default {
       questionnaireList: [],
       term: '',
       period: 0,
-      page: 0,
+      page: 1,
       pageSize: 20,
       ruleForm: {
         timeDate: '',

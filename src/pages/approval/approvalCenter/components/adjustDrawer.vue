@@ -44,6 +44,22 @@
             </el-image>
           </template>
         </template>
+        <template v-else-if="dItem.label === '用户电话'">
+          <el-link
+            v-if="!is3d"
+            type="primary"
+            :href="'/users/#/details/' + dItem.valueId"
+            target="_blank"
+            >{{ dItem.value }}</el-link
+          >
+          <el-link
+            v-else
+            type="primary"
+            :href="'/users/#/details/' + dItem.valueId"
+            target="_blank"
+            >{{ dItem.value }}</el-link
+          >
+        </template>
         <template v-else>
           <span>{{ dItem.value }}</span>
         </template>
@@ -79,7 +95,7 @@
 <script>
 export default {
   name: 'adjustDrawer',
-  props: ['adjustDrawerData', 'isStaffId'],
+  props: { adjustDrawerData: {}, isStaffId: {}, is3d: { default: 0 } },
   data() {
     return {
       adjustDrawerShow: false,

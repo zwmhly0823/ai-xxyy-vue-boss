@@ -52,7 +52,7 @@
               </el-form-item>
               <h6>开始上课时间必须从星期一开始</h6>
             </el-col>
-            <el-col :span="4" :offset="1">
+            <el-col v-if="courseType == '1'" :span="4" :offset="1">
               <h4>接速设置</h4>
               <el-form-item label="" prop="robinNum">
                 <el-input
@@ -63,6 +63,7 @@
               </el-form-item>
               <h6>轮询分配的学生数设置</h6>
             </el-col>
+            <el-col v-else :span="4" :offset="1"></el-col>
           </el-row>
         </div>
         <!-- 售卖周期设置 -->

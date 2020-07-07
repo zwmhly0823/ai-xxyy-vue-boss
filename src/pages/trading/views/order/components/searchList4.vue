@@ -1,10 +1,10 @@
 <!--
- * @Descripttion: 系统课搜索栏
+ * @Descripttion: 素质课搜索栏
  * @version: 1.0.0
- * @Author: liukun
- * @Date: 2020-04-25 17:24:23
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-06-29 18:04:50
+ * @Author: songyanan
+ * @Date: 2020-07-01 11:08:23
+ * @LastEditors: songyanan
+ * @LastEditTime: 2020-07-01 15:24:30
  -->
 <template>
   <el-card
@@ -21,10 +21,6 @@
       <el-form-item label="订单来源:" :class="{ [$style.marginer]: true }">
         <ChannelSelect @result="getChannel" name="pay_channel" />
       </el-form-item>
-
-      <!-- <el-form-item label="物流状态:" :class="{ [$style.marginer]: true }">
-        <orderStatus @result="getExpressStatus" />
-      </el-form-item> -->
 
       <el-form-item label="推荐人信息:" :class="{ [$style.marginer]: true }">
         <div class="row_colum">
@@ -88,54 +84,6 @@
         </DatePicker>
       </el-form-item>
       <br />
-      <el-form-item label="体验课:" :class="{ [$style.marginer]: true }">
-        <div class="row_colum">
-          <department
-            name="last_teacher_id"
-            placeholder="全部销售组"
-            @result="getDepartment"
-          />
-          <group-sell
-            :teacherscope="teacherscope"
-            is-multiple
-            @result="selectPayTeacher"
-            name="last_teacher_id"
-            class="margin_l10"
-            style="width:140px"
-          />
-          <search-stage
-            :teacher-id="teacherscope_trial || teacherscope"
-            class="margin_l10"
-            name="stage"
-            placeholder="全部体验课排期"
-            type="0"
-            @result="selectScheduleTrial"
-          />
-          <hardLevel
-            :class="['margin_l10']"
-            placeholder="体验课难度"
-            style="width:140px"
-            name="sup"
-            @result="supCallBackTrial"
-          />
-          <search-team-name
-            teamnameType="0"
-            :term="term_trial"
-            :teacher-id="teacherscope_trial || teacherscope"
-            @result="getTrialTeamName"
-            name="team_id"
-            :class="['margin_l10']"
-            style="width:140px"
-          />
-          <!-- BOSS 显示单双周选择 -->
-          <trial-course-type
-            v-if="!teacherId"
-            class="margin_l10"
-            name="packages_id"
-            @result="getTrialCourseType"
-          />
-        </div>
-      </el-form-item>
     </el-form>
     <div class="export-order">
       <el-button size="mini" type="primary" @click="showChooseDialog = true"
@@ -178,33 +126,18 @@
 </template>
 <script>
 import dayjs from 'dayjs'
-import hardLevel from '@/components/MSearch/searchItems/hardLevel.vue' // add
 import orderSearch from '@/components/MSearch/searchItems/orderSearch.vue' // add
-// import orderStatus from '@/components/MSearch/searchItems/orderStatus.vue' // add
 import DatePicker from '@/components/MSearch/searchItems/datePicker.vue'
 import ChannelSelect from '@/components/MSearch/searchItems/channel.vue'
-import GroupSell from '@/components/MSearch/searchItems/groupSell'
-import Department from '@/components/MSearch/searchItems/department'
-import SearchTeamName from '@/components/MSearch/searchItems/searchTeamName'
-import SearchStage from '@/components/MSearch/searchItems/searchStage'
-import TrialCourseType from '@/components/MSearch/searchItems/trialCourseType'
 import { downloadHandle } from '@/utils/download'
 import SearchPhoneAndUsername from '@/components/MSearch/searchItems/searchPhoneAndUsername'
 import SimpleSelect from '@/components/MSearch/searchItems/simpleSelect'
-import { isToss } from '@/utils/index'
 
 export default {
   components: {
-    // orderStatus,
-    hardLevel,
     orderSearch,
     ChannelSelect,
     DatePicker,
-    GroupSell,
-    Department,
-    SearchTeamName,
-    SearchStage,
-    TrialCourseType,
     SearchPhoneAndUsername,
     SimpleSelect
   },
@@ -216,8 +149,6 @@ export default {
       cur2: false,
       cur3: false,
       currentBtn: null,
-      teacherscope: null, // 当前选择的体验课老师范围（销售组查询）
-      teacherscope_trial: null, // 当前选择的体验课老师范围
       term_trial: null, // 当前选择体验课排期
       showErr: false,
       errTips: '搜索条件不能为空',
@@ -225,7 +156,6 @@ export default {
       should: [],
       selectTime: null, // 物流时间下拉列表_选中项
       oldTime: '', // 上次时间选择值
-      teacherId: '', // 判断是否是toss环境还是boss环境
       searchParams: [],
       firstOrderList: [
         {
@@ -329,49 +259,6 @@ export default {
     getExpressStatus(res) {
       this.setSeachParmas(res, ['express_status'])
     },
-    getDepartment(res) {
-      this.teacherscope = res.last_teacher_id || null
-      this.setSeachParmas(res, ['last_teacher_id'], 'terms')
-    },
-    // 选择社群销售
-    selectPayTeacher(res) {
-      if (!res.last_teacher_id || res.last_teacher_id.length === 0) {
-        this.teacherscope_trial = null
-        if (this.teacherscope && this.teacherscope.length > 0) {
-          res = {
-            last_teacher_id: this.teacherscope
-          }
-        } else {
-          res = ''
-        }
-      } else {
-        this.teacherscope_trial = res.last_teacher_id
-      }
-      this.setSeachParmas(res, ['last_teacher_id'], 'terms')
-    },
-    // 体验课排期
-    selectScheduleTrial(res) {
-      if (res) {
-        this.term_trial = res.trial_stage || ''
-      } else {
-        this.term_trial = []
-      }
-      this.setSeachParmas(res, ['stage'], 'terms')
-    },
-    // 体验课难度
-    supCallBackTrial(res) {
-      console.log(res, 'res')
-      this.setSeachParmas(res, ['sup'], 'terms')
-    },
-    getTrialTeamName(res) {
-      this.setSeachParmas(res, ['team_id'], 'terms')
-    },
-
-    // 体验课类型
-    getTrialCourseType(res) {
-      this.setSeachParmas(res, ['packages_id'], 'terms')
-    },
-
     async getSendUser(res) {
       this.setSeachParmas(res, ['first_order_send_id'], 'terms')
     },
@@ -531,12 +418,6 @@ export default {
           })
           .catch(() => loading.close())
       }
-    }
-  },
-  created() {
-    const teacherId = isToss()
-    if (teacherId) {
-      this.teacherId = teacherId
     }
   }
 }

@@ -8,13 +8,13 @@ export function noticeLinkTo(type, val) {
       break
     case 4:
       // 订单
-      hrefUrl = 'trading/#/'
+      hrefUrl = 'trading/#/order'
       break
     case 5:
-      hrefUrl = 'approval/#/'
+      hrefUrl = 'approval/#/approvalCenter'
       break
     default:
-      hrefUrl = 'notice-center/#/'
+      hrefUrl = 'notice-center/#/noticeHome'
   }
   // 目前只有单个搜索条件
   const searchQuery = val.split(':')
