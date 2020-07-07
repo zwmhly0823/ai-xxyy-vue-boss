@@ -65,15 +65,11 @@
         <el-table-column
           align="left"
           label="微信ID"
-          min-width="100"
+          min-width="120"
           prop="wechat_id"
         >
           <template slot-scope="scope">
-            <span>{{
-              scope.row.wechat_id && scope.row.wechat_id > 0
-                ? scope.row.wechat_id
-                : '-'
-            }}</span>
+            <span>{{ scope.row.wechat_id || '-' }}</span>
           </template>
         </el-table-column>
         <el-table-column align="left" label="艾客微信ID" min-width="100">
