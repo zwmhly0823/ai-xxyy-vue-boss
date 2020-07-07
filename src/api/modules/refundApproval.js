@@ -4,14 +4,14 @@
  * @Author: liukun
  * @Date: 2020-05-12 15:22:25
  * @LastEditors: liukun
- * @LastEditTime: 2020-06-06 14:37:11
+ * @LastEditTime: 2020-07-06 18:12:37
  */
 
 import axios from '../axiosConfig'
 export default {
   // 获取支付渠道(assert→IMPORT终止)
   getPaymentPay(query = '') {
-    console.warn('我来查渠道', query)
+    console.warn('我来查支付渠道', query)
     return axios.post('/graphql/v1/toss', {
       query: `
         {
@@ -32,10 +32,11 @@ export default {
     return axios.get('/api/o/v1/order/getOrderRefundStatus', query)
   },
 
-  // 通过uid查询订单号
+  // 通过uid查询订单list
   getOrdersByUid(uid) {
+    console.warn('我来查名下订单list')
     return axios.get(
-      `/api/o/v1/order/getOrdersByStatus?userId=${uid}&status=COMPLETED&page=0`
+      `/api/o/v1/order/getOrderByRegtypesAndStatus?userId=${uid}&status=COMPLETED&regtypes=DEFAULT,EXPERIENCE,FIRST_ORDER,RENEW`
     )
   },
 
@@ -61,13 +62,15 @@ export default {
 
   // 获取剩余金额
   getResidueFee({ orderId }) {
+    console.warn('获取剩余金额')
     return axios.get(`/api/o/v1/order/getRemainingAmount?orderId=${orderId}`)
     // return new Promise((resolve, reject) => {
     //   resolve({ code: 0, data: { bala: 54188 } })
     // })
   },
-  // 获取优惠券类型
+  // 获取优惠券list
   getCoupon(params) {
+    console.warn('获取优惠券list')
     return axios.get('/api/s/v1/coupon/getUserCouponByPackageId', params)
   },
   // 提交表单
@@ -80,5 +83,19 @@ export default {
     return axios.get(
       `/api/b/v1/backend/refund/detail/get?flowApprovalId=${params}`
     )
+  },
+  // 获取系统课全年/半年
+  // SYSTEM_COURSE_YEAR 年课
+  // SYSTEM_COURSE_HALFYEAR 半年课
+
+  // getPackages(packagesId) {
+  //   console.warn('获取系统课全年/半年')
+  //   return axios.get(`/api/p/v1/product/getPackages?packagesId=${packagesId}`)
+  // },
+  // 获取第三方渠道来源
+  // channelOuterName
+  getChannel(payChannel) {
+    console.warn('获取第三方渠道来源')
+    return axios.get(`/api/c/v1/channel/getChannelById?id=${payChannel}`)
   }
 }
