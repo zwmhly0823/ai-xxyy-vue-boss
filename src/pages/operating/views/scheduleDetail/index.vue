@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-14 18:28:44
  * @LastEditors: Shentong
- * @LastEditTime: 2020-04-27 12:34:11
+ * @LastEditTime: 2020-07-07 19:06:11
  -->
 <template>
   <div class="app-main height add-schedule-container">
@@ -85,7 +85,8 @@ export default {
       params: {
         departmentIds: '',
         teacherId: '',
-        level: ''
+        level: '',
+        courseDifficulties: ''
       }
     }
   },
@@ -131,11 +132,17 @@ export default {
       }
     },
     searchChange(search) {
-      const { department = [], groupSell = '', level = '' } = search
+      const {
+        department = [],
+        groupSell = '',
+        level = [],
+        courseDifficulties = []
+      } = search
       Object.assign(this.params, {
         departmentIds: department.join(),
         teacherId: groupSell,
-        level: level.join()
+        level: level.join(),
+        courseDifficulties: courseDifficulties.join()
       })
     },
     // 点击修改按钮

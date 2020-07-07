@@ -201,12 +201,10 @@
       width="30%"
     >
       <!-- action="/api/o/v1/express/importExpressList" -->
-
       <el-upload
         ref="upload"
         action=""
         accept=".xls, .xlsx"
-        :data="{ teacherId: '' }"
         :headers="headers"
         :auto-upload="false"
         :limit="1"
@@ -227,6 +225,30 @@
         <!-- :loading="uploading" -->
         <div slot="tip" class="el-upload__tip">只能上传xls/xlsx文件</div>
       </el-upload>
+      <!-- 
+      <el-upload
+        ref="upload"
+        action=""
+        accept=".xls, .xlsx"
+        :headers="{ 'Content-Type': 'multipart/form-data' }"
+        :auto-upload="false"
+        :limit="1"
+        :http-request="uploadFile"
+        :on-progress="uploadProgress"
+      >
+        <el-button slot="trigger" size="small" type="primary"
+          >选取文件</el-button
+        >
+        <el-button
+          style="margin-left: 10px;"
+          size="small"
+          type="success"
+          @click="submitUpload"
+          :disabled="uploading"
+          >上传到服务器</el-button
+        >
+        <div slot="tip" class="el-upload__tip">只能上传xls/xlsx文件</div>
+      </el-upload> -->
     </el-dialog>
   </div>
 </template>
@@ -409,33 +431,52 @@ export default {
     },
     /** 导入数据上传 */
     uploadFile(params) {
-      const formdata = new FormData()
-      const file = params.file
-      formdata.append('file', file)
-      this.uploading = true
-      Object.assign(formdata, { operatorId: this.operatorId })
+      const loadingInstance = this.$loading({
+        target: '.app-main',
+        lock: true,
+        text: '正在上传...',
+        fullscreen: true
+      })
 
-      this.$http.Express.expressUpload(formdata)
+      const { courseType = 0 } = this.$route.params
+      const formdata = new FormData()
+      const { file } = params
+      formdata.append('file', file)
+
+      this.uploading = true
+      Object.assign(formdata, { courseType })
+
+      // this.$http.Operating.updateScheduleExcel(formdata)
+      this.$http.DownloadExcel.updateScheduleExcel(formdata)
         .then((res) => {
-          this.$refs.upload.clearFiles()
-          this.uploading = false
-          if (res.code === 0 && res.payload.length < 1 && res.payload) {
-            this.$message({
-              showClose: true,
-              message: '恭喜你，文件上传成功',
-              type: 'success'
+          if (res && Object.prototype.toString.call(res) === '[object Blob]') {
+            this.$refs.upload.clearFiles()
+            this.dialogVisible = false
+            this.downloadFn(res, file.name, () => {
+              this.$emit('setExcelStatus', 'complete')
             })
           }
-          this.dialogVisible = false
-          this.errorDialog = !res.errors ? res.payload : []
         })
         .finally(() => {
-          this.$emit('setExcelStatus', 'complete')
           this.uploading = false
+          loadingInstance.close()
         })
-      setTimeout(() => {
-        this.uploading = false
-      }, 2000)
+    },
+    // 下载文件
+    downloadFn(data, fileName = '下载', cb) {
+      console.log('fileName', fileName)
+      if (!data) return
+      const blob = new Blob([data])
+      const elink = document.createElement('a')
+      elink.download = fileName
+      elink.style.display = 'none'
+      elink.href = URL.createObjectURL(blob)
+      document.body.appendChild(elink)
+      elink.click()
+      URL.revokeObjectURL(elink.href) // 释放URL 对象
+      document.body.removeChild(elink)
+
+      cb && cb()
     },
     /** 上传进度 */
     uploadProgress(event, file, fileList) {
