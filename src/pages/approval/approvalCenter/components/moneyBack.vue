@@ -2,7 +2,7 @@
  * @Descripttion: 
  * @version: 
  * @LastEditors: liukun
- * @LastEditTime: 2020-07-06 21:50:05
+ * @LastEditTime: 2020-07-07 22:09:39
  -->
 <template>
   <div class="adjustModule">
@@ -572,8 +572,8 @@ export default {
             if (this.refundForm.businessType === '系统课') {
               if (this.pureWeekS && this.pureWeekY !== '') {
                 // 计算系统课退费,得保证取到剩总课时和已上课时
-                const yiYue = Math.floor(this.pureWeekY / 4)
-                const shengYue = Math.floor(this.pureWeekS / 4)
+                const yiYue = Math.ceil(this.pureWeekY / 4) // 已上课向上取整
+                const shengYue = Math.floor(this.pureWeekS / 4) // 剩余课数向下取整
                 console.warn(
                   '选择退款类型为课程退款-系统课,计算所得',
                   '已上月份:' + yiYue,
@@ -927,9 +927,9 @@ export default {
             attsUrl: this.refundForm.imageUrl, // 附件地址
 
             periodAll: this.pureWeekS + this.pureWeekY, // 订单总周期“周”
-            periodAlready: this.pureWeekY, // 已上课周期“周”
+            periodAlready: this.pureWeekY, // 已上课周期“周”(原味)
             // periodResidue: this.pureWeekS, // 剩余上课周期“周”
-            periodRefund: this.refundForm.refundMonths * 4, // 选择退款周期“周”
+            periodRefund: this.refundForm.refundMonths * 4, // 扣了(剩余)多少周期“周”(加工)
             applyUserId: JSON.parse(localStorage.getItem('staff')).id,
             applyUserName: JSON.parse(localStorage.getItem('staff')).realName,
             applyUserDeapartmentId: JSON.parse(localStorage.getItem('staff'))
