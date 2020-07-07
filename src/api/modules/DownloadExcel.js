@@ -4,7 +4,7 @@
  * @Author: Lukun
  * @Date: 2020-05-14 14:31:42
  * @LastEditors: Shentong
- * @LastEditTime: 2020-07-07 16:05:37
+ * @LastEditTime: 2020-07-07 21:46:31
  */
 import axios from '../axios'
 import { getToken } from '@/utils/auth'
@@ -65,12 +65,21 @@ export default {
    */
   updateScheduleExcel(params) {
     if (judgeToken()) {
-      return axios({
-        method: 'POST',
-        url: `/api/t/v1/enroll/import?courseType=${params.courseType}`,
-        responseType: 'blob',
-        headers: getHeaders(),
-        data: params
+      return new Promise((resolve, reject) => {
+        axios({
+          method: 'POST',
+          url: `/api/t/v1/enroll/import?courseType=${params.courseTypes}`,
+          responseType: 'blob',
+          headers: getHeaders(),
+          data: params
+        })
+          .then((res) => {
+            console.log('updateScheduleExcel-res', res)
+            resolve(res)
+          })
+          .catch((err) => {
+            reject(err)
+          })
       })
     }
   },
