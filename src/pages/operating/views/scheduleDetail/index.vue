@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-14 18:28:44
  * @LastEditors: Shentong
- * @LastEditTime: 2020-07-07 19:06:11
+ * @LastEditTime: 2020-07-07 20:56:14
  -->
 <template>
   <div class="app-main height add-schedule-container">
@@ -26,8 +26,8 @@
             <el-row :gutter="20">
               <el-col class="label-name" :span="2">排期id:</el-col>
               <el-col :span="2">{{ scheduleStatistic.period || '-' }}</el-col>
-              <el-col class="label-name" :span="2">接速设置:</el-col>
-              <el-col :span="2">{{ scheduleStatistic.robinNum || '' }}</el-col>
+              <!-- <el-col class="label-name" :span="2">接速设置:</el-col>
+              <el-col :span="2">{{ scheduleStatistic.robinNum || '' }}</el-col> -->
             </el-row>
             <el-row :gutter="20">
               <el-col class="label-name" :span="2">开始招生:</el-col>

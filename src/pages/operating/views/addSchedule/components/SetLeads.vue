@@ -329,7 +329,11 @@
         :http-request="uploadFile"
         :on-progress="uploadProgress"
       >
-        <el-button slot="trigger" size="small" type="primary"
+        <el-button
+          slot="trigger"
+          size="small"
+          type="primary"
+          :disabled="uploading"
           >选取文件</el-button
         >
         <el-button
@@ -527,13 +531,6 @@ export default {
     },
     /** 导入数据上传 */
     uploadFile(params) {
-      const loadingInstance = this.$loading({
-        target: '.app-main',
-        lock: true,
-        text: '正在上传...',
-        fullscreen: true
-      })
-
       const { courseType = 0 } = this.$route.params
       const formdata = new FormData()
       const { file } = params
@@ -542,7 +539,6 @@ export default {
       this.uploading = true
       Object.assign(formdata, { courseType })
 
-      // this.$http.Operating.updateScheduleExcel(formdata)
       this.$http.DownloadExcel.updateScheduleExcel(formdata)
         .then((res) => {
           if (res && Object.prototype.toString.call(res) === '[object Blob]') {
@@ -555,12 +551,10 @@ export default {
         })
         .finally(() => {
           this.uploading = false
-          loadingInstance.close()
         })
     },
     // 下载文件
     downloadFn(data, fileName = '下载', cb) {
-      console.log('fileName', fileName)
       if (!data) return
       const blob = new Blob([data])
       const elink = document.createElement('a')
@@ -646,6 +640,9 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+.el-loading-mask.is-fullscreen {
+  z-index: 14000 !important; //因为我的header的z-index比较大。这里看情况
+}
 .set-leads-container {
   .btn-area {
     text-align: right;
