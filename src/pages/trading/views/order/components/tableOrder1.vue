@@ -37,10 +37,10 @@
           </p>
         </template>
       </el-table-column>
-      <el-table-column label="社群销售·体验课班级" min-width="220">
+      <el-table-column label="业绩归属老师" min-width="220">
         <template slot-scope="scope">
-          <!-- 续费情况 -->
-          <div v-if="scope.row.regtype && scope.row.regtype !== 3">
+          <!-- 续费情况  v-if="scope.row.regtype && scope.row.regtype !== 3" -->
+          <div>
             <p>
               {{ scope.row.salesman ? scope.row.salesman.realname : '-' }}
               <span
@@ -70,16 +70,16 @@
               }}
             </p>
           </div>
-          <div v-else>
+          <!-- <div v-else>
             <p>-</p>
             <p>-</p>
-          </div>
+          </div> -->
         </template>
       </el-table-column>
-      <el-table-column label="服务老师·系统课班级" min-width="220">
+      <el-table-column label="服务老师" min-width="220">
         <template slot-scope="scope">
-          <!-- 非续费 -->
-          <div v-if="scope.row.regtype !== 3">
+          <!-- 非续费 v-if="scope.row.regtype !== 3" -->
+          <div>
             <p>
               {{ scope.row.teacher ? scope.row.teacher.realname : '-' }}
               <span
@@ -104,7 +104,7 @@
             </p>
           </div>
           <!-- 续费 -->
-          <div v-else>
+          <!-- <div v-else>
             <p>
               {{ scope.row.salesman ? scope.row.salesman.realname : '-' }}
               <span
@@ -133,7 +133,23 @@
                   : '-'
               }}
             </p>
-          </div>
+          </div> -->
+        </template>
+      </el-table-column>
+
+      <el-table-column label="订单类型" min-width="80">
+        <template slot-scope="scope">
+          <p>
+            {{
+              scope.row.regtype
+                ? +scope.row.regtype === 2
+                  ? '首单'
+                  : +scope.row.regtype === 3
+                  ? '续费'
+                  : '-'
+                : '-'
+            }}
+          </p>
         </template>
       </el-table-column>
 
