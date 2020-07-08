@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-06-29 16:50:58
  * @LastEditors: Shentong
- * @LastEditTime: 2020-07-06 22:07:10
+ * @LastEditTime: 2020-07-08 15:25:45
 -->
 <template>
   <el-row type="flex" class="new-sop app-main">
@@ -21,7 +21,7 @@
               class="sop-form"
             >
               <el-form-item
-                prop="name"
+                prop="templateName"
                 label="模板名称"
                 style="width:320px;"
                 :rules="[
@@ -33,13 +33,13 @@
                 ]"
               >
                 <el-input
-                  v-model="sopForm.name"
+                  v-model="sopForm.templateName"
                   placeholder="请输入模板名称"
                   maxlength="30"
                 ></el-input>
               </el-form-item>
-              <el-form-item label="模板状态" prop="status">
-                <el-radio-group v-model="sopForm.status">
+              <el-form-item label="模板状态" prop="state">
+                <el-radio-group v-model="sopForm.state">
                   <el-radio :label="0">启用</el-radio>
                   <el-radio :label="1">禁用</el-radio>
                 </el-radio-group>
@@ -197,7 +197,8 @@
                 style="width:150px"
                 size="mini"
                 @click="saveForm"
-                >确认</el-button
+                :loading="!canSave"
+                >{{ canSave ? '确认' : '保存中' }}</el-button
               >
             </div>
           </el-card>
@@ -218,9 +219,10 @@ export default {
   data() {
     return {
       sopForm: {
-        name: '',
-        status: 0
+        templateName: '',
+        state: 0
       },
+      canSave: true,
       intervalType: 'SECONDS',
       intervalTime: 0,
       currenTask: 1,
@@ -475,15 +477,40 @@ export default {
     },
     /** 保存（更新）模板信息 */
     saveForm() {
-      console.log(this.tmpInfo, this.sopForm, 'tmpInfo')
-      this.$refs.sopForm.validate((valid) => {
-        if (valid) {
-          alert('submit!')
-        } else {
-          console.log('error submit!!')
-          return false
+      this.canSave && this.executeSave()
+    },
+    // form表校验
+    judegeValidate(formName) {
+      return this.$refs[formName].validate()
+    },
+    async executeSave() {
+      console.log(this.tmpInfo, 'tmpInfo')
+      this.canSave = false
+      const validatePromise = await this.judegeValidate(
+        'sopForm'
+      ).catch(() => {})
+
+      if (validatePromise) {
+        const params = {
+          map: this.tmpInfo,
+          ...this.sopForm
         }
-      })
+        await this.saveOrUpdate(params)
+      }
+      this.canSave = true
+    },
+    /**
+     * @description 保存、更新接口
+     */
+    async saveOrUpdate(params) {
+      console.log('save-params', params)
+      try {
+        const tasks = await this.$http.Community.saveOrUpdateSopTmpInfo(params)
+        const { code, status } = tasks
+        if (code === 0 && status === 'OK') {
+          this.$message.success('保存成功')
+        }
+      } catch (err) {}
     },
     stepNumHandleChange() {},
     /**
