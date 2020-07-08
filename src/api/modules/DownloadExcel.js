@@ -4,7 +4,7 @@
  * @Author: Lukun
  * @Date: 2020-05-14 14:31:42
  * @LastEditors: Shentong
- * @LastEditTime: 2020-07-07 21:46:31
+ * @LastEditTime: 2020-07-08 15:27:46
  */
 import axios from '../axios'
 import { getToken } from '@/utils/auth'
@@ -68,7 +68,7 @@ export default {
       return new Promise((resolve, reject) => {
         axios({
           method: 'POST',
-          url: `/api/t/v1/enroll/import?courseType=${params.courseTypes}`,
+          url: `/api/t/v1/enroll/import?courseType=${params.courseType}`,
           responseType: 'blob',
           headers: getHeaders(),
           data: params
