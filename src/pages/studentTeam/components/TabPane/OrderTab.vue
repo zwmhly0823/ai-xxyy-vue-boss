@@ -11,14 +11,17 @@
       <el-table-column fixed label="购买用户" class="bugUser" width="220px">
         <template slot-scope="scope" v-if="scope.row.user">
           <img class="bugUser-img" :src="scope.row.user.head" alt="" />
-          <div
-            class="bugUser-right primary-text"
-            @click="openUserDetail(scope.row.user && scope.row.user.id)"
-          >
+          <div class="bugUser-right primary-text">
             <div class="phone">
-              {{ scope.row.user.mobile ? scope.row.user.mobile : '-' }}
+              <span
+                @click="openUserDetail(scope.row.user && scope.row.user.id)"
+                >{{ scope.row.user.mobile ? scope.row.user.mobile : '-' }}</span
+              >
             </div>
-            <div class="age primary-text">
+            <div
+              @click="openUserDetail(scope.row.user && scope.row.user.id)"
+              class="age primary-text"
+            >
               {{ scope.row.sex }} ·
               {{ scope.row.user.birthday }}
             </div>
