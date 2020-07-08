@@ -403,6 +403,15 @@ const routes = [
           module: 'statistics',
           style: 'line'
         }
+      },
+      {
+        path: '/learnRecord',
+        name: 'learnRecord',
+        meta: {
+          title: '学习记录',
+          module: 'statistics',
+          style: 'line'
+        }
       }
     ]
   },
