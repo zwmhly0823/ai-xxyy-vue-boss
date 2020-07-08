@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-24 18:20:12
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-07-06 19:06:49
+ * @LastEditTime: 2020-07-08 17:53:31
  -->
 
 <template>
@@ -595,12 +595,12 @@ export default {
     // wechat_id
     wxId: {
       type: String,
-      default: 'wechat_id'
+      default: ''
     },
     // wechat_record_id
     wxRecordId: {
       type: String,
-      default: 'wechat_record_id'
+      default: ''
     },
     // 是否关联老师搜索
     selectAddress: {
