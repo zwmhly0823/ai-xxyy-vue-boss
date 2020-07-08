@@ -331,7 +331,7 @@ export default {
         .catch((err) => console.log(err))
         .then((res) => {
           // 将获取来的物流信息回显到弹窗 ，如果返回为空则弹窗获取失败
-          if (Object.keys(res.payload).length !== 0) {
+          if (res.payload && Object.keys(res.payload).length !== 0) {
             this.expressNoInfo = res.payload
           } else {
             this.$message.error('获取失败')
@@ -352,6 +352,10 @@ export default {
               if (res.payload) {
                 this.$message.success('物流信息更新成功')
                 this.isShowEditNo = false
+                this.drawer = false
+                window.setTimeout(() => {
+                  this.$emit('refresh')
+                }, 700)
               } else {
                 this.$message.error('物流信息更新失败')
               }
