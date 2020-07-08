@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-04-25 17:24:23
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-06-25 15:41:35
+ * @LastEditTime: 2020-07-08 21:34:14
  -->
 <template>
   <el-card
@@ -39,6 +39,17 @@
             type="2"
             v-if="hasSendId"
           />
+        </div>
+      </el-form-item>
+      <el-form-item label="订单类型:" :class="{ [$style.marginer]: true }">
+        <div class="row_colum">
+          <simple-select
+            name="regtype"
+            :data-list="orderTypeList"
+            :multiple="false"
+            placeholder="全部"
+            @result="getOrderType"
+          ></simple-select>
         </div>
       </el-form-item>
       <br />
@@ -291,6 +302,16 @@ export default {
           text: '无推荐人'
         }
       ],
+      orderTypeList: [
+        {
+          id: '2',
+          text: '首单'
+        },
+        {
+          id: '3',
+          text: '续费'
+        }
+      ],
       hasSendId: true,
       showChooseDialog: false,
       chooseExport: '1'
@@ -473,6 +494,10 @@ export default {
         this.hasSendId = true
       }
       this.setSeachParmas(res, ['is_first_order_send_id'])
+    },
+    getOrderType(res) {
+      console.log(res)
+      this.setSeachParmas(res, ['regtype'])
     },
 
     /**  处理接收到的查询参数
