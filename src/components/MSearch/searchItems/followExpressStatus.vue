@@ -34,12 +34,26 @@ export default {
     name: {
       type: String,
       default: 'express_status'
+    },
+    searchProp: {
+      type: Object,
+      default: () => {}
     }
   },
   data() {
     return {
       express_status: [],
       dataList: FOLLOW_EXPRESS_STATUS_LIST
+    }
+  },
+  created() {
+    if (this.searchProp && this.name === this.searchProp.name) {
+      // 本期只会有一个值不会有多个值的情况
+      this.express_status.push(this.searchProp.value + '')
+      this.onChange(this.searchProp.value + '')
+      setTimeout(() => {
+        localStorage.removeItem('noticeParams')
+      }, 0)
     }
   },
   methods: {

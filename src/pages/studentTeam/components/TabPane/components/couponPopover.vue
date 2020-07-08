@@ -251,25 +251,27 @@ export default {
   margin: 10px 0 0 10px;
 }
 </style>
-<style lang="scss">
-.el-button--text {
-  display: none !important;
-}
+<style lang="scss" scoped>
+/deep/ {
+  .el-button--text {
+    display: none !important;
+  }
 
-.el-select {
-  width: 70%;
-  margin-left: 10px;
-}
-.el-dialog__body {
-  color: #e6a13c !important;
-  font-size: 18px;
-  padding: 10px 20px;
-  span {
-    color: #606266;
-    font-size: 14px;
-    display: inline-table;
-    padding: 0 0 0 5px;
-    line-height: 20px;
+  .el-select {
+    width: 70%;
+    margin-left: 10px;
+  }
+  .el-dialog__body {
+    color: #e6a13c !important;
+    font-size: 18px;
+    padding: 10px 20px;
+    span {
+      color: #606266;
+      font-size: 14px;
+      display: inline-table;
+      padding: 0 0 0 5px;
+      line-height: 20px;
+    }
   }
 }
 </style>

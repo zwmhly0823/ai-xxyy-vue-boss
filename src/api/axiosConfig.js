@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-03-17 11:50:18
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-06-13 23:06:33
+ * @LastEditTime: 2020-07-03 11:39:25
  */
 import axios from './axios'
 import { getToken } from '@/utils/auth'
@@ -133,9 +133,13 @@ export default {
     }
   },
   getHeaders() {
+    // 增加操作人ID
+    const staff = JSON.parse(localStorage.getItem('staff') || '{}')
+    const operatorId = staff && staff.id
     const token = getToken() || ''
     const headers = {
-      'Content-Type': 'application/json;charset=UTF-8'
+      'Content-Type': 'application/json;charset=UTF-8',
+      operatorId
     }
     if (token) {
       headers.Authorization = token.includes('Bearer ')

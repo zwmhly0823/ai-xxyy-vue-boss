@@ -3,8 +3,8 @@
  * @version:
  * @Author: zhubaodong
  * @Date: 2020-03-24 18:50:54
- * @LastEditors: panjian
- * @LastEditTime: 2020-05-23 16:47:03
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-07-03 14:12:12
  -->
 <template>
   <div class="search-item small threeSelect">
@@ -210,27 +210,11 @@ export default {
   },
   methods: {
     // 获取渠道来源 filter: 过滤关键词  eg：filter:"抖音"
-    // async getChannel() {
-    //   await axios
-    //     .post('/graphql/channel', {
-    //       query: `{
-    //         channelAllList(size: 500) {
-    //             id
-    //             channel_class_id
-    //             channel_outer_name
-    //           }
-    //         }
-    //       `
-    //     })
-    //     .then((res) => {
-    //       this.channelList = res.data.channelAllList
-    //     })
-    // },
     async getChannelLeves() {
       await axios
-        .post('/graphql/channel', {
+        .post('/graphql/v1/toss', {
           query: `{
-            channelAllList(size: 500) {
+            ChannelAllList {
                 id
                 channel_class_id
                 channel_outer_name
@@ -239,7 +223,7 @@ export default {
           `
         })
         .then((res) => {
-          this.channelLeves = res.data.channelAllList
+          this.channelLeves = res.data.ChannelAllList
         })
     },
     changeChannelId(res) {

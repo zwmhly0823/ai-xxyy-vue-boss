@@ -5,13 +5,30 @@
  * @Author: shentong
  * @Date: 2020-03-13 14:38:28
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-06-24 14:34:39
+ * @LastEditTime: 2020-07-04 11:47:17
  */
 // import axios from '../axios'
 import axios from '../axiosConfig'
 
 export default {
+  /**
+   * 修改学员是否已加微信、已进群状态
+   * @param {*} Object
+   * {
+   *  studentId,
+      teamId,
+      courseType,
+      addedGroup,
+      addedWechat
+   * }
+   */
   updateTeamStudent(params) {
+    // 增加操作人ID operatorId
+    const staff = JSON.parse(localStorage.getItem('staff'))
+    if (staff && staff.id) {
+      const operatorId = { operatorId: staff.id }
+      Object.assign(params, operatorId)
+    }
     return axios.put(
       '/api/tm/v1/teacher/manager/team/updateTeamStudent',
       params
@@ -176,6 +193,9 @@ export default {
             added_wechat
             follow
             user_status
+            is_track
+            today
+            tomorrow
             userInfo {
               id
               nickname
@@ -211,6 +231,9 @@ export default {
             userIntention {
               type
               describe
+              is_track
+              today
+              tomorrow
             }
             payChannelInfo {
               channel_inner_name
@@ -697,14 +720,16 @@ export default {
   },
   // 创建用户意向度
   createUserInetention(query) {
-    return axios.get(
-      `/api/u/v1/user/userintention/create?uid=${query.uid}&type=${query.type}&describe=${query.describe}`
-    )
+    let q = `uid=${query.uid}&type=${query.type}&describe=${query.describe}&isTrack=${query.isTrack}`
+    q += `&today=${query.today || ''}`
+    q += `&tomorrow=${query.tomorrow || ''}`
+    return axios.get(`/api/u/v1/user/userintention/create?${q}`)
   },
   // 更新用户意向度
   updateUserInetention(query) {
-    return axios.get(
-      `/api/u/v1/user/userintention/update?uid=${query.uid}&type=${query.type}&describe=${query.describe}`
-    )
+    let q = `uid=${query.uid}&type=${query.type}&describe=${query.describe}&isTrack=${query.isTrack}`
+    q += `&today=${query.today || ''}`
+    q += `&tomorrow=${query.tomorrow || ''}`
+    return axios.get(`/api/u/v1/user/userintention/update?${q}`)
   }
 }

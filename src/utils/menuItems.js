@@ -61,11 +61,6 @@ const menuItems = [
     isShow: true
   },
   {
-    link: 'approval',
-    text: '审批中心',
-    isShow: true
-  },
-  {
     link: 'dashboard',
     text: 'Dashboard',
     isShow: false
@@ -73,6 +68,11 @@ const menuItems = [
   {
     link: 'login',
     text: '登录',
+    isShow: false
+  },
+  {
+    link: 'notice-center',
+    text: '通知中心',
     isShow: false
   },
   {

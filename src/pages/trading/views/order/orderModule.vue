@@ -18,6 +18,7 @@
               <el-tab-pane label="系统课" name="5">
                 <search-list1
                   @search="handleSearch"
+                  :searchProp="searchProp"
                   v-if="activeTopic === '5'"
                 />
                 <all-order1
@@ -50,6 +51,17 @@
                   v-if="activeTopic === '1,2,6'"
                 />
               </el-tab-pane>
+              <el-tab-pane label="素质课" name="7">
+                <search-list4
+                  @search="handleSearch"
+                  v-if="activeTopic === '7'"
+                />
+                <all-order4
+                  :topic="activeTopic"
+                  :search="search"
+                  v-if="activeTopic === '7'"
+                />
+              </el-tab-pane>
             </el-tabs>
           </div>
         </el-scrollbar>
@@ -62,9 +74,11 @@
 import allOrder1 from './components/allOrder1'
 import allOrder2 from './components/allOrder2'
 import allOrder3 from './components/allOrder3'
+import allOrder4 from './components/allOrder4'
 import searchList1 from './components/searchList1.vue'
 import searchList2 from './components/searchList2.vue'
 import searchList3 from './components/searchList3.vue'
+import searchList4 from './components/searchList4.vue'
 export default {
   name: 'orderModule',
   props: [],
@@ -72,9 +86,11 @@ export default {
     allOrder1,
     allOrder2,
     allOrder3,
+    allOrder4,
     searchList1,
     searchList2,
-    searchList3
+    searchList3,
+    searchList4
   },
   data() {
     return {
@@ -82,7 +98,8 @@ export default {
       activeTopic: '5',
       // 搜索
       search: [],
-      showSearch: true
+      showSearch: true,
+      searchProp: {}
     }
   },
   computed: {},
@@ -102,9 +119,18 @@ export default {
       this.search = res
     }
   },
-  created() {},
-  mounted() {},
-  destroyed() {}
+  created() {
+    const urlParams = localStorage.getItem('noticeParams')
+    if (urlParams) {
+      // 本期消息中心跳转只做体验课的
+      // 更新:本期虽然但是，都要往系统课跳，默认就是系统课
+      // this.activeTopic = '4'
+      this.searchProp = {
+        name: urlParams.split(',')[0],
+        value: urlParams.split(',')[1]
+      }
+    }
+  }
 }
 </script>
 

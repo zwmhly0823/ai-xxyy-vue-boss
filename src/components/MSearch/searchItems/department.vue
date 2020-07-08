@@ -29,6 +29,8 @@
 </template>
 
 <script>
+import { sortByKey } from '@/utils/boss'
+
 export default {
   props: {
     name: {
@@ -60,8 +62,11 @@ export default {
   methods: {
     getDepartment() {
       this.$http.Department.getDepartmentList().then((res) => {
-        this.departmentList = res.payload || []
-        console.log(this.departmentList, 'this.departmentList')
+        const arr = res.payload || []
+        const department = sortByKey(arr, 'id')
+        department.sort(this.handle('sort'))
+        this.recursive(department)
+        this.departmentList = department
       })
     },
     async onSelect(data) {
@@ -84,6 +89,21 @@ export default {
           data === null || data.length > 0 ? { [this.name]: teacherIds } : ''
         )
       }
+    },
+    handle(property) {
+      return function(a, b) {
+        const val1 = a[property]
+        const val2 = b[property]
+        return val2 - val1
+      }
+    },
+    recursive(value) {
+      value.forEach((item) => {
+        if (item.children && item.children.length > 0) {
+          item.children.sort(this.handle('sort'))
+          this.recursive(item.children)
+        }
+      })
     }
   }
 }

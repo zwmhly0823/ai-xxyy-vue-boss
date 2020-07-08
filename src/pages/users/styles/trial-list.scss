@@ -6,27 +6,52 @@
   .trial-header {
     padding: 0 20px;
     border-bottom: 10px solid #f0f1f2;
+    background-color: #fff;
     ::v-deep {
       .el-tabs__header {
         margin: 0;
       }
-      // 搜索框
-      .el-input--mini .el-input__inner,
-      .el-cascader.el-cascader--mini {
-        height: 22px;
-        line-height: 22px;
+      .el-tabs__nav-wrap {
+        &::after {
+          height: 0;
+        }
       }
-      .el-cascader--mini .el-input--mini .el-input__inner {
-        height: 22px !important;
-      }
-      .el-cascader__search-input {
-        height: 22px !important;
-      }
+    }
+  }
+
+  .trial-container-sidebar {
+    transition: all 0.2s;
+    &.closed {
+      margin-left: -130px;
+      // transform: translateX(-130px);
     }
   }
 
   // 重置element
   ::v-deep {
+    // el-tree
+    .el-tree-node__content > .is-leaf.el-tree-node__expand-icon {
+      padding: 0;
+    }
+    .el-tree--highlight-current
+      .el-tree-node.is-current
+      > .el-tree-node__content {
+      background-color: transparent;
+      color: #2a75ed;
+    }
+    // 搜索框
+    .el-input--mini .el-input__inner,
+    .el-cascader.el-cascader--mini {
+      height: 22px;
+      line-height: 22px;
+    }
+    .el-cascader--mini .el-input--mini .el-input__inner {
+      height: 22px !important;
+    }
+    .el-cascader__search-input {
+      height: 22px !important;
+    }
+
     // table
     .el-table {
       th,
@@ -140,11 +165,30 @@
       }
     }
   }
+  .intent-select-none {
+    /deep/ {
+      .el-input__inner {
+        background-color: #eee;
+      }
+      .el-input__inner,
+      .el-icon-arrow-up {
+        color: #fff;
+      }
+    }
+  }
   .remarks-content {
     display: flex;
     align-items: center;
     justify-content: space-between;
     width: 90%;
+    .iconfont {
+      position: relative;
+      top: 2px;
+      margin: 0;
+      width: 14px;
+      height: 14px;
+      fill: #ff8b8c;
+    }
     .remarks-text {
       text-overflow: -o-ellipsis-lastline;
       overflow: hidden;
@@ -176,6 +220,13 @@
     .el-dropdown-link {
       font-size: 12px;
       cursor: pointer;
+    }
+  }
+  .time-icon-text {
+    transform: scale(0.8);
+    &-t {
+      position: relative;
+      top: -1px;
     }
   }
   .red-color {

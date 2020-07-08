@@ -46,6 +46,23 @@
           </el-dropdown>
         </template>
       </el-table-column>
+      <!-- 无地址状态 sortItem.id 为 0 的情况 -->
+      <el-table-column width="25" fixed v-if="sortItem.id == 0">
+        <template slot-scope="scope">
+          <el-dropdown trigger="click">
+            <div :class="scope.row.id === current.id ? 'three-dot' : 'disnone'">
+              <img src="@/assets/images/icon/icon-three-dot.jpg" />
+            </div>
+            <el-dropdown-menu slot="dropdown">
+              <div class="every-one">
+                <div class="no" @click="handleFailed(scope.row.id)">
+                  <el-dropdown-item>失效</el-dropdown-item>
+                </div>
+              </div>
+            </el-dropdown-menu>
+          </el-dropdown>
+        </template>
+      </el-table-column>
       <el-table-column
         label="用户及购买日期"
         width="200"
@@ -75,6 +92,7 @@
         :label="+regtype === 1 || regtype === '2,3' ? '难度' : '补发商品'"
         :width="+regtype === 1 || regtype === '2,3' ? '120' : '200'"
         v-if="showCol.productType"
+        :key="0"
       >
         <template slot-scope="scope">
           <div class="product">
@@ -86,12 +104,7 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column
-        v-if="showCol.level"
-        label="级别"
-        width="120"
-        :key="Math.random()"
-      >
+      <el-table-column v-if="showCol.level" label="级别" width="120" :key="1">
         <template slot-scope="scope">
           <div class="product">
             <span>{{ scope.row.level || '--' }}</span>
@@ -102,7 +115,7 @@
         label="补发方式"
         width="200"
         v-if="showCol.replenishType"
-        :key="Math.random()"
+        :key="2"
       >
         <template slot-scope="scope">
           <div class="product">
@@ -114,7 +127,7 @@
         label="补发类别"
         width="200"
         v-if="showCol.replenishFamily"
-        :key="Math.random()"
+        :key="3"
       >
         <template slot-scope="scope">
           <div class="product">
@@ -126,7 +139,7 @@
         label="补发原因"
         width="200"
         v-if="showCol.replenishReason"
-        :key="Math.random()"
+        :key="4"
       >
         <template slot-scope="scope">
           <div class="product">
@@ -138,7 +151,7 @@
         label="申请人"
         width="180"
         v-if="showCol.applicant"
-        :key="Math.random()"
+        :key="5"
       >
         <template slot-scope="scope">
           <div class="product">
@@ -150,7 +163,7 @@
         label="类别"
         width="180"
         v-if="showCol.courseType"
-        :key="Math.random()"
+        :key="6"
       >
         <template slot-scope="scope">
           <div class="product">
@@ -162,7 +175,7 @@
         label="随材版本"
         width="150"
         v-if="showCol.productVersion"
-        :key="Math.random()"
+        :key="7"
       >
         <template slot-scope="scope">
           <div>
@@ -174,7 +187,7 @@
         label="收货信息"
         width="200"
         v-if="showCol.receiptInfo"
-        :key="Math.random()"
+        :key="8"
       >
         <template slot-scope="scope">
           <div class="address">
@@ -224,7 +237,7 @@
         label="失败原因"
         width="200"
         v-if="showCol.expressRemark"
-        :key="Math.random()"
+        :key="9"
       >
         <template slot-scope="scope">
           <div class="product">
@@ -232,7 +245,7 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="期数" width="150" v-if="showCol.term">
+      <el-table-column label="期数" width="150" v-if="showCol.term" :key="10">
         <template slot-scope="scope">
           <div class="product">
             <span>{{
@@ -241,14 +254,24 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="班级名" width="150" v-if="showCol.className">
+      <el-table-column
+        label="班级名"
+        width="150"
+        v-if="showCol.className"
+        :key="11"
+      >
         <template slot-scope="scope">
           <div class="product">
             <span>{{ StudentTeamList[scope.row.last_team_id] }}</span>
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="社群销售" width="150" v-if="showCol.teacher">
+      <el-table-column
+        label="社群销售"
+        width="150"
+        v-if="showCol.teacher"
+        :key="12"
+      >
         <template slot-scope="scope">
           <div class="product">
             <span>{{ TeacherList[scope.row.last_teacher_id] }}</span>
@@ -259,6 +282,7 @@
         label="物流状态"
         width="200"
         v-if="showCol.expressStatus"
+        :key="13"
       >
         <template slot-scope="scope">
           <div class="express">
@@ -287,6 +311,7 @@
         label="物流创建·审核·揽收·签收"
         width="200"
         v-if="showCol.expressInfo"
+        :key="14"
       >
         <template slot-scope="scope">
           <div class="sign">
@@ -346,7 +371,7 @@
             <div class="dropdown">
               <el-select
                 v-model="value1"
-                placeholder="中通云仓"
+                placeholder="请选择承运商"
                 @change="selectExpress"
               >
                 <el-option
@@ -517,27 +542,31 @@ export default {
       checkParams: [],
       options: [
         {
+          value1: '0',
+          label: '不指定承运商'
+        },
+        {
           value1: '4',
           label: '京东快递'
         },
         {
-          value1: '3',
-          label: '百世物流'
-        },
-        {
-          value1: '2',
-          label: '中通云仓'
+          value1: '5',
+          label: '圆通云仓'
         },
         {
           value1: '1',
           label: '京东云仓'
         },
         {
-          value1: '0',
-          label: '不指定承运商'
+          value1: '2',
+          label: '中通云仓'
+        },
+        {
+          value1: '3',
+          label: '百世物流'
         }
       ],
-      value1: '2',
+      value1: '0',
       dialogVisiblePass: false,
       expressBatch: [],
       expressNu: [],
@@ -681,6 +710,7 @@ export default {
     // 审核通过时选择物流承运商
     selectExpress(val) {},
     handleClosePass() {
+      this.value1 = '0'
       this.dialogVisiblePass = false
     },
     handleBatchPass(val) {

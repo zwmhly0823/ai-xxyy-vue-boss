@@ -495,6 +495,7 @@ export default {
   },
   created() {
     this.studentId = this.$route.params.id
+
     // 学员信息接口
     this.reqUser()
   },
@@ -502,34 +503,12 @@ export default {
     // 学员信息接口
     reqUser() {
       this.$http.User.getUser(this.studentId).then((res) => {
-        console.log('学员基本信息', res.data.User)
+        // console.log('学员基本信息', res.data.User)
         this.sendId =
           res.data.User && res.data.User.send_id ? res.data.User.send_id : '0'
-        // 年龄格式化
-        res.data.User.age =
-          res.data.User.birthday !== '0'
-            ? GetAgeByBrithday(res.data.User.birthday)
-            : '-'
-        // 生日格式化
-        res.data.User.birthday = res.data.User.birthday
-          ? formatData(res.data.User.birthday * 1000)
-          : '-'
-        // 注册时间格式化
-        res.data.User.join_date = res.data.User.join_date
-          ? formatData(res.data.User.join_date)
-          : '-'
         // 课程tab默认显示
         this.courseData = res.data.User.teams[0].id
-        res.data.User.teams.length > 0 &&
-          res.data.User.teams.forEach((item) => {
-            // 课程名称格式化 0:体验课   >0:系统课
-            if (item.team_type === '0') {
-              item.team_type_formatting = '体验课'
-            } else {
-              item.team_type_formatting = '系统课'
-            }
-          })
-        this.stuInfor = res.data.User
+        this.stuInfor = this.modifyData(res.data.User)
         this.loading = false
         // init lessonType
         this.lessonType = this.stuInfor.teams[0].team_type - 0 > 0 ? 1 : 0
@@ -567,12 +546,30 @@ export default {
         }
       })
     },
+    modifyData(data) {
+      // 年龄格式化
+      data.age = data.birthday !== '0' ? GetAgeByBrithday(data.birthday) : '-'
+      // 生日格式化
+      data.birthday = data.birthday ? formatData(data.birthday * 1000) : '-'
+      // 注册时间格式化
+      data.join_date = data.join_date ? formatData(data.join_date) : '-'
+      data.teams.length > 0 &&
+        data.teams.forEach((item) => {
+          // 课程名称格式化 0:体验课   >0:系统课
+          if (item.team_type === '0') {
+            item.team_type_formatting = '体验课'
+          } else {
+            item.team_type_formatting = '系统课'
+          }
+        })
+      return data
+    },
     // 已退费模块
     checkBack() {
       // 把体验课和系统课中的id和状态都抽出来，isrefund=1是退费的
       const classObj = new Map()
       // console.log(this.stuInfor)
-      if (this.stuInfor.trialCourse.team_id) {
+      if (this.stuInfor.trialCourse && this.stuInfor.trialCourse.team_id) {
         classObj.set(
           +this.stuInfor.trialCourse.team_id,
           this.stuInfor.trialCourse.orderInfo.isrefund

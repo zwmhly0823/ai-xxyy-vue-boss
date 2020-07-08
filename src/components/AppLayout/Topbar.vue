@@ -30,12 +30,13 @@
     </div>
 
     <div class="right-menu">
-      <a
-        class="talk-btn"
-        href="https://wgjkf.xiaoxiongmeishu.com"
-        target="_blank"
-        >进入聊天工作台</a
+      <el-badge
+        :value="noticeBadge"
+        :hidden="!noticeBadge"
+        class="notices-content"
       >
+        <el-button type="text" @click="clickNoticeTop">通知中心</el-button>
+      </el-badge>
       <el-dropdown class="avatar-container" trigger="click">
         <div class="user-info">
           <div class="avatar-wrapper">
@@ -62,6 +63,10 @@
         </el-dropdown-menu>
       </el-dropdown>
     </div>
+    <notice-center
+      ref="noticeCenter"
+      @reduceBadge="reduceBadge"
+    ></notice-center>
     <el-dialog
       title="修改密码"
       :visible.sync="dialogVisible"
@@ -89,11 +94,13 @@ import Breadcrumb from './Breadcrumb'
 import Hamburger from './Hamburger'
 import { removeToken } from '@/utils/auth'
 import { baseUrl } from '@/utils/index'
+import noticeCenter from './noticeCenter/noticeCenter'
 
 export default {
   components: {
     Breadcrumb,
-    Hamburger
+    Hamburger,
+    noticeCenter
   },
   computed: {
     ...mapGetters(['sidebar', 'avatar'])
@@ -111,7 +118,8 @@ export default {
       userInfo: null,
       head: 'https://msb-ai.meixiu.mobi/ai-pm/static/touxiang.png',
       dialogVisible: false,
-      newPassword: ''
+      newPassword: '',
+      noticeBadge: 0
     }
   },
   created() {
@@ -122,6 +130,8 @@ export default {
       return
     }
     this.userInfo = JSON.parse(userInfo)
+    // 通知的角标数字
+    this.getNoticeBadge()
   },
   methods: {
     toggleSideBar() {
@@ -152,6 +162,23 @@ export default {
       } catch (error) {
         console.log(error)
       }
+    },
+    clickNoticeTop() {
+      this.$refs.noticeCenter.openDrawer()
+    },
+    getNoticeBadge() {
+      this.$http.NoticeCenter.getBadgeBoss({ staffId: this.userInfo.id })
+        .then((res) => {
+          if (res.code === 0 && res.status === 'OK') {
+            this.noticeBadge = res.payload
+          }
+        })
+        .catch(() => {
+          console.log('获取消息数量角标失败')
+        })
+    },
+    reduceBadge() {
+      this.noticeBadge--
     }
   }
 }
@@ -260,6 +287,12 @@ export default {
       right: -20px;
       top: 22px;
       font-size: 12px;
+    }
+    .notices-content {
+      margin-right: 30px;
+      /deep/ .el-badge__content.is-fixed {
+        top: 12px;
+      }
     }
   }
 }
