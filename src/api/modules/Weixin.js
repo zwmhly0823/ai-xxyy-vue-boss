@@ -3,8 +3,8 @@
  * @version:
  * @Author: shentong
  * @Date: 2020-03-13 14:38:28
- * @LastEditors: panjian
- * @LastEditTime: 2020-04-09 19:19:17
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-07-06 19:02:41
  */
 // import axios from '../axios'
 import axios from '../axiosConfig'
@@ -25,6 +25,8 @@ export default {
             nickname
             teacher_id
             head_img_url
+            wechat_id
+            wechat_record_id
           }
         }
       }`
@@ -91,5 +93,44 @@ export default {
       }
       `
     })
+  },
+  // wechat_id模糊搜索
+  getWechatIdListEx(id, query) {
+    // const p = {
+    //   [`${id}.like`]: { [`${id}.keyword`]: `*${query}*` }
+    // }
+    // const params = JSON.stringify(p)
+    let params
+    if (id === 'wechat_id') {
+      params = `{ "bool": { "must": [{ "wildcard": { "${id}.keyword": "*${query}*" } }] } }`
+    } else {
+      params = `{ "bool": { "must": [{ "term": { "${id}": "${query}" } }] } }`
+    }
+    return axios.post('/graphql/v1/toss', {
+      query: `
+      {
+        WeChatTeacherListEx(query:${JSON.stringify(params)})
+        {
+          id
+          ${id}
+        }
+      }
+      `
+    })
   }
+  // wechat_id精准搜索
+  // getWechatIdList(id, query) {
+  //   const params = `{ "${id}": "*${query}*" }`
+  //   return axios.post('/graphql/v1/toss', {
+  //     query: `
+  //     {
+  //       WeChatTeacherList(query:${JSON.stringify(params)})
+  //       {
+  //         id
+  //         ${id}
+  //       }
+  //     }
+  //     `
+  //   })
+  // }
 }

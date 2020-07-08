@@ -3,8 +3,8 @@
  * @version: 
  * @Author: panjian
  * @Date: 2020-04-14 15:15:31
- * @LastEditors: panjian
- * @LastEditTime: 2020-05-07 18:17:36
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-07-07 18:51:53
  -->
 <template>
   <div>
@@ -249,11 +249,13 @@ export default {
           console.log(params, 'fasdsafs')
           this.$http.Teacher.relation(params).then((res) => {
             console.log(res, 'res')
-            this.$message({
-              message: '添加成功',
-              type: 'success'
-            })
-            this.$emit('addWeChat', 1)
+            if (res && res.code === 0) {
+              this.$message({
+                message: '添加成功',
+                type: 'success'
+              })
+              this.$emit('addWeChat', 1)
+            }
           })
         } else {
           console.log('error submit!!')
