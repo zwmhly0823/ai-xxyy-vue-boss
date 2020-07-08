@@ -324,7 +324,11 @@
       </el-table-column>
     </el-table>
     <div class="drawer-body">
-      <express-detail :transferExpress="transferExpress" ref="zi" />
+      <express-detail
+        :transferExpress="transferExpress"
+        @refresh="getExpressList"
+        ref="zi"
+      />
     </div>
 
     <div class="dialog-shenhe">
