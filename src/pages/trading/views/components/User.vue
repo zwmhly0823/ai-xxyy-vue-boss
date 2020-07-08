@@ -1,9 +1,17 @@
+<!--
+ * @Descripttion: 
+ * @version: 
+ * @Author: panjian
+ * @Date: 2020-07-08 13:40:39
+ * @LastEditors: panjian
+ * @LastEditTime: 2020-07-08 15:11:44
+-->
 <!-- 用户信息 -->
 <template>
   <section>
     <p v-if="!user">-</p>
-    <div v-else class="primary-text" @click="openUserDetail(user.id, user)">
-      <p>
+    <div v-else class="primary-text">
+      <p @click="openUserDetail(user.id, user)">
         {{ user.username || '-' }}
         {{
           user.birthday
@@ -13,7 +21,11 @@
             : ''
         }}
       </p>
-      <p>{{ user.mobile || '-' }}</p>
+      <p>
+        <span @click="openUserDetail(user.id, user)">{{
+          user.mobile || '-'
+        }}</span>
+      </p>
     </div>
   </section>
 </template>

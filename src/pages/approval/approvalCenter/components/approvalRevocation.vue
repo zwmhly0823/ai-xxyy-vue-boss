@@ -4,7 +4,7 @@
  * @Author: Lukun
  * @Date: 2020-04-27 17:47:58
  * @LastEditors: liukun
- * @LastEditTime: 2020-07-04 19:26:52
+ * @LastEditTime: 2020-07-08 14:14:53
  -->
 <template>
   <div class="container">
@@ -314,6 +314,18 @@
             <el-col :span="5">支付渠道:</el-col>
             <el-col :span="18" :offset="1">{{
               drawerApprovalDeatail.channel
+            }}</el-col>
+          </el-row>
+          <el-row v-if="drawerApprovalDeatail.payeeName">
+            <el-col :span="5">收款人姓名:</el-col>
+            <el-col :span="18" :offset="1">{{
+              drawerApprovalDeatail.payeeName
+            }}</el-col>
+          </el-row>
+          <el-row v-if="drawerApprovalDeatail.payeeAccount">
+            <el-col :span="5">支付宝账号:</el-col>
+            <el-col :span="18" :offset="1">{{
+              drawerApprovalDeatail.payeeAccount
             }}</el-col>
           </el-row>
           <el-row>

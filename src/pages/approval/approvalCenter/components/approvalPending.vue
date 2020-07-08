@@ -4,7 +4,7 @@
  * @Author: Lukun
  * @Date: 2020-04-27 17:47:58
  * @LastEditors: liukun
- * @LastEditTime: 2020-07-04 20:37:59
+ * @LastEditTime: 2020-07-08 14:21:15
  -->
 <template>
   <div class="container">
@@ -340,6 +340,18 @@
               drawerApprovalDeatail.channel
             }}</el-col>
           </el-row>
+          <el-row v-if="drawerApprovalDeatail.payeeName">
+            <el-col :span="5">收款人姓名:</el-col>
+            <el-col :span="18" :offset="1">{{
+              drawerApprovalDeatail.payeeName
+            }}</el-col>
+          </el-row>
+          <el-row v-if="drawerApprovalDeatail.payeeAccount">
+            <el-col :span="5">支付宝账号:</el-col>
+            <el-col :span="18" :offset="1">{{
+              drawerApprovalDeatail.payeeAccount
+            }}</el-col>
+          </el-row>
           <el-row>
             <el-col :span="5">退款类型:</el-col>
             <el-col :span="18" :offset="1">{{
@@ -351,7 +363,11 @@
           <el-row>
             <el-col :span="5">已上课周期:</el-col>
             <el-col :span="18" :offset="1">{{
-              drawerApprovalDeatail.periodAlready
+              `
+           ${Math.floor(
+             drawerApprovalDeatail.periodAlready / 4
+           )}月${drawerApprovalDeatail.periodAlready % 4}周
+           `
             }}</el-col>
           </el-row>
           <!-- <el-row>

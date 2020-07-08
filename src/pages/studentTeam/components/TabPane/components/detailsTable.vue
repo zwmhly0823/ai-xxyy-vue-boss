@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 20:22:24
  * @LastEditors: panjian
- * @LastEditTime: 2020-06-19 18:48:14
+ * @LastEditTime: 2020-07-08 15:05:57
  -->
 <template>
   <div class="table-box">
@@ -67,20 +67,27 @@
         <!-- 基本信息 -->
         <el-table-column width="280" label="基本信息">
           <template slot-scope="scope">
-            <div
-              class="scope-info-box primary-text"
-              @click="openUserDetail(scope.row.student_id)"
-            >
+            <div class="scope-info-box primary-text">
               <img
                 class="scope-info-img borders"
                 :src="`${scope.row.head}?x-oss-process=image/resize,l_100`"
                 alt=""
               />
               <div class="info-telephone">
-                {{ scope.row.mobile }}
+                <span @click="openUserDetail(scope.row.student_id)">{{
+                  scope.row.mobile
+                }}</span>
               </div>
-              <span class="info-sex">{{ scope.row.sex }}</span>
-              <span class="info-age">{{ scope.row.birthday }}</span>
+              <span
+                @click="openUserDetail(scope.row.student_id)"
+                class="info-sex"
+                >{{ scope.row.sex }}</span
+              >
+              <span
+                @click="openUserDetail(scope.row.student_id)"
+                class="info-age"
+                >{{ scope.row.birthday }}</span
+              >
               <span class="info-basics">{{
                 scope.row.base_painting_text
               }}</span>

@@ -68,9 +68,13 @@
             alt=""
           />
           <div class="information-right">
-            <div @click="openUserDetail(scope.row)">
-              <div class="phone primary-text">{{ scope.row.mobile }}</div>
-              <div class="age primary-text">
+            <div>
+              <div class="phone primary-text">
+                <span @click="openUserDetail(scope.row)">{{
+                  scope.row.mobile
+                }}</span>
+              </div>
+              <div @click="openUserDetail(scope.row)" class="age primary-text">
                 {{ scope.row.sex }} · {{ scope.row.birthday }}
                 <span v-show="scope.row.base_painting_text">·</span>
                 {{ scope.row.base_painting_text }}
