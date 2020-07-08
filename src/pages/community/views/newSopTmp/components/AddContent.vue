@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-06-30 19:21:08
  * @LastEditors: Shentong
- * @LastEditTime: 2020-07-06 19:04:54
+ * @LastEditTime: 2020-07-08 20:45:07
 -->
 <template>
   <el-dialog
@@ -151,10 +151,11 @@ export default {
     }
   },
   created() {
+    console.log('content', this.content)
     const { msgType = '1', msgContent = '', isEdit = false } = this.content
     this.isEdit = isEdit
     // console.log(msgType, 'msgType')
-    if (msgType === '1') {
+    if (+msgType === 1) {
       this.addContentForm.textarea = msgContent
     } else {
       this.tabIndex = 1

@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-06-29 18:42:38
  * @LastEditors: Shentong
- * @LastEditTime: 2020-07-08 15:25:39
+ * @LastEditTime: 2020-07-08 20:33:40
  */
 import axios from '../axiosConfig'
 
@@ -48,19 +48,28 @@ export default {
    * SOP模板列表
    */
   getTemplateList(params) {
-    const { templateName = '', state } = params
-    return axios.post(
-      `/api/toss/v1/toss-api/soptemplate/saveOrUpdate?&templateName=${templateName}&state=${state}`
-    )
+    const { uid, username = '', type } = params
+    const url = username
+      ? `/api/toss/v1/toss-api/soptemplate/getTemplateList?&uid=${uid}&username=${username}&type=${type}`
+      : `/api/toss/v1/toss-api/soptemplate/getTemplateList?&uid=${uid}&type=${type}`
+    return axios.get(url)
   },
   /**
    * 保存或者更新SOP模板信息
    */
   saveOrUpdateSopTmpInfo(params) {
-    const { templateName = '', templateId = '', state, map = [] } = params
+    const { templateName = '', templateId = '', state, map = [], uid } = params
     return axios.post(
-      `/api/toss/v1/toss-api/soptemplate/saveOrUpdate?templateId=${templateId}&templateName=${templateName}&state=${state}`,
+      `/api/toss/v1/toss-api/soptemplate/saveOrUpdate?templateId=${templateId}&templateName=${templateName}&state=${state}&uid=${uid}`,
       map
+    )
+  },
+  /**
+   * 保存或者更新SOP模板信息
+   */
+  delTemplate(params) {
+    return axios.post(
+      `/api/toss/v1/toss-api/soptemplate/delTemplate?templateId=${params.templateId}`
     )
   }
 }
