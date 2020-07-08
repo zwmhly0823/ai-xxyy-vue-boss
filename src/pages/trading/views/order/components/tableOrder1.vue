@@ -2,7 +2,7 @@
 <template>
   <div class="title-box">
     <el-table :data="orderList">
-      <el-table-column label="用户信息" prop="user" min-width="180" fixed>
+      <el-table-column label="用户信息" prop="user" min-width="150" fixed>
         <template slot-scope="scope">
           <user :user="scope.row.user" />
         </template>
@@ -15,7 +15,22 @@
           </p>
         </template>
       </el-table-column>
-      <el-table-column label="商品信息" min-width="200">
+      <el-table-column label="订单类型" min-width="80">
+        <template slot-scope="scope">
+          <p>
+            {{
+              scope.row.regtype
+                ? +scope.row.regtype === 2
+                  ? '首单'
+                  : +scope.row.regtype === 3
+                  ? '续费'
+                  : '-'
+                : '-'
+            }}
+          </p>
+        </template>
+      </el-table-column>
+      <el-table-column label="商品信息" min-width="150">
         <template slot-scope="scope">
           <p>
             {{
@@ -37,7 +52,7 @@
           </p>
         </template>
       </el-table-column>
-      <el-table-column label="业绩归属老师" min-width="220">
+      <el-table-column label="业绩归属老师" min-width="180">
         <template slot-scope="scope">
           <!-- 续费情况  v-if="scope.row.regtype && scope.row.regtype !== 3" -->
           <div>
@@ -76,7 +91,7 @@
           </div> -->
         </template>
       </el-table-column>
-      <el-table-column label="服务老师" min-width="220">
+      <el-table-column label="服务老师" min-width="180">
         <template slot-scope="scope">
           <!-- 非续费 v-if="scope.row.regtype !== 3" -->
           <div>
@@ -137,29 +152,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="订单类型" min-width="80">
-        <template slot-scope="scope">
-          <p>
-            {{
-              scope.row.regtype
-                ? +scope.row.regtype === 2
-                  ? '首单'
-                  : +scope.row.regtype === 3
-                  ? '续费'
-                  : '-'
-                : '-'
-            }}
-          </p>
-        </template>
-      </el-table-column>
-
-      <el-table-column label="订单状态" min-width="100">
-        <template slot-scope="scope">
-          {{ scope.row.order_status ? scope.row.order_status : '-' }}
-        </template>
-      </el-table-column>
-
-      <el-table-column label="订单来源" min-width="200">
+      <el-table-column label="订单来源" min-width="180">
         <template slot-scope="scope">
           <p>体验课:{{ scope.row.trial_pay_channel_text || '-' }}</p>
           <p>
@@ -170,7 +163,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="推荐人信息" min-width="160">
+      <el-table-column label="推荐人信息" min-width="120">
         <template slot-scope="scope">
           <p
             v-if="scope.row.first_send_user"
@@ -202,6 +195,12 @@
                 : '-'
             }}
           </p>
+        </template>
+      </el-table-column>
+
+      <el-table-column label="订单状态" min-width="80">
+        <template slot-scope="scope">
+          {{ scope.row.order_status ? scope.row.order_status : '-' }}
         </template>
       </el-table-column>
 
