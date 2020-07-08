@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-06-06 14:18:35
  * @LastEditors: panjian
- * @LastEditTime: 2020-06-13 23:06:18
+ * @LastEditTime: 2020-07-08 15:44:50
 -->
 <template>
   <div class="app-main height">
@@ -22,7 +22,7 @@
       <el-table :data="tableData" style="width: 100%">
         <el-table-column label="用户信息" width="280">
           <template slot-scope="scope">
-            <div @click="userHandle(scope.row)" class="info-box">
+            <div class="info-box">
               <div class="user-info-box">
                 <img
                   v-if="scope.row.head"
@@ -46,11 +46,17 @@
                 />
               </div>
               <div class="user-info-text-box">
-                <span>{{ scope.row.username || '-' }} -</span>
-                <span> {{ scope.row.mobile || '-' }}</span>
+                <span @click="userHandle(scope.row)"
+                  >{{ scope.row.username || '-' }} -</span
+                >
+                <span @click="userHandle(scope.row)">
+                  {{ scope.row.mobile || '-' }}</span
+                >
                 <br />
-                <span> {{ scope.row.birthday || '-' }} · </span>
-                <span>
+                <span @click="userHandle(scope.row)">
+                  {{ scope.row.birthday || '-' }} ·
+                </span>
+                <span @click="userHandle(scope.row)">
                   {{ scope.row.base_painting_text || '-' }}
                 </span>
               </div>
