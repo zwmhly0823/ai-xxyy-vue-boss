@@ -333,6 +333,15 @@ export default {
           // 将获取来的物流信息回显到弹窗 ，如果返回为空则弹窗获取失败
           if (res.payload && Object.keys(res.payload).length !== 0) {
             this.expressNoInfo = res.payload
+            const company = this.expressCompanyList.find(
+              (item) => item.value === res.payload.expressCompanyNu
+            )
+            if (company === undefined) {
+              this.expressCompanyList.push({
+                label: res.payload.expressCompany,
+                value: res.payload.expressCompanyNu
+              })
+            }
           } else {
             this.$message.error('获取失败')
           }
