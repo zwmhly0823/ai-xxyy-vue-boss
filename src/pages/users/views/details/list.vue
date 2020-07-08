@@ -85,7 +85,7 @@
             ></i>
             <el-button
               round
-              v-if="scope.row.task_image"
+              v-if="!scope.row.task_video"
               class="down-btn"
               @click="downImg(scope.row)"
               size="mini"
