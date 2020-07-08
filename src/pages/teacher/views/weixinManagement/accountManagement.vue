@@ -6,6 +6,8 @@
         wxSerch="wechat_no.keyword"
         wxTeacherPhone="teacher_id"
         wxStatus="is_effective"
+        wxId="wechat_id"
+        wxRecordId="wechat_record_id"
         wxConcatTeacher="wechatJud"
       >
         <el-button
