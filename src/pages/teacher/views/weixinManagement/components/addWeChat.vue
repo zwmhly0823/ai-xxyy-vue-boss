@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-04-14 15:15:31
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-07-07 18:51:53
+ * @LastEditTime: 2020-07-08 12:39:02
  -->
 <template>
   <div>
@@ -122,7 +122,7 @@ export default {
       if (!value) {
         return callback(new Error('微信号不能为空'))
       } else {
-        var regEn = /[`~!@#$%^&*()_+<>?:"{},.\\/;'[\]]/im
+        var regEn = /[`~!@#$%^&*()+<>?:"{},.\\/;'[\]]/im
         var regCn = /[·！#￥（——）：；“”‘、，|《。》？、【】[\]]/im
         var regWn = /^[\u4e00-\u9fa5]+$/
         if (regEn.test(value) || regCn.test(value) || regWn.test(value)) {
