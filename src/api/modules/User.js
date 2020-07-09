@@ -5,7 +5,7 @@
  * @Author: shentong
  * @Date: 2020-03-13 14:38:28
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-07-09 21:48:54
+ * @LastEditTime: 2020-07-09 21:57:29
  */
 // import axios from '../axios'
 import axios from '../axiosConfig'
@@ -451,8 +451,8 @@ export default {
   // 统计分析的学习记录
   getStudentTrialRecordPage(page = 1, term, sup, sort = 'desc', size = 8) {
     const formattingQuery = JSON.stringify({
-      term: term == '0' ? null : term,
-      'sup.keyword': sup == '0' ? null : sup
+      term,
+      'sup.keyword': sup
     })
     const formattingSort = JSON.stringify({ ctime: sort })
     return axios.post(`/graphql/v1/toss`, {
