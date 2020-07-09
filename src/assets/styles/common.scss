@@ -58,3 +58,8 @@
   overflow: hidden !important;
   text-overflow: ellipsis !important;
 }
+
+// drawer的title默认会被选中的问题
+.el-drawer__header span[role='heading']:focus {
+  outline: 0;
+}

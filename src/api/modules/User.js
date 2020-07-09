@@ -242,6 +242,7 @@ export default {
             expressInfo{
               express_status
             }
+            questionnaire_count
           }
         }
       }`
@@ -736,5 +737,15 @@ export default {
   // 学员详情 修改地址
   updateExpressAddressNew(query) {
     return axios.get(`/api/ex/v1/express/updateExpressAddressNew`, query)
+  },
+  getQuestionnairePage(query) {
+    return axios.get(
+      `/api/f/v1/questionnaire/getQuestionnairePage?uid=${query.uid}&page=${query.page}&pagesize=${query.pagesize}&mobile=${query.mobile}`
+    )
+  },
+  getQuestionnaireByUserId(query) {
+    return axios.get(
+      `/api/f/v1/questionnaire/getQuestionnaireByUserId?uid=${query.uid}&questionnaireId=${query.questionnaireId}&mobile=${query.mobile}`
+    )
   }
 }
