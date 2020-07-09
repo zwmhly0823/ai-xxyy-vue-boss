@@ -44,6 +44,40 @@ export default {
       data
     )
   },
+  /*
+   * 任务列表
+   *
+   */
+  listJobTaskPage(data) {
+    return axios.post('/api/toss/v1/toss-api/sopJobTask/listJobTaskPage', data)
+  },
+  /**
+   * 获取模版列表
+   *
+   */
+  getTempList(params) {
+    return axios.get(
+      `/api/toss/v1/toss-api/soptemplate/getTempList?uid=${params.uid}&type=${params.type}`
+    )
+  },
+  /**
+   * sop模板 查看详情
+   *
+   */
+  viewSopJobTask(params) {
+    return axios.get(
+      `/api/toss/v1/toss-api/sopJobTask/viewSopJobTask?id=${params.id}`
+    )
+  },
+  /**
+   * sop模板 更新任务状态
+   *
+   */
+  updateStatus(params) {
+    return axios.get(
+      `/api/toss/v1/toss-api/sopJobTask/updateStatus?id=${params.id}&taskstatus=${params.taskstatus}`
+    )
+  },
   /**
    * SOP模板列表
    */

@@ -12,28 +12,13 @@
       <el-form-item label="群名称">
         <el-input
           placeholder="请输入内容"
-          v-model="groupName"
+          v-model="name"
           clearable
           :width="150"
+          @input="handleDebounce"
           @change="changeGroup()"
         >
         </el-input>
-        <!-- <el-select
-          class="item-style"
-          remote
-          :reserve-keyword="true"
-          size="mini"
-          clearable
-          placeholder="群名称"
-          v-model="groupName"
-        >
-          <el-option
-            v-for="item in groupList"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
-          ></el-option>
-        </el-select> -->
       </el-form-item>
     </el-form>
     <div class="tablecon">
@@ -69,13 +54,15 @@
       </el-table>
     </div>
     <div class="bottom_choose" v-show="tableData.length > 0">
-      <el-button>取消</el-button>
-      <el-button type="primary" @click="chooseGroup">确认</el-button>
+      <el-button size="mini" @click="closeChooseGroup">取消</el-button>
+      <el-button size="mini" type="primary" @click="chooseGroup"
+        >确认</el-button
+      >
     </div>
   </div>
 </template>
 <script>
-// import EleTable from '@/components/Table/EleTable'
+import { debounce } from 'lodash'
 export default {
   props: {
     taskstatus: {
@@ -93,262 +80,46 @@ export default {
   },
   data() {
     return {
+      name: '',
       tableData: [],
-      groupName: '',
-      chooseGroupList: [],
-      groupList: [
-        {
-          value: '选项1',
-          label: '黄金糕'
-        },
-        {
-          value: '选项2',
-          label: '双皮奶'
-        },
-        {
-          value: '选项3',
-          label: '蚵仔煎'
-        },
-        {
-          value: '选项4',
-          label: '龙须面'
-        },
-        {
-          value: '选项5',
-          label: '北京烤鸭'
-        }
-      ]
+      chooseGroupList: []
     }
   },
   components: {
     // EleTable
   },
-  created() {
-    let res = this.getWeChatCluster(this.wechatNo, this.taskstatus, name)
-    res = {
-      status: 'OK',
-      code: 0,
-      payload: [
-        {
-          cluster_id: 24593,
-          cluster_name: '标签建群',
-          wechat_record_id: 219,
-          wx_cluster_id: '22047492070@chatroom',
-          owner_wechat_id: 'wxid_m0y7hvhqsz7822',
-          remark: '',
-          owner_nick_name: '美术宝_测试',
-          account_id: 1,
-          membersNum: 5
-        },
-        {
-          cluster_id: 24592,
-          cluster_name: '班级建群',
-          wechat_record_id: 219,
-          wx_cluster_id: '23222382564@chatroom',
-          owner_wechat_id: 'wxid_m0y7hvhqsz7822',
-          remark: '',
-          owner_nick_name: '美术宝_测试',
-          account_id: 1,
-          membersNum: 4
-        },
-        {
-          cluster_id: 24591,
-          cluster_name: '自动班级拉群',
-          wechat_record_id: 219,
-          wx_cluster_id: '22341691994@chatroom',
-          owner_wechat_id: 'wxid_m0y7hvhqsz7822',
-          remark: '',
-          owner_nick_name: '美术宝_测试',
-          account_id: 1,
-          membersNum: 4
-        },
-        {
-          cluster_id: 24589,
-          cluster_name: '自动标签群1',
-          wechat_record_id: 219,
-          wx_cluster_id: '24735345931@chatroom',
-          owner_wechat_id: 'wxid_m0y7hvhqsz7822',
-          remark: '',
-          owner_nick_name: '美术宝_测试',
-          account_id: 1,
-          membersNum: 6
-        },
-        {
-          cluster_id: 24577,
-          cluster_name: '自动加群',
-          wechat_record_id: 219,
-          wx_cluster_id: '24667948477@chatroom',
-          owner_wechat_id: 'wxid_m0y7hvhqsz7822',
-          remark: '',
-          owner_nick_name: '美术宝_测试',
-          account_id: 1,
-          membersNum: 1
-        },
-        {
-          cluster_id: 24574,
-          cluster_name: '自动标签群1',
-          wechat_record_id: 219,
-          wx_cluster_id: '22107982163@chatroom',
-          owner_wechat_id: 'wxid_m0y7hvhqsz7822',
-          remark: '',
-          owner_nick_name: '美术宝_测试',
-          account_id: 1,
-          membersNum: 6
-        },
-        {
-          cluster_id: 24565,
-          cluster_name: '自动标签群1',
-          wechat_record_id: 219,
-          wx_cluster_id: '23954373388@chatroom',
-          owner_wechat_id: 'wxid_m0y7hvhqsz7822',
-          remark: '',
-          owner_nick_name: '美术宝_测试',
-          account_id: 1,
-          membersNum: 1
-        },
-        {
-          cluster_id: 24544,
-          cluster_name: '自动班级1',
-          wechat_record_id: 219,
-          wx_cluster_id: '22074092203@chatroom',
-          owner_wechat_id: 'wxid_m0y7hvhqsz7822',
-          remark: '',
-          owner_nick_name: '美术宝_测试',
-          account_id: 1,
-          membersNum: 1
-        },
-        {
-          cluster_id: 24050,
-          cluster_name: '测试',
-          wechat_record_id: 219,
-          wx_cluster_id: '22327581909@chatroom',
-          owner_wechat_id: 'wxid_m0y7hvhqsz7822',
-          remark: '',
-          owner_nick_name: '美术宝_测试',
-          account_id: 1,
-          membersNum: 4
-        },
-        {
-          cluster_id: 24048,
-          cluster_name: '测试',
-          wechat_record_id: 219,
-          wx_cluster_id: '23610891845@chatroom',
-          owner_wechat_id: 'wxid_m0y7hvhqsz7822',
-          remark: '',
-          owner_nick_name: '美术宝_测试',
-          account_id: 1,
-          membersNum: 5
-        },
-        {
-          cluster_id: 24047,
-          cluster_name: '测试',
-          wechat_record_id: 219,
-          wx_cluster_id: '22401781852@chatroom',
-          owner_wechat_id: 'wxid_m0y7hvhqsz7822',
-          remark: '',
-          owner_nick_name: '美术宝_测试',
-          account_id: 1,
-          membersNum: 5
-        },
-        {
-          cluster_id: 24046,
-          cluster_name: '测试',
-          wechat_record_id: 219,
-          wx_cluster_id: '24656548793@chatroom',
-          owner_wechat_id: 'wxid_m0y7hvhqsz7822',
-          remark: '',
-          owner_nick_name: '美术宝_测试',
-          account_id: 1,
-          membersNum: 5
-        },
-        {
-          cluster_id: 24045,
-          cluster_name: '测试',
-          wechat_record_id: 219,
-          wx_cluster_id: '24265963281@chatroom',
-          owner_wechat_id: 'wxid_m0y7hvhqsz7822',
-          remark: '',
-          owner_nick_name: '美术宝_测试',
-          account_id: 1,
-          membersNum: 5
-        },
-        {
-          cluster_id: 23995,
-          cluster_name: '测试群12324',
-          wechat_record_id: 219,
-          wx_cluster_id: '24621950164@chatroom',
-          owner_wechat_id: 'wxid_m0y7hvhqsz7822',
-          remark: '',
-          owner_nick_name: '美术宝_测试',
-          account_id: 1,
-          membersNum: 4
-        },
-        {
-          cluster_id: 22518,
-          cluster_name: '爱蒙 逼',
-          wechat_record_id: 219,
-          wx_cluster_id: '23339577440@chatroom',
-          owner_wechat_id: 'wxid_m0y7hvhqsz7822',
-          remark: '',
-          owner_nick_name: '美术宝_测试',
-          account_id: 1,
-          membersNum: 3
-        },
-        {
-          cluster_id: 22517,
-          cluster_name: '小熊美术xx期-S1/2/3-x班',
-          wechat_record_id: 219,
-          wx_cluster_id: '19367515048@chatroom',
-          owner_wechat_id: 'wxid_m0y7hvhqsz7822',
-          remark: '',
-          owner_nick_name: '美术宝_测试',
-          account_id: 1,
-          membersNum: 3
-        },
-        {
-          cluster_id: 22516,
-          cluster_name: '测试',
-          wechat_record_id: 219,
-          wx_cluster_id: '22385886119@chatroom',
-          owner_wechat_id: 'wxid_m0y7hvhqsz7822',
-          remark: '',
-          owner_nick_name: '美术宝_测试',
-          account_id: 1,
-          membersNum: 3
-        },
-        {
-          cluster_id: 22515,
-          cluster_name: '爱懵圈🙈、承让、于泽昌',
-          wechat_record_id: 219,
-          wx_cluster_id: '23442177362@chatroom',
-          owner_wechat_id: 'wxid_m0y7hvhqsz7822',
-          remark: '',
-          owner_nick_name: '美术宝_测试',
-          account_id: 1,
-          membersNum: 3
-        }
-      ]
-    }
-    this.tableData = res.payload
-    console.log(res)
-  },
-  mounted() {
-    this.tableData.forEach((v, i) => {
-      this.parent_tableData.forEach((_v, _i) => {
-        if (v.cluster_id === _v.cluster_id) {
-          this.$refs.myseleTable.toggleRowSelection(v)
-        }
+  async created() {
+    const tabs = await this.getWeChatCluster(this.name).catch()
+    const { code, payload = [] } = tabs
+    if (tabs && code === 0) {
+      this.tableData = payload
+      this.$nextTick(() => {
+        this.tableData.forEach((v, i) => {
+          this.parent_tableData.forEach((_v, _i) => {
+            if (v.cluster_id === _v.cluster_id) {
+              this.$refs.myseleTable.toggleRowSelection(v)
+            }
+          })
+        })
       })
-    })
+    }
   },
+  mounted() {},
   computed: {},
   methods: {
+    handleDebounce: debounce(function(event) {
+      this.getWeChatCluster(this.name).then((res) => {
+        if (res.code === 0) {
+          this.tableData = res.payload
+        }
+      })
+    }, 500),
     // 获取群信息
-    async getWeChatCluster(wechatNo, taskstatus, name = '') {
+    async getWeChatCluster(name = '') {
       try {
         const Info = await this.$http.Community.getWeChatCluster({
-          wechatNo,
-          taskstatus,
+          wechatNo: this.wechatNo,
+          taskstatus: this.taskstatus,
           name
         })
         return Info
@@ -358,15 +129,19 @@ export default {
     },
     // 搜索群名称
     changeGroup() {
-      console.log(this.groupName)
+      this.handleDebounce()
     },
     // 选择
     handleSelectionChange(val) {
       this.chooseGroupList = val
-      console.log(val)
     },
     chooseGroup() {
       this.$emit('choose-group', this.chooseGroupList)
+    },
+    // 关闭
+    closeChooseGroup() {
+      this.name = ''
+      this.$emit('close-choosegroup')
     }
   }
 }
@@ -387,6 +162,7 @@ export default {
 }
 .bottom_choose {
   display: flex;
+  padding-top: 10px;
   justify-content: center;
 }
 .el-input {

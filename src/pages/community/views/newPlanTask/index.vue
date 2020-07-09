@@ -65,14 +65,14 @@
               >
             </el-radio-group>
           </el-form-item>
-          <el-button
-            type="primary"
-            icon="el-icon-plus"
-            size="mini"
-            @click="chooseGroup('sopFrom')"
-            >选择群</el-button
-          >
         </el-form>
+        <el-button
+          type="primary"
+          icon="el-icon-plus"
+          size="mini"
+          @click="chooseGroup('sopFrom')"
+          >选择群</el-button
+        >
       </el-card>
       <div ref="tableContainer">
         <ele-table
@@ -90,11 +90,9 @@
             prop="membersNum"
             align="center"
           ></el-table-column>
-          <el-table-column
-            label="带班销售"
-            prop="owner_nick_name"
-            align="center"
-          ></el-table-column>
+          <el-table-column label="带班销售" align="center">
+            {{ this.teacherName }}</el-table-column
+          >
           <el-table-column
             label="微信群工作微信号"
             prop="owner_wechat_id"
@@ -121,23 +119,30 @@
         </ele-table>
       </div>
       <div class="bottom_choose" v-show="tableData.length">
-        <el-button size="mini">取消</el-button>
+        <el-button size="mini" @click="cannelOpt">取消</el-button>
         <el-button size="mini" type="primary" @click="saveTaskPlan"
           >确认</el-button
         >
       </div>
-      <el-dialog title="选择群" :visible.sync="dialogGroupVisible" width="50%">
+      <el-dialog
+        title="选择群"
+        :visible.sync="dialogGroupVisible"
+        width="50%"
+        destroy-on-close
+      >
         <choose-group
           :taskstatus="teacherId"
           :wechatNo="sopFrom.wxNumber"
-          :parent_tableData="this.tableData"
+          :parent_tableData="tableData"
           @choose-group="parent_chooseGroup"
+          @close-choosegroup="parent_close"
         ></choose-group>
       </el-dialog>
     </el-col>
   </el-row>
 </template>
 <script>
+import { isToss } from '@/utils/index'
 import EleTable from '@/components/Table/EleTable'
 import ChooseGroup from './components/chooseGroup'
 export default {
@@ -147,69 +152,14 @@ export default {
       tableHeight: 'auto',
       dialogGroupVisible: false,
       clusterIdList: [],
+      teacherName: '',
       teacherId: '',
       taskPlan: {},
       planTemplate: [],
       wechatNos: [],
-      tableData: [
-        {
-          cluster_id: 24593,
-          cluster_name: '标签建群',
-          wechat_record_id: 219,
-          wx_cluster_id: '22047492070@chatroom',
-          owner_wechat_id: 'wxid_m0y7hvhqsz7822',
-          remark: '',
-          owner_nick_name: '美术宝_测试',
-          account_id: 1,
-          membersNum: 5
-        },
-        {
-          cluster_id: 24592,
-          cluster_name: '班级建群',
-          wechat_record_id: 219,
-          wx_cluster_id: '23222382564@chatroom',
-          owner_wechat_id: 'wxid_m0y7hvhqsz7822',
-          remark: '',
-          owner_nick_name: '美术宝_测试',
-          account_id: 1,
-          membersNum: 4
-        },
-        {
-          cluster_id: 24591,
-          cluster_name: '自动班级拉群',
-          wechat_record_id: 219,
-          wx_cluster_id: '22341691994@chatroom',
-          owner_wechat_id: 'wxid_m0y7hvhqsz7822',
-          remark: '',
-          owner_nick_name: '美术宝_测试',
-          account_id: 1,
-          membersNum: 4
-        },
-        {
-          cluster_id: 24589,
-          cluster_name: '自动标签群1',
-          wechat_record_id: 219,
-          wx_cluster_id: '24735345931@chatroom',
-          owner_wechat_id: 'wxid_m0y7hvhqsz7822',
-          remark: '',
-          owner_nick_name: '美术宝_测试',
-          account_id: 1,
-          membersNum: 6
-        },
-        {
-          cluster_id: 24577,
-          cluster_name: '自动加群',
-          wechat_record_id: 219,
-          wx_cluster_id: '24667948477@chatroom',
-          owner_wechat_id: 'wxid_m0y7hvhqsz7822',
-          remark: '',
-          owner_nick_name: '美术宝_测试',
-          account_id: 1,
-          membersNum: 1
-        }
-      ],
+      tableData: [],
       sopFrom: {
-        taskName: '模板任务1',
+        taskName: '',
         planTemplate: '',
         planStartDate: '',
         wxNumber: ''
@@ -240,7 +190,16 @@ export default {
     ChooseGroup
   },
   async created() {
-    this.teacherId = JSON.parse(localStorage.getItem('staff')).id || ''
+    const teacher = isToss()
+    if (teacher) {
+      const tossteacher = JSON.parse(localStorage.getItem('teacher'))
+      this.teacherId = tossteacher.id || ''
+      this.teacherName = tossteacher.realName || ''
+    } else {
+      const staff = JSON.parse(localStorage.getItem('staff'))
+      this.teacherId = staff.id || ''
+      this.teacherName = staff.realName || ''
+    }
     if (this.$route.params.id === '-1') {
       this.id = ''
     } else {
@@ -250,6 +209,14 @@ export default {
     if (this.taskPlan) {
       this.planTemplate = this.taskPlan.payload.templateList || []
       this.wechatNos = this.taskPlan.payload.wechatNos || []
+    }
+
+    if (this.id) {
+      this.sopFrom.taskName = this.taskPlan.payload.taskName
+      this.sopFrom.planTemplate = this.taskPlan.payload.templateId
+      this.sopFrom.planStartDate = this.taskPlan.payload.job_time
+      this.sopFrom.wxNumber = this.taskPlan.payload.wechatNo
+      this.tableData = this.taskPlan.payload.weChatIcodeClusterLists
     }
     console.log(this.id, this.teacherId, this.taskPlan)
     this.calcTableHeight()
@@ -291,6 +258,10 @@ export default {
       this.tableData = data
       this.dialogGroupVisible = false
     },
+    // 关闭
+    parent_close() {
+      this.dialogGroupVisible = false
+    },
     // 保存任务计划
     saveTaskPlan() {
       this.clusterIdList = []
@@ -309,21 +280,44 @@ export default {
       this.saveOrUpdateSopJobTask(obj).then((res) => {
         if (res.code === 0) {
           this.$message('保存成功')
+          this.$router.push({
+            path: '/groupSop/'
+          })
         }
         console.log(res)
       })
       console.log(obj)
     },
+    // 取消
+    cannelOpt() {
+      this.$router.push({ path: '/groupSop' })
+    },
     // 保存或者更新任务
     async saveOrUpdateSopJobTask(data) {
       try {
-        const tmpInfo = await this.$http.Community.saveOrUpdateSopJobTask({
-          data
-        })
+        const tmpInfo = await this.$http.Community.saveOrUpdateSopJobTask(data)
         return tmpInfo
       } catch (err) {
         console.log(err)
       }
+    },
+    formatTime(timestamp) {
+      var date = new Date(timestamp * 1)
+      var Y = date.getFullYear() + '-'
+      var M =
+        (date.getMonth() + 1 < 10
+          ? '0' + (date.getMonth() + 1)
+          : date.getMonth() + 1) + '-'
+      var D =
+        (date.getDate() < 10 ? '0' + date.getDate() : date.getDate()) + ' '
+      var h =
+        (date.getHours() < 10 ? '0' + date.getHours() : date.getHours()) + ':'
+      var m =
+        (date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes()) +
+        ':'
+      var s =
+        date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds()
+      return Y + M + D + h + m + s
     },
     /** 表格删除某一行确认按钮 */
     confirmDelRow(row) {

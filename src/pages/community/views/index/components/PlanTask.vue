@@ -6,144 +6,90 @@
  * @LastEditors: shasen
  * @LastEditTime: 2020-07-04 18:29:22
 -->
-<!--
- * @Descripttion: TOSS小熊
- * @version: 1.0.0
- * @Author: Shentong
- * @Date: 2020-06-29 17:02:32
- * @LastEditors: Shentong
- * @LastEditTime: 2020-06-29 17:08:56
--->
 <template>
   <div class="plan-task-container">
     <div class="operete-row">
-      <div class="search-container">
-        <div class="search-item small">
-          <el-select
-            class="item-style"
-            v-model="search_term.taskname"
-            filterable
-            remote
-            :reserve-keyword="true"
-            size="mini"
-            clearable
-            placeholder="任务名称"
-            :remote-method="handleDebounce"
-            @change="selectChange"
-          >
-            <el-option
-              v-for="item in taskList"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            ></el-option>
-          </el-select>
-          <el-select
-            class="item-style margin_l10"
-            v-model="search_term.templatename"
-            filterable
-            remote
-            :reserve-keyword="true"
-            size="mini"
-            clearable
-            placeholder="模板名称"
-            :remote-method="handleDebounce"
-            @change="selectChange"
-          >
-            <el-option
-              v-for="item in templateList"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            ></el-option>
-          </el-select>
-          <el-select
-            class="item-style margin_l10"
-            v-model="search_term.creater"
-            filterable
-            remote
-            :reserve-keyword="true"
-            size="mini"
-            clearable
-            placeholder="创建人"
-            :remote-method="handleDebounce"
-            @change="selectChange"
-          >
-            <el-option
-              v-for="item in createrList"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            ></el-option>
-          </el-select>
-          <el-date-picker
-            v-model="search_term.timefw"
-            size="mini"
-            type="datetimerange"
-            range-separator="至"
-            start-placeholder="开始日期"
-            end-placeholder="结束日期"
-            class="margin_l10"
-          >
-          </el-date-picker>
-          <b class="el-icon-search"></b>
-        </div>
-      </div>
+      <planTaskSearch
+        @getlistJobTaskPage="getlistJobTaskPage"
+        :sourchParams="sourchParams"
+      />
       <div class="add-btn">
         <el-button type="primary" size="mini" @click="new_sop_handle"
           >新建SOP任务</el-button
         >
       </div>
     </div>
-    <section>
+    <section ref="tableContainer">
       <ele-table
         :tableSize="'small'"
         :dataList="tableData"
-        :size="tableParams.size"
-        :page="tableParams.page"
+        :tableHeight="tableHeight"
+        :size="sourchParams.pageSize"
+        :page="sourchParams.pageNo"
         :total="totalElements"
         @pageChange="pageChange_handler"
         class="mytable"
       >
-        <el-table-column label="序号" prop="a" align="center"></el-table-column>
+        <el-table-column label="序号" align="center">
+          <template slot-scope="scope">
+            <span>{{
+              (sourchParams.pageNo - 1) * sourchParams.pageSize +
+                scope.$index +
+                1
+            }}</span>
+          </template>
+        </el-table-column>
         <el-table-column
           label="计划名称"
-          prop="b"
+          prop="taskName"
           align="center"
         ></el-table-column>
         <el-table-column
           label="调用模版"
-          prop="c"
+          prop="templateName"
           align="center"
         ></el-table-column>
         <el-table-column
           label="发送微信号"
-          prop="d"
+          prop="wechatNo"
           align="center"
         ></el-table-column>
         <el-table-column
           label="接受群数量"
-          prop="e"
+          prop="clusterNum"
           align="center"
         ></el-table-column>
         <el-table-column
           label="创建人"
-          prop="f"
+          prop="cname"
           align="center"
         ></el-table-column>
-        <el-table-column label="职级" prop="g" align="center"></el-table-column>
         <el-table-column
-          label="创建时间"
-          prop="h"
+          label="职级"
+          prop="rankName"
           align="center"
         ></el-table-column>
-        <el-table-column label="任务进度" prop="i" align="center">
-          <el-progress
-            :text-inside="true"
-            :show-text="false"
-            :stroke-width="15"
-            :percentage="70"
-          ></el-progress>
+        <el-table-column label="创建时间" prop="ctime" align="center">
+          <template slot-scope="scope">
+            <span>{{
+              scope.row.ctime ? formatTime(scope.row.ctime) : '-'
+            }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column
+          label="任务进度"
+          prop="taskStatus"
+          align="center"
+          :formatter="formatTaskStatus"
+        >
+          <template slot-scope="scope">
+            <span v-if="scope.row.taskStatus === 'AWAIT'">待执行</span>
+            <span v-if="scope.row.taskStatus === 'FINISH'">已完成</span>
+            <span v-if="scope.row.taskStatus === 'PROCESSING'">
+              {{ scope.row.processingDay }}</span
+            >
+            <span v-if="scope.row.taskStatus === 'STOP'">已终止</span>
+          </template>
         </el-table-column>
         <el-table-column label="操作" align="center">
           <template slot-scope="scope">
@@ -157,23 +103,32 @@
               <el-button
                 class="editStyle_btn"
                 type="text"
-                @click="tableRowOperate(scope.row, '2')"
+                @click="taskRevise(scope.row, '2')"
+                :class="{ editStyle_unbtn: scope.row.taskStatus !== 'AWAIT' }"
+                :disabled="scope.row.taskStatus !== 'AWAIT'"
                 >修改</el-button
               >
               <el-popconfirm
-                confirmButtonText="YES"
-                cancelButtonText="算了"
+                confirmButtonText="确定"
+                cancelButtonText="取消"
                 icon="el-icon-info"
                 iconColor="red"
-                title="你确定要删除该项内容吗？"
-                @onConfirm="confirmDelRow"
+                title="你确定要取消该项内容吗？"
+                @onConfirm="confirmCancelRow(scope.row)"
               >
                 <el-button
                   type="text"
-                  @click="tableRowOperate(scope.row, '3')"
+                  @click="cancelOperation(scope.row, '3')"
                   slot="reference"
-                  class="editStyle_unbtn"
-                  disabled
+                  :class="{
+                    editStyle_unbtn:
+                      scope.row.taskStatus === 'STOP' ||
+                      scope.row.taskStatus === 'FINISH'
+                  }"
+                  :disabled="
+                    scope.row.taskStatus === 'STOP' ||
+                      scope.row.taskStatus === 'FINISH'
+                  "
                   >取消</el-button
                 >
               </el-popconfirm>
@@ -184,123 +139,33 @@
     </section>
     <el-drawer title="任务详情" :visible.sync="taskDetails_drawer">
       <section style="padding:0 10px;">
-        <el-steps direction="vertical" :active="1">
-          <el-step>
+        <el-steps direction="vertical" :active="activeStatus">
+          <el-step v-for="(item, index) in taskDetailsCon" :key="index">
             <template class="steptop" slot="title"
-              ><span class="steptop_active">第一天</span> <span>已完成</span>
+              ><span class="steptop_active">第{{ item.day }}天</span>
+              <span v-if="item.templateStatus === 0">待开始</span>
+              <span v-if="item.templateStatus === 1">已完成</span>
+              <span v-if="item.templateStatus === 2">进行中</span>
+              <span v-if="item.templateStatus === 3">已终止</span>
             </template>
             <template slot="description">
               <div class="step-row">
-                <p>将于2020.06.20 00:00:00开始发送</p>
+                <p>将于{{ item.startTime }}开始发送</p>
                 <ul>
-                  <li>
-                    <p>2020.06.20 10:00:00</p>
+                  <li
+                    v-for="(_item, _index) in item.templateDetails"
+                    :key="_index"
+                  >
+                    <p>{{ _item.startTime }}</p>
                     <div>
-                      <span class="ordernumber">1</span>
-                      <span style=" width: calc(100% - 50px);"
-                        >你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好</span
+                      <span class="ordernumber">{{ _index + 1 }}</span>
+                      <span
+                        style=" width: calc(100% - 50px);"
+                        v-if="_item.msgType === 1"
+                        >{{ _item.msgContent }}</span
                       >
-                    </div>
-                  </li>
-                  <li>
-                    <p>2020.06.20 10:00:00</p>
-                    <div>
-                      <span class="ordernumber">2</span>
-                      <span style=" width: calc(100% - 50px);"
-                        >你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好</span
-                      >
-                    </div>
-                  </li>
-                  <li>
-                    <p>2020.06.20 10:00:00</p>
-                    <div>
-                      <span class="ordernumber">3</span>
-                      <span style=" width: calc(100% - 50px);"
-                        ><img
-                          src="https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg"
-                          alt=""
-                      /></span>
-                    </div>
-                  </li>
-                </ul>
-              </div>
-            </template>
-          </el-step>
-          <el-step>
-            <template class="steptop" slot="title"
-              ><span class="steptop_active">第二天</span> <span>进行中</span>
-            </template>
-            <template slot="description">
-              <div class="step-row">
-                <p>将于2020.06.20 00:00:00开始发送</p>
-                <ul>
-                  <li>
-                    <p>2020.06.20 10:00:00</p>
-                    <div>
-                      <span class="ordernumber">1</span>
-                      <span style=" width: calc(100% - 50px);"
-                        >你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好</span
-                      >
-                    </div>
-                  </li>
-                  <li>
-                    <p>2020.06.20 10:00:00</p>
-                    <div>
-                      <span class="ordernumber">2</span>
-                      <span style=" width: calc(100% - 50px);"
-                        >你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好</span
-                      >
-                    </div>
-                  </li>
-                  <li>
-                    <p>2020.06.20 10:00:00</p>
-                    <div>
-                      <span class="ordernumber">3</span>
-                      <span style=" width: calc(100% - 50px);"
-                        ><img
-                          src="https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg"
-                          alt=""
-                      /></span>
-                    </div>
-                  </li>
-                </ul>
-              </div>
-            </template>
-          </el-step>
-          <el-step>
-            <template class="steptop" slot="title"
-              ><span class="steptop_active">第三天</span> <span>未完成</span>
-            </template>
-            <template slot="description">
-              <div class="step-row">
-                <p>将于2020.06.20 00:00:00开始发送</p>
-                <ul>
-                  <li>
-                    <p>2020.06.20 10:00:00</p>
-                    <div>
-                      <span class="ordernumber">1</span>
-                      <span style=" width: calc(100% - 50px);"
-                        >你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好</span
-                      >
-                    </div>
-                  </li>
-                  <li>
-                    <p>2020.06.20 10:00:00</p>
-                    <div>
-                      <span class="ordernumber">2</span>
-                      <span style=" width: calc(100% - 50px);"
-                        >你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好</span
-                      >
-                    </div>
-                  </li>
-                  <li>
-                    <p>2020.06.20 10:00:00</p>
-                    <div>
-                      <span class="ordernumber">3</span>
-                      <span style=" width: calc(100% - 50px);"
-                        ><img
-                          src="https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg"
-                          alt=""
+                      <span style=" width: calc(100% - 50px);" v-else
+                        ><img :src="_item.msgContent" alt=""
                       /></span>
                     </div>
                   </li>
@@ -314,171 +179,180 @@
   </div>
 </template>
 <script>
-import { debounce } from 'lodash'
+import { isToss } from '@/utils/index'
+import planTaskSearch from './planTaskSearch'
 import EleTable from '@/components/Table/EleTable'
 export default {
   data() {
     return {
-      search_term: {
-        taskname: '',
-        templatename: '',
-        creater: '',
-        timefw: ''
-      },
-      taskList: [],
-      templateList: [],
-      createrList: [],
-      tableData: [
-        {
-          a: 1,
-          b: '完课提醒全部销售',
-          c: '完课提醒',
-          d: 'xiaoxong01',
-          e: 20,
-          f: '申生男',
-          g: '经理',
-          h: '2020-06-13 00:00:00',
-          i: 70
-        }
-      ],
+      tableHeight: 'auto',
+      tableData: [],
+      activeStatus: 0,
       taskDetails_drawer: false,
-      tableParams: {
-        size: 20,
-        page: 1
+      taskDetailsCon: [],
+      sourchParams: {
+        pageNo: 1,
+        pageSize: 20,
+        type: '',
+        username: '',
+        jobTaskName: '',
+        templateId: '',
+        startTime: '',
+        endTime: ''
       },
       totalElements: 0
     }
   },
-  mounted() {
-    this.getTaskList()
-    this.getTemplateList()
-    this.getCreaterList()
+  created() {
+    const teacherId = isToss()
+    if (teacherId) {
+      this.sourchParams.type = 1
+    } else {
+      this.sourchParams.type = 2
+    }
+    this.calcTableHeight()
+    this.getlistJobTaskPage()
+    console.log('tableData')
+    console.log(this.tableData)
   },
+  mounted() {},
   components: {
-    EleTable
+    EleTable,
+    planTaskSearch
   },
-  computed: {
-    handleDebounce() {
-      return debounce(this.getTaskList, 500)
-    },
-    search_term_new() {
-      return JSON.parse(JSON.stringify(this.search_term))
-    }
-  },
-  watch: {
-    search_term_new: {
-      handler: (val, olVal) => {
-        console.log('我变化了', val, olVal) // 但是val和olVal值一样
-      },
-      deep: true
-    }
-  },
+  computed: {},
+
   methods: {
-    selectChange() {
-      console.log(this.taskname, 'this.taskname')
+    // 任务列表
+    getlistJobTaskPage() {
+      this.listJobTaskPage(this.sourchParams).then((res) => {
+        this.tableData = res.content
+        this.totalElements = Number(res.totalElements)
+        console.log(res)
+      })
     },
-    // 获取任务名称
-    getTaskList(res) {
-      console.log(this.taskList, res, 'vla')
-      setTimeout(() => {
-        this.taskList = [
-          {
-            value: '选项1',
-            label: '黄金糕'
-          },
-          {
-            value: '选项2',
-            label: '双皮奶'
-          },
-          {
-            value: '选项3',
-            label: '蚵仔煎'
-          },
-          {
-            value: '选项4',
-            label: '龙须面'
-          },
-          {
-            value: '选项5',
-            label: '北京烤鸭'
-          }
-        ]
-      }, 300)
+
+    async listJobTaskPage(data) {
+      try {
+        const tmpInfo = await this.$http.Community.listJobTaskPage(data)
+        return tmpInfo
+      } catch (err) {
+        console.log(err)
+      }
     },
-    // 获取模板名称
-    getTemplateList(res) {
-      console.log(this.templateList, res, 'templateList')
-      setTimeout(() => {
-        this.templateList = [
-          {
-            value: '选项1',
-            label: '黄金糕'
-          },
-          {
-            value: '选项2',
-            label: '双皮奶'
-          },
-          {
-            value: '选项3',
-            label: '蚵仔煎'
-          },
-          {
-            value: '选项4',
-            label: '龙须面'
-          },
-          {
-            value: '选项5',
-            label: '北京烤鸭'
-          }
-        ]
-      }, 300)
+    formatTime(timestamp) {
+      var date = new Date(timestamp * 1)
+      var Y = date.getFullYear() + '-'
+      var M =
+        (date.getMonth() + 1 < 10
+          ? '0' + (date.getMonth() + 1)
+          : date.getMonth() + 1) + '-'
+      var D =
+        (date.getDate() < 10 ? '0' + date.getDate() : date.getDate()) + ' '
+      var h =
+        (date.getHours() < 10 ? '0' + date.getHours() : date.getHours()) + ':'
+      var m =
+        (date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes()) +
+        ':'
+      var s =
+        date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds()
+      return Y + M + D + h + m + s
     },
-    // 获取创建人
-    getCreaterList(res) {
-      console.log(this.createrList, res, 'createrList')
-      setTimeout(() => {
-        this.createrList = [
-          {
-            value: '选项1',
-            label: '黄金糕'
-          },
-          {
-            value: '选项2',
-            label: '双皮奶'
-          },
-          {
-            value: '选项3',
-            label: '蚵仔煎'
-          },
-          {
-            value: '选项4',
-            label: '龙须面'
-          },
-          {
-            value: '选项5',
-            label: '北京烤鸭'
-          }
-        ]
-      }, 300)
+    // 任务进度
+    formatTaskStatus(row, column) {
+      console.log('123123123123123')
+      console.log(row, column)
     },
     /** 详情 */
     taskDetails(row, type) {
-      this.taskDetails_drawer = true
+      this.getViewSopJobTask(row.id)
       console.log(row, type)
     },
-    pageChange_handler(res) {},
-    tableRowOperate(row, type) {
+    getViewSopJobTask(id) {
+      this.viewSopJobTask(id).then((res) => {
+        if (res.code === 0) {
+          this.active_Status()
+          this.taskDetails_drawer = true
+          this.taskDetailsCon = res.payload
+        }
+        console.log(res)
+      })
+    },
+    async viewSopJobTask(id) {
+      try {
+        const tmpInfo = await this.$http.Community.viewSopJobTask({ id })
+        return tmpInfo
+      } catch (err) {
+        console.log(err)
+      }
+    },
+    // activeStatus状态
+    active_Status() {
+      this.taskDetailsCon.forEach((item, index) => {
+        if (item.templateStatus === 2) {
+          console.log(item, '=====')
+          this.activeStatus = item.day - 1
+        } else {
+          this.activeStatus = 0
+        }
+        console.log(item, index)
+      })
+    },
+    // 修改
+    taskRevise(row, type) {
+      console.log(row)
+      this.$router.push({
+        path: `/newPlantask/${row.id}`
+      })
+    },
+    // 取消操作
+    cancelOperation(row, type) {
       console.log(row, type)
     },
-    /** 表格删除某一行确认按钮 */
-    confirmDelRow() {
-      console.log('删除了')
+    /** 表格取消某一行确认按钮 */
+    confirmCancelRow(row) {
+      console.log('删除了', row)
+      const params = {
+        id: row.id,
+        taskstatus: 'STOP'
+      }
+      console.log(params)
+      this.$http.Community.updateStatus(params).then((res) => {
+        console.log(res, '-------------')
+        if (res.code === 0) {
+          this.$message({
+            message: '取消成功',
+            type: 'success'
+          })
+          setTimeout(() => {
+            this.getlistJobTaskPage()
+          }, 1500)
+        }
+      })
+    },
+    // 换页
+    pageChange_handler(res) {
+      // this.tableParams.page = res
+      this.sourchParams.pageNo = res
+      this.getlistJobTaskPage()
+      console.log(res)
     },
     /** 新建sop按钮 */
     new_sop_handle() {
       const id = '-1'
       this.$router.push({
         path: `/newPlantask/${id}`
+      })
+    },
+    // 计算表格高度
+    calcTableHeight() {
+      this.$nextTick(() => {
+        // Element.getBoundingClientRect() 方法返回元素的大小及其相对于视口的位置。
+        const tableTopHeight = this.$refs.tableContainer.getBoundingClientRect()
+          .y
+        //  document.body.clientHeight 返回body元素内容的高度
+        const tableHeight = document.body.clientHeight - tableTopHeight - 60
+        this.tableHeight = tableHeight + ''
       })
     }
   }
@@ -548,5 +422,13 @@ li {
     color: #c0c4cc !important;
     cursor: not-allowed;
   }
+}
+.el-input {
+  width: 150px;
+}
+
+.el-popconfirm__action {
+  display: flex;
+  justify-content: space-around;
 }
 </style>
