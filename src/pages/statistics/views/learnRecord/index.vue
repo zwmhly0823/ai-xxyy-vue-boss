@@ -1,0 +1,322 @@
+<!--
+ * @Descripttion: 学习记录
+ * @version: 1.0.0
+ * @Author: zhangjianwen
+ * @Date: 2020-07-09 15:02:59
+ * @LastEditors: zhangjianwen
+ * @LastEditTime: 2020-07-09 20:16:53
+-->
+<template>
+  <div class="learn-record">
+    <div class="record-header">
+      <el-tabs v-model="term">
+        <el-tab-pane
+          v-for="mg in manageMentList"
+          :label="mg.period_label"
+          :name="mg.period"
+          :key="mg.period"
+        >
+        </el-tab-pane>
+        <el-tab-pane>
+          <el-dropdown @command="handleCommand" slot="label">
+            <span class="el-dropdown-link">
+              下拉菜单<i class="el-icon-arrow-down el-icon--right"></i>
+            </span>
+            <el-dropdown-menu slot="dropdown">
+              <el-dropdown-item
+                :key="mg.management.period"
+                v-for="mg in manageMentHistoryList"
+                :command="mg.management.period"
+                >{{ mg.management.period_name }}</el-dropdown-item
+              >
+            </el-dropdown-menu>
+          </el-dropdown>
+        </el-tab-pane>
+      </el-tabs>
+    </div>
+    <div class="record-header">
+      <el-tabs v-model="level">
+        <el-tab-pane label="S1难度" name="S1"></el-tab-pane>
+        <el-tab-pane label="S2难度" name="S2"></el-tab-pane>
+        <el-tab-pane label="S3难度" name="S3"></el-tab-pane>
+      </el-tabs>
+    </div>
+    <div>
+      <el-row>
+        <el-col
+          :span="6"
+          v-for="item in recordList"
+          :key="item.ctime"
+          class="card-main"
+        >
+          <el-card :body-style="{ padding: '0px' }">
+            <div class="card-data">
+              {{ item.send_date }}
+            </div>
+            <div class="card-content">
+              <div class="content-img">
+                <img :src="item.image" class="image" />
+              </div>
+
+              <div style="padding: 14px;">
+                <p>课程名称：{{ item.title }}</p>
+                <p>课程类型：{{ learn_type[item.lesson_type] }}</p>
+                <p>
+                  今日参课：{{
+                    `${item.today_join_course_count}/${item.all_send_course_count}  `
+                  }}
+                </p>
+                <p>
+                  昨日参课：{{
+                    `${item.yesterday_join_course_count}/${item.all_send_course_count}  `
+                  }}
+                </p>
+                <p>
+                  今日完课：{{
+                    `${item.today_complete_course_count}/${item.all_send_course_count}  `
+                  }}
+                </p>
+              </div>
+            </div>
+          </el-card>
+        </el-col>
+      </el-row>
+    </div>
+
+    <div class="empty" v-if="recordList.length === 0">暂无数据</div>
+
+    <m-pagination
+      :current-page="currentPage"
+      :page-count="totalPages"
+      :total="totalElements"
+      @current-change="handleSizeChange"
+      show-pager
+      open="calc(100vw - 170px - 25px)"
+      close="calc(100vw - 50px - 25px)"
+    ></m-pagination>
+  </div>
+</template>
+
+<script>
+import _ from 'lodash'
+import MPagination from '@/components/MPagination/index.vue'
+// import Search from '../../components/Search.vue'
+
+export default {
+  name: 'trialUsers',
+  components: {
+    MPagination
+    // Search
+  },
+  computed: {},
+  data() {
+    return {
+      manageMentList: [],
+      manageMentHistoryList: [],
+      term: '0',
+      level: '0',
+      recordList: [],
+      currentPage: 1,
+      totalPages: null,
+      totalElements: null,
+      learn_type: {
+        0: '小熊AI课',
+        10: '家长课堂',
+        11: '小熊TV课'
+      }
+
+      // editableTabsValue: '2',
+      // editableTabs: [
+      //   {
+      //     title: 'Tab 1',
+      //     name: '1',
+      //     content: 'Tab 1 content'
+      //   },
+      //   {
+      //     title: 'Tab 2',
+      //     name: '2',
+      //     content: 'Tab 2 content'
+      //   }
+      // ],
+      // tabIndex: 2
+    }
+  },
+  watch: {
+    term(val, old) {
+      console.log(val, old, '触发')
+      this.term = val
+      this.getData(this.currentPage, val, this.level)
+    },
+    level(val, old) {
+      this.level = val
+      this.getData(this.currentPage, this.term, val)
+    }
+  },
+  created() {},
+  mounted() {
+    this.getManagement().then(() => {
+      this.term = this.manageMentList[0].period
+      this.level = 'S1'
+      // this.getData()
+    })
+  },
+  methods: {
+    // 获取排期期数
+    getManagement() {
+      const params = {
+        // teacher_id: this.teacherIds
+      }
+      return this.$http.User.ManagementForTeacherList(params).then((res) => {
+        console.log(res)
+        if (res && res.data && res.data.ManagementForTeacherList) {
+          if (res.data.ManagementForTeacherList.length === 0) {
+            // this.term = '0'
+            // this.getData()
+            // // 获取今日、明日待跟进数量
+            // setTimeout(() => {
+            //   this.getTodayCount()
+            //   this.getTodayCount('tomorrow')
+            // }, 500)
+            return
+          }
+
+          // 只显示开课中的期数 status // 1 招生中   2待开课   3 开课中  4 已结课',
+          const arr = res.data.ManagementForTeacherList.filter(
+            (item) => item.management && item.management.status === 3
+          )
+          const arrHistory = res.data.ManagementForTeacherList.filter(
+            (item) => item.management && item.management.status === 4
+          )
+          this.manageMentHistoryList = arrHistory
+          console.log(this.manageMentHistoryList)
+          const list = arr.map((item) => {
+            item.management.period_label = `${item.management.period_name}(
+              开课中
+            )`
+
+            return item.management
+          })
+
+          this.manageMentList = _.orderBy(list, ['status'], ['desc'])
+          console.log(this.manageMentList)
+          // this.manageMentList = _.orderBy(list, ['status'], ['desc'])
+          // if (this.propTerm) {
+          //   this.term = this.propTerm
+          // } else {
+          //   this.term =
+          //     this.manageMentList.length > 0
+          //       ? this.manageMentList[0].period
+          //       : '0'
+          // }
+        }
+      })
+    },
+    // 查询
+    getData(page = this.currentPage, term = this.term, level = this.level) {
+      // const query = Object.assign({}, obj)
+      this.recordList = []
+      // const page = this.currentPage
+      // const sort = {}
+      // if (this.sortActive) {
+      //   sort[this.sortActive] = this.sortKeys[this.sortActive]
+      //  }
+      return this.$http.User.getStudentTrialRecordPage(page, term, level)
+        .then((res) => {
+          console.log(res)
+          // var defTotalElements = 0
+          // var defTotalPages = 1
+          // var defContent = []
+          if (
+            res &&
+            res.data &&
+            res.data.StudentTrialRecordOperatorStatisticsPage
+          ) {
+            const data = res.data.StudentTrialRecordOperatorStatisticsPage
+            this.totalElements = Number(data.totalElements)
+            this.totalPages = Number(data.totalPages)
+            this.recordList = data.content
+            console.log(this.recordList)
+            // defTotalElements = totalElements
+            // defTotalPages = totalPages
+            // // defContent = content
+            // defContent = this.initName(content)
+          }
+          // this.dataList = defContent
+          // // console.log('dataList', this.dataList)
+          // this.totalPages = +defTotalPages
+          // this.totalElements = +defTotalElements
+          // loading.close()
+        })
+        .catch(() => {
+          // loading.close()
+        })
+    },
+
+    handleCommand(command) {
+      this.term = command
+    },
+
+    handleSizeChange(val) {
+      console.log(val)
+      this.currentPage = val
+      this.getData(val)
+    }
+  }
+}
+</script>
+
+<style lang="scss" scoped>
+.trial-container-body {
+  flex: 1;
+  overflow: hidden;
+  background-color: #fff;
+}
+.learn-record {
+  margin: 10px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  overflow: hidden;
+  background-color: #f0f1f2;
+  .record-header {
+    padding: 0 20px;
+    background-color: white;
+    margin-bottom: 10px;
+    border-bottom: 10px solid #f0f1f2;
+  }
+}
+.card-main {
+  padding: 10px;
+  .card-data {
+    margin: 10px auto;
+    width: 100px;
+    background-color: gray;
+    color: white;
+    text-align: center;
+  }
+  .content-img {
+    width: 40%;
+    padding: 10px;
+    img {
+      width: 100%;
+    }
+  }
+  .card-content {
+    padding-top: 10px;
+    display: flex;
+  }
+}
+.empty {
+  text-align: center;
+  background: white;
+  width: 100%;
+  height: 500px;
+  line-height: 200px;
+  font-size: 20px;
+}
+/deep/ .el-tabs__header {
+  padding: 0;
+  position: relative;
+  margin: 0 0 0 !important;
+}
+</style>
