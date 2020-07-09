@@ -219,6 +219,18 @@ export default {
     console.log('tableData')
     console.log(this.tableData)
   },
+  activated() {
+    const teacherId = isToss()
+    if (teacherId) {
+      this.sourchParams.type = 1
+    } else {
+      this.sourchParams.type = 2
+    }
+    this.calcTableHeight()
+    this.getlistJobTaskPage()
+    console.log('tableData')
+    console.log(this.tableData)
+  },
   mounted() {},
   components: {
     EleTable,

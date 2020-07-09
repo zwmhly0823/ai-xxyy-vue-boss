@@ -215,8 +215,8 @@ export default {
     }
 
     // 调用
-    if (this.$router.params.templateId) {
-      this.sopFrom.planTemplate = this.$router.params.templateId
+    if (this.$route.params.templateId !== '-1') {
+      this.sopFrom.planTemplate = this.$route.params.templateId
     }
 
     if (this.id) {

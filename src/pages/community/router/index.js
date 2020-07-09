@@ -27,7 +27,7 @@ const routes = [
     meta: {
       title: '群sop',
       icon: 'el-icon-s-custom',
-      keepAlive: false
+      keepAlive: true
     },
     component: () => import('../views/index/index.vue')
   },
