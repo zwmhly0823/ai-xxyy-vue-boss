@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-06-29 17:02:32
  * @LastEditors: Shentong
- * @LastEditTime: 2020-07-09 22:03:24
+ * @LastEditTime: 2020-07-09 22:11:01
 -->
 <template>
   <div class="soptmp-container">
@@ -144,6 +144,7 @@ export default {
   },
   mounted() {},
   methods: {
+    /** activated在同组件下切换不执行？ */
     init() {
       const teacherId = isToss()
       let itemType = 'teacher'
