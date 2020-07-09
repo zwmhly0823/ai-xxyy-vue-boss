@@ -10,7 +10,8 @@
   <el-row type="flex" class="new-plan app-main">
     <el-col class="new-plan-container">
       <el-card class="header">
-        <div class="tip">新建SOP任务计划</div>
+        <div class="tip" v-if="id">修改SOP任务计划</div>
+        <div class="tip" v-else>新建SOP任务计划</div>
         <el-form
           :model="sopFrom"
           ref="sopFrom"
