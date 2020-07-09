@@ -3,8 +3,8 @@
  * @version: 1.0.0
  * @Author: songyanan
  * @Date: 2020-07-01 11:08:23
- * @LastEditors: songyanan
- * @LastEditTime: 2020-07-01 15:24:30
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-07-09 15:03:02
  -->
 <template>
   <el-card
@@ -356,12 +356,10 @@ export default {
             'paymentPay.transaction_id': '交易流水号',
             'paymentPay.trade_type_text': '支付方式',
             amount: '交易金额',
-            'packagesType.name': '套餐类型',
-            'stageInfo.period_name': '期数',
-            'channel.channel_outer_name': '线索渠道',
-            sup_text: '课程难度'
+            product_name: '商品名称',
+            'channel.channel_outer_name': '线索渠道'
           },
-          fileName: `体验课订单导出-${fileTitleTime}`, // 文件名称
+          fileName: `素质课订单导出-${fileTitleTime}`, // 文件名称
           query: JSON.stringify(query)
         }
         // console.log(exportExcel)
@@ -369,7 +367,7 @@ export default {
         this.$http.DownloadExcel.exportOrder(params)
           .then((res) => {
             console.log(res)
-            downloadHandle(res, `体验课订单导出-${fileTitle}`, () => {
+            downloadHandle(res, `素质课订单导出-${fileTitle}`, () => {
               loading.close()
               this.$message.success('导出成功')
             })

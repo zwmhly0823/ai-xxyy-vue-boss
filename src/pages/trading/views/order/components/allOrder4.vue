@@ -24,6 +24,20 @@
             </div>
           </div>
         </el-col>
+        <!-- 已支付 2 -->
+        <el-col :span="5">
+          <div
+            class="grid-content"
+            :class="{ current: status === '2' }"
+            @click="chnageStatus('2')"
+          >
+            <div class="oride-top">已支付</div>
+            <div class="oride-middle">
+              <em>{{ +statisticsObj.paying.value.toFixed(2) || 0 }}</em
+              >元 {{ statisticsObj.paying.count || 0 }}笔
+            </div>
+          </div>
+        </el-col>
         <!-- 未支付 0，1 -->
         <el-col :span="5">
           <div
@@ -114,6 +128,7 @@ export default {
       statistics: {
         '0': { count: 0, value: 0 },
         '1': { count: 0, value: 0 },
+        '2': { count: 0, value: 0 },
         '3': { count: 0, value: 0 },
         '5': { count: 0, value: 0 },
         '6': { count: 0, value: 0 },
@@ -133,6 +148,11 @@ export default {
           count: +statistics['0'].count + +statistics['1'].count,
           value: +statistics['0'].value + +statistics['1'].value
         }
+        // 已支付 2
+        obj.paying = {
+          count: +statistics['2'].count,
+          value: +statistics['2'].value
+        }
         // 退费：5，6，7
         obj.refund = {
           count:
@@ -149,8 +169,16 @@ export default {
           value: +statistics['3'].value
         }
         obj.total = {
-          count: obj.topay.count + obj.refund.count + obj.payed.count,
-          value: obj.topay.value + obj.refund.value + obj.payed.value
+          count:
+            obj.topay.count +
+            obj.refund.count +
+            obj.payed.count +
+            obj.paying.count,
+          value:
+            obj.topay.value +
+            obj.refund.value +
+            obj.payed.value +
+            obj.paying.value
         }
         return obj
       },
@@ -212,6 +240,7 @@ export default {
       this.statistics = {
         '0': { count: 0, value: 0 },
         '1': { count: 0, value: 0 },
+        '2': { count: 0, value: 0 },
         '3': { count: 0, value: 0 },
         '5': { count: 0, value: 0 },
         '6': { count: 0, value: 0 },
