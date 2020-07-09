@@ -4,8 +4,8 @@
  * @version:
  * @Author: shentong
  * @Date: 2020-03-13 14:38:28
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-07-04 11:47:17
+ * @LastEditors: zhangjianwen
+ * @LastEditTime: 2020-07-09 16:59:05
  */
 // import axios from '../axios'
 import axios from '../axiosConfig'
@@ -446,7 +446,45 @@ export default {
       }`
     })
   },
-
+  // 统计分析的学习记录
+  getStudentTrialRecordPage(page = 1, term, sup, sort = 'desc', size = 8) {
+    const formattingQuery = JSON.stringify({
+      term: term == '0' ? null : term,
+      'sup.keyword': sup == '0' ? null : sup
+    })
+    const formattingSort = JSON.stringify({ ctime: sort })
+    return axios.post(`/graphql/v1/toss`, {
+      query: `{
+        StudentTrialRecordOperatorStatisticsPage(
+          query:${JSON.stringify(formattingQuery)},
+          page: ${page},
+          size:${size},
+          sort:${JSON.stringify(formattingSort)}
+          )
+          {
+            totalPages
+            totalElements
+            content{
+              id
+              ctime
+              utime
+              course_id
+              term
+              sup
+              image
+              team_state
+              lesson_type
+              title
+              send_date
+              all_send_course_count
+              today_join_course_count
+              today_complete_course_count
+              yesterday_join_course_count
+            }
+          }
+        }`
+    })
+  },
   // 学习记录
   getSendCourseLogPage(
     query = '',
