@@ -297,7 +297,7 @@ export default {
     taskRevise(row, type) {
       console.log(row)
       this.$router.push({
-        path: `/newPlantask/${row.id}`
+        path: `/newPlantask/${row.id}/-1`
       })
     },
     // 取消操作
@@ -336,7 +336,7 @@ export default {
     new_sop_handle() {
       const id = '-1'
       this.$router.push({
-        path: `/newPlantask/${id}`
+        path: `/newPlantask/${id}/-1`
       })
     },
     // 计算表格高度
