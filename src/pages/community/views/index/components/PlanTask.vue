@@ -76,12 +76,7 @@
             }}</span>
           </template>
         </el-table-column>
-        <el-table-column
-          label="任务进度"
-          prop="taskStatus"
-          align="center"
-          :formatter="formatTaskStatus"
-        >
+        <el-table-column label="任务进度" prop="taskStatus" align="center">
           <template slot-scope="scope">
             <span v-if="scope.row.taskStatus === 'AWAIT'">待执行</span>
             <span v-if="scope.row.taskStatus === 'FINISH'">已完成</span>
@@ -160,11 +155,11 @@
                     <div>
                       <span class="ordernumber">{{ _index + 1 }}</span>
                       <span
-                        style=" width: calc(100% - 50px);"
+                        style=" width: calc(100% - 25px);"
                         v-if="_item.msgType === 1"
                         >{{ _item.msgContent }}</span
                       >
-                      <span style=" width: calc(100% - 50px);" v-else
+                      <span style=" width: calc(100% - 25px);" v-else
                         ><img :src="_item.msgContent" alt=""
                       /></span>
                     </div>
@@ -203,6 +198,15 @@ export default {
       totalElements: 0
     }
   },
+  // watch: {
+  //   activeStatus(val) {
+  //     if (!val) {
+  //       this.activeStatus = 0
+  //     } else {
+  //       this.activeStatus = val
+  //     }
+  //   }
+  // },
   created() {
     const teacherId = isToss()
     if (teacherId) {
@@ -228,7 +232,6 @@ export default {
       this.listJobTaskPage(this.sourchParams).then((res) => {
         this.tableData = res.content
         this.totalElements = Number(res.totalElements)
-        console.log(res)
       })
     },
 
@@ -258,24 +261,17 @@ export default {
         date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds()
       return Y + M + D + h + m + s
     },
-    // 任务进度
-    formatTaskStatus(row, column) {
-      console.log('123123123123123')
-      console.log(row, column)
-    },
     /** 详情 */
     taskDetails(row, type) {
       this.getViewSopJobTask(row.id)
-      console.log(row, type)
     },
     getViewSopJobTask(id) {
       this.viewSopJobTask(id).then((res) => {
         if (res.code === 0) {
+          this.taskDetailsCon = res.payload
           this.active_Status()
           this.taskDetails_drawer = true
-          this.taskDetailsCon = res.payload
         }
-        console.log(res)
       })
     },
     async viewSopJobTask(id) {
@@ -288,15 +284,14 @@ export default {
     },
     // activeStatus状态
     active_Status() {
-      this.taskDetailsCon.forEach((item, index) => {
-        if (item.templateStatus === 2) {
-          console.log(item, '=====')
-          this.activeStatus = item.day - 1
+      for (let i = 0; i < this.taskDetailsCon.length; i++) {
+        if (this.taskDetailsCon[i].templateStatus === 2) {
+          this.activeStatus = this.taskDetailsCon[i].day - 1
+          break
         } else {
           this.activeStatus = 0
         }
-        console.log(item, index)
-      })
+      }
     },
     // 修改
     taskRevise(row, type) {
@@ -393,19 +388,20 @@ li {
   display: flex;
   justify-content: stretch;
   align-items: center;
-  background: #e7e7e7;
+  background: #f3f3f3;
   border-radius: 5px;
+  padding: 8px;
 }
 .el-drawer__body {
   height: 100%;
   overflow: scroll;
 }
 .ordernumber {
-  width: 50px !important;
+  width: 20px !important;
   display: inline-block;
   text-align: center;
-  margin: 0 !important;
-  background: #cccccc;
+  margin: 0 5px 0 0 !important;
+  // background: #cccccc;
   border-radius: 30px;
 }
 .margin_l10 {
@@ -430,5 +426,8 @@ li {
 .el-popconfirm__action {
   display: flex;
   justify-content: space-around;
+}
+.steptop_active {
+  margin-right: 10px;
 }
 </style>
