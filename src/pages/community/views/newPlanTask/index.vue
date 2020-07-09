@@ -287,7 +287,7 @@ export default {
       }
       this.saveOrUpdateSopJobTask(obj).then((res) => {
         if (res.code === 0) {
-          this.$message('保存成功')
+          this.$message.success('保存成功')
           this.$router.push({
             path: '/groupSop/'
           })
