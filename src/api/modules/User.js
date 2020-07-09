@@ -9,7 +9,11 @@
  * @LastEditTime: 2020-07-07 15:34:55
 =======
  * @LastEditors: zhangjianwen
+<<<<<<< HEAD
  * @LastEditTime: 2020-07-09 16:59:05
+>>>>>>> feature/learnrecord
+=======
+ * @LastEditTime: 2020-07-09 21:38:59
 >>>>>>> feature/learnrecord
  */
 // import axios from '../axios'
@@ -456,8 +460,8 @@ export default {
   // 统计分析的学习记录
   getStudentTrialRecordPage(page = 1, term, sup, sort = 'desc', size = 8) {
     const formattingQuery = JSON.stringify({
-      term: term == '0' ? null : term,
-      'sup.keyword': sup == '0' ? null : sup
+      term,
+      'sup.keyword': sup
     })
     const formattingSort = JSON.stringify({ ctime: sort })
     return axios.post(`/graphql/v1/toss`, {
