@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-06-29 16:50:58
  * @LastEditors: Shentong
- * @LastEditTime: 2020-07-09 14:46:58
+ * @LastEditTime: 2020-07-09 17:02:03
 -->
 <template>
   <el-row type="flex" class="new-sop app-main">
@@ -243,11 +243,11 @@ export default {
       timeScaleSelect: [
         {
           label: '秒',
-          value: 'SECONDS'
+          value: 'SCECOND'
         },
         {
           label: '分钟',
-          value: 'MINITES'
+          value: 'BRANCH'
         },
         {
           label: '小时',
