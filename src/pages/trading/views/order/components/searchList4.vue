@@ -4,7 +4,7 @@
  * @Author: songyanan
  * @Date: 2020-07-01 11:08:23
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-07-09 14:46:55
+ * @LastEditTime: 2020-07-09 15:03:02
  -->
 <template>
   <el-card
@@ -357,9 +357,7 @@ export default {
             'paymentPay.trade_type_text': '支付方式',
             amount: '交易金额',
             product_name: '商品名称',
-            'stageInfo.period_name': '期数',
-            'channel.channel_outer_name': '线索渠道',
-            sup_text: '课程难度'
+            'channel.channel_outer_name': '线索渠道'
           },
           fileName: `素质课订单导出-${fileTitleTime}`, // 文件名称
           query: JSON.stringify(query)
