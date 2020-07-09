@@ -3,8 +3,8 @@
  * @version:
  * @Author: Lukun
  * @Date: 2020-05-14 14:31:42
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-06-28 18:40:43
+ * @LastEditors: Shentong
+ * @LastEditTime: 2020-07-08 15:27:46
  */
 import axios from '../axios'
 import { getToken } from '@/utils/auth'
@@ -60,7 +60,29 @@ export default {
       })
     }
   },
-
+  /**
+   * @description 招生排期上传excel
+   */
+  updateScheduleExcel(params) {
+    if (judgeToken()) {
+      return new Promise((resolve, reject) => {
+        axios({
+          method: 'POST',
+          url: `/api/t/v1/enroll/import?courseType=${params.courseType}`,
+          responseType: 'blob',
+          headers: getHeaders(),
+          data: params
+        })
+          .then((res) => {
+            console.log('updateScheduleExcel-res', res)
+            resolve(res)
+          })
+          .catch((err) => {
+            reject(err)
+          })
+      })
+    }
+  },
   /**
    * 订单导出
    * @param {*} params 
