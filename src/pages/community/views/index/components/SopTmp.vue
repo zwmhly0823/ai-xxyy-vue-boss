@@ -4,14 +4,14 @@
  * @Author: Shentong
  * @Date: 2020-06-29 17:02:32
  * @LastEditors: Shentong
- * @LastEditTime: 2020-07-08 19:17:02
+ * @LastEditTime: 2020-07-09 15:41:43
 -->
 <template>
   <div class="soptmp-container">
     <div class="operete-row">
       <div class="search-container">
         <!-- 组件① -->
-        <div class="search-item small">
+        <div class="search-item small" v-if="userInfo.type == '1'">
           <group-sell
             @result="selectAuthor"
             :name="'username'"
@@ -19,7 +19,7 @@
           />
         </div>
       </div>
-      <div class="add-btn">
+      <div class="add-btn" v-if="userInfo.type == '2'">
         <el-button type="primary" size="mini" @click="new_sop_handle"
           >新建SOP模板</el-button
         >
@@ -150,7 +150,6 @@ export default {
   methods: {
     /** 创建人选择时 */
     selectAuthor(author) {
-      console.log(author, 'author')
       Object.assign(this.userInfo, author)
       this.getTemplateList()
     },
@@ -189,6 +188,10 @@ export default {
     },
     tableRowOperate(row, type) {
       if (type === '1') {
+        // TODO:
+        this.$router.push({
+          path: `/newPlantask/-1`
+        })
       } else if (type === '2') {
         this.$router.push({
           path: `/newSoptmp/${row.id}`

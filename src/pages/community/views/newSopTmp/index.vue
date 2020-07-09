@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-06-29 16:50:58
  * @LastEditors: Shentong
- * @LastEditTime: 2020-07-08 21:53:19
+ * @LastEditTime: 2020-07-09 14:46:58
 -->
 <template>
   <el-row type="flex" class="new-sop app-main">
@@ -299,9 +299,7 @@ export default {
   },
   computed: {},
   methods: {
-    firstSendTimeChange() {
-      // console.log(this.tmpInfo, 'firstSendTimeChange')
-    },
+    firstSendTimeChange() {},
     /** 删除某一天任务 */
     delTask(index) {
       delete this.tmpInfo[index]
@@ -322,7 +320,11 @@ export default {
         this.tmpInfo = {
           ...this.tmpInfo,
           [lastTask]: [
-            { ...this.emptyContentTmp, firstSendTime: this.firstSendTime }
+            {
+              ...this.emptyContentTmp,
+              firstSendTime: this.firstSendTime,
+              day: lastTask
+            }
           ]
         }
       }
@@ -384,11 +386,9 @@ export default {
     },
     async executeSave() {
       this.canSave = false
-      const validatePromise = await this.judegeValidate(
-        'sopForm'
-      ).catch(() => {})
+      const validatePro = await this.judegeValidate('sopForm').catch(() => {})
 
-      if (validatePromise) {
+      if (validatePro) {
         const params = this.packageSendData()
         await this.saveOrUpdate(params)
       }
@@ -420,7 +420,7 @@ export default {
           this.$message({
             type: 'success',
             message: '保存成功',
-            duration: 2000,
+            duration: 1200,
             onClose: () => this.cancelUpdate()
           })
         }
