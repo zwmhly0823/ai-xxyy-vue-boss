@@ -4,14 +4,14 @@
  * @Author: Shentong
  * @Date: 2020-06-29 17:02:32
  * @LastEditors: Shentong
- * @LastEditTime: 2020-07-09 18:48:35
+ * @LastEditTime: 2020-07-09 22:03:24
 -->
 <template>
   <div class="soptmp-container">
     <div class="operete-row">
       <div class="search-container">
         <!-- 组件① -->
-        <div class="search-item small" v-if="userInfo.type == '1'">
+        <div class="search-item small" v-if="userInfo.type == '2'">
           <group-sell
             @result="selectAuthor"
             :name="'username'"
@@ -19,7 +19,7 @@
           />
         </div>
       </div>
-      <div class="add-btn" v-if="userInfo.type == '2'">
+      <div class="add-btn" v-if="userInfo.type == '1'">
         <el-button type="primary" size="mini" @click="new_sop_handle"
           >新建SOP模板</el-button
         >
@@ -69,13 +69,17 @@
         ></el-table-column>
         <el-table-column
           label="模板状态"
-          prop="state"
+          prop="cstate"
           align="center"
         ></el-table-column>
         <el-table-column label="操作" align="center">
           <template slot-scope="scope">
             <div class="editStyle">
-              <span @click="tableRowOperate(scope.row, '1')">调用</span>
+              <span
+                @click="tableRowOperate(scope.row, '1')"
+                :class="{ 'btn-disabled': scope.row.state }"
+                >调用</span
+              >
               <span @click="tableRowOperate(scope.row, '2')">编辑</span>
               <el-popconfirm
                 confirmButtonText="YES"
@@ -133,21 +137,25 @@ export default {
     }
   },
   created() {
-    const teacherId = isToss()
-    let itemType = 'teacher'
-    if (!teacherId) {
-      itemType = 'staff'
-      this.userInfo.type = '2'
-    }
-    const userInfo = localStorage.getItem(itemType)
-
-    this.userInfo.uid = JSON.parse(userInfo).id
-    console.log('this.userInfo', this.userInfo)
-    // this.getAuthorList()
-    this.getTemplateList()
+    this.init()
+  },
+  activated() {
+    this.init()
   },
   mounted() {},
   methods: {
+    init() {
+      const teacherId = isToss()
+      let itemType = 'teacher'
+      if (!teacherId) {
+        itemType = 'staff'
+        this.userInfo.type = '2'
+      }
+      const userInfo = localStorage.getItem(itemType)
+
+      this.userInfo.uid = JSON.parse(userInfo).id
+      this.getTemplateList()
+    },
     /** 创建人选择时 */
     selectAuthor(author) {
       Object.assign(this.userInfo, author)
@@ -188,9 +196,10 @@ export default {
     },
     tableRowOperate(row, type) {
       if (type === '1') {
-        this.$router.push({
-          path: `/newPlantask/-1/${row.id}`
-        })
+        !row.state &&
+          this.$router.push({
+            path: `/newPlantask/-1/${row.id}`
+          })
       } else if (type === '2') {
         this.$router.push({
           path: `/newSoptmp/${row.id}`
@@ -230,7 +239,7 @@ export default {
         const { payload = [] } = tmpList || {}
         payload.forEach((item) => {
           item.ctime = item.ctime ? formatData(item.ctime) : ''
-          item.state = item.state ? '禁用' : '启用'
+          item.cstate = item.state ? '禁用' : '启用'
         })
         this.tableData = payload
       } catch (err) {
@@ -280,6 +289,10 @@ section {
       span {
         color: #2a75ed;
         cursor: pointer;
+        &.btn-disabled {
+          color: #ccc;
+          cursor: no-drop;
+        }
       }
     }
   }
