@@ -5,7 +5,7 @@
  * @Author: shentong
  * @Date: 2020-03-13 14:38:28
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-07-09 16:59:05
+ * @LastEditTime: 2020-07-09 21:38:59
  */
 // import axios from '../axios'
 import axios from '../axiosConfig'
@@ -242,6 +242,7 @@ export default {
             expressInfo{
               express_status
             }
+            questionnaire_count
           }
         }
       }`
@@ -387,6 +388,7 @@ export default {
           }
           base_painting_text
           address {
+            id
             receipt_name
             receipt_tel
             province
@@ -449,8 +451,8 @@ export default {
   // 统计分析的学习记录
   getStudentTrialRecordPage(page = 1, term, sup, sort = 'desc', size = 8) {
     const formattingQuery = JSON.stringify({
-      term: term == '0' ? null : term,
-      'sup.keyword': sup == '0' ? null : sup
+      term,
+      'sup.keyword': sup
     })
     const formattingSort = JSON.stringify({ ctime: sort })
     return axios.post(`/graphql/v1/toss`, {
@@ -769,5 +771,19 @@ export default {
     q += `&today=${query.today || ''}`
     q += `&tomorrow=${query.tomorrow || ''}`
     return axios.get(`/api/u/v1/user/userintention/update?${q}`)
+  },
+  // 学员详情 修改地址
+  updateExpressAddressNew(query) {
+    return axios.get(`/api/ex/v1/express/updateExpressAddressNew`, query)
+  },
+  getQuestionnairePage(query) {
+    return axios.get(
+      `/api/f/v1/questionnaire/getQuestionnairePage?uid=${query.uid}&page=${query.page}&pagesize=${query.pagesize}&mobile=${query.mobile}`
+    )
+  },
+  getQuestionnaireByUserId(query) {
+    return axios.get(
+      `/api/f/v1/questionnaire/getQuestionnaireByUserId?uid=${query.uid}&questionnaireId=${query.questionnaireId}&mobile=${query.mobile}`
+    )
   }
 }
