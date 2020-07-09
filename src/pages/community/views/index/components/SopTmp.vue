@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-06-29 17:02:32
  * @LastEditors: Shentong
- * @LastEditTime: 2020-07-04 18:33:50
+ * @LastEditTime: 2020-07-08 19:17:02
 -->
 <template>
   <div class="soptmp-container">
@@ -12,26 +12,11 @@
       <div class="search-container">
         <!-- 组件① -->
         <div class="search-item small">
-          <el-select
-            class="item-style"
-            v-model="selectVal"
-            filterable
-            remote
-            :reserve-keyword="true"
-            size="mini"
-            clearable
-            placeholder="创建人"
-            :remote-method="handleDebounce"
-            @change="selectChange"
-          >
-            <el-option
-              v-for="item in authorList"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            ></el-option>
-          </el-select>
-          <b class="el-icon-search"></b>
+          <group-sell
+            @result="selectAuthor"
+            :name="'username'"
+            :tip="'创建人'"
+          />
         </div>
       </div>
       <div class="add-btn">
@@ -45,41 +30,46 @@
         :tableHeight="tableHeight"
         :tableSize="'small'"
         :dataList="tableData"
+        :loading="flags.loading"
         :size="tableParams.size"
         :page="tableParams.page"
         :total="totalElements"
         @pageChange="pageChange_handler"
         class="mytable"
       >
-        <el-table-column label="序号" prop="" align="center"></el-table-column>
+        <el-table-column label="序号" prop="" align="center">
+          <template slot-scope="scope"
+            ><span>{{ scope.$index + 1 }} </span>
+          </template>
+        </el-table-column>
         <el-table-column
           label="模板名称"
-          prop="conversion_rate"
+          prop="templateName"
           align="center"
         ></el-table-column>
         <el-table-column
           label="调用次数"
-          prop="conversion_rate"
+          prop="useNum"
           align="center"
         ></el-table-column>
         <el-table-column
           label="创建人"
-          prop="conversion_rate"
+          prop="username"
           align="center"
         ></el-table-column>
         <el-table-column
           label="职级"
-          prop="conversion_rate"
+          prop="rankname"
           align="center"
         ></el-table-column>
         <el-table-column
           label="创建时间"
-          prop="conversion_rate"
+          prop="ctime"
           align="center"
         ></el-table-column>
         <el-table-column
           label="模板状态"
-          prop="conversion_rate"
+          prop="state"
           align="center"
         ></el-table-column>
         <el-table-column label="操作" align="center">
@@ -108,33 +98,62 @@
 </template>
 <script>
 import { debounce } from 'lodash'
+import GroupSell from './groupSell'
 import EleTable from '@/components/Table/EleTable'
+import { isToss, formatData } from '@/utils/index.js'
 export default {
   data() {
     return {
       tableHeight: 'auto',
-      tableData: [{}],
+      tableData: [],
       tableParams: {
         size: 20,
         page: 1
       },
       totalElements: 0,
       authorList: [],
-      selectVal: ''
+      selectVal: '',
+      userInfo: {
+        username: '',
+        type: '2' // 1:toss2:boss
+      },
+      currentRow: {},
+      flags: {
+        loading: false
+      }
     }
   },
   components: {
-    EleTable
+    EleTable,
+    GroupSell
   },
   computed: {
     handleDebounce() {
       return debounce(this.getAuthorList, 500)
     }
   },
-  mounted() {
-    this.getAuthorList()
+  created() {
+    const teacherId = isToss()
+    let itemType = 'teacher'
+    if (!teacherId) {
+      itemType = 'staff'
+      this.userInfo.type = '2'
+    }
+    const userInfo = localStorage.getItem(itemType)
+
+    this.userInfo.uid = JSON.parse(userInfo).id
+    console.log('this.userInfo', this.userInfo)
+    // this.getAuthorList()
+    this.getTemplateList()
   },
+  mounted() {},
   methods: {
+    /** 创建人选择时 */
+    selectAuthor(author) {
+      console.log(author, 'author')
+      Object.assign(this.userInfo, author)
+      this.getTemplateList()
+    },
     /** 获取创建人列表 */
     getAuthorList(res) {
       console.log(this.selectVal, res, 'vla')
@@ -168,14 +187,55 @@ export default {
     selectChange() {
       console.log(this.selectVal, 'this.selectVal')
     },
-    tableRowOperate(row, type) {},
+    tableRowOperate(row, type) {
+      if (type === '1') {
+      } else if (type === '2') {
+        this.$router.push({
+          path: `/newSoptmp/${row.id}`
+        })
+      } else {
+        this.currentRow = row
+      }
+    },
     /** 顶部tabs切换事件 */
     top_tabs_click(index, tab) {
       this.headerTabIndex = index
     },
     /** 表格删除某一行确认按钮 */
     confirmDelRow() {
-      console.log('删除了')
+      // console.log('删除了') delTemplate
+      const id = this.currentRow.id
+      id && this.delTemplate(id)
+    },
+    /** 删除一模板 */
+    async delTemplate(templateId) {
+      try {
+        const tmpList = await this.$http.Community.delTemplate({
+          templateId
+        }).catch()
+        tmpList && tmpList.code === 0 && this.getTemplateList()
+      } catch (err) {
+        console.log(err)
+      }
+    },
+    /** 获取sop列表 */
+    async getTemplateList() {
+      this.flags.loading = true
+      try {
+        const tmpList = await this.$http.Community.getTemplateList(
+          this.userInfo
+        ).catch()
+        const { payload = [] } = tmpList || {}
+        payload.forEach((item) => {
+          item.ctime = item.ctime ? formatData(item.ctime) : ''
+          item.state = item.state ? '禁用' : '启用'
+        })
+        this.tableData = payload
+      } catch (err) {
+        console.log(err)
+      } finally {
+        this.flags.loading = false
+      }
     },
     /** 新建sop按钮 */
     new_sop_handle() {

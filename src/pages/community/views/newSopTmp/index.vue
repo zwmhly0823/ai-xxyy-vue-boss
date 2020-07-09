@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-06-29 16:50:58
  * @LastEditors: Shentong
- * @LastEditTime: 2020-07-06 22:07:10
+ * @LastEditTime: 2020-07-08 21:53:19
 -->
 <template>
   <el-row type="flex" class="new-sop app-main">
@@ -21,7 +21,7 @@
               class="sop-form"
             >
               <el-form-item
-                prop="name"
+                prop="templateName"
                 label="模板名称"
                 style="width:320px;"
                 :rules="[
@@ -33,13 +33,13 @@
                 ]"
               >
                 <el-input
-                  v-model="sopForm.name"
+                  v-model="sopForm.templateName"
                   placeholder="请输入模板名称"
                   maxlength="30"
                 ></el-input>
               </el-form-item>
-              <el-form-item label="模板状态" prop="status">
-                <el-radio-group v-model="sopForm.status">
+              <el-form-item label="模板状态" prop="state">
+                <el-radio-group v-model="sopForm.state">
                   <el-radio :label="0">启用</el-radio>
                   <el-radio :label="1">禁用</el-radio>
                 </el-radio-group>
@@ -189,7 +189,7 @@
               </div>
             </div>
             <div class="operate-btn">
-              <el-button size="mini" style="width:150px" @click="saveForm"
+              <el-button size="mini" style="width:150px" @click="cancelUpdate"
                 >取消</el-button
               >
               <el-button
@@ -197,7 +197,8 @@
                 style="width:150px"
                 size="mini"
                 @click="saveForm"
-                >确认</el-button
+                :loading="!canSave"
+                >{{ canSave ? '确认' : '保存中' }}</el-button
               >
             </div>
           </el-card>
@@ -214,130 +215,19 @@
 </template>
 <script>
 import AddContent from './components/AddContent'
+import { isToss } from '@/utils/index.js'
 export default {
   data() {
     return {
       sopForm: {
-        name: '',
-        status: 0
+        templateName: '',
+        state: 0,
+        uid: '',
+        templateId: ''
       },
-      intervalType: 'SECONDS',
-      intervalTime: 0,
+      canSave: true,
       currenTask: 1,
       currenContentArr: [],
-      mockList: {
-        '1': [
-          {
-            id: 1,
-            cid: '0',
-            mid: '0',
-            ctime: '0',
-            utime: '0',
-            del: '0',
-            templateId: 1,
-            day: 1,
-            strip: 1,
-            startTime: '8:23:00',
-            endTime: '9:00:00',
-            intervalTime: 0,
-            intervalType: 'HOUR',
-            msgType: '1',
-            msgContent:
-              '第一天第一条的内容:Lorem, ipsum dolor sit amet consectetur adipisicing elit. Eaque ducimus est debitis ex harum similique praesentium. Dolores, deserunt impedit architecto distinctio beatae eius delectus accusantium corporis, qui officiis necessitatibus maxime!'
-          },
-          {
-            id: 2,
-            cid: '0',
-            mid: '0',
-            ctime: '0',
-            utime: '0',
-            del: '0',
-            templateId: 1,
-            day: 1,
-            strip: 2,
-            startTime: '8:30:00',
-            endTime: '9:00:00',
-            intervalTime: 0,
-            intervalType: 'MINITES',
-            msgType: '3',
-            msgContent:
-              'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg'
-          }
-        ],
-        '2': [
-          {
-            id: 2,
-            cid: '0',
-            mid: '0',
-            ctime: '0',
-            utime: '0',
-            del: '0',
-            templateId: 1,
-            day: 2,
-            strip: 1,
-            startTime: '06:30:00',
-            endTime: '09:00:01',
-            intervalTime: 0,
-            intervalType: 'HOUR',
-            msgType: '1',
-            msgContent: '第二天第一条的内容'
-          }
-        ],
-        '3': [
-          {
-            id: 1,
-            cid: '0',
-            mid: '0',
-            ctime: '0',
-            utime: '0',
-            del: '0',
-            templateId: 1,
-            day: 2,
-            strip: 1,
-            startTime: '05:30:00',
-            endTime: '09:00:01',
-            intervalTime: 0,
-            intervalType: 'HOUR',
-            msgType: '1',
-            msgContent: '第三天第一条的内容'
-          },
-          {
-            id: 1,
-            cid: '0',
-            mid: '0',
-            ctime: '0',
-            utime: '0',
-            del: '0',
-            templateId: 1,
-            day: 2,
-            strip: 1,
-            startTime: '04:30:00',
-            endTime: '12:00:01',
-            intervalTime: 0,
-            intervalType: 'MINITES',
-            msgType: '3',
-            msgContent:
-              'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg'
-          },
-          {
-            id: 1,
-            cid: '0',
-            mid: '0',
-            ctime: '0',
-            utime: '0',
-            del: '0',
-            templateId: 1,
-            day: 2,
-            strip: 1,
-            startTime: '14:30:00',
-            endTime: '9:00:01',
-            intervalTime: 0,
-            intervalType: 'HOUR',
-            msgType: '1',
-            msgContent: '第三天第三条的内容'
-          }
-        ]
-      },
       emptyContentTmp: {
         day: 1,
         startTime: '',
@@ -346,9 +236,9 @@ export default {
         intervalType: 'HOUR',
         msgType: '1',
         msgContent: '',
-        firstSendTime: ['06:00:00', '23:00:00']
+        firstSendTime: ['06:00:00', '23:59:59']
       },
-      firstSendTime: ['06:00:00', '23:00:00'],
+      firstSendTime: ['06:00:00', '23:59:59'],
       tmpInfo: {},
       timeScaleSelect: [
         {
@@ -365,31 +255,38 @@ export default {
         }
       ],
       centerDialogVisible: false,
-      curCtnt: {},
-      params: {
-        id: ''
-      }
+      curCtnt: {}
     }
   },
   components: { AddContent },
   async created() {
     const { id = '' } = this.$route.params
-    this.params.id = id
-    if (id !== '-1') {
-      // const tmpInfo = await this.getSopTemplate(id)
+    const teacherId = isToss()
 
-      // TODO:
-      this.tmpInfo = this.mockList
-      for (var i in this.tmpInfo) {
-        const curTask = this.tmpInfo[i]
-        console.log(curTask, 'curTask')
-        curTask.forEach((task, index) => {
-          const { startTime, endTime } = task
+    let itemType = 'teacher'
+    !teacherId && (itemType = 'staff')
+    const userInfo = localStorage.getItem(itemType)
+
+    this.sopForm.uid = JSON.parse(userInfo).id
+
+    if (id !== '-1') {
+      this.sopForm.templateId = id
+      const tmpInfo = await this.getSopTemplate(id)
+
+      const { templateName = '', state = 0, detailMap = {} } = tmpInfo
+      Object.assign(this.sopForm, {
+        state,
+        templateName
+      })
+
+      for (var i in detailMap) {
+        const curTask = detailMap[i]
+        curTask.forEach((task) => {
+          const { startTime = '', endTime = '' } = task
           task.firstSendTime = [startTime, endTime]
         })
       }
-      console.log('this.tmpInfo', this.tmpInfo)
-      // 判断数据是否为空对象
+      this.tmpInfo = { ...detailMap }
     } else {
       this.tmpInfo = {
         1: [this.emptyContentTmp]
@@ -403,12 +300,10 @@ export default {
   computed: {},
   methods: {
     firstSendTimeChange() {
-      console.log(this.tmpInfo, 'firstSendTimeChange')
+      // console.log(this.tmpInfo, 'firstSendTimeChange')
     },
     /** 删除某一天任务 */
     delTask(index) {
-      // console.log('index', index)
-      // this.currenTask = index
       delete this.tmpInfo[index]
       this.tmpInfo = { ...this.tmpInfo }
     },
@@ -418,11 +313,11 @@ export default {
     },
     /** 添加一天的 任务 */
     addTask() {
-      console.log(this.tmpInfo, 'this.tmpInfo')
       /** vue中数组出现了__ob__: Observer，使用下标取不到值 */
       const tmpInfo = JSON.parse(JSON.stringify(this.tmpInfo))
       const taskArr = Object.getOwnPropertyNames(tmpInfo)
       const lastTask = +taskArr[taskArr.length - 1] + 1
+
       if (taskArr.length) {
         this.tmpInfo = {
           ...this.tmpInfo,
@@ -436,13 +331,6 @@ export default {
     tasksClickHandle(index) {
       this.currenTask = index
       this.currenContentArr = this.tmpInfo[index]
-      // console.log('this.currenContentArr', this.currenContentArr)
-      // if (this.currenContentArr.length) {
-      // 每项任务的第一条信息发送时间
-      // const { startTime = '', endTime = '' } = this.currenContentArr[0]
-      // this.FirstSendTime = [startTime, endTime]
-      // console.log(this.FirstSendTime, 'this.FirstSendTime')
-      // }
     },
     /** 新增一条内容 */
     newContent() {
@@ -464,26 +352,79 @@ export default {
     },
     /** 通过模板id获取模板信息 */
     async getSopTemplate(templateId) {
+      const loadingInstance = this.$loading({
+        target: '.app-main',
+        lock: true,
+        text: '正在获取数据...',
+        fullscreen: true
+      })
       try {
         const tmpInfo = await this.$http.Community.getSopTemplate({
           templateId
         })
-        return tmpInfo
+        const { payload = {} } = tmpInfo
+        return payload
       } catch (err) {
         console.log(err)
+      } finally {
+        loadingInstance.close()
       }
     },
     /** 保存（更新）模板信息 */
     saveForm() {
-      console.log(this.tmpInfo, this.sopForm, 'tmpInfo')
-      this.$refs.sopForm.validate((valid) => {
-        if (valid) {
-          alert('submit!')
-        } else {
-          console.log('error submit!!')
-          return false
+      this.canSave && this.executeSave()
+    },
+    /** 取消修改按钮 */
+    cancelUpdate() {
+      this.$router.back(-1)
+    },
+    // form表校验
+    judegeValidate(formName) {
+      return this.$refs[formName].validate()
+    },
+    async executeSave() {
+      this.canSave = false
+      const validatePromise = await this.judegeValidate(
+        'sopForm'
+      ).catch(() => {})
+
+      if (validatePromise) {
+        const params = this.packageSendData()
+        await this.saveOrUpdate(params)
+      }
+      this.canSave = true
+    },
+    /** 封装需要提交的数据 */
+    packageSendData() {
+      for (var i in this.tmpInfo) {
+        const curTask = this.tmpInfo[i]
+        curTask.forEach((task) => {
+          const [startTime, endTime] = task.firstSendTime
+          task.startTime = startTime || '06:00:00'
+          task.endTime = endTime || '23:59:59'
+        })
+      }
+      return {
+        map: this.tmpInfo,
+        ...this.sopForm
+      }
+    },
+    /**
+     * @description 保存、更新接口
+     */
+    async saveOrUpdate(params) {
+      try {
+        const tasks = await this.$http.Community.saveOrUpdateSopTmpInfo(params)
+        const { code, status } = tasks
+        if (code === 0 && status === 'OK') {
+          this.$message({
+            type: 'success',
+            message: '保存成功',
+            duration: 2000,
+            onClose: () => this.cancelUpdate()
+          })
         }
-      })
+      } catch (err) {}
     },
     stepNumHandleChange() {},
     /**
@@ -494,7 +435,7 @@ export default {
       const {
         close = true,
         closeOnly = true,
-        msgType = '1',
+        msgType = 1,
         textarea = '',
         imgUrl = '',
         curIndex,
@@ -504,7 +445,7 @@ export default {
       if (!closeOnly) {
         const content = {
           msgType,
-          msgContent: msgType === '1' ? textarea : imgUrl
+          msgContent: +msgType === 1 ? textarea : imgUrl
         }
         if (isEdit) {
           this.currenContentArr[curIndex] = {
