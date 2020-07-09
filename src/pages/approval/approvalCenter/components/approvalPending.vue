@@ -3,8 +3,8 @@
  * @version: 
  * @Author: Lukun
  * @Date: 2020-04-27 17:47:58
- * @LastEditors: liukun
- * @LastEditTime: 2020-07-08 14:21:15
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-07-09 16:57:20
  -->
 <template>
   <div class="container">
@@ -436,7 +436,7 @@
           <el-row>
             <el-col :span="5">购买渠道:</el-col>
             <el-col :span="18" :offset="1">{{
-              drawerApprovalDeatail.channel
+              drawerApprovalDeatail.channelName
             }}</el-col>
           </el-row>
           <el-row>
