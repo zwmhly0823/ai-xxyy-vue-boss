@@ -50,7 +50,7 @@ export default {
   },
   computed: {
     currentTabComponent: function() {
-      return !this.headerTabIndex ? 'sop-tmp' : 'plan-task'
+      return this.headerTabIndex ? 'sop-tmp' : 'plan-task'
     }
   },
   methods: {
