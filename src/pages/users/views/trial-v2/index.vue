@@ -470,6 +470,46 @@
               </p>
             </template>
           </el-table-column>
+          <el-table-column label="调查问卷" min-width="80">
+            <template slot="header">
+              <div
+                class="sort-operate-box"
+                @click="sortRules('listen_comment_count')"
+              >
+                <span>调查问卷</span>
+                <div class="sort-icon-arrow">
+                  <i
+                    class="el-icon-caret-top top-color"
+                    :class="{
+                      active:
+                        sortKeys['listen_comment_count'] != 'asc' &&
+                        sortActive == 'listen_comment_count'
+                    }"
+                  ></i>
+                  <i
+                    class="el-icon-caret-bottom bottom"
+                    :class="{
+                      active:
+                        sortKeys['listen_comment_count'] == 'asc' &&
+                        sortActive == 'listen_comment_count'
+                    }"
+                  ></i>
+                </div>
+              </div>
+            </template>
+            <template slot-scope="scope">
+              <span v-if="!scope.row.questionnaire_count">
+                0
+              </span>
+              <el-button
+                v-else
+                type="text"
+                @click="clickQuestionaire(scope.row.userInfo)"
+              >
+                {{ scope.row.questionnaire_count }}
+              </el-button>
+            </template>
+          </el-table-column>
           <el-table-column label="体验课班级·销售" min-width="120">
             <template slot-scope="scope">
               <p v-if="!scope.row.teamInfo">
@@ -601,6 +641,11 @@
       :coupon-data="couponData"
       :select-user-id="[currentUser.id]"
     />
+
+    <!-- 调查问卷 -->
+    <questionaire-drawer-component
+      ref="questionaireDrawerC"
+    ></questionaire-drawer-component>
   </div>
 </template>
 
@@ -619,6 +664,7 @@ import Search from '../../components/Search.vue'
 import ToolTip from '../../components/ToolTip.vue'
 import SendCoupon from '../../components/SendCoupon.vue'
 import TrialSidebar from '../../components/trial/TrialSidebar.vue'
+import QuestionaireDrawerComponent from '../../components/trial/QuestionaireDrawerComponent.vue'
 export default {
   name: 'trialUsers',
   components: {
@@ -630,7 +676,8 @@ export default {
     Search,
     ToolTip,
     SendCoupon,
-    TrialSidebar
+    TrialSidebar,
+    QuestionaireDrawerComponent
   },
   computed: {
     searchParams() {
@@ -734,8 +781,14 @@ export default {
       this.filterParams = {}
     },
 
-    searchParams(params) {
-      console.log(params)
+    searchParams(params, oldval) {
+      // console.log(params)
+      if (
+        Object.keys(params).length === 0 &&
+        Object.keys(oldval).length === 0
+      ) {
+        return
+      }
       this.currentPage = 1
       this.getData()
       // 获取今日、明日待跟进数量
@@ -1320,6 +1373,15 @@ export default {
           if (type === 'tomorrow') this.tomorrowTotal = totalElements
         }
       })
+    },
+    clickQuestionaire(userinfo) {
+      const query = {
+        uid: userinfo.id,
+        mobile: userinfo.mobile,
+        page: 1,
+        pagesize: 20
+      }
+      this.$refs.questionaireDrawerC.openDrawer(query)
     }
   }
 }

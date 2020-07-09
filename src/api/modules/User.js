@@ -242,6 +242,7 @@ export default {
             expressInfo{
               express_status
             }
+            questionnaire_count
           }
         }
       }`
@@ -731,5 +732,15 @@ export default {
     q += `&today=${query.today || ''}`
     q += `&tomorrow=${query.tomorrow || ''}`
     return axios.get(`/api/u/v1/user/userintention/update?${q}`)
+  },
+  getQuestionnairePage(query) {
+    return axios.get(
+      `/api/f/v1/questionnaire/getQuestionnairePage?uid=${query.uid}&page=${query.page}&pagesize=${query.pagesize}&mobile=${query.mobile}`
+    )
+  },
+  getQuestionnaireByUserId(query) {
+    return axios.get(
+      `/api/f/v1/questionnaire/getQuestionnaireByUserId?uid=${query.uid}&questionnaireId=${query.questionnaireId}&mobile=${query.mobile}`
+    )
   }
 }
