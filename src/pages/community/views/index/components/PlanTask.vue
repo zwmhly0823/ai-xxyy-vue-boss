@@ -179,7 +179,7 @@
   </div>
 </template>
 <script>
-// import { isToss } from '@/utils/index'
+import { isToss } from '@/utils/index'
 import planTaskSearch from './planTaskSearch'
 import EleTable from '@/components/Table/EleTable'
 export default {
@@ -189,141 +189,11 @@ export default {
       tableData: [],
       activeStatus: 0,
       taskDetails_drawer: false,
-      taskDetailsCon: [
-        {
-          templateStatus: 1,
-          day: 1,
-          startTime: '2020-07-07 10:40-14:30',
-          templateDetails: [
-            {
-              id: '1',
-              cid: '470676591924613120',
-              mid: '0',
-              ctime: '0',
-              utime: '0',
-              del: '0',
-              templateId: '1',
-              day: 1,
-              strip: 1,
-              startTime: '10:40',
-              endTime: '14:30',
-              msgType: 3,
-              msgContent:
-                'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
-              intervalTime: 5,
-              intervalType: 'SCECOND'
-            },
-            {
-              id: '2',
-              cid: '470676591924613120',
-              mid: '0',
-              ctime: '0',
-              utime: '0',
-              del: '0',
-              templateId: '1',
-              day: 1,
-              strip: 1,
-              startTime: '10:40',
-              endTime: '14:30',
-              msgType: 1,
-              msgContent:
-                'h我就说你可能对方h我就说你可能对方h我就说你可能对方h我就说你可能对方h我就说你可能对方h我就说你可能对方h我就说你可能对方',
-              intervalTime: 5,
-              intervalType: 'SCECOND'
-            }
-          ]
-        },
-        {
-          templateStatus: 2,
-          day: 2,
-          startTime: '2020-07-07 10:40-14:30',
-          templateDetails: [
-            {
-              id: '1',
-              cid: '470676591924613120',
-              mid: '0',
-              ctime: '0',
-              utime: '0',
-              del: '0',
-              templateId: '1',
-              day: 1,
-              strip: 1,
-              startTime: '10:40',
-              endTime: '14:30',
-              msgType: 3,
-              msgContent:
-                'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
-              intervalTime: 5,
-              intervalType: 'SCECOND'
-            },
-            {
-              id: '2',
-              cid: '470676591924613120',
-              mid: '0',
-              ctime: '0',
-              utime: '0',
-              del: '0',
-              templateId: '1',
-              day: 1,
-              strip: 1,
-              startTime: '10:40',
-              endTime: '14:30',
-              msgType: 1,
-              msgContent:
-                'h我就说你可能对方h我就说你可能对方h我就说你可能对方h我就说你可能对方h我就说你可能对方h我就说你可能对方h我就说你可能对方',
-              intervalTime: 5,
-              intervalType: 'SCECOND'
-            }
-          ]
-        },
-        {
-          templateStatus: 0,
-          day: 3,
-          startTime: '2020-07-07 10:40-14:30',
-          templateDetails: [
-            {
-              id: '1',
-              cid: '470676591924613120',
-              mid: '0',
-              ctime: '0',
-              utime: '0',
-              del: '0',
-              templateId: '1',
-              day: 1,
-              strip: 1,
-              startTime: '10:40',
-              endTime: '14:30',
-              msgType: 3,
-              msgContent:
-                'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
-              intervalTime: 5,
-              intervalType: 'SCECOND'
-            },
-            {
-              id: '2',
-              cid: '470676591924613120',
-              mid: '0',
-              ctime: '0',
-              utime: '0',
-              del: '0',
-              templateId: '1',
-              day: 1,
-              strip: 1,
-              startTime: '10:40',
-              endTime: '14:30',
-              msgType: 1,
-              msgContent:
-                'h我就说你可能对方h我就说你可能对方h我就说你可能对方h我就说你可能对方h我就说你可能对方h我就说你可能对方h我就说你可能对方',
-              intervalTime: 5,
-              intervalType: 'SCECOND'
-            }
-          ]
-        }
-      ],
+      taskDetailsCon: [],
       sourchParams: {
         pageNo: 1,
         pageSize: 20,
-        type: 2,
+        type: '',
         username: '',
         jobTaskName: '',
         templateId: '',
@@ -334,12 +204,12 @@ export default {
     }
   },
   created() {
-    // const teacherId = isToss()
-    // if (teacherId) {
-    //   this.sourchParams.type = 1
-    // } else {
-    //   this.sourchParams.type = 2
-    // }
+    const teacherId = isToss()
+    if (teacherId) {
+      this.sourchParams.type = 1
+    } else {
+      this.sourchParams.type = 2
+    }
     this.calcTableHeight()
     this.getlistJobTaskPage()
     console.log('tableData')
@@ -403,7 +273,7 @@ export default {
         if (res.code === 0) {
           this.active_Status()
           this.taskDetails_drawer = true
-          // this.taskDetailsCon = res.payload
+          this.taskDetailsCon = res.payload
         }
         console.log(res)
       })
