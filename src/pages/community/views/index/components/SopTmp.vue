@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-06-29 17:02:32
  * @LastEditors: Shentong
- * @LastEditTime: 2020-07-09 15:41:43
+ * @LastEditTime: 2020-07-09 18:48:35
 -->
 <template>
   <div class="soptmp-container">
@@ -188,9 +188,8 @@ export default {
     },
     tableRowOperate(row, type) {
       if (type === '1') {
-        // TODO:
         this.$router.push({
-          path: `/newPlantask/-1`
+          path: `/newPlantask/-1/${row.id}`
         })
       } else if (type === '2') {
         this.$router.push({
