@@ -201,6 +201,8 @@ export default {
       this.teacherId = staff.id || ''
       this.teacherName = staff.realName || ''
     }
+
+    // 新增与编辑逻辑
     if (this.$route.params.id === '-1') {
       this.id = ''
     } else {
@@ -210,6 +212,11 @@ export default {
     if (this.taskPlan) {
       this.planTemplate = this.taskPlan.payload.templateList || []
       this.wechatNos = this.taskPlan.payload.wechatNos || []
+    }
+
+    // 调用
+    if (this.$router.params.templateId) {
+      this.sopFrom.planTemplate = this.$router.params.templateId
     }
 
     if (this.id) {
