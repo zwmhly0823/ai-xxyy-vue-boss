@@ -3,8 +3,8 @@
  * @version: 
  * @Author: Lukun
  * @Date: 2020-05-16 17:43:36
- * @LastEditors: Lukun
- * @LastEditTime: 2020-06-03 16:04:06
+ * @LastEditors: liukun
+ * @LastEditTime: 2020-07-09 21:06:17
 -->
 <template>
   <div class="container">
@@ -23,6 +23,7 @@
           :key="item.value"
           :label="item.label"
           :value="item.value"
+          :disabled="!item.show"
         >
         </el-option>
       </el-select>
@@ -58,7 +59,7 @@
 <script>
 import { debounce } from 'lodash'
 import axios from '@/api/axiosConfig'
-
+const positionId = Number(JSON.parse(localStorage.getItem('staff')).positionId)
 export default {
   props: {
     // 老师ID,通过老师获取对应的排期
@@ -72,11 +73,13 @@ export default {
       courseOptions: [
         {
           value: 'TESTCOURSE',
-          label: '体验课'
+          label: '体验课',
+          show: positionId === 1 || positionId === 2
         },
         {
           value: 'SYSTEMCOURSE',
-          label: '系统课'
+          label: '系统课',
+          show: positionId === 1 || positionId === 3
         }
       ],
       course: {
@@ -91,6 +94,16 @@ export default {
       chooseTeam: true,
       type: '', // 1-系统课，0-体验课
       addList: {}
+    }
+  },
+  mounted() {
+    if (positionId === 2) {
+      // 体验课
+      this.value = 'TESTCOURSE' // 显示赋值
+      this.$emit('result', { period: '', managementType: 'TESTCOURSE' }) // 给父组件传结果用于bb请求数据
+    } else if (positionId === 3) {
+      this.value = 'SYSTEMCOURSE' // 显示赋值
+      this.$emit('result', { period: '', managementType: 'SYSTEMCOURSE' }) // 给父组件传结果用于bb请求数据
     }
   },
   computed: {
