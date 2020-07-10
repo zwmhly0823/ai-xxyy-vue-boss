@@ -1360,14 +1360,14 @@ export default {
       if (+this.term !== 0) {
         Object.assign(params, { term: this.term })
       }
-      console.log(params)
+      // console.log(params)
 
       this.$http.User.trialCourseUsersV2(params, 1, {}).then((res) => {
-        console.log(res, 'todaycount')
+        // console.log(res, 'todaycount')
 
         if (res && res.data && res.data.StudentTrialV2StatisticsPage) {
           const { totalElements = 0 } = res.data.StudentTrialV2StatisticsPage
-          console.log(totalElements)
+          // console.log(totalElements)
 
           if (type === 'today') this.todayTotal = totalElements
           if (type === 'tomorrow') this.tomorrowTotal = totalElements
