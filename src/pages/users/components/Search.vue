@@ -204,6 +204,30 @@
               />
             </div>
           </el-form-item>
+          <el-form-item label="参课节数:">
+            <div class="search-group">
+              <simple-select
+                name="join_course_count"
+                placeholder="请选择"
+                :my-style="{ width: '100px' }"
+                :multiple="false"
+                :data-list="joinCourseList"
+                @result="getSearchData('join_course_count', arguments)"
+              />
+            </div>
+          </el-form-item>
+          <el-form-item label="完课节数:">
+            <div class="search-group">
+              <simple-select
+                name="complete_course_count"
+                placeholder="请选择"
+                :my-style="{ width: '100px' }"
+                :multiple="false"
+                :data-list="completeCourseList"
+                @result="getSearchData('complete_course_count', arguments)"
+              />
+            </div>
+          </el-form-item>
           <p @click="handleClear" class="clear-btn primary-text">清空筛选</p>
         </el-form>
       </div>
@@ -265,7 +289,7 @@ export default {
      */
     getSearchData(key, res) {
       const search = res && res[0]
-      console.log(key, res)
+      // console.log(key, res)
 
       if (search) {
         if (key === 'sup') {
@@ -318,8 +342,8 @@ export default {
           this.$delete(this.searchQuery, 'user_num_text')
         }
       }
-      console.log(search, 'getSearchData')
-      console.log(this.searchQuery, 'this.searchQuery')
+      // console.log(search, 'getSearchData')
+      // console.log(this.searchQuery, 'this.searchQuery')
       this.$emit('search', this.searchQuery)
     },
     handleClear() {
