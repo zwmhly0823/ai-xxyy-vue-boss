@@ -53,6 +53,7 @@
               v-model="sopFrom.planStartDate"
               type="date"
               value-format="yyyy-MM-dd"
+              :picker-options="expireTimeOption"
               placeholder="选择日期时间"
             ></el-date-picker>
           </el-form-item>
@@ -183,6 +184,11 @@ export default {
         wxNumber: [
           { required: true, message: '请选择发送微信号', trigger: 'change' }
         ]
+      },
+      expireTimeOption: {
+        disabledDate(date) {
+          return date.getTime() <= Date.now() - 24 * 60 * 60 * 1000
+        }
       }
     }
   },
