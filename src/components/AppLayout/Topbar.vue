@@ -3,8 +3,8 @@
  * @Email: yangjiyong@meishubao.com
  * @Date: 2020-03-13 15:13:34
  * @Description: topbar 顶部功能区
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-06-22 22:50:43
+ * @LastEditors: zhangjianwen
+ * @LastEditTime: 2020-07-10 16:24:27
  -->
 <template>
   <div class="navbar" :class="{ prod: isProd }">
@@ -30,6 +30,7 @@
     </div>
 
     <div class="right-menu">
+      <GlobelSearch class="globelSearch-con" />
       <el-badge
         :value="noticeBadge"
         :hidden="!noticeBadge"
@@ -91,6 +92,7 @@
 <script>
 import { mapGetters } from 'vuex'
 import Breadcrumb from './Breadcrumb'
+import GlobelSearch from './GlobelSearch'
 import Hamburger from './Hamburger'
 import { removeToken } from '@/utils/auth'
 import { baseUrl } from '@/utils/index'
@@ -100,7 +102,8 @@ export default {
   components: {
     Breadcrumb,
     Hamburger,
-    noticeCenter
+    noticeCenter,
+    GlobelSearch
   },
   computed: {
     ...mapGetters(['sidebar', 'avatar'])
@@ -209,7 +212,19 @@ export default {
       background: rgba(0, 0, 0, 0.025);
     }
   }
+  .globelSearch-con {
+    line-height: 46px;
+    height: 100%;
+    width: 220px;
+    cursor: pointer;
+    transition: background 0.3s;
+    -webkit-tap-highlight-color: transparent;
+    margin-right: 20px;
 
+    &:hover {
+      background: rgba(0, 0, 0, 0.025);
+    }
+  }
   .breadcrumb-container {
     float: left;
     margin-left: 15px;
