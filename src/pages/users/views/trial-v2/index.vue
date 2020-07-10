@@ -474,7 +474,7 @@
             <template slot="header">
               <div
                 class="sort-operate-box"
-                @click="sortRules('listen_comment_count')"
+                @click="sortRules('questionnaire_count')"
               >
                 <span>调查问卷</span>
                 <div class="sort-icon-arrow">
@@ -482,16 +482,16 @@
                     class="el-icon-caret-top top-color"
                     :class="{
                       active:
-                        sortKeys['listen_comment_count'] != 'asc' &&
-                        sortActive == 'listen_comment_count'
+                        sortKeys['questionnaire_count'] != 'asc' &&
+                        sortActive == 'questionnaire_count'
                     }"
                   ></i>
                   <i
                     class="el-icon-caret-bottom bottom"
                     :class="{
                       active:
-                        sortKeys['listen_comment_count'] == 'asc' &&
-                        sortActive == 'listen_comment_count'
+                        sortKeys['questionnaire_count'] == 'asc' &&
+                        sortActive == 'questionnaire_count'
                     }"
                   ></i>
                 </div>
@@ -751,7 +751,8 @@ export default {
         join_course_count: 'desc',
         complete_course_count: 'desc',
         task_count: 'desc',
-        listen_comment_count: 'desc'
+        listen_comment_count: 'desc',
+        questionnaire_count: 'desc'
       },
       sortActive: '',
       // 1 招生中   2待开课   3 开课中  4 已结课'
