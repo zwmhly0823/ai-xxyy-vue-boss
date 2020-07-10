@@ -3,8 +3,8 @@
  * @version:
  * @Author: zhubaodong
  * @Date: 2020-03-24 18:20:12
- * @LastEditors: Lukun
- * @LastEditTime: 2020-06-01 11:59:07
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-07-08 17:53:31
  -->
 
 <template>
@@ -254,17 +254,21 @@
       </el-form-item> -->
 
       <el-form-item
-        v-if="wxSerch || wxTeacherPhone || wxStatus || wxConcatTeacher"
+        v-if="wxSerch || wxTeacherPhone || wxStatus || wxConcatTeacher || wxId"
       >
         <wx-list
           :wxSerch="wxSerch"
           :wxTeacherPhone="wxTeacherPhone"
           :wxStatus="wxStatus"
           :wxConcatTeacher="wxConcatTeacher"
+          :wxId="wxId"
+          :wxRecordId="wxRecordId"
           @getWxSerch="getWxSerch"
           @getPhone="getPhoneData"
           @getWxStatus="getWxStatus"
           @getWxConcatTeacher="getWxConcatTeacher"
+          @getWxIdSerch="getWxIdSerch"
+          @getWechatRecordIdSearch="getWechatRecordIdSearch"
         />
       </el-form-item>
       <el-form-item v-if="selectAddress">
@@ -586,7 +590,17 @@ export default {
     // 是否关联老师搜索
     wxConcatTeacher: {
       type: String,
-      default: '' // wxConcatTeacher
+      default: ''
+    },
+    // wechat_id
+    wxId: {
+      type: String,
+      default: ''
+    },
+    // wechat_record_id
+    wxRecordId: {
+      type: String,
+      default: ''
     },
     // 是否关联老师搜索
     selectAddress: {
@@ -829,9 +843,7 @@ export default {
       this.setSeachParmas(res, [this.teamDetail || 'last_team_id'])
     },
     getWxSerch(res) {
-      console.log('微信搜索父组件接收到的res', res)
       this.setSeachParmas(res, [this.wxSerch], 'wildcard')
-      console.log('@+++index.vue+++@@this.wxSerch@@@', this.wxSerch)
     },
     getVersionNu(res) {
       this.setSeachParmas(res, [this.moreVersion || 'product_version'])
@@ -863,6 +875,12 @@ export default {
     },
     getWxConcatTeacher(res) {
       this.setSeachParmas(res, [this.wxConcatTeacher])
+    },
+    getWxIdSerch(res) {
+      this.setSeachParmas(res, [this.wxId], 'wildcard')
+    },
+    getWechatRecordIdSearch(res) {
+      this.setSeachParmas(res, [this.wxRecordId])
     },
     getAddress(res) {
       this.setSeachParmas(res, [this.selectAddress])

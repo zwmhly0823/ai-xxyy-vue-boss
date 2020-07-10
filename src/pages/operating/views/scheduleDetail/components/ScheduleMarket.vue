@@ -4,7 +4,7 @@
  * @Author: shentong
  * @Date: 2020-04-02 16:08:02
  * @LastEditors: Shentong
- * @LastEditTime: 2020-04-27 12:39:22
+ * @LastEditTime: 2020-07-07 19:05:58
  -->
 <template>
   <div>
@@ -183,9 +183,7 @@ export default {
 
         this.totalElements = +_list.totalElements
         this.flags.loading = false
-      } catch (err) {
-        console.log()
-      }
+      } catch (err) {}
     },
     // 表格 内 统计数据
     async getScheduleDetailStatistic() {

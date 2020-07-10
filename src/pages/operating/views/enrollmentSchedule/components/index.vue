@@ -3,8 +3,8 @@
  * @version:
  * @Author: shentong
  * @Date: 2020-04-02 16:08:02
- * @LastEditors: Shentong
- * @LastEditTime: 2020-04-27 14:51:08
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-07-03 11:40:47
  -->
 <template>
   <div>
@@ -27,6 +27,12 @@
         @click="addEditSchedule(0)"
         >新增招生排期</el-button
       >
+      <el-alert
+        title="随意新增或编辑招生排期，有可能影响当前线索分配！请谨慎操作！"
+        type="error"
+        :closable="false"
+      >
+      </el-alert>
     </div>
 
     <div class="orderStyle">
@@ -298,9 +304,16 @@ export default {
   .el-card {
     border: 0;
   }
-}
-.orderStyle {
-  // padding-bottom: 45px;
+  ::v-deep {
+    .el-alert--error {
+      margin: 0 auto;
+      width: 600px;
+      text-align: center;
+      .el-alert__content {
+        margin: 0 auto;
+      }
+    }
+  }
 }
 .editStyle {
   color: #0401ff;

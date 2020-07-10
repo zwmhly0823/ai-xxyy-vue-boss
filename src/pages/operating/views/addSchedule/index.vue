@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-14 18:28:44
  * @LastEditors: Shentong
- * @LastEditTime: 2020-04-26 13:43:06
+ * @LastEditTime: 2020-07-06 15:36:00
  -->
 <template>
   <div class="app-main height add-schedule-container">
@@ -36,6 +36,7 @@
           <set-leads
             v-if="courseType == '0' && stepStatus == 2"
             @listenStepStatus="fSstepStatus"
+            @setExcelStatus="excelStatus"
           ></set-leads>
 
           <!-- 第二步 -->
@@ -83,6 +84,7 @@ export default {
   props: [],
   data() {
     return {
+      isComplete: false,
       stepStatus: 1,
       teacherSelectInfo: {},
       courseType: '0',
@@ -97,31 +99,22 @@ export default {
   },
   computed: {
     isShowSecondStep() {
-      if (
+      return (
         (this.courseType === '0' && this.stepStatus === 3) ||
         (this.courseType === '1' && this.stepStatus === 2)
-      ) {
-        return true
-      }
-      return false
+      )
     },
     isShowThirdStep() {
-      if (
+      return (
         (this.courseType === '0' && this.stepStatus === 4) ||
         (this.courseType === '1' && this.stepStatus === 3)
-      ) {
-        return true
-      }
-      return false
+      )
     },
     isShowLastStep() {
-      if (
+      return (
         (this.courseType === '0' && this.stepStatus === 5) ||
         (this.courseType === '1' && this.stepStatus === 4)
-      ) {
-        return true
-      }
-      return false
+      )
     }
   },
   created() {
@@ -134,7 +127,10 @@ export default {
     oneStepNext(val) {
       if (val) this.stepStatus++
     },
-    // 第一，二步 点击下一步 监听
+    /**
+     * @description 第一，二步 点击下一步 监听
+     * @param {type } 0： 上一步；1: 下一步
+     */
     fSstepStatus(type) {
       if (type) this.stepStatus++
       else this.stepStatus--
@@ -149,6 +145,14 @@ export default {
       this.$store.commit('setSchedulePeriod', '')
       this.$store.commit('setScheduleTeacher', [])
       this.$router.push({ path: '/' })
+    },
+    /**
+     * @description "设置分配线索规则"步骤中的《导入数据》工能emit值
+     * @params {res}
+     * @type 返回为'complete'代表导入数据成功，此时直接跳转到完成步骤
+     */
+    excelStatus(res) {
+      res === 'complete' && (this.stepStatus = this.courseType === '0' ? 5 : 4)
     }
   }
 }

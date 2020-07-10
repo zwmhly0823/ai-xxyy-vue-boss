@@ -3,8 +3,8 @@
  * @version:
  * @Author: Shentong
  * @Date: 2020-03-16 19:46:39
- * @LastEditors: panjian
- * @LastEditTime: 2020-06-28 14:26:05
+ * @LastEditors: Shentong
+ * @LastEditTime: 2020-07-07 18:51:33
  */
 import axios from '../axiosConfig'
 // import { getToken } from '@/utils/auth'
@@ -97,7 +97,7 @@ export default {
    */
   getScheduleDetailList(params) {
     return axios.get(
-      `/api/s/v1/management/enroll/getDetail?teacherId=${params.teacherId}&departmentIds=${params.departmentIds}&level=${params.level}&courseType=${params.courseType}&period=${params.period}&pageSize=${params.size}&pageNumber=` +
+      `/api/s/v1/management/enroll/getDetail?teacherId=${params.teacherId}&departmentIds=${params.departmentIds}&level=${params.level}&courseType=${params.courseType}&period=${params.period}&courseDifficulties=${params.courseDifficulties}&pageSize=${params.size}&pageNumber=` +
         params.pageNum
     )
   },
@@ -116,7 +116,7 @@ export default {
    */
   getScheduleDetailStatistic(params) {
     return axios.get(
-      `/api/s/v1/management/enroll/calculation/byPeriod?teacherId=${params.teacherId}&departmentIds=${params.departmentIds}&level=${params.level}&courseType=${params.courseType}&period=${params.period}`
+      `/api/s/v1/management/enroll/calculation/byPeriod?teacherId=${params.teacherId}&departmentIds=${params.departmentIds}&level=${params.level}&courseType=${params.courseType}&period=${params.period}&courseDifficulties=${params.courseDifficulties}`
     )
   },
   /**
@@ -337,5 +337,63 @@ export default {
         }
       }`
     })
+  },
+
+  /**
+   * 替换用户手机号
+   * v1/user/replaceMobile?staffId=1&oldMobile=13012345670&newMobile=13012345672
+   *  */
+  replaceMobile({ newMobile, oldMobile, staffId } = {}) {
+    return axios.post(
+      `/api/u/v1/user/replaceMobile?staffId=${staffId}&oldMobile=${oldMobile}&newMobile=${newMobile}`
+    )
+  },
+
+  /**
+   * 获取手机号替换记录
+   */
+  getUserReplaceMobileLog(params = '', page = 1) {
+    return axios.post('/graphql/v1/toss', {
+      query: `{
+        UserReplaceMobileLogPage(query: ${params}, page:${page}){
+          totalElements
+          totalPages
+          number
+          content{
+            id
+            cid
+            ctime
+            del
+            mid
+            utime
+            new_mobile
+            old_mobile
+            new_uid
+            uid
+            staff_id
+            remark
+            user{
+              id
+              user_num
+              username
+            }
+            staff{
+              id
+              real_name
+              user_name
+            }
+          }
+        }
+      }`
+    })
+  },
+  /**
+   * @description 招生排期上传excel
+   */
+  updateScheduleExcel(parmas) {
+    return axios.post(
+      `/api/t/v1/enroll/import?courseType=${parmas.courseType}`,
+      parmas
+    )
   }
 }

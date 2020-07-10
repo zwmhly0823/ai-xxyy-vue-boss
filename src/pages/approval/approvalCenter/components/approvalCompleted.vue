@@ -3,8 +3,8 @@
  * @version: 
  * @Author: Lukun
  * @Date: 2020-04-27 17:47:58
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-06-24 20:19:38
+ * @LastEditors: liukun
+ * @LastEditTime: 2020-07-08 14:14:27
  -->
 <template>
   <div class="container">
@@ -148,9 +148,14 @@
         </el-row>
         <el-row>
           <el-col :span="3">用户电话:</el-col>
-          <el-col :span="20" :offset="1">{{
-            drawerApprovalDeatail.userTel
-          }}</el-col>
+          <el-col :span="20" :offset="1"
+            ><el-link
+              type="primary"
+              :href="'/users/#/details/' + drawerApprovalDeatail.userId"
+              target="_blank"
+              >{{ drawerApprovalDeatail.userTel }}</el-link
+            ></el-col
+          >
         </el-row>
         <el-row>
           <el-col :span="3">补发商品:</el-col>
@@ -265,14 +270,28 @@
         </el-row>
         <el-row>
           <el-col :span="5">用户电话:</el-col>
-          <el-col :span="18" :offset="1">{{
-            drawerApprovalDeatail.customerPhone
-          }}</el-col>
+          <el-col :span="18" :offset="1"
+            ><el-link
+              type="primary"
+              :href="'/users/#/details/' + drawerApprovalDeatail.userId"
+              target="_blank"
+              >{{ drawerApprovalDeatail.customerPhone }}</el-link
+            ></el-col
+          >
         </el-row>
         <el-row>
           <el-col :span="5">订单号:</el-col>
+          <el-col :span="18" :offset="1"
+            >{{ drawerApprovalDeatail.outTradeNo
+            }}<span style="color:red" v-if="drawerApprovalDeatail.isImport"
+              >(此为第三方导入订单)</span
+            ></el-col
+          >
+        </el-row>
+        <el-row v-if="drawerApprovalDeatail.channelOuterName">
+          <el-col :span="5">订单来源:</el-col>
           <el-col :span="18" :offset="1">{{
-            drawerApprovalDeatail.outTradeNo
+            drawerApprovalDeatail.channelOuterName
           }}</el-col>
         </el-row>
         <div v-if="currentType !== 'UNCREDITED'">
@@ -306,12 +325,24 @@
               drawerApprovalDeatail.channel
             }}</el-col>
           </el-row>
+          <el-row v-if="drawerApprovalDeatail.payeeName">
+            <el-col :span="5">收款人姓名:</el-col>
+            <el-col :span="18" :offset="1">{{
+              drawerApprovalDeatail.payeeName
+            }}</el-col>
+          </el-row>
+          <el-row v-if="drawerApprovalDeatail.payeeAccount">
+            <el-col :span="5">支付宝账号:</el-col>
+            <el-col :span="18" :offset="1">{{
+              drawerApprovalDeatail.payeeAccount
+            }}</el-col>
+          </el-row>
           <el-row>
             <el-col :span="5">退款类型:</el-col>
             <el-col :span="18" :offset="1">{{
-              drawerApprovalDeatail.refundType == '1'
-                ? '课程退款'
-                : '优惠券退款'
+              { 0: '优惠券退款', 1: '课程退款', 2: '降半年包', 3: '补偿' }[
+                drawerApprovalDeatail.refundType
+              ]
             }}</el-col>
           </el-row>
           <el-row>
@@ -324,7 +355,7 @@
            `
             }}</el-col>
           </el-row>
-          <el-row>
+          <!-- <el-row>
             <el-col :span="5">退款月数:</el-col>
             <el-col :span="18" :offset="1">{{
               `${Math.floor(drawerApprovalDeatail.periodRefund / 4)}月`
@@ -339,7 +370,7 @@
            )}月${drawerApprovalDeatail.periodResidue % 4}周
            `
             }}</el-col>
-          </el-row>
+          </el-row> -->
           <el-row>
             <el-col :span="5">退款金额:</el-col>
             <el-col :span="18" :offset="1">{{
@@ -356,6 +387,19 @@
             <el-col :span="5">退款说明:</el-col>
             <el-col :span="18" :offset="1">{{
               drawerApprovalDeatail.refundMsg
+            }}</el-col>
+          </el-row>
+          <el-row
+            v-if="
+              drawerApprovalDeatail.isRecover === 1 ||
+                drawerApprovalDeatail.isRecover === 0
+            "
+          >
+            <el-col :span="5">课程与物流恢复状态:</el-col>
+            <el-col :span="18" :offset="1">{{
+              Number(drawerApprovalDeatail.isRecover)
+                ? '已恢复'
+                : '未恢复请处理'
             }}</el-col>
           </el-row>
           <el-row>
@@ -424,6 +468,7 @@
       </div>
     </el-drawer>
     <adjust-drawer
+      :is3d="1"
       ref="adjustDrawerCom"
       :adjustDrawerData="adjustDrawerData"
     ></adjust-drawer>
@@ -673,7 +718,8 @@ export default {
                 },
                 {
                   label: '用户电话',
-                  value: payData.userTel
+                  value: payData.userTel,
+                  valueId: payData.userId
                 },
                 {
                   label: '订单号',

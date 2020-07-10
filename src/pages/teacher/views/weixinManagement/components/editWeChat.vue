@@ -3,8 +3,8 @@
  * @version: 
  * @Author: panjian
  * @Date: 2020-04-14 15:15:31
- * @LastEditors: panjian
- * @LastEditTime: 2020-05-07 18:22:09
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-07-08 12:39:09
  -->
 <template>
   <div>
@@ -123,7 +123,7 @@ export default {
       if (!value) {
         return callback(new Error('微信号不能为空'))
       } else {
-        var regEn = /[`~!@#$%^&*()_+<>?:"{},.\\/;'[\]]/im
+        var regEn = /[`~!@#$%^&*()+<>?:"{},.\\/;'[\]]/im
         var regCn = /[·！#￥（——）：；“”‘、，|《。》？、【】[\]]/im
         var regWn = /^[\u4e00-\u9fa5]+$/
         if (regEn.test(value) || regCn.test(value) || regWn.test(value)) {
@@ -283,11 +283,13 @@ export default {
           console.log(params, 'paramsparamsparams')
 
           this.$http.Teacher.relation(params).then((res) => {
-            this.$message({
-              message: '添加成功',
-              type: 'success'
-            })
-            this.$emit('editWeChat', 1)
+            if (res && res.code === 0) {
+              this.$message({
+                message: '添加成功',
+                type: 'success'
+              })
+              this.$emit('editWeChat', 1)
+            }
           })
         } else {
           console.log('error submit!!')

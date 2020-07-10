@@ -83,6 +83,16 @@
               @click="enlarge(scope.row)"
               v-if="scope.row.task_video"
             ></i>
+            <el-button
+              round
+              v-if="!scope.row.task_video"
+              class="down-btn"
+              @click="downImg(scope.row)"
+              size="mini"
+              type="primary"
+              plain
+              >下载作品</el-button
+            >
           </div>
         </template>
       </el-table-column>
@@ -378,6 +388,45 @@ export default {
       this.videoDialog = true
       console.log(val.task_video)
     },
+    // 下载图片
+    downImg(val) {
+      const that = this
+      console.log('下载', val)
+      const canvas = document.createElement('canvas')
+      const typeName = val.task_image.lastIndexOf('.')
+      const type = val.task_image.substr(typeName + 1)
+      const image = new Image()
+      image.setAttribute('crossOrigin', 'anonymous')
+
+      image.src = val.task_image
+      image.onload = function() {
+        const link = document.createElement('a')
+        canvas.width = image.width
+        canvas.height = image.height
+        const context = canvas.getContext('2d')
+        context.drawImage(image, 0, 0, image.width, image.height)
+        const url = canvas.toDataURL('image/' + type)
+        const blob = that.dataUrlToBold(url)
+        const objUrl = URL.createObjectURL(blob)
+        link.style.display = 'none'
+        link.href = objUrl
+        link.download = `${val.sendCourseLog.wd_info}${val.sendCourseLog.title}.jpg`
+        link.target = '_blank'
+        document.body.appendChild(link)
+        link.click()
+      }
+    },
+    dataUrlToBold(url) {
+      const arr = url.split(',')
+      const mime = arr[0].match(/:(.*?);/)[1]
+      const bStr = atob(arr[1])
+      let n = bStr.length
+      const u8arr = new Uint8Array(n)
+      while (n--) {
+        u8arr[n] = bStr.charCodeAt(n)
+      }
+      return new Blob([u8arr], { type: mime })
+    },
     // 关闭视频播放 清空数据
     closeDialog() {
       this.currentVideo = ''
@@ -442,6 +491,11 @@ export default {
     transform: translate(-50%, -50%);
     font-size: 40px;
     color: #f5f7fa;
+  }
+  .down-btn {
+    text-align: center;
+    margin-left: 10px;
+    padding: 4px 15px;
   }
 }
 

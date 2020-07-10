@@ -132,4 +132,28 @@ const enums = {
   ]
 }
 
+function getJoinCourseList() {
+  const list = []
+  while (list.length <= 12) {
+    list.push({
+      id: list.length,
+      text: list.length
+    })
+  }
+  return list
+}
+function getCompleteCourseList() {
+  const list = []
+  while (list.length <= 12) {
+    list.push({
+      id: list.length,
+      text: list.length
+    })
+  }
+  return list
+}
+
+enums.joinCourseList = getJoinCourseList()
+enums.completeCourseList = getCompleteCourseList()
+
 export default enums

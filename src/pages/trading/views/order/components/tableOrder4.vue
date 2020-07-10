@@ -1,10 +1,16 @@
-<!-- 系统课订单列表 topic = '5' -->
+<!--
+ * @Author: songyanan
+ * @Email: songyanan@meishubao.com
+ * @Date: 2020-07-01 11:19:27
+ * @Last Modified by:   songyanan
+ * @Last Modified time: 2020-07-04 17:45:00
+ -->
 <template>
   <div class="title-box">
-    <el-table :data="orderList">
-      <el-table-column label="用户信息" prop="user" min-width="150" fixed>
+    <el-table :data="orderList" v-loading="loading">
+      <el-table-column label="用户信息" prop="user" min-width="180" fixed>
         <template slot-scope="scope">
-          <user :user="scope.row.user" />
+          <user :user="scope.row.user" :flag="true" />
         </template>
       </el-table-column>
       <el-table-column label="归属地" prop="QCellCore" min-width="120">
@@ -15,22 +21,7 @@
           </p>
         </template>
       </el-table-column>
-      <el-table-column label="订单类型" min-width="80">
-        <template slot-scope="scope">
-          <p>
-            {{
-              scope.row.regtype
-                ? +scope.row.regtype === 2
-                  ? '首单'
-                  : +scope.row.regtype === 3
-                  ? '续费'
-                  : '-'
-                : '-'
-            }}
-          </p>
-        </template>
-      </el-table-column>
-      <el-table-column label="商品信息" min-width="150">
+      <el-table-column label="商品信息" min-width="160">
         <template slot-scope="scope">
           <p>
             {{
@@ -39,7 +30,6 @@
                 : scope.row.product_name || '-'
             }}
           </p>
-          <!-- 人民币 ， 宝石，小熊币 -->
           <p>
             {{ scope.row.currency ? scope.row.currency : '人民币 ' }}
             {{
@@ -52,118 +42,51 @@
           </p>
         </template>
       </el-table-column>
-      <el-table-column label="业绩归属老师" min-width="180">
+      <!-- <el-table-column label="社群销售·素质课班级" min-width="220">
         <template slot-scope="scope">
-          <!-- 续费情况  v-if="scope.row.regtype && scope.row.regtype !== 3" -->
-          <div>
-            <p>
-              {{ scope.row.salesman ? scope.row.salesman.realname : '-' }}
-              <span
-                v-if="trialTeamUid[scope.row.uid]"
-                :class="{
-                  'primary-text': trialTeamUid[scope.row.uid].team_name
-                }"
-                @click="
-                  openDetail(trialTeamUid[scope.row.uid].id, scope.row, 0)
-                "
-              >
-                （{{ trialTeamUid[scope.row.uid].team_name }}）
-              </span>
-              <span v-else>-</span>
-            </p>
-            <p>
-              {{
-                scope.row.salesman
-                  ? scope.row.salesman.area_name ||
-                    scope.row.salesman.department_name ||
-                    scope.row.salesman.group_name
-                    ? scope.row.salesman.group_name ||
-                      scope.row.salesman.department_name ||
-                      scope.row.salesman.area_name
-                    : '-'
-                  : '-'
-              }}
-            </p>
-          </div>
-          <!-- <div v-else>
-            <p>-</p>
-            <p>-</p>
-          </div> -->
-        </template>
-      </el-table-column>
-      <el-table-column label="服务老师" min-width="180">
-        <template slot-scope="scope">
-          <!-- 非续费 v-if="scope.row.regtype !== 3" -->
-          <div>
-            <p>
-              {{ scope.row.teacher ? scope.row.teacher.realname : '-' }}
-              <span
-                :class="{ 'primary-text': scope.row.team }"
-                @click="openDetail(scope.row.team.id, scope.row, 2)"
-              >
-                ({{ scope.row.team ? scope.row.team.team_name : '-' }})
-              </span>
-            </p>
-            <p>
-              {{
-                scope.row.teacher
-                  ? scope.row.teacher.area_name ||
-                    scope.row.teacher.department_name ||
-                    scope.row.teacher.group_name
-                    ? scope.row.teacher.group_name ||
-                      scope.row.teacher.department_name ||
-                      scope.row.teacher.area_name
-                    : '-'
-                  : '-'
-              }}
-            </p>
-          </div>
-          <!-- 续费 -->
-          <!-- <div v-else>
-            <p>
-              {{ scope.row.salesman ? scope.row.salesman.realname : '-' }}
-              <span
-                v-if="trialTeamUid[scope.row.uid]"
-                :class="{
-                  'primary-text': trialTeamUid[scope.row.uid].team_name
-                }"
-                @click="
-                  openDetail(trialTeamUid[scope.row.uid].id, scope.row, 0)
-                "
-              >
-                （{{ trialTeamUid[scope.row.uid].team_name }}）
-              </span>
-              <span v-else>-</span>
-            </p>
-            <p>
-              {{
-                scope.row.salesman
-                  ? scope.row.salesman.area_name ||
-                    scope.row.salesman.department_name ||
-                    scope.row.salesman.group_name
-                    ? scope.row.salesman.group_name ||
-                      scope.row.salesman.department_name ||
-                      scope.row.salesman.area_name
-                    : '-'
-                  : '-'
-              }}
-            </p>
-          </div> -->
-        </template>
-      </el-table-column>
-
-      <el-table-column label="订单来源" min-width="180">
-        <template slot-scope="scope">
-          <p>体验课:{{ scope.row.trial_pay_channel_text || '-' }}</p>
           <p>
-            系统课:{{
-              scope.row.channel ? scope.row.channel.channel_outer_name : '-'
+            {{ scope.row.teacher ? scope.row.teacher.realname : '-' }}
+            <span
+              :class="{ 'primary-text': trialTeam[scope.row.id] }"
+              @click="
+                openDetail(
+                  trialTeam[scope.row.id] && trialTeam[scope.row.id].id
+                )
+              "
+            >
+              ({{
+                trialTeam[scope.row.id]
+                  ? trialTeam[scope.row.id].team_name
+                  : '-'
+              }})
+            </span>
+          </p>
+          <p>
+            {{
+              scope.row.teacher_department &&
+              scope.row.teacher_department.department
+                ? departmentObj[scope.row.teacher_department.department.id]
+                  ? departmentObj[scope.row.teacher_department.department.id]
+                      .name
+                  : '-'
+                : '-'
             }}
           </p>
         </template>
+      </el-table-column> -->
+      <el-table-column label="订单状态" min-width="220">
+        <template slot-scope="scope">
+          {{ scope.row.order_status ? scope.row.order_status : '-' }}
+        </template>
       </el-table-column>
-
-      <el-table-column label="推荐人信息" min-width="120">
+      <el-table-column label="订单来源" min-width="140">
+        <template slot-scope="scope">
+          <p>
+            {{ scope.row.channel ? scope.row.channel.channel_outer_name : '-' }}
+          </p>
+        </template>
+      </el-table-column>
+      <el-table-column label="推荐人信息" min-width="160">
         <template slot-scope="scope">
           <p
             v-if="scope.row.first_send_user"
@@ -198,13 +121,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="订单状态" min-width="80">
-        <template slot-scope="scope">
-          {{ scope.row.order_status ? scope.row.order_status : '-' }}
-        </template>
-      </el-table-column>
-
-      <el-table-column label="关联物流" min-width="170">
+      <!-- <el-table-column label="关联物流" min-width="170">
         <template slot-scope="scope">
           <p
             :class="{ 'primary-color': scope.row.express.express_total > 0 }"
@@ -214,18 +131,17 @@
           >
             {{ scope.row.express ? scope.row.express.express_total || 0 : '-' }}
           </p>
-          <!-- 体验课不显示最后一次物流状态 -->
           <p>
             {{
               scope.row.express
                 ? scope.row.express.last_express_status
-                  ? `最后一次${scope.row.express.last_express_status}`
+                  ? `${scope.row.express.last_express_status}`
                   : '-'
                 : '-'
             }}
           </p>
         </template>
-      </el-table-column>
+      </el-table-column> -->
     </el-table>
     <div v-if="orderList.length === 0" class="noData">暂无数据</div>
     <div class="drawer-body">
@@ -274,10 +190,8 @@ export default {
   },
   computed: {
     topicArr() {
-      if (this.topic === '4' || this.topic === '5') {
+      if (this.topic === '7') {
         return [this.topic]
-      } else if (this.topic === '1,2,6') {
-        return this.topic.split(',')
       }
       return []
     }
@@ -302,8 +216,9 @@ export default {
       // statisticsQuery: [], // 统计需要 bool 表达式
       departmentObj: {}, // 组织机构 obj
       orderStatisticsResult: [], // 统计结果
-      trialTeam: {}, // 学员的体验课班级名称
-      trialTeamUid: {}
+      trialTeam: {}, // 学员的素质课班级名称
+      trialTeamUid: {},
+      loading: true
     }
   },
   created() {
@@ -314,7 +229,7 @@ export default {
       this.getOrderList()
     }
 
-    // this.getDepartment()
+    this.getDepartment()
   },
   watch: {
     // 切换tab
@@ -358,37 +273,6 @@ export default {
     async getOrderList(page = this.currentPage, status) {
       // const statisticsQuery = []
       const queryObj = {}
-      // TOSS
-      if (this.teacherId) {
-        Object.assign(queryObj, {
-          pay_teacher_id:
-            this.teacherGroup.length > 0 ? this.teacherGroup : [this.teacherId]
-        })
-        // statisticsQuery.push({
-        //   terms: {
-        //     pay_teacher_id:
-        //       this.teacherGroup.length > 0
-        //         ? this.teacherGroup
-        //         : [this.teacherId]
-        //   }
-        // })
-      }
-
-      const topicRelation = await this.$http.Product.topicRelationId(
-        `${JSON.stringify({
-          topic_id: this.topicArr
-        })}`
-      )
-      let relationIds = []
-      if (
-        topicRelation.data.PackagesTopicList &&
-        topicRelation.data.PackagesTopicList.length > 0
-      )
-        relationIds = topicRelation.data.PackagesTopicList.map(
-          (item) => item.relation_id
-        )
-
-      console.log(this.searchIn)
 
       // 组合搜索条件
       this.searchIn.forEach((item) => {
@@ -400,34 +284,9 @@ export default {
       // 支付状态
       if (this.status) {
         Object.assign(queryObj, { status: this.status.split(',') })
-        // statisticsQuery.push({ terms: { status: this.status.split(',') } })
       }
-
-      /**
-       * this.topic
-       * 体验课(4),系统课(5)去 p_packages_topic表找relation_id
-       */
-      if (this.topic === '4' || this.topic === '5') {
-        Object.assign(queryObj, { packages_id: relationIds })
-
-        // !!! 如果系统课类型选择 半年系统课 - packages，则packages_id = 10
-        if (
-          Object.keys(queryObj).includes('packages_type') &&
-          +queryObj.packages_type === 3
-        ) {
-          Object.assign(queryObj, { packages_id: ['10'] })
-          delete queryObj.packages_type
-        }
-
-        // 如果选择年系统课，把半年课去掉 10
-        if (
-          Object.keys(queryObj).includes('packages_type') &&
-          +queryObj.packages_type === 4
-        ) {
-          const type = relationIds.filter((item) => item !== '10')
-          queryObj.packages_id = type
-        }
-
+      if (this.topic === '7') {
+        queryObj.regtype = this.topic
         // 如果有推荐人搜索条件
         if (
           queryObj.is_first_order_send_id &&
@@ -449,14 +308,6 @@ export default {
         delete queryObj.is_first_order_send_id
         this.orderData(queryObj, this.currentPage)
 
-        // 获取统计数据
-        // statisticsQuery.push({
-        //   terms: { packages_id: relationIds }
-        // })
-        // statisticsQuery.push(...this.searchIn)
-        // console.log(statisticsQuery)
-
-        // 求和统计不需要传当前状态，统计全部状态的值
         const statisticsQuery = deepClone(queryObj)
         delete statisticsQuery.status
 
@@ -473,52 +324,68 @@ export default {
     },
 
     // 订单列表数据
-    orderData(queryObj = {}, page = 1) {
-      // 最终搜索条件
-      this.$emit('get-params', queryObj)
-      console.log(queryObj)
-
-      this.$http.Order.orderPage(`${JSON.stringify(queryObj)}`, page)
+    async orderData(queryObj = {}, page = 1) {
+      try {
+        // 最终搜索条件
+        this.$emit('get-params', queryObj)
+        const res = await this.$http.Order.orderPage(
+          `${JSON.stringify(queryObj)}`,
+          page
+        )
+        if (!res.data.OrderPage) {
+          this.totalElements = 0
+          this.currentPage = 1
+          this.orderList = []
+          return
+        }
+        if (this.topic === '7') {
+          this.totalElements = +res.data.OrderPage.totalElements
+          this.currentPage = +res.data.OrderPage.number
+        }
+        const _data = res.data.OrderPage.content
+        const orderIds = []
+        const userIds = []
+        _data.forEach((item, index) => {
+          orderIds.push(item.id)
+          userIds.push(item.uid)
+          // 下单时间格式化
+          item.ctime = formatData(item.ctime, 's')
+        })
+        await this.getQualityClassProductDetail(orderIds, _data)
+        // this.orderList = _data
+        if (userIds.length > 0) this.getUserTrialTeam(userIds)
+      } catch (error) {
+        console.log(error)
+      }
+    },
+    getQualityClassProductDetail(ids, data) {
+      this.$http.Order.getQualityClassProductDetail(ids)
         .then((res) => {
-          if (!res.data.OrderPage) {
-            this.totalElements = 0
-            this.currentPage = 1
-            this.orderList = []
-            return
+          for (const item of data) {
+            for (const _item of res.data.OrderProductList) {
+              if (_item.oid === item.id) {
+                item.packages_name = _item.name
+              }
+            }
           }
-          if (this.topic === '4' || this.topic === '5') {
-            this.totalElements = +res.data.OrderPage.totalElements
-            this.currentPage = +res.data.OrderPage.number
-          }
-          const _data = res.data.OrderPage.content
-          const orderIds = []
-          const userIds = []
-          _data.forEach((item, index) => {
-            orderIds.push(item.id)
-            userIds.push(item.uid)
-            // 下单时间格式化
-            item.ctime = formatData(item.ctime, 's')
-          })
-          this.orderList = _data
-          if (userIds.length > 0) this.getUserTrialTeam(userIds)
+          setTimeout(() => {
+            this.orderList = data
+            this.loading = false
+          }, 0)
         })
         .catch((err) => {
           console.log(err)
         })
     },
-
     // 获取组织机构
-    // getDepartment() {
-    //   this.$http.Department.teacherDepartment().then((res) => {
-    //     const dpt = (res.data && res.data.TeacherDepartmentList) || []
-    //     this.departmentObj = _.keyBy(dpt, 'id') || {}
-    //   })
-    // },
-
-    // 获取学员体验课班级
-    // 通过Uid查询对应体验课班级，通过team_id获取
+    getDepartment() {
+      this.$http.Department.teacherDepartment().then((res) => {
+        const dpt = (res.data && res.data.TeacherDepartmentList) || []
+        this.departmentObj = _.keyBy(dpt, 'id') || {}
+      })
+    },
     async getUserTrialTeam(ids = []) {
-      if (this.topic !== '5' && this.topic !== '4') return {}
+      if (this.topic !== '7') return {}
 
       const query = ids.length > 0 ? JSON.stringify({ student_id: ids }) : ''
       const trial = await this.$http.Team.getTrialCourseList(query)
@@ -538,9 +405,6 @@ export default {
       })
       this.trialTeam = result || {}
       this.trialTeamUid = resultUid || {}
-      console.log(this.trialTeam)
-      console.log(this.trialTeamUid)
-
       // return result
     },
 
@@ -552,12 +416,10 @@ export default {
       const dom = document.getElementById('order-scroll')
       dom.querySelector('.order-wrapper').scrollTo(0, 0)
     },
-    // /student-team/#/teamDetail/280/0
     // 打开班级详情
-    openDetail(id, row, type) {
-      // type 0体验课 2系统课
+    openDetail(id, row) {
       row && console.log(row)
-      id && openBrowserTab(`/student-team/#/teamDetail/${id}/${type}`)
+      id && openBrowserTab(`/student-team/#/teamDetail/${id}/0`)
     },
     // 用户详情
     openUserDetail(id) {

@@ -30,6 +30,30 @@
 // console.log(routes)
 const staff = JSON.parse(localStorage.getItem('staff'))
 
+// 超级管理员权限
+let superOperatingRouter = []
+
+if (staff.roleId === '7') {
+  superOperatingRouter = [
+    {
+      path: '/operatingSchedule',
+      name: 'operatingSchedule',
+      meta: {
+        title: '招生排期',
+        module: 'operating'
+      }
+    },
+    {
+      path: '/changePhoneNumber',
+      name: 'changePhoneNumber',
+      meta: {
+        title: '手机号替换',
+        module: 'operating'
+      }
+    }
+  ]
+}
+
 const routes = [
   // 班级
   {
@@ -322,25 +346,14 @@ const routes = [
         }
       },
       {
-        path: '/operatingSchedule',
-        name: 'operatingSchedule',
-        // hidden: staff.roleId !== '1' && staff.roleId !== '7',
-        hidden: staff.roleId !== '7',
-        meta: {
-          // show: staff.roleId === '1' || staff.roleId === '7',
-          show: staff.roleId === '7',
-          title: '招生排期',
-          module: 'operating'
-        }
-      },
-      {
         path: '/pushConfig',
         name: 'pushConfig',
         meta: {
           title: '推送配置',
           module: 'operating'
         }
-      }
+      },
+      ...superOperatingRouter
     ]
   },
   // 工具类路由
