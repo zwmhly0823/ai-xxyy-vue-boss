@@ -2,7 +2,11 @@
  * @Descripttion: 
  * @version: 
  * @LastEditors: liukun
+<<<<<<< HEAD
  * @LastEditTime: 2020-07-07 22:09:39
+=======
+ * @LastEditTime: 2020-07-08 17:43:07
+>>>>>>> feature/approval_v1.6
  -->
 <template>
   <div class="adjustModule">
@@ -382,12 +386,8 @@ export default {
             // })
           }
         }
-        // 只有体验课,才去查-订单来源
-        if (
-          targetItem &&
-          targetItem.id &&
-          targetItem.regtype === 'EXPERIENCE'
-        ) {
+        // 只有isThird===1是第三方订单,才去查来源
+        if (targetItem && targetItem.payChannel && this.isThird) {
           const { code, payload } = await this.$http.RefundApproval.getChannel(
             targetItem.payChannel
           ).catch((err) => {
