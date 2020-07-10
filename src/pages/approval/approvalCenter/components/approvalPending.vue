@@ -4,7 +4,7 @@
  * @Author: Lukun
  * @Date: 2020-04-27 17:47:58
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-07-09 16:57:20
+ * @LastEditTime: 2020-07-10 11:03:00
  -->
 <template>
   <div class="container">
@@ -484,11 +484,13 @@
             </el-col>
           </el-row>
         </div>
-        <!-- 无归属订单审批身份,测试账号bearboss；线上只有张奔有权限 慎重改动 -->
+        <!-- 无归属订单审批身份,测试账号bearboss；线上只有张奔,杨阳('462345658762924032')，刘彩屏(455930591481827328)有权限 慎重改动 -->
         <div
           v-if="
             currentType === 'UNCREDITED' &&
-              resetParams.staffId === '455930731630301184'
+              (resetParams.staffId === '455930731630301184' ||
+                resetParams.staffId === '455930591481827328' ||
+                resetParams.staffId === '462345658762924032')
           "
         >
           <el-row class="BOTTOM">
