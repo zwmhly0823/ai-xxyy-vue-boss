@@ -4,7 +4,7 @@
  * @Author: huzhifu
  * @Date: 2020-05-07 10:50:45
  * @LastEditors: liukun
- * @LastEditTime: 2020-07-07 21:42:02
+ * @LastEditTime: 2020-07-08 17:43:07
  -->
 <template>
   <div class="adjustModule">
@@ -384,12 +384,8 @@ export default {
             // })
           }
         }
-        // 只有体验课,才去查-订单来源
-        if (
-          targetItem &&
-          targetItem.id &&
-          targetItem.regtype === 'EXPERIENCE'
-        ) {
+        // 只有isThird===1是第三方订单,才去查来源
+        if (targetItem && targetItem.payChannel && this.isThird) {
           const { code, payload } = await this.$http.RefundApproval.getChannel(
             targetItem.payChannel
           ).catch((err) => {

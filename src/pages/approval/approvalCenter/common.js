@@ -3,8 +3,8 @@
  * @version: 1.0.0
  * @Author: YangJiyong
  * @Date: 2020-05-23 14:20:28
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-05-23 14:54:51
+ * @LastEditors: liukun
+ * @LastEditTime: 2020-07-09 21:58:24
  */
 
 //  环境判断及获取操作人ID
@@ -52,7 +52,10 @@ function getStaff(staffInfo) {
     {
       staffId: staff.id,
       staffName: staff.realName,
-      isStaffId: staff.positionId === '1'
+      isStaffId:
+        staff.positionId === '1' ||
+        staff.positionId === '2' ||
+        staff.positionId === '3'
     }
   )
 }
