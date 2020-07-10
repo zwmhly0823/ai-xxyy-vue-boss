@@ -3,8 +3,8 @@
  * @version:
  * @Author: zhubaodong
  * @Date: 2020-04-02 16:08:02
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-06-23 11:36:03
+ * @LastEditors: panjian
+ * @LastEditTime: 2020-07-10 15:01:16
  -->
 <template>
   <div>
@@ -110,7 +110,7 @@
             <div>{{ scope.row.ding_userid || '-' }}</div>
           </template>
         </el-table-column>
-        <el-table-column label="绑定微信号">
+        <el-table-column width="180" label="绑定微信号">
           <template slot-scope="scope">
             <div v-if="scope.row.weixin">
               <!-- <div><img :src="scope.row.head_image" /></div> -->

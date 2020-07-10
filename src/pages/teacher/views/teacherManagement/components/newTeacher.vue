@@ -37,11 +37,14 @@
       <!-- 密码 -->
       <el-form-item label="密码" prop="pass" style="width:60%;">
         <el-input
+          v-if="ruleForm.pwd"
           type="password"
           v-model.trim="ruleForm.pass"
           autocomplete="off"
           show-password
+          placeholder="请输入内容"
         ></el-input>
+        <el-input v-else v-model.trim="ruleForm.pass"></el-input>
       </el-form-item>
       <!-- 真实姓名 -->
       <el-form-item label="真实姓名" prop="name" style="width:60%;">
@@ -115,6 +118,19 @@
           ></el-option>
         </el-select>
       </el-form-item> -->
+
+      <!-- 管理部门 -->
+      <el-form-item label="管理部门" prop="administration">
+        <el-cascader
+          v-model="ruleForm.administration"
+          :options="suDepartments"
+          @change="handleChangeAdministration"
+          :props="optionPropsAdministration"
+          style="width:57.5%"
+          collapse-tags
+        >
+        </el-cascader>
+      </el-form-item>
       <!-- 销售等级 -->
       <el-form-item label="销售等级" prop="level">
         <el-select
@@ -124,6 +140,21 @@
         >
           <el-option
             v-for="item in levels"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          ></el-option>
+        </el-select>
+      </el-form-item>
+      <!-- 销售等级 -->
+      <el-form-item label="职场" prop="workplace">
+        <el-select
+          v-model="ruleForm.workplace"
+          clearable
+          placeholder="请选择职场"
+        >
+          <el-option
+            v-for="item in workplaceList"
             :key="item.value"
             :label="item.label"
             :value="item.value"
@@ -292,6 +323,11 @@ export default {
         label: 'name',
         checkStrictly: true
       },
+      optionPropsAdministration: {
+        value: 'id',
+        label: 'name',
+        multiple: true
+      },
       // 职务
       position: [],
       // 职级
@@ -317,6 +353,8 @@ export default {
         { label: '3级社群销售', value: 3 },
         { label: '新兵营', value: 0 }
       ],
+      // 职场
+      workplaceList: [],
       // Level: [
       //   { label: '新兵培训', value: 0 },
       //   { label: '下组待接生', value: 1 },
@@ -333,6 +371,7 @@ export default {
         phone: '',
         // 密码
         pass: '',
+        pwd: '',
         // 头像
         imageUrl: '',
         // 真实姓名
@@ -364,7 +403,12 @@ export default {
         // 分配微信号
         weChat: [],
         // 销售等级
-        level: ''
+        level: '',
+        // 管理部门
+        administration: '',
+        administrations: [],
+        // 职场
+        workplace: ''
       },
 
       // 表单验证
@@ -449,7 +493,15 @@ export default {
           { required: true, message: '请选择在职状态', trigger: 'change' }
         ],
         // 销售等级
-        level: [{ required: true, message: '请选择销售等级', trigger: 'blur' }]
+        level: [{ required: true, message: '请选择销售等级', trigger: 'blur' }],
+        // 在职状态
+        workplace: [
+          { required: true, message: '请选择职场', trigger: 'change' }
+        ],
+        // 管理部门
+        administration: [
+          { required: true, message: '请选择管理部门', trigger: 'change' }
+        ]
       }
     }
   },
@@ -539,6 +591,7 @@ export default {
             this.ruleForm.nickname = payload.teacher.nickname
             this.ruleForm.dingUserid = payload.teacher.dingUserid
             this.ruleForm.resource = payload.teacher.sex
+            this.ruleForm.pwd = payload.teacher.password
             // this.ruleForm.region = payload.department
             //   ? [payload.department.id]
             //   : []
@@ -614,7 +667,9 @@ export default {
           leaveTrain: this.ruleForm.groupDate,
           status: this.ruleForm.workingState,
           isLogin: this.ruleForm.accountSettings,
-          level: this.ruleForm.level
+          level: this.ruleForm.level,
+          dataAuth: this.ruleForm.administrations,
+          workPlace: this.ruleForm.workPlace
         },
         department: {
           id:
@@ -681,6 +736,18 @@ export default {
     // 部门联机选择
     handleChange(value) {
       console.log(value)
+    },
+    // 管理部门选择
+    handleChangeAdministration(data) {
+      const _data = []
+      data.forEach((res) => {
+        res.forEach((ele) => {
+          _data.push(ele)
+        })
+      })
+      const _datas = Array.from(new Set(_data))
+      this.ruleForm.administrations = _datas
+      console.log(_datas)
     },
     // 头像上传
     async uploadFile(file) {
