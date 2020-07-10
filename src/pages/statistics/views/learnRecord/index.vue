@@ -4,7 +4,7 @@
  * @Author: zhangjianwen
  * @Date: 2020-07-09 15:02:59
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-07-09 20:16:53
+ * @LastEditTime: 2020-07-10 11:28:54
 -->
 <template>
   <div class="learn-record">
@@ -51,7 +51,7 @@
         >
           <el-card :body-style="{ padding: '0px' }">
             <div class="card-data">
-              {{ item.send_date }}
+              {{ timeSplit(item.send_date) }}
             </div>
             <div class="card-content">
               <div class="content-img">
@@ -260,6 +260,13 @@ export default {
       console.log(val)
       this.currentPage = val
       this.getData(val)
+    },
+    // 时间格式
+    timeSplit(date) {
+      return date
+        .split('-')
+        .splice(1)
+        .join('-')
     }
   }
 }
