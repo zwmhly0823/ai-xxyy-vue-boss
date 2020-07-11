@@ -105,7 +105,7 @@
 </template>
 <script>
 import { debounce } from 'lodash'
-// import uploadFile from '@/utils/upload' // 上传公共方法 TODO:
+import uploadFile from '@/utils/upload' // 上传公共方法 TODO:
 const appData = require('@/utils/emoji.json')
 export default {
   props: {
@@ -177,14 +177,14 @@ export default {
     /** img-upload */
     // 上传附件
     uploadHandle(file) {
-      this.addContentForm.imgUrl =
-        'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg'
+      // this.addContentForm.imgUrl =
+      //   'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg'
       // TODO:
       console.log(file, this.addContentForm.imgUrl)
-      //   uploadFile(file).then((res) => {
-      //     console.log('res', res)
-      //     this.addContentForm.imgUrl // 取来图片remote地址
-      //   })
+      uploadFile(file).then((res) => {
+        console.log('res', res)
+        this.addContentForm.imgUrl = res
+      })
     },
     handleRemove(file) {
       this.addContentForm.imgUrl = ''
