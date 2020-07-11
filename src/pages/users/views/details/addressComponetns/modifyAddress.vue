@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-04-01 13:24:40
  * @LastEditors: panjian
- * @LastEditTime: 2020-07-06 18:46:29
+ * @LastEditTime: 2020-07-11 12:00:07
  -->
 <template>
   <div>
@@ -213,8 +213,6 @@ export default {
     },
     // 级联城市级联
     handleChange(data) {
-      console.log(data, '-----------')
-
       const provinces = this.areaLists.filter(
         (item) => +item.value === +data[0]
       )
@@ -238,9 +236,10 @@ export default {
       }
       const params = {
         operatorId: this.operatorId,
+        userId: this.modifyFormData.id,
         // orderId: this.modifyFormData.orderid,
-        // addressId: '',
-        expressId: this.modifyFormData.address[0].id,
+        addressId: this.modifyFormData.address[0].id,
+        expressId: '',
         // userId: this.modifyFormData.userid,
         receiptName: this.ruleForm.receiptName,
         receiptTel: this.ruleForm.receiptTel,

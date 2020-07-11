@@ -969,6 +969,7 @@ export default {
             content {
               id
               order_id
+              address_id
               product_name
               delivery_collect_time
               center_express_id
