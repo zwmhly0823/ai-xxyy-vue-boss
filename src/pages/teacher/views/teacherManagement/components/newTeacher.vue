@@ -354,7 +354,12 @@ export default {
         { label: '新兵营', value: 0 }
       ],
       // 职场
-      workplaceList: [],
+      workplaceList: [
+        {
+          label: '北京场',
+          value: '01'
+        }
+      ],
       // Level: [
       //   { label: '新兵培训', value: 0 },
       //   { label: '下组待接生', value: 1 },
@@ -405,7 +410,7 @@ export default {
         // 销售等级
         level: '',
         // 管理部门
-        administration: '',
+        administration: [],
         administrations: [],
         // 职场
         workplace: ''
@@ -625,6 +630,9 @@ export default {
             this.ruleForm.workingState = payload.teacher.status
             this.WeChat = payload.weixinList
             this.ruleForm.level = payload.teacher.level
+            this.ruleForm.workplace = payload.teacher.workPlace
+            this.ruleForm.administration.push(payload.teacher.dataAuth)
+            console.log(this.ruleForm.administration)
           }
         )
       }
@@ -669,7 +677,7 @@ export default {
           isLogin: this.ruleForm.accountSettings,
           level: this.ruleForm.level,
           dataAuth: this.ruleForm.administrations,
-          workPlace: this.ruleForm.workPlace
+          workPlace: this.ruleForm.workplace
         },
         department: {
           id:
@@ -681,6 +689,8 @@ export default {
         rank: { id: this.ruleForm.rank },
         weixinList: this.ruleForm.weChat
       }
+      console.log(params)
+
       this.$refs[formName].validate((valid) => {
         if (valid) {
           // 新建接口请求
@@ -746,8 +756,8 @@ export default {
         })
       })
       const _datas = Array.from(new Set(_data))
-      this.ruleForm.administrations = _datas
-      console.log(_datas)
+      this.ruleForm.administrations = _datas.join(',').toString()
+      console.log(_datas.join(',').toString())
     },
     // 头像上传
     async uploadFile(file) {
