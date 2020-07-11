@@ -20,6 +20,14 @@ export default {
     )
   },
   /**
+   * 获取物流中台物流详情
+   * */
+  getExpressDetails(params) {
+    return axios.get(
+      `/api/o/v1/express/getExpressDetailCenterForAPP?expressNo=${params.expressNo}`
+    )
+  },
+  /**
    * 添加物流收货人信息
    * @param {*} param0
    */
