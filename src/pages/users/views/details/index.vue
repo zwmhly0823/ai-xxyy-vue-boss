@@ -542,7 +542,7 @@ export default {
         this.stuInfor = this.modifyData(res.data.User)
         this.loading = false
         // init lessonType
-        this.lessonType = this.stuInfor.teams[0].team_type - 0 > 0 ? 1 : 0
+        this.lessonType = teamData.team_type - 0 > 0 ? 1 : 0
         // 判断是不是已退费
         this.checkBack()
         // 在不能自己选系统课体验课的页面，用户在有多个系统课的情况下，右上角的tag页签展示优先级开课中>待开课>已开课>已退费
@@ -581,6 +581,8 @@ export default {
       data.birthday = data.birthday ? formatData(data.birthday * 1000) : '-'
       // 注册时间格式化
       data.join_date = data.join_date ? formatData(data.join_date) : '-'
+      // data.teams =
+      //   data.teams.length > 0 ? data.teams : { id: '', team_type: '' }
       data.teams.length > 0 &&
         data.teams.forEach((item) => {
           // 课程名称格式化 0:体验课   >0:系统课

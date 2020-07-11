@@ -4,7 +4,7 @@
  * @Author: zhangjiawen
  * @Date: 2020-07-10 14:49:13
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-07-11 14:54:02
+ * @LastEditTime: 2020-07-11 19:49:02
 -->
 <template>
   <el-input
@@ -13,7 +13,7 @@
     size="mini"
     placeholder="请输入手机号/ID搜索"
     v-model="student_id"
-    @change="selectStu"
+    @keyup.enter.native="selectStu"
     clearable
   >
     <i slot="prefix" class="el-input__icon el-icon-search"></i>
@@ -33,6 +33,7 @@ export default {
   methods: {
     selectStu() {
       console.log('变化', this.student_id)
+
       if (!this.student_id) {
         return
       }
@@ -50,6 +51,14 @@ export default {
           this.student_id = ''
         } else {
           this.$message.error('暂无此学员')
+          // debugger
+          const oldVal = this.student_id
+          this.student_id = ''
+          console.log(1, this.student_id)
+          this.$nextTick(() => {
+            this.student_id = oldVal
+            console.log(2, this.student_id)
+          })
         }
       })
     }
