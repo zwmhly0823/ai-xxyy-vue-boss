@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-13 16:53:27
  * @LastEditors: panjian
- * @LastEditTime: 2020-07-10 11:16:13
+ * @LastEditTime: 2020-07-11 17:57:45
  -->
 <template>
   <div class="left-container">
@@ -28,7 +28,7 @@
       >
         <span class="menu-box">
           <span :title="data.id" class="menu-name">{{ `${data.name}` }}</span>
-          <span v-if="data.name === '全部'">{{ `(500)` }}</span>
+          <span v-if="data.name === '全部'">{{ `(${qbSize})` }}</span>
           <span v-else>{{ `(${data.size})` }}</span>
         </span>
         <span
@@ -71,6 +71,7 @@ export default {
   },
   data() {
     return {
+      qbSize: '',
       departmentList: [
         {
           name: '全部',
@@ -106,8 +107,14 @@ export default {
   },
   async created() {
     this.initTree()
+    this.getDepartmentTree()
   },
   methods: {
+    getDepartmentTree() {
+      this.$http.Teacher.departmentTree().then((res) => {
+        this.qbSize = res.payload
+      })
+    },
     async initTree() {
       try {
         await this.$http.Teacher.getDepartmentTree(1).then((res) => {

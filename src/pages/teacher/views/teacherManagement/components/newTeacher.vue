@@ -631,7 +631,14 @@ export default {
             this.WeChat = payload.weixinList
             this.ruleForm.level = payload.teacher.level
             this.ruleForm.workplace = payload.teacher.workPlace
-            this.ruleForm.administration.push(payload.teacher.dataAuth)
+            // const list = [
+            //   ['33', '34', '45'],
+            //   ['33', '34', '53'],
+            //   ['33', '34', '46']
+            // ]
+            // const list = ['发就开始了地方金坷垃受打击了', 'fsdfsdfss']
+            this.ruleForm.administration = payload.teacher.dataAuth
+            // this.ruleForm.administration.push(payload.teacher.dataAuth)
             console.log(this.ruleForm.administration)
           }
         )
@@ -749,6 +756,7 @@ export default {
     },
     // 管理部门选择
     handleChangeAdministration(data) {
+      console.log(data)
       const _data = []
       data.forEach((res) => {
         res.forEach((ele) => {
