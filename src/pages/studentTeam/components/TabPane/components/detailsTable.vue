@@ -4,7 +4,11 @@
  * @Author: panjian
  * @Date: 2020-03-16 20:22:24
  * @LastEditors: panjian
+<<<<<<< HEAD
  * @LastEditTime: 2020-07-08 15:05:57
+=======
+ * @LastEditTime: 2020-07-10 19:00:26
+>>>>>>> origin/new-team-info-address
  -->
 <template>
   <div class="table-box">
@@ -904,7 +908,7 @@ export default {
       const id = row.id
       const userid = row.user_id
       const orderid = row.order_id
-      this.formData = { id, userid, orderid }
+      this.formData = { id, userid, orderid, row }
       // console.log(row, column, event, index)
     },
     // 向父组建传值 已加好友

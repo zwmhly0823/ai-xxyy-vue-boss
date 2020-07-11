@@ -4,41 +4,10 @@
  * @Author: panjian
  * @Date: 2020-04-01 13:24:40
  * @LastEditors: panjian
- * @LastEditTime: 2020-07-11 12:05:36
+ * @LastEditTime: 2020-07-11 12:00:07
  -->
 <template>
   <div>
-    <div v-show="showChoiceModel">
-      <h3 style="color:#606266;">选择物流地址</h3>
-      <div class="choiceAddRess">
-        <template v-if="addressList.length != 0">
-          <el-radio-group v-model="addressVal">
-            <el-radio
-              @change="onAddressVal(item)"
-              class="mt-20"
-              v-for="item in addressList"
-              :key="item.id"
-              :label="item.id"
-            >
-              <span>{{ item.receiptName }}{{ item.receiptTel }}</span
-              ><br />
-              <span v-if="item.province == item.city"
-                >{{ item.city }}{{ item.area }}</span
-              >
-              <span v-else
-                >{{ item.province }}{{ item.city }}{{ item.area }}</span
-              >
-            </el-radio>
-          </el-radio-group>
-        </template>
-        <template v-else>
-          <div class="choiceAddRess" style="color: #8e8e8e;font-size:15px;">
-            无可用地址
-          </div>
-        </template>
-      </div>
-    </div>
-    <h3 style="color:#606266;" v-show="showChoiceModel">填写物流信息</h3>
     <el-form
       :model="ruleForm"
       :rules="rules"
@@ -98,10 +67,6 @@ export default {
       default: () => {
         return {}
       }
-    },
-    showChoiceModel: {
-      type: Boolean,
-      default: true
     }
   },
   data() {
@@ -143,7 +108,7 @@ export default {
       },
       rules: {
         receiptName: [
-          { required: false, validator: validateName, trigger: 'blur' }
+          { required: true, validator: validateName, trigger: 'blur' }
         ],
         receiptTel: [
           {
@@ -167,8 +132,8 @@ export default {
   // },
   created() {
     this.getAddressList()
-    console.log(this.modifyFormData)
     this.createdEcho()
+    // this.handleItemChange()
   },
   methods: {
     handleItemChange(data) {
@@ -202,78 +167,47 @@ export default {
     },
     createdEcho() {
       // this.addressVal = this.modifyFormData.id
-      this.ruleForm.receiptName = this.modifyFormData.row.receipt_name
-      this.ruleForm.receiptTel = this.modifyFormData.row.mobile
+      this.ruleForm.receiptName = this.modifyFormData.address[0].receipt_name
+      this.ruleForm.receiptTel = this.modifyFormData.address[0].receipt_tel
 
       const provinces = this.areaLists.filter(
-        (item) => item.label === this.modifyFormData.row.province
+        (item) => item.label === this.modifyFormData.address[0].province
       )
       const citys = provinces[0].children.filter(
-        (item) => item.label === this.modifyFormData.row.city
+        (item) => item.label === this.modifyFormData.address[0].city
       )
       const areas = citys[0].children.filter(
-        (item) => item.label === this.modifyFormData.row.area
+        (item) => item.label === this.modifyFormData.address[0].area
       )
       this.province = provinces[0].label
       this.city = citys[0].label
       this.area = areas[0].label
       this.areaSlist = [provinces[0].value, citys[0].value, areas[0].value]
-      this.ruleForm.addressDetail = this.modifyFormData.row.address_detail
+      this.ruleForm.addressDetail = this.modifyFormData.address[0].address_detail
     },
     // 选择地址
-    onAddressVal(data) {
-      this.ruleForm.receiptName = data.receiptName
-      this.ruleForm.receiptTel = data.receiptTel
-      const provinces = this.areaLists.filter(
-        (item) => item.label === data.province
-      )
-      const citys = provinces[0].children.filter(
-        (item) => item.label === data.city
-      )
-      const areas = citys[0].children.filter((item) => item.label === data.area)
-      this.areaSlist = [provinces[0].value, citys[0].value, areas[0].value]
-      this.province = provinces[0].label
-      this.city = citys[0].label
-      this.area = areas[0].label
-      this.ruleForm.addressDetail = data.addressDetail
-    },
+    // onAddressVal(data) {
+    //   this.ruleForm.receiptName = data.receiptName
+    //   this.ruleForm.receiptTel = data.receiptTel
+    //   const provinces = this.areaLists.filter(
+    //     (item) => item.label === data.province
+    //   )
+    //   const citys = provinces[0].children.filter(
+    //     (item) => item.label === data.city
+    //   )
+    //   const areas = citys[0].children.filter((item) => item.label === data.area)
+    //   this.areaSlist = [provinces[0].value, citys[0].value, areas[0].value]
+    //   this.province = provinces[0].label
+    //   this.city = citys[0].label
+    //   this.area = areas[0].label
+    //   this.ruleForm.addressDetail = data.addressDetail
+    // },
     getAddressList() {
       if (!this.modifyFormData.userid) return false
       this.$http.Express.getAddressList(this.modifyFormData.userid).then(
         (res) => {
           const _data = res.payload
           this.addressList = _data
-          console.log(
-            this.addressList,
-            'this.addressListthis.addressListthis.addressList'
-          )
-
-          // _data.forEach((res) => {
-          //   if (+this.modifyFormData.addressid === +res.id) {
-          //     this.addressVal = res.id
-          //     this.ruleForm.receiptName = res.receiptName
-          //     this.ruleForm.receiptTel = res.receiptTel
-
-          //     const provinces = this.areaLists.filter(
-          //       (item) => item.label === res.province
-          //     )
-          //     const citys = provinces[0].children.filter(
-          //       (item) => item.label === res.city
-          //     )
-          //     const areas = citys[0].children.filter(
-          //       (item) => item.label === res.area
-          //     )
-          //     this.province = provinces[0].label
-          //     this.city = citys[0].label
-          //     this.area = areas[0].label
-          //     this.areaSlist = [
-          //       provinces[0].value,
-          //       citys[0].value,
-          //       areas[0].value
-          //     ]
-          //     this.ruleForm.addressDetail = res.addressDetail
-          //   }
-          // })
         }
       )
     },
@@ -302,21 +236,28 @@ export default {
       }
       const params = {
         operatorId: this.operatorId,
-        addressId: this.modifyFormData.row.address_id,
-        userId: this.modifyFormData.userid,
-        expressId: this.modifyFormData.id,
+        userId: this.modifyFormData.id,
+        // orderId: this.modifyFormData.orderid,
+        addressId: this.modifyFormData.address[0].id,
+        expressId: '',
+        // userId: this.modifyFormData.userid,
         receiptName: this.ruleForm.receiptName,
         receiptTel: this.ruleForm.receiptTel,
         province: this.province,
         city: this.city,
         area: this.area,
-        street: this.street,
+        code: this.street,
         addressDetail: this.ruleForm.addressDetail
+        // areaCode: this.areaCode,
+        // expressNo: '',
+        // expressCompany: '',
+        // expressCompanyNu: ''
       }
+      console.log(params)
 
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          this.$http.Express.updateExpressAddressNew(params)
+          this.$http.User.updateExpressAddressNew(params)
             .then((res) => {
               if (res.data) {
                 return
@@ -363,5 +304,10 @@ export default {
   left: 18px;
   font-size: 14px;
   font-weight: 600;
+}
+</style>
+<style lang="scss">
+.el-form-item.is-required:not(.is-no-asterisk) > .el-form-item__label:before {
+  content: '';
 }
 </style>
