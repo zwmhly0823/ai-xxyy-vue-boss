@@ -4,7 +4,7 @@
  * @Author: zhangjianwen
  * @Date: 2020-07-09 15:02:59
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-07-10 11:28:54
+ * @LastEditTime: 2020-07-11 16:56:12
 -->
 <template>
   <div class="learn-record">
@@ -20,7 +20,7 @@
         <el-tab-pane>
           <el-dropdown @command="handleCommand" slot="label">
             <span class="el-dropdown-link">
-              下拉菜单<i class="el-icon-arrow-down el-icon--right"></i>
+              更多<i class="el-icon-arrow-down el-icon--right"></i>
             </span>
             <el-dropdown-menu slot="dropdown">
               <el-dropdown-item
@@ -58,7 +58,7 @@
                 <img :src="item.image" class="image" />
               </div>
 
-              <div style="padding: 14px;">
+              <div class="content-word" style="padding: 14px;">
                 <p>课程名称：{{ item.title }}</p>
                 <p>课程类型：{{ learn_type[item.lesson_type] }}</p>
                 <p>
@@ -143,6 +143,9 @@ export default {
   },
   watch: {
     term(val, old) {
+      if (val === '2') {
+        return false
+      }
       console.log(val, old, '触发')
       this.term = val
       this.getData(this.currentPage, val, this.level)
@@ -161,6 +164,14 @@ export default {
     })
   },
   methods: {
+    compare(pre, property) {
+      return function(a, b) {
+        console.log(a, b.pre.period)
+        var value1 = a.pre.property
+        var value2 = b.pre.property
+        return value1 - value2
+      }
+    },
     // 获取排期期数
     getManagement() {
       const params = {
@@ -170,13 +181,6 @@ export default {
         console.log(res)
         if (res && res.data && res.data.ManagementForTeacherList) {
           if (res.data.ManagementForTeacherList.length === 0) {
-            // this.term = '0'
-            // this.getData()
-            // // 获取今日、明日待跟进数量
-            // setTimeout(() => {
-            //   this.getTodayCount()
-            //   this.getTodayCount('tomorrow')
-            // }, 500)
             return
           }
 
@@ -187,9 +191,15 @@ export default {
           const arrHistory = res.data.ManagementForTeacherList.filter(
             (item) => item.management && item.management.status === 4
           )
-          this.manageMentHistoryList = arrHistory
+          const arrSort = arr.sort((a, b) => {
+            return a.management.period - b.management.period
+          })
+          const arrHistorySort = arrHistory.sort((a, b) => {
+            return a.management.period - b.management.period
+          })
+          this.manageMentHistoryList = arrHistorySort
           console.log(this.manageMentHistoryList)
-          const list = arr.map((item) => {
+          const list = arrSort.map((item) => {
             item.management.period_label = `${item.management.period_name}(
               开课中
             )`
@@ -311,6 +321,11 @@ export default {
   .card-content {
     padding-top: 10px;
     display: flex;
+    .content-word {
+      p {
+        height: 20px;
+      }
+    }
   }
 }
 .empty {
