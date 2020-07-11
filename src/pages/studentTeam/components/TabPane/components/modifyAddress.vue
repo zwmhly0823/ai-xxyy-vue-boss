@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-04-01 13:24:40
  * @LastEditors: panjian
- * @LastEditTime: 2020-07-06 19:22:00
+ * @LastEditTime: 2020-07-11 12:05:36
  -->
 <template>
   <div>
@@ -167,7 +167,7 @@ export default {
   // },
   created() {
     this.getAddressList()
-    // console.log(this.modifyFormData.addressid)
+    console.log(this.modifyFormData)
     this.createdEcho()
   },
   methods: {
@@ -202,7 +202,6 @@ export default {
     },
     createdEcho() {
       // this.addressVal = this.modifyFormData.id
-      console.log(this.modifyFormData)
       this.ruleForm.receiptName = this.modifyFormData.row.receipt_name
       this.ruleForm.receiptTel = this.modifyFormData.row.mobile
 
@@ -303,13 +302,15 @@ export default {
       }
       const params = {
         operatorId: this.operatorId,
+        addressId: this.modifyFormData.row.address_id,
+        userId: this.modifyFormData.userid,
         expressId: this.modifyFormData.id,
         receiptName: this.ruleForm.receiptName,
         receiptTel: this.ruleForm.receiptTel,
         province: this.province,
         city: this.city,
         area: this.area,
-        code: this.street,
+        street: this.street,
         addressDetail: this.ruleForm.addressDetail
       }
 

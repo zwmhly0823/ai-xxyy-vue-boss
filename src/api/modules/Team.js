@@ -385,6 +385,7 @@ export default {
           receipt_tel
           receipt_name
           product_name
+          address_id
         }
       }
     }`
