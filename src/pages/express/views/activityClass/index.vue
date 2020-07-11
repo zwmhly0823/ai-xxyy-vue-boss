@@ -118,7 +118,7 @@ const replenishHideSearchItem = {
   replenishMethod: '',
   replenishProductType: 'product_type'
 }
-const allExpressSourceType = '0,1,2,3,4'
+const allExpressSourceType = '0,1,2,3,4,6' // 6，导入订单
 const replenishSourceType = '5'
 export default {
   components: {
