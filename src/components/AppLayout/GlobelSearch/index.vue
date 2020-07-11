@@ -4,14 +4,14 @@
  * @Author: zhangjiawen
  * @Date: 2020-07-10 14:49:13
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-07-10 16:46:54
+ * @LastEditTime: 2020-07-11 14:54:02
 -->
 <template>
   <el-input
     minlength="4"
     maxlength="11"
     size="mini"
-    placeholder="请输入手机号或者学员id"
+    placeholder="请输入手机号/ID搜索"
     v-model="student_id"
     @change="selectStu"
     clearable
@@ -49,7 +49,7 @@ export default {
           openBrowserTab(`/users/#/details/${res.data.User.id}`)
           this.student_id = ''
         } else {
-          this.$message.error('查无当前学员')
+          this.$message.error('暂无此学员')
         }
       })
     }

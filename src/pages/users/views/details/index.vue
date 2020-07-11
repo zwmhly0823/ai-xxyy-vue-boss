@@ -534,7 +534,11 @@ export default {
         this.sendId =
           res.data.User && res.data.User.send_id ? res.data.User.send_id : '0'
         // 课程tab默认显示
-        this.courseData = res.data.User.teams[0].id
+        const teamData =
+          res.data.User.teams.length > 0
+            ? res.data.User.teams[0]
+            : { id: '', team_type: '' }
+        this.courseData = teamData.id
         this.stuInfor = this.modifyData(res.data.User)
         this.loading = false
         // init lessonType
@@ -555,13 +559,10 @@ export default {
         }
         if (this.tabData === 'learningRecord') {
           // 学习记录接口
-          this.reqSendCourseLogPage(
-            res.data.User.teams[0].id,
-            res.data.User.teams[0].team_type
-          )
+          this.reqSendCourseLogPage(teamData.id, teamData.team_type)
         } else if (this.tabData === 'collectionOf') {
           // 作品集接口
-          this.reqStudentCourseTaskPage(res.data.User.teams[0].id)
+          this.reqStudentCourseTaskPage(teamData.id)
         } else if (this.tabData === 'orderLogistics') {
           // 订单·物流数据接口
           this.reqgetOrderPage()
