@@ -9,7 +9,11 @@
 <template>
   <el-row type="flex" class="new-sop app-main">
     <el-col class="new-sop-container">
-      <div class="scroll-container">
+      <div
+        class="scroll-container"
+        :style="{ height: scrollHeight }"
+        ref="scrollRef"
+      >
         <el-scrollbar wrap-class="scrollbar-wrapper">
           <el-card class="header">
             <div class="tip">新建SOP模板</div>
@@ -255,7 +259,8 @@ export default {
         }
       ],
       centerDialogVisible: false,
-      curCtnt: {}
+      curCtnt: {},
+      scrollHeight: 'auto'
     }
   },
   components: { AddContent },
@@ -296,6 +301,19 @@ export default {
     const taskArr = Object.getOwnPropertyNames(this.tmpInfo)
 
     taskArr.length && this.tasksClickHandle(taskArr[0])
+  },
+  mounted() {
+    // this.$nextTick(() => {
+    const scrollHeight =
+      document.body.clientHeight - this.$refs.scrollRef.offsetTop - 70
+    this.scrollHeight = scrollHeight + 'px'
+    console.log(
+      'scrollHeight',
+      document.body.clientHeight,
+      this.$refs.scrollRef.offsetTop,
+      this.scrollHeight
+    )
+    // })
   },
   computed: {},
   methods: {
@@ -420,7 +438,7 @@ export default {
           this.$message({
             type: 'success',
             message: '保存成功',
-            duration: 1200,
+            duration: 1000,
             onClose: () => this.cancelUpdate()
           })
         }
@@ -463,6 +481,9 @@ export default {
 <style rel="stylesheet/scss" lang="scss">
 .new-sop {
   .new-sop-container {
+    .el-card__body {
+      padding: 20px 20px 0 20px;
+    }
     position: relative;
     margin: 10px;
     overflow-x: hidden;
@@ -490,11 +511,12 @@ export default {
       .section {
         .task-container {
           display: flex;
-          min-height: 450px;
+          min-height: 400px;
           .task-group {
             width: 180px;
             margin-right: 20px;
             position: relative;
+            padding-bottom: 40px;
             .item {
               width: 100%;
               border: 1px solid #dcdfe6;
@@ -640,7 +662,8 @@ export default {
         .operate-btn {
           display: flex;
           justify-content: center;
-          margin-top: 20px;
+          margin: 10px;
+          // padding-bottom: 10px;
           button:first-child {
             margin-right: 20px;
           }
