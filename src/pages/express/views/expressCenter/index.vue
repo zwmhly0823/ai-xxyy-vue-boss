@@ -1,17 +1,25 @@
 <template>
   <div class="container">
-    <div class="automatic-config" @click="showSetUp">
-      <span><i class="el-icon-setting"></i> 设置</span>
+    <div class="automatic-config">
+      <el-dropdown @command="handleCommand">
+        <span class="el-dropdown-link">
+          <span><i class="el-icon-setting"></i>设置</span>
+        </span>
+        <el-dropdown-menu slot="dropdown">
+          <el-dropdown-item command="import">导入物流信息</el-dropdown-item>
+          <el-dropdown-item command="export">导出物流信息</el-dropdown-item>
+          <el-dropdown-item
+            v-show="activeName === '0' || activeName === '1'"
+            command="setting"
+            >自动发货设置</el-dropdown-item
+          >
+        </el-dropdown-menu>
+      </el-dropdown>
     </div>
     <el-tabs v-model="activeName" type="border-card" @tab-click="switchTab">
-      <el-tab-pane label="体验课11" name="0">
-        <toggle
-          @result="getStatus"
-          :tab="activeName"
-          :regtype="regtype"
-          :source_type="source_type"
-        />
+      <el-tab-pane label="体验课" name="0">
         <rightUp
+          ref="right0"
           :tab="activeName"
           @result="getSearch"
           :regtype="regtype"
@@ -20,6 +28,12 @@
           :hideCol="hideCol"
           :hideSearchItem="hideSearchItem"
           :teamClass="teamClass"
+        />
+        <toggle
+          @result="getStatus"
+          :tab="activeName"
+          :regtype="regtype"
+          :source_type="source_type"
         />
         <el-scrollbar
           wrap-class="scrollbar-wrapper-first"
@@ -36,15 +50,9 @@
           </div>
         </el-scrollbar>
       </el-tab-pane>
-      <el-tab-pane label="补发商品" name="1">
-        <toggle
-          @result="getStatus"
-          :hideToggleBtn="hideToggleBtn"
-          :tab="activeName"
-          :regtype="regtype"
-          :source_type="source_type"
-        />
+      <el-tab-pane label="系统课" name="1">
         <rightUp
+          ref="right1"
           :tab="activeName"
           @result="getSearch"
           :regtype="regtype"
@@ -53,6 +61,78 @@
           :hideCol="hideCol"
           :hideSearchItem="hideSearchItem"
           :teamClass="teamClass"
+        />
+        <toggle
+          @result="getStatus"
+          :tab="activeName"
+          :regtype="regtype"
+          :source_type="source_type"
+        />
+        <el-scrollbar
+          wrap-class="scrollbar-wrapper-first"
+          id="express-right-scroll-first"
+        >
+          <div class="scroll" ref="scroll" :style="{ height: scrollHeight }">
+            <rightDown
+              :search="search"
+              :sortItem="sortItem"
+              :regtype="regtype"
+              :source_type="source_type"
+              :hideCol="hideCol"
+            />
+          </div>
+        </el-scrollbar>
+      </el-tab-pane>
+      <el-tab-pane label="活动商品" name="2">
+        <rightUp
+          ref="right2"
+          @result="getSearch"
+          :regtype="regtype"
+          :status="sortItem.id"
+          :source_type="source_type"
+          :hideCol="hideCol"
+          :hideSearchItem="hideSearchItem"
+        />
+        <toggle
+          @result="getStatus"
+          :tab="activeName"
+          :regtype="regtype"
+          :source_type="source_type"
+          :hideToggleBtn="allHideToggleBtn"
+        />
+        <el-scrollbar
+          wrap-class="scrollbar-wrapper-first"
+          id="express-right-scroll-first"
+        >
+          <div class="scroll" ref="scroll" :style="{ height: scrollHeight }">
+            <rightDown
+              :search="search"
+              :sortItem="sortItem"
+              :regtype="regtype"
+              :source_type="source_type"
+              :hideCol="hideCol"
+            />
+          </div>
+        </el-scrollbar>
+      </el-tab-pane>
+      <el-tab-pane label="补发商品" name="3">
+        <rightUp
+          ref="right3"
+          :tab="activeName"
+          @result="getSearch"
+          :regtype="regtype"
+          :status="sortItem.id"
+          :source_type="source_type"
+          :hideCol="hideCol"
+          :hideSearchItem="hideSearchItem"
+          :teamClass="teamClass"
+        />
+        <toggle
+          @result="getStatus"
+          :hideToggleBtn="hideToggleBtn"
+          :tab="activeName"
+          :regtype="regtype"
+          :source_type="source_type"
         />
         <el-scrollbar
           wrap-class="scrollbar-wrapper-first"
@@ -151,10 +231,39 @@ const allExpressHideCol = {
   applicant: false,
   courseType: false
 }
+const allExpressHideColActivity = {
+  replenishType: false,
+  productType: false,
+  replenishReason: false,
+  applicant: false,
+  productVersion: false,
+  term: false,
+  className: false,
+  teacher: false
+}
 const allExpressHideSearchItem = {
   level: '',
   replenishReason: '',
   replenishMethod: ''
+}
+const allExpressHideSearchItemSystem = {
+  // 系统课物流需要显示级别
+  level: 'level',
+  replenishReason: '',
+  replenishMethod: '',
+  teacherTip: '辅导老师'
+}
+const allExpressHideSearchItemActivity = {
+  productName: 'product_name',
+  level: '',
+  replenishReason: '',
+  replenishMethod: '',
+  moreVersion: '',
+  sup: '',
+  schedule: '',
+  groupSell: '',
+  teamDetail: '',
+  topicType: 'regtype'
 }
 const replenishHideCol = {
   productName: true,
@@ -222,10 +331,22 @@ export default {
   mounted() {
     this.$nextTick(() => {
       this.calcSrollHeight()
-      console.log(11)
     })
   },
   methods: {
+    handleCommand(command) {
+      switch (command) {
+        case 'setting':
+          this.showSetUp()
+          break
+        case 'import':
+          this.$refs['right' + this.activeName].showImportDialog()
+          break
+        case 'export':
+          this.$refs['right' + this.activeName].showExportDialog()
+          break
+      }
+    },
     // 计算滚动区域高度
     calcSrollHeight() {
       const topH = this.$refs.scroll.getBoundingClientRect().y
@@ -423,11 +544,26 @@ export default {
       }
     },
     switchTab(tab) {
-      if (this.activeName === '1') {
+      // 补发商品
+      if (this.activeName === '3') {
         this.hideSearchItem = replenishHideSearchItem
         this.hideCol = replenishHideCol
         this.source_type = replenishSourceType
-      } else {
+      }
+      // 活动商品
+      else if (this.activeName === '2') {
+        this.hideSearchItem = allExpressHideSearchItemActivity
+        this.hideCol = allExpressHideColActivity
+        this.source_type = allExpressSourceType
+      }
+      // 系统课
+      else if (this.activeName === '1') {
+        this.hideSearchItem = allExpressHideSearchItemSystem
+        this.hideCol = allExpressHideCol
+        this.source_type = allExpressSourceType
+      }
+      // 体验课
+      else {
         this.hideSearchItem = allExpressHideSearchItem
         this.hideCol = allExpressHideCol
         this.source_type = allExpressSourceType
