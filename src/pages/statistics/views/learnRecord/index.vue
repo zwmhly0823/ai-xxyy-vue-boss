@@ -4,7 +4,7 @@
  * @Author: zhangjianwen
  * @Date: 2020-07-09 15:02:59
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-07-13 16:11:39
+ * @LastEditTime: 2020-07-13 16:40:15
 -->
 <template>
   <div class="learn-record">
@@ -88,6 +88,7 @@
       <m-pagination
         :current-page="currentPage"
         :page-count="totalPages"
+        :pageSize="8"
         :total="totalElements"
         @current-change="handleSizeChange"
         show-pager
@@ -195,7 +196,7 @@ export default {
           const arrSort = arr.sort((a, b) => {
             return a.management.period - b.management.period
           })
-          const arrHistorySort = arrHistory.sort((a, b) => {
+          const arrHistorySort = arrHistory.sort((b, a) => {
             return a.management.period - b.management.period
           })
           this.manageMentHistoryList = arrHistorySort
@@ -245,6 +246,7 @@ export default {
             const data = res.data.StudentTrialRecordOperatorStatisticsPage
             this.totalElements = Number(data.totalElements)
             this.totalPages = Number(data.totalPages)
+            console.log(this.totalElements, this.totalPages)
             this.recordList = data.content
             console.log(this.recordList)
             // defTotalElements = totalElements
