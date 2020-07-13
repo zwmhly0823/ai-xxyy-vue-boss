@@ -4,7 +4,7 @@
  * @Author: zhangjianwen
  * @Date: 2020-07-09 15:02:59
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-07-13 18:52:20
+ * @LastEditTime: 2020-07-13 20:26:24
 -->
 <template>
   <div class="learn-record">
@@ -58,7 +58,7 @@
                 <img :src="item.image" class="image" />
               </div>
 
-              <div class="content-word" style="padding: 14px;">
+              <div class="content-word">
                 <p>课程名称：{{ item.title }}</p>
                 <p>课程类型：{{ learn_type[item.lesson_type] }}</p>
                 <p>
@@ -297,10 +297,13 @@ export default {
     }
   }
   .card-content {
+    height: 220px;
     padding-top: 10px;
     display: flex;
     .content-word {
+      padding: 14px;
       p {
+        font-size: 12px;
         height: 20px;
       }
     }
