@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-25 14:35:19
  * @LastEditors: Shentong
- * @LastEditTime: 2020-05-27 19:50:50
+ * @LastEditTime: 2020-07-13 13:43:24
  -->
 <template>
   <!-- <el-scrollbar class="scroll-search-container"> -->
@@ -37,6 +37,7 @@
         style="width:130px;"
         @result="selectSellTeacher"
         :name="'groupSell'"
+        :tip="!regType ? '社群销售' : '辅导老师'"
       />
     </div>
     <div class="comp-cell">
@@ -199,7 +200,7 @@ export default {
 .table-searcher-container {
   display: flex;
   align-items: center;
-  min-width: 1200px;
+  // min-width: 1200px;
   flex-wrap: wrap;
   // height: 50px;
   .comp-cell {
