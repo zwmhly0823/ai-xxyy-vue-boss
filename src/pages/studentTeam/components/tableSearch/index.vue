@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-25 14:35:19
  * @LastEditors: Shentong
- * @LastEditTime: 2020-05-27 19:50:50
+ * @LastEditTime: 2020-07-13 13:43:24
  -->
 <template>
   <!-- <el-scrollbar class="scroll-search-container"> -->
@@ -19,18 +19,10 @@
         :type="regType + ''"
         :placeholder="coursePlaceholder[regType]"
       />
-      <!-- <el-input
-          placeholder="全部体验课排期"
-          v-model="val1"
-          clearable
-          size="mini"
-          class="base-input"
-        >
-        </el-input> -->
     </div>
     <div class="comp-cell">
       <span class="label" v-if="!regType">销售组：</span>
-      <span class="label" v-else>服务组：</span>
+      <span class="label" v-else>服务部：</span>
       <department
         style="width:130px;"
         @result="getDepartment"
@@ -45,6 +37,7 @@
         style="width:130px;"
         @result="selectSellTeacher"
         :name="'groupSell'"
+        :tip="!regType ? '社群销售' : '辅导老师'"
       />
     </div>
     <div class="comp-cell">
@@ -68,6 +61,25 @@
       >
       </el-input>
     </div>
+    <div class="comp-cell" v-if="regType">
+      <span class="label" style="width:84px">全部类型：</span>
+      <el-select
+        class="item-style"
+        size="mini"
+        v-model="category"
+        clearable
+        placeholder="请选择类型"
+        @change="courseTypeChange"
+      >
+        <el-option
+          v-for="item in categoryTypeList"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value"
+        >
+        </el-option>
+      </el-select>
+    </div>
   </div>
   <!-- </el-scrollbar> -->
 </template>
@@ -89,11 +101,22 @@ export default {
     return {
       val1: '',
       teamName: '',
+      category: '',
       sup: 'sup',
       coursePlaceholder: {
         0: '体验课排期',
         1: '系统课排期'
       },
+      categoryTypeList: [
+        {
+          label: '年课班',
+          value: '2'
+        },
+        {
+          label: '半年课班',
+          value: '4'
+        }
+      ],
       emitInfo: {}
     }
   },
@@ -157,6 +180,11 @@ export default {
     onSelectTeamName() {
       this.manageChange(this.teamName, 'teamName')
     },
+    // 课程类型
+    courseTypeChange(res) {
+      console.log(res, 'res')
+      this.manageChange(this.category, 'category')
+    },
     manageChange(res, key) {
       this.emitInfo[key] = res
       this.$emit('change', this.emitInfo)
@@ -172,10 +200,11 @@ export default {
 .table-searcher-container {
   display: flex;
   align-items: center;
-  min-width: 1200px;
-  height: 50px;
+  // min-width: 1200px;
+  flex-wrap: wrap;
+  // height: 50px;
   .comp-cell {
-    margin-right: 15px;
+    margin: 5px 15px 5px 0;
     display: flex;
     align-items: center;
     .search-item.small {
@@ -183,6 +212,9 @@ export default {
     }
     .base-input {
       width: 130px;
+    }
+    .item-style {
+      width: 140px;
     }
   }
 }
