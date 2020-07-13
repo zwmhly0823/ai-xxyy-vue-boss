@@ -26,7 +26,11 @@
           class="list-collapse-item"
         >
           <template slot="title">
-            <span>{{ cItem.title }}</span>
+            <!--isRead 0是未读1是已读-->
+            <el-badge v-if="+cItem.isRead === 0" is-dot class="no-read-dot">
+              {{ cItem.title }}
+            </el-badge>
+            <span v-else-if="+cItem.isRead === 1">{{ cItem.title }}</span>
             <span class="item-time">{{ cItem.notifyTimeFormatted }}</span>
           </template>
           <div>{{ cItem.content }}</div>
@@ -218,6 +222,12 @@ li {
       }
       .details-button {
         padding-bottom: 0;
+      }
+      .no-read-dot {
+        /deep/ .is-dot {
+          top: 17px;
+          right: 0px;
+        }
       }
     }
   }
