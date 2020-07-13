@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-04-01 13:24:40
  * @LastEditors: panjian
- * @LastEditTime: 2020-07-06 19:10:13
+ * @LastEditTime: 2020-07-13 18:48:37
  -->
 <template>
   <el-form
@@ -54,8 +54,7 @@
   </el-form>
 </template>
 <script>
-import areaLists from '@/utils/area.json'
-import { isToss, deepClone } from '@/utils/index'
+import { isToss } from '@/utils/index'
 export default {
   name: 'logisticsForm',
   props: ['formData'],
@@ -83,7 +82,7 @@ export default {
       }
     }
     return {
-      areaLists: areaLists,
+      areaLists: [],
       province: null,
       city: null,
       area: null,
@@ -112,19 +111,43 @@ export default {
       operatorId: ''
     }
   },
+  created() {
+    this.getAreaLists()
+  },
   methods: {
+    getAreaLists() {
+      this.$http.Express.getCenterAddressList().then((res) => {
+        const _data = res.payload.data
+        _data.forEach((ele) => {
+          ele.label = ele.provinceName
+          ele.value = ele.id
+          ele.children = ele.citys
+          ele.children.forEach((val) => {
+            val.label = val.cityName
+            val.value = +val.cityCode + 999
+            val.children = val.countys
+            val.children.forEach((_value) => {
+              _value.label = _value.countyName
+              _value.value = _value.countyCode
+              _value.children = [{ label: '暂不选择', value: '' }]
+            })
+          })
+        })
+        this.areaLists = _data
+      })
+    },
     handleItemChange(data) {
-      const addressList = deepClone(this.areaLists)
+      const addressList = this.areaLists
       addressList.forEach((res) => {
-        if (res.value === data[0]) {
+        if (data[0] === res.id) {
           res.children.forEach((ele) => {
-            if (ele.value === data[1]) {
+            if (data[1] === +ele.cityCode + 999) {
               ele.children.forEach((val) => {
-                val.children = [{ label: '暂不选择', value: '' }]
-                if (val.value === data[2]) {
-                  this.$http.Express.getCenterAddressTownList(val.value).then(
-                    (vlaue) => {
-                      const _data = vlaue.payload
+                if (data[2] === val.countyCode) {
+                  this.$http.Express.getCenterAddressTownList(data[2]).then(
+                    (data) => {
+                      console.log(data)
+                      const _data = data.payload
                       _data.forEach((codeVal) => {
                         const add = {
                           label: codeVal.townName,
@@ -140,7 +163,6 @@ export default {
           })
         }
       })
-      this.areaLists = addressList
     },
     // 级联城市级联
     handleChange(data) {

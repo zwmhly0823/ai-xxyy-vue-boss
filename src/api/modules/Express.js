@@ -3,8 +3,8 @@
  * @version:
  * @Author: panjian
  * @Date: 2020-03-31 22:54:28
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-07-11 19:47:47
+ * @LastEditors: panjian
+ * @LastEditTime: 2020-07-13 18:47:46
  */
 // import axios from '../axios'
 import axios from '../axiosConfig'
@@ -205,6 +205,10 @@ export default {
   //       `
   //     })
   //   }
+  // 获取第三级地址
+  getCenterAddressList(code) {
+    return axios.get(`/api/ex/v1/express/getCenterAddressList?code=${code}`)
+  },
   // 获取第四级地址
   getCenterAddressTownList(code) {
     return axios.get(`/api/ex/v1/express/getCenterAddressTownList?code=${code}`)
