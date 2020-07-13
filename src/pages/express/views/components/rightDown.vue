@@ -64,28 +64,36 @@
         </template>
       </el-table-column>
       <el-table-column
-        label="用户及购买日期"
+        label="用户及注册时间"
         width="200"
         fixed
         v-if="showCol.userAddDate"
       >
         <template slot-scope="scope">
           <div class="user" if="scope.row.user">
-            <div
-              class="
-            name"
-            >
-              {{ (scope.row.user && scope.row.user.mobile) || '' }}
+            <div class="name">
+              <el-button
+                type="text"
+                class="trail"
+                @click="userHandle(scope.row.user)"
+              >
+                {{
+                  (scope.row.user &&
+                    `${scope.row.user.mobile} ${scope.row.user.username}`) ||
+                    ''
+                }}
+              </el-button>
             </div>
-            <div>{{ scope.row.buytime }}</div>
+            <div class="gray-text">{{ scope.row.ctime }}</div>
           </div>
         </template>
       </el-table-column>
       <el-table-column label="商品信息" width="200" v-if="showCol.productName">
         <template slot-scope="scope">
           <div class="product">
-            <span>{{ scope.row.product_name }}</span>
+            <span>{{ scope.row.center_product_code || '-' }}</span>
           </div>
+          <div class="gray-text">{{ scope.row.product_name }}</div>
         </template>
       </el-table-column>
       <el-table-column
@@ -112,13 +120,16 @@
         </template>
       </el-table-column>
       <el-table-column
-        label="补发方式"
+        label="物流类型"
         width="200"
         v-if="showCol.replenishType"
         :key="2"
       >
         <template slot-scope="scope">
           <div class="product">
+            <span>{{ regtypeEnum[scope.row.regtype] || '--' }}</span>
+          </div>
+          <div class="gray-text">
             <span>{{ scope.row.replenish_type_text || '--' }}</span>
           </div>
         </template>
@@ -143,7 +154,14 @@
       >
         <template slot-scope="scope">
           <div class="product">
-            <span>{{ scope.row.replenish_reason_text || '--' }}</span>
+            <span>{{ scope.row.operator_name || '--' }}申请</span>
+          </div>
+          <div class="gray-text">
+            <span
+              >{{ scope.row.replenish_reason_text || '--' }}&nbsp;&nbsp;&nbsp;{{
+                scope.row.express_remark || '--'
+              }}</span
+            >
           </div>
         </template>
       </el-table-column>
@@ -160,7 +178,7 @@
         </template>
       </el-table-column>
       <el-table-column
-        label="类别"
+        label="活动类型"
         width="180"
         v-if="showCol.courseType"
         :key="6"
@@ -196,12 +214,12 @@
                 <span>{{ scope.row.receipt_name }}</span>
                 <span>{{ scope.row.receipt_tel }}</span>
               </div>
-              <div>
+              <div class="gray-text">
                 <span>{{ scope.row.province }}</span>
                 <span>{{ scope.row.city }}</span>
                 <span>{{ scope.row.area }}</span>
               </div>
-              <div>
+              <div class="gray-text">
                 <span>{{ scope.row.address_detail }}</span>
               </div>
             </div>
@@ -255,14 +273,21 @@
         </template>
       </el-table-column>
       <el-table-column
-        label="班级名"
+        label="班级信息"
         width="150"
         v-if="showCol.className"
         :key="11"
       >
         <template slot-scope="scope">
           <div class="product">
-            <span>{{ StudentTeamList[scope.row.last_team_id] }}</span>
+            <span>{{
+              scope.row.course_day ? scope.row.course_day + '开课' : '--'
+            }}</span>
+          </div>
+          <div class="gray-text">
+            {{
+              scope.row.lastTeamInfo ? scope.row.lastTeamInfo.team_name : '--'
+            }}
           </div>
         </template>
       </el-table-column>
@@ -274,7 +299,18 @@
       >
         <template slot-scope="scope">
           <div class="product">
-            <span>{{ TeacherList[scope.row.last_teacher_id] }}</span>
+            {{
+              scope.row.lastTeacherInfo
+                ? scope.row.lastTeacherInfo.realname
+                : ''
+            }}
+          </div>
+          <div class="gray-text">
+            {{
+              scope.row.lastTeacherInfo
+                ? scope.row.lastTeacherInfo.group_name
+                : '--'
+            }}
           </div>
         </template>
       </el-table-column>
@@ -443,9 +479,11 @@
 </template>
 
 <script>
+/* eslint-disable camelcase */
 import MPagination from '@/components/MPagination/index.vue'
-import { isToss, formatData } from '@/utils/index'
+import { isToss, formatData, openBrowserTab } from '@/utils/index'
 import { mapState } from 'vuex'
+import dayjs from 'dayjs'
 import expressDetail from '@/pages/trading/views/components/expressDetail'
 import modifyAddress from '@/pages/studentTeam/components/TabPane/components/modifyAddress'
 import logisticsForm from '@/pages/studentTeam/components/TabPane/components/logisticsForm'
@@ -453,11 +491,19 @@ import {
   replenishTypeList,
   replenishReasonSearchList,
   expressToggleList,
-  productTopicList
+  productTopicList,
+  productTopicListBf
 } from '@/utils/expressItemConfig'
 
 let supList = []
-
+const regtypeEnum = {
+  '1': '体验课补发',
+  '2': '系统课补发',
+  '3': '系统课补发',
+  '4': '活动补发',
+  '5': '活动补发',
+  '6': '活动补发'
+}
 export default {
   props: {
     search: { type: [String, Number, Array, Object], default: '' },
@@ -540,6 +586,7 @@ export default {
   data() {
     return {
       // 默认审核时弹出
+      regtypeEnum,
       modal: false,
       // 审核传参
       checkBatchParams: [],
@@ -630,6 +677,16 @@ export default {
     }
   },
   methods: {
+    // 点击用户信息回调事件
+    userHandle(user) {
+      if (!user || !user.id) {
+        this.$message.error('缺少用户信息')
+        return
+      }
+      const { id } = user
+      // 新标签打开详情页
+      id && openBrowserTab(`/users/#/details/${id}`)
+    },
     // 初始化searchIn
     initTableData() {
       this.tableData = []
@@ -1001,9 +1058,39 @@ export default {
               last_teacher_id
               pay_teacher_id
               regtype
+              address_id
+              center_product_code
+              stageInfo {
+                course_day
+              }
+              teamInfo {
+                team_name
+              }
+              lastTeamInfo {
+                team_name
+              }
+              teacherInfo {
+                realname
+                area_name
+                department_name
+                group_name
+              }
+              lastTeacherInfo {
+                realname
+                area_name
+                department_name
+                group_name
+              }
+              payTeacherInfo {
+                realname
+                area_name
+                department_name
+                group_name
+              }
               user {
                 id
                 birthday
+                username
                 mobile
               }
             }
@@ -1025,7 +1112,12 @@ export default {
             item.uptime = formatData(+item.utime, 's')
             item.sgtime = formatData(+item.signing_time, 's')
             item.buytime = formatData(+item.buy_time, 's')
+            item.ctime = formatData(+item.buy_time, 's')
             item.center_ctime = formatData(+item.center_ctime, 's')
+            item.course_day = item.stageInfo?.course_day
+              ? dayjs.unix(item.stageInfo?.course_day / 1000).format('MMDD')
+              : '-'
+
             // 处理补发类型
             this.handleRegtype(item)
             // 处理补发方式
@@ -1054,8 +1146,8 @@ export default {
           this.totalPages = +res.data.LogisticsListPageNew.totalPages
 
           this.totalElements = +res.data.LogisticsListPageNew.totalElements // 总条数
-          this.getTeacherList(realnameId)
-          this.getStudentTeamList(teamId)
+          // this.getTeacherList(realnameId)
+          // this.getStudentTeamList(teamId)
           this.getScheduleList(schedule)
         }
       })
@@ -1068,11 +1160,22 @@ export default {
       })
     },
     handleReplenishType(listItem) {
-      replenishTypeList.map((item) => {
-        if (+item.value === +listItem.replenish_type) {
-          listItem.replenish_type_text = item.label
-        }
-      })
+      // 系统或体验
+      if (['1', '2', '3'].includes(listItem.regtype)) {
+        replenishTypeList.map((item) => {
+          if (+item.value === +listItem.replenish_type) {
+            listItem.replenish_type_text = item.label
+          }
+        })
+      }
+      // 活动
+      else {
+        productTopicListBf.map((item) => {
+          if (+item.value === +listItem.regtype) {
+            listItem.replenish_type_text = item.label
+          }
+        })
+      }
     },
     handleReplenishReason(listItem) {
       replenishReasonSearchList.map((item) => {
@@ -1211,6 +1314,10 @@ export default {
   background-color: #fff;
   color: #666;
   padding-bottom: 20px;
+  .gray-text {
+    color: #999;
+    font-size: 12px;
+  }
   .table-all {
     .disnone {
       display: none;
