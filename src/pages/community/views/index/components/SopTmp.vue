@@ -11,8 +11,8 @@
     <div class="operete-row">
       <div class="search-container">
         <!-- 组件① -->
-        <!-- <div class="search-item small" v-if="userInfo.type == '2'"> -->
-        <div class="search-item small">
+        <div class="search-item small" v-if="userInfo.type == '2'">
+          <!-- <div class="search-item small"> -->
           <group-sell
             @result="selectAuthor"
             :name="'username'"
@@ -20,8 +20,8 @@
           />
         </div>
       </div>
-      <!-- <div class="add-btn" v-if="userInfo.type == '1'"> -->
-      <div class="add-btn">
+      <div class="add-btn" v-if="userInfo.type == '1'">
+        <!-- <div class="add-btn"> -->
         <el-button type="primary" size="mini" @click="new_sop_handle"
           >新建SOP模板</el-button
         >
