@@ -278,6 +278,11 @@
           <el-col :span="6">
             <el-row>
               <el-col :span="6" style="color: #aeaeae;">默认地址：</el-col>
+              <div @click="onUpdataAddress" class="updateAddress">
+                <div>
+                  修改
+                </div>
+              </div>
               <el-col :span="18">
                 {{
                   stuInfor.address &&
@@ -456,6 +461,18 @@
         close="calc(100vw - 50px - 25px)"
       ></m-pagination>
     </div>
+    <div>
+      <el-dialog
+        width="500px"
+        title="修改收货信息"
+        :visible.sync="dialogTableVisible"
+      >
+        <modifyAddress
+          :modifyFormData="stuInfor"
+          @modifyAddressExpress="modifyAddressExpress"
+        />
+      </el-dialog>
+    </div>
   </div>
 </template>
 
@@ -463,10 +480,12 @@
 import MPagination from '@/components/MPagination/index.vue'
 import DetailsList from './list.vue'
 import { GetAgeByBrithday, formatData, openBrowserTab } from '@/utils/index'
+import modifyAddress from './addressComponetns/modifyAddress'
 export default {
-  components: { DetailsList, MPagination },
+  components: { DetailsList, MPagination, modifyAddress },
   data() {
     return {
+      dialogTableVisible: false,
       currentPage: 1,
       totalElements: 0,
       totalPages: 1,
@@ -500,18 +519,29 @@ export default {
     this.reqUser()
   },
   methods: {
+    modifyAddressExpress() {
+      this.dialogTableVisible = false
+      this.reqUser()
+    },
+    onUpdataAddress() {
+      this.dialogTableVisible = true
+    },
     // 学员信息接口
     reqUser() {
       this.$http.User.getUser(this.studentId).then((res) => {
-        // console.log('学员基本信息', res.data.User)
+        console.log('学员基本信息', res.data.User)
         this.sendId =
           res.data.User && res.data.User.send_id ? res.data.User.send_id : '0'
         // 课程tab默认显示
-        this.courseData = res.data.User.teams[0].id
+        const teamData =
+          res.data.User.teams.length > 0
+            ? res.data.User.teams[0]
+            : { id: '', team_type: '' }
+        this.courseData = teamData.id
         this.stuInfor = this.modifyData(res.data.User)
         this.loading = false
         // init lessonType
-        this.lessonType = this.stuInfor.teams[0].team_type - 0 > 0 ? 1 : 0
+        this.lessonType = teamData.team_type - 0 > 0 ? 1 : 0
         // 判断是不是已退费
         this.checkBack()
         // 在不能自己选系统课体验课的页面，用户在有多个系统课的情况下，右上角的tag页签展示优先级开课中>待开课>已开课>已退费
@@ -528,13 +558,10 @@ export default {
         }
         if (this.tabData === 'learningRecord') {
           // 学习记录接口
-          this.reqSendCourseLogPage(
-            res.data.User.teams[0].id,
-            res.data.User.teams[0].team_type
-          )
+          this.reqSendCourseLogPage(teamData.id, teamData.team_type)
         } else if (this.tabData === 'collectionOf') {
           // 作品集接口
-          this.reqStudentCourseTaskPage(res.data.User.teams[0].id)
+          this.reqStudentCourseTaskPage(teamData.id)
         } else if (this.tabData === 'orderLogistics') {
           // 订单·物流数据接口
           this.reqgetOrderPage()
@@ -553,6 +580,8 @@ export default {
       data.birthday = data.birthday ? formatData(data.birthday * 1000) : '-'
       // 注册时间格式化
       data.join_date = data.join_date ? formatData(data.join_date) : '-'
+      // data.teams =
+      //   data.teams.length > 0 ? data.teams : { id: '', team_type: '' }
       data.teams.length > 0 &&
         data.teams.forEach((item) => {
           // 课程名称格式化 0:体验课   >0:系统课
@@ -982,7 +1011,7 @@ export default {
   // 详情行
   .specific {
     margin: 10px 0 0 40px;
-    height: 90px;
+    min-height: 90px;
     // background: #67c23a;
     .el-col {
       line-height: 30px;
@@ -1011,6 +1040,22 @@ export default {
         margin: 0 20px 0 0;
         cursor: pointer;
         color: #aeaeae;
+      }
+    }
+    .updateAddress {
+      width: 40px;
+      height: 20px;
+      position: absolute;
+      top: 35px;
+      left: 15px;
+      color: #fff;
+      background: #409eff;
+      border-radius: 50px;
+      line-height: 20px;
+      cursor: pointer;
+      div {
+        text-align: center;
+        font-size: 12px;
       }
     }
   }

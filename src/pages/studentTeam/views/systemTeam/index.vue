@@ -3,13 +3,8 @@
  * @version: 1.0.0
  * @Author: Shentong
  * @Date: 2020-05-14 14:11:21
-<<<<<<< HEAD
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-06-12 15:14:28
-=======
  * @LastEditors: Shentong
  * @LastEditTime: 2020-05-29 17:12:38
->>>>>>> feature/new-teams-0527
  -->
 <template>
   <el-row type="flex" class="app-main team-container">
@@ -415,7 +410,8 @@ export default {
         department = [],
         teacherId = '',
         sup = [],
-        teamName = ''
+        teamName = '',
+        category = ''
       } = this.searchEmit
 
       Object.assign(this.tabQuery, {
@@ -424,6 +420,7 @@ export default {
         sup,
         department,
         teacherId,
+        category,
         page: 1
       })
       // this.getTrialTeamList(this.tabQuery)
@@ -539,7 +536,7 @@ export default {
     display: flex;
     flex-direction: column;
     .header-search-container {
-      height: 50px;
+      // height: 50px;
       display: flex;
       padding-left: 15px;
       border-bottom: 1px solid #eee;

@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-04-01 13:24:40
  * @LastEditors: panjian
- * @LastEditTime: 2020-05-15 12:03:16
+ * @LastEditTime: 2020-07-13 18:54:14
  -->
 <template>
   <div>
@@ -61,6 +61,8 @@
           size="medium"
           filterable
           @change="handleChange"
+          :props="{ expandTrigger: 'hover' }"
+          @active-item-change="handleItemChange"
         >
         </el-cascader>
       </el-form-item>
@@ -86,7 +88,6 @@
   </div>
 </template>
 <script>
-import areaLists from '@/utils/area.json'
 import { isToss } from '@/utils/index'
 export default {
   name: 'logisticsForm',
@@ -127,11 +128,12 @@ export default {
     }
     return {
       areaSlist: [],
-      areaLists: areaLists,
+      areaLists: [],
       province: null,
       city: null,
       area: null,
       areaCode: null,
+      street: null,
       addressVal: '',
       ruleForm: {
         receiptName: '',
@@ -165,28 +167,87 @@ export default {
   created() {
     this.getAddressList()
     // console.log(this.modifyFormData.addressid)
-    this.createdEcho()
+    this.getAreaLists()
   },
   methods: {
+    getAreaLists() {
+      this.$http.Express.getCenterAddressList().then((res) => {
+        const _data = res.payload.data
+        _data.forEach((ele) => {
+          ele.label = ele.provinceName
+          ele.value = ele.id
+          ele.children = ele.citys
+          ele.children.forEach((val) => {
+            val.label = val.cityName
+            val.value = +val.cityCode + 999
+            val.children = val.countys
+            val.children.forEach((_value) => {
+              _value.label = _value.countyName
+              _value.value = _value.countyCode
+              _value.children = [{ label: '暂不选择', value: '' }]
+            })
+          })
+        })
+        this.areaLists = _data
+        this.createdEcho()
+      })
+    },
+    handleItemChange(data) {
+      const addressList = this.areaLists
+      addressList.forEach((res) => {
+        if (data[0] === res.id) {
+          res.children.forEach((ele) => {
+            if (data[1] === +ele.cityCode + 999) {
+              ele.children.forEach((val) => {
+                if (data[2] === val.countyCode) {
+                  this.$http.Express.getCenterAddressTownList(data[2]).then(
+                    (data) => {
+                      console.log(data)
+                      const _data = data.payload
+                      _data.forEach((codeVal) => {
+                        const add = {
+                          label: codeVal.townName,
+                          value: codeVal.townCode
+                        }
+                        val.children.push(add)
+                      })
+                    }
+                  )
+                }
+              })
+            }
+          })
+        }
+      })
+    },
     createdEcho() {
       // this.addressVal = this.modifyFormData.id
       console.log(this.modifyFormData)
       this.ruleForm.receiptName = this.modifyFormData.row.receipt_name
       this.ruleForm.receiptTel = this.modifyFormData.row.mobile
-
-      const provinces = this.areaLists.filter(
-        (item) => item.label === this.modifyFormData.row.province
-      )
-      const citys = provinces[0].children.filter(
-        (item) => item.label === this.modifyFormData.row.city
-      )
-      const areas = citys[0].children.filter(
-        (item) => item.label === this.modifyFormData.row.area
-      )
+      const areaList = this.areaLists
+      const provinces = []
+      const citys = []
+      const areas = []
+      areaList.forEach((res) => {
+        if (res.label === this.modifyFormData.row.province) {
+          provinces.push(res)
+          res.children.forEach((ele) => {
+            if (ele.label === this.modifyFormData.row.city) {
+              citys.push(ele)
+              ele.children.forEach((val) => {
+                if (val.label === this.modifyFormData.row.area) {
+                  areas.push(val)
+                }
+              })
+            }
+          })
+        }
+      })
       this.province = provinces[0].label
       this.city = citys[0].label
       this.area = areas[0].label
-      this.areaSlist = [provinces[0].value, citys[0].value, areas[0].value]
+      this.areaSlist = [provinces[0].value, citys[0].value, areas[0].value, '']
       this.ruleForm.addressDetail = this.modifyFormData.row.address_detail
     },
     // 选择地址
@@ -259,6 +320,7 @@ export default {
       this.city = citys[0].label
       this.area = areas[0].label
       this.areaCode = data[2]
+      this.street = data[3]
     },
     submitForm(formName) {
       const teacher = isToss()
@@ -269,33 +331,29 @@ export default {
         this.operatorId = staff.id
       }
       const params = {
-        // operatorId: this.operatorId,
-        // orderId: this.modifyFormData.orderid,
-        // addressId: '',
+        operatorId: this.operatorId,
+        addressId: this.modifyFormData.row.address_id,
+        userId: this.modifyFormData.userid,
         expressId: this.modifyFormData.id,
-        // userId: this.modifyFormData.userid,
         receiptName: this.ruleForm.receiptName,
         receiptTel: this.ruleForm.receiptTel,
         province: this.province,
         city: this.city,
         area: this.area,
+        street: this.street,
         addressDetail: this.ruleForm.addressDetail
-        // areaCode: this.areaCode,
-        // expressNo: '',
-        // expressCompany: '',
-        // expressCompanyNu: ''
       }
 
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          this.$http.Express.updateExpressAddress(params)
+          this.$http.Express.updateExpressAddressNew(params)
             .then((res) => {
               if (res.data) {
                 return
               }
               if (res.code === 0) {
                 this.$message({
-                  message: '地址添加成功',
+                  message: '地址修改成功',
                   type: 'success'
                 })
                 setTimeout(() => {

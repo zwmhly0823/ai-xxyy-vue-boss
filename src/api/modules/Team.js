@@ -2,8 +2,8 @@
  * @Author: YangJiyong
  * @Email: yangjiyong@meishubao.com
  * @Date: 2020-03-21 11:58:33
- * @Last Modified by: YangJiyong
- * @Last Modified time: 2020-05-21 18:56:28
+ * @Last Modified by: mikey.zhaopeng
+ * @Last Modified time: 2020-07-11 17:28:49
  * @Description: 班级
  */
 import axios from '../axiosConfig'
@@ -30,14 +30,14 @@ export default {
             student_id
             ctime
             utime
-            added_group          
+            added_group
             added_group_time
-            added_wechat          
+            added_wechat
             added_wechat_time
             team_id
             teacher_id
             sup
-            term          
+            term
             current_lesson
             course_state
             team_category
@@ -52,13 +52,13 @@ export default {
             page_origin
             page_origin_id
             send_id
-            sex           
+            sex
             status
             username
             weixin_openid
             weixin_unionid
             user_num
-            base_painting           
+            base_painting
             base_painting_text
             import_remark
             import_time
@@ -68,7 +68,7 @@ export default {
             out_trade_no
             order_id
             fast_follow_time
-            follow          
+            follow
             wechat_nickname
           }
         }
@@ -158,6 +158,7 @@ export default {
       teamName = '',
       teamState = '0',
       courseDay = '',
+      category = '',
       page = 1,
       size = '20',
       sort = `{"ctime":"desc"}`
@@ -168,6 +169,7 @@ export default {
         'team_name.like': { 'team_name.keyword': `*${teamName}*` }
       })
     courseDay && Object.assign(query, { courseDay })
+    category && Object.assign(query, { category })
     term.length && Object.assign(query, { term })
     department.length && Object.assign(query, { department_id: department })
     sup.length && Object.assign(query, { 'sup.keyword': sup })
@@ -385,6 +387,7 @@ export default {
           receipt_tel
           receipt_name
           product_name
+          address_id
         }
       }
     }`

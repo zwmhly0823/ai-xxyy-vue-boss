@@ -4,60 +4,70 @@
  * @Author: panjian
  * @Date: 2020-04-01 13:24:40
  * @LastEditors: panjian
- * @LastEditTime: 2020-07-13 18:48:37
+ * @LastEditTime: 2020-07-13 18:55:40
  -->
 <template>
-  <el-form
-    :model="ruleForm"
-    :rules="rules"
-    ref="ruleForm"
-    label-width="100px"
-    class="demo-ruleForm"
-  >
-    <el-form-item label="收货人姓名" prop="receiptName">
-      <el-input v-model="ruleForm.receiptName"></el-input>
-    </el-form-item>
-    <el-form-item label="收货人电话" prop="receiptTel">
-      <el-input v-model="ruleForm.receiptTel"></el-input>
-    </el-form-item>
-    <!-- <span class="areaLists-css">收货人地址</span> -->
-    <el-form-item label="收货人地址">
-      <el-cascader
-        placeholder="省/市/区"
-        :options="areaLists"
-        size="medium"
-        filterable
-        @change="handleChange"
-        :props="{ expandTrigger: 'hover' }"
-        @active-item-change="handleItemChange"
-      >
-      </el-cascader>
-    </el-form-item>
-    <el-form-item label="详细地址" prop="addressDetail">
-      <el-input v-model="ruleForm.addressDetail"></el-input>
-    </el-form-item>
-    <el-form-item>
-      <el-button
-        size="small"
-        style="width: 100px;"
-        type="primary"
-        @click="submitForm('ruleForm')"
-        >保存</el-button
-      >
-      <el-button
-        size="small"
-        style="width: 100px;"
-        @click="resetForm('ruleForm')"
-        >取消</el-button
-      >
-    </el-form-item>
-  </el-form>
+  <div>
+    <el-form
+      :model="ruleForm"
+      :rules="rules"
+      ref="ruleForm"
+      label-width="100px"
+      class="demo-ruleForm"
+    >
+      <el-form-item label="收货人姓名" prop="receiptName">
+        <el-input v-model="ruleForm.receiptName"></el-input>
+      </el-form-item>
+      <el-form-item label="收货人电话" prop="receiptTel">
+        <el-input v-model="ruleForm.receiptTel"></el-input>
+      </el-form-item>
+      <!-- <span class="areaLists-css">收货人地址</span> -->
+      <el-form-item label="收货人地址">
+        <el-cascader
+          v-model="areaSlist"
+          placeholder="省/市/区"
+          :options="areaLists"
+          size="medium"
+          filterable
+          @change="handleChange"
+          :props="{ expandTrigger: 'hover' }"
+          @active-item-change="handleItemChange"
+        >
+        </el-cascader>
+      </el-form-item>
+      <el-form-item label="详细地址" prop="addressDetail">
+        <el-input v-model="ruleForm.addressDetail"></el-input>
+      </el-form-item>
+      <el-form-item>
+        <el-button
+          size="small"
+          style="width: 100px;"
+          type="primary"
+          @click="submitForm('ruleForm')"
+          >保存</el-button
+        >
+        <el-button
+          size="small"
+          style="width: 100px;"
+          @click="resetForm('ruleForm')"
+          >取消</el-button
+        >
+      </el-form-item>
+    </el-form>
+  </div>
 </template>
 <script>
 import { isToss } from '@/utils/index'
 export default {
   name: 'logisticsForm',
-  props: ['formData'],
+  props: {
+    modifyFormData: {
+      type: Object,
+      default: () => {
+        return {}
+      }
+    }
+  },
   data() {
     var validateName = (rule, value, callback) => {
       if (value === '') {
@@ -82,12 +92,14 @@ export default {
       }
     }
     return {
+      areaSlist: [],
       areaLists: [],
       province: null,
       city: null,
       area: null,
       areaCode: null,
       street: null,
+      addressVal: '',
       ruleForm: {
         receiptName: '',
         receiptTel: '',
@@ -95,7 +107,7 @@ export default {
       },
       rules: {
         receiptName: [
-          { required: false, validator: validateName, trigger: 'blur' }
+          { required: true, validator: validateName, trigger: 'blur' }
         ],
         receiptTel: [
           {
@@ -108,11 +120,19 @@ export default {
           { required: true, message: '请填写详细地址', trigger: 'blur' }
         ]
       },
-      operatorId: ''
+      operatorId: '',
+      addressList: []
     }
   },
+  // watch: {
+  //   modifyFormData(old, val) {
+  //     console.log(val, old)
+  //   }
+  // },
   created() {
+    this.getAddressList()
     this.getAreaLists()
+    // this.handleItemChange()
   },
   methods: {
     getAreaLists() {
@@ -134,6 +154,7 @@ export default {
           })
         })
         this.areaLists = _data
+        this.createdEcho()
       })
     },
     handleItemChange(data) {
@@ -164,6 +185,62 @@ export default {
         }
       })
     },
+    createdEcho() {
+      // this.addressVal = this.modifyFormData.id
+      console.log(this.modifyFormData)
+      this.ruleForm.receiptName = this.modifyFormData.address[0].receipt_name
+      this.ruleForm.receiptTel = this.modifyFormData.address[0].receipt_tel
+      const areaList = this.areaLists
+      const provinces = []
+      const citys = []
+      const areas = []
+      areaList.forEach((res) => {
+        if (res.label === this.modifyFormData.address[0].province) {
+          provinces.push(res)
+          res.children.forEach((ele) => {
+            if (ele.label === this.modifyFormData.address[0].city) {
+              citys.push(ele)
+              ele.children.forEach((val) => {
+                if (val.label === this.modifyFormData.address[0].area) {
+                  areas.push(val)
+                }
+              })
+            }
+          })
+        }
+      })
+      this.province = provinces[0].label
+      this.city = citys[0].label
+      this.area = areas[0].label
+      this.areaSlist = [provinces[0].value, citys[0].value, areas[0].value, '']
+      this.ruleForm.addressDetail = this.modifyFormData.address[0].address_detail
+    },
+    // 选择地址
+    // onAddressVal(data) {
+    //   this.ruleForm.receiptName = data.receiptName
+    //   this.ruleForm.receiptTel = data.receiptTel
+    //   const provinces = this.areaLists.filter(
+    //     (item) => item.label === data.province
+    //   )
+    //   const citys = provinces[0].children.filter(
+    //     (item) => item.label === data.city
+    //   )
+    //   const areas = citys[0].children.filter((item) => item.label === data.area)
+    //   this.areaSlist = [provinces[0].value, citys[0].value, areas[0].value]
+    //   this.province = provinces[0].label
+    //   this.city = citys[0].label
+    //   this.area = areas[0].label
+    //   this.ruleForm.addressDetail = data.addressDetail
+    // },
+    getAddressList() {
+      if (!this.modifyFormData.userid) return false
+      this.$http.Express.getAddressList(this.modifyFormData.userid).then(
+        (res) => {
+          const _data = res.payload
+          this.addressList = _data
+        }
+      )
+    },
     // 级联城市级联
     handleChange(data) {
       const provinces = this.areaLists.filter(
@@ -189,10 +266,11 @@ export default {
       }
       const params = {
         operatorId: this.operatorId,
-        // orderId: this.formData.orderid,
-        // addressId: '',
-        expressId: this.formData.id,
-        // userId: this.formData.userid,
+        userId: this.modifyFormData.id,
+        // orderId: this.modifyFormData.orderid,
+        addressId: this.modifyFormData.address[0].id,
+        expressId: '',
+        // userId: this.modifyFormData.userid,
         receiptName: this.ruleForm.receiptName,
         receiptTel: this.ruleForm.receiptTel,
         province: this.province,
@@ -205,26 +283,22 @@ export default {
         // expressCompany: '',
         // expressCompanyNu: ''
       }
-      if (!this.province) {
-        this.$message({
-          message: '请选择收货人地址'
-        })
-        return false
-      }
+      console.log(params)
+
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          this.$http.Express.createExpressAddressNew(params)
+          this.$http.User.updateExpressAddressNew(params)
             .then((res) => {
               if (res.data) {
                 return
               }
-              if (res.status) {
+              if (res.code === 0) {
                 this.$message({
-                  message: '地址添加成功',
+                  message: '地址修改成功',
                   type: 'success'
                 })
                 setTimeout(() => {
-                  this.$emit('addExpress', 1)
+                  this.$emit('modifyAddressExpress', 1)
                 }, 1000)
               }
             })
@@ -238,17 +312,32 @@ export default {
     },
     resetForm(formName) {
       this.$refs[formName].resetFields()
-      this.$emit('addExpress', 2)
+      this.$emit('modifyAddressExpress', 2)
     }
   }
 }
 </script>
 <style lang="scss" scoped>
+.choiceAddRess {
+  max-height: 150px;
+  overflow-y: scroll;
+  .mt-20 {
+    margin-top: 20px;
+    &:nth-child(1) {
+      margin-top: 0px;
+    }
+  }
+}
 .areaLists-css {
   position: relative;
   top: 30px;
   left: 18px;
   font-size: 14px;
   font-weight: 600;
+}
+</style>
+<style lang="scss">
+.el-form-item.is-required:not(.is-no-asterisk) > .el-form-item__label:before {
+  content: '';
 }
 </style>
