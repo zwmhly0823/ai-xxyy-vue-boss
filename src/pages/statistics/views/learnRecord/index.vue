@@ -4,7 +4,7 @@
  * @Author: zhangjianwen
  * @Date: 2020-07-09 15:02:59
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-07-11 16:56:12
+ * @LastEditTime: 2020-07-13 15:50:36
 -->
 <template>
   <div class="learn-record">
@@ -41,7 +41,7 @@
         <el-tab-pane label="S3难度" name="S3"></el-tab-pane>
       </el-tabs>
     </div>
-    <div>
+    <div class="record-con">
       <el-row>
         <el-col
           :span="6"
@@ -84,16 +84,17 @@
     </div>
 
     <div class="empty" v-if="recordList.length === 0">暂无数据</div>
-
-    <m-pagination
-      :current-page="currentPage"
-      :page-count="totalPages"
-      :total="totalElements"
-      @current-change="handleSizeChange"
-      show-pager
-      open="calc(100vw - 170px - 25px)"
-      close="calc(100vw - 50px - 25px)"
-    ></m-pagination>
+    <div class="pag-con">
+      <m-pagination
+        :current-page="currentPage"
+        :page-count="totalPages"
+        :total="totalElements"
+        @current-change="handleSizeChange"
+        show-pager
+        open="calc(100vw - 170px - 25px)"
+        close="calc(100vw - 50px - 25px)"
+      ></m-pagination>
+    </div>
   </div>
 </template>
 
