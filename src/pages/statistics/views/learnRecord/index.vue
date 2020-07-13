@@ -4,7 +4,7 @@
  * @Author: zhangjianwen
  * @Date: 2020-07-09 15:02:59
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-07-13 15:50:36
+ * @LastEditTime: 2020-07-13 16:11:39
 -->
 <template>
   <div class="learn-record">
@@ -302,6 +302,17 @@ export default {
     margin-bottom: 10px;
     border-bottom: 10px solid #f0f1f2;
   }
+  .record-con {
+    padding-bottom: 50px;
+  }
+  .pag-con {
+    position: fixed;
+    width: 100%;
+    height: 20px;
+    background: #f0f1f2;
+    bottom: 0;
+    right: 0;
+  }
 }
 .card-main {
   padding: 10px;
@@ -329,6 +340,7 @@ export default {
     }
   }
 }
+
 .empty {
   text-align: center;
   background: white;
