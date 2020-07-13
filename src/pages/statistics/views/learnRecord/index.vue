@@ -4,7 +4,7 @@
  * @Author: zhangjianwen
  * @Date: 2020-07-09 15:02:59
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-07-13 16:40:15
+ * @LastEditTime: 2020-07-13 17:13:18
 -->
 <template>
   <div class="learn-record">
@@ -46,7 +46,7 @@
         <el-col
           :span="6"
           v-for="item in recordList"
-          :key="item.ctime"
+          :key="item.id"
           class="card-main"
         >
           <el-card :body-style="{ padding: '0px' }">
@@ -148,12 +148,13 @@ export default {
       if (val === '2') {
         return false
       }
-      console.log(val, old, '触发')
       this.term = val
+      this.currentPage = 1
       this.getData(this.currentPage, val, this.level)
     },
     level(val, old) {
       this.level = val
+      this.currentPage = 1
       this.getData(this.currentPage, this.term, val)
     }
   },
@@ -168,7 +169,6 @@ export default {
   methods: {
     compare(pre, property) {
       return function(a, b) {
-        console.log(a, b.pre.period)
         var value1 = a.pre.property
         var value2 = b.pre.property
         return value1 - value2
@@ -180,7 +180,6 @@ export default {
         // teacher_id: this.teacherIds
       }
       return this.$http.User.ManagementForTeacherList(params).then((res) => {
-        console.log(res)
         if (res && res.data && res.data.ManagementForTeacherList) {
           if (res.data.ManagementForTeacherList.length === 0) {
             return
@@ -200,7 +199,6 @@ export default {
             return a.management.period - b.management.period
           })
           this.manageMentHistoryList = arrHistorySort
-          console.log(this.manageMentHistoryList)
           const list = arrSort.map((item) => {
             item.management.period_label = `${item.management.period_name}(
               开课中
@@ -210,34 +208,14 @@ export default {
           })
 
           this.manageMentList = _.orderBy(list, ['status'], ['desc'])
-          console.log(this.manageMentList)
-          // this.manageMentList = _.orderBy(list, ['status'], ['desc'])
-          // if (this.propTerm) {
-          //   this.term = this.propTerm
-          // } else {
-          //   this.term =
-          //     this.manageMentList.length > 0
-          //       ? this.manageMentList[0].period
-          //       : '0'
-          // }
         }
       })
     },
     // 查询
     getData(page = this.currentPage, term = this.term, level = this.level) {
-      // const query = Object.assign({}, obj)
       this.recordList = []
-      // const page = this.currentPage
-      // const sort = {}
-      // if (this.sortActive) {
-      //   sort[this.sortActive] = this.sortKeys[this.sortActive]
-      //  }
       return this.$http.User.getStudentTrialRecordPage(page, term, level)
         .then((res) => {
-          console.log(res)
-          // var defTotalElements = 0
-          // var defTotalPages = 1
-          // var defContent = []
           if (
             res &&
             res.data &&
@@ -246,23 +224,10 @@ export default {
             const data = res.data.StudentTrialRecordOperatorStatisticsPage
             this.totalElements = Number(data.totalElements)
             this.totalPages = Number(data.totalPages)
-            console.log(this.totalElements, this.totalPages)
             this.recordList = data.content
-            console.log(this.recordList)
-            // defTotalElements = totalElements
-            // defTotalPages = totalPages
-            // // defContent = content
-            // defContent = this.initName(content)
           }
-          // this.dataList = defContent
-          // // console.log('dataList', this.dataList)
-          // this.totalPages = +defTotalPages
-          // this.totalElements = +defTotalElements
-          // loading.close()
         })
-        .catch(() => {
-          // loading.close()
-        })
+        .catch(() => {})
     },
 
     handleCommand(command) {
@@ -270,7 +235,6 @@ export default {
     },
 
     handleSizeChange(val) {
-      console.log(val)
       this.currentPage = val
       this.getData(val)
     },
