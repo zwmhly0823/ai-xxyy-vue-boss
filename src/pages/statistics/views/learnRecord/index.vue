@@ -4,7 +4,7 @@
  * @Author: zhangjianwen
  * @Date: 2020-07-09 15:02:59
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-07-13 18:07:04
+ * @LastEditTime: 2020-07-13 18:52:20
 -->
 <template>
   <div class="learn-record">
@@ -22,7 +22,7 @@
             <span class="el-dropdown-link">
               更多<i class="el-icon-arrow-down el-icon--right"></i>
             </span>
-            <el-dropdown-menu slot="dropdown">
+            <el-dropdown-menu class="el-menu" slot="dropdown">
               <el-dropdown-item
                 :key="mg.management.period"
                 v-for="mg in manageMentHistoryList"
@@ -306,7 +306,10 @@ export default {
     }
   }
 }
-
+.el-menu {
+  max-height: 500px;
+  overflow: scroll;
+}
 .empty {
   text-align: center;
   background: white;
