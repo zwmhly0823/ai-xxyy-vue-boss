@@ -1024,7 +1024,7 @@ export default {
   // 详情行
   .specific {
     margin: 10px 0 0 40px;
-    height: 90px;
+    min-height: 90px;
     // background: #67c23a;
     .el-col {
       line-height: 30px;

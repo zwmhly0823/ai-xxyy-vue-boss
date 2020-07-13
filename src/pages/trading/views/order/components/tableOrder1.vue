@@ -2,7 +2,7 @@
 <template>
   <div class="title-box">
     <el-table :data="orderList">
-      <el-table-column label="用户信息" prop="user" min-width="150" fixed>
+      <el-table-column label="用户信息" prop="user" min-width="180" fixed>
         <template slot-scope="scope">
           <user :user="scope.row.user" :singleData="scope.row" />
         </template>
@@ -52,7 +52,7 @@
           </p>
         </template>
       </el-table-column>
-      <el-table-column label="业绩归属老师" min-width="180">
+      <el-table-column label="业绩归属老师" min-width="220">
         <template slot-scope="scope">
           <!-- 续费情况  v-if="scope.row.regtype && scope.row.regtype !== 3" -->
           <div>
