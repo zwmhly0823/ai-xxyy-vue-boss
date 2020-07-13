@@ -4,11 +4,12 @@
  * @Author: YangJiyong
  * @Date: 2020-05-25 15:34:04
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-06-23 21:30:42
+ * @LastEditTime: 2020-07-13 11:27:57
 -->
 <template>
   <div class="user-list">
     <el-tabs type="border-card" v-model="teamstate">
+      <el-tab-pane label="全部学员" name="0,1,2"></el-tab-pane>
       <el-tab-pane label="开课中" name="1"></el-tab-pane>
       <el-tab-pane label="待开课" name="0"></el-tab-pane>
       <!-- <el-tab-pane label="已结课" name="2"></el-tab-pane> -->
@@ -205,13 +206,13 @@ export default {
     searchParams() {
       return {
         ...this.search,
-        teamstate: +this.teamstate
+        teamstate: this.teamstate.split(',')
       }
     }
   },
   data() {
     return {
-      teamstate: '1', // 0 待开始；1 上课中；2 已结课
+      teamstate: '0,1,2', // 0 待开始；1 上课中；2 已结课
       currentPage: 1,
       totalElements: 0,
       totalPages: 1,
