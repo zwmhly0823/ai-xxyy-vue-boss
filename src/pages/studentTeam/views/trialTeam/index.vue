@@ -3,8 +3,8 @@
  * @version: 1.0.0
  * @Author: Shentong
  * @Date: 2020-05-14 14:11:21
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-06-12 18:55:31
+ * @LastEditors: Shentong
+ * @LastEditTime: 2020-07-13 13:51:31
  -->
 <template>
   <el-row type="flex" class="app-main team-container">
@@ -607,7 +607,7 @@ export default {
     display: flex;
     flex-direction: column;
     .header-search-container {
-      height: 50px;
+      // height: 50px;
       display: flex;
       padding-left: 15px;
       border-bottom: 1px solid #eee;
