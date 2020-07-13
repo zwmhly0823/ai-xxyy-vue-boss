@@ -59,6 +59,7 @@
   </div>
 </template>
 <script>
+import { isToss } from '@/utils/index'
 import { debounce } from 'lodash'
 export default {
   props: {
@@ -73,13 +74,24 @@ export default {
       username: '',
       selectTime: [],
       templateId: '',
-      templateList: []
+      templateList: [],
+      teacherId: '',
+      type: ''
     }
   },
   components: {},
   created() {
-    const uid = JSON.parse(localStorage.getItem('staff')).id || ''
-    this.getTempList(uid, 2).then((res) => {
+    const teacher = isToss()
+    if (teacher) {
+      const tossteacher = JSON.parse(localStorage.getItem('teacher'))
+      this.teacherId = tossteacher.id || ''
+      this.type = 1
+    } else {
+      const staff = JSON.parse(localStorage.getItem('staff'))
+      this.teacherId = staff.id || ''
+      this.type = 2
+    }
+    this.getTempList(this.teacherId, this.type).then((res) => {
       if (res.code === 0) {
         this.templateList = res.payload
         console.log('getTempList')
