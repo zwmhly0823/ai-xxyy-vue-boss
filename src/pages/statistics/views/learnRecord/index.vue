@@ -4,7 +4,7 @@
  * @Author: zhangjianwen
  * @Date: 2020-07-09 15:02:59
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-07-13 17:18:53
+ * @LastEditTime: 2020-07-13 18:11:27
 -->
 <template>
   <div class="learn-record">
@@ -17,7 +17,7 @@
           :key="mg.period"
         >
         </el-tab-pane>
-        <el-tab-pane>
+        <el-tab-pane v-if="manageMentHistoryList.length > 0">
           <el-dropdown @command="handleCommand" slot="label">
             <span class="el-dropdown-link">
               更多<i class="el-icon-arrow-down el-icon--right"></i>

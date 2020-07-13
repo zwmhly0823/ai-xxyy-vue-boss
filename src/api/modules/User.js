@@ -4,8 +4,8 @@
  * @version:
  * @Author: shentong
  * @Date: 2020-03-13 14:38:28
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-07-13 11:45:52
+ * @LastEditors: zhangjianwen
+ * @LastEditTime: 2020-07-13 18:11:49
  */
 // import axios from '../axios'
 import axios from '../axiosConfig'
@@ -736,7 +736,7 @@ export default {
    **/
   ManagementForTeacherList({
     // teacher_id = [],
-    team_state = [0, 1],
+    team_state = [1, 2],
     team_type = 0
   } = {}) {
     const query = {
