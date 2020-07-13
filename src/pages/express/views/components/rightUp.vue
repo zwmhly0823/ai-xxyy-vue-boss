@@ -31,7 +31,7 @@
     </div>
     <!-- v-if="!teacherId" TOSS -->
     <!-- <div class="search-export" v-if="!teacherId"> -->
-    <div class="search-export">
+    <!-- <div class="search-export">
       <div>
         <el-button size="small" type="primary" @click="dialogVisible = true">
           导入物流信息
@@ -42,7 +42,7 @@
           >导出物流信息</el-button
         >
       </div>
-    </div>
+    </div> -->
 
     <el-dialog title="导出物流消息" :visible.sync="dickUp" width="30%">
       <span>确定导出选中的数据嘛</span>
@@ -265,7 +265,9 @@ export default {
     submitUpload(file, filelist) {
       this.$refs.upload.submit()
     },
-
+    showImportDialog() {
+      this.dialogVisible = true
+    },
     showExportDialog() {
       this.expressId = sessionStorage.getItem('uid') || []
       // 如果物流状态选择全部，不能导出

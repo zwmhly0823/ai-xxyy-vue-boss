@@ -35,3 +35,9 @@ export const productTopicList = [
   { name: '推荐有礼', id: '4' },
   { name: '邀请有奖', id: '6' }
 ]
+
+export const productTopicListBf = [
+  { label: '小熊商城补发', value: '5' },
+  { label: '推荐有礼补发', value: '4' },
+  { label: '邀请有奖补发', value: '6' }
+]

@@ -1,4 +1,4 @@
-const plugins = []
+const plugins = ['@babel/plugin-proposal-optional-chaining']
 if (process.env.BASE_URL === 'ghpageslive') {
   plugins.push('transform-remove-console')
 }
