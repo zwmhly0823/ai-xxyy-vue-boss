@@ -225,8 +225,8 @@ li {
       }
       .no-read-dot {
         /deep/ .is-dot {
-          top: 17px;
-          right: 0px;
+          top: 24px;
+          left: -20px;
         }
       }
     }
