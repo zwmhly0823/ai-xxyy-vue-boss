@@ -56,6 +56,9 @@ export default {
             leave_date
             level
             leave_train
+            teacher_status
+            data_auth
+            work_place
             department {
               id
               name

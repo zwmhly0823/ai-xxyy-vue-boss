@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-13 16:53:27
  * @LastEditors: panjian
- * @LastEditTime: 2020-07-11 17:57:45
+ * @LastEditTime: 2020-07-14 16:28:56
  -->
 <template>
   <div class="left-container">
@@ -32,7 +32,7 @@
           <span v-else>{{ `(${data.size})` }}</span>
         </span>
         <span
-          v-show="nowId == data.id && isShowEditIcon"
+          v-show="nowId == data.id && isShowEditIcon && data.name !== '全部'"
           class="el-icon-more"
           @click.stop="editTools(data)"
         ></span>
@@ -75,6 +75,7 @@ export default {
       departmentList: [
         {
           name: '全部',
+          pid: '99999',
           children: []
         }
       ],

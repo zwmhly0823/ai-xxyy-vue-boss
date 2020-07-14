@@ -34,12 +34,17 @@
       <el-form-item label="手机号" prop="phone" style="width:60%;">
         <el-input v-model.number="ruleForm.phone" :maxlength="11"></el-input>
       </el-form-item>
+      <!-- 账号 -->
+      <el-form-item label="账号" prop="username" style="width:60%;">
+        <el-input v-model="ruleForm.username"></el-input>
+      </el-form-item>
       <!-- 密码 -->
       <el-form-item label="密码" prop="pass" style="width:60%;">
         <el-input
           v-if="ruleForm.pwd"
+          @focus="onPassword"
           type="password"
-          v-model.trim="ruleForm.pass"
+          v-model.trim="ruleForm.pwd"
           autocomplete="off"
           show-password
           placeholder="请输入内容"
@@ -357,7 +362,7 @@ export default {
       workplaceList: [
         {
           label: '北京场',
-          value: '01'
+          value: '北京场'
         }
       ],
       // Level: [
@@ -374,6 +379,8 @@ export default {
       ruleForm: {
         // 手机号
         phone: '',
+        // 账号
+        username: '',
         // 密码
         pass: '',
         pwd: '',
@@ -412,6 +419,7 @@ export default {
         // 管理部门
         administration: [],
         administrations: [],
+        note: [],
         // 职场
         workplace: ''
       },
@@ -420,6 +428,7 @@ export default {
       rules: {
         // 手机号
         phone: [{ required: true, validator: checkAge, trigger: 'blur' }],
+        username: [{ required: true, message: '请输入账号', trigger: 'blur' }],
         // 密码
         pass: [
           { validator: validatePass, trigger: 'blur' },
@@ -543,6 +552,9 @@ export default {
   },
 
   methods: {
+    onPassword() {
+      this.ruleForm.pwd = ''
+    },
     createdUrl() {
       // 职务接口
       this.$http.Teacher.getTeacherDutyList().then((res) => {
@@ -596,7 +608,8 @@ export default {
             this.ruleForm.nickname = payload.teacher.nickname
             this.ruleForm.dingUserid = payload.teacher.dingUserid
             this.ruleForm.resource = payload.teacher.sex
-            this.ruleForm.pwd = payload.teacher.password
+
+            this.ruleForm.pwd = 'msb123'
             // this.ruleForm.region = payload.department
             //   ? [payload.department.id]
             //   : []
@@ -631,13 +644,16 @@ export default {
             this.WeChat = payload.weixinList
             this.ruleForm.level = payload.teacher.level
             this.ruleForm.workplace = payload.teacher.workPlace
+            this.ruleForm.username = payload.teacher.username
+            this.ruleForm.administrations = payload.teacher.dataAuth
+            this.ruleForm.administration = JSON.parse(payload.teacher.note)
+            this.ruleForm.note = payload.teacher.note
             // const list = [
             //   ['33', '34', '45'],
             //   ['33', '34', '53'],
             //   ['33', '34', '46']
             // ]
-            // const list = ['发就开始了地方金坷垃受打击了', 'fsdfsdfss']
-            this.ruleForm.administration = payload.teacher.dataAuth
+            // this.ruleForm.administration = payload.teacher.dataAuth
             // this.ruleForm.administration.push(payload.teacher.dataAuth)
             console.log(this.ruleForm.administration)
           }
@@ -684,7 +700,9 @@ export default {
           isLogin: this.ruleForm.accountSettings,
           level: this.ruleForm.level,
           dataAuth: this.ruleForm.administrations,
-          workPlace: this.ruleForm.workplace
+          workPlace: this.ruleForm.workplace,
+          username: this.ruleForm.username,
+          note: this.ruleForm.note
         },
         department: {
           id:
@@ -756,7 +774,8 @@ export default {
     },
     // 管理部门选择
     handleChangeAdministration(data) {
-      console.log(data)
+      console.log(JSON.stringify(data))
+      this.ruleForm.note = JSON.stringify(data)
       const _data = []
       data.forEach((res) => {
         res.forEach((ele) => {
