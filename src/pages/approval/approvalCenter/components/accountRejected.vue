@@ -259,7 +259,6 @@ export default {
             this.tableData = this.dataToText(res.payload.content)
           } else {
             this.tableData = []
-            this.$message.error('暂无数据')
           }
           this.pageLoading = false
         })
