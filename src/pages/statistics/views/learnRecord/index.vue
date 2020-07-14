@@ -4,7 +4,7 @@
  * @Author: zhangjianwen
  * @Date: 2020-07-09 15:02:59
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-07-13 18:57:29
+ * @LastEditTime: 2020-07-14 16:05:21
 -->
 <template>
   <div class="learn-record">
@@ -17,7 +17,7 @@
           :key="mg.period"
         >
         </el-tab-pane>
-        <el-tab-pane v-if="manageMentHistoryList.length > 0">
+        <el-tab-pane name="999" v-if="manageMentHistoryList.length > 0">
           <el-dropdown @command="handleCommand" slot="label">
             <span class="el-dropdown-link">
               更多<i class="el-icon-arrow-down el-icon--right"></i>
@@ -44,7 +44,7 @@
     <div class="record-con">
       <el-row>
         <el-col
-          :span="6"
+          :span="8"
           v-for="item in recordList"
           :key="item.id"
           class="card-main"
@@ -58,7 +58,7 @@
                 <img :src="item.image" class="image" />
               </div>
 
-              <div class="content-word" style="padding: 14px;">
+              <div class="content-word">
                 <p>课程名称：{{ item.title }}</p>
                 <p>课程类型：{{ learn_type[item.lesson_type] }}</p>
                 <p>
@@ -88,7 +88,7 @@
       <m-pagination
         :current-page="currentPage"
         :page-count="totalPages"
-        :pageSize="8"
+        :pageSize="9"
         :total="totalElements"
         @current-change="handleSizeChange"
         show-pager
@@ -145,7 +145,7 @@ export default {
   },
   watch: {
     term(val, old) {
-      if (val === '2') {
+      if (val === '999') {
         return false
       }
       this.term = val
@@ -293,14 +293,19 @@ export default {
     width: 40%;
     padding: 10px;
     img {
-      width: 100%;
+      display: block;
+      max-width: 100%;
+      max-height: 100%;
     }
   }
   .card-content {
+    height: 220px;
     padding-top: 10px;
     display: flex;
     .content-word {
+      padding: 14px;
       p {
+        font-size: 12px;
         height: 20px;
       }
     }
