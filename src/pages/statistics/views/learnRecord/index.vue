@@ -4,7 +4,7 @@
  * @Author: zhangjianwen
  * @Date: 2020-07-09 15:02:59
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-07-14 15:47:23
+ * @LastEditTime: 2020-07-14 16:18:54
 -->
 <template>
   <div class="learn-record">
@@ -305,7 +305,7 @@ export default {
     .content-word {
       padding: 14px;
       p {
-        font-size: 12px;
+        font-size: 14px;
         height: 20px;
       }
     }
