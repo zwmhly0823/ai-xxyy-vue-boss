@@ -5,7 +5,7 @@
  * @Author: shentong
  * @Date: 2020-03-13 14:38:28
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-07-13 17:55:05
+ * @LastEditTime: 2020-07-14 16:33:43
  */
 // import axios from '../axios'
 import axios from '../axiosConfig'
@@ -449,7 +449,7 @@ export default {
     })
   },
   // 统计分析的学习记录
-  getStudentTrialRecordPage(page = 1, term, sup, sort = 'desc', size = 8) {
+  getStudentTrialRecordPage(page = 1, term, sup, sort = 'desc', size = 9) {
     const formattingQuery = JSON.stringify({
       term,
       'sup.keyword': sup
