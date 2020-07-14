@@ -306,6 +306,17 @@ export default {
       }
       callback()
     }
+    const userName = (rule, value, callback) => {
+      if (!value) {
+        callback(new Error('请输入账号'))
+      } else {
+        if (!/^[0-9a-zA-Z_./?'";:,=+-_)()*&^%$#@!`~|]*$/.test(value)) {
+          callback(new Error('请输入英文,数字'))
+        } else {
+          callback()
+        }
+      }
+    }
     return {
       headers: { 'Content-Type': 'multipart/form-data' },
       // title
@@ -428,7 +439,7 @@ export default {
       rules: {
         // 手机号
         phone: [{ required: true, validator: checkAge, trigger: 'blur' }],
-        username: [{ required: true, message: '请输入账号', trigger: 'blur' }],
+        username: [{ required: true, validator: userName, trigger: 'blur' }],
         // 密码
         pass: [
           { validator: validatePass, trigger: 'blur' },
@@ -644,7 +655,7 @@ export default {
             this.WeChat = payload.weixinList
             this.ruleForm.level = payload.teacher.level
             this.ruleForm.workplace = payload.teacher.workPlace
-            this.ruleForm.username = payload.teacher.username
+            this.ruleForm.username = payload.teacher.userName
             this.ruleForm.administrations = payload.teacher.dataAuth
             this.ruleForm.administration = JSON.parse(payload.teacher.note)
             this.ruleForm.note = payload.teacher.note
@@ -701,7 +712,7 @@ export default {
           level: this.ruleForm.level,
           dataAuth: this.ruleForm.administrations,
           workPlace: this.ruleForm.workplace,
-          username: this.ruleForm.username,
+          userName: this.ruleForm.username,
           note: this.ruleForm.note
         },
         department: {
