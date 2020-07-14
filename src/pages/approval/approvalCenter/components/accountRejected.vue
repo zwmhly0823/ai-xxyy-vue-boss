@@ -274,7 +274,7 @@ export default {
     },
     // 新加手机号
     getPhone(val) {
-      this.params.userTel = val
+      this.params.userTel = val.userTel
       this.initListData(this.params)
     },
     paginationChange(val) {
