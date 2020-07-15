@@ -4,13 +4,16 @@
       <span
         :class="{ 'pitch-up': index == activeIndex }"
         @click="getToggleClick(index)"
-        >{{ item.label }}</span
       >
+        {{ item.label }}
+        <span class="count">{{ item.count }}</span>
+      </span>
     </div>
   </div>
 </template>
 
 <script>
+/* eslint-disable camelcase */
 import { isToss } from '@/utils/index'
 import { expressToggleList } from '@/utils/expressItemConfig'
 export default {
@@ -67,24 +70,19 @@ export default {
         const x = res.data.logisticsStatisticsNew
         this.toggleList.map((item) => {
           if (item.id === '0') {
-            item.label = x
-              ? `${item.label}（${Number(x.no_address)}）`
-              : `${item.label}`
+            item.count = Number(x?.no_address) || ''
           }
           if (
             item.id === '6' &&
             Object.prototype.hasOwnProperty.call(item.center_express_id, 'lte')
           ) {
-            item.label = x
-              ? `${item.label}（${Number(x.confirm_wait_send)}）`
-              : `${item.label}`
+            item.count = Number(x?.confirm_wait_send) || ''
           }
           if (item.id === '1') {
-            item.label = x
-              ? `${item.label}（${Number(x.wait_send)}）`
-              : `${item.label}`
+            item.count = Number(x?.wait_send) || ''
           }
         })
+        this.toggleList = [...this.toggleList]
       })
     },
     getToggleClick(index) {
@@ -138,8 +136,29 @@ export default {
     font-weight: 400;
     padding: 5px;
     cursor: pointer;
+    span {
+      display: inline-block;
+      padding-top: 5px;
+      position: relative;
+      .count {
+        position: absolute;
+        top: -12px;
+        right: -15px;
+        font-size: 12px;
+        color: #999;
+      }
+    }
     .pitch-up {
       color: #2a75ed;
+      position: relative;
+      &::after {
+        content: '';
+        background: #2a75ed;
+        height: 2px;
+        bottom: -20px;
+        width: 100%;
+        display: inline-block;
+      }
     }
   }
 }

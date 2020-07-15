@@ -3,8 +3,8 @@
  * @Email: yangjiyong@meishubao.com
  * @Date: 2020-03-13 15:13:34
  * @Description: topbar 顶部功能区
- * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-07-10 16:24:27
+ * @LastEditors: panjian
+ * @LastEditTime: 2020-07-15 12:06:10
  -->
 <template>
   <div class="navbar" :class="{ prod: isProd }">
@@ -55,11 +55,11 @@
               个人中心
             </el-dropdown-item>
           </router-link> -->
-          <el-dropdown-item @click.native="logout">
-            <span style="display:block;">退出登录</span>
-          </el-dropdown-item>
           <el-dropdown-item @click.native="replacePassword">
             <span style="display:block;">修改密码</span>
+          </el-dropdown-item>
+          <el-dropdown-item @click.native="logout">
+            <span style="display:block;">退出登录</span>
           </el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
@@ -74,14 +74,23 @@
       width="430px"
       :append-to-body="true"
     >
-      <el-form>
+      <el-form style="height:30px;">
         <el-form-item label="新密码" label-width="15%">
           <el-input size="medium" v-model="newPassword" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="handleSureReplacePassword"
+        <el-button
+          style="width:100px;"
+          size="medium"
+          @click="dialogVisible = false"
+          >取 消</el-button
+        >
+        <el-button
+          style="width:100px;"
+          size="medium"
+          type="primary"
+          @click="handleSureReplacePassword"
           >确 定</el-button
         >
       </div>

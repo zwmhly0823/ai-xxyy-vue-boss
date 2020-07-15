@@ -3,8 +3,8 @@
  * @version:
  * @Author: Lukun
  * @Date: 2020-05-18 16:51:39
- * @LastEditors: Lukun
- * @LastEditTime: 2020-05-19 19:28:03
+ * @LastEditors: zhouzebin
+ * @LastEditTime: 2020-07-11 15:59:42
  */
 
 import Vue from 'vue'
@@ -20,7 +20,20 @@ const routes = [
       title: '物流',
       icon: 'el-icon-s-custom'
     },
-    redirect: '/experienceClass'
+    redirect: '/expressCenter'
+  },
+  {
+    path: '/expressCenter',
+    name: 'expressCenter',
+    meta: {
+      title: '物流管理',
+      keepAlive: false
+    },
+    component: () =>
+      import(
+        /* webpackChunkName: "expressCenter" */
+        '../views/expressCenter/index.vue'
+      )
   },
   {
     path: '/experienceClass',

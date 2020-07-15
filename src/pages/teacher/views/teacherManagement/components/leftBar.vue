@@ -3,8 +3,8 @@
  * @version:
  * @Author: zhubaodong
  * @Date: 2020-03-13 16:53:27
- * @LastEditors: songyanan
- * @LastEditTime: 2020-06-06 17:57:10
+ * @LastEditors: panjian
+ * @LastEditTime: 2020-07-14 16:28:56
  -->
 <template>
   <div class="left-container">
@@ -28,10 +28,11 @@
       >
         <span class="menu-box">
           <span :title="data.id" class="menu-name">{{ `${data.name}` }}</span>
-          <span>{{ `(${data.size})` }}</span>
+          <span v-if="data.name === '全部'">{{ `(${qbSize})` }}</span>
+          <span v-else>{{ `(${data.size})` }}</span>
         </span>
         <span
-          v-show="nowId == data.id && isShowEditIcon"
+          v-show="nowId == data.id && isShowEditIcon && data.name !== '全部'"
           class="el-icon-more"
           @click.stop="editTools(data)"
         ></span>
@@ -70,7 +71,14 @@ export default {
   },
   data() {
     return {
-      departmentList: [],
+      qbSize: '',
+      departmentList: [
+        {
+          name: '全部',
+          pid: '99999',
+          children: []
+        }
+      ],
       isShowEditIcon: false,
       nowId: null,
       showMenu: false,
@@ -100,8 +108,14 @@ export default {
   },
   async created() {
     this.initTree()
+    this.getDepartmentTree()
   },
   methods: {
+    getDepartmentTree() {
+      this.$http.Teacher.departmentTree().then((res) => {
+        this.qbSize = res.payload
+      })
+    },
     async initTree() {
       try {
         await this.$http.Teacher.getDepartmentTree(1).then((res) => {
@@ -112,7 +126,7 @@ export default {
           department.sort(this.handle('sort'))
           // 多层排序
           this.recursive(department)
-          this.departmentList = department
+          this.departmentList[0].children = department
         })
       } catch (error) {
         console.log(error)

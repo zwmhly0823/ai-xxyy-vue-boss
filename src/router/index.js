@@ -248,46 +248,65 @@ const routes = [
       }
     ]
   },
-  // 物流管理
+  // 物流管理new
   {
     path: '/express',
     name: 'express',
-    // hidden: true,
     meta: {
       title: '物流管理',
       icon: 'iconwuliuguanli',
       module: 'express'
-    },
-    children: [
-      {
-        path: '/experienceClass',
-        name: 'experienceClass',
-        meta: {
-          title: '体验课',
-          module: 'express',
-          show: false
-        }
-      },
-      {
-        path: '/systemClass',
-        name: 'systemClass',
-        meta: {
-          title: '系统课',
-          module: 'express',
-          show: false
-        }
-      },
-      {
-        path: '/activityClass',
-        name: 'activityClass',
-        meta: {
-          title: '活动商品',
-          module: 'express',
-          show: false
-        }
-      }
-    ]
+    }
   },
+  // 物流管理
+  // {
+  //   path: '/express',
+  //   name: 'express',
+  //   // hidden: true,
+  //   meta: {
+  //     title: '物流管理',
+  //     icon: 'iconwuliuguanli',
+  //     module: 'express'
+  //   },
+  //   children: [
+  //     {
+  //       path: '/expressCenter',
+  //       name: 'expressCenter',
+  //       meta: {
+  //         title: '物流管理',
+  //         icon: 'iconwuliuguanli',
+  //         module: 'express'
+  //       }
+  //     },
+  //     {
+  //       path: '/experienceClass',
+  //       name: 'experienceClass',
+  //       meta: {
+  //         title: '体验课',
+  //         module: 'express',
+  //         show: false
+  //       }
+  //     },
+  //     {
+  //       path: '/systemClass',
+  //       name: 'systemClass',
+  //       meta: {
+  //         title: '系统课',
+  //         module: 'express',
+  //         show: false
+  //       }
+  //     },
+  //     {
+  //       path: '/activityClass',
+  //       name: 'activityClass',
+  //       meta: {
+  //         title: '活动商品',
+  //         module: 'express',
+  //         show: false
+  //       }
+  //     }
+  //   ]
+  // },
   // 财务(该模块先隐藏,丹阳还会回来)
   {
     path: '/finance',

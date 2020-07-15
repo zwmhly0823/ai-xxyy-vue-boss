@@ -3,8 +3,8 @@
  * @version:
  * @Author: zhubaodong
  * @Date: 2020-04-02 16:08:02
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-06-23 11:38:35
+ * @LastEditors: panjian
+ * @LastEditTime: 2020-07-15 12:06:20
  -->
 <template>
   <div>
@@ -85,7 +85,7 @@
             </el-dropdown>
           </template>
         </el-table-column>
-        <el-table-column label="员工ID" width="80">
+        <el-table-column label="员工ID" width="100">
           <template slot-scope="scope">
             <div>{{ scope.row.id }}</div>
           </template>
@@ -110,7 +110,7 @@
             <div>{{ scope.row.ding_userid || '-' }}</div>
           </template>
         </el-table-column>
-        <el-table-column label="绑定微信号">
+        <el-table-column width="150" label="绑定微信号">
           <template slot-scope="scope">
             <div v-if="scope.row.weixin">
               <!-- <div><img :src="scope.row.head_image" /></div> -->
@@ -132,13 +132,18 @@
             <div>{{ scope.row.phone }}</div>
           </template>
         </el-table-column>
-        <el-table-column label="所属部门" min-width="120px">
+        <el-table-column label="所属部门" min-width="150px">
           <template slot-scope="scope">
             <div>
               {{ scope.row.department ? scope.row.department.pname : '-' }}
               <br />
               {{ scope.row.department ? scope.row.department.name : '-' }}
             </div>
+          </template>
+        </el-table-column>
+        <el-table-column label="职场" min-width="100px">
+          <template slot-scope="scope">
+            <div>{{ scope.row.work_place || '-' }}</div>
           </template>
         </el-table-column>
         <el-table-column label="职务/职级" min-width="100px">
@@ -150,6 +155,11 @@
             </div>
             <div v-else><p>-</p></div>
             <div>{{ scope.row.rank ? scope.row.rank.name || '-' : '-' }}</div>
+          </template>
+        </el-table-column>
+        <el-table-column label="员工状态" min-width="120px">
+          <template slot-scope="scope">
+            <div>{{ scope.row.teacher_status || '-' }}</div>
           </template>
         </el-table-column>
 
@@ -302,7 +312,12 @@ export default {
           children: children
         }
       }
-      this.departmentQuery = query
+      if (query.department.pid === '99999') {
+        this.departmentQuery = ''
+        this.query = ''
+      } else {
+        this.departmentQuery = query
+      }
       this.getData()
     }
   },
