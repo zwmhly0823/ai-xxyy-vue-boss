@@ -34,14 +34,22 @@
       <el-form-item label="手机号" prop="phone" style="width:60%;">
         <el-input v-model.number="ruleForm.phone" :maxlength="11"></el-input>
       </el-form-item>
+      <!-- 账号 -->
+      <el-form-item label="账号" prop="username" style="width:60%;">
+        <el-input v-model="ruleForm.username"></el-input>
+      </el-form-item>
       <!-- 密码 -->
       <el-form-item label="密码" prop="pass" style="width:60%;">
         <el-input
+          v-if="ruleForm.pwd"
+          @focus="onPassword"
           type="password"
-          v-model.trim="ruleForm.pass"
+          v-model.trim="ruleForm.pwd"
           autocomplete="off"
           show-password
+          placeholder="请输入内容"
         ></el-input>
+        <el-input v-else v-model.trim="ruleForm.pass"></el-input>
       </el-form-item>
       <!-- 真实姓名 -->
       <el-form-item label="真实姓名" prop="name" style="width:60%;">
@@ -115,6 +123,19 @@
           ></el-option>
         </el-select>
       </el-form-item> -->
+
+      <!-- 管理部门 -->
+      <el-form-item label="管理部门" prop="administration">
+        <el-cascader
+          v-model="ruleForm.administration"
+          :options="suDepartments"
+          @change="handleChangeAdministration"
+          :props="optionPropsAdministration"
+          style="width:57.5%"
+          collapse-tags
+        >
+        </el-cascader>
+      </el-form-item>
       <!-- 销售等级 -->
       <el-form-item label="销售等级" prop="level">
         <el-select
@@ -123,7 +144,22 @@
           placeholder="请选择销售等级"
         >
           <el-option
-            v-for="item in levels"
+            v-for="(item, index) in levels"
+            :key="index"
+            :label="item.label"
+            :value="item.value"
+          ></el-option>
+        </el-select>
+      </el-form-item>
+      <!-- 职场 -->
+      <el-form-item label="职场" prop="workplace">
+        <el-select
+          v-model="ruleForm.workplace"
+          clearable
+          placeholder="请选择职场"
+        >
+          <el-option
+            v-for="item in workplaceList"
             :key="item.value"
             :label="item.label"
             :value="item.value"
@@ -270,6 +306,17 @@ export default {
       }
       callback()
     }
+    const userName = (rule, value, callback) => {
+      if (!value) {
+        callback(new Error('请输入账号'))
+      } else {
+        if (!/^[0-9a-zA-Z_./?'";:,=+-_)()*&^%$#@!`~|]*$/.test(value)) {
+          callback(new Error('请输入英文,数字'))
+        } else {
+          callback()
+        }
+      }
+    }
     return {
       headers: { 'Content-Type': 'multipart/form-data' },
       // title
@@ -291,6 +338,11 @@ export default {
         value: 'id',
         label: 'name',
         checkStrictly: true
+      },
+      optionPropsAdministration: {
+        value: 'id',
+        label: 'name',
+        multiple: true
       },
       // 职务
       position: [],
@@ -317,6 +369,13 @@ export default {
         { label: '3级社群销售', value: 3 },
         { label: '新兵营', value: 0 }
       ],
+      // 职场
+      workplaceList: [
+        {
+          label: '北京场',
+          value: '北京场'
+        }
+      ],
       // Level: [
       //   { label: '新兵培训', value: 0 },
       //   { label: '下组待接生', value: 1 },
@@ -331,8 +390,11 @@ export default {
       ruleForm: {
         // 手机号
         phone: '',
+        // 账号
+        username: '',
         // 密码
         pass: '',
+        pwd: '',
         // 头像
         imageUrl: '',
         // 真实姓名
@@ -364,13 +426,20 @@ export default {
         // 分配微信号
         weChat: [],
         // 销售等级
-        level: ''
+        level: '',
+        // 管理部门
+        administration: [],
+        administrations: [],
+        note: [],
+        // 职场
+        workplace: ''
       },
 
       // 表单验证
       rules: {
         // 手机号
         phone: [{ required: true, validator: checkAge, trigger: 'blur' }],
+        username: [{ required: true, validator: userName, trigger: 'blur' }],
         // 密码
         pass: [
           { validator: validatePass, trigger: 'blur' },
@@ -449,7 +518,15 @@ export default {
           { required: true, message: '请选择在职状态', trigger: 'change' }
         ],
         // 销售等级
-        level: [{ required: true, message: '请选择销售等级', trigger: 'blur' }]
+        level: [{ required: true, message: '请选择销售等级', trigger: 'blur' }],
+        // 职场
+        workplace: [
+          { required: true, message: '请选择职场', trigger: 'change' }
+        ],
+        // 管理部门
+        administration: [
+          { required: true, message: '请选择管理部门', trigger: 'change' }
+        ]
       }
     }
   },
@@ -483,9 +560,24 @@ export default {
     if (query && query.index) this.newTitle = query.index
     // 接口调用
     this.createdUrl()
+    this.onGetRegionTree()
   },
 
   methods: {
+    onGetRegionTree() {
+      this.$http.Teacher.getRegionTree().then((res) => {
+        console.log(res)
+        const _data = res.payload
+        _data.forEach((ele) => {
+          ele.value = ele.id + ''
+          ele.label = ele.name
+        })
+        this.workplaceList = _data
+      })
+    },
+    onPassword() {
+      this.ruleForm.pwd = ''
+    },
     createdUrl() {
       // 职务接口
       this.$http.Teacher.getTeacherDutyList().then((res) => {
@@ -539,6 +631,8 @@ export default {
             this.ruleForm.nickname = payload.teacher.nickname
             this.ruleForm.dingUserid = payload.teacher.dingUserid
             this.ruleForm.resource = payload.teacher.sex
+
+            this.ruleForm.pwd = 'msb123'
             // this.ruleForm.region = payload.department
             //   ? [payload.department.id]
             //   : []
@@ -572,6 +666,19 @@ export default {
             this.ruleForm.workingState = payload.teacher.status
             this.WeChat = payload.weixinList
             this.ruleForm.level = payload.teacher.level
+            this.ruleForm.workplace = payload.teacher.workPlace
+            this.ruleForm.username = payload.teacher.userName
+            this.ruleForm.administrations = payload.teacher.dataAuth
+            this.ruleForm.administration = JSON.parse(payload.teacher.note)
+            this.ruleForm.note = payload.teacher.note
+            // const list = [
+            //   ['33', '34', '45'],
+            //   ['33', '34', '53'],
+            //   ['33', '34', '46']
+            // ]
+            // this.ruleForm.administration = payload.teacher.dataAuth
+            // this.ruleForm.administration.push(payload.teacher.dataAuth)
+            console.log(this.ruleForm.administration)
           }
         )
       }
@@ -614,7 +721,11 @@ export default {
           leaveTrain: this.ruleForm.groupDate,
           status: this.ruleForm.workingState,
           isLogin: this.ruleForm.accountSettings,
-          level: this.ruleForm.level
+          level: this.ruleForm.level,
+          dataAuth: this.ruleForm.administrations,
+          workPlace: this.ruleForm.workplace,
+          userName: this.ruleForm.username,
+          note: this.ruleForm.note
         },
         department: {
           id:
@@ -626,6 +737,8 @@ export default {
         rank: { id: this.ruleForm.rank },
         weixinList: this.ruleForm.weChat
       }
+      console.log(params)
+
       this.$refs[formName].validate((valid) => {
         if (valid) {
           // 新建接口请求
@@ -681,6 +794,20 @@ export default {
     // 部门联机选择
     handleChange(value) {
       console.log(value)
+    },
+    // 管理部门选择
+    handleChangeAdministration(data) {
+      console.log(JSON.stringify(data))
+      this.ruleForm.note = JSON.stringify(data)
+      const _data = []
+      data.forEach((res) => {
+        res.forEach((ele) => {
+          _data.push(ele)
+        })
+      })
+      const _datas = Array.from(new Set(_data))
+      this.ruleForm.administrations = _datas.join(',').toString()
+      console.log(_datas.join(',').toString())
     },
     // 头像上传
     async uploadFile(file) {
