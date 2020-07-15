@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-14 18:28:44
  * @LastEditors: Shentong
- * @LastEditTime: 2020-07-06 15:36:00
+ * @LastEditTime: 2020-07-15 11:55:57
  -->
 <template>
   <div class="app-main height add-schedule-container">
@@ -144,7 +144,7 @@ export default {
     backList() {
       this.$store.commit('setSchedulePeriod', '')
       this.$store.commit('setScheduleTeacher', [])
-      this.$router.push({ path: '/' })
+      this.$router.push({ path: '/operatingSchedule' })
     },
     /**
      * @description "设置分配线索规则"步骤中的《导入数据》工能emit值

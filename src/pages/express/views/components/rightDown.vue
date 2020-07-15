@@ -258,7 +258,7 @@
         :key="9"
       >
         <template slot-scope="scope">
-          <div class="product">
+          <div class="gray-text">
             <span>{{ scope.row.express_remark || '--' }}</span>
           </div>
         </template>
@@ -504,6 +504,20 @@ const regtypeEnum = {
   '5': '活动补发',
   '6': '活动补发'
 }
+const LEVEL_ENUM = {
+  L1: 28,
+  L2: 28 * 2,
+  L3: 28 * 3,
+  L4: 28 * 4,
+  L5: 28 * 5,
+  L6: 28 * 6,
+  L7: 28 * 7,
+  L8: 28 * 8,
+  L9: 28 * 9,
+  L10: 28 * 10,
+  L11: 28 * 11,
+  L12: 28 * 12
+}
 export default {
   props: {
     search: { type: [String, Number, Array, Object], default: '' },
@@ -573,7 +587,8 @@ export default {
     const teacherId = isToss()
     if (teacherId) {
       this.teacherId = teacherId
-      this.getTeacherByRole()
+      // this.getTeacherByRole()
+      this.getExpressList()
     } else {
       this.getExpressList()
     }
@@ -1116,9 +1131,10 @@ export default {
             item.buytime = formatData(+item.buy_time, 's')
             item.ctime = formatData(+item.buy_time, 's')
             item.center_ctime = formatData(+item.center_ctime, 's')
-            item.course_day = item.stageInfo?.course_day
-              ? dayjs.unix(item.stageInfo?.course_day / 1000).format('MMDD')
-              : '-'
+            item.course_day = this.getCourseDay(
+              item.stageInfo?.course_day,
+              item.level
+            )
             item.center_ctime_str = formatData(+item.center_ctime, 's')
             // 处理补发类型
             this.handleRegtype(item)
@@ -1153,6 +1169,16 @@ export default {
           this.getScheduleList(schedule)
         }
       })
+    },
+    getCourseDay(time, level) {
+      if (!time) {
+        return '-'
+      }
+      const timeC = LEVEL_ENUM[level]
+      if (timeC) {
+        time = +time + timeC * 24 * 3600 * 1000
+      }
+      return dayjs.unix(time / 1000).format('MMDD' || '-')
     },
     handleRegtype(listItem) {
       productTopicList.map((item) => {
