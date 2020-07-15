@@ -304,5 +304,9 @@ export default {
   // 全部总数
   departmentTree() {
     return axios.get(`/api/t/v1/department/count/departmentTree`)
+  },
+  // 获取职场
+  getRegionTree() {
+    return axios.get(`/api/u/v1/region/getRegionTree`)
   }
 }

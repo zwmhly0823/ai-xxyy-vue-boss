@@ -144,14 +144,14 @@
           placeholder="请选择销售等级"
         >
           <el-option
-            v-for="item in levels"
-            :key="item.value"
+            v-for="(item, index) in levels"
+            :key="index"
             :label="item.label"
             :value="item.value"
           ></el-option>
         </el-select>
       </el-form-item>
-      <!-- 销售等级 -->
+      <!-- 职场 -->
       <el-form-item label="职场" prop="workplace">
         <el-select
           v-model="ruleForm.workplace"
@@ -519,7 +519,7 @@ export default {
         ],
         // 销售等级
         level: [{ required: true, message: '请选择销售等级', trigger: 'blur' }],
-        // 在职状态
+        // 职场
         workplace: [
           { required: true, message: '请选择职场', trigger: 'change' }
         ],
@@ -560,9 +560,21 @@ export default {
     if (query && query.index) this.newTitle = query.index
     // 接口调用
     this.createdUrl()
+    this.onGetRegionTree()
   },
 
   methods: {
+    onGetRegionTree() {
+      this.$http.Teacher.getRegionTree().then((res) => {
+        console.log(res)
+        const _data = res.payload
+        _data.forEach((ele) => {
+          ele.value = ele.id + ''
+          ele.label = ele.name
+        })
+        this.workplaceList = _data
+      })
+    },
     onPassword() {
       this.ruleForm.pwd = ''
     },
