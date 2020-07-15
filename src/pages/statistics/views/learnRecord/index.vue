@@ -4,7 +4,7 @@
  * @Author: zhangjianwen
  * @Date: 2020-07-09 15:02:59
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-07-11 16:56:12
+ * @LastEditTime: 2020-07-14 16:18:54
 -->
 <template>
   <div class="learn-record">
@@ -17,12 +17,12 @@
           :key="mg.period"
         >
         </el-tab-pane>
-        <el-tab-pane>
+        <el-tab-pane name="999" v-if="manageMentHistoryList.length > 0">
           <el-dropdown @command="handleCommand" slot="label">
             <span class="el-dropdown-link">
               更多<i class="el-icon-arrow-down el-icon--right"></i>
             </span>
-            <el-dropdown-menu slot="dropdown">
+            <el-dropdown-menu class="el-menu" slot="dropdown">
               <el-dropdown-item
                 :key="mg.management.period"
                 v-for="mg in manageMentHistoryList"
@@ -41,12 +41,12 @@
         <el-tab-pane label="S3难度" name="S3"></el-tab-pane>
       </el-tabs>
     </div>
-    <div>
+    <div class="record-con">
       <el-row>
         <el-col
-          :span="6"
+          :span="8"
           v-for="item in recordList"
-          :key="item.ctime"
+          :key="item.id"
           class="card-main"
         >
           <el-card :body-style="{ padding: '0px' }">
@@ -58,7 +58,7 @@
                 <img :src="item.image" class="image" />
               </div>
 
-              <div class="content-word" style="padding: 14px;">
+              <div class="content-word">
                 <p>课程名称：{{ item.title }}</p>
                 <p>课程类型：{{ learn_type[item.lesson_type] }}</p>
                 <p>
@@ -84,16 +84,18 @@
     </div>
 
     <div class="empty" v-if="recordList.length === 0">暂无数据</div>
-
-    <m-pagination
-      :current-page="currentPage"
-      :page-count="totalPages"
-      :total="totalElements"
-      @current-change="handleSizeChange"
-      show-pager
-      open="calc(100vw - 170px - 25px)"
-      close="calc(100vw - 50px - 25px)"
-    ></m-pagination>
+    <div class="pag-con">
+      <m-pagination
+        :current-page="currentPage"
+        :page-count="totalPages"
+        :pageSize="9"
+        :total="totalElements"
+        @current-change="handleSizeChange"
+        show-pager
+        open="calc(100vw - 170px - 25px)"
+        close="calc(100vw - 50px - 25px)"
+      ></m-pagination>
+    </div>
   </div>
 </template>
 
@@ -143,15 +145,16 @@ export default {
   },
   watch: {
     term(val, old) {
-      if (val === '2') {
+      if (val === '999') {
         return false
       }
-      console.log(val, old, '触发')
       this.term = val
+      this.currentPage = 1
       this.getData(this.currentPage, val, this.level)
     },
     level(val, old) {
       this.level = val
+      this.currentPage = 1
       this.getData(this.currentPage, this.term, val)
     }
   },
@@ -166,7 +169,6 @@ export default {
   methods: {
     compare(pre, property) {
       return function(a, b) {
-        console.log(a, b.pre.period)
         var value1 = a.pre.property
         var value2 = b.pre.property
         return value1 - value2
@@ -178,7 +180,6 @@ export default {
         // teacher_id: this.teacherIds
       }
       return this.$http.User.ManagementForTeacherList(params).then((res) => {
-        console.log(res)
         if (res && res.data && res.data.ManagementForTeacherList) {
           if (res.data.ManagementForTeacherList.length === 0) {
             return
@@ -194,11 +195,10 @@ export default {
           const arrSort = arr.sort((a, b) => {
             return a.management.period - b.management.period
           })
-          const arrHistorySort = arrHistory.sort((a, b) => {
+          const arrHistorySort = arrHistory.sort((b, a) => {
             return a.management.period - b.management.period
           })
           this.manageMentHistoryList = arrHistorySort
-          console.log(this.manageMentHistoryList)
           const list = arrSort.map((item) => {
             item.management.period_label = `${item.management.period_name}(
               开课中
@@ -208,34 +208,14 @@ export default {
           })
 
           this.manageMentList = _.orderBy(list, ['status'], ['desc'])
-          console.log(this.manageMentList)
-          // this.manageMentList = _.orderBy(list, ['status'], ['desc'])
-          // if (this.propTerm) {
-          //   this.term = this.propTerm
-          // } else {
-          //   this.term =
-          //     this.manageMentList.length > 0
-          //       ? this.manageMentList[0].period
-          //       : '0'
-          // }
         }
       })
     },
     // 查询
     getData(page = this.currentPage, term = this.term, level = this.level) {
-      // const query = Object.assign({}, obj)
       this.recordList = []
-      // const page = this.currentPage
-      // const sort = {}
-      // if (this.sortActive) {
-      //   sort[this.sortActive] = this.sortKeys[this.sortActive]
-      //  }
       return this.$http.User.getStudentTrialRecordPage(page, term, level)
         .then((res) => {
-          console.log(res)
-          // var defTotalElements = 0
-          // var defTotalPages = 1
-          // var defContent = []
           if (
             res &&
             res.data &&
@@ -245,21 +225,9 @@ export default {
             this.totalElements = Number(data.totalElements)
             this.totalPages = Number(data.totalPages)
             this.recordList = data.content
-            console.log(this.recordList)
-            // defTotalElements = totalElements
-            // defTotalPages = totalPages
-            // // defContent = content
-            // defContent = this.initName(content)
           }
-          // this.dataList = defContent
-          // // console.log('dataList', this.dataList)
-          // this.totalPages = +defTotalPages
-          // this.totalElements = +defTotalElements
-          // loading.close()
         })
-        .catch(() => {
-          // loading.close()
-        })
+        .catch(() => {})
     },
 
     handleCommand(command) {
@@ -267,7 +235,6 @@ export default {
     },
 
     handleSizeChange(val) {
-      console.log(val)
       this.currentPage = val
       this.getData(val)
     },
@@ -301,6 +268,17 @@ export default {
     margin-bottom: 10px;
     border-bottom: 10px solid #f0f1f2;
   }
+  .record-con {
+    padding-bottom: 50px;
+  }
+  .pag-con {
+    position: fixed;
+    width: 100%;
+    height: 20px;
+    background: #f0f1f2;
+    bottom: 0;
+    right: 0;
+  }
 }
 .card-main {
   padding: 10px;
@@ -315,18 +293,27 @@ export default {
     width: 40%;
     padding: 10px;
     img {
-      width: 100%;
+      display: block;
+      max-width: 100%;
+      max-height: 100%;
     }
   }
   .card-content {
+    height: 220px;
     padding-top: 10px;
     display: flex;
     .content-word {
+      padding: 14px;
       p {
+        font-size: 14px;
         height: 20px;
       }
     }
   }
+}
+.el-menu {
+  max-height: 500px;
+  overflow: scroll;
 }
 .empty {
   text-align: center;

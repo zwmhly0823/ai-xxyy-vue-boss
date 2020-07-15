@@ -4,8 +4,8 @@
  * @version:
  * @Author: shentong
  * @Date: 2020-03-13 14:38:28
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-07-13 11:45:52
+ * @LastEditors: Shentong
+ * @LastEditTime: 2020-07-15 22:51:52
  */
 // import axios from '../axios'
 import axios from '../axiosConfig'
@@ -449,7 +449,7 @@ export default {
     })
   },
   // 统计分析的学习记录
-  getStudentTrialRecordPage(page = 1, term, sup, sort = 'desc', size = 8) {
+  getStudentTrialRecordPage(page = 1, term, sup, sort = 'desc', size = 9) {
     const formattingQuery = JSON.stringify({
       term,
       'sup.keyword': sup
@@ -736,7 +736,7 @@ export default {
    **/
   ManagementForTeacherList({
     // teacher_id = [],
-    team_state = [0, 1],
+    team_state = [1, 2],
     team_type = 0
   } = {}) {
     const query = {

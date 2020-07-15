@@ -468,6 +468,7 @@
         :visible.sync="dialogTableVisible"
       >
         <modifyAddress
+          v-if="dialogTableVisible"
           :modifyFormData="stuInfor"
           @modifyAddressExpress="modifyAddressExpress"
         />

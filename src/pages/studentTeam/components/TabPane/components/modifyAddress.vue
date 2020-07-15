@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-04-01 13:24:40
  * @LastEditors: panjian
- * @LastEditTime: 2020-07-11 12:05:36
+ * @LastEditTime: 2020-07-13 18:54:14
  -->
 <template>
   <div>
@@ -88,8 +88,7 @@
   </div>
 </template>
 <script>
-import areaLists from '@/utils/area.json'
-import { isToss, deepClone } from '@/utils/index'
+import { isToss } from '@/utils/index'
 export default {
   name: 'logisticsForm',
   props: {
@@ -129,7 +128,7 @@ export default {
     }
     return {
       areaSlist: [],
-      areaLists: areaLists,
+      areaLists: [],
       province: null,
       city: null,
       area: null,
@@ -167,22 +166,44 @@ export default {
   // },
   created() {
     this.getAddressList()
-    console.log(this.modifyFormData)
-    this.createdEcho()
+    // console.log(this.modifyFormData.addressid)
+    this.getAreaLists()
   },
   methods: {
+    getAreaLists() {
+      this.$http.Express.getCenterAddressList().then((res) => {
+        const _data = res.payload.data
+        _data.forEach((ele) => {
+          ele.label = ele.provinceName
+          ele.value = ele.id
+          ele.children = ele.citys
+          ele.children.forEach((val) => {
+            val.label = val.cityName
+            val.value = +val.cityCode + 999
+            val.children = val.countys
+            val.children.forEach((_value) => {
+              _value.label = _value.countyName
+              _value.value = _value.countyCode
+              _value.children = [{ label: '暂不选择', value: '' }]
+            })
+          })
+        })
+        this.areaLists = _data
+        this.createdEcho()
+      })
+    },
     handleItemChange(data) {
-      const addressList = deepClone(this.areaLists)
+      const addressList = this.areaLists
       addressList.forEach((res) => {
-        if (res.value === data[0]) {
+        if (data[0] === res.id) {
           res.children.forEach((ele) => {
-            if (ele.value === data[1]) {
+            if (data[1] === +ele.cityCode + 999) {
               ele.children.forEach((val) => {
-                val.children = [{ label: '暂不选择', value: '' }]
-                if (val.value === data[2]) {
-                  this.$http.Express.getCenterAddressTownList(val.value).then(
-                    (vlaue) => {
-                      const _data = vlaue.payload
+                if (data[2] === val.countyCode) {
+                  this.$http.Express.getCenterAddressTownList(data[2]).then(
+                    (data) => {
+                      console.log(data)
+                      const _data = data.payload
                       _data.forEach((codeVal) => {
                         const add = {
                           label: codeVal.townName,
@@ -198,26 +219,35 @@ export default {
           })
         }
       })
-      this.areaLists = addressList
     },
     createdEcho() {
       // this.addressVal = this.modifyFormData.id
+      console.log(this.modifyFormData)
       this.ruleForm.receiptName = this.modifyFormData.row.receipt_name
       this.ruleForm.receiptTel = this.modifyFormData.row.mobile
-
-      const provinces = this.areaLists.filter(
-        (item) => item.label === this.modifyFormData.row.province
-      )
-      const citys = provinces[0].children.filter(
-        (item) => item.label === this.modifyFormData.row.city
-      )
-      const areas = citys[0].children.filter(
-        (item) => item.label === this.modifyFormData.row.area
-      )
+      const areaList = this.areaLists
+      const provinces = []
+      const citys = []
+      const areas = []
+      areaList.forEach((res) => {
+        if (res.label === this.modifyFormData.row.province) {
+          provinces.push(res)
+          res.children.forEach((ele) => {
+            if (ele.label === this.modifyFormData.row.city) {
+              citys.push(ele)
+              ele.children.forEach((val) => {
+                if (val.label === this.modifyFormData.row.area) {
+                  areas.push(val)
+                }
+              })
+            }
+          })
+        }
+      })
       this.province = provinces[0].label
       this.city = citys[0].label
       this.area = areas[0].label
-      this.areaSlist = [provinces[0].value, citys[0].value, areas[0].value]
+      this.areaSlist = [provinces[0].value, citys[0].value, areas[0].value, '']
       this.ruleForm.addressDetail = this.modifyFormData.row.address_detail
     },
     // 选择地址

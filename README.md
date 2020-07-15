@@ -9,7 +9,7 @@
 
 ### [TOSS 正式环境](https://toss.xiaoxiongmeishu.com/login/#/)
 
-18967101347  体验课
+18967101347 体验课
 18910930251 系统课
 
 ### [BOSS 测试环境](https://test.meixiu.mobi/ai-app-vue-boss-test/login/#/)
@@ -17,9 +17,9 @@
 帐号：
 bearboss / bearnb123
 
-账号：13501224231密码xxnb123
-
 ### [BOSS 正式环境](https://boss.xiaoxiongmeishu.com/login/#/)
+
+账号：13501224231 密码 xxnb123
 
 ### [Search API](http://docker.meixiu.mobi:48767/jsondoc-ui.html?url=/data/search/m1/jsondoc#)
 

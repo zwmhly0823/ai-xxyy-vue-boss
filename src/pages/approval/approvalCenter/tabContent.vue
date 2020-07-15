@@ -51,6 +51,7 @@ export default {
     accountRejected
   },
   created() {
+    this.getNoticeLinkParams()
     this.getRouterData()
   },
   data() {
@@ -109,6 +110,9 @@ export default {
             break
           case 3:
             this.activeNameBySearch = 'fifth'
+            this.$nextTick(() => {
+              this.$refs.accountRejected.initListData()
+            })
             break
         }
         localStorage.removeItem('noticeParams')

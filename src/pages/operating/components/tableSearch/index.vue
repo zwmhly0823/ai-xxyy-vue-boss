@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-25 14:35:19
  * @LastEditors: Shentong
- * @LastEditTime: 2020-07-07 18:18:56
+ * @LastEditTime: 2020-07-15 21:09:54
  -->
 <template>
   <div class="table-searcher-container">
@@ -13,6 +13,10 @@
     </div>
     <div class="comp-cell">
       <group-sell @result="selectSellTeacher" :name="'groupSell'" />
+    </div>
+    <div class="comp-cell" v-if="isShowSup">
+      <!-- 微信号搜索 -->
+      <wx-list :wxSerch="wxSerch" @getWxSerch="getWxSerch" />
     </div>
     <div class="comp-cell">
       <el-select
@@ -52,16 +56,23 @@
         </el-option>
       </el-select>
     </div>
+    <div class="comp-cell" v-if="moreVersion">
+      <!-- 随材版本-->
+      <more-version-box @result="getVersionNu" :name="'version'" />
+    </div>
   </div>
 </template>
 <script>
 import Department from '@/components/MSearch/searchItems/department'
 import GroupSell from '@/components/MSearch/searchItems/groupSell'
+import MoreVersionBox from '@/components/MSearch/searchItems/moreVersionBox'
+import wxList from '../wxSearch'
 export default {
-  props: ['isShowLevel'],
+  props: ['isShowLevel', 'isShowSup', 'moreVersion'],
   data() {
     return {
       emitInfo: {},
+      wxSerch: '',
       level: '',
       courseDifficulties: '',
       // 销售等级
@@ -91,9 +102,20 @@ export default {
   },
   components: {
     Department,
-    GroupSell
+    GroupSell,
+    wxList,
+    MoreVersionBox
   },
   methods: {
+    getVersionNu(res) {
+      console.log(res, 'version-res')
+      // this.manageChange({ version }, 'version')
+      // this.setSeachParmas(res, [this.moreVersion || 'product_version'])
+    },
+    getWxSerch(res) {
+      const sup = Object.values(res)[0]
+      this.manageChange({ sup }, 'sup')
+    },
     // 招生级别 TODO:
     scheduleLevel(courseDifficulties) {
       this.manageChange({ courseDifficulties }, 'courseDifficulties')
