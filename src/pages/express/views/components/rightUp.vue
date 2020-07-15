@@ -48,7 +48,11 @@
       <span>确定导出选中的数据嘛</span>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dickUp = false">取 消</el-button>
-        <el-button type="primary" @click="exportExpress">
+        <el-button
+          type="primary"
+          :loading="exportLoading"
+          @click="exportExpress"
+        >
           确 定
         </el-button>
       </span>
@@ -162,6 +166,7 @@ export default {
   },
   data() {
     return {
+      exportLoading: false,
       errorDialog: [],
       teacherId: '',
       operatorId: '',
@@ -421,9 +426,16 @@ export default {
         query,
         sort
       }
-      this.$http.DownloadExcel.exportExpress(params).then((res) => {
-        this.downloadFn(res, '物流下载')
-      })
+      this.exportLoading = true
+      this.$http.DownloadExcel.exportExpress(params).then(
+        (res) => {
+          this.downloadFn(res, '物流下载')
+          this.exportLoading = false
+        },
+        () => {
+          this.exportLoading = false
+        }
+      )
     },
     dosomething() {},
     handleSearch(search) {
