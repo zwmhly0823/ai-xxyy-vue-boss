@@ -22,10 +22,11 @@ export const expressToggleList = [
   { label: '待发货', id: '1' },
   { label: '已发货', id: '2' },
   { label: '已完成', id: '3' },
-  { label: '疑难', id: '8' },
-  { label: '退签', id: '4' },
-  { label: '退回', id: '5' },
-  { label: '失效', id: '7' },
+  // { label: '疑难', id: '8' },
+  // { label: '退签', id: '4' },
+  // { label: '退回', id: '5' },
+  { label: '异常件', id: '4,5,8' },
+  { label: '已失效', id: '7' },
   { label: '暂停发货', id: '9' },
   { label: '下单失败', id: '6', center_express_id: { gt: 0 } }
 ]
