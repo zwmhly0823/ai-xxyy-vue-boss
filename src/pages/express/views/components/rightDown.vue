@@ -93,7 +93,9 @@
           <div class="product">
             <span>{{ scope.row.center_product_code || '-' }}</span>
           </div>
-          <div class="gray-text">{{ scope.row.product_name }}</div>
+          <div class="gray-text">
+            {{ scope.row.product_name }} {{ scope.row.product_version }}
+          </div>
         </template>
       </el-table-column>
       <el-table-column
@@ -189,7 +191,7 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column
+      <!-- <el-table-column
         label="随材版本"
         width="150"
         v-if="showCol.productVersion"
@@ -200,7 +202,7 @@
             <span>{{ scope.row.product_version || '-' }}</span>
           </div>
         </template>
-      </el-table-column>
+      </el-table-column> -->
       <el-table-column
         label="收货信息"
         width="200"
@@ -248,18 +250,6 @@
                 >填写地址</el-button
               >
             </div>
-          </div>
-        </template>
-      </el-table-column>
-      <el-table-column
-        label="失败原因"
-        width="200"
-        v-if="showCol.expressRemark"
-        :key="9"
-      >
-        <template slot-scope="scope">
-          <div class="gray-text">
-            <span>{{ scope.row.express_remark || '--' }}</span>
           </div>
         </template>
       </el-table-column>
@@ -344,17 +334,29 @@
         </template>
       </el-table-column>
       <el-table-column
-        label="物流创建·审核·揽收·签收"
+        label="失败原因"
+        width="200"
+        v-if="showCol.expressRemark"
+        :key="9"
+      >
+        <template slot-scope="scope">
+          <div class="gray-text">
+            <span>{{ scope.row.express_remark || '--' }}</span>
+          </div>
+        </template>
+      </el-table-column>
+      <el-table-column
+        label="物流时效"
         width="200"
         v-if="showCol.expressInfo"
         :key="14"
       >
         <template slot-scope="scope">
-          <div class="sign">
-            <div>创建:{{ scope.row.crtime }}</div>
-            <div>审核:{{ scope.row.center_ctime_str }}</div>
-            <div>揽收:{{ scope.row.detime }}</div>
-            <div>签收:{{ scope.row.sgtime }}</div>
+          <div class="gray-text">
+            <div>创建: {{ scope.row.crtime }}</div>
+            <div>审核: {{ scope.row.center_ctime_str }}</div>
+            <div>揽收: {{ scope.row.detime }}</div>
+            <div>签收: {{ scope.row.sgtime }}</div>
           </div>
         </template>
       </el-table-column>
