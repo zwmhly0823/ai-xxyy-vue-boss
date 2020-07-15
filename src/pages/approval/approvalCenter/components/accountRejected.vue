@@ -259,7 +259,6 @@ export default {
             this.tableData = this.dataToText(res.payload.content)
           } else {
             this.tableData = []
-            this.$message.error('暂无数据')
           }
           this.pageLoading = false
         })
@@ -274,7 +273,7 @@ export default {
     },
     // 新加手机号
     getPhone(val) {
-      this.params.userTel = val
+      this.params.userTel = val.userTel
       this.initListData(this.params)
     },
     paginationChange(val) {
