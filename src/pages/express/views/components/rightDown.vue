@@ -15,8 +15,8 @@
       @cell-mouse-enter="handleMouseEnter"
       @cell-mouse-leave="handleMouseLeave"
     >
-      <el-table-column type="selection" width="25" fixed> </el-table-column>
-      <el-table-column width="25" fixed v-if="sortItem.id == 6">
+      <el-table-column type="selection" min-width="25" fixed> </el-table-column>
+      <el-table-column min-width="25" fixed v-if="sortItem.id == 6">
         <template slot-scope="scope">
           <el-dropdown trigger="click">
             <div :class="scope.row.id === current.id ? 'three-dot' : 'disnone'">
@@ -47,7 +47,7 @@
         </template>
       </el-table-column>
       <!-- 无地址状态 sortItem.id 为 0 的情况 -->
-      <el-table-column width="25" fixed v-if="sortItem.id == 0">
+      <el-table-column min-width="25" fixed v-if="sortItem.id == 0">
         <template slot-scope="scope">
           <el-dropdown trigger="click">
             <div :class="scope.row.id === current.id ? 'three-dot' : 'disnone'">
@@ -65,7 +65,7 @@
       </el-table-column>
       <el-table-column
         label="用户及注册时间"
-        width="200"
+        min-width="200"
         fixed
         v-if="showCol.userAddDate"
       >
@@ -88,7 +88,11 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="商品信息" width="200" v-if="showCol.productName">
+      <el-table-column
+        label="商品信息"
+        min-width="200"
+        v-if="showCol.productName"
+      >
         <template slot-scope="scope">
           <div class="product">
             <span>{{ scope.row.center_product_code || '-' }}</span>
@@ -114,7 +118,12 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column v-if="showCol.level" label="级别" width="120" :key="1">
+      <el-table-column
+        v-if="showCol.level"
+        label="级别"
+        min-width="120"
+        :key="1"
+      >
         <template slot-scope="scope">
           <div class="product">
             <span>{{ scope.row.level || '--' }}</span>
@@ -123,7 +132,7 @@
       </el-table-column>
       <el-table-column
         label="物流类型"
-        width="200"
+        min-width="200"
         v-if="showCol.replenishType"
         :key="2"
       >
@@ -138,7 +147,7 @@
       </el-table-column>
       <el-table-column
         label="补发类别"
-        width="200"
+        min-width="200"
         v-if="showCol.replenishFamily"
         :key="3"
       >
@@ -150,7 +159,7 @@
       </el-table-column>
       <el-table-column
         label="补发原因"
-        width="200"
+        min-width="200"
         v-if="showCol.replenishReason"
         :key="4"
       >
@@ -169,7 +178,7 @@
       </el-table-column>
       <el-table-column
         label="申请人"
-        width="180"
+        min-width="180"
         v-if="showCol.applicant"
         :key="5"
       >
@@ -181,7 +190,7 @@
       </el-table-column>
       <el-table-column
         label="活动类型"
-        width="180"
+        min-width="180"
         v-if="showCol.courseType"
         :key="6"
       >
@@ -193,7 +202,7 @@
       </el-table-column>
       <!-- <el-table-column
         label="随材版本"
-        width="150"
+        min-width="150"
         v-if="showCol.productVersion"
         :key="7"
       >
@@ -205,7 +214,7 @@
       </el-table-column> -->
       <el-table-column
         label="收货信息"
-        width="200"
+        min-width="200"
         v-if="showCol.receiptInfo"
         :key="8"
       >
@@ -253,7 +262,12 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="期数" width="150" v-if="showCol.term" :key="10">
+      <el-table-column
+        label="期数"
+        min-width="150"
+        v-if="showCol.term"
+        :key="10"
+      >
         <template slot-scope="scope">
           <div class="product">
             <span>{{
@@ -264,7 +278,7 @@
       </el-table-column>
       <el-table-column
         label="班级信息"
-        width="150"
+        min-width="150"
         v-if="showCol.className"
         :key="11"
       >
@@ -283,7 +297,7 @@
       </el-table-column>
       <el-table-column
         label="社群销售"
-        width="150"
+        min-width="150"
         v-if="showCol.teacher"
         :key="12"
       >
@@ -306,7 +320,7 @@
       </el-table-column>
       <el-table-column
         label="物流状态"
-        width="200"
+        min-width="200"
         v-if="showCol.expressStatus"
         :key="13"
       >
@@ -335,7 +349,7 @@
       </el-table-column>
       <el-table-column
         label="失败原因"
-        width="200"
+        min-width="200"
         v-if="showCol.expressRemark"
         :key="9"
       >
@@ -347,7 +361,7 @@
       </el-table-column>
       <el-table-column
         label="物流时效"
-        width="200"
+        min-width="200"
         v-if="showCol.expressInfo"
         :key="14"
       >

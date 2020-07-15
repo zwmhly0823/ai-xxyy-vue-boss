@@ -170,7 +170,7 @@ export default {
       dialogVisible: false,
       dickUp: false,
       headers: { 'Content-Type': 'multipart/form-data' },
-      expressStatus: '0,1,2,3,4,5,6,7,8',
+      expressStatus: '0,1,2,3,4,5,6,7,8,9',
       uploading: false,
       close: false,
       expressId: '',
@@ -275,7 +275,7 @@ export default {
       if (
         !this.searchIn.length &&
         !this.expressId.length &&
-        this.expressStatus === '0,1,2,3,4,5,6,7,8'
+        this.expressStatus === '0,1,2,3,4,5,6,7,8,9'
       ) {
         this.$message.error('不能导出全部物流，请选择状态或筛选')
         return
