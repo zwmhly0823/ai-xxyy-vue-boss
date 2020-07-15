@@ -3,8 +3,8 @@
  * @version:
  * @Author: shentong
  * @Date: 2020-04-02 16:08:02
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-07-03 11:40:47
+ * @LastEditors: Shentong
+ * @LastEditTime: 2020-07-15 22:48:46
  -->
 <template>
   <div>
@@ -133,11 +133,21 @@
           label="状态"
           align="center"
         ></el-table-column>
-        <el-table-column label="操作" align="center" width="110">
+        <el-table-column label="操作" align="center" width="130">
           <template slot-scope="scope">
             <div class="editStyle">
               <span
-                style="margin-right:20px"
+                style="margin-right:15px"
+                @click="downlaodExcel(scope.row, true)"
+                >导出</span
+              >
+              <span
+                style="margin-right:15px"
+                @click="downlaodExcel(scope.row, false)"
+                >下载2</span
+              >
+              <span
+                style="margin-right:15px"
                 @click="addEditSchedule(scope.row)"
                 >编辑</span
               >
@@ -208,6 +218,51 @@ export default {
       this.tabIndex = index
       this.tabQuery.page = 1
       this.getCourseListByType()
+    },
+    // 下载当前行
+    async downlaodExcel(row, type) {
+      console.log('row', row.period)
+      const params = {
+        departmentIds: '',
+        teacherId: '',
+        level: '',
+        courseDifficulties: '',
+        courseType: this.tabIndex,
+        period: row.period
+      }
+
+      // this.$http.DownloadExcel.downloadExcelByPeriod(params)
+      // const url = type ?
+      let downInfo
+      if (type) {
+        downInfo = await this.$http.Operating.exportExcel(params)
+      } else {
+        downInfo = await this.$http.DownloadExcel.downloadExcelByPeriod(params)
+      }
+
+      if (downInfo) {
+        const name = !+params.courseType ? '体验课' : '系统课'
+        this.downloadFn(downInfo, `${name}-第${params.period}期`, () => {
+          // this.$emit('setExcelStatus', 'complete')
+        })
+      } else {
+        this.$message.error('下载失败')
+      }
+    },
+    // 下载文件
+    downloadFn(data, fileName = '下载', cb) {
+      if (!data) return
+      const blob = new Blob([data])
+      const elink = document.createElement('a')
+      elink.download = fileName
+      elink.style.display = 'none'
+      elink.href = URL.createObjectURL(blob)
+      document.body.appendChild(elink)
+      elink.click()
+      URL.revokeObjectURL(elink.href) // 释放URL 对象
+      document.body.removeChild(elink)
+
+      cb && cb()
     },
     // 新增、编辑
     addEditSchedule(row) {

@@ -4,10 +4,31 @@
  * @Author: Shentong
  * @Date: 2020-04-15 20:35:57
  * @LastEditors: Shentong
- * @LastEditTime: 2020-07-06 15:10:32
+ * @LastEditTime: 2020-07-15 21:40:10
  -->
 <template>
   <div class="third-step">
+    <div class="search-container">
+      <div class="tabs">
+        <div
+          class="tab"
+          v-for="(tab, index) in levelList"
+          :key="index"
+          :class="{ active: index == levelIndex }"
+          @click="levelClickHandle(tab, index)"
+        >
+          {{ tab.label }}
+        </div>
+      </div>
+      <div class="table-search">
+        <table-search
+          @change="searchChange"
+          :isShowLevel="true"
+          :isShowSup="true"
+          :moreVersion="true"
+        ></table-search>
+      </div>
+    </div>
     <div class="step-container step-three-container">
       <ele-table
         :dataList="tableData"
@@ -201,11 +222,27 @@
 <script>
 import _ from 'lodash'
 import EleTable from '@/components/Table/EleTable'
+import TableSearch from '../../../components/tableSearch/index'
 import { mapGetters } from 'vuex'
 export default {
   props: ['stepStatus'],
   data() {
     return {
+      levelIndex: 0,
+      levelList: [
+        {
+          label: 'S1',
+          value: 'S1'
+        },
+        {
+          label: 'S2',
+          value: 'S2'
+        },
+        {
+          label: 'S3',
+          value: 'S3'
+        }
+      ],
       tableData: [],
       isValidate: true,
       totalElements: 0,
@@ -237,7 +274,8 @@ export default {
     ...mapGetters(['scheduleTeacherId', 'schedulePeriod'])
   },
   components: {
-    EleTable
+    EleTable,
+    TableSearch
   },
   watch: {},
   async created() {
@@ -252,6 +290,26 @@ export default {
     this.scheduleTeacherId.length && this.getTeacherConfigList(params)
   },
   methods: {
+    // 顶部tabs点击事件
+    levelClickHandle(tab, index) {
+      this.levelIndex = index
+    },
+    // 搜索emit数据
+    searchChange(search) {
+      console.log('search', search)
+      // const {
+      //   department = [],
+      //   groupSell = '',
+      //   level = [],
+      //   courseDifficulties = []
+      // } = search
+      // Object.assign(this.params, {
+      //   departmentIds: department.join(),
+      //   teacherId: groupSell,
+      //   level: level.join(),
+      //   courseDifficulties: courseDifficulties.join()
+      // })
+    },
     // 根据老师ids获取招生排期设置中老师配置信息
     async getTeacherConfigList(params) {
       try {
@@ -394,6 +452,31 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+.search-container {
+  .tabs {
+    display: flex;
+    height: 35px;
+    align-items: center;
+    background: #f5f7fa;
+    .tab {
+      padding: 0 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      cursor: pointer;
+      &.active {
+        background: #fff;
+        color: #2a75ed;
+      }
+    }
+  }
+  .table-search {
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+  }
+}
 .step-three-container {
   // display: flex;
   // align-items: center;
