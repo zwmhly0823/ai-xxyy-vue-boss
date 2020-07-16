@@ -1,22 +1,12 @@
 /*
  * @Descripttion:
  * @version:
- * @Author: Shentong
- * @Date: 2020-03-16 19:46:39
-<<<<<<< HEAD
+ * @Author: Lukun
+ * @Date: 2020-05-14 14:31:42
  * @LastEditors: Shentong
- * @LastEditTime: 2020-07-07 21:06:58
-=======
- * @LastEditors: Shentong
-<<<<<<< HEAD
- * @LastEditTime: 2020-07-07 18:51:33
->>>>>>> operatingSchedule-0706
-=======
- * @LastEditTime: 2020-07-15 22:24:48
->>>>>>> feature/operating-0715
+ * @LastEditTime: 2020-07-16 21:22:59
  */
 import axios from '../axiosConfig'
-// import { getToken } from '@/utils/auth'
 
 export default {
   /**
@@ -81,7 +71,7 @@ export default {
    */
   getTeacherConfigList(params) {
     return axios.post(
-      `/api/t/v1/teacher/course/enroll/teacher/config?courseType=${params.courseType}&period=${params.period}`,
+      `/api/t/v1/teacher/course/enroll/teacher/config?courseType=${params.courseType}&period=${params.period}&courseDifficulty=${params.courseDifficulty}&departmentIds=${params.departmentIds}&teacherWechatIds=${params.teacherWechatIds}&levels=${params.levels}`,
       params.ids
     )
   },
