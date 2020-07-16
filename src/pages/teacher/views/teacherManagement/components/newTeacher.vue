@@ -154,6 +154,7 @@
       <!-- 职场 -->
       <el-form-item label="职场" prop="workplace">
         <el-select
+          @change="onWorkPlace"
           v-model="ruleForm.workplace"
           clearable
           placeholder="请选择职场"
@@ -162,7 +163,7 @@
             v-for="item in workplaceList"
             :key="item.value"
             :label="item.label"
-            :value="item.value"
+            :value="item"
           ></el-option>
         </el-select>
       </el-form-item>
@@ -432,7 +433,9 @@ export default {
         administrations: [],
         note: [],
         // 职场
-        workplace: ''
+        workplace: '',
+        workplaces: '',
+        workPlaceCode: ''
       },
 
       // 表单验证
@@ -560,17 +563,21 @@ export default {
     if (query && query.index) this.newTitle = query.index
     // 接口调用
     this.createdUrl()
-    this.onGetRegionTree()
+    this.onGetWorkPlace()
   },
 
   methods: {
-    onGetRegionTree() {
-      this.$http.Teacher.getRegionTree().then((res) => {
+    onWorkPlace(data) {
+      this.ruleForm.workplaces = data.label
+      this.ruleForm.workPlaceCode = data.value
+    },
+    onGetWorkPlace() {
+      this.$http.Teacher.getWorkPlace().then((res) => {
         console.log(res)
         const _data = res.payload
         _data.forEach((ele) => {
-          ele.value = ele.id + ''
-          ele.label = ele.name
+          ele.value = ele.workPlaceCode + ''
+          ele.label = ele.workPlace
         })
         this.workplaceList = _data
       })
@@ -624,6 +631,7 @@ export default {
         // 教师详情
         this.$http.Teacher.getTeacherDetail(this.$route.query.teacherId).then(
           (res) => {
+            console.log(res)
             const { payload = {} } = res
             this.ruleForm.imageUrl = payload.teacher.headImage
             this.ruleForm.phone = payload.teacher.phone
@@ -671,14 +679,8 @@ export default {
             this.ruleForm.administrations = payload.teacher.dataAuth
             this.ruleForm.administration = JSON.parse(payload.teacher.note)
             this.ruleForm.note = payload.teacher.note
-            // const list = [
-            //   ['33', '34', '45'],
-            //   ['33', '34', '53'],
-            //   ['33', '34', '46']
-            // ]
-            // this.ruleForm.administration = payload.teacher.dataAuth
-            // this.ruleForm.administration.push(payload.teacher.dataAuth)
-            console.log(this.ruleForm.administration)
+            this.ruleForm.workplaces = payload.teacher.workPlace
+            this.ruleForm.workPlaceCode = payload.teacher.workPlaceCode
           }
         )
       }
@@ -723,7 +725,8 @@ export default {
           isLogin: this.ruleForm.accountSettings,
           level: this.ruleForm.level,
           dataAuth: this.ruleForm.administrations,
-          workPlace: this.ruleForm.workplace,
+          workPlace: this.ruleForm.workplaces,
+          workPlaceCode: this.ruleForm.workPlaceCode,
           userName: this.ruleForm.username,
           note: this.ruleForm.note
         },
