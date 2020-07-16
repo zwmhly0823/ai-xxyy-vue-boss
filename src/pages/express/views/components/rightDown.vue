@@ -1146,7 +1146,6 @@ export default {
             item.sgtime = formatData(+item.signing_time, 's')
             item.buytime = formatData(+item.buy_time, 's')
             item.ctime = formatData(+item.buy_time, 's')
-            item.center_ctime = formatData(+item.center_ctime, 's')
             item.course_day = this.getCourseDay(
               item.stageInfo?.course_day,
               item.level
