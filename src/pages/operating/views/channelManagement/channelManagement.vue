@@ -4,13 +4,16 @@
  * @Author: panjian
  * @Date: 2020-04-25 12:09:03
  * @LastEditors: panjian
- * @LastEditTime: 2020-05-18 11:59:52
+ * @LastEditTime: 2020-07-16 11:55:52
  -->
 <template>
   <div class="app-main height">
     <div class="channel-box-top">
       <el-tabs v-model="activeName" @tab-click="handleClick" type="border-card">
         <el-tab-pane label="渠道查询" name="channelQuery">
+          <channel-search :tabIndex="tabIndex" />
+        </el-tab-pane>
+        <el-tab-pane label="二级渠道查询" name="TwoChannelQuery">
           <channel-search :tabIndex="tabIndex" />
         </el-tab-pane>
         <el-tab-pane label="渠道信息管理" name="channleInfo">
