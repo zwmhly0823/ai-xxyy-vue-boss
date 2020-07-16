@@ -15,8 +15,8 @@
       @cell-mouse-enter="handleMouseEnter"
       @cell-mouse-leave="handleMouseLeave"
     >
-      <el-table-column type="selection" width="25" fixed> </el-table-column>
-      <el-table-column width="25" fixed v-if="sortItem.id == 6">
+      <el-table-column type="selection" min-width="25" fixed> </el-table-column>
+      <el-table-column min-width="25" fixed v-if="sortItem.id == 6">
         <template slot-scope="scope">
           <el-dropdown trigger="click">
             <div :class="scope.row.id === current.id ? 'three-dot' : 'disnone'">
@@ -47,7 +47,7 @@
         </template>
       </el-table-column>
       <!-- 无地址状态 sortItem.id 为 0 的情况 -->
-      <el-table-column width="25" fixed v-if="sortItem.id == 0">
+      <el-table-column min-width="25" fixed v-if="sortItem.id == 0">
         <template slot-scope="scope">
           <el-dropdown trigger="click">
             <div :class="scope.row.id === current.id ? 'three-dot' : 'disnone'">
@@ -65,7 +65,7 @@
       </el-table-column>
       <el-table-column
         label="用户及注册时间"
-        width="200"
+        min-width="200"
         fixed
         v-if="showCol.userAddDate"
       >
@@ -88,12 +88,18 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="商品信息" width="200" v-if="showCol.productName">
+      <el-table-column
+        label="商品信息"
+        min-width="200"
+        v-if="showCol.productName"
+      >
         <template slot-scope="scope">
           <div class="product">
             <span>{{ scope.row.center_product_code || '-' }}</span>
           </div>
-          <div class="gray-text">{{ scope.row.product_name }}</div>
+          <div class="gray-text">
+            {{ scope.row.product_name }} {{ scope.row.product_version }}
+          </div>
         </template>
       </el-table-column>
       <el-table-column
@@ -112,7 +118,12 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column v-if="showCol.level" label="级别" width="120" :key="1">
+      <el-table-column
+        v-if="showCol.level"
+        label="级别"
+        min-width="120"
+        :key="1"
+      >
         <template slot-scope="scope">
           <div class="product">
             <span>{{ scope.row.level || '--' }}</span>
@@ -121,7 +132,7 @@
       </el-table-column>
       <el-table-column
         label="物流类型"
-        width="200"
+        min-width="200"
         v-if="showCol.replenishType"
         :key="2"
       >
@@ -136,7 +147,7 @@
       </el-table-column>
       <el-table-column
         label="补发类别"
-        width="200"
+        min-width="200"
         v-if="showCol.replenishFamily"
         :key="3"
       >
@@ -148,7 +159,7 @@
       </el-table-column>
       <el-table-column
         label="补发原因"
-        width="200"
+        min-width="200"
         v-if="showCol.replenishReason"
         :key="4"
       >
@@ -167,7 +178,7 @@
       </el-table-column>
       <el-table-column
         label="申请人"
-        width="180"
+        min-width="180"
         v-if="showCol.applicant"
         :key="5"
       >
@@ -179,7 +190,7 @@
       </el-table-column>
       <el-table-column
         label="活动类型"
-        width="180"
+        min-width="180"
         v-if="showCol.courseType"
         :key="6"
       >
@@ -189,9 +200,9 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column
+      <!-- <el-table-column
         label="随材版本"
-        width="150"
+        min-width="150"
         v-if="showCol.productVersion"
         :key="7"
       >
@@ -200,10 +211,10 @@
             <span>{{ scope.row.product_version || '-' }}</span>
           </div>
         </template>
-      </el-table-column>
+      </el-table-column> -->
       <el-table-column
         label="收货信息"
-        width="200"
+        min-width="200"
         v-if="showCol.receiptInfo"
         :key="8"
       >
@@ -252,18 +263,11 @@
         </template>
       </el-table-column>
       <el-table-column
-        label="失败原因"
-        width="200"
-        v-if="showCol.expressRemark"
-        :key="9"
+        label="期数"
+        min-width="150"
+        v-if="showCol.term"
+        :key="10"
       >
-        <template slot-scope="scope">
-          <div class="product">
-            <span>{{ scope.row.express_remark || '--' }}</span>
-          </div>
-        </template>
-      </el-table-column>
-      <el-table-column label="期数" width="150" v-if="showCol.term" :key="10">
         <template slot-scope="scope">
           <div class="product">
             <span>{{
@@ -274,7 +278,7 @@
       </el-table-column>
       <el-table-column
         label="班级信息"
-        width="150"
+        min-width="150"
         v-if="showCol.className"
         :key="11"
       >
@@ -293,7 +297,7 @@
       </el-table-column>
       <el-table-column
         label="社群销售"
-        width="150"
+        min-width="150"
         v-if="showCol.teacher"
         :key="12"
       >
@@ -316,7 +320,7 @@
       </el-table-column>
       <el-table-column
         label="物流状态"
-        width="200"
+        min-width="200"
         v-if="showCol.expressStatus"
         :key="13"
       >
@@ -344,17 +348,29 @@
         </template>
       </el-table-column>
       <el-table-column
-        label="物流创建·审核·揽收·签收"
-        width="200"
+        label="失败原因"
+        min-width="200"
+        v-if="showCol.expressRemark"
+        :key="9"
+      >
+        <template slot-scope="scope">
+          <div class="gray-text">
+            <span>{{ scope.row.express_remark || '--' }}</span>
+          </div>
+        </template>
+      </el-table-column>
+      <el-table-column
+        label="物流时效"
+        min-width="200"
         v-if="showCol.expressInfo"
         :key="14"
       >
         <template slot-scope="scope">
-          <div class="sign">
-            <div>创建:{{ scope.row.crtime }}</div>
-            <div>审核:{{ scope.row.center_ctime_str }}</div>
-            <div>揽收:{{ scope.row.detime }}</div>
-            <div>签收:{{ scope.row.sgtime }}</div>
+          <div class="gray-text">
+            <div>创建: {{ scope.row.crtime }}</div>
+            <div>审核: {{ scope.row.center_ctime_str }}</div>
+            <div>揽收: {{ scope.row.detime }}</div>
+            <div>签收: {{ scope.row.sgtime }}</div>
           </div>
         </template>
       </el-table-column>
@@ -504,6 +520,20 @@ const regtypeEnum = {
   '5': '活动补发',
   '6': '活动补发'
 }
+const LEVEL_ENUM = {
+  L1: 28,
+  L2: 28 * 2,
+  L3: 28 * 3,
+  L4: 28 * 4,
+  L5: 28 * 5,
+  L6: 28 * 6,
+  L7: 28 * 7,
+  L8: 28 * 8,
+  L9: 28 * 9,
+  L10: 28 * 10,
+  L11: 28 * 11,
+  L12: 28 * 12
+}
 export default {
   props: {
     search: { type: [String, Number, Array, Object], default: '' },
@@ -573,7 +603,8 @@ export default {
     const teacherId = isToss()
     if (teacherId) {
       this.teacherId = teacherId
-      this.getTeacherByRole()
+      // this.getTeacherByRole()
+      this.getExpressList()
     } else {
       this.getExpressList()
     }
@@ -1115,9 +1146,10 @@ export default {
             item.sgtime = formatData(+item.signing_time, 's')
             item.buytime = formatData(+item.buy_time, 's')
             item.ctime = formatData(+item.buy_time, 's')
-            item.course_day = item.stageInfo?.course_day
-              ? dayjs.unix(item.stageInfo?.course_day / 1000).format('MMDD')
-              : '-'
+            item.course_day = this.getCourseDay(
+              item.stageInfo?.course_day,
+              item.level
+            )
             item.center_ctime_str = formatData(+item.center_ctime, 's')
             // 处理补发类型
             this.handleRegtype(item)
@@ -1152,6 +1184,16 @@ export default {
           this.getScheduleList(schedule)
         }
       })
+    },
+    getCourseDay(time, level) {
+      if (!time) {
+        return '-'
+      }
+      const timeC = LEVEL_ENUM[level]
+      if (timeC) {
+        time = +time + timeC * 24 * 3600 * 1000
+      }
+      return dayjs.unix(time / 1000).format('MMDD' || '-')
     },
     handleRegtype(listItem) {
       productTopicList.map((item) => {

@@ -48,7 +48,11 @@
       <span>确定导出选中的数据嘛</span>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dickUp = false">取 消</el-button>
-        <el-button type="primary" @click="exportExpress">
+        <el-button
+          type="primary"
+          :loading="exportLoading"
+          @click="exportExpress"
+        >
           确 定
         </el-button>
       </span>
@@ -162,6 +166,7 @@ export default {
   },
   data() {
     return {
+      exportLoading: false,
       errorDialog: [],
       teacherId: '',
       operatorId: '',
@@ -170,7 +175,7 @@ export default {
       dialogVisible: false,
       dickUp: false,
       headers: { 'Content-Type': 'multipart/form-data' },
-      expressStatus: '0,1,2,3,4,5,6,7,8',
+      expressStatus: '0,1,2,3,4,5,6,7,8,9',
       uploading: false,
       close: false,
       expressId: '',
@@ -275,7 +280,7 @@ export default {
       if (
         !this.searchIn.length &&
         !this.expressId.length &&
-        this.expressStatus === '0,1,2,3,4,5,6,7,8'
+        this.expressStatus === '0,1,2,3,4,5,6,7,8,9'
       ) {
         this.$message.error('不能导出全部物流，请选择状态或筛选')
         return
@@ -421,9 +426,16 @@ export default {
         query,
         sort
       }
-      this.$http.DownloadExcel.exportExpress(params).then((res) => {
-        this.downloadFn(res, '物流下载')
-      })
+      this.exportLoading = true
+      this.$http.DownloadExcel.exportExpress(params).then(
+        (res) => {
+          this.downloadFn(res, '物流下载')
+          this.exportLoading = false
+        },
+        () => {
+          this.exportLoading = false
+        }
+      )
     },
     dosomething() {},
     handleSearch(search) {

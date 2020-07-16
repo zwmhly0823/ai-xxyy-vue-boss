@@ -575,7 +575,11 @@ export default {
     },
     // 展示失败原因
     handleHideCol(val) {
-      if (val.id === '6' && val.centerExpressId !== 0) {
+      if (
+        (val.id === '6' && val.center_express_id?.gt === 0) ||
+        val.id === '7' ||
+        val.id === '9'
+      ) {
         this.$set(this.hideCol, 'expressRemark', true)
       } else {
         this.$set(this.hideCol, 'expressRemark', false)

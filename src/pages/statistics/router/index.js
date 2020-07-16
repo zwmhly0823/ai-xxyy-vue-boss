@@ -1,7 +1,7 @@
 /*
  * @Date: 2020-03-13 15:20:21
- * @LastEditors: panjian
- * @LastEditTime: 2020-06-06 14:19:08
+ * @LastEditors: zhangjianwen
+ * @LastEditTime: 2020-07-08 15:13:29
  * @FilePath: /ai-app-vue-toss/src/pages/studentTeam/router/index.js
  */
 import Vue from 'vue'
@@ -54,6 +54,15 @@ const routes = [
       keepAlive: true
     },
     component: () => import('../views/behavior/index.vue')
+  },
+  {
+    path: '/learnRecord',
+    name: 'learnRecord',
+    meta: {
+      title: '学习记录',
+      keepAlive: true
+    },
+    component: () => import('../views/learnRecord/index.vue')
   }
 ]
 
