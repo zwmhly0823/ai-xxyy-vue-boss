@@ -4,7 +4,7 @@
  * @Author: shentong
  * @Date: 2020-04-02 16:08:02
  * @LastEditors: Shentong
- * @LastEditTime: 2020-07-15 22:48:46
+ * @LastEditTime: 2020-07-16 12:28:02
  -->
 <template>
   <div>
@@ -136,15 +136,8 @@
         <el-table-column label="操作" align="center" width="130">
           <template slot-scope="scope">
             <div class="editStyle">
-              <span
-                style="margin-right:15px"
-                @click="downlaodExcel(scope.row, true)"
-                >导出</span
-              >
-              <span
-                style="margin-right:15px"
-                @click="downlaodExcel(scope.row, false)"
-                >下载2</span
+              <span style="margin-right:15px" @click="downlaodExcel(scope.row)"
+                >下载</span
               >
               <span
                 style="margin-right:15px"
@@ -220,7 +213,7 @@ export default {
       this.getCourseListByType()
     },
     // 下载当前行
-    async downlaodExcel(row, type) {
+    async downlaodExcel(row) {
       console.log('row', row.period)
       const params = {
         departmentIds: '',
@@ -230,19 +223,11 @@ export default {
         courseType: this.tabIndex,
         period: row.period
       }
+      const res = await this.$http.DownloadExcel.downloadExcelByPeriod(params)
 
-      // this.$http.DownloadExcel.downloadExcelByPeriod(params)
-      // const url = type ?
-      let downInfo
-      if (type) {
-        downInfo = await this.$http.Operating.exportExcel(params)
-      } else {
-        downInfo = await this.$http.DownloadExcel.downloadExcelByPeriod(params)
-      }
-
-      if (downInfo) {
+      if (res && Object.prototype.toString.call(res) === '[object Blob]') {
         const name = !+params.courseType ? '体验课' : '系统课'
-        this.downloadFn(downInfo, `${name}-第${params.period}期`, () => {
+        this.downloadFn(res, `${name}-第${params.period}期`, () => {
           // this.$emit('setExcelStatus', 'complete')
         })
       } else {
@@ -253,14 +238,22 @@ export default {
     downloadFn(data, fileName = '下载', cb) {
       if (!data) return
       const blob = new Blob([data])
-      const elink = document.createElement('a')
-      elink.download = fileName
-      elink.style.display = 'none'
-      elink.href = URL.createObjectURL(blob)
-      document.body.appendChild(elink)
-      elink.click()
-      URL.revokeObjectURL(elink.href) // 释放URL 对象
-      document.body.removeChild(elink)
+      var downloadElement = document.createElement('a')
+      var href = window.URL.createObjectURL(blob) // 创建下载的链接
+      downloadElement.href = href
+      downloadElement.download = `${fileName}.xls` // 下载后文件名
+      document.body.appendChild(downloadElement)
+      downloadElement.click() // 点击下载
+      document.body.removeChild(downloadElement) // 下载完成移除元素
+      window.URL.revokeObjectURL(href) // 释放掉blob对象
+      // const elink = document.createElement('a')
+      // elink.download = fileName
+      // elink.style.display = 'none'
+      // elink.href = URL.createObjectURL(blob)
+      // document.body.appendChild(elink)
+      // elink.click()
+      // URL.revokeObjectURL(elink.href) // 释放URL 对象
+      // document.body.removeChild(elink)
 
       cb && cb()
     },
