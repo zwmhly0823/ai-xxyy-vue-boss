@@ -33,6 +33,9 @@ const staff = JSON.parse(localStorage.getItem('staff'))
 // 超级管理员权限
 let superOperatingRouter = []
 
+// 管理员、
+const adminRouter = []
+
 if (staff.roleId === '7') {
   superOperatingRouter = [
     {
@@ -53,7 +56,17 @@ if (staff.roleId === '7') {
     }
   ]
 }
-
+// 管理员权限
+if (staff.roleId === '1') {
+  adminRouter.push({
+    path: '/changePhoneNumber',
+    name: 'changePhoneNumber',
+    meta: {
+      title: '手机号替换',
+      module: 'operating'
+    }
+  })
+}
 const routes = [
   // 班级
   {
@@ -353,7 +366,8 @@ const routes = [
           module: 'operating'
         }
       },
-      ...superOperatingRouter
+      ...superOperatingRouter,
+      ...adminRouter
     ]
   },
   // 工具类路由
