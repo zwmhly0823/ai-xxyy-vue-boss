@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-04-25 12:09:03
  * @LastEditors: panjian
- * @LastEditTime: 2020-07-16 11:55:52
+ * @LastEditTime: 2020-07-16 17:19:47
  -->
 <template>
   <div class="app-main height">
@@ -14,7 +14,7 @@
           <channel-search :tabIndex="tabIndex" />
         </el-tab-pane>
         <el-tab-pane label="二级渠道查询" name="TwoChannelQuery">
-          <channel-search :tabIndex="tabIndex" />
+          <channel-search-two :tabIndex="tabIndex" />
         </el-tab-pane>
         <el-tab-pane label="渠道信息管理" name="channleInfo">
           <channel-information :tabIndex="tabIndex" />
@@ -32,6 +32,7 @@
 
 <script>
 import channelSearch from './components/channelSearch'
+import channelSearchTwo from './components/channelSearchTwo'
 import channelInformation from './components/channelInformation'
 import secChannelInformation from './components/secChannelInformation'
 import channelUpload from './components/channelUpload'
@@ -40,7 +41,8 @@ export default {
     channelSearch,
     channelInformation,
     secChannelInformation,
-    channelUpload
+    channelUpload,
+    channelSearchTwo
   },
   data() {
     return { tabIndex: '', activeName: 'channelQuery' }
