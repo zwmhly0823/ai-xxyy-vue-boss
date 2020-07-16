@@ -1115,7 +1115,6 @@ export default {
             item.sgtime = formatData(+item.signing_time, 's')
             item.buytime = formatData(+item.buy_time, 's')
             item.ctime = formatData(+item.buy_time, 's')
-            item.center_ctime = formatData(+item.center_ctime, 's')
             item.course_day = item.stageInfo?.course_day
               ? dayjs.unix(item.stageInfo?.course_day / 1000).format('MMDD')
               : '-'
