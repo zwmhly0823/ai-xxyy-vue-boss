@@ -3,8 +3,8 @@
  * @version: 
  * @Author: Lukun
  * @Date: 2020-04-15 15:18:49
- * @LastEditors: Lukun
- * @LastEditTime: 2020-05-08 19:00:10
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-07-16 15:52:19
  -->
 <template>
   <div class="container express-detail">
@@ -305,12 +305,8 @@ export default {
       this.expressInformation = val
       this.expressNu = this.expressInformation.express_nu
       const timeNodes = new Date('2020-07-01').getTime()
-      // 2020-07-01之后且center_express_id 不等于0 且不是中通快递 取中台数据
-      if (
-        +val.center_ctime > timeNodes &&
-        val.center_express_id !== '0' &&
-        String(val.express_company).indexOf('中通') === -1
-      ) {
+      // 2020-07-01之后且center_express_id 不等于0  取中台数据
+      if (+val.center_ctime > timeNodes && val.center_express_id !== '0') {
         this.getExpressDetails(this.expressNu)
       } else {
         this.expressList(this.expressNu, val.express_status)
@@ -454,12 +450,8 @@ export default {
       this.isActive = i
       this.expressInformation = item
       const timeNodes = new Date('2020-07-01').getTime()
-      // 2020-07-01之后且center_express_id 不等于0 且不是中通快递 取中台数据
-      if (
-        +item.center_ctime > timeNodes &&
-        item.center_express_id !== '0' &&
-        String(item.express_company).indexOf('中通') === -1
-      ) {
+      // 2020-07-01之后且center_express_id 不等于0 取中台数据
+      if (+item.center_ctime > timeNodes && item.center_express_id !== '0') {
         this.getExpressDetails(item.express_nu)
       } else {
         this.expressList(item.express_nu, item.express_status)
