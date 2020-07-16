@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-14 18:28:44
  * @LastEditors: Shentong
- * @LastEditTime: 2020-07-15 18:26:48
+ * @LastEditTime: 2020-07-16 18:42:12
  -->
 <template>
   <div class="app-main height add-schedule-container">
@@ -25,9 +25,9 @@
               <el-step title="完成" icon="el-icon-success"></el-step>
             </el-steps>
           </div>
-          <!-- 第一步 v-show="stepStatus == 1" -->
+          <!-- 第一步 -->
           <first-step
-            v-show="stepStatus == 1000"
+            v-show="stepStatus == 1"
             :stepStatus="stepStatus"
             @listenStepStatus="oneStepNext"
           ></first-step>
@@ -45,8 +45,9 @@
             :stepStatus="stepStatus"
             @listenStepStatus="fSstepStatus"
           ></second-step>
-          <!-- 第三步 v-if="isShowThirdStep"-->
+          <!-- 第三步 -->
           <third-step
+            v-if="isShowThirdStep"
             :stepStatus="stepStatus"
             @listenStepStatus="fSstepStatus"
           ></third-step>

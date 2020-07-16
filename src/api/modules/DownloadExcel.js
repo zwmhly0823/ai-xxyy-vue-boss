@@ -4,7 +4,7 @@
  * @Author: Lukun
  * @Date: 2020-05-14 14:31:42
  * @LastEditors: Shentong
- * @LastEditTime: 2020-07-15 22:49:21
+ * @LastEditTime: 2020-07-16 21:16:36
  */
 import axios from '../axios'
 import { getToken } from '@/utils/auth'
@@ -73,7 +73,6 @@ export default {
           headers: getHeaders()
         })
           .then((res) => {
-            console.log('downloadExcelByPeriod-res', res)
             resolve(res)
           })
           .catch((err) => {

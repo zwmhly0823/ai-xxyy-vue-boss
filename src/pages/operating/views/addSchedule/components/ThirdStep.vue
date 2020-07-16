@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-15 20:35:57
  * @LastEditors: Shentong
- * @LastEditTime: 2020-07-15 21:40:10
+ * @LastEditTime: 2020-07-16 21:11:31
  -->
 <template>
   <div class="third-step">
@@ -21,11 +21,11 @@
         </div>
       </div>
       <div class="table-search">
+        <!-- 随材版本和课程类型先不做 -->
         <table-search
           @change="searchChange"
           :isShowLevel="true"
-          :isShowSup="true"
-          :moreVersion="true"
+          :isShowWxSearch="true"
         ></table-search>
       </div>
     </div>
@@ -267,6 +267,12 @@ export default {
       tabQuery: {
         size: 2,
         pageNum: 1
+      },
+      params: {
+        courseDifficulty: 'S1',
+        departmentIds: '',
+        teacherWechatIds: '',
+        levels: ''
       }
     }
   },
@@ -281,40 +287,41 @@ export default {
   async created() {
     const { courseType = 0 } = this.$route.params
     // 根据老师ids获取招生排期设置中老师配置信息 TODO:
-    const params = {
+    Object.assign(this.params, {
       courseType,
       period: this.schedulePeriod,
       ids: this.scheduleTeacherId
-    }
+    })
     await this.getCourseVersion()
-    this.scheduleTeacherId.length && this.getTeacherConfigList(params)
+    this.scheduleTeacherId.length && this.getTeacherConfigList()
   },
   methods: {
     // 顶部tabs点击事件
     levelClickHandle(tab, index) {
       this.levelIndex = index
+
+      Object.assign(this.params, {
+        courseDifficulty: tab.value
+      })
+
+      this.getTeacherConfigList()
     },
     // 搜索emit数据
     searchChange(search) {
-      console.log('search', search)
-      // const {
-      //   department = [],
-      //   groupSell = '',
-      //   level = [],
-      //   courseDifficulties = []
-      // } = search
-      // Object.assign(this.params, {
-      //   departmentIds: department.join(),
-      //   teacherId: groupSell,
-      //   level: level.join(),
-      //   courseDifficulties: courseDifficulties.join()
-      // })
+      const { department = [], groupSell = '', level = [], sup = '' } = search
+      Object.assign(this.params, {
+        departmentIds: department.join(),
+        teacherWechatIds: sup,
+        levels: level.join(),
+        ids: groupSell ? [groupSell] : this.scheduleTeacherId
+      })
+      this.getTeacherConfigList()
     },
     // 根据老师ids获取招生排期设置中老师配置信息
-    async getTeacherConfigList(params) {
+    async getTeacherConfigList() {
       try {
         const teacherList = await this.$http.Operating.getTeacherConfigList(
-          params
+          this.params
         )
         const { payload = [] } = teacherList
 
@@ -322,16 +329,16 @@ export default {
           const { enroll = [] } = item
           // 如果enroll为空，手动添加
           if (!enroll.length) {
-            for (let i = 1; i <= 3; i++) {
-              enroll.push({
-                courseDifficulty: `S${i}`,
-                status: 0,
-                teamSize: '',
-                sumTeamSize: '',
-                courseVersion: '',
-                courseCategory: []
-              })
-            }
+            // for (let i = 1; i <= 3; i++) {
+            enroll.push({
+              courseDifficulty: this.params.courseDifficulty,
+              status: 0,
+              teamSize: '',
+              sumTeamSize: '',
+              courseVersion: '',
+              courseCategory: []
+            })
+            // }
           } else {
             enroll.forEach((item) => {
               item.courseCategory = item.courseCategory
