@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-04-02 16:08:02
  * @LastEditors: panjian
- * @LastEditTime: 2020-07-14 16:50:16
+ * @LastEditTime: 2020-07-16 15:27:06
  -->
 <template>
   <div>
@@ -54,10 +54,12 @@
       style="margin: 15px;"
       >新增销售</el-button
     > -->
-
+    <div class="tableInner" ref="tableInner"></div>
     <div class="orderStyle">
       <el-table
         :data="tableData"
+        :height="tableHeight"
+        empty-text=" "
         :header-cell-style="{
           fontSize: '12px',
           color: '#666',
@@ -261,6 +263,7 @@ export default {
   },
   data() {
     return {
+      tableHeight: 0,
       departmentQuery: '',
       searchQuery: '',
       query: '',
@@ -320,6 +323,13 @@ export default {
       }
       this.getData()
     }
+  },
+  created() {
+    this.$nextTick(() => {
+      const tableHeight =
+        document.body.clientHeight - this.$refs.tableInner.offsetTop - 120
+      this.tableHeight = tableHeight + ''
+    })
   },
   activated() {
     setTimeout(() => {
