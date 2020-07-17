@@ -56,6 +56,9 @@ export default {
             leave_date
             level
             leave_train
+            teacher_status
+            data_auth
+            work_place
             department {
               id
               name
@@ -297,5 +300,13 @@ export default {
     return axios.get(
       `/api/t/v1/teacher/course/enroll/courseVersion?period=${params.period}&courseType=${params.courseType}`
     )
+  },
+  // 全部总数
+  departmentTree() {
+    return axios.get(`/api/t/v1/department/count/departmentTree`)
+  },
+  // 获取职场
+  getWorkPlace() {
+    return axios.get(`/api/t/v1/teacher/getWorkPlace`)
   }
 }
