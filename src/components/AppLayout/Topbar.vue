@@ -3,8 +3,8 @@
  * @Email: yangjiyong@meishubao.com
  * @Date: 2020-03-13 15:13:34
  * @Description: topbar 顶部功能区
- * @LastEditors: panjian
- * @LastEditTime: 2020-07-15 12:06:10
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-07-17 21:54:25
  -->
 <template>
   <div class="navbar" :class="{ prod: isProd }">

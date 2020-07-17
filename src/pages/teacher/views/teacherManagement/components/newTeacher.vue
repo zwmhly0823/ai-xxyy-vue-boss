@@ -429,7 +429,7 @@ export default {
         level: '',
         // 管理部门
         administration: [],
-        administrations: [],
+        administrations: '',
         note: [],
         // 职场
         workplace: '',
