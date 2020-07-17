@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-15 20:35:57
  * @LastEditors: Shentong
- * @LastEditTime: 2020-07-16 21:11:31
+ * @LastEditTime: 2020-07-17 12:13:02
  -->
 <template>
   <div class="third-step">
@@ -181,11 +181,7 @@
           align="center"
         >
           <template slot-scope="scope">
-            <div
-              v-for="(v, v_index) in scope.row.enroll"
-              :key="v_index"
-              class="select-container"
-            >
+            <div v-for="(v, v_index) in scope.row.enroll" :key="v_index">
               <el-select
                 multiple
                 :disabled="!Boolean(+v.status)"
@@ -193,6 +189,7 @@
                 popper-class="courseCategory"
                 size="mini"
                 placeholder="课程类型"
+                clearable
               >
                 <el-option
                   v-for="item in trialClass"
@@ -298,13 +295,16 @@ export default {
   methods: {
     // 顶部tabs点击事件
     levelClickHandle(tab, index) {
-      this.levelIndex = index
+      const callback = () => {
+        this.levelIndex = index
 
-      Object.assign(this.params, {
-        courseDifficulty: tab.value
-      })
+        Object.assign(this.params, {
+          courseDifficulty: tab.value
+        })
 
-      this.getTeacherConfigList()
+        this.getTeacherConfigList()
+      }
+      index !== this.levelIndex && this.stepOpt(false, callback)
     },
     // 搜索emit数据
     searchChange(search) {
@@ -433,7 +433,7 @@ export default {
       }
     },
     // 上一步，下一步
-    async stepOpt(type) {
+    async stepOpt(type, cb) {
       const { courseType = 0 } = this.$route.params
       const tableData = _.cloneDeep(this.tableData)
       this.validateTableForm(tableData)
@@ -446,7 +446,7 @@ export default {
         const callback = () => {
           this.$emit('listenStepStatus', type)
         }
-        await this.saveScheduleConfig(params, callback)
+        await this.saveScheduleConfig(params, cb || callback)
       }
     },
     warningMessage(message) {
