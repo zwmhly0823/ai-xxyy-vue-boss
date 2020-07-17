@@ -46,7 +46,6 @@
           type="password"
           v-model.trim="ruleForm.pwd"
           autocomplete="new-password"
-          show-password
           placeholder="请输入内容"
         ></el-input>
         <el-input v-else v-model.trim="ruleForm.pass"></el-input>
