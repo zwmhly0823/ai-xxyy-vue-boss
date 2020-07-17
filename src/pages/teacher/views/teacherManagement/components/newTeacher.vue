@@ -739,6 +739,12 @@ export default {
         rank: { id: this.ruleForm.rank },
         weixinList: this.ruleForm.weChat
       }
+      if (
+        this.ruleForm.note instanceof Array &&
+        this.ruleForm.note.length === 0
+      ) {
+        params.teacher.note = ''
+      }
       console.log(params)
 
       this.$refs[formName].validate((valid) => {
