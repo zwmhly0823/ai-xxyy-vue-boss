@@ -45,7 +45,7 @@
           @focus="onPassword"
           type="password"
           v-model.trim="ruleForm.pwd"
-          autocomplete="off"
+          autocomplete="new-password"
           show-password
           placeholder="请输入内容"
         ></el-input>
