@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-04-02 16:08:02
  * @LastEditors: panjian
- * @LastEditTime: 2020-07-16 15:27:06
+ * @LastEditTime: 2020-07-17 12:03:58
  -->
 <template>
   <div>
@@ -87,7 +87,7 @@
             </el-dropdown>
           </template>
         </el-table-column>
-        <el-table-column label="员工ID" width="100">
+        <el-table-column label="员工ID" width="120">
           <template slot-scope="scope">
             <div>{{ scope.row.id }}</div>
           </template>
@@ -102,7 +102,7 @@
             <div>{{ sex[scope.row.sex] }}</div>
           </template>
         </el-table-column> -->
-        <el-table-column label="对外昵称">
+        <el-table-column label="对外昵称" min-width="160">
           <template slot-scope="scope">
             <div>{{ scope.row.nickname || '-' }}</div>
           </template>
@@ -114,7 +114,7 @@
         </el-table-column>
         <el-table-column width="150" label="绑定微信号">
           <template slot-scope="scope">
-            <div v-if="scope.row.weixin">
+            <div v-if="scope.row.weixin.length > 0">
               <!-- <div><img :src="scope.row.head_image" /></div> -->
               <p
                 style="margin: 0;"
@@ -136,11 +136,15 @@
         </el-table-column>
         <el-table-column label="所属部门" min-width="150px">
           <template slot-scope="scope">
-            <div>
-              {{ scope.row.department ? scope.row.department.pname : '-' }}
-              <br />
-              {{ scope.row.department ? scope.row.department.name : '-' }}
+            <div v-if="scope.row.department.pname || scope.row.department.name">
+              <div>
+                {{ scope.row.department.pname }}
+              </div>
+              <div>
+                {{ scope.row.department.name }}
+              </div>
             </div>
+            <div v-else>-</div>
           </template>
         </el-table-column>
         <el-table-column label="职场" min-width="100px">
@@ -194,7 +198,7 @@
         <el-table-column label="离职时间" min-width="120px">
           <template slot-scope="scope">
             <div>
-              {{ scope.row.leave_date }}
+              {{ scope.row.leave_date || '-' }}
             </div>
           </template>
         </el-table-column>
