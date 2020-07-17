@@ -105,6 +105,15 @@
                 is-multiple
                 @result="getSearchData('teacher_id', arguments)"
               />
+              <!-- 体验课班级（从订单那边儿搬过来 -->
+              <search-team-name
+                teamnameType="0"
+                :term="term_trial"
+                :teacher-id="teacherId"
+                @result="getSearchData('team_id', arguments)"
+                name="team_id"
+                style="width:140px;margin-left:10px;"
+              />
             </div>
           </el-form-item>
           <el-form-item label="课前准备:">
@@ -239,6 +248,7 @@
 import FollowExpressStatus from '@/components/MSearch/searchItems/followExpressStatus.vue'
 import Department from '@/components/MSearch/searchItems/department.vue'
 import GroupSell from '@/components/MSearch/searchItems/groupSell.vue'
+import SearchTeamName from '@/components/MSearch/searchItems/searchTeamName'
 import HardLevel from '@/components/MSearch/searchItems/hardLevel.vue'
 import Channel from '@/components/MSearch/searchItems/channel.vue'
 import DefineLabel from '@/components/MSearch/searchItems/defineLabel.vue'
@@ -250,6 +260,7 @@ export default {
     FollowExpressStatus,
     Department,
     GroupSell,
+    SearchTeamName,
     HardLevel,
     SearchPhoneOrUsernum,
     Channel,
@@ -262,7 +273,15 @@ export default {
       type: String,
       default: '0'
     },
+    // 通知中心的参数集合
     searchProp: {
+      type: Object,
+      default: () => {
+        return {}
+      }
+    },
+    // 参数集合
+    paramsToSearch: {
       type: Object,
       default: () => {
         return {}
@@ -274,7 +293,9 @@ export default {
       labelName: '',
       ...enums,
       searchQuery: {},
-      nowDate: new Date().getTime()
+      nowDate: new Date().getTime(),
+      term_trial: null, // 当前选择体验课排期
+      teacherId: null
     }
   },
   computed: {
@@ -282,6 +303,13 @@ export default {
       console.log(this.nowDate, 'this.nowDate')
       return this.nowDate
     }
+  },
+  created() {
+    // 搜索项的参数
+    this.term_trial = this.paramsToSearch.term && [this.paramsToSearch.term]
+    this.teacherId = this.paramsToSearch.teacherId && [
+      this.paramsToSearch.teacherId
+    ]
   },
   methods: {
     /**
