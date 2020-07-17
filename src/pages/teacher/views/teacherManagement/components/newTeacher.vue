@@ -525,11 +525,11 @@ export default {
         // 职场
         workplace: [
           { required: true, message: '请选择职场', trigger: 'change' }
-        ],
-        // 管理部门
-        administration: [
-          { required: true, message: '请选择管理部门', trigger: 'change' }
         ]
+        // 管理部门
+        // administration: [
+        //   { required: true, message: '请选择管理部门', trigger: 'change' }
+        // ]
       }
     }
   },
