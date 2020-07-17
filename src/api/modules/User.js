@@ -155,7 +155,7 @@ export default {
     })
   },
 
-  trialCourseUsersV2(query = {}, page = 1, sortRules) {
+  trialCourseUsersV2(query = {}, page = 1, sortRules, size = 20) {
     const q = JSON.stringify(JSON.stringify(query))
     const sort =
       Object.keys(sortRules).length === 0
@@ -163,7 +163,7 @@ export default {
         : JSON.stringify(JSON.stringify(sortRules))
     return axios.post('/graphql/v1/toss', {
       query: `{
-        StudentTrialV2StatisticsPage(query: ${q},page: ${page}, sort: ${sort}){
+        StudentTrialV2StatisticsPage(query: ${q},page: ${page}, sort: ${sort}, size: ${size}){
           totalPages
           totalElements
           number
@@ -243,6 +243,7 @@ export default {
               express_status
             }
             questionnaire_count
+            bi_label
           }
         }
       }`

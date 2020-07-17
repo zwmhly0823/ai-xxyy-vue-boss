@@ -235,32 +235,4 @@
   .fts-14 {
     font-size: 14px;
   }
-  .sort-operate-box {
-    position: relative;
-    cursor: pointer;
-    .sort-icon-arrow {
-      display: inline-block;
-      position: relative;
-      top: -2px;
-      .top {
-        position: absolute;
-        bottom: 0;
-      }
-      .active {
-        color: #2a75ed;
-      }
-      .top-color {
-        position: absolute;
-        bottom: 0;
-      }
-      .bottom {
-        position: absolute;
-        top: -6px;
-      }
-      .bottom-color {
-        position: absolute;
-        top: -6px;
-      }
-    }
-  }
 }
