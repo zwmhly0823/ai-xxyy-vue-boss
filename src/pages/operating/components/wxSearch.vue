@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-07-15 20:45:14
  * @LastEditors: Shentong
- * @LastEditTime: 2020-07-15 20:49:46
+ * @LastEditTime: 2020-07-17 15:51:57
 -->
 <template>
   <div class="wx-search">
@@ -106,7 +106,7 @@ export default {
       this.weixinInp = data.wechat_no
       this.$emit(
         'getWxSerch',
-        data.wechat_no ? { [this.wxSerch]: data.wechat_no } : ''
+        data.wechat_no ? { [this.wxSerch]: data.id } : ''
       )
     }
   }

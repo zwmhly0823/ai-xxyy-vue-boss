@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-15 20:35:57
  * @LastEditors: Shentong
- * @LastEditTime: 2020-07-17 12:13:02
+ * @LastEditTime: 2020-07-17 15:45:03
  -->
 <template>
   <div class="third-step">
@@ -308,10 +308,16 @@ export default {
     },
     // 搜索emit数据
     searchChange(search) {
-      const { department = [], groupSell = '', level = [], sup = '' } = search
+      console.log('search', search)
+      const {
+        department = [],
+        groupSell = '',
+        level = [],
+        teacherWechatIds = ''
+      } = search
       Object.assign(this.params, {
         departmentIds: department.join(),
-        teacherWechatIds: sup,
+        teacherWechatIds,
         levels: level.join(),
         ids: groupSell ? [groupSell] : this.scheduleTeacherId
       })

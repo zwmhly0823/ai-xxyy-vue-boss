@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-25 14:35:19
  * @LastEditors: Shentong
- * @LastEditTime: 2020-07-16 16:36:05
+ * @LastEditTime: 2020-07-17 15:52:42
  -->
 <template>
   <div class="table-searcher-container">
@@ -18,7 +18,7 @@
     </div>
     <!-- 微信号搜索 -->
     <div class="comp-cell" v-if="isShowWxSearch">
-      <wx-list :wxSerch="wxSerch" @getWxSerch="getWxSerch" />
+      <wx-list wxSerch="wxSearchInfo" @getWxSerch="getWxSerch" />
     </div>
     <!-- 销售等级 -->
     <div class="comp-cell" v-if="isShowLevel">
@@ -136,8 +136,8 @@ export default {
       // this.setSeachParmas(res, [this.moreVersion || 'product_version'])
     },
     getWxSerch(res) {
-      const sup = Object.values(res)[0]
-      this.manageChange({ sup }, 'sup')
+      const teacherWechatIds = Object.values(res)[0]
+      this.manageChange({ teacherWechatIds }, 'teacherWechatIds')
     },
     // 招生级别 TODO:
     scheduleLevel(courseDifficulties) {
