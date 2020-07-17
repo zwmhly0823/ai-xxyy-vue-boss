@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-04-02 16:08:02
  * @LastEditors: panjian
- * @LastEditTime: 2020-07-17 12:03:58
+ * @LastEditTime: 2020-07-17 14:54:14
  -->
 <template>
   <div>
@@ -112,7 +112,7 @@
             <div>{{ scope.row.ding_userid || '-' }}</div>
           </template>
         </el-table-column>
-        <el-table-column width="150" label="绑定微信号">
+        <el-table-column width="160" label="绑定微信号">
           <template slot-scope="scope">
             <div v-if="scope.row.weixin.length > 0">
               <!-- <div><img :src="scope.row.head_image" /></div> -->
