@@ -3,8 +3,8 @@
  * @version:
  * @Author: Shentong
  * @Date: 2020-03-16 19:46:39
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-07-17 16:51:00
+ * @LastEditors: Shentong
+ * @LastEditTime: 2020-07-18 13:35:25
  */
 import axios from '../axiosConfig'
 // import { getToken } from '@/utils/auth'
@@ -72,7 +72,7 @@ export default {
    */
   getTeacherConfigList(params) {
     return axios.post(
-      `/api/t/v1/teacher/course/enroll/teacher/config?courseType=${params.courseType}&period=${params.period}`,
+      `/api/t/v1/teacher/course/enroll/teacher/config?courseType=${params.courseType}&period=${params.period}&courseDifficulty=${params.courseDifficulty}&departmentIds=${params.departmentIds}&teacherWechatIds=${params.teacherWechatIds}&levels=${params.levels}`,
       params.ids
     )
   },
@@ -90,6 +90,27 @@ export default {
    */
   pwdLoginIn(params) {
     return axios.post('/api/b/v1/staff/login', params)
+  },
+  // 导出
+  exportExcel(params) {
+    console.warn('接口-导出excel')
+    return axios.post(
+      `/api/s/v1/management/enroll/exportDetail?teacherId=${params.teacherId}&departmentIds=${params.departmentIds}&level=${params.level}&courseType=${params.courseType}&period=${params.period}&courseDifficulties=${params.courseDifficulties}`,
+      params,
+      {
+        responseType: 'blob' // 跟headers同级的
+        // 给文件流加个字段,excel就不会有内部错误了
+        // 二进制大对象(表示一个不可变、原始数据的类文件对象)
+      }
+    )
+  },
+  /**
+   * 招生排期列表 下载
+   */
+  downloadExcel(params) {
+    return axios.post(
+      `/api/s/v1/management/enroll/exportDetail?teacherId=${params.teacherId}&departmentIds=${params.departmentIds}&level=${params.level}&courseType=${params.courseType}&period=${params.period}&courseDifficulties=${params.courseDifficulties}`
+    )
   },
   /**
    *

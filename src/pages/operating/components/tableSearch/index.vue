@@ -4,19 +4,25 @@
  * @Author: Shentong
  * @Date: 2020-04-25 14:35:19
  * @LastEditors: Shentong
- * @LastEditTime: 2020-07-07 18:18:56
+ * @LastEditTime: 2020-07-17 15:52:42
  -->
 <template>
   <div class="table-searcher-container">
+    <!-- 销售部 -->
     <div class="comp-cell">
       <department @result="getDepartment" :name="'department'" :onlyDept="1" />
     </div>
+    <!-- 社群销售 -->
     <div class="comp-cell">
       <group-sell @result="selectSellTeacher" :name="'groupSell'" />
     </div>
-    <div class="comp-cell">
+    <!-- 微信号搜索 -->
+    <div class="comp-cell" v-if="isShowWxSearch">
+      <wx-list wxSerch="wxSearchInfo" @getWxSerch="getWxSerch" />
+    </div>
+    <!-- 销售等级 -->
+    <div class="comp-cell" v-if="isShowLevel">
       <el-select
-        v-if="isShowLevel"
         v-model="level"
         clearable
         size="mini"
@@ -33,9 +39,9 @@
         </el-option>
       </el-select>
     </div>
-    <div class="comp-cell">
+    <!-- 招生级别 -->
+    <div class="comp-cell" v-if="isShowSup">
       <el-select
-        v-if="isShowLevel"
         v-model="courseDifficulties"
         clearable
         size="mini"
@@ -52,16 +58,44 @@
         </el-option>
       </el-select>
     </div>
+    <!-- 随材版本-->
+    <div class="comp-cell" v-if="moreVersion">
+      <more-version-box @result="getVersionNu" :name="'version'" />
+    </div>
   </div>
 </template>
 <script>
 import Department from '@/components/MSearch/searchItems/department'
 import GroupSell from '@/components/MSearch/searchItems/groupSell'
+import MoreVersionBox from '@/components/MSearch/searchItems/moreVersionBox'
+import wxList from '../wxSearch'
 export default {
-  props: ['isShowLevel'],
+  props: {
+    // 是否显示销售等级
+    isShowLevel: {
+      type: Boolean,
+      default: false
+    },
+    // 是否显示微信号搜索
+    isShowWxSearch: {
+      type: Boolean,
+      default: false
+    },
+    // 是否显示招生级别
+    isShowSup: {
+      type: Boolean,
+      default: false
+    },
+    // 是否显示随材版本
+    moreVersion: {
+      type: Boolean,
+      default: false
+    }
+  },
   data() {
     return {
       emitInfo: {},
+      wxSerch: '',
       level: '',
       courseDifficulties: '',
       // 销售等级
@@ -91,9 +125,20 @@ export default {
   },
   components: {
     Department,
-    GroupSell
+    GroupSell,
+    wxList,
+    MoreVersionBox
   },
   methods: {
+    getVersionNu(res) {
+      console.log(res, 'version-res')
+      // this.manageChange({ version }, 'version')
+      // this.setSeachParmas(res, [this.moreVersion || 'product_version'])
+    },
+    getWxSerch(res) {
+      const teacherWechatIds = Object.values(res)[0]
+      this.manageChange({ teacherWechatIds }, 'teacherWechatIds')
+    },
     // 招生级别 TODO:
     scheduleLevel(courseDifficulties) {
       this.manageChange({ courseDifficulties }, 'courseDifficulties')
