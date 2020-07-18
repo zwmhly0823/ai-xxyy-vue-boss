@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-15 20:35:57
  * @LastEditors: Shentong
- * @LastEditTime: 2020-07-17 15:45:03
+ * @LastEditTime: 2020-07-18 14:31:05
  -->
 <template>
   <div class="third-step">
@@ -20,14 +20,14 @@
           {{ tab.label }}
         </div>
       </div>
-      <div class="table-search">
-        <!-- 随材版本和课程类型先不做 -->
+      <!-- 随材版本和课程类型先不做 -->
+      <!-- <div class="table-search">
         <table-search
           @change="searchChange"
           :isShowLevel="true"
           :isShowWxSearch="true"
         ></table-search>
-      </div>
+      </div> -->
     </div>
     <div class="step-container step-three-container">
       <ele-table
@@ -219,7 +219,7 @@
 <script>
 import _ from 'lodash'
 import EleTable from '@/components/Table/EleTable'
-import TableSearch from '../../../components/tableSearch/index'
+// import TableSearch from '../../../components/tableSearch/index'
 import { mapGetters } from 'vuex'
 export default {
   props: ['stepStatus'],
@@ -277,8 +277,8 @@ export default {
     ...mapGetters(['scheduleTeacherId', 'schedulePeriod'])
   },
   components: {
-    EleTable,
-    TableSearch
+    EleTable
+    // TableSearch
   },
   watch: {},
   async created() {
