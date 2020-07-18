@@ -4,7 +4,11 @@
  * @Author: panjian
  * @Date: 2020-04-25 12:09:03
  * @LastEditors: panjian
+<<<<<<< HEAD
  * @LastEditTime: 2020-07-18 16:53:46
+=======
+ * @LastEditTime: 2020-07-18 17:08:17
+>>>>>>> channel
  -->
 <template>
   <div id="channel-box-two" class="channel-box">
@@ -86,8 +90,6 @@
     <div class="channel-fixed" v-show="tableShow">
       <el-row class="channel-fixed-row">
         <el-col :span="2"><div>渠道分类</div></el-col>
-        <el-col :span="2" class="row2"><div>渠道名称</div></el-col>
-        <el-col :span="1" class="row3"><div>渠道ID</div></el-col>
         <el-col :span="2" class="row4"><div>体验课成单数</div></el-col>
         <el-col :span="2" class="row5"><div>体验课未支付</div></el-col>
         <el-col :span="1" class="row6"><div>添加微信数</div></el-col>
@@ -666,23 +668,18 @@ export default {
       font-weight: normal;
       .row1 {
       }
-      .row2 {
-        margin-left: 20px;
-      }
-      .row3 {
-        margin-left: 30px;
-      }
       .row4 {
-        margin-left: 30px;
+        margin-left: 10px;
       }
       .row5 {
+        margin-left: 20px;
       }
       .row6 {
         width: 5%;
-        margin-left: -20px;
+        margin-left: 60px;
       }
       .row7 {
-        margin-left: 20px;
+        margin-left: 90px;
       }
       .row8 {
         margin-left: 20px;
@@ -725,25 +722,20 @@ export default {
         font-weight: normal;
         .row1 {
         }
-        .row2 {
+        .row4 {
           margin-left: -20px;
         }
-        .row3 {
-          margin-left: -10px;
-        }
-        .row4 {
-          margin-left: 120px;
-        }
         .row5 {
-        }
-        .row6 {
-          margin-left: 70px;
-        }
-        .row7 {
           margin-left: 80px;
         }
+        .row6 {
+          margin-left: 80px;
+        }
+        .row7 {
+          margin-left: 130px;
+        }
         .row8 {
-          margin-left: -10px;
+          // margin-left: -10px;
         }
         .row9 {
           margin-left: -20px;
