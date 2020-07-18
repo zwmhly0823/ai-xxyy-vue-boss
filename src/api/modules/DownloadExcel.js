@@ -4,7 +4,7 @@
  * @Author: Lukun
  * @Date: 2020-05-14 14:31:42
  * @LastEditors: Shentong
- * @LastEditTime: 2020-07-08 15:27:46
+ * @LastEditTime: 2020-07-16 21:16:36
  */
 import axios from '../axios'
 import { getToken } from '@/utils/auth'
@@ -57,6 +57,27 @@ export default {
         //   ...params
         // }
         data: params
+      })
+    }
+  },
+  /**
+   * @description 招生排期下载某一期excel
+   */
+  downloadExcelByPeriod(params) {
+    if (judgeToken()) {
+      return new Promise((resolve, reject) => {
+        axios({
+          method: 'POST',
+          url: `/api/s/v1/management/enroll/exportDetail?teacherId=${params.teacherId}&departmentIds=${params.departmentIds}&level=${params.level}&courseType=${params.courseType}&period=${params.period}&courseDifficulties=${params.courseDifficulties}`,
+          responseType: 'blob',
+          headers: getHeaders()
+        })
+          .then((res) => {
+            resolve(res)
+          })
+          .catch((err) => {
+            reject(err)
+          })
       })
     }
   },

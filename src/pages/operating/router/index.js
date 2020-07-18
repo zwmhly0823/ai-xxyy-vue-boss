@@ -1,7 +1,7 @@
 /*
  * @Date: 2020-03-13 15:20:21
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-07-03 18:34:21
+ * @LastEditTime: 2020-07-17 16:51:32
  * @FilePath: /ai-app-vue-toss/src/pages/studentTeam/router/index.js
  */
 import Vue from 'vue'
@@ -110,6 +110,15 @@ const routes = [
       keepAlive: false
     },
     component: () => import('../views/changePhoneNumber/index.vue')
+  },
+  {
+    path: '/problem',
+    name: 'problem',
+    meta: {
+      title: '问卷管理',
+      keepAlive: false
+    },
+    component: () => import('../views/problem/index.vue')
   }
 ]
 

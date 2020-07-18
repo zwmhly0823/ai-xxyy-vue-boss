@@ -3,8 +3,8 @@
  * @version:
  * @Author: shentong
  * @Date: 2020-04-02 16:08:02
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-07-03 11:40:47
+ * @LastEditors: Shentong
+ * @LastEditTime: 2020-07-16 12:28:02
  -->
 <template>
   <div>
@@ -133,11 +133,14 @@
           label="状态"
           align="center"
         ></el-table-column>
-        <el-table-column label="操作" align="center" width="110">
+        <el-table-column label="操作" align="center" width="130">
           <template slot-scope="scope">
             <div class="editStyle">
+              <span style="margin-right:15px" @click="downlaodExcel(scope.row)"
+                >下载</span
+              >
               <span
-                style="margin-right:20px"
+                style="margin-right:15px"
                 @click="addEditSchedule(scope.row)"
                 >编辑</span
               >
@@ -208,6 +211,51 @@ export default {
       this.tabIndex = index
       this.tabQuery.page = 1
       this.getCourseListByType()
+    },
+    // 下载当前行
+    async downlaodExcel(row) {
+      console.log('row', row.period)
+      const params = {
+        departmentIds: '',
+        teacherId: '',
+        level: '',
+        courseDifficulties: '',
+        courseType: this.tabIndex,
+        period: row.period
+      }
+      const res = await this.$http.DownloadExcel.downloadExcelByPeriod(params)
+
+      if (res && Object.prototype.toString.call(res) === '[object Blob]') {
+        const name = !+params.courseType ? '体验课' : '系统课'
+        this.downloadFn(res, `${name}-第${params.period}期`, () => {
+          // this.$emit('setExcelStatus', 'complete')
+        })
+      } else {
+        this.$message.error('下载失败')
+      }
+    },
+    // 下载文件
+    downloadFn(data, fileName = '下载', cb) {
+      if (!data) return
+      const blob = new Blob([data])
+      var downloadElement = document.createElement('a')
+      var href = window.URL.createObjectURL(blob) // 创建下载的链接
+      downloadElement.href = href
+      downloadElement.download = `${fileName}.xls` // 下载后文件名
+      document.body.appendChild(downloadElement)
+      downloadElement.click() // 点击下载
+      document.body.removeChild(downloadElement) // 下载完成移除元素
+      window.URL.revokeObjectURL(href) // 释放掉blob对象
+      // const elink = document.createElement('a')
+      // elink.download = fileName
+      // elink.style.display = 'none'
+      // elink.href = URL.createObjectURL(blob)
+      // document.body.appendChild(elink)
+      // elink.click()
+      // URL.revokeObjectURL(elink.href) // 释放URL 对象
+      // document.body.removeChild(elink)
+
+      cb && cb()
     },
     // 新增、编辑
     addEditSchedule(row) {

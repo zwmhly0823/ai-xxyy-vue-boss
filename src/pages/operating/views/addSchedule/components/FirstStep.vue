@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-15 20:35:57
  * @LastEditors: Shentong
- * @LastEditTime: 2020-05-22 16:18:51
+ * @LastEditTime: 2020-07-15 17:35:23
  -->
 <template>
   <div class="first-step">
@@ -423,7 +423,7 @@ export default {
       })
     },
     cancel() {
-      this.$router.push({ path: '/' })
+      this.$router.push({ path: '/operatingSchedule' })
     }
   }
 }

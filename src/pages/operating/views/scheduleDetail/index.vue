@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-14 18:28:44
  * @LastEditors: Shentong
- * @LastEditTime: 2020-07-07 20:56:14
+ * @LastEditTime: 2020-07-16 16:36:29
  -->
 <template>
   <div class="app-main height add-schedule-container">
@@ -45,13 +45,12 @@
           <el-tabs type="border-card">
             <el-tab-pane label="招生详情-销售">
               <div class="search-container">
-                <!-- TODO: -->
                 <table-search
                   @change="searchChange"
                   :isShowLevel="courseType == '0'"
+                  :isShowSup="true"
                 ></table-search>
               </div>
-              <!-- TODO: -->
               <schedule-market :paramsInfo="params"></schedule-market>
             </el-tab-pane>
             <!-- <el-tab-pane label="招生详情-部门" disabled

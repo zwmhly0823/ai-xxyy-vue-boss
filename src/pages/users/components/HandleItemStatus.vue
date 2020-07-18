@@ -9,9 +9,8 @@
 <template>
   <el-dropdown @command="handleDropdown">
     <span class="el-dropdown-link">
-      <item-status :type="type" :row="row" /><i
-        class="el-icon-arrow-down el-icon--right"
-      ></i>
+      <item-status ref="itemStatus" :type="type" :row="row" />
+      <i class="el-icon-arrow-down el-icon--right"></i>
     </span>
     <el-dropdown-menu slot="dropdown">
       <el-dropdown-item
@@ -93,13 +92,17 @@ export default {
             Object.assign(newRow, this.row, {
               added_wechat: res.payload.addedWechat
             })
+            this.row.added_wechat = res.payload.addedWechat
           }
           if (this.type === '2') {
             Object.assign(newRow, this.row, {
               added_group: res.payload.addedGroup
             })
+            this.row.added_group = res.payload.addedGroup
           }
-          this.$emit('change', newRow)
+          this.$forceUpdate()
+          this.$refs.itemStatus.$forceUpdate()
+          // this.$emit('change', newRow)
         }
       })
     }
