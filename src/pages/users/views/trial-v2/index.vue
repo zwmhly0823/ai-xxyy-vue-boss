@@ -182,46 +182,6 @@
               </template>
             </template>
           </el-table-column>
-          <el-table-column label="转化预测" min-width="70">
-            <template slot="header">
-              <div
-                class="sort-operate-box"
-                @click="sortRules('bi_label.keyword')"
-              >
-                <span>转化预测</span>
-                <div class="sort-icon-arrow">
-                  <i
-                    class="el-icon-caret-top top-color"
-                    :class="{
-                      active:
-                        sortKeys['bi_label.keyword'] != 'asc' &&
-                        sortActive == 'bi_label.keyword'
-                    }"
-                  ></i>
-                  <i
-                    class="el-icon-caret-bottom bottom"
-                    :class="{
-                      active:
-                        sortKeys['bi_label.keyword'] == 'asc' &&
-                        sortActive == 'bi_label.keyword'
-                    }"
-                  ></i>
-                </div>
-              </div>
-            </template>
-            <template slot-scope="scope">
-              <i
-                class="el-icon-bottom"
-                style="color: #C60D00;"
-                v-if="+scope.row.bi_label === 0"
-              ></i>
-              <i
-                class="el-icon-top top-arrow"
-                style="color: #4A975A;"
-                v-else-if="+scope.row.bi_label === 1"
-              ></i>
-            </template>
-          </el-table-column>
           <el-table-column label="参课" min-width="150">
             <template slot="header">
               <el-dropdown
@@ -543,7 +503,6 @@
               <p>点评作品: {{ scope.row.comment_count }}</p>
             </template>
           </el-table-column>
-
           <el-table-column label="标签" min-width="150">
             <template slot-scope="scope">
               <template
@@ -571,7 +530,6 @@
               </template>
             </template>
           </el-table-column>
-
           <el-table-column label="添加微信" min-width="60">
             <template slot-scope="scope">
               <el-switch
@@ -763,7 +721,33 @@
               </p>
             </template>
           </el-table-column>
-          <el-table-column label="转化" min-width="60" fixed="right">
+          <el-table-column label="转化" min-width="65" fixed="right">
+            <template slot="header">
+              <div
+                class="sort-operate-box"
+                @click="sortRules('bi_label.keyword')"
+              >
+                <span>转化</span>
+                <div class="sort-icon-arrow">
+                  <i
+                    class="el-icon-caret-top top-color"
+                    :class="{
+                      active:
+                        sortKeys['bi_label.keyword'] != 'asc' &&
+                        sortActive == 'bi_label.keyword'
+                    }"
+                  ></i>
+                  <i
+                    class="el-icon-caret-bottom bottom"
+                    :class="{
+                      active:
+                        sortKeys['bi_label.keyword'] == 'asc' &&
+                        sortActive == 'bi_label.keyword'
+                    }"
+                  ></i>
+                </div>
+              </div>
+            </template>
             <template slot-scope="scope">
               <span
                 :class="[
@@ -774,6 +758,22 @@
               >
                 {{ scope.row.user_status_name }}
               </span>
+              <i
+                class="el-icon-bottom"
+                style="color: #C60D00;"
+                v-if="
+                  scope.row.user_status_name === '未转化' &&
+                    +scope.row.bi_label === 0
+                "
+              ></i>
+              <i
+                class="el-icon-top top-arrow"
+                style="color: #4A975A;"
+                v-else-if="
+                  scope.row.user_status_name === '未转化' &&
+                    +scope.row.bi_label === 1
+                "
+              ></i>
             </template>
           </el-table-column>
           <el-table-column label="操作" min-width="60" fixed="right">
@@ -811,10 +811,7 @@
           :current-page="currentPage"
           :page-count="totalPages"
           :total="totalElements"
-          :pageSize="pageSize"
-          :pageSizeArr="[20, 50, 100, 200, 500]"
           @current-change="handleSizeChange"
-          @current-pagesizes="handlePageSizeChange"
           show-pager
           open="calc(100vw - 170px - 25px)"
           close="calc(100vw - 50px - 25px)"
@@ -943,7 +940,6 @@ export default {
       search: [],
       term: '',
       currentPage: 1,
-      pageSize: 20,
       totalElements: 0,
       totalPages: 1,
       dataList: [],
@@ -1157,8 +1153,7 @@ export default {
       if (this.sortActive) {
         sort[this.sortActive] = this.sortKeys[this.sortActive]
       }
-      const size = this.pageSize
-      return this.$http.User.trialCourseUsersV2(query, page, sort, size)
+      return this.$http.User.trialCourseUsersV2(query, page, sort)
         .then((res) => {
           // console.log(res)
           var defTotalElements = 0
@@ -1179,7 +1174,9 @@ export default {
           // console.log('dataList', this.dataList)
           this.totalPages = +defTotalPages
           this.totalElements = +defTotalElements
-          loading.close()
+          this.$nextTick(() => {
+            loading.close()
+          })
         })
         .catch(() => {
           loading.close()
@@ -1228,13 +1225,6 @@ export default {
 
       // console.log(this.page)
       this.currentPage = page
-      this.getData()
-    },
-    handlePageSizeChange(val) {
-      if (val === this.pageSize) {
-        return
-      }
-      this.pageSize = val
       this.getData()
     },
 
@@ -1604,19 +1594,13 @@ export default {
       }
       // console.log(params)
 
-      this.$http.User.trialCourseUsersV2(params, 1, {}, this.pageSize).then(
-        (res) => {
-          // console.log(res, 'todaycount')
-
-          if (res && res.data && res.data.StudentTrialV2StatisticsPage) {
-            const { totalElements = 0 } = res.data.StudentTrialV2StatisticsPage
-            // console.log(totalElements)
-
-            if (type === 'today') this.todayTotal = totalElements
-            if (type === 'tomorrow') this.tomorrowTotal = totalElements
-          }
+      this.$http.User.trialCourseUsersV2(params, 1, {}).then((res) => {
+        if (res && res.data && res.data.StudentTrialV2StatisticsPage) {
+          const { totalElements = 0 } = res.data.StudentTrialV2StatisticsPage
+          if (type === 'today') this.todayTotal = totalElements
+          if (type === 'tomorrow') this.tomorrowTotal = totalElements
         }
-      )
+      })
     },
     clickQuestionaire(userinfo) {
       const query = {

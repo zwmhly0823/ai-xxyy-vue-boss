@@ -90,7 +90,7 @@
               />
             </div>
           </el-form-item>
-          <el-form-item label="归属销售:">
+          <el-form-item label="归属销售&班级:" label-width="100px">
             <div class="search-group">
               <department
                 name="department_id"
