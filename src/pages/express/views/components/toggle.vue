@@ -72,14 +72,43 @@ export default {
           if (item.id === '0') {
             item.count = Number(x?.no_address) || ''
           }
+          if (item.id === '1') {
+            item.count = Number(x?.wait_send) || ''
+          }
+        })
+        this.toggleList = [...this.toggleList]
+      })
+    },
+    getLogisticsStatisticsDsh() {
+      let q
+      if (this.teacherId || this.teacherId === 0) {
+        q = `{"teacher_id": [${this.teacherId}],"regtype":[${this.regtype}],"source_type":[${this.source_type}],"center_express_id":{"lte":0}}`
+      } else {
+        q = `{"regtype":[${this.regtype}],"source_type":[${this.source_type}],"center_express_id":{"lte":0}}`
+      }
+      const query = JSON.stringify(q)
+      this.$http.Express.getLogisticsStatistics({
+        query: `{
+          logisticsStatisticsNew(query:${query}) {
+            no_address
+            wait_send
+            has_send
+            has_signed
+            signed_failed
+            has_return
+            confirm_wait_send
+            invalid
+            difficult
+          }
+        }`
+      }).then((res) => {
+        const x = res.data.logisticsStatisticsNew
+        this.toggleList.map((item) => {
           if (
             item.id === '6' &&
             Object.prototype.hasOwnProperty.call(item.center_express_id, 'lte')
           ) {
             item.count = Number(x?.confirm_wait_send) || ''
-          }
-          if (item.id === '1') {
-            item.count = Number(x?.wait_send) || ''
           }
         })
         this.toggleList = [...this.toggleList]
@@ -113,10 +142,12 @@ export default {
     this.hideSomeBtn()
     this.getTeacherId()
     this.getLogisticsStatistics()
+    this.getLogisticsStatisticsDsh()
   },
   watch: {
     tab() {
       this.getLogisticsStatistics()
+      this.getLogisticsStatisticsDsh()
       this.initToggleList()
       this.hideSomeBtn()
       this.activeIndex = 0
