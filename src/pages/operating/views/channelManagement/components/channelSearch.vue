@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-04-25 12:09:03
  * @LastEditors: panjian
- * @LastEditTime: 2020-05-26 12:23:17
+ * @LastEditTime: 2020-07-18 15:46:09
  -->
 <template>
   <div id="channel-box" class="channel-box">
@@ -377,15 +377,12 @@ export default {
   methods: {
     handleScroll() {
       // const jump = document.getElementById('el_table').scrollHeight
-      // console.log(jump.offsetTop)
 
       // this.$nextTick(() => {
       //   const dom =
       //     document.documentElement.scrollTop || document.body.scrollTop
-      //   console.log(dom)
       // })
       const dom = document.getElementById('channel-box').scrollTop
-      console.log(dom)
       dom > 289 ? (this.tableShow = true) : (this.tableShow = false)
     },
     // 渠道一级
@@ -565,7 +562,6 @@ export default {
     // 组件 排期传的值
     schedulingSearch(data) {
       this.querySearchTrialStage = data
-      console.log(this.querySearchTrialStage, 'schedulingSearch')
       this.totalNumber = 1
       this.getChannelDetailPage()
     },
@@ -578,7 +574,6 @@ export default {
         this.stateTime = ''
         this.endTime = ''
       }
-      console.log(this.stateTime, this.endTime, 'dateSearch')
       this.totalNumber = 1
       this.getChannelDetailPage()
     },
@@ -591,14 +586,11 @@ export default {
     // handleEdit(index, row) {
     //   // 鼠标移入三个点上面触发的事件
     //   // 当没有点击复选框 直接点击加好友
-    //   // console.log(index, row, '点击查看详情11')
     //   this.channelIdRow = row
     // },
     // onExtension() {
     //   // 渠道推广统计
     //   // this.drawer = true
-    //   console.log('渠道推广统计')
-    //   console.log(this.channelIdRow, 'channelIdRowchannelIdRowchannelIdRow')
     // },
     // 表头回调样式
     headerCss({ row, column, rowIndex, columnIndex }) {
