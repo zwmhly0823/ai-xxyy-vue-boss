@@ -4,10 +4,10 @@
  * @Author: panjian
  * @Date: 2020-04-25 12:09:03
  * @LastEditors: panjian
- * @LastEditTime: 2020-07-18 15:46:33
+ * @LastEditTime: 2020-07-18 16:49:58
  -->
 <template>
-  <div id="channel-box" class="channel-box">
+  <div id="channel-box-two" class="channel-box">
     <div class="channel-box-top">
       <div class="channel-box-top-search">
         <channel-search-two
@@ -381,7 +381,7 @@ export default {
       //   const dom =
       //     document.documentElement.scrollTop || document.body.scrollTop
       // })
-      const dom = document.getElementById('channel-box').scrollTop
+      const dom = document.getElementById('channel-box-two').scrollTop
       dom > 289 ? (this.tableShow = true) : (this.tableShow = false)
     },
     // 渠道一级
