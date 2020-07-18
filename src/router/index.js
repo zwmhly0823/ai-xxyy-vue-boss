@@ -402,15 +402,7 @@ const routes = [
         }
       },
       ...superOperatingRouter,
-      ...adminRouter,
-      {
-        path: '/problem',
-        name: 'problem',
-        meta: {
-          title: '问卷管理',
-          module: 'operating'
-        }
-      }
+      ...adminRouter
     ]
   },
   // 工具类路由
