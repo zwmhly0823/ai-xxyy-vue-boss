@@ -3,8 +3,8 @@
  * @version: 
  * @Author: Lukun
  * @Date: 2020-04-27 17:47:58
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-07-10 11:03:00
+ * @LastEditors: liukun
+ * @LastEditTime: 2020-07-18 18:15:18
  -->
 <template>
   <div class="container">
@@ -678,9 +678,8 @@ import VersionBox from '../../../../components/MSearch/searchItems/moreVersionBo
 export default {
   computed: {
     isPositionId() {
-      return JSON.parse(localStorage.getItem('staff')).positionId === '1'
-        ? 1
-        : false
+      const staffLk = JSON.parse(localStorage.getItem('staff')).positionId
+      return staffLk === '1' || staffLk === '2' || staffLk === '3' ? 1 : false
     }
   },
   props: ['typeTime', 'activeName'],
