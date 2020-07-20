@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-06-16 16:27:14
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-07-20 16:46:02
+ * @LastEditTime: 2020-07-20 16:58:08
 -->
 <template>
   <div class="user-list">
@@ -755,8 +755,9 @@ export default {
         questionnaire_count: 'desc'
       },
       sortActive: '',
-      // 1 招生中   2待开课   3 开课中  4 已结课'
+      // 0-待开始 1 招生中   2待开课   3 开课中  4 已结课'
       period: {
+        0: '待开始',
         1: '招生中',
         2: '待开课 ',
         3: '上课中',
