@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-06-16 16:27:14
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-07-01 22:11:34
+ * @LastEditTime: 2020-07-20 16:17:38
 -->
 <template>
   <div class="user-list">
@@ -857,6 +857,7 @@ export default {
     getManagement() {
       const params = {
         // teacher_id: this.teacherIds
+        team_state: [0, 1]
       }
       return this.$http.User.ManagementForTeacherList(params).then((res) => {
         console.log(res)

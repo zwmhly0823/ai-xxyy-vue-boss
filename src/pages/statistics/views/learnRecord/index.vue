@@ -3,8 +3,8 @@
  * @version: 1.0.0
  * @Author: zhangjianwen
  * @Date: 2020-07-09 15:02:59
- * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-07-14 16:18:54
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-07-20 16:18:39
 -->
 <template>
   <div class="learn-record">
@@ -178,6 +178,7 @@ export default {
     getManagement() {
       const params = {
         // teacher_id: this.teacherIds
+        team_state: [1, 2]
       }
       return this.$http.User.ManagementForTeacherList(params).then((res) => {
         if (res && res.data && res.data.ManagementForTeacherList) {
