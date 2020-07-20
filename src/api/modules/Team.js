@@ -386,6 +386,7 @@ export default {
           receipt_name
           product_name
           address_id
+          street
         }
       }
     }`

@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 20:22:24
  * @LastEditors: panjian
- * @LastEditTime: 2020-07-10 19:00:26
+ * @LastEditTime: 2020-07-20 18:06:51
  -->
 <template>
   <div class="table-box">
@@ -320,6 +320,7 @@
                 <span>{{ scope.row.province }}</span>
                 <span>{{ scope.row.city }}</span>
                 <span>{{ scope.row.area }}</span>
+                <span>{{ scope.row.street }}</span>
                 <br />
                 <span>{{ scope.row.address_detail }}</span>
               </div>

@@ -168,7 +168,7 @@
       </el-table-column>
       <el-table-column
         label="收货信息"
-        width="200"
+        width="280"
         v-if="showCol.receiptInfo"
         :key="8"
       >
@@ -183,6 +183,7 @@
                 <span>{{ scope.row.province }}</span>
                 <span>{{ scope.row.city }}</span>
                 <span>{{ scope.row.area }}</span>
+                <span>{{ scope.row.street }}</span>
               </div>
               <div>
                 <span>{{ scope.row.address_detail }}</span>
@@ -976,6 +977,7 @@ export default {
               last_teacher_id
               pay_teacher_id
               regtype
+              street
               user {
                 id
                 birthday

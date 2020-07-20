@@ -329,6 +329,13 @@
                     ? stuInfor.address[0].area
                     : '-'
                 }}
+                {{
+                  stuInfor.address &&
+                  stuInfor.address.length > 0 &&
+                  stuInfor.address[0].street
+                    ? stuInfor.address[0].street
+                    : '-'
+                }}
                 <br />
                 {{
                   stuInfor.address &&
