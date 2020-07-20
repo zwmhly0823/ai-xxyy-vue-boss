@@ -3,8 +3,8 @@
  * @version: 
  * @Author: panjian
  * @Date: 2020-04-01 13:24:40
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-07-20 20:04:41
+ * @LastEditors: panjian
+ * @LastEditTime: 2020-07-20 17:16:05
  -->
 <template>
   <el-form
@@ -54,7 +54,8 @@
   </el-form>
 </template>
 <script>
-import { isToss } from '@/utils/index'
+import areaLists from '@/utils/area.json'
+import { isToss, deepClone } from '@/utils/index'
 export default {
   name: 'logisticsForm',
   props: ['formData'],
@@ -82,13 +83,13 @@ export default {
       }
     }
     return {
-      areaLists: [],
-      levelFourList: [],
+      areaLists: areaLists,
       province: null,
       city: null,
       area: null,
       areaCode: null,
       street: null,
+      levelFourList: [],
       ruleForm: {
         receiptName: '',
         receiptTel: '',
@@ -96,7 +97,7 @@ export default {
       },
       rules: {
         receiptName: [
-          { required: false, validator: validateName, trigger: 'blur' }
+          { required: true, validator: validateName, trigger: 'blur' }
         ],
         receiptTel: [
           {
@@ -112,43 +113,19 @@ export default {
       operatorId: ''
     }
   },
-  created() {
-    this.getAreaLists()
-  },
   methods: {
-    getAreaLists() {
-      this.$http.Express.getCenterAddressList().then((res) => {
-        const _data = res.payload.data
-        _data.forEach((ele) => {
-          ele.label = ele.provinceName
-          ele.value = ele.id
-          ele.children = ele.citys
-          ele.children.forEach((val) => {
-            val.label = val.cityName
-            val.value = +val.cityCode + 999
-            val.children = val.countys
-            val.children.forEach((_value) => {
-              _value.label = _value.countyName
-              _value.value = _value.countyCode
-              _value.children = [{ label: '暂不选择', value: '' }]
-            })
-          })
-        })
-        this.areaLists = _data
-      })
-    },
     handleItemChange(data) {
-      const addressList = this.areaLists
+      const addressList = deepClone(this.areaLists)
       addressList.forEach((res) => {
-        if (data[0] === res.id) {
+        if (res.value === data[0]) {
           res.children.forEach((ele) => {
-            if (data[1] === +ele.cityCode + 999) {
+            if (ele.value === data[1]) {
               ele.children.forEach((val) => {
-                if (data[2] === val.countyCode) {
-                  this.$http.Express.getCenterAddressTownList(data[2]).then(
-                    (data) => {
-                      console.log(data)
-                      const _data = data.payload
+                val.children = [{ label: '暂不选择', value: '' }]
+                if (val.value === data[2]) {
+                  this.$http.Express.getCenterAddressTownList(val.value).then(
+                    (vlaue) => {
+                      const _data = vlaue.payload
                       _data.forEach((codeVal) => {
                         const add = {
                           label: codeVal.townName,
@@ -165,6 +142,7 @@ export default {
           })
         }
       })
+      this.areaLists = addressList
     },
     // 级联城市级联
     handleChange(data) {
@@ -195,8 +173,9 @@ export default {
       const params = {
         operatorId: this.operatorId,
         // orderId: this.formData.orderid,
-        // addressId: '',
-        expressId: this.formData.id,
+        addressId: '',
+        userId: this.formData.id,
+        expressId: '',
         // userId: this.formData.userid,
         receiptName: this.ruleForm.receiptName,
         receiptTel: this.ruleForm.receiptTel,
@@ -210,6 +189,7 @@ export default {
         // expressCompany: '',
         // expressCompanyNu: ''
       }
+      console.log(params)
       if (!this.province) {
         this.$message({
           message: '请选择收货人地址'
@@ -218,7 +198,7 @@ export default {
       }
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          this.$http.Express.createExpressAddressNew(params)
+          this.$http.User.updateExpressAddressNew(params)
             .then((res) => {
               if (res.data) {
                 return
@@ -255,5 +235,10 @@ export default {
   left: 18px;
   font-size: 14px;
   font-weight: 600;
+}
+</style>
+<style lang="scss">
+.el-form-item.is-required:not(.is-no-asterisk) > .el-form-item__label:before {
+  content: '';
 }
 </style>

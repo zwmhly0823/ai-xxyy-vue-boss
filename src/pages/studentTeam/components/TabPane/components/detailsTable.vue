@@ -3,12 +3,8 @@
  * @version:
  * @Author: panjian
  * @Date: 2020-03-16 20:22:24
- * @LastEditors: panjian
-<<<<<<< HEAD
- * @LastEditTime: 2020-07-08 15:05:57
-=======
- * @LastEditTime: 2020-07-10 19:00:26
->>>>>>> origin/new-team-info-address
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-07-20 20:04:06
  -->
 <template>
   <div class="table-box">
@@ -331,6 +327,7 @@
                 <span>{{ scope.row.province }}</span>
                 <span>{{ scope.row.city }}</span>
                 <span>{{ scope.row.area }}</span>
+                <span>{{ scope.row.street }}</span>
                 <br />
                 <span>{{ scope.row.address_detail }}</span>
               </div>

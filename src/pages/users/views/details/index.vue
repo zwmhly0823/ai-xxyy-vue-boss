@@ -278,9 +278,18 @@
           <el-col :span="6">
             <el-row>
               <el-col :span="6" style="color: #aeaeae;">默认地址：</el-col>
-              <div @click="onUpdataAddress" class="updateAddress">
+              <div
+                v-if="stuInfor.address && stuInfor.address.length > 0"
+                @click="onUpdataAddress"
+                class="updateAddress"
+              >
                 <div>
                   修改
+                </div>
+              </div>
+              <div v-else @click="onNewAddress" class="updateAddress">
+                <div>
+                  新增
                 </div>
               </div>
               <el-col :span="18">
@@ -318,6 +327,13 @@
                   stuInfor.address.length > 0 &&
                   stuInfor.address[0].area
                     ? stuInfor.address[0].area
+                    : '-'
+                }}
+                {{
+                  stuInfor.address &&
+                  stuInfor.address.length > 0 &&
+                  stuInfor.address[0].street
+                    ? stuInfor.address[0].street
                     : '-'
                 }}
                 <br />
@@ -474,6 +490,15 @@
         />
       </el-dialog>
     </div>
+    <div>
+      <el-dialog
+        width="500px"
+        title="新增收货信息"
+        :visible.sync="dialogTableVisibleNew"
+      >
+        <logisticsForm @addExpress="addExpress" :formData="stuInfor" />
+      </el-dialog>
+    </div>
   </div>
 </template>
 
@@ -482,11 +507,13 @@ import MPagination from '@/components/MPagination/index.vue'
 import DetailsList from './list.vue'
 import { GetAgeByBrithday, formatData, openBrowserTab } from '@/utils/index'
 import modifyAddress from './addressComponetns/modifyAddress'
+import logisticsForm from './addressComponetns/logisticsForm'
 export default {
-  components: { DetailsList, MPagination, modifyAddress },
+  components: { DetailsList, MPagination, modifyAddress, logisticsForm },
   data() {
     return {
       dialogTableVisible: false,
+      dialogTableVisibleNew: false,
       currentPage: 1,
       totalElements: 0,
       totalPages: 1,
@@ -524,8 +551,15 @@ export default {
       this.dialogTableVisible = false
       this.reqUser()
     },
+    addExpress() {
+      this.dialogTableVisibleNew = false
+      this.reqUser()
+    },
     onUpdataAddress() {
       this.dialogTableVisible = true
+    },
+    onNewAddress() {
+      this.dialogTableVisibleNew = true
     },
     // 学员信息接口
     reqUser() {
