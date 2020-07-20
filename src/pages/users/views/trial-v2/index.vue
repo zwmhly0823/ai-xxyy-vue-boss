@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-06-16 16:27:14
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-07-20 16:17:38
+ * @LastEditTime: 2020-07-20 16:46:02
 -->
 <template>
   <div class="user-list">
@@ -873,11 +873,12 @@ export default {
             return
           }
 
-          // 只显示开课中和待开课的期数 status // 1 招生中   2待开课   3 开课中  4 已结课',
+          // 只显示开课中和待开课的期数 status // 0 待开始 1 招生中   2待开课   3 开课中  4 已结课',
           const arr = res.data.ManagementForTeacherList.filter(
             (item) =>
               item.management &&
-              (+item.management.status === 1 ||
+              (+item.management.status === 0 ||
+                +item.management.status === 1 ||
                 +item.management.status === 2 ||
                 +item.management.status === 3)
           )
