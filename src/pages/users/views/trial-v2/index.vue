@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-06-16 16:27:14
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-07-20 16:58:08
+ * @LastEditTime: 2020-07-20 17:12:28
 -->
 <template>
   <div class="user-list">
@@ -878,8 +878,7 @@ export default {
           const arr = res.data.ManagementForTeacherList.filter(
             (item) =>
               item.management &&
-              (+item.management.status === 0 ||
-                +item.management.status === 1 ||
+              (+item.management.status === 1 ||
                 +item.management.status === 2 ||
                 +item.management.status === 3)
           )
