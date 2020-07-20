@@ -307,15 +307,15 @@ export default {
       callback()
     }
     const userName = (rule, value, callback) => {
-      if (!value) {
-        callback(new Error('请输入账号'))
+      // if (!value) {
+      //   callback(new Error('请输入账号'))
+      // } else {
+      if (!/^[0-9a-zA-Z_./?'";:,=+-_)()*&^%$#@!`~|]*$/.test(value)) {
+        callback(new Error('请输入英文,数字'))
       } else {
-        if (!/^[0-9a-zA-Z_./?'";:,=+-_)()*&^%$#@!`~|]*$/.test(value)) {
-          callback(new Error('请输入英文,数字'))
-        } else {
-          callback()
-        }
+        callback()
       }
+      // }
     }
     return {
       headers: { 'Content-Type': 'multipart/form-data' },
@@ -441,7 +441,7 @@ export default {
       rules: {
         // 手机号
         phone: [{ required: true, validator: checkAge, trigger: 'blur' }],
-        username: [{ required: true, validator: userName, trigger: 'blur' }],
+        username: [{ required: false, validator: userName, trigger: 'blur' }],
         // 密码
         pass: [
           { validator: validatePass, trigger: 'blur' },
