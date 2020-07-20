@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-04-01 13:24:40
  * @LastEditors: panjian
- * @LastEditTime: 2020-07-20 14:49:21
+ * @LastEditTime: 2020-07-20 17:16:05
  -->
 <template>
   <el-form
@@ -89,6 +89,7 @@ export default {
       area: null,
       areaCode: null,
       street: null,
+      levelFourList: [],
       ruleForm: {
         receiptName: '',
         receiptTel: '',
@@ -132,6 +133,7 @@ export default {
                         }
                         val.children.push(add)
                       })
+                      this.levelFourList = _data
                     }
                   )
                 }
@@ -151,11 +153,14 @@ export default {
         (item) => +item.value === +data[1]
       )
       const areas = citys[0].children.filter((item) => +item.value === +data[2])
+      const streets = this.levelFourList.filter(
+        (item) => +item.townCode === +data[3]
+      )
       this.province = provinces[0].label
       this.city = citys[0].label
       this.area = areas[0].label
       this.areaCode = data[2]
-      this.street = data[3]
+      this.street = streets[0].townName
     },
     submitForm(formName) {
       const teacher = isToss()
@@ -177,7 +182,7 @@ export default {
         province: this.province,
         city: this.city,
         area: this.area,
-        code: this.street,
+        street: this.street,
         addressDetail: this.ruleForm.addressDetail
         // areaCode: this.areaCode,
         // expressNo: '',
