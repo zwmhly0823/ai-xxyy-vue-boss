@@ -155,6 +155,15 @@
                 @result="getSearchData('follow', arguments)"
                 class="search-group-item"
               />
+              <simple-select
+                name="is_login"
+                placeholder="登陆APP"
+                :multiple="false"
+                :data-list="loginStatus"
+                :my-style="{ width: '120px' }"
+                @result="getSearchData('is_login', arguments)"
+                class="search-group-item"
+              />
             </div>
           </el-form-item>
           <el-form-item label="课程难度:">
