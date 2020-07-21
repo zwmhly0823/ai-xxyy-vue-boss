@@ -3,8 +3,8 @@
  * @version: 
  * @Author: panjian
  * @Date: 2020-04-01 13:24:40
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-07-20 20:04:59
+ * @LastEditors: panjian
+ * @LastEditTime: 2020-07-21 17:58:07
  -->
 <template>
   <div>
@@ -203,7 +203,6 @@ export default {
                 if (data[2] === val.countyCode) {
                   this.$http.Express.getCenterAddressTownList(data[2]).then(
                     (data) => {
-                      console.log(data)
                       const _data = data.payload
                       _data.forEach((codeVal) => {
                         const add = {
@@ -321,11 +320,12 @@ export default {
       const streets = this.levelFourList.filter(
         (item) => +item.townCode === +data[3]
       )
+
       this.province = provinces[0].label
       this.city = citys[0].label
       this.area = areas[0].label
       this.areaCode = data[2]
-      this.street = streets[0].townName
+      this.street = data[3] ? streets[0].townName : ''
     },
     submitForm(formName) {
       const teacher = isToss()
