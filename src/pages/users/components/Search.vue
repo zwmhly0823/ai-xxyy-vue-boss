@@ -109,7 +109,6 @@
               <search-team-name
                 teamnameType="0"
                 :term="term_trial"
-                :teacher-id="teacherId"
                 @result="getSearchData('team_id', arguments)"
                 name="team_id"
                 style="width:140px;margin-left:10px;"
@@ -303,8 +302,7 @@ export default {
       ...enums,
       searchQuery: {},
       nowDate: new Date().getTime(),
-      term_trial: null, // 当前选择体验课排期
-      teacherId: null
+      term_trial: null // 当前选择体验课排期
     }
   },
   computed: {
@@ -316,9 +314,6 @@ export default {
   created() {
     // 搜索项的参数
     this.term_trial = this.paramsToSearch.term && [this.paramsToSearch.term]
-    this.teacherId = this.paramsToSearch.teacherId && [
-      this.paramsToSearch.teacherId
-    ]
   },
   methods: {
     /**
@@ -387,6 +382,13 @@ export default {
       this.nowDate = new Date().getTime()
       this.searchQuery = {}
       this.$emit('search', {})
+    },
+    changeTerm(val) {
+      if (+val === 0) {
+        this.term_trial = []
+      } else {
+        this.term_trial = [val]
+      }
     }
   }
 }

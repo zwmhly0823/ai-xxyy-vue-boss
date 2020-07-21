@@ -38,6 +38,8 @@
       <div class="trial-container-body">
         <!-- search section -->
         <search
+          ref="searchC"
+          v-if="paramsToSearch.term"
           @search="getSearchQuery"
           :key="currentDate"
           :searchProp="searchProp"
@@ -998,10 +1000,13 @@ export default {
   watch: {
     // 切换期数，清空搜索及筛选项
     term(val, old) {
-      console.log(val, old)
+      if (old === '') return
+      // console.log(val, old)
       this.currentDate = new Date().getTime()
       this.search = []
       this.filterParams = {}
+      this.paramsToSearch.term = val
+      this.$refs.searchC && this.$refs.searchC.changeTerm(val)
     },
 
     searchParams(params, oldval) {
@@ -1122,7 +1127,6 @@ export default {
           }
           // 把参数传给search，获取班级用
           this.paramsToSearch.term = this.term
-          this.paramsToSearch.teacherId = this.teacherId
         }
       })
     },

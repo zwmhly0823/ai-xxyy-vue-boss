@@ -352,7 +352,8 @@ export default {
     // 体验课排期
     selectScheduleTrial(res) {
       if (res) {
-        this.term_trial = res.trial_stage || ''
+        // this.term_trial = res.trial_stage || ''
+        this.term_trial = res.stage || []
       } else {
         this.term_trial = []
       }
