@@ -38,9 +38,12 @@
       <div class="trial-container-body">
         <!-- search section -->
         <search
+          ref="searchC"
+          v-if="paramsToSearch.term"
           @search="getSearchQuery"
           :key="currentDate"
           :searchProp="searchProp"
+          :paramsToSearch="paramsToSearch"
         />
 
         <!-- 操作区 -->
@@ -181,33 +184,116 @@
               </template>
             </template>
           </el-table-column>
-
           <el-table-column label="参课" min-width="150">
             <template slot="header">
-              <div
-                class="sort-operate-box"
-                @click="sortRules('join_course_count')"
+              <el-dropdown
+                class="classes-dropdown"
+                size="small"
+                trigger="click"
+                placement="bottom-start"
+                @command="classesDropdown"
               >
-                <span>参课</span>
-                <div class="sort-icon-arrow">
-                  <i
-                    class="el-icon-caret-top top-color"
-                    :class="{
-                      active:
-                        sortKeys['join_course_count'] != 'asc' &&
-                        sortActive == 'join_course_count'
-                    }"
-                  ></i>
-                  <i
-                    class="el-icon-caret-bottom bottom"
-                    :class="{
-                      active:
-                        sortKeys['join_course_count'] == 'asc' &&
-                        sortActive == 'join_course_count'
-                    }"
-                  ></i>
+                <div class="sort-operate-box">
+                  <span>参课</span>
+                  <div class="sort-icon-arrow">
+                    <i
+                      class="el-icon-caret-top top-color"
+                      :class="{
+                        active:
+                          (sortKeys['all_join_course_count'] != 'asc' &&
+                            sortActive == 'all_join_course_count') ||
+                          (sortKeys['join_course_count'] != 'asc' &&
+                            sortActive == 'join_course_count') ||
+                          (sortKeys['last_join_time'] != 'asc' &&
+                            sortActive == 'last_join_time')
+                      }"
+                    ></i>
+                    <i
+                      class="el-icon-caret-bottom bottom"
+                      :class="{
+                        active:
+                          (sortKeys['all_join_course_count'] == 'asc' &&
+                            sortActive == 'all_join_course_count') ||
+                          (sortKeys['join_course_count'] == 'asc' &&
+                            sortActive == 'join_course_count') ||
+                          (sortKeys['last_join_time'] == 'asc' &&
+                            sortActive == 'last_join_time')
+                      }"
+                    ></i>
+                  </div>
                 </div>
-              </div>
+                <el-dropdown-menu slot="dropdown">
+                  <el-dropdown-item command="all_join_course_count">
+                    <div class="sort-operate-box">
+                      <span>按次数</span>
+                      <div class="sort-icon-arrow">
+                        <i
+                          class="el-icon-caret-top top-color"
+                          :class="{
+                            active:
+                              sortKeys['all_join_course_count'] != 'asc' &&
+                              sortActive == 'all_join_course_count'
+                          }"
+                        ></i>
+                        <i
+                          class="el-icon-caret-bottom bottom"
+                          :class="{
+                            active:
+                              sortKeys['all_join_course_count'] == 'asc' &&
+                              sortActive == 'all_join_course_count'
+                          }"
+                        ></i>
+                      </div>
+                    </div>
+                  </el-dropdown-item>
+                  <el-dropdown-item command="join_course_count">
+                    <div class="sort-operate-box">
+                      <span>按节数</span>
+                      <div class="sort-icon-arrow">
+                        <i
+                          class="el-icon-caret-top top-color"
+                          :class="{
+                            active:
+                              sortKeys['join_course_count'] != 'asc' &&
+                              sortActive == 'join_course_count'
+                          }"
+                        ></i>
+                        <i
+                          class="el-icon-caret-bottom bottom"
+                          :class="{
+                            active:
+                              sortKeys['join_course_count'] == 'asc' &&
+                              sortActive == 'join_course_count'
+                          }"
+                        ></i>
+                      </div>
+                    </div>
+                  </el-dropdown-item>
+                  <el-dropdown-item command="last_join_time">
+                    <div class="sort-operate-box">
+                      <span>按最近操作时间</span>
+                      <div class="sort-icon-arrow">
+                        <i
+                          class="el-icon-caret-top top-color"
+                          :class="{
+                            active:
+                              sortKeys['last_join_time'] != 'asc' &&
+                              sortActive == 'last_join_time'
+                          }"
+                        ></i>
+                        <i
+                          class="el-icon-caret-bottom bottom"
+                          :class="{
+                            active:
+                              sortKeys['last_join_time'] == 'asc' &&
+                              sortActive == 'last_join_time'
+                          }"
+                        ></i>
+                      </div>
+                    </div>
+                  </el-dropdown-item>
+                </el-dropdown-menu>
+              </el-dropdown>
             </template>
             <template slot-scope="scope">
               <p>
@@ -226,30 +312,114 @@
           </el-table-column>
           <el-table-column label="完课" min-width="140">
             <template slot="header">
-              <div
-                class="sort-operate-box"
-                @click="sortRules('complete_course_count')"
+              <el-dropdown
+                class="classes-dropdown"
+                size="small"
+                trigger="click"
+                placement="bottom-start"
+                @command="classesDropdown"
               >
-                <span>完课</span>
-                <div class="sort-icon-arrow">
-                  <i
-                    class="el-icon-caret-top top-color"
-                    :class="{
-                      active:
-                        sortKeys['complete_course_count'] != 'asc' &&
-                        sortActive == 'complete_course_count'
-                    }"
-                  ></i>
-                  <i
-                    class="el-icon-caret-bottom bottom"
-                    :class="{
-                      active:
-                        sortKeys['complete_course_count'] == 'asc' &&
-                        sortActive == 'complete_course_count'
-                    }"
-                  ></i>
+                <div class="sort-operate-box">
+                  <span>完课</span>
+                  <div class="sort-icon-arrow">
+                    <i
+                      class="el-icon-caret-top top-color"
+                      :class="{
+                        active:
+                          (sortKeys['all_complete_course_count'] != 'asc' &&
+                            sortActive == 'all_complete_course_count') ||
+                          (sortKeys['complete_course_count'] != 'asc' &&
+                            sortActive == 'complete_course_count') ||
+                          (sortKeys['last_complete_time'] != 'asc' &&
+                            sortActive == 'last_complete_time')
+                      }"
+                    ></i>
+                    <i
+                      class="el-icon-caret-bottom bottom"
+                      :class="{
+                        active:
+                          (sortKeys['all_complete_course_count'] == 'asc' &&
+                            sortActive == 'all_complete_course_count') ||
+                          (sortKeys['complete_course_count'] == 'asc' &&
+                            sortActive == 'complete_course_count') ||
+                          (sortKeys['last_complete_time'] == 'asc' &&
+                            sortActive == 'last_complete_time')
+                      }"
+                    ></i>
+                  </div>
                 </div>
-              </div>
+                <el-dropdown-menu slot="dropdown">
+                  <el-dropdown-item command="all_complete_course_count">
+                    <div class="sort-operate-box">
+                      <span>按次数</span>
+                      <div class="sort-icon-arrow">
+                        <i
+                          class="el-icon-caret-top top-color"
+                          :class="{
+                            active:
+                              sortKeys['all_complete_course_count'] != 'asc' &&
+                              sortActive == 'all_complete_course_count'
+                          }"
+                        ></i>
+                        <i
+                          class="el-icon-caret-bottom bottom"
+                          :class="{
+                            active:
+                              sortKeys['all_complete_course_count'] == 'asc' &&
+                              sortActive == 'all_complete_course_count'
+                          }"
+                        ></i>
+                      </div>
+                    </div>
+                  </el-dropdown-item>
+                  <el-dropdown-item command="complete_course_count">
+                    <div class="sort-operate-box">
+                      <span>按节数</span>
+                      <div class="sort-icon-arrow">
+                        <i
+                          class="el-icon-caret-top top-color"
+                          :class="{
+                            active:
+                              sortKeys['complete_course_count'] != 'asc' &&
+                              sortActive == 'complete_course_count'
+                          }"
+                        ></i>
+                        <i
+                          class="el-icon-caret-bottom bottom"
+                          :class="{
+                            active:
+                              sortKeys['complete_course_count'] == 'asc' &&
+                              sortActive == 'complete_course_count'
+                          }"
+                        ></i>
+                      </div>
+                    </div>
+                  </el-dropdown-item>
+                  <el-dropdown-item command="last_complete_time">
+                    <div class="sort-operate-box">
+                      <span>按最近操作时间</span>
+                      <div class="sort-icon-arrow">
+                        <i
+                          class="el-icon-caret-top top-color"
+                          :class="{
+                            active:
+                              sortKeys['last_complete_time'] != 'asc' &&
+                              sortActive == 'last_complete_time'
+                          }"
+                        ></i>
+                        <i
+                          class="el-icon-caret-bottom bottom"
+                          :class="{
+                            active:
+                              sortKeys['last_complete_time'] == 'asc' &&
+                              sortActive == 'last_complete_time'
+                          }"
+                        ></i>
+                      </div>
+                    </div>
+                  </el-dropdown-item>
+                </el-dropdown-menu>
+              </el-dropdown>
             </template>
             <template slot-scope="scope">
               <p>
@@ -335,7 +505,6 @@
               <p>点评作品: {{ scope.row.comment_count }}</p>
             </template>
           </el-table-column>
-
           <el-table-column label="标签" min-width="150">
             <template slot-scope="scope">
               <template
@@ -363,7 +532,6 @@
               </template>
             </template>
           </el-table-column>
-
           <el-table-column label="添加微信" min-width="60">
             <template slot-scope="scope">
               <el-switch
@@ -555,7 +723,33 @@
               </p>
             </template>
           </el-table-column>
-          <el-table-column label="转化" min-width="60" fixed="right">
+          <el-table-column label="转化" min-width="65" fixed="right">
+            <template slot="header">
+              <div
+                class="sort-operate-box"
+                @click="sortRules('bi_label.keyword')"
+              >
+                <span>转化</span>
+                <div class="sort-icon-arrow">
+                  <i
+                    class="el-icon-caret-top top-color"
+                    :class="{
+                      active:
+                        sortKeys['bi_label.keyword'] != 'asc' &&
+                        sortActive == 'bi_label.keyword'
+                    }"
+                  ></i>
+                  <i
+                    class="el-icon-caret-bottom bottom"
+                    :class="{
+                      active:
+                        sortKeys['bi_label.keyword'] == 'asc' &&
+                        sortActive == 'bi_label.keyword'
+                    }"
+                  ></i>
+                </div>
+              </div>
+            </template>
             <template slot-scope="scope">
               <span
                 :class="[
@@ -566,6 +760,22 @@
               >
                 {{ scope.row.user_status_name }}
               </span>
+              <i
+                class="el-icon-bottom"
+                style="color: #C60D00;"
+                v-if="
+                  scope.row.user_status_name === '未转化' &&
+                    +scope.row.bi_label === 0
+                "
+              ></i>
+              <i
+                class="el-icon-top top-arrow"
+                style="color: #4A975A;"
+                v-else-if="
+                  scope.row.user_status_name === '未转化' &&
+                    +scope.row.bi_label === 1
+                "
+              ></i>
             </template>
           </el-table-column>
           <el-table-column label="操作" min-width="60" fixed="right">
@@ -748,11 +958,23 @@ export default {
       currentUser: {}, // 当前选择用户
       couponData: [],
       sortKeys: {
+        // 参课节数
         join_course_count: 'desc',
+        // 参课次数
+        all_join_course_count: 'desc',
+        // 参课最近操作时间
+        last_join_time: 'desc',
+        // 完课次数
+        all_complete_course_count: 'desc',
+        // 完课节数
         complete_course_count: 'desc',
+        // 完课最近操作时间
+        last_complete_time: 'desc',
         task_count: 'desc',
         listen_comment_count: 'desc',
-        questionnaire_count: 'desc'
+        questionnaire_count: 'desc',
+        // 预测转化
+        'bi_label.keyword': 'desc'
       },
       sortActive: '',
       // 0-待开始 1 招生中   2待开课   3 开课中  4 已结课'
@@ -763,9 +985,11 @@ export default {
         3: '上课中',
         4: '已结课'
       },
-      // 传给search的值
+      // 通知中心传给search的值
       searchProp: {},
-      // 消息中心传过来的期数值
+      // 本页面传给search的值都放在这个对象下
+      paramsToSearch: {},
+      // 通知中心传过来的期数值
       propTerm: '',
       filterParams: {},
       isOpened: true,
@@ -777,10 +1001,13 @@ export default {
   watch: {
     // 切换期数，清空搜索及筛选项
     term(val, old) {
-      console.log(val, old)
+      if (old === '') return
+      // console.log(val, old)
       this.currentDate = new Date().getTime()
       this.search = []
       this.filterParams = {}
+      this.paramsToSearch.term = val
+      this.$refs.searchC && this.$refs.searchC.changeTerm(val)
     },
 
     searchParams(params, oldval) {
@@ -900,6 +1127,8 @@ export default {
                 ? this.manageMentList[0].period
                 : '0'
           }
+          // 把参数传给search，获取班级用
+          this.paramsToSearch.term = this.term
         }
       })
     },
@@ -951,7 +1180,9 @@ export default {
           // console.log('dataList', this.dataList)
           this.totalPages = +defTotalPages
           this.totalElements = +defTotalElements
-          loading.close()
+          this.$nextTick(() => {
+            loading.close()
+          })
         })
         .catch(() => {
           loading.close()
@@ -1331,6 +1562,10 @@ export default {
         this.couponData = (res.payload && res.payload.content) || []
       })
     },
+    // 参课的下拉排序
+    classesDropdown(command) {
+      this.sortRules(command)
+    },
     // 改变排序规则
     sortRules(sortKey) {
       // let sort = ''
@@ -1366,12 +1601,8 @@ export default {
       // console.log(params)
 
       this.$http.User.trialCourseUsersV2(params, 1, {}).then((res) => {
-        // console.log(res, 'todaycount')
-
         if (res && res.data && res.data.StudentTrialV2StatisticsPage) {
           const { totalElements = 0 } = res.data.StudentTrialV2StatisticsPage
-          // console.log(totalElements)
-
           if (type === 'today') this.todayTotal = totalElements
           if (type === 'tomorrow') this.tomorrowTotal = totalElements
         }
@@ -1403,5 +1634,35 @@ export default {
   flex: 1;
   overflow: hidden;
   background-color: #fff;
+}
+.sort-operate-box {
+  position: relative;
+  font-size: 12px;
+  color: #909399;
+  cursor: pointer;
+  .sort-icon-arrow {
+    display: inline-block;
+    position: relative;
+    top: -2px;
+    .top {
+      position: absolute;
+      bottom: 0;
+    }
+    .active {
+      color: #2a75ed;
+    }
+    .top-color {
+      position: absolute;
+      bottom: 0;
+    }
+    .bottom {
+      position: absolute;
+      top: -6px;
+    }
+    .bottom-color {
+      position: absolute;
+      top: -6px;
+    }
+  }
 }
 </style>

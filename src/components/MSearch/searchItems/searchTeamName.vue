@@ -99,7 +99,9 @@ export default {
       q.bool.must.push(teamType)
       this.teacherId &&
         q.bool.must.push({ terms: { teacher_id: this.teacherId } })
-      this.term && q.bool.must.push({ terms: { term: this.term } })
+      this.term &&
+        this.term.length &&
+        q.bool.must.push({ terms: { term: this.term } })
       this.$http.Team.getStudentTeamV1Search(JSON.stringify(q))
         .then((res) => {
           this.teamList = res.data.StudentTeamListEx || []

@@ -243,6 +243,7 @@ export default {
               express_status
             }
             questionnaire_count
+            bi_label
           }
         }
       }`
