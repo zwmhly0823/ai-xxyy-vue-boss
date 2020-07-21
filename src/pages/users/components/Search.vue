@@ -313,7 +313,11 @@ export default {
   },
   created() {
     // 搜索项的参数
-    this.term_trial = this.paramsToSearch.term && [this.paramsToSearch.term]
+    if (+this.paramsToSearch.term === 0) {
+      this.term_trial = []
+    } else {
+      this.term_trial = this.paramsToSearch.term && [this.paramsToSearch.term]
+    }
   },
   methods: {
     /**
