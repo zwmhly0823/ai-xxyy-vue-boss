@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-06-29 17:02:32
  * @LastEditors: Shentong
- * @LastEditTime: 2020-07-22 20:50:18
+ * @LastEditTime: 2020-07-22 21:12:45
 -->
 <template>
   <div class="soptmp-container">
@@ -74,7 +74,11 @@
           prop="cstate"
           align="center"
         ></el-table-column>
-        <el-table-column label="操作" align="center">
+        <el-table-column
+          label="操作"
+          align="center"
+          v-if="userInfo.type == '1'"
+        >
           <template slot-scope="scope">
             <div class="editStyle">
               <span
@@ -180,30 +184,6 @@ export default {
     /** 获取创建人列表 */
     getAuthorList(res) {
       console.log(this.selectVal, res, 'vla')
-      setTimeout(() => {
-        this.authorList = [
-          {
-            value: '选项1',
-            label: '黄金糕'
-          },
-          {
-            value: '选项2',
-            label: '双皮奶'
-          },
-          {
-            value: '选项3',
-            label: '蚵仔煎'
-          },
-          {
-            value: '选项4',
-            label: '龙须面'
-          },
-          {
-            value: '选项5',
-            label: '北京烤鸭'
-          }
-        ]
-      }, 300)
     },
     /** table底部翻页按钮 */
     pageChange_handler(res) {},
