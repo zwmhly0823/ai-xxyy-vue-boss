@@ -32,7 +32,7 @@ export default {
    */
   getWeChatCluster(params) {
     return axios.get(
-      `/api/toss/v1/toss-api/sopJobTask/getWeChatCluster?wechatNo=${params.wechatNo}&taskstatus=${params.taskstatus}&name=${params.name}`
+      `/api/toss/v1/toss-api/sopJobTask/getWeChatCluster?wechatNo=${params.wechatNo}&teacherId=${params.teacherId}&name=${params.name}`
     )
   },
   /**

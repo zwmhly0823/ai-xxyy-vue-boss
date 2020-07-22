@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-06-29 16:50:58
  * @LastEditors: Shentong
- * @LastEditTime: 2020-07-09 17:02:03
+ * @LastEditTime: 2020-07-15 14:48:38
 -->
 <template>
   <el-row type="flex" class="new-sop app-main">
@@ -80,26 +80,6 @@
                     第<span>{{ currenContentArr[0].day }}</span
                     >天
                   </div>
-                  <!-- <el-time-picker
-                    size="mini"
-                    v-model="currenContentArr[0].startTime"
-                    :picker-options="{
-                      selectableRange: '18:30:00 - 20:30:00'
-                    }"
-                    placeholder="任意时间点"
-                  >
-                  </el-time-picker>
-                  <span>至</span>
-                  <el-time-picker
-                    size="mini"
-                    arrow-control
-                    v-model="currenContentArr[0].endTime"
-                    :picker-options="{
-                      selectableRange: '18:30:00 - 20:30:00'
-                    }"
-                    placeholder="任意时间点"
-                  >
-                  </el-time-picker> -->
                   <el-time-picker
                     size="mini"
                     is-range
@@ -115,69 +95,77 @@
                   </el-time-picker>
                   <span class="tip">第一条信息在时间段内随机发送</span>
                 </div>
-                <div class="label content">发送内容</div>
                 <div class="send-content">
+                  <!-- 临时处理bug -->
                   <div
-                    class="common"
-                    :class="content.msgType == '1' ? 'text-type' : 'img-type'"
-                    v-for="(content, index) in currenContentArr"
-                    :key="index"
+                    class="content-list"
+                    v-if="
+                      currenContentArr.length && currenContentArr[0].msgContent
+                    "
                   >
-                    <div class="content">
-                      <div class="gap-time" v-if="index != 0">
-                        <span>间隔</span>
-                        <el-input-number
-                          v-model="currenContentArr[index].intervalTime"
-                          controls-position="right"
-                          size="mini"
-                          @change="stepNumHandleChange"
-                          :min="1"
-                          :max="10"
-                          class="step-num"
-                        ></el-input-number>
-                        <el-select
-                          v-model="currenContentArr[index].intervalType"
-                          class="time-scale"
-                          placeholder="请选择"
-                          size="mini"
-                        >
-                          <el-option
-                            v-for="item in timeScaleSelect"
-                            :key="item.label"
-                            :label="item.label"
-                            :value="item.value"
+                    <div class="label content">发送内容</div>
+                    <div
+                      class="common"
+                      :class="content.msgType == '1' ? 'text-type' : 'img-type'"
+                      v-for="(content, index) in currenContentArr"
+                      :key="index"
+                    >
+                      <div class="content">
+                        <div class="gap-time" v-if="index != 0">
+                          <span>间隔</span>
+                          <el-input-number
+                            v-model="currenContentArr[index].intervalTime"
+                            controls-position="right"
+                            size="mini"
+                            @change="stepNumHandleChange"
+                            :min="1"
+                            class="step-num"
+                          ></el-input-number>
+                          <el-select
+                            v-model="currenContentArr[index].intervalType"
+                            class="time-scale"
+                            placeholder="请选择"
+                            size="mini"
                           >
-                          </el-option>
-                        </el-select>
-                        <span>发送</span>
-                      </div>
-                      <div class="text-img-box">
-                        <div class="desc">
-                          {{ content.msgType == '1' ? '文案：' : '图片：' }}
+                            <el-option
+                              v-for="item in timeScaleSelect"
+                              :key="item.label"
+                              :label="item.label"
+                              :value="item.value"
+                            >
+                            </el-option>
+                          </el-select>
+                          <span>发送</span>
                         </div>
-                        <div class="info">
-                          <div v-if="content.msgType == '1'">
-                            {{ content.msgContent }}
+                        <div class="text-img-box">
+                          <div class="desc">
+                            {{ content.msgType == '1' ? '文案：' : '图片：' }}
                           </div>
-                          <el-image
-                            v-else
-                            style="width: 100px; height: 100px"
-                            :src="content.msgContent"
-                            fit="fill"
-                          ></el-image>
+                          <div class="info">
+                            <div v-if="content.msgType == '1'">
+                              {{ content.msgContent }}
+                            </div>
+                            <el-image
+                              v-else
+                              style="width: 100px; height: 100px"
+                              :src="content.msgContent"
+                              fit="fill"
+                            ></el-image>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                    <div class="operate">
-                      <i
-                        class="el-icon-edit"
-                        @click.stop="editCurrContent(index, content)"
-                      ></i>
-                      <i
-                        v-if="currenContentArr.length > 1"
-                        class="el-icon-delete"
-                        @click.stop="delCurrContent(index)"
-                      ></i>
+                      <div class="operate">
+                        <i
+                          class="el-icon-edit"
+                          @click.stop="editCurrContent(index, content)"
+                        ></i>
+                        <!--  -->
+                        <i
+                          v-if="currenContentArr.length > 1"
+                          class="el-icon-delete"
+                          @click.stop="delCurrContent(index)"
+                        ></i>
+                      </div>
                     </div>
                   </div>
                   <div class="add-content-btn">
@@ -234,6 +222,7 @@ export default {
       currenContentArr: [],
       emptyContentTmp: {
         day: 1,
+        strip: 1,
         startTime: '',
         endTime: '',
         intervalTime: 0,
@@ -297,23 +286,14 @@ export default {
         1: [this.emptyContentTmp]
       }
     }
-
-    const taskArr = Object.getOwnPropertyNames(this.tmpInfo)
+    const taskArr = Object.keys(this.tmpInfo)
 
     taskArr.length && this.tasksClickHandle(taskArr[0])
   },
   mounted() {
-    // this.$nextTick(() => {
     const scrollHeight =
       document.body.clientHeight - this.$refs.scrollRef.offsetTop - 70
     this.scrollHeight = scrollHeight + 'px'
-    console.log(
-      'scrollHeight',
-      document.body.clientHeight,
-      this.$refs.scrollRef.offsetTop,
-      this.scrollHeight
-    )
-    // })
   },
   computed: {},
   methods: {
@@ -360,6 +340,10 @@ export default {
     /** 删除当前任务下的某条内容 */
     delCurrContent(index) {
       this.currenContentArr.splice(index, 1)
+      /** 重置strip */
+      this.currenContentArr.forEach((item, i) => {
+        item.strip = i + 1
+      })
     },
     /** 编辑当前任务下的某条内容 */
     editCurrContent(index, ctnt) {
@@ -402,13 +386,15 @@ export default {
     judegeValidate(formName) {
       return this.$refs[formName].validate()
     },
+    // 任务内容校验
+    // judegeContent()
     async executeSave() {
       this.canSave = false
+      // 验证form表单
       const validatePro = await this.judegeValidate('sopForm').catch(() => {})
-
       if (validatePro) {
         const params = this.packageSendData()
-        await this.saveOrUpdate(params)
+        params && (await this.saveOrUpdate(params))
       }
       this.canSave = true
     },
@@ -416,12 +402,18 @@ export default {
     packageSendData() {
       for (var i in this.tmpInfo) {
         const curTask = this.tmpInfo[i]
-        curTask.forEach((task) => {
-          const [startTime, endTime] = task.firstSendTime
-          task.startTime = startTime || '06:00:00'
-          task.endTime = endTime || '23:59:59'
-        })
+        for (var j = 0; j < curTask.length; j++) {
+          // 判断内容是否为空
+          if (!curTask[j].msgContent) {
+            this.$message.warning('您有未填写完全的内容项！')
+            return false
+          }
+          const [startTime, endTime] = curTask[j].firstSendTime
+          curTask[j].startTime = startTime || '06:00:00'
+          curTask[j].endTime = endTime || '23:59:59'
+        }
       }
+      console.log(1)
       return {
         map: this.tmpInfo,
         ...this.sopForm
@@ -465,13 +457,19 @@ export default {
           msgType,
           msgContent: +msgType === 1 ? textarea : imgUrl
         }
-        if (isEdit) {
+        // 第一条内容特别处理
+        const { msgContent = '' } = this.currenContentArr[0] || {}
+        if (isEdit || !msgContent) {
           this.currenContentArr[curIndex] = {
             ...this.currenContentArr[curIndex],
             ...content
           }
         } else {
-          this.currenContentArr.push({ ...this.emptyContentTmp, ...content })
+          this.currenContentArr.push({
+            ...this.emptyContentTmp,
+            ...content,
+            strip: this.currenContentArr.length + 1
+          })
         }
       }
     }
@@ -509,6 +507,9 @@ export default {
         }
       }
       .section {
+        .add-content-btn {
+          margin-top: 20px;
+        }
         .task-container {
           display: flex;
           min-height: 400px;

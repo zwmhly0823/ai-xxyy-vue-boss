@@ -25,7 +25,7 @@ const routes = [
     path: '/groupSop',
     name: 'groupSop',
     meta: {
-      title: '群sop',
+      title: '群SOP',
       icon: 'el-icon-s-custom',
       keepAlive: true
     },
@@ -35,7 +35,7 @@ const routes = [
     path: '/newSoptmp/:id',
     name: 'newSoptmp',
     meta: {
-      title: '群sop',
+      title: '群SOP',
       icon: 'el-icon-s-custom',
       keepAlive: false
     },
@@ -45,7 +45,7 @@ const routes = [
     path: '/newPlantask/:id/:templateId',
     name: 'newPlantask',
     meta: {
-      title: 'sop管理',
+      title: '群SOP',
       icon: 'el-icon-s-custom',
       keepAlive: false
     },

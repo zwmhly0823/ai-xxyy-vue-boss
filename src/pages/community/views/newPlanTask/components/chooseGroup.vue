@@ -110,7 +110,7 @@ export default {
     handleDebounce: debounce(function(event) {
       this.getWeChatCluster(this.name).then((res) => {
         if (res.code === 0) {
-          this.tableData = res.payload
+          this.tableData = res.payload || []
         }
       })
     }, 500),
@@ -119,7 +119,7 @@ export default {
       try {
         const Info = await this.$http.Community.getWeChatCluster({
           wechatNo: this.wechatNo,
-          taskstatus: this.taskstatus,
+          teacherId: this.taskstatus,
           name
         })
         return Info

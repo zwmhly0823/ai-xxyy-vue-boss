@@ -91,6 +91,7 @@ export default {
       this.teacherId = staff.id || ''
       this.type = 2
     }
+
     this.getTempList(this.teacherId, this.type).then((res) => {
       if (res.code === 0) {
         this.templateList = res.payload

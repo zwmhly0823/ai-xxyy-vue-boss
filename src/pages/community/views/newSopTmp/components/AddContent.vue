@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-06-30 19:21:08
  * @LastEditors: Shentong
- * @LastEditTime: 2020-07-09 14:41:31
+ * @LastEditTime: 2020-07-21 16:02:03
 -->
 <template>
   <el-dialog
@@ -29,24 +29,31 @@
           <i :class="tab.icon"></i>
           <span>{{ tab.title }}</span>
         </div>
-        <!-- <svg class="iconfont iconemoji"></svg> -->
+
         <div class="emoji" v-if="!tabIndex">
-          <i
+          <svg
+            class="iconfont icon-sty"
+            @click="changeEmojiToggle = !changeEmojiToggle"
+          >
+            <use xlink:href="#iconemoji"></use>
+          </svg>
+          <!-- <i
             class="el-icon-burger"
             @click="changeEmojiToggle = !changeEmojiToggle"
-          ></i>
+          ></i> -->
 
           <div class="emoji-list" v-if="changeEmojiToggle">
-            <el-scrollbar wrap-class="scrollbar-wrapper">
-              <a
+            <!-- <el-scrollbar wrap-class="scrollbar-wrapper"> -->
+            <VEmojiPicker @select="selectEmoji" />
+            <!-- <a
                 href="javascript:void(0);"
                 @click="getEmo(index)"
                 v-for="(item, index) in faceList"
                 :key="index"
                 class="emotionItem"
                 >{{ item }}</a
-              >
-            </el-scrollbar>
+              > -->
+            <!-- </el-scrollbar> -->
           </div>
         </div>
       </div>
@@ -105,8 +112,8 @@
 </template>
 <script>
 import { debounce } from 'lodash'
-import uploadFile from '@/utils/upload' // 上传公共方法 TODO:
-const appData = require('@/utils/emoji.json')
+import uploadFile from '@/utils/upload' // 上传公共方法
+import VEmojiPicker from 'v-emoji-picker'
 export default {
   props: {
     centerDialogVisible: {
@@ -144,7 +151,9 @@ export default {
       ]
     }
   },
-  components: {},
+  components: {
+    VEmojiPicker
+  },
   computed: {
     centerDialog() {
       return this.centerDialogVisible
@@ -161,11 +170,15 @@ export default {
     }
   },
   mounted() {
-    for (const i in appData) {
-      this.faceList.push(appData[i].char)
-    }
+    // for (const i in emoji) {
+    //   this.faceList.push(emoji[i].char)
+    // }
   },
   methods: {
+    selectEmoji(emoji) {
+      console.log('emoji', emoji)
+      this.addContentForm.textarea += `${emoji.data}  `
+    },
     /** 此处不可使用箭头函数 */
     topTabClick: debounce(function(index) {
       this.tabIndex = index
@@ -177,10 +190,6 @@ export default {
     /** img-upload */
     // 上传附件
     uploadHandle(file) {
-      // this.addContentForm.imgUrl =
-      //   'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg'
-      // TODO:
-      console.log(file, this.addContentForm.imgUrl)
       uploadFile(file).then((res) => {
         console.log('res', res)
         this.addContentForm.imgUrl = res
@@ -206,7 +215,6 @@ export default {
         }, 250)
       } else {
         const { isEdit = false, curIndex = 0 } = this.content
-        console.log('this.addContentForm', this.addContentForm)
         this.$emit('dialogOperate', {
           ...this.addContentForm,
           msgType: !this.tabIndex ? '1' : '3',
@@ -311,16 +319,20 @@ export default {
       height: 100%;
       display: flex;
       align-items: center;
-      i {
+      .icon-sty {
+        fill: #b1c153;
+        width: 23px;
+        height: 23px;
         cursor: pointer;
       }
       .emoji-list {
         border: 1px solid #eee;
-        width: 310px;
-        height: 200px;
+        width: 338px;
+        // width: 310px;
+        // height: 200px;
         position: absolute;
         right: 0;
-        top: 20px;
+        top: 30px;
         z-index: 9;
         background: #fff;
         box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);

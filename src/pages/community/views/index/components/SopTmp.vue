@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-06-29 17:02:32
  * @LastEditors: Shentong
- * @LastEditTime: 2020-07-10 16:10:46
+ * @LastEditTime: 2020-07-21 17:11:15
 -->
 <template>
   <div class="soptmp-container">
@@ -27,7 +27,7 @@
         >
       </div>
     </div>
-    <section>
+    <section ref="tableContainer">
       <ele-table
         :tableHeight="tableHeight"
         :tableSize="'small'"
@@ -82,7 +82,11 @@
                 :class="{ 'btn-disabled': scope.row.state }"
                 >调用</span
               >
-              <span @click="tableRowOperate(scope.row, '2')">编辑</span>
+              <span
+                @click="tableRowOperate(scope.row, '2')"
+                :class="{ 'btn-disabled': +scope.row.useNum }"
+                >编辑</span
+              >
               <el-popconfirm
                 confirmButtonText="YES"
                 cancelButtonText="算了"
@@ -121,7 +125,7 @@ export default {
       selectVal: '',
       userInfo: {
         username: '',
-        type: '2' // 1:toss2:boss
+        type: '1' // 1:toss2:boss
       },
       currentRow: {},
       flags: {
@@ -158,6 +162,13 @@ export default {
 
       this.userInfo.uid = JSON.parse(userInfo).id
       this.getTemplateList()
+      this.$nextTick(() => {
+        const tableTopHeight = this.$refs.tableContainer.getBoundingClientRect()
+          .y
+        //  document.body.clientHeight 返回body元素内容的高度
+        const tableHeight = document.body.clientHeight - tableTopHeight - 60
+        this.tableHeight = tableHeight + ''
+      })
     },
     /** 创建人选择时 */
     selectAuthor(author) {
@@ -204,9 +215,10 @@ export default {
             path: `/newPlantask/-1/${row.id}`
           })
       } else if (type === '2') {
-        this.$router.push({
-          path: `/newSoptmp/${row.id}`
-        })
+        !row.useNum &&
+          this.$router.push({
+            path: `/newSoptmp/${row.id}`
+          })
       } else {
         this.currentRow = row
       }

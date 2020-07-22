@@ -3,8 +3,8 @@
  * @version: 1.0.0
  * @Author: Shasen
  * @Date: 2020-06-29 16:50:58
- * @LastEditors: shasen
- * @LastEditTime: 2020-07-06 11:41:19
+ * @LastEditors: Shentong
+ * @LastEditTime: 2020-07-21 14:42:57
 -->
 <template>
   <el-row type="flex" class="new-plan app-main">
@@ -20,7 +20,7 @@
           class="sop-form"
           :rules="rules"
         >
-          <el-form-item prop="taskName" label="模板名称" style="width:320px;">
+          <el-form-item prop="taskName" label="任务名称" style="width:320px;">
             <el-input
               v-model="sopFrom.taskName"
               placeholder="请输入任务名称"
@@ -58,7 +58,7 @@
             ></el-date-picker>
           </el-form-item>
           <el-form-item label="发送微信号" prop="wxNumber">
-            <el-radio-group v-model="sopFrom.wxNumber">
+            <el-radio-group v-model="sopFrom.wxNumber" @change="wxNumberChange">
               <el-radio
                 v-for="(item, index) in wechatNos"
                 :key="index"
@@ -76,7 +76,7 @@
           >选择群</el-button
         >
       </el-card>
-      <div ref="tableContainer">
+      <div ref="tableContainer" class="tableContainer_">
         <ele-table
           :tableSize="'small'"
           :dataList="tableData"
@@ -133,6 +133,7 @@
         destroy-on-close
       >
         <choose-group
+          ref="chooseGroup"
           :taskstatus="teacherId"
           :wechatNo="sopFrom.wxNumber"
           :parent_tableData="tableData"
@@ -241,6 +242,9 @@ export default {
     deleteTablerow(row, type) {
       console.log(row, type)
     },
+    wxNumberChange(value) {
+      this.tableData = []
+    },
     // 获取SOP任务计划
     async getToSaveOrUpdate(id, teacherId) {
       try {
@@ -259,6 +263,9 @@ export default {
         if (valid) {
           console.log('valid====', valid)
           this.dialogGroupVisible = true
+          this.$nextTick(() => {
+            this.$refs.chooseGroup.handleDebounce()
+          })
           console.log(this.sopFrom)
         } else {
           console.log('error submit!!')
@@ -358,9 +365,17 @@ export default {
 }
 </script>
 <style rel="stylesheet/scss" lang="scss">
+.new-plan-container {
+  padding: 10px;
+}
 .new-plan {
   background: #ffffff;
 }
+// .tableContainer_ {
+//   display: flex;
+//   justify-content: center;
+//   padding: 20px;
+// }
 .header {
   .tip {
     margin-bottom: 20px;

@@ -14,7 +14,11 @@
         :sourchParams="sourchParams"
       />
       <div class="add-btn">
-        <el-button type="primary" size="mini" @click="new_sop_handle"
+        <el-button
+          type="primary"
+          size="mini"
+          @click="new_sop_handle"
+          v-if="sourchParams.type === 1"
           >新建SOP任务</el-button
         >
       </div>
@@ -96,6 +100,7 @@
                 >详情</el-button
               >
               <el-button
+                v-if="sourchParams.type === 1"
                 class="editStyle_btn"
                 type="text"
                 @click="taskRevise(scope.row, '2')"
@@ -104,6 +109,7 @@
                 >修改</el-button
               >
               <el-popconfirm
+                v-if="sourchParams.type === 1"
                 confirmButtonText="确定"
                 cancelButtonText="取消"
                 icon="el-icon-info"
@@ -151,7 +157,26 @@
                     v-for="(_item, _index) in item.templateDetails"
                     :key="_index"
                   >
-                    <p>{{ _item.startTime }}</p>
+                    <p v-if="_item.strip === 1">{{ _item.startTime }}</p>
+                    <p
+                      v-if="_item.strip !== 1 && _item.intervalType === 'HOUR'"
+                    >
+                      {{ _item.intervalTime }}小时
+                    </p>
+                    <p
+                      v-if="
+                        _item.strip !== 1 && _item.intervalType === 'BRANCH'
+                      "
+                    >
+                      {{ _item.intervalTime }}分钟
+                    </p>
+                    <p
+                      v-if="
+                        _item.strip !== 1 && _item.intervalType === 'SCECOND'
+                      "
+                    >
+                      {{ _item.intervalTime }}秒
+                    </p>
                     <div>
                       <span class="ordernumber">{{ _index + 1 }}</span>
                       <span
@@ -193,7 +218,8 @@ export default {
         jobTaskName: '',
         templateId: '',
         startTime: '',
-        endTime: ''
+        endTime: '',
+        uid: ''
       },
       totalElements: 0
     }
@@ -210,9 +236,13 @@ export default {
   created() {
     const teacherId = isToss()
     if (teacherId) {
+      const tossteacher = JSON.parse(localStorage.getItem('teacher'))
       this.sourchParams.type = 1
+      this.sourchParams.uid = tossteacher.id
     } else {
+      const staff = JSON.parse(localStorage.getItem('staff'))
       this.sourchParams.type = 2
+      this.sourchParams.uid = staff.id || ''
     }
     this.calcTableHeight()
     this.getlistJobTaskPage()
