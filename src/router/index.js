@@ -164,13 +164,21 @@ const routes = [
   {
     path: '/community',
     name: 'community',
-    // hidden: true,
     meta: {
       title: '社群工具',
       icon: 'icongongju1',
       module: 'community'
     },
     children: [
+      {
+        path: '/groupSop',
+        name: 'groupSop',
+        meta: {
+          title: '群SOP',
+          module: 'community',
+          show: true
+        }
+      },
       {
         path:
           'https://wgj.xiaoxiongmeishu.com/Site/AccuratePush/accuratePush.html',
