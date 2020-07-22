@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-04-01 13:24:40
  * @LastEditors: panjian
- * @LastEditTime: 2020-07-20 17:16:05
+ * @LastEditTime: 2020-07-21 17:59:58
  -->
 <template>
   <el-form
@@ -160,7 +160,7 @@ export default {
       this.city = citys[0].label
       this.area = areas[0].label
       this.areaCode = data[2]
-      this.street = streets[0].townName
+      this.street = data[3] ? streets[0].townName : ''
     },
     submitForm(formName) {
       const teacher = isToss()
