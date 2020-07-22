@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-06-29 16:50:58
  * @LastEditors: Shentong
- * @LastEditTime: 2020-07-15 14:48:38
+ * @LastEditTime: 2020-07-22 20:52:09
 -->
 <template>
   <el-row type="flex" class="new-sop app-main">
@@ -413,7 +413,6 @@ export default {
           curTask[j].endTime = endTime || '23:59:59'
         }
       }
-      console.log(1)
       return {
         map: this.tmpInfo,
         ...this.sopForm
@@ -460,16 +459,24 @@ export default {
         // 第一条内容特别处理
         const { msgContent = '' } = this.currenContentArr[0] || {}
         if (isEdit || !msgContent) {
-          this.currenContentArr[curIndex] = {
-            ...this.currenContentArr[curIndex],
-            ...content
-          }
+          this.currenContentArr[curIndex].msgType = content.msgType
+          this.currenContentArr[curIndex].msgContent = content.msgContent
+          /** 此处更改 替换方案⤴️ */
+          // this.currenContentArr[curIndex] = {
+          //   ...this.currenContentArr[curIndex],
+          //   ...content
+          // }
         } else {
-          this.currenContentArr.push({
-            ...this.emptyContentTmp,
-            ...content,
-            strip: this.currenContentArr.length + 1
-          })
+          this.emptyContentTmp.msgType = content.msgType
+          this.emptyContentTmp.msgContent = content.msgContent
+          this.emptyContentTmp.strip = this.currenContentArr.length + 1
+
+          this.currenContentArr.push(this.emptyContentTmp)
+          // this.currenContentArr.push({
+          //   ...this.emptyContentTmp,
+          //   ...content,
+          //   strip: this.currenContentArr.length + 1
+          // })
         }
       }
     }

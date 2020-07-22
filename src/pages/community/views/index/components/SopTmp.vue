@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-06-29 17:02:32
  * @LastEditors: Shentong
- * @LastEditTime: 2020-07-21 17:11:15
+ * @LastEditTime: 2020-07-22 20:50:18
 -->
 <template>
   <div class="soptmp-container">
@@ -87,7 +87,9 @@
                 :class="{ 'btn-disabled': +scope.row.useNum }"
                 >编辑</span
               >
+              <span v-if="+scope.row.useNum" class="btn-disabled">删除</span>
               <el-popconfirm
+                v-else
                 confirmButtonText="YES"
                 cancelButtonText="算了"
                 icon="el-icon-info"
