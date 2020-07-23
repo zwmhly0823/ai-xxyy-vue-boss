@@ -3,8 +3,8 @@
  * @version:
  * @Author: Shentong
  * @Date: 2020-03-16 19:46:39
- * @LastEditors: Shentong
- * @LastEditTime: 2020-07-07 18:51:33
+ * @LastEditors: panjian
+ * @LastEditTime: 2020-07-23 11:48:09
  */
 import axios from '../axiosConfig'
 // import { getToken } from '@/utils/auth'
@@ -123,41 +123,63 @@ export default {
    *
    *渠道查询
    */
-  channelDetailPage(queryParams) {
-    return axios.post('/graphql/channelDetail', {
+  countsByTrialChannel(params) {
+    return axios.get(
+      `/api/o/v1/userOrderSuccess/channel/boss/countsByTrialChannel?trialChannels=${params.trialChannels}&trialChannelClassIds=${params.trialChannelClassIds}&stage=${params.stage}&startCtime=${params.startCtime}&endCtime=${params.endCtime}&page=${params.page}&pageSzie=${params.pageSzie}`
+    )
+  },
+  // 查询渠道名称 渠道分类
+  ChannelDetailStatisticsList(Params = `""`) {
+    return axios.post('/graphql/v1/toss', {
       query: `{
-        channelDetailPage(channelQuery:${queryParams},size:20){
+        ChannelDetailStatisticsList(query:${JSON.stringify(Params)}){
+          id
+          ctime
+          channel_inner_name
+          channel_class_id
+          channel_class_name
+          p_channel_class_name
+          p_channel_class_id
+        }
+      }`
+    })
+  },
+  // 渠道查询 模块数据
+  countsByTrialChannelOfTotal(params) {
+    return axios.get(
+      `/api/o/v1/userOrderSuccess/channel/boss/countsByTrialChannelOfTotal?trialChannels=${params.trialChannels}&trialChannelClassIds=${params.trialChannelClassIds}&stage=${params.stage}&startCtime=${params.startCtime}&endCtime=${params.endCtime}`
+    )
+  },
+  // 二级渠道查询 列表查询
+  countsByTrialChannelClassId(params) {
+    return axios.get(
+      `/api/o/v1/userOrderSuccess/channel/boss/countsByTrialChannelClassId?trialChannelClassIds=${params.trialChannelClassIds}&stage=${params.stage}&startCtime=${params.startCtime}&endCtime=${params.endCtime}&page=${params.page}&pageSzie=${params.pageSzie}`
+    )
+  },
+  // 二级渠道查询 模块数据
+  countsByTrialChannelClassIdOfTotal(params) {
+    return axios.get(
+      `/api/o/v1/userOrderSuccess/channel/boss/countsByTrialChannelClassIdOfTotal?trialChannelClassIds=${params.trialChannelClassIds}&stage=${params.stage}&startCtime=${params.startCtime}&endCtime=${params.endCtime}`
+    )
+  },
+  // 二级渠道查询名称 渠道分类
+  ChannelClassPageName(Params, page = 1) {
+    return axios.post('/graphql/v1/toss', {
+      query: `{
+        ChannelClassPage(query:${JSON.stringify(Params)}){
+          content{
+            channel_class_name
+            channel_level
+            id
+            channel_class_parent_id
+            channelClassParent{
+              channel_class_name
+              id
+            }
+          }
           number
-          size
-          numberOfElements
           totalElements
           totalPages
-          content {
-            channelId
-            channelName
-            channelClassId
-            channelClassName
-            channelParentName
-            channelParentId
-            orderUserAllNums
-            orderUserPayNums
-            orderUserNoPayNums
-            wechatAddNums
-            joinCourseNums
-            completeCourseNums
-            systemOrderNums
-            systemOrderAmounts
-            channelCtime
-          }
-          counts {
-            allUserNums
-            allPayUserNums
-            allJoinUserNums
-            allCompleteUserNums
-            allSystemUserNums
-            allSystemUserAmounts
-            allWechatAddNums
-          }
         }
       }`
     })

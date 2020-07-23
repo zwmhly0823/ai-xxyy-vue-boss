@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-04-25 12:09:03
  * @LastEditors: panjian
- * @LastEditTime: 2020-07-18 15:46:09
+ * @LastEditTime: 2020-07-23 10:57:45
  -->
 <template>
   <div id="channel-box" class="channel-box">
@@ -31,7 +31,7 @@
         <el-col :span="6">
           <div class="grid-content bg-purple">
             <p>累计成单金额</p>
-            <span>{{ allSystemUserAmounts }}</span>
+            <span>{{ allSystemUserAmounts || '-' }}</span>
           </div>
         </el-col>
         <el-col :span="6">
@@ -151,28 +151,30 @@
         >
           <el-table-column label="渠道分类" width="200" align="center">
             <template slot-scope="scope">
-              <span>{{ scope.row.channelParentName }}</span>
+              <span>{{ scope.row.p_channel_class_name || '-' }}</span>
               <span style="margin-left:10px;">{{
-                scope.row.channelClassName
+                scope.row.channel_class_name || '-'
               }}</span>
             </template>
           </el-table-column>
           <el-table-column width="150" label="渠道名称">
             <template slot-scope="scope">
               <a
+                v-if="scope.row.channel_inner_name"
                 style="color: #2a75ed;"
                 :href="scope.row.channelNameLink"
                 target="_blank"
-                >{{ scope.row.channelName }}</a
+                >{{ scope.row.channel_inner_name }}</a
               >
+              <span v-else>-</span>
             </template>
           </el-table-column>
-          <el-table-column prop="channelId" label="渠道ID"> </el-table-column>
-          <el-table-column prop="orderUserPayNums" label="体验课成单数">
+          <el-table-column prop="pay_channel" label="渠道ID"> </el-table-column>
+          <el-table-column prop="trial_user_num" label="体验课成单数">
           </el-table-column>
-          <el-table-column prop="orderUserNoPayNums" label="体验课未支付">
+          <el-table-column prop="order_user_no_pay_nums" label="体验课未支付">
           </el-table-column>
-          <el-table-column prop="wechatAddNums" label="添加微信数">
+          <el-table-column prop="wet_nums" label="添加微信数">
           </el-table-column>
           <el-table-column
             prop="address"
@@ -193,7 +195,7 @@
               </div>
             </template>
             <template slot-scope="scope">
-              <div>{{ scope.row.joinCourseNums }}</div>
+              <div>{{ scope.row.join_user_num }}</div>
               <div>{{ scope.row.joinCourseNumsPercent }}</div>
             </template>
           </el-table-column>
@@ -211,7 +213,7 @@
               </div>
             </template>
             <template slot-scope="scope">
-              <div>{{ scope.row.completeCourseNums }}</div>
+              <div>{{ scope.row.complete_user_num }}</div>
               <div>{{ scope.row.completeCourseNumsPercent }}</div>
             </template>
           </el-table-column>
@@ -229,12 +231,12 @@
               </div>
             </template>
             <template slot-scope="scope">
-              <div>{{ scope.row.systemOrderNums }}</div>
+              <div>{{ scope.row.system_user_num }}</div>
               <div>{{ scope.row.systemOrderNumsPercent }}</div>
             </template>
           </el-table-column>
           <el-table-column
-            prop="systemOrderAmounts"
+            prop="system_user_amounts"
             width="100"
             label="成单金额"
           >
@@ -252,10 +254,17 @@
           </el-table-column>
           <el-table-column label="创建时间">
             <template slot-scope="scope">
-              {{ scope.row.channelCtime }}
+              {{ scope.row.ctime || '-' }}
             </template>
           </el-table-column>
         </el-table>
+        <m-pagination
+          @current-change="handleCurrentChange"
+          :current-page="+totalNumber"
+          :total="+totalElements"
+          open="calc(100vw - 147px - 50px)"
+          close="calc(100vw - 26px - 50px)"
+        />
       </template>
     </div>
     <el-drawer
@@ -289,7 +298,7 @@
 </template>
 
 <script>
-// import MPagination from '@/components/MPagination/index.vue'
+import MPagination from '@/components/MPagination/index.vue'
 import channelSearch from '../components/componentsSearch/search'
 import { timestamp } from '@/utils/index'
 export default {
@@ -300,7 +309,7 @@ export default {
     }
   },
   components: {
-    // MPagination,
+    MPagination,
     channelSearch
   },
   data() {
@@ -350,8 +359,11 @@ export default {
       // 获取到列表的一条数据
       channelIdRow: '',
       // 一级渠道emit的数据
-      channelSearchValList: []
+      channelSearchValList: '',
       // 二级渠道emit数据
+
+      // 参数渠道id
+      channelValueList: []
     }
   },
   watch: {
@@ -364,7 +376,7 @@ export default {
         this.endTime = ''
         this.totalNumber = 1
         this.getChannelDetailPage()
-        this.channelSearchValList = []
+        this.channelSearchValList = ''
       }
     }
   },
@@ -376,115 +388,54 @@ export default {
   },
   methods: {
     handleScroll() {
-      // const jump = document.getElementById('el_table').scrollHeight
-
-      // this.$nextTick(() => {
-      //   const dom =
-      //     document.documentElement.scrollTop || document.body.scrollTop
-      // })
       const dom = document.getElementById('channel-box').scrollTop
       dom > 289 ? (this.tableShow = true) : (this.tableShow = false)
     },
     // 渠道一级
     channelSearchValue(data) {
-      this.channelSearchValList = data
-      if (data.length) {
-        this.query = this.channelIds.length
-          ? `{"bool":{"must_not":{"terms":{"channel_class_id":["17","36"]}},"must":[{"terms":{"channel_class_id":${JSON.stringify(
-              data
-            )}}},{"terms":{"id":${JSON.stringify(this.channelIds)}}}]}}`
-          : `{"bool":{"must_not":{"terms":{"channel_class_id":["17","36"]}},"must":[{"terms":{"channel_class_id":${JSON.stringify(
-              data
-            )}}}]}}`
-      } else {
-        this.query = this.channelIds.length
-          ? `{"bool":{"must_not":{"terms":{"channel_class_id":["17","36"]}},"must":[{"terms":{"id":${JSON.stringify(
-              this.channelIds
-            )}}}]}}`
-          : `{"bool":{"must_not":{"terms":{"channel_class_id":["17","36"]}}}}`
-      }
       this.totalNumber = 1
+      this.channelSearchValList = data.toString()
       this.getChannelDetailPage()
     },
-    // TODO:
+    // 选择渠道
     getChannelLeves(data) {
-      this.channelIds = data
-      if (data.length) {
-        this.query = this.channelSearchValList.length
-          ? `{"bool":{"must_not":{"terms":{"channel_class_id":["17","36"]}},"must":[{"terms":{"channel_class_id":${JSON.stringify(
-              this.channelSearchValList
-            )}}},{"terms":{"id":${JSON.stringify(this.channelIds)}}}]}}`
-          : `{"bool":{"must_not":{"terms":{"channel_class_id":["17","36"]}},"must":{"terms":{"id":${JSON.stringify(
-              data
-            )}}}}}`
-      } else {
-        this.query = this.channelSearchValList.length
-          ? `{"bool":{"must_not":{"terms":{"channel_class_id":["17","36"]}},"must":[{"terms":{"channel_class_id":${JSON.stringify(
-              this.channelSearchValList
-            )}}}]}}`
-          : `{"bool":{"must_not":{"terms":{"channel_class_id":["17","36"]}}}}`
-      }
       this.totalNumber = 1
+      this.channelIds = data.toString()
       this.getChannelDetailPage()
     },
     getChannelDetailPage() {
-      if (
-        this.query ||
-        this.channelIds.length ||
-        this.querySearchTrialStage ||
-        this.stateTime ||
-        this.endTime
-      ) {
-        const queryChannelList = this.query
-          ? this.query
-          : `{"bool":{"must_not":{"terms":{"channel_class_id":["17","36"]}}}}`
-        const channelId = this.channelIds.length
-          ? `${JSON.stringify(this.channelIds.join())}`
-          : `""`
-        const SearchTrialStage = this.querySearchTrialStage
-          ? `"${this.querySearchTrialStage}"`
-          : `"0"`
-        const trialOrderStartCtime = this.stateTime
-          ? `"${this.stateTime}"`
-          : `"0"`
-        const trialOrderEndCtime = this.endTime ? `"${this.endTime}"` : `"0"`
-        const channelSearchValList = this.channelSearchValList.length
-          ? this.channelSearchValList.join()
-          : ''
-        this.querysData = `${JSON.stringify(
-          queryChannelList
-        )},channelClassIds:${JSON.stringify(
-          channelSearchValList
-        )},channelIds:${channelId},trialStage:${SearchTrialStage},trialOrderEndCtime:${trialOrderEndCtime},trialOrderStartCtime:${trialOrderStartCtime},page:${
-          this.totalNumber
-        }`
-      } else {
-        this.querysData = `"{\\"bool\\":{\\"must_not\\":{\\"terms\\":{\\"channel_class_id\\":[\\"17\\",\\"36\\"]}}}}",trialStage:"",trialOrderEndCtime:"0",trialOrderStartCtime:"0",page:${this.totalNumber}`
+      const params = {
+        trialChannels: this.channelIds,
+        trialChannelClassIds: this.channelSearchValList,
+        stage: this.querySearchTrialStage,
+        startCtime: this.stateTime,
+        endCtime: this.endTime,
+        page: this.totalNumber,
+        pageSzie: '20'
       }
-      this.$http.Operating.channelDetailPage(this.querysData).then((res) => {
-        const _data = res.data.channelDetailPage
-        // 总条数
-        this.totalElements = +_data.totalElements
-        // 当前页
-        this.totalNumber = +_data.number
-        // 表格数据
-        _data.content.forEach((res) => {
-          if (res.channelCtime === '0') {
-            res.channelCtime = '-'
-          } else {
-            res.channelCtime = timestamp(res.channelCtime, 5)
-          }
-          res.channelNameLink = `https://www.xiaoxiongmeishu.com/activity/newFortyNine?changeImg=1&channelId=${res.channelId}`
+      const paramsM = {
+        trialChannels: this.channelIds,
+        trialChannelClassIds: this.channelSearchValList,
+        stage: this.querySearchTrialStage,
+        startCtime: this.stateTime,
+        endCtime: this.endTime
+      }
+      this.$http.Operating.countsByTrialChannel(params).then((res) => {
+        const _data = res.content
+        this.totalNumber = res.number
+        this.totalElements = res.totalElements
+        _data.forEach((res) => {
+          res.channelNameLink = `https://www.xiaoxiongmeishu.com/activity/newFortyNine?changeImg=1&channelId=${res.pay_channel}`
           // 线索数
           // const orderUserAllNums = +res.orderUserAllNums
           // 购买体验课数
-          const orderUserPayNums = +res.orderUserPayNums
+          const orderUserPayNums = +res.trial_user_num
           // 参课数
-          const joinCourseNums = +res.joinCourseNums
+          const joinCourseNums = +res.join_user_num
           // 完课数
-          const completeCourseNums = +res.completeCourseNums
+          const completeCourseNums = +res.complete_user_num
           // 成单数
-          const systemOrderNums = +res.systemOrderNums
+          const systemOrderNums = +res.system_user_num
           // 计算参课率
           if (joinCourseNums === 0 && orderUserPayNums === 0) {
             res.joinCourseNumsPercent = '0%'
@@ -506,58 +457,113 @@ export default {
             const nums = (systemOrderNums / orderUserPayNums) * 100
             res.systemOrderNumsPercent = `${nums.toFixed(2)}%`
           }
+          this.channelValueList.push(res.pay_channel)
         })
+        this.onGetChannelList(_data)
+      })
+      this.$http.Operating.countsByTrialChannelOfTotal(paramsM).then((ele) => {
         // 模块数据
-        const _datas = _data.counts
+        const _datas = ele.payload
         // 累计成单金额
-        const allSystemUserAmountsNums = +_datas.allSystemUserAmounts
-        // const allSystemUserAmountsNums = 1234567.23456789
-        this.allSystemUserAmounts = `${allSystemUserAmountsNums.toFixed(2)}`
+        if (_datas.system_user_amounts !== 'null') {
+          const allSystemUserAmountsNums = +_datas.system_user_amounts
+          this.allSystemUserAmounts = `${allSystemUserAmountsNums.toFixed(2)}`
+        } else {
+          this.allSystemUserAmounts = '0'
+        }
         // 累计转化率
-        if (+_datas.allSystemUserNums === 0 && +_datas.allPayUserNums === 0) {
+        if (+_datas.system_user_num === 0 && _datas.trial_user_num === 'null') {
           this.conversionRate = `0%`
         } else {
           const conversionRatePercentNums =
-            (_datas.allSystemUserNums / _datas.allPayUserNums) * 100
+            (_datas.system_user_num / _datas.trial_user_num) * 100
           this.conversionRate = `${conversionRatePercentNums.toFixed(2)}%`
         }
         // 系统课成单人数
-        this.allSystemUser = _datas.allSystemUserNums
+        this.allSystemUser = _datas.system_user_num
         // 添加微信
-        this.allWechatAddNums = _datas.allWechatAddNums
+        if (_datas.wet_nums !== 'null') {
+          this.allWechatAddNums = _datas.wet_nums
+        } else {
+          this.allWechatAddNums = '0'
+        }
         // 未支付
-        this.unpaid = _datas.allUserNums - _datas.allPayUserNums
+        this.unpaid = _datas.order_user_no_pay_nums
         // 参课数
-        this.allJoinUserNums = _datas.allJoinUserNums
+        this.allJoinUserNums = _datas.join_user_num
         // 参课率
-        if (+_datas.allJoinUserNums === 0 && +_datas.allPayUserNums === 0) {
+        if (+_datas.join_user_num === 0 && _datas.trial_user_num === 'null') {
           this.allJoinUserNumsPercent = `0%`
         } else {
           const allJoinUserNumsPercentNums =
-            (_datas.allJoinUserNums / _datas.allPayUserNums) * 100
+            (_datas.join_user_num / _datas.trial_user_num) * 100
           this.allJoinUserNumsPercent = `${allJoinUserNumsPercentNums.toFixed(
             2
           )}%`
         }
         // 完课数
-        this.allCompleteUserNums = _datas.allCompleteUserNums
+        this.allCompleteUserNums = _datas.complete_user_num
         // 完课率
-        if (+_datas.allCompleteUserNums === 0 && +_datas.allPayUserNums === 0) {
+        if (
+          +_datas.complete_user_num === 0 &&
+          _datas.trial_user_num === 'null'
+        ) {
           this.allCompleteUserNumsPercent = `0%`
         } else {
           const allCompleteUserNumsPercentNums =
-            (_datas.allCompleteUserNums / _datas.allPayUserNums) * 100
+            (_datas.complete_user_num / _datas.trial_user_num) * 100
           this.allCompleteUserNumsPercent = `${allCompleteUserNumsPercentNums.toFixed(
             2
           )}%`
         }
         // 成单数
-        this.allPayUserNums = _datas.allPayUserNums
+        if (_datas.trial_user_num !== 'null') {
+          this.allPayUserNums = _datas.trial_user_num
+        } else {
+          this.allPayUserNums = '0'
+        }
         // 线索数
-        this.allUserNums = _datas.allUserNums
-
-        this.tableData = _data.content
+        if (
+          _datas.trial_user_num !== 'null' &&
+          +_datas.order_user_no_pay_nums !== 0
+        ) {
+          this.allUserNums =
+            +_datas.trial_user_num + +_datas.order_user_no_pay_nums
+        } else {
+          this.allUserNums = '0'
+        }
       })
+
+      //   this.tableData = _data.content
+      // })
+    },
+    // 调取渠道分类  渠道名称接口
+    onGetChannelList(_data) {
+      const channelValue = `{"id":${JSON.stringify(this.channelValueList)}}`
+      this.$http.Operating.ChannelDetailStatisticsList(channelValue).then(
+        (ele) => {
+          const __data = ele.data.ChannelDetailStatisticsList
+          _data.forEach((val) => {
+            __data.forEach((item) => {
+              if (+item.id === +val.pay_channel) {
+                val.channel_class_id = item.channel_class_id
+                val.channel_class_name = item.channel_class_name
+                val.channel_inner_name = item.channel_inner_name
+                val.ctime = item.ctime
+                if (+val.ctime === 0 && val.ctime) {
+                  val.ctime = '-'
+                } else {
+                  val.ctime = timestamp(val.ctime, 5)
+                }
+                val.id = item.id
+                val.p_channel_class_id = item.p_channel_class_id
+                val.p_channel_class_name = item.p_channel_class_name
+              }
+            })
+          })
+          this.tableData = _data
+        }
+      )
     },
     // 组件 排期传的值
     schedulingSearch(data) {
@@ -578,11 +584,11 @@ export default {
       this.getChannelDetailPage()
     },
     // 分页
-    // handleCurrentChange(val) {
-    // this.totalNumber = val
-    // this.getChannelDetailPage()
-    // this.$emit('onCurrentPage', val)
-    // },
+    handleCurrentChange(val) {
+      this.totalNumber = val
+      this.getChannelDetailPage()
+      // this.$emit('onCurrentPage', val)
+    },
     // handleEdit(index, row) {
     //   // 鼠标移入三个点上面触发的事件
     //   // 当没有点击复选框 直接点击加好友
