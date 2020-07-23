@@ -2,8 +2,8 @@
  * @Descripttion:
  * @Author: songyanan
  * @Date: 2020-05-20 10:10:19
- * @LastEditors: songyanan
- * @LastEditTime: 2020-05-22 16:26:10
+ * @LastEditors: panjian
+ * @LastEditTime: 2020-07-23 16:29:24
  -->
 <template>
   <div>
@@ -16,6 +16,11 @@
       <el-tab-pane label="微信号交接">
         <div v-if="tabIndex === '1'">
           <Wechar :tabIndex="tabIndex" />
+        </div>
+      </el-tab-pane>
+      <el-tab-pane label="历史记录">
+        <div v-if="tabIndex === '2'">
+          <history :tabIndex="tabIndex" />
         </div>
       </el-tab-pane>
     </el-tabs>
@@ -36,7 +41,8 @@ export default {
   },
   components: {
     Wechar: () => import('./components/wecharHandover.vue'),
-    Class: () => import('./components/classHandover.vue')
+    Class: () => import('./components/classHandover.vue'),
+    history: () => import('./components/history.vue')
   }
 }
 </script>
