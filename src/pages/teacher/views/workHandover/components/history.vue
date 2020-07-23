@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-07-23 16:26:04
  * @LastEditors: panjian
- * @LastEditTime: 2020-07-23 18:00:17
+ * @LastEditTime: 2020-07-23 18:41:29
 -->
 <template>
   <div class="history-box">
@@ -19,7 +19,7 @@
       <el-table
         :header-cell-style="headerCss"
         :data="tableData"
-        style="width: 100%;margin-bottom:60px;"
+        style="width: 100%;margin-bottom:50px;"
       >
         <el-table-column prop="date" label="交接类型"> </el-table-column>
         <el-table-column prop="name" label="交出方"> </el-table-column>
@@ -31,11 +31,12 @@
       </el-table>
       <!-- 分页 -->
       <m-pagination
+        style="bottom:0px;right:0px;"
         @current-change="handleCurrentChange"
         :current-page="+currentPage"
         :total="+totalElements"
-        open="calc(100vw - 147px - 50px)"
-        close="calc(100vw - 26px - 50px)"
+        open="calc(100vw - 147px)"
+        close="calc(100vw - 26px)"
       />
     </div>
   </div>
