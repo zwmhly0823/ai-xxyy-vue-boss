@@ -20,6 +20,25 @@ const routes = [
     redirect: '/channelManagement'
   },
   {
+    path: '/activityManagement',
+    name: 'activityManagement',
+    meta: {
+      title: '活动管理',
+      keepAlive: true
+    },
+    component: () => import('../views/activityManagement/index.vue')
+  },
+  {
+    path: '/newActivityManage/:id/:templateId',
+    name: 'newActivityManage',
+    meta: {
+      title: '活动管理',
+      keepAlive: false
+    },
+    component: () =>
+      import('../views/activityManagement/addActivityManage/index.vue')
+  },
+  {
     path: '/operatingSchedule',
     name: 'operatingSchedule',
     meta: {

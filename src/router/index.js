@@ -335,6 +335,14 @@ const routes = [
     },
     children: [
       {
+        path: '/activityManagement',
+        name: 'activityManagement',
+        meta: {
+          title: '活动管理',
+          module: 'operating'
+        }
+      },
+      {
         path: '/channelManagement',
         name: 'channelManagement',
         meta: {
