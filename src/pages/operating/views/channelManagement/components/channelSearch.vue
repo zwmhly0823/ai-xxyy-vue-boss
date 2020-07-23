@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-04-25 12:09:03
  * @LastEditors: panjian
- * @LastEditTime: 2020-07-23 10:57:45
+ * @LastEditTime: 2020-07-23 15:51:16
  -->
 <template>
   <div id="channel-box" class="channel-box">
@@ -683,6 +683,7 @@ export default {
         margin-left: 30px;
       }
       .row5 {
+        margin-left: -30px;
       }
       .row6 {
         width: 5%;
@@ -742,12 +743,13 @@ export default {
           margin-left: 120px;
         }
         .row5 {
+          margin-left: 30px;
         }
         .row6 {
-          margin-left: 70px;
+          margin-left: 20px;
         }
         .row7 {
-          margin-left: 80px;
+          margin-left: 100px;
         }
         .row8 {
           margin-left: -10px;

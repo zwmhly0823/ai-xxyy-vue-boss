@@ -4,10 +4,10 @@
  * @Author: panjian
  * @Date: 2020-04-25 12:09:03
  * @LastEditors: panjian
- * @LastEditTime: 2020-07-23 11:59:59
+ * @LastEditTime: 2020-07-23 15:53:29
  -->
 <template>
-  <div id="channel-box" class="channel-box">
+  <div id="channel-boxs" class="channel-box">
     <div class="channel-box-top">
       <div class="channel-box-top-search">
         <channel-search-two
@@ -136,7 +136,6 @@
             </el-tooltip>
           </div></el-col
         >
-        <el-col :span="2" class="row11"><div>创建时间</div></el-col>
       </el-row>
     </div>
     <div class="channel-box-bottom">
@@ -160,12 +159,7 @@
           </el-table-column>
           <el-table-column prop="wet_nums" label="添加微信数">
           </el-table-column>
-          <el-table-column
-            prop="address"
-            width="130px"
-            align="conent"
-            label="参课数/参课率"
-          >
+          <el-table-column prop="address" align="conent" label="参课数/参课率">
             <template slot="header">
               <div>
                 <span>参课数/参课率</span>
@@ -183,7 +177,7 @@
               <div>{{ scope.row.joinCourseNumsPercent }}</div>
             </template>
           </el-table-column>
-          <el-table-column prop="address" width="130px" label="完课数/完课率">
+          <el-table-column prop="address" label="完课数/完课率">
             <template slot="header">
               <div>
                 <span>完课数/完课率</span>
@@ -201,7 +195,7 @@
               <div>{{ scope.row.completeCourseNumsPercent }}</div>
             </template>
           </el-table-column>
-          <el-table-column prop="address" width="130px" label="成单数/转化率">
+          <el-table-column prop="address" label="成单数/转化率">
             <template slot="header">
               <div>
                 <span>成单数/转化率</span>
@@ -219,11 +213,7 @@
               <div>{{ scope.row.systemOrderNumsPercent }}</div>
             </template>
           </el-table-column>
-          <el-table-column
-            prop="system_user_amounts"
-            width="100"
-            label="成单金额"
-          >
+          <el-table-column prop="system_user_amounts" label="成单金额">
             <template slot="header">
               <div>
                 <span>成单金额</span>
@@ -251,33 +241,6 @@
         />
       </template>
     </div>
-    <el-drawer
-      class="drawer-detail"
-      :show-close="showClose"
-      :visible.sync="drawer"
-      :modal="false"
-      size="40%"
-    >
-      <div class="drawer-box">
-        <h3>基本信息</h3>
-        <p>
-          <span>渠道分类: </span>
-          <span class="drawer-box-text"> 线上推广 - 推广人</span>
-        </p>
-        <p>
-          <span>渠道名称: </span>
-          <span class="drawer-box-text">推广人</span>
-        </p>
-        <p>
-          <span>渠道ID: </span>
-          <span class="drawer-box-text">43433</span>
-        </p>
-        <p>
-          <span>链接地址: </span>
-          <a :href="link" target="_blank">{{ link }}</a>
-        </p>
-      </div>
-    </el-drawer>
   </div>
 </template>
 
@@ -372,7 +335,7 @@ export default {
   },
   methods: {
     handleScroll() {
-      const dom = document.getElementById('channel-box').scrollTop
+      const dom = document.getElementById('channel-boxs').scrollTop
       dom > 289 ? (this.tableShow = true) : (this.tableShow = false)
     },
     // 渠道一级
@@ -666,34 +629,27 @@ export default {
       font-weight: normal;
       .row1 {
       }
-      .row2 {
-        margin-left: 20px;
-      }
-      .row3 {
-        margin-left: 30px;
-      }
       .row4 {
-        margin-left: 30px;
+        margin-left: 10px;
       }
       .row5 {
+        margin-left: 30px;
       }
       .row6 {
         width: 5%;
-        margin-left: -20px;
+        margin-left: 50px;
       }
       .row7 {
-        margin-left: 20px;
+        margin-left: 100px;
       }
       .row8 {
-        margin-left: 20px;
+        margin-left: 50px;
       }
       .row9 {
-        margin-left: 20px;
+        margin-left: 50px;
       }
       .row10 {
-        margin-left: 20px;
-      }
-      .row11 {
+        margin-left: 40px;
       }
       .bottom-tips {
         color: #fff;
@@ -725,34 +681,26 @@ export default {
         font-weight: normal;
         .row1 {
         }
-        .row2 {
-          margin-left: -20px;
-        }
-        .row3 {
-          margin-left: -10px;
-        }
         .row4 {
-          margin-left: 120px;
+          margin-left: -30px;
         }
         .row5 {
+          margin-left: 80px;
         }
         .row6 {
           margin-left: 70px;
         }
         .row7 {
-          margin-left: 80px;
+          margin-left: 120px;
         }
         .row8 {
-          margin-left: -10px;
+          margin-left: 70px;
         }
         .row9 {
-          margin-left: -20px;
+          margin-left: 70px;
         }
         .row10 {
-          margin-left: -20px;
-        }
-        .row11 {
-          margin-left: -20px;
+          margin-left: 70px;
         }
         .bottom-tips {
           color: #fff;
