@@ -65,6 +65,8 @@
         <div class="tableInner" ref="tableInner"></div>
         <!-- table -->
         <el-table
+          ref="table"
+          v-if="+tableHeight !== 0"
           :height="tableHeight"
           :data="dataList"
           empty-text=" "
@@ -1008,6 +1010,8 @@ export default {
       this.filterParams = {}
       this.paramsToSearch.term = val
       this.$refs.searchC && this.$refs.searchC.changeTerm(val)
+      // 切换期数时清空筛选项
+      this.$refs.searchC && this.$refs.searchC.resetFilter()
     },
 
     searchParams(params, oldval) {
@@ -1028,11 +1032,11 @@ export default {
     }
   },
   created() {
-    this.$nextTick(() => {
-      const tableHeight =
-        document.body.clientHeight - this.$refs.tableInner.offsetTop - 110
-      this.tableHeight = tableHeight + ''
-    })
+    // this.$nextTick(() => {
+    //   const tableHeight =
+    //     document.body.clientHeight - this.$refs.tableInner.offsetTop - 110
+    //   this.tableHeight = tableHeight + ''
+    // })
     // 消息中心传递过来的预设参数
     this.paramsFromUrl()
     this.init()
@@ -1129,6 +1133,13 @@ export default {
           }
           // 把参数传给search，获取班级用
           this.paramsToSearch.term = this.term
+          // 上面的方法获取到term之后，才会加载search组件，加载完search组件之后才去算table的高
+          // 之所以要等是为了避免重绘 ---我是这么想的
+          this.$nextTick(() => {
+            const tableHeight =
+              document.body.clientHeight - this.$refs.tableInner.offsetTop - 90
+            this.tableHeight = tableHeight + ''
+          })
         }
       })
     },

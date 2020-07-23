@@ -382,9 +382,12 @@ export default {
       // console.log(this.searchQuery, 'this.searchQuery')
       this.$emit('search', this.searchQuery)
     },
-    handleClear() {
+    resetFilter() {
       this.nowDate = new Date().getTime()
       this.searchQuery = {}
+    },
+    handleClear() {
+      this.resetFilter()
       this.$emit('search', {})
     },
     changeTerm(val) {
