@@ -4,19 +4,18 @@
  * @Author: panjian
  * @Date: 2020-04-25 12:09:03
  * @LastEditors: panjian
- * @LastEditTime: 2020-07-23 15:51:16
+ * @LastEditTime: 2020-07-23 15:53:29
  -->
 <template>
-  <div id="channel-box" class="channel-box">
+  <div id="channel-boxs" class="channel-box">
     <div class="channel-box-top">
       <div class="channel-box-top-search">
-        <channel-search
+        <channel-search-two
           @channelSearchValue="channelSearchValue"
           @schedulingSearch="schedulingSearch"
           @dateSearch="dateSearch"
-          @getChannelLeves="getChannelLeves"
           :tabIndex="tabIndex"
-        ></channel-search>
+        ></channel-search-two>
       </div>
     </div>
     <div class="channel-box-medium">
@@ -87,8 +86,6 @@
     <div class="channel-fixed" v-show="tableShow">
       <el-row class="channel-fixed-row">
         <el-col :span="2"><div>渠道分类</div></el-col>
-        <el-col :span="2" class="row2"><div>渠道名称</div></el-col>
-        <el-col :span="1" class="row3"><div>渠道ID</div></el-col>
         <el-col :span="2" class="row4"><div>体验课成单数</div></el-col>
         <el-col :span="2" class="row5"><div>体验课未支付</div></el-col>
         <el-col :span="1" class="row6"><div>添加微信数</div></el-col>
@@ -139,7 +136,6 @@
             </el-tooltip>
           </div></el-col
         >
-        <el-col :span="2" class="row11"><div>创建时间</div></el-col>
       </el-row>
     </div>
     <div class="channel-box-bottom">
@@ -157,31 +153,13 @@
               }}</span>
             </template>
           </el-table-column>
-          <el-table-column width="150" label="渠道名称">
-            <template slot-scope="scope">
-              <a
-                v-if="scope.row.channel_inner_name"
-                style="color: #2a75ed;"
-                :href="scope.row.channelNameLink"
-                target="_blank"
-                >{{ scope.row.channel_inner_name }}</a
-              >
-              <span v-else>-</span>
-            </template>
-          </el-table-column>
-          <el-table-column prop="pay_channel" label="渠道ID"> </el-table-column>
           <el-table-column prop="trial_user_num" label="体验课成单数">
           </el-table-column>
           <el-table-column prop="order_user_no_pay_nums" label="体验课未支付">
           </el-table-column>
           <el-table-column prop="wet_nums" label="添加微信数">
           </el-table-column>
-          <el-table-column
-            prop="address"
-            width="130px"
-            align="conent"
-            label="参课数/参课率"
-          >
+          <el-table-column prop="address" align="conent" label="参课数/参课率">
             <template slot="header">
               <div>
                 <span>参课数/参课率</span>
@@ -199,7 +177,7 @@
               <div>{{ scope.row.joinCourseNumsPercent }}</div>
             </template>
           </el-table-column>
-          <el-table-column prop="address" width="130px" label="完课数/完课率">
+          <el-table-column prop="address" label="完课数/完课率">
             <template slot="header">
               <div>
                 <span>完课数/完课率</span>
@@ -217,7 +195,7 @@
               <div>{{ scope.row.completeCourseNumsPercent }}</div>
             </template>
           </el-table-column>
-          <el-table-column prop="address" width="130px" label="成单数/转化率">
+          <el-table-column prop="address" label="成单数/转化率">
             <template slot="header">
               <div>
                 <span>成单数/转化率</span>
@@ -235,11 +213,7 @@
               <div>{{ scope.row.systemOrderNumsPercent }}</div>
             </template>
           </el-table-column>
-          <el-table-column
-            prop="system_user_amounts"
-            width="100"
-            label="成单金额"
-          >
+          <el-table-column prop="system_user_amounts" label="成单金额">
             <template slot="header">
               <div>
                 <span>成单金额</span>
@@ -252,11 +226,11 @@
               </div>
             </template>
           </el-table-column>
-          <el-table-column label="创建时间">
+          <!-- <el-table-column label="创建时间">
             <template slot-scope="scope">
               {{ scope.row.ctime || '-' }}
             </template>
-          </el-table-column>
+          </el-table-column> -->
         </el-table>
         <m-pagination
           @current-change="handleCurrentChange"
@@ -267,40 +241,13 @@
         />
       </template>
     </div>
-    <el-drawer
-      class="drawer-detail"
-      :show-close="showClose"
-      :visible.sync="drawer"
-      :modal="false"
-      size="40%"
-    >
-      <div class="drawer-box">
-        <h3>基本信息</h3>
-        <p>
-          <span>渠道分类: </span>
-          <span class="drawer-box-text"> 线上推广 - 推广人</span>
-        </p>
-        <p>
-          <span>渠道名称: </span>
-          <span class="drawer-box-text">推广人</span>
-        </p>
-        <p>
-          <span>渠道ID: </span>
-          <span class="drawer-box-text">43433</span>
-        </p>
-        <p>
-          <span>链接地址: </span>
-          <a :href="link" target="_blank">{{ link }}</a>
-        </p>
-      </div>
-    </el-drawer>
   </div>
 </template>
 
 <script>
 import MPagination from '@/components/MPagination/index.vue'
-import channelSearch from '../components/componentsSearch/search'
-import { timestamp } from '@/utils/index'
+import channelSearchTwo from '../components/componentsSearch/searchTwo'
+// import { timestamp } from '@/utils/index'
 export default {
   props: {
     tabIndex: {
@@ -310,7 +257,7 @@ export default {
   },
   components: {
     MPagination,
-    channelSearch
+    channelSearchTwo
   },
   data() {
     return {
@@ -388,19 +335,13 @@ export default {
   },
   methods: {
     handleScroll() {
-      const dom = document.getElementById('channel-box').scrollTop
+      const dom = document.getElementById('channel-boxs').scrollTop
       dom > 289 ? (this.tableShow = true) : (this.tableShow = false)
     },
     // 渠道一级
     channelSearchValue(data) {
       this.totalNumber = 1
       this.channelSearchValList = data.toString()
-      this.getChannelDetailPage()
-    },
-    // 选择渠道
-    getChannelLeves(data) {
-      this.totalNumber = 1
-      this.channelIds = data.toString()
       this.getChannelDetailPage()
     },
     getChannelDetailPage() {
@@ -420,7 +361,8 @@ export default {
         startCtime: this.stateTime,
         endCtime: this.endTime
       }
-      this.$http.Operating.countsByTrialChannel(params).then((res) => {
+      this.$http.Operating.countsByTrialChannelClassId(params).then((res) => {
+        console.log(res)
         const _data = res.content
         this.totalNumber = res.number
         this.totalElements = res.totalElements
@@ -457,82 +399,92 @@ export default {
             const nums = (systemOrderNums / orderUserPayNums) * 100
             res.systemOrderNumsPercent = `${nums.toFixed(2)}%`
           }
-          this.channelValueList.push(res.pay_channel)
+          if (
+            res.trial_channel_class_id !== 'null' &&
+            res.trial_channel_class_id
+          ) {
+            this.channelValueList.push(res.trial_channel_class_id)
+          }
         })
         this.onGetChannelList(_data)
       })
-      this.$http.Operating.countsByTrialChannelOfTotal(paramsM).then((ele) => {
-        // 模块数据
-        const _datas = ele.payload
-        // 累计成单金额
-        if (_datas.system_user_amounts !== 'null') {
-          const allSystemUserAmountsNums = +_datas.system_user_amounts
-          this.allSystemUserAmounts = `${allSystemUserAmountsNums.toFixed(2)}`
-        } else {
-          this.allSystemUserAmounts = '0'
+      this.$http.Operating.countsByTrialChannelClassIdOfTotal(paramsM).then(
+        (ele) => {
+          // 模块数据
+          const _datas = ele.payload
+          // 累计成单金额
+          if (_datas.system_user_amounts !== 'null') {
+            const allSystemUserAmountsNums = +_datas.system_user_amounts
+            this.allSystemUserAmounts = `${allSystemUserAmountsNums.toFixed(2)}`
+          } else {
+            this.allSystemUserAmounts = '0'
+          }
+          // 累计转化率
+          if (
+            +_datas.system_user_num === 0 &&
+            _datas.trial_user_num === 'null'
+          ) {
+            this.conversionRate = `0%`
+          } else {
+            const conversionRatePercentNums =
+              (_datas.system_user_num / _datas.trial_user_num) * 100
+            this.conversionRate = `${conversionRatePercentNums.toFixed(2)}%`
+          }
+          // 系统课成单人数
+          this.allSystemUser = _datas.system_user_num
+          // 添加微信
+          if (_datas.wet_nums !== 'null') {
+            this.allWechatAddNums = _datas.wet_nums
+          } else {
+            this.allWechatAddNums = '0'
+          }
+          // 未支付
+          this.unpaid = _datas.order_user_no_pay_nums
+          // 参课数
+          this.allJoinUserNums = _datas.join_user_num
+          // 参课率
+          if (+_datas.join_user_num === 0 && _datas.trial_user_num === 'null') {
+            this.allJoinUserNumsPercent = `0%`
+          } else {
+            const allJoinUserNumsPercentNums =
+              (_datas.join_user_num / _datas.trial_user_num) * 100
+            this.allJoinUserNumsPercent = `${allJoinUserNumsPercentNums.toFixed(
+              2
+            )}%`
+          }
+          // 完课数
+          this.allCompleteUserNums = _datas.complete_user_num
+          // 完课率
+          if (
+            +_datas.complete_user_num === 0 &&
+            _datas.trial_user_num === 'null'
+          ) {
+            this.allCompleteUserNumsPercent = `0%`
+          } else {
+            const allCompleteUserNumsPercentNums =
+              (_datas.complete_user_num / _datas.trial_user_num) * 100
+            this.allCompleteUserNumsPercent = `${allCompleteUserNumsPercentNums.toFixed(
+              2
+            )}%`
+          }
+          // 成单数
+          if (_datas.trial_user_num !== 'null') {
+            this.allPayUserNums = _datas.trial_user_num
+          } else {
+            this.allPayUserNums = '0'
+          }
+          // 线索数
+          if (
+            _datas.trial_user_num !== 'null' &&
+            +_datas.order_user_no_pay_nums !== 0
+          ) {
+            this.allUserNums =
+              +_datas.trial_user_num + +_datas.order_user_no_pay_nums
+          } else {
+            this.allUserNums = '0'
+          }
         }
-        // 累计转化率
-        if (+_datas.system_user_num === 0 && _datas.trial_user_num === 'null') {
-          this.conversionRate = `0%`
-        } else {
-          const conversionRatePercentNums =
-            (_datas.system_user_num / _datas.trial_user_num) * 100
-          this.conversionRate = `${conversionRatePercentNums.toFixed(2)}%`
-        }
-        // 系统课成单人数
-        this.allSystemUser = _datas.system_user_num
-        // 添加微信
-        if (_datas.wet_nums !== 'null') {
-          this.allWechatAddNums = _datas.wet_nums
-        } else {
-          this.allWechatAddNums = '0'
-        }
-        // 未支付
-        this.unpaid = _datas.order_user_no_pay_nums
-        // 参课数
-        this.allJoinUserNums = _datas.join_user_num
-        // 参课率
-        if (+_datas.join_user_num === 0 && _datas.trial_user_num === 'null') {
-          this.allJoinUserNumsPercent = `0%`
-        } else {
-          const allJoinUserNumsPercentNums =
-            (_datas.join_user_num / _datas.trial_user_num) * 100
-          this.allJoinUserNumsPercent = `${allJoinUserNumsPercentNums.toFixed(
-            2
-          )}%`
-        }
-        // 完课数
-        this.allCompleteUserNums = _datas.complete_user_num
-        // 完课率
-        if (
-          +_datas.complete_user_num === 0 &&
-          _datas.trial_user_num === 'null'
-        ) {
-          this.allCompleteUserNumsPercent = `0%`
-        } else {
-          const allCompleteUserNumsPercentNums =
-            (_datas.complete_user_num / _datas.trial_user_num) * 100
-          this.allCompleteUserNumsPercent = `${allCompleteUserNumsPercentNums.toFixed(
-            2
-          )}%`
-        }
-        // 成单数
-        if (_datas.trial_user_num !== 'null') {
-          this.allPayUserNums = _datas.trial_user_num
-        } else {
-          this.allPayUserNums = '0'
-        }
-        // 线索数
-        if (
-          _datas.trial_user_num !== 'null' &&
-          +_datas.order_user_no_pay_nums !== 0
-        ) {
-          this.allUserNums =
-            +_datas.trial_user_num + +_datas.order_user_no_pay_nums
-        } else {
-          this.allUserNums = '0'
-        }
-      })
+      )
 
       //   this.tableData = _data.content
       // })
@@ -540,30 +492,34 @@ export default {
     // 调取渠道分类  渠道名称接口
     onGetChannelList(_data) {
       const channelValue = `{"id":${JSON.stringify(this.channelValueList)}}`
-      this.$http.Operating.ChannelDetailStatisticsList(channelValue).then(
-        (ele) => {
-          const __data = ele.data.ChannelDetailStatisticsList
-          _data.forEach((val) => {
-            __data.forEach((item) => {
-              if (+item.id === +val.pay_channel) {
-                val.channel_class_id = item.channel_class_id
-                val.channel_class_name = item.channel_class_name
-                val.channel_inner_name = item.channel_inner_name
-                val.ctime = item.ctime
-                if (+val.ctime === 0 && val.ctime) {
-                  val.ctime = '-'
-                } else {
-                  val.ctime = timestamp(val.ctime, 5)
-                }
-                val.id = item.id
-                val.p_channel_class_id = item.p_channel_class_id
-                val.p_channel_class_name = item.p_channel_class_name
+      this.$http.Operating.ChannelClassPageName(channelValue).then((ele) => {
+        const __data = ele.data.ChannelClassPage.content
+        _data.forEach((val) => {
+          __data.forEach((item) => {
+            console.log(item, '-----')
+            console.log(val, '=====')
+            if (+item.id === +val.trial_channel_class_id) {
+              val.channel_class_id = item.channel_class_parent_id
+              val.channel_class_name = item.channel_class_name
+              // if (+val.ctime === 0 && val.ctime) {
+              //   val.ctime = '-'
+              // } else {
+              //   val.ctime = timestamp(val.ctime, 5)
+              // }
+              if (
+                item.channelClassParent &&
+                item.channelClassParent.channel_class_name
+              ) {
+                val.p_channel_class_name =
+                  item.channelClassParent.channel_class_name
+              } else {
+                val.p_channel_class_name = '-'
               }
-            })
+            }
           })
-          this.tableData = _data
-        }
-      )
+        })
+        this.tableData = _data
+      })
     },
     // 组件 排期传的值
     schedulingSearch(data) {
@@ -673,35 +629,27 @@ export default {
       font-weight: normal;
       .row1 {
       }
-      .row2 {
-        margin-left: 20px;
-      }
-      .row3 {
-        margin-left: 30px;
-      }
       .row4 {
-        margin-left: 30px;
+        margin-left: 10px;
       }
       .row5 {
-        margin-left: -30px;
+        margin-left: 30px;
       }
       .row6 {
         width: 5%;
-        margin-left: -20px;
+        margin-left: 50px;
       }
       .row7 {
-        margin-left: 20px;
+        margin-left: 100px;
       }
       .row8 {
-        margin-left: 20px;
+        margin-left: 50px;
       }
       .row9 {
-        margin-left: 20px;
+        margin-left: 50px;
       }
       .row10 {
-        margin-left: 20px;
-      }
-      .row11 {
+        margin-left: 40px;
       }
       .bottom-tips {
         color: #fff;
@@ -733,35 +681,26 @@ export default {
         font-weight: normal;
         .row1 {
         }
-        .row2 {
-          margin-left: -20px;
-        }
-        .row3 {
-          margin-left: -10px;
-        }
         .row4 {
-          margin-left: 120px;
+          margin-left: -30px;
         }
         .row5 {
-          margin-left: 30px;
+          margin-left: 80px;
         }
         .row6 {
-          margin-left: 20px;
+          margin-left: 70px;
         }
         .row7 {
-          margin-left: 100px;
+          margin-left: 120px;
         }
         .row8 {
-          margin-left: -10px;
+          margin-left: 70px;
         }
         .row9 {
-          margin-left: -20px;
+          margin-left: 70px;
         }
         .row10 {
-          margin-left: -20px;
-        }
-        .row11 {
-          margin-left: -20px;
+          margin-left: 70px;
         }
         .bottom-tips {
           color: #fff;

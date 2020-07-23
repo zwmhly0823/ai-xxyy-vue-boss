@@ -3,8 +3,8 @@
  * @version: 
  * @Author: panjian
  * @Date: 2020-05-06 16:33:15
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-05-26 20:20:15
+ * @LastEditors: panjian
+ * @LastEditTime: 2020-07-18 15:48:24
  -->
 <template>
   <div class="channelAdd-box">
@@ -315,7 +315,6 @@ export default {
         this.queryList,
         this.currentPage
       ).then((res) => {
-        console.log('res:', res)
         this.currentPage = res.data.ChannelDetailStatisticsPage.number
         this.totalElements = res.data.ChannelDetailStatisticsPage.totalElements
         const _data = res.data.ChannelDetailStatisticsPage.content
@@ -343,7 +342,6 @@ export default {
     },
     // 渠道下拉框
     channelSearchValue(data) {
-      console.log(data)
       this.currentPage = 1
       if (data) {
         const channelClassId = []
@@ -362,10 +360,6 @@ export default {
         }
         // const id = {  }
         this.queryList = `${JSON.stringify(JSON.stringify(channelClassid))}`
-        console.log(
-          this.queryList,
-          'this.queryListthis.queryListthis.queryList'
-        )
       } else {
         this.queryList = `""`
       }
@@ -399,7 +393,6 @@ export default {
     handleEdit(index, row) {
       // 鼠标移入三个点上面触发的事件
       // 当没有点击复选框 直接点击加好友
-      console.log(index, row, '点击查看详情11')
     },
     // 点击添加渠道
     onAddChannel() {
@@ -435,10 +428,7 @@ export default {
     },
     // 下载单张二维码
     onUpload(row) {
-      console.log(row, 'xiazai')
       const url = row.short_er_code
-      console.log(url)
-
       setTimeout(() => {
         downloadByBlob(
           url,
@@ -484,7 +474,6 @@ export default {
       downImgAll(imgListName, imgUrlList)
         .then((res) => {
           // loadingInstance.close()
-          console.log(res)
           this.downLoad = false
         })
         .catch((err) => {
@@ -499,7 +488,6 @@ export default {
     },
     // 点击推广人统计查看
     onExtension(row) {
-      console.log(row, '推广人链接')
       this.$http.Operating.getEncode(row.id).then((res) => {
         // window.location.href = res
         window.open(res)
