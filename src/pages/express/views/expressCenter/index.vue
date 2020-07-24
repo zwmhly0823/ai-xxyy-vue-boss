@@ -264,7 +264,7 @@ const allExpressHideSearchItemSystem = {
 }
 const allExpressHideSearchItemActivity = {
   productName: 'product_name',
-  level: '',
+  level: 'level',
   replenishReason: '',
   replenishMethod: '',
   moreVersion: '',
@@ -285,12 +285,13 @@ const replenishHideCol = {
   productType: false
 }
 const replenishHideSearchItem = {
-  level: '',
+  level: 'level',
   moreVersion: '',
   // schedule: '',
   groupSell: '',
   teamDetail: '',
-  operatorId: 'operator_id'
+  operatorId: 'operator_id',
+  regType: 'regType'
 }
 const allExpressSourceType = '0,1,2,3,4'
 const replenishSourceType = '5'

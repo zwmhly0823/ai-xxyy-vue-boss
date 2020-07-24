@@ -296,7 +296,7 @@
         </template>
       </el-table-column>
       <el-table-column
-        label="社群销售"
+        :label="regtype == '1' ? '社群销售' : '辅导老师'"
         min-width="150"
         v-if="showCol.teacher"
         :key="12"
@@ -935,6 +935,9 @@ export default {
       }
       this.searchIn.forEach((item) => {
         if (item && item.term) {
+          if (item.term.regType) {
+            timeType.regtype = item.term.regType
+          }
           if (item.term.operator_id) {
             timeType.operator_id = item.term.operator_id
           }

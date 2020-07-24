@@ -27,6 +27,7 @@
         :teacherTip="showItem.teacherTip"
         :teamClass="teamClass"
         :productName="showItem.productName"
+        :regType="showItem.regType"
       />
     </div>
     <!-- v-if="!teacherId" TOSS -->
@@ -453,6 +454,7 @@ export default {
         }
         return item
       })
+
       this.$emit('result', this.searchIn)
       switchTabSearchIn[
         `searchIn${this.regtype}${this.source_type}`
