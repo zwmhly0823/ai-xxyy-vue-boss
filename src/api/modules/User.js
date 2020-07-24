@@ -4,8 +4,8 @@
  * @version:
  * @Author: shentong
  * @Date: 2020-03-13 14:38:28
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-07-11 20:37:17
+ * @LastEditors: liukun
+ * @LastEditTime: 2020-07-22 21:54:51
  */
 // import axios from '../axios'
 import axios from '../axiosConfig'
@@ -380,6 +380,7 @@ export default {
           loginData {
             device_type
             device_model
+            login_time
           }
           birthday
           sender{
@@ -411,6 +412,7 @@ export default {
             orderInfo {
               isrefund
             }
+            remaining_week
           }
           teams{
              id
@@ -443,6 +445,13 @@ export default {
           accountUserCollect{
             code
             value
+          }
+          jluserInfo{
+            avatar
+            nick_name
+            wechat_no
+            remark
+            labels
           }
         }
       }`
@@ -594,7 +603,8 @@ export default {
     const sort = `{ "ctime": "desc" }`
     return axios.post(`/graphql/v1/toss`, {
       query: `{
-        CouponUserPage(query:${JSON.stringify(formattingQuery)},
+        CouponUserPage(
+          query:${JSON.stringify(formattingQuery)},
           sort: ${JSON.stringify(sort)},
           page: ${page},
           size:${size}) {
@@ -623,6 +633,7 @@ export default {
       }`
     })
   },
+  // 小熊币
   getUserAssetsCoin(query = '', page = 1, size = 20) {
     const formattingQuery = JSON.stringify({
       uid: query,
@@ -747,5 +758,59 @@ export default {
   // 学员详情 修改地址
   updateExpressAddressNew(query) {
     return axios.get(`/api/ex/v1/express/updateExpressAddressNew`, query)
+  },
+  // 提交跟踪表单
+  submitForm(query) {
+    return axios.get(`/api/u/v1/user/userfollowlog/createUserFollowLog`, query)
+  },
+  // 获取学员发展的下线
+  getRecommendList(query) {
+    return axios.post('/graphql/v1/toss', {
+      query: `{
+            UserList(query: ${JSON.stringify(
+              JSON.stringify({ send_id: query })
+            )},size:200){
+            id
+            username
+           }
+      }`
+    })
+  },
+  // 获取除了艾克外的所有标签4种
+  listLabelsForUser(userId) {
+    return axios.get(
+      `/api/toss/v1/toss-api/label/listLabelsForUser?userId=${userId}&teacherId=111`
+    )
+  },
+  // track_flow_list
+  getTrackList({ uid, page = 1, size = 10 } = {}) {
+    return axios.post('/graphql/v1/toss', {
+      query: `{
+            UserFollowLogPage(
+              query: ${JSON.stringify(JSON.stringify({ uid }))},
+              size:${size},
+              page:${page},
+              sort:${JSON.stringify(JSON.stringify({ ctime: 'desc' }))}
+              )
+            {
+            content{
+              uid
+              teacherInfo{
+                realname
+                duty_id
+                departmentInfo{
+                  name
+                }
+              }
+              contact_type
+              point_type
+              finish_type
+              content
+              ctime
+            }
+            totalElements
+           }
+      }`
+    })
   }
 }

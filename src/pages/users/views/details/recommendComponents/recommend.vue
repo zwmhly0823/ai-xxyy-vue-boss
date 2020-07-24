@@ -1,0 +1,92 @@
+<!--
+ * @Descripttion: TOSS小熊
+ * @version: 1.0.0
+ * @Author: liukun
+ * @Date: 2020-07-22 10:31:00
+ * @LastEditors: liukun
+ * @LastEditTime: 2020-07-22 15:15:03
+-->
+<template>
+  <el-dialog title="推荐信息" :visible.sync="recommendInfo" width="40%">
+    <div>
+      <el-row type="flex" justify="start" align="middle" class="marginb10">
+        <el-col :span="5">推荐人:</el-col>
+        <el-col :span="18" :offset="1">{{ recommendHuman || '-' }}</el-col>
+      </el-row>
+      <el-row type="flex" justify="start" align="middle" class="marginb10">
+        <el-col :span="5">推荐了:</el-col>
+        <el-col
+          :span="18"
+          :offset="1"
+          class="recommendDone"
+          v-if="recommendList.length"
+        >
+          <span v-for="(item, index) of recommendList" :key="index">{{
+            item.username || '-'
+          }}</span>
+        </el-col>
+        <el-col :span="18" :offset="1" class="recommendDone" v-else> - </el-col>
+      </el-row>
+    </div>
+  </el-dialog>
+</template>
+
+<script>
+export default {
+  name: 'recommend',
+  props: {
+    // 他的上线
+    recommendHuman: {
+      type: String,
+      default: '',
+      required: true
+    }
+  },
+  data() {
+    return {
+      recommendInfo: false,
+      recommendList: []
+    }
+  },
+  methods: {
+    async getRecommendList() {
+      // 他的下线
+      const {
+        data: { UserList }
+      } = await this.$http.User.getRecommendList(this.$route.params.id).catch(
+        (err) => {
+          console.error(err)
+          this.$message.error('该学员推荐下线获取失败')
+        }
+      )
+      if (UserList.length) {
+        this.recommendList = UserList
+      }
+    }
+  },
+  mounted() {
+    this.getRecommendList()
+  }
+}
+</script>
+
+<style lang="scss" scoped>
+.marginb10 {
+  margin-bottom: 10px;
+  font-size: 16px;
+}
+.marginb10:nth-last-of-type(1) {
+  margin-bottom: 0px;
+}
+.marginb10 .el-col-5 {
+  text-align: right;
+}
+.recommendDone {
+  max-height: 80px;
+  overflow: auto;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-content: space-between;
+}
+</style>
