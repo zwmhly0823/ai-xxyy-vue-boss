@@ -266,7 +266,7 @@ export default {
     taskRevise(row, type) {
       console.log(row)
       this.$router.push({
-        path: `/newActivityManage/${row.id}/-1`
+        path: `/newActivityManage/${row.id}`
       })
     },
     // 取消操作
@@ -305,7 +305,7 @@ export default {
     new_sop_handle() {
       const id = '-1'
       this.$router.push({
-        path: `/newActivityManage/${id}/-1`
+        path: `/newActivityManage/${id}`
       })
     },
     // 计算表格高度

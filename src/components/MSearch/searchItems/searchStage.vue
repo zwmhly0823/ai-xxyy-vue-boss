@@ -20,6 +20,7 @@
       :placeholder="placeholderText"
       :remote-method="handleDebounce"
       :loading="loading"
+      :disabled="isDisabled"
       @change="onChange"
     >
       <el-option
@@ -59,6 +60,10 @@ export default {
     teacherId: {
       type: Array,
       default: () => []
+    },
+    isDisabled: {
+      type: Boolean,
+      default: false
     }
   },
   data() {

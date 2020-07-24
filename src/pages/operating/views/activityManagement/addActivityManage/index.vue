@@ -3,37 +3,37 @@
  * @version: 1.0.0
  * @Author: Shasen
  * @Date: 2020-06-29 16:50:58
- * @LastEditors: Shentong
+ * @LastEditors: Shasen
  * @LastEditTime: 2020-07-21 14:42:57
 -->
 <template>
-  <el-row type="flex" class="new-plan app-main">
-    <el-col class="new-plan-container">
+  <el-row type="flex" class="activity-manage app-main">
+    <el-col class="activity-manage-container">
       <el-card class="header">
-        <div class="tip" v-if="id">修改SOP任务计划</div>
-        <div class="tip" v-else>新建SOP任务计划</div>
+        <div class="tip" v-if="id">修改活动</div>
+        <div class="tip" v-else>新建活动</div>
         <el-form
-          :model="sopFrom"
-          ref="sopFrom"
+          :model="activityFrom"
+          ref="activityFrom"
           label-width="100px"
           size="mini"
-          class="sop-form"
+          class="activity-from"
           :rules="rules"
         >
-          <el-form-item prop="taskName" label="任务名称" style="width:320px;">
+          <el-form-item prop="taskName" label="活动名称" style="width:320px;">
             <el-input
-              v-model="sopFrom.taskName"
-              placeholder="请输入任务名称"
+              v-model="activityFrom.taskName"
+              placeholder="请输入活动名称"
             ></el-input>
           </el-form-item>
           <el-form-item
             prop="planTemplate"
-            label="计划模板"
+            label="活动类型"
             style="width:320px;"
           >
             <el-select
               class="item-style"
-              v-model="sopFrom.planTemplate"
+              v-model="activityFrom.planTemplate"
               remote
               :reserve-keyword="true"
               size="mini"
@@ -48,84 +48,125 @@
               ></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="任务开始日期" prop="planStartDate">
+          <el-form-item label="活动时间" prop="planStartDate">
             <el-date-picker
-              v-model="sopFrom.planStartDate"
-              type="date"
+              v-model="activityFrom.planStartDate"
+              type="daterange"
               value-format="yyyy-MM-dd"
               :picker-options="expireTimeOption"
-              placeholder="选择日期时间"
+              range-separator="至"
+              start-placeholder="开始日期"
+              end-placeholder="结束日期"
             ></el-date-picker>
           </el-form-item>
-          <el-form-item label="发送微信号" prop="wxNumber">
-            <el-radio-group v-model="sopFrom.wxNumber" @change="wxNumberChange">
-              <el-radio
-                v-for="(item, index) in wechatNos"
-                :key="index"
-                :label="item"
-                >{{ item }}</el-radio
+          <el-form-item label="活动范围">
+            <el-row style="display:flex;margin-bottom: 10px;">
+              {{ explesson }}
+              <el-checkbox
+                label="体验课"
+                name="type"
+                v-model="explesson"
+                style="margin-right:20px;"
+              ></el-checkbox>
+              <search-stage
+                :isDisabled="!explesson"
+                class="search-group-item"
+                name="term0"
+                placeholder="体验课排期"
+                type="0"
+                @result="getSchedul('term0', arguments, 0)"
+              />
+            </el-row>
+            <el-row style="display:flex">
+              <el-checkbox
+                label="系统课"
+                name="type"
+                style="margin-right:20px;"
+              ></el-checkbox>
+              <search-stage
+                class="search-group-item"
+                name="term1"
+                placeholder="系统课排期"
+                type="1"
+                @result="getSchedul('term1', arguments, 1)"
+              />
+            </el-row>
+          </el-form-item>
+          <el-form-item label="赠品设置">
+            <el-button
+              type="primary"
+              icon="el-icon-plus"
+              size="mini"
+              @click="chooseGroup('activityFrom')"
+              >选择群</el-button
+            >
+            <div ref="tableContainer" class="tableContainer_">
+              <ele-table
+                :tableSize="'small'"
+                :dataList="tableData"
+                :tableHeight="tableHeight"
               >
-            </el-radio-group>
+                <el-table-column
+                  label="群名称"
+                  prop="cluster_name"
+                  align="center"
+                ></el-table-column>
+                <el-table-column
+                  label="群人数"
+                  prop="membersNum"
+                  align="center"
+                ></el-table-column>
+                <el-table-column label="带班销售" align="center">
+                  {{ this.teacherName }}</el-table-column
+                >
+                <el-table-column
+                  label="微信群工作微信号"
+                  prop="owner_wechat_id"
+                  align="center"
+                ></el-table-column>
+                <el-table-column label="操作" align="center">
+                  <template slot-scope="scope">
+                    <div class="editStyle">
+                      <el-popconfirm
+                        confirmButtonText="YES"
+                        cancelButtonText="算了"
+                        icon="el-icon-info"
+                        iconColor="red"
+                        title="你确定要删除该项内容吗？"
+                        @onConfirm="confirmDelRow(scope.row)"
+                      >
+                        <span
+                          @click="deleteTablerow(scope.row, '1')"
+                          slot="reference"
+                          >删除</span
+                        >
+                      </el-popconfirm>
+                    </div>
+                  </template>
+                </el-table-column>
+              </ele-table>
+            </div>
+          </el-form-item>
+          <el-form-item label="活动说明">
+            <el-input
+              type="textarea"
+              style="width:400px"
+              :autosize="{ minRows: 2, maxRows: 4 }"
+              placeholder="请输入内容"
+            >
+            </el-input>
           </el-form-item>
         </el-form>
-        <el-button
-          type="primary"
-          icon="el-icon-plus"
-          size="mini"
-          @click="chooseGroup('sopFrom')"
-          >选择群</el-button
-        >
-      </el-card>
-      <div ref="tableContainer" class="tableContainer_">
-        <ele-table
-          :tableSize="'small'"
-          :dataList="tableData"
-          :tableHeight="tableHeight"
-        >
-          <el-table-column
-            label="群名称"
-            prop="cluster_name"
-            align="center"
-          ></el-table-column>
-          <el-table-column
-            label="群人数"
-            prop="membersNum"
-            align="center"
-          ></el-table-column>
-          <el-table-column label="带班销售" align="center">
-            {{ this.teacherName }}</el-table-column
+        <div class="bottom_choose" v-show="tableData.length">
+          <el-button size="mini" @click="cannelOpt">取消</el-button>
+          <el-button
+            size="mini"
+            type="primary"
+            @click="saveTaskPlan('activityFrom')"
+            >确认</el-button
           >
-          <el-table-column
-            label="微信群工作微信号"
-            prop="owner_wechat_id"
-            align="center"
-          ></el-table-column>
-          <el-table-column label="操作" align="center">
-            <template slot-scope="scope">
-              <div class="editStyle">
-                <el-popconfirm
-                  confirmButtonText="YES"
-                  cancelButtonText="算了"
-                  icon="el-icon-info"
-                  iconColor="red"
-                  title="你确定要删除该项内容吗？"
-                  @onConfirm="confirmDelRow(scope.row)"
-                >
-                  <span @click="deleteTablerow(scope.row, '1')" slot="reference"
-                    >删除</span
-                  >
-                </el-popconfirm>
-              </div>
-            </template>
-          </el-table-column>
-        </ele-table>
-      </div>
-      <div class="bottom_choose" v-show="tableData.length">
-        <el-button size="mini" @click="cannelOpt">取消</el-button>
-        <el-button size="mini" type="primary" @click="saveTaskPlan"
-          >确认</el-button
-        >
-      </div>
+        </div>
+      </el-card>
       <el-dialog
         title="选择群"
         :visible.sync="dialogGroupVisible"
@@ -135,7 +176,6 @@
         <choose-group
           ref="chooseGroup"
           :taskstatus="teacherId"
-          :wechatNo="sopFrom.wxNumber"
           :parent_tableData="tableData"
           @choose-group="parent_chooseGroup"
           @close-choosegroup="parent_close"
@@ -148,9 +188,11 @@
 import { isToss } from '@/utils/index'
 import EleTable from '@/components/Table/EleTable'
 import ChooseGroup from './components/chooseGroup'
+import SearchStage from '@/components/MSearch/searchItems/searchStage.vue'
 export default {
   data() {
     return {
+      explesson: false,
       id: '',
       tableHeight: 'auto',
       dialogGroupVisible: false,
@@ -161,11 +203,10 @@ export default {
       planTemplate: [],
       wechatNos: [],
       tableData: [],
-      sopFrom: {
+      activityFrom: {
         taskName: '',
         planTemplate: '',
-        planStartDate: '',
-        wxNumber: ''
+        planStartDate: ''
       },
       rules: {
         taskName: [
@@ -176,14 +217,10 @@ export default {
         ],
         planStartDate: [
           {
-            type: 'string',
             required: true,
-            message: '请选择任务开始日期',
+            message: '请选择时间范围',
             trigger: 'change'
           }
-        ],
-        wxNumber: [
-          { required: true, message: '请选择发送微信号', trigger: 'change' }
         ]
       },
       expireTimeOption: {
@@ -195,7 +232,17 @@ export default {
   },
   components: {
     EleTable,
-    ChooseGroup
+    ChooseGroup,
+    SearchStage
+  },
+  watch: {
+    explesson(val, old) {
+      if (!val) {
+        console.log('11111')
+        this.$emit('result', '')
+      }
+      console.log(val, old)
+    }
   },
   async created() {
     const teacher = isToss()
@@ -221,16 +268,10 @@ export default {
       this.wechatNos = this.taskPlan.payload.wechatNos || []
     }
 
-    // 调用
-    if (this.$route.params.templateId !== '-1') {
-      this.sopFrom.planTemplate = this.$route.params.templateId
-    }
-
     if (this.id) {
-      this.sopFrom.taskName = this.taskPlan.payload.taskName
-      this.sopFrom.planTemplate = this.taskPlan.payload.templateId
-      this.sopFrom.planStartDate = this.taskPlan.payload.job_time
-      this.sopFrom.wxNumber = this.taskPlan.payload.wechatNo
+      this.activityFrom.taskName = this.taskPlan.payload.taskName
+      this.activityFrom.planTemplate = this.taskPlan.payload.templateId
+      this.activityFrom.planStartDate = this.taskPlan.payload.job_time
       this.tableData = this.taskPlan.payload.weChatIcodeClusterLists
     }
     console.log(this.id, this.teacherId, this.taskPlan)
@@ -239,11 +280,12 @@ export default {
   mounted() {},
   computed: {},
   methods: {
+    // 获取活动范围 体验课系统课拍戏
+    getSchedul(key, res, type) {
+      console.log(key, res[0], type, '11212121212121')
+    },
     deleteTablerow(row, type) {
       console.log(row, type)
-    },
-    wxNumberChange(value) {
-      this.tableData = []
     },
     // 获取SOP任务计划
     async getToSaveOrUpdate(id, teacherId) {
@@ -258,19 +300,10 @@ export default {
       }
     },
     // 选择群
-    chooseGroup(sopFrom) {
-      this.$refs[sopFrom].validate((valid) => {
-        if (valid) {
-          console.log('valid====', valid)
-          this.dialogGroupVisible = true
-          this.$nextTick(() => {
-            this.$refs.chooseGroup.handleDebounce()
-          })
-          console.log(this.sopFrom)
-        } else {
-          console.log('error submit!!')
-          return false
-        }
+    chooseGroup(activityFrom) {
+      this.dialogGroupVisible = true
+      this.$nextTick(() => {
+        this.$refs.chooseGroup.handleDebounce()
       })
     },
     // 子组建传递
@@ -284,7 +317,16 @@ export default {
       this.dialogGroupVisible = false
     },
     // 保存任务计划
-    saveTaskPlan() {
+    saveTaskPlan(activityFrom) {
+      this.$refs[activityFrom].validate((valid) => {
+        if (valid) {
+          console.log('valid====', valid)
+          console.log(this.activityFrom)
+        } else {
+          console.log('error submit!!')
+          return false
+        }
+      })
       this.clusterIdList = []
       this.tableData.forEach((i) => {
         this.clusterIdList.push(i.cluster_id)
@@ -292,21 +334,20 @@ export default {
       const obj = {
         id: this.id,
         clusterIdList: this.clusterIdList,
-        templateId: this.sopFrom.planTemplate,
-        taskName: this.sopFrom.taskName,
-        wechatNo: this.sopFrom.wxNumber,
+        templateId: this.activityFrom.planTemplate,
+        taskName: this.activityFrom.taskName,
         uid: this.teacherId,
-        job_time: this.sopFrom.planStartDate
+        job_time: this.activityFrom.planStartDate
       }
-      this.saveOrUpdateSopJobTask(obj).then((res) => {
-        if (res.code === 0) {
-          this.$message.success('保存成功')
-          this.$router.push({
-            path: '/groupSop/'
-          })
-        }
-        console.log(res)
-      })
+      // this.saveOrUpdateSopJobTask(obj).then((res) => {
+      //   if (res.code === 0) {
+      //     this.$message.success('保存成功')
+      //     this.$router.push({
+      //       path: '/groupSop/'
+      //     })
+      //   }
+      //   console.log(res)
+      // })
       console.log(obj)
     },
     // 取消
@@ -365,10 +406,10 @@ export default {
 }
 </script>
 <style rel="stylesheet/scss" lang="scss">
-.new-plan-container {
+.activity-manage-container {
   padding: 10px;
 }
-.new-plan {
+.activity-manage {
   background: #ffffff;
 }
 // .tableContainer_ {
@@ -377,10 +418,11 @@ export default {
 //   padding: 20px;
 // }
 .header {
+  height: 100%;
   .tip {
     margin-bottom: 20px;
   }
-  .sop-form {
+  .activity-from {
     font-size: 12px;
   }
 }
