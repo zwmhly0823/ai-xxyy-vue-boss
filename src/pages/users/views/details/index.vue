@@ -1,397 +1,415 @@
 <template>
   <section class="details-body">
-    <!-- 头部 -->
-    <el-row type="flex" justify="start" align="middle" class="header">
-      <el-col :span="16">
-        <div class="upset_24col">
-          <!-- 男：1 女：2 -->
-          <div class="img-box">
-            <img class="head-portrait" :src="stuInfor.head || defaultHead" />
-            <i v-if="stuInfor.sex === '2'" class="female el-icon-female " />
-            <i v-else-if="stuInfor.sex === '1'" class="male el-icon-male" />
-            <i v-else class="el-icon-toilet-paper" />
+    <el-scrollbar>
+      <!-- 头部 -->
+      <el-row type="flex" justify="start" align="middle" class="header">
+        <el-col :span="16">
+          <div class="upset_24col">
+            <!-- 男：1 女：2 -->
+            <div class="img-box">
+              <img class="head-portrait" :src="stuInfor.head || defaultHead" />
+              <i v-if="stuInfor.sex === '2'" class="female el-icon-female " />
+              <i v-else-if="stuInfor.sex === '1'" class="male el-icon-male" />
+              <i v-else class="el-icon-toilet-paper" />
+            </div>
+            <div>
+              {{ stuInfor.username || '-' }}
+              ·
+              {{ stuInfor.user_num || '-' }}
+            </div>
+            <!-- 只有'1'是关注了-->
+            <div>
+              <svg
+                v-if="stuInfor.weixinUser && stuInfor.weixinUser.follow === '1'"
+                class="lk-icon-green"
+                aria-hidden="true"
+              >
+                <use xlink:href="#icongongzhonghao"></use>
+              </svg>
+              <svg v-else class="lk-icon" aria-hidden="true">
+                <use xlink:href="#icongongzhonghao"></use>
+              </svg>
+            </div>
+            <div>
+              <span>区域</span>:
+              {{ stuInfor.mobile_province || '-' }}
+              · {{ stuInfor.mobile_city || '-' }}
+            </div>
+            <div>
+              <span>年龄</span>:
+              {{ stuInfor.age }}
+            </div>
+            <div>
+              <span>生日</span>:
+              {{ stuInfor.birthday }}
+            </div>
+            <div>
+              <span>优惠券</span>:
+              <el-button type="text" @click="jumpToAsset(1)">
+                {{ stuInfor.coupon && stuInfor.coupon.length }}
+              </el-button>
+            </div>
+            <div>
+              <span>小熊币</span>:
+              <el-button type="text" @click="jumpToAsset(2)">
+                {{
+                  stuInfor.account &&
+                  stuInfor.account[0] &&
+                  stuInfor.account[0].balance
+                    ? stuInfor.account[0].balance
+                    : 0
+                }}
+              </el-button>
+            </div>
+            <div>
+              <i class="el-icon-location-outline el-elment-lk" />
+              <span>用户地址</span>:
+              <el-button
+                type="text"
+                @click="$refs.showAddress.showAddress = true"
+              >
+                {{ stuInfor.address && stuInfor.address.length }}
+              </el-button>
+            </div>
           </div>
-          <div>
-            {{ stuInfor.username || '-' }}
-            ·
-            {{ stuInfor.user_num || '-' }}
-          </div>
-          <!-- 只有'1'是关注了-->
-          <div>
-            <svg
-              v-if="stuInfor.weixinUser && stuInfor.weixinUser.follow === '1'"
-              class="lk-icon-green"
-              aria-hidden="true"
-            >
-              <use xlink:href="#icongongzhonghao"></use>
-            </svg>
-            <svg v-else class="lk-icon" aria-hidden="true">
-              <use xlink:href="#icongongzhonghao"></use>
-            </svg>
-          </div>
-          <div>
-            <span>区域</span>:
-            {{ stuInfor.mobile_province || '-' }}
-            · {{ stuInfor.mobile_city || '-' }}
-          </div>
-          <div>
-            <span>年龄</span>:
-            {{ stuInfor.age }}
-          </div>
-          <div>
-            <span>生日</span>:
-            {{ stuInfor.birthday }}
-          </div>
-          <div>
-            <i class="el-icon-money el-elment-lk" />
-            <span>优惠券</span>:
-            <el-button type="text" @click="jumpToAsset(1)">
-              {{ stuInfor.coupon && stuInfor.coupon.length }}
-            </el-button>
-          </div>
-          <div>
-            <i class="el-icon-coin el-elment-lk" />
-            <span>小熊币</span>:
-            <el-button type="text" @click="jumpToAsset(2)">
-              {{
-                stuInfor.account &&
-                stuInfor.account[0] &&
-                stuInfor.account[0].balance
-                  ? stuInfor.account[0].balance
-                  : 0
-              }}
-            </el-button>
-          </div>
-          <div>
-            <i class="el-icon-location-outline el-elment-lk" />
-            <span>用户地址</span>:
-            <el-button
-              type="text"
-              @click="$refs.showAddress.showAddress = true"
-            >
-              {{ stuInfor.address && stuInfor.address.length }}
-            </el-button>
-          </div>
-        </div>
-      </el-col>
+        </el-col>
 
-      <el-col :span="5" :offset="3">
-        <div class="upset_24col">
-          <el-button size="medium" @click="couponList">发优惠券</el-button>
-          <el-dropdown
-            split-button
-            size="medium"
-            @click="
-              $message({
-                message: '右边选择审批类型',
-                type: 'warning'
-              })
-            "
-            @command="queryJump"
-          >
-            发起审批
-            <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item
-                v-for="(item, index) of [
-                  '退款',
-                  '补发货',
-                  '调班',
-                  '调级',
-                  '调期'
-                ]"
-                :key="index"
-                :command="item"
-                >{{ item }}</el-dropdown-item
-              >
-            </el-dropdown-menu>
-          </el-dropdown>
-        </div>
-      </el-col>
-    </el-row>
-    <!-- 大肚腩 -->
-    <el-row type="flex" justify="start" align="middle" class="belly">
-      <el-col :span="17" class="dular">
-        <!-- 用户资料 -->
-        <div class="padding-top20">
-          <section class="setou123">
-            <strong></strong>
-            <span>用户资料</span>
-          </section>
-          <section>
-            <el-divider content-position="left">基本信息</el-divider>
-            <el-row type="flex" justify="space-around" align="middle">
-              <el-col :span="7">手机号: {{ stuInfor.mobile || '-' }}</el-col>
-              <el-col :span="7"
-                >推荐信息:
-                <el-button
-                  type="text"
-                  @click="$refs.recommend.recommendInfo = true"
+        <el-col :span="5" :offset="3">
+          <div class="upset_24col">
+            <el-button size="mini" type="primary" plain @click="couponList"
+              >发优惠券</el-button
+            >
+            <el-dropdown
+              split-button
+              size="mini"
+              @click="
+                $message({
+                  message: '右边选择审批类型',
+                  type: 'warning'
+                })
+              "
+              @command="queryJump"
+            >
+              发起审批
+              <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item
+                  v-for="(item, index) of [
+                    '退款',
+                    '补发货',
+                    '调班',
+                    '调级',
+                    '调期'
+                  ]"
+                  :key="index"
+                  :command="item"
+                  >{{ item }}</el-dropdown-item
                 >
-                  详情
-                </el-button></el-col
+              </el-dropdown-menu>
+            </el-dropdown>
+          </div>
+        </el-col>
+      </el-row>
+      <!-- 大肚腩 -->
+      <el-row type="flex" justify="start" align="middle" class="belly">
+        <el-col :span="17" class="dular">
+          <!-- 用户资料 -->
+          <div class="padding-top20">
+            <section class="setou123">
+              <strong></strong>
+              <span>用户资料</span>
+            </section>
+            <section style="margin-top:15px">
+              <el-divider content-position="left">基本信息</el-divider>
+              <el-row
+                type="flex"
+                justify="space-around"
+                align="middle"
+                style="margin-top:15px"
               >
-              <el-col :span="7"
-                >用户状态:
-                <el-tag type="danger" size="small">{{
-                  stuInfor.status_text || '-'
-                }}</el-tag></el-col
+                <el-col :span="7">
+                  <span>手机号码:</span> {{ stuInfor.mobile || '-' }}
+                </el-col>
+                <el-col :span="7">
+                  <span>推荐信息:</span>
+                  <el-button
+                    type="text"
+                    size="mini"
+                    @click="$refs.recommend.recommendInfo = true"
+                  >
+                    详情
+                  </el-button></el-col
+                >
+                <el-col :span="7">
+                  <span>用户状态:</span>
+                  <el-tag type="danger" size="mini">{{
+                    stuInfor.status_text || '-'
+                  }}</el-tag></el-col
+                >
+              </el-row>
+              <el-row type="flex" justify="space-around" align="middle">
+                <el-col :span="7">
+                  <span>注册渠道:</span>
+                  {{
+                    stuInfor.channelInfo &&
+                      (stuInfor.channelInfo.channel_inner_name || '-')
+                  }}</el-col
+                >
+                <el-col :span="7">
+                  <span>注册时间:</span>
+                  {{ stuInfor.join_date }}
+                </el-col>
+                <el-col :span="7">
+                  <span>最近活跃:</span>
+                  {{
+                    stuInfor.loginData &&
+                      (stuInfor.loginData[0].device_model || '-')
+                  }}
+                  {{
+                    stuInfor.loginData &&
+                      (stuInfor.loginData[0].login_time
+                        ? new Date(
+                            Number(stuInfor.loginData[0].login_time)
+                          ).toLocaleDateString()
+                        : '-')
+                  }}
+                </el-col>
+              </el-row>
+              <el-row type="flex" justify="space-around" align="middle">
+                <el-col :span="7">
+                  <span>系统课剩余:</span>
+                  {{
+                    stuInfor.systemCourse &&
+                      stuInfor.systemCourse.length &&
+                      stuInfor.systemCourse[0].remaining_week + '周'
+                  }}</el-col
+                >
+                <el-col :span="7"></el-col>
+                <el-col :span="7"></el-col>
+              </el-row>
+            </section>
+            <section style="margin-top:20px">
+              <el-divider content-position="left">微信信息</el-divider>
+              <!-- 双编剧塌陷现场-BFC -->
+              <el-row
+                style="margin-top:15px"
+                type="flex"
+                justify="space-around"
+                align="middle"
               >
-            </el-row>
-            <el-row type="flex" justify="space-around" align="middle">
-              <el-col :span="7"
-                >注册渠道:
-                {{
-                  stuInfor.channelInfo &&
-                    (stuInfor.channelInfo.channel_inner_name || '-')
-                }}</el-col
-              >
-              <el-col :span="7"> 注册时间: {{ stuInfor.join_date }} </el-col>
-              <el-col :span="7">
-                最近活跃:
-                {{
-                  stuInfor.loginData &&
-                    (stuInfor.loginData[0].device_model || '-')
-                }}^_^{{
-                  stuInfor.loginData &&
-                    (stuInfor.loginData[0].login_time
-                      ? new Date(
-                          Number(stuInfor.loginData[0].login_time)
-                        ).toLocaleDateString()
-                      : '-')
-                }}
-              </el-col>
-            </el-row>
-            <el-row
-              style="margin-top:12px"
-              type="flex"
-              justify="space-around"
-              align="middle"
-            >
-              <el-col :span="7"
-                >系统课剩余:
-                {{
-                  stuInfor.systemCourse &&
-                    stuInfor.systemCourse.length &&
-                    stuInfor.systemCourse[0].remaining_week + '周'
-                }}</el-col
-              >
-              <el-col :span="7"></el-col>
-              <el-col :span="7"></el-col>
-            </el-row>
-          </section>
-          <section style="margin-top:20px">
-            <el-divider content-position="left">微信信息</el-divider>
-            <!-- 双编剧塌陷现场-BFC -->
-            <el-row
-              style="margin-top:20px"
-              type="flex"
-              justify="space-around"
-              align="middle"
-            >
-              <el-col :span="7" style="vertical-align:middle">
-                微信昵称:
-                <img
-                  style="vertical-align:middle"
-                  class="head-portrait_small"
-                  :src="
-                    stuInfor.jluserInfo &&
-                      (stuInfor.jluserInfo.avatar || defaultHead)
-                  "
-                />
-                {{
-                  stuInfor.jluserInfo
-                    ? stuInfor.jluserInfo.nick_name || '-'
-                    : '-'
-                }}
-              </el-col>
-              <el-col :span="7"
-                >微信号:{{
-                  stuInfor.jluserInfo
-                    ? stuInfor.jluserInfo.wechat_no || '-'
-                    : '-'
-                }}
-              </el-col>
-              <el-col :span="7"
-                >微信备注:{{
-                  stuInfor.jluserInfo ? stuInfor.jluserInfo.remark || '-' : '-'
-                }}
-              </el-col>
-            </el-row>
-          </section>
-        </div>
-        <div class="padding-top20">
-          <section class="setou123">
-            <strong></strong>
-            <span>用户标签</span>
-          </section>
-          <section v-if="!babels_lk.length && !aikelabel.length">
-            <el-row type="flex" justify="space-around" align="middle">
-              <el-col :span="7" style="color:#ccc">
-                暂无标签
-              </el-col>
-              <el-col :span="7"></el-col>
-              <el-col :span="7"></el-col>
-            </el-row>
-          </section>
-          <section style="padding-left:15px" v-else>
-            <el-tag
-              style="margin-right:10px"
-              type="sucess"
-              size="small"
-              v-for="item of aikelabel"
-              :key="item"
-              >{{ item }}</el-tag
-            >
-            <span v-if="babels_lk && babels_lk.length && babels_lk[0].name">
+                <el-col :span="7" style="vertical-align:middle">
+                  <span>微信昵称:</span>
+                  <img
+                    style="vertical-align:middle"
+                    class="head-portrait_small"
+                    :src="
+                      (stuInfor.jluserInfo && stuInfor.jluserInfo.avatar) ||
+                        defaultHead
+                    "
+                  />
+                  {{
+                    stuInfor.jluserInfo
+                      ? stuInfor.jluserInfo.nick_name || '-'
+                      : '-'
+                  }}
+                </el-col>
+                <el-col :span="7">
+                  <span>微信号:</span>
+                  {{
+                    stuInfor.jluserInfo
+                      ? stuInfor.jluserInfo.wechat_no || '-'
+                      : '-'
+                  }}
+                </el-col>
+                <el-col :span="7">
+                  <span>微信备注:</span>
+                  {{
+                    stuInfor.jluserInfo
+                      ? stuInfor.jluserInfo.remark || '-'
+                      : '-'
+                  }}
+                </el-col>
+              </el-row>
+            </section>
+          </div>
+          <div class="padding-top20">
+            <section class="setou123">
+              <strong></strong>
+              <span>用户标签</span>
+            </section>
+            <section v-if="!babels_lk.length && !aikelabel.length">
+              <el-row type="flex" justify="space-around" align="middle">
+                <el-col :span="7" style="color:#ccc">
+                  暂无标签
+                </el-col>
+                <el-col :span="7"></el-col>
+                <el-col :span="7"></el-col>
+              </el-row>
+            </section>
+            <section style="padding-left:15px" v-else>
               <el-tag
                 style="margin-right:10px"
-                type="warning"
-                size="small"
-                v-for="item of babels_lk"
-                :key="item.id"
-                >{{ item.name }}</el-tag
+                type="sucess"
+                size="mini"
+                v-for="item of aikelabel"
+                :key="item"
+                >{{ item }}</el-tag
               >
-            </span>
-          </section>
-        </div>
-        <div class="padding-top20">
-          <section class="setou123">
-            <strong></strong>
-            <span>用户群组</span>
-          </section>
-          <section>
-            <el-row type="flex" justify="space-around" align="middle">
-              <el-col :span="7" style="color:#ccc">
-                暂无群组
-              </el-col>
-              <el-col :span="7"></el-col>
-              <el-col :span="7"></el-col>
-            </el-row>
-          </section>
-        </div>
-      </el-col>
-      <el-col :span="7" class="dular">
-        <!-- 跟进记录 -->
-        <trackFlow />
-      </el-col>
-    </el-row>
-    <!-- tab标签页 -->
-    <div class="tab-sty">
-      <el-tabs type="border-card" v-model="tabData" @tab-click="tabBtn">
-        <el-tab-pane label="学习记录" name="learningRecord"></el-tab-pane>
-        <el-tab-pane label="作品集" name="collectionOf"></el-tab-pane>
-        <el-tab-pane label="订单·物流记录" name="orderLogistics"></el-tab-pane>
-        <el-tab-pane label="用户资产" name="userAsset"></el-tab-pane>
-        <el-tab-pane label="通知事件记录" name="notifyRecord"></el-tab-pane>
-      </el-tabs>
-    </div>
-    <!-- 夹在中间的学习记录,作品集 -->
-    <div
-      class="course-sty"
-      v-if="['learningRecord', 'collectionOf'].includes(tabData)"
-    >
-      <el-tabs v-model="courseData" @tab-click="courseBtn">
-        <el-tab-pane
-          v-for="item in stuInfor.teams"
-          :key="item.id"
-          :label="`${item.team_type_formatting}:${item.team_name}`"
-          :name="item.id"
-        >
-          <!-- 公用部分 -->
-          <div class="statistical">
-            <div>
-              <span>社群销售</span>:
-              {{ item.teacher_info && item.teacher_info.realname }}
-            </div>
-            <div>
-              <span>微信昵称</span>:
-              {{ item.teacher_info && item.teacher_info.nickname }}
-            </div>
-            <div>
-              <span>微信号</span>:
-              {{
-                item.teacher_wechat_info && item.teacher_wechat_info.wechat_no
-              }}
-            </div>
+              <span v-if="babels_lk && babels_lk.length && babels_lk[0].name">
+                <el-tag
+                  style="margin-right:10px"
+                  type="warning"
+                  size="small"
+                  v-for="item of babels_lk"
+                  :key="item.id"
+                  >{{ item.name }}</el-tag
+                >
+              </span>
+            </section>
           </div>
-          <!-- 学习记录特有 -->
-          <div
-            class="statistical class-statistical"
-            v-if="tabData === 'learningRecord'"
+          <div class="padding-top20">
+            <section class="setou123">
+              <strong></strong>
+              <span>用户群组</span>
+            </section>
+            <section>
+              <el-row type="flex" justify="space-around" align="middle">
+                <el-col :span="7" style="color:#ccc">
+                  暂无群组
+                </el-col>
+                <el-col :span="7"></el-col>
+                <el-col :span="7"></el-col>
+              </el-row>
+            </section>
+          </div>
+        </el-col>
+        <el-col :span="7" class="dular">
+          <!-- 跟进记录 -->
+          <trackFlow />
+        </el-col>
+      </el-row>
+      <!-- tab标签页 -->
+      <div class="tab-sty">
+        <el-tabs type="border-card" v-model="tabData" @tab-click="tabBtn">
+          <el-tab-pane label="学习记录" name="learningRecord"></el-tab-pane>
+          <el-tab-pane label="作品集" name="collectionOf"></el-tab-pane>
+          <el-tab-pane
+            label="订单·物流记录"
+            name="orderLogistics"
+          ></el-tab-pane>
+          <el-tab-pane label="用户资产" name="userAsset"></el-tab-pane>
+          <el-tab-pane label="通知事件记录" name="notifyRecord"></el-tab-pane>
+        </el-tabs>
+      </div>
+      <!-- 夹在中间的学习记录,作品集 -->
+      <div
+        class="course-sty"
+        v-if="['learningRecord', 'collectionOf'].includes(tabData)"
+      >
+        <el-tabs v-model="courseData" @tab-click="courseBtn">
+          <el-tab-pane
+            v-for="item in stuInfor.teams"
+            :key="item.id"
+            :label="`${item.team_type_formatting}:${item.team_name}`"
+            :name="item.id"
           >
-            <div>
-              <span>已放课</span>:
-              <span class="tatistical-span">
-                {{ item.send_course_count }}
-              </span>
+            <!-- 公用部分 -->
+            <div class="statistical">
+              <div>
+                <span>社群销售</span>:
+                {{ item.teacher_info && item.teacher_info.realname }}
+              </div>
+              <div>
+                <span>微信昵称</span>:
+                {{ item.teacher_info && item.teacher_info.nickname }}
+              </div>
+              <div>
+                <span>微信号</span>:
+                {{
+                  item.teacher_wechat_info && item.teacher_wechat_info.wechat_no
+                }}
+              </div>
             </div>
-            <div>
-              <span>当日参课</span>:
-              <span class="tatistical-span">
-                {{ item.day_join_course_count }}
-              </span>
+            <!-- 学习记录特有 -->
+            <div
+              class="statistical class-statistical"
+              v-if="tabData === 'learningRecord'"
+            >
+              <div>
+                <span>已放课</span>:
+                <span class="tatistical-span">
+                  {{ item.send_course_count }}
+                </span>
+              </div>
+              <div>
+                <span>当日参课</span>:
+                <span class="tatistical-span">
+                  {{ item.day_join_course_count }}
+                </span>
+              </div>
+              <div>
+                <span>当日完课</span>:
+                <span class="tatistical-span">
+                  {{ item.day_complete_course_count }}
+                </span>
+              </div>
             </div>
-            <div>
-              <span>当日完课</span>:
-              <span class="tatistical-span">
-                {{ item.day_complete_course_count }}
-              </span>
+            <!-- 作品集特有 -->
+            <div
+              class="statistical class-statistical"
+              v-if="tabData === 'collectionOf'"
+            >
+              <div>
+                <span>作品总数</span>:
+                <span class="tatistical-span">{{
+                  item.course_task_count
+                }}</span>
+              </div>
+              <div>
+                <span>收到点评</span>:
+                <span class="tatistical-span">
+                  {{ item.task_comment_count }}
+                </span>
+              </div>
+              <div>
+                <span>已听点评</span>:
+                <span class="tatistical-span">
+                  {{ item.listen_comment_count }}
+                </span>
+              </div>
             </div>
-          </div>
-          <!-- 作品集特有 -->
-          <div
-            class="statistical class-statistical"
-            v-if="tabData === 'collectionOf'"
-          >
-            <div>
-              <span>作品总数</span>:
-              <span class="tatistical-span">{{ item.course_task_count }}</span>
-            </div>
-            <div>
-              <span>收到点评</span>:
-              <span class="tatistical-span">
-                {{ item.task_comment_count }}
-              </span>
-            </div>
-            <div>
-              <span>已听点评</span>:
-              <span class="tatistical-span">
-                {{ item.listen_comment_count }}
-              </span>
-            </div>
-          </div>
-        </el-tab-pane>
-      </el-tabs>
-    </div>
-    <!-- tab列表 -->
-    <details-list
-      ref="detailsList"
-      :tabData="tabData"
-      :tabList="tabList"
-      :wholeData="wholeData"
-      :wholeSecondData="wholeSecondData"
-      @ivrBubbleData="ivrBubbleData"
-      @changePagenation="changePagenation"
-      @couponSendSucc="couponSendSucc"
-    />
-    <!-- 分页组件 -->
-    <m-pagination
-      v-if="
-        [
-          'learningRecord',
-          'collectionOf',
-          'orderLogistics',
-          'notifyRecord'
-        ].includes(tabData)
-      "
-      :current-page="currentPage"
-      :page-count="totalPages"
-      :total="totalElements"
-      @current-change="handleSizeChange"
-      show-pager
-      open="calc(100vw - 170px - 25px)"
-      close="calc(100vw - 50px - 25px)"
-    ></m-pagination>
+          </el-tab-pane>
+        </el-tabs>
+      </div>
+      <!-- tab列表 -->
+      <details-list
+        ref="detailsList"
+        :tabData="tabData"
+        :tabList="tabList"
+        :wholeData="wholeData"
+        :wholeSecondData="wholeSecondData"
+        @ivrBubbleData="ivrBubbleData"
+        @changePagenation="changePagenation"
+        @couponSendSucc="couponSendSucc"
+      />
+      <!-- 分页组件 -->
+      <m-pagination
+        v-if="
+          [
+            'learningRecord',
+            'collectionOf',
+            'orderLogistics',
+            'notifyRecord'
+          ].includes(tabData)
+        "
+        :current-page="currentPage"
+        :page-count="totalPages"
+        :total="totalElements"
+        @current-change="handleSizeChange"
+        show-pager
+        open="calc(100vw - 170px - 25px)"
+        close="calc(100vw - 50px - 25px)"
+      ></m-pagination>
+    </el-scrollbar>
     <!-- 修改地址 -->
     <el-dialog
       width="500px"
@@ -910,8 +928,10 @@ export default {
 <style lang="scss" scoped>
 .details-body {
   width: 100%;
-  height: calc(100vh - 50px);
+  height: calc(100vh - 90px);
   margin: 10px 10px 0px;
+  font-size: 12px;
+  overflow: auto;
 }
 //head
 .header {
@@ -959,7 +979,7 @@ export default {
   width: 20px;
   height: 20px;
   overflow: hidden;
-  color: #1afa29;
+  color: #42b983;
   fill: currentColor;
 }
 .upset_24col {
@@ -984,10 +1004,22 @@ export default {
 }
 
 .dular {
-  overflow: auto;
+  // overflow: auto;
   height: 420px;
   background-color: #fff;
   // padding: 10px;
+  ::v-deep {
+    .el-row {
+      line-height: 24px;
+    }
+    .el-col {
+      > span:first-child {
+        display: inline-block;
+        width: 65px;
+        color: #aeaeae;
+      }
+    }
+  }
 }
 .dular:nth-last-of-type(1) {
   margin-left: 10px;
@@ -999,18 +1031,19 @@ export default {
   padding-top: 10px;
 }
 .setou123 {
-  padding: 10px 0px;
+  padding: 10px 15px;
   span {
     vertical-align: middle;
-    font-size: 16px;
+    font-size: 14px;
   }
   strong {
     vertical-align: middle;
     background-color: #49a3ff;
     display: inline-block;
-    width: 16px;
-    height: 2px;
-    transform: rotate(90deg);
+    margin-right: 5px;
+    width: 2px;
+    height: 14px;
+    // transform: rotate(90deg);
   }
 }
 .el-divider {
@@ -1027,8 +1060,8 @@ export default {
 }
 </style>
 
-// 老物件
 <style lang="scss" scoped>
+// 老物件
 /deep/.el-tabs__content {
   padding: 8px;
 }

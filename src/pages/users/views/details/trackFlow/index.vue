@@ -4,20 +4,26 @@
  * @Author: liukun
  * @Date: 2020-07-20 16:37:31
  * @LastEditors: liukun
- * @LastEditTime: 2020-07-24 21:46:56
+ * @LastEditTime: 2020-07-24 22:42:52
 -->
 <template>
-  <div>
+  <div class="track-container">
     <div class="upset_24col_space_between">
       <section class="setou123">
         <strong></strong>
         <span>跟进记录</span>
       </section>
       <section style="margin-right:30px">
-        <el-button type="text" @click="$refs.track_add.dialogFormVisible = true"
+        <el-button
+          type="text"
+          size="mini"
+          @click="$refs.track_add.dialogFormVisible = true"
           >新建</el-button
         >
-        <el-button type="text" @click="$refs.track_more.drawer = true"
+        <el-button
+          type="text"
+          size="mini"
+          @click="$refs.track_more.drawer = true"
           >更多</el-button
         >
       </section>
@@ -47,16 +53,19 @@
               style="vertical-align: middle"
               class="lk-icon"
               aria-hidden="true"
+              :class="{ 'icon-fail': item.finish_type === '0' }"
             >
               <use xlink:href="#icongongzhonghao"></use>
             </svg>
             <i
               v-else-if="item.contact_type === '1'"
               class="el-icon-phone-outline el-elment-lk"
+              :class="{ 'icon-fail': item.finish_type === '0' }"
             ></i>
             <i
               v-else-if="item.contact_type === '2'"
               class="el-icon-mobile-phone el-elment-lk"
+              :class="{ 'icon-fail': item.finish_type === '0' }"
             ></i>
             <span style="vertical-align: middle;padding-left:5px">{{
               item.finish_type === '0'
@@ -68,15 +77,17 @@
           </div>
         </div>
         <div class="upset_24col_space_between padding-right15">
-          <span>{{ item.point_type }}</span>
-          <span>{{ new Date(Number(item.ctime)).toLocaleString() }}</span>
+          <span class="color-gray">{{ item.point_type }}</span>
+          <span class="color-gray">{{
+            new Date(Number(item.ctime)).toLocaleString()
+          }}</span>
         </div>
         <div class="upset_24col_space_between padding-right15">
           <span>{{ item.content }}</span>
         </div>
       </section>
     </div>
-    <div v-else>暂无数据</div>
+    <div v-else class="no-data">暂无数据</div>
     <addNew ref="track_add" />
     <trackMore ref="track_more" />
   </div>
@@ -133,6 +144,15 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.track-container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  .chouti {
+    flex: 1;
+    overflow: auto;
+  }
+}
 .upset_24col_space_between {
   display: flex;
   justify-content: space-between;
@@ -142,7 +162,7 @@ export default {
   padding: 10px 0px;
   span {
     vertical-align: middle;
-    font-size: 16px;
+    font-size: 14px;
   }
   strong {
     vertical-align: middle;
@@ -166,15 +186,29 @@ export default {
   width: 20px;
   height: 20px;
   overflow: hidden;
-  color: #bfbfbf;
+  color: #42b983;
   fill: currentColor;
 }
 .el-elment-lk {
   vertical-align: middle;
   font-size: 20px;
-  color: #ccc;
+  color: #49a3ff;
 }
 .padding-right15 {
   padding-right: 15px;
+}
+.color-gray {
+  color: #aeaeae;
+}
+// .icon-phone {
+//   color: #49a3ff;
+// }
+.icon-fail {
+  color: #f56c6c !important;
+}
+.no-data {
+  margin-top: 100px;
+  color: #aeaeae;
+  text-align: center;
 }
 </style>

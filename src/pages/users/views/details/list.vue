@@ -552,6 +552,8 @@ export default {
     padding: 0;
     font-size: 0;
   }
+  padding: 0 10px;
+  background: #fff;
 }
 .asset-loading {
   text-align: center;
