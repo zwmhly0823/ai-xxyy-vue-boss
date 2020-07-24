@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-15 20:35:57
  * @LastEditors: Shentong
- * @LastEditTime: 2020-07-24 14:31:34
+ * @LastEditTime: 2020-07-24 14:44:10
  -->
 <template>
   <div class="third-step">
@@ -338,6 +338,7 @@ export default {
     },
     // 根据老师ids获取招生排期设置中老师配置信息
     async getTeacherConfigList() {
+      this.flags.loading = true
       try {
         const teacherList = await this.$http.Operating.getTeacherConfigList(
           this.params
