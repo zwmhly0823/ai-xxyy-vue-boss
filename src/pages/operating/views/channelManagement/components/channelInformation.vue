@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-05-06 16:33:15
  * @LastEditors: panjian
- * @LastEditTime: 2020-07-18 15:48:24
+ * @LastEditTime: 2020-07-24 11:59:09
  -->
 <template>
   <div class="channelAdd-box">
@@ -283,7 +283,7 @@ export default {
     }
   },
   created() {
-    // this.getChannelOne()
+    this.getChannelOne()
   },
   methods: {
     // 获取渠道id
