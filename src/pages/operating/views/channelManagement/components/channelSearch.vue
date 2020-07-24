@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-04-25 12:09:03
  * @LastEditors: panjian
- * @LastEditTime: 2020-07-23 15:51:16
+ * @LastEditTime: 2020-07-24 11:24:03
  -->
 <template>
   <div id="channel-box" class="channel-box">
@@ -395,12 +395,14 @@ export default {
     channelSearchValue(data) {
       this.totalNumber = 1
       this.channelSearchValList = data.toString()
+      this.channelValueList = []
       this.getChannelDetailPage()
     },
     // 选择渠道
     getChannelLeves(data) {
       this.totalNumber = 1
       this.channelIds = data.toString()
+      this.channelValueList = []
       this.getChannelDetailPage()
     },
     getChannelDetailPage() {
@@ -411,7 +413,7 @@ export default {
         startCtime: this.stateTime,
         endCtime: this.endTime,
         page: this.totalNumber,
-        pageSzie: '20'
+        pageSzie: '60'
       }
       const paramsM = {
         trialChannels: this.channelIds,
@@ -457,6 +459,7 @@ export default {
             const nums = (systemOrderNums / orderUserPayNums) * 100
             res.systemOrderNumsPercent = `${nums.toFixed(2)}%`
           }
+
           this.channelValueList.push(res.pay_channel)
         })
         this.onGetChannelList(_data)
@@ -539,7 +542,8 @@ export default {
     },
     // 调取渠道分类  渠道名称接口
     onGetChannelList(_data) {
-      const channelValue = `{"id":${JSON.stringify(this.channelValueList)}}`
+      const query = this.channelValueList
+      const channelValue = `{"id":${JSON.stringify(query)}}`
       this.$http.Operating.ChannelDetailStatisticsList(channelValue).then(
         (ele) => {
           const __data = ele.data.ChannelDetailStatisticsList
@@ -569,6 +573,7 @@ export default {
     schedulingSearch(data) {
       this.querySearchTrialStage = data
       this.totalNumber = 1
+      this.channelValueList = []
       this.getChannelDetailPage()
     },
     // 组件 时间回传的值
@@ -581,11 +586,13 @@ export default {
         this.endTime = ''
       }
       this.totalNumber = 1
+      this.channelValueList = []
       this.getChannelDetailPage()
     },
     // 分页
     handleCurrentChange(val) {
       this.totalNumber = val
+      this.channelValueList = []
       this.getChannelDetailPage()
       // this.$emit('onCurrentPage', val)
     },
