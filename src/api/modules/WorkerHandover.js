@@ -64,9 +64,9 @@ export default {
   /**
    * 历史查询
    * */
-  getHandoverRecord(page, size = 20) {
+  getHandoverRecord(params) {
     return axios.get(
-      `/api/t/v1/handover/page/getHandoverRecord?pageNumber=${page}&pageSize=${size}`
+      `/api/t/v1/handover/page/getHandoverRecord?pageNumber=${params.page}&pageSize=${params.size}`
     )
   }
 }
