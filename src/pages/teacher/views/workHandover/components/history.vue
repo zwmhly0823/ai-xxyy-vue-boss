@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-07-23 16:26:04
  * @LastEditors: panjian
- * @LastEditTime: 2020-07-24 12:16:08
+ * @LastEditTime: 2020-07-24 18:35:35
 -->
 <template>
   <div class="history-box">
@@ -24,13 +24,21 @@
         <el-table-column prop="studentSteamId" label="交接类型">
         </el-table-column>
         <el-table-column prop="sendRealName" label="交出方"> </el-table-column>
-        <el-table-column prop="name" label="交出内容"> </el-table-column>
+        <el-table-column label="交出内容">
+          <template slot-scope="scope">
+            {{ scope.row.content || '-' }}
+          </template>
+        </el-table-column>
         <el-table-column prop="receiveRealName" label="接收方">
         </el-table-column>
         <el-table-column prop="receiveWeixinNo" label="接收微信号">
         </el-table-column>
-        <el-table-column prop="operatorName" label="操作人"> </el-table-column>
-        <el-table-column prop="name" label="交接时间"> </el-table-column>
+        <el-table-column prop="operatorName" label="操作人">
+          <template slot-scope="scope">
+            {{ scope.row.operatorName || '-' }}
+          </template>
+        </el-table-column>
+        <el-table-column prop="operatTime" label="交接时间"> </el-table-column>
       </el-table>
       <!-- 分页 -->
       <m-pagination
@@ -46,6 +54,7 @@
 </template>
 
 <script>
+import { timestamp } from '@/utils/index'
 import MPagination from '@/components/MPagination/index.vue'
 import groupSell from './groupSell.vue'
 export default {
@@ -57,13 +66,10 @@ export default {
     return {
       currentPage: '1',
       totalElements: '',
-      tableData: [
-        {
-          date: '2016-05-02',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }
-      ]
+      tableData: [],
+      teacherSendId: '',
+      teacherReceiveId: '',
+      handoverType: ''
     }
   },
   created() {
@@ -72,6 +78,9 @@ export default {
   methods: {
     onGetHandoverRecord() {
       const params = {
+        teacherSendId: this.teacherSendId,
+        teacherReceiveId: this.teacherReceiveId,
+        handoverType: this.handoverType,
         page: this.currentPage,
         size: '20'
       }
@@ -79,11 +88,15 @@ export default {
         this.currentPage = res.payload.number
         this.totalElements = res.payload.totalElements
         const _data = res.payload.content
+
         _data.forEach((ele) => {
+          ele.operatTime = timestamp(ele.operatTime, 2)
           if (ele.studentSteamId === '0') {
             ele.studentSteamId = '微信交接'
+            ele.content = ele.sendWeixinNo
           } else {
             ele.studentSteamId = '班级交接'
+            ele.content = ele.teamName
           }
         })
         console.log(res)
@@ -91,14 +104,17 @@ export default {
       })
     },
     onHandover(data) {
+      this.teacherSendId = data
       console.log(data)
       this.onGetHandoverRecord()
     },
     onReceive(data) {
+      this.teacherReceiveId = data
       console.log(data)
       this.onGetHandoverRecord()
     },
     onType(data) {
+      this.handoverType = data
       console.log(data)
       this.onGetHandoverRecord()
     },
