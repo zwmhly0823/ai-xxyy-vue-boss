@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-15 20:35:57
  * @LastEditors: Shentong
- * @LastEditTime: 2020-07-18 14:31:05
+ * @LastEditTime: 2020-07-24 14:31:34
  -->
 <template>
   <div class="third-step">
@@ -19,6 +19,7 @@
         >
           {{ tab.label }}
         </div>
+        <div class="tip">tip：切换前请先保存当前级别下更改的内容哟~</div>
       </div>
       <!-- 随材版本和课程类型先不做 -->
       <!-- <div class="table-search">
@@ -45,21 +46,21 @@
         <el-table-column
           prop="teacherRealName"
           label="真实姓名"
-          width="100"
+          min-width="100"
           align="center"
         >
         </el-table-column>
         <el-table-column
           prop="departmentName"
           label="所属部门"
-          width="150"
+          min-width="150"
           align="center"
         >
         </el-table-column>
         <el-table-column
           prop="levelName"
           label="销售等级"
-          width="120"
+          min-width="120"
           align="center"
         >
           <template slot-scope="scope">
@@ -69,21 +70,21 @@
         <el-table-column
           prop="teacherWechatNo"
           label="绑定微信"
-          width="120"
+          min-width="120"
           align="center"
         >
         </el-table-column>
         <el-table-column
           prop="lastPeriod"
           label="最近接生期数"
-          width="100"
+          min-width="100"
           align="center"
         >
         </el-table-column>
         <el-table-column
           prop="address"
           label="招生级别"
-          width="80"
+          min-width="80"
           align="center"
         >
           <template slot-scope="scope">
@@ -95,7 +96,7 @@
         <el-table-column
           prop="address"
           label="打开开关"
-          width="100"
+          min-width="100"
           align="center"
         >
           <template slot-scope="scope">
@@ -130,7 +131,7 @@
         <el-table-column
           prop="address"
           label="计划招生"
-          width="100"
+          min-width="100"
           align="center"
         >
           <template slot-scope="scope">
@@ -148,7 +149,7 @@
         <el-table-column
           prop="address"
           label="课程材料版本"
-          width="130"
+          min-width="130"
           align="center"
         >
           <template slot-scope="scope">
@@ -177,7 +178,7 @@
         <el-table-column
           prop="address"
           label="体验课类型"
-          width="240"
+          min-width="240"
           align="center"
         >
           <template slot-scope="scope">
@@ -202,16 +203,27 @@
             </div>
           </template>
         </el-table-column>
+        <el-table-column prop="address" label="" min-width="70" align="center">
+          <template slot-scope="scope">
+            <el-button
+              type="primary"
+              size="mini"
+              @click="saveRow(scope.$index, scope.row)"
+            >
+              保存
+            </el-button>
+          </template>
+        </el-table-column>
       </ele-table>
 
       <!-- 取消、下一步 -->
       <div class="operate-btn">
-        <el-button size="small" type="primary" @click="stepOpt(0)"
-          >上一步</el-button
+        <el-button size="small" type="warning" @click="backList"
+          >取消</el-button
         >
-        <el-button size="small" type="primary" @click="stepOpt(1)"
+        <!-- <el-button size="small" type="primary" @click="stepOpt(1)"
           >提交保存</el-button
-        >
+        > -->
       </div>
     </div>
   </div>
@@ -304,7 +316,8 @@ export default {
 
         this.getTeacherConfigList()
       }
-      index !== this.levelIndex && this.stepOpt(false, callback)
+      // index !== this.levelIndex && this.stepOpt(false, callback)
+      index !== this.levelIndex && callback()
     },
     // 搜索emit数据
     searchChange(search) {
@@ -391,7 +404,7 @@ export default {
         const _res = await this.$http.Operating.saveScheduleConfig(params)
         if (_res.code === 0) {
           this.$message.success('保存成功')
-          cb()
+          cb && cb()
         }
       } catch (err) {
         this.$message({
@@ -438,6 +451,27 @@ export default {
         }
       }
     },
+    // 某一行单独保存
+    async saveRow(index, row) {
+      // console.log(this.tableData, index, row)
+      const { courseType = 0 } = this.$route.params
+      const data = _.cloneDeep(this.tableData)
+      const tableData = [data[index]]
+      this.validateTableForm(tableData)
+      if (this.isValidate) {
+        const params = {
+          courseType,
+          period: this.schedulePeriod,
+          body: tableData
+        }
+        await this.saveScheduleConfig(params)
+      }
+    },
+    backList() {
+      this.$store.commit('setSchedulePeriod', '')
+      this.$store.commit('setScheduleTeacher', [])
+      this.$router.push({ path: '/operatingSchedule' })
+    },
     // 上一步，下一步
     async stepOpt(type, cb) {
       const { courseType = 0 } = this.$route.params
@@ -483,6 +517,11 @@ export default {
         color: #2a75ed;
       }
     }
+  }
+  .tip {
+    font-size: 12px;
+    font-family: monospace;
+    color: #666;
   }
   .table-search {
     margin-top: 10px;
