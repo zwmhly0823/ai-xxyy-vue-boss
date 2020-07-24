@@ -413,7 +413,7 @@ export default {
         startCtime: this.stateTime,
         endCtime: this.endTime,
         page: this.totalNumber,
-        pageSzie: '20'
+        pageSzie: '60'
       }
       const paramsM = {
         trialChannels: this.channelIds,
