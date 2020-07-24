@@ -3,8 +3,8 @@
  * @version:
  * @Author: zhubaodong
  * @Date: 2020-04-02 16:08:02
- * @LastEditors: panjian
- * @LastEditTime: 2020-07-17 14:54:14
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-07-24 19:06:13
  -->
 <template>
   <div>
@@ -14,7 +14,6 @@
       teachername="realname.keyword"
       teachernickname="nickname.keyword"
       rank="rank_id"
-      induction="status"
       landing="is_login"
       position="duty_id"
       seller-level="level"
@@ -270,7 +269,7 @@ export default {
       tableHeight: 0,
       departmentQuery: '',
       searchQuery: '',
-      query: '',
+      query: { status: 0 },
       sex: {
         // 0: '-',
         0: '男',
@@ -321,7 +320,7 @@ export default {
       }
       if (query.department.pid === '99999') {
         this.departmentQuery = ''
-        this.query = ''
+        this.query = { status: 0 }
       } else {
         this.departmentQuery = query
       }
@@ -359,14 +358,14 @@ export default {
         this.searchQuery = term
       } else {
         this.searchQuery = ''
-        this.query = ''
+        this.query = { status: 0 }
       }
       this.getData(1)
     },
     getData(page = this.currentPage) {
       if (this.departmentQuery || this.searchQuery) {
-        this.query = Object.assign(
-          {},
+        Object.assign(
+          this.query,
           this.departmentQuery || {},
           this.searchQuery || {}
         )
