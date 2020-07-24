@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-04-25 12:09:03
  * @LastEditors: panjian
- * @LastEditTime: 2020-07-23 15:53:29
+ * @LastEditTime: 2020-07-24 11:27:43
  -->
 <template>
   <div id="channel-boxs" class="channel-box">
@@ -322,6 +322,7 @@ export default {
         this.stateTime = ''
         this.endTime = ''
         this.totalNumber = 1
+        this.channelValueList = []
         this.getChannelDetailPage()
         this.channelSearchValList = ''
       }
@@ -342,6 +343,7 @@ export default {
     channelSearchValue(data) {
       this.totalNumber = 1
       this.channelSearchValList = data.toString()
+      this.channelValueList = []
       this.getChannelDetailPage()
     },
     getChannelDetailPage() {
@@ -362,7 +364,6 @@ export default {
         endCtime: this.endTime
       }
       this.$http.Operating.countsByTrialChannelClassId(params).then((res) => {
-        console.log(res)
         const _data = res.content
         this.totalNumber = res.number
         this.totalElements = res.totalElements
@@ -491,13 +492,12 @@ export default {
     },
     // 调取渠道分类  渠道名称接口
     onGetChannelList(_data) {
-      const channelValue = `{"id":${JSON.stringify(this.channelValueList)}}`
+      const query = this.channelValueList
+      const channelValue = `{"id":${JSON.stringify(query)}}`
       this.$http.Operating.ChannelClassPageName(channelValue).then((ele) => {
         const __data = ele.data.ChannelClassPage.content
         _data.forEach((val) => {
           __data.forEach((item) => {
-            console.log(item, '-----')
-            console.log(val, '=====')
             if (+item.id === +val.trial_channel_class_id) {
               val.channel_class_id = item.channel_class_parent_id
               val.channel_class_name = item.channel_class_name
@@ -525,6 +525,7 @@ export default {
     schedulingSearch(data) {
       this.querySearchTrialStage = data
       this.totalNumber = 1
+      this.channelValueList = []
       this.getChannelDetailPage()
     },
     // 组件 时间回传的值
@@ -537,11 +538,13 @@ export default {
         this.endTime = ''
       }
       this.totalNumber = 1
+      this.channelValueList = []
       this.getChannelDetailPage()
     },
     // 分页
     handleCurrentChange(val) {
       this.totalNumber = val
+      this.channelValueList = []
       this.getChannelDetailPage()
       // this.$emit('onCurrentPage', val)
     },
