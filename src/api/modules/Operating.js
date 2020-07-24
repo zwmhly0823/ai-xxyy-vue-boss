@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-03-16 19:46:39
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-07-23 20:24:10
+ * @LastEditTime: 2020-07-24 16:40:28
  */
 import axios from '../axiosConfig'
 // import { getToken } from '@/utils/auth'
@@ -153,7 +153,7 @@ export default {
   ChannelDetailStatisticsList(Params = `""`) {
     return axios.post('/graphql/v1/toss', {
       query: `{
-        ChannelDetailStatisticsList(query:${JSON.stringify(Params)}){
+        ChannelDetailStatisticsList(query:${JSON.stringify(Params)},size:60){
           id
           ctime
           channel_inner_name
@@ -187,7 +187,7 @@ export default {
   ChannelClassPageName(Params, page = 1) {
     return axios.post('/graphql/v1/toss', {
       query: `{
-        ChannelClassPage(query:${JSON.stringify(Params)}){
+        ChannelClassPage(query:${JSON.stringify(Params)},size:60){
           content{
             channel_class_name
             channel_level
