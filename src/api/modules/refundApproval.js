@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-05-12 15:22:25
  * @LastEditors: liukun
- * @LastEditTime: 2020-07-06 18:12:37
+ * @LastEditTime: 2020-07-24 21:34:34
  */
 
 import axios from '../axiosConfig'
@@ -97,5 +97,19 @@ export default {
   getChannel(payChannel) {
     console.warn('获取第三方渠道来源')
     return axios.get(`/api/c/v1/channel/getChannelById?id=${payChannel}`)
+  },
+  // 为了学员详情跳转来的审核页面，自动填入手机号-获取uid
+  getUid_lk(query) {
+    return axios.post('/graphql/user', {
+      query: `{
+              blurrySearch(query: ${JSON.stringify(JSON.stringify(query))}) {
+                  id
+                  mobile
+                  wechat_nikename
+                  last_team_id
+                }
+            }
+          `
+    })
   }
 }

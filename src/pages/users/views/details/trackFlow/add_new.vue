@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-07-20 16:37:49
  * @LastEditors: liukun
- * @LastEditTime: 2020-07-23 09:52:27
+ * @LastEditTime: 2020-07-24 21:31:06
 --><template>
   <el-dialog title="新建跟进记录" :visible.sync="dialogFormVisible" width="50%">
     <el-form
@@ -115,7 +115,7 @@ export default {
     }
   },
   mounted() {
-    this.form.uid = Number(this.$route.params.id)
+    this.form.uid = this.$route.params.id
     const storage1 = JSON.parse(localStorage.getItem('teacher'))
     this.form.teacherId = Number(storage1.id)
     this.form.roleType =

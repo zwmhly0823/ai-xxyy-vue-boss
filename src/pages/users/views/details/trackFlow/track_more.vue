@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-07-20 16:38:13
  * @LastEditors: liukun
- * @LastEditTime: 2020-07-23 14:34:22
+ * @LastEditTime: 2020-07-24 21:48:07
 -->
 <template>
   <el-drawer :visible.sync="drawer" size="35%" :destroy-on-close="true">
@@ -15,7 +15,7 @@
       </section>
     </template>
     <div class="chouti" v-if="tableData && tableData.length">
-      <section class="flower_item" v-for="item of tableData" :key="item.uid">
+      <section class="flower_item" v-for="item of tableData" :key="item.ctime">
         <div class="upset_24col_space_between padding-right15">
           <div>
             <el-tag size="small" v-if="item.teacherInfo.duty_id === '1'"
@@ -115,8 +115,8 @@ export default {
         }
       } = await this.$http.User.getTrackList({
         uid: this.$route.params.id,
-        size: this.pageSize,
-        page: this.currentPage
+        size,
+        page
       }).catch((err) => {
         this.$message.error('flow更多数据获取失败')
         console.error(err)

@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-07-20 16:37:31
  * @LastEditors: liukun
- * @LastEditTime: 2020-07-23 14:34:08
+ * @LastEditTime: 2020-07-24 21:46:56
 -->
 <template>
   <div>
@@ -23,7 +23,7 @@
       </section>
     </div>
     <div class="chouti" v-if="tableData && tableData.length">
-      <section class="flower_item" v-for="item of tableData" :key="item.uid">
+      <section class="flower_item" v-for="item of tableData" :key="item.ctime">
         <div class="upset_24col_space_between padding-right15">
           <div>
             <el-tag size="small" v-if="item.teacherInfo.duty_id === '1'"

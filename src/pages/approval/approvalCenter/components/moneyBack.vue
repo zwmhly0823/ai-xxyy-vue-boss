@@ -4,7 +4,7 @@
  * @Author: huzhifu
  * @Date: 2020-05-07 10:50:45
  * @LastEditors: liukun
- * @LastEditTime: 2020-07-08 17:43:07
+ * @LastEditTime: 2020-07-24 21:40:41
  -->
 <template>
   <div class="adjustModule">
@@ -248,6 +248,30 @@ export default {
   components: {
     SearchPhone
   },
+  // 学员详情跳转来审批query lk
+  async mounted() {
+    if (this.$route.query && this.$route.query.cellphone) {
+      console.info('captured学员详情跳转而来')
+      // 显示并保存手机号
+      this.refundForm.cellPhone = this.$refs.toGetPhone.input = this.$route.query.cellphone
+      // 手机号查uid
+      const {
+        data: { blurrySearch }
+      } = await this.$http.RefundApproval.getUid_lk({
+        mobile: this.$route.query.cellphone
+      }).catch((err) => {
+        console.error(err)
+        this.$message.error('跳转来的手机号获取uid失败')
+      })
+      if (blurrySearch && blurrySearch[0] && blurrySearch[0].id) {
+        this.refundForm.name = blurrySearch[0].id // 保存uid
+        this.getordersWithUid() // uid获取订单list
+      } else {
+        this.$message.warning('跳转来的手机号没有uid')
+      }
+    }
+  },
+
   watch: {
     // 首框改变,清空关联订单
     'refundForm.cellPhone': {
@@ -864,33 +888,40 @@ export default {
     getUid({ uid }) {
       console.info(uid)
       if (uid) {
-        this.refundForm.name = uid
-        this.refundForm.cellPhone = this.$refs.toGetPhone.input
-        this.$http.RefundApproval.getOrdersByUid(uid) // 用uid获取订单
-          .then(({ code, payload }) => {
-            if (!code && payload.length) {
-              this.refundForm.order = ''
-              this.orderOptions = []
-              this.orderOptions = payload.map((item) => {
-                item.relationOrder =
-                  item.outTradeNo.replace(/[^\d]+/g, '') +
-                  `(^_^)${item.packagesName}`
-                return item
-              })
-            } else {
-              this.$message({
-                message: '该手机号未查询到订单',
-                type: 'warning'
-              })
-            }
-          })
-          .catch((err) => console.error(err))
+        this.refundForm.name = uid // 存uid
+        this.refundForm.cellPhone = this.$refs.toGetPhone.input // 存手机号
+        this.getordersWithUid() // 用uid去提货订单数据
       } else {
-        // this.$message({
-        //   message: 'searchPhone组件没有得到uid',
-        //   type: 'warning'
-        // })
+        this.$message({
+          message: 'searchPhone组件没有得到uid',
+          type: 'warning'
+        })
       }
+    },
+    // 用uid去提货订单数据
+    getordersWithUid() {
+      this.$http.RefundApproval.getOrdersByUid(this.refundForm.name)
+        .then(({ code, payload }) => {
+          if (!code && payload.length) {
+            this.refundForm.order = ''
+            this.orderOptions = []
+            this.orderOptions = payload.map((item) => {
+              item.relationOrder =
+                item.outTradeNo.replace(/[^\d]+/g, '') +
+                `(^_^)${item.packagesName}`
+              return item
+            })
+          } else {
+            this.$message({
+              message: '该手机号未查询到订单',
+              type: 'warning'
+            })
+          }
+        })
+        .catch((err) => {
+          this.$message.error('uid获取失败')
+          console.error(err)
+        })
     },
     // 提交表单
     onSubmit(formName) {

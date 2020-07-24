@@ -510,7 +510,17 @@ export default {
 
     // 审批5项跳转
     queryJump(commandlk) {
-      this.$message(commandlk)
+      this.$message(commandlk + '去')
+      const cellphone = this.stuInfor.mobile
+      const obj = {
+        退款: `/approval/#/moneyBack?cellphone=${cellphone}`,
+        补发货: `/approval/#/repair?cellphone=${cellphone}`,
+        调班: `/approval/#/approvalCenter/adjust?adjustType=3&cellphone=${cellphone}`,
+        调级: `/approval/#/approvalCenter/adjust?adjustType=2&cellphone=${cellphone}`,
+        调期: `/approval/#/approvalCenter/adjust?adjustType=1&cellphone=${cellphone}`
+      }
+      // this.$router.push(obj[commandlk])
+      location.href = obj[commandlk]
     },
     // 给被迫引用发券组件拿couponlist
     couponList() {
