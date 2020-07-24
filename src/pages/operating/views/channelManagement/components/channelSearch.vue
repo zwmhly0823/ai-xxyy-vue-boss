@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-04-25 12:09:03
  * @LastEditors: panjian
- * @LastEditTime: 2020-07-24 11:24:03
+ * @LastEditTime: 2020-07-24 14:25:36
  -->
 <template>
   <div id="channel-box" class="channel-box">
@@ -262,6 +262,7 @@
           @current-change="handleCurrentChange"
           :current-page="+totalNumber"
           :total="+totalElements"
+          :pageSize="+60"
           open="calc(100vw - 147px - 50px)"
           close="calc(100vw - 26px - 50px)"
         />
