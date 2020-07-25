@@ -19,6 +19,7 @@
         clearable
         :placeholder="tip"
         :remote-method="getTeacher"
+        :disabled="isDisabled"
         :loading="loading"
         @change="onChange"
       >
@@ -46,6 +47,10 @@ export default {
       default: '社群销售'
     },
     isMultiple: {
+      type: Boolean,
+      default: false
+    },
+    isDisabled: {
       type: Boolean,
       default: false
     },
