@@ -4,7 +4,7 @@
  * @Author: zhangjianwen
  * @Date: 2020-07-09 15:02:59
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-07-25 19:29:57
+ * @LastEditTime: 2020-07-25 21:46:05
 -->
 <template>
   <div class="learn-record">
@@ -187,12 +187,13 @@
           >
         </div>
         <div>
-          <el-form ref="form" label-width="100px">
+          <el-form label-width="100px">
             <el-row>
               <el-col :span="8">
                 <el-form-item label="学员搜索:">
                   <div class="search-group">
                     <search-phone-or-usernum
+                      ref="useNum"
                       style="margin-right: 10px;"
                       type="2"
                       tablename="StudentTrialV2StatisticsList"
@@ -202,7 +203,7 @@
                 </el-form-item>
               </el-col>
               <el-col :span="6">
-                <el-form-item label="班级名称">
+                <el-form-item ref="formItem" label="班级名称">
                   <el-input
                     style="width:100"
                     v-model="classVal"
@@ -217,10 +218,11 @@
               <el-col :span="22" v-show="isActive !== 2">
                 <el-form-item label="时间搜索:" class="search-group flt">
                   <date-down-quick-select
+                    ref="dataPick"
                     :quick-btn="['day', 'yesterday']"
                     :slectShow="isActive === 1"
                     name="dateTime"
-                    @result="getSearchData('dateTime', arguments)"
+                    @result="getSearchData('name', arguments)"
                   />
                 </el-form-item>
               </el-col>
@@ -433,19 +435,20 @@ export default {
         11: '小熊TV课'
       },
       use_status: {
-        0: '已注册',
-        1: '已体验课',
-        2: '体验课完课',
-        3: '已月系统课',
-        4: '月系统课完课',
+        0: '未转化',
+        1: '未转化',
+        2: '未转化',
+        3: '未转化',
+        4: '未转化',
         5: '已年系统课',
-        6: '年系统课完课',
-        7: '年系统课续费',
-        8: '注销失效',
-        9: '已季系统课',
-        10: '季系统课完课',
+        6: '已年系统课',
+        7: '已年系统课',
+        8: '未转化',
+        9: '未转化',
+        10: '未转化',
         11: '已半年系统课',
-        12: '半年系统课完课'
+        12: '已半年系统课',
+        13: '已半年系统课'
       },
       lessonData: [],
       learnRecordData: [],
@@ -567,6 +570,10 @@ export default {
     changeType(val) {
       this.isActive = val
       this.currentPage = 1
+      this.classVal = ''
+      this.$refs.dataPick.handleChange()
+      this.$refs.useNum.handleChange()
+
       this.getRecordList()
     },
     // 点击下拉

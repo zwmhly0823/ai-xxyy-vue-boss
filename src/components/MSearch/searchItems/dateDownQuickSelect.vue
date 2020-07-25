@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-05-28 10:06:51
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-07-22 19:46:09
+ * @LastEditTime: 2020-07-25 21:42:04
 -->
 <template>
   <div class="search-item">
@@ -131,7 +131,8 @@ export default {
   },
   methods: {
     handleChange() {
-      this.value = ''
+      this.timeData = ''
+      console.log('测试完成')
       // this.$emit('result', '')
     },
     //  选择时间
