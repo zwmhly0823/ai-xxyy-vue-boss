@@ -5,7 +5,7 @@
  * @Author: shentong
  * @Date: 2020-03-13 14:38:28
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-07-25 19:16:24
+ * @LastEditTime: 2020-07-25 22:56:48
  */
 // import axios from '../axios'
 import axios from '../axiosConfig'
@@ -484,7 +484,138 @@ export default {
               today_join_course_count
               today_complete_course_count
               yesterday_join_course_count
+              ad_today_join_course_count
+              ad_today_complete_course_count
+              ad_yesterday_join_course_count
             }
+          }
+        }`
+    })
+  },
+  // 学习记录基本信息
+  getStudentDetail(term, course_id, sup) {
+    // console.log(query)
+    const formattingQuery = JSON.stringify({
+      term,
+      course_id,
+      sup: sup.toLowerCase()
+    })
+    console.log(formattingQuery)
+    return axios.post(`/graphql/v1/toss`, {
+      query: `{
+        StudentTrialRecordDetailBossStatistics(
+          query:${JSON.stringify(formattingQuery)}
+          
+          )
+          {
+    id
+    ctime
+    utime
+    course_id
+    term
+    sup
+    team_state
+    lesson_type
+    title
+    send_date
+    image
+    current_lesson
+    week
+    desc
+    encyclopedias
+    professional
+    all_send_course_count
+    join_course_count
+    complete_course_count
+    all_join_course_rate
+    all_complete_course_rate
+    task_count
+    comment_count
+    lesson_comment_count
+    learn_course_count
+    ad_count
+    ad_join_course_count
+      ad_complete_course_count
+      ad_learn_course_count
+      ad_all_join_course_rate
+      ad_all_complete_course_rate
+  }
+          
+        }`
+    })
+  },
+  // 学习记录详情页
+  getStudentTRecordList(query, teamName = '', sup, page = 1, sort = 'desc') {
+    console.log(teamName)
+    teamName &&
+      Object.assign(query, {
+        'team_name.like': { 'team_name.keyword': `*${teamName}*` }
+      })
+    const formattingQuery = JSON.stringify({
+      ...query,
+      sup: sup.toLowerCase()
+    })
+    console.log(formattingQuery)
+    const formattingSort = JSON.stringify({ ctime: sort })
+    return axios.post(`/graphql/v1/toss`, {
+      query: `{
+        StudentTrialRecordListStatisticsPage(
+          query:${JSON.stringify(formattingQuery)},
+          page: ${page},
+          size:20,
+          sort:${JSON.stringify(formattingSort)}
+          )
+          {
+             content {
+      id
+      cid
+      mid
+      ctime
+      utime
+      student_id
+      course_id
+      team_id
+      team_name
+      term
+      sup
+      team_state
+      teacher_id
+      realname
+      department_id
+      department_name
+      user_num
+      username
+      nickname
+      birthday
+      base_painting
+      mobile
+      sex
+      mobile_city
+      mobile_province
+      status
+      state
+      learn_course_count
+      last_join_course_time
+      complete_time
+      task_count
+      comment_count
+      lesson_comment_count
+      ad_count
+      ad_last_join_course_time
+      ad_complete_time
+      ad_join_course_count
+      ad_complete_course_count
+      ad_state
+
+    }
+    empty
+    first
+    last
+    number
+    size
+    numberOfElements
+    totalElements
+    totalPages
           }
         }`
     })
