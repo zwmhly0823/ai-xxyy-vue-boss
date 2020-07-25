@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-07-20 16:37:49
  * @LastEditors: liukun
- * @LastEditTime: 2020-07-25 17:22:00
+ * @LastEditTime: 2020-07-25 18:13:38
 --><template>
   <el-dialog title="新建跟进记录" :visible.sync="dialogFormVisible" width="50%">
     <el-form
@@ -85,7 +85,7 @@ export default {
         pointType: [{ required: true, message: '必选', trigger: 'change' }],
         content: [
           { required: true, message: '请键入内容', trigger: 'blur' },
-          { max: 300, message: '最多300个字符', trigger: 'blur' }
+          { max: 255, message: '最多255个字符', trigger: 'blur' }
         ]
       }
     }

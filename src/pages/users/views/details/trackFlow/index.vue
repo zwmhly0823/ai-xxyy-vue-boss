@@ -3,8 +3,8 @@
  * @version: 1.0.0
  * @Author: liukun
  * @Date: 2020-07-20 16:37:31
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-07-25 16:06:36
+ * @LastEditors: liukun
+ * @LastEditTime: 2020-07-25 18:15:05
 -->
 <template>
   <div class="track-container">
@@ -74,7 +74,7 @@
             }}</span>
           </div>
         </div>
-        <div class="upset_24col_space_between padding-right15">
+        <div class="upset_24col_space_between padding-right15 margin22">
           <span class="color-gray">{{ item.point_type }}</span>
           <span class="color-gray">{{
             new Date(Number(item.ctime)).toLocaleString()
@@ -182,7 +182,6 @@ export default {
 .flower_item {
   padding: 10px 5px;
   border-bottom: 1px solid #ccc;
-  height: 100px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -216,5 +215,8 @@ export default {
   margin-top: 100px;
   color: #aeaeae;
   text-align: center;
+}
+.margin22 {
+  margin: 12px 0;
 }
 </style>
