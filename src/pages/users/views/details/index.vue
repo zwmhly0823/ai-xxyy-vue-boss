@@ -45,13 +45,21 @@
             </div>
             <div>
               <span class="tccc">优惠券</span>:
-              <b class="textonline" @click="jumpToAsset(1)">
+              <b
+                style="cursor:pointer"
+                class="textonline"
+                @click="jumpToAsset(1)"
+              >
                 {{ stuInfor.coupon && stuInfor.coupon.length }}
               </b>
             </div>
             <div>
               <span class="tccc">小熊币</span>:
-              <b class="textonline" @click="jumpToAsset(2)">
+              <b
+                style="cursor:pointer"
+                class="textonline"
+                @click="jumpToAsset(2)"
+              >
                 {{
                   stuInfor.account &&
                   stuInfor.account[0] &&
@@ -434,7 +442,7 @@
     <!-- 推荐弹窗 -->
     <recommend
       ref="recommend"
-      :recommendHuman="stuInfor.sender ? stuInfor.sender.username : ''"
+      :recommendHuman="stuInfor.sender ? stuInfor.sender : {}"
     />
 
     <!-- 被迫弹窗发券引到这里-->

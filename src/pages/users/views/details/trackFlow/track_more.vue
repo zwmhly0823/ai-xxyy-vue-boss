@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-07-20 16:38:13
  * @LastEditors: liukun
- * @LastEditTime: 2020-07-25 20:30:25
+ * @LastEditTime: 2020-07-25 20:43:24
 -->
 <template>
   <el-drawer :visible.sync="drawer" size="35%" :destroy-on-close="true">
@@ -28,9 +28,7 @@
               >CT</el-tag
             >
             <span style="margin-left:10px">{{
-              item.teacherInfo.realname +
-                '-' +
-                item.teacherInfo.departmentInfo.name
+              item.teacherInfo.realname + item.teacherInfo.departmentInfo.name
             }}</span>
           </div>
           <div>
