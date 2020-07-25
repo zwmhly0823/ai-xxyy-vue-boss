@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-07-20 16:38:13
  * @LastEditors: liukun
- * @LastEditTime: 2020-07-25 17:53:56
+ * @LastEditTime: 2020-07-25 20:30:25
 -->
 <template>
   <el-drawer :visible.sync="drawer" size="35%" :destroy-on-close="true">
@@ -63,11 +63,9 @@
             }}</span>
           </div>
         </div>
-        <div class="upset_24col_space_between padding-right15">
+        <div class="upset_24col_space_between padding-right15 margin22">
           <span class="color-gray">{{ item.point_type }}</span>
-          <span class="color-gray">{{
-            new Date(Number(item.ctime)).toLocaleString()
-          }}</span>
+          <span class="color-gray">{{ item.ctime }}</span>
         </div>
         <div class="upset_24col_space_between padding-right15">
           <span>{{ item.content }}</span>
@@ -89,6 +87,7 @@
 </template>
 
 <script>
+import { formatDate } from '@/utils/mini_tool_lk'
 export default {
   name: 'track_more',
   data() {
@@ -141,6 +140,7 @@ export default {
             '5': '日常沟通'
           }
           item.point_type = obj[item.point_type]
+          item.ctime = formatDate(+item.ctime)
         })
         this.tableData = content
         console.info('2号list更新')
@@ -182,7 +182,6 @@ export default {
 .flower_item {
   padding: 10px 5px;
   border-bottom: 1px solid #ccc;
-  height: 100px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -224,5 +223,8 @@ export default {
   .el-drawer__close-btn {
     outline: none;
   }
+}
+.margin22 {
+  margin: 12px 0;
 }
 </style>

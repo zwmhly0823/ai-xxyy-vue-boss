@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-07-20 16:37:31
  * @LastEditors: liukun
- * @LastEditTime: 2020-07-25 18:15:05
+ * @LastEditTime: 2020-07-25 20:20:48
 -->
 <template>
   <div class="track-container">
@@ -18,10 +18,7 @@
           type="text"
           size="mini"
           @click="$refs.track_more.drawer = true"
-          >更多<i
-            class="el-icon-arrow-right
-"
-          ></i
+          >更多<i class="el-icon-arrow-right"></i
         ></el-button>
       </section>
     </div>
@@ -39,9 +36,7 @@
               >CT</el-tag
             >
             <span style="margin-left:10px">{{
-              item.teacherInfo.realname +
-                '-' +
-                item.teacherInfo.departmentInfo.name
+              item.teacherInfo.realname + item.teacherInfo.departmentInfo.name
             }}</span>
           </div>
           <div>
@@ -76,9 +71,7 @@
         </div>
         <div class="upset_24col_space_between padding-right15 margin22">
           <span class="color-gray">{{ item.point_type }}</span>
-          <span class="color-gray">{{
-            new Date(Number(item.ctime)).toLocaleString()
-          }}</span>
+          <span class="color-gray">{{ item.ctime }}</span>
         </div>
         <div class="upset_24col_space_between padding-right15">
           <span>{{ item.content }}</span>
@@ -92,6 +85,7 @@
 </template>
 
 <script>
+import { formatDate } from '@/utils/mini_tool_lk'
 import addNew from './add_new'
 import trackMore from './track_more'
 export default {
@@ -99,8 +93,7 @@ export default {
   components: { addNew, trackMore },
   data() {
     return {
-      tableData: [],
-      dutyId: ''
+      tableData: []
     }
   },
   methods: {
@@ -131,6 +124,7 @@ export default {
             '5': '日常沟通'
           }
           item.point_type = obj[item.point_type]
+          item.ctime = formatDate(+item.ctime)
         })
         this.tableData = content
         console.info('1号list更新')
@@ -139,7 +133,6 @@ export default {
   },
   created() {
     this.getTrackList()
-    this.dutyId = JSON.parse(localStorage.getItem('teacher')).dutyId
   },
   mounted() {
     this.$root.$on('reload', (r) => {

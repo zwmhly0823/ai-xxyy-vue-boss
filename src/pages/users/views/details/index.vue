@@ -31,26 +31,26 @@
               </svg>
             </div>
             <div>
-              <span>区域</span>:
+              <span class="tccc">区域</span>:
               {{ stuInfor.mobile_province || '-' }}
               · {{ stuInfor.mobile_city || '-' }}
             </div>
             <div>
-              <span>年龄</span>:
+              <span class="tccc">年龄</span>:
               {{ stuInfor.age }}
             </div>
             <div>
-              <span>生日</span>:
+              <span class="tccc">生日</span>:
               {{ stuInfor.birthday }}
             </div>
             <div>
-              <span>优惠券</span>:
+              <span class="tccc">优惠券</span>:
               <b class="textonline" @click="jumpToAsset(1)">
                 {{ stuInfor.coupon && stuInfor.coupon.length }}
               </b>
             </div>
             <div>
-              <span>小熊币</span>:
+              <span class="tccc">小熊币</span>:
               <b class="textonline" @click="jumpToAsset(2)">
                 {{
                   stuInfor.account &&
@@ -72,10 +72,11 @@
 
         <el-col :span="5" :offset="3">
           <div class="upset_24col">
-            <el-button size="mini" type="primary" plain @click="couponList"
+            <el-button size="mini" type="primary" @click="couponList"
               >发优惠券</el-button
             >
             <el-dropdown
+              type="primary"
               split-button
               size="mini"
               @click="
@@ -115,7 +116,10 @@
               <span>用户资料</span>
             </section>
             <section style="margin-top:15px">
-              <el-divider content-position="left">基本信息</el-divider>
+              <div class="gengbo">
+                <span>基本信息</span>
+                <el-divider></el-divider>
+              </div>
               <el-row
                 type="flex"
                 justify="space-around"
@@ -184,7 +188,10 @@
               </el-row>
             </section>
             <section style="margin-top:20px">
-              <el-divider content-position="left">微信信息</el-divider>
+              <div class="gengbo">
+                <span>微信信息</span>
+                <el-divider></el-divider>
+              </div>
               <!-- 双编剧塌陷现场-BFC -->
               <el-row
                 style="margin-top:15px"
@@ -266,6 +273,7 @@
             <section class="setou123">
               <strong></strong>
               <span>用户群组</span>
+              <span style="color:#ccc;font-size:14px">(包含微信标签)</span>
             </section>
             <section>
               <el-row type="flex" justify="space-around" align="middle">
@@ -439,6 +447,7 @@
 </template>
 
 <script>
+import { formatDate } from '@/utils/mini_tool_lk'
 import recommend from './recommendComponents/recommend.vue'
 import showAddress from './addressComponents/showAddress.vue'
 import trackFlow from './trackFlow/index'
@@ -764,9 +773,7 @@ export default {
       // 生日格式化
       data.birthday = data.birthday ? formatData(data.birthday * 1000) : '-'
       // 注册时间格式化
-      data.join_date = data.join_date
-        ? new Date(+data.join_date).toLocaleString()
-        : '-'
+      data.join_date = data.join_date ? formatDate(+data.join_date) : '-'
       // 课程名称格式化 0:体验课   >0:系统课
       data.teams &&
         data.teams.length > 0 &&
@@ -1055,11 +1062,19 @@ export default {
   border-radius: 50%;
 }
 .colorposition {
-  color: #f56c6c;
+  color: #49a3ff;
 }
 .textonline {
   color: #2a75ed;
   text-decoration: underline;
+}
+.tccc {
+  color: #ccc;
+}
+.gengbo {
+  padding: 0px 16px;
+  font-size: 14px;
+  color: #ccc;
 }
 </style>
 
