@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-07-20 16:38:13
  * @LastEditors: liukun
- * @LastEditTime: 2020-07-25 17:24:20
+ * @LastEditTime: 2020-07-25 17:53:56
 -->
 <template>
   <el-drawer :visible.sync="drawer" size="35%" :destroy-on-close="true">
@@ -42,13 +42,17 @@
             >
               <use xlink:href="#icongongzhonghao"></use>
             </svg>
-            <i
-              v-else-if="item.contact_type === '1'"
-              class="el-icon-phone-outline el-elment-lk"
-            ></i>
+            <svg
+              v-if="item.contact_type === '1'"
+              style="vertical-align: middle"
+              class="el-elment-lk"
+              aria-hidden="true"
+            >
+              <use xlink:href="#icondianhua"></use>
+            </svg>
             <i
               v-else-if="item.contact_type === '2'"
-              class="el-icon-mobile-phone el-elment-lk"
+              class="el-icon-mobile-phone icon-fail"
             ></i>
             <span style="vertical-align: middle;padding-left:5px">{{
               item.finish_type === '0'
@@ -60,8 +64,10 @@
           </div>
         </div>
         <div class="upset_24col_space_between padding-right15">
-          <span>{{ item.point_type }}</span>
-          <span>{{ new Date(Number(item.ctime)).toLocaleString() }}</span>
+          <span class="color-gray">{{ item.point_type }}</span>
+          <span class="color-gray">{{
+            new Date(Number(item.ctime)).toLocaleString()
+          }}</span>
         </div>
         <div class="upset_24col_space_between padding-right15">
           <span>{{ item.content }}</span>
@@ -186,13 +192,14 @@ export default {
   width: 20px;
   height: 20px;
   overflow: hidden;
-  color: #bfbfbf;
+  color: #42b983;
   fill: currentColor;
 }
 .el-elment-lk {
   vertical-align: middle;
-  font-size: 20px;
-  color: #ccc;
+  width: 24px;
+  height: 18px;
+  fill: #49a3ff;
 }
 .padding-right15 {
   padding-right: 15px;
@@ -201,5 +208,21 @@ export default {
   padding: 0px 20px;
   max-height: 85vh;
   overflow-x: auto;
+}
+.color-gray {
+  color: #aeaeae;
+}
+.icon-fail {
+  vertical-align: middle;
+  font-size: 18px;
+  color: #f56c6c !important;
+}
+::v-deep {
+  .el-drawer__header {
+    margin-bottom: 10px;
+  }
+  .el-drawer__close-btn {
+    outline: none;
+  }
 }
 </style>
