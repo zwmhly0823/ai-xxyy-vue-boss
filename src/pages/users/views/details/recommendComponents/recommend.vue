@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-07-22 10:31:00
  * @LastEditors: liukun
- * @LastEditTime: 2020-07-25 21:04:27
+ * @LastEditTime: 2020-07-25 21:18:08
 -->
 <template>
   <el-dialog title="推荐信息" :visible.sync="recommendInfo" width="40%">
@@ -24,7 +24,7 @@
           v-if="recommendList.length"
         >
           <span v-for="(item, index) of recommendList" :key="index">{{
-            item.username || '-'
+            item.username || '-' + '-' + item.user_num || '-'
           }}</span>
         </el-col>
         <el-col :span="18" :offset="1" class="recommendDone" v-else> - </el-col>

@@ -442,7 +442,9 @@
     <!-- 推荐弹窗 -->
     <recommend
       ref="recommend"
-      :recommendHuman="stuInfor.sender ? stuInfor.sender : {}"
+      :recommendHuman="
+        stuInfor.sender ? stuInfor.sender : { username: '-', user_num: '' }
+      "
     />
 
     <!-- 被迫弹窗发券引到这里-->
