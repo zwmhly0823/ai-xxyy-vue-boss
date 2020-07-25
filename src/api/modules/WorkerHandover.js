@@ -3,7 +3,7 @@
  * @Author: songyanan
  * @Date: 2020-05-22 19:12:45
  * @LastEditors: panjian
- * @LastEditTime: 2020-07-24 18:35:52
+ * @LastEditTime: 2020-07-25 11:11:35
  */
 import axios from '../axiosConfig'
 
@@ -66,7 +66,7 @@ export default {
    * */
   getHandoverRecord(params) {
     return axios.get(
-      `/api/t/v1/handover/page/getHandoverRecord?teacherSendId=${params.teacherSendId}&teacherReceiveId=${params.teacherReceiveId}&handoverType=${params.handoverType}pageNumber=${params.page}&pageSize=${params.size}`
+      `/api/t/v1/handover/page/getHandoverRecord?teacherSendId=${params.teacherSendId}&teacherReceiveId=${params.teacherReceiveId}&handoverType=${params.handoverType}&pageNumber=${params.page}&pageSize=${params.size}`
     )
   }
 }

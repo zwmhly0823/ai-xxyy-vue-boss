@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-07-23 16:26:04
  * @LastEditors: panjian
- * @LastEditTime: 2020-07-24 18:35:35
+ * @LastEditTime: 2020-07-25 13:17:13
 -->
 <template>
   <div class="history-box">
@@ -38,7 +38,8 @@
             {{ scope.row.operatorName || '-' }}
           </template>
         </el-table-column>
-        <el-table-column prop="operatTime" label="交接时间"> </el-table-column>
+        <el-table-column prop="operatorTime" label="交接时间">
+        </el-table-column>
       </el-table>
       <!-- 分页 -->
       <m-pagination
@@ -58,6 +59,12 @@ import { timestamp } from '@/utils/index'
 import MPagination from '@/components/MPagination/index.vue'
 import groupSell from './groupSell.vue'
 export default {
+  props: {
+    tabIndex: {
+      type: String,
+      default: ''
+    }
+  },
   components: {
     groupSell,
     MPagination
@@ -70,6 +77,11 @@ export default {
       teacherSendId: '',
       teacherReceiveId: '',
       handoverType: ''
+    }
+  },
+  watch: {
+    tabIndex(value) {
+      this.currentPage = '1'
     }
   },
   created() {
@@ -90,7 +102,7 @@ export default {
         const _data = res.payload.content
 
         _data.forEach((ele) => {
-          ele.operatTime = timestamp(ele.operatTime, 2)
+          ele.operatorTime = timestamp(ele.operatorTime, 2)
           if (ele.studentSteamId === '0') {
             ele.studentSteamId = '微信交接'
             ele.content = ele.sendWeixinNo
@@ -105,16 +117,19 @@ export default {
     },
     onHandover(data) {
       this.teacherSendId = data
+      this.currentPage = '1'
       console.log(data)
       this.onGetHandoverRecord()
     },
     onReceive(data) {
       this.teacherReceiveId = data
+      this.currentPage = '1'
       console.log(data)
       this.onGetHandoverRecord()
     },
     onType(data) {
       this.handoverType = data
+      this.currentPage = '1'
       console.log(data)
       this.onGetHandoverRecord()
     },
