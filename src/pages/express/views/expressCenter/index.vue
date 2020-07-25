@@ -63,7 +63,7 @@
             :source_type="source_type"
             :hideCol="allExpressHideCol"
             :hideSearchItem="allExpressHideSearchItemSystem"
-            :teamClass="teamClass"
+            :teamClass="teamClassSys"
           />
           <toggle
             @result="getStatus"
@@ -132,7 +132,7 @@
             :source_type="'5'"
             :hideCol="replenishHideCol"
             :hideSearchItem="replenishHideSearchItem"
-            :teamClass="teamClass"
+            teamClass=""
           />
           <toggle
             @result="getStatus"
@@ -279,6 +279,7 @@ const replenishHideCol = {
   productVersion: false,
   term: false,
   className: false,
+  classNameBf: true,
   teacher: false,
   courseType: false,
   applicant: false,
@@ -349,6 +350,7 @@ export default {
       replenishHideCol,
       allHideToggleBtn: ['9'],
       teamClass: '0', // 排期组件添加类别区分 系统课传1 体验课传0
+      teamClassSys: '1', // 排期组件添加类别区分 系统课传1 体验课传0
       allExpressHideSearchItemActivity,
       allExpressHideSearchItemSystem,
       replenishHideSearchItem

@@ -296,6 +296,20 @@
         </template>
       </el-table-column>
       <el-table-column
+        label="班级"
+        min-width="150"
+        v-if="showCol.classNameBf"
+        :key="19"
+      >
+        <template slot-scope="scope">
+          <div>
+            {{
+              scope.row.lastTeamInfo ? scope.row.lastTeamInfo.team_name : '--'
+            }}
+          </div>
+        </template>
+      </el-table-column>
+      <el-table-column
         :label="regtype == '1' ? '社群销售' : '辅导老师'"
         min-width="150"
         v-if="showCol.teacher"
@@ -521,18 +535,18 @@ const regtypeEnum = {
   '6': '活动补发'
 }
 const LEVEL_ENUM = {
-  L1: 28,
-  L2: 28 * 2,
-  L3: 28 * 3,
-  L4: 28 * 4,
-  L5: 28 * 5,
-  L6: 28 * 6,
-  L7: 28 * 7,
-  L8: 28 * 8,
-  L9: 28 * 9,
-  L10: 28 * 10,
-  L11: 28 * 11,
-  L12: 28 * 12
+  L1: 0,
+  L2: 28,
+  L3: 28 * 2,
+  L4: 28 * 3,
+  L5: 28 * 4,
+  L6: 28 * 5,
+  L7: 28 * 6,
+  L8: 28 * 7,
+  L9: 28 * 8,
+  L10: 28 * 9,
+  L11: 28 * 10,
+  L12: 28 * 11
 }
 export default {
   props: {
@@ -1192,7 +1206,7 @@ export default {
       if (!time) {
         return '-'
       }
-      const timeC = LEVEL_ENUM[level]
+      const timeC = this.regtype === '1' ? 0 : LEVEL_ENUM[level]
       if (timeC) {
         time = +time + timeC * 24 * 3600 * 1000
       }
