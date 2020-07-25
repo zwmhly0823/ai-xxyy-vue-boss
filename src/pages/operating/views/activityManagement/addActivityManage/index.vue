@@ -59,9 +59,8 @@
               end-placeholder="结束日期"
             ></el-date-picker>
           </el-form-item>
-          <el-form-item label="活动范围">
+          <el-form-item label="活动范围" prop="explessonCheck">
             <el-row style="display:flex;margin-bottom: 10px;">
-              {{ explesson }}
               <el-checkbox
                 label="体验课"
                 name="type"
@@ -69,6 +68,7 @@
                 style="margin-right:20px;"
               ></el-checkbox>
               <search-stage
+                :record="activityFrom.explessonCheck"
                 :isDisabled="!explesson"
                 class="search-group-item"
                 name="term0"
@@ -77,13 +77,18 @@
                 @result="getSchedul('term0', arguments, 0)"
               />
             </el-row>
+          </el-form-item>
+          <el-form-item label="" prop="syslessonCheck">
             <el-row style="display:flex">
               <el-checkbox
                 label="系统课"
                 name="type"
+                v-model="syslesson"
                 style="margin-right:20px;"
               ></el-checkbox>
               <search-stage
+                :record="activityFrom.syslessonCheck"
+                :isDisabled="!syslesson"
                 class="search-group-item"
                 name="term1"
                 placeholder="系统课排期"
@@ -92,7 +97,7 @@
               />
             </el-row>
           </el-form-item>
-          <el-form-item label="赠品设置">
+          <el-form-item label="赠品设置" prop="giftOptionCheck">
             <el-button
               type="primary"
               icon="el-icon-plus"
@@ -100,7 +105,11 @@
               @click="chooseGroup('activityFrom')"
               >选择群</el-button
             >
-            <div ref="tableContainer" class="tableContainer_">
+            <div
+              ref="tableContainer"
+              class="tableContainer_"
+              v-show="tableData.length"
+            >
               <ele-table
                 :tableSize="'small'"
                 :dataList="tableData"
@@ -157,7 +166,7 @@
             </el-input>
           </el-form-item>
         </el-form>
-        <div class="bottom_choose" v-show="tableData.length">
+        <div class="bottom_choose">
           <el-button size="mini" @click="cannelOpt">取消</el-button>
           <el-button
             size="mini"
@@ -191,8 +200,33 @@ import ChooseGroup from './components/chooseGroup'
 import SearchStage from '@/components/MSearch/searchItems/searchStage.vue'
 export default {
   data() {
+    var expvalidator = (rule, value, callback) => {
+      console.log(rule, value, '----------')
+      if (value.length > 0 || this.activityFrom.syslessonCheck.length > 0) {
+        callback() // 自定义校验-以获取到保存到商品信息
+      } else {
+        callback(new Error('请完成商品信息的选择'))
+      }
+    }
+    var sysvalidator = (rule, value, callback) => {
+      console.log(rule, value, '----------')
+      if (value.length > 0 || this.activityFrom.explessonCheck.length > 0) {
+        callback() // 自定义校验-以获取到保存到商品信息
+      } else {
+        callback(new Error('请完成商品信息的选择'))
+      }
+    }
+    var giftOptionvalidator = (rule, value, callback) => {
+      console.log(rule, value, '----------')
+      if (this.tableData.length > 0) {
+        callback() // 自定义校验-以获取到保存到商品信息
+      } else {
+        callback(new Error('请完成商品信息的选择'))
+      }
+    }
     return {
       explesson: false,
+      syslesson: false,
       id: '',
       tableHeight: 'auto',
       dialogGroupVisible: false,
@@ -206,7 +240,10 @@ export default {
       activityFrom: {
         taskName: '',
         planTemplate: '',
-        planStartDate: ''
+        planStartDate: '',
+        giftOption: [],
+        explessonCheck: [],
+        syslessonCheck: []
       },
       rules: {
         taskName: [
@@ -221,7 +258,23 @@ export default {
             message: '请选择时间范围',
             trigger: 'change'
           }
+        ],
+        explessonCheck: [
+          { required: true, validator: expvalidator, trigger: 'blur' }
+        ],
+        syslessonCheck: [
+          { required: true, validator: sysvalidator, trigger: 'blur' }
+        ],
+        giftOptionCheck: [
+          { required: true, validator: giftOptionvalidator, trigger: 'blur' }
         ]
+        // giftOption: [
+        //   {
+        //     required: true,
+        //     validator: validateProduct,
+        //     trigger: 'blur'
+        //   }
+        // ]
       },
       expireTimeOption: {
         disabledDate(date) {
@@ -239,7 +292,14 @@ export default {
     explesson(val, old) {
       if (!val) {
         console.log('11111')
-        this.$emit('result', '')
+        this.activityFrom.explessonCheck = []
+      }
+      console.log(val, old)
+    },
+    syslesson(val, old) {
+      if (!val) {
+        console.log('11111')
+        this.activityFrom.syslessonCheck = []
       }
       console.log(val, old)
     }
@@ -282,6 +342,13 @@ export default {
   methods: {
     // 获取活动范围 体验课系统课拍戏
     getSchedul(key, res, type) {
+      console.log(res, 'ressssssss')
+      if (type === 0) {
+        this.activityFrom.explessonCheck = res[0].term0 || []
+        console.log(this.activityFrom.explessonCheck, '-=-=')
+      } else {
+        this.activityFrom.syslessonCheck = res[0].term1 || []
+      }
       console.log(key, res[0], type, '11212121212121')
     },
     deleteTablerow(row, type) {

@@ -64,6 +64,10 @@ export default {
     isDisabled: {
       type: Boolean,
       default: false
+    },
+    record: {
+      type: Array,
+      default: () => []
     }
   },
   data() {
@@ -87,6 +91,12 @@ export default {
     this.getData()
   },
   watch: {
+    isDisabled(val) {
+      if (val) {
+        this.stage = []
+      }
+      console.log(val, '123123')
+    },
     teacherId(val) {
       this.stage = ''
       this.$emit('result', '')
