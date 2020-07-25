@@ -30,12 +30,13 @@
 // console.log(routes)
 const staff = JSON.parse(localStorage.getItem('staff'))
 
-// 超级管理员权限
 let superOperatingRouter = []
+let superTeacherRouter = []
 
 // 管理员、
 const adminRouter = []
 
+// 超级管理员权限
 if (staff.roleId === '7') {
   superOperatingRouter = [
     {
@@ -52,6 +53,24 @@ if (staff.roleId === '7') {
       meta: {
         title: '手机号替换',
         module: 'operating'
+      }
+    }
+  ]
+  superTeacherRouter = [
+    {
+      path: '/teacherManagement',
+      name: 'teacherManagement',
+      meta: {
+        title: '员工帐号',
+        module: 'teacher'
+      }
+    },
+    {
+      path: '/weixinManagement',
+      name: 'weixinManagement',
+      meta: {
+        title: '员工微信',
+        module: 'teacher'
       }
     }
   ]
@@ -456,22 +475,7 @@ const routes = [
       module: 'teacher'
     },
     children: [
-      {
-        path: '/teacherManagement',
-        name: 'teacherManagement',
-        meta: {
-          title: '员工帐号',
-          module: 'teacher'
-        }
-      },
-      {
-        path: '/weixinManagement',
-        name: 'weixinManagement',
-        meta: {
-          title: '员工微信',
-          module: 'teacher'
-        }
-      },
+      ...superTeacherRouter,
       {
         path: '/workHandover',
         name: 'workHandover',
