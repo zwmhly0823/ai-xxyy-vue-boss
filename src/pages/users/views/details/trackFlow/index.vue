@@ -3,8 +3,8 @@
  * @version: 1.0.0
  * @Author: liukun
  * @Date: 2020-07-20 16:37:31
- * @LastEditors: liukun
- * @LastEditTime: 2020-07-24 22:42:52
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-07-25 16:06:36
 -->
 <template>
   <div class="track-container">
@@ -24,8 +24,11 @@
           type="text"
           size="mini"
           @click="$refs.track_more.drawer = true"
-          >更多</el-button
-        >
+          >更多<i
+            class="el-icon-arrow-right
+"
+          ></i
+        ></el-button>
       </section>
     </div>
     <div class="chouti" v-if="tableData && tableData.length">
@@ -53,19 +56,20 @@
               style="vertical-align: middle"
               class="lk-icon"
               aria-hidden="true"
-              :class="{ 'icon-fail': item.finish_type === '0' }"
             >
               <use xlink:href="#icongongzhonghao"></use>
             </svg>
-            <i
-              v-else-if="item.contact_type === '1'"
-              class="el-icon-phone-outline el-elment-lk"
-              :class="{ 'icon-fail': item.finish_type === '0' }"
-            ></i>
+            <svg
+              v-if="item.contact_type === '1'"
+              style="vertical-align: middle"
+              class="el-elment-lk"
+              aria-hidden="true"
+            >
+              <use xlink:href="#icondianhua"></use>
+            </svg>
             <i
               v-else-if="item.contact_type === '2'"
-              class="el-icon-mobile-phone el-elment-lk"
-              :class="{ 'icon-fail': item.finish_type === '0' }"
+              class="el-icon-mobile-phone icon-fail"
             ></i>
             <span style="vertical-align: middle;padding-left:5px">{{
               item.finish_type === '0'
@@ -191,8 +195,9 @@ export default {
 }
 .el-elment-lk {
   vertical-align: middle;
-  font-size: 20px;
-  color: #49a3ff;
+  width: 24px;
+  height: 18px;
+  fill: #49a3ff;
 }
 .padding-right15 {
   padding-right: 15px;
@@ -200,10 +205,9 @@ export default {
 .color-gray {
   color: #aeaeae;
 }
-// .icon-phone {
-//   color: #49a3ff;
-// }
 .icon-fail {
+  vertical-align: middle;
+  font-size: 18px;
   color: #f56c6c !important;
 }
 .no-data {
