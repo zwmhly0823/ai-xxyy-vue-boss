@@ -5,7 +5,7 @@
  * @Author: shentong
  * @Date: 2020-03-13 14:38:28
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-07-20 20:03:49
+ * @LastEditTime: 2020-07-25 19:16:24
  */
 // import axios from '../axios'
 import axios from '../axiosConfig'
@@ -774,6 +774,10 @@ export default {
     q += `&tomorrow=${query.tomorrow || ''}`
     return axios.get(`/api/u/v1/user/userintention/update?${q}`)
   },
+  // 学员详情 修改地址
+  updateExpressAddressNew(query) {
+    return axios.get(`/api/ex/v1/express/updateExpressAddressNew`, query)
+  },
   getQuestionnairePage(query) {
     return axios.get(
       `/api/f/v1/questionnaire/getQuestionnairePage?uid=${query.uid}&page=${query.page}&pagesize=${query.pagesize}&mobile=${query.mobile}`
@@ -783,9 +787,5 @@ export default {
     return axios.get(
       `/api/f/v1/questionnaire/getQuestionnaireByUserId?uid=${query.uid}&questionnaireId=${query.questionnaireId}&mobile=${query.mobile}`
     )
-  },
-  // 学员详情 修改地址
-  updateExpressAddressNew(query) {
-    return axios.get(`/api/ex/v1/express/updateExpressAddressNew`, query)
   }
 }

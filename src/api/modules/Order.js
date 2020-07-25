@@ -101,6 +101,7 @@ export default {
             }
             trial_pay_channel
             trial_pay_channel_text
+            isrefund
           }
         }
       }`

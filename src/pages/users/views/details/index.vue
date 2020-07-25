@@ -86,7 +86,7 @@
               <!-- 逻辑：当前班级状态 0: 待开课 1:开课中 2:已结课-->
               <template
                 v-if="
-                  stuInfor.teams[courseIndex].isRefund === 1 &&
+                  +isrefund === 1 &&
                     ['learningRecord', 'collectionOf'].includes(tabData)
                 "
               >
@@ -174,8 +174,8 @@
               >
                 <!-- 当前课程teams.id === systemCourse.team_id -->
                 <span
-                  v-for="item in stuInfor.systemCourse"
-                  :key="item.team_id"
+                  v-for="(item, key) in stuInfor.systemCourse"
+                  :key="key"
                   v-show="item.team_id === stuInfor.teams[courseIndex].id"
                 >
                   <el-tag
@@ -371,8 +371,8 @@
       >
         <el-tabs v-model="courseData" @tab-click="courseBtn">
           <el-tab-pane
-            v-for="item in stuInfor.teams"
-            :key="item.id"
+            v-for="(item, key) in stuInfor.teams"
+            :key="key"
             :label="`${item.team_type_formatting}:${item.team_name}`"
             :name="item.id"
           >
@@ -537,12 +537,13 @@ export default {
       courseIndex: 0,
       lessonType: null,
       defaultHead: 'https://msb-ai.meixiu.mobi/ai-pm/static/touxiang.png',
-      wholeData: {}
+      wholeData: {},
+      // 从上个界面过来的是否退费
+      isrefund: ''
     }
   },
   created() {
     this.studentId = this.$route.params.id
-
     // 学员信息接口
     this.reqUser()
   },
@@ -626,6 +627,21 @@ export default {
             item.team_type_formatting = '系统课'
           }
         })
+      // 判断是否有多个系统课的情况
+      this.isrefund = this.$route.query.isrefund
+      if (data.systemCourse.length > 1) {
+        if (this.isrefund) {
+          // 前面有传过来值就用前面的值
+          data.systemCourse = data.systemCourse.filter((item) => {
+            return +item.orderInfo.isrefund === +this.isrefund
+          })
+        } else {
+          // 没有传过来值的话就把已退费的筛掉
+          data.systemCourse = data.systemCourse.filter((item) => {
+            return +item.orderInfo.isrefund === 0
+          })
+        }
+      }
       return data
     },
     // 已退费模块
@@ -842,9 +858,6 @@ export default {
     },
     tabBtn(tab, event) {
       this.currentPage = 1
-      // console.log(tab, event, '学习记录')
-      this.assetCouponDone = false
-      this.assetCoinDone = false
       this.reqUser()
     },
     // 学习记录课程

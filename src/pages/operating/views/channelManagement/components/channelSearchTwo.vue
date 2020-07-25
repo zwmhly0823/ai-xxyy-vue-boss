@@ -3,8 +3,8 @@
  * @version: 
  * @Author: panjian
  * @Date: 2020-04-25 12:09:03
- * @LastEditors: panjian
- * @LastEditTime: 2020-07-24 14:25:13
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-07-25 19:17:14
  -->
 <template>
   <div id="channel-boxs" class="channel-box">

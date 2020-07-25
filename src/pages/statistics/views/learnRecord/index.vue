@@ -4,7 +4,7 @@
  * @Author: zhangjianwen
  * @Date: 2020-07-09 15:02:59
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-07-20 16:18:39
+ * @LastEditTime: 2020-07-25 19:17:34
 -->
 <template>
   <div class="learn-record">

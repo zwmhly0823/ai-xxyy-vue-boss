@@ -454,6 +454,9 @@ export default {
     couponSendSucc() {
       this.$emit('couponSendSucc')
     },
+    ivrBubbleData(data) {
+      this.$emit('ivrBubbleData', data)
+    },
     jumpToCoin(data) {
       this.assetCurPane = data
     },
@@ -462,9 +465,6 @@ export default {
         this.$refs.order_id.drawer = true
         this.order_id = id
       }
-    },
-    ivrBubbleData(data) {
-      this.$emit('ivrBubbleData', data)
     },
     changePagenation(data) {
       this.$emit('changePagenation', data)

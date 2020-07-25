@@ -46,10 +46,11 @@ export default {
     },
     classObj() {
       return {
-        hideSidebar: !this.sidebar.opened,
-        openSidebar: this.sidebar.opened,
-        withoutAnimation: this.sidebar.withoutAnimation,
-        mobile: this.device === 'mobile'
+        // TODO: 默认展开菜单，调整时修改此处
+        // hideSidebar: !this.sidebar.opened,
+        openSidebar: this.sidebar.opened
+        // withoutAnimation: this.sidebar.withoutAnimation,
+        // mobile: this.device === 'mobile'
       }
     },
     rightpopParams() {

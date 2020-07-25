@@ -3,8 +3,8 @@
  * @version: 
  * @Author: panjian
  * @Date: 2020-04-21 16:31:03
- * @LastEditors: panjian
- * @LastEditTime: 2020-04-21 17:44:05
+ * @LastEditors: zhouzebin
+ * @LastEditTime: 2020-07-24 15:35:54
  -->
 <template>
   <div>
@@ -15,6 +15,7 @@
       size="mini"
       filterable
       @change="handleChange"
+      clearable
     >
     </el-cascader>
   </div>

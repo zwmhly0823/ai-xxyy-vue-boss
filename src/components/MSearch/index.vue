@@ -3,8 +3,8 @@
  * @version:
  * @Author: zhubaodong
  * @Date: 2020-03-24 18:20:12
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-07-08 17:53:31
+ * @LastEditors: zhouzebin
+ * @LastEditTime: 2020-07-24 16:15:20
  -->
 
 <template>
@@ -288,6 +288,10 @@
           :sourceType="sourceType"
         />
       </el-form-item>
+      <!-- 物流类型 -->
+      <el-form-item v-if="regType">
+        <express-type @result="getExpressType" name="regType" />
+      </el-form-item>
       <el-form-item v-if="replenishProductType">
         <replenish-product-type
           @result="getReplenishProductType"
@@ -343,6 +347,7 @@ import replenishMethod from './searchItems/replenishMethod.vue'
 import replenishProduct from './searchItems/replenishProduct'
 import replenishProductType from './searchItems/replenishProductType'
 import ConsigneePhone from './searchItems/consigneePhone.vue'
+import expressType from './searchItems/expressType'
 // import SearchTrialStage from './searchItems/searchTrialStage'
 import { isToss } from '@/utils/index'
 // 员工角色
@@ -438,7 +443,7 @@ export default {
     // 是否只搜手机号
     phoneTip: {
       type: String,
-      default: '手机号查询'
+      default: '用户手机号查询'
     },
     // 微信号搜索
     weixinNumber: {
@@ -637,6 +642,11 @@ export default {
       type: String,
       default: ''
     },
+    // 物流方式
+    regType: {
+      type: String,
+      default: ''
+    },
     // 申请人
     operatorId: {
       type: String,
@@ -718,7 +728,8 @@ export default {
     operatorName,
     replenishProductType,
     employeesRole,
-    staffName
+    staffName,
+    expressType
   },
   data() {
     return {
@@ -900,6 +911,9 @@ export default {
     },
     getReplenishMethod(res) {
       this.setSeachParmas(res, [this.replenishMethod || 'replenish_type'])
+    },
+    getExpressType(res) {
+      this.setSeachParmas(res, [this.regType || 'regType'])
     },
     gerOperatorName(res) {
       this.setSeachParmas(res, [this.operatorId])

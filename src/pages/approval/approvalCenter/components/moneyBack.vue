@@ -1,10 +1,8 @@
 <!--
  * @Descripttion: 
  * @version: 
- * @Author: huzhifu
- * @Date: 2020-05-07 10:50:45
  * @LastEditors: liukun
- * @LastEditTime: 2020-07-08 17:43:07
+ * @LastEditTime: 2020-07-10 12:35:00
  -->
 <template>
   <div class="adjustModule">

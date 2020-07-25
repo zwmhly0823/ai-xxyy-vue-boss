@@ -4,10 +4,9 @@
  * @Author: Shentong
  * @Date: 2020-03-16 19:46:39
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-07-24 16:40:28
+ * @LastEditTime: 2020-07-25 19:16:10
  */
 import axios from '../axiosConfig'
-// import { getToken } from '@/utils/auth'
 
 export default {
   /**
@@ -430,15 +429,6 @@ export default {
       }`
     })
   },
-  /**
-   * @description 招生排期上传excel
-   */
-  updateScheduleExcel(parmas) {
-    return axios.post(
-      `/api/t/v1/enroll/import?courseType=${parmas.courseType}`,
-      parmas
-    )
-  },
   // 问卷管理 查询问卷列表数据
   queryQuestionnairePages(page) {
     return axios.get(
@@ -454,5 +444,14 @@ export default {
   // 问卷管理 保存 修改
   saveQuestionnaire(params) {
     return axios.post(`/api/f/v1/questionnaire/saveQuestionnaire`, params)
+  },
+  /**
+   * @description 招生排期上传excel
+   */
+  updateScheduleExcel(parmas) {
+    return axios.post(
+      `/api/t/v1/enroll/import?courseType=${parmas.courseType}`,
+      parmas
+    )
   }
 }

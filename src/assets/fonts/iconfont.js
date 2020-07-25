@@ -1,12 +1,3 @@
-/*
- * @Descripttion: TOSS小熊
- * @version: 1.0.0
- * @Author: liukun
- * @Date: 2020-06-19 20:45:10
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-07-01 21:30:24
- */
-
 /* eslint-disable */
 /*
  * @Descripttion: TOSS小熊

@@ -4,13 +4,16 @@
       <span
         :class="{ 'pitch-up': index == activeIndex }"
         @click="getToggleClick(index)"
-        >{{ item.label }}</span
       >
+        {{ item.label }}
+        <span class="count">{{ item.count }}</span>
+      </span>
     </div>
   </div>
 </template>
 
 <script>
+/* eslint-disable camelcase */
 import { isToss } from '@/utils/index'
 import { expressToggleList } from '@/utils/expressItemConfig'
 export default {
@@ -67,24 +70,48 @@ export default {
         const x = res.data.logisticsStatisticsNew
         this.toggleList.map((item) => {
           if (item.id === '0') {
-            item.label = x
-              ? `${item.label}（${Number(x.no_address)}）`
-              : `${item.label}`
+            item.count = Number(x?.no_address) || ''
           }
+          if (item.id === '1') {
+            item.count = Number(x?.wait_send) || ''
+          }
+        })
+        this.toggleList = [...this.toggleList]
+      })
+    },
+    getLogisticsStatisticsDsh() {
+      let q
+      if (this.teacherId || this.teacherId === 0) {
+        q = `{"teacher_id": [${this.teacherId}],"regtype":[${this.regtype}],"source_type":[${this.source_type}],"center_express_id":{"lte":0}}`
+      } else {
+        q = `{"regtype":[${this.regtype}],"source_type":[${this.source_type}],"center_express_id":{"lte":0}}`
+      }
+      const query = JSON.stringify(q)
+      this.$http.Express.getLogisticsStatistics({
+        query: `{
+          logisticsStatisticsNew(query:${query}) {
+            no_address
+            wait_send
+            has_send
+            has_signed
+            signed_failed
+            has_return
+            confirm_wait_send
+            invalid
+            difficult
+          }
+        }`
+      }).then((res) => {
+        const x = res.data.logisticsStatisticsNew
+        this.toggleList.map((item) => {
           if (
             item.id === '6' &&
             Object.prototype.hasOwnProperty.call(item.center_express_id, 'lte')
           ) {
-            item.label = x
-              ? `${item.label}（${Number(x.confirm_wait_send)}）`
-              : `${item.label}`
-          }
-          if (item.id === '1') {
-            item.label = x
-              ? `${item.label}（${Number(x.wait_send)}）`
-              : `${item.label}`
+            item.count = Number(x?.confirm_wait_send) || ''
           }
         })
+        this.toggleList = [...this.toggleList]
       })
     },
     getToggleClick(index) {
@@ -115,10 +142,12 @@ export default {
     this.hideSomeBtn()
     this.getTeacherId()
     this.getLogisticsStatistics()
+    this.getLogisticsStatisticsDsh()
   },
   watch: {
     tab() {
       this.getLogisticsStatistics()
+      this.getLogisticsStatisticsDsh()
       this.initToggleList()
       this.hideSomeBtn()
       this.activeIndex = 0
@@ -138,8 +167,29 @@ export default {
     font-weight: 400;
     padding: 5px;
     cursor: pointer;
+    span {
+      display: inline-block;
+      padding-top: 5px;
+      position: relative;
+      .count {
+        position: absolute;
+        top: -12px;
+        right: -15px;
+        font-size: 12px;
+        color: #999;
+      }
+    }
     .pitch-up {
       color: #2a75ed;
+      position: relative;
+      &::after {
+        content: '';
+        background: #2a75ed;
+        height: 2px;
+        bottom: -20px;
+        width: 100%;
+        display: inline-block;
+      }
     }
   }
 }
