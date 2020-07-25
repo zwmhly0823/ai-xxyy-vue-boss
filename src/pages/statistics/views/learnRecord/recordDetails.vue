@@ -4,7 +4,7 @@
  * @Author: zhangjianwen
  * @Date: 2020-07-09 15:02:59
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-07-25 21:46:05
+ * @LastEditTime: 2020-07-25 23:10:32
 -->
 <template>
   <div class="learn-record">
@@ -613,11 +613,16 @@ export default {
     userHandle(user) {
       console.log(user)
 
-      const { username, id, mobile } = user
+      const { username, mobile } = user
+      const studentId = user.student_id
+
       // this.$router.push(`details?id=${uid}`)
       // 新标签打开详情页
-      id &&
-        openBrowserTab(`/users/#/details/${id}`, `学员:${username || mobile}`)
+      studentId &&
+        openBrowserTab(
+          `/users/#/details/${studentId}`,
+          `学员:${username || mobile}`
+        )
     },
     // 点击班级名称，打开班级详情
     openTeam(row) {
