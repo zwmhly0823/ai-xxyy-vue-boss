@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-07-22 10:31:00
  * @LastEditors: liukun
- * @LastEditTime: 2020-07-22 13:51:14
+ * @LastEditTime: 2020-07-25 17:20:01
 -->
 <template>
   <el-dialog title="用户地址" :visible.sync="showAddress" width="40%">
@@ -30,9 +30,12 @@
         >
       </el-row>
       <el-row type="flex" justify="start" align="middle" class="marginb10">
-        <el-col :span="5">修改地址:</el-col>
-        <el-col :span="18" :offset="1">
-          <el-button type="text" @click="changeAddress1">操作</el-button>
+        <el-col :span="5">操作:</el-col>
+        <el-col :span="18" :offset="1" v-if="Object.keys(addressData).length">
+          <el-button type="text" @click="changeAddress1">修改</el-button>
+        </el-col>
+        <el-col :span="18" :offset="1" v-else>
+          <el-button type="text" @click="changeAddress1">增加</el-button>
         </el-col>
       </el-row>
     </div>

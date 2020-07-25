@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-07-20 16:38:13
  * @LastEditors: liukun
- * @LastEditTime: 2020-07-24 21:48:07
+ * @LastEditTime: 2020-07-25 17:24:20
 -->
 <template>
   <el-drawer :visible.sync="drawer" size="35%" :destroy-on-close="true">
@@ -137,11 +137,17 @@ export default {
           item.point_type = obj[item.point_type]
         })
         this.tableData = content
+        console.info('2号list更新')
       }
     }
   },
   created() {
     this.getTrackList()
+  },
+  mounted() {
+    this.$root.$on('reload', (r) => {
+      this.getTrackList()
+    })
   }
 }
 </script>

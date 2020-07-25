@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-07-20 16:37:31
  * @LastEditors: liukun
- * @LastEditTime: 2020-07-24 22:42:52
+ * @LastEditTime: 2020-07-25 17:23:31
 -->
 <template>
   <div class="track-container">
@@ -14,12 +14,6 @@
         <span>跟进记录</span>
       </section>
       <section style="margin-right:30px">
-        <el-button
-          type="text"
-          size="mini"
-          @click="$refs.track_add.dialogFormVisible = true"
-          >新建</el-button
-        >
         <el-button
           type="text"
           size="mini"
@@ -101,7 +95,8 @@ export default {
   components: { addNew, trackMore },
   data() {
     return {
-      tableData: []
+      tableData: [],
+      dutyId: ''
     }
   },
   methods: {
@@ -134,11 +129,18 @@ export default {
           item.point_type = obj[item.point_type]
         })
         this.tableData = content
+        console.info('1号list更新')
       }
     }
   },
   created() {
     this.getTrackList()
+    this.dutyId = JSON.parse(localStorage.getItem('teacher')).dutyId
+  },
+  mounted() {
+    this.$root.$on('reload', (r) => {
+      this.getTrackList()
+    })
   }
 }
 </script>

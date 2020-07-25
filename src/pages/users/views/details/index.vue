@@ -45,13 +45,13 @@
             </div>
             <div>
               <span>优惠券</span>:
-              <el-button type="text" @click="jumpToAsset(1)">
+              <b class="textonline" @click="jumpToAsset(1)">
                 {{ stuInfor.coupon && stuInfor.coupon.length }}
-              </el-button>
+              </b>
             </div>
             <div>
               <span>小熊币</span>:
-              <el-button type="text" @click="jumpToAsset(2)">
+              <b class="textonline" @click="jumpToAsset(2)">
                 {{
                   stuInfor.account &&
                   stuInfor.account[0] &&
@@ -59,17 +59,13 @@
                     ? stuInfor.account[0].balance
                     : 0
                 }}
-              </el-button>
+              </b>
             </div>
             <div>
-              <i class="el-icon-location-outline el-elment-lk" />
-              <span>用户地址</span>:
-              <el-button
-                type="text"
+              <i
+                class="el-icon-location-outline colorposition el-elment-lk"
                 @click="$refs.showAddress.showAddress = true"
-              >
-                {{ stuInfor.address && stuInfor.address.length }}
-              </el-button>
+              />
             </div>
           </div>
         </el-col>
@@ -175,14 +171,14 @@
                 </el-col>
               </el-row>
               <el-row type="flex" justify="space-around" align="middle">
-                <el-col :span="7">
-                  <span>系统课剩余:</span>
-                  {{
-                    stuInfor.systemCourse &&
-                      stuInfor.systemCourse.length &&
-                      stuInfor.systemCourse[0].remaining_week + '周'
-                  }}</el-col
+                <el-col
+                  v-if="stuInfor.systemCourse && stuInfor.systemCourse.length"
+                  :span="7"
                 >
+                  <span>系统课剩余:</span>
+                  {{ stuInfor.systemCourse[0].remaining_week + '周' }}</el-col
+                >
+                <el-col v-else :span="7"></el-col>
                 <el-col :span="7"></el-col>
                 <el-col :span="7"></el-col>
               </el-row>
@@ -1057,6 +1053,13 @@ export default {
   width: 20px;
   height: 20px;
   border-radius: 50%;
+}
+.colorposition {
+  color: #f56c6c;
+}
+.textonline {
+  color: #2a75ed;
+  text-decoration: underline;
 }
 </style>
 

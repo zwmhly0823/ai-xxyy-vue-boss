@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-07-20 16:37:49
  * @LastEditors: liukun
- * @LastEditTime: 2020-07-24 21:31:06
+ * @LastEditTime: 2020-07-25 17:22:00
 --><template>
   <el-dialog title="新建跟进记录" :visible.sync="dialogFormVisible" width="50%">
     <el-form
@@ -85,7 +85,7 @@ export default {
         pointType: [{ required: true, message: '必选', trigger: 'change' }],
         content: [
           { required: true, message: '请键入内容', trigger: 'blur' },
-          { min: 5, max: 20, message: '长度在 5 到 20 个字符', trigger: 'blur' }
+          { max: 300, message: '最多300个字符', trigger: 'blur' }
         ]
       }
     }
@@ -103,6 +103,10 @@ export default {
           if (code === 0) {
             this.$message.success('记录提交成功')
             this.dialogFormVisible = false
+            this.$refs.form.resetFields()
+            setTimeout(() => {
+              this.$root.$emit('reload', true)
+            }, 1500) // 不延时拉不到新数据
           }
         } else {
           this.$message.warning('请检查表单规则')
@@ -114,15 +118,7 @@ export default {
       this.dialogFormVisible = false
     }
   },
-  mounted() {
-    this.form.uid = this.$route.params.id
-    const storage1 = JSON.parse(localStorage.getItem('teacher'))
-    this.form.teacherId = Number(storage1.id)
-    this.form.roleType =
-      storage1.dutyId === '2' ? 'CT' : storage1.dutyId === '1' ? 'CC' : ''
-    // this.form.roleType = 'CT'
-    // this.form.teacherId = 666
-  }
+  mounted() {}
 }
 </script>
 
