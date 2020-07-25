@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-07-23 16:26:04
  * @LastEditors: panjian
- * @LastEditTime: 2020-07-25 13:17:13
+ * @LastEditTime: 2020-07-25 14:37:16
 -->
 <template>
   <div class="history-box">
@@ -111,26 +111,22 @@ export default {
             ele.content = ele.teamName
           }
         })
-        console.log(res)
         this.tableData = _data
       })
     },
     onHandover(data) {
       this.teacherSendId = data
       this.currentPage = '1'
-      console.log(data)
       this.onGetHandoverRecord()
     },
     onReceive(data) {
       this.teacherReceiveId = data
       this.currentPage = '1'
-      console.log(data)
       this.onGetHandoverRecord()
     },
     onType(data) {
       this.handoverType = data
       this.currentPage = '1'
-      console.log(data)
       this.onGetHandoverRecord()
     },
     // 分页
