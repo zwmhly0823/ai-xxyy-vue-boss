@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-04-25 12:09:03
  * @LastEditors: panjian
- * @LastEditTime: 2020-07-24 14:25:36
+ * @LastEditTime: 2020-07-24 18:40:53
  -->
 <template>
   <div id="channel-box" class="channel-box">
@@ -378,6 +378,7 @@ export default {
         this.totalNumber = 1
         this.getChannelDetailPage()
         this.channelSearchValList = ''
+        this.channelValueList = []
       }
     }
   },
