@@ -2,8 +2,8 @@
  * @Descripttion:
  * @Author: songyanan
  * @Date: 2020-05-22 19:12:45
- * @LastEditors: songyanan
- * @LastEditTime: 2020-05-26 18:02:50
+ * @LastEditors: panjian
+ * @LastEditTime: 2020-07-25 11:11:35
  */
 import axios from '../axiosConfig'
 
@@ -59,6 +59,14 @@ export default {
   fishHandvorGetTable(sendTeacherId, pageSize, pageNumber) {
     return axios.get(
       `/api/t/v1/handover/getHandoverRecordsteam?sendTeacherId=${sendTeacherId}&pageSize=${pageSize}&pageNumber=${pageNumber}`
+    )
+  },
+  /**
+   * 历史查询
+   * */
+  getHandoverRecord(params) {
+    return axios.get(
+      `/api/t/v1/handover/page/getHandoverRecord?teacherSendId=${params.teacherSendId}&teacherReceiveId=${params.teacherReceiveId}&handoverType=${params.handoverType}&pageNumber=${params.page}&pageSize=${params.size}`
     )
   }
 }
