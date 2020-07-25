@@ -1092,7 +1092,7 @@ export default {
         team_state: [0, 1]
       }
       return this.$http.User.ManagementForTeacherList(params).then((res) => {
-        console.log(res)
+        // console.log(res)
         if (res && res.data && res.data.ManagementForTeacherList) {
           if (res.data.ManagementForTeacherList.length === 0) {
             this.term = '0'
@@ -1102,6 +1102,7 @@ export default {
               this.getTodayCount()
               this.getTodayCount('tomorrow')
             }, 500)
+            this.renderSearchAndTable()
             return
           }
 
@@ -1131,15 +1132,7 @@ export default {
                 ? this.manageMentList[0].period
                 : '0'
           }
-          // 把参数传给search，获取班级用
-          this.paramsToSearch.term = this.term
-          // 上面的方法获取到term之后，才会加载search组件，加载完search组件之后才去算table的高
-          // 之所以要等是为了避免重绘 ---我是这么想的
-          this.$nextTick(() => {
-            const tableHeight =
-              document.body.clientHeight - this.$refs.tableInner.offsetTop - 90
-            this.tableHeight = tableHeight + ''
-          })
+          this.renderSearchAndTable()
         }
       })
     },
@@ -1236,6 +1229,17 @@ export default {
         }
       })
       return data
+    },
+    renderSearchAndTable() {
+      // 把参数传给search，获取班级用
+      this.paramsToSearch.term = this.term
+      // 上面的方法获取到term之后，才会加载search组件，加载完search组件之后才去算table的高
+      // 之所以要等是为了避免重绘 ---我是这么想的
+      this.$nextTick(() => {
+        const tableHeight =
+          document.body.clientHeight - this.$refs.tableInner.offsetTop - 90
+        this.tableHeight = tableHeight + ''
+      })
     },
     handleSizeChange(page) {
       console.log(page)
