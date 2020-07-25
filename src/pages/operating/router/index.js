@@ -110,6 +110,15 @@ const routes = [
       keepAlive: false
     },
     component: () => import('../views/changePhoneNumber/index.vue')
+  },
+  {
+    path: '/issueBearCoins',
+    name: 'issueBearCoins',
+    meta: {
+      title: '发放小熊币',
+      keepAlive: false
+    },
+    component: () => import('../views/issueBearCoins/index.vue')
   }
 ]
 

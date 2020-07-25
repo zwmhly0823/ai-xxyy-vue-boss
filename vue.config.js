@@ -57,6 +57,7 @@ module.exports = {
     proxy: {
       '/api': {
         target: 'https://test.meixiu.mobi',
+        // target: 'http://docker.meixiu.mobi:18766',
         changeOrigin: true,
         ws: true,
         secure: false,

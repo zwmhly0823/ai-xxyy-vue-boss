@@ -395,5 +395,37 @@ export default {
       `/api/t/v1/enroll/import?courseType=${parmas.courseType}`,
       parmas
     )
+  },
+  /**
+   * @description 导入模板
+   */
+  exportUpload(parmas) {
+    return axios.post('/api/a/v1/account/batchUpdateAccount', parmas)
+  },
+  /**
+   * @description 小熊币发放列表
+   */
+  issueBearList(params = '', page = 1) {
+    return axios.post('/graphql/v1/toss', {
+      query: `{
+        AccountPage(query: ${params}, page:${page}) {
+          totalPages
+          totalElements
+          content {
+            user{
+              user_num
+              id
+            }
+            id
+            uid
+            ctime
+            account_type
+            trans_type
+            amount
+            note
+          }
+        }
+      }`
+    })
   }
 }

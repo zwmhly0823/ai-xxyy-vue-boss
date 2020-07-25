@@ -366,6 +366,14 @@ const routes = [
           module: 'operating'
         }
       },
+      {
+        path: '/issueBearCoins',
+        name: 'issueBearCoins',
+        meta: {
+          title: '发放小熊币',
+          module: 'operating'
+        }
+      },
       ...superOperatingRouter,
       ...adminRouter
     ]

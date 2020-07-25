@@ -13,6 +13,7 @@
       class="search-type"
       @change="handleChange"
       v-model="searchType"
+      v-if="isHidden"
     >
       <el-option
         v-for="item in searchTypeList"
@@ -74,6 +75,16 @@ export default {
     tablename: {
       type: String,
       default: 'UserListEx'
+    },
+    // 运营管理--小熊币发送页面,只有用户ID搜索 1
+    defaultType: {
+      type: String,
+      default: '0'
+    },
+    // 运营管理--小熊币发送页面,隐藏掉下拉选择
+    isHidden: {
+      type: Boolean,
+      default: true
     }
   },
   data() {
