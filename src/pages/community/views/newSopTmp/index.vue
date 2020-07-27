@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-06-29 16:50:58
  * @LastEditors: Shentong
- * @LastEditTime: 2020-07-22 20:52:09
+ * @LastEditTime: 2020-07-27 20:15:15
 -->
 <template>
   <el-row type="flex" class="new-sop app-main">
@@ -208,6 +208,7 @@
 <script>
 import AddContent from './components/AddContent'
 import { isToss } from '@/utils/index.js'
+import _ from 'lodash'
 export default {
   data() {
     return {
@@ -459,24 +460,26 @@ export default {
         // 第一条内容特别处理
         const { msgContent = '' } = this.currenContentArr[0] || {}
         if (isEdit || !msgContent) {
-          this.currenContentArr[curIndex].msgType = content.msgType
-          this.currenContentArr[curIndex].msgContent = content.msgContent
+          const ct = _.cloneDeep(content)
+
+          this.currenContentArr[curIndex].msgType = ct.msgType
+          this.currenContentArr[curIndex].msgContent = ct.msgContent
           /** 此处更改 替换方案⤴️ */
           // this.currenContentArr[curIndex] = {
-          //   ...this.currenContentArr[curIndex],
+          //   ...curArr,
           //   ...content
           // }
         } else {
-          this.emptyContentTmp.msgType = content.msgType
-          this.emptyContentTmp.msgContent = content.msgContent
-          this.emptyContentTmp.strip = this.currenContentArr.length + 1
+          // this.emptyContentTmp.msgType = content.msgType
+          // this.emptyContentTmp.msgContent = content.msgContent
+          // this.emptyContentTmp.strip = this.currenContentArr.length + 1
 
-          this.currenContentArr.push(this.emptyContentTmp)
-          // this.currenContentArr.push({
-          //   ...this.emptyContentTmp,
-          //   ...content,
-          //   strip: this.currenContentArr.length + 1
-          // })
+          // this.currenContentArr.push(this.emptyContentTmp)
+          this.currenContentArr.push({
+            ...this.emptyContentTmp,
+            ...content,
+            strip: this.currenContentArr.length + 1
+          })
         }
       }
     }
