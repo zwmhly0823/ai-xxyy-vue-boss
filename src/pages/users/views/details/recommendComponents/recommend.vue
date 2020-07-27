@@ -3,8 +3,8 @@
  * @version: 1.0.0
  * @Author: liukun
  * @Date: 2020-07-22 10:31:00
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-07-27 11:26:39
+ * @LastEditors: liukun
+ * @LastEditTime: 2020-07-27 13:40:11
 -->
 <template>
   <el-dialog title="推荐信息" :visible.sync="recommendInfo" width="40%">
@@ -12,7 +12,7 @@
       <el-row type="flex" justify="start" align="middle" class="marginb10">
         <el-col :span="5">推荐人:</el-col>
         <el-col :span="18" :offset="1">{{
-          recommendHuman.username + '-' + recommendHuman.user_num
+          recommendHuman.username || '-' + '-' + recommendHuman.user_num || '-'
         }}</el-col>
       </el-row>
       <el-row type="flex" justify="start" align="middle" class="marginb10">

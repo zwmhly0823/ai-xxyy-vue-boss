@@ -443,7 +443,7 @@
     <recommend
       ref="recommend"
       :recommendHuman="
-        stuInfor.sender ? stuInfor.sender : { username: '-', user_num: '' }
+        stuInfor.sender ? stuInfor.sender : { username: '', user_num: '' }
       "
     />
 
