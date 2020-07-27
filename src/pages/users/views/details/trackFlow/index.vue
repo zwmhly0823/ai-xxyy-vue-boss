@@ -3,8 +3,8 @@
  * @version: 1.0.0
  * @Author: liukun
  * @Date: 2020-07-20 16:37:31
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-07-27 11:15:07
+ * @LastEditors: liukun
+ * @LastEditTime: 2020-07-27 16:06:38
 -->
 <template>
   <div class="track-container">
@@ -74,7 +74,9 @@
           <span class="color-gray">{{ item.ctime }}</span>
         </div>
         <div class="upset_24col_space_between padding-right15">
-          <span class="content">{{ item.content }}</span>
+          <span class="content" style="line-height:15px">{{
+            item.content
+          }}</span>
         </div>
       </section>
     </div>

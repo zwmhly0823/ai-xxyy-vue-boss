@@ -5,7 +5,7 @@
  * @Author: shentong
  * @Date: 2020-03-13 14:38:28
  * @LastEditors: liukun
- * @LastEditTime: 2020-07-27 15:43:51
+ * @LastEditTime: 2020-07-27 16:24:58
  */
 // import axios from '../axios'
 import axios from '../axiosConfig'
@@ -386,6 +386,7 @@ export default {
           sender{
             username
             mobile
+            user_num
           }
           base_painting_text
           address {
@@ -772,6 +773,7 @@ export default {
               JSON.stringify({ send_id: query })
             )},size:200){
             id
+            user_num
             username
            }
       }`
