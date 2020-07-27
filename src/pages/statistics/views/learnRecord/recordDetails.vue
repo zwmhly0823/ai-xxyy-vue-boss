@@ -4,7 +4,7 @@
  * @Author: zhangjianwen
  * @Date: 2020-07-09 15:02:59
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-07-25 23:10:32
+ * @LastEditTime: 2020-07-27 15:38:19
 -->
 <template>
   <div class="learn-record">
@@ -29,8 +29,14 @@
           >
             <p class="word-list">百科知识：{{ recordDetail.encyclopedias }}</p>
           </el-tooltip>
-
-          <p class="word-list">专业知识：{{ recordDetail.professional }}</p>
+          <el-tooltip
+            class="item"
+            effect="dark"
+            :content="recordDetail.professional"
+            placement="top-start"
+          >
+            <p class="word-list">专业知识：{{ recordDetail.professional }}</p>
+          </el-tooltip>
         </div>
       </div>
     </div>
@@ -340,7 +346,11 @@
           </template>
         </el-table-column>
 
-        <el-table-column label="传作品" v-if="lessonType !== 10">
+        <el-table-column
+          label="传作品"
+          v-if="lessonType !== 10"
+          min-width="200"
+        >
           <template slot-scope="scope">
             <p>
               {{ scope.row.task_count > 0 ? '已上传' : '未上传' }}
@@ -348,7 +358,7 @@
             <p>
               {{
                 scope.row.last_task_time
-                  ? `最近：${scope.row.last_task_time}`
+                  ? `最近：${formatDate(scope.row.last_task_time)}`
                   : `最近：无`
               }}
             </p>
@@ -671,6 +681,7 @@ export default {
         padding: 0 0 0 20px;
         .word-list {
           width: 90%;
+          max-width: 900px;
           white-space: nowrap;
           overflow: hidden;
           text-overflow: ellipsis;
