@@ -308,7 +308,7 @@ import BaseUserInfo from '../../components/BaseUserInfo.vue'
 import labelCheckbox from '../../components/labelCheckboxSystem'
 import ModifyAddress from '../../components/ModifyAddress.vue'
 import enums from '../../components/searchData'
-import { formatData, isToss, openBrowserTab } from '@/utils/index'
+import { formatData, openBrowserTab } from '@/utils/index'
 import { FOLLOW_EXPRESS_STATUS, ISREFUND } from '@/utils/enums'
 import CouponPopover from '../../../studentTeam/components/TabPane/components/couponPopover'
 export default {
@@ -441,13 +441,13 @@ export default {
           document.body.clientHeight - this.$refs.tableInner.offsetTop - 90
         this.tableHeight = tableHeight + ''
       })
-      this.teacherId = isToss()
-      const teacher_ = JSON.parse(localStorage.getItem('teacher'))
-      if (teacher_) {
-        this.teacher_ = teacher_
-        this.departmentId = teacher_.departmentId
-        console.log(teacher_, '_teacher_teacher')
-      }
+      // this.teacherId = isToss()
+      // const teacher_ = JSON.parse(localStorage.getItem('teacher'))
+      // if (teacher_) {
+      //   this.teacher_ = teacher_
+      //   this.departmentId = teacher_.departmentId
+      //   console.log(teacher_, '_teacher_teacher')
+      // }
       const staff = JSON.parse(localStorage.getItem('staff'))
       if (staff) {
         this.departmentId = staff.departmentId
@@ -457,16 +457,16 @@ export default {
       // this.getTeachersById()
     },
     // TOSS, 老师权限
-    getTeachersById() {
-      if (!this.teacherId) return
+    // getTeachersById() {
+    //   if (!this.teacherId) return
 
-      this.$http.Permission.getAllTeacherByRole({
-        teacherId: this.teacherId
-      }).then((res) => {
-        this.teacherIds = res || [this.teacherId]
-        this.getData()
-      })
-    },
+    //   this.$http.Permission.getAllTeacherByRole({
+    //     teacherId: this.teacherId
+    //   }).then((res) => {
+    //     this.teacherIds = res || [this.teacherId]
+    //     this.getData()
+    //   })
+    // },
     getData() {
       const loading = this.$loading({
         lock: true,
@@ -475,13 +475,13 @@ export default {
         background: 'rgba(0, 0, 0, 0.1)'
       })
       // 如果搜索销售，用获取的老师id替换权限老师id
-      const teacher = {}
-      if (Object.keys(this.searchParams).includes('teacherid')) {
-        Object.assign(teacher, {
-          teacherid: this.teacherIds
-        })
-      }
-      const query = Object.assign({}, this.searchParams, teacher)
+      // const teacher = {}
+      // if (Object.keys(this.searchParams).includes('teacherid')) {
+      //   Object.assign(teacher, {
+      //     teacherid: this.teacherIds
+      //   })
+      // }
+      const query = Object.assign({}, this.searchParams)
       console.log(query)
 
       const page = this.currentPage

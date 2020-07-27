@@ -278,10 +278,10 @@ export default {
     // const params = Object.assign(query, { page })
     // return axios.post('/api/b/v1/student/center/system/list', params)
     const q = JSON.stringify(JSON.stringify(query))
-    const sort = JSON.stringify(JSON.stringify({ ctime: 'desc' }))
-    Object.keys(sortRules).length === 0
-      ? JSON.stringify(JSON.stringify({ ctime: 'desc' }))
-      : JSON.stringify(JSON.stringify(sortRules))
+    const sort =
+      Object.keys(sortRules).length === 0
+        ? JSON.stringify(JSON.stringify({ ctime: 'desc' }))
+        : JSON.stringify(JSON.stringify(sortRules))
     return axios.post('/graphql/v1/toss', {
       query: `{
         StudentSystemStatisticsPage(query: ${q},page: ${page}, sort: ${sort}){
