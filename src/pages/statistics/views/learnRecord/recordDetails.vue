@@ -4,7 +4,7 @@
  * @Author: zhangjianwen
  * @Date: 2020-07-09 15:02:59
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-07-27 15:38:19
+ * @LastEditTime: 2020-07-27 17:02:36
 -->
 <template>
   <div class="learn-record">
@@ -228,7 +228,7 @@
                     :quick-btn="['day', 'yesterday']"
                     :slectShow="isActive === 1"
                     name="dateTime"
-                    @result="getSearchData('name', arguments)"
+                    @result="getSearchData('dateTime', arguments)"
                   />
                 </el-form-item>
               </el-col>
@@ -471,6 +471,8 @@ export default {
       totalPages: null,
       totalElements: null,
       teacherIds: null,
+      joinDate: '',
+      overDate: '',
       loading: false
     }
   },
@@ -605,9 +607,6 @@ export default {
     getClass() {},
     getSearchData(key, res) {
       console.log(res)
-      // if(res[0].length){
-
-      // }
       if (key === 'user') {
         this.num = res[0].mobile || res[0].user_num_text
       }
