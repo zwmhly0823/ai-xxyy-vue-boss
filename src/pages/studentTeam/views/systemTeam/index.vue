@@ -465,7 +465,8 @@ export default {
     },
     team_tabs_click(team, index) {
       this.teamIndex = index
-      this.initSearchData({})
+      // 更新:不要清空筛选 https://www.tapd.cn/61055427/prong/stories/view/1161055427001005799
+      // this.initSearchData({})
       Object.assign(this.tabQuery, team, {
         page: 1
       })
