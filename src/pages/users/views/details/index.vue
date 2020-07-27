@@ -31,20 +31,20 @@
               </svg>
             </div>
             <div>
-              <span class="tccc">区域</span>:
+              <span class="tccc">区域:</span>
               {{ stuInfor.mobile_province || '-' }}
               · {{ stuInfor.mobile_city || '-' }}
             </div>
             <div>
-              <span class="tccc">年龄</span>:
+              <span class="tccc">年龄:</span>
               {{ stuInfor.age }}
             </div>
             <div>
-              <span class="tccc">生日</span>:
+              <span class="tccc">生日:</span>
               {{ stuInfor.birthday }}
             </div>
             <div>
-              <span class="tccc">优惠券</span>:
+              <span class="tccc">优惠券:</span>
               <b
                 style="cursor:pointer"
                 class="textonline"
@@ -54,7 +54,7 @@
               </b>
             </div>
             <div>
-              <span class="tccc">小熊币</span>:
+              <span class="tccc">小熊币:</span>
               <b
                 style="cursor:pointer"
                 class="textonline"
@@ -197,7 +197,7 @@
             </section>
             <section style="margin-top:20px">
               <div class="gengbo">
-                <span>微信信息</span>
+                <span>用户微信</span>
                 <el-divider></el-divider>
               </div>
               <!-- 双编剧塌陷现场-BFC -->
@@ -246,6 +246,7 @@
             <section class="setou123">
               <strong></strong>
               <span>用户标签</span>
+              <span style="color:#ccc;font-size:14px">(包含微信标签)</span>
             </section>
             <section v-if="!babels_lk.length && !aikelabel.length">
               <el-row type="flex" justify="space-around" align="middle">
@@ -281,7 +282,6 @@
             <section class="setou123">
               <strong></strong>
               <span>用户群组</span>
-              <span style="color:#ccc;font-size:14px">(包含微信标签)</span>
             </section>
             <section>
               <el-row type="flex" justify="space-around" align="middle">

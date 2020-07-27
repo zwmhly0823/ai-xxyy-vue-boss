@@ -3,8 +3,8 @@
  * @version: 1.0.0
  * @Author: liukun
  * @Date: 2020-07-20 16:37:31
- * @LastEditors: liukun
- * @LastEditTime: 2020-07-25 20:20:48
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-07-27 11:15:07
 -->
 <template>
   <div class="track-container">
@@ -74,7 +74,7 @@
           <span class="color-gray">{{ item.ctime }}</span>
         </div>
         <div class="upset_24col_space_between padding-right15">
-          <span>{{ item.content }}</span>
+          <span class="content">{{ item.content }}</span>
         </div>
       </section>
     </div>
@@ -203,6 +203,9 @@ export default {
   vertical-align: middle;
   font-size: 18px;
   color: #f56c6c !important;
+}
+.content {
+  line-height: 20px;
 }
 .no-data {
   margin-top: 100px;

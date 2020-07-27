@@ -3,8 +3,8 @@
  * @version: 1.0.0
  * @Author: liukun
  * @Date: 2020-07-20 16:38:13
- * @LastEditors: liukun
- * @LastEditTime: 2020-07-25 20:43:24
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-07-27 11:15:42
 -->
 <template>
   <el-drawer :visible.sync="drawer" size="35%" :destroy-on-close="true">
@@ -66,7 +66,7 @@
           <span class="color-gray">{{ item.ctime }}</span>
         </div>
         <div class="upset_24col_space_between padding-right15">
-          <span>{{ item.content }}</span>
+          <span class="content">{{ item.content }}</span>
         </div>
       </section>
     </div>
@@ -213,6 +213,9 @@ export default {
   vertical-align: middle;
   font-size: 18px;
   color: #f56c6c !important;
+}
+.content {
+  line-height: 20px;
 }
 ::v-deep {
   .el-drawer__header {
