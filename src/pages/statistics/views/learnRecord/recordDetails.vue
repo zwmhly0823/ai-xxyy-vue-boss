@@ -4,7 +4,7 @@
  * @Author: zhangjianwen
  * @Date: 2020-07-09 15:02:59
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-07-27 17:02:36
+ * @LastEditTime: 2020-07-27 18:07:03
 -->
 <template>
   <div class="learn-record">
@@ -238,7 +238,7 @@
       </div>
       <el-table
         :data="learnRecordData"
-        style="width: 100%"
+        style="width: 100% ;padding:20px"
         max-height="500"
         :header-cell-style="{ background: 'rgb(178, 185, 197,.3)' }"
         class="table-style"
@@ -607,6 +607,7 @@ export default {
     getClass() {},
     getSearchData(key, res) {
       console.log(res)
+      this.currentPage = 1
       if (key === 'user') {
         this.num = res[0].mobile || res[0].user_num_text
       }
