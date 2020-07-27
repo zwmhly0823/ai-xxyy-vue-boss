@@ -5,7 +5,7 @@
  * @Author: shentong
  * @Date: 2020-03-13 14:38:28
  * @LastEditors: liukun
- * @LastEditTime: 2020-07-22 21:54:51
+ * @LastEditTime: 2020-07-27 15:43:51
  */
 // import axios from '../axios'
 import axios from '../axiosConfig'
@@ -396,6 +396,7 @@ export default {
             city
             area
             address_detail
+            id
           }
           trialCourse{
             team_id

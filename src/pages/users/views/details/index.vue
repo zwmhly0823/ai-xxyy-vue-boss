@@ -71,6 +71,7 @@
             </div>
             <div>
               <i
+                style="cursor:pointer"
                 class="el-icon-location-outline colorposition el-elment-lk"
                 @click="$refs.showAddress.showAddress = true"
               />
