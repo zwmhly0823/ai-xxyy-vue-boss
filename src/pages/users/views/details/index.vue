@@ -79,7 +79,7 @@
         </el-col>
 
         <el-col :span="5" :offset="3">
-          <div class="upset_24col">
+          <div class="upset_24col flex-end">
             <el-button size="mini" type="primary" @click="couponList"
               >发优惠券</el-button
             >
@@ -950,6 +950,7 @@ export default {
 .header {
   background-color: #fff;
   height: 50px;
+  padding-right: 10px;
 }
 
 .img-box {
@@ -997,8 +998,14 @@ export default {
 }
 .upset_24col {
   display: flex;
-  justify-content: space-around;
+  justify-content: start;
   align-items: center;
+  &.flex-end {
+    justify-content: flex-end;
+  }
+  > div {
+    margin: 0 10px;
+  }
 }
 .upset_24col_space_between {
   display: flex;
