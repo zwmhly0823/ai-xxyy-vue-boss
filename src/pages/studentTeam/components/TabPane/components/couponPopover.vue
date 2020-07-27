@@ -202,9 +202,6 @@ export default {
           // 成功
           this.paidoutOk = this.selectUserId.length
           this.paidOut = 'OK'
-          // 为了发券成功后刷新学员详情
-          console.info(99999)
-          location.reload()
         } else if (res.payload.length === this.selectUserId.length) {
           // 失败
           this.paidoutNo = this.selectUserId.length
@@ -223,6 +220,8 @@ export default {
     couponsucBtn() {
       this.couponSuccessful = false
       this.$emit('couponSendSucc')
+      // 为了发券成功后刷新学员详情
+      location.reload()
     }
   }
 }
