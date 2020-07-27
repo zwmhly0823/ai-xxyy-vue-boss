@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-14 18:28:44
  * @LastEditors: Shentong
- * @LastEditTime: 2020-07-24 14:54:04
+ * @LastEditTime: 2020-07-27 16:41:08
  -->
 <template>
   <div class="app-main height add-schedule-container">
@@ -159,7 +159,6 @@ export default {
 </script>
 <style lang="scss" scoped>
 .add-schedule-container {
-  min-width: 1200px;
   .grid-content {
     background: white;
     height: 100%;
