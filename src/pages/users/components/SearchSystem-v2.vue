@@ -35,10 +35,10 @@
                 @result="getSearchData('department_id', arguments)"
               />
               <group-sell
-                name="teacherid"
+                name="teacher_id"
                 tip="辅导老师"
                 is-multiple
-                @result="getSearchData('teacherid', arguments)"
+                @result="getSearchData('teacher_id', arguments)"
                 class="search-group-item"
               />
             </div>

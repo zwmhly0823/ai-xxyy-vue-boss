@@ -47,7 +47,7 @@
           ></span>
         </template>
       </el-table-column>
-      <el-table-column label="系统课包类型" min-width="180">
+      <el-table-column label="系统课包类型" min-width="100">
         <template slot-scope="scope">
           <p
             v-if="
@@ -65,7 +65,7 @@
           </p>
         </template>
       </el-table-column>
-      <el-table-column label="城市" min-width="140">
+      <el-table-column label="城市" min-width="120">
         <template slot-scope="scope">
           <p v-if="scope.row.mobileprovince && scope.row.mobilecity">
             {{ scope.row.mobileprovince }} · {{ scope.row.mobilecity }}
@@ -76,7 +76,7 @@
           <p v-else>-</p>
         </template>
       </el-table-column>
-      <el-table-column label="参课" min-width="150">
+      <el-table-column label="参课" min-width="100">
         <template slot="header">
           <div class="sort-operate-box" @click="sortRules('noactivecount')">
             <span>参课</span>
@@ -113,7 +113,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="完课" min-width="150">
+      <el-table-column label="完课" min-width="100">
         <template slot="header">
           <div class="sort-operate-box" @click="sortRules('activecount')">
             <span>完课</span>
@@ -149,7 +149,7 @@
           </p>
         </template>
       </el-table-column>
-      <el-table-column label="作品数" min-width="100">
+      <el-table-column label="作品数" min-width="80">
         <template slot="header">
           <div class="sort-operate-box" @click="sortRules('taskcount')">
             <span>传作品</span>
@@ -179,7 +179,7 @@
           <p>点评作品: {{ scope.row.flag_total_count }}</p>
         </template>
       </el-table-column>
-      <el-table-column label="生命周期" min-width="120">
+      <el-table-column label="生命周期" min-width="100">
         <template slot-scope="scope">
           <p v-if="scope.row.life_cycle === 0">待开课</p>
           <p v-if="scope.row.life_cycle === 1">上课中</p>
@@ -188,7 +188,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="加微" min-width="100">
+      <el-table-column label="加微" min-width="60">
         <template slot-scope="scope">
           <!-- <handle-item-status
             type="1"
@@ -206,7 +206,7 @@
           </el-switch>
         </template>
       </el-table-column>
-      <el-table-column label="进群" min-width="100">
+      <el-table-column label="进群" min-width="60">
         <template slot-scope="scope">
           <!-- <handle-item-status
             type="2"
@@ -224,7 +224,7 @@
           </el-switch>
         </template>
       </el-table-column>
-      <el-table-column label="公众号" min-width="140">
+      <el-table-column label="公众号" min-width="60">
         <template slot-scope="scope">
           <span v-if="!scope.row.follow || +scope.row.follow === 0">
             -
@@ -239,7 +239,7 @@
           <p class="btn-text " v-else @click="openTeam(scope.row)">
             {{ scope.row.realname }} ({{ scope.row.teamname }})
           </p>
-          <p>【{{ scope.row.departmentname }}】</p>
+          <p>{{ scope.row.departmentname }}</p>
         </template>
       </el-table-column>
       <el-table-column label="销售/班级" min-width="180">
@@ -249,7 +249,7 @@
               scope.row.trialteamname || '-'
             }})
           </p>
-          <p>【{{ scope.row.trialdepartmentname || '' }}】</p>
+          <p>{{ scope.row.trialdepartmentname || '' }}</p>
         </template>
       </el-table-column>
       <el-table-column label="渠道" min-width="120" fixed="right">
