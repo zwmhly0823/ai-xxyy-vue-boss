@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-07-22 10:31:00
  * @LastEditors: liukun
- * @LastEditTime: 2020-07-27 13:40:11
+ * @LastEditTime: 2020-07-27 17:00:22
 -->
 <template>
   <el-dialog title="推荐信息" :visible.sync="recommendInfo" width="40%">
@@ -12,7 +12,9 @@
       <el-row type="flex" justify="start" align="middle" class="marginb10">
         <el-col :span="5">推荐人:</el-col>
         <el-col :span="18" :offset="1">{{
-          recommendHuman.username || '-' + '-' + recommendHuman.user_num || '-'
+          (recommendHuman.username || '-') +
+            '-' +
+            (recommendHuman.user_num || '-')
         }}</el-col>
       </el-row>
       <el-row type="flex" justify="start" align="middle" class="marginb10">
@@ -24,7 +26,7 @@
           v-if="recommendList.length"
         >
           <span v-for="(item, index) of recommendList" :key="index">{{
-            item.username || '-' + '-' + item.user_num || '-'
+            (item.username || '-') + '-' + (item.user_num || '-')
           }}</span>
         </el-col>
         <el-col :span="18" :offset="1" class="recommendDone" v-else> - </el-col>

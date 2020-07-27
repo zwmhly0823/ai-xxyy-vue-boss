@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-07-20 16:38:13
  * @LastEditors: liukun
- * @LastEditTime: 2020-07-27 16:08:39
+ * @LastEditTime: 2020-07-27 17:02:36
 -->
 <template>
   <el-drawer :visible.sync="drawer" size="35%" :destroy-on-close="true">
@@ -66,9 +66,7 @@
           <span class="color-gray">{{ item.ctime }}</span>
         </div>
         <div class="upset_24col_space_between padding-right15">
-          <span class="content" style="line-height:15px">{{
-            item.content
-          }}</span>
+          <span style="line-height:18px">{{ item.content }}</span>
         </div>
       </section>
     </div>
