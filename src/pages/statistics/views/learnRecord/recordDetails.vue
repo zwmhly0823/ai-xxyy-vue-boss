@@ -4,7 +4,7 @@
  * @Author: zhangjianwen
  * @Date: 2020-07-09 15:02:59
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-07-27 18:07:03
+ * @LastEditTime: 2020-07-27 18:23:34
 -->
 <template>
   <div class="learn-record">
@@ -238,7 +238,7 @@
       </div>
       <el-table
         :data="learnRecordData"
-        style="width: 100% ;padding:20px"
+        style="width: 100% ;padding:0"
         max-height="500"
         :header-cell-style="{ background: 'rgb(178, 185, 197,.3)' }"
         class="table-style"
