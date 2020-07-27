@@ -274,21 +274,33 @@ export default {
       "isRefund":2,//退费
       "status":0//排期状态
    **/
-  systemCourseUsers(query = {}, page = 1) {
+  systemCourseUsers(query = {}, page = 1, sortRules = {}) {
     // const params = Object.assign(query, { page })
     // return axios.post('/api/b/v1/student/center/system/list', params)
     const q = JSON.stringify(JSON.stringify(query))
-    const sort = JSON.stringify(JSON.stringify({ ctime: 'desc' }))
+    const sort =
+      Object.keys(sortRules).length === 0
+        ? JSON.stringify(JSON.stringify({ ctime: 'desc' }))
+        : JSON.stringify(JSON.stringify(sortRules))
     return axios.post('/graphql/v1/toss', {
       query: `{
         StudentSystemStatisticsPage(query: ${q},page: ${page}, sort: ${sort}){
             totalPages
             totalElements
             content {
+              last_complete_time
+              last_join_time
+              flag_total_count
+              pay_channel
+              channel_outer_name
+              life_cycle
               studentid
+              user_num_text
               username
               usernum
               nickname
+              userlabel
+              usernum
               ctime
               utime
               basepainting
@@ -336,6 +348,8 @@ export default {
               trialteamname
               trialrealname
               trialdepartmentname
+              user_status
+              department_id
             }
           }
         }

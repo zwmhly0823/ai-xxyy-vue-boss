@@ -139,6 +139,17 @@ const enums = {
       id: 4,
       text: '无意向'
     }
+  ],
+  // 系统课包类型
+  userStatusList: [
+    {
+      id: 1,
+      text: '年课班'
+    },
+    {
+      id: 2,
+      text: '半年课班'
+    }
   ]
 }
 

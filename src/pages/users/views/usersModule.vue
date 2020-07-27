@@ -15,7 +15,7 @@
       <!-- 系统课 -->
       <div class="app-main-container-scrollbar" v-if="type === 'systemUsers'">
         <!-- 系统课 -->
-        <search-system @search="getSearchQuery" />
+        <!-- <search-system @search="getSearchQuery" /> -->
         <!-- 系统课学员列表 -->
         <system-list :search="searchResult" />
       </div>
@@ -23,13 +23,13 @@
   </el-row>
 </template>
 <script>
-import SearchSystem from '../components/SearchSystem.vue'
+// import SearchSystem from '../components/SearchSystem.vue'
 import TrialList from './trial-v2/index.vue'
-import SystemList from './system/index.vue'
+import SystemList from './system-v2/index.vue'
 
 export default {
   components: {
-    SearchSystem,
+    // SearchSystem,
     TrialList,
     SystemList
   },

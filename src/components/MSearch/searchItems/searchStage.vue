@@ -20,6 +20,7 @@
       :placeholder="placeholderText"
       :remote-method="handleDebounce"
       :loading="loading"
+      :style="myStyle"
       @change="onChange"
     >
       <el-option
@@ -59,6 +60,10 @@ export default {
     teacherId: {
       type: Array,
       default: () => []
+    },
+    myStyle: {
+      type: Object,
+      default: () => {}
     }
   },
   data() {

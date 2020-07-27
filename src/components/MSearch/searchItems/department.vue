@@ -13,6 +13,7 @@
       class="item-style"
       :placeholder="placeholder"
       :options="departmentList"
+      :disabled="isDisabled"
       :props="{
         multiple: multiple,
         value: 'id',
@@ -46,6 +47,14 @@ export default {
       type: Number,
       default: 0
     },
+    departmentId: {
+      type: String,
+      default: '0'
+    },
+    isDisabled: {
+      type: Boolean,
+      default: false
+    },
     multiple: {
       type: Boolean,
       default: true
@@ -61,7 +70,7 @@ export default {
   },
   methods: {
     getDepartment() {
-      this.$http.Department.getDepartmentList().then((res) => {
+      this.$http.Department.getDepartmentList(this.departmentId).then((res) => {
         const arr = res.payload || []
         const department = sortByKey(arr, 'id')
         department.sort(this.handle('sort'))
