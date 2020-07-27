@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-07-20 16:38:13
  * @LastEditors: liukun
- * @LastEditTime: 2020-07-27 17:02:36
+ * @LastEditTime: 2020-07-27 18:20:08
 -->
 <template>
   <el-drawer :visible.sync="drawer" size="35%" :destroy-on-close="true">
@@ -70,8 +70,9 @@
         </div>
       </section>
     </div>
-    <div v-else>暂无数据</div>
+    <div class="no-data" v-else>暂无数据</div>
     <el-pagination
+      v-if="allDigit > 0"
       layout="prev,pager,next,total,sizes,jumper"
       :total="allDigit"
       :page-size="pageSize"
@@ -227,5 +228,10 @@ export default {
 }
 .margin22 {
   margin: 12px 0;
+}
+.no-data {
+  margin-top: 100px;
+  color: #aeaeae;
+  text-align: center;
 }
 </style>
