@@ -46,11 +46,11 @@
           prop="owner_nick_name"
           align="center"
         ></el-table-column>
-        <el-table-column
+        <!-- <el-table-column
           label="微信群工作微信号"
           prop="owner_wechat_id"
           align="center"
-        ></el-table-column>
+        ></el-table-column> -->
       </el-table>
     </div>
     <div class="bottom_choose" v-show="tableData.length > 0">
@@ -93,15 +93,15 @@ export default {
     const { code, payload = [] } = tabs
     if (tabs && code === 0) {
       this.tableData = payload
-      this.$nextTick(() => {
-        this.tableData.forEach((v, i) => {
-          this.parent_tableData.forEach((_v, _i) => {
-            if (v.cluster_id === _v.cluster_id) {
-              this.$refs.myseleTable.toggleRowSelection(v)
-            }
-          })
-        })
-      })
+      // this.$nextTick(() => {
+      //   this.tableData.forEach((v, i) => {
+      //     this.parent_tableData.forEach((_v, _i) => {
+      //       if (v.cluster_id === _v.cluster_id) {
+      //         this.$refs.myseleTable.toggleRowSelection(v)
+      //       }
+      //     })
+      //   })
+      // })
     }
   },
   mounted() {},
@@ -133,6 +133,7 @@ export default {
     },
     // 选择
     handleSelectionChange(val) {
+      console.log(val, '11111')
       this.chooseGroupList = val
     },
     chooseGroup() {
