@@ -3,7 +3,7 @@
     <el-scrollbar>
       <!-- 头部 -->
       <el-row type="flex" justify="start" align="middle" class="header">
-        <el-col :span="16">
+        <el-col>
           <div class="upset_24col">
             <!-- 男：1 女：2 -->
             <div class="img-box">
@@ -78,7 +78,7 @@
           </div>
         </el-col>
 
-        <el-col :span="5" :offset="3">
+        <el-col :span="6">
           <div class="upset_24col flex-end">
             <el-button size="mini" type="primary" @click="couponList"
               >发优惠券</el-button
