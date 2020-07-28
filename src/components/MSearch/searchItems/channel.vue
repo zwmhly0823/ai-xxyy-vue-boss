@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-24 18:50:54
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-07-29 00:57:53
+ * @LastEditTime: 2020-07-29 01:12:27
  -->
 <template>
   <div class="search-item small threeSelect">
@@ -179,17 +179,10 @@ export default {
       // console.log(classifiData, '渠道分类总数')
       // console.log(this.showDatas)
     },
-    onChange(data) {
-      // 没用啊🐻弟
-      console.log(data)
-      this.$emit(
-        'result',
-        data.length > 0 ? { [this.name]: this.channelData } : ''
-      )
-    },
     onSelect(data) {
       console.log(data)
-      this.$emit('result', data.length > 0 ? { [this.name]: data } : '')
+      // this.$emit('result', data.length > 0 ? { [this.name]: data } : '')
+      this.$emit('result', { [this.name]: data })
     }
   }
 }

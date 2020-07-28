@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-07-10 14:53:10
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-07-29 00:35:45
+ * @LastEditTime: 2020-07-29 01:09:39
 -->
 <template>
   <!-- :before-close="handelCancel" -->
@@ -344,13 +344,13 @@
 
             <h3>活跃行为</h3>
             <div class="expression-section-row">
-              <form-item-date
+              <!-- <form-item-date
                 name="last_login_time"
                 label="APP活跃时间"
                 :current="form.last_login_time"
                 :key="now"
                 @result="getItemNumber"
-              />
+              /> -->
               <form-item-date
                 name="last_join_time"
                 label="最近参课时间"
@@ -358,8 +358,6 @@
                 :key="now + 1"
                 @result="getItemNumber"
               />
-            </div>
-            <div class="expression-section-row">
               <form-item-date
                 name="last_complete_time"
                 label="最近完课时间"
@@ -368,6 +366,15 @@
                 @result="getItemNumber"
               />
             </div>
+            <!-- <div class="expression-section-row">
+              <form-item-date
+                name="last_complete_time"
+                label="最近完课时间"
+                :current="form.last_complete_time"
+                :key="now + 2"
+                @result="getItemNumber"
+              />
+            </div> -->
 
             <h3>转化情况</h3>
             <div class="expression-section-row">
