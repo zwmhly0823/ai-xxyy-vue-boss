@@ -623,8 +623,8 @@ export default {
       this.$http.User.getSendCourseLogPage(
         this.studentId,
         id, // 课程ID
-        this.lessonType, // 课程类型
-        this.currentPage
+        this.currentPage,
+        this.lessonType // 课程类型
       ).then((res) => {
         console.log('学习记录接口', res, res.data.SendCourseLogPage.content)
         this.tabList = [] // 赋值前清空
