@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-07-10 14:53:10
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-07-28 23:13:39
+ * @LastEditTime: 2020-07-29 00:35:45
 -->
 <template>
   <!-- :before-close="handelCancel" -->
@@ -129,7 +129,6 @@
                 :label-width="innerFormLabelWidth"
                 prop="pay_channel"
                 size="mini"
-                v-if="rankId !== 3"
               >
                 <channel
                   placeholder="请选择"
@@ -633,45 +632,60 @@ export default {
     }
   },
   watch: {
-    currentGroupData(val, old) {
-      console.log(val, 'currentGroup')
-
-      this.handelReset()
-      // if (val === old) return
-      // 编辑时
-      if (val.id && this.activeType !== 'ADVANCEDSEARCH' && val.isGroup) {
-        const { name, expression, remark } = val
-        const obj = JSON.parse(expression)
-        const expressionObj = deepClone(obj)
-        console.log(expressionObj)
-
-        // 城市处理
-        if (expressionObj.city) {
-          const city = JSON.parse(expressionObj.city)
-          this.currentCity = (city && city.data) || []
-        }
-        Object.assign(this.form, {
-          name,
-          ...expressionObj,
-          remark
-        })
-        this.now = Date.now()
+    searchParams(val) {
+      const search = val || {}
+      const searchObj = deepClone(search)
+      // 城市处理
+      if (searchObj.city) {
+        const city = JSON.parse(searchObj.city)
+        this.currentCity = (city && city.data) || []
       }
-      if (this.activeType === 'ADVANCEDSEARCH' && this.searchParams) {
-        const search = this.searchParams
-        const searchObj = deepClone(search)
-        // 城市处理
-        if (searchObj.city) {
-          const city = JSON.parse(searchObj.city)
-          this.currentCity = (city && city.data) || []
-        }
-        Object.assign(this.form, {
-          name: '',
-          remark: '',
-          ...searchObj
-        })
-      }
+      Object.assign(this.form, {
+        name: '',
+        remark: '',
+        ...searchObj
+      })
+      console.log(this.form, 'form')
     },
+    // currentGroupData(val, old) {
+    //   console.log(val, 'currentGroup')
+
+    //   this.handelReset()
+    //   // if (val === old) return
+    //   // 编辑时
+    //   if (val.id && this.activeType !== 'ADVANCEDSEARCH' && val.isGroup) {
+    //     const { name, expression, remark } = val
+    //     const obj = JSON.parse(expression)
+    //     const expressionObj = deepClone(obj)
+    //     console.log(expressionObj)
+
+    //     // 城市处理
+    //     if (expressionObj.city) {
+    //       const city = JSON.parse(expressionObj.city)
+    //       this.currentCity = (city && city.data) || []
+    //     }
+    //     Object.assign(this.form, {
+    //       name,
+    //       ...expressionObj,
+    //       remark
+    //     })
+    //     this.now = Date.now()
+    //   }
+    //   if (this.activeType === 'ADVANCEDSEARCH' && this.searchParams) {
+    //     const search = this.searchParams
+    //     const searchObj = deepClone(search)
+    //     // 城市处理
+    //     if (searchObj.city) {
+    //       const city = JSON.parse(searchObj.city)
+    //       this.currentCity = (city && city.data) || []
+    //     }
+    //     Object.assign(this.form, {
+    //       name: '',
+    //       remark: '',
+    //       ...searchObj
+    //     })
+    //   }
+    // },
 
     // 是否将高级搜索条件保存为个人自定义人群组
     isAddPersonalGroup(val) {
