@@ -149,11 +149,9 @@
                   </el-button></el-col
                 >
                 <el-col :span="7">
-                  <span>用户状态:</span>
-                  <el-tag type="danger" size="mini">{{
-                    stuInfor.status_text || '-'
-                  }}</el-tag></el-col
-                >
+                  <span>注册时间:</span>
+                  {{ stuInfor.join_date }}
+                </el-col>
               </el-row>
               <el-row type="flex" justify="space-around" align="middle">
                 <el-col :span="7">
@@ -164,9 +162,12 @@
                   }}</el-col
                 >
                 <el-col :span="7">
-                  <span>注册时间:</span>
-                  {{ stuInfor.join_date }}
-                </el-col>
+                  <span>用户状态:</span>
+                  <el-tag type="danger" size="mini">{{
+                    stuInfor.status_text || '-'
+                  }}</el-tag></el-col
+                >
+
                 <el-col :span="7">
                   <span>最近活跃:</span>
                   {{
@@ -320,8 +321,8 @@
       >
         <el-tabs v-model="courseData" @tab-click="courseBtn">
           <el-tab-pane
-            v-for="item in stuInfor.teams"
-            :key="item.id"
+            v-for="(item, key) in stuInfor.teams"
+            :key="key"
             :label="`${item.team_type_formatting}:${item.team_name}`"
             :name="item.id"
           >
@@ -520,7 +521,6 @@ export default {
   },
   created() {
     this.studentId = this.$route.params.id
-
     // 学员信息接口
     this.reqUser()
     this.getlabelWithoutAike()
@@ -999,7 +999,7 @@ export default {
 }
 .upset_24col {
   display: flex;
-  justify-content: start;
+  justify-content: flex-start;
   align-items: center;
   &.flex-end {
     justify-content: flex-end;
