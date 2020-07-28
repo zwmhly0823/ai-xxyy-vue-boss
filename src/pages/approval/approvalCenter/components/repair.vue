@@ -4,7 +4,7 @@
  * @Author: Lukun
  * @Date: 2020-04-28 13:50:45
  * @LastEditors: liukun
- * @LastEditTime: 2020-06-08 20:38:25
+ * @LastEditTime: 2020-07-24 21:43:33
  -->
 <template>
   <div class="container-content">
@@ -273,6 +273,30 @@ export default {
     RepairLevel,
     Package
   },
+  // 学员详情跳转来审批query lk
+  async mounted() {
+    if (this.$route.query && this.$route.query.cellphone) {
+      console.info('captured学员详情跳转而来')
+      // 显示手机号
+      this.$refs.toGetPhone.input = this.$route.query.cellphone
+      // 手机号查uid
+      const {
+        data: { blurrySearch }
+      } = await this.$http.RefundApproval.getUid_lk({
+        mobile: this.$route.query.cellphone
+      }).catch((err) => {
+        console.error(err)
+        this.$message.error('跳转来的手机号获取uid失败')
+      })
+      if (blurrySearch && blurrySearch[0] && blurrySearch[0].id) {
+        this.formRepair.userId = blurrySearch[0].id // 保存uid
+        this.getordersBylkuid() // uid获取订单list
+      } else {
+        this.$message.warning('跳转来的手机号没有uid')
+      }
+    }
+  },
+
   created() {
     const staff = getStaffInfo()
     this.applyId = staff.staffId
@@ -690,27 +714,33 @@ export default {
       this.formRepair.cellPhone = this.$refs.toGetPhone.input
       this.formRepair.applyName = this.applyName
       if (val.uid) {
-        this.userId = val.uid
-        this.$http.Order.getOrdersByUid(val.uid)
-          .then((res) => {
-            if (res.payload && res.payload.content.length) {
-              this.orderDisable = false
-              this.orderList = res.payload.content.map((item) => {
-                item.showMessage = item.outTradeNo + ` ${item.packagesName}`
-                return item
-              })
-            } else {
-              this.$message({
-                message: '该手机号未查询到订单',
-                type: 'warning'
-              })
-            }
-          })
-          .catch((err) => {
-            console.log(err)
-          })
+        // 去获取订单
+        this.getordersBylkuid()
       }
     },
+    // 用uid获取订单列表
+    getordersBylkuid() {
+      this.userId = this.formRepair.userId
+      this.$http.Order.getOrdersByUid(this.formRepair.userId)
+        .then((res) => {
+          if (res.payload && res.payload.content.length) {
+            this.orderDisable = false
+            this.orderList = res.payload.content.map((item) => {
+              item.showMessage = item.outTradeNo + ` ${item.packagesName}`
+              return item
+            })
+          } else {
+            this.$message({
+              message: '该手机号未查询到订单',
+              type: 'warning'
+            })
+          }
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+    },
+
     // 选择商品
     chooseProduct() {
       if (this.formRepair.type && this.formRepair.type !== 'MATERIALS') {

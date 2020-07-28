@@ -3,8 +3,8 @@
  * @version: 
  * @Author: panjian
  * @Date: 2020-04-01 13:24:40
- * @LastEditors: panjian
- * @LastEditTime: 2020-07-21 18:00:10
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-07-28 19:29:43
  -->
 <template>
   <div>
@@ -92,14 +92,13 @@ export default {
       }
     }
     return {
-      areaSlist: [],
-      areaLists: [],
+      areaSlist: [], // 省市区联动地址选择
+      areaLists: [], // 省市区联动地址选择-相关
       province: null,
       city: null,
       area: null,
       areaCode: null,
       street: null,
-      addressVal: '',
       ruleForm: {
         receiptName: '',
         receiptTel: '',
@@ -125,15 +124,10 @@ export default {
       levelFourList: []
     }
   },
-  // watch: {
-  //   modifyFormData(old, val) {
-  //     console.log(val, old)
-  //   }
-  // },
+
   created() {
     this.getAddressList()
     this.getAreaLists()
-    // this.handleItemChange()
   },
   methods: {
     getAreaLists() {
@@ -155,7 +149,12 @@ export default {
           })
         })
         this.areaLists = _data
-        this.createdEcho()
+
+        // lk
+        console.log('爹给的一坨', this.modifyFormData)
+        if (this.modifyFormData.address && this.modifyFormData.address[0]) {
+          this.createdEcho()
+        }
       })
     },
     handleItemChange(data) {
@@ -188,8 +187,6 @@ export default {
       })
     },
     createdEcho() {
-      // this.addressVal = this.modifyFormData.id
-      console.log(this.modifyFormData)
       this.ruleForm.receiptName = this.modifyFormData.address[0].receipt_name
       this.ruleForm.receiptTel = this.modifyFormData.address[0].receipt_tel
       const areaList = this.areaLists
@@ -217,23 +214,8 @@ export default {
       this.areaSlist = [provinces[0].value, citys[0].value, areas[0].value, '']
       this.ruleForm.addressDetail = this.modifyFormData.address[0].address_detail
     },
-    // 选择地址
-    // onAddressVal(data) {
-    //   this.ruleForm.receiptName = data.receiptName
-    //   this.ruleForm.receiptTel = data.receiptTel
-    //   const provinces = this.areaLists.filter(
-    //     (item) => item.label === data.province
-    //   )
-    //   const citys = provinces[0].children.filter(
-    //     (item) => item.label === data.city
-    //   )
-    //   const areas = citys[0].children.filter((item) => item.label === data.area)
-    //   this.areaSlist = [provinces[0].value, citys[0].value, areas[0].value]
-    //   this.province = provinces[0].label
-    //   this.city = citys[0].label
-    //   this.area = areas[0].label
-    //   this.ruleForm.addressDetail = data.addressDetail
-    // },
+
+    // 有userid 才去取
     getAddressList() {
       if (!this.modifyFormData.userid) return false
       this.$http.Express.getAddressList(this.modifyFormData.userid).then(
@@ -273,7 +255,10 @@ export default {
         operatorId: this.operatorId,
         userId: this.modifyFormData.id,
         // orderId: this.modifyFormData.orderid,
-        addressId: this.modifyFormData.address[0].id,
+        addressId:
+          this.modifyFormData.address &&
+          this.modifyFormData.address[0] &&
+          this.modifyFormData.address[0].id,
         expressId: '',
         // userId: this.modifyFormData.userid,
         receiptName: this.ruleForm.receiptName,
@@ -288,7 +273,7 @@ export default {
         // expressCompany: '',
         // expressCompanyNu: ''
       }
-      console.log(params)
+      console.log('提交表单数据', params)
 
       this.$refs[formName].validate((valid) => {
         if (valid) {

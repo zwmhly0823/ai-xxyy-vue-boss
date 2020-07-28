@@ -63,7 +63,6 @@
       header-row-class-name="learning-record-sty"
       v-if="tabData === 'collectionOf'"
     >
-      <!-- 作品集 -->
       <el-table-column label="序号" width="70">
         <template slot-scope="scope">
           <div>{{ scope.row.serNum }}</div>
@@ -245,7 +244,7 @@
     </el-table>
     <express-detail :order_id="order_id" ref="order_id" />
 
-    <!--用户资产 Start-->
+    <!--用户资产-->
     <div class="course-sty" v-if="tabData === 'userAsset'">
       <el-tabs v-model="assetCurPane">
         <el-tab-pane label="优惠券" name="assetCoupon">
@@ -253,6 +252,7 @@
             v-if="wholeData.CouponUserPage && wholeData.CouponUserPage.content"
           >
             <coupon-component
+              ref=""
               :propData="wholeData"
               @couponSendSucc="couponSendSucc"
               @changePagenation="changePagenation"
@@ -285,8 +285,7 @@
         </el-tab-pane>
       </el-tabs>
     </div>
-    <!--用户资产 End-->
-
+    <!--通知事件记录-->
     <template v-if="tabData === 'notifyRecord'">
       <template v-if="wholeData.payload">
         <ivr-con
@@ -416,6 +415,7 @@ export default {
         link.click()
       }
     },
+    // 图片下载bold
     dataUrlToBold(url) {
       const arr = url.split(',')
       const mime = arr[0].match(/:(.*?);/)[1]
@@ -552,6 +552,8 @@ export default {
     padding: 0;
     font-size: 0;
   }
+  padding: 0 10px;
+  background: #fff;
 }
 .asset-loading {
   text-align: center;

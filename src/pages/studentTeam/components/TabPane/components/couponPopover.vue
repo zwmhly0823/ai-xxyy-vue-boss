@@ -220,6 +220,8 @@ export default {
     couponsucBtn() {
       this.couponSuccessful = false
       this.$emit('couponSendSucc')
+      // 为了发券成功后刷新学员详情
+      location.reload()
     }
   }
 }

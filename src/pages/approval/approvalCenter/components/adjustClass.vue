@@ -95,6 +95,30 @@ export default {
   components: {
     SearchPhone
   },
+  // 学员详情跳转来审批query lk
+  async mounted() {
+    if (this.$route.query && this.$route.query.cellphone) {
+      console.info('captured学员详情跳转而来')
+      // 显示手机号
+      this.$refs.searchPhone[0].input = this.$route.query.cellphone
+      // 手机号查uid
+      const {
+        data: { blurrySearch }
+      } = await this.$http.RefundApproval.getUid_lk({
+        mobile: this.$route.query.cellphone
+      }).catch((err) => {
+        console.error(err)
+        this.$message.error('跳转来的手机号获取uid失败')
+      })
+      if (blurrySearch && blurrySearch[0] && blurrySearch[0].id) {
+        this.formData.userId = blurrySearch[0].id // 保存uid
+        this.renderOrderList() // uid获取订单list
+      } else {
+        this.$message.warning('跳转来的手机号没有uid')
+      }
+    }
+  },
+
   data() {
     return {
       // 调期调级调课：1/2/3
