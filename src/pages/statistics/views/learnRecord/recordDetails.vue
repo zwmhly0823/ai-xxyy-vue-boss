@@ -4,7 +4,7 @@
  * @Author: zhangjianwen
  * @Date: 2020-07-09 15:02:59
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-07-27 18:23:34
+ * @LastEditTime: 2020-07-28 14:22:51
 -->
 <template>
   <div class="learn-record">
@@ -238,7 +238,7 @@
       </div>
       <el-table
         :data="learnRecordData"
-        style="width: 100% ;padding:0"
+        style="width: 100% ;padding-bottom:0"
         max-height="500"
         :header-cell-style="{ background: 'rgb(178, 185, 197,.3)' }"
         class="table-style"
@@ -741,6 +741,9 @@ export default {
 /deep/ .el-table .rowClass {
   background: #c3bfbc;
   color: blue;
+}
+/deep/ .el-table__body-wrapper {
+  padding-bottom: 20px;
 }
 /deep/ .el-form-item {
   margin-bottom: 5px;
