@@ -1,13 +1,13 @@
-/* eslint-disable */
 /*
  * @Descripttion: TOSS小熊
  * @version: 1.0.0
  * @Author: liukun
  * @Date: 2020-07-17 14:42:46
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-07-28 19:28:01
+ * @LastEditTime: 2020-07-28 20:30:39
  */
 
+/* eslint-disable */
 !(function(c) {
   var l,
     a,
@@ -34,7 +34,7 @@
   function z() {
     i || ((i = !0), h())
   }
-  ;(t = function() {
+  ;(a = function() {
     var c,
       l,
       a,
@@ -62,7 +62,7 @@
           }),
           document.addEventListener('DOMContentLoaded', t, !1))
       : document.attachEvent &&
-        ((h = t),
+        ((h = a),
         (o = c.document),
         (i = !1),
         (e = function() {
