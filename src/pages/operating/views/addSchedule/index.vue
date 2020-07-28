@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-14 18:28:44
  * @LastEditors: Shentong
- * @LastEditTime: 2020-07-16 18:42:12
+ * @LastEditTime: 2020-07-27 16:41:08
  -->
 <template>
   <div class="app-main height add-schedule-container">
@@ -22,7 +22,7 @@
               ></el-step>
               <el-step title="选择带班销售" icon="el-icon-s-flag"></el-step>
               <el-step title="设置招生容量" icon="el-icon-s-check"></el-step>
-              <el-step title="完成" icon="el-icon-success"></el-step>
+              <!-- <el-step title="完成" icon="el-icon-success"></el-step> -->
             </el-steps>
           </div>
           <!-- 第一步 -->
@@ -159,7 +159,6 @@ export default {
 </script>
 <style lang="scss" scoped>
 .add-schedule-container {
-  min-width: 1200px;
   .grid-content {
     background: white;
     height: 100%;
