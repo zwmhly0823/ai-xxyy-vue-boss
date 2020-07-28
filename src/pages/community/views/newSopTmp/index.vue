@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-06-29 16:50:58
  * @LastEditors: Shentong
- * @LastEditTime: 2020-07-27 20:21:10
+ * @LastEditTime: 2020-07-28 22:01:29
 -->
 <template>
   <el-row type="flex" class="new-sop app-main">
@@ -91,6 +91,7 @@
                     placeholder="选择时间范围"
                     class="time-picker"
                     @change="firstSendTimeChange"
+                    :arrow-control="true"
                   >
                   </el-time-picker>
                   <span class="tip">第一条信息在时间段内随机发送</span>
