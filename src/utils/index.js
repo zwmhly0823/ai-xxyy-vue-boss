@@ -373,3 +373,13 @@ export function openBrowserTab(path, out = false) {
 
   window.open(pathUrl, '_blank')
 }
+
+/**
+ * 获取变量数据类型
+ * Array,String,Object, Null, Undefined
+ */
+export function getDataType(v) {
+  const type = Object.prototype.toString.call(v)
+  const res = (type && type.substring(8, type.length - 1)) || ''
+  return res
+}

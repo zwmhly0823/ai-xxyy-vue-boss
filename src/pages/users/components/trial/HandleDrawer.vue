@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-07-10 14:53:10
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-07-28 17:38:56
+ * @LastEditTime: 2020-07-28 23:13:39
 -->
 <template>
   <!-- :before-close="handelCancel" -->
@@ -161,7 +161,7 @@
               </el-form-item>
             </div>
 
-            <h3>上课准备</h3>
+            <h3>课前准备</h3>
             <div class="expression-section-row">
               <el-form-item
                 label="加微情况"
@@ -188,6 +188,15 @@
             </div>
             <div class="expression-section-row">
               <el-form-item
+                label="是否进群"
+                :label-width="innerFormLabelWidth"
+                prop="added_group"
+              >
+                <el-radio v-model="form.added_group" label="">全部</el-radio>
+                <el-radio v-model="form.added_group" label="0">未进群</el-radio>
+                <el-radio v-model="form.added_group" label="1">已进群</el-radio>
+              </el-form-item>
+              <el-form-item
                 label="APP"
                 :label-width="innerFormLabelWidth"
                 prop="is_login"
@@ -196,26 +205,33 @@
                 <el-radio v-model="form.is_login" label="0">未登录</el-radio>
                 <el-radio v-model="form.is_login" label="1">已登录</el-radio>
               </el-form-item>
+            </div>
+            <div class="expression-section-row">
               <el-form-item
                 label="盒子物流"
                 :label-width="innerFormLabelWidth"
                 prop="express_status"
               >
-                <!-- <el-radio v-model="form.express_status" label="">全部</el-radio>
-                <el-radio v-model="form.express_status" label="1"
-                  >无地址</el-radio
-                >
-                <el-radio v-model="form.express_status" label="2"
-                  >未送达</el-radio
-                >
-                <el-radio v-model="form.express_status" label="3"
-                  >已完成</el-radio
-                > -->
-                <el-checkbox-group v-model="form.express_status">
+                <!-- <el-checkbox-group v-model="form.express_status">
                   <el-checkbox label="0">无地址</el-checkbox>
                   <el-checkbox label="1,2,4,5,6,7,8,9">未送达</el-checkbox>
                   <el-checkbox label="3">已完成</el-checkbox>
-                </el-checkbox-group>
+                </el-checkbox-group> -->
+                <el-select
+                  v-model="form.express_status"
+                  placeholder="请选择"
+                  size="mini"
+                  clearable
+                  multiple
+                  collapse-tags
+                >
+                  <el-option
+                    :key="item.id"
+                    :label="item.text"
+                    :value="item.id"
+                    v-for="item in expressList"
+                  ></el-option>
+                </el-select>
               </el-form-item>
             </div>
 
@@ -466,6 +482,7 @@ import Channel from '@/components/MSearch/searchItems/channel.vue'
 import CustomSelectRegions from '@/components/MSearch/searchItems/customSelectRegions.vue'
 import FormItemNumber from './FormItemNumber'
 import FormItemDate from './FormItemDate'
+import { FOLLOW_EXPRESS_STATUS_LIST } from '@/utils/enums'
 export default {
   components: {
     Channel,
@@ -475,7 +492,10 @@ export default {
   },
   props: {
     // 当前登录人身份 1-经理，2-组长，3-组员
-    rankId: Number,
+    rankId: {
+      type: Number,
+      default: 1
+    },
     drawer: {
       type: Boolean,
       default: false
@@ -483,12 +503,12 @@ export default {
     // 人群组类型 PERSONAL, DEPARTMENT, ADVANCEDSEARCH
     activeType: {
       type: String,
-      default: ''
+      default: 'ADVANCEDSEARCH'
     },
     // 个人自定义群组的数量，最多3个
     personalCount: {
       type: Number,
-      default: 0
+      default: 4
     },
     // 编辑时的当前组数据
     currentGroup: {
@@ -559,6 +579,7 @@ export default {
           text: '小于'
         }
       ],
+      expressList: FOLLOW_EXPRESS_STATUS_LIST,
       form: {
         name: '',
         remark: '',
@@ -566,6 +587,7 @@ export default {
         pay_channel: [],
         base_painting: '',
         added_wechat: '',
+        added_group: '',
         follow: '',
         is_login: '',
         express_status: [],

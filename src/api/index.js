@@ -3,9 +3,10 @@
  * @version:
  * @Author: shentong
  * @Date: 2020-03-13 14:38:28
- * @LastEditors: Shentong
- * @LastEditTime: 2020-06-29 18:43:36
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-07-28 23:05:19
  */
+import Base from './modules/Base'
 import Login from './modules/Login'
 import User from './modules/User' // 用户接口
 import Order from './modules/Order' // 订单接口
@@ -32,6 +33,7 @@ import Community from './modules/Community' // 社群工具
 
 export default Object.assign(
   {},
+  { Base },
   { Login },
   { Order },
   { User },

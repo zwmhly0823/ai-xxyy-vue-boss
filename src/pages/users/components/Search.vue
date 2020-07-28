@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-06-20 20:23:28
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-07-01 21:36:11
+ * @LastEditTime: 2020-07-28 22:18:24
  @ApiModel(description = "用户跟进状态")
     public enum STATUS {
 
@@ -80,16 +80,6 @@
     <el-card border="false" shadow="never">
       <div class="form">
         <el-form :inline="true" label-position="right" label-width="80px">
-          <el-form-item label="学员搜索:">
-            <div class="search-group">
-              <search-phone-or-usernum
-                style="margin-right: 10px;"
-                type="2"
-                tablename="StudentTrialV2StatisticsList"
-                @result="getSearchData('user', arguments)"
-              />
-            </div>
-          </el-form-item>
           <el-form-item label="归属销售&班级:" label-width="100px">
             <div class="search-group">
               <department
@@ -115,7 +105,17 @@
               />
             </div>
           </el-form-item>
-          <el-form-item label="课前准备:">
+          <el-form-item label="学员搜索:">
+            <div class="search-group">
+              <search-phone-or-usernum
+                style="margin-right: 10px;"
+                type="2"
+                tablename="StudentTrialV2StatisticsList"
+                @result="getSearchData('user', arguments)"
+              />
+            </div>
+          </el-form-item>
+          <el-form-item label="课前准备:" v-if="false">
             <div class="search-group">
               <simple-select
                 name="added_wechat"
@@ -165,7 +165,7 @@
               />
             </div>
           </el-form-item>
-          <el-form-item label="课程难度:">
+          <!-- <el-form-item label="课程难度:">
             <div class="search-group">
               <hard-level
                 placeholder="请选择"
@@ -174,7 +174,7 @@
                 @result="getSearchData('sup', arguments)"
               />
             </div>
-          </el-form-item>
+          </el-form-item> -->
 
           <el-form-item label="渠道选择:">
             <div class="search-group">
@@ -186,7 +186,7 @@
               />
             </div>
           </el-form-item>
-          <el-form-item label="标签:">
+          <!-- <el-form-item label="标签:">
             <div class="search-group">
               <define-label
                 placeholder="请选择"
@@ -195,7 +195,7 @@
                 @result="getSearchData('user_label.like', arguments)"
               />
             </div>
-          </el-form-item>
+          </el-form-item> -->
           <!-- // user_status 0 未转化 1 月课 2半年课 3 年课 -->
           <el-form-item label="系统课转化:">
             <div class="search-group">
@@ -245,7 +245,12 @@
               />
             </div>
           </el-form-item>
-          <p @click="handleClear" class="clear-btn primary-text">清空筛选</p>
+          <div class="handle-area d-flex align-center">
+            <el-button size="mini" @click="advancedSearch" type="primary"
+              >高级筛选</el-button
+            >
+            <p @click="handleClear" class="clear-btn primary-text">清空筛选</p>
+          </div>
         </el-form>
       </div>
     </el-card>
@@ -257,9 +262,9 @@ import FollowExpressStatus from '@/components/MSearch/searchItems/followExpressS
 import Department from '@/components/MSearch/searchItems/department.vue'
 import GroupSell from '@/components/MSearch/searchItems/groupSell.vue'
 import SearchTeamName from '@/components/MSearch/searchItems/searchTeamName'
-import HardLevel from '@/components/MSearch/searchItems/hardLevel.vue'
+// import HardLevel from '@/components/MSearch/searchItems/hardLevel.vue'
 import Channel from '@/components/MSearch/searchItems/channel.vue'
-import DefineLabel from '@/components/MSearch/searchItems/defineLabel.vue'
+// import DefineLabel from '@/components/MSearch/searchItems/defineLabel.vue'
 import SearchPhoneOrUsernum from '@/components/MSearch/searchItems/searchPhoneOrUsernum.vue'
 import SimpleSelect from '@/components/MSearch/searchItems/simpleSelect.vue'
 import enums from '../components/searchData'
@@ -269,10 +274,10 @@ export default {
     Department,
     GroupSell,
     SearchTeamName,
-    HardLevel,
+    // HardLevel,
     SearchPhoneOrUsernum,
     Channel,
-    DefineLabel,
+    // DefineLabel,
     SimpleSelect
   },
   props: {
@@ -388,6 +393,10 @@ export default {
     },
     handleClear() {
       this.resetFilter()
+      // 同时清空高级筛选项
+      this.$parent.$refs.sidebar.$refs.drawer.handelReset('ruleForm', true)
+      this.$parent.$refs.sidebar.handleAdvancedSearch({})
+
       this.$emit('search', {})
     },
     changeTerm(val) {
@@ -396,6 +405,16 @@ export default {
       } else {
         this.term_trial = [val]
       }
+    },
+
+    /**
+     * 高级搜索
+     */
+    advancedSearch() {
+      console.log(this.$parent.$refs.sidebar)
+      this.$parent.$refs.sidebar.showDrawer = true
+      this.$parent.$refs.sidebar.currentGroupType = 'ADVANCEDSEARCH'
+      // this.$parent.$refs.sidebar.currentNode = {}
     }
   }
 }
@@ -406,11 +425,14 @@ export default {
   position: relative;
   font-size: 12px;
 
-  .clear-btn {
+  .handle-area {
     position: absolute;
     right: 20px;
-    bottom: 0;
-    text-decoration: underline;
+    bottom: 10px;
+    p {
+      margin: 0 0 0 10px;
+      text-decoration: underline;
+    }
   }
 
   ::v-deep {
@@ -424,7 +446,7 @@ export default {
     }
     .el-form-item__label {
       font-size: inherit;
-      font-weight: normal;
+      font-weight: 500;
     }
     .el-form--inline .el-form-item {
       margin-bottom: -10px;

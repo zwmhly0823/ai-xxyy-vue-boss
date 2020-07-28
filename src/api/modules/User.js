@@ -5,7 +5,7 @@
  * @Author: shentong
  * @Date: 2020-03-13 14:38:28
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-07-25 22:56:48
+ * @LastEditTime: 2020-07-28 22:36:44
  */
 // import axios from '../axios'
 import axios from '../axiosConfig'
@@ -931,6 +931,50 @@ export default {
   getQuestionnaireByUserId(query) {
     return axios.get(
       `/api/f/v1/questionnaire/getQuestionnaireByUserId?uid=${query.uid}&questionnaireId=${query.questionnaireId}&mobile=${query.mobile}`
+    )
+  },
+
+  /**
+   * v2.2 新增 - 自定义人群组
+   * teacherId -老师ID
+   * name - 组名
+   * expression - 条件数据 String
+   * remark - 备注
+   * type - 自定义类型: PERSONAL(个人)，DEPARTMENT(部门)，ADVANCEDSEARCH(高级搜索)
+   */
+  addTeacherFollowGroup(params) {
+    return axios.post('/api/t/v1/teacher/teacherFollowGroup/add', params)
+  },
+
+  /**
+   * v2.2 编辑 - 自定义人群组
+   * id - 群组id
+   * name - 组名
+   * expression - 条件数据 String
+   * remark - 备注
+   */
+  updateTeacherFollowGroup(params = {}) {
+    return axios.post('/api/t/v1/teacher/teacherFollowGroup/update', params)
+  },
+
+  // 获取自定义人群组信息
+  getTeacherFollowGroup(id) {
+    if (!id) return
+    return axios.get(`/api/t/v1/teacher/teacherFollowGroup/get?id=${id}`)
+  },
+
+  // 删除自定义人群组信息
+  deleteTeacherFollowGroup(id) {
+    if (!id) return
+    return axios.get(`/api/t/v1/teacher/teacherFollowGroup/delete?id=${id}`)
+  },
+
+  // 根据teacherId和类型,查询老师跟进组信息
+  // type: PERSONAL(个人)，DEPARTMENT(部门)
+  getAllFollowGroup(teacherId, type = 'PERSONAL') {
+    if (!teacherId) return
+    return axios.get(
+      `/api/t/v1/teacher/teacherFollowGroup/findAllByTeacherIdAndType?teacherId=${teacherId}&type=${type}`
     )
   }
 }
