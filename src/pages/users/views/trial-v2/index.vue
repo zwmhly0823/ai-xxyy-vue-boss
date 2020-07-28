@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-06-16 16:27:14
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-07-20 17:12:28
+ * @LastEditTime: 2020-07-28 23:23:37
 -->
 <template>
   <div class="user-list">
@@ -33,6 +33,7 @@
           :tomorrowTotal="tomorrowTotal"
           @filter="getFilter"
           @toggle="handleToggle"
+          ref="sidebar"
         />
       </div>
       <div class="trial-container-body">
@@ -874,7 +875,7 @@ import intentionDialog from '../../components/intentionDialog'
 import { FOLLOW_EXPRESS_STATUS } from '@/utils/enums'
 import Search from '../../components/Search.vue'
 import ToolTip from '../../components/ToolTip.vue'
-import SendCoupon from '../../components/SendCoupon.vue'
+import SendCoupon from '../../../studentTeam/components/TabPane/components/couponPopover.vue'
 import TrialSidebar from '../../components/trial/TrialSidebar.vue'
 import QuestionaireDrawerComponent from '../../components/trial/QuestionaireDrawerComponent.vue'
 export default {

@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-24 18:50:54
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-07-03 14:13:50
+ * @LastEditTime: 2020-07-29 01:12:27
  -->
 <template>
   <div class="search-item small threeSelect">
@@ -25,6 +25,7 @@
       :style="myStyle"
       clearable
       filterable
+      v-model="value"
     ></el-cascader>
   </div>
 </template>
@@ -54,10 +55,16 @@ export default {
     myStyle: {
       type: Object,
       default: () => {}
+    },
+    // 用户编辑回显已选择项， id数组
+    current: {
+      type: Array,
+      default: () => []
     }
   },
   data() {
     return {
+      value: [], // modal
       channelList: [], // 渠道来源[]
       channelData: null,
       channelClassData: [],
@@ -69,6 +76,14 @@ export default {
     await this.getChannel()
     await this.getChannelClassList()
     this.formatData(this.channelList, this.channelClassList)
+  },
+  mounted() {
+    this.value = this.current
+  },
+  watch: {
+    current(val) {
+      this.value = this.current
+    }
   },
   methods: {
     // 获取渠道来源 filter: 过滤关键词  eg：filter:"抖音"
@@ -164,17 +179,10 @@ export default {
       // console.log(classifiData, '渠道分类总数')
       // console.log(this.showDatas)
     },
-    onChange(data) {
-      // 没用啊🐻弟
-      console.log(data)
-      this.$emit(
-        'result',
-        data.length > 0 ? { [this.name]: this.channelData } : ''
-      )
-    },
     onSelect(data) {
       console.log(data)
-      this.$emit('result', data.length > 0 ? { [this.name]: data } : '')
+      // this.$emit('result', data.length > 0 ? { [this.name]: data } : '')
+      this.$emit('result', { [this.name]: data })
     }
   }
 }

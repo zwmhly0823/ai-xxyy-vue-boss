@@ -162,7 +162,7 @@ export default {
       })
     },
     selectUserId(val) {
-      console.log(val, '用户idprops传参')
+      // console.log(val, '用户idprops传参')
     }
   },
   methods: {
