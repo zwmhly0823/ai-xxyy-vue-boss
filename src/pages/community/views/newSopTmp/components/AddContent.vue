@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-06-30 19:21:08
  * @LastEditors: Shentong
- * @LastEditTime: 2020-07-21 16:02:03
+ * @LastEditTime: 2020-07-27 17:25:50
 -->
 <template>
   <el-dialog
@@ -30,6 +30,7 @@
           <span>{{ tab.title }}</span>
         </div>
 
+        <!-- 隐藏表情功能 TODO: -->
         <div class="emoji" v-if="!tabIndex">
           <svg
             class="iconfont icon-sty"
@@ -42,18 +43,8 @@
             @click="changeEmojiToggle = !changeEmojiToggle"
           ></i> -->
 
-          <div class="emoji-list" v-if="changeEmojiToggle">
-            <!-- <el-scrollbar wrap-class="scrollbar-wrapper"> -->
-            <VEmojiPicker @select="selectEmoji" />
-            <!-- <a
-                href="javascript:void(0);"
-                @click="getEmo(index)"
-                v-for="(item, index) in faceList"
-                :key="index"
-                class="emotionItem"
-                >{{ item }}</a
-              > -->
-            <!-- </el-scrollbar> -->
+          <div class="emoji-list-box" v-if="changeEmojiToggle">
+            <emoji-list @selectedEmoji="selectEmoji"></emoji-list>
           </div>
         </div>
       </div>
@@ -113,7 +104,8 @@
 <script>
 import { debounce } from 'lodash'
 import uploadFile from '@/utils/upload' // 上传公共方法
-import VEmojiPicker from 'v-emoji-picker'
+import EmojiList from './EmojiList'
+// import VEmojiPicker from 'v-emoji-picker'
 export default {
   props: {
     centerDialogVisible: {
@@ -152,7 +144,8 @@ export default {
     }
   },
   components: {
-    VEmojiPicker
+    EmojiList
+    // VEmojiPicker
   },
   computed: {
     centerDialog() {
@@ -176,8 +169,7 @@ export default {
   },
   methods: {
     selectEmoji(emoji) {
-      console.log('emoji', emoji)
-      this.addContentForm.textarea += `${emoji.data}  `
+      this.addContentForm.textarea += `${emoji}  `
     },
     /** 此处不可使用箭头函数 */
     topTabClick: debounce(function(index) {
@@ -325,11 +317,9 @@ export default {
         height: 23px;
         cursor: pointer;
       }
-      .emoji-list {
+      .emoji-list-box {
         border: 1px solid #eee;
         width: 338px;
-        // width: 310px;
-        // height: 200px;
         position: absolute;
         right: 0;
         top: 30px;
@@ -337,7 +327,7 @@ export default {
         background: #fff;
         box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
         border-radius: 5px;
-        padding: 5px;
+        padding: 5px 10px 5px 5px;
         // overflow-y: scroll;
         box-sizing: border-box;
         .el-scrollbar__wrap.default-scrollbar__wrap {
