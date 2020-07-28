@@ -5,7 +5,7 @@
  * @Author: shentong
  * @Date: 2020-03-13 14:38:28
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-07-25 22:56:48
+ * @LastEditTime: 2020-07-28 15:31:36
  */
 // import axios from '../axios'
 import axios from '../axiosConfig'
@@ -612,6 +612,7 @@ export default {
       last_join_course_time
       complete_time
       task_count
+      last_task_time
       comment_count
       lesson_comment_count
       ad_count
