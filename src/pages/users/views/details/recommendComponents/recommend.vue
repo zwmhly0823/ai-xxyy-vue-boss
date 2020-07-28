@@ -3,8 +3,8 @@
  * @version: 1.0.0
  * @Author: liukun
  * @Date: 2020-07-22 10:31:00
- * @LastEditors: liukun
- * @LastEditTime: 2020-07-27 17:00:22
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-07-28 19:31:22
 -->
 <template>
   <el-dialog title="推荐信息" :visible.sync="recommendInfo" width="40%">
@@ -65,8 +65,6 @@ export default {
       )
       if (UserList.length) {
         this.recommendList = UserList
-      } else {
-        this.$message.warning('加油,该学员没有下线')
       }
     }
   },
