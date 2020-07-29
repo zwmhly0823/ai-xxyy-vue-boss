@@ -35,7 +35,8 @@
             </el-form-item>
           </el-form>
         </el-col>
-        <el-col :span="2">
+        <!-- 目前只有 18618194642 （463055260383186944）有导入权限 -->
+        <el-col :span="2" v-if="isAuth">
           <el-button size="mini" type="primary" @click="dialogVisible = true">
             导入模板
           </el-button>
@@ -95,12 +96,13 @@ export default {
       dialogVisible: false,
       headers: { 'Content-Type': 'multipart/form-data' },
       uploading: false,
-      fileList: []
+      fileList: [],
+      staff: {}
     }
   },
   computed: {
     isAuth() {
-      return JSON.parse(localStorage.getItem('staff')).mobile === '18618194642 '
+      return JSON.parse(localStorage.getItem('staff')).mobile === '18618194642'
     }
   },
   methods: {
