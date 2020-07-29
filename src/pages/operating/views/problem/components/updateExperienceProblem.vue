@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-06-28 18:37:21
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-07-29 14:31:00
+ * @LastEditTime: 2020-07-29 19:14:53
 -->
 <template>
   <div class="experience-box">
@@ -15,7 +15,7 @@
       <el-button @click="addItemCheckboxType" type="text">多选题</el-button>
       <br />
       <el-button @click="addItemFillInTheBlanksType" type="text"
-        >单项填空题</el-button
+        >填空题</el-button
       >
       <br />
       <el-button @click="addItemShortAnswerType" type="text">简答题</el-button>
@@ -115,7 +115,9 @@
               <i class="el-icon-delete" @click="deleteItem(item, index)"></i>
             </el-form-item>
             <el-form-item
-              v-if="item.questionType == 'SUBJECTIVE'"
+              v-if="
+                ['SUBJECTIVE', 'SUBJECTIVE_DESC'].includes(item.questionType)
+              "
               style="margin-left:50px;"
             >
               <el-checkbox v-model="item.isMusts">是否必填</el-checkbox>
@@ -225,6 +227,7 @@ export default {
         questionType: 'RADIO',
         questionClass: 'PUBLIC',
         questionState: 'DEFAULT',
+        isMusts: 1,
         questionOptionList: [
           {
             optionNo: 'A',
@@ -244,6 +247,7 @@ export default {
         questionClass: 'PUBLIC',
         questionType: 'CHECKBOX',
         questionState: 'DEFAULT',
+        isMusts: 1,
         questionOptionList: [
           {
             optionNo: 'A',
@@ -265,9 +269,10 @@ export default {
         questionState: 'DEFAULT',
         isMusts: false
       },
+      //
       shortAnswerType: {
         questionClass: 'PUBLIC',
-        questionType: 'SUBJECTIVE',
+        questionType: 'SUBJECTIVE_DESC',
         title: '',
         questionState: 'DEFAULT',
         isMusts: false

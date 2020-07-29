@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-06-28 18:37:21
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-07-29 16:11:25
+ * @LastEditTime: 2020-07-29 19:15:09
 -->
 <template>
   <div class="experience-box">
@@ -238,6 +238,7 @@ export default {
         questionType: 'RADIO',
         questionClass: 'PUBLIC',
         questionState: 'DEFAULT',
+        isMusts: 1,
         questionOptionList: [
           {
             optionNo: 'A',
@@ -257,6 +258,7 @@ export default {
         questionClass: 'PUBLIC',
         questionType: 'CHECKBOX',
         questionState: 'DEFAULT',
+        isMusts: 1,
         questionOptionList: [
           {
             optionNo: 'A',
