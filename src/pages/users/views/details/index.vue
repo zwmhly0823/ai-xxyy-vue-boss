@@ -172,10 +172,12 @@
                   <span>最近活跃:</span>
                   {{
                     stuInfor.loginData &&
+                      stuInfor.loginData[0] &&
                       (stuInfor.loginData[0].device_model || '-')
                   }}
                   {{
                     stuInfor.loginData &&
+                      stuInfor.loginData[0] &&
                       (stuInfor.loginData[0].login_time
                         ? new Date(
                             Number(stuInfor.loginData[0].login_time)
