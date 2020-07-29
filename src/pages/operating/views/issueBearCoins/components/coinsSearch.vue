@@ -8,6 +8,7 @@
               <search-phone-or-usernum
                 defaultType="0"
                 :isHidden="false"
+                :name="['id']"
                 type="3"
                 tablename="UserList"
                 @result="getSearchUid('user', arguments)"
@@ -106,7 +107,8 @@ export default {
     // 用户ID接收值
     getSearchUid(key, res) {
       const search = res && res[0]
-      this.$emit('searchUid', search)
+      const uid = { uid: search.id }
+      this.$emit('searchUid', uid)
     },
     // 补发类型接收值
     getSearchData(key, res) {

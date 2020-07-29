@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-06-22 12:08:17
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-07-29 16:33:53
+ * @LastEditTime: 2020-07-29 21:56:53
 -->
 <template>
   <div class="search-mobile d-flex align-center">
@@ -41,7 +41,9 @@
         <el-option
           v-for="item in dataList"
           :key="item.id"
-          :label="`${item[name[searchType]]}`"
+          :label="
+            `${item[name[searchType] === 'id' ? 'mobile' : name[searchType]]}`
+          "
           :value="`${item[name[searchType]]}`"
         ></el-option>
       </el-select>
