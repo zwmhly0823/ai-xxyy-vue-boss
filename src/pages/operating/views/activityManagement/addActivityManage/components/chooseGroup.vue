@@ -32,28 +32,24 @@
       >
         <el-table-column type="selection" width="55"> </el-table-column>
         <el-table-column
-          label="群名称"
-          prop="cluster_name"
+          label="商品名称"
+          prop="product_name"
           align="center"
         ></el-table-column>
-        <el-table-column
-          label="群人数"
-          prop="membersNum"
-          align="center"
-        ></el-table-column>
-        <el-table-column
-          label="带班销售"
-          prop="owner_nick_name"
-          align="center"
-        ></el-table-column>
-        <!-- <el-table-column
-          label="微信群工作微信号"
-          prop="owner_wechat_id"
-          align="center"
-        ></el-table-column> -->
+        <el-table-column label="商品类型" prop="product_type" align="center">
+          <template slot-scope="scope">
+            {{ scope.row.product_type === 1 ? '实物商品' : '虚拟商品' }}
+          </template>
+        </el-table-column>
+        <el-table-column label="赠品价格" prop="product_price" align="center">
+          <template slot-scope="scope">
+            ¥{{ scope.row.product_price }}
+          </template>
+        </el-table-column>
       </el-table>
     </div>
     <div class="bottom_choose" v-show="tableData.length > 0">
+      <el-button size="mini" @click="saveAndConadd">保存并继续添加</el-button>
       <el-button size="mini" @click="closeChooseGroup">取消</el-button>
       <el-button size="mini" type="primary" @click="chooseGroup"
         >确认</el-button
@@ -82,37 +78,74 @@ export default {
     return {
       name: '',
       tableData: [],
-      chooseGroupList: []
+      chooseProductList: []
     }
   },
   components: {
     // EleTable
   },
   async created() {
-    const tabs = await this.getWeChatCluster(this.name).catch()
-    const { code, payload = [] } = tabs
-    if (tabs && code === 0) {
-      this.tableData = payload
-      // this.$nextTick(() => {
-      //   this.tableData.forEach((v, i) => {
-      //     this.parent_tableData.forEach((_v, _i) => {
-      //       if (v.cluster_id === _v.cluster_id) {
-      //         this.$refs.myseleTable.toggleRowSelection(v)
-      //       }
-      //     })
-      //   })
-      // })
-    }
+    setTimeout(() => {
+      this.tableData = [
+        {
+          product_name: '花架',
+          product_type: 1,
+          product_price: 100
+        },
+        {
+          product_name: '24色马克笔',
+          product_type: 1,
+          product_price: 100
+        },
+        {
+          product_name: '涂色卡',
+          product_type: 1,
+          product_price: 100
+        },
+        {
+          product_name: '安徒生大赛',
+          product_type: 2,
+          product_price: 100
+        }
+      ]
+    }, 100)
+    // const tabs = await this.getWeChatCluster(this.name).catch()
+    // // const { code, payload = [] } = tabs
+    // const { code } = tabs
+    // if (tabs && code === 0) {
+    //   this.tableData = [
+    //     {
+    //       product_name: '花架',
+    //       product_type: 1,
+    //       product_price: 100
+    //     },
+    //     {
+    //       product_name: '24色马克笔',
+    //       product_type: 1,
+    //       product_price: 100
+    //     },
+    //     {
+    //       product_name: '涂色卡',
+    //       product_type: 1,
+    //       product_price: 100
+    //     },
+    //     {
+    //       product_name: '安徒生大赛',
+    //       product_type: 2,
+    //       product_price: 100
+    //     }
+    //   ]
+    // }
   },
   mounted() {},
   computed: {},
   methods: {
     handleDebounce: debounce(function(event) {
-      this.getWeChatCluster(this.name).then((res) => {
-        if (res.code === 0) {
-          this.tableData = res.payload || []
-        }
-      })
+      // this.getWeChatCluster(this.name).then((res) => {
+      //   if (res.code === 0) {
+      //     this.tableData = res.payload || []
+      //   }
+      // })
     }, 500),
     // 获取群信息
     async getWeChatCluster(name = '') {
@@ -134,10 +167,29 @@ export default {
     // 选择
     handleSelectionChange(val) {
       console.log(val, '11111')
-      this.chooseGroupList = val
+      this.chooseProductList = val
     },
+    // 保存并继续添加
+    saveAndConadd() {
+      const { chooseProductList } = this
+      if (chooseProductList.length) {
+        let price = 0
+        chooseProductList.forEach((item) => {
+          price = price + item.product_price
+          // const obj = {
+          //   productname: item.product_name,
+          //   producttype: item.product_type,
+          //   prod
+          // }
+        })
+        console.log(chooseProductList)
+      } else {
+        console.log('选啊 ')
+      }
+    },
+    // 保存
     chooseGroup() {
-      this.$emit('choose-group', this.chooseGroupList)
+      this.$emit('choose-group', this.chooseProductList)
     },
     // 关闭
     closeChooseGroup() {

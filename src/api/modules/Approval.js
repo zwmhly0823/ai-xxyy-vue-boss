@@ -39,5 +39,10 @@ export default {
     return axios.post(
       `/api/b/v1/backend/completed/reissue/flow?flowApprovalId=${params.flowApprovalId}&staffName=${params.staffName}&staffId=${params.staffId}&isConfirm=${params.isConfirm}&approvalRemark=${params.approvalRemark}`
     )
+  },
+  getProductByTypes() {
+    return axios.get(
+      `/api/p/v1/product/getProductByTypes?types=ACTUAL_GOODS,VIRTUAL_GOODS`
+    )
   }
 }

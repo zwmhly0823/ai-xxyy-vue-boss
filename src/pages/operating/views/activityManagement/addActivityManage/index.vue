@@ -20,56 +20,61 @@
           class="activity-from"
           :rules="rules"
         >
-          <el-form-item prop="taskName" label="活动名称" style="width:320px;">
+          <el-form-item
+            prop="promotionsName"
+            label="活动名称"
+            style="width:320px;"
+          >
             <el-input
-              v-model="activityFrom.taskName"
+              v-model="activityFrom.promotionsName"
               placeholder="请输入活动名称"
             ></el-input>
           </el-form-item>
           <el-form-item
-            prop="planTemplate"
+            prop="promotionsType"
             label="活动类型"
             style="width:320px;"
           >
             <el-select
               class="item-style"
-              v-model="activityFrom.planTemplate"
+              v-model="activityFrom.promotionsType"
               remote
+              filterable
               :reserve-keyword="true"
               size="mini"
               clearable
               placeholder="选择模板"
             >
               <el-option
-                v-for="item in planTemplate || []"
-                :key="item.id"
-                :label="item.templateName"
-                :value="item.id"
+                v-for="item in promotionsType || []"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
               ></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="活动时间" prop="planStartDate">
+          <el-form-item label="活动时间" prop="promotionsDate">
             <el-date-picker
-              v-model="activityFrom.planStartDate"
-              type="daterange"
-              value-format="yyyy-MM-dd"
+              v-model="activityFrom.promotionsDate"
+              type="datetimerange"
+              value-format="yyyy-MM-dd HH:mm:ss"
               :picker-options="expireTimeOption"
               range-separator="至"
               start-placeholder="开始日期"
               end-placeholder="结束日期"
             ></el-date-picker>
           </el-form-item>
-          <el-form-item label="活动范围" prop="explessonCheck">
+          <el-form-item label="活动范围" prop="trialTerms">
             <el-row style="display:flex;margin-bottom: 10px;">
               <el-checkbox
                 label="体验课"
                 name="type"
-                v-model="explesson"
+                v-model="isTrial"
                 style="margin-right:20px;"
               ></el-checkbox>
               <search-stage
-                :record="activityFrom.explessonCheck"
-                :isDisabled="!explesson"
+                :record="activityFrom.trialTerms"
+                :isDisabled="!isTrial"
                 class="search-group-item"
                 name="term0"
                 placeholder="体验课排期"
@@ -78,17 +83,17 @@
               />
             </el-row>
           </el-form-item>
-          <el-form-item label="" prop="syslessonCheck">
+          <el-form-item label="" prop="systemTerms">
             <el-row style="display:flex">
               <el-checkbox
                 label="系统课"
                 name="type"
-                v-model="syslesson"
+                v-model="isSystem"
                 style="margin-right:20px;"
               ></el-checkbox>
               <search-stage
-                :record="activityFrom.syslessonCheck"
-                :isDisabled="!syslesson"
+                :record="activityFrom.systemTerms"
+                :isDisabled="!isSystem"
                 class="search-group-item"
                 name="term1"
                 placeholder="系统课排期"
@@ -103,7 +108,7 @@
               icon="el-icon-plus"
               size="mini"
               @click="chooseGroup('activityFrom')"
-              >选择群</el-button
+              >选择商品</el-button
             >
             <div
               ref="tableContainer"
@@ -116,21 +121,27 @@
                 :tableHeight="tableHeight"
               >
                 <el-table-column
-                  label="群名称"
-                  prop="cluster_name"
+                  label="赠品名称"
+                  prop="giftsName"
                   align="center"
                 ></el-table-column>
                 <el-table-column
-                  label="群人数"
-                  prop="membersNum"
+                  label="赠品类型"
+                  prop="giftsType"
                   align="center"
                 ></el-table-column>
-                <el-table-column label="带班销售" align="center">
-                  {{ this.teacherName }}</el-table-column
+                <el-table-column
+                  label="赠品价格"
+                  prop="giftsPrice"
+                  align="center"
                 >
+                  <template slot-scope="scope">
+                    ¥{{ scope.row.giftsPrice }}
+                  </template>
+                </el-table-column>
                 <el-table-column
-                  label="微信群工作微信号"
-                  prop="owner_wechat_id"
+                  label="物流单数量"
+                  prop="expressCount"
                   align="center"
                 ></el-table-column>
                 <el-table-column label="操作" align="center">
@@ -142,10 +153,10 @@
                         icon="el-icon-info"
                         iconColor="red"
                         title="你确定要删除该项内容吗？"
-                        @onConfirm="confirmDelRow(scope.row)"
+                        @onConfirm="confirmDelRow(scope.row, scope.$index)"
                       >
                         <span
-                          @click="deleteTablerow(scope.row, '1')"
+                          @click="deleteTablerow(scope.row, scope.$index)"
                           slot="reference"
                           >删除</span
                         >
@@ -160,6 +171,7 @@
             <el-input
               type="textarea"
               style="width:400px"
+              v-model="activityFrom.desc"
               :autosize="{ minRows: 2, maxRows: 4 }"
               placeholder="请输入内容"
             >
@@ -179,30 +191,29 @@
       <el-dialog
         title="选择群"
         :visible.sync="dialogGroupVisible"
-        width="50%"
+        width="70%"
         destroy-on-close
       >
-        <choose-group
-          ref="chooseGroup"
-          :taskstatus="teacherId"
-          :parent_tableData="tableData"
-          @choose-group="parent_chooseGroup"
+        <ChooseProduct
+          :productList="productList"
+          @combinationPro="combinationPro"
           @close-choosegroup="parent_close"
-        ></choose-group>
+        >
+        </ChooseProduct>
       </el-dialog>
     </el-col>
   </el-row>
 </template>
 <script>
-import { isToss } from '@/utils/index'
 import EleTable from '@/components/Table/EleTable'
-import ChooseGroup from './components/chooseGroup'
+// import ChooseGroup from './components/chooseGroup'
+import ChooseProduct from './components/chooseProduct'
 import SearchStage from '@/components/MSearch/searchItems/searchStage.vue'
 export default {
   data() {
     var expvalidator = (rule, value, callback) => {
       console.log(rule, value, '----------')
-      if (value.length > 0 || this.activityFrom.syslessonCheck.length > 0) {
+      if (value.length > 0 || this.activityFrom.systemTerms.length > 0) {
         callback() // 自定义校验-以获取到保存到商品信息
       } else {
         callback(new Error('请完成商品信息的选择'))
@@ -210,7 +221,7 @@ export default {
     }
     var sysvalidator = (rule, value, callback) => {
       console.log(rule, value, '----------')
-      if (value.length > 0 || this.activityFrom.explessonCheck.length > 0) {
+      if (value.length > 0 || this.activityFrom.trialTerms.length > 0) {
         callback() // 自定义校验-以获取到保存到商品信息
       } else {
         callback(new Error('请完成商品信息的选择'))
@@ -225,56 +236,50 @@ export default {
       }
     }
     return {
-      explesson: false,
-      syslesson: false,
+      isTrial: false, // 体验课checkbox
+      isSystem: true, // 系统课checkbox
       id: '',
       tableHeight: 'auto',
       dialogGroupVisible: false,
-      clusterIdList: [],
-      teacherName: '',
-      teacherId: '',
-      taskPlan: {},
-      planTemplate: [],
-      wechatNos: [],
+      promotionsType: [
+        {
+          value: 'GIFT',
+          label: '关单赠品'
+        }
+      ], // 活动类型列表
       tableData: [],
       activityFrom: {
-        taskName: '',
-        planTemplate: '',
-        planStartDate: '',
-        giftOption: [],
-        explessonCheck: [],
-        syslessonCheck: []
+        promotionsName: '', // 活动名称
+        promotionsType: 'GIFT', // 活动类型 默认关单赠品
+        promotionsDate: [], // 活动时间
+        trialTerms: [], // 体验课
+        systemTerms: ['29', '28', '27'], // 系统课
+        desc: '' // 活动说明
       },
+      productList: [],
       rules: {
-        taskName: [
+        promotionsName: [
           { required: true, message: '请输入任务名称', trigger: 'blur' }
         ],
-        planTemplate: [
+        promotionsType: [
           { required: true, message: '请选择计划模板', trigger: 'change' }
         ],
-        planStartDate: [
+        promotionsDate: [
           {
             required: true,
             message: '请选择时间范围',
             trigger: 'change'
           }
         ],
-        explessonCheck: [
+        trialTerms: [
           { required: true, validator: expvalidator, trigger: 'blur' }
         ],
-        syslessonCheck: [
+        systemTerms: [
           { required: true, validator: sysvalidator, trigger: 'blur' }
         ],
         giftOptionCheck: [
           { required: true, validator: giftOptionvalidator, trigger: 'blur' }
         ]
-        // giftOption: [
-        //   {
-        //     required: true,
-        //     validator: validateProduct,
-        //     trigger: 'blur'
-        //   }
-        // ]
       },
       expireTimeOption: {
         disabledDate(date) {
@@ -285,36 +290,48 @@ export default {
   },
   components: {
     EleTable,
-    ChooseGroup,
-    SearchStage
+    // ChooseGroup,
+    SearchStage,
+    ChooseProduct
   },
   watch: {
-    explesson(val, old) {
+    isTrial(val, old) {
       if (!val) {
         console.log('11111')
-        this.activityFrom.explessonCheck = []
+        this.activityFrom.trialTerms = []
       }
       console.log(val, old)
     },
-    syslesson(val, old) {
+    isSystem(val, old) {
       if (!val) {
         console.log('11111')
-        this.activityFrom.syslessonCheck = []
+        this.activityFrom.systemTerms = []
       }
       console.log(val, old)
     }
   },
   async created() {
-    const teacher = isToss()
-    if (teacher) {
-      const tossteacher = JSON.parse(localStorage.getItem('teacher'))
-      this.teacherId = tossteacher.id || ''
-      this.teacherName = tossteacher.realName || ''
-    } else {
-      const staff = JSON.parse(localStorage.getItem('staff'))
-      this.teacherId = staff.id || ''
-      this.teacherName = staff.realName || ''
-    }
+    // 获取商品
+    this.getProductByTypes().then((res) => {
+      if (res.code === 0 || res) {
+        res.payload.forEach((item) => {
+          item.key = item.id
+          item.label = item.name
+        })
+        this.productList = res.payload
+        console.log(res, '=------=')
+      }
+    })
+    // const teacher = isToss()
+    // if (teacher) {
+    //   const tossteacher = JSON.parse(localStorage.getItem('teacher'))
+    //   this.teacherId = tossteacher.id || ''
+    //   this.teacherName = tossteacher.realName || ''
+    // } else {
+    //   const staff = JSON.parse(localStorage.getItem('staff'))
+    //   this.teacherId = staff.id || ''
+    //   this.teacherName = staff.realName || ''
+    // }
 
     // 新增与编辑逻辑
     if (this.$route.params.id === '-1') {
@@ -322,19 +339,19 @@ export default {
     } else {
       this.id = this.$route.params.id
     }
-    this.taskPlan = await this.getToSaveOrUpdate(this.id, this.teacherId)
-    if (this.taskPlan) {
-      this.planTemplate = this.taskPlan.payload.templateList || []
-      this.wechatNos = this.taskPlan.payload.wechatNos || []
-    }
+    // this.taskPlan = await this.getToSaveOrUpdate(this.id, this.teacherId)
+    // if (this.taskPlan) {
+    //   this.promotionsType = this.taskPlan.payload.templateList || []
+    //   this.wechatNos = this.taskPlan.payload.wechatNos || []
+    // }
 
-    if (this.id) {
-      this.activityFrom.taskName = this.taskPlan.payload.taskName
-      this.activityFrom.planTemplate = this.taskPlan.payload.templateId
-      this.activityFrom.planStartDate = this.taskPlan.payload.job_time
-      this.tableData = this.taskPlan.payload.weChatIcodeClusterLists
-    }
-    console.log(this.id, this.teacherId, this.taskPlan)
+    // if (this.id) {
+    //   this.activityFrom.promotionsName = this.taskPlan.payload.promotionsName
+    //   this.activityFrom.promotionsType = this.taskPlan.payload.templateId
+    //   this.activityFrom.promotionsDate = this.taskPlan.payload.job_time
+    //   this.tableData = this.taskPlan.payload.weChatIcodeClusterLists
+    // }
+    // console.log(this.id, this.teacherId, this.taskPlan)
     this.calcTableHeight()
   },
   mounted() {},
@@ -344,10 +361,10 @@ export default {
     getSchedul(key, res, type) {
       console.log(res, 'ressssssss')
       if (type === 0) {
-        this.activityFrom.explessonCheck = res[0].term0 || []
-        console.log(this.activityFrom.explessonCheck, '-=-=')
+        this.activityFrom.trialTerms = res[0].term0 || []
+        console.log(this.activityFrom.trialTerms, '-=-=')
       } else {
-        this.activityFrom.syslessonCheck = res[0].term1 || []
+        this.activityFrom.systemTerms = res[0].term1 || []
       }
       console.log(key, res[0], type, '11212121212121')
     },
@@ -355,30 +372,82 @@ export default {
       console.log(row, type)
     },
     // 获取SOP任务计划
-    async getToSaveOrUpdate(id, teacherId) {
+    // async getToSaveOrUpdate(id, teacherId) {
+    //   try {
+    //     const tmpInfo = await this.$http.Community.getToSaveOrUpdate({
+    //       id,
+    //       teacherId
+    //     })
+    //     return tmpInfo
+    //   } catch (err) {
+    //     console.log(err)
+    //   }
+    // },
+    // 组合商品
+    combinationPro(data) {
+      const obj = {
+        giftsName: '',
+        giftsType: '',
+        giftsPrice: 0,
+        expressCount: 0,
+        products: []
+      }
+      const product = {
+        id: ''
+      }
+      // let giftsType
+      for (let i = 0; i < this.productList.length; i++) {
+        for (let j = 0; j < data.length; j++) {
+          if (data[j] === this.productList[i].key) {
+            obj.giftsName = obj.giftsName + '+' + this.productList[i].name
+            obj.giftsType = obj.giftsType + '+' + this.productList[i].type
+            obj.giftsPrice =
+              Number(obj.giftsPrice) + Number(this.productList[i].price)
+            if (this.productList[i].type === 'ACTUAL_GOODS') {
+              obj.expressCount += 1
+            }
+            product.id = this.productList[i].id
+            obj.products.push(product)
+          }
+        }
+      }
+      console.log(obj.giftsName, 'giftsName')
+      console.log(obj.giftsType, 'giftsType')
+      console.log(obj.giftsPrice, 'giftsPrice')
+      console.log(obj.expressCount, 'giftsPrice')
+
+      obj.giftsName = obj.giftsName.substring(1)
+      obj.giftsType = obj.giftsType.substring(1)
+      if (
+        obj.giftsType.includes('ACTUAL_GOODS') &&
+        obj.giftsType.includes('VIRTUAL_GOODS')
+      ) {
+        obj.giftsType = '实物+虚拟'
+      } else if (obj.giftsType.includes('ACTUAL_GOODS')) {
+        obj.giftsType = '实物'
+      } else if (obj.giftsType.includes('VIRTUAL_GOODS')) {
+        obj.giftsType = '虚拟'
+      }
+      console.log(obj, 'obj')
+      this.tableData.push(obj)
+    },
+    // 获取商品
+    async getProductByTypes() {
       try {
-        const tmpInfo = await this.$http.Community.getToSaveOrUpdate({
-          id,
-          teacherId
-        })
-        return tmpInfo
+        const Info = await this.$http.Approval.getProductByTypes({})
+        return Info
       } catch (err) {
         console.log(err)
       }
     },
-    // 选择群
+    // 选择商品
     chooseGroup(activityFrom) {
       this.dialogGroupVisible = true
-      this.$nextTick(() => {
-        this.$refs.chooseGroup.handleDebounce()
-      })
+      // this.$nextTick(() => {
+      //   this.$refs.chooseGroup.handleDebounce()
+      // })
     },
-    // 子组建传递
-    parent_chooseGroup(data) {
-      console.log(data)
-      this.tableData = data
-      this.dialogGroupVisible = false
-    },
+
     // 关闭
     parent_close() {
       this.dialogGroupVisible = false
@@ -394,17 +463,17 @@ export default {
           return false
         }
       })
-      this.clusterIdList = []
-      this.tableData.forEach((i) => {
-        this.clusterIdList.push(i.cluster_id)
-      })
       const obj = {
-        id: this.id,
-        clusterIdList: this.clusterIdList,
-        templateId: this.activityFrom.planTemplate,
-        taskName: this.activityFrom.taskName,
-        uid: this.teacherId,
-        job_time: this.activityFrom.planStartDate
+        promotionsName: this.activityFrom.promotionsName,
+        promotionsType: this.activityFrom.promotionsType,
+        startDate: this.activityFrom.promotionsDate[0],
+        endDate: this.activityFrom.promotionsDate[1],
+        desc: this.activityFrom.desc,
+        isTrial: this.isTrial,
+        isSystem: this.isSystem,
+        trialTerms: this.activityFrom.trialTerms,
+        systemTerms: this.activityFrom.systemTerms,
+        gifts: this.tableData
       }
       // this.saveOrUpdateSopJobTask(obj).then((res) => {
       //   if (res.code === 0) {
@@ -430,32 +499,13 @@ export default {
         console.log(err)
       }
     },
-    formatTime(timestamp) {
-      var date = new Date(timestamp * 1)
-      var Y = date.getFullYear() + '-'
-      var M =
-        (date.getMonth() + 1 < 10
-          ? '0' + (date.getMonth() + 1)
-          : date.getMonth() + 1) + '-'
-      var D =
-        (date.getDate() < 10 ? '0' + date.getDate() : date.getDate()) + ' '
-      var h =
-        (date.getHours() < 10 ? '0' + date.getHours() : date.getHours()) + ':'
-      var m =
-        (date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes()) +
-        ':'
-      var s =
-        date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds()
-      return Y + M + D + h + m + s
-    },
     /** 表格删除某一行确认按钮 */
-    confirmDelRow(row) {
-      console.log('删除了', row)
+    confirmDelRow(row, _index) {
+      console.log('删除了', row, _index)
       this.tableData.forEach((item, index) => {
-        if (item.cluster_id === row.cluster_id) {
+        if (index === _index) {
           this.tableData.splice(index, 1)
         }
-        // console.log(item, arrIndex)
       })
     },
     // 计算表格高度
@@ -479,11 +529,6 @@ export default {
 .activity-manage {
   background: #ffffff;
 }
-// .tableContainer_ {
-//   display: flex;
-//   justify-content: center;
-//   padding: 20px;
-// }
 .header {
   height: 100%;
   .tip {
