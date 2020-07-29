@@ -49,33 +49,23 @@
                   </template>
                 </el-table-column>
                 <el-table-column
-                  label="计划名称"
+                  label="活动名称"
                   prop="taskName"
                   align="center"
                 ></el-table-column>
                 <el-table-column
-                  label="调用模版"
+                  label="活动类型"
                   prop="templateName"
                   align="center"
                 ></el-table-column>
                 <el-table-column
-                  label="发送微信号"
+                  label="活动范围"
                   prop="wechatNo"
                   align="center"
                 ></el-table-column>
                 <el-table-column
-                  label="接受群数量"
+                  label="活动时间"
                   prop="clusterNum"
-                  align="center"
-                ></el-table-column>
-                <el-table-column
-                  label="创建人"
-                  prop="cname"
-                  align="center"
-                ></el-table-column>
-                <el-table-column
-                  label="职级"
-                  prop="rankName"
                   align="center"
                 ></el-table-column>
                 <el-table-column label="创建时间" prop="ctime" align="center">
@@ -83,20 +73,6 @@
                     <span>{{
                       scope.row.ctime ? formatTime(scope.row.ctime) : '-'
                     }}</span>
-                  </template>
-                </el-table-column>
-                <el-table-column
-                  label="任务进度"
-                  prop="taskStatus"
-                  align="center"
-                >
-                  <template slot-scope="scope">
-                    <span v-if="scope.row.taskStatus === 'AWAIT'">待执行</span>
-                    <span v-if="scope.row.taskStatus === 'FINISH'">已完成</span>
-                    <span v-if="scope.row.taskStatus === 'PROCESSING'">
-                      {{ scope.row.processingDay }}</span
-                    >
-                    <span v-if="scope.row.taskStatus === 'STOP'">已终止</span>
                   </template>
                 </el-table-column>
                 <el-table-column label="操作" align="center">

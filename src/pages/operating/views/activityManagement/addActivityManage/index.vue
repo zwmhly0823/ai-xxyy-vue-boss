@@ -189,7 +189,7 @@
         </div>
       </el-card>
       <el-dialog
-        title="选择群"
+        title="赠品设置"
         :visible.sync="dialogGroupVisible"
         width="70%"
         destroy-on-close
@@ -237,7 +237,7 @@ export default {
     }
     return {
       isTrial: false, // 体验课checkbox
-      isSystem: true, // 系统课checkbox
+      isSystem: false, // 系统课checkbox
       id: '',
       tableHeight: 'auto',
       dialogGroupVisible: false,
@@ -252,8 +252,8 @@ export default {
         promotionsName: '', // 活动名称
         promotionsType: 'GIFT', // 活动类型 默认关单赠品
         promotionsDate: [], // 活动时间
-        trialTerms: [], // 体验课
-        systemTerms: ['29', '28', '27'], // 系统课
+        trialTerms: ['1', '16'], // 体验课
+        systemTerms: [], // 系统课
         desc: '' // 活动说明
       },
       productList: [],
@@ -488,7 +488,7 @@ export default {
     },
     // 取消
     cannelOpt() {
-      this.$router.push({ path: '/groupSop' })
+      this.$router.push({ path: '/activityManagement' })
     },
     // 保存或者更新任务
     async saveOrUpdateSopJobTask(data) {

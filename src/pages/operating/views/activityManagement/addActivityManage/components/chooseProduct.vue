@@ -13,7 +13,7 @@
         style="text-align: left; display: inline-block"
         v-model="value"
         filterable
-        :titles="['Source', 'Target']"
+        :titles="['选择商品', '组合赠品']"
         :button-texts="['到左边', '到右边']"
         :format="{
           noChecked: '${total}',
