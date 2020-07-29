@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-06-22 12:08:17
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-07-29 14:56:09
+ * @LastEditTime: 2020-07-29 16:33:53
 -->
 <template>
   <div class="search-mobile d-flex align-center">
@@ -129,9 +129,12 @@ export default {
       if (!value) return
       const val = value.replace(/\s*/g, '')
       this.loading = true
+      let range = {}
       // 系统课
-      let range = {
-        user_status: { gte: 2 }
+      if (this.type === '1') {
+        range = {
+          user_status: { gte: 2 }
+        }
       }
       // 体验课
       if (this.type === '0') {

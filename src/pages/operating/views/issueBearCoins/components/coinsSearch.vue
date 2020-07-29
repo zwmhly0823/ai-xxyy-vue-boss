@@ -8,7 +8,8 @@
               <search-phone-or-usernum
                 defaultType="0"
                 :isHidden="false"
-                tablename="StudentTrialV2StatisticsList"
+                type="3"
+                tablename="UserList"
                 @result="getSearchUid('user', arguments)"
               />
             </el-form-item>
@@ -55,6 +56,8 @@
         :limit="1"
         :http-request="uploadFile"
         :on-progress="uploadProgress"
+        :on-exceed="handleExceed"
+        :on-change="handleChange"
       >
         <el-button slot="trigger" size="small" type="primary"
           >选取文件</el-button
@@ -64,7 +67,7 @@
           size="small"
           type="success"
           @click="submitUpload"
-          :disabled="uploading"
+          :disabled="uploading || fileList.length === 0"
           >上传到服务器</el-button
         >
         <!-- :loading="uploading" -->
@@ -90,7 +93,8 @@ export default {
       searchQuery: {},
       dialogVisible: false,
       headers: { 'Content-Type': 'multipart/form-data' },
-      uploading: false
+      uploading: false,
+      fileList: []
     }
   },
   computed: {
@@ -122,6 +126,14 @@ export default {
       this.$emit('ctime', res)
     },
     uploadProgress() {},
+    handleChange(file, fileList) {
+      this.fileList = fileList
+    },
+    handleExceed(files, fileList) {
+      this.$message.warning(
+        '当前限制只能选择1个文件,可删除当前已选择文件重新选择'
+      )
+    },
     // 上传模板
     uploadFile(params) {
       const formdata = new FormData()
