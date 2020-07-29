@@ -16,12 +16,7 @@
       <el-table-column prop="desc" label="操作"></el-table-column>
       <el-table-column label="金额">
         <template slot-scope="scope">
-          <span
-            v-if="
-              scope.row.trans_type - 0 === 4 || scope.row.trans_type - 0 === 5
-            "
-            class="red-text-color"
-          >
+          <span v-if="scope.row.coinDown" class="red-text-color">
             - {{ scope.row.amount }}</span
           >
           <span v-else class="green-text-color"> + {{ scope.row.amount }}</span>
@@ -73,6 +68,20 @@ export default {
           value: 0
         }
       ],
+      transTypeNameArr: [
+        '默认',
+        '邀请有奖或推荐有礼',
+        '完成任务',
+        '邀请有奖红包',
+        '提现',
+        '小熊币兑换',
+        '学习奖励',
+        '用户注册',
+        '运营活动',
+        '投诉补偿',
+        '大转盘',
+        '大转盘'
+      ],
       renderTableData: null,
       rowStyle: {
         height: '57px',
@@ -95,23 +104,16 @@ export default {
       if (!this.renderTableData.length) {
         return
       }
-      this.renderTableData.forEach((item, key) => {
-        item.update_date = item.update_date ? item.update_date : '-'
-      })
-      const transTypeNameArr = [
-        '默认',
-        '邀请有奖或推荐有礼',
-        '完成任务',
-        '邀请有奖红包',
-        '提现',
-        '小熊币兑换',
-        '学习奖励',
-        '用户注册',
-        '运营活动',
-        '投诉补偿'
-      ]
       this.renderTableData.forEach((nItem) => {
-        nItem.transTypeName = transTypeNameArr[+nItem.trans_type]
+        nItem.transTypeName = this.transTypeNameArr[+nItem.trans_type]
+        nItem.update_date = nItem.update_date ? nItem.update_date : '-'
+        if (
+          +nItem.trans_type === 4 ||
+          +nItem.trans_type === 5 ||
+          +nItem.trans_type === 11
+        ) {
+          nItem.coinDown = true
+        }
       })
     },
     initNum() {
@@ -121,27 +123,13 @@ export default {
         switch (nItem.code - 0) {
           case 4:
           case 5:
+          case 11:
             this.coinNumList[1].value += nItem.value - 0
             break
           default:
             this.coinNumList[0].value += nItem.value - 0
             break
         }
-      })
-      const transTypeNameArr = [
-        '默认',
-        '邀请有奖或推荐有礼',
-        '完成任务',
-        '邀请有奖红包',
-        '提现',
-        '小熊币兑换',
-        '学习奖励',
-        '用户注册',
-        '运营活动',
-        '投诉补偿'
-      ]
-      this.renderTableData.forEach((nItem) => {
-        nItem.transTypeName = transTypeNameArr[+nItem.trans_type]
       })
       this.coinNumList[2].value =
         this.coinNumList[0].value - this.coinNumList[1].value
