@@ -666,7 +666,7 @@ export default {
   getUserAssetsCoin(query = '', page = 1, size = 20) {
     const formattingQuery = JSON.stringify({
       uid: query,
-      trans_type: ['1', '2', '3', '4', '5', '6', '8', '9'], // 经和后端确认前端滤掉0和7
+      trans_type: ['1', '2', '3', '4', '5', '6', '8', '9', '10', '11'], // 经和后端确认前端滤掉0和7
       account_type: 2
     })
     const sort = `{ "ctime": "desc" }`
