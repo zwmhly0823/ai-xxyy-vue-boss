@@ -36,7 +36,7 @@
             >
               <template slot-scope="scope">
                 <span v-if="scope.row.trans_type === '8'">运营活动</span>
-                <span v-if="scope.row.trans_type === '9'">系统补偿</span>
+                <span v-if="scope.row.trans_type === '9'">投诉补偿</span>
               </template>
             </el-table-column>
             <el-table-column
@@ -157,7 +157,7 @@ export default {
         const timer = setTimeout(() => {
           this.getData()
           clearTimeout(timer)
-        }, 1000)
+        }, 2000)
       }
     },
     // 点击用户信息回调事件
