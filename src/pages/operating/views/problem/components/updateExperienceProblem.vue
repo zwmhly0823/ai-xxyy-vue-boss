@@ -3,8 +3,8 @@
  * @version: 
  * @Author: panjian
  * @Date: 2020-06-28 18:37:21
- * @LastEditors: panjian
- * @LastEditTime: 2020-07-03 16:03:54
+ * @LastEditors: zhangjianwen
+ * @LastEditTime: 2020-07-29 14:31:00
 -->
 <template>
   <div class="experience-box">
@@ -18,6 +18,7 @@
         >单项填空题</el-button
       >
       <br />
+      <el-button @click="addItemShortAnswerType" type="text">简答题</el-button>
     </div>
 
     <div
@@ -264,6 +265,13 @@ export default {
         questionState: 'DEFAULT',
         isMusts: false
       },
+      shortAnswerType: {
+        questionClass: 'PUBLIC',
+        questionType: 'SUBJECTIVE',
+        title: '',
+        questionState: 'DEFAULT',
+        isMusts: false
+      },
       summaryListValue: true
     }
   },
@@ -382,6 +390,11 @@ export default {
     addItemFillInTheBlanksType() {
       const fillInTheBlanksType = deepClone(this.fillInTheBlanksType)
       this.ruleForms.summaryList.push(fillInTheBlanksType)
+    },
+    // 新增简答题
+    addItemShortAnswerType() {
+      const shortAnswerType = deepClone(this.shortAnswerType)
+      this.ruleForms.summaryList.push(shortAnswerType)
     },
     // 删除单选提 多选提 填空题
     deleteItem(item, index) {
