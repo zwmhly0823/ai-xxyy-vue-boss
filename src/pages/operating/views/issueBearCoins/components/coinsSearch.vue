@@ -1,7 +1,7 @@
 <template>
   <div class="search-container">
-    <el-card border="false">
-      <el-row>
+    <el-card border="false" shadow="never">
+      <el-row type="flex">
         <el-col :span="22">
           <el-form :inline="true">
             <el-form-item label="用户手机号:">
@@ -34,7 +34,7 @@
           </el-form>
         </el-col>
         <el-col :span="2">
-          <el-button size="small" type="primary" @click="dialogVisible = true">
+          <el-button size="mini" type="primary" @click="dialogVisible = true">
             导入模板
           </el-button>
         </el-col>
@@ -65,7 +65,7 @@
           type="success"
           @click="submitUpload"
           :disabled="uploading"
-          >s上传到服务器</el-button
+          >上传到服务器</el-button
         >
         <!-- :loading="uploading" -->
         <div slot="tip" class="el-upload__tip">只能上传csv文件</div>
@@ -140,9 +140,9 @@ export default {
               message: '恭喜你，模板导入成功',
               type: 'success'
             })
+            this.$emit('exportFile', true)
           }
           this.dialogVisible = false
-          this.$emit('exportFile', true)
         })
         .finally(() => {
           this.uploading = false
@@ -179,10 +179,26 @@ export default {
 }
 </style>
 <style lang="scss" scoped>
-/deep/.el-form-item {
-  margin-right: 20px;
-}
 .export-btn {
   text-align: right;
+}
+.search-container {
+  ::v-deep {
+    .el-card {
+      border-radius: 0;
+      border: 0;
+      border-bottom: 10px solid #f0f1f2;
+      &__body {
+        padding-bottom: 0;
+      }
+      .el-button {
+        position: relative;
+        top: 5px;
+      }
+    }
+    .el-form-item {
+      margin-right: 20px;
+    }
+  }
 }
 </style>

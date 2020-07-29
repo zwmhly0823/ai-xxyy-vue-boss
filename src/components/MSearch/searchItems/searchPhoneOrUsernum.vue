@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-06-22 12:08:17
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-06-22 15:25:26
+ * @LastEditTime: 2020-07-29 14:56:09
 -->
 <template>
   <div class="search-mobile d-flex align-center">
@@ -25,6 +25,7 @@
     <div class="search-item">
       <el-select
         class="item-style"
+        :class="{ single: !isHidden }"
         :style="customStyle"
         v-model="value"
         filterable
@@ -204,6 +205,14 @@ export default {
         padding-left: 25px;
         border-top-left-radius: 0;
         border-bottom-left-radius: 0;
+      }
+    }
+    &.single {
+      ::v-deep {
+        .el-input__inner {
+          border-top-left-radius: 4px;
+          border-bottom-left-radius: 4px;
+        }
       }
     }
   }

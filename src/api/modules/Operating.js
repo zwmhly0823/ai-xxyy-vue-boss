@@ -3,8 +3,8 @@
  * @version:
  * @Author: Shentong
  * @Date: 2020-03-16 19:46:39
- * @LastEditors: Shentong
- * @LastEditTime: 2020-07-07 18:51:33
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-07-29 14:01:47
  */
 import axios from '../axiosConfig'
 // import { getToken } from '@/utils/auth'
@@ -423,6 +423,7 @@ export default {
             trans_type
             amount
             note
+            desc
           }
         }
       }`

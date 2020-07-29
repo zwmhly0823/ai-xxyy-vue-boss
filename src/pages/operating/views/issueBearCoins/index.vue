@@ -1,72 +1,76 @@
 <template>
-  <el-row class="app-main height coins">
-    <!-- search -->
-    <coins-search
-      @search="getSearchType"
-      @ctime="getSearchTime"
-      @searchUid="getSearchUid"
-      @exportFile="getExport"
-    />
-    <!-- table -->
-    <div class="coins-table">
-      <el-table
-        :data="tableData"
-        style="width: 100%;border-top:1px solid #EBEEF5"
-      >
-        <el-table-column
-          label="用户编号"
-          min-width="15%"
-          align="center"
-          prop="user"
-        >
-          <template slot-scope="scope">
-            <span v-if="scope.row.user === null"></span>
-            <span v-else class="user-detail" @click="userHandle(scope.row)">
-              {{ scope.row.user.user_num }}
-            </span>
-          </template>
-        </el-table-column>
-        <el-table-column
-          label="补发类型"
-          min-width="15%"
-          align="center"
-          prop="account_type"
-        >
-          <template slot-scope="scope">
-            <span v-if="scope.row.trans_type === '8'">运营活动</span>
-            <span v-if="scope.row.trans_type === '9'">系统补偿</span>
-          </template>
-        </el-table-column>
-        <el-table-column
-          label="补发数量"
-          min-width="15%"
-          align="center"
-          prop="amount"
-        >
-        </el-table-column>
-        <el-table-column
-          label="补发原因"
-          min-width="35%"
-          align="center"
-          prop="note"
-        >
-        </el-table-column>
-        <el-table-column
-          label="发放时间"
-          min-width="20%"
-          align="center"
-          prop="ctime"
-        >
-        </el-table-column>
-      </el-table>
+  <el-row type="flex" class="app-main height coins">
+    <div class="app-main-container">
+      <div class="app-main-container-scrollbar change-phone">
+        <!-- search -->
+        <coins-search
+          @search="getSearchType"
+          @ctime="getSearchTime"
+          @searchUid="getSearchUid"
+          @exportFile="getExport"
+        />
+        <!-- table -->
+        <div class="coins-table">
+          <el-table
+            :data="tableData"
+            style="width: 100%;border-top:1px solid #EBEEF5"
+          >
+            <el-table-column
+              label="用户编号"
+              min-width="15%"
+              align="center"
+              prop="user"
+            >
+              <template slot-scope="scope">
+                <span v-if="scope.row.user === null"></span>
+                <span v-else class="user-detail" @click="userHandle(scope.row)">
+                  {{ scope.row.user.user_num }}
+                </span>
+              </template>
+            </el-table-column>
+            <el-table-column
+              label="补发类型"
+              min-width="15%"
+              align="center"
+              prop="account_type"
+            >
+              <template slot-scope="scope">
+                <span v-if="scope.row.trans_type === '8'">运营活动</span>
+                <span v-if="scope.row.trans_type === '9'">系统补偿</span>
+              </template>
+            </el-table-column>
+            <el-table-column
+              label="补发数量"
+              min-width="15%"
+              align="center"
+              prop="amount"
+            >
+            </el-table-column>
+            <el-table-column
+              label="补发原因"
+              min-width="35%"
+              align="center"
+              prop="desc"
+            >
+            </el-table-column>
+            <el-table-column
+              label="发放时间"
+              min-width="20%"
+              align="center"
+              prop="ctime"
+            >
+            </el-table-column>
+          </el-table>
+        </div>
+        <m-pagination
+          @current-change="handleCurrentChange"
+          :current-page="+currentPage"
+          :total="+totalElements"
+          open="calc(100vw - 195px)"
+          close="calc(100vw - 75px)"
+        />
+      </div>
     </div>
-    <m-pagination
-      @current-change="handleCurrentChange"
-      :current-page="+currentPage"
-      :total="+totalElements"
-      open="calc(100vw - 195px)"
-      close="calc(100vw - 75px)"
-    />
   </el-row>
 </template>
 <script>
@@ -143,7 +147,6 @@ export default {
       this.currentPage = 1
       this.getData()
     },
-    // 应该是当前选择第几页吧
     handleCurrentChange(val) {
       this.currentPage = val
       this.getData()
@@ -151,7 +154,10 @@ export default {
     // 导入数据列表
     getExport(res) {
       if (res) {
-        this.getData()
+        const timer = setTimeout(() => {
+          this.getData()
+          clearTimeout(timer)
+        }, 1000)
       }
     },
     // 点击用户信息回调事件
@@ -169,6 +175,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.app-main-container {
+  margin: 0;
+}
 .coins {
   padding: 10px;
   &-table {
