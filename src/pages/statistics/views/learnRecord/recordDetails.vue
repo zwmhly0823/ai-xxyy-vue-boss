@@ -4,7 +4,7 @@
  * @Author: zhangjianwen
  * @Date: 2020-07-09 15:02:59
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-07-28 14:22:51
+ * @LastEditTime: 2020-07-30 14:59:24
 -->
 <template>
   <div class="learn-record">
@@ -53,37 +53,35 @@
         >
           <el-table-column prop="all_send_course_count" label="应参课人数">
           </el-table-column>
-          <!-- <el-table-column prop="join_course_count" label="实际参课人数">
-          </el-table-column> -->
           <el-table-column
             prop="join_course_count"
             label="实际参课人数"
-            v-if="[0, 11].includes(lessonType)"
+            v-if="interTypef.includes(lessonType)"
           >
           </el-table-column>
           <el-table-column
             prop="ad_join_course_count"
             label="实际参课人数"
-            v-if="[10].includes(lessonType)"
+            v-if="interTypes.includes(lessonType)"
           >
           </el-table-column>
           <el-table-column
             prop="learn_course_count"
             label="总参课次数"
-            v-if="[0, 11].includes(lessonType)"
+            v-if="interTypef.includes(lessonType)"
           >
           </el-table-column>
           <el-table-column
             prop="ad_learn_course_count"
             label="总参课次数"
-            v-if="[10].includes(lessonType)"
+            v-if="interTypes.includes(lessonType)"
           >
           </el-table-column>
 
           <el-table-column
             prop="all_join_course_rate"
             label="累计参课率"
-            v-if="[0, 11].includes(lessonType)"
+            v-if="interTypef.includes(lessonType)"
           >
             <template slot-scope="scope">
               <p>
@@ -94,7 +92,7 @@
           <el-table-column
             prop="ad_all_join_course_rate"
             label="累计参课率"
-            v-if="[10].includes(lessonType)"
+            v-if="interTypes.includes(lessonType)"
           >
             <template slot-scope="scope">
               <p>
@@ -104,20 +102,20 @@
           </el-table-column>
           <el-table-column
             prop="complete_course_count"
-            v-if="[0, 11].includes(lessonType)"
+            v-if="interTypef.includes(lessonType)"
             label="总完课人数"
           >
           </el-table-column>
           <el-table-column
             prop="ad_complete_course_count"
-            v-if="[10].includes(lessonType)"
+            v-if="interTypes.includes(lessonType)"
             label="总完课人数"
           >
           </el-table-column>
           <el-table-column
             prop="all_complete_course_rate"
             label="累计完课率"
-            v-if="[0, 11].includes(lessonType)"
+            v-if="interTypef.includes(lessonType)"
             >>
             <template slot-scope="scope">
               <p>
@@ -128,7 +126,7 @@
           <el-table-column
             prop="ad_all_complete_course_rate"
             label="累计完课率"
-            v-if="[10].includes(lessonType)"
+            v-if="interTypes.includes(lessonType)"
             >>
             <template slot-scope="scope">
               <p>
@@ -193,7 +191,7 @@
           >
         </div>
         <div>
-          <el-form label-width="100px">
+          <el-form ref="form" label-width="100px">
             <el-row>
               <el-col :span="8">
                 <el-form-item label="学员搜索:">
@@ -209,7 +207,7 @@
                 </el-form-item>
               </el-col>
               <el-col :span="6">
-                <el-form-item ref="formItem" label="班级名称">
+                <el-form-item label="班级名称">
                   <el-input
                     style="width:100"
                     v-model="classVal"
@@ -238,7 +236,7 @@
       </div>
       <el-table
         :data="learnRecordData"
-        style="width: 100% ;padding-bottom:0"
+        style="width: 100%"
         max-height="500"
         :header-cell-style="{ background: 'rgb(178, 185, 197,.3)' }"
         class="table-style"
@@ -255,7 +253,26 @@
           prop="state"
           label="参课"
           min-width="150"
-          v-if="[10].includes(lessonType)"
+          v-if="interTypef.includes(lessonType)"
+        >
+          <template slot-scope="scope">
+            <p>
+              {{ scope.row.state === 2 ? '未参课' : '已参课' }}
+            </p>
+            <p>
+              {{
+                scope.row.last_join_course_time
+                  ? `最近：${formatDate(scope.row.last_join_course_time)}`
+                  : `最近：无`
+              }}
+            </p>
+          </template>
+        </el-table-column>
+        <el-table-column
+          prop="state"
+          label="参课"
+          min-width="150"
+          v-if="interTypes.includes(lessonType)"
         >
           <template slot-scope="scope">
             <p>
@@ -272,30 +289,10 @@
         </el-table-column>
 
         <el-table-column
-          prop="state"
-          label="参课"
-          min-width="150"
-          v-if="[0, 11].includes(lessonType)"
-        >
-          <template slot-scope="scope">
-            <p>
-              {{ scope.row.state === 2 ? '未参课' : '已参课' }}
-            </p>
-            <p>
-              {{
-                scope.row.last_join_course_time
-                  ? `最近：${formatDate(scope.row.last_join_course_time)}`
-                  : `最近：无`
-              }}
-            </p>
-          </template>
-        </el-table-column>
-
-        <el-table-column
           prop="learn_course_count"
           label="参课次数"
           width="80"
-          v-if="[0, 11].includes(lessonType)"
+          v-if="interTypef.includes(lessonType)"
         >
         </el-table-column>
 
@@ -303,13 +300,13 @@
           prop="ad_join_course_count"
           label="参课次数"
           width="80"
-          v-if="[10].includes(lessonType)"
+          v-if="interTypes.includes(lessonType)"
         >
         </el-table-column>
         <el-table-column
           prop="last_join_course_time"
           label="完课"
-          v-if="[0, 11].includes(lessonType)"
+          v-if="interTypef.includes(lessonType)"
           min-width="200"
         >
           <template slot-scope="scope">
@@ -329,7 +326,7 @@
         <el-table-column
           prop="ad_last_join_course_time"
           label="完课"
-          v-if="[10].includes(lessonType)"
+          v-if="interTypes.includes(lessonType)"
           min-width="200"
         >
           <template slot-scope="scope">
@@ -440,10 +437,12 @@ export default {
       isActive: 1, // 参课类型 0 已参课 1已完课  2 未参课
       lessonType: 0, // 课程类型
       learn_type: {
-        0: '小熊AI课',
-        10: '家长课堂',
+        0: '小熊AI课', // 虚拟课
+        10: '家长课堂', // 会销课
         11: '小熊TV课'
       },
+      interTypef: [0],
+      interTypes: [10, 11],
       use_status: {
         0: '未转化',
         1: '未转化',
@@ -471,8 +470,6 @@ export default {
       totalPages: null,
       totalElements: null,
       teacherIds: null,
-      joinDate: '',
-      overDate: '',
       loading: false
     }
   },
@@ -493,10 +490,14 @@ export default {
     getRecordList() {
       this.loading = true
       const params = {
+        // teacher_id: JSON.parse(localStorage.getItem('teacher')).id,
+        // student_id: '408398321242345472',
+        // state: this.isActive,
+        // sup: this.$route.params.sup,
         term: this.$route.params.id,
         course_id: this.$route.params.course_id
       }
-      if (+this.lessonType === 10) {
+      if (+this.lessonType === 10 || +this.lessonType === 11) {
         params.ad_state = this.isActive
       } else {
         params.state = this.isActive
@@ -555,6 +556,7 @@ export default {
     // 学员记录详情基本信息
     getStudentDetail() {
       return this.$http.User.getStudentDetail(
+        // JSON.parse(localStorage.getItem('teacher')).id,
         this.$route.params.id,
         this.$route.params.course_id,
         this.$route.params.sup
@@ -607,7 +609,9 @@ export default {
     getClass() {},
     getSearchData(key, res) {
       console.log(res)
-      this.currentPage = 1
+      // if(res[0].length){
+
+      // }
       if (key === 'user') {
         this.num = res[0].mobile || res[0].user_num_text
       }
@@ -625,7 +629,6 @@ export default {
 
       const { username, mobile } = user
       const studentId = user.student_id
-
       // this.$router.push(`details?id=${uid}`)
       // 新标签打开详情页
       studentId &&
@@ -680,7 +683,6 @@ export default {
       .details-word {
         padding: 0 0 0 20px;
         .word-list {
-          width: 90%;
           max-width: 900px;
           white-space: nowrap;
           overflow: hidden;
@@ -741,9 +743,6 @@ export default {
 /deep/ .el-table .rowClass {
   background: #c3bfbc;
   color: blue;
-}
-/deep/ .el-table__body-wrapper {
-  padding-bottom: 20px;
 }
 /deep/ .el-form-item {
   margin-bottom: 5px;
