@@ -1,48 +1,39 @@
 <template>
   <div class="table-searcher-container">
     <div class="comp-cell">
-      <el-select
-        v-model="templateId"
-        class="item-style margin_l10"
-        filterable
-        remote
-        :reserve-keyword="true"
+      <el-input
+        v-model="promotionsName"
         size="mini"
+        placeholder="活动名称"
         clearable
-        @change="getTemplateId"
-        placeholder="模板名称"
-      >
-        <el-option
-          v-for="item in templateList"
-          :key="item.id"
-          :label="item.templateName"
-          :value="item.id"
-        ></el-option>
-      </el-select>
+        @input="setPromotionsName"
+        @change="setPromotionsName"
+      ></el-input>
     </div>
     <div class="comp-cell">
       <search-stage
         class="search-group-item"
-        name="term0"
+        name="trialTerms"
         placeholder="体验课排期"
         type="0"
         :myStyle="{ width: '100px' }"
-        @result="getSearchData('term0', arguments)"
+        @result="getSearchData('trialTerms', arguments)"
       />
     </div>
     <div class="comp-cell">
       <search-stage
         class="search-group-item"
-        name="term1"
+        name="systemTerms"
         placeholder="系统课排期"
         type="1"
         :myStyle="{ width: '100px' }"
-        @result="getSearchData('term1', arguments)"
+        @result="getSearchData('systemTerms', arguments)"
       />
     </div>
   </div>
 </template>
 <script>
+import { debounce } from 'lodash'
 import SearchStage from '@/components/MSearch/searchItems/searchStage.vue'
 export default {
   props: {
@@ -53,37 +44,30 @@ export default {
   },
   data() {
     return {
-      templateId: '',
-      templateList: [],
+      promotionsName: '',
       searchQuery: {}
     }
   },
   components: {
     SearchStage
   },
-  created() {
-    this.getTempList(this.teacherId, this.type).then((res) => {
-      if (res.code === 0) {
-        this.templateList = res.payload
-        console.log('getTempList')
-        console.log(res)
-      }
-    })
-  },
+  created() {},
   methods: {
     /**
      * search item 回调。 key,自定义参数，res，组件返回的值 res[0]
      */
     getSearchData(key, res) {
       const search = res && res[0]
-      console.log(search, '=========================', key)
+
       if (search) {
+        if (key === 'trialTerms' || key === 'systemTerms') {
+          search[key] = search[key] && search[key].join(',')
+        }
         this.searchQuery = {
           ...this.searchQuery,
           ...search
         }
       } else {
-        // delete this.searchQuery[key]
         this.$delete(this.searchQuery, key)
       }
       // 删除返回值为空数组的情况
@@ -94,31 +78,16 @@ export default {
       console.log(this.searchQuery, 'this.searchQuery')
       this.$emit('search', this.searchQuery)
     },
-    // 获取模版列表
-    async getTempList(uid, type) {
-      try {
-        const Info = await this.$http.Community.getTempList({
-          uid: 11,
-          type: 1
-        })
-        return Info
-      } catch (err) {
-        console.log(err)
-      }
-    },
-    // 模板名称
-    getTemplateId(res) {
+    // 活动名称
+    setPromotionsName: debounce(function(event) {
+      console.log(event)
       this.searchQuery = {
         ...this.searchQuery,
-        aaaa: res
+        promotionsName: event
       }
-      console.log(this.searchQuery, 'this.searchQuery-----')
-    }
-    // getTemplateId: debounce(function(event) {
-    //   this.sourchParams.templateId = event
-    //   this.sourchParams.pageNo = 1
-    //   this.$emit('getlistJobTaskPage', this.sourchParams)
-    // }, 500)
+      console.log(this.searchQuery)
+      this.$emit('search', this.searchQuery)
+    }, 500)
   }
 }
 </script>

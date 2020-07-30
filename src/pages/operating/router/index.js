@@ -29,7 +29,7 @@ const routes = [
     component: () => import('../views/activityManagement/index.vue')
   },
   {
-    path: '/newActivityManage/:id',
+    path: '/newActivityManage/:promotionsId/:type',
     name: 'newActivityManage',
     meta: {
       title: '活动管理',

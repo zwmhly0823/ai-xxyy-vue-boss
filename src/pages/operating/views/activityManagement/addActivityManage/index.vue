@@ -10,7 +10,7 @@
   <el-row type="flex" class="activity-manage app-main">
     <el-col class="activity-manage-container">
       <el-card class="header">
-        <div class="tip" v-if="id">修改活动</div>
+        <div class="tip" v-if="promotionsId">修改活动</div>
         <div class="tip" v-else>新建活动</div>
         <el-form
           :model="activityFrom"
@@ -56,8 +56,8 @@
           <el-form-item label="活动时间" prop="promotionsDate">
             <el-date-picker
               v-model="activityFrom.promotionsDate"
-              type="datetimerange"
-              value-format="yyyy-MM-dd HH:mm:ss"
+              type="daterange"
+              value-format="yyyy-MM-dd"
               :picker-options="expireTimeOption"
               range-separator="至"
               start-placeholder="开始日期"
@@ -107,7 +107,7 @@
               type="primary"
               icon="el-icon-plus"
               size="mini"
-              @click="chooseGroup('activityFrom')"
+              @click="chooseProduct('activityFrom')"
               >选择商品</el-button
             >
             <div
@@ -155,11 +155,7 @@
                         title="你确定要删除该项内容吗？"
                         @onConfirm="confirmDelRow(scope.row, scope.$index)"
                       >
-                        <span
-                          @click="deleteTablerow(scope.row, scope.$index)"
-                          slot="reference"
-                          >删除</span
-                        >
+                        <span slot="reference">删除</span>
                       </el-popconfirm>
                     </div>
                   </template>
@@ -183,7 +179,7 @@
           <el-button
             size="mini"
             type="primary"
-            @click="saveTaskPlan('activityFrom')"
+            @click="saveActivity('activityFrom')"
             >确认</el-button
           >
         </div>
@@ -206,7 +202,6 @@
 </template>
 <script>
 import EleTable from '@/components/Table/EleTable'
-// import ChooseGroup from './components/chooseGroup'
 import ChooseProduct from './components/chooseProduct'
 import SearchStage from '@/components/MSearch/searchItems/searchStage.vue'
 export default {
@@ -238,7 +233,7 @@ export default {
     return {
       isTrial: false, // 体验课checkbox
       isSystem: false, // 系统课checkbox
-      id: '',
+      promotionsId: '',
       tableHeight: 'auto',
       dialogGroupVisible: false,
       promotionsType: [
@@ -252,7 +247,7 @@ export default {
         promotionsName: '', // 活动名称
         promotionsType: 'GIFT', // 活动类型 默认关单赠品
         promotionsDate: [], // 活动时间
-        trialTerms: ['1', '16'], // 体验课
+        trialTerms: [], // 体验课
         systemTerms: [], // 系统课
         desc: '' // 活动说明
       },
@@ -290,27 +285,26 @@ export default {
   },
   components: {
     EleTable,
-    // ChooseGroup,
     SearchStage,
     ChooseProduct
   },
   watch: {
-    isTrial(val, old) {
-      if (!val) {
-        console.log('11111')
-        this.activityFrom.trialTerms = []
-      }
-      console.log(val, old)
-    },
-    isSystem(val, old) {
-      if (!val) {
-        console.log('11111')
-        this.activityFrom.systemTerms = []
-      }
-      console.log(val, old)
-    }
+    // isTrial(val, old) {
+    //   if (!val) {
+    //     console.log('11111')
+    //     this.activityFrom.trialTerms = []
+    //   }
+    //   console.log(val, old)
+    // },
+    // isSystem(val, old) {
+    //   if (!val) {
+    //     console.log('11111')
+    //     this.activityFrom.systemTerms = []
+    //   }
+    //   console.log(val, old)
+    // }
   },
-  async created() {
+  created() {
     // 获取商品
     this.getProductByTypes().then((res) => {
       if (res.code === 0 || res) {
@@ -322,36 +316,32 @@ export default {
         console.log(res, '=------=')
       }
     })
-    // const teacher = isToss()
-    // if (teacher) {
-    //   const tossteacher = JSON.parse(localStorage.getItem('teacher'))
-    //   this.teacherId = tossteacher.id || ''
-    //   this.teacherName = tossteacher.realName || ''
-    // } else {
-    //   const staff = JSON.parse(localStorage.getItem('staff'))
-    //   this.teacherId = staff.id || ''
-    //   this.teacherName = staff.realName || ''
-    // }
-
     // 新增与编辑逻辑
-    if (this.$route.params.id === '-1') {
-      this.id = ''
+    if (this.$route.params.promotionsId === '-1') {
+      this.promotionsId = ''
     } else {
-      this.id = this.$route.params.id
+      this.promotionsId = this.$route.params.promotionsId
+      setTimeout(() => {
+        this.getPromotionsById(this.promotionsId).then((res) => {
+          this.activityFrom.promotionsName = res.payload.promotionsName
+          this.activityFrom.promotionsType = res.payload.promotionsType
+          const promotionsDate = []
+          promotionsDate.push(res.payload.startDate)
+          promotionsDate.push(res.payload.endDate)
+          this.activityFrom.promotionsDate = promotionsDate
+          this.isTrial = res.payload.isTrial
+          const trialTerms = res.payload.trialTerms.split(',')
+          console.log(trialTerms)
+          this.activityFrom.trialTerms = trialTerms
+          this.isSystem = res.payload.isSystem
+          this.activityFrom.systemTerms = res.payload.systemTerms.split(',')
+          this.activityFrom.desc = res.payload.desc
+          this.tableData = res.payload.gifts
+          console.log(res, '====')
+        })
+      }, 3000)
+      console.log(this.promotionsId)
     }
-    // this.taskPlan = await this.getToSaveOrUpdate(this.id, this.teacherId)
-    // if (this.taskPlan) {
-    //   this.promotionsType = this.taskPlan.payload.templateList || []
-    //   this.wechatNos = this.taskPlan.payload.wechatNos || []
-    // }
-
-    // if (this.id) {
-    //   this.activityFrom.promotionsName = this.taskPlan.payload.promotionsName
-    //   this.activityFrom.promotionsType = this.taskPlan.payload.templateId
-    //   this.activityFrom.promotionsDate = this.taskPlan.payload.job_time
-    //   this.tableData = this.taskPlan.payload.weChatIcodeClusterLists
-    // }
-    // console.log(this.id, this.teacherId, this.taskPlan)
     this.calcTableHeight()
   },
   mounted() {},
@@ -368,21 +358,17 @@ export default {
       }
       console.log(key, res[0], type, '11212121212121')
     },
-    deleteTablerow(row, type) {
-      console.log(row, type)
+    // 获取详情内容
+    async getPromotionsById(promotionsId) {
+      try {
+        const tmpInfo = await this.$http.Operating.getPromotionsById({
+          promotionsId
+        })
+        return tmpInfo
+      } catch (err) {
+        console.log(err)
+      }
     },
-    // 获取SOP任务计划
-    // async getToSaveOrUpdate(id, teacherId) {
-    //   try {
-    //     const tmpInfo = await this.$http.Community.getToSaveOrUpdate({
-    //       id,
-    //       teacherId
-    //     })
-    //     return tmpInfo
-    //   } catch (err) {
-    //     console.log(err)
-    //   }
-    // },
     // 组合商品
     combinationPro(data) {
       const obj = {
@@ -441,19 +427,16 @@ export default {
       }
     },
     // 选择商品
-    chooseGroup(activityFrom) {
+    chooseProduct(activityFrom) {
       this.dialogGroupVisible = true
-      // this.$nextTick(() => {
-      //   this.$refs.chooseGroup.handleDebounce()
-      // })
     },
 
     // 关闭
     parent_close() {
       this.dialogGroupVisible = false
     },
-    // 保存任务计划
-    saveTaskPlan(activityFrom) {
+    // 保存
+    saveActivity(activityFrom) {
       this.$refs[activityFrom].validate((valid) => {
         if (valid) {
           console.log('valid====', valid)
@@ -471,29 +454,30 @@ export default {
         desc: this.activityFrom.desc,
         isTrial: this.isTrial,
         isSystem: this.isSystem,
-        trialTerms: this.activityFrom.trialTerms,
-        systemTerms: this.activityFrom.systemTerms,
+        trialTerms: this.activityFrom.trialTerms.join(','),
+        systemTerms: this.activityFrom.systemTerms.join(','),
         gifts: this.tableData
       }
-      // this.saveOrUpdateSopJobTask(obj).then((res) => {
-      //   if (res.code === 0) {
-      //     this.$message.success('保存成功')
-      //     this.$router.push({
-      //       path: '/groupSop/'
-      //     })
-      //   }
-      //   console.log(res)
-      // })
+      this.saveAndUpdatePromotions(obj).then((res) => {
+        if (res.code === 0) {
+          this.$message.success('保存成功')
+          console.log(res)
+          this.$router.push({
+            path: '/activityManagement/'
+          })
+        }
+        console.log(res)
+      })
       console.log(obj)
     },
     // 取消
     cannelOpt() {
       this.$router.push({ path: '/activityManagement' })
     },
-    // 保存或者更新任务
-    async saveOrUpdateSopJobTask(data) {
+    // 保存或者更新活动
+    async saveAndUpdatePromotions(data) {
       try {
-        const tmpInfo = await this.$http.Community.saveOrUpdateSopJobTask(data)
+        const tmpInfo = await this.$http.Operating.saveAndUpdatePromotions(data)
         return tmpInfo
       } catch (err) {
         console.log(err)

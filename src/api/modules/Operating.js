@@ -454,5 +454,17 @@ export default {
   // 问卷管理 保存 修改
   saveQuestionnaire(params) {
     return axios.post(`/api/f/v1/questionnaire/saveQuestionnaire`, params)
+  },
+  // 新建活动编辑活动保存
+  saveAndUpdatePromotions(params) {
+    return axios.post(`/api/p/v1/promotions/saveAndUpdatePromotions`, params)
+  },
+  // 活动管理列表
+  getPromotionsPageList(params) {
+    return axios.get(`/api/p/v1/promotions/getPromotionsPageList`, params)
+  },
+  // 活动管理详情
+  getPromotionsById(params) {
+    return axios.get(`/api/p/v1/promotions/getPromotionsById`, params)
   }
 }
