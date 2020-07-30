@@ -4,7 +4,7 @@
  * @Date: 2020-03-13 15:13:34
  * @Description: topbar 顶部功能区
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-07-17 21:54:25
+ * @LastEditTime: 2020-07-30 15:03:46
  -->
 <template>
   <div class="navbar" :class="{ prod: isProd }">
@@ -31,12 +31,20 @@
 
     <div class="right-menu">
       <GlobelSearch class="globelSearch-con" />
+      <a
+        class="order-btn"
+        href="https://shimo.im/docs/opMWovESib0pcyh0/"
+        target="_blank"
+        >帮助</a
+      >
+      <span class="item-line"></span>
       <el-badge
         :value="noticeBadge"
         :hidden="!noticeBadge"
         class="notices-content"
       >
-        <el-button type="text" @click="clickNoticeTop">通知中心</el-button>
+        <span type="text" @click="clickNoticeTop" class="order-btn">通知</span>
+        <!-- <el-button type="text" @click="clickNoticeTop">通知中心</el-button> -->
       </el-badge>
       <el-dropdown class="avatar-container" trigger="click">
         <div class="user-info">
@@ -243,6 +251,25 @@ export default {
     float: right;
     height: 100%;
     line-height: 50px;
+    .item-line {
+      display: inline-block;
+      background-color: #bec0c3;
+      width: 2px;
+      height: 10px;
+    }
+    .order-btn {
+      cursor: pointer;
+      padding: 5px 10px;
+      height: 20px;
+      font-weight: 500;
+      color: gray;
+      font-size: 14px;
+
+      // &:hover {
+      //   background-color: #2a75ed;
+      //   color: #fff;
+      // }
+    }
 
     .talk-btn {
       margin-right: 20px;
