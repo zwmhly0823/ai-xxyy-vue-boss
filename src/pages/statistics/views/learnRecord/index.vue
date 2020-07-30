@@ -4,7 +4,7 @@
  * @Author: zhangjianwen
  * @Date: 2020-07-09 15:02:59
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-07-25 22:57:03
+ * @LastEditTime: 2020-07-30 16:26:17
 -->
 <template>
   <div class="learn-record">
@@ -63,21 +63,21 @@
                 <p>课程类型：{{ learn_type[item.lesson_type] }}</p>
                 <p>
                   今日参课：{{
-                    item.lesson_type === 10
+                    [10, 11].includes(item.lesson_type)
                       ? `${item.ad_today_join_course_count}/${item.all_send_course_count}  `
                       : `${item.today_join_course_count}/${item.all_send_course_count}  `
                   }}
                 </p>
                 <p>
                   昨日参课：{{
-                    item.lesson_type === 10
+                    [10, 11].includes(item.lesson_type)
                       ? `${item.ad_yesterday_join_course_count}/${item.all_send_course_count}  `
                       : `${item.yesterday_join_course_count}/${item.all_send_course_count}  `
                   }}
                 </p>
                 <p>
                   今日完课：{{
-                    item.lesson_type === 10
+                    [10, 11].includes(item.lesson_type)
                       ? `${item.ad_today_complete_course_count}/${item.all_send_course_count}  `
                       : `${item.today_complete_course_count}/${item.all_send_course_count}  `
                   }}
