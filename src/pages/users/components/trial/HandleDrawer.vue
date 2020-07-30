@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-07-10 14:53:10
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-07-29 01:09:39
+ * @LastEditTime: 2020-07-30 15:35:16
 -->
 <template>
   <!-- :before-close="handelCancel" -->
@@ -646,6 +646,8 @@ export default {
       if (searchObj.city) {
         const city = JSON.parse(searchObj.city)
         this.currentCity = (city && city.data) || []
+      } else {
+        this.currentCity = []
       }
       Object.assign(this.form, {
         name: '',
