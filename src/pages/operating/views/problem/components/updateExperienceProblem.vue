@@ -3,8 +3,8 @@
  * @version: 
  * @Author: panjian
  * @Date: 2020-06-28 18:37:21
- * @LastEditors: panjian
- * @LastEditTime: 2020-07-03 16:03:54
+ * @LastEditors: zhangjianwen
+ * @LastEditTime: 2020-07-29 19:14:53
 -->
 <template>
   <div class="experience-box">
@@ -15,9 +15,10 @@
       <el-button @click="addItemCheckboxType" type="text">多选题</el-button>
       <br />
       <el-button @click="addItemFillInTheBlanksType" type="text"
-        >单项填空题</el-button
+        >填空题</el-button
       >
       <br />
+      <el-button @click="addItemShortAnswerType" type="text">简答题</el-button>
     </div>
 
     <div
@@ -114,7 +115,9 @@
               <i class="el-icon-delete" @click="deleteItem(item, index)"></i>
             </el-form-item>
             <el-form-item
-              v-if="item.questionType == 'SUBJECTIVE'"
+              v-if="
+                ['SUBJECTIVE', 'SUBJECTIVE_DESC'].includes(item.questionType)
+              "
               style="margin-left:50px;"
             >
               <el-checkbox v-model="item.isMusts">是否必填</el-checkbox>
@@ -224,6 +227,7 @@ export default {
         questionType: 'RADIO',
         questionClass: 'PUBLIC',
         questionState: 'DEFAULT',
+        isMusts: 1,
         questionOptionList: [
           {
             optionNo: 'A',
@@ -243,6 +247,7 @@ export default {
         questionClass: 'PUBLIC',
         questionType: 'CHECKBOX',
         questionState: 'DEFAULT',
+        isMusts: 1,
         questionOptionList: [
           {
             optionNo: 'A',
@@ -260,6 +265,14 @@ export default {
       fillInTheBlanksType: {
         questionClass: 'PUBLIC',
         questionType: 'SUBJECTIVE',
+        title: '',
+        questionState: 'DEFAULT',
+        isMusts: false
+      },
+      //
+      shortAnswerType: {
+        questionClass: 'PUBLIC',
+        questionType: 'SUBJECTIVE_DESC',
         title: '',
         questionState: 'DEFAULT',
         isMusts: false
@@ -382,6 +395,11 @@ export default {
     addItemFillInTheBlanksType() {
       const fillInTheBlanksType = deepClone(this.fillInTheBlanksType)
       this.ruleForms.summaryList.push(fillInTheBlanksType)
+    },
+    // 新增简答题
+    addItemShortAnswerType() {
+      const shortAnswerType = deepClone(this.shortAnswerType)
+      this.ruleForms.summaryList.push(shortAnswerType)
     },
     // 删除单选提 多选提 填空题
     deleteItem(item, index) {

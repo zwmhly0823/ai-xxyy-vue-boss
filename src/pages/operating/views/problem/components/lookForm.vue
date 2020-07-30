@@ -3,8 +3,8 @@
  * @version: 
  * @Author: panjian
  * @Date: 2020-07-01 15:10:26
- * @LastEditors: panjian
- * @LastEditTime: 2020-07-02 15:52:02
+ * @LastEditors: zhangjianwen
+ * @LastEditTime: 2020-07-29 16:37:39
 -->
 <template>
   <div class="look-form-box">
@@ -23,7 +23,10 @@
             >
             <span
               style="margin-left:10px;"
-              v-if="item.isMusts && item.questionType == 'SUBJECTIVE'"
+              v-if="
+                item.isMusts &&
+                  ['SUBJECTIVE', 'SUBJECTIVE_DESC'].includes(item.questionType)
+              "
               >(必填)</span
             >
             <div v-if="item.questionType == 'RADIO'">
@@ -55,6 +58,15 @@
                 disabled
                 v-model="input[index]"
                 placeholder="填空题 用户输入框"
+                style="width:400px;"
+              ></el-input>
+            </div>
+            <div v-if="item.questionType == 'SUBJECTIVE_DESC'">
+              <el-input
+                disabled
+                type="textarea"
+                placeholder="简答题 用户输入框"
+                v-model="input[index]"
                 style="width:400px;"
               ></el-input>
             </div>

@@ -3,8 +3,8 @@
  * @version: 
  * @Author: panjian
  * @Date: 2020-06-24 17:01:54
- * @LastEditors: panjian
- * @LastEditTime: 2020-07-07 19:20:45
+ * @LastEditors: zhangjianwen
+ * @LastEditTime: 2020-07-30 14:11:44
 -->
 <template>
   <div class="problem-box">
@@ -135,11 +135,19 @@ export default {
       pageNum: '1',
       totalElements: '',
       tableData: [],
+      isEnv: '',
       questionnaireId: ''
     }
   },
   created() {
     this.onQueryQuestionnairePage()
+    this.isEnv = new RegExp('[0-9]').test(location.origin.split('/')[2])
+      ? 'https://test.meixiu.mobi/ai-app-h5-test/question'
+      : location.origin.includes('test')
+      ? 'https://test.meixiu.mobi/ai-app-h5-test/question'
+      : location.origin.includes('prod')
+      ? 'https://test.meixiu.mobi/ai-app-h5-test/question'
+      : 'https://www.xiaoxiongmeishu.com/h5/question'
   },
   methods: {
     handLeCopy(index, row) {
@@ -191,7 +199,7 @@ export default {
         this.totalElements = res.payload.totalElements
         const _data = res.payload.content
         _data.forEach((res) => {
-          res.address = `https://www.xiaoxiongmeishu.com/h5/question?id=${res.id}`
+          res.address = `${this.isEnv}?id=${res.id}`
         })
         this.tableData = _data
       })
