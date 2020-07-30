@@ -63,6 +63,18 @@ const routes = [
         /* webpackChunkName: "adjust" */
         '../approvalCenter/components/adjustClass.vue'
       )
+  },
+  {
+    path: '/approvalCenter/mergeboxes',
+    name: 'mergeboxes',
+    meta: {
+      title: '审批中心'
+    },
+    component: () =>
+      import(
+        /* webpackChunkName: "mergeboxes" */
+        '../approvalCenter/views/mergeBoxes.vue'
+      )
   }
 ]
 const router = new VueRouter({

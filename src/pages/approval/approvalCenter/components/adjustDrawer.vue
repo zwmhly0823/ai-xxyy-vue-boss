@@ -60,6 +60,23 @@
             >{{ dItem.value }}</el-link
           >
         </template>
+        <template v-else-if="dItem.type === 'arrayInfo'">
+          <div
+            v-for="(childItem, childIndex) in dItem.value"
+            :key="childIndex"
+            class="array-info-class"
+          >
+            <div class="array-info-item">
+              商品{{ childIndex + 1 }}： {{ childItem.name }}
+            </div>
+            <div class="array-info-item">
+              版 本： {{ childItem.proVersion }}
+            </div>
+            <div class="array-info-item">
+              商品码： {{ childItem.centerProductCode }}
+            </div>
+          </div>
+        </template>
         <template v-else>
           <span>{{ dItem.value }}</span>
         </template>
@@ -143,6 +160,12 @@ export default {
   }
   .adjust-drawer-form {
     margin-bottom: 60px;
+    .array-info-class {
+      margin-bottom: 20px;
+      .array-info-item {
+        height: 20px;
+      }
+    }
   }
   .adjust-drawer-button-box {
     text-align: center;

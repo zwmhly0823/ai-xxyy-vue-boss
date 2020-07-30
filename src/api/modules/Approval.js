@@ -39,5 +39,30 @@ export default {
     return axios.post(
       `/api/b/v1/backend/completed/reissue/flow?flowApprovalId=${params.flowApprovalId}&staffName=${params.staffName}&staffId=${params.staffId}&isConfirm=${params.isConfirm}&approvalRemark=${params.approvalRemark}`
     )
+  },
+  // 获取当前物流信息
+  getExpressByOrderId(query) {
+    return axios.get(
+      `/api/ex/v1/express/getExpressByOrderId?orderId=${query.orderId}`
+    )
+  },
+  // 通过当前物流信息获取商品信息
+  getCourseMaterialsMoreThanLevel(query) {
+    return axios.get(
+      `/api/p/v1/product/getCourseMaterialsMoreThanLevel?courseDifficulty=${query.sup}&courseLevel=${query.level}`
+    )
+  },
+  // 申请随材打包
+  packageboxFlow(query) {
+    return axios.post(
+      `/api/b/v1/backend/v1/backend/apply/packagebox/flow`,
+      query
+    )
+  },
+  // 随材打包审批详情
+  getPackageInfo(id) {
+    return axios.get(
+      `/api/b/v1/backend/v1/backend/packagebox/flow/info?flowApprovalId=${id}`
+    )
   }
 }

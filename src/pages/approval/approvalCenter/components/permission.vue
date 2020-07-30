@@ -9,26 +9,6 @@
 <template>
   <div class="container">
     <div class="icon">
-      <!-- <div class="moneyback" @click="goMoneyBack">
-        <span class="text">
-          财务
-        </span>
-        <div class="icon-text">
-          <i class="el-icon-edit-outline"></i>
-          <span>
-            退款审批
-          </span>
-        </div>
-      </div>
-      <div class="replenish">
-        <span class="text">物流</span>
-        <div class="icon-text" @click="goReplenish">
-          <i class="el-icon-data-analysis"></i>
-          <span>
-            补发货审批
-          </span>
-        </div>
-      </div> -->
       <div class="adjust-box">
         <div class="adjust-box-row">
           <p class="adjust-title">财务</p>
@@ -42,6 +22,10 @@
           <div class="adjust-item" @click="goReplenish">
             <i class="el-icon-truck color-2"></i>
             <span class="item-text">补发货审批</span>
+          </div>
+          <div class="adjust-item" @click="mergeBoxes">
+            <i class="el-icon-truck color-2"></i>
+            <span class="item-text">随材打包</span>
           </div>
         </div>
         <div class="adjust-box-row">
@@ -78,6 +62,10 @@ export default {
         path: '/approvalCenter/adjust',
         query: { adjustType: data }
       })
+    },
+    // 随材打包
+    mergeBoxes() {
+      this.$router.push('/approvalCenter/mergeboxes')
     }
   }
 }
