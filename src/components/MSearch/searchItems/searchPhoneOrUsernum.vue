@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-06-22 12:08:17
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-06-22 15:25:26
+ * @LastEditTime: 2020-07-29 21:56:53
 -->
 <template>
   <div class="search-mobile d-flex align-center">
@@ -13,6 +13,7 @@
       class="search-type"
       @change="handleChange"
       v-model="searchType"
+      v-if="isHidden"
     >
       <el-option
         v-for="item in searchTypeList"
@@ -24,6 +25,7 @@
     <div class="search-item">
       <el-select
         class="item-style"
+        :class="{ single: !isHidden }"
         :style="customStyle"
         v-model="value"
         filterable
@@ -39,7 +41,9 @@
         <el-option
           v-for="item in dataList"
           :key="item.id"
-          :label="`${item[name[searchType]]}`"
+          :label="
+            `${item[name[searchType] === 'id' ? 'mobile' : name[searchType]]}`
+          "
           :value="`${item[name[searchType]]}`"
         ></el-option>
       </el-select>
@@ -74,6 +78,16 @@ export default {
     tablename: {
       type: String,
       default: 'UserListEx'
+    },
+    // 运营管理--小熊币发送页面,只有用户ID搜索 1
+    defaultType: {
+      type: String,
+      default: '0'
+    },
+    // 运营管理--小熊币发送页面,隐藏掉下拉选择
+    isHidden: {
+      type: Boolean,
+      default: true
     }
   },
   data() {
@@ -117,9 +131,12 @@ export default {
       if (!value) return
       const val = value.replace(/\s*/g, '')
       this.loading = true
+      let range = {}
       // 系统课
-      let range = {
-        user_status: { gte: 2 }
+      if (this.type === '1') {
+        range = {
+          user_status: { gte: 2 }
+        }
       }
       // 体验课
       if (this.type === '0') {
@@ -193,6 +210,14 @@ export default {
         padding-left: 25px;
         border-top-left-radius: 0;
         border-bottom-left-radius: 0;
+      }
+    }
+    &.single {
+      ::v-deep {
+        .el-input__inner {
+          border-top-left-radius: 4px;
+          border-bottom-left-radius: 4px;
+        }
       }
     }
   }

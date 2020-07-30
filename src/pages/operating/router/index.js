@@ -1,7 +1,7 @@
 /*
  * @Date: 2020-03-13 15:20:21
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-07-17 16:51:32
+ * @LastEditTime: 2020-07-30 12:17:33
  * @FilePath: /ai-app-vue-toss/src/pages/studentTeam/router/index.js
  */
 import Vue from 'vue'
@@ -119,6 +119,15 @@ const routes = [
       keepAlive: false
     },
     component: () => import('../views/problem/index.vue')
+  },
+  {
+    path: '/issueBearCoins',
+    name: 'issueBearCoins',
+    meta: {
+      title: '发放小熊币',
+      keepAlive: false
+    },
+    component: () => import('../views/issueBearCoins/index.vue')
   }
 ]
 
