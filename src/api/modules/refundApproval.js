@@ -3,8 +3,8 @@
  * @version: 1.0.0
  * @Author: liukun
  * @Date: 2020-05-12 15:22:25
- * @LastEditors: liukun
- * @LastEditTime: 2020-07-24 21:34:34
+ * @LastEditors: Shentong
+ * @LastEditTime: 2020-07-31 15:16:20
  */
 
 import axios from '../axiosConfig'
@@ -71,7 +71,8 @@ export default {
   // 获取优惠券list
   getCoupon(params) {
     console.warn('获取优惠券list')
-    return axios.get('/api/s/v1/coupon/getUserCouponByPackageId', params)
+    return axios.get('/api/s/v1/coupon/package/getCoupon', params)
+    // return axios.get('/api/s/v1/coupon/getUserCouponByPackageId', params)
   },
   // 提交表单
   submito(params) {
