@@ -61,8 +61,12 @@
                 </el-table-column>
                 <el-table-column label="活动范围" align="center">
                   <template slot-scope="scope">
-                    <span>体验课:{{ scope.row.trialTerms }}</span>
-                    <span>系统课:{{ scope.row.systemTerms }}</span>
+                    <span v-if="scope.row.trialTermsName"
+                      >体验课:{{ scope.row.trialTermsName }}</span
+                    ><br />
+                    <span v-if="scope.row.systemTermsName"
+                      >系统课:{{ scope.row.systemTermsName }}</span
+                    >
                   </template>
                 </el-table-column>
                 <el-table-column
@@ -71,8 +75,13 @@
                   align="center"
                   ><template slot-scope="scope">
                     <span
-                      >{{ scope.row.startDate }}-{{ scope.row.endDate }}</span
+                      >{{ scope.row.startDate }}～{{ scope.row.endDate }}</span
                     >
+                    <i
+                      class="el-icon-edit"
+                      style="margin-left:20px;"
+                      @click="changeActivityTime(scope.row)"
+                    ></i>
                   </template>
                 </el-table-column>
                 <el-table-column label="创建时间" prop="ctime" align="center">
@@ -94,6 +103,10 @@
                       <el-button
                         class="editStyle_btn"
                         type="text"
+                        :disabled="isEditActivity(scope.row.endDate)"
+                        :class="{
+                          editStyle_unbtn: isEditActivity(scope.row.endDate)
+                        }"
                         @click="activityDetails(scope.row, '2')"
                         >编辑</el-button
                       >
@@ -106,6 +119,23 @@
         </el-scrollbar>
       </div>
     </el-col>
+    <el-dialog title="修改活动结束时间" :visible.sync="activityTimeDialog">
+      <el-form :model="activityTime">
+        <el-form-item label="结束时间">
+          <el-date-picker
+            v-model="activityTime.endTime"
+            type="date"
+            value-format="yyyy-MM-dd"
+            placeholder="选择日期"
+          >
+          </el-date-picker>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="activityTimeDialog = false">取 消</el-button>
+        <el-button type="primary" @click="_changeActivityTime">确 定</el-button>
+      </div>
+    </el-dialog>
   </el-row>
 </template>
 <script>
@@ -124,7 +154,12 @@ export default {
         trialTerms: '',
         systemTerms: ''
       },
-      totalElements: 0
+      totalElements: 0,
+      activityTimeDialog: false,
+      activityTime: {
+        endTime: ''
+      },
+      id: ''
     }
   },
   // watch: {
@@ -147,7 +182,19 @@ export default {
     EleTable,
     activitySearch
   },
-  computed: {},
+  computed: {
+    isEditActivity() {
+      return (time) => {
+        const date = new Date(time).getTime()
+        const nowdate = new Date().getTime()
+        if (nowdate >= date) {
+          return true
+        } else {
+          return false
+        }
+      }
+    }
+  },
 
   methods: {
     // 获取search
@@ -201,27 +248,6 @@ export default {
     cancelOperation(row, type) {
       console.log(row, type)
     },
-    /** 表格取消某一行确认按钮 */
-    confirmCancelRow(row) {
-      console.log('删除了', row)
-      const params = {
-        id: row.id,
-        taskstatus: 'STOP'
-      }
-      console.log(params)
-      this.$http.Community.updateStatus(params).then((res) => {
-        console.log(res, '-------------')
-        if (res.code === 0) {
-          this.$message({
-            message: '取消成功',
-            type: 'success'
-          })
-          setTimeout(() => {
-            this.get_PromotionsPageList()
-          }, 1500)
-        }
-      })
-    },
     // 换页
     pageChange_handler(res) {
       // this.tableParams.page = res
@@ -242,6 +268,30 @@ export default {
       this.$router.push({
         path: `/newActivityManage/${promotionsId}/${type}`
       })
+    },
+    // 修改活动时间
+    changeActivityTime(row) {
+      this.activityTimeDialog = true
+      this.activityTime.endTime = row.endDate
+      this.id = row.id
+      console.log(row)
+    },
+    _changeActivityTime() {
+      const params = {
+        id: this.id,
+        endDate: this.activityTime.endTime
+      }
+      this.$http.Operating.updatePromotionsDate(params).then((res) => {
+        console.log(res, '-------------')
+        if (res.code === 0) {
+          this.$message({
+            message: '保存成功',
+            type: 'success'
+          })
+          this.get_PromotionsPageList()
+        }
+      })
+      this.activityTimeDialog = false
     },
     // 计算表格高度
     calcTableHeight() {
@@ -280,6 +330,9 @@ export default {
     }
   }
 }
+.el-dialog {
+  width: 30%;
+}
 .operete-row {
   display: flex;
   padding: 10px;
@@ -315,5 +368,9 @@ section {
       }
     }
   }
+}
+.editStyle_unbtn span {
+  color: #c0c4cc !important;
+  cursor: not-allowed;
 }
 </style>
