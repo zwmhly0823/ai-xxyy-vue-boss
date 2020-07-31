@@ -9,13 +9,13 @@
         <span class="coupon-nums-label">{{ cItem.label }} :</span>
         <span class="coupon-nums-val">{{ cItem.value }}</span>
       </div>
-      <el-button
+      <!-- <el-button
         class="send-coupon-button"
         type="primary"
         size="small"
         @click="presentCoupon"
         >发券</el-button
-      >
+      > -->
     </div>
 
     <el-table
@@ -75,12 +75,12 @@
       close="calc(100vw - 75px)"
     ></m-pagination>
     <!-- 弹窗 -->
-    <coupon-popover
+    <!-- <coupon-popover
       ref="couponPopover"
       :couponData="couponData"
       :selectUserId="selectUserId"
       @couponSendSucc="couponSendSucc"
-    />
+    /> -->
   </div>
 </template>
 
@@ -88,11 +88,11 @@
 import { cloneDeep } from 'lodash'
 import { formatData } from '@/utils/index'
 import MPagination from '@/components/MPagination/index.vue'
-import CouponPopover from '../../../../studentTeam/components/TabPane/components/couponPopover'
+// import CouponPopover from '../../../../studentTeam/components/TabPane/components/couponPopover'
 export default {
   name: 'couponComponent',
   components: {
-    CouponPopover,
+    // CouponPopover,
     MPagination
   },
   props: {
@@ -101,7 +101,7 @@ export default {
   created() {
     this.initRenderData()
     this.initNum()
-    this.couponList()
+    // this.couponList()
   },
   data() {
     return {
@@ -205,20 +205,20 @@ export default {
       })
     },
     // 优惠卷列表接口
-    couponList() {
-      this.$http.Team.getAllCoupons(0).then((res) => {
-        this.couponData = (res.payload && res.payload.content) || []
-      })
-    },
-    presentCoupon() {
-      this.selectUserId = [this.propData.userId]
-      this.$refs.couponPopover.issueCoupons = true
-      this.$refs.couponPopover.couponsTime = ''
-    },
+    // couponList() {
+    //   this.$http.Team.getAllCoupons(0).then((res) => {
+    //     this.couponData = (res.payload && res.payload.content) || []
+    //   })
+    // },
+    // presentCoupon() {
+    //   this.selectUserId = [this.propData.userId]
+    //   this.$refs.couponPopover.issueCoupons = true
+    //   this.$refs.couponPopover.couponsTime = ''
+    // },
     // 优惠券发放成功
-    couponSendSucc() {
-      this.$emit('couponSendSucc')
-    },
+    // couponSendSucc() {
+    //   this.$emit('couponSendSucc')
+    // },
     handleSizeChange(page) {
       this.currentPage = page
       this.$emit('changePagenation', {

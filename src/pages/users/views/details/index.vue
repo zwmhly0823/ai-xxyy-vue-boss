@@ -81,9 +81,9 @@
 
         <el-col :span="6">
           <div class="upset_24col flex-end">
-            <el-button size="mini" type="primary" @click="couponList"
+            <!-- <el-button size="mini" type="primary" @click="couponList"
               >发优惠券</el-button
-            >
+            > -->
             <el-dropdown
               type="primary"
               split-button
@@ -452,11 +452,11 @@
     />
 
     <!-- 被迫弹窗发券引到这里-->
-    <coupon-popover
+    <!-- <coupon-popover
       ref="couponPopover"
       :couponData="couponData"
       :selectUserId="[studentId]"
-    />
+    /> -->
   </section>
 </template>
 
@@ -469,7 +469,7 @@ import MPagination from '@/components/MPagination/index.vue'
 import DetailsList from './list.vue'
 import { GetAgeByBrithday, formatData, openBrowserTab } from '@/utils/index'
 import modifyAddress from './addressComponents/modifyAddress.vue'
-import CouponPopover from '@/pages/studentTeam/components/TabPane/components/couponPopover'
+// import CouponPopover from '@/pages/studentTeam/components/TabPane/components/couponPopover'
 
 export default {
   components: {
@@ -478,7 +478,7 @@ export default {
     MPagination,
     modifyAddress,
     showAddress,
-    CouponPopover,
+    // CouponPopover,
     trackFlow
   },
   data() {
@@ -505,7 +505,7 @@ export default {
       courseData: '', // 学习记录-作品集-tab选中课程id
       lessonType: '', // 学习记录-作品集-tab选中课程类型(0是体验,1是系统)
       courseIndex: 0, // stuInfor.steams全部课程中,展示优先级最高课程的下标(受其影响:学习记录-作品集-tab选中课程)
-      couponData: [], // 被迫引进发券组件需要的couponlist
+      // couponData: [], // 被迫引进发券组件需要的couponlist
       loading: false, // loading
       defaultHead: 'https://msb-ai.meixiu.mobi/ai-pm/static/touxiang.png'
     }
@@ -559,12 +559,12 @@ export default {
       location.href = obj[commandlk]
     },
     // 给被迫引用发券组件拿couponlist
-    couponList() {
-      this.$http.Team.getAllCoupons(0).then((res) => {
-        this.couponData = (res.payload && res.payload.content) || []
-        this.$refs.couponPopover.issueCoupons = true
-      })
-    },
+    // couponList() {
+    //   this.$http.Team.getAllCoupons(0).then((res) => {
+    //     this.couponData = (res.payload && res.payload.content) || []
+    //     this.$refs.couponPopover.issueCoupons = true
+    //   })
+    // },
     // 数据接口_学员信息
     reqUser() {
       this.$http.User.getUser(this.studentId).then((res) => {
