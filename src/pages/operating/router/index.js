@@ -24,7 +24,7 @@ const routes = [
     name: 'activityManagement',
     meta: {
       title: '活动管理',
-      keepAlive: true
+      keepAlive: false
     },
     component: () => import('../views/activityManagement/index.vue')
   },
