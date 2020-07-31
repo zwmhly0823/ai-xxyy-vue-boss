@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-06-16 16:27:14
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-07-28 23:23:37
+ * @LastEditTime: 2020-07-31 11:37:11
 -->
 <template>
   <div class="user-list">
@@ -802,7 +802,7 @@
                     "
                     >催发地址短信</el-dropdown-item
                   >
-                  <el-dropdown-item command="3">发优惠券</el-dropdown-item>
+                  <!-- <el-dropdown-item command="3">发优惠券</el-dropdown-item> -->
                   <!-- <el-dropdown-item command="4">添加标签</el-dropdown-item> -->
                 </el-dropdown-menu>
               </el-dropdown>
@@ -849,11 +849,11 @@
     ></intention-dialog>
 
     <!-- 发送优惠券 -->
-    <send-coupon
+    <!-- <send-coupon
       ref="couponDialog"
       :coupon-data="couponData"
       :select-user-id="[currentUser.id]"
-    />
+    /> -->
 
     <!-- 调查问卷 -->
     <questionaire-drawer-component
@@ -875,7 +875,7 @@ import intentionDialog from '../../components/intentionDialog'
 import { FOLLOW_EXPRESS_STATUS } from '@/utils/enums'
 import Search from '../../components/Search.vue'
 import ToolTip from '../../components/ToolTip.vue'
-import SendCoupon from '../../../studentTeam/components/TabPane/components/couponPopover.vue'
+// import SendCoupon from '../../../studentTeam/components/TabPane/components/couponPopover.vue'
 import TrialSidebar from '../../components/trial/TrialSidebar.vue'
 import QuestionaireDrawerComponent from '../../components/trial/QuestionaireDrawerComponent.vue'
 export default {
@@ -888,7 +888,7 @@ export default {
     intentionDialog,
     Search,
     ToolTip,
-    SendCoupon,
+    // SendCoupon,
     TrialSidebar,
     QuestionaireDrawerComponent
   },
@@ -1550,10 +1550,10 @@ export default {
           this.sendMessage(true)
           break
         // 优惠券
-        case '3':
-          this.$refs.couponDialog.issueCoupons = true
-          this.$refs.couponDialog.couponsTime = ''
-          break
+        // case '3':
+        //   this.$refs.couponDialog.issueCoupons = true
+        //   this.$refs.couponDialog.couponsTime = ''
+        //   break
         // 加标签
         // case '4':
         //   this.onLabel()
