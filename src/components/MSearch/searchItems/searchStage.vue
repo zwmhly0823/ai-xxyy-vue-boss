@@ -91,9 +91,9 @@ export default {
     this.getData()
   },
   watch: {
-    // record(val) {
-    //   this.stage = val
-    // },
+    record(val) {
+      this.stage = val
+    },
     isDisabled(val) {
       if (val) {
         this.stage = []

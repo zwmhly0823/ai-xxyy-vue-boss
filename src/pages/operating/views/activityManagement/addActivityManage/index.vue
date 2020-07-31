@@ -439,6 +439,7 @@ export default {
       this.$refs[activityFrom].validate((valid) => {
         if (valid) {
           const obj = {
+            id: '-1',
             promotionsName: this.activityFrom.promotionsName,
             promotionsType: this.activityFrom.promotionsType,
             startDate: this.activityFrom.promotionsDate[0],
