@@ -466,5 +466,9 @@ export default {
   // 活动管理详情
   getPromotionsById(params) {
     return axios.get(`/api/p/v1/promotions/getPromotionsById`, params)
+  },
+  // 修改活动结束时间
+  updatePromotionsDate(params) {
+    return axios.post(`/api/p/v1/promotions/updatePromotionsDate`, params)
   }
 }
