@@ -4,7 +4,7 @@
  * @Author: Lukun
  * @Date: 2020-04-27 17:47:58
  * @LastEditors: liukun
- * @LastEditTime: 2020-07-31 16:18:59
+ * @LastEditTime: 2020-07-31 22:52:44
  -->
 <template>
   <div class="container">
@@ -662,7 +662,9 @@
           <el-input v-model="form_checkbox.reason"></el-input>
         </el-form-item>
         <el-form-item
-          v-if="!drawerApprovalDeatail.addressId"
+          v-if="
+            !drawerApprovalDeatail.addressId && currentType !== 'UNCREDITED'
+          "
           label="恢复学生放课与随材物流"
           prop="isRecover"
         >
