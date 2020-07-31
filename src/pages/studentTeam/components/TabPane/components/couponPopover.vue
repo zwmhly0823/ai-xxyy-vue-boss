@@ -6,40 +6,53 @@
         :visible.sync="issueCoupons"
         width="30%"
         :append-to-body="true"
-        top="40vh"
       >
-        <span>选择优惠卷:</span>
-        <!-- <el-select
-          v-model="value"
-          :placeholder="
-            `${dropdownDefault.amount}元  ${dropdownDefault.name}  有效期${dropdownDefault.expire}天`
-          "
-          popper-class="select-sty"
-          no-data-text="没有更多优惠券了"
-        > -->
+        <span class="label">选择优惠卷:</span>
         <el-select
           v-model="value"
-          :placeholder="`${dropdownDefault.amount}元  ${dropdownDefault.name} `"
           popper-class="select-sty"
           no-data-text="没有更多优惠券了"
+          @change="seletedCoupon"
         >
           <el-option
-            v-for="item in couponDropdown"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
+            v-for="(item, index) of couponDropdown"
+            :key="index"
+            :label="`${item.amount}元${item.name} `"
+            :value="item.amount"
           >
           </el-option>
         </el-select>
         <div class="coupons-time">
-          <span>设置有效期:</span>
-          <el-date-picker
+          <span class="label">选择到期时间:</span>
+          <!-- <el-date-picker
             v-model="couponsTime"
             type="datetime"
             placeholder="请设置优惠券到期时间"
             :picker-options="pickerOptions"
           >
+          </el-date-picker> -->
+          <el-date-picker
+            v-model="couponsDate"
+            type="date"
+            placeholder="请选择日期"
+            value-format="yyyy-MM-dd"
+            :picker-options="pickerDateOptions"
+          >
           </el-date-picker>
+        </div>
+        <div class="coupons-time">
+          <span class="label"></span>
+          <el-time-select
+            v-model="couponsTime"
+            :picker-options="{
+              start: '00:00',
+              step: '00:30',
+              end: '24:00',
+              minTime: now
+            }"
+            placeholder="请选择小时"
+          >
+          </el-time-select>
         </div>
         <span slot="footer" class="dialog-footer">
           <el-button @click="issueCoupons = false">取 消</el-button>
@@ -55,20 +68,18 @@
         :visible.sync="couponConf"
         width="30%"
         :append-to-body="true"
-        top="40vh"
       >
         <i class="el-icon-warning">
           <span>
-            是否确认向用户发放"{{ dropdownDefault.amount }}元
-            {{ dropdownDefault.name }}"
+            是否确认向用户发放"{{ dropdownSelected.amount }}元
+            {{ dropdownSelected.name }}"
             <br />
-            <!-- 此优惠券有效期{{ dropdownDefault.expire }}天 -->
-            到期时间:{{ formcouponsTime }}
+            到期时间：{{ couponsDateTime }}
           </span>
         </i>
         <span slot="footer" class="dialog-footer">
           <el-button @click="couponConf = false">取 消</el-button>
-          <el-button type="primary" @click="couponconfBtn(dropdownDefault.id)">
+          <el-button type="primary" @click="couponconfBtn(dropdownSelected.id)">
             确 定
           </el-button>
         </span>
@@ -80,7 +91,6 @@
         :visible.sync="couponSuccessful"
         width="30%"
         :append-to-body="true"
-        top="40vh"
       >
         <div
           class="coupons-successful"
@@ -113,15 +123,16 @@
   </div>
 </template>
 <script>
-import { formatData } from '@/utils'
+// import { isToss } from '@/utils'
 export default {
   props: {
     couponData: Array,
-    selectUserId: Array
+    selectUserId: Array,
+    needReload: Boolean
   },
   data() {
     return {
-      pickerOptions: {
+      pickerDateOptions: {
         disabledDate(time) {
           return time.getTime() < Date.now() - 8.64e7
         }
@@ -129,10 +140,13 @@ export default {
       // 发放优惠券弹窗
       issueCoupons: false,
       // 发放优惠券弹窗下拉菜单
-      dropdownDefault: {},
       couponDropdown: [],
-      // 下拉框值
+      // 选中哪张优惠券(用于接口)
+      dropdownSelected: {},
+      // 下拉框的v-model
       value: '',
+      // 优惠卷日期
+      couponsDate: '',
       // 优惠卷时间
       couponsTime: '',
       // 格式化优惠券
@@ -148,54 +162,96 @@ export default {
       // 优惠卷发放失败条数
       paidoutNo: '',
       // 优惠卷发放失败原因
-      failureWhy: []
+      failureWhy: [],
+      teacherInfo: {},
+      // 当前时间
+      now: '',
+      // 系统课老师可发放优惠券ID
+      systemCouponIds: ['11', '20'],
+      // 体验课老师可发放优惠券ID
+      trialCouponIds: ['6', '11', '20']
     }
   },
-  created() {},
+  computed: {
+    // 选择的日期和时间组合
+    couponsDateTime() {
+      if (this.couponsDate && this.couponsTime) {
+        return `${this.couponsDate} ${this.couponsTime}`
+      }
+      return ''
+    }
+  },
+  created() {
+    // this.teacherInfo = isToss(true)
+  },
   mounted() {},
   watch: {
+    couponsDateTime(val) {
+      console.log(val)
+    },
     couponData(val) {
-      val.forEach((data) => {
-        if (data.id === '6') {
-          this.dropdownDefault = data
-        }
+      this.couponDropdown = val.filter((item) => {
+        return this.trialCouponIds.includes(item.id)
       })
     },
     selectUserId(val) {
-      // console.log(val, '用户idprops传参')
+      console.log(val, '用户idprops传参')
     }
   },
   methods: {
-    // 优惠券下拉弹窗
+    // 选中优惠券
+    seletedCoupon(val) {
+      this.dropdownSelected = this.couponDropdown.find(
+        (item) => item.amount === val
+      )
+    },
+    // 确认优惠券
     issueCouponsBtn() {
+      if (!this.value) {
+        this.$message.error('请选择优惠券')
+        return
+      }
+      if (!this.couponsDate) {
+        this.$message({
+          showClose: true,
+          message: '请选择优惠券到期日期',
+          type: 'warning'
+        })
+        return
+      }
       if (!this.couponsTime) {
         this.$message({
           showClose: true,
-          message: '请设置优惠券到期时间',
+          message: '请选择优惠券到期时间',
           type: 'warning'
         })
-      } else if (
-        this.couponsTime &&
-        new Date().getTime() > new Date(this.couponsTime).getTime()
+        return
+      }
+      if (
+        this.couponsDateTime &&
+        new Date().getTime() > new Date(this.couponsDateTime).getTime()
       ) {
         this.$message({
           showClose: true,
           message: '到期时间应大于当前时间',
           type: 'warning'
         })
-      } else {
-        this.issueCoupons = false
-        this.couponConf = true
-        this.formcouponsTime = formatData(this.couponsTime, 's')
+        return
       }
+
+      this.issueCoupons = false
+      this.couponConf = true
+      // this.formcouponsTime = formatData(this.couponsDateTime, 's')
     },
     // 优惠券发放确认弹窗
     couponconfBtn(id) {
+      console.log(id, '90890890')
+
       this.couponConf = false
       this.couponSuccessful = true
       this.$http.Team.sendCoupon(
         id,
-        new Date(this.couponsTime).getTime(),
+        new Date(this.couponsDateTime).getTime(),
         this.selectUserId
       ).then((res) => {
         if (res.payload.length === 0) {
@@ -220,13 +276,18 @@ export default {
     couponsucBtn() {
       this.couponSuccessful = false
       this.$emit('couponSendSucc')
-      // 为了发券成功后刷新学员详情
-      location.reload()
+      // 需要刷新当前页面的情况
+      if (this.needReload) {
+        location.reload()
+      }
     }
   }
 }
 </script>
 <style scoped lang="scss">
+.label {
+  width: 100px;
+}
 .coupons-successful {
   font-size: 14px;
   text-align: center;
@@ -240,10 +301,10 @@ export default {
 // 优惠卷发放失败原因
 .failure-why {
   margin: 10px 0 0 0;
+  padding: 10px;
   height: 100px;
-  overflow: scroll;
+  overflow: auto;
   border: 1px solid #eaeefb;
-  text-align: center;
   font-size: 14px;
   color: #909399;
 }
