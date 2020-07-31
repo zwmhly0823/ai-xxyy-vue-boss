@@ -4,7 +4,7 @@
  * @Author: Lukun
  * @Date: 2020-04-27 17:47:58
  * @LastEditors: liukun
- * @LastEditTime: 2020-07-08 14:14:27
+ * @LastEditTime: 2020-07-31 16:19:10
  -->
 <template>
   <div class="container">
@@ -439,6 +439,25 @@
             <el-col :span="18" :offset="1">{{
               drawerApprovalDeatail.orderTime
             }}</el-col>
+          </el-row>
+          <el-row>
+            <el-col :span="5">推荐人:</el-col>
+            <el-col :span="18" :offset="1"
+              ><el-link
+                type="primary"
+                :href="'/users/#/details/' + drawerApprovalDeatail.sendId"
+                target="_blank"
+                >{{
+                  JSON.parse(drawerApprovalDeatail.sendInfo).mobile +
+                    '*' +
+                    JSON.parse(drawerApprovalDeatail.sendInfo).teamName +
+                    '*' +
+                    JSON.parse(drawerApprovalDeatail.sendInfo).departmentName +
+                    '*' +
+                    JSON.parse(drawerApprovalDeatail.sendInfo).teacherNickname
+                }}</el-link
+              ></el-col
+            >
           </el-row>
           <el-row>
             <el-col :span="5">聊天截图:</el-col>
