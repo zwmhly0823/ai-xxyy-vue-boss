@@ -856,7 +856,7 @@ export default {
                 },
                 {
                   label: '申请理由',
-                  value: payData.reason
+                  value: payData.applyReason
                 }
               ]
             })

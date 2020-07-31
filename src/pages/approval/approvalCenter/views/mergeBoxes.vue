@@ -384,7 +384,8 @@ export default {
         currentExpress: this.formData.expressInfo,
         userId: this.formData.userId,
         packageCount: this.formData.packageCount,
-        packageBoxProductSimpleList: packageBoxs
+        packageBoxProductSimpleList: packageBoxs,
+        applyReason: this.formData.reason
       }
     },
     packageboxFlow(query) {
