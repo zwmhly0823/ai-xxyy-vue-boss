@@ -19,6 +19,7 @@
           size="mini"
           class="activity-from"
           :rules="rules"
+          :disabled="$route.params.type == 1 ? true : false"
         >
           <el-form-item
             prop="promotionsName"
@@ -289,20 +290,20 @@ export default {
     ChooseProduct
   },
   watch: {
-    // isTrial(val, old) {
-    //   if (!val) {
-    //     console.log('11111')
-    //     this.activityFrom.trialTerms = []
-    //   }
-    //   console.log(val, old)
-    // },
-    // isSystem(val, old) {
-    //   if (!val) {
-    //     console.log('11111')
-    //     this.activityFrom.systemTerms = []
-    //   }
-    //   console.log(val, old)
-    // }
+    isTrial(val, old) {
+      if (!val) {
+        console.log('11111')
+        this.activityFrom.trialTerms = []
+      }
+      console.log(val, old)
+    },
+    isSystem(val, old) {
+      if (!val) {
+        console.log('11111')
+        this.activityFrom.systemTerms = []
+      }
+      console.log(val, old)
+    }
   },
   created() {
     // 获取商品
@@ -321,25 +322,23 @@ export default {
       this.promotionsId = ''
     } else {
       this.promotionsId = this.$route.params.promotionsId
-      setTimeout(() => {
-        this.getPromotionsById(this.promotionsId).then((res) => {
-          this.activityFrom.promotionsName = res.payload.promotionsName
-          this.activityFrom.promotionsType = res.payload.promotionsType
-          const promotionsDate = []
-          promotionsDate.push(res.payload.startDate)
-          promotionsDate.push(res.payload.endDate)
-          this.activityFrom.promotionsDate = promotionsDate
-          this.isTrial = res.payload.isTrial
-          const trialTerms = res.payload.trialTerms.split(',')
-          console.log(trialTerms)
-          this.activityFrom.trialTerms = trialTerms
-          this.isSystem = res.payload.isSystem
-          this.activityFrom.systemTerms = res.payload.systemTerms.split(',')
-          this.activityFrom.desc = res.payload.desc
-          this.tableData = res.payload.gifts
-          console.log(res, '====')
-        })
-      }, 3000)
+      this.getPromotionsById(this.promotionsId).then((res) => {
+        this.activityFrom.promotionsName = res.payload.promotionsName
+        this.activityFrom.promotionsType = res.payload.promotionsType
+        const promotionsDate = []
+        promotionsDate.push(res.payload.startDate)
+        promotionsDate.push(res.payload.endDate)
+        this.activityFrom.promotionsDate = promotionsDate
+        this.isTrial = res.payload.isTrial
+        const trialTerms = res.payload.trialTerms.split(',')
+        console.log(trialTerms)
+        this.activityFrom.trialTerms = trialTerms
+        this.isSystem = res.payload.isSystem
+        this.activityFrom.systemTerms = res.payload.systemTerms.split(',')
+        this.activityFrom.desc = res.payload.desc
+        this.tableData = res.payload.gifts
+        console.log(res, this.activityFrom, '====')
+      })
       console.log(this.promotionsId)
     }
     this.calcTableHeight()
@@ -439,6 +438,32 @@ export default {
     saveActivity(activityFrom) {
       this.$refs[activityFrom].validate((valid) => {
         if (valid) {
+          const obj = {
+            promotionsName: this.activityFrom.promotionsName,
+            promotionsType: this.activityFrom.promotionsType,
+            startDate: this.activityFrom.promotionsDate[0],
+            endDate: this.activityFrom.promotionsDate[1],
+            desc: this.activityFrom.desc,
+            isTrial: this.isTrial,
+            isSystem: this.isSystem,
+            trialTerms: this.activityFrom.trialTerms.join(','),
+            systemTerms: this.activityFrom.systemTerms.join(','),
+            gifts: this.tableData
+          }
+          if (this.promotionsId) {
+            obj.id = this.promotionsId
+          }
+          this.saveAndUpdatePromotions(obj).then((res) => {
+            if (res.code === 0) {
+              this.$message.success('保存成功')
+              console.log(res)
+              this.$router.push({
+                path: '/activityManagement/'
+              })
+            }
+            console.log(res)
+          })
+          console.log(obj)
           console.log('valid====', valid)
           console.log(this.activityFrom)
         } else {
@@ -446,29 +471,6 @@ export default {
           return false
         }
       })
-      const obj = {
-        promotionsName: this.activityFrom.promotionsName,
-        promotionsType: this.activityFrom.promotionsType,
-        startDate: this.activityFrom.promotionsDate[0],
-        endDate: this.activityFrom.promotionsDate[1],
-        desc: this.activityFrom.desc,
-        isTrial: this.isTrial,
-        isSystem: this.isSystem,
-        trialTerms: this.activityFrom.trialTerms.join(','),
-        systemTerms: this.activityFrom.systemTerms.join(','),
-        gifts: this.tableData
-      }
-      this.saveAndUpdatePromotions(obj).then((res) => {
-        if (res.code === 0) {
-          this.$message.success('保存成功')
-          console.log(res)
-          this.$router.push({
-            path: '/activityManagement/'
-          })
-        }
-        console.log(res)
-      })
-      console.log(obj)
     },
     // 取消
     cannelOpt() {
