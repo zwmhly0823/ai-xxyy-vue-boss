@@ -4,7 +4,7 @@
  * @Author: Lukun
  * @Date: 2020-04-27 17:47:58
  * @LastEditors: liukun
- * @LastEditTime: 2020-07-31 22:52:44
+ * @LastEditTime: 2020-07-31 23:22:34
  -->
 <template>
   <div class="container">
@@ -449,17 +449,21 @@
             <el-col :span="5">推荐人:</el-col>
             <el-col :span="18" :offset="1"
               ><el-link
+                v-if="Number(drawerApprovalDeatail.sendId)"
                 type="primary"
                 :href="'/users/#/details/' + drawerApprovalDeatail.sendId"
                 target="_blank"
                 >{{
-                  JSON.parse(drawerApprovalDeatail.sendInfo).mobile +
+                  (JSON.parse(drawerApprovalDeatail.sendInfo).mobile || '-') +
                     '*' +
-                    JSON.parse(drawerApprovalDeatail.sendInfo).teamName +
+                    (JSON.parse(drawerApprovalDeatail.sendInfo).teamName ||
+                      '-') +
                     '*' +
-                    JSON.parse(drawerApprovalDeatail.sendInfo).departmentName +
+                    (JSON.parse(drawerApprovalDeatail.sendInfo)
+                      .departmentName || '-') +
                     '*' +
-                    JSON.parse(drawerApprovalDeatail.sendInfo).teacherNickname
+                    (JSON.parse(drawerApprovalDeatail.sendInfo)
+                      .teacherNickname || '-')
                 }}</el-link
               ></el-col
             >
