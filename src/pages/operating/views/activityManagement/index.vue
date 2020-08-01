@@ -103,9 +103,9 @@
                       <el-button
                         class="editStyle_btn"
                         type="text"
-                        :disabled="isEditActivity(scope.row.endDate)"
+                        :disabled="isEditActivity(scope.row.startDate)"
                         :class="{
-                          editStyle_unbtn: isEditActivity(scope.row.endDate)
+                          editStyle_unbtn: isEditActivity(scope.row.startDate)
                         }"
                         @click="activityDetails(scope.row, '2')"
                         >编辑</el-button
