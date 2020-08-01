@@ -3,8 +3,8 @@
  * @Descripttion:
  * @Author: songyanan
  * @Date: 2020-05-11 14:30:00
- * @LastEditors: songyanan
- * @LastEditTime: 2020-05-15 20:05:10
+ * @LastEditors: Shentong
+ * @LastEditTime: 2020-08-01 15:38:24
  */
  -->
 <template>
@@ -16,6 +16,7 @@
           v-model="form.type"
           placeholder="请选择课程类型"
           class="course-type"
+          @change="onCourseTypeChange"
         >
           <el-option
             v-for="(item, index) in courseType"
@@ -34,7 +35,11 @@
           >
           </el-option>
         </el-select>
-        <el-select v-model="form.level" placeholder="请选择课程级别">
+        <el-select
+          v-model="form.level"
+          placeholder="请选择课程级别"
+          v-if="isNotTvCourse"
+        >
           <el-option
             v-for="(item, index) in courseLevel"
             :key="index"
@@ -43,7 +48,11 @@
           >
           </el-option>
         </el-select>
-        <el-select v-model="form.unit" placeholder="请选择课程单元">
+        <el-select
+          v-model="form.unit"
+          placeholder="请选择课程单元"
+          v-if="isNotTvCourse"
+        >
           <el-option
             v-for="(item, index) in courseUnit"
             :key="index"
@@ -52,7 +61,11 @@
           >
           </el-option>
         </el-select>
-        <el-select v-model="form.lesson" placeholder="请选择课程Lesson">
+        <el-select
+          v-model="form.lesson"
+          placeholder="请选择课程Lesson"
+          v-if="isNotTvCourse"
+        >
           <el-option
             v-for="(item, index) in courseLesson"
             :key="index"
@@ -115,7 +128,6 @@
 
 <script>
 import {
-  courseType,
   courseDifficulty,
   courseLevel,
   courseUnit,
@@ -128,7 +140,7 @@ import uploadFile from '@/utils/upload'
 export default {
   data() {
     return {
-      courseType: courseType,
+      courseType: ['体验课', '系统课', '体验课-TV课', '系统课-TV课'],
       courseDifficulty: courseDifficulty,
       courseLevel: courseLevel,
       courseUnit: courseUnit,
@@ -150,6 +162,11 @@ export default {
       audioList: [],
       isShowRate: true,
       removeFile: []
+    }
+  },
+  computed: {
+    isNotTvCourse() {
+      return this.form.type !== 2 && this.form.type !== 3
     }
   },
   watch: {
@@ -179,6 +196,10 @@ export default {
     }
   },
   methods: {
+    /** 选择课程类型时 */
+    onCourseTypeChange(courseType) {
+      console.log('courseType', courseType)
+    },
     initData() {
       const arr = Object.keys(this.form)
       arr.map((item, index) => {
@@ -229,6 +250,7 @@ export default {
         courseId,
         rate
       } = this.form
+      console.log('this.form', this.form)
       const {
         coursePayload,
         scoreObj,
@@ -238,7 +260,7 @@ export default {
       } = this
       const fileUrlList = []
       for (const item of audioList) {
-        if (removeFile.length !== 0) {
+        if (removeFile.length) {
           for (const remove of removeFile) {
             if (item.uid === remove.uid) {
               fileUrlList.push(item.url)
