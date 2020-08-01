@@ -4,7 +4,7 @@
  * @Author: Lukun
  * @Date: 2020-04-27 17:47:58
  * @LastEditors: liukun
- * @LastEditTime: 2020-07-18 18:15:18
+ * @LastEditTime: 2020-07-31 23:22:34
  -->
 <template>
   <div class="container">
@@ -446,6 +446,29 @@
             }}</el-col>
           </el-row>
           <el-row>
+            <el-col :span="5">推荐人:</el-col>
+            <el-col :span="18" :offset="1"
+              ><el-link
+                v-if="Number(drawerApprovalDeatail.sendId)"
+                type="primary"
+                :href="'/users/#/details/' + drawerApprovalDeatail.sendId"
+                target="_blank"
+                >{{
+                  (JSON.parse(drawerApprovalDeatail.sendInfo).mobile || '-') +
+                    '*' +
+                    (JSON.parse(drawerApprovalDeatail.sendInfo).teamName ||
+                      '-') +
+                    '*' +
+                    (JSON.parse(drawerApprovalDeatail.sendInfo)
+                      .departmentName || '-') +
+                    '*' +
+                    (JSON.parse(drawerApprovalDeatail.sendInfo)
+                      .teacherNickname || '-')
+                }}</el-link
+              ></el-col
+            >
+          </el-row>
+          <el-row>
             <el-col :span="5">聊天截图:</el-col>
             <el-col :span="18" :offset="1">
               <el-image
@@ -643,7 +666,9 @@
           <el-input v-model="form_checkbox.reason"></el-input>
         </el-form-item>
         <el-form-item
-          v-if="!drawerApprovalDeatail.addressId"
+          v-if="
+            !drawerApprovalDeatail.addressId && currentType !== 'UNCREDITED'
+          "
           label="恢复学生放课与随材物流"
           prop="isRecover"
         >

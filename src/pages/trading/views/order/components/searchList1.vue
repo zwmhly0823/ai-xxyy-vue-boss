@@ -3,8 +3,8 @@
  * @version: 1.0.0
  * @Author: liukun
  * @Date: 2020-04-25 17:24:23
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-07-08 21:34:14
+ * @LastEditors: liukun
+ * @LastEditTime: 2020-08-01 17:42:19
  -->
 <template>
   <el-card
@@ -629,6 +629,7 @@ export default {
             'payTeacherInfo.ding_userid': '钉钉员工号',
             'enrolledInfo.enrolled_amount': '报名金额',
             'enrolledInfo.enrolled_time': '报名时间',
+            'senderTrialManagement.period_name': '所属期',
             'enrolledInfo.group_name': '战队',
             'enrolledInfo.department_name': '部门',
             'enrolledInfo.department_area_name': '区',

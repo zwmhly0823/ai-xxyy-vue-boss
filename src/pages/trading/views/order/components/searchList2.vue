@@ -3,8 +3,8 @@
  * @version: 1.0.0
  * @Author: liukun
  * @Date: 2020-04-25 17:24:23
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-06-29 18:07:43
+ * @LastEditors: liukun
+ * @LastEditTime: 2020-07-31 15:49:13
  -->
 <template>
   <el-card
@@ -505,6 +505,7 @@ export default {
             'before_teacher.ding_userid': '钉钉员工号',
             'after_teacher.realname': '接班老师',
             'after_teacher.ding_userid': '钉钉员工号',
+            lastHandoverTime: '交接时间',
             'enrolledInfo.is_enrolled': '是否报名',
             'enrolledInfo.enrolled_amount': '报名金额',
             'enrolledInfo.enrolled_time': '报名时间',
