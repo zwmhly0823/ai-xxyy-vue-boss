@@ -196,6 +196,18 @@
               />
             </div>
           </el-form-item> -->
+          <el-form-item label="系统标签:">
+            <div class="search-group">
+              <simple-select
+                name="user_status"
+                placeholder="请选择"
+                :my-style="{ width: '100px' }"
+                :multiple="false"
+                :data-list="conversionStatus"
+                @result="getSearchData('user_status', arguments)"
+              />
+            </div>
+          </el-form-item>
           <!-- // user_status 0 未转化 1 月课 2半年课 3 年课 -->
           <el-form-item label="系统课转化:">
             <div class="search-group">
@@ -209,7 +221,7 @@
               />
             </div>
           </el-form-item>
-          <el-form-item label="意向度:">
+          <el-form-item label="意向度:" label-width="75px">
             <div class="search-group">
               <simple-select
                 name="user_intention_type"
@@ -245,6 +257,13 @@
               />
             </div>
           </el-form-item>
+          <!-- 用来占位 -->
+          <div class="seat-div">
+            <el-button size="mini" type="primary">
+              高级筛选
+            </el-button>
+            <p class="clear-btn primary-text">清空筛选</p>
+          </div>
           <div class="handle-area d-flex align-center">
             <el-button size="mini" @click="advancedSearch" type="primary"
               >高级筛选</el-button
@@ -424,7 +443,18 @@ export default {
 .search-container {
   position: relative;
   font-size: 12px;
-
+  .seat-div {
+    margin-left: 20px;
+    display: inline-block;
+    visibility: hidden;
+    button {
+      display: inline-block;
+    }
+    p {
+      display: inline-block;
+      margin: 0 0 0 10px;
+    }
+  }
   .handle-area {
     position: absolute;
     right: 20px;
