@@ -23,7 +23,7 @@
             <i class="el-icon-truck color-2"></i>
             <span class="item-text">补发货审批</span>
           </div>
-          <div class="adjust-item" @click="mergeBoxes">
+          <div class="adjust-item" @click="mergeBoxes" v-if="showMergeBoxes">
             <i class="el-icon-truck color-2"></i>
             <span class="item-text">随材打包</span>
           </div>
@@ -50,6 +50,19 @@
 
 <script>
 export default {
+  data() {
+    return {
+      showMergeBoxes: false
+    }
+  },
+  created() {
+    // 随材打包只对特定人员可见
+    const userinfo = JSON.parse(localStorage.getItem('teacher'))
+    const passUser = ['15210892350', '17610067673', '13552914531']
+    if (passUser.includes(userinfo.phone)) {
+      this.showMergeBoxes = true
+    }
+  },
   methods: {
     goReplenish() {
       this.$router.push('/repair')
