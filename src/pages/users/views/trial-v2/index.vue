@@ -187,6 +187,36 @@
               </template>
             </template>
           </el-table-column>
+          <el-table-column label="系统标签" min-width="150">
+            <template slot-scope="scope">
+              <template v-if="0">
+                <i
+                  class="el-icon-circle-plus-outline intention-icon"
+                  @click="createSysTag(scope.$index, scope.row.id)"
+                ></i>
+              </template>
+              <template v-else>
+                <div class="remarks-content tag-box">
+                  <el-popover
+                    placement="top-start"
+                    trigger="hover"
+                    content="123"
+                  >
+                    <div slot="reference">
+                      <span
+                        class="tag-item"
+                        v-for="(item, index) in 4"
+                        :key="index"
+                      >
+                        {{ item }}1111111
+                      </span>
+                    </div>
+                  </el-popover>
+                  <i class="el-icon-edit"></i>
+                </div>
+              </template>
+            </template>
+          </el-table-column>
           <el-table-column label="参课" min-width="150">
             <template slot="header">
               <el-dropdown
@@ -1632,7 +1662,8 @@ export default {
         pagesize: 20
       }
       this.$refs.questionaireDrawerC.openDrawer(query)
-    }
+    },
+    createSysTag(index, uid) {}
   }
 }
 </script>
