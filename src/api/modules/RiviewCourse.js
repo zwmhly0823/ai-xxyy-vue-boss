@@ -2,8 +2,8 @@
  * @Descripttion:
  * @Author: songyanan
  * @Date: 2020-05-11 17:35:28
- * @LastEditors: songyanan
- * @LastEditTime: 2020-05-13 20:02:00
+ * @LastEditors: Shentong
+ * @LastEditTime: 2020-08-03 20:25:32
  */
 import axios from '../axiosConfig'
 
@@ -35,6 +35,12 @@ export default {
    * */
   getCourseLesson(params) {
     return axios.get(`/api/k/v1/courseware/getCoursewares/no?no=${params}`)
+  },
+  /**
+   * 获取TV课程列表
+   * */
+  getTVCourseLesson(params) {
+    return axios.get(`/api/k/v1/courseware/getCoursewares/type/level`, params)
   },
   /**
    * 待点评数据

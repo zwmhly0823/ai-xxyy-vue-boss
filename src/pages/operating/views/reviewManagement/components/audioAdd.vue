@@ -4,7 +4,7 @@
  * @Author: songyanan
  * @Date: 2020-05-11 14:30:00
  * @LastEditors: Shentong
- * @LastEditTime: 2020-08-01 19:11:31
+ * @LastEditTime: 2020-08-03 22:42:02
  */
  -->
 <template>
@@ -21,12 +21,16 @@
           <el-option
             v-for="(item, index) in courseType"
             :key="index"
-            :label="item"
-            :value="index"
+            :label="item.label"
+            :value="item.value"
           >
           </el-option>
         </el-select>
-        <el-select v-model="form.difficulty" placeholder="请选择课程难度">
+        <el-select
+          v-model="form.difficulty"
+          placeholder="请选择课程难度"
+          v-if="isNotTvCourse"
+        >
           <el-option
             v-for="(item, index) in courseDifficulty"
             :key="index"
@@ -35,11 +39,7 @@
           >
           </el-option>
         </el-select>
-        <el-select
-          v-model="form.level"
-          placeholder="请选择课程级别"
-          v-if="isNotTvCourse"
-        >
+        <el-select v-model="form.level" placeholder="请选择课程级别">
           <el-option
             v-for="(item, index) in courseLevel"
             :key="index"
@@ -140,7 +140,28 @@ import uploadFile from '@/utils/upload'
 export default {
   data() {
     return {
-      courseType: ['体验课', '系统课', '体验课-TV课', '系统课-TV课'],
+      courseType: [
+        {
+          label: '体验课',
+          value: 'EXPERIENCE'
+        },
+        {
+          label: '系统课',
+          value: 'SYSTEM'
+        },
+        {
+          label: '体验课-TV课',
+          value: 'TA'
+        },
+        {
+          label: '系统课-TV课',
+          value: 'TB'
+        },
+        {
+          label: '节日主题课',
+          value: 'T6'
+        }
+      ],
       courseDifficulty: courseDifficulty,
       courseLevel: courseLevel,
       courseUnit: courseUnit,
@@ -166,19 +187,28 @@ export default {
   },
   computed: {
     isNotTvCourse() {
-      return this.form.type !== 2 && this.form.type !== 3
+      const {
+        form: { type }
+      } = this
+      return type !== 'TA' && type !== 'TB' && type !== 'T6'
     }
   },
   watch: {
     form: {
       handler(val) {
-        /** 当选择课程为‘体验课-TV’or‘系统课-TV' */
+        console.log('val', val)
+        /** 当选择课程为‘体验课-TV’or‘系统课-TV' or '节日主题课' */
         if (!this.isNotTvCourse) {
-          this.form.level = null
+          this.form.courseDifficulty = null
           this.form.unit = null
           this.form.lesson = null
-          this.form.courseId = null
+          // this.form.courseId = null
           // 设置 对应的课程
+          val.level !== null &&
+            this.getTVCourseLesson({
+              levelNo: this.courseLevel[val.level],
+              typeNo: val.type
+            })
         } else {
           if (
             val.type !== null &&
@@ -187,7 +217,12 @@ export default {
             val.unit !== null &&
             val.lesson !== null
           ) {
-            const type = val.type === 0 ? 'T1' : 'T2'
+            const couseT = {
+              EXPERIENCE: 'T1',
+              SYSTEM: 'T2'
+            }
+            console.log(val.type, 'val.type')
+            const type = couseT[val.type]
             const params = `${type}${this.courseDifficulty[val.difficulty]}${
               this.courseLevel[val.level]
             }${this.courseUnit[val.unit]}${this.courseLesson[val.lesson]}`
@@ -205,6 +240,24 @@ export default {
     }
   },
   methods: {
+    /** 获取TV课程列表 */
+    async getTVCourseLesson(params) {
+      // this.coursePayload.length = 0
+      try {
+        const res = await this.$http.RiviewCourse.getTVCourseLesson(params)
+        console.log(res, 'tv-res')
+        if (res.code === 0) {
+          this.coursePayload = res.payload
+          // res.payload.length &&
+          //   res.payload.map((item, index) => {
+          //     this.coursePayload.push(item)
+          //   })
+          console.log(this.coursePayload, 'coursePayload-new')
+        }
+      } catch (error) {
+        console.log(error)
+      }
+    },
     /** 选择课程类型时 */
     onCourseTypeChange(courseType) {
       console.log('courseType', courseType)
@@ -224,6 +277,7 @@ export default {
             res.payload.map((item, index) => {
               this.coursePayload.push(item)
             })
+          console.log(this.coursePayload, 'coursePayload-OLD')
         }
       } catch (error) {
         console.log(error)
@@ -292,28 +346,42 @@ export default {
       }
       if (!isShowRate) score = 'EXCELLENT'
 
-      this.form.level = null
+      // this.form.level = null TODO: 看不懂为啥要 设为 null
+      if (!this.isNotTvCourse) {
+        if (
+          type === null ||
+          level === null ||
+          courseId === null ||
+          degree === null ||
+          score === null ||
+          !fileUrl
+        ) {
+          this.$message({
+            message: '选择项为空，暂时无法提交！',
+            type: 'error'
+          })
+          // return false
+        }
+      } else if (
+        type === null ||
+        difficulty === null ||
+        degree === null ||
+        level === null ||
+        unit === null ||
+        lesson === null ||
+        courseId === null ||
+        score === null ||
+        !fileUrl
+      ) {
+        this.$message({
+          message: '选择项为空，暂时无法提交！',
+          type: 'error'
+        })
+        // return false
+      }
 
-      // 暂时注释 :TODO:
-      // if (
-      //   type === null ||
-      //   difficulty === null ||
-      //   degree === null ||
-      //   level === null ||
-      //   unit === null ||
-      //   lesson === null ||
-      //   courseId === null ||
-      //   score === null ||
-      //   !fileUrl
-      // ) {
-      //   this.$message({
-      //     message: '选择项为空，暂时无法提交！',
-      //     type: 'error'
-      //   })
-      //   return false
-      // }
       const params = {
-        courseType: type === 0 ? 'EXPERIENCE' : 'SYSTEM',
+        courseType: type,
         courseStrait: courseDifficulty[difficulty],
         courseLevel: courseLevel[level],
         courseUnit: courseUnit[unit],
@@ -322,7 +390,7 @@ export default {
         courseName: courseName,
         reviewDimension: reviewDegree[degree],
         score: score,
-        fileUrl: fileUrl,
+        fileUrl: fileUrl || '巴拉巴拉', // TODO:
         opreation: 'ENABLE'
       }
       console.log('params', params)
