@@ -4,7 +4,7 @@
  * @Author: songyanan
  * @Date: 2020-05-11 14:30:00
  * @LastEditors: Shentong
- * @LastEditTime: 2020-08-01 15:38:24
+ * @LastEditTime: 2020-08-01 19:11:31
  */
  -->
 <template>
@@ -172,23 +172,32 @@ export default {
   watch: {
     form: {
       handler(val) {
-        if (
-          val.type !== null &&
-          val.difficulty !== null &&
-          val.level !== null &&
-          val.unit !== null &&
-          val.lesson !== null
-        ) {
-          const type = val.type === 0 ? 'T1' : 'T2'
-          const params = `${type}${this.courseDifficulty[val.difficulty]}${
-            this.courseLevel[val.level]
-          }${this.courseUnit[val.unit]}${this.courseLesson[val.lesson]}`
-          this.loadCourseList(params)
-        }
-        if (val.degree === 0) {
-          this.isShowRate = false
+        /** 当选择课程为‘体验课-TV’or‘系统课-TV' */
+        if (!this.isNotTvCourse) {
+          this.form.level = null
+          this.form.unit = null
+          this.form.lesson = null
+          this.form.courseId = null
+          // 设置 对应的课程
         } else {
-          this.isShowRate = true
+          if (
+            val.type !== null &&
+            val.difficulty !== null &&
+            val.level !== null &&
+            val.unit !== null &&
+            val.lesson !== null
+          ) {
+            const type = val.type === 0 ? 'T1' : 'T2'
+            const params = `${type}${this.courseDifficulty[val.difficulty]}${
+              this.courseLevel[val.level]
+            }${this.courseUnit[val.unit]}${this.courseLesson[val.lesson]}`
+            this.loadCourseList(params)
+          }
+          if (val.degree === 0) {
+            this.isShowRate = false
+          } else {
+            this.isShowRate = true
+          }
         }
       },
       deep: true,
@@ -211,7 +220,7 @@ export default {
       try {
         const res = await this.$http.RiviewCourse.getCourseLesson(params)
         if (res.code === 0) {
-          res.payload.length !== 0 &&
+          res.payload.length &&
             res.payload.map((item, index) => {
               this.coursePayload.push(item)
             })
@@ -234,9 +243,7 @@ export default {
       })
     },
     handleRemoveFile(list) {
-      if (list.length === 0) {
-        this.audioList = []
-      }
+      if (!list.length) this.audioList = []
       this.removeFile = list
     },
     async handleSubmit() {
@@ -283,26 +290,28 @@ export default {
           score = key
         }
       }
-      if (!isShowRate) {
-        score = 'EXCELLENT'
-      }
-      if (
-        type === null ||
-        difficulty === null ||
-        degree === null ||
-        level === null ||
-        unit === null ||
-        lesson === null ||
-        courseId === null ||
-        score === null ||
-        !fileUrl
-      ) {
-        this.$message({
-          message: '选择项为空，暂时无法提交！',
-          type: 'error'
-        })
-        return false
-      }
+      if (!isShowRate) score = 'EXCELLENT'
+
+      this.form.level = null
+
+      // 暂时注释 :TODO:
+      // if (
+      //   type === null ||
+      //   difficulty === null ||
+      //   degree === null ||
+      //   level === null ||
+      //   unit === null ||
+      //   lesson === null ||
+      //   courseId === null ||
+      //   score === null ||
+      //   !fileUrl
+      // ) {
+      //   this.$message({
+      //     message: '选择项为空，暂时无法提交！',
+      //     type: 'error'
+      //   })
+      //   return false
+      // }
       const params = {
         courseType: type === 0 ? 'EXPERIENCE' : 'SYSTEM',
         courseStrait: courseDifficulty[difficulty],
@@ -316,6 +325,7 @@ export default {
         fileUrl: fileUrl,
         opreation: 'ENABLE'
       }
+      console.log('params', params)
       try {
         const res = await this.$http.RiviewCourse.addRiviewInform(params)
         if (res.code === 0) {
