@@ -57,9 +57,9 @@ export default {
   },
   created() {
     // 随材打包只对特定人员可见
-    const userinfo = JSON.parse(localStorage.getItem('teacher'))
+    const userinfo = JSON.parse(localStorage.getItem('staff'))
     const passUser = ['15210892350', '17610067673', '13552914531']
-    if (passUser.includes(userinfo.phone)) {
+    if (passUser.includes(userinfo.mobile)) {
       this.showMergeBoxes = true
     }
   },
