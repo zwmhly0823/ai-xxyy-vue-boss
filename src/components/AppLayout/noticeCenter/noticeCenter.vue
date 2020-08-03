@@ -162,7 +162,7 @@ export default {
     hasRead(id, index, clicked) {
       this.noticeLoading = true
       const query = {
-        staffId: +this.staffId,
+        staffId: this.staffId,
         notifyIds: +id
       }
       this.$http.NoticeCenter.updateNotifyIsReadByStaffId(query)
