@@ -4,7 +4,7 @@
  * @Author: zhangjiawen
  * @Date: 2020-07-31 17:53:04
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-08-04 21:19:42
+ * @LastEditTime: 2020-08-04 22:05:16
 -->
 <template>
   <div class="container">
@@ -134,10 +134,13 @@
       <div>
         <el-form :inline="true" class="demo-form-inline">
           <el-form-item label="绑定坐席人员">
-            <el-input
-              v-model="user_name"
-              placeholder="请输入绑定坐席员工"
-            ></el-input>
+            <group-sell
+              style="width:160px !important;margin-right: 20px;"
+              @result="getTeachId('groupSell', arguments)"
+              :name="'groupSell'"
+              tip="请输入绑定坐席名称"
+              size="small"
+            />
           </el-form-item>
           <p>
             <el-form-item label="绑定电话类型">
@@ -149,6 +152,9 @@
           </p>
           <el-form-item label="绑定电话号码">
             <el-input
+              size="mini"
+              style="width:160px"
+              @input="changeNum()"
               v-model="user_phone"
               placeholder="请输入绑定电话号码"
             ></el-input>
@@ -237,9 +243,9 @@ export default {
       if (+val.use_status === 1) {
         return false
       }
-      this.user_name = val.agent_name
+      // this.user_name = val.agent_name
       this.user_radio = val.tel_type === '1' ? '手机号' : 'IP电话'
-      this.user_phone = val.tel
+      // this.user_phone = val.tel
       this.listData = val
       this.centerDialogVisible = true
     },
@@ -248,13 +254,21 @@ export default {
       const { id } = this.listData
       const telTypeName = this.user_radio === '手机号' ? 'MOBILE' : 'IP_PHONE'
       const parmes = {
-        teacherId: this.listData.teacher_id,
+        teacherId: this.user_name,
         id,
         tel: this.user_phone,
         telType: telTypeName
       }
       return this.$http.Outbound.bindTel(parmes, this.currentPage)
-        .then((res) => {})
+        .then((res) => {
+          if (+res.code === 0) {
+            this.$message({
+              showClose: true,
+              message: '成功绑定',
+              type: 'success'
+            })
+          }
+        })
         .catch(() => {
           // loading.close()
         })
@@ -280,6 +294,20 @@ export default {
       }
 
       this.getPhoneList()
+    },
+    // 输入电话号码
+    changeNum() {
+      if (this.user_phone.length > 11) {
+        this.$message({
+          showClose: true,
+          message: '输入长度不能超过11位',
+          type: 'error'
+        })
+      }
+    },
+    getTeachId(key, val) {
+      console.log(val)
+      this.user_name = val[0].groupSell
     },
     //
     formatDate(date) {
