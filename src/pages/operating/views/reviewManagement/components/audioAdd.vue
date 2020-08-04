@@ -4,7 +4,7 @@
  * @Author: songyanan
  * @Date: 2020-05-11 14:30:00
  * @LastEditors: Shentong
- * @LastEditTime: 2020-08-04 15:07:26
+ * @LastEditTime: 2020-08-04 16:12:28
  */
  -->
 <template>
@@ -26,11 +26,7 @@
           >
           </el-option>
         </el-select>
-        <el-select
-          v-model="form.difficulty"
-          placeholder="请选择课程难度"
-          v-if="isNotTvCourse"
-        >
+        <el-select v-model="form.difficulty" placeholder="请选择课程难度">
           <el-option
             v-for="(item, index) in courseDifficulty"
             :key="index"
@@ -39,7 +35,11 @@
           >
           </el-option>
         </el-select>
-        <el-select v-model="form.level" placeholder="请选择课程级别">
+        <el-select
+          v-model="form.level"
+          placeholder="请选择课程级别"
+          v-if="isNotTvCourse"
+        >
           <el-option
             v-for="(item, index) in courseLevel"
             :key="index"
@@ -74,7 +74,7 @@
           >
           </el-option>
         </el-select>
-        <el-select v-model="form.courseId" placeholder="请选择对应课程">
+        <el-select v-model="courseId" placeholder="请选择对应课程">
           <el-option
             v-for="(item, index) in coursePayload"
             :key="index"
@@ -85,7 +85,7 @@
         </el-select>
       </el-form-item>
       <el-form-item label="点评维度" class="audio-add-form-item degree">
-        <el-select v-model="form.degree" placeholder="请选择点评维度">
+        <el-select v-model="commentFrom.degree" placeholder="请选择点评维度">
           <el-option
             v-for="(item, index) in reviewDegree"
             :key="index"
@@ -95,7 +95,7 @@
           </el-option>
         </el-select>
         <el-select
-          v-model="form.rate"
+          v-model="commentFrom.rate"
           placeholder="请选择评分"
           v-show="isShowRate"
         >
@@ -170,15 +170,17 @@ export default {
       reviewDegree: reviewDegree,
       reviewRate: reviewRate,
       scoreObj: scoreObj,
+      courseId: null, // 课程特殊处理
+      commentFrom: {
+        degree: null,
+        rate: null
+      },
       form: {
         type: null,
         difficulty: null,
         level: null,
         unit: null,
-        lesson: null,
-        courseId: null,
-        degree: null,
-        rate: null
+        lesson: null
       },
       audioList: [],
       isShowRate: true,
@@ -194,24 +196,29 @@ export default {
     }
   },
   watch: {
-    'form.type': function(newVal, oldVal) {
-      this.form.courseId = null
-      // console.log(newVal, oldVal, '-----------')
-      // if (newVal !=== oldVal && )
+    commentFrom: {
+      handler(val, old) {
+        if (val.degree === 0) {
+          this.isShowRate = false
+        } else {
+          this.isShowRate = true
+        }
+      },
+      deep: true,
+      immediate: true
     },
     form: {
-      handler(val, old) {
-        console.log('val', val, old)
+      handler(val) {
+        this.courseId = null
         /** 当选择课程为‘体验课-TV’or‘系统课-TV' or '节日主题课' */
         if (!this.isNotTvCourse) {
-          this.form.courseDifficulty = null
+          this.form.level = null
           this.form.unit = null
           this.form.lesson = null
-          // this.form.courseId = null
           // 设置 对应的课程
-          if (val.level !== null) {
+          if (val.difficulty !== null) {
             this.getTVCourseLesson({
-              levelNo: this.courseLevel[val.level],
+              stageNo: this.courseDifficulty[val.difficulty],
               typeNo: val.type
             })
           }
@@ -227,18 +234,12 @@ export default {
               EXPERIENCE: 'T1',
               SYSTEM: 'T2'
             }
-            console.log(val.type, 'val.type')
             const type = couseT[val.type]
             const params = `${type}${this.courseDifficulty[val.difficulty]}${
               this.courseLevel[val.level]
             }${this.courseUnit[val.unit]}${this.courseLesson[val.lesson]}`
             this.loadCourseList(params)
           }
-        }
-        if (val.degree === 0) {
-          this.isShowRate = false
-        } else {
-          this.isShowRate = true
         }
       },
       deep: true,
@@ -296,16 +297,8 @@ export default {
       this.removeFile = list
     },
     async handleSubmit() {
-      const {
-        type,
-        difficulty,
-        degree,
-        level,
-        unit,
-        lesson,
-        courseId,
-        rate
-      } = this.form
+      const { type, difficulty, level, unit, lesson } = this.form
+      const { degree, rate } = this.commentFrom
       console.log('this.form', this.form)
       const {
         coursePayload,
@@ -329,7 +322,7 @@ export default {
       const fileUrl = fileUrlList.join('')
       let courseName = null
       for (const item of coursePayload) {
-        if (item.id === courseId) {
+        if (item.id === this.courseId) {
           courseName = item.title
         }
       }
@@ -346,7 +339,7 @@ export default {
         if (
           type === null ||
           level === null ||
-          courseId === null ||
+          this.courseId === null ||
           degree === null ||
           score === null ||
           !fileUrl
@@ -364,7 +357,7 @@ export default {
         level === null ||
         unit === null ||
         lesson === null ||
-        courseId === null ||
+        this.courseId === null ||
         score === null ||
         !fileUrl
       ) {
@@ -376,28 +369,27 @@ export default {
       }
       let curCourse = {}
       for (let i = 0; i < this.coursePayload.length; i++) {
-        if ((this.coursePayload[i].id = courseId)) {
+        if ((this.coursePayload[i].id = this.courseId)) {
           curCourse = this.coursePayload[i]
           break
         }
       }
       const {
         coursewareNo = '', // lesseon
-        stageNo = '', // courseStrait
+        levelNo = '', // courseLevel
         unitNo = '' // courseUnit
       } = curCourse
-      console.log(coursewareNo, stageNo, unitNo)
       const params = {
         courseType: type,
-        courseStrait: courseDifficulty[difficulty] || stageNo,
-        courseLevel: courseLevel[level],
+        courseStrait: courseDifficulty[difficulty],
+        courseLevel: courseLevel[level] || levelNo,
         courseUnit: courseUnit[unit] || unitNo,
         courseLesson: courseLesson[lesson] || coursewareNo,
-        courseId: courseId,
-        courseName: courseName,
+        courseId: this.courseId,
         reviewDimension: reviewDegree[degree],
-        score: score,
-        fileUrl: fileUrl, // TODO:
+        courseName,
+        score,
+        fileUrl, // TODO:
         opreation: 'ENABLE'
       }
       console.log('params', params)
