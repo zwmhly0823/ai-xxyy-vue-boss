@@ -447,7 +447,7 @@ const routes = [
     name: 'outbound',
     meta: {
       title: '呼叫中心',
-      icon: 'iconshenpizhongxin',
+      icon: 'icondianhua',
       module: 'outbound'
     }
   },
