@@ -442,6 +442,15 @@ const routes = [
       module: 'approval'
     }
   },
+  {
+    path: '/outbound',
+    name: 'outbound',
+    meta: {
+      title: '呼叫中心',
+      icon: 'iconshenpizhongxin',
+      module: 'outbound'
+    }
+  },
   // 数据中心
   {
     path: '/statistics',
