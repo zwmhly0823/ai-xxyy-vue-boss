@@ -4,7 +4,7 @@
  * @Author: songyanan
  * @Date: 2020-05-11 14:30:00
  * @LastEditors: Shentong
- * @LastEditTime: 2020-08-04 14:48:51
+ * @LastEditTime: 2020-08-04 15:07:26
  */
  -->
 <template>
@@ -234,11 +234,11 @@ export default {
             }${this.courseUnit[val.unit]}${this.courseLesson[val.lesson]}`
             this.loadCourseList(params)
           }
-          if (val.degree === 0) {
-            this.isShowRate = false
-          } else {
-            this.isShowRate = true
-          }
+        }
+        if (val.degree === 0) {
+          this.isShowRate = false
+        } else {
+          this.isShowRate = true
         }
       },
       deep: true,
