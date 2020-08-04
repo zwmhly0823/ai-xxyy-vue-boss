@@ -4,7 +4,7 @@
  * @Author: songyanan
  * @Date: 2020-05-11 14:30:00
  * @LastEditors: Shentong
- * @LastEditTime: 2020-08-04 16:12:28
+ * @LastEditTime: 2020-08-04 16:36:50
  */
  -->
 <template>
@@ -299,7 +299,16 @@ export default {
     async handleSubmit() {
       const { type, difficulty, level, unit, lesson } = this.form
       const { degree, rate } = this.commentFrom
-      console.log('this.form', this.form)
+      console.log(
+        'this.form',
+        type,
+        difficulty,
+        level,
+        unit,
+        lesson,
+        degree,
+        rate
+      )
       const {
         coursePayload,
         scoreObj,
@@ -338,7 +347,7 @@ export default {
       if (!this.isNotTvCourse) {
         if (
           type === null ||
-          level === null ||
+          difficulty === null ||
           this.courseId === null ||
           degree === null ||
           score === null ||
