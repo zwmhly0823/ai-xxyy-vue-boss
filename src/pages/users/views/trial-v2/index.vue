@@ -197,19 +197,14 @@
               </template>
               <template v-else>
                 <div class="remarks-content tag-box">
-                  <el-popover
-                    placement="top-start"
-                    trigger="hover"
-                    content="123"
-                  >
+                  <el-popover placement="top-start" trigger="hover">
+                    <tags-popover></tags-popover>
                     <div slot="reference">
-                      <span
-                        class="tag-item"
-                        v-for="(item, index) in 4"
+                      <tags-item
+                        v-for="(item, index) in tagList(4)"
                         :key="index"
-                      >
-                        {{ item }}1111111
-                      </span>
+                        :text="item + ''"
+                      ></tags-item>
                     </div>
                   </el-popover>
                   <i class="el-icon-edit"></i>
@@ -908,6 +903,8 @@ import ToolTip from '../../components/ToolTip.vue'
 // import SendCoupon from '../../../studentTeam/components/TabPane/components/couponPopover.vue'
 import TrialSidebar from '../../components/trial/TrialSidebar.vue'
 import QuestionaireDrawerComponent from '../../components/trial/QuestionaireDrawerComponent.vue'
+import tagsItem from '../../components/trial/tags/TagsItem.vue'
+import tagsPopover from '../../components/trial/tags/TagsPopover.vue'
 export default {
   name: 'trialUsers',
   components: {
@@ -920,7 +917,9 @@ export default {
     ToolTip,
     // SendCoupon,
     TrialSidebar,
-    QuestionaireDrawerComponent
+    QuestionaireDrawerComponent,
+    tagsItem,
+    tagsPopover
   },
   computed: {
     searchParams() {
@@ -967,6 +966,15 @@ export default {
     },
     tomorrow() {
       return tomorrowTimestamp()
+    },
+    tagList() {
+      return function(list) {
+        if (list.length > 4) {
+          return list.slice(0, 4)
+        } else {
+          return list
+        }
+      }
     }
   },
   data() {

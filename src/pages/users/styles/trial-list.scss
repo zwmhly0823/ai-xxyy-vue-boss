@@ -239,24 +239,4 @@
   .fts-14 {
     font-size: 14px;
   }
-  .tag-box {
-    .tag-item {
-      display: inline-block;
-      max-width: 52px;
-      background-color: #dff3ff;
-      border: 1px solid #d4e3f2;
-      border-radius: 3px;
-      color: #7bbdfa;
-      padding: 0 5px;
-      margin-right: 5px;
-      margin-bottom: 5px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-    i {
-      vertical-align: top;
-      margin-top: 5px;
-    }
-  }
 }
