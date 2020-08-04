@@ -4,7 +4,7 @@
  * @Author: songyanan
  * @Date: 2020-05-11 14:30:00
  * @LastEditors: Shentong
- * @LastEditTime: 2020-08-03 22:42:02
+ * @LastEditTime: 2020-08-04 14:48:51
  */
  -->
 <template>
@@ -194,9 +194,14 @@ export default {
     }
   },
   watch: {
+    'form.type': function(newVal, oldVal) {
+      this.form.courseId = null
+      // console.log(newVal, oldVal, '-----------')
+      // if (newVal !=== oldVal && )
+    },
     form: {
-      handler(val) {
-        console.log('val', val)
+      handler(val, old) {
+        console.log('val', val, old)
         /** 当选择课程为‘体验课-TV’or‘系统课-TV' or '节日主题课' */
         if (!this.isNotTvCourse) {
           this.form.courseDifficulty = null
@@ -204,11 +209,12 @@ export default {
           this.form.lesson = null
           // this.form.courseId = null
           // 设置 对应的课程
-          val.level !== null &&
+          if (val.level !== null) {
             this.getTVCourseLesson({
               levelNo: this.courseLevel[val.level],
               typeNo: val.type
             })
+          }
         } else {
           if (
             val.type !== null &&
@@ -242,17 +248,10 @@ export default {
   methods: {
     /** 获取TV课程列表 */
     async getTVCourseLesson(params) {
-      // this.coursePayload.length = 0
       try {
         const res = await this.$http.RiviewCourse.getTVCourseLesson(params)
-        console.log(res, 'tv-res')
         if (res.code === 0) {
           this.coursePayload = res.payload
-          // res.payload.length &&
-          //   res.payload.map((item, index) => {
-          //     this.coursePayload.push(item)
-          //   })
-          console.log(this.coursePayload, 'coursePayload-new')
         }
       } catch (error) {
         console.log(error)
@@ -269,15 +268,11 @@ export default {
       })
     },
     async loadCourseList(params) {
-      this.coursePayload.length = 0
       try {
         const res = await this.$http.RiviewCourse.getCourseLesson(params)
         if (res.code === 0) {
-          res.payload.length &&
-            res.payload.map((item, index) => {
-              this.coursePayload.push(item)
-            })
-          console.log(this.coursePayload, 'coursePayload-OLD')
+          // 清空 课程列表
+          this.coursePayload = res.payload
         }
       } catch (error) {
         console.log(error)
@@ -360,7 +355,7 @@ export default {
             message: '选择项为空，暂时无法提交！',
             type: 'error'
           })
-          // return false
+          return false
         }
       } else if (
         type === null ||
@@ -377,20 +372,32 @@ export default {
           message: '选择项为空，暂时无法提交！',
           type: 'error'
         })
-        // return false
+        return false
       }
-
+      let curCourse = {}
+      for (let i = 0; i < this.coursePayload.length; i++) {
+        if ((this.coursePayload[i].id = courseId)) {
+          curCourse = this.coursePayload[i]
+          break
+        }
+      }
+      const {
+        coursewareNo = '', // lesseon
+        stageNo = '', // courseStrait
+        unitNo = '' // courseUnit
+      } = curCourse
+      console.log(coursewareNo, stageNo, unitNo)
       const params = {
         courseType: type,
-        courseStrait: courseDifficulty[difficulty],
+        courseStrait: courseDifficulty[difficulty] || stageNo,
         courseLevel: courseLevel[level],
-        courseUnit: courseUnit[unit],
-        courseLesson: courseLesson[lesson],
+        courseUnit: courseUnit[unit] || unitNo,
+        courseLesson: courseLesson[lesson] || coursewareNo,
         courseId: courseId,
         courseName: courseName,
         reviewDimension: reviewDegree[degree],
         score: score,
-        fileUrl: fileUrl || '巴拉巴拉', // TODO:
+        fileUrl: fileUrl, // TODO:
         opreation: 'ENABLE'
       }
       console.log('params', params)
