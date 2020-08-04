@@ -4,7 +4,7 @@
  * @Author: zhangjiawen
  * @Date: 2020-07-31 17:53:04
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-08-04 19:13:47
+ * @LastEditTime: 2020-08-04 21:19:42
 -->
 <template>
   <div class="container">
@@ -94,7 +94,7 @@
       </el-table-column>
       <el-table-column prop="use_status" label="状态" width="120">
         <template slot-scope="scope">
-          <span>{{ scope.row.use_status ? '使用中' : '空闲' }}</span>
+          <span>{{ +scope.row.use_status === 1 ? '使用中' : '空闲' }}</span>
         </template>
       </el-table-column>
       <el-table-column prop="bind_time" label="绑定时间" min-width="150">
@@ -104,9 +104,12 @@
       </el-table-column>
       <el-table-column label="操作" width="100">
         <template slot-scope="scope">
-          <span @click="goBind(scope.row)">{{
-            scope.row.use_status ? '--' : '绑定'
-          }}</span>
+          <span
+            style="color: blue;
+            cursor: pointer;"
+            @click="goBind(scope.row)"
+            >{{ +scope.row.use_status === 1 ? '--' : '绑定' }}</span
+          >
         </template>
       </el-table-column>
     </el-table>
@@ -132,14 +135,13 @@
         <el-form :inline="true" class="demo-form-inline">
           <el-form-item label="绑定坐席人员">
             <el-input
-              disabled
               v-model="user_name"
               placeholder="请输入绑定坐席员工"
             ></el-input>
           </el-form-item>
           <p>
             <el-form-item label="绑定电话类型">
-              <el-radio-group v-model="user_radio" disabled>
+              <el-radio-group v-model="user_radio">
                 <el-radio label="手机号"></el-radio>
                 <el-radio label="IP电话"></el-radio>
               </el-radio-group>
@@ -147,9 +149,8 @@
           </p>
           <el-form-item label="绑定电话号码">
             <el-input
-              disabled
               v-model="user_phone"
-              placeholder="请输入绑定电话号码，仅限输入数字"
+              placeholder="请输入绑定电话号码"
             ></el-input>
           </el-form-item>
         </el-form>
@@ -244,12 +245,12 @@ export default {
     },
     // 绑定
     postBind() {
-      const { id, tel } = this.listData
-      const telTypeName = this.listData.tel_type === 1 ? 'MOBILE' : 'IP_PHONE'
+      const { id } = this.listData
+      const telTypeName = this.user_radio === '手机号' ? 'MOBILE' : 'IP_PHONE'
       const parmes = {
         teacherId: this.listData.teacher_id,
         id,
-        tel,
+        tel: this.user_phone,
         telType: telTypeName
       }
       return this.$http.Outbound.bindTel(parmes, this.currentPage)
