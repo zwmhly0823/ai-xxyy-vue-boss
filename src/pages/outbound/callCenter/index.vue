@@ -4,7 +4,7 @@
  * @Author: zhangjiawen
  * @Date: 2020-07-31 17:53:04
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-08-04 18:35:15
+ * @LastEditTime: 2020-08-04 18:40:02
 -->
 <template>
   <div class="container">
@@ -232,7 +232,10 @@ export default {
     },
     // 绑定解绑
     goBind(val) {
-      console.log(val)
+      console.log(val.use_status)
+      if (+val.use_status === 1) {
+        return false
+      }
       this.user_name = val.agent_name
       this.user_radio = val.tel_type === '1' ? '手机号' : 'IP电话'
       this.user_phone = val.tel
