@@ -3,8 +3,8 @@
  * @Descripttion:
  * @Author: songyanan
  * @Date: 2020-05-11 10:46:18
- * @LastEditors: songyanan
- * @LastEditTime: 2020-05-15 20:20:40
+ * @LastEditors: Shentong
+ * @LastEditTime: 2020-08-04 20:04:06
  */
  -->
 <template>
@@ -25,7 +25,7 @@
       <el-table-column label="课程" width="240" align="center">
         <template slot-scope="scope">
           <span style="margin: 0 20px 0 0">{{
-            scope.row.courseType === 'SYSTEM' ? '系统课' : '体验课'
+            courseVal[scope.row.courseType]
           }}</span>
           <span style="margin: 0 20px 0 0"
             >{{
@@ -92,6 +92,13 @@ import { scoreObj } from '@/common/data'
 export default {
   data() {
     return {
+      courseVal: {
+        EXPERIENCE: '体验课',
+        SYSTEM: '系统课',
+        TA: '体验课-TV课',
+        TB: '系统课-TV课',
+        T6: '节日主题课'
+      },
       number: 1,
       loading: true,
       list: [],
