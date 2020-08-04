@@ -3,8 +3,8 @@
  * @version:
  * @Author: zhubaodong
  * @Date: 2020-03-26 16:28:45
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-06-01 20:20:52
+ * @LastEditors: zhangjianwen
+ * @LastEditTime: 2020-08-04 19:39:43
  -->
 <template>
   <div class="search-item small">
@@ -22,6 +22,7 @@
         :disabled="isDisabled"
         :loading="loading"
         @change="onChange"
+        suffix-icon="el-icon-search"
       >
         <el-option
           v-for="item in teacherList"
@@ -132,7 +133,7 @@ export default {
 <style lang="scss" scoped>
 .search-item {
   &.small {
-    width: 140px !important;
+    width: 150px !important;
   }
 }
 </style>

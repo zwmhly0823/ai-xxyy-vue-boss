@@ -4,7 +4,7 @@
  * @Author: zhangjiawen
  * @Date: 2020-07-31 17:53:04
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-08-04 18:40:02
+ * @LastEditTime: 2020-08-04 19:13:47
 -->
 <template>
   <div class="container">
@@ -21,7 +21,7 @@
           ></el-input>
         </el-form-item>
         <group-sell
-          style="width:130px;padding-top: 6px;margin-right: 20px;"
+          style="width:150px;padding-top: 6px;margin-right: 20px;"
           @result="getSearchData('groupSell', arguments)"
           :name="'groupSell'"
           tip="绑定坐席名称查询"
@@ -302,5 +302,8 @@ export default {
   .demo-form-flex {
     display: flex;
   }
+}
+.el-input__inner {
+  width: 150px !important;
 }
 </style>
