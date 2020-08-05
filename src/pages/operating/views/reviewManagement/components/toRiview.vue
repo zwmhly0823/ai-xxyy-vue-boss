@@ -3,19 +3,19 @@
  * @Descripttion:
  * @Author: songyanan
  * @Date: 2020-05-11 14:30:00
- * @LastEditors: songyanan
- * @LastEditTime: 2020-05-16 12:47:30
+ * @LastEditors: Shentong
+ * @LastEditTime: 2020-08-05 17:48:29
  */
  -->
 <template>
-  <div class="container" v-if="renderFlag">
+  <div class="container">
     <el-table
       v-loading="loading"
       element-loading-text="拼命加载中"
       :data="list"
     >
       <el-table-column label="作品" width="300" align="center">
-        <template slot-scope="scope">
+        <template slot-scope="scope" v-if="scope.row.taskImage">
           <el-image
             class="works-img"
             :src="scope.row.taskImage"
@@ -27,11 +27,14 @@
         </template>
       </el-table-column>
       <el-table-column label="点评" width="500" align="center">
-        <template slot-scope="scope">
+        <template
+          slot-scope="scope"
+          v-if="scope.row.reviewDataList !== undefined"
+        >
           <div class="review-container">
             <div class="top-container">
               <div
-                v-for="(item, index) in getObjValues(scope.row.reviewDataList)"
+                v-for="(item, index) in Object.keys(scope.row.reviewDataList)"
                 :key="index"
               >
                 <div
@@ -63,7 +66,7 @@
             </div>
             <div
               class="bottom-container"
-              v-if="getObjValues(scope.row.reviewDataList).length > 0"
+              v-if="Object.keys(scope.row.reviewDataList).length"
             >
               <el-button
                 type="success"
@@ -154,47 +157,49 @@ export default {
   },
   methods: {
     async initList(number) {
+      this.loading = true
       try {
         const res = await this.$http.RiviewCourse.getToView(number)
         if (res.code === 0) {
-          this.list = res.payload.content
+          const list = res.payload.content
           this.totalElements = Number.parseInt(res.payload.totalElements)
-          await res.payload.content.map((item, index) => {
+          list.forEach((item, index) => {
             const str = `${item.id}@${item.courseId}`
             this.courseIdList.push(str)
           })
-          this.iniToViewInform()
+          await this.iniToViewInform(list)
         }
       } catch (error) {
         console.log(error)
       }
     },
-    async iniToViewInform() {
-      if (this.courseIdList.length < 0) return
+    async iniToViewInform(list) {
+      if (!this.courseIdList.length) return
       const courseIds = this.courseIdList.join(',')
-      const { list } = this
       try {
         const res = await this.$http.RiviewCourse.getToViewInform(courseIds)
         if (res.code === 0) {
           const reviewList = res.payload
-          for (const item of list) {
+          this.list = list.map((item) => {
             for (const key in reviewList) {
               if (item.id === key) {
                 const keys = reviewList[key]
                 const obj = {}
                 for (let i = 0; i < reviewDegree.length; i++) {
                   const current = reviewDegree[i]
-                  obj[current] = keys[current]
+                  const curVal = keys[current]
+                  curVal && (obj[current] = curVal)
                 }
                 item.reviewDataList = obj
               }
             }
-          }
-          this.renderFlag = true
-          this.loading = false
+            return item
+          })
         }
       } catch (error) {
         console.log(error)
+      } finally {
+        this.loading = false
       }
     },
     async pageChange_handler(page) {
@@ -204,9 +209,8 @@ export default {
       document.body.scrollTop = document.documentElement.scrollTop = 0
     },
     getObjValues(obj) {
-      if (obj === undefined) {
-        return false
-      }
+      if (!obj) return false
+
       const newarr = []
       for (const key in obj) {
         if (obj[key]) {
