@@ -3,8 +3,8 @@
  * @version:
  * @Author: panjian
  * @Date: 2020-03-31 22:54:28
- * @LastEditors: panjian
- * @LastEditTime: 2020-07-13 18:57:35
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-08-05 17:50:58
  */
 // import axios from '../axios'
 import axios from '../axiosConfig'
@@ -90,7 +90,8 @@ export default {
   // 物流上传
   expressUpload(params) {
     return axios.post(
-      `/api/o/v1/express/importExpressListNew?operatorId=${params.operatorId}`,
+      // `/api/o/v1/express/importExpressListNew?operatorId=${params.operatorId}`,
+      `/api/ex/v1/express/importExpressListNew?operatorId=${params.operatorId}`,
       params
     )
   },
