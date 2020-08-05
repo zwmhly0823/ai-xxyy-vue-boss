@@ -51,6 +51,7 @@
           v-model="formData.packageCount"
           :style="{ width: '200px' }"
           value-key="index"
+          @change="selectPackageCount"
         >
           <el-option
             v-for="i in packageCountList"
@@ -62,7 +63,7 @@
       </el-form-item>
       <el-form-item label="商品信息 :" v-if="showGoods">
         <el-table
-          :data="goodsData"
+          :data="goodsShowData"
           border
           style="width: 450px"
           header-cell-class-name="header-height"
@@ -155,7 +156,8 @@ export default {
       packageCountList: 0,
       // 商品信息
       showGoods: false,
-      goodsData: []
+      goodsData: [],
+      goodsShowData: []
     }
   },
   methods: {
@@ -316,8 +318,6 @@ export default {
         .then((res) => {
           if (res.payload && res.payload.length) {
             this.goodsData = res.payload
-            this.showGoods = true
-            console.log(this.goodsData)
           }
         })
         .catch(() => {
@@ -347,6 +347,12 @@ export default {
         this.packageCountList = baseCount - baseCount
       }
     },
+    selectPackageCount(val) {
+      this.goodsShowData = this.goodsData.slice(0, val)
+      this.$nextTick(() => {
+        this.showGoods = true
+      })
+    },
     // 提交表单
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
@@ -365,7 +371,7 @@ export default {
     prepareData() {
       const userinfo = JSON.parse(localStorage.getItem('staff'))
       const packageBoxs = []
-      this.goodsData.forEach((item) => {
+      this.goodsShowData.forEach((item) => {
         packageBoxs.push({
           id: item.id,
           name: item.name,
