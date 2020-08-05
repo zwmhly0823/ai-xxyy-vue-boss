@@ -58,7 +58,7 @@ export default {
   created() {
     // 随材打包只对特定人员可见
     const userinfo = JSON.parse(localStorage.getItem('staff'))
-    const passUser = ['15210892350', '17610067673', '13552914531']
+    const passUser = ['15210892350', '17610067673', '18515545600']
     if (passUser.includes(userinfo.mobile)) {
       this.showMergeBoxes = true
     }
