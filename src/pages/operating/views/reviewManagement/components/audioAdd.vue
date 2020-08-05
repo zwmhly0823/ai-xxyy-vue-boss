@@ -4,7 +4,7 @@
  * @Author: songyanan
  * @Date: 2020-05-11 14:30:00
  * @LastEditors: Shentong
- * @LastEditTime: 2020-08-04 16:36:50
+ * @LastEditTime: 2020-08-05 19:23:05
  */
  -->
 <template>
@@ -259,9 +259,7 @@ export default {
       }
     },
     /** 选择课程类型时 */
-    onCourseTypeChange(courseType) {
-      console.log('courseType', courseType)
-    },
+    onCourseTypeChange(courseType) {},
     initData() {
       const arr = Object.keys(this.form)
       arr.map((item, index) => {
@@ -299,16 +297,6 @@ export default {
     async handleSubmit() {
       const { type, difficulty, level, unit, lesson } = this.form
       const { degree, rate } = this.commentFrom
-      console.log(
-        'this.form',
-        type,
-        difficulty,
-        level,
-        unit,
-        lesson,
-        degree,
-        rate
-      )
       const {
         coursePayload,
         scoreObj,
@@ -401,7 +389,6 @@ export default {
         fileUrl, // TODO:
         opreation: 'ENABLE'
       }
-      console.log('params', params)
       try {
         const res = await this.$http.RiviewCourse.addRiviewInform(params)
         if (res.code === 0) {
