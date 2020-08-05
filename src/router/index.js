@@ -195,7 +195,7 @@ const routes = [
         meta: {
           title: '群SOP',
           module: 'community',
-          show: true
+          show: false
         }
       },
       {
@@ -203,7 +203,7 @@ const routes = [
           'https://wgj.xiaoxiongmeishu.com/Site/AccuratePush/accuratePush.html',
         meta: {
           title: '群发消息',
-          show: true
+          show: false
         }
       },
       {
@@ -211,7 +211,7 @@ const routes = [
           'https://wgj.xiaoxiongmeishu.com/Marketing/FriendsCircle/FriendsCircleList',
         meta: {
           title: '发朋友圈',
-          show: true
+          show: false
         }
       },
       {
@@ -219,7 +219,7 @@ const routes = [
           'https://wgj.xiaoxiongmeishu.com/Equipment/QuickReply/QuickReplyList',
         meta: {
           title: '快捷回复',
-          show: true
+          show: false
         }
       },
       {
@@ -227,28 +227,28 @@ const routes = [
           'https://wgj.xiaoxiongmeishu.com/Equipment/AutoCreateCluster/KeyClusterList',
         meta: {
           title: '自动拉群',
-          show: true
+          show: false
         }
       },
       {
         path: 'https://wgj.xiaoxiongmeishu.com/WeiXin/Tag/WeiXinTagList',
         meta: {
           title: '微信标签',
-          show: true
+          show: false
         }
       },
       // {
       //   path: 'https://wgj.xiaoxiongmeishu.com/Equipment/Material/MaterialList',
       //   meta: {
       //     title: '素材库',
-      //     show: true
+      //     show: false
       //   }
       // },
       {
         path: 'https://wgj.xiaoxiongmeishu.com/WeiXin/Cluster/ClusterList',
         meta: {
           title: '微信群',
-          show: true
+          show: false
         }
       },
       {
