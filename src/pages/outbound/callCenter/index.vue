@@ -4,7 +4,7 @@
  * @Author: zhangjiawen
  * @Date: 2020-07-31 17:53:04
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-08-05 13:00:36
+ * @LastEditTime: 2020-08-05 15:19:30
 -->
 <template>
   <div class="container">
@@ -139,15 +139,17 @@
     >
       <div>
         <el-form :inline="true" class="demo-form-inline">
-          <el-form-item label="绑定坐席人员">
-            <group-sell
-              style="width:160px !important;margin-right: 20px;"
-              @result="getTeachId('groupSell', arguments)"
-              :name="'groupSell'"
-              tip="请输入绑定坐席名称"
-              size="small"
-            />
-          </el-form-item>
+          <p style="padding-left: 19px;">
+            <el-form-item label="绑定坐席人员">
+              <group-sell
+                style="width:160px !important;margin-right: 20px;"
+                @result="getTeachId('groupSell', arguments)"
+                :name="'groupSell'"
+                tip="请输入绑定坐席名称"
+                size="small"
+              />
+            </el-form-item>
+          </p>
           <p>
             <el-form-item label="绑定电话类型">
               <el-radio-group v-model="user_radio">
@@ -156,15 +158,17 @@
               </el-radio-group>
             </el-form-item>
           </p>
-          <el-form-item label="绑定电话号码">
-            <el-input
-              size="mini"
-              style="width:160px"
-              @input="changeNum()"
-              v-model="user_phone"
-              placeholder="请输入绑定电话号码"
-            ></el-input>
-          </el-form-item>
+          <p>
+            <el-form-item label="绑定电话号码">
+              <el-input
+                size="mini"
+                style="width:160px"
+                @input="changeNum()"
+                v-model="user_phone"
+                placeholder="请输入绑定电话号码"
+              ></el-input>
+            </el-form-item>
+          </p>
         </el-form>
       </div>
       <span slot="footer" class="dialog-footer">
@@ -249,14 +253,19 @@ export default {
       if (+val.use_status === 1) {
         return false
       }
-      // this.user_name = val.agent_name
-      this.user_radio = val.tel_type === '1' ? '手机号' : 'IP电话'
-      // this.user_phone = val.tel
+      this.user_radio = '手机号'
       this.listData = val
       this.centerDialogVisible = true
     },
     // 绑定
     postBind() {
+      if (!this.user_name || !this.user_phone) {
+        return this.$message({
+          showClose: true,
+          message: '请输入姓名和电话',
+          type: 'error'
+        })
+      }
       const { id } = this.listData
       const telTypeName = this.user_radio === '手机号' ? 'MOBILE' : 'IP_PHONE'
       const parmes = {
@@ -317,7 +326,7 @@ export default {
         .catch(() => {
           this.$message({
             type: 'info',
-            message: '已取消删除'
+            message: '已取消解绑'
           })
         })
     },
