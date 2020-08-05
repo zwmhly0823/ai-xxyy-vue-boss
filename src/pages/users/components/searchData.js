@@ -150,6 +150,28 @@ const enums = {
       id: 2,
       text: '半年课班'
     }
+  ],
+  supList: [
+    {
+      id: 's1',
+      text: 's1'
+    },
+    {
+      id: 's2',
+      text: 's2'
+    },
+    {
+      id: 's3',
+      text: 's3'
+    },
+    {
+      id: 's4',
+      text: 's4'
+    },
+    {
+      id: 's5',
+      text: 's5'
+    }
   ]
 }
 
