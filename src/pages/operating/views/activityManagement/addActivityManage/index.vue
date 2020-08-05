@@ -188,7 +188,7 @@
       <el-dialog
         title="赠品设置"
         :visible.sync="dialogGroupVisible"
-        width="70%"
+        width="76%"
         destroy-on-close
       >
         <ChooseProduct
