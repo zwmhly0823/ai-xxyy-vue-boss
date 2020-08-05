@@ -20,6 +20,7 @@
       :placeholder="placeholderText"
       :remote-method="handleDebounce"
       :loading="loading"
+      :style="myStyle"
       :disabled="isDisabled"
       @change="onChange"
     >
@@ -60,6 +61,10 @@ export default {
     teacherId: {
       type: Array,
       default: () => []
+    },
+    myStyle: {
+      type: Object,
+      default: () => {}
     },
     isDisabled: {
       type: Boolean,

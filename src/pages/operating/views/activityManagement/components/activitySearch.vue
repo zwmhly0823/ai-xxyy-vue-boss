@@ -16,7 +16,7 @@
         name="trialTerms"
         placeholder="体验课排期"
         type="0"
-        :myStyle="{ width: '100px' }"
+        :myStyle="{ width: '140px' }"
         @result="getSearchData('trialTerms', arguments)"
       />
     </div>
@@ -26,7 +26,7 @@
         name="systemTerms"
         placeholder="系统课排期"
         type="1"
-        :myStyle="{ width: '100px' }"
+        :myStyle="{ width: '140px' }"
         @result="getSearchData('systemTerms', arguments)"
       />
     </div>
