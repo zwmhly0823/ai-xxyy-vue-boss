@@ -4,7 +4,7 @@
  * @Author: zhangjiawen
  * @Date: 2020-07-31 17:53:04
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-08-04 22:05:16
+ * @LastEditTime: 2020-08-05 13:00:36
 -->
 <template>
   <div class="container">
@@ -105,10 +105,16 @@
       <el-table-column label="操作" width="100">
         <template slot-scope="scope">
           <span
-            style="color: blue;
-            cursor: pointer;"
+            class="handle-btn"
+            @click="unBind(scope.row)"
+            v-if="+scope.row.use_status === 1"
+            >解绑</span
+          >
+          <span
+            class="handle-btn"
             @click="goBind(scope.row)"
-            >{{ +scope.row.use_status === 1 ? '--' : '绑定' }}</span
+            v-if="+scope.row.use_status === 0"
+            >绑定</span
           >
         </template>
       </el-table-column>
@@ -259,9 +265,14 @@ export default {
         tel: this.user_phone,
         telType: telTypeName
       }
-      return this.$http.Outbound.bindTel(parmes, this.currentPage)
+      return this.$http.Outbound.bindTel(parmes)
         .then((res) => {
           if (+res.code === 0) {
+            this.centerDialogVisible = false
+            setTimeout(() => {
+              this.getPhoneList()
+            }, 1000)
+
             this.$message({
               showClose: true,
               message: '成功绑定',
@@ -271,6 +282,43 @@ export default {
         })
         .catch(() => {
           // loading.close()
+        })
+    },
+
+    // 解绑
+    unBind(val) {
+      this.$confirm(
+        `您即将给员工${val.teacherInfo.realname}进行坐席解绑, 请确认?`,
+        '解绑确认',
+        {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }
+      )
+        .then(() => {
+          return this.$http.Outbound.unbindTel(val.id)
+            .then((res) => {
+              if (+res.code === 0) {
+                setTimeout(() => {
+                  this.getPhoneList()
+                }, 1000)
+                this.$message({
+                  showClose: true,
+                  message: '解绑成功',
+                  type: 'success'
+                })
+              }
+            })
+            .catch(() => {
+              // loading.close()
+            })
+        })
+        .catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          })
         })
     },
     // 分页
@@ -330,6 +378,10 @@ export default {
   }
   .demo-form-flex {
     display: flex;
+  }
+  .handle-btn {
+    color: blue;
+    cursor: pointer;
   }
 }
 .el-input__inner {
