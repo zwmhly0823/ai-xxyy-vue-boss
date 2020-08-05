@@ -53,6 +53,9 @@
           <div v-if="scope.row.type === 'ADJUSTMENT_CLASS'">
             调班
           </div>
+          <div v-if="scope.row.type === 'PACKAGE_BOX'">
+            随材打包
+          </div>
           <div v-if="scope.row.type === 'UNCREDITED'">
             无归属订单审批
           </div>
@@ -703,6 +706,9 @@ export default {
       if (ADJUST_TYPE.includes(type)) {
         this.openAdjustDetail(type, id)
       }
+      if (type === 'PACKAGE_BOX') {
+        this.openPackageDetaild(id)
+      }
     },
     openAdjustDetail(type, id) {
       this.adjustDrawerData.loading = true
@@ -823,6 +829,61 @@ export default {
             )
           }
           this.adjustDrawerData.loading = false
+        })
+        .catch(() => {
+          this.adjustDrawerData.loading = false
+          this.$message.error('获取审批详情失败')
+        })
+    },
+    openPackageDetaild(id) {
+      this.adjustDrawerData.loading = true
+      this.$refs.adjustDrawerCom.handleDrawerOpen()
+      this.$http.Approval.getPackageInfo(id)
+        .then((res) => {
+          this.adjustDrawerData.loading = false
+          if (res && res.payload) {
+            const payData = res.payload
+            Object.assign(this.adjustDrawerData, {
+              title: '随材打包申请',
+              flowApprovalId: payData.flowApprovalId,
+              content: [
+                {
+                  label: '申请人',
+                  value: payData.applyName
+                },
+                {
+                  label: '申请人部门',
+                  value: payData.applyDepartment
+                },
+                {
+                  label: '用户电话',
+                  value: payData.userTel,
+                  valueId: payData.userId
+                },
+                {
+                  label: '订单号',
+                  value: payData.outTradeNo
+                },
+                {
+                  label: '当前物流状态',
+                  value: payData.currentExpress
+                },
+                {
+                  label: '打包数量',
+                  value: payData.packageCount
+                },
+                {
+                  label: '商品信息',
+                  type: 'arrayInfo',
+                  value: JSON.parse(payData.packageProduct)
+                },
+                {
+                  label: '申请理由',
+                  value: payData.applyReason
+                }
+              ]
+            })
+          }
         })
         .catch(() => {
           this.adjustDrawerData.loading = false
