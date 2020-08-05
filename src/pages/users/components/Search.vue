@@ -245,6 +245,18 @@
               />
             </div>
           </el-form-item>
+          <el-form-item label="课程难度:">
+            <div class="search-group">
+              <simple-select
+                name="sup"
+                placeholder="请选择"
+                :my-style="{ width: '100px' }"
+                :multiple="false"
+                :data-list="supList"
+                @result="getSearchData('sup', arguments)"
+              />
+            </div>
+          </el-form-item>
           <div class="handle-area d-flex align-center">
             <el-button size="mini" @click="advancedSearch" type="primary"
               >高级筛选</el-button
@@ -333,10 +345,10 @@ export default {
       // console.log(key, res)
 
       if (search) {
-        if (key === 'sup') {
-          const r = search[key].map((item) => `s${item}`)
-          search[key] = r
-        }
+        // if (key === 'sup') {
+        //   const r = search[key].map((item) => `s${item}`)
+        //   search[key] = r
+        // }
         // 系统课转化
         if (key === 'user_status') {
           // 未转化
