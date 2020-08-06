@@ -3,8 +3,8 @@
  * @version:
  * @Author: shentong
  * @Date: 2020-03-13 14:38:28
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-07-28 23:05:19
+ * @LastEditors: zhangjianwen
+ * @LastEditTime: 2020-08-03 18:20:23
  */
 import Base from './modules/Base'
 import Login from './modules/Login'
@@ -30,6 +30,7 @@ import WorkerHandover from './modules/WorkerHandover'
 import Staff from './modules/Staff' // 员工
 import NoticeCenter from './modules/NoticeCenter'
 import Community from './modules/Community' // 社群工具
+import Outbound from './modules/Outbound' // 社群工具
 
 export default Object.assign(
   {},
@@ -56,5 +57,6 @@ export default Object.assign(
   { WorkerHandover },
   { Staff },
   { NoticeCenter },
-  { Community }
+  { Community },
+  { Outbound }
 )
