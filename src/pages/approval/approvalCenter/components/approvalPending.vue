@@ -1271,6 +1271,7 @@ export default {
               type: 'notDone',
               title: '随材打包申请',
               flowApprovalId: payData.flowApprovalId,
+              packagePower: this.resetParams.staffMobile !== '15027913263', // 只有15027913263这个人有权限走随材打包的审批
               content: [
                 {
                   label: '申请人',

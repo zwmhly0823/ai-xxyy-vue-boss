@@ -52,6 +52,7 @@ function getStaff(staffInfo) {
     {
       staffId: staff.id,
       staffName: staff.realName,
+      staffMobile: staff.mobile,
       isStaffId:
         staff.positionId === '1' ||
         staff.positionId === '2' ||

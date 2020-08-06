@@ -83,7 +83,11 @@
       </el-form-item>
     </el-form>
     <div
-      v-if="adjustDrawerData.type === 'notDone' && isStaffId"
+      v-if="
+        adjustDrawerData.type === 'notDone' &&
+          isStaffId &&
+          !adjustDrawerData.packagePower
+      "
       class="adjust-drawer-button-box"
     >
       <el-button @click="adjustDrawerPass('reject')">拒 绝</el-button>
@@ -112,7 +116,15 @@
 <script>
 export default {
   name: 'adjustDrawer',
-  props: { adjustDrawerData: {}, isStaffId: {}, is3d: { default: 0 } },
+  props: {
+    adjustDrawerData: {},
+    isStaffId: {},
+    is3d: { default: 0 },
+    packagePower: {
+      type: Boolean,
+      default: true
+    }
+  },
   data() {
     return {
       adjustDrawerShow: false,
