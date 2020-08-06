@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-08-06 17:15:04
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-06 18:36:54
+ * @LastEditTime: 2020-08-06 22:03:52
 -->
 <template>
   <el-row type="flex" class="app-main height">
@@ -24,51 +24,78 @@
           <el-table-column prop="address" label="有效期"> </el-table-column>
           <el-table-column prop="address" label="状态"> </el-table-column>
           <el-table-column label="操作">
-            <template>
+            <template slot-scope="scope">
               <p class="primary-text">
-                <span>码库</span> | <span @click="handleInvalid">失效</span> |
-                <span @click="handleDelete">删除</span>
+                <span @click="handleOpenLibrary(scope.row)">码库</span> |
+                <span @click="handleInvalid(scope.row)">失效</span> |
+                <span @click="handleDelete(scope.row)">删除</span>
               </p>
             </template>
           </el-table-column>
         </el-table>
+        <!-- 分页 -->
+        <m-pagination
+          :current-page="currentPage"
+          :page-count="totalPages"
+          :total="totalElements"
+          @current-change="handleSizeChange"
+          show-pager
+          open="calc(100vw - 170px - 25px)"
+          close="calc(100vw - 50px - 25px)"
+        ></m-pagination>
       </div>
     </div>
   </el-row>
 </template>
 
 <script>
+import { openBrowserTab } from '@/utils/index'
+import MPagination from '@/components/MPagination/index.vue'
 export default {
+  components: {
+    MPagination
+  },
   data() {
     return {
       tableData: [
         {
+          id: 1,
           date: '2016-05-02',
           name: '王小虎',
           address: '上海市普陀区金沙江路 1518 弄'
         },
         {
+          id: 2,
           date: '2016-05-04',
           name: '王小虎',
           address: '上海市普陀区金沙江路 1517 弄'
         },
         {
+          id: 3,
           date: '2016-05-01',
           name: '王小虎',
           address: '上海市普陀区金沙江路 1519 弄'
         },
         {
+          id: 4,
           date: '2016-05-03',
           name: '王小虎',
           address: '上海市普陀区金沙江路 1516 弄'
         }
       ],
-      visibleInvalid: false,
-      visibleDelete: false
+      currentPage: 1,
+      totalElements: 0,
+      totalPages: 1
     }
   },
 
   methods: {
+    // 查看码库
+    handleOpenLibrary(row) {
+      console.log(row, 'library')
+      const { id } = row
+      openBrowserTab(`/marketing/#/redeemCodeLibrary/${id}`)
+    },
     // 失效
     handleInvalid(row) {
       console.log(row, 'invalid')
@@ -88,6 +115,11 @@ export default {
         // TODO: 调用接口
         this.$message.success('操作成功')
       })
+    },
+
+    handleSizeChange(page) {
+      console.log(page, 'page')
+      this.currentPage = page
     }
   }
 }
@@ -100,10 +132,7 @@ export default {
     border-bottom: 5px solid #f0f1f2;
   }
   &-list {
-    padding: 10px;
-    p {
-      margin: 0;
-    }
+    padding: 0 10px 10px;
     span {
       padding: 0 5px;
     }
