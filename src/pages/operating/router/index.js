@@ -1,7 +1,7 @@
 /*
  * @Date: 2020-03-13 15:20:21
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-07-30 12:17:33
+ * @LastEditors: liukun
+ * @LastEditTime: 2020-08-03 15:58:22
  * @FilePath: /ai-app-vue-toss/src/pages/studentTeam/router/index.js
  */
 import Vue from 'vue'
@@ -128,6 +128,15 @@ const routes = [
       keepAlive: false
     },
     component: () => import('../views/issueBearCoins/index.vue')
+  },
+  {
+    path: '/recommend',
+    name: 'recommend',
+    meta: {
+      title: '转介绍截图审批',
+      keepAlive: false
+    },
+    component: () => import('../views/recommend/changeRecommend.vue')
   }
 ]
 
