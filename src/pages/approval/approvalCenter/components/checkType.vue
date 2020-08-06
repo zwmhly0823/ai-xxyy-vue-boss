@@ -49,7 +49,8 @@ export default {
         { name: '调期申请', value: 'ADJUSTMENT_STAGE' },
         { name: '调级申请', value: 'ADJUSTMENT_SUP' },
         { name: '调班申请', value: 'ADJUSTMENT_CLASS' },
-        { name: '无归属订单审批', value: 'UNCREDITED' }
+        { name: '无归属订单审批', value: 'UNCREDITED' },
+        { name: '赠品', value: 'PROMOTIONS' }
       ],
       packageDataInner: ''
     }
