@@ -3,8 +3,8 @@
  * @version: 2.0.0
  * @Author: YangJiyong
  * @Date: 2020-03-24 12:49:53
- * @LastEditors: liukun
- * @LastEditTime: 2020-06-28 18:06:13
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-08-06 17:30:31
 -->
 <template>
   <div v-if="!item.hidden">
@@ -76,7 +76,7 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex'
-import '@/assets/fonts/iconfont.js' // iconfont 图标
+// import '@/assets/fonts/iconfont.js' // iconfont 图标
 export default {
   name: 'SidebarItem',
   props: {

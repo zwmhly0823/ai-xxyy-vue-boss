@@ -84,6 +84,11 @@ const menuItems = [
     link: 'community',
     text: '社群工具',
     isShow: true
+  },
+  {
+    link: 'marketing',
+    text: '营销中心',
+    isShow: true
   }
 ]
 
