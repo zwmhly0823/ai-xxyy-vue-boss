@@ -4,7 +4,7 @@
  * @Author: zhangjiawen
  * @Date: 2020-08-03 15:50:58
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-08-05 12:49:34
+ * @LastEditTime: 2020-08-06 15:35:24
  */
 
 import axios from '../axiosConfig'
@@ -41,9 +41,30 @@ export default {
               teacherInfo{
                 realname
                 department_name
+                department_id
               }
             }
           }
+        }`
+    })
+  },
+  // 根据id 获取老师id
+  getTeachId(parmes, page = 1, size = 500) {
+    const formattingQuery = JSON.stringify(parmes)
+
+    return axios.post(`/graphql/v1/toss`, {
+      query: `{
+        TeacherList(
+           query:${JSON.stringify(formattingQuery)},
+          page: ${page},
+          size:${size},
+          
+          )
+          {
+            department_id
+    id
+              }
+           
         }`
     })
   },

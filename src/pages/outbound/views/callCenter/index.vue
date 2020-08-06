@@ -4,7 +4,7 @@
  * @Author: zhangjiawen
  * @Date: 2020-07-31 17:53:04
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-08-05 15:19:30
+ * @LastEditTime: 2020-08-06 15:40:40
 -->
 <template>
   <div class="container">
@@ -24,7 +24,7 @@
           style="width:150px;padding-top: 6px;margin-right: 20px;"
           @result="getSearchData('groupSell', arguments)"
           :name="'groupSell'"
-          tip="绑定坐席名称查询"
+          tip="绑定坐席"
         />
         <el-form-item label="">
           <search-phone
@@ -45,18 +45,19 @@
             />
           </div> -->
         </el-form-item>
-        <department
+        <!-- <department
           style="width:130px;padding-top: 6px;margin-right: 20px;"
           @result="getSearchData('department', arguments)"
           :name="'department'"
           :onlyDept="1"
-        />
+        /> -->
         <el-form-item>
           <el-select
             size="mini"
             v-model="status"
             placeholder="使用状态"
             @change="getSearchData('status', arguments)"
+            clearable
           >
             <el-option label="使用中" value="1"></el-option>
             <el-option label="空闲中" value="0"></el-option>
@@ -181,9 +182,9 @@
 
 <script>
 import MPagination from '@/components/MPagination/index.vue'
-import Department from '@/components/MSearch/searchItems/department'
+// import Department from '@/components/MSearch/searchItems/department'
 import GroupSell from '@/components/MSearch/searchItems/groupSell.vue'
-import SearchPhone from '@/components/MSearch/searchItems/searchPhone.vue'
+import SearchPhone from '../components/searchPhone'
 import { formatData, isToss } from '@/utils/index'
 
 export default {
@@ -206,7 +207,8 @@ export default {
       user_phone: ''
     }
   },
-  components: { MPagination, Department, GroupSell, SearchPhone },
+  // components: { MPagination, Department, GroupSell, SearchPhone },
+  components: { MPagination, GroupSell, SearchPhone },
   created() {
     this.teacherId = isToss()
   },
@@ -217,8 +219,10 @@ export default {
     // 学员记录详情基本信息
     getPhoneList() {
       const parmes = {
-        teacher_id: this.agent,
-        id: this.phone
+        teacher_id: this.agent
+      }
+      if (this.phone) {
+        parmes.tel = this.phone
       }
       if (this.status) {
         parmes.use_status = this.status
@@ -335,19 +339,38 @@ export default {
       this.currentPage = val
       this.getPhoneList()
     },
-    //
-    getDepartment() {},
+    // 获取id
+    getTeachList(val) {
+      const numVal = val.map((item) => {
+        return +item
+      })
+      const parmes = { department_id: numVal }
+      return this.$http.Outbound.getTeachId(parmes, this.currentPage)
+        .then((res) => {
+          if (res && res.data && res.data.TeacherOutboundPage) {
+            this.outboundList = res.data.TeacherOutboundPage.content
+            this.totalElements = +res.data.TeacherOutboundPage.totalElements
+            this.totalPages = +res.data.TeacherOutboundPage.totalPages
+            console.log(111, this.lessonType)
+          }
+        })
+        .catch(() => {
+          // loading.close()
+        })
+    },
     // 改变状态
     getSearchData(key, val) {
       console.log(key, val)
       if (key === 'department') {
         this.department = val[0].department
+        // console.log(val[0].department)
+        this.getTeachList(this.department)
       }
       if (key === 'groupSell') {
         this.agent = val[0].groupSell
       }
       if (key === 'phone') {
-        this.phone = val[0]['']
+        this.phone = val[0]
       }
 
       this.getPhoneList()

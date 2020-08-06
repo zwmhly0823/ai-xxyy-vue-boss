@@ -4,7 +4,7 @@
  * @Author: zhangjiawen
  * @Date: 2020-07-31 17:53:04
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-07-31 18:12:56
+ * @LastEditTime: 2020-08-06 15:42:37
  */
 
 import Vue from 'vue'
@@ -32,7 +32,8 @@ const routes = [
       title: '席位配置',
       keepAlive: false
     },
-    component: () => import('../callCenter/index.vue')
+
+    component: () => import('../views/callCenter/index.vue')
   }
 ]
 const router = new VueRouter({
