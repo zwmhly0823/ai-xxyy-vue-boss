@@ -72,6 +72,28 @@
           </el-option>
         </el-select>
       </el-form-item>
+      <el-form-item>
+        <!-- 微信模块相关从@components/MSearch/searchItems/wxInput.vue粘贴来 -->
+        <el-autocomplete
+          v-model="searchParams.wechat"
+          size="mini"
+          clearable
+          filterable
+          reserve-keyword
+          :fetch-suggestions="weixinSearch"
+          :trigger-on-focus="false"
+          placeholder="微信号搜索"
+          @select="onWxSerch"
+          ref="wxnum"
+        >
+          <i class="el-icon-search el-input__icon" slot="suffix"></i>
+          <template slot-scope="{ item }">
+            <div style="display:flex">
+              <div class="name">{{ item.wechat_no || '-' }}</div>
+            </div>
+          </template>
+        </el-autocomplete>
+      </el-form-item>
     </el-form>
   </div>
 </template>
@@ -117,6 +139,10 @@ export default {
           label: '班级交接'
         }
       ],
+      wechatOptions: [],
+      searchParams: {
+        wechat: ''
+      },
       value: ''
     }
   },
@@ -131,6 +157,11 @@ export default {
     teacherId(val, old) {
       if (val !== old && !val) {
         this.$emit('result', '')
+      }
+    },
+    'searchParams.wechat'(val) {
+      if (!val) {
+        console.log('清空了微信项')
       }
     }
   },
@@ -168,6 +199,37 @@ export default {
     },
     onChangeType(item) {
       this.$emit('onType', item || '')
+    },
+    onWxSerch(data) {
+      console.log(data)
+      this.searchParams.wechat = data.wechat_no
+    },
+    // 输入微信号
+    async weixinSearch(queryString, cb) {
+      const reg = /^\w+$/
+      if (!+this.onlyWeixin) {
+        if (!reg.test(queryString)) {
+          this.searchParams.wechat = ''
+          return
+        }
+      }
+      // 输入内容查找到的关联信息（下拉框）
+      const list = await this.weixinCreateFilter(queryString)
+      // console.log('*****list******', list)
+      // cb 展示列表数据
+      cb(list)
+      this.$refs.wxnum.handleFocus()
+    },
+    // 调用微信号搜索接口
+    weixinCreateFilter(queryString) {
+      // 输入内容匹配到的关联信息（下拉框）
+      return this.$http.Weixin.getWeChatTeacherListEx(
+        'wechat_no.keyword',
+        queryString
+      ).then((res) => {
+        // console.log('微信搜索调用接口', res)
+        return res.data.WeChatTeacherListEx || []
+      })
     }
   }
 }
