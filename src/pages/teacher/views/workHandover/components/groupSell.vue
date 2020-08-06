@@ -94,11 +94,23 @@
           </template>
         </el-autocomplete>
       </el-form-item>
+      <el-form-item>
+        <el-input
+          placeholder="班级名称"
+          v-model="searchParams.teamName"
+          clearable
+          size="mini"
+          class="base-input"
+          @input="handleDebounce"
+        >
+        </el-input>
+      </el-form-item>
     </el-form>
   </div>
 </template>
 
 <script>
+import { debounce } from 'lodash'
 export default {
   props: {
     name: {
@@ -141,13 +153,19 @@ export default {
       ],
       wechatOptions: [],
       searchParams: {
-        wechat: ''
+        wechat: '',
+        teamName: ''
       },
       value: ''
     }
   },
   created() {
     this.getTeacher()
+  },
+  computed: {
+    handleDebounce() {
+      return debounce(this.inputHandler, 500)
+    }
   },
   watch: {
     teacherscope(val, old) {
@@ -230,6 +248,9 @@ export default {
         // console.log('微信搜索调用接口', res)
         return res.data.WeChatTeacherListEx || []
       })
+    },
+    inputHandler() {
+      console.log(this.searchParams.teamName)
     }
   }
 }
