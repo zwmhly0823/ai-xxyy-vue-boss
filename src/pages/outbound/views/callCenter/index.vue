@@ -4,7 +4,7 @@
  * @Author: zhangjiawen
  * @Date: 2020-07-31 17:53:04
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-08-06 15:40:40
+ * @LastEditTime: 2020-08-06 20:08:14
 -->
 <template>
   <div class="container">
@@ -143,6 +143,7 @@
           <p style="padding-left: 19px;">
             <el-form-item label="绑定坐席人员">
               <group-sell
+                ref="group"
                 style="width:160px !important;margin-right: 20px;"
                 @result="getTeachId('groupSell', arguments)"
                 :name="'groupSell'"
@@ -260,6 +261,9 @@ export default {
       this.user_radio = '手机号'
       this.listData = val
       this.centerDialogVisible = true
+      this.$refs.group.handleChange()
+
+      this.user_phone = ''
     },
     // 绑定
     postBind() {
@@ -284,7 +288,7 @@ export default {
             this.centerDialogVisible = false
             setTimeout(() => {
               this.getPhoneList()
-            }, 1000)
+            }, 2000)
 
             this.$message({
               showClose: true,
@@ -388,6 +392,7 @@ export default {
     getTeachId(key, val) {
       console.log(val)
       this.user_name = val[0].groupSell
+      console.log(this.user_name)
     },
     //
     formatDate(date) {
