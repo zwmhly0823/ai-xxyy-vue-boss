@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-05-19 17:18:39
  * @LastEditors: liukun
- * @LastEditTime: 2020-07-06 21:59:19
+ * @LastEditTime: 2020-08-06 16:28:44
 -->
 <template>
   <section class="bianju10">
@@ -446,8 +446,8 @@ export default {
     },
     refundType(val) {
       console.info(val, typeof val)
-      if (val === '0' || val === '1') {
-        this.searchJson.refundType = Number(val)
+      if (typeof val === 'number') {
+        this.searchJson.refundType = val
         this.arrangeParams()
       } else {
         this.searchJson.refundType = ''
