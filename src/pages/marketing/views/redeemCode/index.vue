@@ -4,13 +4,15 @@
  * @Author: YangJiyong
  * @Date: 2020-08-06 17:15:04
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-06 22:03:52
+ * @LastEditTime: 2020-08-07 21:34:59
 -->
 <template>
   <el-row type="flex" class="app-main height">
     <div class="app-main-container redeem-code">
       <div class="redeem-code-header d-flex">
-        <el-button type="primary" size="mini">创建兑换码</el-button>
+        <el-button type="primary" size="mini" @click="handleAdd"
+          >创建兑换码</el-button
+        >
       </div>
       <!-- list -->
       <div class="redeem-code-list">
@@ -21,6 +23,7 @@
           </el-table-column>
           <el-table-column prop="address" label="套餐商品"> </el-table-column>
           <el-table-column prop="address" label="客户标识"> </el-table-column>
+          <el-table-column prop="address" label="渠道"> </el-table-column>
           <el-table-column prop="address" label="有效期"> </el-table-column>
           <el-table-column prop="address" label="状态"> </el-table-column>
           <el-table-column label="操作">
@@ -45,14 +48,23 @@
         ></m-pagination>
       </div>
     </div>
+
+    <!-- 增加兑换码标题 -->
+    <add-redeem-code
+      :show="showAddDialog"
+      @cancel="handelCancelAdd"
+      @confirm="handelConfirmAdd"
+    />
   </el-row>
 </template>
 
 <script>
 import { openBrowserTab } from '@/utils/index'
 import MPagination from '@/components/MPagination/index.vue'
+import AddRedeemCode from './add.vue'
 export default {
   components: {
+    AddRedeemCode,
     MPagination
   },
   data() {
@@ -83,6 +95,7 @@ export default {
           address: '上海市普陀区金沙江路 1516 弄'
         }
       ],
+      showAddDialog: false,
       currentPage: 1,
       totalElements: 0,
       totalPages: 1
@@ -90,6 +103,17 @@ export default {
   },
 
   methods: {
+    /**
+     * 获取兑换码列表
+     */
+    getData() {
+      console.log('data')
+    },
+
+    // 创建兑换码按钮
+    handleAdd() {
+      this.showAddDialog = true
+    },
     // 查看码库
     handleOpenLibrary(row) {
       console.log(row, 'library')
@@ -120,6 +144,19 @@ export default {
     handleSizeChange(page) {
       console.log(page, 'page')
       this.currentPage = page
+    },
+
+    // 创建成功回调 @status - true:继续创建，false-返回列表
+    handelConfirmAdd(status) {
+      this.showAddDialog = status
+      this.currentPage = 1
+      setTimeout(() => {
+        this.getData()
+      }, 1000)
+    },
+    // 取消创建回调
+    handelCancelAdd() {
+      this.showAddDialog = false
     }
   }
 }

@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-08-06 17:08:18
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-06 20:29:54
+ * @LastEditTime: 2020-08-07 11:08:14
  */
 import Vue from 'vue'
 import VueRouter from 'vue-router'
@@ -22,7 +22,7 @@ const routes = [
     },
     redirect: '/redeemCode'
   },
-  //   兑换码
+  //   兑换码列表
   {
     path: '/redeemCode',
     name: 'redeemCode',
@@ -42,6 +42,16 @@ const routes = [
     },
     component: () => import('../views/redeemCode/library.vue')
   }
+  //   创建兑换码
+  //   {
+  //     path: '/addRedeemCode',
+  //     name: 'addRedeemCode',
+  //     meta: {
+  //       title: '创建兑换码',
+  //       keepAlive: true
+  //     },
+  //     component: () => import('../views/redeemCode/add.vue')
+  //   }
 ]
 
 const router = new VueRouter({

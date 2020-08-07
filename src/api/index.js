@@ -4,7 +4,7 @@
  * @Author: shentong
  * @Date: 2020-03-13 14:38:28
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-07-28 23:05:19
+ * @LastEditTime: 2020-08-07 16:42:49
  */
 import Base from './modules/Base'
 import Login from './modules/Login'
@@ -30,6 +30,7 @@ import WorkerHandover from './modules/WorkerHandover'
 import Staff from './modules/Staff' // 员工
 import NoticeCenter from './modules/NoticeCenter'
 import Community from './modules/Community' // 社群工具
+import Marketing from './modules/Marketing' // 营销中心
 
 export default Object.assign(
   {},
@@ -56,5 +57,6 @@ export default Object.assign(
   { WorkerHandover },
   { Staff },
   { NoticeCenter },
-  { Community }
+  { Community },
+  { Marketing }
 )
