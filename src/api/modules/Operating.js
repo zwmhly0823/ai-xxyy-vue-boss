@@ -3,8 +3,8 @@
  * @version:
  * @Author: Shentong
  * @Date: 2020-03-16 19:46:39
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-07-30 12:17:21
+ * @LastEditors: Shentong
+ * @LastEditTime: 2020-08-07 16:40:04
  */
 import axios from '../axiosConfig'
 
@@ -486,5 +486,19 @@ export default {
         }
       }`
     })
+  },
+  /**
+   * 教师渠道绑定-保存
+   */
+  saveOrUpdate(params) {
+    return axios.post('/api/t/v1/teacherChannel/saveOrUpdate', params)
+  },
+  /**
+   * 教师渠道绑定-查找记录
+   */
+  getRecord(params) {
+    return axios.post(
+      `/api/t/v1/teacherChannel/getRecord?period=${params.period}`
+    )
   }
 }

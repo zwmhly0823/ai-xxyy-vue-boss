@@ -299,6 +299,10 @@
         </el-row>
       </div>
     </div>
+    <ChannelThreelist
+      :channelThreededList="channelThreededList"
+      @editRow="editRow"
+    ></ChannelThreelist>
     <!-- 取消、下一步 -->
     <div class="operate-btn">
       <el-button size="small" type="primary" @click="stepOperate(0)">
@@ -318,7 +322,6 @@
       :before-close="handleCloseUpdata"
       width="30%"
     >
-      <!-- action="/api/o/v1/express/importExpressList" -->
       <el-upload
         ref="upload"
         action=""
@@ -353,6 +356,7 @@
     <channel-threeded
       :centerDialogVisible="centerDialogVisible"
       @dialogOperate="dialogOperate"
+      :editChannelThreeded="editChannelThreeded"
       v-if="centerDialogVisible"
     ></channel-threeded>
   </div>
@@ -361,6 +365,8 @@
 <script>
 import { mapGetters } from 'vuex'
 import ChannelThreeded from './ChannelThreeded'
+import ChannelThreelist from './ChannelThreelist'
+
 const robinNumRuls = [
   { required: true, message: '接速不能为空' },
   { type: 'number', message: '接速必须为数字值' },
@@ -377,7 +383,7 @@ const robinNumRuls = [
 ]
 export default {
   props: {},
-  components: { ChannelThreeded },
+  components: { ChannelThreeded, ChannelThreelist },
   data() {
     var checkFun = (rule, value, callback) => {
       if (!value && value !== 0) {
@@ -400,6 +406,8 @@ export default {
       callback()
     }
     return {
+      editChannelThreeded: null,
+      channelThreededList: [],
       centerDialogVisible: false,
       uploading: false,
       dialogVisible: false,
@@ -504,11 +512,19 @@ export default {
     if (this.schedulePeriod) {
       this.getLeads({ period: this.schedulePeriod, courseType })
     }
+    this.getRecord()
   },
   methods: {
+    editRow(row) {
+      console.log('row', row)
+      this.centerDialogVisible = true
+      this.editChannelThreeded = row
+    },
     dialogOperate(args) {
-      const { close = true } = args
+      const { close = true, submitSucc = false } = args
       this.centerDialogVisible = !close
+      this.editChannelThreeded = null
+      if (submitSucc) this.getRecord()
     },
     submitUpload(file, filelist) {
       this.$refs.upload.submit()
@@ -566,15 +582,22 @@ export default {
 
       cb && cb()
     },
-    /** 上传进度 */
-    uploadProgress(event, file, fileList) {
-      console.log(
-        event,
-        file,
-        fileList,
-        'event, file, fileList--------------------'
-      )
+    /** 渠道线索定向分配 教师渠道绑定-查找记录 */
+    async getRecord(cb) {
+      try {
+        const { period = '' } = this.$route.params
+        const res = await this.$http.Operating.getRecord({ period })
+        console.log(res, 'getRecord-res')
+        if (res.code === 0) {
+          this.channelThreededList = res.payload
+          cb && cb()
+        }
+      } catch (err) {
+        this.$message.error('配置出错')
+      }
     },
+    /** 上传进度 */
+    uploadProgress(event, file, fileList) {},
     /** 导入数据 */
     exportExcel() {
       this.dialogVisible = true
@@ -650,7 +673,11 @@ export default {
     padding-right: 6%;
   }
   .set-area {
-    padding: 0 20px 20px;
+    padding: 10px;
+    border: 1px solid #eee;
+    border-radius: 5px;
+    margin-top: 10px;
+    // padding: 0 20px 20px;
     .set-percent {
       h4 {
         margin: 0;

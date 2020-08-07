@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-06-30 19:21:08
  * @LastEditors: Shentong
- * @LastEditTime: 2020-08-06 23:22:54
+ * @LastEditTime: 2020-08-07 19:54:55
 -->
 <template>
   <div class="channel-threeded">
@@ -35,7 +35,7 @@
               size="mini"
               clearable
               placeholder="选择渠道"
-              @change="changeChannelId('hhh')"
+              :disabled="formList[index].isEdit"
             >
               <el-option
                 v-for="item in channelLeves"
@@ -105,7 +105,6 @@
 </template>
 <script>
 import { cloneDeep } from 'lodash'
-// import GroupSell from '@/components/MSearch/searchItems/groupSell'
 import Department from './department'
 import axios from '@/api/axiosConfig'
 export default {
@@ -113,6 +112,10 @@ export default {
     centerDialogVisible: {
       type: Boolean,
       default: false
+    },
+    editChannelThreeded: {
+      type: Object,
+      default: () => null
     }
   },
   data() {
@@ -137,7 +140,7 @@ export default {
     }
   },
   components: {
-    // GroupSell,
+    // ChannelThreelist,
     Department
   },
   computed: {
@@ -146,70 +149,112 @@ export default {
     }
   },
   async created() {
+    console.log('editChannelThreeded', this.editChannelThreeded)
     await this.getChannelLeves()
-    this.initFrom()
+    if (this.editChannelThreeded === null) {
+      this.initForm()
+    } else {
+      const { channelId } = this.editChannelThreeded
+      this.formList = [
+        {
+          ...this.formItem,
+          channel: channelId,
+          isEdit: true
+        }
+      ]
+    }
     this.getTeacher()
   },
   mounted() {},
   methods: {
-    initFrom() {
+    initForm() {
       this.formList.push(cloneDeep(this.formItem))
     },
-    onSelect(data) {
-      console.log(data)
-      //   this.$emit('channelSearchValue', data.length > 0 ? data : '')
-    },
     dialogClose() {
-      console.log('on close is invoked')
+      this.clearFormData()
       this.$emit('dialogOperate', { close: true })
     },
     getDepartment(res) {
-      console.log('idnex', res)
       const { data, index } = res
       this.formList[index].teacherscope = data.pay_teacher_id || null
       this.formList[index].teacherId = []
+
       this.getTeacher(index)
-      //   this.teacherscope = res.pay_teacher_id || null
-      //   this.setSeachParmas(res, ['pay_teacher_id'], 'terms')
     },
-    // 选择社群销售
-    // selectPayTeacher(res) {
-    //   if (!res.pay_teacher_id || res.pay_teacher_id.length === 0) {
-    //     this.teacherscope_trial = null
-    //     if (this.teacherscope && this.teacherscope.length > 0) {
-    //       res = {
-    //         pay_teacher_id: this.teacherscope
-    //       }
-    //     } else {
-    //       res = ''
-    //     }
-    //   } else {
-    //     this.teacherscope_trial = res.pay_teacher_id
-    //   }
-    //   //   this.setSeachParmas(res, ['pay_teacher_id'], 'terms')
-    // },
     cleanDept() {
       this.showDept = false
       this.$nextTick(() => {
         this.showDept = true
       })
     },
-    dialogOperate(type) {
-      console.log(this.formList)
+    clearFormData() {
+      this.cleanDept()
+      this.formList = [cloneDeep(this.formItem)]
+    },
+    async dialogOperate(type) {
+      const callback = () => {
+        this.clearFormData()
+        this.$emit('dialogOperate', { close: true, submitSucc: true })
+      }
       if (type === 'cancel') {
-        this.cleanDept()
-        this.formList = [cloneDeep(this.formItem)]
-        // this.$emit('dialogOperate', { close: true })
+        this.dialogClose()
+      } else if (type === 'submit' && this.validateForm()) {
+        await this.submitForm(callback)
       }
     },
     packageFormData() {
-      // const { }
+      const { courseType = '0', period = '', formArr = [] } = this.$route.params
+
+      this.formList.forEach((item) => {
+        const { channel = '', teacherId = [] } = item
+        teacherId.forEach((id) => {
+          formArr.push({
+            period,
+            channelId: channel,
+            teacherId: id,
+            courseCategory: courseType !== '0' ? '2' : '0'
+          })
+        })
+      })
+      return formArr
     },
-    submitForm() {
-      // const
+    validateForm() {
+      for (const item of this.formList) {
+        if (!item.channel || !item.teacherId.length) {
+          this.$message.warning('请先分配好渠道线索哟~')
+          return false
+        }
+      }
+      return true
     },
-    changeChannelId(res, b, c) {
-      console.log('渠道res', res, b, c)
+    /** 教师渠道绑定-保存 */
+    async submitForm(cb) {
+      const loadingInstance = this.$loading({
+        target: 'body',
+        lock: true,
+        text: '正在设置...'
+      })
+      try {
+        const params = this.packageFormData()
+        const res = await this.$http.Operating.saveOrUpdate(params)
+        if (res.code === 0 && cb) cb()
+      } catch (err) {
+        this.$message.error('配置出错')
+      } finally {
+        // 以服务的方式调用的 Loading 需要异步关闭
+        this.$nextTick(() => loadingInstance.close())
+      }
+    },
+    /** 教师渠道绑定-查找记录 */
+    async getRecord(cb) {
+      try {
+        const { period = '' } = this.$route.params
+        const res = await this.$http.Operating.getRecord({ period })
+        console.log(res, 'getRecord-res')
+        if (res.code === 0 && cb) cb()
+      } catch (err) {
+        this.$message.error('配置出错')
+      }
     },
     // 添加一个渠道池
     addFormItem() {
@@ -257,22 +302,7 @@ export default {
     },
     onChange(item) {
       console.log(item, 'teacherid-item')
-      //   const obj = {
-      //     [this.name]: item
-      //   }
-      //   if (this.returnList) {
-      //     Object.assign(obj, {
-      //       teacherList: this.teacherList
-      //     })
-      //   }
-      //   this.$emit('result', item ? obj : '')
     }
-  },
-  watch: {
-    // teacherscope(val, old) {
-    //   this.teacherId = ''
-    //   this.getTeacher()
-    // }
   }
 }
 </script>
