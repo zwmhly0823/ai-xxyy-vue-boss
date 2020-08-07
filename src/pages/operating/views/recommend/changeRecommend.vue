@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-08-03 15:45:34
  * @LastEditors: liukun
- * @LastEditTime: 2020-08-05 18:39:15
+ * @LastEditTime: 2020-08-07 17:50:15
 -->
 <template>
   <!-- wrap_lk:给分页留了40高度 -->
@@ -73,12 +73,9 @@
       <el-table :data="tableData">
         <el-table-column label="用户信息" align="center">
           <template slot-scope="scope">
-            <div>
-              {{
-                scope.row.outTradeNo &&
-                  scope.row.outTradeNo.replace(/[a-z]*/g, '')
-              }}<br />{{ scope.row.transactionId }}
-            </div>
+            <el-link type="primary" :href="scope.row.attsUrl" target="_blank">{{
+              scope.row.attsUrl22
+            }}</el-link>
           </template>
         </el-table-column>
         <el-table-column prop="regtypeStr" label="活动名称" align="center">

@@ -314,6 +314,9 @@
           ></el-tab-pane>
           <el-tab-pane label="用户资产" name="userAsset"></el-tab-pane>
           <el-tab-pane label="通知事件记录" name="notifyRecord"></el-tab-pane>
+          <el-tab-pane label="转介绍" name="changeRecommend">
+            <changeRecommend />
+          </el-tab-pane>
         </el-tabs>
       </div>
       <!-- 夹在中间的学习记录,作品集 -->
@@ -462,6 +465,7 @@
 
 <script>
 import { formatDate } from '@/utils/mini_tool_lk'
+import changeRecommend from './changeRecommend/index.vue'
 import recommend from './recommendComponents/recommend.vue'
 import showAddress from './addressComponents/showAddress.vue'
 import trackFlow from './trackFlow/index'
@@ -473,6 +477,7 @@ import modifyAddress from './addressComponents/modifyAddress.vue'
 
 export default {
   components: {
+    changeRecommend,
     recommend,
     DetailsList,
     MPagination,
