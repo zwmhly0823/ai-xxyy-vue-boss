@@ -5,7 +5,7 @@ import ProductType from '@/components/MSearch/searchItems/productType.vue';
  * @Author: songyanan
  * @Date: 2020-06-05 10:13:40
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-08-07 20:26:36
+ * @LastEditTime: 2020-08-07 22:48:03
  -->
 <template>
   <div>
@@ -103,10 +103,10 @@ export default {
       type: Object,
       default: () => ({})
     },
-    departmentFlatList: {
-      type: Array,
-      default: () => []
-    },
+    // departmentFlatList: {
+    //   type: Array,
+    //   default: () => []
+    // },
     currentItem: {
       type: Object,
       default: () => ({})
@@ -127,18 +127,26 @@ export default {
         name: '',
         sort: ''
       },
+      departmentFlatList: null,
       departfather: this.editCurrentData.id,
       edit: this.editCurrentData
     }
   },
   computed: {},
   created() {
-    console.log(this.departmentFlatList.flat(10))
+    this.getdepartmentList()
+    // console.log(this.departmentFlatList.flat(10))
     // this.departfather = this.editCurrentData.name
   },
   methods: {
     changeDap() {
-      console.log(this.departfather)
+      //  console.log(this.departfather)
+    },
+    getdepartmentList() {
+      this.$http.Teacher.getdepartmentAllList().then((res) => {
+        console.log('部门数据s', res.data.TeacherDepartmentList)
+        this.departmentFlatList = res.data.TeacherDepartmentList
+      })
     },
     handleDialog(type) {
       this.$emit('handleDialog', type)

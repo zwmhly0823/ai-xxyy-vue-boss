@@ -295,6 +295,18 @@ export default {
        }`
     })
   },
+  // 获取所有部门列表
+  getdepartmentAllList() {
+    // TeacherListEx(query:${JSON.stringify(q)},size:100) {
+    return axios.post('/graphql/v1/boss', {
+      query: `{
+          TeacherDepartmentList(query:"",size:100){
+            id
+            name
+          }
+       }`
+    })
+  },
   // 根據期數和課程類型獲取版本信息
   getVersionByCourseVersion(params) {
     return axios.get(
