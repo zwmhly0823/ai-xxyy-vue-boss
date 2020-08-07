@@ -3,8 +3,8 @@
  * @version: 1.0.0
  * @Author: liukun
  * @Date: 2020-04-25 17:24:23
- * @LastEditors: liukun
- * @LastEditTime: 2020-08-01 17:42:19
+ * @LastEditors: zhangjianwen
+ * @LastEditTime: 2020-08-07 21:14:41
  -->
 <template>
   <el-card
@@ -530,6 +530,7 @@ export default {
           })
           this.must = temp
         }
+
         this.searchParams = temp
         this.$emit('search', temp)
 
