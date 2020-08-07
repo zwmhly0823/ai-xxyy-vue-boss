@@ -4,8 +4,8 @@ import ProductType from '@/components/MSearch/searchItems/productType.vue';
  * @version:
  * @Author: songyanan
  * @Date: 2020-06-05 10:13:40
- * @LastEditors: songyanan
- * @LastEditTime: 2020-06-06 17:59:48
+ * @LastEditors: zhangjianwen
+ * @LastEditTime: 2020-08-07 20:26:36
  -->
 <template>
   <div>
@@ -18,7 +18,7 @@ import ProductType from '@/components/MSearch/searchItems/productType.vue';
         <el-form-item v-if="currentItem.type === 'sameLevel'" label="名称">
           <el-input v-model="sameLevel.name" maxlength="10" />
         </el-form-item>
-        <el-form-item v-if="currentItem.type === 'sameLevel'" label="排序">
+        <!-- <el-form-item v-if="currentItem.type === 'sameLevel'" label="排序">
           <el-input
             type="number"
             v-model="sameLevel.sort"
@@ -26,14 +26,27 @@ import ProductType from '@/components/MSearch/searchItems/productType.vue';
             onkeypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))"
             oninput="if(value.length>5)value=value.slice(0,5)"
           />
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item v-if="currentItem.type === 'childLevel'" label="归属上级">
-          <el-input :disabled="true" v-model="editCurrentData.name" />
+          <el-select
+            v-model="departfather"
+            placeholder="请选择"
+            @change="changeDap"
+          >
+            <el-option
+              v-for="item in departmentFlatList"
+              :key="item.value"
+              :label="item.name"
+              :value="item.id"
+            >
+              {{ item.name }}
+            </el-option>
+          </el-select>
         </el-form-item>
         <el-form-item v-if="currentItem.type === 'childLevel'" label="子级名称">
           <el-input v-model="childLevel.name" maxlength="10" />
         </el-form-item>
-        <el-form-item v-if="currentItem.type === 'childLevel'" label="排序">
+        <!-- <el-form-item v-if="currentItem.type === 'childLevel'" label="排序">
           <el-input
             type="number"
             v-model="childLevel.sort"
@@ -41,11 +54,23 @@ import ProductType from '@/components/MSearch/searchItems/productType.vue';
             onkeypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))"
             oninput="if(value.length>5)value=value.slice(0,5)"
           />
+        </el-form-item> -->
+        <el-form-item v-if="currentItem.type === 'edit'" label="归属上级">
+          <el-select v-model="departfather" placeholder="请选择">
+            <el-option
+              v-for="item in departmentFlatList"
+              :key="item.value"
+              :label="item.name"
+              :value="item.id"
+            >
+              {{ item.name }}
+            </el-option>
+          </el-select>
         </el-form-item>
         <el-form-item v-if="currentItem.type === 'edit'" label="名称">
           <el-input v-model="edit.name" maxlength="10" />
         </el-form-item>
-        <el-form-item v-if="currentItem.type === 'edit'" label="排序">
+        <!-- <el-form-item v-if="currentItem.type === 'edit'" label="排序">
           <el-input
             type="number"
             v-model="edit.sort"
@@ -53,7 +78,7 @@ import ProductType from '@/components/MSearch/searchItems/productType.vue';
             onkeypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))"
             oninput="if(value.length>5)value=value.slice(0,5)"
           />
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item v-if="currentItem.type === 'delete'">
           <i class="el-icon-warning"></i
           ><span class="delete-tip">{{
@@ -78,6 +103,10 @@ export default {
       type: Object,
       default: () => ({})
     },
+    departmentFlatList: {
+      type: Array,
+      default: () => []
+    },
     currentItem: {
       type: Object,
       default: () => ({})
@@ -87,6 +116,7 @@ export default {
       default: false
     }
   },
+
   data() {
     return {
       sameLevel: {
@@ -97,13 +127,30 @@ export default {
         name: '',
         sort: ''
       },
+      departfather: this.editCurrentData.id,
       edit: this.editCurrentData
     }
   },
+  computed: {},
+  created() {
+    console.log(this.departmentFlatList.flat(10))
+    // this.departfather = this.editCurrentData.name
+  },
   methods: {
+    changeDap() {
+      console.log(this.departfather)
+    },
     handleDialog(type) {
       this.$emit('handleDialog', type)
     }
+    // treeTurnArr() {
+    //   const departfathelist = []
+    //   this.departmentFlatList.map((item) => {
+    //     if (item.children) {
+    //     }
+    //     departfathelist.push()
+    //   })
+    // }
   }
 }
 </script>
