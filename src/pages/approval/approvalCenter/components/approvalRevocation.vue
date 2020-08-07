@@ -24,7 +24,10 @@
     >
       <el-table-column width="50">
         <template slot-scope="scope">
-          <el-dropdown placement="bottom-start">
+          <el-dropdown
+            placement="bottom-start"
+            v-if="scope.row.type !== 'PROMOTIONS'"
+          >
             <div :class="scope.row.id === current.id ? 'three-dot' : 'disnone'">
               <img src="@/assets/images/icon/icon-three-dot.jpg" />
             </div>
@@ -69,6 +72,9 @@
           </div>
           <div v-if="scope.row.type === 'UNCREDITED'">
             无归属订单审批
+          </div>
+          <div v-if="scope.row.type === 'PROMOTIONS'">
+            赠品
           </div>
         </template>
       </el-table-column>
@@ -468,6 +474,12 @@
         </div>
       </div>
     </el-drawer>
+    <!-- 赠品审批抽屉 -->
+    <ApprovalGiftDetail
+      :drawerGiftDeatail="drawerGiftDeatail"
+      :drawerGift="drawerGift"
+      @close-gift="handleClose"
+    />
     <adjust-drawer
       :is3d="1"
       ref="adjustDrawerCom"
@@ -493,6 +505,7 @@ import SearchPart from './searchPart'
 import adjustDrawer from './adjustDrawer'
 import { getStaffInfo } from '../common'
 import courseTeam from './courseTeam'
+import ApprovalGiftDetail from './approvalGiftDetail'
 
 export default {
   props: ['activeName'],
@@ -504,7 +517,8 @@ export default {
     CheckType,
     SearchPart,
     adjustDrawer,
-    courseTeam
+    courseTeam,
+    ApprovalGiftDetail
   },
   watch: {
     activeName(val) {
@@ -525,6 +539,8 @@ export default {
       staffId: '',
       tableData: [],
       current: {},
+      drawerGift: false,
+      drawerGiftDeatail: {},
       drawerApproval: false,
       drawerApprovalDeatail: {},
       currentPage: 1,
@@ -668,6 +684,16 @@ export default {
           }
         })
       }
+      // 赠品
+      if (type === 'PROMOTIONS') {
+        this.$http.Backend.getGiftDetail(id).then((res) => {
+          if (res && res.payload) {
+            res.payload.ctime = timestamp(res.payload.ctime, 2)
+            this.drawerGiftDeatail = res.payload
+            this.drawerGift = true
+          }
+        })
+      }
       // 调期调级调班
       // 以下涉及调调调的部分（到openAdjustDetail方法为止）又和待审批已审批那边儿基本一毛一样，所以为啥最一开始不写成一个组件嘞
       const ADJUST_TYPE = [
@@ -802,6 +828,7 @@ export default {
     // 关闭审批详情查看
     handleClose() {
       this.drawerApproval = false
+      this.drawerGift = false
     },
     // 点击下拉操作
     pullDownList(id, type) {
