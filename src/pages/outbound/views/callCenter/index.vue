@@ -4,7 +4,7 @@
  * @Author: zhangjiawen
  * @Date: 2020-07-31 17:53:04
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-08-06 20:08:14
+ * @LastEditTime: 2020-08-07 11:33:06
 -->
 <template>
   <div class="container">
@@ -261,7 +261,7 @@ export default {
       this.user_radio = '手机号'
       this.listData = val
       this.centerDialogVisible = true
-      this.$refs.group.handleChange()
+      this.$refs.group.clearData()
 
       this.user_phone = ''
     },

@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-26 16:28:45
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-08-04 19:39:43
+ * @LastEditTime: 2020-08-07 11:32:34
  -->
 <template>
   <div class="search-item small">
@@ -91,6 +91,9 @@ export default {
     }
   },
   methods: {
+    clearData() {
+      this.teacherId = ''
+    },
     selectFocus(e) {
       this.getTeacher()
     },
