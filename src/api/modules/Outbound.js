@@ -4,15 +4,15 @@
  * @Author: zhangjiawen
  * @Date: 2020-08-03 15:50:58
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-08-06 19:14:54
+ * @LastEditTime: 2020-08-07 11:36:59
  */
 
 import axios from '../axiosConfig'
 export default {
   // 获取绑定坐席列表
-  getOutboundListPage(parmes, page = 1, sort = 'desc', size = 20) {
+  getOutboundListPage(parmes, page = 1, sort = 'asc', size = 20) {
     const formattingQuery = JSON.stringify(parmes)
-    const formattingSort = JSON.stringify({ ctime: sort })
+    const formattingSort = JSON.stringify({ cno: sort })
     return axios.post(`/graphql/v1/toss`, {
       query: `{
         TeacherOutboundPage(
