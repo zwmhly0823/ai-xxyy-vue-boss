@@ -94,9 +94,15 @@ export default {
       // }
       if (data === '-1') {
         this.$emit('result', data ? { [this.name]: '6', source_type: '4' } : '')
-        console.log('11111')
       } else {
-        this.$emit('result', data ? { [this.name]: data } : '')
+        if (data === '6') {
+          this.$emit(
+            'result',
+            data ? { [this.name]: '6', source_type: '0,1,2,3' } : ''
+          )
+        } else {
+          this.$emit('result', data ? { [this.name]: data } : '')
+        }
       }
     },
     onClear() {

@@ -114,7 +114,12 @@
                 :search="searchActivity"
                 :sortItem="sortItem"
                 :regtype="regtypeActivity"
-                :source_type="source_type"
+                :source_type="
+                  (searchActivity &&
+                    searchActivity[0] &&
+                    searchActivity[0].term.source_type) ||
+                    source_type
+                "
                 :hideCol="allExpressHideColActivity"
               />
             </div>
