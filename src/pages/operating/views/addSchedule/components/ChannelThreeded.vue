@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-06-30 19:21:08
  * @LastEditors: Shentong
- * @LastEditTime: 2020-08-08 14:10:27
+ * @LastEditTime: 2020-08-08 21:20:17
 -->
 <template>
   <div class="channel-threeded">
@@ -63,7 +63,6 @@
               size="mini"
               clearable
               placeholder="社群销售"
-              :remote-method="getTeacher"
               :loading="loading"
               @change="onChange"
             >
@@ -278,8 +277,32 @@ export default {
           this.channelLeves = res.data.ChannelAllList
         })
     },
-    // 社群销售
     getTeacher(index = 0, query = '') {
+      const { getDepartmentTeacherEx } = this.$http.Department
+      const { teacherscope = null } = this.formList[index]
+      console.log(this.formList, teacherscope)
+      if (teacherscope && teacherscope.length) {
+        this.loading = true
+        const q = {
+          bool: {
+            must: query
+              ? [{ wildcard: { 'realname.keyword': `*${query}*` } }]
+              : []
+          }
+        }
+        q.bool.must.push({ terms: { id: teacherscope } })
+        getDepartmentTeacherEx(JSON.stringify(q))
+          .then((res) => {
+            this.formList[index].teacherList = res.data.TeacherListEx || []
+            this.loading = false
+          })
+          .catch(() => {
+            this.loading = false
+          })
+      }
+    },
+    // 社群销售
+    getTeacher_1(index = 0, query = '') {
       const { getDepartmentTeacherEx } = this.$http.Department
       const { teacherscope } = this.formList[index]
       this.loading = true
