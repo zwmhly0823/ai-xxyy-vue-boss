@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-08-06 17:13:23
  * @LastEditors: liukun
- * @LastEditTime: 2020-08-06 22:14:02
+ * @LastEditTime: 2020-08-08 20:55:42
 -->
 <template>
   <div>
@@ -30,30 +30,33 @@
     </div>
     <div class="table">
       <el-table :data="tableData">
-        <el-table-column label="截图" align="center">
+        <el-table-column prop="buytime" label="截图" align="center">
           <template slot-scope="scope">
             <el-image
               style="width: 100px; height: 100px"
               fit="contain"
-              :src="scope.row.attsUrl"
-              :preview-src-list="[scope.row.attsUrl]"
+              :src="scope.row.uploadUrl"
+              :preview-src-list="[scope.row.uploadUrl]"
             >
             </el-image>
           </template>
         </el-table-column>
-        <el-table-column prop="buytime" label="上传时间" align="center">
+        <el-table-column prop="ctime" label="上传截图时间" align="center">
         </el-table-column>
-        <el-table-column prop="statusStr" label="审核时间" align="center">
+        <el-table-column prop="endTime" label="审核时间" align="center">
         </el-table-column>
-        <el-table-column prop="statusStr" label="审核状态" align="center">
+        <el-table-column prop="status" label="审核状态" align="center">
         </el-table-column>
-        <el-table-column prop="statusStr" label="活动名称" align="center">
+        <el-table-column prop="title" label="活动名称" align="center">
         </el-table-column>
-        <el-table-column prop="refundTypeStr" label="活动赠品" align="center">
+        <el-table-column label="活动赠品" align="center">
+          <template slot-scope="scope">
+            {{ scope.row.rewardName + '*' + scope.row.rewardValue }}
+          </template>
         </el-table-column>
-        <el-table-column prop="refundRuleStr3" label="审核人" align="center">
+        <el-table-column prop="approvalName" label="审核人" align="center">
         </el-table-column>
-        <el-table-column prop="refundRuleStr32" label="驳回原因" align="center">
+        <el-table-column prop="approvalRemark" label="驳回原因" align="center">
         </el-table-column>
       </el-table>
     </div>
@@ -61,32 +64,45 @@
 </template>
 
 <script>
+import { formatDate } from '@/utils/mini_tool_lk'
+
 export default {
   name: 'changeRecommend',
   data() {
     return {
       tableData: [],
       month_: Date.now(),
-      userId: this.$route.params.id
+      searchJson: { page: 1, size: 100, userId: this.$route.params.id }
     }
   },
 
   methods: {
     tt(r) {
-      console.info(typeof r, r)
+      this.getData(r)
     },
-    async getTableList() {
-      const tt = await this.$http.User.listLabelRecommendForUser({
-        id: this.userId,
-        month: this.month_
-      }).catch((err) => {
-        console.error(err)
-        this.$message.error('转介绍tab数据获取失败')
+    // 数据接口(传当前页,页容量 取总数据，总条目)
+    async getData(sctime) {
+      Object.assign(this.searchJson, { sctime })
+      const {
+        code,
+        payload: { content }
+      } = await this.$http.User.getTable(this.searchJson).catch((err) => {
+        console.info('取数据接口报错,', err)
+        this.$message.error('table数据接口失败')
       })
-      if (tt) {
-        this.tableData = tt.hh
-      } else {
-        this.$message.warning('转介绍tab数据为空')
+      if (!code) {
+        // 加工整合
+        content.forEach((item) => {
+          item.ctime = item.ctime ? formatDate(+item.ctime) : ''
+          item.endTime = item.endTime ? formatDate(+item.endTime) : ''
+          item.status = {
+            PENDING: '待审核',
+            COMPLETED: '审核通过',
+            DECLINE: '审核驳回'
+          }[item.status]
+        })
+        // 赋值
+        this.tableData = content
       }
     }
   },
@@ -96,7 +112,7 @@ export default {
     }
   },
   mounted() {
-    console.info(typeof this.month_, this.month_)
+    this.getData(this.month_)
   }
 }
 </script>

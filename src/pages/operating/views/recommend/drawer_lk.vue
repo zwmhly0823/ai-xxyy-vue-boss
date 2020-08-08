@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-07-20 16:37:49
  * @LastEditors: liukun
- * @LastEditTime: 2020-08-05 20:20:32
+ * @LastEditTime: 2020-08-08 15:53:13
 --><template>
   <el-drawer :visible.sync="drawer" size="40%" :destroy-on-close="true">
     <template v-slot:title>
@@ -100,9 +100,17 @@
 
 <script>
 export default {
-  name: 'addNew',
+  name: 'drawer_lk',
+  props: {
+    initItem: { type: Object, default: () => {} },
+    arrageArray: { type: Array, default: () => [] }
+  },
+
   data() {
     return {
+      arrageArraySon: [...this.arrageArray], // 单向流原则
+      initItemSon: { ...this.initItem }, // 单向流原则
+      initItemTrue: {}, // 通用的复现单元数据
       drawer: false,
       // form
       form: {
@@ -125,6 +133,16 @@ export default {
     }
   },
   methods: {
+    // 回显
+    review() {
+      if (this.initItemSon.status) {
+        // 第1次处理
+        this.initItemTrue = this.initItemSon
+      } else {
+        this.initItemTrue = this.arrageArraySon[0]
+      }
+    },
+    // 提交
     submitForm() {
       this.$refs.form.validate(async (valid) => {
         if (valid) {
@@ -145,6 +163,24 @@ export default {
     resetForm() {
       this.$refs.form.resetFields()
       this.drawer = false
+    },
+    // 提交成功后_往复操作
+    recall() {
+      // 第1次处理
+      if (this.initItemSon.status) {
+        this.initItemSon.status = null
+        this.arrageArraySon.splice(
+          this.arrageArraySon.findIndex(
+            (item) => item.flowId === this.initItemSon.flowId
+          ),
+          1
+        )
+      } else {
+        this.arrageArraySon.shift()
+        if (!this.arrageArraySon.length) {
+          this.$message.warning('辛苦啦,当前页审批完成! 翻页接着批')
+        }
+      }
     }
   },
   watch: {
@@ -154,6 +190,18 @@ export default {
       handler(newValue, oldValue) {
         if (newValue === 1) {
           this.form.reason = ''
+        }
+      }
+    },
+    // 他爹点那么一下
+    initItemSon: {
+      immediate: true,
+      deep: true,
+      handler(newValue, oldValue) {
+        // 处理上来就执行的问题
+        if (oldValue) {
+          console.info('点击审核,单条数据改变触发第1步回显')
+          this.review()
         }
       }
     }

@@ -4,8 +4,8 @@
  * @version:
  * @Author: shentong
  * @Date: 2020-03-13 14:38:28
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-07-29 01:25:59
+ * @LastEditors: liukun
+ * @LastEditTime: 2020-08-08 20:47:58
  */
 // import axios from '../axios'
 import axios from '../axiosConfig'
@@ -1045,5 +1045,9 @@ export default {
     return axios.get(
       `/api/t/v1/teacher/teacherFollowGroup/findAllByTeacherIdAndType?teacherId=${teacherId}&type=${type}`
     )
+  },
+  // 截图转介绍
+  getTable(parmas) {
+    return axios.get('/api/b/v1/backend/userflow/sharereward/pageList', parmas)
   }
 }

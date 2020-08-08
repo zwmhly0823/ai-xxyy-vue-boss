@@ -3,8 +3,8 @@
  * @version:
  * @Author: Shentong
  * @Date: 2020-03-16 19:46:39
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-07-30 12:17:21
+ * @LastEditors: liukun
+ * @LastEditTime: 2020-08-08 16:44:46
  */
 import axios from '../axiosConfig'
 
@@ -486,5 +486,9 @@ export default {
         }
       }`
     })
+  },
+  // 截图转介绍
+  getTable(parmas) {
+    return axios.get('/api/b/v1/backend/userflow/sharereward/pageList', parmas)
   }
 }

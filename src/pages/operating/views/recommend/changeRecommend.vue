@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-08-03 15:45:34
  * @LastEditors: liukun
- * @LastEditTime: 2020-08-07 17:50:15
+ * @LastEditTime: 2020-08-08 20:08:04
 -->
 <template>
   <!-- wrap_lk:给分页留了40高度 -->
@@ -73,44 +73,55 @@
       <el-table :data="tableData">
         <el-table-column label="用户信息" align="center">
           <template slot-scope="scope">
-            <el-link type="primary" :href="scope.row.attsUrl" target="_blank">{{
-              scope.row.attsUrl22
-            }}</el-link>
+            <el-link
+              type="primary"
+              :href="'/users/#/details/' + scope.row.userId"
+              target="_blank"
+              >{{ scope.row.userName }}</el-link
+            >
           </template>
         </el-table-column>
-        <el-table-column prop="regtypeStr" label="活动名称" align="center">
+        <el-table-column prop="title" label="活动名称" align="center">
         </el-table-column>
-        <el-table-column prop="applyName" label="活动赠品" align="center">
+        <el-table-column label="活动赠品" align="center">
+          <template slot-scope="scope">
+            {{ scope.row.rewardName + '*' + scope.row.rewardValue }}
+          </template>
         </el-table-column>
-        <el-table-column prop="tradeTypeStr" label="辅导老师" align="center">
+        <el-table-column
+          prop="systemTeacherName"
+          label="辅导老师"
+          align="center"
+        >
         </el-table-column>
         <el-table-column prop="buytime" label="截图" align="center">
           <template slot-scope="scope">
             <el-image
               style="width: 100px; height: 100px"
               fit="contain"
-              :src="scope.row.attsUrl"
-              :preview-src-list="[scope.row.attsUrl]"
+              :src="scope.row.uploadUrl"
+              :preview-src-list="[scope.row.uploadUrl]"
             >
             </el-image>
           </template>
         </el-table-column>
-        <el-table-column prop="buytime" label="上传截图时间" align="center">
+        <el-table-column prop="ctime" label="上传截图时间" align="center">
         </el-table-column>
-        <el-table-column prop="statusStr" label="审核时间" align="center">
+        <el-table-column prop="endTime" label="审核时间" align="center">
         </el-table-column>
-        <el-table-column prop="statusStr" label="审核状态" align="center">
+        <el-table-column prop="status" label="审核状态" align="center">
         </el-table-column>
-        <el-table-column prop="refundTypeStr" label="驳回原因" align="center">
+        <el-table-column prop="approvalRemark" label="驳回原因" align="center">
         </el-table-column>
-        <el-table-column prop="refundRuleStr" label="审核人" align="center">
+        <el-table-column prop="approvalName" label="审核人" align="center">
         </el-table-column>
-        <el-table-column label="操作" align="center" v-show="'待审核or全部'">
-          <template slot-scope="scope" v-if="'待审核才显示昂'">
-            <el-button
-              type="text"
-              v-if="scope.row.审核状态待审核"
-              @click="handleEdit(scope.$index, scope.row)"
+        <el-table-column
+          label="操作"
+          align="center"
+          v-show="tabsValue != 'DECLINE' && tabsValue != 'COMPLETED'"
+        >
+          <template slot-scope="scope" v-if="scope.row.status === 'PENDING'">
+            <el-button type="text" @click="handleEdit(scope.$index, scope.row)"
               >审核</el-button
             >
           </template>
@@ -130,12 +141,13 @@
       </el-pagination>
     </div>
     <div class="pdrawer_lk">
-      <drawerLk ref="drawer_lk" />
+      <drawerLk ref="drawer_lk" :initItem="initItem" :arrageArr="arrangeArr" />
     </div>
   </section>
 </template>
 
 <script>
+import { formatDate } from '@/utils/mini_tool_lk'
 import drawerLk from './drawer_lk.vue'
 import SearchPhoneAndUsername from '@/components/MSearch/searchItems/searchPhoneAndUsername.vue'
 import GroupSell from '@/components/MSearch/searchItems/groupSell.vue'
@@ -155,15 +167,27 @@ export default {
       tabsValue: '', // 显示tabs
       // 活动总量(接口来的)
       activity: [
-        { label: '推荐有礼', value: 1 },
-        { label: '冲弟玩蛇', value: 2 }
+        { label: '首单分享得红包', value: 'AFTER_FIRST_ORDER_SHARE' },
+        { label: '完成分享任务得小熊币', value: 'SHARE_TASK' }
       ],
       // tabpans总量
-      tabs: { 全部: '0', 待审核: '1', 审核驳回: '2', 审核成功: '3' },
+      tabs: {
+        全部: 'PENDING,DECLINE,COMPLETED',
+        待审核: 'PENDING',
+        审核驳回: 'DECLINE',
+        审核成功: 'COMPLETED'
+      },
       // 表格数据
       tableData: [],
       // arrange_search
-      searchParams: {}
+      searchJson: {},
+      // son initItem
+      initItem: {}
+    }
+  },
+  computed: {
+    arrangeArr() {
+      return this.tableData.filter((item) => item.status === 'PENDING')
     }
   },
   methods: {
@@ -180,11 +204,13 @@ export default {
       console.info('活动', r)
     },
     handleClick(tab) {
-      console.info('tabpad实例', tab)
+      console.info('tabpad实例', tab, tab.name)
     },
+    // 点击审核
     handleEdit(index, item) {
       this.$refs.drawer_lk.drawer = true
-      console.info('如何取符合要求的下个id')
+      this.initItem = item
+      console.info('点击审核')
     },
     // 页容量变化
     handleSizeChange(val) {
@@ -199,21 +225,34 @@ export default {
     // 数据接口(传当前页,页容量 取总数据，总条目)
     async getData({ page = 1, size = 10 } = {}) {
       Object.assign(this.searchJson, { page, size }) // 放心page,size会覆盖原有
-      const { content, totalElements } = await this.$http.Finance.getTable(
-        this.searchJson
-      ).catch((err) => {
+      const {
+        code,
+        payload: { content, totalElements }
+      } = await this.$http.Operating.getTable(this.searchJson).catch((err) => {
         console.info('取数据接口报错,', err)
         this.$message.error('table数据接口失败')
       })
-      if (totalElements >= 0) {
+      if (!code) {
         this.pageSize = size // 就取本地设订的可以嘛？server也是听本地的传值(统一接口成功再变化分页信息)
         this.currentPage = page // 就取本地设订的可以嘛？server也是听本地的传值(统一接口成功再变化分页信息)
         this.allDigit = +totalElements // 总量
+        // 加工整合
+        content.forEach((item) => {
+          item.ctime = item.ctime ? formatDate(+item.ctime) : ''
+          item.endTime = item.endTime ? formatDate(+item.endTime) : ''
+          item.status = {
+            PENDING: '待审核',
+            COMPLETED: '审核通过',
+            DECLINE: '审核驳回'
+          }[item.status]
+        })
+        // 赋值
         this.tableData = content
       }
     }
   },
   mounted() {
+    this.getData()
     this.$refs.drawer_lk.drawer = true
   }
 }
