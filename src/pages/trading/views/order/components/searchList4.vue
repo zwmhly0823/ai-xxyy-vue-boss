@@ -3,8 +3,8 @@
  * @version: 1.0.0
  * @Author: songyanan
  * @Date: 2020-07-01 11:08:23
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-07-09 15:03:02
+ * @LastEditors: zhangjianwen
+ * @LastEditTime: 2020-08-08 18:53:08
  -->
 <template>
   <el-card
@@ -268,7 +268,13 @@ export default {
       } else {
         this.hasSendId = true
       }
-      this.setSeachParmas(res, ['is_first_order_send_id'])
+      if (!res) {
+        this.setSeachParmas({ is_first_order_send_id: '' }, [
+          'is_first_order_send_id'
+        ])
+      } else {
+        this.getSendUser(res, ['is_first_order_send_id'])
+      }
     },
 
     /**  处理接收到的查询参数

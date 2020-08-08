@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-04-25 17:24:23
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-08-08 16:59:29
+ * @LastEditTime: 2020-08-08 18:42:58
  -->
 <template>
   <el-card
@@ -486,19 +486,26 @@ export default {
       this.setSeachParmas(res, ['trial_team_id'], 'terms')
     },
     async getSendUser(res) {
+      console.log(res)
       this.setSeachParmas(res, ['first_order_send_id'], 'terms')
     },
     // fix
     getFirstOrder(res) {
-      console.log('执行')
-
+      console.log(res)
+      // console.log(res[0].is_first_order_send_id)
       if (res && res.is_first_order_send_id === '0') {
         this.$refs.phoneName.handleEmpty()
         this.hasSendId = false
       } else {
         this.hasSendId = true
       }
-      this.setSeachParmas(res, ['is_first_order_send_id'])
+      if (!res) {
+        this.setSeachParmas({ is_first_order_send_id: '' }, [
+          'is_first_order_send_id'
+        ])
+      } else {
+        this.getSendUser(res, ['is_first_order_send_id'])
+      }
     },
     getOrderType(res) {
       console.log(res)
@@ -537,6 +544,7 @@ export default {
         }
 
         this.searchParams = temp
+        console.log('参数', temp)
         this.$emit('search', temp)
 
         return
