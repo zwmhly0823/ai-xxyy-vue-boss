@@ -4,11 +4,11 @@
  * @Author: zhubaodong
  * @Date: 2020-03-13 16:53:27
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-08-07 19:53:54
+ * @LastEditTime: 2020-08-08 14:57:05
  -->
 <template>
   <div class="left-container">
-    <div class="title">小熊项目</div>
+    <div class="title">组织架构</div>
     <el-tree
       class="left-container-tree"
       :data="departmentList"
@@ -28,7 +28,7 @@
       >
         <span class="menu-box">
           <span :title="data.id" class="menu-name">{{ `${data.name}` }}</span>
-          <span v-if="data.name === '全部'">{{ `(${qbSize})` }}</span>
+          <span v-if="data.name === '小熊项目'">{{ `(${qbSize})` }}</span>
           <span v-else>{{ `(${data.size})` }}</span>
         </span>
         <span
@@ -36,14 +36,18 @@
           class="el-icon-more"
           @click.stop="editTools(data)"
         ></span>
-        <el-card v-show="nowId == data.id && showMenu && data.name === '全部'">
+        <el-card
+          v-show="nowId == data.id && showMenu && data.name === '小熊项目'"
+        >
           <div v-for="(item, index) in editMenuListNodel" :key="index">
             <div @click.stop="handleMenuItem(data, item)">
               {{ item.lable }}
             </div>
           </div>
         </el-card>
-        <el-card v-show="nowId == data.id && showMenu && data.name !== '全部'">
+        <el-card
+          v-show="nowId == data.id && showMenu && data.name !== '小熊项目'"
+        >
           <div v-for="(item, index) in editMenuList" :key="index">
             <div @click.stop="handleMenuItem(data, item)">
               {{ item.lable }}
@@ -82,7 +86,7 @@ export default {
       qbSize: '',
       departmentList: [
         {
-          name: '全部',
+          name: '小熊项目',
           pid: '99999',
           children: []
         }
@@ -213,9 +217,10 @@ export default {
           break
         case 'childLevel':
           pid = form._data.departfather
+          // pid = ''
           break
         case 'edit':
-          pid = form._data.departfather
+          pid = form._data.depart
           break
         default:
           pid = ''

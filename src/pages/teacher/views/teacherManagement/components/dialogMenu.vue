@@ -5,7 +5,7 @@ import ProductType from '@/components/MSearch/searchItems/productType.vue';
  * @Author: songyanan
  * @Date: 2020-06-05 10:13:40
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-08-07 22:48:03
+ * @LastEditTime: 2020-08-08 16:03:18
  -->
 <template>
   <div>
@@ -35,7 +35,7 @@ import ProductType from '@/components/MSearch/searchItems/productType.vue';
           >
             <el-option
               v-for="item in departmentFlatList"
-              :key="item.value"
+              :key="item.id"
               :label="item.name"
               :value="item.id"
             >
@@ -56,10 +56,10 @@ import ProductType from '@/components/MSearch/searchItems/productType.vue';
           />
         </el-form-item> -->
         <el-form-item v-if="currentItem.type === 'edit'" label="归属上级">
-          <el-select v-model="departfather" placeholder="请选择">
+          <el-select v-model="depart" placeholder="请选择">
             <el-option
               v-for="item in departmentFlatList"
-              :key="item.value"
+              :key="item.id"
               :label="item.name"
               :value="item.id"
             >
@@ -113,7 +113,7 @@ export default {
     },
     dialogVisible: {
       type: Boolean,
-      default: false
+      default: () => false
     }
   },
 
@@ -128,7 +128,8 @@ export default {
         sort: ''
       },
       departmentFlatList: null,
-      departfather: this.editCurrentData.id,
+      departfather: +this.editCurrentData.id || 0,
+      depart: +this.editCurrentData.pid,
       edit: this.editCurrentData
     }
   },
@@ -144,8 +145,12 @@ export default {
     },
     getdepartmentList() {
       this.$http.Teacher.getdepartmentAllList().then((res) => {
-        console.log('部门数据s', res.data.TeacherDepartmentList)
-        this.departmentFlatList = res.data.TeacherDepartmentList
+        this.departmentFlatList = [
+          ...res.data.TeacherDepartmentList,
+          { name: '小熊项目', id: 0 }
+        ]
+        console.log('部门数据s', this.departmentFlatList)
+        console.log('部门id', this.departfather)
       })
     },
     handleDialog(type) {
