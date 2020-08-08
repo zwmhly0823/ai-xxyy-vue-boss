@@ -4,14 +4,17 @@
  * @Author: YangJiyong
  * @Date: 2020-08-06 19:52:15
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-06 22:00:29
+ * @LastEditTime: 2020-08-08 16:21:38
 -->
 <template>
   <el-row type="flex" class="app-main height">
     <div class="app-main-container redeem-code-library">
       <header>
-        <h4>这是一个兑换码标题</h4>
-        <p>有效期：2020-08-13 13:30 至 2020-08-13 13:30</p>
+        <h4>{{ redeemCode.title }}</h4>
+        <p>
+          有效期：{{ redeemCode.start_date_text }} 至
+          {{ redeemCode.end_date_text }}
+        </p>
       </header>
       <!-- search -->
       <div class="library-search d-flex align-center justify-between">
@@ -32,17 +35,12 @@
           </el-table-column>
           <el-table-column prop="status" label="使用状态" width="120">
           </el-table-column>
+          <el-table-column prop="address" label="兑换时间"> </el-table-column>
           <el-table-column prop="address" label="使用时间"> </el-table-column>
           <el-table-column prop="address" label="班级/销售">
             <template slot-scope="scope">
               <p class="primary-text">0804期S1-15班{{ scope.row.id }}</p>
               <p>张三 社群一部-辽阔</p>
-            </template>
-          </el-table-column>
-          <el-table-column prop="address" label="APP登录">
-            <template slot-scope="scope">
-              <p>iPhone</p>
-              <p>{{ scope.row.date }}</p>
             </template>
           </el-table-column>
         </el-table>
@@ -63,6 +61,7 @@
 </template>
 
 <script>
+import { openBrowserTab, formatData } from '@/utils/index'
 import MPagination from '@/components/MPagination/index.vue'
 export default {
   components: {
@@ -72,36 +71,9 @@ export default {
     return {
       // 兑换码ID
       redeemCodeId: '',
-      tableData: [
-        {
-          id: 1,
-          date: '2016-05-02',
-          name: '王小虎',
-          status: '已使用',
-          address: '上海市普陀区金沙江路 1518 弄'
-        },
-        {
-          id: 2,
-          date: '2016-05-04',
-          name: '王小虎',
-          status: '已使用',
-          address: '上海市普陀区金沙江路 1517 弄'
-        },
-        {
-          id: 3,
-          date: '2016-05-01',
-          name: '王小虎',
-          status: '已使用',
-          address: '上海市普陀区金沙江路 1519 弄'
-        },
-        {
-          id: 4,
-          date: '2016-05-03',
-          name: '王小虎',
-          status: '已使用',
-          address: '上海市普陀区金沙江路 1516 弄'
-        }
-      ],
+      // 当前兑换码信息
+      redeemCode: {},
+      tableData: [],
       currentPage: 1,
       totalElements: 0,
       totalPages: 1
@@ -110,12 +82,31 @@ export default {
   created() {
     const { id } = this.$route.params
     this.redeemCodeId = id
+    this.getRedeemCodeDetail()
   },
 
   methods: {
+    // 获取当前兑换码信息
+    getRedeemCodeDetail() {
+      if (!this.redeemCodeId) return
+      const params = {
+        id: this.redeemCodeId
+      }
+      this.$http.Marketing.getRedeemCodeDetail(params).then((res) => {
+        if (res.data && res.data.ExchangeCodeConfig) {
+          const info = res.data.ExchangeCodeConfig
+          info.start_date_text = formatData(info.start_date, 'm')
+          info.end_date_text = formatData(info.end_date, 'm')
+          this.redeemCode = info || {}
+          return
+        }
+        this.redeemCode = {}
+      })
+    },
     handleSizeChange(page) {
       console.log(page, 'page')
       this.currentPage = page
+      openBrowserTab()
     }
   }
 }

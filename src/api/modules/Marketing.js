@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-08-07 16:39:06
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-08 15:45:34
+ * @LastEditTime: 2020-08-08 16:06:24
  */
 import axios from '../axiosConfig'
 
@@ -89,5 +89,27 @@ export default {
   handleDeleteRedeemCode(id) {
     if (!id) return
     return axios.post(`/api/s/v1/exchange/code/deleteConfig?id=${id}`)
+  },
+
+  // 根据ID获取一条兑换码详情
+  getRedeemCodeDetail(params = {}) {
+    if (!params && !params?.id) return
+    return axios.post(`/graphql/v1/toss`, {
+      query: `{
+        ExchangeCodeConfig(query:${JSON.stringify(JSON.stringify(params))}){
+          id
+          title
+          num
+          package_id
+          channel_id
+          customer_sign_id
+          start_date
+          end_date
+          status
+          code
+          ctime
+        }
+      }`
+    })
   }
 }
