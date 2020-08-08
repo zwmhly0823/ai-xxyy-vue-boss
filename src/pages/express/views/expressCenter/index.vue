@@ -127,7 +127,7 @@
             ref="right3"
             :tab="activeName"
             @result="getSearch"
-            :regtype="`${regtype},${regtypeSys},${regtypeActivity}`"
+            :regtype="`0,${regtype},${regtypeSys},${regtypeActivity}`"
             :status="sortItem.id"
             :source_type="'5'"
             :hideCol="replenishHideCol"
@@ -138,7 +138,7 @@
             @result="getStatus"
             :hideToggleBtn="hideToggleBtn"
             :tab="activeName"
-            :regtype="`${regtype},${regtypeSys},${regtypeActivity}`"
+            :regtype="`0,${regtype},${regtypeSys},${regtypeActivity}`"
             :source_type="'5'"
           />
           <el-scrollbar
@@ -149,7 +149,7 @@
               <rightDown
                 :search="searchReplenish"
                 :sortItem="sortItem"
-                :regtype="`${regtype},${regtypeSys},${regtypeActivity}`"
+                :regtype="`0,${regtype},${regtypeSys},${regtypeActivity}`"
                 :source_type="'5'"
                 :hideCol="replenishHideCol"
               />
