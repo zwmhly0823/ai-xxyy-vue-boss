@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-06-30 19:21:08
  * @LastEditors: Shentong
- * @LastEditTime: 2020-08-07 19:54:55
+ * @LastEditTime: 2020-08-08 14:10:27
 -->
 <template>
   <div class="channel-threeded">
@@ -191,7 +191,7 @@ export default {
       this.cleanDept()
       this.formList = [cloneDeep(this.formItem)]
     },
-    async dialogOperate(type) {
+    dialogOperate(type) {
       const callback = () => {
         this.clearFormData()
         this.$emit('dialogOperate', { close: true, submitSucc: true })
@@ -199,7 +199,7 @@ export default {
       if (type === 'cancel') {
         this.dialogClose()
       } else if (type === 'submit' && this.validateForm()) {
-        await this.submitForm(callback)
+        this.submitForm(callback)
       }
     },
     packageFormData() {
@@ -221,7 +221,7 @@ export default {
     validateForm() {
       for (const item of this.formList) {
         if (!item.channel || !item.teacherId.length) {
-          this.$message.warning('请先分配好渠道线索哟~')
+          this.$message.warning('请先分配好渠道线索~')
           return false
         }
       }
