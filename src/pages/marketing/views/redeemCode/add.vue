@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-08-06 22:29:42
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-07 21:37:33
+ * @LastEditTime: 2020-08-08 14:59:46
 -->
 <template>
   <div class="add-redeem-code">
@@ -47,7 +47,7 @@
             start-placeholder="生效时间"
             end-placeholder="失效时间"
             value-format="timestamp"
-            :default-time="['00:00:00', '23:59:59']"
+            :default-time="['00:00:00', '24:00:00']"
             :picker-options="pickerOptions"
             style="width: 100%"
           >
@@ -249,6 +249,22 @@ export default {
           delete obj.date
 
           // TODO:套餐名称，渠道名称，标签名称
+          console.log(this.packageProduct)
+          const packageName = this.packageProduct?.name || ''
+          const channelName =
+            this.channelList.filter(
+              (item) => item.id === this.form.channelId
+            )[0].text || ''
+          const customerSignName =
+            this.labelList.filter(
+              (item) => item.id === this.form.customerSignId
+            )[0].name || ''
+          Object.assign(obj, {
+            packageName,
+            channelName,
+            customerSignName
+          })
+          console.log(obj)
 
           // 提交
           this.loading = true
@@ -273,8 +289,6 @@ export default {
             .finally(() => {
               this.loading = false
             })
-
-          alert('submit!')
         } else {
           console.log('error submit!!')
           return false
