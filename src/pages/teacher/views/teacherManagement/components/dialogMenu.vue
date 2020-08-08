@@ -5,15 +5,11 @@ import ProductType from '@/components/MSearch/searchItems/productType.vue';
  * @Author: songyanan
  * @Date: 2020-06-05 10:13:40
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-08-08 16:03:18
+ * @LastEditTime: 2020-08-08 17:36:57
  -->
 <template>
   <div>
-    <el-dialog
-      :title="currentItem.lable"
-      :visible.sync="dialogVisible"
-      width="25%"
-    >
+    <el-dialog :title="currentItem.lable" :visible.sync="Visible" width="25%">
       <el-form label-width="20%">
         <el-form-item v-if="currentItem.type === 'sameLevel'" label="名称">
           <el-input v-model="sameLevel.name" maxlength="10" />
@@ -129,8 +125,10 @@ export default {
       },
       departmentFlatList: null,
       departfather: +this.editCurrentData.id || 0,
+      // departfather: 12,
       depart: +this.editCurrentData.pid,
-      edit: this.editCurrentData
+      edit: this.editCurrentData,
+      Visible: this.dialogVisible
     }
   },
   computed: {},
