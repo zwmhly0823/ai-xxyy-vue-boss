@@ -79,6 +79,7 @@ export default {
       console.log(this.rigthValueChoose, '组合商品')
       if (this.rigthValueChoose.length > 0) {
         this.$emit('combinationPro', this.rigthValueChoose)
+        console.log(this.rigthValueChoose, 'this.rigthValueChoose====')
       } else {
         console.log('选择得')
       }

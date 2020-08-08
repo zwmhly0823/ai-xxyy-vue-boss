@@ -370,6 +370,7 @@ export default {
     },
     // 组合商品
     combinationPro(data) {
+      console.log(data, 'data====')
       const obj = {
         giftsName: '',
         giftsType: '',
@@ -377,12 +378,13 @@ export default {
         expressCount: 0,
         products: []
       }
-      const product = {
-        id: ''
-      }
+
       // let giftsType
       for (let i = 0; i < this.productList.length; i++) {
         for (let j = 0; j < data.length; j++) {
+          const product = {
+            id: ''
+          }
           if (data[j] === this.productList[i].key) {
             obj.giftsName = obj.giftsName + '+' + this.productList[i].name
             obj.giftsType = obj.giftsType + '+' + this.productList[i].type
@@ -396,10 +398,11 @@ export default {
           }
         }
       }
-      console.log(obj.giftsName, 'giftsName')
-      console.log(obj.giftsType, 'giftsType')
-      console.log(obj.giftsPrice, 'giftsPrice')
-      console.log(obj.expressCount, 'giftsPrice')
+      console.log(obj, '====obj====')
+      // console.log(obj.giftsName, 'giftsName')
+      // console.log(obj.giftsType, 'giftsType')
+      // console.log(obj.giftsPrice, 'giftsPrice')
+      // console.log(obj.expressCount, 'giftsPrice')
 
       obj.giftsName = obj.giftsName.substring(1)
       obj.giftsType = obj.giftsType.substring(1)
