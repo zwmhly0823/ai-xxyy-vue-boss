@@ -84,6 +84,9 @@ export default {
     // this.getData()
   },
   methods: {
+    handleEmpty() {
+      this.value = ''
+    },
     getData(value = '') {
       if (!value) return
       const val = value.replace(/\s*/g, '')
