@@ -4,7 +4,7 @@
  * @Author: shentong
  * @Date: 2020-03-13 16:20:48
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-08-07 21:32:58
+ * @LastEditTime: 2020-08-08 16:37:23
  */
 import axios from '../axiosConfig'
 // 素质课的时候，测试环境暂时删除
@@ -30,9 +30,11 @@ export default {
   orderPage(query, page = 1) {
     let handleQuery
     if (query && JSON.parse(query).pay_channel) {
-      handleQuery = JSON.parse(query).pay_channel
-      if (handleQuery && handleQuery.length <= 0) {
-        handleQuery.pay_channel = null
+      handleQuery = JSON.parse(query)
+      const payChannel = JSON.parse(query).pay_channel
+      if (payChannel && payChannel.length <= 0) {
+        // handleQuery.pay_channel = null
+        delete handleQuery.pay_channel
         handleQuery = JSON.stringify(handleQuery)
       } else {
         handleQuery = query

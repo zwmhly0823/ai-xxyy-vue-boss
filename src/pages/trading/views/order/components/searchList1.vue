@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-04-25 17:24:23
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-08-07 21:14:41
+ * @LastEditTime: 2020-08-08 16:59:29
  -->
 <template>
   <el-card
@@ -32,6 +32,7 @@
             placeholder="全部"
           ></simple-select>
           <SearchPhoneAndUsername
+            ref="phoneName"
             @result="getSendUser"
             :custom-style="{ width: '200px' }"
             placeholder="推荐人手机号/用户名称"
@@ -487,8 +488,12 @@ export default {
     async getSendUser(res) {
       this.setSeachParmas(res, ['first_order_send_id'], 'terms')
     },
+    // fix
     getFirstOrder(res) {
+      console.log('执行')
+
       if (res && res.is_first_order_send_id === '0') {
+        this.$refs.phoneName.handleEmpty()
         this.hasSendId = false
       } else {
         this.hasSendId = true
