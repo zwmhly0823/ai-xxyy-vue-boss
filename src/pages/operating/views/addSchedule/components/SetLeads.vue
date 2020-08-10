@@ -299,6 +299,10 @@
         </el-row>
       </div>
     </div>
+    <ChannelThreelist
+      :channelThreededList="channelThreededList"
+      @editRow="editRow"
+    ></ChannelThreelist>
     <!-- 取消、下一步 -->
     <div class="operate-btn">
       <el-button size="small" type="primary" @click="stepOperate(0)">
@@ -318,7 +322,6 @@
       :before-close="handleCloseUpdata"
       width="30%"
     >
-      <!-- action="/api/o/v1/express/importExpressList" -->
       <el-upload
         ref="upload"
         action=""
@@ -347,36 +350,23 @@
         <!-- :loading="uploading" -->
         <div slot="tip" class="el-upload__tip">只能上传xls/xlsx文件</div>
       </el-upload>
-      <!-- 
-      <el-upload
-        ref="upload"
-        action=""
-        accept=".xls, .xlsx"
-        :headers="{ 'Content-Type': 'multipart/form-data' }"
-        :auto-upload="false"
-        :limit="1"
-        :http-request="uploadFile"
-        :on-progress="uploadProgress"
-      >
-        <el-button slot="trigger" size="small" type="primary"
-          >选取文件</el-button
-        >
-        <el-button
-          style="margin-left: 10px;"
-          size="small"
-          type="success"
-          @click="submitUpload"
-          :disabled="uploading"
-          >上传到服务器</el-button
-        >
-        <div slot="tip" class="el-upload__tip">只能上传xls/xlsx文件</div>
-      </el-upload> -->
     </el-dialog>
+
+    <!-- 渠道线索定向分配模态框 -->
+    <channel-threeded
+      :centerDialogVisible="centerDialogVisible"
+      @dialogOperate="dialogOperate"
+      :editChannelThreeded="editChannelThreeded"
+      v-if="centerDialogVisible"
+    ></channel-threeded>
   </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
+import ChannelThreeded from './ChannelThreeded'
+import ChannelThreelist from './ChannelThreelist'
+
 const robinNumRuls = [
   { required: true, message: '接速不能为空' },
   { type: 'number', message: '接速必须为数字值' },
@@ -393,7 +383,7 @@ const robinNumRuls = [
 ]
 export default {
   props: {},
-  components: {},
+  components: { ChannelThreeded, ChannelThreelist },
   data() {
     var checkFun = (rule, value, callback) => {
       if (!value && value !== 0) {
@@ -416,6 +406,9 @@ export default {
       callback()
     }
     return {
+      editChannelThreeded: null,
+      channelThreededList: [],
+      centerDialogVisible: false,
       uploading: false,
       dialogVisible: false,
       headers: { 'Content-Type': 'multipart/form-data' },
@@ -519,8 +512,20 @@ export default {
     if (this.schedulePeriod) {
       this.getLeads({ period: this.schedulePeriod, courseType })
     }
+    this.getRecord()
   },
   methods: {
+    editRow(row) {
+      console.log('row', row)
+      this.centerDialogVisible = true
+      this.editChannelThreeded = row
+    },
+    dialogOperate(args) {
+      const { close = true, submitSucc = false } = args
+      this.centerDialogVisible = !close
+      this.editChannelThreeded = null
+      if (submitSucc) this.getRecord()
+    },
     submitUpload(file, filelist) {
       this.$refs.upload.submit()
     },
@@ -577,15 +582,22 @@ export default {
 
       cb && cb()
     },
-    /** 上传进度 */
-    uploadProgress(event, file, fileList) {
-      console.log(
-        event,
-        file,
-        fileList,
-        'event, file, fileList--------------------'
-      )
+    /** 渠道线索定向分配 教师渠道绑定-查找记录 */
+    async getRecord(cb) {
+      try {
+        const { period = '' } = this.$route.params
+        const res = await this.$http.Operating.getRecord({ period })
+        console.log(res, 'getRecord-res')
+        if (res.code === 0) {
+          this.channelThreededList = res.payload
+          cb && cb()
+        }
+      } catch (err) {
+        this.$message.error('配置出错')
+      }
     },
+    /** 上传进度 */
+    uploadProgress(event, file, fileList) {},
     /** 导入数据 */
     exportExcel() {
       this.dialogVisible = true
@@ -593,6 +605,7 @@ export default {
     toSetChannelLeads() {
       // TODO 渠道线索定向分配
       console.log('渠道线索定向分配')
+      this.centerDialogVisible = true
     },
     // 修改时获取数据
     getLeads(params) {
@@ -653,14 +666,19 @@ export default {
   z-index: 14000 !important; //因为我的header的z-index比较大。这里看情况
 }
 .set-leads-container {
+  width: 80%;
+  margin: 0 auto;
   .btn-area {
     text-align: right;
+    padding-right: 6%;
   }
   .set-area {
-    padding: 0 20px 20px;
+    padding: 10px;
+    border: 1px solid #eee;
+    border-radius: 5px;
+    margin-top: 10px;
+    // padding: 0 20px 20px;
     .set-percent {
-      width: 80%;
-      margin: 0 auto;
       h4 {
         margin: 0;
       }
