@@ -5,11 +5,15 @@ import ProductType from '@/components/MSearch/searchItems/productType.vue';
  * @Author: songyanan
  * @Date: 2020-06-05 10:13:40
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-08-10 16:15:23
+ * @LastEditTime: 2020-08-10 16:49:39
  -->
 <template>
   <div>
-    <el-dialog :title="currentItem.lable" :visible.sync="Visible" width="30%">
+    <el-dialog
+      :title="currentItem.lable"
+      :visible.sync="dialogVisible"
+      width="30%"
+    >
       <el-form label-width="20%">
         <el-form-item v-if="currentItem.type === 'sameLevel'" label="名称">
           <el-input v-model="sameLevel.name" maxlength="10" />
