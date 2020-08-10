@@ -5,7 +5,7 @@ import ProductType from '@/components/MSearch/searchItems/productType.vue';
  * @Author: songyanan
  * @Date: 2020-06-05 10:13:40
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-08-10 17:45:42
+ * @LastEditTime: 2020-08-10 17:52:40
  -->
 <template>
   <div>
@@ -14,7 +14,7 @@ import ProductType from '@/components/MSearch/searchItems/productType.vue';
       :visible.sync="dialogVisible"
       width="500px"
     >
-      <el-form label-width="100px" style="margin:0">
+      <el-form label-width="100px " style="margin:0">
         <el-form-item v-if="currentItem.type === 'sameLevel'" label="名称">
           <el-input v-model="sameLevel.name" maxlength="10" />
         </el-form-item>
@@ -201,5 +201,8 @@ export default {
   -webkit-appearance: none;
   appearance: none;
   margin: 0;
+}
+/deep/ .el-form-item__label {
+  color: darkgray;
 }
 </style>
