@@ -298,7 +298,7 @@ export default {
   // 获取所有部门列表
   getdepartmentAllList() {
     // TeacherListEx(query:${JSON.stringify(q)},size:100) {
-    return axios.post('/graphql/v1/boss', {
+    return axios.post('/graphql/v1/toss', {
       query: `{
           TeacherDepartmentList(query:"",size:100){
             id

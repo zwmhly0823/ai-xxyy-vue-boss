@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-13 16:53:27
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-08-08 14:57:05
+ * @LastEditTime: 2020-08-10 16:31:07
  -->
 <template>
   <div class="left-container">
@@ -29,7 +29,7 @@
         <span class="menu-box">
           <span :title="data.id" class="menu-name">{{ `${data.name}` }}</span>
           <span v-if="data.name === '小熊项目'">{{ `(${qbSize})` }}</span>
-          <span v-else>{{ `(${data.size})` }}</span>
+          <span v-else>{{ data.size ? `(${data.size} )` : `(0)` }}</span>
         </span>
         <span
           v-show="nowId == data.id && isShowEditIcon"
@@ -146,7 +146,7 @@ export default {
           // 多层排序
           this.recursive(department)
           this.departmentList[0].children = department
-          console.log(department)
+          console.log('列表', department)
           this.departmentFlatList = department
         })
       } catch (error) {
@@ -318,7 +318,7 @@ export default {
     font-size: 18px;
     padding: 10px 0px 10px 20px;
   }
-  padding: 10px 0px;
+  padding: 10px 0px 130px;
   .custom-tree-node {
     width: 100%;
     display: flex;

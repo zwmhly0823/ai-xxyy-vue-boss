@@ -5,11 +5,11 @@ import ProductType from '@/components/MSearch/searchItems/productType.vue';
  * @Author: songyanan
  * @Date: 2020-06-05 10:13:40
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-08-08 17:36:57
+ * @LastEditTime: 2020-08-10 16:15:23
  -->
 <template>
   <div>
-    <el-dialog :title="currentItem.lable" :visible.sync="Visible" width="25%">
+    <el-dialog :title="currentItem.lable" :visible.sync="Visible" width="30%">
       <el-form label-width="20%">
         <el-form-item v-if="currentItem.type === 'sameLevel'" label="名称">
           <el-input v-model="sameLevel.name" maxlength="10" />
@@ -124,7 +124,7 @@ export default {
         sort: ''
       },
       departmentFlatList: null,
-      departfather: +this.editCurrentData.id || 0,
+      departfather: this.editCurrentData.id || 0,
       // departfather: 12,
       depart: +this.editCurrentData.pid,
       edit: this.editCurrentData,
@@ -134,7 +134,7 @@ export default {
   computed: {},
   created() {
     this.getdepartmentList()
-    // console.log(this.departmentFlatList.flat(10))
+    console.log(typeof this.editCurrentData.id)
     // this.departfather = this.editCurrentData.name
   },
   methods: {
@@ -147,8 +147,8 @@ export default {
           ...res.data.TeacherDepartmentList,
           { name: '小熊项目', id: 0 }
         ]
-        console.log('部门数据s', this.departmentFlatList)
-        console.log('部门id', this.departfather)
+        // console.log('部门数据s', this.departmentFlatList)
+        // console.log('部门id', this.departfather)
       })
     },
     handleDialog(type) {
