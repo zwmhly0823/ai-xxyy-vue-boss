@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-04-25 17:24:23
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-08-08 18:42:58
+ * @LastEditTime: 2020-08-10 14:26:37
  -->
 <template>
   <el-card
@@ -19,6 +19,7 @@
           class="allmini"
           :searchProp="searchProp"
           @result="getOrderSearch"
+          @clear="clearNum()"
         />
       </el-form-item>
 
@@ -337,10 +338,18 @@ export default {
     }
   },
   methods: {
+    // 切换手机/订单清空筛选项
+    clearNum() {
+      this.getOrderSearch({ uid: '' })
+      this.getOrderSearch({ out_trade_no: '' })
+      // this.setSeachParmas(val, [key])
+    },
     // 订单号、手机号
     getOrderSearch(res) {
+      console.log('手机号', res)
       const key = Object.keys(res || {})[0]
       const val = res[key] ? res : ''
+      console.log(key, val)
       this.setSeachParmas(val, [key])
     },
     // 选择渠道

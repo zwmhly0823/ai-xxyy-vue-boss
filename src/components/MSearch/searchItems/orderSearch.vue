@@ -3,8 +3,8 @@
  * @version: 1.0.0
  * @Author: liukun
  * @Date: 2020-04-25 17:10:01
- * @LastEditors: liukun
- * @LastEditTime: 2020-04-28 15:26:04
+ * @LastEditors: zhangjianwen
+ * @LastEditTime: 2020-08-10 12:28:50
  -->
 <template>
   <div>
@@ -67,6 +67,7 @@ export default {
   methods: {
     onChange(val) {
       console.info(val)
+      this.$emit('clear')
       this.value = ''
     },
     querySearch(query, cb) {

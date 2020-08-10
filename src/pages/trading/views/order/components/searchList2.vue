@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-04-25 17:24:23
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-08-08 18:52:48
+ * @LastEditTime: 2020-08-10 15:12:37
  -->
 <template>
   <el-card
@@ -15,7 +15,11 @@
   >
     <el-form :inline="true" label-position="right" label-width="100px">
       <el-form-item label="订单搜索:" :class="{ [$style.marginer]: true }">
-        <orderSearch class="allmini" @result="getOrderSearch" />
+        <orderSearch
+          class="allmini"
+          @result="getOrderSearch"
+          @clear="clearNum()"
+        />
       </el-form-item>
 
       <el-form-item label="订单来源:" :class="{ [$style.marginer]: true }">
@@ -244,6 +248,12 @@ export default {
   },
   computed: {},
   methods: {
+    // 切换手机/订单清空筛选项
+    clearNum() {
+      this.getOrderSearch({ uid: '' })
+      this.getOrderSearch({ out_trade_no: '' })
+      // this.setSeachParmas(val, [key])
+    },
     // 订单号、手机号
     getOrderSearch(res) {
       const key = Object.keys(res || {})[0]
