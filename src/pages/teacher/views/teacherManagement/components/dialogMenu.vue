@@ -5,7 +5,7 @@ import ProductType from '@/components/MSearch/searchItems/productType.vue';
  * @Author: songyanan
  * @Date: 2020-06-05 10:13:40
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-08-10 22:35:06
+ * @LastEditTime: 2020-08-10 23:26:09
  -->
 <template>
   <div>
@@ -131,12 +131,20 @@ export default {
       departmentFlatList: null,
       departfather: this.editCurrentData.id || '0',
       // departfather: 12,
-      depart: this.editCurrentData.pid || '0',
+      departs: this.editCurrentData.pid || '0',
       edit: this.editCurrentData,
       Visible: this.dialogVisible
     }
   },
-  computed: {},
+  computed: {
+    depart: function() {
+      if (this.departs === '99999') {
+        return '0'
+      } else {
+        return this.departs || '0'
+      }
+    }
+  },
   created() {
     this.getdepartmentList()
     console.log('id', this.editCurrentData)
