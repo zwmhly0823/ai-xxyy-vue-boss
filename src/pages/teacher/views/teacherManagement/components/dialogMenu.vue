@@ -5,7 +5,7 @@ import ProductType from '@/components/MSearch/searchItems/productType.vue';
  * @Author: songyanan
  * @Date: 2020-06-05 10:13:40
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-08-10 22:22:40
+ * @LastEditTime: 2020-08-10 22:35:06
  -->
 <template>
   <div>
@@ -129,9 +129,9 @@ export default {
         sort: ''
       },
       departmentFlatList: null,
-      departfather: this.editCurrentData.id || 0,
+      departfather: this.editCurrentData.id || '0',
       // departfather: 12,
-      depart: this.editCurrentData.pid || 0,
+      depart: this.editCurrentData.pid || '0',
       edit: this.editCurrentData,
       Visible: this.dialogVisible
     }

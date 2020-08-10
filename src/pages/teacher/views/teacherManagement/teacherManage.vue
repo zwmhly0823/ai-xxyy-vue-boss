@@ -3,8 +3,8 @@
  * @version:
  * @Author: zhubaodong
  * @Date: 2020-04-02 15:35:27
- * @LastEditors: zhubaodong
- * @LastEditTime: 2020-04-02 19:01:16
+ * @LastEditors: zhangjianwen
+ * @LastEditTime: 2020-08-10 22:58:16
  -->
 <template>
   <el-row type="flex" class="app-main height teacherContainer">
@@ -49,8 +49,10 @@ export default {
 .teacherContainer {
   &-left {
     padding-left: 0px;
-    width: 220px;
-    min-width: 220px;
+    padding-right: 10px;
+    width: 240px;
+    overflow-x: auto;
+    // min-width: 240px;
     border-right: 1px solid #e3e3e3;
   }
   &-right {

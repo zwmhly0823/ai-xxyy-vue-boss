@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-13 16:53:27
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-08-10 16:31:07
+ * @LastEditTime: 2020-08-10 23:00:30
  -->
 <template>
   <div class="left-container">
@@ -29,7 +29,9 @@
         <span class="menu-box">
           <span :title="data.id" class="menu-name">{{ `${data.name}` }}</span>
           <span v-if="data.name === '小熊项目'">{{ `(${qbSize})` }}</span>
-          <span v-else>{{ data.size ? `(${data.size} )` : `(0)` }}</span>
+          <span style="padding-right:10px" v-else>{{
+            data.size ? `(${data.size} )` : `(0)`
+          }}</span>
         </span>
         <span
           v-show="nowId == data.id && isShowEditIcon"
@@ -319,6 +321,7 @@ export default {
     padding: 10px 0px 10px 20px;
   }
   padding: 10px 0px 130px;
+  overflow-x: auto;
   .custom-tree-node {
     width: 100%;
     display: flex;
