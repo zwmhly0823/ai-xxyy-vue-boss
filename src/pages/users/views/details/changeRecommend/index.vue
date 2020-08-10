@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-08-06 17:13:23
  * @LastEditors: liukun
- * @LastEditTime: 2020-08-08 20:55:42
+ * @LastEditTime: 2020-08-10 07:31:38
 -->
 <template>
   <div>
@@ -19,13 +19,17 @@
       >
       </el-date-picker>
       <section>
-        累计审核时间：<span>{{ 999 }}</span>
+        累计审核成功：<span>{{ '-' }}</span>
       </section>
       <section>
-        {{ showMonth + '月' }}审核成功：<span>{{ 111 }}</span>
+        {{ showMonth + '月' }}审核成功：<span>{{
+          (tableData[0] && tableData[0].currentMonthAgreeCount) || '-'
+        }}</span>
       </section>
       <section>
-        {{ showMonth + '月' }}审核驳回：<span>{{ 222 }}</span>
+        {{ showMonth + '月' }}审核驳回：<span>{{
+          (tableData[0] && tableData[0].currentMonthRejectCount) || '-'
+        }}</span>
       </section>
     </div>
     <div class="table">
@@ -72,7 +76,7 @@ export default {
     return {
       tableData: [],
       month_: Date.now(),
-      searchJson: { page: 1, size: 100, userId: this.$route.params.id }
+      searchJson: { pageNum: 1, pageSize: 100, userId: this.$route.params.id }
     }
   },
 

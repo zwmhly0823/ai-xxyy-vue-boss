@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-08-03 15:45:34
  * @LastEditors: liukun
- * @LastEditTime: 2020-08-08 20:08:04
+ * @LastEditTime: 2020-08-10 09:21:42
 -->
 <template>
   <!-- wrap_lk:给分页留了40高度 -->
@@ -115,11 +115,7 @@
         </el-table-column>
         <el-table-column prop="approvalName" label="审核人" align="center">
         </el-table-column>
-        <el-table-column
-          label="操作"
-          align="center"
-          v-show="tabsValue != 'DECLINE' && tabsValue != 'COMPLETED'"
-        >
+        <el-table-column label="操作" align="center">
           <template slot-scope="scope" v-if="scope.row.status === 'PENDING'">
             <el-button type="text" @click="handleEdit(scope.$index, scope.row)"
               >审核</el-button
@@ -193,18 +189,30 @@ export default {
   methods: {
     _wai1(r) {
       console.info('学员', r)
+      this.searchJson.userId = r['']
+      this.getData()
     },
     _wai2(r) {
-      console.info('老师', r)
+      console.info('老师', r.pay_teacher_id)
+      this.searchJson.systemTeacherId =
+        r.pay_teacher_id[r.pay_teacher_id.length - 1]
+      this.getData()
     },
     chooseTime(r) {
       console.info('时间', r)
+      this.searchJson.sctime = r[0]
+      this.searchJson.ectime = r[1]
+      this.getData()
     },
     chooseActivity(r) {
       console.info('活动', r)
+      this.searchJson.type = r
+      this.getData()
     },
     handleClick(tab) {
       console.info('tabpad实例', tab, tab.name)
+      this.searchJson.status = tab.name
+      this.getData()
     },
     // 点击审核
     handleEdit(index, item) {
@@ -215,16 +223,16 @@ export default {
     // 页容量变化
     handleSizeChange(val) {
       console.log(`每页 ${val} 条`)
-      this.arrangeParams({ page: this.page, size: val })
+      this.getData({ pageNum: this.page, pageSize: val })
     },
     // 当前页变化
     handleCurrentChange(val) {
       console.log(`当前页: ${val}`)
-      this.arrangeParams({ page: val, size: this.pageSize })
+      this.getData({ pageNum: val, pageSize: this.pageSize })
     },
     // 数据接口(传当前页,页容量 取总数据，总条目)
-    async getData({ page = 1, size = 10 } = {}) {
-      Object.assign(this.searchJson, { page, size }) // 放心page,size会覆盖原有
+    async getData({ pageNum = 1, pageSize = 10 } = {}) {
+      Object.assign(this.searchJson, { pageNum, pageSize }) // 放心page,size会覆盖原有
       const {
         code,
         payload: { content, totalElements }
@@ -233,8 +241,8 @@ export default {
         this.$message.error('table数据接口失败')
       })
       if (!code) {
-        this.pageSize = size // 就取本地设订的可以嘛？server也是听本地的传值(统一接口成功再变化分页信息)
-        this.currentPage = page // 就取本地设订的可以嘛？server也是听本地的传值(统一接口成功再变化分页信息)
+        this.pageSize = pageSize // 就取本地设订的可以嘛？server也是听本地的传值(统一接口成功再变化分页信息)
+        this.currentPage = pageNum // 就取本地设订的可以嘛？server也是听本地的传值(统一接口成功再变化分页信息)
         this.allDigit = +totalElements // 总量
         // 加工整合
         content.forEach((item) => {

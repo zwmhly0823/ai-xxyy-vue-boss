@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-03-16 19:46:39
  * @LastEditors: liukun
- * @LastEditTime: 2020-08-08 16:44:46
+ * @LastEditTime: 2020-08-10 08:54:51
  */
 import axios from '../axiosConfig'
 
@@ -490,5 +490,9 @@ export default {
   // 截图转介绍
   getTable(parmas) {
     return axios.get('/api/b/v1/backend/userflow/sharereward/pageList', parmas)
+  },
+  // 提交截图审核
+  submit_img(parmas) {
+    return axios.post('/api/b/v1/backend/userflow/complete', parmas)
   }
 }

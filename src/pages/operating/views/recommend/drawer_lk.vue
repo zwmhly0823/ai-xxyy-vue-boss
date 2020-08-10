@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-07-20 16:37:49
  * @LastEditors: liukun
- * @LastEditTime: 2020-08-08 15:53:13
+ * @LastEditTime: 2020-08-10 09:34:37
 --><template>
   <el-drawer :visible.sync="drawer" size="40%" :destroy-on-close="true">
     <template v-slot:title>
@@ -22,56 +22,34 @@
         label-width="100px"
       >
         <el-form-item label="用户信息">
-          <el-input v-model="form.infoD" readonly></el-input>
+          <el-input v-model="initItemTrue.userName" readonly></el-input>
         </el-form-item>
         <el-form-item label="本月通过审核数">
-          <el-input v-model="form.digit" readonly></el-input>
+          <el-input
+            v-model="initItemTrue.currentMonthAgreeCount"
+            readonly
+          ></el-input>
         </el-form-item>
         <el-form-item label="上传时间">
-          <el-date-picker
-            v-model="form.dateTime"
-            type="datetime"
-            value-format="timestamp"
-            readonly
-            style="width:100%"
-          >
-          </el-date-picker>
-        </el-form-item>
-        <div class="justify_lk">
-          <el-form-item label="沟通渠道">
-            <el-select v-model="form.contactType" placeholder="请选择沟通渠道">
-              <el-option label="坐席" value="TEL"></el-option>
-              <el-option label="手机" value="MOBILE"></el-option>
-              <el-option label="微信" value="WX"></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="结束类型">
-            <el-select v-model="form.finishType" placeholder="请选择结束类型">
-              <el-option label="无效沟通" value="INVALID"></el-option>
-              <el-option label="完成沟通" value="COMPLETE"></el-option>
-            </el-select>
-          </el-form-item>
-        </div>
-        <el-form-item label="沟通内容">
-          <el-input type="textarea" v-model="form.content"></el-input>
+          <el-input v-model="initItemTrue.ctime" readonly></el-input>
         </el-form-item>
         <el-form-item label="截图">
           <el-image
             :src="
-              form.img ||
+              initItemTrue.uploadUrl ||
                 'https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg'
             "
             width="80%"
           ></el-image>
         </el-form-item>
-        <el-form-item label="审核结果" prop="result">
-          <el-radio-group v-model="form.result">
-            <el-radio :label="1">通过</el-radio>
-            <el-radio :label="0">驳回</el-radio>
+        <el-form-item label="审核结果" prop="isAgree">
+          <el-radio-group v-model="form.isAgree">
+            <el-radio :label="true">通过</el-radio>
+            <el-radio :label="false">驳回</el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="驳回原因" prop="reason" v-if="!form.result">
-          <el-radio-group v-model="form.reason">
+        <el-form-item label="驳回原因" prop="remark" v-if="!form.isAgree">
+          <el-radio-group v-model="form.remark">
             <el-radio
               v-for="(value, name) in {
                 0: '朋友圈未保留12小时以上',
@@ -83,7 +61,7 @@
                 6: '截图不完整',
                 7: '截图有特殊处理'
               }"
-              :label="name"
+              :label="value"
               :key="name"
               >{{ value }}</el-radio
             >
@@ -102,7 +80,12 @@
 export default {
   name: 'drawer_lk',
   props: {
-    initItem: { type: Object, default: () => {} },
+    initItem: {
+      type: Object,
+      default: () => {
+        return { flowId: '' }
+      }
+    },
     arrageArray: { type: Array, default: () => [] }
   },
 
@@ -114,21 +97,15 @@ export default {
       drawer: false,
       // form
       form: {
-        uid: 0,
-        teacherId: 0,
-
-        infoD: '',
-        digit: '',
-        dateTime: '',
-        img: '',
-        result: 1,
-        reason: ''
+        id: this.initItemTrue && this.initItemTrue.flowId,
+        isAgree: true,
+        remark: ''
       },
       rules: {
-        result: [
+        isAgree: [
           { required: true, message: '审核结果必选', trigger: 'change' }
         ],
-        reason: [{ required: true, message: '驳回原因必选', trigger: 'change' }]
+        remark: [{ required: true, message: '驳回原因必选', trigger: 'change' }]
       }
     }
   },
@@ -137,7 +114,9 @@ export default {
     review() {
       if (this.initItemSon.status) {
         // 第1次处理
-        this.initItemTrue = this.initItemSon
+        this.initItemTrue = Object.assign(this.initItemSon, {
+          ctime: +this.initItemSon.ctime
+        })
       } else {
         this.initItemTrue = this.arrageArraySon[0]
       }
@@ -146,14 +125,15 @@ export default {
     submitForm() {
       this.$refs.form.validate(async (valid) => {
         if (valid) {
-          const { code } = await this.$http.User.submitForm(this.form).catch(
-            (err) => {
-              console.error(err)
-              this.$message.error('审核处理失败')
-            }
-          )
+          const { code } = await this.$http.Operating.submit_img(
+            this.form
+          ).catch((err) => {
+            console.error(err)
+            this.$message.error('审核处理失败')
+          })
           if (code === 0) {
             this.$message.success('该单审核完成')
+            this.recall()
           }
         } else {
           this.$message.warning('请检查表单规则')
@@ -175,21 +155,25 @@ export default {
           ),
           1
         )
+        this.review()
       } else {
         this.arrageArraySon.shift()
         if (!this.arrageArraySon.length) {
           this.$message.warning('辛苦啦,当前页审批完成! 翻页接着批')
+          return false
+        } else {
+          this.review()
         }
       }
     }
   },
   watch: {
-    'form.result': {
+    'form.isAgree': {
       immediate: true,
       deep: true,
       handler(newValue, oldValue) {
-        if (newValue === 1) {
-          this.form.reason = ''
+        if (newValue === true) {
+          this.form.remark = ''
         }
       }
     },
@@ -206,7 +190,9 @@ export default {
       }
     }
   },
-  mounted() {}
+  mounted() {
+    // console.info(this.initItemTrue)
+  }
 }
 </script>
 
