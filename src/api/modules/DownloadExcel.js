@@ -3,8 +3,8 @@
  * @version:
  * @Author: Lukun
  * @Date: 2020-05-14 14:31:42
- * @LastEditors: Shentong
- * @LastEditTime: 2020-07-16 21:16:36
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-08-10 18:00:07
  */
 import axios from '../axios'
 import { getToken } from '@/utils/auth'
@@ -139,6 +139,31 @@ export default {
         headers: getHeaders(),
         timeout: 300000,
         data: params
+      })
+    }
+  },
+
+  /**
+   * 营销中心-兑换码记录列表导出
+   */
+  exportRedeemCodeLog(params) {
+    console.log(params, 'params')
+    if (judgeToken()) {
+      return new Promise((resolve, reject) => {
+        axios({
+          method: 'POST',
+          url: '/graphql/export',
+          responseType: 'blob',
+          headers: getHeaders(),
+          data: params
+        })
+          .then((res) => {
+            console.log(res, '兑换码 download')
+            resolve(res)
+          })
+          .catch((err) => {
+            reject(err)
+          })
       })
     }
   }

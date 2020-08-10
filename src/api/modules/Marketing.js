@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-08-07 16:39:06
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-08 16:06:24
+ * @LastEditTime: 2020-08-10 21:18:05
  */
 import axios from '../axiosConfig'
 
@@ -53,6 +53,7 @@ export default {
             id
             title
             num
+            converted_num
             package_id
             package_name
             channel_id
@@ -108,6 +109,60 @@ export default {
           status
           code
           ctime
+          packageInfo{
+            name
+            type
+          }
+        }
+      }`
+    })
+  },
+
+  // 获取兑换码用户兑换记录
+  getRedeemCodeLog(params = {}, page = 1, sort = {}) {
+    const query =
+      !params || Object.keys(params).length === 0
+        ? `""`
+        : JSON.stringify(JSON.stringify(params))
+    const sortObj = sort
+      ? JSON.stringify(
+          JSON.stringify(Object.assign(sort, { use_date: 'desc' }))
+        )
+      : `""`
+    return axios.post('/graphql/v1/toss', {
+      query: `{
+        ExchangeCodeLogPage(query:${query}, page: ${page}, sort: ${sortObj}){
+          totalElements
+          totalPages
+          number
+          content{
+            id
+            code
+            config_id
+            del
+            use_date
+            status
+            user_id
+            teacher_id
+            team_id
+            card_no
+            order_no
+            converted_date
+            teacherInfo{
+              realname
+              department_name
+              area_name
+              group_name
+            }
+            teamInfo{
+              team_name
+              team_type
+            }
+            userInfo{
+              username
+              mobile
+            }
+          }
         }
       }`
     })

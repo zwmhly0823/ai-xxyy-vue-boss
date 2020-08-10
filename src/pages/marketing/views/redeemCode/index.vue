@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-08-06 17:15:04
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-08 15:47:07
+ * @LastEditTime: 2020-08-10 21:07:11
 -->
 <template>
   <el-row type="flex" class="app-main height">
@@ -21,7 +21,7 @@
           </el-table-column>
           <el-table-column prop="num" label="兑换个数/个数" width="100">
             <template slot-scope="scope">
-              <p>{{ 10 }}/{{ scope.row.num }}</p>
+              <p>{{ scope.row.converted_num }}/{{ scope.row.num }}</p>
             </template>
           </el-table-column>
           <el-table-column
@@ -29,8 +29,15 @@
             label="套餐商品"
           ></el-table-column>
           <el-table-column prop="customer_sign_name" label="标签">
+            <template slot-scope="scope">{{
+              scope.row.customer_sign_name || '--'
+            }}</template>
           </el-table-column>
-          <el-table-column prop="channel_name" label="渠道"> </el-table-column>
+          <el-table-column prop="channel_name" label="渠道">
+            <template slot-scope="scope">{{
+              scope.row.channel_name || '--'
+            }}</template>
+          </el-table-column>
           <el-table-column prop="start_date" label="有效期" min-width="120">
             <template slot-scope="scope">
               <p>起：{{ scope.row.start_date_text }}</p>
@@ -242,7 +249,7 @@ export default {
     border-bottom: 5px solid #f0f1f2;
   }
   &-list {
-    padding: 0 10px 10px;
+    padding: 0 10px 25px;
     span {
       padding: 0 5px;
     }
