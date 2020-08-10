@@ -5,7 +5,7 @@ import ProductType from '@/components/MSearch/searchItems/productType.vue';
  * @Author: songyanan
  * @Date: 2020-06-05 10:13:40
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-08-10 22:16:34
+ * @LastEditTime: 2020-08-10 22:22:40
  -->
 <template>
   <div>
@@ -151,7 +151,7 @@ export default {
       this.$http.Teacher.getdepartmentAllList().then((res) => {
         this.departmentFlatList = [
           ...res.data.TeacherDepartmentList,
-          { name: '小熊项目', id: 0 }
+          { name: '小熊项目', id: '0' }
         ]
         console.log('部门数据s', this.departmentFlatList)
         // console.log('部门id', this.departfather)
