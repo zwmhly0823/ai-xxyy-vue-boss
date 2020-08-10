@@ -5,16 +5,16 @@ import ProductType from '@/components/MSearch/searchItems/productType.vue';
  * @Author: songyanan
  * @Date: 2020-06-05 10:13:40
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-08-10 16:49:39
+ * @LastEditTime: 2020-08-10 17:45:42
  -->
 <template>
   <div>
     <el-dialog
       :title="currentItem.lable"
       :visible.sync="dialogVisible"
-      width="30%"
+      width="500px"
     >
-      <el-form label-width="20%">
+      <el-form label-width="100px" style="margin:0">
         <el-form-item v-if="currentItem.type === 'sameLevel'" label="名称">
           <el-input v-model="sameLevel.name" maxlength="10" />
         </el-form-item>
@@ -32,6 +32,7 @@ import ProductType from '@/components/MSearch/searchItems/productType.vue';
             v-model="departfather"
             placeholder="请选择"
             @change="changeDap"
+            style="width:300px"
           >
             <el-option
               v-for="item in departmentFlatList"
@@ -44,7 +45,11 @@ import ProductType from '@/components/MSearch/searchItems/productType.vue';
           </el-select>
         </el-form-item>
         <el-form-item v-if="currentItem.type === 'childLevel'" label="子级名称">
-          <el-input v-model="childLevel.name" maxlength="10" />
+          <el-input
+            style="width:300px"
+            v-model="childLevel.name"
+            maxlength="10"
+          />
         </el-form-item>
         <!-- <el-form-item v-if="currentItem.type === 'childLevel'" label="排序">
           <el-input
@@ -56,7 +61,7 @@ import ProductType from '@/components/MSearch/searchItems/productType.vue';
           />
         </el-form-item> -->
         <el-form-item v-if="currentItem.type === 'edit'" label="归属上级">
-          <el-select v-model="depart" placeholder="请选择">
+          <el-select v-model="depart" placeholder="请选择" style="width:300px">
             <el-option
               v-for="item in departmentFlatList"
               :key="item.id"
@@ -68,7 +73,7 @@ import ProductType from '@/components/MSearch/searchItems/productType.vue';
           </el-select>
         </el-form-item>
         <el-form-item v-if="currentItem.type === 'edit'" label="名称">
-          <el-input v-model="edit.name" maxlength="10" />
+          <el-input style="width:300px" v-model="edit.name" maxlength="10" />
         </el-form-item>
         <!-- <el-form-item v-if="currentItem.type === 'edit'" label="排序">
           <el-input
