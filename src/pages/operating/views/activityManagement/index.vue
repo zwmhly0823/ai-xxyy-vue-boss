@@ -214,7 +214,7 @@ export default {
       this.getPromotionsPageList(this.sourchParams).then((res) => {
         console.log(res)
         this.tableData = res.payload.content
-        this.totalElements = Number(res.totalElements)
+        this.totalElements = Number(res.payload.totalElements)
       })
     },
 
