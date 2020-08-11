@@ -5,11 +5,18 @@ import ProductType from '@/components/MSearch/searchItems/productType.vue';
  * @Author: songyanan
  * @Date: 2020-06-05 10:13:40
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-08-10 23:26:09
+ * @LastEditTime: 2020-08-11 17:24:15
  -->
 <template>
   <div>
-    <el-dialog :title="currentItem.lable" :visible.sync="Visible" width="500px">
+    <el-dialog
+      :title="currentItem.lable"
+      :visible.sync="Visible"
+      :close-on-click-modal="false"
+      :close-on-press-escape="false"
+      width="500px"
+      @close="handleDialog('cacle')"
+    >
       <el-form label-width="100px " style="margin:0">
         <el-form-item v-if="currentItem.type === 'sameLevel'" label="名称">
           <el-input v-model="sameLevel.name" maxlength="10" />
@@ -156,6 +163,7 @@ export default {
       //  console.log(this.departfather)
     },
     getdepartmentList() {
+      this.departmentFlatList = []
       this.$http.Teacher.getdepartmentAllList().then((res) => {
         this.departmentFlatList = [
           ...res.data.TeacherDepartmentList,
