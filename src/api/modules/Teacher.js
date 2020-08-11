@@ -297,9 +297,15 @@ export default {
   },
   // 获取所有部门列表
   getdepartmentAllList() {
+    //  JSON.stringify(querys)
+    const querys = {
+      del: 0
+    }
     return axios.post('/graphql/v1/toss', {
       query: `{
-          TeacherDepartmentList(query:"",size:1000){
+          TeacherDepartmentList(query:${JSON.stringify(
+            JSON.stringify(querys)
+          )},size:1000){
             id
             name
           }
