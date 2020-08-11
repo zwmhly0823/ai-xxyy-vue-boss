@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-04-25 17:24:23
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-08-11 15:30:41
+ * @LastEditTime: 2020-08-11 16:47:48
  -->
 <template>
   <el-card
@@ -139,6 +139,7 @@
             class="margin_l10"
             @result="getTrialChannel"
             name="trial_pay_channel"
+            @clear="clearChannel(0)"
           />
         </div>
       </el-form-item>
@@ -184,6 +185,7 @@
             class="margin_l10"
             @result="getChannel"
             name="pay_channel"
+            @clear="clearChannel(1)"
           />
         </div>
       </el-form-item>
@@ -352,8 +354,21 @@ export default {
       console.log(key, val)
       this.setSeachParmas(val, [key])
     },
+    // 清空渠道选项
+    clearChannel(res) {
+      if (res) {
+        this.setSeachParmas({ pay_channel: '' }, ['pay_channel'], 'terms')
+      } else {
+        this.setSeachParmas(
+          { trial_pay_channel: '' },
+          ['trial_pay_channel'],
+          'terms'
+        )
+      }
+    },
     // 选择渠道
     getChannel(res) {
+      console.log(res)
       this.setSeachParmas(res, ['pay_channel'], 'terms')
     },
     getTrialChannel(res) {
@@ -555,13 +570,20 @@ export default {
           temp[0].terms.trial_pay_channel &&
           temp[0].terms.trial_pay_channel.length <= 0
         ) {
-          delete temp[0].terms.trial_pay_channel
+          temp.map((item) => {
+            console.log(item)
+            delete item.terms.trial_pay_channel
+          })
+          // delete temp[0].terms.trial_pay_channel
+          // delete temp[1].terms.trial_pay_channel
         }
         if (
           temp[0].terms.pay_channel &&
           temp[0].terms.pay_channel.length <= 0
         ) {
-          delete temp[0].terms.pay_channel
+          temp.map((item) => {
+            delete item.terms.pay_channel
+          })
         }
         this.searchParams = temp
         console.log('参数', temp)
