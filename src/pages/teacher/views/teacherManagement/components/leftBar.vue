@@ -3,12 +3,12 @@
  * @version:
  * @Author: zhubaodong
  * @Date: 2020-03-13 16:53:27
- * @LastEditors: panjian
- * @LastEditTime: 2020-07-14 16:28:56
+ * @LastEditors: zhangjianwen
+ * @LastEditTime: 2020-08-10 23:31:04
  -->
 <template>
   <div class="left-container">
-    <div class="title">组织结构</div>
+    <div class="title">组织架构</div>
     <el-tree
       class="left-container-tree"
       :data="departmentList"
@@ -28,15 +28,26 @@
       >
         <span class="menu-box">
           <span :title="data.id" class="menu-name">{{ `${data.name}` }}</span>
-          <span v-if="data.name === '全部'">{{ `(${qbSize})` }}</span>
-          <span v-else>{{ `(${data.size})` }}</span>
+          <span v-if="data.name === '小熊项目'">{{ `(${qbSize})` }}</span>
+          <span v-else>{{ data.size ? `(${data.size} )` : `(0)` }}</span>
         </span>
         <span
-          v-show="nowId == data.id && isShowEditIcon && data.name !== '全部'"
+          v-show="nowId == data.id && isShowEditIcon"
           class="el-icon-more"
           @click.stop="editTools(data)"
         ></span>
-        <el-card v-show="nowId == data.id && showMenu">
+        <el-card
+          v-show="nowId == data.id && showMenu && data.name === '小熊项目'"
+        >
+          <div v-for="(item, index) in editMenuListNodel" :key="index">
+            <div @click.stop="handleMenuItem(data, item)">
+              {{ item.lable }}
+            </div>
+          </div>
+        </el-card>
+        <el-card
+          v-show="nowId == data.id && showMenu && data.name !== '小熊项目'"
+        >
           <div v-for="(item, index) in editMenuList" :key="index">
             <div @click.stop="handleMenuItem(data, item)">
               {{ item.lable }}
@@ -50,6 +61,7 @@
       :editCurrentData="editCurrentData"
       :currentItem="editCurrentItem"
       :dialogVisible="dialogVisible"
+      :departmentFlatList="departmentFlatList"
       @handleDialog="handleDialog"
       ref="dialogRef"
     />
@@ -74,7 +86,7 @@ export default {
       qbSize: '',
       departmentList: [
         {
-          name: '全部',
+          name: '小熊项目',
           pid: '99999',
           children: []
         }
@@ -84,11 +96,7 @@ export default {
       showMenu: false,
       editMenuList: [
         {
-          lable: '新建同级',
-          type: 'sameLevel'
-        },
-        {
-          lable: '新建子级',
+          lable: '新建',
           type: 'childLevel'
         },
         {
@@ -100,9 +108,20 @@ export default {
           type: 'delete'
         }
       ],
+      editMenuListNodel: [
+        {
+          lable: '新建',
+          type: 'childLevel'
+        },
+        {
+          lable: '修改',
+          type: 'edit'
+        }
+      ],
       dialogVisible: false,
       editCurrentItem: {},
       editCurrentData: {},
+      departmentFlatList: [],
       menuType: null
     }
   },
@@ -127,6 +146,8 @@ export default {
           // 多层排序
           this.recursive(department)
           this.departmentList[0].children = department
+          console.log('列表', department)
+          this.departmentFlatList = department
         })
       } catch (error) {
         console.log(error)
@@ -187,6 +208,7 @@ export default {
     async addMenu() {
       const { menuType, editCurrentData } = this
       const form = this.$refs.dialogRef
+      console.log(form)
       let pid = ''
       // 创建栏目时,一级创建同级时为0，创建子栏目时为当前id;二级、三级创建同级时为当前数据的pid,创建子级时为当前id
       switch (menuType) {
@@ -194,7 +216,11 @@ export default {
           pid = editCurrentData.flag === 1 ? '0' : editCurrentData.pid
           break
         case 'childLevel':
-          pid = editCurrentData.id
+          pid = form._data.departfather
+          // pid = ''
+          break
+        case 'edit':
+          pid = form._data.depart
           break
         default:
           pid = ''
@@ -203,6 +229,8 @@ export default {
         name: form[menuType].name,
         sort: form[menuType].sort,
         id: menuType === 'edit' ? editCurrentData.id : '',
+        // id: ['edit', 'childLevel'].includes(menuType)
+        //   ? form._data.departfather
         pid: pid
       }
       if (params.name === '') {
@@ -290,7 +318,8 @@ export default {
     font-size: 18px;
     padding: 10px 0px 10px 20px;
   }
-  padding: 10px 0px;
+  padding: 10px 0px 130px;
+  overflow-x: auto;
   .custom-tree-node {
     width: 100%;
     display: flex;
@@ -328,6 +357,9 @@ export default {
 
 #menu ul li {
   list-style: none;
+}
+/deep/ .custom-tree-node {
+  padding-right: 20px;
 }
 </style>
 <style lang="scss">
