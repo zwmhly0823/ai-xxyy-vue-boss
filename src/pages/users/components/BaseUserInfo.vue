@@ -28,6 +28,10 @@
         }}</span>
       </p>
       <p>
+        <!-- vip -->
+        <svg class="iconfont-vip">
+          <use xlink:href="#iconvip"></use>
+        </svg>
         <i class="el-icon-male" v-if="user && +user.sex === 1"></i>
         <i class="el-icon-female female" v-if="user && +user.sex === 2"></i>
         {{ birthday }} · {{ basePainting || '' }}
@@ -138,6 +142,13 @@ export default {
       &.female {
         color: #f23589;
       }
+    }
+    .iconfont-vip {
+      position: relative;
+      top: 2px;
+      width: 14px;
+      height: 14px;
+      fill: #f96137;
     }
     .username {
       position: relative;

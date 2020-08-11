@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-06-28 11:20:19
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-07-28 23:09:58
+ * @LastEditTime: 2020-08-11 12:50:04
 -->
 <template>
   <div class="trial-list-sidebar">
@@ -121,6 +121,11 @@ export default {
             {
               id: 'user-2',
               label: '已转化学员'
+            },
+            // 系统课标签-vip学员。兑换码兑换来的
+            {
+              id: 'user-vip',
+              label: 'VIP学员'
             }
           ]
         }
@@ -182,6 +187,10 @@ export default {
         // 已转化学员
         case 'user-2':
           param = { user_status: { gte: 3 } }
+          break
+        // VIP学员
+        case 'user-vip':
+          param = { 'sys_label.like': { 'sys_label.keyword': '*vip*' } }
           break
         // track-today
         case 'track-today':
@@ -312,7 +321,7 @@ export default {
 
       /**
        * 盒子物流 无地址：[0], 未送达：[1,2,4,5,6,7,8,9], 已送达 [3]
-       * 
+       *
        * 0: '无地址',
           6: '待审核',
           1: '待发货',
