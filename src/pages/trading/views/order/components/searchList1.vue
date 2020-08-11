@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-04-25 17:24:23
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-08-11 16:47:48
+ * @LastEditTime: 2020-08-11 18:25:36
  -->
 <template>
   <el-card
@@ -356,6 +356,8 @@ export default {
     },
     // 清空渠道选项
     clearChannel(res) {
+      console.log(res)
+      debugger
       if (res) {
         this.setSeachParmas({ pay_channel: '' }, ['pay_channel'], 'terms')
       } else {
@@ -566,25 +568,35 @@ export default {
           })
           this.must = temp
         }
-        if (
-          temp[0].terms.trial_pay_channel &&
-          temp[0].terms.trial_pay_channel.length <= 0
-        ) {
-          temp.map((item) => {
-            console.log(item)
-            delete item.terms.trial_pay_channel
-          })
-          // delete temp[0].terms.trial_pay_channel
-          // delete temp[1].terms.trial_pay_channel
-        }
-        if (
-          temp[0].terms.pay_channel &&
-          temp[0].terms.pay_channel.length <= 0
-        ) {
-          temp.map((item) => {
-            delete item.terms.pay_channel
-          })
-        }
+        // if (
+        //   temp[0].terms.trial_pay_channel &&
+        //   temp[0].terms.trial_pay_channel.length <= 0
+        // ) {
+        //   temp.map((item) => {
+        //     console.log(item)
+        //     delete item.terms.trial_pay_channel
+        //   })
+
+        // }
+        // if (
+        //   temp[0].terms.pay_channel &&
+        //   temp[0].terms.pay_channel.length <= 0
+        // ) {
+        //   temp.map((item) => {
+        //     delete item.terms.pay_channel
+        //   })
+        // }
+        temp.map((item, index) => {
+          if (item.terms.pay_channel && item.terms.pay_channel.length <= 0) {
+            temp.splice(index, 1)
+          }
+          if (
+            item.terms.trial_pay_channel &&
+            item.terms.trial_pay_channel.length <= 0
+          ) {
+            temp.splice(index, 1)
+          }
+        })
         this.searchParams = temp
         console.log('参数', temp)
         this.$emit('search', temp)
