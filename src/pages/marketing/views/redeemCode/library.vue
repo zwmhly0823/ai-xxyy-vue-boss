@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-08-06 19:52:15
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-10 21:25:38
+ * @LastEditTime: 2020-08-11 14:26:57
 -->
 <template>
   <el-row type="flex" class="app-main height">
@@ -138,7 +138,7 @@ export default {
       totalElements: 0,
       totalPages: 1,
       statusObj: {
-        '0': '不可用',
+        '0': '已失效', // 已失效，手动设置失效
         '1': '未使用', // 未使用，未兑换
         '4': '已失效', // 未使用，已兑换
         '2': '已兑换', // 已兑换成功
@@ -286,10 +286,11 @@ export default {
         header: {
           'library.packageInfo.name': '套餐名称',
           code: '兑换码',
+          card_no: '卡号',
           'userInfo.mobile': '用户手机号',
           'userInfo.username': '用户昵称',
           'library.customerSignInfo.name': '用户标签',
-          status_text: '使用时间',
+          status_text: '使用状态',
           use_date_text: '使用时间',
           converted_date_text: '兑换时间',
           'teamInfo.team_name': '班级',

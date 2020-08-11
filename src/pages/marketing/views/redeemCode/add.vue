@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-08-06 22:29:42
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-08 14:59:46
+ * @LastEditTime: 2020-08-11 14:37:04
 -->
 <template>
   <div class="add-redeem-code">
@@ -149,6 +149,10 @@ export default {
     var checkDate = (rule, value, callback) => {
       if (!value) return
       const start = value[0]
+      const end = value[1]
+      if (start >= end) {
+        return callback(new Error('失效时间要大于有效时间，请重新选择'))
+      }
       if (start < Date.now()) {
         return callback(new Error('有效时间不能早于当前时间，请重新选择'))
       }
@@ -170,7 +174,7 @@ export default {
         date: [
           {
             required: true,
-            message: '请选择生效时间及失效时间',
+            message: '请设置兑换码有效期',
             trigger: 'blur'
           },
           { validator: checkDate, trigger: ['blur', 'change'] }
@@ -308,6 +312,7 @@ export default {
      */
     resetForm(formName = 'form') {
       this.$refs[formName].resetFields()
+      this.packageProduct = {}
     },
 
     // 选择套餐
