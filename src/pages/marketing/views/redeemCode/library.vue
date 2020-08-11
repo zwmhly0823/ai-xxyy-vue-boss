@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-08-06 19:52:15
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-11 14:26:57
+ * @LastEditTime: 2020-08-11 14:58:47
 -->
 <template>
   <el-row type="flex" class="app-main height">
@@ -140,7 +140,7 @@ export default {
       statusObj: {
         '0': '已失效', // 已失效，手动设置失效
         '1': '未使用', // 未使用，未兑换
-        '4': '已失效', // 未使用，已兑换
+        '4': '已失效', // 未使用，已兑换-过期
         '2': '已兑换', // 已兑换成功
         '3': '已使用' // 兑换码已领取成功
       },
@@ -268,6 +268,11 @@ export default {
       if (!data) {
         delete this.searchParams.status
       }
+      // 如果 status='4' 已失效，查询条件加上手动失效状态-0
+      if (data && data.status === '4') {
+        Object.assign(data, { status: ['0', '4'] })
+      }
+
       this.handleSearch(data)
     },
 
