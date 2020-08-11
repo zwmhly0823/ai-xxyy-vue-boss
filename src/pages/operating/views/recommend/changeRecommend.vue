@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-08-03 15:45:34
  * @LastEditors: liukun
- * @LastEditTime: 2020-08-10 09:21:42
+ * @LastEditTime: 2020-08-11 17:09:12
 -->
 <template>
   <!-- wrap_lk:给分页留了40高度 -->
@@ -116,7 +116,7 @@
         <el-table-column prop="approvalName" label="审核人" align="center">
         </el-table-column>
         <el-table-column label="操作" align="center">
-          <template slot-scope="scope" v-if="scope.row.status === 'PENDING'">
+          <template slot-scope="scope" v-if="scope.row.status === '待审核'">
             <el-button type="text" @click="handleEdit(scope.$index, scope.row)"
               >审核</el-button
             >
@@ -137,7 +137,7 @@
       </el-pagination>
     </div>
     <div class="pdrawer_lk">
-      <drawerLk ref="drawer_lk" :initItem="initItem" :arrageArr="arrangeArr" />
+      <drawerLk ref="drawer_lk" :arrangeArr="arrangeArr" />
     </div>
   </section>
 </template>
@@ -176,14 +176,12 @@ export default {
       // 表格数据
       tableData: [],
       // arrange_search
-      searchJson: {},
-      // son initItem
-      initItem: {}
+      searchJson: {}
     }
   },
   computed: {
     arrangeArr() {
-      return this.tableData.filter((item) => item.status === 'PENDING')
+      return this.tableData.filter((item) => item.status === '待审核')
     }
   },
   methods: {
@@ -216,9 +214,9 @@ export default {
     },
     // 点击审核
     handleEdit(index, item) {
+      console.info('点击审核给儿子传数据单元')
+      this.$root.$emit('singSong', item)
       this.$refs.drawer_lk.drawer = true
-      this.initItem = item
-      console.info('点击审核')
     },
     // 页容量变化
     handleSizeChange(val) {
@@ -261,7 +259,6 @@ export default {
   },
   mounted() {
     this.getData()
-    this.$refs.drawer_lk.drawer = true
   }
 }
 </script>

@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-07-20 16:37:49
  * @LastEditors: liukun
- * @LastEditTime: 2020-08-10 09:34:37
+ * @LastEditTime: 2020-08-11 18:15:10
 --><template>
   <el-drawer :visible.sync="drawer" size="40%" :destroy-on-close="true">
     <template v-slot:title>
@@ -80,24 +80,18 @@
 export default {
   name: 'drawer_lk',
   props: {
-    initItem: {
-      type: Object,
-      default: () => {
-        return { flowId: '' }
-      }
-    },
-    arrageArray: { type: Array, default: () => [] }
+    arrangeArr: { type: Array, default: () => [] }
   },
 
   data() {
     return {
-      arrageArraySon: [...this.arrageArray], // 单向流原则
-      initItemSon: { ...this.initItem }, // 单向流原则
+      arrageArraySon: [],
+      initItemSon: {},
       initItemTrue: {}, // 通用的复现单元数据
       drawer: false,
       // form
       form: {
-        id: this.initItemTrue && this.initItemTrue.flowId,
+        id: '',
         isAgree: true,
         remark: ''
       },
@@ -112,11 +106,13 @@ export default {
   methods: {
     // 回显
     review() {
+      console.info('回显触发lllll')
       if (this.initItemSon.status) {
         // 第1次处理
-        this.initItemTrue = Object.assign(this.initItemSon, {
-          ctime: +this.initItemSon.ctime
-        })
+        // this.initItemTrue = Object.assign(this.initItemSon, {
+        //   ctime: +this.initItemSon.ctime
+        // })
+        this.initItemTrue = this.initItemSon
       } else {
         this.initItemTrue = this.arrageArraySon[0]
       }
@@ -125,6 +121,8 @@ export default {
     submitForm() {
       this.$refs.form.validate(async (valid) => {
         if (valid) {
+          // 追加参数:flowId后提交
+          this.form.id = +this.initItemTrue.flowId
           const { code } = await this.$http.Operating.submit_img(
             this.form
           ).catch((err) => {
@@ -148,6 +146,7 @@ export default {
     recall() {
       // 第1次处理
       if (this.initItemSon.status) {
+        console.info('刚才提交的是首单,现在shift')
         this.initItemSon.status = null
         this.arrageArraySon.splice(
           this.arrageArraySon.findIndex(
@@ -155,13 +154,35 @@ export default {
           ),
           1
         )
-        this.review()
-      } else {
-        this.arrageArraySon.shift()
+        console.info('首单shift之后总量', this.arrageArraySon)
         if (!this.arrageArraySon.length) {
-          this.$message.warning('辛苦啦,当前页审批完成! 翻页接着批')
+          console.info('提交之后 库存没了')
+          this.$alert('当前页审批已全部完成', '辛苦啦', {
+            callback: (r) => {
+              this.drawer = false
+              location.reload()
+            }
+          })
           return false
         } else {
+          console.info('提交之后还有库存', this.arrageArraySon)
+          this.review()
+        }
+      } else {
+        console.info('刚才提交的是普通单,现在shift')
+        this.arrageArraySon.shift()
+        console.info('普通单shift之后总量', this.arrageArraySon)
+        if (!this.arrageArraySon.length) {
+          console.info('提交之后 库存没了')
+          this.$alert('当前页审批已全部完成', '辛苦啦', {
+            callback: (r) => {
+              this.drawer = false
+              location.reload()
+            }
+          })
+          return false
+        } else {
+          console.info('提交之后还有库存', this.arrageArraySon)
           this.review()
         }
       }
@@ -177,21 +198,23 @@ export default {
         }
       }
     },
-    // 他爹点那么一下
-    initItemSon: {
+    arrangeArr: {
       immediate: true,
       deep: true,
+      // 列表点击审核传来的待审核数组
       handler(newValue, oldValue) {
-        // 处理上来就执行的问题
-        if (oldValue) {
-          console.info('点击审核,单条数据改变触发第1步回显')
-          this.review()
-        }
+        console.log(newValue, oldValue, 'arrangeArr')
+        this.arrageArraySon = newValue
       }
     }
   },
   mounted() {
-    // console.info(this.initItemTrue)
+    // 列表点击审核传来的item
+    this.$root.$on('singSong', (r) => {
+      this.initItemSon = r
+      console.info(this.initItemSon)
+      this.review()
+    })
   }
 }
 </script>
