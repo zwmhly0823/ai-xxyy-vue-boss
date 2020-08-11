@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-04-25 17:24:23
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-08-10 15:12:37
+ * @LastEditTime: 2020-08-11 15:33:07
  -->
 <template>
   <el-card
@@ -430,6 +430,18 @@ export default {
             [extraKey]: res
           })
           this.must = temp
+        }
+        if (
+          temp[0].terms.trial_pay_channel &&
+          temp[0].terms.trial_pay_channel.length <= 0
+        ) {
+          delete temp[0].terms.trial_pay_channel
+        }
+        if (
+          temp[0].terms.pay_channel &&
+          temp[0].terms.pay_channel.length <= 0
+        ) {
+          delete temp[0].terms.pay_channel
         }
         this.searchParams = temp
         this.$emit('search', temp)

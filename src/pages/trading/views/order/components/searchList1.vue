@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-04-25 17:24:23
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-08-10 14:26:37
+ * @LastEditTime: 2020-08-11 15:30:41
  -->
 <template>
   <el-card
@@ -551,7 +551,18 @@ export default {
           })
           this.must = temp
         }
-
+        if (
+          temp[0].terms.trial_pay_channel &&
+          temp[0].terms.trial_pay_channel.length <= 0
+        ) {
+          delete temp[0].terms.trial_pay_channel
+        }
+        if (
+          temp[0].terms.pay_channel &&
+          temp[0].terms.pay_channel.length <= 0
+        ) {
+          delete temp[0].terms.pay_channel
+        }
         this.searchParams = temp
         console.log('参数', temp)
         this.$emit('search', temp)

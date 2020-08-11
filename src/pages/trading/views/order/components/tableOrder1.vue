@@ -459,7 +459,18 @@ export default {
         // 求和统计不需要传当前状态，统计全部状态的值
         const statisticsQuery = deepClone(queryObj)
         delete statisticsQuery.status
-
+        if (
+          statisticsQuery.trial_pay_channel &&
+          statisticsQuery.trial_pay_channel.length <= 0
+        ) {
+          delete statisticsQuery.trial_pay_channel
+        }
+        if (
+          statisticsQuery.pay_channel &&
+          statisticsQuery.pay_channel.length <= 0
+        ) {
+          delete statisticsQuery.pay_channel
+        }
         this.$http.Order.orderStatistics(
           statisticsQuery,
           'amount',

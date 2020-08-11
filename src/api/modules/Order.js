@@ -4,7 +4,7 @@
  * @Author: shentong
  * @Date: 2020-03-13 16:20:48
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-08-10 18:30:21
+ * @LastEditTime: 2020-08-11 15:21:29
  */
 import axios from '../axiosConfig'
 // 素质课的时候，测试环境暂时删除
@@ -28,36 +28,36 @@ export default {
    * 获取订单列表 v1
    * */
   orderPage(query, page = 1) {
-    let handleQuery
-    if (query && JSON.parse(query).pay_channel) {
-      handleQuery = JSON.parse(query)
-      const payChannel = JSON.parse(query).pay_channel
-      if (payChannel && payChannel.length <= 0) {
-        // handleQuery.pay_channel = null
-        delete handleQuery.pay_channel
-        handleQuery = JSON.stringify(handleQuery)
-      } else {
-        handleQuery = query
-      }
-    } else {
-      handleQuery = query
-    }
-    if (query && JSON.parse(query).trial_pay_channel) {
-      handleQuery = JSON.parse(query)
-      const payChannel = JSON.parse(query).trial_pay_channel
-      if (payChannel && payChannel.length <= 0) {
-        // handleQuery.pay_channel = null
-        delete handleQuery.trial_pay_channel
-        handleQuery = JSON.stringify(handleQuery)
-      } else {
-        handleQuery = query
-      }
-    } else {
-      handleQuery = query
-    }
+    // let handleQuery
+    // if (query && JSON.parse(query).pay_channel) {
+    //   handleQuery = JSON.parse(query)
+    //   const payChannel = JSON.parse(query).pay_channel
+    //   if (payChannel && payChannel.length <= 0) {
+    //     // handleQuery.pay_channel = null
+    //     delete handleQuery.pay_channel
+    //     handleQuery = JSON.stringify(handleQuery)
+    //   } else {
+    //     handleQuery = query
+    //   }
+    // } else {
+    //   handleQuery = query
+    // }
+    // if (query && JSON.parse(query).trial_pay_channel) {
+    //   handleQuery = JSON.parse(query)
+    //   const payChannel = JSON.parse(query).trial_pay_channel
+    //   if (payChannel && payChannel.length <= 0) {
+    //     // handleQuery.pay_channel = null
+    //     delete handleQuery.trial_pay_channel
+    //     handleQuery = JSON.stringify(handleQuery)
+    //   } else {
+    //     handleQuery = query
+    //   }
+    // } else {
+    //   handleQuery = query
+    // }
     return axios.post('/graphql/v1/toss', {
       query: `{
-        OrderPage(query: ${JSON.stringify(handleQuery)}, page: ${page}) {
+        OrderPage(query: ${JSON.stringify(query)}, page: ${page}) {
           totalPages
           totalElements
           number
