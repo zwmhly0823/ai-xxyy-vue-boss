@@ -3,8 +3,8 @@
  * @version: 1.0.0
  * @Author: liukun
  * @Date: 2020-05-12 15:22:25
- * @LastEditors: Shentong
- * @LastEditTime: 2020-07-31 15:16:20
+ * @LastEditors: liukun
+ * @LastEditTime: 2020-08-11 19:07:53
  */
 
 import axios from '../axiosConfig'
@@ -40,19 +40,26 @@ export default {
     )
   },
 
-  getPeriod(query = '') {
+  // getPeriod(query = '') {
+  //   console.warn('我来查系统课已上时长', query)
+  //   return axios.get('/graphql/v1/toss', {
+  //     query: `
+  //       {
+  //         StudentSystemCourse(query: ${JSON.stringify(query)}
+  //     ){
+  //     remaining_week
+  //     reduce_week
+  //        }
+  //       }
+  //     `
+  //   })
+  // },
+  getPeriod(query) {
     console.warn('我来查系统课已上时长', query)
-    return axios.get('/graphql/v1/toss', {
-      query: `
-        {
-          StudentSystemCourse(query: ${JSON.stringify(query)}
-      ){
-      remaining_week
-      reduce_week
-         }
-        }
-      `
-    })
+    return axios.get(
+      '/api/ts/v1/teaching/student/system/findSystemByOrderNo',
+      query
+    )
   },
   // 获取单价
   getEveryPrice(params) {

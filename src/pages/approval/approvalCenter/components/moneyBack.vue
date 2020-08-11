@@ -1,8 +1,8 @@
 <!--
  * @Descripttion: 
  * @version: 
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-07-28 19:28:13
+ * @LastEditors: liukun
+ * @LastEditTime: 2020-08-11 19:14:48
  -->
 <template>
   <div class="adjustModule">
@@ -435,19 +435,19 @@ export default {
           this.refundForm.businessType === '系统课'
         ) {
           const {
-            data: { StudentSystemCourse }
-          } = await this.$http.RefundApproval.getPeriod(
-            JSON.stringify({ order_no: targetItem.id })
-          ).catch((err) => {
+            payload: { reduceWeek, remainingWeek }
+          } = await this.$http.RefundApproval.getPeriod({
+            orderNo: targetItem.id
+          }).catch((err) => {
             console.warn(err)
             this.$message({
               message: '系统课剩余信息未获能获取,无法计算退款',
               type: 'error'
             })
           })
-          if (StudentSystemCourse && StudentSystemCourse.remaining_week) {
-            this.pureWeekS = StudentSystemCourse.remaining_week
-            this.pureWeekY = StudentSystemCourse.reduce_week
+          if (remainingWeek) {
+            this.pureWeekS = remainingWeek
+            this.pureWeekY = reduceWeek
             console.info(
               `选择系统订单后接口得到剩余${this.pureWeekS},已经${this.pureWeekY}`
             )
@@ -955,8 +955,8 @@ export default {
 
             periodAll: this.pureWeekS + this.pureWeekY, // 订单总周期“周”
             periodAlready: this.pureWeekY, // 已上课周期“周”(原味)
-            // periodResidue: this.pureWeekS, // 剩余上课周期“周”
-            periodRefund: this.refundForm.refundMonths * 4, // 扣了(剩余)多少周期“周”(加工)
+            periodResidue: this.pureWeekS, // 剩余上课周期“周”(原味)
+            periodRefund: this.refundForm.refundMonths * 4, // 扣了(剩余的全扣)多少周期“周”(加工)
             applyUserId: JSON.parse(localStorage.getItem('staff')).id,
             applyUserName: JSON.parse(localStorage.getItem('staff')).realName,
             applyUserDeapartmentId: JSON.parse(localStorage.getItem('staff'))
