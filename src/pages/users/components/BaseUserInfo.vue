@@ -29,7 +29,7 @@
       </p>
       <p>
         <!-- vip -->
-        <svg class="iconfont-vip">
+        <svg class="iconfont-vip" v-if="is_sys_label_vip">
           <use xlink:href="#iconvip"></use>
         </svg>
         <i class="el-icon-male" v-if="user && +user.sex === 1"></i>
@@ -48,6 +48,11 @@ export default {
     user: {
       type: Object,
       default: () => ({})
+    },
+    // 用户系统标签
+    sysLabel: {
+      type: String,
+      default: ''
     }
   },
   data() {
@@ -74,6 +79,12 @@ export default {
         ? this.user.base_painting || this.user.basepainting
         : ''
       return base ? BASE_PAINTING[base] : '-'
+    },
+    // 是不是vip标签 - 固定标签: vip
+    is_sys_label_vip() {
+      if (!this.sysLabel || this.sysLabel === '-') return false
+      const label = this.sysLabel.split(',')
+      return label.includes('vip')
     }
   },
   methods: {

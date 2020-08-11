@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-05-25 15:34:04
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-07-13 21:50:31
+ * @LastEditTime: 2020-08-11 17:18:35
 -->
 <template>
   <div class="user-list">
@@ -38,7 +38,11 @@
       <!-- <el-table-column type="selection" width="55"> </el-table-column> -->
       <el-table-column label="用户信息" min-width="180" fixed>
         <template slot-scope="scope">
-          <base-user-info :user="scope.row" @handle-click="userHandle" />
+          <base-user-info
+            :user="scope.row"
+            :sys-label="scope.row.sys_label"
+            @handle-click="userHandle"
+          />
           <span
             v-if="teacher_.dutyId === '2'"
             @click="handLeCopy(scope.$index, scope.row)"

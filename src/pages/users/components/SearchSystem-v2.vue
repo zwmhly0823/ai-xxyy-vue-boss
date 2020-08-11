@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-05-27 18:43:42
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-11 12:48:31
+ * @LastEditTime: 2020-08-11 17:32:03
 -->
 <template>
   <div class="search-container" :key="resetSearch">
@@ -333,7 +333,6 @@ export default {
         } else {
           this.$delete(this.searchQuery, 'sys_label.like')
         }
-        console.log(search, 'sdasdgasgd')
 
         if (key !== 'dateTime') {
           this.searchQuery = {

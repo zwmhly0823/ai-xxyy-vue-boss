@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-06-16 16:27:14
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-07-31 11:37:11
+ * @LastEditTime: 2020-08-11 17:10:54
 -->
 <template>
   <div class="user-list">
@@ -79,6 +79,7 @@
             <template slot-scope="scope">
               <base-user-info
                 :user="scope.row.userInfo"
+                :sys-label="scope.row.sys_label"
                 @handle-click="userHandle"
               />
             </template>

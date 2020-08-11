@@ -5,7 +5,7 @@
  * @Author: shentong
  * @Date: 2020-03-13 14:38:28
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-07-29 01:25:59
+ * @LastEditTime: 2020-08-11 16:26:46
  */
 // import axios from '../axios'
 import axios from '../axiosConfig'
@@ -244,6 +244,7 @@ export default {
             }
             questionnaire_count
             bi_label
+            sys_label
           }
         }
       }`
@@ -350,6 +351,7 @@ export default {
               trialdepartmentname
               user_status
               department_id
+              sys_label
             }
           }
         }

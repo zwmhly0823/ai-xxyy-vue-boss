@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-06-28 11:20:19
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-11 12:50:04
+ * @LastEditTime: 2020-08-11 17:30:25
 -->
 <template>
   <div class="trial-list-sidebar">
