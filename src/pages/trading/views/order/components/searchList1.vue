@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-04-25 17:24:23
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-08-11 18:25:36
+ * @LastEditTime: 2020-08-11 20:24:50
  -->
 <template>
   <el-card
@@ -587,10 +587,15 @@ export default {
         //   })
         // }
         temp.map((item, index) => {
-          if (item.terms.pay_channel && item.terms.pay_channel.length <= 0) {
+          if (
+            item.terms &&
+            item.terms.pay_channel &&
+            item.terms.pay_channel.length <= 0
+          ) {
             temp.splice(index, 1)
           }
           if (
+            item.terms &&
             item.terms.trial_pay_channel &&
             item.terms.trial_pay_channel.length <= 0
           ) {

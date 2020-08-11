@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-04-25 17:24:23
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-08-11 15:33:07
+ * @LastEditTime: 2020-08-11 20:26:10
  -->
 <template>
   <el-card
@@ -431,18 +431,22 @@ export default {
           })
           this.must = temp
         }
-        if (
-          temp[0].terms.trial_pay_channel &&
-          temp[0].terms.trial_pay_channel.length <= 0
-        ) {
-          delete temp[0].terms.trial_pay_channel
-        }
-        if (
-          temp[0].terms.pay_channel &&
-          temp[0].terms.pay_channel.length <= 0
-        ) {
-          delete temp[0].terms.pay_channel
-        }
+        temp.map((item, index) => {
+          if (
+            item.terms &&
+            item.terms.pay_channel &&
+            item.terms.pay_channel.length <= 0
+          ) {
+            temp.splice(index, 1)
+          }
+          if (
+            item.terms &&
+            item.terms.trial_pay_channel &&
+            item.terms.trial_pay_channel.length <= 0
+          ) {
+            temp.splice(index, 1)
+          }
+        })
         this.searchParams = temp
         this.$emit('search', temp)
         return
