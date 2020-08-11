@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-08-06 22:29:42
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-11 14:37:04
+ * @LastEditTime: 2020-08-11 14:49:15
 -->
 <template>
   <div class="add-redeem-code">
@@ -225,7 +225,7 @@ export default {
       channelList: [
         {
           id: '2048',
-          text: 'VIP学员'
+          text: 'vip学员'
         }
       ],
       labelList: [],
