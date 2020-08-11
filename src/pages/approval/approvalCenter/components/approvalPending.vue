@@ -4,7 +4,7 @@
  * @Author: Lukun
  * @Date: 2020-04-27 17:47:58
  * @LastEditors: liukun
- * @LastEditTime: 2020-07-31 23:22:34
+ * @LastEditTime: 2020-08-11 20:43:33
  -->
 <template>
   <div class="container">
@@ -98,6 +98,7 @@
           <div>{{ scope.row.period }}</div>
           <div>{{ scope.row.receptContent }}</div>
           <div>{{ scope.row.reason }}</div>
+          <div>已上课周期：{{ scope.row.periodAlready || '-' }}</div>
         </template>
       </el-table-column>
       <el-table-column label="发起时间" width="180">
@@ -109,12 +110,35 @@
       </el-table-column>
       <el-table-column label="状态" width="180">
         <template slot-scope="scope">
+          <!-- 其他类型 -->
           <div
-            @click="getApprovalDeatail(scope.row.type, scope.row.id)"
-            v-show="scope.row.status === 'PENDING'"
-            class="wait-pending"
+            v-if="scope.row.status === 'PENDING' && scope.row.type !== 'REFUND'"
           >
-            待审批
+            <div
+              @click="getApprovalDeatail(scope.row.type, scope.row.id)"
+              class="wait-pending"
+            >
+              待审批
+            </div>
+          </div>
+          <!-- 退款类型 -->
+          <div
+            v-if="scope.row.status === 'PENDING' && scope.row.type === 'REFUND'"
+          >
+            <div
+              v-if="positionIdlk === '4' && scope.row.periodAlready === '0'"
+              @click="getApprovalDeatail(scope.row.type, scope.row.id)"
+              class="wait-pending"
+            >
+              待审批
+            </div>
+            <div
+              v-if="positionIdlk !== '4' && scope.row.periodAlready !== '0'"
+              @click="getApprovalDeatail(scope.row.type, scope.row.id)"
+              class="wait-pending"
+            >
+              待审批
+            </div>
           </div>
         </template>
       </el-table-column>
@@ -707,7 +731,15 @@ export default {
   computed: {
     isPositionId() {
       const staffLk = JSON.parse(localStorage.getItem('staff')).positionId
-      return staffLk === '1' || staffLk === '2' || staffLk === '3' ? 1 : false
+      return staffLk === '1' ||
+        staffLk === '2' ||
+        staffLk === '3' ||
+        staffLk === '4'
+        ? 1
+        : false
+    },
+    positionIdlk() {
+      return JSON.parse(localStorage.getItem('staff')).positionId
     }
   },
   props: ['typeTime', 'activeName'],
