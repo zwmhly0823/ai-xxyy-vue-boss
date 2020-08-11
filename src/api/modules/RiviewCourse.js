@@ -3,7 +3,7 @@
  * @Author: songyanan
  * @Date: 2020-05-11 17:35:28
  * @LastEditors: Shentong
- * @LastEditTime: 2020-08-03 20:25:32
+ * @LastEditTime: 2020-08-11 11:48:27
  */
 import axios from '../axiosConfig'
 
@@ -29,6 +29,12 @@ export default {
    * */
   audioIsUse(reviewVoice) {
     return axios.get(`/api/b/v1/reviewVoice/updateReviewVoice`, reviewVoice)
+  },
+  /**
+   * 获取课程2.0
+   * */
+  getCourseLessons(params) {
+    return axios.get(`/api/k/v1/courseware/getCoursewares/typeNo?no=${params}`)
   },
   /**
    * 获取课程

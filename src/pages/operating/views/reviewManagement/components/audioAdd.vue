@@ -4,7 +4,7 @@
  * @Author: songyanan
  * @Date: 2020-05-11 14:30:00
  * @LastEditors: Shentong
- * @LastEditTime: 2020-08-05 19:23:05
+ * @LastEditTime: 2020-08-11 12:04:44
  */
  -->
 <template>
@@ -26,6 +26,9 @@
           >
           </el-option>
         </el-select>
+        <div class="current-lessen" v-if="currentLessonId">
+          课程ID：{{ currentLessonId }}
+        </div>
         <el-select v-model="form.difficulty" placeholder="请选择课程难度">
           <el-option
             v-for="(item, index) in courseDifficulty"
@@ -74,7 +77,11 @@
           >
           </el-option>
         </el-select>
-        <el-select v-model="courseId" placeholder="请选择对应课程">
+        <el-select
+          v-model="courseId"
+          placeholder="请选择对应课程"
+          @change="currentLesson"
+        >
           <el-option
             v-for="(item, index) in coursePayload"
             :key="index"
@@ -140,6 +147,7 @@ import uploadFile from '@/utils/upload'
 export default {
   data() {
     return {
+      currentLessonId: '',
       courseType: [
         {
           label: '体验课',
@@ -210,6 +218,7 @@ export default {
     form: {
       handler(val) {
         this.courseId = null
+        this.currentLessonId = ''
         /** 当选择课程为‘体验课-TV’or‘系统课-TV' or '节日主题课' */
         if (!this.isNotTvCourse) {
           this.form.level = null
@@ -258,6 +267,10 @@ export default {
         console.log(error)
       }
     },
+    /** 选择当前课程时 */
+    currentLesson(curLesson) {
+      this.currentLessonId = curLesson
+    },
     /** 选择课程类型时 */
     onCourseTypeChange(courseType) {},
     initData() {
@@ -268,7 +281,7 @@ export default {
     },
     async loadCourseList(params) {
       try {
-        const res = await this.$http.RiviewCourse.getCourseLesson(params)
+        const res = await this.$http.RiviewCourse.getCourseLessons(params)
         if (res.code === 0) {
           // 清空 课程列表
           this.coursePayload = res.payload
@@ -421,6 +434,11 @@ export default {
   height: 100vh;
   background: rgb(255, 255, 255);
   overflow: hidden;
+  .current-lessen {
+    position: absolute;
+    top: 35px;
+    left: 60px;
+  }
   .go-back {
     margin: 10px 0 0 10px;
   }
