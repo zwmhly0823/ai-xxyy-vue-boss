@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-08-06 19:52:15
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-12 14:52:23
+ * @LastEditTime: 2020-08-12 15:17:52
 -->
 <template>
   <el-row type="flex" class="app-main height">
@@ -149,7 +149,12 @@ export default {
       searchParams: {},
       exporting: false,
       // 体验课套餐类型 0-单周体验课，6-双周体验
-      packageTypeMap: ['0', '6']
+      packageTypeMap: ['0', '6'],
+      sortParams: {
+        status: this.redeemStatus === '1' ? 'desc' : 'asc',
+        use_date: 'desc',
+        converted_date: 'desc'
+      }
     }
   },
   computed: {
@@ -208,17 +213,13 @@ export default {
     getRedeemCodeLog() {
       const page = this.currentPage
       const params = this.searchParams || {}
-      const sort = {
-        status: this.redeemStatus === '1' ? 'desc' : 'asc',
-        converted_date: 'desc'
-      }
       const loading = this.$loading({
         lock: true,
         text: '加载中',
         spinner: 'el-icon-loading',
         background: 'rgba(0, 0, 0, 0.1)'
       })
-      this.$http.Marketing.getRedeemCodeLog(params, page, sort)
+      this.$http.Marketing.getRedeemCodeLog(params, page, this.sortParams)
         .then((res) => {
           console.log(res)
           if (res.data && res.data.ExchangeCodeLogPage) {
@@ -315,7 +316,7 @@ export default {
           Object.keys(this.searchParams).length > 0
             ? JSON.stringify(this.searchParams)
             : `""`,
-        sort: JSON.stringify({ use_date: 'desc' })
+        sort: JSON.stringify(this.sortParams)
       }
       const loading = this.$loading({
         lock: true,
