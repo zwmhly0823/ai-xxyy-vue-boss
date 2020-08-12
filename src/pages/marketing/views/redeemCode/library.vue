@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-08-06 19:52:15
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-12 15:17:52
+ * @LastEditTime: 2020-08-12 15:33:09
 -->
 <template>
   <el-row type="flex" class="app-main height">
@@ -149,12 +149,7 @@ export default {
       searchParams: {},
       exporting: false,
       // 体验课套餐类型 0-单周体验课，6-双周体验
-      packageTypeMap: ['0', '6'],
-      sortParams: {
-        status: this.redeemStatus === '1' ? 'desc' : 'asc',
-        use_date: 'desc',
-        converted_date: 'desc'
-      }
+      packageTypeMap: ['0', '6']
     }
   },
   computed: {
@@ -179,6 +174,13 @@ export default {
         this.packageTypeMap.includes(this.redeemCode?.packageInfo?.type) ||
         false
       )
+    },
+    sortParams() {
+      return {
+        status: this.redeemStatus === '1' ? 'desc' : 'asc',
+        use_date: 'desc',
+        converted_date: 'desc'
+      }
     }
   },
   created() {
