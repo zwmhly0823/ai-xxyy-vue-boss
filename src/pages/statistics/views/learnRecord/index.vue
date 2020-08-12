@@ -4,7 +4,7 @@
  * @Author: zhangjianwen
  * @Date: 2020-07-09 15:02:59
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-08-12 17:00:51
+ * @LastEditTime: 2020-08-12 18:57:05
 -->
 <template>
   <div class="learn-record">
@@ -18,10 +18,10 @@
         >
         </el-tab-pane>
         <el-tab-pane
-          v-if="manageMentList.length <= 0 && manageMentHistoryList.length > 0"
-          :label="manageMentHistoryList[0].period_label"
-          :name="manageMentHistoryList[0].period"
-          :key="manageMentHistoryList[0].period"
+          v-if="manageMentList.length <= 0 && mangeFirst"
+          :label="mangeFirst.period_label"
+          :name="mangeFirst.period"
+          :key="mangeFirst.period"
         >
         </el-tab-pane>
         <el-tab-pane
@@ -38,7 +38,7 @@
                 :key="mg.period"
                 v-for="mg in manageMentHistoryList"
                 :command="mg"
-                >{{ mg.period_name }}</el-dropdown-item
+                >{{ mg.period_label }}</el-dropdown-item
               >
             </el-dropdown-menu>
           </el-dropdown>
@@ -141,6 +141,7 @@ export default {
       dropName: '更多',
       manageMentList: [],
       manageMentHistoryList: [],
+      mangeFirst: null,
       term: '0',
       level: '0',
       recordList: [],
@@ -251,7 +252,16 @@ export default {
             return item.management
           })
 
-          this.manageMentHistoryList = _.orderBy(listHis, ['status'], ['desc'])
+          const handleData = _.orderBy(listHis, ['status'], ['desc'])
+          if (this.manageMentList.length <= 0 && handleData.length > 1) {
+            this.mangeFirst = handleData[0]
+            this.manageMentHistoryList = handleData.slice(1)
+            // this.manageMentHistoryList = manageMentHistoryList
+            console.log(this.manageMentHistoryList)
+          } else {
+            this.mangeFirst = handleData[0]
+            this.manageMentHistoryList = handleData
+          }
           console.log('处理过的数据', this.manageMentHistoryList)
         }
       })
