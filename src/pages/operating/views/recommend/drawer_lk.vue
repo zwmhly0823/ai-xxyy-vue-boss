@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-07-20 16:37:49
  * @LastEditors: liukun
- * @LastEditTime: 2020-08-11 18:15:10
+ * @LastEditTime: 2020-08-12 15:02:09
 --><template>
   <el-drawer :visible.sync="drawer" size="40%" :destroy-on-close="true">
     <template v-slot:title>
@@ -79,6 +79,7 @@
 <script>
 export default {
   name: 'drawer_lk',
+  inject: ['cr'],
   props: {
     arrangeArr: { type: Array, default: () => [] }
   },
@@ -159,8 +160,7 @@ export default {
           console.info('提交之后 库存没了')
           this.$alert('当前页审批已全部完成', '辛苦啦', {
             callback: (r) => {
-              this.drawer = false
-              location.reload()
+              this.currentPageApproveEnd()
             }
           })
           return false
@@ -176,8 +176,7 @@ export default {
           console.info('提交之后 库存没了')
           this.$alert('当前页审批已全部完成', '辛苦啦', {
             callback: (r) => {
-              this.drawer = false
-              location.reload()
+              this.currentPageApproveEnd()
             }
           })
           return false
@@ -185,6 +184,21 @@ export default {
           console.info('提交之后还有库存', this.arrageArraySon)
           this.review()
         }
+      }
+    },
+    // 当页全部审批结束后回调
+    currentPageApproveEnd() {
+      this.drawer = false
+      if (this.cr.currentPage < this.cr.totalPages) {
+        this.cr.getData({
+          pageNum: this.cr.currentPage + 1,
+          pageSize: this.cr.pageSize
+        })
+      } else {
+        this.cr.getData({
+          pageNum: this.cr.currentPage,
+          pageSize: this.cr.pageSize
+        })
       }
     }
   },

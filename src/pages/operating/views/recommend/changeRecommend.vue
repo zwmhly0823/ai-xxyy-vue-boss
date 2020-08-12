@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-08-03 15:45:34
  * @LastEditors: liukun
- * @LastEditTime: 2020-08-11 17:09:12
+ * @LastEditTime: 2020-08-12 14:34:00
 -->
 <template>
   <!-- wrap_lk:给分页留了40高度 -->
@@ -107,7 +107,10 @@
         </el-table-column>
         <el-table-column prop="ctime" label="上传截图时间" align="center">
         </el-table-column>
-        <el-table-column prop="endTime" label="审核时间" align="center">
+        <el-table-column label="审核时间" align="center">
+          <template slot-scope="scope">
+            {{ scope.row.endTime || '-' }}
+          </template>
         </el-table-column>
         <el-table-column prop="status" label="审核状态" align="center">
         </el-table-column>
@@ -149,12 +152,16 @@ import SearchPhoneAndUsername from '@/components/MSearch/searchItems/searchPhone
 import GroupSell from '@/components/MSearch/searchItems/groupSell.vue'
 
 export default {
+  provide() {
+    return { cr: this }
+  },
   name: 'changeRecommend',
   components: { SearchPhoneAndUsername, GroupSell, drawerLk },
   data() {
     return {
       // 分页
       allDigit: 0,
+      totalPages: 0,
       pageSize: 10,
       currentPage: 1,
 
@@ -233,7 +240,7 @@ export default {
       Object.assign(this.searchJson, { pageNum, pageSize }) // 放心page,size会覆盖原有
       const {
         code,
-        payload: { content, totalElements }
+        payload: { content, totalElements, totalPages }
       } = await this.$http.Operating.getTable(this.searchJson).catch((err) => {
         console.info('取数据接口报错,', err)
         this.$message.error('table数据接口失败')
@@ -242,6 +249,7 @@ export default {
         this.pageSize = pageSize // 就取本地设订的可以嘛？server也是听本地的传值(统一接口成功再变化分页信息)
         this.currentPage = pageNum // 就取本地设订的可以嘛？server也是听本地的传值(统一接口成功再变化分页信息)
         this.allDigit = +totalElements // 总量
+        this.totalPages = +totalPages // 总页数
         // 加工整合
         content.forEach((item) => {
           item.ctime = item.ctime ? formatDate(+item.ctime) : ''
