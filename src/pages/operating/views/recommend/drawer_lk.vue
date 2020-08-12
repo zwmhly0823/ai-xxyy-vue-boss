@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-07-20 16:37:49
  * @LastEditors: liukun
- * @LastEditTime: 2020-08-12 15:02:09
+ * @LastEditTime: 2020-08-12 19:41:42
 --><template>
   <el-drawer :visible.sync="drawer" size="40%" :destroy-on-close="true">
     <template v-slot:title>
@@ -21,34 +21,32 @@
         label-position="right"
         label-width="100px"
       >
-        <el-form-item label="用户信息">
-          <el-input v-model="initItemTrue.userName" readonly></el-input>
+        <el-form-item label="用户信息概况:">
+          <section>{{ initItemTrue.userName }}</section>
+          <!-- <el-input v-model="initItemTrue.userName" readonly></el-input> -->
         </el-form-item>
-        <el-form-item label="本月通过审核数">
-          <el-input
-            v-model="initItemTrue.currentMonthAgreeCount"
-            readonly
-          ></el-input>
+        <el-form-item label="本月通过审核数:">
+          <section>{{ initItemTrue.currentMonthAgreeCount }}</section>
         </el-form-item>
-        <el-form-item label="上传时间">
-          <el-input v-model="initItemTrue.ctime" readonly></el-input>
+        <el-form-item label="截图上传时间:">
+          <section>{{ initItemTrue.ctime }}</section>
         </el-form-item>
-        <el-form-item label="截图">
+        <el-form-item label="用户上传截图:">
           <el-image
             :src="
               initItemTrue.uploadUrl ||
                 'https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg'
             "
-            width="80%"
-          ></el-image>
+            style="width: 60%"
+          />
         </el-form-item>
-        <el-form-item label="审核结果" prop="isAgree">
+        <el-form-item label="审核结果:" prop="isAgree">
           <el-radio-group v-model="form.isAgree">
             <el-radio :label="true">通过</el-radio>
             <el-radio :label="false">驳回</el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="驳回原因" prop="remark" v-if="!form.isAgree">
+        <el-form-item label="驳回原因:" prop="remark" v-if="!form.isAgree">
           <el-radio-group v-model="form.remark">
             <el-radio
               v-for="(value, name) in {

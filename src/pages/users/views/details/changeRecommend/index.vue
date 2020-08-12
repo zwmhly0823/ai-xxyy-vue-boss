@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-08-06 17:13:23
  * @LastEditors: liukun
- * @LastEditTime: 2020-08-12 18:14:16
+ * @LastEditTime: 2020-08-12 19:46:06
 -->
 <template>
   <div>
@@ -19,7 +19,9 @@
       >
       </el-date-picker>
       <section>
-        累计审核成功：<span>{{ '-' }}</span>
+        累计审核成功：<span>{{
+          tableData[0] && tableData[0].totalAgreeCount
+        }}</span>
       </section>
       <section>
         {{ showMonth + '月' }}审核成功：<span>{{
@@ -104,7 +106,9 @@ export default {
       if (!code) {
         // 加工整合
         content.forEach((item) => {
-          item.ctime = item.ctime ? formatDate(+item.ctime) : ''
+          item.approvalRemark = item.approvalRemark || '-'
+          item.approvalName = item.approvalName || '-'
+          item.ctime = item.ctime ? formatDate(+item.ctime) : '-'
           item.endTime = item.endTime !== '0' ? formatDate(+item.endTime) : '-'
           item.status = {
             PENDING: '待审核',

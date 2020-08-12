@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-08-03 15:45:34
  * @LastEditors: liukun
- * @LastEditTime: 2020-08-12 17:13:07
+ * @LastEditTime: 2020-08-12 19:20:07
 -->
 <template>
   <!-- wrap_lk:给分页留了40高度 -->
@@ -21,7 +21,7 @@
           <SearchPhoneAndUsername
             type="2"
             :customStyle="{ width: '160px' }"
-            placeholder="手机号或昵称或id"
+            placeholder="手机号或id"
             @result="_wai1"
           />
         </el-form-item>
@@ -107,7 +107,7 @@
         </el-table-column>
         <el-table-column prop="ctime" label="上传截图时间" align="center">
         </el-table-column>
-        <el-table-column label="审核时间" prop="status" align="center">
+        <el-table-column label="审核时间" prop="endTime" align="center">
         </el-table-column>
         <el-table-column prop="status" label="审核状态" align="center">
         </el-table-column>
@@ -164,7 +164,7 @@ export default {
 
       num1: '', // 显示时间
       num2: '', // 显示活动
-      tabsValue: '', // 显示tabs
+      tabsValue: 'PENDING,DECLINE,COMPLETED', // 显示tabs
       // 活动总量(接口来的)
       activity: [
         { label: '首单分享得红包', value: 'AFTER_FIRST_ORDER_SHARE' },
@@ -254,7 +254,9 @@ export default {
         this.totalPages = +totalPages // 总页数
         // 加工整合
         content.forEach((item) => {
-          item.ctime = item.ctime ? formatDate(+item.ctime) : ''
+          item.approvalRemark = item.approvalRemark || '-'
+          item.approvalName = item.approvalName || '-'
+          item.ctime = item.ctime ? formatDate(+item.ctime) : '-'
           item.endTime = item.endTime !== '0' ? formatDate(+item.endTime) : '-'
           item.status = {
             PENDING: '待审核',
