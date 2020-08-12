@@ -3,13 +3,13 @@
  * @version: 1.0.0
  * @Author: zhangjianwen
  * @Date: 2020-07-09 15:02:59
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-07-30 16:26:17
+ * @LastEditors: zhangjianwen
+ * @LastEditTime: 2020-08-12 17:00:51
 -->
 <template>
   <div class="learn-record">
     <div class="record-header">
-      <el-tabs v-model="term">
+      <el-tabs v-model="term" @tab-click="clearName">
         <el-tab-pane
           v-for="mg in manageMentList"
           :label="mg.period_label"
@@ -17,17 +17,28 @@
           :key="mg.period"
         >
         </el-tab-pane>
-        <el-tab-pane name="999" v-if="manageMentHistoryList.length > 0">
+        <el-tab-pane
+          v-if="manageMentList.length <= 0 && manageMentHistoryList.length > 0"
+          :label="manageMentHistoryList[0].period_label"
+          :name="manageMentHistoryList[0].period"
+          :key="manageMentHistoryList[0].period"
+        >
+        </el-tab-pane>
+        <el-tab-pane
+          disabled
+          name="999"
+          v-if="manageMentHistoryList.length > 0"
+        >
           <el-dropdown @command="handleCommand" slot="label">
             <span class="el-dropdown-link">
-              更多<i class="el-icon-arrow-down el-icon--right"></i>
+              {{ dropName }}<i class="el-icon-arrow-down el-icon--right"></i>
             </span>
             <el-dropdown-menu class="el-menu" slot="dropdown">
               <el-dropdown-item
-                :key="mg.management.period"
+                :key="mg.period"
                 v-for="mg in manageMentHistoryList"
-                :command="mg.management.period"
-                >{{ mg.management.period_name }}</el-dropdown-item
+                :command="mg"
+                >{{ mg.period_name }}</el-dropdown-item
               >
             </el-dropdown-menu>
           </el-dropdown>
@@ -82,6 +93,13 @@
                       : `${item.today_complete_course_count}/${item.all_send_course_count}  `
                   }}
                 </p>
+                <p>
+                  累计参课：{{
+                    [10, 11].includes(item.lesson_type)
+                      ? `${item.ad_join_course_count}/${item.all_send_course_count}  `
+                      : `${item.join_course_count}/${item.all_send_course_count}  `
+                  }}
+                </p>
               </div>
             </div>
           </el-card>
@@ -120,6 +138,7 @@ export default {
   computed: {},
   data() {
     return {
+      dropName: '更多',
       manageMentList: [],
       manageMentHistoryList: [],
       term: '0',
@@ -160,9 +179,17 @@ export default {
       this.getData(this.currentPage, val, this.level)
     },
     level(val, old) {
+      console.log('难度', val)
       this.level = val
       this.currentPage = 1
       this.getData(this.currentPage, this.term, val)
+      // if (this.dropName === '更多') {
+      //   return false
+      // } else {
+      //   this.level = val
+      //   this.currentPage = 1
+      //   this.getData(this.currentPage, this.term, val)
+      // }
     }
   },
   created() {},
@@ -206,7 +233,7 @@ export default {
           const arrHistorySort = arrHistory.sort((b, a) => {
             return a.management.period - b.management.period
           })
-          this.manageMentHistoryList = arrHistorySort
+          // this.manageMentHistoryList = arrHistorySort
           const list = arrSort.map((item) => {
             item.management.period_label = `${item.management.period_name}(
               开课中
@@ -216,6 +243,16 @@ export default {
           })
 
           this.manageMentList = _.orderBy(list, ['status'], ['desc'])
+          const listHis = arrHistorySort.map((item) => {
+            item.management.period_label = `${item.management.period_name}(
+              已结课
+            )`
+
+            return item.management
+          })
+
+          this.manageMentHistoryList = _.orderBy(listHis, ['status'], ['desc'])
+          console.log('处理过的数据', this.manageMentHistoryList)
         }
       })
     },
@@ -239,7 +276,17 @@ export default {
     },
 
     handleCommand(command) {
-      this.term = command
+      console.log(command)
+      this.term = command.period
+      this.dropName = command.period_label
+    },
+    clearName() {
+      console.log(this.term)
+      if (this.term === '999') {
+        return
+      }
+
+      this.dropName = '更多'
     },
 
     handleSizeChange(val) {
@@ -318,7 +365,7 @@ export default {
     padding-top: 10px;
     display: flex;
     .content-word {
-      padding: 14px;
+      padding: 10px;
       p {
         font-size: 14px;
         height: 20px;
