@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-06-20 20:23:28
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-07-28 22:18:24
+ * @LastEditTime: 2020-08-12 14:28:52
  @ApiModel(description = "用户跟进状态")
     public enum STATUS {
 
@@ -80,7 +80,7 @@
     <el-card border="false" shadow="never">
       <div class="form">
         <el-form :inline="true" label-position="right" label-width="80px">
-          <el-form-item label="归属销售&班级:" label-width="100px">
+          <el-form-item label="归属销售&班级:" label-width="105px">
             <div class="search-group">
               <department
                 name="department_id"
@@ -197,7 +197,7 @@
             </div>
           </el-form-item> -->
           <!-- // user_status 0 未转化 1 月课 2半年课 3 年课 -->
-          <el-form-item label="系统课转化:">
+          <el-form-item label="系统课转化:" label-width="85px">
             <div class="search-group">
               <simple-select
                 name="user_status"
