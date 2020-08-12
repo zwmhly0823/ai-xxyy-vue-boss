@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-05-27 18:43:42
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-11 17:32:03
+ * @LastEditTime: 2020-08-12 19:14:49
 -->
 <template>
   <div class="search-container" :key="resetSearch">
@@ -289,11 +289,11 @@ export default {
         {
           id: 1,
           text: '是'
-        },
-        {
-          id: 0,
-          text: '否'
         }
+        // {
+        //   id: 0,
+        //   text: '否'
+        // }
       ]
     }
   },
