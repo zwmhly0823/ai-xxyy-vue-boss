@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-04-25 17:24:23
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-08-11 20:24:50
+ * @LastEditTime: 2020-08-11 20:57:47
  -->
 <template>
   <el-card
@@ -357,7 +357,6 @@ export default {
     // 清空渠道选项
     clearChannel(res) {
       console.log(res)
-      debugger
       if (res) {
         this.setSeachParmas({ pay_channel: '' }, ['pay_channel'], 'terms')
       } else {
