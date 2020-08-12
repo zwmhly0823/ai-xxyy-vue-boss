@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-08-06 17:13:23
  * @LastEditors: liukun
- * @LastEditTime: 2020-08-10 07:31:38
+ * @LastEditTime: 2020-08-12 18:14:16
 -->
 <template>
   <div>
@@ -23,12 +23,12 @@
       </section>
       <section>
         {{ showMonth + '月' }}审核成功：<span>{{
-          (tableData[0] && tableData[0].currentMonthAgreeCount) || '-'
+          tableData[0] && tableData[0].currentMonthAgreeCount
         }}</span>
       </section>
       <section>
         {{ showMonth + '月' }}审核驳回：<span>{{
-          (tableData[0] && tableData[0].currentMonthRejectCount) || '-'
+          tableData[0] && tableData[0].currentMonthRejectCount
         }}</span>
       </section>
     </div>
@@ -75,18 +75,25 @@ export default {
   data() {
     return {
       tableData: [],
-      month_: Date.now(),
+      month_: new Date(
+        new Date().getFullYear(),
+        new Date().getMonth()
+      ).valueOf(),
       searchJson: { pageNum: 1, pageSize: 100, userId: this.$route.params.id }
     }
   },
 
   methods: {
     tt(r) {
+      console.info(r)
       this.getData(r)
     },
     // 数据接口(传当前页,页容量 取总数据，总条目)
     async getData(sctime) {
-      Object.assign(this.searchJson, { sctime })
+      Object.assign(this.searchJson, {
+        sctime,
+        ectime: new Date(sctime).setMonth(new Date(sctime).getMonth() + 1)
+      })
       const {
         code,
         payload: { content }
@@ -98,7 +105,7 @@ export default {
         // 加工整合
         content.forEach((item) => {
           item.ctime = item.ctime ? formatDate(+item.ctime) : ''
-          item.endTime = item.endTime ? formatDate(+item.endTime) : ''
+          item.endTime = item.endTime !== '0' ? formatDate(+item.endTime) : '-'
           item.status = {
             PENDING: '待审核',
             COMPLETED: '审核通过',

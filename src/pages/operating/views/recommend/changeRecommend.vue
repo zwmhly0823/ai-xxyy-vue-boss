@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-08-03 15:45:34
  * @LastEditors: liukun
- * @LastEditTime: 2020-08-12 14:34:00
+ * @LastEditTime: 2020-08-12 17:13:07
 -->
 <template>
   <!-- wrap_lk:给分页留了40高度 -->
@@ -107,10 +107,7 @@
         </el-table-column>
         <el-table-column prop="ctime" label="上传截图时间" align="center">
         </el-table-column>
-        <el-table-column label="审核时间" align="center">
-          <template slot-scope="scope">
-            {{ scope.row.endTime || '-' }}
-          </template>
+        <el-table-column label="审核时间" prop="status" align="center">
         </el-table-column>
         <el-table-column prop="status" label="审核状态" align="center">
         </el-table-column>
@@ -205,8 +202,13 @@ export default {
     },
     chooseTime(r) {
       console.info('时间', r)
-      this.searchJson.sctime = r[0]
-      this.searchJson.ectime = r[1]
+      if (r) {
+        this.searchJson.sctime = r[0]
+        this.searchJson.ectime = r[1]
+      } else {
+        this.searchJson.sctime = ''
+        this.searchJson.ectime = ''
+      }
       this.getData()
     },
     chooseActivity(r) {
@@ -253,7 +255,7 @@ export default {
         // 加工整合
         content.forEach((item) => {
           item.ctime = item.ctime ? formatDate(+item.ctime) : ''
-          item.endTime = item.endTime ? formatDate(+item.endTime) : ''
+          item.endTime = item.endTime !== '0' ? formatDate(+item.endTime) : '-'
           item.status = {
             PENDING: '待审核',
             COMPLETED: '审核通过',
