@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-08-06 17:15:04
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-10 21:07:11
+ * @LastEditTime: 2020-08-12 14:45:11
 -->
 <template>
   <el-row type="flex" class="app-main height">
@@ -173,8 +173,8 @@ export default {
     },
     // 查看码库
     handleOpenLibrary(row) {
-      const { id } = row
-      openBrowserTab(`/marketing/#/redeemCodeLibrary/${id}`)
+      const { id, status } = row
+      openBrowserTab(`/marketing/#/redeemCodeLibrary/${id}/${status}`)
     },
     // 失效
     handleInvalid(row) {

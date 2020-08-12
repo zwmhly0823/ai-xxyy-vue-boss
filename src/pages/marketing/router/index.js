@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-08-06 17:08:18
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-07 11:08:14
+ * @LastEditTime: 2020-08-12 14:44:27
  */
 import Vue from 'vue'
 import VueRouter from 'vue-router'
@@ -32,9 +32,9 @@ const routes = [
     },
     component: () => import('../views/redeemCode/index.vue')
   },
-  //   兑换码 - 码库
+  //   兑换码 - 码库 @status: 1-有效 0-失效
   {
-    path: '/redeemCodeLibrary/:id',
+    path: '/redeemCodeLibrary/:id/:status',
     name: 'redeemCodeLibrary',
     meta: {
       title: '兑换码 / 码库',

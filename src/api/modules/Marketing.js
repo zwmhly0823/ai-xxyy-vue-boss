@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-08-07 16:39:06
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-11 18:59:22
+ * @LastEditTime: 2020-08-12 14:48:31
  */
 import axios from '../axiosConfig'
 
@@ -126,9 +126,7 @@ export default {
         : JSON.stringify(JSON.stringify(params))
     const sortObj = sort
       ? JSON.stringify(
-          JSON.stringify(
-            Object.assign(sort, { status: 'desc', use_date: 'desc' })
-          )
+          JSON.stringify(Object.assign(sort, { use_date: 'desc' }))
         )
       : `""`
     return axios.post('/graphql/v1/toss', {

@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-08-06 19:52:15
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-11 14:58:47
+ * @LastEditTime: 2020-08-12 14:52:23
 -->
 <template>
   <el-row type="flex" class="app-main height">
@@ -131,6 +131,8 @@ export default {
     return {
       // 兑换码ID
       redeemCodeId: '',
+      // 码库状态 1-有效，0-失效
+      redeemStatus: '',
       // 当前兑换码信息
       redeemCode: {},
       tableData: [],
@@ -175,8 +177,9 @@ export default {
     }
   },
   created() {
-    const { id } = this.$route.params
+    const { id, status } = this.$route.params
     this.redeemCodeId = id
+    this.redeemStatus = status
     this.searchParams = { config_id: id }
     this.getRedeemCodeDetail()
     this.getRedeemCodeLog()
@@ -205,13 +208,17 @@ export default {
     getRedeemCodeLog() {
       const page = this.currentPage
       const params = this.searchParams || {}
+      const sort = {
+        status: this.redeemStatus === '1' ? 'desc' : 'asc',
+        converted_date: 'desc'
+      }
       const loading = this.$loading({
         lock: true,
         text: '加载中',
         spinner: 'el-icon-loading',
         background: 'rgba(0, 0, 0, 0.1)'
       })
-      this.$http.Marketing.getRedeemCodeLog(params, page)
+      this.$http.Marketing.getRedeemCodeLog(params, page, sort)
         .then((res) => {
           console.log(res)
           if (res.data && res.data.ExchangeCodeLogPage) {
