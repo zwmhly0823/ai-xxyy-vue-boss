@@ -28,6 +28,10 @@
         }}</span>
       </p>
       <p>
+        <!-- vip -->
+        <svg class="iconfont-vip" v-if="is_sys_label_vip">
+          <use xlink:href="#iconvip"></use>
+        </svg>
         <i class="el-icon-male" v-if="user && +user.sex === 1"></i>
         <i class="el-icon-female female" v-if="user && +user.sex === 2"></i>
         {{ birthday }} · {{ basePainting || '' }}
@@ -44,6 +48,11 @@ export default {
     user: {
       type: Object,
       default: () => ({})
+    },
+    // 用户系统标签
+    sysLabel: {
+      type: String,
+      default: ''
     }
   },
   data() {
@@ -70,6 +79,12 @@ export default {
         ? this.user.base_painting || this.user.basepainting
         : ''
       return base ? BASE_PAINTING[base] : '-'
+    },
+    // 是不是vip标签 - 固定标签: vip
+    is_sys_label_vip() {
+      if (!this.sysLabel || this.sysLabel === '-') return false
+      const label = this.sysLabel.split(',')
+      return label.includes('vip')
     }
   },
   methods: {
@@ -138,6 +153,13 @@ export default {
       &.female {
         color: #f23589;
       }
+    }
+    .iconfont-vip {
+      position: relative;
+      top: 2px;
+      width: 14px;
+      height: 14px;
+      fill: #f96137;
     }
     .username {
       position: relative;

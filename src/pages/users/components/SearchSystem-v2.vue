@@ -3,8 +3,8 @@
  * @version: 1.0.0
  * @Author: YangJiyong
  * @Date: 2020-05-27 18:43:42
- * @LastEditors: liukun
- * @LastEditTime: 2020-06-18 21:30:03
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-08-12 19:14:49
 -->
 <template>
   <div class="search-container" :key="resetSearch">
@@ -163,6 +163,18 @@
               </div>
             </el-form-item>
           </div>
+          <div>
+            <el-form-item label="VIP学员">
+              <simple-select
+                name="sys_label"
+                placeholder="请选择"
+                :multiple="false"
+                :data-list="vipUserStatus"
+                @result="getSearchData('sys_label', arguments)"
+                class="search-group-item"
+              />
+            </el-form-item>
+          </div>
           <!-- <el-form-item label="招生排期:" class="search-group">
             <search-stage
               class="search-group-item"
@@ -259,7 +271,7 @@ export default {
       labelName: '',
       ...enums,
       searchQuery: {},
-      nowDate: new Date().getTime()
+      nowDate: new Date().getTime(),
       // 体验课未上传作品的值是 -1。这里单独拿出来写
       // courseTaskStatusList: [
       //   {
@@ -271,6 +283,18 @@ export default {
       //     text: '未上传作品'
       //   }
       // ]
+
+      // 是否体验课学员
+      vipUserStatus: [
+        {
+          id: 1,
+          text: '是'
+        }
+        // {
+        //   id: 0,
+        //   text: '否'
+        // }
+      ]
     }
   },
   computed: {
@@ -303,6 +327,13 @@ export default {
             search.user_status = { gte: 5, lte: 7 }
           }
         }
+        // vip
+        if (key === 'sys_label' && search[key] === 1) {
+          search['sys_label.like'] = { 'sys_label.keyword': '*vip*' }
+        } else {
+          this.$delete(this.searchQuery, 'sys_label.like')
+        }
+
         if (key !== 'dateTime') {
           this.searchQuery = {
             ...this.searchQuery,
@@ -326,11 +357,15 @@ export default {
           this.$delete(this.searchQuery, 'startTime')
           this.$delete(this.searchQuery, 'endTime')
         }
+        if (key === 'sys_label') {
+          this.$delete(this.searchQuery, 'sys_label.like')
+        }
       }
       // 删除返回值为空数组的情况
       if (search && search[key].length === 0) {
         this.$delete(this.searchQuery, key)
       }
+      this.$delete(this.searchQuery, 'sys_label')
       console.log(search, 'getSearchData')
       console.log(this.searchQuery, 'this.searchQuery')
       this.$emit('search', this.searchQuery)
