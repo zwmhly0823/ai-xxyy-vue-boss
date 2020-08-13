@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-08-07 14:03:15
  * @LastEditors: Shentong
- * @LastEditTime: 2020-08-07 18:23:04
+ * @LastEditTime: 2020-08-13 17:38:58
 -->
 <template>
   <ele-table
@@ -42,7 +42,7 @@
         <span>{{ scope.row.teacherName }}</span>
       </template>
     </el-table-column>
-    <el-table-column label="当日完课率" align="center">
+    <el-table-column label="操作" align="center">
       <template slot-scope="scope">
         <span @click="editRow(scope.row)" class="edit-row">编辑</span>
       </template>
