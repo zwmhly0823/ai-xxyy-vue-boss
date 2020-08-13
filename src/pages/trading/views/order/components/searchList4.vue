@@ -4,7 +4,7 @@
  * @Author: songyanan
  * @Date: 2020-07-01 11:08:23
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-08-08 18:53:08
+ * @LastEditTime: 2020-08-13 21:30:13
  -->
 <template>
   <el-card
@@ -15,7 +15,11 @@
   >
     <el-form :inline="true" label-position="right" label-width="100px">
       <el-form-item label="订单搜索:" :class="{ [$style.marginer]: true }">
-        <orderSearch class="allmini" @result="getOrderSearch" />
+        <orderSearch
+          class="allmini"
+          @result="getOrderSearch"
+          @clear="clearNum()"
+        />
       </el-form-item>
 
       <el-form-item label="订单来源:" :class="{ [$style.marginer]: true }">
@@ -32,6 +36,7 @@
             placeholder="全部"
           ></simple-select>
           <SearchPhoneAndUsername
+            ref="phoneName"
             @result="getSendUser"
             :custom-style="{ width: '200px' }"
             placeholder="推荐人手机号/用户名称"
@@ -174,6 +179,12 @@ export default {
   },
   computed: {},
   methods: {
+    // 切换手机/订单清空筛选项
+    clearNum() {
+      this.getOrderSearch({ uid: '' })
+      this.getOrderSearch({ out_trade_no: '' })
+      // this.setSeachParmas(val, [key])
+    },
     // 订单号、手机号
     getOrderSearch(res) {
       const key = Object.keys(res || {})[0]
@@ -269,9 +280,13 @@ export default {
         this.hasSendId = true
       }
       if (!res) {
+        if (this.$refs.phoneName) {
+          this.$refs.phoneName.handleEmpty()
+        }
         this.setSeachParmas({ is_first_order_send_id: '' }, [
           'is_first_order_send_id'
         ])
+        this.setSeachParmas('', ['first_order_send_id'], 'terms')
       } else {
         this.getSendUser(res, ['is_first_order_send_id'])
       }
@@ -306,6 +321,22 @@ export default {
           })
           this.must = temp
         }
+        temp.map((item, index) => {
+          if (
+            item.terms &&
+            item.terms.pay_channel &&
+            item.terms.pay_channel.length <= 0
+          ) {
+            temp.splice(index, 1)
+          }
+          if (
+            item.terms &&
+            item.terms.trial_pay_channel &&
+            item.terms.trial_pay_channel.length <= 0
+          ) {
+            temp.splice(index, 1)
+          }
+        })
         this.searchParams = temp
         this.$emit('search', temp)
         return

@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-04-25 17:24:23
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-08-08 18:42:58
+ * @LastEditTime: 2020-08-13 21:28:26
  -->
 <template>
   <el-card
@@ -19,6 +19,7 @@
           class="allmini"
           :searchProp="searchProp"
           @result="getOrderSearch"
+          @clear="clearNum()"
         />
       </el-form-item>
 
@@ -138,6 +139,7 @@
             class="margin_l10"
             @result="getTrialChannel"
             name="trial_pay_channel"
+            @clear="clearChannel(0)"
           />
         </div>
       </el-form-item>
@@ -183,6 +185,7 @@
             class="margin_l10"
             @result="getChannel"
             name="pay_channel"
+            @clear="clearChannel(1)"
           />
         </div>
       </el-form-item>
@@ -337,14 +340,36 @@ export default {
     }
   },
   methods: {
+    // 切换手机/订单清空筛选项
+    clearNum() {
+      this.getOrderSearch({ uid: '' })
+      this.getOrderSearch({ out_trade_no: '' })
+      // this.setSeachParmas(val, [key])
+    },
     // 订单号、手机号
     getOrderSearch(res) {
+      console.log('手机号', res)
       const key = Object.keys(res || {})[0]
       const val = res[key] ? res : ''
+      console.log(key, val)
       this.setSeachParmas(val, [key])
+    },
+    // 清空渠道选项
+    clearChannel(res) {
+      console.log(res)
+      if (res) {
+        this.setSeachParmas({ pay_channel: '' }, ['pay_channel'], 'terms')
+      } else {
+        this.setSeachParmas(
+          { trial_pay_channel: '' },
+          ['trial_pay_channel'],
+          'terms'
+        )
+      }
     },
     // 选择渠道
     getChannel(res) {
+      console.log(res)
       this.setSeachParmas(res, ['pay_channel'], 'terms')
     },
     getTrialChannel(res) {
@@ -492,14 +517,25 @@ export default {
     // fix
     getFirstOrder(res) {
       console.log(res)
+      // this.$refs.phoneName.handleEmpty()
+      // this.setSeachParmas({ is_first_order_send_id: '' }, [
+      //   'is_first_order_send_id'
+      // ])
       // console.log(res[0].is_first_order_send_id)
       if (res && res.is_first_order_send_id === '0') {
         this.$refs.phoneName.handleEmpty()
+        this.setSeachParmas({ is_first_order_send_id: '' }, [
+          'is_first_order_send_id'
+        ])
         this.hasSendId = false
       } else {
         this.hasSendId = true
       }
       if (!res) {
+        if (this.$refs.phoneName) {
+          this.$refs.phoneName.handleEmpty()
+        }
+        this.setSeachParmas('', ['first_order_send_id'], 'terms')
         this.setSeachParmas({ is_first_order_send_id: '' }, [
           'is_first_order_send_id'
         ])
@@ -542,7 +578,40 @@ export default {
           })
           this.must = temp
         }
+        // if (
+        //   temp[0].terms.trial_pay_channel &&
+        //   temp[0].terms.trial_pay_channel.length <= 0
+        // ) {
+        //   temp.map((item) => {
+        //     console.log(item)
+        //     delete item.terms.trial_pay_channel
+        //   })
 
+        // }
+        // if (
+        //   temp[0].terms.pay_channel &&
+        //   temp[0].terms.pay_channel.length <= 0
+        // ) {
+        //   temp.map((item) => {
+        //     delete item.terms.pay_channel
+        //   })
+        // }
+        temp.map((item, index) => {
+          if (
+            item.terms &&
+            item.terms.pay_channel &&
+            item.terms.pay_channel.length <= 0
+          ) {
+            temp.splice(index, 1)
+          }
+          if (
+            item.terms &&
+            item.terms.trial_pay_channel &&
+            item.terms.trial_pay_channel.length <= 0
+          ) {
+            temp.splice(index, 1)
+          }
+        })
         this.searchParams = temp
         console.log('参数', temp)
         this.$emit('search', temp)

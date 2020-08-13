@@ -15,7 +15,11 @@
   >
     <el-form :inline="true" label-position="right" label-width="100px">
       <el-form-item label="订单搜索:" :class="{ [$style.marginer]: true }">
-        <order-search class="allmini" @result="getOrderSearch" />
+        <order-search
+          class="allmini"
+          @result="getOrderSearch"
+          @clear="clearNum()"
+        />
       </el-form-item>
       <el-form-item label="商品类型:" :class="{ [$style.marginer]: true }">
         <product-type name="regtype" @result="getProductType" />
@@ -95,6 +99,12 @@ export default {
     }
   },
   methods: {
+    // 切换手机/订单清空筛选项
+    clearNum() {
+      this.getOrderSearch({ uid: '' })
+      this.getOrderSearch({ out_trade_no: '' })
+      // this.setSeachParmas(val, [key])
+    },
     // 订单号搜索
     getOrderSearch(res) {
       console.log(res)

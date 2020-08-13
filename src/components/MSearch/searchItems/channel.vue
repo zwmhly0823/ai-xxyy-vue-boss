@@ -3,8 +3,8 @@
  * @version:
  * @Author: zhubaodong
  * @Date: 2020-03-24 18:50:54
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-07-29 01:12:27
+ * @LastEditors: zhangjianwen
+ * @LastEditTime: 2020-08-11 16:35:24
  -->
 <template>
   <div class="search-item small threeSelect">
@@ -86,6 +86,11 @@ export default {
     }
   },
   methods: {
+    // 清空值
+    clear() {
+      this.value = []
+      this.$emit('clear')
+    },
     // 获取渠道来源 filter: 过滤关键词  eg：filter:"抖音"
     async getChannel() {
       const {
