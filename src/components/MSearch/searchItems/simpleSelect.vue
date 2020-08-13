@@ -83,7 +83,7 @@ export default {
   },
   methods: {
     onChange(data) {
-      // console.log(data, `${this.name} - ${this.placeholder}`)
+      console.log(data, `${this.name} - ${this.placeholder}`)
 
       this.$emit('result', data !== '' ? { [this.name]: data } : '')
     }

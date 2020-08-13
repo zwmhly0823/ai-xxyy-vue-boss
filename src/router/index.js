@@ -537,6 +537,17 @@ const routes = [
         }
       }
     ]
+  },
+  // 营销中心
+  {
+    path: '/marketing',
+    name: 'marketing',
+    hidden: staff.roleId !== '7',
+    meta: {
+      title: '营销中心',
+      icon: 'iconyingxiaoguanli',
+      module: 'marketing'
+    }
   }
 ]
 

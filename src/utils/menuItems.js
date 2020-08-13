@@ -89,6 +89,11 @@ const menuItems = [
     link: 'outbound',
     text: '呼叫中心',
     isShow: true
+  },
+  {
+    link: 'marketing',
+    text: '营销中心',
+    isShow: true
   }
 ]
 
