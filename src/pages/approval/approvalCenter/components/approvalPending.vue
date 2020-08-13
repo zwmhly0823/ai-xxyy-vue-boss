@@ -4,7 +4,7 @@
  * @Author: Lukun
  * @Date: 2020-04-27 17:47:58
  * @LastEditors: liukun
- * @LastEditTime: 2020-07-31 23:22:34
+ * @LastEditTime: 2020-08-13 21:58:12
  -->
 <template>
   <div class="container">
@@ -116,6 +116,25 @@
           >
             待审批
           </div>
+          <!-- 退款类型 -->
+          <!-- <div
+            v-if="scope.row.status === 'PENDING' && scope.row.type === 'REFUND'"
+          >
+            <div
+              v-if="positionIdlk === '4' && scope.row.periodAlready === '0'"
+              @click="getApprovalDeatail(scope.row.type, scope.row.id)"
+              class="wait-pending"
+            >
+              待审批
+            </div>
+            <div
+              v-if="positionIdlk !== '4' && scope.row.periodAlready !== '0'"
+              @click="getApprovalDeatail(scope.row.type, scope.row.id)"
+              class="wait-pending"
+            >
+              待审批
+            </div>
+          </div> -->
         </template>
       </el-table-column>
     </el-table>
@@ -394,7 +413,7 @@
             <el-col :span="4" :offset="1">{{
               drawerApprovalDeatail.refundFee
             }}</el-col>
-            <el-col v-if="isPositionId" :span="13" :offset="1">
+            <el-col v-if="isStaffId" :span="13" :offset="1">
               <mark @click="dialogFormVisible = true">修改金额</mark>
             </el-col>
           </el-row>
@@ -705,9 +724,8 @@ import VersionBox from '../../../../components/MSearch/searchItems/moreVersionBo
 
 export default {
   computed: {
-    isPositionId() {
-      const staffLk = JSON.parse(localStorage.getItem('staff')).positionId
-      return staffLk === '1' || staffLk === '2' || staffLk === '3' ? 1 : false
+    positionIdlk() {
+      return JSON.parse(localStorage.getItem('staff')).positionId
     }
   },
   props: ['typeTime', 'activeName'],
@@ -788,12 +806,12 @@ export default {
         TRANSPORT_BAD: '运输损坏'
       },
       courseOptions: { TESTCOURSE: '体验课', SYSTEMCOURSE: '系统课' },
-      currentType: ''
+      currentType: '',
+      type_lk: ''
     }
   },
-  created() {
+  mounted() {
     const staff = getStaffInfo()
-    console.log(staff, 'staff')
 
     this.resetParams = staff
     this.staffId = staff.staffId
@@ -813,14 +831,27 @@ export default {
       size: 20
     }
     this.params.isOperation = this.isStaffId
+    // 初始拿数据就得带上_课程类型参数保证看到的搜索条件与结果一致↓↓
+
+    if (this.positionIdlk === '0' || this.positionIdlk === '1') {
+      // 父组件mounted时刻请求数据 0,1不带课程类型参数 拿全量
+    } else if (this.positionIdlk === '3' || this.positionIdlk === '4') {
+      // 父组件mounted时刻请求数据 3,4 带课程类型参数 只拿系统课
+      this.params.managementType = 'SYSTEMCOURSE'
+    } else if (this.positionIdlk === '2') {
+      // 父组件mounted时刻请求数据 2 带课程类型参数 只拿体验课
+      this.params.managementType = 'TESTCOURSE'
+    }
+    console.log('父组件mounted时刻:请求数据了', this.params)
     this.checkPending(this.params)
   },
 
   methods: {
     // 期数查询
     getTeamId(val) {
-      this.currentPage = 1
       if (val) {
+        console.info('子组件课程类型变化,父组件请求新数据')
+        this.currentPage = 1
         Object.assign(this.params, {
           managementType: val.managementType,
           period: val.period,
@@ -828,10 +859,12 @@ export default {
         })
         this.checkPending(this.params)
       } else {
-        this.params.managementType = ''
-        this.params.period = ''
-        this.params.page = 1
-        this.checkPending(this.params)
+        console.info('子组件课程类型变化,父组件不作为_因为是清空')
+        // 防止点x 请求全类别数据
+        // this.params.managementType = ''
+        // this.params.period = ''
+        // this.params.page = 1
+        // this.checkPending(this.params)
       }
     },
     // 用于清空修改金额的弹窗内容
@@ -937,6 +970,9 @@ export default {
     // 查询审批类型判断
     getcheckType(val) {
       Object.assign(this.params, { type: val })
+      this.type_lk = val
+      console.log(this.type_lk)
+
       this.currentPage = 1
       this.params.page = 1
       this.checkPending(this.params)
@@ -1333,8 +1369,7 @@ export default {
     checkPending(params) {
       this.$http.Backend.checkListPending(params).then((res) => {
         if (res && res.payload && res.payload.content) {
-          this.totalElements = res.payload.totalElements
-          this.tableData = res.payload.content.map((item) => {
+          const zancunArr = res.payload.content.map((item) => {
             const zhaiyao = item.abstractContent.split('^')
             item.repiarContent = zhaiyao[0]
             item.period = zhaiyao[1]
@@ -1344,6 +1379,21 @@ export default {
             item.approveTime = timestamp(item.endTime, 2)
             return item
           })
+          // 类型:退款  positionId为3或4 前端单独筛选下
+          if (this.type_lk === 'REFUND' && this.positionIdlk === '4') {
+            this.tableData = zancunArr.filter(
+              (item) => item.periodAlready === '0'
+            )
+            this.totalElements = this.tableData.length
+          } else if (this.type_lk === 'REFUND' && this.positionIdlk === '3') {
+            this.tableData = zancunArr.filter(
+              (item) => item.periodAlready !== '0'
+            )
+            this.totalElements = this.tableData.length
+          } else {
+            this.tableData = zancunArr
+            this.totalElements = res.payload.totalElements
+          }
         }
       })
     },

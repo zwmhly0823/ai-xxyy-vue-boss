@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-05-23 14:20:28
  * @LastEditors: liukun
- * @LastEditTime: 2020-07-09 21:58:24
+ * @LastEditTime: 2020-08-13 17:21:48
  */
 
 //  环境判断及获取操作人ID
@@ -53,10 +53,7 @@ function getStaff(staffInfo) {
       staffId: staff.id,
       staffName: staff.realName,
       staffMobile: staff.mobile,
-      isStaffId:
-        staff.positionId === '1' ||
-        staff.positionId === '2' ||
-        staff.positionId === '3'
+      isStaffId: staff.positionId !== '0'
     }
   )
 }
