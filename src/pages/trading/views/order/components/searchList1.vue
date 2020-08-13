@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-04-25 17:24:23
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-08-11 20:57:47
+ * @LastEditTime: 2020-08-13 21:13:02
  -->
 <template>
   <el-card
@@ -517,14 +517,25 @@ export default {
     // fix
     getFirstOrder(res) {
       console.log(res)
+      // this.$refs.phoneName.handleEmpty()
+      // this.setSeachParmas({ is_first_order_send_id: '' }, [
+      //   'is_first_order_send_id'
+      // ])
       // console.log(res[0].is_first_order_send_id)
       if (res && res.is_first_order_send_id === '0') {
         this.$refs.phoneName.handleEmpty()
+        this.setSeachParmas({ is_first_order_send_id: '' }, [
+          'is_first_order_send_id'
+        ])
         this.hasSendId = false
       } else {
         this.hasSendId = true
       }
       if (!res) {
+        if (this.$refs.phoneName) {
+          this.$refs.phoneName.handleEmpty()
+        }
+        this.setSeachParmas('', ['first_order_send_id'], 'terms')
         this.setSeachParmas({ is_first_order_send_id: '' }, [
           'is_first_order_send_id'
         ])
