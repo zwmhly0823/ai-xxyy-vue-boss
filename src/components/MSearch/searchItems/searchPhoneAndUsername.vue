@@ -105,7 +105,7 @@ export default {
       }
       const query = `{"bool":{"must":[${JSON.stringify(
         range
-      )}],"filter":{"bool":{"should":[{"wildcard":{"username.keyword":"*${val}*"}},{"wildcard":{"mobile.keyword":"*${val}*"}},{"term":{"user_num":${val}}}]}}}}`
+      )}],"filter":{"bool":{"should":[{"wildcard":{"username.keyword":"*${val}*"}},{"wildcard":{"mobile.keyword":"*${val}*"}},{"wildcard":{"user_num_text.keyword":"*${val}*"}}]}}}}`
       const q = JSON.stringify(query)
 
       const sort = `{"id":"desc"}`
