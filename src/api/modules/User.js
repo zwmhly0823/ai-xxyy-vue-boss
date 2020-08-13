@@ -4,8 +4,8 @@
  * @version:
  * @Author: shentong
  * @Date: 2020-03-13 14:38:28
- * @LastEditors: liukun
- * @LastEditTime: 2020-08-08 20:47:58
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-08-13 17:07:10
  */
 // import axios from '../axios'
 import axios from '../axiosConfig'
@@ -509,6 +509,8 @@ export default {
               today_join_course_count
               today_complete_course_count
               yesterday_join_course_count
+              join_course_count
+              ad_join_course_count
               ad_today_join_course_count
               ad_today_complete_course_count
               ad_yesterday_join_course_count
