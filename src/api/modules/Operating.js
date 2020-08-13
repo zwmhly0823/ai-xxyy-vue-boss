@@ -3,8 +3,8 @@
  * @version:
  * @Author: Shentong
  * @Date: 2020-03-16 19:46:39
- * @LastEditors: Shentong
- * @LastEditTime: 2020-08-07 16:40:04
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-08-13 17:05:51
  */
 import axios from '../axiosConfig'
 
@@ -499,6 +499,16 @@ export default {
   getRecord(params) {
     return axios.post(
       `/api/t/v1/teacherChannel/getRecord?period=${params.period}`
+    )
+  },
+  // 截图转介绍
+  getTable(parmas) {
+    return axios.get('/api/b/v1/backend/userflow/sharereward/pageList', parmas)
+  },
+  // 提交截图审核
+  submit_img(parmas) {
+    return axios.post(
+      `/api/b/v1/backend/userflow/complete?id=${parmas.id}&isAgree=${parmas.isAgree}&remark=${parmas.remark}`
     )
   }
 }

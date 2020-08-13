@@ -428,6 +428,14 @@ const routes = [
           module: 'operating'
         }
       },
+      {
+        path: '/recommend',
+        name: 'recommend',
+        meta: {
+          title: '转介绍截图',
+          module: 'operating'
+        }
+      },
       ...superOperatingRouter,
       ...adminRouter
     ]
