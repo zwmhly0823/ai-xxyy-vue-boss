@@ -88,7 +88,7 @@ export default {
     const q = JSON.stringify(query)
     return axios.post('/graphql/v1/toss', {
       query: `{
-        StudentTeamList(query:${JSON.stringify(q)}, size: 2000){
+        StudentTeamList(query:${JSON.stringify(q)}, size: 3000){
           id
           team_name
           sup
