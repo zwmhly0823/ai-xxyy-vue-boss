@@ -81,14 +81,14 @@ export default {
   },
 
   /**
-   * 根据难度 sup 搜索班级 TODO: 班级数量大于500时做调整
+   * 根据难度 sup 搜索班级 TODO: 班级数量大于1000时做调整
    */
   searchTeamBySup(sup = '') {
     const query = { 'sup.keyword': sup }
     const q = JSON.stringify(query)
     return axios.post('/graphql/v1/toss', {
       query: `{
-        StudentTeamList(query:${JSON.stringify(q)}, size: 500){
+        StudentTeamList(query:${JSON.stringify(q)}, size: 1000){
           id
           team_name
           sup

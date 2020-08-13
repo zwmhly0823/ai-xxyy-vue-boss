@@ -4,7 +4,7 @@
  * @Author: shentong
  * @Date: 2020-03-13 16:20:48
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-08-11 15:21:29
+ * @LastEditTime: 2020-08-13 18:16:18
  */
 import axios from '../axiosConfig'
 // 素质课的时候，测试环境暂时删除
@@ -67,6 +67,7 @@ export default {
             ctime
             packages_name
             sup
+            trial_sup
             stage
             regtype
             amount
