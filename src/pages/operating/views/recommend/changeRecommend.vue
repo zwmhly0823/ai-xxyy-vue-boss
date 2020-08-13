@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-08-03 15:45:34
  * @LastEditors: liukun
- * @LastEditTime: 2020-08-13 14:55:42
+ * @LastEditTime: 2020-08-13 18:15:30
 -->
 <template>
   <!-- wrap_lk:给分页留了40高度 -->
@@ -21,7 +21,7 @@
           <SearchPhoneAndUsername
             type="2"
             :customStyle="{ width: '160px' }"
-            placeholder="手机号或id"
+            placeholder="手机号或昵称"
             @result="_wai1"
           />
         </el-form-item>
