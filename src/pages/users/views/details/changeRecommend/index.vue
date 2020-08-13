@@ -4,12 +4,13 @@
  * @Author: liukun
  * @Date: 2020-08-06 17:13:23
  * @LastEditors: liukun
- * @LastEditTime: 2020-08-12 19:46:06
+ * @LastEditTime: 2020-08-13 14:58:08
 -->
 <template>
   <div>
     <div class="search">
       <el-date-picker
+        size="mini"
         v-model="month_"
         type="month"
         placeholder="选择月"
@@ -135,9 +136,23 @@ export default {
 <style lang="scss" scoped>
 .search {
   font-size: 14px;
-  width: 60%;
+  width: 40%;
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+.search {
+  section {
+    font-size: 12px;
+  }
+  span {
+    color: #f84e5e;
+  }
+}
+.search /deep/ .el-input {
+  width: 170px;
+}
+/deep/ .el-icon-circle-close {
+  color: #f84e5e;
 }
 </style>

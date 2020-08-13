@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-08-03 15:45:34
  * @LastEditors: liukun
- * @LastEditTime: 2020-08-12 19:20:07
+ * @LastEditTime: 2020-08-13 14:55:42
 -->
 <template>
   <!-- wrap_lk:给分页留了40高度 -->
@@ -296,6 +296,9 @@ export default {
     display: flex;
     justify-content: flex-end;
     align-items: center;
+  }
+  /deep/ .el-icon-circle-close {
+    color: #f84e5e;
   }
 }
 </style>

@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-07-20 16:37:49
  * @LastEditors: liukun
- * @LastEditTime: 2020-08-12 19:41:42
+ * @LastEditTime: 2020-08-13 14:57:07
 --><template>
   <el-drawer :visible.sync="drawer" size="40%" :destroy-on-close="true">
     <template v-slot:title>
@@ -18,7 +18,7 @@
         :model="form"
         ref="form"
         :rules="rules"
-        label-position="right"
+        label-position="left"
         label-width="100px"
       >
         <el-form-item label="用户信息概况:">
@@ -26,7 +26,9 @@
           <!-- <el-input v-model="initItemTrue.userName" readonly></el-input> -->
         </el-form-item>
         <el-form-item label="本月通过审核数:">
-          <section>{{ initItemTrue.currentMonthAgreeCount }}</section>
+          <section style="color:#f84e5e">
+            {{ initItemTrue.currentMonthAgreeCount }}
+          </section>
         </el-form-item>
         <el-form-item label="截图上传时间:">
           <section>{{ initItemTrue.ctime }}</section>
@@ -265,5 +267,8 @@ export default {
 .dialog-footer {
   display: flex;
   justify-content: flex-end;
+}
+/deep/ .el-form .el-form-item {
+  margin-bottom: 7px;
 }
 </style>
