@@ -4,7 +4,7 @@
  * @Author: Lukun
  * @Date: 2020-05-16 17:43:36
  * @LastEditors: liukun
- * @LastEditTime: 2020-07-09 21:06:17
+ * @LastEditTime: 2020-08-13 19:13:50
 -->
 <template>
   <div class="container">
@@ -13,13 +13,13 @@
         v-model="value"
         @change="selectTeam"
         @clear="clearNextData"
-        placeholder="请选择课程系统"
+        placeholder="请选择课程类型"
         clearable
         class="courseTeam"
         size="mini"
       >
         <el-option
-          v-for="item in courseOptions"
+          v-for="item of courseOptions"
           :key="item.value"
           :label="item.label"
           :value="item.value"
@@ -74,18 +74,18 @@ export default {
         {
           value: 'TESTCOURSE',
           label: '体验课',
-          show: positionId === 1 || positionId === 2
+          show: positionId === 0 || positionId === 1 || positionId === 2
         },
         {
           value: 'SYSTEMCOURSE',
           label: '系统课',
-          show: positionId === 1 || positionId === 3
+          show:
+            positionId === 0 ||
+            positionId === 1 ||
+            positionId === 3 ||
+            positionId === 4
         }
       ],
-      course: {
-        '0': 'TESTCOURSE',
-        '1': 'SYSTEMCOURSE'
-      },
       loading: false,
       stage: '',
       dataList: [],
@@ -97,13 +97,18 @@ export default {
     }
   },
   mounted() {
+    console.info('子组件mounted:显示赋值')
+    // 初始显示_赋值
     if (positionId === 2) {
-      // 体验课
-      this.value = 'TESTCOURSE' // 显示赋值
-      this.$emit('result', { period: '', managementType: 'TESTCOURSE' }) // 给父组件传结果用于bb请求数据
-    } else if (positionId === 3) {
-      this.value = 'SYSTEMCOURSE' // 显示赋值
-      this.$emit('result', { period: '', managementType: 'SYSTEMCOURSE' }) // 给父组件传结果用于bb请求数据
+      // 纯体验课
+      this.value = 'TESTCOURSE'
+      this.chooseTeam = false
+    } else if (positionId === 3 || positionId === 4) {
+      // 纯系统课
+      this.chooseTeam = false
+      this.value = 'SYSTEMCOURSE'
+    } else {
+      // 全类 0,1
     }
   },
   computed: {
@@ -150,6 +155,7 @@ export default {
       this.$emit('result', '')
     },
     selectTeam(val) {
+      console.info('子组件课程类型手动变化后,告知父组件-mounted赋值触发么??')
       if (val) {
         switch (val) {
           case 'TESTCOURSE':
