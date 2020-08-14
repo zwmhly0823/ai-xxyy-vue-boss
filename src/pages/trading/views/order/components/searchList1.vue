@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-04-25 17:24:23
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-08-13 21:28:26
+ * @LastEditTime: 2020-08-14 17:08:21
  -->
 <template>
   <el-card
@@ -493,11 +493,26 @@ export default {
       this.setSeachParmas(res, ['last_teacher_id'], 'terms')
     },
     getSystemCourseType(res) {
+      if (res && res.packages_type === '5') {
+        this.must.map((item, idx) => {
+          if (item.term.packages_type) {
+            this.must.splice(idx, 1)
+          }
+        })
+        return this.setSeachParmas({ packages_course_week: '96' }, [
+          'packages_course_week'
+        ])
+      }
       if (res) {
         this.packages_type = res.packages_type
       } else {
         this.packages_type = null
       }
+      this.must.map((item, idx) => {
+        if (item.term.packages_course_week) {
+          this.must.splice(idx, 1)
+        }
+      })
       this.setSeachParmas(res, ['packages_type'])
     },
     getDepartment(res) {

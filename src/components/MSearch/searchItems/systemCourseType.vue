@@ -57,6 +57,10 @@ export default {
         {
           id: '4',
           text: '年系统课'
+        },
+        {
+          id: '5',
+          text: '两年系统课'
         }
       ]
     }
