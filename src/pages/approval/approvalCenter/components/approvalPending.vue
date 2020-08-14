@@ -4,7 +4,7 @@
  * @Author: Lukun
  * @Date: 2020-04-27 17:47:58
  * @LastEditors: liukun
- * @LastEditTime: 2020-08-13 21:58:12
+ * @LastEditTime: 2020-08-14 21:16:31
  -->
 <template>
   <div class="container">
@@ -831,8 +831,7 @@ export default {
       size: 20
     }
     this.params.isOperation = this.isStaffId
-    // 初始拿数据就得带上_课程类型参数保证看到的搜索条件与结果一致↓↓
-
+    // lk 为3,4 初始拿数据就得带上_课程类型参数保证看到的搜索条件与结果一致↓↓
     if (this.positionIdlk === '0' || this.positionIdlk === '1') {
       // 父组件mounted时刻请求数据 0,1不带课程类型参数 拿全量
     } else if (this.positionIdlk === '3' || this.positionIdlk === '4') {
@@ -1367,6 +1366,13 @@ export default {
     },
     // 待审核列表渲染
     checkPending(params) {
+      // lk 为3,4处理分页
+      if (
+        this.type_lk === 'REFUND' &&
+        (this.positionIdlk === '3' || this.positionIdlk === '4')
+      ) {
+        Object.assign(params, { page: 1, size: 999 })
+      }
       this.$http.Backend.checkListPending(params).then((res) => {
         if (res && res.payload && res.payload.content) {
           const zancunArr = res.payload.content.map((item) => {
@@ -1379,7 +1385,7 @@ export default {
             item.approveTime = timestamp(item.endTime, 2)
             return item
           })
-          // 类型:退款  positionId为3或4 前端单独筛选下
+          // lk 为3,4 前端单独筛选下
           if (this.type_lk === 'REFUND' && this.positionIdlk === '4') {
             this.tableData = zancunArr.filter(
               (item) => item.periodAlready === '0'
