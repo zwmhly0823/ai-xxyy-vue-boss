@@ -3,8 +3,8 @@
  * @version: 
  * @Author: Lukun
  * @Date: 2020-04-15 15:18:49
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-07-16 15:52:19
+ * @LastEditors: zhangjianwen
+ * @LastEditTime: 2020-08-14 18:40:03
  -->
 <template>
   <div class="container express-detail">
@@ -138,7 +138,7 @@
           >
             <el-radio label="DELIVER_WAIT_CONFIRM">下单失败</el-radio>
             <el-radio label="DELIVER_SING">已签收</el-radio>
-            <el-radio label="INVALID">设为无效</el-radio>
+            <!-- <el-radio label="INVALID">设为无效</el-radio> -->
           </el-radio-group>
         </el-form-item>
         <el-form-item>
