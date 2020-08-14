@@ -2,7 +2,7 @@
  * @Descripttion: 
  * @version: 
  * @LastEditors: liukun
- * @LastEditTime: 2020-08-11 19:14:48
+ * @LastEditTime: 2020-08-14 18:23:11
  -->
 <template>
   <div class="adjustModule">
@@ -610,34 +610,23 @@ export default {
                     this.onCancel('refundForm')
                   })
                 } else {
-                  if (this.half === 180) {
-                    this.refundForm.refundAmount = Math.round(
-                      this.refundForm.residueFee -
-                        ((1499 / 6) * yiYue).toFixed(2)
-                    )
-                    if (
-                      this.refundForm.refundAmount > this.refundForm.residueFee
-                    ) {
-                      this.$message({
-                        message: '退款金额不能大于剩余金额',
-                        type: 'error'
-                      })
-                      this.onCancel('refundForm')
-                    }
-                  } else if (this.half === 365) {
-                    this.refundForm.refundAmount = Math.round(
-                      this.refundForm.residueFee -
-                        ((2600 / 12) * yiYue).toFixed(2)
-                    )
-                    if (
-                      this.refundForm.refundAmount > this.refundForm.residueFee
-                    ) {
-                      this.$message({
-                        message: '退款金额不能大于剩余金额',
-                        type: 'error'
-                      })
-                      this.onCancel('refundForm')
-                    }
+                  // 全年半年二合一
+                  const interfaceTy = (this.pureWeekS + this.pureWeekY) / 4
+                  this.refundForm.refundAmount = Math.round(
+                    this.refundForm.residueFee -
+                      (
+                        (this.refundForm.residueFee / interfaceTy) *
+                        yiYue
+                      ).toFixed(2)
+                  )
+                  if (
+                    this.refundForm.refundAmount > this.refundForm.residueFee
+                  ) {
+                    this.$message({
+                      message: '退款金额不能大于剩余金额',
+                      type: 'error'
+                    })
+                    this.onCancel('refundForm')
                   }
                   this.refundForm.refundMonths = shengYue // 退了几个月的课
                   // for (let i = 1; i <= shengYue; i++) {
