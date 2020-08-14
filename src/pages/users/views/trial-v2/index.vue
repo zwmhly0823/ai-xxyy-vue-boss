@@ -187,27 +187,46 @@
               </template>
             </template>
           </el-table-column>
-          <el-table-column label="系统标签" min-width="150">
+          <el-table-column label="手动标签" min-width="150">
             <template slot-scope="scope">
-              <template v-if="0">
+              <template v-if="!scope.row.user_label">
                 <i
                   class="el-icon-circle-plus-outline intention-icon"
-                  @click="createSysTag(scope.$index, scope.row.id)"
+                  @click="editSysTag(scope.$index, scope.row.id)"
                 ></i>
               </template>
               <template v-else>
                 <div class="remarks-content tag-box">
-                  <el-popover placement="top-start" trigger="hover">
-                    <tags-popover></tags-popover>
+                  <el-popover
+                    placement="top-start"
+                    trigger="hover"
+                    @show="tagPopoverShow(scope.row)"
+                  >
+                    <div
+                      v-if="!tagPopoverData"
+                      v-loading="true"
+                      style="width: 200px;height: 200px"
+                    ></div>
+                    <tags-popover
+                      ref="tagPopover"
+                      v-if="tagPopoverData"
+                      :tagPopoverData="tagPopoverData"
+                    ></tags-popover>
                     <div slot="reference">
                       <tags-item
-                        v-for="(item, index) in tagList(4)"
+                        v-for="(item, index) in scope.row.user_label.split(',')
+                          .length > 2
+                          ? scope.row.user_label.split(',').slice(0, 2)
+                          : scope.row.user_label.split(',')"
                         :key="index"
-                        :text="item + ''"
+                        :text="item"
                       ></tags-item>
                     </div>
                   </el-popover>
-                  <i class="el-icon-edit"></i>
+                  <i
+                    class="el-icon-edit"
+                    @click="editSysTag(scope.$index, scope.row.id)"
+                  ></i>
                 </div>
               </template>
             </template>
@@ -533,33 +552,6 @@
               <p>点评作品: {{ scope.row.comment_count }}</p>
             </template>
           </el-table-column>
-          <el-table-column label="标签" min-width="150">
-            <template slot-scope="scope">
-              <template
-                v-if="!scope.row.user_label || scope.row.user_label === '-'"
-              >
-                <!-- <i
-              class="el-icon-circle-plus-outline intention-icon"
-              @click="onLabel"
-            ></i> -->
-                <p>-</p>
-              </template>
-              <template v-else>
-                <div class="remarks-content">
-                  <el-popover
-                    placement="top-start"
-                    trigger="hover"
-                    :content="scope.row.user_label"
-                  >
-                    <div slot="reference" class="remarks-text">
-                      {{ scope.row.user_label }}
-                    </div>
-                  </el-popover>
-                  <!-- <i class="el-icon-edit" @click="onLabel"></i> -->
-                </div>
-              </template>
-            </template>
-          </el-table-column>
           <el-table-column label="添加微信" min-width="60">
             <template slot-scope="scope">
               <el-switch
@@ -828,7 +820,7 @@
                     >催发地址短信</el-dropdown-item
                   >
                   <!-- <el-dropdown-item command="3">发优惠券</el-dropdown-item> -->
-                  <!-- <el-dropdown-item command="4">添加标签</el-dropdown-item> -->
+                  <el-dropdown-item command="4">添加标签</el-dropdown-item>
                 </el-dropdown-menu>
               </el-dropdown>
             </template>
@@ -862,12 +854,6 @@
         v-if="showModifyAddress"
       />
     </el-dialog>
-    <!-- <label-checkbox
-      v-if="showDialogFormVisible"
-      :labelRowValue="labelRowValue"
-      @onRefresh="onRefresh"
-      ref="labelCheckbox"
-    /> -->
     <intention-dialog
       ref="intentionDialog"
       @intentConfirm="intentConfirm"
@@ -884,6 +870,14 @@
     <questionaire-drawer-component
       ref="questionaireDrawerC"
     ></questionaire-drawer-component>
+
+    <!-- 手动标签 -->
+    <tag-detail
+      ref="tagDetail"
+      @changeTagSucc="changeTagSucc"
+      @deleteTagEmit="deleteTagEmit"
+      @saveTag="saveTag"
+    ></tag-detail>
   </div>
 </template>
 
@@ -895,7 +889,6 @@ import BaseUserInfo from '../../components/BaseUserInfo.vue'
 import ModifyAddress from '../../components/ModifyAddress.vue'
 import enums from '../../components/searchData'
 import { formatData, openBrowserTab } from '@/utils/index'
-// import labelCheckbox from '../../components/labelCheckbox'
 import intentionDialog from '../../components/intentionDialog'
 import { FOLLOW_EXPRESS_STATUS } from '@/utils/enums'
 import Search from '../../components/Search.vue'
@@ -905,13 +898,13 @@ import TrialSidebar from '../../components/trial/TrialSidebar.vue'
 import QuestionaireDrawerComponent from '../../components/trial/QuestionaireDrawerComponent.vue'
 import tagsItem from '../../components/trial/tags/TagsItem.vue'
 import tagsPopover from '../../components/trial/tags/TagsPopover.vue'
+import tagDetail from '../../components/trial/tags/tagDetail.vue'
 export default {
   name: 'trialUsers',
   components: {
     MPagination,
     BaseUserInfo,
     ModifyAddress,
-    // labelCheckbox,
     intentionDialog,
     Search,
     ToolTip,
@@ -919,7 +912,8 @@ export default {
     TrialSidebar,
     QuestionaireDrawerComponent,
     tagsItem,
-    tagsPopover
+    tagsPopover,
+    tagDetail
   },
   computed: {
     searchParams() {
@@ -1036,7 +1030,10 @@ export default {
       isOpened: true,
       currentDate: '',
       todayTotal: 0,
-      tomorrowTotal: 0
+      tomorrowTotal: 0,
+      userinfo: {},
+      tagDataMap: new Map(), // 标签的浮窗和弹窗的数据都从这个map里面取，避免重复请求
+      tagPopoverData: null
     }
   },
   watch: {
@@ -1071,11 +1068,7 @@ export default {
     }
   },
   created() {
-    // this.$nextTick(() => {
-    //   const tableHeight =
-    //     document.body.clientHeight - this.$refs.tableInner.offsetTop - 110
-    //   this.tableHeight = tableHeight + ''
-    // })
+    this.userinfo = JSON.parse(localStorage.getItem('staff'))
     // 消息中心传递过来的预设参数
     this.paramsFromUrl()
     this.init()
@@ -1110,11 +1103,6 @@ export default {
         this.init()
       }, 1000)
     },
-    // 添加标签
-    // onLabel() {
-    //   this.$refs.labelCheckbox.dialogFormVisible = true
-    //   this.$refs.labelCheckbox.getAllTeacherByRoleIds()
-    // },
     // 获取一行数据
     hoverRow(row, column, cell, event) {
       this.labelRowValue = row
@@ -1153,7 +1141,7 @@ export default {
                 +item.management.status === 2 ||
                 +item.management.status === 3)
           )
-          console.log(arr)
+          // console.log(arr)
           const list = arr.map((item) => {
             item.management.period_label = `${item.management.period_name}(${
               this.period[item.management.status]
@@ -1593,9 +1581,9 @@ export default {
         //   this.$refs.couponDialog.couponsTime = ''
         //   break
         // 加标签
-        // case '4':
-        //   this.onLabel()
-        //   break
+        case '4':
+          this.editSysTag(index, user.id)
+          break
       }
     },
 
@@ -1671,7 +1659,92 @@ export default {
       }
       this.$refs.questionaireDrawerC.openDrawer(query)
     },
-    createSysTag(index, uid) {}
+    async changeTagSucc(type, uid) {
+      if (type === 'createPersonTag') {
+        const data = await this.getTeacherLabel(uid)
+        if (!data) {
+          return
+        }
+        this.tagDataMap.set(uid, data)
+        this.$refs.tagDetail.rightPersonSysTag(data)
+      }
+    },
+    async deleteTagEmit(uid) {
+      const data = await this.getTeacherLabel(uid)
+      if (!data) {
+        return
+      }
+      this.tagDataMap.set(uid, data)
+      this.$refs.tagDetail.initdata(this.tagDataMap.get(uid), uid)
+    },
+    saveTag(userLabel, uid) {
+      for (let i = 0, len = this.dataList.length; i < len; i++) {
+        if (this.dataList[i].id === uid) {
+          this.dataList[i].user_label = userLabel
+        }
+      }
+      this.tagDataMap.delete(uid)
+    },
+    getTeacherLabel(uid) {
+      const query = {
+        userId: uid,
+        teacherId: this.userinfo.id,
+        teacherIds: [this.userinfo.id]
+      }
+      return this.$http.Setting.getTeacherLabel(query)
+        .then((res) => {
+          if (res.code === 0 && res.status === 'OK') {
+            return res.payload
+          } else {
+            return false
+          }
+        })
+        .catch(() => {
+          this.$message.error('获取标签信息错误')
+          return false
+        })
+    },
+    async editSysTag(index, uid) {
+      this.$refs.tagDetail.open()
+      // Popover和点击出来的弹窗只需要请求一次数据
+      if (!this.tagDataMap.get(uid)) {
+        const data = await this.getTeacherLabel(uid)
+        if (!data) {
+          return
+        }
+        if (data === '没有老师数据') {
+          this.$message.error('没有老师数据')
+          return
+        }
+        this.tagDataMap.set(uid, data)
+      }
+      // console.log(this.tagDataMap.get(uid))
+      this.$refs.tagDetail.initdata(this.tagDataMap.get(uid), uid)
+    },
+    async tagPopoverShow(val) {
+      // Popover和点击出来的弹窗只需要请求一次数据
+      if (this.tagDataMap.get(val.id)) {
+        this.tagPopoverData = null
+        this.$nextTick(() => {
+          this.tagPopoverData = this.tagDataMap.get(val.id)
+        })
+        return
+      }
+      const data = await this.getTeacherLabel(val.id)
+      if (!data) {
+        return
+      }
+      if (data === '没有老师数据') {
+        this.$message.error('没有老师数据')
+        return
+      }
+      this.tagDataMap.set(val.id, data)
+      // el-popover中的视图不会随着数据变化
+      this.tagPopoverData = null
+      this.$nextTick(() => {
+        this.tagPopoverData = this.tagDataMap.get(val.id)
+      })
+    }
   }
 }
 </script>

@@ -1045,5 +1045,16 @@ export default {
     return axios.get(
       `/api/t/v1/teacher/teacherFollowGroup/findAllByTeacherIdAndType?teacherId=${teacherId}&type=${type}`
     )
+  },
+  JLLabelRecordInfoList(query) {
+    return axios.post('/graphql/v1/toss', {
+      query: `{
+        JLLabelRecordInfoList(query: ${JSON.stringify(
+          JSON.stringify({ label_id: query })
+        )},size:1000){
+          uid
+        }
+      }`
+    })
   }
 }

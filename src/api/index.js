@@ -30,6 +30,7 @@ import WorkerHandover from './modules/WorkerHandover'
 import Staff from './modules/Staff' // 员工
 import NoticeCenter from './modules/NoticeCenter'
 import Community from './modules/Community' // 社群工具
+import Setting from './modules/Setting'
 
 export default Object.assign(
   {},
@@ -56,5 +57,6 @@ export default Object.assign(
   { WorkerHandover },
   { Staff },
   { NoticeCenter },
-  { Community }
+  { Community },
+  { Setting }
 )

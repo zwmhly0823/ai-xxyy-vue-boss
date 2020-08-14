@@ -196,15 +196,12 @@
               />
             </div>
           </el-form-item> -->
-          <el-form-item label="系统标签:">
+          <el-form-item label="手动标签:">
             <div class="search-group">
-              <simple-select
-                name="user_status"
+              <define-label-v2
                 placeholder="请选择"
-                :my-style="{ width: '100px' }"
-                :multiple="false"
-                :data-list="conversionStatus"
-                @result="getSearchData('user_status', arguments)"
+                name="id"
+                @result="getSearchData('id', arguments)"
               />
             </div>
           </el-form-item>
@@ -284,6 +281,7 @@ import SearchTeamName from '@/components/MSearch/searchItems/searchTeamName'
 // import HardLevel from '@/components/MSearch/searchItems/hardLevel.vue'
 import Channel from '@/components/MSearch/searchItems/channel.vue'
 // import DefineLabel from '@/components/MSearch/searchItems/defineLabel.vue'
+import DefineLabelV2 from '@/components/MSearch/searchItems/defineLabelV2.vue'
 import SearchPhoneOrUsernum from '@/components/MSearch/searchItems/searchPhoneOrUsernum.vue'
 import SimpleSelect from '@/components/MSearch/searchItems/simpleSelect.vue'
 import enums from '../components/searchData'
@@ -297,7 +295,8 @@ export default {
     SearchPhoneOrUsernum,
     Channel,
     // DefineLabel,
-    SimpleSelect
+    SimpleSelect,
+    DefineLabelV2
   },
   props: {
     // 班级类型： 0-体验课 1-系统课
