@@ -215,10 +215,7 @@
                     ></tags-popover>
                     <div slot="reference">
                       <tags-item
-                        v-for="(item, index) in scope.row.user_label.split(',')
-                          .length > 2
-                          ? scope.row.user_label.split(',').slice(0, 2)
-                          : scope.row.user_label.split(',')"
+                        v-for="(item, index) in scope.row.user_label.split(',')"
                         :key="index"
                         :text="item"
                       ></tags-item>
