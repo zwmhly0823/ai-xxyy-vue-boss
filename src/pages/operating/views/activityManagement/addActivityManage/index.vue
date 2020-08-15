@@ -417,6 +417,7 @@ export default {
         obj.giftsType = '虚拟'
       }
       console.log(obj, 'obj')
+      this.$message.success('组合商品成功')
       this.tableData.push(obj)
     },
     // 获取商品
