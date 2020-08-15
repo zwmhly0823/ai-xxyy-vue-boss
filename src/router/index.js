@@ -547,7 +547,25 @@ const routes = [
       title: '营销中心',
       icon: 'iconyingxiaoguanli',
       module: 'marketing'
-    }
+    },
+    children: [
+      {
+        path: '/redeemCode',
+        name: 'redeemCode',
+        meta: {
+          title: '兑换码',
+          module: 'marketing'
+        }
+      },
+      {
+        path: '/coupon',
+        name: 'coupon',
+        meta: {
+          title: '优惠券',
+          module: 'marketing'
+        }
+      }
+    ]
   }
 ]
 

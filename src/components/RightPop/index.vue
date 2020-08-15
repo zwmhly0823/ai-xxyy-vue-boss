@@ -3,11 +3,11 @@
  * @version: 1.0.0
  * @Author: YangJiyong
  * @Date: 2020-06-11 16:06:24
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-06-11 19:58:52
+ * @LastEditors: Shentong
+ * @LastEditTime: 2020-08-15 16:27:22
 -->
 <template>
-  <div class="right-pop" v-if="rightpop.show" :style="myPosition">
+  <div class="right-pop" v-if="rightpop && rightpop.show" :style="myPosition">
     <ul>
       <li @click.stop="openTab" @mouseleave="handleRightLeave">
         新标签页打开
