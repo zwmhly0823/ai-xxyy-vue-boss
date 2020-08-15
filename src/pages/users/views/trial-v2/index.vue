@@ -190,10 +190,11 @@
           <el-table-column label="手动标签" min-width="150">
             <template slot-scope="scope">
               <template v-if="!scope.row.user_label">
-                <i
+                <!-- <i
                   class="el-icon-circle-plus-outline intention-icon"
                   @click="editSysTag(scope.$index, scope.row.id)"
-                ></i>
+                ></i> -->
+                <span>--</span>
               </template>
               <template v-else>
                 <div class="remarks-content tag-box">
@@ -223,10 +224,10 @@
                       ></tags-item>
                     </div>
                   </el-popover>
-                  <i
+                  <!-- <i
                     class="el-icon-edit"
                     @click="editSysTag(scope.$index, scope.row.id)"
-                  ></i>
+                  ></i> -->
                 </div>
               </template>
             </template>
