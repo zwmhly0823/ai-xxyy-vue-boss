@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-08-06 17:15:04
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-12 14:45:11
+ * @LastEditTime: 2020-08-15 11:12:06
 -->
 <template>
   <el-row type="flex" class="app-main height">
@@ -222,8 +222,8 @@ export default {
     },
 
     handleSizeChange(page) {
-      console.log(page, 'page')
       this.currentPage = page
+      this.getData()
     },
 
     // 创建成功回调 @status - true:继续创建，false-返回列表
@@ -232,7 +232,7 @@ export default {
       this.currentPage = 1
       setTimeout(() => {
         this.getData()
-      }, 1000)
+      }, 1500)
     },
     // 取消创建回调
     handelCancelAdd() {
