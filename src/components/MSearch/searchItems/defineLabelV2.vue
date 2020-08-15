@@ -51,7 +51,8 @@ export default {
     },
     getTeacherLabel() {
       const query = {
-        userId: ''
+        userId: '',
+        teacherIds: []
       }
       return this.$http.Setting.getTeacherLabel(query).then((res) => {
         if (res.code === 0 && res.status === 'OK') {
