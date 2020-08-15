@@ -1685,9 +1685,7 @@ export default {
     },
     getTeacherLabel(uid) {
       const query = {
-        userId: uid,
-        teacherId: this.userinfo.id,
-        teacherIds: [this.userinfo.id]
+        userId: uid
       }
       return this.$http.Setting.getTeacherLabel(query)
         .then((res) => {

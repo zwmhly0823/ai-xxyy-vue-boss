@@ -51,9 +51,7 @@ export default {
     },
     getTeacherLabel() {
       const query = {
-        userId: '',
-        teacherId: JSON.parse(localStorage.getItem('staff')).id,
-        teacherIds: [JSON.parse(localStorage.getItem('staff')).id]
+        userId: ''
       }
       return this.$http.Setting.getTeacherLabel(query).then((res) => {
         if (res.code === 0 && res.status === 'OK') {

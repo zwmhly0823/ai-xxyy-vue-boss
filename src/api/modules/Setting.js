@@ -11,10 +11,7 @@ export default {
   },
   // 标签弹窗
   getTeacherLabel(query) {
-    return axios.post(
-      `/api/toss/v1/toss-api/label/getTeacherLabel?teacherId=${query.teacherId}`,
-      query
-    )
+    return axios.post(`/api/toss/v1/toss-api/label/getTeacherLabel`, query)
   },
   getTeacherList() {
     const query = JSON.stringify({
