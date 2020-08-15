@@ -818,7 +818,7 @@
                     >催发地址短信</el-dropdown-item
                   >
                   <!-- <el-dropdown-item command="3">发优惠券</el-dropdown-item> -->
-                  <el-dropdown-item command="4">添加标签</el-dropdown-item>
+                  <!-- <el-dropdown-item command="4">添加标签</el-dropdown-item> -->
                 </el-dropdown-menu>
               </el-dropdown>
             </template>
