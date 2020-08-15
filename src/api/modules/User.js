@@ -5,7 +5,7 @@
  * @Author: shentong
  * @Date: 2020-03-13 14:38:28
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-13 22:58:04
+ * @LastEditTime: 2020-08-15 19:07:04
  */
 // import axios from '../axios'
 import axios from '../axiosConfig'
@@ -1053,5 +1053,16 @@ export default {
   // 截图转介绍
   getTable(parmas) {
     return axios.get('/api/b/v1/backend/userflow/sharereward/pageList', parmas)
+  },
+  JLLabelRecordInfoList(query) {
+    return axios.post('/graphql/v1/toss', {
+      query: `{
+        JLLabelRecordInfoList(query: ${JSON.stringify(
+          JSON.stringify({ label_id: query })
+        )},size:1000){
+          uid
+        }
+      }`
+    })
   }
 }

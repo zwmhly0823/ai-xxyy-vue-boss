@@ -4,7 +4,7 @@
  * @Author: shentong
  * @Date: 2020-03-13 14:38:28
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-13 22:56:05
+ * @LastEditTime: 2020-08-15 19:06:33
  */
 import Base from './modules/Base'
 import Login from './modules/Login'
@@ -32,6 +32,7 @@ import NoticeCenter from './modules/NoticeCenter'
 import Community from './modules/Community' // 社群工具
 import Outbound from './modules/Outbound' // 社群工具
 import Marketing from './modules/Marketing' // 营销中心
+import Setting from './modules/Setting'
 
 export default Object.assign(
   {},
@@ -60,5 +61,6 @@ export default Object.assign(
   { NoticeCenter },
   { Community },
   { Outbound },
-  { Marketing }
+  { Marketing },
+  { Setting }
 )
