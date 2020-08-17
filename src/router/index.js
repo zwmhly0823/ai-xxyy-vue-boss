@@ -449,7 +449,27 @@ const routes = [
       title: '呼叫中心',
       icon: 'icondianhua',
       module: 'outbound'
-    }
+    },
+    children: [
+      {
+        path: '/CallRecord',
+        name: 'CallRecord',
+        meta: {
+          title: '通话记录',
+          module: 'outbound',
+          style: 'line'
+        }
+      },
+      {
+        path: '/CallCenter',
+        name: 'CallCenter',
+        meta: {
+          title: '席位配置',
+          module: 'outbound',
+          style: 'line'
+        }
+      }
+    ]
   },
   // 数据中心
   {
