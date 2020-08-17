@@ -4,7 +4,7 @@
  * @Author: zhangjianwen
  * @Date: 2020-07-09 15:02:59
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-08-12 18:57:05
+ * @LastEditTime: 2020-08-17 17:16:43
 -->
 <template>
   <div class="learn-record">
@@ -366,8 +366,8 @@ export default {
     padding: 10px;
     img {
       display: block;
-      max-width: 100%;
-      max-height: 100%;
+      // max-width: 95%;
+      max-height: 95%;
     }
   }
   .card-content {
@@ -379,6 +379,7 @@ export default {
       p {
         font-size: 14px;
         height: 20px;
+        margin-bottom: 14px;
       }
     }
   }
