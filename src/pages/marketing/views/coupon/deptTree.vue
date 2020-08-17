@@ -4,14 +4,14 @@
  * @Author: zhubaodong
  * @Date: 2020-03-13 16:53:27
  * @LastEditors: Shentong
- * @LastEditTime: 2020-08-17 17:10:40
+ * @LastEditTime: 2020-08-17 19:38:45
  -->
 <template>
   <div class="left-container">
-    <div class="title">组织架构</div>
     <el-tree
       class="left-container-tree"
       :data="departmentList"
+      show-checkbox
       default-expand-all
       node-key="customId"
       :current-node-key="0"
@@ -31,40 +31,13 @@
           <span v-if="data.name === '小熊项目'">{{ `(${qbSize})` }}</span>
           <span v-else>{{ data.size ? `(${data.size} )` : `(0)` }}</span>
         </span>
-        <span
-          v-show="nowId == data.id && isShowEditIcon"
-          class="el-icon-more"
-          @click.stop="editTools(data)"
-        ></span>
-        <el-card
-          v-show="nowId == data.id && showMenu && data.name === '小熊项目'"
-        >
-          <div v-for="(item, index) in editMenuListNodel" :key="index">
-            <div @click.stop="handleMenuItem(data, item)">
-              {{ item.lable }}
-            </div>
-          </div>
-        </el-card>
-        <el-card
-          v-show="nowId == data.id && showMenu && data.name !== '小熊项目'"
-        >
-          <div v-for="(item, index) in editMenuList" :key="index">
-            <div @click.stop="handleMenuItem(data, item)">
-              {{ item.lable }}
-            </div>
-          </div>
-        </el-card>
+        <div class="day-sets" v-if="data.children == null && data.pid != '0'">
+          <span>开课后第</span>
+          <el-input v-model="data.day" size="mini"></el-input>
+          <span>天</span>
+        </div>
       </span>
     </el-tree>
-    <DialogMenu
-      v-if="dialogVisible"
-      :editCurrentData="editCurrentData"
-      :currentItem="editCurrentItem"
-      :dialogVisible="dialogVisible"
-      :departmentFlatList="departmentFlatList"
-      @handleDialog="handleDialog"
-      ref="dialogRef"
-    />
   </div>
 </template>
 
@@ -306,9 +279,7 @@ export default {
       })
     }
   },
-  components: {
-    DialogMenu: () => import('./dialogMenu')
-  }
+  components: {}
 }
 </script>
 <style lang="scss" scoped>
@@ -327,11 +298,17 @@ export default {
     position: relative;
     .menu-box {
       display: flex;
-      .menu-name {
-        // width: 60px;
-        // overflow: hidden;
-        // text-overflow: ellipsis;
-        // white-space: nowrap;
+    }
+    .day-sets {
+      /deep/ div {
+        margin: 0 10px;
+        width: 40px;
+      }
+      /deep/ input {
+        width: 40px;
+        height: 20px;
+        padding: 3px;
+        text-align: center;
       }
     }
   }

@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-08-15 15:42:18
  * @LastEditors: Shentong
- * @LastEditTime: 2020-08-15 19:54:16
+ * @LastEditTime: 2020-08-17 18:22:56
 -->
 <template>
   <el-row type="flex" class="app-main grantRule">
@@ -35,7 +35,9 @@
               <div class="label">
                 <span>发放规则</span>
                 <div class="btn">
-                  <el-button size="mini" type="primary">新建规则</el-button>
+                  <el-button size="mini" type="primary" @click="newRuleHandle"
+                    >新建规则</el-button
+                  >
                 </div>
               </div>
               <div ref="tableContainer" class="table-container">
@@ -76,13 +78,24 @@
         </el-scrollbar>
       </div>
     </el-col>
+    <new-rule
+      :centerDialogVisible="centerDialogVisible"
+      :ruleContent="ruleContent"
+      @emitDialogOperate="dialogOperate"
+      v-if="centerDialogVisible"
+    ></new-rule>
   </el-row>
 </template>
 <script>
+import NewRule from './newRule'
 export default {
-  components: {},
+  components: {
+    NewRule
+  },
   data() {
     return {
+      centerDialogVisible: true,
+      ruleContent: {},
       tableData: [
         {
           date: '2020-02-22',
@@ -98,6 +111,18 @@ export default {
   mounted() {},
 
   methods: {
+    /**
+     * @description diolog模态框emit回来的事件
+     * @tip { msgType } 1: 文本；3: 图片
+     */
+    dialogOperate(args) {
+      const { close = true } = args
+      this.centerDialogVisible = !close
+    },
+    /** 新建规则 */
+    newRuleHandle() {
+      this.centerDialogVisible = true
+    },
     tableHeaderClassName() {
       return 'header-row'
     }
