@@ -15,6 +15,14 @@
       <SearchPart @result="getSeachePart" />
       <courseTeam @result="getTeamId" />
       <searchPhone name="userTel" @result_lk="getPhone" />
+      <el-button
+        type="primary"
+        size="mini"
+        style="margin-left:100px;"
+        v-if="flowApprovalIdList.length"
+        @click="batchApproval"
+        >批量审核通过</el-button
+      >
     </div>
     <!-- 数据table -->
     <el-table
@@ -23,7 +31,10 @@
       highlight-current-row
       @cell-mouse-enter="handleMouseEnter"
       @cell-mouse-leave="handleMouseLeave"
+      @selection-change="handleSelectionChange"
     >
+      <el-table-column type="selection" width="50" v-if="checkboxChoose">
+      </el-table-column>
       <el-table-column width="50">
         <template slot-scope="scope">
           <el-dropdown
@@ -77,6 +88,9 @@
           </div>
           <div v-if="scope.row.type === 'UNCREDITED'">
             无归属订单审批
+          </div>
+          <div v-if="scope.row.type === 'PROMOTIONS'">
+            赠品
           </div>
         </template>
       </el-table-column>
@@ -138,6 +152,17 @@
         </template>
       </el-table-column>
     </el-table>
+    <!-- 赠品审批抽屉 -->
+    <ApprovalGiftDetail
+      :drawerGiftDeatail="drawerGiftDeatail"
+      :drawerGift="drawerGift"
+      :staffId="staffId"
+      :staffName="staffName"
+      :params_pending="params"
+      @refuse-dialog="refuseDialog"
+      @close-gift="handleClose"
+      @check-pending="checkPending"
+    />
     <!-- 退款补发货抽屉 -->
     <el-drawer
       :visible.sync="drawerApproval"
@@ -689,7 +714,9 @@
         </el-form-item>
         <el-form-item
           v-if="
-            !drawerApprovalDeatail.addressId && currentType !== 'UNCREDITED'
+            !drawerApprovalDeatail.addressId &&
+              currentType !== 'UNCREDITED' &&
+              currentType !== 'PROMOTIONS'
           "
           label="恢复学生放课与随材物流"
           prop="isRecover"
@@ -721,7 +748,7 @@ import adjustDrawer from './adjustDrawer'
 import { getStaffInfo } from '../common'
 import courseTeam from './courseTeam'
 import VersionBox from '../../../../components/MSearch/searchItems/moreVersionBox'
-
+import ApprovalGiftDetail from './approvalGiftDetail'
 export default {
   computed: {
     positionIdlk() {
@@ -744,7 +771,8 @@ export default {
     CheckType,
     SearchPart,
     adjustDrawer,
-    courseTeam
+    courseTeam,
+    ApprovalGiftDetail
   },
   data() {
     var validateName = (rule, value, callback) => {
@@ -783,8 +811,13 @@ export default {
       params: {}, // 列表的参数
       resetParams: {}, // 撤销的参数
       staffId: '',
+      staffName: '',
       tableData: [],
       current: {},
+      checkboxChoose: false,
+      flowApprovalIdList: [],
+      drawerGift: false,
+      drawerGiftDeatail: {},
       drawerApproval: false,
       drawerApprovalDeatail: {},
       currentPage: 1,
@@ -922,7 +955,9 @@ export default {
           const params = {
             isRecover: this.form_checkbox.isRecover ? 1 : 0,
             approvalRemark: this.form_checkbox.reason,
-            flowApprovalId: this.drawerApprovalDeatail.flowApprovalId,
+            flowApprovalId:
+              this.drawerApprovalDeatail.flowApprovalId ||
+              this.drawerGiftDeatail.flowApprovalId,
             isConfirm: false,
             version: this.version,
             staffId: this.staffId,
@@ -968,6 +1003,12 @@ export default {
     },
     // 查询审批类型判断
     getcheckType(val) {
+      if (val === 'PROMOTIONS') {
+        this.checkboxChoose = true
+      } else {
+        this.checkboxChoose = false
+      }
+      console.log(val, 'val====')
       Object.assign(this.params, { type: val })
       this.type_lk = val
       console.log(this.type_lk)
@@ -1025,6 +1066,10 @@ export default {
           console.log(err)
         })
     },
+    // 拒绝弹窗（赠品）
+    refuseDialog() {
+      this.dialogFormVisible_checkbox = true
+    },
     // 同意申请
     ensureReplenish() {
       const version = typeof this.version !== 'string'
@@ -1081,6 +1126,10 @@ export default {
     // 点x关闭按钮
     closeEndBack() {
       this.endback = false
+    },
+    // 关闭审批详情查看
+    handleClose() {
+      this.drawerGift = false
     },
     // ensureBackend 撤销弹出框确认按钮
     ensureBackend() {
@@ -1157,6 +1206,16 @@ export default {
             this.drawerApprovalDeatail.chat_url = res.payload.chatUrl[0]
             this.drawerApprovalDeatail.pay_url = res.payload.paymentUrl[0]
             this.drawerApproval = true
+          }
+        })
+      }
+      // 赠品
+      if (type === 'PROMOTIONS') {
+        this.$http.Backend.getGiftDetail(id).then((res) => {
+          if (res && res.payload) {
+            res.payload.ctime = timestamp(res.payload.ctime, 2)
+            this.drawerGiftDeatail = res.payload
+            this.drawerGift = true
           }
         })
       }
@@ -1351,6 +1410,40 @@ export default {
           this.$message.error('获取审批详情失败')
         })
     },
+    // checkbox多选改变
+    handleSelectionChange(val) {
+      this.flowApprovalIdList = []
+      val.forEach((item) => {
+        console.log(item.id)
+        this.flowApprovalIdList.push(item.id)
+        console.log(this.flowApprovalIdList)
+      })
+      console.log(val.id, 'checkbox多选改变')
+    },
+    // 批量审批
+    batchApproval() {
+      const params = {
+        flowApprovalIdList: this.flowApprovalIdList,
+        staffId: this.staffId,
+        staffName: this.staffName,
+        approvalRemark: '批量审核通过'
+      }
+      this.$http.Backend.batchApproval(params)
+        .then((res) => {
+          // console.log(res)
+          if (res.code === 0) {
+            this.$message({
+              message: '批量审批通过',
+              type: 'success'
+            })
+            this.checkPending(this.params)
+          }
+        })
+        .catch((error) => {
+          console.log(error)
+          this.$message.error('提交出错啦')
+        })
+    },
     // 点击下拉操作
     pullDownList(id, type) {
       Object.assign(this.resetParams, { flowApprovalId: id })
@@ -1373,6 +1466,7 @@ export default {
       ) {
         Object.assign(params, { page: 1, size: 999 })
       }
+      console.log(params, 'paramsparamsparams')
       this.$http.Backend.checkListPending(params).then((res) => {
         if (res && res.payload && res.payload.content) {
           const zancunArr = res.payload.content.map((item) => {

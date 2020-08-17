@@ -63,5 +63,15 @@ export default {
   },
   changeCash(params) {
     return axios.post(`/api/b/v1/backend/refund/detail/updateRefundFee`, params)
+  },
+  // 赠品详情
+  getGiftDetail(params) {
+    return axios.get(
+      `/api/b/v1/backend/promotions/detail/get?flowApprovalId=${params}`
+    )
+  },
+  // 赠品批量审批
+  batchApproval(params) {
+    return axios.post(`/api/b/v1/backend/completed/batch/flow`, params)
   }
 }

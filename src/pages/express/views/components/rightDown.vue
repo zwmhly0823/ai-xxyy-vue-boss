@@ -1145,6 +1145,7 @@ export default {
                 username
                 mobile
               }
+              source_type
             }
           }
         }`
@@ -1218,6 +1219,9 @@ export default {
       productTopicList.map((item) => {
         if (+item.id === +listItem.regtype) {
           listItem.regtype_text = item.name
+        }
+        if (+item.id === 6 && listItem.source_type === '4') {
+          listItem.regtype_text = '关单赠品'
         }
       })
     },

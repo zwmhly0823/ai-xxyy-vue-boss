@@ -12,7 +12,6 @@
       v-model="topicData"
       size="mini"
       clearable
-      multiple
       placeholder="全部类别"
       @change="onChange"
       @clear="onClear"
@@ -67,6 +66,7 @@ export default {
           `
         })
         .then((res) => {
+          console.log(res, 'res')
           res.data.productTopic.map((item) => {
             if (+item.id === 1) {
               item.id = '5'
@@ -79,10 +79,31 @@ export default {
               this.pruductTopicList.push(item)
             }
           })
+          this.pruductTopicList.push({
+            id: '-1',
+            name: '关单赠品'
+          })
         })
     },
     onChange(data) {
-      this.$emit('result', data ? { [this.name]: data } : '')
+      console.log(data, 'data--')
+      // if (data.indexOf('6') > -1) {
+      //   console.log('1111')
+      // } else {
+      //   console.log('2222')
+      // }
+      if (data === '-1') {
+        this.$emit('result', data ? { [this.name]: '6', source_type: '4' } : '')
+      } else {
+        if (data === '6') {
+          this.$emit(
+            'result',
+            data ? { [this.name]: '6', source_type: '0,1,2,3' } : ''
+          )
+        } else {
+          this.$emit('result', data ? { [this.name]: data } : '')
+        }
+      }
     },
     onClear() {
       this.$emit('result', '')
