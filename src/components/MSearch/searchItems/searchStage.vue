@@ -21,6 +21,7 @@
       :remote-method="handleDebounce"
       :loading="loading"
       :style="myStyle"
+      :disabled="isDisabled"
       @change="onChange"
     >
       <el-option
@@ -64,12 +65,20 @@ export default {
     myStyle: {
       type: Object,
       default: () => {}
+    },
+    isDisabled: {
+      type: Boolean,
+      default: false
+    },
+    record: {
+      type: Array,
+      default: () => []
     }
   },
   data() {
     return {
       loading: false,
-      stage: '',
+      stage: this.isMultiple ? this.record : '',
       dataList: [],
       period: [] // 期数
     }
@@ -87,6 +96,15 @@ export default {
     this.getData()
   },
   watch: {
+    record(val) {
+      this.stage = val
+    },
+    isDisabled(val) {
+      if (val) {
+        this.stage = []
+      }
+      console.log(val, '123123')
+    },
     teacherId(val) {
       this.stage = ''
       this.$emit('result', '')
@@ -100,6 +118,7 @@ export default {
       const teamType =
         this.type === '0' ? { team_type: 0 } : { team_type: { gt: 0 } }
       Object.assign(query, teamType)
+
       const q = JSON.stringify(query)
       axios
         .post('/graphql/v1/toss', {
@@ -127,8 +146,12 @@ export default {
       if (this.type) {
         queryParams.bool.must.push({ term: { type: `${this.type}` } })
       }
+      if (this.record.length > 0) {
+        console.log(this.period)
+        this.period.push(...this.record)
+      }
       if (this.period.length > 0) {
-        queryParams.bool.must.push({ terms: { period: this.period } })
+        // queryParams.bool.must.push({ terms: { period: this.period } })
       }
       const q = JSON.stringify(queryParams)
       const sort = `{"id":"desc"}`
@@ -154,6 +177,7 @@ export default {
     },
     // 获取选中的
     onChange(data) {
+      console.log(data)
       this.$emit('result', data.length > 0 ? { [this.name]: data } : '')
     }
   }

@@ -510,5 +510,21 @@ export default {
     return axios.post(
       `/api/b/v1/backend/userflow/complete?id=${parmas.id}&isAgree=${parmas.isAgree}&remark=${parmas.remark}`
     )
+  },
+  // 新建活动编辑活动保存
+  saveAndUpdatePromotions(params) {
+    return axios.post(`/api/p/v1/promotions/saveAndUpdatePromotions`, params)
+  },
+  // 活动管理列表
+  getPromotionsPageList(params) {
+    return axios.get(`/api/p/v1/promotions/getPromotionsPageList`, params)
+  },
+  // 活动管理详情
+  getPromotionsById(params) {
+    return axios.get(`/api/p/v1/promotions/getPromotionsById`, params)
+  },
+  // 修改活动结束时间
+  updatePromotionsDate(params) {
+    return axios.post(`/api/p/v1/promotions/updatePromotionsDate`, params)
   }
 }

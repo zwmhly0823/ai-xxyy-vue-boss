@@ -64,5 +64,10 @@ export default {
     return axios.get(
       `/api/b/v1/backend/v1/backend/packagebox/flow/info?flowApprovalId=${id}`
     )
+  },
+  getProductByTypes() {
+    return axios.get(
+      `/api/p/v1/product/getProductByTypes?types=ACTUAL_GOODS,VIRTUAL_GOODS`
+    )
   }
 }
