@@ -440,6 +440,17 @@ const routes = [
       ...adminRouter
     ]
   },
+  // 营销中心
+  {
+    path: '/marketing',
+    name: 'marketing',
+    hidden: staff.roleId !== '7',
+    meta: {
+      title: '营销中心',
+      icon: 'iconyingxiaoguanli',
+      module: 'marketing'
+    }
+  },
   // 工具类路由
   {
     path: '/approval',
@@ -537,17 +548,6 @@ const routes = [
         }
       }
     ]
-  },
-  // 营销中心
-  {
-    path: '/marketing',
-    name: 'marketing',
-    hidden: staff.roleId !== '7',
-    meta: {
-      title: '营销中心',
-      icon: 'iconyingxiaoguanli',
-      module: 'marketing'
-    }
   }
 ]
 
