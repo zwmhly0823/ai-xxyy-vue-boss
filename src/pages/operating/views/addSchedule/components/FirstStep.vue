@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-15 20:35:57
  * @LastEditors: Shentong
- * @LastEditTime: 2020-08-19 00:05:02
+ * @LastEditTime: 2020-08-19 00:20:24
  -->
 <template>
   <div class="first-step">
@@ -467,7 +467,7 @@ export default {
       // 时间格式转化：转换为0点时刻
       const courseDay = new Date(this.formInfo.attendClassTimeStart).setHours(0)
 
-      const endCourseDay = this.formInfo.attendClassTimeEnd
+      const endCourseDay = new Date(this.formInfo.attendClassTimeEnd).getTime()
       // this.attendClassObj.courseDay = new Date(
       //   this.attendClassObj.courseDay
       // ).setHours(0)
