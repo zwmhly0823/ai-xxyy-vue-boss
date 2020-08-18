@@ -34,7 +34,7 @@
         <span
           v-if="user && user.first_order_send_id > 0"
           style="color: rgb(255, 139, 140);"
-          >转</span
+          >R</span
         >
       </p>
     </div>
