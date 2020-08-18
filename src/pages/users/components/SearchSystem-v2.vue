@@ -162,6 +162,31 @@
                 />
               </div>
             </el-form-item>
+
+            <el-form-item label="是否续费:">
+              <div class="search-group">
+                <simple-select
+                  name="remain_order_count"
+                  placeholder="请选择"
+                  :my-style="{ width: '130px' }"
+                  :multiple="false"
+                  :data-list="isrenewList"
+                  @result="getSearchData('remain_order_count', arguments)"
+                />
+              </div>
+            </el-form-item>
+            <el-form-item label="转介绍学员:">
+              <div class="search-group">
+                <simple-select
+                  name="first_order_send_id"
+                  placeholder="请选择"
+                  :my-style="{ width: '130px' }"
+                  :multiple="false"
+                  :data-list="user_StatusList"
+                  @result="getSearchData('first_order_send_id', arguments)"
+                />
+              </div>
+            </el-form-item>
           </div>
           <!-- <el-form-item label="招生排期:" class="search-group">
             <search-stage
@@ -301,6 +326,28 @@ export default {
           // 年课
           if (search.user_status === 1) {
             search.user_status = { gte: 5, lte: 7 }
+          }
+        }
+        // 是否续费
+        if (key === 'remain_order_count') {
+          // 已续费
+          if (search.remain_order_count === '2') {
+            search.remain_order_count = { gt: 1 }
+          }
+          // 待续费
+          if (search.remain_order_count === '1') {
+            search.remain_order_count = { lte: 1 }
+          }
+        }
+        // 是否转介绍
+        if (key === 'first_order_send_id') {
+          // 是
+          if (search.first_order_send_id === '2') {
+            search.first_order_send_id = { gt: 0 }
+          }
+          // 否
+          if (search.first_order_send_id === '1') {
+            search.first_order_send_id = { lte: 0 }
           }
         }
         if (key !== 'dateTime') {

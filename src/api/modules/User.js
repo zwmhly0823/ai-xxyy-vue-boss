@@ -350,6 +350,15 @@ export default {
               trialdepartmentname
               user_status
               department_id
+              first_order_send_id
+              remain_order_count
+              user_info{
+                sender{
+                  id
+                  username
+                  user_num
+                }
+              }
             }
           }
         }
