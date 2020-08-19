@@ -20,13 +20,17 @@
     </div>
     <div class="set-area">
       <div class="set-percent">
-        <el-row>
+        <el-row v-if="leaderLineForm.leaderLine.length">
           <el-col :span="4">
             <h4 class="row-style">线索分配占比设置</h4>
           </el-col>
-          <el-col :span="6"><h3>S</h3></el-col>
-          <el-col :span="6"><h3>A</h3></el-col>
-          <el-col :span="6"><h3>B</h3></el-col>
+          <el-col
+            v-for="(line, index) in leaderLineForm.leaderLine[0]
+              .channelLevelList"
+            :key="index"
+            :span="6"
+            ><h3>{{ line.channelLevel }}</h3></el-col
+          >
         </el-row>
         <el-row :gutter="10" class="row-style">
           <el-col :span="4" class="leads-title">销售等级</el-col>
@@ -365,7 +369,6 @@ export default {
   margin: 0 auto;
   .btn-area {
     text-align: right;
-    padding-right: 6%;
   }
   .set-area {
     padding: 10px 10px 25px 10px;
