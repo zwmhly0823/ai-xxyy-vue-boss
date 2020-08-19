@@ -21,7 +21,7 @@
     <div class="set-area">
       <div class="set-percent">
         <el-row>
-          <el-col :span="6">
+          <el-col :span="4">
             <h4 class="row-style">线索分配占比设置</h4>
           </el-col>
           <el-col :span="6"><h3>S</h3></el-col>
@@ -29,7 +29,7 @@
           <el-col :span="6"><h3>B</h3></el-col>
         </el-row>
         <el-row :gutter="10" class="row-style">
-          <el-col :span="6" class="leads-title">销售等级</el-col>
+          <el-col :span="4" class="leads-title">销售等级</el-col>
           <el-col :span="3" class="leads-title title-center">渠道占比</el-col>
           <el-col :span="3" class="leads-title title-center">接速设置</el-col>
           <el-col :span="3" class="leads-title title-center">渠道占比</el-col>
@@ -37,266 +37,64 @@
           <el-col :span="3" class="leads-title title-center">渠道占比</el-col>
           <el-col :span="3" class="leads-title title-center">接速设置</el-col>
         </el-row>
-        <el-row :gutter="10" class="row-style">
-          <el-col :span="6" class="leads-title">1级社群销售</el-col>
-          <el-form ref="rules_1" :model="percent[1]" :rules="rules_1">
-            <el-col :span="3">
-              <el-form-item prop="S">
-                <el-input
-                  class="input"
-                  v-model.number="percent[1].S"
-                  size="mini"
-                  placeholder="请输入内容"
-                ></el-input>
-                <span class="gary-txt">%</span>
-              </el-form-item>
+        <!-- 线索分配占比设置start -->
+        <el-form ref="leaderLineForm" :model="leaderLineForm" :inline="true">
+          <el-row
+            :gutter="10"
+            class="row-style"
+            v-for="(line, index) in leaderLineForm.leaderLine"
+            :key="index"
+          >
+            <el-col :span="4" class="leads-title">{{
+              line.teacherLevelName
+            }}</el-col>
+            <el-col
+              :span="6"
+              v-for="(channel, i_channel) in line.channelLevelList"
+              :key="i_channel"
+            >
+              <div class="chanel-item">
+                <!-- :prop="'channelLevelList.' + i_channel + '.rate'" -->
+                <el-form-item
+                  :prop="
+                    'leaderLine.' +
+                      index +
+                      '.channelLevelList.' +
+                      i_channel +
+                      '.rate'
+                  "
+                  :rules="leaderLineRule"
+                >
+                  <el-input
+                    class="input"
+                    v-model.number="channel.rate"
+                    size="mini"
+                    placeholder="输入占比"
+                  ></el-input>
+                  <span class="gary-txt">%</span>
+                </el-form-item>
+                <el-form-item
+                  :prop="
+                    'leaderLine.' +
+                      index +
+                      '.channelLevelList.' +
+                      i_channel +
+                      '.robinNum'
+                  "
+                  :rules="robinNumRuls"
+                >
+                  <el-input
+                    class="input"
+                    v-model.number="channel.robinNum"
+                    size="mini"
+                    placeholder="输入接速"
+                  ></el-input>
+                </el-form-item>
+              </div>
             </el-col>
-            <el-col :span="3">
-              <el-form-item prop="SRobinNum">
-                <el-input
-                  class="speed-input"
-                  v-model.number="percent[1].SRobinNum"
-                  size="mini"
-                ></el-input>
-              </el-form-item>
-            </el-col>
-            <el-col :span="3">
-              <el-form-item prop="A">
-                <el-input
-                  class="input"
-                  v-model.number="percent[1].A"
-                  size="mini"
-                  placeholder="请输入内容"
-                ></el-input>
-                <span class="gary-txt">%</span>
-              </el-form-item>
-            </el-col>
-            <el-col :span="3">
-              <el-form-item prop="ARobinNum">
-                <el-input
-                  class="speed-input"
-                  v-model.number="percent[1].ARobinNum"
-                  size="mini"
-                ></el-input>
-              </el-form-item>
-            </el-col>
-            <el-col :span="3">
-              <el-form-item prop="B">
-                <el-input
-                  class="input"
-                  v-model.number="percent[1].B"
-                  size="mini"
-                  placeholder="请输入内容"
-                ></el-input>
-                <span class="gary-txt">%</span>
-              </el-form-item>
-            </el-col>
-            <el-col :span="3">
-              <el-form-item prop="BRobinNum">
-                <el-input
-                  class="speed-input"
-                  v-model.number="percent[1].BRobinNum"
-                  size="mini"
-                ></el-input>
-              </el-form-item>
-            </el-col>
-          </el-form>
-        </el-row>
-        <el-row :gutter="10" class="row-style">
-          <el-col :span="6" class="leads-title">2级社群销售</el-col>
-          <el-form ref="rules_2" :model="percent[2]" :rules="rules_2">
-            <el-col :span="3">
-              <el-form-item prop="S">
-                <el-input
-                  class="input"
-                  v-model.number="percent[2].S"
-                  size="mini"
-                  placeholder="请输入内容"
-                ></el-input>
-                <span class="gary-txt">%</span>
-              </el-form-item>
-            </el-col>
-            <el-col :span="3">
-              <el-form-item prop="SRobinNum">
-                <el-input
-                  class="speed-input"
-                  v-model.number="percent[2].SRobinNum"
-                  size="mini"
-                ></el-input>
-              </el-form-item>
-            </el-col>
-            <el-col :span="3">
-              <el-form-item prop="A">
-                <el-input
-                  class="input"
-                  v-model.number="percent[2].A"
-                  size="mini"
-                  placeholder="请输入内容"
-                ></el-input>
-                <span class="gary-txt">%</span>
-              </el-form-item>
-            </el-col>
-            <el-col :span="3">
-              <el-form-item prop="ARobinNum">
-                <el-input
-                  class="speed-input"
-                  v-model.number="percent[2].ARobinNum"
-                  size="mini"
-                ></el-input>
-              </el-form-item>
-            </el-col>
-            <el-col :span="3">
-              <el-form-item prop="B">
-                <el-input
-                  class="input"
-                  v-model.number="percent[2].B"
-                  size="mini"
-                  placeholder="请输入内容"
-                ></el-input>
-                <span class="gary-txt">%</span>
-              </el-form-item>
-            </el-col>
-            <el-col :span="3">
-              <el-form-item prop="BRobinNum">
-                <el-input
-                  class="speed-input"
-                  v-model.number="percent[2].BRobinNum"
-                  size="mini"
-                ></el-input>
-              </el-form-item>
-            </el-col>
-          </el-form>
-        </el-row>
-        <el-row :gutter="10" class="row-style">
-          <el-col :span="6" class="leads-title">3级社群销售</el-col>
-          <el-form ref="rules_3" :model="percent[3]" :rules="rules_3">
-            <el-col :span="3">
-              <el-form-item prop="S">
-                <el-input
-                  class="input"
-                  v-model.number="percent[3].S"
-                  size="mini"
-                  placeholder="请输入内容"
-                ></el-input>
-                <span class="gary-txt">%</span>
-              </el-form-item>
-            </el-col>
-            <el-col :span="3">
-              <el-form-item prop="SRobinNum">
-                <el-input
-                  class="speed-input"
-                  v-model.number="percent[3].SRobinNum"
-                  size="mini"
-                ></el-input>
-              </el-form-item>
-            </el-col>
-            <el-col :span="3">
-              <el-form-item prop="A">
-                <el-input
-                  class="input"
-                  v-model.number="percent[3].A"
-                  size="mini"
-                  placeholder="请输入内容"
-                ></el-input>
-                <span class="gary-txt">%</span>
-              </el-form-item>
-            </el-col>
-            <el-col :span="3">
-              <el-form-item prop="ARobinNum">
-                <el-input
-                  class="speed-input"
-                  v-model.number="percent[3].ARobinNum"
-                  size="mini"
-                ></el-input>
-              </el-form-item>
-            </el-col>
-            <el-col :span="3">
-              <el-form-item prop="B">
-                <el-input
-                  class="input"
-                  v-model.number="percent[3].B"
-                  size="mini"
-                  placeholder="请输入内容"
-                ></el-input>
-                <span class="gary-txt">%</span>
-              </el-form-item>
-            </el-col>
-            <el-col :span="3">
-              <el-form-item prop="BRobinNum">
-                <el-input
-                  class="speed-input"
-                  v-model.number="percent[3].BRobinNum"
-                  size="mini"
-                ></el-input>
-              </el-form-item>
-            </el-col>
-          </el-form>
-        </el-row>
-        <el-row :gutter="10" class="row-style">
-          <el-col :span="6" class="leads-title">新兵营</el-col>
-          <el-form ref="rules_0" :model="percent[0]" :rules="rules_0">
-            <el-col :span="3">
-              <el-form-item prop="S">
-                <el-input
-                  class="input"
-                  v-model.number="percent[0].S"
-                  size="mini"
-                  placeholder="请输入内容"
-                ></el-input>
-                <span class="gary-txt">%</span>
-              </el-form-item>
-            </el-col>
-            <el-col :span="3">
-              <el-form-item prop="SRobinNum">
-                <el-input
-                  class="speed-input"
-                  v-model.number="percent[0].SRobinNum"
-                  size="mini"
-                ></el-input>
-              </el-form-item>
-            </el-col>
-            <el-col :span="3">
-              <el-form-item prop="A">
-                <el-input
-                  class="input"
-                  v-model.number="percent[0].A"
-                  size="mini"
-                  placeholder="请输入内容"
-                ></el-input>
-                <span class="gary-txt">%</span>
-              </el-form-item>
-            </el-col>
-            <el-col :span="3">
-              <el-form-item prop="ARobinNum">
-                <el-input
-                  class="speed-input"
-                  v-model.number="percent[0].ARobinNum"
-                  size="mini"
-                ></el-input>
-              </el-form-item>
-            </el-col>
-            <el-col :span="3">
-              <el-form-item prop="B">
-                <el-input
-                  class="input"
-                  v-model.number="percent[0].B"
-                  size="mini"
-                  placeholder="请输入内容"
-                ></el-input>
-                <span class="gary-txt">%</span>
-              </el-form-item>
-            </el-col>
-            <el-col :span="3">
-              <el-form-item prop="BRobinNum">
-                <el-input
-                  class="speed-input"
-                  v-model.number="percent[0].BRobinNum"
-                  size="mini"
-                ></el-input>
-              </el-form-item>
-            </el-col>
-          </el-form>
-        </el-row>
+          </el-row>
+        </el-form>
+        <!-- 线索分配占比设置end -->
       </div>
     </div>
     <ChannelThreelist
@@ -367,44 +165,10 @@ import { mapGetters } from 'vuex'
 import ChannelThreeded from './ChannelThreeded'
 import ChannelThreelist from './ChannelThreelist'
 
-const robinNumRuls = [
-  { required: true, message: '接速不能为空' },
-  { type: 'number', message: '接速必须为数字值' },
-  {
-    validator: (rule, value, callback) => {
-      if (value > 0) {
-        callback()
-      } else {
-        return callback(new Error('接速需大于0'))
-      }
-    },
-    trigger: 'change'
-  }
-]
 export default {
   props: {},
   components: { ChannelThreeded, ChannelThreelist },
   data() {
-    var checkFun = (rule, value, callback) => {
-      if (!value && value !== 0) {
-        return callback(new Error('请输入分配占比'))
-      }
-      if (!Number.isInteger(value)) {
-        return callback(new Error('请输入数字值'))
-      }
-      // 当前销售级别下各等级分数及总和
-      const S = Number(this.percent[rule.level].S)
-      const A = Number(this.percent[rule.level].A)
-      const B = Number(this.percent[rule.level].B)
-      const sum = S + A + B
-      if (S !== 0 && A !== 0 && B !== 0 && sum !== 100) {
-        return callback(new Error('请填写正确的数字'))
-      }
-      if (value > 100 || sum > 100) {
-        return callback(new Error('不能超过100'))
-      }
-      callback()
-    }
     return {
       editChannelThreeded: null,
       channelThreededList: [],
@@ -412,96 +176,36 @@ export default {
       uploading: false,
       dialogVisible: false,
       headers: { 'Content-Type': 'multipart/form-data' },
-      percent: {
-        0: {
-          S: null,
-          A: null,
-          B: null,
-          SRobinNum: null,
-          ARobinNum: null,
-          BRobinNum: null
+      leaderLineForm: {
+        leaderLine: []
+      },
+      leaderLineRule: [
+        {
+          required: true,
+          message: '不能为空',
+          trigger: 'blur'
         },
-        1: {
-          S: null,
-          A: null,
-          B: null,
-          SRobinNum: null,
-          ARobinNum: null,
-          BRobinNum: null
-        },
-        2: {
-          S: null,
-          A: null,
-          B: null,
-          SRobinNum: null,
-          ARobinNum: null,
-          BRobinNum: null
-        },
-        3: {
-          S: null,
-          A: null,
-          B: null,
-          SRobinNum: null,
-          ARobinNum: null,
-          BRobinNum: null
+        {
+          type: 'number',
+          transform: (value) => Number(value),
+          message: '必须为数字',
+          trigger: 'blur'
         }
-      },
-      rules_1: {
-        S: [
-          { validator: checkFun, required: true, trigger: 'change', level: '1' }
-        ],
-        A: [
-          { validator: checkFun, required: true, trigger: 'change', level: '1' }
-        ],
-        B: [
-          { validator: checkFun, required: true, trigger: 'change', level: '1' }
-        ],
-        SRobinNum: robinNumRuls,
-        ARobinNum: robinNumRuls,
-        BRobinNum: robinNumRuls
-      },
-      rules_2: {
-        S: [
-          { validator: checkFun, required: true, trigger: 'change', level: '2' }
-        ],
-        A: [
-          { validator: checkFun, required: true, trigger: 'change', level: '2' }
-        ],
-        B: [
-          { validator: checkFun, required: true, trigger: 'change', level: '2' }
-        ],
-        SRobinNum: robinNumRuls,
-        ARobinNum: robinNumRuls,
-        BRobinNum: robinNumRuls
-      },
-      rules_3: {
-        S: [
-          { validator: checkFun, required: true, trigger: 'change', level: '3' }
-        ],
-        A: [
-          { validator: checkFun, required: true, trigger: 'change', level: '3' }
-        ],
-        B: [
-          { validator: checkFun, required: true, trigger: 'change', level: '3' }
-        ],
-        SRobinNum: robinNumRuls,
-        ARobinNum: robinNumRuls,
-        BRobinNum: robinNumRuls
-      },
-      rules_0: {
-        S: [
-          { validator: checkFun, required: true, trigger: 'change', level: '0' }
-        ],
-        A: [
-          { validator: checkFun, required: true, trigger: 'change', level: '0' }
-        ],
-        B: [
-          { validator: checkFun, required: true, trigger: 'change', level: '0' }
-        ],
-        SRobinNum: robinNumRuls,
-        ARobinNum: robinNumRuls,
-        BRobinNum: robinNumRuls
-      }
+      ],
+      robinNumRuls: [
+        { required: true, message: '不能为空' },
+        { type: 'number', message: '必须为数字' },
+        {
+          validator: (rule, value, callback) => {
+            if (value > 0) {
+              callback()
+            } else {
+              return callback(new Error('接速需>0'))
+            }
+          },
+          trigger: 'change'
+        }
+      ]
     }
   },
   computed: {
@@ -516,7 +220,6 @@ export default {
   },
   methods: {
     editRow(row) {
-      console.log('row', row)
       this.centerDialogVisible = true
       this.editChannelThreeded = row
     },
@@ -587,7 +290,6 @@ export default {
       try {
         const { period = '' } = this.$route.params
         const res = await this.$http.Operating.getRecord({ period })
-        console.log(res, 'getRecord-res')
         if (res.code === 0) {
           this.channelThreededList = res.payload
           cb && cb()
@@ -603,15 +305,13 @@ export default {
       this.dialogVisible = true
     },
     toSetChannelLeads() {
-      // TODO 渠道线索定向分配
-      console.log('渠道线索定向分配')
       this.centerDialogVisible = true
     },
     // 修改时获取数据
     getLeads(params) {
       this.$http.Operating.getLeads(params).then((res) => {
         if (res.code === 0 && Object.keys(res.payload).length > 0) {
-          Object.assign(this.percent, res.payload)
+          this.leaderLineForm.leaderLine = res.payload
         } else {
           this.$message({
             message: '获取数据失败',
@@ -623,22 +323,15 @@ export default {
     // 上一步、下一步
     stepOperate(type) {
       if (!type) {
-        // 上一步
         this.$emit('listenStepStatus', type)
       } else {
-        // 下一步
-        // 数据填写校验
-        const rules0 = this.$refs.rules_0.validate()
-        const rules1 = this.$refs.rules_1.validate()
-        const rules2 = this.$refs.rules_2.validate()
-        const rules3 = this.$refs.rules_3.validate()
-        Promise.all([rules0, rules1, rules2, rules3])
-          .then((valids) => {
-            if (valids) {
-              this.$http.Operating.addLeads(
-                this.percent,
-                this.schedulePeriod
-              ).then((res) => {
+        this.$refs.leaderLineForm.validate((valid) => {
+          if (valid) {
+            this.$http.Operating.addLeads(
+              this.leaderLineForm.leaderLine,
+              this.schedulePeriod
+            )
+              .then((res) => {
                 if (res.code === 0) {
                   this.$message.success('保存成功')
                   this.$emit('listenStepStatus', type)
@@ -646,12 +339,14 @@ export default {
                   this.$message.error('保存失败')
                 }
               })
-            }
-          })
-          .catch((err) => {
-            console.log(err)
-            this.$message.error('请填写完全')
-          })
+              .catch((err) => {
+                console.log(err)
+                this.$message.error('保存失败')
+              })
+          } else {
+            return false
+          }
+        })
       }
     },
     // 跳过这一步 产品临时需求
@@ -673,7 +368,7 @@ export default {
     padding-right: 6%;
   }
   .set-area {
-    padding: 10px;
+    padding: 10px 10px 25px 10px;
     border: 1px solid #eee;
     border-radius: 5px;
     margin-top: 10px;
@@ -691,6 +386,9 @@ export default {
 
         &:last-child {
           margin-bottom: 0;
+        }
+        .chanel-item {
+          display: flex;
         }
         .title-center {
           text-align: center;
@@ -713,7 +411,9 @@ export default {
           transform: translateX(-50%);
         }
         .gary-txt {
-          margin-left: 5px;
+          display: inline-block;
+          text-align: center;
+          width: 20px;
           color: #999;
         }
       }

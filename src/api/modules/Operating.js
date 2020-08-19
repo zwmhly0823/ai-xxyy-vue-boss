@@ -3,8 +3,8 @@
  * @version:
  * @Author: Shentong
  * @Date: 2020-03-16 19:46:39
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-13 17:05:51
+ * @LastEditors: Shentong
+ * @LastEditTime: 2020-08-19 14:43:44
  */
 import axios from '../axiosConfig'
 
@@ -54,7 +54,8 @@ export default {
    */
   getLeads(params) {
     return axios.get(
-      `/api/t/v1/teacher/course/enroll/teacher/channel/config?courseType=${params.courseType}&period=${params.period}`
+      `/api/t/v1/teacher/course/enroll/teacher/channel/config?period=${params.period}`
+      // `/api/t/v1/teacher/course/enroll/teacher/channel/config?courseType=${params.courseType}&period=${params.period}`
     )
   },
   /**

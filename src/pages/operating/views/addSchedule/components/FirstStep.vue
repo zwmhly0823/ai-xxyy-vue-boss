@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-15 20:35:57
  * @LastEditors: Shentong
- * @LastEditTime: 2020-08-19 00:20:24
+ * @LastEditTime: 2020-08-19 18:23:41
  -->
 <template>
   <div class="first-step">
@@ -341,11 +341,8 @@ export default {
   methods: {
     // 开课时期
     startClassChange(courseDay) {
-      console.log('courseDay', courseDay, courseDay + 14 * 3600 * 1000)
-      // this.formInfo.attendClassTimeEnd = new Date(val).getTime()
       this.formInfo.attendClassTimeStart = courseDay
 
-      // this.formInfo.attendClassTimeEnd = courseDay + 14 * 3600 * 1000
       this.endClassChange(courseDay + 13 * 24 * 3600 * 1000)
     },
     // 节课时期
@@ -468,9 +465,7 @@ export default {
       const courseDay = new Date(this.formInfo.attendClassTimeStart).setHours(0)
 
       const endCourseDay = new Date(this.formInfo.attendClassTimeEnd).getTime()
-      // this.attendClassObj.courseDay = new Date(
-      //   this.attendClassObj.courseDay
-      // ).setHours(0)
+
       Object.assign(sendFrom, {
         ...this.sellCycleObj,
         courseDay,
