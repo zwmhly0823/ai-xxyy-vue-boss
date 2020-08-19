@@ -19,11 +19,35 @@
           :name="'groupSell'"
           tip="请选择老师"
         />
-
-        <courseTeam
+        <el-select
+          size="mini"
+          v-model="classType"
+          placeholder="班级类型"
+          @change="changeType()"
+          clearable
+          style="width:120px;padding-top: 10px;margin:0 20px;"
+        >
+          <el-option label="系统课" value="1"></el-option>
+          <el-option label="体验课" value="2"></el-option>
+        </el-select>
+        <search-team-name
+          @result="getSearchData('team', arguments)"
+          ref="lessonTypeA"
+          name="teach"
+          style="width:150px;padding-top: 10px;margin-right:20px;"
+          v-show="classType == 1"
+        />
+        <search-trial-team-name
+          @result="getSearchData('team', arguments)"
+          ref="lessonTypeB"
+          name="teach"
+          style="width:150px;padding-top: 10px;margin-right:20px;"
+          v-show="classType == 2"
+        />
+        <!-- <courseTeam
           @result="getSearchData('teamId', arguments)"
           style="width:400px;padding-top: 0px;"
-        />
+        /> -->
 
         <el-form-item>
           <el-select
@@ -32,21 +56,23 @@
             placeholder="通话状态查询"
             @change="getSearchData('status', arguments)"
             clearable
-            style="width:100px;padding-top: 4px;margin-right: 20px;"
+            style="width:120px;padding-top: 4px;margin-right: 20px;"
           >
-            <el-option label="使用中" value="1"></el-option>
-            <el-option label="空闲中" value="0"></el-option>
+            <el-option label="座席未接听" value="30"></el-option>
+            <el-option label="座席接听,未呼叫客户" value="31"></el-option>
+            <el-option label="座席接听,客户未接听" value="32"></el-option>
+            <el-option label="双方接听" value="33"></el-option>
           </el-select>
         </el-form-item>
 
         <el-form-item>
           <el-select
             size="mini"
-            v-model="status"
+            v-model="type"
             placeholder="呼叫类型查询"
             @change="getSearchData('type', arguments)"
             clearable
-            style="width:100px;padding-top: 4px;margin-right: 20px;"
+            style="width:120px;padding-top: 4px;margin-right: 20px;"
           >
             <el-option label="回呼" value="1"></el-option>
             <el-option label="智能语音" value="2"></el-option>
@@ -68,22 +94,33 @@
     <div class="course-data">
       <div class="data-con">
         <el-table
-          :data="outboundList"
+          :data="outboundStatistics"
           style="width: 100%"
           align="center"
           border
           :header-cell-style="{ background: 'rgb(178, 185, 197,.3)' }"
           :cell-style="{ fontSize: '16px' }"
         >
-          <el-table-column fixed prop="cno" label="通话总数"> </el-table-column>
-          <el-table-column prop="agent_name" label="接通总数">
+          <el-table-column fixed prop="total" label="通话总数">
           </el-table-column>
-          <el-table-column prop="agent_name" label="未接通总数">
+          <el-table-column prop="answerTotal" label="接通总数">
           </el-table-column>
-          <el-table-column prop="agent_name" label="接通率"> </el-table-column>
-          <el-table-column prop="agent_name" label="总通话时长">
+          <el-table-column prop="notAnswerTotal" label="未接通总数">
           </el-table-column>
-          <el-table-column prop="agent_name" label="总通话平均时长">
+          <el-table-column prop="answerRate" label="接通率">
+            <template slot-scope="scope">
+              <span>{{ `${scope.row.answerRate}%` }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column prop="answerTotalTime" label="总通话时长">
+            <template slot-scope="scope">
+              <span>{{ `${formatDuring(scope.row.answerTotalTime)}` }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column prop="avgTime" label="总通话平均时长">
+            <template slot-scope="scope">
+              <span>{{ `${formatDuring(scope.row.avgTime)}` }}</span>
+            </template>
           </el-table-column>
         </el-table>
       </div>
@@ -217,21 +254,22 @@
 </template>
 
 <script>
-import courseTeam from '../components/courseTeam'
+// import courseTeam from '../components/courseTeam'
 import MPagination from '@/components/MPagination/index.vue'
 import Department from '@/components/MSearch/searchItems/department'
 import GroupSell from '../components/groupSell'
-import DateDownQuickSelect from '@/components/MSearch/searchItems/dateDownQuickSelect.vue'
+import DateDownQuickSelect from '../components/dateDownQuickSelect'
+import SearchTeamName from '../components/searchTeamName'
+import SearchTrialTeamName from '../components/searchTrialTeamName'
 // import SearchStage from '@/components/MSearch/searchItems/searchStage'
 import { formatData, isToss } from '@/utils/index'
 
 export default {
   data() {
     return {
-      user: '',
-      cno: '',
-      lessonData: [],
+      outboundStatistics: [],
       status: '', // 使用状态
+      type: '', // 外呼类型
       currentPage: 1,
       totalPages: 0,
       totalElements: 1,
@@ -243,16 +281,18 @@ export default {
       teacherIds: [],
       user_name: '',
       user_radio: '',
-      user_phone: ''
+      user_phone: '',
+      classType: null
     }
   },
   components: {
     MPagination,
     Department,
     GroupSell,
-
     DateDownQuickSelect,
-    courseTeam
+    // courseTeam,
+    SearchTeamName,
+    SearchTrialTeamName
   },
   // components: { MPagination, GroupSell, SearchPhone },
   created() {
@@ -260,25 +300,32 @@ export default {
   },
   mounted() {
     this.getPhoneList()
+    this.getStatistics()
   },
   methods: {
     // 获取通话记录列表
     getPhoneList() {
-      const parmes = {
-        teacher_id: this.agent
+      const parmes = {}
+      if (this.department) {
+        parmes.teacher_id = this.department
       }
-      if (this.phone) {
-        parmes.tel = this.phone
+      if (this.groupSell) {
+        parmes.teacher_id = [this.groupSell]
       }
       if (this.status) {
-        parmes.use_status = this.status
+        parmes.cdr_status = [this.status]
       }
-      if (this.cno) {
-        parmes.cno = this.cno
+      if (this.callType) {
+        parmes.call_type = this.callType
       }
-      if (this.department && this.department.length > 0) {
-        parmes.department_id = this.department
+
+      if (this.time_begin && this.time_type === 0) {
+        parmes.start_time = this.joinDate
       }
+      if (this.time_begin && this.time_type === 1) {
+        parmes.end_time = this.overDate
+      }
+      // this.getStatistics(parmes)
       return this.$http.Outbound.getRecordListPage(parmes, this.currentPage)
         .then((res) => {
           if (res && res.data && res.data.TeacherOutboundCallRecordPage) {
@@ -286,6 +333,39 @@ export default {
             this.totalElements = +res.data.TeacherOutboundCallRecordPage
               .totalElements
             this.totalPages = +res.data.TeacherOutboundCallRecordPage.totalPages
+          }
+        })
+        .catch(() => {
+          // loading.close()
+        })
+    },
+    // 获取通话统计数据
+    getStatistics() {
+      const parmes = {}
+      if (this.department) {
+        parmes.teacher_id = this.department
+      }
+      if (this.groupSell) {
+        parmes.teacher_id = [this.groupSell]
+      }
+      if (this.status) {
+        parmes.car_status = [this.status]
+      }
+      if (this.callType) {
+        parmes.call_type = this.callType
+      }
+      // if (this.department && this.department.length > 0) {
+      //   parmes.department_id = this.department
+      // }
+      if (this.time_begin) {
+        parmes.time_type = this.time_type
+        parmes.time_begin = this.time_begin
+        parmes.time_end = this.time_end
+      }
+      return this.$http.Outbound.getRecordgetStatistics(parmes)
+        .then((res) => {
+          if (res && res.data && res.data.TeacherOutboundStatistics) {
+            this.outboundStatistics = [res.data.TeacherOutboundStatistics]
           }
         })
         .catch(() => {
@@ -326,7 +406,6 @@ export default {
       console.log(key, val)
       if (key === 'department') {
         this.department = val[0].pay_teacher_id
-        console.log(this.department)
       }
       if (key === 'groupSell') {
         // 返回的id
@@ -336,22 +415,36 @@ export default {
         this.period = val[0].period
         this.lessonType = val[0].managementType
       }
-      if (key === 'phone') {
-        this.phone = val[0]
+      if (key === 'status') {
+        this.status = val[0]
+      }
+      if (key === 'type') {
+        this.callType = val[0] === '3' ? [4, 5, 6] : [val[0]]
+      }
+      if (key === 'dateTime') {
+        this.time_type = val[0].over ? 1 : 0
+        if (val[0].join) {
+          this.time_begin = val[0].join.gte
+          this.time_end = val[0].join.lte
+          this.joinDate = val[0].join
+        } else if (val[0].over) {
+          this.time_begin = val[0].over.gte
+          this.time_end = val[0].over.lte
+          this.overDate = val[0].over
+        } else {
+          this.time_begin = ''
+          this.time_end = ''
+          this.joinDate = ''
+          this.overDate = ''
+        }
+      }
+      if (key === 'team') {
+        this.groupSell = val[0].teach
       }
 
       this.getPhoneList()
     },
-    // 输入电话号码
-    changeNum() {
-      if (this.user_phone.length > 11) {
-        this.$message({
-          showClose: true,
-          message: '输入长度不能超过11位',
-          type: 'error'
-        })
-      }
-    },
+
     getTeachId(key, val) {
       console.log(val)
       this.user_name = val[0].groupSell
@@ -362,17 +455,24 @@ export default {
       return formatData(date, 's')
     },
     //
-    getDepartment() {},
+    changeType() {
+      console.log('test', this.$refs.lessonType)
+      this.$refs.lessonTypeA.getEmpty()
+      this.$refs.lessonTypeB.getEmpty()
+    },
+    // 获取班级列表
+    getTeamName(value) {
+      console.log(value)
+    },
     // 时间转化
     formatDuring(t) {
       const HOUR = 1000 * 60 * 60
-      const d = parseInt(t / (HOUR * 24))
-      const h = parseInt((t % (HOUR * 24)) / HOUR)
+      const h = parseInt(t / HOUR)
       const m = parseInt((t % HOUR) / (1000 * 60))
       const s = parseInt((t % (1000 * 60)) / 1000)
 
       let text = ''
-      d && (text += `${d}天`)
+
       h && (text += `${h}小时`)
       m && (text += `${m}分`)
       s && (text += `${s}秒`)

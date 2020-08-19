@@ -4,7 +4,7 @@
  * @Author: zhangjiawen
  * @Date: 2020-08-03 15:50:58
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-08-18 21:16:02
+ * @LastEditTime: 2020-08-19 15:45:21
  */
 
 import axios from '../axiosConfig'
@@ -147,6 +147,26 @@ export default {
     }
            
           }
+        }`
+    })
+  },
+  // 获取通话统计数据
+  getRecordgetStatistics(parmes) {
+    const formattingQuery = JSON.stringify(parmes)
+    return axios.post(`/graphql/v1/toss`, {
+      query: `{
+        TeacherOutboundStatistics(
+           query:${JSON.stringify(formattingQuery)}, 
+          )
+          {
+             total
+              answerTotal
+              notAnswerTotal
+              answerTotalTime
+              answerRate
+              avgTime
+              }
+           
         }`
     })
   },
