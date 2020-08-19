@@ -1,15 +1,17 @@
 <template>
   <el-form :inline="true" size="mini" class="table-searcher-container">
     <el-form-item label="订单搜索:">
-      <orderSearch
-        class="allmini"
-        @result="getOrderSearch"
-        @clear="clearNum()"
-      />
+      <div class="row_colum">
+        <orderSearch
+          class="allmini"
+          @result="getOrderSearch"
+          @clear="clearNum()"
+        />
+      </div>
     </el-form-item>
     <!-- <el-form-item label="订单搜索:">
       <div class="concat">
-        <el-input
+      <el-input
           v-model="promotionsName"
           size="mini"
           placeholder="活动名称"
