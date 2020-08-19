@@ -1,79 +1,68 @@
 <template>
   <div class="container">
     <div>
-      <el-form :inline="true" class="demo-form-flex">
+      <el-form :inline="false" class="demo-form-flex">
         <el-row>
-          <el-col :span="4">
+          <el-col :span="24">
             <department
-              style="width:130px;padding-top: 6px;margin-right: 20px;"
+              style="width:130px;padding-top: 10px;margin-right: 20px;"
               name="pay_teacher_id"
               placeholder="全部部门"
               :arrIndex="[]"
-              @result="getDepartment"
-            />
-          </el-col>
-          <el-col :span="4">
-            <group-sell
-              style="width:150px;padding-top: 6px;margin-right: 20px;"
-              @result="getSearchData('groupSell', arguments)"
-              :name="'groupSell'"
-              tip="请选择老师"
-            />
-          </el-col>
-          <el-col :span="8">
-            <courseTeam @result="getTeamId" />
-            <!-- <search-stage
-              :teacher-id="teacherscope_trial || teacherscope"
-              class="margin_l10"
-              name="trial_stage"
-              placeholder="全部体验课排期"
-              type="0"
-              @result="selectScheduleTrial"
-            /> -->
-          </el-col>
-          <el-col :span="4">
-            <el-form-item>
-              <el-select
-                size="mini"
-                v-model="status"
-                placeholder="使用状态"
-                @change="getSearchData('status', arguments)"
-                clearable
-              >
-                <el-option label="使用中" value="1"></el-option>
-                <el-option label="空闲中" value="0"></el-option>
-              </el-select>
-            </el-form-item>
-          </el-col>
-          <el-col :span="4">
-            <el-form-item>
-              <el-select
-                size="mini"
-                v-model="status"
-                placeholder="呼叫类型"
-                @change="getSearchData('status', arguments)"
-                clearable
-              >
-                <el-option label="外呼" value="1"></el-option>
-                <el-option label="智能语音" value="2"></el-option>
-                <el-option label="回呼" value="3"></el-option>
-              </el-select>
-            </el-form-item>
-          </el-col>
+              @result="getSearchData('department', arguments)"
+          /></el-col>
         </el-row>
-        <el-row>
-          <el-col :span="24">
-            <el-form-item label="时间搜索:" class="search-group flt">
-              <date-down-quick-select
-                ref="dataPick"
-                :quick-btn="['day', 'yesterday']"
-                :slectShow="true"
-                name="dateTime"
-                @result="getSearchData('dateTime', arguments)"
-              />
-            </el-form-item>
-          </el-col>
-        </el-row>
+
+        <group-sell
+          style="width:130px;padding-top: 10px;"
+          @result="getSearchData('groupSell', arguments)"
+          :name="'groupSell'"
+          tip="请选择老师"
+        />
+
+        <courseTeam
+          @result="getSearchData('teamId', arguments)"
+          style="width:400px;padding-top: 0px;"
+        />
+
+        <el-form-item>
+          <el-select
+            size="mini"
+            v-model="status"
+            placeholder="通话状态查询"
+            @change="getSearchData('status', arguments)"
+            clearable
+            style="width:100px;padding-top: 4px;margin-right: 20px;"
+          >
+            <el-option label="使用中" value="1"></el-option>
+            <el-option label="空闲中" value="0"></el-option>
+          </el-select>
+        </el-form-item>
+
+        <el-form-item>
+          <el-select
+            size="mini"
+            v-model="status"
+            placeholder="呼叫类型查询"
+            @change="getSearchData('type', arguments)"
+            clearable
+            style="width:100px;padding-top: 4px;margin-right: 20px;"
+          >
+            <el-option label="回呼" value="1"></el-option>
+            <el-option label="智能语音" value="2"></el-option>
+            <el-option label="外呼" value="3"></el-option>
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <el-form :inline="false" class="demo-form-flex">
+        <date-down-quick-select
+          ref="dataPick"
+          :quick-btn="['day', 'yesterday']"
+          :slectShow="true"
+          name="dateTime"
+          style="margin-bottom:20px;"
+          @result="getSearchData('dateTime', arguments)"
+        />
       </el-form>
     </div>
     <div class="course-data">
@@ -107,10 +96,15 @@
     >
       <el-table-column fixed prop="cno" label="坐席工号" width="150">
       </el-table-column>
-      <el-table-column prop="agent_name" label="坐席名称" width="120">
+      <el-table-column prop="student_mobile" label="用户电话" width="120">
+      </el-table-column>
+      <el-table-column prop="agent_name" label="课程期数" width="120">
+        <template slot-scope="scope">
+          <span>{{ scope.row.studentInfo.teams[0].team_name }}</span>
+        </template>
       </el-table-column>
 
-      <el-table-column prop="teacherInfo.realname" label="绑定坐席" width="120">
+      <el-table-column prop="agent_name" label="呼叫坐席" width="120">
       </el-table-column>
       <el-table-column
         prop="teacherInfo.department_name"
@@ -118,30 +112,33 @@
         width="300"
       >
       </el-table-column>
-      <el-table-column prop="tel_type" label="电话类型" width="120">
+      <el-table-column prop="call_type_text" label="呼叫类型" width="120">
+      </el-table-column>
+      <el-table-column prop="start_time" label="拨打时间" min-width="150">
         <template slot-scope="scope">
-          <span>{{
-            +scope.row.tel_type === 0
-              ? '--'
-              : +scope.row.tel_type === 1
-              ? '手机号'
-              : '分机号'
-          }}</span>
+          <span>{{ `${formatDate(scope.row.start_time)}` }}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="tel" label="绑定电话" width="120">
-      </el-table-column>
-      <el-table-column prop="use_status" label="状态" width="120">
+      <el-table-column prop="answer_time" label="接听时间" min-width="150">
         <template slot-scope="scope">
-          <span>{{ +scope.row.use_status === 1 ? '使用中' : '空闲' }}</span>
+          <span>{{ `${formatDate(scope.row.answer_time)}` }}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="bind_time" label="绑定时间" min-width="150">
+      <el-table-column prop="end_time" label="挂断时间" min-width="150">
         <template slot-scope="scope">
-          <span>{{ `${formatDate(scope.row.bind_time)}` }}</span>
+          <span>{{ `${formatDate(scope.row.end_time)}` }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" width="100">
+      <el-table-column prop="answer_duration" label="通话时长" min-width="150">
+        <template slot-scope="scope">
+          <span>{{ `${formatDuring(scope.row.answer_duration)}` }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column prop="cdr_status_text" label="通话状态" width="120">
+      </el-table-column>
+
+      <!-- <el-table-column label="操作" width="100">
         <template slot-scope="scope">
           <span
             class="handle-btn"
@@ -156,7 +153,7 @@
             >绑定</span
           >
         </template>
-      </el-table-column>
+      </el-table-column> -->
     </el-table>
     <div class="pag-con">
       <m-pagination
@@ -223,7 +220,7 @@
 import courseTeam from '../components/courseTeam'
 import MPagination from '@/components/MPagination/index.vue'
 import Department from '@/components/MSearch/searchItems/department'
-import GroupSell from '@/components/MSearch/searchItems/groupSell.vue'
+import GroupSell from '../components/groupSell'
 import DateDownQuickSelect from '@/components/MSearch/searchItems/dateDownQuickSelect.vue'
 // import SearchStage from '@/components/MSearch/searchItems/searchStage'
 import { formatData, isToss } from '@/utils/index'
@@ -265,7 +262,7 @@ export default {
     this.getPhoneList()
   },
   methods: {
-    // 学员记录详情基本信息
+    // 获取通话记录列表
     getPhoneList() {
       const parmes = {
         teacher_id: this.agent
@@ -282,13 +279,13 @@ export default {
       if (this.department && this.department.length > 0) {
         parmes.department_id = this.department
       }
-      return this.$http.Outbound.getOutboundListPage(parmes, this.currentPage)
+      return this.$http.Outbound.getRecordListPage(parmes, this.currentPage)
         .then((res) => {
-          if (res && res.data && res.data.TeacherOutboundPage) {
-            this.outboundList = res.data.TeacherOutboundPage.content
-            this.totalElements = +res.data.TeacherOutboundPage.totalElements
-            this.totalPages = +res.data.TeacherOutboundPage.totalPages
-            console.log(111, this.lessonType)
+          if (res && res.data && res.data.TeacherOutboundCallRecordPage) {
+            this.outboundList = res.data.TeacherOutboundCallRecordPage.content
+            this.totalElements = +res.data.TeacherOutboundCallRecordPage
+              .totalElements
+            this.totalPages = +res.data.TeacherOutboundCallRecordPage.totalPages
           }
         })
         .catch(() => {
@@ -299,92 +296,6 @@ export default {
     selectSellTeacher(teachers) {
       const { groupSell = '' } = teachers || {}
       this.manageChange(groupSell, 'teacherId')
-    },
-    // 绑定解绑
-    goBind(val) {
-      console.log(val.use_status)
-      if (+val.use_status === 1) {
-        return false
-      }
-      this.user_radio = '手机号'
-      this.listData = val
-      this.centerDialogVisible = true
-      this.$refs.group.clearData()
-
-      this.user_phone = ''
-    },
-    // 绑定
-    postBind() {
-      if (!this.user_name || !this.user_phone) {
-        return this.$message({
-          showClose: true,
-          message: '请输入姓名和电话',
-          type: 'error'
-        })
-      }
-      const { id } = this.listData
-      const telTypeName = this.user_radio === '手机号' ? 'MOBILE' : 'IP_PHONE'
-      const parmes = {
-        teacherId: this.user_name,
-        id,
-        tel: this.user_phone,
-        telType: telTypeName
-      }
-      return this.$http.Outbound.bindTel(parmes)
-        .then((res) => {
-          if (+res.code === 0) {
-            this.centerDialogVisible = false
-            setTimeout(() => {
-              this.getPhoneList()
-            }, 2000)
-
-            this.$message({
-              showClose: true,
-              message: '成功绑定',
-              type: 'success'
-            })
-          }
-        })
-        .catch(() => {
-          // loading.close()
-        })
-    },
-
-    // 解绑
-    unBind(val) {
-      this.$confirm(
-        `您即将给员工${val.teacherInfo.realname}进行坐席解绑, 请确认?`,
-        '解绑确认',
-        {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }
-      )
-        .then(() => {
-          return this.$http.Outbound.unbindTel(val.id)
-            .then((res) => {
-              if (+res.code === 0) {
-                setTimeout(() => {
-                  this.getPhoneList()
-                }, 1000)
-                this.$message({
-                  showClose: true,
-                  message: '解绑成功',
-                  type: 'success'
-                })
-              }
-            })
-            .catch(() => {
-              // loading.close()
-            })
-        })
-        .catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消解绑'
-          })
-        })
     },
     // 分页
     handleSizeChange(val) {
@@ -410,16 +321,20 @@ export default {
           // loading.close()
         })
     },
-    // 改变状态
+    // 改变筛选项
     getSearchData(key, val) {
       console.log(key, val)
       if (key === 'department') {
-        this.department = val[0].department
-        // console.log(val[0].department)
-        this.getTeachList(this.department)
+        this.department = val[0].pay_teacher_id
+        console.log(this.department)
       }
       if (key === 'groupSell') {
-        this.agent = val[0].groupSell
+        // 返回的id
+        this.groupSell = val[0].groupSell
+      }
+      if (key === 'teamId') {
+        this.period = val[0].period
+        this.lessonType = val[0].managementType
       }
       if (key === 'phone') {
         this.phone = val[0]
@@ -447,7 +362,22 @@ export default {
       return formatData(date, 's')
     },
     //
-    getDepartment() {}
+    getDepartment() {},
+    // 时间转化
+    formatDuring(t) {
+      const HOUR = 1000 * 60 * 60
+      const d = parseInt(t / (HOUR * 24))
+      const h = parseInt((t % (HOUR * 24)) / HOUR)
+      const m = parseInt((t % HOUR) / (1000 * 60))
+      const s = parseInt((t % (1000 * 60)) / 1000)
+
+      let text = ''
+      d && (text += `${d}天`)
+      h && (text += `${h}小时`)
+      m && (text += `${m}分`)
+      s && (text += `${s}秒`)
+      return text || '-'
+    }
   }
 }
 </script>
