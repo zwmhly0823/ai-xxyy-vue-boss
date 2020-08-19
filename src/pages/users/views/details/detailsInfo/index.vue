@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-08-17 19:37:24
  * @LastEditors: liukun
- * @LastEditTime: 2020-08-19 15:57:39
+ * @LastEditTime: 2020-08-19 16:11:05
 -->
 <template>
   <div class="details" v-loading="loading">
@@ -489,7 +489,7 @@ export default {
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  font-size: 14px;
+  font-size: 12px;
 }
 .item1 span:nth-of-type(1) {
   color: #ccc;
