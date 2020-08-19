@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-08-17 19:37:24
  * @LastEditors: liukun
- * @LastEditTime: 2020-08-19 02:20:54
+ * @LastEditTime: 2020-08-19 15:57:39
 -->
 <template>
   <div class="details" v-loading="loading">
@@ -52,6 +52,11 @@
             ><div class="item1">
               <span>购买时间</span
               ><span>{{ experience_lk.sup && (experience_lk.sup || '-') }}</span
+              ><span>{{
+                experience_lk.orderInfo &&
+                  experience_lk.orderInfo.packages_name &&
+                  (experience_lk.orderInfo.packages_name || '-')
+              }}</span
               >·<span>{{
                 experience_lk.buytime && (experience_lk.buytime || '-')
               }}</span>
@@ -198,7 +203,7 @@
         <el-row>
           <el-col :span="5"
             ><div class="item1">
-              <span>负责销售</span
+              <span>负责服务</span
               ><span>{{
                 systerm_lk.teacherInfo &&
                   systerm_lk.teacherInfo.realname +
@@ -210,7 +215,7 @@
           >
           <el-col :span="5"
             ><div class="item1">
-              <span>销售微信</span
+              <span>服务微信</span
               ><span>{{
                 systerm_lk.teacherInfo &&
                   systerm_lk.teacherInfo.weixin &&
@@ -221,7 +226,7 @@
           >
           <el-col :span="5"
             ><div class="item1">
-              <span>销售电话</span
+              <span>服务电话</span
               ><span>{{
                 systerm_lk.teacherInfo &&
                   systerm_lk.teacherInfo.phone &&
@@ -234,6 +239,11 @@
               <span>购买时间</span
               ><span>{{
                 systerm_lk.currentsuper && (systerm_lk.currentsuper || '-')
+              }}</span
+              ><span>{{
+                systerm_lk.orderInfo &&
+                  systerm_lk.orderInfo.packages_name &&
+                  (systerm_lk.orderInfo.packages_name.substring(4) || '-')
               }}</span
               >·<span>{{
                 systerm_lk.orderInfo &&
@@ -268,22 +278,13 @@
           >
           <el-col :span="5"
             ><div class="item1">
-              <span>开课结课</span
+              <span>开课时间</span
               ><span>{{
                 systerm_lk.managementInfo &&
                   systerm_lk.managementInfo.course_day &&
-                  (new Date(+systerm_lk.managementInfo.course_day)
-                    .toLocaleDateString()
-                    .substring(5) ||
-                    '-')
-              }}</span
-              >-
-              <span>{{
-                systerm_lk.managementInfo &&
-                  systerm_lk.managementInfo.end_course_day &&
-                  (new Date(+systerm_lk.managementInfo.end_course_day)
-                    .toLocaleDateString()
-                    .substring(5) ||
+                  (new Date(
+                    +systerm_lk.managementInfo.course_day
+                  ).toLocaleDateString() ||
                     '-')
               }}</span>
             </div></el-col

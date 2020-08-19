@@ -5,7 +5,7 @@
  * @Author: shentong
  * @Date: 2020-03-13 14:38:28
  * @LastEditors: liukun
- * @LastEditTime: 2020-08-19 15:17:01
+ * @LastEditTime: 2020-08-19 15:48:30
  */
 // import axios from '../axios'
 import axios from '../axiosConfig'
@@ -1098,6 +1098,9 @@ export default {
               id
               team_name
             }
+            orderInfo {
+              packages_name
+            }
             all_join_course_count
             join_course_count
             send_course_count
@@ -1143,6 +1146,7 @@ export default {
             currenttotal
             channel_outer_name
             orderInfo {
+              packages_name
               buytime
             }
             managementInfo {
