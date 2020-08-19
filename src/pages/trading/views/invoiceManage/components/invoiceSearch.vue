@@ -22,22 +22,22 @@
     <el-form-item label="发票类型:">
       <div class="row_colum">
         <simple-select
-          name="fplx"
-          :data-list="fplxList"
+          name="invoice_type"
+          :data-list="invoiceTypeList"
           :multiple="false"
           placeholder="全部"
-          @result="getSearchData('fplx', arguments)"
+          @result="getSearchData('invoice_type', arguments)"
         ></simple-select>
       </div>
     </el-form-item>
     <el-form-item label="开票状态:">
       <div class="row_colum">
         <simple-select
-          name="kpzt"
-          :data-list="fplxList"
+          name="invoice_status"
+          :data-list="invoiceStatusList"
           :multiple="false"
           placeholder="全部"
-          @result="getSearchData('kpzt', arguments)"
+          @result="getSearchData('invoice_status', arguments)"
         ></simple-select>
       </div>
     </el-form-item>
@@ -45,7 +45,7 @@
       <div class="row_colum">
         <select-date
           :name="timeData"
-          @result="getTimeData"
+          @result="getSearchData(selectTime || oldTime, arguments)"
           @timeCallBack="getTimeCallBack"
         />
       </div>
@@ -57,29 +57,51 @@ import orderSearch from '@/components/MSearch/searchItems/orderSearch.vue' // ad
 import SimpleSelect from '@/components/MSearch/searchItems/simpleSelect'
 import SelectDate from '@/components/MSearch/searchItems/selectDate.vue'
 export default {
-  props: {
-    sourchParams: {
-      type: Object,
-      default: () => ({})
-    }
-  },
+  props: {},
   data() {
     return {
       promotionsName: '',
       searchQuery: {},
+      selectTime: null,
+      oldTime: '',
       timeData: [
-        { text: '购买时间', value: 'ctime' },
-        { text: '揽收时间', value: 'delivery_collect_time' },
-        { text: '签收时间', value: 'signing_time' }
+        { text: '开票申请时间', value: 'ctime' },
+        { text: '开票完成时间', value: 'complete_time' }
       ],
-      fplxList: [
+      invoiceStatusList: [
         {
-          id: '1',
-          text: '类型1'
+          id: 0,
+          text: '待开票'
         },
         {
-          id: '2',
-          text: '类型2'
+          id: 1,
+          text: '开票中'
+        },
+        {
+          id: 2,
+          text: '已开票'
+        },
+        {
+          id: 3,
+          text: '开票失败'
+        },
+        {
+          id: 4,
+          text: '作废'
+        }
+      ],
+      invoiceTypeList: [
+        {
+          id: 0,
+          text: '无'
+        },
+        {
+          id: 1,
+          text: '普通发票'
+        },
+        {
+          id: 2,
+          text: '专票'
         }
       ]
     }
@@ -105,9 +127,6 @@ export default {
       console.log(key, val)
       this.getSearchData([key], val)
     },
-    // getSearchdata(data) {
-    //   console.log(data.fplx, 'datadddd')
-    // },
     /**
      * search item 回调。 key,自定义参数，res，组件返回的值 res[0]
      */
@@ -115,6 +134,11 @@ export default {
       console.log(key, res, 'resssssss')
       const search = res && res[0]
       if (search) {
+        if (key === 'ctime') {
+          this.$delete(this.searchQuery, 'complete_time')
+        } else if (key === 'complete_time') {
+          this.$delete(this.searchQuery, 'ctime')
+        }
         this.searchQuery = {
           ...this.searchQuery,
           ...search
@@ -129,6 +153,15 @@ export default {
       console.log(search, 'getSearchData')
       console.log(this.searchQuery, 'this.searchQuery')
       this.$emit('search', this.searchQuery)
+    },
+    // 获取下拉时间选择select
+    getTimeCallBack(data) {
+      console.log(data, 'data==')
+      if (data) {
+        this.selectTime = data
+      } else {
+        this.oldTime = data
+      }
     }
   }
 }

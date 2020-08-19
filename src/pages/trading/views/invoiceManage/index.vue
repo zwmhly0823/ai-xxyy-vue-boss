@@ -13,7 +13,7 @@
         <el-scrollbar wrap-class="scrollbar-wrapper">
           <div class="invoice-manage-container">
             <div class="operete-row">
-              <invoiceSearch @search="getSearch" :sourchParams="sourchParams" />
+              <invoiceSearch @search="getSearch" />
             </div>
             <section ref="tableContainer">
               <ele-table
@@ -28,13 +28,14 @@
               >
                 <el-table-column label="用户信息" align="center">
                   <template slot-scope="scope">
-                    <p>{{ scope.row.buyername }}</p>
-                    <p>{{ scope.row.buyername }}</p>
+                    <p>{{ scope.row.username }}</p>
+                    <p>{{ scope.row.mobile }}</p>
                   </template>
                 </el-table-column>
                 <el-table-column label="订单编号·订单交易流水号" align="center">
                   <template slot-scope="scope">
-                    <span>{{ scope.row.buyername }}</span>
+                    <p>{{ scope.row.oid }}</p>
+                    <p>{{ scope.row.transaction_id }}</p>
                   </template>
                 </el-table-column>
                 <el-table-column label="发票抬头" align="center">
@@ -44,37 +45,52 @@
                 </el-table-column>
                 <el-table-column label="发票类型" align="center">
                   <template slot-scope="scope">
-                    <span>{{ scope.row.buyername }}</span>
+                    <span v-if="scope.row.invoice_type === 0">无</span>
+                    <span v-if="scope.row.invoice_type === 1">普通发票</span>
+                    <span v-if="scope.row.invoice_type === 2">专票</span>
                   </template>
                 </el-table-column>
                 <el-table-column label="发票金额" align="center">
                   <template slot-scope="scope">
-                    <span>{{ scope.row.buyername }}</span>
+                    <span>{{ scope.row.money }}</span>
                   </template>
                 </el-table-column>
                 <el-table-column label="发票代码" align="center">
                   <template slot-scope="scope">
-                    <span>{{ scope.row.buyername }}</span>
+                    <span>{{ scope.row.invoice_code }}</span>
                   </template>
                 </el-table-column>
                 <el-table-column label="开票申请时间" align="center">
                   <template slot-scope="scope">
-                    <span>{{ scope.row.buyername }}</span>
+                    <span>{{ scope.row.ctime ? scope.row.ctime : '-' }}</span>
                   </template>
                 </el-table-column>
                 <el-table-column label="开票完成时间" align="center">
                   <template slot-scope="scope">
-                    <span>{{ scope.row.buyername }}</span>
+                    <span>{{
+                      scope.row.complete_time ? scope.row.complete_time : '-'
+                    }}</span>
                   </template>
                 </el-table-column>
                 <el-table-column label="开票状态" align="center">
                   <template slot-scope="scope">
-                    <span>{{ scope.row.buyername }}</span>
+                    <span v-if="scope.row.invoice_status === 0">待开票</span>
+                    <span v-if="scope.row.invoice_status === 1">开票中</span>
+                    <span v-if="scope.row.invoice_status === 2">已开票</span>
+                    <span v-if="scope.row.invoice_status === 3">开票失败</span>
+                    <span v-if="scope.row.invoice_status === 4">作废</span>
                   </template>
                 </el-table-column>
                 <el-table-column label="操作" align="center">
                   <template slot-scope="scope">
-                    <span>{{ scope.row.buyername }}</span>
+                    <a
+                      :href="scope.row.invoice_pdf"
+                      class="editStyle"
+                      target="_blank"
+                      v-if="scope.row.invoice_pdf"
+                      >操作</a
+                    >
+                    <span v-else>-</span>
                   </template>
                 </el-table-column>
               </ele-table>
@@ -96,10 +112,7 @@ export default {
       tableData: [],
       sourchParams: {
         page: 1,
-        size: 20,
-        promotionsName: '',
-        trialTerms: '',
-        systemTerms: ''
+        size: 20
       },
       totalElements: 0
     }
@@ -117,15 +130,9 @@ export default {
 
   methods: {
     // 获取search
-    getSearch(res) {
-      console.log(res, 'res_getSearch=-=-=')
-      this.sourchParams = {
-        page: 1,
-        size: 20,
-        promotionsName: res.promotionsName,
-        trialTerms: res.trialTerms,
-        systemTerms: res.systemTerms
-      }
+    getSearch(data) {
+      console.log(data, 'res_getSearch=-=-=')
+      this.invoiceData(data)
       // this.get_PromotionsPageList()
     },
     // 发票管理列表
@@ -136,7 +143,8 @@ export default {
           // this.tableData = res.data.InvoiceRecordPage.content
           _data.forEach((item) => {
             // 开票申请时间
-            item.complete_time = formatData(item.complete_time)
+            item.complete_time = formatData(item.complete_time, 's')
+            item.ctime = formatData(item.ctime, 's')
           })
           console.log(res, 'res===')
           this.tableData = _data
@@ -188,9 +196,6 @@ export default {
     }
   }
 }
-.el-dialog {
-  width: 30%;
-}
 .operete-row {
   display: flex;
   padding: 10px;
@@ -214,21 +219,13 @@ export default {
 section {
   .mytable {
     .editStyle {
-      display: flex;
-      justify-content: center;
-      span {
-        color: #2a75ed;
-        cursor: pointer;
-        &.btn-disabled {
-          color: #ccc;
-          cursor: no-drop;
-        }
+      color: #2a75ed;
+      cursor: pointer;
+      &.btn-disabled {
+        color: #ccc;
+        cursor: no-drop;
       }
     }
   }
-}
-.editStyle_unbtn span {
-  color: #c0c4cc !important;
-  cursor: not-allowed;
 }
 </style>
