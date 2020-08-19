@@ -480,7 +480,12 @@
       </el-table-column>
       <el-table-column label="是否续费" min-width="120" fixed="right">
         <template slot-scope="scope">
-          <p v-if="scope.row.remain_order_count > 1">已续费</p>
+          <p
+            v-if="scope.row.remain_order_count > 1"
+            style="color: rgb(255, 139, 140);"
+          >
+            已续费
+          </p>
           <p v-else>待续费</p>
         </template>
       </el-table-column>
