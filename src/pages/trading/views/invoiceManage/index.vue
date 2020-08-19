@@ -1,0 +1,234 @@
+<!--
+ * @Descripttion: 
+ * @version: 
+ * @Author: shasen
+ * @Date: 2020-08-19 15:13:40
+ * @LastEditors: shasen
+ * @LastEditTime: 2020-08-19 19:49:18
+ -->
+<template>
+  <el-row type="flex" class="invoice-manage app-main">
+    <el-col class="grop-container">
+      <div class="scroll-container">
+        <el-scrollbar wrap-class="scrollbar-wrapper">
+          <div class="invoice-manage-container">
+            <div class="operete-row">
+              <invoiceSearch @search="getSearch" :sourchParams="sourchParams" />
+            </div>
+            <section ref="tableContainer">
+              <ele-table
+                :tableSize="'small'"
+                :dataList="tableData"
+                :tableHeight="tableHeight"
+                :size="sourchParams.size"
+                :page="sourchParams.page"
+                :total="totalElements"
+                @pageChange="pageChange_handler"
+                class="mytable"
+              >
+                <el-table-column label="用户信息" align="center">
+                  <template slot-scope="scope">
+                    <p>{{ scope.row.buyername }}</p>
+                    <p>{{ scope.row.buyername }}</p>
+                  </template>
+                </el-table-column>
+                <el-table-column label="订单编号·订单交易流水号" align="center">
+                  <template slot-scope="scope">
+                    <span>{{ scope.row.buyername }}</span>
+                  </template>
+                </el-table-column>
+                <el-table-column label="发票抬头" align="center">
+                  <template slot-scope="scope">
+                    <span>{{ scope.row.buyername }}</span>
+                  </template>
+                </el-table-column>
+                <el-table-column label="发票类型" align="center">
+                  <template slot-scope="scope">
+                    <span>{{ scope.row.buyername }}</span>
+                  </template>
+                </el-table-column>
+                <el-table-column label="发票金额" align="center">
+                  <template slot-scope="scope">
+                    <span>{{ scope.row.buyername }}</span>
+                  </template>
+                </el-table-column>
+                <el-table-column label="发票代码" align="center">
+                  <template slot-scope="scope">
+                    <span>{{ scope.row.buyername }}</span>
+                  </template>
+                </el-table-column>
+                <el-table-column label="开票申请时间" align="center">
+                  <template slot-scope="scope">
+                    <span>{{ scope.row.buyername }}</span>
+                  </template>
+                </el-table-column>
+                <el-table-column label="开票完成时间" align="center">
+                  <template slot-scope="scope">
+                    <span>{{ scope.row.buyername }}</span>
+                  </template>
+                </el-table-column>
+                <el-table-column label="开票状态" align="center">
+                  <template slot-scope="scope">
+                    <span>{{ scope.row.buyername }}</span>
+                  </template>
+                </el-table-column>
+                <el-table-column label="操作" align="center">
+                  <template slot-scope="scope">
+                    <span>{{ scope.row.buyername }}</span>
+                  </template>
+                </el-table-column>
+              </ele-table>
+            </section>
+          </div>
+        </el-scrollbar>
+      </div>
+    </el-col>
+  </el-row>
+</template>
+<script>
+import invoiceSearch from './components/invoiceSearch'
+import EleTable from '@/components/Table/EleTable'
+import { formatData } from '@/utils/index.js'
+export default {
+  data() {
+    return {
+      tableHeight: 'auto',
+      tableData: [],
+      sourchParams: {
+        page: 1,
+        size: 20,
+        promotionsName: '',
+        trialTerms: '',
+        systemTerms: ''
+      },
+      totalElements: 0
+    }
+  },
+  created() {
+    this.calcTableHeight()
+    this.invoiceData()
+  },
+  mounted() {},
+  components: {
+    EleTable,
+    invoiceSearch
+  },
+  computed: {},
+
+  methods: {
+    // 获取search
+    getSearch(res) {
+      console.log(res, 'res_getSearch=-=-=')
+      this.sourchParams = {
+        page: 1,
+        size: 20,
+        promotionsName: res.promotionsName,
+        trialTerms: res.trialTerms,
+        systemTerms: res.systemTerms
+      }
+      // this.get_PromotionsPageList()
+    },
+    // 发票管理列表
+    invoiceData(queryObj = {}, page = 1) {
+      this.$http.Order.invoicePage(`${JSON.stringify(queryObj)}`, page)
+        .then((res) => {
+          const _data = res.data.InvoiceRecordPage.content
+          // this.tableData = res.data.InvoiceRecordPage.content
+          _data.forEach((item) => {
+            // 开票申请时间
+            item.complete_time = formatData(item.complete_time)
+          })
+          console.log(res, 'res===')
+          this.tableData = _data
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+    },
+    // 换页
+    pageChange_handler(res) {
+      this.sourchParams.page = res
+      // this.get_PromotionsPageList()
+      console.log(res)
+    },
+    // 计算表格高度
+    calcTableHeight() {
+      this.$nextTick(() => {
+        // Element.getBoundingClientRect() 方法返回元素的大小及其相对于视口的位置。
+        const tableTopHeight = this.$refs.tableContainer.getBoundingClientRect()
+          .y
+        //  document.body.clientHeight 返回body元素内容的高度
+        const tableHeight = document.body.clientHeight - tableTopHeight - 60
+        this.tableHeight = tableHeight + ''
+      })
+    }
+  }
+}
+</script>
+<style rel="stylesheet/scss" lang="scss">
+.invoice-manage {
+  .grop-container {
+    position: relative;
+    margin: 10px;
+    background: #fff;
+    overflow-x: hidden;
+    flex: 1;
+    margin: 10px;
+    .scroll-container {
+      background: white;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      .scrollbar-wrapper {
+        overflow-x: hidden;
+      }
+      .el-scrollbar {
+        flex: 1;
+      }
+    }
+  }
+}
+.el-dialog {
+  width: 30%;
+}
+.operete-row {
+  display: flex;
+  padding: 10px;
+  justify-content: space-between;
+  align-items: center;
+  .search-container {
+    .search-item {
+      position: relative;
+      /deep/ input {
+        padding-left: 25px;
+      }
+    }
+    b {
+      position: absolute;
+      left: 10px;
+      top: 7px;
+      color: #999;
+    }
+  }
+}
+section {
+  .mytable {
+    .editStyle {
+      display: flex;
+      justify-content: center;
+      span {
+        color: #2a75ed;
+        cursor: pointer;
+        &.btn-disabled {
+          color: #ccc;
+          cursor: no-drop;
+        }
+      }
+    }
+  }
+}
+.editStyle_unbtn span {
+  color: #c0c4cc !important;
+  cursor: not-allowed;
+}
+</style>

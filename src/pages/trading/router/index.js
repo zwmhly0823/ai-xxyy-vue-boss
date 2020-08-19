@@ -53,6 +53,15 @@ const routes = [
       keepAlive: true
     },
     component: () => import('../views/financeRefound/financeRefound.vue')
+  },
+  {
+    path: '/invoiceManage',
+    name: 'invoiceManage',
+    meta: {
+      title: '发票管理',
+      keepAlive: true
+    },
+    component: () => import('../views/invoiceManage/index.vue')
   }
 ]
 

@@ -217,5 +217,50 @@ export default {
         }
       }`
     })
+  },
+  /*
+   * 获取发票管理列表
+   * */
+  invoicePage(query, page = 1) {
+    return axios.post('/graphql/v1/toss', {
+      query: `{
+        InvoiceRecordPage(query: ${JSON.stringify(query)}, page: ${page}) {
+          content {
+            id
+            uid
+            oid
+            title_type
+            company_name
+            invoice_img
+            invoice_pdf
+            invoice_status
+            invoice_type
+            email
+            address
+            phone
+            taxnum
+            buyername
+            account
+            message
+            money
+            uniq_id
+            complete_time
+            invoice_code
+            transaction_id
+            user_num
+            username
+            mobile
+          }
+          empty
+          first
+          last
+          number
+          size
+          numberOfElements
+          totalElements
+          totalPages
+        }
+      }`
+    })
   }
 }
