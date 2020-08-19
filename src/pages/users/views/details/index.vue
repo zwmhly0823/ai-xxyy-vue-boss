@@ -187,10 +187,7 @@
                 </el-col>
               </el-row>
               <el-row type="flex" justify="space-around" align="middle">
-                <el-col
-                  v-if="stuInfor.systemCourse && stuInfor.systemCourse.length"
-                  :span="7"
-                >
+                <el-col :span="7">
                   <span>系统课剩余:</span>
                   {{ systemCourseTotal + '周' }}</el-col
                 >
@@ -608,6 +605,11 @@ export default {
 
         // ③学员基本资料_时间格式ed
         this.stuInfor = this.modifyData(res.data.User || {})
+        // 设置 title
+        document.title.startsWith('学员中心') &&
+          (document.title = `${this.stuInfor.username +
+            '·' +
+            this.stuInfor.user_num}-小熊美术BOSS`)
         if (typeof this.stuInfor.systemCourse_lifeCycle === 'string') {
           this.stuInfor.systemCourse_lifeCycle = {
             0: '待开课',

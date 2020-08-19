@@ -5,7 +5,7 @@
  * @Author: shentong
  * @Date: 2020-03-13 14:38:28
  * @LastEditors: liukun
- * @LastEditTime: 2020-08-19 02:25:10
+ * @LastEditTime: 2020-08-19 15:17:01
  */
 // import axios from '../axios'
 import axios from '../axiosConfig'
@@ -1121,7 +1121,7 @@ export default {
       query: `{
             StudentSystemStatisticsList(
               query: ${JSON.stringify(JSON.stringify({ studentid: query }))},
-              sort:${JSON.stringify(JSON.stringify({ ctime: 'desc' }))}
+              sort:${JSON.stringify(JSON.stringify({ ctime: 'asc' }))}
               )
             {
             addedgroup
