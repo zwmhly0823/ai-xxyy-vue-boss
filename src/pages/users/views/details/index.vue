@@ -534,7 +534,7 @@ export default {
       )
     },
     systemCourseTotal() {
-      return this.stuInfor.systemCourse.length
+      return this.stuInfor.systemCourse && this.stuInfor.systemCourse.length
         ? this.stuInfor.systemCourse.reduce((pre, cur, index, arr) => {
             return pre + cur.remaining_week
           }, 0)

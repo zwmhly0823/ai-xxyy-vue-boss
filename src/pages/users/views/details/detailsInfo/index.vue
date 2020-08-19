@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-08-17 19:37:24
  * @LastEditors: liukun
- * @LastEditTime: 2020-08-19 16:11:05
+ * @LastEditTime: 2020-08-19 16:58:21
 -->
 <template>
   <div class="details" v-loading="loading">
@@ -33,8 +33,9 @@
               ><span>{{
                 experience_lk.teacherInfo &&
                   experience_lk.teacherInfo.weixin &&
-                  experience_lk.teacherInfo.weixin.weixin_no &&
-                  (experience_lk.teacherInfo.weixin.weixin_no || '-')
+                  experience_lk.teacherInfo.weixin[0] &&
+                  experience_lk.teacherInfo.weixin[0].weixin_no &&
+                  (experience_lk.teacherInfo.weixin[0].weixin_no || '-')
               }}</span>
             </div></el-col
           >
@@ -219,8 +220,9 @@
               ><span>{{
                 systerm_lk.teacherInfo &&
                   systerm_lk.teacherInfo.weixin &&
-                  systerm_lk.teacherInfo.weixin.weixin_no &&
-                  (systerm_lk.teacherInfo.weixin.weixin_no || '-')
+                  systerm_lk.teacherInfo.weixin[0] &&
+                  systerm_lk.teacherInfo.weixin[0].weixin_no &&
+                  (systerm_lk.teacherInfo.weixin[0].weixin_no || '-')
               }}</span>
             </div></el-col
           >
