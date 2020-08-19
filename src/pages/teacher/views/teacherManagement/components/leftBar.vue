@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-13 16:53:27
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-08-10 23:31:04
+ * @LastEditTime: 2020-08-19 11:46:30
  -->
 <template>
   <div class="left-container">
@@ -220,7 +220,7 @@ export default {
           // pid = ''
           break
         case 'edit':
-          pid = form._data.depart
+          pid = form._data.departs
           break
         default:
           pid = ''
