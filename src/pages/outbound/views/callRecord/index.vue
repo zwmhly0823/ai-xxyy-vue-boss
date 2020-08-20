@@ -131,13 +131,23 @@
       style="width: 100%;margin-top:30px;"
       :header-cell-style="{ background: 'rgb(178, 185, 197,.3)' }"
     >
-      <el-table-column fixed prop="cno" label="坐席工号" width="150">
+      <el-table-column fixed prop="cno" label="坐席工号" width="80">
       </el-table-column>
-      <el-table-column prop="student_mobile" label="用户电话" width="120">
-      </el-table-column>
-      <el-table-column prop="agent_name" label="课程期数" width="120">
+      <el-table-column prop="student_mobile" label="用户电话" width="160">
         <template slot-scope="scope">
-          <span>{{ scope.row.studentInfo.teams[0].team_name }}</span>
+          <span>{{
+            scope.row.studentInfo &&
+              `${scope.row.studentInfo.mobile}--${scope.row.studentInfo.mobile_city}`
+          }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column prop="agent_name" label="课程期数" width="160">
+        <template slot-scope="scope">
+          <span>{{
+            scope.row.studentInfo &&
+              scope.row.studentInfo.teams &&
+              scope.row.studentInfo.teams[0].team_name
+          }}</span>
         </template>
       </el-table-column>
 
