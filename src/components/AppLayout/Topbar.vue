@@ -4,7 +4,7 @@
  * @Date: 2020-03-13 15:13:34
  * @Description: topbar 顶部功能区
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-07-30 15:03:46
+ * @LastEditTime: 2020-08-20 16:42:12
  -->
 <template>
   <div class="navbar" :class="{ prod: isProd }">
@@ -30,7 +30,10 @@
     </div>
 
     <div class="right-menu">
+      <!-- 全局搜索学员 - 手机号、user_num -->
       <GlobelSearch class="globelSearch-con" />
+
+      <!-- 功能区 入口 -->
       <a
         class="order-btn"
         href="https://shimo.im/docs/opMWovESib0pcyh0/"
@@ -44,8 +47,10 @@
         class="notices-content"
       >
         <span type="text" @click="clickNoticeTop" class="order-btn">通知</span>
-        <!-- <el-button type="text" @click="clickNoticeTop">通知中心</el-button> -->
       </el-badge>
+      <!-- 功能区 入口 - end -->
+
+      <!-- 用户信息 -->
       <el-dropdown class="avatar-container" trigger="click">
         <div class="user-info">
           <div class="avatar-wrapper">
@@ -58,11 +63,6 @@
           <i class="el-icon-arrow-down" />
         </div>
         <el-dropdown-menu slot="dropdown" class="user-dropdown">
-          <!-- <router-link to="/">
-            <el-dropdown-item>
-              个人中心
-            </el-dropdown-item>
-          </router-link> -->
           <el-dropdown-item @click.native="replacePassword">
             <span style="display:block;">修改密码</span>
           </el-dropdown-item>
@@ -71,11 +71,35 @@
           </el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
+      <!-- 用户信息 end -->
+
+      <!-- 多科目切换 -->
+      <div class="subject-change">
+        <el-dropdown @command="handleChangeSubject">
+          <div class="subject-change-title">
+            {{ currentSubjectText }}
+            <i class="el-icon-arrow-down el-icon--right"></i>
+            <div class="subject-change-tips">-- 切换科目 --</div>
+          </div>
+          <el-dropdown-menu slot="dropdown">
+            <el-dropdown-item
+              v-for="item in subjectsList"
+              :command="item.key"
+              :key="item.key"
+              >{{ item.title }}</el-dropdown-item
+            >
+          </el-dropdown-menu>
+        </el-dropdown>
+      </div>
     </div>
+
+    <!-- 通知中心列表 抽屉 -->
     <notice-center
       ref="noticeCenter"
       @reduceBadge="reduceBadge"
     ></notice-center>
+
+    <!-- 修改用户密码 dialog -->
     <el-dialog
       title="修改密码"
       :visible.sync="dialogVisible"
@@ -107,12 +131,12 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 import Breadcrumb from './Breadcrumb'
 import GlobelSearch from './GlobelSearch'
 import Hamburger from './Hamburger'
 import { removeToken } from '@/utils/auth'
-import { baseUrl } from '@/utils/index'
+import { baseUrl, openBrowserTab } from '@/utils/index'
 import noticeCenter from './noticeCenter/noticeCenter'
 
 export default {
@@ -123,7 +147,17 @@ export default {
     GlobelSearch
   },
   computed: {
-    ...mapGetters(['sidebar', 'avatar'])
+    ...mapGetters(['sidebar', 'avatar', 'subjects']),
+    subjectsList() {
+      // 切换列表排除当前本身项目
+      const list = this.subjects.subjectsList.filter(
+        (item) => item.key !== this.subjects.currentSubjectKey
+      )
+      return list
+    },
+    currentSubjectText() {
+      return this.subjects.currentSubjectTitle
+    }
   },
   watch: {
     dialogVisible(val) {
@@ -139,7 +173,8 @@ export default {
       head: 'https://msb-ai.meixiu.mobi/ai-pm/static/touxiang.png',
       dialogVisible: false,
       newPassword: '',
-      noticeBadge: 0
+      noticeBadge: 0,
+      currentSubject: 'bear-art'
     }
   },
   created() {
@@ -152,8 +187,13 @@ export default {
     this.userInfo = JSON.parse(userInfo)
     // 通知的角标数字
     this.getNoticeBadge()
+    this.currentSubject = this.subjects.currentSubjectKey
+    this.getSubject()
   },
   methods: {
+    ...mapActions({
+      getSubject: 'subjects/getSubject'
+    }),
     toggleSideBar() {
       this.$store.dispatch('app/toggleSideBar')
     },
@@ -199,6 +239,20 @@ export default {
     },
     reduceBadge() {
       this.noticeBadge--
+    },
+
+    /**
+     * 多科目切换
+     */
+    handleChangeSubject(command) {
+      console.log(command)
+      // 非小熊美术
+      if (command !== 'bear-art') {
+        openBrowserTab(`/${command}/#/users`)
+      } else {
+        openBrowserTab(`/users/#/trial`)
+      }
+      // this.currentSubject = command
     }
   }
 }
@@ -344,6 +398,30 @@ export default {
       /deep/ .el-badge__content.is-fixed {
         top: 12px;
       }
+    }
+  }
+  // 多科目
+  .subject-change {
+    float: right;
+    min-width: 105px;
+    margin-left: 10px;
+    padding-left: 15px;
+    padding-right: 30px;
+    background: #2a75ed30;
+    cursor: pointer;
+    &-title {
+      position: relative;
+    }
+    &-tips {
+      position: absolute;
+      line-height: 12px;
+      font-size: 12px;
+      bottom: 2px;
+      left: -5px;
+      right: -25px;
+      text-align: center;
+      transform: scale(0.9);
+      color: #f56c6c; // #2a75ed
     }
   }
 }

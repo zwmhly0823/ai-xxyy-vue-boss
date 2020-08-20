@@ -2,8 +2,8 @@
  * @Author: songyanan
  * @Email: songyanan@meishubao.com
  * @Date: 2020-06-09 14:42:08
- * @LastEditors: songyanan
- * @LastEditTime: 2020-06-11 16:12:40
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-08-20 15:39:25
  */
 
 const glob = require('glob')
@@ -12,9 +12,11 @@ const chalk = require('chalk')
 const { execSync } = require('child_process')
 const webpack = require('webpack')
 const AddAssetHtmlPlugin = require('add-asset-html-webpack-plugin')
-const { getMenuText } = require('./src/utils/menuItems')
+const { getMenuText } = require('./src/config/sidebarMenu/menuItems')
 const { BASE_URL } = process.env
 const entries = {}
+// 多科目名称-除小熊美术
+const subjects = ['msb-writing']
 
 const camel2Line = function(str) {
   return str.replace(/([A-Z])/g, '-$1').toLowerCase()
@@ -46,7 +48,10 @@ const getEntry = function() {
       entry: `src/pages/${fileName}/main.js`,
       template: 'public/index.html',
       filename: `${fileNameStr}/index.html`,
-      title: `${getMenuText(fileNameStr)}`,
+      // 多科目项目只显示科目名称+BOSS，小熊显示模块名及小熊美术BOSS
+      title: subjects.includes(fileNameStr)
+        ? `${getMenuText(fileNameStr)}BOSS`
+        : `${getMenuText(fileNameStr)} - 小熊美术BOSS`,
       chunks: ['chunk-vendors', 'chunk-common', fileNameStr]
     }
   })
