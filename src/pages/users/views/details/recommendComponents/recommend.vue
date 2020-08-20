@@ -3,19 +3,27 @@
  * @version: 1.0.0
  * @Author: liukun
  * @Date: 2020-07-22 10:31:00
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-07-28 19:31:22
+ * @LastEditors: liukun
+ * @LastEditTime: 2020-08-18 22:53:04
 -->
 <template>
   <el-dialog title="推荐信息" :visible.sync="recommendInfo" width="40%">
     <div class="recommend-dialog">
       <el-row type="flex" justify="start" align="middle" class="marginb10">
         <el-col :span="5">推荐人:</el-col>
-        <el-col :span="18" :offset="1">{{
-          (recommendHuman.username || '-') +
-            '-' +
-            (recommendHuman.user_num || '-')
-        }}</el-col>
+        <el-col :span="18" :offset="1"
+          ><el-link
+            :href="`/users/#/details/${recommendHuman.id}`"
+            target="_blank"
+            type="primary"
+          >
+            {{
+              (recommendHuman.username || '-') +
+                '-' +
+                (recommendHuman.user_num || '-')
+            }}</el-link
+          ></el-col
+        >
       </el-row>
       <el-row type="flex" justify="start" align="middle" class="marginb10">
         <el-col :span="5">推荐了:</el-col>
@@ -25,9 +33,17 @@
           class="recommendDone"
           v-if="recommendList.length"
         >
-          <span v-for="(item, index) of recommendList" :key="index">{{
-            (item.username || '-') + '-' + (item.user_num || '-')
-          }}</span>
+          <span v-for="(item, index) of recommendList" :key="index"
+            ><el-link
+              :href="`/users/#/details/${item.id}`"
+              target="_blank"
+              type="primary"
+            >
+              {{
+                (item.username || '-') + '-' + (item.user_num || '-')
+              }}</el-link
+            ></span
+          >
         </el-col>
         <el-col :span="18" :offset="1" class="recommendDone" v-else> - </el-col>
       </el-row>
@@ -93,7 +109,10 @@ export default {
   overflow: auto;
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-content: space-between;
+  span {
+    padding-right: 20px;
+  }
 }
 </style>
