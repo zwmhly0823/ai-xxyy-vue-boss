@@ -4,7 +4,7 @@
  * @Author: zhangjiawen
  * @Date: 2020-08-03 15:50:58
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-08-19 15:45:21
+ * @LastEditTime: 2020-08-20 16:07:37
  */
 
 import axios from '../axiosConfig'
@@ -49,9 +49,9 @@ export default {
     })
   },
   // 获取通话记录列表
-  getRecordListPage(parmes, page = 1, sort = 'asc', size = 20) {
+  getRecordListPage(parmes, page = 1, sort = 'desc', size = 20) {
     const formattingQuery = JSON.stringify(parmes)
-    const formattingSort = JSON.stringify({ cno: sort })
+    const formattingSort = JSON.stringify({ start_time: sort })
     return axios.post(`/graphql/v1/toss`, {
       query: `{
         TeacherOutboundCallRecordPage(

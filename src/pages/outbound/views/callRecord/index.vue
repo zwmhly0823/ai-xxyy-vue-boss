@@ -133,12 +133,13 @@
     >
       <el-table-column fixed prop="cno" label="坐席工号" width="80">
       </el-table-column>
-      <el-table-column prop="student_mobile" label="用户电话" width="160">
+      <el-table-column prop="student_mobile" label="用户信息" width="160">
         <template slot-scope="scope">
-          <span>{{
+          <user :user="scope.row.studentInfo" :singleData="scope.row" />
+          <!-- <span>{{
             scope.row.studentInfo &&
               `${scope.row.studentInfo.mobile}--${scope.row.studentInfo.mobile_city}`
-          }}</span>
+          }}</span> -->
         </template>
       </el-table-column>
       <el-table-column prop="agent_name" label="课程期数" width="160">
@@ -152,6 +153,11 @@
       </el-table-column>
 
       <el-table-column prop="agent_name" label="呼叫坐席" width="120">
+        <template slot-scope="scope">
+          <span>{{
+            scope.row.teacherInfo && scope.row.teacherInfo.realname
+          }}</span>
+        </template>
       </el-table-column>
       <el-table-column
         prop="teacherInfo.department_name"
@@ -271,6 +277,7 @@ import GroupSell from '../components/groupSell'
 import DateDownQuickSelect from '../components/dateDownQuickSelect'
 import SearchTeamName from '../components/searchTeamName'
 import SearchTrialTeamName from '../components/searchTrialTeamName'
+import User from '../components/User'
 // import SearchStage from '@/components/MSearch/searchItems/searchStage'
 import { formatData, isToss } from '@/utils/index'
 
@@ -302,7 +309,8 @@ export default {
     DateDownQuickSelect,
     // courseTeam,
     SearchTeamName,
-    SearchTrialTeamName
+    SearchTrialTeamName,
+    User
   },
   // components: { MPagination, GroupSell, SearchPhone },
   created() {
