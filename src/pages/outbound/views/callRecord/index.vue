@@ -324,11 +324,38 @@ export default {
     // 获取通话记录列表
     getPhoneList() {
       const parmes = {}
-      if (this.department) {
-        parmes.teacher_id = this.department
-      }
-      if (this.groupSell) {
-        parmes.teacher_id = [this.groupSell]
+      // 因为部门 老师 课程 都是使用teachId 来筛选 所以需要做前端筛选判断 求三个集合交集
+      if (this.department || this.groupSell || this.teamTeach) {
+        console.log(this.department, this.groupSell, this.teamTeach)
+
+        parmes.teacher_id = this.department || [this.groupSell] || [
+            this.teamTeach
+          ]
+
+        if (this.department && this.groupSell) {
+          parmes.teacher_id = this.department.includes(this.groupSell)
+            ? [this.groupSell]
+            : []
+        }
+        if (this.department && this.teamTeach) {
+          parmes.teacher_id = this.department.includes(this.teamTeach)
+            ? [this.teamTeach]
+            : []
+        }
+        if (this.groupSell && this.teamTeach) {
+          parmes.teacher_id =
+            this.teamTeach === this.groupSell ? [this.teamTeach] : []
+        }
+        if (this.department && this.groupSell && this.teamTeach) {
+          if (
+            this.groupSell === this.teamTeach &&
+            this.department.includes(this.groupSell)
+          ) {
+            parmes.teacher_id = [this.groupSell]
+          } else {
+            parmes.teacher_id = []
+          }
+        }
       }
       if (this.status) {
         parmes.cdr_status = [this.status]
@@ -343,6 +370,7 @@ export default {
       if (this.time_begin && this.time_type === 1) {
         parmes.end_time = this.overDate
       }
+      console.log(parmes)
       // this.getStatistics(parmes)
       return this.$http.Outbound.getRecordListPage(parmes, this.currentPage)
         .then((res) => {
@@ -360,11 +388,38 @@ export default {
     // 获取通话统计数据
     getStatistics() {
       const parmes = {}
-      if (this.department) {
-        parmes.teacher_id = this.department
-      }
-      if (this.groupSell) {
-        parmes.teacher_id = [this.groupSell]
+      // 因为部门 老师 课程 都是使用teachId 来筛选 所以需要做前端筛选判断 求三个集合交集
+      if (this.department || this.groupSell || this.teamTeach) {
+        console.log(this.department, this.groupSell, this.teamTeach)
+
+        parmes.teacher_id = this.department || [this.groupSell] || [
+            this.teamTeach
+          ]
+
+        if (this.department && this.groupSell) {
+          parmes.teacher_id = this.department.includes(this.groupSell)
+            ? [this.groupSell]
+            : []
+        }
+        if (this.department && this.teamTeach) {
+          parmes.teacher_id = this.department.includes(this.teamTeach)
+            ? [this.teamTeach]
+            : []
+        }
+        if (this.groupSell && this.teamTeach) {
+          parmes.teacher_id =
+            this.teamTeach === this.groupSell ? [this.teamTeach] : []
+        }
+        if (this.department && this.groupSell && this.teamTeach) {
+          if (
+            this.groupSell === this.teamTeach &&
+            this.department.includes(this.groupSell)
+          ) {
+            parmes.teacher_id = [this.groupSell]
+          } else {
+            parmes.teacher_id = []
+          }
+        }
       }
       if (this.status) {
         parmes.car_status = [this.status]
@@ -457,10 +512,11 @@ export default {
         }
       }
       if (key === 'team') {
-        this.groupSell = val[0].teach
+        this.teamTeach = val[0].teach
       }
 
       this.getPhoneList()
+      this.getStatistics()
     },
 
     getTeachId(key, val) {
