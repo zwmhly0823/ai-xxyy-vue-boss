@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-08-17 19:37:24
  * @LastEditors: liukun
- * @LastEditTime: 2020-08-20 14:29:31
+ * @LastEditTime: 2020-08-20 17:35:58
 -->
 <template>
   <div class="details" v-loading="loading">
@@ -61,7 +61,7 @@
               ><span>{{
                 experience_lk.orderInfo &&
                   experience_lk.orderInfo.packages_name &&
-                  (experience_lk.orderInfo.packages_name || '-')
+                  (experience_lk.orderInfo.packages_name.substring(4) || '-')
               }}</span
               >·<span>{{
                 experience_lk.buytime && (experience_lk.buytime || '-')
@@ -156,8 +156,9 @@
                 >{{
                   typeof experience_lk.all_join_course_count == 'number' &&
                     ('' + experience_lk.all_join_course_count || '-')
-                }}次_</span
-              ><span style="color:#f56c6c">{{
+                }}次</span
+              ><span style="color:#00000000">g</span>
+              <span style="color:#f56c6c">{{
                 experience_lk.join_course_count || '-'
               }}</span
               >/
@@ -171,7 +172,8 @@
                 >{{
                   typeof experience_lk.all_complete_course_count === 'number' &&
                     ('' + experience_lk.all_complete_course_count || '-')
-                }}次_</span
+                }}次</span
+              ><span style="color:#00000000">g</span
               ><span style="color:#f56c6c">{{
                 experience_lk.complete_course_count || '-'
               }}</span
@@ -337,6 +339,8 @@
                   typeof systerm_lk.all_noactivecount === 'number' &&
                     ('' + systerm_lk.all_noactivecount || '-')
                 }}次_</span
+              >
+              <span style="color:#00000000">g</span
               ><span style="color:#f56c6c">{{
                 systerm_lk.activecount || '-'
               }}</span
@@ -352,6 +356,7 @@
                   typeof systerm_lk.all_activecount === 'number' &&
                     ('' + systerm_lk.all_activecount || '-')
                 }}次_</span
+              ><span style="color:#00000000">g</span
               ><span style="color:#f56c6c">{{
                 systerm_lk.activecount || '-'
               }}</span
@@ -501,5 +506,8 @@ export default {
   display: inline-block;
   width: 80px;
   text-align: left;
+}
+.item1 /deep/ .el-link--inner {
+  font-size: 12px;
 }
 </style>
