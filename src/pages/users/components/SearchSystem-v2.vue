@@ -178,12 +178,12 @@
             <el-form-item label="转介绍学员:">
               <div class="search-group">
                 <simple-select
-                  name="first_order_send_id"
+                  name="send_id"
                   placeholder="请选择"
                   :my-style="{ width: '130px' }"
                   :multiple="false"
                   :data-list="user_StatusList"
-                  @result="getSearchData('first_order_send_id', arguments)"
+                  @result="getSearchData('send_id', arguments)"
                 />
               </div>
             </el-form-item>
@@ -340,14 +340,14 @@ export default {
           }
         }
         // 是否转介绍
-        if (key === 'first_order_send_id') {
+        if (key === 'send_id') {
           // 是
-          if (search.first_order_send_id === '2') {
-            search.first_order_send_id = { gt: 0 }
+          if (search.send_id === '2') {
+            search.send_id = { gt: 0 }
           }
           // 否
-          if (search.first_order_send_id === '1') {
-            search.first_order_send_id = { lte: 0 }
+          if (search.send_id === '1') {
+            search.send_id = { lte: 0 }
           }
         }
         if (key !== 'dateTime') {
