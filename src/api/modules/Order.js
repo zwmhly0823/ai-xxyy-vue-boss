@@ -219,6 +219,35 @@ export default {
     })
   },
   /*
+   *获取交易流水号
+   * */
+  searchPaymentPay(no = '', size = 20) {
+    const query = {
+      bool: {
+        must: [
+          {
+            wildcard: { transaction_id: `*${no}*` }
+          },
+          {
+            term: { status: 2 }
+          },
+          {
+            term: { type: 1 }
+          }
+        ]
+      }
+    }
+    const q = JSON.stringify(query)
+    return axios.post('/graphql/v1/toss', {
+      query: `{
+        PaymentPayListEx(query: ${JSON.stringify(q)}, size: ${size}){
+          oid,
+          transaction_id
+        }
+      }`
+    })
+  },
+  /*
    * 获取发票管理列表
    * */
   invoicePage(query, page = 1) {
@@ -227,8 +256,10 @@ export default {
         InvoiceRecordPage(query: ${JSON.stringify(query)}, page: ${page}) {
           content {
             id
-            uid
             oid
+            ctime
+            uid
+            invoice_status
             title_type
             company_name
             invoice_img
@@ -245,12 +276,19 @@ export default {
             money
             uniq_id
             complete_time
-            invoice_code
-            transaction_id
-            user_num
-            username
-            mobile
-            ctime
+            isImport
+            userInfo {
+              user_num
+              username
+              mobile
+            }
+            orderInfo {
+              out_trade_no
+              invoice_code
+            }
+            paymentPayInfo {
+              transaction_id
+            }
           }
           empty
           first

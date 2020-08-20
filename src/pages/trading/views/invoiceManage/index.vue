@@ -28,14 +28,33 @@
               >
                 <el-table-column label="用户信息" align="center">
                   <template slot-scope="scope">
-                    <p>{{ scope.row.username }}</p>
-                    <p>{{ scope.row.mobile }}</p>
+                    <div @click="userHandle(scope.row)" class="primary-text">
+                      <p>{{ scope.row.userInfo.username }}</p>
+                      <p>{{ scope.row.userInfo.mobile }}</p>
+                    </div>
                   </template>
                 </el-table-column>
-                <el-table-column label="订单编号·订单交易流水号" align="center">
+                <el-table-column
+                  label="订单编号·订单交易流水号"
+                  align="center"
+                  min-width="130"
+                >
                   <template slot-scope="scope">
-                    <p>{{ scope.row.oid }}</p>
-                    <p>{{ scope.row.transaction_id }}</p>
+                    <p>
+                      {{
+                        scope.row.orderInfo && scope.row.orderInfo.out_trade_no
+                          ? scope.row.orderInfo.out_trade_no
+                          : '-'
+                      }}
+                    </p>
+                    <p>
+                      {{
+                        scope.row.paymentPayInfo &&
+                        scope.row.paymentPayInfo.transaction_id
+                          ? scope.row.paymentPayInfo.transaction_id
+                          : '-'
+                      }}
+                    </p>
                   </template>
                 </el-table-column>
                 <el-table-column label="发票抬头" align="center">
@@ -57,7 +76,11 @@
                 </el-table-column>
                 <el-table-column label="发票代码" align="center">
                   <template slot-scope="scope">
-                    <span>{{ scope.row.invoice_code }}</span>
+                    <span>{{
+                      scope.row.orderInfo && scope.row.orderInfo.invoice_code
+                        ? scope.row.orderInfo.invoice_code
+                        : '-'
+                    }}</span>
                   </template>
                 </el-table-column>
                 <el-table-column label="开票申请时间" align="center">
@@ -104,7 +127,7 @@
 <script>
 import invoiceSearch from './components/invoiceSearch'
 import EleTable from '@/components/Table/EleTable'
-import { formatData } from '@/utils/index.js'
+import { formatData, openBrowserTab } from '@/utils/index.js'
 export default {
   data() {
     return {
@@ -114,7 +137,8 @@ export default {
         page: 1,
         size: 20
       },
-      totalElements: 0
+      totalElements: 0,
+      queryObj: {}
     }
   },
   created() {
@@ -132,7 +156,9 @@ export default {
     // 获取search
     getSearch(data) {
       console.log(data, 'res_getSearch=-=-=')
-      this.invoiceData(data)
+      this.queryObj = data
+      this.sourchParams.page = 1
+      this.invoiceData(this.queryObj, 1)
       // this.get_PromotionsPageList()
     },
     // 发票管理列表
@@ -148,14 +174,22 @@ export default {
           })
           console.log(res, 'res===')
           this.tableData = _data
+          this.totalElements = Number(res.data.InvoiceRecordPage.totalElements)
         })
         .catch((err) => {
           console.log(err)
         })
     },
+    // 用户详情页
+    userHandle(row) {
+      console.log(row, 'row')
+      // 新标签打开详情页
+      row.uid && openBrowserTab(`/users/#/details/${row.uid}`)
+    },
     // 换页
     pageChange_handler(res) {
       this.sourchParams.page = res
+      this.invoiceData(this.queryObj, this.sourchParams.page)
       // this.get_PromotionsPageList()
       console.log(res)
     },
