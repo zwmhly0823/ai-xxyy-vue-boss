@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-15 20:35:57
  * @LastEditors: Shentong
- * @LastEditTime: 2020-08-19 18:23:41
+ * @LastEditTime: 2020-08-20 14:51:46
  -->
 <template>
   <div class="first-step">
@@ -56,6 +56,7 @@
                   v-model="formInfo.attendClassTimeEnd"
                   type="date"
                   placeholder="结课时期"
+                  :picker-options="pickerBeginDateAfter"
                   value-format="timestamp"
                   @change="endClassChange"
                 >
@@ -341,13 +342,13 @@ export default {
   methods: {
     // 开课时期
     startClassChange(courseDay) {
-      this.formInfo.attendClassTimeStart = courseDay
+      this.formInfo.attendClassTimeStart = courseDay || ''
 
-      this.endClassChange(courseDay + 13 * 24 * 3600 * 1000)
+      courseDay && this.endClassChange(courseDay + 13 * 24 * 3600 * 1000)
     },
     // 节课时期
     endClassChange(endCourseDay) {
-      this.formInfo.attendClassTimeEnd = endCourseDay
+      this.formInfo.attendClassTimeEnd = endCourseDay || ''
     },
     // // 上课周期
     // attendClassTimeChange(val) {
