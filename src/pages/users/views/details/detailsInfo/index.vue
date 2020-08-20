@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-08-17 19:37:24
  * @LastEditors: liukun
- * @LastEditTime: 2020-08-20 17:35:58
+ * @LastEditTime: 2020-08-20 19:53:27
 -->
 <template>
   <div class="details" v-loading="loading">
@@ -338,7 +338,7 @@
                 >{{
                   typeof systerm_lk.all_noactivecount === 'number' &&
                     ('' + systerm_lk.all_noactivecount || '-')
-                }}次_</span
+                }}次</span
               >
               <span style="color:#00000000">g</span
               ><span style="color:#f56c6c">{{
@@ -355,7 +355,7 @@
                 >{{
                   typeof systerm_lk.all_activecount === 'number' &&
                     ('' + systerm_lk.all_activecount || '-')
-                }}次_</span
+                }}次</span
               ><span style="color:#00000000">g</span
               ><span style="color:#f56c6c">{{
                 systerm_lk.activecount || '-'
