@@ -386,9 +386,13 @@ export default {
               this.$message.success('删除成功!')
               console.info(this.faInstance.stuInfor.teams)
               console.info(this.faInstance.courseIndex)
-              this.faInstance.reqStudentCourseTaskPage(
-                this.faInstance.stuInfor.teams[this.faInstance.courseIndex].id
-              ) // 刷新数据
+              setTimeout(() => {
+                // 刷新数据
+                this.faInstance.reqUser()
+                // this.faInstance.reqStudentCourseTaskPage(
+                //   this.faInstance.stuInfor.teams[this.faInstance.courseIndex].id
+                // )
+              }, 1000)
             } else {
               this.$message.error('删除失败,稍后重试!')
             }
