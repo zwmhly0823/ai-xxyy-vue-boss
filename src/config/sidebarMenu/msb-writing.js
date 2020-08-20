@@ -4,16 +4,16 @@
  * @Author: YangJiyong
  * @Date: 2020-08-19 21:14:16
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-20 15:31:25
+ * @LastEditTime: 2020-08-20 22:28:52
  */
-const module = 'msbWriting'
+const module = 'msb-writing'
 const staff = JSON.parse(localStorage.getItem('staff'))
 
 let superOperatingRouter = []
 let superTeacherRouter = []
 
-// 管理员、
-const adminRouter = []
+// 管理员
+// const adminRouter = []
 
 // 超级管理员权限
 if (staff.roleId === '7') {
@@ -23,15 +23,7 @@ if (staff.roleId === '7') {
       name: 'operatingSchedule',
       meta: {
         title: '招生排期',
-        module: 'operating'
-      }
-    },
-    {
-      path: '/changePhoneNumber',
-      name: 'changePhoneNumber',
-      meta: {
-        title: '手机号替换',
-        module: 'operating'
+        module
       }
     }
   ]
@@ -41,29 +33,13 @@ if (staff.roleId === '7') {
       name: 'teacherManagement',
       meta: {
         title: '员工帐号',
-        module: 'teacher'
-      }
-    },
-    {
-      path: '/weixinManagement',
-      name: 'weixinManagement',
-      meta: {
-        title: '员工微信',
-        module: 'teacher'
+        module
       }
     }
   ]
 }
 // 管理员权限
 if (staff.roleId === '1') {
-  adminRouter.push({
-    path: '/changePhoneNumber',
-    name: 'changePhoneNumber',
-    meta: {
-      title: '手机号替换',
-      module: 'operating'
-    }
-  })
 }
 const msbWriting = [
   // 班级
@@ -73,7 +49,7 @@ const msbWriting = [
     meta: {
       title: '班级管理',
       icon: 'iconbanjiguanli',
-      module: 'student-team'
+      module
     },
     children: [
       {
@@ -81,7 +57,7 @@ const msbWriting = [
         name: 'trialTeam',
         meta: {
           title: '体验课',
-          module: 'student-team',
+          module,
           show: true
         }
       },
@@ -90,7 +66,7 @@ const msbWriting = [
         name: 'systemTeam',
         meta: {
           title: '系统课',
-          module: 'student-team',
+          module,
           show: true
         }
       }
@@ -124,6 +100,15 @@ const msbWriting = [
           module,
           show: true
         }
+      },
+      {
+        path: '/system',
+        name: 'system',
+        meta: {
+          title: '全部学员',
+          module,
+          show: true
+        }
       }
     ]
   },
@@ -135,7 +120,7 @@ const msbWriting = [
     meta: {
       title: '交易管理',
       icon: 'iconjianyiguanli',
-      module: 'trading'
+      module
     },
     children: [
       {
@@ -143,115 +128,13 @@ const msbWriting = [
         name: 'order',
         meta: {
           title: '订单管理',
-          module: 'trading',
-          show: true
-        }
-      },
-      {
-        path: '/financeRefound',
-        name: 'financeRefound',
-        meta: {
-          title: '订单退款',
-          module: 'trading',
+          module,
           show: true
         }
       }
     ]
   },
-  // 社群工具
-  {
-    path: '/community',
-    name: 'community',
-    meta: {
-      title: '社群工具',
-      icon: 'icongongju1',
-      module: 'community'
-    },
-    children: [
-      {
-        path: '/groupSop',
-        name: 'groupSop',
-        meta: {
-          title: '群SOP',
-          module: 'community',
-          show: false
-        }
-      },
-      {
-        path:
-          'https://wgj.xiaoxiongmeishu.com/Site/AccuratePush/accuratePush.html',
-        meta: {
-          title: '群发消息',
-          show: false
-        }
-      },
-      {
-        path:
-          'https://wgj.xiaoxiongmeishu.com/Marketing/FriendsCircle/FriendsCircleList',
-        meta: {
-          title: '发朋友圈',
-          show: false
-        }
-      },
-      {
-        path:
-          'https://wgj.xiaoxiongmeishu.com/Equipment/QuickReply/QuickReplyList',
-        meta: {
-          title: '快捷回复',
-          show: false
-        }
-      },
-      {
-        path:
-          'https://wgj.xiaoxiongmeishu.com/Equipment/AutoCreateCluster/KeyClusterList',
-        meta: {
-          title: '自动拉群',
-          show: false
-        }
-      },
-      {
-        path: 'https://wgj.xiaoxiongmeishu.com/WeiXin/Tag/WeiXinTagList',
-        meta: {
-          title: '微信标签',
-          show: false
-        }
-      },
-      {
-        path: 'https://wgj.xiaoxiongmeishu.com/WeiXin/Cluster/ClusterList',
-        meta: {
-          title: '微信群',
-          show: false
-        }
-      },
-      {
-        path:
-          'https://wgj.xiaoxiongmeishu.com/Marketing/AutoPassFriend/AutoPassFriendList',
-        meta: {
-          title: '被动通过添加好友设置'
-        }
-      },
-      {
-        path:
-          'https://wgj.xiaoxiongmeishu.com/Equipment/MsgRule/UserAddRuleList',
-        meta: {
-          title: '通过好友自动回复设置'
-        }
-      },
-      {
-        path: 'https://wgj.xiaoxiongmeishu.com/Equipment/MsgRule/KeyRuleList',
-        meta: {
-          title: '单聊关键词自动回复设置'
-        }
-      },
-      {
-        path:
-          'https://wgj.xiaoxiongmeishu.com/Equipment/MsgRule/ClusterKeyRuleList?menuType=1',
-        meta: {
-          title: '群聊关键词自动回复设置'
-        }
-      }
-    ]
-  },
+
   // 物流管理new
   {
     path: '/express',
@@ -259,29 +142,8 @@ const msbWriting = [
     meta: {
       title: '物流管理',
       icon: 'iconwuliuguanli',
-      module: 'express'
+      module
     }
-  },
-  // 财务(该模块先隐藏,丹阳还会回来)
-  {
-    path: '/finance',
-    name: 'finance',
-    hidden: true, // 原封不动,丹阳还会回来
-    meta: {
-      title: '财务',
-      icon: 'el-icon-s-finance',
-      module: 'finance'
-    },
-    children: [
-      {
-        path: '/financeRefound',
-        name: 'financeRefound',
-        meta: {
-          title: '退款',
-          module: 'finance'
-        }
-      }
-    ]
   },
 
   // 运营中心
@@ -292,193 +154,31 @@ const msbWriting = [
     meta: {
       title: '运营管理',
       icon: 'iconyunyingzhongxin',
-      module: 'operating'
+      module
     },
     children: [
-      {
-        path: '/activityManagement',
-        name: 'activityManagement',
-        meta: {
-          title: '活动管理',
-          module: 'operating'
-        }
-      },
       {
         path: '/channelManagement',
         name: 'channelManagement',
         meta: {
           title: '渠道管理',
-          module: 'operating'
+          module
         }
       },
-      {
-        path: '/reviewManagement',
-        name: 'reviewManagement',
-        meta: {
-          title: '点评管理',
-          module: 'operating'
-        }
-      },
-      {
-        path: '/verificationCode',
-        name: 'verificationCode',
-        meta: {
-          title: '验证码查询',
-          module: 'operating'
-        }
-      },
-      {
-        path: '/labelManage',
-        name: 'labelManage',
-        meta: {
-          title: '标签管理',
-          module: 'operating'
-        }
-      },
-      {
-        path: '/pushConfig',
-        name: 'pushConfig',
-        meta: {
-          title: '推送配置',
-          module: 'operating'
-        }
-      },
-      {
-        path: '/problem',
-        name: 'problem',
-        meta: {
-          title: '问卷管理',
-          module: 'operating'
-        }
-      },
-      {
-        path: '/issueBearCoins',
-        name: 'issueBearCoins',
-        meta: {
-          title: '发放小熊币',
-          module: 'operating'
-        }
-      },
-      {
-        path: '/recommend',
-        name: 'recommend',
-        meta: {
-          title: '转介绍截图',
-          module: 'operating'
-        }
-      },
-      ...superOperatingRouter,
-      ...adminRouter
-    ]
-  },
-  // 营销中心
-  {
-    path: '/marketing',
-    name: 'marketing',
-    hidden: staff.roleId !== '7',
-    meta: {
-      title: '营销中心',
-      icon: 'iconyingxiaoguanli',
-      module: 'marketing'
-    }
-  },
-  // 工具类路由
-  {
-    path: '/approval',
-    name: 'approval',
-    meta: {
-      title: '审批中心',
-      icon: 'iconshenpizhongxin',
-      module: 'approval'
-    }
-  },
-  {
-    path: '/outbound',
-    name: 'outbound',
-    meta: {
-      title: '呼叫中心',
-      icon: 'icondianhua',
-      module: 'outbound'
-    }
-  },
-  // 数据中心
-  {
-    path: '/statistics',
-    name: 'statistics',
-    // hidden: true,
-    meta: {
-      title: '数据中心',
-      icon: 'icontongjifenxi',
-      module: 'statistics'
-    },
-    children: [
-      {
-        path: '/priodPerformance',
-        name: 'priodPerformance',
-        meta: {
-          title: '按期汇总',
-          module: 'statistics',
-          style: 'line'
-        }
-      },
-      {
-        path: '/salesPerformance',
-        name: 'salesPerformance',
-        meta: {
-          title: '过程分析',
-          module: 'statistics',
-          style: 'line'
-        }
-      },
-      {
-        path: '/behavior',
-        name: 'behavior',
-        meta: {
-          title: '行为轨迹',
-          module: 'statistics',
-          style: 'line'
-        }
-      },
-      {
-        path: '/learnRecord',
-        name: 'learnRecord',
-        meta: {
-          title: '学习记录',
-          module: 'statistics',
-          style: 'line'
-        }
-      }
+      ...superOperatingRouter
     ]
   },
   // 设置 - 老师模块
   {
     path: '/teacher',
     name: 'teacher',
-    // hidden: true,
+    hidden: staff.roleId !== '7', // 目前只有一个员工设置，只有超管有权限
     meta: {
       title: '设置',
       icon: 'iconiconset',
-      module: 'teacher'
+      module
     },
-    children: [
-      ...superTeacherRouter,
-      {
-        path: '/workHandover',
-        name: 'workHandover',
-        meta: {
-          title: '离职交接',
-          module: 'teacher'
-        }
-      },
-      {
-        path: '/systemAccount',
-        name: 'systemAccount',
-        meta: {
-          title: '系统帐号',
-          module: 'teacher'
-        }
-      }
-    ]
+    children: [...superTeacherRouter]
   }
 ]
 
