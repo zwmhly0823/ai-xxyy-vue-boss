@@ -5,7 +5,7 @@
  * @Author: shentong
  * @Date: 2020-03-13 14:38:28
  * @LastEditors: liukun
- * @LastEditTime: 2020-08-19 15:48:30
+ * @LastEditTime: 2020-08-20 14:17:02
  */
 // import axios from '../axios'
 import axios from '../axiosConfig'
@@ -1127,6 +1127,7 @@ export default {
               sort:${JSON.stringify(JSON.stringify({ ctime: 'asc' }))}
               )
             {
+            departmentname
             addedgroup
             addedwechat
             expressstatus

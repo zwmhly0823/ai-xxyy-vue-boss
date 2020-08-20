@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-08-17 19:37:24
  * @LastEditors: liukun
- * @LastEditTime: 2020-08-19 16:58:21
+ * @LastEditTime: 2020-08-20 14:29:31
 -->
 <template>
   <div class="details" v-loading="loading">
@@ -20,10 +20,15 @@
               <span>负责销售</span
               ><span>{{
                 experience_lk.teacherInfo &&
-                  experience_lk.teacherInfo.realname +
-                    '-' +
-                    experience_lk.teacherInfo.departmentInfo.name +
-                    '战队'
+                  experience_lk.teacherInfo.realname &&
+                  experience_lk.teacherInfo.realname
+              }}</span
+              >-
+              <span>{{
+                experience_lk.teacherInfo &&
+                  experience_lk.teacherInfo.departmentInfo &&
+                  experience_lk.teacherInfo.departmentInfo.name &&
+                  experience_lk.teacherInfo.departmentInfo.name + '战队'
               }}</span>
             </div></el-col
           >
@@ -206,12 +211,10 @@
             ><div class="item1">
               <span>负责服务</span
               ><span>{{
-                systerm_lk.teacherInfo &&
-                  systerm_lk.teacherInfo.realname +
-                    '-' +
-                    systerm_lk.teacherInfo.departmentInfo.name +
-                    '战队'
-              }}</span>
+                systerm_lk.teacherInfo && systerm_lk.teacherInfo.realname
+              }}</span
+              >-
+              <span>{{ systerm_lk.departmentname || '-' }}</span>
             </div></el-col
           >
           <el-col :span="5"
