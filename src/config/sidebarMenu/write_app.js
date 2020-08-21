@@ -4,9 +4,9 @@
  * @Author: YangJiyong
  * @Date: 2020-08-19 21:14:16
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-21 12:21:50
+ * @LastEditTime: 2020-08-21 16:09:39
  */
-const module = 'msb-writing'
+const module = 'write_app'
 const staff = JSON.parse(localStorage.getItem('staff'))
 
 let superOperatingRouter = []

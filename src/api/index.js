@@ -4,12 +4,12 @@
  * @Author: shentong
  * @Date: 2020-03-13 14:38:28
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-21 11:10:55
+ * @LastEditTime: 2020-08-21 16:12:28
  */
 /**
- * 美术宝写字 专有。 业务代码中引用： this.$http.msbWriting.User(params).then()
+ * 美术宝写字 专有。 业务代码中引用： this.$http.writeApp.User(params).then()
  */
-import msbWriting from './index-msb-writing'
+import writeApp from './index_write_app'
 
 /**
  * 小熊美术 及 公共
@@ -44,7 +44,7 @@ import Setting from './modules/Setting'
 
 export default Object.assign(
   {},
-  { msbWriting },
+  { writeApp },
   { Base },
   { Login },
   { Order },

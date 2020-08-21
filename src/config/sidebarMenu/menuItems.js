@@ -96,7 +96,7 @@ const menuItems = [
     isShow: true
   },
   {
-    link: 'msb-writing',
+    link: 'write_app',
     text: '美术宝写字',
     isShow: false
   }
