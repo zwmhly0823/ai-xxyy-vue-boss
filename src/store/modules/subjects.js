@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-08-20 11:27:55
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-20 11:56:16
+ * @LastEditTime: 2020-08-21 12:17:40
  */
 // import Cookies from 'js-cookie'
 
@@ -22,6 +22,8 @@ const mutations = {
   GET_SUBJECT: (state) => {
     const pathname = location.pathname.replace(/\//g, '')
     const key = Object.keys(subjects).includes(pathname) ? pathname : 'bear-art'
+    console.log(key)
+
     state.currentSubject = { [`${key}`]: subjects[key] }
     state.currentSubjectKey = key
     state.currentSubjectTitle = subjects[key]

@@ -4,7 +4,7 @@
  * @Date: 2020-03-13 15:13:34
  * @Description: topbar 顶部功能区
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-20 16:42:12
+ * @LastEditTime: 2020-08-21 12:22:58
  -->
 <template>
   <div class="navbar" :class="{ prod: isProd }">
@@ -33,21 +33,25 @@
       <!-- 全局搜索学员 - 手机号、user_num -->
       <GlobelSearch class="globelSearch-con" />
 
-      <!-- 功能区 入口 -->
-      <a
-        class="order-btn"
-        href="https://shimo.im/docs/opMWovESib0pcyh0/"
-        target="_blank"
-        >帮助</a
-      >
-      <span class="item-line"></span>
-      <el-badge
-        :value="noticeBadge"
-        :hidden="!noticeBadge"
-        class="notices-content"
-      >
-        <span type="text" @click="clickNoticeTop" class="order-btn">通知</span>
-      </el-badge>
+      <!-- 功能区 入口; 目前只有 小熊美术 显示 -->
+      <template v-if="currentSubject === 'bear-art'">
+        <a
+          class="order-btn"
+          href="https://shimo.im/docs/opMWovESib0pcyh0/"
+          target="_blank"
+          >帮助</a
+        >
+        <span class="item-line"></span>
+        <el-badge
+          :value="noticeBadge"
+          :hidden="!noticeBadge"
+          class="notices-content"
+        >
+          <span type="text" @click="clickNoticeTop" class="order-btn"
+            >通知</span
+          >
+        </el-badge>
+      </template>
       <!-- 功能区 入口 - end -->
 
       <!-- 用户信息 -->
@@ -75,7 +79,7 @@
 
       <!-- 多科目切换 -->
       <div class="subject-change">
-        <el-dropdown @command="handleChangeSubject">
+        <el-dropdown @command="handleChangeSubject" trigger="click">
           <div class="subject-change-title">
             {{ currentSubjectText }}
             <i class="el-icon-arrow-down el-icon--right"></i>
@@ -185,10 +189,11 @@ export default {
       return
     }
     this.userInfo = JSON.parse(userInfo)
-    // 通知的角标数字
-    this.getNoticeBadge()
+
     this.currentSubject = this.subjects.currentSubjectKey
     this.getSubject()
+    // 通知的角标数字
+    this.currentSubject === 'bear-art' && this.getNoticeBadge()
   },
   methods: {
     ...mapActions({

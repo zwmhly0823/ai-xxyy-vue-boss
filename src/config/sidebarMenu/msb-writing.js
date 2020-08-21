@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-08-19 21:14:16
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-20 22:28:52
+ * @LastEditTime: 2020-08-21 12:21:50
  */
 const module = 'msb-writing'
 const staff = JSON.parse(localStorage.getItem('staff'))
@@ -102,8 +102,8 @@ const msbWriting = [
         }
       },
       {
-        path: '/system',
-        name: 'system',
+        path: '/all',
+        name: 'all',
         meta: {
           title: '全部学员',
           module,
