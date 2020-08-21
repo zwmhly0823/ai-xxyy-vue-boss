@@ -352,6 +352,15 @@ export default {
               user_status
               department_id
               sys_label
+              send_id
+              remain_order_count
+              user_info{
+                sender{
+                  id
+                  username
+                  user_num
+                }
+              }
             }
           }
         }
