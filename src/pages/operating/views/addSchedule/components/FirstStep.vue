@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-15 20:35:57
  * @LastEditors: Shentong
- * @LastEditTime: 2020-08-20 14:51:46
+ * @LastEditTime: 2020-08-21 15:26:57
  -->
 <template>
   <div class="first-step">
@@ -344,7 +344,9 @@ export default {
     startClassChange(courseDay) {
       this.formInfo.attendClassTimeStart = courseDay || ''
 
-      courseDay && this.endClassChange(courseDay + 13 * 24 * 3600 * 1000)
+      if (courseDay && this.courseType === '0') {
+        courseDay && this.endClassChange(courseDay + 13 * 24 * 3600 * 1000)
+      }
     },
     // 节课时期
     endClassChange(endCourseDay) {
