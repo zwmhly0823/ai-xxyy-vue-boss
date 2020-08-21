@@ -3,7 +3,7 @@
  * @Email: songyanan@meishubao.com
  * @Date: 2020-06-09 14:42:08
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-20 15:39:25
+ * @LastEditTime: 2020-08-21 16:10:31
  */
 
 const glob = require('glob')
@@ -16,7 +16,7 @@ const { getMenuText } = require('./src/config/sidebarMenu/menuItems')
 const { BASE_URL } = process.env
 const entries = {}
 // 多科目名称-除小熊美术
-const subjects = ['msb-writing']
+const subjects = ['write_app']
 
 const camel2Line = function(str) {
   return str.replace(/([A-Z])/g, '-$1').toLowerCase()

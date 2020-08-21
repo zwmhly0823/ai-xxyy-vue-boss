@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-08-19 20:42:54
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-21 11:10:08
+ * @LastEditTime: 2020-08-21 16:10:13
  */
-import User from './modules/msb-writing/User' // 用户接口
+import User from './modules/write_app/User' // 用户接口
 export default Object.assign({}, { User })

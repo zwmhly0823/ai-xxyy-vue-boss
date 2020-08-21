@@ -21,7 +21,7 @@ const state = {
 const mutations = {
   GET_SUBJECT: (state) => {
     const pathname = location.pathname.replace(/\//g, '')
-    const key = Object.keys(subjects).includes(pathname) ? pathname : 'bear-art'
+    const key = Object.keys(subjects).includes(pathname) ? pathname : 'art_app'
     console.log(key)
 
     state.currentSubject = { [`${key}`]: subjects[key] }
