@@ -111,10 +111,8 @@ export default {
     },
     // 订单号、手机号、交易流水号
     getOrderSearch(res) {
-      console.log('手机号', res)
       const key = Object.keys(res || {})[0]
       const val = res[key] ? [res] : []
-      console.log(key, val)
       this.getSearchData(key, val)
       // this.getSearchData([key], val)
     },
@@ -122,7 +120,6 @@ export default {
      * search item 回调。 key,自定义参数，res，组件返回的值 res[0]
      */
     getSearchData(key, res) {
-      console.log(key, res, 'resssssss')
       const search = res && res[0]
       if (search) {
         if (key === 'ctime') {
@@ -141,13 +138,10 @@ export default {
       if (search && search[key].length === 0) {
         this.$delete(this.searchQuery, key)
       }
-      console.log(search, 'getSearchData')
-      console.log(this.searchQuery, 'this.searchQuery')
       this.$emit('search', this.searchQuery)
     },
     // 获取下拉时间选择select
     getTimeCallBack(data) {
-      console.log(data, 'data==')
       if (data) {
         this.selectTime = data
       } else {

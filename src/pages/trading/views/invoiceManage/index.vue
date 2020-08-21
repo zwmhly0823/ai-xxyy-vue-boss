@@ -23,14 +23,27 @@
                 :size="sourchParams.size"
                 :page="sourchParams.page"
                 :total="totalElements"
+                :loading="loading"
                 @pageChange="pageChange_handler"
                 class="mytable"
               >
                 <el-table-column label="用户信息" align="center">
                   <template slot-scope="scope">
                     <div @click="userHandle(scope.row)" class="primary-text">
-                      <p>{{ scope.row.userInfo.username }}</p>
-                      <p>{{ scope.row.userInfo.mobile }}</p>
+                      <p>
+                        {{
+                          scope.row.userInfo && scope.row.userInfo.username
+                            ? scope.row.userInfo.username
+                            : '-'
+                        }}
+                      </p>
+                      <p>
+                        {{
+                          scope.row.userInfo && scope.row.userInfo.mobile
+                            ? scope.row.userInfo.mobile
+                            : '-'
+                        }}
+                      </p>
                     </div>
                   </template>
                 </el-table-column>
@@ -133,6 +146,7 @@ export default {
     return {
       tableHeight: 'auto',
       tableData: [],
+      loading: false,
       sourchParams: {
         page: 1,
         size: 20
@@ -155,14 +169,13 @@ export default {
   methods: {
     // 获取search
     getSearch(data) {
-      console.log(data, 'res_getSearch=-=-=')
       this.queryObj = data
       this.sourchParams.page = 1
       this.invoiceData(this.queryObj, 1)
-      // this.get_PromotionsPageList()
     },
     // 发票管理列表
     invoiceData(queryObj = {}, page = 1) {
+      this.loading = true
       this.$http.Order.invoicePage(`${JSON.stringify(queryObj)}`, page)
         .then((res) => {
           const _data = res.data.InvoiceRecordPage.content
@@ -172,9 +185,9 @@ export default {
             item.complete_time = formatData(item.complete_time, 's')
             item.ctime = formatData(item.ctime, 's')
           })
-          console.log(res, 'res===')
           this.tableData = _data
           this.totalElements = Number(res.data.InvoiceRecordPage.totalElements)
+          this.loading = false
         })
         .catch((err) => {
           console.log(err)
@@ -182,7 +195,6 @@ export default {
     },
     // 用户详情页
     userHandle(row) {
-      console.log(row, 'row')
       // 新标签打开详情页
       row.uid && openBrowserTab(`/users/#/details/${row.uid}`)
     },
@@ -190,8 +202,6 @@ export default {
     pageChange_handler(res) {
       this.sourchParams.page = res
       this.invoiceData(this.queryObj, this.sourchParams.page)
-      // this.get_PromotionsPageList()
-      console.log(res)
     },
     // 计算表格高度
     calcTableHeight() {
