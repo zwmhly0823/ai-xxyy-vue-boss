@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-03-13 15:24:11
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-06-12 19:18:50
+ * @LastEditTime: 2020-08-21 15:21:41
  -->
 <template>
   <div id="login" class="login-container">
@@ -205,11 +205,13 @@ export default {
       tabFirstActive: true,
       pwdLoginForm: {
         userName: '',
-        pwd: ''
+        pwd: '',
+        origin: 1 // 标记后端登录
       },
       codeLoginForm: {
         phone: '',
-        code: ''
+        code: '',
+        origin: 1 // 标记后端登录
       },
       checkInterval: '',
       passwordType: 'password',
