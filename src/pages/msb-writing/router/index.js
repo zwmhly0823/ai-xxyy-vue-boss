@@ -3,8 +3,8 @@
  * @version: 1.0.0
  * @Author: YangJiyong
  * @Date: 2020-08-19 20:26:32
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-20 10:56:22
+ * @LastEditors: Shentong
+ * @LastEditTime: 2020-08-21 15:42:21
  */
 import Vue from 'vue'
 import VueRouter from 'vue-router'
@@ -29,6 +29,15 @@ const routes = [
       keepAlive: true
     },
     component: () => import('../views/Users/index.vue')
+  },
+  {
+    path: '/operatingSchedule',
+    name: 'operatingSchedule',
+    meta: {
+      title: '招生排期',
+      keepAlive: true
+    },
+    component: () => import('../views/Operating/index.vue')
   }
   //   {
   //     path: '/system',
