@@ -158,55 +158,55 @@ export default {
   methods: {
     getChannelDetailStatisticsPage() {
       const id = `id:${this.modifyRow.id}`
-      this.$http.Operating.ChannelDetailStatisticsPage(JSON.stringify(id)).then(
-        (res) => {
-          const _data = res.data.ChannelDetailStatisticsPage.content
-          _data.forEach((item) => {
-            this.channelId = item.id
-            this.ruleForm.channelOne = item.p_channel_class_name
-            this.channelOneId = item.p_channel_class_id
-            this.channelTwoId = item.channel_class_id
-            if (item.channel_class_name) {
-              this.channelTwoDisabled = false
-              this.channelThreeDisabled = false
-            }
-            this.ruleForm.channelTwo = item.channel_class_name
-            this.ruleForm.channelThree = item.channel_inner_name
-            this.ruleForm.sort = item.channel_sort
-            this.ruleForm.desc = item.remarks
-            this.ruleForm.status = item.status.toString()
-            this.ruleForm.channelLevel = item.channel_level
-          })
-        }
-      )
+      this.$http.writeApp.Operating.ChannelDetailStatisticsPage(
+        JSON.stringify(id)
+      ).then((res) => {
+        const _data = res.data.ChannelDetailStatisticsPage.content
+        _data.forEach((item) => {
+          this.channelId = item.id
+          this.ruleForm.channelOne = item.p_channel_class_name
+          this.channelOneId = item.p_channel_class_id
+          this.channelTwoId = item.channel_class_id
+          if (item.channel_class_name) {
+            this.channelTwoDisabled = false
+            this.channelThreeDisabled = false
+          }
+          this.ruleForm.channelTwo = item.channel_class_name
+          this.ruleForm.channelThree = item.channel_inner_name
+          this.ruleForm.sort = item.channel_sort
+          this.ruleForm.desc = item.remarks
+          this.ruleForm.status = item.status.toString()
+          this.ruleForm.channelLevel = item.channel_level
+        })
+      })
     },
     channelTwo() {
       if (typeof this.ruleForm.channelOne === 'string') {
-        this.$http.Operating.getChannelAndClass(this.channelOneId).then(
-          (res) => {
-            const data = res.payload.channelClassList
-            data.forEach((res) => {
-              res.label = res.channelClassName
-              res.value = +res.id
-            })
-            this.channelTwoList = data
-          }
-        )
+        this.$http.writeApp.Operating.getChannelAndClass(
+          this.channelOneId
+        ).then((res) => {
+          const data = res.payload.channelClassList
+          data.forEach((res) => {
+            res.label = res.channelClassName
+            res.value = +res.id
+          })
+          this.channelTwoList = data
+        })
       } else {
-        this.$http.Operating.getChannelAndClass(this.ruleForm.channelOne).then(
-          (res) => {
-            const data = res.payload.channelClassList
-            data.forEach((res) => {
-              res.label = res.channelClassName
-              res.value = +res.id
-            })
-            this.channelTwoList = data
-          }
-        )
+        this.$http.writeApp.Operating.getChannelAndClass(
+          this.ruleForm.channelOne
+        ).then((res) => {
+          const data = res.payload.channelClassList
+          data.forEach((res) => {
+            res.label = res.channelClassName
+            res.value = +res.id
+          })
+          this.channelTwoList = data
+        })
       }
     },
     getChannelOne() {
-      this.$http.Operating.getChannelAndClass(0).then((res) => {
+      this.$http.writeApp.Operating.getChannelAndClass(0).then((res) => {
         const data = res.payload.channelClassList
         data.forEach((res) => {
           res.label = res.channelClassName
@@ -262,15 +262,17 @@ export default {
             }
           }
 
-          this.$http.Operating.updateChannel(this.props).then((res) => {
-            console.log(res)
-            if (res.code === 0) {
-              this.$message.success('渠道修改成功')
-              this.$refs[formName].resetFields()
-              this.$emit('modifyChannelShow', false)
-              this.$emit('modifyChannelShowBtn', 1)
+          this.$http.writeApp.Operating.updateChannel(this.props).then(
+            (res) => {
+              console.log(res)
+              if (res.code === 0) {
+                this.$message.success('渠道修改成功')
+                this.$refs[formName].resetFields()
+                this.$emit('modifyChannelShow', false)
+                this.$emit('modifyChannelShowBtn', 1)
+              }
             }
-          })
+          )
         } else {
           return false
         }

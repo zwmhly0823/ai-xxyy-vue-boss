@@ -147,19 +147,19 @@ export default {
   },
   methods: {
     channelTwo() {
-      this.$http.Operating.getChannelAndClass(this.ruleForm.channelOne).then(
-        (res) => {
-          const data = res.payload.channelClassList
-          data.forEach((res) => {
-            res.label = res.channelClassName
-            res.value = +res.id
-          })
-          this.channelTwoList = data
-        }
-      )
+      this.$http.writeApp.Operating.getChannelAndClass(
+        this.ruleForm.channelOne
+      ).then((res) => {
+        const data = res.payload.channelClassList
+        data.forEach((res) => {
+          res.label = res.channelClassName
+          res.value = +res.id
+        })
+        this.channelTwoList = data
+      })
     },
     getChannelOne() {
-      this.$http.Operating.getChannelAndClass(0).then((res) => {
+      this.$http.writeApp.Operating.getChannelAndClass(0).then((res) => {
         const data = res.payload.channelClassList
         data.forEach((res) => {
           res.label = res.channelClassName
@@ -199,7 +199,7 @@ export default {
             remarks: this.ruleForm.desc,
             channelLevel: this.getLevel(this.ruleForm.channelLevel) // 渠道等级
           }
-          this.$http.Operating.createChannel(props).then((res) => {
+          this.$http.writeApp.Operating.createChannel(props).then((res) => {
             if (res.code === 0) {
               this.$message.success('渠道添加成功')
               this.$refs[formName].resetFields()

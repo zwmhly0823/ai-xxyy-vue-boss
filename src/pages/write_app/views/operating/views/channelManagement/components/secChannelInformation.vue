@@ -145,7 +145,7 @@ export default {
         defaultQuery.channel_level = Array.from(new Set(this.channelLevels))
       }
       const queryParamsJsonStr = JSON.stringify(JSON.stringify(defaultQuery))
-      this.$http.Operating.ChannelClassPage(
+      this.$http.writeApp.Operating.ChannelClassPage(
         queryParamsJsonStr,
         this.currentPage
       ).then((res) => {

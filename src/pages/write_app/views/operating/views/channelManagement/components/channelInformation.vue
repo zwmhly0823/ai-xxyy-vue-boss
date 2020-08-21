@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-05-06 16:33:15
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-21 15:44:46
+ * @LastEditTime: 2020-08-21 20:40:13
  -->
 <template>
   <div class="channelAdd-box">
@@ -229,47 +229,6 @@ export default {
       queryList: [],
       channelName: [],
       modifyRow: '',
-      imgList: [
-        {
-          channelId: '21',
-          img: 'https://s1.meixiu.mobi/h5/headPic/1587896513277.jpg'
-        },
-        {
-          channelId: '26',
-          img:
-            'http://s1.meixiu.mobi/iOSImage/4e41b93c7f7ec80dc943d12aa94fa528.jpg'
-        },
-        {
-          channelId: '31',
-          img:
-            'http://s1.meixiu.mobi/iOSImage/bbd1b2f1ad446840aa09663b533ff0a6.jpg'
-        },
-        {
-          channelId: '32',
-          img:
-            'http://s1.meixiu.mobi/android-images/2020-04-30/7ff9aa1f04644a829313ccdbbdfd0774.jpeg'
-        },
-        {
-          channelId: '11',
-          img:
-            'http://s1.meixiu.mobi/iOSImage/7e360fb83ca6be1b09bff5f37a7d328c.jpg'
-        },
-        {
-          channelId: '22',
-          img:
-            'http://s1.meixiu.mobi/iOSImage/72d1f779396b80cc7ee00c3b4346ed93.jpg'
-        },
-        {
-          channelId: '33',
-          img:
-            'http://s1.meixiu.mobi/iOSImage/30b80ff5402873d95b5c75123d931829.jpg'
-        },
-        {
-          channelId: '44',
-          img:
-            'http://s1.meixiu.mobi/android-images/2020-05-03/4b01192047ef43a9b4377d1a43c85fa8.jpeg'
-        }
-      ],
       tableInfoObj: {}
     }
   },
@@ -289,13 +248,13 @@ export default {
     // 获取渠道id
     getChannelOne() {
       const arrOne = []
-      this.$http.Operating.getChannelAndClass(17).then((res) => {
+      this.$http.writeApp.Operating.getChannelAndClass(17).then((res) => {
         const data = res.payload.channelList
         data.forEach((item) => {
           arrOne.push(item.id)
         })
 
-        this.$http.Operating.getChannelAndClass(36).then((res) => {
+        this.$http.writeApp.Operating.getChannelAndClass(36).then((res) => {
           const arrTwo = []
           const data = res.payload.channelList
           data.forEach((item) => {
@@ -311,7 +270,7 @@ export default {
       if (this.queryList.length === 0) {
         this.queryList = `""`
       }
-      this.$http.Operating.ChannelDetailStatisticsPage(
+      this.$http.writeApp.Operating.ChannelDetailStatisticsPage(
         this.queryList,
         this.currentPage
       ).then((res) => {
@@ -446,15 +405,9 @@ export default {
       // })
       this.downLoad = true
       const imgAll = this.tableData
-      // const imgAll = this.imgList
       const imgUrlList = []
       const imgListName = {}
       imgAll.forEach((res) => {
-        // res.short_er_code && (imgUrlList[res.id] = res.short_er_code)
-        // res.short_er_code &&
-        //   (imgListName[
-        //     res.id
-        //   ] = `${res.p_channel_class_name}-${res.channel_class_name}-${res.channel_inner_name}-${res.id}`)
         if (res.short_er_code) {
           imgUrlList.push({ id: res.id, shortCode: res.short_er_code })
           imgListName[
@@ -488,7 +441,7 @@ export default {
     },
     // 点击推广人统计查看
     onExtension(row) {
-      this.$http.Operating.getEncode(row.id).then((res) => {
+      this.$http.writeApp.Operating.getEncode(row.id).then((res) => {
         // window.location.href = res
         window.open(res)
       })

@@ -88,7 +88,7 @@ export default {
     },
     // 获取一级渠道列表
     getChannelOne() {
-      this.$http.Operating.getChannelAndClass(0).then((res) => {
+      this.$http.writeApp.Operating.getChannelAndClass(0).then((res) => {
         const data = res.payload.channelClassList
         data.forEach((res) => {
           res.label = res.channelClassName
@@ -107,14 +107,16 @@ export default {
             channelClassParentId: this.ruleForm.channelOne,
             channelLevel: this.getLevel(this.ruleForm.channelLevel)
           }
-          this.$http.Operating.updateChannelClassV2(params).then((res) => {
-            if (res.code === 0) {
-              this.$message.success('渠道修改成功')
-              this.$refs[formName].resetFields()
-              this.$emit('modifyChannelShow', false)
-              this.$emit('modifyChannelShowBtn', 1)
+          this.$http.writeApp.Operating.updateChannelClassV2(params).then(
+            (res) => {
+              if (res.code === 0) {
+                this.$message.success('渠道修改成功')
+                this.$refs[formName].resetFields()
+                this.$emit('modifyChannelShow', false)
+                this.$emit('modifyChannelShowBtn', 1)
+              }
             }
-          })
+          )
         } else {
           return false
         }
