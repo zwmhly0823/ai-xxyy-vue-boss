@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-08-19 20:26:32
  * @LastEditors: Shentong
- * @LastEditTime: 2020-08-21 15:42:21
+ * @LastEditTime: 2020-08-21 22:22:49
  */
 import Vue from 'vue'
 import VueRouter from 'vue-router'
@@ -61,7 +61,7 @@ const routes = [
 
 const router = new VueRouter({
   base: process.env.BASE_URL,
-  module: 'msb-writing',
+  module: 'write_app',
   routes
 })
 

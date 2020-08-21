@@ -4,7 +4,7 @@
  * @Date: 2020-03-13 15:13:34
  * @Description: topbar 顶部功能区
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-21 12:22:58
+ * @LastEditTime: 2020-08-21 16:27:00
  -->
 <template>
   <div class="navbar" :class="{ prod: isProd }">
@@ -34,7 +34,7 @@
       <GlobelSearch class="globelSearch-con" />
 
       <!-- 功能区 入口; 目前只有 小熊美术 显示 -->
-      <template v-if="currentSubject === 'bear-art'">
+      <template v-if="currentSubject === 'art_app'">
         <a
           class="order-btn"
           href="https://shimo.im/docs/opMWovESib0pcyh0/"
@@ -178,7 +178,7 @@ export default {
       dialogVisible: false,
       newPassword: '',
       noticeBadge: 0,
-      currentSubject: 'bear-art'
+      currentSubject: 'art_app'
     }
   },
   created() {
@@ -193,7 +193,7 @@ export default {
     this.currentSubject = this.subjects.currentSubjectKey
     this.getSubject()
     // 通知的角标数字
-    this.currentSubject === 'bear-art' && this.getNoticeBadge()
+    this.currentSubject === 'art_app' && this.getNoticeBadge()
   },
   methods: {
     ...mapActions({
@@ -252,7 +252,7 @@ export default {
     handleChangeSubject(command) {
       console.log(command)
       // 非小熊美术
-      if (command !== 'bear-art') {
+      if (command !== 'art_app') {
         openBrowserTab(`/${command}/#/users`)
       } else {
         openBrowserTab(`/users/#/trial`)

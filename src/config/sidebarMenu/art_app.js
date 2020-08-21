@@ -4,9 +4,16 @@
  * @Author: YangJiyong
  * @Date: 2020-08-19 21:14:08
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-20 15:26:31
+ * @LastEditTime: 2020-08-21 19:04:20
  */
+import { removeToken } from '@/utils/auth'
+import { baseUrl } from '@/utils/index'
 const staff = JSON.parse(localStorage.getItem('staff'))
+if (!staff) {
+  removeToken()
+  console.log('baseUrl:', baseUrl())
+  location.href = `${baseUrl()}login/#/`
+}
 
 let superOperatingRouter = []
 let superTeacherRouter = []
