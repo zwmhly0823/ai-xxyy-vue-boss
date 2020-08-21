@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-04-25 17:24:23
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-08-14 17:08:21
+ * @LastEditTime: 2020-08-20 15:13:33
  -->
 <template>
   <el-card
@@ -492,10 +492,11 @@ export default {
       }
       this.setSeachParmas(res, ['last_teacher_id'], 'terms')
     },
+    // 系统课选择课程类型
     getSystemCourseType(res) {
       if (res && res.packages_type === '5') {
         this.must.map((item, idx) => {
-          if (item.term.packages_type) {
+          if (item.term && item.term.packages_type) {
             this.must.splice(idx, 1)
           }
         })
@@ -509,7 +510,7 @@ export default {
         this.packages_type = null
       }
       this.must.map((item, idx) => {
-        if (item.term.packages_course_week) {
+        if (item.term && item.term.packages_course_week) {
           this.must.splice(idx, 1)
         }
       })

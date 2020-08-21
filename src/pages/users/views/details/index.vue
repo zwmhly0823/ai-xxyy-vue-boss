@@ -187,15 +187,16 @@
                 </el-col>
               </el-row>
               <el-row type="flex" justify="space-around" align="middle">
-                <el-col
-                  v-if="stuInfor.systemCourse && stuInfor.systemCourse.length"
-                  :span="7"
-                >
+                <el-col :span="7">
                   <span>系统课剩余:</span>
-                  {{ stuInfor.systemCourse[0].remaining_week + '周' }}</el-col
+                  {{ systemCourseTotal + '周' }}</el-col
                 >
-                <el-col v-else :span="7"></el-col>
-                <el-col :span="7"></el-col>
+                <el-col :span="7">
+                  <span>生命周期:</span>
+                  <el-tag type="success" size="mini">{{
+                    stuInfor.systemCourse_lifeCycle || '-'
+                  }}</el-tag>
+                </el-col>
                 <el-col :span="7"></el-col>
               </el-row>
             </section>
@@ -282,7 +283,7 @@
               </span>
             </section>
           </div>
-          <div class="padding-top20">
+          <!-- <div class="padding-top20">
             <section class="setou123">
               <strong></strong>
               <span>用户群组</span>
@@ -296,7 +297,7 @@
                 <el-col :span="7"></el-col>
               </el-row>
             </section>
-          </div>
+          </div> -->
         </el-col>
         <el-col :span="7" class="dular">
           <!-- 跟进记录 -->
@@ -306,6 +307,9 @@
       <!-- tab标签页 -->
       <div class="tab-sty">
         <el-tabs type="border-card" v-model="tabData" @tab-click="tabBtn">
+          <el-tab-pane label="详细信息" name="detailsInfo">
+            <detailsInfo />
+          </el-tab-pane>
           <el-tab-pane label="学习记录" name="learningRecord"></el-tab-pane>
           <el-tab-pane label="作品集" name="collectionOf"></el-tab-pane>
           <el-tab-pane
@@ -450,7 +454,9 @@
     <recommend
       ref="recommend"
       :recommendHuman="
-        stuInfor.sender ? stuInfor.sender : { username: '', user_num: '' }
+        stuInfor.sender
+          ? stuInfor.sender
+          : { username: '', user_num: '', id: '' }
       "
     />
 
@@ -465,6 +471,7 @@
 
 <script>
 import { formatDate } from '@/utils/mini_tool_lk'
+import detailsInfo from './detailsInfo/index.vue'
 import changeRecommend from './changeRecommend/index.vue'
 import recommend from './recommendComponents/recommend.vue'
 import showAddress from './addressComponents/showAddress.vue'
@@ -477,6 +484,7 @@ import modifyAddress from './addressComponents/modifyAddress.vue'
 
 export default {
   components: {
+    detailsInfo,
     changeRecommend,
     recommend,
     DetailsList,
@@ -502,7 +510,7 @@ export default {
         teams: []
       }, // 学员基本信息(timeFormatted)
       babels_lk: [], // 学员标签(非艾克的全部4项)
-      tabData: 'learningRecord', // paneltab name
+      tabData: 'detailsInfo', // paneltab name
       tabList: [], // 学习记录,作品集,订单物流记录table数据list
       wholeData: {}, // 用户资产_优惠券_全套数据 '或' 通知事件记录_全套数据
       wholeSecondData: {}, // 用户资产_小熊币_全套数据
@@ -524,6 +532,13 @@ export default {
           JSON.parse(this.stuInfor.jluserInfo.labels)) ||
         []
       )
+    },
+    systemCourseTotal() {
+      return this.stuInfor.systemCourse && this.stuInfor.systemCourse.length
+        ? this.stuInfor.systemCourse.reduce((pre, cur, index, arr) => {
+            return pre + cur.remaining_week
+          }, 0)
+        : '-'
     }
   },
   created() {
@@ -590,6 +605,19 @@ export default {
 
         // ③学员基本资料_时间格式ed
         this.stuInfor = this.modifyData(res.data.User || {})
+        // 设置 title
+        document.title.startsWith('学员中心') &&
+          (document.title = `${this.stuInfor.username +
+            '·' +
+            this.stuInfor.user_num}-小熊美术BOSS`)
+        if (typeof this.stuInfor.systemCourse_lifeCycle === 'string') {
+          this.stuInfor.systemCourse_lifeCycle = {
+            0: '待开课',
+            1: '开课中',
+            2: '已结课',
+            91: '已退费'
+          }[this.stuInfor.systemCourse_lifeCycle]
+        }
         this.loading = false
 
         // ④整合stuInfor里所有课程teams 添加字段isRefund(1退费,0正常)
