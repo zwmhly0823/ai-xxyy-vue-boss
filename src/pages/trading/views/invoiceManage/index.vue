@@ -124,7 +124,7 @@
                       class="editStyle"
                       target="_blank"
                       v-if="scope.row.invoice_pdf"
-                      >操作</a
+                      >详情</a
                     >
                     <span v-else>-</span>
                   </template>
