@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-03-16 19:46:39
  * @LastEditors: Shentong
- * @LastEditTime: 2020-08-19 14:43:44
+ * @LastEditTime: 2020-08-21 19:31:19
  */
 import axios from '../axiosConfig'
 
@@ -527,5 +527,11 @@ export default {
   // 修改活动结束时间
   updatePromotionsDate(params) {
     return axios.post(`/api/p/v1/promotions/updatePromotionsDate`, params)
+  },
+  // 获取销售等级
+  getSellLevel(params) {
+    return axios.get(
+      `/api/t/v1/teacher/course/teacherLevelByType?type=0&level=1`
+    )
   }
 }
