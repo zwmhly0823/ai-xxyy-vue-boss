@@ -24,6 +24,7 @@
                 :page="sourchParams.page"
                 :total="totalElements"
                 :loading="loading"
+                :showAllTotalNum="showAllTotalNum"
                 @pageChange="pageChange_handler"
                 class="mytable"
               >
@@ -144,6 +145,7 @@ import { formatData, openBrowserTab } from '@/utils/index.js'
 export default {
   data() {
     return {
+      showAllTotalNum: true,
       tableHeight: 'auto',
       tableData: [],
       loading: false,
