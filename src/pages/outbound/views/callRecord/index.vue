@@ -130,25 +130,18 @@
       border
       style="width: 100%;margin-top:30px;"
       :header-cell-style="{ background: 'rgb(178, 185, 197,.3)' }"
+      max-height="500"
     >
       <el-table-column fixed prop="cno" label="坐席工号" width="80">
       </el-table-column>
-      <el-table-column prop="student_mobile" label="用户信息" width="160">
+      <el-table-column fixed prop="student_mobile" label="用户信息" width="160">
         <template slot-scope="scope">
           <user :user="scope.row.studentInfo" :singleData="scope.row" />
-          <!-- <span>{{
-            scope.row.studentInfo &&
-              `${scope.row.studentInfo.mobile}--${scope.row.studentInfo.mobile_city}`
-          }}</span> -->
         </template>
       </el-table-column>
-      <el-table-column prop="agent_name" label="课程期数" width="160">
+      <el-table-column prop="agent_name" label="用户所在班级" width="160">
         <template slot-scope="scope">
-          <span>{{
-            scope.row.studentInfo &&
-              scope.row.studentInfo.teams &&
-              scope.row.studentInfo.teams[0].team_name
-          }}</span>
+          <span>{{ selectClass(scope.row.studentInfo) }}</span>
         </template>
       </el-table-column>
 
@@ -162,7 +155,7 @@
       <el-table-column
         prop="teacherInfo.department_name"
         label="绑定坐席所属部门"
-        width="300"
+        width="150"
       >
       </el-table-column>
       <el-table-column prop="call_type_text" label="呼叫类型" width="120">
@@ -492,7 +485,11 @@ export default {
         this.status = val[0]
       }
       if (key === 'type') {
-        this.callType = val[0] === '3' ? [4, 5, 6] : [val[0]]
+        if (val[0]) {
+          this.callType = val[0] === '3' ? [4, 5, 6] : [val[0]]
+        } else {
+          this.callType = ''
+        }
       }
       if (key === 'dateTime') {
         this.time_type = val[0].over ? 1 : 0
@@ -551,6 +548,21 @@ export default {
       m && (text += `${m}分`)
       s && (text += `${s}秒`)
       return text || '-'
+    },
+    // 选取系统课
+    selectClass(val) {
+      if (!val) {
+        return
+      }
+      let className
+      val.teams.map((item) => {
+        if (item.team_type === '0') {
+          className = item.team_name
+        } else if (item.team_type === '2') {
+          className = item.team_name
+        }
+      })
+      return className
     }
   }
 }
