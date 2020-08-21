@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-08-19 20:26:32
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-20 10:56:22
+ * @LastEditTime: 2020-08-21 15:42:21
  */
 import Vue from 'vue'
 import VueRouter from 'vue-router'
@@ -29,7 +29,7 @@ const routes = [
       keepAlive: true
     },
     component: () => import('../views/Users/index.vue')
-  }
+  },
   //   {
   //     path: '/system',
   //     name: 'systemUsers',
@@ -48,6 +48,20 @@ const routes = [
   //     },
   //     component: () => import('../views/details/index.vue')
   //   }
+
+  /**
+   * 运营管理
+   */
+  {
+    path: '/channel',
+    name: 'channel',
+    meta: {
+      title: '渠道管理',
+      keepAlive: true
+    },
+    component: () =>
+      import('../views/operating/views/channelManagement/channelManagement.vue')
+  }
 ]
 
 const router = new VueRouter({

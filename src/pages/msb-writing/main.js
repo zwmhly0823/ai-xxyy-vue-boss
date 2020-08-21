@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-08-19 20:03:32
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-19 22:17:45
+ * @LastEditTime: 2020-08-21 15:51:28
  */
 import Vue from 'vue'
 import App from './App.vue'
@@ -14,7 +14,7 @@ import '@/plugins/element-ui'
 import 'normalize.css/normalize.css' // A modern alternative to CSS resets
 import '@/assets/styles/index.scss' // global css
 
-import $http from '@/api/index-msb-writing' // global
+import $http from '@/api' // global
 
 Vue.config.productionTip = false
 
