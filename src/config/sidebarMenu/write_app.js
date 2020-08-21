@@ -4,10 +4,17 @@
  * @Author: YangJiyong
  * @Date: 2020-08-19 21:14:16
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-21 16:09:39
+ * @LastEditTime: 2020-08-21 18:56:10
  */
-const module = 'write_app'
+import { removeToken } from '@/utils/auth'
+import { baseUrl } from '@/utils/index'
 const staff = JSON.parse(localStorage.getItem('staff'))
+if (!staff) {
+  removeToken()
+  console.log('baseUrl:', baseUrl())
+  location.href = `${baseUrl()}login/#/`
+}
+const module = 'write_app'
 
 let superOperatingRouter = []
 let superTeacherRouter = []

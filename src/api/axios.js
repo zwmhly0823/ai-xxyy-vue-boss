@@ -4,7 +4,7 @@
  * @Author: shentong
  * @Date: 2020-03-13 14:38:28
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-06-13 23:05:05
+ * @LastEditTime: 2020-08-21 18:42:36
  */
 import axios from 'axios'
 import _ from 'lodash'
@@ -22,10 +22,17 @@ axios.defaults.headers.post['Content-Type'] =
 
 axios.interceptors.request.use(
   (config) => {
-    // if (isTest) {
-    //   const { url } = config
-    //   config.url = url.replace(/\/graphql/, '')
+    // 非graphql服务接口，统一回科目类型
+    // const { url, method } = config
+    // if (url.includes('/api/') && !url.includes('graphql')) {
+    //   if (method.toLowerCase() === 'get') {
+    //     config.url += !url.includes('?')
+    //       ? '?subject=write_app'
+    //       : '&subject=write_app'
+    //   }
     // }
+    // console.log(config)
+
     return config
   },
   (error) => {

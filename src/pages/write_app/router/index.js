@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-08-19 20:26:32
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-21 16:10:04
+ * @LastEditTime: 2020-08-21 17:58:31
  */
 import Vue from 'vue'
 import VueRouter from 'vue-router'
@@ -53,8 +53,8 @@ const routes = [
    * 运营管理
    */
   {
-    path: '/channel',
-    name: 'channel',
+    path: '/channelManagement',
+    name: 'channelManagement',
     meta: {
       title: '渠道管理',
       keepAlive: true
