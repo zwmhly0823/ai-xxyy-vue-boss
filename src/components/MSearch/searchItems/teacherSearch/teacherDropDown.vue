@@ -3,8 +3,8 @@
  * @version:
  * @Author: zhubaodong
  * @Date: 2020-03-24 18:50:54
- * @LastEditors: zhubaodong
- * @LastEditTime: 2020-04-13 17:05:48
+ * @LastEditors: Shentong
+ * @LastEditTime: 2020-08-22 15:21:56
  -->
 <template>
   <div class="search-item small">
@@ -94,9 +94,9 @@
     >
       <el-option
         v-for="item in sellerLevelList"
-        :key="item.value"
-        :label="item.label"
-        :value="item.value"
+        :key="item.level"
+        :label="item.levelName"
+        :value="item.level"
       >
       </el-option>
     </el-select>
@@ -187,10 +187,19 @@ export default {
   },
   async created() {
     // 职级
+    this.getSellLevel()
     await this.getrank()
     await this.getSup()
   },
   methods: {
+    // 获取销售等级
+    async getSellLevel(params) {
+      try {
+        const { payload = [] } = await this.$http.Operating.getSellLevel(params)
+
+        this.sellerLevelList = payload
+      } catch (err) {}
+    },
     // 职级
     async getrank() {
       this.$http.Teacher.TeacherRankList().then((res) => {

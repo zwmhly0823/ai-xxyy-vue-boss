@@ -172,6 +172,28 @@ const enums = {
       id: 's5',
       text: 's5'
     }
+  ],
+  // 转介绍学员
+  user_StatusList: [
+    {
+      id: '2',
+      text: '是'
+    },
+    {
+      id: '1',
+      text: '否'
+    }
+  ],
+  // 是否续费
+  isrenewList: [
+    {
+      id: '2',
+      text: '已续费'
+    },
+    {
+      id: '1',
+      text: '待续费'
+    }
   ]
 }
 
