@@ -3,8 +3,8 @@
  * @version: 1.0.0
  * @Author: YangJiyong
  * @Date: 2020-08-19 20:26:32
- * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-08-22 17:20:21
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-08-22 17:32:52
  */
 import Vue from 'vue'
 import VueRouter from 'vue-router'
@@ -76,7 +76,7 @@ const routes = [
       keepAlive: true
     },
     component: () => import('../views/trading/views/order/orderModule.vue')
-  }
+  },
   //   {
   //     path: '/system',
   //     name: 'systemUsers',
@@ -95,6 +95,20 @@ const routes = [
   //     },
   //     component: () => import('../views/details/index.vue')
   //   }
+
+  /**
+   * 运营管理
+   */
+  {
+    path: '/channelManagement',
+    name: 'channelManagement',
+    meta: {
+      title: '渠道管理',
+      keepAlive: true
+    },
+    component: () =>
+      import('../views/operating/views/channelManagement/channelManagement.vue')
+  }
 ]
 
 const router = new VueRouter({
