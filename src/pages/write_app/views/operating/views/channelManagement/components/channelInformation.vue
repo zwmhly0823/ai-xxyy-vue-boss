@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-05-06 16:33:15
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-21 20:40:13
+ * @LastEditTime: 2020-08-22 15:15:50
  -->
 <template>
   <div class="channelAdd-box">
@@ -274,6 +274,7 @@ export default {
         this.queryList,
         this.currentPage
       ).then((res) => {
+        if (!res.data.ChannelDetailStatisticsPage) return
         this.currentPage = res.data.ChannelDetailStatisticsPage.number
         this.totalElements = res.data.ChannelDetailStatisticsPage.totalElements
         const _data = res.data.ChannelDetailStatisticsPage.content

@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-04-25 12:09:03
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-21 21:43:03
+ * @LastEditTime: 2020-08-22 15:19:54
  -->
 <template>
   <div id="channel-boxs" class="channel-box">
@@ -417,6 +417,7 @@ export default {
       ).then((ele) => {
         // 模块数据
         const _datas = ele.payload
+        if (!_datas) return
         // 累计成单金额
         if (_datas.system_user_amounts !== 'null') {
           const allSystemUserAmountsNums = +_datas.system_user_amounts
@@ -496,7 +497,7 @@ export default {
       const channelValue = `{"id":${JSON.stringify(query)}}`
       this.$http.writeApp.Operating.ChannelClassPageName(channelValue).then(
         (ele) => {
-          const __data = ele.data?.ChannelClassPage.content
+          const __data = ele.data?.ChannelClassPage?.content
           if (!__data) return
           _data.forEach((val) => {
             __data.forEach((item) => {
