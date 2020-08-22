@@ -4,10 +4,17 @@
  * @Author: YangJiyong
  * @Date: 2020-08-19 21:14:16
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-21 12:21:50
+ * @LastEditTime: 2020-08-21 19:04:28
  */
-const module = 'msb-writing'
+import { removeToken } from '@/utils/auth'
+import { baseUrl } from '@/utils/index'
 const staff = JSON.parse(localStorage.getItem('staff'))
+if (!staff) {
+  removeToken()
+  console.log('baseUrl:', baseUrl())
+  location.href = `${baseUrl()}login/#/`
+}
+const module = 'write_app'
 
 let superOperatingRouter = []
 let superTeacherRouter = []

@@ -4,12 +4,21 @@
  * @Author: YangJiyong
  * @Date: 2020-08-19 17:36:34
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-20 12:14:33
+ * @LastEditTime: 2020-08-21 16:08:05
+ * 美术APP
+  @ApiModelProperty("美术")
+  ART_APP,
+  * 写字APP
+  @ApiModelProperty("写字")
+  WRITE_APP,
+  * AI学院
+  @ApiModelProperty("AI学院")
+  COLLEGE_APP
  */
 
 const subjects = {
-  'bear-art': '小熊美术',
-  'msb-writing': '美术宝写字'
+  art_app: '小熊美术',
+  write_app: '美术宝写字'
 }
 
 const subjectsArr = function() {
