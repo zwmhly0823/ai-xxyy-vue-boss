@@ -84,6 +84,22 @@
         >
         </el-cascader>
       </el-form-item>
+      <el-form-item label="科目" prop="subject">
+        <el-select
+          multiple
+          v-model="ruleForm.subjest"
+          clearable
+          placeholder="请选择科目"
+        >
+          <el-option
+            v-for="item in subjestList"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          >
+          </el-option>
+        </el-select>
+      </el-form-item>
       <!-- 职务 -->
       <el-form-item label="职务" prop="positionVal">
         <el-select
@@ -376,6 +392,21 @@ export default {
           value: '北京场'
         }
       ],
+      // 课程类型
+      subjestList: [
+        {
+          value: '0',
+          label: '美术'
+        },
+        {
+          value: '1',
+          label: '写字'
+        },
+        {
+          value: '2',
+          label: 'AI学院'
+        }
+      ],
       // Level: [
       //   { label: '新兵培训', value: 0 },
       //   { label: '下组待接生', value: 1 },
@@ -407,6 +438,8 @@ export default {
         resource: '',
         // 所属部门
         region: [],
+        // 科目
+        subjest: [],
         // 职务
         positionVal: [],
         // 职级
@@ -708,6 +741,7 @@ export default {
     },
     // 提交按钮
     submitHandle(formName) {
+      console.log(this.ruleForm)
       const positionValId = []
       this.ruleForm.positionVal.forEach((val) => {
         positionValId.push({ id: val })
@@ -736,7 +770,8 @@ export default {
           workPlace: this.ruleForm.workplaces,
           workPlaceCode: this.ruleForm.workPlaceCode,
           userName: this.ruleForm.username,
-          note: this.ruleForm.note
+          note: this.ruleForm.note,
+          ApiModelProperty: this.ruleForm.subjest
         },
         department: {
           id:

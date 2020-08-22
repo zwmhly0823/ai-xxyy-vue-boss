@@ -1,11 +1,3 @@
-/*
- * @Descripttion: 美术宝写字项目
- * @version: 1.0.0
- * @Author: YangJiyong
- * @Date: 2020-08-19 20:03:32
- * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-08-22 14:53:32
- */
 import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
@@ -14,7 +6,7 @@ import '@/plugins/element-ui'
 import 'normalize.css/normalize.css' // A modern alternative to CSS resets
 import '@/assets/styles/index.scss' // global css
 
-import $http from '@/api' // global
+import $http from '@/api' // global css
 
 Vue.config.productionTip = false
 

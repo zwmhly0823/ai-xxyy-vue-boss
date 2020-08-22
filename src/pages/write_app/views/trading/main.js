@@ -1,10 +1,10 @@
 /*
- * @Descripttion: 美术宝写字项目
+ * @Descripttion: TOSS小熊
  * @version: 1.0.0
- * @Author: YangJiyong
- * @Date: 2020-08-19 20:03:32
- * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-08-22 14:53:32
+ * @Author: liukun
+ * @Date: 2020-04-20 15:59:10
+ * @LastEditors: liukun
+ * @LastEditTime: 2020-04-30 11:59:49
  */
 import Vue from 'vue'
 import App from './App.vue'
@@ -14,12 +14,13 @@ import '@/plugins/element-ui'
 import 'normalize.css/normalize.css' // A modern alternative to CSS resets
 import '@/assets/styles/index.scss' // global css
 
-import $http from '@/api' // global
+import $http from '@/api' // global css
 
 Vue.config.productionTip = false
 
 Object.assign(Vue.prototype, {
   $http
+  //
 })
 
 const _Vue = new Vue({
