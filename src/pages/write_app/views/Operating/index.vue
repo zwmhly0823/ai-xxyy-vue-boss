@@ -1,16 +1,11 @@
 <!--
  * @Descripttion: 
  * @version: 1.0.0
- * @Author: YangJiyong
- * @Date: 2020-08-19 22:11:50
+ * @Author: Shentong
+ * @Date: 2020-08-22 15:11:04
  * @LastEditors: Shentong
- * @LastEditTime: 2020-08-21 15:08:03
+ * @LastEditTime: 2020-08-22 15:11:12
 -->
 <template>
-  <div>美术宝写字-招生排期</div>
+  <div>111</div>
 </template>
-<script>
-export default {}
-</script>
-
-<style lang="scss" scoped></style>
