@@ -365,7 +365,7 @@ export function openBrowserTab(path, out = false) {
     return
   }
   let baseUrl = ''
-  if (pathname.includes('test')) {
+  if (pathname.includes('test') || pathname.includes('dev')) {
     const pathArr = pathname.split('/')
     baseUrl = '/' + [pathArr[1]].join('/')
   }
@@ -399,9 +399,6 @@ export function getAppSubject(upper = true) {
   const envFlag = env.some((item) => pathname.includes(item))
   // 测试或开发环境
   const key = envFlag ? pathname.split('/')[2] : pathname.split('/')[1]
-  let subject = 'art_app'
-  if (Object.keys(subjects).includes(key)) {
-    subject = key
-  }
+  const subject = Object.keys(subjects).includes(key) ? key : 'art_app'
   return upper ? subject.toUpperCase() : subject
 }
