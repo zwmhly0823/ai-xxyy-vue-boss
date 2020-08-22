@@ -60,6 +60,20 @@
               prop="ctime"
             >
             </el-table-column>
+            <el-table-column
+              label="状态"
+              min-width="15%"
+              align="center"
+              prop="statusName"
+            >
+            </el-table-column>
+            <el-table-column
+              label="备注"
+              min-width="25%"
+              align="center"
+              prop="failedReason"
+            >
+            </el-table-column>
           </el-table>
         </div>
         <m-pagination
@@ -121,16 +135,30 @@ export default {
           if (data) {
             const { totalElements, content = [] } = data
             this.totalElements = totalElements
-            this.tableData = content.map((item) => {
-              item.ctime = formatData(item.ctime, 's')
-              return item
-            })
+            this.tableData = this.modifyTableData(content)
           }
           loading.close()
         })
         .catch(() => {
           loading.close()
         })
+    },
+    modifyTableData(content) {
+      content.forEach((cItem) => {
+        cItem.ctime = formatData(cItem.ctime, 's')
+        switch (cItem.status) {
+          case 'DEFAULT':
+            cItem.statusName = '默认'
+            break
+          case 'SUCCESS':
+            cItem.statusName = '成功'
+            break
+          case 'FAILED':
+            cItem.statusName = '失败'
+            break
+        }
+      })
+      return content
     },
     getSearchType(res) {
       this.searchType = res

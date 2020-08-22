@@ -80,7 +80,10 @@ export default {
         '运营活动',
         '投诉补偿',
         '大转盘',
-        '大转盘'
+        '大转盘',
+        '活动收入',
+        '活动支出',
+        '系统扣除'
       ],
       renderTableData: null,
       rowStyle: {
@@ -110,7 +113,9 @@ export default {
         if (
           +nItem.trans_type === 4 ||
           +nItem.trans_type === 5 ||
-          +nItem.trans_type === 11
+          +nItem.trans_type === 11 ||
+          +nItem.trans_type === 13 ||
+          +nItem.trans_type === 14
         ) {
           nItem.coinDown = true
         }
@@ -124,6 +129,8 @@ export default {
           case 4:
           case 5:
           case 11:
+          case 13:
+          case 14:
             this.coinNumList[1].value += nItem.value - 0
             break
           default:
