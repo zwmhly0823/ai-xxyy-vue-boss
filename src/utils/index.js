@@ -10,6 +10,7 @@
 import { Message } from 'element-ui'
 import dayjs from 'dayjs'
 import store from '@/store'
+import { subjects } from '@/config/subjects'
 
 /**
  * 是否 toss。 是toss返回 teacher_id,否则返回 null
@@ -364,7 +365,7 @@ export function openBrowserTab(path, out = false) {
     return
   }
   let baseUrl = ''
-  if (pathname.includes('test')) {
+  if (pathname.includes('test') || pathname.includes('dev')) {
     const pathArr = pathname.split('/')
     baseUrl = '/' + [pathArr[1]].join('/')
   }
@@ -382,4 +383,22 @@ export function getDataType(v) {
   const type = Object.prototype.toString.call(v)
   const res = (type && type.substring(8, type.length - 1)) || ''
   return res
+}
+
+/**
+ * 获取当前科目类型 返回 枚举值
+ * ART_APP // 美术
+  WRITE_APP // 写字
+  COLLEGE_APP // AI学院
+ * 
+ @upper: Boolean 是否大小写
+ */
+export function getAppSubject(upper = true) {
+  const { pathname } = location
+  const env = ['dev', 'test']
+  const envFlag = env.some((item) => pathname.includes(item))
+  // 测试或开发环境
+  const key = envFlag ? pathname.split('/')[2] : pathname.split('/')[1]
+  const subject = Object.keys(subjects).includes(key) ? key : 'art_app'
+  return upper ? subject.toUpperCase() : subject
 }

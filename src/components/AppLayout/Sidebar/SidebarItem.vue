@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-03-24 12:49:53
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-11 10:45:25
+ * @LastEditTime: 2020-08-22 16:30:56
 -->
 <template>
   <div v-if="!item.hidden">
@@ -75,7 +75,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex'
+import { mapGetters } from 'vuex'
 // import '@/assets/fonts/iconfont.js' // iconfont 图标
 export default {
   name: 'SidebarItem',
@@ -102,7 +102,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions('tabbed', ['setCurrentTabbed', 'setTabbedList']),
+    // ...mapActions('tabbed', ['setCurrentTabbed', 'setTabbedList']),
     // 展开更多
     handleOpen(item, index = 0, hasChildren = false) {
       console.log(item)
