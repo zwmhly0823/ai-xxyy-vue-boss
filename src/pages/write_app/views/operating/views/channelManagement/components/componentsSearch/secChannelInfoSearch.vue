@@ -85,6 +85,7 @@ export default {
     },
     // 查询下拉列表
     formatData(classifiData) {
+      if (!classifiData) return
       // 第一级目录
       const arrList = []
       classifiData.forEach((item) => {

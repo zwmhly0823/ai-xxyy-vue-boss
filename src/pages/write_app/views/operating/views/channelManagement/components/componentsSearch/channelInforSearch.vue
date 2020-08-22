@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-24 18:50:54
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-07-03 14:13:59
+ * @LastEditTime: 2020-08-22 18:09:05
  -->
 <template>
   <div class="search-item small threeSelect">
@@ -71,7 +71,7 @@ export default {
       channelList: [],
       channelData: null,
       channelClassData: [],
-      channelClassList: null, // 分类条件
+      channelClassList: [], // 分类条件
       showDatas: null // 三级列表展示数据
     }
   },
@@ -121,7 +121,8 @@ export default {
           this.channelClassList = res.data.ChannelClassList
         })
     },
-    formatData(classdata, classifiData) {
+    formatData(classdata, classifiData = []) {
+      if (!classifiData) return
       // 第一级目录
       const arrList = []
       classifiData.forEach((item) => {
