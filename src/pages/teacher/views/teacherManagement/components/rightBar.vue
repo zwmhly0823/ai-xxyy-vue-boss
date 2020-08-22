@@ -3,8 +3,8 @@
  * @version:
  * @Author: zhubaodong
  * @Date: 2020-04-02 16:08:02
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-07-25 19:18:03
+ * @LastEditors: Shentong
+ * @LastEditTime: 2020-08-21 21:56:46
  -->
 <template>
   <div>
@@ -190,7 +190,7 @@
         <el-table-column label="销售等级" min-width="120px">
           <template slot-scope="scope">
             <div>
-              {{ scope.row.level }}
+              {{ scope.row.level || '' }}
             </div>
           </template>
         </el-table-column>
@@ -389,6 +389,8 @@ export default {
               totalElements
             } = res.data.TeacherManagePage
             content.forEach((res) => {
+              const { teacherLevelInfo = {} } = res
+              console.log(teacherLevelInfo)
               res.join_date = res.join_date
                 ? formatData(new Date(res.join_date).getTime(), 'd')
                 : ''
@@ -399,23 +401,27 @@ export default {
                 ? formatData(new Date(res.leave_date).getTime(), 'd')
                 : ''
               // 销售等级
-              if (res.level === 0) {
-                res.level = '新兵营'
-              } else if (res.level === 1) {
-                res.level = '1级社群销售'
-              } else if (res.level === 2) {
-                res.level = '2级社群销售'
-              } else if (res.level === 3) {
-                res.level = '3级社群销售'
-              } else if (res.level === 4) {
-                res.level = '1级'
-              } else if (res.level === 5) {
-                res.level = '2级'
-              } else if (res.level === 6) {
-                res.level = '3级'
-              } else if (res.level === 7) {
-                res.level = '4级'
-              }
+              teacherLevelInfo &&
+                (res.level = teacherLevelInfo.level_name || '')
+
+              // res.level = teacherLevelInfo.level_name || ''
+              // if (res.level === 0) {
+              //   res.level = '新兵营'
+              // } else if (res.level === 1) {
+              //   res.level = '1级社群销售'
+              // } else if (res.level === 2) {
+              //   res.level = '2级社群销售'
+              // } else if (res.level === 3) {
+              //   res.level = '3级社群销售'
+              // } else if (res.level === 4) {
+              //   res.level = '1级'
+              // } else if (res.level === 5) {
+              //   res.level = '2级'
+              // } else if (res.level === 6) {
+              //   res.level = '3级'
+              // } else if (res.level === 7) {
+              //   res.level = '4级'
+              // }
             })
             this.tableData = content
             if (this.detailsIndex === '2') {
