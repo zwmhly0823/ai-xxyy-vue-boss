@@ -4,14 +4,14 @@
  * @Author: shentong
  * @Date: 2020-03-13 14:38:28
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-22 17:33:23
+ * @LastEditTime: 2020-08-22 18:28:59
  */
 import axios from 'axios'
 import _ from 'lodash'
 import { removeToken } from '@/utils/auth'
 import { getAppSubject } from '@/utils/index'
 
-const appSubject = getAppSubject()
+const subject = getAppSubject()
 
 // 测试环境配置
 // const isTest = process.env.BASE_URL === 'ghpagestest'
@@ -30,8 +30,8 @@ axios.interceptors.request.use(
     if (url.includes('/api/') && !url.includes('graphql')) {
       if (method.toLowerCase() === 'get') {
         config.url += !url.includes('?')
-          ? `?appSubject=${appSubject}`
-          : `&appSubject=${appSubject}`
+          ? `?subject=${subject}`
+          : `&subject=${subject}`
       }
     }
     return config
