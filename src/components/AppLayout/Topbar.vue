@@ -4,7 +4,7 @@
  * @Date: 2020-03-13 15:13:34
  * @Description: topbar 顶部功能区
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-21 16:27:00
+ * @LastEditTime: 2020-08-21 22:24:39
  -->
 <template>
   <div class="navbar" :class="{ prod: isProd }">
@@ -190,8 +190,8 @@ export default {
     }
     this.userInfo = JSON.parse(userInfo)
 
-    this.currentSubject = this.subjects.currentSubjectKey
     this.getSubject()
+    this.currentSubject = this.subjects.currentSubjectKey
     // 通知的角标数字
     this.currentSubject === 'art_app' && this.getNoticeBadge()
   },

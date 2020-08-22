@@ -77,6 +77,10 @@ export default {
               id
               weixin_no
             }
+            teacherLevelInfo{
+              level
+              level_name
+            }
           }
         }
       }`

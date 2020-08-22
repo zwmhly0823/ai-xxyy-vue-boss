@@ -3,8 +3,8 @@
  * @version:
  * @Author: Shentong
  * @Date: 2020-03-16 19:46:39
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-13 17:05:51
+ * @LastEditors: Shentong
+ * @LastEditTime: 2020-08-22 15:17:22
  */
 import axios from '../axiosConfig'
 
@@ -54,7 +54,8 @@ export default {
    */
   getLeads(params) {
     return axios.get(
-      `/api/t/v1/teacher/course/enroll/teacher/channel/config?courseType=${params.courseType}&period=${params.period}`
+      `/api/t/v1/teacher/course/enroll/teacher/channel/config?period=${params.period}`
+      // `/api/t/v1/teacher/course/enroll/teacher/channel/config?courseType=${params.courseType}&period=${params.period}`
     )
   },
   /**
@@ -526,5 +527,9 @@ export default {
   // 修改活动结束时间
   updatePromotionsDate(params) {
     return axios.post(`/api/p/v1/promotions/updatePromotionsDate`, params)
+  },
+  // 获取销售等级
+  getSellLevel(params) {
+    return axios.get(`/api/t/v1/teacher/course/teacherLevelByType?level=0`)
   }
 }
