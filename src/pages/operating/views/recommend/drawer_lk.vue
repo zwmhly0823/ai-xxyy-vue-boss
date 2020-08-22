@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-07-20 16:37:49
  * @LastEditors: liukun
- * @LastEditTime: 2020-08-13 14:57:07
+ * @LastEditTime: 2020-08-22 19:51:59
 --><template>
   <el-drawer :visible.sync="drawer" size="40%" :destroy-on-close="true">
     <template v-slot:title>
@@ -81,13 +81,13 @@ export default {
   name: 'drawer_lk',
   inject: ['cr'],
   props: {
-    arrangeArr: { type: Array, default: () => [] }
+    arrangeArr: { type: Array, default: () => [] },
+    approvingItem: { type: Object, default: () => {} }
   },
 
   data() {
     return {
       arrageArraySon: [],
-      initItemSon: {},
       initItemTrue: {}, // 通用的复现单元数据
       drawer: false,
       // form
@@ -106,17 +106,8 @@ export default {
   },
   methods: {
     // 回显
-    review() {
-      console.info('回显触发lllll')
-      if (this.initItemSon.status) {
-        // 第1次处理
-        // this.initItemTrue = Object.assign(this.initItemSon, {
-        //   ctime: +this.initItemSon.ctime
-        // })
-        this.initItemTrue = this.initItemSon
-      } else {
-        this.initItemTrue = this.arrageArraySon[0]
-      }
+    review(r) {
+      this.initItemTrue = r || this.arrageArraySon[0]
     },
     // 提交
     submitForm() {
@@ -139,96 +130,62 @@ export default {
         }
       })
     },
+
+    // 下条
+    recall() {
+      // 删除已审核过的上条
+      this.arrageArraySon.splice(
+        this.arrageArraySon.findIndex(
+          (item) => item.flowId === this.initItemTrue.flowId
+        ),
+        1
+      )
+      // 视当前页库存情况
+      if (!this.arrageArraySon.length) {
+        this.$alert('当前页审批已全部完成', '辛苦啦', {
+          callback: () => {
+            this.drawer = false
+            this.cr.getData({ pageSize: this.cr.pageSize })
+            // 功能达成;副作用页码不响应,因为每次拉新都选第1页数据
+            // 原因是每次审核是以页为单位,审完1页才接口更新总量数据
+          }
+        })
+      } else {
+        this.review()
+      }
+    },
     resetForm() {
       this.$refs.form.resetFields()
       this.drawer = false
-    },
-    // 提交成功后_往复操作
-    recall() {
-      // 第1次处理
-      if (this.initItemSon.status) {
-        console.info('刚才提交的是首单,现在shift')
-        this.initItemSon.status = null
-        this.arrageArraySon.splice(
-          this.arrageArraySon.findIndex(
-            (item) => item.flowId === this.initItemSon.flowId
-          ),
-          1
-        )
-        console.info('首单shift之后总量', this.arrageArraySon)
-        if (!this.arrageArraySon.length) {
-          console.info('提交之后 库存没了')
-          this.$alert('当前页审批已全部完成', '辛苦啦', {
-            callback: (r) => {
-              this.currentPageApproveEnd()
-            }
-          })
-          return false
-        } else {
-          console.info('提交之后还有库存', this.arrageArraySon)
-          this.review()
-        }
-      } else {
-        console.info('刚才提交的是普通单,现在shift')
-        this.arrageArraySon.shift()
-        console.info('普通单shift之后总量', this.arrageArraySon)
-        if (!this.arrageArraySon.length) {
-          console.info('提交之后 库存没了')
-          this.$alert('当前页审批已全部完成', '辛苦啦', {
-            callback: (r) => {
-              this.currentPageApproveEnd()
-            }
-          })
-          return false
-        } else {
-          console.info('提交之后还有库存', this.arrageArraySon)
-          this.review()
-        }
-      }
-    },
-    // 当页全部审批结束后回调
-    currentPageApproveEnd() {
-      this.drawer = false
-      if (this.cr.currentPage < this.cr.totalPages) {
-        this.cr.getData({
-          pageNum: this.cr.currentPage + 1,
-          pageSize: this.cr.pageSize
-        })
-      } else {
-        this.cr.getData({
-          pageNum: this.cr.currentPage,
-          pageSize: this.cr.pageSize
-        })
-      }
     }
   },
   watch: {
+    arrangeArr: {
+      immediate: false,
+      deep: true,
+      handler(newValue, oldValue) {
+        console.log(newValue, oldValue, 'arrangeArr')
+        this.arrageArraySon = newValue
+      }
+    },
+    approvingItem: {
+      immediate: false,
+      deep: true,
+      handler(newValue, oldValue) {
+        console.log(newValue, oldValue, 'approvingItem')
+        this.initItemTrue = newValue
+      }
+    },
+
     'form.isAgree': {
-      immediate: true,
+      immediate: false,
       deep: true,
       handler(newValue, oldValue) {
         if (newValue === true) {
           this.form.remark = ''
         }
       }
-    },
-    arrangeArr: {
-      immediate: true,
-      deep: true,
-      // 列表点击审核传来的待审核数组
-      handler(newValue, oldValue) {
-        console.log(newValue, oldValue, 'arrangeArr')
-        this.arrageArraySon = newValue
-      }
     }
-  },
-  mounted() {
-    // 列表点击审核传来的item
-    this.$root.$on('singSong', (r) => {
-      this.initItemSon = r
-      console.info(this.initItemSon)
-      this.review()
-    })
   }
 }
 </script>
