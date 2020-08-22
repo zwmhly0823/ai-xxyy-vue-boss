@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-25 14:35:19
  * @LastEditors: Shentong
- * @LastEditTime: 2020-07-17 15:52:42
+ * @LastEditTime: 2020-08-21 19:40:21
  -->
 <template>
   <div class="table-searcher-container">
@@ -32,9 +32,9 @@
       >
         <el-option
           v-for="item in sellerLevelList"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value"
+          :key="item.level"
+          :label="item.levelName"
+          :value="item.level"
         >
         </el-option>
       </el-select>
@@ -129,7 +129,18 @@ export default {
     wxList,
     MoreVersionBox
   },
+  created() {
+    this.getSellLevel()
+  },
   methods: {
+    // 获取销售等级
+    async getSellLevel(params) {
+      try {
+        const { payload = [] } = await this.$http.Operating.getSellLevel(params)
+
+        this.sellerLevelList = payload
+      } catch (err) {}
+    },
     getVersionNu(res) {
       console.log(res, 'version-res')
       // this.manageChange({ version }, 'version')

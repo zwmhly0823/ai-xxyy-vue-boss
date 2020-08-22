@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-15 20:35:57
  * @LastEditors: Shentong
- * @LastEditTime: 2020-08-07 16:20:13
+ * @LastEditTime: 2020-08-21 15:26:57
  -->
 <template>
   <div class="first-step">
@@ -14,7 +14,7 @@
         <h4>排期基本设置</h4>
         <el-divider></el-divider>
       </div>
-      <el-form :model="formInfo" :rules="rules" ref="formInfo">
+      <el-form :model="formInfo" :inline="true" :rules="rules" ref="formInfo">
         <div class="time-select">
           <el-row>
             <el-col :span="8">
@@ -35,10 +35,41 @@
 
               <h6>建议体验课售卖周期从本周五至下周五</h6>
             </el-col>
-            <el-col :span="8" :offset="1">
+            <el-col :span="10" :offset="1">
               <h4>上课周期</h4>
-              <el-form-item label="" prop="attendClassTime">
+              <el-form-item label="" prop="attendClassTimeStart">
                 <el-date-picker
+                  size="small"
+                  v-model="formInfo.attendClassTimeStart"
+                  type="date"
+                  placeholder="开课时期"
+                  :picker-options="pickerBeginDateBefore"
+                  value-format="timestamp"
+                  @change="startClassChange"
+                >
+                </el-date-picker>
+              </el-form-item>
+              <span class="time-space">至</span>
+              <el-form-item label="" prop="attendClassTimeEnd">
+                <el-date-picker
+                  size="small"
+                  v-model="formInfo.attendClassTimeEnd"
+                  type="date"
+                  placeholder="结课时期"
+                  :picker-options="pickerBeginDateAfter"
+                  value-format="timestamp"
+                  @change="endClassChange"
+                >
+                </el-date-picker>
+                <!-- <el-date-picker
+                  size="small"
+                  v-model="formInfo.attendClassTimeEnd"
+                  type="date"
+                  placeholder="结课时期"
+                  :picker-options="pickerBeginDateAfter"
+                >
+                </el-date-picker> -->
+                <!-- value-format="yyyy-MM-dd" <el-date-picker
                   size="small"
                   v-model="formInfo.attendClassTime"
                   format="yyyy 年 MM 月 dd 日"
@@ -48,7 +79,7 @@
                   :default-time="['12:00:00']"
                   @change="attendClassTimeChange"
                 >
-                </el-date-picker>
+                </el-date-picker> -->
               </el-form-item>
               <h6>开始上课时间必须从星期一开始</h6>
             </el-col>
@@ -83,7 +114,7 @@
               <el-form-item label="" style="width:80%;">
                 <el-input
                   v-model="formInfo[`sellDate_${index}`]"
-                  size="small"
+                  size="mini"
                   :disabled="true"
                   placeholder="售卖日期"
                 ></el-input></el-form-item
@@ -109,7 +140,7 @@
               >
                 <el-input
                   v-model="formInfo[`limit_${index}`]"
-                  size="small"
+                  size="mini"
                   placeholder="限售(对内)"
                 ></el-input>
               </el-form-item>
@@ -134,7 +165,7 @@
               >
                 <el-input
                   v-model="formInfo[`fakeLimit_${index}`]"
-                  size="small"
+                  size="mini"
                   placeholder="限售(对外)"
                 ></el-input>
               </el-form-item>
@@ -158,7 +189,7 @@
                 ]"
                 ><el-input
                   v-model="formInfo[`fakeSales_${index}`]"
-                  size="small"
+                  size="mini"
                   placeholder="已售(对外)"
                 ></el-input> </el-form-item
             ></el-col>
@@ -198,7 +229,9 @@ export default {
       courseType: 0, // 课程类型；0 体验课；1系统课
       formInfo: {
         sellCycleTime: '',
-        attendClassTime: '',
+        attendClassTimeStart: '',
+        attendClassTimeEnd: '',
+        // attendClassTime: '',
         robinNum: '' // 接速设置
       },
       setSellTimeForm: [],
@@ -220,14 +253,45 @@ export default {
             trigger: 'change'
           }
         ],
-        attendClassTime: [
+        attendClassTimeStart: [
           {
             required: true,
-            message: '请选择上课周期',
+            message: '请选择开课时期',
             trigger: 'change'
           }
         ],
+        attendClassTimeEnd: [
+          {
+            required: true,
+            message: '请选择结课时期',
+            trigger: 'change'
+          }
+        ],
+        // attendClassTime: [
+        //   {
+        //     required: true,
+        //     message: '请选择上课周期',
+        //     trigger: 'change'
+        //   }
+        // ],
         robinNum: [{ validator: checkNumber, required: true, trigger: 'blur' }]
+      },
+      pickerBeginDateBefore: {
+        disabledDate: (time) => {
+          const endDateVal = this.formInfo.attendClassTimeEnd
+          // const now = new Date().getTime() - 86400000
+          if (endDateVal) {
+            return time.getTime() > endDateVal
+          }
+        }
+      },
+      pickerBeginDateAfter: {
+        disabledDate: (time) => {
+          const endDateVal = this.formInfo.attendClassTimeStart
+          if (endDateVal) {
+            return time.getTime() < endDateVal
+          }
+        }
       }
     }
   },
@@ -251,38 +315,52 @@ export default {
           sellCycle = []
         } = _data.payload
 
+        const sellCycleTime = [
+          new Date(Number(`${startDate}`)),
+          new Date(Number(`${endDate}`))
+        ]
+
         this.formInfo = {
-          sellCycleTime: [
-            new Date(Number(`${startDate}`)),
-            new Date(Number(`${endDate}`))
-          ],
-          attendClassTime: [
-            new Date(Number(`${courseDay}`)),
-            new Date(Number(`${endCourseDay}`))
-          ],
+          sellCycleTime,
+          attendClassTimeStart: new Date(Number(`${courseDay}`)),
+          attendClassTimeEnd: new Date(Number(`${endCourseDay}`)),
+          // attendClassTime: [
+          //   new Date(Number(`${courseDay}`)),
+          //   new Date(Number(`${endCourseDay}`))
+          // ],
           sellCycle,
           robinNum // 接速设置
         }
-
-        this.sellCycleTimeChange(this.formInfo.sellCycleTime)
-        this.attendClassTimeChange(this.formInfo.attendClassTime)
+        // this.startClassChange()
+        this.sellCycleTimeChange(sellCycleTime)
+        // this.attendClassTimeChange(this.formInfo.attendClassTime)
       } catch (err) {
         console.log(err)
       }
     }
   },
   methods: {
-    // 上课周期
-    attendClassTimeChange(val) {
-      const [courseDay = '', endCourseDay = ''] = val || []
-      this.attendClassObj = {
-        ...this.attendClassObj,
-        courseDay: courseDay ? courseDay.getTime() : '',
-        endCourseDay: endCourseDay ? endCourseDay.getTime() : ''
+    // 开课时期
+    startClassChange(courseDay) {
+      this.formInfo.attendClassTimeStart = courseDay || ''
+
+      if (courseDay && this.courseType === '0') {
+        courseDay && this.endClassChange(courseDay + 13 * 24 * 3600 * 1000)
       }
     },
-    // 通过售卖日期的变化的天数，动态设置售卖周期
-    calcSellTimeByDiffDay() {},
+    // 节课时期
+    endClassChange(endCourseDay) {
+      this.formInfo.attendClassTimeEnd = endCourseDay || ''
+    },
+    // // 上课周期
+    // attendClassTimeChange(val) {
+    //   const [courseDay = '', endCourseDay = ''] = val || []
+    //   this.attendClassObj = {
+    //     ...this.attendClassObj,
+    //     courseDay: courseDay ? courseDay.getTime() : '',
+    //     endCourseDay: endCourseDay ? endCourseDay.getTime() : ''
+    //   }
+    // },
     // 售卖周期
     sellCycleTimeChange(val) {
       const [startDate = '', endDate = ''] = val || []
@@ -319,8 +397,8 @@ export default {
       }
       this.sellCycleObj = {
         ...this.sellCycleObj,
-        startDate: startDate ? startDate.getTime() : '',
-        endDate: endDate ? endDate.getTime() : ''
+        startDate: startDate.getTime() || '',
+        endDate: endDate.getTime() || ''
       }
     },
     // 计算售卖设置里的 ’售卖日期‘
@@ -387,12 +465,14 @@ export default {
         this.setSellTimeForm.push(obj)
       }
       // 时间格式转化：转换为0点时刻
-      this.attendClassObj.courseDay = new Date(
-        this.attendClassObj.courseDay
-      ).setHours(0)
+      const courseDay = new Date(this.formInfo.attendClassTimeStart).setHours(0)
+
+      const endCourseDay = new Date(this.formInfo.attendClassTimeEnd).getTime()
+
       Object.assign(sendFrom, {
-        ...this.attendClassObj,
         ...this.sellCycleObj,
+        courseDay,
+        endCourseDay,
         robinNum: this.formInfo.robinNum,
         sellCycle: this.setSellTimeForm,
         type: this.courseType,
@@ -430,6 +510,14 @@ export default {
 </script>
 <style lang="scss" scoped>
 .step-one-container {
+  .time-space {
+    height: 40px;
+    display: inline-flex;
+    align-items: center;
+    /* width: 20px; */
+    justify-content: center;
+    margin-right: 10px;
+  }
   .el-divider {
     margin: 10px 0 !important;
   }
