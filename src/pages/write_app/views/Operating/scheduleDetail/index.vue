@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-14 18:28:44
  * @LastEditors: Shentong
- * @LastEditTime: 2020-07-16 16:36:29
+ * @LastEditTime: 2020-08-22 17:06:32
  -->
 <template>
   <div class="app-main height add-schedule-container">
@@ -75,7 +75,7 @@
 <script>
 import { formatData } from '@/utils/index'
 import ScheduleMarket from './components/ScheduleMarket'
-import TableSearch from '../../components/tableSearch/index'
+import TableSearch from './components/tableSearch'
 export default {
   data() {
     return {

@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-15 20:35:57
  * @LastEditors: Shentong
- * @LastEditTime: 2020-07-27 16:41:55
+ * @LastEditTime: 2020-08-22 17:20:58
  -->
 <template>
   <div class="third-step">
@@ -246,10 +246,6 @@ export default {
         {
           label: 'S2',
           value: 'S2'
-        },
-        {
-          label: 'S3',
-          value: 'S3'
         }
       ],
       tableData: [],
@@ -294,7 +290,23 @@ export default {
   },
   watch: {},
   async created() {
-    const { courseType = 0 } = this.$route.params
+    const { courseType = '0' } = this.$route.params
+    if (courseType === '1') {
+      this.levelList = this.levels.concat([
+        {
+          label: 'S3',
+          value: 'S3'
+        },
+        {
+          label: 'S4',
+          value: 'S4'
+        },
+        {
+          label: 'S5',
+          value: 'S5'
+        }
+      ])
+    }
     // 根据老师ids获取招生排期设置中老师配置信息 TODO:
     Object.assign(this.params, {
       courseType,

@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-14 18:28:44
  * @LastEditors: Shentong
- * @LastEditTime: 2020-07-27 16:41:08
+ * @LastEditTime: 2020-08-22 17:17:45
  -->
 <template>
   <div class="app-main height add-schedule-container">
@@ -15,11 +15,11 @@
           <div class="step-container-status">
             <el-steps :active="stepStatus">
               <el-step title="设置基本信息" icon="el-icon-edit"></el-step>
-              <el-step
+              <!-- <el-step
                 v-if="courseType == '0'"
                 title="设置分配线索规则"
                 icon="el-icon-s-tools"
-              ></el-step>
+              ></el-step> -->
               <el-step title="选择带班销售" icon="el-icon-s-flag"></el-step>
               <el-step title="设置招生容量" icon="el-icon-s-check"></el-step>
               <!-- <el-step title="完成" icon="el-icon-success"></el-step> -->
@@ -33,11 +33,11 @@
           ></first-step>
 
           <!-- 插入一步 设置分配线索 仅体验课显示 -->
-          <set-leads
+          <!-- <set-leads
             v-if="courseType == '0' && stepStatus == 2"
             @listenStepStatus="fSstepStatus"
             @setExcelStatus="excelStatus"
-          ></set-leads>
+          ></set-leads> -->
 
           <!-- 第二步 -->
           <second-step
@@ -79,7 +79,7 @@
 import FirstStep from './components/FirstStep'
 import SecondStep from './components/SecondStep'
 import ThirdStep from './components/ThirdStep'
-import SetLeads from './components/SetLeads'
+// import SetLeads from './components/SetLeads'
 export default {
   props: [],
   data() {
@@ -94,8 +94,8 @@ export default {
   components: {
     FirstStep,
     SecondStep,
-    ThirdStep,
-    SetLeads
+    ThirdStep
+    // SetLeads
   },
   computed: {
     isShowSecondStep() {

@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-25 14:35:19
  * @LastEditors: Shentong
- * @LastEditTime: 2020-08-21 19:40:21
+ * @LastEditTime: 2020-08-22 17:12:50
  -->
 <template>
   <div class="table-searcher-container">
@@ -68,7 +68,7 @@
 import Department from '@/components/MSearch/searchItems/department'
 import GroupSell from '@/components/MSearch/searchItems/groupSell'
 import MoreVersionBox from '@/components/MSearch/searchItems/moreVersionBox'
-import wxList from '../wxSearch'
+import wxList from './wxSearch'
 export default {
   props: {
     // 是否显示销售等级

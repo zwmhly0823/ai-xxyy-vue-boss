@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-08-19 20:26:32
  * @LastEditors: Shentong
- * @LastEditTime: 2020-08-21 22:22:49
+ * @LastEditTime: 2020-08-22 17:08:24
  */
 import Vue from 'vue'
 import VueRouter from 'vue-router'
@@ -37,7 +37,26 @@ const routes = [
       title: '招生排期',
       keepAlive: true
     },
-    component: () => import('../views/Operating/index.vue')
+    component: () => import('../views/Operating/scheduleList/index.vue')
+  },
+  // 新增、编辑
+  {
+    path: '/addSchedule/:period/:courseType/',
+    name: 'addSchedule',
+    meta: {
+      title: '新建排期',
+      keepAlive: false
+    },
+    component: () => import('../views/Operating/addSchedule/index.vue')
+  },
+  {
+    path: '/scheduleDetail/:period/:courseType/',
+    name: 'scheduleDetail',
+    meta: {
+      title: '排期详情',
+      keepAlive: false
+    },
+    component: () => import('../views/Operating/scheduleDetail/index.vue')
   }
   //   {
   //     path: '/system',

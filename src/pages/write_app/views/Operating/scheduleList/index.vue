@@ -4,7 +4,7 @@
  * @Author: shentong
  * @Date: 2020-04-02 16:08:02
  * @LastEditors: Shentong
- * @LastEditTime: 2020-07-16 12:28:02
+ * @LastEditTime: 2020-08-22 17:36:50
  -->
 <template>
   <div>
@@ -154,7 +154,7 @@
 </template>
 
 <script>
-// import MSearch from '@/components/MSearch/index.vue' TODO:
+import { mapGetters } from 'vuex'
 import EleTable from '@/components/Table/EleTable'
 import { formatData } from '@/utils'
 export default {
@@ -167,6 +167,9 @@ export default {
   components: {
     // MSearch,
     EleTable
+  },
+  computed: {
+    ...mapGetters(['subjects'])
   },
   data() {
     return {
@@ -200,9 +203,11 @@ export default {
       teacherID: ''
     }
   },
-  computed: {},
   watch: {},
   async activated() {
+    console.log('subjects', this.subjects)
+    this.tabQuery.subject = this.subjects.currentSubjectKey || ''
+
     await this.getCourseListByType()
   },
   methods: {
@@ -237,6 +242,7 @@ export default {
     // 下载文件
     downloadFn(data, fileName = '下载', cb) {
       if (!data) return
+
       const blob = new Blob([data])
       var downloadElement = document.createElement('a')
       var href = window.URL.createObjectURL(blob) // 创建下载的链接
@@ -246,14 +252,6 @@ export default {
       downloadElement.click() // 点击下载
       document.body.removeChild(downloadElement) // 下载完成移除元素
       window.URL.revokeObjectURL(href) // 释放掉blob对象
-      // const elink = document.createElement('a')
-      // elink.download = fileName
-      // elink.style.display = 'none'
-      // elink.href = URL.createObjectURL(blob)
-      // document.body.appendChild(elink)
-      // elink.click()
-      // URL.revokeObjectURL(elink.href) // 释放URL 对象
-      // document.body.removeChild(elink)
 
       cb && cb()
     },
@@ -294,12 +292,14 @@ export default {
         // page: --this.tabQuery.page,
         courseType: this.tabIndex
       }
-      // TODO:
+      console.log('his.$http.writeApp', this.$http)
       try {
         const {
           content = [],
           totalElements = 0
-        } = await this.$http.Operating.getCourseListByType(this.tabQuery)
+        } = await this.$http.writeApp.Operating.getCourseListByType(
+          this.tabQuery
+        )
         this.totalPages = Number(totalElements)
 
         content.forEach((item) => {

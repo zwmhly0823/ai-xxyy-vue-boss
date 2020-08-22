@@ -4,7 +4,7 @@
  * @Author: shentong
  * @Date: 2020-04-02 16:08:02
  * @LastEditors: Shentong
- * @LastEditTime: 2020-08-22 16:27:47
+ * @LastEditTime: 2020-08-22 17:33:52
  -->
 <template>
   <div>
@@ -292,12 +292,14 @@ export default {
         // page: --this.tabQuery.page,
         courseType: this.tabIndex
       }
-      // TODO:
+      console.log('his.$http.writeApp', this.$http.writeApp)
       try {
         const {
           content = [],
           totalElements = 0
-        } = await this.$http.Operating.getCourseListByType(this.tabQuery)
+        } = await this.$http.writeApp.Operating.getCourseListByType(
+          this.tabQuery
+        )
         this.totalPages = Number(totalElements)
 
         content.forEach((item) => {
