@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-24 18:50:54
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-22 18:09:05
+ * @LastEditTime: 2020-08-22 19:50:57
  -->
 <template>
   <div class="search-item small threeSelect">
@@ -150,13 +150,14 @@ export default {
           item.children && item.children.forEach((vals) => (vals.children = []))
       )
 
-      classdata.forEach((content, num) => {
-        arrList.forEach((datas, nums) => {
-          if (+content.channel_class_id === +datas.id) {
-            datas.children.push(content)
-          }
+      classdata &&
+        classdata.forEach((content, num) => {
+          arrList.forEach((datas, nums) => {
+            if (+content.channel_class_id === +datas.id) {
+              datas.children.push(content)
+            }
+          })
         })
-      })
 
       const result = firstNode.map((item) => {
         if (item.children && item.children.length === 0) {

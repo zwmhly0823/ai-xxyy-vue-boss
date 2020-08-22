@@ -3,8 +3,8 @@
  * @version: 
  * @Author: panjian
  * @Date: 2020-05-07 10:48:30
- * @LastEditors: panjian
- * @LastEditTime: 2020-05-11 20:53:00
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-08-22 19:57:59
  -->
 <template>
   <div class="drawer-box">
@@ -101,6 +101,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 export default {
   data() {
     var channelSort = (rule, value, callback) => {
@@ -141,6 +142,9 @@ export default {
         sort: [{ required: true, validator: channelSort, trigger: 'blur' }]
       }
     }
+  },
+  computed: {
+    ...mapGetters(['subjects'])
   },
   created() {
     this.getChannelOne()
@@ -197,7 +201,8 @@ export default {
             channelSort: this.ruleForm.sort, // 渠道排序
             status: this.ruleForm.status, // 1开启0禁用
             remarks: this.ruleForm.desc,
-            channelLevel: this.getLevel(this.ruleForm.channelLevel) // 渠道等级
+            channelLevel: this.getLevel(this.ruleForm.channelLevel), // 渠道等级
+            subject: this.subjects.subject
           }
           this.$http.writeApp.Operating.createChannel(props).then((res) => {
             if (res.code === 0) {

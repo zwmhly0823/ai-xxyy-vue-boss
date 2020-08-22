@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-08-20 11:27:55
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-22 16:28:51
+ * @LastEditTime: 2020-08-22 19:57:39
  * 美术APP
   @ApiModelProperty("美术")
   ART_APP, 0
