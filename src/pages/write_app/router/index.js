@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-08-19 20:26:32
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-08-22 14:53:43
+ * @LastEditTime: 2020-08-22 17:20:21
  */
 import Vue from 'vue'
 import VueRouter from 'vue-router'
@@ -30,15 +30,26 @@ const routes = [
     },
     component: () => import('../views/Users/index.vue')
   },
-  // {
-  //   path: '/teacherManagement',
-  //   name: 'teacherManagement',
-  //   meta: {
-  //     title: '员工账号',
-  //     keepAlive: true
-  //   },
-  //   component: () => import('../../')
-  // },
+  {
+    path: '/teacherManagement',
+    name: 'teacherManagement',
+    meta: {
+      title: '员工账号',
+      keepAlive: true
+    },
+    component: () =>
+      import('../../teacher/views/teacherManagement/teacherManage.vue')
+  },
+  {
+    path: '/newTeacher',
+    name: 'newTeacher',
+    meta: {
+      title: '新增员工',
+      keepAlive: true
+    },
+    component: () =>
+      import('../../teacher/views/teacherManagement/components/newTeacher.vue')
+  },
   {
     path: '/express',
     name: 'express',
@@ -47,6 +58,24 @@ const routes = [
       keepAlive: true
     },
     component: () => import('../views/express/views/expressCenter/index.vue')
+  },
+  // {
+  //   path: '/express',
+  //   name: 'express',
+  //   meta: {
+  //     title: '物流管理',
+  //     keepAlive: true
+  //   },
+  //   component: () => import('../views/express/views/expressCenter/index.vue')
+  // },
+  {
+    path: '/order',
+    name: 'order',
+    meta: {
+      title: '订单管理',
+      keepAlive: true
+    },
+    component: () => import('../views/trading/views/order/orderModule.vue')
   }
   //   {
   //     path: '/system',
