@@ -1,166 +1,73 @@
 <template>
   <div class="container">
-    <div class="automatic-config">
-      <el-dropdown @command="handleCommand">
-        <span class="el-dropdown-link">
-          <span><i class="el-icon-setting"></i>设置</span>
-        </span>
-        <el-dropdown-menu slot="dropdown">
-          <el-dropdown-item command="import">导入物流信息</el-dropdown-item>
-          <el-dropdown-item command="export">导出物流信息</el-dropdown-item>
-          <!-- <el-dropdown-item
-            v-show="activeName === '0' || activeName === '1'"
-            command="setting"
-            >自动发货设置</el-dropdown-item
-          > -->
-        </el-dropdown-menu>
-      </el-dropdown>
+    <div class="automatic-config" @click="showSetUp">
+      <span><i class="el-icon-setting"></i> 自动发货设置</span>
     </div>
     <el-tabs v-model="activeName" type="border-card" @tab-click="switchTab">
-      <el-tab-pane label="体验课" name="0">
-        <div v-if="activeName == '0'">
-          <rightUp
-            ref="right0"
-            :tab="activeName"
-            @result="getSearch"
-            :regtype="regtype"
-            :status="sortItem.id"
-            :source_type="source_type"
-            :hideCol="hideCol"
-            :hideSearchItem="hideSearchItem"
-            :teamClass="teamClass"
-          />
-          <toggle
-            @result="getStatus"
-            :tab="activeName"
-            :regtype="regtype"
-            :source_type="source_type"
-          />
-          <el-scrollbar
-            wrap-class="scrollbar-wrapper-first"
-            id="express-right-scroll-first"
-          >
-            <div class="scroll" ref="scroll" :style="{ height: scrollHeight }">
-              <rightDown
-                :search="search"
-                :sortItem="sortItem"
-                :regtype="regtype"
-                :source_type="source_type"
-                :hideCol="hideCol"
-              />
-            </div>
-          </el-scrollbar>
-        </div>
+      <el-tab-pane label="全部物流" name="0">
+        <toggle
+          @result="getStatus"
+          :tab="activeName"
+          :regtype="regtype"
+          :source_type="source_type"
+        />
+        <rightUp
+          :tab="activeName"
+          @result="getSearch"
+          :regtype="regtype"
+          :status="sortItem.id"
+          :source_type="source_type"
+          :hideCol="hideCol"
+          :hideSearchItem="hideSearchItem"
+          :teamClass="teamClass"
+        />
+        <el-scrollbar
+          wrap-class="scrollbar-wrapper-first"
+          id="express-right-scroll-first"
+        >
+          <div class="scroll" ref="scroll" :style="{ height: scrollHeight }">
+            <rightDown
+              :search="search"
+              :sortItem="sortItem"
+              :regtype="regtype"
+              :source_type="source_type"
+              :hideCol="hideCol"
+            />
+          </div>
+        </el-scrollbar>
       </el-tab-pane>
-      <el-tab-pane label="系统课" name="1">
-        <div v-if="activeName == '1'">
-          <rightUp
-            ref="right1"
-            :tab="activeName"
-            @result="getSearch"
-            :regtype="regtypeSys"
-            :status="sortItem.id"
-            :source_type="source_type"
-            :hideCol="allExpressHideCol"
-            :hideSearchItem="allExpressHideSearchItemSystem"
-            :teamClass="teamClassSys"
-          />
-          <toggle
-            @result="getStatus"
-            :tab="activeName"
-            :regtype="regtypeSys"
-            :source_type="source_type"
-          />
-          <el-scrollbar
-            wrap-class="scrollbar-wrapper-first"
-            id="express-right-scroll-first"
-          >
-            <div class="scroll" ref="scroll" :style="{ height: scrollHeight }">
-              <rightDown
-                :search="searchSystem"
-                :sortItem="sortItem"
-                :regtype="regtypeSys"
-                :source_type="source_type"
-                :hideCol="allExpressHideCol"
-              />
-            </div>
-          </el-scrollbar>
-        </div>
-      </el-tab-pane>
-      <el-tab-pane label="活动商品" name="2">
-        <div v-if="activeName == '2'">
-          <rightUp
-            ref="right2"
-            @result="getSearch"
-            :regtype="regtypeActivity"
-            :status="sortItem.id"
-            :source_type="source_type"
-            :hideCol="allExpressHideColActivity"
-            :hideSearchItem="allExpressHideSearchItemActivity"
-          />
-          <toggle
-            @result="getStatus"
-            :tab="activeName"
-            :regtype="regtypeActivity"
-            :source_type="source_type"
-            :hideToggleBtn="allHideToggleBtn"
-          />
-          <el-scrollbar
-            wrap-class="scrollbar-wrapper-first"
-            id="express-right-scroll-first"
-          >
-            <div class="scroll" ref="scroll" :style="{ height: scrollHeight }">
-              <rightDown
-                :search="searchActivity"
-                :sortItem="sortItem"
-                :regtype="regtypeActivity"
-                :source_type="
-                  (searchActivity &&
-                    searchActivity[0] &&
-                    searchActivity[0].term.source_type) ||
-                    source_type
-                "
-                :hideCol="allExpressHideColActivity"
-              />
-            </div>
-          </el-scrollbar>
-        </div>
-      </el-tab-pane>
-      <el-tab-pane label="补发商品" name="3">
-        <div v-if="activeName == '3'">
-          <rightUp
-            ref="right3"
-            :tab="activeName"
-            @result="getSearch"
-            :regtype="`0,${regtype},${regtypeSys},${regtypeActivity}`"
-            :status="sortItem.id"
-            :source_type="'5'"
-            :hideCol="replenishHideCol"
-            :hideSearchItem="replenishHideSearchItem"
-            teamClass=""
-          />
-          <toggle
-            @result="getStatus"
-            :hideToggleBtn="hideToggleBtn"
-            :tab="activeName"
-            :regtype="`0,${regtype},${regtypeSys},${regtypeActivity}`"
-            :source_type="'5'"
-          />
-          <el-scrollbar
-            wrap-class="scrollbar-wrapper-first"
-            id="express-right-scroll-first"
-          >
-            <div class="scroll" :style="{ height: scrollHeight }">
-              <rightDown
-                :search="searchReplenish"
-                :sortItem="sortItem"
-                :regtype="`0,${regtype},${regtypeSys},${regtypeActivity}`"
-                :source_type="'5'"
-                :hideCol="replenishHideCol"
-              />
-            </div>
-          </el-scrollbar>
-        </div>
+      <el-tab-pane label="补发货" name="1">
+        <toggle
+          @result="getStatus"
+          :hideToggleBtn="hideToggleBtn"
+          :tab="activeName"
+          :regtype="regtype"
+          :source_type="source_type"
+        />
+        <rightUp
+          :tab="activeName"
+          @result="getSearch"
+          :regtype="regtype"
+          :status="sortItem.id"
+          :source_type="source_type"
+          :hideCol="hideCol"
+          :hideSearchItem="hideSearchItem"
+          :teamClass="teamClass"
+        />
+        <el-scrollbar
+          wrap-class="scrollbar-wrapper-first"
+          id="express-right-scroll-first"
+        >
+          <div class="scroll" :style="{ height: scrollHeight }">
+            <rightDown
+              :search="search"
+              :sortItem="sortItem"
+              :regtype="regtype"
+              :source_type="source_type"
+              :hideCol="hideCol"
+            />
+          </div>
+        </el-scrollbar>
       </el-tab-pane>
     </el-tabs>
     <!-- 自动发货设置弹窗 -->
@@ -242,62 +149,28 @@ const allExpressHideCol = {
   productType: false,
   replenishReason: false,
   applicant: false,
-  term: false,
   courseType: false
-}
-const allExpressHideColActivity = {
-  replenishType: false,
-  productType: false,
-  replenishReason: false,
-  applicant: false,
-  productVersion: false,
-  term: false,
-  className: false,
-  teacher: false
 }
 const allExpressHideSearchItem = {
   level: '',
   replenishReason: '',
   replenishMethod: ''
 }
-const allExpressHideSearchItemSystem = {
-  // 系统课物流需要显示级别
-  level: 'level',
-  replenishReason: '',
-  replenishMethod: '',
-  teacherTip: '辅导老师'
-}
-const allExpressHideSearchItemActivity = {
-  productName: 'product_name',
-  level: 'level',
-  replenishReason: '',
-  replenishMethod: '',
-  moreVersion: '',
-  sup: '',
-  schedule: '',
-  groupSell: '',
-  teamDetail: '',
-  topicType: 'regtype'
-}
 const replenishHideCol = {
   productName: true,
   productVersion: false,
-  term: false,
+  term: true,
   className: false,
-  classNameBf: true,
   teacher: false,
-  courseType: false,
-  applicant: false,
-  productType: false
+  courseType: false
 }
 const replenishHideSearchItem = {
-  level: 'level',
+  level: '',
   moreVersion: '',
   // schedule: '',
   groupSell: '',
   teamDetail: '',
-  operatorId: 'operator_id',
-  regType: 'regType'
+  operatorId: 'operator_id'
 }
 const allExpressSourceType = '0,1,2,3,4'
 const replenishSourceType = '5'
@@ -309,7 +182,6 @@ export default {
   },
   data() {
     return {
-      tabsShowed: ['0'],
       isShowSetUp: false, // 自动发货按钮配置弹窗
       scrollHeight: 'auto', // scroll高度
       automaticParams: [
@@ -339,26 +211,12 @@ export default {
       activeName: '0',
       sortItem: {},
       search: '',
-      searchSystem: '',
-      searchReplenish: '',
-      searchActivity: '',
-      replenishSourceType,
       hideSearchItem: allExpressHideSearchItem,
       regtype: '1', // 体验课是1  系统课是2，3
-      regtypeSys: '2,3',
-      regtypeActivity: '4,5,6',
       hideToggleBtn: ['9', '0'],
       source_type: allExpressSourceType,
       hideCol: allExpressHideCol,
-      allExpressHideCol,
-      allExpressHideColActivity,
-      replenishHideCol,
-      allHideToggleBtn: ['9'],
-      teamClass: '0', // 排期组件添加类别区分 系统课传1 体验课传0
-      teamClassSys: '1', // 排期组件添加类别区分 系统课传1 体验课传0
-      allExpressHideSearchItemActivity,
-      allExpressHideSearchItemSystem,
-      replenishHideSearchItem
+      teamClass: '0' // 排期组件添加类别区分 系统课传1 体验课传0
     }
   },
   mounted() {
@@ -367,19 +225,6 @@ export default {
     })
   },
   methods: {
-    handleCommand(command) {
-      switch (command) {
-        case 'setting':
-          this.showSetUp()
-          break
-        case 'import':
-          this.$refs['right' + this.activeName].showImportDialog()
-          break
-        case 'export':
-          this.$refs['right' + this.activeName].showExportDialog()
-          break
-      }
-    },
     // 计算滚动区域高度
     calcSrollHeight() {
       const topH = this.$refs.scroll.getBoundingClientRect().y
@@ -562,20 +407,7 @@ export default {
     },
     // 获取物流搜索的条件值
     getSearch(val) {
-      switch (this.activeName) {
-        case '0':
-          this.search = val
-          break
-        case '1':
-          this.searchSystem = val
-          break
-        case '2':
-          this.searchActivity = val
-          break
-        case '3':
-          this.searchReplenish = val
-          break
-      }
+      this.search = val
     },
     getStatus(val) {
       this.sortItem = val
@@ -583,45 +415,22 @@ export default {
     },
     // 展示失败原因
     handleHideCol(val) {
-      if (
-        (val.id === '6' && val.center_express_id?.gt === 0) ||
-        val.id === '7' ||
-        val.id === '9'
-      ) {
+      if (val.id === '6' && val.centerExpressId !== 0) {
         this.$set(this.hideCol, 'expressRemark', true)
       } else {
         this.$set(this.hideCol, 'expressRemark', false)
       }
     },
     switchTab(tab) {
-      !this.tabsShowed.includes(this.activeName) &&
-        this.tabsShowed.push(this.activeName)
-      this.tabsShowed = [...this.tabsShowed]
-      this.sortItem = {}
-      // // 补发商品
-      // if (this.activeName === '3') {
-      //   this.hideSearchItem = replenishHideSearchItem
-      //   this.hideCol = replenishHideCol
-      //   this.source_type = replenishSourceType
-      // }
-      // // 活动商品
-      // else if (this.activeName === '2') {
-      //   this.hideSearchItem = allExpressHideSearchItemActivity
-      //   this.hideCol = allExpressHideColActivity
-      //   this.source_type = allExpressSourceType
-      // }
-      // // 系统课
-      // else if (this.activeName === '1') {
-      //   this.hideSearchItem = allExpressHideSearchItemSystem
-      //   this.hideCol = allExpressHideCol
-      //   this.source_type = allExpressSourceType
-      // }
-      // // 体验课
-      // else {
-      //   this.hideSearchItem = allExpressHideSearchItem
-      //   this.hideCol = allExpressHideCol
-      //   this.source_type = allExpressSourceType
-      // }
+      if (this.activeName === '1') {
+        this.hideSearchItem = replenishHideSearchItem
+        this.hideCol = replenishHideCol
+        this.source_type = replenishSourceType
+      } else {
+        this.hideSearchItem = allExpressHideSearchItem
+        this.hideCol = allExpressHideCol
+        this.source_type = allExpressSourceType
+      }
     }
   }
 }
