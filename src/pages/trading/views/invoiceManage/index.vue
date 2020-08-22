@@ -88,7 +88,7 @@
                     <span>{{ scope.row.money }}</span>
                   </template>
                 </el-table-column>
-                <el-table-column label="发票代码" align="center">
+                <el-table-column label="发票号码" align="center">
                   <template slot-scope="scope">
                     <span>{{
                       scope.row.orderInfo && scope.row.orderInfo.invoice_code
