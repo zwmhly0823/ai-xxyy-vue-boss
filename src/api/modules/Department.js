@@ -1,3 +1,12 @@
+/*
+ * @Descripttion:
+ * @version: 1.0.0
+ * @Author: zhangjiawen
+ * @Date: 2020-07-03 17:21:52
+ * @LastEditors: zhangjianwen
+ * @LastEditTime: 2020-08-18 21:37:26
+ */
+
 /**
  * 组织机构
  */
@@ -44,6 +53,17 @@ export default {
       query: `{
         TeacherListEx(query: ${JSON.stringify(query)}, size: 20){
           id
+          realname
+        }
+      }`
+    })
+  },
+  // 模糊查询teacherList
+  getCallTeacherEx(query = '') {
+    return axios.post('/graphql/v1/toss', {
+      query: `{
+        TeacherOutboundPage(query: ${JSON.stringify(query)}, size: 20){
+          teacher_id
           realname
         }
       }`
