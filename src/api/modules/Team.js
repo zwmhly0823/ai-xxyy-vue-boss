@@ -597,6 +597,7 @@ export default {
           )}, sort: ${JSON.stringify(sort)}) {
             id
             team_name
+            teacher_id
           }
         }
       `
