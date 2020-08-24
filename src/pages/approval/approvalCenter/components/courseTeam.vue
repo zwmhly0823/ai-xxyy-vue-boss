@@ -3,8 +3,8 @@
  * @version: 
  * @Author: Lukun
  * @Date: 2020-05-16 17:43:36
- * @LastEditors: liukun
- * @LastEditTime: 2020-08-13 19:13:50
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-08-24 18:25:11
 -->
 <template>
   <div class="container">
@@ -192,7 +192,10 @@ export default {
       this.loading = true
       const queryParams = {
         bool: {
-          must: [{ wildcard: { 'period_name.keyword': `*${queryString}*` } }]
+          must: [
+            { wildcard: { 'period_name.keyword': `*${queryString}*` } },
+            { term: { subject: this.$store.getters.subjects.subjectCode } }
+          ]
         }
       }
       if (this.type) {

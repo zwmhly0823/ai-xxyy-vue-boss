@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-04-25 12:09:03
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-07-25 19:17:14
+ * @LastEditTime: 2020-08-24 18:15:56
  -->
 <template>
   <div id="channel-boxs" class="channel-box">
@@ -366,6 +366,7 @@ export default {
       }
       this.$http.Operating.countsByTrialChannelClassId(params).then((res) => {
         const _data = res.content
+        if (!_data) return
         this.totalNumber = res.number
         this.totalElements = res.totalElements
         _data.forEach((res) => {
@@ -414,6 +415,7 @@ export default {
         (ele) => {
           // 模块数据
           const _datas = ele.payload
+          if (!_datas) return
           // 累计成单金额
           if (_datas.system_user_amounts !== 'null') {
             const allSystemUserAmountsNums = +_datas.system_user_amounts
@@ -496,7 +498,8 @@ export default {
       const query = this.channelValueList
       const channelValue = `{"id":${JSON.stringify(query)}}`
       this.$http.Operating.ChannelClassPageName(channelValue).then((ele) => {
-        const __data = ele.data.ChannelClassPage.content
+        const __data = ele?.data?.ChannelClassPage.content
+        if (!__data) return
         _data.forEach((val) => {
           __data.forEach((item) => {
             if (+item.id === +val.trial_channel_class_id) {
