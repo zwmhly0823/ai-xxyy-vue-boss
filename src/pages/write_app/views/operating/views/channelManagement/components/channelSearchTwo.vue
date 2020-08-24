@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-04-25 12:09:03
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-22 15:19:54
+ * @LastEditTime: 2020-08-24 17:04:32
  -->
 <template>
   <div id="channel-boxs" class="channel-box">
@@ -367,6 +367,7 @@ export default {
       this.$http.writeApp.Operating.countsByTrialChannelClassId(params).then(
         (res) => {
           const _data = res.content
+          if (!_data) return
           this.totalNumber = res.number
           this.totalElements = res.totalElements
           _data.forEach((res) => {
@@ -494,7 +495,9 @@ export default {
     // 调取渠道分类  渠道名称接口
     onGetChannelList(_data) {
       const query = this.channelValueList
-      const channelValue = `{"id":${JSON.stringify(query)}}`
+      const channelValue = `{"id":${JSON.stringify(query)},"subject": ${
+        this.$store.getters.subjects.subjectCode
+      }}`
       this.$http.writeApp.Operating.ChannelClassPageName(channelValue).then(
         (ele) => {
           const __data = ele.data?.ChannelClassPage?.content

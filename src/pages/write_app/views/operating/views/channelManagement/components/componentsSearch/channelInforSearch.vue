@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-24 18:50:54
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-22 19:50:57
+ * @LastEditTime: 2020-08-24 16:25:22
  -->
 <template>
   <div class="search-item small threeSelect">
@@ -89,10 +89,11 @@ export default {
   methods: {
     // 获取渠道来源 filter: 过滤关键词  eg：filter:"抖音"
     async getChannel() {
+      const subject = { subject: this.$store.getters.subjects.subjectCode }
       await axios
         .post('/graphql/v1/toss', {
           query: `{
-            ChannelAllList {
+            ChannelAllList(query:${JSON.stringify(JSON.stringify(subject))}) {
                 id
                 channel_class_id
                 channel_outer_name
@@ -106,20 +107,8 @@ export default {
     },
     // 获取渠道来源分类 filter: 过滤关键词  eg：filter:"抖音"
     async getChannelClassList() {
-      await axios
-        .post('/graphql/v1/toss', {
-          query: `{
-              ChannelClassList(size: 500){
-                id
-                channel_class_parent_id
-                channel_class_name
-              }
-            }
-          `
-        })
-        .then((res) => {
-          this.channelClassList = res.data.ChannelClassList
-        })
+      const res = await this.$http.writeApp.Operating.getChannelClassList()
+      this.channelClassList = res?.data?.ChannelClassList || []
     },
     formatData(classdata, classifiData = []) {
       if (!classifiData) return

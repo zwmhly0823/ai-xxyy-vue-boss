@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-03-16 19:46:39
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-21 20:49:51
+ * @LastEditTime: 2020-08-24 16:13:48
  */
 import axios from '../../axiosConfig'
 
@@ -143,6 +143,19 @@ export default {
    *
    *渠道查询
    */
+  getChannelClassList(params = '') {
+    const query = (params && JSON.stringify(params)) || ''
+    return axios.post('/graphql/v1/toss', {
+      query: `{
+              ChannelClassList(query: ${JSON.stringify(query)}, size: 500){
+                id
+                channel_class_parent_id
+                channel_class_name
+              }
+            }
+          `
+    })
+  },
   countsByTrialChannel(params) {
     return axios.get(
       `/api/o/v1/userOrderSuccess/channel/boss/countsByTrialChannel?trialChannels=${params.trialChannels}&trialChannelClassIds=${params.trialChannelClassIds}&stage=${params.stage}&startCtime=${params.startCtime}&endCtime=${params.endCtime}&page=${params.page}&pageSzie=${params.pageSzie}`
@@ -160,6 +173,8 @@ export default {
           channel_class_name
           p_channel_class_name
           p_channel_class_id
+          subject
+          subject_text
         }
       }`
     })
@@ -263,6 +278,8 @@ export default {
             channel_class_name
             p_channel_class_name
             p_channel_class_id
+            subject
+            subject_text
           }
         }
       }`

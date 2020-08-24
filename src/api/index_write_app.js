@@ -4,9 +4,9 @@
  * @Author: YangJiyong
  * @Date: 2020-08-19 20:42:54
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-21 21:02:41
+ * @LastEditTime: 2020-08-24 14:55:46
  */
 import User from './modules/write_app/User' // 用户接口
-import Operating from './modules/Operating' // 运营中心
+import Operating from './modules/write_app/Operating' // 运营中心
 import DownloadExcel from './modules/DownloadExcel' // 统计模块
 export default Object.assign({}, { User }, { Operating }, { DownloadExcel })
