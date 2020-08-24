@@ -110,7 +110,7 @@
           </p>
         </template>
       </el-table-column>
-      <el-table-column label="推荐人信息" min-width="160">
+      <!-- <el-table-column label="推荐人信息" min-width="160">
         <template slot-scope="scope">
           <p
             v-if="scope.row.first_send_user"
@@ -129,7 +129,7 @@
             }}
           </p>
         </template>
-      </el-table-column>
+      </el-table-column> -->
       <el-table-column label="下单时间·订单号" min-width="180">
         <template slot-scope="scope">
           <p>

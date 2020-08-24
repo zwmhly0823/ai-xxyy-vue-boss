@@ -44,12 +44,12 @@ export default {
       type: null,
       typeList: [
         {
-          id: '1',
-          text: '体验课'
+          id: '5,6',
+          text: '双周'
         },
         {
-          id: '2',
-          text: '试听课'
+          id: '11',
+          text: '单周'
         }
       ]
     }

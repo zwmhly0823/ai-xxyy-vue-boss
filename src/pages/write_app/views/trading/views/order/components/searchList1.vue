@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-04-25 17:24:23
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-08-20 15:13:33
+ * @LastEditTime: 2020-08-24 18:52:03
  -->
 <template>
   <el-card
@@ -123,6 +123,7 @@
           <hardLevel
             :class="['margin_l10']"
             placeholder="全部体验课难度"
+            subType="0"
             style="width:140px"
             name="trial_team_id"
             @result="supCallBackTrial"
@@ -169,6 +170,7 @@
           <hardLevel
             :class="['margin_l10']"
             placeholder="全部系统课难度"
+            subType="1"
             style="width:140px"
             name="sup"
             @result="supCallBack"
@@ -231,7 +233,7 @@
 </template>
 <script>
 import dayjs from 'dayjs'
-import hardLevel from '@/components/MSearch/searchItems/hardLevel.vue' // add
+import hardLevel from '@/components/MSearch/searchItems/hardWriteLevel.vue' // add
 import orderSearch from '@/components/MSearch/searchItems/orderSearch.vue' // add
 import systemCourseType from '@/components/MSearch/searchItems/systemCourseType.vue'
 import DatePicker from '@/components/MSearch/searchItems/datePicker.vue'

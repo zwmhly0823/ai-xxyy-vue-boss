@@ -84,7 +84,7 @@
         >
         </el-cascader>
       </el-form-item>
-      <el-form-item label="科目" prop="subject">
+      <el-form-item label="科目及职务" prop="positionVal" class="Identity">
         <el-select
           multiple
           v-model="ruleForm.subjest"
@@ -99,9 +99,33 @@
           >
           </el-option>
         </el-select>
+        <el-cascader
+          v-model="ruleForm.positionVal"
+          :options="optionsList"
+          clearable
+          placeholder="请选择职务"
+        ></el-cascader>
+        <!-- <el-select v-model="ruleForm.positionVal" placeholder="请选择职务">
+          <el-option
+            v-for="(item, index) in position"
+            :key="index"
+            :label="item.name"
+            :value="item.id"
+          >
+          </el-option>
+        </el-select>
+        <el-select v-model="ruleForm.identType" placeholder="请选择类型">
+          <el-option
+            v-for="(item, index) in identTypeList"
+            :key="index"
+            :label="item.label"
+            :value="item.value"
+          >
+          </el-option>
+        </el-select> -->
       </el-form-item>
       <!-- 职务 -->
-      <el-form-item label="职务" prop="positionVal">
+      <!-- <el-form-item label="职务" prop="positionVal">
         <el-select
           v-model="ruleForm.positionVal"
           multiple
@@ -115,10 +139,14 @@
           >
           </el-option>
         </el-select>
-      </el-form-item>
+      </el-form-item> -->
       <!-- 职级 -->
       <el-form-item label="职级" prop="rank">
-        <el-select v-model="ruleForm.rank" placeholder="请选择职级">
+        <el-select
+          v-model="ruleForm.rank"
+          placeholder="请选择职级"
+          @change="handleChangerank"
+        >
           <el-option
             v-for="item in rankList"
             :key="item.id"
@@ -140,8 +168,13 @@
       </el-form-item> -->
 
       <!-- 管理部门 -->
-      <el-form-item label="管理部门" prop="administration">
+      <el-form-item
+        label="管理部门"
+        :prop="[1, 2].includes(ruleForm.rank) ? 'administration' : ''"
+        v-show="[1, 2].includes(ruleForm.rank)"
+      >
         <el-cascader
+          ref="administration"
           v-model="ruleForm.administration"
           :options="suDepartments"
           @change="handleChangeAdministration"
@@ -392,6 +425,60 @@ export default {
           value: '北京场'
         }
       ],
+      //
+      optionsList: [
+        {
+          value: '0',
+          label: '系统课老师',
+          children: [
+            {
+              value: '2',
+              label: '全职'
+            },
+            {
+              value: '4',
+              label: '兼职'
+            },
+            {
+              value: '6',
+              label: '1对1'
+            }
+          ]
+        },
+        {
+          value: '1',
+          label: '体验课老师',
+          children: [
+            {
+              value: '1',
+              label: '全职'
+            },
+            {
+              value: '3',
+              label: '兼职'
+            },
+            {
+              value: '5',
+              label: '1对1'
+            }
+          ]
+        }
+      ],
+      //
+      identTypeList: [
+        {
+          value: '0',
+          label: '全职'
+        },
+        {
+          value: '1',
+          label: '兼职'
+        },
+        {
+          value: '2',
+          label: '1对1'
+        }
+      ],
       // 课程类型
       subjestList: [
         {
@@ -401,11 +488,11 @@ export default {
         {
           value: '1',
           label: '写字'
-        },
-        {
-          value: '2',
-          label: 'AI学院'
         }
+        // {
+        //   value: '2',
+        //   label: 'AI学院'
+        // }
       ],
       // Level: [
       //   { label: '新兵培训', value: 0 },
@@ -442,6 +529,8 @@ export default {
         subjest: [],
         // 职务
         positionVal: [],
+        // 身份类别
+        identType: '',
         // 职级
         rank: '',
         // 带班级别
@@ -514,7 +603,7 @@ export default {
         ],
         // 职务
         positionVal: [
-          { required: true, message: '请选择职务', trigger: 'change' }
+          { required: true, message: '请选择科目和职务', trigger: 'change' }
         ],
         // 职级
         rank: [{ required: true, message: '请选择职级', trigger: 'change' }],
@@ -557,11 +646,11 @@ export default {
         // 职场
         workplace: [
           { required: true, message: '请选择职场', trigger: 'change' }
-        ]
+        ],
         // 管理部门
-        // administration: [
-        //   { required: true, message: '请选择管理部门', trigger: 'change' }
-        // ]
+        administration: [
+          { required: true, message: '请选择管理部门', trigger: 'change' }
+        ]
       }
     }
   },
@@ -770,7 +859,7 @@ export default {
               ? this.ruleForm.region
               : this.ruleForm.region[this.ruleForm.region.length - 1]
         },
-        duty: positionValId,
+        duty: positionValId[1],
         rank: { id: this.ruleForm.rank },
         weixinList: this.ruleForm.weChat
       }
@@ -833,6 +922,10 @@ export default {
       } else {
         this.ruleForm.weChat = []
       }
+    },
+    // 职级变化
+    handleChangerank() {
+      this.ruleForm.administration = ''
     },
     // 部门联机选择
     handleChange(value) {
@@ -937,6 +1030,12 @@ export default {
       color: #1f2f3d;
       font-weight: 400;
     }
+  }
+}
+.Identity {
+  .el-select {
+    width: 200px !important;
+    margin-right: 20px;
   }
 }
 // 下拉框

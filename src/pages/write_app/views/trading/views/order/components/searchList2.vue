@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-04-25 17:24:23
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-08-13 21:30:04
+ * @LastEditTime: 2020-08-24 21:31:02
  -->
 <template>
   <el-card
@@ -119,6 +119,7 @@
           <hardLevel
             :class="['margin_l10']"
             placeholder="体验课难度"
+            subType="0"
             style="width:140px"
             name="sup"
             @result="supCallBackTrial"
@@ -183,7 +184,7 @@
 </template>
 <script>
 import dayjs from 'dayjs'
-import hardLevel from '@/components/MSearch/searchItems/hardLevel.vue' // add
+import hardLevel from '@/components/MSearch/searchItems/hardWriteLevel.vue' // add
 import orderSearch from '@/components/MSearch/searchItems/orderSearch.vue' // add
 // import orderStatus from '@/components/MSearch/searchItems/orderStatus.vue' // add
 import DatePicker from '@/components/MSearch/searchItems/datePicker.vue'
@@ -192,7 +193,7 @@ import GroupSell from '@/components/MSearch/searchItems/groupSell'
 import Department from '@/components/MSearch/searchItems/department'
 import SearchTeamName from '@/components/MSearch/searchItems/searchTeamName'
 import SearchStage from '@/components/MSearch/searchItems/searchStage'
-import TrialCourseType from '@/components/MSearch/searchItems/trialCourseType'
+import TrialCourseType from '@/components/MSearch/searchItems/trialClassType'
 import { downloadHandle } from '@/utils/download'
 import SearchPhoneAndUsername from '@/components/MSearch/searchItems/searchPhoneAndUsername'
 import SimpleSelect from '@/components/MSearch/searchItems/simpleSelect'
@@ -248,6 +249,9 @@ export default {
     }
   },
   computed: {},
+  mounted() {
+    console.log(window)
+  },
   methods: {
     // 切换手机/订单清空筛选项
     clearNum() {
