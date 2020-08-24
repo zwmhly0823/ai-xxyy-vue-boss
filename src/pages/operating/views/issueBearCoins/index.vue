@@ -37,6 +37,7 @@
               <template slot-scope="scope">
                 <span v-if="scope.row.trans_type === '8'">运营活动</span>
                 <span v-if="scope.row.trans_type === '9'">投诉补偿</span>
+                <span v-if="scope.row.trans_type === '14'">系统扣除</span>
               </template>
             </el-table-column>
             <el-table-column
@@ -125,7 +126,7 @@ export default {
       })
       const query = {
         account_type: 2,
-        trans_type: [8, 9]
+        trans_type: [8, 9, 14]
       }
       Object.assign(query, this.searchMobile, this.searchType, this.searchTime)
       const params = JSON.stringify(JSON.stringify(query))
