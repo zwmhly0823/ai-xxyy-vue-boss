@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-08-19 21:14:16
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-22 17:32:13
+ * @LastEditTime: 2020-08-24 17:33:23
  */
 import { removeToken } from '@/utils/auth'
 import { baseUrl } from '@/utils/index'
@@ -174,6 +174,17 @@ const msbWriting = [
       },
       ...superOperatingRouter
     ]
+  },
+  // 营销中心
+  {
+    path: '/marketing',
+    name: 'marketing',
+    hidden: staff.roleId !== '7',
+    meta: {
+      title: '营销中心',
+      icon: 'iconyingxiaoguanli',
+      module
+    }
   },
   // 设置 - 老师模块
   {

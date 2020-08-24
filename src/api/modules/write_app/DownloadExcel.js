@@ -4,9 +4,9 @@
  * @Author: Lukun
  * @Date: 2020-05-14 14:31:42
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-10 18:00:07
+ * @LastEditTime: 2020-08-24 18:06:37
  */
-import axios from '../axios'
+import axios from '../../axios'
 import { getToken } from '@/utils/auth'
 // const Qs = require('qs')
 

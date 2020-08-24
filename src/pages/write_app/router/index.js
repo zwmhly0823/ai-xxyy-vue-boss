@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-08-19 20:26:32
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-22 17:32:52
+ * @LastEditTime: 2020-08-24 18:05:15
  */
 import Vue from 'vue'
 import VueRouter from 'vue-router'
@@ -28,7 +28,7 @@ const routes = [
       title: '体验课学员',
       keepAlive: true
     },
-    component: () => import('../views/Users/index.vue')
+    component: () => import('../views/users/index.vue')
   },
   {
     path: '/teacherManagement',
@@ -108,6 +108,18 @@ const routes = [
     },
     component: () =>
       import('../views/operating/views/channelManagement/channelManagement.vue')
+  },
+  /**
+   * 营销中心  - 和小熊美术用一套
+   */
+  {
+    path: '/marketing',
+    name: 'marketing',
+    meta: {
+      title: '营销中心',
+      keepAlive: true
+    },
+    component: () => import('../../marketing/views/redeemCode/index.vue')
   }
 ]
 
