@@ -403,7 +403,7 @@ export function getAppSubject(upper = true) {
   return upper ? subject.toUpperCase() : subject
 }
 
-// 获取科目cdoe 0-ART_APP, 1-WRITE_APP, 2-COLLEGE_APP
+// 获取科目cdoe: '0','1','2' (0-ART_APP, 1-WRITE_APP, 2-COLLEGE_APP)
 export function getAppSubjectCode() {
   const key = getAppSubject(false)
   return Object.keys(subjects).findIndex((item) => item === key) + ''
