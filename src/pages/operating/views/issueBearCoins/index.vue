@@ -40,12 +40,11 @@
                 <span v-if="scope.row.trans_type === '14'">系统扣除</span>
               </template>
             </el-table-column>
-            <el-table-column
-              label="补发数量"
-              min-width="15%"
-              align="center"
-              prop="amount"
-            >
+            <el-table-column label="补发数量" min-width="15%" align="center">
+              <template slot-scope="scope">
+                <span v-if="scope.row.trans_type === '14'">-</span>
+                <span>{{ scope.row.amount }}</span>
+              </template>
             </el-table-column>
             <el-table-column
               label="补发原因"
