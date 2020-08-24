@@ -402,3 +402,9 @@ export function getAppSubject(upper = true) {
   const subject = Object.keys(subjects).includes(key) ? key : 'art_app'
   return upper ? subject.toUpperCase() : subject
 }
+
+// 获取科目cdoe 0-ART_APP, 1-WRITE_APP, 2-COLLEGE_APP
+export function getAppSubjectCode() {
+  const key = getAppSubject(false)
+  return Object.keys(subjects).findIndex((item) => item === key) + ''
+}

@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-08-19 21:14:16
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-24 17:33:23
+ * @LastEditTime: 2020-08-24 20:08:19
  */
 import { removeToken } from '@/utils/auth'
 import { baseUrl } from '@/utils/index'
@@ -91,8 +91,8 @@ const msbWriting = [
     },
     children: [
       {
-        path: '/trial',
-        name: 'trial',
+        path: '/trialUsers',
+        name: 'trialUsers',
         meta: {
           title: '体验课',
           module,
