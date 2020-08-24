@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-05-06 16:33:15
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-24 16:55:56
+ * @LastEditTime: 2020-08-24 18:28:05
  -->
 <template>
   <div class="channelAdd-box">
@@ -257,7 +257,8 @@ export default {
 
         this.$http.writeApp.Operating.getChannelAndClass(36).then((res) => {
           const arrTwo = []
-          const data = res.payload.channelList
+          const data = res?.payload?.channelList
+          if (!data) return
           data.forEach((item) => {
             arrTwo.push(item.id)
           })
