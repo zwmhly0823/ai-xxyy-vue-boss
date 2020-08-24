@@ -483,6 +483,9 @@ import modifyAddress from './addressComponents/modifyAddress.vue'
 // import CouponPopover from '@/pages/studentTeam/components/TabPane/components/couponPopover'
 
 export default {
+  provide() {
+    return { faInstance: this }
+  },
   components: {
     detailsInfo,
     changeRecommend,
