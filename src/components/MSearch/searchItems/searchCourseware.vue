@@ -50,7 +50,6 @@ T10,
   <div class="search-item small">
     <el-select
       v-model="teamName"
-      multiple
       filterable
       remote
       :reserve-keyword="true"
@@ -82,13 +81,13 @@ export default {
     },
     placeholder: {
       type: String,
-      default: '系统课名称'
-    },
-    // 课程类型
-    typeNo: {
-      type: String,
-      default: '1'
+      default: '课程名称'
     }
+    // 课程类型
+    // typeNo: {
+    //   type: String,
+    //   default: '1'
+    // }
   },
   computed: {
     handleDebounce() {
@@ -110,7 +109,7 @@ export default {
     getCourse(query) {
       // if (query !== '') {
       this.loading = true
-      this.$http.RiviewCourse.getCoursewareSearch(query, this.typeNo)
+      this.$http.RiviewCourse.getCoursewareSearch(query)
         .then((res) => {
           this.courseList = res.data.CoursewareListEx || []
           this.loading = false

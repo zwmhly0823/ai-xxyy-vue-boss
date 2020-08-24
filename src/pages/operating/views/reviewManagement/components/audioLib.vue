@@ -11,19 +11,22 @@
   <div class="audio-container">
     <div class="audio-container-button">
       <div style="display: flex;">
-        <MSearch search-courseware="course_id" @search="handleSearch">
+        <MSearch search-courseware="course_id" @search="getCourseId"> </MSearch>
+        <div style="padding: 6px 0 0 0;">
           <simple-select
             name="searchComment"
             placeholder="是否上架"
             :multiple="false"
             class="search-group-item"
             :data-list="shelfList"
-            @result="handleSearch"
+            @result="getSearchData('searchComment', arguments)"
           />
-        </MSearch>
-        <div style="padding: 6px 0 0 0;">
-          <DatePicker @result="handleSearch" name="ctime" />
         </div>
+        <DatePicker
+          name="ctime"
+          style="padding: 6px 0 0 20px;"
+          @result="getSearchData('ctime', arguments)"
+        />
       </div>
       <div>
         <el-button type="primary" @click="addPage">新增语音</el-button>
@@ -159,10 +162,37 @@ export default {
     this.initList(this.number)
   },
   methods: {
+    getCourseId(res) {
+      // searchComment {searchComment: 1}
+      console.log('课程名称', res)
+      const key = 'course_id'
+      let val = ''
+      if (res[0] && res[0].terms) {
+        val = res[0].terms
+      }
+      console.log(key, val)
+      this.getSearchData(key, [val])
+    },
     // 点击搜索
-    handleSearch(res) {
-      console.log(res, 'res')
-      this.search = res
+    getSearchData(key, res) {
+      const search = res && res[0]
+      console.log(key, res[0], '===')
+
+      if (search) {
+        this.query = {
+          ...this.query,
+          ...search
+        }
+      } else {
+        this.$delete(this.query, key)
+      }
+      console.log(search, 'search==')
+      // 删除返回值没空数组的情况
+      if (search && search[key].length === 0) {
+        this.$delete(this.query, key)
+      }
+      // this.$emit('search', this.query)
+      console.log(this.query, 'query====')
     },
     addPage() {
       this.$router.push('/audioAdd')

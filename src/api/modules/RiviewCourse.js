@@ -88,7 +88,7 @@ export default {
     )
   },
   // 获取系统课名称 - 模糊搜索. typNo-课程类型
-  getCoursewareSearch(query = '', typeNo) {
+  getCoursewareSearch(query = '', typeNo = [0, 1, 8, 9]) {
     const newquery = {
       bool: { must: [{ wildcard: { 'title.keyword': `*${query}*` } }] }
     }
