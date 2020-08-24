@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-08-19 20:26:32
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-24 18:05:15
+ * @LastEditTime: 2020-08-24 21:37:45
  */
 import Vue from 'vue'
 import VueRouter from 'vue-router'
@@ -22,7 +22,7 @@ const routes = [
     }
   },
   {
-    path: '/trialUser',
+    path: '/trialUsers',
     name: 'trialUsers',
     meta: {
       title: '体验课学员',
