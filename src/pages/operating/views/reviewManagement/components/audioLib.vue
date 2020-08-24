@@ -10,7 +10,22 @@
 <template>
   <div class="audio-container">
     <div class="audio-container-button">
-      <el-button type="primary" @click="addPage">新增语音</el-button>
+      <MSearch search-courseware="course_id" @search="handleSearch">
+        <simple-select
+          name="searchComment"
+          placeholder="是否上架"
+          :multiple="false"
+          class="search-group-item"
+          :data-list="shelfList"
+          @result="handleSearch"
+        />
+        <DatePicker />
+      </MSearch>
+      <div>
+        <el-button type="primary" @click="addPage">新增语音</el-button>
+        <el-button type="primary" @click="addPage">一键禁用</el-button>
+        <el-button type="primary" @click="addPage">一键取消禁用</el-button>
+      </div>
     </div>
     <el-table
       v-loading="loading"
@@ -89,9 +104,23 @@
 
 <script>
 import { scoreObj } from '@/common/data'
+import MSearch from '@/components/MSearch/index'
+import SimpleSelect from '@/components/MSearch/searchItems/simpleSelect'
+import DatePicker from '@/components/MSearch/searchItems/datePicker'
+
 export default {
   data() {
     return {
+      shelfList: [
+        {
+          id: 1,
+          text: '是'
+        },
+        {
+          id: 2,
+          text: '否'
+        }
+      ],
       courseVal: {
         EXPERIENCE: '体验课',
         SYSTEM: '系统课',
@@ -114,6 +143,11 @@ export default {
     this.initList(this.number)
   },
   methods: {
+    // 点击搜索
+    handleSearch(res) {
+      console.log(res, 'res')
+      this.search = res
+    },
     addPage() {
       this.$router.push('/audioAdd')
     },
@@ -150,6 +184,9 @@ export default {
     }
   },
   components: {
+    MSearch,
+    SimpleSelect,
+    DatePicker,
     MPagination: () => import('@/components/MPagination/index.vue')
   }
 }
@@ -158,16 +195,16 @@ export default {
 <style lang="scss" scoped>
 .audio-container {
   margin: 0 0 30px 0;
-  &-button {
-    width: 100%;
-    height: 50px;
-    background: rgb(255, 255, 255);
-    line-height: 50px;
-    margin: 10px 0 10px 0;
-    button {
-      margin: 0 0 0 20px;
-    }
-  }
+  // &-button {
+  //   width: 100%;
+  //   height: 50px;
+  //   background: rgb(255, 255, 255);
+  //   line-height: 50px;
+  //   margin: 10px 0 10px 0;
+  //   button {
+  //     margin: 0 0 0 20px;
+  //   }
+  // }
   .audio {
     overflow: hidden;
     width: 47px;
@@ -179,8 +216,17 @@ export default {
     bottom: 0;
   }
   /deep/ button {
-    height: 35px;
+    height: 30px;
     line-height: 0;
+  }
+  /deep/ .el-card {
+    border: none;
+  }
+  .audio-container-button {
+    display: flex;
+    justify-content: space-between;
+    background: #fff;
+    padding: 5px;
   }
 }
 </style>

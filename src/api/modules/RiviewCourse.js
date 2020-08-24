@@ -86,5 +86,28 @@ export default {
     return axios.get(
       `/api/tm/v1/teacher/manager/courseTask/all/commentTask?pageNumber=${number}&pageSize=${size}`
     )
+  },
+  // 获取系统课名称 - 模糊搜索. typNo-课程类型
+  getCoursewareSearch(query = '', typeNo) {
+    const newquery = {
+      bool: { must: [{ wildcard: { 'title.keyword': `*${query}*` } }] }
+    }
+    if (typeNo) {
+      newquery.bool.must.push({ terms: { type_no: typeNo } })
+    }
+    const q = JSON.stringify(newquery)
+    const sort = `{ "id": "desc" }`
+    return axios.post('/graphql/v1/toss', {
+      query: `
+        {
+         CoursewareListEx(query: ${JSON.stringify(q)}, sort: ${JSON.stringify(
+        sort
+      )}) {
+            id
+            title
+          }
+        }
+      `
+    })
   }
 }

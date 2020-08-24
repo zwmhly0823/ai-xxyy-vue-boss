@@ -310,6 +310,17 @@
       <el-form-item v-if="operatorId">
         <operator-name @result="gerOperatorName" :name="operatorId" />
       </el-form-item>
+      <el-form-item v-if="searchCourseware">
+        <!-- 系统课名称搜索 -->
+        <search-courseware
+          @result="getSearchCourseware"
+          :name="searchCourseware"
+          type="0"
+        />
+      </el-form-item>
+      <el-form-item>
+        <slot></slot>
+      </el-form-item>
     </el-form>
   </el-card>
 </template>
@@ -353,6 +364,7 @@ import { isToss } from '@/utils/index'
 // 员工角色
 import employeesRole from './searchItems/role.vue'
 import staffName from './searchItems/staffName.vue'
+import SearchCourseware from './searchItems/searchCourseware'
 
 export default {
   props: {
@@ -692,6 +704,11 @@ export default {
     devalueValue: {
       type: String,
       default: ''
+    },
+    // 系统课名称
+    searchCourseware: {
+      type: String,
+      default: ''
     }
   },
   components: {
@@ -729,7 +746,8 @@ export default {
     replenishProductType,
     employeesRole,
     staffName,
-    expressType
+    expressType,
+    SearchCourseware
   },
   data() {
     return {
@@ -938,6 +956,9 @@ export default {
     // 收货人电话
     getConsigneePhone(res) {
       this.setSeachParmas(res, [this.consigneePhone || 'receipt_tel'])
+    },
+    getSearchCourseware(res) {
+      this.setSeachParmas(res, [this.searchTrialStage || 'course_id'], 'terms')
     },
 
     /**  处理接收到的查询参数
