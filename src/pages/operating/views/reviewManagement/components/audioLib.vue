@@ -30,14 +30,15 @@
       </div>
       <div>
         <el-button type="primary" @click="addPage">新增语音</el-button>
-        <el-button type="primary" @click="addPage">一键禁用</el-button>
-        <el-button type="primary" @click="addPage">一键取消禁用</el-button>
+        <el-button type="primary" @click="allDisable">一键禁用</el-button>
+        <el-button type="primary" @click="allUnDisable">一键取消禁用</el-button>
       </div>
     </div>
     <el-table
       v-loading="loading"
       element-loading-text="拼命加载中"
       :data="list"
+      @selection-change="handleSelectionChange"
     >
       <el-table-column type="selection" width="50"> </el-table-column>
       <el-table-column label="语音ID" width="80" align="center">
@@ -105,7 +106,9 @@
             v-if="scope.row.opreation === 'DISABLE'"
             >取消禁用</el-button
           >
-          <el-button type="text">删除</el-button>
+          <el-button type="text" @click="deleteAudio(scope.row)"
+            >删除</el-button
+          >
         </template>
       </el-table-column>
     </el-table>
@@ -193,6 +196,70 @@ export default {
       }
       // this.$emit('search', this.query)
       console.log(this.query, 'query====')
+    },
+    // 一键禁用
+    allDisable() {
+      this.$confirm('禁用后语音不可使用，是否禁用?', '禁用语音', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      })
+        .then(() => {
+          this.$message({
+            type: 'success',
+            message: '操作成功!'
+          })
+        })
+        .catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消'
+          })
+        })
+    },
+    // 一键取消禁用
+    allUnDisable() {
+      this.$confirm('取消禁用后语音即可使用，是否取消禁用?', '取消禁用语音', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      })
+        .then(() => {
+          this.$message({
+            type: 'success',
+            message: '操作成功!'
+          })
+        })
+        .catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消'
+          })
+        })
+    },
+    // 删除
+    deleteAudio(row) {
+      this.$confirm('删除后语音不可恢复，是否删除语音?', '删除语音', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      })
+        .then(() => {
+          this.$message({
+            type: 'success',
+            message: '删除成功!'
+          })
+        })
+        .catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消'
+          })
+        })
+    },
+    // checkbox
+    handleSelectionChange(res) {
+      console.log(res, '---')
     },
     addPage() {
       this.$router.push('/audioAdd')
