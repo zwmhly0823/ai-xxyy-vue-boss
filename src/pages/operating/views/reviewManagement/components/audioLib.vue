@@ -10,17 +10,21 @@
 <template>
   <div class="audio-container">
     <div class="audio-container-button">
-      <MSearch search-courseware="course_id" @search="handleSearch">
-        <simple-select
-          name="searchComment"
-          placeholder="是否上架"
-          :multiple="false"
-          class="search-group-item"
-          :data-list="shelfList"
-          @result="handleSearch"
-        />
-        <DatePicker />
-      </MSearch>
+      <div style="display: flex;">
+        <MSearch search-courseware="course_id" @search="handleSearch">
+          <simple-select
+            name="searchComment"
+            placeholder="是否上架"
+            :multiple="false"
+            class="search-group-item"
+            :data-list="shelfList"
+            @result="handleSearch"
+          />
+        </MSearch>
+        <div style="padding: 6px 0 0 0;">
+          <DatePicker @result="handleSearch" name="ctime" />
+        </div>
+      </div>
       <div>
         <el-button type="primary" @click="addPage">新增语音</el-button>
         <el-button type="primary" @click="addPage">一键禁用</el-button>
@@ -32,16 +36,21 @@
       element-loading-text="拼命加载中"
       :data="list"
     >
-      <el-table-column label="语音ID" width="180" align="center">
+      <el-table-column type="selection" width="50"> </el-table-column>
+      <el-table-column label="语音ID" width="80" align="center">
         <template slot-scope="scope">
           <div>{{ scope.row.id }}</div>
         </template>
       </el-table-column>
-      <el-table-column label="课程" width="240" align="center">
+      <el-table-column label="课程类型" width="120" align="center">
         <template slot-scope="scope">
           <span style="margin: 0 20px 0 0">{{
             courseVal[scope.row.courseType]
           }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="课程名称" width="180">
+        <template slot-scope="scope">
           <span style="margin: 0 20px 0 0"
             >{{
               scope.row.courseStrait +
@@ -52,12 +61,15 @@
           <span>{{ scope.row.courseName }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="点评维度" width="180" align="center">
+      <el-table-column label="课程版本" width="80" align="center">
+        V1.1.0
+      </el-table-column>
+      <el-table-column label="维度" width="100" align="center">
         <template slot-scope="scope">
           <div>{{ scope.row.reviewDimension }}</div>
         </template>
       </el-table-column>
-      <el-table-column label="评分" width="180" align="center">
+      <el-table-column label="评分" width="80" align="center">
         <template slot-scope="scope">
           <div>{{ scoreObj[scope.row.score] }}</div>
         </template>
@@ -73,20 +85,24 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="操作" width="180" align="center">
+      <el-table-column label="上传时间" width="180" align="center">
+        2020-08-20 17:20:30
+      </el-table-column>
+      <el-table-column label="操作" width="180" align="center" fixed="right">
         <template slot-scope="scope">
           <el-button
-            type="primary"
+            type="text"
             @click="handleItem(scope.row.opreation, scope.row.id)"
             v-if="scope.row.opreation === 'ENABLE'"
             >禁用</el-button
           >
           <el-button
-            type="primary"
+            type="text"
             @click="handleItem(scope.row.opreation, scope.row.id)"
             v-if="scope.row.opreation === 'DISABLE'"
             >取消禁用</el-button
           >
+          <el-button type="text">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
