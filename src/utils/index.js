@@ -11,6 +11,7 @@ import { Message } from 'element-ui'
 import dayjs from 'dayjs'
 import store from '@/store'
 import { subjects } from '@/config/subjects'
+// import { of } from 'core-js/fn/array'
 
 /**
  * 是否 toss。 是toss返回 teacher_id,否则返回 null
@@ -407,4 +408,16 @@ export function getAppSubject(upper = true) {
 export function getAppSubjectCode() {
   const key = getAppSubject(false)
   return Object.keys(subjects).findIndex((item) => item === key) + ''
+}
+// 注入 课程类型 subject
+export function injectSubject(query) {
+  if (!query) return
+  if (typeof query === 'string') {
+    const queryObj = JSON.parse(query)
+    queryObj.subject = getAppSubjectCode()
+    return JSON.stringify(queryObj)
+  } else {
+    query.subject = getAppSubjectCode()
+    return JSON.stringify(query)
+  }
 }

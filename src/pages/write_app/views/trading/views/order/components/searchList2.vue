@@ -250,7 +250,7 @@ export default {
   },
   computed: {},
   mounted() {
-    console.log(window)
+    console.log(window.a)
   },
   methods: {
     // 切换手机/订单清空筛选项
