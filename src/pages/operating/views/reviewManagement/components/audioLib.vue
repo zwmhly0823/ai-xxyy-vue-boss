@@ -29,9 +29,15 @@
         />
       </div>
       <div>
-        <el-button type="primary" @click="addPage">新增语音</el-button>
-        <el-button type="primary" @click="allDisable">一键禁用</el-button>
-        <el-button type="primary" @click="allUnDisable">一键取消禁用</el-button>
+        <el-button type="primary" size="small" @click="addPage"
+          >新增语音</el-button
+        >
+        <el-button type="primary" @click="allDisable" size="small"
+          >一键禁用</el-button
+        >
+        <el-button type="primary" @click="allUnDisable" size="small"
+          >一键取消禁用</el-button
+        >
       </div>
     </div>
     <el-table
@@ -66,7 +72,11 @@
         </template>
       </el-table-column>
       <el-table-column label="课程版本" width="80" align="center">
-        V1.1.0
+        <template slot-scope="scope">
+          <span style="margin: 0 20px 0 0">{{
+            scope.row.courseVersion ? scope.row.courseVersion : '-'
+          }}</span>
+        </template>
       </el-table-column>
       <el-table-column label="维度" width="100" align="center">
         <template slot-scope="scope">
@@ -78,6 +88,12 @@
           <div>{{ scoreObj[scope.row.score] }}</div>
         </template>
       </el-table-column>
+      <el-table-column label="语音名称" width="80" align="center">
+        <template slot-scope="scope">
+          <div>{{ scope.row.voiceName ? scope.row.voiceName : '-' }}</div>
+        </template>
+      </el-table-column>
+
       <el-table-column label="语音" width="180" align="center">
         <template slot-scope="scope">
           <div class="audio">
@@ -90,7 +106,9 @@
         </template>
       </el-table-column>
       <el-table-column label="上传时间" width="180" align="center">
-        2020-08-20 17:20:30
+        <template slot-scope="scope">
+          <div>{{ scope.row.ctime ? scope.row.ctime : '-' }}</div>
+        </template>
       </el-table-column>
       <el-table-column label="操作" width="180" align="center" fixed="right">
         <template slot-scope="scope">

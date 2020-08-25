@@ -14,7 +14,6 @@
     :on-remove="handleRemove"
     :before-upload="beforeAvatarUpload"
     :limit="limit"
-    multiple
     :on-exceed="handleExceed"
     :on-error="uploadErr"
     :on-success="onloadSuccess"

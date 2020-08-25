@@ -127,7 +127,11 @@
         <div slot="mp3" class="upload-tip">只能上传mp3格式</div>
       </Upload>
     </div>
-    <el-button type="primary" class="button-sure" @click="handleSubmit"
+    <el-button
+      type="primary"
+      size="small"
+      class="button-sure"
+      @click="handleSubmit"
       >确认上传</el-button
     >
   </div>
@@ -143,7 +147,7 @@ import {
   reviewRate,
   scoreObj
 } from '@/common/data'
-import uploadFile from '@/utils/upload'
+import uploadFile from '@/utils/newupload'
 export default {
   data() {
     return {
@@ -291,8 +295,10 @@ export default {
       }
     },
     upload(file) {
+      console.log(file, 'file')
       const _this = this
       uploadFile(file).then((res) => {
+        console.log(res, 'res=')
         _this.$message({
           message: `${file.file.name}上传成功！`,
           type: 'success'
@@ -389,6 +395,10 @@ export default {
         levelNo = '', // courseLevel
         unitNo = '' // courseUnit
       } = curCourse
+      // const fileName = 'https://s1.meixiu.mobi/h5/headPic/1598338769600.mp3'
+      const pos = fileUrl.lastIndexOf('/')
+      const voiceName = fileUrl.substring(pos + 1, fileUrl.length - 4)
+      console.log(voiceName, 'voiceName=')
       const params = {
         courseType: type,
         courseStrait: courseDifficulty[difficulty],
@@ -400,7 +410,8 @@ export default {
         courseName,
         score,
         fileUrl, // TODO:
-        opreation: 'ENABLE'
+        opreation: 'ENABLE',
+        voiceName
       }
       try {
         const res = await this.$http.RiviewCourse.addRiviewInform(params)
