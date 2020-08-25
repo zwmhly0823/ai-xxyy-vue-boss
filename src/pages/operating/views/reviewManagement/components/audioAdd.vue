@@ -132,6 +132,7 @@
       size="small"
       class="button-sure"
       @click="handleSubmit"
+      :disabled="btnDisabled"
       >确认上传</el-button
     >
   </div>
@@ -196,7 +197,8 @@ export default {
       },
       audioList: [],
       isShowRate: true,
-      removeFile: []
+      removeFile: [],
+      btnDisabled: false
     }
   },
   computed: {
@@ -414,15 +416,27 @@ export default {
         voiceName
       }
       try {
+        this.btnDisabled = true
         const res = await this.$http.RiviewCourse.addRiviewInform(params)
         if (res.code === 0) {
           this.$message({
             message: '上传成功！',
             type: 'success'
           })
+          setTimeout(() => {
+            this.btnDisabled = false
+          }, 3000)
+        } else {
+          setTimeout(() => {
+            this.btnDisabled = false
+          }, 3000)
         }
       } catch (error) {
         console.log(error)
+        setTimeout(() => {
+          alert('1111')
+          this.btnDisabled = false
+        }, 3000)
       }
     },
     goBack() {
