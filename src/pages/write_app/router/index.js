@@ -3,8 +3,8 @@
  * @version: 1.0.0
  * @Author: YangJiyong
  * @Date: 2020-08-19 20:26:32
- * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-08-25 14:45:32
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-08-25 15:34:22
  */
 import Vue from 'vue'
 import VueRouter from 'vue-router'
@@ -21,15 +21,24 @@ const routes = [
       keepAlive: true
     }
   },
-  // {
-  //   path: '/trialUsers',
-  //   name: 'trialUsers',
-  //   meta: {
-  //     title: '体验课学员',
-  //     keepAlive: true
-  //   },
-  //   component: () => import('../views/users/index.vue')
-  // },
+  {
+    path: '/trialUsers',
+    name: 'trialUsers',
+    meta: {
+      title: '体验课学员',
+      keepAlive: true
+    },
+    component: () => import('../views/users/views/usersModule.vue')
+  },
+  {
+    path: '/systemUsers',
+    name: 'systemUsers',
+    meta: {
+      title: '系统课学员',
+      keepAlive: true
+    },
+    component: () => import('../views/users/views/usersModule.vue')
+  },
   {
     path: '/teacherManagement',
     name: 'teacherManagement',
