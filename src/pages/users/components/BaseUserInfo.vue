@@ -34,7 +34,10 @@
         </svg>
         <i class="el-icon-male" v-if="user && +user.sex === 1"></i>
         <i class="el-icon-female female" v-if="user && +user.sex === 2"></i>
-        {{ birthday }} · {{ basePainting || '' }}
+        {{ birthday }} · {{ basePainting || '' }}·
+        <span v-if="user && user.send_id > 0" style="color: rgb(255, 139, 140);"
+          >R</span
+        >
       </p>
     </div>
   </div>

@@ -3,8 +3,8 @@
  * @version: 
  * @Author: panjian
  * @Date: 2020-04-25 12:09:03
- * @LastEditors: panjian
- * @LastEditTime: 2020-07-24 18:40:53
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-08-24 18:14:38
  -->
 <template>
   <div id="channel-box" class="channel-box">
@@ -426,6 +426,7 @@ export default {
       }
       this.$http.Operating.countsByTrialChannel(params).then((res) => {
         const _data = res.content
+        if (!_data) return
         this.totalNumber = res.number
         this.totalElements = res.totalElements
         _data.forEach((res) => {
@@ -469,6 +470,7 @@ export default {
       this.$http.Operating.countsByTrialChannelOfTotal(paramsM).then((ele) => {
         // 模块数据
         const _datas = ele.payload
+        if (!_datas) return
         // 累计成单金额
         if (_datas.system_user_amounts !== 'null') {
           const allSystemUserAmountsNums = +_datas.system_user_amounts
@@ -548,7 +550,8 @@ export default {
       const channelValue = `{"id":${JSON.stringify(query)}}`
       this.$http.Operating.ChannelDetailStatisticsList(channelValue).then(
         (ele) => {
-          const __data = ele.data.ChannelDetailStatisticsList
+          const __data = ele?.data?.ChannelDetailStatisticsList
+          if (!__data) return
           _data.forEach((val) => {
             __data.forEach((item) => {
               if (+item.id === +val.pay_channel) {

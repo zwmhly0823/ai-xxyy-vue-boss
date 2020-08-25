@@ -3,8 +3,8 @@
  * @version:
  * @Author: zhubaodong
  * @Date: 2020-03-26 16:28:45
- * @LastEditors: Lukun
- * @LastEditTime: 2020-06-01 11:58:42
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-08-24 18:24:54
  -->
 <template>
   <div class="search-item small">
@@ -80,7 +80,10 @@ export default {
     createFilter(queryString) {
       const queryParams = {
         bool: {
-          must: [{ wildcard: { 'period_name.keyword': `*${queryString}*` } }]
+          must: [
+            { wildcard: { 'period_name.keyword': `*${queryString}*` } },
+            { term: { subject: this.$store.getters.subjects.subjectCode } }
+          ]
         }
       }
       if (this.teamClass) {

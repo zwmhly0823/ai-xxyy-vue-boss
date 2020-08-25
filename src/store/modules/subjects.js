@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-08-20 11:27:55
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-21 17:11:20
+ * @LastEditTime: 2020-08-22 19:57:39
  * 美术APP
   @ApiModelProperty("美术")
   ART_APP, 0
@@ -16,7 +16,7 @@
   COLLEGE_APP 2
  */
 // import Cookies from 'js-cookie'
-
+import { getAppSubject } from '@/utils/index'
 import { subjects, subjectsList } from '@/config/subjects'
 
 const state = {
@@ -31,9 +31,7 @@ const state = {
 
 const mutations = {
   GET_SUBJECT: (state) => {
-    const pathname = location.pathname.replace(/\//g, '')
-    const key = Object.keys(subjects).includes(pathname) ? pathname : 'art_app'
-    console.log(key)
+    const key = getAppSubject(false)
 
     state.currentSubject = { [`${key}`]: subjects[key] }
     state.currentSubjectKey = key

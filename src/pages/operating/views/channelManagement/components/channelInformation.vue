@@ -3,8 +3,8 @@
  * @version: 
  * @Author: panjian
  * @Date: 2020-05-06 16:33:15
- * @LastEditors: panjian
- * @LastEditTime: 2020-07-24 11:59:09
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-08-24 18:31:20
  -->
 <template>
   <div class="channelAdd-box">
@@ -290,7 +290,8 @@ export default {
     getChannelOne() {
       const arrOne = []
       this.$http.Operating.getChannelAndClass(17).then((res) => {
-        const data = res.payload.channelList
+        const data = res?.payload?.channelList
+        if (!data) return
         data.forEach((item) => {
           arrOne.push(item.id)
         })

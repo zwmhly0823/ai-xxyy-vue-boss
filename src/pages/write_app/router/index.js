@@ -3,8 +3,8 @@
  * @version: 1.0.0
  * @Author: YangJiyong
  * @Date: 2020-08-19 20:26:32
- * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-08-22 17:20:21
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-08-24 21:37:45
  */
 import Vue from 'vue'
 import VueRouter from 'vue-router'
@@ -22,13 +22,13 @@ const routes = [
     }
   },
   {
-    path: '/trialUser',
+    path: '/trialUsers',
     name: 'trialUsers',
     meta: {
       title: '体验课学员',
       keepAlive: true
     },
-    component: () => import('../views/Users/index.vue')
+    component: () => import('../views/users/index.vue')
   },
   {
     path: '/teacherManagement',
@@ -76,7 +76,7 @@ const routes = [
       keepAlive: true
     },
     component: () => import('../views/trading/views/order/orderModule.vue')
-  }
+  },
   //   {
   //     path: '/system',
   //     name: 'systemUsers',
@@ -95,6 +95,32 @@ const routes = [
   //     },
   //     component: () => import('../views/details/index.vue')
   //   }
+
+  /**
+   * 运营管理
+   */
+  {
+    path: '/channelManagement',
+    name: 'channelManagement',
+    meta: {
+      title: '渠道管理',
+      keepAlive: true
+    },
+    component: () =>
+      import('../views/operating/views/channelManagement/channelManagement.vue')
+  },
+  /**
+   * 营销中心  - 和小熊美术用一套
+   */
+  {
+    path: '/marketing',
+    name: 'marketing',
+    meta: {
+      title: '营销中心',
+      keepAlive: true
+    },
+    component: () => import('../../marketing/views/redeemCode/index.vue')
+  }
 ]
 
 const router = new VueRouter({

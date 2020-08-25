@@ -194,8 +194,8 @@
           <el-option
             v-for="(item, index) in levels"
             :key="index"
-            :label="item.label"
-            :value="item.value"
+            :label="item.levelName"
+            :value="item.level"
           ></el-option>
         </el-select>
       </el-form-item>
@@ -685,9 +685,18 @@ export default {
     // 接口调用
     this.createdUrl()
     this.onGetWorkPlace()
+    this.getSellLevel()
   },
 
   methods: {
+    // 获取销售等级
+    async getSellLevel(params) {
+      try {
+        const { payload = [] } = await this.$http.Operating.getSellLevel(params)
+
+        this.levels = payload
+      } catch (err) {}
+    },
     onWorkPlace(data) {
       this.ruleForm.workplaces = data.label
       this.ruleForm.workPlaceCode = data.value

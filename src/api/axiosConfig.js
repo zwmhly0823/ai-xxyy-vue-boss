@@ -3,12 +3,12 @@
  * @version:
  * @Author: Shentong
  * @Date: 2020-03-17 11:50:18
- * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-08-04 18:27:34
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-08-22 18:28:42
  */
 import axios from './axios'
 import { getToken } from '@/utils/auth'
-import { baseUrl } from '@/utils/index'
+import { baseUrl, getAppSubject } from '@/utils/index'
 // 转json
 
 axios.defaults.withCredentials = true
@@ -133,13 +133,16 @@ export default {
     }
   },
   getHeaders() {
+    // 科目
+    const subject = getAppSubject()
     // 增加操作人ID
     const staff = JSON.parse(localStorage.getItem('staff') || '{}')
     const operatorId = staff && staff.id
     const token = getToken() || ''
     const headers = {
       'Content-Type': 'application/json;charset=UTF-8',
-      operatorId
+      operatorId,
+      subject
     }
     if (token) {
       headers.Authorization = token.includes('Bearer ')

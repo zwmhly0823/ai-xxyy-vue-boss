@@ -162,6 +162,31 @@
                 />
               </div>
             </el-form-item>
+
+            <el-form-item label="是否续费:">
+              <div class="search-group">
+                <simple-select
+                  name="remain_order_count"
+                  placeholder="请选择"
+                  :my-style="{ width: '130px' }"
+                  :multiple="false"
+                  :data-list="isrenewList"
+                  @result="getSearchData('remain_order_count', arguments)"
+                />
+              </div>
+            </el-form-item>
+            <el-form-item label="转介绍学员:">
+              <div class="search-group">
+                <simple-select
+                  name="send_id"
+                  placeholder="请选择"
+                  :my-style="{ width: '130px' }"
+                  :multiple="false"
+                  :data-list="user_StatusList"
+                  @result="getSearchData('send_id', arguments)"
+                />
+              </div>
+            </el-form-item>
           </div>
           <div>
             <el-form-item label="VIP学员">
@@ -334,6 +359,28 @@ export default {
           this.$delete(this.searchQuery, 'sys_label.like')
         }
 
+        // 是否续费
+        if (key === 'remain_order_count') {
+          // 已续费
+          if (search.remain_order_count === '2') {
+            search.remain_order_count = { gt: 1 }
+          }
+          // 待续费
+          if (search.remain_order_count === '1') {
+            search.remain_order_count = { lte: 1 }
+          }
+        }
+        // 是否转介绍
+        if (key === 'send_id') {
+          // 是
+          if (search.send_id === '2') {
+            search.send_id = { gt: 0 }
+          }
+          // 否
+          if (search.send_id === '1') {
+            search.send_id = { lte: 0 }
+          }
+        }
         if (key !== 'dateTime') {
           this.searchQuery = {
             ...this.searchQuery,
