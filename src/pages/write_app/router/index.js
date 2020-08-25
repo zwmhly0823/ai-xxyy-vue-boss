@@ -3,8 +3,8 @@
  * @version: 1.0.0
  * @Author: YangJiyong
  * @Date: 2020-08-19 20:26:32
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-22 17:32:52
+ * @LastEditors: liukun
+ * @LastEditTime: 2020-08-24 16:48:57
  */
 import Vue from 'vue'
 import VueRouter from 'vue-router'
@@ -20,6 +20,15 @@ const routes = [
       icon: 'el-icon-s-custom',
       keepAlive: true
     }
+  },
+  {
+    path: '/details/:id',
+    name: 'detailsUsers',
+    meta: {
+      title: '学员详情',
+      keepAlive: false
+    },
+    component: () => import('../../users/views/details/index.vue')
   },
   {
     path: '/trialUser',
@@ -86,15 +95,6 @@ const routes = [
   //     },
   //     component: () => import('../views/usersModule.vue')
   //   },
-  //   {
-  //     path: '/details/:id',
-  //     name: 'detailsUsers',
-  //     meta: {
-  //       title: '学员详情',
-  //       keepAlive: false
-  //     },
-  //     component: () => import('../views/details/index.vue')
-  //   }
 
   /**
    * 运营管理
