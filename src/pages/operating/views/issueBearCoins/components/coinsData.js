@@ -7,6 +7,10 @@ const enums = {
     {
       id: 9,
       text: '投诉补偿'
+    },
+    {
+      id: 14,
+      text: '系统扣除'
     }
   ]
 }

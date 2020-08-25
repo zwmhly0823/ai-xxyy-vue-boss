@@ -482,6 +482,8 @@ export default {
             amount
             note
             desc
+            status
+            failedReason
           }
         }
       }`
