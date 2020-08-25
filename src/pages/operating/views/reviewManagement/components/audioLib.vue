@@ -107,7 +107,9 @@
       </el-table-column>
       <el-table-column label="上传时间" width="180" align="center">
         <template slot-scope="scope">
-          <div>{{ scope.row.ctime ? scope.row.ctime : '-' }}</div>
+          <div>
+            {{ scope.row.ctime ? scope.row.ctime : '-' }}
+          </div>
         </template>
       </el-table-column>
       <el-table-column label="操作" width="180" align="center" fixed="right">
@@ -147,7 +149,7 @@ import { scoreObj } from '@/common/data'
 import MSearch from '@/components/MSearch/index'
 import SimpleSelect from '@/components/MSearch/searchItems/simpleSelect'
 import DatePicker from '@/components/MSearch/searchItems/datePicker'
-
+import { formatData } from '@/utils/index.js'
 export default {
   data() {
     return {
@@ -298,7 +300,11 @@ export default {
       try {
         const res = await this.$http.RiviewCourse.getAudioList(number)
         if (res.code === 0) {
-          this.list = res.payload.content
+          const _list = res.payload.content
+          _list.forEach((item) => {
+            item.ctime = formatData(item.ctime, 's')
+          })
+          this.list = _list
           this.totalElements = Number.parseInt(res.payload.totalElements)
           this.loading = false
         }
