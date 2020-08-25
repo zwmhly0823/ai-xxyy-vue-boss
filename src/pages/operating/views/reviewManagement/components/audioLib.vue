@@ -176,7 +176,8 @@ export default {
         size: 10,
         pageNum: 1
       },
-      scoreObj: scoreObj
+      scoreObj: scoreObj,
+      ids: ''
     }
   },
   mounted() {
@@ -217,16 +218,21 @@ export default {
     },
     // 一键禁用
     allDisable() {
+      if (this.ids.length === 0) {
+        this.$message({
+          type: 'info',
+          message: '请选择禁用项'
+        })
+        return
+      }
       this.$confirm('禁用后语音不可使用，是否禁用?', '禁用语音', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       })
         .then(() => {
-          this.$message({
-            type: 'success',
-            message: '操作成功!'
-          })
+          console.log(this.ids, 'idsssss')
+          this.batchUpdateReviewVoice('DISABLE', this.ids)
         })
         .catch(() => {
           this.$message({
@@ -237,16 +243,20 @@ export default {
     },
     // 一键取消禁用
     allUnDisable() {
+      if (this.ids.length === 0) {
+        this.$message({
+          type: 'info',
+          message: '请选择取消项'
+        })
+        return
+      }
       this.$confirm('取消禁用后语音即可使用，是否取消禁用?', '取消禁用语音', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       })
         .then(() => {
-          this.$message({
-            type: 'success',
-            message: '操作成功!'
-          })
+          this.batchUpdateReviewVoice('ENABLE', this.ids)
         })
         .catch(() => {
           this.$message({
@@ -263,10 +273,7 @@ export default {
         type: 'warning'
       })
         .then(() => {
-          this.$message({
-            type: 'success',
-            message: '删除成功!'
-          })
+          this.delReviewVoice(row.id)
         })
         .catch(() => {
           this.$message({
@@ -277,6 +284,11 @@ export default {
     },
     // checkbox
     handleSelectionChange(res) {
+      const _ids = []
+      res.forEach((item) => {
+        _ids.push(item.id)
+      })
+      this.ids = _ids.join(',')
       console.log(res, '---')
     },
     addPage() {
@@ -308,6 +320,46 @@ export default {
         const res = await this.$http.RiviewCourse.audioIsUse(params)
         if (res.code === 0) {
           this.initList(this.query.pageNum)
+        }
+      } catch (error) {
+        console.log(error)
+      }
+    },
+    // 一键禁用/取消
+    async batchUpdateReviewVoice(type, ids) {
+      const params = {
+        opreation: type === 'ENABLE' ? 'DISABLE' : 'ENABLE',
+        ids: ids
+      }
+      try {
+        const res = await this.$http.RiviewCourse.batchUpdateReviewVoice(params)
+        if (res.code === 0) {
+          console.log(res, 'res===')
+          // this.initList(this.query.pageNum)
+          this.$message({
+            type: 'success',
+            message: '操作成功!'
+          })
+          this.ids = ''
+        }
+      } catch (error) {
+        console.log(error)
+      }
+    },
+    // 删除接口
+    async delReviewVoice(id) {
+      const params = {
+        id: id
+      }
+      try {
+        const res = await this.$http.RiviewCourse.delReviewVoice(params)
+        if (res.code === 0) {
+          console.log(res, 'res===')
+          // this.initList(this.query.pageNum)
+          this.$message({
+            type: 'success',
+            message: '删除成功!'
+          })
         }
       } catch (error) {
         console.log(error)

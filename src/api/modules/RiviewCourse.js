@@ -109,5 +109,17 @@ export default {
         }
       `
     })
+  },
+  /**
+   * 一键禁用/取消
+   * */
+  batchUpdateReviewVoice(params) {
+    return axios.get(`/api/b/v1/reviewVoice/batchUpdateReviewVoice`, params)
+  },
+  /**
+   * 删除
+   * */
+  delReviewVoice(params) {
+    return axios.get(`/api/b/v1/reviewVoice/delReviewVoice`, params)
   }
 }
