@@ -4,11 +4,13 @@
  * @version:
  * @Author: shentong
  * @Date: 2020-03-13 14:38:28
- * @LastEditors: liukun
- * @LastEditTime: 2020-08-20 14:17:02
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-08-24 22:06:43
  */
 // import axios from '../axios'
 import axios from '../axiosConfig'
+import { getAppSubjectCode } from '@/utils/index'
+const subject = getAppSubjectCode()
 
 export default {
   /**
@@ -918,7 +920,8 @@ export default {
     const query = {
       // teacher_id,
       team_state,
-      team_type
+      team_type,
+      subject
     }
     const params = JSON.stringify(query)
     // const sort = `{"id": "desc"}`

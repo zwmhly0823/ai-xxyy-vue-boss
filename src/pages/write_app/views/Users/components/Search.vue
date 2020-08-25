@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-06-20 20:23:28
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-15 19:07:28
+ * @LastEditTime: 2020-08-25 14:49:04
  @ApiModel(description = "用户跟进状态")
     public enum STATUS {
 
@@ -165,16 +165,6 @@
               />
             </div>
           </el-form-item>
-          <!-- <el-form-item label="课程难度:">
-            <div class="search-group">
-              <hard-level
-                placeholder="请选择"
-                :my-style="{ width: '100px !important' }"
-                name="sup"
-                @result="getSearchData('sup', arguments)"
-              />
-            </div>
-          </el-form-item> -->
 
           <el-form-item label="渠道选择:">
             <div class="search-group">
@@ -256,14 +246,7 @@
           </el-form-item>
           <el-form-item label="课程难度:">
             <div class="search-group">
-              <simple-select
-                name="sup"
-                placeholder="请选择"
-                :my-style="{ width: '100px' }"
-                :multiple="false"
-                :data-list="supList"
-                @result="getSearchData('sup', arguments)"
-              />
+              <grade @result="getSearchData('grade', arguments)" />
             </div>
           </el-form-item>
           <!-- 用来占位 -->
@@ -296,6 +279,7 @@ import Channel from '@/components/MSearch/searchItems/channel.vue'
 import DefineLabelV2 from '@/components/MSearch/searchItems/defineLabelV2.vue'
 import SearchPhoneOrUsernum from '@/components/MSearch/searchItems/searchPhoneOrUsernum.vue'
 import SimpleSelect from '@/components/MSearch/searchItems/simpleSelect.vue'
+import Grade from '../../../components/search/Grade.vue'
 import enums from '../components/searchData'
 export default {
   components: {
@@ -308,7 +292,8 @@ export default {
     Channel,
     // DefineLabel,
     SimpleSelect,
-    DefineLabelV2
+    DefineLabelV2,
+    Grade
   },
   props: {
     // 班级类型： 0-体验课 1-系统课

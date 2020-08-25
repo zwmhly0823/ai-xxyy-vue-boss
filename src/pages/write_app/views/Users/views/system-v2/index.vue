@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-05-25 15:34:04
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-11 17:18:35
+ * @LastEditTime: 2020-08-24 23:05:55
 -->
 <template>
   <div class="user-list">
@@ -546,7 +546,7 @@ import ModifyAddress from '../../components/ModifyAddress.vue'
 import enums from '../../components/searchData'
 import { formatData, openBrowserTab } from '@/utils/index'
 import { FOLLOW_EXPRESS_STATUS, ISREFUND } from '@/utils/enums'
-import CouponPopover from '../../../studentTeam/components/TabPane/components/couponPopover'
+import CouponPopover from '@/pages/studentTeam/components/TabPane/components/couponPopover'
 export default {
   name: 'systemUsers',
   components: {

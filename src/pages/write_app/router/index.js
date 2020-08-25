@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-08-19 20:26:32
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-24 21:57:41
+ * @LastEditTime: 2020-08-24 23:04:16
  */
 import Vue from 'vue'
 import VueRouter from 'vue-router'
@@ -28,7 +28,16 @@ const routes = [
       title: '体验课学员',
       keepAlive: true
     },
-    component: () => import('../views/users/views/trial-v2/index.vue')
+    component: () => import('../views/users/views/usersModule.vue')
+  },
+  {
+    path: '/systemUsers',
+    name: 'systemUsers',
+    meta: {
+      title: '系统课学员',
+      keepAlive: true
+    },
+    component: () => import('../views/users/views/usersModule.vue')
   },
   {
     path: '/teacherManagement',

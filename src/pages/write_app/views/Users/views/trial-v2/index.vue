@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-06-16 16:27:14
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-24 20:42:31
+ * @LastEditTime: 2020-08-25 14:53:21
 -->
 <template>
   <div class="user-list">
@@ -48,11 +48,11 @@
         />
 
         <!-- 操作区 -->
-        <div class="handle-section">
+        <!-- <div class="handle-section">
           <el-button size="mini" @click="sendMessage(false)"
             >地址催发短信</el-button
           >
-        </div>
+        </div> -->
         <!-- 数据统计 -->
         <div class="statistics-section d-flex justify-between align-center">
           <div class="statistics-section-left">
@@ -74,7 +74,7 @@
           @selection-change="handleSelectionChange"
           @cell-mouse-enter="hoverRow"
         >
-          <el-table-column type="selection" width="30"> </el-table-column>
+          <!-- <el-table-column type="selection" width="30"> </el-table-column> -->
           <el-table-column label="用户" min-width="165" fixed>
             <template slot-scope="scope">
               <base-user-info
@@ -346,8 +346,7 @@
                 次数:
                 <span>{{ scope.row.all_join_course_count }}</span>
                 节数:
-                <span class="red-color">{{ scope.row.join_course_count }}</span
-                >/{{ scope.row.send_course_count }}
+                <span class="red-color">{{ scope.row.join_course_count }}</span>
               </p>
               <p>
                 最近：{{
@@ -476,7 +475,7 @@
                 节数:
                 <span class="red-color">
                   {{ scope.row.complete_course_count }}</span
-                >/{{ scope.row.send_course_count }}
+                >
               </p>
               <p>
                 最近：{{
@@ -657,7 +656,7 @@
               </p>
             </template>
           </el-table-column>
-          <el-table-column label="调查问卷" min-width="80">
+          <!-- <el-table-column label="调查问卷" min-width="80">
             <template slot="header">
               <div
                 class="sort-operate-box"
@@ -696,7 +695,7 @@
                 {{ scope.row.questionnaire_count }}
               </el-button>
             </template>
-          </el-table-column>
+          </el-table-column> -->
           <el-table-column label="体验课班级·销售" min-width="120">
             <template slot-scope="scope">
               <p v-if="!scope.row.teamInfo">
@@ -743,32 +742,6 @@
             </template>
           </el-table-column>
           <el-table-column label="转化" min-width="65" fixed="right">
-            <template slot="header">
-              <div
-                class="sort-operate-box"
-                @click="sortRules('bi_label.keyword')"
-              >
-                <span>转化</span>
-                <div class="sort-icon-arrow">
-                  <i
-                    class="el-icon-caret-top top-color"
-                    :class="{
-                      active:
-                        sortKeys['bi_label.keyword'] != 'asc' &&
-                        sortActive == 'bi_label.keyword'
-                    }"
-                  ></i>
-                  <i
-                    class="el-icon-caret-bottom bottom"
-                    :class="{
-                      active:
-                        sortKeys['bi_label.keyword'] == 'asc' &&
-                        sortActive == 'bi_label.keyword'
-                    }"
-                  ></i>
-                </div>
-              </div>
-            </template>
             <template slot-scope="scope">
               <span
                 :class="[
@@ -779,22 +752,6 @@
               >
                 {{ scope.row.user_status_name }}
               </span>
-              <i
-                class="el-icon-bottom"
-                style="color: #C60D00;"
-                v-if="
-                  scope.row.user_status_name === '未转化' &&
-                    +scope.row.bi_label === 0
-                "
-              ></i>
-              <i
-                class="el-icon-top top-arrow"
-                style="color: #4A975A;"
-                v-else-if="
-                  scope.row.user_status_name === '未转化' &&
-                    +scope.row.bi_label === 1
-                "
-              ></i>
             </template>
           </el-table-column>
           <el-table-column label="操作" min-width="60" fixed="right">
@@ -1510,56 +1467,56 @@ export default {
     },
 
     // 地址催发短信 @isSingle Boolean， 是否单条发
-    sendMessage(isSingle = false) {
-      let orderNo = []
-      // 批量发送
-      if (!isSingle) {
-        if (this.selectUsers.length === 0) {
-          this.$message.error('请选择学员')
-          return
-        }
-        // 如果选择的学员物流已有地址，则中断并提示
-        for (let index = 0; index < this.selectUsers.length; index++) {
-          const item = this.selectUsers[index]
-          if (item.expressInfo && +item.expressInfo.express_status > 0) {
-            this.$message.error('不支持发送给已添加物流地址的学员')
-            orderNo = []
-            break
-          }
-          orderNo.push(item.order_no)
-        }
-      }
-      // 单条发送
-      else {
-        this.currentUser.order_no && orderNo.push(this.currentUser.order_no)
-      }
-      console.log(orderNo)
+    // sendMessage(isSingle = false) {
+    //   let orderNo = []
+    //   // 批量发送
+    //   if (!isSingle) {
+    //     if (this.selectUsers.length === 0) {
+    //       this.$message.error('请选择学员')
+    //       return
+    //     }
+    //     // 如果选择的学员物流已有地址，则中断并提示
+    //     for (let index = 0; index < this.selectUsers.length; index++) {
+    //       const item = this.selectUsers[index]
+    //       if (item.expressInfo && +item.expressInfo.express_status > 0) {
+    //         this.$message.error('不支持发送给已添加物流地址的学员')
+    //         orderNo = []
+    //         break
+    //       }
+    //       orderNo.push(item.order_no)
+    //     }
+    //   }
+    //   // 单条发送
+    //   else {
+    //     this.currentUser.order_no && orderNo.push(this.currentUser.order_no)
+    //   }
+    //   console.log(orderNo)
 
-      if (orderNo.length === 0) return
-      this.$confirm(
-        `您即将给用户发送【催发地址短信】，发送人数：${orderNo.length}人`,
-        '催发地址短信',
-        {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }
-      ).then(() => {
-        const orderIds = orderNo.join(',')
-        console.log(orderIds, 'orderIds')
-        this.$http.Order.pushMsgByOrderIds(orderIds)
-          .then((res) => {
-            if (res.errors) {
-              this.$message.error(res.errors)
-              return
-            }
-            this.$message.success('提交成功')
-          })
-          .catch(() => {
-            this.$message.error('提交失败')
-          })
-      })
-    },
+    //   if (orderNo.length === 0) return
+    //   this.$confirm(
+    //     `您即将给用户发送【催发地址短信】，发送人数：${orderNo.length}人`,
+    //     '催发地址短信',
+    //     {
+    //       confirmButtonText: '确定',
+    //       cancelButtonText: '取消',
+    //       type: 'warning'
+    //     }
+    //   ).then(() => {
+    //     const orderIds = orderNo.join(',')
+    //     console.log(orderIds, 'orderIds')
+    //     this.$http.Order.pushMsgByOrderIds(orderIds)
+    //       .then((res) => {
+    //         if (res.errors) {
+    //           this.$message.error(res.errors)
+    //           return
+    //         }
+    //         this.$message.success('提交成功')
+    //       })
+    //       .catch(() => {
+    //         this.$message.error('提交失败')
+    //       })
+    //   })
+    // },
     // 操作列的下拉
     handleColumnCommand(command, user = {}, index) {
       this.currentUser = user
@@ -1651,15 +1608,15 @@ export default {
         }
       })
     },
-    clickQuestionaire(userinfo) {
-      const query = {
-        uid: userinfo.id,
-        mobile: userinfo.mobile,
-        page: 1,
-        pagesize: 20
-      }
-      this.$refs.questionaireDrawerC.openDrawer(query)
-    },
+    // clickQuestionaire(userinfo) {
+    //   const query = {
+    //     uid: userinfo.id,
+    //     mobile: userinfo.mobile,
+    //     page: 1,
+    //     pagesize: 20
+    //   }
+    //   this.$refs.questionaireDrawerC.openDrawer(query)
+    // },
     async changeTagSucc(type, uid) {
       if (type === 'createPersonTag') {
         const data = await this.getTeacherLabel(uid)

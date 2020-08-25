@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-07-10 14:53:10
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-07-30 15:35:16
+ * @LastEditTime: 2020-08-25 11:23:59
 -->
 <template>
   <!-- :before-close="handelCancel" -->
@@ -137,21 +137,13 @@
                   @result="getChannel"
                 />
               </el-form-item>
+              <!-- 只有小熊美术科目展示 -->
               <el-form-item
                 label="美术基础"
                 :label-width="innerFormLabelWidth"
                 prop="base_painting"
+                v-if="subjects.subject === 'ART_APP'"
               >
-                <!-- <el-radio v-model="form.base_painting" label="">全部</el-radio>
-                <el-radio v-model="form.base_painting" label="1"
-                  >无基础</el-radio
-                >
-                <el-radio v-model="form.base_painting" label="3"
-                  >1年以上</el-radio
-                >
-                <el-radio v-model="form.base_painting" label="2"
-                  >1年以下</el-radio
-                > -->
                 <el-select v-model="form.base_painting" size="mini" clearable>
                   <el-option value="1" label="无基础"></el-option>
                   <el-option value="2" label="1年以下"></el-option>
@@ -483,6 +475,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 import { isToss, deepClone, getDataType } from '@/utils/index'
 import Channel from '@/components/MSearch/searchItems/channel.vue'
 import CustomSelectRegions from '@/components/MSearch/searchItems/customSelectRegions.vue'
@@ -527,6 +520,7 @@ export default {
     }
   },
   computed: {
+    ...mapGetters(['subjects']),
     title() {
       // return this.activeType === 'ADVANCEDSEARCH'
       //   ? '高级筛选'

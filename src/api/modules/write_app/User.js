@@ -5,7 +5,7 @@
  * @Author: shentong
  * @Date: 2020-03-13 14:38:28
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-24 21:00:05
+ * @LastEditTime: 2020-08-25 14:52:00
  */
 // import axios from '../axios'
 import axios from '../../axiosConfig'
@@ -95,69 +95,9 @@ export default {
   /**
    * 用户中心
    */
-  // 体验课学员
-  trialCourseUsers(query = {}, page = 1) {
-    const q = JSON.stringify(JSON.stringify(query))
-    const sort = JSON.stringify(JSON.stringify({ ctime: 'desc' }))
-    return axios.post('/graphql/v1/toss', {
-      query: `{
-        StudentTrialStatisticsPage(query: ${q},page: ${page}, sort: ${sort}){
-            totalPages
-            totalElements
-            content{
-              id
-              username
-              user_num
-              nickname
-              head
-              sex
-              birthday
-              base_painting
-              mobile
-              mobile_city
-              mobile_province
-              team_id
-              team_name
-              teacher_realname
-              department_name
-              team_type
-              team_state
-              term
-              wechat_nikename
-              express_id
-              express_status
-              trial_order_no
-              system_order_no
-              follow
-              added_group
-              added_wechat
-              channel
-              is_conversion
-              conversion_type
-              is_today_join_course
-              is_today_complete_course
-              has_today_course_task
-              today_course_task_count
-              system_team_id
-              system_team_name
-              system_order_no
-              system_order_buytime
-              system_teacher_id
-              system_teacher_realname
-              system_teacher_username
-              system_teacher_department_id
-              system_teacher_department_name
-              system_order_packages_name
-              device_type
-              last_login_time
-            }
-          }
-        }
-      `
-    })
-  },
-
+  // 体验课学员 V2
   trialCourseUsersV2(query = {}, page = 1, sortRules) {
+    // Object.assign(query || {}, { subject })
     const q = JSON.stringify(JSON.stringify(query))
     const sort =
       Object.keys(sortRules).length === 0
@@ -181,7 +121,6 @@ export default {
             last_login_time
             user_intention_type
             user_intention_describe
-            send_course_count
             join_course_count
             all_join_course_count
             complete_course_count
