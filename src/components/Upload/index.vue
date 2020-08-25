@@ -20,8 +20,11 @@
     :on-progress="uploadProgress"
     :http-request="upload"
   >
-    <el-button size="small" :style="{ width: btnWidth + 'px' }" type="primary"
-      >点击上传</el-button
+    <el-button
+      size="small"
+      :style="{ width: btnWidth + 'px' }"
+      type="primary"
+      >{{ uploadText }}</el-button
     >
     <slot name="mp3"></slot>
   </el-upload>
@@ -48,6 +51,11 @@ export default {
     upload: {
       type: Function,
       default: () => {}
+    },
+    uploadText: {
+      // 按钮名称
+      type: String,
+      default: '点击上传'
     }
   },
   methods: {

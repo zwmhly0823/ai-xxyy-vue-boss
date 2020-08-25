@@ -11,7 +11,7 @@
   <div class="audio-add">
     <el-button type="primary" @click="goBack" class="go-back">返回</el-button>
     <el-form :model="form" class="audio-add-form">
-      <el-form-item label="课程" class="audio-add-form-item">
+      <el-form-item label="课  程" class="audio-add-form-item">
         <el-select
           v-model="form.type"
           placeholder="请选择课程类型"
@@ -122,6 +122,7 @@
         format="audio"
         :upload="upload"
         :audioList="audioList"
+        uploadText="选择语音"
         @handle-remove="handleRemoveFile"
       >
         <div slot="mp3" class="upload-tip">只能上传mp3格式</div>
@@ -474,16 +475,13 @@ export default {
       .el-select {
         margin: 0 0 0 30px;
       }
-      .course-type {
-        margin-left: 60px;
-      }
     }
     .degree {
       margin-top: 30px;
     }
     /deep/ .el-form-item__content {
       display: flex;
-      justify-content: flex-start;
+      // justify-content: flex-start;
     }
   }
   .upload-container {
@@ -500,6 +498,9 @@ export default {
     height: 32px;
     line-height: 0;
     margin: 20px 0 0 180px;
+  }
+  /deep/ .el-form-item__label {
+    width: 70px !important;
   }
 }
 </style>

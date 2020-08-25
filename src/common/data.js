@@ -37,3 +37,9 @@ export const scoreObj = {
   AVERAGE: '一般',
   NOFOUNDATION: '无基础'
 }
+export const _scoreObj = {
+  EXCELLENT: '优(4分)',
+  GOOD: '良(3分)',
+  AVERAGE: '一般(2分)',
+  NOFOUNDATION: '无基础(1分)'
+}
