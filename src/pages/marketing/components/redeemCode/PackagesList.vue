@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-08-07 16:59:43
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-07 21:08:59
+ * @LastEditTime: 2020-08-26 16:58:51
 -->
 <template>
   <el-dialog
@@ -54,8 +54,9 @@ export default {
   },
   data() {
     return {
-      // 指定的套餐ID; 前期只有体验课 [5, 3, 10, 18]
-      exIds: [5],
+      // 指定的套餐ID; 前期只有体验课 [5, 3, 10, 18],
+      // 新增"美术宝写字精品体验课（id 19）""美术宝写字尊享体验课（id 20）"
+      exIds: [5, 19, 20],
       dataList: [],
       checkedId: this.currentId || '' // 选中的套餐ID
     }
@@ -104,7 +105,7 @@ export default {
 
 <style lang="scss" scoped>
 .package-list {
-  min-height: 320px;
+  min-height: 300px;
   &-item {
     margin: 20px 20px 0;
     padding-bottom: 20px;

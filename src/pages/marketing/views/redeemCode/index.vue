@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-08-06 17:15:04
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-15 11:12:06
+ * @LastEditTime: 2020-08-26 20:07:16
 -->
 <template>
   <el-row type="flex" class="app-main height">
@@ -40,8 +40,13 @@
           </el-table-column>
           <el-table-column prop="start_date" label="有效期" min-width="120">
             <template slot-scope="scope">
-              <p>起：{{ scope.row.start_date_text }}</p>
-              <p>止：{{ scope.row.end_date_text }}</p>
+              <template v-if="scope.row.expire && scope.row.expire !== '0'">
+                <p>兑换当日{{ scope.row.expire }}天内</p>
+              </template>
+              <template v-else>
+                <p>起：{{ scope.row.start_date_text }}</p>
+                <p>止：{{ scope.row.end_date_text }}</p>
+              </template>
             </template>
           </el-table-column>
           <el-table-column prop="status" label="状态">
@@ -174,7 +179,12 @@ export default {
     // 查看码库
     handleOpenLibrary(row) {
       const { id, status } = row
-      openBrowserTab(`/marketing/#/redeemCodeLibrary/${id}/${status}`)
+      // 如果是自定义时间，则加上参数 expire
+      let url = `/marketing/#/redeemCodeLibrary/${id}/${status}`
+      if (row.expire && row.expire !== '0') {
+        url += `?expire=${row.expire}`
+      }
+      openBrowserTab(url)
     },
     // 失效
     handleInvalid(row) {

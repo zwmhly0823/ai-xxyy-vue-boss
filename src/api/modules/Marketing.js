@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-08-07 16:39:06
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-12 15:18:34
+ * @LastEditTime: 2020-08-26 18:51:40
  */
 import axios from '../axiosConfig'
 
@@ -19,10 +19,13 @@ export default {
   },
 
   // 获取商品套餐列表
-  getPackageList(params = {}) {
+  getPackageList(params = {}, sort) {
+    const sortObj = sort || { id: 'asc' }
     return axios.post('/graphql/v1/toss', {
       query: `{
-        PackagesList(query: ${JSON.stringify(JSON.stringify(params))}){
+        PackagesList(query: ${JSON.stringify(
+          JSON.stringify(params)
+        )}, sort: ${JSON.stringify(JSON.stringify(sortObj))}){
           id
           name
           price
@@ -65,6 +68,7 @@ export default {
             status
             code
             ctime
+            expire
             channelInfo{
               channel_outer_name
             }
