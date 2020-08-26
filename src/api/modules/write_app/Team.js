@@ -7,10 +7,8 @@
  * @Description: 班级
  */
 import axios from '../../axiosConfig'
-// import newAxios from '../axios.js'
 import { getAppSubjectCode } from '@/utils/index'
 const subject = getAppSubjectCode()
-console.log(subject, 'subject-team')
 
 export default {
   // 加好友进群 新接口  体验课

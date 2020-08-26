@@ -5,7 +5,11 @@
  * @Author: shentong
  * @Date: 2020-03-13 14:38:28
  * @LastEditors: YangJiyong
+<<<<<<< HEAD
  * @LastEditTime: 2020-08-24 22:06:43
+=======
+ * @LastEditTime: 2020-08-24 20:19:27
+>>>>>>> master
  */
 // import axios from '../axios'
 import axios from '../axiosConfig'
@@ -728,6 +732,7 @@ export default {
             totalPages
             totalElements
             content{
+              id
               student_id
               task_image
               task_video
@@ -1179,5 +1184,10 @@ export default {
           }
       }`
     })
+  },
+  taskDelete(taskId) {
+    return axios.post(
+      `/api/ts/v1/teaching/student/task/delete?taskId=${taskId}`
+    )
   }
 }
