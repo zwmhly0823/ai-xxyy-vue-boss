@@ -322,7 +322,7 @@ export default {
             type: 'success'
           })
           setTimeout(() => {
-            this.initList(this.number)
+            this.initList(this.query.pageNum)
           }, 1500)
         }
       } catch (error) {

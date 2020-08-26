@@ -201,10 +201,6 @@ export default {
     getSearchData(key, res) {
       const search = res && res[0]
       console.log(key, res[0], '===')
-      //  Object.assign(this.params, {
-      //     startTime: val.ctime.gte,
-      //     endTime: val.ctime.lte
-      //   })
       if (search) {
         if (key !== 'ctime') {
           this.query = {
