@@ -3,8 +3,13 @@
  * @version: 1.0.0
  * @Author: YangJiyong
  * @Date: 2020-08-19 20:26:32
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-25 15:34:22
+<<<<<<< HEAD
+ * @LastEditors: Shentong
+ * @LastEditTime: 2020-08-26 15:54:18
+=======
+ * @LastEditors: Shentong
+ * @LastEditTime: 2020-08-26 14:34:10
+>>>>>>> msb-writing/招生排期
  */
 import Vue from 'vue'
 import VueRouter from 'vue-router'
@@ -38,6 +43,34 @@ const routes = [
       keepAlive: true
     },
     component: () => import('../views/users/views/usersModule.vue')
+  },
+  {
+    path: '/operatingSchedule',
+    name: 'operatingSchedule',
+    meta: {
+      title: '招生排期',
+      keepAlive: true
+    },
+    component: () => import('../views/operating/scheduleList/index.vue')
+  },
+  // 新增、编辑
+  {
+    path: '/addSchedule/:period/:courseType/',
+    name: 'addSchedule',
+    meta: {
+      title: '新建排期',
+      keepAlive: false
+    },
+    component: () => import('../views/operating/addSchedule/index.vue')
+  },
+  {
+    path: '/scheduleDetail/:period/:courseType/',
+    name: 'scheduleDetail',
+    meta: {
+      title: '排期详情',
+      keepAlive: false
+    },
+    component: () => import('../views/operating/scheduleDetail/index.vue')
   },
   {
     path: '/teacherManagement',
@@ -129,7 +162,42 @@ const routes = [
       keepAlive: true
     },
     component: () => import('../../marketing/views/redeemCode/index.vue')
+  },
+  /**
+   * @descript 班级模块 >>>>start
+   */
+  {
+    path: '/trialTeam', // 体验课班级
+    name: 'trialTeam',
+    meta: {
+      title: '体验课班级',
+      keepAlive: true
+    },
+    hidden: true,
+    component: () => import('../views/studentTeam/views/trialTeam/index.vue')
+  },
+  {
+    path: '/systemTeam', // 系统课班级
+    name: 'systemTeam',
+    meta: {
+      title: '系统课班级',
+      keepAlive: true
+    },
+    hidden: true,
+    component: () => import('../views/studentTeam/views/systemTeam/index.vue')
+  },
+  {
+    path: '/teamDetail/:id/:type', // 班级详情
+    name: 'teamDetail',
+    meta: {
+      title: '班级中心'
+    },
+    hidden: true,
+    component: () => import('../views/studentTeam/views/teamDetail/index.vue')
   }
+  /**
+   * @descript 班级模块 >>>> end
+   */
 ]
 
 const router = new VueRouter({
