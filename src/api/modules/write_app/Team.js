@@ -8,6 +8,9 @@
  */
 import axios from '../../axiosConfig'
 // import newAxios from '../axios.js'
+import { getAppSubjectCode } from '@/utils/index'
+const subject = getAppSubjectCode()
+console.log(subject, 'subject-team')
 
 export default {
   // 加好友进群 新接口  体验课
@@ -163,7 +166,7 @@ export default {
       size = '20',
       sort = `{"ctime":"desc"}`
     } = params
-    const query = { team_state: teamState.split(',') }
+    const query = { team_state: teamState.split(','), subject }
     teamName &&
       Object.assign(query, {
         'team_name.like': { 'team_name.keyword': `*${teamName}*` }
@@ -241,7 +244,8 @@ export default {
       size = '20',
       sort = `{"ctime":"desc"}`
     } = params
-    const query = { team_state: teamState.split(',') }
+    /** 写字项目query需要subject参数 */
+    const query = { team_state: teamState.split(','), subject }
     teamName &&
       Object.assign(query, {
         'team_name.like': { 'team_name.keyword': `*${teamName}*` }
@@ -256,6 +260,7 @@ export default {
     !teacherId &&
       teacherIdArr.length &&
       Object.assign(query, { teacher_id: teacherIdArr })
+
     return axios.post('/graphql/v1/toss', {
       query: `{
         StudentTrialTeamStatisticsPage(page: ${page}, size:${size},query: ${JSON.stringify(

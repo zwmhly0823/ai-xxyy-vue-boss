@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-03-16 19:46:39
  * @LastEditors: Shentong
- * @LastEditTime: 2020-08-26 16:05:17
+ * @LastEditTime: 2020-08-26 16:18:31
  */
 import axios from '../../axiosConfig'
 import { injectSubject, getAppSubjectCode, getAppSubject } from '@/utils/index'
@@ -30,7 +30,6 @@ export default {
    * 新增招生排期第一步-add
    */
   addScheduleFirstStep(params) {
-    console.log('subjectCode()', getAppSubject())
     return axios.post(
       `/api/s/v1/management/enroll/sell/save?subject=${getAppSubject()}`,
       params

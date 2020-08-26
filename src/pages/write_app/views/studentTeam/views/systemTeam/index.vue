@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-05-14 14:11:21
  * @LastEditors: Shentong
- * @LastEditTime: 2020-07-13 13:44:04
+ * @LastEditTime: 2020-08-26 17:19:49
  -->
 <template>
   <el-row type="flex" class="app-main team-container">
@@ -437,7 +437,7 @@ export default {
           data: {
             StudentSystemTeamStatisticsPage: { content = [], totalElements }
           }
-        } = await this.$http.Team.getSystemTeamList(params)
+        } = await this.$http.writeApp.Team.getSystemTeamList(params)
         // 总数、分页用
         this.totalElements = +totalElements || 0
         this.pakageListData(content)
