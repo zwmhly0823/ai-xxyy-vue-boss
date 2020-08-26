@@ -5,7 +5,7 @@
  * @Author: YangJiyong
  * @Date: 2020-08-25 11:57:39
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-25 14:46:51
+ * @LastEditTime: 2020-08-26 12:10:46
 -->
 <template>
   <simple-select
@@ -80,11 +80,11 @@ export default {
         {
           id: '5',
           text: 'S5'
+        },
+        {
+          id: '6',
+          text: 'S6'
         }
-        // {
-        //   id: '6',
-        //   text: 'S1'
-        // }
       ]
     }
   },
