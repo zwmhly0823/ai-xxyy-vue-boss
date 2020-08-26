@@ -4,7 +4,7 @@
  * @Author: Lukun
  * @Date: 2020-04-27 17:47:58
  * @LastEditors: liukun
- * @LastEditTime: 2020-07-31 23:22:46
+ * @LastEditTime: 2020-08-26 18:32:32
  -->
 <template>
   <div class="container">
@@ -941,6 +941,22 @@ export default {
             item.approveTime = timestamp(item.endTime, 2)
             return item
           })
+          // 重写部门名称
+          const idArr = this.tableData.map((item) => item.id)
+          this.$http.Backend.changeDepart(idArr).then(
+            ({ data: { TeacherDepartmentRelationList } }) => {
+              console.info('lklk-待审核', idArr, TeacherDepartmentRelationList)
+              if (TeacherDepartmentRelationList.length) {
+                TeacherDepartmentRelationList.forEach((item, index) => {
+                  this.tableData.forEach((itemx, indexX) => {
+                    if (item.teacher_id === itemx.id) {
+                      itemx.applyDepartment = item.department.name
+                    }
+                  })
+                })
+              }
+            }
+          )
         }
       })
     }

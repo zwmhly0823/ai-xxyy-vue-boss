@@ -257,6 +257,26 @@ export default {
             this.totalElements = res.payload.totalElements
             // 个别数据做文字化处理
             this.tableData = this.dataToText(res.payload.content)
+            // 重写部门名称
+            const idArr = this.tableData.map((item) => item.id)
+            this.$http.Backend.changeDepart(idArr).then(
+              ({ data: { TeacherDepartmentRelationList } }) => {
+                console.info(
+                  'lklk-待审核',
+                  idArr,
+                  TeacherDepartmentRelationList
+                )
+                if (TeacherDepartmentRelationList.length) {
+                  TeacherDepartmentRelationList.forEach((item, index) => {
+                    this.tableData.forEach((itemx, indexX) => {
+                      if (item.teacher_id === itemx.id) {
+                        itemx.applyDepartment = item.department.name
+                      }
+                    })
+                  })
+                }
+              }
+            )
           } else {
             this.tableData = []
           }

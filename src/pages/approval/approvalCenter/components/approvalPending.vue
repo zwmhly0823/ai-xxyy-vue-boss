@@ -4,7 +4,7 @@
  * @Author: Lukun
  * @Date: 2020-04-27 17:47:58
  * @LastEditors: liukun
- * @LastEditTime: 2020-08-14 21:16:31
+ * @LastEditTime: 2020-08-26 18:32:12
  -->
 <template>
   <div class="container">
@@ -1479,6 +1479,22 @@ export default {
             item.approveTime = timestamp(item.endTime, 2)
             return item
           })
+          // 重写部门名称
+          const idArr = this.tableData.map((item) => item.id)
+          this.$http.Backend.changeDepart(idArr).then(
+            ({ data: { TeacherDepartmentRelationList } }) => {
+              console.info('lklk-待审核', idArr, TeacherDepartmentRelationList)
+              if (TeacherDepartmentRelationList.length) {
+                TeacherDepartmentRelationList.forEach((item, index) => {
+                  this.tableData.forEach((itemx, indexX) => {
+                    if (item.teacher_id === itemx.id) {
+                      itemx.applyDepartment = item.department.name
+                    }
+                  })
+                })
+              }
+            }
+          )
           // lk 为3,4 前端单独筛选下
           if (this.type_lk === 'REFUND' && this.positionIdlk === '4') {
             this.tableData = zancunArr.filter(
