@@ -66,7 +66,13 @@ export default {
    * */
   getHandoverRecord(params) {
     return axios.get(
-      `/api/t/v1/handover/page/getHandoverRecord?teacherSendId=${params.teacherSendId}&teacherReceiveId=${params.teacherReceiveId}&handoverType=${params.handoverType}&pageNumber=${params.page}&pageSize=${params.size}`
+      `/api/t/v1/handover/page/getHandoverRecord?teacherSendId=${
+        params.teacherSendId
+      }&teacherReceiveId=${params.teacherReceiveId}&handoverType=${
+        params.handoverType
+      }&pageNumber=${params.page}&pageSize=${
+        params.size
+      }&weixinSendId=${params.weixinSendId || ''}&teamId=${params.teamId || ''}`
     )
   }
 }

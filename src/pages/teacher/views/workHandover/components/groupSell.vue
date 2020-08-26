@@ -55,7 +55,7 @@
           </el-option>
         </el-select>
       </el-form-item>
-      <el-form-item>
+      <!-- <el-form-item>
         <el-select
           size="mini"
           @change="onChangeType"
@@ -71,7 +71,7 @@
           >
           </el-option>
         </el-select>
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item>
         <!-- 微信模块相关从@components/MSearch/searchItems/wxInput.vue粘贴来 -->
         <el-autocomplete
@@ -84,6 +84,7 @@
           :trigger-on-focus="false"
           placeholder="微信号搜索"
           @select="onWxSerch"
+          @clear="clearWxSerch"
           ref="wxnum"
         >
           <i class="el-icon-search el-input__icon" slot="suffix"></i>
@@ -95,22 +96,30 @@
         </el-autocomplete>
       </el-form-item>
       <el-form-item>
-        <el-input
-          placeholder="班级名称"
+        <el-autocomplete
           v-model="searchParams.teamName"
-          clearable
           size="mini"
-          class="base-input"
-          @input="handleDebounce"
+          clearable
+          filterable
+          :fetch-suggestions="teamIdSearch"
+          :trigger-on-focus="false"
+          placeholder="交出班级名称查询"
+          @select="onTeamId"
+          @clear="clearTeamId"
         >
-        </el-input>
+          <i class="el-icon-search el-input__icon" slot="suffix"></i>
+          <template slot-scope="{ item }">
+            <div style="display:flex">
+              <div class="name">{{ item.team_name || '-' }}</div>
+            </div>
+          </template>
+        </el-autocomplete>
       </el-form-item>
     </el-form>
   </div>
 </template>
 
 <script>
-import { debounce } from 'lodash'
 export default {
   props: {
     name: {
@@ -162,11 +171,6 @@ export default {
   created() {
     this.getTeacher()
   },
-  computed: {
-    handleDebounce() {
-      return debounce(this.inputHandler, 500)
-    }
-  },
   watch: {
     teacherscope(val, old) {
       this.teacherId = ''
@@ -175,11 +179,6 @@ export default {
     teacherId(val, old) {
       if (val !== old && !val) {
         this.$emit('result', '')
-      }
-    },
-    'searchParams.wechat'(val) {
-      if (!val) {
-        console.log('清空了微信项')
       }
     }
   },
@@ -219,8 +218,12 @@ export default {
       this.$emit('onType', item || '')
     },
     onWxSerch(data) {
-      console.log(data)
       this.searchParams.wechat = data.wechat_no
+      this.$emit('searchFun', 'weixinSendId', data.id)
+    },
+    clearWxSerch() {
+      this.searchParams.wechat = ''
+      this.$emit('searchFun', 'weixinSendId', '')
     },
     // 输入微信号
     async weixinSearch(queryString, cb) {
@@ -249,8 +252,22 @@ export default {
         return res.data.WeChatTeacherListEx || []
       })
     },
-    inputHandler() {
-      console.log(this.searchParams.teamName)
+    async teamIdSearch(queryString, cb) {
+      const list = await this.StudentTeamList(queryString)
+      cb(list)
+    },
+    StudentTeamList(teamName) {
+      return this.$http.Teacher.StudentTeamList(teamName).then((res) => {
+        return res?.data?.StudentTeamList || []
+      })
+    },
+    onTeamId(data) {
+      this.searchParams.teamName = data.team_name
+      this.$emit('searchFun', 'teamId', data.id)
+    },
+    clearTeamId() {
+      this.searchParams.teamName = ''
+      this.$emit('searchFun', 'teamId', '')
     }
   }
 }
