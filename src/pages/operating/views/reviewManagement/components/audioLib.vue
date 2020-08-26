@@ -14,12 +14,12 @@
         <MSearch search-courseware="course_id" @search="getCourseId"> </MSearch>
         <div style="padding: 6px 0 0 0;">
           <simple-select
-            name="searchComment"
+            name="operation"
             placeholder="是否上架"
             :multiple="false"
             class="search-group-item"
             :data-list="shelfList"
-            @result="getSearchData('searchComment', arguments)"
+            @result="getSearchData('operation', arguments)"
           />
         </div>
         <DatePicker
@@ -134,7 +134,7 @@
     </el-table>
     <m-pagination
       :current-page="query.pageNum"
-      :page-size="query.size"
+      :page-size="query.pageSize"
       :total="totalElements"
       :showPager="true"
       @current-change="pageChange_handler"
@@ -155,11 +155,11 @@ export default {
     return {
       shelfList: [
         {
-          id: 1,
+          id: 0,
           text: '是'
         },
         {
-          id: 2,
+          id: 1,
           text: '否'
         }
       ],
@@ -175,7 +175,7 @@ export default {
       list: [],
       totalElements: 0,
       query: {
-        size: 10,
+        pageSize: 10,
         pageNum: 1
       },
       scoreObj: scoreObj,
@@ -183,7 +183,7 @@ export default {
     }
   },
   mounted() {
-    this.initList(this.number)
+    this.initList(this.query)
   },
   methods: {
     getCourseId(res) {
@@ -201,14 +201,32 @@ export default {
     getSearchData(key, res) {
       const search = res && res[0]
       console.log(key, res[0], '===')
-
+      //  Object.assign(this.params, {
+      //     startTime: val.ctime.gte,
+      //     endTime: val.ctime.lte
+      //   })
       if (search) {
-        this.query = {
-          ...this.query,
-          ...search
+        if (key !== 'ctime') {
+          this.query = {
+            ...this.query,
+            ...search
+          }
+        } // 查询时间处理格式
+        else {
+          const startTime = search.ctime.gte
+          const endTime = search.ctime.lte
+          this.query = {
+            ...this.query,
+            startTime,
+            endTime
+          }
         }
       } else {
         this.$delete(this.query, key)
+        if (key === 'ctime') {
+          this.$delete(this.query, 'startTime')
+          this.$delete(this.query, 'endTime')
+        }
       }
       console.log(search, 'search==')
       // 删除返回值没空数组的情况
@@ -216,6 +234,8 @@ export default {
         this.$delete(this.query, key)
       }
       // this.$emit('search', this.query)
+      this.query.pageNum = 1
+      this.initList(this.query)
       console.log(this.query, 'query====')
     },
     // 一键禁用
@@ -291,14 +311,14 @@ export default {
         _ids.push(item.id)
       })
       this.ids = _ids.join(',')
-      console.log(res, '---')
+      console.log(res, _ids, this.ids, '---')
     },
     addPage() {
       this.$router.push('/audioAdd')
     },
-    async initList(number) {
+    async initList(params) {
       try {
-        const res = await this.$http.RiviewCourse.getAudioList(number)
+        const res = await this.$http.RiviewCourse.getAudioList(params)
         if (res.code === 0) {
           const _list = res.payload.content
           _list.forEach((item) => {
@@ -314,7 +334,7 @@ export default {
     },
     async pageChange_handler(page) {
       this.query.pageNum = page
-      await this.initList(page)
+      await this.initList(this.query)
       document.body.scrollTop = document.documentElement.scrollTop = 0
     },
     async handleItem(type, id) {
@@ -325,7 +345,7 @@ export default {
       try {
         const res = await this.$http.RiviewCourse.audioIsUse(params)
         if (res.code === 0) {
-          this.initList(this.query.pageNum)
+          this.initList(this.query)
         }
       } catch (error) {
         console.log(error)
@@ -341,11 +361,11 @@ export default {
         const res = await this.$http.RiviewCourse.batchUpdateReviewVoice(params)
         if (res.code === 0) {
           console.log(res, 'res===')
-          // this.initList(this.query.pageNum)
           this.$message({
             type: 'success',
             message: '操作成功!'
           })
+          this.initList(this.query)
           this.ids = ''
         }
       } catch (error) {
@@ -361,11 +381,11 @@ export default {
         const res = await this.$http.RiviewCourse.delReviewVoice(params)
         if (res.code === 0) {
           console.log(res, 'res===')
-          // this.initList(this.query.pageNum)
           this.$message({
             type: 'success',
             message: '删除成功!'
           })
+          this.initList(this.query)
         }
       } catch (error) {
         console.log(error)

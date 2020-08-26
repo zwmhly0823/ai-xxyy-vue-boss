@@ -18,10 +18,8 @@ export default {
   /**
    * 获取语音库列表
    * */
-  getAudioList(number, size = 10) {
-    return axios.get(
-      `/api/b/v1/reviewVoice/getPageReviewVoice?pageNum=${number}&pageSize=${size}`
-    )
+  getAudioList(params) {
+    return axios.get(`/api/b/v1/reviewVoice/getPageReviewVoice`, params)
   },
   /**
    * 更新点评语音是否禁用
