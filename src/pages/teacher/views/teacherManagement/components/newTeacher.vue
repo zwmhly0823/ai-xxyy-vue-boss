@@ -860,7 +860,7 @@ export default {
           workPlaceCode: this.ruleForm.workPlaceCode,
           userName: this.ruleForm.username,
           note: this.ruleForm.note,
-          ApiModelProperty: this.ruleForm.subjest
+          subject: this.ruleForm.subjest.join(',')
         },
         department: {
           id:
@@ -868,7 +868,7 @@ export default {
               ? this.ruleForm.region
               : this.ruleForm.region[this.ruleForm.region.length - 1]
         },
-        duty: positionValId[1],
+        duty: [positionValId[1]],
         rank: { id: this.ruleForm.rank },
         weixinList: this.ruleForm.weChat
       }
