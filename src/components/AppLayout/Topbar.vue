@@ -4,7 +4,7 @@
  * @Date: 2020-03-13 15:13:34
  * @Description: topbar 顶部功能区
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-26 20:10:16
+ * @LastEditTime: 2020-08-26 21:50:48
  -->
 <template>
   <div class="navbar" :class="{ prod: isProd }">
@@ -412,7 +412,7 @@ export default {
     margin-left: 10px;
     padding-left: 15px;
     padding-right: 30px;
-    background: #2a75ed30;
+    // background: #2a75ed30;
     cursor: pointer;
     &-title {
       position: relative;
@@ -426,7 +426,8 @@ export default {
       right: -25px;
       text-align: center;
       transform: scale(0.9);
-      color: #f56c6c; // #2a75ed
+      // color: #f56c6c; // #2a75ed
+      color: #ccc;
     }
   }
 }
