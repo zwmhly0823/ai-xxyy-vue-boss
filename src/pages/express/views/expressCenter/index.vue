@@ -8,11 +8,11 @@
         <el-dropdown-menu slot="dropdown">
           <el-dropdown-item command="import">导入物流信息</el-dropdown-item>
           <el-dropdown-item command="export">导出物流信息</el-dropdown-item>
-          <!-- <el-dropdown-item
+          <el-dropdown-item
             v-show="activeName === '0' || activeName === '1'"
             command="setting"
             >自动发货设置</el-dropdown-item
-          > -->
+          >
         </el-dropdown-menu>
       </el-dropdown>
     </div>

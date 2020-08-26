@@ -3,11 +3,12 @@
  * @version:
  * @Author: panjian
  * @Date: 2020-03-31 22:54:28
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-05 17:50:58
+ * @LastEditors: zhangjianwen
+ * @LastEditTime: 2020-08-25 20:10:17
  */
 // import axios from '../axios'
 import axios from '../axiosConfig'
+// import { injectSubject } from '@/utils/index'
 
 export default {
   /**

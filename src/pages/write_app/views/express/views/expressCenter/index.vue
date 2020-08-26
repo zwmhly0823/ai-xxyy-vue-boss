@@ -126,7 +126,7 @@
           </el-scrollbar>
         </div>
       </el-tab-pane>
-      <el-tab-pane label="补发商品" name="3">
+      <!-- <el-tab-pane label="补发商品" name="3">
         <div v-if="activeName == '3'">
           <rightUp
             ref="right3"
@@ -161,7 +161,7 @@
             </div>
           </el-scrollbar>
         </div>
-      </el-tab-pane>
+      </el-tab-pane> -->
     </el-tabs>
     <!-- 自动发货设置弹窗 -->
     <el-dialog

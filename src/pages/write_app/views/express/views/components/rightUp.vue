@@ -8,7 +8,6 @@
         :schedule="showItem.schedule"
         :sup="showItem.sup"
         :expressNo="showItem.expressNo"
-        :level="showItem.level"
         :groupSell="showItem.groupSell"
         :teamDetail="showItem.teamDetail"
         :moreVersion="showItem.moreVersion"

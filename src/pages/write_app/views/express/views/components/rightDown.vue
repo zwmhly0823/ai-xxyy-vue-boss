@@ -512,7 +512,12 @@
 <script>
 /* eslint-disable camelcase */
 import MPagination from '@/components/MPagination/index.vue'
-import { isToss, formatData, openBrowserTab } from '@/utils/index'
+import {
+  isToss,
+  formatData,
+  openBrowserTab,
+  injectSubject
+} from '@/utils/index'
 import { mapState } from 'vuex'
 import dayjs from 'dayjs'
 import expressDetail from '@/pages/trading/views/components/expressDetail'
@@ -1030,7 +1035,6 @@ export default {
           timeType.express_nu = item.wildcard.express_nu
         }
       })
-      // debugger
       timeType = {
         ...timeType,
         express_status: this.sortItem.id || expressToggleList[0].id,
@@ -1063,9 +1067,9 @@ export default {
         this.$store.dispatch('getShowStatus', type)
       }
       this.$http.Express.getLogisticsList({
-        query: `{LogisticsListPageNew(query:${JSON.stringify(query)}, size: ${
-          this.currentItem
-        }, page: ${this.currentPage}) {
+        query: `{LogisticsListPageNew(query:${JSON.stringify(
+          injectSubject(query)
+        )}, size: ${this.currentItem}, page: ${this.currentPage}) {
             first
             last
             number

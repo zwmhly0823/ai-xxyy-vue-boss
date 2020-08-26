@@ -409,7 +409,7 @@ export function getAppSubjectCode() {
   const key = getAppSubject(false)
   return Object.keys(subjects).findIndex((item) => item === key) + ''
 }
-// 注入 课程类型 subject
+// 注入 课程类型 subject 参数接受 对象和序列化的字符串
 export function injectSubject(query) {
   if (!query) return
   if (typeof query === 'string') {
