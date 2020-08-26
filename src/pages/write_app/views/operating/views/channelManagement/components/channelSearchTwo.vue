@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-04-25 12:09:03
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-24 17:04:32
+ * @LastEditTime: 2020-08-26 16:47:21
  -->
 <template>
   <div id="channel-boxs" class="channel-box">
@@ -495,9 +495,11 @@ export default {
     // 调取渠道分类  渠道名称接口
     onGetChannelList(_data) {
       const query = this.channelValueList
-      const channelValue = `{"id":${JSON.stringify(query)},"subject": ${
-        this.$store.getters.subjects.subjectCode
-      }}`
+      const channelValue = {}
+      if (query.length > 0) {
+        Object.assign(channelValue, { id: query })
+      }
+
       this.$http.writeApp.Operating.ChannelClassPageName(channelValue).then(
         (ele) => {
           const __data = ele.data?.ChannelClassPage?.content
