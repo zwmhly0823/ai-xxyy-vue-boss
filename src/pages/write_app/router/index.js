@@ -3,13 +3,8 @@
  * @version: 1.0.0
  * @Author: YangJiyong
  * @Date: 2020-08-19 20:26:32
-<<<<<<< HEAD
- * @LastEditors: Shentong
- * @LastEditTime: 2020-08-26 15:54:18
-=======
- * @LastEditors: Shentong
- * @LastEditTime: 2020-08-26 14:34:10
->>>>>>> msb-writing/招生排期
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-08-26 21:19:05
  */
 import Vue from 'vue'
 import VueRouter from 'vue-router'
