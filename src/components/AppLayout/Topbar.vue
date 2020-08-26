@@ -4,7 +4,7 @@
  * @Date: 2020-03-13 15:13:34
  * @Description: topbar 顶部功能区
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-22 17:31:52
+ * @LastEditTime: 2020-08-26 20:10:16
  -->
 <template>
   <div class="navbar" :class="{ prod: isProd }">
@@ -253,7 +253,7 @@ export default {
       console.log(command)
       // 非小熊美术
       if (command !== 'art_app') {
-        openBrowserTab(`/${command}/#/users`)
+        openBrowserTab(`/${command}/#/trialUsers`)
       } else {
         openBrowserTab(`/users/#/trial`)
       }
