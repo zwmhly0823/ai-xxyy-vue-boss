@@ -193,5 +193,89 @@ export default {
         }
       }`
     })
+  },
+  /*
+   *获取交易流水号
+   * */
+  searchPaymentPay(no = '', size = 20) {
+    const query = {
+      bool: {
+        must: [
+          {
+            wildcard: { transaction_id: `*${no}*` }
+          },
+          {
+            term: { status: 2 }
+          },
+          {
+            term: { type: 1 }
+          }
+        ]
+      }
+    }
+    const q = JSON.stringify(query)
+    return axios.post('/graphql/v1/toss', {
+      query: `{
+        PaymentPayListEx(query: ${JSON.stringify(q)}, size: ${size}){
+          oid,
+          transaction_id
+        }
+      }`
+    })
+  },
+  /*
+   * 获取发票管理列表
+   * */
+  invoicePage(query, page = 1) {
+    return axios.post('/graphql/v1/toss', {
+      query: `{
+        InvoiceRecordPage(query: ${JSON.stringify(query)}, page: ${page}) {
+          content {
+            id
+            oid
+            ctime
+            uid
+            invoice_status
+            title_type
+            company_name
+            invoice_img
+            invoice_pdf
+            invoice_status
+            invoice_type
+            email
+            address
+            phone
+            taxnum
+            buyername
+            account
+            message
+            money
+            uniq_id
+            complete_time
+            isImport
+            userInfo {
+              user_num
+              username
+              mobile
+            }
+            orderInfo {
+              out_trade_no
+              invoice_code
+            }
+            paymentPayInfo {
+              transaction_id
+            }
+          }
+          empty
+          first
+          last
+          number
+          size
+          numberOfElements
+          totalElements
+          totalPages
+        }
+      }`
+    })
   }
 }

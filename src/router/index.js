@@ -2,8 +2,8 @@
  * @Author: YangJiyong
  * @Email: yangjiyong@meishubao.com
  * @Date: 2020-03-14 15:07:26
- * @Last Modified by: songyanan
- * @Last Modified time: 2020-06-13 10:32:02
+ * @Last Modified by: shasen
+ * @Last Modified time: yyyy-08-We 02:33:16
  * @Description: 设置左侧导航展示数据
  * 通过导入模块router/index.js判断，规定模块入口文件为 {path: '/', name: 'Home'}
  * TODO: 自动完成
@@ -173,6 +173,15 @@ const routes = [
         name: 'financeRefound',
         meta: {
           title: '订单退款',
+          module: 'trading',
+          show: true
+        }
+      },
+      {
+        path: '/invoiceManage',
+        name: 'invoiceManage',
+        meta: {
+          title: '发票管理',
           module: 'trading',
           show: true
         }

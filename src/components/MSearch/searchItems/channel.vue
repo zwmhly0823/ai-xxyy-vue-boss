@@ -3,8 +3,8 @@
  * @version:
  * @Author: zhubaodong
  * @Date: 2020-03-24 18:50:54
- * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-08-11 16:35:24
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-08-24 22:15:24
  -->
 <template>
   <div class="search-item small threeSelect">
@@ -93,11 +93,12 @@ export default {
     },
     // 获取渠道来源 filter: 过滤关键词  eg：filter:"抖音"
     async getChannel() {
+      const subject = { subject: this.$store.getters.subjects.subjectCode }
       const {
         data: { ChannelAllList }
       } = await axios.post('/graphql/v1/toss', {
         query: `{
-            ChannelAllList {
+            ChannelAllList(query:${JSON.stringify(JSON.stringify(subject))}) {
                 id
                 channel_class_id
                 channel_outer_name

@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-04-25 12:09:03
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-24 16:30:59
+ * @LastEditTime: 2020-08-26 11:14:56
  -->
 <template>
   <div id="channel-box" class="channel-box">
@@ -21,13 +21,6 @@
     </div>
     <div class="channel-box-medium">
       <el-row :gutter="20">
-        <!-- <el-col :span="3">
-          <div class="grid-content2 bg-purple2">
-            <span>
-              数据汇总
-            </span>
-          </div>
-        </el-col> -->
         <el-col :span="6">
           <div class="grid-content bg-purple">
             <p>累计成单金额</p>
@@ -700,8 +693,6 @@ export default {
       font-size: 12px;
       color: #666;
       font-weight: normal;
-      .row1 {
-      }
       .row2 {
         margin-left: 20px;
       }
@@ -729,8 +720,6 @@ export default {
       }
       .row10 {
         margin-left: 20px;
-      }
-      .row11 {
       }
       .bottom-tips {
         color: #fff;
@@ -760,8 +749,6 @@ export default {
         font-size: 12px;
         color: #666;
         font-weight: normal;
-        .row1 {
-        }
         .row2 {
           margin-left: -20px;
         }

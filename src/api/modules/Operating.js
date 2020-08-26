@@ -3,10 +3,12 @@
  * @version:
  * @Author: Shentong
  * @Date: 2020-03-16 19:46:39
- * @LastEditors: Shentong
- * @LastEditTime: 2020-08-22 15:17:22
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-08-26 11:57:46
  */
 import axios from '../axiosConfig'
+import { injectSubject, getAppSubjectCode } from '@/utils/index'
+const subjectCode = getAppSubjectCode()
 
 export default {
   /**
@@ -144,6 +146,21 @@ export default {
    *
    *渠道查询
    */
+  getChannelClassList(params = '') {
+    const query =
+      (params && injectSubject(params)) ||
+      JSON.stringify({ subject: subjectCode })
+    return axios.post('/graphql/v1/toss', {
+      query: `{
+              ChannelClassList(query: ${JSON.stringify(query)}, size: 500){
+                id
+                channel_class_parent_id
+                channel_class_name
+              }
+            }
+          `
+    })
+  },
   countsByTrialChannel(params) {
     return axios.get(
       `/api/o/v1/userOrderSuccess/channel/boss/countsByTrialChannel?trialChannels=${params.trialChannels}&trialChannelClassIds=${params.trialChannelClassIds}&stage=${params.stage}&startCtime=${params.startCtime}&endCtime=${params.endCtime}&page=${params.page}&pageSzie=${params.pageSzie}`
@@ -151,9 +168,10 @@ export default {
   },
   // 查询渠道名称 渠道分类
   ChannelDetailStatisticsList(Params = `""`) {
+    const query = injectSubject(Params)
     return axios.post('/graphql/v1/toss', {
       query: `{
-        ChannelDetailStatisticsList(query:${JSON.stringify(Params)},size:60){
+        ChannelDetailStatisticsList(query:${JSON.stringify(query)},size:60){
           id
           ctime
           channel_inner_name
@@ -185,9 +203,10 @@ export default {
   },
   // 二级渠道查询名称 渠道分类
   ChannelClassPageName(Params, page = 1) {
+    const query = injectSubject(Params)
     return axios.post('/graphql/v1/toss', {
       query: `{
-        ChannelClassPage(query:${JSON.stringify(Params)},size:60){
+        ChannelClassPage(query:${JSON.stringify(query)},size:60){
           content{
             channel_class_name
             channel_level

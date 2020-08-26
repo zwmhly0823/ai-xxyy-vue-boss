@@ -3,8 +3,8 @@
  * @version: 1.0.0
  * @Author: zhangjiawen
  * @Date: 2020-07-03 17:21:52
- * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-08-18 21:37:26
+ * @LastEditors: Shentong
+ * @LastEditTime: 2020-08-25 15:15:14
  */
 
 /**
@@ -31,7 +31,7 @@ export default {
   // 通过API获取组织机构
   getDepartmentList(departmentId = 0) {
     return axios.get(
-      `/api/t/v1/department/getDepartmentTree?departmentId=${departmentId}`
+      `/api/t/v2/department/getDepartmentTree?departmentId=${departmentId}`
     )
   },
 

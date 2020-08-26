@@ -3,8 +3,13 @@
  * @version: 1.0.0
  * @Author: YangJiyong
  * @Date: 2020-08-19 20:03:32
+<<<<<<< HEAD
  * @LastEditors: YangJiyong
  * @LastEditTime: 2020-08-24 21:36:51
+=======
+ * @LastEditors: Shentong
+ * @LastEditTime: 2020-08-24 14:48:41
+>>>>>>> msb-writing/招生排期
  */
 import Vue from 'vue'
 import App from './App.vue'

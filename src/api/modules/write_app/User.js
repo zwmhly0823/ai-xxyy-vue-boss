@@ -5,10 +5,12 @@
  * @Author: shentong
  * @Date: 2020-03-13 14:38:28
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-21 11:09:36
+ * @LastEditTime: 2020-08-25 14:52:00
  */
 // import axios from '../axios'
 import axios from '../../axiosConfig'
+import { getAppSubjectCode } from '@/utils/index'
+const subject = getAppSubjectCode()
 
 export default {
   /**
@@ -93,69 +95,9 @@ export default {
   /**
    * 用户中心
    */
-  // 体验课学员
-  trialCourseUsers(query = {}, page = 1) {
-    const q = JSON.stringify(JSON.stringify(query))
-    const sort = JSON.stringify(JSON.stringify({ ctime: 'desc' }))
-    return axios.post('/graphql/v1/toss', {
-      query: `{
-        StudentTrialStatisticsPage(query: ${q},page: ${page}, sort: ${sort}){
-            totalPages
-            totalElements
-            content{
-              id
-              username
-              user_num
-              nickname
-              head
-              sex
-              birthday
-              base_painting
-              mobile
-              mobile_city
-              mobile_province
-              team_id
-              team_name
-              teacher_realname
-              department_name
-              team_type
-              team_state
-              term
-              wechat_nikename
-              express_id
-              express_status
-              trial_order_no
-              system_order_no
-              follow
-              added_group
-              added_wechat
-              channel
-              is_conversion
-              conversion_type
-              is_today_join_course
-              is_today_complete_course
-              has_today_course_task
-              today_course_task_count
-              system_team_id
-              system_team_name
-              system_order_no
-              system_order_buytime
-              system_teacher_id
-              system_teacher_realname
-              system_teacher_username
-              system_teacher_department_id
-              system_teacher_department_name
-              system_order_packages_name
-              device_type
-              last_login_time
-            }
-          }
-        }
-      `
-    })
-  },
-
+  // 体验课学员 V2
   trialCourseUsersV2(query = {}, page = 1, sortRules) {
+    // Object.assign(query || {}, { subject })
     const q = JSON.stringify(JSON.stringify(query))
     const sort =
       Object.keys(sortRules).length === 0
@@ -179,7 +121,6 @@ export default {
             last_login_time
             user_intention_type
             user_intention_describe
-            send_course_count
             join_course_count
             all_join_course_count
             complete_course_count
@@ -352,6 +293,15 @@ export default {
               user_status
               department_id
               sys_label
+              send_id
+              remain_order_count
+              user_info{
+                sender{
+                  id
+                  username
+                  user_num
+                }
+              }
             }
           }
         }
@@ -369,7 +319,7 @@ export default {
     return axios.post('/graphql/v1/toss', {
       query: `{
         User(query:${JSON.stringify(formattingQuery)}){
-
+          systemCourse_lifeCycle
           id
           head
           sex
@@ -401,6 +351,7 @@ export default {
           }
           birthday
           sender{
+            id
             username
             mobile
             user_num
@@ -426,6 +377,7 @@ export default {
             }
           }
           systemCourse{
+            ctime
             team_id
             added_group
             added_wechat
@@ -907,7 +859,8 @@ export default {
     const query = {
       // teacher_id,
       team_state,
-      team_type
+      team_type,
+      subject
     }
     const params = JSON.stringify(query)
     // const sort = `{"id": "desc"}`
@@ -1062,6 +1015,107 @@ export default {
         )},size:1000){
           uid
         }
+      }`
+    })
+  },
+  // 学员详情_详细信息_体验课
+  StudentTrialV2Statistics(query) {
+    return axios.post('/graphql/v1/toss', {
+      query: `{
+        StudentTrialV2Statistics(query: ${JSON.stringify(
+          JSON.stringify({ id: query })
+        )}){
+            sup
+            id
+            buytime
+            payChannelInfo {
+              channel_inner_name
+            }
+            teacherInfo {
+              realname
+              departmentInfo {
+                name
+              }
+              weixin {
+                weixin_no
+              }
+              phone
+            }
+            managementInfo {
+              course_day
+              end_course_day
+            }
+            teamInfo {
+              id
+              team_name
+            }
+            orderInfo {
+              packages_name
+            }
+            all_join_course_count
+            join_course_count
+            send_course_count
+            all_complete_course_count
+            complete_course_count
+            task_count
+            comment_count
+            listen_comment_count
+            current_lesson
+            added_group
+            added_wechat
+            express_status
+        }
+      }`
+    })
+  },
+
+  // 系统课
+  StudentSystemStatisticsList(query) {
+    return axios.post('/graphql/v1/toss', {
+      query: `{
+            StudentSystemStatisticsList(
+              query: ${JSON.stringify(JSON.stringify({ studentid: query }))},
+              sort:${JSON.stringify(JSON.stringify({ ctime: 'asc' }))}
+              )
+            {
+            departmentname
+            addedgroup
+            addedwechat
+            expressstatus
+            currentlevel
+            currentsuper
+            currentunit
+            currentlesson
+            teamid
+            teamname
+            noactivecount
+            all_noactivecount
+            activecount
+            all_activecount
+            taskcount
+            flag_total_count
+            flagcount
+            currenttotal
+            channel_outer_name
+            orderInfo {
+              packages_name
+              buytime
+            }
+            managementInfo {
+              course_day
+              end_course_day
+            }
+            teacherInfo {
+              realname
+              departmentInfo {
+                name
+              }
+              weixin {
+                weixin_no
+              }
+              phone
+            }
+          }
       }`
     })
   }

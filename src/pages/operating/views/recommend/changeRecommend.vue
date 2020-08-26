@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-08-03 15:45:34
  * @LastEditors: liukun
- * @LastEditTime: 2020-08-13 18:15:30
+ * @LastEditTime: 2020-08-22 19:50:56
 -->
 <template>
   <!-- wrap_lk:给分页留了40高度 -->
@@ -137,7 +137,11 @@
       </el-pagination>
     </div>
     <div class="pdrawer_lk">
-      <drawerLk ref="drawer_lk" :arrangeArr="arrangeArr" />
+      <drawerLk
+        ref="drawer_lk"
+        :arrangeArr="arrangeArr"
+        :approvingItem="approvingItem"
+      />
     </div>
   </section>
 </template>
@@ -158,7 +162,6 @@ export default {
     return {
       // 分页
       allDigit: 0,
-      totalPages: 0,
       pageSize: 10,
       currentPage: 1,
 
@@ -179,7 +182,7 @@ export default {
       },
       // 表格数据
       tableData: [],
-      // arrange_search
+      approvingItem: {},
       searchJson: {}
     }
   },
@@ -217,14 +220,14 @@ export default {
       this.getData()
     },
     handleClick(tab) {
-      console.info('tabpad实例', tab, tab.name)
+      console.info('tab-pane实例', tab, tab.name)
       this.searchJson.status = tab.name
       this.getData()
     },
     // 点击审核
     handleEdit(index, item) {
       console.info('点击审核给儿子传数据单元')
-      this.$root.$emit('singSong', item)
+      this.approvingItem = item
       this.$refs.drawer_lk.drawer = true
     },
     // 页容量变化
@@ -242,7 +245,7 @@ export default {
       Object.assign(this.searchJson, { pageNum, pageSize }) // 放心page,size会覆盖原有
       const {
         code,
-        payload: { content, totalElements, totalPages }
+        payload: { content, totalElements }
       } = await this.$http.Operating.getTable(this.searchJson).catch((err) => {
         console.info('取数据接口报错,', err)
         this.$message.error('table数据接口失败')
@@ -251,7 +254,6 @@ export default {
         this.pageSize = pageSize // 就取本地设订的可以嘛？server也是听本地的传值(统一接口成功再变化分页信息)
         this.currentPage = pageNum // 就取本地设订的可以嘛？server也是听本地的传值(统一接口成功再变化分页信息)
         this.allDigit = +totalElements // 总量
-        this.totalPages = +totalPages // 总页数
         // 加工整合
         content.forEach((item) => {
           item.approvalRemark = item.approvalRemark || '-'
@@ -296,9 +298,7 @@ export default {
     display: flex;
     justify-content: flex-end;
     align-items: center;
-  }
-  /deep/ .el-icon-circle-close {
-    color: #f84e5e;
+    z-index: 66;
   }
 }
 </style>

@@ -3,10 +3,13 @@
  * @version:
  * @Author: Shentong
  * @Date: 2020-03-16 19:46:39
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-24 16:13:48
+ * @LastEditors: Shentong
+ * @LastEditTime: 2020-08-26 16:18:31
  */
 import axios from '../../axiosConfig'
+import { injectSubject, getAppSubjectCode, getAppSubject } from '@/utils/index'
+
+const subjectCode = getAppSubjectCode()
 
 export default {
   /**
@@ -20,17 +23,17 @@ export default {
    * 获取体验课、系统课列表
    */
   getCourseListByType(params) {
-    const page = params.page - 1
-    return axios.get(
-      `/api/s/v1/management/enroll/count/page?courseType=${params.courseType}&pageSize=${params.size}&pageNumber=` +
-        page
-    )
+    params.pageNumber = params.pageNumber - 1
+    return axios.get(`/api/s/v1/management/enroll/count/page`, params)
   },
   /**
    * 新增招生排期第一步-add
    */
   addScheduleFirstStep(params) {
-    return axios.post(`/api/s/v1/management/enroll/sell/save`, params)
+    return axios.post(
+      `/api/s/v1/management/enroll/sell/save?subject=${getAppSubject()}`,
+      params
+    )
   },
   /**
    * 新增招生排期第一步-edit获取数据
@@ -54,7 +57,8 @@ export default {
    */
   getLeads(params) {
     return axios.get(
-      `/api/t/v1/teacher/course/enroll/teacher/channel/config?courseType=${params.courseType}&period=${params.period}`
+      `/api/t/v1/teacher/course/enroll/teacher/channel/config?period=${params.period}`
+      // `/api/t/v1/teacher/course/enroll/teacher/channel/config?courseType=${params.courseType}&period=${params.period}`
     )
   },
   /**
@@ -92,7 +96,6 @@ export default {
   },
   // 导出
   exportExcel(params) {
-    console.warn('接口-导出excel')
     return axios.post(
       `/api/s/v1/management/enroll/exportDetail?teacherId=${params.teacherId}&departmentIds=${params.departmentIds}&level=${params.level}&courseType=${params.courseType}&period=${params.period}&courseDifficulties=${params.courseDifficulties}`,
       params,
@@ -127,7 +130,7 @@ export default {
    */
   getScheduleDetailInfo(params) {
     return axios.get(
-      `/api/s/v1/management/enroll/getManagement?courseType=${params.courseType}&period=${params.period}`
+      `/api/s/v1/management/enroll/getManagement/courseType?courseType=${params.courseType}&period=${params.period}`
     )
   },
   /**
@@ -144,7 +147,9 @@ export default {
    *渠道查询
    */
   getChannelClassList(params = '') {
-    const query = (params && JSON.stringify(params)) || ''
+    const query =
+      (params && injectSubject(params)) ||
+      JSON.stringify({ subject: subjectCode })
     return axios.post('/graphql/v1/toss', {
       query: `{
               ChannelClassList(query: ${JSON.stringify(query)}, size: 500){
@@ -163,9 +168,10 @@ export default {
   },
   // 查询渠道名称 渠道分类
   ChannelDetailStatisticsList(Params = `""`) {
+    const query = injectSubject(Params)
     return axios.post('/graphql/v1/toss', {
       query: `{
-        ChannelDetailStatisticsList(query:${JSON.stringify(Params)},size:60){
+        ChannelDetailStatisticsList(query:${JSON.stringify(query)},size:60){
           id
           ctime
           channel_inner_name
@@ -199,9 +205,10 @@ export default {
   },
   // 二级渠道查询名称 渠道分类
   ChannelClassPageName(Params, page = 1) {
+    const query = injectSubject(Params)
     return axios.post('/graphql/v1/toss', {
       query: `{
-        ChannelClassPage(query:${JSON.stringify(Params)},size:60){
+        ChannelClassPage(query:${JSON.stringify(query)},size:60){
           content{
             channel_class_name
             channel_level
@@ -543,5 +550,9 @@ export default {
   // 修改活动结束时间
   updatePromotionsDate(params) {
     return axios.post(`/api/p/v1/promotions/updatePromotionsDate`, params)
+  },
+  // 获取销售等级
+  getSellLevel(params) {
+    return axios.get(`/api/t/v1/teacher/course/teacherLevelByType?level=0`)
   }
 }
