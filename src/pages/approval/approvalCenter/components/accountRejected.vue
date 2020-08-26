@@ -258,7 +258,7 @@ export default {
             // 个别数据做文字化处理
             this.tableData = this.dataToText(res.payload.content)
             // 重写部门名称
-            const idArr = this.tableData.map((item) => item.id)
+            const idArr = this.tableData.map((item) => item.applyId)
             this.$http.Backend.changeDepart(idArr).then(
               ({ data: { TeacherDepartmentRelationList } }) => {
                 console.info(
@@ -269,7 +269,7 @@ export default {
                 if (TeacherDepartmentRelationList.length) {
                   TeacherDepartmentRelationList.forEach((item, index) => {
                     this.tableData.forEach((itemx, indexX) => {
-                      if (item.teacher_id === itemx.id) {
+                      if (item.teacher_id === itemx.applyId) {
                         itemx.applyDepartment = item.department.name
                       }
                     })

@@ -4,7 +4,7 @@
  * @Author: Lukun
  * @Date: 2020-04-27 17:47:58
  * @LastEditors: liukun
- * @LastEditTime: 2020-08-26 18:32:32
+ * @LastEditTime: 2020-08-26 21:02:22
  -->
 <template>
   <div class="container">
@@ -942,14 +942,14 @@ export default {
             return item
           })
           // 重写部门名称
-          const idArr = this.tableData.map((item) => item.id)
+          const idArr = this.tableData.map((item) => item.applyId)
           this.$http.Backend.changeDepart(idArr).then(
             ({ data: { TeacherDepartmentRelationList } }) => {
               console.info('lklk-待审核', idArr, TeacherDepartmentRelationList)
               if (TeacherDepartmentRelationList.length) {
                 TeacherDepartmentRelationList.forEach((item, index) => {
                   this.tableData.forEach((itemx, indexX) => {
-                    if (item.teacher_id === itemx.id) {
+                    if (item.teacher_id === itemx.applyId) {
                       itemx.applyDepartment = item.department.name
                     }
                   })
