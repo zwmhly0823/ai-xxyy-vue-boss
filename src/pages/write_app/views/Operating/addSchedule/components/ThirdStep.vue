@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-15 20:35:57
  * @LastEditors: Shentong
- * @LastEditTime: 2020-08-22 17:20:58
+ * @LastEditTime: 2020-08-26 13:35:01
  -->
 <template>
   <div class="third-step">
@@ -292,7 +292,7 @@ export default {
   async created() {
     const { courseType = '0' } = this.$route.params
     if (courseType === '1') {
-      this.levelList = this.levels.concat([
+      this.levelList = this.levelList.concat([
         {
           label: 'S3',
           value: 'S3'
@@ -304,6 +304,10 @@ export default {
         {
           label: 'S5',
           value: 'S5'
+        },
+        {
+          label: 'S6',
+          value: 'S6'
         }
       ])
     }
@@ -352,7 +356,7 @@ export default {
     async getTeacherConfigList() {
       this.flags.loading = true
       try {
-        const teacherList = await this.$http.Operating.getTeacherConfigList(
+        const teacherList = await this.$http.writeApp.Operating.getTeacherConfigList(
           this.params
         )
         const { payload = [] } = teacherList
@@ -393,7 +397,9 @@ export default {
     // 获取随材版本
     async getCourseVersion() {
       try {
-        const { payload = [] } = await this.$http.Operating.getCourseVersion({
+        const {
+          payload = []
+        } = await this.$http.writeApp.Operating.getCourseVersion({
           type: 'courseVersion'
         })
         this.productVersion = payload
@@ -414,7 +420,9 @@ export default {
       })
 
       try {
-        const _res = await this.$http.Operating.saveScheduleConfig(params)
+        const _res = await this.$http.writeApp.Operating.saveScheduleConfig(
+          params
+        )
         if (_res.code === 0) {
           this.$message.success('保存成功')
           cb && cb()

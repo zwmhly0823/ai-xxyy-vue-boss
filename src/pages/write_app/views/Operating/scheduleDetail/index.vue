@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-14 18:28:44
  * @LastEditors: Shentong
- * @LastEditTime: 2020-08-22 17:06:32
+ * @LastEditTime: 2020-08-25 15:28:02
  -->
 <template>
   <div class="app-main height add-schedule-container">
@@ -112,7 +112,9 @@ export default {
       try {
         const {
           payload = {}
-        } = await this.$http.Operating.getScheduleDetailInfo(this.params)
+        } = await this.$http.writeApp.Operating.getScheduleDetailInfo(
+          this.params
+        )
         const {
           startDate = '',
           endDate = '',
@@ -180,6 +182,7 @@ export default {
         align-items: center;
         font-size: 20px;
         font-weight: 500;
+        margin: 10px 0;
         > p {
           margin-right: 15px;
         }

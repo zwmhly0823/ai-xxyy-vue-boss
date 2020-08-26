@@ -4,7 +4,7 @@
  * @Author: shentong
  * @Date: 2020-04-02 16:08:02
  * @LastEditors: Shentong
- * @LastEditTime: 2020-07-15 16:39:26
+ * @LastEditTime: 2020-08-25 15:34:15
  -->
 <template>
   <div>
@@ -159,7 +159,6 @@ export default {
           ...val,
           pageNum: 1
         }
-        console.log('this.tabQuery', this.tabQuery)
         this.init()
         // 表格内统计
         this.getScheduleDetailStatistic()

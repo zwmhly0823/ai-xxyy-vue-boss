@@ -1,3 +1,12 @@
+/*
+ * @Descripttion:
+ * @version: 1.0.0
+ * @Author: zhangjiawen
+ * @Date: 2020-07-03 17:21:52
+ * @LastEditors: Shentong
+ * @LastEditTime: 2020-08-25 15:15:14
+ */
+
 /**
  * 组织机构
  */
@@ -22,7 +31,7 @@ export default {
   // 通过API获取组织机构
   getDepartmentList(departmentId = 0) {
     return axios.get(
-      `/api/t/v1/department/getDepartmentTree?departmentId=${departmentId}`
+      `/api/t/v2/department/getDepartmentTree?departmentId=${departmentId}`
     )
   },
 
@@ -44,6 +53,17 @@ export default {
       query: `{
         TeacherListEx(query: ${JSON.stringify(query)}, size: 20){
           id
+          realname
+        }
+      }`
+    })
+  },
+  // 模糊查询teacherList
+  getCallTeacherEx(query = '') {
+    return axios.post('/graphql/v1/toss', {
+      query: `{
+        TeacherOutboundPage(query: ${JSON.stringify(query)}, size: 20){
+          teacher_id
           realname
         }
       }`

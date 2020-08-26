@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-25 14:35:19
  * @LastEditors: Shentong
- * @LastEditTime: 2020-08-22 17:12:50
+ * @LastEditTime: 2020-08-26 13:35:33
  -->
 <template>
   <div class="table-searcher-container">
@@ -21,7 +21,7 @@
       <wx-list wxSerch="wxSearchInfo" @getWxSerch="getWxSerch" />
     </div>
     <!-- 销售等级 -->
-    <div class="comp-cell" v-if="isShowLevel">
+    <!-- <div class="comp-cell" v-if="isShowLevel">
       <el-select
         v-model="level"
         clearable
@@ -38,7 +38,7 @@
         >
         </el-option>
       </el-select>
-    </div>
+    </div> -->
     <!-- 招生级别 -->
     <div class="comp-cell" v-if="isShowSup">
       <el-select
@@ -114,12 +114,7 @@ export default {
         {
           label: 'S2',
           value: 'S2'
-        },
-        {
-          label: 'S3',
-          value: 'S3'
-        },
-        { label: 'S4', value: 'S4' }
+        }
       ]
     }
   },
@@ -130,7 +125,28 @@ export default {
     MoreVersionBox
   },
   created() {
-    this.getSellLevel()
+    const { courseType = '0' } = this.$route.params
+    if (courseType === '1') {
+      this.scheduleLevelList = this.scheduleLevelList.concat([
+        {
+          label: 'S3',
+          value: 'S3'
+        },
+        {
+          label: 'S4',
+          value: 'S4'
+        },
+        {
+          label: 'S5',
+          value: 'S5'
+        },
+        {
+          label: 'S6',
+          value: 'S6'
+        }
+      ])
+    }
+    // this.getSellLevel()
   },
   methods: {
     // 获取销售等级

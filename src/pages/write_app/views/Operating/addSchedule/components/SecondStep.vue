@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-15 20:35:57
  * @LastEditors: Shentong
- * @LastEditTime: 2020-04-22 11:50:58
+ * @LastEditTime: 2020-08-24 18:27:26
  -->
 <template>
   <div class="second-step">
@@ -97,7 +97,7 @@ export default {
     // 编辑页获取所 选择的 teacher：TODO:
     async getHasSelectTeacher() {
       try {
-        const teacherList = await this.$http.Operating.getHasSelectTeacher(
+        const teacherList = await this.$http.writeApp.Operating.getHasSelectTeacher(
           this.params
         )
         const { payload = [] } = teacherList

@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-14 18:28:44
  * @LastEditors: Shentong
- * @LastEditTime: 2020-08-22 17:17:45
+ * @LastEditTime: 2020-08-25 15:44:50
  -->
 <template>
   <div class="app-main height add-schedule-container">
@@ -41,13 +41,13 @@
 
           <!-- 第二步 -->
           <second-step
-            v-show="isShowSecondStep"
+            v-show="stepStatus == 2"
             :stepStatus="stepStatus"
             @listenStepStatus="fSstepStatus"
           ></second-step>
           <!-- 第三步 -->
           <third-step
-            v-if="isShowThirdStep"
+            v-if="stepStatus == 3"
             :stepStatus="stepStatus"
             @listenStepStatus="fSstepStatus"
           ></third-step>
@@ -98,12 +98,6 @@ export default {
     // SetLeads
   },
   computed: {
-    isShowSecondStep() {
-      return (
-        (this.courseType === '0' && this.stepStatus === 3) ||
-        (this.courseType === '1' && this.stepStatus === 2)
-      )
-    },
     isShowThirdStep() {
       return (
         (this.courseType === '0' && this.stepStatus === 4) ||

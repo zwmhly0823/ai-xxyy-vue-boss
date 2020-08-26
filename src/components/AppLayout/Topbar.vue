@@ -4,7 +4,7 @@
  * @Date: 2020-03-13 15:13:34
  * @Description: topbar 顶部功能区
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-21 22:24:39
+ * @LastEditTime: 2020-08-22 17:31:52
  -->
 <template>
   <div class="navbar" :class="{ prod: isProd }">

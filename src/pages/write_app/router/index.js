@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-08-19 20:26:32
  * @LastEditors: Shentong
- * @LastEditTime: 2020-08-22 17:08:24
+ * @LastEditTime: 2020-08-26 14:34:10
  */
 import Vue from 'vue'
 import VueRouter from 'vue-router'
@@ -37,7 +37,7 @@ const routes = [
       title: '招生排期',
       keepAlive: true
     },
-    component: () => import('../views/Operating/scheduleList/index.vue')
+    component: () => import('../views/operating/scheduleList/index.vue')
   },
   // 新增、编辑
   {
@@ -47,7 +47,7 @@ const routes = [
       title: '新建排期',
       keepAlive: false
     },
-    component: () => import('../views/Operating/addSchedule/index.vue')
+    component: () => import('../views/operating/addSchedule/index.vue')
   },
   {
     path: '/scheduleDetail/:period/:courseType/',
@@ -56,8 +56,55 @@ const routes = [
       title: '排期详情',
       keepAlive: false
     },
-    component: () => import('../views/Operating/scheduleDetail/index.vue')
-  }
+    component: () => import('../views/operating/scheduleDetail/index.vue')
+  },
+  {
+    path: '/teacherManagement',
+    name: 'teacherManagement',
+    meta: {
+      title: '员工账号',
+      keepAlive: true
+    },
+    component: () =>
+      import('../../teacher/views/teacherManagement/teacherManage.vue')
+  },
+  {
+    path: '/newTeacher',
+    name: 'newTeacher',
+    meta: {
+      title: '新增员工',
+      keepAlive: true
+    },
+    component: () =>
+      import('../../teacher/views/teacherManagement/components/newTeacher.vue')
+  },
+  {
+    path: '/express',
+    name: 'express',
+    meta: {
+      title: '物流管理',
+      keepAlive: true
+    },
+    component: () => import('../views/express/views/expressCenter/index.vue')
+  },
+  // {
+  //   path: '/express',
+  //   name: 'express',
+  //   meta: {
+  //     title: '物流管理',
+  //     keepAlive: true
+  //   },
+  //   component: () => import('../views/express/views/expressCenter/index.vue')
+  // },
+  {
+    path: '/order',
+    name: 'order',
+    meta: {
+      title: '订单管理',
+      keepAlive: true
+    },
+    component: () => import('../views/trading/views/order/orderModule.vue')
+  },
   //   {
   //     path: '/system',
   //     name: 'systemUsers',
@@ -76,6 +123,55 @@ const routes = [
   //     },
   //     component: () => import('../views/details/index.vue')
   //   }
+
+  /**
+   * 运营管理
+   */
+  {
+    path: '/channelManagement',
+    name: 'channelManagement',
+    meta: {
+      title: '渠道管理',
+      keepAlive: true
+    },
+    component: () =>
+      import('../views/operating/views/channelManagement/channelManagement.vue')
+  },
+  /**
+   * @descript 班级模块 >>>>start
+   */
+  {
+    path: '/trialTeam', // 体验课班级
+    name: 'trialTeam',
+    meta: {
+      title: '体验课班级',
+      keepAlive: true
+    },
+    hidden: true,
+    component: () => import('../views/studentTeam/views/trialTeam/index.vue')
+  },
+  {
+    path: '/systemTeam', // 系统课班级
+    name: 'systemTeam',
+    meta: {
+      title: '系统课班级',
+      keepAlive: true
+    },
+    hidden: true,
+    component: () => import('../views/studentTeam/views/systemTeam/index.vue')
+  },
+  {
+    path: '/teamDetail/:id/:type', // 班级详情
+    name: 'teamDetail',
+    meta: {
+      title: '班级中心'
+    },
+    hidden: true,
+    component: () => import('../views/studentTeam/views/teamDetail/index.vue')
+  }
+  /**
+   * @descript 班级模块 >>>> end
+   */
 ]
 
 const router = new VueRouter({

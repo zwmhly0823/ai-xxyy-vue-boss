@@ -4,7 +4,7 @@
  * @Author: shentong
  * @Date: 2020-04-02 16:08:02
  * @LastEditors: Shentong
- * @LastEditTime: 2020-08-22 17:36:50
+ * @LastEditTime: 2020-08-25 15:27:42
  -->
 <template>
   <div>
@@ -35,12 +35,13 @@
       </el-alert>
     </div>
 
-    <div class="orderStyle">
+    <div class="orderStyle" ref="tableContainer">
       <ele-table
+        :tableHeight="tableHeight"
         :dataList="tableData"
         :loading="flags.loading"
-        :size="tabQuery.size"
-        :page="tabQuery.page"
+        :size="tabQuery.pageSize"
+        :page="tabQuery.pageNumber"
         :total="totalPages"
         @pageChange="pageChange_handler"
         class="mytable"
@@ -173,6 +174,7 @@ export default {
   },
   data() {
     return {
+      tableHeight: 'auto',
       canClick: true,
       query: '',
       tabIndex: 0,
@@ -182,8 +184,8 @@ export default {
         loading: false
       },
       tabQuery: {
-        size: 20,
-        page: 1
+        pageSize: 20,
+        pageNumber: 1
       },
       sex: {
         // 0: '-',
@@ -205,16 +207,16 @@ export default {
   },
   watch: {},
   async activated() {
-    console.log('subjects', this.subjects)
-    this.tabQuery.subject = this.subjects.currentSubjectKey || ''
-
+    this.tabQuery.pageNumber = 1
+    // this.tabQuery.subject = this.subjects.currentSubjectKey || ''
+    this.$nextTick(() => this.calcTableHeight())
     await this.getCourseListByType()
   },
   methods: {
     /** adolf-start */
     tabs_click(index) {
       this.tabIndex = index
-      this.tabQuery.page = 1
+      this.tabQuery.pageNumber = 1
       this.getCourseListByType()
     },
     // 下载当前行
@@ -228,7 +230,9 @@ export default {
         courseType: this.tabIndex,
         period: row.period
       }
-      const res = await this.$http.DownloadExcel.downloadExcelByPeriod(params)
+      const res = await this.$http.writeApp.DownloadExcel.downloadExcelByPeriod(
+        params
+      )
 
       if (res && Object.prototype.toString.call(res) === '[object Blob]') {
         const name = !+params.courseType ? '体验课' : '系统课'
@@ -271,11 +275,9 @@ export default {
     /**
      * @description 分页 回调事件
      */
-    pageChange_handler(page) {
-      this.tabQuery.page = page
+    pageChange_handler(pageNumber) {
+      this.tabQuery.pageNumber = pageNumber
       this.getCourseListByType()
-
-      // console.log(aa, 'aa')
     },
     /** adolf-end */
     async getCourseListByType() {
@@ -289,10 +291,8 @@ export default {
       }
       this.tabQuery = {
         ...this.tabQuery,
-        // page: --this.tabQuery.page,
         courseType: this.tabIndex
       }
-      console.log('his.$http.writeApp', this.$http)
       try {
         const {
           content = [],
@@ -322,6 +322,16 @@ export default {
     // 搜索
     handleSearch(data) {
       console.log(data)
+    },
+    calcTableHeight() {
+      this.$nextTick(() => {
+        // Element.getBoundingClientRect() 方法返回元素的大小及其相对于视口的位置。
+        const tableTopHeight = this.$refs.tableContainer.getBoundingClientRect()
+          .y
+        //  document.body.clientHeight 返回body元素内容的高度
+        const tableHeight = document.body.clientHeight - tableTopHeight - 60
+        this.tableHeight = tableHeight + ''
+      })
     }
   }
 }

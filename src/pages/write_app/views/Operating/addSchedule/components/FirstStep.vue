@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-15 20:35:57
  * @LastEditors: Shentong
- * @LastEditTime: 2020-08-21 15:26:57
+ * @LastEditTime: 2020-08-24 17:03:32
  -->
 <template>
   <div class="first-step">
@@ -213,6 +213,7 @@
 </template>
 <script>
 import { Loading } from 'element-ui'
+// import { mapGetters } from 'vuex'
 export default {
   props: ['stepStatus'],
   data() {
@@ -295,9 +296,12 @@ export default {
       }
     }
   },
-  computed: {},
+  // computed: {
+  //   ...mapGetters(['subject'])
+  // },
   watch: {},
   async created() {
+    console.log('this.subject', this.subject)
     const { period = '', courseType = 0 } = this.$route.params
     this.period = period
     this.courseType = courseType
@@ -427,7 +431,9 @@ export default {
         fullscreen: true
       })
       try {
-        const _res = await this.$http.Operating.addScheduleFirstStep(params)
+        const _res = await this.$http.writeApp.Operating.addScheduleFirstStep(
+          params
+        )
         if (_res.code === 0) cb(_res)
       } catch (err) {
         this.$message({
@@ -442,7 +448,9 @@ export default {
     // 新增招生排期第一步-edit获取数据
     async getScheduleFirstStep(params) {
       try {
-        const _res = await this.$http.Operating.getScheduleFirstStep(params)
+        const _res = await this.$http.writeApp.Operating.getScheduleFirstStep(
+          params
+        )
         return Promise.resolve(_res)
       } catch (err) {
         this.$message({

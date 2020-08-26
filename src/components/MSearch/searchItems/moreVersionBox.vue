@@ -3,8 +3,8 @@
  * @version: 
  * @Author: zhubaodong
  * @Date: 2020-03-24 18:50:54
- * @LastEditors: Lukun
- * @LastEditTime: 2020-06-03 16:44:02
+ * @LastEditors: zhangjianwen
+ * @LastEditTime: 2020-08-22 14:37:23
  -->
 <template>
   <div class="search-item small">
@@ -78,6 +78,12 @@ export default {
     },
     // 获取多版本盒子
     getProductVersion() {
+      console.log(this.$http)
+      // console.log(
+      //   111,
+      //   this.$http.Product,
+      //   this.$http.Product.getCourseVersion()
+      // )
       this.$http.Product.getCourseVersion({ type: 'courseVersion' }).then(
         (res) => {
           if (res && res.payload) {

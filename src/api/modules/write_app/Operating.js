@@ -4,9 +4,10 @@
  * @Author: Shentong
  * @Date: 2020-03-16 19:46:39
  * @LastEditors: Shentong
- * @LastEditTime: 2020-08-22 16:33:26
+ * @LastEditTime: 2020-08-25 14:56:44
  */
 import axios from '../../axiosConfig'
+import { getAppSubject } from '@/utils/index'
 
 export default {
   /**
@@ -20,15 +21,18 @@ export default {
    * 获取体验课、系统课列表
    */
   getCourseListByType(params) {
-    params.pageSize = params.size
-    params.pageNumber = params.page - 1
+    params.pageNumber = params.pageNumber - 1
     return axios.get(`/api/s/v1/management/enroll/count/page`, params)
   },
   /**
    * 新增招生排期第一步-add
    */
   addScheduleFirstStep(params) {
-    return axios.post(`/api/s/v1/management/enroll/sell/save`, params)
+    console.log('getAppSubject()', getAppSubject())
+    return axios.post(
+      `/api/s/v1/management/enroll/sell/save?subject=${getAppSubject()}`,
+      params
+    )
   },
   /**
    * 新增招生排期第一步-edit获取数据
@@ -91,7 +95,6 @@ export default {
   },
   // 导出
   exportExcel(params) {
-    console.warn('接口-导出excel')
     return axios.post(
       `/api/s/v1/management/enroll/exportDetail?teacherId=${params.teacherId}&departmentIds=${params.departmentIds}&level=${params.level}&courseType=${params.courseType}&period=${params.period}&courseDifficulties=${params.courseDifficulties}`,
       params,
@@ -126,7 +129,7 @@ export default {
    */
   getScheduleDetailInfo(params) {
     return axios.get(
-      `/api/s/v1/management/enroll/getManagement?courseType=${params.courseType}&period=${params.period}`
+      `/api/s/v1/management/enroll/getManagement/courseType?courseType=${params.courseType}&period=${params.period}`
     )
   },
   /**
