@@ -4,7 +4,7 @@
  * @Author: Lukun
  * @Date: 2020-04-27 17:47:58
  * @LastEditors: liukun
- * @LastEditTime: 2020-08-26 21:02:39
+ * @LastEditTime: 2020-08-26 21:22:32
  -->
 <template>
   <div class="container">
@@ -937,13 +937,14 @@ export default {
             item.reason = zhaiyao[3]
             item.openTime = timestamp(item.ctime, 2)
             item.approveTime = timestamp(item.endTime, 2)
+            item.applyDepartment = ''
             return item
           })
           // 重写部门名称
           const idArr = this.tableData.map((item) => item.applyId)
           this.$http.Backend.changeDepart(idArr).then(
             ({ data: { TeacherDepartmentRelationList } }) => {
-              console.info('lklk-待审核', idArr, TeacherDepartmentRelationList)
+              console.info('lklk-已撤销', idArr, TeacherDepartmentRelationList)
               if (TeacherDepartmentRelationList.length) {
                 TeacherDepartmentRelationList.forEach((item, index) => {
                   this.tableData.forEach((itemx, indexX) => {

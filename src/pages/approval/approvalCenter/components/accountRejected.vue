@@ -255,6 +255,9 @@ export default {
           if (res.payload.content && res.payload.content.length) {
             this.currentPage = res.payload.number - 0 + 1
             this.totalElements = res.payload.totalElements
+            this.tableData.forEach((item, index) => {
+              item.applyDepartment = ''
+            })
             // 个别数据做文字化处理
             this.tableData = this.dataToText(res.payload.content)
             // 重写部门名称
@@ -262,7 +265,7 @@ export default {
             this.$http.Backend.changeDepart(idArr).then(
               ({ data: { TeacherDepartmentRelationList } }) => {
                 console.info(
-                  'lklk-待审核',
+                  'lklk-财务拒绝',
                   idArr,
                   TeacherDepartmentRelationList
                 )
