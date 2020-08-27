@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-05-25 15:34:04
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-24 23:05:55
+ * @LastEditTime: 2020-08-27 17:55:06
 -->
 <template>
   <div class="user-list">
@@ -46,11 +46,6 @@
             <p>【点评】</p>
             <p>1、点评作品：筛选期数内，已被老师点评过的作品数</p>
             <p>2、已听作品：筛选期数内，用户已经听过点评的作品数</p>
-            <p>【是否续费】</p>
-            <p>
-              1、已续费：代表这个用户有已完成的续费订单（包括半年及全年系统课续费）
-            </p>
-            <p>2、待续费：代表这个用户只有一笔系统课新报订单，没有续费订单</p>
           </div>
           <i class="el-icon-warning" style="padding-left:20px;"></i>
         </el-tooltip>
@@ -440,19 +435,6 @@
           <!-- <item-status type="3" :row="wechatStatus(scope.row)" /> -->
         </template>
       </el-table-column>
-      <el-table-column label="推荐人" min-width="160">
-        <template slot-scope="scope">
-          <p
-            class="btn-text "
-            v-if="scope.row.user_info && scope.row.user_info.sender"
-            @click="openRecommender(scope.row)"
-          >
-            {{ scope.row.user_info.sender.username || '-' }}
-            {{ scope.row.user_info.sender.user_num }}
-          </p>
-          <p v-else>-</p>
-        </template>
-      </el-table-column>
       <el-table-column label="辅导老师/班级" min-width="190">
         <template slot-scope="scope">
           <p v-if="!scope.row.teamname || scope.row.teamname === '-'">-</p>
@@ -480,17 +462,6 @@
       <el-table-column label="渠道" min-width="120" fixed="right">
         <template slot-scope="scope">
           <p>{{ scope.row.channel_outer_name || '-' }}</p>
-        </template>
-      </el-table-column>
-      <el-table-column label="是否续费" min-width="120" fixed="right">
-        <template slot-scope="scope">
-          <p
-            v-if="scope.row.remain_order_count > 1"
-            style="color: rgb(255, 139, 140);"
-          >
-            已续费
-          </p>
-          <p v-else>待续费</p>
         </template>
       </el-table-column>
     </el-table>
@@ -725,7 +696,7 @@ export default {
       if (this.sortActive) {
         sort[this.sortActive] = this.sortKeys[this.sortActive]
       }
-      this.$http.User.systemCourseUsers(query, page, sort)
+      this.$http.writeApp.User.systemCourseUsers(query, page, sort)
         .then((res) => {
           console.log(res)
           const payload =
@@ -760,7 +731,7 @@ export default {
           spinner: 'el-icon-loading',
           background: 'rgba(0, 0, 0, 0.1)'
         })
-        this.$http.User.systemCourseUsers(
+        this.$http.writeApp.User.systemCourseUsers(
           Object.assign(
             { life_cycle: this.life_cycle, teacherid: [teacherid] },
             query
@@ -830,7 +801,7 @@ export default {
       } else if (type === 'group') {
         params.addedGroup = val
       }
-      this.$http.User.updateTeamStudent(params).then((res) => {
+      this.$http.writeApp.User.updateTeamStudent(params).then((res) => {
         if (res && res.code === 0) {
           this.$message({
             message: '修改成功',
@@ -886,10 +857,6 @@ export default {
           `/users/#/details/${studentid}`,
           `学员：${username || mobile}`
         )
-    },
-    // 推荐人
-    openRecommender(row) {
-      openBrowserTab(`/users/#/details/${row.user_info.sender.id}`)
     },
     expressStatus(status) {
       if (!status && status !== 0) {

@@ -5,11 +5,11 @@
  * @Author: shentong
  * @Date: 2020-03-13 14:38:28
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-25 14:52:00
+ * @LastEditTime: 2020-08-27 17:57:09
  */
 // import axios from '../axios'
 import axios from '../../axiosConfig'
-import { getAppSubjectCode } from '@/utils/index'
+import { getAppSubjectCode, injectSubject } from '@/utils/index'
 const subject = getAppSubjectCode()
 
 export default {
@@ -98,7 +98,7 @@ export default {
   // 体验课学员 V2
   trialCourseUsersV2(query = {}, page = 1, sortRules) {
     // Object.assign(query || {}, { subject })
-    const q = JSON.stringify(JSON.stringify(query))
+    const q = JSON.stringify(injectSubject(query))
     const sort =
       Object.keys(sortRules).length === 0
         ? JSON.stringify(JSON.stringify({ ctime: 'desc' }))
@@ -219,7 +219,7 @@ export default {
   systemCourseUsers(query = {}, page = 1, sortRules = {}) {
     // const params = Object.assign(query, { page })
     // return axios.post('/api/b/v1/student/center/system/list', params)
-    const q = JSON.stringify(JSON.stringify(query))
+    const q = JSON.stringify(injectSubject(query))
     const sort =
       Object.keys(sortRules).length === 0
         ? JSON.stringify(JSON.stringify({ ctime: 'desc' }))
@@ -294,14 +294,6 @@ export default {
               department_id
               sys_label
               send_id
-              remain_order_count
-              user_info{
-                sender{
-                  id
-                  username
-                  user_num
-                }
-              }
             }
           }
         }
@@ -315,7 +307,7 @@ export default {
 
   // 学员基本信息
   getUser(query = '') {
-    const formattingQuery = JSON.stringify({ id: query })
+    const formattingQuery = JSON.stringify(injectSubject({ id: query }))
     return axios.post('/graphql/v1/toss', {
       query: `{
         User(query:${JSON.stringify(formattingQuery)}){

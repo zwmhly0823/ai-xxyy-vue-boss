@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-05-27 18:43:42
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-12 19:14:49
+ * @LastEditTime: 2020-08-27 17:51:09
 -->
 <template>
   <div class="search-container" :key="resetSearch">
@@ -122,11 +122,18 @@
           </div> -->
           <div>
             <el-form-item label="课程难度:">
-              <hard-level
+              <!-- <hard-level
                 class="search-group-item"
                 placeholder="全部系统课难度"
                 style="width:140px"
                 name="currentsuper"
+                @result="getSearchData('currentsuper', arguments)"
+              /> -->
+              <grade
+                placeholder="全部系统课难度"
+                name="currentsuper"
+                team-type="1"
+                extra="s"
                 @result="getSearchData('currentsuper', arguments)"
               />
             </el-form-item>
@@ -163,7 +170,7 @@
               </div>
             </el-form-item>
 
-            <el-form-item label="是否续费:">
+            <!-- <el-form-item label="是否续费:">
               <div class="search-group">
                 <simple-select
                   name="remain_order_count"
@@ -174,8 +181,8 @@
                   @result="getSearchData('remain_order_count', arguments)"
                 />
               </div>
-            </el-form-item>
-            <el-form-item label="转介绍学员:">
+            </el-form-item> -->
+            <!-- <el-form-item label="转介绍学员:">
               <div class="search-group">
                 <simple-select
                   name="send_id"
@@ -186,7 +193,7 @@
                   @result="getSearchData('send_id', arguments)"
                 />
               </div>
-            </el-form-item>
+            </el-form-item> -->
           </div>
           <div>
             <el-form-item label="VIP学员">
@@ -249,12 +256,13 @@
 import GroupSell from '@/components/MSearch/searchItems/groupSell.vue'
 import Department from '@/components/MSearch/searchItems/department.vue'
 import SearchStage from '@/components/MSearch/searchItems/searchStage.vue'
-import HardLevel from '@/components/MSearch/searchItems/hardLevel.vue'
+// import HardLevel from '@/components/MSearch/searchItems/hardLevel.vue'
 // import SearchPhoneAndUsername from '@/components/MSearch/searchItems/searchPhoneAndUsername.vue'
 import SearchPhoneAndUsername from '@/components/MSearch/searchItems/searchPhoneAndUsername_system.vue'
 import SearchTeamName from '@/components/MSearch/searchItems/searchTeamName'
 // import DatePickerWithQuickSelect from '@/components/MSearch/searchItems/datePickerWithQuickSelect.vue'
 import SimpleSelect from '@/components/MSearch/searchItems/simpleSelect.vue'
+import Grade from '../../../components/search/Grade.vue'
 import enums from '../components/searchData'
 // import { deepClone } from '@/utils/index'
 export default {
@@ -263,11 +271,12 @@ export default {
     GroupSell,
     Department,
     SearchStage,
-    HardLevel,
+    // HardLevel,
     SearchPhoneAndUsername,
     SearchTeamName,
     // DatePickerWithQuickSelect,
-    SimpleSelect
+    SimpleSelect,
+    Grade
   },
   props: {
     // 班级类型： 0-体验课 1-系统课
@@ -337,10 +346,10 @@ export default {
       const search = res && res[0]
       console.log(search, '=========================', key)
       if (search) {
-        if (key === 'currentsuper') {
-          const r = search[key].map((item) => `s${item}`)
-          search[key] = r
-        }
+        // if (key === 'currentsuper') {
+        //   const r = search[key].map((item) => `s${item}`)
+        //   search[key] = r
+        // }
         // 系统课包类型
         if (key === 'user_status') {
           // 半年课
@@ -360,27 +369,27 @@ export default {
         }
 
         // 是否续费
-        if (key === 'remain_order_count') {
-          // 已续费
-          if (search.remain_order_count === '2') {
-            search.remain_order_count = { gt: 1 }
-          }
-          // 待续费
-          if (search.remain_order_count === '1') {
-            search.remain_order_count = { lte: 1 }
-          }
-        }
+        // if (key === 'remain_order_count') {
+        //   // 已续费
+        //   if (search.remain_order_count === '2') {
+        //     search.remain_order_count = { gt: 1 }
+        //   }
+        //   // 待续费
+        //   if (search.remain_order_count === '1') {
+        //     search.remain_order_count = { lte: 1 }
+        //   }
+        // }
         // 是否转介绍
-        if (key === 'send_id') {
-          // 是
-          if (search.send_id === '2') {
-            search.send_id = { gt: 0 }
-          }
-          // 否
-          if (search.send_id === '1') {
-            search.send_id = { lte: 0 }
-          }
-        }
+        // if (key === 'send_id') {
+        //   // 是
+        //   if (search.send_id === '2') {
+        //     search.send_id = { gt: 0 }
+        //   }
+        //   // 否
+        //   if (search.send_id === '1') {
+        //     search.send_id = { lte: 0 }
+        //   }
+        // }
         if (key !== 'dateTime') {
           this.searchQuery = {
             ...this.searchQuery,
@@ -448,7 +457,7 @@ export default {
   .clear-btn {
     position: absolute;
     right: 20px;
-    bottom: 0;
+    bottom: 10px;
     text-decoration: underline;
   }
 

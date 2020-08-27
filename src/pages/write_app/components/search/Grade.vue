@@ -5,7 +5,7 @@
  * @Author: YangJiyong
  * @Date: 2020-08-25 11:57:39
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-26 12:10:46
+ * @LastEditTime: 2020-08-27 17:48:46
 -->
 <template>
   <simple-select
@@ -18,6 +18,7 @@
 </template>
 
 <script>
+import { getDataType } from '@/utils/index'
 import SimpleSelect from '@/components/MSearch/searchItems/simpleSelect'
 export default {
   components: {
@@ -41,6 +42,11 @@ export default {
     multiple: {
       type: Boolean,
       default: false
+    },
+    // 返回值的格式，默认返回 年级对应的数字（1-6）；加上‘s’或'S'，返回s1, S2
+    extra: {
+      type: String,
+      default: ''
     }
   },
   computed: {
@@ -91,6 +97,14 @@ export default {
 
   methods: {
     getData(res) {
+      if (res && this.extra) {
+        const value = Object.values(res)[0]
+        const type = getDataType(value)
+        if (type === 'Array') {
+          res[this.name] = value.map((item) => `${this.extra}${item}`)
+        }
+        if (type === 'String') res[this.name] = `${this.extra}${value}`
+      }
       this.$emit('result', res)
     }
   }
