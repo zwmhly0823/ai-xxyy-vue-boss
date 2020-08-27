@@ -81,7 +81,6 @@
           filterable
           reserve-keyword
           :fetch-suggestions="weixinSearch"
-          :trigger-on-focus="false"
           placeholder="微信号搜索"
           @select="onWxSerch"
           @clear="clearWxSerch"
@@ -102,7 +101,6 @@
           clearable
           filterable
           :fetch-suggestions="teamIdSearch"
-          :trigger-on-focus="false"
           placeholder="交出班级名称查询"
           @select="onTeamId"
           @clear="clearTeamId"
@@ -227,19 +225,18 @@ export default {
     },
     // 输入微信号
     async weixinSearch(queryString, cb) {
-      const reg = /^\w+$/
-      if (!+this.onlyWeixin) {
-        if (!reg.test(queryString)) {
-          this.searchParams.wechat = ''
-          return
-        }
-      }
+      // const reg = /^\w+$/
+      // if (!+this.onlyWeixin) {
+      //   if (!reg.test(queryString)) {
+      //     this.searchParams.wechat = ''
+      //     return
+      //   }
+      // }
       // 输入内容查找到的关联信息（下拉框）
       const list = await this.weixinCreateFilter(queryString)
       // console.log('*****list******', list)
       // cb 展示列表数据
       cb(list)
-      this.$refs.wxnum.handleFocus()
     },
     // 调用微信号搜索接口
     weixinCreateFilter(queryString) {
