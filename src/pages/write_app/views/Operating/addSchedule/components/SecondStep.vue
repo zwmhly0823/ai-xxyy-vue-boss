@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-15 20:35:57
  * @LastEditors: Shentong
- * @LastEditTime: 2020-08-24 18:27:26
+ * @LastEditTime: 2020-08-27 20:51:11
  -->
 <template>
   <div class="second-step">
@@ -138,7 +138,7 @@ export default {
       }
       const query = this.query ? JSON.stringify(this.query) : ''
       // tab数据
-      const res = await this.$http.Teacher.getTeacherPage(
+      const res = await this.$http.writeApp.Teacher.getTeacherPage(
         page,
         JSON.stringify(query),
         500
