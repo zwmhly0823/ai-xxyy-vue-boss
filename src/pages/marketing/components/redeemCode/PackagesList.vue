@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-08-07 16:59:43
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-26 16:58:51
+ * @LastEditTime: 2020-08-27 21:08:29
 -->
 <template>
   <el-dialog
@@ -23,7 +23,13 @@
         :key="item.id"
       >
         <el-radio v-model="checkedId" :label="item.id">
-          <p>{{ item.name }}（课时{{ item.course_week }}周）</p>
+          <p>
+            {{ item.name }}
+            <!-- 写字体验课不显示课时 -->
+            <span v-if="item.id !== '19' && item.id !== '20'"
+              >（课时{{ item.course_week }}周）</span
+            >
+          </p>
           <p class="red">{{ item.price }}元</p>
         </el-radio>
       </div>

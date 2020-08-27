@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-08-06 22:29:42
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-26 21:15:15
+ * @LastEditTime: 2020-08-27 21:03:04
 -->
 <template>
   <div class="add-redeem-code">
@@ -259,6 +259,10 @@ export default {
         {
           id: '2048',
           text: 'vip学员'
+        },
+        {
+          id: '250',
+          text: '兑换码'
         }
       ],
       labelList: [{ id: '0', name: '无' }],
