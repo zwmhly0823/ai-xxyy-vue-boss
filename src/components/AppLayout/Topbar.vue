@@ -4,7 +4,7 @@
  * @Date: 2020-03-13 15:13:34
  * @Description: topbar 顶部功能区
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-26 21:50:48
+ * @LastEditTime: 2020-08-27 20:58:16
  -->
 <template>
   <div class="navbar" :class="{ prod: isProd }">
@@ -83,15 +83,21 @@
           <div class="subject-change-title">
             {{ currentSubjectText }}
             <i class="el-icon-arrow-down el-icon--right"></i>
-            <div class="subject-change-tips">-- 切换科目 --</div>
+            <!-- <div class="subject-change-tips">-- 切换科目 --</div> -->
           </div>
-          <el-dropdown-menu slot="dropdown">
+          <el-dropdown-menu slot="dropdown" class="subject-change-menu">
             <el-dropdown-item
               v-for="item in subjectsList"
               :command="item.key"
               :key="item.key"
-              >{{ item.title }}</el-dropdown-item
-            >
+              >{{ item.title }}
+              <svg
+                class="iconfont"
+                aria-hidden="true"
+                @click.stop.self="openNewTab(item.key)"
+              >
+                <use xlink:href="#iconopen"></use></svg
+            ></el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
       </div>
@@ -247,17 +253,24 @@ export default {
     },
 
     /**
-     * 多科目切换
+     * 多科目切换 @isNew: 是否新浏览器标签打开
      */
-    handleChangeSubject(command) {
-      console.log(command)
+    // 当前页面切换
+    handleChangeSubject(command, isNew = false) {
+      console.log(command, isNew)
+      location.href =
+        command !== 'art_app' ? `/${command}/#/trialUsers` : `/users/#/trial`
+    },
+
+    // 新标签页打开
+    openNewTab(key) {
+      console.log(key, 'new tab')
       // 非小熊美术
-      if (command !== 'art_app') {
-        openBrowserTab(`/${command}/#/trialUsers`)
+      if (key !== 'art_app') {
+        openBrowserTab(`/${key}/#/trialUsers`)
       } else {
         openBrowserTab(`/users/#/trial`)
       }
-      // this.currentSubject = command
     }
   }
 }
@@ -412,22 +425,46 @@ export default {
     margin-left: 10px;
     padding-left: 15px;
     padding-right: 30px;
-    // background: #2a75ed30;
+    border-left: 1px solid #ddd;
     cursor: pointer;
     &-title {
       position: relative;
     }
-    &-tips {
-      position: absolute;
-      line-height: 12px;
-      font-size: 12px;
-      bottom: 2px;
-      left: -5px;
-      right: -25px;
-      text-align: center;
-      transform: scale(0.9);
-      // color: #f56c6c; // #2a75ed
-      color: #ccc;
+    // &-tips {
+    //   position: absolute;
+    //   line-height: 12px;
+    //   font-size: 12px;
+    //   bottom: 2px;
+    //   left: -5px;
+    //   right: -25px;
+    //   text-align: center;
+    //   transform: scale(0.9);
+    //   color: #ccc;
+    // }
+  }
+}
+</style>
+
+<style lang="scss">
+.subject-change {
+  &-menu {
+    left: inherit !important;
+    right: 10px;
+    width: 135px;
+    ::v-deep {
+      .popper__arrow {
+        left: inherit !important;
+      }
+    }
+    .iconfont {
+      position: relative;
+      top: 10px;
+      float: right;
+      width: 14px;
+      fill: #999;
+      &:hover {
+        fill: #2a75ed;
+      }
     }
   }
 }
