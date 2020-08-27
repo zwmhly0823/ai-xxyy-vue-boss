@@ -3,8 +3,8 @@
  * @version: 1.0.0
  * @Author: YangJiyong
  * @Date: 2020-08-19 21:14:16
- * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-08-27 17:29:36
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-08-27 17:40:23
  */
 import { removeToken } from '@/utils/auth'
 import { baseUrl } from '@/utils/index'
@@ -116,23 +116,23 @@ const msbWriting = [
         }
       },
       {
-        path: '/system',
-        name: 'system',
+        path: '/systemUsers',
+        name: 'systemUsers',
         meta: {
           title: '系统课',
           module,
           show: true
         }
-      },
-      {
-        path: '/all',
-        name: 'all',
-        meta: {
-          title: '全部学员',
-          module,
-          show: true
-        }
       }
+      // {
+      //   path: '/all',
+      //   name: 'all',
+      //   meta: {
+      //     title: '全部学员',
+      //     module,
+      //     show: true
+      //   }
+      // }
     ]
   },
   // 交易

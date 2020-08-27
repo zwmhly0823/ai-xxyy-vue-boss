@@ -5,15 +5,11 @@
  * @Author: shentong
  * @Date: 2020-03-13 14:38:28
  * @LastEditors: YangJiyong
-<<<<<<< HEAD
- * @LastEditTime: 2020-08-24 22:06:43
-=======
- * @LastEditTime: 2020-08-24 20:19:27
->>>>>>> master
+ * @LastEditTime: 2020-08-27 18:06:37
  */
 // import axios from '../axios'
 import axios from '../axiosConfig'
-import { getAppSubjectCode } from '@/utils/index'
+import { getAppSubjectCode, injectSubject } from '@/utils/index'
 const subject = getAppSubjectCode()
 
 export default {
@@ -101,7 +97,7 @@ export default {
    */
   // 体验课学员
   trialCourseUsers(query = {}, page = 1) {
-    const q = JSON.stringify(JSON.stringify(query))
+    const q = JSON.stringify(injectSubject(query))
     const sort = JSON.stringify(JSON.stringify({ ctime: 'desc' }))
     return axios.post('/graphql/v1/toss', {
       query: `{
@@ -162,7 +158,7 @@ export default {
   },
 
   trialCourseUsersV2(query = {}, page = 1, sortRules) {
-    const q = JSON.stringify(JSON.stringify(query))
+    const q = JSON.stringify(injectSubject(query))
     const sort =
       Object.keys(sortRules).length === 0
         ? JSON.stringify(JSON.stringify({ ctime: 'desc' }))
@@ -284,7 +280,7 @@ export default {
   systemCourseUsers(query = {}, page = 1, sortRules = {}) {
     // const params = Object.assign(query, { page })
     // return axios.post('/api/b/v1/student/center/system/list', params)
-    const q = JSON.stringify(JSON.stringify(query))
+    const q = JSON.stringify(injectSubject(query))
     const sort =
       Object.keys(sortRules).length === 0
         ? JSON.stringify(JSON.stringify({ ctime: 'desc' }))
