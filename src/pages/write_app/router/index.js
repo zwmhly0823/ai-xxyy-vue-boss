@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-08-19 20:26:32
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-08-27 17:20:23
+ * @LastEditTime: 2020-08-27 17:58:21
  */
 import Vue from 'vue'
 import VueRouter from 'vue-router'
@@ -101,7 +101,7 @@ const routes = [
     name: 'newTeacher',
     meta: {
       title: '新增员工',
-      keepAlive: true
+      keepAlive: false
     },
     component: () =>
       import('../../teacher/views/teacherManagement/components/newTeacher.vue')

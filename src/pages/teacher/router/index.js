@@ -1,7 +1,7 @@
 /*
  * @Date: 2020-03-13 15:20:21
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-08-07 15:09:21
+ * @LastEditTime: 2020-08-27 17:46:31
  * @FilePath: /ai-app-vue-toss/src/pages/studentTeam/router/index.js
  */
 import Vue from 'vue'
@@ -53,9 +53,10 @@ const routes = [
   {
     path: '/newTeacher',
     name: 'newTeacher',
-    // meta: {
-    //   title: '新增老师'
-    // },
+    meta: {
+      title: '新增老师',
+      keepAlive: false
+    },
     component: () =>
       import('../views/teacherManagement/components/newTeacher.vue')
   },

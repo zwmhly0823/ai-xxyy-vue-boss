@@ -680,6 +680,7 @@ export default {
     }
   },
   created() {
+    console.log('执行生命周期')
     const query = this.$route.query
     // query.index ''/新建老师  1/编辑老师 2/查看老师
     if (query && query.index) this.newTitle = query.index
