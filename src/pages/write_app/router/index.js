@@ -3,8 +3,8 @@
  * @version: 1.0.0
  * @Author: YangJiyong
  * @Date: 2020-08-19 20:26:32
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-26 21:21:02
+ * @LastEditors: zhangjianwen
+ * @LastEditTime: 2020-08-27 17:20:23
  */
 import Vue from 'vue'
 import VueRouter from 'vue-router'
@@ -76,6 +76,25 @@ const routes = [
     },
     component: () =>
       import('../../teacher/views/teacherManagement/teacherManage.vue')
+  },
+  {
+    path: '/weixinManagement',
+    name: 'weixinManagement',
+    meta: {
+      title: '员工微信',
+      keepAlive: true
+    },
+    component: () =>
+      import('../../teacher/views/weixinManagement/accountManagement.vue')
+  },
+  {
+    path: '/systemAccount',
+    name: 'systemAccount',
+    meta: {
+      title: '系统账号',
+      keepAlive: true
+    },
+    component: () => import('../../teacher/views/systemAccount/index.vue')
   },
   {
     path: '/newTeacher',

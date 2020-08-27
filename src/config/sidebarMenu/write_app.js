@@ -3,8 +3,8 @@
  * @version: 1.0.0
  * @Author: YangJiyong
  * @Date: 2020-08-19 21:14:16
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-24 20:08:19
+ * @LastEditors: zhangjianwen
+ * @LastEditTime: 2020-08-27 17:29:36
  */
 import { removeToken } from '@/utils/auth'
 import { baseUrl } from '@/utils/index'
@@ -40,6 +40,22 @@ if (staff.roleId === '7') {
       name: 'teacherManagement',
       meta: {
         title: '员工帐号',
+        module
+      }
+    },
+    {
+      path: '/weixinManagement',
+      name: 'weixinManagement',
+      meta: {
+        title: '员工微信',
+        module
+      }
+    },
+    {
+      path: '/systemAccount',
+      name: 'systemAccount',
+      meta: {
+        title: '系统账号',
         module
       }
     }
