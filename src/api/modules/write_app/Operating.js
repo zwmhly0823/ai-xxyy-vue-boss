@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-03-16 19:46:39
  * @LastEditors: Shentong
- * @LastEditTime: 2020-08-26 16:18:31
+ * @LastEditTime: 2020-08-27 19:53:42
  */
 import axios from '../../axiosConfig'
 import { injectSubject, getAppSubjectCode, getAppSubject } from '@/utils/index'
@@ -75,7 +75,13 @@ export default {
    */
   getTeacherConfigList(params) {
     return axios.post(
-      `/api/t/v1/teacher/course/enroll/teacher/config?courseType=${params.courseType}&period=${params.period}&courseDifficulty=${params.courseDifficulty}&departmentIds=${params.departmentIds}&teacherWechatIds=${params.teacherWechatIds}&levels=${params.levels}`,
+      `/api/t/v1/teacher/course/enroll/teacher/config?courseType=${
+        params.courseType
+      }&period=${params.period}&courseDifficulty=${
+        params.courseDifficulty
+      }&departmentIds=${params.departmentIds}&teacherWechatIds=${
+        params.teacherWechatIds
+      }&levels=${params.levels}&subject=${getAppSubject()}`,
       params.ids
     )
   },
@@ -84,7 +90,9 @@ export default {
    */
   saveScheduleConfig(params) {
     return axios.post(
-      `/api/t/v1/teacher/course/enroll/teacher/config/save?courseType=${params.courseType}&period=${params.period}`,
+      `/api/t/v1/teacher/course/enroll/teacher/config/save?courseType=${
+        params.courseType
+      }&period=${params.period}&subject=${getAppSubject()}`,
       params.body
     )
   },
