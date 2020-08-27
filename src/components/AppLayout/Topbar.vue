@@ -4,7 +4,7 @@
  * @Date: 2020-03-13 15:13:34
  * @Description: topbar 顶部功能区
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-27 20:58:16
+ * @LastEditTime: 2020-08-27 22:13:05
  -->
 <template>
   <div class="navbar" :class="{ prod: isProd }">
@@ -259,7 +259,9 @@ export default {
     handleChangeSubject(command, isNew = false) {
       console.log(command, isNew)
       location.href =
-        command !== 'art_app' ? `/${command}/#/trialUsers` : `/users/#/trial`
+        command !== 'art_app'
+          ? `${baseUrl()}${command}/#/trialUsers`
+          : `${baseUrl()}users/#/trial`
     },
 
     // 新标签页打开
