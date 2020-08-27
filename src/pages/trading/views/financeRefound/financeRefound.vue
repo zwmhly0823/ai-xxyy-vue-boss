@@ -304,6 +304,36 @@
             >{{ choutidata.refundRuleStr }}
           </el-col>
         </el-row>
+        <el-row v-if="choutidata.invoiceStatus !== ''">
+          <el-col :span="4">开票状态:</el-col>
+          <el-col :span="18" :offset="2"
+            ><span v-if="choutidata.invoiceStatus == 'DEFAULT'">待开票</span>
+            <span v-else-if="choutidata.invoiceStatus == 'PENDING'"
+              >开票中</span
+            >
+            <span v-else-if="choutidata.invoiceStatus == 'COMPLETED'"
+              >已开票</span
+            >
+            <span v-else-if="choutidata.invoiceStatus == 'FAILED'"
+              >开票失败</span
+            >
+            <span v-else>作废</span>
+          </el-col>
+        </el-row>
+        <el-row v-if="choutidata.invoiceType !== ''">
+          <el-col :span="4">发票类型:</el-col>
+          <el-col :span="18" :offset="2"
+            ><span v-if="choutidata.invoiceType == 'DEFAULT'">无</span>
+            <span v-else-if="choutidata.invoiceType == 'GENERAL'"
+              >普通发票</span
+            >
+            <span v-else>专票</span>
+          </el-col>
+        </el-row>
+        <el-row v-if="choutidata.invoiceCode !== ''">
+          <el-col :span="4">发票号码:</el-col>
+          <el-col :span="18" :offset="2">{{ choutidata.invoiceCode }} </el-col>
+        </el-row>
         <el-row v-if="choutidata.refundReason !== ''">
           <el-col :span="4">退款原因:</el-col>
           <el-col :span="18" :offset="2">{{ choutidata.refundReason }} </el-col>
