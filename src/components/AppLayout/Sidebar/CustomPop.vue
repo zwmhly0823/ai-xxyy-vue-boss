@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-06-09 10:52:48
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-06-22 22:55:20
+ * @LastEditTime: 2020-08-27 17:00:19
 -->
 <template>
   <div
@@ -111,7 +111,7 @@ export default {
       let baseUrl = ''
 
       // https://msb-ai.meixiu.mobi/ai-app-vue-toss-test/student-team/#/ 测试环境
-      if (pathname.includes('test')) {
+      if (pathname.includes('test') || pathname.includes('dev')) {
         const pathArr = pathname.split('/')
         baseUrl = '/' + [pathArr[1]].join('/') // , pathArr[2]
       }
