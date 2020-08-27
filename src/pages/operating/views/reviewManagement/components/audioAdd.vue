@@ -121,6 +121,7 @@
         :btnWidth="130"
         format="audio"
         :upload="upload"
+        :limit="1"
         :audioList="audioList"
         uploadText="选择语音"
         @handle-remove="handleRemoveFile"
