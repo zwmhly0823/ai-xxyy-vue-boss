@@ -87,12 +87,12 @@
       <el-form-item label="科目及职务" prop="positionVal" class="Identity">
         <el-select
           multiple
-          v-model="ruleForm.subjest"
+          v-model="ruleForm.subject"
           clearable
           placeholder="请选择科目"
         >
           <el-option
-            v-for="item in subjestList"
+            v-for="item in subjectList"
             :key="item.value"
             :label="item.label"
             :value="item.value"
@@ -101,6 +101,7 @@
         </el-select>
         <el-cascader
           v-model="ruleForm.positionVal"
+          @change="changePos()"
           :options="optionsList"
           clearable
           placeholder="请选择职务"
@@ -480,7 +481,7 @@ export default {
         }
       ],
       // 课程类型
-      subjestList: [
+      subjectList: [
         {
           value: '0',
           label: '美术'
@@ -526,7 +527,7 @@ export default {
         // 所属部门
         region: [],
         // 科目
-        subjest: [],
+        subject: [],
         // 职务
         positionVal: [],
         // 身份类别
@@ -777,9 +778,15 @@ export default {
             this.ruleForm.region = payload.department
               ? payload.department.id
               : []
-            payload.duty.forEach((val) => {
-              this.ruleForm.positionVal.push(val.id * 1)
-            })
+            // payload.duty.forEach((val) => {
+            //   const parmes = {}
+            //   parmes.id = val.id
+            //   this.ruleForm.positionVal.push(parmes)
+            // })
+            const duty = payload.duty[0].id
+            this.ruleForm.positionVal =
+              duty % 2 === 0 ? ['0', duty] : ['1', duty]
+            // this.ruleForm.positionVal = payload.duty.id
             this.ruleForm.rank = payload.rank ? payload.rank.id * 1 : ''
             // 0520: fixed-编辑时没有入职时间，不再默认显示当前时间。必填项  By: Yang
             this.ruleForm.inductionDate = payload.teacher.joinDate
@@ -811,6 +818,7 @@ export default {
             this.ruleForm.note = payload.teacher.note
             this.ruleForm.workplaces = payload.teacher.workPlace
             this.ruleForm.workPlaceCode = payload.teacher.workPlaceCode
+            this.ruleForm.subject = [payload.teacher.subject]
           }
         )
       }
@@ -860,7 +868,7 @@ export default {
           workPlaceCode: this.ruleForm.workPlaceCode,
           userName: this.ruleForm.username,
           note: this.ruleForm.note,
-          subject: this.ruleForm.subjest.join(',')
+          subject: this.ruleForm.subject.join(',')
         },
         department: {
           id:
@@ -1020,7 +1028,10 @@ export default {
       return (isJPG || isPNG || isJPEG) && isLt2M
     },
     // 头像上传成功回调
-    handleAvatarSuccess(res, file) {}
+    handleAvatarSuccess(res, file) {},
+    changePos(val) {
+      console.log(this.ruleForm.positionVal)
+    }
   }
 }
 </script>
