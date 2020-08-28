@@ -134,7 +134,7 @@
 
 <script>
 import { timestamp } from '@/utils/index'
-import { reviewDegree, scoreObj } from '@/common/data'
+import { reviewDegree, _scoreObj } from '@/common/data'
 export default {
   data() {
     return {
@@ -148,7 +148,7 @@ export default {
       timestamp: timestamp,
       loading: true,
       courseIdList: [],
-      scoreObj: scoreObj,
+      scoreObj: _scoreObj,
       renderFlag: false
     }
   },
@@ -322,7 +322,7 @@ export default {
             type: 'success'
           })
           setTimeout(() => {
-            this.initList(this.number)
+            this.initList(this.query.pageNum)
           }, 1500)
         }
       } catch (error) {
