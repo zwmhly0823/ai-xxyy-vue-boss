@@ -412,12 +412,14 @@ export function getAppSubjectCode() {
 // 注入 课程类型 subject 参数接受 对象和序列化的字符串
 export function injectSubject(query) {
   if (!query) return
-  if (typeof query === 'string') {
-    const queryObj = JSON.parse(query)
-    queryObj.subject = getAppSubjectCode()
+  const queryStr = typeof query === 'string' ? query : JSON.stringify(query)
+  if (queryStr.includes('must')) {
+    const queryObj = JSON.parse(queryStr)
+    queryObj.bool.must.push({ subject: getAppSubjectCode() })
     return JSON.stringify(queryObj)
   } else {
-    query.subject = getAppSubjectCode()
-    return JSON.stringify(query)
+    const queryObj = JSON.parse(queryStr)
+    queryObj.subject = getAppSubjectCode()
+    return JSON.stringify(queryObj)
   }
 }
