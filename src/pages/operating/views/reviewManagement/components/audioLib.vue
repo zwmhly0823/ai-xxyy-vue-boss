@@ -250,7 +250,7 @@ export default {
       })
         .then(() => {
           console.log(this.ids, 'idsssss')
-          this.batchUpdateReviewVoice('DISABLE', this.ids)
+          this.batchUpdateReviewVoice('ENABLE', this.ids)
         })
         .catch(() => {
           this.$message({
@@ -274,7 +274,7 @@ export default {
         type: 'warning'
       })
         .then(() => {
-          this.batchUpdateReviewVoice('ENABLE', this.ids)
+          this.batchUpdateReviewVoice('DISABLE', this.ids)
         })
         .catch(() => {
           this.$message({
