@@ -55,6 +55,9 @@
 
         <el-col :span="6">
           <div class="upset_24col flex-end">
+            <el-button size="mini" type="primary" @click="couponList"
+              >发优惠券</el-button
+            >
             <el-dropdown
               type="primary"
               split-button
@@ -330,6 +333,13 @@
           : { username: '', user_num: '', id: '' }
       "
     />
+    <!-- 优惠券弹窗 -->
+    <coupon-popover
+      ref="couponPopover"
+      :couponData="couponData"
+      :needReload="true"
+      :selectUserId="[studentId]"
+    />
   </section>
 </template>
 
@@ -347,6 +357,7 @@ import showAddress from './addressComponents/showAddress.vue'
 import trackFlow from './trackFlow/index'
 import { GetAgeByBrithday, formatData } from '@/utils/index'
 import modifyAddress from './addressComponents/modifyAddress.vue'
+import CouponPopover from '@/pages/studentTeam/components/TabPane/components/couponPopover'
 
 export default {
   components: {
@@ -363,14 +374,15 @@ export default {
     trackFlow,
     recommend,
     showAddress,
-    modifyAddress
+    modifyAddress,
+    CouponPopover
   },
   data() {
     return {
       // <修改地址>组件弹窗显示隐藏
       dialogTableVisible: false,
       // 该学员id
-      studentId: '',
+      studentId: this.$route.params.id,
       // 推荐人id
       sendId: '0',
       // 学员基本信息(timeFormatted)
@@ -384,7 +396,9 @@ export default {
       babels_lk: [],
       // paneltab name
       tabData: 'detailsInfo',
-      defaultHead: 'https://msb-ai.meixiu.mobi/ai-pm/static/touxiang.png'
+      defaultHead: 'https://msb-ai.meixiu.mobi/ai-pm/static/touxiang.png',
+
+      couponData: [] // 优惠券组件列表数据
     }
   },
   computed: {
@@ -406,9 +420,9 @@ export default {
     }
   },
   created() {
-    this.studentId = this.$route.params.id
     this.reqUser() // 学员信息接口
     this.getlabelWithoutAike() // 获取艾克之外的标签
+    console.info('你是啥科目', this.$store.state.subjects)
   },
   methods: {
     // 获取艾克之外的标签
@@ -525,6 +539,14 @@ export default {
     modifyAddressExpress() {
       this.dialogTableVisible = false
       this.reqUser()
+    },
+    // 获取优惠券列表给组件
+    couponList() {
+      this.$http.Team.getAllCoupons(0).then((res) => {
+        this.couponData = (res.payload && res.payload.content) || [] // 把优惠券list传过去
+        this.$refs.couponPopover.issueCoupons = true
+        this.$refs.couponPopover.couponsTime = ''
+      })
     }
   }
 }
