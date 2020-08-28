@@ -80,7 +80,7 @@ const routes = [
     name: 'reviewManagement',
     meta: {
       title: '点评管理',
-      keepAlive: true
+      keepAlive: false
     },
     component: () => import('../views/reviewManagement/index.vue')
   },
