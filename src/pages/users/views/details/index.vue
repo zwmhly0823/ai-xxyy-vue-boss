@@ -59,6 +59,7 @@
               >发优惠券</el-button
             >
             <el-dropdown
+              v-if="whichSubject === 0"
               type="primary"
               split-button
               size="mini"
@@ -136,7 +137,7 @@
                   }}</el-col
                 >
                 <el-col :span="7">
-                  <span>用户状态:</span>
+                  <span>学习科目:</span>
                   <el-tag type="danger" size="mini">{{
                     stuInfor.status_text || '-'
                   }}</el-tag></el-col
@@ -160,7 +161,7 @@
                   }}
                 </el-col>
               </el-row>
-              <el-row type="flex" justify="space-around" align="middle">
+              <!-- <el-row type="flex" justify="space-around" align="middle">
                 <el-col :span="7">
                   <span>系统课剩余:</span>
                   {{ systemCourseTotal + '周' }}</el-col
@@ -172,7 +173,7 @@
                   }}</el-tag>
                 </el-col>
                 <el-col :span="7"></el-col>
-              </el-row>
+              </el-row> -->
             </section>
             <section style="margin-top:20px">
               <div class="gengbo">
@@ -379,6 +380,7 @@ export default {
   },
   data() {
     return {
+      whichSubject: this.$store.state.subjects.subjectCode,
       // <修改地址>组件弹窗显示隐藏
       dialogTableVisible: false,
       // 该学员id
@@ -410,14 +412,14 @@ export default {
           JSON.parse(this.stuInfor.jluserInfo.labels)) ||
         []
       )
-    },
-    systemCourseTotal() {
-      return this.stuInfor.systemCourse && this.stuInfor.systemCourse.length
-        ? this.stuInfor.systemCourse.reduce((pre, cur, index, arr) => {
-            return pre + cur.remaining_week
-          }, 0)
-        : '-'
     }
+    // systemCourseTotal() {
+    //   return this.stuInfor.systemCourse && this.stuInfor.systemCourse.length
+    //     ? this.stuInfor.systemCourse.reduce((pre, cur, index, arr) => {
+    //         return pre + cur.remaining_week
+    //       }, 0)
+    //     : '-'
+    // }
   },
   created() {
     this.reqUser() // 学员信息接口
@@ -614,6 +616,7 @@ export default {
   justify-content: flex-start;
   align-items: center;
   &.flex-end {
+    padding-right: 10px;
     justify-content: flex-end;
   }
   > div {
