@@ -83,6 +83,7 @@ export default {
       const ids = { department_id: data || [] }
       if (this.onlyDept === 1) {
         // 返回选择的节点本身及其包含的了节点
+        /** bug-->> @remove-tag事件不执行 */
         const allNodes = this.$refs.dept.getCheckedNodes()
         const allNodesId = allNodes.map((item) => item.value)
 
@@ -125,6 +126,9 @@ export default {
     white-space: nowrap !important;
     overflow: hidden !important;
     text-overflow: ellipsis !important;
+  }
+  .el-icon-close {
+    display: none;
   }
 }
 .search-item {
