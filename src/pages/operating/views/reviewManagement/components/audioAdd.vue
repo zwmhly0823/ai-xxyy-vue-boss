@@ -475,6 +475,7 @@ export default {
       margin: 0 0 0 80px;
       .el-select {
         margin: 0 0 0 30px;
+        width: 150px;
       }
     }
     .degree {
