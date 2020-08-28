@@ -3,8 +3,8 @@
  * @version: 1.0.0
  * @Author: YangJiyong
  * @Date: 2020-08-19 21:14:16
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-24 20:08:19
+ * @LastEditors: songyanan
+ * @LastEditTime: 2020-08-26 16:08:19
  */
 import { removeToken } from '@/utils/auth'
 import { baseUrl } from '@/utils/index'
@@ -109,8 +109,8 @@ const msbWriting = [
         }
       },
       {
-        path: '/all',
-        name: 'all',
+        path: '/allUsers',
+        name: 'allUsers',
         meta: {
           title: '全部学员',
           module,

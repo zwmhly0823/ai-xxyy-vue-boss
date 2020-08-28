@@ -191,6 +191,84 @@ export default {
       }`
     })
   },
+  // 全部学员
+  studentAllUserList(query = {}, page = 1, sortRules) {
+    const q = JSON.stringify(JSON.stringify(query))
+    const sort =
+      Object.keys(sortRules).length === 0
+        ? JSON.stringify(JSON.stringify({ ctime: 'desc' }))
+        : JSON.stringify(JSON.stringify(sortRules))
+    return axios.post('/graphql/v1/toss', {
+      query: `{
+        StudentAllUserStatisticsPage(query: ${q},page: ${page}, sort: ${sort}){
+          totalPages
+          totalElements
+          number
+          content {
+            id
+            ctime
+            utime
+            uid
+            channel
+            join_date
+            status
+            extends_channel
+            extends_join_date
+            extends_status
+            extends_id
+            oids
+            teacher_ids
+            last_teacher_ids
+            pay_teacher_ids
+            sale_department_ids
+            is_trial
+            is_system
+            subject
+            subject_text
+            userInfo {
+              join_date
+              status
+              status_text
+              user_num
+              mobile
+              username
+              sex
+              birthday
+              teams {
+                team_name
+                subject
+                team_type
+                team_type_text
+                teacher_info {
+                  realname
+                  department_id
+                  departmentInfo {
+                    name
+                  }
+                }
+              }
+              channelInfo {
+                channel_outer_name
+              }
+            }
+            userExtendsInfo {
+              join_date
+              status
+              status_text
+              user_num
+              mobile
+              username
+              sex
+              birthday
+              channelInfo {
+                channel_outer_name
+              }
+            }
+          }
+        }
+      }`
+    })
+  },
 
   /**
    * 用户中心- 系统课学员列表

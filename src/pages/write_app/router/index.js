@@ -3,13 +3,8 @@
  * @version: 1.0.0
  * @Author: YangJiyong
  * @Date: 2020-08-19 20:26:32
-<<<<<<< HEAD
- * @LastEditors: Shentong
- * @LastEditTime: 2020-08-26 15:54:18
-=======
- * @LastEditors: Shentong
- * @LastEditTime: 2020-08-26 14:34:10
->>>>>>> msb-writing/招生排期
+ * @LastEditors: songyanan
+ * @LastEditTime: 2020-08-26 16:34:18
  */
 import Vue from 'vue'
 import VueRouter from 'vue-router'
@@ -40,6 +35,15 @@ const routes = [
     name: 'systemUsers',
     meta: {
       title: '系统课学员',
+      keepAlive: true
+    },
+    component: () => import('../views/users/views/usersModule.vue')
+  },
+  {
+    path: '/allUsers',
+    name: 'allUsers',
+    meta: {
+      title: '全部学员',
       keepAlive: true
     },
     component: () => import('../views/users/views/usersModule.vue')

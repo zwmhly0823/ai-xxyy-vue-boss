@@ -3,8 +3,8 @@
  * @version: 1.0.0
  * @Author: YangJiyong
  * @Date: 2020-06-22 12:08:17
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-07-29 21:56:53
+ * @LastEditors: songyanan
+ * @LastEditTime: 2020-08-28 17:14:00
 -->
 <template>
   <div class="search-mobile d-flex align-center">
@@ -88,6 +88,11 @@ export default {
     isHidden: {
       type: Boolean,
       default: true
+    },
+    // 是否增加扩展配置，抛出id使用
+    extension: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -105,7 +110,8 @@ export default {
           label: '学员ID'
         }
       ],
-      dataList: []
+      dataList: [],
+      uid: ''
     }
   },
   computed: {
@@ -125,6 +131,7 @@ export default {
   methods: {
     handleChange() {
       this.value = ''
+      this.uid = ''
       this.$emit('result', '')
     },
     getData(value = '') {
@@ -184,8 +191,15 @@ export default {
     },
     // 获取选中的
     onChange(data) {
-      console.log(data)
-      this.$emit('result', data ? { [this.nameKey]: data } : '')
+      const _list = [...this.dataList]
+      for (const item of _list) {
+        if (item.mobile === data || item.user_num_text === data) {
+          this.uid = item.id
+        }
+      }
+      !this.extension
+        ? this.$emit('result', data ? { [this.nameKey]: data } : '')
+        : this.$emit('result', data ? { uid: this.uid } : '')
     }
   }
 }
