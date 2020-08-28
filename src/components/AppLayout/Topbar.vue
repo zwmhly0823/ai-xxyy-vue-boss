@@ -4,7 +4,7 @@
  * @Date: 2020-03-13 15:13:34
  * @Description: topbar 顶部功能区
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-27 22:13:05
+ * @LastEditTime: 2020-08-28 11:46:45
  -->
 <template>
   <div class="navbar" :class="{ prod: isProd }">
@@ -79,7 +79,11 @@
 
       <!-- 多科目切换 -->
       <div class="subject-change">
-        <el-dropdown @command="handleChangeSubject" trigger="click">
+        <el-dropdown
+          @command="handleChangeSubject"
+          trigger="click"
+          placement="bottom"
+        >
           <div class="subject-change-title">
             {{ currentSubjectText }}
             <i class="el-icon-arrow-down el-icon--right"></i>
@@ -445,24 +449,15 @@ export default {
     // }
   }
 }
-</style>
-
-<style lang="scss">
 .subject-change {
   &-menu {
-    left: inherit !important;
-    right: 10px;
     width: 135px;
-    ::v-deep {
-      .popper__arrow {
-        left: inherit !important;
-      }
-    }
     .iconfont {
       position: relative;
       top: 10px;
       float: right;
       width: 14px;
+      margin-right: -5px;
       fill: #999;
       &:hover {
         fill: #2a75ed;
