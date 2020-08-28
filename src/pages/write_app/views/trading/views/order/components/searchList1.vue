@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-04-25 17:24:23
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-08-24 18:52:03
+ * @LastEditTime: 2020-08-28 16:08:08
  -->
 <template>
   <el-card
@@ -23,7 +23,7 @@
         />
       </el-form-item>
 
-      <el-form-item label="推荐人信息:" :class="{ [$style.marginer]: true }">
+      <!-- <el-form-item label="推荐人信息:" :class="{ [$style.marginer]: true }">
         <div class="row_colum">
           <simple-select
             name="is_first_order_send_id"
@@ -42,7 +42,7 @@
             v-if="hasSendId"
           />
         </div>
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item label="订单类型:" :class="{ [$style.marginer]: true }">
         <div class="row_colum">
           <simple-select
@@ -123,7 +123,7 @@
           <hardLevel
             :class="['margin_l10']"
             placeholder="全部体验课难度"
-            subType="0"
+            teamType="0"
             style="width:140px"
             name="trial_team_id"
             @result="supCallBackTrial"
@@ -170,7 +170,7 @@
           <hardLevel
             :class="['margin_l10']"
             placeholder="全部系统课难度"
-            subType="1"
+            teamType="1"
             style="width:140px"
             name="sup"
             @result="supCallBack"
@@ -233,7 +233,7 @@
 </template>
 <script>
 import dayjs from 'dayjs'
-import hardLevel from '@/components/MSearch/searchItems/hardWriteLevel.vue' // add
+import hardLevel from '../../../../../components/search/Grade.vue' // add
 import orderSearch from '@/components/MSearch/searchItems/orderSearch.vue' // add
 import systemCourseType from '@/components/MSearch/searchItems/systemCourseType.vue'
 import DatePicker from '@/components/MSearch/searchItems/datePicker.vue'
@@ -243,7 +243,7 @@ import Department from '@/components/MSearch/searchItems/department'
 import SearchTeamName from '@/components/MSearch/searchItems/searchTeamName'
 // import SearchTrialTeamName from '@/components/MSearch/searchItems/searchTrialTeamName'
 import SearchStage from '@/components/MSearch/searchItems/searchStage'
-import SearchPhoneAndUsername from '@/components/MSearch/searchItems/searchPhoneAndUsername'
+// import SearchPhoneAndUsername from '@/components/MSearch/searchItems/searchPhoneAndUsername'
 import SimpleSelect from '@/components/MSearch/searchItems/simpleSelect'
 import { isToss } from '@/utils/index'
 import { downloadHandle } from '@/utils/download'
@@ -267,7 +267,7 @@ export default {
     SearchTeamName,
     // SearchTrialTeamName,
     SearchStage,
-    SearchPhoneAndUsername,
+    // SearchPhoneAndUsername,
     SimpleSelect
   },
 

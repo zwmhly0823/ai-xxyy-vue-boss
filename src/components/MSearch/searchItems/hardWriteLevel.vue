@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-24 18:50:54
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-08-24 18:53:05
+ * @LastEditTime: 2020-08-28 17:24:15
  -->
 <template>
   <div class="search-item small">
@@ -32,7 +32,6 @@
 </template>
 
 <script>
-import axios from '@/api/axiosConfig'
 import { mapState } from 'vuex'
 
 export default {
@@ -65,16 +64,16 @@ export default {
       scheduleList: [],
       supList: [],
       experList: [
-        { id: 0, name: '基础' },
-        { id: 1, name: '高阶' }
+        { id: 1, name: '基础(S1)' },
+        { id: 2, name: '高阶(S2)' }
       ],
       systemList: [
-        { id: 0, name: '一年级' },
-        { id: 1, name: '二年级' },
-        { id: 2, name: '三年级' },
-        { id: 3, name: '四年级' },
-        { id: 4, name: '五年级' },
-        { id: 5, name: '六年级' }
+        { id: 1, name: 'S1' },
+        { id: 2, name: 'S2' },
+        { id: 3, name: 'S3' },
+        { id: 4, name: 'S4' },
+        { id: 5, name: 'S5' },
+        { id: 6, name: 'S6' }
       ],
       levelList: [],
       stageData: null,
@@ -93,60 +92,35 @@ export default {
       }
     })
   },
-  watch: {
-    addSupS(val) {
-      console.log(val)
-    }
-  },
+  watch: {},
   async created() {
     this.supList = this.subType === '1' ? this.systemList : this.experList
     // await this.getSup()
   },
   methods: {
-    // 难度
-    async getSup() {
-      axios
-        .post('/graphql/filter', {
-          query: `{
-            courseSupList{
-                id
-                name
-              }
-            }
-          `
-        })
-        .then((res) => {
-          this.supList = res.data ? res.data.courseSupList || [] : []
-          this.supList.splice(
-            res.data.courseSupList.filter((item) => +item.id === 0),
-            1
-          )
-        })
-    },
-
     supChange(data) {
-      console.log(data)
-      // 如果是体验课难度，查询订单的话，需要关联tg_student_team,根据id关联o_order的trial_team_id
-      if (this.name === 'trial_team_id') {
-        const supArr = data.map((item) => `S${item}`)
-        this.$http.StudentTerm.searchTeamBySup(supArr).then((res) => {
-          console.log(res)
-          if (res && res.data && res.data.StudentTeamList) {
-            const result = res.data.StudentTeamList.map((item) => item.id)
-            this.$emit(
-              'result',
-              result.length > 0 ? { [this.name]: result } : ''
-            )
-            return
-          }
-          this.$emit('result', '')
-        })
-      } else {
-        this.$emit(
-          'result',
-          data.length > 0 ? { [this.name]: this.supData } : ''
-        )
-      }
+      this.$emit('result', '')
+      // console.log(data)
+      // // 如果是体验课难度，查询订单的话，需要关联tg_student_team,根据id关联o_order的trial_team_id
+      // if (this.name === 'trial_team_id') {
+      //   const supArr = data.map((item) => `S${item}`)
+      //   this.$http.StudentTerm.searchTeamBySup(supArr).then((res) => {
+      //     console.log(res)
+      //     if (res && res.data && res.data.StudentTeamList) {
+      //       const result = res.data.StudentTeamList.map((item) => item.id)
+      //       this.$emit(
+      //         'result',
+      //         result.length > 0 ? { [this.name]: result } : ''
+      //       )
+      //       return
+      //     }
+      //   })
+      // } else {
+      //   this.$emit(
+      //     'result',
+      //     data.length > 0 ? { [this.name]: this.supData } : ''
+      //   )
+      // }
     }
   }
 }
