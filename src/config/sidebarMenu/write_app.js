@@ -123,6 +123,15 @@ const msbWriting = [
           module,
           show: true
         }
+      },
+      {
+        path: '/allUsers',
+        name: 'allUsers',
+        meta: {
+          title: '全部学员',
+          module,
+          show: true
+        }
       }
       // {
       //   path: '/all',

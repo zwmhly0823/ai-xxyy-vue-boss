@@ -130,6 +130,15 @@ const bearArt = [
           module: 'users',
           show: true
         }
+      },
+      {
+        path: '/allUsers',
+        name: 'allUsers',
+        meta: {
+          title: '全部学员',
+          module: 'users',
+          show: true
+        }
       }
     ]
   },
