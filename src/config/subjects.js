@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-08-19 17:36:34
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-21 16:08:05
+ * @LastEditTime: 2020-08-28 20:52:21
  * 美术APP
   @ApiModelProperty("美术")
   ART_APP,
@@ -17,8 +17,8 @@
  */
 
 const subjects = {
-  art_app: '小熊美术',
-  write_app: '美术宝写字'
+  art_app: '美术科目',
+  write_app: '写字科目'
 }
 
 const subjectsArr = function() {
