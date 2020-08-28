@@ -3,8 +3,8 @@
  * @version: 1.0.0
  * @Author: YangJiyong
  * @Date: 2020-08-19 20:26:32
- * @LastEditors: songyanan
- * @LastEditTime: 2020-08-26 16:34:18
+ * @LastEditors: liukun
+ * @LastEditTime: 2020-08-28 22:17:10
  */
 import Vue from 'vue'
 import VueRouter from 'vue-router'
@@ -22,7 +22,16 @@ const routes = [
     }
   },
   {
-    path: '/trialUsers',
+    path: '/details/:id',
+    name: 'detailsUsers',
+    meta: {
+      title: '学员详情',
+      keepAlive: false
+    },
+    component: () => import('../../users/views/details/index.vue')
+  },
+  {
+    path: '/trialUser',
     name: 'trialUsers',
     meta: {
       title: '体验课学员',
@@ -151,15 +160,6 @@ const routes = [
   //     },
   //     component: () => import('../views/usersModule.vue')
   //   },
-  //   {
-  //     path: '/details/:id',
-  //     name: 'detailsUsers',
-  //     meta: {
-  //       title: '学员详情',
-  //       keepAlive: false
-  //     },
-  //     component: () => import('../views/details/index.vue')
-  //   }
 
   /**
    * 运营管理
