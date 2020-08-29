@@ -143,7 +143,7 @@
         <el-table-column label="用户信息" width="120">
           <template slot-scope="scope">
             <div class="usertext" @click="userHandle(scope.row)">
-              {{ scope.row.payeeName ? scope.row.payeeName : '-' }}<br />{{
+              {{ scope.row.userName ? scope.row.userName : '-' }}<br />{{
                 scope.row.mobile
               }}
             </div>
@@ -416,7 +416,7 @@ export default {
         applyName: ''
       },
       // 被动关联事件_断值(用于赋值↑下半段)
-      num1: '0',
+      num1: '2',
       num1_: '',
       num2: '',
       num2_: '',
