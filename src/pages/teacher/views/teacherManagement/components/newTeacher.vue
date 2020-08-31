@@ -819,7 +819,7 @@ export default {
             this.ruleForm.note = payload.teacher.note
             this.ruleForm.workplaces = payload.teacher.workPlace
             this.ruleForm.workPlaceCode = payload.teacher.workPlaceCode
-            this.ruleForm.subject = [payload.teacher.subject]
+            this.ruleForm.subject = payload.teacher.subject.split(',')
           }
         )
       }
