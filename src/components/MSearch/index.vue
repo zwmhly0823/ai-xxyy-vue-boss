@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-24 18:20:12
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-08-28 17:43:58
+ * @LastEditTime: 2020-08-28 19:40:06
  -->
 
 <template>
@@ -96,7 +96,7 @@
           style="margin-bottom:0px"
         />
 
-        <hardWriteLevel
+        <hard-write-level
           v-if="this.$store.getters.subjects.subjectCode === 1"
           subType="1"
           :class="['margin_l10']"
