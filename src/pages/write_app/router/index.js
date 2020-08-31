@@ -3,8 +3,8 @@
  * @version: 1.0.0
  * @Author: YangJiyong
  * @Date: 2020-08-19 20:26:32
- * @LastEditors: liukun
- * @LastEditTime: 2020-08-28 22:17:10
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-08-31 18:11:53
  */
 import Vue from 'vue'
 import VueRouter from 'vue-router'
@@ -31,7 +31,7 @@ const routes = [
     component: () => import('../../users/views/details/index.vue')
   },
   {
-    path: '/trialUser',
+    path: '/trialUsers',
     name: 'trialUsers',
     meta: {
       title: '体验课学员',
