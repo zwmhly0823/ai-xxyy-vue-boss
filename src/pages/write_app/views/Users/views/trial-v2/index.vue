@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-06-16 16:27:14
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-25 14:53:21
+ * @LastEditTime: 2020-08-31 21:21:51
 -->
 <template>
   <div class="user-list">
@@ -1221,9 +1221,15 @@ export default {
       // 上面的方法获取到term之后，才会加载search组件，加载完search组件之后才去算table的高
       // 之所以要等是为了避免重绘 ---我是这么想的
       this.$nextTick(() => {
-        const tableHeight =
-          document.body.clientHeight - this.$refs.tableInner.offsetTop - 90
-        this.tableHeight = tableHeight + ''
+        setTimeout(() => {
+          const tableHeight =
+            document.body.clientHeight - this.$refs.tableInner.offsetTop - 90
+          this.tableHeight = tableHeight + ''
+          console.log(
+            this.$refs.tableInner.offsetTop,
+            'this.$refs.tableInner.offsetTop'
+          )
+        }, 1000)
       })
     },
     handleSizeChange(page) {
