@@ -80,13 +80,12 @@ export default {
     },
     async onSelect(data) {
       // TODO: 根据选择的销售组，获取销售ID
-      const ids = { department_id: data || [] }
+      // const ids = { department_id: data || [] }
+      // 返回选择的节点本身及其包含的了节点
+      const allNodes = this.$refs.dept.getCheckedNodes()
+      const allNodesId = allNodes.map((item) => item.value)
+      const ids = { department_id: allNodesId || [] }
       if (this.onlyDept === 1) {
-        // 返回选择的节点本身及其包含的了节点
-        /** bug-->> @remove-tag事件不执行 */
-        const allNodes = this.$refs.dept.getCheckedNodes()
-        const allNodesId = allNodes.map((item) => item.value)
-
         this.$emit('result', { [this.name]: allNodesId })
         // this.$emit('result', { [this.name]: data })
       } else {
