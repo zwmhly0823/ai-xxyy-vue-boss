@@ -57,11 +57,11 @@ export default {
   methods: {
     onChange(type) {
       console.log(type)
-      let item = ['1', '5', '6', '11']
-      if (type === '11') {
-        item = ['11']
-      } else if (type === '5,6') {
-        item = ['5', '6']
+      let item = ['19', '20', '21']
+      if (type === '1') {
+        item = ['21']
+      } else if (type === '2') {
+        item = ['19', '20']
       }
       this.$emit('result', { [this.name]: item })
     }
