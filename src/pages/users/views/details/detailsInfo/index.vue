@@ -4,10 +4,14 @@
  * @Author: liukun
  * @Date: 2020-08-17 19:37:24
  * @LastEditors: liukun
- * @LastEditTime: 2020-08-20 19:53:27
+ * @LastEditTime: 2020-08-31 16:40:01
 -->
 <template>
   <div class="details" v-loading="loading">
+    <el-radio-group v-model="changeSubject" size="mini">
+      <el-radio-button :label="0">美术</el-radio-button>
+      <el-radio-button :label="1">写字</el-radio-button>
+    </el-radio-group>
     <div v-if="Object.keys(experience_lk).length">
       <section class="setou123">
         <strong></strong>
@@ -401,7 +405,19 @@ export default {
       experience_lk: {},
       systerm_lk: {},
       loading: false,
-      userId: this.$route.params.id
+      userId: this.$route.params.id,
+      changeSubject: this.$store.state.subjects.subjectCode
+    }
+  },
+  watch: {
+    changeSubject: {
+      immediate: false,
+      deep: true,
+      handler(newValue, oldValue) {
+        console.info('详情信息-手动切换科目')
+        this.tiyan()
+        this.xitong()
+      }
     }
   },
   methods: {
@@ -409,9 +425,10 @@ export default {
     async tiyan() {
       const {
         data: { StudentTrialV2Statistics }
-      } = await this.$http.User.StudentTrialV2Statistics(
-        this.$route.params.id
-      ).catch((err) => {
+      } = await this.$http.User.StudentTrialV2Statistics({
+        id: this.$route.params.id,
+        subject: this.changeSubject
+      }).catch((err) => {
         console.error(err)
         this.$message.error('该学员体验课信息获取失败')
       })
@@ -433,15 +450,18 @@ export default {
           9: '暂停'
         }[String(StudentTrialV2Statistics.express_status)]
         this.experience_lk = StudentTrialV2Statistics
+      } else {
+        this.experience_lk = {}
       }
     },
     // 系统课
     async xitong() {
       const {
         data: { StudentSystemStatisticsList }
-      } = await this.$http.User.StudentSystemStatisticsList(
-        this.$route.params.id
-      ).catch((err) => {
+      } = await this.$http.User.StudentSystemStatisticsList({
+        studentid: this.$route.params.id,
+        subject: this.changeSubject
+      }).catch((err) => {
         console.error(err)
         this.$message.error('该学员体验课信息获取失败')
       })
@@ -463,6 +483,8 @@ export default {
           9: '暂停'
         }[String(StudentSystemStatisticsList[0].expressstatus)]
         this.systerm_lk = StudentSystemStatisticsList[0]
+      } else {
+        this.systerm_lk = {}
       }
     }
   }

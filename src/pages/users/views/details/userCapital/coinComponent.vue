@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-08-25 11:40:19
  * @LastEditors: liukun
- * @LastEditTime: 2020-08-28 14:53:15
+ * @LastEditTime: 2020-09-01 14:34:53
 -->
 <template>
   <div class="coin-content">
@@ -43,6 +43,12 @@
 <script>
 export default {
   name: 'coinComponent',
+  props: {
+    changeSubject: {
+      type: Number,
+      required: true
+    }
+  },
   data() {
     return {
       coinNumList: [
@@ -82,17 +88,30 @@ export default {
   mounted() {
     this.$root.$on('bearCoin', (r) => {
       console.info('老爹给用户资产-小熊币-基础数据', r)
-      this.faProps = r
+      this.faProps = r || []
       this.top3Show()
     })
     setTimeout(this.reqGetUserCoin, 2000)
   },
+  watch: {
+    changeSubject: {
+      immediate: false,
+      deep: true,
+      handler(newValue, oldValue) {
+        this.reqGetUserCoin()
+      }
+    }
+  },
   methods: {
     // 数据接口_用户资产_小熊币
     reqGetUserCoin() {
-      this.$http.User.getUserAssetsCoin(this.$route.params.id, this.currentPage)
+      this.$http.User.getUserAssetsCoin(
+        this.changeSubject,
+        this.$route.params.id,
+        this.currentPage
+      )
         .then((res) => {
-          if (res.data.AccountPage.content.length) {
+          if (res.data.AccountPage && res.data.AccountPage.content.length) {
             res.data.AccountPage.content.forEach((nItem) => {
               // 类型
               nItem.transTypeName = this.transTypeNameArr[+nItem.trans_type]
@@ -106,9 +125,12 @@ export default {
                   ? 1
                   : 0
             })
+            this.allDigit = Number(res.data.AccountPage.totalElements)
+            this.renderTableData = res.data.AccountPage.content
+          } else {
+            this.allDigit = 0
+            this.renderTableData = []
           }
-          this.allDigit = Number(res.data.AccountPage.totalElements)
-          this.renderTableData = res.data.AccountPage.content
         })
         .catch(() => {
           this.$message.error('获取用户资产_小熊币_失败')

@@ -3,8 +3,8 @@
  * @version:
  * @Author: shentong
  * @Date: 2020-03-13 14:38:28
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-22 18:28:59
+ * @LastEditors: liukun
+ * @LastEditTime: 2020-09-01 12:47:11
  */
 import axios from 'axios'
 import _ from 'lodash'
@@ -28,7 +28,7 @@ axios.interceptors.request.use(
     // 非graphql服务接口，统一回科目类型
     const { url, method } = config
     if (url.includes('/api/') && !url.includes('graphql')) {
-      if (method.toLowerCase() === 'get') {
+      if (method.toLowerCase() === 'get' && url.indexOf('subject=') === -1) {
         config.url += !url.includes('?')
           ? `?subject=${subject}`
           : `&subject=${subject}`
