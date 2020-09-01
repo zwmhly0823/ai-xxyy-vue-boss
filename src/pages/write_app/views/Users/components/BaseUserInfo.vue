@@ -60,7 +60,7 @@ export default {
     // 点击用户信息事件回调, 参数是用户ID
     onClick() {
       const user = this.user
-      user.id = this.uid
+      if (this.uid) user.id = this.uid
       this.$emit('handle-click', this.user)
     }
   }

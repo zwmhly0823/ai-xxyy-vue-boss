@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-06-16 16:27:14
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-31 21:21:51
+ * @LastEditTime: 2020-09-01 15:50:19
 -->
 <template>
   <div class="user-list">
@@ -1285,6 +1285,8 @@ export default {
 
     // 点击用户信息回调事件
     userHandle(user) {
+      console.log(user, 'user')
+
       if (!user || !user.id) {
         this.$message.error('缺少用户信息')
         return
