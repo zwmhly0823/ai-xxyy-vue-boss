@@ -274,8 +274,10 @@ export default {
   },
   computed: {
     topicArr() {
-      if (this.topic === '4' || this.topic === '5') {
-        return [this.topic]
+      if (this.topic === '4') {
+        return ['7']
+      } else if (this.topic === '5') {
+        return ['8']
       } else if (this.topic === '1,2,6') {
         return this.topic.split(',')
       }
@@ -373,7 +375,8 @@ export default {
         //   }
         // })
       }
-
+      // console.log('系统', this.topicArr)
+      //  const topiArrcId = this.topic === '5' ? '8' : this.topic
       const topicRelation = await this.$http.Product.topicRelationId(
         `${JSON.stringify({
           topic_id: this.topicArr
