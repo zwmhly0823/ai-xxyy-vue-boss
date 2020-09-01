@@ -55,7 +55,7 @@
           </el-option>
         </el-select>
       </el-form-item>
-      <!-- <el-form-item>
+      <el-form-item>
         <el-select
           size="mini"
           @change="onChangeType"
@@ -71,7 +71,7 @@
           >
           </el-option>
         </el-select>
-      </el-form-item> -->
+      </el-form-item>
       <el-form-item>
         <!-- 微信模块相关从@components/MSearch/searchItems/wxInput.vue粘贴来 -->
         <el-autocomplete
