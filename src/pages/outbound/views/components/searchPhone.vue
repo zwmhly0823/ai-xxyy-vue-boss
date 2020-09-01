@@ -6,6 +6,7 @@
       class="inline-input"
       v-model="input"
       clearable
+      :dataType="dataType"
       :fetch-suggestions="querySearch"
       :placeholder="tip"
       :trigger-on-focus="false"
@@ -15,7 +16,7 @@
       <i class="el-icon-search el-input__icon" slot="suffix"></i>
       <template slot-scope="{ item }">
         <div style="display:flex">
-          <div class="name">{{ item.tel || '-' }}</div>
+          <div class="name">{{ item.tel || item.student_mobile || '-' }}</div>
           <div class="name" v-if="+onlyPhone">
             /{{ item.wechat_nikename || '-' }}
           </div>
@@ -36,6 +37,10 @@ export default {
       default: 'mini'
     },
     name: {
+      type: String,
+      default: ''
+    },
+    dataType: {
       type: String,
       default: ''
     },
@@ -71,6 +76,7 @@ export default {
   data() {
     return {
       input: '',
+      initType: 'TeacherOutboundList',
       selectData: []
     }
   },
@@ -107,7 +113,13 @@ export default {
           return
         }
       }
-      const searchUid = await this.createFilter(queryString)
+      let searchUid
+      if (this.dataType) {
+        searchUid = await this.callFilter(queryString)
+      } else {
+        searchUid = await this.createFilter(queryString)
+      }
+
       console.log(searchUid, '匹配到的数据')
       const results = this.selectData
       // 调用 callback 返回建议列表的数据
@@ -115,18 +127,11 @@ export default {
       cb(searchUid)
     },
     createFilter(queryString) {
-      // realname.keyword': `*${value}*` }
-      // const queryParams = `{"tel.keyword":"*${queryString}*"}`
-      //    const querys = {
-      //   bool: { must: [{ wildcard: { 'realname.keyword': `*${value}*` } }] }
-      // }
       const queryArr = []
       queryArr.push(queryString)
       const queryParams = {
         'tel.like': { 'tel.keyword': `*${queryArr}*` }
       }
-      // if (queryString) queryParams.bool.must.push({ term: queryArr })
-      // const q = JSON.stringify(queryParams)
       return axios // 未加工
         .post('/graphql/v1/toss', {
           query: `{
@@ -134,27 +139,54 @@ export default {
                 JSON.stringify(queryParams)
               )}) {
                   tel
-
+                  
 
                 }
             }
           `
         })
         .then((res) => {
-          this.selectData = res.data.TeacherOutboundList
-          console.log(this.selectData)
-          return this.selectData
+          return (this.selectData = res.data.TeacherOutboundList)
+        })
+    },
+    callFilter(queryString) {
+      const queryArr = []
+      queryArr.push(queryString)
+      const queryParams = {
+        'student_mobile.like': { 'student_mobile.keyword': `*${queryArr}*` }
+      }
+
+      return axios // 未加工
+        .post('/graphql/v1/toss', {
+          query: `{
+              TeacherOutboundCallRecordList(query: ${JSON.stringify(
+                JSON.stringify(queryParams)
+              )}) {
+                  
+                  student_mobile
+
+                }
+            }
+          `
+        })
+        .then((res) => {
+          return (this.selectData = res.data.TeacherOutboundCallRecordList)
         })
     },
     inputHandler(data) {
-      this.input = data.tel
-      this.$emit('result', data.tel)
+      this.input = data.tel || data.student_mobile
+      this.$emit('result', data.tel || data.student_mobile)
       if (this.name === 'userTel') {
         this.$emit('result_lk', { [this.name]: data.tel })
       }
     }
   },
-  created() {},
+  created() {
+    // this.initType =
+    //   this.dataType === '1'
+    //     ? 'TeacherOutboundCallRecordPage'
+    //     : 'TeacherOutboundList'
+  },
   mounted() {}
 }
 </script>

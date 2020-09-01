@@ -79,6 +79,16 @@
             <el-option label="外呼" value="3"></el-option>
           </el-select>
         </el-form-item>
+        <el-form-item>
+          <search-phone
+            style="padding-top: 4px;"
+            @result="getSearchData('phone', arguments)"
+            tip="用户手机号查询"
+            dataType="1"
+            ref="searchUserByPhone"
+            teamId=""
+          />
+        </el-form-item>
       </el-form>
       <el-form :inline="false" class="demo-form-flex">
         <date-down-quick-select
@@ -270,6 +280,7 @@ import GroupSell from '../components/groupSell'
 import DateDownQuickSelect from '../components/dateDownQuickSelect'
 import SearchTeamName from '../components/searchTeamName'
 import SearchTrialTeamName from '../components/searchTrialTeamName'
+import SearchPhone from '../components/searchPhone'
 import User from '../components/User'
 // import SearchStage from '@/components/MSearch/searchItems/searchStage'
 import { formatData, isToss } from '@/utils/index'
@@ -289,6 +300,7 @@ export default {
       // agent: null,
       // department: '',
       teacherIds: [],
+      userPhone: '',
       user_name: '',
       user_radio: '',
       user_phone: '',
@@ -303,6 +315,7 @@ export default {
     // courseTeam,
     SearchTeamName,
     SearchTrialTeamName,
+    SearchPhone,
     User
   },
   // components: { MPagination, GroupSell, SearchPhone },
@@ -356,7 +369,9 @@ export default {
       if (this.callType) {
         parmes.call_type = this.callType
       }
-
+      if (this.userPhone) {
+        parmes.student_mobile = this.userPhone
+      }
       if (this.time_begin && this.time_type === 0) {
         parmes.start_time = this.joinDate
       }
@@ -419,6 +434,9 @@ export default {
       }
       if (this.callType) {
         parmes.call_type = this.callType
+      }
+      if (this.userPhone) {
+        parmes.student_mobile = this.userPhone
       }
       // if (this.department && this.department.length > 0) {
       //   parmes.department_id = this.department
@@ -511,7 +529,9 @@ export default {
       if (key === 'team') {
         this.teamTeach = val[0].teach
       }
-
+      if (key === 'phone') {
+        this.userPhone = val[0]
+      }
       this.getPhoneList()
       this.getStatistics()
     },
