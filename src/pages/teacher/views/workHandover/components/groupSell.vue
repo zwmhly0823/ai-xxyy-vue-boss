@@ -32,7 +32,7 @@
           </el-option>
         </el-select>
       </el-form-item>
-      <el-form-item>
+      <!-- <el-form-item>
         <el-select
           v-model="teacherIds"
           :multiple="isMultiple"
@@ -71,7 +71,7 @@
           >
           </el-option>
         </el-select>
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item>
         <!-- 微信模块相关从@components/MSearch/searchItems/wxInput.vue粘贴来 -->
         <el-autocomplete
