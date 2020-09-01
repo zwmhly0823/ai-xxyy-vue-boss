@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-08-06 22:29:42
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-27 21:03:04
+ * @LastEditTime: 2020-09-01 11:59:07
 -->
 <template>
   <div class="add-redeem-code">
@@ -81,7 +81,12 @@
             <div class="flex-1">
               <h4>{{ packageProduct.name }}</h4>
               <p class="red">{{ packageProduct.price }}元</p>
-              <p>课时：{{ packageProduct.course_week }}周</p>
+              <!-- 写字项目体验课不显示课时 -->
+              <p
+                v-if="packageProduct.id !== '19' && packageProduct.id !== '20'"
+              >
+                课时：{{ packageProduct.course_week }}周
+              </p>
             </div>
             <el-button size="mini" @click="dialogPackageVisible = true"
               >更换商品</el-button
