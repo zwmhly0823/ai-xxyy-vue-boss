@@ -571,11 +571,11 @@ export default {
     openDetail(id, row, type) {
       // type 0体验课 2系统课
       row && console.log(row)
-      id && openBrowserTab(`/student-team/#/teamDetail/${id}/${type}`)
+      id && openBrowserTab(`/write_app/#/teamDetail/${id}/${type}`)
     },
     // 用户详情
     openUserDetail(id) {
-      id && openBrowserTab(`/users/#/details/${id}`)
+      id && openBrowserTab(`/write_app/#/details/${id}`)
     }
   }
 }

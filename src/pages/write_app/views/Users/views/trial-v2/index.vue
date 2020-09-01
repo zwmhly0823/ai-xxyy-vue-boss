@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-06-16 16:27:14
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-09-01 15:50:19
+ * @LastEditTime: 2020-09-01 22:19:38
 -->
 <template>
   <div class="user-list">
@@ -1293,7 +1293,7 @@ export default {
       }
       const { id } = user
       // 新标签打开详情页
-      id && openBrowserTab(`/users/#/details/${id}`)
+      id && openBrowserTab(`/write_app/#/details/${id}`)
     },
 
     expressStatus(status) {
@@ -1312,8 +1312,7 @@ export default {
       if (!row.teacherInfo || !row.teamInfo || !row.team_id) return
       const teamId = row.team_id
       const teamType = row.teamInfo.team_type || '0'
-      teamId &&
-        openBrowserTab(`/student-team/#/teamDetail/${teamId}/${teamType}`)
+      teamId && openBrowserTab(`/write_app/#/teamDetail/${teamId}/${teamType}`)
     },
 
     formatDate(date, flag = 's') {
