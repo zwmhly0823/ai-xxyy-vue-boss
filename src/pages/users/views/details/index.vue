@@ -59,7 +59,7 @@
               >发优惠券</el-button
             >
             <el-dropdown
-              v-if="whichSubject === 0"
+              v-if="changeSubject === 0"
               type="primary"
               split-button
               size="mini"
@@ -380,7 +380,7 @@ export default {
   },
   data() {
     return {
-      whichSubject: this.$store.state.subjects.subjectCode,
+      changeSubject: this.$store.state.subjects.subjectCode,
       // <修改地址>组件弹窗显示隐藏
       dialogTableVisible: false,
       // 该学员id
@@ -424,7 +424,6 @@ export default {
   created() {
     this.reqUser() // 学员信息接口
     this.getlabelWithoutAike() // 获取艾克之外的标签
-    console.info('你是啥科目', this.$store.state.subjects)
   },
   methods: {
     // 获取艾克之外的标签
@@ -441,35 +440,41 @@ export default {
     },
     // 数据接口_学员信息
     reqUser() {
-      this.$http.User.getUser(this.studentId).then((res) => {
-        // ①推荐人id 可跳转
-        this.sendId =
-          res.data.User && res.data.User.send_id ? res.data.User.send_id : '0'
-        // ②学员基本资料_时间格式ed
-        this.stuInfor = this.modifyData(res.data.User || {})
-        // ③设置 title
-        document.title.startsWith('学员中心') &&
-          (document.title = `${this.stuInfor.username +
-            '·' +
-            this.stuInfor.user_num}-小熊美术BOSS`)
-        // ④设置生命周期
-        if (typeof this.stuInfor.systemCourse_lifeCycle === 'string') {
-          this.stuInfor.systemCourse_lifeCycle = {
-            0: '待开课',
-            1: '开课中',
-            2: '已结课',
-            91: '已退费'
-          }[this.stuInfor.systemCourse_lifeCycle]
-        }
-        // ⑤整合stuInfor里所有课程teams 添加字段isRefund(1退费,0正常)
-        this.checkBack()
+      this.$http.User.getUser(this.studentId, this.changeSubject).then(
+        (res) => {
+          // ①推荐人id 可跳转
+          this.sendId =
+            res.data.User && res.data.User.send_id ? res.data.User.send_id : '0'
+          // ②学员基本资料_时间格式ed
+          this.stuInfor = this.modifyData(res.data.User || {})
+          // ③设置 title
+          document.title.startsWith('学员中心') &&
+            (document.title = `${this.stuInfor.username +
+              '·' +
+              this.stuInfor.user_num}-小熊美术BOSS`)
+          document.title.indexOf('写字') !== -1 &&
+            (document.title = `${this.stuInfor.username +
+              '·' +
+              this.stuInfor.user_num}-美术宝写字BOSS`)
+          // ④设置生命周期
+          if (typeof this.stuInfor.systemCourse_lifeCycle === 'string') {
+            this.stuInfor.systemCourse_lifeCycle = {
+              0: '待开课',
+              1: '开课中',
+              2: '已结课',
+              91: '已退费'
+            }[this.stuInfor.systemCourse_lifeCycle]
+          }
+          // ⑤整合stuInfor里所有课程teams 添加字段isRefund(1退费,0正常)
+          // this.checkBack()
 
-        // ⑥给各个组件传基础数据
-        this.$root.$emit('study', this.stuInfor.teams) // 学习记录
-        this.$root.$emit('portfolio', this.stuInfor.teams) // 作品集
-        this.$root.$emit('bearCoin', this.stuInfor.accountUserCollect) // 用户资产_小熊币
-        this.$root.$emit('coupon', this.stuInfor.couponUserCollect) // 用户资产_优惠券
-      })
+          // ⑥给各个组件传基础数据
+          this.$root.$emit('study', this.stuInfor.teams) // 学习记录
+          this.$root.$emit('portfolio', this.stuInfor.teams) // 作品集
+          this.$root.$emit('bearCoin', this.stuInfor.accountUserCollect) // 用户资产_小熊币
+          this.$root.$emit('coupon', this.stuInfor.couponUserCollect) // 用户资产_优惠券
+        }
+      )
     },
 
     // 功能函数-标识已退费['isrefund' 再报错我吃了它]

@@ -4,17 +4,26 @@
  * @Author: liukun
  * @Date: 2020-08-27 10:17:03
  * @LastEditors: liukun
- * @LastEditTime: 2020-08-28 14:54:57
+ * @LastEditTime: 2020-09-01 11:31:25
 -->
 <template>
-  <el-tabs v-model="assetCurPane">
-    <el-tab-pane label="优惠券" name="assetCoupon">
-      <couponComponent />
-    </el-tab-pane>
-    <el-tab-pane label="小熊币" name="assetBearCoin">
-      <coinComponent />
-    </el-tab-pane>
-  </el-tabs>
+  <div>
+    <el-radio-group v-model="changeSubject" size="mini">
+      <el-radio-button :label="0">美术</el-radio-button>
+      <el-radio-button :label="1">写字</el-radio-button>
+    </el-radio-group>
+    <el-tabs v-model="assetCurPane">
+      <el-tab-pane label="优惠券" name="assetCoupon">
+        <couponComponent :changeSubject="changeSubject" />
+      </el-tab-pane>
+      <el-tab-pane
+        :label="{ 0: '小熊币', 1: '点点币' }[changeSubject]"
+        name="assetBearCoin"
+      >
+        <coinComponent :changeSubject="changeSubject" />
+      </el-tab-pane>
+    </el-tabs>
+  </div>
 </template>
 <script>
 import couponComponent from './couponComponent'
@@ -27,7 +36,8 @@ export default {
   },
   data() {
     return {
-      assetCurPane: 'assetCoupon'
+      assetCurPane: 'assetCoupon',
+      changeSubject: this.$store.state.subjects.subjectCode
     }
   },
   methods: {}

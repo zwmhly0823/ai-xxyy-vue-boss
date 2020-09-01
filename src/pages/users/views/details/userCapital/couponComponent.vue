@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-08-25 11:40:19
  * @LastEditors: liukun
- * @LastEditTime: 2020-08-28 15:35:01
+ * @LastEditTime: 2020-09-01 14:35:27
 -->
 <template>
   <div class="coupon-content">
@@ -77,7 +77,12 @@
 import { formatData } from '@/utils/index'
 export default {
   name: 'couponComponent',
-
+  props: {
+    changeSubject: {
+      type: Number,
+      required: true
+    }
+  },
   data() {
     return {
       couponNumList: [
@@ -107,10 +112,19 @@ export default {
   mounted() {
     this.$root.$on('coupon', (r) => {
       console.info('老爹给用户资产-优惠券-基础数据', r)
-      this.faProps = r
+      this.faProps = r || []
       this.top4Show()
     })
     setTimeout(this.reqGetUserAssets, 3000)
+  },
+  watch: {
+    changeSubject: {
+      immediate: false,
+      deep: true,
+      handler(newValue, oldValue) {
+        this.reqGetUserAssets()
+      }
+    }
   },
   methods: {
     // 翻页
@@ -122,11 +136,15 @@ export default {
     // 数据接口_用户资产_优惠券
     reqGetUserAssets() {
       this.$http.User.getUserAssetsCoupon(
+        this.changeSubject,
         this.$route.params.id,
         this.currentPage
       )
         .then((res) => {
-          if (res.data.CouponUserPage.content.length) {
+          if (
+            res.data.CouponUserPage &&
+            res.data.CouponUserPage.content.length
+          ) {
             res.data.CouponUserPage.content.forEach((pItem) => {
               switch (pItem.coupon.type - 0) {
                 case 0:
@@ -166,6 +184,9 @@ export default {
             })
             this.allDigit = Number(res.data.CouponUserPage.totalElements)
             this.renderTableData = res.data.CouponUserPage.content
+          } else {
+            this.allDigit = 0
+            this.renderTableData = []
           }
         })
         .catch(() => {

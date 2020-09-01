@@ -4,14 +4,18 @@
  * @Author: liukun
  * @Date: 2020-08-25 11:40:19
  * @LastEditors: liukun
- * @LastEditTime: 2020-08-27 10:40:01
+ * @LastEditTime: 2020-09-01 14:40:33
 -->
 <template>
   <div>
     <div class="course-sty">
+      <el-radio-group v-model="changeSubject" size="mini">
+        <el-radio-button :label="0">美术</el-radio-button>
+        <el-radio-button :label="1">写字</el-radio-button>
+      </el-radio-group>
       <el-tabs v-model="courseData" @tab-click="courseBtn">
         <el-tab-pane
-          v-for="(item, key) of teams_lk"
+          v-for="(item, key) of teams_lk_filter"
           :key="key"
           :label="`${item.team_type_formatting}:${item.team_name}`"
           :name="'' + key"
@@ -179,11 +183,11 @@ export default {
   mounted() {
     this.$root.$on('portfolio', (r) => {
       console.info('老爹给作品集的基础数据', r)
-      this.teams_lk = r
+      this.teams_lk = r || []
     })
     // 初始化拿数据
     setTimeout(() => {
-      this.lessonId = this.teams_lk[0] ? this.teams_lk[0].id : ''
+      this.lessonId = this.teams_lk_filter[0] ? this.teams_lk_filter[0].id : ''
       this.reqStudentCourseTaskPage()
     }, 1000)
   },
@@ -204,13 +208,31 @@ export default {
       play: -1,
       audioId: '',
       currentVideo: '',
-      videoDialog: false
+      videoDialog: false,
+      changeSubject: this.$store.state.subjects.subjectCode
+    }
+  },
+  computed: {
+    teams_lk_filter() {
+      return this.teams_lk.filter(
+        (item) => item.subject === '' + this.changeSubject
+      )
+    }
+  },
+  watch: {
+    changeSubject: {
+      immediate: false,
+      deep: true,
+      handler(newValue, oldValue) {
+        console.info('作品集-手动切换科目')
+        this.reqStudentCourseTaskPage()
+      }
     }
   },
   methods: {
     // 切换课程
     courseBtn(r) {
-      this.lessonId = this.teams_lk[r.name].id
+      this.lessonId = this.teams_lk_filter[r.name].id
       this.reqStudentCourseTaskPage()
     },
     // 翻页
@@ -222,12 +244,17 @@ export default {
     // 数据接口_作品集
     reqStudentCourseTaskPage() {
       this.$http.User.getStudentCourseTaskPage(
+        this.changeSubject,
         this.$route.params.id, // studentId
         this.lessonId, // 课程Id
         this.currentPage
       ).then((res) => {
         console.log('作品集模块接口', res.data.StudentCourseTaskPage.content)
-        const _data = res.data.StudentCourseTaskPage.content
+        const _data =
+          res.data.StudentCourseTaskPage &&
+          res.data.StudentCourseTaskPage.content
+            ? res.data.StudentCourseTaskPage.content
+            : []
         _data.forEach((item, index) => {
           item.serNum = ++index
           if (item.taskComment && item.taskComment.length) {
@@ -243,8 +270,12 @@ export default {
           }
           item.ctime = item.ctime ? formatData(item.ctime, 's') : ''
         })
-        this.allDigit = +res.data.StudentCourseTaskPage.totalElements
         this.porfolioTableData = _data // 赋值
+        this.allDigit =
+          res.data.StudentCourseTaskPage &&
+          +res.data.StudentCourseTaskPage.totalElements
+            ? +res.data.StudentCourseTaskPage.totalElements
+            : 0
       })
     },
     // 下载图片
@@ -309,11 +340,6 @@ export default {
         audio.load()
       }
       this.audioId = audio.id
-    }
-  },
-  computed: {
-    hh2() {
-      return 2
     }
   }
 }

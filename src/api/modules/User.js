@@ -5,7 +5,7 @@
  * @Author: shentong
  * @Date: 2020-03-13 14:38:28
  * @LastEditors: liukun
- * @LastEditTime: 2020-08-20 14:17:02
+ * @LastEditTime: 2020-09-01 14:20:10
  */
 // import axios from '../axios'
 import axios from '../axiosConfig'
@@ -373,8 +373,8 @@ export default {
    */
 
   // 学员基本信息
-  getUser(query = '') {
-    const formattingQuery = JSON.stringify({ id: query })
+  getUser(query = '', subject = '') {
+    const formattingQuery = JSON.stringify({ id: query, subject })
     return axios.post('/graphql/v1/toss', {
       query: `{
         User(query:${JSON.stringify(formattingQuery)}){
@@ -446,6 +446,7 @@ export default {
             remaining_week
           }
           teams{
+             subject
              id
              team_type
              team_name
@@ -663,6 +664,7 @@ export default {
   },
   // 学习记录
   getSendCourseLogPage(
+    subject = '',
     query = '',
     teamId = '',
     page = 1,
@@ -675,7 +677,8 @@ export default {
       student_id: query,
       team_id: +teamId,
       del: del,
-      lesson_type: +lessonType
+      lesson_type: +lessonType,
+      subject
     })
     const formattingSort = JSON.stringify({ id: sort })
     return axios.post(`/graphql/v1/toss`, {
@@ -705,6 +708,7 @@ export default {
   },
   // 作品集
   getStudentCourseTaskPage(
+    subject = '',
     query = '',
     teamId = '',
     page = 1,
@@ -714,7 +718,8 @@ export default {
     const formattingQuery = JSON.stringify({
       student_id: query,
       team_id: +teamId,
-      del: del
+      del: del,
+      subject
     })
     const sort = `{ "ctime": "asc" }`
     return axios.post(`/graphql/v1/toss`, {
@@ -799,8 +804,9 @@ export default {
     })
   },
   // 优惠券
-  getUserAssetsCoupon(query = '', page = 1, size = 20) {
+  getUserAssetsCoupon(subject = '', query = '', page = 1, size = 20) {
     const formattingQuery = JSON.stringify({
+      subject,
       uid: query
     })
     const sort = `{ "ctime": "desc" }`
@@ -837,8 +843,9 @@ export default {
     })
   },
   // 小熊币
-  getUserAssetsCoin(query = '', page = 1, size = 20) {
+  getUserAssetsCoin(subject = '', query = '', page = 1, size = 20) {
     const formattingQuery = JSON.stringify({
+      subject,
       uid: query,
       trans_type: ['1', '2', '3', '4', '5', '6', '8', '9', '10', '11'], // 经和后端确认前端滤掉0和7
       account_type: 2
@@ -964,7 +971,7 @@ export default {
   },
   // 提交跟踪表单
   submitForm(query) {
-    return axios.get(`/api/u/v1/user/userfollowlog/createUserFollowLog`, query)
+    return axios.get(`/api/u/v2/user/userfollowlog/createUserFollowLog`, query)
   },
   // 获取学员发展的下线
   getRecommendList(query) {
@@ -987,11 +994,11 @@ export default {
     )
   },
   // track_flow_list
-  getTrackList({ uid, page = 1, size = 10 } = {}) {
+  getTrackList({ uid, subject, page = 1, size = 10 } = {}) {
     return axios.post('/graphql/v1/toss', {
       query: `{
             UserFollowLogPage(
-              query: ${JSON.stringify(JSON.stringify({ uid }))},
+              query: ${JSON.stringify(JSON.stringify({ uid, subject }))},
               size:${size},
               page:${page},
               sort:${JSON.stringify(JSON.stringify({ ctime: 'desc' }))}
@@ -1081,7 +1088,7 @@ export default {
     return axios.post('/graphql/v1/toss', {
       query: `{
         StudentTrialV2Statistics(query: ${JSON.stringify(
-          JSON.stringify({ id: query })
+          JSON.stringify(query)
         )}){
             sup
             id
@@ -1132,7 +1139,7 @@ export default {
     return axios.post('/graphql/v1/toss', {
       query: `{
             StudentSystemStatisticsList(
-              query: ${JSON.stringify(JSON.stringify({ studentid: query }))},
+              query: ${JSON.stringify(JSON.stringify(query))},
               sort:${JSON.stringify(JSON.stringify({ ctime: 'asc' }))}
               )
             {

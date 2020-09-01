@@ -4,14 +4,18 @@
  * @Author: liukun
  * @Date: 2020-08-25 11:40:19
  * @LastEditors: liukun
- * @LastEditTime: 2020-08-28 14:16:37
+ * @LastEditTime: 2020-09-01 14:38:51
 -->
 <template>
   <div>
     <div class="course-sty">
+      <el-radio-group v-model="changeSubject" size="mini">
+        <el-radio-button :label="0">美术</el-radio-button>
+        <el-radio-button :label="1">写字</el-radio-button>
+      </el-radio-group>
       <el-tabs v-model="courseData" @tab-click="courseBtn">
         <el-tab-pane
-          v-for="(item, key) of teams_lk"
+          v-for="(item, key) of teams_lk_filter"
           :key="key"
           :label="`${item.team_type_formatting}:${item.team_name}`"
           :name="'' + key"
@@ -129,12 +133,14 @@ export default {
   mounted() {
     this.$root.$on('study', (r) => {
       console.info('老爹给学习记录的基础数据', r)
-      this.teams_lk = r
+      this.teams_lk = r || []
     })
     // 初始化拿数据
     setTimeout(() => {
-      this.lessonType = this.teams_lk[0] ? this.teams_lk[0].team_type : ''
-      this.lessonId = this.teams_lk[0] ? this.teams_lk[0].id : ''
+      this.lessonType = this.teams_lk_filter[0]
+        ? this.teams_lk_filter[0].team_type
+        : ''
+      this.lessonId = this.teams_lk_filter[0] ? this.teams_lk_filter[0].id : ''
       this.reqSendCourseLogPage()
     }, 1000)
   },
@@ -150,14 +156,32 @@ export default {
       currentPage: 1, // 页码
 
       // 分页组件
-      allDigit: 1 // 总量
+      allDigit: 1, // 总量
+      changeSubject: this.$store.state.subjects.subjectCode
+    }
+  },
+  computed: {
+    teams_lk_filter() {
+      return this.teams_lk.filter(
+        (item) => item.subject === '' + this.changeSubject
+      )
+    }
+  },
+  watch: {
+    changeSubject: {
+      immediate: false,
+      deep: true,
+      handler(newValue, oldValue) {
+        console.info('学习记录-手动切换科目')
+        this.reqSendCourseLogPage()
+      }
     }
   },
   methods: {
     // 切换课程
     courseBtn(r) {
-      this.lessonType = this.teams_lk[r.name].team_type
-      this.lessonId = this.teams_lk[r.name].id
+      this.lessonType = this.teams_lk_filter[r.name].team_type
+      this.lessonId = this.teams_lk_filter[r.name].id
       this.reqSendCourseLogPage()
     },
     // 翻页
@@ -169,13 +193,17 @@ export default {
     // 数据接口_学习记录
     reqSendCourseLogPage() {
       this.$http.User.getSendCourseLogPage(
+        this.changeSubject,
         this.$route.params.id, // studentId
         this.lessonId, // 课程Id
         this.currentPage, // 页码
         this.lessonType // 课程类型
       ).then((res) => {
-        console.log('学习记录模块接口', res.data.SendCourseLogPage.content)
-        const _data = res.data.SendCourseLogPage.content
+        console.log('学习记录模块接口', res.data.SendCourseLogPage)
+        const _data =
+          res.data.SendCourseLogPage && res.data.SendCourseLogPage.content
+            ? res.data.SendCourseLogPage.content
+            : []
         _data.forEach((item) => {
           // 课程计划时间
           item.ctime = item.ctime ? formatData(item.ctime, 's') : '-'
@@ -196,14 +224,13 @@ export default {
             }
           }
         })
-        this.allDigit = +res.data.SendCourseLogPage.totalElements
         this.studyTableData = _data // 赋值
+        this.allDigit =
+          res.data.SendCourseLogPage &&
+          +res.data.SendCourseLogPage.totalElements
+            ? +res.data.SendCourseLogPage.totalElements
+            : 0
       })
-    }
-  },
-  computed: {
-    hh2() {
-      return 2
     }
   }
 }
