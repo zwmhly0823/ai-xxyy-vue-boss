@@ -5,7 +5,7 @@
  * @Author: shentong
  * @Date: 2020-03-13 14:38:28
  * @LastEditors: liukun
- * @LastEditTime: 2020-09-01 14:20:10
+ * @LastEditTime: 2020-09-01 21:40:53
  */
 // import axios from '../axios'
 import axios from '../axiosConfig'
@@ -373,8 +373,8 @@ export default {
    */
 
   // 学员基本信息
-  getUser(query = '', subject = '') {
-    const formattingQuery = JSON.stringify({ id: query, subject })
+  getUser(query = '') {
+    const formattingQuery = JSON.stringify({ id: query })
     return axios.post('/graphql/v1/toss', {
       query: `{
         User(query:${JSON.stringify(formattingQuery)}){
@@ -842,6 +842,24 @@ export default {
       }`
     })
   },
+  // 小熊币优惠券上头
+  _reqGetUserTop(paramsObj) {
+    return axios.post(`/graphql/v1/toss`, {
+      query: `{
+        UserExtends(query:${JSON.stringify(JSON.stringify(paramsObj))}) {
+           couponUserCollect{
+            code
+            value
+          }
+          accountUserCollect{
+            code
+            value
+          }
+        }
+      }`
+    })
+  },
+
   // 小熊币
   getUserAssetsCoin(subject = '', query = '', page = 1, size = 20) {
     const formattingQuery = JSON.stringify({
