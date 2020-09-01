@@ -329,5 +329,20 @@ export default {
   // 获取职场
   getWorkPlace() {
     return axios.get(`/api/t/v1/teacher/getWorkPlace`)
+  },
+  // 获取全部班级列表
+  StudentTeamList(teamName) {
+    const params = JSON.stringify({
+      team_state: [1, 2],
+      'team_name.like': { 'team_name.keyword': `*${teamName}*` }
+    })
+    return axios.post('/graphql/v1/toss', {
+      query: `{
+        StudentTeamList(query: ${JSON.stringify(params)}){
+          id
+          team_name
+        }
+      }`
+    })
   }
 }
