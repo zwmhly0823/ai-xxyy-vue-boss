@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-04-25 17:24:23
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-08-28 16:09:34
+ * @LastEditTime: 2020-09-01 20:35:09
  -->
 <template>
   <el-card
@@ -133,9 +133,8 @@
             :class="['margin_l10']"
             style="width:140px"
           />
-          <!-- BOSS 显示单双周选择 -->
+          <!-- 写字 班级类型  -->
           <trial-course-type
-            v-if="!teacherId"
             class="margin_l10"
             name="packages_id"
             @result="getTrialCourseType"
@@ -185,7 +184,9 @@
 <script>
 import dayjs from 'dayjs'
 import hardLevel from '../../../../../components/search/Grade.vue' // add
+import TrialCourseType from '@/pages/write_app/components/search/subjecType.vue'
 import orderSearch from '@/components/MSearch/searchItems/orderSearch.vue' // add
+
 // import orderStatus from '@/components/MSearch/searchItems/orderStatus.vue' // add
 import DatePicker from '@/components/MSearch/searchItems/datePicker.vue'
 import ChannelSelect from '@/components/MSearch/searchItems/channel.vue'
@@ -193,7 +194,7 @@ import GroupSell from '@/components/MSearch/searchItems/groupSell'
 import Department from '@/components/MSearch/searchItems/department'
 import SearchTeamName from '@/components/MSearch/searchItems/searchTeamName'
 import SearchStage from '@/components/MSearch/searchItems/searchStage'
-import TrialCourseType from '@/components/MSearch/searchItems/trialClassType'
+
 import { downloadHandle } from '@/utils/download'
 // import SearchPhoneAndUsername from '@/components/MSearch/searchItems/searchPhoneAndUsername'
 // import SimpleSelect from '@/components/MSearch/searchItems/simpleSelect'
