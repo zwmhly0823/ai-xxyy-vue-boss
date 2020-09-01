@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-04-25 17:24:23
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-08-28 16:09:34
+ * @LastEditTime: 2020-09-01 17:53:22
  -->
 <template>
   <el-card
@@ -185,7 +185,9 @@
 <script>
 import dayjs from 'dayjs'
 import hardLevel from '../../../../../components/search/Grade.vue' // add
+import TrialCourseType from '@/pages/write_app/components/search/Type.vue'
 import orderSearch from '@/components/MSearch/searchItems/orderSearch.vue' // add
+
 // import orderStatus from '@/components/MSearch/searchItems/orderStatus.vue' // add
 import DatePicker from '@/components/MSearch/searchItems/datePicker.vue'
 import ChannelSelect from '@/components/MSearch/searchItems/channel.vue'
@@ -193,7 +195,7 @@ import GroupSell from '@/components/MSearch/searchItems/groupSell'
 import Department from '@/components/MSearch/searchItems/department'
 import SearchTeamName from '@/components/MSearch/searchItems/searchTeamName'
 import SearchStage from '@/components/MSearch/searchItems/searchStage'
-import TrialCourseType from '@/components/MSearch/searchItems/trialClassType'
+
 import { downloadHandle } from '@/utils/download'
 // import SearchPhoneAndUsername from '@/components/MSearch/searchItems/searchPhoneAndUsername'
 // import SimpleSelect from '@/components/MSearch/searchItems/simpleSelect'

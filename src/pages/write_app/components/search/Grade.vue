@@ -4,8 +4,8 @@
  * @version: 1.0.0
  * @Author: YangJiyong
  * @Date: 2020-08-25 11:57:39
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-27 17:48:46
+ * @LastEditors: zhangjianwen
+ * @LastEditTime: 2020-09-01 16:21:29
 -->
 <template>
   <simple-select
@@ -69,27 +69,27 @@ export default {
       dataListSys: [
         {
           id: '1',
-          text: 'S1'
+          text: '一年级(S1)'
         },
         {
           id: '2',
-          text: 'S2'
+          text: '二年级(S2)'
         },
         {
           id: '3',
-          text: 'S3'
+          text: '三年级(S3)'
         },
         {
           id: '4',
-          text: 'S4'
+          text: '四年级(S4)'
         },
         {
           id: '5',
-          text: 'S5'
+          text: '五年级(S5)'
         },
         {
           id: '6',
-          text: 'S6'
+          text: '六年级(S6)'
         }
       ]
     }

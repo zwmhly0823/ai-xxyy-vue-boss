@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-24 18:50:54
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-08-28 17:24:15
+ * @LastEditTime: 2020-09-01 16:25:56
  -->
 <template>
   <div class="search-item small">
@@ -68,12 +68,12 @@ export default {
         { id: 2, name: '高阶(S2)' }
       ],
       systemList: [
-        { id: 1, name: 'S1' },
-        { id: 2, name: 'S2' },
-        { id: 3, name: 'S3' },
-        { id: 4, name: 'S4' },
-        { id: 5, name: 'S5' },
-        { id: 6, name: 'S6' }
+        { id: 1, name: '一年级(S1)' },
+        { id: 2, name: '二年级(S2)' },
+        { id: 3, name: '三年级(S3)' },
+        { id: 4, name: '四年级(S4)' },
+        { id: 5, name: '五年级(S5)' },
+        { id: 6, name: '六年级(S6)' }
       ],
       levelList: [],
       stageData: null,
