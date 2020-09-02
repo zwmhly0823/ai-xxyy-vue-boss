@@ -3,8 +3,8 @@
  * @version:
  * @Author: Shentong
  * @Date: 2020-03-17 11:50:18
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-22 18:28:42
+ * @LastEditors: Shentong
+ * @LastEditTime: 2020-09-02 18:04:25
  */
 import axios from './axios'
 import { getToken } from '@/utils/auth'
@@ -22,11 +22,12 @@ export default {
   // 判断是否需要token
   judgeToken() {
     const token = this.getHeaders().Authorization
-    const needToken = location.href.indexOf('login') === -1
+    const needToken =
+      location.href.indexOf('login') === -1 &&
+      location.href.lastIndexOf('?from=1v1') === -1
 
     if (needToken && !token) {
-      location.href = `${baseUrl}/login/#/`
-      // location.href = `/login/#/`
+      location.href = `${baseUrl()}login/#/`
       return 0
     }
     return 1

@@ -3,8 +3,8 @@
  * @Email: yangjiyong@meishubao.com
  * @Date: 2020-03-13 15:13:34
  * @Description: topbar 顶部功能区
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-28 20:54:45
+ * @LastEditors: Shentong
+ * @LastEditTime: 2020-09-02 17:46:37
  -->
 <template>
   <div class="navbar" :class="{ prod: isProd }">
@@ -195,7 +195,7 @@ export default {
     const userInfo = localStorage.getItem('staff')
     this.isProd = location.origin.indexOf('prod') > -1
     if (!userInfo) {
-      this.logout()
+      // this.logout() TODO: ? 。。。
       return
     }
     this.userInfo = JSON.parse(userInfo)

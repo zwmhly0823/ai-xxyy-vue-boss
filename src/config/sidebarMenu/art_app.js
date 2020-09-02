@@ -3,15 +3,14 @@
  * @version: 1.0.0
  * @Author: YangJiyong
  * @Date: 2020-08-19 21:14:08
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-22 17:32:00
+ * @LastEditors: Shentong
+ * @LastEditTime: 2020-09-02 17:58:56
  */
 import { removeToken } from '@/utils/auth'
 import { baseUrl } from '@/utils/index'
-const staff = JSON.parse(localStorage.getItem('staff'))
+const staff = JSON.parse(localStorage.getItem('staff')) || {}
 if (!staff) {
   removeToken()
-  console.log('baseUrl:', baseUrl())
   location.href = `${baseUrl()}login/#/`
 }
 
