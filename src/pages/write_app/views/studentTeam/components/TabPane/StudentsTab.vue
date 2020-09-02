@@ -146,7 +146,7 @@
 <script>
 import { mapGetters } from 'vuex'
 import axios from '@/api/axiosConfig'
-import { GetAgeByBrithday, openBrowserTab } from '@/utils/index'
+import { GetAgeByBrithday } from '@/utils/index'
 import MPagination from '@/components/MPagination/index.vue'
 import CouponPopover from './components/couponPopover'
 import MSearch from '@/components/MSearch/index.vue'
@@ -439,8 +439,10 @@ export default {
     // 打开用户详情
     openUserDetail(row) {
       if (row.id) {
+        this.$router.push({
+          path: `/details/${row.id}`
+        })
       }
-      row.id && openBrowserTab(`/users/#/details/${row.id}`)
     }
   }
 }
