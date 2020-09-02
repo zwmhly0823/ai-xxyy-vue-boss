@@ -15,19 +15,19 @@
             :data="tableData"
             style="width: 100%;border-top:1px solid #EBEEF5"
           >
-            <!-- <el-table-column
+            <el-table-column
               label="用户编号"
               min-width="15%"
               align="center"
-              prop="user"
+              prop="userNum"
             >
               <template slot-scope="scope">
-                <span v-if="scope.row.user === null"></span>
+                <span v-if="!+scope.row.userNum"></span>
                 <span v-else class="user-detail" @click="userHandle(scope.row)">
-                  {{ scope.row.user.user_num }}
+                  {{ scope.row.userNum }}
                 </span>
               </template>
-            </el-table-column> -->
+            </el-table-column>
             <el-table-column
               label="补发类型"
               min-width="15%"
@@ -119,7 +119,8 @@ export default {
         background: 'rgba(0, 0, 0, 0.1)'
       })
       const query = {
-        pageNumber: this.currentPage
+        pageNumber: this.currentPage,
+        pageSize: 20
       }
       Object.assign(query, this.searchMobile, this.searchType, this.searchTime)
       this.$http.Operating.issueBearList(query)
