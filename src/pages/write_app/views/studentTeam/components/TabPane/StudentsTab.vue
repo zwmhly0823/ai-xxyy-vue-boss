@@ -438,6 +438,8 @@ export default {
 
     // 打开用户详情
     openUserDetail(row) {
+      if (row.id) {
+      }
       row.id && openBrowserTab(`/users/#/details/${row.id}`)
     }
   }
