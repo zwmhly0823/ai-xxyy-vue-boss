@@ -148,6 +148,7 @@
               <span v-if="item.templateStatus === 1">已完成</span>
               <span v-if="item.templateStatus === 2">进行中</span>
               <span v-if="item.templateStatus === 3">已终止</span>
+              <span v-if="item.templateStatus === 4">发送失败</span>
             </template>
             <template slot="description">
               <div class="step-row">
