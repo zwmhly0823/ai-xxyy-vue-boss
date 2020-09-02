@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 20:22:24
  * @LastEditors: Shentong
- * @LastEditTime: 2020-08-24 16:12:34
+ * @LastEditTime: 2020-09-02 12:07:37
  -->
 <template>
   <div class="table-box">
@@ -27,17 +27,15 @@
               (this.tables.courseState == 1 || this.tables.courseState == 0)
           "
         ></el-table-column>
-        <el-table-column
+        <!-- <el-table-column
           v-if="this.tables.courseState == 1 || this.tables.courseState == 0"
           width="20px"
         >
           <template slot="header" slot-scope="scope">
             <el-Popover popper-class="batch-btn" trigger="hover">
-              <!-- 标题气泡内容 -->
               <div size="mini" type="text" @click="batchBtn">
                 批量发送加好友短信
               </div>
-              <!-- 标题点击...图片 -->
               <div
                 @click="headerPoint(scope.$index, scope)"
                 v-show="moreTitle"
@@ -49,12 +47,10 @@
           </template>
           <template slot-scope="scope">
             <el-Popover popper-class="batch-btn" trigger="hover">
-              <!-- 气泡内容 -->
               <div size="mini" type="text" @click="batchBtn">
                 <span v-show="moreTitle === true">批量发送加好友短信</span>
                 <span v-show="moreTitle === false">发送加好友短信</span>
               </div>
-              <!-- 点击...图片 -->
               <div
                 @mouseenter="handleEdit(scope.$index, scope.row)"
                 slot="reference"
@@ -63,7 +59,7 @@
               </div>
             </el-Popover>
           </template>
-        </el-table-column>
+        </el-table-column> -->
         <!-- 基本信息 -->
         <el-table-column width="280" label="基本信息">
           <template slot-scope="scope">

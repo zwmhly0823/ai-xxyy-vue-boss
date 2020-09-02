@@ -20,14 +20,12 @@
       <!-- 全选按钮 -->
       <el-table-column type="selection" width="40px"></el-table-column>
       <!-- 更多按钮 -->
-      <el-table-column width="20px">
+      <!-- <el-table-column width="20px">
         <template slot="header" slot-scope="scope">
           <el-Popover popper-class="batch-btn" trigger="hover">
-            <!-- 标题气泡内容 -->
             <div size="mini" type="text" @click="batchBtn">
               批量发放优惠券
             </div>
-            <!-- 标题点击...图片 -->
             <div
               @click="headerPoint(scope.$index, scope)"
               v-show="moreTitle"
@@ -39,12 +37,10 @@
         </template>
         <template slot-scope="scope">
           <el-Popover popper-class="batch-btn" trigger="hover">
-            <!-- 气泡内容 -->
             <div size="mini" type="text" @click="batchBtn">
               <span v-show="moreTitle === true">批量发放优惠券</span>
               <span v-show="moreTitle === false">发放优惠券</span>
             </div>
-            <!-- 点击...图片 -->
             <div
               @mouseenter="handleEdit(scope.$index, scope.row)"
               slot="reference"
@@ -53,7 +49,7 @@
             </div>
           </el-Popover>
         </template>
-      </el-table-column>
+      </el-table-column> -->
       <!-- 弹窗 -->
       <coupon-popover
         ref="couponPopover"
@@ -450,6 +446,7 @@ export default {
 <style scoped lang="scss">
 // 基本信息
 .information {
+  font-size: 12px;
   &-img {
     width: 50px;
     height: 50px;
@@ -515,7 +512,7 @@ export default {
 .dataStyle {
   .el-table_1_column_2 {
     cursor: pointer;
-    font-size: 19px !important;
+    // font-size: 19px !important; TODO: ?
   }
   .el-form-item {
     float: right;

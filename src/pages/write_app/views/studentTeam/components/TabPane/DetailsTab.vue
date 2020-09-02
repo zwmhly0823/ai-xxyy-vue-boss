@@ -3,8 +3,8 @@
  * @version:
  * @Author: panjian
  * @Date: 2020-03-16 14:19:58
- * @LastEditors: panjian
- * @LastEditTime: 2020-06-19 18:49:21
+ * @LastEditors: Shentong
+ * @LastEditTime: 2020-09-02 12:03:56
  -->
 <template>
   <div>
@@ -18,7 +18,8 @@
         :teamType="`${classObj.type == 0 ? '0' : '1'}`"
         :teamId="classObj.teamId"
       />
-      <el-button
+      <!-- TODO: -->
+      <!-- <el-button
         size="mini"
         type="primary"
         style="margin-right: 10px;"
@@ -34,7 +35,7 @@
         v-show="exhibition"
         @click="ExhibitionList"
         >生成作品展</el-button
-      >
+      > -->
       <checkBox
         class="check-box"
         :tables="table"
