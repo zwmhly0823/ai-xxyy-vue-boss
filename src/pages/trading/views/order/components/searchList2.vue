@@ -511,7 +511,10 @@ export default {
             'packagesType.name': '套餐类型',
             'stageInfo.period_name': '期数',
             'channel.channel_outer_name': '线索渠道',
-            sup_text: '课程难度'
+            sup_text: '课程难度',
+            invoice_status_text: '开票状态',
+            invoice_type_text: '开票类型',
+            invoice_code: '发票号码'
           },
           fileName: `体验课订单导出-${fileTitleTime}`, // 文件名称
           query: JSON.stringify(query)
