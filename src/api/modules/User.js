@@ -1047,14 +1047,14 @@ export default {
     let q = `uid=${query.uid}&type=${query.type}&describe=${query.describe}&isTrack=${query.isTrack}`
     q += `&today=${query.today || ''}`
     q += `&tomorrow=${query.tomorrow || ''}`
-    return axios.get(`/api/u/v1/user/userintention/create?${q}`)
+    return axios.get(`/api/u/v2/user/userintention/create?${q}`)
   },
   // 更新用户意向度
   updateUserInetention(query) {
     let q = `uid=${query.uid}&type=${query.type}&describe=${query.describe}&isTrack=${query.isTrack}`
     q += `&today=${query.today || ''}`
     q += `&tomorrow=${query.tomorrow || ''}`
-    return axios.get(`/api/u/v1/user/userintention/update?${q}`)
+    return axios.get(`/api/u/v2/user/userintention/update?${q}`)
   },
   // 学员详情 修改地址
   updateExpressAddressNew(query) {
