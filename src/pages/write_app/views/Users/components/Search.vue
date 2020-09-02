@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-06-20 20:23:28
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-25 14:49:04
+ * @LastEditTime: 2020-09-02 21:59:39
  @ApiModel(description = "用户跟进状态")
     public enum STATUS {
 
@@ -246,7 +246,11 @@
           </el-form-item>
           <el-form-item label="课程难度:">
             <div class="search-group">
-              <grade @result="getSearchData('grade', arguments)" />
+              <grade
+                name="sup"
+                extra="s"
+                @result="getSearchData('sup', arguments)"
+              />
             </div>
           </el-form-item>
           <!-- 用来占位 -->
