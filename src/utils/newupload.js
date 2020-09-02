@@ -74,7 +74,7 @@ const uploadFile = async (file) => {
     } = puhSinged
 
     const requestHost = `https://${bucketName}.${endpoint}`
-    const filename = file.file.name
+    const filename = file.file.name.replace(/\s*/g, '')
     const dirPath = `h5/headPic/` + new Date().getTime() + `/`
     const formData = new FormData()
     const fileUrl = `${Contants.OSS_IMG_BASE_URL}/${dirPath}${filename}`

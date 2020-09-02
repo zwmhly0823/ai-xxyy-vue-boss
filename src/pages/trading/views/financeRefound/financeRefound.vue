@@ -18,6 +18,7 @@
               placeholder="请选择"
               @change="chooseOrder"
             >
+              <el-option label="用户手机号" value="2"></el-option>
               <el-option label="订单号" value="0"></el-option>
               <el-option label="交易流水号" value="1"></el-option>
             </el-select>
@@ -139,6 +140,15 @@
     <el-divider></el-divider>
     <div>
       <el-table :data="tableData" style="width: 100%">
+        <el-table-column label="用户信息" width="120">
+          <template slot-scope="scope">
+            <div class="usertext" @click="userHandle(scope.row)">
+              {{ scope.row.userName ? scope.row.userName : '-' }}<br />{{
+                scope.row.mobile
+              }}
+            </div>
+          </template>
+        </el-table-column>
         <el-table-column label="订单编号-订单交易流水号" width="220">
           <template slot-scope="scope">
             <div>
@@ -304,6 +314,36 @@
             >{{ choutidata.refundRuleStr }}
           </el-col>
         </el-row>
+        <el-row v-if="choutidata.invoiceStatus !== ''">
+          <el-col :span="4">开票状态:</el-col>
+          <el-col :span="18" :offset="2"
+            ><span v-if="choutidata.invoiceStatus == 'DEFAULT'">待开票</span>
+            <span v-else-if="choutidata.invoiceStatus == 'PENDING'"
+              >开票中</span
+            >
+            <span v-else-if="choutidata.invoiceStatus == 'COMPLETED'"
+              >已开票</span
+            >
+            <span v-else-if="choutidata.invoiceStatus == 'FAILED'"
+              >开票失败</span
+            >
+            <span v-else>作废</span>
+          </el-col>
+        </el-row>
+        <el-row v-if="choutidata.invoiceType !== ''">
+          <el-col :span="4">发票类型:</el-col>
+          <el-col :span="18" :offset="2"
+            ><span v-if="choutidata.invoiceType == 'DEFAULT'">无</span>
+            <span v-else-if="choutidata.invoiceType == 'GENERAL'"
+              >普通发票</span
+            >
+            <span v-else>专票</span>
+          </el-col>
+        </el-row>
+        <el-row v-if="choutidata.invoiceCode !== ''">
+          <el-col :span="4">发票号码:</el-col>
+          <el-col :span="18" :offset="2">{{ choutidata.invoiceCode }} </el-col>
+        </el-row>
         <el-row v-if="choutidata.refundReason !== ''">
           <el-col :span="4">退款原因:</el-col>
           <el-col :span="18" :offset="2">{{ choutidata.refundReason }} </el-col>
@@ -345,6 +385,7 @@
 
 <script>
 import applicant from './applicant.vue'
+import { openBrowserTab } from '@/utils/index'
 export default {
   components: {
     applicant
@@ -365,6 +406,7 @@ export default {
 
         outTradeNo: '', // 订单号
         transactionId: '', // 订单交易流水号
+        mobile: '', // 用户手机号
         sbuytime: '', // 订单支付-开始时
         ebuytime: '', // 订单支付-结束时间
         sctime: '', // 申请退款-开始时间
@@ -374,7 +416,7 @@ export default {
         applyName: ''
       },
       // 被动关联事件_断值(用于赋值↑下半段)
-      num1: '0',
+      num1: '2',
       num1_: '',
       num2: '',
       num2_: '',
@@ -404,6 +446,16 @@ export default {
     return { self: this }
   },
   methods: {
+    // 用户跳转
+    userHandle(user) {
+      if (!user || !user.uid) {
+        this.$message.error('缺少用户信息')
+        return
+      }
+      const { uid } = user
+      // 新标签打开详情页
+      uid && openBrowserTab(`/users/#/details/${uid}`)
+    },
     businessType(val) {
       console.info(val, typeof val)
       if (val === '1' || val === '2') {
@@ -463,10 +515,12 @@ export default {
     // 2组关联
     chooseOrder(val) {
       console.info(val, typeof val)
+      console.log(val, 'val====')
       if (val === '0') {
         // 订单号
         if (this.num1_) {
           this.searchJson.transactionId = ''
+          this.searchJson.mobile = ''
           this.searchJson.outTradeNo = 'xiong' + this.num1_
           this.arrangeParams()
         } else {
@@ -479,6 +533,7 @@ export default {
         // 流水号
         if (this.num1_) {
           this.searchJson.outTradeNo = ''
+          this.searchJson.mobile = ''
           this.searchJson.transactionId = this.num1_
           this.arrangeParams()
         } else {
@@ -487,25 +542,58 @@ export default {
             type: 'warning'
           })
         }
+      } else if (val === '2') {
+        if (this.num1_) {
+          this.searchJson.outTradeNo = ''
+          this.searchJson.transactionId = ''
+          this.searchJson.mobile = this.num1_
+          this.arrangeParams()
+        } else {
+          this.$message({
+            message: '别忘记键入编号,才能给你数据',
+            type: 'warning'
+          })
+        }
+        // 用户手机号
       } else {
         this.searchJson.outTradeNo = ''
         this.searchJson.transactionId = ''
+        this.searchJson.mobile = ''
         this.arrangeParams()
       }
     },
     intoNumber(val) {
       console.info(val, typeof val)
+      console.log(this.num1)
       if (this.num1 === '0') {
         // 订单号
-        this.searchJson.transactionId = ''
-        this.searchJson.outTradeNo = 'xiong' + val
-        this.arrangeParams()
+        if (val) {
+          this.searchJson.transactionId = ''
+          this.searchJson.mobile = ''
+          this.searchJson.outTradeNo = 'xiong' + val
+          this.arrangeParams()
+        } else {
+          this.searchJson.transactionId = ''
+          this.searchJson.mobile = ''
+          this.searchJson.outTradeNo = ''
+          this.arrangeParams()
+        }
       } else if (this.num1 === '1') {
         // 流水号
         this.searchJson.outTradeNo = ''
+        this.searchJson.mobile = ''
         this.searchJson.transactionId = val
         this.arrangeParams()
+      } else if (this.num1 === '2') {
+        // 用户手机号
+        this.searchJson.outTradeNo = ''
+        this.searchJson.transactionId = ''
+        this.searchJson.mobile = val
+        this.arrangeParams()
       } else {
+        this.searchJson.outTradeNo = ' '
+        this.searchJson.transactionId = ' '
+        this.searchJson.mobile = ' '
         this.$message({
           message: '请先选择订单搜索类型,我再给你数据',
           type: 'error'
@@ -624,7 +712,7 @@ export default {
         if (this.searchJson[key] !== '') {
           finalJson[key] = this.searchJson[key]
         } else {
-          console.info(`给青龙大哥剔牙--${key}-因为它是${this.searchJson[key]}`)
+          // console.info(`给青龙大哥剔牙--${key}-因为它是${this.searchJson[key]}`)
         }
       }
       console.warn('整理完毕,去找接口要数据', finalJson)
@@ -650,7 +738,7 @@ export default {
         if (this.searchJson[key] !== '') {
           finalJson[key] = this.searchJson[key]
         } else {
-          console.info(`给青龙大哥剔牙--${key}-因为它是${this.searchJson[key]}`)
+          // console.info(`给青龙大哥剔牙--${key}-因为它是${this.searchJson[key]}`)
         }
       }
       // 再剔除页码与页容量
@@ -858,5 +946,9 @@ export default {
 .buttonBetween {
   display: flex;
   justify-content: space-around;
+}
+.usertext {
+  color: #2a75ed;
+  cursor: pointer;
 }
 </style>
