@@ -3,8 +3,8 @@
  * @version: 
  * @Author: panjian
  * @Date: 2020-07-08 13:40:39
- * @LastEditors: panjian
- * @LastEditTime: 2020-07-08 15:11:44
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-09-01 22:20:30
 -->
 <!-- 用户信息 -->
 <template>
@@ -60,10 +60,10 @@ export default {
       if (Object.keys(this.singleData).length) {
         uid &&
           openBrowserTab(
-            `/users/#/details/${uid}?isrefund=${this.singleData.isrefund}`
+            `/write_app/#/details/${uid}?isrefund=${this.singleData.isrefund}`
           )
       } else {
-        uid && openBrowserTab(`/users/#/details/${uid}`)
+        uid && openBrowserTab(`/write_app/#/details/${uid}`)
       }
     }
   }

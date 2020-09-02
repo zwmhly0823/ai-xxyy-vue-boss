@@ -19,6 +19,11 @@
     }
   }
 
+  .trial-container {
+    overflow: hidden;
+    flex: 1;
+    padding-bottom: 32px;
+  }
   .trial-container-sidebar {
     transition: all 0.2s;
     &.closed {

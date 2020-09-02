@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-05-25 15:34:04
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-27 17:55:06
+ * @LastEditTime: 2020-09-01 22:21:30
 -->
 <template>
   <div class="user-list">
@@ -854,7 +854,7 @@ export default {
       // 新标签打开详情页
       studentid &&
         openBrowserTab(
-          `/users/#/details/${studentid}`,
+          `/write_app/#/details/${studentid}`,
           `学员：${username || mobile}`
         )
     },
@@ -897,7 +897,7 @@ export default {
       const { teamid, teamname, teamtype = '1' } = row
       teamid &&
         openBrowserTab(
-          `/student-team/#/teamDetail/${teamid}/${teamtype}`,
+          `/write_app/#/teamDetail/${teamid}/${teamtype}`,
           `${teamname}`
         )
     },

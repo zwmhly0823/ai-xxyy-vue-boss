@@ -4,7 +4,7 @@
  * @Date: 2020-03-13 15:13:34
  * @Description: topbar 顶部功能区
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-28 11:46:45
+ * @LastEditTime: 2020-08-28 20:54:45
  -->
 <template>
   <div class="navbar" :class="{ prod: isProd }">
@@ -81,13 +81,13 @@
       <div class="subject-change">
         <el-dropdown
           @command="handleChangeSubject"
-          trigger="click"
+          trigger="hover"
           placement="bottom"
         >
           <div class="subject-change-title">
-            {{ currentSubjectText }}
+            <!-- {{ currentSubjectText }} -->
+            科目
             <i class="el-icon-arrow-down el-icon--right"></i>
-            <!-- <div class="subject-change-tips">-- 切换科目 --</div> -->
           </div>
           <el-dropdown-menu slot="dropdown" class="subject-change-menu">
             <el-dropdown-item
@@ -168,10 +168,10 @@ export default {
         (item) => item.key !== this.subjects.currentSubjectKey
       )
       return list
-    },
-    currentSubjectText() {
-      return this.subjects.currentSubjectTitle
     }
+    // currentSubjectText() {
+    //   return this.subjects.currentSubjectTitle
+    // }
   },
   watch: {
     dialogVisible(val) {
@@ -414,7 +414,7 @@ export default {
     .el-icon-arrow-down {
       position: absolute;
       right: -20px;
-      top: 22px;
+      top: 20px;
       font-size: 12px;
     }
     .notices-content {
@@ -426,27 +426,17 @@ export default {
   }
   // 多科目
   .subject-change {
+    position: relative;
     float: right;
-    min-width: 105px;
+    min-width: 100px;
     margin-left: 10px;
-    padding-left: 15px;
-    padding-right: 30px;
-    border-left: 1px solid #ddd;
+    padding-left: 30px;
+    border-left: 2px solid #bec0c3;
     cursor: pointer;
     &-title {
       position: relative;
+      font-weight: 500;
     }
-    // &-tips {
-    //   position: absolute;
-    //   line-height: 12px;
-    //   font-size: 12px;
-    //   bottom: 2px;
-    //   left: -5px;
-    //   right: -25px;
-    //   text-align: center;
-    //   transform: scale(0.9);
-    //   color: #ccc;
-    // }
   }
 }
 .subject-change {

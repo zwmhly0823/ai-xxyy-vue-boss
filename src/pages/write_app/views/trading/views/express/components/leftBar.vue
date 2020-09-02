@@ -105,18 +105,18 @@ export default {
       axios
         .post('/graphql/logisticsStatistics', {
           query: `{
-logisticsStatistics(query:${query}) {
-no_address
-wait_send
-has_send
-has_signed
-signed_failed
-has_return
-confirm_wait_send
-invalid
-difficult
-}
-}`
+            logisticsStatistics(query:${query}) {
+            no_address
+            wait_send
+            has_send
+            has_signed
+            signed_failed
+            has_return
+            confirm_wait_send
+            invalid
+            difficult
+            }
+            }`
         })
         .then((res) => {
           console.log(res, 'resList', res.data.logisticsStatistics, this.whack)

@@ -215,8 +215,10 @@ export default {
   },
   computed: {
     topicArr() {
-      if (this.topic === '4' || this.topic === '5') {
-        return [this.topic]
+      if (this.topic === '4') {
+        return ['7']
+      } else if (this.topic === '5') {
+        return ['8']
       } else if (this.topic === '1,2,6') {
         return this.topic.split(',')
       }
@@ -314,7 +316,8 @@ export default {
         //   }
         // })
       }
-
+      // console.log('', this.topicArr)
+      //  const topiArrcId = this.topic === '5' ? '8' : this.topic
       const topicRelation = await this.$http.Product.topicRelationId(
         `${JSON.stringify({
           topic_id: this.topicArr
@@ -475,11 +478,11 @@ export default {
     // 打开班级详情
     openDetail(id, row) {
       row && console.log(row)
-      id && openBrowserTab(`/student-team/#/teamDetail/${id}/0`)
+      id && openBrowserTab(`/write_app/#/teamDetail/${id}/0`)
     },
     // 用户详情
     openUserDetail(id) {
-      id && openBrowserTab(`/users/#/details/${id}`)
+      id && openBrowserTab(`/write_app/#/details/${id}`)
     }
   }
 }

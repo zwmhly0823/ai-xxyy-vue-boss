@@ -3,8 +3,8 @@
  * @version: 1.0.0
  * @Author: Shentong
  * @Date: 2020-05-14 14:11:21
- * @LastEditors: Shentong
- * @LastEditTime: 2020-08-26 17:19:49
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-09-01 22:20:18
  -->
 <template>
   <el-row type="flex" class="app-main team-container">
@@ -359,7 +359,7 @@ export default {
       //   })
       id &&
         openBrowserTab(
-          `/student-team/#/teamDetail/${id}/${teamType}`,
+          `/write_app/#/teamDetail/${id}/${teamType}`,
           `${row.team_name}`
         )
     },

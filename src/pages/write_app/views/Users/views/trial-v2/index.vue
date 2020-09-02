@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-06-16 16:27:14
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-25 14:53:21
+ * @LastEditTime: 2020-09-01 22:19:38
 -->
 <template>
   <div class="user-list">
@@ -1221,9 +1221,15 @@ export default {
       // 上面的方法获取到term之后，才会加载search组件，加载完search组件之后才去算table的高
       // 之所以要等是为了避免重绘 ---我是这么想的
       this.$nextTick(() => {
-        const tableHeight =
-          document.body.clientHeight - this.$refs.tableInner.offsetTop - 90
-        this.tableHeight = tableHeight + ''
+        setTimeout(() => {
+          const tableHeight =
+            document.body.clientHeight - this.$refs.tableInner.offsetTop - 90
+          this.tableHeight = tableHeight + ''
+          console.log(
+            this.$refs.tableInner.offsetTop,
+            'this.$refs.tableInner.offsetTop'
+          )
+        }, 1000)
       })
     },
     handleSizeChange(page) {
@@ -1279,13 +1285,15 @@ export default {
 
     // 点击用户信息回调事件
     userHandle(user) {
+      console.log(user, 'user')
+
       if (!user || !user.id) {
         this.$message.error('缺少用户信息')
         return
       }
       const { id } = user
       // 新标签打开详情页
-      id && openBrowserTab(`/users/#/details/${id}`)
+      id && openBrowserTab(`/write_app/#/details/${id}`)
     },
 
     expressStatus(status) {
@@ -1304,8 +1312,7 @@ export default {
       if (!row.teacherInfo || !row.teamInfo || !row.team_id) return
       const teamId = row.team_id
       const teamType = row.teamInfo.team_type || '0'
-      teamId &&
-        openBrowserTab(`/student-team/#/teamDetail/${teamId}/${teamType}`)
+      teamId && openBrowserTab(`/write_app/#/teamDetail/${teamId}/${teamType}`)
     },
 
     formatDate(date, flag = 's') {

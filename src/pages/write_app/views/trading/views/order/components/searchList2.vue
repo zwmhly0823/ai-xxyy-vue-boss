@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-04-25 17:24:23
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-08-24 21:31:02
+ * @LastEditTime: 2020-09-01 20:35:09
  -->
 <template>
   <el-card
@@ -30,7 +30,7 @@
         <orderStatus @result="getExpressStatus" />
       </el-form-item> -->
 
-      <el-form-item label="推荐人信息:" :class="{ [$style.marginer]: true }">
+      <!-- <el-form-item label="推荐人信息:" :class="{ [$style.marginer]: true }">
         <div class="row_colum">
           <simple-select
             name="is_first_order_send_id"
@@ -49,7 +49,7 @@
             v-if="hasSendId"
           />
         </div>
-      </el-form-item>
+      </el-form-item> -->
       <br />
 
       <el-form-item label="下单时间:" :class="{ [$style.marginer]: true }">
@@ -133,9 +133,8 @@
             :class="['margin_l10']"
             style="width:140px"
           />
-          <!-- BOSS 显示单双周选择 -->
+          <!-- 写字 班级类型  -->
           <trial-course-type
-            v-if="!teacherId"
             class="margin_l10"
             name="packages_id"
             @result="getTrialCourseType"
@@ -184,8 +183,10 @@
 </template>
 <script>
 import dayjs from 'dayjs'
-import hardLevel from '@/components/MSearch/searchItems/hardWriteLevel.vue' // add
+import hardLevel from '../../../../../components/search/Grade.vue' // add
+import TrialCourseType from '@/pages/write_app/components/search/subjecType.vue'
 import orderSearch from '@/components/MSearch/searchItems/orderSearch.vue' // add
+
 // import orderStatus from '@/components/MSearch/searchItems/orderStatus.vue' // add
 import DatePicker from '@/components/MSearch/searchItems/datePicker.vue'
 import ChannelSelect from '@/components/MSearch/searchItems/channel.vue'
@@ -193,10 +194,10 @@ import GroupSell from '@/components/MSearch/searchItems/groupSell'
 import Department from '@/components/MSearch/searchItems/department'
 import SearchTeamName from '@/components/MSearch/searchItems/searchTeamName'
 import SearchStage from '@/components/MSearch/searchItems/searchStage'
-import TrialCourseType from '@/components/MSearch/searchItems/trialClassType'
+
 import { downloadHandle } from '@/utils/download'
-import SearchPhoneAndUsername from '@/components/MSearch/searchItems/searchPhoneAndUsername'
-import SimpleSelect from '@/components/MSearch/searchItems/simpleSelect'
+// import SearchPhoneAndUsername from '@/components/MSearch/searchItems/searchPhoneAndUsername'
+// import SimpleSelect from '@/components/MSearch/searchItems/simpleSelect'
 import { isToss } from '@/utils/index'
 
 export default {
@@ -210,9 +211,9 @@ export default {
     Department,
     SearchTeamName,
     SearchStage,
-    TrialCourseType,
-    SearchPhoneAndUsername,
-    SimpleSelect
+    TrialCourseType
+    // SearchPhoneAndUsername,
+    // SimpleSelect
   },
 
   data() {

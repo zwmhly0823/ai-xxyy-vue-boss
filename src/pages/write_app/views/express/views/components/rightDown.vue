@@ -736,7 +736,7 @@ export default {
       }
       const { id } = user
       // 新标签打开详情页
-      id && openBrowserTab(`/users/#/details/${id}`)
+      id && openBrowserTab(`/write_app/#/details/${id}`)
     },
     // 初始化searchIn
     initTableData() {

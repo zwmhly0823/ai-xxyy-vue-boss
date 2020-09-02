@@ -3,8 +3,8 @@
  * @version: 1.0.0
  * @Author: YangJiyong
  * @Date: 2020-08-19 20:26:32
- * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-08-27 17:58:21
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-08-31 18:11:53
  */
 import Vue from 'vue'
 import VueRouter from 'vue-router'
@@ -22,6 +22,15 @@ const routes = [
     }
   },
   {
+    path: '/details/:id',
+    name: 'detailsUsers',
+    meta: {
+      title: '学员详情',
+      keepAlive: false
+    },
+    component: () => import('../../users/views/details/index.vue')
+  },
+  {
     path: '/trialUsers',
     name: 'trialUsers',
     meta: {
@@ -35,6 +44,15 @@ const routes = [
     name: 'systemUsers',
     meta: {
       title: '系统课学员',
+      keepAlive: true
+    },
+    component: () => import('../views/users/views/usersModule.vue')
+  },
+  {
+    path: '/allUsers',
+    name: 'allUsers',
+    meta: {
+      title: '全部学员',
       keepAlive: true
     },
     component: () => import('../views/users/views/usersModule.vue')
@@ -142,15 +160,6 @@ const routes = [
   //     },
   //     component: () => import('../views/usersModule.vue')
   //   },
-  //   {
-  //     path: '/details/:id',
-  //     name: 'detailsUsers',
-  //     meta: {
-  //       title: '学员详情',
-  //       keepAlive: false
-  //     },
-  //     component: () => import('../views/details/index.vue')
-  //   }
 
   /**
    * 运营管理
