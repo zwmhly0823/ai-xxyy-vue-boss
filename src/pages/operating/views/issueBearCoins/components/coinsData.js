@@ -1,15 +1,15 @@
 const enums = {
   coinsStatus: [
     {
-      id: 8,
+      id: 'OPERATION_ACTIVE',
       text: '运营活动'
     },
     {
-      id: 9,
+      id: 'COMPLAINT_COMPENSATE',
       text: '投诉补偿'
     },
     {
-      id: 14,
+      id: 'OPERATIONAL_DEDUCT',
       text: '系统扣除'
     }
   ]

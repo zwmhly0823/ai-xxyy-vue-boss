@@ -15,7 +15,7 @@
             :data="tableData"
             style="width: 100%;border-top:1px solid #EBEEF5"
           >
-            <el-table-column
+            <!-- <el-table-column
               label="用户编号"
               min-width="15%"
               align="center"
@@ -27,18 +27,13 @@
                   {{ scope.row.user.user_num }}
                 </span>
               </template>
-            </el-table-column>
+            </el-table-column> -->
             <el-table-column
               label="补发类型"
               min-width="15%"
               align="center"
-              prop="account_type"
+              prop="transTypeName"
             >
-              <template slot-scope="scope">
-                <span v-if="scope.row.trans_type === '8'">运营活动</span>
-                <span v-if="scope.row.trans_type === '9'">投诉补偿</span>
-                <span v-if="scope.row.trans_type === '14'">系统扣除</span>
-              </template>
             </el-table-column>
             <el-table-column label="补发数量" min-width="15%" align="center">
               <template slot-scope="scope">
@@ -50,7 +45,7 @@
               label="补发原因"
               min-width="35%"
               align="center"
-              prop="desc"
+              prop="reason"
             >
             </el-table-column>
             <el-table-column
@@ -124,14 +119,12 @@ export default {
         background: 'rgba(0, 0, 0, 0.1)'
       })
       const query = {
-        account_type: 2,
-        trans_type: [8, 9, 14]
+        pageNumber: this.currentPage
       }
       Object.assign(query, this.searchMobile, this.searchType, this.searchTime)
-      const params = JSON.stringify(JSON.stringify(query))
-      this.$http.Operating.issueBearList(params, this.currentPage)
+      this.$http.Operating.issueBearList(query)
         .then((res) => {
-          const data = res.data && res.data.AccountPage
+          const data = res.payload
           if (data) {
             const { totalElements, content = [] } = data
             this.totalElements = totalElements
@@ -157,6 +150,20 @@ export default {
             cItem.statusName = '失败'
             break
         }
+        switch (cItem.transType) {
+          case 'OPERATION_ACTIVE':
+            cItem.transTypeName = '运营活动'
+            break
+          case 'COMPLAINT_COMPENSATE':
+            cItem.transTypeName = '投诉补偿'
+            break
+          case 'OPERATIONAL_DEDUCT':
+            cItem.transTypeName = '系统扣除'
+            break
+          default:
+            cItem.transTypeName = '-'
+            break
+        }
       })
       return content
     },
@@ -166,7 +173,14 @@ export default {
       this.getData()
     },
     getSearchTime(res) {
-      this.searchTime = res
+      if (res) {
+        this.searchTime = {
+          startTime: res.ctime.gte,
+          endTime: res.ctime.lte
+        }
+      } else {
+        this.searchTime = ''
+      }
       this.currentPage = 1
       this.getData()
     },
