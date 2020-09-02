@@ -3,8 +3,8 @@
  * @version: 1.0.0
  * @Author: YangJiyong
  * @Date: 2020-06-22 12:08:17
- * @LastEditors: songyanan
- * @LastEditTime: 2020-08-28 17:14:00
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-09-02 16:39:10
 -->
 <template>
   <div class="search-mobile d-flex align-center">
@@ -55,6 +55,7 @@
 <script>
 import { debounce } from 'lodash'
 import axios from '@/api/axiosConfig'
+import { injectSubject } from '@/utils/index'
 export default {
   props: {
     customStyle: {
@@ -173,7 +174,7 @@ export default {
         .post('/graphql/v1/toss', {
           query: `{
                   ${this.tablename}(query: ${JSON.stringify(
-            q
+            injectSubject(q)
           )}, sort: ${JSON.stringify(sort)}){
                     id
                     user_num_text
