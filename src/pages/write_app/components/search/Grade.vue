@@ -4,8 +4,8 @@
  * @version: 1.0.0
  * @Author: YangJiyong
  * @Date: 2020-08-25 11:57:39
- * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-09-01 16:21:29
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-09-02 21:44:21
 -->
 <template>
   <simple-select
@@ -59,11 +59,11 @@ export default {
       dataListTrial: [
         {
           id: '1',
-          text: 'S1(基础)'
+          text: '基础(S1)'
         },
         {
           id: '2',
-          text: 'S2(高阶)'
+          text: '高阶(S2)'
         }
       ],
       dataListSys: [
