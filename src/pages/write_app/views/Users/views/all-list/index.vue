@@ -54,23 +54,14 @@
           <!-- 体验课信息 -->
           <el-table-column label="销售/班级" min-width="165">
             <template slot-scope="scope">
-              <span v-if="scope.row.userExtendsInfo.teams.length === 0">{{
-                '--'
-              }}</span>
+              <span v-if="scope.row.trailTeams.length === 0">--</span>
               <div v-else>
-                <div
-                  v-for="(item, index) in scope.row.userExtendsInfo.teams"
-                  :key="index"
-                >
-                  <div
-                    v-if="item.subject === subjectCode && +item.team_type === 0"
-                  >
-                    <div>
-                      <span>{{ item.teacher_info.realname }}</span>
-                      <span class="hight">{{ `(${item.team_name})` }}</span>
-                    </div>
-                    <div>{{ `${item.teacher_info.departmentInfo.name}` }}</div>
+                <div v-for="(item, index) in scope.row.trailTeams" :key="index">
+                  <div>
+                    <span>{{ item.teacher_info.realname }}</span>
+                    <span class="hight">{{ `(${item.team_name})` }}</span>
                   </div>
+                  <div>{{ `${item.teacher_info.departmentInfo.name}` }}</div>
                 </div>
               </div>
             </template>
@@ -78,12 +69,10 @@
           <!-- 系统课信息 -->
           <el-table-column label="班主任/班级" min-width="165">
             <template slot-scope="scope">
-              <span v-if="scope.row.userExtendsInfo.teams.length === 0">{{
-                '--'
-              }}</span>
+              <span v-if="scope.row.systemTeams.length === 0">--</span>
               <div v-else>
                 <div
-                  v-for="(item, index) in scope.row.userExtendsInfo.teams"
+                  v-for="(item, index) in scope.row.systemTeams"
                   :key="index"
                 >
                   <div
@@ -107,11 +96,14 @@
           <el-table-column label="首次来源渠道" min-width="100">
             <template slot-scope="scope">
               <span v-if="scope.row.userExtendsInfo">
-                {{ scope.row.userExtendsInfo.channelInfo.channel_outer_name }}
+                {{
+                  scope.row.userExtendsInfo.channelInfo.channel_outer_name ||
+                    '-'
+                }}
               </span>
             </template>
           </el-table-column>
-          <el-table-column label="系统课转化" min-width="65" fixed="right">
+          <el-table-column label="系统课转化" min-width="90" fixed="right">
             <template slot-scope="scope">
               <span
                 v-if="scope.row.userExtendsInfo !== null"
@@ -346,6 +338,14 @@ export default {
             item.user_status_name = '已购半年课'
             break
         }
+        // 销售/班级（体验课班级）
+        item.trailTeams = item.userInfo.teams.filter(
+          (item) => item.subject === this.subjectCode && +item.team_type === 0
+        )
+        // 班主任/班级（系统课班级）
+        item.systemTeams = item.userInfo.teams.filter(
+          (item) => item.subject === this.subjectCode && +item.team_type > 0
+        )
       })
       return data
     },
