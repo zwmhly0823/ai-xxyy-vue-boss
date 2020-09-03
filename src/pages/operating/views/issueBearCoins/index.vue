@@ -22,7 +22,7 @@
               prop="userNum"
             >
               <template slot-scope="scope">
-                <span v-if="!+scope.row.userNum"></span>
+                <span v-if="!+scope.row.userNum">-</span>
                 <span v-else class="user-detail" @click="userHandle(scope.row)">
                   {{ scope.row.userNum }}
                 </span>
@@ -119,7 +119,7 @@ export default {
         background: 'rgba(0, 0, 0, 0.1)'
       })
       const query = {
-        pageNumber: this.currentPage,
+        pageNumber: this.currentPage - 1,
         pageSize: 20
       }
       Object.assign(query, this.searchMobile, this.searchType, this.searchTime)
