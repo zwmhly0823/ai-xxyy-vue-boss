@@ -24,7 +24,12 @@
         <!-- dom -->
         <div class="tableInner" ref="tableInner"></div>
         <!-- table -->
-        <el-table ref="table" :data="dataList" empty-text=" ">
+        <el-table
+          ref="table"
+          :data="dataList"
+          empty-text=" "
+          :height="tableHeight"
+        >
           <el-table-column
             label="用户ID"
             min-width="165"
@@ -153,6 +158,7 @@ export default {
   data() {
     return {
       subjectCode: getAppSubjectCode(),
+      tableHeight: 0,
       // 查询条件
       search: [],
       term: '',
@@ -258,6 +264,13 @@ export default {
     }
   },
   mounted() {
+    this.$nextTick(() => {
+      setTimeout(() => {
+        const tableHeight =
+          document.body.clientHeight - this.$refs.tableInner.offsetTop - 90
+        this.tableHeight = tableHeight + ''
+      }, 1000)
+    })
     this.getData()
   },
   methods: {
