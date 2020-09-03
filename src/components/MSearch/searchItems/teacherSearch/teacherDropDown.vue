@@ -168,21 +168,13 @@ export default {
       // 职级value
       rankData: null,
       // 入职状态value
-      inductionData: null,
+      inductionData: '0',
       // 登陆状态value
       landingData: null,
       // 职务value
       positionData: null,
       // 销售等级value
       sellerLevelData: null
-    }
-  },
-  watch: {
-    channelData(val) {
-      console.log(val)
-    },
-    addSupS(val) {
-      console.log(val)
     }
   },
   async created() {

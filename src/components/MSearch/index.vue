@@ -856,8 +856,6 @@ export default {
     },
     // 物流时间
     getTimeData(res) {
-      console.log(this.selectTime, '清除时的this.selectTime')
-
       this.setSeachParmas(res, [this.selectTime || this.oldTime], 'range')
     },
     // 选择物流单号

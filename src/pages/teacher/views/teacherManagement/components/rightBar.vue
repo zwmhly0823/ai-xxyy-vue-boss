@@ -9,15 +9,16 @@
 <template>
   <div>
     <m-search
+      ref="searchComponent"
       @search="handleSearch"
       teacherphone="phone.keyword"
       teachername="realname.keyword"
       teachernickname="nickname.keyword"
       rank="rank_id"
+      induction="status"
       landing="is_login"
       position="duty_id"
       seller-level="level"
-      v-if="true"
     >
       <!-- <el-button type="primary" slot="searchItems" size="mini">搜索</el-button> -->
       <el-button
@@ -269,7 +270,7 @@ export default {
       tableHeight: 0,
       departmentQuery: '',
       searchQuery: '',
-      query: { status: 0 },
+      query: {},
       sex: {
         // 0: '-',
         0: '男',
@@ -320,7 +321,7 @@ export default {
       }
       if (query.department.pid === '99999') {
         this.departmentQuery = ''
-        this.query = { status: 0 }
+        this.query = {}
       } else {
         this.departmentQuery = query
       }
@@ -336,7 +337,12 @@ export default {
   },
   activated() {
     setTimeout(() => {
-      this.getData()
+      // 搜索项有初始值，先去走一遍搜索
+      if (this.searchQuery) {
+        this.getData()
+      } else {
+        this.$refs.searchComponent.setSeachParmas({ status: '0' }, ['status'])
+      }
       if (this.teacherID) {
         this.$refs.detailsHidden.createdUrl(this.teacherID)
       }
@@ -354,11 +360,10 @@ export default {
             Object.assign(term, res.terms)
           }
         })
-        // this.query = JSON.stringify(term)
         this.searchQuery = term
       } else {
         this.searchQuery = ''
-        this.query = { status: 0 }
+        this.query = {}
       }
       this.getData(1)
     },
@@ -380,7 +385,7 @@ export default {
       })
       this.$http.Teacher.getTeacherPage(page, JSON.stringify(query))
         .then((res) => {
-          console.log(res.data.TeacherManagePage.content, '老师列表')
+          // console.log(res.data.TeacherManagePage.content, '老师列表')
           if (res && res.data && res.data.TeacherManagePage) {
             const {
               content = [],
@@ -390,7 +395,7 @@ export default {
             } = res.data.TeacherManagePage
             content.forEach((res) => {
               const { teacherLevelInfo = {} } = res
-              console.log(teacherLevelInfo)
+              // console.log(teacherLevelInfo)
               res.join_date = res.join_date
                 ? formatData(new Date(res.join_date).getTime(), 'd')
                 : ''
