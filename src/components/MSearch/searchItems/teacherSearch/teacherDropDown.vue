@@ -100,6 +100,16 @@
       >
       </el-option>
     </el-select>
+    <!-- 在职状态 -->
+    <el-select
+      class="item-style"
+      clearable
+      v-if="!isNull(staffStatus)"
+      size="mini"
+      placeholder="选择在职状态"
+    >
+      <el-option></el-option>
+    </el-select>
   </div>
 </template>
 
@@ -140,6 +150,11 @@ export default {
     addSupS: {
       type: Boolean,
       default: false
+    },
+    // 在职状态
+    staffStatus: {
+      type: Number,
+      default: null
     }
   },
   data() {
