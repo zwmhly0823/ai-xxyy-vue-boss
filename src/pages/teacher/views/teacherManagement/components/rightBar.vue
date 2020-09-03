@@ -9,15 +9,16 @@
 <template>
   <div>
     <m-search
+      ref="searchComponent"
       @search="handleSearch"
       teacherphone="phone.keyword"
       teachername="realname.keyword"
       teachernickname="nickname.keyword"
       rank="rank_id"
+      induction="status"
       landing="is_login"
       position="duty_id"
       seller-level="level"
-      staff-status="status"
     >
       <!-- <el-button type="primary" slot="searchItems" size="mini">搜索</el-button> -->
       <el-button
@@ -336,7 +337,9 @@ export default {
   },
   activated() {
     setTimeout(() => {
-      this.getData()
+      // this.getData()
+      // 搜索项有初始值，先去走一遍搜索
+      this.$refs.searchComponent.setSeachParmas({ status: '0' }, ['status'])
       if (this.teacherID) {
         this.$refs.detailsHidden.createdUrl(this.teacherID)
       }
@@ -354,7 +357,6 @@ export default {
             Object.assign(term, res.terms)
           }
         })
-        // this.query = JSON.stringify(term)
         this.searchQuery = term
       } else {
         this.searchQuery = ''

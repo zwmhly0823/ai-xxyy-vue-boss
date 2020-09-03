@@ -175,7 +175,6 @@
           :landingName="landing"
           :positionName="position"
           :sellerLevelName="sellerLevel"
-          :staffStatus="staffStatus"
           style="margin-bottom:0px"
         />
       </el-form-item>
@@ -710,11 +709,6 @@ export default {
     searchCourseware: {
       type: String,
       default: ''
-    },
-    // 在职状态
-    staffStatus: {
-      type: Number,
-      default: null
     }
   },
   components: {
@@ -862,8 +856,6 @@ export default {
     },
     // 物流时间
     getTimeData(res) {
-      console.log(this.selectTime, '清除时的this.selectTime')
-
       this.setSeachParmas(res, [this.selectTime || this.oldTime], 'range')
     },
     // 选择物流单号

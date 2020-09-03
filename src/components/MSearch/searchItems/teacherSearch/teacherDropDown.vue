@@ -100,16 +100,6 @@
       >
       </el-option>
     </el-select>
-    <!-- 在职状态 -->
-    <el-select
-      class="item-style"
-      clearable
-      v-if="!isNull(staffStatus)"
-      size="mini"
-      placeholder="选择在职状态"
-    >
-      <el-option></el-option>
-    </el-select>
   </div>
 </template>
 
@@ -150,11 +140,6 @@ export default {
     addSupS: {
       type: Boolean,
       default: false
-    },
-    // 在职状态
-    staffStatus: {
-      type: Number,
-      default: null
     }
   },
   data() {
@@ -183,21 +168,13 @@ export default {
       // 职级value
       rankData: null,
       // 入职状态value
-      inductionData: null,
+      inductionData: '0',
       // 登陆状态value
       landingData: null,
       // 职务value
       positionData: null,
       // 销售等级value
       sellerLevelData: null
-    }
-  },
-  watch: {
-    channelData(val) {
-      console.log(val)
-    },
-    addSupS(val) {
-      console.log(val)
     }
   },
   async created() {
