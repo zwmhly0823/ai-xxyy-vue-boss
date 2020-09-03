@@ -145,10 +145,10 @@ export default {
             cItem.statusName = '默认'
             break
           case 'SUCCESS':
-            cItem.statusName = '成功'
+            cItem.statusName = '导入成功'
             break
           case 'FAILED':
-            cItem.statusName = '失败'
+            cItem.statusName = '导入失败'
             break
         }
         switch (cItem.transType) {
