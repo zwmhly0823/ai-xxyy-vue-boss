@@ -3,8 +3,8 @@
  * @version:
  * @Author: Shentong
  * @Date: 2020-03-17 11:50:18
- * @LastEditors: Shentong
- * @LastEditTime: 2020-09-02 18:06:28
+ * @LastEditors: liukun
+ * @LastEditTime: 2020-09-03 21:21:06
  */
 import axios from './axios'
 import { getToken } from '@/utils/auth'
@@ -29,6 +29,7 @@ export default {
 
     if (needToken && !token) {
       location.href = `${baseUrl()}login/#/`
+      // location.href = `/login/#/`
       return 0
     }
     return 1
