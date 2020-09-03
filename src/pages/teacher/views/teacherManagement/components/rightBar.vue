@@ -337,9 +337,12 @@ export default {
   },
   activated() {
     setTimeout(() => {
-      // this.getData()
       // 搜索项有初始值，先去走一遍搜索
-      this.$refs.searchComponent.setSeachParmas({ status: '0' }, ['status'])
+      if (this.searchQuery) {
+        this.getData()
+      } else {
+        this.$refs.searchComponent.setSeachParmas({ status: '0' }, ['status'])
+      }
       if (this.teacherID) {
         this.$refs.detailsHidden.createdUrl(this.teacherID)
       }
