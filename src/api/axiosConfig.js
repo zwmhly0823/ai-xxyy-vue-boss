@@ -3,8 +3,8 @@
  * @version:
  * @Author: Shentong
  * @Date: 2020-03-17 11:50:18
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-22 18:28:42
+ * @LastEditors: liukun
+ * @LastEditTime: 2020-09-03 21:13:42
  */
 import axios from './axios'
 import { getToken } from '@/utils/auth'
@@ -25,7 +25,7 @@ export default {
     const needToken = location.href.indexOf('login') === -1
 
     if (needToken && !token) {
-      location.href = `${baseUrl}/login/#/`
+      location.href = `${baseUrl()}login/#/`
       // location.href = `/login/#/`
       return 0
     }
