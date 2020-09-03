@@ -3,8 +3,8 @@
  * @version: 1.0.0
  * @Author: YangJiyong
  * @Date: 2020-08-19 20:26:32
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-31 18:11:53
+ * @LastEditors: Shentong
+ * @LastEditTime: 2020-09-03 15:13:38
  */
 import Vue from 'vue'
 import VueRouter from 'vue-router'
@@ -173,6 +173,19 @@ const routes = [
     },
     component: () =>
       import('../views/operating/views/channelManagement/channelManagement.vue')
+  },
+  /**
+   * 点评管理
+   */
+  {
+    path: '/reviewManagement',
+    name: 'reviewManagement',
+    meta: {
+      title: '渠道管理',
+      keepAlive: true
+    },
+    component: () =>
+      import('../views/operating/views/reviewManagement/index.vue')
   },
   /**
    * 营销中心  - 和小熊美术用一套

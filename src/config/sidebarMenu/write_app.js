@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-08-19 21:14:16
  * @LastEditors: Shentong
- * @LastEditTime: 2020-09-02 17:59:06
+ * @LastEditTime: 2020-09-03 15:25:32
  */
 import { removeToken } from '@/utils/auth'
 import { baseUrl } from '@/utils/index'
@@ -193,6 +193,14 @@ const msbWriting = [
         name: 'channelManagement',
         meta: {
           title: '渠道管理',
+          module
+        }
+      },
+      {
+        path: '/reviewManagement',
+        name: 'reviewManagement',
+        meta: {
+          title: '点评管理',
           module
         }
       },
