@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-09-03 15:14:25
  * @LastEditors: Shentong
- * @LastEditTime: 2020-09-03 19:22:23
+ * @LastEditTime: 2020-09-04 21:00:21
 -->
 <template>
   <el-row type="flex" class="app-main reviewManagement">
@@ -51,7 +51,12 @@
                     v-for="(img, index) in scope.row.imgs"
                     :key="index"
                   >
-                    <img :src="img" alt="" />
+                    <el-image
+                      style="width: 100px; height: 100px"
+                      :src="img"
+                      :preview-src-list="scope.row.imgs"
+                    >
+                    </el-image>
                   </div>
                 </template>
               </el-table-column>
@@ -102,8 +107,12 @@
                     @click="audioClickHandle(scope.$index, index, item)"
                     :key="index"
                   >
-                    <i class="el-icon-video-play"></i>
-                    <i class="el-icon-video-pause"></i>
+                    <i
+                      v-if="currentAudioIndex == `${scope.$index}${index}`"
+                      class="el-icon-video-pause"
+                    ></i>
+                    <i v-else class="el-icon-video-play"></i>
+                    <!-- :ref="`audioRef_${scope.$index}_${index}`" -->
                     <audio
                       :src="item"
                       :ref="`audioRef_${scope.$index}_${index}`"
@@ -176,24 +185,21 @@ export default {
         {
           imgs: [
             'http://s1.meixiu.mobi/android-images/2020-08-04/9826c5d2a4634f438cb0d9b4415f583f.jpg',
-            'http://s1.meixiu.mobi/android-images/2020-08-04/9826c5d2a4634f438cb0d9b4415f583f.jpg'
+            'http://s1.meixiu.mobi/android-images/2020-09-04/e1cd31339ac54e5d854f5c299496e308.jpg'
           ],
-          audio:
-            'https://xiaoxiong-pub.oss-accelerate.aliyuncs.com/ai-app-mp-teacher/audio/11/15988448825439430.mp3'
+          audio: 'http://mp3.9ku.com/hot/2007/05-07/84566.mp3'
         },
         {
           imgs: [
             'http://s1.meixiu.mobi/android-images/2020-08-04/9826c5d2a4634f438cb0d9b4415f583f.jpg'
           ],
-          audio:
-            'https://xiaoxiong-pub.oss-accelerate.aliyuncs.com/ai-app-mp-teacher/audio/11/15988448331239332.mp3'
+          audio: 'http://mp3.9ku.com/hot/2009/05-31/183203.mp3'
         },
         {
           imgs: [
             'http://s1.meixiu.mobi/android-images/2020-08-04/9826c5d2a4634f438cb0d9b4415f583f.jpg'
           ],
-          audio:
-            'https://xiaoxiong-pub.oss-accelerate.aliyuncs.com/ai-app-mp-teacher/audio/11/15988497820174884.mp3'
+          audio: 'http://mp3.9ku.com/hot/2011/05-31/411603.mp3'
         }
       ]
     }
@@ -209,8 +215,9 @@ export default {
   methods: {
     // 组件emit
     searchChange(res) {
-      this.initSearchData(res, true)
-      this.getTrialTeamList(this.tabQuery)
+      console.log('emit-res', res)
+      // this.initSearchData(res, true)
+      // this.getTrialTeamList(this.tabQuery)
     },
     initSearchData(res, isFromEmit = false) {
       // 如果是子组件emit而来的数据，则不需要清空
@@ -242,15 +249,36 @@ export default {
     },
     audioClickHandle($index, index, src) {
       // 当前音频ref
-      const currentRef = `audioRef_${$index}_${index}`
-      const allAudioRef = Object.values(this.$refs)
-      // TODO:
-      allAudioRef.forEach((item, index) => {
-        item[0].load()
-      })
-      this.currentAudioIndex = `${$index}${index}`
+      // const { audioRef = [] } = this.$refs
 
-      console.log(currentRef, this.$refs)
+      // const typeOfAudio = Object.prototype.toString.call(audioRef)
+      // if (typeOfAudio === '[object Array]') {
+      //   audioRef.forEach((audio) => {
+      //     console.log(audio, 'audio')
+      //   })
+      // }
+
+      const currentRef = `audioRef_${$index}_${index}`
+      const currentAudio = this.$refs[currentRef][0]
+      /** 顾虑掉其他ref，只包含音频 audio 组件 */
+      const keys = Object.keys(this.$refs).filter(
+        (item) => item.indexOf('audioRef') !== -1
+      )
+      keys.forEach((key) => {
+        if (key !== currentRef) {
+          const otherAudio = this.$refs[key][0]
+          if (otherAudio && otherAudio.load) otherAudio.load()
+        }
+      })
+
+      if (currentAudio.paused) {
+        this.currentAudioIndex = `${$index}${index}`
+        currentAudio.play() // audio.play();// 播放
+      } else {
+        // audio.pause() // 暂停
+        currentAudio.load() // 取消播放并回到0秒
+        this.currentAudioIndex = null
+      }
     },
     // 条件查询列表
     async getTrialTeamList(params) {
@@ -301,6 +329,9 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+/deep/ .el-image-viewer__canvas > img {
+  max-height: 80% !important;
+}
 .reviewManagement {
   &-content {
     overflow-x: hidden;
@@ -346,6 +377,7 @@ export default {
     > img {
       width: 50px;
       height: 50px;
+      cursor: pointer;
     }
   }
   .audio-box {

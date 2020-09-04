@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-25 14:35:19
  * @LastEditors: Shentong
- * @LastEditTime: 2020-09-03 17:50:31
+ * @LastEditTime: 2020-09-04 20:55:08
  -->
 <template>
   <!-- <el-scrollbar class="scroll-search-container"> -->
@@ -34,7 +34,7 @@
         v-model="formInfo.cmtStatus"
         clearable
         placeholder="点评状态"
-        @change="courseTypeChange"
+        @change="commentStatusChange"
       >
         <el-option
           v-for="item in commentStatus"
@@ -65,7 +65,14 @@
       </el-select>
     </div>
     <div class="comp-cell">
-      <el-input
+      <m-search
+        class="search-box"
+        @search="handleSearch"
+        phone="uid"
+        onlyPhone="1"
+        phoneTip="手机号/微信昵称 查询"
+      />
+      <!-- <el-input
         placeholder="用户手机号"
         v-model="formInfo.phone"
         clearable
@@ -73,7 +80,7 @@
         class="base-input"
         @input="handleDebounce"
       >
-      </el-input>
+      </el-input> -->
     </div>
     <div class="comp-cell">
       <el-date-picker
@@ -95,7 +102,7 @@
 <script>
 import _ from 'lodash'
 // import SearchTeamName from '@/components/MSearch/searchItems/searchTeamName'
-
+import MSearch from '@/components/MSearch/index.vue'
 import Department from '@/components/MSearch/searchItems/department'
 import GroupSell from '@/components/MSearch/searchItems/groupSell'
 // import StageSupLevels from '@/components/MSearch/searchItems/stageSupLevels.vue'
@@ -150,24 +157,23 @@ export default {
   },
   components: {
     Department,
-    GroupSell
+    GroupSell,
+    MSearch
   },
   methods: {
+    // 用户手机号
+    handleSearch(res) {
+      const [term = {}] = res || []
+      const { term: { uid = '' } = {} } = term
+
+      this.manageChange(uid, 'uid')
+    },
     sellCycleTimeChange(tiemArr = []) {
       const [startTime = '', endTime = ''] = tiemArr
       console.log(startTime, endTime)
+      this.manageChange(this.formInfo.receiveTime, 'receiveTime')
     },
-    // 课程排期emit
-    selectSchedule(res) {
-      const { stage = [] } = res
-      this.manageChange(stage, 'term')
-      // console.log(res, 'res')
-      // this.setSeachParmas(res, ['stage'], 'terms')
-    },
-    // supCallBack(level) {
-    //   console.log(level)
-    // },
-    // 社群销售
+    // 老师
     selectSellTeacher(teachers) {
       const { groupSell = '' } = teachers || {}
       this.manageChange(groupSell, 'teacherId')
@@ -194,6 +200,10 @@ export default {
       console.log(this.teamName)
       this.manageChange(this.teamName, 'teamName')
     },
+    // 点评状态
+    commentStatusChange(res) {
+      this.manageChange(this.formInfo.cmtStatus, 'cmtStatus')
+    },
     // 课程类型
     courseTypeChange(res) {
       console.log(res, 'res')
@@ -208,6 +218,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+/deep/ .el-card.search-style.search-box.is-never-shadow {
+  border: none;
+  margin: 0;
+}
 .scroll-search-container {
   overflow-y: hidden;
 }
