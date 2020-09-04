@@ -63,10 +63,18 @@
               <div v-else>
                 <div v-for="(item, index) in scope.row.trailTeams" :key="index">
                   <div>
-                    <span>{{ item.teacher_info.realname }}</span>
+                    <span>{{
+                      (item.teacher_info && item.teacher_info.realname) || '--'
+                    }}</span>
                     <span class="hight">{{ `(${item.team_name})` }}</span>
                   </div>
-                  <div>{{ `${item.teacher_info.departmentInfo.name}` }}</div>
+                  <div>
+                    {{
+                      `${(item.teacher_info.departmentInfo &&
+                        item.teacher_info.departmentInfo.name) ||
+                        '--'}`
+                    }}
+                  </div>
                 </div>
               </div>
             </template>
@@ -84,7 +92,13 @@
                     <span>{{ item.teacher_info.realname }}</span>
                     <span class="hight">{{ `(${item.team_name})` }}</span>
                   </div>
-                  <div>{{ `${item.teacher_info.departmentInfo.name}` }}</div>
+                  <div>
+                    {{
+                      `${(item.teacher_info.departmentInfo &&
+                        item.teacher_info.departmentInfo.name) ||
+                        '--'}`
+                    }}
+                  </div>
                 </div>
               </div>
             </template>

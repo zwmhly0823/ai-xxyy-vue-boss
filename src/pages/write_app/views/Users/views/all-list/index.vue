@@ -66,7 +66,13 @@
                     <span>{{ item.teacher_info.realname }}</span>
                     <span class="hight">{{ `(${item.team_name})` }}</span>
                   </div>
-                  <div>{{ `${item.teacher_info.departmentInfo.name}` }}</div>
+                  <div>
+                    {{
+                      `${(item.teacher_info.departmentInfo &&
+                        item.teacher_info.departmentInfo.name) ||
+                        '--'}`
+                    }}
+                  </div>
                 </div>
               </div>
             </template>
@@ -87,7 +93,13 @@
                       <span>{{ item.teacher_info.realname }}</span>
                       <span class="hight">{{ `(${item.team_name})` }}</span>
                     </div>
-                    <div>{{ `${item.teacher_info.departmentInfo.name}` }}</div>
+                    <div>
+                      {{
+                        `${(item.teacher_info.departmentInfo &&
+                          item.teacher_info.departmentInfo.name) ||
+                          '--'}`
+                      }}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -108,9 +120,10 @@
               >
                 {{
                   scope.row.userExtendsInfo.channelInfo.channel_outer_name ||
-                    '-'
+                    '--'
                 }}
               </span>
+              <span v-else>--</span>
             </template>
           </el-table-column>
           <el-table-column label="系统课转化" min-width="90" fixed="right">
@@ -385,7 +398,7 @@ export default {
     },
 
     formatDate(date, flag = 's') {
-      return formatData(date, flag)
+      return (date && formatData(date, flag)) || '--'
     }
   }
 }

@@ -16,7 +16,8 @@
                 style="margin-right: 10px;"
                 type="2"
                 :extension="true"
-                tablename="StudentTrialV2StatisticsList"
+                user-num-key="user_num"
+                tablename="UserSubjectStatisticsList"
                 @result="getSearchData('uid', arguments)"
               />
             </div>

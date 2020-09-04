@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-06-22 12:08:17
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-09-02 16:39:10
+ * @LastEditTime: 2020-09-04 18:10:03
 -->
 <template>
   <div class="search-mobile d-flex align-center">
@@ -94,6 +94,14 @@ export default {
     extension: {
       type: Boolean,
       default: false
+    },
+    userStatusKey: {
+      type: String,
+      default: 'user_status'
+    },
+    userNumKey: {
+      type: String,
+      default: 'user_num_text'
     }
   },
   data() {
@@ -143,19 +151,19 @@ export default {
       // 系统课
       if (this.type === '1') {
         range = {
-          user_status: { gte: 2 }
+          [`${this.userStatusKey}`]: { gte: 2 }
         }
       }
       // 体验课
       if (this.type === '0') {
-        range = { user_status: ['1', '2'] }
+        range = { [`${this.userStatusKey}`]: ['1', '2'] }
       }
       // 全部
-      if (this.type === '2') {
-        range = {
-          user_status: { gt: 0 }
-        }
-      }
+      // if (this.type === '2') {
+      //   range = {
+      //     [`${this.userStatusKey}`]: { gte: 0 }
+      //   }
+      // }
       const query = { ...range }
       //   const query = {}
       if (this.searchType === 0) {
@@ -164,7 +172,9 @@ export default {
         })
       } else {
         Object.assign(query, {
-          'user_num_text.like': { 'user_num_text.keyword': `*${val}*` }
+          [`${this.userNumKey}.like`]: {
+            [`${this.userNumKey}.keyword`]: `*${val}*`
+          }
         })
       }
       const q = JSON.stringify(query)
