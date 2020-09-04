@@ -4,7 +4,7 @@
  * @Author: Lukun
  * @Date: 2020-04-27 17:47:58
  * @LastEditors: liukun
- * @LastEditTime: 2020-08-26 21:21:45
+ * @LastEditTime: 2020-09-04 17:53:55
  -->
 <template>
   <div class="container">
@@ -12,6 +12,21 @@
     <div class="time">
       <tabTimeSelect @result="getSeacherTime" />
       <CheckType @result="getcheckType" />
+      <el-select
+        :style="{ 'margin-right': '20px' }"
+        size="mini"
+        v-model="xx"
+        placeholder="请选择是否0课时"
+        @change="zeroChange"
+        v-show="isRefund"
+      >
+        <el-option
+          v-for="(value, key) in { 未开课0课时: 'YES', 已开课非0课时: 'NO' }"
+          :key="value"
+          :label="key"
+          :value="value"
+        ></el-option>
+      </el-select>
       <SearchPart @result="getSeachePart" />
       <courseTeam @result="getTeamId" />
       <searchPhone name="userTel" @result_lk="getPhone" />
@@ -806,6 +821,8 @@ export default {
         reason: '',
         isRecover: true
       },
+      xx: '', // 0课时绑定值
+      isRefund: 0, // 选择退款出现0课时
       dialogFormVisible: false, // ↑修改金额表单lk
       dialogFormVisible_checkbox: false, // 拒绝checkbox
       params: {}, // 列表的参数
@@ -1015,6 +1032,20 @@ export default {
 
       this.currentPage = 1
       this.params.page = 1
+      this.checkPending(this.params)
+
+      // external_0课时退费(显隐)
+      if (val === 'REFUND') {
+        this.isRefund = 1
+      } else {
+        this.isRefund = 0
+      }
+    },
+    // 查询类型是退款出现的0课时选择
+    zeroChange(val) {
+      this.params.page = 1
+      this.currentPage = 1
+      Object.assign(this.params, { isZero: val })
       this.checkPending(this.params)
     },
     // 新加手机号
