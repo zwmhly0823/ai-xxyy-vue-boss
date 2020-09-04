@@ -30,11 +30,14 @@
           empty-text=" "
           :height="tableHeight"
         >
-          <el-table-column
-            label="用户ID"
-            min-width="165"
-            prop="uid"
-          ></el-table-column>
+          <el-table-column label="用户ID" min-width="85">
+            <template slot-scope="scope">
+              <p v-if="scope.row.userInfo">
+                {{ scope.row.userInfo.user_num || '--' }}
+              </p>
+              <p v-else>--</p>
+            </template>
+          </el-table-column>
           <!-- 除了美术科目以外的科目，都取 userInfo-->
           <el-table-column label="用户信息" min-width="165">
             <template slot-scope="scope">
