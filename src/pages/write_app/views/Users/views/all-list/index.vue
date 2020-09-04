@@ -100,7 +100,12 @@
           </el-table-column>
           <el-table-column label="首次来源渠道" min-width="100">
             <template slot-scope="scope">
-              <span v-if="scope.row.userExtendsInfo">
+              <span
+                v-if="
+                  scope.row.userExtendsInfo &&
+                    scope.row.userExtendsInfo.channelInfo
+                "
+              >
                 {{
                   scope.row.userExtendsInfo.channelInfo.channel_outer_name ||
                     '-'
