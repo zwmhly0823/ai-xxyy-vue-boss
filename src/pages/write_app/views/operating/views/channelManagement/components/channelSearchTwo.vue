@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-04-25 12:09:03
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-26 16:47:21
+ * @LastEditTime: 2020-09-04 11:35:29
  -->
 <template>
   <div id="channel-boxs" class="channel-box">
@@ -316,7 +316,7 @@ export default {
   },
   watch: {
     tabIndex(value) {
-      if (value === '0') {
+      if (value === '1') {
         this.query = ''
         this.channelIds = []
         this.querySearchTrialStage = ''
@@ -330,7 +330,7 @@ export default {
     }
   },
   created() {
-    this.getChannelDetailPage()
+    // this.getChannelDetailPage()
   },
   mounted() {
     window.addEventListener('scroll', this.handleScroll, true)

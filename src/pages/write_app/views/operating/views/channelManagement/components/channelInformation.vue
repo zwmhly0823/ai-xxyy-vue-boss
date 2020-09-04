@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-05-06 16:33:15
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-24 18:28:05
+ * @LastEditTime: 2020-09-04 11:44:27
  -->
 <template>
   <div class="channelAdd-box">
@@ -161,7 +161,7 @@
       :modal="false"
       size="30%"
     >
-      <add-cahnnel
+      <add-channel
         @addChannelShowBtn="addChannelShowBtn"
         @addChannelShow="addChannelShow"
       />
@@ -173,7 +173,7 @@
       :modal="false"
       size="30%"
     >
-      <modify-cahnnel
+      <modify-channel
         v-if="modifyDrawer"
         :modifyRow="modifyRow"
         @modifyChannelShowBtn="modifyChannelShowBtn"
@@ -184,15 +184,12 @@
 </template>
 
 <script>
-import channelSearch from '../components/componentsSearch/channelInforSearch'
-import addCahnnel from '../components/components/addCahnnel'
-import modifyCahnnel from '../components/components/modifyCahnnel'
+import channelSearch from './componentsSearch/channelInforSearch'
+import addChannel from './components/addChannel'
+import modifyChannel from './components/modifyChannel'
 import MPagination from '@/components/MPagination/index.vue'
 import { timestamp } from '@/utils/index'
-import {
-  downloadByBlob,
-  downImgAll
-} from '../components/components/downloadQRcode'
+import { downloadByBlob, downImgAll } from './components/downloadQRcode'
 export default {
   props: {
     tabIndex: {
@@ -203,8 +200,8 @@ export default {
   components: {
     channelSearch,
     MPagination,
-    addCahnnel,
-    modifyCahnnel
+    addChannel,
+    modifyChannel
   },
   filters: {
     channelLevelFilter(val) {
@@ -234,15 +231,16 @@ export default {
   },
   watch: {
     tabIndex(value) {
-      if (value === '1') {
+      if (value === '2') {
         this.queryList = `""`
         this.currentPage = 1
         this.getChannelOne()
+        this.getChannelDetailStatisticsPage()
       }
     }
   },
   created() {
-    this.getChannelOne()
+    // this.getChannelOne()
   },
   methods: {
     // 获取渠道id
@@ -250,10 +248,10 @@ export default {
       const arrOne = []
       this.$http.writeApp.Operating.getChannelAndClass(17).then((res) => {
         const data = res?.payload?.channelList
-        if (!data) return
-        data.forEach((item) => {
-          arrOne.push(item.id)
-        })
+        data &&
+          data.forEach((item) => {
+            arrOne.push(item.id)
+          })
 
         this.$http.writeApp.Operating.getChannelAndClass(36).then((res) => {
           const arrTwo = []
@@ -262,7 +260,6 @@ export default {
           data.forEach((item) => {
             arrTwo.push(item.id)
           })
-          this.getChannelDetailStatisticsPage()
           this.channelName = arrOne.concat(arrTwo)
         })
       })
@@ -370,7 +367,9 @@ export default {
     },
     // 添加渠道点击提交刷新页面
     addChannelShowBtn(data) {
-      this.getChannelDetailStatisticsPage()
+      setTimeout(() => {
+        this.getChannelDetailStatisticsPage()
+      }, 2000)
     },
     // 关闭添加渠道页面
     addChannelShow(data) {

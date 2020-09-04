@@ -123,7 +123,7 @@ export default {
   },
   watch: {
     tabIndex(value) {
-      if (value === '2') {
+      if (value === '3') {
         this.channelSearchIds = []
         this.channelLevels = []
         this.currentPage = 1
