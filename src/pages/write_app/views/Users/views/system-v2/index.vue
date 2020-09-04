@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-05-25 15:34:04
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-09-01 22:21:30
+ * @LastEditTime: 2020-09-04 12:07:32
 -->
 <template>
   <div class="user-list">
@@ -492,11 +492,11 @@
       />
     </el-dialog>
     <!-- 发送优惠券 -->
-    <coupon-popover
+    <!-- <coupon-popover
       ref="couponDialog"
       :couponData="couponData"
       :selectUserId="[studentid]"
-    />
+    /> -->
     <label-checkbox
       v-if="showDialogFormVisible"
       :labelRowValue="labelRowValue"
@@ -517,7 +517,7 @@ import ModifyAddress from '../../components/ModifyAddress.vue'
 import enums from '../../components/searchData'
 import { formatData, openBrowserTab } from '@/utils/index'
 import { FOLLOW_EXPRESS_STATUS, ISREFUND } from '@/utils/enums'
-import CouponPopover from '@/pages/studentTeam/components/TabPane/components/couponPopover'
+// import CouponPopover from '@/pages/studentTeam/components/TabPane/components/couponPopover'
 export default {
   name: 'systemUsers',
   components: {
@@ -527,8 +527,8 @@ export default {
     // HandleItemStatus,
     // ItemStatus,
     ModifyAddress,
-    labelCheckbox,
-    CouponPopover
+    labelCheckbox
+    // CouponPopover
   },
   // props: {
   //   // 查询条件
@@ -607,7 +607,7 @@ export default {
       const key = Object.keys(this.$route.query)[0]
       this.$root.$emit(key + '_lk', this.$route.query[key])
     }
-    this.getCouponList()
+    // this.getCouponList()
   },
   methods: {
     handLeCopy(index, row) {
@@ -936,11 +936,11 @@ export default {
       }
     },
     // 获取优惠券列表
-    getCouponList() {
-      this.$http.Team.getAllCoupons(0).then((res) => {
-        this.couponData = (res.payload && res.payload.content) || []
-      })
-    },
+    // getCouponList() {
+    //   this.$http.Team.getAllCoupons(0).then((res) => {
+    //     this.couponData = (res.payload && res.payload.content) || []
+    //   })
+    // },
     // 重置当前选择用户
     resetCurrentUser() {
       this.currentUser = {}

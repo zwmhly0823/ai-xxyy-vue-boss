@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-06-16 16:27:14
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-11 17:10:54
+ * @LastEditTime: 2020-09-04 11:53:39
 -->
 <template>
   <div class="user-list">
@@ -1072,9 +1072,9 @@ export default {
     this.paramsFromUrl()
     this.init()
   },
-  mounted() {
-    this.getCouponList()
-  },
+  // mounted() {
+  //   this.getCouponList()
+  // },
   methods: {
     paramsFromUrl() {
       const urlParams = localStorage.getItem('noticeParams')
@@ -1598,11 +1598,11 @@ export default {
     },
 
     // 获取优惠券列表
-    getCouponList() {
-      this.$http.Team.getAllCoupons(0).then((res) => {
-        this.couponData = (res.payload && res.payload.content) || []
-      })
-    },
+    // getCouponList() {
+    //   this.$http.Team.getAllCoupons(0).then((res) => {
+    //     this.couponData = (res.payload && res.payload.content) || []
+    //   })
+    // },
     // 参课的下拉排序
     classesDropdown(command) {
       this.sortRules(command)

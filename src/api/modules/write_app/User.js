@@ -5,7 +5,7 @@
  * @Author: shentong
  * @Date: 2020-03-13 14:38:28
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-27 17:57:09
+ * @LastEditTime: 2020-09-03 20:57:39
  */
 // import axios from '../axios'
 import axios from '../../axiosConfig'
@@ -193,7 +193,7 @@ export default {
   },
   // 全部学员
   studentAllUserList(query = {}, page = 1, sortRules) {
-    const q = JSON.stringify(JSON.stringify(query))
+    const q = JSON.stringify(injectSubject(query))
     const sort =
       Object.keys(sortRules).length === 0
         ? JSON.stringify(JSON.stringify({ ctime: 'desc' }))

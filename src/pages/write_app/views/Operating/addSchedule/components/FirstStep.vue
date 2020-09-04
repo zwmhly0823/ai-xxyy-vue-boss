@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-15 20:35:57
  * @LastEditors: Shentong
- * @LastEditTime: 2020-08-27 14:22:20
+ * @LastEditTime: 2020-09-03 21:50:10
  -->
 <template>
   <div class="first-step">
@@ -33,7 +33,7 @@
                 </el-date-picker>
               </el-form-item>
 
-              <h6>建议体验课售卖周期从本周五至下周五</h6>
+              <!-- <h6>建议体验课售卖周期从本周五至下周五</h6> -->
             </el-col>
             <el-col :span="10" :offset="1">
               <h4>上课周期</h4>
@@ -81,10 +81,12 @@
                 >
                 </el-date-picker> -->
               </el-form-item>
-              <h6>开始上课时间必须从星期一开始</h6>
+              <!-- <h6>开始上课时间必须从星期一开始</h6> -->
             </el-col>
             <el-col :span="4" :offset="1">
-              <h4>接速设置</h4>
+              <h4>
+                接速设置<span class="speed-tip">（轮询分配的学生数设置）</span>
+              </h4>
               <el-form-item label="" prop="robinNum">
                 <el-input
                   size="small"
@@ -92,7 +94,7 @@
                   placeholder="请输入学生数"
                 ></el-input>
               </el-form-item>
-              <h6>轮询分配的学生数设置</h6>
+              <!-- <h6>轮询分配的学生数设置</h6> -->
             </el-col>
           </el-row>
         </div>
@@ -537,6 +539,10 @@ export default {
     h4 {
       margin: 10px 0;
     }
+  }
+  .speed-tip {
+    font-size: 12px;
+    color: #aaa;
   }
   .time-select {
     h6 {
