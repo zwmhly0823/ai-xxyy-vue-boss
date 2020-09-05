@@ -3,8 +3,8 @@
  * @version: 
  * @Author: panjian
  * @Date: 2020-04-01 13:24:40
- * @LastEditors: panjian
- * @LastEditTime: 2020-07-21 17:58:07
+ * @LastEditors: Shentong
+ * @LastEditTime: 2020-09-05 19:36:48
  -->
 <template>
   <div>
@@ -20,13 +20,14 @@
               :key="item.id"
               :label="item.id"
             >
-              <span>{{ item.receiptName }}{{ item.receiptTel }}</span
-              ><br />
+              <span>{{ item.receiptName }}{{ item.receiptTel }}</span>
               <span v-if="item.province == item.city"
-                >{{ item.city }}{{ item.area }}</span
+                ><span style="padding:0 3px;">/</span>{{ item.city
+                }}{{ item.area }}</span
               >
               <span v-else
-                >{{ item.province }}{{ item.city }}{{ item.area }}</span
+                ><span style="padding:0 3px;">/</span>{{ item.province
+                }}{{ item.city }}{{ item.area }}</span
               >
             </el-radio>
           </el-radio-group>
@@ -258,11 +259,15 @@ export default {
       const provinces = this.areaLists.filter(
         (item) => item.label === data.province
       )
+
       const citys = provinces[0].children.filter(
         (item) => item.label === data.city
       )
       const areas = citys[0].children.filter((item) => item.label === data.area)
-      this.areaSlist = [provinces[0].value, citys[0].value, areas[0].value]
+      // this.areaSlist = [provinces[0].value, citys[0].value, areas[0].value, '']
+      this.areaSlist[0] = provinces[0].value
+      this.areaSlist[1] = citys[0].value
+      this.areaSlist[2] = areas[0].value
       this.province = provinces[0].label
       this.city = citys[0].label
       this.area = areas[0].label
@@ -383,12 +388,13 @@ export default {
 </script>
 <style lang="scss" scoped>
 .choiceAddRess {
-  max-height: 150px;
+  min-height: 30px;
+  max-height: 400px;
   overflow-y: scroll;
   .mt-20 {
-    margin-top: 20px;
-    &:nth-child(1) {
-      margin-top: 0px;
+    padding: 5px;
+    /deep/ .el-radio__input {
+      top: 0px;
     }
   }
 }

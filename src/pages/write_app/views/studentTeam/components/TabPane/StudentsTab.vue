@@ -202,7 +202,7 @@ export default {
     // 优惠卷列表接口
     this.studentsList()
     this.getstatusList()
-    this.couponList()
+    // this.couponList()
   },
   watch: {
     searchUser(val) {
