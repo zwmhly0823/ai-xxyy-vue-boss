@@ -5,7 +5,7 @@
  * @Author: shentong
  * @Date: 2020-03-13 14:38:28
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-09-05 16:49:12
+ * @LastEditTime: 2020-09-05 18:18:47
  */
 // import axios from '../axios'
 import axios from '../axiosConfig'
@@ -42,21 +42,16 @@ export default {
 
   /**
    * 模糊搜索用户手机号，获取用户信息
+   * 多学科 新版
    */
   searchUserByPhone(queryString = '') {
     const query = {
-      bool: {
-        must: [
-          {
-            wildcard: { mobile: `*${queryString}*` }
-          }
-        ]
-      }
+      'mobile.like': { 'mobile.keyword': `*${queryString}*` }
     }
     const q = JSON.stringify(query)
     return axios.post('/graphql/v1/toss', {
       query: `{
-        UserListEx(query:${JSON.stringify(q)}){
+        UserSubjectStatisticsList(query:${JSON.stringify(injectSubject(q))}){
           id
           mobile
           username
@@ -64,6 +59,30 @@ export default {
       }`
     })
   },
+  /**
+   * 模糊搜索用户手机号，获取用户信息
+   */
+  // searchUserByPhone(queryString = '') {
+  //   const query = {
+  //     bool: {
+  //       must: [
+  //         {
+  //           wildcard: { mobile: `*${queryString}*` }
+  //         }
+  //       ]
+  //     }
+  //   }
+  //   const q = JSON.stringify(query)
+  //   return axios.post('/graphql/v1/toss', {
+  //     query: `{
+  //       UserListEx(query:${JSON.stringify(q)}){
+  //         id
+  //         mobile
+  //         username
+  //       }
+  //     }`
+  //   })
+  // },
   getUserInfo(query = '') {
     return axios.post('/graphql/v1/toss', {
       query: `

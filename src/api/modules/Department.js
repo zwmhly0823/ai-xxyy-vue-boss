@@ -3,23 +3,31 @@
  * @version: 1.0.0
  * @Author: zhangjiawen
  * @Date: 2020-07-03 17:21:52
- * @LastEditors: Shentong
- * @LastEditTime: 2020-08-25 15:15:14
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-09-05 18:44:49
  */
 
 /**
  * 组织机构
  */
+import { injectSubject, getAppSubjectCode } from '@/utils/index'
 import axios from '../axiosConfig'
+
+const subjectCode = getAppSubjectCode()
 
 export default {
   /**
    * 获取组织机构 t_teacher_department
    */
   teacherDepartment(params = '') {
+    const query = {
+      subject: subjectCode
+    }
     return axios.post('/graphql/v1/toss', {
       query: `{
-        TeacherDepartmentList(query: ${JSON.stringify(params)}, size: 300){
+        TeacherDepartmentList(query: ${JSON.stringify(
+          JSON.stringify(query)
+        )}, size: 300){
           id
           pid
           name
@@ -39,7 +47,7 @@ export default {
   getDepartmentTeacher(query = '') {
     return axios.post('/graphql/v1/toss', {
       query: `{
-        TeacherList(query: ${JSON.stringify(query)}, size: 300){
+        TeacherList(query: ${injectSubject(query)}, size: 300){
           id
           realname
         }
@@ -64,6 +72,18 @@ export default {
       query: `{
         TeacherOutboundPage(query: ${JSON.stringify(query)}, size: 20){
           teacher_id
+          realname
+        }
+      }`
+    })
+  },
+
+  // 申请人列表
+  getOperatorNameList(query) {
+    return axios.post('/graphql/logisticsStatistics', {
+      query: `{
+        operator(query:${JSON.stringify(query)}) {
+          id
           realname
         }
       }`
