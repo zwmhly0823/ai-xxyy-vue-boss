@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-04-25 17:24:23
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-08-20 15:13:33
+ * @LastEditTime: 2020-09-04 20:49:04
  -->
 <template>
   <el-card
@@ -52,6 +52,18 @@
             placeholder="全部"
             @result="getOrderType"
           ></simple-select>
+        </div>
+      </el-form-item>
+
+      <el-form-item label="业绩归属:" :class="{ [$style.marginer]: true }">
+        <div class="row_colum">
+          <orderAttr
+            name="pay_teacher_duty_id"
+            :data-list="orderTypeList"
+            :multiple="false"
+            placeholder="全部"
+            @result="getPerformType"
+          ></orderAttr>
         </div>
       </el-form-item>
       <br />
@@ -148,6 +160,7 @@
         <div class="row_colum">
           <systemCourseType
             style="width:140px"
+            teamType="1"
             @result="getSystemCourseType"
             name="packages_type"
           />
@@ -231,6 +244,7 @@
 </template>
 <script>
 import dayjs from 'dayjs'
+import orderAttr from '@/components/MSearch/searchItems/orderAttribution.vue' // add
 import hardLevel from '@/components/MSearch/searchItems/hardLevel.vue' // add
 import orderSearch from '@/components/MSearch/searchItems/orderSearch.vue' // add
 import systemCourseType from '@/components/MSearch/searchItems/systemCourseType.vue'
@@ -265,6 +279,7 @@ export default {
     SearchTeamName,
     // SearchTrialTeamName,
     SearchStage,
+    orderAttr,
     SearchPhoneAndUsername,
     SimpleSelect
   },
@@ -494,6 +509,16 @@ export default {
     },
     // 系统课选择课程类型
     getSystemCourseType(res) {
+      if (res && res.packages_type === '6') {
+        this.must.map((item, idx) => {
+          if (item.term && item.term.packages_type) {
+            this.must.splice(idx, 1)
+          }
+        })
+        return this.setSeachParmas({ packages_course_week: '72' }, [
+          'packages_course_week'
+        ])
+      }
       if (res && res.packages_type === '5') {
         this.must.map((item, idx) => {
           if (item.term && item.term.packages_type) {
@@ -501,6 +526,26 @@ export default {
           }
         })
         return this.setSeachParmas({ packages_course_week: '96' }, [
+          'packages_course_week'
+        ])
+      }
+      if (res && res.packages_type === '4') {
+        this.must.map((item, idx) => {
+          if (item.term && item.term.packages_type) {
+            this.must.splice(idx, 1)
+          }
+        })
+        return this.setSeachParmas({ packages_course_week: '48' }, [
+          'packages_course_week'
+        ])
+      }
+      if (res && res.packages_type === '3') {
+        this.must.map((item, idx) => {
+          if (item.term && item.term.packages_type) {
+            this.must.splice(idx, 1)
+          }
+        })
+        return this.setSeachParmas({ packages_course_week: '24' }, [
           'packages_course_week'
         ])
       }
@@ -563,7 +608,9 @@ export default {
       console.log(res)
       this.setSeachParmas(res, ['regtype'])
     },
-
+    getPerformType(res) {
+      this.setSeachParmas(res, ['pay_teacher_duty_id'])
+    },
     /**  处理接收到的查询参数
      * @res: Object, 子筛选组件返回的表达式对象，如 {sup: 2}
      * @key: Array 指定res的key。如课程类型+期数选项，清除课程类型时，期数也清除了，这里要同步清除must的数据

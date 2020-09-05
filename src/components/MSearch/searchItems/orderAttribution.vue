@@ -4,7 +4,7 @@
  * @Date: 2020-04-20 12:17:21
  * @Last Modified by:   YangJiyong
  * @Last Modified time: 2020-04-20 12:17:21
- * @Description: 系统课类型：月系统课-1、季系统课-2、半年系统课-3、年系统课-4
+ * @Description: 订单类型：下拉选择，首单、续费两个维度 regtype: 2-首单，3-续费
 -->
 <template>
   <div class="search-item small">
@@ -12,12 +12,12 @@
       v-model="result"
       size="mini"
       clearable
-      placeholder="全部系统课类型"
+      placeholder="全部"
       @change="onChange"
       class="item-style"
     >
       <el-option
-        v-for="item in typeList"
+        v-for="item in orderTypeList"
         :key="item.id"
         :value="item.id"
         :label="item.text"
@@ -29,9 +29,6 @@
 <script>
 export default {
   props: {
-    teamType: {
-      type: String
-    },
     name: {
       type: String,
       default: ''
@@ -40,37 +37,16 @@ export default {
   data() {
     return {
       result: null,
-      typeList: [
-        // {
-        //   id: '0',
-        //   text: '体验课'
-        // },
+      orderTypeList: [
         {
           id: '1',
-          text: '月系统课'
+          text: '销售团队'
         },
         {
           id: '2',
-          text: '季系统课'
-        },
-        {
-          id: '3',
-          text: '半年系统课'
-        },
-        {
-          id: '4',
-          text: '年系统课'
-        },
-        {
-          id: '5',
-          text: '两年系统课'
+          text: '服务团队'
         }
       ]
-    }
-  },
-  created() {
-    if (this.teamType) {
-      this.typeList.push({ id: '6', text: '系统课升级' })
     }
   },
   methods: {
