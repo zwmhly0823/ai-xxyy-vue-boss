@@ -3,11 +3,12 @@
  * @version:
  * @Author: shentong
  * @Date: 2020-03-13 16:20:48
- * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-08-25 14:51:13
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-09-05 18:25:46
  */
 import axios from '../axiosConfig'
-import { injectSubject } from '@/utils/index'
+import { injectSubject, getAppSubjectCode } from '@/utils/index'
+const subjectCode = getAppSubjectCode()
 // 素质课的时候，测试环境暂时删除
 // department{
 //   department{
@@ -122,6 +123,9 @@ export default {
         must: [
           {
             wildcard: { out_trade_no: `*${no}*` }
+          },
+          {
+            term: { subject: subjectCode }
           }
         ]
       }
@@ -203,6 +207,9 @@ export default {
         must: [
           {
             wildcard: { transaction_id: `*${no}*` }
+          },
+          {
+            term: { subject: subjectCode }
           },
           {
             term: { status: 2 }

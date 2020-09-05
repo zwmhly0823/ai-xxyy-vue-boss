@@ -3,8 +3,8 @@
  * @version:
  * @Author: zhubaodong
  * @Date: 2020-03-26 16:28:45
- * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-08-07 11:32:34
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-09-05 17:57:10
  -->
 <template>
   <div class="search-item small">
@@ -103,8 +103,11 @@ export default {
       const q = {
         bool: {
           must: query
-            ? [{ wildcard: { 'realname.keyword': `*${query}*` } }]
-            : []
+            ? [
+                { wildcard: { 'realname.keyword': `*${query}*` } },
+                { term: { subject: this.$store.getters.subjects.subjectCode } }
+              ]
+            : [{ term: { subject: this.$store.getters.subjects.subjectCode } }]
         }
       }
       this.teacherscope &&

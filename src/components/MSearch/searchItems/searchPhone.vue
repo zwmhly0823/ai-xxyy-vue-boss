@@ -3,8 +3,8 @@
  * @version:
  * @Author: zhubaodong
  * @Date: 2020-03-26 16:28:45
- * @LastEditors: liukun
- * @LastEditTime: 2020-06-23 19:22:07
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-09-05 18:50:12
  -->
 <template>
   <div class="search-item small">
@@ -123,7 +123,7 @@ export default {
       cb(searchUid)
     },
     createFilter(queryString) {
-      const queryParams = `{"mobile":"${queryString}","team_id":"${this.teamId}","team_type":"${this.teamType}"}`
+      const queryParams = `{"mobile":"${queryString}","team_id":"${this.teamId}","team_type":"${this.teamType}","subject":"${this.$store.getters.subjects.subjectCode}"}`
       return axios // 未加工
         .post('/graphql/user', {
           query: `{
