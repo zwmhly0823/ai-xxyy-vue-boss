@@ -135,9 +135,13 @@
                 >
                 <el-col :span="7">
                   <span>学习科目:</span>
-                  <el-tag type="danger" size="mini">{{
-                    stuInfor.status_text || '-'
-                  }}</el-tag></el-col
+                  <el-tag
+                    type="danger"
+                    size="mini"
+                    v-for="(item, index) in stuInfor.bought_subject"
+                    :key="index"
+                    >{{ item }}</el-tag
+                  ></el-col
                 >
 
                 <el-col :span="7">
