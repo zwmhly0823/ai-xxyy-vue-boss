@@ -4,8 +4,8 @@
  * @version:
  * @Author: shentong
  * @Date: 2020-03-13 14:38:28
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-09-05 16:49:12
+ * @LastEditors: liukun
+ * @LastEditTime: 2020-09-05 17:54:19
  */
 // import axios from '../axios'
 import axios from '../axiosConfig'
@@ -461,6 +461,7 @@ export default {
     return axios.post('/graphql/v1/toss', {
       query: `{
         User(query:${JSON.stringify(formattingQuery)}){
+          bought_subject
           systemCourse_lifeCycle
           id
           head

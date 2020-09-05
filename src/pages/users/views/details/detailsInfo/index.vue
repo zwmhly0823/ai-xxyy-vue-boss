@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-08-17 19:37:24
  * @LastEditors: liukun
- * @LastEditTime: 2020-09-04 12:17:28
+ * @LastEditTime: 2020-09-05 17:47:47
 -->
 <template>
   <div class="details" v-loading="loading">
@@ -92,7 +92,7 @@
                   :href="
                     `${
                       changeSubject ? '/write_app' : '/student-team'
-                    }/#/teamDetail'/${experience_lk.teamInfo &&
+                    }/#/teamDetail/${experience_lk.teamInfo &&
                       experience_lk.teamInfo.id}/0`
                   "
                   target="_blank"
@@ -281,7 +281,7 @@
                   :href="
                     `${
                       changeSubject ? '/write_app' : '/student-team'
-                    }/#/teamDetail'/${systerm_lk.teamInfo &&
+                    }/#/teamDetail/${systerm_lk.teamInfo &&
                       systerm_lk.teamInfo.id}/2`
                   "
                   target="_blank"
