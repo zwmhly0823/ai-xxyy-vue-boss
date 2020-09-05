@@ -1,24 +1,43 @@
 <!--
- * @Author: songyanan
- * @Email: songyanan@meishubao.com
- * @Date: 2020-08-27 16:47:01
- * @Last Modified by:   songyanan
- * @Last Modified time: 2020-05-28 15:37:01
- * @Description:
+ * @Author: YangJiyong
+ * @Email: yangjiyong@meishubao.com
+ * @Date: 2020-05-20 21:37:01
+ * @Last Modified by:   YangJiyong
+ * @Last Modified time: 2020-05-20 21:37:01
+ * @Description: 用户基础信息 - 头像，用户名，手机号，性别，生日，基础
+ *  性别
+    0: '',
+    1: '男',
+    2: '女',
+    3: '保密'
  -->
 <template>
   <div class="user-info">
+    <!-- <div class="user-info-l">
+      <div class="user-info-head">
+        <img :src="head" alt="" />
+      </div>
+      <i class="el-icon-male" v-if="user && +user.sex === 1"></i>
+      <i class="el-icon-female female" v-if="user && +user.sex === 2"></i>
+    </div> -->
     <div>
       <p class="primary-text">
+        <span @click="onClick">{{ (user && user.mobile) || '' }}</span> -
         <span @click="onClick" class="username">{{
-          (user && user.username) || '--'
+          (user && user.username) || '-'
         }}</span>
-        <span @click="onClick">{{ (user && user.mobile) || '' }}</span>
       </p>
       <p>
+        <!-- vip -->
+        <svg class="iconfont-vip" v-if="is_sys_label_vip">
+          <use xlink:href="#iconvip"></use>
+        </svg>
         <i class="el-icon-male" v-if="user && +user.sex === 1"></i>
         <i class="el-icon-female female" v-if="user && +user.sex === 2"></i>
-        {{ birthday }} · {{ basePainting || '' }}·
+        {{ birthday
+        }}<span v-if="!basePainting || basePainting !== '-'">
+          · {{ basePainting || '' }}·</span
+        >
         <span v-if="user && user.send_id > 0" style="color: rgb(255, 139, 140);"
           >R</span
         >
@@ -36,12 +55,24 @@ export default {
       type: Object,
       default: () => ({})
     },
-    uid: {
+    // 用户系统标签
+    sysLabel: {
       type: String,
       default: ''
     }
   },
+  data() {
+    return {
+      defaultHead: 'https://msb-ai.meixiu.mobi/ai-pm/static/touxiang.png'
+    }
+  },
   computed: {
+    // 头像
+    head() {
+      const head = (this.user && this.user.head) || this.defaultHead
+      return `${head}?x-oss-process=image/resize,l_100`
+    },
+
     // 生日
     birthday() {
       return this.user && this.user.birthday
@@ -54,13 +85,18 @@ export default {
         ? this.user.base_painting || this.user.basepainting
         : ''
       return base ? BASE_PAINTING[base] : '-'
+    },
+    // 是不是vip标签 - 固定标签: vip
+    is_sys_label_vip() {
+      if (!this.sysLabel || this.sysLabel === '-') return false
+      const label = this.sysLabel.split(',')
+      return label.includes('vip')
     }
   },
   methods: {
     // 点击用户信息事件回调, 参数是用户ID
     onClick() {
-      const user = this.user
-      if (this.uid) user.id = this.uid
+      // this.$emit('handle-click', this.user.id || this.user.studentid)
       this.$emit('handle-click', this.user)
     }
   }
@@ -68,7 +104,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '../../../../../assets/styles/mixin.scss';
+@import '@/assets/styles/mixin.scss';
 .user-info {
   display: flex;
   align-items: center;

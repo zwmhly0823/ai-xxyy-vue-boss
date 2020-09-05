@@ -114,8 +114,9 @@
           <el-table-column label="首次来源渠道" min-width="100">
             <template slot-scope="scope">
               <span v-if="scope.row.userInfo && scope.row.userInfo.channelInfo">
-                {{ scope.row.userInfo.channelInfo.channel_outer_name }}
+                {{ scope.row.userInfo.channelInfo.channel_outer_name || '--' }}
               </span>
+              <span v-else>--</span>
             </template>
           </el-table-column>
           <el-table-column label="系统课转化" min-width="90" fixed="right">
@@ -128,8 +129,9 @@
                   }
                 ]"
               >
-                {{ scope.row.userInfo.status_text }}
+                {{ scope.row.userInfo.status_text || '-' }}
               </span>
+              <span v-else>--</span>
             </template>
           </el-table-column>
         </el-table>
@@ -299,7 +301,7 @@ export default {
       if (this.sortActive) {
         sort[this.sortActive] = this.sortKeys[this.sortActive]
       }
-      return this.$http.writeApp.User.studentAllUserList(query, page, sort)
+      this.$http.writeApp.User.studentAllUserList(query, page, sort)
         .then((res) => {
           var defTotalElements = 0
           var defTotalPages = 1
@@ -360,14 +362,22 @@ export default {
             item.user_status_name = '已购半年课'
             break
         }
-        // 销售/班级（体验课班级）
-        item.trailTeams = item.userInfo.teams.filter(
-          (item) => item.subject === this.subjectCode && +item.team_type === 0
-        )
-        // 班主任/班级（系统课班级）
-        item.systemTeams = item.userInfo.teams.filter(
-          (item) => item.subject === this.subjectCode && +item.team_type > 0
-        )
+        item.trailTeams = []
+        item.systemTeams = []
+        if (item?.userInfo?.teams) {
+          // 销售/班级（体验课班级）
+          item.trailTeams = item.userInfo.teams.filter(
+            (item) => item.subject === this.subjectCode && +item.team_type === 0
+          )
+          // 班主任/班级（系统课班级）
+          item.systemTeams = item.userInfo.teams.filter(
+            (item) => item.subject === this.subjectCode && +item.team_type > 0
+          )
+        }
+        // userExtendsInfo 添加学员id字段
+        if (item.userExtendsInfo) {
+          item.userExtendsInfo.id = item.uid
+        }
       })
       return data
     },

@@ -5,7 +5,7 @@
  * @Author: shentong
  * @Date: 2020-03-13 14:38:28
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-09-03 20:57:39
+ * @LastEditTime: 2020-09-05 16:53:01
  */
 // import axios from '../axios'
 import axios from '../../axiosConfig'
@@ -226,6 +226,7 @@ export default {
             subject
             subject_text
             userInfo {
+              id
               join_date
               status
               status_text
@@ -252,6 +253,7 @@ export default {
               }
             }
             userExtendsInfo {
+              u_id
               join_date
               status
               status_text

@@ -4,8 +4,8 @@
  * @version:
  * @Author: shentong
  * @Date: 2020-03-13 14:38:28
- * @LastEditors: liukun
- * @LastEditTime: 2020-09-01 22:35:52
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-09-05 16:49:12
  */
 // import axios from '../axios'
 import axios from '../axiosConfig'
@@ -288,6 +288,7 @@ export default {
             subject
             subject_text
             userInfo {
+              id
               join_date
               status
               status_text
@@ -314,6 +315,7 @@ export default {
               }
             }
             userExtendsInfo {
+              u_id
               join_date
               status
               status_text
