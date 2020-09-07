@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-08-25 11:40:19
  * @LastEditors: liukun
- * @LastEditTime: 2020-09-01 14:40:33
+ * @LastEditTime: 2020-09-07 15:01:46
 -->
 <template>
   <div>
@@ -147,6 +147,13 @@
           </div>
         </template>
       </el-table-column>
+      <el-table-column label="操作">
+        <template slot-scope="scope">
+          <el-button type="text" @click="delete_task(scope.row.id)"
+            >删除</el-button
+          >
+        </template>
+      </el-table-column>
     </el-table>
     <div class="pagination_lk">
       <el-pagination
@@ -230,6 +237,29 @@ export default {
     }
   },
   methods: {
+    // 删除作品
+    delete_task(...args) {
+      this.$confirm('此操作将永久删除该文件, 是否继续?', '温馨提示', {
+        type: 'warning'
+      }).then(() => {
+        this.$http.User.taskDelete(args[0]).then(
+          (r) => {
+            if (!r.code) {
+              this.$message.success('删除成功!')
+              setTimeout(() => {
+                // 刷新数据
+                this.reqStudentCourseTaskPage()
+              }, 1000)
+            } else {
+              this.$message.error('删除失败,稍后重试!')
+            }
+          },
+          (err) => {
+            console.warn(err)
+          }
+        )
+      })
+    },
     // 切换课程
     courseBtn(r) {
       this.lessonId = this.teams_lk_filter[r.name].id
