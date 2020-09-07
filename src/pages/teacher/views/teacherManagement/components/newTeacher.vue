@@ -156,23 +156,11 @@
           ></el-option>
         </el-select>
       </el-form-item>
-      <!-- 带班级别 -->
-      <!-- <el-form-item label="带班级别" prop="shiftLevel">
-        <el-select v-model="ruleForm.shiftLevel" placeholder="请选择带班级别">
-          <el-option
-            v-for="(item, index) in shiftList"
-            :key="index"
-            :label="item.name"
-            :value="item.id"
-          ></el-option>
-        </el-select>
-      </el-form-item> -->
-
       <!-- 管理部门 -->
       <el-form-item
         label="管理部门"
-        :prop="[1, 2].includes(ruleForm.rank) ? 'administration' : ''"
-        v-show="[1, 2].includes(ruleForm.rank)"
+        :prop="['1', '2'].includes(ruleForm.rank) ? 'administration' : ''"
+        v-show="['1', '2'].includes(ruleForm.rank)"
       >
         <el-cascader
           ref="administration"
@@ -749,6 +737,7 @@ export default {
       this.$http.Teacher.TeacherRankList().then((res) => {
         const rank = res.data.TeacherRankList || []
         this.rankList = _.sortBy(rank, 'id')
+        console.log(this.rankList)
       })
       // 级别
       this.$http.Teacher.courseSupList().then((res) => {
@@ -944,6 +933,7 @@ export default {
     // 职级变化
     handleChangerank() {
       this.ruleForm.administration = ''
+      console.log(111, this.ruleForm.rank)
     },
     // 部门联机选择
     handleChange(value) {
