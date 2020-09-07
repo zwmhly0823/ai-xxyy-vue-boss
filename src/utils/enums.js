@@ -79,3 +79,24 @@ export const ISREFUND = {
   2: '申请退费',
   3: '退费中'
 }
+
+/**
+ * @description  SUP对应 写字课中的年级
+ * @params { sup: S1...S6, teamType: '0'体验课，'1'系统课}
+ */
+
+export const GETGRADE = (sup, teamType) => {
+  if (!sup || !teamType) return ''
+
+  const TU = {
+    '0S1': '基础(S1)',
+    '0S2': '高阶(S2)',
+    '1S1': '一年级(S1)',
+    '1S2': '二年级(S2)',
+    '1S3': '三年级(S3)',
+    '1S4': '四年级(S4)',
+    '1S5': '五年级(S5)',
+    '1S6': '六年级(S6)'
+  }
+  return TU[`${teamType}${sup}`] || ''
+}

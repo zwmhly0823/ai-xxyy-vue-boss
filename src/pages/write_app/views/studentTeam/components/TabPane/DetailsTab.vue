@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 14:19:58
  * @LastEditors: Shentong
- * @LastEditTime: 2020-09-07 14:35:03
+ * @LastEditTime: 2020-09-07 21:00:09
  -->
 <template>
   <div>
@@ -1020,12 +1020,12 @@ export default {
               item.nickname = ''
               item.head = ''
             }
-            if (item.course_current_num) {
-              item.course_begin_time = timestamp(item.course_begin_time, 7)
-              item.course_current_num = `${item.course_current_num}·${item.course_begin_time}`
-            } else {
-              item.course_current_num = '-'
-            }
+            // if (item.course_current_num) {
+            //   item.course_begin_time = timestamp(item.course_begin_time, 7)
+            //   item.course_current_num = `${item.course_current_num}·${item.course_begin_time}`
+            // } else {
+            //   item.course_current_num = '-'
+            // }
             if (item.join_course_state) {
               item.join_course_time = timestamp(item.join_course_time, 6)
             } else {
@@ -1092,12 +1092,12 @@ export default {
               item.nickname = ''
               item.head = ''
             }
-            if (item.course_current_num) {
-              item.start_course_date = timestamp(item.works_ctime, 7)
-              item.course_current_num = `${item.course_current_num}·${item.start_course_date}`
-            } else {
-              item.course_current_num = '-'
-            }
+            // if (item.course_current_num) {
+            //   item.start_course_date = timestamp(item.works_ctime, 7)
+            //   item.course_current_num = `${item.course_current_num}·${item.start_course_date}`
+            // } else {
+            //   item.course_current_num = '-'
+            // }
             if (item.works_ctime) {
               item.works_ctime = timestamp(item.works_ctime, 6)
             }

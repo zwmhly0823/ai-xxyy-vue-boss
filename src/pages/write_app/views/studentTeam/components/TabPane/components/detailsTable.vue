@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 20:22:24
  * @LastEditors: Shentong
- * @LastEditTime: 2020-09-02 12:07:37
+ * @LastEditTime: 2020-09-07 21:11:44
  -->
 <template>
   <div class="table-box">
@@ -84,9 +84,12 @@
                 class="info-age"
                 >{{ scope.row.birthday }}</span
               >
-              <span class="info-basics">{{
-                scope.row.base_painting_text
+              <span class="info-basics" v-if="classObj">{{
+                GETGRADE(scope.row.sup, classObj.type)
               }}</span>
+              <!-- <span class="info-basics">{{
+                scope.row.base_painting_text
+              }}</span> -->
             </div>
           </template>
         </el-table-column>
@@ -136,7 +139,7 @@
             <el-dropdown @command="commandFriend" trigger="click">
               <span class="el-dropdown-link icon-warps">
                 <i
-                  v-show="scope.row.added_wechat == 0 ? true : false"
+                  v-show="scope.row.added_wechat == 0"
                   class="el-icon-caret-bottom el-icon--right"
                 ></i>
               </span>
@@ -150,7 +153,10 @@
                 </el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
-            <div>{{ scope.row.added_wechat_time }}</div>
+            <div style="margin-left:10px;" v-if="scope.row.added_wechat == 0">
+              -- --
+            </div>
+            <div v-else>{{ scope.row.added_wechat_time }}</div>
             <span style="display: none;"> {{ scope.row.group }}</span>
           </template>
         </el-table-column>
@@ -189,7 +195,7 @@
             <el-dropdown @command="onGroup" trigger="click">
               <span class="el-dropdown-link icon-warps">
                 <i
-                  v-show="scope.row.added_group == 0 ? true : false"
+                  v-show="scope.row.added_group == 0"
                   class="el-icon-caret-bottom el-icon--right"
                 ></i>
               </span>
@@ -203,7 +209,10 @@
                 </el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
-            <div>{{ scope.row.added_group_time }}</div>
+            <div style="margin-left:10px;" v-if="scope.row.added_group == 0">
+              -- --
+            </div>
+            <div v-else>{{ scope.row.added_group_time }}</div>
             <span style="display: none;"> {{ scope.row.group }}</span>
           </template>
         </el-table-column>
@@ -239,7 +248,11 @@
               src="@/assets/images/success.png"
               alt=""
             />
-            <div>{{ scope.row.fast_follow_time }}</div>
+            <!-- <div>{{ scope.row.fast_follow_time }}</div> -->
+            <div style="margin-left:10px;" v-if="scope.row.follow == 0">
+              -- --
+            </div>
+            <div v-else>{{ scope.row.fast_follow_time }}</div>
             <span style="display: none;"> {{ scope.row }}</span>
           </template>
         </el-table-column>
@@ -336,13 +349,13 @@
                   @click="handelAddExpress"
                   >帮他填写</el-button
                 >
-                <el-button
+                <!-- <el-button
                   icon="el-icon-postcard"
                   size="mini"
                   type="primary"
                   plain
                   @click="onUrgentAddress"
-                  >催发地址</el-button
+                  >催发地址</el-button -->
                 >
               </div>
             </div>
@@ -501,6 +514,16 @@
             </div>
           </template>
         </el-table-column>
+        <!-- 课程后新增“解锁”字段（状态为已解锁、未解锁；已解锁状态下，添加解锁时间） TODO: -->
+        <el-table-column key="p6" label="解锁">
+          <template slot-scope="scope">
+            <div>
+              <span>{{ scope.row.lock }}</span>
+              <br />
+              <span>{{ scope.row.lock_time }}</span>
+            </div>
+          </template>
+        </el-table-column>
       </el-table>
       <!-- 分页 -->
       <m-pagination
@@ -611,14 +634,12 @@
             </div>
           </template>
         </el-table-column>
-        <!-- 组建遍历表头 -->
-        <!-- <el-table-column
-          v-for="(item, index) in tables.tableLabel"
-          :key="index"
-          :prop="item.prop"
-          :width="item.width"
-          :label="item.label"
-        ></el-table-column> -->
+        <!-- 列表新增 ”点评老师“，取最新的点评老师（在点评后添加）TODO: -->
+        <el-table-column key="w4" label="点评老师">
+          <template slot-scope="scope">
+            <div class="works-ctime">{{ scope.row.comment_teacher }}</div>
+          </template>
+        </el-table-column>
       </el-table>
       <!-- 分页 -->
       <m-pagination
@@ -656,6 +677,7 @@ import MPagination from '@/components/MPagination/index.vue'
 import logisticsForm from '../components/logisticsForm'
 import modifyAddress from '../components/modifyAddress'
 import { openBrowserTab } from '@/utils/index'
+import { GETGRADE } from '@/utils/enums'
 export default {
   name: 'detailsTable',
   props: {
@@ -683,6 +705,7 @@ export default {
   },
   data() {
     return {
+      GETGRADE,
       pointImg: require('@/assets/images/point.png'),
       expressStatus: '',
       rowId: '', // 判断页面那条数据显示
@@ -976,7 +999,7 @@ export default {
         margin-left: 5px;
       }
       .info-basics {
-        margin-left: 10px;
+        margin-left: 5px;
       }
     }
     .group-img {

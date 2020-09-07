@@ -3,8 +3,8 @@
  * @version: 1.0.0
  * @Author: Shentong
  * @Date: 2020-05-14 14:11:21
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-09-01 22:20:18
+ * @LastEditors: Shentong
+ * @LastEditTime: 2020-09-07 22:04:02
  -->
 <template>
   <el-row type="flex" class="app-main team-container">
@@ -153,7 +153,7 @@
                 min-width="70"
                 prop="today_complete_course_count"
                 align="center"
-                v-if="teamIndex != 0 && teamIndex != 3"
+                v-if="!hideMutileTab"
               >
                 <template slot="header">
                   <div
@@ -187,7 +187,7 @@
                 min-width="70"
                 prop="yesterday_complete_course_count"
                 align="center"
-                v-if="teamIndex != 0 && teamIndex != 3"
+                v-if="!hideMutileTab"
               >
                 <template slot="header">
                   <div
@@ -238,6 +238,7 @@
                 min-width="110"
                 prop="current_lesson"
                 align="center"
+                v-if="!hideProgress"
               ></el-table-column>
               <el-table-column
                 label="开课时间"
@@ -342,7 +343,16 @@ export default {
     // await this.getAllTeacherByRole(params)
     this.getTrialTeamList(this.tabQuery)
   },
-  computed: {},
+  computed: {
+    /** 待开课&全部班级: 课程进度隐藏 */
+    hideProgress() {
+      return [0, 1, 2, 3].includes(this.teamIndex)
+    },
+    /** 上课中&已结课: 今日完课、昨日完课 */
+    hideMutileTab() {
+      return [0, 1, 2, 3].includes(this.teamIndex)
+    }
+  },
   mounted() {
     this.calcTableHeight()
   },

@@ -72,6 +72,11 @@
               </div>
               <div @click="openUserDetail(scope.row)" class="age primary-text">
                 {{ scope.row.sex }} · {{ scope.row.birthday }}
+                {{ scope.row.sup + '----' }}
+                <span v-show="scope.row.sup"
+                  >·{{ GETGRADE(scope.row.sup, classObj.type) }}</span
+                >
+
                 <!-- <span v-show="scope.row.base_painting_text">·</span>
                 {{ scope.row.base_painting_text }} -->
               </div>
@@ -147,6 +152,7 @@
 import { mapGetters } from 'vuex'
 import axios from '@/api/axiosConfig'
 import { GetAgeByBrithday } from '@/utils/index'
+import { GETGRADE } from '@/utils/enums'
 import MPagination from '@/components/MPagination/index.vue'
 import CouponPopover from './components/couponPopover'
 import MSearch from '@/components/MSearch/index.vue'
@@ -166,6 +172,7 @@ export default {
   },
   data() {
     return {
+      GETGRADE: GETGRADE,
       pointImg: require('@/assets/images/point.png'),
       visible: false,
       popoverindex: 0,

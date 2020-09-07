@@ -3,8 +3,8 @@
  * @version:
  * @Author: zhubaodong
  * @Date: 2020-03-13 16:53:41
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-20 14:53:45
+ * @LastEditors: Shentong
+ * @LastEditTime: 2020-09-07 20:11:18
  -->
 <template>
   <div class="right-container">
@@ -13,13 +13,11 @@
       class="box-card1"
       v-if="JSON.stringify(classMessage) != '{}'"
     >
-      <!-- TODO: -->
+      <!-- TODO: {{ teamDetail.id }}: 去掉班级id-->
       <div class="header" v-if="teamDetail.id">
         <div class="header-left">
           <div class="title">
-            <span class="title-text"
-              >{{ teamDetail.id }}:{{ teamDetail.team_name }}</span
-            >
+            <span class="title-text">{{ teamDetail.team_name }}</span>
             <span class="text-iconsY">{{
               teamDetail.team_type == 0 ? '体验课' : '系统课'
             }}</span>
@@ -216,16 +214,16 @@
               <div>{{ classMessage.statictis.unlogin }}</div>
               <div>待打开App</div>
             </div>
-            <div>
+            <!-- <div>
               <div>{{ classMessage.statictis.today_add_class }}</div>
               <div>今日课程参课</div>
             </div>
             <div>
               <div>{{ classMessage.statictis.yesterday_add_class }}</div>
               <div>昨日课程参课</div>
-            </div>
+            </div> -->
           </div>
-          <div class="params-bottom">
+          <!-- <div class="params-bottom">
             <div>
               <div>{{ classMessage.statictis.tody_comp_class }}</div>
               <div>今日课程完课</div>
@@ -250,7 +248,7 @@
               <div>{{ classMessage.statictis.yesterday_comment }}</div>
               <div>昨日点评作品</div>
             </div>
-          </div>
+          </div> -->
         </div>
       </div>
     </el-card>
@@ -591,14 +589,21 @@ export default {
         .params-top {
           width: 100%;
           display: flex;
-          div {
+          height: 100%;
+          > div {
             flex: 1;
             display: flex;
             flex-direction: column;
             align-items: center;
-            div:nth-child(1) {
-              color: #4d4d4d;
-              margin-bottom: 4px;
+            > div {
+              flex: 1;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              &:nth-child(1) {
+                color: #4d4d4d;
+                margin-bottom: 4px;
+              }
             }
           }
         }
