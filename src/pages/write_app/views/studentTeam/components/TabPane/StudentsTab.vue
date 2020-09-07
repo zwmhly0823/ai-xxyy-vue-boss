@@ -72,8 +72,8 @@
               </div>
               <div @click="openUserDetail(scope.row)" class="age primary-text">
                 {{ scope.row.sex }} · {{ scope.row.birthday }}
-                <span v-show="scope.row.base_painting_text">·</span>
-                {{ scope.row.base_painting_text }}
+                <!-- <span v-show="scope.row.base_painting_text">·</span>
+                {{ scope.row.base_painting_text }} -->
               </div>
             </div>
             <div class="age">

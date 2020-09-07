@@ -3,8 +3,8 @@
  * @version:
  * @Author: panjian
  * @Date: 2020-03-16 20:22:24
- * @LastEditors: panjian
- * @LastEditTime: 2020-04-24 10:29:24
+ * @LastEditors: Shentong
+ * @LastEditTime: 2020-09-07 14:38:48
  -->
 <template>
   <div>
@@ -259,9 +259,9 @@ export default {
       type: Object,
       default: null
     },
-    classId: {
+    classObj: {
       type: Object,
-      default: null
+      default: () => {}
     },
     audioTabs: {
       type: String,
@@ -359,7 +359,7 @@ export default {
   },
   mounted() {},
   watch: {
-    classId(value) {
+    classObj(value) {
       setTimeout(() => {
         // 参课完课 重置
         this.groupsDisabled = true
@@ -397,14 +397,16 @@ export default {
       this.attendClassSelect = ''
     }
   },
-  created() {},
+  created() {
+    console.log('classObj', this.classObj)
+  },
   methods: {
     // 参课完课 作品及点评 筛选下拉框接口
     remoteMethod() {
       this.loading = true
       setTimeout(() => {
         this.loading = false
-        const query = `{"team_id":${this.classId.classId.id},"team_type":${this.classId.type}}`
+        const query = `{"team_id":${this.classObj.teamId},"team_type":${this.classObj.type}}`
         this.$http.Team.getStuCourseList({ query }).then((item) => {
           const data = item.data.getStuCourseList
           const _data = []
@@ -549,6 +551,7 @@ export default {
   width: 18px;
 }
 .title-text {
+  height: 30px;
   font-weight: 400;
   font-size: 22px;
 }
