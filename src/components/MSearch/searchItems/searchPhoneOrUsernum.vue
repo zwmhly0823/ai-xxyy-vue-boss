@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-06-22 12:08:17
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-09-04 18:10:03
+ * @LastEditTime: 2020-09-07 16:48:32
 -->
 <template>
   <div class="search-mobile d-flex align-center">
@@ -210,7 +210,7 @@ export default {
       }
       !this.extension
         ? this.$emit('result', data ? { [this.nameKey]: data } : '')
-        : this.$emit('result', data ? { uid: this.uid } : '')
+        : this.$emit('result', data ? { id: this.uid } : '')
     }
   }
 }

@@ -5,7 +5,7 @@
  * @Author: shentong
  * @Date: 2020-03-13 14:38:28
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-09-05 16:53:01
+ * @LastEditTime: 2020-09-07 16:08:18
  */
 // import axios from '../axios'
 import axios from '../../axiosConfig'
@@ -212,10 +212,6 @@ export default {
             channel
             join_date
             status
-            extends_channel
-            extends_join_date
-            extends_status
-            extends_id
             oids
             teacher_ids
             last_teacher_ids
@@ -248,20 +244,6 @@ export default {
                   }
                 }
               }
-              channelInfo {
-                channel_outer_name
-              }
-            }
-            userExtendsInfo {
-              u_id
-              join_date
-              status
-              status_text
-              user_num
-              mobile
-              username
-              sex
-              birthday
               channelInfo {
                 channel_outer_name
               }

@@ -4,7 +4,7 @@
  * @Author: zhangjiawen
  * @Date: 2020-07-03 17:21:52
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-09-05 18:44:49
+ * @LastEditTime: 2020-09-07 14:26:28
  */
 
 /**
@@ -47,7 +47,7 @@ export default {
   getDepartmentTeacher(query = '') {
     return axios.post('/graphql/v1/toss', {
       query: `{
-        TeacherList(query: ${injectSubject(query)}, size: 300){
+        TeacherList(query: ${JSON.stringify(injectSubject(query))}, size: 300){
           id
           realname
         }

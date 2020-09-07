@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-08-06 17:15:04
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-26 20:07:16
+ * @LastEditTime: 2020-09-07 18:34:46
 -->
 <template>
   <el-row type="flex" class="app-main height">
@@ -179,8 +179,11 @@ export default {
     // 查看码库
     handleOpenLibrary(row) {
       const { id, status } = row
+      // 区分科目 TODO:新增其他科目时再优化
+      const subject = this.$store.getters.subjects.subjectCode
+      const subjectText = +subject === 0 ? 'marketing' : 'write_app'
       // 如果是自定义时间，则加上参数 expire
-      let url = `/marketing/#/redeemCodeLibrary/${id}/${status}`
+      let url = `/${subjectText}/#/redeemCodeLibrary/${id}/${status}`
       if (row.expire && row.expire !== '0') {
         url += `?expire=${row.expire}`
       }

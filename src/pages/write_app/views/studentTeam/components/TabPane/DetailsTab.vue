@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 14:19:58
  * @LastEditors: Shentong
- * @LastEditTime: 2020-09-02 12:03:56
+ * @LastEditTime: 2020-09-07 14:35:03
  -->
 <template>
   <div>
@@ -15,6 +15,7 @@
         phone="uid"
         onlyPhone="1"
         phoneTip="手机号/微信昵称 查询"
+        :classObj="classObj"
         :teamType="`${classObj.type == 0 ? '0' : '1'}`"
         :teamId="classObj.teamId"
       />
@@ -387,55 +388,6 @@ export default {
         this.getGroup()
       })
     }
-    // classObj(value) {
-    // // 切换标签 语音停止
-    // const audios = this.$refs
-    // const audiosList = Object.values(audios)
-    // audiosList.forEach((item, index) => {
-    //   item[0].load()
-    // })
-    // this.screenWorksData = {}
-    // this.screenAttendClassData = {}
-    // this.sortGroup = ''
-    // this.table.currentPage = 1
-    // if (value.teamId && value.classId.id) {
-    //   this.tableDataEmpty = true
-    //   if (+value.type === 0) {
-    //     this.type = 'TRAIL'
-    //   } else if (+value.type === 1) {
-    //     this.type = 'MONTH'
-    //   } else if (+value.type === 2) {
-    //     this.type = 'YEAR'
-    //   } else {
-    //     this.type = ''
-    //   }
-    //   this.getGroup()
-    //   if (this.tabsName === '加好友进群') {
-    //     setTimeout(() => {
-    //       this.getGroup()
-    //     }, 200)
-    //   } else if (this.tabsName === '物流') {
-    //     setTimeout(() => {
-    //       this.getLogistics()
-    //     }, 200)
-    //   } else if (this.tabsName === '打开APP') {
-    //     setTimeout(() => {
-    //       this.geiLogin()
-    //     }, 200)
-    //   } else if (this.tabsName === '参课和完课') {
-    //     setTimeout(() => {
-    //       this.getClassCompPage()
-    //     }, 200)
-    //   } else if (this.tabsName === '作品及点评') {
-    //     setTimeout(() => {
-    //       this.getStuComment()
-    //     }, 200)
-    //   }
-    // } else {
-    //   this.tableDataEmpty = false
-    //   this.table.tableData = []
-    // }
-    // }
   },
   mounted() {
     const teacherId = isToss()
@@ -471,34 +423,19 @@ export default {
     },
     // 搜索组件传回来的值
     handleSearch(res) {
-      if (res.length === 0) {
-        this.search = ''
+      this.search = res.length ? `"${res[0].term.uid}"` : ''
+      this.table.currentPage = 1
+      // this.getGroup()
+      if (this.tabsName === '加好友进群') {
         this.getGroup()
-        if (this.tabsName === '加好友进群') {
-          this.getGroup()
-        } else if (this.tabsName === '物流') {
-          this.getLogistics()
-        } else if (this.tabsName === '打开APP') {
-          this.geiLogin()
-        } else if (this.tabsName === '参课和完课') {
-          this.getClassCompPage()
-        } else if (this.tabsName === '作品及点评') {
-          this.getStuComment()
-        }
-      } else {
-        this.search = `"${res[0].term.uid}"`
-        this.getGroup()
-        if (this.tabsName === '加好友进群') {
-          this.getGroup()
-        } else if (this.tabsName === '物流') {
-          this.getLogistics()
-        } else if (this.tabsName === '打开APP') {
-          this.geiLogin()
-        } else if (this.tabsName === '参课和完课') {
-          this.getClassCompPage()
-        } else if (this.tabsName === '作品及点评') {
-          this.getStuComment()
-        }
+      } else if (this.tabsName === '物流') {
+        this.getLogistics()
+      } else if (this.tabsName === '打开APP') {
+        this.geiLogin()
+      } else if (this.tabsName === '参课和完课') {
+        this.getClassCompPage()
+      } else if (this.tabsName === '作品及点评') {
+        this.getStuComment()
       }
     },
     // 生成完课榜----确定按钮
