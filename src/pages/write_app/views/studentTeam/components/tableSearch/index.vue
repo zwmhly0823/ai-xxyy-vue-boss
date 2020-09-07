@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-25 14:35:19
  * @LastEditors: Shentong
- * @LastEditTime: 2020-08-26 17:10:58
+ * @LastEditTime: 2020-09-07 13:32:22
  -->
 <template>
   <!-- <el-scrollbar class="scroll-search-container"> -->
@@ -169,7 +169,7 @@ export default {
 
       if (sup.length) {
         sup = _.cloneDeep(sup)
-        let strSup = sup.map((item) => `S${item}`)
+        let strSup = sup.map((item) => `${item}`)
         strSup = strSup.join().split(',')
         this.manageChange(strSup, 'sup')
       } else this.manageChange(sup, 'sup')
