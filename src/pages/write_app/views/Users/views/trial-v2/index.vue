@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-06-16 16:27:14
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-09-04 12:07:04
+ * @LastEditTime: 2020-09-07 20:46:20
 -->
 <template>
   <div class="user-list">
@@ -79,6 +79,7 @@
             <template slot-scope="scope">
               <base-user-info
                 :user="scope.row.userInfo"
+                :user-extends="scope.row.userExtends"
                 :sys-label="scope.row.sys_label"
                 @handle-click="userHandle"
               />
@@ -730,8 +731,9 @@
           <el-table-column label="渠道" min-width="100">
             <template slot-scope="scope">
               <span v-if="scope.row.payChannelInfo">
-                {{ scope.row.payChannelInfo.channel_outer_name }}
+                {{ scope.row.payChannelInfo.channel_outer_name || '-' }}
               </span>
+              <span v-else>-</span>
             </template>
           </el-table-column>
           <el-table-column label="ID" min-width="55">
@@ -1297,7 +1299,7 @@ export default {
     },
 
     expressStatus(status) {
-      if (!status && +status !== 0) {
+      if (!status && status !== 0) {
         return '-'
       }
       // 异常物流

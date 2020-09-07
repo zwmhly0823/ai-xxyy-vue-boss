@@ -129,15 +129,15 @@ export default {
         // 系统课转化
         if (key === 'status') {
           // 未转化
-          if (search.status === 0) {
+          if (search.status === 1) {
             search.status = { lte: 2 }
           }
           // 已购半年课
-          if (search.status === 2) {
+          if (search.status === 3) {
             search.status = { gte: 11, lte: 12 }
           }
           // 已购年课
-          if (search.status === 3) {
+          if (search.status === 4) {
             search.status = { gte: 5, lte: 7 }
           }
         }
@@ -150,9 +150,9 @@ export default {
         this.$delete(this.searchQuery, key)
       }
       // 删除返回值没空数组的情况
-      if (key !== 'user' && search && search[key].length === 0) {
-        this.$delete(this.searchQuery, key)
-      }
+      // if (key !== 'user' && search && search[key].length === 0) {
+      //   this.$delete(this.searchQuery, key)
+      // }
       this.$emit('search', this.searchQuery)
     }
   }

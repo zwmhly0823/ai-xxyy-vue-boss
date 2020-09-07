@@ -329,6 +329,8 @@ export default {
         }
         switch (+item.status) {
           case 0:
+            item.user_status_name = '已注册'
+            break
           case 1:
           case 2:
             item.user_status_name = '未转化'

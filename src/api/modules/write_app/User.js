@@ -5,7 +5,7 @@
  * @Author: shentong
  * @Date: 2020-03-13 14:38:28
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-09-07 16:08:18
+ * @LastEditTime: 2020-09-07 21:02:54
  */
 // import axios from '../axios'
 import axios from '../../axiosConfig'
@@ -149,6 +149,9 @@ export default {
               base_painting
               mobile_city
               mobile_province
+            }
+            userExtends{
+              grade
             }
             teamInfo {
               team_name
@@ -356,6 +359,9 @@ export default {
               department_id
               sys_label
               send_id
+              userExtends{
+                grade
+              }
             }
           }
         }
