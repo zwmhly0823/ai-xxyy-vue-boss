@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-08-06 19:52:15
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-09-07 18:24:51
+ * @LastEditTime: 2020-09-07 18:46:43
 -->
 <template>
   <el-row type="flex" class="app-main height">
@@ -99,8 +99,11 @@
               </p>
               <p v-else>--</p>
               <p v-if="scope.row.teacherInfo">
-                {{ scope.row.teacherInfo.realname }}
-                {{ scope.row.teacherInfo.department_name }}
+                {{ scope.row.teacherInfo.realname }} -
+                {{
+                  scope.row.teacherInfo.department_name ||
+                    scope.row.teacherInfo.group_name
+                }}
               </p>
               <p v-else>--</p>
             </template>
