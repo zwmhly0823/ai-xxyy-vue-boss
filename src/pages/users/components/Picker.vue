@@ -4,7 +4,7 @@
  * @Author: songyanan
  * @Date: 2020-08-27 14:51:00
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-09-07 15:24:04
+ * @LastEditTime: 2020-09-07 15:39:45
  -->
 <template>
   <div class="search-item">
@@ -12,7 +12,7 @@
       v-model="timeData"
       class="small"
       size="mini"
-      type="datetimerange"
+      type="daterange"
       value-format="timestamp"
       range-separator="至"
       start-placeholder="开始日期"

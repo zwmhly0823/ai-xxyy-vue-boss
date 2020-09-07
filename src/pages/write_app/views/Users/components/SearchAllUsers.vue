@@ -18,7 +18,7 @@
                 :extension="true"
                 user-num-key="user_num"
                 tablename="UserSubjectStatisticsList"
-                @result="getSearchData('uid', arguments)"
+                @result="getSearchData('id', arguments)"
               />
             </div>
           </el-form-item>
@@ -148,6 +148,10 @@ export default {
           ...search
         }
       } else {
+        this.$delete(this.searchQuery, key)
+      }
+      // 删除返回值没空数组的情况
+      if (key !== 'user' && search && search[key].length === 0) {
         this.$delete(this.searchQuery, key)
       }
       this.$emit('search', this.searchQuery)
