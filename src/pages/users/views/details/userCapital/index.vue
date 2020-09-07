@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-08-27 10:17:03
  * @LastEditors: liukun
- * @LastEditTime: 2020-09-01 22:26:06
+ * @LastEditTime: 2020-09-07 16:41:43
 -->
 <template>
   <div>
@@ -58,7 +58,7 @@ export default {
       const {
         data: { UserExtends }
       } = await this.$http.User._reqGetUserTop({
-        id: this.$route.params.id,
+        u_id: this.$route.params.id,
         subject: this.changeSubject
       }).catch((err) => {
         console.error(err)
