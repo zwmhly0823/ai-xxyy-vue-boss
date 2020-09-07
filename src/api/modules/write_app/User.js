@@ -5,7 +5,7 @@
  * @Author: shentong
  * @Date: 2020-03-13 14:38:28
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-09-05 16:53:01
+ * @LastEditTime: 2020-09-07 21:02:54
  */
 // import axios from '../axios'
 import axios from '../../axiosConfig'
@@ -150,6 +150,9 @@ export default {
               mobile_city
               mobile_province
             }
+            userExtends{
+              grade
+            }
             teamInfo {
               team_name
               team_type
@@ -212,10 +215,6 @@ export default {
             channel
             join_date
             status
-            extends_channel
-            extends_join_date
-            extends_status
-            extends_id
             oids
             teacher_ids
             last_teacher_ids
@@ -248,20 +247,6 @@ export default {
                   }
                 }
               }
-              channelInfo {
-                channel_outer_name
-              }
-            }
-            userExtendsInfo {
-              u_id
-              join_date
-              status
-              status_text
-              user_num
-              mobile
-              username
-              sex
-              birthday
               channelInfo {
                 channel_outer_name
               }
@@ -374,6 +359,9 @@ export default {
               department_id
               sys_label
               send_id
+              userExtends{
+                grade
+              }
             }
           }
         }

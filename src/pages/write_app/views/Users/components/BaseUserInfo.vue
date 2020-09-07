@@ -13,13 +13,6 @@
  -->
 <template>
   <div class="user-info">
-    <!-- <div class="user-info-l">
-      <div class="user-info-head">
-        <img :src="head" alt="" />
-      </div>
-      <i class="el-icon-male" v-if="user && +user.sex === 1"></i>
-      <i class="el-icon-female female" v-if="user && +user.sex === 2"></i>
-    </div> -->
     <div>
       <p class="primary-text">
         <span @click="onClick">{{ (user && user.mobile) || '' }}</span> -
@@ -34,12 +27,9 @@
         </svg>
         <i class="el-icon-male" v-if="user && +user.sex === 1"></i>
         <i class="el-icon-female female" v-if="user && +user.sex === 2"></i>
-        {{ birthday
-        }}<span v-if="!basePainting || basePainting !== '-'">
-          · {{ basePainting || '' }}·</span
-        >
+        {{ birthday }}<span v-if="grade"> · {{ grade || '' }}</span>
         <span v-if="user && user.send_id > 0" style="color: rgb(255, 139, 140);"
-          >R</span
+          >· R</span
         >
       </p>
     </div>
@@ -48,10 +38,15 @@
 
 <script>
 import { GetAgeByBrithday } from '@/utils/index'
-import { BASE_PAINTING } from '@/utils/enums'
+import { GRADE } from '@/utils/enums'
 export default {
   props: {
     user: {
+      type: Object,
+      default: () => ({})
+    },
+    // 党员扩展
+    userExtends: {
       type: Object,
       default: () => ({})
     },
@@ -80,23 +75,28 @@ export default {
         : '-'
     },
     // 绘画基础
-    basePainting() {
-      const base = this.user
-        ? this.user.base_painting || this.user.basepainting
-        : ''
-      return base ? BASE_PAINTING[base] : '-'
-    },
+    // basePainting() {
+    //   const base = this.user
+    //     ? this.user.base_painting || this.user.basepainting
+    //     : ''
+    //   return base ? BASE_PAINTING[base] : '-'
+    // },
     // 是不是vip标签 - 固定标签: vip
     is_sys_label_vip() {
       if (!this.sysLabel || this.sysLabel === '-') return false
       const label = this.sysLabel.split(',')
       return label.includes('vip')
+    },
+    // 学员年级 1-6年级
+    grade() {
+      return this.userExtends && this.userExtends.grade
+        ? GRADE[this.userExtends.grade]
+        : ''
     }
   },
   methods: {
     // 点击用户信息事件回调, 参数是用户ID
     onClick() {
-      // this.$emit('handle-click', this.user.id || this.user.studentid)
       this.$emit('handle-click', this.user)
     }
   }
@@ -109,27 +109,6 @@ export default {
   display: flex;
   align-items: center;
   cursor: pointer;
-  &-l {
-    position: relative;
-    i {
-      position: absolute;
-      right: 10px;
-      bottom: 0;
-      background-color: #369bff;
-      display: block;
-      width: 18px;
-      height: 18px;
-      line-height: 18px;
-      border-radius: 100%;
-      overflow: hidden;
-      color: #fff;
-      text-align: center;
-      font-weight: bolder;
-      &.female {
-        background-color: #f23589;
-      }
-    }
-  }
   &-head {
     margin-right: 16px;
     width: 36px;

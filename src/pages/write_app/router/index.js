@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-08-19 20:26:32
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-31 18:11:53
+ * @LastEditTime: 2020-09-07 18:28:10
  */
 import Vue from 'vue'
 import VueRouter from 'vue-router'
@@ -185,6 +185,16 @@ const routes = [
       keepAlive: true
     },
     component: () => import('../../marketing/views/redeemCode/index.vue')
+  },
+  //   兑换码 - 码库 @status: 1-有效 0-失效
+  {
+    path: '/redeemCodeLibrary/:id/:status',
+    name: 'redeemCodeLibrary',
+    meta: {
+      title: '兑换码 / 码库',
+      keepAlive: true
+    },
+    component: () => import('../../marketing/views/redeemCode/library.vue')
   },
   /**
    * @descript 班级模块 >>>>start

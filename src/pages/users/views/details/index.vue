@@ -136,9 +136,10 @@
                 <el-col :span="7">
                   <span>学习科目:</span>
                   <el-tag
+                    style="margin-right:3px"
                     type="danger"
                     size="mini"
-                    v-for="(item, index) in stuInfor.bought_subject"
+                    v-for="(item, index) in stuInfor.studyCount"
                     :key="index"
                     >{{ item }}</el-tag
                   ></el-col
@@ -397,6 +398,25 @@ export default {
     }
   },
   computed: {
+    studyCount() {
+      return this.stuInfor.bought_subject.map((item) => {
+        switch (item) {
+          case 'ART_APP':
+            item = '小熊美术'
+            break
+          case 'WRITE_APP':
+            item = '美术宝写字'
+            break
+          case 'COLLEGE_APP':
+            item = 'AI学院'
+            break
+          default:
+            item = '未知学科'
+            break
+        }
+        return item
+      })
+    },
     aikelabel() {
       return (
         (this.stuInfor &&

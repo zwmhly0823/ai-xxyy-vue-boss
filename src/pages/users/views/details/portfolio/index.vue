@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-08-25 11:40:19
  * @LastEditors: liukun
- * @LastEditTime: 2020-09-07 15:01:46
+ * @LastEditTime: 2020-09-07 16:49:29
 -->
 <template>
   <div>
@@ -147,7 +147,7 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="操作">
+      <el-table-column label="操作" v-if="!changeSubject">
         <template slot-scope="scope">
           <el-button type="text" @click="delete_task(scope.row.id)"
             >删除</el-button

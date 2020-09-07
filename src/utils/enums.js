@@ -80,6 +80,15 @@ export const ISREFUND = {
   3: '退费中'
 }
 
+// 学员年级
+export const GRADE = {
+  1: '一年级',
+  2: '二年级',
+  3: '三年级',
+  4: '四年级',
+  5: '五年级',
+  6: '六年级'
+}
 /**
  * @description  SUP对应 写字课中的年级
  * @params { sup: S1...S6, teamType: '0'体验课，'1'系统课}

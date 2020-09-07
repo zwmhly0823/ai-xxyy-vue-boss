@@ -42,7 +42,7 @@
           <el-table-column label="用户信息" min-width="165">
             <template slot-scope="scope">
               <base-user-info
-                :user="scope.row.userExtendsInfo"
+                :user="scope.row.userInfo"
                 :uid="scope.row.uid"
                 :sys-label="scope.row.sys_label"
                 @handle-click="userHandle"
@@ -66,12 +66,15 @@
               <div v-else>
                 <div v-for="(item, index) in scope.row.trailTeams" :key="index">
                   <div>
-                    <span>{{ item.teacher_info.realname }}</span>
+                    <span>{{
+                      (item.teacher_info && item.teacher_info.realname) || '--'
+                    }}</span>
                     <span class="hight">{{ `(${item.team_name})` }}</span>
                   </div>
                   <div>
                     {{
-                      `${(item.teacher_info.departmentInfo &&
+                      `${(item.teacher_info &&
+                        item.teacher_info.departmentInfo &&
                         item.teacher_info.departmentInfo.name) ||
                         '--'}`
                     }}
@@ -93,12 +96,16 @@
                     v-if="item.subject === subjectCode && +item.team_type > 0"
                   >
                     <div>
-                      <span>{{ item.teacher_info.realname }}</span>
+                      <span>{{
+                        (item.teacher_info && item.teacher_info.realname) ||
+                          '--'
+                      }}</span>
                       <span class="hight">{{ `(${item.team_name})` }}</span>
                     </div>
                     <div>
                       {{
-                        `${(item.teacher_info.departmentInfo &&
+                        `${(item.teacher_info &&
+                          item.teacher_info.departmentInfo &&
                           item.teacher_info.departmentInfo.name) ||
                           '--'}`
                       }}
@@ -115,16 +122,8 @@
           </el-table-column>
           <el-table-column label="首次来源渠道" min-width="100">
             <template slot-scope="scope">
-              <span
-                v-if="
-                  scope.row.userExtendsInfo &&
-                    scope.row.userExtendsInfo.channelInfo
-                "
-              >
-                {{
-                  scope.row.userExtendsInfo.channelInfo.channel_outer_name ||
-                    '--'
-                }}
+              <span v-if="scope.row.userInfo && scope.row.userInfo.channelInfo">
+                {{ scope.row.userInfo.channelInfo.channel_outer_name || '--' }}
               </span>
               <span v-else>--</span>
             </template>
@@ -132,15 +131,14 @@
           <el-table-column label="系统课转化" min-width="90" fixed="right">
             <template slot-scope="scope">
               <span
-                v-if="scope.row.userExtendsInfo !== null"
+                v-if="scope.row.user_status_name !== null"
                 :class="[
                   {
-                    'red-color':
-                      scope.row.userExtendsInfo.status_text === '未转化'
+                    'red-color': scope.row.user_status_name === '未转化'
                   }
                 ]"
               >
-                {{ scope.row.userExtendsInfo.status_text || '--' }}
+                {{ scope.row.user_status_name || '--' }}
               </span>
               <span v-else>--</span>
             </template>
@@ -217,13 +215,6 @@ export default {
   computed: {
     searchParams() {
       const search = Object.assign({}, this.search)
-
-      if (this.term && +this.term !== 0) {
-        Object.assign(search, { term: this.term })
-      }
-      if (+this.term === 0) {
-        delete search.term
-      }
       // filter 与 search params 组合
       Object.assign(search, this.filterParams)
       // 系统课转化学员条件冲突，处理交互 TODO: 待优化
@@ -264,16 +255,6 @@ export default {
     }
   },
   watch: {
-    term(val, old) {
-      if (old === '') return
-      this.currentDate = new Date().getTime()
-      this.search = []
-      this.filterParams = {}
-      this.paramsToSearch.term = val
-      this.$refs.searchC && this.$refs.searchC.changeTerm(val)
-      this.$refs.searchC && this.$refs.searchC.resetFilter()
-    },
-
     searchParams(params, oldval) {
       if (
         Object.keys(params).length === 0 &&
@@ -348,6 +329,8 @@ export default {
         }
         switch (+item.status) {
           case 0:
+            item.user_status_name = '已注册'
+            break
           case 1:
           case 2:
             item.user_status_name = '未转化'
@@ -385,9 +368,9 @@ export default {
             (item) => item.subject === this.subjectCode && +item.team_type > 0
           )
         }
-        // userExtendsInfo 添加学员id字段
-        if (item.userExtendsInfo) {
-          item.userExtendsInfo.id = item.uid
+        // userInfo 添加学员id字段
+        if (item.userInfo) {
+          item.userInfo.id = item.uid
         }
       })
       return data

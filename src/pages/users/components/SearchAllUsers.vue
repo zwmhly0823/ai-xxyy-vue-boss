@@ -25,11 +25,10 @@
           <el-form-item label="归属销售:" label-width="105px">
             <div class="search-group">
               <department
-                name="department_id"
-                :only-dept="1"
+                name="teacher_ids"
                 placeholder="选择销售组"
                 style="margin-right: 10px;"
-                @result="getSearchData('department_id', arguments)"
+                @result="getSearchData('teacher_ids', arguments)"
               />
               <group-sell
                 name="teacher_ids"
@@ -41,9 +40,9 @@
           </el-form-item>
           <el-form-item label="来源时间:" label-width="105px">
             <date-picker
-              name="date"
+              name="join_date"
               tip="时间控件"
-              @result="getSearchData('date', arguments)"
+              @result="getSearchData('join_date', arguments)"
             />
           </el-form-item>
           <el-form-item label="渠道选择:">
@@ -126,28 +125,20 @@ export default {
      */
     getSearchData(key, res) {
       const search = res && res[0]
-
       if (search) {
         // 系统课转化
         if (key === 'status') {
           // 未转化
-          if (search.status === 0) {
+          if (search.status === 1) {
             search.status = { lte: 2 }
           }
           // 已购半年课
-          if (search.status === 2) {
+          if (search.status === 3) {
             search.status = { gte: 11, lte: 12 }
           }
           // 已购年课
-          if (search.status === 3) {
+          if (search.status === 4) {
             search.status = { gte: 5, lte: 7 }
-          }
-        }
-
-        // user_label 标签
-        if (key === 'user_label.like') {
-          search['user_label.like'] = {
-            'user_label.keyword': `*${search['user_label.like']}*`
           }
         }
 
@@ -156,24 +147,12 @@ export default {
           ...search
         }
       } else {
-        // delete this.searchQuery[key]
         this.$delete(this.searchQuery, key)
       }
       // 删除返回值没空数组的情况
-      if (key !== 'user' && search && search[key].length === 0) {
-        this.$delete(this.searchQuery, key)
-      }
-      // 学员手机号或学员编号
-      if (key === 'user') {
-        if (search.mobile && search.mobile.length === 0)
-          this.$delete(this.searchQuery, 'mobile')
-        if (search.user_num_text && search.user_num_text.length === 0)
-          this.$delete(this.searchQuery, 'user_num_text')
-        if (!search.mobile && !search.user_num_text) {
-          this.$delete(this.searchQuery, 'mobile')
-          this.$delete(this.searchQuery, 'user_num_text')
-        }
-      }
+      // if (key !== 'user' && search && search[key].length === 0) {
+      //   this.$delete(this.searchQuery, key)
+      // }
       this.$emit('search', this.searchQuery)
     }
   }
