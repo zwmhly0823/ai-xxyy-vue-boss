@@ -207,12 +207,12 @@ export default {
     searchParams() {
       const search = Object.assign({}, this.search)
 
-      if (this.term && +this.term !== 0) {
-        Object.assign(search, { term: this.term })
-      }
-      if (+this.term === 0) {
-        delete search.term
-      }
+      // if (this.term && +this.term !== 0) {
+      //   Object.assign(search, { term: this.term })
+      // }
+      // if (+this.term === 0) {
+      //   delete search.term
+      // }
       // filter 与 search params 组合
       Object.assign(search, this.filterParams)
       // 系统课转化学员条件冲突，处理交互 TODO: 待优化
@@ -253,17 +253,19 @@ export default {
     }
   },
   watch: {
-    term(val, old) {
-      if (old === '') return
-      this.currentDate = new Date().getTime()
-      this.search = []
-      this.filterParams = {}
-      this.paramsToSearch.term = val
-      this.$refs.searchC && this.$refs.searchC.changeTerm(val)
-      this.$refs.searchC && this.$refs.searchC.resetFilter()
-    },
+    // term(val, old) {
+    //   if (old === '') return
+    //   this.currentDate = new Date().getTime()
+    //   this.search = []
+    //   this.filterParams = {}
+    //   this.paramsToSearch.term = val
+    //   this.$refs.searchC && this.$refs.searchC.changeTerm(val)
+    //   this.$refs.searchC && this.$refs.searchC.resetFilter()
+    // },
 
     searchParams(params, oldval) {
+      console.log(params)
+
       if (
         Object.keys(params).length === 0 &&
         Object.keys(oldval).length === 0
