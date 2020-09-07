@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-08-26 16:27:40
  * @LastEditors: Shentong
- * @LastEditTime: 2020-08-26 17:18:40
+ * @LastEditTime: 2020-09-07 11:51:33
 -->
 <template>
   <el-select
@@ -52,37 +52,37 @@ export default {
       levelData: null,
       trialLevelList: [
         {
-          label: 'S1',
+          label: '基础(S1)',
           value: 'S1'
         },
         {
-          label: 'S2',
+          label: '高阶(S2)',
           value: 'S2'
         }
       ],
       systemlList: [
         {
-          label: 'S1',
+          label: '一年级(S1)',
           value: 'S1'
         },
         {
-          label: 'S2',
+          label: '二年级(S2)',
           value: 'S2'
         },
         {
-          label: 'S3',
+          label: '三年级(S3)',
           value: 'S3'
         },
         {
-          label: 'S4',
+          label: '四年级(S4)',
           value: 'S4'
         },
         {
-          label: 'S5',
+          label: '五年级(S5)',
           value: 'S5'
         },
         {
-          label: 'S6',
+          label: '六年级(S6)',
           value: 'S6'
         }
       ]
