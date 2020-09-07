@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-08-06 19:52:15
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-26 21:14:19
+ * @LastEditTime: 2020-09-07 18:24:51
 -->
 <template>
   <el-row type="flex" class="app-main height">
@@ -278,7 +278,7 @@ export default {
       if (!start || start === '0' || !expire) return '--'
       const cur = new Date(+start)
       cur.setDate(cur.getDate() + expire)
-      cur.setHours(0, 0, 0, 0)
+      // cur.setHours(0, 0, 0, 0)
       return formatData(cur.getTime(), 'm')
     },
 
