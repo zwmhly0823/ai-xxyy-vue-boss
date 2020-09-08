@@ -808,6 +808,7 @@ export default {
             this.ruleForm.note = payload.teacher.note
             this.ruleForm.workplaces = payload.teacher.workPlace
             this.ruleForm.workPlaceCode = payload.teacher.workPlaceCode
+            console.log(payload.teacher.subject, typeof payload.teacher.subject)
             this.ruleForm.subject = payload.teacher.subject.split(',')
           }
         )
