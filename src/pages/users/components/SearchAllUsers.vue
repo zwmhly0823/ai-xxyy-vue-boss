@@ -154,6 +154,14 @@ export default {
           })
         }
 
+        if (key === 'last_teacher_ids') {
+          Object.assign(search, {
+            [`${key}.like`]: {
+              [`${key}.keyword`]: `*${search[key]}*`
+            }
+          })
+        }
+
         this.searchQuery = {
           ...this.searchQuery,
           ...search
@@ -164,11 +172,11 @@ export default {
       // 删除返回值没空数组的情况
       if (search && search[key].length === 0) {
         this.$delete(this.searchQuery, key)
-        if (key === 'sale_department_ids') {
+        if (key === 'sale_department_ids' || key === 'last_teacher_ids') {
           this.$delete(this.searchQuery, `${key}.like`)
         }
       }
-      if (key === 'sale_department_ids') {
+      if (key === 'sale_department_ids' || key === 'last_teacher_ids') {
         this.$delete(this.searchQuery, key)
       }
       this.$emit('search', this.searchQuery)
