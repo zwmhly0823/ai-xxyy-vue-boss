@@ -5,7 +5,7 @@
  * @Author: shentong
  * @Date: 2020-03-13 14:38:28
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-09-08 17:44:53
+ * @LastEditTime: 2020-09-08 22:06:55
  */
 // import axios from '../axios'
 import axios from '../axiosConfig'
@@ -307,6 +307,9 @@ export default {
             is_system
             subject
             subject_text
+            channelInfo {
+              channel_outer_name
+            }
             userInfo {
               id
               join_date
@@ -329,9 +332,6 @@ export default {
                     name
                   }
                 }
-              }
-              channelInfo {
-                channel_outer_name
               }
             }
             userExtendsInfo {

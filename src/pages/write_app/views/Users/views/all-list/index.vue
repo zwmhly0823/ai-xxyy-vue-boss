@@ -123,8 +123,8 @@
           </el-table-column>
           <el-table-column label="首次来源渠道" min-width="100">
             <template slot-scope="scope">
-              <span v-if="scope.row.userInfo && scope.row.userInfo.channelInfo">
-                {{ scope.row.userInfo.channelInfo.channel_outer_name || '--' }}
+              <span v-if="scope.row.channelInfo">
+                {{ scope.row.channelInfo.channel_outer_name || '--' }}
               </span>
               <span v-else>--</span>
             </template>
