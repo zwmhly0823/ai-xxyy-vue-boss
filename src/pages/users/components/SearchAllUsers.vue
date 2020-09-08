@@ -25,15 +25,17 @@
           <el-form-item label="归属销售:" label-width="105px">
             <div class="search-group">
               <department
-                name="teacher_ids"
+                name="sale_department_ids"
                 placeholder="选择销售组"
                 style="margin-right: 10px;"
-                @result="getSearchData('teacher_ids', arguments)"
+                :multiple="false"
+                :checkStrictly="true"
+                :only-dept="1"
+                @result="getSearchData('sale_department_ids', arguments)"
               />
               <group-sell
                 name="teacher_ids"
                 tip="选择销售人员"
-                is-multiple
                 @result="getSearchData('teacher_ids', arguments)"
               />
             </div>
@@ -144,6 +146,14 @@ export default {
           }
         }
 
+        if (key === 'sale_department_ids') {
+          Object.assign(search, {
+            [`${key}.like`]: {
+              [`${key}.keyword`]: `*${search[key].join(',')}*`
+            }
+          })
+        }
+
         this.searchQuery = {
           ...this.searchQuery,
           ...search
@@ -153,6 +163,12 @@ export default {
       }
       // 删除返回值没空数组的情况
       if (search && search[key].length === 0) {
+        this.$delete(this.searchQuery, key)
+        if (key === 'sale_department_ids') {
+          this.$delete(this.searchQuery, `${key}.like`)
+        }
+      }
+      if (key === 'sale_department_ids') {
         this.$delete(this.searchQuery, key)
       }
       this.$emit('search', this.searchQuery)
