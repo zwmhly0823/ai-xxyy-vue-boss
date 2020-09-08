@@ -72,10 +72,9 @@
               </div>
               <div @click="openUserDetail(scope.row)" class="age primary-text">
                 {{ scope.row.sex }} · {{ scope.row.birthday }}
-                {{ scope.row.sup + '----' }}
-                <span v-show="scope.row.sup"
-                  >·{{ GETGRADE(scope.row.sup, classObj.type) }}</span
-                >
+                <span v-show="scope.row.grade">{{
+                  `·${scope.row.grade}`
+                }}</span>
 
                 <!-- <span v-show="scope.row.base_painting_text">·</span>
                 {{ scope.row.base_painting_text }} -->
@@ -152,7 +151,7 @@
 import { mapGetters } from 'vuex'
 import axios from '@/api/axiosConfig'
 import { GetAgeByBrithday } from '@/utils/index'
-import { GETGRADE } from '@/utils/enums'
+import { GRADE, USER_SEX, GETGRADE } from '@/utils/enums'
 import MPagination from '@/components/MPagination/index.vue'
 import CouponPopover from './components/couponPopover'
 import MSearch from '@/components/MSearch/index.vue'
@@ -306,6 +305,9 @@ export default {
                 status
               }
               pay_channel_outer_name
+              userExtends{
+                grade
+              }
             }
           }
         }`
@@ -317,17 +319,14 @@ export default {
           const _data = res.data.teamUserListPage.content
           _data.forEach((ele) => {
             // 性别 0/默认 1/男 2/女  3/保密
-            const sex = ele.sex
-            if (sex === '0') {
-              ele.sex = '-'
-            } else if (sex === '1') {
-              ele.sex = '男'
-            } else if (sex === '2') {
-              ele.sex = '女'
-            } else if (sex === '3') {
-              ele.sex = '保密'
+            const { sex = '0', userExtends = {} } = ele
+
+            if (userExtends && userExtends.grade) {
+              ele.grade = GRADE[userExtends.grade]
             }
-            // 年龄转换
+
+            ele.sex = USER_SEX[sex]
+
             ele.birthday !== '0'
               ? (ele.birthday = GetAgeByBrithday(ele.birthday))
               : (ele.birthday = '-')
