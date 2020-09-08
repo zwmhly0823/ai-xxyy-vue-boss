@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-08-25 11:40:19
  * @LastEditors: liukun
- * @LastEditTime: 2020-09-01 14:38:51
+ * @LastEditTime: 2020-09-08 18:56:38
 -->
 <template>
   <div>
@@ -38,18 +38,19 @@
           </div>
           <div class="statistical class-statistical">
             <div>
-              <span>已放课</span>:
+              <span v-if="changeSubject">已解锁</span>
+              <span v-else>已放课</span>:
               <span class="tatistical-span">
                 {{ item.send_course_count }}
               </span>
             </div>
-            <div>
+            <div v-if="!changeSubject">
               <span>当日参课</span>:
               <span class="tatistical-span">
                 {{ item.day_join_course_count }}
               </span>
             </div>
-            <div>
+            <div v-if="!changeSubject">
               <span>当日完课</span>:
               <span class="tatistical-span">
                 {{ item.day_complete_course_count }}

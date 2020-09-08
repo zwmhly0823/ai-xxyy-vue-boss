@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-08-17 19:37:24
  * @LastEditors: liukun
- * @LastEditTime: 2020-09-05 17:47:47
+ * @LastEditTime: 2020-09-08 18:52:47
 -->
 <template>
   <div class="details" v-loading="loading">
@@ -157,7 +157,8 @@
         <el-row>
           <el-col :span="5"
             ><div class="item1">
-              <span>参课/放课</span>
+              <span v-if="changeSubject">参课/解锁</span>
+              <span v-else>参课/放课</span>
               <span
                 >{{
                   typeof experience_lk.all_join_course_count == 'number' &&
@@ -173,7 +174,8 @@
           >
           <el-col :span="5"
             ><div class="item1">
-              <span>完课/放课</span>
+              <span v-if="changeSubject">完课/解锁</span>
+              <span v-else>完课/放课</span>
               <span
                 >{{
                   typeof experience_lk.all_complete_course_count === 'number' &&
@@ -341,7 +343,8 @@
         <el-row>
           <el-col :span="5"
             ><div class="item1">
-              <span>参课/放课</span>
+              <span v-if="changeSubject">参课/解锁</span>
+              <span v-else>参课/放课</span>
               <span
                 >{{
                   typeof systerm_lk.all_noactivecount === 'number' &&
@@ -358,7 +361,8 @@
           >
           <el-col :span="5"
             ><div class="item1">
-              <span>完课/放课</span>
+              <span v-if="changeSubject">完课/解锁</span>
+              <span v-else>完课/放课</span>
               <span
                 >{{
                   typeof systerm_lk.all_activecount === 'number' &&
