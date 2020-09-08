@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-08-25 11:40:19
  * @LastEditors: liukun
- * @LastEditTime: 2020-09-07 16:49:29
+ * @LastEditTime: 2020-09-08 18:54:15
 -->
 <template>
   <div>
@@ -94,7 +94,11 @@
           </div>
         </template>
       </el-table-column>
-
+      <el-table-column label="老师姓名" width="70">
+        <template slot-scope="scope">
+          <div>{{ scope.row.serNum || '--' }}</div>
+        </template>
+      </el-table-column>
       <el-table-column label="老师点评·点评时间">
         <template slot-scope="scope">
           <div

@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-06-22 12:08:17
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-09-07 16:48:32
+ * @LastEditTime: 2020-09-08 16:20:20
 -->
 <template>
   <div class="search-mobile d-flex align-center">
@@ -180,6 +180,9 @@ export default {
       const q = JSON.stringify(query)
 
       const sort = `{"id":"desc"}`
+      // 搜索全部学员时，传 u_id
+      const exParams =
+        this.tablename === 'UserSubjectStatisticsList' ? 'u_id' : ''
       axios
         .post('/graphql/v1/toss', {
           query: `{
@@ -189,6 +192,7 @@ export default {
                     id
                     user_num_text
                     mobile
+                    ${exParams}
                   }
                 }`
         })
@@ -205,12 +209,12 @@ export default {
       const _list = [...this.dataList]
       for (const item of _list) {
         if (item.mobile === data || item.user_num_text === data) {
-          this.uid = item.id
+          this.uid = item.u_id
         }
       }
       !this.extension
         ? this.$emit('result', data ? { [this.nameKey]: data } : '')
-        : this.$emit('result', data ? { id: this.uid } : '')
+        : this.$emit('result', data ? { uid: this.uid } : '')
     }
   }
 }

@@ -43,6 +43,7 @@
             <template slot-scope="scope">
               <base-user-info
                 :user="scope.row.userInfo"
+                :user-extends="{ grade: scope.row.grade }"
                 :uid="scope.row.uid"
                 :sys-label="scope.row.sys_label"
                 @handle-click="userHandle"

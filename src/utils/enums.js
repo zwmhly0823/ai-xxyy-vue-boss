@@ -80,15 +80,31 @@ export const ISREFUND = {
   3: '退费中'
 }
 
-// 学员年级
+/**
+ * public static enum GRADE {
+    DEFAULT,
+    GRADE_PRE,
+    GRADE_ONE,
+    GRADE_TWO,
+    GRADE_THREE,
+    GRADE_FOUR,
+    GRADE_FIVE,
+    GRADE_SIX;
+
+    private GRADE() {
+    }
+}
+ */
+// 写字学员基本信息-学员年级
 export const GRADE = {
-  0: '学龄前',
-  1: '一年级',
-  2: '二年级',
-  3: '三年级',
-  4: '四年级',
-  5: '五年级',
-  6: '六年级'
+  0: '',
+  1: '学龄前',
+  2: '一年级',
+  3: '二年级',
+  4: '三年级',
+  5: '四年级',
+  6: '五年级',
+  7: '六年级'
 }
 /**
  * @description  SUP对应 写字课中的年级

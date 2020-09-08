@@ -4,8 +4,8 @@
  * @version:
  * @Author: shentong
  * @Date: 2020-03-13 14:38:28
- * @LastEditors: liukun
- * @LastEditTime: 2020-09-07 14:54:54
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-09-08 17:44:53
  */
 // import axios from '../axios'
 import axios from '../axiosConfig'
@@ -277,7 +277,7 @@ export default {
     const q = JSON.stringify(JSON.stringify(query))
     const sort =
       Object.keys(sortRules).length === 0
-        ? JSON.stringify(JSON.stringify({ ctime: 'desc' }))
+        ? JSON.stringify(JSON.stringify({ join_date: 'desc' }))
         : JSON.stringify(JSON.stringify(sortRules))
     return axios.post('/graphql/v1/toss', {
       query: `{
@@ -302,6 +302,7 @@ export default {
             last_teacher_ids
             pay_teacher_ids
             sale_department_ids
+            last_department_ids
             is_trial
             is_system
             subject

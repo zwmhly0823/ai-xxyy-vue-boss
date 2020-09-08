@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-04-25 12:09:03
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-24 18:14:38
+ * @LastEditTime: 2020-09-08 20:10:59
  -->
 <template>
   <div id="channel-box" class="channel-box">
@@ -316,7 +316,7 @@ export default {
   data() {
     return {
       tableShow: false,
-      link: 'https://www.baidu.com',
+      link: '',
       showClose: true,
       drawer: false,
       tableData: [],
@@ -547,10 +547,14 @@ export default {
     // 调取渠道分类  渠道名称接口
     onGetChannelList(_data) {
       const query = this.channelValueList
-      const channelValue = `{"id":${JSON.stringify(query)}}`
+      const channelValue = `{"id":${JSON.stringify(query)}, "subject": ${
+        this.$store.getters.subjects.subjectCode
+      }}`
       this.$http.Operating.ChannelDetailStatisticsList(channelValue).then(
         (ele) => {
           const __data = ele?.data?.ChannelDetailStatisticsList
+          console.log(__data)
+
           if (!__data) return
           _data.forEach((val) => {
             __data.forEach((item) => {

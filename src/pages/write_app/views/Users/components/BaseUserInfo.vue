@@ -45,7 +45,7 @@ export default {
       type: Object,
       default: () => ({})
     },
-    // 党员扩展
+    // 学员扩展
     userExtends: {
       type: Object,
       default: () => ({})

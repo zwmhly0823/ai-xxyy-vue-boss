@@ -22,18 +22,20 @@
               />
             </div>
           </el-form-item>
-          <el-form-item label="归属销售:" label-width="105px">
+          <el-form-item label="归属销售/班主任:" label-width="105px">
             <div class="search-group">
               <department
-                name="teacher_ids"
+                name="last_department_ids"
                 placeholder="选择销售组"
                 style="margin-right: 10px;"
-                @result="getSearchData('teacher_ids', arguments)"
+                :multiple="false"
+                :checkStrictly="true"
+                :only-dept="1"
+                @result="getSearchData('last_department_ids', arguments)"
               />
               <group-sell
                 name="teacher_ids"
-                tip="选择销售人员"
-                is-multiple
+                tip="选择销售/班主任"
                 @result="getSearchData('teacher_ids', arguments)"
               />
             </div>
@@ -125,12 +127,14 @@ export default {
      */
     getSearchData(key, res) {
       const search = res && res[0]
+      console.log(key, search)
+
       if (search) {
         // 系统课转化
         if (key === 'status') {
           // 未转化
           if (search.status === 1) {
-            search.status = { lte: 2 }
+            search.status = { gt: 0, lte: 2 }
           }
           // 已购半年课
           if (search.status === 3) {
@@ -142,6 +146,22 @@ export default {
           }
         }
 
+        if (key === 'last_department_ids') {
+          Object.assign(search, {
+            [`${key}.like`]: {
+              [`${key}.keyword`]: `*${search[key].join(',')}*`
+            }
+          })
+        }
+
+        if (key === 'last_teacher_ids') {
+          Object.assign(search, {
+            [`${key}.like`]: {
+              [`${key}.keyword`]: `*${search[key]}*`
+            }
+          })
+        }
+
         this.searchQuery = {
           ...this.searchQuery,
           ...search
@@ -150,9 +170,15 @@ export default {
         this.$delete(this.searchQuery, key)
       }
       // 删除返回值没空数组的情况
-      // if (key !== 'user' && search && search[key].length === 0) {
-      //   this.$delete(this.searchQuery, key)
-      // }
+      if (search && search[key].length === 0) {
+        this.$delete(this.searchQuery, key)
+        if (key === 'last_department_ids' || key === 'last_teacher_ids') {
+          this.$delete(this.searchQuery, `${key}.like`)
+        }
+      }
+      if (key === 'last_department_ids' || key === 'last_teacher_ids') {
+        this.$delete(this.searchQuery, key)
+      }
       this.$emit('search', this.searchQuery)
     }
   }
