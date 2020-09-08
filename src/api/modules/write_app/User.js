@@ -5,7 +5,7 @@
  * @Author: shentong
  * @Date: 2020-03-13 14:38:28
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-09-07 22:23:53
+ * @LastEditTime: 2020-09-08 17:36:21
  */
 // import axios from '../axios'
 import axios from '../../axiosConfig'
@@ -224,6 +224,7 @@ export default {
             is_system
             subject
             subject_text
+            grade
             userInfo {
               id
               join_date
