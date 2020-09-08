@@ -1,6 +1,7 @@
 <template>
   <div class="container">
     <div class="search-up">
+      <!-- 随材版本 后端未开发 前端先注释 :moreVersion="showItem.moreVersion" -->
       <m-search
         @search="handleSearch"
         class="clearBorder"
@@ -10,7 +11,6 @@
         :expressNo="showItem.expressNo"
         :groupSell="showItem.groupSell"
         :teamDetail="showItem.teamDetail"
-        :moreVersion="showItem.moreVersion"
         :timeData="showItem.timeData"
         :selectAddress="showItem.selectAddress"
         :consigneePhone="showItem.consigneePhone"
