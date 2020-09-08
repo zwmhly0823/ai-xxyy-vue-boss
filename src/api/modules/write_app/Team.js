@@ -11,6 +11,77 @@ import { getAppSubjectCode } from '@/utils/index'
 const subject = getAppSubjectCode()
 
 export default {
+  // 加好友进群 新接口  体验课 改版2.0写字
+  StudentTrialV2StatisticsPage({ querysData, currentPage, sortGroup }) {
+    return axios.post('/graphql/v1/toss', {
+      query: `{
+        StudentTrialV2StatisticsPage(query:${JSON.stringify(
+          querysData
+        )} , page: ${currentPage}, size: 20,${sortGroup}) {
+          empty
+          first
+          last
+          number
+          size
+          numberOfElements
+          totalElements
+          totalPages
+          content {
+            data_id
+            id
+            ctime
+            utime
+            added_group
+            added_wechat
+            team_id
+            teacher_id
+            sup
+            term
+            current_lesson
+            course_state
+            team_category
+            remaining_week
+            buytime
+            userInfo {
+              birthday
+              channel
+              head
+              join_date
+              mobile
+              nickname
+              page_origin
+              page_origin_id
+              send_id
+              sex
+              status
+              username
+              weixin_openid
+              weixin_unionid
+              user_num
+              base_painting
+              base_painting_text
+              import_remark
+              import_time
+              mobile_city
+              mobile_province
+              weixinUser {
+                nickname
+              }
+            }
+            orderInfo {
+              out_trade_no
+            }
+            order_no
+            fast_follow_time
+            follow
+            userExtends {
+              grade
+            }
+          }
+        }
+      }`
+    })
+  },
   // 加好友进群 新接口  体验课
   StudentTrialForTeamStatisticsPage({ querysData, currentPage, sortGroup }) {
     return axios.post('/graphql/v1/toss', {

@@ -82,6 +82,7 @@ export const ISREFUND = {
 
 // 学员年级
 export const GRADE = {
+  0: '学龄前',
   1: '一年级',
   2: '二年级',
   3: '三年级',

@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 14:19:58
  * @LastEditors: Shentong
- * @LastEditTime: 2020-09-07 21:00:09
+ * @LastEditTime: 2020-09-08 21:32:37
  -->
 <template>
   <div>
@@ -193,7 +193,8 @@
 </template>
 <script>
 import { mapGetters } from 'vuex'
-import checkBox from '@/components/MCheckBox/index'
+import { GRADE, USER_SEX } from '@/utils/enums'
+import checkBox from '../../../../components/search/MCheckBox'
 import detailsTable from './components/detailsTable'
 import MSearch from '@/components/MSearch/index.vue'
 import { timestamp, GetAgeByBrithday, isToss } from '@/utils/index'
@@ -399,12 +400,14 @@ export default {
   methods: {
     // 根据班级id获取班级详情
     getTeamDetailById(params) {
-      this.$http.Team.getTeamDetailById({ id: params.teamId }).then((res) => {
-        const {
-          data: { StudentTeam = {} }
-        } = res
-        this.teamDetail = StudentTeam
-      })
+      this.$http.writeApp.Team.getTeamDetailById({ id: params.teamId }).then(
+        (res) => {
+          const {
+            data: { StudentTeam = {} }
+          } = res
+          this.teamDetail = StudentTeam
+        }
+      )
     },
     screenAttendClass(data) {
       this.screenAttendClassData = data
@@ -647,11 +650,7 @@ export default {
       })
       const queryParams = `{"team_id" : ${teamId}, "week" : "${lesson +
         week}", "sort" : "${this.finishLessonData.finishClassSort}"}`
-      console.log(
-        'request - params  -->> ',
-        'team_id: ' + teamId + ' , lesson :' + lesson + ' , week : ' + week
-      )
-      this.$http.Team.finishClassList({
+      this.$http.writeApp.Team.finishClassList({
         queryParams: queryParams
       }).then((res) => {
         if (res.error) {
@@ -688,7 +687,7 @@ export default {
         text: '图片正在生成中'
       })
       const QueryParams = `{"team_id" : ${teamId}, "week" :  "${week}"}`
-      this.$http.Team.exhibitionOfWorks({
+      this.$http.writeApp.Team.exhibitionOfWorks({
         QueryParams: QueryParams
       }).then((res) => {
         if (res.error) {
@@ -758,7 +757,7 @@ export default {
       console.log(this.classObj.type, 'classObj.type')
       const trail = +this.classObj.type
         ? 'StudentSystemForTeamStatisticsPage'
-        : 'StudentTrialForTeamStatisticsPage'
+        : 'StudentTrialV2StatisticsPage'
 
       if (this.classObj.teamId) {
         if (this.search) {
@@ -769,34 +768,30 @@ export default {
         const sortFollow = '{"follow":"desc"}'
         const cortfollowDesc = `sort:${JSON.stringify(sortFollow)}`
         const sort = this.sortGroup ? this.sortGroup : cortfollowDesc
-        this.$http.Team[trail]({
+        this.$http.writeApp.Team[trail]({
           querysData: this.querysData,
           currentPage: this.table.currentPage,
           sortGroup: sort
         }).then((res) => {
-          this.table.tableData = []
-          // 0 默认 1 男 2 女 3 保密
-          // 0 默认  1 无基础  2 一年以下 3 一年以上
-          // 0 叉 1 对号
           this.table.totalElements = +res.data[trail].totalElements
           const _data = res.data[trail].content
           _data.forEach((item) => {
-            item.birthday = GetAgeByBrithday(item.birthday)
-            if (+item.sex === 0) {
-              item.sex = '- ·'
-            } else if (+item.sex === 1) {
-              item.sex = '男 ·'
-            } else if (+item.sex === 2) {
-              item.sex = '女 ·'
-            } else if (+item.sex === 3) {
-              item.sex = '保密 ·'
+            /** shentong writer 改写 */
+            const { userInfo = {}, userExtends } = item
+
+            userInfo.birthday = GetAgeByBrithday(userInfo.birthday)
+            userInfo.sex = USER_SEX[+userInfo.sex]
+            if (userExtends && userExtends.grade) {
+              item.grade = GRADE[userExtends.grade]
             }
-            if (item.birthday.indexOf(50) !== -1) {
-              item.birthday = '-'
+            /** shentong writer 改写 */
+
+            if (userInfo.birthday.indexOf(50) !== -1) {
+              userInfo.birthday = '-'
             }
             item.buytime = timestamp(item.buytime, 6)
-            item.added_wechat_time = timestamp(item.added_wechat_time, 6)
-            item.added_group_time = timestamp(item.added_group_time, 6)
+            item.added_wechat_time = timestamp(item.utime, 6)
+            item.added_group_time = timestamp(item.utime, 6)
             item.fast_follow_time = timestamp(item.fast_follow_time, 6)
             this.table.courseState = item.course_state
           })
@@ -817,7 +812,7 @@ export default {
         } else {
           this.querysData = `{"team_id":${this.classObj.teamId},"team_type":${this.classObj.type}}`
         }
-        this.$http.Team.getStuExpressPage({
+        this.$http.writeApp.Team.getStuExpressPage({
           querysData: this.querysData,
           currentPage: this.table.currentPage
         }).then((res) => {
@@ -887,7 +882,7 @@ export default {
         } else {
           this.querysData = `{"team_id":${this.classObj.teamId},"team_type":${this.classObj.type}}`
         }
-        this.$http.Team.getStuLoginPage({
+        this.$http.writeApp.Team.getStuLoginPage({
           querysData: this.querysData,
           currentPage: this.table.currentPage
         }).then((res) => {
@@ -1002,7 +997,7 @@ export default {
             this.querysData = `{"team_id":${this.classObj.teamId},"team_type":${this.classObj.type}}`
           }
         }
-        this.$http.Team.getClassCompPage({
+        this.$http.writeApp.Team.getClassCompPage({
           querysData: this.querysData,
           currentPage: this.table.currentPage
         }).then((res) => {
@@ -1075,7 +1070,7 @@ export default {
             this.querysData = `{"team_id":${this.classObj.teamId},"team_type":${this.classObj.type}}`
           }
         }
-        this.$http.Team.getStuCommentPage({
+        this.$http.writeApp.Team.getStuCommentPage({
           querysData: this.querysData,
           currentPage: this.table.currentPage
         }).then((res) => {
