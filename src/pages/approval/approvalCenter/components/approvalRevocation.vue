@@ -4,12 +4,11 @@
  * @Author: Lukun
  * @Date: 2020-04-27 17:47:58
  * @LastEditors: liukun
- * @LastEditTime: 2020-09-04 17:55:26
+ * @LastEditTime: 2020-09-08 16:54:47
  -->
 <template>
   <div class="container">
     <div class="time">
-      <tabTimeSelect @result="getSeacherTime" />
       <CheckType @result="getcheckType" />
       <el-select
         :style="{ 'margin-right': '20px' }"
@@ -26,9 +25,28 @@
           :value="value"
         ></el-option>
       </el-select>
-      <SearchPart @result="getSeachePart" />
-      <courseTeam @result="getTeamId" />
-      <searchPhone name="userTel" @result_lk="getPhone" />
+      <searchPhone
+        name="userTel"
+        @result_lk="getPhone"
+        style="margin-right:20px"
+      />
+      <courseTeam
+        @result="getTeamId"
+        style="margin-left:0px;margin-right:20px"
+      />
+      <department
+        style="margin-right:20px"
+        name="pay_teacher_id"
+        placeholder="全部部门"
+        @result="getSearchData1"
+      />
+      <group-sell
+        style="margin-right:20px"
+        @result="getSearchData2"
+        :name="'groupSell'"
+        tip="请选择老师"
+      />
+      <tabTimeSelect style="margin-left:0px" @result="getSeacherTime" />
     </div>
     <el-table
       :data="tableData"
@@ -123,6 +141,7 @@
           </div>
         </template>
       </el-table-column>
+      <el-table-column label="审批人" prop="approvalName"> </el-table-column>
       <el-table-column label="审批时间" width="180">
         <template slot-scope="scope">
           <div>
@@ -514,12 +533,13 @@
 </template>
 
 <script>
+import Department from '@/components/MSearch/searchItems/department'
+import GroupSell from './groupSell'
 import searchPhone from '@/components/MSearch/searchItems/searchPhone.vue'
 import MPagination from '@/components/MPagination/index.vue'
 import { timestamp } from '@/utils/index'
 import CheckType from './checkType'
 import TabTimeSelect from './timeSearch'
-import SearchPart from './searchPart'
 import adjustDrawer from './adjustDrawer'
 import { getStaffInfo } from '../common'
 import courseTeam from './courseTeam'
@@ -527,13 +547,13 @@ import ApprovalGiftDetail from './approvalGiftDetail'
 
 export default {
   props: ['activeName'],
-
   components: {
+    Department,
+    GroupSell,
     searchPhone,
     MPagination,
     TabTimeSelect,
     CheckType,
-    SearchPart,
     adjustDrawer,
     courseTeam,
     ApprovalGiftDetail
@@ -589,12 +609,13 @@ export default {
     // Parameters:
     this.params = {
       type: '',
-      keyword: '',
       status: 'REVOCATION',
       staffId: this.staffId,
       isOperation: false,
       startTime: '',
       endTime: '',
+      departmentIds: '', // 新添部门
+      teacherIds: '', // 新添老师
       page: 1,
       size: 20
     }
@@ -603,6 +624,22 @@ export default {
     this.checkPending(this.params)
   },
   methods: {
+    getSearchData1(val) {
+      console.info('选择部门获取值:', val)
+      this.params.page = 1
+      this.currentPage = 1
+      this.params.departmentIds = val.pay_teacher_id
+        ? String(val.pay_teacher_id)
+        : ''
+      this.checkPending(this.params)
+    },
+    getSearchData2(val) {
+      console.info('选择老师获取值:', val)
+      this.params.page = 1
+      this.currentPage = 1
+      this.params.teacherIds = val.groupSell ? String(val.groupSell) : ''
+      this.checkPending(this.params)
+    },
     // 期数查询
     getTeamId(val) {
       this.params.page = 1
@@ -618,13 +655,6 @@ export default {
         this.params.period = ''
         this.checkPending(this.params)
       }
-    },
-    // 销售部门搜索
-    getSeachePart(val) {
-      Object.assign(this.params, { keyword: val })
-      this.params.page = 1
-      this.currentPage = 1
-      this.checkPending(this.params)
     },
     // 审批类型判断
     getcheckType(val) {
@@ -971,21 +1001,21 @@ export default {
             return item
           })
           // 重写部门名称
-          const idArr = this.tableData.map((item) => item.applyId)
-          this.$http.Backend.changeDepart(idArr).then(
-            ({ data: { TeacherDepartmentRelationList } }) => {
-              console.info('lklk-已撤销', idArr, TeacherDepartmentRelationList)
-              if (TeacherDepartmentRelationList.length) {
-                TeacherDepartmentRelationList.forEach((item, index) => {
-                  this.tableData.forEach((itemx, indexX) => {
-                    if (item.teacher_id === itemx.applyId) {
-                      itemx.applyDepartment = item.department.name
-                    }
-                  })
-                })
-              }
-            }
-          )
+          // const idArr = this.tableData.map((item) => item.applyId)
+          // this.$http.Backend.changeDepart(idArr).then(
+          //   ({ data: { TeacherDepartmentRelationList } }) => {
+          //     console.info('lklk-已撤销', idArr, TeacherDepartmentRelationList)
+          //     if (TeacherDepartmentRelationList.length) {
+          //       TeacherDepartmentRelationList.forEach((item, index) => {
+          //         this.tableData.forEach((itemx, indexX) => {
+          //           if (item.teacher_id === itemx.applyId) {
+          //             itemx.applyDepartment = item.department.name
+          //           }
+          //         })
+          //       })
+          //     }
+          //   }
+          // )
         }
       })
     }
@@ -997,7 +1027,9 @@ export default {
 .container {
   .time {
     display: flex;
+    justify-content: flex-start;
     align-items: center;
+    flex-wrap: wrap;
   }
   .drawer-approval-detail {
     padding-top: 50px;
