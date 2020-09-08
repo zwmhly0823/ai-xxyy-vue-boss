@@ -5,7 +5,7 @@
  * @Author: shentong
  * @Date: 2020-03-13 14:38:28
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-09-07 22:24:04
+ * @LastEditTime: 2020-09-08 17:44:53
  */
 // import axios from '../axios'
 import axios from '../axiosConfig'
@@ -302,6 +302,7 @@ export default {
             last_teacher_ids
             pay_teacher_ids
             sale_department_ids
+            last_department_ids
             is_trial
             is_system
             subject
