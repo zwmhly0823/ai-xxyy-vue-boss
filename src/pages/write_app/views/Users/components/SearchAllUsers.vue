@@ -151,9 +151,9 @@ export default {
         this.$delete(this.searchQuery, key)
       }
       // 删除返回值没空数组的情况
-      // if (key !== 'user' && search && search[key].length === 0) {
-      //   this.$delete(this.searchQuery, key)
-      // }
+      if (search && search[key].length === 0) {
+        this.$delete(this.searchQuery, key)
+      }
       this.$emit('search', this.searchQuery)
     }
   }
