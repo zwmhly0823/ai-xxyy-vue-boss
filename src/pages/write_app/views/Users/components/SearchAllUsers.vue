@@ -25,13 +25,13 @@
           <el-form-item label="归属销售/班主任:" label-width="105px">
             <div class="search-group">
               <department
-                name="sale_department_ids"
+                name="last_department_ids"
                 placeholder="选择销售组"
                 style="margin-right: 10px;"
                 :multiple="false"
                 :checkStrictly="true"
                 :only-dept="1"
-                @result="getSearchData('sale_department_ids', arguments)"
+                @result="getSearchData('last_department_ids', arguments)"
               />
               <group-sell
                 name="last_teacher_ids"
@@ -147,7 +147,7 @@ export default {
           }
         }
 
-        if (key === 'sale_department_ids') {
+        if (key === 'last_department_ids') {
           Object.assign(search, {
             [`${key}.like`]: {
               [`${key}.keyword`]: `*${search[key].join(',')}*`
@@ -168,18 +168,18 @@ export default {
         }
       } else {
         this.$delete(this.searchQuery, key)
-        if (key === 'sale_department_ids' || key === 'last_teacher_ids') {
+        if (key === 'last_department_ids' || key === 'last_teacher_ids') {
           this.$delete(this.searchQuery, `${key}.like`)
         }
       }
       // 删除返回值没空数组的情况
       if (search && search[key].length === 0) {
         this.$delete(this.searchQuery, key)
-        if (key === 'sale_department_ids' || key === 'last_teacher_ids') {
+        if (key === 'last_department_ids' || key === 'last_teacher_ids') {
           this.$delete(this.searchQuery, `${key}.like`)
         }
       }
-      if (key === 'sale_department_ids' || key === 'last_teacher_ids') {
+      if (key === 'last_department_ids' || key === 'last_teacher_ids') {
         this.$delete(this.searchQuery, key)
       }
       this.$emit('search', this.searchQuery)
