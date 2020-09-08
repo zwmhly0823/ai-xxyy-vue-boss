@@ -22,7 +22,7 @@
               />
             </div>
           </el-form-item>
-          <el-form-item label="归属销售:" label-width="105px">
+          <el-form-item label="归属销售/班主任:" label-width="105px">
             <div class="search-group">
               <department
                 name="sale_department_ids"
@@ -35,7 +35,7 @@
               />
               <group-sell
                 name="teacher_ids"
-                tip="选择销售人员"
+                tip="选择销售/班主任"
                 @result="getSearchData('teacher_ids', arguments)"
               />
             </div>

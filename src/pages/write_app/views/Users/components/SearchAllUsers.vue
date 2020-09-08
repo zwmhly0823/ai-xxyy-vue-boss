@@ -22,7 +22,7 @@
               />
             </div>
           </el-form-item>
-          <el-form-item label="归属销售:" label-width="105px">
+          <el-form-item label="归属销售/班主任:" label-width="105px">
             <div class="search-group">
               <department
                 name="sale_department_ids"
@@ -34,9 +34,9 @@
                 @result="getSearchData('sale_department_ids', arguments)"
               />
               <group-sell
-                name="teacher_ids"
-                tip="选择销售人员"
-                @result="getSearchData('teacher_ids', arguments)"
+                name="last_teacher_ids"
+                tip="选择销售/班主任"
+                @result="getSearchData('last_teacher_ids', arguments)"
               />
             </div>
           </el-form-item>
@@ -153,14 +153,13 @@ export default {
               [`${key}.keyword`]: `*${search[key].join(',')}*`
             }
           })
-          // const dept = search[key]
-          // dept.forEach((item) => {
-          //   Object.assign(search, {
-          //     [`${key}.like`]: {
-          //       [`${key}.keyword`]: `*${item}*`
-          //     }
-          //   })
-          // })
+        }
+        if (key === 'last_teacher_ids') {
+          Object.assign(search, {
+            [`${key}.like`]: {
+              [`${key}.keyword`]: `*${search[key]}*`
+            }
+          })
         }
 
         this.searchQuery = {
@@ -169,15 +168,18 @@ export default {
         }
       } else {
         this.$delete(this.searchQuery, key)
+        if (key === 'sale_department_ids' || key === 'last_teacher_ids') {
+          this.$delete(this.searchQuery, `${key}.like`)
+        }
       }
       // 删除返回值没空数组的情况
       if (search && search[key].length === 0) {
         this.$delete(this.searchQuery, key)
-        if (key === 'sale_department_ids') {
+        if (key === 'sale_department_ids' || key === 'last_teacher_ids') {
           this.$delete(this.searchQuery, `${key}.like`)
         }
       }
-      if (key === 'sale_department_ids') {
+      if (key === 'sale_department_ids' || key === 'last_teacher_ids') {
         this.$delete(this.searchQuery, key)
       }
       this.$emit('search', this.searchQuery)
