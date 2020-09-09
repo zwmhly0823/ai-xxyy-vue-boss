@@ -18,7 +18,7 @@
       class="students-box"
     >
       <!-- 全选按钮 -->
-      <el-table-column type="selection" width="60px"></el-table-column>
+      <!-- <el-table-column type="selection" width="60px"></el-table-column> -->
       <!-- 更多按钮 -->
       <!-- <el-table-column width="20px">
         <template slot="header" slot-scope="scope">

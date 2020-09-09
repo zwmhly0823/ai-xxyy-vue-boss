@@ -42,7 +42,14 @@ export default {
             team_category
             remaining_week
             buytime
-            userInfo {
+            orderInfo {
+              out_trade_no
+            }
+            order_no
+            fast_follow_time
+            follow
+            userExtends {
+              grade
               birthday
               channel
               head
@@ -59,22 +66,76 @@ export default {
               weixin_unionid
               user_num
               base_painting
-              base_painting_text
               import_remark
               import_time
-              mobile_city
-              mobile_province
               weixinUser {
                 nickname
               }
             }
+          }
+        }
+      }`
+    })
+  },
+  // 加好友进群 新接口  系统课 改版2.0写字
+  StudentSystemStatisticsPage({ querysData, currentPage, sortGroup }) {
+    return axios.post('/graphql/v1/toss', {
+      query: `{
+        StudentSystemStatisticsPage(query:${JSON.stringify(
+          querysData
+        )} , page: ${currentPage}, size: 20,${sortGroup}) {
+          empty
+          first
+          last
+          number
+          size
+          numberOfElements
+          totalElements
+          totalPages
+          content {
+            studentid
+            ctime
+            utime
+            addedgroup
+            addedwechat
+            teamid
+            teacherid
+            sup
+            term
+            currentsuper
+            currentlevel
+            currentunit
+            currentlesson  
+            course_state
             orderInfo {
               out_trade_no
-            }
-            order_no
-            fast_follow_time
+              buytime
+            }   
+            orderid
             follow
             userExtends {
+              birthday
+              channel
+              head
+              join_date
+              mobile
+              nickname
+              page_origin
+              page_origin_id
+              send_id
+              sex
+              status
+              username
+              weixin_openid
+              weixin_unionid
+              user_num
+              base_painting
+              import_remark
+              import_time
+              weixinUser{
+                nickname
+                fastFollowTime
+              }
               grade
             }
           }
@@ -527,6 +588,8 @@ export default {
           complete_course_state
           complete_course_time
           student_id
+          is_start_course
+          start_date
         }
       }
     }`
