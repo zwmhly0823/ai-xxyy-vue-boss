@@ -26,7 +26,7 @@
             </div>
             <div class="oride-bottom">
               <p>
-                {{ statistics.complete ? statistics.complete.bear : 0 }} 小熊币
+                {{ statistics.complete ? statistics.complete.bear : 0 }} 点点币
               </p>
               <p>
                 {{ statistics.complete ? statistics.complete.gem : 0 }} 宝石
@@ -47,7 +47,7 @@
               >笔
             </div>
             <div class="oride-bottom">
-              <p>{{ statistics.nopay ? statistics.nopay.bear : 0 }} 小熊币</p>
+              <p>{{ statistics.nopay ? statistics.nopay.bear : 0 }} 点点币</p>
               <p>{{ statistics.nopay ? statistics.nopay.gem : 0 }} 宝石</p>
             </div>
           </div>
@@ -83,7 +83,7 @@
               >笔
             </div>
             <div class="oride-bottom">
-              <p>{{ statistics.total ? statistics.total.bear : 0 }} 小熊币</p>
+              <p>{{ statistics.total ? statistics.total.bear : 0 }} 点点币</p>
               <p>{{ statistics.total ? statistics.total.gem : 0 }} 宝石</p>
             </div>
           </div>

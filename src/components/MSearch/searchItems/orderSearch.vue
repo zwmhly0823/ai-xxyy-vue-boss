@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-04-25 17:10:01
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-08-10 12:28:50
+ * @LastEditTime: 2020-09-09 17:48:52
  -->
 <template>
   <div>
@@ -99,10 +99,10 @@ export default {
           this.value = ''
           return
         }
-        this.$http.User.searchUserByPhone(query).then((res) => {
+        this.$http.Base.getUserNumPhone(query).then((res) => {
           console.log(res, 'mobile')
-          if (res && res.data && res.data.UserListEx) {
-            result = res.data.UserListEx.map((item) => {
+          if (res && res.data && res.data.UserSubjectStatisticsList) {
+            result = res.data.UserSubjectStatisticsList.map((item) => {
               item.value = item.mobile
               return item
             })

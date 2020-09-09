@@ -64,7 +64,7 @@
                 placeholder="请选择"
                 :my-style="{ width: '100px' }"
                 :multiple="false"
-                :data-list="conversionStatus"
+                :data-list="conversionStatusAll"
                 @result="getSearchData('status', arguments)"
               />
             </div>

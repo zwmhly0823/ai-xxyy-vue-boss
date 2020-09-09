@@ -163,7 +163,7 @@ export default {
       }
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          this.$http.Express.editAddressAndExpressForOrder(params)
+          this.$http.Express.createExpressAddressNew(params)
             .then((res) => {
               if (res.data) {
                 return
