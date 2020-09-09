@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-08-25 11:40:19
  * @LastEditors: liukun
- * @LastEditTime: 2020-09-01 14:35:27
+ * @LastEditTime: 2020-09-09 19:57:08
 -->
 <template>
   <div class="coupon-content">
@@ -19,7 +19,7 @@
       </div>
     </div>
 
-    <el-table :data="renderTableData" style="width: 100%">
+    <el-table :data="faProps" style="width: 100%">
       <el-table-column prop="coupon[name]" label="券名"></el-table-column>
       <el-table-column
         prop="coupon[typeName]"
@@ -29,7 +29,7 @@
       <el-table-column label="面值" width="100">
         <template slot-scope="scope">
           <div>
-            {{ `¥: ${scope.row.coupon.amount}` }}
+            {{ `¥ ${scope.row.coupon.amount}` }}
           </div>
         </template>
       </el-table-column>
@@ -63,10 +63,8 @@
     <div class="pagination_lk">
       <el-pagination
         layout="prev,pager,next,total"
-        :page-size="20"
         :total="allDigit"
         :current-page="currentPage"
-        @current-change="handleCurrentChange"
       >
       </el-pagination>
     </div>
@@ -103,112 +101,89 @@ export default {
           value: 0
         }
       ],
-      renderTableData: [],
-      faProps: [], // 爹给的
+      faProps: [], // 爹给的(已深拷贝)
       currentPage: 1,
       allDigit: 0
     }
   },
   mounted() {
     this.$root.$on('coupon', (r) => {
-      console.info('老爹给用户资产-优惠券-基础数据', r)
-      this.faProps = r || []
-      this.top4Show()
+      console.info('老爹给用户资产-优惠券table-基础数据list计算出来', r)
+      this.faProps = r
     })
-    setTimeout(this.reqGetUserAssets, 3000)
   },
   watch: {
-    changeSubject: {
+    faProps: {
       immediate: false,
       deep: true,
       handler(newValue, oldValue) {
-        this.reqGetUserAssets()
+        if (newValue !== oldValue) {
+          this.reqGetUserAssets()
+          this.top4Show()
+        }
       }
     }
   },
   methods: {
-    // 翻页
-    handleCurrentChange(val) {
-      console.log(`当前页: ${val}`)
-      this.currentPage = val
-      this.reqGetUserAssets()
-    },
     // 数据接口_用户资产_优惠券
     reqGetUserAssets() {
-      this.$http.User.getUserAssetsCoupon(
-        this.changeSubject,
-        this.$route.params.id,
-        this.currentPage
-      )
-        .then((res) => {
-          if (
-            res.data.CouponUserPage &&
-            res.data.CouponUserPage.content.length
-          ) {
-            res.data.CouponUserPage.content.forEach((pItem) => {
-              switch (pItem.coupon.type - 0) {
-                case 0:
-                  pItem.coupon.typeName = '代金券'
-                  break
-                case 1:
-                  pItem.coupon.typeName = '折扣券'
-                  break
-                case 2:
-                  pItem.coupon.typeName = '满减券'
-                  break
-              }
-              switch (pItem.status - 0) {
-                case 0:
-                  pItem.statusName = '不可用'
-                  break
-                case 1:
-                  pItem.statusName = '可用'
-                  pItem.statusAbled = true
-                  break
-                case 2:
-                  pItem.statusName = '已使用'
-                  break
-                case 3:
-                  pItem.statusName = '已过期'
-                  break
-              }
-              pItem.end_date = formatData(pItem.end_date, 's')
-              pItem.start_date = formatData(pItem.start_date, 's')
-              if (pItem.order) {
-                pItem.order.ctime = formatData(pItem.order.ctime, 's')
-              } else {
-                pItem.order = {
-                  ctime: '-'
-                }
-              }
-            })
-            this.allDigit = Number(res.data.CouponUserPage.totalElements)
-            this.renderTableData = res.data.CouponUserPage.content
+      console.count('llllll')
+      if (this.faProps && this.faProps.length) {
+        this.faProps.forEach((pItem) => {
+          switch (pItem.coupon.type - 0) {
+            case 0:
+              pItem.coupon.typeName = '代金券'
+              break
+            case 1:
+              pItem.coupon.typeName = '折扣券'
+              break
+            case 2:
+              pItem.coupon.typeName = '满减券'
+              break
+          }
+          switch (pItem.status - 0) {
+            case 0:
+              pItem.statusName = '不可用'
+              break
+            case 1:
+              pItem.statusName = '可用'
+              pItem.statusAbled = true
+              break
+            case 2:
+              pItem.statusName = '已使用'
+              break
+            case 3:
+              pItem.statusName = '已过期'
+              break
+          }
+          pItem.end_date = formatData(pItem.end_date, 's')
+          pItem.start_date = formatData(pItem.start_date, 's')
+          if (pItem.order) {
+            pItem.order.ctime = formatData(pItem.order.ctime, 's')
           } else {
-            this.allDigit = 0
-            this.renderTableData = []
+            pItem.order = {
+              ctime: '-'
+            }
           }
         })
-        .catch(() => {
-          this.$message.error('获取用户资产_优惠券_失败')
-        })
+        this.allDigit = this.faProps.length
+      }
     },
     top4Show() {
+      let i = 0
+      while (i < 4) {
+        this.couponNumList[i].value = 0
+        i++
+      }
+      console.count('kkkk')
+      this.couponNumList[0].value = this.faProps.length
       this.faProps.forEach((nItem) => {
-        if (nItem.code === '_all') {
-          this.couponNumList[0].value = nItem.value - 0
-        } else if (nItem.code - 0 === 0) {
-          // 不可用
-          this.couponNumList[2].value += nItem.value - 0
-        } else if (nItem.code - 0 === 1) {
-          // 可用
-          this.couponNumList[1].value = nItem.value - 0
-        } else if (nItem.code - 0 === 2) {
-          // 已使用
-          this.couponNumList[3].value = nItem.value - 0
-        } else if (nItem.code - 0 === 3) {
-          // 已过期
-          this.couponNumList[2].value += nItem.value - 0
+        if (nItem.status === '0' || nItem.status === '3') {
+          this.couponNumList[2].value++ // 无效
+        } else if (nItem.status === '1') {
+          this.couponNumList[1].value++ // 可用
+        } else if (nItem.status === '2') {
+          this.couponNumList[3].value++ // 已使用
         }
       })
     }

@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-08-25 11:40:19
  * @LastEditors: liukun
- * @LastEditTime: 2020-09-08 18:54:15
+ * @LastEditTime: 2020-09-09 19:49:27
 -->
 <template>
   <div>
@@ -20,38 +20,42 @@
           :label="`${item.team_type_formatting}:${item.team_name}`"
           :name="'' + key"
         >
-          <div class="statistical">
-            <div>
-              <span>社群销售</span>:
-              {{ item.teacher_info && item.teacher_info.realname }}
+          <div class="inner_lk">
+            <div class="statistical">
+              <div>
+                <span>社群销售</span>:
+                {{ item.teacher_info && item.teacher_info.realname }}
+              </div>
+              <div>
+                <span>微信昵称</span>:
+                {{ item.teacher_info && item.teacher_info.nickname }}
+              </div>
+              <div>
+                <span>微信号</span>:
+                {{
+                  item.teacher_wechat_info && item.teacher_wechat_info.wechat_no
+                }}
+              </div>
             </div>
-            <div>
-              <span>微信昵称</span>:
-              {{ item.teacher_info && item.teacher_info.nickname }}
-            </div>
-            <div>
-              <span>微信号</span>:
-              {{
-                item.teacher_wechat_info && item.teacher_wechat_info.wechat_no
-              }}
-            </div>
-          </div>
-          <div class="statistical class-statistical">
-            <div>
-              <span>作品总数</span>:
-              <span class="tatistical-span">{{ item.course_task_count }}</span>
-            </div>
-            <div>
-              <span>收到点评</span>:
-              <span class="tatistical-span">
-                {{ item.task_comment_count }}
-              </span>
-            </div>
-            <div>
-              <span>已听点评</span>:
-              <span class="tatistical-span">
-                {{ item.listen_comment_count }}
-              </span>
+            <div class="statistical">
+              <div>
+                <span>作品总数</span>:
+                <span class="tatistical-span">{{
+                  item.course_task_count
+                }}</span>
+              </div>
+              <div>
+                <span>收到点评</span>:
+                <span class="tatistical-span">
+                  {{ item.task_comment_count }}
+                </span>
+              </div>
+              <div>
+                <span>已听点评</span>:
+                <span class="tatistical-span">
+                  {{ item.listen_comment_count }}
+                </span>
+              </div>
             </div>
           </div>
         </el-tab-pane>
@@ -380,22 +384,26 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.course-sty {
+.inner_lk {
+  display: flex;
+  align-items: center;
+}
+.statistical {
   background-color: #fff;
-  .statistical {
-    div {
-      float: left;
-      span {
-        color: #aeaeae;
-      }
-    }
-  }
-  .class-statistical {
-    margin: 0 15px 0 0;
-    float: left;
-    margin: 0 0 0 25px;
-    .tatistical-span {
-      color: #5ea0f5;
+  min-width: 200px;
+  display: flex;
+  margin-right: 30px;
+}
+
+.statistical .tatistical-span {
+  color: #5ea0f5;
+}
+
+.statistical {
+  div {
+    margin-right: 10px;
+    span {
+      color: #aeaeae;
     }
   }
 }

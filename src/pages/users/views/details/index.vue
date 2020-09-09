@@ -136,10 +136,10 @@
                 <el-col :span="7">
                   <span>学习科目:</span>
                   <el-tag
-                    style="margin-right:3px"
+                    style="margin-right:5px"
                     type="danger"
                     size="mini"
-                    v-for="(item, index) in stuInfor.studyCount"
+                    v-for="(item, index) in studyCount"
                     :key="index"
                     >{{ item }}</el-tag
                   ></el-col
@@ -163,19 +163,6 @@
                   }}
                 </el-col>
               </el-row>
-              <!-- <el-row type="flex" justify="space-around" align="middle">
-                <el-col :span="7">
-                  <span>系统课剩余:</span>
-                  {{ systemCourseTotal + '周' }}</el-col
-                >
-                <el-col :span="7">
-                  <span>生命周期:</span>
-                  <el-tag type="success" size="mini">{{
-                    stuInfor.systemCourse_lifeCycle || '-'
-                  }}</el-tag>
-                </el-col>
-                <el-col :span="7"></el-col>
-              </el-row> -->
             </section>
             <section style="margin-top:20px">
               <div class="gengbo">
@@ -261,22 +248,6 @@
               </span>
             </section>
           </div>
-          <!-- 用户群组 -->
-          <!-- <div class="padding-top20">
-            <section class="setou123">
-              <strong></strong>
-              <span>用户群组</span>
-            </section>
-            <section>
-              <el-row type="flex" justify="space-around" align="middle">
-                <el-col :span="7" style="color:#ccc">
-                  暂无群组
-                </el-col>
-                <el-col :span="7"></el-col>
-                <el-col :span="7"></el-col>
-              </el-row>
-            </section>
-          </div> -->
         </el-col>
         <el-col :span="7" class="dular">
           <!-- 跟进记录 -->
@@ -388,7 +359,8 @@ export default {
         address: [{}],
         sender: { username: '' },
         jluserInfo: {},
-        teams: []
+        teams: [],
+        bought_subject: [] // 学习科目
       },
       // 学员标签(非艾克的全部4项)
       babels_lk: [],
@@ -426,13 +398,6 @@ export default {
         []
       )
     }
-    // systemCourseTotal() {
-    //   return this.stuInfor.systemCourse && this.stuInfor.systemCourse.length
-    //     ? this.stuInfor.systemCourse.reduce((pre, cur, index, arr) => {
-    //         return pre + cur.remaining_week
-    //       }, 0)
-    //     : '-'
-    // }
   },
   created() {
     this.reqUser() // 学员信息接口
@@ -477,8 +442,6 @@ export default {
             91: '已退费'
           }[this.stuInfor.systemCourse_lifeCycle]
         }
-        // ⑤整合stuInfor里所有课程teams 添加字段isRefund(1退费,0正常)
-        // this.checkBack()
 
         // ⑥给各个组件传基础数据
         this.$root.$emit('study', this.stuInfor.teams) // 学习记录
@@ -486,37 +449,6 @@ export default {
       })
     },
 
-    // 功能函数-标识已退费['isrefund' 再报错我吃了它]
-    checkBack() {
-      // 把体验课和系统课中的退费状态整合进teams,isrefund=1是退费的
-      const map1 = new Map()
-      if (
-        this.stuInfor.trialCourse &&
-        this.stuInfor.trialCourse.team_id &&
-        (this.stuInfor.trialCourse.orderInfo.isrefund === 1 ||
-          this.stuInfor.trialCourse.orderInfo.isrefund === 0)
-      ) {
-        map1.set(
-          +this.stuInfor.trialCourse.team_id,
-          this.stuInfor.trialCourse.orderInfo.isrefund
-        ) // [[2205,0],[]]
-      }
-      if (this.stuInfor.systemCourse && this.stuInfor.systemCourse.length) {
-        this.stuInfor.systemCourse.forEach((sItem) => {
-          if (
-            sItem.team_id &&
-            sItem.orderInfo &&
-            (sItem.orderInfo.isrefund === 1 || sItem.orderInfo.isrefund === 0)
-          )
-            map1.set(+sItem.team_id, sItem.orderInfo.isrefund)
-        })
-      }
-      if (map1.size !== 0) {
-        this.stuInfor.teams.forEach((tItem) => {
-          tItem.isRefund = map1.get(+tItem.id)
-        })
-      }
-    },
     // 工具函数_时间格式化
     modifyData(data) {
       // 年龄格式化

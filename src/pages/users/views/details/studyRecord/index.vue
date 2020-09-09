@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-08-25 11:40:19
  * @LastEditors: liukun
- * @LastEditTime: 2020-09-08 18:56:38
+ * @LastEditTime: 2020-09-09 19:51:47
 -->
 <template>
   <div>
@@ -20,41 +20,43 @@
           :label="`${item.team_type_formatting}:${item.team_name}`"
           :name="'' + key"
         >
-          <div class="statistical">
-            <div>
-              <span>社群销售</span>:
-              {{ item.teacher_info && item.teacher_info.realname }}
+          <div class="inner_lk">
+            <div class="statistical">
+              <div>
+                <span>社群销售</span>:
+                {{ item.teacher_info && item.teacher_info.realname }}
+              </div>
+              <div>
+                <span>微信昵称</span>:
+                {{ item.teacher_info && item.teacher_info.nickname }}
+              </div>
+              <div>
+                <span>微信号</span>:
+                {{
+                  item.teacher_wechat_info && item.teacher_wechat_info.wechat_no
+                }}
+              </div>
             </div>
-            <div>
-              <span>微信昵称</span>:
-              {{ item.teacher_info && item.teacher_info.nickname }}
-            </div>
-            <div>
-              <span>微信号</span>:
-              {{
-                item.teacher_wechat_info && item.teacher_wechat_info.wechat_no
-              }}
-            </div>
-          </div>
-          <div class="statistical class-statistical">
-            <div>
-              <span v-if="changeSubject">已解锁</span>
-              <span v-else>已放课</span>:
-              <span class="tatistical-span">
-                {{ item.send_course_count }}
-              </span>
-            </div>
-            <div v-if="!changeSubject">
-              <span>当日参课</span>:
-              <span class="tatistical-span">
-                {{ item.day_join_course_count }}
-              </span>
-            </div>
-            <div v-if="!changeSubject">
-              <span>当日完课</span>:
-              <span class="tatistical-span">
-                {{ item.day_complete_course_count }}
-              </span>
+            <div class="statistical">
+              <div>
+                <span v-if="changeSubject">已解锁</span>
+                <span v-else>已放课</span>:
+                <span class="tatistical-span">
+                  {{ item.send_course_count }}
+                </span>
+              </div>
+              <div v-if="!changeSubject">
+                <span>当日参课</span>:
+                <span class="tatistical-span">
+                  {{ item.day_join_course_count }}
+                </span>
+              </div>
+              <div v-if="!changeSubject">
+                <span>当日完课</span>:
+                <span class="tatistical-span">
+                  {{ item.day_complete_course_count }}
+                </span>
+              </div>
             </div>
           </div>
         </el-tab-pane>
@@ -238,22 +240,26 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.course-sty {
+.inner_lk {
+  display: flex;
+  align-items: center;
+}
+.statistical {
   background-color: #fff;
-  .statistical {
-    div {
-      float: left;
-      span {
-        color: #aeaeae;
-      }
-    }
-  }
-  .class-statistical {
-    margin: 0 15px 0 0;
-    float: left;
-    margin: 0 0 0 25px;
-    .tatistical-span {
-      color: #5ea0f5;
+  min-width: 200px;
+  display: flex;
+  margin-right: 30px;
+}
+
+.statistical .tatistical-span {
+  color: #5ea0f5;
+}
+
+.statistical {
+  div {
+    margin-right: 10px;
+    span {
+      color: #aeaeae;
     }
   }
 }
