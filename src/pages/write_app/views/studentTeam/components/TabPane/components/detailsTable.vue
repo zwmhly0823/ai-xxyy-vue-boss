@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 20:22:24
  * @LastEditors: Shentong
- * @LastEditTime: 2020-09-10 00:02:45
+ * @LastEditTime: 2020-09-10 01:54:25
  -->
 <template>
   <div class="table-box">
@@ -82,7 +82,7 @@
               <span @click="openUserDetail(scope.row.id)" class="info-age">{{
                 scope.row.userExtends.birthday
               }}</span>
-              <span class="info-basics">{{ scope.row.grade }}</span>
+              <span class="info-basics">{{ scope.row.userExtends.grade }}</span>
             </div>
           </template>
         </el-table-column>

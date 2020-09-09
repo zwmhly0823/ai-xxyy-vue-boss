@@ -1,3 +1,11 @@
+<!--
+ * @Descripttion: 学员 table
+ * @version:
+ * @Author: panjian
+ * @Date: 2020-03-16 14:19:58
+ * @LastEditors: Shentong
+ * @LastEditTime: 2020-09-10 01:34:14
+ -->
 <template>
   <div class="dataStyle">
     <div class="search-section">
