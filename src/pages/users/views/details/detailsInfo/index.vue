@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-08-17 19:37:24
  * @LastEditors: liukun
- * @LastEditTime: 2020-09-08 18:52:47
+ * @LastEditTime: 2020-09-09 23:06:01
 -->
 <template>
   <div class="details" v-loading="loading">
@@ -12,6 +12,217 @@
       <el-radio-button :label="0">美术</el-radio-button>
       <el-radio-button :label="1">写字</el-radio-button>
     </el-radio-group>
+    <!-- 写字0元体验课 -->
+    <div v-if="Object.keys(experience_lk0).length">
+      <section class="setou123">
+        <strong></strong>
+        <span>0元体验课信息</span>
+      </section>
+      <section>
+        <el-row>
+          <el-col :span="5"
+            ><div class="item1">
+              <span>负责销售</span
+              ><span>{{
+                experience_lk0.teacherInfo &&
+                  experience_lk0.teacherInfo.realname &&
+                  experience_lk0.teacherInfo.realname
+              }}</span
+              >-
+              <span>{{
+                experience_lk0.teacherInfo &&
+                  experience_lk0.teacherInfo.departmentInfo &&
+                  experience_lk0.teacherInfo.departmentInfo.name &&
+                  experience_lk0.teacherInfo.departmentInfo.name + '战队'
+              }}</span>
+            </div></el-col
+          >
+          <el-col :span="5"
+            ><div class="item1">
+              <span>销售微信</span
+              ><span>{{
+                experience_lk0.teacherInfo &&
+                  experience_lk0.teacherInfo.weixin &&
+                  experience_lk0.teacherInfo.weixin[0] &&
+                  experience_lk0.teacherInfo.weixin[0].weixin_no &&
+                  (experience_lk0.teacherInfo.weixin[0].weixin_no || '-')
+              }}</span>
+            </div></el-col
+          >
+          <el-col :span="5"
+            ><div class="item1">
+              <span>销售电话</span
+              ><span>{{
+                experience_lk0.teacherInfo &&
+                  experience_lk0.teacherInfo.phone &&
+                  (experience_lk0.teacherInfo.phone || '-')
+              }}</span>
+            </div></el-col
+          >
+          <el-col :span="5"
+            ><div class="item1">
+              <span>购买时间</span
+              ><span>{{
+                experience_lk0.sup && (experience_lk0.sup || '-')
+              }}</span
+              ><span>{{
+                experience_lk0.orderInfo &&
+                  experience_lk0.orderInfo.packages_name &&
+                  (experience_lk0.orderInfo.packages_name.substring(4) || '-')
+              }}</span
+              >·<span>{{
+                experience_lk0.buytime && (experience_lk0.buytime || '-')
+              }}</span>
+            </div></el-col
+          >
+          <el-col :span="4"
+            ><div class="item1">
+              <span>购买渠道</span
+              ><span>{{
+                experience_lk0.payChannelInfo &&
+                  experience_lk0.payChannelInfo.channel_inner_name &&
+                  (experience_lk0.payChannelInfo.channel_inner_name || '-')
+              }}</span>
+            </div></el-col
+          >
+        </el-row>
+        <el-row>
+          <el-col :span="5"
+            ><div class="item1">
+              <span>所属班级</span
+              ><span v-if="!isFrom1v1"
+                ><el-link
+                  :href="
+                    `${
+                      changeSubject ? '/write_app' : '/student-team'
+                    }/#/teamDetail/${experience_lk0.teamInfo &&
+                      experience_lk0.teamInfo.id}/0`
+                  "
+                  target="_blank"
+                  type="primary"
+                  >{{
+                    experience_lk0.teamInfo &&
+                      experience_lk0.teamInfo.team_name &&
+                      (experience_lk0.teamInfo.team_name || '-')
+                  }}</el-link
+                ></span
+              >
+              <span v-else
+                ><span>{{
+                  experience_lk0.teamInfo &&
+                    experience_lk0.teamInfo.team_name &&
+                    (experience_lk0.teamInfo.team_name || '-')
+                }}</span></span
+              >
+            </div></el-col
+          >
+          <el-col :span="5"
+            ><div class="item1">
+              <span>开课结课</span
+              ><span>{{
+                experience_lk0.managementInfo &&
+                  experience_lk0.managementInfo.course_day &&
+                  (new Date(+experience_lk0.managementInfo.course_day)
+                    .toLocaleDateString()
+                    .substring(5) ||
+                    '-')
+              }}</span
+              >-
+              <span>{{
+                experience_lk0.managementInfo &&
+                  experience_lk0.managementInfo.end_course_day &&
+                  (new Date(+experience_lk0.managementInfo.end_course_day)
+                    .toLocaleDateString()
+                    .substring(5) ||
+                    '-')
+              }}</span>
+            </div></el-col
+          >
+          <el-col :span="5"
+            ><div class="item1">
+              <span>课程进度</span
+              ><span>{{
+                experience_lk0.current_lesson &&
+                  (experience_lk0.current_lesson || '-')
+              }}</span>
+            </div></el-col
+          >
+          <el-col :span="5"
+            ><div class="item1">
+              <span>课前准备</span
+              ><span>{{
+                typeof experience_lk0.added_wechat === 'number' &&
+                  (experience_lk0.added_wechat ? '已加微' : '未加微')
+              }}</span
+              >、
+              <span>{{
+                typeof experience_lk0.added_group === 'number' &&
+                  (experience_lk0.added_group ? '已进群' : '未进群')
+              }}</span
+              >、
+              <span>{{ experience_lk0.express_status }}</span>
+            </div></el-col
+          >
+        </el-row>
+        <el-row>
+          <el-col :span="5"
+            ><div class="item1">
+              <span v-if="changeSubject">参课/解锁</span>
+              <span v-else>参课/放课</span>
+              <span
+                >{{
+                  typeof experience_lk0.all_join_course_count == 'number' &&
+                    ('' + experience_lk0.all_join_course_count || '-')
+                }}次</span
+              ><span style="color:#00000000">g</span
+              ><span style="color:#f56c6c">{{
+                experience_lk0.join_course_count || '-'
+              }}</span
+              >/
+              <span>{{ experience_lk0.send_course_count || '-' }}节</span>
+            </div></el-col
+          >
+          <el-col :span="5"
+            ><div class="item1">
+              <span v-if="changeSubject">完课/解锁</span>
+              <span v-else>完课/放课</span>
+              <span
+                >{{
+                  typeof experience_lk0.all_complete_course_count ===
+                    'number' &&
+                    ('' + experience_lk0.all_complete_course_count || '-')
+                }}次</span
+              >
+              <span style="color:#00000000">g</span
+              ><span style="color:#f56c6c">{{
+                experience_lk0.complete_course_count || '-'
+              }}</span
+              >/
+              <span>{{ experience_lk0.send_course_count || '-' }}节</span>
+            </div></el-col
+          >
+          <el-col :span="5"
+            ><div class="item1">
+              <span>作品</span
+              ><span style="color:#f56c6c">{{
+                '' + experience_lk0.task_count || '-'
+              }}</span
+              >张
+            </div></el-col
+          >
+          <el-col :span="4"
+            ><div class="item1">
+              <span>听点评/点评</span
+              ><span style="color:#f56c6c">{{
+                '' + experience_lk0.listen_comment_count || '-'
+              }}</span
+              >/<span>{{ '' + experience_lk0.comment_count || '-' }}</span>
+            </div></el-col
+          >
+        </el-row>
+      </section>
+    </div>
+    <!-- 体验课 -->
     <div v-if="Object.keys(experience_lk).length">
       <section class="setou123">
         <strong></strong>
@@ -210,6 +421,7 @@
         </el-row>
       </section>
     </div>
+    <!-- 系统课 -->
     <div v-if="Object.keys(systerm_lk).length">
       <section class="setou123 external">
         <strong></strong>
@@ -399,17 +611,18 @@
     </div>
   </div>
 </template>
-
 <script>
 import { formatDate } from '@/utils/mini_tool_lk'
 
 export default {
   created() {
+    this.tiyan0()
     this.tiyan()
     this.xitong()
   },
   data() {
     return {
+      experience_lk0: {},
       experience_lk: {},
       systerm_lk: {},
       loading: false,
@@ -423,19 +636,57 @@ export default {
       deep: true,
       handler(newValue, oldValue) {
         console.info('详情信息-手动切换科目')
+        this.tiyan0()
         this.tiyan()
         this.xitong()
       }
     }
   },
   methods: {
+    // 0元体验课
+    async tiyan0() {
+      console.info('o元体验课请求发出')
+      const {
+        data: { StudentTrialV2Statistics }
+      } = await this.$http.User.StudentTrialV2Statistics({
+        id: this.$route.params.id,
+        subject: this.changeSubject,
+        team_id: 0
+      }).catch((err) => {
+        console.error(err)
+        this.$message.error('该学员0元体验课信息获取失败')
+      })
+      if (StudentTrialV2Statistics) {
+        StudentTrialV2Statistics.buytime = formatDate(
+          +StudentTrialV2Statistics.buytime
+        )
+        StudentTrialV2Statistics.express_status = {
+          '-1': '无信息',
+          0: '待发货',
+          1: '待发货',
+          2: '已发货',
+          3: '已签收',
+          4: '退签',
+          5: '退回',
+          6: '待确认发货',
+          7: '无效',
+          8: '疑难',
+          9: '暂停'
+        }[String(StudentTrialV2Statistics.express_status)]
+        console.info('0000000', StudentTrialV2Statistics)
+        this.experience_lk0 = StudentTrialV2Statistics
+      } else {
+        this.experience_lk0 = {}
+      }
+    },
     // 体验课
     async tiyan() {
       const {
         data: { StudentTrialV2Statistics }
       } = await this.$http.User.StudentTrialV2Statistics({
         id: this.$route.params.id,
-        subject: this.changeSubject
+        subject: this.changeSubject,
+        team_id: { gt: 0 }
       }).catch((err) => {
         console.error(err)
         this.$message.error('该学员体验课信息获取失败')
@@ -471,9 +722,12 @@ export default {
         subject: this.changeSubject
       }).catch((err) => {
         console.error(err)
-        this.$message.error('该学员体验课信息获取失败')
+        this.$message.error('该学员系统课信息获取失败')
       })
-      if (StudentSystemStatisticsList[0]) {
+      if (
+        StudentSystemStatisticsList[0] &&
+        StudentSystemStatisticsList[0].orderInfo
+      ) {
         StudentSystemStatisticsList[0].orderInfo.buytime = formatDate(
           +StudentSystemStatisticsList[0].orderInfo.buytime
         )
