@@ -4,8 +4,13 @@
  * @version:
  * @Author: shentong
  * @Date: 2020-03-13 14:38:28
+<<<<<<< HEAD
+ * @LastEditors: liukun
+ * @LastEditTime: 2020-09-09 19:43:42
+=======
  * @LastEditors: YangJiyong
  * @LastEditTime: 2020-09-08 22:06:55
+>>>>>>> 48a8518649edc0b6f7bd3b8faf0dd4a7bf44b34b
  */
 // import axios from '../axios'
 import axios from '../axiosConfig'
@@ -908,23 +913,12 @@ export default {
       }`
     })
   },
-  // 优惠券
-  getUserAssetsCoupon(subject = '', query = '', page = 1, size = 20) {
-    const formattingQuery = JSON.stringify({
-      subject,
-      uid: query
-    })
-    const sort = `{ "ctime": "desc" }`
+  // 小熊币优惠券上头
+  _reqGetUserTop(paramsObj) {
     return axios.post(`/graphql/v1/toss`, {
       query: `{
-        CouponUserPage(
-          query:${JSON.stringify(formattingQuery)},
-          sort: ${JSON.stringify(sort)},
-          page: ${page},
-          size:${size}) {
-            totalElements
-            totalPages
-            content{
+        UserExtends(query:${JSON.stringify(JSON.stringify(paramsObj))}) {
+           couponUserList{
               id
               status
               start_date
@@ -942,29 +936,54 @@ export default {
                 packages_type
                 packages_name
               }
-            }
-          }
-      }`
-    })
-  },
-  // 小熊币优惠券上头
-  _reqGetUserTop(paramsObj) {
-    return axios.post(`/graphql/v1/toss`, {
-      query: `{
-        UserExtends(query:${JSON.stringify(JSON.stringify(paramsObj))}) {
-           couponUserCollect{
-            code
-            value
-          }
-          accountUserCollect{
-            code
-            value
-          }
+           }
+           accountUserCollect{
+             code
+             value
+           }
         }
       }`
     })
   },
-
+  // 优惠券(↑从上面取了↑)
+  // getUserAssetsCoupon(subject = '', query = '', page = 1, size = 20) {
+  //   const formattingQuery = JSON.stringify({
+  //     subject,
+  //     uid: query
+  //   })
+  //   const sort = `{ "ctime": "desc" }`
+  //   return axios.post(`/graphql/v1/toss`, {
+  //     query: `{
+  //       CouponUserPage(
+  //         query:${JSON.stringify(formattingQuery)},
+  //         sort: ${JSON.stringify(sort)},
+  //         page: ${page},
+  //         size:${size}) {
+  //           totalElements
+  //           totalPages
+  //           content{
+  //             id
+  //             status
+  //             start_date
+  //             end_date
+  //             notity_date
+  //             ctime
+  //             utime
+  //             coupon {
+  //               name
+  //               type
+  //               amount
+  //             }
+  //             order {
+  //               ctime
+  //               packages_type
+  //               packages_name
+  //             }
+  //           }
+  //         }
+  //     }`
+  //   })
+  // },
   // 小熊币
   getUserAssetsCoin(subject = '', query = '', page = 1, size = 20) {
     const formattingQuery = JSON.stringify({

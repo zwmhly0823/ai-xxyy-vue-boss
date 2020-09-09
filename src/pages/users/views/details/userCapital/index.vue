@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-08-27 10:17:03
  * @LastEditors: liukun
- * @LastEditTime: 2020-09-07 16:41:43
+ * @LastEditTime: 2020-09-09 19:57:54
 -->
 <template>
   <div>
@@ -66,7 +66,7 @@ export default {
       })
       if (UserExtends) {
         this.$root.$emit('bearCoin', UserExtends.accountUserCollect) // 用户资产_小熊币
-        this.$root.$emit('coupon', UserExtends.couponUserCollect) // 用户资产_优惠券
+        this.$root.$emit('coupon', UserExtends.couponUserList) // 用户资产_优惠券
       } else {
         this.$root.$emit('bearCoin', []) // 用户资产_小熊币
         this.$root.$emit('coupon', []) // 用户资产_优惠券
