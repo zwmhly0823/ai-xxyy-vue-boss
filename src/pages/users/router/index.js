@@ -43,6 +43,15 @@ const routes = [
     component: () => import('../views/usersModule.vue')
   },
   {
+    path: '/allUsers',
+    name: 'allUsers',
+    meta: {
+      title: '全部学员',
+      keepAlive: true
+    },
+    component: () => import('../views/usersModule.vue')
+  },
+  {
     path: '/details/:id',
     name: 'detailsUsers',
     meta: {

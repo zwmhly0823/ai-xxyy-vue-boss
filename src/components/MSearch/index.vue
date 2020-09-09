@@ -3,8 +3,8 @@
  * @version:
  * @Author: zhubaodong
  * @Date: 2020-03-24 18:20:12
- * @LastEditors: zhouzebin
- * @LastEditTime: 2020-07-24 16:15:20
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-09-10 03:09:58
  -->
 
 <template>
@@ -83,6 +83,7 @@
 
       <el-form-item v-if="level || sup || stage">
         <stage-sup-levels
+          v-if="this.$store.getters.subjects.subjectCode === 0"
           @stageCallBack="stageCallBack"
           @supCallBack="supCallBack"
           @levelCallBack="levelCallBack"
@@ -93,6 +94,16 @@
           :addSupS="addSupS"
           :supPlaceholder="supPlaceholder"
           style="margin-bottom:0px"
+        />
+
+        <hard-write-level
+          v-if="this.$store.getters.subjects.subjectCode === 1"
+          subType="1"
+          :class="['margin_l10']"
+          placeholder="难度"
+          style="width:140px"
+          name="sup"
+          @result="supCallBack"
         />
       </el-form-item>
 
@@ -325,10 +336,14 @@
   </el-card>
 </template>
 <script>
+import { isToss } from '@/utils/index'
+
 import DatePicker from './searchItems/datePicker.vue'
 import ChannelSelect from './searchItems/channel.vue'
 import ProductTopic from './searchItems/productTopic.vue'
 import StageSupLevels from './searchItems/stageSupLevels.vue'
+import hardWriteLevel from './searchItems/hardWriteLevel.vue'
+
 import SearchPhone from './searchItems/searchPhone.vue'
 import OutTradeNo from './searchItems/outTradeNo.vue'
 import ProductName from './searchItems/productName.vue'
@@ -360,7 +375,7 @@ import replenishProductType from './searchItems/replenishProductType'
 import ConsigneePhone from './searchItems/consigneePhone.vue'
 import expressType from './searchItems/expressType'
 // import SearchTrialStage from './searchItems/searchTrialStage'
-import { isToss } from '@/utils/index'
+
 // 员工角色
 import employeesRole from './searchItems/role.vue'
 import staffName from './searchItems/staffName.vue'
@@ -747,7 +762,8 @@ export default {
     employeesRole,
     staffName,
     expressType,
-    SearchCourseware
+    SearchCourseware,
+    hardWriteLevel
   },
   data() {
     return {
@@ -1027,6 +1043,7 @@ export default {
     }
   },
   created() {
+    console.log(this.$store.getters.subjects.subjectCode)
     const teacherId = isToss()
     if (teacherId) {
       this.teacherId = teacherId

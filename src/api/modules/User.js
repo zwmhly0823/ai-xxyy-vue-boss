@@ -4,11 +4,13 @@
  * @version:
  * @Author: shentong
  * @Date: 2020-03-13 14:38:28
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-24 20:19:27
+ * @LastEditors: liukun
+ * @LastEditTime: 2020-09-09 21:10:28
  */
 // import axios from '../axios'
 import axios from '../axiosConfig'
+import { getAppSubjectCode, injectSubject } from '@/utils/index'
+const subject = getAppSubjectCode()
 
 export default {
   /**
@@ -40,21 +42,16 @@ export default {
 
   /**
    * 模糊搜索用户手机号，获取用户信息
+   * 多学科 新版
    */
   searchUserByPhone(queryString = '') {
     const query = {
-      bool: {
-        must: [
-          {
-            wildcard: { mobile: `*${queryString}*` }
-          }
-        ]
-      }
+      'mobile.like': { 'mobile.keyword': `*${queryString}*` }
     }
     const q = JSON.stringify(query)
     return axios.post('/graphql/v1/toss', {
       query: `{
-        UserListEx(query:${JSON.stringify(q)}){
+        UserSubjectStatisticsList(query:${JSON.stringify(injectSubject(q))}){
           id
           mobile
           username
@@ -62,6 +59,30 @@ export default {
       }`
     })
   },
+  /**
+   * 模糊搜索用户手机号，获取用户信息
+   */
+  // searchUserByPhone(queryString = '') {
+  //   const query = {
+  //     bool: {
+  //       must: [
+  //         {
+  //           wildcard: { mobile: `*${queryString}*` }
+  //         }
+  //       ]
+  //     }
+  //   }
+  //   const q = JSON.stringify(query)
+  //   return axios.post('/graphql/v1/toss', {
+  //     query: `{
+  //       UserListEx(query:${JSON.stringify(q)}){
+  //         id
+  //         mobile
+  //         username
+  //       }
+  //     }`
+  //   })
+  // },
   getUserInfo(query = '') {
     return axios.post('/graphql/v1/toss', {
       query: `
@@ -95,7 +116,7 @@ export default {
    */
   // 体验课学员
   trialCourseUsers(query = {}, page = 1) {
-    const q = JSON.stringify(JSON.stringify(query))
+    const q = JSON.stringify(injectSubject(query))
     const sort = JSON.stringify(JSON.stringify({ ctime: 'desc' }))
     return axios.post('/graphql/v1/toss', {
       query: `{
@@ -156,7 +177,7 @@ export default {
   },
 
   trialCourseUsersV2(query = {}, page = 1, sortRules) {
-    const q = JSON.stringify(JSON.stringify(query))
+    const q = JSON.stringify(injectSubject(query))
     const sort =
       Object.keys(sortRules).length === 0
         ? JSON.stringify(JSON.stringify({ ctime: 'desc' }))
@@ -251,6 +272,88 @@ export default {
     })
   },
 
+  // 全部学员
+  studentAllUserList(query = {}, page = 1, sortRules) {
+    const q = JSON.stringify(JSON.stringify(query))
+    const sort =
+      Object.keys(sortRules).length === 0
+        ? JSON.stringify(JSON.stringify({ join_date: 'desc' }))
+        : JSON.stringify(JSON.stringify(sortRules))
+    return axios.post('/graphql/v1/toss', {
+      query: `{
+        StudentAllUserStatisticsPage(query: ${q},page: ${page}, sort: ${sort}){
+          totalPages
+          totalElements
+          number
+          content {
+            id
+            ctime
+            utime
+            uid
+            channel
+            join_date
+            status
+            extends_channel
+            extends_join_date
+            extends_status
+            extends_id
+            oids
+            teacher_ids
+            last_teacher_ids
+            pay_teacher_ids
+            sale_department_ids
+            last_department_ids
+            is_trial
+            is_system
+            subject
+            subject_text
+            channelInfo {
+              channel_outer_name
+            }
+            userInfo {
+              id
+              join_date
+              status
+              status_text
+              user_num
+              mobile
+              username
+              sex
+              birthday
+              teams {
+                team_name
+                subject
+                team_type
+                team_type_text
+                teacher_info {
+                  realname
+                  department_id
+                  departmentInfo {
+                    name
+                  }
+                }
+              }
+            }
+            userExtendsInfo {
+              u_id
+              join_date
+              status
+              status_text
+              user_num
+              mobile
+              username
+              sex
+              birthday
+              channelInfo {
+                channel_outer_name
+              }
+            }
+          }
+        }
+      }`
+    })
+  },
+
   /**
    * 用户中心- 系统课学员列表
    * "page":1,
@@ -278,7 +381,7 @@ export default {
   systemCourseUsers(query = {}, page = 1, sortRules = {}) {
     // const params = Object.assign(query, { page })
     // return axios.post('/api/b/v1/student/center/system/list', params)
-    const q = JSON.stringify(JSON.stringify(query))
+    const q = JSON.stringify(injectSubject(query))
     const sort =
       Object.keys(sortRules).length === 0
         ? JSON.stringify(JSON.stringify({ ctime: 'desc' }))
@@ -378,6 +481,7 @@ export default {
     return axios.post('/graphql/v1/toss', {
       query: `{
         User(query:${JSON.stringify(formattingQuery)}){
+          bought_subject
           systemCourse_lifeCycle
           id
           head
@@ -446,6 +550,7 @@ export default {
             remaining_week
           }
           teams{
+             subject
              id
              team_type
              team_name
@@ -663,6 +768,7 @@ export default {
   },
   // 学习记录
   getSendCourseLogPage(
+    subject = '',
     query = '',
     teamId = '',
     page = 1,
@@ -675,7 +781,8 @@ export default {
       student_id: query,
       team_id: +teamId,
       del: del,
-      lesson_type: +lessonType
+      lesson_type: +lessonType,
+      subject
     })
     const formattingSort = JSON.stringify({ id: sort })
     return axios.post(`/graphql/v1/toss`, {
@@ -705,6 +812,7 @@ export default {
   },
   // 作品集
   getStudentCourseTaskPage(
+    subject = '',
     query = '',
     teamId = '',
     page = 1,
@@ -714,7 +822,8 @@ export default {
     const formattingQuery = JSON.stringify({
       student_id: query,
       team_id: +teamId,
-      del: del
+      del: del,
+      subject
     })
     const sort = `{ "ctime": "asc" }`
     return axios.post(`/graphql/v1/toss`, {
@@ -799,22 +908,12 @@ export default {
       }`
     })
   },
-  // 优惠券
-  getUserAssetsCoupon(query = '', page = 1, size = 20) {
-    const formattingQuery = JSON.stringify({
-      uid: query
-    })
-    const sort = `{ "ctime": "desc" }`
+  // 小熊币优惠券上头
+  _reqGetUserTop(paramsObj) {
     return axios.post(`/graphql/v1/toss`, {
       query: `{
-        CouponUserPage(
-          query:${JSON.stringify(formattingQuery)},
-          sort: ${JSON.stringify(sort)},
-          page: ${page},
-          size:${size}) {
-            totalElements
-            totalPages
-            content{
+        UserExtends(query:${JSON.stringify(JSON.stringify(paramsObj))}) {
+           couponUserList{
               id
               status
               start_date
@@ -832,14 +931,58 @@ export default {
                 packages_type
                 packages_name
               }
-            }
-          }
+           }
+           accountUserCollect{
+             code
+             value
+           }
+        }
       }`
     })
   },
+  // 优惠券(↑从上面取了↑)
+  // getUserAssetsCoupon(subject = '', query = '', page = 1, size = 20) {
+  //   const formattingQuery = JSON.stringify({
+  //     subject,
+  //     uid: query
+  //   })
+  //   const sort = `{ "ctime": "desc" }`
+  //   return axios.post(`/graphql/v1/toss`, {
+  //     query: `{
+  //       CouponUserPage(
+  //         query:${JSON.stringify(formattingQuery)},
+  //         sort: ${JSON.stringify(sort)},
+  //         page: ${page},
+  //         size:${size}) {
+  //           totalElements
+  //           totalPages
+  //           content{
+  //             id
+  //             status
+  //             start_date
+  //             end_date
+  //             notity_date
+  //             ctime
+  //             utime
+  //             coupon {
+  //               name
+  //               type
+  //               amount
+  //             }
+  //             order {
+  //               ctime
+  //               packages_type
+  //               packages_name
+  //             }
+  //           }
+  //         }
+  //     }`
+  //   })
+  // },
   // 小熊币
-  getUserAssetsCoin(query = '', page = 1, size = 20) {
+  getUserAssetsCoin(subject = '', query = '', page = 1, size = 20) {
     const formattingQuery = JSON.stringify({
+      subject,
       uid: query,
       trans_type: ['1', '2', '3', '4', '5', '6', '8', '9', '10', '11'], // 经和后端确认前端滤掉0和7
       account_type: 2
@@ -919,7 +1062,8 @@ export default {
     const query = {
       // teacher_id,
       team_state,
-      team_type
+      team_type,
+      subject
     }
     const params = JSON.stringify(query)
     // const sort = `{"id": "desc"}`
@@ -940,14 +1084,14 @@ export default {
     let q = `uid=${query.uid}&type=${query.type}&describe=${query.describe}&isTrack=${query.isTrack}`
     q += `&today=${query.today || ''}`
     q += `&tomorrow=${query.tomorrow || ''}`
-    return axios.get(`/api/u/v1/user/userintention/create?${q}`)
+    return axios.get(`/api/u/v2/user/userintention/create?${q}`)
   },
   // 更新用户意向度
   updateUserInetention(query) {
     let q = `uid=${query.uid}&type=${query.type}&describe=${query.describe}&isTrack=${query.isTrack}`
     q += `&today=${query.today || ''}`
     q += `&tomorrow=${query.tomorrow || ''}`
-    return axios.get(`/api/u/v1/user/userintention/update?${q}`)
+    return axios.get(`/api/u/v2/user/userintention/update?${q}`)
   },
   // 学员详情 修改地址
   updateExpressAddressNew(query) {
@@ -965,7 +1109,7 @@ export default {
   },
   // 提交跟踪表单
   submitForm(query) {
-    return axios.get(`/api/u/v1/user/userfollowlog/createUserFollowLog`, query)
+    return axios.get(`/api/u/v2/user/userfollowlog/createUserFollowLog`, query)
   },
   // 获取学员发展的下线
   getRecommendList(query) {
@@ -988,11 +1132,11 @@ export default {
     )
   },
   // track_flow_list
-  getTrackList({ uid, page = 1, size = 10 } = {}) {
+  getTrackList({ uid, subject, page = 1, size = 10 } = {}) {
     return axios.post('/graphql/v1/toss', {
       query: `{
             UserFollowLogPage(
-              query: ${JSON.stringify(JSON.stringify({ uid }))},
+              query: ${JSON.stringify(JSON.stringify({ uid, subject }))},
               size:${size},
               page:${page},
               sort:${JSON.stringify(JSON.stringify({ ctime: 'desc' }))}
@@ -1082,7 +1226,7 @@ export default {
     return axios.post('/graphql/v1/toss', {
       query: `{
         StudentTrialV2Statistics(query: ${JSON.stringify(
-          JSON.stringify({ id: query })
+          JSON.stringify(query)
         )}){
             sup
             id
@@ -1133,7 +1277,7 @@ export default {
     return axios.post('/graphql/v1/toss', {
       query: `{
             StudentSystemStatisticsList(
-              query: ${JSON.stringify(JSON.stringify({ studentid: query }))},
+              query: ${JSON.stringify(JSON.stringify(query))},
               sort:${JSON.stringify(JSON.stringify({ ctime: 'asc' }))}
               )
             {

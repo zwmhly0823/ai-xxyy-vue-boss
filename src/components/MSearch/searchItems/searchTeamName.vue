@@ -97,6 +97,9 @@ export default {
         }
       }
       q.bool.must.push(teamType)
+      q.bool.must.push({
+        term: { subject: this.$store.getters.subjects.subjectCode }
+      })
       this.teacherId &&
         q.bool.must.push({ terms: { teacher_id: this.teacherId } })
       this.term &&

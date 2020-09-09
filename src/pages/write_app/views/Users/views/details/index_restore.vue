@@ -867,7 +867,7 @@ export default {
     refereesBtn() {
       console.log('推荐人')
       // const { username, mobile } = this.stuInfor.sender
-      this.sendId && openBrowserTab(`/users/#/details/${this.sendId}`)
+      this.sendId && openBrowserTab(`/write_app/#/details/${this.sendId}`)
       // this.$router.push({ path: '/details', query: { id: '123' } })
     },
     // 收起✔️

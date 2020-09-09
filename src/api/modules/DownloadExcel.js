@@ -3,11 +3,12 @@
  * @version:
  * @Author: Lukun
  * @Date: 2020-05-14 14:31:42
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-10 18:00:07
+ * @LastEditors: zhangjianwen
+ * @LastEditTime: 2020-09-10 01:16:04
  */
 import axios from '../axios'
 import { getToken } from '@/utils/auth'
+
 // const Qs = require('qs')
 
 const getHeaders = () => {
@@ -129,8 +130,6 @@ export default {
       }
    */
   exportOrder(params) {
-    console.log(params)
-
     if (judgeToken()) {
       return axios({
         method: 'POST',

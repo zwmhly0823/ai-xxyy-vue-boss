@@ -69,7 +69,7 @@ export default {
     createFilter(queryString) {
       const st = queryString.toUpperCase()
       const queryParams = JSON.stringify(`
-      {"bool":{"must":[{"wildcard":{"team_name.keyword":"*${st}*"}}]}}
+      {"bool":{"must":[{"wildcard":{"team_name.keyword":"*${st}*"}},{"term":{"subject":"${this.$store.getters.subjects.subjectCode}"}}]}}
       `)
       return axios
         .post('/graphql/v1/toss', {

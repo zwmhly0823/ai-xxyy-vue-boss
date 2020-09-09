@@ -3,8 +3,8 @@
  * @Email: yangjiyong@meishubao.com
  * @Date: 2020-03-13 15:13:34
  * @Description: topbar 顶部功能区
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-07-30 15:03:46
+ * @LastEditors: Shentong
+ * @LastEditTime: 2020-09-02 17:46:37
  -->
 <template>
   <div class="navbar" :class="{ prod: isProd }">
@@ -30,22 +30,31 @@
     </div>
 
     <div class="right-menu">
+      <!-- 全局搜索学员 - 手机号、user_num -->
       <GlobelSearch class="globelSearch-con" />
-      <a
-        class="order-btn"
-        href="https://shimo.im/docs/opMWovESib0pcyh0/"
-        target="_blank"
-        >帮助</a
-      >
-      <span class="item-line"></span>
-      <el-badge
-        :value="noticeBadge"
-        :hidden="!noticeBadge"
-        class="notices-content"
-      >
-        <span type="text" @click="clickNoticeTop" class="order-btn">通知</span>
-        <!-- <el-button type="text" @click="clickNoticeTop">通知中心</el-button> -->
-      </el-badge>
+
+      <!-- 功能区 入口; 目前只有 小熊美术 显示 -->
+      <template v-if="currentSubject === 'art_app'">
+        <a
+          class="order-btn"
+          href="https://shimo.im/docs/opMWovESib0pcyh0/"
+          target="_blank"
+          >帮助</a
+        >
+        <span class="item-line"></span>
+        <el-badge
+          :value="noticeBadge"
+          :hidden="!noticeBadge"
+          class="notices-content"
+        >
+          <span type="text" @click="clickNoticeTop" class="order-btn"
+            >通知</span
+          >
+        </el-badge>
+      </template>
+      <!-- 功能区 入口 - end -->
+
+      <!-- 用户信息 -->
       <el-dropdown class="avatar-container" trigger="click">
         <div class="user-info">
           <div class="avatar-wrapper">
@@ -58,11 +67,6 @@
           <i class="el-icon-arrow-down" />
         </div>
         <el-dropdown-menu slot="dropdown" class="user-dropdown">
-          <!-- <router-link to="/">
-            <el-dropdown-item>
-              个人中心
-            </el-dropdown-item>
-          </router-link> -->
           <el-dropdown-item @click.native="replacePassword">
             <span style="display:block;">修改密码</span>
           </el-dropdown-item>
@@ -71,11 +75,45 @@
           </el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
+      <!-- 用户信息 end -->
+
+      <!-- 多科目切换 -->
+      <div class="subject-change">
+        <el-dropdown
+          @command="handleChangeSubject"
+          trigger="hover"
+          placement="bottom"
+        >
+          <div class="subject-change-title">
+            <!-- {{ currentSubjectText }} -->
+            科目
+            <i class="el-icon-arrow-down el-icon--right"></i>
+          </div>
+          <el-dropdown-menu slot="dropdown" class="subject-change-menu">
+            <el-dropdown-item
+              v-for="item in subjectsList"
+              :command="item.key"
+              :key="item.key"
+              >{{ item.title }}
+              <svg
+                class="iconfont"
+                aria-hidden="true"
+                @click.stop.self="openNewTab(item.key)"
+              >
+                <use xlink:href="#iconopen"></use></svg
+            ></el-dropdown-item>
+          </el-dropdown-menu>
+        </el-dropdown>
+      </div>
     </div>
+
+    <!-- 通知中心列表 抽屉 -->
     <notice-center
       ref="noticeCenter"
       @reduceBadge="reduceBadge"
     ></notice-center>
+
+    <!-- 修改用户密码 dialog -->
     <el-dialog
       title="修改密码"
       :visible.sync="dialogVisible"
@@ -107,12 +145,12 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 import Breadcrumb from './Breadcrumb'
 import GlobelSearch from './GlobelSearch'
 import Hamburger from './Hamburger'
 import { removeToken } from '@/utils/auth'
-import { baseUrl } from '@/utils/index'
+import { baseUrl, openBrowserTab } from '@/utils/index'
 import noticeCenter from './noticeCenter/noticeCenter'
 
 export default {
@@ -123,7 +161,17 @@ export default {
     GlobelSearch
   },
   computed: {
-    ...mapGetters(['sidebar', 'avatar'])
+    ...mapGetters(['sidebar', 'avatar', 'subjects']),
+    subjectsList() {
+      // 切换列表排除当前本身项目
+      const list = this.subjects.subjectsList.filter(
+        (item) => item.key !== this.subjects.currentSubjectKey
+      )
+      return list
+    }
+    // currentSubjectText() {
+    //   return this.subjects.currentSubjectTitle
+    // }
   },
   watch: {
     dialogVisible(val) {
@@ -139,21 +187,28 @@ export default {
       head: 'https://msb-ai.meixiu.mobi/ai-pm/static/touxiang.png',
       dialogVisible: false,
       newPassword: '',
-      noticeBadge: 0
+      noticeBadge: 0,
+      currentSubject: 'art_app'
     }
   },
   created() {
     const userInfo = localStorage.getItem('staff')
     this.isProd = location.origin.indexOf('prod') > -1
     if (!userInfo) {
-      this.logout()
+      // this.logout() TODO: ? 。。。
       return
     }
     this.userInfo = JSON.parse(userInfo)
+
+    this.getSubject()
+    this.currentSubject = this.subjects.currentSubjectKey
     // 通知的角标数字
-    this.getNoticeBadge()
+    this.currentSubject === 'art_app' && this.getNoticeBadge()
   },
   methods: {
+    ...mapActions({
+      getSubject: 'subjects/getSubject'
+    }),
     toggleSideBar() {
       this.$store.dispatch('app/toggleSideBar')
     },
@@ -199,6 +254,29 @@ export default {
     },
     reduceBadge() {
       this.noticeBadge--
+    },
+
+    /**
+     * 多科目切换 @isNew: 是否新浏览器标签打开
+     */
+    // 当前页面切换
+    handleChangeSubject(command, isNew = false) {
+      console.log(command, isNew)
+      location.href =
+        command !== 'art_app'
+          ? `${baseUrl()}${command}/#/trialUsers`
+          : `${baseUrl()}users/#/trial`
+    },
+
+    // 新标签页打开
+    openNewTab(key) {
+      console.log(key, 'new tab')
+      // 非小熊美术
+      if (key !== 'art_app') {
+        openBrowserTab(`/${key}/#/trialUsers`)
+      } else {
+        openBrowserTab(`/users/#/trial`)
+      }
     }
   }
 }
@@ -336,13 +414,43 @@ export default {
     .el-icon-arrow-down {
       position: absolute;
       right: -20px;
-      top: 22px;
+      top: 20px;
       font-size: 12px;
     }
     .notices-content {
       margin-right: 30px;
       /deep/ .el-badge__content.is-fixed {
         top: 12px;
+      }
+    }
+  }
+  // 多科目
+  .subject-change {
+    position: relative;
+    float: right;
+    min-width: 100px;
+    margin-left: 10px;
+    padding-left: 30px;
+    border-left: 2px solid #bec0c3;
+    cursor: pointer;
+    &-title {
+      position: relative;
+      font-weight: 500;
+    }
+  }
+}
+.subject-change {
+  &-menu {
+    width: 135px;
+    .iconfont {
+      position: relative;
+      top: 10px;
+      float: right;
+      width: 14px;
+      margin-right: -5px;
+      fill: #999;
+      &:hover {
+        fill: #2a75ed;
       }
     }
   }

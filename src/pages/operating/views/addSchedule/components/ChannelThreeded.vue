@@ -3,8 +3,8 @@
  * @version: 1.0.0
  * @Author: Shentong
  * @Date: 2020-06-30 19:21:08
- * @LastEditors: Shentong
- * @LastEditTime: 2020-08-08 21:20:17
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-08-24 18:18:59
 -->
 <template>
   <div class="channel-threeded">
@@ -262,10 +262,11 @@ export default {
     },
     // 获取渠道来源 filter: 过滤关键词  eg：filter:"抖音"
     async getChannelLeves() {
+      const subject = { subject: this.$store.getters.subjects.subjectCode }
       await axios
         .post('/graphql/v1/toss', {
           query: `{
-            ChannelAllList {
+            ChannelAllList(query:${JSON.stringify(JSON.stringify(subject))}) {
                 id
                 channel_class_id
                 channel_outer_name

@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-05-25 15:34:04
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-11 17:18:35
+ * @LastEditTime: 2020-09-04 11:55:00
 -->
 <template>
   <div class="user-list">
@@ -521,11 +521,11 @@
       />
     </el-dialog>
     <!-- 发送优惠券 -->
-    <coupon-popover
+    <!-- <coupon-popover
       ref="couponDialog"
       :couponData="couponData"
       :selectUserId="[studentid]"
-    />
+    /> -->
     <label-checkbox
       v-if="showDialogFormVisible"
       :labelRowValue="labelRowValue"
@@ -546,7 +546,7 @@ import ModifyAddress from '../../components/ModifyAddress.vue'
 import enums from '../../components/searchData'
 import { formatData, openBrowserTab } from '@/utils/index'
 import { FOLLOW_EXPRESS_STATUS, ISREFUND } from '@/utils/enums'
-import CouponPopover from '../../../studentTeam/components/TabPane/components/couponPopover'
+// import CouponPopover from '../../../studentTeam/components/TabPane/components/couponPopover'
 export default {
   name: 'systemUsers',
   components: {
@@ -556,8 +556,8 @@ export default {
     // HandleItemStatus,
     // ItemStatus,
     ModifyAddress,
-    labelCheckbox,
-    CouponPopover
+    labelCheckbox
+    // CouponPopover
   },
   // props: {
   //   // 查询条件
@@ -636,7 +636,7 @@ export default {
       const key = Object.keys(this.$route.query)[0]
       this.$root.$emit(key + '_lk', this.$route.query[key])
     }
-    this.getCouponList()
+    // this.getCouponList()
   },
   methods: {
     handLeCopy(index, row) {
@@ -935,45 +935,45 @@ export default {
         )
     },
     // 操作列的下拉
-    handleColumnCommand(command, user = {}, index) {
-      console.log(command, user, index)
-      this.currentUser = user
-      switch (command) {
-        // 沟通备注
-        case '1':
-          if (!user.userIntention || +user.userIntention.type === 0) {
-            this.createIntention(index, user.id)
-          } else {
-            this.intentDescribeChange(index, user.id)
-          }
-          break
-        // 催发地址短信
-        case '2':
-          this.sendMessage(true)
-          break
-        // 优惠券
-        case '3':
-          this.studentid = user.studentid
-          this.$refs.couponDialog.issueCoupons = true
-          this.$refs.couponDialog.couponsTime = ''
-          break
-        // 加标签
-        case '4':
-          this.onLabel()
-          break
-      }
-    },
+    // handleColumnCommand(command, user = {}, index) {
+    //   console.log(command, user, index)
+    //   this.currentUser = user
+    //   switch (command) {
+    //     // 沟通备注
+    //     case '1':
+    //       if (!user.userIntention || +user.userIntention.type === 0) {
+    //         this.createIntention(index, user.id)
+    //       } else {
+    //         this.intentDescribeChange(index, user.id)
+    //       }
+    //       break
+    //     // 催发地址短信
+    //     case '2':
+    //       this.sendMessage(true)
+    //       break
+    //     // 优惠券
+    //     case '3':
+    //       this.studentid = user.studentid
+    //       this.$refs.couponDialog.issueCoupons = true
+    //       this.$refs.couponDialog.couponsTime = ''
+    //       break
+    //     // 加标签
+    //     case '4':
+    //       this.onLabel()
+    //       break
+    //   }
+    // },
     handleCommandChange(visible) {
       if (visible) {
         this.resetCurrentUser()
       }
     },
     // 获取优惠券列表
-    getCouponList() {
-      this.$http.Team.getAllCoupons(0).then((res) => {
-        this.couponData = (res.payload && res.payload.content) || []
-      })
-    },
+    // getCouponList() {
+    //   this.$http.Team.getAllCoupons(0).then((res) => {
+    //     this.couponData = (res.payload && res.payload.content) || []
+    //   })
+    // },
     // 重置当前选择用户
     resetCurrentUser() {
       this.currentUser = {}

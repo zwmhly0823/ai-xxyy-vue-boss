@@ -4,10 +4,11 @@
  * @Author: panjian
  * @Date: 2020-03-31 22:54:28
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-05 17:50:58
+ * @LastEditTime: 2020-09-05 17:33:33
  */
-// import axios from '../axios'
+import { getAppSubjectCode } from '@/utils/index'
 import axios from '../axiosConfig'
+const subjectCode = getAppSubjectCode()
 
 export default {
   /**
@@ -61,7 +62,8 @@ export default {
         must: [
           {
             wildcard: { receipt_tel: `*${queryString}*` }
-          }
+          },
+          { term: { subject: subjectCode } }
         ]
       }
     }

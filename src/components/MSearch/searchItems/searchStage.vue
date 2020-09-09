@@ -117,7 +117,9 @@ export default {
       const query = { teacher_id: this.teacherId }
       const teamType =
         this.type === '0' ? { team_type: 0 } : { team_type: { gt: 0 } }
-      Object.assign(query, teamType)
+      Object.assign(query, teamType, {
+        subject: this.$store.getters.subjects.subjectCode
+      })
 
       const q = JSON.stringify(query)
       axios
@@ -140,7 +142,10 @@ export default {
       this.loading = true
       const queryParams = {
         bool: {
-          must: [{ wildcard: { 'period_name.keyword': `*${queryString}*` } }]
+          must: [
+            { wildcard: { 'period_name.keyword': `*${queryString}*` } },
+            { term: { subject: this.$store.getters.subjects.subjectCode } }
+          ]
         }
       }
       if (this.type) {

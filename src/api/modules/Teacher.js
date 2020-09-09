@@ -13,7 +13,7 @@ export default {
    * 组织机构列表
    * */
   getDepartmentTree(id) {
-    return axios.get(`/api/t/v1/department/getDepartmentTree?id=${id}`)
+    return axios.get(`/api/t/v2/department/getDepartmentTree?id=${id}`)
   },
   /**
    * 新增、编辑组织结构
@@ -295,6 +295,7 @@ export default {
           productTopic{
             id
             name
+          
           }
        }`
     })

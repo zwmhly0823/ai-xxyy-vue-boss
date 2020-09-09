@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-06-16 16:27:14
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-11 17:10:54
+ * @LastEditTime: 2020-09-07 19:55:16
 -->
 <template>
   <div class="user-list">
@@ -731,8 +731,9 @@
           <el-table-column label="渠道" min-width="100">
             <template slot-scope="scope">
               <span v-if="scope.row.payChannelInfo">
-                {{ scope.row.payChannelInfo.channel_outer_name }}
+                {{ scope.row.payChannelInfo.channel_outer_name || '-' }}
               </span>
+              <span v-else>-</span>
             </template>
           </el-table-column>
           <el-table-column label="ID" min-width="55">
@@ -1072,9 +1073,9 @@ export default {
     this.paramsFromUrl()
     this.init()
   },
-  mounted() {
-    this.getCouponList()
-  },
+  // mounted() {
+  //   this.getCouponList()
+  // },
   methods: {
     paramsFromUrl() {
       const urlParams = localStorage.getItem('noticeParams')
@@ -1330,7 +1331,7 @@ export default {
     },
 
     expressStatus(status) {
-      if (!status && +status !== 0) {
+      if (!status && status !== 0) {
         return '-'
       }
       // 异常物流
@@ -1598,11 +1599,11 @@ export default {
     },
 
     // 获取优惠券列表
-    getCouponList() {
-      this.$http.Team.getAllCoupons(0).then((res) => {
-        this.couponData = (res.payload && res.payload.content) || []
-      })
-    },
+    // getCouponList() {
+    //   this.$http.Team.getAllCoupons(0).then((res) => {
+    //     this.couponData = (res.payload && res.payload.content) || []
+    //   })
+    // },
     // 参课的下拉排序
     classesDropdown(command) {
       this.sortRules(command)

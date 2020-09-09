@@ -3,10 +3,12 @@
  * @version:
  * @Author: shentong
  * @Date: 2020-03-13 16:20:48
- * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-08-13 19:00:56
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-09-05 18:25:46
  */
 import axios from '../axiosConfig'
+import { injectSubject, getAppSubjectCode } from '@/utils/index'
+const subjectCode = getAppSubjectCode()
 // 素质课的时候，测试环境暂时删除
 // department{
 //   department{
@@ -28,36 +30,11 @@ export default {
    * 获取订单列表 v1
    * */
   orderPage(query, page = 1) {
-    // let handleQuery
-    // if (query && JSON.parse(query).pay_channel) {
-    //   handleQuery = JSON.parse(query)
-    //   const payChannel = JSON.parse(query).pay_channel
-    //   if (payChannel && payChannel.length <= 0) {
-    //     // handleQuery.pay_channel = null
-    //     delete handleQuery.pay_channel
-    //     handleQuery = JSON.stringify(handleQuery)
-    //   } else {
-    //     handleQuery = query
-    //   }
-    // } else {
-    //   handleQuery = query
-    // }
-    // if (query && JSON.parse(query).trial_pay_channel) {
-    //   handleQuery = JSON.parse(query)
-    //   const payChannel = JSON.parse(query).trial_pay_channel
-    //   if (payChannel && payChannel.length <= 0) {
-    //     // handleQuery.pay_channel = null
-    //     delete handleQuery.trial_pay_channel
-    //     handleQuery = JSON.stringify(handleQuery)
-    //   } else {
-    //     handleQuery = query
-    //   }
-    // } else {
-    //   handleQuery = query
-    // }
     return axios.post('/graphql/v1/toss', {
       query: `{
-        OrderPage(query: ${JSON.stringify(query)}, page: ${page}) {
+        OrderPage(query: ${JSON.stringify(
+          injectSubject(query)
+        )}, page: ${page}) {
           totalPages
           totalElements
           number
@@ -146,6 +123,9 @@ export default {
         must: [
           {
             wildcard: { out_trade_no: `*${no}*` }
+          },
+          {
+            term: { subject: subjectCode }
           }
         ]
       }
@@ -172,7 +152,7 @@ export default {
     return axios.post('/graphql/v1/toss', {
       query: `{
         OrderStatistics(query: ${JSON.stringify(
-          queryStr
+          injectSubject(queryStr)
         )}, sumField:"${sumField}", termField:"${termField}"){
           code
           type
@@ -227,6 +207,9 @@ export default {
         must: [
           {
             wildcard: { transaction_id: `*${no}*` }
+          },
+          {
+            term: { subject: subjectCode }
           },
           {
             term: { status: 2 }

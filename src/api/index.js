@@ -1,10 +1,18 @@
 /*
- * @Descripttion:
+ * @Descripttion: 组合所有接口文件
  * @version:
  * @Author: shentong
  * @Date: 2020-03-13 14:38:28
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-15 19:06:33
+ * @LastEditTime: 2020-08-21 20:52:04
+ */
+/**
+ * 美术宝写字 专有。 业务代码中引用： this.$http.writeApp.User(params).then()
+ */
+import writeApp from './index_write_app'
+
+/**
+ * 小熊美术 及 公共
  */
 import Base from './modules/Base'
 import Login from './modules/Login'
@@ -36,6 +44,7 @@ import Setting from './modules/Setting'
 
 export default Object.assign(
   {},
+  { writeApp },
   { Base },
   { Login },
   { Order },

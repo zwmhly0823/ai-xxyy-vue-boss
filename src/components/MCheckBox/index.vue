@@ -3,8 +3,8 @@
  * @version:
  * @Author: panjian
  * @Date: 2020-03-16 20:22:24
- * @LastEditors: panjian
- * @LastEditTime: 2020-04-24 10:29:24
+ * @LastEditors: Shentong
+ * @LastEditTime: 2020-09-08 21:22:47
  -->
 <template>
   <div>
@@ -44,7 +44,7 @@
           筛选</el-button
         >
         <p class="title-text">参课和完课筛选</p>
-        <p>选择课程</p>
+        <p class="label">选择课程</p>
         <el-select
           v-model="attendClassSelect"
           filterable
@@ -56,6 +56,7 @@
           placeholder="请选择课程"
           @visible-change="remoteMethod"
           :loading="loading"
+          size="mini"
         >
           <el-option
             v-for="item in attendClassList"
@@ -65,8 +66,8 @@
           >
           </el-option>
         </el-select>
-        <p>状态</p>
-        <el-select v-model="attendClassStatus" placeholder="请选择">
+        <p class="label">状态</p>
+        <el-select v-model="attendClassStatus" placeholder="请选择" size="mini">
           <el-option
             v-for="item in states"
             :key="item.value"
@@ -75,11 +76,12 @@
           >
           </el-option>
         </el-select>
-        <p>参课情况</p>
+        <p class="label">参课情况</p>
         <el-select
           @change="friendsChange"
           v-model="attendClassGinseng"
           placeholder="请选择"
+          size="mini"
         >
           <el-option
             v-for="item in friends"
@@ -89,11 +91,12 @@
           >
           </el-option>
         </el-select>
-        <p>完课情况</p>
+        <p class="label">完课情况</p>
         <el-select
           :disabled="groupsDisabled"
           v-model="attendClassFinish"
           placeholder="请选择"
+          size="mini"
         >
           <el-option
             v-for="item in groups"
@@ -104,23 +107,20 @@
           </el-option>
         </el-select>
         <div class="check-button">
-          <el-button
-            style="border: none;"
-            @click="attendClassEmpty"
-            size="small"
+          <el-button style="border: none;" @click="attendClassEmpty" size="mini"
             >清空</el-button
           >
           <el-button
             @click="onAttendClass"
             style="margin-left:40px;width:80px;"
-            size="small"
+            size="mini"
             type="primary"
             >过滤</el-button
           >
           <el-button
             @click="attendClassCancel"
             style="width:80px;color:#2a75ed;border:1px solid #2a75ed;"
-            size="small"
+            size="mini"
             >取消</el-button
           >
         </div>
@@ -163,7 +163,7 @@
           筛选</el-button
         >
         <p class="title-text">作品及点评筛选</p>
-        <p>选择课程</p>
+        <p class="label">选择课程</p>
         <el-select
           v-model="worksSelect"
           filterable
@@ -175,6 +175,7 @@
           placeholder="请选择课程"
           @visible-change="remoteMethod"
           :loading="loading"
+          size="mini"
         >
           <el-option
             v-for="item in worksList"
@@ -184,12 +185,13 @@
           >
           </el-option>
         </el-select>
-        <p>作品上传</p>
+        <p class="label">作品上传</p>
 
         <el-select
           @change="uploadsChange"
           v-model="emptyWorksUpload"
           placeholder="请选择"
+          size="mini"
         >
           <el-option
             v-for="item in uploads"
@@ -199,13 +201,14 @@
           >
           </el-option>
         </el-select>
-        <p>作品点评</p>
+        <p class="label">作品点评</p>
 
         <el-select
           @change="commentsChange"
           :disabled="commentsDisabled"
           v-model="emptyWorksComment"
           placeholder="请选择"
+          size="mini"
         >
           <el-option
             v-for="item in comments"
@@ -215,11 +218,12 @@
           >
           </el-option>
         </el-select>
-        <p>听作品点评</p>
+        <p class="label">听作品点评</p>
         <el-select
           :disabled="hearWorkssDisabled"
           v-model="emptyWorksHear"
           placeholder="请选择"
+          size="mini"
         >
           <el-option
             v-for="item in hearWorkss"
@@ -230,20 +234,20 @@
           </el-option>
         </el-select>
         <div class="check-button">
-          <el-button style="border: none;" @click="worksEmpty" size="small"
+          <el-button style="border: none;" @click="worksEmpty" size="mini"
             >清空</el-button
           >
           <el-button
             @click="onWorks"
             style="margin-left:40px;width:80px;"
-            size="small"
+            size="mini"
             type="primary"
             >过滤</el-button
           >
           <el-button
             @click="worksCancel"
             style="width:80px;color:#2a75ed;border:1px solid #2a75ed;"
-            size="small"
+            size="mini"
             >取消</el-button
           >
         </div>
@@ -259,9 +263,9 @@ export default {
       type: Object,
       default: null
     },
-    classId: {
+    classObj: {
       type: Object,
-      default: null
+      default: () => {}
     },
     audioTabs: {
       type: String,
@@ -359,7 +363,7 @@ export default {
   },
   mounted() {},
   watch: {
-    classId(value) {
+    classObj(value) {
       setTimeout(() => {
         // 参课完课 重置
         this.groupsDisabled = true
@@ -404,7 +408,7 @@ export default {
       this.loading = true
       setTimeout(() => {
         this.loading = false
-        const query = `{"team_id":${this.classId.classId.id},"team_type":${this.classId.type}}`
+        const query = `{"team_id":${this.classObj.teamId},"team_type":${this.classObj.type}}`
         this.$http.Team.getStuCourseList({ query }).then((item) => {
           const data = item.data.getStuCourseList
           const _data = []
@@ -434,10 +438,10 @@ export default {
       const isJoinCourse = this.attendClassGinseng.toString()
       const isCompleteCourse = this.attendClassFinish.toString()
       const data = {
-        courseId: courseId,
-        userStatus: userStatus,
-        isJoinCourse: isJoinCourse,
-        isCompleteCourse: isCompleteCourse
+        courseId,
+        userStatus,
+        isJoinCourse,
+        isCompleteCourse
       }
       this.$emit('screenAttendClass', data)
       this.attendClassShow = false
@@ -549,8 +553,14 @@ export default {
   width: 18px;
 }
 .title-text {
-  font-weight: 400;
-  font-size: 22px;
+  height: 30px;
+  font-weight: 500;
+  font-size: 15px;
+}
+.label {
+  height: 25px;
+  display: flex;
+  align-items: center;
 }
 .check-menu {
   width: 260px;

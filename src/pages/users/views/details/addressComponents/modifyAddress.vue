@@ -3,8 +3,8 @@
  * @version: 
  * @Author: panjian
  * @Date: 2020-04-01 13:24:40
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-07-28 19:29:43
+ * @LastEditors: liukun
+ * @LastEditTime: 2020-08-25 10:17:07
  -->
 <template>
   <div>
@@ -59,7 +59,7 @@
 <script>
 import { isToss } from '@/utils/index'
 export default {
-  name: 'logisticsForm',
+  name: 'modifyAddress',
   props: {
     modifyFormData: {
       type: Object,

@@ -1,0 +1,546 @@
+<!--
+ * @Descripttion: 学员 table
+ * @version:
+ * @Author: panjian
+ * @Date: 2020-03-16 14:19:58
+ * @LastEditors: Shentong
+ * @LastEditTime: 2020-09-10 01:34:14
+ -->
+<template>
+  <div class="dataStyle">
+    <div class="search-section">
+      <m-search
+        class="search-box"
+        @search="handleSearch"
+        phone="uid"
+        onlyPhone="1"
+        phoneTip="手机号/微信昵称 查询"
+        :teamType="`${classObj.teamId && +classObj.type === 0 ? '0' : '1'}`"
+        :teamId="classObj.teamId"
+      />
+    </div>
+    <el-table
+      :data="tableData"
+      :header-cell-style="headerStyle"
+      @selection-change="handleSelectionChange"
+      class="students-box"
+    >
+      <!-- 全选按钮 -->
+      <!-- <el-table-column type="selection" width="60px"></el-table-column> -->
+      <!-- 更多按钮 -->
+      <!-- <el-table-column width="20px">
+        <template slot="header" slot-scope="scope">
+          <el-Popover popper-class="batch-btn" trigger="hover">
+            <div size="mini" type="text" @click="batchBtn">
+              批量发放优惠券
+            </div>
+            <div
+              @click="headerPoint(scope.$index, scope)"
+              v-show="moreTitle"
+              slot="reference"
+            >
+              <img :src="pointImg" />
+            </div>
+          </el-Popover>
+        </template>
+        <template slot-scope="scope">
+          <el-Popover popper-class="batch-btn" trigger="hover">
+            <div size="mini" type="text" @click="batchBtn">
+              <span v-show="moreTitle === true">批量发放优惠券</span>
+              <span v-show="moreTitle === false">发放优惠券</span>
+            </div>
+            <div
+              @mouseenter="handleEdit(scope.$index, scope.row)"
+              slot="reference"
+            >
+              <img :src="pointImg" />
+            </div>
+          </el-Popover>
+        </template>
+      </el-table-column> -->
+      <!-- 弹窗 -->
+      <coupon-popover
+        ref="couponPopover"
+        :couponData="couponData"
+        :selectUserId="selectUserId"
+      />
+      <el-table-column label="基本信息" class="information" width="300px">
+        <template slot-scope="scope">
+          <img
+            class="information-img"
+            :src="`${scope.row.head}?x-oss-process=image/resize,l_100`"
+            alt=""
+          />
+          <div class="information-right">
+            <div>
+              <div class="phone primary-text">
+                <span @click="openUserDetail(scope.row)">{{
+                  scope.row.mobile
+                }}</span>
+              </div>
+              <div @click="openUserDetail(scope.row)" class="age primary-text">
+                {{ scope.row.sex }} · {{ scope.row.birthday }}
+                <span v-show="scope.row.grade">{{
+                  `·${scope.row.grade}`
+                }}</span>
+
+                <!-- <span v-show="scope.row.base_painting_text">·</span>
+                {{ scope.row.base_painting_text }} -->
+              </div>
+            </div>
+            <div class="age">
+              体验课渠道:
+              <span>{{ scope.row.pay_channel_outer_name }}</span>
+            </div>
+          </div>
+        </template>
+      </el-table-column>
+      <el-table-column label="上课信息" class="haveclass">
+        <div slot-scope="scope" class="haveclass-box">
+          <div class="haveclass-content">
+            打开:
+            <span>{{ scope.row.statistics.open_app }}</span>
+          </div>
+          <div class="haveclass-content">
+            解锁:
+            <span>{{ scope.row.statistics.start_course }}</span>
+          </div>
+          <div class="haveclass-content">
+            完课:
+            <span>{{ scope.row.statistics.complete_course }}</span>
+          </div>
+          <div class="haveclass-content">
+            作品:
+            <span>{{ scope.row.statistics.course_task }}</span>
+          </div>
+          <div class="haveclass-content">
+            点评:
+            <span>{{ scope.row.statistics.comment }}</span>
+          </div>
+          <div class="haveclass-content">
+            听点评:
+            <span>{{ scope.row.statistics.listen_comment }}</span>
+          </div>
+        </div>
+      </el-table-column>
+      <el-table-column label="关联物流" class="logistics">
+        <template slot-scope="scope">
+          <!-- <div class="logistics-num">{{ scope.row.express.total }}</div> -->
+          <span class="text333"> 全部物流:</span>
+          <span class="logistics-num">
+            {{ scope.row.express.total }}
+          </span>
+          <div class="text333">{{ scope.row.express.status }}</div>
+        </template>
+      </el-table-column>
+      <el-table-column label="状态" class="status-style">
+        <template slot-scope="scope">
+          <div class="text333">{{ scope.row.status }}</div>
+          <div class="text333">
+            {{ scope.row.wechat_status.added_wechat }}
+          </div>
+          <div class="text333">{{ scope.row.wechat_status.added_group }}</div>
+        </template>
+      </el-table-column>
+      <!-- <el-table-column label="标签" class="thelabel"></el-table-column> -->
+    </el-table>
+    <!-- 分页 -->
+    <m-pagination
+      :current-page="currentPage"
+      :page-count="totalPages"
+      :total="totalElements"
+      @current-change="handleSizeChange"
+      open="calc(100vw - 147px - 50px)"
+      close="calc(100vw - 26px - 50px)"
+    ></m-pagination>
+  </div>
+</template>
+<script>
+import { mapGetters } from 'vuex'
+import axios from '@/api/axiosConfig'
+import { GetAgeByBrithday } from '@/utils/index'
+import { GRADE, USER_SEX, GETGRADE } from '@/utils/enums'
+import MPagination from '@/components/MPagination/index.vue'
+import CouponPopover from './components/couponPopover'
+import MSearch from '@/components/MSearch/index.vue'
+
+export default {
+  components: {
+    MPagination,
+    CouponPopover,
+    MSearch
+  },
+  props: {
+    // 班级传参
+    classObj: {
+      type: Object,
+      default: () => {}
+    }
+  },
+  data() {
+    return {
+      GETGRADE: GETGRADE,
+      pointImg: require('@/assets/images/point.png'),
+      visible: false,
+      popoverindex: 0,
+      // 总页数
+      totalPages: 1,
+      totalElements: 0, // 总条数
+      // 当前页数
+      currentPage: 1,
+      // 学员列表
+      tableData: [],
+      // 用户状态列表
+      statusList: [],
+      tableDataEmpty: true,
+      // 标题更多按钮显示
+      moreTitle: false,
+      // 优惠卷接口数据
+      couponData: [],
+      // 选择按钮用户id
+      selectUserId: [],
+      // 搜索
+      search: '',
+      // 请求接口参数
+      queryData: '',
+      searchUid: ''
+    }
+  },
+  computed: {
+    ...mapGetters(['team']),
+    searchUser() {
+      return this.team.userByPhone
+    }
+  },
+  async created() {
+    await this.getstatusList()
+    this.studentsList()
+  },
+  watch: {
+    searchUser(val) {
+      this.search = ''
+      if (val && val.tid) {
+        // 根据手机号获取uid
+        const q = `{"mobile": ${val.phone}}`
+        this.$http.User.getUserInfo(q).then((res) => {
+          this.searchUid = (res.data.User && res.data.User.id) || ''
+          this.search = `"${this.searchUid}"`
+        })
+        this.studentsList()
+      }
+    }
+    // classId(value) {
+    //   if (!value) return
+    //   this.scrollTop()
+    //   this.currentPage = 1
+    //   if (value.classId) {
+    //     this.tableDataEmpty = true
+    //     this.studentsList()
+    //     this.getstatusList()
+    //   } else {
+    //     this.tableDataEmpty = false
+    //     this.tableData = []
+    //   }
+    // }
+  },
+  methods: {
+    // 搜索
+    handleSearch(res) {
+      if (res.length === 0) {
+        this.search = ''
+        this.studentsList()
+      } else {
+        this.search = `"${res[0].term.uid}"`
+        this.studentsList()
+      }
+    },
+    // 学员列表
+    studentsList() {
+      if (this.search) {
+        this.queryData = `type: ${this.classObj.type}, team_id: "${this.classObj.teamId}",page:${this.currentPage},id:${this.search}`
+      } else {
+        this.queryData = `type: ${this.classObj.type}, team_id: "${this.classObj.teamId}",page:${this.currentPage}`
+      }
+      axios
+        .post('/graphql/team', {
+          query: `{
+          teamUserListPage(${this.queryData}) {
+            empty
+            first
+            last
+            number
+            size
+            numberOfElements
+            totalElements
+            totalPages
+            content {
+              id
+              ctime
+              birthday
+              nickname
+              username
+              country
+              head
+              send_id
+              channel
+              status
+              subscribe
+              sex
+              type
+              weixin_openid
+              user_num
+              base_painting
+              base_painting_text
+              team_id
+              mobile
+              statistics {
+                login
+                complete_course
+                join_course
+                course_task
+                comment
+                listen_comment
+                open_app
+                start_course
+              }
+              wechat_status {
+                added_group
+                added_wechat
+              }
+              express {
+                total
+                status
+              }
+              pay_channel_outer_name
+              userExtends{
+                grade
+              }
+            }
+          }
+        }`
+        })
+        .then((res) => {
+          if (!res.data.teamUserListPage) return
+          this.totalPages = res.data.teamUserListPage.totalPages * 1
+          this.totalElements = +res.data.teamUserListPage.totalElements
+          const _data = res.data.teamUserListPage.content
+          _data.forEach((ele) => {
+            // 性别 0/默认 1/男 2/女  3/保密
+            const { sex = '0', userExtends = {} } = ele
+
+            if (userExtends && userExtends.grade) {
+              ele.grade = GRADE[userExtends.grade]
+            }
+
+            ele.sex = USER_SEX[sex]
+
+            ele.birthday !== '0'
+              ? (ele.birthday = GetAgeByBrithday(ele.birthday))
+              : (ele.birthday = '-')
+            // 是否添加微信群  0/未加  1/已加
+            const addedGroup = ele.wechat_status.added_group
+            if (addedGroup === 0) {
+              ele.wechat_status.added_group = '未进微信群'
+            } else if (addedGroup === 1) {
+              ele.wechat_status.added_group = '已进微信群'
+            }
+            //  是否添加好友 0/未加 1/已加
+            const addedWechat = ele.wechat_status.added_wechat
+            if (addedWechat === 0) {
+              ele.wechat_status.added_wechat = '未加好友'
+            } else if (addedWechat === 1) {
+              ele.wechat_status.added_wechat = '已加好友'
+            }
+            //  物流状态  0/最后一次已创建 1/最后一次代发货  2/最后一次已发货  3/最后一次已经完成 4/最后一次签收失败 5/最后一次已退货
+            const status = ele.express.status
+            if (status === 0) {
+              ele.express.status = '最后一次已创建'
+            } else if (status === 1) {
+              ele.express.status = '最后一次待发货'
+            } else if (status === 2) {
+              ele.express.status = '最后一次已发货'
+            } else if (status === 3) {
+              ele.express.status = '最后一次已完成'
+            } else if (status === 4) {
+              ele.express.status = '最后一次签收失败'
+            } else if (status === 5) {
+              ele.express.status = '最后一次已退货'
+            } else if (status === 6) {
+              ele.express.status = '最后一次待审核'
+            }
+            // 状态匹配
+            this.statusList.forEach((value) => {
+              if (+value.id === +ele.status) {
+                ele.status = value.nameZh
+              }
+            })
+          })
+          if (this.tableDataEmpty) {
+            this.tableData = _data
+          } else {
+            this.tableData = []
+          }
+        })
+    },
+    // 用户状态接口
+    getstatusList() {
+      axios
+        .post('/graphql/user', {
+          query: `{
+          userFollowStateList {
+            id
+            nameZh
+            sort
+          }
+        }`
+        })
+        .then((res) => {
+          this.statusList = res.data.userFollowStateList
+            ? res.data.userFollowStateList
+            : []
+        })
+    },
+    // 优惠卷列表接口
+    couponList() {
+      this.$http.Team.getAllCoupons(0).then((res) => {
+        this.couponData = (res.payload && res.payload.content) || []
+      })
+    },
+    // 选择按钮
+    handleSelectionChange(val, index) {
+      this.selectUserId = []
+      if (val.length > 1) {
+        this.moreTitle = true
+      } else {
+        this.moreTitle = false
+      }
+      val.forEach((data) => {
+        this.selectUserId.push(data.id)
+      })
+    },
+    // 表头优惠卷操作
+    headerPoint(index, scope) {},
+    // 表格优惠卷操作
+    handleEdit(index, row) {
+      // 当没有点击选择时点击发放优惠卷气泡
+      if (this.moreTitle === false) {
+        this.selectUserId = []
+        this.selectUserId.push(row.id)
+      }
+    },
+    // 点击批量发放优惠卷
+    batchBtn() {
+      this.$refs.couponPopover.issueCoupons = true
+      this.$refs.couponPopover.couponsTime = ''
+    },
+    // 点击分页
+    handleSizeChange(val) {
+      this.currentPage = val
+      this.studentsList()
+      this.scrollTop()
+    },
+    scrollTop() {
+      const dom = document.getElementById('right-scroll')
+      dom.querySelector('.scrollbar-wrapper').scrollTo(0, 0)
+    },
+    // 表头样式
+    headerStyle() {
+      return 'font-size: 12px;color: #666;font-weight: normal;'
+    },
+
+    // 打开用户详情
+    openUserDetail(row) {
+      if (row.id) {
+        this.$router.push({
+          path: `/details/${row.id}`
+        })
+      }
+    }
+  }
+}
+</script>
+<style scoped lang="scss">
+// 基本信息
+.information {
+  font-size: 12px;
+  &-img {
+    width: 50px;
+    height: 50px;
+    float: left;
+    text-align: center;
+    border: 1px solid #f2f2f2;
+    margin: 0 10px 0 0;
+  }
+  &-right {
+    float: left;
+    // width: 140px;
+    line-height: 20px;
+    color: #333333;
+    line-height: 20px;
+    .age {
+      color: #666;
+    }
+  }
+}
+// 上课信息
+.haveclass {
+  &-box {
+    width: 140px;
+    .haveclass-content {
+      color: #333333;
+      float: left;
+      margin: 0 5px 0 0;
+      span {
+        color: #2461b9;
+      }
+    }
+  }
+}
+//关联物流
+.logistics {
+  &-num {
+    color: #2461b9;
+  }
+}
+
+.text333 {
+  color: #333333 !important;
+}
+</style>
+<style lang="scss">
+.el-table thead {
+  color: #666666;
+  font-weight: normal;
+}
+.hover-row {
+  background: #ebebeb !important;
+}
+.el-table td {
+  border-bottom: 1px solid #ededed;
+}
+.batch-btn {
+  line-height: 10px;
+  min-width: 110px;
+  font-size: 12px;
+  text-align: center;
+  cursor: pointer;
+}
+.dataStyle {
+  .el-table_1_column_2 {
+    cursor: pointer;
+    // font-size: 19px !important; TODO: ?
+  }
+  .el-form-item {
+    float: right;
+  }
+}
+.search-section {
+  display: flex;
+  align-items: center;
+}
+.search-box {
+  display: flex;
+  border: 0;
+  margin-top: 10px;
+}
+</style>

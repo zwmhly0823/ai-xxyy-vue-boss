@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-07-20 16:38:13
  * @LastEditors: liukun
- * @LastEditTime: 2020-07-27 18:20:08
+ * @LastEditTime: 2020-09-01 14:29:58
 -->
 <template>
   <el-drawer :visible.sync="drawer" size="35%" :destroy-on-close="true">
@@ -89,6 +89,12 @@
 import { formatDate } from '@/utils/mini_tool_lk'
 export default {
   name: 'track_more',
+  props: {
+    changeSubject: {
+      type: Number,
+      required: true
+    }
+  },
   data() {
     return {
       drawer: false,
@@ -118,6 +124,7 @@ export default {
           UserFollowLogPage: { content, totalElements }
         }
       } = await this.$http.User.getTrackList({
+        subject: this.changeSubject,
         uid: this.$route.params.id,
         size,
         page
@@ -143,6 +150,11 @@ export default {
         })
         this.tableData = content
         console.info('2号list更新')
+      } else {
+        this.pageSize = 10
+        this.currentPage = 1
+        this.allDigit = 0
+        this.tableData = []
       }
     }
   },

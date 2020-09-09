@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-07-20 16:37:49
  * @LastEditors: liukun
- * @LastEditTime: 2020-07-25 18:13:38
+ * @LastEditTime: 2020-09-01 12:32:18
 --><template>
   <el-dialog title="新建跟进记录" :visible.sync="dialogFormVisible" width="50%">
     <el-form
@@ -64,6 +64,12 @@
 <script>
 export default {
   name: 'addNew',
+  props: {
+    changeSubject: {
+      type: Number,
+      required: true
+    }
+  },
   data() {
     return {
       dialogFormVisible: false,
@@ -94,12 +100,14 @@ export default {
     submitForm() {
       this.$refs.form.validate(async (valid) => {
         if (valid) {
-          const { code } = await this.$http.User.submitForm(this.form).catch(
-            (err) => {
-              console.error(err)
-              this.$message.error('记录提交失败')
-            }
-          )
+          const { code } = await this.$http.User.submitForm(
+            Object.assign(this.form, {
+              subject: this.changeSubject ? 'WRITE_APP' : 'ART_APP'
+            })
+          ).catch((err) => {
+            console.error(err)
+            this.$message.error('记录提交失败')
+          })
           if (code === 0) {
             this.$message.success('记录提交成功')
             this.dialogFormVisible = false

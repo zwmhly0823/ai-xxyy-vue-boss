@@ -11,10 +11,9 @@
     </div>
   </div>
 </template>
-
 <script>
 /* eslint-disable camelcase */
-import { isToss } from '@/utils/index'
+import { isToss, injectSubject } from '@/utils/index'
 import { expressToggleList } from '@/utils/expressItemConfig'
 export default {
   props: {
@@ -51,7 +50,7 @@ export default {
       } else {
         q = `{"regtype":[${this.regtype}],"source_type":[${this.source_type}]}`
       }
-      const query = JSON.stringify(q)
+      const query = JSON.stringify(injectSubject(q))
       this.$http.Express.getLogisticsStatistics({
         query: `{
           logisticsStatisticsNew(query:${query}) {

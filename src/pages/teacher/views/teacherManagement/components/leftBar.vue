@@ -4,7 +4,8 @@
  * @Author: zhubaodong
  * @Date: 2020-03-13 16:53:27
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-08-19 11:46:30
+ * @LastEditTime: 2020-08-27 16:12:05
+ 
  -->
 <template>
   <div class="left-container">
@@ -12,10 +13,10 @@
     <el-tree
       class="left-container-tree"
       :data="departmentList"
-      default-expand-all
-      node-key="customId"
+      node-key="pid"
       :current-node-key="0"
       :expand-on-click-node="false"
+      :default-expanded-keys="['99999']"
       highlight-current
       style="color:#2F2E31"
       @node-click="nodeClick"

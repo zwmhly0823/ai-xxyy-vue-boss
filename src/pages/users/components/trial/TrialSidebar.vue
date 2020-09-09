@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-06-28 11:20:19
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-11 17:30:25
+ * @LastEditTime: 2020-09-09 22:03:46
 -->
 <template>
   <div class="trial-list-sidebar">
@@ -190,7 +190,7 @@ export default {
           break
         // VIP学员
         case 'user-vip':
-          param = { 'sys_label.like': { 'sys_label.keyword': '*vip*' } }
+          param = { 'vip_name.like': { 'vip_name.keyword': '*vip*' } }
           break
         // track-today
         case 'track-today':

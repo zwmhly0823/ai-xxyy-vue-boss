@@ -150,13 +150,6 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="操作">
-        <template slot-scope="scope">
-          <el-button type="text" @click="delete_task(scope.row.id)"
-            >删除</el-button
-          >
-        </template>
-      </el-table-column>
     </el-table>
     <!-- 点击图片放大 -->
     <el-dialog
@@ -333,7 +326,6 @@ import coinComponent from './assetComponents/coinComponent'
 import ExpressDetail from '../../../trading/views/components/expressDetail'
 import ivrCon from './ivrComponents/ivrCon'
 export default {
-  inject: ['faInstance'],
   props: {
     tabData: String,
     tabList: Array,
@@ -375,34 +367,6 @@ export default {
     }
   },
   methods: {
-    // 删除作品
-    delete_task(...args) {
-      this.$confirm('此操作将永久删除该文件, 是否继续?', '温馨提示', {
-        type: 'warning'
-      }).then(() => {
-        this.$http.User.taskDelete(args[0]).then(
-          (r) => {
-            if (!r.code) {
-              this.$message.success('删除成功!')
-              console.info(this.faInstance.stuInfor.teams)
-              console.info(this.faInstance.courseIndex)
-              setTimeout(() => {
-                // 刷新数据
-                this.faInstance.reqUser()
-                // this.faInstance.reqStudentCourseTaskPage(
-                //   this.faInstance.stuInfor.teams[this.faInstance.courseIndex].id
-                // )
-              }, 1000)
-            } else {
-              this.$message.error('删除失败,稍后重试!')
-            }
-          },
-          (err) => {
-            console.warn(err)
-          }
-        )
-      })
-    },
     // 点击当日参课
     participationBtn() {
       console.log('当日参课')

@@ -4,14 +4,18 @@
  * @Author: liukun
  * @Date: 2020-07-20 16:37:31
  * @LastEditors: liukun
- * @LastEditTime: 2020-07-27 17:02:11
+ * @LastEditTime: 2020-09-01 12:14:53
 -->
 <template>
   <div class="track-container">
     <div class="upset_24col_space_between">
       <section class="setou123">
         <strong></strong>
-        <span>跟进记录</span>
+        <span style="margin-right:5px">跟进记录</span>
+        <el-select v-model="changeSubject" size="mini" style="width:75px">
+          <el-option label="美术" :value="0"></el-option>
+          <el-option label="写字" :value="1"></el-option>
+        </el-select>
       </section>
       <section style="margin-right:30px">
         <el-button
@@ -79,8 +83,8 @@
       </section>
     </div>
     <div v-else class="no-data">暂无数据</div>
-    <addNew ref="track_add" />
-    <trackMore ref="track_more" />
+    <addNew ref="track_add" :changeSubject="changeSubject" />
+    <trackMore ref="track_more" :changeSubject="changeSubject" />
   </div>
 </template>
 
@@ -93,27 +97,34 @@ export default {
   components: { addNew, trackMore },
   data() {
     return {
-      tableData: []
+      tableData: [],
+      changeSubject: this.$store.state.subjects.subjectCode
+    }
+  },
+  watch: {
+    changeSubject: {
+      immediate: false,
+      deep: true,
+      handler(newValue, oldValue) {
+        console.info('跟进记录-手动切换科目')
+        this.getTrackList()
+      }
     }
   },
   methods: {
     async getTrackList({ size = 10, page = 1 } = {}) {
       const {
         data: {
-          UserFollowLogPage: { content, totalElements }
+          UserFollowLogPage: { content }
         }
       } = await this.$http.User.getTrackList({
-        uid: this.$route.params.id,
-        size: this.pageSize,
-        page: this.currentPage
+        subject: this.changeSubject,
+        uid: this.$route.params.id
       }).catch((err) => {
         this.$message.error('flow更多数据获取失败')
         console.error(err)
       })
       if (content && content.length) {
-        this.pageSize = size
-        this.currentPage = page
-        this.allDigit = Number(totalElements)
         content.forEach((item, index) => {
           const obj = {
             '0': '首通',
@@ -128,6 +139,8 @@ export default {
         })
         this.tableData = content
         console.info('1号list更新')
+      } else {
+        this.tableData = []
       }
     }
   },
