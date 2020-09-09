@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-06-20 20:23:28
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-15 19:07:28
+ * @LastEditTime: 2020-09-09 16:59:36
  @ApiModel(description = "用户跟进状态")
     public enum STATUS {
 
@@ -370,15 +370,15 @@ export default {
         // 系统课转化
         if (key === 'user_status') {
           // 未转化
-          if (search.user_status === 0) {
+          if (search.user_status === 1) {
             search.user_status = { lte: 2 }
           }
           // 已购半年课
-          if (search.user_status === 2) {
+          if (search.user_status === 3) {
             search.user_status = { gte: 11, lte: 12 }
           }
           // 已购年课
-          if (search.user_status === 3) {
+          if (search.user_status === 4) {
             search.user_status = { gte: 5, lte: 7 }
           }
         }
