@@ -34,9 +34,9 @@
                 @result="getSearchData('last_department_ids', arguments)"
               />
               <group-sell
-                name="teacher_ids"
+                name="last_teacher_ids"
                 tip="选择销售/班主任"
-                @result="getSearchData('teacher_ids', arguments)"
+                @result="getSearchData('last_teacher_ids', arguments)"
               />
             </div>
           </el-form-item>
@@ -64,7 +64,7 @@
                 placeholder="请选择"
                 :my-style="{ width: '100px' }"
                 :multiple="false"
-                :data-list="conversionStatus"
+                :data-list="conversionStatusAll"
                 @result="getSearchData('status', arguments)"
               />
             </div>
@@ -168,6 +168,9 @@ export default {
         }
       } else {
         this.$delete(this.searchQuery, key)
+        if (key === 'last_department_ids' || key === 'last_teacher_ids') {
+          this.$delete(this.searchQuery, `${key}.like`)
+        }
       }
       // 删除返回值没空数组的情况
       if (search && search[key].length === 0) {

@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 20:22:24
  * @LastEditors: Shentong
- * @LastEditTime: 2020-09-08 21:22:47
+ * @LastEditTime: 2020-09-08 18:03:23
  -->
 <template>
   <div>
@@ -66,6 +66,16 @@
           >
           </el-option>
         </el-select>
+        <p class="label">解锁状态</p>
+        <el-select v-model="lockStatus" placeholder="请选择" size="mini">
+          <el-option
+            v-for="item in locks"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          >
+          </el-option>
+        </el-select>
         <p class="label">状态</p>
         <el-select v-model="attendClassStatus" placeholder="请选择" size="mini">
           <el-option
@@ -106,6 +116,7 @@
           >
           </el-option>
         </el-select>
+
         <div class="check-button">
           <el-button style="border: none;" @click="attendClassEmpty" size="mini"
             >清空</el-button
@@ -289,12 +300,24 @@ export default {
       attendClassGinseng: '',
       // 参课完课 完课状态
       attendClassFinish: '',
+      // 解锁状态
+      lockStatus: '',
       // 作品及点评 作品上传
       emptyWorksUpload: '',
       // 作品及点评 作品点评
       emptyWorksComment: '',
       // 作品及点评 听作品点评
       emptyWorksHear: '',
+      locks: [
+        {
+          value: '1',
+          label: '已解锁'
+        },
+        {
+          value: '0',
+          label: '未解锁'
+        }
+      ],
       states: [
         {
           value: '5',
@@ -401,7 +424,9 @@ export default {
       this.attendClassSelect = ''
     }
   },
-  created() {},
+  created() {
+    console.log('classObj', this.classObj)
+  },
   methods: {
     // 参课完课 作品及点评 筛选下拉框接口
     remoteMethod() {
@@ -437,11 +462,13 @@ export default {
       const userStatus = this.attendClassStatus
       const isJoinCourse = this.attendClassGinseng.toString()
       const isCompleteCourse = this.attendClassFinish.toString()
+      /** 解锁状态 */
       const data = {
         courseId,
         userStatus,
         isJoinCourse,
-        isCompleteCourse
+        isCompleteCourse,
+        lockStatus: this.lockStatus
       }
       this.$emit('screenAttendClass', data)
       this.attendClassShow = false

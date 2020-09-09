@@ -1,4 +1,16 @@
+/*
+ * @Descripttion:
+ * @version: 1.0.0
+ * @Author: YangJiyong
+ * @Date: 2020-08-17 11:29:52
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-09-09 12:05:22
+ */
+
 import axios from '../axiosConfig'
+import { getAppSubjectCode } from '@/utils/index'
+const subjectCode = getAppSubjectCode()
+
 export default {
   getDepLabelList(query) {
     return axios.post(`/api/toss/v1/toss-api/label/depLabelList`, query)
@@ -15,7 +27,8 @@ export default {
   },
   getTeacherList() {
     const query = JSON.stringify({
-      duty_id: '1'
+      duty_id: '1',
+      'subject.like': { 'subject.keyword': `*${subjectCode}*` }
     })
     return axios.post('/graphql/v1/toss', {
       query: `{

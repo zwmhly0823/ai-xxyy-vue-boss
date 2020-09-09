@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 20:22:24
  * @LastEditors: Shentong
- * @LastEditTime: 2020-09-07 21:11:44
+ * @LastEditTime: 2020-09-09 15:29:28
  -->
 <template>
   <div class="table-box">
@@ -66,30 +66,23 @@
             <div class="scope-info-box primary-text">
               <img
                 class="scope-info-img borders"
-                :src="`${scope.row.head}?x-oss-process=image/resize,l_100`"
+                :src="
+                  `${scope.row.userExtends.head}?x-oss-process=image/resize,l_100`
+                "
                 alt=""
               />
               <div class="info-telephone">
-                <span @click="openUserDetail(scope.row.student_id)">{{
-                  scope.row.mobile
+                <span @click="openUserDetail(scope.row.id)">{{
+                  scope.row.userExtends.mobile
                 }}</span>
               </div>
-              <span
-                @click="openUserDetail(scope.row.student_id)"
-                class="info-sex"
-                >{{ scope.row.sex }}</span
-              >
-              <span
-                @click="openUserDetail(scope.row.student_id)"
-                class="info-age"
-                >{{ scope.row.birthday }}</span
-              >
-              <span class="info-basics" v-if="classObj">{{
-                GETGRADE(scope.row.sup, classObj.type)
+              <span @click="openUserDetail(scope.row.id)" class="info-sex">{{
+                scope.row.userExtends.sex
               }}</span>
-              <!-- <span class="info-basics">{{
-                scope.row.base_painting_text
-              }}</span> -->
+              <span @click="openUserDetail(scope.row.id)" class="info-age">{{
+                scope.row.userExtends.birthday
+              }}</span>
+              <span class="info-basics">{{ scope.row.grade }}</span>
             </div>
           </template>
         </el-table-column>
@@ -490,9 +483,21 @@
         <el-table-column key="p4" label="课程">
           <template slot-scope="scope">
             <div>
-              <span>{{ scope.row.course_current_num }}</span>
-              <br />
+              <!-- <span>{{ scope.row.course_current_num }}</span>
+              <br /> -->
               <span>{{ scope.row.course_title }}</span>
+            </div>
+          </template>
+        </el-table-column>
+        <!-- 课程后新增“解锁”字段（状态为已解锁、未解锁；已解锁状态下，添加解锁时间） TODO: -->
+        <el-table-column key="p7" label="解锁">
+          <template slot-scope="scope">
+            <div>
+              <span>{{ scope.row.is_start_course }}</span>
+              <br />
+              <span v-if="scope.row.is_start_course">{{
+                scope.row.start_date
+              }}</span>
             </div>
           </template>
         </el-table-column>
@@ -511,16 +516,6 @@
               <span>{{ scope.row.complete_course_state }}</span>
               <br />
               <span>{{ scope.row.complete_course_time }}</span>
-            </div>
-          </template>
-        </el-table-column>
-        <!-- 课程后新增“解锁”字段（状态为已解锁、未解锁；已解锁状态下，添加解锁时间） TODO: -->
-        <el-table-column key="p6" label="解锁">
-          <template slot-scope="scope">
-            <div>
-              <span>{{ scope.row.lock }}</span>
-              <br />
-              <span>{{ scope.row.lock_time }}</span>
             </div>
           </template>
         </el-table-column>
@@ -576,8 +571,8 @@
         <el-table-column key="w3" label="课程">
           <template slot-scope="scope">
             <div>
-              <span>{{ scope.row.course_current_num }}</span>
-              <br />
+              <!-- <span>{{ scope.row.course_current_num }}</span>
+              <br /> -->
               <span>{{ scope.row.classTitle }}</span>
             </div>
           </template>
@@ -635,7 +630,7 @@
           </template>
         </el-table-column>
         <!-- 列表新增 ”点评老师“，取最新的点评老师（在点评后添加）TODO: -->
-        <el-table-column key="w4" label="点评老师">
+        <el-table-column key="w6" label="点评老师">
           <template slot-scope="scope">
             <div class="works-ctime">{{ scope.row.comment_teacher }}</div>
           </template>

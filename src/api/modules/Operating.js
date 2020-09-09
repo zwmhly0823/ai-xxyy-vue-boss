@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-03-16 19:46:39
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-26 11:57:46
+ * @LastEditTime: 2020-09-08 21:00:09
  */
 import axios from '../axiosConfig'
 import { injectSubject, getAppSubjectCode } from '@/utils/index'
@@ -204,6 +204,7 @@ export default {
   // 二级渠道查询名称 渠道分类
   ChannelClassPageName(Params, page = 1) {
     const query = injectSubject(Params)
+
     return axios.post('/graphql/v1/toss', {
       query: `{
         ChannelClassPage(query:${JSON.stringify(query)},size:60){
@@ -293,9 +294,10 @@ export default {
    * 二级渠道查询
    */
   ChannelClassPage(Params, page = 1) {
+    const query = injectSubject(JSON.parse(Params))
     return axios.post('/graphql/v1/toss', {
       query: `{
-        ChannelClassPage(query:${Params},page:${page},size:20){
+        ChannelClassPage(query:${JSON.stringify(query)},page:${page},size:20){
           content{
             channel_class_name
             channel_level

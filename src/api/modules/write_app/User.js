@@ -5,7 +5,7 @@
  * @Author: shentong
  * @Date: 2020-03-13 14:38:28
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-09-08 17:44:38
+ * @LastEditTime: 2020-09-08 22:06:30
  */
 // import axios from '../axios'
 import axios from '../../axiosConfig'
@@ -226,6 +226,9 @@ export default {
             subject
             subject_text
             grade
+            channelInfo {
+              channel_outer_name
+            }
             userInfo {
               id
               join_date
@@ -248,9 +251,6 @@ export default {
                     name
                   }
                 }
-              }
-              channelInfo {
-                channel_outer_name
               }
             }
           }

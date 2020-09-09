@@ -3,8 +3,8 @@
  * @version: 
  * @Author: panjian
  * @Date: 2020-04-01 13:24:40
- * @LastEditors: yangjiyong
- * @LastEditTime: 2020-05-22 14:50:16
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-09-09 15:16:02
  -->
 <template>
   <el-form
@@ -163,7 +163,7 @@ export default {
       }
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          this.$http.Express.editAddressAndExpressForOrder(params)
+          this.$http.Express.createExpressAddressNew(params)
             .then((res) => {
               if (res.data) {
                 return
