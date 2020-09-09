@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-06-28 11:20:19
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-09-08 21:09:45
+ * @LastEditTime: 2020-09-09 23:07:15
 -->
 <template>
   <div class="trial-list-sidebar">
@@ -195,11 +195,13 @@ export default {
           break
         // VIP学员
         case 'user-vip':
-          param = { 'sys_label.like': { 'sys_label.keyword': '*vip*' } }
+          param = { 'vip_name.like': { 'vip_name.keyword': '*vip*' } }
           break
         // 写字项目，1v1 0元兑换
         case 'user-1v1-reddemcode':
-          param = { sys_label: ['0元尊享体验课', '0元精品体验课'] }
+          param = {
+            'zone_1_name.like': { 'zone_1_name.keyword': '*0元*' }
+          }
           break
         // track-today
         case 'track-today':
