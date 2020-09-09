@@ -227,6 +227,9 @@ export default {
                   sex
                   birthday
                   base_painting_text
+                  userExtends{
+                    grade
+                  }
                 }
               }
             }

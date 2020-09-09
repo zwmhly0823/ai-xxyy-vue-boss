@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 14:19:58
  * @LastEditors: Shentong
- * @LastEditTime: 2020-09-08 21:32:37
+ * @LastEditTime: 2020-09-09 17:21:56
  -->
 <template>
   <div>
@@ -754,9 +754,8 @@ export default {
     },
     // 加好友进群接口
     getGroup() {
-      console.log(this.classObj.type, 'classObj.type')
       const trail = +this.classObj.type
-        ? 'StudentSystemForTeamStatisticsPage'
+        ? 'StudentSystemStatisticsPage'
         : 'StudentTrialV2StatisticsPage'
 
       if (this.classObj.teamId) {
@@ -777,18 +776,20 @@ export default {
           const _data = res.data[trail].content
           _data.forEach((item) => {
             /** shentong writer 改写 */
-            const { userInfo = {}, userExtends } = item
+            const userExtends = item.userExtends || {}
+            const { sex = '', birthday = '', grade = '' } = userExtends
 
-            userInfo.birthday = GetAgeByBrithday(userInfo.birthday)
-            userInfo.sex = USER_SEX[+userInfo.sex]
-            if (userExtends && userExtends.grade) {
-              item.grade = GRADE[userExtends.grade]
-            }
+            userExtends.sex = sex ? USER_SEX[+sex] : ''
+            userExtends.grade = grade ? GRADE[userExtends.grade] : ''
+            userExtends.birthday = birthday ? GetAgeByBrithday(birthday) : ''
+
             /** shentong writer 改写 */
 
-            if (userInfo.birthday.indexOf(50) !== -1) {
-              userInfo.birthday = '-'
+            if (userExtends.birthday.indexOf(50) !== -1) {
+              userExtends.birthday = '-'
             }
+
+            item.userExtends = userExtends
             item.buytime = timestamp(item.buytime, 6)
             item.added_wechat_time = timestamp(item.utime, 6)
             item.added_group_time = timestamp(item.utime, 6)
@@ -974,27 +975,29 @@ export default {
         if (this.search) {
           this.querysData = `{"team_id":${this.classObj.teamId},"team_type":${this.classObj.type},"uid":${this.search}}`
         } else {
+          let {
+            courseId,
+            userStatus,
+            isJoinCourse,
+            isCompleteCourse,
+            lockStatus
+          } = this.screenAttendClassData
+
           if (
-            this.screenAttendClassData.courseId ||
-            this.screenAttendClassData.userStatus ||
-            this.screenAttendClassData.isJoinCourse ||
-            this.screenAttendClassData.isCompleteCourse
+            courseId ||
+            userStatus ||
+            isJoinCourse ||
+            isCompleteCourse ||
+            lockStatus
           ) {
-            const courseId = this.screenAttendClassData.courseId
-              ? `"${this.screenAttendClassData.courseId}"`
-              : `""`
-            const userStatus = this.screenAttendClassData.userStatus
-              ? `"${this.screenAttendClassData.userStatus}"`
-              : `""`
-            const isJoinCourse = this.screenAttendClassData.isJoinCourse
-              ? `"${this.screenAttendClassData.isJoinCourse}"`
-              : `""`
-            const isCompleteCourse = this.screenAttendClassData.isCompleteCourse
-              ? `"${this.screenAttendClassData.isCompleteCourse}"`
-              : `""`
-            this.querysData = `{"team_id":${this.classObj.teamId},"team_type":${this.classObj.type},"course_id":${courseId},"user_status":${userStatus},"is_join_course":${isJoinCourse},"is_complete_course":${isCompleteCourse}}`
+            courseId = courseId ? `"${courseId}"` : `""`
+            userStatus = userStatus ? `"${userStatus}"` : `""`
+            isJoinCourse = isJoinCourse ? `"${isJoinCourse}"` : `""`
+            isCompleteCourse = isCompleteCourse ? `"${isCompleteCourse}"` : `""`
+            lockStatus = lockStatus ? `"${lockStatus}"` : `""`
+            this.querysData = `{"team_id":${this.classObj.teamId},"subject":"1","team_type":${this.classObj.type},"course_id":${courseId},"user_status":${userStatus},"is_join_course":${lockStatus},"is_start_course":${isJoinCourse},"is_complete_course":${isCompleteCourse}}`
           } else {
-            this.querysData = `{"team_id":${this.classObj.teamId},"team_type":${this.classObj.type}}`
+            this.querysData = `{"team_id":${this.classObj.teamId},"subject":"1","team_type":${this.classObj.type}}`
           }
         }
         this.$http.writeApp.Team.getClassCompPage({
@@ -1006,11 +1009,11 @@ export default {
           this.table.totalElements = +res.data.getClassCompPage.totalElements
           const _data = res.data.getClassCompPage.content
           _data.forEach((item) => {
-            if (item.buy_time) {
-              item.buy_time = timestamp(item.buy_time, 6)
-            } else {
-              item.buy_time = '-'
-            }
+            item.buy_time = item.buy_time ? timestamp(item.buy_time, 6) : '-'
+            item.start_date = item.start_date
+              ? timestamp(item.start_date, 6)
+              : ''
+
             if (!item.nickname) {
               item.nickname = ''
               item.head = ''
