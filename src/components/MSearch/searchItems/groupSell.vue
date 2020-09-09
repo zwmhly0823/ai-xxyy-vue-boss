@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-26 16:28:45
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-09-05 17:57:10
+ * @LastEditTime: 2020-09-09 11:56:49
  -->
 <template>
   <div class="search-item small">
@@ -105,9 +105,19 @@ export default {
           must: query
             ? [
                 { wildcard: { 'realname.keyword': `*${query}*` } },
-                { term: { subject: this.$store.getters.subjects.subjectCode } }
+                {
+                  wildcard: {
+                    'subject.keyword': `*${this.$store.getters.subjects.subjectCode}*`
+                  }
+                }
               ]
-            : [{ term: { subject: this.$store.getters.subjects.subjectCode } }]
+            : [
+                {
+                  wildcard: {
+                    'subject.keyword': `*${this.$store.getters.subjects.subjectCode}*`
+                  }
+                }
+              ]
         }
       }
       this.teacherscope &&
