@@ -16,7 +16,7 @@
                 : scope.row.product_name || '-'
             }}
           </p>
-          <!-- 人民币 ， 宝石，小熊币 -->
+          <!-- 人民币 ， 宝石，点点币 -->
           <p>
             {{ scope.row.currency ? scope.row.currency : '人民币 ' }}
             {{
@@ -395,7 +395,7 @@ export default {
                 item.amount = item.gem_integral
               } else if (item.regtype === 5) {
                 item.regtype_text = '小熊商城'
-                currency = { currency: '小熊币' }
+                currency = { currency: '点点币' }
                 Object.assign(item, currency)
                 item.amount = item.bear_integral
               } else if (item.regtype === 6) {
