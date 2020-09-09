@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 20:22:24
  * @LastEditors: Shentong
- * @LastEditTime: 2020-09-10 01:54:25
+ * @LastEditTime: 2020-09-10 02:08:39
  -->
 <template>
   <div class="table-box">
@@ -19,14 +19,14 @@
         @row-click="onClick"
         @selection-change="handleSelectionChange"
       >
-        <el-table-column
+        <!-- <el-table-column
           type="selection"
           width="40px"
           v-if="
             this.tables.tabs == 0 &&
               (this.tables.courseState == 1 || this.tables.courseState == 0)
           "
-        ></el-table-column>
+        ></el-table-column> -->
         <!-- <el-table-column
           v-if="this.tables.courseState == 1 || this.tables.courseState == 0"
           width="20px"
@@ -493,7 +493,7 @@
         <el-table-column key="p7" label="解锁">
           <template slot-scope="scope">
             <div>
-              <span>{{ scope.row.is_start_course }}</span>
+              <span>{{ scope.row.is_start_course || '未解锁' }}</span>
               <br />
               <span v-if="scope.row.is_start_course">{{
                 scope.row.start_date
