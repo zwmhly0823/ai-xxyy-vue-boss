@@ -3,8 +3,8 @@
  * @version: 
  * @Author: zhubaodong
  * @Date: 2020-03-24 18:50:54
- * @LastEditors: Lukun
- * @LastEditTime: 2020-05-19 15:15:32
+ * @LastEditors: zhangjianwen
+ * @LastEditTime: 2020-09-10 00:56:13
  -->
 <template>
   <div class="search-item">
@@ -110,7 +110,15 @@ export default {
     }
   },
   mounted() {
-    this.getProductTopic()
+    if (this.$store.getters.subjects.subjectCode === 1) {
+      this.pruductTopicList = [
+        { id: 5, name: '点点商城' },
+        { id: 4, name: '推荐有礼' },
+        { id: 6, name: '邀请有奖' }
+      ]
+    } else {
+      this.getProductTopic()
+    }
   }
 }
 </script>

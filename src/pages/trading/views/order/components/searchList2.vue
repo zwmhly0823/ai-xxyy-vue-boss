@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-04-25 17:24:23
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-08-13 21:30:04
+ * @LastEditTime: 2020-09-10 01:23:41
  -->
 <template>
   <el-card
@@ -477,6 +477,7 @@ export default {
       }
 
       const query = this.$parent.$children[1].finalParams
+      query.subject = 0
       const fileTitle = dayjs(new Date()).format('YYYY-MM-DD')
       const fileTitleTime = dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss')
 

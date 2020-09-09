@@ -295,6 +295,7 @@ export default {
           productTopic{
             id
             name
+          
           }
        }`
     })

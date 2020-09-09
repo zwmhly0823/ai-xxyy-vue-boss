@@ -527,9 +527,13 @@ import {
   replenishTypeList,
   replenishReasonSearchList,
   expressToggleList,
-  productTopicList,
   productTopicListBf
 } from '@/utils/expressItemConfig'
+const productTopicList = [
+  { id: '5', name: '点点商城' },
+  { id: '4', name: '推荐有礼' },
+  { id: '6', name: '邀请有奖' }
+]
 
 let supList = []
 const regtypeEnum = {
@@ -751,13 +755,13 @@ export default {
       })
     },
     // 获取补发
-    getProductTopicList() {
-      this.$http.Teacher.productTopicList().then((res) => {
-        if (res.data && res.data.productTopic) {
-          productTopicList = res.data.productTopic
-        }
-      })
-    },
+    // getProductTopicList() {
+    //   this.$http.Teacher.productTopicList().then((res) => {
+    //     if (res.data && res.data.productTopic) {
+    //       productTopicList = res.data.productTopic
+    //     }
+    //   })
+    // },
     // 鼠标进入显示操作栏
     handleMouseEnter(row) {
       this.current = row
@@ -1176,6 +1180,8 @@ export default {
             )
             item.center_ctime_str = formatData(+item.center_ctime, 's')
             // 处理补发类型
+            // item.regtype_text = productTopicList[item.regtype]
+            // console.log(item.regtype_text)
             this.handleRegtype(item)
             // 处理补发方式
             this.handleReplenishType(item)
@@ -1220,8 +1226,9 @@ export default {
       return dayjs.unix(time / 1000).format('MMDD' || '-')
     },
     handleRegtype(listItem) {
+      console.log(productTopicList, listItem.regtype)
       productTopicList.map((item) => {
-        if (+item.id === +listItem.regtype) {
+        if (item.id === listItem.regtype) {
           listItem.regtype_text = item.name
         }
         if (+item.id === 6 && listItem.source_type === '4') {

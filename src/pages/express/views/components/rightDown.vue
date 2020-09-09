@@ -214,7 +214,7 @@
       </el-table-column> -->
       <el-table-column
         label="收货信息"
-        min-width="200"
+        width="280"
         v-if="showCol.receiptInfo"
         :key="8"
       >
@@ -1144,6 +1144,7 @@ export default {
                 department_name
                 group_name
               }
+              street
               user {
                 id
                 birthday

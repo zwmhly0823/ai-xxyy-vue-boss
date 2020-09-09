@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-04-25 17:24:23
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-08-28 16:08:08
+ * @LastEditTime: 2020-09-10 01:16:53
  -->
 <template>
   <el-card
@@ -658,6 +658,7 @@ export default {
 
       // 获取查询条件
       const query = this.$parent.$children[1].finalParams
+      query.subject = 1
       console.log('query======')
       console.log(query)
 
