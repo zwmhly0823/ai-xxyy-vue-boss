@@ -33,13 +33,18 @@ export default {
     name: {
       type: String,
       default: ''
+    },
+    subjectType: {
+      type: Number,
+      default: 0
     }
   },
   data() {
     return {
       isMultipe: true,
       result: null,
-      typeList: [
+      typeList: [],
+      artList: [
         {
           id: '5',
           text: '小熊商城'
@@ -52,8 +57,17 @@ export default {
           id: '6',
           text: '邀请有奖'
         }
+      ],
+      writeList: [
+        {
+          id: '5',
+          text: '点点商城'
+        }
       ]
     }
+  },
+  created() {
+    this.typeList = this.subjectType ? this.writeList : this.artList
   },
   methods: {
     onChange(item) {

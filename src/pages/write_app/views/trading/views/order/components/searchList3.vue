@@ -22,7 +22,7 @@
         />
       </el-form-item>
       <el-form-item label="商品类型:" :class="{ [$style.marginer]: true }">
-        <product-type name="regtype" @result="getProductType" />
+        <product-type subjectType="1" name="regtype" @result="getProductType" />
       </el-form-item>
       <br />
       <el-form-item label="下单时间:" :class="{ [$style.marginer]: true }">
