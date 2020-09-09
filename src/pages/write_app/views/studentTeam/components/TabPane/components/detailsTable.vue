@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 20:22:24
  * @LastEditors: Shentong
- * @LastEditTime: 2020-09-09 15:29:28
+ * @LastEditTime: 2020-09-10 00:02:45
  -->
 <template>
   <div class="table-box">
@@ -571,9 +571,9 @@
         <el-table-column key="w3" label="课程">
           <template slot-scope="scope">
             <div>
-              <!-- <span>{{ scope.row.course_current_num }}</span>
-              <br /> -->
               <span>{{ scope.row.classTitle }}</span>
+              <br />
+              <span>{{ scope.row.start_date }}</span>
             </div>
           </template>
         </el-table-column>
@@ -632,7 +632,10 @@
         <!-- 列表新增 ”点评老师“，取最新的点评老师（在点评后添加）TODO: -->
         <el-table-column key="w6" label="点评老师">
           <template slot-scope="scope">
-            <div class="works-ctime">{{ scope.row.comment_teacher }}</div>
+            <div class="comment-teacher">
+              <div>{{ scope.row.teacher_name }}</div>
+              <div>{{ scope.row.has_comment_utime }}</div>
+            </div>
           </template>
         </el-table-column>
       </el-table>

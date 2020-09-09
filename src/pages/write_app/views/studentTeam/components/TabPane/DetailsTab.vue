@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 14:19:58
  * @LastEditors: Shentong
- * @LastEditTime: 2020-09-09 22:01:19
+ * @LastEditTime: 2020-09-10 00:03:11
  -->
 <template>
   <div>
@@ -973,7 +973,7 @@ export default {
     getClassCompPage() {
       if (this.classObj.teamId) {
         if (this.search) {
-          this.querysData = `{"team_id":${this.classObj.teamId},"team_type":${this.classObj.type},"uid":${this.search}}`
+          this.querysData = `{"team_id":${this.classObj.teamId},"subject":"1","team_type":${this.classObj.type},"uid":${this.search}}`
         } else {
           let {
             courseId,
@@ -1083,8 +1083,14 @@ export default {
           // task_sound_second 音频多少秒
           this.table.totalElements = +res.data.getStuCommentPage.totalElements
           const _data = res.data.getStuCommentPage.content
-          _data.forEach((item, index) => {
+          _data.forEach((item = {}, index) => {
             item.buytime = timestamp(item.buytime, 6)
+            item.has_comment_utime = item.has_comment_utime
+              ? timestamp(item.has_comment_utime, 6)
+              : ''
+            item.start_date = item.start_date
+              ? timestamp(item.start_date, 6)
+              : ''
             // item.works_ctime = timestamp(item.works_ctime, 6)
             if (!item.nickname) {
               item.nickname = ''

@@ -635,6 +635,9 @@ export default {
           sound_comment
           sound_comment_second
           student_id
+          teacher_id
+          teacher_name
+          start_date
           listenInfoArr {
             task_image
             works_ctime
