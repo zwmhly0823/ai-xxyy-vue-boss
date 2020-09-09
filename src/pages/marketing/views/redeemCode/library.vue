@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-08-06 19:52:15
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-09-07 18:46:43
+ * @LastEditTime: 2020-09-09 15:24:51
 -->
 <template>
   <el-row type="flex" class="app-main height">
@@ -290,6 +290,13 @@ export default {
       let url = `/users/#/details/${obj.id}`
       if (type === 1) {
         url = `/student-team/#/teamDetail/${obj.id}/${obj.type}`
+      }
+      // 写字项目时
+      if (+this.$store.getters.subjects.subjectCode === 1) {
+        url =
+          type === 0
+            ? `/write_app/#/details/${obj.id}`
+            : `/write_app/#/teamDetail/${obj.id}/${obj.type}`
       }
       openBrowserTab(url)
     },
