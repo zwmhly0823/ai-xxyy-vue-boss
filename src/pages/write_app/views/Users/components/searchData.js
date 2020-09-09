@@ -82,14 +82,14 @@ const enums = {
     {
       id: 1,
       text: '未转化'
-    },
-    {
-      id: 0,
-      text: '已注册'
     }
+    // {
+    //   id: 0,
+    //   text: '已注册'
+    // }
   ],
   conversionType: {
-    0: '已注册',
+    // 0: '已注册',
     1: '未转化',
     2: '已购月课',
     3: '已购半年课',
@@ -225,5 +225,11 @@ function getCompleteCourseList() {
 
 enums.joinCourseList = getJoinCourseList()
 enums.completeCourseList = getCompleteCourseList()
+
+enums.conversionStatusAll = enums.conversionStatus.concat({
+  id: 0,
+  text: '已注册'
+})
+enums.conversionTypeAll = Object.assign(enums.conversionType, { 0: '已注册' })
 
 export default enums
