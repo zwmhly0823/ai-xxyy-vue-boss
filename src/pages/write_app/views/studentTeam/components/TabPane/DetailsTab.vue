@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 14:19:58
  * @LastEditors: Shentong
- * @LastEditTime: 2020-09-09 21:45:13
+ * @LastEditTime: 2020-09-09 22:01:19
  -->
 <template>
   <div>
@@ -995,7 +995,7 @@ export default {
             isJoinCourse = isJoinCourse ? `"${isJoinCourse}"` : `""`
             isCompleteCourse = isCompleteCourse ? `"${isCompleteCourse}"` : `""`
             lockStatus = lockStatus ? `"${lockStatus}"` : `""`
-            this.querysData = `{"team_id":${this.classObj.teamId},"subject":"1","team_type":${this.classObj.type},"course_id":${courseId},"user_status":${userStatus},"is_join_course":${lockStatus},"is_start_course":${isJoinCourse},"is_complete_course":${isCompleteCourse}}`
+            this.querysData = `{"team_id":${this.classObj.teamId},"subject":"1","team_type":${this.classObj.type},"course_id":${courseId},"user_status":${userStatus},"is_join_course":${isJoinCourse},"is_start_course":${lockStatus},"is_complete_course":${isCompleteCourse}}`
           } else {
             this.querysData = `{"team_id":${this.classObj.teamId},"subject":"1","team_type":${this.classObj.type}}`
           }
