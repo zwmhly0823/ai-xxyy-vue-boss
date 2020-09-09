@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 14:19:58
  * @LastEditors: Shentong
- * @LastEditTime: 2020-09-09 17:21:56
+ * @LastEditTime: 2020-09-09 21:45:13
  -->
 <template>
   <div>
@@ -1048,7 +1048,7 @@ export default {
     getStuComment() {
       if (this.classObj.teamId) {
         if (this.search) {
-          this.querysData = `{"team_id":${this.classObj.teamId},"team_type":${this.classObj.type},"uid":${this.search}}`
+          this.querysData = `{"team_id":${this.classObj.teamId},"team_type":${this.classObj.type},"subject":"1","uid":${this.search}}`
         } else {
           if (
             this.screenWorksData.courseId ||
@@ -1068,9 +1068,9 @@ export default {
             const isListen = this.screenWorksData.isListen
               ? `"${this.screenWorksData.isListen}"`
               : `""`
-            this.querysData = `{"team_id":${this.classObj.teamId},"team_type":${this.classObj.type},"course_id":${courseId},"is_task":${isTask},"is_comment":${isComment},"is_listen":${isListen}}`
+            this.querysData = `{"team_id":${this.classObj.teamId},"team_type":${this.classObj.type},"subject":"1","course_id":${courseId},"is_task":${isTask},"is_comment":${isComment},"is_listen":${isListen}}`
           } else {
-            this.querysData = `{"team_id":${this.classObj.teamId},"team_type":${this.classObj.type}}`
+            this.querysData = `{"team_id":${this.classObj.teamId},"team_type":${this.classObj.type},"subject":"1"}`
           }
         }
         this.$http.writeApp.Team.getStuCommentPage({
