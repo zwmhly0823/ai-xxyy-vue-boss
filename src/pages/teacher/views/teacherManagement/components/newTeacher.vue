@@ -777,7 +777,8 @@ export default {
             this.ruleForm.positionVal =
               duty % 2 === 0 ? ['0', duty] : ['1', duty]
             // this.ruleForm.positionVal = payload.duty.id
-            this.ruleForm.rank = payload.rank ? payload.rank.id * 1 : ''
+            console.log(typeof payload.rank.id)
+            this.ruleForm.rank = payload.rank ? payload.rank.id : ''
             // 0520: fixed-编辑时没有入职时间，不再默认显示当前时间。必填项  By: Yang
             this.ruleForm.inductionDate = payload.teacher.joinDate
               ? formatData(
@@ -804,11 +805,18 @@ export default {
             this.ruleForm.workplace = payload.teacher.workPlace
             this.ruleForm.username = payload.teacher.userName
             this.ruleForm.administrations = payload.teacher.dataAuth
-            this.ruleForm.administration = JSON.parse(payload.teacher.note)
+            this.ruleForm.administration =
+              payload.teacher.note && JSON.parse(payload.teacher.note)
             this.ruleForm.note = payload.teacher.note
             this.ruleForm.workplaces = payload.teacher.workPlace
             this.ruleForm.workPlaceCode = payload.teacher.workPlaceCode
-            this.ruleForm.subject = payload.teacher.subject.split(',')
+            console.log(payload.teacher.subject, typeof payload.teacher.subject)
+            // 兼容返回值类型 string int
+            const subjects =
+              typeof payload.teacher.subject === 'string'
+                ? payload.teacher.subject.split(',')
+                : [payload.teacher.subject]
+            this.ruleForm.subject = subjects
           }
         )
       }

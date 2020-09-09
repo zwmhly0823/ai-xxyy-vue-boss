@@ -3,8 +3,8 @@
  * @version: 1.0.0
  * @Author: YangJiyong
  * @Date: 2020-08-19 21:14:08
- * @LastEditors: Shentong
- * @LastEditTime: 2020-09-02 17:58:56
+ * @LastEditors: zhangjianwen
+ * @LastEditTime: 2020-09-08 20:13:09
  */
 import { removeToken } from '@/utils/auth'
 import { baseUrl } from '@/utils/index'
@@ -413,7 +413,27 @@ const bearArt = [
       title: '呼叫中心',
       icon: 'icondianhua',
       module: 'outbound'
-    }
+    },
+    children: [
+      {
+        path: '/CallRecord',
+        name: 'CallRecord',
+        meta: {
+          title: '通话记录',
+          module: 'outbound',
+          style: 'line'
+        }
+      },
+      {
+        path: '/CallCenter',
+        name: 'CallCenter',
+        meta: {
+          title: '席位配置',
+          module: 'outbound',
+          style: 'line'
+        }
+      }
+    ]
   },
   // 数据中心
   {
