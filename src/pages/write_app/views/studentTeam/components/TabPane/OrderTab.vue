@@ -27,7 +27,7 @@
             </div>
             <div>
               <!-- <span v-show="scope.row.user.base_painting_text">·</span> -->
-              {{ scope.row.user.base_painting_text }}
+              {{ scope.row.grade }}
             </div>
           </div>
         </template>
@@ -52,9 +52,7 @@
                     : '-'
                 }}
               </span>
-              <span style="color: #666"
-                >级别:{{ scope.row.sup ? `S${scope.row.sup}` : '-' }}</span
-              >
+              <span style="color: #666">级别:{{ scope.row.sup }}</span>
             </div>
           </div>
         </div>
@@ -145,6 +143,7 @@
 <script>
 import dayjs from 'dayjs'
 import axios from '@/api/axiosConfig'
+import { GRADE, USER_SEX, GETGRADE } from '@/utils/enums'
 import { GetAgeByBrithday, formatData, openBrowserTab } from '@/utils/index'
 
 import MPagination from '@/components/MPagination/index.vue'
@@ -227,9 +226,9 @@ export default {
                   sex
                   birthday
                   base_painting_text
-                  userExtends{
-                    grade
-                  }
+                }
+                userExtends{
+                  grade
                 }
               }
             }
@@ -238,44 +237,35 @@ export default {
         .then((res) => {
           this.totalPages = +res.data.teamUserOrderPage.totalPages
           this.totalElements = +res.data.teamUserOrderPage.totalElements
-          const _data = res.data.teamUserOrderPage.content
-          _data &&
-            _data.forEach((ele) => {
-              if (ele.user) {
-                // 性别 0/默认 1/男 2/女  3/保密
-                const sex = ele.user.sex
-                switch (sex) {
-                  case '1': {
-                    ele.sex = '男'
-                    break
-                  }
-                  case '2': {
-                    ele.sex = '女'
-                    break
-                  }
-                  case '3': {
-                    ele.sex = '保密'
-                    break
-                  }
-                  default:
-                    ele.sex = '-'
-                    break
-                }
+          const _data = res.data.teamUserOrderPage.content || []
 
-                // 年龄转换
-                ele.user.birthday !== '0'
-                  ? (ele.user.birthday = GetAgeByBrithday(ele.user.birthday))
-                  : (ele.user.birthday = '-')
+          _data.forEach((ele = {}) => {
+            const { userExtends = {}, sup } = ele
 
-                ele.ctime = formatData(ele.ctime, 's')
-                ele.express_cur_time = formatData(ele.express_cur_time, 's')
-                ele.management_start_date = ele.management_start_date
-                  ? dayjs
-                      .unix(Number(ele.management_start_date) / 1000)
-                      .format('MMDD')
-                  : ''
-              }
-            })
+            if (userExtends && userExtends.grade) {
+              ele.grade = GRADE[userExtends.grade]
+            }
+
+            if (ele.user) {
+              // 性别 0/默认 1/男 2/女  3/保密
+              const sex = ele.user.sex
+              ele.sex = USER_SEX[sex]
+
+              // 年龄转换
+              ele.user.birthday !== '0'
+                ? (ele.user.birthday = GetAgeByBrithday(ele.user.birthday))
+                : (ele.user.birthday = '-')
+
+              ele.ctime = formatData(ele.ctime, 's')
+              ele.express_cur_time = formatData(ele.express_cur_time, 's')
+              ele.management_start_date = ele.management_start_date
+                ? dayjs
+                    .unix(Number(ele.management_start_date) / 1000)
+                    .format('MMDD')
+                : ''
+            }
+            ele.sup = GETGRADE(`S${sup}`, `${this.classObj.type}`)
+          })
           this.tableData = _data
         })
     },

@@ -94,8 +94,8 @@
             <span>{{ scope.row.statistics.open_app }}</span>
           </div>
           <div class="haveclass-content">
-            参课:
-            <span>{{ scope.row.statistics.join_course }}</span>
+            解锁:
+            <span>{{ scope.row.statistics.start_course }}</span>
           </div>
           <div class="haveclass-content">
             完课:
@@ -204,11 +204,9 @@ export default {
       return this.team.userByPhone
     }
   },
-  created() {
-    // 优惠卷列表接口
+  async created() {
+    await this.getstatusList()
     this.studentsList()
-    this.getstatusList()
-    // this.couponList()
   },
   watch: {
     searchUser(val) {
@@ -295,6 +293,7 @@ export default {
                 comment
                 listen_comment
                 open_app
+                start_course
               }
               wechat_status {
                 added_group
@@ -363,7 +362,7 @@ export default {
             }
             // 状态匹配
             this.statusList.forEach((value) => {
-              if (value.id === ele.status) {
+              if (+value.id === +ele.status) {
                 ele.status = value.nameZh
               }
             })
@@ -429,7 +428,6 @@ export default {
     // 点击分页
     handleSizeChange(val) {
       this.currentPage = val
-      this.getstatusList()
       this.studentsList()
       this.scrollTop()
     },
