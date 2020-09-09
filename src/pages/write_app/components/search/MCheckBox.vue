@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 20:22:24
  * @LastEditors: Shentong
- * @LastEditTime: 2020-09-08 18:03:23
+ * @LastEditTime: 2020-09-09 23:51:20
  -->
 <template>
   <div>
@@ -503,6 +503,7 @@ export default {
     },
     // 参课完课 点击清空
     attendClassEmpty() {
+      this.lockStatus = ''
       this.groupsDisabled = true
       this.attendClassSelect = ''
       // 参课完课 状态
