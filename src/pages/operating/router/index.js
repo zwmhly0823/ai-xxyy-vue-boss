@@ -76,6 +76,15 @@ const routes = [
     component: () => import('../views/scheduleDetail/index.vue')
   },
   {
+    path: '/comment',
+    name: 'comment',
+    meta: {
+      title: '点评管理',
+      keepAlive: false
+    },
+    component: () => import('../views/reviewManagement/comment.vue')
+  },
+  {
     path: '/reviewManagement',
     name: 'reviewManagement',
     meta: {

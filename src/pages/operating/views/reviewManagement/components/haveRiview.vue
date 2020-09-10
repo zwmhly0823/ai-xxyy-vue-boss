@@ -9,6 +9,7 @@
  -->
 <template>
   <div class="container">
+    <have-riview-search></have-riview-search>
     <el-table
       v-loading="loading"
       element-loading-text="拼命加载中"
@@ -69,6 +70,16 @@
           <div class="review-type">{{ scope.row.teacherRealName }}</div>
         </template>
       </el-table-column>
+      <el-table-column label="兼职老师" align="center" width="80">
+        <!-- <template slot-scope="scope">
+          <div class="review-type">{{ scope.row.teacherRealName }}</div>
+        </template> -->
+      </el-table-column>
+      <el-table-column label="点评老师" align="center" width="80">
+        <!-- <template slot-scope="scope">
+          <div class="review-type">{{ scope.row.teacherRealName }}</div>
+        </template> -->
+      </el-table-column>
       <el-table-column label="上传日期" align="center" width="180">
         <template slot-scope="scope">
           <div class="review-type">{{ timestamp(scope.row.ctime, 2) }}</div>
@@ -84,6 +95,11 @@
             {{ timestamp(item.ctime, 2) }}
           </div>
         </template>
+      </el-table-column>
+      <el-table-column label="听点评" align="center" width="100">
+        <!-- <template slot-scope="scope">
+          <div class="review-type">{{ scope.row.teacherRealName }}</div>
+        </template> -->
       </el-table-column>
     </el-table>
     <m-pagination
@@ -148,7 +164,9 @@ export default {
     }
   },
   components: {
-    MPagination: () => import('@/components/MPagination/index.vue')
+    MPagination: () => import('@/components/MPagination/index.vue'),
+    HaveRiviewSearch: () =>
+      import('../../../components/search/haveRiviewSearch.vue')
   }
 }
 </script>

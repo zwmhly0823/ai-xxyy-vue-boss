@@ -398,6 +398,14 @@ const routes = [
         }
       },
       {
+        path: '/comment',
+        name: 'comment',
+        meta: {
+          title: '语音库',
+          module: 'operating'
+        }
+      },
+      {
         path: '/reviewManagement',
         name: 'reviewManagement',
         meta: {
