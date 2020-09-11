@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-08-06 22:29:42
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-09-01 11:59:07
+ * @LastEditTime: 2020-09-11 18:00:56
 -->
 <template>
   <div class="add-redeem-code">
@@ -266,7 +266,7 @@ export default {
           text: 'vip学员'
         },
         {
-          id: '250',
+          id: '2147',
           text: '兑换码'
         }
       ],
@@ -279,7 +279,6 @@ export default {
   },
   watch: {
     radioDate(val) {
-      console.log(val)
       if (val === '1') {
         this.form.expire = ''
       }
