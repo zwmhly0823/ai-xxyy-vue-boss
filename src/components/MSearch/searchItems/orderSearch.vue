@@ -3,8 +3,8 @@
  * @version: 1.0.0
  * @Author: liukun
  * @Date: 2020-04-25 17:10:01
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-09-10 17:20:31
+ * @LastEditors: zhangjianwen
+ * @LastEditTime: 2020-09-11 13:48:08
  -->
 <template>
   <div>
@@ -109,8 +109,8 @@ export default {
         }
         this.$http.Base.getUserNumPhone(query).then((res) => {
           console.log(res, 'mobile')
-          if (res && res.data && res.data.UserSubjectStatisticsList) {
-            result = res.data.UserSubjectStatisticsList.map((item) => {
+          if (res && res.data && res.data.UserSubjectStatisticsListEx) {
+            result = res.data.UserSubjectStatisticsListEx.map((item) => {
               item.value = item.mobile
               return item
             })

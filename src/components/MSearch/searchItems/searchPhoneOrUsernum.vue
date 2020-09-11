@@ -3,8 +3,8 @@
  * @version: 1.0.0
  * @Author: YangJiyong
  * @Date: 2020-06-22 12:08:17
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-09-08 16:20:20
+ * @LastEditors: zhangjianwen
+ * @LastEditTime: 2020-09-11 13:48:56
 -->
 <template>
   <div class="search-mobile d-flex align-center">
