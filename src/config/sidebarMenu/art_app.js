@@ -3,8 +3,8 @@
  * @version: 1.0.0
  * @Author: YangJiyong
  * @Date: 2020-08-19 21:14:08
- * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-09-08 20:13:09
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-09-11 13:29:00
  */
 import { removeToken } from '@/utils/auth'
 import { baseUrl } from '@/utils/index'
@@ -166,6 +166,15 @@ const bearArt = [
         name: 'financeRefound',
         meta: {
           title: '订单退款',
+          module: 'trading',
+          show: true
+        }
+      },
+      {
+        path: '/invoiceManage',
+        name: 'invoiceManage',
+        meta: {
+          title: '发票管理',
           module: 'trading',
           show: true
         }
