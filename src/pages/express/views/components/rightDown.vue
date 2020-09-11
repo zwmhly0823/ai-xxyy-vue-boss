@@ -522,8 +522,8 @@ import {
   replenishTypeList,
   replenishReasonSearchList,
   expressToggleList,
-  productTopicList,
-  productTopicListBf
+  productTopicListBf,
+  productTypeList
 } from '@/utils/expressItemConfig'
 
 let supList = []
@@ -588,6 +588,7 @@ export default {
   },
   watch: {
     search(val) {
+      console.log(val, 'val===')
       this.currentPage = 1
       this.searchIn = val
       if (sessionStorage.getItem('val')) {
@@ -746,13 +747,13 @@ export default {
       })
     },
     // 获取补发
-    getProductTopicList() {
-      this.$http.Teacher.productTopicList().then((res) => {
-        if (res.data && res.data.productTopic) {
-          productTopicList = res.data.productTopic
-        }
-      })
-    },
+    // getProductTopicList() {
+    //   this.$http.Teacher.productTopicList().then((res) => {
+    //     if (res.data && res.data.productTopic) {
+    //       productTopicList = res.data.productTopic
+    //     }
+    //   })
+    // },
     // 鼠标进入显示操作栏
     handleMouseEnter(row) {
       this.current = row
@@ -949,6 +950,7 @@ export default {
         this.teacherId && (timeType.teacher_id = this.teacherIds.join())
       }
       this.searchIn.forEach((item) => {
+        console.log(item, 'item===')
         if (item && item.term) {
           if (item.term.regType) {
             timeType.regtype = item.term.regType
@@ -959,18 +961,23 @@ export default {
           if (item.term.product_name) {
             timeType.product_name = item.term.product_name
           }
-          if (item.term.product_type && item.term.product_type.length) {
-            timeType.product_type = item.term.product_type.join(',')
+          if (item.term.productType) {
+            timeType.product_type = item.term.productType
           }
-          if (item.term.provincesCode) {
-            timeType.province = item.term.provincesCode
+          if (item.term.province) {
+            timeType.province = item.term.province.provincesCode
+            timeType.city = item.term.province.citysCode
+            timeType.area = item.term.province.areasCode
           }
-          if (item.term.citysCode) {
-            timeType.city = item.term.citysCode
-          }
-          if (item.term.areasCode) {
-            timeType.area = item.term.areasCode
-          }
+          // if (item.term.provincesCode) {
+          //   timeType.province = item.term.provincesCode
+          // }
+          // if (item.term.citysCode) {
+          //   timeType.city = item.term.citysCode
+          // }
+          // if (item.term.areasCode) {
+          //   timeType.area = item.term.areasCode
+          // }
           if (item.term.receipt_tel) {
             timeType.receipt_tel = item.term.receipt_tel
           }
@@ -1216,13 +1223,13 @@ export default {
       return dayjs.unix(time / 1000).format('MMDD' || '-')
     },
     handleRegtype(listItem) {
-      productTopicList.map((item) => {
-        if (+item.id === +listItem.regtype) {
+      productTypeList.map((item) => {
+        if (+item.id === +listItem.product_type) {
           listItem.regtype_text = item.name
         }
-        if (+item.id === 6 && listItem.source_type === '4') {
-          listItem.regtype_text = '关单赠品'
-        }
+        // if (+item.id === 6 && listItem.source_type === '4') {
+        //   listItem.regtype_text = '关单赠品'
+        // }
       })
     },
     handleReplenishType(listItem) {
