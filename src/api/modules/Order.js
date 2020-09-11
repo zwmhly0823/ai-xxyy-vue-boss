@@ -4,7 +4,7 @@
  * @Author: shentong
  * @Date: 2020-03-13 16:20:48
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-09-05 18:25:46
+ * @LastEditTime: 2020-09-10 16:31:50
  */
 import axios from '../axiosConfig'
 import { injectSubject, getAppSubjectCode } from '@/utils/index'
@@ -281,6 +281,22 @@ export default {
           numberOfElements
           totalElements
           totalPages
+        }
+      }`
+    })
+  },
+
+  /*
+   *获取交易流水号 v2
+   {'transaction_id.like':{'transaction_id.keyword':'*word*'}}
+   * */
+  searchPaymentPayV2(params = {}) {
+    const query = Object.assign(params || {}, { subject: subjectCode })
+    return axios.post('/graphql/v1/toss', {
+      query: `{
+        PaymentPayList(query: ${JSON.stringify(JSON.stringify(query))}){
+          oid,
+          transaction_id
         }
       }`
     })
