@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-07-18 15:45:45
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-09-11 13:52:57
+ * @LastEditTime: 2020-09-11 15:30:30
  */
 
 import axios from '../axiosConfig'
@@ -57,6 +57,7 @@ export default {
             mobile
             username
             user_num
+            u_id
             subject
             }
           }`

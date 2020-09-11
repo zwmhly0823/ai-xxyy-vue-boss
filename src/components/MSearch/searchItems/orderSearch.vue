@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-04-25 17:10:01
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-09-11 13:48:08
+ * @LastEditTime: 2020-09-11 15:37:59
  -->
 <template>
   <div>
@@ -179,12 +179,11 @@ export default {
       })
     },
     handleSelect(data) {
-      console.log(data)
       const obj = {}
       if (this.select === '0') {
         Object.assign(obj, { [this.keyword]: data.out_trade_no })
       } else if (this.select === '1') {
-        Object.assign(obj, { [this.keyword]: data.id })
+        Object.assign(obj, { [this.keyword]: data.u_id })
       } else if (this.select === '2') {
         Object.assign(obj, { [this.keyword]: data.user_id })
       } else {
