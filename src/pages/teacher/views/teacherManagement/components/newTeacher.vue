@@ -836,7 +836,12 @@ export default {
     },
     // 提交按钮
     submitHandle(formName) {
-      console.log(this.ruleForm)
+      if (this.ruleForm.subject.length <= 0) {
+        return this.$message({
+          message: '请选择科目',
+          type: 'error'
+        })
+      }
       const positionValId = []
       this.ruleForm.positionVal.forEach((val) => {
         positionValId.push({ id: val })
