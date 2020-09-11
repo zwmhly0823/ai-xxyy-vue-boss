@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 20:22:24
  * @LastEditors: Shentong
- * @LastEditTime: 2020-09-11 15:48:31
+ * @LastEditTime: 2020-09-11 21:08:03
  -->
 <template>
   <div class="table-box">
@@ -63,7 +63,10 @@
         <!-- 基本信息 -->
         <el-table-column width="280" label="基本信息">
           <template slot-scope="scope">
-            <div class="scope-info-box primary-text">
+            <div
+              class="scope-info-box primary-text"
+              @click="openUserDetail(scope.row.studentid)"
+            >
               <img
                 class="scope-info-img borders"
                 :src="
@@ -72,16 +75,10 @@
                 alt=""
               />
               <div class="info-telephone">
-                <span @click="openUserDetail(scope.row.id)">{{
-                  scope.row.userExtends.mobile
-                }}</span>
+                <span>{{ scope.row.userExtends.mobile }}</span>
               </div>
-              <span @click="openUserDetail(scope.row.id)" class="info-sex">{{
-                scope.row.userExtends.sex
-              }}</span>
-              <span @click="openUserDetail(scope.row.id)" class="info-age">{{
-                scope.row.userExtends.birthday
-              }}</span>
+              <span class="info-sex">{{ scope.row.userExtends.sex }}</span>
+              <span class="info-age">{{ scope.row.userExtends.birthday }}</span>
               <span class="info-basics">{{ scope.row.userExtends.grade }}</span>
             </div>
           </template>
@@ -967,8 +964,7 @@ export default {
       this.$emit('onCurrentPage', val)
     },
     // 打开用户详情
-    openUserDetail(uid, row) {
-      console.log(row)
+    openUserDetail(uid) {
       uid && openBrowserTab(`/write_app/#/details/${uid}`)
     }
   }
