@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 14:19:58
  * @LastEditors: Shentong
- * @LastEditTime: 2020-09-10 00:03:11
+ * @LastEditTime: 2020-09-11 18:35:32
  -->
 <template>
   <div>
@@ -42,9 +42,10 @@
         :tables="table"
         :classObj="classObj"
         :audioTabs="audioTabs"
+        :clearSearchData.sync="clearSearchData"
         @screenWorks="screenWorks"
         @screenAttendClass="screenAttendClass"
-        v-if="this.table.tabs == 3 || this.table.tabs == 4"
+        v-show="this.table.tabs == 3 || this.table.tabs == 4"
       />
     </div>
     <div>
@@ -223,6 +224,8 @@ export default {
   },
   data() {
     return {
+      // 清空过滤搜索中的值
+      clearSearchData: false,
       // 完课榜隐藏单选框
       radioOne: true,
       radioTwo: true,
@@ -754,15 +757,22 @@ export default {
     },
     // 加好友进群接口
     getGroup() {
-      const trail = +this.classObj.type
+      const isSystemCourse = +this.classObj.type
+
+      const trail = isSystemCourse
         ? 'StudentSystemStatisticsPage'
         : 'StudentTrialV2StatisticsPage'
 
       if (this.classObj.teamId) {
         if (this.search) {
-          this.querysData = `{"team_id":${this.classObj.teamId},"student_id":${this.search}}`
+          // 后端写的傻逼传参方式teamid
+          this.querysData = isSystemCourse
+            ? `{"teamid":${this.classObj.teamId},"student_id":${this.search}}`
+            : `{"team_id":${this.classObj.teamId},"student_id":${this.search}}`
         } else {
-          this.querysData = `{"team_id":${this.classObj.teamId}}`
+          this.querysData = isSystemCourse
+            ? `{"teamid":${this.classObj.teamId}}`
+            : `{"team_id":${this.classObj.teamId}}`
         }
         const sortFollow = '{"follow":"desc"}'
         const cortfollowDesc = `sort:${JSON.stringify(sortFollow)}`
@@ -1190,7 +1200,8 @@ export default {
         this.table.tabs = 2
         this.audioTabs = '2'
       } else if (tab.index === '3') {
-        // 参课和完课
+        // 参课和完课 初始化 ‘过滤’ 搜索框内容
+        this.clearSearchData = true
         this.btnbox = true
         setTimeout(() => {
           this.getClassCompPage()
@@ -1199,6 +1210,8 @@ export default {
         this.table.tabs = 3
         this.audioTabs = '3'
       } else if (tab.index === '4') {
+        // 参课和完课 初始化 ‘过滤’ 搜索框内容
+        this.clearSearchData = true
         this.btnbox = false
         // 作品及点评
         setTimeout(() => {
