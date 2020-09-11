@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 20:22:24
  * @LastEditors: Shentong
- * @LastEditTime: 2020-09-10 02:08:39
+ * @LastEditTime: 2020-09-11 15:48:31
  -->
 <template>
   <div class="table-box">
@@ -1146,6 +1146,7 @@ export default {
       border: #ccc 1px solid;
       margin-top: 10px;
       background: #bbe166;
+      cursor: pointer;
       .audio-triangle {
         position: absolute;
         top: -3px;
@@ -1175,8 +1176,9 @@ export default {
       }
       .audio-second {
         position: absolute;
-        right: -22px;
+        right: 10px;
         top: 3px;
+        color: #fff;
       }
     }
   }
