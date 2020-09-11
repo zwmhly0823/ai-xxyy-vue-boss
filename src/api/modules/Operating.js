@@ -485,29 +485,32 @@ export default {
   /**
    * @description 小熊币发放列表
    */
-  issueBearList(params = '', page = 1) {
-    return axios.post('/graphql/v1/toss', {
-      query: `{
-        AccountPage(query: ${params}, page:${page}) {
-          totalPages
-          totalElements
-          content {
-            user{
-              user_num
-              id
-            }
-            id
-            uid
-            ctime
-            account_type
-            trans_type
-            amount
-            note
-            desc
-          }
-        }
-      }`
-    })
+  // issueBearList(params = '', page = 1) {
+  //   return axios.post('/graphql/v1/toss', {
+  //     query: `{
+  //       AccountPage(query: ${params}, page:${page}) {
+  //         totalPages
+  //         totalElements
+  //         content {
+  //           user{
+  //             user_num
+  //             id
+  //           }
+  //           id
+  //           uid
+  //           ctime
+  //           account_type
+  //           trans_type
+  //           amount
+  //           note
+  //           desc
+  //         }
+  //       }
+  //     }`
+  //   })
+  // },
+  issueBearList(params) {
+    return axios.get(`/api/a/v1/account/getImportLogList`, params)
   },
   /**
    * 教师渠道绑定-保存
