@@ -4,7 +4,7 @@
  * @Author: Lukun
  * @Date: 2020-04-27 17:47:58
  * @LastEditors: liukun
- * @LastEditTime: 2020-08-26 21:21:45
+ * @LastEditTime: 2020-09-11 20:37:17
  -->
 <template>
   <div class="container">
@@ -1467,7 +1467,7 @@ export default {
         Object.assign(params, { page: 1, size: 999 })
       }
       console.log(params, 'paramsparamsparams')
-      this.$http.Backend.checkListPending(params).then((res) => {
+      this.$http.Backend.checkListPending(params).then(async (res) => {
         if (res && res.payload && res.payload.content) {
           const zancunArr = res.payload.content.map((item) => {
             const zhaiyao = item.abstractContent.split('^')
@@ -1481,21 +1481,21 @@ export default {
             return item
           })
           // 重写部门名称
-          const idArr = this.tableData.map((item) => item.applyId)
-          this.$http.Backend.changeDepart(idArr).then(
-            ({ data: { TeacherDepartmentRelationList } }) => {
-              console.info('lklk-待审核', idArr, TeacherDepartmentRelationList)
-              if (TeacherDepartmentRelationList.length) {
-                TeacherDepartmentRelationList.forEach((item, index) => {
-                  this.tableData.forEach((itemx, indexX) => {
-                    if (item.teacher_id === itemx.applyId) {
-                      itemx.applyDepartment = item.department.name
-                    }
-                  })
-                })
-              }
-            }
-          )
+          const idArr = zancunArr.map((item) => item.applyId)
+          const {
+            data: { TeacherDepartmentRelationList }
+          } = await this.$http.Backend.changeDepart(idArr)
+          console.info('lklk-待审核', idArr, TeacherDepartmentRelationList)
+          if (TeacherDepartmentRelationList.length) {
+            TeacherDepartmentRelationList.forEach((item, index) => {
+              zancunArr.forEach((itemx, indexX) => {
+                if (item.teacher_id === itemx.applyId) {
+                  console.count('匹配成功次数')
+                  itemx.applyDepartment = item.department.name
+                }
+              })
+            })
+          }
           // lk 为3,4 前端单独筛选下
           if (this.type_lk === 'REFUND' && this.positionIdlk === '4') {
             this.tableData = zancunArr.filter(
