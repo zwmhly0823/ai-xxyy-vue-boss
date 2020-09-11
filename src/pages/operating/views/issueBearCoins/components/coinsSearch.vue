@@ -10,7 +10,7 @@
                 :isHidden="false"
                 :name="['mobile']"
                 type="3"
-                tablename="UserList"
+                tablename="UserSubjectStatisticsList"
                 @result="getSearchUid('user', arguments)"
               />
             </el-form-item>
