@@ -209,7 +209,8 @@ export default {
         this.$message.error('缺少用户信息')
         return
       }
-      const { id } = user.user
+      // const { id } = user.user
+      const id = user.uid
       // 新标签打开详情页
       id && openBrowserTab(`/users/#/details/${id}`)
     }
