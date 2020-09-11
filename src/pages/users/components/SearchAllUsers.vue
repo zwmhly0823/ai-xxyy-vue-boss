@@ -230,6 +230,12 @@ export default {
     .el-form--inline .el-form-item {
       margin-bottom: -10px;
     }
+    .el-range-editor--mini.el-input__inner {
+      height: 22px;
+    }
+    .el-range-editor--mini .el-range-separator {
+      line-height: 17px;
+    }
   }
 }
 .search-group {
