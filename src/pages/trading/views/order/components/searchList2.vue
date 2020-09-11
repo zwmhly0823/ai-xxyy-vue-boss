@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-04-25 17:24:23
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-09-10 01:23:41
+ * @LastEditTime: 2020-09-11 16:42:15
  -->
 <template>
   <el-card
@@ -134,7 +134,6 @@
           />
           <!-- BOSS 显示单双周选择 -->
           <trial-course-type
-            v-if="!teacherId"
             class="margin_l10"
             name="packages_id"
             @result="getTrialCourseType"
@@ -192,7 +191,7 @@ import GroupSell from '@/components/MSearch/searchItems/groupSell'
 import Department from '@/components/MSearch/searchItems/department'
 import SearchTeamName from '@/components/MSearch/searchItems/searchTeamName'
 import SearchStage from '@/components/MSearch/searchItems/searchStage'
-import TrialCourseType from '@/components/MSearch/searchItems/trialCourseType'
+import TrialCourseType from '@/components/MSearch/searchItems/trialClassType'
 import { downloadHandle } from '@/utils/download'
 import SearchPhoneAndUsername from '@/components/MSearch/searchItems/searchPhoneAndUsername'
 import SimpleSelect from '@/components/MSearch/searchItems/simpleSelect'
