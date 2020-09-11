@@ -415,7 +415,7 @@ export function injectSubject(query) {
   const queryStr = typeof query === 'string' ? query : JSON.stringify(query)
   if (queryStr.includes('must')) {
     const queryObj = JSON.parse(queryStr)
-    queryObj.bool.must.push({ subject: getAppSubjectCode() })
+    queryObj.bool.must.push({ term: { subject: getAppSubjectCode() } })
     return JSON.stringify(queryObj)
   } else {
     const queryObj = JSON.parse(queryStr)
