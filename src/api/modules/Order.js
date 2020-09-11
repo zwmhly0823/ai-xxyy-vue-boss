@@ -4,7 +4,7 @@
  * @Author: shentong
  * @Date: 2020-03-13 16:20:48
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-09-10 16:31:50
+ * @LastEditTime: 2020-09-11 17:25:21
  */
 import axios from '../axiosConfig'
 import { injectSubject, getAppSubjectCode } from '@/utils/index'
@@ -54,6 +54,7 @@ export default {
             product_name
             out_trade_no
             total_amount
+            pay_teacher_duty_id
             user{
               id
               username
