@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-04-25 17:10:01
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-08-10 12:28:50
+ * @LastEditTime: 2020-09-11 20:19:59
  -->
 <!--
   用户手机号 uid
@@ -104,10 +104,10 @@ export default {
           this.value = ''
           return
         }
-        this.$http.User.searchUserByPhone(query).then((res) => {
+        this.$http.Base.getUserNumPhone(query).then((res) => {
           console.log(res, 'mobile')
-          if (res && res.data && res.data.UserListEx) {
-            result = res.data.UserListEx.map((item) => {
+          if (res && res.data && res.data.UserSubjectStatisticsListEx) {
+            result = res.data.UserSubjectStatisticsListEx.map((item) => {
               item.value = item.mobile
               return item
             })
@@ -131,14 +131,16 @@ export default {
       }
     },
     getUidByPhone(num) {
-      this.$http.User.searchUserByPhone(num).then((res) => {
+      this.$http.Base.getUserNumPhone(num).then((res) => {
         if (
           res &&
           res.data &&
-          res.data.UserListEx &&
-          res.data.UserListEx.length
+          res.data.UserSubjectStatisticsListEx &&
+          res.data.UserSubjectStatisticsListEx.length
         ) {
-          this.$emit('result', { uid: res.data.UserListEx[0].id })
+          this.$emit('result', {
+            uid: res.data.UserSubjectStatisticsListEx[0].u_id
+          })
         }
         setTimeout(() => {
           localStorage.removeItem('noticeParams')
@@ -151,7 +153,7 @@ export default {
       if (this.select === '0') {
         Object.assign(obj, { [this.keyword]: data.id })
       } else if (this.select === '1') {
-        Object.assign(obj, { [this.keyword]: data.id })
+        Object.assign(obj, { [this.keyword]: data.u_id })
       } else {
         Object.assign(obj, { [this.keyword]: data.oid })
       }
