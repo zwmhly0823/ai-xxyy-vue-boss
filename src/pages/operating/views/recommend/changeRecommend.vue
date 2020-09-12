@@ -76,7 +76,7 @@
           <template slot-scope="scope">
             <el-link
               type="primary"
-              :href="'/users/#/details/' + scope.row.userId"
+              :href="userLink(scope.row.userId)"
               target="_blank"
               >{{ scope.row.userName }}</el-link
             >
@@ -190,6 +190,16 @@ export default {
   computed: {
     arrangeArr() {
       return this.tableData.filter((item) => item.status === '待审核')
+    },
+    userLink() {
+      return function(userId) {
+        let url = ''
+        const host = window.location.hostname
+        if (host.includes('test')) {
+          url = 'ai-app-vue-boss-test/'
+        }
+        return `${url}/users/#/details/${userId}`
+      }
     }
   },
   methods: {
