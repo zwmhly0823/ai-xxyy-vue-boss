@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-08-25 11:40:19
  * @LastEditors: liukun
- * @LastEditTime: 2020-09-09 19:51:47
+ * @LastEditTime: 2020-09-12 18:56:19
 -->
 <template>
   <div>
@@ -17,8 +17,10 @@
         <el-tab-pane
           v-for="(item, key) of teams_lk_filter"
           :key="key"
-          :label="`${item.team_type_formatting}:${item.team_name}`"
-          :name="'' + key"
+          :label="`${item.team_type_formatting || '体验课'}:${item.team_name}`"
+          :courseIds="item.course_ids"
+          :teamId="item.id"
+          :lessonType="item.team_type > 0 ? 1 : 0"
         >
           <div class="inner_lk">
             <div class="statistical">
@@ -42,7 +44,7 @@
                 <span v-if="changeSubject">已解锁</span>
                 <span v-else>已放课</span>:
                 <span class="tatistical-span">
-                  {{ item.send_course_count }}
+                  {{ item.start_course_count || item.send_course_count }}
                 </span>
               </div>
               <div v-if="!changeSubject">
@@ -115,6 +117,30 @@
           </div>
         </template>
       </el-table-column>
+      <el-table-column label="解锁状态" v-if="changeSubject">
+        <template slot-scope="scope">
+          <section>
+            {{
+              scope.row.studentCompleteCourseLog &&
+              scope.row.studentCompleteCourseLog.start_date &&
+              scope.row.studentCompleteCourseLog.start_date !==
+                '1970-01-01 08:00:00'
+                ? '解锁'
+                : '未解锁'
+            }}
+          </section>
+          <section>
+            {{
+              scope.row.studentCompleteCourseLog &&
+              scope.row.studentCompleteCourseLog.start_date &&
+              scope.row.studentCompleteCourseLog.start_date !==
+                '1970-01-01 08:00:00'
+                ? scope.row.studentCompleteCourseLog.start_date
+                : ''
+            }}
+          </section>
+        </template>
+      </el-table-column>
     </el-table>
     <div class="pagination_lk">
       <el-pagination
@@ -134,28 +160,37 @@ import { formatData } from '@/utils/index'
 export default {
   name: 'studyRecord',
   mounted() {
-    this.$root.$on('study', (r) => {
-      console.info('老爹给学习记录的基础数据', r)
-      this.teams_lk = r || []
+    this.$root.$on('study', (...argus) => {
+      console.info('老爹给学习记录的基础数据和写字0元体验', argus[0], argus[1])
+      this.teams_lk = argus[0] || []
+      this.teams_lk_free_write = argus[1] || []
     })
-    // 初始化拿数据
+    // 初始化-拿数组第1条数据
     setTimeout(() => {
-      this.lessonType = this.teams_lk_filter[0]
-        ? this.teams_lk_filter[0].team_type
-        : ''
-      this.lessonId = this.teams_lk_filter[0] ? this.teams_lk_filter[0].id : ''
-      this.reqSendCourseLogPage()
+      if (this.teams_lk_filter[0]) {
+        this.teamId = this.teams_lk_filter[0].id
+        this.lessonType = this.teams_lk_filter[0].team_type > 0 ? 1 : 0
+        this.courseId =
+          this.teams_lk_filter[0] &&
+          this.teams_lk_filter[0].course_ids &&
+          this.teams_lk_filter[0].course_ids.length
+            ? this.teams_lk_filter[0].course_ids
+            : []
+        this.reqSendCourseLogPage()
+      }
     }, 1000)
   },
   data() {
     return {
+      teams_lk_free_write: [], // tab-pane(写字0元体验)
       teams_lk: [], // tab-pane
       courseData: '0', // tab-pane v-model
       studyTableData: [], // table展示数据
 
       // 数据查询
       lessonType: '', // 课程类型
-      lessonId: '', // 课程Id
+      teamId: '', // 班级Id
+      courseId: [], // 写字0元体验课
       currentPage: 1, // 页码
 
       // 分页组件
@@ -165,9 +200,16 @@ export default {
   },
   computed: {
     teams_lk_filter() {
-      return this.teams_lk.filter(
-        (item) => item.subject === '' + this.changeSubject
+      const arrNew = this.teams_lk
+        .filter((item) => item.subject === '' + this.changeSubject)
+        .concat(this.changeSubject ? this.teams_lk_free_write : [])
+      console.info(
+        '学习记录:o元,科目,最终',
+        this.teams_lk_free_write,
+        this.changeSubject,
+        arrNew
       )
+      return arrNew
     }
   },
   watch: {
@@ -183,9 +225,18 @@ export default {
   methods: {
     // 切换课程
     courseBtn(r) {
-      this.lessonType = this.teams_lk_filter[r.name].team_type
-      this.lessonId = this.teams_lk_filter[r.name].id
-      this.reqSendCourseLogPage()
+      console.info(r)
+      if (r.$attrs.courseIds && r.$attrs.courseIds.length) {
+        // 写字0元体验课
+        this.courseId = r.$attrs.courseIds
+        this.reqSendCourseLogPage()
+      } else {
+        // 普通系统体验课
+        this.teamId = r.$attrs.teamId
+        this.lessonType = r.$attrs.lessonType
+        this.courseId = []
+        this.reqSendCourseLogPage()
+      }
     },
     // 翻页
     handleCurrentChange(val) {
@@ -195,13 +246,15 @@ export default {
     },
     // 数据接口_学习记录
     reqSendCourseLogPage() {
-      this.$http.User.getSendCourseLogPage(
-        this.changeSubject,
-        this.$route.params.id, // studentId
-        this.lessonId, // 课程Id
-        this.currentPage, // 页码
-        this.lessonType // 课程类型
-      ).then((res) => {
+      this.$http.User.getSendCourseLogPage({
+        page: this.currentPage,
+        subject: this.changeSubject,
+        studentId: this.$route.params.id,
+
+        teamId: this.teamId, // 班级Id
+        lessonType: this.lessonType, // 课程类型
+        courseId: this.courseId // 写字0元体验课
+      }).then((res) => {
         console.log('学习记录模块接口', res.data.SendCourseLogPage)
         const _data =
           res.data.SendCourseLogPage && res.data.SendCourseLogPage.content
@@ -222,6 +275,13 @@ export default {
             if (item.studentCompleteCourseLog.complete_time) {
               item.studentCompleteCourseLog.complete_time = formatData(
                 item.studentCompleteCourseLog.complete_time,
+                's'
+              )
+            }
+            // 解锁时间(写字特有)
+            if (item.studentCompleteCourseLog.start_date) {
+              item.studentCompleteCourseLog.start_date = formatData(
+                item.studentCompleteCourseLog.start_date,
                 's'
               )
             }
