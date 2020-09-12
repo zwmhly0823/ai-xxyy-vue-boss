@@ -126,3 +126,18 @@ export const GETGRADE = (sup, teamType) => {
   }
   return TU[`${teamType}${sup}`] || ''
 }
+
+/** 系统课订单 */
+export const SYSTEMRADE = (sup) => {
+  if (!sup) return ''
+
+  const TU = {
+    S1: '一年级(S1)',
+    S2: '二年级(S2)',
+    S3: '三年级(S3)',
+    S4: '四年级(S4)',
+    S5: '五年级(S5)',
+    S6: '六年级(S6)'
+  }
+  return TU[`${sup}`] || ''
+}

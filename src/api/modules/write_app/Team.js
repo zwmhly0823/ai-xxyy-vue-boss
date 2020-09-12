@@ -524,6 +524,7 @@ export default {
           product_name
           address_id
           street
+          order_ctime
         }
       }
     }`
@@ -554,6 +555,7 @@ export default {
             express_ctime
             first_login_time
             page_origin
+            order_ctime
           }
         }
       }`
