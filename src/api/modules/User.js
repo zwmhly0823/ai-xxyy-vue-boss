@@ -5,7 +5,7 @@
  * @Author: shentong
  * @Date: 2020-03-13 14:38:28
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-09-12 13:01:18
+ * @LastEditTime: 2020-09-12 19:20:27
  */
 // import axios from '../axios'
 import axios from '../axiosConfig'
@@ -572,6 +572,14 @@ export default {
             listen_comment_count
             current_lesson
           }
+          zero_teamid_write_trials{
+            start_course_count
+            course_task_count
+            task_comment_count
+            listen_comment_count
+            course_ids
+            team_name
+          }
           join_date
           status_text
           couponUserCollect{
@@ -766,32 +774,42 @@ export default {
         }`
     })
   },
-  // 学习记录
-  getSendCourseLogPage(
-    subject = '',
-    query = '',
-    teamId = '',
-    page = 1,
-    lessonType = 0,
-    del = 0,
-    sort = 'asc',
-    size = '20'
-  ) {
-    const formattingQuery = JSON.stringify({
-      student_id: query,
-      team_id: +teamId,
-      del: del,
-      lesson_type: +lessonType,
-      subject
-    })
-    const formattingSort = JSON.stringify({ id: sort })
+  // 学习记录(查普通系统课体验课+写字0元体验课)
+  getSendCourseLogPage({
+    page,
+    subject,
+    studentId,
+    teamId, // 只普通用
+    lessonType, // 只普通用
+    courseId // 只写字0元体验课用
+  }) {
+    const formattingQuery = JSON.stringify(
+      courseId && courseId.length
+        ? {
+            del: 0,
+            subject,
+            student_id: studentId,
+            team_id: 0,
+            lesson_type: 0,
+            // 写字0元体验课
+            course_id: courseId
+          }
+        : {
+            del: 0,
+            subject,
+            student_id: studentId,
+            // normal 体验系统课
+            team_id: teamId,
+            lesson_type: lessonType
+          }
+    )
     return axios.post(`/graphql/v1/toss`, {
       query: `{
         SendCourseLogPage(
           query:${JSON.stringify(formattingQuery)},
-          sort:${JSON.stringify(formattingSort)},
+          sort:${JSON.stringify(JSON.stringify({ id: 'asc' }))},
           page: ${page},
-          size:${size})
+          size:20)
           {
             totalPages
             totalElements
@@ -799,6 +817,7 @@ export default {
               wd_info
               title
               ctime
+              start_date
               studentCompleteCourseLog{
                 ctime
                 is_today_join_course
@@ -810,32 +829,41 @@ export default {
         }`
     })
   },
-  // 作品集
-  getStudentCourseTaskPage(
-    subject = '',
-    query = '',
-    teamId = '',
-    page = 1,
-    size = '20',
-    del = 0
-  ) {
-    const formattingQuery = JSON.stringify({
-      student_id: query,
-      team_id: +teamId,
-      del: del,
-      subject
-    })
-    const sort = `{ "ctime": "asc" }`
+  // 作品集(查普通系统课体验课+写字0元体验课)
+  getStudentCourseTaskPage({
+    page,
+    subject,
+    studentId,
+    teamId, // 只普通用
+    courseId // 只写字0元体验课用
+  }) {
+    const formattingQuery = JSON.stringify(
+      courseId && courseId.length
+        ? {
+            del: 0,
+            subject,
+            student_id: studentId,
+            team_id: 0,
+            // 写字0元体验课
+            course_id: courseId
+          }
+        : {
+            del: 0,
+            subject,
+            student_id: studentId,
+            // normal 体验系统课
+            team_id: teamId
+          }
+    )
     return axios.post(`/graphql/v1/toss`, {
       query: `{
         StudentCourseTaskPage(query:${JSON.stringify(formattingQuery)},
-        sort: ${JSON.stringify(sort)},
+        sort: ${JSON.stringify(`{ "ctime": "asc" }`)},
           page: ${page},
-          size:${size}){
+          size:20){
             totalPages
             totalElements
             content{
-              id
               student_id
               task_image
               task_video
@@ -845,6 +873,9 @@ export default {
                 sound_comment_second
                 type
                 ctime
+                teacherInfo{
+                  realname
+                }
               }
               listenComment{
                 id

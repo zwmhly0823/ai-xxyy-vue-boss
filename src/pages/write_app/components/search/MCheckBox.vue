@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 20:22:24
  * @LastEditors: Shentong
- * @LastEditTime: 2020-09-09 23:51:20
+ * @LastEditTime: 2020-09-11 18:24:09
  -->
 <template>
   <div>
@@ -281,6 +281,10 @@ export default {
     audioTabs: {
       type: String,
       default: ''
+    },
+    clearSearchData: {
+      type: Boolean,
+      default: false
     }
   },
   components: {},
@@ -422,6 +426,16 @@ export default {
       // 参课完课 完课情况
       this.attendClassFinish = ''
       this.attendClassSelect = ''
+    },
+    clearSearchData(val, old) {
+      if (val) {
+        if (this.audioTabs === '3') {
+          this.attendClassEmpty()
+        } else if (this.audioTabs === '4') {
+          this.worksEmpty()
+        }
+        this.$emit('update:clearSearchData', false)
+      }
     }
   },
   created() {

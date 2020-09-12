@@ -143,7 +143,7 @@
 <script>
 import dayjs from 'dayjs'
 import axios from '@/api/axiosConfig'
-import { GRADE, USER_SEX, GETGRADE } from '@/utils/enums'
+import { GRADE, USER_SEX, SYSTEMRADE } from '@/utils/enums'
 import { GetAgeByBrithday, formatData, openBrowserTab } from '@/utils/index'
 
 import MPagination from '@/components/MPagination/index.vue'
@@ -264,7 +264,7 @@ export default {
                     .format('MMDD')
                 : ''
             }
-            ele.sup = GETGRADE(`S${sup}`, `${this.classObj.type}`)
+            ele.sup = SYSTEMRADE(`S${sup}`)
           })
           this.tableData = _data
         })

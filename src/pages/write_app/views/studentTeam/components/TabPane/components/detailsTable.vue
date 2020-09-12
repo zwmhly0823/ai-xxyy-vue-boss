@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 20:22:24
  * @LastEditors: Shentong
- * @LastEditTime: 2020-09-10 02:08:39
+ * @LastEditTime: 2020-09-12 18:50:22
  -->
 <template>
   <div class="table-box">
@@ -63,7 +63,10 @@
         <!-- 基本信息 -->
         <el-table-column width="280" label="基本信息">
           <template slot-scope="scope">
-            <div class="scope-info-box primary-text">
+            <div
+              class="scope-info-box primary-text"
+              @click="openUserDetail(scope.row.studentid)"
+            >
               <img
                 class="scope-info-img borders"
                 :src="
@@ -72,16 +75,10 @@
                 alt=""
               />
               <div class="info-telephone">
-                <span @click="openUserDetail(scope.row.id)">{{
-                  scope.row.userExtends.mobile
-                }}</span>
+                <span>{{ scope.row.userExtends.mobile }}</span>
               </div>
-              <span @click="openUserDetail(scope.row.id)" class="info-sex">{{
-                scope.row.userExtends.sex
-              }}</span>
-              <span @click="openUserDetail(scope.row.id)" class="info-age">{{
-                scope.row.userExtends.birthday
-              }}</span>
+              <span class="info-sex">{{ scope.row.userExtends.sex }}</span>
+              <span class="info-age">{{ scope.row.userExtends.birthday }}</span>
               <span class="info-basics">{{ scope.row.userExtends.grade }}</span>
             </div>
           </template>
@@ -280,7 +277,7 @@
                 >{{ scope.row.mobile }}</span
               >
               <br />
-              <span>{{ scope.row.ctime }}</span>
+              <span>{{ scope.row.order_ctime }}</span>
             </div>
           </template>
         </el-table-column>
@@ -390,7 +387,7 @@
                 >{{ scope.row.mobile }}</span
               >
               <br />
-              <span>{{ scope.row.express_ctime }}</span>
+              <span>{{ scope.row.order_ctime }}</span>
             </div>
           </template>
         </el-table-column>
@@ -917,14 +914,13 @@ export default {
       this.added_group = row.added_group
       this.added_wechat = row.added_wechat
       this.rowIdDianping = row.id
-      this.student_id = row.student_id
+      this.student_id = row.id || row.studentId
       this.tableindex = row.index
       this.orderId = row.order_id
       const id = row.id
       const userid = row.user_id
       const orderid = row.order_id
       this.formData = { id, userid, orderid, row }
-      // console.log(row, column, event, index)
     },
     // 向父组建传值 已加好友
     commandFriend(command) {
@@ -967,8 +963,7 @@ export default {
       this.$emit('onCurrentPage', val)
     },
     // 打开用户详情
-    openUserDetail(uid, row) {
-      console.log(row)
+    openUserDetail(uid) {
       uid && openBrowserTab(`/write_app/#/details/${uid}`)
     }
   }
@@ -1146,6 +1141,7 @@ export default {
       border: #ccc 1px solid;
       margin-top: 10px;
       background: #bbe166;
+      cursor: pointer;
       .audio-triangle {
         position: absolute;
         top: -3px;
@@ -1175,8 +1171,9 @@ export default {
       }
       .audio-second {
         position: absolute;
-        right: -22px;
+        right: 10px;
         top: 3px;
+        color: #fff;
       }
     }
   }

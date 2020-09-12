@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 14:19:58
  * @LastEditors: Shentong
- * @LastEditTime: 2020-09-10 00:03:11
+ * @LastEditTime: 2020-09-12 18:48:05
  -->
 <template>
   <div>
@@ -42,9 +42,10 @@
         :tables="table"
         :classObj="classObj"
         :audioTabs="audioTabs"
+        :clearSearchData.sync="clearSearchData"
         @screenWorks="screenWorks"
         @screenAttendClass="screenAttendClass"
-        v-if="this.table.tabs == 3 || this.table.tabs == 4"
+        v-show="this.table.tabs == 3 || this.table.tabs == 4"
       />
     </div>
     <div>
@@ -223,6 +224,8 @@ export default {
   },
   data() {
     return {
+      // 清空过滤搜索中的值
+      clearSearchData: false,
       // 完课榜隐藏单选框
       radioOne: true,
       radioTwo: true,
@@ -311,7 +314,61 @@ export default {
       sortGroup: '',
       screenWorksData: {},
       screenAttendClassData: {},
-      teamDetail: {}
+      teamDetail: {},
+      getLoginStatus: [
+        {
+          id: '0',
+          statusName: '已注册'
+        },
+        {
+          id: '1',
+          statusName: '已体验课'
+        },
+        {
+          id: '2',
+          statusName: '体验完课'
+        },
+        {
+          id: '3',
+          statusName: '已月课'
+        },
+        {
+          id: '4',
+          statusName: '月课完课'
+        },
+        {
+          id: '5',
+          statusName: '已年课'
+        },
+        {
+          id: '6',
+          statusName: '年课完课'
+        },
+        {
+          id: '7',
+          statusName: '年课续费'
+        },
+        {
+          id: '8',
+          statusName: '注销失败'
+        },
+        {
+          id: '9',
+          statusName: '已季课'
+        },
+        {
+          id: '10',
+          statusName: '季课完课'
+        },
+        {
+          id: '11',
+          statusName: '已半年课'
+        },
+        {
+          id: '12',
+          statusName: '半年课完课'
+        }
+      ]
     }
   },
   created() {
@@ -428,7 +485,6 @@ export default {
     handleSearch(res) {
       this.search = res.length ? `"${res[0].term.uid}"` : ''
       this.table.currentPage = 1
-      // this.getGroup()
       if (this.tabsName === '加好友进群') {
         this.getGroup()
       } else if (this.tabsName === '物流') {
@@ -754,15 +810,22 @@ export default {
     },
     // 加好友进群接口
     getGroup() {
-      const trail = +this.classObj.type
+      const isSystemCourse = +this.classObj.type
+
+      const trail = isSystemCourse
         ? 'StudentSystemStatisticsPage'
         : 'StudentTrialV2StatisticsPage'
 
       if (this.classObj.teamId) {
         if (this.search) {
-          this.querysData = `{"team_id":${this.classObj.teamId},"student_id":${this.search}}`
+          // 后端写的傻逼传参方式teamid
+          this.querysData = isSystemCourse
+            ? `{"teamid":${this.classObj.teamId},"student_id":${this.search}}`
+            : `{"team_id":${this.classObj.teamId},"student_id":${this.search}}`
         } else {
-          this.querysData = `{"team_id":${this.classObj.teamId}}`
+          this.querysData = isSystemCourse
+            ? `{"teamid":${this.classObj.teamId}}`
+            : `{"team_id":${this.classObj.teamId}}`
         }
         const sortFollow = '{"follow":"desc"}'
         const cortfollowDesc = `sort:${JSON.stringify(sortFollow)}`
@@ -774,8 +837,16 @@ export default {
         }).then((res) => {
           this.table.totalElements = +res.data[trail].totalElements
           const _data = res.data[trail].content
-          _data.forEach((item) => {
-            /** shentong writer 改写 */
+          _data.forEach((item = {}) => {
+            /** shentong writer 改写 体验课系统课接口返回的字段不同，做兼容 */
+            const {
+              added_wechat: addWct,
+              addedwechat,
+              added_group: addGroup,
+              addedgroup,
+              studentid,
+              id
+            } = item
             const userExtends = item.userExtends || {}
             const { sex = '', birthday = '', grade = '' } = userExtends
 
@@ -783,17 +854,20 @@ export default {
             userExtends.grade = grade ? GRADE[userExtends.grade] : ''
             userExtends.birthday = birthday ? GetAgeByBrithday(birthday) : ''
 
+            item.added_wechat = addWct !== undefined ? addWct : addedwechat
+            item.added_group = addGroup !== undefined ? addGroup : addedgroup
+            item.studentId = id !== undefined ? id : studentid
             /** shentong writer 改写 */
-
-            if (userExtends.birthday.indexOf(50) !== -1) {
-              userExtends.birthday = '-'
-            }
+            userExtends.birthday.indexOf(50) !== -1 &&
+              (userExtends.birthday = '-')
 
             item.userExtends = userExtends
-            item.buytime = timestamp(item.buytime, 6)
+            item.buytime = item.buytime ? timestamp(item.buytime, 6) : ''
             item.added_wechat_time = timestamp(item.utime, 6)
             item.added_group_time = timestamp(item.utime, 6)
-            item.fast_follow_time = timestamp(item.fast_follow_time, 6)
+            item.fast_follow_time = item.fast_follow_time
+              ? timestamp(item.fast_follow_time, 6)
+              : ''
             this.table.courseState = item.course_state
           })
           if (this.tableDataEmpty) {
@@ -820,16 +894,19 @@ export default {
           this.table.tableData = []
           this.table.totalElements = +res.data.stuExpressPage.totalElements
           const _data = res.data.stuExpressPage.content
-          _data.forEach((item) => {
-            item.ctime = timestamp(item.ctime, 6)
+          _data.forEach((item = {}) => {
+            const {
+              ctime = '',
+              order_ctime: orderCtime,
+              product_name: productName
+            } = item
+
+            item.ctime = ctime ? timestamp(ctime, 6) : ''
+            item.order_ctime = +orderCtime ? timestamp(orderCtime, 6) : ''
+            item.product_name = productName ? `「${item.product_name}」` : '-'
             if (!item.nickname) {
               item.nickname = ''
               item.head = ''
-            }
-            if (item.product_name) {
-              item.product_name = `「${item.product_name}」`
-            } else {
-              item.product_name = '-'
             }
             const experssStatus = [
               {
@@ -889,9 +966,19 @@ export default {
         }).then((res) => {
           this.table.totalElements = +res.data.stuLoginPage.totalElements
           const _data = res.data.stuLoginPage.content
-          _data.forEach((item) => {
-            item.express_ctime = timestamp(item.express_ctime, 6)
-            item.first_login_time = timestamp(item.first_login_time, 2)
+          _data.forEach((item = {}) => {
+            /** shentong更改 */
+            const {
+              express_ctime: expressCtime,
+              order_ctime: orderCtime,
+              first_login_time: fLogintime
+            } = item
+
+            item.express_ctime = +expressCtime ? timestamp(expressCtime, 6) : ''
+            item.order_ctime = +orderCtime ? timestamp(orderCtime, 6) : ''
+
+            item.first_login_time = +fLogintime ? timestamp(fLogintime, 2) : ''
+            /** shentong更改 */
             if (!item.nickname) {
               item.nickname = ''
               item.head = ''
@@ -905,60 +992,8 @@ export default {
             if (item.page_origin === '') {
               item.page_origin = ''
             }
-            const status = [
-              {
-                id: '0',
-                statusName: '已注册'
-              },
-              {
-                id: '1',
-                statusName: '已体验课'
-              },
-              {
-                id: '2',
-                statusName: '体验完课'
-              },
-              {
-                id: '3',
-                statusName: '已月课'
-              },
-              {
-                id: '4',
-                statusName: '月课完课'
-              },
-              {
-                id: '5',
-                statusName: '已年课'
-              },
-              {
-                id: '6',
-                statusName: '年课完课'
-              },
-              {
-                id: '7',
-                statusName: '年课续费'
-              },
-              {
-                id: '8',
-                statusName: '注销失败'
-              },
-              {
-                id: '9',
-                statusName: '已季课'
-              },
-              {
-                id: '10',
-                statusName: '季课完课'
-              },
-              {
-                id: '11',
-                statusName: '已半年课'
-              },
-              {
-                id: '12',
-                statusName: '半年课完课'
-              }
-            ]
+
+            const status = this.getLoginStatus
             for (let i = 0; i < status.length; i++) {
               if (item.status === status[i].id) {
                 item.status = status[i].statusName
@@ -1190,7 +1225,8 @@ export default {
         this.table.tabs = 2
         this.audioTabs = '2'
       } else if (tab.index === '3') {
-        // 参课和完课
+        // 参课和完课 初始化 ‘过滤’ 搜索框内容
+        this.clearSearchData = true
         this.btnbox = true
         setTimeout(() => {
           this.getClassCompPage()
@@ -1199,6 +1235,8 @@ export default {
         this.table.tabs = 3
         this.audioTabs = '3'
       } else if (tab.index === '4') {
+        // 参课和完课 初始化 ‘过滤’ 搜索框内容
+        this.clearSearchData = true
         this.btnbox = false
         // 作品及点评
         setTimeout(() => {
