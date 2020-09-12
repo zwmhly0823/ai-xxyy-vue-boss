@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-06-16 16:27:14
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-09-07 19:55:16
+ * @LastEditTime: 2020-09-12 17:05:03
 -->
 <template>
   <div class="user-list">
@@ -1121,7 +1121,23 @@ export default {
       return this.$http.User.ManagementForTeacherList(params).then((res) => {
         // console.log(res)
         if (res && res.data && res.data.ManagementForTeacherList) {
-          if (res.data.ManagementForTeacherList.length === 0) {
+          const filterArr = res.data.ManagementForTeacherList.filter(
+            (item) =>
+              item.management &&
+              +item.management.subject ===
+                +this.$store.getters.subjects.subjectCode
+          )
+
+          // 只显示开课中和待开课的期数 status // 0 待开始 1 招生中   2待开课   3 开课中  4 已结课',
+          const arr = filterArr.filter(
+            (item) =>
+              item.management &&
+              (+item.management.status === 1 ||
+                +item.management.status === 2 ||
+                +item.management.status === 3)
+          )
+          // console.log(arr)
+          if (arr === 0) {
             this.term = '0'
             this.getData()
             // 获取今日、明日待跟进数量
@@ -1133,15 +1149,6 @@ export default {
             return
           }
 
-          // 只显示开课中和待开课的期数 status // 0 待开始 1 招生中   2待开课   3 开课中  4 已结课',
-          const arr = res.data.ManagementForTeacherList.filter(
-            (item) =>
-              item.management &&
-              (+item.management.status === 1 ||
-                +item.management.status === 2 ||
-                +item.management.status === 3)
-          )
-          // console.log(arr)
           const list = arr.map((item) => {
             item.management.period_label = `${item.management.period_name}(${
               this.period[item.management.status]
