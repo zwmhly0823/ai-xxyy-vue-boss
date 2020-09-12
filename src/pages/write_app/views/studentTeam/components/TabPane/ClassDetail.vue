@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 14:19:58
  * @LastEditors: Shentong
- * @LastEditTime: 2020-09-12 18:48:05
+ * @LastEditTime: 2020-09-12 19:22:09
  -->
 <template>
   <div>
@@ -485,9 +485,8 @@ export default {
     handleSearch(res) {
       this.search = res.length ? `"${res[0].term.uid}"` : ''
       this.table.currentPage = 1
-      if (this.tabsName === '加好友进群') {
-        this.getGroup()
-      } else if (this.tabsName === '物流') {
+      console.log(this.tabsName, 'TABNAME')
+      if (this.tabsName === '物流') {
         this.getLogistics()
       } else if (this.tabsName === '打开APP') {
         this.geiLogin()
@@ -495,6 +494,8 @@ export default {
         this.getClassCompPage()
       } else if (this.tabsName === '作品及点评') {
         this.getStuComment()
+      } else {
+        this.getGroup()
       }
     },
     // 生成完课榜----确定按钮
