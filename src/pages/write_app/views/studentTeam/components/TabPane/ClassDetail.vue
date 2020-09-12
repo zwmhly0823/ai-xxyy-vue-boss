@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 14:19:58
  * @LastEditors: Shentong
- * @LastEditTime: 2020-09-12 12:33:28
+ * @LastEditTime: 2020-09-12 18:48:05
  -->
 <template>
   <div>
@@ -314,7 +314,61 @@ export default {
       sortGroup: '',
       screenWorksData: {},
       screenAttendClassData: {},
-      teamDetail: {}
+      teamDetail: {},
+      getLoginStatus: [
+        {
+          id: '0',
+          statusName: '已注册'
+        },
+        {
+          id: '1',
+          statusName: '已体验课'
+        },
+        {
+          id: '2',
+          statusName: '体验完课'
+        },
+        {
+          id: '3',
+          statusName: '已月课'
+        },
+        {
+          id: '4',
+          statusName: '月课完课'
+        },
+        {
+          id: '5',
+          statusName: '已年课'
+        },
+        {
+          id: '6',
+          statusName: '年课完课'
+        },
+        {
+          id: '7',
+          statusName: '年课续费'
+        },
+        {
+          id: '8',
+          statusName: '注销失败'
+        },
+        {
+          id: '9',
+          statusName: '已季课'
+        },
+        {
+          id: '10',
+          statusName: '季课完课'
+        },
+        {
+          id: '11',
+          statusName: '已半年课'
+        },
+        {
+          id: '12',
+          statusName: '半年课完课'
+        }
+      ]
     }
   },
   created() {
@@ -431,7 +485,6 @@ export default {
     handleSearch(res) {
       this.search = res.length ? `"${res[0].term.uid}"` : ''
       this.table.currentPage = 1
-      // this.getGroup()
       if (this.tabsName === '加好友进群') {
         this.getGroup()
       } else if (this.tabsName === '物流') {
@@ -791,20 +844,22 @@ export default {
               addedwechat,
               added_group: addGroup,
               addedgroup,
-              userExtends = {}
+              studentid,
+              id
             } = item
+            const userExtends = item.userExtends || {}
             const { sex = '', birthday = '', grade = '' } = userExtends
 
             userExtends.sex = sex ? USER_SEX[+sex] : ''
             userExtends.grade = grade ? GRADE[userExtends.grade] : ''
             userExtends.birthday = birthday ? GetAgeByBrithday(birthday) : ''
+
             item.added_wechat = addWct !== undefined ? addWct : addedwechat
             item.added_group = addGroup !== undefined ? addGroup : addedgroup
+            item.studentId = id !== undefined ? id : studentid
             /** shentong writer 改写 */
-
-            if (userExtends.birthday.indexOf(50) !== -1) {
-              userExtends.birthday = '-'
-            }
+            userExtends.birthday.indexOf(50) !== -1 &&
+              (userExtends.birthday = '-')
 
             item.userExtends = userExtends
             item.buytime = item.buytime ? timestamp(item.buytime, 6) : ''
@@ -814,8 +869,6 @@ export default {
               ? timestamp(item.fast_follow_time, 6)
               : ''
             this.table.courseState = item.course_state
-
-            console.log('item', item)
           })
           if (this.tableDataEmpty) {
             this.table.tableData = _data
@@ -841,16 +894,19 @@ export default {
           this.table.tableData = []
           this.table.totalElements = +res.data.stuExpressPage.totalElements
           const _data = res.data.stuExpressPage.content
-          _data.forEach((item) => {
-            item.ctime = timestamp(item.ctime, 6)
+          _data.forEach((item = {}) => {
+            const {
+              ctime = '',
+              order_ctime: orderCtime,
+              product_name: productName
+            } = item
+
+            item.ctime = ctime ? timestamp(ctime, 6) : ''
+            item.order_ctime = +orderCtime ? timestamp(orderCtime, 6) : ''
+            item.product_name = productName ? `「${item.product_name}」` : '-'
             if (!item.nickname) {
               item.nickname = ''
               item.head = ''
-            }
-            if (item.product_name) {
-              item.product_name = `「${item.product_name}」`
-            } else {
-              item.product_name = '-'
             }
             const experssStatus = [
               {
@@ -910,9 +966,19 @@ export default {
         }).then((res) => {
           this.table.totalElements = +res.data.stuLoginPage.totalElements
           const _data = res.data.stuLoginPage.content
-          _data.forEach((item) => {
-            item.express_ctime = timestamp(item.express_ctime, 6)
-            item.first_login_time = timestamp(item.first_login_time, 2)
+          _data.forEach((item = {}) => {
+            /** shentong更改 */
+            const {
+              express_ctime: expressCtime,
+              order_ctime: orderCtime,
+              first_login_time: fLogintime
+            } = item
+
+            item.express_ctime = +expressCtime ? timestamp(expressCtime, 6) : ''
+            item.order_ctime = +orderCtime ? timestamp(orderCtime, 6) : ''
+
+            item.first_login_time = +fLogintime ? timestamp(fLogintime, 2) : ''
+            /** shentong更改 */
             if (!item.nickname) {
               item.nickname = ''
               item.head = ''
@@ -926,60 +992,8 @@ export default {
             if (item.page_origin === '') {
               item.page_origin = ''
             }
-            const status = [
-              {
-                id: '0',
-                statusName: '已注册'
-              },
-              {
-                id: '1',
-                statusName: '已体验课'
-              },
-              {
-                id: '2',
-                statusName: '体验完课'
-              },
-              {
-                id: '3',
-                statusName: '已月课'
-              },
-              {
-                id: '4',
-                statusName: '月课完课'
-              },
-              {
-                id: '5',
-                statusName: '已年课'
-              },
-              {
-                id: '6',
-                statusName: '年课完课'
-              },
-              {
-                id: '7',
-                statusName: '年课续费'
-              },
-              {
-                id: '8',
-                statusName: '注销失败'
-              },
-              {
-                id: '9',
-                statusName: '已季课'
-              },
-              {
-                id: '10',
-                statusName: '季课完课'
-              },
-              {
-                id: '11',
-                statusName: '已半年课'
-              },
-              {
-                id: '12',
-                statusName: '半年课完课'
-              }
-            ]
+
+            const status = this.getLoginStatus
             for (let i = 0; i < status.length; i++) {
               if (item.status === status[i].id) {
                 item.status = status[i].statusName

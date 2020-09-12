@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 20:22:24
  * @LastEditors: Shentong
- * @LastEditTime: 2020-09-11 21:08:03
+ * @LastEditTime: 2020-09-12 18:50:22
  -->
 <template>
   <div class="table-box">
@@ -277,7 +277,7 @@
                 >{{ scope.row.mobile }}</span
               >
               <br />
-              <span>{{ scope.row.ctime }}</span>
+              <span>{{ scope.row.order_ctime }}</span>
             </div>
           </template>
         </el-table-column>
@@ -387,7 +387,7 @@
                 >{{ scope.row.mobile }}</span
               >
               <br />
-              <span>{{ scope.row.express_ctime }}</span>
+              <span>{{ scope.row.order_ctime }}</span>
             </div>
           </template>
         </el-table-column>
@@ -914,14 +914,13 @@ export default {
       this.added_group = row.added_group
       this.added_wechat = row.added_wechat
       this.rowIdDianping = row.id
-      this.student_id = row.student_id
+      this.student_id = row.id || row.studentId
       this.tableindex = row.index
       this.orderId = row.order_id
       const id = row.id
       const userid = row.user_id
       const orderid = row.order_id
       this.formData = { id, userid, orderid, row }
-      // console.log(row, column, event, index)
     },
     // 向父组建传值 已加好友
     commandFriend(command) {
