@@ -250,7 +250,8 @@
           v-if="
             isStaffId &&
               drawerApprovalDeatail.mode === 'DEFAULT' &&
-              drawerApprovalDeatail.type === 'MATERIALS'
+              (drawerApprovalDeatail.type === 'EXPERIENCE_MATERIALS' ||
+                drawerApprovalDeatail.type === 'SYSTEM_MATERIALS')
           "
         >
           <el-col :span="3">版本信息:</el-col>
@@ -1080,7 +1081,8 @@ export default {
       const versionBool =
         this.isStaffId &&
         this.drawerApprovalDeatail.mode === 'DEFAULT' &&
-        this.drawerApprovalDeatail.type === 'MATERIALS'
+        (this.drawerApprovalDeatail.type === 'EXPERIENCE_MATERIALS' ||
+          this.drawerApprovalDeatail.type === 'SYSTEM_MATERIALS')
       if (versionBool && (this.version === '' || version)) {
         this.$message('请选择版本号')
         return
