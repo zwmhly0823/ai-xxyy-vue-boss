@@ -294,7 +294,7 @@
       </el-form-item>
     </el-form>
     <div style="text-align: center; padding:10px 0">
-      <el-button type="primary" @click="submitHandle('ruleForm')"
+      <el-button type="primary" @click="throttleSubmit('ruleForm')"
         >提交</el-button
       >
       <el-button @click="resetForm('ruleForm')">取消</el-button>
@@ -356,6 +356,8 @@ export default {
       // }
     }
     return {
+      // 防抖节流标示
+      throtFlag: true,
       headers: { 'Content-Type': 'multipart/form-data' },
       // title
       newTitle: '',
@@ -833,6 +835,22 @@ export default {
           )
         }
       }
+    },
+    // 提交包裹节流
+    throttleSubmit(formName) {
+      console.log(this.throtFlag)
+      if (this.throtFlag) {
+        this.submitHandle(formName)
+        this.throtFlag = false
+      } else {
+        return this.$message({
+          message: '请勿重复提交',
+          type: 'warn'
+        })
+      }
+      setTimeout(() => {
+        this.throtFlag = true
+      }, 5000)
     },
     // 提交按钮
     submitHandle(formName) {
