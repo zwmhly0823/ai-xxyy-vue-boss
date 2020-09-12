@@ -33,7 +33,7 @@
             item.user_num_text ? item.user_num_text + '/' : ''
           }${item.username}`
         "
-        :value="item.id"
+        :value="item.u_id"
       ></el-option>
     </el-select>
     <i class="el-icon-search"></i>
