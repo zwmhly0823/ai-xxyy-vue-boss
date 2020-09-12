@@ -9,11 +9,15 @@
 <template>
   <div class="container">
     <div class="time">
-      <tabTimeSelect @result="getSeacherTime" />
-      <CheckType @result="getcheckType" />
-      <SearchPart @result="getSeachePart" />
-      <courseTeam @result="getTeamId" />
-      <searchPhone name="userTel" @result_lk="getPhone" />
+      <tabTimeSelect class="inline-search" @result="getSeacherTime" />
+      <CheckType class="inline-search" @result="getcheckType" />
+      <SearchPart class="inline-search" @result="getSeachePart" />
+      <courseTeam class="inline-search" @result="getTeamId" />
+      <searchPhone
+        class="inline-search margin_left_20"
+        name="userTel"
+        @result_lk="getPhone"
+      />
     </div>
     <el-table
       :data="tableData"
@@ -981,8 +985,14 @@ export default {
     text-align: right;
   }
   .time {
-    display: flex;
+    // display: flex;
     align-items: center;
+    .inline-search {
+      display: inline-block;
+    }
+    .margin_left_20 {
+      margin-left: 20px;
+    }
   }
   .drawer-approval-detail {
     padding-top: 50px;
