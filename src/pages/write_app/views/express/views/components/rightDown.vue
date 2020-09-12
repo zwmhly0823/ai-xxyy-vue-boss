@@ -284,12 +284,12 @@
         :key="11"
       >
         <template slot-scope="scope">
-          <div class="product">
+          <!-- <div class="product">
             <span>{{
               scope.row.course_day ? scope.row.course_day + '开课' : '--'
             }}</span>
-          </div>
-          <div class="gray-text">
+          </div> -->
+          <div class="product">
             {{
               scope.row.lastTeamInfo ? scope.row.lastTeamInfo.team_name : '--'
             }}
