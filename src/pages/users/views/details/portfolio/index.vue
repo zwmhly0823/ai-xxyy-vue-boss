@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-08-25 11:40:19
  * @LastEditors: liukun
- * @LastEditTime: 2020-09-09 19:49:27
+ * @LastEditTime: 2020-09-12 19:00:06
 -->
 <template>
   <div>
@@ -17,8 +17,9 @@
         <el-tab-pane
           v-for="(item, key) of teams_lk_filter"
           :key="key"
-          :label="`${item.team_type_formatting}:${item.team_name}`"
-          :name="'' + key"
+          :label="`${item.team_type_formatting || '体验课'}:${item.team_name}`"
+          :courseIds="item.course_ids"
+          :teamId="item.id"
         >
           <div class="inner_lk">
             <div class="statistical">
@@ -100,7 +101,13 @@
       </el-table-column>
       <el-table-column label="老师姓名" width="70">
         <template slot-scope="scope">
-          <div>{{ scope.row.serNum || '--' }}</div>
+          <div>
+            {{
+              scope.row.taskComment[0] &&
+                scope.row.taskComment[0].teacherInfo &&
+                scope.row.taskComment[0].teacherInfo.realname
+            }}
+          </div>
         </template>
       </el-table-column>
       <el-table-column label="老师点评·点评时间">
@@ -196,42 +203,60 @@ import { formatData } from '@/utils/index'
 export default {
   name: 'portfolio',
   mounted() {
-    this.$root.$on('portfolio', (r) => {
-      console.info('老爹给作品集的基础数据', r)
-      this.teams_lk = r || []
+    this.$root.$on('portfolio', (...argus) => {
+      console.info('老爹给作品集的基础数据和写字0元体验', argus[0], argus[1])
+      this.teams_lk = argus[0] || []
+      this.teams_lk_free_write = argus[1] || []
     })
-    // 初始化拿数据
+    // 初始化-拿数组第1条数据
     setTimeout(() => {
-      this.lessonId = this.teams_lk_filter[0] ? this.teams_lk_filter[0].id : ''
-      this.reqStudentCourseTaskPage()
+      if (this.teams_lk_filter[0]) {
+        this.teamId = this.teams_lk_filter[0].id
+        this.courseId =
+          this.teams_lk_filter[0] &&
+          this.teams_lk_filter[0].course_ids &&
+          this.teams_lk_filter[0].course_ids.length
+            ? this.teams_lk_filter[0].course_ids
+            : []
+        this.reqStudentCourseTaskPage()
+      }
     }, 1000)
   },
   data() {
     return {
+      teams_lk_free_write: [], // tab-pane(写字0元体验)
       teams_lk: [], // tab-pane
       courseData: '0', // tab-pane v-model
       porfolioTableData: [], // table展示数据
 
       // 数据查询
-      lessonId: '', // 课程Id
+      teamId: '', // 班级Id
+      courseId: [], // 写字0元体验课
       currentPage: 1, // 页码
 
       // 分页组件
       allDigit: 1, // 总量
+      changeSubject: this.$store.state.subjects.subjectCode,
 
       // 播放相关
       play: -1,
       audioId: '',
       currentVideo: '',
-      videoDialog: false,
-      changeSubject: this.$store.state.subjects.subjectCode
+      videoDialog: false
     }
   },
   computed: {
     teams_lk_filter() {
-      return this.teams_lk.filter(
-        (item) => item.subject === '' + this.changeSubject
+      const arrNew = this.teams_lk
+        .filter((item) => item.subject === '' + this.changeSubject)
+        .concat(this.changeSubject ? this.teams_lk_free_write : [])
+      console.info(
+        '作品集:o元,科目,最终',
+        this.teams_lk_free_write,
+        this.changeSubject,
+        arrNew
       )
+      return arrNew
     }
   },
   watch: {
@@ -270,8 +295,17 @@ export default {
     },
     // 切换课程
     courseBtn(r) {
-      this.lessonId = this.teams_lk_filter[r.name].id
-      this.reqStudentCourseTaskPage()
+      console.info(r)
+      if (r.$attrs.courseIds && r.$attrs.courseIds.length) {
+        // 写字0元体验课
+        this.courseId = r.$attrs.courseIds
+        this.reqStudentCourseTaskPage()
+      } else {
+        // 普通系统体验课
+        this.teamId = r.$attrs.teamId
+        this.courseId = []
+        this.reqStudentCourseTaskPage()
+      }
     },
     // 翻页
     handleCurrentChange(val) {
@@ -281,12 +315,14 @@ export default {
     },
     // 数据接口_作品集
     reqStudentCourseTaskPage() {
-      this.$http.User.getStudentCourseTaskPage(
-        this.changeSubject,
-        this.$route.params.id, // studentId
-        this.lessonId, // 课程Id
-        this.currentPage
-      ).then((res) => {
+      this.$http.User.getStudentCourseTaskPage({
+        page: this.currentPage,
+        subject: this.changeSubject,
+        studentId: this.$route.params.id,
+
+        teamId: this.teamId, // 班级Id
+        courseId: this.courseId // 写字0元体验课
+      }).then((res) => {
         console.log('作品集模块接口', res.data.StudentCourseTaskPage.content)
         const _data =
           res.data.StudentCourseTaskPage &&

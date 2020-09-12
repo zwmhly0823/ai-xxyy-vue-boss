@@ -433,19 +433,17 @@ export default {
           (document.title = `${this.stuInfor.username +
             '·' +
             this.stuInfor.user_num}-美术宝写字BOSS`)
-        // ④设置生命周期
-        if (typeof this.stuInfor.systemCourse_lifeCycle === 'string') {
-          this.stuInfor.systemCourse_lifeCycle = {
-            0: '待开课',
-            1: '开课中',
-            2: '已结课',
-            91: '已退费'
-          }[this.stuInfor.systemCourse_lifeCycle]
-        }
-
-        // ⑥给各个组件传基础数据
-        this.$root.$emit('study', this.stuInfor.teams) // 学习记录
-        this.$root.$emit('portfolio', this.stuInfor.teams) // 作品集
+        // ④给各个组件传基础数据
+        this.$root.$emit(
+          'study',
+          this.stuInfor.teams,
+          this.stuInfor.zero_teamid_write_trials
+        ) // 学习记录+0元体验课
+        this.$root.$emit(
+          'portfolio',
+          this.stuInfor.teams,
+          this.stuInfor.zero_teamid_write_trials
+        ) // 作品集+0元体验课
       })
     },
 
