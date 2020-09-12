@@ -4,8 +4,8 @@
  * @version:
  * @Author: shentong
  * @Date: 2020-03-13 14:38:28
- * @LastEditors: liukun
- * @LastEditTime: 2020-09-09 21:10:28
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-09-12 13:01:18
  */
 // import axios from '../axios'
 import axios from '../axiosConfig'
@@ -1074,6 +1074,7 @@ export default {
             period_name
             period
             status
+            subject
           }
         }
       }`
