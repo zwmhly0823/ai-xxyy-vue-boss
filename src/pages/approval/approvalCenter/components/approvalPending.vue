@@ -10,11 +10,15 @@
   <div class="container">
     <!-- 搜索框 -->
     <div class="time">
-      <tabTimeSelect @result="getSeacherTime" />
-      <CheckType @result="getcheckType" />
-      <SearchPart @result="getSeachePart" />
-      <courseTeam @result="getTeamId" />
-      <searchPhone name="userTel" @result_lk="getPhone" />
+      <tabTimeSelect class="inline-search" @result="getSeacherTime" />
+      <CheckType class="inline-search" @result="getcheckType" />
+      <SearchPart class="inline-search" @result="getSeachePart" />
+      <courseTeam class="inline-search" @result="getTeamId" />
+      <searchPhone
+        class="inline-search margin_left_20"
+        name="userTel"
+        @result_lk="getPhone"
+      />
       <el-button
         type="primary"
         size="mini"
@@ -1607,8 +1611,14 @@ export default {
     color: #2a75ed;
   }
   .time {
-    display: flex;
+    // display: flex;
     align-items: center;
+    .inline-search {
+      display: inline-block;
+    }
+    .margin_left_20 {
+      margin-left: 20px;
+    }
   }
   // 是否三点
   .disnone {

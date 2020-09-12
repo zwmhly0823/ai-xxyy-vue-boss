@@ -8,7 +8,7 @@
 -->
 <template>
   <div class="container">
-    <div class="course-item">
+    <div class="course-item inline-search">
       <el-select
         v-model="value"
         @change="selectTeam"
@@ -28,7 +28,7 @@
         </el-option>
       </el-select>
     </div>
-    <div class="course-item">
+    <div class="course-item inline-search">
       <el-select
         class="item-style"
         v-model="stage"
