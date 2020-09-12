@@ -194,11 +194,11 @@ export default {
     userLink() {
       return function(userId) {
         let url = ''
-        const host = window.location.hostname
-        if (host.includes('test')) {
+        const origin = window.location.origin
+        if (origin.includes('test')) {
           url = 'ai-app-vue-boss-test/'
         }
-        return `${url}/users/#/details/${userId}`
+        return `${origin}/${url}users/#/details/${userId}`
       }
     }
   },
