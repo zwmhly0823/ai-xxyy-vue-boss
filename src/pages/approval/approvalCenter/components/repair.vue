@@ -835,9 +835,11 @@ export default {
             switch (this.formRepair.packagesType) {
               case 'EXPERIENCE_COURSE':
                 this.formRepair.courseType = 1
+                this.formRepair.type = 'EXPERIENCE_MATERIALS'
                 break
               case 'SYSTEM_COURSE':
                 this.formRepair.courseType = 2
+                this.formRepair.type = 'SYSTEM_MATERIALS'
                 break
               default:
                 break
