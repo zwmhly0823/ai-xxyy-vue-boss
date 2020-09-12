@@ -36,6 +36,11 @@ export default {
                 wildcard: {
                   usernum: `*${val}*`
                 }
+              },
+              {
+                wildcard: {
+                  'username.keyword': `*${val}*`
+                }
               }
             ]
           }
