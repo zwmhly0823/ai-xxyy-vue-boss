@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 14:19:58
  * @LastEditors: Shentong
- * @LastEditTime: 2020-09-11 18:42:44
+ * @LastEditTime: 2020-09-12 12:33:28
  -->
 <template>
   <div>
@@ -784,15 +784,22 @@ export default {
         }).then((res) => {
           this.table.totalElements = +res.data[trail].totalElements
           const _data = res.data[trail].content
-          _data.forEach((item) => {
-            /** shentong writer 改写 */
-            const userExtends = item.userExtends || {}
+          _data.forEach((item = {}) => {
+            /** shentong writer 改写 体验课系统课接口返回的字段不同，做兼容 */
+            const {
+              added_wechat: addWct,
+              addedwechat,
+              added_group: addGroup,
+              addedgroup,
+              userExtends = {}
+            } = item
             const { sex = '', birthday = '', grade = '' } = userExtends
 
             userExtends.sex = sex ? USER_SEX[+sex] : ''
             userExtends.grade = grade ? GRADE[userExtends.grade] : ''
             userExtends.birthday = birthday ? GetAgeByBrithday(birthday) : ''
-
+            item.added_wechat = addWct !== undefined ? addWct : addedwechat
+            item.added_group = addGroup !== undefined ? addGroup : addedgroup
             /** shentong writer 改写 */
 
             if (userExtends.birthday.indexOf(50) !== -1) {
@@ -803,8 +810,12 @@ export default {
             item.buytime = item.buytime ? timestamp(item.buytime, 6) : ''
             item.added_wechat_time = timestamp(item.utime, 6)
             item.added_group_time = timestamp(item.utime, 6)
-            item.fast_follow_time = timestamp(item.fast_follow_time, 6)
+            item.fast_follow_time = item.fast_follow_time
+              ? timestamp(item.fast_follow_time, 6)
+              : ''
             this.table.courseState = item.course_state
+
+            console.log('item', item)
           })
           if (this.tableDataEmpty) {
             this.table.tableData = _data
