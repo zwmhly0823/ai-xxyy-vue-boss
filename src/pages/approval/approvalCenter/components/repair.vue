@@ -850,6 +850,9 @@ export default {
 
             delete this.formRepair.mode
           }
+          const loading = this.$loading({
+            lock: true
+          })
           this.$http.Backend.applyReplenish(this.formRepair).then((res) => {
             if (res) {
               this.clearData()
@@ -860,6 +863,9 @@ export default {
                 }
               })
             }
+            setTimeout(() => {
+              loading.close()
+            }, 1000)
           })
         } else {
           console.log('error submit!!')
