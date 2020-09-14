@@ -864,6 +864,7 @@ export default {
             totalPages
             totalElements
             content{
+              id
               student_id
               task_image
               task_video
