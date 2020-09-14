@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-24 18:50:54
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-09-01 16:25:56
+ * @LastEditTime: 2020-09-14 15:35:33
  -->
 <template>
   <div class="search-item small">
@@ -94,6 +94,7 @@ export default {
   },
   watch: {},
   async created() {
+    console.log(this.subType)
     this.supList = this.subType === '1' ? this.systemList : this.experList
     // await this.getSup()
   },
