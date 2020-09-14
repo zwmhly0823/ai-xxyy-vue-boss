@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 14:19:58
  * @LastEditors: Shentong
- * @LastEditTime: 2020-09-14 18:02:22
+ * @LastEditTime: 2020-09-14 20:09:11
  -->
 <template>
   <div>
@@ -821,8 +821,8 @@ export default {
         if (this.search) {
           // 后端写的傻逼传参方式teamid
           this.querysData = isSystemCourse
-            ? `{"teamid":${this.classObj.teamId},"student_id":${this.search}}`
-            : `{"team_id":${this.classObj.teamId},"student_id":${this.search}}`
+            ? `{"teamid":${this.classObj.teamId},"studentid":${this.search}}`
+            : `{"team_id":${this.classObj.teamId},"id":${this.search}}`
         } else {
           this.querysData = isSystemCourse
             ? `{"teamid":${this.classObj.teamId}}`
