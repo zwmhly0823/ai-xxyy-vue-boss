@@ -76,6 +76,11 @@
         <product-topic @result="getProductTopic" :name="topicType" />
       </el-form-item>
 
+      <el-form-item v-if="productType">
+        <!-- 物流类别 -->
+        <product-typelog @result="getProductTypelog" :name="productType" />
+      </el-form-item>
+
       <el-form-item v-if="moreVersion">
         <!-- 随材版本-->
         <more-version-box @result="getVersionNu" :name="moreVersion" />
@@ -328,6 +333,7 @@
 import DatePicker from './searchItems/datePicker.vue'
 import ChannelSelect from './searchItems/channel.vue'
 import ProductTopic from './searchItems/productTopic.vue'
+import ProductTypelog from './searchItems/productTypelog.vue'
 import StageSupLevels from './searchItems/stageSupLevels.vue'
 import SearchPhone from './searchItems/searchPhone.vue'
 import OutTradeNo from './searchItems/outTradeNo.vue'
@@ -386,6 +392,11 @@ export default {
     topicType: {
       type: String,
       default: '' // topicType
+    },
+    // 物流类别
+    productType: {
+      type: String,
+      default: ''
     },
     // 期数
     stage: {
@@ -621,8 +632,8 @@ export default {
     },
     // 是否关联老师搜索
     selectAddress: {
-      type: Boolean,
-      default: false // selectAddress
+      type: String,
+      default: '' // selectAddress
     },
     // 系统课排期
     searchStage: {
@@ -714,6 +725,7 @@ export default {
   components: {
     ChannelSelect,
     ProductTopic,
+    ProductTypelog,
     StageSupLevels,
     DatePicker,
     SearchPhone,
@@ -771,6 +783,11 @@ export default {
     getProductTopic(res) {
       console.log(res, 'res')
       this.setSeachParmas(res, [this.topicType || 'topicType'])
+    },
+    // 物流类别
+    getProductTypelog(res) {
+      console.log(res, 'res')
+      this.setSeachParmas(res, [this.productType || 'productType'])
     },
     // 期数
     stageCallBack(res) {
@@ -910,6 +927,7 @@ export default {
       this.setSeachParmas(res, [this.wxRecordId])
     },
     getAddress(res) {
+      console.log(res, 'getAddress==')
       this.setSeachParmas(res, [this.selectAddress])
     },
     getSearchStage(res) {
@@ -989,30 +1007,25 @@ export default {
       })
       // must
       if (name === 'must') {
-        if (res && (res.provincesCode || res.provincesCode === '')) {
-          let hasAddress = false
-          temp.forEach((item) => {
-            if (item.term && item.term.provincesCode) {
-              hasAddress = true
-              item.term = res
-              this.must = temp
-            }
-          })
-          if (!hasAddress) {
+        console.log(res, 'res==')
+        if (res) {
+          if (
+            this.selectAddress &&
+            Object.keys(res).includes('provincesCode')
+          ) {
             temp.push({
-              // [`${extraKey}`]: `${JSON.stringify(res)}`
+              [extraKey]: { [`${this.selectAddress}`]: res }
+            })
+          } else {
+            temp.push({
               [extraKey]: res
             })
-            this.must = temp
           }
-        } else if (res) {
-          temp.push({
-            // [`${extraKey}`]: `${JSON.stringify(res)}`
-            [extraKey]: res
-          })
+
           this.must = temp
         }
         // this.$emit('search', res === '' ? '' : temp)
+        console.log(temp, 'temp==')
         this.$emit('search', temp)
         return
       }

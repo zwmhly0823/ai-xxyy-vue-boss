@@ -15,6 +15,7 @@
       size="mini"
       filterable
       @change="handleChange"
+      @clear="onClear"
       clearable
     >
     </el-cascader>
@@ -27,8 +28,8 @@ export default {
   name: 'selectAddress',
   props: {
     name: {
-      type: Boolean,
-      default: false
+      type: String,
+      default: ''
     },
     // 是否只返回值，如果是，父组件获得值后根据实际表达式组装数据
     onlyValue: {
@@ -60,6 +61,7 @@ export default {
           citysCode: citys[0].label,
           areasCode: areas[0].label
         }
+        this.$emit('getAddress', this.selectData)
       } else if (data[0] && data[1]) {
         const provinces = this.areaLists.filter(
           (item) => +item.value === +data[0]
@@ -71,6 +73,7 @@ export default {
           provincesCode: provinces[0].label,
           citysCode: citys[0].label
         }
+        this.$emit('getAddress', this.selectData)
       } else if (data[0]) {
         const provinces = this.areaLists.filter(
           (item) => +item.value === +data[0]
@@ -78,9 +81,13 @@ export default {
         this.selectData = {
           provincesCode: provinces[0].label
         }
+        this.$emit('getAddress', this.selectData)
+      } else {
+        this.$emit('getAddress', '')
       }
-
-      this.$emit('getAddress', this.selectData)
+    },
+    onClear() {
+      this.$emit('getAddress', '')
     }
   }
 }
