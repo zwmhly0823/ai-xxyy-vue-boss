@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 14:19:58
  * @LastEditors: Shentong
- * @LastEditTime: 2020-09-12 19:22:09
+ * @LastEditTime: 2020-09-14 18:02:22
  -->
 <template>
   <div>
@@ -884,9 +884,9 @@ export default {
     getLogistics() {
       if (this.classObj.teamId) {
         if (this.search) {
-          this.querysData = `{"team_id":${this.classObj.teamId},"team_type":${this.classObj.type},"uid":${this.search}}`
+          this.querysData = `{"team_id":${this.classObj.teamId},"subject":"1","team_type":${this.classObj.type},"uid":${this.search}}`
         } else {
-          this.querysData = `{"team_id":${this.classObj.teamId},"team_type":${this.classObj.type}}`
+          this.querysData = `{"team_id":${this.classObj.teamId},"subject":"1","team_type":${this.classObj.type}}`
         }
         this.$http.writeApp.Team.getStuExpressPage({
           querysData: this.querysData,
@@ -957,9 +957,9 @@ export default {
     geiLogin() {
       if (this.classObj.teamId) {
         if (this.search) {
-          this.querysData = `{"team_id":${this.classObj.teamId},"team_type":${this.classObj.type},"uid":${this.search}}`
+          this.querysData = `{"team_id":${this.classObj.teamId},"subject":"1","team_type":${this.classObj.type},"uid":${this.search}}`
         } else {
-          this.querysData = `{"team_id":${this.classObj.teamId},"team_type":${this.classObj.type}}`
+          this.querysData = `{"team_id":${this.classObj.teamId},"subject":"1","team_type":${this.classObj.type}}`
         }
         this.$http.writeApp.Team.getStuLoginPage({
           querysData: this.querysData,
