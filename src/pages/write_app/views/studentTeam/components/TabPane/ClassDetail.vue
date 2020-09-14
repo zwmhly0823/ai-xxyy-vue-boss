@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 14:19:58
  * @LastEditors: Shentong
- * @LastEditTime: 2020-09-14 20:09:11
+ * @LastEditTime: 2020-09-14 21:15:43
  -->
 <template>
   <div>
@@ -1145,6 +1145,14 @@ export default {
               item.task_image = ''
               item.works_ctime = ''
             }
+            if (item.listenInfoArr) {
+              item.listenInfoArr.forEach((ls) => {
+                if (ls.task_sound_second) {
+                  ls.task_sound_second = Math.floor(ls.task_sound_second / 1000)
+                }
+              })
+            }
+
             if (item.has_comment_ctime) {
               item.has_comment_ctime = timestamp(item.has_comment_ctime, 6)
               item.has_comment_ctime = `已点评·${item.has_comment_ctime}`
