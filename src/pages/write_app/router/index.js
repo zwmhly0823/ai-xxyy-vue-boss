@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-08-19 20:26:32
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-09-07 18:28:10
+ * @LastEditTime: 2020-09-15 17:21:44
  */
 import Vue from 'vue'
 import VueRouter from 'vue-router'
@@ -53,7 +53,7 @@ const routes = [
     name: 'allUsers',
     meta: {
       title: '全部学员',
-      keepAlive: true
+      keepAlive: false
     },
     component: () => import('../views/users/views/usersModule.vue')
   },
