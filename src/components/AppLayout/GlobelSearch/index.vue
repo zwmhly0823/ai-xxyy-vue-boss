@@ -4,7 +4,7 @@
  * @Author: zhangjiawen
  * @Date: 2020-07-10 14:49:13
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-09-12 19:21:11
+ * @LastEditTime: 2020-09-15 15:56:37
 -->
 <template>
   <el-input
@@ -56,6 +56,19 @@ export default {
             `/users/#/details/${res.data.UserSubjectStatisticsListEx[0].u_id}`
           )
           this.student_id = ''
+        } else if (
+          res.data.UserSubjectStatisticsListEx &&
+          res.data.UserSubjectStatisticsListEx.length > 1 &&
+          this.student_id.length < 11
+        ) {
+          res.data.UserSubjectStatisticsListEx.map((item, index) => {
+            if (item.user_num === this.student_id) {
+              return openBrowserTab(
+                `/users/#/details/${res.data.UserSubjectStatisticsListEx[index].u_id}`
+              )
+            }
+          })
+          this.$message.error('暂无此学员')
         } else {
           this.$message.error('暂无此学员')
           // debugger
