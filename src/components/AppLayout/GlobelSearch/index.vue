@@ -4,7 +4,7 @@
  * @Author: zhangjiawen
  * @Date: 2020-07-10 14:49:13
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-09-15 18:27:23
+ * @LastEditTime: 2020-09-15 22:03:57
 -->
 <template>
   <el-input
@@ -66,6 +66,7 @@ export default {
               )
             }
           })
+          this.student_id = ''
           this.$message.error('暂无此学员')
         } else {
           this.$message.error('暂无此学员')
