@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-13 16:53:41
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-20 14:53:45
+ * @LastEditTime: 2020-09-15 19:57:21
  -->
 <template>
   <div class="right-container">
@@ -444,6 +444,7 @@ export default {
         const {
           data: { detail = {} }
         } = res
+        if (!detail) return {}
         detail.state =
           detail && detail.team_state
             ? this.teamStatus[+detail.team_state] || '今日开课'

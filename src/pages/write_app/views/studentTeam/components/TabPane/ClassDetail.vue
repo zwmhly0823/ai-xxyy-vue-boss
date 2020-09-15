@@ -3,8 +3,8 @@
  * @version:
  * @Author: panjian
  * @Date: 2020-03-16 14:19:58
- * @LastEditors: Shentong
- * @LastEditTime: 2020-09-12 18:48:05
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-09-15 21:05:04
  -->
 <template>
   <div>
@@ -368,7 +368,8 @@ export default {
           id: '12',
           statusName: '半年课完课'
         }
-      ]
+      ],
+      defaultHead: 'https://msb-ai.meixiu.mobi/ai-pm/static/touxiang.png'
     }
   },
   created() {
@@ -818,7 +819,7 @@ export default {
 
       if (this.classObj.teamId) {
         if (this.search) {
-          // 后端写的傻逼传参方式teamid
+          // 体验课、系统课接口返回的字段书写格式不致
           this.querysData = isSystemCourse
             ? `{"teamid":${this.classObj.teamId},"student_id":${this.search}}`
             : `{"team_id":${this.classObj.teamId},"student_id":${this.search}}`
@@ -860,6 +861,14 @@ export default {
             /** shentong writer 改写 */
             userExtends.birthday.indexOf(50) !== -1 &&
               (userExtends.birthday = '-')
+            // 默认头像
+            if (
+              !userExtends ||
+              (userExtends &&
+                (!userExtends.head || userExtends.head === 'undefined'))
+            ) {
+              userExtends.head = this.defaultHead
+            }
 
             item.userExtends = userExtends
             item.buytime = item.buytime ? timestamp(item.buytime, 6) : ''

@@ -3,8 +3,8 @@
  * @version:
  * @Author: panjian
  * @Date: 2020-03-16 14:19:58
- * @LastEditors: Shentong
- * @LastEditTime: 2020-09-10 01:34:14
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-09-15 20:54:11
  -->
 <template>
   <div class="dataStyle">
@@ -203,7 +203,8 @@ export default {
       search: '',
       // 请求接口参数
       queryData: '',
-      searchUid: ''
+      searchUid: '',
+      defaultHead: 'https://msb-ai.meixiu.mobi/ai-pm/static/touxiang.png'
     }
   },
   computed: {
@@ -337,6 +338,10 @@ export default {
             ele.birthday !== '0'
               ? (ele.birthday = GetAgeByBrithday(ele.birthday))
               : (ele.birthday = '-')
+            // 默认头像
+            if (!ele.head || ele.head === 'undefined') {
+              ele.head = this.defaultHead
+            }
             // 是否添加微信群  0/未加  1/已加
             const addedGroup = ele.wechat_status.added_group
             if (addedGroup === 0) {
