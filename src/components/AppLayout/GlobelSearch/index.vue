@@ -4,7 +4,7 @@
  * @Author: zhangjiawen
  * @Date: 2020-07-10 14:49:13
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-09-15 15:56:37
+ * @LastEditTime: 2020-09-15 18:27:23
 -->
 <template>
   <el-input
@@ -25,11 +25,16 @@ import { openBrowserTab } from '@/utils/index'
 export default {
   data() {
     return {
-      student_id: ''
+      student_id: '',
+      currentUrl: ''
     }
   },
+
   watch: {},
-  created() {},
+  created() {
+    this.currentUrl =
+      this.$store.getters.subjects.subjectCode === 1 ? 'write_app' : 'users'
+  },
   methods: {
     selectStu() {
       console.log('变化', this.student_id)
@@ -37,14 +42,7 @@ export default {
       if (!this.student_id) {
         return
       }
-      // const params =
-      //   this.student_id.length === 11
-      //     ? {
-      //         mobile: this.student_id
-      //       }
-      //     : {
-      //         user_num: this.student_id
-      //       }
+
       return this.$http.Base.getUserNumPhone(this.student_id).then((res) => {
         console.log(res.data.UserSubjectStatisticsListEx.length)
 
@@ -53,7 +51,7 @@ export default {
           res.data.UserSubjectStatisticsListEx.length === 1
         ) {
           openBrowserTab(
-            `/users/#/details/${res.data.UserSubjectStatisticsListEx[0].u_id}`
+            `/${this.currentUrl}/#/details/${res.data.UserSubjectStatisticsListEx[0].u_id}`
           )
           this.student_id = ''
         } else if (
@@ -64,7 +62,7 @@ export default {
           res.data.UserSubjectStatisticsListEx.map((item, index) => {
             if (item.user_num === this.student_id) {
               return openBrowserTab(
-                `/users/#/details/${res.data.UserSubjectStatisticsListEx[index].u_id}`
+                `/${this.currentUrl}/#/details/${res.data.UserSubjectStatisticsListEx[index].u_id}`
               )
             }
           })
