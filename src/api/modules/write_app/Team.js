@@ -228,6 +228,7 @@ export default {
             student_id
             nickname
             sex
+            head
             birthday
             base_painting
             buytime
