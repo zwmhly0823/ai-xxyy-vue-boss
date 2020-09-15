@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-08-17 19:37:24
  * @LastEditors: liukun
- * @LastEditTime: 2020-09-09 23:06:01
+ * @LastEditTime: 2020-09-15 16:35:58
 -->
 <template>
   <div class="details" v-loading="loading">
@@ -495,8 +495,7 @@
                   :href="
                     `${
                       changeSubject ? '/write_app' : '/student-team'
-                    }/#/teamDetail/${systerm_lk.teamInfo &&
-                      systerm_lk.teamInfo.id}/2`
+                    }/#/teamDetail/${systerm_lk.teamid}/2`
                   "
                   target="_blank"
                   type="primary"
