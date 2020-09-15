@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-15 20:35:57
  * @LastEditors: Shentong
- * @LastEditTime: 2020-08-26 13:35:01
+ * @LastEditTime: 2020-09-15 13:40:54
  -->
 <template>
   <div class="third-step">
@@ -264,7 +264,7 @@ export default {
         { name: 'V2.0', value: 'V2.0' }
       ],
       trialClass: [
-        { name: '单周体验课', value: '3' },
+        // { name: '单周体验课', value: '3' },
         { name: '双周体验课', value: '0' },
         { name: '年系统课', value: '2' },
         { name: '半年系统课', value: '4' }
