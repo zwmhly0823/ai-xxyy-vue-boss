@@ -125,7 +125,7 @@ export default {
     },
     status: {
       type: String,
-      default: '0'
+      default: ''
     },
     regtype: {
       type: String,
@@ -205,9 +205,7 @@ export default {
   },
   watch: {
     status(val) {
-      if (val) {
-        this.expressStatus = val
-      }
+      this.expressStatus = val
     },
     source_type() {
       this.$emit(
@@ -416,9 +414,9 @@ export default {
           {
             terms: { source_type: this.source_type.split(',') }
           },
-          // {
-          //   terms: { regtype: this.regtype.split(',') }
-          // },
+          {
+            terms: { regtype: this.regtype.split(',') }
+          },
           { terms: { express_status: this.expressStatus.split(',') } }
         ])
         let finalmust = []
