@@ -161,15 +161,13 @@
                   <span>最近活跃:</span>
                   {{
                     stuInfor_add.lastLoginData &&
-                      stuInfor_add.lastLoginData[0] &&
-                      (stuInfor_add.lastLoginData[0].device_model || '-')
+                      (stuInfor_add.lastLoginData.device_model || '-')
                   }}
                   {{
                     stuInfor_add.lastLoginData &&
-                      stuInfor_add.lastLoginData[0] &&
-                      (stuInfor_add.lastLoginData[0].login_time
+                      (stuInfor_add.lastLoginData.login_time
                         ? new Date(
-                            Number(stuInfor_add.lastLoginData[0].login_time)
+                            Number(stuInfor_add.lastLoginData.login_time)
                           ).toLocaleDateString()
                         : '-')
                   }}
