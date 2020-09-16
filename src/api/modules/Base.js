@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-07-18 15:45:45
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-09-11 15:30:30
+ * @LastEditTime: 2020-09-15 14:47:08
  */
 
 import axios from '../axiosConfig'
@@ -34,7 +34,7 @@ export default {
               },
               {
                 wildcard: {
-                  usernum: `*${val}*`
+                  user_num: `*${val}*`
                 }
               },
               {
