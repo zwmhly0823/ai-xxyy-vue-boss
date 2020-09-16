@@ -4,8 +4,8 @@
  * @version:
  * @Author: shentong
  * @Date: 2020-03-13 14:38:28
- * @LastEditors: Shentong
- * @LastEditTime: 2020-09-16 14:47:48
+ * @LastEditors: zhangjianwen
+ * @LastEditTime: 2020-09-16 16:10:53
  */
 // import axios from '../axios'
 import axios from '../axiosConfig'
@@ -580,7 +580,7 @@ export default {
     return axios.post(`/graphql/v1/toss`, {
       query: `{
         StudentTrialRecordOperatorStatisticsPage(
-          query:${JSON.stringify(formattingQuery)},
+          query:${JSON.stringify(injectSubject(formattingQuery))},
           page: ${page},
           size:${size},
           sort:${JSON.stringify(formattingSort)}
@@ -626,7 +626,7 @@ export default {
     return axios.post(`/graphql/v1/toss`, {
       query: `{
         StudentTrialRecordDetailBossStatistics(
-          query:${JSON.stringify(formattingQuery)}
+          query:${JSON.stringify(injectSubject(formattingQuery))}
           
           )
           {
@@ -682,7 +682,7 @@ export default {
     return axios.post(`/graphql/v1/toss`, {
       query: `{
         StudentTrialRecordListStatisticsPage(
-          query:${JSON.stringify(formattingQuery)},
+          query:${JSON.stringify(injectSubject(formattingQuery))},
           page: ${page},
           size:20,
           sort:${JSON.stringify(formattingSort)}
