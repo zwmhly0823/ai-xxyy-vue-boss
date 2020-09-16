@@ -3,8 +3,8 @@
  * @version:
  * @Author: panjian
  * @Date: 2020-03-16 14:19:58
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-09-15 21:05:04
+ * @LastEditors: Shentong
+ * @LastEditTime: 2020-09-16 14:48:31
  -->
 <template>
   <div>
@@ -486,9 +486,8 @@ export default {
     handleSearch(res) {
       this.search = res.length ? `"${res[0].term.uid}"` : ''
       this.table.currentPage = 1
-      if (this.tabsName === '加好友进群') {
-        this.getGroup()
-      } else if (this.tabsName === '物流') {
+      console.log(this.tabsName, 'TABNAME')
+      if (this.tabsName === '物流') {
         this.getLogistics()
       } else if (this.tabsName === '打开APP') {
         this.geiLogin()
@@ -496,6 +495,8 @@ export default {
         this.getClassCompPage()
       } else if (this.tabsName === '作品及点评') {
         this.getStuComment()
+      } else {
+        this.getGroup()
       }
     },
     // 生成完课榜----确定按钮
@@ -821,8 +822,8 @@ export default {
         if (this.search) {
           // 体验课、系统课接口返回的字段书写格式不致
           this.querysData = isSystemCourse
-            ? `{"teamid":${this.classObj.teamId},"student_id":${this.search}}`
-            : `{"team_id":${this.classObj.teamId},"student_id":${this.search}}`
+            ? `{"teamid":${this.classObj.teamId},"studentid":${this.search}}`
+            : `{"team_id":${this.classObj.teamId},"id":${this.search}}`
         } else {
           this.querysData = isSystemCourse
             ? `{"teamid":${this.classObj.teamId}}`
@@ -892,9 +893,9 @@ export default {
     getLogistics() {
       if (this.classObj.teamId) {
         if (this.search) {
-          this.querysData = `{"team_id":${this.classObj.teamId},"team_type":${this.classObj.type},"uid":${this.search}}`
+          this.querysData = `{"team_id":${this.classObj.teamId},"subject":"1","team_type":${this.classObj.type},"uid":${this.search}}`
         } else {
-          this.querysData = `{"team_id":${this.classObj.teamId},"team_type":${this.classObj.type}}`
+          this.querysData = `{"team_id":${this.classObj.teamId},"subject":"1","team_type":${this.classObj.type}}`
         }
         this.$http.writeApp.Team.getStuExpressPage({
           querysData: this.querysData,
@@ -965,9 +966,9 @@ export default {
     geiLogin() {
       if (this.classObj.teamId) {
         if (this.search) {
-          this.querysData = `{"team_id":${this.classObj.teamId},"team_type":${this.classObj.type},"uid":${this.search}}`
+          this.querysData = `{"team_id":${this.classObj.teamId},"subject":"1","team_type":${this.classObj.type},"uid":${this.search}}`
         } else {
-          this.querysData = `{"team_id":${this.classObj.teamId},"team_type":${this.classObj.type}}`
+          this.querysData = `{"team_id":${this.classObj.teamId},"subject":"1","team_type":${this.classObj.type}}`
         }
         this.$http.writeApp.Team.getStuLoginPage({
           querysData: this.querysData,
@@ -1153,6 +1154,14 @@ export default {
               item.task_image = ''
               item.works_ctime = ''
             }
+            if (item.listenInfoArr) {
+              item.listenInfoArr.forEach((ls) => {
+                if (ls.task_sound_second) {
+                  ls.task_sound_second = Math.floor(ls.task_sound_second / 1000)
+                }
+              })
+            }
+
             if (item.has_comment_ctime) {
               item.has_comment_ctime = timestamp(item.has_comment_ctime, 6)
               item.has_comment_ctime = `已点评·${item.has_comment_ctime}`

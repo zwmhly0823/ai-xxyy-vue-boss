@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-15 20:35:57
  * @LastEditors: Shentong
- * @LastEditTime: 2020-08-27 20:51:11
+ * @LastEditTime: 2020-09-15 20:31:24
  -->
 <template>
   <div class="second-step">
@@ -141,7 +141,7 @@ export default {
       const res = await this.$http.writeApp.Teacher.getTeacherPage(
         page,
         JSON.stringify(query),
-        500
+        3000
       )
       if (res && res.data && res.data.TeacherManagePage) {
         const { content = [], number } = res.data.TeacherManagePage

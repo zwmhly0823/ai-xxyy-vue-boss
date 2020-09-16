@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-08-25 11:40:19
  * @LastEditors: liukun
- * @LastEditTime: 2020-09-12 18:56:19
+ * @LastEditTime: 2020-09-15 23:04:11
 -->
 <template>
   <div>
@@ -40,11 +40,16 @@
               </div>
             </div>
             <div class="statistical">
-              <div>
-                <span v-if="changeSubject">已解锁</span>
-                <span v-else>已放课</span>:
+              <div v-if="changeSubject">
+                <span>已解锁</span>
                 <span class="tatistical-span">
-                  {{ item.start_course_count || item.send_course_count }}
+                  {{ item.start_course_count }}
+                </span>
+              </div>
+              <div v-else>
+                <span>已放课</span>:
+                <span class="tatistical-span">
+                  {{ item.send_course_count }}
                 </span>
               </div>
               <div v-if="!changeSubject">
@@ -75,17 +80,18 @@
           <div>{{ scope.row.ctime }}</div>
         </template>
       </el-table-column>
+
       <el-table-column label="首次参课时间">
         <template slot-scope="scope">
           <div>
             {{
               scope.row.studentCompleteCourseLog &&
-              scope.row.studentCompleteCourseLog.ctime
+              scope.row.studentCompleteCourseLog.ctime !== '-'
                 ? scope.row.studentCompleteCourseLog.ctime
                 : '未参课'
             }}
           </div>
-          <div class="course-btn">
+          <div class="course-btn" v-if="!changeSubject">
             {{
               scope.row.studentCompleteCourseLog &&
               scope.row.studentCompleteCourseLog.is_today_join_course === 1
@@ -95,19 +101,17 @@
           </div>
         </template>
       </el-table-column>
+
       <el-table-column prop="address" label="首次完课时间">
         <template slot-scope="scope">
           <div>
             {{
-              scope.row.studentCompleteCourseLog &&
-              scope.row.studentCompleteCourseLog.complete_time &&
-              scope.row.studentCompleteCourseLog.complete_time !==
-                '1970-01-01 08:00:00'
+              scope.row.studentCompleteCourseLog.complete_time !== '-'
                 ? scope.row.studentCompleteCourseLog.complete_time
                 : '未完课'
             }}
           </div>
-          <div class="course-btn">
+          <div class="course-btn" v-if="changeSubject">
             {{
               scope.row.studentCompleteCourseLog &&
               scope.row.studentCompleteCourseLog.is_today_complete_course === 1
@@ -117,25 +121,20 @@
           </div>
         </template>
       </el-table-column>
+
       <el-table-column label="解锁状态" v-if="changeSubject">
         <template slot-scope="scope">
           <section>
             {{
-              scope.row.studentCompleteCourseLog &&
-              scope.row.studentCompleteCourseLog.start_date &&
-              scope.row.studentCompleteCourseLog.start_date !==
-                '1970-01-01 08:00:00'
+              scope.row.start_date && scope.row.start_date !== '-'
                 ? '解锁'
                 : '未解锁'
             }}
           </section>
           <section>
             {{
-              scope.row.studentCompleteCourseLog &&
-              scope.row.studentCompleteCourseLog.start_date &&
-              scope.row.studentCompleteCourseLog.start_date !==
-                '1970-01-01 08:00:00'
-                ? scope.row.studentCompleteCourseLog.start_date
+              scope.row.start_date && scope.row.start_date !== '-'
+                ? scope.row.start_date
                 : ''
             }}
           </section>
@@ -257,33 +256,45 @@ export default {
       }).then((res) => {
         console.log('学习记录模块接口', res.data.SendCourseLogPage)
         const _data =
-          res.data.SendCourseLogPage && res.data.SendCourseLogPage.content
+          res.data.SendCourseLogPage &&
+          res.data.SendCourseLogPage.content &&
+          res.data.SendCourseLogPage.content.length
             ? res.data.SendCourseLogPage.content
             : []
         _data.forEach((item) => {
           // 课程计划时间
-          item.ctime = item.ctime ? formatData(item.ctime, 's') : '-'
+          item.ctime = item.ctime !== '0' ? formatData(item.ctime, 's') : '-'
           if (item.studentCompleteCourseLog) {
             // 参课时间
-            if (item.studentCompleteCourseLog.ctime) {
+            if (
+              item.studentCompleteCourseLog &&
+              item.studentCompleteCourseLog.ctime
+            ) {
               item.studentCompleteCourseLog.ctime = formatData(
                 item.studentCompleteCourseLog.ctime,
                 's'
               )
+            } else {
+              item.studentCompleteCourseLog.ctime = '-'
             }
+
             // 完课时间
-            if (item.studentCompleteCourseLog.complete_time) {
+            if (
+              item.studentCompleteCourseLog &&
+              item.studentCompleteCourseLog.complete_time !== '0'
+            ) {
               item.studentCompleteCourseLog.complete_time = formatData(
                 item.studentCompleteCourseLog.complete_time,
                 's'
               )
+            } else {
+              item.studentCompleteCourseLog.complete_time = '-'
             }
             // 解锁时间(写字特有)
-            if (item.studentCompleteCourseLog.start_date) {
-              item.studentCompleteCourseLog.start_date = formatData(
-                item.studentCompleteCourseLog.start_date,
-                's'
-              )
+            if (item.start_date !== '0') {
+              item.start_date = formatData(item.start_date, 's')
+            } else {
+              item.start_date = '-'
             }
           }
         })

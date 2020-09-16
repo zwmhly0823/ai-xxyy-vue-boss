@@ -4,8 +4,8 @@
  * @version:
  * @Author: shentong
  * @Date: 2020-03-13 14:38:28
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-09-12 19:20:27
+ * @LastEditors: Shentong
+ * @LastEditTime: 2020-09-16 14:47:48
  */
 // import axios from '../axios'
 import axios from '../axiosConfig'
@@ -481,45 +481,48 @@ export default {
     return axios.post('/graphql/v1/toss', {
       query: `{
         User(query:${JSON.stringify(formattingQuery)}){
+          jluserInfo {
+            avatar
+            nick_name
+            wechat_no
+            remark
+            labels
+          }
           bought_subject
-          systemCourse_lifeCycle
-          id
-          head
-          sex
-          nickname
-          username
-          user_num
-          mobile
-          send_id
-          weixinUser {
-            follow
-            nickname
-            uid
-          }
-          coupon {
-            id
-          }
-          account {
-            balance
-          }
           mobile_province
           mobile_city
-          channelInfo {
-            channel_inner_name
-          }
-          loginData {
-            device_type
-            device_model
-            login_time
-          }
-          birthday
-          sender{
+          teams {
+            subject
             id
-            username
-            mobile
-            user_num
+            team_type
+            team_name
+            team_state
+            wd_info
+            teacher_info {
+              realname
+              nickname
+            }
+            teacher_wechat_info {
+              wechat_no
+            }
+            course_count
+            start_course_count
+            send_course_count
+            day_join_course_count
+            day_complete_course_count
+            course_task_count
+            task_comment_count
+            listen_comment_count
+            current_lesson
           }
-          base_painting_text
+          zero_teamid_write_trials {
+            start_course_count
+            course_task_count
+            task_comment_count
+            listen_comment_count
+            course_ids
+            team_name
+          }
           address {
             id
             receipt_name
@@ -531,71 +534,37 @@ export default {
             street
             id
           }
-          trialCourse{
-            team_id
-            added_group
-            added_wechat
-            orderInfo {
-              isrefund
-            }
-          }
-          systemCourse{
-            ctime
-            team_id
-            added_group
-            added_wechat
-            orderInfo {
-              isrefund
-            }
-            remaining_week
-          }
-          teams{
-             subject
-             id
-             team_type
-             team_name
-             team_state
-             wd_info
-             teacher_info{
-                realname
-                nickname
-            }
-            teacher_wechat_info{
-                wechat_no
-            }
-            course_count
-            send_course_count
-            day_join_course_count
-            day_complete_course_count
-            course_task_count
-            task_comment_count
-            listen_comment_count
-            current_lesson
-          }
-          zero_teamid_write_trials{
-            start_course_count
-            course_task_count
-            task_comment_count
-            listen_comment_count
-            course_ids
-            team_name
-          }
+        }
+      }`
+    })
+  },
+  // 学员基本信息——分类补充
+  getUser_add(query) {
+    const formattingQuery = JSON.stringify(query)
+    return axios.post('/graphql/v1/toss', {
+      query: `{
+        UserExtends(query:${JSON.stringify(formattingQuery)}){
+          head
+          sex
+          username
+          user_num
+          birthday
+          mobile
           join_date
-          status_text
-          couponUserCollect{
-            code
-            value
+          weixinUser {
+            follow
           }
-          accountUserCollect{
-            code
-            value
+          channelInfo {
+            channel_inner_name
           }
-          jluserInfo{
-            avatar
-            nick_name
-            wechat_no
-            remark
-            labels
+          lastLoginData {
+            device_model
+            login_time
+          }
+          sender {
+            username
+            user_num
+            id
           }
         }
       }`
@@ -1148,8 +1117,8 @@ export default {
   getRecommendList(query) {
     return axios.post('/graphql/v1/toss', {
       query: `{
-            UserList(query: ${JSON.stringify(
-              JSON.stringify({ send_id: query })
+            UserExtendsList(query: ${JSON.stringify(
+              JSON.stringify(query)
             )},size:200){
             id
             user_num
@@ -1291,6 +1260,7 @@ export default {
             all_join_course_count
             join_course_count
             send_course_count
+            start_course_count
             all_complete_course_count
             complete_course_count
             task_count
@@ -1332,6 +1302,7 @@ export default {
             flag_total_count
             flagcount
             currenttotal
+            start_course_count
             channel_outer_name
             orderInfo {
               packages_name

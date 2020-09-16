@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-08-17 19:37:24
  * @LastEditors: liukun
- * @LastEditTime: 2020-09-09 23:06:01
+ * @LastEditTime: 2020-09-15 23:00:39
 -->
 <template>
   <div class="details" v-loading="loading">
@@ -179,7 +179,7 @@
                 experience_lk0.join_course_count || '-'
               }}</span
               >/
-              <span>{{ experience_lk0.send_course_count || '-' }}节</span>
+              <span>{{ experience_lk0.start_course_count || '-' }}节</span>
             </div></el-col
           >
           <el-col :span="5"
@@ -198,7 +198,7 @@
                 experience_lk0.complete_course_count || '-'
               }}</span
               >/
-              <span>{{ experience_lk0.send_course_count || '-' }}节</span>
+              <span>{{ experience_lk0.start_course_count || '-' }}节</span>
             </div></el-col
           >
           <el-col :span="5"
@@ -380,7 +380,13 @@
                 experience_lk.join_course_count || '-'
               }}</span
               >/
-              <span>{{ experience_lk.send_course_count || '-' }}节</span>
+              <span
+                >{{
+                  changeSubject
+                    ? experience_lk.start_course_count
+                    : experience_lk.send_course_count
+                }}节</span
+              >
             </div></el-col
           >
           <el-col :span="5"
@@ -397,7 +403,13 @@
                 experience_lk.complete_course_count || '-'
               }}</span
               >/
-              <span>{{ experience_lk.send_course_count || '-' }}节</span>
+              <span
+                >{{
+                  changeSubject
+                    ? experience_lk.start_course_count
+                    : experience_lk.send_course_count
+                }}节</span
+              >
             </div></el-col
           >
           <el-col :span="5"
@@ -495,8 +507,7 @@
                   :href="
                     `${
                       changeSubject ? '/write_app' : '/student-team'
-                    }/#/teamDetail/${systerm_lk.teamInfo &&
-                      systerm_lk.teamInfo.id}/2`
+                    }/#/teamDetail/${systerm_lk.teamid}/2`
                   "
                   target="_blank"
                   type="primary"
@@ -568,7 +579,13 @@
                 systerm_lk.activecount || '-'
               }}</span
               >/
-              <span>{{ systerm_lk.currenttotal || '-' }}节</span>
+              <span
+                >{{
+                  changeSubject
+                    ? systerm_lk.start_course_count
+                    : systerm_lk.currenttotal
+                }}节</span
+              >
             </div></el-col
           >
           <el-col :span="5"
@@ -585,7 +602,13 @@
                 systerm_lk.activecount || '-'
               }}</span
               >/
-              <span>{{ systerm_lk.currenttotal || '-' }}节</span>
+              <span
+                >{{
+                  changeSubject
+                    ? systerm_lk.start_course_count
+                    : systerm_lk.currenttotal
+                }}节</span
+              >
             </div></el-col
           >
           <el-col :span="5"
