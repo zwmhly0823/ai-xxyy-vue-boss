@@ -4,17 +4,29 @@
  * @Author: Lukun
  * @Date: 2020-04-27 17:47:58
  * @LastEditors: liukun
- * @LastEditTime: 2020-08-13 21:58:12
+ * @LastEditTime: 2020-09-11 20:37:17
  -->
 <template>
   <div class="container">
     <!-- 搜索框 -->
     <div class="time">
-      <tabTimeSelect @result="getSeacherTime" />
-      <CheckType @result="getcheckType" />
-      <SearchPart @result="getSeachePart" />
-      <courseTeam @result="getTeamId" />
-      <searchPhone name="userTel" @result_lk="getPhone" />
+      <tabTimeSelect class="inline-search" @result="getSeacherTime" />
+      <CheckType class="inline-search" @result="getcheckType" />
+      <SearchPart class="inline-search" @result="getSeachePart" />
+      <courseTeam class="inline-search" @result="getTeamId" />
+      <searchPhone
+        class="inline-search margin_left_20"
+        name="userTel"
+        @result_lk="getPhone"
+      />
+      <el-button
+        type="primary"
+        size="mini"
+        style="margin-left:100px;"
+        v-if="flowApprovalIdList.length"
+        @click="batchApproval"
+        >批量审核通过</el-button
+      >
     </div>
     <!-- 数据table -->
     <el-table
@@ -23,7 +35,10 @@
       highlight-current-row
       @cell-mouse-enter="handleMouseEnter"
       @cell-mouse-leave="handleMouseLeave"
+      @selection-change="handleSelectionChange"
     >
+      <el-table-column type="selection" width="50" v-if="checkboxChoose">
+      </el-table-column>
       <el-table-column width="50">
         <template slot-scope="scope">
           <el-dropdown
@@ -77,6 +92,9 @@
           </div>
           <div v-if="scope.row.type === 'UNCREDITED'">
             无归属订单审批
+          </div>
+          <div v-if="scope.row.type === 'PROMOTIONS'">
+            赠品
           </div>
         </template>
       </el-table-column>
@@ -138,6 +156,17 @@
         </template>
       </el-table-column>
     </el-table>
+    <!-- 赠品审批抽屉 -->
+    <ApprovalGiftDetail
+      :drawerGiftDeatail="drawerGiftDeatail"
+      :drawerGift="drawerGift"
+      :staffId="staffId"
+      :staffName="staffName"
+      :params_pending="params"
+      @refuse-dialog="refuseDialog"
+      @close-gift="handleClose"
+      @check-pending="checkPending"
+    />
     <!-- 退款补发货抽屉 -->
     <el-drawer
       :visible.sync="drawerApproval"
@@ -221,7 +250,8 @@
           v-if="
             isStaffId &&
               drawerApprovalDeatail.mode === 'DEFAULT' &&
-              drawerApprovalDeatail.type === 'MATERIALS'
+              (drawerApprovalDeatail.type === 'EXPERIENCE_MATERIALS' ||
+                drawerApprovalDeatail.type === 'SYSTEM_MATERIALS')
           "
         >
           <el-col :span="3">版本信息:</el-col>
@@ -689,7 +719,9 @@
         </el-form-item>
         <el-form-item
           v-if="
-            !drawerApprovalDeatail.addressId && currentType !== 'UNCREDITED'
+            !drawerApprovalDeatail.addressId &&
+              currentType !== 'UNCREDITED' &&
+              currentType !== 'PROMOTIONS'
           "
           label="恢复学生放课与随材物流"
           prop="isRecover"
@@ -721,7 +753,7 @@ import adjustDrawer from './adjustDrawer'
 import { getStaffInfo } from '../common'
 import courseTeam from './courseTeam'
 import VersionBox from '../../../../components/MSearch/searchItems/moreVersionBox'
-
+import ApprovalGiftDetail from './approvalGiftDetail'
 export default {
   computed: {
     positionIdlk() {
@@ -744,7 +776,8 @@ export default {
     CheckType,
     SearchPart,
     adjustDrawer,
-    courseTeam
+    courseTeam,
+    ApprovalGiftDetail
   },
   data() {
     var validateName = (rule, value, callback) => {
@@ -783,8 +816,13 @@ export default {
       params: {}, // 列表的参数
       resetParams: {}, // 撤销的参数
       staffId: '',
+      staffName: '',
       tableData: [],
       current: {},
+      checkboxChoose: false,
+      flowApprovalIdList: [],
+      drawerGift: false,
+      drawerGiftDeatail: {},
       drawerApproval: false,
       drawerApprovalDeatail: {},
       currentPage: 1,
@@ -831,8 +869,7 @@ export default {
       size: 20
     }
     this.params.isOperation = this.isStaffId
-    // 初始拿数据就得带上_课程类型参数保证看到的搜索条件与结果一致↓↓
-
+    // lk 为3,4 初始拿数据就得带上_课程类型参数保证看到的搜索条件与结果一致↓↓
     if (this.positionIdlk === '0' || this.positionIdlk === '1') {
       // 父组件mounted时刻请求数据 0,1不带课程类型参数 拿全量
     } else if (this.positionIdlk === '3' || this.positionIdlk === '4') {
@@ -923,7 +960,9 @@ export default {
           const params = {
             isRecover: this.form_checkbox.isRecover ? 1 : 0,
             approvalRemark: this.form_checkbox.reason,
-            flowApprovalId: this.drawerApprovalDeatail.flowApprovalId,
+            flowApprovalId:
+              this.drawerApprovalDeatail.flowApprovalId ||
+              this.drawerGiftDeatail.flowApprovalId,
             isConfirm: false,
             version: this.version,
             staffId: this.staffId,
@@ -969,6 +1008,12 @@ export default {
     },
     // 查询审批类型判断
     getcheckType(val) {
+      if (val === 'PROMOTIONS') {
+        this.checkboxChoose = true
+      } else {
+        this.checkboxChoose = false
+      }
+      console.log(val, 'val====')
       Object.assign(this.params, { type: val })
       this.type_lk = val
       console.log(this.type_lk)
@@ -1026,13 +1071,18 @@ export default {
           console.log(err)
         })
     },
+    // 拒绝弹窗（赠品）
+    refuseDialog() {
+      this.dialogFormVisible_checkbox = true
+    },
     // 同意申请
     ensureReplenish() {
       const version = typeof this.version !== 'string'
       const versionBool =
         this.isStaffId &&
         this.drawerApprovalDeatail.mode === 'DEFAULT' &&
-        this.drawerApprovalDeatail.type === 'MATERIALS'
+        (this.drawerApprovalDeatail.type === 'EXPERIENCE_MATERIALS' ||
+          this.drawerApprovalDeatail.type === 'SYSTEM_MATERIALS')
       if (versionBool && (this.version === '' || version)) {
         this.$message('请选择版本号')
         return
@@ -1082,6 +1132,10 @@ export default {
     // 点x关闭按钮
     closeEndBack() {
       this.endback = false
+    },
+    // 关闭审批详情查看
+    handleClose() {
+      this.drawerGift = false
     },
     // ensureBackend 撤销弹出框确认按钮
     ensureBackend() {
@@ -1158,6 +1212,16 @@ export default {
             this.drawerApprovalDeatail.chat_url = res.payload.chatUrl[0]
             this.drawerApprovalDeatail.pay_url = res.payload.paymentUrl[0]
             this.drawerApproval = true
+          }
+        })
+      }
+      // 赠品
+      if (type === 'PROMOTIONS') {
+        this.$http.Backend.getGiftDetail(id).then((res) => {
+          if (res && res.payload) {
+            res.payload.ctime = timestamp(res.payload.ctime, 2)
+            this.drawerGiftDeatail = res.payload
+            this.drawerGift = true
           }
         })
       }
@@ -1352,6 +1416,40 @@ export default {
           this.$message.error('获取审批详情失败')
         })
     },
+    // checkbox多选改变
+    handleSelectionChange(val) {
+      this.flowApprovalIdList = []
+      val.forEach((item) => {
+        console.log(item.id)
+        this.flowApprovalIdList.push(item.id)
+        console.log(this.flowApprovalIdList)
+      })
+      console.log(val.id, 'checkbox多选改变')
+    },
+    // 批量审批
+    batchApproval() {
+      const params = {
+        flowApprovalIdList: this.flowApprovalIdList,
+        staffId: this.staffId,
+        staffName: this.staffName,
+        approvalRemark: '批量审核通过'
+      }
+      this.$http.Backend.batchApproval(params)
+        .then((res) => {
+          // console.log(res)
+          if (res.code === 0) {
+            this.$message({
+              message: '批量审批通过',
+              type: 'success'
+            })
+            this.checkPending(this.params)
+          }
+        })
+        .catch((error) => {
+          console.log(error)
+          this.$message.error('提交出错啦')
+        })
+    },
     // 点击下拉操作
     pullDownList(id, type) {
       Object.assign(this.resetParams, { flowApprovalId: id })
@@ -1367,7 +1465,15 @@ export default {
     },
     // 待审核列表渲染
     checkPending(params) {
-      this.$http.Backend.checkListPending(params).then((res) => {
+      // lk 为3,4处理分页
+      if (
+        this.type_lk === 'REFUND' &&
+        (this.positionIdlk === '3' || this.positionIdlk === '4')
+      ) {
+        Object.assign(params, { page: 1, size: 999 })
+      }
+      console.log(params, 'paramsparamsparams')
+      this.$http.Backend.checkListPending(params).then(async (res) => {
         if (res && res.payload && res.payload.content) {
           const zancunArr = res.payload.content.map((item) => {
             const zhaiyao = item.abstractContent.split('^')
@@ -1377,9 +1483,26 @@ export default {
             item.reason = zhaiyao[3]
             item.openTime = timestamp(item.ctime, 2)
             item.approveTime = timestamp(item.endTime, 2)
+            item.applyDepartment = ''
             return item
           })
-          // 类型:退款  positionId为3或4 前端单独筛选下
+          // 重写部门名称
+          const idArr = zancunArr.map((item) => item.applyId)
+          const {
+            data: { TeacherDepartmentRelationList }
+          } = await this.$http.Backend.changeDepart(idArr)
+          console.info('lklk-待审核', idArr, TeacherDepartmentRelationList)
+          if (TeacherDepartmentRelationList.length) {
+            TeacherDepartmentRelationList.forEach((item, index) => {
+              zancunArr.forEach((itemx, indexX) => {
+                if (item.teacher_id === itemx.applyId) {
+                  console.count('匹配成功次数')
+                  itemx.applyDepartment = item.department.name
+                }
+              })
+            })
+          }
+          // lk 为3,4 前端单独筛选下
           if (this.type_lk === 'REFUND' && this.positionIdlk === '4') {
             this.tableData = zancunArr.filter(
               (item) => item.periodAlready === '0'
@@ -1490,8 +1613,14 @@ export default {
     color: #2a75ed;
   }
   .time {
-    display: flex;
+    // display: flex;
     align-items: center;
+    .inline-search {
+      display: inline-block;
+    }
+    .margin_left_20 {
+      margin-left: 20px;
+    }
   }
   // 是否三点
   .disnone {

@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-06-20 20:23:28
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-12 14:28:52
+ * @LastEditTime: 2020-09-09 16:59:36
  @ApiModel(description = "用户跟进状态")
     public enum STATUS {
 
@@ -196,6 +196,15 @@
               />
             </div>
           </el-form-item> -->
+          <el-form-item label="手动标签:">
+            <div class="search-group">
+              <define-label-v2
+                placeholder="请选择"
+                name="id"
+                @result="getSearchData('id', arguments)"
+              />
+            </div>
+          </el-form-item>
           <!-- // user_status 0 未转化 1 月课 2半年课 3 年课 -->
           <el-form-item label="系统课转化:" label-width="85px">
             <div class="search-group">
@@ -209,7 +218,7 @@
               />
             </div>
           </el-form-item>
-          <el-form-item label="意向度:">
+          <el-form-item label="意向度:" label-width="75px">
             <div class="search-group">
               <simple-select
                 name="user_intention_type"
@@ -257,6 +266,13 @@
               />
             </div>
           </el-form-item>
+          <!-- 用来占位 -->
+          <div class="seat-div">
+            <el-button size="mini" type="primary">
+              高级筛选
+            </el-button>
+            <p class="clear-btn primary-text">清空筛选</p>
+          </div>
           <div class="handle-area d-flex align-center">
             <el-button size="mini" @click="advancedSearch" type="primary"
               >高级筛选</el-button
@@ -277,6 +293,7 @@ import SearchTeamName from '@/components/MSearch/searchItems/searchTeamName'
 // import HardLevel from '@/components/MSearch/searchItems/hardLevel.vue'
 import Channel from '@/components/MSearch/searchItems/channel.vue'
 // import DefineLabel from '@/components/MSearch/searchItems/defineLabel.vue'
+import DefineLabelV2 from '@/components/MSearch/searchItems/defineLabelV2.vue'
 import SearchPhoneOrUsernum from '@/components/MSearch/searchItems/searchPhoneOrUsernum.vue'
 import SimpleSelect from '@/components/MSearch/searchItems/simpleSelect.vue'
 import enums from '../components/searchData'
@@ -290,7 +307,8 @@ export default {
     SearchPhoneOrUsernum,
     Channel,
     // DefineLabel,
-    SimpleSelect
+    SimpleSelect,
+    DefineLabelV2
   },
   props: {
     // 班级类型： 0-体验课 1-系统课
@@ -352,15 +370,15 @@ export default {
         // 系统课转化
         if (key === 'user_status') {
           // 未转化
-          if (search.user_status === 0) {
+          if (search.user_status === 1) {
             search.user_status = { lte: 2 }
           }
           // 已购半年课
-          if (search.user_status === 2) {
+          if (search.user_status === 3) {
             search.user_status = { gte: 11, lte: 12 }
           }
           // 已购年课
-          if (search.user_status === 3) {
+          if (search.user_status === 4) {
             search.user_status = { gte: 5, lte: 7 }
           }
         }
@@ -436,7 +454,18 @@ export default {
 .search-container {
   position: relative;
   font-size: 12px;
-
+  .seat-div {
+    margin-left: 20px;
+    display: inline-block;
+    visibility: hidden;
+    button {
+      display: inline-block;
+    }
+    p {
+      display: inline-block;
+      margin: 0 0 0 10px;
+    }
+  }
   .handle-area {
     position: absolute;
     right: 20px;

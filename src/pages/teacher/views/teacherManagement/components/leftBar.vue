@@ -4,7 +4,8 @@
  * @Author: zhubaodong
  * @Date: 2020-03-13 16:53:27
  * @LastEditors: Shentong
- * @LastEditTime: 2020-08-17 17:10:40
+ * @LastEditTime: 2020-09-16 13:56:15
+ 
  -->
 <template>
   <div class="left-container">
@@ -12,10 +13,10 @@
     <el-tree
       class="left-container-tree"
       :data="departmentList"
-      default-expand-all
-      node-key="customId"
+      node-key="pid"
       :current-node-key="0"
       :expand-on-click-node="false"
+      :default-expanded-keys="['99999']"
       highlight-current
       style="color:#2F2E31"
       @node-click="nodeClick"
@@ -220,7 +221,7 @@ export default {
           // pid = ''
           break
         case 'edit':
-          pid = form._data.depart
+          pid = form._data.departs
           break
         default:
           pid = ''

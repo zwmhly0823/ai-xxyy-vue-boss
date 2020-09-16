@@ -3,12 +3,12 @@
  * @version:
  * @Author: Shentong
  * @Date: 2020-03-17 11:50:18
- * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-08-04 18:27:34
+ * @LastEditors: liukun
+ * @LastEditTime: 2020-09-03 21:21:06
  */
 import axios from './axios'
 import { getToken } from '@/utils/auth'
-import { baseUrl } from '@/utils/index'
+import { baseUrl, getAppSubject } from '@/utils/index'
 // 转json
 
 axios.defaults.withCredentials = true
@@ -22,10 +22,13 @@ export default {
   // 判断是否需要token
   judgeToken() {
     const token = this.getHeaders().Authorization
-    const needToken = location.href.indexOf('login') === -1
+    const { href = '' } = location || {}
+
+    const needToken =
+      href.indexOf('login') === -1 && href.lastIndexOf('?from=1v1') === -1
 
     if (needToken && !token) {
-      location.href = `${baseUrl}/login/#/`
+      location.href = `${baseUrl()}login/#/`
       // location.href = `/login/#/`
       return 0
     }
@@ -133,13 +136,16 @@ export default {
     }
   },
   getHeaders() {
+    // 科目
+    const subject = getAppSubject()
     // 增加操作人ID
     const staff = JSON.parse(localStorage.getItem('staff') || '{}')
     const operatorId = staff && staff.id
     const token = getToken() || ''
     const headers = {
       'Content-Type': 'application/json;charset=UTF-8',
-      operatorId
+      operatorId,
+      subject
     }
     if (token) {
       headers.Authorization = token.includes('Bearer ')

@@ -5,7 +5,7 @@ import ProductType from '@/components/MSearch/searchItems/productType.vue';
  * @Author: songyanan
  * @Date: 2020-06-05 10:13:40
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-08-11 17:24:15
+ * @LastEditTime: 2020-08-19 11:44:36
  -->
 <template>
   <div>
@@ -64,7 +64,7 @@ import ProductType from '@/components/MSearch/searchItems/productType.vue';
           />
         </el-form-item> -->
         <el-form-item v-if="currentItem.type === 'edit'" label="归属上级">
-          <el-select v-model="depart" placeholder="请选择" style="width:300px">
+          <el-select v-model="departs" placeholder="请选择" style="width:300px">
             <el-option
               v-for="item in departmentFlatList"
               :key="item.id"
@@ -143,19 +143,12 @@ export default {
       Visible: this.dialogVisible
     }
   },
-  computed: {
-    depart: function() {
-      if (this.departs === '99999') {
-        return '0'
-      } else {
-        return this.departs || '0'
-      }
-    }
-  },
+  computed: {},
   created() {
     this.getdepartmentList()
-    console.log('id', this.editCurrentData)
-    console.log(typeof this.editCurrentData.id)
+    if (this.departs === '99999') {
+      this.departs = '0'
+    }
     // this.departfather = this.editCurrentData.name
   },
   methods: {

@@ -34,7 +34,6 @@
 </template>
 
 <script>
-import axios from '@/api/axiosConfig'
 export default {
   props: {
     tabIndex: {
@@ -68,20 +67,8 @@ export default {
   methods: {
     // 获取渠道来源分类 filter: 过滤关键词  eg：filter:"抖音"
     async getChannelClassList() {
-      await axios
-        .post('/graphql/v1/toss', {
-          query: `{
-              ChannelClassList(size: 500){
-                id
-                channel_class_parent_id
-                channel_class_name
-              }
-            }
-          `
-        })
-        .then((res) => {
-          this.channelClassList = res.data.ChannelClassList
-        })
+      const res = await this.$http.Operating.getChannelClassList()
+      this.channelClassList = res?.data?.ChannelClassList || []
     },
     // 查询下拉列表
     formatData(classifiData) {

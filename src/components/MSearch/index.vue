@@ -3,8 +3,8 @@
  * @version:
  * @Author: zhubaodong
  * @Date: 2020-03-24 18:20:12
- * @LastEditors: zhouzebin
- * @LastEditTime: 2020-07-24 16:15:20
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-09-10 03:09:58
  -->
 
 <template>
@@ -83,6 +83,7 @@
 
       <el-form-item v-if="level || sup || stage">
         <stage-sup-levels
+          v-if="this.$store.getters.subjects.subjectCode === 0"
           @stageCallBack="stageCallBack"
           @supCallBack="supCallBack"
           @levelCallBack="levelCallBack"
@@ -93,6 +94,16 @@
           :addSupS="addSupS"
           :supPlaceholder="supPlaceholder"
           style="margin-bottom:0px"
+        />
+
+        <hard-write-level
+          v-if="this.$store.getters.subjects.subjectCode === 1"
+          subType="1"
+          :class="['margin_l10']"
+          placeholder="难度"
+          style="width:140px"
+          name="sup"
+          @result="supCallBack"
         />
       </el-form-item>
 
@@ -310,14 +321,29 @@
       <el-form-item v-if="operatorId">
         <operator-name @result="gerOperatorName" :name="operatorId" />
       </el-form-item>
+      <el-form-item v-if="searchCourseware">
+        <!-- 系统课名称搜索 -->
+        <search-courseware
+          @result="getSearchCourseware"
+          :name="searchCourseware"
+          type="0"
+        />
+      </el-form-item>
+      <el-form-item>
+        <slot></slot>
+      </el-form-item>
     </el-form>
   </el-card>
 </template>
 <script>
+import { isToss } from '@/utils/index'
+
 import DatePicker from './searchItems/datePicker.vue'
 import ChannelSelect from './searchItems/channel.vue'
 import ProductTopic from './searchItems/productTopic.vue'
 import StageSupLevels from './searchItems/stageSupLevels.vue'
+import hardWriteLevel from './searchItems/hardWriteLevel.vue'
+
 import SearchPhone from './searchItems/searchPhone.vue'
 import OutTradeNo from './searchItems/outTradeNo.vue'
 import ProductName from './searchItems/productName.vue'
@@ -349,10 +375,11 @@ import replenishProductType from './searchItems/replenishProductType'
 import ConsigneePhone from './searchItems/consigneePhone.vue'
 import expressType from './searchItems/expressType'
 // import SearchTrialStage from './searchItems/searchTrialStage'
-import { isToss } from '@/utils/index'
+
 // 员工角色
 import employeesRole from './searchItems/role.vue'
 import staffName from './searchItems/staffName.vue'
+import SearchCourseware from './searchItems/searchCourseware'
 
 export default {
   props: {
@@ -692,6 +719,11 @@ export default {
     devalueValue: {
       type: String,
       default: ''
+    },
+    // 系统课名称
+    searchCourseware: {
+      type: String,
+      default: ''
     }
   },
   components: {
@@ -729,7 +761,9 @@ export default {
     replenishProductType,
     employeesRole,
     staffName,
-    expressType
+    expressType,
+    SearchCourseware,
+    hardWriteLevel
   },
   data() {
     return {
@@ -838,8 +872,6 @@ export default {
     },
     // 物流时间
     getTimeData(res) {
-      console.log(this.selectTime, '清除时的this.selectTime')
-
       this.setSeachParmas(res, [this.selectTime || this.oldTime], 'range')
     },
     // 选择物流单号
@@ -939,6 +971,9 @@ export default {
     getConsigneePhone(res) {
       this.setSeachParmas(res, [this.consigneePhone || 'receipt_tel'])
     },
+    getSearchCourseware(res) {
+      this.setSeachParmas(res, [this.searchTrialStage || 'course_id'], 'terms')
+    },
 
     /**  处理接收到的查询参数
      * @res: Object, 子筛选组件返回的表达式对象，如 {sup: 2}
@@ -1008,6 +1043,7 @@ export default {
     }
   },
   created() {
+    console.log(this.$store.getters.subjects.subjectCode)
     const teacherId = isToss()
     if (teacherId) {
       this.teacherId = teacherId

@@ -84,8 +84,49 @@
         >
         </el-cascader>
       </el-form-item>
+      <el-form-item label="科目及职务" prop="positionVal" class="Identity">
+        <el-select
+          multiple
+          v-model="ruleForm.subject"
+          clearable
+          placeholder="请选择科目"
+        >
+          <el-option
+            v-for="item in subjectList"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          >
+          </el-option>
+        </el-select>
+        <el-cascader
+          v-model="ruleForm.positionVal"
+          @change="changePos()"
+          :options="optionsList"
+          clearable
+          placeholder="请选择职务"
+        ></el-cascader>
+        <!-- <el-select v-model="ruleForm.positionVal" placeholder="请选择职务">
+          <el-option
+            v-for="(item, index) in position"
+            :key="index"
+            :label="item.name"
+            :value="item.id"
+          >
+          </el-option>
+        </el-select>
+        <el-select v-model="ruleForm.identType" placeholder="请选择类型">
+          <el-option
+            v-for="(item, index) in identTypeList"
+            :key="index"
+            :label="item.label"
+            :value="item.value"
+          >
+          </el-option>
+        </el-select> -->
+      </el-form-item>
       <!-- 职务 -->
-      <el-form-item label="职务" prop="positionVal">
+      <!-- <el-form-item label="职务" prop="positionVal">
         <el-select
           v-model="ruleForm.positionVal"
           multiple
@@ -99,10 +140,14 @@
           >
           </el-option>
         </el-select>
-      </el-form-item>
+      </el-form-item> -->
       <!-- 职级 -->
       <el-form-item label="职级" prop="rank">
-        <el-select v-model="ruleForm.rank" placeholder="请选择职级">
+        <el-select
+          v-model="ruleForm.rank"
+          placeholder="请选择职级"
+          @change="handleChangerank"
+        >
           <el-option
             v-for="item in rankList"
             :key="item.id"
@@ -111,21 +156,14 @@
           ></el-option>
         </el-select>
       </el-form-item>
-      <!-- 带班级别 -->
-      <!-- <el-form-item label="带班级别" prop="shiftLevel">
-        <el-select v-model="ruleForm.shiftLevel" placeholder="请选择带班级别">
-          <el-option
-            v-for="(item, index) in shiftList"
-            :key="index"
-            :label="item.name"
-            :value="item.id"
-          ></el-option>
-        </el-select>
-      </el-form-item> -->
-
       <!-- 管理部门 -->
-      <el-form-item label="管理部门" prop="administration">
+      <el-form-item
+        label="管理部门"
+        :prop="['1', '2'].includes(ruleForm.rank) ? 'administration' : ''"
+        v-show="['1', '2'].includes(ruleForm.rank)"
+      >
         <el-cascader
+          ref="administration"
           v-model="ruleForm.administration"
           :options="suDepartments"
           @change="handleChangeAdministration"
@@ -145,8 +183,8 @@
           <el-option
             v-for="(item, index) in levels"
             :key="index"
-            :label="item.label"
-            :value="item.value"
+            :label="item.levelName"
+            :value="item.level"
           ></el-option>
         </el-select>
       </el-form-item>
@@ -256,7 +294,7 @@
       </el-form-item>
     </el-form>
     <div style="text-align: center; padding:10px 0">
-      <el-button type="primary" @click="submitHandle('ruleForm')"
+      <el-button type="primary" @click="throttleSubmit('ruleForm')"
         >提交</el-button
       >
       <el-button @click="resetForm('ruleForm')">取消</el-button>
@@ -318,6 +356,8 @@ export default {
       // }
     }
     return {
+      // 防抖节流标示
+      throtFlag: true,
       headers: { 'Content-Type': 'multipart/form-data' },
       // title
       newTitle: '',
@@ -376,6 +416,75 @@ export default {
           value: '北京场'
         }
       ],
+      //
+      optionsList: [
+        {
+          value: '0',
+          label: '系统课老师',
+          children: [
+            {
+              value: '2',
+              label: '全职'
+            },
+            {
+              value: '4',
+              label: '兼职'
+            },
+            {
+              value: '6',
+              label: '1对1'
+            }
+          ]
+        },
+        {
+          value: '1',
+          label: '体验课老师',
+          children: [
+            {
+              value: '1',
+              label: '全职'
+            },
+            {
+              value: '3',
+              label: '兼职'
+            },
+            {
+              value: '5',
+              label: '1对1'
+            }
+          ]
+        }
+      ],
+      //
+      identTypeList: [
+        {
+          value: '0',
+          label: '全职'
+        },
+        {
+          value: '1',
+          label: '兼职'
+        },
+        {
+          value: '2',
+          label: '1对1'
+        }
+      ],
+      // 课程类型
+      subjectList: [
+        {
+          value: '0',
+          label: '美术'
+        },
+        {
+          value: '1',
+          label: '写字'
+        }
+        // {
+        //   value: '2',
+        //   label: 'AI学院'
+        // }
+      ],
       // Level: [
       //   { label: '新兵培训', value: 0 },
       //   { label: '下组待接生', value: 1 },
@@ -407,8 +516,12 @@ export default {
         resource: '',
         // 所属部门
         region: [],
+        // 科目
+        subject: [],
         // 职务
         positionVal: [],
+        // 身份类别
+        identType: '',
         // 职级
         rank: '',
         // 带班级别
@@ -481,7 +594,7 @@ export default {
         ],
         // 职务
         positionVal: [
-          { required: true, message: '请选择职务', trigger: 'change' }
+          { required: true, message: '请选择科目和职务', trigger: 'change' }
         ],
         // 职级
         rank: [{ required: true, message: '请选择职级', trigger: 'change' }],
@@ -524,11 +637,11 @@ export default {
         // 职场
         workplace: [
           { required: true, message: '请选择职场', trigger: 'change' }
-        ]
+        ],
         // 管理部门
-        // administration: [
-        //   { required: true, message: '请选择管理部门', trigger: 'change' }
-        // ]
+        administration: [
+          { required: true, message: '请选择管理部门', trigger: 'change' }
+        ]
       }
     }
   },
@@ -557,15 +670,25 @@ export default {
     }
   },
   created() {
+    console.log('执行生命周期')
     const query = this.$route.query
     // query.index ''/新建老师  1/编辑老师 2/查看老师
     if (query && query.index) this.newTitle = query.index
     // 接口调用
     this.createdUrl()
     this.onGetWorkPlace()
+    this.getSellLevel()
   },
 
   methods: {
+    // 获取销售等级
+    async getSellLevel(params) {
+      try {
+        const { payload = [] } = await this.$http.Operating.getSellLevel(params)
+
+        this.levels = payload
+      } catch (err) {}
+    },
     onWorkPlace(data) {
       this.ruleForm.workplaces = data.label
       this.ruleForm.workPlaceCode = data.value
@@ -616,6 +739,7 @@ export default {
       this.$http.Teacher.TeacherRankList().then((res) => {
         const rank = res.data.TeacherRankList || []
         this.rankList = _.sortBy(rank, 'id')
+        console.log(this.rankList)
       })
       // 级别
       this.$http.Teacher.courseSupList().then((res) => {
@@ -646,10 +770,17 @@ export default {
             this.ruleForm.region = payload.department
               ? payload.department.id
               : []
-            payload.duty.forEach((val) => {
-              this.ruleForm.positionVal.push(val.id * 1)
-            })
-            this.ruleForm.rank = payload.rank ? payload.rank.id * 1 : ''
+            // payload.duty.forEach((val) => {
+            //   const parmes = {}
+            //   parmes.id = val.id
+            //   this.ruleForm.positionVal.push(parmes)
+            // })
+            const duty = payload.duty[0].id
+            this.ruleForm.positionVal =
+              duty % 2 === 0 ? ['0', duty] : ['1', duty]
+            // this.ruleForm.positionVal = payload.duty.id
+            console.log(typeof payload.rank.id)
+            this.ruleForm.rank = payload.rank ? payload.rank.id : ''
             // 0520: fixed-编辑时没有入职时间，不再默认显示当前时间。必填项  By: Yang
             this.ruleForm.inductionDate = payload.teacher.joinDate
               ? formatData(
@@ -676,10 +807,18 @@ export default {
             this.ruleForm.workplace = payload.teacher.workPlace
             this.ruleForm.username = payload.teacher.userName
             this.ruleForm.administrations = payload.teacher.dataAuth
-            this.ruleForm.administration = JSON.parse(payload.teacher.note)
+            this.ruleForm.administration =
+              payload.teacher.note && JSON.parse(payload.teacher.note)
             this.ruleForm.note = payload.teacher.note
             this.ruleForm.workplaces = payload.teacher.workPlace
             this.ruleForm.workPlaceCode = payload.teacher.workPlaceCode
+            console.log(payload.teacher.subject, typeof payload.teacher.subject)
+            // 兼容返回值类型 string int
+            const subjects =
+              typeof payload.teacher.subject === 'string'
+                ? payload.teacher.subject.split(',')
+                : [payload.teacher.subject]
+            this.ruleForm.subject = subjects
           }
         )
       }
@@ -697,8 +836,30 @@ export default {
         }
       }
     },
+    // 提交包裹节流
+    throttleSubmit(formName) {
+      console.log(this.throtFlag)
+      if (this.throtFlag) {
+        this.submitHandle(formName)
+        this.throtFlag = false
+      } else {
+        return this.$message({
+          message: '请勿重复提交',
+          type: 'warn'
+        })
+      }
+      setTimeout(() => {
+        this.throtFlag = true
+      }, 5000)
+    },
     // 提交按钮
     submitHandle(formName) {
+      if (this.ruleForm.subject.length <= 0) {
+        return this.$message({
+          message: '请选择科目',
+          type: 'error'
+        })
+      }
       const positionValId = []
       this.ruleForm.positionVal.forEach((val) => {
         positionValId.push({ id: val })
@@ -727,7 +888,8 @@ export default {
           workPlace: this.ruleForm.workplaces,
           workPlaceCode: this.ruleForm.workPlaceCode,
           userName: this.ruleForm.username,
-          note: this.ruleForm.note
+          note: this.ruleForm.note,
+          subject: this.ruleForm.subject.join(',')
         },
         department: {
           id:
@@ -735,7 +897,7 @@ export default {
               ? this.ruleForm.region
               : this.ruleForm.region[this.ruleForm.region.length - 1]
         },
-        duty: positionValId,
+        duty: [positionValId[1]],
         rank: { id: this.ruleForm.rank },
         weixinList: this.ruleForm.weChat
       }
@@ -798,6 +960,11 @@ export default {
       } else {
         this.ruleForm.weChat = []
       }
+    },
+    // 职级变化
+    handleChangerank() {
+      this.ruleForm.administration = ''
+      console.log(111, this.ruleForm.rank)
     },
     // 部门联机选择
     handleChange(value) {
@@ -883,7 +1050,10 @@ export default {
       return (isJPG || isPNG || isJPEG) && isLt2M
     },
     // 头像上传成功回调
-    handleAvatarSuccess(res, file) {}
+    handleAvatarSuccess(res, file) {},
+    changePos(val) {
+      console.log(this.ruleForm.positionVal)
+    }
   }
 }
 </script>
@@ -902,6 +1072,12 @@ export default {
       color: #1f2f3d;
       font-weight: 400;
     }
+  }
+}
+.Identity {
+  .el-select {
+    width: 200px !important;
+    margin-right: 20px;
   }
 }
 // 下拉框

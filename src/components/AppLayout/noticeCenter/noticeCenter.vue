@@ -93,7 +93,8 @@ export default {
     }
   },
   created() {
-    this.staffId = JSON.parse(localStorage.getItem('staff')).id
+    const staff = localStorage.getItem('staff')
+    staff && (this.staffId = JSON.parse(staff).id)
   },
   methods: {
     openDrawer() {

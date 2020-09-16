@@ -3,8 +3,8 @@
  * @version:
  * @Author: zhubaodong
  * @Date: 2020-03-13 15:05:19
- * @LastEditors: Shentong
- * @LastEditTime: 2020-04-17 16:29:17
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-08-20 15:55:02
  */
 import Vue from 'vue'
 import Vuex from 'vuex'
@@ -16,6 +16,7 @@ import leftbar from './modules/leftbar'
 import schedule from './modules/schedule'
 import team from './modules/team'
 import tabbed from './modules/tabbed'
+import subjects from './modules/subjects'
 
 Vue.use(Vuex)
 
@@ -27,7 +28,8 @@ const store = new Vuex.Store({
     leftbar,
     schedule,
     team,
-    tabbed
+    tabbed,
+    subjects
   },
   getters
 })

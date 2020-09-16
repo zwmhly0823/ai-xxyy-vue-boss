@@ -4,16 +4,20 @@
  * @Author: Lukun
  * @Date: 2020-04-27 17:47:58
  * @LastEditors: liukun
- * @LastEditTime: 2020-07-31 23:23:11
+ * @LastEditTime: 2020-08-26 21:22:32
  -->
 <template>
   <div class="container">
     <div class="time">
-      <tabTimeSelect @result="getSeacherTime" />
-      <CheckType @result="getcheckType" />
-      <SearchPart @result="getSeachePart" />
-      <courseTeam @result="getTeamId" />
-      <searchPhone name="userTel" @result_lk="getPhone" />
+      <tabTimeSelect class="inline-search" @result="getSeacherTime" />
+      <CheckType class="inline-search" @result="getcheckType" />
+      <SearchPart class="inline-search" @result="getSeachePart" />
+      <courseTeam class="inline-search" @result="getTeamId" />
+      <searchPhone
+        class="inline-search margin_left_20"
+        name="userTel"
+        @result_lk="getPhone"
+      />
     </div>
     <el-table
       :data="tableData"
@@ -24,7 +28,10 @@
     >
       <el-table-column width="50">
         <template slot-scope="scope">
-          <el-dropdown placement="bottom-start">
+          <el-dropdown
+            placement="bottom-start"
+            v-if="scope.row.type !== 'PROMOTIONS'"
+          >
             <div :class="scope.row.id === current.id ? 'three-dot' : 'disnone'">
               <img src="@/assets/images/icon/icon-three-dot.jpg" />
             </div>
@@ -72,6 +79,9 @@
           </div>
           <div v-if="scope.row.type === 'UNCREDITED'">
             无归属订单审批
+          </div>
+          <div v-if="scope.row.type === 'PROMOTIONS'">
+            赠品
           </div>
         </template>
       </el-table-column>
@@ -471,6 +481,12 @@
         </div>
       </div>
     </el-drawer>
+    <!-- 赠品审批抽屉 -->
+    <ApprovalGiftDetail
+      :drawerGiftDeatail="drawerGiftDeatail"
+      :drawerGift="drawerGift"
+      @close-gift="handleClose"
+    />
     <adjust-drawer
       :is3d="1"
       ref="adjustDrawerCom"
@@ -496,6 +512,7 @@ import SearchPart from './searchPart'
 import adjustDrawer from './adjustDrawer'
 import { getStaffInfo } from '../common'
 import courseTeam from './courseTeam'
+import ApprovalGiftDetail from './approvalGiftDetail'
 
 export default {
   props: ['activeName'],
@@ -507,7 +524,8 @@ export default {
     CheckType,
     SearchPart,
     adjustDrawer,
-    courseTeam
+    courseTeam,
+    ApprovalGiftDetail
   },
   watch: {
     activeName(val) {
@@ -528,6 +546,8 @@ export default {
       staffId: '',
       tableData: [],
       current: {},
+      drawerGift: false,
+      drawerGiftDeatail: {},
       drawerApproval: false,
       drawerApprovalDeatail: {},
       currentPage: 1,
@@ -668,6 +688,16 @@ export default {
             this.drawerApprovalDeatail.chat_url = res.payload.chatUrl[0]
             this.drawerApprovalDeatail.pay_url = res.payload.paymentUrl[0]
             this.drawerApproval = true
+          }
+        })
+      }
+      // 赠品
+      if (type === 'PROMOTIONS') {
+        this.$http.Backend.getGiftDetail(id).then((res) => {
+          if (res && res.payload) {
+            res.payload.ctime = timestamp(res.payload.ctime, 2)
+            this.drawerGiftDeatail = res.payload
+            this.drawerGift = true
           }
         })
       }
@@ -863,6 +893,7 @@ export default {
     // 关闭审批详情查看
     handleClose() {
       this.drawerApproval = false
+      this.drawerGift = false
     },
     // 点击下拉操作
     pullDownList(id, type) {
@@ -910,8 +941,25 @@ export default {
             item.reason = zhaiyao[3]
             item.openTime = timestamp(item.ctime, 2)
             item.approveTime = timestamp(item.endTime, 2)
+            item.applyDepartment = ''
             return item
           })
+          // 重写部门名称
+          const idArr = this.tableData.map((item) => item.applyId)
+          this.$http.Backend.changeDepart(idArr).then(
+            ({ data: { TeacherDepartmentRelationList } }) => {
+              console.info('lklk-已撤销', idArr, TeacherDepartmentRelationList)
+              if (TeacherDepartmentRelationList.length) {
+                TeacherDepartmentRelationList.forEach((item, index) => {
+                  this.tableData.forEach((itemx, indexX) => {
+                    if (item.teacher_id === itemx.applyId) {
+                      itemx.applyDepartment = item.department.name
+                    }
+                  })
+                })
+              }
+            }
+          )
         }
       })
     }
@@ -922,8 +970,14 @@ export default {
 <style lang="scss" scoped>
 .container {
   .time {
-    display: flex;
+    // display: flex;
     align-items: center;
+    .inline-search {
+      display: inline-block;
+    }
+    .margin_left_20 {
+      margin-left: 20px;
+    }
   }
   .drawer-approval-detail {
     padding-top: 50px;

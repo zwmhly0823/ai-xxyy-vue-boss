@@ -3,10 +3,11 @@
  * @version:
  * @Author: Shentong
  * @Date: 2020-04-07 13:52:26
- * @LastEditors: songyanan
- * @LastEditTime: 2020-07-03 14:08:32
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-09-12 12:57:29
  */
 import axios from '../axiosConfig'
+import { injectSubject } from '@/utils/index'
 
 export default {
   /**
@@ -22,7 +23,8 @@ export default {
 
     return axios.post('/graphql/v1/toss', {
       query: `{
-        ManagementStatusList(query: ${JSON.stringify(query) || null}) {
+        ManagementStatusList(query: ${JSON.stringify(injectSubject(query)) ||
+          null}) {
           period
           end_date
           start_date
@@ -30,6 +32,7 @@ export default {
           period_name
           course_day
           end_course_day
+          subject
       }}`
     })
   },

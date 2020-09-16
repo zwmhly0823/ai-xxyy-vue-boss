@@ -69,26 +69,31 @@ const enums = {
       text: '未上传作品'
     }
   ],
-  // conversion_type 0 未转化 1 月课 2半年课 3 年课
+  // conversion_type 1 未转化 1 月课 2半年课 3 年课
   conversionStatus: [
     {
-      id: 2,
+      id: 3,
       text: '已购半年课'
     },
     {
-      id: 3,
+      id: 4,
       text: '已购年课'
     },
     {
-      id: 0,
+      id: 1,
       text: '未转化'
     }
+    // {
+    //   id: 0,
+    //   text: '已注册'
+    // }
   ],
   conversionType: {
-    0: '未转化',
-    1: '已购月课',
-    2: '已购半年课',
-    3: '已购年课'
+    // 0: '已注册',
+    1: '未转化',
+    2: '已购月课',
+    3: '已购半年课',
+    4: '已购年课'
   },
 
   /**
@@ -172,6 +177,28 @@ const enums = {
       id: 's5',
       text: 's5'
     }
+  ],
+  // 转介绍学员
+  user_StatusList: [
+    {
+      id: '2',
+      text: '是'
+    },
+    {
+      id: '1',
+      text: '否'
+    }
+  ],
+  // 是否续费
+  isrenewList: [
+    {
+      id: '2',
+      text: '已续费'
+    },
+    {
+      id: '1',
+      text: '待续费'
+    }
   ]
 }
 
@@ -198,5 +225,11 @@ function getCompleteCourseList() {
 
 enums.joinCourseList = getJoinCourseList()
 enums.completeCourseList = getCompleteCourseList()
+
+enums.conversionStatusAll = enums.conversionStatus.concat({
+  id: 0,
+  text: '已注册'
+})
+enums.conversionTypeAll = Object.assign(enums.conversionType, { 0: '已注册' })
 
 export default enums

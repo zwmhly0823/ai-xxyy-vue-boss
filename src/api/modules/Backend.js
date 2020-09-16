@@ -4,7 +4,7 @@
  * @Author: Lukun
  * @Date: 2020-05-10 16:17:21
  * @LastEditors: liukun
- * @LastEditTime: 2020-07-02 16:34:55
+ * @LastEditTime: 2020-08-26 18:28:10
  */
 import axios from '../axiosConfig'
 export default {
@@ -63,5 +63,27 @@ export default {
   },
   changeCash(params) {
     return axios.post(`/api/b/v1/backend/refund/detail/updateRefundFee`, params)
+  },
+  // 赠品详情
+  getGiftDetail(params) {
+    return axios.get(
+      `/api/b/v1/backend/promotions/detail/get?flowApprovalId=${params}`
+    )
+  },
+  // 赠品批量审批
+  batchApproval(params) {
+    return axios.post(`/api/b/v1/backend/completed/batch/flow`, params)
+  },
+  // 临时解决方案-显示申请人部门
+  changeDepart(params) {
+    console.warn('临时解决方案-显示申请人部门')
+    return axios.post('/graphql/v1/toss', {
+      query: `{
+            TeacherDepartmentRelationList(
+              query: ${JSON.stringify(JSON.stringify({ teacher_id: params }))},
+              )
+            {teacher_id department {name}}    
+      }`
+    })
   }
 }

@@ -3,8 +3,8 @@
  * @version:
  * @Author: zhubaodong
  * @Date: 2020-03-13 16:53:41
- * @LastEditors: Shentong
- * @LastEditTime: 2020-05-30 17:12:13
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-09-15 19:57:21
  -->
 <template>
   <div class="right-container">
@@ -444,6 +444,7 @@ export default {
         const {
           data: { detail = {} }
         } = res
+        if (!detail) return {}
         detail.state =
           detail && detail.team_state
             ? this.teamStatus[+detail.team_state] || '今日开课'
@@ -476,11 +477,6 @@ export default {
 </script>
 <style lang="scss" scoped>
 @import '~@/assets/styles/variables.scss';
-
-@font-face {
-  font-family: 'number_font';
-  src: url('~@/assets/fonts/TG-TYPE-Bold.otf');
-} //引入本地字体数字文件
 
 .right-container {
   .box-card1 {
@@ -557,7 +553,6 @@ export default {
           font-size: 24px;
           margin-bottom: 10px;
           flex: 1;
-          font-family: 'number_font';
           font-weight: 500;
         }
         .order-count {
@@ -565,11 +560,6 @@ export default {
           display: flex;
           justify-content: space-around;
           flex: 1;
-          span {
-            span {
-              font-family: 'number_font';
-            }
-          }
         }
       }
       &-boxCenter {
@@ -582,7 +572,6 @@ export default {
           color: #4d4d4d;
           font-weight: 500;
           margin-bottom: 10px;
-          font-family: 'number_font';
           flex: 1;
           span {
             font-size: 14px;
@@ -609,7 +598,6 @@ export default {
             flex-direction: column;
             align-items: center;
             div:nth-child(1) {
-              font-family: 'number_font';
               color: #4d4d4d;
               margin-bottom: 4px;
             }
@@ -624,7 +612,6 @@ export default {
             flex-direction: column;
             align-items: center;
             div:nth-child(1) {
-              font-family: 'number_font';
               color: #4d4d4d;
               margin-bottom: 4px;
             }

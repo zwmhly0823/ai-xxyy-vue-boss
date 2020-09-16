@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-06-11 16:06:24
  * @LastEditors: Shentong
- * @LastEditTime: 2020-08-15 16:27:22
+ * @LastEditTime: 2020-09-16 13:55:39
 -->
 <template>
   <div class="right-pop" v-if="rightpop && rightpop.show" :style="myPosition">

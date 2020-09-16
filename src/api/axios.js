@@ -3,12 +3,15 @@
  * @version:
  * @Author: shentong
  * @Date: 2020-03-13 14:38:28
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-06-13 23:05:05
+ * @LastEditors: liukun
+ * @LastEditTime: 2020-09-01 12:47:11
  */
 import axios from 'axios'
 import _ from 'lodash'
 import { removeToken } from '@/utils/auth'
+import { getAppSubject } from '@/utils/index'
+
+const subject = getAppSubject()
 
 // 测试环境配置
 // const isTest = process.env.BASE_URL === 'ghpagestest'
@@ -22,10 +25,15 @@ axios.defaults.headers.post['Content-Type'] =
 
 axios.interceptors.request.use(
   (config) => {
-    // if (isTest) {
-    //   const { url } = config
-    //   config.url = url.replace(/\/graphql/, '')
-    // }
+    // 非graphql服务接口，统一回科目类型
+    const { url, method } = config
+    if (url.includes('/api/') && !url.includes('graphql')) {
+      if (method.toLowerCase() === 'get' && url.indexOf('subject=') === -1) {
+        config.url += !url.includes('?')
+          ? `?subject=${subject}`
+          : `&subject=${subject}`
+      }
+    }
     return config
   },
   (error) => {

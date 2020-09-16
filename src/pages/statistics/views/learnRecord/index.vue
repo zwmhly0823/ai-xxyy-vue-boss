@@ -3,8 +3,8 @@
  * @version: 1.0.0
  * @Author: zhangjianwen
  * @Date: 2020-07-09 15:02:59
- * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-08-12 18:57:05
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-09-12 13:06:14
 -->
 <template>
   <div class="learn-record">
@@ -221,11 +221,19 @@ export default {
             return
           }
 
+          // 过滤当前科目
+          const manageMentList = res.data.ManagementForTeacherList.filter(
+            (item) =>
+              item.management &&
+              +item.management.subject ===
+                this.$store.getters.subjects.subjectCode
+          )
+
           // 只显示开课中的期数 status // 1 招生中   2待开课   3 开课中  4 已结课',
-          const arr = res.data.ManagementForTeacherList.filter(
+          const arr = manageMentList.filter(
             (item) => item.management && item.management.status === 3
           )
-          const arrHistory = res.data.ManagementForTeacherList.filter(
+          const arrHistory = manageMentList.filter(
             (item) => item.management && item.management.status === 4
           )
           const arrSort = arr.sort((a, b) => {
@@ -379,6 +387,7 @@ export default {
       p {
         font-size: 14px;
         height: 20px;
+        margin-bottom: 14px;
       }
     }
   }

@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-08-06 22:29:42
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-11 14:49:15
+ * @LastEditTime: 2020-09-11 18:00:56
 -->
 <template>
   <div class="add-redeem-code">
@@ -34,24 +34,37 @@
         <el-form-item label="兑换码数量" prop="num">
           <el-input
             v-model.number="form.num"
-            placeholder="请输入兑换码数量（不大于1000）"
-            maxlength="4"
+            placeholder="请输入兑换码数量（不大于100000）"
+            maxlength="6"
             autocomplete="off"
           ></el-input>
         </el-form-item>
-        <el-form-item label="有效时间" prop="date">
-          <el-date-picker
-            v-model="form.date"
-            type="datetimerange"
-            align="right"
-            start-placeholder="生效时间"
-            end-placeholder="失效时间"
-            value-format="timestamp"
-            :default-time="['00:00:00', '24:00:00']"
-            :picker-options="pickerOptions"
-            style="width: 100%"
-          >
-          </el-date-picker>
+        <el-form-item label="有效时间" :prop="dateProp">
+          <!-- 固定时间 -->
+          <el-radio v-model="radioDate" label="1"
+            ><el-date-picker
+              v-model="form.date"
+              type="datetimerange"
+              align="right"
+              start-placeholder="生效时间"
+              end-placeholder="失效时间"
+              value-format="timestamp"
+              :default-time="['00:00:00', '24:00:00']"
+              :picker-options="pickerOptions"
+              style="width: 100%"
+              :disabled="radioDate === '2'"
+            >
+            </el-date-picker
+          ></el-radio>
+          <!-- 自定义时间 -->
+          <el-radio v-model="radioDate" label="2" style="margin-top: 10px">
+            兑换当日起<el-input
+              :disabled="radioDate === '1'"
+              v-model="form.expire"
+              maxlength="4"
+              style="width: 80px; margin: 0 10px;"
+            />天内可使用
+          </el-radio>
         </el-form-item>
         <el-form-item label="兑换商品套餐" prop="packageId">
           <el-input v-model="form.packageId" style="display: none;" />
@@ -68,7 +81,12 @@
             <div class="flex-1">
               <h4>{{ packageProduct.name }}</h4>
               <p class="red">{{ packageProduct.price }}元</p>
-              <p>课时：{{ packageProduct.course_week }}周</p>
+              <!-- 写字项目体验课不显示课时 -->
+              <p
+                v-if="packageProduct.id !== '19' && packageProduct.id !== '20'"
+              >
+                课时：{{ packageProduct.course_week }}周
+              </p>
             </div>
             <el-button size="mini" @click="dialogPackageVisible = true"
               >更换商品</el-button
@@ -136,10 +154,21 @@ export default {
       default: false
     }
   },
-  computed: {},
+  computed: {
+    dateProp() {
+      return this.radioDate === '1' ? 'date' : 'expire'
+    }
+  },
   data() {
     // 数量校验规则
     var checkNum = (rule, value, callback) => {
+      if (value <= 0 || value > 100000) {
+        return callback(new Error('请输入1~100000内数字'))
+      }
+      callback()
+    }
+    // 有效天数校验规则
+    var expireDay = (rule, value, callback) => {
       if (value <= 0 || value > 1000) {
         return callback(new Error('请输入1~1000内数字'))
       }
@@ -159,7 +188,7 @@ export default {
       callback()
     }
     return {
-      // dialogFormVisible: this.show || false,
+      radioDate: '1',
       dialogPackageVisible: false,
       rules: {
         title: [
@@ -168,7 +197,7 @@ export default {
         ],
         num: [
           { required: true, message: '请输入兑换码数量', trigger: 'blur' },
-          { type: 'number', message: '仅限输入数字，最大上限为1000' },
+          { type: 'number', message: '仅限输入数字，最大上限为100000' },
           { validator: checkNum, trigger: 'blur' }
         ],
         date: [
@@ -178,6 +207,14 @@ export default {
             trigger: 'blur'
           },
           { validator: checkDate, trigger: ['blur', 'change'] }
+        ],
+        expire: [
+          {
+            required: true,
+            message: '请设置兑换码有效期',
+            trigger: 'blur'
+          },
+          { validator: expireDay, trigger: ['blur', 'change'] }
         ],
         packageId: [
           {
@@ -201,6 +238,7 @@ export default {
         title: '',
         num: '',
         date: '',
+        expire: '', // 有效天数
         // startDate: '',
         // endDate: '',
         packageId: '',
@@ -221,19 +259,33 @@ export default {
         }
       },
       packageProduct: {}, // 选中的商品套餐
-      // TODO:指定的渠道, 先写死 ！！！
+      // TODO:指定的渠道, 先写死 ！！！  写字渠道待添加
       channelList: [
         {
           id: '2048',
           text: 'vip学员'
+        },
+        {
+          id: '2147',
+          text: '兑换码'
         }
       ],
-      labelList: [],
+      labelList: [{ id: '0', name: '无' }],
       loading: false
     }
   },
   created() {
     this.getMarketingLabel()
+  },
+  watch: {
+    radioDate(val) {
+      if (val === '1') {
+        this.form.expire = ''
+      }
+      if (val === '2') {
+        this.form.date = ''
+      }
+    }
   },
   methods: {
     /**
@@ -259,10 +311,16 @@ export default {
             this.channelList.filter(
               (item) => item.id === this.form.channelId
             )[0].text || ''
-          const customerSignName =
-            this.labelList.filter(
-              (item) => item.id === this.form.customerSignId
-            )[0].name || ''
+          let customerSignName = ''
+          if (obj.customerSignId === '0') {
+            obj.customerSignId = ''
+            customerSignName = ''
+          } else {
+            customerSignName =
+              this.labelList.filter(
+                (item) => item.id === this.form.customerSignId
+              )[0].name || ''
+          }
           Object.assign(obj, {
             packageName,
             channelName,
@@ -332,7 +390,7 @@ export default {
     getMarketingLabel() {
       this.$http.Marketing.getMarketingLabelList().then((res) => {
         if (res?.code === 0 && res?.payload) {
-          this.labelList = res.payload
+          this.labelList.push(...res.payload)
         }
       })
     }
@@ -341,6 +399,19 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.add-redeem-code {
+  ::v-deep {
+    .el-radio__label {
+      font-size: 12px;
+    }
+    .el-radio__input.is-checked + .el-radio__label {
+      color: #606266;
+    }
+    .el-range-editor.is-disabled {
+      border-color: #e4e7ed !important;
+    }
+  }
+}
 .package {
   &-btn {
     width: 90px;

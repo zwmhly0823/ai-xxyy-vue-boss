@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-17 11:22:08
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-06-08 14:45:30
+ * @LastEditTime: 2020-08-28 20:51:49
  -->
 <template>
   <div class="sidebar-logo-container" :class="{ collapse: collapse }">
@@ -31,7 +31,9 @@
 </template>
 
 <script>
-import Logo from '@/assets/images/boss.png'
+// import Logo from '@/assets/images/boss.png'
+import ArtAppLogo from '@/assets/images/art_app_boss.png'
+import WriteAppLogo from '@/assets/images/write_app_boss.png'
 import LogoSmall from '@/assets/images/boss-64.png'
 export default {
   name: 'SidebarLogo',
@@ -44,8 +46,15 @@ export default {
   data() {
     return {
       title: '', // 小熊美术TOSS
-      logo: Logo,
+      // logo: Logo,
       logoSmall: LogoSmall
+    }
+  },
+  computed: {
+    logo() {
+      return +this.$store.getters.subjects.subjectCode === 0
+        ? ArtAppLogo
+        : WriteAppLogo
     }
   }
 }
@@ -76,7 +85,7 @@ export default {
 
     & .sidebar-logo {
       margin: 0 auto;
-      width: 90px;
+      width: 115px;
       vertical-align: middle;
       text-align: center;
       img {

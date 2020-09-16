@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-24 18:50:54
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-07-03 14:12:12
+ * @LastEditTime: 2020-08-26 11:49:57
  -->
 <template>
   <div class="search-item small threeSelect">
@@ -211,10 +211,11 @@ export default {
   methods: {
     // 获取渠道来源 filter: 过滤关键词  eg：filter:"抖音"
     async getChannelLeves() {
+      const subject = { subject: this.$store.getters.subjects.subjectCode }
       await axios
         .post('/graphql/v1/toss', {
           query: `{
-            ChannelAllList {
+            ChannelAllList(query:${JSON.stringify(JSON.stringify(subject))}) {
                 id
                 channel_class_id
                 channel_outer_name
@@ -231,20 +232,8 @@ export default {
     },
     // 获取渠道来源分类 filter: 过滤关键词  eg：filter:"抖音"
     async getChannelClassList() {
-      await axios
-        .post('/graphql/v1/toss', {
-          query: `{
-              ChannelClassList(size: 500){
-                id
-                channel_class_parent_id
-                channel_class_name
-              }
-            }
-          `
-        })
-        .then((res) => {
-          this.channelClassList = res.data.ChannelClassList
-        })
+      const res = await this.$http.Operating.getChannelClassList()
+      this.channelClassList = res?.data?.ChannelClassList || []
     },
     formatData(classdata, classifiData) {
       // 第一级目录
@@ -304,7 +293,10 @@ export default {
       this.loading = true
       const queryParams = {
         bool: {
-          must: [{ wildcard: { 'period_name.keyword': `*${queryString}*` } }]
+          must: [
+            { wildcard: { 'period_name.keyword': `*${queryString}*` } },
+            { term: { subject: this.$store.getters.subjects.subjectCode } }
+          ]
         }
       }
       if (this.type) {

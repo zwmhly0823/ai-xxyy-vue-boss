@@ -3,10 +3,11 @@
  * @version: 1.0.0
  * @Author: liukun
  * @Date: 2020-07-25 19:15:30
- * @LastEditors: liukun
- * @LastEditTime: 2020-07-25 19:34:40
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-09-14 19:14:01
  */
 export function formatDate(date1) {
+  if (!date1 || date1 === '0') return '-'
   var date = new Date(date1)
   var YY = date.getFullYear() + '-'
   var MM =

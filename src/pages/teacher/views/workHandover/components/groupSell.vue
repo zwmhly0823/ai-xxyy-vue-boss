@@ -32,7 +32,7 @@
           </el-option>
         </el-select>
       </el-form-item>
-      <el-form-item>
+      <!-- <el-form-item>
         <el-select
           v-model="teacherIds"
           :multiple="isMultiple"
@@ -71,6 +71,47 @@
           >
           </el-option>
         </el-select>
+      </el-form-item> -->
+      <el-form-item>
+        <!-- 微信模块相关从@components/MSearch/searchItems/wxInput.vue粘贴来 -->
+        <el-autocomplete
+          v-model="searchParams.wechat"
+          size="mini"
+          clearable
+          filterable
+          reserve-keyword
+          :fetch-suggestions="weixinSearch"
+          placeholder="微信号搜索"
+          @select="onWxSerch"
+          @clear="clearWxSerch"
+          ref="wxnum"
+        >
+          <i class="el-icon-search el-input__icon" slot="suffix"></i>
+          <template slot-scope="{ item }">
+            <div style="display:flex">
+              <div class="name">{{ item.wechat_no || '-' }}</div>
+            </div>
+          </template>
+        </el-autocomplete>
+      </el-form-item>
+      <el-form-item>
+        <el-autocomplete
+          v-model="searchParams.teamName"
+          size="mini"
+          clearable
+          filterable
+          :fetch-suggestions="teamIdSearch"
+          placeholder="交出班级名称查询"
+          @select="onTeamId"
+          @clear="clearTeamId"
+        >
+          <i class="el-icon-search el-input__icon" slot="suffix"></i>
+          <template slot-scope="{ item }">
+            <div style="display:flex">
+              <div class="name">{{ item.team_name || '-' }}</div>
+            </div>
+          </template>
+        </el-autocomplete>
       </el-form-item>
     </el-form>
   </div>
@@ -117,6 +158,11 @@ export default {
           label: '班级交接'
         }
       ],
+      wechatOptions: [],
+      searchParams: {
+        wechat: '',
+        teamName: ''
+      },
       value: ''
     }
   },
@@ -168,6 +214,57 @@ export default {
     },
     onChangeType(item) {
       this.$emit('onType', item || '')
+    },
+    onWxSerch(data) {
+      this.searchParams.wechat = data.wechat_no
+      this.$emit('searchFun', 'weixinSendId', data.id)
+    },
+    clearWxSerch() {
+      this.searchParams.wechat = ''
+      this.$emit('searchFun', 'weixinSendId', '')
+    },
+    // 输入微信号
+    async weixinSearch(queryString, cb) {
+      // const reg = /^\w+$/
+      // if (!+this.onlyWeixin) {
+      //   if (!reg.test(queryString)) {
+      //     this.searchParams.wechat = ''
+      //     return
+      //   }
+      // }
+      // 输入内容查找到的关联信息（下拉框）
+      const list = await this.weixinCreateFilter(queryString)
+      // console.log('*****list******', list)
+      // cb 展示列表数据
+      cb(list)
+    },
+    // 调用微信号搜索接口
+    weixinCreateFilter(queryString) {
+      // 输入内容匹配到的关联信息（下拉框）
+      return this.$http.Weixin.getWeChatTeacherListEx(
+        'wechat_no.keyword',
+        queryString
+      ).then((res) => {
+        // console.log('微信搜索调用接口', res)
+        return res.data.WeChatTeacherListEx || []
+      })
+    },
+    async teamIdSearch(queryString, cb) {
+      const list = await this.StudentTeamList(queryString)
+      cb(list)
+    },
+    StudentTeamList(teamName) {
+      return this.$http.Teacher.StudentTeamList(teamName).then((res) => {
+        return res?.data?.StudentTeamList || []
+      })
+    },
+    onTeamId(data) {
+      this.searchParams.teamName = data.team_name
+      this.$emit('searchFun', 'teamId', data.id)
+    },
+    clearTeamId() {
+      this.searchParams.teamName = ''
+      this.$emit('searchFun', 'teamId', '')
     }
   }
 }

@@ -4,16 +4,20 @@
  * @Author: Lukun
  * @Date: 2020-04-27 17:47:58
  * @LastEditors: liukun
- * @LastEditTime: 2020-07-31 23:22:46
+ * @LastEditTime: 2020-08-26 21:22:03
  -->
 <template>
   <div class="container">
     <div class="time">
-      <tabTimeSelect @result="getSeacherTime" />
-      <CheckType @result="getcheckType" />
-      <SearchPart @result="getSeachePart" />
-      <courseTeam @result="getTeamId" />
-      <searchPhone name="userTel" @result_lk="getPhone" />
+      <tabTimeSelect class="inline-search" @result="getSeacherTime" />
+      <CheckType class="inline-search" @result="getcheckType" />
+      <SearchPart class="inline-search" @result="getSeachePart" />
+      <courseTeam class="inline-search" @result="getTeamId" />
+      <searchPhone
+        class="inline-search margin_left_20"
+        name="userTel"
+        @result_lk="getPhone"
+      />
     </div>
     <el-table
       :data="tableData"
@@ -58,6 +62,9 @@
           </div>
           <div v-if="scope.row.type === 'UNCREDITED'">
             无归属订单审批
+          </div>
+          <div v-if="scope.row.type === 'PROMOTIONS'">
+            赠品
           </div>
         </template>
       </el-table-column>
@@ -493,6 +500,12 @@
         </div>
       </div>
     </el-drawer>
+    <!-- 赠品审批抽屉 -->
+    <ApprovalGiftDetail
+      :drawerGiftDeatail="drawerGiftDeatail"
+      :drawerGift="drawerGift"
+      @close-gift="handleClose"
+    />
     <adjust-drawer
       :is3d="1"
       ref="adjustDrawerCom"
@@ -518,6 +531,7 @@ import TabTimeSelect from './timeSearch'
 import CheckType from './checkType'
 import SearchPart from './searchPart'
 import adjustDrawer from './adjustDrawer'
+import ApprovalGiftDetail from './approvalGiftDetail'
 
 export default {
   props: ['activeName'],
@@ -528,7 +542,8 @@ export default {
     CheckType,
     SearchPart,
     adjustDrawer,
-    courseTeam
+    courseTeam,
+    ApprovalGiftDetail
   },
   watch: {
     activeName(val) {
@@ -549,6 +564,8 @@ export default {
       staffId: '',
       tableData: [],
       current: {},
+      drawerGift: false,
+      drawerGiftDeatail: {},
       drawerApproval: false,
       drawerApprovalDeatail: {},
       currentPage: 1,
@@ -693,6 +710,16 @@ export default {
             this.drawerApprovalDeatail.chat_url = res.payload.chatUrl[0]
             this.drawerApprovalDeatail.pay_url = res.payload.paymentUrl[0]
             this.drawerApproval = true
+          }
+        })
+      }
+      // 赠品
+      if (type === 'PROMOTIONS') {
+        this.$http.Backend.getGiftDetail(id).then((res) => {
+          if (res && res.payload) {
+            res.payload.ctime = timestamp(res.payload.ctime, 2)
+            this.drawerGiftDeatail = res.payload
+            this.drawerGift = true
           }
         })
       }
@@ -893,6 +920,7 @@ export default {
     // 关闭审批详情查看
     handleClose() {
       this.drawerApproval = false
+      this.drawerGift = false
     },
     // 鼠标进入
     handleMouseEnter(row) {
@@ -915,8 +943,25 @@ export default {
             item.reason = zhaiyao[3]
             item.openTime = timestamp(item.ctime, 2)
             item.approveTime = timestamp(item.endTime, 2)
+            item.applyDepartment = ''
             return item
           })
+          // 重写部门名称
+          const idArr = this.tableData.map((item) => item.applyId)
+          this.$http.Backend.changeDepart(idArr).then(
+            ({ data: { TeacherDepartmentRelationList } }) => {
+              console.info('lklk-已审批', idArr, TeacherDepartmentRelationList)
+              if (TeacherDepartmentRelationList.length) {
+                TeacherDepartmentRelationList.forEach((item, index) => {
+                  this.tableData.forEach((itemx, indexX) => {
+                    if (item.teacher_id === itemx.applyId) {
+                      itemx.applyDepartment = item.department.name
+                    }
+                  })
+                })
+              }
+            }
+          )
         }
       })
     }
@@ -940,8 +985,14 @@ export default {
     text-align: right;
   }
   .time {
-    display: flex;
+    // display: flex;
     align-items: center;
+    .inline-search {
+      display: inline-block;
+    }
+    .margin_left_20 {
+      margin-left: 20px;
+    }
   }
   .drawer-approval-detail {
     padding-top: 50px;

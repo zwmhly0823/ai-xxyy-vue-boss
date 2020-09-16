@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-04-25 17:10:01
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-08-10 12:28:50
+ * @LastEditTime: 2020-09-11 15:37:59
  -->
 <template>
   <div>
@@ -19,6 +19,7 @@
       <el-option label="用户手机号" value="1"></el-option>
       <el-option label="收货人手机号" value="2"></el-option>
       <el-option label="订单号" value="0"></el-option>
+      <el-option label="交易流水号" value="3"></el-option>
     </el-select>
     <el-autocomplete
       placeholder="请输入内容"
@@ -26,7 +27,7 @@
       size="mini"
       clearable
       :fetch-suggestions="querySearch"
-      :maxlength="select !== '0' ? 11 : 50"
+      :maxlength="maxLength"
       @select="handleSelect"
       ref="input"
     >
@@ -61,7 +62,14 @@ export default {
       if (this.select === '0') key = 'out_trade_no'
       if (this.select === '1') key = 'uid'
       if (this.select === '2') key = 'uid'
+      if (this.select === '3') key = 'id'
       return key
+    },
+    maxLength() {
+      let len = 11
+      if (this.select === '0') len = 50
+      if (this.select === '3') len = 28
+      return len
     }
   },
   methods: {
@@ -99,10 +107,10 @@ export default {
           this.value = ''
           return
         }
-        this.$http.User.searchUserByPhone(query).then((res) => {
+        this.$http.Base.getUserNumPhone(query).then((res) => {
           console.log(res, 'mobile')
-          if (res && res.data && res.data.UserListEx) {
-            result = res.data.UserListEx.map((item) => {
+          if (res && res.data && res.data.UserSubjectStatisticsListEx) {
+            result = res.data.UserSubjectStatisticsListEx.map((item) => {
               item.value = item.mobile
               return item
             })
@@ -110,7 +118,7 @@ export default {
           cb(result)
           this.$refs.input.activated = true
         })
-      } else {
+      } else if (this.select === '2') {
         // 收货人手机号
         // 下单手机号 -> 用户手机号
         const reg = /^[0-9]*$/
@@ -123,6 +131,30 @@ export default {
           if (res && res.data && res.data.ExpressListEx) {
             result = res.data.ExpressListEx.map((item) => {
               item.value = item.receipt_tel
+              return item
+            })
+          }
+          cb(result)
+          this.$refs.input.activated = true
+        })
+      } else {
+        // 交易流水号
+        const reg = /^[0-9]*$/
+        if (!reg.test(query)) {
+          this.value = ''
+          return
+        }
+        const params = {
+          'transaction_id.like': {
+            'transaction_id.keyword': `*${this.value}*`
+          },
+          status: 2,
+          type: 1
+        }
+        this.$http.Order.searchPaymentPayV2(params).then((res) => {
+          if (res?.data?.PaymentPayList) {
+            result = res.data.PaymentPayList.map((item) => {
+              item.value = item.transaction_id
               return item
             })
           }
@@ -147,14 +179,15 @@ export default {
       })
     },
     handleSelect(data) {
-      console.log(data)
       const obj = {}
       if (this.select === '0') {
         Object.assign(obj, { [this.keyword]: data.out_trade_no })
       } else if (this.select === '1') {
-        Object.assign(obj, { [this.keyword]: data.id })
-      } else {
+        Object.assign(obj, { [this.keyword]: data.u_id })
+      } else if (this.select === '2') {
         Object.assign(obj, { [this.keyword]: data.user_id })
+      } else {
+        Object.assign(obj, { [this.keyword]: data.oid })
       }
       this.$emit('result', obj)
     }

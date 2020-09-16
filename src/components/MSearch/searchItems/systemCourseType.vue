@@ -29,6 +29,9 @@
 <script>
 export default {
   props: {
+    teamType: {
+      type: String
+    },
     name: {
       type: String,
       default: ''
@@ -57,8 +60,17 @@ export default {
         {
           id: '4',
           text: '年系统课'
+        },
+        {
+          id: '5',
+          text: '两年系统课'
         }
       ]
+    }
+  },
+  created() {
+    if (this.teamType) {
+      this.typeList.push({ id: '6', text: '系统课升级' })
     }
   },
   methods: {

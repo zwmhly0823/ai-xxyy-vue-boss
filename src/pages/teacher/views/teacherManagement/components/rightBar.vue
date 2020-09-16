@@ -3,21 +3,22 @@
  * @version:
  * @Author: zhubaodong
  * @Date: 2020-04-02 16:08:02
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-07-25 19:18:03
+ * @LastEditors: zhangjianwen
+ * @LastEditTime: 2020-09-12 15:32:23
  -->
 <template>
   <div>
     <m-search
+      ref="searchComponent"
       @search="handleSearch"
       teacherphone="phone.keyword"
       teachername="realname.keyword"
       teachernickname="nickname.keyword"
       rank="rank_id"
+      induction="status"
       landing="is_login"
       position="duty_id"
       seller-level="level"
-      v-if="true"
     >
       <!-- <el-button type="primary" slot="searchItems" size="mini">搜索</el-button> -->
       <el-button
@@ -190,7 +191,7 @@
         <el-table-column label="销售等级" min-width="120px">
           <template slot-scope="scope">
             <div>
-              {{ scope.row.level }}
+              {{ scope.row.level || '' }}
             </div>
           </template>
         </el-table-column>
@@ -269,7 +270,7 @@ export default {
       tableHeight: 0,
       departmentQuery: '',
       searchQuery: '',
-      query: { status: 0 },
+      query: {},
       sex: {
         // 0: '-',
         0: '男',
@@ -320,7 +321,7 @@ export default {
       }
       if (query.department.pid === '99999') {
         this.departmentQuery = ''
-        this.query = { status: 0 }
+        this.query = {}
       } else {
         this.departmentQuery = query
       }
@@ -336,7 +337,12 @@ export default {
   },
   activated() {
     setTimeout(() => {
-      this.getData()
+      // 搜索项有初始值，先去走一遍搜索
+      if (this.searchQuery) {
+        this.getData()
+      } else {
+        this.$refs.searchComponent.setSeachParmas({ status: '0' }, ['status'])
+      }
       if (this.teacherID) {
         this.$refs.detailsHidden.createdUrl(this.teacherID)
       }
@@ -354,15 +360,15 @@ export default {
             Object.assign(term, res.terms)
           }
         })
-        // this.query = JSON.stringify(term)
         this.searchQuery = term
       } else {
         this.searchQuery = ''
-        this.query = { status: 0 }
+        this.query = {}
       }
       this.getData(1)
     },
     getData(page = this.currentPage) {
+      this.query = {}
       if (this.departmentQuery || this.searchQuery) {
         Object.assign(
           this.query,
@@ -380,7 +386,7 @@ export default {
       })
       this.$http.Teacher.getTeacherPage(page, JSON.stringify(query))
         .then((res) => {
-          console.log(res.data.TeacherManagePage.content, '老师列表')
+          // console.log(res.data.TeacherManagePage.content, '老师列表')
           if (res && res.data && res.data.TeacherManagePage) {
             const {
               content = [],
@@ -389,6 +395,8 @@ export default {
               totalElements
             } = res.data.TeacherManagePage
             content.forEach((res) => {
+              const { teacherLevelInfo = {} } = res
+              // console.log(teacherLevelInfo)
               res.join_date = res.join_date
                 ? formatData(new Date(res.join_date).getTime(), 'd')
                 : ''
@@ -399,23 +407,27 @@ export default {
                 ? formatData(new Date(res.leave_date).getTime(), 'd')
                 : ''
               // 销售等级
-              if (res.level === 0) {
-                res.level = '新兵营'
-              } else if (res.level === 1) {
-                res.level = '1级社群销售'
-              } else if (res.level === 2) {
-                res.level = '2级社群销售'
-              } else if (res.level === 3) {
-                res.level = '3级社群销售'
-              } else if (res.level === 4) {
-                res.level = '1级'
-              } else if (res.level === 5) {
-                res.level = '2级'
-              } else if (res.level === 6) {
-                res.level = '3级'
-              } else if (res.level === 7) {
-                res.level = '4级'
-              }
+              teacherLevelInfo &&
+                (res.level = teacherLevelInfo.level_name || '')
+
+              // res.level = teacherLevelInfo.level_name || ''
+              // if (res.level === 0) {
+              //   res.level = '新兵营'
+              // } else if (res.level === 1) {
+              //   res.level = '1级社群销售'
+              // } else if (res.level === 2) {
+              //   res.level = '2级社群销售'
+              // } else if (res.level === 3) {
+              //   res.level = '3级社群销售'
+              // } else if (res.level === 4) {
+              //   res.level = '1级'
+              // } else if (res.level === 5) {
+              //   res.level = '2级'
+              // } else if (res.level === 6) {
+              //   res.level = '3级'
+              // } else if (res.level === 7) {
+              //   res.level = '4级'
+              // }
             })
             this.tableData = content
             if (this.detailsIndex === '2') {

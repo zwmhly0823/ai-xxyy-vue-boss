@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-08-06 17:15:04
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-12 14:45:11
+ * @LastEditTime: 2020-09-07 18:34:46
 -->
 <template>
   <el-row type="flex" class="app-main height">
@@ -40,8 +40,13 @@
           </el-table-column>
           <el-table-column prop="start_date" label="有效期" min-width="120">
             <template slot-scope="scope">
-              <p>起：{{ scope.row.start_date_text }}</p>
-              <p>止：{{ scope.row.end_date_text }}</p>
+              <template v-if="scope.row.expire && scope.row.expire !== '0'">
+                <p>兑换当日{{ scope.row.expire }}天内</p>
+              </template>
+              <template v-else>
+                <p>起：{{ scope.row.start_date_text }}</p>
+                <p>止：{{ scope.row.end_date_text }}</p>
+              </template>
             </template>
           </el-table-column>
           <el-table-column prop="status" label="状态">
@@ -174,7 +179,15 @@ export default {
     // 查看码库
     handleOpenLibrary(row) {
       const { id, status } = row
-      openBrowserTab(`/marketing/#/redeemCodeLibrary/${id}/${status}`)
+      // 区分科目 TODO:新增其他科目时再优化
+      const subject = this.$store.getters.subjects.subjectCode
+      const subjectText = +subject === 0 ? 'marketing' : 'write_app'
+      // 如果是自定义时间，则加上参数 expire
+      let url = `/${subjectText}/#/redeemCodeLibrary/${id}/${status}`
+      if (row.expire && row.expire !== '0') {
+        url += `?expire=${row.expire}`
+      }
+      openBrowserTab(url)
     },
     // 失效
     handleInvalid(row) {
@@ -222,8 +235,8 @@ export default {
     },
 
     handleSizeChange(page) {
-      console.log(page, 'page')
       this.currentPage = page
+      this.getData()
     },
 
     // 创建成功回调 @status - true:继续创建，false-返回列表
@@ -232,7 +245,7 @@ export default {
       this.currentPage = 1
       setTimeout(() => {
         this.getData()
-      }, 1000)
+      }, 1500)
     },
     // 取消创建回调
     handelCancelAdd() {

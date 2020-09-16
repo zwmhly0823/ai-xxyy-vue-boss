@@ -3,8 +3,8 @@
  * @version:
  * @Author: zhubaodong
  * @Date: 2020-03-24 18:50:54
- * @LastEditors: panjian
- * @LastEditTime: 2020-07-22 18:15:32
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-08-26 12:08:10
  -->
 <template>
   <div class="search-item small threeSelect">
@@ -186,20 +186,8 @@ export default {
   methods: {
     // 获取渠道来源分类 filter: 过滤关键词  eg：filter:"抖音"
     async getChannelClassList() {
-      await axios
-        .post('/graphql/v1/toss', {
-          query: `{
-              ChannelClassList(size: 500){
-                id
-                channel_class_parent_id
-                channel_class_name
-              }
-            }
-          `
-        })
-        .then((res) => {
-          this.channelClassList = res.data.ChannelClassList
-        })
+      const res = await this.$http.Operating.getChannelClassList()
+      this.channelClassList = res?.data?.ChannelClassList || []
     },
     formatData(classdata, classifiData) {
       // 第一级目录
@@ -259,7 +247,10 @@ export default {
       this.loading = true
       const queryParams = {
         bool: {
-          must: [{ wildcard: { 'period_name.keyword': `*${queryString}*` } }]
+          must: [
+            { wildcard: { 'period_name.keyword': `*${queryString}*` } },
+            { term: { subject: this.$store.getters.subjects.subjectCode } }
+          ]
         }
       }
       if (this.type) {

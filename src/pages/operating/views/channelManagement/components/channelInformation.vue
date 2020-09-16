@@ -3,8 +3,8 @@
  * @version: 
  * @Author: panjian
  * @Date: 2020-05-06 16:33:15
- * @LastEditors: panjian
- * @LastEditTime: 2020-07-24 11:59:09
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-09-08 20:16:36
  -->
 <template>
   <div class="channelAdd-box">
@@ -290,7 +290,8 @@ export default {
     getChannelOne() {
       const arrOne = []
       this.$http.Operating.getChannelAndClass(17).then((res) => {
-        const data = res.payload.channelList
+        const data = res?.payload?.channelList
+        if (!data) return
         data.forEach((item) => {
           arrOne.push(item.id)
         })
@@ -308,9 +309,16 @@ export default {
     },
     // 列表请求
     getChannelDetailStatisticsPage() {
-      if (this.queryList.length === 0) {
-        this.queryList = `""`
+      const subject = { subject: this.$store.getters.subjects.subjectCode }
+      let obj = {}
+      if (this.queryList.length === 0 || this.queryList === `""`) {
+        // this.queryList = `""`
+        Object.assign(obj, subject)
+      } else {
+        obj = JSON.parse(JSON.parse(this.queryList))
+        Object.assign(obj, subject)
       }
+      this.queryList = JSON.stringify(JSON.stringify(obj))
       this.$http.Operating.ChannelDetailStatisticsPage(
         this.queryList,
         this.currentPage

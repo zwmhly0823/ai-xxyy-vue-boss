@@ -4,7 +4,7 @@
  * @Author: ShenTong
  * @Date: 2020-04-11 16:06:42
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-06-11 16:45:40
+ * @LastEditTime: 2020-08-20 15:54:45
  */
 const getters = {
   sidebar: (state) => state.app.sidebar,
@@ -25,6 +25,7 @@ const getters = {
   avatar: (state) => 'https://msb-ai.meixiu.mobi/ai-pm/static/touxiang.png',
   name: (state) => '',
   scheduleTeacherId: (state) => state.schedule.scheduleTeacherId,
-  schedulePeriod: (state) => state.schedule.schedulePeriod
+  schedulePeriod: (state) => state.schedule.schedulePeriod,
+  subjects: (state) => state.subjects
 }
 export default getters

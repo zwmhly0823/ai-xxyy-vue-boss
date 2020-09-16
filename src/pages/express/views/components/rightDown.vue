@@ -214,7 +214,7 @@
       </el-table-column> -->
       <el-table-column
         label="收货信息"
-        min-width="200"
+        width="280"
         v-if="showCol.receiptInfo"
         :key="8"
       >
@@ -284,12 +284,12 @@
         :key="11"
       >
         <template slot-scope="scope">
-          <div class="product">
+          <!-- <div class="product">
             <span>{{
               scope.row.course_day ? scope.row.course_day + '开课' : '--'
             }}</span>
-          </div>
-          <div class="gray-text">
+          </div> -->
+          <div class="product">
             {{
               scope.row.lastTeamInfo ? scope.row.lastTeamInfo.team_name : '--'
             }}
@@ -512,7 +512,12 @@
 <script>
 /* eslint-disable camelcase */
 import MPagination from '@/components/MPagination/index.vue'
-import { isToss, formatData, openBrowserTab } from '@/utils/index'
+import {
+  isToss,
+  formatData,
+  openBrowserTab,
+  injectSubject
+} from '@/utils/index'
 import { mapState } from 'vuex'
 import dayjs from 'dayjs'
 import expressDetail from '@/pages/trading/views/components/expressDetail'
@@ -1063,9 +1068,9 @@ export default {
         this.$store.dispatch('getShowStatus', type)
       }
       this.$http.Express.getLogisticsList({
-        query: `{LogisticsListPageNew(query:${JSON.stringify(query)}, size: ${
-          this.currentItem
-        }, page: ${this.currentPage}) {
+        query: `{LogisticsListPageNew(query:${JSON.stringify(
+          injectSubject(query)
+        )}, size: ${this.currentItem}, page: ${this.currentPage}) {
             first
             last
             number
@@ -1139,12 +1144,14 @@ export default {
                 department_name
                 group_name
               }
+              street
               user {
                 id
                 birthday
                 username
                 mobile
               }
+              source_type
             }
           }
         }`
@@ -1218,6 +1225,9 @@ export default {
       productTopicList.map((item) => {
         if (+item.id === +listItem.regtype) {
           listItem.regtype_text = item.name
+        }
+        if (+item.id === 6 && listItem.source_type === '4') {
+          listItem.regtype_text = '关单赠品'
         }
       })
     },

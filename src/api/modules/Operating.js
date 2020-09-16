@@ -4,9 +4,11 @@
  * @Author: Shentong
  * @Date: 2020-03-16 19:46:39
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-13 17:05:51
+ * @LastEditTime: 2020-09-08 21:00:09
  */
 import axios from '../axiosConfig'
+import { injectSubject, getAppSubjectCode } from '@/utils/index'
+const subjectCode = getAppSubjectCode()
 
 export default {
   /**
@@ -54,7 +56,8 @@ export default {
    */
   getLeads(params) {
     return axios.get(
-      `/api/t/v1/teacher/course/enroll/teacher/channel/config?courseType=${params.courseType}&period=${params.period}`
+      `/api/t/v1/teacher/course/enroll/teacher/channel/config?period=${params.period}`
+      // `/api/t/v1/teacher/course/enroll/teacher/channel/config?courseType=${params.courseType}&period=${params.period}`
     )
   },
   /**
@@ -143,6 +146,21 @@ export default {
    *
    *渠道查询
    */
+  getChannelClassList(params = '') {
+    const query =
+      (params && injectSubject(params)) ||
+      JSON.stringify({ subject: subjectCode })
+    return axios.post('/graphql/v1/toss', {
+      query: `{
+              ChannelClassList(query: ${JSON.stringify(query)}, size: 500){
+                id
+                channel_class_parent_id
+                channel_class_name
+              }
+            }
+          `
+    })
+  },
   countsByTrialChannel(params) {
     return axios.get(
       `/api/o/v1/userOrderSuccess/channel/boss/countsByTrialChannel?trialChannels=${params.trialChannels}&trialChannelClassIds=${params.trialChannelClassIds}&stage=${params.stage}&startCtime=${params.startCtime}&endCtime=${params.endCtime}&page=${params.page}&pageSzie=${params.pageSzie}`
@@ -150,9 +168,10 @@ export default {
   },
   // 查询渠道名称 渠道分类
   ChannelDetailStatisticsList(Params = `""`) {
+    const query = injectSubject(Params)
     return axios.post('/graphql/v1/toss', {
       query: `{
-        ChannelDetailStatisticsList(query:${JSON.stringify(Params)},size:60){
+        ChannelDetailStatisticsList(query:${JSON.stringify(query)},size:60){
           id
           ctime
           channel_inner_name
@@ -184,9 +203,11 @@ export default {
   },
   // 二级渠道查询名称 渠道分类
   ChannelClassPageName(Params, page = 1) {
+    const query = injectSubject(Params)
+
     return axios.post('/graphql/v1/toss', {
       query: `{
-        ChannelClassPage(query:${JSON.stringify(Params)},size:60){
+        ChannelClassPage(query:${JSON.stringify(query)},size:60){
           content{
             channel_class_name
             channel_level
@@ -273,9 +294,10 @@ export default {
    * 二级渠道查询
    */
   ChannelClassPage(Params, page = 1) {
+    const query = injectSubject(JSON.parse(Params))
     return axios.post('/graphql/v1/toss', {
       query: `{
-        ChannelClassPage(query:${Params},page:${page},size:20){
+        ChannelClassPage(query:${JSON.stringify(query)},page:${page},size:20){
           content{
             channel_class_name
             channel_level
@@ -463,29 +485,32 @@ export default {
   /**
    * @description 小熊币发放列表
    */
-  issueBearList(params = '', page = 1) {
-    return axios.post('/graphql/v1/toss', {
-      query: `{
-        AccountPage(query: ${params}, page:${page}) {
-          totalPages
-          totalElements
-          content {
-            user{
-              user_num
-              id
-            }
-            id
-            uid
-            ctime
-            account_type
-            trans_type
-            amount
-            note
-            desc
-          }
-        }
-      }`
-    })
+  // issueBearList(params = '', page = 1) {
+  //   return axios.post('/graphql/v1/toss', {
+  //     query: `{
+  //       AccountPage(query: ${params}, page:${page}) {
+  //         totalPages
+  //         totalElements
+  //         content {
+  //           user{
+  //             user_num
+  //             id
+  //           }
+  //           id
+  //           uid
+  //           ctime
+  //           account_type
+  //           trans_type
+  //           amount
+  //           note
+  //           desc
+  //         }
+  //       }
+  //     }`
+  //   })
+  // },
+  issueBearList(params) {
+    return axios.get(`/api/a/v1/account/getImportLogList`, params)
   },
   /**
    * 教师渠道绑定-保存
@@ -510,5 +535,25 @@ export default {
     return axios.post(
       `/api/b/v1/backend/userflow/complete?id=${parmas.id}&isAgree=${parmas.isAgree}&remark=${parmas.remark}`
     )
+  },
+  // 新建活动编辑活动保存
+  saveAndUpdatePromotions(params) {
+    return axios.post(`/api/p/v1/promotions/saveAndUpdatePromotions`, params)
+  },
+  // 活动管理列表
+  getPromotionsPageList(params) {
+    return axios.get(`/api/p/v1/promotions/getPromotionsPageList`, params)
+  },
+  // 活动管理详情
+  getPromotionsById(params) {
+    return axios.get(`/api/p/v1/promotions/getPromotionsById`, params)
+  },
+  // 修改活动结束时间
+  updatePromotionsDate(params) {
+    return axios.post(`/api/p/v1/promotions/updatePromotionsDate`, params)
+  },
+  // 获取销售等级
+  getSellLevel(params) {
+    return axios.get(`/api/t/v1/teacher/course/teacherLevelByType?level=0`)
   }
 }

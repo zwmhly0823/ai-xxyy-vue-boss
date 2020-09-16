@@ -13,6 +13,7 @@
         @onHandover="onHandover"
         @onReceive="onReceive"
         @onType="onType"
+        @searchFun="searchFun"
       />
     </div>
     <div class="table-box">
@@ -76,7 +77,8 @@ export default {
       tableData: [],
       teacherSendId: '',
       teacherReceiveId: '',
-      handoverType: ''
+      handoverType: '',
+      searchParams: {}
     }
   },
   watch: {
@@ -96,6 +98,7 @@ export default {
         page: this.currentPage,
         size: '20'
       }
+      Object.assign(params, this.searchParams)
       this.$http.WorkerHandover.getHandoverRecord(params).then((res) => {
         this.currentPage = res.payload.number
         this.totalElements = res.payload.totalElements
@@ -136,15 +139,14 @@ export default {
     },
     headerCss({ row, column, rowIndex, columnIndex }) {
       return 'font-size:12px;color:#666;font-weight:normal;background:#f1f1f1;'
+    },
+    searchFun(name, val) {
+      this.searchParams[name] = val
+      this.currentPage = '1'
+      this.onGetHandoverRecord()
     }
   }
 }
 </script>
 
-<style lang="scss" scoped>
-.history-box {
-  .table-box {
-    // margin-bottom: 60px;
-  }
-}
-</style>
+<style lang="scss" scoped></style>

@@ -1,10 +1,18 @@
 /*
- * @Descripttion:
+ * @Descripttion: 组合所有接口文件
  * @version:
  * @Author: shentong
  * @Date: 2020-03-13 14:38:28
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-13 22:56:05
+ * @LastEditTime: 2020-08-21 20:52:04
+ */
+/**
+ * 美术宝写字 专有。 业务代码中引用： this.$http.writeApp.User(params).then()
+ */
+import writeApp from './index_write_app'
+
+/**
+ * 小熊美术 及 公共
  */
 import Base from './modules/Base'
 import Login from './modules/Login'
@@ -32,9 +40,11 @@ import NoticeCenter from './modules/NoticeCenter'
 import Community from './modules/Community' // 社群工具
 import Outbound from './modules/Outbound' // 社群工具
 import Marketing from './modules/Marketing' // 营销中心
+import Setting from './modules/Setting'
 
 export default Object.assign(
   {},
+  { writeApp },
   { Base },
   { Login },
   { Order },
@@ -60,5 +70,6 @@ export default Object.assign(
   { NoticeCenter },
   { Community },
   { Outbound },
-  { Marketing }
+  { Marketing },
+  { Setting }
 )

@@ -95,6 +95,7 @@ export default {
             student_id
             nickname
             sex
+            head
             birthday
             base_painting
             buytime
@@ -597,6 +598,7 @@ export default {
           )}, sort: ${JSON.stringify(sort)}) {
             id
             team_name
+            teacher_id
           }
         }
       `

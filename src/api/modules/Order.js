@@ -3,10 +3,12 @@
  * @version:
  * @Author: shentong
  * @Date: 2020-03-13 16:20:48
- * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-08-13 19:00:56
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-09-11 17:25:21
  */
 import axios from '../axiosConfig'
+import { injectSubject, getAppSubjectCode } from '@/utils/index'
+const subjectCode = getAppSubjectCode()
 // 素质课的时候，测试环境暂时删除
 // department{
 //   department{
@@ -28,36 +30,11 @@ export default {
    * 获取订单列表 v1
    * */
   orderPage(query, page = 1) {
-    // let handleQuery
-    // if (query && JSON.parse(query).pay_channel) {
-    //   handleQuery = JSON.parse(query)
-    //   const payChannel = JSON.parse(query).pay_channel
-    //   if (payChannel && payChannel.length <= 0) {
-    //     // handleQuery.pay_channel = null
-    //     delete handleQuery.pay_channel
-    //     handleQuery = JSON.stringify(handleQuery)
-    //   } else {
-    //     handleQuery = query
-    //   }
-    // } else {
-    //   handleQuery = query
-    // }
-    // if (query && JSON.parse(query).trial_pay_channel) {
-    //   handleQuery = JSON.parse(query)
-    //   const payChannel = JSON.parse(query).trial_pay_channel
-    //   if (payChannel && payChannel.length <= 0) {
-    //     // handleQuery.pay_channel = null
-    //     delete handleQuery.trial_pay_channel
-    //     handleQuery = JSON.stringify(handleQuery)
-    //   } else {
-    //     handleQuery = query
-    //   }
-    // } else {
-    //   handleQuery = query
-    // }
     return axios.post('/graphql/v1/toss', {
       query: `{
-        OrderPage(query: ${JSON.stringify(query)}, page: ${page}) {
+        OrderPage(query: ${JSON.stringify(
+          injectSubject(query)
+        )}, page: ${page}) {
           totalPages
           totalElements
           number
@@ -77,6 +54,7 @@ export default {
             product_name
             out_trade_no
             total_amount
+            pay_teacher_duty_id
             user{
               id
               username
@@ -146,6 +124,9 @@ export default {
         must: [
           {
             wildcard: { out_trade_no: `*${no}*` }
+          },
+          {
+            term: { subject: subjectCode }
           }
         ]
       }
@@ -172,7 +153,7 @@ export default {
     return axios.post('/graphql/v1/toss', {
       query: `{
         OrderStatistics(query: ${JSON.stringify(
-          queryStr
+          injectSubject(queryStr)
         )}, sumField:"${sumField}", termField:"${termField}"){
           code
           type
@@ -214,6 +195,109 @@ export default {
           oid
           name
           price
+        }
+      }`
+    })
+  },
+  /*
+   *获取交易流水号
+   * */
+  searchPaymentPay(no = '', size = 20) {
+    const query = {
+      bool: {
+        must: [
+          {
+            wildcard: { transaction_id: `*${no}*` }
+          },
+          {
+            term: { subject: subjectCode }
+          },
+          {
+            term: { status: 2 }
+          },
+          {
+            term: { type: 1 }
+          }
+        ]
+      }
+    }
+    const q = JSON.stringify(query)
+    return axios.post('/graphql/v1/toss', {
+      query: `{
+        PaymentPayListEx(query: ${JSON.stringify(q)}, size: ${size}){
+          oid,
+          transaction_id
+        }
+      }`
+    })
+  },
+  /*
+   * 获取发票管理列表
+   * */
+  invoicePage(query, page = 1) {
+    return axios.post('/graphql/v1/toss', {
+      query: `{
+        InvoiceRecordPage(query: ${JSON.stringify(query)}, page: ${page}) {
+          content {
+            id
+            oid
+            ctime
+            uid
+            invoice_status
+            title_type
+            company_name
+            invoice_img
+            invoice_pdf
+            invoice_status
+            invoice_type
+            email
+            address
+            phone
+            taxnum
+            buyername
+            account
+            message
+            money
+            uniq_id
+            complete_time
+            isImport
+            userInfo {
+              user_num
+              username
+              mobile
+            }
+            orderInfo {
+              out_trade_no
+              invoice_code
+            }
+            paymentPayInfo {
+              transaction_id
+            }
+          }
+          empty
+          first
+          last
+          number
+          size
+          numberOfElements
+          totalElements
+          totalPages
+        }
+      }`
+    })
+  },
+
+  /*
+   *获取交易流水号 v2
+   {'transaction_id.like':{'transaction_id.keyword':'*word*'}}
+   * */
+  searchPaymentPayV2(params = {}) {
+    const query = Object.assign(params || {}, { subject: subjectCode })
+    return axios.post('/graphql/v1/toss', {
+      query: `{
+        PaymentPayList(query: ${JSON.stringify(JSON.stringify(query))}){
+          oid,
+          transaction_id
         }
       }`
     })

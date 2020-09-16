@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-06-16 16:27:14
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-11 17:10:54
+ * @LastEditTime: 2020-09-12 17:05:03
 -->
 <template>
   <div class="user-list">
@@ -184,6 +184,48 @@
                     class="el-icon-edit"
                     @click="intentDescribeChange(scope.$index, scope.row.id)"
                   ></i>
+                </div>
+              </template>
+            </template>
+          </el-table-column>
+          <el-table-column label="手动标签" min-width="150">
+            <template slot-scope="scope">
+              <template v-if="!scope.row.user_label">
+                <!-- <i
+                  class="el-icon-circle-plus-outline intention-icon"
+                  @click="editSysTag(scope.$index, scope.row.id)"
+                ></i> -->
+                <span>--</span>
+              </template>
+              <template v-else>
+                <div class="remarks-content tag-box">
+                  <el-popover
+                    placement="top-start"
+                    trigger="hover"
+                    @show="tagPopoverShow(scope.row)"
+                  >
+                    <div
+                      v-if="!tagPopoverData"
+                      v-loading="true"
+                      style="width: 200px;height: 200px"
+                    ></div>
+                    <tags-popover
+                      ref="tagPopover"
+                      v-if="tagPopoverData"
+                      :tagPopoverData="tagPopoverData"
+                    ></tags-popover>
+                    <div slot="reference">
+                      <tags-item
+                        v-for="(item, index) in scope.row.user_label.split(',')"
+                        :key="index"
+                        :text="item"
+                      ></tags-item>
+                    </div>
+                  </el-popover>
+                  <!-- <i
+                    class="el-icon-edit"
+                    @click="editSysTag(scope.$index, scope.row.id)"
+                  ></i> -->
                 </div>
               </template>
             </template>
@@ -509,33 +551,6 @@
               <p>点评作品: {{ scope.row.comment_count }}</p>
             </template>
           </el-table-column>
-          <el-table-column label="标签" min-width="150">
-            <template slot-scope="scope">
-              <template
-                v-if="!scope.row.user_label || scope.row.user_label === '-'"
-              >
-                <!-- <i
-              class="el-icon-circle-plus-outline intention-icon"
-              @click="onLabel"
-            ></i> -->
-                <p>-</p>
-              </template>
-              <template v-else>
-                <div class="remarks-content">
-                  <el-popover
-                    placement="top-start"
-                    trigger="hover"
-                    :content="scope.row.user_label"
-                  >
-                    <div slot="reference" class="remarks-text">
-                      {{ scope.row.user_label }}
-                    </div>
-                  </el-popover>
-                  <!-- <i class="el-icon-edit" @click="onLabel"></i> -->
-                </div>
-              </template>
-            </template>
-          </el-table-column>
           <el-table-column label="添加微信" min-width="60">
             <template slot-scope="scope">
               <el-switch
@@ -716,8 +731,9 @@
           <el-table-column label="渠道" min-width="100">
             <template slot-scope="scope">
               <span v-if="scope.row.payChannelInfo">
-                {{ scope.row.payChannelInfo.channel_outer_name }}
+                {{ scope.row.payChannelInfo.channel_outer_name || '-' }}
               </span>
+              <span v-else>-</span>
             </template>
           </el-table-column>
           <el-table-column label="ID" min-width="55">
@@ -838,12 +854,6 @@
         v-if="showModifyAddress"
       />
     </el-dialog>
-    <!-- <label-checkbox
-      v-if="showDialogFormVisible"
-      :labelRowValue="labelRowValue"
-      @onRefresh="onRefresh"
-      ref="labelCheckbox"
-    /> -->
     <intention-dialog
       ref="intentionDialog"
       @intentConfirm="intentConfirm"
@@ -860,6 +870,14 @@
     <questionaire-drawer-component
       ref="questionaireDrawerC"
     ></questionaire-drawer-component>
+
+    <!-- 手动标签 -->
+    <tag-detail
+      ref="tagDetail"
+      @changeTagSucc="changeTagSucc"
+      @deleteTagEmit="deleteTagEmit"
+      @saveTag="saveTag"
+    ></tag-detail>
   </div>
 </template>
 
@@ -871,7 +889,6 @@ import BaseUserInfo from '../../components/BaseUserInfo.vue'
 import ModifyAddress from '../../components/ModifyAddress.vue'
 import enums from '../../components/searchData'
 import { formatData, openBrowserTab } from '@/utils/index'
-// import labelCheckbox from '../../components/labelCheckbox'
 import intentionDialog from '../../components/intentionDialog'
 import { FOLLOW_EXPRESS_STATUS } from '@/utils/enums'
 import Search from '../../components/Search.vue'
@@ -879,19 +896,24 @@ import ToolTip from '../../components/ToolTip.vue'
 // import SendCoupon from '../../../studentTeam/components/TabPane/components/couponPopover.vue'
 import TrialSidebar from '../../components/trial/TrialSidebar.vue'
 import QuestionaireDrawerComponent from '../../components/trial/QuestionaireDrawerComponent.vue'
+import tagsItem from '../../components/trial/tags/TagsItem.vue'
+import tagsPopover from '../../components/trial/tags/TagsPopover.vue'
+import tagDetail from '../../components/trial/tags/tagDetail.vue'
 export default {
   name: 'trialUsers',
   components: {
     MPagination,
     BaseUserInfo,
     ModifyAddress,
-    // labelCheckbox,
     intentionDialog,
     Search,
     ToolTip,
     // SendCoupon,
     TrialSidebar,
-    QuestionaireDrawerComponent
+    QuestionaireDrawerComponent,
+    tagsItem,
+    tagsPopover,
+    tagDetail
   },
   computed: {
     searchParams() {
@@ -938,6 +960,15 @@ export default {
     },
     tomorrow() {
       return tomorrowTimestamp()
+    },
+    tagList() {
+      return function(list) {
+        if (list.length > 4) {
+          return list.slice(0, 4)
+        } else {
+          return list
+        }
+      }
     }
   },
   data() {
@@ -999,7 +1030,10 @@ export default {
       isOpened: true,
       currentDate: '',
       todayTotal: 0,
-      tomorrowTotal: 0
+      tomorrowTotal: 0,
+      userinfo: {},
+      tagDataMap: new Map(), // 标签的浮窗和弹窗的数据都从这个map里面取，避免重复请求
+      tagPopoverData: null
     }
   },
   watch: {
@@ -1034,18 +1068,14 @@ export default {
     }
   },
   created() {
-    // this.$nextTick(() => {
-    //   const tableHeight =
-    //     document.body.clientHeight - this.$refs.tableInner.offsetTop - 110
-    //   this.tableHeight = tableHeight + ''
-    // })
+    this.userinfo = JSON.parse(localStorage.getItem('staff'))
     // 消息中心传递过来的预设参数
     this.paramsFromUrl()
     this.init()
   },
-  mounted() {
-    this.getCouponList()
-  },
+  // mounted() {
+  //   this.getCouponList()
+  // },
   methods: {
     paramsFromUrl() {
       const urlParams = localStorage.getItem('noticeParams')
@@ -1073,11 +1103,6 @@ export default {
         this.init()
       }, 1000)
     },
-    // 添加标签
-    // onLabel() {
-    //   this.$refs.labelCheckbox.dialogFormVisible = true
-    //   this.$refs.labelCheckbox.getAllTeacherByRoleIds()
-    // },
     // 获取一行数据
     hoverRow(row, column, cell, event) {
       this.labelRowValue = row
@@ -1096,7 +1121,23 @@ export default {
       return this.$http.User.ManagementForTeacherList(params).then((res) => {
         // console.log(res)
         if (res && res.data && res.data.ManagementForTeacherList) {
-          if (res.data.ManagementForTeacherList.length === 0) {
+          const filterArr = res.data.ManagementForTeacherList.filter(
+            (item) =>
+              item.management &&
+              +item.management.subject ===
+                +this.$store.getters.subjects.subjectCode
+          )
+
+          // 只显示开课中和待开课的期数 status // 0 待开始 1 招生中   2待开课   3 开课中  4 已结课',
+          const arr = filterArr.filter(
+            (item) =>
+              item.management &&
+              (+item.management.status === 1 ||
+                +item.management.status === 2 ||
+                +item.management.status === 3)
+          )
+          // console.log(arr)
+          if (arr === 0) {
             this.term = '0'
             this.getData()
             // 获取今日、明日待跟进数量
@@ -1108,15 +1149,6 @@ export default {
             return
           }
 
-          // 只显示开课中和待开课的期数 status // 0 待开始 1 招生中   2待开课   3 开课中  4 已结课',
-          const arr = res.data.ManagementForTeacherList.filter(
-            (item) =>
-              item.management &&
-              (+item.management.status === 1 ||
-                +item.management.status === 2 ||
-                +item.management.status === 3)
-          )
-          console.log(arr)
           const list = arr.map((item) => {
             item.management.period_label = `${item.management.period_name}(${
               this.period[item.management.status]
@@ -1306,7 +1338,7 @@ export default {
     },
 
     expressStatus(status) {
-      if (!status && +status !== 0) {
+      if (!status && status !== 0) {
         return '-'
       }
       // 异常物流
@@ -1556,9 +1588,9 @@ export default {
         //   this.$refs.couponDialog.couponsTime = ''
         //   break
         // 加标签
-        // case '4':
-        //   this.onLabel()
-        //   break
+        case '4':
+          this.editSysTag(index, user.id)
+          break
       }
     },
 
@@ -1574,11 +1606,11 @@ export default {
     },
 
     // 获取优惠券列表
-    getCouponList() {
-      this.$http.Team.getAllCoupons(0).then((res) => {
-        this.couponData = (res.payload && res.payload.content) || []
-      })
-    },
+    // getCouponList() {
+    //   this.$http.Team.getAllCoupons(0).then((res) => {
+    //     this.couponData = (res.payload && res.payload.content) || []
+    //   })
+    // },
     // 参课的下拉排序
     classesDropdown(command) {
       this.sortRules(command)
@@ -1633,6 +1665,91 @@ export default {
         pagesize: 20
       }
       this.$refs.questionaireDrawerC.openDrawer(query)
+    },
+    async changeTagSucc(type, uid) {
+      if (type === 'createPersonTag') {
+        const data = await this.getTeacherLabel(uid)
+        if (!data) {
+          return
+        }
+        this.tagDataMap.set(uid, data)
+        this.$refs.tagDetail.rightPersonSysTag(data)
+      }
+    },
+    async deleteTagEmit(uid) {
+      const data = await this.getTeacherLabel(uid)
+      if (!data) {
+        return
+      }
+      this.tagDataMap.set(uid, data)
+      this.$refs.tagDetail.initdata(this.tagDataMap.get(uid), uid)
+    },
+    saveTag(userLabel, uid) {
+      for (let i = 0, len = this.dataList.length; i < len; i++) {
+        if (this.dataList[i].id === uid) {
+          this.dataList[i].user_label = userLabel
+        }
+      }
+      this.tagDataMap.delete(uid)
+    },
+    getTeacherLabel(uid) {
+      const query = {
+        userId: uid,
+        teacherIds: []
+      }
+      return this.$http.Setting.getTeacherLabel(query)
+        .then((res) => {
+          if (res.code === 0 && res.status === 'OK') {
+            return res.payload
+          } else {
+            return false
+          }
+        })
+        .catch(() => {
+          this.$message.error('获取标签信息错误')
+          return false
+        })
+    },
+    async editSysTag(index, uid) {
+      this.$refs.tagDetail.open()
+      // Popover和点击出来的弹窗只需要请求一次数据
+      if (!this.tagDataMap.get(uid)) {
+        const data = await this.getTeacherLabel(uid)
+        if (!data) {
+          return
+        }
+        if (data === '没有老师数据') {
+          this.$message.error('没有老师数据')
+          return
+        }
+        this.tagDataMap.set(uid, data)
+      }
+      // console.log(this.tagDataMap.get(uid))
+      this.$refs.tagDetail.initdata(this.tagDataMap.get(uid), uid)
+    },
+    async tagPopoverShow(val) {
+      // Popover和点击出来的弹窗只需要请求一次数据
+      if (this.tagDataMap.get(val.id)) {
+        this.tagPopoverData = null
+        this.$nextTick(() => {
+          this.tagPopoverData = this.tagDataMap.get(val.id)
+        })
+        return
+      }
+      const data = await this.getTeacherLabel(val.id)
+      if (!data) {
+        return
+      }
+      if (data === '没有老师数据') {
+        this.$message.error('没有老师数据')
+        return
+      }
+      this.tagDataMap.set(val.id, data)
+      // el-popover中的视图不会随着数据变化
+      this.tagPopoverData = null
+      this.$nextTick(() => {
+        this.tagPopoverData = this.tagDataMap.get(val.id)
+      })
     }
   }
 }

@@ -13,7 +13,7 @@ export default {
    * 组织机构列表
    * */
   getDepartmentTree(id) {
-    return axios.get(`/api/t/v1/department/getDepartmentTree?id=${id}`)
+    return axios.get(`/api/t/v2/department/getDepartmentTree?id=${id}`)
   },
   /**
    * 新增、编辑组织结构
@@ -76,6 +76,10 @@ export default {
             weixin {
               id
               weixin_no
+            }
+            teacherLevelInfo{
+              level
+              level_name
             }
           }
         }
@@ -291,6 +295,7 @@ export default {
           productTopic{
             id
             name
+          
           }
        }`
     })
@@ -325,5 +330,20 @@ export default {
   // 获取职场
   getWorkPlace() {
     return axios.get(`/api/t/v1/teacher/getWorkPlace`)
+  },
+  // 获取全部班级列表
+  StudentTeamList(teamName) {
+    const params = JSON.stringify({
+      team_state: [1, 2],
+      'team_name.like': { 'team_name.keyword': `*${teamName}*` }
+    })
+    return axios.post('/graphql/v1/toss', {
+      query: `{
+        StudentTeamList(query: ${JSON.stringify(params)}){
+          id
+          team_name
+        }
+      }`
+    })
   }
 }

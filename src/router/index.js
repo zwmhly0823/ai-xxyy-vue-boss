@@ -2,8 +2,8 @@
  * @Author: YangJiyong
  * @Email: yangjiyong@meishubao.com
  * @Date: 2020-03-14 15:07:26
- * @Last Modified by: songyanan
- * @Last Modified time: 2020-06-13 10:32:02
+ * @Last Modified by: shasen
+ * @Last Modified time: yyyy-08-We 02:33:16
  * @Description: 设置左侧导航展示数据
  * 通过导入模块router/index.js判断，规定模块入口文件为 {path: '/', name: 'Home'}
  * TODO: 自动完成
@@ -145,6 +145,15 @@ const routes = [
           module: 'users',
           show: true
         }
+      },
+      {
+        path: '/allUsers',
+        name: 'allUsers',
+        meta: {
+          title: '全部学员',
+          module: 'users',
+          show: true
+        }
       }
     ]
   },
@@ -173,6 +182,15 @@ const routes = [
         name: 'financeRefound',
         meta: {
           title: '订单退款',
+          module: 'trading',
+          show: true
+        }
+      },
+      {
+        path: '/invoiceManage',
+        name: 'invoiceManage',
+        meta: {
+          title: '发票管理',
           module: 'trading',
           show: true
         }
@@ -373,6 +391,14 @@ const routes = [
     },
     children: [
       {
+        path: '/activityManagement',
+        name: 'activityManagement',
+        meta: {
+          title: '活动管理',
+          module: 'operating'
+        }
+      },
+      {
         path: '/channelManagement',
         name: 'channelManagement',
         meta: {
@@ -440,6 +466,17 @@ const routes = [
       ...adminRouter
     ]
   },
+  // 营销中心
+  {
+    path: '/marketing',
+    name: 'marketing',
+    hidden: staff.roleId !== '7',
+    meta: {
+      title: '营销中心',
+      icon: 'iconyingxiaoguanli',
+      module: 'marketing'
+    }
+  },
   // 工具类路由
   {
     path: '/approval',
@@ -457,7 +494,27 @@ const routes = [
       title: '呼叫中心',
       icon: 'icondianhua',
       module: 'outbound'
-    }
+    },
+    children: [
+      {
+        path: '/CallRecord',
+        name: 'CallRecord',
+        meta: {
+          title: '通话记录',
+          module: 'outbound',
+          style: 'line'
+        }
+      },
+      {
+        path: '/CallCenter',
+        name: 'CallCenter',
+        meta: {
+          title: '席位配置',
+          module: 'outbound',
+          style: 'line'
+        }
+      }
+    ]
   },
   // 数据中心
   {
