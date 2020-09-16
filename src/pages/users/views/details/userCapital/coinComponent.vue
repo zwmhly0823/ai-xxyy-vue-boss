@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-08-25 11:40:19
  * @LastEditors: liukun
- * @LastEditTime: 2020-09-01 14:34:53
+ * @LastEditTime: 2020-09-16 15:05:58
 -->
 <template>
   <div class="coin-content">
@@ -148,6 +148,8 @@ export default {
         (pre, cur, index, self) => {
           if (cur.code !== '4' && cur.code !== '5' && cur.code !== '11') {
             return pre + Number(cur.value)
+          } else {
+            return pre + 0
           }
         },
         0
@@ -158,7 +160,7 @@ export default {
           if (cur.code === '11') {
             return pre + Number(cur.value)
           } else {
-            return 0
+            return pre + 0
           }
         },
         0
