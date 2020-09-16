@@ -4,7 +4,7 @@
  * @Author: zhangjiawen
  * @Date: 2020-07-10 14:49:13
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-09-15 22:03:57
+ * @LastEditTime: 2020-09-16 11:48:35
 -->
 <template>
   <el-input
@@ -61,12 +61,13 @@ export default {
         ) {
           res.data.UserSubjectStatisticsListEx.map((item, index) => {
             if (item.user_num === this.student_id) {
+              this.student_id = ''
               return openBrowserTab(
                 `/${this.currentUrl}/#/details/${res.data.UserSubjectStatisticsListEx[index].u_id}`
               )
             }
           })
-          this.student_id = ''
+
           this.$message.error('暂无此学员')
         } else {
           this.$message.error('暂无此学员')
