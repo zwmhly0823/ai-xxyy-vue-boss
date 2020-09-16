@@ -4,7 +4,7 @@
  * @Author: zhangjiawen
  * @Date: 2020-07-10 14:49:13
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-09-16 15:25:10
+ * @LastEditTime: 2020-09-16 15:27:44
 -->
 <template>
   <el-input
@@ -74,7 +74,6 @@ export default {
           }
         } else {
           console.log(222)
-          debugger
           this.$message.error('暂无此学员')
           // debugger
           const oldVal = this.student_id
