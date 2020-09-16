@@ -475,8 +475,36 @@ const routes = [
       title: '营销中心',
       icon: 'iconyingxiaoguanli',
       module: 'marketing'
-    }
+    },
+    children: [
+      {
+        path: '/redeemCode',
+        name: 'redeemCode',
+        meta: {
+          title: '兑换码',
+          module: 'marketing'
+        }
+      },
+      {
+        path: '/coupon',
+        name: 'coupon',
+        meta: {
+          title: '优惠券',
+          module: 'marketing'
+        }
+      }
+    ]
   },
+  // {
+  //   path: '/marketing',
+  //   name: 'marketing',
+  //   hidden: staff.roleId !== '7',
+  //   meta: {
+  //     title: '营销中心',
+  //     icon: 'iconyingxiaoguanli',
+  //     module: 'marketing'
+  //   }
+  // },
   // 工具类路由
   {
     path: '/approval',
@@ -591,35 +619,6 @@ const routes = [
         meta: {
           title: '系统帐号',
           module: 'teacher'
-        }
-      }
-    ]
-  },
-  // 营销中心
-  {
-    path: '/marketing',
-    name: 'marketing',
-    hidden: staff.roleId !== '7',
-    meta: {
-      title: '营销中心',
-      icon: 'iconyingxiaoguanli',
-      module: 'marketing'
-    },
-    children: [
-      {
-        path: '/redeemCode',
-        name: 'redeemCode',
-        meta: {
-          title: '兑换码',
-          module: 'marketing'
-        }
-      },
-      {
-        path: '/coupon',
-        name: 'coupon',
-        meta: {
-          title: '优惠券',
-          module: 'marketing'
         }
       }
     ]
