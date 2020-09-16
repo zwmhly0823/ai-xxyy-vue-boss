@@ -4,7 +4,7 @@
  * @Author: zhangjiawen
  * @Date: 2020-07-10 14:49:13
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-09-16 11:48:35
+ * @LastEditTime: 2020-09-16 15:25:10
 -->
 <template>
   <el-input
@@ -59,17 +59,22 @@ export default {
           res.data.UserSubjectStatisticsListEx.length > 1 &&
           this.student_id.length < 11
         ) {
-          res.data.UserSubjectStatisticsListEx.map((item, index) => {
-            if (item.user_num === this.student_id) {
-              this.student_id = ''
-              return openBrowserTab(
-                `/${this.currentUrl}/#/details/${res.data.UserSubjectStatisticsListEx[index].u_id}`
-              )
-            }
+          const arrList = []
+          res.data.UserSubjectStatisticsListEx.map((item) => {
+            arrList.push(item.user_num)
           })
-
-          this.$message.error('暂无此学员')
+          const idx = arrList.indexOf(this.student_id)
+          if (idx >= 0) {
+            this.student_id = ''
+            return openBrowserTab(
+              `/${this.currentUrl}/#/details/${res.data.UserSubjectStatisticsListEx[idx].u_id}`
+            )
+          } else {
+            this.$message.error('暂无此学员')
+          }
         } else {
+          console.log(222)
+          debugger
           this.$message.error('暂无此学员')
           // debugger
           const oldVal = this.student_id
