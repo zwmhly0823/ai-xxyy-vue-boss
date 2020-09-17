@@ -32,6 +32,23 @@ export default {
   getOssSign() {
     return axios.get(`/api/home/v1/ossconfig/getStsPubWriteToken`)
   },
+  // 招生排期
+  getTeacherRealnameAndId(page = 1, query = '', size = '3000') {
+    return axios.post('/graphql/v1/boss', {
+      query: `{
+        TeacherManagePage(page: ${page}, query: ${query ||
+        null}, size:${size}) {
+          number
+          totalPages
+          totalElements
+          content {
+            id
+            realname
+          }
+        }
+      }`
+    })
+  },
   // 老师列表
   getTeacherPage(page = 1, query = '', size = '20') {
     const sort = `{"id": "desc"}`
