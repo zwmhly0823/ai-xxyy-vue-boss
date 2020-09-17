@@ -3,8 +3,8 @@
  * @version:
  * @Author: zhubaodong
  * @Date: 2020-03-24 18:20:12
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-09-10 03:09:58
+ * @LastEditors: zhangjianwen
+ * @LastEditTime: 2020-09-14 15:43:55
  -->
 
 <template>
@@ -98,7 +98,8 @@
 
         <hard-write-level
           v-if="this.$store.getters.subjects.subjectCode === 1"
-          subType="1"
+          :tab="tab"
+          :subType="tab"
           :class="['margin_l10']"
           placeholder="难度"
           style="width:140px"
@@ -383,6 +384,11 @@ import SearchCourseware from './searchItems/searchCourseware'
 
 export default {
   props: {
+    // 物流体验课0 系统课1
+    tab: {
+      type: String,
+      default: '' // tab
+    },
     // 有无收货地址
     hasaddress: {
       type: String,
