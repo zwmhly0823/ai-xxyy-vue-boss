@@ -443,7 +443,7 @@ export default {
         id: '物流信息ID',
         user_id: '用户ID',
         out_trade_no: '订单号',
-        regtype: '商品类型',
+        product_type: '商品类型',
         term: '期名',
         sup: '课程难度',
         level: '课程级别',
