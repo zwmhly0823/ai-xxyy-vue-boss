@@ -117,6 +117,7 @@
                 :source_type="
                   (searchActivity &&
                     searchActivity[0] &&
+                    searchActivity[0].term &&
                     searchActivity[0].term.source_type) ||
                     source_type
                 "
@@ -277,7 +278,8 @@ const allExpressHideSearchItemActivity = {
   schedule: '',
   groupSell: '',
   teamDetail: '',
-  topicType: 'regtype'
+  // topicType: 'regtype',
+  productType: 'productType'
 }
 const replenishHideCol = {
   productName: true,
@@ -299,7 +301,7 @@ const replenishHideSearchItem = {
   operatorId: 'operator_id',
   regType: 'regType'
 }
-const allExpressSourceType = '0,1,2,3,4'
+const allExpressSourceType = '0,1,2,3,4,6,7,8'
 const replenishSourceType = '5'
 export default {
   components: {

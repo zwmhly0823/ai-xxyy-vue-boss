@@ -91,7 +91,8 @@ const allExpressHideSearchItem = {
   schedule: '',
   groupSell: '',
   teamDetail: '',
-  topicType: 'regtype'
+  topicType: 'regtype',
+  productType: ''
 }
 const replenishHideCol = {
   productName: false,

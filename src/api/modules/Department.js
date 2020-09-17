@@ -77,7 +77,6 @@ export default {
       }`
     })
   },
-
   // 申请人列表
   getOperatorNameList(query) {
     return axios.post('/graphql/logisticsStatistics', {
