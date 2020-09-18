@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-08-06 17:08:18
  * @LastEditors: Shentong
- * @LastEditTime: 2020-08-15 16:41:50
+ * @LastEditTime: 2020-09-18 17:12:47
  */
 import Vue from 'vue'
 import VueRouter from 'vue-router'
@@ -52,7 +52,7 @@ const routes = [
     component: () => import('../views/coupon/index.vue')
   },
   {
-    path: '/grantRule/:id',
+    path: '/grantRule/:couponId',
     name: 'grantRule',
     meta: {
       title: '定向发放配置',

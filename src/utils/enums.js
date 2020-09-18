@@ -141,3 +141,7 @@ export const SYSTEMRADE = (sup) => {
   }
   return TU[`${sup}`] || ''
 }
+
+/** 优惠券类型 */
+
+export const COUPONTYPE = (type) => {}

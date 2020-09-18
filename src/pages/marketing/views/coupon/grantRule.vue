@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-08-15 15:42:18
  * @LastEditors: Shentong
- * @LastEditTime: 2020-08-17 18:22:56
+ * @LastEditTime: 2020-09-18 17:27:33
 -->
 <template>
   <el-row type="flex" class="app-main grantRule">
@@ -19,7 +19,7 @@
               <div class="coupon-info">
                 <div>
                   <span>优惠券名称：</span>
-                  <span class="val">新人优惠券</span>
+                  <span class="val">{{ couponInfo.name }}</span>
                 </div>
                 <div>
                   <span>优惠券类型：</span>
@@ -27,7 +27,7 @@
                 </div>
                 <div>
                   <span>面额：</span>
-                  <span class="val">200元</span>
+                  <span class="val">{{ `${couponInfo.amount}元` }}</span>
                 </div>
               </div>
             </div>
@@ -94,7 +94,7 @@ export default {
   },
   data() {
     return {
-      centerDialogVisible: true,
+      centerDialogVisible: false,
       ruleContent: {},
       tableData: [
         {
@@ -102,15 +102,42 @@ export default {
           name: 'adolf-victor',
           address: 'loremjflajflajdfaljdfadlj'
         }
-      ]
+      ],
+      couponInfo: {}
     }
   },
 
-  created() {},
+  async created() {
+    const { couponId } = this.$route.params
+
+    await this.getCouponInfo({ couponId })
+  },
 
   mounted() {},
 
   methods: {
+    async getCouponInfo(params) {
+      const loadingInstance = this.$loading({
+        target: '.app-main',
+        lock: true,
+        text: '加载中...',
+        fullscreen: true
+      })
+
+      const { getCouponInfo } = this.$http.Marketing
+
+      const couponDetail = await getCouponInfo(params).catch((err) => {
+        console.log(err)
+      })
+
+      const { payload: { couponDetailInfo = [], couponInfo = {} } = {} } =
+        couponDetail || {}
+
+      this.couponInfo = couponInfo
+      this.tableData = couponDetailInfo
+
+      loadingInstance.close()
+    },
     /**
      * @description diolog模态框emit回来的事件
      * @tip { msgType } 1: 文本；3: 图片
