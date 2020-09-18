@@ -92,7 +92,7 @@
           <rightUp
             ref="right2"
             @result="getSearch"
-            :regtype="regtypeActivity"
+            :regtype="`0,${regtypeActivity}`"
             :status="sortItem.id"
             :source_type="source_type"
             :hideCol="allExpressHideColActivity"
@@ -101,7 +101,7 @@
           <toggle
             @result="getStatus"
             :tab="activeName"
-            :regtype="regtypeActivity"
+            :regtype="`0,${regtypeActivity}`"
             :source_type="source_type"
             :hideToggleBtn="allHideToggleBtn"
           />
@@ -113,7 +113,7 @@
               <rightDown
                 :search="searchActivity"
                 :sortItem="sortItem"
-                :regtype="regtypeActivity"
+                :regtype="`0,${regtypeActivity}`"
                 :source_type="
                   (searchActivity &&
                     searchActivity[0] &&
