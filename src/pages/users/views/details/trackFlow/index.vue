@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-07-20 16:37:31
  * @LastEditors: liukun
- * @LastEditTime: 2020-09-01 12:14:53
+ * @LastEditTime: 2020-09-18 21:48:03
 -->
 <template>
   <div class="track-container">
@@ -39,9 +39,16 @@
               v-else-if="item.teacherInfo.duty_id === '2'"
               >CT</el-tag
             >
-            <span style="margin-left:10px">{{
-              item.teacherInfo.realname + item.teacherInfo.departmentInfo.name
-            }}</span>
+            <span style="margin-left:10px"
+              >{{
+                (item.teacherInfo && item.teacherInfo.realname) ||
+                  (item.staffInfo && item.staffInfo.realname)
+              }}{{
+                item.teacherInfo &&
+                  item.teacherInfo.departmentInfo &&
+                  item.teacherInfo.departmentInfo.name
+              }}</span
+            >
           </div>
           <div>
             <svg
@@ -132,7 +139,8 @@ export default {
             '2': 'CF04',
             '3': 'CF08',
             '4': '老生覆盖',
-            '5': '日常沟通'
+            '5': '日常沟通',
+            '6': '退费挽单'
           }
           item.point_type = obj[item.point_type]
           item.ctime = formatDate(+item.ctime)

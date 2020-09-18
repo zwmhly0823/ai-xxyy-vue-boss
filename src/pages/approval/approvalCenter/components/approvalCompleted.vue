@@ -4,7 +4,7 @@
  * @Author: Lukun
  * @Date: 2020-04-27 17:47:58
  * @LastEditors: liukun
- * @LastEditTime: 2020-08-26 21:22:03
+ * @LastEditTime: 2020-09-18 21:41:27
  -->
 <template>
   <div class="container">
@@ -951,7 +951,10 @@ export default {
           this.$http.Backend.changeDepart(idArr).then(
             ({ data: { TeacherDepartmentRelationList } }) => {
               console.info('lklk-已审批', idArr, TeacherDepartmentRelationList)
-              if (TeacherDepartmentRelationList.length) {
+              if (
+                TeacherDepartmentRelationList &&
+                TeacherDepartmentRelationList.length
+              ) {
                 TeacherDepartmentRelationList.forEach((item, index) => {
                   this.tableData.forEach((itemx, indexX) => {
                     if (item.teacher_id === itemx.applyId) {

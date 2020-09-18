@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-07-20 16:38:13
  * @LastEditors: liukun
- * @LastEditTime: 2020-09-01 14:29:58
+ * @LastEditTime: 2020-09-18 21:48:34
 -->
 <template>
   <el-drawer :visible.sync="drawer" size="35%" :destroy-on-close="true">
@@ -143,7 +143,8 @@ export default {
             '2': 'CF04',
             '3': 'CF08',
             '4': '老生覆盖',
-            '5': '日常沟通'
+            '5': '日常沟通',
+            '6': '退费挽单'
           }
           item.point_type = obj[item.point_type]
           item.ctime = formatDate(+item.ctime)
