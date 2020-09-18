@@ -44,7 +44,11 @@
         <el-table-column label="微信号" min-width="180">
           <template slot-scope="scope">
             <div class="weixin-box">
-              <img class="weixinHead" :src="scope.row.head_img_url" alt="" />
+              <img
+                class="weixinHead"
+                :src="scope.row.head_img_url || wxHead"
+                alt=""
+              />
               <span class="weixinName">{{ scope.row.wechat_no }}</span>
               <!-- 鼠标指向显示二维码 -->
               <el-popover placement="right" trigger="hover">
@@ -210,7 +214,8 @@ export default {
       timeout: null,
       // 搜索
       querSearch: '',
-      searchQuery: null
+      searchQuery: null,
+      wxHead: require('@/assets/images/bear.png')
     }
   },
 
