@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-07-20 16:37:31
  * @LastEditors: liukun
- * @LastEditTime: 2020-09-18 21:48:03
+ * @LastEditTime: 2020-09-18 22:59:13
 -->
 <template>
   <div class="track-container">
@@ -90,18 +90,16 @@
       </section>
     </div>
     <div v-else class="no-data">暂无数据</div>
-    <addNew ref="track_add" :changeSubject="changeSubject" />
     <trackMore ref="track_more" :changeSubject="changeSubject" />
   </div>
 </template>
 
 <script>
 import { formatDate } from '@/utils/mini_tool_lk'
-import addNew from './add_new'
 import trackMore from './track_more'
 export default {
   name: 'index',
-  components: { addNew, trackMore },
+  components: { trackMore },
   data() {
     return {
       tableData: [],
