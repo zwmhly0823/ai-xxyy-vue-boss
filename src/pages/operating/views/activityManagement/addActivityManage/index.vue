@@ -3,8 +3,8 @@
  * @version: 1.0.0
  * @Author: Shasen
  * @Date: 2020-06-29 16:50:58
- * @LastEditors: Shasen
- * @LastEditTime: 2020-07-21 14:42:57
+ * @LastEditors: shasen
+ * @LastEditTime: 2020-09-19 14:58:18
 -->
 <template>
   <el-row type="flex" class="activity-manage app-main">
@@ -65,7 +65,7 @@
               end-placeholder="结束日期"
             ></el-date-picker>
           </el-form-item>
-          <el-form-item label="活动范围" prop="trialTerms">
+          <!-- <el-form-item label="活动范围" prop="trialTerms">
             <el-row style="display:flex;margin-bottom: 10px;">
               <el-checkbox
                 label="体验课"
@@ -102,6 +102,80 @@
                 @result="getSchedul('term1', arguments, 1)"
               />
             </el-row>
+          </el-form-item> -->
+
+          <el-form-item label="活动范围" prop="trialTerms">
+            <el-row style="display:flex;margin-bottom: 10px;">
+              <el-radio
+                v-model="activityRange"
+                label="1"
+                class="Schedule"
+                style="display: flex;align-items: center;"
+              >
+                <span style="width:80px;">
+                  按排期
+                </span>
+                <search-stage
+                  :record="activityFrom.trialTerms"
+                  class="search-group-item"
+                  name="term0"
+                  :isDisabled="activityRange !== '1'"
+                  placeholder="体验课排期"
+                  type="0"
+                  @result="getSchedul('term0', arguments, 0)"
+                />
+                <search-stage
+                  :record="activityFrom.systemTerms"
+                  class="search-group-item"
+                  name="term1"
+                  :isDisabled="activityRange !== '1'"
+                  placeholder="系统课排期"
+                  type="1"
+                  @result="getSchedul('term1', arguments, 1)"
+                />
+              </el-radio>
+            </el-row>
+          </el-form-item>
+          <el-form-item label="" prop="payOrderDate">
+            <el-row style="display:flex;margin-bottom: 10px;">
+              <el-radio v-model="activityRange" label="2">
+                <span style="width:80px;margin-right:10px;">按下单时间</span>
+                <el-date-picker
+                  v-model="activityFrom.payOrderDate"
+                  type="daterange"
+                  :disabled="activityRange !== '2'"
+                  value-format="yyyy-MM-dd"
+                  :picker-options="expireTimeOption"
+                  range-separator="至"
+                  start-placeholder="开始日期"
+                  end-placeholder="结束日期"
+                ></el-date-picker>
+              </el-radio>
+            </el-row>
+          </el-form-item>
+
+          <el-form-item
+            prop="businessType"
+            label="业务类型"
+            style="width:320px;"
+          >
+            <el-select
+              class="item-style"
+              v-model="activityFrom.businessType"
+              remote
+              filterable
+              :reserve-keyword="true"
+              size="mini"
+              clearable
+              placeholder="选择类型"
+            >
+              <el-option
+                v-for="item in businessType || []"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              ></el-option>
+            </el-select>
           </el-form-item>
           <el-form-item label="赠品设置" prop="giftOptionCheck">
             <el-button
@@ -209,18 +283,38 @@ export default {
   data() {
     var expvalidator = (rule, value, callback) => {
       console.log(rule, value, '----------')
-      if (value.length > 0 || this.activityFrom.systemTerms.length > 0) {
+      if (
+        value.length > 0 ||
+        this.activityFrom.systemTerms.length > 0 ||
+        this.activityFrom.payOrderDate.length > 0
+      ) {
         callback() // 自定义校验-以获取到保存到商品信息
       } else {
-        callback(new Error('请完成商品信息的选择'))
+        callback(new Error('请完成活动范围的选择'))
       }
     }
     var sysvalidator = (rule, value, callback) => {
       console.log(rule, value, '----------')
-      if (value.length > 0 || this.activityFrom.trialTerms.length > 0) {
+      if (
+        value.length > 0 ||
+        this.activityFrom.trialTerms.length > 0 ||
+        this.activityFrom.payOrderDate.length > 0
+      ) {
         callback() // 自定义校验-以获取到保存到商品信息
       } else {
-        callback(new Error('请完成商品信息的选择'))
+        callback(new Error('请完成活动范围的选择'))
+      }
+    }
+    var payvalidator = (rule, value, callback) => {
+      console.log(rule, value, '----------')
+      if (
+        value.length > 0 ||
+        this.activityFrom.trialTerms.length > 0 ||
+        this.activityFrom.systemTerms.length > 0
+      ) {
+        callback() // 自定义校验-以获取到保存到商品信息
+      } else {
+        callback(new Error('请完成活动范围的选择'))
       }
     }
     var giftOptionvalidator = (rule, value, callback) => {
@@ -232,8 +326,9 @@ export default {
       }
     }
     return {
-      isTrial: false, // 体验课checkbox
-      isSystem: false, // 系统课checkbox
+      activityRange: '', // 活动范围radio
+      // isTrial: false, // 体验课checkbox
+      // isSystem: false, // 系统课checkbox
       promotionsId: '',
       tableHeight: 'auto',
       dialogGroupVisible: false,
@@ -243,11 +338,36 @@ export default {
           label: '关单赠品'
         }
       ], // 活动类型列表
+      businessType: [
+        // 业务类型
+        {
+          value: '1',
+          label: '首单年课'
+        },
+        {
+          value: '2',
+          label: '首单两年课'
+        },
+        {
+          value: '3',
+          label: '续费年课'
+        },
+        {
+          value: '4',
+          label: '续费两年课'
+        },
+        {
+          value: '5',
+          label: '补差半年至两年'
+        }
+      ],
       tableData: [],
       activityFrom: {
         promotionsName: '', // 活动名称
         promotionsType: 'GIFT', // 活动类型 默认关单赠品
+        businessType: '', // 业务类型
         promotionsDate: [], // 活动时间
+        payOrderDate: [], // 下单时间
         trialTerms: [], // 体验课
         systemTerms: [], // 系统课
         desc: '' // 活动说明
@@ -259,6 +379,9 @@ export default {
         ],
         promotionsType: [
           { required: true, message: '请选择计划模板', trigger: 'change' }
+        ],
+        businessType: [
+          { required: true, message: '请选择业务类型', trigger: 'change' }
         ],
         promotionsDate: [
           {
@@ -272,6 +395,9 @@ export default {
         ],
         systemTerms: [
           { required: true, validator: sysvalidator, trigger: 'blur' }
+        ],
+        payOrderDate: [
+          { required: true, validator: payvalidator, trigger: 'blur' }
         ],
         giftOptionCheck: [
           { required: true, validator: giftOptionvalidator, trigger: 'blur' }
@@ -290,19 +416,28 @@ export default {
     ChooseProduct
   },
   watch: {
-    isTrial(val, old) {
-      if (!val) {
-        console.log('11111')
+    // isTrial(val, old) {
+    //   if (!val) {
+    //     console.log('11111')
+    //     this.activityFrom.trialTerms = []
+    //   }
+    //   console.log(val, old)
+    // },
+    // isSystem(val, old) {
+    //   if (!val) {
+    //     console.log('11111')
+    //     this.activityFrom.systemTerms = []
+    //   }
+    //   console.log(val, old)
+    // },
+    activityRange(val, old) {
+      if (val !== '2') {
+        this.activityFrom.payOrderDate = ''
+      } else {
         this.activityFrom.trialTerms = []
-      }
-      console.log(val, old)
-    },
-    isSystem(val, old) {
-      if (!val) {
-        console.log('11111')
         this.activityFrom.systemTerms = []
       }
-      console.log(val, old)
+      console.log(val, old, 'val-old-payOrderDate')
     }
   },
   created() {
@@ -329,11 +464,11 @@ export default {
         promotionsDate.push(res.payload.startDate)
         promotionsDate.push(res.payload.endDate)
         this.activityFrom.promotionsDate = promotionsDate
-        this.isTrial = res.payload.isTrial
+        // this.isTrial = res.payload.isTrial
         const trialTerms = res.payload.trialTerms.split(',')
         console.log(trialTerms)
         this.activityFrom.trialTerms = trialTerms
-        this.isSystem = res.payload.isSystem
+        // this.isSystem = res.payload.isSystem
         this.activityFrom.systemTerms = res.payload.systemTerms.split(',')
         this.activityFrom.desc = res.payload.desc
         this.tableData = res.payload.gifts
@@ -446,11 +581,12 @@ export default {
             id: '-1',
             promotionsName: this.activityFrom.promotionsName,
             promotionsType: this.activityFrom.promotionsType,
+            businessType: this.activityFrom.businessType,
             startDate: this.activityFrom.promotionsDate[0],
             endDate: this.activityFrom.promotionsDate[1],
             desc: this.activityFrom.desc,
-            isTrial: this.isTrial,
-            isSystem: this.isSystem,
+            // isTrial: this.isTrial,
+            // isSystem: this.isSystem,
             trialTerms: this.activityFrom.trialTerms.join(','),
             systemTerms: this.activityFrom.systemTerms.join(','),
             gifts: this.tableData
@@ -458,16 +594,16 @@ export default {
           if (this.promotionsId) {
             obj.id = this.promotionsId
           }
-          this.saveAndUpdatePromotions(obj).then((res) => {
-            if (res.code === 0) {
-              this.$message.success('保存成功')
-              console.log(res)
-              this.$router.push({
-                path: '/activityManagement/'
-              })
-            }
-            console.log(res)
-          })
+          // this.saveAndUpdatePromotions(obj).then((res) => {
+          //   if (res.code === 0) {
+          //     this.$message.success('保存成功')
+          //     console.log(res)
+          //     this.$router.push({
+          //       path: '/activityManagement/'
+          //     })
+          //   }
+          //   console.log(res)
+          // })
           console.log(obj)
           console.log('valid====', valid)
           console.log(this.activityFrom)
@@ -546,5 +682,10 @@ export default {
 }
 .el-form-item__content {
   margin-left: 110px !important;
+}
+.Schedule .el-radio__label {
+  display: flex;
+  align-items: center;
+  justify-self: center;
 }
 </style>
