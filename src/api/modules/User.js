@@ -4,8 +4,8 @@
  * @version:
  * @Author: shentong
  * @Date: 2020-03-13 14:38:28
- * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-09-16 16:10:53
+ * @LastEditors: liukun
+ * @LastEditTime: 2020-09-19 14:53:53
  */
 // import axios from '../axios'
 import axios from '../axiosConfig'
@@ -1152,6 +1152,9 @@ export default {
                 departmentInfo{
                   name
                 }
+              }
+              staffInfo {
+                real_name
               }
               contact_type
               point_type

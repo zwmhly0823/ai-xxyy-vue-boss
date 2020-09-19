@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-07-20 16:38:13
  * @LastEditors: liukun
- * @LastEditTime: 2020-09-18 21:48:34
+ * @LastEditTime: 2020-09-19 15:53:36
 -->
 <template>
   <el-drawer :visible.sync="drawer" size="35%" :destroy-on-close="true">
@@ -18,18 +18,27 @@
       <section class="flower_item" v-for="item of tableData" :key="item.ctime">
         <div class="upset_24col_space_between padding-right15">
           <div>
-            <el-tag size="small" v-if="item.teacherInfo.duty_id === '1'"
+            <el-tag
+              size="small"
+              v-if="item.teacherInfo && item.teacherInfo.duty_id === '1'"
               >CC</el-tag
             >
             <el-tag
               size="small"
               type="danger"
-              v-else-if="item.teacherInfo.duty_id === '2'"
+              v-else-if="item.teacherInfo && item.teacherInfo.duty_id === '2'"
               >CT</el-tag
             >
-            <span style="margin-left:10px">{{
-              item.teacherInfo.realname + item.teacherInfo.departmentInfo.name
-            }}</span>
+            <span style="margin-left:10px"
+              >{{
+                (item.teacherInfo && item.teacherInfo.realname) ||
+                  (item.staffInfo && item.staffInfo.real_name)
+              }}{{
+                item.teacherInfo &&
+                  item.teacherInfo.departmentInfo &&
+                  item.teacherInfo.departmentInfo.name
+              }}</span
+            >
           </div>
           <div>
             <svg
@@ -159,10 +168,20 @@ export default {
       }
     }
   },
+  watch: {
+    changeSubject: {
+      immediate: false,
+      deep: true,
+      handler(newValue, oldValue) {
+        this.getTrackList()
+      }
+    }
+  },
   created() {
     this.getTrackList()
   },
   mounted() {
+    // 详情页新增记录刷新列表
     this.$root.$on('reload', (r) => {
       this.getTrackList()
     })

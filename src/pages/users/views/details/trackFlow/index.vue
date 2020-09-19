@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-07-20 16:37:31
  * @LastEditors: liukun
- * @LastEditTime: 2020-09-18 22:59:13
+ * @LastEditTime: 2020-09-19 15:22:43
 -->
 <template>
   <div class="track-container">
@@ -30,19 +30,21 @@
       <section class="flower_item" v-for="item of tableData" :key="item.ctime">
         <div class="upset_24col_space_between padding-right15">
           <div>
-            <el-tag size="small" v-if="item.teacherInfo.duty_id === '1'"
+            <el-tag
+              size="small"
+              v-if="item.teacherInfo && item.teacherInfo.duty_id === '1'"
               >CC</el-tag
             >
             <el-tag
               size="small"
               type="danger"
-              v-else-if="item.teacherInfo.duty_id === '2'"
+              v-else-if="item.teacherInfo && item.teacherInfo.duty_id === '2'"
               >CT</el-tag
             >
             <span style="margin-left:10px"
               >{{
                 (item.teacherInfo && item.teacherInfo.realname) ||
-                  (item.staffInfo && item.staffInfo.realname)
+                  (item.staffInfo && item.staffInfo.real_name)
               }}{{
                 item.teacherInfo &&
                   item.teacherInfo.departmentInfo &&
@@ -154,6 +156,7 @@ export default {
     this.getTrackList()
   },
   mounted() {
+    // 详情页新增记录刷新列表
     this.$root.$on('reload', (r) => {
       this.getTrackList()
     })
