@@ -286,7 +286,7 @@ export default {
             this.currentPage = res.payload.number - 0 + 1
             this.totalElements = res.payload.totalElements
             this.tableData.forEach((item, index) => {
-              item.applyDepartment = ''
+              // item.applyDepartment = ''
             })
             // 个别数据做文字化处理
             this.tableData = this.dataToText(res.payload.content)

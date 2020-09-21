@@ -4,7 +4,7 @@
  * @Author: Lukun
  * @Date: 2020-04-27 17:47:58
  * @LastEditors: liukun
- * @LastEditTime: 2020-09-21 17:50:39
+ * @LastEditTime: 2020-09-21 19:06:23
  -->
 <template>
   <div class="container">
@@ -998,7 +998,7 @@ export default {
             item.reason = zhaiyao[3]
             item.openTime = timestamp(item.ctime, 2)
             item.approveTime = timestamp(item.endTime, 2)
-            item.applyDepartment = ''
+            // item.applyDepartment = ''
             return item
           })
           // 重写部门名称
