@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-04-14 15:15:31
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-09-21 20:43:11
+ * @LastEditTime: 2020-09-21 21:22:28
  -->
 <template>
   <div>
@@ -183,20 +183,20 @@ export default {
     // 部门联机选择
     handleChange(value) {
       console.log(value)
-      console.log(Object.values(value))
-      switch (value && value.length) {
-        case 1:
-          this.ruleForm.associatedTeacher = value[0]
-          break
-        case 2:
-          this.ruleForm.associatedTeacher = value[1]
-          break
-        case 3:
-          this.ruleForm.associatedTeacher = value[2]
-          break
-        default:
-          break
-      }
+      this.ruleForm.associatedTeacher = value[value.length - 1]
+      // switch (value && value.length) {
+      //   case 1:
+      //     this.ruleForm.associatedTeacher = value[0]
+      //     break
+      //   case 2:
+      //     this.ruleForm.associatedTeacher = value[1]
+      //     break
+      //   case 3:
+      //     this.ruleForm.associatedTeacher = value[2]
+      //     break
+      //   default:
+      //     break
+      // }
       this.ruleForm.teacherId = ''
       this.regionOptionsList = []
       this.remoteMethod()

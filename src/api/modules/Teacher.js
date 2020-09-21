@@ -232,7 +232,7 @@ export default {
     }
     if (query) querys.bool.must.push({ term: query })
     const q = JSON.stringify(querys)
-    return axios.post('/graphql/v1/teacher', {
+    return axios.post('/graphql/v1/toss', {
       query: `{
         TeacherListEx(query:${JSON.stringify(q)},size:100) {
           realname
