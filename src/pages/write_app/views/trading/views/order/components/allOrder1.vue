@@ -232,6 +232,8 @@ export default {
      */
     chnageStatus(status) {
       this.status = status
+      // emit status, 用于搜索组件判断条件
+      this.$emit('pay-status', status)
     },
 
     reset() {

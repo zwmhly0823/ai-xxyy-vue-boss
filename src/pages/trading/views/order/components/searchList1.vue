@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-04-25 17:24:23
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-09-11 17:25:33
+ * @LastEditTime: 2020-09-21 21:36:53
  -->
 <template>
   <el-card
@@ -54,25 +54,14 @@
           ></simple-select>
         </div>
       </el-form-item>
-
-      <el-form-item label="业绩归属:" :class="{ [$style.marginer]: true }">
-        <div class="row_colum">
-          <orderAttr
-            name="pay_teacher_duty_id"
-            :data-list="orderTypeList"
-            :multiple="false"
-            placeholder="全部"
-            @result="getPerformType"
-          ></orderAttr>
-        </div>
-      </el-form-item>
       <br />
 
-      <el-form-item label="下单时间:" :class="{ [$style.marginer]: true }">
+      <el-form-item :label="timeLabel" :class="{ [$style.marginer]: true }">
         <DatePicker
           :class="[$style.fourPoint, 'allmini']"
+          :name="timeName"
           @result="getDate"
-          name="ctime"
+          :key="payStatus"
         >
           <template v-slot:buttons>
             <div class="row_colum margin_l10">
@@ -107,6 +96,17 @@
             </div>
           </template>
         </DatePicker>
+      </el-form-item>
+      <el-form-item label="业绩归属:" :class="{ [$style.marginer]: true }">
+        <div class="row_colum">
+          <orderAttr
+            name="pay_teacher_duty_id"
+            :data-list="orderTypeList"
+            :multiple="false"
+            placeholder="全部"
+            @result="getPerformType"
+          ></orderAttr>
+        </div>
       </el-form-item>
       <br />
       <el-form-item label="体验课:" :class="{ [$style.marginer]: true }">
@@ -266,6 +266,11 @@ export default {
     searchProp: {
       type: Object,
       default: () => {}
+    },
+    // 订单支付状态 3-已完成
+    payStatus: {
+      type: String,
+      default: '3'
     }
   },
   components: {
@@ -336,7 +341,14 @@ export default {
       chooseExport: '1'
     }
   },
-  computed: {},
+  computed: {
+    timeLabel() {
+      return this.payStatus === '3' ? '支付时间:' : '下单时间:'
+    },
+    timeName() {
+      return this.payStatus === '3' ? 'buytime' : 'ctime'
+    }
+  },
   watch: {
     packages_type(val, old) {
       const { getTeacherIdByCategory } = this.$http.Teacher
@@ -352,6 +364,22 @@ export default {
       } else {
         this.teacherscope_s = null
       }
+    },
+    payStatus(val) {
+      /**
+       * 切换支付状态时，清空支付时间/下单时间搜索条件
+       */
+      this.searchParams.forEach((item) => {
+        if (item.range) {
+          const time = item.range?.ctime || item.range?.buytime
+          if (time) {
+            delete item.range
+            for (let i = 0; i < 4; i++) {
+              this['cur' + i] = false
+            }
+          }
+        }
+      })
     }
   },
   methods: {
@@ -426,7 +454,7 @@ export default {
       if (!res || !res.quick) this.currentBtn = null
       if (res.quick && this.currentBtn) this[`cur${this.currentBtn}`] = true
       delete res.quick
-      this.setSeachParmas(res, ['ctime'], 'range')
+      this.setSeachParmas(res, [this.timeName], 'range')
     },
     // 4点外移
     today() {

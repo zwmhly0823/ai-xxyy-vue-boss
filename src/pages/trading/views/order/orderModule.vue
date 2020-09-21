@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-24 15:16:26
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-05-11 19:19:54
+ * @LastEditTime: 2020-09-21 20:19:48
  -->
 <template>
   <el-row type="flex" class="app-main height">
@@ -19,11 +19,13 @@
                 <search-list1
                   @search="handleSearch"
                   :searchProp="searchProp"
+                  :pay-status="payStatus"
                   v-if="activeTopic === '5'"
                 />
                 <all-order1
                   :topic="activeTopic"
                   :search="search"
+                  @pay-status="getPayStatus"
                   v-if="activeTopic === '5'"
                 />
               </el-tab-pane>
@@ -31,12 +33,14 @@
               <!-- 包含全部体验课订单数据（双周体验课、单周体验课） -->
               <el-tab-pane label="体验课" name="4">
                 <search-list2
+                  :pay-status="payStatus"
                   @search="handleSearch"
                   v-if="activeTopic === '4'"
                 />
                 <all-order2
                   :topic="activeTopic"
                   :search="search"
+                  @pay-status="getPayStatus"
                   v-if="activeTopic === '4'"
                 />
               </el-tab-pane>
@@ -99,24 +103,23 @@ export default {
       // 搜索
       search: [],
       showSearch: true,
-      searchProp: {}
+      searchProp: {},
+      payStatus: '3' // 支付状态
     }
   },
   computed: {},
   watch: {},
   methods: {
-    // 点击tab(无用啊已经v-model了)
-    // handleClick(tab, event) {
-    //   // this.activeTopic = tab.name
-    //   // 子组件重新渲染
-    //   this.showSearch = false
-    //   this.$nextTick(() => {
-    //     this.showSearch = true
-    //   })
-    // },
     // 点击搜索
     handleSearch(res) {
+      console.log(res, 'search')
+
       this.search = res
+    },
+
+    getPayStatus(status) {
+      console.log(status, 'pay status')
+      this.payStatus = status
     }
   },
   created() {

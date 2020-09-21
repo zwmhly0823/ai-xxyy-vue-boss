@@ -40,7 +40,7 @@
           <p>
             {{
               scope.row.out_trade_no
-                ? scope.row.out_trade_no.replace('xiong', '')
+                ? scope.row.out_trade_no.replace('xz', '')
                 : '-'
             }}
           </p>
