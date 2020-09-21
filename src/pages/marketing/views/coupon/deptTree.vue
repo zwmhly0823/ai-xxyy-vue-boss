@@ -4,11 +4,12 @@
  * @Author: zhubaodong
  * @Date: 2020-03-13 16:53:27
  * @LastEditors: Shentong
- * @LastEditTime: 2020-08-17 19:38:45
+ * @LastEditTime: 2020-09-21 22:08:35
  -->
 <template>
   <div class="left-container">
     <el-tree
+      ref="tree"
       class="left-container-tree"
       :data="departmentList"
       show-checkbox
@@ -18,22 +19,21 @@
       :expand-on-click-node="false"
       highlight-current
       style="color:#2F2E31"
-      @node-click="nodeClick"
     >
-      <span
-        class="custom-tree-node"
-        slot-scope="{ node, data }"
-        @mouseover="showTools(data)"
-        @mouseleave="hiddenTools(data)"
       >
+      <span class="custom-tree-node" slot-scope="{ node, data }">
         <span class="menu-box">
           <span :title="data.id" class="menu-name">{{ `${data.name}` }}</span>
-          <span v-if="data.name === '小熊项目'">{{ `(${qbSize})` }}</span>
-          <span v-else>{{ data.size ? `(${data.size} )` : `(0)` }}</span>
+          <!-- <span v-if="data.name === '小熊项目'">{{ `(${qbSize})` }}</span>
+          <span v-else>{{ data.size ? `(${data.size} )` : `(0)` }}</span> -->
         </span>
         <div class="day-sets" v-if="data.children == null && data.pid != '0'">
           <span>开课后第</span>
-          <el-input v-model="data.day" size="mini"></el-input>
+          <el-input
+            size="mini"
+            v-model="data.day"
+            @input="nodeInput"
+          ></el-input>
           <span>天</span>
         </div>
       </span>
@@ -45,13 +45,21 @@
 import { sortByKey } from '@/utils/boss'
 export default {
   props: {
-    experienceData: {
+    dayDeptId: {
       type: Object,
-      default: () => ({})
+      default: () => {}
     },
     systemData: {
       type: Object,
-      default: () => ({})
+      default: () => {}
+    },
+    dayDept: {
+      type: Object,
+      default: () => {}
+    },
+    submit: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -64,53 +72,74 @@ export default {
           children: []
         }
       ],
-      isShowEditIcon: false,
-      nowId: null,
-      showMenu: false,
-      editMenuList: [
-        {
-          lable: '新建',
-          type: 'childLevel'
-        },
-        {
-          lable: '修改',
-          type: 'edit'
-        },
-        {
-          lable: '删除',
-          type: 'delete'
-        }
-      ],
-      editMenuListNodel: [
-        {
-          lable: '新建',
-          type: 'childLevel'
-        },
-        {
-          lable: '修改',
-          type: 'edit'
-        }
-      ],
-      dialogVisible: false,
-      editCurrentItem: {},
-      editCurrentData: {},
-      departmentFlatList: [],
-      menuType: null
+      deptFlatList: []
     }
   },
-  async created() {
+  created() {
     this.initTree()
-    this.getDepartmentTree()
+    // this.getDepartmentTree()
   },
-  methods: {
-    getDepartmentTree() {
-      this.$http.Teacher.departmentTree().then((res) => {
-        this.qbSize = res.payload
+  watch: {
+    submit(val, oldVal) {
+      const checkedNode = this.handleCheckChange()
+      const { deptFlatList } = this
+      this.$emit('changeSubmit', {
+        val,
+        oldVal,
+        deptFlatList,
+        checkedNode
       })
     },
-    async initTree() {
+    dayDeptId: {
+      handler: function(deptIds) {
+        console.log('dayDeptId', deptIds)
+
+        const connectDeptIdDay = function(deptArr = [], deptIds = {}) {
+          console.log('deptIds', deptIds)
+          deptArr.forEach((item, index) => {
+            const { id, children } = item
+            item.day = this.dayDept[id] || ''
+            deptArr[index] = {
+              ...item
+            }
+            if (children && children.length) connectDeptIdDay(children)
+          })
+        }
+        connectDeptIdDay(this.deptFlatList, deptIds)
+      },
+      deep: true
+    }
+  },
+  methods: {
+    /** 回显 tree中id对应的天数day */
+    showDayById(deptIds) {
+      this.connectDeptIdDay(this.deptFlatList, deptIds)
+    },
+
+    handleCheckChange() {
+      const res = this.$refs.tree.getCheckedNodes()
+      return res.filter((item) => {
+        return item.children == null && item.pid !== '0'
+      })
+    },
+    nodeInput() {
+      console.log('3', this.deptFlatList)
+    },
+    // getDepartmentTree() {
+    //   this.$http.Teacher.departmentTree().then((res) => {
+    //     this.qbSize = res.payload
+    //   })
+    // },
+    initTree() {
+      const loadingInstance = this.$loading({
+        target: '.app-main',
+        lock: true,
+        text: '加载中...',
+        fullscreen: true
+      })
+
       try {
-        await this.$http.Teacher.getDepartmentTree(1).then((res) => {
+        this.$http.Teacher.getDepartmentTree(1).then((res) => {
           const arr = (res && res.payload) || []
           if (arr.length === 0) return arr
           const department = sortByKey(arr, 'id')
@@ -119,147 +148,34 @@ export default {
           // 多层排序
           this.recursive(department)
           this.departmentList[0].children = department
-          console.log('列表', department)
-          this.departmentFlatList = department
+
+          /** 把天数和对应的id关联到tree-node中 */
+          this.connectDeptIdDay(department)
+
+          this.deptFlatList = department
         })
       } catch (error) {
         console.log(error)
+      } finally {
+        loadingInstance.close()
       }
+    },
+    /** 把天数和对应的id关联到tree-node中 */
+    connectDeptIdDay(deptArr = [], deptIds = {}) {
+      console.log('deptIds', deptIds)
+      deptArr.forEach((item, index) => {
+        const { id, children } = item
+        item.day = this.dayDept[id] || ''
+        deptArr[index] = {
+          ...item
+        }
+        if (children && children.length) this.connectDeptIdDay(children)
+      })
     },
     // 点击节点
     nodeClick(data) {
       console.log('点击节点', data)
       this.$emit('change', data)
-    },
-    // 鼠标移入显示icon
-    showTools(item) {
-      this.isShowEditIcon = true
-      this.nowId = item.id
-    },
-    // 鼠标移出消失icon
-    hiddenTools(item) {
-      this.isShowEditIcon = false
-      this.nowId = null
-      this.showMenu = false
-    },
-    // 点击icon
-    editTools(item) {
-      this.showMenu = true
-    },
-    // 点击菜单item
-    handleMenuItem(data, item) {
-      this.showMenu = false
-      this.dialogVisible = true
-      this.editCurrentItem = JSON.parse(JSON.stringify(item))
-      this.editCurrentData = JSON.parse(JSON.stringify(data))
-      this.menuType = item.type
-    },
-    handleDialog(type) {
-      const { menuType } = this
-      if (type === 'submit') {
-        switch (menuType) {
-          case 'delete':
-            this.deleMenu()
-            break
-          case 'sameLevel':
-            this.addMenu()
-            break
-          case 'childLevel':
-            this.addMenu()
-            break
-          case 'edit':
-            this.addMenu()
-            break
-          default:
-            return ''
-        }
-      } else {
-        this.initProps()
-      }
-    },
-    // 增加菜单
-    async addMenu() {
-      const { menuType, editCurrentData } = this
-      const form = this.$refs.dialogRef
-      console.log(form)
-      let pid = ''
-      // 创建栏目时,一级创建同级时为0，创建子栏目时为当前id;二级、三级创建同级时为当前数据的pid,创建子级时为当前id
-      switch (menuType) {
-        case 'sameLevel':
-          pid = editCurrentData.flag === 1 ? '0' : editCurrentData.pid
-          break
-        case 'childLevel':
-          pid = form._data.departfather
-          // pid = ''
-          break
-        case 'edit':
-          pid = form._data.depart
-          break
-        default:
-          pid = ''
-      }
-      let params = {
-        name: form[menuType].name,
-        sort: form[menuType].sort,
-        id: menuType === 'edit' ? editCurrentData.id : '',
-        // id: ['edit', 'childLevel'].includes(menuType)
-        //   ? form._data.departfather
-        pid: pid
-      }
-      if (params.name === '') {
-        this.$message.warning('名称是必填项哦～')
-        return
-      }
-      try {
-        const res = await this.$http.Teacher.createDepartment(params)
-        if (res.code === 0) {
-          if (menuType === 'sameLevel' || menuType === 'childLevel') {
-            this.$message.success(`新增栏目"${params.name}"成功`)
-          } else {
-            this.$message.success(`更改栏目"${params.name}"成功`)
-          }
-          params = {}
-          this.initProps()
-          this.initTree()
-        }
-      } catch (error) {
-        params = {}
-        console.log(error)
-      }
-    },
-    // 删除菜单
-    async deleMenu() {
-      try {
-        const res = await this.$http.Teacher.deleteDepartmentById(
-          this.editCurrentData.id
-        )
-        if (res.code === 0) {
-          this.$message.success(`已成功删除${this.editCurrentData.name}`)
-          this.initProps()
-          this.initTree()
-        }
-      } catch (error) {
-        console.log(error)
-      }
-    },
-    initProps() {
-      this.dialogVisible = false
-      this.editCurrentItem = {}
-      this.editCurrentData = {}
-      this.menuType = null
-    },
-    // 右击icon，显示菜单
-    menuTools(e) {
-      const oMenu = document.getElementById('menu')
-
-      if (+e.button === 2) {
-        e.preventDefault()
-        const _x = e.clientX
-        const _y = e.clientY
-        oMenu.style.display = 'block'
-        oMenu.style.left = _x - 175 + 'px'
-        oMenu.style.top = _y - 50 + 'px'
-      }
     },
     // 组织结构排序
     handle(property) {
@@ -272,7 +188,7 @@ export default {
     // 递归排序
     recursive(value) {
       value.forEach((item) => {
-        if (item.children && item.children.length > 0) {
+        if (item.children && item.children.length) {
           item.children.sort(this.handle('sort'))
           this.recursive(item.children)
         }

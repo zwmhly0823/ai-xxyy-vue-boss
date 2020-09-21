@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-08-15 14:35:51
  * @LastEditors: Shentong
- * @LastEditTime: 2020-09-18 18:24:47
+ * @LastEditTime: 2020-09-21 16:14:37
 -->
 
 <template>
@@ -104,7 +104,6 @@ export default {
 
   created() {
     this.getCouponList()
-    // this.getPackageList()
   },
 
   mounted() {
@@ -136,18 +135,6 @@ export default {
 
         item.name = name
         item.packgeDes = packgeDes
-      })
-    },
-    getPackageList() {
-      const params = {
-        id: [5, 19, 20]
-      }
-      this.$http.Marketing.getPackageList(params).then((res) => {
-        const list = res?.data?.PackagesList || []
-        this.dataList = list.map((item) => {
-          item.price = item.price > 0 ? (+item.price).toFixed(2) : item.price
-          return item
-        })
       })
     },
     operate_set(row) {

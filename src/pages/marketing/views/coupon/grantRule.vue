@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-08-15 15:42:18
  * @LastEditors: Shentong
- * @LastEditTime: 2020-09-18 17:27:33
+ * @LastEditTime: 2020-09-21 20:36:41
 -->
 <template>
   <el-row type="flex" class="app-main grantRule">
@@ -81,6 +81,7 @@
     <new-rule
       :centerDialogVisible="centerDialogVisible"
       :ruleContent="ruleContent"
+      :couponInfo="couponInfo"
       @emitDialogOperate="dialogOperate"
       v-if="centerDialogVisible"
     ></new-rule>
@@ -94,15 +95,9 @@ export default {
   },
   data() {
     return {
-      centerDialogVisible: false,
+      centerDialogVisible: true,
       ruleContent: {},
-      tableData: [
-        {
-          date: '2020-02-22',
-          name: 'adolf-victor',
-          address: 'loremjflajflajdfaljdfadlj'
-        }
-      ],
+      tableData: [],
       couponInfo: {}
     }
   },
