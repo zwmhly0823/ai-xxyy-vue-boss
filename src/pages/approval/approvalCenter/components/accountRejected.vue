@@ -24,8 +24,9 @@
       />
       <department
         style="margin-right:20px"
-        name="pay_teacher_id"
+        name="DepartmentIds"
         placeholder="全部部门"
+        :onlyDept="1"
         @result="getSearchData1"
       />
       <group-sell
@@ -196,8 +197,8 @@ export default {
   methods: {
     getSearchData1(val) {
       console.info('选择部门获取值:', val)
-      this.params.departmentIds = val.pay_teacher_id
-        ? String(val.pay_teacher_id)
+      this.params.departmentIds = val.DepartmentIds
+        ? String(val.DepartmentIds)
         : ''
       this.initListData(this.params)
     },

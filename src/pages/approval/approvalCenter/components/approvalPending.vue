@@ -4,7 +4,7 @@
  * @Author: Lukun
  * @Date: 2020-04-27 17:47:58
  * @LastEditors: liukun
- * @LastEditTime: 2020-09-08 16:44:27
+ * @LastEditTime: 2020-09-21 17:33:55
  -->
 <template>
   <div class="container">
@@ -37,8 +37,9 @@
       />
       <department
         style="margin-right:20px"
-        name="pay_teacher_id"
+        name="DepartmentIds"
         placeholder="全部部门"
+        :onlyDept="1"
         @result="getSearchData1"
       />
       <group-sell
@@ -914,8 +915,8 @@ export default {
       console.info('选择部门获取值:', val)
       this.params.page = 1
       this.currentPage = 1
-      this.params.departmentIds = val.pay_teacher_id
-        ? String(val.pay_teacher_id)
+      this.params.departmentIds = val.DepartmentIds
+        ? String(val.DepartmentIds)
         : ''
       this.checkPending(this.params)
     },
