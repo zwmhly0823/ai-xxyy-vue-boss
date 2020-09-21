@@ -4,7 +4,7 @@
  * @Author: Lukun
  * @Date: 2020-04-27 17:47:58
  * @LastEditors: liukun
- * @LastEditTime: 2020-09-18 22:13:25
+ * @LastEditTime: 2020-09-21 12:01:32
  -->
 <template>
   <div class="container">
@@ -857,7 +857,6 @@ export default {
 
     this.resetParams = staff
     this.staffId = staff.staffId
-    this.staffName = staff.staffName
     this.isStaffId = staff.isStaffId
     this.staffName = staff.staffName
     // Parameters:
@@ -975,9 +974,9 @@ export default {
           if (this.drawerApprovalDeatail.addressId) {
             delete params.isRecover
           }
-          this.$http.Backend.isAggrePass(params)
-            .then((res) => {
-              console.log(res)
+          this.$http.Backend.isAggrePass(params).then((res) => {
+            console.log(res)
+            if (!res.code) {
               this.checkPending(this.params)
               this.dialogFormVisible_checkbox = false // 关闭弹窗
               this.drawerApproval = false // 关闭抽屉
@@ -986,12 +985,8 @@ export default {
                 message: '拒绝审核通过',
                 type: 'success'
               })
-
-              // this.$emit('result', 'third')
-            })
-            .catch((err) => {
-              this.$message(err)
-            })
+            }
+          })
         } else {
           return false
         }
@@ -1055,21 +1050,17 @@ export default {
             staffId: this.staffId,
             staffName: this.staffName
           }
-          this.$http.Backend.isAggrePass(params)
-            .then((res) => {
-              this.checkPending(this.params)
-              this.drawerApproval = false
-              this.handleCloseDraw()
-              this.$message({
-                message: '拒绝审核通过',
-                type: 'success'
-              })
+          this.$http.Backend.isAggrePass(params).then((res) => {
+            this.checkPending(this.params)
+            this.drawerApproval = false
+            this.handleCloseDraw()
+            this.$message({
+              message: '拒绝审核通过',
+              type: 'success'
+            })
 
-              this.$emit('result', 'third')
-            })
-            .catch((err) => {
-              this.$message(err)
-            })
+            this.$emit('result', 'third')
+          })
         })
         .catch((err) => {
           console.log(err)
@@ -1111,7 +1102,7 @@ export default {
           }
           this.$http.Backend.isAggrePass(params)
             .then((res) => {
-              if (res && res.payload) {
+              if (!res.code) {
                 this.checkPending(this.params)
                 this.drawerApproval = false
                 this.$root.$emit('lk', '')
@@ -1119,7 +1110,6 @@ export default {
                   message: '同意审核通过',
                   type: 'success'
                 })
-                // this.$emit('result', 'third')
               } else {
                 this.$root.$emit('lk', '')
               }
