@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-07-20 16:37:49
  * @LastEditors: liukun
- * @LastEditTime: 2020-09-18 21:40:23
+ * @LastEditTime: 2020-09-21 15:36:00
 --><template>
   <el-dialog title="新建跟进记录" :visible.sync="dialogFormVisible" width="50%">
     <el-form
@@ -154,7 +154,7 @@ export default {
   },
   mounted() {
     this.getTags()
-    const storage1 = JSON.parse(localStorage.getItem('teacher'))
+    const storage1 = JSON.parse(localStorage.getItem('staff'))
     this.form.teacherId = Number(storage1.id)
   }
 }
