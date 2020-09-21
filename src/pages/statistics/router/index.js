@@ -1,7 +1,7 @@
 /*
  * @Date: 2020-03-13 15:20:21
- * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-07-25 18:43:44
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-09-21 15:23:49
  * @FilePath: /ai-app-vue-toss/src/pages/studentTeam/router/index.js
  */
 import Vue from 'vue'
@@ -72,6 +72,15 @@ const routes = [
       keepAlive: true
     },
     component: () => import('../views/learnRecord/recordDetails.vue')
+  },
+  {
+    path: '/courseLog',
+    name: 'courseLog',
+    meta: {
+      title: '参课统计',
+      keepAlive: true
+    },
+    component: () => import('../views/courseLog/index.vue')
   }
 ]
 
