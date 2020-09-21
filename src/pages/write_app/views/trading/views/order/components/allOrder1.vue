@@ -253,7 +253,7 @@ export default {
 <style lang="scss">
 .order-call {
   .el-row {
-    padding: 20px 0 20px 10px;
+    padding: 0 0 0 10px;
     &:last-child {
       margin-bottom: 0;
     }

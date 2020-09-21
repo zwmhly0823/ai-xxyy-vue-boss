@@ -464,7 +464,7 @@ export default {
 </script>
 <style scoped lang="scss">
 .title-box {
-  padding-bottom: 50px;
+  padding-bottom: 30px;
 }
 .noData {
   text-align: center;

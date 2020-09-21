@@ -4,7 +4,7 @@
  * @Author: shentong
  * @Date: 2020-03-13 16:20:48
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-09-05 18:04:32
+ * @LastEditTime: 2020-09-21 16:20:45
  */
 import axios from '../../axiosConfig'
 import { injectSubject, getAppSubjectCode } from '@/utils/index'
@@ -42,6 +42,7 @@ export default {
             id
             uid
             ctime
+            buytime
             packages_name
             sup
             stage

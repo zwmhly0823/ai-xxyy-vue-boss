@@ -4,6 +4,7 @@
 } //引入本地字体数字文件
 .top-box {
   margin-top: -20px;
+  margin-bottom: 10px;
   width: 100%;
   height: 100%;
   .grid-content {
@@ -35,6 +36,7 @@
   .oride-bottom {
     display: flex;
     justify-content: space-around;
+    padding-bottom: 10px;
     font-family: 'number_font';
     color: #666666;
     font-size: 12px;
