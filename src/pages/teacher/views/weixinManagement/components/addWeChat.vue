@@ -3,8 +3,8 @@
  * @version: 
  * @Author: panjian
  * @Date: 2020-04-14 15:15:31
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-07-08 12:39:02
+ * @LastEditors: zhangjianwen
+ * @LastEditTime: 2020-09-21 20:11:49
  -->
 <template>
   <div>
@@ -201,7 +201,8 @@ export default {
       this.regionOptionsList = []
       this.remoteMethod()
     },
-    remoteMethod(query) {
+    remoteMethod(query = '') {
+      console.log(query)
       if (query !== '') {
         this.loading = true
         setTimeout(() => {
@@ -211,23 +212,21 @@ export default {
               department_id: `${this.ruleForm.associatedTeacher}`
             }
           }
-          this.$http.Teacher.TeacherList(this.TeacherListvalue, query).then(
-            (res) => {
-              const data = res.data.TeacherListEx
-              const _data = []
-              data.forEach((res) => {
-                _data.push({
-                  value: res.id,
-                  label: res.realname
-                })
+          this.$http.Teacher.TeacherList(this.TeacherListvalue).then((res) => {
+            const data = res.data.TeacherListEx
+            const _data = []
+            data.forEach((res) => {
+              _data.push({
+                value: res.id,
+                label: res.realname
               })
-              this.regionOptionsList = _data.filter((item) => {
-                return query
-                  ? item.label.toLowerCase().indexOf(query.toLowerCase()) > -1
-                  : item
-              })
-            }
-          )
+            })
+            this.regionOptionsList = _data.filter((item) => {
+              return query
+                ? item.label.toLowerCase().indexOf(query.toLowerCase()) > -1
+                : item
+            })
+          })
         }, 200)
       } else {
         this.regionOptionsList = []

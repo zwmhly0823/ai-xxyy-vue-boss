@@ -12,7 +12,7 @@ export default {
   /**
    * 组织机构列表
    * */
-  getDepartmentTree(id) {
+  getDepartmentTree(id = 0) {
     return axios.get(`/api/t/v2/department/getDepartmentTree?id=${id}`)
   },
   /**
