@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-07-20 16:37:31
  * @LastEditors: liukun
- * @LastEditTime: 2020-09-19 15:22:43
+ * @LastEditTime: 2020-09-21 20:29:59
 -->
 <template>
   <div class="track-container">
@@ -84,6 +84,9 @@
         </div>
         <div class="upset_24col_space_between padding-right15 margin22">
           <span class="color-gray">{{ item.point_type }}</span>
+          <el-tag v-if="item.label_text" type="warning" size="mini">{{
+            item.label_text
+          }}</el-tag>
           <span class="color-gray">{{ item.ctime }}</span>
         </div>
         <div class="upset_24col_space_between padding-right15">
