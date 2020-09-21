@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-04-14 15:15:31
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-09-21 20:11:49
+ * @LastEditTime: 2020-09-21 20:43:11
  -->
 <template>
   <div>
@@ -203,16 +203,17 @@ export default {
     },
     remoteMethod(query = '') {
       console.log(query)
-      if (query !== '') {
-        this.loading = true
-        setTimeout(() => {
-          this.loading = false
-          if (this.ruleForm.associatedTeacher) {
-            this.TeacherListvalue = {
-              department_id: `${this.ruleForm.associatedTeacher}`
-            }
+      // if (query !== '') {}
+      this.loading = true
+      setTimeout(() => {
+        this.loading = false
+        if (this.ruleForm.associatedTeacher) {
+          this.TeacherListvalue = {
+            department_id: `${this.ruleForm.associatedTeacher}`
           }
-          this.$http.Teacher.TeacherList(this.TeacherListvalue).then((res) => {
+        }
+        this.$http.Teacher.TeacherList(this.TeacherListvalue, query).then(
+          (res) => {
             const data = res.data.TeacherListEx
             const _data = []
             data.forEach((res) => {
@@ -226,11 +227,12 @@ export default {
                 ? item.label.toLowerCase().indexOf(query.toLowerCase()) > -1
                 : item
             })
-          })
-        }, 200)
-      } else {
-        this.regionOptionsList = []
-      }
+          }
+        )
+      }, 200)
+      //  else {
+      //   this.regionOptionsList = []
+      // }
     },
     // 提交
     submitForm(formName) {
