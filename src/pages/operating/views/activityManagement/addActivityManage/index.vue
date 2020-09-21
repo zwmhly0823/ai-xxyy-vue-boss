@@ -116,6 +116,7 @@
                   按排期
                 </span>
                 <search-stage
+                  style="margin-right:20px;"
                   :record="activityFrom.trialTerms"
                   class="search-group-item"
                   name="term0"
@@ -164,6 +165,7 @@
               v-model="activityFrom.businessType"
               remote
               filterable
+              multiple
               :reserve-keyword="true"
               size="mini"
               clearable
@@ -381,7 +383,7 @@ export default {
           { required: true, message: '请选择计划模板', trigger: 'change' }
         ],
         businessType: [
-          { required: true, message: '请选择业务类型', trigger: 'change' }
+          { required: true, message: '请选择业务类型', trigger: 'blur' }
         ],
         promotionsDate: [
           {
@@ -594,16 +596,16 @@ export default {
           if (this.promotionsId) {
             obj.id = this.promotionsId
           }
-          // this.saveAndUpdatePromotions(obj).then((res) => {
-          //   if (res.code === 0) {
-          //     this.$message.success('保存成功')
-          //     console.log(res)
-          //     this.$router.push({
-          //       path: '/activityManagement/'
-          //     })
-          //   }
-          //   console.log(res)
-          // })
+          this.saveAndUpdatePromotions(obj).then((res) => {
+            if (res.code === 0) {
+              this.$message.success('保存成功')
+              console.log(res)
+              this.$router.push({
+                path: '/activityManagement/'
+              })
+            }
+            console.log(res)
+          })
           console.log(obj)
           console.log('valid====', valid)
           console.log(this.activityFrom)
