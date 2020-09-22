@@ -107,7 +107,7 @@
           <el-form-item label="活动范围" prop="trialTerms">
             <el-row style="display:flex;margin-bottom: 10px;">
               <el-radio
-                v-model="activityRange"
+                v-model="promotionsRange"
                 label="1"
                 class="Schedule"
                 style="display: flex;align-items: center;"
@@ -120,7 +120,7 @@
                   :record="activityFrom.trialTerms"
                   class="search-group-item"
                   name="term0"
-                  :isDisabled="activityRange !== '1'"
+                  :isDisabled="promotionsRange !== '1'"
                   placeholder="体验课排期"
                   type="0"
                   @result="getSchedul('term0', arguments, 0)"
@@ -129,7 +129,7 @@
                   :record="activityFrom.systemTerms"
                   class="search-group-item"
                   name="term1"
-                  :isDisabled="activityRange !== '1'"
+                  :isDisabled="promotionsRange !== '1'"
                   placeholder="系统课排期"
                   type="1"
                   @result="getSchedul('term1', arguments, 1)"
@@ -139,12 +139,12 @@
           </el-form-item>
           <el-form-item label="" prop="payOrderDate">
             <el-row style="display:flex;margin-bottom: 10px;">
-              <el-radio v-model="activityRange" label="2">
+              <el-radio v-model="promotionsRange" label="2">
                 <span style="width:80px;margin-right:10px;">按下单时间</span>
                 <el-date-picker
                   v-model="activityFrom.payOrderDate"
                   type="daterange"
-                  :disabled="activityRange !== '2'"
+                  :disabled="promotionsRange !== '2'"
                   value-format="yyyy-MM-dd"
                   :picker-options="expireTimeOption"
                   range-separator="至"
@@ -328,9 +328,9 @@ export default {
       }
     }
     return {
-      activityRange: '', // 活动范围radio
-      // isTrial: false, // 体验课checkbox
-      // isSystem: false, // 系统课checkbox
+      promotionsRange: '', // 活动范围radio
+      isTrial: false, // 体验课checkbox
+      isSystem: false, // 系统课checkbox
       promotionsId: '',
       tableHeight: 'auto',
       dialogGroupVisible: false,
@@ -343,23 +343,23 @@ export default {
       businessType: [
         // 业务类型
         {
-          value: '1',
+          value: '0',
           label: '首单年课'
         },
         {
-          value: '2',
+          value: '1',
           label: '首单两年课'
         },
         {
-          value: '3',
+          value: '2',
           label: '续费年课'
         },
         {
-          value: '4',
+          value: '3',
           label: '续费两年课'
         },
         {
-          value: '5',
+          value: '4',
           label: '补差半年至两年'
         }
       ],
@@ -367,7 +367,7 @@ export default {
       activityFrom: {
         promotionsName: '', // 活动名称
         promotionsType: 'GIFT', // 活动类型 默认关单赠品
-        businessType: '', // 业务类型
+        businessType: [], // 业务类型
         promotionsDate: [], // 活动时间
         payOrderDate: [], // 下单时间
         trialTerms: [], // 体验课
@@ -418,6 +418,9 @@ export default {
     ChooseProduct
   },
   watch: {
+    // trialTerms(val, old) {
+    //   console.log('trialTerms=====', val, old)
+    // },
     // isTrial(val, old) {
     //   if (!val) {
     //     console.log('11111')
@@ -432,7 +435,7 @@ export default {
     //   }
     //   console.log(val, old)
     // },
-    activityRange(val, old) {
+    promotionsRange(val, old) {
       if (val !== '2') {
         this.activityFrom.payOrderDate = ''
       } else {
@@ -579,6 +582,17 @@ export default {
     saveActivity(activityFrom) {
       this.$refs[activityFrom].validate((valid) => {
         if (valid) {
+          if (this.activityFrom.trialTerms.length > 0) {
+            this.isTrial = true
+          } else {
+            this.isTrial = false
+          }
+          if (this.activityFrom.systemTerms.length > 0) {
+            this.isSystem = true
+          } else {
+            this.isSystem = false
+          }
+
           const obj = {
             id: '-1',
             promotionsName: this.activityFrom.promotionsName,
@@ -587,12 +601,16 @@ export default {
             startDate: this.activityFrom.promotionsDate[0],
             endDate: this.activityFrom.promotionsDate[1],
             desc: this.activityFrom.desc,
-            // isTrial: this.isTrial,
-            // isSystem: this.isSystem,
+            isTrial: this.isTrial,
+            isSystem: this.isSystem,
+            orderStartDate: this.activityFrom.payOrderDate[0],
+            orderEndDate: this.activityFrom.payOrderDate[1],
             trialTerms: this.activityFrom.trialTerms.join(','),
             systemTerms: this.activityFrom.systemTerms.join(','),
+            orderTypes: this.activityFrom.businessType.join(','),
             gifts: this.tableData
           }
+
           if (this.promotionsId) {
             obj.id = this.promotionsId
           }
