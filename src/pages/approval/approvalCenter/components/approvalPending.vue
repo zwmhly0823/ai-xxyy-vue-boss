@@ -4,7 +4,7 @@
  * @Author: Lukun
  * @Date: 2020-04-27 17:47:58
  * @LastEditors: liukun
- * @LastEditTime: 2020-09-21 19:06:11
+ * @LastEditTime: 2020-09-22 11:51:42
  -->
 <template>
   <div class="container">
@@ -13,6 +13,7 @@
       <CheckType @result="getcheckType" />
       <el-select
         :style="{ 'margin-right': '20px' }"
+        clearable
         size="mini"
         v-model="xx"
         placeholder="请选择是否0课时"
@@ -1049,7 +1050,15 @@ export default {
       } else {
         this.checkboxChoose = false
       }
-      console.log(val, 'val====')
+      // external_0课时退费(显隐)
+      if (val === 'REFUND') {
+        this.isRefund = 1
+      } else {
+        this.isRefund = 0
+        this.params.isZero = ''
+        this.xx = ''
+      }
+
       Object.assign(this.params, { type: val })
       this.type_lk = val
       console.log(this.type_lk)
@@ -1057,13 +1066,6 @@ export default {
       this.currentPage = 1
       this.params.page = 1
       this.checkPending(this.params)
-
-      // external_0课时退费(显隐)
-      if (val === 'REFUND') {
-        this.isRefund = 1
-      } else {
-        this.isRefund = 0
-      }
     },
     // 查询类型是退款出现的0课时选择
     zeroChange(val) {

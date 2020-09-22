@@ -4,7 +4,7 @@
  * @Author: Lukun
  * @Date: 2020-04-27 17:47:58
  * @LastEditors: liukun
- * @LastEditTime: 2020-09-21 17:50:29
+ * @LastEditTime: 2020-09-22 11:52:24
  -->
 <template>
   <div class="container">
@@ -12,6 +12,7 @@
       <CheckType @result="getcheckType" />
       <el-select
         :style="{ 'margin-right': '20px' }"
+        clearable
         size="mini"
         v-model="xx"
         placeholder="请选择是否0课时"
@@ -681,16 +682,18 @@ export default {
     },
     // 审批类型判断
     getcheckType(val) {
-      this.params.page = 1
-      this.currentPage = 1
-      Object.assign(this.params, { type: val })
-      this.checkPending(this.params)
       // external_0课时退费(显隐)
       if (val === 'REFUND') {
         this.isRefund = 1
       } else {
         this.isRefund = 0
+        this.params.isZero = ''
+        this.xx = ''
       }
+      this.params.page = 1
+      this.currentPage = 1
+      Object.assign(this.params, { type: val })
+      this.checkPending(this.params)
     },
     // 查询类型是退款出现的0课时选择
     zeroChange(val) {
