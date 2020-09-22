@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-09-03 15:14:25
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-09-22 16:40:36
+ * @LastEditTime: 2020-09-22 17:08:46
 -->
 <template>
   <el-row type="flex" class="app-main reviewManagement">
@@ -82,12 +82,12 @@
               <el-table-column
                 label="课程类型"
                 min-width="110"
-                prop="course_type"
+                prop="course_type_text"
               ></el-table-column>
               <el-table-column
                 label="课程难度"
                 min-width="100"
-                prop="sup"
+                prop="sup_text"
               ></el-table-column>
               <el-table-column label="点评老师" min-width="120">
                 <template slot-scope="scope">
@@ -171,6 +171,7 @@
 <script>
 import _ from 'lodash'
 import { formatData } from '@/utils/index'
+import { GETGRADE } from '@/utils/enums'
 import TableSearch from './components/tableSearch/index'
 import EleTable from '@/components/Table/EleTable'
 
@@ -316,6 +317,23 @@ export default {
           item.flagRecord.ctime = formatData(item.flagRecord.ctime, 'm')
         }
         // 课程类型 1-体验课，2-系统课
+        item.course_type_text = item.course_type
+          ? item.course_type === '1'
+            ? '体验课'
+            : '系统课'
+          : '-'
+        // 课程难度
+        let supText = '-'
+        if (item.sup) {
+          const sup = item.sup.toLocaleUpperCase()
+          if (item.course_type === '1') {
+            supText = GETGRADE('0', sup)
+          }
+          if (item.course_type === '2') {
+            supText = GETGRADE('1', sup)
+          }
+        }
+        item.sup_text = supText
       })
       this.tableData = list || []
     },
