@@ -1,5 +1,5 @@
 <!--
- * @Descripttion: 
+ * @Descripttion:
  * @version: 1.0.0
  * @Author: Shentong
  * @Date: 2020-08-15 15:42:18
@@ -40,13 +40,14 @@
                   >
                 </div>
               </div>
-              <div ref="tableContainer" class="table-container">
+              <div ref="tr" class="table-container">
                 <el-table
                   :data="tableData"
                   border
                   style="width: 100%"
                   :header-row-class-name="tableHeaderClassName"
                   size="mini"
+                  :height="ctnHeight"
                 >
                   <el-table-column
                     header-align="center"
@@ -117,7 +118,8 @@ export default {
       tableData: [],
       couponInfo: {},
       lookPeriod: '',
-      couponId: ''
+      couponId: '',
+      ctnHeight: 'auto'
     }
   },
 
@@ -128,7 +130,9 @@ export default {
     await this.getCouponInfo({ couponId })
   },
 
-  mounted() {},
+  mounted() {
+    this.calcTableHeight()
+  },
 
   methods: {
     refreshData() {},
@@ -194,6 +198,17 @@ export default {
     },
     tableHeaderClassName() {
       return 'header-row'
+    },
+    calcTableHeight(ref) {
+      this.$nextTick(() => {
+        // Element.getBoundingClientRect() 方法返回元素的大小及其相对于视口的位置。
+        const tableTopHeight = this.$refs.tr.getBoundingClientRect().y
+        //  document.body.clientHeight 返回body元素内容的高度
+        const ctnHeight = document.body.clientHeight - tableTopHeight - 40
+
+        this.ctnHeight = ctnHeight + ''
+        console.log('tableTopHeight', this.ctnHeight)
+      })
     }
   }
 }
@@ -217,7 +232,7 @@ export default {
     .content {
       padding: 30px;
       .base-info {
-        margin-bottom: 40px;
+        margin-bottom: 30px;
         .coupon-info {
           display: flex;
           height: 40px;
@@ -233,7 +248,7 @@ export default {
       }
       .grand-rule {
         .table-container {
-          margin-top: 50px;
+          margin-top: 20px;
         }
       }
       .divider {

@@ -7,38 +7,40 @@
  * @LastEditTime: 2020-09-22 22:35:06
  -->
 <template>
-  <div class="left-container" ref="treeContainer">
-    <el-tree
-      ref="tree"
-      class="left-container-tree"
-      :data="departmentList"
-      show-checkbox
-      default-expand-all
-      node-key="id"
-      :current-node-key="0"
-      :expand-on-click-node="false"
-      highlight-current
-      style="color:#2F2E31"
-    >
+  <div class="left-container">
+    <div ref="tr" class="tree-container" :style="{ height: containerHeight }">
+      <el-tree
+        ref="tree"
+        class="left-container-tree"
+        :data="departmentList"
+        show-checkbox
+        default-expand-all
+        node-key="id"
+        :current-node-key="0"
+        :expand-on-click-node="false"
+        highlight-current
+        style="color:#2F2E31"
       >
-      <span class="custom-tree-node" slot-scope="{ node, data }">
-        <span class="menu-box">
-          <span :title="data.id" class="menu-name">{{ `${data.name}` }}</span>
-          <!-- <span v-if="data.name === '小熊项目'">{{ `(${qbSize})` }}</span>
-          <span v-else>{{ data.size ? `(${data.size} )` : `(0)` }}</span> -->
+        >
+        <span class="custom-tree-node" slot-scope="{ node, data }">
+          <span class="menu-box">
+            <span :title="data.id" class="menu-name">{{ `${data.name}` }}</span>
+            <!-- <span v-if="data.name === '小熊项目'">{{ `(${qbSize})` }}</span>
+            <span v-else>{{ data.size ? `(${data.size} )` : `(0)` }}</span> -->
+          </span>
+          <div class="day-sets" v-if="data.children == null && data.pid != '0'">
+            <span>开课后第</span>
+            <el-input
+              size="mini"
+              v-model="data.day"
+              @input="nodeInput"
+              type="number"
+            ></el-input>
+            <span>天</span>
+          </div>
         </span>
-        <div class="day-sets" v-if="data.children == null && data.pid != '0'">
-          <span>开课后第</span>
-          <el-input
-            size="mini"
-            v-model="data.day"
-            @input="nodeInput"
-            type="number"
-          ></el-input>
-          <span>天</span>
-        </div>
-      </span>
-    </el-tree>
+      </el-tree>
+    </div>
   </div>
 </template>
 
@@ -88,10 +90,7 @@ export default {
   },
   mounted() {
     this.$nextTick(() => {
-      setTimeout(() => {
-        this.containerHeight = this.calcTableHeight('treeContainer')
-        console.log(this.containerHeight, 'containerHeight')
-      }, 1000)
+      this.calcTableHeight('tr')
     })
   },
   watch: {
@@ -155,7 +154,7 @@ export default {
     // },
     initTree() {
       const loadingInstance = this.$loading({
-        target: '.app-main',
+        target: 'body',
         lock: true,
         text: '加载中...',
         fullscreen: true
@@ -235,11 +234,13 @@ export default {
     calcTableHeight(ref) {
       this.$nextTick(() => {
         // Element.getBoundingClientRect() 方法返回元素的大小及其相对于视口的位置。
-        const tableTopHeight = this.$refs[ref].getBoundingClientRect().y
+        const tableTopHeight = this.$refs.tr.getBoundingClientRect().y
         //  document.body.clientHeight 返回body元素内容的高度
         const containerHeight =
-          document.body.clientHeight - tableTopHeight - 60 + ''
-        return containerHeight
+          document.body.clientHeight - tableTopHeight - 100
+
+        this.containerHeight = containerHeight + 'px'
+        console.log('tableTopHeight', this.containerHeight)
       })
     }
   },
@@ -248,8 +249,10 @@ export default {
 </script>
 <style lang="scss" scoped>
 .left-container {
-  height: 500px;
-  overflow-y: scroll;
+  // height: 500px;
+  .tree-container {
+    overflow-y: scroll;
+  }
   .title {
     font-size: 18px;
     padding: 10px 0px 10px 20px;
@@ -270,7 +273,7 @@ export default {
         width: 40px;
       }
       /deep/ input {
-        width: 40px;
+        width: 70px;
         height: 20px;
         padding: 3px;
         text-align: center;

@@ -11,7 +11,7 @@
     :title="'新建定向发放规则'"
     :visible.sync="centerDialog"
     width="60%"
-    top="5vh"
+    top="20px"
     :before-close="dialogClose"
     :close-on-click-modal="false"
     custom-class="dialog-custom"
@@ -247,7 +247,6 @@ export default {
     async lookSendRule(params) {
       const { lookSendRule } = this.$http.Marketing
       const dayDeptIds = await lookSendRule(params).catch()
-      //
       const { payload: { couponDispensedDetailsList = [] } = {} } =
         dayDeptIds || {}
 
@@ -264,6 +263,7 @@ export default {
         }
       })
     },
+    /** 打包封装需要提交的数据 */
     bundleData(a, b) {
       const couponDispensedDetails = this.packageDeptIdAndDay(a, b)
 
@@ -329,14 +329,16 @@ export default {
       /** 回显 tree */
       this.dayDeptId = this.getIdDayKeyVal(dayDeptId)
     },
-    changeSubmit({ val, oldVal, deptFlatList, checkedNode }) {
+    async changeSubmit({ val, oldVal, deptFlatList, checkedNode }) {
       if (val && !oldVal) {
         if (!this.validateData()) {
           this.isSubmit = false
         } else {
           /** 打包好的需要掉接口的数据 */
           const result = this.bundleData(deptFlatList, checkedNode)
-          this.saveCouponRule(result)
+          await this.saveCouponRule(result)
+
+          this.isSubmit = false
         }
       }
     },
@@ -356,8 +358,6 @@ export default {
         this.$emit('emitDialogOperate', { close: true, refresh: true })
       }
       loadingInstance.close()
-
-      this.isSubmit = false
     },
     /** 优惠券 期 下拉框 */
     /**
@@ -388,6 +388,9 @@ export default {
 <style>
 .el-scrollbar__wrap {
   overflow-x: auto;
+}
+.dialog-custom {
+  margin-bottom: 0 !important;
 }
 </style>
 <style rel="stylesheet/scss" lang="scss" scoped>
@@ -439,7 +442,7 @@ export default {
     }
     .selected-group {
       .label {
-        margin-bottom: 20px;
+        // margin-bottom: 20px;
       }
       .my-tree {
         .select-all {
