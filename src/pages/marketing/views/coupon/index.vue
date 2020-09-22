@@ -1,5 +1,5 @@
 <!--
- * @Descripttion: 
+ * @Descripttion:
  * @version: 1.0.0
  * @Author: Shentong
  * @Date: 2020-08-15 14:35:51
@@ -113,12 +113,8 @@ export default {
   methods: {
     async getCouponList() {
       this.flags.loading = true
-
-      const couponList = await this.$http.Marketing.getCouponList(
-        this.tabQuery
-      ).catch((err) => {
-        console.log(err)
-      })
+      const { getCouponList } = this.$http.Marketing
+      const couponList = await getCouponList(this.tabQuery).catch()
 
       const { payload: { content = [] } = {}, totalElements = 0 } =
         couponList || {}
