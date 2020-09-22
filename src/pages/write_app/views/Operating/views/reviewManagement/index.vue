@@ -3,8 +3,8 @@
  * @version: 1.0.0
  * @Author: Shentong
  * @Date: 2020-09-03 15:14:25
- * @LastEditors: Shentong
- * @LastEditTime: 2020-09-04 21:00:21
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-09-22 16:40:36
 -->
 <template>
   <el-row type="flex" class="app-main reviewManagement">
@@ -29,121 +29,135 @@
             >
               <el-table-column
                 label="点评ID"
-                min-width="50"
-                prop="department_name"
+                min-width="80"
+                prop="task_comment_id"
                 align="center"
               ></el-table-column>
-              <el-table-column
-                label="用户信息"
-                min-width="180"
-                prop="teacher_realname"
-                align="center"
-              ></el-table-column>
-              <el-table-column
-                label="作品"
-                min-width="120"
-                prop="teacher_wechat_no"
-                align="center"
-              >
+              <el-table-column label="用户信息" min-width="180">
+                <template slot-scope="scope">
+                  <p v-if="scope.row.userInfo">
+                    {{ scope.row.userInfo.mobile || '-' }}-{{
+                      scope.row.userInfo.username
+                    }}
+                  </p>
+                  <p>{{ scope.row.period_name || '-' }}</p>
+                </template>
+              </el-table-column>
+              <el-table-column label="作品" min-width="80">
                 <template slot-scope="scope">
                   <div
                     class="img-box"
-                    v-for="(img, index) in scope.row.imgs"
+                    v-for="(img, index) in scope.row.taskImageList"
                     :key="index"
                   >
                     <el-image
-                      style="width: 100px; height: 100px"
+                      style="height: 50px;"
                       :src="img"
-                      :preview-src-list="scope.row.imgs"
+                      fit="contain"
+                      :preview-src-list="scope.row.taskImageList"
                     >
+                      <div slot="error" class="image-slot">
+                        <i class="el-icon-picture-outline"></i>
+                      </div>
                     </el-image>
                   </div>
                 </template>
               </el-table-column>
               <el-table-column
                 label="课程名称·上传时间"
-                min-width="120"
+                min-width="140"
                 prop="teacher_wechat_no"
-                align="center"
               >
-                <!-- <template slot-scope="scope">
+                <template slot-scope="scope">
                   <div
                     class="img-box"
-                    v-for="(img, index) in scope.row.imgs"
-                    :key="index"
+                    v-for="course in scope.row.courseTaskList"
+                    :key="course.id"
                   >
-                    <img :src="img" alt="" />
+                    <p>{{ course.course_name }}</p>
+                    <p>{{ course.ctime }}</p>
                   </div>
-                </template> -->
+                </template>
               </el-table-column>
               <el-table-column
                 label="课程类型"
                 min-width="110"
-                prop="courseType"
-                align="center"
+                prop="course_type"
               ></el-table-column>
               <el-table-column
                 label="课程难度"
                 min-width="100"
-                prop="level"
-                align="center"
+                prop="sup"
               ></el-table-column>
-              <el-table-column
-                label="点评老师"
-                min-width="120"
-                prop="end_course_day"
-                align="center"
-              ></el-table-column>
-              <el-table-column
-                label="点评内容"
-                min-width="120"
-                prop="teacher_wechat_no"
-                align="center"
-              >
+              <el-table-column label="点评老师" min-width="120">
+                <template slot-scope="scope">
+                  <div v-if="scope.row.teacherInfo">
+                    <p>{{ scope.row.teacherInfo.realname }}</p>
+                    <p>
+                      {{
+                        (scope.row.teacherInfo.departmentInfo &&
+                          scope.row.teacherInfo.departmentInfo.name) ||
+                          '-'
+                      }}
+                    </p>
+                  </div>
+                  <p v-else>-</p>
+                </template>
+              </el-table-column>
+              <el-table-column label="点评内容" min-width="120">
                 <template slot-scope="scope">
                   <div
+                    v-if="scope.row.commentInfo"
                     class="audio-box"
-                    v-for="(item, index) in scope.row.audio.split(',')"
-                    @click="audioClickHandle(scope.$index, index, item)"
-                    :key="index"
+                    @click="
+                      audioClickHandle(scope.$index, scope.row.commentInfo)
+                    "
                   >
                     <i
-                      v-if="currentAudioIndex == `${scope.$index}${index}`"
+                      v-if="
+                        currentAudioIndex ==
+                          `${scope.$index}${scope.row.commentInfo.id}`
+                      "
                       class="el-icon-video-pause"
                     ></i>
                     <i v-else class="el-icon-video-play"></i>
-                    <!-- :ref="`audioRef_${scope.$index}_${index}`" -->
                     <audio
-                      :src="item"
-                      :ref="`audioRef_${scope.$index}_${index}`"
+                      :src="scope.row.commentInfo.sound_comment"
+                      :ref="
+                        `audioRef_${scope.$index}_${scope.row.commentInfo.id}`
+                      "
                     ></audio>
                   </div>
+                  <p v-else>-</p>
                 </template>
               </el-table-column>
               <el-table-column
                 label="老师接收时间"
                 min-width="120"
-                prop="end_course_day"
-                align="center"
+                prop="ctime"
               ></el-table-column>
-              <el-table-column
-                label="点评状态"
-                min-width="120"
-                prop="status"
-                align="center"
-              >
+              <el-table-column label="点评状态" min-width="120" prop="status">
                 <template slot-scope="scope">
-                  <div class="comment-status">{{ scope.row.status }}</div>
+                  <p class="comment-status">
+                    {{ scope.row.is_comment === '1' ? '已点评' : '待点评' }}
+                  </p>
+                  <p>{{ scope.row.task_comment_time_text }}</p>
                 </template>
               </el-table-column>
-              <el-table-column
-                label="听点评状态"
-                min-width="120"
-                prop="status"
-                align="center"
-              >
+              <el-table-column label="听点评状态" min-width="120" prop="status">
                 <template slot-scope="scope">
-                  <div class="comment-status">{{ scope.row.status }}</div>
+                  <!-- 已点评 -->
+                  <div v-if="scope.row.is_comment === '1'">
+                    <div
+                      v-if="scope.row.flagRecord && scope.row.flagRecord.ctime"
+                    >
+                      <p>已听点评</p>
+                      <p>{{ scope.row.flagRecord.ctime || '-' }}</p>
+                    </div>
+                    <p v-else>未听点评</p>
+                  </div>
+                  <!-- 待点评 -->
+                  <p v-else>-</p>
                 </template>
               </el-table-column>
             </ele-table>
@@ -156,6 +170,7 @@
 
 <script>
 import _ from 'lodash'
+import { formatData } from '@/utils/index'
 import TableSearch from './components/tableSearch/index'
 import EleTable from '@/components/Table/EleTable'
 
@@ -180,32 +195,11 @@ export default {
         page: 1
       },
       searchEmit: {},
-      showSearch: true,
-      dataMocke: [
-        {
-          imgs: [
-            'http://s1.meixiu.mobi/android-images/2020-08-04/9826c5d2a4634f438cb0d9b4415f583f.jpg',
-            'http://s1.meixiu.mobi/android-images/2020-09-04/e1cd31339ac54e5d854f5c299496e308.jpg'
-          ],
-          audio: 'http://mp3.9ku.com/hot/2007/05-07/84566.mp3'
-        },
-        {
-          imgs: [
-            'http://s1.meixiu.mobi/android-images/2020-08-04/9826c5d2a4634f438cb0d9b4415f583f.jpg'
-          ],
-          audio: 'http://mp3.9ku.com/hot/2009/05-31/183203.mp3'
-        },
-        {
-          imgs: [
-            'http://s1.meixiu.mobi/android-images/2020-08-04/9826c5d2a4634f438cb0d9b4415f583f.jpg'
-          ],
-          audio: 'http://mp3.9ku.com/hot/2011/05-31/411603.mp3'
-        }
-      ]
+      showSearch: true
     }
   },
   async created() {
-    this.getTrialTeamList(this.tabQuery)
+    this.getStudentTaskDispatchLogPage(this.tabQuery)
   },
   computed: {},
   mounted() {
@@ -217,7 +211,7 @@ export default {
     searchChange(res) {
       console.log('emit-res', res)
       // this.initSearchData(res, true)
-      // this.getTrialTeamList(this.tabQuery)
+      // this.getStudentTaskDispatchLogPage(this.tabQuery)
     },
     initSearchData(res, isFromEmit = false) {
       // 如果是子组件emit而来的数据，则不需要清空
@@ -247,53 +241,52 @@ export default {
         page: 1
       })
     },
-    audioClickHandle($index, index, src) {
+    audioClickHandle($index, item) {
       // 当前音频ref
-      // const { audioRef = [] } = this.$refs
+      const currentRef = `audioRef_${$index}_${item.id}`
+      const currentAudio = this.$refs[currentRef]
 
-      // const typeOfAudio = Object.prototype.toString.call(audioRef)
-      // if (typeOfAudio === '[object Array]') {
-      //   audioRef.forEach((audio) => {
-      //     console.log(audio, 'audio')
-      //   })
-      // }
-
-      const currentRef = `audioRef_${$index}_${index}`
-      const currentAudio = this.$refs[currentRef][0]
       /** 顾虑掉其他ref，只包含音频 audio 组件 */
       const keys = Object.keys(this.$refs).filter(
         (item) => item.indexOf('audioRef') !== -1
       )
       keys.forEach((key) => {
         if (key !== currentRef) {
-          const otherAudio = this.$refs[key][0]
+          const otherAudio = this.$refs[key]
           if (otherAudio && otherAudio.load) otherAudio.load()
         }
       })
 
       if (currentAudio.paused) {
-        this.currentAudioIndex = `${$index}${index}`
+        this.currentAudioIndex = `${$index}${item.id}`
         currentAudio.play() // audio.play();// 播放
       } else {
         // audio.pause() // 暂停
         currentAudio.load() // 取消播放并回到0秒
         this.currentAudioIndex = null
       }
+      // 播放结束后，监听事件，改变按钮状态
+      currentAudio.addEventListener('ended', () => {
+        this.currentAudioIndex = null
+      })
     },
-    // 条件查询列表
-    async getTrialTeamList(params) {
+    /**
+     * 获取点评列表
+     */
+    async getStudentTaskDispatchLogPage(params) {
       this.flags.loading = true
       try {
         const {
           data: {
-            StudentTrialTeamStatisticsPage: { content = [], totalElements }
+            StudentTaskDispatchLogPage: { content = [], totalElements }
           }
-        } = await this.$http.writeApp.Team.getTrialTeamList(params)
+        } = await this.$http.writeApp.ReviewManage.getStudentTaskDispatchLogPage(
+          params
+        )
         // 总数、分页用
         this.totalElements = +totalElements || 0
         this.pakageListData(content)
         // this.tableData = content
-        this.tableData = this.dataMocke
       } catch (err) {
         console.log('err', err)
       } finally {
@@ -301,13 +294,37 @@ export default {
       }
     },
     // 组装table接口返回数据
-    pakageListData(list) {},
+    pakageListData(list) {
+      const data = list || []
+      data.forEach((item) => {
+        const taskImageList = [] // 作品列表
+        const { courseTaskList = [] } = item
+        const cousreList = courseTaskList.map((course) => {
+          course.ctime = course.ctime ? formatData(course.ctime, 'm') : '-'
+          course.course_name = course.course_name || '-'
+          taskImageList.push(course.task_image)
+          return course
+        })
+        item.courseTaskList = cousreList
+        item.taskImageList = taskImageList
+        item.ctime = item.ctime ? formatData(item.ctime, 'm') : '-'
+        item.task_comment_time_text = item.task_comment_time
+          ? formatData(item.task_comment_time, 'm')
+          : ''
+        // 听点评
+        if (item?.flagRecord?.ctime) {
+          item.flagRecord.ctime = formatData(item.flagRecord.ctime, 'm')
+        }
+        // 课程类型 1-体验课，2-系统课
+      })
+      this.tableData = list || []
+    },
     /**
      * @description 分页 回调事件
      */
     pageChange_handler(page) {
       this.tabQuery.page = page
-      this.getTrialTeamList(this.tabQuery)
+      this.getStudentTaskDispatchLogPage(this.tabQuery)
     },
     getElementToPageTop(el) {
       if (el.parentElement) {
@@ -331,6 +348,11 @@ export default {
 <style lang="scss" scoped>
 /deep/ .el-image-viewer__canvas > img {
   max-height: 80% !important;
+}
+/deep/ .el-image {
+  .el-icon-circle-close {
+    color: #fff;
+  }
 }
 .reviewManagement {
   &-content {
@@ -389,12 +411,6 @@ export default {
 }
 </style>
 <style lang="scss">
-// .mytable > .el-table tbody tr:hover > td:first-child {
-//   background-color: #2a75ed !important;
-//   .team-name-pointer {
-//     color: #ffffff;
-//   }
-// }
 .grid-content .scrollbar-wrapper {
   overflow-x: hidden;
 }

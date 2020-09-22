@@ -3,8 +3,8 @@
  * @version: 1.0.0
  * @Author: YangJiyong
  * @Date: 2020-08-19 20:26:32
- * @LastEditors: Shentong
- * @LastEditTime: 2020-09-03 15:13:38
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-09-22 15:20:24
  */
 import Vue from 'vue'
 import VueRouter from 'vue-router'
@@ -181,7 +181,7 @@ const routes = [
     path: '/reviewManagement',
     name: 'reviewManagement',
     meta: {
-      title: '渠道管理',
+      title: '点评管理',
       keepAlive: true
     },
     component: () =>

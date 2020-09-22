@@ -56,8 +56,8 @@ module.exports = {
   devServer: {
     proxy: {
       '/api': {
-        // target: 'https://test.meixiu.mobi',
-        target: 'https://dev.meixiu.mobi',
+        target: 'https://test.meixiu.mobi',
+        // target: 'https://dev.meixiu.mobi',
         changeOrigin: true,
         ws: true,
         secure: false,
@@ -67,8 +67,8 @@ module.exports = {
       },
       // 查询接口
       '/data': {
-        // target: 'https://test.meixiu.mobi',
-        target: 'https://dev.meixiu.mobi',
+        target: 'https://test.meixiu.mobi',
+        // target: 'https://dev.meixiu.mobi',
         changeOrigin: true,
         ws: true,
         secure: false,
@@ -80,9 +80,9 @@ module.exports = {
         // local - 本地开发环境
         // target: 'http://localhost:3000',
         // release - 测试环境
-        // target: 'http://docker.meixiu.mobi:43401',
+        target: 'http://docker.meixiu.mobi:43401',
         // dev - 开发环境
-        target: 'http://docker.meixiu.mobi:33401',
+        // target: 'http://docker.meixiu.mobi:33401',
         //  线上环境
         // target: 'http://docker.meixiu.mobi:13401',
         // product -预发布环境
@@ -95,8 +95,8 @@ module.exports = {
         }
       },
       '/getStuRankingList': {
-        // target: 'http://docker.meixiu.mobi:43401',
-        target: 'http://docker.meixiu.mobi:33401',
+        target: 'http://docker.meixiu.mobi:43401',
+        // target: 'http://docker.meixiu.mobi:33401',
         changeOrigin: true,
         ws: true,
         secure: false,
