@@ -4,8 +4,8 @@
  * @version:
  * @Author: shentong
  * @Date: 2020-03-13 14:38:28
- * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-09-16 16:10:53
+ * @LastEditors: liukun
+ * @LastEditTime: 2020-09-22 16:08:31
  */
 // import axios from '../axios'
 import axios from '../axiosConfig'
@@ -564,7 +564,7 @@ export default {
           sender {
             username
             user_num
-            id
+            u_id
           }
         }
       }`
@@ -1120,7 +1120,7 @@ export default {
             UserExtendsList(query: ${JSON.stringify(
               JSON.stringify(query)
             )},size:200){
-            id
+            u_id
             user_num
             username
            }

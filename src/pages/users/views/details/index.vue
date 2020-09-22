@@ -314,7 +314,7 @@
       :recommendHuman="
         stuInfor_add.sender
           ? stuInfor_add.sender
-          : { username: '', user_num: '', id: '' }
+          : { username: '', user_num: '', u_id: '' }
       "
     />
   </section>

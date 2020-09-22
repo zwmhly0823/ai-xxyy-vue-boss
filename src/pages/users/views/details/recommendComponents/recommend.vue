@@ -4,16 +4,16 @@
  * @Author: liukun
  * @Date: 2020-07-22 10:31:00
  * @LastEditors: liukun
- * @LastEditTime: 2020-09-15 23:02:21
+ * @LastEditTime: 2020-09-22 16:12:45
 -->
 <template>
   <el-dialog title="推荐信息" :visible.sync="recommendInfo" width="40%">
     <div class="recommend-dialog">
       <el-row type="flex" justify="start" align="middle" class="marginb10">
         <el-col :span="5">推荐人:</el-col>
-        <el-col :span="18" :offset="1"
+        <el-col :span="18" :offset="1" v-if="recommendHuman.u_id"
           ><el-link
-            :href="`/users/#/details/${recommendHuman.id}`"
+            :href="`/users/#/details/${recommendHuman.u_id}`"
             target="_blank"
             type="primary"
           >
@@ -24,6 +24,7 @@
             }}</el-link
           ></el-col
         >
+        <el-col :span="18" :offset="1" v-else> - </el-col>
       </el-row>
       <el-row type="flex" justify="start" align="middle" class="marginb10">
         <el-col :span="5">推荐了:</el-col>
@@ -35,7 +36,7 @@
         >
           <span v-for="(item, index) of recommendList" :key="index"
             ><el-link
-              :href="`/users/#/details/${item.id}`"
+              :href="`/users/#/details/${item.u_id}`"
               target="_blank"
               type="primary"
             >
