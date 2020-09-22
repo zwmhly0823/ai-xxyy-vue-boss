@@ -4,17 +4,17 @@
  * @Author: zhubaodong
  * @Date: 2020-03-13 16:53:27
  * @LastEditors: Shentong
- * @LastEditTime: 2020-09-21 22:08:35
+ * @LastEditTime: 2020-09-22 22:35:06
  -->
 <template>
-  <div class="left-container">
+  <div class="left-container" ref="treeContainer">
     <el-tree
       ref="tree"
       class="left-container-tree"
       :data="departmentList"
       show-checkbox
       default-expand-all
-      node-key="customId"
+      node-key="id"
       :current-node-key="0"
       :expand-on-click-node="false"
       highlight-current
@@ -33,6 +33,7 @@
             size="mini"
             v-model="data.day"
             @input="nodeInput"
+            type="number"
           ></el-input>
           <span>天</span>
         </div>
@@ -43,6 +44,7 @@
 
 <script>
 import { sortByKey } from '@/utils/boss'
+// import { deepClone } from '@/utils/index'
 export default {
   props: {
     dayDeptId: {
@@ -60,6 +62,10 @@ export default {
     submit: {
       type: Boolean,
       default: false
+    },
+    period: {
+      type: String,
+      default: ''
     }
   },
   data() {
@@ -72,14 +78,26 @@ export default {
           children: []
         }
       ],
-      deptFlatList: []
+      deptFlatList: [],
+      containerHeight: ''
     }
   },
   created() {
     this.initTree()
     // this.getDepartmentTree()
   },
+  mounted() {
+    this.$nextTick(() => {
+      setTimeout(() => {
+        this.containerHeight = this.calcTableHeight('treeContainer')
+        console.log(this.containerHeight, 'containerHeight')
+      }, 1000)
+    })
+  },
   watch: {
+    period(val, oldVal) {
+      console.log(val, oldVal)
+    },
     submit(val, oldVal) {
       const checkedNode = this.handleCheckChange()
       const { deptFlatList } = this
@@ -92,39 +110,44 @@ export default {
     },
     dayDeptId: {
       handler: function(deptIds) {
-        console.log('dayDeptId', deptIds)
-
-        const connectDeptIdDay = function(deptArr = [], deptIds = {}) {
-          console.log('deptIds', deptIds)
-          deptArr.forEach((item, index) => {
-            const { id, children } = item
-            item.day = this.dayDept[id] || ''
-            deptArr[index] = {
-              ...item
-            }
-            if (children && children.length) connectDeptIdDay(children)
-          })
-        }
-        connectDeptIdDay(this.deptFlatList, deptIds)
+        console.log('tree-deptIds', deptIds)
+        /** 回显 tree中id对应的天数day */
+        // this.deptTreeCl(this.deptFlatList)
+        // const department = deepClone(this.deptFlatList)
+        this.$nextTick(() => {
+          setTimeout(() => {
+            this.connectDeptIdDays(this.deptFlatList, deptIds)
+            this.$refs.tree.setCheckedKeys(Object.keys(deptIds))
+          }, 1000)
+        })
       },
       deep: true
     }
   },
   methods: {
-    /** 回显 tree中id对应的天数day */
-    showDayById(deptIds) {
-      this.connectDeptIdDay(this.deptFlatList, deptIds)
+    /** 把天数和对应的id关联到tree-node中 */
+    connectDeptIdDays(deptArr = [], deptIds = {}) {
+      deptArr.forEach((item, index) => {
+        const { id, children } = item
+        item.day = deptIds[id] || ''
+        item = {
+          ...item
+        }
+        if (children && children.length)
+          this.connectDeptIdDays(children, deptIds)
+      })
     },
-
+    closure(arg) {
+      // const deptIds = arg
+      // return function(deptIds) {}
+    },
     handleCheckChange() {
       const res = this.$refs.tree.getCheckedNodes()
       return res.filter((item) => {
         return item.children == null && item.pid !== '0'
       })
     },
-    nodeInput() {
-      console.log('3', this.deptFlatList)
-    },
+    nodeInput() {},
     // getDepartmentTree() {
     //   this.$http.Teacher.departmentTree().then((res) => {
     //     this.qbSize = res.payload
@@ -150,9 +173,10 @@ export default {
           this.departmentList[0].children = department
 
           /** 把天数和对应的id关联到tree-node中 */
-          this.connectDeptIdDay(department)
+          this.connectDeptIdDay(department, this.dayDept)
 
           this.deptFlatList = department
+          console.log('init=dept', this.deptFlatList)
         })
       } catch (error) {
         console.log(error)
@@ -160,16 +184,30 @@ export default {
         loadingInstance.close()
       }
     },
-    /** 把天数和对应的id关联到tree-node中 */
-    connectDeptIdDay(deptArr = [], deptIds = {}) {
-      console.log('deptIds', deptIds)
+    deptTreeCl(deptArr = []) {
       deptArr.forEach((item, index) => {
-        const { id, children } = item
-        item.day = this.dayDept[id] || ''
+        const { children } = item
+        item.day = ''
         deptArr[index] = {
           ...item
         }
-        if (children && children.length) this.connectDeptIdDay(children)
+        if (children && children.length) this.deptTreeCl(children)
+      })
+    },
+    clearTreeData() {
+      this.$refs.tree.setCheckedKeys([])
+      this.deptTreeCl(this.deptFlatList)
+    },
+    /** 把天数和对应的id关联到tree-node中 */
+    connectDeptIdDay(deptArr = [], deptIds = {}) {
+      deptArr.forEach((item, index) => {
+        const { id, children } = item
+        item.day = deptIds[id] || ''
+        deptArr[index] = {
+          ...item
+        }
+        if (children && children.length)
+          this.connectDeptIdDay(children, deptIds)
       })
     },
     // 点击节点
@@ -193,6 +231,16 @@ export default {
           this.recursive(item.children)
         }
       })
+    },
+    calcTableHeight(ref) {
+      this.$nextTick(() => {
+        // Element.getBoundingClientRect() 方法返回元素的大小及其相对于视口的位置。
+        const tableTopHeight = this.$refs[ref].getBoundingClientRect().y
+        //  document.body.clientHeight 返回body元素内容的高度
+        const containerHeight =
+          document.body.clientHeight - tableTopHeight - 60 + ''
+        return containerHeight
+      })
     }
   },
   components: {}
@@ -200,12 +248,13 @@ export default {
 </script>
 <style lang="scss" scoped>
 .left-container {
-  overflow: scroll;
+  height: 500px;
+  overflow-y: scroll;
   .title {
     font-size: 18px;
     padding: 10px 0px 10px 20px;
   }
-  padding: 10px 0px 130px;
+  padding: 10px 0px;
   overflow-x: auto;
   .custom-tree-node {
     width: 100%;

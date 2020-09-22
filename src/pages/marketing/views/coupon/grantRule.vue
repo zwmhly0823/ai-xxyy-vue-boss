@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-08-15 15:42:18
  * @LastEditors: Shentong
- * @LastEditTime: 2020-09-21 20:36:41
+ * @LastEditTime: 2020-09-22 22:31:27
 -->
 <template>
   <el-row type="flex" class="app-main grantRule">
@@ -51,25 +51,40 @@
                   <el-table-column
                     header-align="center"
                     align="center"
-                    prop="date"
-                    label="日期"
+                    prop="executeTime"
+                    label="执行时间"
                     width="180"
                   >
                   </el-table-column>
                   <el-table-column
                     header-align="center"
                     align="center"
-                    prop="name"
-                    label="姓名"
+                    prop="periodName"
+                    label="影响期"
                     width="180"
                   >
                   </el-table-column>
                   <el-table-column
                     header-align="center"
                     align="center"
-                    prop="address"
-                    label="地址"
+                    prop="excuteName"
+                    label="执行状态"
                   >
+                    <template slot-scope="scope">
+                      <div
+                        class="excuse-status"
+                        :class="{ active: scope.row.excuteName == '执行中' }"
+                      >
+                        {{ scope.row.excuteName }}
+                      </div>
+                    </template>
+                  </el-table-column>
+                  <el-table-column label="操作" align="center">
+                    <template slot-scope="scope">
+                      <div class="opt">
+                        <span @click="look_handle(scope.row)">查看</span>
+                      </div>
+                    </template>
                   </el-table-column>
                 </el-table>
               </div>
@@ -82,6 +97,7 @@
       :centerDialogVisible="centerDialogVisible"
       :ruleContent="ruleContent"
       :couponInfo="couponInfo"
+      :period="lookPeriod"
       @emitDialogOperate="dialogOperate"
       v-if="centerDialogVisible"
     ></new-rule>
@@ -89,21 +105,25 @@
 </template>
 <script>
 import NewRule from './newRule'
+import { formatData } from '@/utils/index'
 export default {
   components: {
     NewRule
   },
   data() {
     return {
-      centerDialogVisible: true,
+      centerDialogVisible: false,
       ruleContent: {},
       tableData: [],
-      couponInfo: {}
+      couponInfo: {},
+      lookPeriod: '',
+      couponId: ''
     }
   },
 
   async created() {
     const { couponId } = this.$route.params
+    this.couponId = couponId
 
     await this.getCouponInfo({ couponId })
   },
@@ -111,6 +131,7 @@ export default {
   mounted() {},
 
   methods: {
+    refreshData() {},
     async getCouponInfo(params) {
       const loadingInstance = this.$loading({
         target: '.app-main',
@@ -121,14 +142,29 @@ export default {
 
       const { getCouponInfo } = this.$http.Marketing
 
-      const couponDetail = await getCouponInfo(params).catch((err) => {
-        console.log(err)
-      })
+      const couponDetail = await getCouponInfo(params).catch()
 
       const { payload: { couponDetailInfo = [], couponInfo = {} } = {} } =
         couponDetail || {}
 
       this.couponInfo = couponInfo
+
+      /**
+       * @description 执行完毕，executeType = 0: 执行完毕，executeType = 1 执行中
+       */
+      couponDetailInfo.forEach((item) => {
+        const { executeTime = '' } = item
+        item.executeTime = executeTime ? formatData(executeTime) : ''
+        item.excuteName = '执行完毕'
+      })
+      for (var i = 0; i < couponDetailInfo.length; i++) {
+        const item = couponDetailInfo[i]
+        if (item.executeType === 1) {
+          item.excuteName = '执行中'
+          break
+        }
+      }
+
       this.tableData = couponDetailInfo
 
       loadingInstance.close()
@@ -138,12 +174,23 @@ export default {
      * @tip { msgType } 1: 文本；3: 图片
      */
     dialogOperate(args) {
-      const { close = true } = args
+      const { close = true, refresh = false } = args
       this.centerDialogVisible = !close
+      if (refresh) {
+        this.getCouponInfo({
+          couponId: this.couponId
+        })
+      }
     },
     /** 新建规则 */
     newRuleHandle() {
       this.centerDialogVisible = true
+    },
+    look_handle(row) {
+      const { id } = row
+      this.centerDialogVisible = true
+
+      this.lookPeriod = id
     },
     tableHeaderClassName() {
       return 'header-row'
@@ -211,6 +258,13 @@ export default {
         }
       }
     }
+  }
+  .opt {
+    color: #2a75ed;
+    cursor: pointer;
+  }
+  .excuse-status.active {
+    color: #67c23a;
   }
 }
 </style>

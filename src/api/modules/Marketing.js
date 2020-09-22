@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-08-07 16:39:06
  * @LastEditors: Shentong
- * @LastEditTime: 2020-09-21 21:10:29
+ * @LastEditTime: 2020-09-22 17:11:48
  */
 import axios from '../axiosConfig'
 
@@ -186,12 +186,19 @@ export default {
       `/api/s/v1/management/user/getManagementListByStatus?status=${status}`
     )
   },
-  // 新增、修改 优惠券发放规则，部门id和天数关联数据
+  // 新增、查看 优惠券发放规则，部门id和天数关联数据
   getDayTimeAndDeptId(params) {
     return axios.post(`/api/s/v1/couponDispensed/selectCouponDispensed`, params)
   },
   // 新增 优惠券发放规则， 保存按钮
   saveCouponRule(params) {
     return axios.post(`/api/s/v1/couponDispensed/createCouponDispensed`, params)
+  },
+  // 根据选择的 select期数，联动tree组件
+  lookSendRule(params) {
+    return axios.post(
+      `/api/s/v1/couponDispensed/selectCouponDispensedDetails`,
+      params
+    )
   }
 }

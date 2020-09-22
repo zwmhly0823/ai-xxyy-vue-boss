@@ -4,14 +4,14 @@
  * @Author: Shentong
  * @Date: 2020-06-30 19:21:08
  * @LastEditors: Shentong
- * @LastEditTime: 2020-09-21 21:48:42
+ * @LastEditTime: 2020-09-22 22:25:51
 -->
 <template>
   <el-dialog
     :title="'新建定向发放规则'"
     :visible.sync="centerDialog"
     width="60%"
-    top="10vh"
+    top="5vh"
     :before-close="dialogClose"
     :close-on-click-modal="false"
     custom-class="dialog-custom"
@@ -24,12 +24,14 @@
           </div>
           <div class="ctn">
             <div class="title">执行方式：</div>
-            <el-radio v-model="formData.exeType" label="0">仅选中期</el-radio>
+            <el-radio v-model="formData.exeType" label="0" @change="radioChange"
+              >仅选中期</el-radio
+            >
             <div class="tooltip-gap">
               <el-tooltip
                 class="item"
                 effect="dark"
-                content="Right Center 提示文字"
+                content="编辑保存后，对已领取未使用且未过期的优惠券生效"
                 placement="right"
               >
                 <i
@@ -42,8 +44,8 @@
               v-model="formData.exePeriod"
               size="mini"
               placeholder="请选择执行期"
-              :disabled="formData.exeType == '1'"
               multiple
+              :disabled="formData.exeType == '1'"
               @change="onlyExePeriodChange"
             >
               <el-option
@@ -57,14 +59,14 @@
           </div>
           <div class="ctn">
             <div class="title"></div>
-            <el-radio v-model="formData.exeType" label="1"
+            <el-radio v-model="formData.exeType" label="1" @change="radioChange"
               >仅选中期及后续所有期</el-radio
             >
             <div class="tooltip-gap">
               <el-tooltip
                 class="item"
                 effect="dark"
-                content="Right Center 提示文字"
+                content="编辑保存后，从选中期开始，已领取未使用及后续期领取的券均生效"
                 placement="right"
               >
                 <i
@@ -78,6 +80,7 @@
               size="mini"
               placeholder="请选择执行期"
               :disabled="formData.exeType == '0'"
+              @change="onlyExePeriodChange"
             >
               <el-option
                 v-for="(item, index) in exePeriodMore"
@@ -102,6 +105,7 @@
               :dayDept="dayAndDeptIdKeyVal"
               :submit="isSubmit"
               :dayDeptId="dayDeptId"
+              :period="lookPeriod"
               @changeSubmit="changeSubmit"
             ></dept-tree>
           </div>
@@ -132,6 +136,10 @@ export default {
     couponInfo: {
       type: Object,
       default: () => {}
+    },
+    period: {
+      type: String,
+      default: ''
     }
   },
   data() {
@@ -155,7 +163,9 @@ export default {
         couponDispensedDetails: [],
         couponDispensedRules: {}
       },
-      dayDeptId: {}
+      dayDeptId: {},
+      lookPeriod: '',
+      couponDetail: {}
     }
   },
   components: { DeptTree },
@@ -170,13 +180,16 @@ export default {
      */
     this.getPeriodByStatus(1)
     this.getPeriodByStatus(2)
-    // TODO: 查看的时候用
-    // this.getDayTimeAndDeptId({
-    //   couponDispensadRulesId: 17
-    // })
+
+    this.echoInit()
   },
   mounted() {},
   watch: {
+    lookPeriod(val, oldVal) {
+      this.echoTree({
+        couponDispensadRulesId: val
+      })
+    },
     'formData.exeType': {
       handler: function(newVal, old) {
         if (old === '0') {
@@ -188,14 +201,39 @@ export default {
     }
   },
   methods: {
+    radioChange(res) {
+      this.dayDeptId = {}
+    },
+    // 回显初始化
+    echoInit() {
+      this.lookPeriod = this.period
+      this.couponDetail = this.couponInfo
+    },
+    /** 点击查看按钮，通过期数period回显树结构和select框 */
+    async echoTree(params) {
+      const { getDayTimeAndDeptId } = this.$http.Marketing
+      const echoData = await getDayTimeAndDeptId(params).catch()
+      const {
+        payload: { couponDispensedDetails = [], couponDispensedRules = {} } = {}
+      } = echoData || {}
+
+      const { executeType = '0', period = '' } = couponDispensedRules
+      Object.assign(this.formData, {
+        exeType: String(executeType)
+      })
+
+      if (executeType === 1) {
+        this.formData.periodMore = Number(period)
+      } else {
+        this.formData.exePeriod = period.split(',').map(Number)
+      }
+
+      this.couponDetail = couponDispensedRules
+      /** 回显 tree */
+      this.dayDeptId = this.getIdDayKeyVal(couponDispensedDetails)
+    },
     validateData() {
       const { exeType, exePeriod, periodMore } = this.formData
-      console.log(
-        'exeType,exePeriod,periodMore',
-        exeType,
-        exePeriod,
-        periodMore
-      )
       if (exeType === '0' && !exePeriod.length) {
         this.$message.warning('请选择执行期')
         return 0
@@ -206,20 +244,19 @@ export default {
       return 1
     },
     /** 新增、修改 优惠券发放规则，部门id和天数关联数据 TODO: */
-    async getDayTimeAndDeptId(params) {
-      const { getDayTimeAndDeptId } = this.$http.Marketing
-      const dayDeptIds = await getDayTimeAndDeptId(params).catch()
+    async lookSendRule(params) {
+      const { lookSendRule } = this.$http.Marketing
+      const dayDeptIds = await lookSendRule(params).catch()
       //
-      const { payload: { couponDispensedDetails = [] } = {} } = dayDeptIds || {}
+      const { payload: { couponDispensedDetailsList = [] } = {} } =
+        dayDeptIds || {}
 
-      return couponDispensedDetails
+      return couponDispensedDetailsList
     },
-    /** img-upload */
     dialogClose() {
       this.$emit('emitDialogOperate', { close: true })
     },
     packageDeptIdAndDay(allTree, checkedNode) {
-      // console.log('----', allTree, checkedNode)
       return checkedNode.map((item) => {
         return {
           day: item.day,
@@ -232,13 +269,15 @@ export default {
 
       const {
         formData: { exeType, exePeriod, periodMore },
-        couponInfo: { id: couponId, name: couponName }
+        couponDetail: { id: couponId, name: couponName }
       } = this
 
       const periodAndName = {}
       const couponDispensedRules = {}
       const periodName = []
-      const periodList = exeType === '0' ? exePeriod : periodMore // periodMore 是 string
+      // if
+      const periodList =
+        exeType === '0' ? exePeriod : String(periodMore).split(',') // periodMore 是 string
       const originPeriodArr =
         exeType === '0' ? 'onlyExePeriod' : 'exePeriodMore'
 
@@ -265,48 +304,60 @@ export default {
     },
     /** 新增内容底部按钮操作 */
     dialogOperate(type) {
-      this.isSubmit = true
-      // this.$emit('emitDialogOperate', { close: true })
+      if (type === 'submit') {
+        this.isSubmit = true
+      } else {
+        this.$emit('emitDialogOperate', { close: true })
+      }
     },
-    // 仅选中期被选中change事件
-    async onlyExePeriodChange(res) {
-      console.log('onlyExePeriodChange-res', res)
-      const dayDeptId = await this.getDayTimeAndDeptId({
-        couponDispensadRulesId: res.join()
-      })
+    /** 通过uid、day 返回组合的 id:day 键值对 */
+    getIdDayKeyVal(arr = []) {
       const deptAndDay = {}
-      dayDeptId.forEach((item) => {
+      arr.forEach((item) => {
         const { day, uid } = item
         deptAndDay[uid] = day
       })
+      return deptAndDay
+    },
+    // 仅选中期被选中change事件
+    async onlyExePeriodChange(res) {
+      const { couponId } = this.$route.params
+      const dayDeptId = await this.lookSendRule({
+        couponId,
+        period: Array.isArray(res) ? res.join() : res
+      })
       /** 回显 tree */
-      this.dayDeptId = deptAndDay
+      this.dayDeptId = this.getIdDayKeyVal(dayDeptId)
     },
     changeSubmit({ val, oldVal, deptFlatList, checkedNode }) {
       if (val && !oldVal) {
         if (!this.validateData()) {
           this.isSubmit = false
         } else {
-          console.log('保存')
           /** 打包好的需要掉接口的数据 */
           const result = this.bundleData(deptFlatList, checkedNode)
-          console.log(result, 'result')
           this.saveCouponRule(result)
-
-          setTimeout(() => {
-            this.isSubmit = false
-          }, 3000)
         }
       }
     },
     /** 新增 优惠券发放规则， 保存按钮 */
     async saveCouponRule(params) {
+      const loadingInstance = this.$loading({
+        target: '.app-main',
+        lock: true,
+        text: '正在保存...',
+        fullscreen: true
+      })
       const { saveCouponRule } = this.$http.Marketing
 
       const save = await saveCouponRule(params).catch()
       if (save && save.code === 0) {
         this.$message.success('保存成功')
+        this.$emit('emitDialogOperate', { close: true, refresh: true })
       }
+      loadingInstance.close()
+
+      this.isSubmit = false
     },
     /** 优惠券 期 下拉框 */
     /**
@@ -340,6 +391,9 @@ export default {
 }
 </style>
 <style rel="stylesheet/scss" lang="scss" scoped>
+/deep/ .el-dialog__body {
+  padding: 0 !important;
+}
 .dialog-center {
   .rule-content {
     padding: 15px;
