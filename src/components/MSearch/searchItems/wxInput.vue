@@ -230,13 +230,15 @@ export default {
   methods: {
     // 输入微信号
     async weixinSearch(queryString, cb) {
-      const reg = /^\w+$/
-      if (!+this.onlyWeixin) {
-        if (!reg.test(queryString)) {
-          this.weixinInp = ''
-          return
-        }
-      }
+      console.log(this.onlyWeixin)
+
+      // const reg = /^\w+$/
+      // if (!+this.onlyWeixin) {
+      //   if (!reg.test(queryString)) {
+      //     this.weixinInp = ''
+      //     return
+      //   }
+      // }
       // 输入内容查找到的关联信息（下拉框）
       const list = await this.weixinCreateFilter(queryString)
       // console.log('*****list******', list)
