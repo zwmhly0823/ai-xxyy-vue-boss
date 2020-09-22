@@ -3,26 +3,25 @@
  * @version: 1.0.0
  * @Author: Shentong
  * @Date: 2020-04-25 14:35:19
- * @LastEditors: Shentong
- * @LastEditTime: 2020-09-04 20:55:08
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-09-22 20:51:34
  -->
 <template>
-  <!-- <el-scrollbar class="scroll-search-container"> -->
   <div class="table-searcher-container">
     <div class="comp-cell">
       <department
         style="width:130px;"
         @result="getDepartment"
-        :name="'department'"
+        :name="'teacher_id'"
         :placeholder="'区部'"
-        :onlyDept="1"
       />
     </div>
     <div class="comp-cell">
       <group-sell
         style="width:130px;"
         @result="selectSellTeacher"
-        :name="'groupSell'"
+        :name="'teacher_id'"
+        :teacherscope="teacherScope"
         :tip="'老师'"
       />
     </div>
@@ -31,7 +30,7 @@
       <el-select
         class="item-style"
         size="mini"
-        v-model="formInfo.cmtStatus"
+        v-model="formInfo.is_comment"
         clearable
         placeholder="点评状态"
         @change="commentStatusChange"
@@ -46,11 +45,11 @@
       </el-select>
     </div>
 
-    <div class="comp-cell" v-if="regType">
+    <div class="comp-cell">
       <el-select
         class="item-style"
         size="mini"
-        v-model="formInfo.courseType"
+        v-model="formInfo.course_type"
         clearable
         placeholder="课程类型"
         @change="courseTypeChange"
@@ -68,24 +67,15 @@
       <m-search
         class="search-box"
         @search="handleSearch"
-        phone="uid"
+        phone="student_id"
         onlyPhone="1"
-        phoneTip="手机号/微信昵称 查询"
+        phoneTip="用户手机号"
       />
-      <!-- <el-input
-        placeholder="用户手机号"
-        v-model="formInfo.phone"
-        clearable
-        size="mini"
-        class="base-input"
-        @input="handleDebounce"
-      >
-      </el-input> -->
     </div>
     <div class="comp-cell">
       <el-date-picker
         size="small"
-        v-model="formInfo.receiveTime"
+        v-model="ctime"
         type="datetimerange"
         value-format="timestamp"
         range-separator="至"
@@ -97,22 +87,21 @@
       </el-date-picker>
     </div>
   </div>
-  <!-- </el-scrollbar> -->
 </template>
 <script>
-import _ from 'lodash'
+// import _ from 'lodash'
 // import SearchTeamName from '@/components/MSearch/searchItems/searchTeamName'
 import MSearch from '@/components/MSearch/index.vue'
 import Department from '@/components/MSearch/searchItems/department'
 import GroupSell from '@/components/MSearch/searchItems/groupSell'
 // import StageSupLevels from '@/components/MSearch/searchItems/stageSupLevels.vue'
 export default {
-  props: {
-    regType: {
-      type: Number,
-      default: 0
-    }
-  },
+  // props: {
+  //   regType: {
+  //     type: Number,
+  //     default: 0
+  //   }
+  // },
   data() {
     return {
       teamName: '',
@@ -123,36 +112,35 @@ export default {
       },
       commentStatus: [
         {
-          label: '已点评',
-          value: '1'
+          label: '待点评',
+          value: '0'
         },
         {
-          label: '未点评',
-          value: '2'
+          label: '已点评',
+          value: '1'
         }
       ],
       categoryTypeList: [
         {
           label: '体验课',
-          value: '0'
+          value: '1'
         },
         {
           label: '系统课',
-          value: '1'
+          value: '2'
         }
       ],
       formInfo: {
-        cmtStatus: '',
-        courseType: '',
-        phone: '',
-        receiveTime: ''
+        is_comment: '',
+        course_type: '',
+        student_id: '',
+        teacher_id: '',
+        ctime: {}
       },
-      emitInfo: {}
-    }
-  },
-  computed: {
-    handleDebounce() {
-      return _.debounce(this.inputHandler, 500)
+      ctime: [],
+      emitInfo: {},
+      // 通过区部获取到的老师数组
+      teacherScope: null
     }
   },
   components: {
@@ -164,53 +152,50 @@ export default {
     // 用户手机号
     handleSearch(res) {
       const [term = {}] = res || []
-      const { term: { uid = '' } = {} } = term
-
-      this.manageChange(uid, 'uid')
+      // eslint-disable-next-line camelcase
+      const { term: { student_id = '' } = {} } = term
+      this.manageChange(student_id, 'student_id')
     },
-    sellCycleTimeChange(tiemArr = []) {
-      const [startTime = '', endTime = ''] = tiemArr
-      console.log(startTime, endTime)
-      this.manageChange(this.formInfo.receiveTime, 'receiveTime')
+    sellCycleTimeChange(timeArr = []) {
+      if (!timeArr || timeArr.length === 0) {
+        this.formInfo.ctime = {}
+      } else {
+        const [startTime = '', endTime = ''] = timeArr
+        this.formInfo.ctime = {
+          gte: startTime + '',
+          lte: endTime + ''
+        }
+      }
+      this.manageChange(this.formInfo.ctime, 'ctime')
     },
     // 老师
-    selectSellTeacher(teachers) {
-      const { groupSell = '' } = teachers || {}
-      this.manageChange(groupSell, 'teacherId')
+    selectSellTeacher(res) {
+      console.log(res)
+      this.manageChange(res.teacher_id, 'teacher_id')
     },
     // 销售组
-    getDepartment(depts) {
-      // console.log(depts, 'depts')
-      const { department = [] } = depts || {}
-      this.manageChange(department, 'department')
-    },
-    // 难度
-    supCallBack(res) {
-      console.log(res, 'sup')
-      let { sup = [] } = res || {}
-
-      if (sup.length) {
-        sup = _.cloneDeep(sup)
-        let strSup = sup.map((item) => `S${item}`)
-        strSup = strSup.join().split(',')
-        this.manageChange(strSup, 'sup')
-      } else this.manageChange(sup, 'sup')
-    },
-    inputHandler(data) {
-      console.log(this.teamName)
-      this.manageChange(this.teamName, 'teamName')
+    getDepartment(res) {
+      console.log(res, 'getDepartment')
+      this.teacherScope =
+        (res && (res.teacher_id.length > 0 ? res.teacher_id : null)) || null
+      this.manageChange(res.teacher_id || [], 'teacher_id')
     },
     // 点评状态
     commentStatusChange(res) {
-      this.manageChange(this.formInfo.cmtStatus, 'cmtStatus')
+      this.manageChange(this.formInfo.is_comment, 'is_comment')
     },
     // 课程类型
     courseTypeChange(res) {
       console.log(res, 'res')
-      this.manageChange(this.formInfo.courseType, 'courseType')
+      this.manageChange(this.formInfo.course_type, 'course_type')
     },
     manageChange(res, key) {
-      this.emitInfo[key] = res
+      console.log(res, key)
+      if (!res || Object.keys(res).length === 0) {
+        delete this.emitInfo[key]
+      } else {
+        this.emitInfo[key] = res
+      }
       this.$emit('change', this.emitInfo)
     }
   }

@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-09-03 15:14:25
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-09-22 17:08:46
+ * @LastEditTime: 2020-09-22 20:32:51
 -->
 <template>
   <el-row type="flex" class="app-main reviewManagement">
@@ -192,6 +192,7 @@ export default {
       totalElements: 0,
       tableData: [],
       tabQuery: {
+        query: {},
         size: 10,
         page: 1
       },
@@ -211,8 +212,8 @@ export default {
     // 组件emit
     searchChange(res) {
       console.log('emit-res', res)
-      // this.initSearchData(res, true)
-      // this.getStudentTaskDispatchLogPage(this.tabQuery)
+      this.tabQuery.page = 1
+      this.initSearchData(res, true)
     },
     initSearchData(res, isFromEmit = false) {
       // 如果是子组件emit而来的数据，则不需要清空
@@ -226,21 +227,21 @@ export default {
       this.searchEmit = _.cloneDeep(res)
 
       const {
-        term = [],
-        department = [],
-        teacherId = '',
-        sup = [],
-        teamName = ''
+        teacher_id: teacherId,
+        student_id: studentId,
+        course_type: courseType,
+        is_comment: isComment,
+        ctime
       } = this.searchEmit
 
-      Object.assign(this.tabQuery, {
-        term,
-        teamName,
-        sup,
-        department,
-        teacherId,
-        page: 1
+      Object.assign(this.tabQuery.query, {
+        teacher_id: teacherId,
+        student_id: studentId,
+        course_type: courseType,
+        is_comment: isComment,
+        ctime
       })
+      this.getStudentTaskDispatchLogPage(this.tabQuery)
     },
     audioClickHandle($index, item) {
       // 当前音频ref
