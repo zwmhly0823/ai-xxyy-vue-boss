@@ -4,19 +4,16 @@
  * @Author: liukun
  * @Date: 2020-07-20 16:37:49
  * @LastEditors: liukun
- * @LastEditTime: 2020-09-01 12:32:18
+ * @LastEditTime: 2020-09-21 22:09:26
 --><template>
   <el-dialog title="新建跟进记录" :visible.sync="dialogFormVisible" width="50%">
     <el-form
       :model="form"
       ref="form"
       :rules="rules"
-      label-width="80px"
+      label-width="120px"
       label-position="right"
     >
-      <el-form-item label="所属部门" prop="roleType">
-        <el-input v-model="form.roleType" readonly disabled></el-input>
-      </el-form-item>
       <div class="justify_lk">
         <el-form-item label="沟通渠道" prop="contactType">
           <el-select v-model="form.contactType" placeholder="请选择沟通渠道">
@@ -37,16 +34,18 @@
           <el-radio
             :label="value"
             v-for="(value, name) in {
-              首通: 'FIRST',
-              CF01: 'CF01',
-              CF04: 'CF04',
-              CF08: 'CF08',
-              老生覆盖: 'EARLY_STUDENT',
-              日常回访: 'DAILY_CONTACT'
+              退费挽单: 'DETAIN'
             }"
             :key="name"
             >{{ name }}</el-radio
           >
+        </el-radio-group>
+      </el-form-item>
+      <el-form-item label="升舱意向标签" prop="labelId">
+        <el-radio-group v-model="form.labelId">
+          <el-radio v-for="item of tags_ft" :key="item.id" :label="item.id">{{
+            item.name
+          }}</el-radio>
         </el-radio-group>
       </el-form-item>
 
@@ -65,30 +64,32 @@
 export default {
   name: 'addNew',
   props: {
-    changeSubject: {
-      type: Number,
+    userId: {
+      // 抽屉内容接口值
+      type: String,
       required: true
     }
   },
   data() {
     return {
       dialogFormVisible: false,
+      tags_ft: [],
       // form
       form: {
         uid: 0,
         teacherId: 0,
-
-        roleType: '',
+        systemType: 'BOSS',
+        pointType: '',
         contactType: '',
         finishType: '',
-        pointType: '',
+        labelId: '',
         content: ''
       },
       rules: {
-        roleType: [{ required: true, message: '必填', trigger: 'change' }],
         contactType: [{ required: true, message: '必选', trigger: 'change' }],
         finishType: [{ required: true, message: '必选', trigger: 'change' }],
         pointType: [{ required: true, message: '必选', trigger: 'change' }],
+        labelId: [{ required: true, message: '必选', trigger: 'change' }],
         content: [
           { required: true, message: '请键入内容', trigger: 'blur' },
           { max: 255, message: '最多255个字符', trigger: 'blur' }
@@ -96,13 +97,42 @@ export default {
       }
     }
   },
+  watch: {
+    userId: {
+      immediate: false,
+      deep: true,
+      handler(newValue, oldValue) {
+        if (newValue !== oldValue) this.form.uid = newValue
+      }
+    }
+  },
   methods: {
+    async getTags() {
+      const {
+        code,
+        payload
+      } = await this.$http.Approval.getTagsFangTao().catch((err) => {
+        console.error(err)
+        this.$message.error('意向标签获取失败_网络')
+      })
+      if (!code) {
+        this.tags_ft = payload
+      } else {
+        this.$message.error('意向标签获取失败_接口')
+      }
+    },
     submitForm() {
       this.$refs.form.validate(async (valid) => {
         if (valid) {
+          console.info(
+            6666,
+            Object.assign(this.form, {
+              subject: this.$store.state.subjects.subject
+            })
+          )
           const { code } = await this.$http.User.submitForm(
             Object.assign(this.form, {
-              subject: this.changeSubject ? 'WRITE_APP' : 'ART_APP'
+              subject: this.$store.state.subjects.subject
             })
           ).catch((err) => {
             console.error(err)
@@ -111,10 +141,6 @@ export default {
           if (code === 0) {
             this.$message.success('记录提交成功')
             this.dialogFormVisible = false
-            this.$refs.form.resetFields()
-            setTimeout(() => {
-              this.$root.$emit('reload', true)
-            }, 1500) // 不延时拉不到新数据
           }
         } else {
           this.$message.warning('请检查表单规则')
@@ -126,7 +152,11 @@ export default {
       this.dialogFormVisible = false
     }
   },
-  mounted() {}
+  mounted() {
+    this.getTags()
+    const storage1 = JSON.parse(localStorage.getItem('staff'))
+    this.form.teacherId = storage1.id
+  }
 }
 </script>
 

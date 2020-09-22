@@ -4,7 +4,7 @@
  * @Author: Lukun
  * @Date: 2020-04-27 17:47:58
  * @LastEditors: liukun
- * @LastEditTime: 2020-09-11 20:37:17
+ * @LastEditTime: 2020-09-21 12:01:32
  -->
 <template>
   <div class="container">
@@ -156,17 +156,7 @@
         </template>
       </el-table-column>
     </el-table>
-    <!-- 赠品审批抽屉 -->
-    <ApprovalGiftDetail
-      :drawerGiftDeatail="drawerGiftDeatail"
-      :drawerGift="drawerGift"
-      :staffId="staffId"
-      :staffName="staffName"
-      :params_pending="params"
-      @refuse-dialog="refuseDialog"
-      @close-gift="handleClose"
-      @check-pending="checkPending"
-    />
+
     <!-- 退款补发货抽屉 -->
     <el-drawer
       :visible.sync="drawerApproval"
@@ -422,22 +412,6 @@
            `
             }}</el-col>
           </el-row>
-          <!-- <el-row>
-            <el-col :span="5">退款月数:</el-col>
-            <el-col :span="18" :offset="1">{{
-              `${Math.floor(drawerApprovalDeatail.periodRefund / 4)}月`
-            }}</el-col>
-          </el-row> -->
-          <!-- <el-row>
-            <el-col :span="5">剩余可上课周期:</el-col>
-            <el-col :span="18" :offset="1">{{
-              `
-           ${Math.floor(
-             drawerApprovalDeatail.periodResidue / 4
-           )}月${drawerApprovalDeatail.periodResidue % 4}周
-           `
-            }}</el-col>
-          </el-row> -->
           <el-row :class="$style.align_items">
             <el-col :span="5">退款金额:</el-col>
             <el-col :span="4" :offset="1">{{
@@ -548,6 +522,18 @@
         <div v-if="currentType !== 'UNCREDITED'">
           <el-row class="BOTTOM" v-if="isStaffId">
             <el-col :span="20" :offset="1">
+              <a
+                :href="'/users/#/details/' + drawerApprovalDeatail.userId"
+                target="_blank"
+                style="margin-right:5px"
+              >
+                <el-button type="button">查看挽单记录</el-button>
+              </a>
+              <el-button
+                type="button"
+                @click="$refs.wandan.dialogFormVisible = true"
+                >新建挽单记录</el-button
+              >
               <el-button
                 type="button"
                 @click="dialogFormVisible_checkbox = true"
@@ -583,6 +569,18 @@
         </div>
       </div>
     </el-drawer>
+    <!-- 诶,讲真 我有个疑问 随材打包抽屉在哪？ -->
+    <!-- 赠品审批抽屉 -->
+    <ApprovalGiftDetail
+      :drawerGiftDeatail="drawerGiftDeatail"
+      :drawerGift="drawerGift"
+      :staffId="staffId"
+      :staffName="staffName"
+      :params_pending="params"
+      @refuse-dialog="refuseDialog"
+      @close-gift="handleClose"
+      @check-pending="checkPending"
+    />
     <!-- 调味品抽屉 -->
     <adjust-drawer
       :is3d="1"
@@ -656,6 +654,8 @@
         <el-button type="primary" @click="ensureBackend">确 定</el-button>
       </span>
     </el-dialog>
+    <!-- 挽单跟进 -->
+    <addNew :userId="userId_wandan" ref="wandan" />
     <!-- 页码组件 -->
     <m-pagination
       class="bottom0"
@@ -754,6 +754,8 @@ import { getStaffInfo } from '../common'
 import courseTeam from './courseTeam'
 import VersionBox from '../../../../components/MSearch/searchItems/moreVersionBox'
 import ApprovalGiftDetail from './approvalGiftDetail'
+import addNew from './add_new'
+
 export default {
   computed: {
     positionIdlk() {
@@ -777,7 +779,8 @@ export default {
     SearchPart,
     adjustDrawer,
     courseTeam,
-    ApprovalGiftDetail
+    ApprovalGiftDetail,
+    addNew
   },
   data() {
     var validateName = (rule, value, callback) => {
@@ -803,6 +806,7 @@ export default {
         cash: '',
         explain: ''
       },
+      userId_wandan: '', // 挽救单子
       rules_checkbox: {
         reason: [{ required: true, message: '请填写原因', trigger: 'blur' }],
         isRecover: [{ required: true, message: '是否恢复', trigger: 'change' }]
@@ -853,7 +857,6 @@ export default {
 
     this.resetParams = staff
     this.staffId = staff.staffId
-    this.staffName = staff.staffName
     this.isStaffId = staff.isStaffId
     this.staffName = staff.staffName
     // Parameters:
@@ -971,9 +974,9 @@ export default {
           if (this.drawerApprovalDeatail.addressId) {
             delete params.isRecover
           }
-          this.$http.Backend.isAggrePass(params)
-            .then((res) => {
-              console.log(res)
+          this.$http.Backend.isAggrePass(params).then((res) => {
+            console.log(res)
+            if (!res.code) {
               this.checkPending(this.params)
               this.dialogFormVisible_checkbox = false // 关闭弹窗
               this.drawerApproval = false // 关闭抽屉
@@ -982,12 +985,8 @@ export default {
                 message: '拒绝审核通过',
                 type: 'success'
               })
-
-              // this.$emit('result', 'third')
-            })
-            .catch((err) => {
-              this.$message(err)
-            })
+            }
+          })
         } else {
           return false
         }
@@ -1051,21 +1050,17 @@ export default {
             staffId: this.staffId,
             staffName: this.staffName
           }
-          this.$http.Backend.isAggrePass(params)
-            .then((res) => {
-              this.checkPending(this.params)
-              this.drawerApproval = false
-              this.handleCloseDraw()
-              this.$message({
-                message: '拒绝审核通过',
-                type: 'success'
-              })
+          this.$http.Backend.isAggrePass(params).then((res) => {
+            this.checkPending(this.params)
+            this.drawerApproval = false
+            this.handleCloseDraw()
+            this.$message({
+              message: '拒绝审核通过',
+              type: 'success'
+            })
 
-              this.$emit('result', 'third')
-            })
-            .catch((err) => {
-              this.$message(err)
-            })
+            this.$emit('result', 'third')
+          })
         })
         .catch((err) => {
           console.log(err)
@@ -1107,7 +1102,7 @@ export default {
           }
           this.$http.Backend.isAggrePass(params)
             .then((res) => {
-              if (res && res.payload) {
+              if (!res.code) {
                 this.checkPending(this.params)
                 this.drawerApproval = false
                 this.$root.$emit('lk', '')
@@ -1115,7 +1110,6 @@ export default {
                   message: '同意审核通过',
                   type: 'success'
                 })
-                // this.$emit('result', 'third')
               } else {
                 this.$root.$emit('lk', '')
               }
@@ -1198,6 +1192,7 @@ export default {
             // 对传过来的对象做处理
             console.log(this.drawerApprovalDeatail)
             this.drawerApproval = true
+            this.userId_wandan = res.payload.userId // 挽救单子表单提交用到
           }
         })
       }
@@ -1492,7 +1487,10 @@ export default {
             data: { TeacherDepartmentRelationList }
           } = await this.$http.Backend.changeDepart(idArr)
           console.info('lklk-待审核', idArr, TeacherDepartmentRelationList)
-          if (TeacherDepartmentRelationList.length) {
+          if (
+            TeacherDepartmentRelationList &&
+            TeacherDepartmentRelationList.length
+          ) {
             TeacherDepartmentRelationList.forEach((item, index) => {
               zancunArr.forEach((itemx, indexX) => {
                 if (item.teacher_id === itemx.applyId) {

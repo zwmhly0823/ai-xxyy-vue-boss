@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-07-20 16:37:31
  * @LastEditors: liukun
- * @LastEditTime: 2020-09-01 12:14:53
+ * @LastEditTime: 2020-09-21 20:29:59
 -->
 <template>
   <div class="track-container">
@@ -30,18 +30,27 @@
       <section class="flower_item" v-for="item of tableData" :key="item.ctime">
         <div class="upset_24col_space_between padding-right15">
           <div>
-            <el-tag size="small" v-if="item.teacherInfo.duty_id === '1'"
+            <el-tag
+              size="small"
+              v-if="item.teacherInfo && item.teacherInfo.duty_id === '1'"
               >CC</el-tag
             >
             <el-tag
               size="small"
               type="danger"
-              v-else-if="item.teacherInfo.duty_id === '2'"
+              v-else-if="item.teacherInfo && item.teacherInfo.duty_id === '2'"
               >CT</el-tag
             >
-            <span style="margin-left:10px">{{
-              item.teacherInfo.realname + item.teacherInfo.departmentInfo.name
-            }}</span>
+            <span style="margin-left:10px"
+              >{{
+                (item.teacherInfo && item.teacherInfo.realname) ||
+                  (item.staffInfo && item.staffInfo.real_name)
+              }}{{
+                item.teacherInfo &&
+                  item.teacherInfo.departmentInfo &&
+                  item.teacherInfo.departmentInfo.name
+              }}</span
+            >
           </div>
           <div>
             <svg
@@ -75,6 +84,9 @@
         </div>
         <div class="upset_24col_space_between padding-right15 margin22">
           <span class="color-gray">{{ item.point_type }}</span>
+          <el-tag v-if="item.label_text" type="warning" size="mini">{{
+            item.label_text
+          }}</el-tag>
           <span class="color-gray">{{ item.ctime }}</span>
         </div>
         <div class="upset_24col_space_between padding-right15">
@@ -83,18 +95,16 @@
       </section>
     </div>
     <div v-else class="no-data">暂无数据</div>
-    <addNew ref="track_add" :changeSubject="changeSubject" />
     <trackMore ref="track_more" :changeSubject="changeSubject" />
   </div>
 </template>
 
 <script>
 import { formatDate } from '@/utils/mini_tool_lk'
-import addNew from './add_new'
 import trackMore from './track_more'
 export default {
   name: 'index',
-  components: { addNew, trackMore },
+  components: { trackMore },
   data() {
     return {
       tableData: [],
@@ -132,7 +142,8 @@ export default {
             '2': 'CF04',
             '3': 'CF08',
             '4': '老生覆盖',
-            '5': '日常沟通'
+            '5': '日常沟通',
+            '6': '退费挽单'
           }
           item.point_type = obj[item.point_type]
           item.ctime = formatDate(+item.ctime)
@@ -148,6 +159,7 @@ export default {
     this.getTrackList()
   },
   mounted() {
+    // 详情页新增记录刷新列表
     this.$root.$on('reload', (r) => {
       this.getTrackList()
     })

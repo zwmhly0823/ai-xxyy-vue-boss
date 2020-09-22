@@ -4,8 +4,8 @@
  * @version:
  * @Author: shentong
  * @Date: 2020-03-13 14:38:28
- * @LastEditors: liukun
- * @LastEditTime: 2020-09-22 16:08:31
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-09-22 16:53:59
  */
 // import axios from '../axios'
 import axios from '../axiosConfig'
@@ -1146,12 +1146,16 @@ export default {
             {
             content{
               uid
+              label_text
               teacherInfo{
                 realname
                 duty_id
                 departmentInfo{
                   name
                 }
+              }
+              staffInfo {
+                real_name
               }
               contact_type
               point_type
