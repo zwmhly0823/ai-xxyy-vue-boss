@@ -3,11 +3,17 @@
  * @version: 1.0.0
  * @Author: zhangjianwen
  * @Date: 2020-07-09 15:02:59
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-09-12 13:06:14
+ * @LastEditors: zhangjianwen
+ * @LastEditTime: 2020-09-23 17:21:42
 -->
 <template>
   <div class="learn-record">
+    <div class="record-header">
+      <el-tabs v-model="lessonType">
+        <el-tab-pane label="体验课" name="0"></el-tab-pane>
+        <el-tab-pane label="系统课" name="2"></el-tab-pane>
+      </el-tabs>
+    </div>
     <div class="record-header">
       <el-tabs v-model="term" @tab-click="clearName">
         <el-tab-pane
@@ -112,7 +118,7 @@
       <m-pagination
         :current-page="currentPage"
         :page-count="totalPages"
-        :pageSize="9"
+        :pageSize="12"
         :total="totalElements"
         @current-change="handleSizeChange"
         show-pager
@@ -138,6 +144,7 @@ export default {
   computed: {},
   data() {
     return {
+      lessonType: '0',
       dropName: '更多',
       manageMentList: [],
       manageMentHistoryList: [],
@@ -153,24 +160,18 @@ export default {
         10: '家长课堂',
         11: '小熊TV课'
       }
-
-      // editableTabsValue: '2',
-      // editableTabs: [
-      //   {
-      //     title: 'Tab 1',
-      //     name: '1',
-      //     content: 'Tab 1 content'
-      //   },
-      //   {
-      //     title: 'Tab 2',
-      //     name: '2',
-      //     content: 'Tab 2 content'
-      //   }
-      // ],
-      // tabIndex: 2
     }
   },
   watch: {
+    lessonType(val, old) {
+      this.currentPage = 1
+      console.log(111, val, old)
+      this.getManagement().then(() => {
+        this.term = this.manageMentList[0].period
+        this.level = 'S1'
+        this.getData(this.currentPage, val, this.level)
+      })
+    },
     term(val, old) {
       if (val === '999') {
         return false
@@ -202,22 +203,22 @@ export default {
     })
   },
   methods: {
-    compare(pre, property) {
-      return function(a, b) {
-        var value1 = a.pre.property
-        var value2 = b.pre.property
-        return value1 - value2
-      }
-    },
+    // 获取期数
     // 获取排期期数
     getManagement() {
       const params = {
         // teacher_id: this.teacherIds
-        team_state: [1, 2]
+        team_state: [1, 2],
+        team_type: this.lessonType
       }
       return this.$http.User.ManagementForTeacherList(params).then((res) => {
         if (res && res.data && res.data.ManagementForTeacherList) {
           if (res.data.ManagementForTeacherList.length === 0) {
+            this.manageMentList = []
+            this.manageMentHistoryList = []
+            this.mangeFirst = null
+            this.term = ''
+            this.recordList = []
             return
           }
 
@@ -242,6 +243,7 @@ export default {
           const arrHistorySort = arrHistory.sort((b, a) => {
             return a.management.period - b.management.period
           })
+
           // this.manageMentHistoryList = arrHistorySort
           const list = arrSort.map((item) => {
             item.management.period_label = `${item.management.period_name}(
@@ -270,6 +272,13 @@ export default {
             this.mangeFirst = handleData[0]
             this.manageMentHistoryList = handleData
           }
+          if (this.manageMentList.length > 5) {
+            this.manageMentHistoryList = [
+              ...this.manageMentList.slice(6),
+              ...this.manageMentHistoryList
+            ]
+            this.manageMentList = this.manageMentList.slice(0, 5)
+          }
           console.log('处理过的数据', this.manageMentHistoryList)
         }
       })
@@ -277,20 +286,46 @@ export default {
     // 查询
     getData(page = this.currentPage, term = this.term, level = this.level) {
       this.recordList = []
-      return this.$http.User.getStudentTrialRecordPage(page, term, level)
-        .then((res) => {
-          if (
-            res &&
-            res.data &&
-            res.data.StudentTrialRecordOperatorStatisticsPage
-          ) {
-            const data = res.data.StudentTrialRecordOperatorStatisticsPage
-            this.totalElements = Number(data.totalElements)
-            this.totalPages = Number(data.totalPages)
-            this.recordList = data.content
-          }
-        })
-        .catch(() => {})
+      console.log(this.lessonType)
+      if (+this.lessonType === 2) {
+        return this.$http.LearnRecord.getStudentSystemRecordPage(
+          page,
+          term,
+          level
+        )
+          .then((res) => {
+            if (
+              res &&
+              res.data &&
+              res.data.StudentSystemRecordOperatorStatisticsPage
+            ) {
+              const data = res.data.StudentSystemRecordOperatorStatisticsPage
+              this.totalElements = Number(data.totalElements)
+              this.totalPages = Number(data.totalPages)
+              this.recordList = data.content
+            }
+          })
+          .catch(() => {})
+      } else {
+        return this.$http.LearnRecord.getStudentTrialRecordPage(
+          page,
+          term,
+          level
+        )
+          .then((res) => {
+            if (
+              res &&
+              res.data &&
+              res.data.StudentTrialRecordOperatorStatisticsPage
+            ) {
+              const data = res.data.StudentTrialRecordOperatorStatisticsPage
+              this.totalElements = Number(data.totalElements)
+              this.totalPages = Number(data.totalPages)
+              this.recordList = data.content
+            }
+          })
+          .catch(() => {})
+      }
     },
 
     handleCommand(command) {
@@ -320,10 +355,15 @@ export default {
     },
     // 进入详情页
     goDetalis(item) {
-      console.log(item)
-      openBrowserTab(
-        `/statistics/#/recordDetails/${item.term}/${item.course_id}/${item.sup}/${item.lesson_type}`
-      )
+      if (this.lessonType === '0') {
+        openBrowserTab(
+          `/statistics/#/recordTrialDetails/${item.term}/${item.course_id}/${item.sup}/${item.lesson_type}`
+        )
+      } else {
+        openBrowserTab(
+          `/statistics/#/recordSystemDetails/${item.term}/${item.course_id}/${item.sup}/${item.lesson_type}`
+        )
+      }
     }
   }
 }

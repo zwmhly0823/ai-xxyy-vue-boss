@@ -1,7 +1,7 @@
 /*
  * @Date: 2020-03-13 15:20:21
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-07-25 18:43:44
+ * @LastEditTime: 2020-09-23 16:19:41
  * @FilePath: /ai-app-vue-toss/src/pages/studentTeam/router/index.js
  */
 import Vue from 'vue'
@@ -65,13 +65,22 @@ const routes = [
     component: () => import('../views/learnRecord/index.vue')
   },
   {
-    path: '/recordDetails/:id/:course_id/:sup/:lesson_type',
-    name: 'recordDetails',
+    path: '/recordTrialDetails/:id/:course_id/:sup/:lesson_type',
+    name: 'recordTrialDetails',
     meta: {
       title: '学习记录详情',
       keepAlive: true
     },
-    component: () => import('../views/learnRecord/recordDetails.vue')
+    component: () => import('../views/learnRecord/recordTrialDetails.vue')
+  },
+  {
+    path: '/recordSystemDetails/:id/:course_id/:sup/:lesson_type',
+    name: 'recordSystemDetails',
+    meta: {
+      title: '学习记录详情',
+      keepAlive: true
+    },
+    component: () => import('../views/learnRecord/recordSystemDetails.vue')
   }
 ]
 
