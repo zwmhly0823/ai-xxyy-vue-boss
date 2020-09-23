@@ -3,8 +3,8 @@
  * @version: 1.0.0
  * @Author: Shentong
  * @Date: 2020-06-30 19:21:08
- * @LastEditors: Shentong
- * @LastEditTime: 2020-07-24 19:46:39
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-09-23 18:09:12
 -->
 <template>
   <div class="emoji-container">
@@ -16,19 +16,24 @@
           :key="index"
           @click="emojiClickHandle(emoji)"
         >
-          <img :src="require(`@/assets/images/emoji/${emoji}.png`)" alt="" />
+          <!-- <img :src="require(`@/assets/images/emoji/${emoji}.png`)" alt="" /> -->
+          <img
+            :src="require(`${OSSCONFIG.OSS_IMG_BASE_URL_2}/emoji/${emoji}.png`)"
+            alt=""
+          />
         </div>
       </div>
     </el-scrollbar>
   </div>
 </template>
 <script>
-// import { debounce } from 'lodash'
+import OSSCONFIG from '@/utils/contants'
 
 export default {
   props: {},
   data() {
     return {
+      OSSCONFIG,
       emojiData: [
         '微笑',
         '撇嘴',
