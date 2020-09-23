@@ -36,5 +36,11 @@ export default {
     return axios.post(
       `/api/tm/v1/teacher/manager/notify/updateNotify/byTeacherId?teacherId=${query.teacherId}&notifyIds=${query.notifyIds}`
     )
+  },
+  // 全部已读
+  arrReadNotifyIsReadByStaffId(query) {
+    return axios.post(
+      `/api/tm/v1/teacher/manager/notify/updateNotify/byStaffId?staffId=${query.staffId}&notifyIds=&isAllRead=${query.isAllRead}`
+    )
   }
 }
