@@ -474,8 +474,10 @@ export default {
         console.log(trialTerms)
         this.activityFrom.trialTerms = trialTerms
         // this.isSystem = res.payload.isSystem
+        this.promotionsRange = res.payload.promotionsRange.toString()
         this.activityFrom.systemTerms = res.payload.systemTerms.split(',')
         this.activityFrom.desc = res.payload.desc
+        this.activityFrom.businessType = res.payload.orderTypes.split(',')
         this.tableData = res.payload.gifts
         console.log(res, this.activityFrom, '====')
       })
@@ -597,7 +599,6 @@ export default {
             id: '-1',
             promotionsName: this.activityFrom.promotionsName,
             promotionsType: this.activityFrom.promotionsType,
-            businessType: this.activityFrom.businessType,
             startDate: this.activityFrom.promotionsDate[0],
             endDate: this.activityFrom.promotionsDate[1],
             desc: this.activityFrom.desc,
@@ -608,7 +609,8 @@ export default {
             trialTerms: this.activityFrom.trialTerms.join(','),
             systemTerms: this.activityFrom.systemTerms.join(','),
             orderTypes: this.activityFrom.businessType.join(','),
-            gifts: this.tableData
+            gifts: this.tableData,
+            promotionsRange: this.promotionsRange
           }
 
           if (this.promotionsId) {
