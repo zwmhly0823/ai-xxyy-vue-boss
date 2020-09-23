@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-09-22 11:02:28
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-09-22 15:48:01
+ * @LastEditTime: 2020-09-23 16:06:56
  */
 import axios from '../../axiosConfig'
 
@@ -22,8 +22,8 @@ export default {
     size = 10,
     sort = { ctime: 'desc' }
   } = {}) {
-    // const queryObj = Object.assign(query, { subjetc: 1 })
-    const queryStr = (query && JSON.stringify(JSON.stringify(query))) || `""`
+    const queryObj = Object.assign(query, { subject: 1, del: 0 })
+    const queryStr = (query && JSON.stringify(JSON.stringify(queryObj))) || `""`
     const sortStr = JSON.stringify(JSON.stringify(sort))
     return axios.post('/graphql/v1/toss', {
       query: `{

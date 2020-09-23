@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-09-03 15:14:25
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-09-22 20:32:51
+ * @LastEditTime: 2020-09-23 15:52:36
 -->
 <template>
   <el-row type="flex" class="app-main reviewManagement">
@@ -51,9 +51,8 @@
                     :key="index"
                   >
                     <el-image
-                      style="height: 50px;"
+                      style="height: 50px; width: 40px"
                       :src="img"
-                      fit="contain"
                       :preview-src-list="scope.row.taskImageList"
                     >
                       <div slot="error" class="image-slot">
@@ -144,9 +143,10 @@
                   <p>{{ scope.row.task_comment_time_text }}</p>
                 </template>
               </el-table-column>
-              <el-table-column label="听点评状态" min-width="120" prop="status">
+              <!-- 1.0版本先隐藏 听点评状态 -->
+              <!-- <el-table-column label="听点评状态" min-width="120" prop="status">
                 <template slot-scope="scope">
-                  <!-- 已点评 -->
+                  已点评
                   <div v-if="scope.row.is_comment === '1'">
                     <div
                       v-if="scope.row.flagRecord && scope.row.flagRecord.ctime"
@@ -156,10 +156,10 @@
                     </div>
                     <p v-else>未听点评</p>
                   </div>
-                  <!-- 待点评 -->
+                  待点评
                   <p v-else>-</p>
                 </template>
-              </el-table-column>
+              </el-table-column> -->
             </ele-table>
           </div>
         </el-scrollbar>
@@ -318,11 +318,13 @@ export default {
           item.flagRecord.ctime = formatData(item.flagRecord.ctime, 'm')
         }
         // 课程类型 1-体验课，2-系统课
-        item.course_type_text = item.course_type
-          ? item.course_type === '1'
-            ? '体验课'
-            : '系统课'
-          : '-'
+        item.course_type_text = '-'
+        if (item.course_type === '1') {
+          item.course_type_text = '体验课'
+        }
+        if (item.course_type === '2') {
+          item.course_type_text = '系统课'
+        }
         // 课程难度
         let supText = '-'
         if (item.sup) {

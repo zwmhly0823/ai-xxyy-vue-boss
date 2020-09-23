@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-25 14:35:19
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-09-22 20:51:34
+ * @LastEditTime: 2020-09-23 16:02:08
  -->
 <template>
   <div class="table-searcher-container">
@@ -63,7 +63,7 @@
         </el-option>
       </el-select>
     </div>
-    <div class="comp-cell">
+    <div class="comp-cell" style="margin-right: 10px;">
       <m-search
         class="search-box"
         @search="handleSearch"
@@ -79,8 +79,8 @@
         type="datetimerange"
         value-format="timestamp"
         range-separator="至"
-        start-placeholder="开始日期"
-        end-placeholder="结束日期"
+        start-placeholder="接收开始日期"
+        end-placeholder="接收结束日期"
         :default-time="['00:00:00', '23:59:59']"
         @change="sellCycleTimeChange"
       >
@@ -229,6 +229,14 @@ export default {
     }
     .item-style {
       width: 140px;
+    }
+    ::v-deep {
+      .el-card__body {
+        padding: 0;
+      }
+      .el-range-editor--small.el-input__inner {
+        height: 28px;
+      }
     }
   }
 }
