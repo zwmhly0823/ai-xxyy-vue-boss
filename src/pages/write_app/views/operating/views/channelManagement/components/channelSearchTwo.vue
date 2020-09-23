@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-04-25 12:09:03
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-26 16:47:21
+ * @LastEditTime: 2020-09-23 18:36:51
  -->
 <template>
   <div id="channel-boxs" class="channel-box">
@@ -334,6 +334,9 @@ export default {
   },
   mounted() {
     window.addEventListener('scroll', this.handleScroll, true)
+  },
+  destroyed() {
+    window.removeEventListener('scroll')
   },
   methods: {
     handleScroll() {

@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-09-03 15:14:25
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-09-23 17:10:18
+ * @LastEditTime: 2020-09-23 18:27:27
 -->
 <template>
   <el-row type="flex" class="app-main reviewManagement">
@@ -27,12 +27,12 @@
               @pageChange="pageChange_handler"
               class="mytable"
             >
-              <el-table-column
+              <!-- <el-table-column
                 label="点评ID"
                 min-width="80"
                 prop="task_comment_id"
                 align="center"
-              ></el-table-column>
+              ></el-table-column> -->
               <el-table-column label="用户信息" min-width="180">
                 <template slot-scope="scope">
                   <p v-if="scope.row.userInfo">
@@ -336,7 +336,6 @@ export default {
             supText = GETGRADE(sup, '1')
           }
         }
-        console.log(supText)
 
         item.sup_text = supText
       })

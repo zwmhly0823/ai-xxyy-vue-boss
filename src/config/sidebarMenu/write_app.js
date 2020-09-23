@@ -3,8 +3,8 @@
  * @version: 1.0.0
  * @Author: YangJiyong
  * @Date: 2020-08-19 21:14:16
- * @LastEditors: Shentong
- * @LastEditTime: 2020-09-03 15:25:32
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-09-23 18:32:37
  */
 import { removeToken } from '@/utils/auth'
 import { baseUrl } from '@/utils/index'
@@ -200,7 +200,7 @@ const msbWriting = [
         path: '/reviewManagement',
         name: 'reviewManagement',
         meta: {
-          title: '点评管理',
+          title: '兼职老师点评管理',
           module
         }
       },
