@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-09-03 15:14:25
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-09-23 15:52:36
+ * @LastEditTime: 2020-09-23 17:10:18
 -->
 <template>
   <el-row type="flex" class="app-main reviewManagement">
@@ -330,12 +330,14 @@ export default {
         if (item.sup) {
           const sup = item.sup.toLocaleUpperCase()
           if (item.course_type === '1') {
-            supText = GETGRADE('0', sup)
+            supText = GETGRADE(sup, '0')
           }
           if (item.course_type === '2') {
-            supText = GETGRADE('1', sup)
+            supText = GETGRADE(sup, '1')
           }
         }
+        console.log(supText)
+
         item.sup_text = supText
       })
       this.tableData = list || []
