@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-08-15 14:35:51
  * @LastEditors: Shentong
- * @LastEditTime: 2020-09-21 16:14:37
+ * @LastEditTime: 2020-09-23 14:40:41
 -->
 
 <template>
@@ -59,7 +59,7 @@
               ></el-table-column>
               <el-table-column
                 label="绑定套餐"
-                min-width="100"
+                min-width="200"
                 prop="packgeDes"
                 align="center"
               ></el-table-column>

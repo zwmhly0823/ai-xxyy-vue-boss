@@ -4,13 +4,13 @@
  * @Author: Shentong
  * @Date: 2020-06-30 19:21:08
  * @LastEditors: Shentong
- * @LastEditTime: 2020-09-22 22:25:51
+ * @LastEditTime: 2020-09-23 16:34:11
 -->
 <template>
   <el-dialog
     :title="'新建定向发放规则'"
     :visible.sync="centerDialog"
-    width="60%"
+    width="800px"
     top="20px"
     :before-close="dialogClose"
     :close-on-click-modal="false"
@@ -24,7 +24,11 @@
           </div>
           <div class="ctn">
             <div class="title">执行方式：</div>
-            <el-radio v-model="formData.exeType" label="0" @change="radioChange"
+            <el-radio
+              v-model="formData.exeType"
+              label="0"
+              :disabled="lookPeriod != ''"
+              @change="radioChange"
               >仅选中期</el-radio
             >
             <div class="tooltip-gap">
@@ -45,7 +49,7 @@
               size="mini"
               placeholder="请选择执行期"
               multiple
-              :disabled="formData.exeType == '1'"
+              :disabled="formData.exeType == '1' || lookPeriod != ''"
               @change="onlyExePeriodChange"
             >
               <el-option
@@ -59,7 +63,11 @@
           </div>
           <div class="ctn">
             <div class="title"></div>
-            <el-radio v-model="formData.exeType" label="1" @change="radioChange"
+            <el-radio
+              v-model="formData.exeType"
+              label="1"
+              :disabled="lookPeriod != ''"
+              @change="radioChange"
               >仅选中期及后续所有期</el-radio
             >
             <div class="tooltip-gap">
@@ -79,7 +87,7 @@
               v-model="formData.periodMore"
               size="mini"
               placeholder="请选择执行期"
-              :disabled="formData.exeType == '0'"
+              :disabled="formData.exeType == '0' || lookPeriod != ''"
               @change="onlyExePeriodChange"
             >
               <el-option
@@ -112,7 +120,11 @@
         </div>
       </div>
     </div>
-    <span slot="footer" class="dialog-footer">
+    <span
+      slot="footer"
+      class="dialog-footer"
+      :class="{ hiddenBtn: lookPeriod != '' }"
+    >
       <el-button @click="dialogOperate('cancel')" size="mini">取消</el-button>
       <el-button type="primary" @click="dialogOperate('submit')" size="mini"
         >确认</el-button
@@ -186,9 +198,10 @@ export default {
   mounted() {},
   watch: {
     lookPeriod(val, oldVal) {
-      this.echoTree({
-        couponDispensadRulesId: val
-      })
+      val &&
+        this.echoTree({
+          couponDispensadRulesId: val
+        })
     },
     'formData.exeType': {
       handler: function(newVal, old) {
@@ -232,13 +245,22 @@ export default {
       /** 回显 tree */
       this.dayDeptId = this.getIdDayKeyVal(couponDispensedDetails)
     },
-    validateData() {
+    validateData(checkedNode) {
       const { exeType, exePeriod, periodMore } = this.formData
-      if (exeType === '0' && !exePeriod.length) {
+      if (
+        (exeType === '0' && !exePeriod.length) ||
+        (exeType === '1' && periodMore === '')
+      ) {
         this.$message.warning('请选择执行期')
         return 0
-      } else if (exeType === '1' && periodMore === '') {
-        this.$message.warning('请选择执行期')
+      }
+      const emptyDay = checkedNode.filter((item) => item.day === '')
+
+      if (!checkedNode.length) {
+        this.$message.warning('请先配置组和优惠券到期时间')
+        return 0
+      } else if (emptyDay.length) {
+        this.$message.warning('请填写全部组的优惠券到期时间')
         return 0
       }
       return 1
@@ -331,7 +353,7 @@ export default {
     },
     async changeSubmit({ val, oldVal, deptFlatList, checkedNode }) {
       if (val && !oldVal) {
-        if (!this.validateData()) {
+        if (!this.validateData(checkedNode)) {
           this.isSubmit = false
         } else {
           /** 打包好的需要掉接口的数据 */
@@ -342,7 +364,7 @@ export default {
         }
       }
     },
-    /** 新增 优惠券发放规则， 保存按钮 */
+    /** 新增 优惠券发放规则， 保存 */
     async saveCouponRule(params) {
       const loadingInstance = this.$loading({
         target: '.app-main',
@@ -457,7 +479,8 @@ export default {
   }
 }
 .dialog-footer {
-  &.is-edit {
+  &.hiddenBtn {
+    display: none;
   }
 }
 </style>

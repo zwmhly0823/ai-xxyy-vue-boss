@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-08-15 15:42:18
  * @LastEditors: Shentong
- * @LastEditTime: 2020-09-22 22:31:27
+ * @LastEditTime: 2020-09-23 15:35:51
 -->
 <template>
   <el-row type="flex" class="app-main grantRule">
@@ -189,6 +189,7 @@ export default {
     /** 新建规则 */
     newRuleHandle() {
       this.centerDialogVisible = true
+      this.lookPeriod = ''
     },
     look_handle(row) {
       const { id } = row

@@ -4,11 +4,15 @@
  * @Author: zhubaodong
  * @Date: 2020-03-13 16:53:27
  * @LastEditors: Shentong
- * @LastEditTime: 2020-09-22 22:35:06
+ * @LastEditTime: 2020-09-23 16:33:34
  -->
 <template>
   <div class="left-container">
-    <div ref="tr" class="tree-container" :style="{ height: containerHeight }">
+    <div
+      ref="treeContainer"
+      class="tree-container"
+      :style="{ height: containerHeight }"
+    >
       <el-tree
         ref="tree"
         class="left-container-tree"
@@ -25,15 +29,13 @@
         <span class="custom-tree-node" slot-scope="{ node, data }">
           <span class="menu-box">
             <span :title="data.id" class="menu-name">{{ `${data.name}` }}</span>
-            <!-- <span v-if="data.name === '小熊项目'">{{ `(${qbSize})` }}</span>
-            <span v-else>{{ data.size ? `(${data.size} )` : `(0)` }}</span> -->
           </span>
           <div class="day-sets" v-if="data.children == null && data.pid != '0'">
             <span>开课后第</span>
             <el-input
               size="mini"
               v-model="data.day"
-              @input="nodeInput"
+              :disabled="period != ''"
               type="number"
             ></el-input>
             <span>天</span>
@@ -86,12 +88,9 @@ export default {
   },
   created() {
     this.initTree()
-    // this.getDepartmentTree()
   },
   mounted() {
-    this.$nextTick(() => {
-      this.calcTableHeight('tr')
-    })
+    this.calcTableHeight('treeContainer')
   },
   watch: {
     period(val, oldVal) {
@@ -126,9 +125,12 @@ export default {
   methods: {
     /** 把天数和对应的id关联到tree-node中 */
     connectDeptIdDays(deptArr = [], deptIds = {}) {
+      console.log('tree-period', this.period)
       deptArr.forEach((item, index) => {
         const { id, children } = item
         item.day = deptIds[id] || ''
+
+        this.period !== '' && (item.disabled = true)
         item = {
           ...item
         }
@@ -147,11 +149,6 @@ export default {
       })
     },
     nodeInput() {},
-    // getDepartmentTree() {
-    //   this.$http.Teacher.departmentTree().then((res) => {
-    //     this.qbSize = res.payload
-    //   })
-    // },
     initTree() {
       const loadingInstance = this.$loading({
         target: 'body',
@@ -175,7 +172,6 @@ export default {
           this.connectDeptIdDay(department, this.dayDept)
 
           this.deptFlatList = department
-          console.log('init=dept', this.deptFlatList)
         })
       } catch (error) {
         console.log(error)
@@ -234,13 +230,13 @@ export default {
     calcTableHeight(ref) {
       this.$nextTick(() => {
         // Element.getBoundingClientRect() 方法返回元素的大小及其相对于视口的位置。
-        const tableTopHeight = this.$refs.tr.getBoundingClientRect().y
+        const tableTopHeight = this.$refs.treeContainer.getBoundingClientRect()
+          .y
         //  document.body.clientHeight 返回body元素内容的高度
         const containerHeight =
           document.body.clientHeight - tableTopHeight - 100
 
         this.containerHeight = containerHeight + 'px'
-        console.log('tableTopHeight', this.containerHeight)
       })
     }
   },
@@ -270,7 +266,7 @@ export default {
     .day-sets {
       /deep/ div {
         margin: 0 10px;
-        width: 40px;
+        width: 70px;
       }
       /deep/ input {
         width: 70px;
