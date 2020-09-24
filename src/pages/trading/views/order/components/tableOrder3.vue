@@ -9,7 +9,7 @@
  -->
 <template>
   <div class="title-box">
-    <el-table :data="orderList">
+    <el-table :data="orderList" v-loading="loading">
       <el-table-column label="用户信息" min-width="120">
         <template slot-scope="scope">
           <user :user="scope.row.user" />
@@ -130,6 +130,7 @@ export default {
   },
   data() {
     return {
+      loading: false,
       // 给物流详情组件传递的订单id
       order_id: '',
       // 总页数
@@ -200,6 +201,7 @@ export default {
     },
     // 订单列表
     getOrderList(page = this.currentPage, reloadStatistics = false) {
+      this.loading = true
       const queryObj = { regtype: this.regtype }
       // TOSS
       if (this.teacherId) {
@@ -284,6 +286,9 @@ export default {
         })
         .catch((err) => {
           console.log(err)
+        })
+        .finally(() => {
+          this.loading = false
         })
     },
 
@@ -393,7 +398,7 @@ export default {
 
 <style scoped lang="scss">
 .title-box {
-  padding-bottom: 50px;
+  padding-bottom: 30px;
 }
 .noData {
   text-align: center;

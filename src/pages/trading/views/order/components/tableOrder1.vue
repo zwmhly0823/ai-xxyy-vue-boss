@@ -1,7 +1,7 @@
 <!-- 系统课订单列表 topic = '5' -->
 <template>
   <div class="title-box">
-    <el-table :data="orderList">
+    <el-table :data="orderList" v-loading="loading">
       <el-table-column label="用户信息" prop="user" min-width="180" fixed>
         <template slot-scope="scope">
           <user :user="scope.row.user" :singleData="scope.row" />
@@ -183,9 +183,12 @@
           </p>
         </template>
       </el-table-column>
-      <el-table-column label="下单时间·订单号" min-width="180">
+      <el-table-column :label="orderTimeLabel" min-width="180">
         <template slot-scope="scope">
-          <p>
+          <p v-if="status === '3'">
+            {{ scope.row.buytime ? scope.row.buytime : '-' }}
+          </p>
+          <p v-else>
             {{ scope.row.ctime ? scope.row.ctime : '-' }}
           </p>
           <p>
@@ -280,10 +283,14 @@ export default {
         return this.topic.split(',')
       }
       return []
+    },
+    orderTimeLabel() {
+      return this.status === '3' ? '支付时间·订单号' : '下单时间·订单号'
     }
   },
   data() {
     return {
+      loading: false,
       // 给物流详情组件传递的订单id
       order_id: '',
       // 总页数
@@ -357,6 +364,7 @@ export default {
     // 订单列表
     async getOrderList(page = this.currentPage, status) {
       // const statisticsQuery = []
+      this.loading = true
       const queryObj = {}
       // TOSS
       if (this.teacherId) {
@@ -509,12 +517,17 @@ export default {
             userIds.push(item.uid)
             // 下单时间格式化
             item.ctime = formatData(item.ctime, 's')
+            // 支付时间
+            item.buytime = formatData(item.buytime, 's')
           })
           this.orderList = _data
           if (userIds.length > 0) this.getUserTrialTeam(userIds)
         })
         .catch((err) => {
           console.log(err)
+        })
+        .finally(() => {
+          this.loading = false
         })
     },
 
@@ -579,7 +592,7 @@ export default {
 </script>
 <style scoped lang="scss">
 .title-box {
-  padding-bottom: 50px;
+  padding-bottom: 30px;
 }
 .noData {
   text-align: center;
