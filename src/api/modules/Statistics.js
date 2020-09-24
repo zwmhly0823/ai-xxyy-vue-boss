@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-07 13:52:26
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-09-12 12:57:29
+ * @LastEditTime: 2020-09-24 17:12:54
  */
 import axios from '../axiosConfig'
 import { injectSubject } from '@/utils/index'
@@ -492,5 +492,88 @@ export default {
           }
       }}`
     })
+  },
+
+  /**
+   * 系统课-参课统计
+   */
+  // 参课统计列表
+  getStudentSystemJoinCoursePage(query = {}, page = 1, sort = '') {
+    const queryObj = query || {}
+    return axios.post('/graphql/v1/toss', {
+      query: `{
+        StudentSystemJoinCourseDetailPage(query: ${JSON.stringify(
+          injectSubject(queryObj)
+        )}, page: ${page}) {
+        totalElements
+        totalPages
+        number
+        content {
+          subject
+          id
+          ctime
+          utime
+          course_id
+          lesson
+          student_id
+          teacher_id
+          team_id
+          term
+          title
+          subject
+          sup
+          is_first_week_send
+          is_join_course
+          is_complete_course
+          join_course_time
+          complete_course_time
+          user_status
+          userExtends {
+            id
+            u_id
+            user_num_text
+            username
+            mobile
+            status
+            status_text
+          }
+          teacherInfo {
+            realname
+            department_name
+          }
+          teamInfo {
+            id
+            sup
+            team_name
+            team_type
+          }
+          management {
+            period_name
+          }
+        }
+      }
+      }`
+    })
+  },
+
+  // 汇总行数据
+  getStudentSystemJoinCourseDetailSummary(query = {}) {
+    const queryObj = injectSubject(query)
+    return axios.post('/graphql/v1/toss', {
+      query: `{
+        StudentSystemJoinCourseDetailSummary(query: ${JSON.stringify(
+          queryObj
+        )}) {
+          student_count
+          join_course_count
+          complete_course_count
+          join_course_rate
+          complete_course_rate
+        }
+      }`
+    })
   }
+  /**
+   * 系统课-参课统计  end
+   */
 }

@@ -1,7 +1,7 @@
 /*
  * @Date: 2020-03-13 15:20:21
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-09-21 15:23:49
+ * @LastEditTime: 2020-09-24 11:18:35
  * @FilePath: /ai-app-vue-toss/src/pages/studentTeam/router/index.js
  */
 import Vue from 'vue'
@@ -74,13 +74,13 @@ const routes = [
     component: () => import('../views/learnRecord/recordDetails.vue')
   },
   {
-    path: '/courseLog',
-    name: 'courseLog',
+    path: '/systemJoinCourseLog',
+    name: 'systemJoinCourseLog',
     meta: {
       title: '参课统计',
       keepAlive: true
     },
-    component: () => import('../views/courseLog/index.vue')
+    component: () => import('../views/systemJoinCourseLog/index.vue')
   }
 ]
 
