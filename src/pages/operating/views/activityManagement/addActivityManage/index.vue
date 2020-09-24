@@ -4,7 +4,7 @@
  * @Author: Shasen
  * @Date: 2020-06-29 16:50:58
  * @LastEditors: shasen
- * @LastEditTime: 2020-09-19 14:58:18
+ * @LastEditTime: 2020-09-24 15:55:42
 -->
 <template>
   <el-row type="flex" class="activity-manage app-main">
@@ -331,6 +331,7 @@ export default {
       promotionsRange: '', // 活动范围radio
       isTrial: false, // 体验课checkbox
       isSystem: false, // 系统课checkbox
+      isOrder: false, // 按下单时间
       promotionsId: '',
       tableHeight: 'auto',
       dialogGroupVisible: false,
@@ -470,12 +471,19 @@ export default {
         promotionsDate.push(res.payload.endDate)
         this.activityFrom.promotionsDate = promotionsDate
         // this.isTrial = res.payload.isTrial
-        const trialTerms = res.payload.trialTerms.split(',')
-        console.log(trialTerms)
-        this.activityFrom.trialTerms = trialTerms
+        if (res.payload.trialTerms.length) {
+          this.activityFrom.trialTerms = res.payload.trialTerms.split(',')
+        }
         // this.isSystem = res.payload.isSystem
+        const payOrderDate = []
+        payOrderDate.push(res.payload.orderStartDate)
+        payOrderDate.push(res.payload.orderEndDate)
+        this.activityFrom.payOrderDate = payOrderDate
         this.promotionsRange = res.payload.promotionsRange.toString()
-        this.activityFrom.systemTerms = res.payload.systemTerms.split(',')
+        if (res.payload.systemTerms.length) {
+          this.activityFrom.systemTerms = res.payload.systemTerms.split(',')
+        }
+        // this.activityFrom.systemTerms = res.payload.systemTerms.split(',')
         this.activityFrom.desc = res.payload.desc
         this.activityFrom.businessType = res.payload.orderTypes.split(',')
         this.tableData = res.payload.gifts
@@ -594,6 +602,11 @@ export default {
           } else {
             this.isSystem = false
           }
+          if (this.activityFrom.payOrderDate.length > 0) {
+            this.isOrder = true
+          } else {
+            this.isOrder = false
+          }
 
           const obj = {
             id: '-1',
@@ -604,6 +617,7 @@ export default {
             desc: this.activityFrom.desc,
             isTrial: this.isTrial,
             isSystem: this.isSystem,
+            isOrder: this.isOrder,
             orderStartDate: this.activityFrom.payOrderDate[0],
             orderEndDate: this.activityFrom.payOrderDate[1],
             trialTerms: this.activityFrom.trialTerms.join(','),
