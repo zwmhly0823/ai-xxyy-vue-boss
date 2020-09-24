@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-04-25 12:09:03
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-09-23 18:36:51
+ * @LastEditTime: 2020-09-24 18:03:04
  -->
 <template>
   <div id="channel-boxs" class="channel-box">
@@ -642,8 +642,6 @@ export default {
       font-size: 12px;
       color: #666;
       font-weight: normal;
-      .row1 {
-      }
       .row4 {
         margin-left: 10px;
       }
@@ -694,8 +692,6 @@ export default {
         font-size: 12px;
         color: #666;
         font-weight: normal;
-        .row1 {
-        }
         .row4 {
           margin-left: -30px;
         }

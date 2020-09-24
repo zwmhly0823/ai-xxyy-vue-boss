@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-25 14:35:19
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-09-23 16:02:08
+ * @LastEditTime: 2020-09-24 18:17:58
  -->
 <template>
   <div class="table-searcher-container">
@@ -68,7 +68,7 @@
         class="search-box"
         @search="handleSearch"
         phone="student_id"
-        onlyPhone="1"
+        onlyPhone="0"
         phoneTip="用户手机号"
       />
     </div>

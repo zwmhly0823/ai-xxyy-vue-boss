@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-09-03 15:14:25
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-09-23 18:27:27
+ * @LastEditTime: 2020-09-24 18:03:25
 -->
 <template>
   <el-row type="flex" class="app-main reviewManagement">
@@ -144,9 +144,9 @@
                 </template>
               </el-table-column>
               <!-- 1.0版本先隐藏 听点评状态 -->
-              <!-- <el-table-column label="听点评状态" min-width="120" prop="status">
+              <el-table-column label="听点评状态" min-width="120" prop="status">
                 <template slot-scope="scope">
-                  已点评
+                  <!-- 已点评 -->
                   <div v-if="scope.row.is_comment === '1'">
                     <div
                       v-if="scope.row.flagRecord && scope.row.flagRecord.ctime"
@@ -156,10 +156,10 @@
                     </div>
                     <p v-else>未听点评</p>
                   </div>
-                  待点评
+                  <!-- 待点评 -->
                   <p v-else>-</p>
                 </template>
-              </el-table-column> -->
+              </el-table-column>
             </ele-table>
           </div>
         </el-scrollbar>
