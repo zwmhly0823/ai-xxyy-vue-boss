@@ -43,7 +43,7 @@
           <el-table-column
             prop="departmentName"
             label="部门"
-            width="140"
+            width="100"
             align="center"
           >
           </el-table-column>
@@ -83,6 +83,7 @@
             prop="planTeam"
             label="计划班级人数"
           ></el-table-column>
+          <el-table-column label="转介绍招生数" width="100"></el-table-column>
           <el-table-column prop="realTeam" label="已开班级数"></el-table-column>
           <el-table-column
             align="center"
