@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-13 16:53:27
  * @LastEditors: Shentong
- * @LastEditTime: 2020-09-24 16:50:19
+ * @LastEditTime: 2020-09-24 18:50:24
  -->
 <template>
   <div class="left-container">
@@ -31,14 +31,20 @@
             <span :title="data.id" class="menu-name">{{ `${data.name}` }}</span>
           </span>
           <div class="day-sets" v-if="data.children == null && data.pid != '0'">
-            <span>开课后第</span>
-            <el-input
-              size="mini"
-              v-model="data.day"
-              :disabled="period != ''"
-              type="number"
-            ></el-input>
-            <span>天</span>
+            <!-- TODO: -->
+            <div class="judge-box" v-if="$route.params.couponId == '5'">
+              <span>开课后第</span>
+              <el-input
+                size="mini"
+                v-model="data.day"
+                :disabled="period != ''"
+                type="number"
+              ></el-input>
+              <span>天</span>
+            </div>
+            <div class="default-rule" v-else>
+              自定义有效期
+            </div>
           </div>
         </span>
       </el-tree>
@@ -64,6 +70,10 @@ export default {
       default: () => {}
     },
     submit: {
+      type: Boolean,
+      default: false
+    },
+    isChangeRadio: {
       type: Boolean,
       default: false
     },
@@ -93,6 +103,7 @@ export default {
     this.calcTableHeight('treeContainer')
   },
   watch: {
+    isChangeRadio(val) {},
     submit(val, oldVal) {
       const checkedNode = this.handleCheckChange()
       const { deptFlatList } = this
@@ -104,15 +115,28 @@ export default {
       })
     },
     dayDeptId: {
-      handler: function(deptIds) {
-        console.log('tree-deptIds', deptIds)
+      handler: async function(deptIds) {
+        console.log('watch deptIds', deptIds)
         /** 回显 tree中id对应的天数day */
-        this.$nextTick(() => {
-          setTimeout(() => {
-            this.connectDeptIdDays(this.deptFlatList, deptIds)
-            this.$refs.tree.setCheckedKeys(Object.keys(deptIds))
-          }, 500)
-        })
+        await this.$nextTick()
+
+        setTimeout(() => {
+          this.connectDeptIdDays(this.deptFlatList, deptIds)
+
+          this.$refs.tree.setCheckedKeys(Object.keys(deptIds))
+          /** 如果是新增模块，当选择当前期返回内容为空{}时，选中所有tree，设置默认值3 */
+          if (!this.period) {
+            if (!Object.keys(deptIds).length) {
+              this.checkedAllNode()
+              this.deptTreeCl(this.deptFlatList)
+            }
+          }
+
+          if (this.isChangeRadio) {
+            this.checkedAllNode()
+            this.$emit('update:isChangeRadio', false)
+          }
+        }, 500)
       },
       deep: true
     }
@@ -120,11 +144,10 @@ export default {
   methods: {
     /** 把天数和对应的id关联到tree-node中 */
     connectDeptIdDays(deptArr = [], deptIds = {}) {
-      console.log('tree-period', this.period)
       deptArr.forEach((item, index) => {
         const { id, children } = item
         item.day = deptIds[id] || ''
-
+        // 查看模式
         this.period !== '' && (item.disabled = true)
         item = {
           ...item
@@ -133,17 +156,19 @@ export default {
           this.connectDeptIdDays(children, deptIds)
       })
     },
-    closure(arg) {
-      // const deptIds = arg
-      // return function(deptIds) {}
-    },
     handleCheckChange() {
       const res = this.$refs.tree.getCheckedNodes()
       return res.filter((item) => {
-        return item.children == null && item.pid !== '0'
+        return item.children == null && item.pid !== '0' && item.day !== '3'
       })
     },
     nodeInput() {},
+    // tree全选
+    checkedAllNode() {
+      this.$nextTick(() => {
+        this.$refs.tree.setCheckedNodes(this.deptFlatList)
+      })
+    },
     initTree() {
       const loadingInstance = this.$loading({
         target: 'body',
@@ -155,7 +180,7 @@ export default {
       try {
         this.$http.Teacher.getDepartmentTree(1).then((res) => {
           const arr = (res && res.payload) || []
-          if (arr.length === 0) return arr
+          if (!arr.length) return arr
           const department = sortByKey(arr, 'id')
           // 组织结构第一层排序
           department.sort(this.handle('sort'))
@@ -167,6 +192,9 @@ export default {
           this.connectDeptIdDay(department, this.dayDept)
 
           this.deptFlatList = department
+
+          // 新建模式下
+          if (this.period === '') this.checkedAllNode()
         })
       } catch (error) {
         console.log(error)
@@ -178,7 +206,7 @@ export default {
       deptArr.forEach((item, index) => {
         const { children } = item
         item.day = '3'
-        deptArr[index] = {
+        item = {
           ...item
         }
         if (children && children.length) this.deptTreeCl(children)
@@ -259,7 +287,10 @@ export default {
       display: flex;
     }
     .day-sets {
-      /deep/ div {
+      .default-rule {
+        color: #333;
+      }
+      /deep/ div.el-input {
         margin: 0 10px;
         width: 70px;
       }

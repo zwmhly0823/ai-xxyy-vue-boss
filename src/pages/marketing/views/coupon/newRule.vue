@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-06-30 19:21:08
  * @LastEditors: Shentong
- * @LastEditTime: 2020-09-23 16:34:11
+ * @LastEditTime: 2020-09-24 18:34:16
 -->
 <template>
   <el-dialog
@@ -115,6 +115,7 @@
               :dayDeptId="dayDeptId"
               :period="lookPeriod"
               @changeSubmit="changeSubmit"
+              :isChangeRadio.sync="isChangeRadio"
             ></dept-tree>
           </div>
         </div>
@@ -177,7 +178,8 @@ export default {
       },
       dayDeptId: {},
       lookPeriod: '',
-      couponDetail: {}
+      couponDetail: {},
+      isChangeRadio: false
     }
   },
   components: { DeptTree },
@@ -198,10 +200,11 @@ export default {
   mounted() {},
   watch: {
     lookPeriod(val, oldVal) {
-      val &&
-        this.echoTree({
-          couponDispensadRulesId: val
-        })
+      const params = {
+        couponDispensadRulesId: val
+      }
+
+      val && this.echoTree(params)
     },
     'formData.exeType': {
       handler: function(newVal, old) {
@@ -216,6 +219,7 @@ export default {
   methods: {
     radioChange(res) {
       this.dayDeptId = {}
+      this.isChangeRadio = true
     },
     // 回显初始化
     echoInit() {
@@ -358,7 +362,8 @@ export default {
         } else {
           /** 打包好的需要掉接口的数据 */
           const result = this.bundleData(deptFlatList, checkedNode)
-          await this.saveCouponRule(result)
+          console.log('result', result)
+          // await this.saveCouponRule(result) TODO:
 
           this.isSubmit = false
         }
@@ -386,7 +391,6 @@ export default {
      * @status 0 待开始；1 招生中；2 待开课；3 上课中；4 已结课"
      * @desc 1、仅选中期--->仅可选择开课中、待开课期，可支持多选（2,3）；
      *       2、选中期和后续所有期---->仅可选择开课中、待开课、招生中期，仅可单选(1,2,3)
-     *
      */
     async getPeriodByStatus(type) {
       let {

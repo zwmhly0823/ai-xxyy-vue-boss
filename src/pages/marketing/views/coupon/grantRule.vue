@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-08-15 15:42:18
  * @LastEditors: Shentong
- * @LastEditTime: 2020-09-23 15:35:51
+ * @LastEditTime: 2020-09-24 17:38:38
 -->
 <template>
   <el-row type="flex" class="app-main grantRule">
@@ -208,7 +208,6 @@ export default {
         const ctnHeight = document.body.clientHeight - tableTopHeight - 40
 
         this.ctnHeight = ctnHeight + ''
-        console.log('tableTopHeight', this.ctnHeight)
       })
     }
   }
