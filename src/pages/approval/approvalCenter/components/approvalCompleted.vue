@@ -18,6 +18,10 @@
         name="userTel"
         @result_lk="getPhone"
       />
+      <ActivityName
+        class="inline-search margin_left_20"
+        @result="getActivityName"
+      />
     </div>
     <el-table
       :data="tableData"
@@ -530,6 +534,7 @@ import courseTeam from './courseTeam'
 import TabTimeSelect from './timeSearch'
 import CheckType from './checkType'
 import SearchPart from './searchPart'
+import ActivityName from './activityName'
 import adjustDrawer from './adjustDrawer'
 import ApprovalGiftDetail from './approvalGiftDetail'
 
@@ -541,6 +546,7 @@ export default {
     TabTimeSelect,
     CheckType,
     SearchPart,
+    ActivityName,
     adjustDrawer,
     courseTeam,
     ApprovalGiftDetail
@@ -630,6 +636,13 @@ export default {
     // 销售部门搜索
     getSeachePart(val) {
       Object.assign(this.params, { keyword: val })
+      this.params.page = 1
+      this.currentPage = 1
+      this.checkPending(this.params)
+    },
+    //  活动名称搜索
+    getActivityName(val) {
+      Object.assign(this.params, { abstractContent: val })
       this.params.page = 1
       this.currentPage = 1
       this.checkPending(this.params)
