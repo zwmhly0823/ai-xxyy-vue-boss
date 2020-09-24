@@ -24,6 +24,10 @@
       <search-part class="filter-item" @result="getSeachePart" />
       <!-- <course-team class="filter-item" @result="getTeamId" /> -->
       <searchPhone name="userTel" @result_lk="getPhone" class="filter-item" />
+      <ActivityName
+        class="filter-item margin_left_20"
+        @result="getActivityName"
+      />
     </div>
 
     <el-table :data="tableData" style="width: 100%" highlight-current-row>
@@ -106,6 +110,7 @@
 import searchPhone from '@/components/MSearch/searchItems/searchPhone.vue'
 import tabTimeSelect from './timeSearch'
 import searchPart from './searchPart'
+import ActivityName from './activityName'
 // import courseTeam from './courseTeam'
 import MPagination from '@/components/MPagination/index.vue'
 import { getStaffInfo } from '../common'
@@ -119,7 +124,8 @@ export default {
     tabTimeSelect,
     adjustDrawer,
     MPagination,
-    searchPart
+    searchPart,
+    ActivityName
     // courseTeam
   },
   data() {
@@ -312,6 +318,13 @@ export default {
         this.params.startTime = val.ctime.gte
         this.params.endTime = val.ctime.lte
       }
+      this.initListData(this.params)
+    },
+    //  活动名称搜索
+    getActivityName(val) {
+      Object.assign(this.params, { abstractContent: val })
+      this.params.page = 1
+      this.currentPage = 1
       this.initListData(this.params)
     },
     getSeachePart: _.debounce(function(val) {
