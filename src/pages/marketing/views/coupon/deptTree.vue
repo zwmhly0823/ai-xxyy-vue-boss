@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-13 16:53:27
  * @LastEditors: Shentong
- * @LastEditTime: 2020-09-23 16:33:34
+ * @LastEditTime: 2020-09-24 16:50:19
  -->
 <template>
   <div class="left-container">
@@ -93,9 +93,6 @@ export default {
     this.calcTableHeight('treeContainer')
   },
   watch: {
-    period(val, oldVal) {
-      console.log(val, oldVal)
-    },
     submit(val, oldVal) {
       const checkedNode = this.handleCheckChange()
       const { deptFlatList } = this
@@ -110,13 +107,11 @@ export default {
       handler: function(deptIds) {
         console.log('tree-deptIds', deptIds)
         /** 回显 tree中id对应的天数day */
-        // this.deptTreeCl(this.deptFlatList)
-        // const department = deepClone(this.deptFlatList)
         this.$nextTick(() => {
           setTimeout(() => {
             this.connectDeptIdDays(this.deptFlatList, deptIds)
             this.$refs.tree.setCheckedKeys(Object.keys(deptIds))
-          }, 1000)
+          }, 500)
         })
       },
       deep: true
@@ -182,7 +177,7 @@ export default {
     deptTreeCl(deptArr = []) {
       deptArr.forEach((item, index) => {
         const { children } = item
-        item.day = ''
+        item.day = '3'
         deptArr[index] = {
           ...item
         }
@@ -197,7 +192,7 @@ export default {
     connectDeptIdDay(deptArr = [], deptIds = {}) {
       deptArr.forEach((item, index) => {
         const { id, children } = item
-        item.day = deptIds[id] || ''
+        item.day = deptIds[id] || '3'
         deptArr[index] = {
           ...item
         }
