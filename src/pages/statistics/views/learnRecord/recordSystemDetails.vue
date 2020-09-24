@@ -4,7 +4,7 @@
  * @Author: zhangjianwen
  * @Date: 2020-07-09 15:02:59
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-09-23 18:35:08
+ * @LastEditTime: 2020-09-24 19:36:42
 -->
 <template>
   <div class="learn-record">
@@ -380,6 +380,7 @@
           <template slot-scope="scope">
             <p>
               {{
+                scope.row.studentSystemStatistics &&
                 scope.row.studentSystemStatistics.life_cycle === 91
                   ? '退费'
                   : '否'
@@ -391,6 +392,7 @@
           <template slot-scope="scope">
             <p>
               {{
+                scope.row.studentSystemStatistics &&
                 scope.row.studentSystemStatistics.remain_order_count > 1
                   ? '续费'
                   : '否'
