@@ -431,6 +431,36 @@ export default {
                   )}月${payData.periodAlready % 4}周`
                 },
                 {
+                  label: '关单赠品',
+                  value: `${
+                    payData.deductGift === 1
+                      ? '扣除赠品费用'
+                      : payData.deductGift === 0
+                      ? '不扣除赠品费用'
+                      : '-'
+                  }`
+                },
+                {
+                  label: '次月课程',
+                  value: `${
+                    payData.deductMonth === 1
+                      ? '保留'
+                      : payData.deductMonth === 0
+                      ? '不保留'
+                      : '-'
+                  }`
+                },
+                {
+                  label: '随材盒子',
+                  value: `${
+                    payData.deductMaterial === 1
+                      ? '扣除随材盒子费用'
+                      : payData.deductMaterial === 0
+                      ? '不扣除随材盒子费用'
+                      : '-'
+                  }`
+                },
+                {
                   label: '退款月数',
                   value: `${Math.floor(payData.periodRefund / 4)}月`
                 },

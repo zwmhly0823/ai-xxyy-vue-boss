@@ -3,8 +3,8 @@
  * @version: 
  * @Author: Lukun
  * @Date: 2020-04-27 17:47:58
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-09-22 17:11:49
+ * @LastEditors: liukun
+ * @LastEditTime: 2020-09-24 21:06:33
  -->
 <template>
   <div class="container">
@@ -434,6 +434,43 @@
              drawerApprovalDeatail.periodAlready / 4
            )}月${drawerApprovalDeatail.periodAlready % 4}周
            `
+            }}</el-col>
+          </el-row>
+          <el-row
+            v-if="
+              drawerApprovalDeatail.deductGift === 1 ||
+                drawerApprovalDeatail.deductGift === 0
+            "
+          >
+            <el-col :span="5">关单赠品:</el-col>
+            <el-col :span="18" :offset="1">{{
+              drawerApprovalDeatail.deductGift === 1
+                ? '扣除赠品费用'
+                : '不扣除赠品费用'
+            }}</el-col>
+          </el-row>
+          <el-row
+            v-if="
+              drawerApprovalDeatail.deductMonth === 1 ||
+                drawerApprovalDeatail.deductMonth === 0
+            "
+          >
+            <el-col :span="5">次月课程:</el-col>
+            <el-col :span="18" :offset="1">{{
+              drawerApprovalDeatail.deductMonth === 1 ? '保留' : '不保留'
+            }}</el-col>
+          </el-row>
+          <el-row
+            v-if="
+              drawerApprovalDeatail.deductMaterial === 1 ||
+                drawerApprovalDeatail.deductMaterial === 0
+            "
+          >
+            <el-col :span="5">随材盒子:</el-col>
+            <el-col :span="18" :offset="1">{{
+              drawerApprovalDeatail.deductMaterial === 1
+                ? '扣除随材盒子费用'
+                : '不扣除随材盒子费用'
             }}</el-col>
           </el-row>
           <el-row :class="$style.align_items">
