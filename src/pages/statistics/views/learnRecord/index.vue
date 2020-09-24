@@ -4,7 +4,7 @@
  * @Author: zhangjianwen
  * @Date: 2020-07-09 15:02:59
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-09-23 17:21:42
+ * @LastEditTime: 2020-09-24 17:19:01
 -->
 <template>
   <div class="learn-record">
@@ -157,8 +157,10 @@ export default {
       totalElements: null,
       learn_type: {
         0: '小熊AI课',
+        1: '小熊AI课',
         10: '家长课堂',
-        11: '小熊TV课'
+        11: '小熊TV课',
+        12: '小熊TV课'
       }
     }
   },
@@ -237,7 +239,7 @@ export default {
           const arrHistory = manageMentList.filter(
             (item) => item.management && item.management.status === 4
           )
-          const arrSort = arr.sort((a, b) => {
+          const arrSort = arr.sort((b, a) => {
             return a.management.period - b.management.period
           })
           const arrHistorySort = arrHistory.sort((b, a) => {
