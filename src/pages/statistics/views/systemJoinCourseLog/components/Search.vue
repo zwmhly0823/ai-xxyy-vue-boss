@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-09-24 17:20:53
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-09-24 17:58:19
+ * @LastEditTime: 2020-09-24 18:42:49
 -->
 <template>
   <div class="search d-flex">
@@ -54,6 +54,7 @@ export default {
 <style lang="scss" scoped>
 .search {
   padding: 15px;
+  border-bottom: 5px solid #f0f1f2;
   &-item {
     margin-right: 10px;
   }
