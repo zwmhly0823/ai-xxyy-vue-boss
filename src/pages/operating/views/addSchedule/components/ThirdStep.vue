@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-15 20:35:57
  * @LastEditors: Shentong
- * @LastEditTime: 2020-09-24 20:52:56
+ * @LastEditTime: 2020-09-25 16:15:18
  -->
 <template>
   <div class="third-step">
@@ -77,7 +77,7 @@
             {{ scope.row.teacherWechatNo || '' }}
             <i
               class="el-icon-edit edit-styl"
-              @click="editWechat(scope.row)"
+              @click="editWechat(scope.row, scope.$index)"
             ></i>
           </template>
         </el-table-column>
@@ -293,6 +293,7 @@ export default {
   data() {
     return {
       levelIndex: 0,
+      currentRowIndex: -1,
       currentTeacherWenum: '',
       currentTeacherWechatList: [],
       currentEidtRow: {},
@@ -379,10 +380,11 @@ export default {
       index !== this.levelIndex && callback()
     },
     /** 点击编辑微信 按钮 */
-    editWechat(row) {
+    editWechat(row, curIndex) {
       const { departmentId, teacherId } = row
       this.dialogVisible = true
       this.currentEidtRow = row
+      this.currentRowIndex = curIndex
       this.getTeacherAllWechatByDept({
         departmentId,
         teacherId
@@ -398,36 +400,39 @@ export default {
     },
     /** 编辑微信模态框保存按钮 */
     saveEditHandle() {
-      if (!this.currentTeacherWenum) {
+      const { courseType = 0 } = this.$route.params
+      const {
+        currentTeacherWechatList: crtWc,
+        currentTeacherWenum: weixinId,
+        schedulePeriod: period,
+        currentEidtRow: {
+          teacherWechatId: oldWeixinId,
+          teacherWechatNo,
+          teacherId
+        } = {}
+      } = this
+
+      if (!weixinId) {
         this.$message.warning('请选择微信号')
         return
       }
-      const { courseType = 0 } = this.$route.params
-      const {
-        teacherWechatId,
-        teacherWechatNo,
-        teacherId
-      } = this.currentEidtRow
       const params = {
-        oldWeixinId: teacherWechatId,
-        weixinId: this.currentTeacherWenum,
+        oldWeixinId,
+        weixinId,
         weixinNo: '',
         oldWeixinNo: teacherWechatNo,
         teacherId,
         courseType,
-        period: this.schedulePeriod
+        period
       }
 
-      for (let i = 0; i < this.currentTeacherWechatList.length; i++) {
-        if (
-          this.currentTeacherWenum === this.currentTeacherWechatList[i].weixinId
-        ) {
-          params.weixinNo = this.currentTeacherWechatList[i].weixinNo
+      for (let i = 0; i < crtWc.length; i++) {
+        if (weixinId === crtWc[i].weixinId) {
+          params.weixinNo = crtWc[i].weixinNo
           break
         }
       }
-      console.log(this.currentTeacherWenum, params)
-      this.currentTeacherWenum && this.saveEditTeacherWeChat(params)
+      weixinId && this.saveEditTeacherWeChat(params)
     },
     /** 保存更改的老师微信号 */
     saveEditTeacherWeChat(params) {
@@ -436,6 +441,13 @@ export default {
         this.dialogVisible = false
       }
       this.$http.Operating.saveEditTeacherWeChat(params).then((res) => {
+        const {
+          payload: { wechatId = '', wechatNo = '' }
+        } = res
+
+        this.tableData[this.currentRowIndex].teacherWechatNo = wechatNo
+        this.tableData[this.currentRowIndex].teacherWechatId = wechatId
+
         this.$message({
           type: 'success',
           message: '更改成功',
@@ -450,7 +462,6 @@ export default {
     },
     // 搜索emit数据
     searchChange(search) {
-      console.log('search', search)
       const {
         department = [],
         groupSell = '',
@@ -478,7 +489,6 @@ export default {
           const { enroll = [] } = item
           // 如果enroll为空，手动添加
           if (!enroll.length) {
-            // for (let i = 1; i <= 3; i++) {
             enroll.push({
               courseDifficulty: this.params.courseDifficulty,
               status: 0,
@@ -498,7 +508,6 @@ export default {
         })
 
         this.tableData = payload
-        // console.log('this.tableData ', this.tableData)
       } catch (err) {
         this.$message({
           message: '获取列表出错',
@@ -549,7 +558,6 @@ export default {
     pageChange_handler() {},
     // validate
     validateTableForm(data) {
-      console.log('data', data)
       this.isValidate = true
 
       for (var i = 0; i < data.length; i++) {
