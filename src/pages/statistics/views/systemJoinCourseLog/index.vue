@@ -4,14 +4,14 @@
  * @Author: YangJiyong
  * @Date: 2020-09-21 15:00:30
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-09-24 18:46:49
+ * @LastEditTime: 2020-09-25 17:13:17
 -->
 <template>
   <el-row type="flex" class="app-main height">
     <div class="app-main-container">
       <div class="course-log">
         <!-- search -->
-        <search />
+        <search @search="getSearchParams" />
 
         <!-- 统计信息 -->
         <div class="statistics-info d-flex">
@@ -161,11 +161,14 @@ export default {
   },
 
   created() {
-    this.getData()
-    this.getSummary()
+    this.init()
   },
 
   methods: {
+    init() {
+      this.getData()
+      this.getSummary()
+    },
     // 获取列表数据
     getData() {
       this.loading = true
@@ -219,6 +222,14 @@ export default {
         this.searchParams || {}
       )
       this.summary = StudentSystemJoinCourseDetailSummary || {}
+    },
+
+    /**
+     * 搜索条件
+     */
+    getSearchParams(params) {
+      this.searchParams = params
+      this.init()
     },
 
     openUserDetail(user) {
