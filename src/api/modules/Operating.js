@@ -565,5 +565,11 @@ export default {
     return axios.get(
       `/api/t/v1/enroll/updateStatusByPeriod?period=${params.period}&status=${params.status}`
     )
+  },
+  // 转介绍招生数
+  getIntroduceCountByIds(query) {
+    return axios.get(
+      `/api/t/v1/teacher/getIntroduceCountByIds?term=${query.term}&ids=${query.ids}`
+    )
   }
 }

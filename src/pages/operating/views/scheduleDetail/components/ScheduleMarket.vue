@@ -83,7 +83,12 @@
             prop="planTeam"
             label="计划班级人数"
           ></el-table-column>
-          <el-table-column label="转介绍招生数" width="100"></el-table-column>
+          <el-table-column
+            align="center"
+            prop="intruNum"
+            label="转介绍招生数"
+            width="100"
+          ></el-table-column>
           <el-table-column prop="realTeam" label="已开班级数"></el-table-column>
           <el-table-column
             align="center"
@@ -160,7 +165,7 @@ export default {
           ...val,
           pageNum: 1
         }
-        console.log('this.tabQuery', this.tabQuery)
+        // console.log('this.tabQuery', this.tabQuery)
         this.init()
         // 表格内统计
         this.getScheduleDetailStatistic()
@@ -181,6 +186,26 @@ export default {
       try {
         const _list = await this.getScheduleDetailList()
         const { content = [] } = _list
+        const idsArr = []
+        content.forEach((item) => {
+          idsArr.push(item.teacherId)
+        })
+        const query = {
+          ids: idsArr.join(','),
+          term: this.paramsInfo.period
+        }
+        // 转介绍招生数
+        const intruStuNumRes = await this.getIntroduceCountByIds(query)
+        intruStuNumRes.forEach((item) => {
+          content.forEach((value) => {
+            if (item.id === value.teacherId) {
+              value.intruNum = value.count || 0
+            } else {
+              value.intruNum = 0
+            }
+          })
+        })
+
         this.tableData = content
 
         this.totalElements = +_list.totalElements
@@ -240,6 +265,19 @@ export default {
         this.flags.loading = false
         return new Error(err)
       }
+    },
+    // 转介绍招生数
+    getIntroduceCountByIds(query) {
+      return this.$http.Operating.getIntroduceCountByIds(query)
+        .then((res) => {
+          if (res.status === 'OK') {
+            return res.payload
+          }
+          return false
+        })
+        .catch(() => {
+          return false
+        })
     },
     // 分页
     pageChange_handler(page) {
