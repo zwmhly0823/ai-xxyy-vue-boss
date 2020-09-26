@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-08-25 11:40:19
  * @LastEditors: liukun
- * @LastEditTime: 2020-09-15 23:04:11
+ * @LastEditTime: 2020-09-26 16:29:26
 -->
 <template>
   <div>
@@ -20,7 +20,7 @@
           :label="`${item.team_type_formatting || '体验课'}:${item.team_name}`"
           :courseIds="item.course_ids"
           :teamId="item.id"
-          :lessonType="item.team_type > 0 ? 1 : 0"
+          :lessonType="item.team_type > 0 ? [1, 12] : [0, 12]"
         >
           <div class="inner_lk">
             <div class="statistical">
