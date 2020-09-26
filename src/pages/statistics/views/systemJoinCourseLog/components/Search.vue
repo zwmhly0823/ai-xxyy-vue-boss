@@ -4,10 +4,38 @@
  * @Author: YangJiyong
  * @Date: 2020-09-24 17:20:53
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-09-26 16:49:24
+ * @LastEditTime: 2020-09-26 18:42:53
 -->
 <template>
   <div class="search d-flex">
+    <div class="search-item">
+      <search-phone-and-username
+        placeholder="手机号或昵称"
+        name="student_id"
+        @result="getSearch('student_id', arguments)"
+      />
+    </div>
+    <div class="search-item">
+      <date-down-quick-select
+        start-placeholder="放课开始时间"
+        end-placeholder="放课结束时间"
+        name="ctime"
+        :slect-show="false"
+        :quick-btn="['week', 'month']"
+        :key="datepickerKey"
+        @result="getCtime('ctime', arguments)"
+      >
+        <el-button
+          slot="quick-prev"
+          size="mini"
+          plain
+          :class="{ 'current-btn': isFirstWeek }"
+          @click="quickHandleFirstWeek"
+        >
+          首周 <i v-if="isFirstWeek" class="el-icon-circle-close"></i>
+        </el-button>
+      </date-down-quick-select>
+    </div>
     <div class="search-item">
       <simple-select
         placeholder="是否参课"
@@ -40,7 +68,7 @@
         tip="班主任"
         is-multiple
         :key="teacherKey"
-        @result="getSearch('teacher_id', arguments)"
+        @result="getTeacher"
       />
     </div>
     <div class="search-item">
@@ -65,19 +93,23 @@
 
 <script>
 import SimpleSelect from '@/components/MSearch/searchItems/simpleSelect.vue'
+import DateDownQuickSelect from '@/components/MSearch/searchItems/dateDownQuickSelect.vue'
 import Department from '@/components/MSearch/searchItems/department.vue'
 import GroupSell from '@/components/MSearch/searchItems/groupSell.vue'
 import HardLevel from '@/components/MSearch/searchItems/hardLevel.vue'
 import SearchStage from '@/components/MSearch/searchItems/searchStage.vue'
+import SearchPhoneAndUsername from '@/components/MSearch/searchItems/searchPhoneAndUsername.vue'
 import SearchTeamName from '@/components/MSearch/searchItems/searchTeamName'
 export default {
   components: {
     SimpleSelect,
+    DateDownQuickSelect,
     Department,
     GroupSell,
     HardLevel,
     SearchStage,
-    SearchTeamName
+    SearchTeamName,
+    SearchPhoneAndUsername
   },
   data() {
     return {
@@ -94,7 +126,9 @@ export default {
       ],
       searchParams: {},
       teacherFromDepartment: null,
-      teacherKey: 0
+      teacherKey: 0,
+      datepickerKey: 0,
+      isFirstWeek: false
     }
   },
 
@@ -128,6 +162,15 @@ export default {
       this.getSearch('sup.like', arr)
     },
 
+    // 班主任
+    getTeacher(res) {
+      const arr = []
+      if (res && res.teacher_id.length > 0) {
+        arr.push(res)
+      }
+      this.getSearch('teacher_id', arr)
+    },
+
     // 服务组-老师
     getDepartmentTeacher(key, res) {
       // 更换服务组时，更新 老师 筛选框
@@ -135,6 +178,35 @@ export default {
       const param = res && res[0]
       this.teacherFromDepartment = (param && param[key]) || null
       this.getSearch(key, res)
+    },
+
+    // 时间
+    getCtime(key, res) {
+      // 清除 首周
+      // this.getSearch('is_first_week_send', [])
+      this.$delete(this.searchParams, 'is_first_week_send')
+      this.isFirstWeek = false
+
+      this.getSearch(key, res)
+    },
+
+    /**
+     * 首周
+     */
+    quickHandleFirstWeek() {
+      console.log('fisrt')
+      this.isFirstWeek = !this.isFirstWeek
+      const arr = []
+      if (this.isFirstWeek) {
+        arr.push({
+          is_first_week_send: 1
+        })
+      }
+      // 清空 citme
+      this.$delete(this.searchParams, 'ctime')
+
+      this.datepickerKey = new Date().getTime()
+      this.getSearch('is_first_week_send', arr)
     }
   }
 }
@@ -142,9 +214,11 @@ export default {
 
 <style lang="scss" scoped>
 .search {
-  padding: 15px;
+  padding: 15px 15px 5px;
   border-bottom: 5px solid #f0f1f2;
+  flex-flow: wrap;
   &-item {
+    margin-bottom: 5px;
     margin-right: 10px;
   }
 }
