@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-08-25 11:40:19
  * @LastEditors: liukun
- * @LastEditTime: 2020-08-27 11:42:06
+ * @LastEditTime: 2020-09-26 16:18:11
 -->
 <template>
   <div>
@@ -14,7 +14,7 @@
           <div>
             {{ scope.row.packages_name ? scope.row.packages_name : '-' }}
           </div>
-          <div>¥{{ scope.row.amount ? scope.row.amount : '-' }}</div>
+          <div>¥{{ scope.row.amount >= 0 ? scope.row.amount : '-' }}</div>
         </template>
       </el-table-column>
       <el-table-column label="订单状态">

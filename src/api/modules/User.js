@@ -4,8 +4,8 @@
  * @version:
  * @Author: shentong
  * @Date: 2020-03-13 14:38:28
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-09-22 16:53:59
+ * @LastEditors: liukun
+ * @LastEditTime: 2020-09-26 16:11:34
  */
 // import axios from '../axios'
 import axios from '../axiosConfig'
@@ -985,7 +985,21 @@ export default {
     const formattingQuery = JSON.stringify({
       subject,
       uid: query,
-      trans_type: ['1', '2', '3', '4', '5', '6', '8', '9', '10', '11'], // 经和后端确认前端滤掉0和7
+      trans_type: [
+        '1',
+        '2',
+        '3',
+        '4',
+        '5',
+        '6',
+        '8',
+        '9',
+        '10',
+        '11',
+        '12',
+        '13',
+        '14'
+      ], // 经和后端确认前端滤掉0和7
       account_type: 2
     })
     const sort = `{ "ctime": "desc" }`
