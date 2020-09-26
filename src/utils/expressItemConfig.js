@@ -52,5 +52,6 @@ export const productTypeList = [
   { name: '补货商品', id: '5' },
   { name: '关单赠品', id: '6' },
   { name: '转介绍', id: '7' },
-  { name: '兑吧', id: '8' }
+  { name: '兑吧', id: '8' },
+  { name: '邀请有奖-抽奖', id: '9' }
 ]
