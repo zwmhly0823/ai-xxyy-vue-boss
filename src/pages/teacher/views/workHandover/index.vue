@@ -23,6 +23,11 @@
           <history :tabIndex="tabIndex" />
         </div>
       </el-tab-pane>
+      <el-tab-pane label="兼职老师离职交接">
+        <div v-if="tabIndex === '3'">
+          <partTeacher :tabIndex="tabIndex" />
+        </div>
+      </el-tab-pane>
     </el-tabs>
   </div>
 </template>
@@ -42,7 +47,8 @@ export default {
   components: {
     Wechar: () => import('./components/wecharHandover.vue'),
     Class: () => import('./components/classHandover.vue'),
-    history: () => import('./components/history.vue')
+    history: () => import('./components/history.vue'),
+    partTeacher: () => import('./components/partTeacher.vue')
   }
 }
 </script>
