@@ -70,6 +70,18 @@
           ></el-table-column>
           <el-table-column
             align="center"
+            prop="intruNum"
+            label="转介绍招生数"
+            width="100"
+          ></el-table-column>
+          <el-table-column
+            align="center"
+            prop="marketStuNum"
+            label="市场招生数"
+            width="100"
+          ></el-table-column>
+          <el-table-column
+            align="center"
             prop="realSumTeamSize"
             label="实际招生数"
           ></el-table-column>
@@ -82,12 +94,6 @@
             align="center"
             prop="planTeam"
             label="计划班级人数"
-          ></el-table-column>
-          <el-table-column
-            align="center"
-            prop="intruNum"
-            label="转介绍招生数"
-            width="100"
           ></el-table-column>
           <el-table-column prop="realTeam" label="已开班级数"></el-table-column>
           <el-table-column
@@ -203,6 +209,8 @@ export default {
             } else {
               value.intruNum = 0
             }
+            // 市场招生数
+            value.marketStuNum = value.realSumTeamSize - value.intruNum
           })
         })
 
