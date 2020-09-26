@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-09-24 17:20:53
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-09-25 18:15:44
+ * @LastEditTime: 2020-09-26 16:49:24
 -->
 <template>
   <div class="search d-flex">
@@ -31,7 +31,7 @@
         placeholder="服务组"
         name="teacher_id"
         :only-dept="0"
-        @result="getSearch('teacher_id', arguments)"
+        @result="getDepartmentTeacher('teacher_id', arguments)"
       />
     </div>
     <div class="search-item">
@@ -39,7 +39,18 @@
         name="teacher_id"
         tip="班主任"
         is-multiple
+        :key="teacherKey"
         @result="getSearch('teacher_id', arguments)"
+      />
+    </div>
+    <div class="search-item">
+      <hard-level addSupS :multiple="false" @result="getSup" />
+    </div>
+    <div class="search-item">
+      <search-stage
+        placeholder="期数"
+        name="term"
+        @result="getSearch('term', arguments)"
       />
     </div>
     <div class="search-item">
@@ -56,12 +67,16 @@
 import SimpleSelect from '@/components/MSearch/searchItems/simpleSelect.vue'
 import Department from '@/components/MSearch/searchItems/department.vue'
 import GroupSell from '@/components/MSearch/searchItems/groupSell.vue'
+import HardLevel from '@/components/MSearch/searchItems/hardLevel.vue'
+import SearchStage from '@/components/MSearch/searchItems/searchStage.vue'
 import SearchTeamName from '@/components/MSearch/searchItems/searchTeamName'
 export default {
   components: {
     SimpleSelect,
     Department,
     GroupSell,
+    HardLevel,
+    SearchStage,
     SearchTeamName
   },
   data() {
@@ -77,7 +92,9 @@ export default {
           text: '否'
         }
       ],
-      searchParams: {}
+      searchParams: {},
+      teacherFromDepartment: null,
+      teacherKey: 0
     }
   },
 
@@ -87,6 +104,7 @@ export default {
       console.log(res, 'search')
       console.log(key, 'key')
       const param = res && res[0]
+      console.log(param, 'param')
       if (param) {
         Object.assign(this.searchParams, param)
       } else {
@@ -94,6 +112,29 @@ export default {
       }
       console.log(this.searchParams)
       this.$emit('search', this.searchParams)
+    },
+
+    // 难度
+    getSup(res) {
+      const arr = []
+      if (res) {
+        const { sup } = res
+        const param = Object.assign(
+          {},
+          { 'sup.like': { 'sup.keyword': `${sup}` } }
+        )
+        arr.push(param)
+      }
+      this.getSearch('sup.like', arr)
+    },
+
+    // 服务组-老师
+    getDepartmentTeacher(key, res) {
+      // 更换服务组时，更新 老师 筛选框
+      this.teacherKey = new Date().getTime()
+      const param = res && res[0]
+      this.teacherFromDepartment = (param && param[key]) || null
+      this.getSearch(key, res)
     }
   }
 }

@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-09-21 15:00:30
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-09-25 17:13:17
+ * @LastEditTime: 2020-09-26 16:42:13
 -->
 <template>
   <el-row type="flex" class="app-main height">
@@ -51,7 +51,7 @@
               }}
             </template>
           </el-table-column>
-          <el-table-column label="服务组" min-width="130">
+          <el-table-column label="服务组" min-width="140">
             <template slot-scope="scope">
               {{
                 (scope.row.teacherInfo &&
@@ -115,14 +115,14 @@
               <p v-else>-</p>
             </template>
           </el-table-column>
-          <!-- <el-table-column label="期数" min-width="80">
+          <el-table-column label="期数" min-width="80">
             <template slot-scope="scope">
               <p v-if="scope.row.management">
                 {{ scope.row.management.period_name || '-' }}
               </p>
               <p v-else>-</p>
             </template>
-          </el-table-column> -->
+          </el-table-column>
         </el-table>
 
         <!-- 分页 -->
@@ -229,6 +229,7 @@ export default {
      */
     getSearchParams(params) {
       this.searchParams = params
+      this.currentPage = 1
       this.init()
     },
 
