@@ -555,5 +555,21 @@ export default {
   // 获取销售等级
   getSellLevel(params) {
     return axios.get(`/api/t/v1/teacher/course/teacherLevelByType?level=0`)
+  },
+  // 招生排期获取招生状态
+  getStatusByperiods(periods) {
+    return axios.get(`/api/t/v1/enroll/getStatusByperiods?periods=${periods}`)
+  },
+  // 招生排期切换状态
+  updateStatusByPeriod(params) {
+    return axios.get(
+      `/api/t/v1/enroll/updateStatusByPeriod?period=${params.period}&status=${params.status}`
+    )
+  },
+  // 转介绍招生数
+  getIntroduceCountByIds(query) {
+    return axios.get(
+      `/api/t/v1/teacher/getIntroduceCountByIds?term=${query.term}&ids=${query.ids}`
+    )
   }
 }

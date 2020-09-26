@@ -43,7 +43,7 @@
           <el-table-column
             prop="departmentName"
             label="部门"
-            width="140"
+            width="100"
             align="center"
           >
           </el-table-column>
@@ -70,12 +70,24 @@
           ></el-table-column>
           <el-table-column
             align="center"
+            prop="intruNum"
+            label="转介绍招生数"
+            width="100"
+          ></el-table-column>
+          <el-table-column
+            align="center"
+            prop="marketStuNum"
+            label="市场招生数"
+            width="100"
+          ></el-table-column>
+          <el-table-column
+            align="center"
             prop="realSumTeamSize"
             label="实际招生数"
           ></el-table-column>
           <el-table-column
             align="center"
-            prop="enrollRate"
+            prop="enrollStuRate"
             label="招生完成率"
           ></el-table-column>
           <el-table-column
@@ -159,7 +171,7 @@ export default {
           ...val,
           pageNum: 1
         }
-        console.log('this.tabQuery', this.tabQuery)
+        // console.log('this.tabQuery', this.tabQuery)
         this.init()
         // 表格内统计
         this.getScheduleDetailStatistic()
@@ -180,6 +192,31 @@ export default {
       try {
         const _list = await this.getScheduleDetailList()
         const { content = [] } = _list
+        const idsArr = []
+        content.forEach((item) => {
+          idsArr.push(item.teacherId)
+        })
+        const query = {
+          ids: idsArr.join(','),
+          term: this.paramsInfo.period
+        }
+        // 转介绍招生数
+        const intruStuNumRes = await this.getIntroduceCountByIds(query)
+        intruStuNumRes.forEach((item) => {
+          content.forEach((value) => {
+            if (item.id === value.teacherId) {
+              value.intruNum = item.count || 0
+              // 市场招生数
+              value.marketStuNum = value.realSumTeamSize - value.intruNum
+              // 招生完成率
+              value.enrollStuRate =
+                ((value.marketStuNum * 100) / value.planSumTeamSize).toFixed(
+                  1
+                ) + '%'
+            }
+          })
+        })
+
         this.tableData = content
 
         this.totalElements = +_list.totalElements
@@ -239,6 +276,19 @@ export default {
         this.flags.loading = false
         return new Error(err)
       }
+    },
+    // 转介绍招生数
+    getIntroduceCountByIds(query) {
+      return this.$http.Operating.getIntroduceCountByIds(query)
+        .then((res) => {
+          if (res.status === 'OK') {
+            return res.payload
+          }
+          return false
+        })
+        .catch(() => {
+          return false
+        })
     },
     // 分页
     pageChange_handler(page) {

@@ -133,7 +133,7 @@
           label="状态"
           align="center"
         ></el-table-column>
-        <el-table-column label="操作" align="center" width="130">
+        <el-table-column label="操作" align="center" width="200">
           <template slot-scope="scope">
             <div class="editStyle">
               <span style="margin-right:15px" @click="downlaodExcel(scope.row)"
@@ -144,7 +144,27 @@
                 @click="addEditSchedule(scope.row)"
                 >编辑</span
               >
-              <span @click="go_detail(scope.row)">详细</span>
+              <span style="margin-right:15px" @click="go_detail(scope.row)">
+                详细
+              </span>
+              <span
+                v-if="tabIndex === 0"
+                :class="[
+                  {
+                    'cant-click-button':
+                      scope.row.intruSwitchName === '招生完毕'
+                  }
+                ]"
+                @click="
+                  click_intru_switch(
+                    scope.$index,
+                    scope.row.period,
+                    scope.row.intruSwitchName
+                  )
+                "
+              >
+                {{ scope.row.intruSwitchName }}
+              </span>
             </div>
           </template>
         </el-table-column>
@@ -302,6 +322,8 @@ export default {
         } = await this.$http.Operating.getCourseListByType(this.tabQuery)
         this.totalPages = Number(totalElements)
 
+        const periodsArr = []
+
         content.forEach((item) => {
           item.startDate = formatData(item.startDate)
           item.endDate = formatData(item.endDate)
@@ -310,18 +332,87 @@ export default {
             ? formatData(item.endCourseDay)
             : ''
           item.status = status[item.status]
+          periodsArr.push(item.period)
         })
-        this.flags.loading = false
+        // 然后再获取招生的状态
+        const enrollStudentStatus = await this.getStatusByperiods(periodsArr)
+        if (!enrollStudentStatus) {
+          this.$message.error('获取招生状态失败')
+          return
+        }
+        // 把结果等于0的筛出来
+        const enrollArr = []
+        Object.keys(enrollStudentStatus).forEach((item) => {
+          if (+enrollStudentStatus[item] === 0) {
+            enrollArr.push(item)
+          }
+        })
+        content.forEach((item) => {
+          if (['待开课', '上课中', '已结课'].includes(item.status)) {
+            item.intruSwitchName = '招生完毕'
+          } else if (['待开始', '招生中'].includes(item.status)) {
+            item.intruSwitchName = '停止招生'
+          }
+          if (enrollArr.includes(item.period + '')) {
+            item.intruSwitchName = '恢复招生'
+          }
+        })
 
+        this.flags.loading = false
         this.tableData = content
       } catch (err) {
         this.flags.loading = false
         return new Error(err)
       }
     },
+    getStatusByperiods(periodsArr) {
+      return this.$http.Operating.getStatusByperiods(periodsArr.join(','))
+        .then((res) => {
+          if (res.status === 'OK') {
+            return res.payload
+          } else {
+            return false
+          }
+        })
+        .catch(() => {
+          return false
+        })
+    },
     // 搜索
     handleSearch(data) {
       console.log(data)
+    },
+    click_intru_switch(index, period, name) {
+      if (name === '招生完毕') {
+        return
+      }
+      const params = {
+        period: period,
+        status: name === '停止招生' ? 'NOOPEN' : 'OPEN'
+      }
+      this.flags.loading = true
+      this.$http.Operating.updateStatusByPeriod(params)
+        .then((res) => {
+          if (res.status === 'OK') {
+            this.$message({
+              type: 'success',
+              message: '修改成功'
+            })
+            this.$set(
+              this.tableData[index],
+              'intruSwitchName',
+              name === '停止招生' ? '恢复招生' : '停止招生'
+            )
+          } else {
+            this.$message.error('修改失败')
+          }
+        })
+        .catch(() => {
+          this.$message.error('修改失败')
+        })
+        .finally(() => {
+          this.flags.loading = false
+        })
     }
   }
 }
@@ -365,7 +456,13 @@ export default {
 }
 .editStyle {
   color: #0401ff;
-  cursor: pointer;
+  span {
+    cursor: pointer;
+  }
+  .cant-click-button {
+    color: #909399;
+    cursor: auto;
+  }
 }
 </style>
 <style lang="scss">
