@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-09-24 17:20:53
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-09-26 18:42:53
+ * @LastEditTime: 2020-09-26 22:13:29
 -->
 <template>
   <div class="search d-flex">
@@ -67,6 +67,7 @@
         name="teacher_id"
         tip="班主任"
         is-multiple
+        :teacherscope="teacherFromDepartment"
         :key="teacherKey"
         @result="getTeacher"
       />
