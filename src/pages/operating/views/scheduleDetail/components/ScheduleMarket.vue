@@ -87,7 +87,7 @@
           ></el-table-column>
           <el-table-column
             align="center"
-            prop="enrollRate"
+            prop="enrollStuRate"
             label="招生完成率"
           ></el-table-column>
           <el-table-column
@@ -205,12 +205,15 @@ export default {
         intruStuNumRes.forEach((item) => {
           content.forEach((value) => {
             if (item.id === value.teacherId) {
-              value.intruNum = value.count || 0
-            } else {
-              value.intruNum = 0
+              value.intruNum = item.count || 0
+              // 市场招生数
+              value.marketStuNum = value.realSumTeamSize - value.intruNum
+              // 招生完成率
+              value.enrollStuRate =
+                ((value.marketStuNum * 100) / value.planSumTeamSize).toFixed(
+                  1
+                ) + '%'
             }
-            // 市场招生数
-            value.marketStuNum = value.realSumTeamSize - value.intruNum
           })
         })
 
