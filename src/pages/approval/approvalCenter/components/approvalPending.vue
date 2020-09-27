@@ -50,6 +50,14 @@
         tip="请选择老师"
       />
       <tabTimeSelect style="margin-left:0px" @result="getSeacherTime" />
+      <el-button
+        type="primary"
+        size="mini"
+        style="margin-left:100px;"
+        v-if="flowApprovalIdList.length"
+        @click="batchApproval"
+        >批量审核通过</el-button
+      >
     </div>
     <!-- 数据table -->
     <el-table
