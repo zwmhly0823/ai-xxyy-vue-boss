@@ -185,16 +185,22 @@ export default {
       // if (res.regtype.length === 0) res.regtype = ['4', '5', '6']
       // this.setSeachParmas(res, ['regtype'], 'term')
       /**
-       * 新增商品类型筛选项-邀请有奖-抽奖（regtype=6, topic_id=10）
+       * 新增商品类型筛选项-邀请有奖-抽奖（regtype=5, topic_id=10）
        */
       // 邀请有奖-抽奖
       if (res && res.regtype === '666') {
-        res.regtype = '6'
+        res.regtype = '5'
         this.setSeachParmas(res, ['regtype'], 'term')
         this.setSeachParmas({ topic_id: '10' }, ['topic_id'], 'term')
       } else {
         this.setSeachParmas(res, ['regtype'], 'term')
-        this.setSeachParmas('', ['topic_id'], 'term')
+        // 小熊商城
+        if (res.regtype === '5') {
+          res.topic_id = { lt: 10 }
+          this.setSeachParmas(res, ['topic_id'], 'term')
+        } else {
+          this.setSeachParmas('', ['topic_id'], 'term')
+        }
       }
     },
 

@@ -269,11 +269,16 @@ export default {
                 currency = { currency: '宝石' }
                 Object.assign(item, currency)
                 item.amount = item.gem_integral
-              } else if (item.regtype === 5) {
+              } else if (item.regtype === 5 && item.topic_id !== '10') {
                 item.regtype_text = '小熊商城'
                 currency = { currency: '小熊币' }
                 Object.assign(item, currency)
                 item.amount = item.bear_integral
+              } else if (item.regtype === 5 && item.topic_id === '10') {
+                item.regtype_text = '邀请有奖-抽奖'
+                currency = { currency: '人民币' }
+                Object.assign(item, currency)
+                item.amount = 0
               } else if (item.regtype === 6) {
                 item.regtype_text = '邀请有奖'
                 currency = { currency: '赠送' }
