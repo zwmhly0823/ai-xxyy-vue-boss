@@ -3,8 +3,8 @@
  * @version: 
  * @Author: Lukun
  * @Date: 2020-04-27 17:47:58
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-09-22 17:11:49
+ * @LastEditors: liukun
+ * @LastEditTime: 2020-09-28 12:17:58
  -->
 <template>
   <div class="container">
@@ -1526,55 +1526,62 @@ export default {
         this.type_lk === 'REFUND' &&
         (this.positionIdlk === '3' || this.positionIdlk === '4')
       ) {
-        Object.assign(params, { page: 1, size: 999 })
+        Object.assign(params, { page: 1, size: 300 })
       }
       console.log(params, 'paramsparamsparams')
-      this.$http.Backend.checkListPending(params).then(async (res) => {
-        if (res && res.payload && res.payload.content) {
-          const zancunArr = res.payload.content.map((item) => {
-            const zhaiyao = item.abstractContent.split('^')
-            item.repiarContent = zhaiyao[0]
-            item.period = zhaiyao[1]
-            item.receptContent = zhaiyao[2]
-            item.reason = zhaiyao[3]
-            item.openTime = timestamp(item.ctime, 2)
-            item.approveTime = timestamp(item.endTime, 2)
-            // item.applyDepartment = ''
-            return item
-          })
-          // 重写部门名称
-          // const idArr = this.tableData.map((item) => item.applyId)
-          // this.$http.Backend.changeDepart(idArr).then(
-          //   ({ data: { TeacherDepartmentRelationList } }) => {
-          //     console.info('lklk-待审核', idArr, TeacherDepartmentRelationList)
-          //     if (TeacherDepartmentRelationList.length) {
-          //       TeacherDepartmentRelationList.forEach((item, index) => {
-          //         this.tableData.forEach((itemx, indexX) => {
-          //           if (item.teacher_id === itemx.applyId) {
-          //             itemx.applyDepartment = item.department.name
-          //           }
-          //         })
-          //       })
-          //     }
-          //   }
-          // )
-          // lk 为3,4 前端单独筛选下
-          if (this.type_lk === 'REFUND' && this.positionIdlk === '4') {
-            this.tableData = zancunArr.filter(
-              (item) => item.periodAlready === '0'
-            )
-            this.totalElements = this.tableData.length
-          } else if (this.type_lk === 'REFUND' && this.positionIdlk === '3') {
-            this.tableData = zancunArr.filter(
-              (item) => item.periodAlready !== '0'
-            )
-            this.totalElements = this.tableData.length
-          } else {
-            this.tableData = zancunArr
-            this.totalElements = res.payload.totalElements
+      this.$http.Backend.checkListPending(params)
+        .then(async (res) => {
+          if (res && res.payload && res.payload.content) {
+            const zancunArr = res.payload.content.map((item) => {
+              const zhaiyao = item.abstractContent.split('^')
+              item.repiarContent = zhaiyao[0]
+              item.period = zhaiyao[1]
+              item.receptContent = zhaiyao[2]
+              item.reason = zhaiyao[3]
+              item.openTime = timestamp(item.ctime, 2)
+              item.approveTime = timestamp(item.endTime, 2)
+              // item.applyDepartment = ''
+              return item
+            })
+            // 重写部门名称
+            // const idArr = this.tableData.map((item) => item.applyId)
+            // this.$http.Backend.changeDepart(idArr).then(
+            //   ({ data: { TeacherDepartmentRelationList } }) => {
+            //     console.info('lklk-待审核', idArr, TeacherDepartmentRelationList)
+            //     if (TeacherDepartmentRelationList.length) {
+            //       TeacherDepartmentRelationList.forEach((item, index) => {
+            //         this.tableData.forEach((itemx, indexX) => {
+            //           if (item.teacher_id === itemx.applyId) {
+            //             itemx.applyDepartment = item.department.name
+            //           }
+            //         })
+            //       })
+            //     }
+            //   }
+            // )
+            // lk 为3,4 前端单独筛选下
+            if (this.type_lk === 'REFUND' && this.positionIdlk === '4') {
+              this.tableData = zancunArr.filter(
+                (item) => item.periodAlready === '0'
+              )
+              this.totalElements = this.tableData.length
+            } else if (this.type_lk === 'REFUND' && this.positionIdlk === '3') {
+              this.tableData = zancunArr.filter(
+                (item) => item.periodAlready !== '0'
+              )
+              this.totalElements = this.tableData.length
+            } else {
+              this.tableData = zancunArr
+              this.totalElements = res.payload.totalElements
+            }
           }
-        }
-      })
+        })
+        .finally(() => {
+          // 重置 page: 1,size: 20  影响了this.params
+          if (this.type_lk === 'REFUND') {
+            Object.assign(this.params, { page: 1, size: 20 })
+          }
+        })
     },
     // 调期调级调班的drawer同意或拒绝
     adjustDrawerPass(type) {
