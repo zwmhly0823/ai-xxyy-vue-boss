@@ -166,7 +166,7 @@ export default {
       this.getOrderList(this.currentPage, true)
     },
     topic(val) {
-      if (val === '1,2,6') {
+      if (val === '1,2,6,10') {
         this.currentPage = 1
         this.getOrderList()
       }
@@ -224,12 +224,12 @@ export default {
       }
 
       /*
-       * 活动订单 - (小熊商城1，推荐有礼2，赠送6)
+       * 活动订单 - (小熊商城1，推荐有礼2，赠送6, 10邀请有奖-抽奖)
        * 积分兑换=小熊商城
        * 宝石兑换=推荐有礼
        * 赠送=邀请有奖
        * */
-      if (this.topic === '1,2,6') {
+      if (this.topic === '1,2,6,10') {
         // 订单列表
         this.orderData(queryObj, page)
 
@@ -269,11 +269,16 @@ export default {
                 currency = { currency: '宝石' }
                 Object.assign(item, currency)
                 item.amount = item.gem_integral
-              } else if (item.regtype === 5) {
+              } else if (item.regtype === 5 && item.topic_id !== '10') {
                 item.regtype_text = '小熊商城'
                 currency = { currency: '小熊币' }
                 Object.assign(item, currency)
                 item.amount = item.bear_integral
+              } else if (item.regtype === 5 && item.topic_id === '10') {
+                item.regtype_text = '邀请有奖-抽奖'
+                currency = { currency: '人民币' }
+                Object.assign(item, currency)
+                item.amount = 0
               } else if (item.regtype === 6) {
                 item.regtype_text = '邀请有奖'
                 currency = { currency: '赠送' }
