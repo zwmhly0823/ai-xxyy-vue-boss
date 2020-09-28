@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-07 13:52:26
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-09-24 17:12:54
+ * @LastEditTime: 2020-09-28 19:13:13
  */
 import axios from '../axiosConfig'
 import { injectSubject } from '@/utils/index'
@@ -502,7 +502,7 @@ export default {
     const queryObj = query || {}
     return axios.post('/graphql/v1/toss', {
       query: `{
-        StudentSystemJoinCourseDetailPage(query: ${JSON.stringify(
+        StudentSystemRecordListStatisticsPage(query: ${JSON.stringify(
           injectSubject(queryObj)
         )}, page: ${page}) {
         totalElements
@@ -526,8 +526,7 @@ export default {
           is_join_course
           is_complete_course
           join_course_time
-          complete_course_time
-          user_status
+          complete_time
           userExtends {
             id
             u_id

@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-09-21 15:00:30
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-09-26 21:02:55
+ * @LastEditTime: 2020-09-28 19:15:06
 -->
 <template>
   <el-row type="flex" class="app-main height">
@@ -102,7 +102,7 @@
           >
           </el-table-column>
           <el-table-column
-            prop="complete_course_time"
+            prop="complete_time"
             label="完课时间"
             min-width="140"
           >
@@ -182,12 +182,12 @@ export default {
         page
       )
         .then((res) => {
-          if (res?.data?.StudentSystemJoinCourseDetailPage) {
+          if (res?.data?.StudentSystemRecordListStatisticsPage) {
             const {
               content = [],
               totalPages = 1,
               totalElements = 0
-            } = res.data.StudentSystemJoinCourseDetailPage
+            } = res.data.StudentSystemRecordListStatisticsPage
             // this.tableData = content
             this.setData(content)
             this.totalPages = +totalPages
@@ -204,10 +204,8 @@ export default {
         item.join_course_time =
           (item.join_course_time && formatData(item.join_course_time, 's')) ||
           '-'
-        item.complete_course_time =
-          (item.complete_course_time &&
-            formatData(item.complete_course_time, 's')) ||
-          '-'
+        item.complete_time =
+          (item.complete_time && formatData(item.complete_time, 's')) || '-'
         // 放课时间
         item.ctime = (item.ctime && formatData(item.ctime, 's')) || '-'
         item.sup = item.sup || '-'
