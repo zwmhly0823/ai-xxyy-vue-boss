@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-15 20:35:57
  * @LastEditors: Shentong
- * @LastEditTime: 2020-09-25 16:15:18
+ * @LastEditTime: 2020-09-28 12:01:07
  -->
 <template>
   <div class="third-step">
@@ -275,7 +275,7 @@
         </div>
       </div>
       <span slot="footer" class="dialog-footer">
-        <el-button size="mini" @click="dialogVisible = false">取 消</el-button>
+        <el-button size="mini" @click="dialogHandleClose">取 消</el-button>
         <el-button size="mini" type="primary" @click="saveEditHandle"
           >确 定</el-button
         >
@@ -436,10 +436,10 @@ export default {
     },
     /** 保存更改的老师微信号 */
     saveEditTeacherWeChat(params) {
-      const callback = () => {
-        this.currentTeacherWenum = ''
-        this.dialogVisible = false
-      }
+      // const callback = () => {
+      //   this.currentTeacherWenum = ''
+      //   this.dialogVisible = false
+      // }
       this.$http.Operating.saveEditTeacherWeChat(params).then((res) => {
         const {
           payload: { wechatId = '', wechatNo = '' }
@@ -452,13 +452,14 @@ export default {
           type: 'success',
           message: '更改成功',
           duration: 1000,
-          onClose: callback
+          onClose: this.dialogHandleClose
         })
       })
     },
     dialogHandleClose() {
       this.currentTeacherWenum = ''
       this.dialogVisible = false
+      this.currentRowIndex = -1
     },
     // 搜索emit数据
     searchChange(search) {
