@@ -1159,6 +1159,7 @@ export default {
                 mobile
               }
               source_type
+              delivery_type
             }
           }
         }`

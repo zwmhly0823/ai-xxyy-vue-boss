@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-31 22:54:28
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-09-05 17:33:33
+ * @LastEditTime: 2020-10-02 17:04:43
  */
 import { getAppSubjectCode } from '@/utils/index'
 import axios from '../axiosConfig'
@@ -17,7 +17,7 @@ export default {
   ExpressList(params) {
     // return this.post(this.API_HOST + '/admin/login/pass/2', params)
     return axios.get(
-      `/api/o/v1/express/getExpressDetailForAPP?expressNo=${params.expressNo}`
+      `/api/ex/v1/express/getExpressDetailForAPP?expressNo=${params.expressNo}`
     )
   },
   /**
@@ -25,7 +25,7 @@ export default {
    * */
   getExpressDetails(params) {
     return axios.get(
-      `/api/o/v1/express/getExpressDetailCenterForAPP?expressNo=${params.expressNo}`
+      `/api/ex/v1/express/getExpressDetailCenterForAPP?expressNo=${params.expressNo}`
     )
   },
   /**
