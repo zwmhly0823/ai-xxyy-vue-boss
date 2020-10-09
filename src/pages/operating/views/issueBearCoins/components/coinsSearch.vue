@@ -102,7 +102,12 @@ export default {
   },
   computed: {
     isAuth() {
-      return JSON.parse(localStorage.getItem('staff')).mobile === '18618194642'
+      /**
+       * 王新建 - 18701139906
+       */
+      const { mobile = '' } = JSON.parse(localStorage.getItem('staff'))
+      const authData = ['18701139906', '18618194642']
+      return authData.includes(mobile)
     }
   },
   methods: {
