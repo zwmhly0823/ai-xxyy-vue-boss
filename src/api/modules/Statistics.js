@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-07 13:52:26
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-09-28 19:13:13
+ * @LastEditTime: 2020-10-09 17:22:14
  */
 import axios from '../axiosConfig'
 import { injectSubject } from '@/utils/index'
@@ -568,6 +568,7 @@ export default {
           complete_course_count
           join_course_rate
           complete_course_rate
+          complete_in_join_rate
         }
       }`
     })

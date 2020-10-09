@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-09-21 15:00:30
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-09-28 19:15:06
+ * @LastEditTime: 2020-10-09 16:56:17
 -->
 <template>
   <el-row type="flex" class="app-main height">
@@ -21,6 +21,14 @@
           </p>
           <p>
             参课率
+            <span class="primary-text">{{
+              summary.join_course_rate === 'NaN'
+                ? '-'
+                : `${summary.join_course_rate || '0.00'}%`
+            }}</span>
+          </p>
+          <p>
+            参课完课率
             <span class="primary-text">{{
               summary.join_course_rate === 'NaN'
                 ? '-'
