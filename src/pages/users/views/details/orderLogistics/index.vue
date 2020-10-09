@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-08-25 11:40:19
  * @LastEditors: liukun
- * @LastEditTime: 2020-09-26 16:18:11
+ * @LastEditTime: 2020-10-09 18:40:46
 -->
 <template>
   <div>
@@ -52,6 +52,17 @@
             </div>
           </div>
         </template>
+      </el-table-column>
+      <el-table-column label="退款状态" align="center">
+        <template slot-scope="scope">
+          <div>{{ scope.row.isrefund ? '已退款' : '未退款' }}</div>
+        </template>
+      </el-table-column>
+      <el-table-column
+        label="开票状态"
+        prop="invoice_status_text"
+        align="center"
+      >
       </el-table-column>
       <el-table-column label="关联物流">
         <template slot-scope="scope">
