@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-15 20:35:57
  * @LastEditors: Shentong
- * @LastEditTime: 2020-07-27 16:41:55
+ * @LastEditTime: 2020-09-28 12:01:07
  -->
 <template>
   <div class="third-step">
@@ -70,9 +70,16 @@
         <el-table-column
           prop="teacherWechatNo"
           label="绑定微信"
-          min-width="120"
+          min-width="130"
           align="center"
         >
+          <template slot-scope="scope">
+            {{ scope.row.teacherWechatNo || '' }}
+            <i
+              class="el-icon-edit edit-styl"
+              @click="editWechat(scope.row, scope.$index)"
+            ></i>
+          </template>
         </el-table-column>
         <el-table-column
           prop="lastPeriod"
@@ -226,6 +233,54 @@
         > -->
       </div>
     </div>
+    <!-- 编辑微信号模态框 -->
+    <el-dialog
+      title="选择微信号"
+      :visible.sync="dialogVisible"
+      width="60%"
+      :before-close="dialogHandleClose"
+      custom-class="my-dialog-achedule"
+      :close-on-click-modal="false"
+    >
+      <div class="dialog-info">
+        <div class="row-cell">
+          <div>
+            <span class="label">销售姓名：</span
+            ><span>{{ currentEidtRow.teacherRealName }}</span>
+          </div>
+        </div>
+        <div class="row-cell">
+          <div>
+            <span class="label">所属部门：</span
+            ><span>{{ currentEidtRow.departmentName }}</span>
+          </div>
+        </div>
+        <div class="row-cell">
+          <div>
+            <span class="label">选择微信号：</span>
+            <el-select
+              v-model="currentTeacherWenum"
+              placeholder="请选择"
+              size="mini"
+            >
+              <el-option
+                v-for="item in currentTeacherWechatList"
+                :key="item.weixinId"
+                :label="item.weixinNo"
+                :value="item.weixinId"
+              >
+              </el-option>
+            </el-select>
+          </div>
+        </div>
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button size="mini" @click="dialogHandleClose">取 消</el-button>
+        <el-button size="mini" type="primary" @click="saveEditHandle"
+          >确 定</el-button
+        >
+      </span>
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -238,6 +293,11 @@ export default {
   data() {
     return {
       levelIndex: 0,
+      currentRowIndex: -1,
+      currentTeacherWenum: '',
+      currentTeacherWechatList: [],
+      currentEidtRow: {},
+      dialogVisible: false,
       levelList: [
         {
           label: 'S1',
@@ -319,9 +379,90 @@ export default {
       // index !== this.levelIndex && this.stepOpt(false, callback)
       index !== this.levelIndex && callback()
     },
+    /** 点击编辑微信 按钮 */
+    editWechat(row, curIndex) {
+      const { departmentId, teacherId } = row
+      this.dialogVisible = true
+      this.currentEidtRow = row
+      this.currentRowIndex = curIndex
+      this.getTeacherAllWechatByDept({
+        departmentId,
+        teacherId
+      })
+    },
+    /** 根据老师id和部门id查询老师关联微信号 */
+    async getTeacherAllWechatByDept(params) {
+      const teacherList = await this.$http.Operating.getTeacherAllWechatByDept(
+        params
+      )
+      const { payload = [] } = teacherList
+      this.currentTeacherWechatList = payload
+    },
+    /** 编辑微信模态框保存按钮 */
+    saveEditHandle() {
+      const { courseType = 0 } = this.$route.params
+      const {
+        currentTeacherWechatList: crtWc,
+        currentTeacherWenum: weixinId,
+        schedulePeriod: period,
+        currentEidtRow: {
+          teacherWechatId: oldWeixinId,
+          teacherWechatNo,
+          teacherId
+        } = {}
+      } = this
+
+      if (!weixinId) {
+        this.$message.warning('请选择微信号')
+        return
+      }
+      const params = {
+        oldWeixinId,
+        weixinId,
+        weixinNo: '',
+        oldWeixinNo: teacherWechatNo,
+        teacherId,
+        courseType,
+        period
+      }
+
+      for (let i = 0; i < crtWc.length; i++) {
+        if (weixinId === crtWc[i].weixinId) {
+          params.weixinNo = crtWc[i].weixinNo
+          break
+        }
+      }
+      weixinId && this.saveEditTeacherWeChat(params)
+    },
+    /** 保存更改的老师微信号 */
+    saveEditTeacherWeChat(params) {
+      // const callback = () => {
+      //   this.currentTeacherWenum = ''
+      //   this.dialogVisible = false
+      // }
+      this.$http.Operating.saveEditTeacherWeChat(params).then((res) => {
+        const {
+          payload: { wechatId = '', wechatNo = '' }
+        } = res
+
+        this.tableData[this.currentRowIndex].teacherWechatNo = wechatNo
+        this.tableData[this.currentRowIndex].teacherWechatId = wechatId
+
+        this.$message({
+          type: 'success',
+          message: '更改成功',
+          duration: 1000,
+          onClose: this.dialogHandleClose
+        })
+      })
+    },
+    dialogHandleClose() {
+      this.currentTeacherWenum = ''
+      this.dialogVisible = false
+      this.currentRowIndex = -1
+    },
     // 搜索emit数据
     searchChange(search) {
-      console.log('search', search)
       const {
         department = [],
         groupSell = '',
@@ -349,7 +490,6 @@ export default {
           const { enroll = [] } = item
           // 如果enroll为空，手动添加
           if (!enroll.length) {
-            // for (let i = 1; i <= 3; i++) {
             enroll.push({
               courseDifficulty: this.params.courseDifficulty,
               status: 0,
@@ -369,7 +509,6 @@ export default {
         })
 
         this.tableData = payload
-        // console.log('this.tableData ', this.tableData)
       } catch (err) {
         this.$message({
           message: '获取列表出错',
@@ -420,7 +559,6 @@ export default {
     pageChange_handler() {},
     // validate
     validateTableForm(data) {
-      console.log('data', data)
       this.isValidate = true
 
       for (var i = 0; i < data.length; i++) {
@@ -528,6 +666,32 @@ export default {
     margin-top: 10px;
     display: flex;
     align-items: center;
+  }
+}
+.my-dialog-achedule {
+  .dialog-info {
+    .row-cell {
+      height: 35px;
+      display: flex;
+      align-items: center;
+      .label {
+        font-weight: 500;
+        color: #333;
+        margin-right: 20px;
+        width: 90px;
+        display: inline-block;
+      }
+    }
+  }
+}
+.mytable {
+  .edit-styl {
+    font-size: 16px;
+    color: green;
+    cursor: pointer;
+    :hover {
+      color: #2a75ed;
+    }
   }
 }
 .step-three-container {
