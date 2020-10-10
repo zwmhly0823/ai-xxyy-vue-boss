@@ -4,7 +4,7 @@
  * @Author: zhangjianwen
  * @Date: 2020-07-09 15:02:59
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-09-24 19:36:42
+ * @LastEditTime: 2020-10-10 14:24:30
 -->
 <template>
   <div class="learn-record">
@@ -135,6 +135,11 @@
             </template>
           </el-table-column>
           <el-table-column prop="task_count" label="总传作品数">
+            <template slot-scope="scope">
+              <p>
+                {{ scope.row.task_count }}
+              </p>
+            </template>
           </el-table-column>
           <el-table-column
             prop="ad_count"
@@ -242,7 +247,10 @@
         </el-table-column>
         <el-table-column label="用户信息" min-width="200">
           <template slot-scope="scope">
-            <base-user-info :user="scope.row" @handle-click="userHandle" />
+            <base-user-info
+              :user="scope.row.userExtends"
+              @handle-click="userHandle(scope.row)"
+            />
           </template>
         </el-table-column>
         <el-table-column
@@ -346,12 +354,12 @@
         >
           <template slot-scope="scope">
             <p>
-              {{ scope.row.task_count > 0 ? '已上传' : '未上传' }}
+              {{ scope.row.task.length > 0 ? '已上传' : '未上传' }}
             </p>
             <p>
               {{
-                scope.row.last_task_time
-                  ? `最近：${formatDate(scope.row.last_task_time)}`
+                scope.row.task.length > 0 && scope.row.task[0].ctime
+                  ? `最近：${formatDate(scope.row.task[0].ctime)}`
                   : `最近：无`
               }}
             </p>
@@ -369,13 +377,13 @@
         </el-table-column>
         <el-table-column prop="completed_count" label="本月上传截图次数">
         </el-table-column>
-        <el-table-column prop="status" label="是否转化" width="80">
+        <!-- <el-table-column prop="status" label="是否转化" width="80">
           <template slot-scope="scope">
             <p>
-              {{ use_status[scope.row.status] }}
+              {{ use_status[scope.row.userExtends.status] }}
             </p>
           </template>
-        </el-table-column>
+        </el-table-column> -->
         <el-table-column prop="status" label="是否退费" width="80">
           <template slot-scope="scope">
             <p>
@@ -406,7 +414,9 @@
               {{ scope.row.team_name }}
             </p>
             <p>
-              {{ `${scope.row.realname} ${scope.row.department_name}` }}
+              {{
+                `${scope.row.teacherInfo.realname} ${scope.row.teacherInfo.department_name}`
+              }}
             </p>
           </template>
         </el-table-column>

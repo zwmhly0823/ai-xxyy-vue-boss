@@ -273,6 +273,87 @@ export default {
     })
   },
   // 学习记录 系统课 详情页
+  // getStudentSRecordList(query, teamName = '', sup, page = 1, sort = 'desc') {
+  //   console.log(teamName)
+  //   teamName &&
+  //     Object.assign(query, {
+  //       'team_name.like': { 'team_name.keyword': `*${teamName}*` }
+  //     })
+  //   const formattingQuery = JSON.stringify({
+  //     ...query,
+  //     sup: sup.toLowerCase()
+  //   })
+  //   console.log(formattingQuery)
+  //   const formattingSort = JSON.stringify({ ctime: sort })
+  //   return axios.post(`/graphql/v1/toss`, {
+  //     query: `{
+  //       StudentSystemRecordListStatisticsPage(
+  //         query:${JSON.stringify(injectSubject(formattingQuery))},
+  //         page: ${page},
+  //         size:20,
+  //         sort:${JSON.stringify(formattingSort)}
+  //         )
+  //         {
+  //            content {
+  //     id
+  //     cid
+  //     mid
+  //     ctime
+  //     utime
+  //     student_id
+  //     course_id
+  //     team_id
+  //     team_name
+  //     term
+  //     sup
+  //     team_state
+  //     teacher_id
+  //     realname
+  //     department_id
+  //     department_name
+  //     user_num
+  //     username
+  //     nickname
+  //     birthday
+  //     base_painting
+  //     mobile
+  //     sex
+  //     mobile_city
+  //     mobile_province
+  //     status
+  //     state
+  //     learn_course_count
+  //     last_join_course_time
+  //     complete_time
+  //     task_count
+  //     last_task_time
+  //     comment_count
+  //     lesson_comment_count
+  //     ad_count
+  //     ad_last_join_course_time
+  //     ad_complete_time
+  //     ad_join_course_count
+  //     ad_complete_course_count
+  //     ad_state
+  //     completed_count
+  //     studentSystemStatistics{
+  //     life_cycle
+  //     remain_order_count
+  //     }
+
+  //   }
+  //   empty
+  //   first
+  //   last
+  //   number
+  //   size
+  //   numberOfElements
+  //   totalElements
+  //   totalPages
+  //         }
+  //       }`
+  //   })
+  // },
   getStudentSRecordList(query, teamName = '', sup, page = 1, sort = 'desc') {
     console.log(teamName)
     teamName &&
@@ -294,7 +375,7 @@ export default {
           sort:${JSON.stringify(formattingSort)}
           )
           {
-             content {
+      content {
       id
       cid
       mid
@@ -308,25 +389,25 @@ export default {
       sup
       team_state
       teacher_id
-      realname
-      department_id
-      department_name
+      # realname
+      # department_id
+      # department_name
       user_num
-      username
-      nickname
-      birthday
-      base_painting
+      # username
+      # nickname
+      # birthday
+      # base_painting
       mobile
-      sex
-      mobile_city
-      mobile_province
-      status
+      # sex
+      # mobile_city
+      # mobile_province
+      # status
       state
       learn_course_count
       last_join_course_time
       complete_time
-      task_count
-      last_task_time
+      # task_count
+      # last_task_time
       comment_count
       lesson_comment_count
       ad_count
@@ -336,11 +417,30 @@ export default {
       ad_complete_course_count
       ad_state
       completed_count
-      studentSystemStatistics{
-      life_cycle
-      remain_order_count
+      studentSystemStatistics {
+        life_cycle
+        remain_order_count
       }
-
+      teacherInfo {
+        id
+        realname
+        department_id
+        department_name
+      }
+      task {
+        id
+        ctime
+        task_image
+      }
+      userExtends{
+        mobile
+        username
+        nickname
+        birthday
+        base_painting
+        sex
+        status
+      }
     }
     empty
     first
