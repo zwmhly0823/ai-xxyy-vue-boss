@@ -222,7 +222,7 @@ export default {
         this.$message('没有未读消息')
         return
       }
-      this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+      this.$confirm('您确定要将全部未读通知标为已读?', '全部标及提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
