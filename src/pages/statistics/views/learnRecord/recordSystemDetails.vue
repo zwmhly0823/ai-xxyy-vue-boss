@@ -4,7 +4,7 @@
  * @Author: zhangjianwen
  * @Date: 2020-07-09 15:02:59
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-10-10 14:24:30
+ * @LastEditTime: 2020-10-10 18:06:43
 -->
 <template>
   <div class="learn-record">
@@ -58,12 +58,22 @@
             label="实际参课人数"
             v-if="interTypef.includes(lessonType)"
           >
+            <template slot-scope="scope">
+              <p>
+                {{ scope.row.join_course_count }}
+              </p>
+            </template>
           </el-table-column>
           <el-table-column
             prop="ad_join_course_count"
             label="实际参课人数"
             v-if="interTypes.includes(lessonType)"
           >
+            <template slot-scope="scope">
+              <p>
+                {{ scope.row.ad_join_course_count }}
+              </p>
+            </template>
           </el-table-column>
           <el-table-column
             prop="learn_course_count"
@@ -227,6 +237,7 @@
                     :quick-btn="['day', 'yesterday']"
                     :slectShow="isActive === 1"
                     name="dateTime"
+                    labelText="参课时间"
                     @result="getSearchData('dateTime', arguments)"
                   />
                 </el-form-item>
@@ -642,8 +653,12 @@ export default {
         this.num = res[0].mobile || res[0].user_num_text
       }
       if (key === 'dateTime') {
-        this.joinDate = res[0].join
-        this.overDate = res[0].over
+        if (res[0].dateTime) {
+          this.joinDate = res[0].dateTime
+        } else {
+          this.joinDate = res[0].join
+          this.overDate = res[0].over
+        }
       }
       this.$nextTick(() => {
         this.getRecordList()

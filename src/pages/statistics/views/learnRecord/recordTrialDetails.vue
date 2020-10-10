@@ -4,7 +4,7 @@
  * @Author: zhangjianwen
  * @Date: 2020-07-09 15:02:59
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-07-30 14:59:24
+ * @LastEditTime: 2020-10-10 18:06:53
 -->
 <template>
   <div class="learn-record">
@@ -226,6 +226,7 @@
                     :quick-btn="['day', 'yesterday']"
                     :slectShow="isActive === 1"
                     name="dateTime"
+                    labelText="参课时间"
                     @result="getSearchData('dateTime', arguments)"
                   />
                 </el-form-item>
@@ -616,8 +617,12 @@ export default {
         this.num = res[0].mobile || res[0].user_num_text
       }
       if (key === 'dateTime') {
-        this.joinDate = res[0].join
-        this.overDate = res[0].over
+        if (res[0].dateTime) {
+          this.joinDate = res[0].dateTime
+        } else {
+          this.joinDate = res[0].join
+          this.overDate = res[0].over
+        }
       }
       this.$nextTick(() => {
         this.getRecordList()
