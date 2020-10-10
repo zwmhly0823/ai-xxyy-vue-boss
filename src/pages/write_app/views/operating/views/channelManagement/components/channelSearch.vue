@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-04-25 12:09:03
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-26 11:14:56
+ * @LastEditTime: 2020-09-25 22:11:29
  -->
 <template>
   <div id="channel-box" class="channel-box">
@@ -389,6 +389,9 @@ export default {
   mounted() {
     window.addEventListener('scroll', this.handleScroll, true)
   },
+  destroyed() {
+    window.removeEventListener('scroll')
+  },
   methods: {
     handleScroll() {
       const dom = document.getElementById('channel-box').scrollTop
@@ -431,7 +434,7 @@ export default {
         this.totalNumber = res.number
         this.totalElements = res.totalElements
         _data.forEach((res) => {
-          res.channelNameLink = `https://www.xiaoxiongmeishu.com/activity/newFortyNine?changeImg=1&channelId=${res.pay_channel}`
+          res.channelNameLink = `https://activity.meishubao.com/custom/writing?channelId=${res.pay_channel}`
           // 线索数
           // const orderUserAllNums = +res.orderUserAllNums
           // 购买体验课数

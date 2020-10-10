@@ -4,7 +4,7 @@
  * @Author: shentong
  * @Date: 2020-03-13 16:20:48
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-09-11 17:25:21
+ * @LastEditTime: 2020-09-28 18:03:42
  */
 import axios from '../axiosConfig'
 import { injectSubject, getAppSubjectCode } from '@/utils/index'
@@ -42,6 +42,7 @@ export default {
             id
             uid
             ctime
+            buytime
             packages_name
             sup
             stage
@@ -107,6 +108,7 @@ export default {
             trial_pay_channel
             trial_pay_channel_text
             isrefund
+            topic_id
           }
         }
       }`

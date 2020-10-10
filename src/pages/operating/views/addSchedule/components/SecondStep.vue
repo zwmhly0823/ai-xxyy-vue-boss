@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-15 20:35:57
  * @LastEditors: Shentong
- * @LastEditTime: 2020-04-22 11:50:58
+ * @LastEditTime: 2020-09-16 20:49:10
  -->
 <template>
   <div class="second-step">
@@ -113,14 +113,18 @@ export default {
     // 获取部门tree信息
     department(dept = {}) {
       // 根据部门ID获取老师ID
-      const { id, pid, children } = dept
-      const query = {
-        department: {
-          id: `${id}`,
-          pid: `${pid}`,
-          children: `${JSON.stringify(children)}`
+      let { id, pid, children, query = {} } = dept
+
+      if (+id) {
+        query = {
+          department: {
+            id: `${id}`,
+            pid: `${pid}`,
+            children: `${JSON.stringify(children)}`
+          }
         }
       }
+
       this.departmentQuery = query
       this.getTeacherByDept(1, JSON.stringify(query))
     },
@@ -138,13 +142,13 @@ export default {
       }
       const query = this.query ? JSON.stringify(this.query) : ''
       // tab数据
-      const res = await this.$http.Teacher.getTeacherPage(
+      const res = await this.$http.Teacher.getTeacherRealnameAndId(
         page,
         JSON.stringify(query),
-        500
+        3000
       )
-      if (res && res.data && res.data.TeacherManagePage) {
-        const { content = [], number } = res.data.TeacherManagePage
+      if (res && res.data) {
+        const { content = [], number } = res.data.TeacherManagePage || {}
 
         this.transferData = content
         this.currentPage = +number

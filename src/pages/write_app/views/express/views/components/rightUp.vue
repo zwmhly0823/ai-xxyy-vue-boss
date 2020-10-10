@@ -5,6 +5,7 @@
       <m-search
         @search="handleSearch"
         class="clearBorder"
+        :tab="tab"
         :phone="showItem.phone"
         :schedule="showItem.schedule"
         :sup="showItem.sup"
@@ -193,7 +194,8 @@ export default {
         timeData: [
           { text: '购买时间', value: 'ctime' },
           { text: '揽收时间', value: 'delivery_collect_time' },
-          { text: '签收时间', value: 'signing_time' }
+          { text: '签收时间', value: 'signing_time' },
+          { text: '审核时间', value: 'center_ctime' }
         ],
         selectAddress: true,
         replenishReason: 'replenish_reason',
@@ -215,6 +217,7 @@ export default {
     }
   },
   created() {
+    console.log(this.tab, 'tab')
     this.teacherId = isToss()
     this.operatorId =
       this.teacherId || JSON.parse(localStorage.getItem('staff')).id

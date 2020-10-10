@@ -58,6 +58,7 @@ module.exports = {
       '/api': {
         target: 'https://test.meixiu.mobi',
         // target: 'https://dev.meixiu.mobi',
+        // target: 'https://bossprod.xiaoxiongmeishu.com/',
         changeOrigin: true,
         ws: true,
         secure: false,

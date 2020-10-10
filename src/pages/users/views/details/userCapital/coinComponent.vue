@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-08-25 11:40:19
  * @LastEditors: liukun
- * @LastEditTime: 2020-09-01 14:34:53
+ * @LastEditTime: 2020-09-17 11:24:12
 -->
 <template>
   <div class="coin-content">
@@ -146,8 +146,15 @@ export default {
       // 头3数据取自老爹-总获取
       this.coinNumList[0].value = this.faProps.reduce(
         (pre, cur, index, self) => {
-          if (cur.code !== '4' && cur.code !== '5' && cur.code !== '11') {
+          if (
+            cur.code !== '5' &&
+            cur.code !== '11' &&
+            cur.code !== '13' &&
+            cur.code !== '14'
+          ) {
             return pre + Number(cur.value)
+          } else {
+            return pre + 0
           }
         },
         0
@@ -155,10 +162,15 @@ export default {
       // 头3数据取自老爹-已消耗
       this.coinNumList[1].value = this.faProps.reduce(
         (pre, cur, index, self) => {
-          if (cur.code === '11') {
+          if (
+            cur.code === '5' ||
+            cur.code === '11' ||
+            cur.code === '13' ||
+            cur.code === '14'
+          ) {
             return pre + Number(cur.value)
           } else {
-            return 0
+            return pre + 0
           }
         },
         0

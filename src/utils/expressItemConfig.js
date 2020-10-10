@@ -42,3 +42,16 @@ export const productTopicListBf = [
   { label: '推荐有礼补发', value: '4' },
   { label: '邀请有奖补发', value: '6' }
 ]
+
+export const productTypeList = [
+  { name: '体验课随材', id: '0' },
+  { name: '系统课盒子随材', id: '1' },
+  { name: '小熊商城', id: '2' },
+  { name: '推荐有奖', id: '3' },
+  { name: '邀请有奖', id: '4' },
+  { name: '补货商品', id: '5' },
+  { name: '关单赠品', id: '6' },
+  { name: '转介绍', id: '7' },
+  { name: '兑吧', id: '8' },
+  { name: '邀请有奖-抽奖', id: '9' }
+]

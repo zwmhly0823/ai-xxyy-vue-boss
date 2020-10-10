@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-04-25 12:09:03
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-09-04 11:35:29
+ * @LastEditTime: 2020-09-25 22:11:39
  -->
 <template>
   <div id="channel-boxs" class="channel-box">
@@ -335,6 +335,9 @@ export default {
   mounted() {
     window.addEventListener('scroll', this.handleScroll, true)
   },
+  destroyed() {
+    window.removeEventListener('scroll')
+  },
   methods: {
     handleScroll() {
       const dom = document.getElementById('channel-boxs').scrollTop
@@ -639,8 +642,6 @@ export default {
       font-size: 12px;
       color: #666;
       font-weight: normal;
-      .row1 {
-      }
       .row4 {
         margin-left: 10px;
       }
@@ -691,8 +692,6 @@ export default {
         font-size: 12px;
         color: #666;
         font-weight: normal;
-        .row1 {
-        }
         .row4 {
           margin-left: -30px;
         }

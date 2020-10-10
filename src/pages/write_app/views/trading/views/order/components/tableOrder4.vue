@@ -114,7 +114,7 @@
           <p>
             {{
               scope.row.out_trade_no
-                ? scope.row.out_trade_no.replace('xiong', '')
+                ? scope.row.out_trade_no.replace('xz', '')
                 : '-'
             }}
           </p>
@@ -441,7 +441,7 @@ export default {
 </script>
 <style scoped lang="scss">
 .title-box {
-  padding-bottom: 50px;
+  padding-bottom: 30px;
 }
 .noData {
   text-align: center;

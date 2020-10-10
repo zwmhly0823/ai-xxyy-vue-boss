@@ -1152,7 +1152,8 @@ export default {
         delete obj.user_label
       }
       Object.assign(obj, this.searchParams, label)
-      const query = Object.assign({}, obj)
+      // 【写字】体验课学员列表不显示兑换码学员
+      const query = Object.assign({}, obj, { team_id: { gt: 0 } })
 
       const page = this.currentPage
       const sort = {}

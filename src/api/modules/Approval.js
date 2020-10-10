@@ -1,3 +1,12 @@
+/*
+ * @Descripttion: TOSS小熊
+ * @version: 1.0.0
+ * @Author: liukun
+ * @Date: 2020-08-22 20:01:24
+ * @LastEditors: liukun
+ * @LastEditTime: 2020-09-18 21:39:14
+ */
+
 import axios from '../axiosConfig'
 
 export default {
@@ -69,5 +78,11 @@ export default {
     return axios.get(
       `/api/p/v1/product/getProductByTypes?types=ACTUAL_GOODS,VIRTUAL_GOODS`
     )
+  },
+  // 退款审批获取挽留单子的flow tags
+  getTagsFangTao() {
+    return axios.get(`/api/toss/v1/toss-api/label/getMarketingLabelInfo`, {
+      type: 1
+    })
   }
 }

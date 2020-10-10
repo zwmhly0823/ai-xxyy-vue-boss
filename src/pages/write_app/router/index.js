@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-08-19 20:26:32
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-09-15 17:21:44
+ * @LastEditTime: 2020-09-25 22:11:13
  */
 import Vue from 'vue'
 import VueRouter from 'vue-router'
@@ -173,6 +173,19 @@ const routes = [
     },
     component: () =>
       import('../views/operating/views/channelManagement/channelManagement.vue')
+  },
+  /**
+   * 点评管理
+   */
+  {
+    path: '/reviewManagement',
+    name: 'reviewManagement',
+    meta: {
+      title: '兼职老师点评管理',
+      keepAlive: true
+    },
+    component: () =>
+      import('../views/operating/views/reviewManagement/index.vue')
   },
   /**
    * 营销中心  - 和小熊美术用一套

@@ -3,8 +3,8 @@
  * @version: 1.0.0
  * @Author: zhangjiawen
  * @Date: 2020-07-03 17:21:52
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-09-07 14:26:28
+ * @LastEditors: Shentong
+ * @LastEditTime: 2020-09-24 15:35:17
  */
 
 /**
@@ -56,10 +56,10 @@ export default {
   },
 
   // 模糊查询teacherList
-  getDepartmentTeacherEx(query = '') {
+  getDepartmentTeacherEx(query = '', size = 20) {
     return axios.post('/graphql/v1/toss', {
       query: `{
-        TeacherListEx(query: ${JSON.stringify(query)}, size: 20){
+        TeacherListEx(query: ${JSON.stringify(query)}, size: ${size}){
           id
           realname
         }
@@ -77,7 +77,6 @@ export default {
       }`
     })
   },
-
   // 申请人列表
   getOperatorNameList(query) {
     return axios.post('/graphql/logisticsStatistics', {

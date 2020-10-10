@@ -7,20 +7,32 @@
           <div class="upset_24col">
             <!-- 男：1 女：2 -->
             <div class="img-box">
-              <img class="head-portrait" :src="stuInfor.head || defaultHead" />
-              <i v-if="stuInfor.sex === '2'" class="female el-icon-female " />
-              <i v-else-if="stuInfor.sex === '1'" class="male el-icon-male" />
+              <img
+                class="head-portrait"
+                :src="stuInfor_add.head || defaultHead"
+              />
+              <i
+                v-if="stuInfor_add.sex === '2'"
+                class="female el-icon-female "
+              />
+              <i
+                v-else-if="stuInfor_add.sex === '1'"
+                class="male el-icon-male"
+              />
               <i v-else class="el-icon-toilet-paper" />
             </div>
             <div>
-              {{ stuInfor.username || '-' }}
+              {{ stuInfor_add.username || '-' }}
               ·
-              {{ stuInfor.user_num || '-' }}
+              {{ stuInfor_add.user_num || '-' }}
             </div>
             <!-- 只有'1'是关注了-->
             <div>
               <svg
-                v-if="stuInfor.weixinUser && stuInfor.weixinUser.follow === '1'"
+                v-if="
+                  stuInfor_add.weixinUser &&
+                    stuInfor_add.weixinUser.follow === '1'
+                "
                 class="lk-icon-green"
                 aria-hidden="true"
               >
@@ -41,7 +53,7 @@
             </div>
             <div>
               <span class="tccc">生日:</span>
-              {{ stuInfor.birthday }}
+              {{ stuInfor_add.birthday }}
             </div>
             <div>
               <i
@@ -108,7 +120,7 @@
                 style="margin-top:15px"
               >
                 <el-col :span="7">
-                  <span>手机号码:</span> {{ stuInfor.mobile || '-' }}
+                  <span>手机号码:</span> {{ stuInfor_add.mobile || '-' }}
                 </el-col>
                 <el-col :span="7">
                   <span>推荐信息:</span>
@@ -122,15 +134,15 @@
                 >
                 <el-col :span="7">
                   <span>注册时间:</span>
-                  {{ stuInfor.join_date }}
+                  {{ stuInfor_add.join_date }}
                 </el-col>
               </el-row>
               <el-row type="flex" justify="space-around" align="middle">
                 <el-col :span="7">
                   <span>注册渠道:</span>
                   {{
-                    stuInfor.channelInfo &&
-                      (stuInfor.channelInfo.channel_inner_name || '-')
+                    stuInfor_add.channelInfo &&
+                      (stuInfor_add.channelInfo.channel_inner_name || '-')
                   }}</el-col
                 >
                 <el-col :span="7">
@@ -148,16 +160,14 @@
                 <el-col :span="7">
                   <span>最近活跃:</span>
                   {{
-                    stuInfor.loginData &&
-                      stuInfor.loginData[0] &&
-                      (stuInfor.loginData[0].device_model || '-')
+                    stuInfor_add.lastLoginData &&
+                      (stuInfor_add.lastLoginData.device_model || '-')
                   }}
                   {{
-                    stuInfor.loginData &&
-                      stuInfor.loginData[0] &&
-                      (stuInfor.loginData[0].login_time
+                    stuInfor_add.lastLoginData &&
+                      (stuInfor_add.lastLoginData.login_time
                         ? new Date(
-                            Number(stuInfor.loginData[0].login_time)
+                            Number(stuInfor_add.lastLoginData.login_time)
                           ).toLocaleDateString()
                         : '-')
                   }}
@@ -302,9 +312,9 @@
     <recommend
       ref="recommend"
       :recommendHuman="
-        stuInfor.sender
-          ? stuInfor.sender
-          : { username: '', user_num: '', id: '' }
+        stuInfor_add.sender
+          ? stuInfor_add.sender
+          : { username: '', user_num: '', u_id: '' }
       "
     />
   </section>
@@ -354,13 +364,16 @@ export default {
       studentId: this.$route.params.id,
       // 推荐人id
       sendId: '0',
-      // 学员基本信息(timeFormatted)
+      // 学员基本信息(公用_老)
       stuInfor: {
         address: [{}],
-        sender: { username: '' },
         jluserInfo: {},
         teams: [],
         bought_subject: [] // 学习科目
+      },
+      // 学员基本信息(分类补充)
+      stuInfor_add: {
+        sender: { username: '' }
       },
       // 学员标签(非艾克的全部4项)
       babels_lk: [],
@@ -401,6 +414,7 @@ export default {
   },
   created() {
     this.reqUser() // 学员信息接口
+    this.reqUser_add() // 学员信息接口-分类补充
     this.getlabelWithoutAike() // 获取艾克之外的标签
   },
   methods: {
@@ -419,21 +433,19 @@ export default {
     // 数据接口_学员信息
     reqUser() {
       this.$http.User.getUser(this.studentId).then((res) => {
-        // ①推荐人id 可跳转
-        this.sendId =
-          res.data.User && res.data.User.send_id ? res.data.User.send_id : '0'
-        // ②学员基本资料_时间格式ed
-        this.stuInfor = this.modifyData(res.data.User || {})
-        // ③设置 title
-        document.title.startsWith('学员中心') &&
-          (document.title = `${this.stuInfor.username +
-            '·' +
-            this.stuInfor.user_num}-小熊美术BOSS`)
-        document.title.indexOf('写字') !== -1 &&
-          (document.title = `${this.stuInfor.username +
-            '·' +
-            this.stuInfor.user_num}-美术宝写字BOSS`)
-        // ④给各个组件传基础数据
+        // ①学员基本资料_赋值
+        this.stuInfor = res.data.User || {}
+        // ②-1课程名称格式化 0:体验课   >0:系统课
+        if (this.stuInfor.teams && this.stuInfor.teams.length > 0) {
+          this.stuInfor.teams.forEach((item) => {
+            if (item.team_type === '0') {
+              item.team_type_formatting = '体验课'
+            } else {
+              item.team_type_formatting = '系统课'
+            }
+          })
+        }
+        // ②-2给各个组件传基础数据
         this.$root.$emit(
           'study',
           this.stuInfor.teams,
@@ -446,6 +458,28 @@ export default {
         ) // 作品集+0元体验课
       })
     },
+    // 数据接口_学员信息分类补充
+    reqUser_add() {
+      console.count('nihao')
+      this.$http.User.getUser_add({
+        u_id: this.studentId,
+        subject: this.changeSubject
+      }).then((res) => {
+        // ①学员基本资料_分类补充_赋值
+        this.stuInfor_add = res.data.UserExtends
+          ? this.modifyData(res.data.UserExtends)
+          : {}
+        // ②设置 title
+        document.title.startsWith('学员中心') &&
+          (document.title = `${this.stuInfor_add.username +
+            '·' +
+            this.stuInfor_add.user_num}-小熊美术TOSS`)
+        document.title.indexOf('写字') !== -1 &&
+          (document.title = `${this.stuInfor_add.username +
+            '·' +
+            this.stuInfor_add.user_num}-美术宝写字TOSS`)
+      })
+    },
 
     // 工具函数_时间格式化
     modifyData(data) {
@@ -455,23 +489,13 @@ export default {
       data.birthday = data.birthday ? formatData(data.birthday * 1000) : '-'
       // 注册时间格式化
       data.join_date = data.join_date ? formatDate(+data.join_date) : '-'
-      // 课程名称格式化 0:体验课   >0:系统课
-      data.teams &&
-        data.teams.length > 0 &&
-        data.teams.forEach((item) => {
-          if (item.team_type === '0') {
-            item.team_type_formatting = '体验课'
-          } else {
-            item.team_type_formatting = '系统课'
-          }
-        })
       return data
     },
 
     // 审批5项跳转
     queryJump(commandlk) {
       this.$message(commandlk + '去')
-      const cellphone = this.stuInfor.mobile
+      const cellphone = this.stuInfor_add.mobile
       const obj = {
         退款: `/approval/#/moneyBack?cellphone=${cellphone}`,
         补发货: `/approval/#/repair?cellphone=${cellphone}`,
@@ -485,6 +509,7 @@ export default {
     modifyAddressExpress() {
       this.dialogTableVisible = false
       this.reqUser()
+      this.reqUser_add()
     }
   }
 }

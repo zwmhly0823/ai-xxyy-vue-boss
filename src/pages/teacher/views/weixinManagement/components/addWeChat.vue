@@ -3,8 +3,8 @@
  * @version: 
  * @Author: panjian
  * @Date: 2020-04-14 15:15:31
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-07-08 12:39:02
+ * @LastEditors: zhangjianwen
+ * @LastEditTime: 2020-09-21 21:22:28
  -->
 <template>
   <div>
@@ -183,55 +183,56 @@ export default {
     // 部门联机选择
     handleChange(value) {
       console.log(value)
-      console.log(Object.values(value))
-      switch (value && value.length) {
-        case 1:
-          this.ruleForm.associatedTeacher = value[0]
-          break
-        case 2:
-          this.ruleForm.associatedTeacher = value[1]
-          break
-        case 3:
-          this.ruleForm.associatedTeacher = value[2]
-          break
-        default:
-          break
-      }
+      this.ruleForm.associatedTeacher = value[value.length - 1]
+      // switch (value && value.length) {
+      //   case 1:
+      //     this.ruleForm.associatedTeacher = value[0]
+      //     break
+      //   case 2:
+      //     this.ruleForm.associatedTeacher = value[1]
+      //     break
+      //   case 3:
+      //     this.ruleForm.associatedTeacher = value[2]
+      //     break
+      //   default:
+      //     break
+      // }
       this.ruleForm.teacherId = ''
       this.regionOptionsList = []
       this.remoteMethod()
     },
-    remoteMethod(query) {
-      if (query !== '') {
-        this.loading = true
-        setTimeout(() => {
-          this.loading = false
-          if (this.ruleForm.associatedTeacher) {
-            this.TeacherListvalue = {
-              department_id: `${this.ruleForm.associatedTeacher}`
-            }
+    remoteMethod(query = '') {
+      console.log(query)
+      // if (query !== '') {}
+      this.loading = true
+      setTimeout(() => {
+        this.loading = false
+        if (this.ruleForm.associatedTeacher) {
+          this.TeacherListvalue = {
+            department_id: `${this.ruleForm.associatedTeacher}`
           }
-          this.$http.Teacher.TeacherList(this.TeacherListvalue, query).then(
-            (res) => {
-              const data = res.data.TeacherListEx
-              const _data = []
-              data.forEach((res) => {
-                _data.push({
-                  value: res.id,
-                  label: res.realname
-                })
+        }
+        this.$http.Teacher.TeacherList(this.TeacherListvalue, query).then(
+          (res) => {
+            const data = res.data.TeacherListEx
+            const _data = []
+            data.forEach((res) => {
+              _data.push({
+                value: res.id,
+                label: res.realname
               })
-              this.regionOptionsList = _data.filter((item) => {
-                return query
-                  ? item.label.toLowerCase().indexOf(query.toLowerCase()) > -1
-                  : item
-              })
-            }
-          )
-        }, 200)
-      } else {
-        this.regionOptionsList = []
-      }
+            })
+            this.regionOptionsList = _data.filter((item) => {
+              return query
+                ? item.label.toLowerCase().indexOf(query.toLowerCase()) > -1
+                : item
+            })
+          }
+        )
+      }, 200)
+      //  else {
+      //   this.regionOptionsList = []
+      // }
     },
     // 提交
     submitForm(formName) {

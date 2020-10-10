@@ -164,7 +164,7 @@ export default {
       size = '20',
       sort = `{"ctime":"desc"}`
     } = params
-    const query = { team_state: teamState.split(',') }
+    const query = { team_state: teamState.split(','), subject: '0' }
     teamName &&
       Object.assign(query, {
         'team_name.like': { 'team_name.keyword': `*${teamName}*` }
@@ -181,6 +181,7 @@ export default {
     !teacherId &&
       teacherIdArr.length &&
       Object.assign(query, { teacher_id: teacherIdArr })
+
     return axios.post('/graphql/v1/toss', {
       query: `{
         StudentSystemTeamStatisticsPage(page: ${page}, size:${size},query: ${JSON.stringify(
@@ -242,7 +243,7 @@ export default {
       size = '20',
       sort = `{"ctime":"desc"}`
     } = params
-    const query = { team_state: teamState.split(',') }
+    const query = { team_state: teamState.split(','), subject: '0' }
     teamName &&
       Object.assign(query, {
         'team_name.like': { 'team_name.keyword': `*${teamName}*` }

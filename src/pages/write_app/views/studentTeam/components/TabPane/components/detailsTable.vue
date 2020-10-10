@@ -3,8 +3,8 @@
  * @version:
  * @Author: panjian
  * @Date: 2020-03-16 20:22:24
- * @LastEditors: Shentong
- * @LastEditTime: 2020-09-12 18:50:22
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-09-16 19:39:20
  -->
 <template>
   <div class="table-box">
@@ -1144,7 +1144,7 @@ export default {
       cursor: pointer;
       .audio-triangle {
         position: absolute;
-        top: -3px;
+        top: 4px;
         left: -6px;
         width: 10px;
         height: 10px;

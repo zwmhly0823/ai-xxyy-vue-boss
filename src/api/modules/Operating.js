@@ -3,8 +3,8 @@
  * @version:
  * @Author: Shentong
  * @Date: 2020-03-16 19:46:39
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-09-08 21:00:09
+ * @LastEditors: Shentong
+ * @LastEditTime: 2020-10-10 18:07:09
  */
 import axios from '../axiosConfig'
 import { injectSubject, getAppSubjectCode } from '@/utils/index'
@@ -555,5 +555,38 @@ export default {
   // 获取销售等级
   getSellLevel(params) {
     return axios.get(`/api/t/v1/teacher/course/teacherLevelByType?level=0`)
+  },
+  // 招生排期获取招生状态
+  getStatusByperiods(periods) {
+    return axios.get(`/api/t/v1/enroll/getStatusByperiods?periods=${periods}`)
+  },
+  // 招生排期切换状态
+  updateStatusByPeriod(params) {
+    return axios.get(
+      `/api/t/v1/enroll/updateStatusByPeriod?period=${params.period}&status=${params.status}`
+    )
+  },
+  // 转介绍招生数
+  getIntroduceCountByIds(query) {
+    return axios.get(
+      `/api/t/v1/teacher/getIntroduceCountByIds?term=${query.term}&ids=${query.ids}`
+    )
+  },
+  /**
+   * @description 根据老师id和部门id查询老师关联微信号
+   */
+  getTeacherAllWechatByDept(params) {
+    return axios.post(
+      `/api/t/v1/wechat/teacher/getTeacherByDepartmentIdAndTeacherId?teacherId=${params.teacherId}&departmentId=${params.departmentId}`,
+      params
+    )
+  },
+  /**
+   * @description 编辑微信保存按钮
+   */
+  saveEditTeacherWeChat(params) {
+    return axios.post(
+      `/api/t/v1/wechat/teacher/saveTeacherChangeWeixinRecord?teacherId=${params.teacherId}&oldWeixinNo=${params.oldWeixinNo}&oldWeixinId=${params.oldWeixinId}&weixinId=${params.weixinId}&weixinNo=${params.weixinNo}&courseType=${params.courseType}&period=${params.period}`
+    )
   }
 }

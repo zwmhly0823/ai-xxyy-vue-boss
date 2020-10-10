@@ -37,11 +37,15 @@ export default {
     subjectType: {
       type: Number,
       default: 0
+    },
+    isMultipe: {
+      type: Boolean,
+      default: true
     }
   },
   data() {
     return {
-      isMultipe: true,
+      // isMultipe: true,
       result: null,
       typeList: [],
       artList: [
@@ -56,6 +60,11 @@ export default {
         {
           id: '6',
           text: '邀请有奖'
+        },
+        // 新增-邀请有奖（抽奖）。 topic=10
+        {
+          id: '666',
+          text: '邀请有奖-抽奖'
         }
       ],
       writeList: [

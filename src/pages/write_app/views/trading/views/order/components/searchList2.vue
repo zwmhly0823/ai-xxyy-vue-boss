@@ -3,8 +3,8 @@
  * @version: 1.0.0
  * @Author: liukun
  * @Date: 2020-04-25 17:24:23
- * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-09-10 01:17:58
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-09-21 21:37:25
  -->
 <template>
   <el-card
@@ -52,11 +52,12 @@
       </el-form-item> -->
       <br />
 
-      <el-form-item label="下单时间:" :class="{ [$style.marginer]: true }">
+      <el-form-item :label="timeLabel" :class="{ [$style.marginer]: true }">
         <DatePicker
           :class="[$style.fourPoint, 'allmini']"
+          :name="timeName"
+          :key="payStatus"
           @result="getDate"
-          name="ctime"
         >
           <template v-slot:buttons>
             <div class="row_colum margin_l10">
@@ -201,6 +202,13 @@ import { downloadHandle } from '@/utils/download'
 import { isToss } from '@/utils/index'
 
 export default {
+  props: {
+    // 订单支付状态 3-已完成
+    payStatus: {
+      type: String,
+      default: '3'
+    }
+  },
   components: {
     // orderStatus,
     hardLevel,
@@ -249,9 +257,31 @@ export default {
       chooseExport: '1'
     }
   },
-  computed: {},
-  mounted() {
-    console.log(window.a)
+  computed: {
+    timeLabel() {
+      return this.payStatus === '3' ? '支付时间:' : '下单时间:'
+    },
+    timeName() {
+      return this.payStatus === '3' ? 'buytime' : 'ctime'
+    }
+  },
+  watch: {
+    payStatus(val) {
+      /**
+       * 切换支付状态时，清空支付时间/下单时间搜索条件
+       */
+      this.searchParams.forEach((item) => {
+        if (item.range) {
+          const time = item.range?.ctime || item.range?.buytime
+          if (time) {
+            delete item.range
+            for (let i = 0; i < 4; i++) {
+              this['cur' + i] = false
+            }
+          }
+        }
+      })
+    }
   },
   methods: {
     // 切换手机/订单清空筛选项
@@ -283,7 +313,7 @@ export default {
       if (!res || !res.quick) this.currentBtn = null
       if (res.quick && this.currentBtn) this[`cur${this.currentBtn}`] = true
       delete res.quick
-      this.setSeachParmas(res, ['ctime'], 'range')
+      this.setSeachParmas(res, [this.timeName], 'range')
     },
     // 4点外移
     today() {
