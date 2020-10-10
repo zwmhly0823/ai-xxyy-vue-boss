@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-13 16:53:27
  * @LastEditors: Shentong
- * @LastEditTime: 2020-09-24 18:50:24
+ * @LastEditTime: 2020-10-10 20:42:08
  -->
 <template>
   <div class="left-container">
@@ -34,13 +34,18 @@
             <!-- TODO: -->
             <div class="judge-box" v-if="$route.params.couponId == '5'">
               <span>开课后第</span>
+              <span v-if="!data.edit" style="padding:0 3px;">{{
+                data.day
+              }}</span>
               <el-input
+                v-else
                 size="mini"
                 v-model="data.day"
                 :disabled="period != ''"
                 type="number"
               ></el-input>
               <span>天</span>
+              <i class="el-icon-edit edit-styl" @click="editCurDay(data)"></i>
             </div>
             <div class="default-rule" v-else>
               自定义有效期
@@ -146,7 +151,8 @@ export default {
     connectDeptIdDays(deptArr = [], deptIds = {}) {
       deptArr.forEach((item, index) => {
         const { id, children } = item
-        item.day = deptIds[id] || ''
+        item.day = deptIds[id] || '3'
+        item.edit = false // TODO:
         // 查看模式
         this.period !== '' && (item.disabled = true)
         item = {
@@ -159,8 +165,14 @@ export default {
     handleCheckChange() {
       const res = this.$refs.tree.getCheckedNodes()
       return res.filter((item) => {
-        return item.children == null && item.pid !== '0' && item.day !== '3'
+        const { children, pid, day, edit } = item
+        // TODO: 过滤 edit = true 的data
+        return children == null && pid !== '0' && day !== '3' && edit
       })
+    },
+    editCurDay(data) {
+      console.log('cur-data', data)
+      data.edit = !data.edit
     },
     nodeInput() {},
     // tree全选
@@ -221,6 +233,8 @@ export default {
       deptArr.forEach((item, index) => {
         const { id, children } = item
         item.day = deptIds[id] || '3'
+        item.edit = false // TODO:
+
         deptArr[index] = {
           ...item
         }
@@ -289,6 +303,13 @@ export default {
     .day-sets {
       .default-rule {
         color: #333;
+      }
+      .edit-styl {
+        color: green;
+        cursor: pointer;
+        :hover {
+          color: #2a75ed;
+        }
       }
       /deep/ div.el-input {
         margin: 0 10px;

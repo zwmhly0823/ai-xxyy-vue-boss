@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-06-30 19:21:08
  * @LastEditors: Shentong
- * @LastEditTime: 2020-09-24 18:34:16
+ * @LastEditTime: 2020-10-10 20:38:48
 -->
 <template>
   <el-dialog
@@ -48,7 +48,6 @@
               v-model="formData.exePeriod"
               size="mini"
               placeholder="请选择执行期"
-              multiple
               :disabled="formData.exeType == '1' || lookPeriod != ''"
               @change="onlyExePeriodChange"
             >
@@ -161,7 +160,7 @@ export default {
       checkedAll: false,
       formData: {
         exeType: '0',
-        exePeriod: [],
+        exePeriod: '',
         periodMore: ''
       },
       onlyExePeriod: [],
@@ -209,7 +208,7 @@ export default {
     'formData.exeType': {
       handler: function(newVal, old) {
         if (old === '0') {
-          this.formData.exePeriod = []
+          this.formData.exePeriod = ''
         } else if (old === '1') {
           this.formData.periodMore = ''
         }
@@ -242,7 +241,8 @@ export default {
       if (executeType === 1) {
         this.formData.periodMore = Number(period)
       } else {
-        this.formData.exePeriod = period.split(',').map(Number)
+        this.formData.exePeriod = Number(period)
+        // this.formData.exePeriod = period.split(',').map(Number)
       }
 
       this.couponDetail = couponDispensedRules
@@ -252,7 +252,7 @@ export default {
     validateData(checkedNode) {
       const { exeType, exePeriod, periodMore } = this.formData
       if (
-        (exeType === '0' && !exePeriod.length) ||
+        (exeType === '0' && exePeriod === '') ||
         (exeType === '1' && periodMore === '')
       ) {
         this.$message.warning('请选择执行期')
@@ -298,12 +298,14 @@ export default {
         couponDetail: { id: couponId, name: couponName }
       } = this
 
+      console.log(exeType, exePeriod, periodMore)
+
       const periodAndName = {}
       const couponDispensedRules = {}
-      const periodName = []
+      // const periodName = []
       // if
-      const periodList =
-        exeType === '0' ? exePeriod : String(periodMore).split(',') // periodMore 是 string
+      const selPeriod = exeType === '0' ? exePeriod : periodMore
+      // exeType === '0' ? exePeriod : String(periodMore).split(',') // periodMore 是 string
       const originPeriodArr =
         exeType === '0' ? 'onlyExePeriod' : 'exePeriodMore'
 
@@ -311,13 +313,15 @@ export default {
         periodAndName[item.period] = item.periodName
       })
 
-      periodList.forEach((p) => {
-        periodName.push(periodAndName[p])
-      })
+      // selPeriod.forEach((p) => {
+      //   periodName.push(periodAndName[p])
+      // })
 
       Object.assign(couponDispensedRules, {
-        period: periodList.join(),
-        periodName: periodName.join(),
+        // period: selPeriod.join(),
+        period: selPeriod,
+        periodName: periodAndName[selPeriod],
+        // periodName: periodName.join(),
         executeType: exeType,
         couponId,
         couponName
