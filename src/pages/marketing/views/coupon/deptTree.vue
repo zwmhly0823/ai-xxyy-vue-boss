@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-13 16:53:27
  * @LastEditors: Shentong
- * @LastEditTime: 2020-10-12 14:27:19
+ * @LastEditTime: 2020-10-12 15:24:44
  -->
 <template>
   <div class="left-container">
@@ -170,7 +170,7 @@ export default {
       const res = this.$refs.tree.getCheckedNodes()
       return res.filter((item) => {
         const { children, pid, edit } = item
-        // TODO: 过滤 edit = true 的data
+
         if (this.$route.params.couponId !== '5') {
           return children == null && pid !== '0'
         }
