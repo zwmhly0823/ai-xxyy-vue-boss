@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-13 16:53:27
  * @LastEditors: Shentong
- * @LastEditTime: 2020-10-10 20:42:08
+ * @LastEditTime: 2020-10-12 14:27:19
  -->
 <template>
   <div class="left-container">
@@ -45,7 +45,11 @@
                 type="number"
               ></el-input>
               <span>天</span>
-              <i class="el-icon-edit edit-styl" @click="editCurDay(data)"></i>
+              <i
+                class="el-icon-edit edit-styl"
+                v-if="period == ''"
+                @click="editCurDay(data)"
+              ></i>
             </div>
             <div class="default-rule" v-else>
               自定义有效期
@@ -165,9 +169,12 @@ export default {
     handleCheckChange() {
       const res = this.$refs.tree.getCheckedNodes()
       return res.filter((item) => {
-        const { children, pid, day, edit } = item
+        const { children, pid, edit } = item
         // TODO: 过滤 edit = true 的data
-        return children == null && pid !== '0' && day !== '3' && edit
+        if (this.$route.params.couponId !== '5') {
+          return children == null && pid !== '0'
+        }
+        return children == null && pid !== '0' && edit
       })
     },
     editCurDay(data) {
@@ -290,7 +297,7 @@ export default {
     font-size: 18px;
     padding: 10px 0px 10px 20px;
   }
-  padding: 10px 0px;
+  // padding: 10px 0px;
   overflow-x: auto;
   .custom-tree-node {
     width: 100%;

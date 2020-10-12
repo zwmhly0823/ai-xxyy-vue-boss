@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-06-30 19:21:08
  * @LastEditors: Shentong
- * @LastEditTime: 2020-10-10 20:38:48
+ * @LastEditTime: 2020-10-12 14:08:51
 -->
 <template>
   <el-dialog
@@ -100,13 +100,13 @@
           </div>
         </div>
         <div class="selected-group divider">
-          <div class="label">
+          <div class="label" style="justify-content:flex-start;">
             <span>选择组/设置期时间</span>
+            <b class="tip">未能选中的部门将不能发放此优惠券</b>
           </div>
           <div class="my-tree">
             <div class="select-all">
               <!-- <el-checkbox v-model="checkedAll">全选</el-checkbox> -->
-              <span>未能选中的部门将不能发放此优惠券</span>
             </div>
             <dept-tree
               :dayDept="dayAndDeptIdKeyVal"
@@ -284,7 +284,7 @@ export default {
     packageDeptIdAndDay(allTree, checkedNode) {
       return checkedNode.map((item) => {
         return {
-          day: item.day,
+          day: String(item.day),
           uid: item.id
         }
       })
@@ -367,7 +367,7 @@ export default {
           /** 打包好的需要掉接口的数据 */
           const result = this.bundleData(deptFlatList, checkedNode)
           console.log('result', result)
-          // await this.saveCouponRule(result) TODO:
+          await this.saveCouponRule(result) // TODO:
 
           this.isSubmit = false
         }
@@ -473,6 +473,13 @@ export default {
     .selected-group {
       .label {
         // margin-bottom: 20px;
+      }
+      .tip {
+        color: #999;
+        margin-left: 10px;
+        font-weight: normal;
+        font-size: 14px;
+        padding-top: 3px;
       }
       .my-tree {
         .select-all {
