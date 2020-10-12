@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-08-25 11:40:19
  * @LastEditors: liukun
- * @LastEditTime: 2020-10-09 18:40:46
+ * @LastEditTime: 2020-10-12 19:16:59
 -->
 <template>
   <div>
@@ -55,7 +55,15 @@
       </el-table-column>
       <el-table-column label="退款状态" align="center">
         <template slot-scope="scope">
-          <div>{{ scope.row.isrefund ? '已退款' : '未退款' }}</div>
+          <div>
+            {{
+              scope.row.isrefund === 0
+                ? '--'
+                : scope.row.isrefund === 1
+                ? '已退款'
+                : '退款中'
+            }}
+          </div>
         </template>
       </el-table-column>
       <el-table-column
