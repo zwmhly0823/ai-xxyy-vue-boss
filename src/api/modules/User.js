@@ -4,8 +4,8 @@
  * @version:
  * @Author: shentong
  * @Date: 2020-03-13 14:38:28
- * @LastEditors: liukun
- * @LastEditTime: 2020-09-26 16:11:34
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-10-12 11:24:30
  */
 // import axios from '../axios'
 import axios from '../axiosConfig'
@@ -274,7 +274,7 @@ export default {
 
   // 全部学员
   studentAllUserList(query = {}, page = 1, sortRules) {
-    const q = JSON.stringify(JSON.stringify(query))
+    const q = JSON.stringify(injectSubject(query))
     const sort =
       Object.keys(sortRules).length === 0
         ? JSON.stringify(JSON.stringify({ join_date: 'desc' }))
@@ -293,10 +293,6 @@ export default {
             channel
             join_date
             status
-            extends_channel
-            extends_join_date
-            extends_status
-            extends_id
             oids
             teacher_ids
             last_teacher_ids
@@ -307,6 +303,7 @@ export default {
             is_system
             subject
             subject_text
+            grade
             channelInfo {
               channel_outer_name
             }
@@ -321,6 +318,7 @@ export default {
               sex
               birthday
               teams {
+                id
                 team_name
                 subject
                 team_type
@@ -332,20 +330,6 @@ export default {
                     name
                   }
                 }
-              }
-            }
-            userExtendsInfo {
-              u_id
-              join_date
-              status
-              status_text
-              user_num
-              mobile
-              username
-              sex
-              birthday
-              channelInfo {
-                channel_outer_name
               }
             }
           }
