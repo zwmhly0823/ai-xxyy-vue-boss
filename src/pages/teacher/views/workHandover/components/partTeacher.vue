@@ -14,6 +14,7 @@
           tip="请选择老师"
           :teacherscope="handoverTeacherScope"
           return-list
+          isParttimeTeacher
           @result="handoverSelectTeacher"
           name="pay_teacher_id"
           class="margin_l10"
@@ -30,26 +31,6 @@
     </svg>
     <div class="container-middle module">
       <h2>选择学员</h2>
-      <!-- <div class="module-table">
-        <el-table
-          :data="classList"
-          @selection-change="handleSelectionChange"
-          :show-header="false"
-          height="338"
-        >
-          <el-table-column type="selection"> </el-table-column>
-          <el-table-column prop="teamName"> </el-table-column>
-        </el-table>
-        <div class="handover-inform">
-          <div class="handover-inform-text" v-if="classList.length">
-            目标交接班级数<span class="prominent">{{ classList.length }}</span
-            >个;实际接收班级数<span class="prominent">{{
-              receiveTeacher.length
-            }}</span
-            >个
-          </div>
-        </div>
-      </div> -->
     </div>
     <svg class="iconjiantou-you" aria-hidden="true">
       <use xlink:href="#iconjiantou-you"></use>
@@ -64,14 +45,14 @@
           :multiple="false"
           @result="receiveSelectDepartment"
         />
-        <GroupSell
+        <!-- <GroupSell
           tip="请选择老师"
           :teacherscope="receiveTeacherScope"
           return-list
           @result="receiveSelectTeacher"
           name="pay_teacher_id"
           class="margin_l10"
-        />
+        /> -->
         <div class="module-search-tip">请先选择部门和老师哦～</div>
       </div>
 
@@ -107,6 +88,7 @@ export default {
     handoverSelectDepartment(res) {
       this.handoverTeacherScope =
         res.pay_teacher_id.length !== 0 ? res.pay_teacher_id : null
+      console.log(this.handoverTeacherScope)
     },
     // 交出方选择老师
     handoverSelectTeacher(res) {
