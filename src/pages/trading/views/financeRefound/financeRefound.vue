@@ -3,8 +3,8 @@
  * @version: 1.0.0
  * @Author: liukun
  * @Date: 2020-05-19 17:18:39
- * @LastEditors: liukun
- * @LastEditTime: 2020-08-06 16:28:44
+ * @LastEditors: zhangjianwen
+ * @LastEditTime: 2020-10-12 17:25:00
 -->
 <template>
   <section class="bianju10">
@@ -139,7 +139,12 @@
     </div>
     <el-divider></el-divider>
     <div>
-      <el-table :data="tableData" style="width: 100%">
+      <el-table
+        :data="tableData"
+        style="width: 100%"
+        @selection-change="handleSelectionChange"
+      >
+        <el-table-column type="selection" width="55"> </el-table-column>
         <el-table-column label="用户信息" width="120">
           <template slot-scope="scope">
             <div class="usertext" @click="userHandle(scope.row)">
@@ -772,6 +777,8 @@ export default {
       console.log(`当前页: ${val}`)
       this.arrangeParams({ page: val, size: this.pageSize })
     },
+    // 全选
+    handleSelectionChange() {},
     // 操作
     async handleEdit() {
       console.info('index:', arguments[0])
