@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-08-25 11:40:19
  * @LastEditors: liukun
- * @LastEditTime: 2020-09-15 23:04:11
+ * @LastEditTime: 2020-09-27 14:49:25
 -->
 <template>
   <div>
@@ -20,7 +20,7 @@
           :label="`${item.team_type_formatting || '体验课'}:${item.team_name}`"
           :courseIds="item.course_ids"
           :teamId="item.id"
-          :lessonType="item.team_type > 0 ? 1 : 0"
+          :lessonType="item.team_type > 0 ? [1, 12] : [0, 12]"
         >
           <div class="inner_lk">
             <div class="statistical">
@@ -168,7 +168,8 @@ export default {
     setTimeout(() => {
       if (this.teams_lk_filter[0]) {
         this.teamId = this.teams_lk_filter[0].id
-        this.lessonType = this.teams_lk_filter[0].team_type > 0 ? 1 : 0
+        this.lessonType =
+          this.teams_lk_filter[0].team_type > 0 ? [1, 12] : [0, 12]
         this.courseId =
           this.teams_lk_filter[0] &&
           this.teams_lk_filter[0].course_ids &&

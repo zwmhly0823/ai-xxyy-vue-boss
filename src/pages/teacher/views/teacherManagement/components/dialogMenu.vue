@@ -1,11 +1,10 @@
-import ProductType from '@/components/MSearch/searchItems/productType.vue';
 <!--
  * @Descripttion:
  * @version:
  * @Author: songyanan
  * @Date: 2020-06-05 10:13:40
- * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-08-19 11:44:36
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-09-25 11:10:15
  -->
 <template>
   <div>

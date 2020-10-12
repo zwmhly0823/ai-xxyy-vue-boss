@@ -62,6 +62,10 @@ export default {
         {
           id: '7',
           name: '转介绍'
+        },
+        {
+          id: '9',
+          name: '邀请有奖-抽奖'
         }
       ],
       topicData: null

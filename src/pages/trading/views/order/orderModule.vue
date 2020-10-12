@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-24 15:16:26
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-09-21 20:19:48
+ * @LastEditTime: 2020-09-25 11:37:01
  -->
 <template>
   <el-row type="flex" class="app-main height">
@@ -44,15 +44,15 @@
                   v-if="activeTopic === '4'"
                 />
               </el-tab-pane>
-              <el-tab-pane label="活动订单" name="1,2,6">
+              <el-tab-pane label="活动订单" name="1,2,6,10">
                 <search-list3
                   @search="handleSearch"
-                  v-if="activeTopic === '1,2,6'"
+                  v-if="activeTopic === '1,2,6,10'"
                 />
                 <all-order3
                   :topic="activeTopic"
                   :search="search"
-                  v-if="activeTopic === '1,2,6'"
+                  v-if="activeTopic === '1,2,6,10'"
                 />
               </el-tab-pane>
               <el-tab-pane label="素质课" name="7">
