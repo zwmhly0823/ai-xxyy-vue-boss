@@ -3,14 +3,14 @@
  * @version: 1.0.0
  * @Author: zhangjiawen
  * @Date: 2020-07-03 17:21:52
- * @LastEditors: Shentong
- * @LastEditTime: 2020-09-24 15:35:17
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-10-12 22:37:36
  */
 
 /**
- * 组织机构
+ * 组织机构 injectSubject,
  */
-import { injectSubject, getAppSubjectCode } from '@/utils/index'
+import { getAppSubjectCode } from '@/utils/index'
 import axios from '../axiosConfig'
 
 const subjectCode = getAppSubjectCode()
@@ -44,10 +44,14 @@ export default {
   },
 
   // 根据选择的部门ID获取老师ID
-  getDepartmentTeacher(query = '') {
+  getDepartmentTeacher(query = '', size = 300) {
+    const obj = JSON.parse(query || '{}')
+    Object.assign(obj, { 'subject.like': { 'subject.keyword': `*0*` } })
     return axios.post('/graphql/v1/toss', {
       query: `{
-        TeacherList(query: ${JSON.stringify(injectSubject(query))}, size: 300){
+        TeacherList(query: ${JSON.stringify(
+          JSON.stringify(obj)
+        )}, size: ${size}){
           id
           realname
         }
