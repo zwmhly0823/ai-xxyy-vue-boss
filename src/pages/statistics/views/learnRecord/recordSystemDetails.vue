@@ -4,7 +4,7 @@
  * @Author: zhangjianwen
  * @Date: 2020-07-09 15:02:59
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-10-10 18:06:43
+ * @LastEditTime: 2020-10-12 17:50:46
 -->
 <template>
   <div class="learn-record">
@@ -472,8 +472,8 @@ export default {
       isActive: 1, // 参课类型 0 已参课 1已完课  2 未参课
       lessonType: 0, // 课程类型
       learn_type: {
-        1: '小熊AI课', // 系统课课
-        12: '小熊TV课'
+        1: '小熊美术Ai课', // 系统课课
+        12: '小熊美术TV课'
       },
       interTypef: [1],
       interTypes: [12],
@@ -520,39 +520,35 @@ export default {
     })
   },
   methods: {
-    // 获取学员信息列表
+    // 获取信息列表
     getRecordList() {
       this.loading = true
       const params = {
-        // teacher_id: JSON.parse(localStorage.getItem('teacher')).id,
-        // student_id: '408398321242345472',
-        // state: this.isActive,
-        // sup: this.$route.params.sup,
         term: this.$route.params.id,
         course_id: this.$route.params.course_id
       }
-      params.state = this.isActive
-      // if (+this.lessonType === 12) {
-      //   params.ad_state = this.isActive
-      // } else {
-      //   params.state = this.isActive
-      // }
+      // params.state = this.isActive
+      if (+this.lessonType === 12) {
+        params.ad_state = this.isActive
+      } else {
+        params.state = this.isActive
+      }
       if (this.num) {
         this.num.length === 11
           ? (params.mobile = this.num)
           : (params.user_num = this.num)
       }
       if (this.joinDate) {
-        params.last_join_course_time = this.joinDate
-        // ;+this.lessonType === 12
-        //   ? (params.ad_last_join_course_time = this.joinDate)
-        //   : (params.last_join_course_time = this.joinDate)
+        // params.last_join_course_time = this.joinDate
+        ;+this.lessonType === 12
+          ? (params.ad_last_join_course_time = this.joinDate)
+          : (params.last_join_course_time = this.joinDate)
       }
       if (this.overDate) {
-        params.complete_time = this.overDate
-        // ;+this.lessonType === 12
-        //   ? (params.ad_complete_time = this.overDate)
-        //   : (params.complete_time = this.overDate)
+        // params.complete_time = this.overDate
+        ;+this.lessonType === 12
+          ? (params.ad_complete_time = this.overDate)
+          : (params.complete_time = this.overDate)
       }
       // if (this.joinDate) {
       //   if (+this.lessonType === 10) {
