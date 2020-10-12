@@ -4,7 +4,7 @@
  * @Author: Lukun
  * @Date: 2020-04-27 17:47:58
  * @LastEditors: liukun
- * @LastEditTime: 2020-09-24 21:06:33
+ * @LastEditTime: 2020-10-12 18:40:32
  -->
 <template>
   <div class="container">
@@ -302,12 +302,14 @@
           <el-col :span="18" :offset="1">
             <div class="demo-image__preview">
               <el-image
+                v-if="drawerApprovalDeatail.attsUrl"
                 style="width: 220px; height: 120px"
                 :src="drawerApprovalDeatail.attsUrl"
                 fit="contain"
                 :preview-src-list="[drawerApprovalDeatail.attsUrl]"
               >
               </el-image>
+              <span v-else>未上传</span>
             </div>
           </el-col>
         </el-row>
@@ -421,9 +423,14 @@
           <el-row>
             <el-col :span="5">退款类型:</el-col>
             <el-col :span="18" :offset="1">{{
-              { 0: '优惠券退款', 1: '课程退款', 2: '降半年包', 3: '补偿' }[
-                drawerApprovalDeatail.refundType
-              ]
+              {
+                0: '优惠券退款',
+                1: '课程退款',
+                2: '降半年包',
+                3: '补偿',
+                4: '降1年包',
+                5: '降1年半包'
+              }[drawerApprovalDeatail.refundType]
             }}</el-col>
           </el-row>
           <el-row>
@@ -497,13 +504,17 @@
           <el-row>
             <el-col :span="5">附件:</el-col>
             <el-col :span="18" :offset="1">
-              <el-image
-                style="width: 220px; height: 120px"
-                :src="drawerApprovalDeatail.attsUrl"
-                fit="contain"
-                :preview-src-list="[drawerApprovalDeatail.attsUrl]"
-              >
-              </el-image>
+              <div class="demo-image__preview">
+                <el-image
+                  v-if="drawerApprovalDeatail.attsUrl"
+                  style="width: 220px; height: 120px"
+                  :src="drawerApprovalDeatail.attsUrl"
+                  fit="contain"
+                  :preview-src-list="[drawerApprovalDeatail.attsUrl]"
+                >
+                </el-image>
+                <span v-else>未上传</span>
+              </div>
             </el-col>
           </el-row>
         </div>

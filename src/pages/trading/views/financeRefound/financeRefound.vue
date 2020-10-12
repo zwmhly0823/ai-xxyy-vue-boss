@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-05-19 17:18:39
  * @LastEditors: liukun
- * @LastEditTime: 2020-08-06 16:28:44
+ * @LastEditTime: 2020-10-12 17:28:20
 -->
 <template>
   <section class="bianju10">
@@ -88,8 +88,10 @@
               v-for="(item, index) of [
                 { label: '优惠券退款' },
                 { label: '课程退款' },
-                { label: '降为半年包' },
-                { label: '补偿' }
+                { label: '降半年包' },
+                { label: '补偿' },
+                { label: '降一年包' },
+                { label: '降一年半包' }
               ]"
               :label="item.label"
               :value="index"

@@ -2,7 +2,7 @@
  * @Descripttion: 
  * @version: 
  * @LastEditors: liukun
- * @LastEditTime: 2020-10-09 15:55:10
+ * @LastEditTime: 2020-10-12 18:32:29
  -->
 <template>
   <div class="adjustModule">
@@ -111,15 +111,25 @@
         </el-form-item>
         <el-form-item label="退款类型：" prop="refundType">
           <el-radio-group v-model="refundForm.refundType">
+            <el-radio :label="0" v-show="refundForm.businessType === '系统课'"
+              >优惠券退款</el-radio
+            >
             <el-radio :label="1">课程退款</el-radio>
             <el-radio :label="2" v-show="refundForm.businessType === '系统课'"
               >降半年课包</el-radio
             >
+            <el-radio
+              :label="4"
+              v-show="refundForm.businessType === '系统课' && half === 96"
+              >降1年课包</el-radio
+            >
+            <el-radio
+              :label="5"
+              v-show="refundForm.businessType === '系统课' && half === 96"
+              >降1年半课包</el-radio
+            >
             <el-radio :label="3" v-show="refundForm.businessType === '系统课'"
               >补偿</el-radio
-            >
-            <el-radio :label="0" v-show="refundForm.businessType === '系统课'"
-              >优惠券退款</el-radio
             >
           </el-radio-group>
         </el-form-item>
@@ -377,6 +387,21 @@ export default {
         this.selectOrder = targetItem
         console.info('选择关联订单是我,大家快来公用--', targetItem)
 
+        // 显示业务类型
+        if (targetItem && targetItem.regtype) {
+          if (
+            targetItem.regtype === 'EXPERIENCE' ||
+            targetItem.regtype === 'FIRST_ORDER' ||
+            targetItem.regtype === 'RENEW'
+          ) {
+            this.refundForm.businessType =
+              targetItem.regtype === 'EXPERIENCE' ? '体验课' : '系统课'
+          }
+        }
+        // 判断系统课-课时种类(半年课:24  1年课:48  2年课:96)
+        if (this.refundForm.businessType === '系统课') {
+          this.half = this.selectOrder.packagesCourseWeek
+        }
         // 导入订单红色显示(只限体验课)
         if (targetItem && targetItem.regtype === 'EXPERIENCE') {
           this.isThird =
@@ -440,17 +465,6 @@ export default {
               message: '未能获取退款规则',
               type: 'warning'
             })
-          }
-        }
-        // 显示业务类型
-        if (targetItem && targetItem.regtype) {
-          if (
-            targetItem.regtype === 'EXPERIENCE' ||
-            targetItem.regtype === 'FIRST_ORDER' ||
-            targetItem.regtype === 'RENEW'
-          ) {
-            this.refundForm.businessType =
-              targetItem.regtype === 'EXPERIENCE' ? '体验课' : '系统课'
           }
         }
         // 只有isThird===1是第三方订单,才去查来源
@@ -554,15 +568,6 @@ export default {
       async handler(newValue) {
         // 初始就触发,执行前确认关联订单已选择
         if (this.selectOrder && Object.keys(this.selectOrder).length) {
-          // 判断系统课是整年or半年[courseCategory课程类别]
-          if (
-            this.refundForm.businessType === '系统课' &&
-            (newValue === 1 || newValue === 2) &&
-            (this.selectOrder.courseCategory === 2 ||
-              this.selectOrder.courseCategory === 4)
-          ) {
-            this.half = this.selectOrder.courseCategory === 4 ? 180 : 365
-          }
           // newValue:0 选中优惠券时-获取优惠券列表
           if (newValue === 0) {
             // 非课程退款置空其关联的3项
@@ -575,7 +580,6 @@ export default {
 
             this.refundForm.refundAmount = '' // 退款额
             this.refundForm.refundMonths = ''
-
             if (this.refundForm.residueFee >= 200) {
               this.couponTypeOptions = []
               this.refundForm.couponType = ''
@@ -590,8 +594,8 @@ export default {
                       message: '优惠券类型未能获取',
                       type: 'warning'
                     })
-                    // throw new Error('WEWE')
                   }
+                  // throw new Error('WEWE')
                 })
                 .catch((err) => {
                   console.warn(err)
@@ -652,7 +656,7 @@ export default {
                 ? 0
                 : this.refundForm.residueFee
             }
-            // 降为半年包
+            // 降为半年包(分两类情况价格不同)
           } else if (newValue === 2) {
             // 非课程退款置空其关联的3项
             this.jsonDate3 = {
@@ -665,16 +669,39 @@ export default {
             this.refundForm.refundAmount = '' // 退款额
             this.refundForm.refundMonths = ''
             const shengYue = Math.floor(this.pureWeekS / 4)
-            if (
-              this.half === 365 &&
-              shengYue >= 6 &&
-              this.refundForm.residueFee >= 1101
-            ) {
-              this.refundForm.refundAmount = 1101
-              this.refundForm.refundMonths = 6
+            if (this.half === 48) {
+              // 1年课的情况
+              if (shengYue >= 6 && this.refundForm.residueFee >= 1101) {
+                this.refundForm.refundAmount = 1101
+                this.refundForm.refundMonths = 6
+              } else {
+                this.$message({
+                  message: '该一年课订单课余量低于6,不支持降包类型',
+                  type: 'warning'
+                })
+                // this.onCancel('refundForm')
+                setTimeout(() => {
+                  location.reload()
+                }, 4000)
+              }
+            } else if (this.half === 96) {
+              // 2年课的情况
+              if (shengYue >= 6 && this.refundForm.residueFee >= 781) {
+                this.refundForm.refundAmount = 781
+                this.refundForm.refundMonths = 6
+              } else {
+                this.$message({
+                  message: '该两年课订单课余量低于6,不支持降包类型',
+                  type: 'warning'
+                })
+                // this.onCancel('refundForm')
+                setTimeout(() => {
+                  location.reload()
+                }, 4000)
+              }
             } else {
               this.$message({
-                message: '该订单课余量低于6或不是全年课,不支持降包类型',
+                message: '该订单非年课订单,不支持降包类型',
                 type: 'warning'
               })
               // this.onCancel('refundForm')
@@ -682,8 +709,67 @@ export default {
                 location.reload()
               }, 4000)
             }
-            // 补偿
-          } else if (newValue === 3) {
+            // 降1年课包
+          } else if (newValue === 4) {
+            // 非课程退款置空其关联的3项
+            this.jsonDate3 = {
+              deductGift: '',
+              deductMonth: '',
+              deductMaterial: '',
+              boxAble: false
+            }
+            this.refundForm.refundAmount = '' // 退款额
+            this.refundForm.refundMonths = ''
+            const shengYue = Math.floor(this.pureWeekS / 4)
+            if (
+              this.half === 96 &&
+              shengYue >= 12 &&
+              this.refundForm.residueFee >= 2080
+            ) {
+              this.refundForm.refundAmount = 2080
+              this.refundForm.refundMonths = 12
+            } else {
+              this.$message({
+                message: '该订单课余量低于12或不是2年课,不支持降包类型',
+                type: 'warning'
+              })
+              // this.onCancel('refundForm')
+              setTimeout(() => {
+                location.reload()
+              }, 4000)
+            }
+          }
+          // 降1年半课包
+          else if (newValue === 5) {
+            // 非课程退款置空其关联的3项
+            this.jsonDate3 = {
+              deductGift: '',
+              deductMonth: '',
+              deductMaterial: '',
+              boxAble: false
+            }
+            this.refundForm.refundAmount = '' // 退款额
+            this.refundForm.refundMonths = ''
+            const shengYue = Math.floor(this.pureWeekS / 4)
+            if (
+              this.half === 96 &&
+              shengYue >= 18 &&
+              this.refundForm.residueFee >= 3181
+            ) {
+              this.refundForm.refundAmount = 3181
+              this.refundForm.refundMonths = 18
+            } else {
+              this.$message({
+                message: '该订单课余量低于18或不是2年课,不支持降包类型',
+                type: 'warning'
+              })
+              // this.onCancel('refundForm')
+              setTimeout(() => {
+                location.reload()
+              }, 4000)
+            }
+          } // 补偿
+          else if (newValue === 3) {
             // 非课程退款置空其关联的3项
             this.jsonDate3 = {
               deductGift: '',
