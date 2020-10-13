@@ -4,7 +4,7 @@
  * @Author: shentong
  * @Date: 2020-04-02 16:08:02
  * @LastEditors: Shentong
- * @LastEditTime: 2020-10-13 20:10:00
+ * @LastEditTime: 2020-10-13 20:38:50
  -->
 <template>
   <div>
@@ -108,14 +108,14 @@
             width="120"
           ></el-table-column>
           <el-table-column
-            prop="id"
+            prop="courseCategoryCHN"
             label="课程类型"
             width="120"
             align="center"
           >
-            <template slot-scope="scope">
-              <span>{{ courseCategory[scope.row.courseCategory] || '' }}</span>
-            </template>
+            <!-- <template slot-scope="scope">
+              <span>{{ courseCategoryCHN }}</span>
+            </template> -->
           </el-table-column>
         </ele-table>
       </div>
@@ -125,6 +125,7 @@
 
 <script>
 import EleTable from '@/components/Table/EleTable'
+import { COURSECATEGORY } from '@/utils/enums'
 export default {
   props: {
     paramsInfo: {
@@ -219,6 +220,15 @@ export default {
                 ) + '%'
             }
           })
+        })
+
+        content.forEach((value) => {
+          let { courseCategory, courseCategoryCHN = '' } = value
+          courseCategory.split(',').forEach((course) => {
+            courseCategoryCHN += ' ' + COURSECATEGORY(course)
+          })
+
+          value.courseCategoryCHN = courseCategoryCHN
         })
 
         this.tableData = content

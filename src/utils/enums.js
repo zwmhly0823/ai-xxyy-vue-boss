@@ -160,3 +160,19 @@ export const USER_FLLOW_UP = {
   11: '已半年系统课',
   12: '半年系统课完课'
 }
+
+/**
+ * 课程类型
+ */
+
+export const COURSECATEGORY = (course) => {
+  if (!course) return ''
+
+  const TYPE = {
+    0: '双周体验课',
+    2: '年系统课',
+    3: '单周体验课',
+    4: '半年系统课'
+  }
+  return TYPE[`${course}`] || ''
+}
