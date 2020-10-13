@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-05-19 17:18:39
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-10-12 21:36:17
+ * @LastEditTime: 2020-10-13 16:31:30
 -->
 <template>
   <section class="bianju10">
@@ -137,7 +137,7 @@
         </el-form-item>
       </el-form>
       <div>
-        <el-button type="primary" @click.stop="exportAll"
+        <el-button type="primary" @click.stop="BatchRefund"
           >批量发起退款支付</el-button
         >
       </div>
@@ -151,7 +151,7 @@
         @selection-change="handleSelectionChange"
       >
         <el-table-column type="selection" width="55"> </el-table-column>
-        <el-table-column label="用户信息" width="120">
+        <el-table-column label="用户信息" width="120" fixed="left">
           <template slot-scope="scope">
             <div class="usertext" @click="userHandle(scope.row)">
               {{ scope.row.userName ? scope.row.userName : '-' }}<br />{{
@@ -160,7 +160,11 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column label="订单编号-订单交易流水号" width="220">
+        <el-table-column
+          label="订单编号-订单交易流水号"
+          width="220"
+          fixed="left"
+        >
           <template slot-scope="scope">
             <div>
               {{
@@ -174,7 +178,7 @@
         </el-table-column> -->
         <el-table-column prop="regtypeStr" label="业务类型" align="center">
         </el-table-column>
-        <el-table-column prop="applyName" label="申请人" align="center">
+        <el-table-column prop="applyName" label="申请人-部门" align="center">
         </el-table-column>
         <el-table-column prop="tradeTypeStr" label="支付方式" align="center">
         </el-table-column>
@@ -194,13 +198,25 @@
         </el-table-column>
         <el-table-column prop="statusStr" label="退款状态" align="center">
         </el-table-column>
+        <el-table-column
+          prop="refundTypeStr"
+          label="退款支付状态"
+          align="center"
+        >
+        </el-table-column>
         <el-table-column prop="refundTypeStr" label="退款类型" align="center">
         </el-table-column>
-        <el-table-column prop="refundRuleStr" label="退款规则" align="center">
-        </el-table-column>
+
         <el-table-column prop="refundFee" label="退款金额" align="center">
         </el-table-column>
         <el-table-column prop="totoalFee" label="交易金额" align="center">
+        </el-table-column>
+        <el-table-column prop="refundRuleStr" label="退款规则" align="center">
+        </el-table-column>
+        <el-table-column label="订单支付时间" align="center" width="155">
+          <template slot-scope="scope">
+            {{ scope.row.applyTime || scope.row.ctime }}
+          </template>
         </el-table-column>
         <el-table-column label="申请退款时间" align="center" width="155">
           <template slot-scope="scope">
@@ -214,7 +230,7 @@
           width="155"
         >
         </el-table-column>
-        <el-table-column label="操作" align="center">
+        <el-table-column label="操作" align="center" fixed="right">
           <template slot-scope="scope">
             <el-button type="text" @click="handleEdit(scope.$index, scope.row)"
               >详情</el-button
@@ -265,6 +281,7 @@ export default {
   },
   data() {
     return {
+      selectData: [],
       searchJson: {
         regType: '', // 业务类型
         tradeType: '', // 支付方式
@@ -642,8 +659,42 @@ export default {
       this.arrangeParams({ page: val, size: this.pageSize })
     },
     // 全选
-    handleSelectionChange() {},
+    handleSelectionChange(e) {
+      console.log(e)
+      this.selectData = e
+    },
+    // 批量退款
+    BatchRefund() {
+      if (this.selectData && this.selectData.length > 0) {
+        this.$message({
+          message: '请选择订单',
+          type: 'error'
+        })
+      }
+      this.$confirm(
+        `您即将给退款订单【确认退款】确认退款订单数：${this.selectData.length}条`,
+        '批量确认退款',
+        {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }
+      )
+        .then(() => {
+          this.$message({
+            type: 'success',
+            message: '退款成功!'
+          })
+        })
+        .catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消退款'
+          })
+        })
+    },
     // 操作
+
     async handleEdit() {
       console.info('index:', arguments[0])
       console.info('row:', arguments[1])
@@ -663,6 +714,7 @@ export default {
         this.drawer = true
       }
     },
+
     async comfirmRefund() {
       const { code } = await this.$http.Finance.toAgree({
         refundUid: JSON.parse(localStorage.getItem('staff')).id,

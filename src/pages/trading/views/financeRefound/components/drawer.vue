@@ -4,7 +4,7 @@
  * @Author: zhangjiawen
  * @Date: 2020-07-10 14:49:13
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-10-12 21:35:01
+ * @LastEditTime: 2020-10-13 16:23:20
 -->
 <template>
   <div class="feed-main" v-show="feedShow">
@@ -144,6 +144,16 @@
 
 <script>
 export default {
+  props: {
+    orderData: {
+      type: Object,
+      default: () => ({})
+    },
+    singleData: {
+      type: Object,
+      default: () => ({})
+    }
+  },
   data() {
     return {
       feedShow: !localStorage.getItem('feedFlag')
