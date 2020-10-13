@@ -3,8 +3,8 @@
  * @version:
  * @Author: shentong
  * @Date: 2020-03-13 14:38:28
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-21 20:52:04
+ * @LastEditors: zhangjianwen
+ * @LastEditTime: 2020-09-23 16:38:34
  */
 /**
  * 美术宝写字 专有。 业务代码中引用： this.$http.writeApp.User(params).then()
@@ -40,6 +40,7 @@ import NoticeCenter from './modules/NoticeCenter'
 import Community from './modules/Community' // 社群工具
 import Outbound from './modules/Outbound' // 社群工具
 import Marketing from './modules/Marketing' // 营销中心
+import LearnRecord from './modules/LearnRecord' // 学习记录
 import Setting from './modules/Setting'
 
 export default Object.assign(
@@ -71,5 +72,6 @@ export default Object.assign(
   { Community },
   { Outbound },
   { Marketing },
+  { LearnRecord },
   { Setting }
 )

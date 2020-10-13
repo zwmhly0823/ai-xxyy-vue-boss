@@ -4,7 +4,7 @@
  * @Author: zhangjianwen
  * @Date: 2020-07-09 15:02:59
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-07-30 14:59:24
+ * @LastEditTime: 2020-10-12 17:50:46
 -->
 <template>
   <div class="learn-record">
@@ -58,12 +58,22 @@
             label="实际参课人数"
             v-if="interTypef.includes(lessonType)"
           >
+            <template slot-scope="scope">
+              <p>
+                {{ scope.row.join_course_count }}
+              </p>
+            </template>
           </el-table-column>
           <el-table-column
             prop="ad_join_course_count"
             label="实际参课人数"
             v-if="interTypes.includes(lessonType)"
           >
+            <template slot-scope="scope">
+              <p>
+                {{ scope.row.ad_join_course_count }}
+              </p>
+            </template>
           </el-table-column>
           <el-table-column
             prop="learn_course_count"
@@ -134,28 +144,29 @@
               </p>
             </template>
           </el-table-column>
-          <el-table-column
-            prop="task_count"
-            label="总传作品数"
-            v-if="[0, 11].includes(lessonType)"
-          >
+          <el-table-column prop="task_count" label="总传作品数">
+            <template slot-scope="scope">
+              <p>
+                {{ scope.row.task_count }}
+              </p>
+            </template>
           </el-table-column>
           <el-table-column
             prop="ad_count"
             label="总答题数"
-            v-if="lessonType === 11"
+            v-if="lessonType === 12"
           >
           </el-table-column>
           <el-table-column
             prop="comment_count"
             label="总点评数"
-            v-if="lessonType === 0"
+            v-if="lessonType === 1"
           >
           </el-table-column>
           <el-table-column
             prop="lesson_comment_count"
             label="总听点评数"
-            v-if="lessonType === 0"
+            v-if="lessonType === 1"
           >
           </el-table-column>
         </el-table>
@@ -226,6 +237,7 @@
                     :quick-btn="['day', 'yesterday']"
                     :slectShow="isActive === 1"
                     name="dateTime"
+                    labelText="参课时间"
                     @result="getSearchData('dateTime', arguments)"
                   />
                 </el-form-item>
@@ -246,7 +258,10 @@
         </el-table-column>
         <el-table-column label="用户信息" min-width="200">
           <template slot-scope="scope">
-            <base-user-info :user="scope.row" @handle-click="userHandle" />
+            <base-user-info
+              :user="scope.row.userExtends"
+              @handle-click="userHandle(scope.row)"
+            />
           </template>
         </el-table-column>
         <el-table-column
@@ -350,12 +365,12 @@
         >
           <template slot-scope="scope">
             <p>
-              {{ scope.row.task_count > 0 ? '已上传' : '未上传' }}
+              {{ scope.row.task.length > 0 ? '已上传' : '未上传' }}
             </p>
             <p>
               {{
-                scope.row.last_task_time
-                  ? `最近：${formatDate(scope.row.last_task_time)}`
+                scope.row.task.length > 0 && scope.row.task[0].ctime
+                  ? `最近：${formatDate(scope.row.task[0].ctime)}`
                   : `最近：无`
               }}
             </p>
@@ -364,25 +379,43 @@
         <el-table-column
           prop="ad_count"
           label="总答题数"
-          v-if="lessonType === 11"
+          v-if="lessonType === 12"
         >
         </el-table-column>
-        <el-table-column
-          prop="comment_count"
-          label="点评数"
-          v-if="lessonType === 0"
-        >
+
+        <el-table-column prop="comment_count" label="点评数"> </el-table-column>
+        <el-table-column prop="lesson_comment_count" label="听点评数">
         </el-table-column>
-        <el-table-column
-          prop="lesson_comment_count"
-          label="听点评数"
-          v-if="lessonType === 0"
-        >
+        <el-table-column prop="completed_count" label="本月上传截图次数">
         </el-table-column>
-        <el-table-column prop="status" label="是否转化" width="80">
+        <!-- <el-table-column prop="status" label="是否转化" width="80">
           <template slot-scope="scope">
             <p>
-              {{ use_status[scope.row.status] }}
+              {{ use_status[scope.row.userExtends.status] }}
+            </p>
+          </template>
+        </el-table-column> -->
+        <el-table-column prop="status" label="是否退费" width="80">
+          <template slot-scope="scope">
+            <p>
+              {{
+                scope.row.studentSystemStatistics &&
+                scope.row.studentSystemStatistics.life_cycle === 91
+                  ? '退费'
+                  : '否'
+              }}
+            </p>
+          </template>
+        </el-table-column>
+        <el-table-column prop="status" label="是否续费" width="80">
+          <template slot-scope="scope">
+            <p>
+              {{
+                scope.row.studentSystemStatistics &&
+                scope.row.studentSystemStatistics.remain_order_count > 1
+                  ? '续费'
+                  : '否'
+              }}
             </p>
           </template>
         </el-table-column>
@@ -392,7 +425,9 @@
               {{ scope.row.team_name }}
             </p>
             <p>
-              {{ `${scope.row.realname} ${scope.row.department_name}` }}
+              {{
+                `${scope.row.teacherInfo.realname} ${scope.row.teacherInfo.department_name}`
+              }}
             </p>
           </template>
         </el-table-column>
@@ -437,12 +472,11 @@ export default {
       isActive: 1, // 参课类型 0 已参课 1已完课  2 未参课
       lessonType: 0, // 课程类型
       learn_type: {
-        0: '小熊AI课', // 虚拟课
-        10: '家长课堂', // 会销课
-        11: '小熊TV课'
+        1: '小熊美术Ai课', // 系统课课
+        12: '小熊美术TV课'
       },
-      interTypef: [0],
-      interTypes: [10, 11],
+      interTypef: [1],
+      interTypes: [12],
       use_status: {
         0: '未转化',
         1: '未转化',
@@ -486,18 +520,15 @@ export default {
     })
   },
   methods: {
-    // 获取学员信息列表
+    // 获取信息列表
     getRecordList() {
       this.loading = true
       const params = {
-        // teacher_id: JSON.parse(localStorage.getItem('teacher')).id,
-        // student_id: '408398321242345472',
-        // state: this.isActive,
-        // sup: this.$route.params.sup,
         term: this.$route.params.id,
         course_id: this.$route.params.course_id
       }
-      if (+this.lessonType === 10 || +this.lessonType === 11) {
+      // params.state = this.isActive
+      if (+this.lessonType === 12) {
         params.ad_state = this.isActive
       } else {
         params.state = this.isActive
@@ -508,12 +539,14 @@ export default {
           : (params.user_num = this.num)
       }
       if (this.joinDate) {
-        ;+this.lessonType === 10
+        // params.last_join_course_time = this.joinDate
+        ;+this.lessonType === 12
           ? (params.ad_last_join_course_time = this.joinDate)
           : (params.last_join_course_time = this.joinDate)
       }
       if (this.overDate) {
-        ;+this.lessonType === 10
+        // params.complete_time = this.overDate
+        ;+this.lessonType === 12
           ? (params.ad_complete_time = this.overDate)
           : (params.complete_time = this.overDate)
       }
@@ -534,18 +567,18 @@ export default {
       // this.joinDate = res[0].join
       //   this.overDate
 
-      return this.$http.User.getStudentTRecordList(
+      return this.$http.LearnRecord.getStudentSRecordList(
         params,
         teamName,
         this.$route.params.sup,
         this.currentPage
       ).then((res) => {
         this.loading = false
-        if (res && res.data && res.data.StudentTrialRecordListStatisticsPage) {
-          if (res.data.StudentTrialRecordListStatisticsPage.length === 0) {
+        if (res && res.data && res.data.StudentSystemRecordListStatisticsPage) {
+          if (res.data.StudentSystemRecordListStatisticsPage.length === 0) {
             return
           }
-          const reponse = res.data.StudentTrialRecordListStatisticsPage
+          const reponse = res.data.StudentSystemRecordListStatisticsPage
           this.learnRecordData = reponse.content
           console.log(this.learnRecordData)
           this.totalPages = +reponse.totalPages
@@ -555,7 +588,7 @@ export default {
     },
     // 学员记录详情基本信息
     getStudentDetail() {
-      return this.$http.User.getStudentDetail(
+      return this.$http.LearnRecord.getStudentSystemDetail(
         // JSON.parse(localStorage.getItem('teacher')).id,
         this.$route.params.id,
         this.$route.params.course_id,
@@ -565,9 +598,9 @@ export default {
           if (
             res &&
             res.data &&
-            res.data.StudentTrialRecordDetailBossStatistics
+            res.data.StudentSystemRecordDetailBossStatistics
           ) {
-            this.recordDetail = res.data.StudentTrialRecordDetailBossStatistics
+            this.recordDetail = res.data.StudentSystemRecordDetailBossStatistics
             this.lessonType = this.recordDetail.lesson_type
 
             // this.lessonType = 10
@@ -616,8 +649,12 @@ export default {
         this.num = res[0].mobile || res[0].user_num_text
       }
       if (key === 'dateTime') {
-        this.joinDate = res[0].join
-        this.overDate = res[0].over
+        if (res[0].dateTime) {
+          this.joinDate = res[0].dateTime
+        } else {
+          this.joinDate = res[0].join
+          this.overDate = res[0].over
+        }
       }
       this.$nextTick(() => {
         this.getRecordList()

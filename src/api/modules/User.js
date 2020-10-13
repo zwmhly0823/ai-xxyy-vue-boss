@@ -5,7 +5,7 @@
  * @Author: shentong
  * @Date: 2020-03-13 14:38:28
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-10-12 11:24:30
+ * @LastEditTime: 2020-10-13 22:05:14
  */
 // import axios from '../axios'
 import axios from '../axiosConfig'
@@ -1047,7 +1047,7 @@ export default {
    * {
    * teacher_id:[],
    * team_state: [0,1], 0-待开课，1-开课中，2-已结课
-   * team_type: 0, 0-体验课，1-系统课
+   * team_type: 0, 0-体验课，2-系统课
    * }
    * @return {
    *  status // '1 招生中   2待开课   3 开课中  4 已结课',
