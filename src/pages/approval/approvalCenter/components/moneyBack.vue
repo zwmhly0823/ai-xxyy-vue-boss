@@ -2,7 +2,7 @@
  * @Descripttion: 
  * @version: 
  * @LastEditors: liukun
- * @LastEditTime: 2020-10-12 18:32:29
+ * @LastEditTime: 2020-10-13 16:45:20
  -->
 <template>
   <div class="adjustModule">
@@ -302,12 +302,15 @@ export default {
       deep: true,
       handler(newValue, oldValue) {
         console.info('refundAmountComputed改变被捕获:', newValue)
-        if (this.refundForm.residueFee - newValue < 0) {
-          this.$message.warning('退款金额大于剩余金额,请重新选择')
-          // this.onCancel('refundForm')
+        if (this.refundForm.residueFee - newValue < 0 || newValue < 0) {
+          this.$message.warning(
+            (newValue < 0 ? '退款金额小于0' : '退款金额大于剩余金额') +
+              ',请重新选择'
+          )
           setTimeout(() => {
-            location.reload()
-          }, 4000)
+            // location.reload()
+            this.onCancel('refundForm')
+          }, 3000)
         }
       }
     },
@@ -319,10 +322,10 @@ export default {
         console.info('refundMonthsComputed改变被捕获:', newValue)
         if (newValue < 0) {
           this.$message.warning('经核算退款月数小于0,重置')
-          // this.onCancel('refundForm')
           setTimeout(() => {
-            location.reload()
-          }, 4000)
+            // location.reload()
+            this.onCancel('refundForm')
+          }, 3000)
         }
       }
     },
