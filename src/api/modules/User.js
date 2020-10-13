@@ -5,7 +5,7 @@
  * @Author: shentong
  * @Date: 2020-03-13 14:38:28
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-10-13 22:05:14
+ * @LastEditTime: 2020-10-13 22:39:53
  */
 // import axios from '../axios'
 import axios from '../axiosConfig'
@@ -868,7 +868,10 @@ export default {
           totalPages
           totalElements
           content{
+            rmbRefundStatusText
             id
+            isrefund
+            invoice_status_text
             packages_name
             amount
             order_status
@@ -1286,6 +1289,7 @@ export default {
               sort:${JSON.stringify(JSON.stringify({ ctime: 'asc' }))}
               )
             {
+            remaining_week
             departmentname
             addedgroup
             addedwechat

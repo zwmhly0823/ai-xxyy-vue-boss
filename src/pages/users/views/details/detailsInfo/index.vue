@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-08-17 19:37:24
  * @LastEditors: liukun
- * @LastEditTime: 2020-09-15 23:00:39
+ * @LastEditTime: 2020-10-09 18:39:56
 -->
 <template>
   <div class="details" v-loading="loading">
@@ -560,6 +560,19 @@
               }}</span
               >、
               <span>{{ systerm_lk.expressstatus }}</span>
+            </div></el-col
+          >
+          <el-col :span="4"
+            ><div class="item1">
+              <span>剩余周数</span
+              ><span>
+                {{
+                  Object.prototype.toString.call(systerm_lk.remaining_week) ===
+                  '[object String]'
+                    ? systerm_lk.remaining_week + '周'
+                    : '-'
+                }}</span
+              >
             </div></el-col
           >
         </el-row>
