@@ -4,7 +4,7 @@
  * @Author: shentong
  * @Date: 2020-04-02 16:08:02
  * @LastEditors: Shentong
- * @LastEditTime: 2020-07-15 16:39:26
+ * @LastEditTime: 2020-10-13 20:10:00
  -->
 <template>
   <div>
@@ -114,9 +114,7 @@
             align="center"
           >
             <template slot-scope="scope">
-              <span v-if="scope.row.courseCategory == '0'">双周体验课</span>
-              <span v-if="scope.row.courseCategory == '2'">系统课</span>
-              <span v-if="scope.row.courseCategory == '3'">单周体验课</span>
+              <span>{{ courseCategory[scope.row.courseCategory] || '' }}</span>
             </template>
           </el-table-column>
         </ele-table>
@@ -139,6 +137,12 @@ export default {
   },
   data() {
     return {
+      courseCategory: {
+        0: '双周体验课',
+        2: '年系统课',
+        3: '单周体验课',
+        4: '半年系统课'
+      },
       courseType: '0',
       totalElements: 0,
       flags: {
