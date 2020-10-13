@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-06-30 19:21:08
  * @LastEditors: Shentong
- * @LastEditTime: 2020-10-12 14:08:51
+ * @LastEditTime: 2020-10-13 17:46:35
 -->
 <template>
   <el-dialog
@@ -298,12 +298,8 @@ export default {
         couponDetail: { id: couponId, name: couponName }
       } = this
 
-      console.log(exeType, exePeriod, periodMore)
-
       const periodAndName = {}
       const couponDispensedRules = {}
-      // const periodName = []
-      // if
       const selPeriod = exeType === '0' ? exePeriod : periodMore
       // exeType === '0' ? exePeriod : String(periodMore).split(',') // periodMore 是 string
       const originPeriodArr =
@@ -312,10 +308,6 @@ export default {
       this[originPeriodArr].forEach((item) => {
         periodAndName[item.period] = item.periodName
       })
-
-      // selPeriod.forEach((p) => {
-      //   periodName.push(periodAndName[p])
-      // })
 
       Object.assign(couponDispensedRules, {
         // period: selPeriod.join(),
