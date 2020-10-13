@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-08-25 11:40:19
  * @LastEditors: liukun
- * @LastEditTime: 2020-10-12 19:16:59
+ * @LastEditTime: 2020-10-13 11:34:35
 -->
 <template>
   <div>
@@ -58,7 +58,7 @@
           <div>
             {{
               scope.row.isrefund === 0
-                ? '--'
+                ? '未退款'
                 : scope.row.isrefund === 1
                 ? '已退款'
                 : '退款中'
