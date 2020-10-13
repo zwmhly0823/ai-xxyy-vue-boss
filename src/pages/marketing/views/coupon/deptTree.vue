@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-13 16:53:27
  * @LastEditors: Shentong
- * @LastEditTime: 2020-10-12 15:24:44
+ * @LastEditTime: 2020-10-13 19:52:33
  -->
 <template>
   <div class="left-container">
@@ -34,22 +34,21 @@
             <!-- TODO: -->
             <div class="judge-box" v-if="$route.params.couponId == '5'">
               <span>开课后第</span>
-              <span v-if="!data.edit" style="padding:0 3px;">{{
+              <!-- <span v-if="!data.edit" style="padding:0 3px;">{{
                 data.day
-              }}</span>
+              }}</span> -->
               <el-input
-                v-else
                 size="mini"
                 v-model="data.day"
                 :disabled="period != ''"
                 type="number"
               ></el-input>
               <span>天</span>
-              <i
+              <!-- <i
                 class="el-icon-edit edit-styl"
                 v-if="period == ''"
                 @click="editCurDay(data)"
-              ></i>
+              ></i> -->
             </div>
             <div class="default-rule" v-else>
               自定义有效期
@@ -62,7 +61,7 @@
 </template>
 
 <script>
-import { sortByKey } from '@/utils/boss'
+// import { sortByKey } from '@/utils/boss'
 export default {
   props: {
     dayDeptId: {
@@ -155,7 +154,6 @@ export default {
       deptArr.forEach((item, index) => {
         const { id, children } = item
         item.day = deptIds[id] || '3'
-        item.edit = false // TODO:
         // 查看模式
         this.period !== '' && (item.disabled = true)
         item = {
@@ -168,12 +166,13 @@ export default {
     handleCheckChange() {
       const res = this.$refs.tree.getCheckedNodes()
       return res.filter((item) => {
-        const { children, pid, edit } = item
+        const { children, pid } = item
 
-        if (this.$route.params.couponId !== '5') {
-          return children == null && pid !== '0'
-        }
-        return children == null && pid !== '0' && edit
+        return children == null && pid !== '0'
+        // if (this.$route.params.couponId !== '5') {
+        //
+        // }
+        // return children == null && pid !== '0' && edit
       })
     },
     editCurDay(data) {
@@ -199,9 +198,11 @@ export default {
         this.$http.Teacher.getDepartmentTree(1).then((res) => {
           const arr = (res && res.payload) || []
           if (!arr.length) return arr
-          const department = sortByKey(arr, 'id')
+          const department = arr.filter((dept) => dept.name === '美术AI销售')
+          console.log('department', department)
+          // const department = sortByKey(arr, 'id')
           // 组织结构第一层排序
-          department.sort(this.handle('sort'))
+          // department.sort(this.handle('sort'))
           // 多层排序
           this.recursive(department)
           this.departmentList[0].children = department
@@ -239,7 +240,6 @@ export default {
       deptArr.forEach((item, index) => {
         const { id, children } = item
         item.day = deptIds[id] || '3'
-        item.edit = false // TODO:
 
         deptArr[index] = {
           ...item

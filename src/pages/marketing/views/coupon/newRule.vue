@@ -4,11 +4,11 @@
  * @Author: Shentong
  * @Date: 2020-06-30 19:21:08
  * @LastEditors: Shentong
- * @LastEditTime: 2020-10-13 17:46:35
+ * @LastEditTime: 2020-10-13 20:00:24
 -->
 <template>
   <el-dialog
-    :title="'新建定向发放规则'"
+    :title="!period ? '新建定向发放规则' : '查看发放规则'"
     :visible.sync="centerDialog"
     width="800px"
     top="20px"
@@ -258,13 +258,15 @@ export default {
         this.$message.warning('请选择执行期')
         return 0
       }
-      const emptyDay = checkedNode.filter((item) => item.day === '')
+      const emptyDay = checkedNode.filter(
+        (item) => item.day === '' || item.day < 0
+      )
 
       if (!checkedNode.length) {
         this.$message.warning('请先配置组和优惠券到期时间')
         return 0
       } else if (emptyDay.length) {
-        this.$message.warning('请填写全部组的优惠券到期时间')
+        this.$message.warning('请填写指定组的优惠券到期时间')
         return 0
       }
       return 1
