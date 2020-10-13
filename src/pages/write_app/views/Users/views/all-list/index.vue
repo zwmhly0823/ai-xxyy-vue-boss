@@ -70,7 +70,9 @@
                     <span>{{
                       (item.teacher_info && item.teacher_info.realname) || '--'
                     }}</span>
-                    <span class="hight">{{ `(${item.team_name})` }}</span>
+                    <span class="hight" @click="openTeam(item)">{{
+                      `(${item.team_name})`
+                    }}</span>
                   </div>
                   <div>
                     {{
@@ -101,7 +103,9 @@
                         (item.teacher_info && item.teacher_info.realname) ||
                           '--'
                       }}</span>
-                      <span class="hight">{{ `(${item.team_name})` }}</span>
+                      <span class="primary-text" @click="openTeam(item)">{{
+                        `(${item.team_name})`
+                      }}</span>
                     </div>
                     <div>
                       {{
@@ -393,6 +397,15 @@ export default {
       id && openBrowserTab(`/write_app/#/details/${id}`)
     },
 
+    // 点击班级名称，打开班级详情
+    openTeam(row) {
+      if (!row.id) return
+      const teamId = row.id
+      const teamType = row.team_type || '0'
+      teamId &&
+        openBrowserTab(`/student-team/#/teamDetail/${teamId}/${teamType}`)
+    },
+
     formatDate(date, flag = 's') {
       return (date && formatData(date, flag)) || '--'
     }
@@ -443,9 +456,5 @@ export default {
       top: -6px;
     }
   }
-}
-.hight {
-  color: #2a75ed;
-  margin-left: 5px;
 }
 </style>

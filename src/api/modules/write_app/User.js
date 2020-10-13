@@ -5,7 +5,7 @@
  * @Author: shentong
  * @Date: 2020-03-13 14:38:28
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-09-12 16:07:01
+ * @LastEditTime: 2020-10-12 11:23:28
  */
 // import axios from '../axios'
 import axios from '../../axiosConfig'
@@ -240,6 +240,7 @@ export default {
               sex
               birthday
               teams {
+                id
                 team_name
                 subject
                 team_type
