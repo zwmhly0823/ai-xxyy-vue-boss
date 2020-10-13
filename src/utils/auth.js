@@ -3,8 +3,8 @@
  * @version: 1.0.0
  * @Author: Shentong
  * @Date: 2020-04-24 17:30:50
- * @LastEditors: Shentong
- * @LastEditTime: 2020-05-13 21:30:45
+ * @LastEditors: zhangjianwen
+ * @LastEditTime: 2020-10-13 14:23:18
  * @github: https://github.com/js-cookie/js-cookie
  */
 import Cookies from 'js-cookie'
@@ -26,6 +26,8 @@ export function setToken(token) {
 export function removeToken() {
   // localStorage.removeItem('teacher')
   localStorage.removeItem('staff')
+  // 每次退出清除悬浮框标示
+  localStorage.removeItem('feedFlag')
   // 清除multiTabbed
   sessionStorage.removeItem('multiTabbed')
   sessionStorage.removeItem('currentMultiTab')
