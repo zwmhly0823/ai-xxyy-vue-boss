@@ -65,11 +65,6 @@ export default {
     returnList: {
       type: Boolean,
       default: false
-    },
-    // 是否是兼职老师
-    isParttimeTeacher: {
-      type: Boolean,
-      default: false
     }
   },
   components: {},
@@ -82,7 +77,6 @@ export default {
     }
   },
   created() {
-    console.log('getTeacher')
     this.getTeacher()
   },
   watch: {
@@ -126,11 +120,7 @@ export default {
               ]
         }
       }
-      this.teacherscope &&
-        // this.teacherscope.length &&
-        q.bool.must.push({ terms: { id: this.teacherscope } })
-      // 兼职
-      this.isParttimeTeacher && q.bool.must.push({ duty_id: ['3', '4'] })
+      q.bool.must.push({ terms: { id: this.teacherscope } })
       getDepartmentTeacherEx(JSON.stringify(q))
         .then((res) => {
           this.teacherList = res.data.TeacherListEx || []

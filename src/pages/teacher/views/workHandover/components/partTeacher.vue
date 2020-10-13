@@ -8,13 +8,13 @@
           name="pay_teacher_id"
           placeholder="全部部门"
           :multiple="false"
+          isParttimeTeacher
           @result="handoverSelectDepartment"
         />
         <GroupSell
           tip="请选择老师"
           :teacherscope="handoverTeacherScope"
           return-list
-          isParttimeTeacher
           @result="handoverSelectTeacher"
           name="pay_teacher_id"
           class="margin_l10"
@@ -45,14 +45,14 @@
           :multiple="false"
           @result="receiveSelectDepartment"
         />
-        <!-- <GroupSell
+        <GroupSell
           tip="请选择老师"
           :teacherscope="receiveTeacherScope"
           return-list
           @result="receiveSelectTeacher"
           name="pay_teacher_id"
           class="margin_l10"
-        /> -->
+        />
         <div class="module-search-tip">请先选择部门和老师哦～</div>
       </div>
 
@@ -88,7 +88,6 @@ export default {
     handoverSelectDepartment(res) {
       this.handoverTeacherScope =
         res.pay_teacher_id.length !== 0 ? res.pay_teacher_id : null
-      console.log(this.handoverTeacherScope)
     },
     // 交出方选择老师
     handoverSelectTeacher(res) {
