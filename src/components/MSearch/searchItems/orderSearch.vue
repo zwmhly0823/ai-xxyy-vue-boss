@@ -164,14 +164,12 @@ export default {
       }
     },
     getUidByPhone(num) {
-      this.$http.User.searchUserByPhone(num).then((res) => {
-        if (
-          res &&
-          res.data &&
-          res.data.UserListEx &&
-          res.data.UserListEx.length
-        ) {
-          this.$emit('result', { uid: res.data.UserListEx[0].id })
+      // this.$http.User.searchUserByPhone(num).then((res) => {
+      this.$http.Base.getUserNumPhone(num).then((res) => {
+        if (res?.data?.UserSubjectStatisticsListEx?.length) {
+          this.$emit('result', {
+            uid: res.data.UserSubjectStatisticsListEx[0].u_id
+          })
         }
         setTimeout(() => {
           localStorage.removeItem('noticeParams')
