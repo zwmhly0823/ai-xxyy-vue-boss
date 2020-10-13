@@ -4,7 +4,7 @@
  * @Author: zhangjianwen
  * @Date: 2020-07-09 15:02:59
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-09-24 17:19:01
+ * @LastEditTime: 2020-10-13 23:15:57
 -->
 <template>
   <div class="learn-record">
@@ -167,11 +167,15 @@ export default {
   watch: {
     lessonType(val, old) {
       this.currentPage = 1
-      console.log(111, val, old)
-      this.getManagement().then(() => {
-        this.term = this.manageMentList[0].period
-        this.level = 'S1'
-        this.getData(this.currentPage, val, this.level)
+      this.$nextTick(() => {
+        this.getManagement().then(() => {
+          setTimeout(() => {
+            this.term = this.manageMentList[0].period
+            this.level = 'S1'
+            console.log('期数', this.term)
+            // this.getData(this.currentPage, val, this.level)
+          }, 300)
+        })
       })
     },
     term(val, old) {
@@ -183,10 +187,10 @@ export default {
       this.getData(this.currentPage, val, this.level)
     },
     level(val, old) {
-      console.log('难度', val)
-      this.level = val
-      this.currentPage = 1
-      this.getData(this.currentPage, this.term, val)
+      // console.log('难度', val)
+      // this.level = val
+      // this.currentPage = 1
+      // this.getData(this.currentPage, this.term, val)
       // if (this.dropName === '更多') {
       //   return false
       // } else {
@@ -223,7 +227,6 @@ export default {
             this.recordList = []
             return
           }
-
           // 过滤当前科目
           const manageMentList = res.data.ManagementForTeacherList.filter(
             (item) =>
@@ -288,7 +291,7 @@ export default {
     // 查询
     getData(page = this.currentPage, term = this.term, level = this.level) {
       this.recordList = []
-      console.log(this.lessonType)
+      // console.log(this.lessonType)
       if (+this.lessonType === 2) {
         return this.$http.LearnRecord.getStudentSystemRecordPage(
           page,
@@ -304,7 +307,11 @@ export default {
               const data = res.data.StudentSystemRecordOperatorStatisticsPage
               this.totalElements = Number(data.totalElements)
               this.totalPages = Number(data.totalPages)
+              console.log('数据量', this.recordList)
               this.recordList = data.content
+              // this.$nextTick(() => {
+              //   return ()
+              // })
             }
           })
           .catch(() => {})
@@ -323,7 +330,7 @@ export default {
               const data = res.data.StudentTrialRecordOperatorStatisticsPage
               this.totalElements = Number(data.totalElements)
               this.totalPages = Number(data.totalPages)
-              this.recordList = data.content
+              return (this.recordList = data.content)
             }
           })
           .catch(() => {})
