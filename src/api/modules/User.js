@@ -5,7 +5,7 @@
  * @Author: shentong
  * @Date: 2020-03-13 14:38:28
  * @LastEditors: liukun
- * @LastEditTime: 2020-10-09 18:38:12
+ * @LastEditTime: 2020-10-13 19:13:59
  */
 // import axios from '../axios'
 import axios from '../axiosConfig'
@@ -884,6 +884,7 @@ export default {
           totalPages
           totalElements
           content{
+            rmbRefundStatusText
             id
             isrefund
             invoice_status_text
