@@ -4,12 +4,81 @@
  * @Author: zhangjiawen
  * @Date: 2020-07-10 14:49:13
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-10-13 16:23:20
+ * @LastEditTime: 2020-10-13 21:17:56
 -->
 <template>
-  <div class="feed-main" v-show="feedShow">
-    <div class="chouti">
-      <el-row v-if="choutidata.buytime !== ''">
+  <div class="drawer-main" v-show="feedShow">
+    <div class="drawer-con">
+      <div class="drawer-line">
+        <p class="line-title">退款支付详情</p>
+        <el-table :data="payData" style="width: 90%">
+          <el-table-column prop="date" label="选择支付状态" width="180">
+          </el-table-column>
+          <el-table-column prop="name" label="支付状态描述" width="180">
+          </el-table-column>
+          <el-table-column prop="address" label="退款支付时间">
+          </el-table-column>
+        </el-table>
+      </div>
+      <div class="drawer-line">
+        <p class="line-title">退款订单明细</p>
+        <p class="line-delf">
+          <span>用户信息:小雨</span>
+          <span>订单号:小雨</span>
+          <span>订单交易流水号:小雨</span>
+          <span>退款订单状态:小雨</span>
+        </p>
+        <el-table :data="payData" style="width: 90%">
+          <el-table-column prop="date" label="订单业务类型" width="180">
+          </el-table-column>
+          <el-table-column prop="name" label="订单商品信息" width="180">
+          </el-table-column>
+          <el-table-column prop="address" label="订单金额"> </el-table-column>
+          <el-table-column prop="address" label="优惠金额"> </el-table-column>
+          <el-table-column prop="address" label="支付方式"> </el-table-column>
+          <el-table-column prop="address" label="实付金额"> </el-table-column>
+          <el-table-column prop="address" label="已上周期"> </el-table-column>
+          <el-table-column prop="address" label="退费周期"> </el-table-column>
+          <el-table-column prop="address" label="剩余周期"> </el-table-column>
+          <el-table-column prop="address" label="退款类型"> </el-table-column>
+          <el-table-column prop="address" label="订单退款金额">
+          </el-table-column>
+          <el-table-column prop="address" label="订单剩余金额">
+          </el-table-column>
+        </el-table>
+        <p class="line-delf">
+          <span>开票状态:小雨</span>
+          <span>开票类型:小雨</span>
+          <span>发票号码:小雨</span>
+          <span>支付宝信息:小雨</span>
+          <span>附加扣费说明:小雨</span>
+          <span class="downPay">下载支付回单</span>
+        </p>
+      </div>
+      <div class="drawer-line">
+        <p class="line-title">订单生命周期</p>
+        <el-table :data="payData" style="width: 90%">
+          <el-table-column prop="date" label="选择支付状态" width="180">
+          </el-table-column>
+          <el-table-column prop="name" label="支付状态描述" width="180">
+          </el-table-column>
+          <el-table-column prop="address" label="退款支付时间">
+          </el-table-column>
+        </el-table>
+      </div>
+      <div class="drawer-line">
+        <p class="line-title">审批过程记录</p>
+        <el-table :data="payData" style="width: 90%">
+          <el-table-column prop="date" label="发起人/审批人" width="180">
+          </el-table-column>
+          <el-table-column prop="name" label="审批意见" width="180">
+          </el-table-column>
+          <el-table-column prop="address" label="操作时间"> </el-table-column>
+          <el-table-column prop="address" label="备注说明"> </el-table-column>
+        </el-table>
+      </div>
+      <el-button type="primary" @click="comfirmRefund">确认退款</el-button>
+      <!-- <el-row v-if="choutidata.buytime !== ''">
         <el-col :span="4">订单支付时间:</el-col>
         <el-col :span="18" :offset="2"
           >{{ new Date(Number(choutidata.buytime)).toLocaleString() }}
@@ -137,7 +206,7 @@
       </el-row>
       <el-row class="buttonCenter" v-else-if="statusStr === '退款驳回'">
         <el-button type="danger" :disabled="true">已驳回</el-button>
-      </el-row>
+      </el-row>-->
     </div>
   </div>
 </template>
@@ -171,41 +240,18 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.feed-main {
-  position: fixed;
-  right: 10px;
-  bottom: 40px;
-  background: #b8c1c1;
-  width: 60px;
-  height: 80px;
-  .feed-close {
-    float: right;
-    padding-right: 5px;
-    font-size: 20px;
-    color: #6193c7;
+.drawer-line {
+  margin-left: 10px;
+  .line-title {
+    font-size: 16px;
+    font-weight: bold;
+    margin: 10px;
   }
-  .feed-con {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 0;
-    position: absolute;
-    bottom: 0;
-    text-align: center;
-    width: 100%;
-    background: cornflowerblue;
-    color: white;
+  .line-delf {
+    margin-top: 10px;
     font-size: 12px;
-    padding-top: 10px;
-    p {
-      margin-top: 0;
-    }
-    .el-icon-s-comment {
-      // padding-top: 10px;
-      display: inline-block;
-      font-size: 20px;
-      padding-bottom: 3px;
-    }
+    display: flex;
+    justify-content: space-around;
   }
 }
 </style>
