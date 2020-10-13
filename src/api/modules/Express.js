@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-31 22:54:28
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-10-02 17:04:43
+ * @LastEditTime: 2020-10-13 16:22:00
  */
 import { getAppSubjectCode } from '@/utils/index'
 import axios from '../axiosConfig'
@@ -92,8 +92,8 @@ export default {
   // 物流上传
   expressUpload(params) {
     return axios.post(
-      // `/api/o/v1/express/importExpressListNew?operatorId=${params.operatorId}`,
-      `/api/ex/v1/express/importExpressListNew?operatorId=${params.operatorId}`,
+      `/api/o/v1/express/importExpressListNew?operatorId=${params.operatorId}`,
+      // `/api/ex/v1/express/importExpressListNew?operatorId=${params.operatorId}`,
       params
     )
   },
