@@ -111,6 +111,7 @@
     <notice-center
       ref="noticeCenter"
       @reduceBadge="reduceBadge"
+      @clearBadge="clearBadge"
     ></notice-center>
 
     <!-- 修改用户密码 dialog -->
@@ -254,6 +255,9 @@ export default {
     },
     reduceBadge() {
       this.noticeBadge--
+    },
+    clearBadge() {
+      this.noticeBadge = 0
     },
 
     /**

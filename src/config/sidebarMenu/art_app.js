@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-08-19 21:14:08
  * @LastEditors: Shentong
- * @LastEditTime: 2020-09-21 11:51:01
+ * @LastEditTime: 2020-10-13 21:33:28
  */
 import { removeToken } from '@/utils/auth'
 import { baseUrl } from '@/utils/index'
@@ -517,6 +517,15 @@ const bearArt = [
         name: 'learnRecord',
         meta: {
           title: '学习记录',
+          module: 'statistics',
+          style: 'line'
+        }
+      },
+      {
+        path: '/systemJoinCourseLog',
+        name: 'systemJoinCourseLog',
+        meta: {
+          title: '参课统计',
           module: 'statistics',
           style: 'line'
         }

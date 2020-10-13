@@ -142,6 +142,37 @@ export const SYSTEMRADE = (sup) => {
   return TU[`${sup}`] || ''
 }
 
-/** 优惠券类型 */
+/**
+ * 用户跟进状态 user_status
+ */
+export const USER_FLLOW_UP = {
+  0: '已注册',
+  1: '已体验课',
+  2: '体验课完课',
+  3: '已月系统课',
+  4: '月系统课完课',
+  5: '已年系统课',
+  6: '年系统课完课',
+  7: '年系统课续费',
+  8: '注销失效',
+  9: '已季系统课',
+  10: '季系统课完课',
+  11: '已半年系统课',
+  12: '半年系统课完课'
+}
 
-export const COUPONTYPE = (type) => {}
+/**
+ * 课程类型
+ */
+
+export const COURSECATEGORY = (course) => {
+  if (!course) return ''
+
+  const TYPE = {
+    0: '双周体验课',
+    2: '年系统课',
+    3: '单周体验课',
+    4: '半年系统课'
+  }
+  return TYPE[`${course}`] || ''
+}

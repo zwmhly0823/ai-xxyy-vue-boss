@@ -69,7 +69,9 @@
                     <span>{{
                       (item.teacher_info && item.teacher_info.realname) || '--'
                     }}</span>
-                    <span class="hight">{{ `(${item.team_name})` }}</span>
+                    <span class="primary-text" @click="openTeam(item)">{{
+                      `(${item.team_name})`
+                    }}</span>
                   </div>
                   <div>
                     {{
@@ -96,7 +98,9 @@
                     <span>{{
                       (item.teacher_info && item.teacher_info.realname) || '--'
                     }}</span>
-                    <span class="hight">{{ `(${item.team_name})` }}</span>
+                    <span class="primary-text" @click="openTeam(item)">{{
+                      `(${item.team_name})`
+                    }}</span>
                   </div>
                   <div>
                     {{
@@ -290,7 +294,7 @@ export default {
       if (this.sortActive) {
         sort[this.sortActive] = this.sortKeys[this.sortActive]
       }
-      this.$http.writeApp.User.studentAllUserList(query, page, sort)
+      this.$http.User.studentAllUserList(query, page, sort)
         .then((res) => {
           var defTotalElements = 0
           var defTotalPages = 1
@@ -389,6 +393,15 @@ export default {
       id && openBrowserTab(`/users/#/details/${id}`)
     },
 
+    // 点击班级名称，打开班级详情
+    openTeam(row) {
+      if (!row.id) return
+      const teamId = row.id
+      const teamType = row.team_type || '0'
+      teamId &&
+        openBrowserTab(`/student-team/#/teamDetail/${teamId}/${teamType}`)
+    },
+
     formatDate(date, flag = 's') {
       return formatData(date, flag)
     }
@@ -439,9 +452,5 @@ export default {
       top: -6px;
     }
   }
-}
-.hight {
-  color: #2a75ed;
-  margin-left: 5px;
 }
 </style>
