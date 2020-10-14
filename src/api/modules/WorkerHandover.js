@@ -74,5 +74,16 @@ export default {
         params.size
       }&weixinSendId=${params.weixinSendId || ''}&teamId=${params.teamId || ''}`
     )
+  },
+  getDispatchStudentList(teacherId) {
+    return axios.get(
+      `/api/tm/v1/teacher/manager/getDispatchStudentList?teacherId=${teacherId}`
+    )
+  },
+  // 兼职交接
+  dispatchAjax(query) {
+    return axios.post(
+      `/api/tm/v1/teacher/manager/manual/dispatch?teacherId=${query.teacherId}&newTeacherId=${query.newTeacherId}${query.userIdList}`
+    )
   }
 }

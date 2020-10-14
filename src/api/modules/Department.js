@@ -67,6 +67,9 @@ export default {
         TeacherListEx(query: ${JSON.stringify(query)}, size: ${size}){
           id
           realname
+          departmentInfo {
+            name
+          }
         }
       }`
     })
