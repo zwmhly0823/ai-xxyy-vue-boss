@@ -3,8 +3,8 @@
  * @version: 
  * @Author: Lukun
  * @Date: 2020-04-15 15:18:49
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-10-02 17:44:50
+ * @LastEditors: liukun
+ * @LastEditTime: 2020-10-14 20:11:49
  -->
 <template>
   <div class="container express-detail">
@@ -483,7 +483,7 @@ export default {
       return axios
         .post('/graphql/v1/toss', {
           query: `{
-                  ExpressList(query: ${queryParams}) {
+                  ExpressListEx(query: ${queryParams}) {
                      id
                       product_name
                       express_company
@@ -495,7 +495,7 @@ export default {
                 }`
         })
         .then((res) => {
-          this.leftRow = res.data.ExpressList
+          this.leftRow = res.data.ExpressListEx
           this.getexpressInformation(this.leftRow[0], 0)
         })
     },
@@ -519,7 +519,7 @@ export default {
       this.isShowNew = false
       const lastData = {}
       // 如果是京东物流 且物流状态 expressStatus 为2 请求京东物流接口
-      if (id.toString().indexOf('JD') > -1 && expressStatus === '2') {
+      if (id && id.toString().indexOf('JD') > -1 && expressStatus === '2') {
         this.$http.Express.getExpressDetailJDForAPP(id).then((jdRes) => {
           const tempData =
             (jdRes && jdRes.payload && jdRes.payload[0].data) || []

@@ -4,8 +4,8 @@
  * @version:
  * @Author: shentong
  * @Date: 2020-03-13 14:38:28
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-10-13 22:39:53
+ * @LastEditors: liukun
+ * @LastEditTime: 2020-10-14 20:02:44
  */
 // import axios from '../axios'
 import axios from '../axiosConfig'
@@ -968,25 +968,23 @@ export default {
   //   })
   // },
   // 小熊币
-  getUserAssetsCoin(subject = '', query = '', page = 1, size = 20) {
+  getUserAssetsCoin(
+    subject = '',
+    query = '',
+    page = 1,
+    trans_type,
+    ctime,
+    size = 20
+  ) {
+    console.info('小熊币接口触发trans_type值', trans_type)
     const formattingQuery = JSON.stringify({
       subject,
       uid: query,
-      trans_type: [
-        '1',
-        '2',
-        '3',
-        '4',
-        '5',
-        '6',
-        '8',
-        '9',
-        '10',
-        '11',
-        '12',
-        '13',
-        '14'
-      ], // 经和后端确认前端滤掉0和7
+      trans_type:
+        trans_type === 'mounted'
+          ? [1, 2, 3, 4, 5, 6, 8, 9, 10, 11, 12, 13, 14]
+          : trans_type, // 前端滤掉0和7
+      ctime,
       account_type: 2
     })
     const sort = `{ "ctime": "desc" }`
