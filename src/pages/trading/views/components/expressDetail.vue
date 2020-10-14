@@ -4,7 +4,7 @@
  * @Author: Lukun
  * @Date: 2020-04-15 15:18:49
  * @LastEditors: liukun
- * @LastEditTime: 2020-10-14 20:11:49
+ * @LastEditTime: 2020-10-14 21:45:28
  -->
 <template>
   <div class="container express-detail">
@@ -491,6 +491,7 @@ export default {
                       express_status
                       center_ctime
                       center_express_id
+                      delivery_type
                   }
                 }`
         })
