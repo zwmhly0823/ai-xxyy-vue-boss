@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-06-30 19:21:08
  * @LastEditors: Shentong
- * @LastEditTime: 2020-10-13 20:00:24
+ * @LastEditTime: 2020-10-14 11:46:58
 -->
 <template>
   <el-dialog
@@ -360,8 +360,7 @@ export default {
         } else {
           /** 打包好的需要掉接口的数据 */
           const result = this.bundleData(deptFlatList, checkedNode)
-          console.log('result', result)
-          await this.saveCouponRule(result) // TODO:
+          await this.saveCouponRule(result)
 
           this.isSubmit = false
         }

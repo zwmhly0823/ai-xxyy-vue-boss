@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-13 16:53:27
  * @LastEditors: Shentong
- * @LastEditTime: 2020-10-13 19:52:33
+ * @LastEditTime: 2020-10-14 11:46:07
  -->
 <template>
   <div class="left-container">
@@ -123,7 +123,7 @@ export default {
     },
     dayDeptId: {
       handler: async function(deptIds) {
-        console.log('watch deptIds', deptIds)
+        // console.log('watch deptIds', deptIds)
         /** 回显 tree中id对应的天数day */
         await this.$nextTick()
 
