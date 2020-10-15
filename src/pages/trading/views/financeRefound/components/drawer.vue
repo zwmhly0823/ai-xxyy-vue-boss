@@ -4,18 +4,20 @@
  * @Author: zhangjiawen
  * @Date: 2020-07-10 14:49:13
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-10-13 21:17:56
+ * @LastEditTime: 2020-10-14 16:23:24
 -->
 <template>
-  <div class="drawer-main" v-show="feedShow">
+  <div class="drawer-main">
     <div class="drawer-con">
       <div class="drawer-line">
         <p class="line-title">退款支付详情</p>
-        <el-table :data="payData" style="width: 90%">
-          <el-table-column prop="date" label="选择支付状态" width="180">
-          </el-table-column>
-          <el-table-column prop="name" label="支付状态描述" width="180">
-          </el-table-column>
+        <el-table
+          :data="payData"
+          style="width: 90%;border: 1px solid #d7d7e0;"
+          :header-cell-style="{ background: '#F0F9FD' }"
+        >
+          <el-table-column prop="date" label="选择支付状态"> </el-table-column>
+          <el-table-column prop="name" label="支付状态描述"> </el-table-column>
           <el-table-column prop="address" label="退款支付时间">
           </el-table-column>
         </el-table>
@@ -28,11 +30,13 @@
           <span>订单交易流水号:小雨</span>
           <span>退款订单状态:小雨</span>
         </p>
-        <el-table :data="payData" style="width: 90%">
-          <el-table-column prop="date" label="订单业务类型" width="180">
-          </el-table-column>
-          <el-table-column prop="name" label="订单商品信息" width="180">
-          </el-table-column>
+        <el-table
+          :data="payData"
+          style="width: 90%;border: 1px solid #d7d7e0;"
+          :header-cell-style="{ background: '#F0F9FD' }"
+        >
+          <el-table-column prop="date" label="订单业务类型"> </el-table-column>
+          <el-table-column prop="name" label="订单商品信息"> </el-table-column>
           <el-table-column prop="address" label="订单金额"> </el-table-column>
           <el-table-column prop="address" label="优惠金额"> </el-table-column>
           <el-table-column prop="address" label="支付方式"> </el-table-column>
@@ -57,27 +61,36 @@
       </div>
       <div class="drawer-line">
         <p class="line-title">订单生命周期</p>
-        <el-table :data="payData" style="width: 90%">
-          <el-table-column prop="date" label="选择支付状态" width="180">
-          </el-table-column>
-          <el-table-column prop="name" label="支付状态描述" width="180">
-          </el-table-column>
-          <el-table-column prop="address" label="退款支付时间">
-          </el-table-column>
-        </el-table>
+        <p style="width: 90%;height:100px; border: 1px solid #d7d7e0;">
+          <el-steps style="padding-top:10px" :active="2" align-center>
+            <el-step
+              v-for="item in list"
+              :key="item.title"
+              :title="item.title"
+              :description="item.word"
+            ></el-step>
+          </el-steps>
+        </p>
       </div>
       <div class="drawer-line">
         <p class="line-title">审批过程记录</p>
-        <el-table :data="payData" style="width: 90%">
-          <el-table-column prop="date" label="发起人/审批人" width="180">
-          </el-table-column>
-          <el-table-column prop="name" label="审批意见" width="180">
-          </el-table-column>
+        <el-table
+          :data="payData"
+          style="width: 90%;border: 1px solid #d7d7e0;"
+          :header-cell-style="{ background: '#F0F9FD' }"
+        >
+          <el-table-column prop="date" label="发起人/审批人"> </el-table-column>
+          <el-table-column prop="name" label="审批意见"> </el-table-column>
           <el-table-column prop="address" label="操作时间"> </el-table-column>
           <el-table-column prop="address" label="备注说明"> </el-table-column>
         </el-table>
       </div>
-      <el-button type="primary" @click="comfirmRefund">确认退款</el-button>
+      <div class="rawer-bot">
+        <el-button type="primary" @click="comfirmRefund"
+          >发起退款支付</el-button
+        >
+      </div>
+
       <!-- <el-row v-if="choutidata.buytime !== ''">
         <el-col :span="4">订单支付时间:</el-col>
         <el-col :span="18" :offset="2"
@@ -225,16 +238,23 @@ export default {
   },
   data() {
     return {
-      feedShow: !localStorage.getItem('feedFlag')
+      payData: [],
+      list: [
+        { title: '订单创建时间', word: 222 },
+        { title: '订单支付时间', word: 222 },
+        { title: '申请退款时间', word: 222 },
+        { title: '订单支付时间', word: 222 },
+        { title: '订单支付时间', word: 222 }
+      ]
     }
   },
   watch: {},
   created() {},
   methods: {
-    closeFeed() {
-      localStorage.setItem('feedFlag', true)
-      this.feedShow = false
-    }
+    // closeFeed() {
+    //   localStorage.setItem('feedFlag', true)
+    //   this.feedShow = false
+    // }
   }
 }
 </script>
@@ -248,10 +268,15 @@ export default {
     margin: 10px;
   }
   .line-delf {
-    margin-top: 10px;
+    width: 90%;
+    margin: 10px 0;
     font-size: 12px;
     display: flex;
     justify-content: space-around;
   }
+}
+.rawer-bot {
+  margin: 20px 0;
+  text-align: center;
 }
 </style>

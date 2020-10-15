@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-05-19 17:18:39
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-10-13 18:29:37
+ * @LastEditTime: 2020-10-14 16:34:28
 -->
 <template>
   <section class="bianju10">
@@ -259,7 +259,7 @@
       :destroy-on-close="true"
     >
       <template v-slot:title>
-        <h1>退费订单详情</h1>
+        <h1 class="rawer-title">退费订单详情</h1>
       </template>
       <drawer />
     </el-drawer>
@@ -873,5 +873,9 @@ export default {
 .usertext {
   color: #2a75ed;
   cursor: pointer;
+}
+.rawer-title {
+  text-align: center;
+  color: black;
 }
 </style>
