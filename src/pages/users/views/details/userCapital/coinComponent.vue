@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-08-25 11:40:19
  * @LastEditors: liukun
- * @LastEditTime: 2020-10-15 14:47:36
+ * @LastEditTime: 2020-10-15 20:12:39
 -->
 <template>
   <div class="coin-content">
@@ -87,8 +87,8 @@ export default {
   },
   data() {
     return {
-      value1: [], // 任务类型
-      value2: [], // 获取时间
+      value1: [], // 任务类型-[]
+      value2: null, // 获取时间-null
       options: {
         // 前端滤掉0和7
         0: '默认',
@@ -164,8 +164,8 @@ export default {
     // 获取时间筛选对象
     ctime() {
       const ctime = {}
-      ctime.gte = this.value2[0]
-      ctime.lte = this.value2[1]
+      ctime.gte = this.value2 ? this.value2[0] : 0 // 清空之后2030年↓
+      ctime.lte = this.value2 ? this.value2[1] : 1902591374054
       return ctime
     }
   },
@@ -176,8 +176,10 @@ export default {
         this.changeSubject,
         this.$route.params.id,
         this.currentPage,
-        other ? 'mounted' : this.value1,
-        other ? 'mounted' : this.ctime
+        Array.isArray(this.value1) && this.value1.length
+          ? this.value1
+          : [1, 2, 3, 4, 5, 6, 8, 9, 10, 11, 12, 13, 14], // 清空之后全类型
+        this.ctime
       )
         .then((res) => {
           if (res.data.AccountPage && res.data.AccountPage.content.length) {
