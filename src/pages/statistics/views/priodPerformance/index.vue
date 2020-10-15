@@ -3,8 +3,8 @@
  * @version:
  * @Author: Shentong
  * @Date: 2020-04-02 15:35:27
- * @LastEditors: songyanan
- * @LastEditTime: 2020-07-30 14:08:00
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-10-15 18:42:45
  -->
 <template>
   <el-row type="flex" class="app-main height schedule-container">
@@ -45,7 +45,7 @@
                 {{ selectName
                 }}<i class="el-icon-arrow-down el-icon--right"></i>
               </span>
-              <el-dropdown-menu slot="dropdown">
+              <el-dropdown-menu class="el-dropdown-wrapper2" slot="dropdown">
                 <el-dropdown-item
                   v-for="(tab, index) in priodTabsEnd"
                   :key="index"
@@ -781,5 +781,9 @@ export default {
 }
 .grid-content .el-scrollbar {
   flex: 1;
+}
+.el-dropdown-wrapper2 {
+  max-height: 350px;
+  overflow: auto;
 }
 </style>
