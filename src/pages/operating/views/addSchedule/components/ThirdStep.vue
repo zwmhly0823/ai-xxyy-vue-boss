@@ -3,8 +3,8 @@
  * @version: 1.0.0
  * @Author: Shentong
  * @Date: 2020-04-15 20:35:57
- * @LastEditors: Shentong
- * @LastEditTime: 2020-09-28 12:01:07
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-10-15 17:50:25
  -->
 <template>
   <div class="third-step">
@@ -17,7 +17,7 @@
           :class="{ active: index == levelIndex }"
           @click="levelClickHandle(tab, index)"
         >
-          {{ tab.label }}
+          {{ tab.text }}
         </div>
         <div class="tip">tip：切换前请先保存当前级别下更改的内容哟~</div>
       </div>
@@ -96,7 +96,7 @@
         >
           <template slot-scope="scope">
             <div v-for="(leve, l_index) in scope.row.enroll" :key="l_index">
-              {{ leve.courseDifficulty || '' }}
+              {{ levelObj[leve.courseDifficulty] || '' }}
             </div>
           </template>
         </el-table-column>
@@ -288,6 +288,7 @@ import _ from 'lodash'
 import EleTable from '@/components/Table/EleTable'
 // import TableSearch from '../../../components/tableSearch/index'
 import { mapGetters } from 'vuex'
+import { SUP_LEVEL_LIST_UPPER, SUP_LEVEL_UPPER } from '@/utils/supList'
 export default {
   props: ['stepStatus'],
   data() {
@@ -298,20 +299,22 @@ export default {
       currentTeacherWechatList: [],
       currentEidtRow: {},
       dialogVisible: false,
-      levelList: [
-        {
-          label: 'S1',
-          value: 'S1'
-        },
-        {
-          label: 'S2',
-          value: 'S2'
-        },
-        {
-          label: 'S3',
-          value: 'S3'
-        }
-      ],
+      // levelList: [
+      //   {
+      //     label: 'S1',
+      //     value: 'S1'
+      //   },
+      //   {
+      //     label: 'S2',
+      //     value: 'S2'
+      //   },
+      //   {
+      //     label: 'S3',
+      //     value: 'S3'
+      //   }
+      // ],
+      levelList: SUP_LEVEL_LIST_UPPER,
+      levelObj: SUP_LEVEL_UPPER,
       tableData: [],
       isValidate: true,
       totalElements: 0,
@@ -338,7 +341,7 @@ export default {
         pageNum: 1
       },
       params: {
-        courseDifficulty: 'S1',
+        courseDifficulty: 'S4',
         departmentIds: '',
         teacherWechatIds: '',
         levels: ''
@@ -371,7 +374,7 @@ export default {
         this.levelIndex = index
 
         Object.assign(this.params, {
-          courseDifficulty: tab.value
+          courseDifficulty: tab.id
         })
 
         this.getTeacherConfigList()
