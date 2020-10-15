@@ -303,11 +303,6 @@ export default {
       } else {
         console.log(this.searchIn, 'this.searchIn-=')
         const term = this.searchIn.map((item, index) => {
-          console.log(item, 'item-=-=-=')
-          if (item.range && item.range.ctime) {
-            item.range.create_order_time = item.range.ctime
-            delete item.range.ctime
-          }
           if (item.terms && item.terms.sup) {
             item.terms['sup.keyword'] = item.terms.sup
             delete item.terms.sup
@@ -422,8 +417,12 @@ export default {
         ])
         let finalmust = []
         finalmust = finaTerm.filter((item) => {
-          return Object.values(Object.values(item)[0])[0].length
+          if (!item.range) {
+            return Object.values(Object.values(item)[0])[0].length
+          }
+          return item
         })
+        // finalmust = finaTerm
         query = {
           bool: {
             must: finalmust
