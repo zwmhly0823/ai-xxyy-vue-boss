@@ -2,7 +2,7 @@
  * @Descripttion: 
  * @version: 
  * @LastEditors: liukun
- * @LastEditTime: 2020-10-13 16:45:20
+ * @LastEditTime: 2020-10-15 15:55:26
  -->
 <template>
   <div class="adjustModule">
@@ -308,8 +308,8 @@ export default {
               ',请重新选择'
           )
           setTimeout(() => {
-            // location.reload()
-            this.onCancel('refundForm')
+            location.reload()
+            // this.onCancel('refundForm')
           }, 3000)
         }
       }
@@ -323,8 +323,8 @@ export default {
         if (newValue < 0) {
           this.$message.warning('经核算退款月数小于0,重置')
           setTimeout(() => {
-            // location.reload()
-            this.onCancel('refundForm')
+            location.reload()
+            // this.onCancel('refundForm')
           }, 3000)
         }
       }
