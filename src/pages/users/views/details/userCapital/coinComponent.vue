@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-08-25 11:40:19
  * @LastEditors: liukun
- * @LastEditTime: 2020-10-14 20:15:36
+ * @LastEditTime: 2020-10-15 14:47:36
 -->
 <template>
   <div class="coin-content">
@@ -40,6 +40,7 @@
             v-model="value2"
             type="daterange"
             size="mini"
+            unlink-panels
             value-format="timestamp"
             range-separator="至"
             start-placeholder="开始日期"
@@ -87,7 +88,7 @@ export default {
   data() {
     return {
       value1: [], // 任务类型
-      value2: null, // 获取时间
+      value2: [], // 获取时间
       options: {
         // 前端滤掉0和7
         0: '默认',
@@ -159,6 +160,15 @@ export default {
       }
     }
   },
+  computed: {
+    // 获取时间筛选对象
+    ctime() {
+      const ctime = {}
+      ctime.gte = this.value2[0]
+      ctime.lte = this.value2[1]
+      return ctime
+    }
+  },
   methods: {
     // 数据接口_用户资产_小熊币
     reqGetUserCoin(other) {
@@ -167,7 +177,7 @@ export default {
         this.$route.params.id,
         this.currentPage,
         other ? 'mounted' : this.value1,
-        this.value2
+        other ? 'mounted' : this.ctime
       )
         .then((res) => {
           if (res.data.AccountPage && res.data.AccountPage.content.length) {
