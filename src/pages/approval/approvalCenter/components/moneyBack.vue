@@ -2,7 +2,7 @@
  * @Descripttion: 
  * @version: 
  * @LastEditors: liukun
- * @LastEditTime: 2020-10-15 15:55:26
+ * @LastEditTime: 2020-10-15 16:18:41
  -->
 <template>
   <div class="adjustModule">
@@ -679,7 +679,7 @@ export default {
                 this.refundForm.refundMonths = 6
               } else {
                 this.$message({
-                  message: '该一年课订单课余量低于6,不支持降包类型',
+                  message: '该一年课订单课余量低于6,不支持该降包类型',
                   type: 'warning'
                 })
                 // this.onCancel('refundForm')
@@ -694,7 +694,7 @@ export default {
                 this.refundForm.refundMonths = 6
               } else {
                 this.$message({
-                  message: '该两年课订单课余量低于6,不支持降包类型',
+                  message: '该两年课订单课余量低于6,不支持该降包类型',
                   type: 'warning'
                 })
                 // this.onCancel('refundForm')
@@ -704,7 +704,7 @@ export default {
               }
             } else {
               this.$message({
-                message: '该订单非年课订单,不支持降包类型',
+                message: '该订单非年课订单,不支持降包',
                 type: 'warning'
               })
               // this.onCancel('refundForm')
@@ -724,16 +724,13 @@ export default {
             this.refundForm.refundAmount = '' // 退款额
             this.refundForm.refundMonths = ''
             const shengYue = Math.floor(this.pureWeekS / 4)
-            if (
-              this.half === 96 &&
-              shengYue >= 12 &&
-              this.refundForm.residueFee >= 2080
-            ) {
+            if (shengYue >= 12 && this.refundForm.residueFee >= 2080) {
               this.refundForm.refundAmount = 2080
               this.refundForm.refundMonths = 12
             } else {
               this.$message({
-                message: '该订单课余量低于12或不是2年课,不支持降包类型',
+                message:
+                  '该两年课订单课余量低于12个月或剩余金额低于2080,不支持该降包类型',
                 type: 'warning'
               })
               // this.onCancel('refundForm')
@@ -754,16 +751,13 @@ export default {
             this.refundForm.refundAmount = '' // 退款额
             this.refundForm.refundMonths = ''
             const shengYue = Math.floor(this.pureWeekS / 4)
-            if (
-              this.half === 96 &&
-              shengYue >= 18 &&
-              this.refundForm.residueFee >= 3181
-            ) {
+            if (shengYue >= 18 && this.refundForm.residueFee >= 3181) {
               this.refundForm.refundAmount = 3181
               this.refundForm.refundMonths = 18
             } else {
               this.$message({
-                message: '该订单课余量低于18或不是2年课,不支持降包类型',
+                message:
+                  '该两年课订单课余量低于18个月或剩余金额低于3181,不支持该降包类型',
                 type: 'warning'
               })
               // this.onCancel('refundForm')
