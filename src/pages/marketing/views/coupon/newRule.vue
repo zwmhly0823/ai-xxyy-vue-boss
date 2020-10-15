@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-06-30 19:21:08
  * @LastEditors: Shentong
- * @LastEditTime: 2020-10-15 17:28:09
+ * @LastEditTime: 2020-10-15 18:49:07
 -->
 <template>
   <el-dialog
@@ -23,7 +23,7 @@
             <span>执行方式</span>
           </div>
           <div class="ctn">
-            <div class="title">执行方式：</div>
+            <!-- <div class="title">执行方式：</div> -->
             <el-radio
               v-model="formData.exeType"
               label="0"
@@ -60,7 +60,7 @@
               </el-option>
             </el-select>
           </div>
-          <div class="ctn">
+          <!-- <div class="ctn">
             <div class="title"></div>
             <el-radio
               v-model="formData.exeType"
@@ -97,7 +97,7 @@
               >
               </el-option>
             </el-select>
-          </div>
+          </div> -->
         </div>
         <div class="selected-group divider">
           <div class="label" style="justify-content:flex-start;">

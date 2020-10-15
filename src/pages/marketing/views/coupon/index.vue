@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-08-15 14:35:51
  * @LastEditors: Shentong
- * @LastEditTime: 2020-09-23 14:40:41
+ * @LastEditTime: 2020-10-15 18:36:59
 -->
 
 <template>
@@ -70,7 +70,10 @@
                 align="center"
               >
                 <template slot-scope="scope">
-                  <div class="opt">
+                  <div class="gray" v-if="scope.row.id != 5">
+                    <span>自定义有效期</span>
+                  </div>
+                  <div class="opt" v-else>
                     <span @click="operate_set(scope.row)">定向发放配置</span>
                   </div>
                 </template>
@@ -135,6 +138,7 @@ export default {
     },
     operate_set(row) {
       const { id = -1 } = row
+      if (id !== '5') return
       this.$router.push({ path: `/grantRule/${id}` })
     },
     pageChange_handler(page) {
@@ -174,6 +178,9 @@ export default {
   .opt {
     color: #2a75ed;
     cursor: pointer;
+    &.gray {
+      color: #999;
+    }
   }
 }
 </style>

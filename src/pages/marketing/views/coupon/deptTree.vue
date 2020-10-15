@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-13 16:53:27
  * @LastEditors: Shentong
- * @LastEditTime: 2020-10-15 18:01:52
+ * @LastEditTime: 2020-10-15 18:21:16
  -->
 <template>
   <div class="left-container">
@@ -156,12 +156,12 @@ export default {
         const { id, children } = item
         // let baseDay = '3'
         // 查看模式
+        item.disabled = false
         if (this.period !== '') {
           item.day = deptIds[id]
           item.disabled = true
         } else {
           item.day = deptIds[id]
-          console.log(item.day, 'item.day')
           if (item.day === 0) {
             item.disabled = true
           }
@@ -238,10 +238,10 @@ export default {
         if (children && children.length) this.deptTreeCl(children)
       })
     },
-    clearTreeData() {
-      this.$refs.tree.setCheckedKeys([])
-      this.deptTreeCl(this.deptFlatList)
-    },
+    // clearTreeData() {
+    //   this.$refs.tree.setCheckedKeys([])
+    //   this.deptTreeCl(this.deptFlatList)
+    // },
     /** 把天数和对应的id关联到tree-node中 */
     connectDeptIdDay(deptArr = [], deptIds = {}) {
       deptArr.forEach((item, index) => {
