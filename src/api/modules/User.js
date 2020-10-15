@@ -5,7 +5,7 @@
  * @Author: shentong
  * @Date: 2020-03-13 14:38:28
  * @LastEditors: liukun
- * @LastEditTime: 2020-10-15 14:49:15
+ * @LastEditTime: 2020-10-15 20:10:55
  */
 // import axios from '../axios'
 import axios from '../axiosConfig'
@@ -980,11 +980,8 @@ export default {
     const formattingQuery = JSON.stringify({
       subject,
       uid: query,
-      trans_type:
-        trans_type === 'mounted'
-          ? [1, 2, 3, 4, 5, 6, 8, 9, 10, 11, 12, 13, 14]
-          : trans_type, // 前端滤掉0和7
-      ctime: ctime === 'mounted' ? { gte: 0, lte: 1902591374054 } : ctime,
+      trans_type,
+      ctime,
       account_type: 2
     })
     const sort = `{ "ctime": "desc" }`
