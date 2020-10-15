@@ -124,6 +124,8 @@ export default {
       this.$emit('result', '')
     },
     onChange(val) {
+      this.timeData = null
+      this.$emit('result', '')
       this.$emit('timeCallBack', val)
     },
     onClear() {

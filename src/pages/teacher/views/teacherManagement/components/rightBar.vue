@@ -3,8 +3,8 @@
  * @version:
  * @Author: zhubaodong
  * @Date: 2020-04-02 16:08:02
- * @LastEditors: Shentong
- * @LastEditTime: 2020-08-21 21:56:46
+ * @LastEditors: zhangjianwen
+ * @LastEditTime: 2020-09-12 15:32:23
  -->
 <template>
   <div>
@@ -368,6 +368,7 @@ export default {
       this.getData(1)
     },
     getData(page = this.currentPage) {
+      this.query = {}
       if (this.departmentQuery || this.searchQuery) {
         Object.assign(
           this.query,

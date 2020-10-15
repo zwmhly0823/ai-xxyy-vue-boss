@@ -5,7 +5,20 @@
       custom-class="notice-drawer"
       :visible.sync="showNoticeDrawer"
       :modal-append-to-body="false"
+      :with-header="false"
     >
+      <div class="drawer-header">
+        <span>通知中心</span>
+        <i class="el-icon-close header-close" @click="closeDrawer"></i>
+        <el-button
+          plain
+          size="mini"
+          class="all-read-button"
+          @click="allReadClicked"
+        >
+          全部已读
+        </el-button>
+      </div>
       <ul
         class="drawer-list"
         v-loading="noticeLoading"
@@ -89,11 +102,13 @@ export default {
       noticeData: {},
       listData: [],
       curPage: 1,
-      noticeLoading: false
+      noticeLoading: false,
+      repeatMap: new Map()
     }
   },
   created() {
-    this.staffId = JSON.parse(localStorage.getItem('staff')).id
+    const staff = localStorage.getItem('staff')
+    staff && (this.staffId = JSON.parse(staff).id)
   },
   methods: {
     openDrawer() {
@@ -116,6 +131,13 @@ export default {
     },
     clickContent(index, val) {
       this.$set(this.listData[index], 'expand', val)
+      // 标为已读，且防止重复请求
+      if (this.repeatMap.get(this.listData[index].id)) {
+        return
+      }
+      this.hasRead(this.listData[index].id, index, true, false)
+      // 把id存到一个标示数组里
+      this.repeatMap.set(this.listData[index].id, 1)
     },
     // 通往消息中心
     clickNoticeCenter() {
@@ -159,8 +181,8 @@ export default {
     },
     // 标为已读
     // clicked用户点击标为已读（true）还是从其他地方连带着触发的（false）
-    hasRead(id, index, clicked) {
-      this.noticeLoading = true
+    hasRead(id, index, clicked, freshList = true) {
+      freshList && (this.noticeLoading = true)
       const query = {
         staffId: this.staffId,
         notifyIds: +id
@@ -168,9 +190,7 @@ export default {
       this.$http.NoticeCenter.updateNotifyIsReadByStaffId(query)
         .then((res) => {
           if (res.code === 0 && res.status === 'OK') {
-            this.listData.splice(index, 1)
-            // 通过查看详情过来的话隐藏掉侧边栏
-            // 先能用然后上线，以后有机会再优化流程，把clicked这个参数去掉
+            freshList && this.listData.splice(index, 1)
             !clicked && this.closeDrawer()
             // 角标消息数-1
             this.$emit('reduceBadge')
@@ -179,6 +199,39 @@ export default {
         })
         .catch(() => {
           this.noticeLoading = false
+        })
+    },
+    allReadPost() {
+      const query = {
+        staffId: this.staffId,
+        isAllRead: 1
+      }
+      this.$http.NoticeCenter.arrReadNotifyIsReadByStaffId(query).then(
+        (res) => {
+          if (res.code === 0 && res.status === 'OK') {
+            // 角标消息数-1
+            this.$emit('clearBadge')
+            this.closeDrawer()
+          }
+        }
+      )
+    },
+    // 全部已读
+    allReadClicked() {
+      if (!this.listData.length) {
+        this.$message('没有未读消息')
+        return
+      }
+      this.$confirm('您确定要将全部未读通知标为已读?', '全部标及提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      })
+        .then(() => {
+          this.allReadPost()
+        })
+        .catch(() => {
+          this.closeDrawer()
         })
     },
     getNextPageData() {
@@ -229,6 +282,20 @@ li {
 .notice-box {
   .notice-drawer {
     position: relative;
+    .drawer-header {
+      color: #72767b;
+      padding: 20px;
+      .header-close {
+        float: right;
+        font-size: 16px;
+        cursor: pointer;
+      }
+      .all-read-button {
+        float: right;
+        margin-right: 20px;
+        margin-top: -5px;
+      }
+    }
     .drawer-list {
       border-top: 1px solid #f8f8f8;
       margin-bottom: 60px;

@@ -35,6 +35,7 @@
             range-separator="至"
             start-placeholder="开始日期"
             end-placeholder="结束日期"
+            :default-time="['00:00:00', '23:59:59']"
           >
           </el-date-picker>
         </el-form-item>
@@ -75,7 +76,7 @@
           <template slot-scope="scope">
             <el-link
               type="primary"
-              :href="'/users/#/details/' + scope.row.userId"
+              :href="userLink(scope.row.userId)"
               target="_blank"
               >{{ scope.row.userName }}</el-link
             >
@@ -189,6 +190,16 @@ export default {
   computed: {
     arrangeArr() {
       return this.tableData.filter((item) => item.status === '待审核')
+    },
+    userLink() {
+      return function(userId) {
+        let url = ''
+        const origin = window.location.origin
+        if (origin.includes('test')) {
+          url = 'ai-app-vue-boss-test/'
+        }
+        return `${origin}/${url}users/#/details/${userId}`
+      }
     }
   },
   methods: {

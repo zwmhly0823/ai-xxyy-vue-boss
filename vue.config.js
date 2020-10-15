@@ -57,7 +57,8 @@ module.exports = {
     proxy: {
       '/api': {
         target: 'https://test.meixiu.mobi',
-        // target: 'http://docker.meixiu.mobi:18766',
+        // target: 'https://dev.meixiu.mobi',
+        // target: 'https://bossprod.xiaoxiongmeishu.com/',
         changeOrigin: true,
         ws: true,
         secure: false,
@@ -68,6 +69,7 @@ module.exports = {
       // 查询接口
       '/data': {
         target: 'https://test.meixiu.mobi',
+        // target: 'https://dev.meixiu.mobi',
         changeOrigin: true,
         ws: true,
         secure: false,
@@ -95,6 +97,7 @@ module.exports = {
       },
       '/getStuRankingList': {
         target: 'http://docker.meixiu.mobi:43401',
+        // target: 'http://docker.meixiu.mobi:33401',
         changeOrigin: true,
         ws: true,
         secure: false,

@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-06-30 19:21:08
  * @LastEditors: Shentong
- * @LastEditTime: 2020-08-08 21:20:17
+ * @LastEditTime: 2020-09-24 15:39:33
 -->
 <template>
   <div class="channel-threeded">
@@ -148,7 +148,6 @@ export default {
     }
   },
   async created() {
-    console.log('editChannelThreeded', this.editChannelThreeded)
     await this.getChannelLeves()
     if (this.editChannelThreeded === null) {
       this.initForm()
@@ -262,10 +261,11 @@ export default {
     },
     // 获取渠道来源 filter: 过滤关键词  eg：filter:"抖音"
     async getChannelLeves() {
+      const subject = { subject: this.$store.getters.subjects.subjectCode }
       await axios
         .post('/graphql/v1/toss', {
           query: `{
-            ChannelAllList {
+            ChannelAllList(query:${JSON.stringify(JSON.stringify(subject))}) {
                 id
                 channel_class_id
                 channel_outer_name
@@ -277,7 +277,7 @@ export default {
           this.channelLeves = res.data.ChannelAllList
         })
     },
-    getTeacher(index = 0, query = '') {
+    getTeacher_1(index = 0, query = '') {
       const { getDepartmentTeacherEx } = this.$http.Department
       const { teacherscope = null } = this.formList[index]
       console.log(this.formList, teacherscope)
@@ -302,9 +302,9 @@ export default {
       }
     },
     // 社群销售
-    getTeacher_1(index = 0, query = '') {
+    getTeacher(index = 0, query = '') {
       const { getDepartmentTeacherEx } = this.$http.Department
-      const { teacherscope } = this.formList[index]
+      const { teacherscope = null } = this.formList[index]
       this.loading = true
       const q = {
         bool: {
@@ -313,8 +313,10 @@ export default {
             : []
         }
       }
-      teacherscope && q.bool.must.push({ terms: { id: teacherscope } })
-      getDepartmentTeacherEx(JSON.stringify(q))
+      if (teacherscope && teacherscope.length) {
+        q.bool.must.push({ terms: { id: teacherscope } })
+      }
+      getDepartmentTeacherEx(JSON.stringify(q), 3000)
         .then((res) => {
           this.formList[index].teacherList = res.data.TeacherListEx || []
           this.loading = false

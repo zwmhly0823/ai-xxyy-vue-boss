@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-24 18:50:54
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-06-23 18:00:24
+ * @LastEditTime: 2020-09-26 16:24:23
  -->
 <template>
   <div class="search-item small">
@@ -14,7 +14,7 @@
       clearable
       v-if="name"
       size="mini"
-      multiple
+      :multiple="multiple"
       :placeholder="placeholder"
       :style="myStyle"
       @change="supChange"
@@ -48,6 +48,10 @@ export default {
       type: Boolean,
       default: false
     },
+    multiple: {
+      type: Boolean,
+      default: true
+    },
     // 自定义style样式
     myStyle: {
       type: Object,
@@ -76,11 +80,11 @@ export default {
       }
     })
   },
-  watch: {
-    addSupS(val) {
-      console.log(val)
-    }
-  },
+  // watch: {
+  //   addSupS(val) {
+  //     console.log(val)
+  //   }
+  // },
   async created() {
     await this.getSup()
   },

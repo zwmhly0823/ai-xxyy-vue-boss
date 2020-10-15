@@ -33,7 +33,7 @@
             item.user_num_text ? item.user_num_text + '/' : ''
           }${item.username}`
         "
-        :value="item.id"
+        :value="item.u_id"
       ></el-option>
     </el-select>
     <i class="el-icon-search"></i>
@@ -42,7 +42,7 @@
 
 <script>
 import { debounce } from 'lodash'
-import axios from '@/api/axiosConfig'
+// import axios from '@/api/axiosConfig'
 export default {
   props: {
     customStyle: {
@@ -92,44 +92,53 @@ export default {
       const val = value.replace(/\s*/g, '')
 
       this.loading = true
-      // 系统课
-      let range = {
-        range: { status: { gt: 2 } }
-      }
-      // 体验课
-      if (this.type === '0') {
-        range = { terms: { status: ['1', '2'] } }
-      }
-      // 全部
-      if (this.type === '2') {
-        range = {
-          range: { status: { gt: 0 } }
-        }
-      }
-      const query = `{"bool":{"must":[${JSON.stringify(
-        range
-      )}],"filter":{"bool":{"should":[{"wildcard":{"username.keyword":"*${val}*"}},{"wildcard":{"mobile.keyword":"*${val}*"}},{"wildcard":{"user_num_text.keyword":"*${val}*"}}]}}}}`
-      const q = JSON.stringify(query)
-
-      const sort = `{"id":"desc"}`
-      axios
-        .post('/graphql/v1/toss', {
-          query: `{
-                  ${this.tablename}(query: ${q}, sort: ${JSON.stringify(sort)}){
-                    id
-                    username
-                    user_num_text
-                    mobile
-                  }
-                }`
-        })
+      this.$http.Base.getUserNumPhone(val)
         .then((res) => {
           this.loading = false
-          this.dataList = res.data[`${this.tablename}`]
+          console.log(res)
+          this.dataList = res.data.UserSubjectStatisticsListEx
         })
         .catch(() => {
           this.loading = false
         })
+      // // 系统课
+      // let range = {
+      //   range: { status: { gt: 2 } }
+      // }
+      // // 体验课
+      // if (this.type === '0') {
+      //   range = { terms: { status: ['1', '2'] } }
+      // }
+      // // 全部
+      // if (this.type === '2') {
+      //   range = {
+      //     range: { status: { gt: 0 } }
+      //   }
+      // }
+      // const query = `{"bool":{"must":[${JSON.stringify(
+      //   range
+      // )}],"filter":{"bool":{"should":[{"wildcard":{"username.keyword":"*${val}*"}},{"wildcard":{"mobile.keyword":"*${val}*"}},{"wildcard":{"user_num_text.keyword":"*${val}*"}}]}}}}`
+      // const q = JSON.stringify(query)
+
+      // const sort = `{"id":"desc"}`
+      // axios
+      //   .post('/graphql/v1/toss', {
+      //     query: `{
+      //             ${this.tablename}(query: ${q}, sort: ${JSON.stringify(sort)}){
+      //               id
+      //               username
+      //               user_num_text
+      //               mobile
+      //             }
+      //           }`
+      //   })
+      //   .then((res) => {
+      //     this.loading = false
+      //     this.dataList = res.data[`${this.tablename}`]
+      //   })
+      //   .catch(() => {
+      //     this.loading = false
+      //   })
     },
     // 获取选中的
     onChange(data) {

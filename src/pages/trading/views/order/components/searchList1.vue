@@ -3,8 +3,8 @@
  * @version: 1.0.0
  * @Author: liukun
  * @Date: 2020-04-25 17:24:23
- * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-08-20 15:13:33
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-09-21 21:36:53
  -->
 <template>
   <el-card
@@ -56,11 +56,12 @@
       </el-form-item>
       <br />
 
-      <el-form-item label="下单时间:" :class="{ [$style.marginer]: true }">
+      <el-form-item :label="timeLabel" :class="{ [$style.marginer]: true }">
         <DatePicker
           :class="[$style.fourPoint, 'allmini']"
+          :name="timeName"
           @result="getDate"
-          name="ctime"
+          :key="payStatus"
         >
           <template v-slot:buttons>
             <div class="row_colum margin_l10">
@@ -95,6 +96,17 @@
             </div>
           </template>
         </DatePicker>
+      </el-form-item>
+      <el-form-item label="业绩归属:" :class="{ [$style.marginer]: true }">
+        <div class="row_colum">
+          <orderAttr
+            name="pay_teacher_duty_id"
+            :data-list="orderTypeList"
+            :multiple="false"
+            placeholder="全部"
+            @result="getPerformType"
+          ></orderAttr>
+        </div>
       </el-form-item>
       <br />
       <el-form-item label="体验课:" :class="{ [$style.marginer]: true }">
@@ -148,6 +160,7 @@
         <div class="row_colum">
           <systemCourseType
             style="width:140px"
+            teamType="1"
             @result="getSystemCourseType"
             name="packages_type"
           />
@@ -231,6 +244,7 @@
 </template>
 <script>
 import dayjs from 'dayjs'
+import orderAttr from '@/components/MSearch/searchItems/orderAttribution.vue' // add
 import hardLevel from '@/components/MSearch/searchItems/hardLevel.vue' // add
 import orderSearch from '@/components/MSearch/searchItems/orderSearch.vue' // add
 import systemCourseType from '@/components/MSearch/searchItems/systemCourseType.vue'
@@ -252,6 +266,11 @@ export default {
     searchProp: {
       type: Object,
       default: () => {}
+    },
+    // 订单支付状态 3-已完成
+    payStatus: {
+      type: String,
+      default: '3'
     }
   },
   components: {
@@ -265,6 +284,7 @@ export default {
     SearchTeamName,
     // SearchTrialTeamName,
     SearchStage,
+    orderAttr,
     SearchPhoneAndUsername,
     SimpleSelect
   },
@@ -321,7 +341,14 @@ export default {
       chooseExport: '1'
     }
   },
-  computed: {},
+  computed: {
+    timeLabel() {
+      return this.payStatus === '3' ? '支付时间:' : '下单时间:'
+    },
+    timeName() {
+      return this.payStatus === '3' ? 'buytime' : 'ctime'
+    }
+  },
   watch: {
     packages_type(val, old) {
       const { getTeacherIdByCategory } = this.$http.Teacher
@@ -337,6 +364,22 @@ export default {
       } else {
         this.teacherscope_s = null
       }
+    },
+    payStatus(val) {
+      /**
+       * 切换支付状态时，清空支付时间/下单时间搜索条件
+       */
+      this.searchParams.forEach((item) => {
+        if (item.range) {
+          const time = item.range?.ctime || item.range?.buytime
+          if (time) {
+            delete item.range
+            for (let i = 0; i < 4; i++) {
+              this['cur' + i] = false
+            }
+          }
+        }
+      })
     }
   },
   methods: {
@@ -411,7 +454,7 @@ export default {
       if (!res || !res.quick) this.currentBtn = null
       if (res.quick && this.currentBtn) this[`cur${this.currentBtn}`] = true
       delete res.quick
-      this.setSeachParmas(res, ['ctime'], 'range')
+      this.setSeachParmas(res, [this.timeName], 'range')
     },
     // 4点外移
     today() {
@@ -494,6 +537,16 @@ export default {
     },
     // 系统课选择课程类型
     getSystemCourseType(res) {
+      if (res && res.packages_type === '6') {
+        this.must.map((item, idx) => {
+          if (item.term && item.term.packages_type) {
+            this.must.splice(idx, 1)
+          }
+        })
+        return this.setSeachParmas({ packages_course_week: '72' }, [
+          'packages_course_week'
+        ])
+      }
       if (res && res.packages_type === '5') {
         this.must.map((item, idx) => {
           if (item.term && item.term.packages_type) {
@@ -501,6 +554,26 @@ export default {
           }
         })
         return this.setSeachParmas({ packages_course_week: '96' }, [
+          'packages_course_week'
+        ])
+      }
+      if (res && res.packages_type === '4') {
+        this.must.map((item, idx) => {
+          if (item.term && item.term.packages_type) {
+            this.must.splice(idx, 1)
+          }
+        })
+        return this.setSeachParmas({ packages_course_week: '48' }, [
+          'packages_course_week'
+        ])
+      }
+      if (res && res.packages_type === '3') {
+        this.must.map((item, idx) => {
+          if (item.term && item.term.packages_type) {
+            this.must.splice(idx, 1)
+          }
+        })
+        return this.setSeachParmas({ packages_course_week: '24' }, [
           'packages_course_week'
         ])
       }
@@ -563,7 +636,9 @@ export default {
       console.log(res)
       this.setSeachParmas(res, ['regtype'])
     },
-
+    getPerformType(res) {
+      this.setSeachParmas(res, ['pay_teacher_duty_id'])
+    },
     /**  处理接收到的查询参数
      * @res: Object, 子筛选组件返回的表达式对象，如 {sup: 2}
      * @key: Array 指定res的key。如课程类型+期数选项，清除课程类型时，期数也清除了，这里要同步清除must的数据
@@ -656,6 +731,7 @@ export default {
 
       // 获取查询条件
       const query = this.$parent.$children[1].finalParams
+      query.subject = 0
       console.log('query======')
       console.log(query)
 

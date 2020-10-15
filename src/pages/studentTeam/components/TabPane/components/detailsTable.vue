@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 20:22:24
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-07-25 19:17:47
+ * @LastEditTime: 2020-09-16 18:54:27
  -->
 <template>
   <div class="table-box">
@@ -1130,7 +1130,7 @@ export default {
       background: #bbe166;
       .audio-triangle {
         position: absolute;
-        top: -3px;
+        top: 4px;
         left: -6px;
         width: 10px;
         height: 10px;

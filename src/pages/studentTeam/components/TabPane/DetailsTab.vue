@@ -3,8 +3,8 @@
  * @version:
  * @Author: panjian
  * @Date: 2020-03-16 14:19:58
- * @LastEditors: panjian
- * @LastEditTime: 2020-06-19 18:49:21
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-09-15 18:53:08
  -->
 <template>
   <div>
@@ -308,7 +308,8 @@ export default {
       sortGroup: '',
       screenWorksData: {},
       screenAttendClassData: {},
-      teamDetail: {}
+      teamDetail: {},
+      defaultHead: 'https://msb-ai.meixiu.mobi/ai-pm/static/touxiang.png'
     }
   },
   created() {
@@ -855,6 +856,10 @@ export default {
             }
             if (item.birthday.indexOf(50) !== -1) {
               item.birthday = '-'
+            }
+            // 默认头像
+            if (!item.head || item.head === 'undefined') {
+              item.head = this.defaultHead
             }
             item.buytime = timestamp(item.buytime, 6)
             item.added_wechat_time = timestamp(item.added_wechat_time, 6)

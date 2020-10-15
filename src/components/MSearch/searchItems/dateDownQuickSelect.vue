@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-05-28 10:06:51
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-07-25 21:42:04
+ * @LastEditTime: 2020-10-10 17:43:38
 -->
 <template>
   <div class="search-item">
@@ -22,7 +22,9 @@
         :value="item.value"
       ></el-option>
     </el-select>
-    <span class="dataText" v-show="!slectShow"> 参课时间</span>
+    <span class="dataText" v-show="!slectShow && labelText">
+      {{ labelText }}</span
+    >
     <el-date-picker
       class="small"
       size="mini"
@@ -38,6 +40,9 @@
     ></el-date-picker>
     <!-- @change="changeHandler" -->
     <div class="quick-btn-group">
+      <!-- 自定义快捷操作 -->
+      <slot name="quick-prev"></slot>
+      <!-- 自定义快捷操作 END -->
       <el-button
         size="mini"
         plain
@@ -92,6 +97,11 @@ export default {
       type: Boolean,
       default: true
     },
+    // 没有下拉选择时，显示的labelText
+    labelText: {
+      type: String,
+      default: '' // 参课时间
+    },
     startPlaceholder: {
       type: String,
       default: '开始时间'
@@ -141,7 +151,12 @@ export default {
         const gte = this.timeData[0]
         const lte = this.timeData[1]
         const octime = { gte, lte }
-        this.$emit('result', { [this.searchType]: octime })
+        // 如果有下拉选项，根据下拉选择值返回。没有就name返回
+        if (this.slectShow) {
+          this.$emit('result', { [this.searchType]: octime })
+        } else {
+          this.$emit('result', { [this.name]: octime })
+        }
         return
       }
       this.$emit('result', '')
@@ -206,7 +221,7 @@ export default {
   background: white;
   width: 70px;
   margin-right: 10px;
-  border: 1px solid #dcdfe6;
+  // border: 1px solid #dcdfe6;
   height: 26px;
   line-height: 26px;
 }

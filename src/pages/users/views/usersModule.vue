@@ -19,6 +19,7 @@
         <!-- 系统课学员列表 -->
         <system-list :search="searchResult" />
       </div>
+      <all-list v-if="type === 'allUsers'"></all-list>
     </div>
   </el-row>
 </template>
@@ -26,12 +27,14 @@
 // import SearchSystem from '../components/SearchSystem.vue'
 import TrialList from './trial-v2/index.vue'
 import SystemList from './system-v2/index.vue'
+import AllList from './all-list/index.vue'
 
 export default {
   components: {
     // SearchSystem,
     TrialList,
-    SystemList
+    SystemList,
+    AllList
   },
   data() {
     return {

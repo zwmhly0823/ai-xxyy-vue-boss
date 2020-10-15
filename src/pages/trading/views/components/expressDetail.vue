@@ -3,8 +3,8 @@
  * @version: 
  * @Author: Lukun
  * @Date: 2020-04-15 15:18:49
- * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-08-14 18:40:03
+ * @LastEditors: liukun
+ * @LastEditTime: 2020-10-14 21:45:28
  -->
 <template>
   <div class="container express-detail">
@@ -304,9 +304,16 @@ export default {
       this.expressDetailsInfo = []
       this.expressInformation = val
       this.expressNu = this.expressInformation.express_nu
-      const timeNodes = new Date('2020-07-01').getTime()
+      // const timeNodes = new Date('2020-07-01').getTime()
       // 2020-07-01之后且center_express_id 不等于0  取中台数据
-      if (+val.center_ctime > timeNodes && val.center_express_id !== '0') {
+      // if (+val.center_ctime > timeNodes && val.center_express_id !== '0') {
+      //   this.getExpressDetails(this.expressNu)
+      // } else {
+      //   this.expressList(this.expressNu, val.express_status)
+      // }
+
+      // 2020-10-02 强哥说 根据delivery_type这个字段区分，0是取快递100的详情，1是取中台的详情
+      if (+val.delivery_type === 1) {
         this.getExpressDetails(this.expressNu)
       } else {
         this.expressList(this.expressNu, val.express_status)
@@ -449,9 +456,16 @@ export default {
     getexpressInformation(item, i) {
       this.isActive = i
       this.expressInformation = item
-      const timeNodes = new Date('2020-07-01').getTime()
       // 2020-07-01之后且center_express_id 不等于0 取中台数据
-      if (+item.center_ctime > timeNodes && item.center_express_id !== '0') {
+      // const timeNodes = new Date('2020-07-01').getTime()
+      // if (+item.center_ctime > timeNodes && item.center_express_id !== '0') {
+      //   this.getExpressDetails(item.express_nu)
+      // } else {
+      //   this.expressList(item.express_nu, item.express_status)
+      // }
+
+      // 2020-10-02 强哥说 根据delivery_type这个字段区分，0是取快递100的详情，1是取中台的详情
+      if (+item.delivery_type === 1) {
         this.getExpressDetails(item.express_nu)
       } else {
         this.expressList(item.express_nu, item.express_status)
@@ -469,7 +483,7 @@ export default {
       return axios
         .post('/graphql/v1/toss', {
           query: `{
-                  ExpressList(query: ${queryParams}) {
+                  ExpressListEx(query: ${queryParams}) {
                      id
                       product_name
                       express_company
@@ -477,11 +491,12 @@ export default {
                       express_status
                       center_ctime
                       center_express_id
+                      delivery_type
                   }
                 }`
         })
         .then((res) => {
-          this.leftRow = res.data.ExpressList
+          this.leftRow = res.data.ExpressListEx
           this.getexpressInformation(this.leftRow[0], 0)
         })
     },
@@ -505,7 +520,7 @@ export default {
       this.isShowNew = false
       const lastData = {}
       // 如果是京东物流 且物流状态 expressStatus 为2 请求京东物流接口
-      if (id.toString().indexOf('JD') > -1 && expressStatus === '2') {
+      if (id && id.toString().indexOf('JD') > -1 && expressStatus === '2') {
         this.$http.Express.getExpressDetailJDForAPP(id).then((jdRes) => {
           const tempData =
             (jdRes && jdRes.payload && jdRes.payload[0].data) || []

@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-05-14 14:11:21
  * @LastEditors: Shentong
- * @LastEditTime: 2020-07-13 13:44:04
+ * @LastEditTime: 2020-09-15 15:49:16
  -->
 <template>
   <el-row type="flex" class="app-main team-container">
@@ -340,7 +340,7 @@ export default {
     // }
 
     // await this.getAllTeacherByRole(params)
-    this.getTrialTeamList(this.tabQuery)
+    this.getSystemTeamList(this.tabQuery)
   },
   computed: {},
   mounted() {
@@ -353,10 +353,6 @@ export default {
       const teamType = row.team_type || '1'
       this.$store.commit('setTeamItem', row)
 
-      // id &&
-      //   this.$router.push({
-      //     path: `/teamDetail/${id}/${teamType}`
-      //   })
       id &&
         openBrowserTab(
           `/student-team/#/teamDetail/${id}/${teamType}`,
@@ -373,26 +369,15 @@ export default {
           page: 1,
           sort: `{"${sortKey}":"${this.sortKeys[sortKey]}"}`
         })
-        this.getTrialTeamList(this.tabQuery).then((content) => {
+        this.getSystemTeamList(this.tabQuery).then((content) => {
           this.sortActive = sortKey
-          // if (content.length) this.amountStatus = !this.amountStatus
         })
       }
     },
     // 组件emit
     searchChange(res) {
-      // 判断当前社群销售的老师是否属于当前老师权限
-      // const { teacherId = '' } = res
-      // if (teacherId && !this.tabQuery.teacherIdArr.includes(teacherId)) {
-      //   this.$message({
-      //     message: '当前社群销售不属于该老师团队',
-      //     type: 'warning'
-      //   })
-      //   return
-      // }
-
       this.initSearchData(res, true)
-      this.getTrialTeamList(this.tabQuery)
+      this.getSystemTeamList(this.tabQuery)
     },
     initSearchData(res, isFromEmit = false) {
       // 如果是子组件emit而来的数据，则不需要清空
@@ -423,14 +408,9 @@ export default {
         category,
         page: 1
       })
-      // this.getTrialTeamList(this.tabQuery)
     },
-    // async getAllTeacherByRole(params) {
-    //   const teacherIds = await this.$http.Permission.getAllTeacherByRole(params)
-    //   this.tabQuery.teacherIdArr = teacherIds
-    // },
     // 条件查询列表
-    async getTrialTeamList(params) {
+    async getSystemTeamList(params) {
       this.flags.loading = true
       try {
         const {
@@ -470,14 +450,14 @@ export default {
       Object.assign(this.tabQuery, team, {
         page: 1
       })
-      this.getTrialTeamList(this.tabQuery)
+      this.getSystemTeamList(this.tabQuery)
     },
     /**
      * @description 分页 回调事件
      */
     pageChange_handler(page) {
       this.tabQuery.page = page
-      this.getTrialTeamList(this.tabQuery)
+      this.getSystemTeamList(this.tabQuery)
     },
     calcTableHeight() {
       this.$nextTick(() => {

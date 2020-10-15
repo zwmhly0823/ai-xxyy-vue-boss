@@ -4,16 +4,16 @@
  * @Author: liukun
  * @Date: 2020-07-22 10:31:00
  * @LastEditors: liukun
- * @LastEditTime: 2020-08-18 22:53:04
+ * @LastEditTime: 2020-09-22 16:12:45
 -->
 <template>
   <el-dialog title="推荐信息" :visible.sync="recommendInfo" width="40%">
     <div class="recommend-dialog">
       <el-row type="flex" justify="start" align="middle" class="marginb10">
         <el-col :span="5">推荐人:</el-col>
-        <el-col :span="18" :offset="1"
+        <el-col :span="18" :offset="1" v-if="recommendHuman.u_id"
           ><el-link
-            :href="`/users/#/details/${recommendHuman.id}`"
+            :href="`/users/#/details/${recommendHuman.u_id}`"
             target="_blank"
             type="primary"
           >
@@ -24,6 +24,7 @@
             }}</el-link
           ></el-col
         >
+        <el-col :span="18" :offset="1" v-else> - </el-col>
       </el-row>
       <el-row type="flex" justify="start" align="middle" class="marginb10">
         <el-col :span="5">推荐了:</el-col>
@@ -35,7 +36,7 @@
         >
           <span v-for="(item, index) of recommendList" :key="index"
             ><el-link
-              :href="`/users/#/details/${item.id}`"
+              :href="`/users/#/details/${item.u_id}`"
               target="_blank"
               type="primary"
             >
@@ -72,16 +73,20 @@ export default {
     async getRecommendList() {
       // 他的下线
       const {
-        data: { UserList }
-      } = await this.$http.User.getRecommendList(this.$route.params.id).catch(
-        (err) => {
-          console.error(err)
-          this.$message.error('该学员推荐下线获取失败')
-        }
-      )
-      if (UserList.length) {
-        this.recommendList = UserList
+        data: { UserExtendsList }
+      } = await this.$http.User.getRecommendList({
+        send_id: this.$route.params.id,
+        subject: this.$store.state.subjects.subjectCode
+      }).catch((err) => {
+        console.error(err)
+        this.$message.error('该学员推荐下线获取失败')
+      })
+      if (UserExtendsList.length) {
+        this.recommendList = UserExtendsList
       }
+      // else {
+      //   this.$message.warning('加油,该学员没有下线')
+      // }
     }
   },
   mounted() {

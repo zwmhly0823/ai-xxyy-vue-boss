@@ -19,12 +19,12 @@
               label="用户编号"
               min-width="15%"
               align="center"
-              prop="user"
+              prop="userNum"
             >
               <template slot-scope="scope">
-                <span v-if="scope.row.user === null"></span>
+                <span v-if="!+scope.row.userNum">-</span>
                 <span v-else class="user-detail" @click="userHandle(scope.row)">
-                  {{ scope.row.user.user_num }}
+                  {{ scope.row.userNum }}
                 </span>
               </template>
             </el-table-column>
@@ -32,25 +32,20 @@
               label="补发类型"
               min-width="15%"
               align="center"
-              prop="account_type"
+              prop="transTypeName"
             >
-              <template slot-scope="scope">
-                <span v-if="scope.row.trans_type === '8'">运营活动</span>
-                <span v-if="scope.row.trans_type === '9'">投诉补偿</span>
-              </template>
             </el-table-column>
-            <el-table-column
-              label="补发数量"
-              min-width="15%"
-              align="center"
-              prop="amount"
-            >
+            <el-table-column label="补发数量" min-width="15%" align="center">
+              <template slot-scope="scope">
+                <span v-if="scope.row.trans_type === '14'">-</span>
+                <span>{{ scope.row.amount }}</span>
+              </template>
             </el-table-column>
             <el-table-column
               label="补发原因"
               min-width="35%"
               align="center"
-              prop="desc"
+              prop="reason"
             >
             </el-table-column>
             <el-table-column
@@ -58,6 +53,20 @@
               min-width="20%"
               align="center"
               prop="ctime"
+            >
+            </el-table-column>
+            <el-table-column
+              label="状态"
+              min-width="15%"
+              align="center"
+              prop="statusName"
+            >
+            </el-table-column>
+            <el-table-column
+              label="备注"
+              min-width="25%"
+              align="center"
+              prop="failedReason"
             >
             </el-table-column>
           </el-table>
@@ -110,21 +119,17 @@ export default {
         background: 'rgba(0, 0, 0, 0.1)'
       })
       const query = {
-        account_type: 2,
-        trans_type: [8, 9]
+        pageNumber: this.currentPage - 1,
+        pageSize: 20
       }
       Object.assign(query, this.searchMobile, this.searchType, this.searchTime)
-      const params = JSON.stringify(JSON.stringify(query))
-      this.$http.Operating.issueBearList(params, this.currentPage)
+      this.$http.Operating.issueBearList(query)
         .then((res) => {
-          const data = res.data && res.data.AccountPage
+          const data = res.payload
           if (data) {
             const { totalElements, content = [] } = data
             this.totalElements = totalElements
-            this.tableData = content.map((item) => {
-              item.ctime = formatData(item.ctime, 's')
-              return item
-            })
+            this.tableData = this.modifyTableData(content)
           }
           loading.close()
         })
@@ -132,13 +137,51 @@ export default {
           loading.close()
         })
     },
+    modifyTableData(content) {
+      content.forEach((cItem) => {
+        cItem.ctime = formatData(cItem.ctime, 's')
+        switch (cItem.status) {
+          case 'DEFAULT':
+            cItem.statusName = '默认'
+            break
+          case 'SUCCESS':
+            cItem.statusName = '导入成功'
+            break
+          case 'FAILED':
+            cItem.statusName = '导入失败'
+            break
+        }
+        switch (cItem.transType) {
+          case 'OPERATION_ACTIVE':
+            cItem.transTypeName = '运营活动'
+            break
+          case 'COMPLAINT_COMPENSATE':
+            cItem.transTypeName = '投诉补偿'
+            break
+          case 'OPERATIONAL_DEDUCT':
+            cItem.transTypeName = '系统扣除'
+            break
+          default:
+            cItem.transTypeName = '-'
+            break
+        }
+      })
+      return content
+    },
     getSearchType(res) {
       this.searchType = res
       this.currentPage = 1
       this.getData()
     },
     getSearchTime(res) {
-      this.searchTime = res
+      if (res) {
+        this.searchTime = {
+          startTime: res.ctime.gte,
+          endTime: res.ctime.lte
+        }
+      } else {
+        this.searchTime = ''
+      }
       this.currentPage = 1
       this.getData()
     },
@@ -166,7 +209,8 @@ export default {
         this.$message.error('缺少用户信息')
         return
       }
-      const { id } = user.user
+      // const { id } = user.user
+      const id = user.uid
       // 新标签打开详情页
       id && openBrowserTab(`/users/#/details/${id}`)
     }

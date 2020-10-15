@@ -3,8 +3,8 @@
  * @version: 
  * @Author: panjian
  * @Date: 2020-04-25 12:09:03
- * @LastEditors: panjian
- * @LastEditTime: 2020-07-24 18:40:53
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-09-08 20:10:59
  -->
 <template>
   <div id="channel-box" class="channel-box">
@@ -316,7 +316,7 @@ export default {
   data() {
     return {
       tableShow: false,
-      link: 'https://www.baidu.com',
+      link: '',
       showClose: true,
       drawer: false,
       tableData: [],
@@ -426,6 +426,7 @@ export default {
       }
       this.$http.Operating.countsByTrialChannel(params).then((res) => {
         const _data = res.content
+        if (!_data) return
         this.totalNumber = res.number
         this.totalElements = res.totalElements
         _data.forEach((res) => {
@@ -469,6 +470,7 @@ export default {
       this.$http.Operating.countsByTrialChannelOfTotal(paramsM).then((ele) => {
         // 模块数据
         const _datas = ele.payload
+        if (!_datas) return
         // 累计成单金额
         if (_datas.system_user_amounts !== 'null') {
           const allSystemUserAmountsNums = +_datas.system_user_amounts
@@ -545,10 +547,15 @@ export default {
     // 调取渠道分类  渠道名称接口
     onGetChannelList(_data) {
       const query = this.channelValueList
-      const channelValue = `{"id":${JSON.stringify(query)}}`
+      const channelValue = `{"id":${JSON.stringify(query)}, "subject": ${
+        this.$store.getters.subjects.subjectCode
+      }}`
       this.$http.Operating.ChannelDetailStatisticsList(channelValue).then(
         (ele) => {
-          const __data = ele.data.ChannelDetailStatisticsList
+          const __data = ele?.data?.ChannelDetailStatisticsList
+          console.log(__data)
+
+          if (!__data) return
           _data.forEach((val) => {
             __data.forEach((item) => {
               if (+item.id === +val.pay_channel) {

@@ -15,11 +15,11 @@
       :options="departmentList"
       :disabled="isDisabled"
       :props="{
-        multiple: multiple,
+        multiple,
         value: 'id',
         label: 'name',
         emitPath: false,
-        checkStrictly: false
+        checkStrictly
       }"
       :show-all-levels="false"
       clearable
@@ -58,6 +58,11 @@ export default {
     multiple: {
       type: Boolean,
       default: true
+    },
+    // 单行模式下，选择任意一级选项
+    checkStrictly: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -125,6 +130,9 @@ export default {
     white-space: nowrap !important;
     overflow: hidden !important;
     text-overflow: ellipsis !important;
+  }
+  .el-icon-close {
+    display: none;
   }
 }
 .search-item {

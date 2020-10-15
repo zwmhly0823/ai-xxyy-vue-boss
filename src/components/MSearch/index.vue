@@ -3,8 +3,8 @@
  * @version:
  * @Author: zhubaodong
  * @Date: 2020-03-24 18:20:12
- * @LastEditors: zhouzebin
- * @LastEditTime: 2020-07-24 16:15:20
+ * @LastEditors: zhangjianwen
+ * @LastEditTime: 2020-09-14 15:43:55
  -->
 
 <template>
@@ -76,6 +76,11 @@
         <product-topic @result="getProductTopic" :name="topicType" />
       </el-form-item>
 
+      <el-form-item v-if="productType">
+        <!-- 物流类别 -->
+        <product-typelog @result="getProductTypelog" :name="productType" />
+      </el-form-item>
+
       <el-form-item v-if="moreVersion">
         <!-- 随材版本-->
         <more-version-box @result="getVersionNu" :name="moreVersion" />
@@ -83,6 +88,7 @@
 
       <el-form-item v-if="level || sup || stage">
         <stage-sup-levels
+          v-if="this.$store.getters.subjects.subjectCode === 0"
           @stageCallBack="stageCallBack"
           @supCallBack="supCallBack"
           @levelCallBack="levelCallBack"
@@ -93,6 +99,17 @@
           :addSupS="addSupS"
           :supPlaceholder="supPlaceholder"
           style="margin-bottom:0px"
+        />
+
+        <hard-write-level
+          v-if="this.$store.getters.subjects.subjectCode === 1"
+          :tab="tab"
+          :subType="tab"
+          :class="['margin_l10']"
+          placeholder="难度"
+          style="width:140px"
+          name="sup"
+          @result="supCallBack"
         />
       </el-form-item>
 
@@ -325,10 +342,15 @@
   </el-card>
 </template>
 <script>
+import { isToss } from '@/utils/index'
+
 import DatePicker from './searchItems/datePicker.vue'
 import ChannelSelect from './searchItems/channel.vue'
 import ProductTopic from './searchItems/productTopic.vue'
+import ProductTypelog from './searchItems/productTypelog.vue'
 import StageSupLevels from './searchItems/stageSupLevels.vue'
+import hardWriteLevel from './searchItems/hardWriteLevel.vue'
+
 import SearchPhone from './searchItems/searchPhone.vue'
 import OutTradeNo from './searchItems/outTradeNo.vue'
 import ProductName from './searchItems/productName.vue'
@@ -360,7 +382,7 @@ import replenishProductType from './searchItems/replenishProductType'
 import ConsigneePhone from './searchItems/consigneePhone.vue'
 import expressType from './searchItems/expressType'
 // import SearchTrialStage from './searchItems/searchTrialStage'
-import { isToss } from '@/utils/index'
+
 // 员工角色
 import employeesRole from './searchItems/role.vue'
 import staffName from './searchItems/staffName.vue'
@@ -368,6 +390,11 @@ import SearchCourseware from './searchItems/searchCourseware'
 
 export default {
   props: {
+    // 物流体验课0 系统课1
+    tab: {
+      type: String,
+      default: '' // tab
+    },
     // 有无收货地址
     hasaddress: {
       type: String,
@@ -386,6 +413,11 @@ export default {
     topicType: {
       type: String,
       default: '' // topicType
+    },
+    // 物流类别
+    productType: {
+      type: String,
+      default: ''
     },
     // 期数
     stage: {
@@ -621,8 +653,8 @@ export default {
     },
     // 是否关联老师搜索
     selectAddress: {
-      type: Boolean,
-      default: false // selectAddress
+      type: String,
+      default: '' // selectAddress
     },
     // 系统课排期
     searchStage: {
@@ -714,6 +746,7 @@ export default {
   components: {
     ChannelSelect,
     ProductTopic,
+    ProductTypelog,
     StageSupLevels,
     DatePicker,
     SearchPhone,
@@ -747,7 +780,8 @@ export default {
     employeesRole,
     staffName,
     expressType,
-    SearchCourseware
+    SearchCourseware,
+    hardWriteLevel
   },
   data() {
     return {
@@ -771,6 +805,11 @@ export default {
     getProductTopic(res) {
       console.log(res, 'res')
       this.setSeachParmas(res, [this.topicType || 'topicType'])
+    },
+    // 物流类别
+    getProductTypelog(res) {
+      console.log(res, 'res')
+      this.setSeachParmas(res, [this.productType || 'productType'])
     },
     // 期数
     stageCallBack(res) {
@@ -910,6 +949,7 @@ export default {
       this.setSeachParmas(res, [this.wxRecordId])
     },
     getAddress(res) {
+      console.log(res, 'getAddress==')
       this.setSeachParmas(res, [this.selectAddress])
     },
     getSearchStage(res) {
@@ -989,30 +1029,25 @@ export default {
       })
       // must
       if (name === 'must') {
-        if (res && (res.provincesCode || res.provincesCode === '')) {
-          let hasAddress = false
-          temp.forEach((item) => {
-            if (item.term && item.term.provincesCode) {
-              hasAddress = true
-              item.term = res
-              this.must = temp
-            }
-          })
-          if (!hasAddress) {
+        console.log(res, 'res==')
+        if (res) {
+          if (
+            this.selectAddress &&
+            Object.keys(res).includes('provincesCode')
+          ) {
             temp.push({
-              // [`${extraKey}`]: `${JSON.stringify(res)}`
+              [extraKey]: { [`${this.selectAddress}`]: res }
+            })
+          } else {
+            temp.push({
               [extraKey]: res
             })
-            this.must = temp
           }
-        } else if (res) {
-          temp.push({
-            // [`${extraKey}`]: `${JSON.stringify(res)}`
-            [extraKey]: res
-          })
+
           this.must = temp
         }
         // this.$emit('search', res === '' ? '' : temp)
+        console.log(temp, 'temp==')
         this.$emit('search', temp)
         return
       }
@@ -1027,6 +1062,7 @@ export default {
     }
   },
   created() {
+    console.log(this.$store.getters.subjects.subjectCode)
     const teacherId = isToss()
     if (teacherId) {
       this.teacherId = teacherId

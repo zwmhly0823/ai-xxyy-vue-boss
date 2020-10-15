@@ -31,7 +31,8 @@ import { mapGetters } from 'vuex'
 import Logo from './Logo'
 import SidebarItem from './SidebarItem'
 import CustomPop from './CustomPop.vue'
-import routes from '@/router/index'
+// import routes from '@/router/index'
+import routes from '@/config/sidebarMenu/index'
 import variables from '@/assets/styles/variables.scss'
 
 export default {

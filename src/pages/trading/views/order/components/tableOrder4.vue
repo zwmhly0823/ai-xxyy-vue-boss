@@ -440,12 +440,8 @@ export default {
 }
 </script>
 <style scoped lang="scss">
-@font-face {
-  font-family: 'number_font';
-  src: url('~@/assets/fonts/TG-TYPE-Bold.otf');
-} //引入本地字体数字文件
 .title-box {
-  padding-bottom: 50px;
+  padding-bottom: 30px;
 }
 .noData {
   text-align: center;

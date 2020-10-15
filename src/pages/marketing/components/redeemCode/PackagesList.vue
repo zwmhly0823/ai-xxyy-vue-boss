@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-08-07 16:59:43
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-07 21:08:59
+ * @LastEditTime: 2020-08-27 21:08:29
 -->
 <template>
   <el-dialog
@@ -23,7 +23,13 @@
         :key="item.id"
       >
         <el-radio v-model="checkedId" :label="item.id">
-          <p>{{ item.name }}（课时{{ item.course_week }}周）</p>
+          <p>
+            {{ item.name }}
+            <!-- 写字体验课不显示课时 -->
+            <span v-if="item.id !== '19' && item.id !== '20'"
+              >（课时{{ item.course_week }}周）</span
+            >
+          </p>
           <p class="red">{{ item.price }}元</p>
         </el-radio>
       </div>
@@ -54,8 +60,9 @@ export default {
   },
   data() {
     return {
-      // 指定的套餐ID; 前期只有体验课 [5, 3, 10, 18]
-      exIds: [5],
+      // 指定的套餐ID; 前期只有体验课 [5, 3, 10, 18],
+      // 新增"美术宝写字精品体验课（id 19）""美术宝写字尊享体验课（id 20）"
+      exIds: [5, 19, 20],
       dataList: [],
       checkedId: this.currentId || '' // 选中的套餐ID
     }
@@ -104,7 +111,7 @@ export default {
 
 <style lang="scss" scoped>
 .package-list {
-  min-height: 320px;
+  min-height: 300px;
   &-item {
     margin: 20px 20px 0;
     padding-bottom: 20px;

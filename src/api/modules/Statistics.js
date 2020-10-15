@@ -3,10 +3,11 @@
  * @version:
  * @Author: Shentong
  * @Date: 2020-04-07 13:52:26
- * @LastEditors: songyanan
- * @LastEditTime: 2020-07-03 14:08:32
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-10-09 17:22:14
  */
 import axios from '../axiosConfig'
+import { injectSubject } from '@/utils/index'
 
 export default {
   /**
@@ -22,7 +23,8 @@ export default {
 
     return axios.post('/graphql/v1/toss', {
       query: `{
-        ManagementStatusList(query: ${JSON.stringify(query) || null}) {
+        ManagementStatusList(query: ${JSON.stringify(injectSubject(query)) ||
+          null}) {
           period
           end_date
           start_date
@@ -30,6 +32,7 @@ export default {
           period_name
           course_day
           end_course_day
+          subject
       }}`
     })
   },
@@ -489,5 +492,88 @@ export default {
           }
       }}`
     })
+  },
+
+  /**
+   * 系统课-参课统计
+   */
+  // 参课统计列表
+  getStudentSystemJoinCoursePage(query = {}, page = 1, sort = '') {
+    const queryObj = query || {}
+    return axios.post('/graphql/v1/toss', {
+      query: `{
+        StudentSystemRecordListStatisticsPage(query: ${JSON.stringify(
+          injectSubject(queryObj)
+        )}, page: ${page}) {
+        totalElements
+        totalPages
+        number
+        content {
+          subject
+          id
+          ctime
+          utime
+          course_id
+          lesson
+          student_id
+          teacher_id
+          team_id
+          term
+          title
+          subject
+          sup
+          is_first_week_send
+          is_join_course
+          is_complete_course
+          join_course_time
+          complete_time
+          userExtends {
+            id
+            u_id
+            user_num_text
+            username
+            mobile
+            status
+            status_text
+          }
+          teacherInfo {
+            realname
+            department_name
+          }
+          teamInfo {
+            id
+            sup
+            team_name
+            team_type
+          }
+          management {
+            period_name
+          }
+        }
+      }
+      }`
+    })
+  },
+
+  // 汇总行数据
+  getStudentSystemJoinCourseDetailSummary(query = {}) {
+    const queryObj = injectSubject(query)
+    return axios.post('/graphql/v1/toss', {
+      query: `{
+        StudentSystemJoinCourseDetailSummary(query: ${JSON.stringify(
+          queryObj
+        )}) {
+          student_count
+          join_course_count
+          complete_course_count
+          join_course_rate
+          complete_course_rate
+          complete_in_join_rate
+        }
+      }`
+    })
   }
+  /**
+   * 系统课-参课统计  end
+   */
 }

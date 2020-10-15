@@ -8,9 +8,9 @@
               <search-phone-or-usernum
                 defaultType="0"
                 :isHidden="false"
-                :name="['id']"
+                :name="['mobile']"
                 type="3"
-                tablename="UserList"
+                tablename="UserSubjectStatisticsList"
                 @result="getSearchUid('user', arguments)"
               />
             </el-form-item>
@@ -102,23 +102,27 @@ export default {
   },
   computed: {
     isAuth() {
-      return JSON.parse(localStorage.getItem('staff')).mobile === '18618194642'
+      /**
+       * 王新建 - 18701139906
+       */
+      const { mobile = '' } = JSON.parse(localStorage.getItem('staff'))
+      const authData = ['18701139906', '18618194642']
+      return authData.includes(mobile)
     }
   },
   methods: {
     // 用户ID接收值
     getSearchUid(key, res) {
       const search = res && res[0]
-      const uid = { uid: search.id }
-      this.$emit('searchUid', uid)
+      const mobile = { mobile: search.mobile }
+      this.$emit('searchUid', mobile)
     },
     // 补发类型接收值
     getSearchData(key, res) {
-      console.log(res)
       const search = res && res[0]
       const searchQuery = {}
       if (search) {
-        searchQuery.trans_type = [search[key]]
+        searchQuery.transType = search[key]
       }
       this.$emit('search', searchQuery)
     },

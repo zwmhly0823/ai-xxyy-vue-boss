@@ -12,8 +12,8 @@ export default {
   /**
    * 组织机构列表
    * */
-  getDepartmentTree(id) {
-    return axios.get(`/api/t/v1/department/getDepartmentTree?id=${id}`)
+  getDepartmentTree(id = 0) {
+    return axios.get(`/api/t/v2/department/getDepartmentTree?id=${id}`)
   },
   /**
    * 新增、编辑组织结构
@@ -31,6 +31,23 @@ export default {
   },
   getOssSign() {
     return axios.get(`/api/home/v1/ossconfig/getStsPubWriteToken`)
+  },
+  // 招生排期
+  getTeacherRealnameAndId(page = 1, query = '', size = '3000') {
+    return axios.post('/graphql/v1/boss', {
+      query: `{
+        TeacherManagePage(page: ${page}, query: ${query ||
+        null}, size:${size}) {
+          number
+          totalPages
+          totalElements
+          content {
+            id
+            realname
+          }
+        }
+      }`
+    })
   },
   // 老师列表
   getTeacherPage(page = 1, query = '', size = '20') {
@@ -215,7 +232,7 @@ export default {
     }
     if (query) querys.bool.must.push({ term: query })
     const q = JSON.stringify(querys)
-    return axios.post('/graphql/v1/teacher', {
+    return axios.post('/graphql/v1/toss', {
       query: `{
         TeacherListEx(query:${JSON.stringify(q)},size:100) {
           realname
@@ -295,6 +312,7 @@ export default {
           productTopic{
             id
             name
+          
           }
        }`
     })

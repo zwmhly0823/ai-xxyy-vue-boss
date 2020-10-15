@@ -4,17 +4,18 @@
  * @Author: YangJiyong
  * @Date: 2020-08-06 19:52:15
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-12 15:33:09
+ * @LastEditTime: 2020-09-09 15:24:51
 -->
 <template>
   <el-row type="flex" class="app-main height">
     <div class="app-main-container redeem-code-library">
       <header>
         <h4>{{ redeemCode.title }}</h4>
-        <p>
+        <p v-if="!expire">
           有效期：{{ redeemCode.start_date_text }} 至
           {{ redeemCode.end_date_text }}
         </p>
+        <p v-else>有效期：兑换当日{{ expire }}天内</p>
       </header>
       <!-- search -->
       <div class="library-search d-flex align-center justify-between">
@@ -67,8 +68,14 @@
           <el-table-column prop="status_text" label="使用状态" width="120">
           </el-table-column>
           <el-table-column
-            prop="converted_date"
-            label="兑换时间"
+            prop="converted_date_text"
+            :label="expire ? '兑换/发放时间' : '兑换时间'"
+          ></el-table-column>
+          <!-- 自定义时间显示 -->
+          <el-table-column
+            prop="expire_text"
+            label="失效时间"
+            v-if="expire"
           ></el-table-column>
           <el-table-column prop="use_date" label="使用时间"></el-table-column>
           <el-table-column
@@ -92,8 +99,11 @@
               </p>
               <p v-else>--</p>
               <p v-if="scope.row.teacherInfo">
-                {{ scope.row.teacherInfo.realname }}
-                {{ scope.row.teacherInfo.department_name }}
+                {{ scope.row.teacherInfo.realname }} -
+                {{
+                  scope.row.teacherInfo.department_name ||
+                    scope.row.teacherInfo.group_name
+                }}
               </p>
               <p v-else>--</p>
             </template>
@@ -149,7 +159,8 @@ export default {
       searchParams: {},
       exporting: false,
       // 体验课套餐类型 0-单周体验课，6-双周体验
-      packageTypeMap: ['0', '6']
+      packageTypeMap: ['0', '6'],
+      expire: ''
     }
   },
   computed: {
@@ -185,9 +196,11 @@ export default {
   },
   created() {
     const { id, status } = this.$route.params
+    const { expire } = this.$route.query
     this.redeemCodeId = id
     this.redeemStatus = status
     this.searchParams = { config_id: id }
+    this.expire = (expire && +expire) || ''
     this.getRedeemCodeDetail()
     this.getRedeemCodeLog()
   },
@@ -235,7 +248,7 @@ export default {
             this.totalPages = +totalPages
             this.totalElements = +totalElements
             const list = content.map((item) => {
-              item.converted_date =
+              item.converted_date_text =
                 item.converted_date && item.converted_date !== '0'
                   ? formatData(item.converted_date, 'm')
                   : '--'
@@ -246,6 +259,13 @@ export default {
               item.status_text = item.status
                 ? this.statusObj[item.status]
                 : '--'
+              // 如果是自定义有效期，计算失效时间
+              if (this.expire) {
+                item.expire_text = this.calcExpireDate(
+                  item.converted_date,
+                  this.expire
+                )
+              }
               return item
             })
             this.tableData = list
@@ -256,11 +276,27 @@ export default {
         })
     },
 
+    // 计算失效时间 @start: 兑换时间，时间戳。 @expire: 有效天数
+    calcExpireDate(start, expire) {
+      if (!start || start === '0' || !expire) return '--'
+      const cur = new Date(+start)
+      cur.setDate(cur.getDate() + expire)
+      // cur.setHours(0, 0, 0, 0)
+      return formatData(cur.getTime(), 'm')
+    },
+
     // 打开用户或班级详情页 0-用户，1-班级
     openDetailPage(obj, type = 0) {
       let url = `/users/#/details/${obj.id}`
       if (type === 1) {
         url = `/student-team/#/teamDetail/${obj.id}/${obj.type}`
+      }
+      // 写字项目时
+      if (+this.$store.getters.subjects.subjectCode === 1) {
+        url =
+          type === 0
+            ? `/write_app/#/details/${obj.id}`
+            : `/write_app/#/teamDetail/${obj.id}/${obj.type}`
       }
       openBrowserTab(url)
     },

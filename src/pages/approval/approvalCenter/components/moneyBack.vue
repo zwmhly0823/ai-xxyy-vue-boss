@@ -962,6 +962,9 @@ export default {
                 type: 'warning'
               }
             ).then(() => {
+              const loading = this.$loading({
+                lock: true
+              })
               this.$http.RefundApproval.submito(params1)
                 .then(({ code }) => {
                   if (!code) {
@@ -976,8 +979,16 @@ export default {
                 .catch((err) => {
                   console.info(err)
                 })
+                .finally(() => {
+                  setTimeout(() => {
+                    loading.close()
+                  }, 1000)
+                })
             })
           } else {
+            const loading = this.$loading({
+              lock: true
+            })
             this.$http.RefundApproval.submito(params1)
               .then(({ code }) => {
                 if (!code) {
@@ -991,6 +1002,11 @@ export default {
               })
               .catch((err) => {
                 console.info(err)
+              })
+              .finally(() => {
+                setTimeout(() => {
+                  loading.close()
+                }, 1000)
               })
           }
         } else {

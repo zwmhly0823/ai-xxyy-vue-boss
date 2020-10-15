@@ -4,17 +4,52 @@
  * @Author: Lukun
  * @Date: 2020-04-27 17:47:58
  * @LastEditors: liukun
- * @LastEditTime: 2020-08-26 21:21:45
+ * @LastEditTime: 2020-09-28 12:17:58
  -->
 <template>
   <div class="container">
     <!-- 搜索框 -->
     <div class="time">
-      <tabTimeSelect @result="getSeacherTime" />
       <CheckType @result="getcheckType" />
-      <SearchPart @result="getSeachePart" />
-      <courseTeam @result="getTeamId" />
-      <searchPhone name="userTel" @result_lk="getPhone" />
+      <el-select
+        :style="{ 'margin-right': '20px' }"
+        clearable
+        size="mini"
+        v-model="xx"
+        placeholder="请选择是否0课时"
+        @change="zeroChange"
+        v-show="isRefund"
+      >
+        <el-option
+          v-for="(value, key) in { 未开课0课时: 'YES', 已开课非0课时: 'NO' }"
+          :key="value"
+          :label="key"
+          :value="value"
+        ></el-option>
+      </el-select>
+      <searchPhone
+        name="userTel"
+        @result_lk="getPhone"
+        style="margin-right:20px"
+      />
+      <courseTeam
+        @result="getTeamId"
+        style="margin-left:0px;margin-right:20px"
+      />
+      <department
+        style="margin-right:20px"
+        name="DepartmentIds"
+        placeholder="全部部门"
+        :onlyDept="1"
+        @result="getSearchData1"
+      />
+      <group-sell
+        style="margin-right:20px"
+        @result="getSearchData2"
+        :name="'groupSell'"
+        tip="请选择老师"
+      />
+      <tabTimeSelect style="margin-left:0px" @result="getSeacherTime" />
       <el-button
         type="primary"
         size="mini"
@@ -121,6 +156,7 @@
           </div>
         </template>
       </el-table-column>
+      <el-table-column label="审批人" prop="approvalName"> </el-table-column>
       <el-table-column label="状态" width="180">
         <template slot-scope="scope">
           <div
@@ -152,17 +188,7 @@
         </template>
       </el-table-column>
     </el-table>
-    <!-- 赠品审批抽屉 -->
-    <ApprovalGiftDetail
-      :drawerGiftDeatail="drawerGiftDeatail"
-      :drawerGift="drawerGift"
-      :staffId="staffId"
-      :staffName="staffName"
-      :params_pending="params"
-      @refuse-dialog="refuseDialog"
-      @close-gift="handleClose"
-      @check-pending="checkPending"
-    />
+
     <!-- 退款补发货抽屉 -->
     <el-drawer
       :visible.sync="drawerApproval"
@@ -246,7 +272,8 @@
           v-if="
             isStaffId &&
               drawerApprovalDeatail.mode === 'DEFAULT' &&
-              drawerApprovalDeatail.type === 'MATERIALS'
+              (drawerApprovalDeatail.type === 'EXPERIENCE_MATERIALS' ||
+                drawerApprovalDeatail.type === 'SYSTEM_MATERIALS')
           "
         >
           <el-col :span="3">版本信息:</el-col>
@@ -417,22 +444,6 @@
            `
             }}</el-col>
           </el-row>
-          <!-- <el-row>
-            <el-col :span="5">退款月数:</el-col>
-            <el-col :span="18" :offset="1">{{
-              `${Math.floor(drawerApprovalDeatail.periodRefund / 4)}月`
-            }}</el-col>
-          </el-row> -->
-          <!-- <el-row>
-            <el-col :span="5">剩余可上课周期:</el-col>
-            <el-col :span="18" :offset="1">{{
-              `
-           ${Math.floor(
-             drawerApprovalDeatail.periodResidue / 4
-           )}月${drawerApprovalDeatail.periodResidue % 4}周
-           `
-            }}</el-col>
-          </el-row> -->
           <el-row :class="$style.align_items">
             <el-col :span="5">退款金额:</el-col>
             <el-col :span="4" :offset="1">{{
@@ -543,6 +554,18 @@
         <div v-if="currentType !== 'UNCREDITED'">
           <el-row class="BOTTOM" v-if="isStaffId">
             <el-col :span="20" :offset="1">
+              <a
+                :href="'/users/#/details/' + drawerApprovalDeatail.userId"
+                target="_blank"
+                style="margin-right:5px"
+              >
+                <el-button type="button">查看挽单记录</el-button>
+              </a>
+              <el-button
+                type="button"
+                @click="$refs.wandan.dialogFormVisible = true"
+                >新建挽单记录</el-button
+              >
               <el-button
                 type="button"
                 @click="dialogFormVisible_checkbox = true"
@@ -578,6 +601,18 @@
         </div>
       </div>
     </el-drawer>
+    <!-- 诶,讲真 我有个疑问 随材打包抽屉在哪？ -->
+    <!-- 赠品审批抽屉 -->
+    <ApprovalGiftDetail
+      :drawerGiftDeatail="drawerGiftDeatail"
+      :drawerGift="drawerGift"
+      :staffId="staffId"
+      :staffName="staffName"
+      :params_pending="params"
+      @refuse-dialog="refuseDialog"
+      @close-gift="handleClose"
+      @check-pending="checkPending"
+    />
     <!-- 调味品抽屉 -->
     <adjust-drawer
       :is3d="1"
@@ -651,6 +686,8 @@
         <el-button type="primary" @click="ensureBackend">确 定</el-button>
       </span>
     </el-dialog>
+    <!-- 挽单跟进 -->
+    <addNew :userId="userId_wandan" ref="wandan" />
     <!-- 页码组件 -->
     <m-pagination
       class="bottom0"
@@ -738,17 +775,20 @@
 </template>
 
 <script>
+import Department from '@/components/MSearch/searchItems/department'
+import GroupSell from './groupSell'
 import searchPhone from '@/components/MSearch/searchItems/searchPhone.vue'
 import MPagination from '@/components/MPagination/index.vue'
 import tabTimeSelect from './timeSearch'
 import CheckType from './checkType'
 import { timestamp } from '@/utils/index'
-import SearchPart from './searchPart'
 import adjustDrawer from './adjustDrawer'
 import { getStaffInfo } from '../common'
 import courseTeam from './courseTeam'
 import VersionBox from '../../../../components/MSearch/searchItems/moreVersionBox'
 import ApprovalGiftDetail from './approvalGiftDetail'
+import addNew from './add_new'
+
 export default {
   computed: {
     positionIdlk() {
@@ -764,15 +804,17 @@ export default {
     }
   },
   components: {
+    Department,
+    GroupSell,
     searchPhone,
     MPagination,
     tabTimeSelect,
     VersionBox,
     CheckType,
-    SearchPart,
     adjustDrawer,
     courseTeam,
-    ApprovalGiftDetail
+    ApprovalGiftDetail,
+    addNew
   },
   data() {
     var validateName = (rule, value, callback) => {
@@ -798,6 +840,7 @@ export default {
         cash: '',
         explain: ''
       },
+      userId_wandan: '', // 挽救单子
       rules_checkbox: {
         reason: [{ required: true, message: '请填写原因', trigger: 'blur' }],
         isRecover: [{ required: true, message: '是否恢复', trigger: 'change' }]
@@ -806,6 +849,8 @@ export default {
         reason: '',
         isRecover: true
       },
+      xx: '', // 0课时绑定值
+      isRefund: 0, // 选择退款出现0课时
       dialogFormVisible: false, // ↑修改金额表单lk
       dialogFormVisible_checkbox: false, // 拒绝checkbox
       params: {}, // 列表的参数
@@ -848,18 +893,18 @@ export default {
 
     this.resetParams = staff
     this.staffId = staff.staffId
-    this.staffName = staff.staffName
     this.isStaffId = staff.isStaffId
     this.staffName = staff.staffName
     // Parameters:
     this.params = {
       type: '',
-      keyword: '',
       status: 'PENDING',
       staffId: this.staffId,
       isOperation: false,
       startTime: '',
       endTime: '',
+      departmentIds: '', // 新添部门
+      teacherIds: '', // 新添老师
       page: 1,
       size: 20
     }
@@ -879,6 +924,22 @@ export default {
   },
 
   methods: {
+    getSearchData1(val) {
+      console.info('选择部门获取值:', val)
+      this.params.page = 1
+      this.currentPage = 1
+      this.params.departmentIds = val.DepartmentIds
+        ? String(val.DepartmentIds)
+        : ''
+      this.checkPending(this.params)
+    },
+    getSearchData2(val) {
+      console.info('选择老师获取值:', val)
+      this.params.page = 1
+      this.currentPage = 1
+      this.params.teacherIds = val.groupSell ? String(val.groupSell) : ''
+      this.checkPending(this.params)
+    },
     // 期数查询
     getTeamId(val) {
       if (val) {
@@ -966,9 +1027,9 @@ export default {
           if (this.drawerApprovalDeatail.addressId) {
             delete params.isRecover
           }
-          this.$http.Backend.isAggrePass(params)
-            .then((res) => {
-              console.log(res)
+          this.$http.Backend.isAggrePass(params).then((res) => {
+            console.log(res)
+            if (!res.code) {
               this.checkPending(this.params)
               this.dialogFormVisible_checkbox = false // 关闭弹窗
               this.drawerApproval = false // 关闭抽屉
@@ -977,12 +1038,8 @@ export default {
                 message: '拒绝审核通过',
                 type: 'success'
               })
-
-              // this.$emit('result', 'third')
-            })
-            .catch((err) => {
-              this.$message(err)
-            })
+            }
+          })
         } else {
           return false
         }
@@ -994,13 +1051,6 @@ export default {
       this.version = ''
       this.currentType = ''
     },
-    // 销售部门搜索
-    getSeachePart(val) {
-      Object.assign(this.params, { keyword: val })
-      this.params.page = 1
-      this.currentPage = 1
-      this.checkPending(this.params)
-    },
     // 查询审批类型判断
     getcheckType(val) {
       if (val === 'PROMOTIONS') {
@@ -1008,13 +1058,28 @@ export default {
       } else {
         this.checkboxChoose = false
       }
-      console.log(val, 'val====')
+      // external_0课时退费(显隐)
+      if (val === 'REFUND') {
+        this.isRefund = 1
+      } else {
+        this.isRefund = 0
+        this.params.isZero = ''
+        this.xx = ''
+      }
+
       Object.assign(this.params, { type: val })
       this.type_lk = val
       console.log(this.type_lk)
 
       this.currentPage = 1
       this.params.page = 1
+      this.checkPending(this.params)
+    },
+    // 查询类型是退款出现的0课时选择
+    zeroChange(val) {
+      this.params.page = 1
+      this.currentPage = 1
+      Object.assign(this.params, { isZero: val })
       this.checkPending(this.params)
     },
     // 新加手机号
@@ -1046,21 +1111,17 @@ export default {
             staffId: this.staffId,
             staffName: this.staffName
           }
-          this.$http.Backend.isAggrePass(params)
-            .then((res) => {
-              this.checkPending(this.params)
-              this.drawerApproval = false
-              this.handleCloseDraw()
-              this.$message({
-                message: '拒绝审核通过',
-                type: 'success'
-              })
+          this.$http.Backend.isAggrePass(params).then((res) => {
+            this.checkPending(this.params)
+            this.drawerApproval = false
+            this.handleCloseDraw()
+            this.$message({
+              message: '拒绝审核通过',
+              type: 'success'
+            })
 
-              this.$emit('result', 'third')
-            })
-            .catch((err) => {
-              this.$message(err)
-            })
+            this.$emit('result', 'third')
+          })
         })
         .catch((err) => {
           console.log(err)
@@ -1076,7 +1137,8 @@ export default {
       const versionBool =
         this.isStaffId &&
         this.drawerApprovalDeatail.mode === 'DEFAULT' &&
-        this.drawerApprovalDeatail.type === 'MATERIALS'
+        (this.drawerApprovalDeatail.type === 'EXPERIENCE_MATERIALS' ||
+          this.drawerApprovalDeatail.type === 'SYSTEM_MATERIALS')
       if (versionBool && (this.version === '' || version)) {
         this.$message('请选择版本号')
         return
@@ -1101,7 +1163,7 @@ export default {
           }
           this.$http.Backend.isAggrePass(params)
             .then((res) => {
-              if (res && res.payload) {
+              if (!res.code) {
                 this.checkPending(this.params)
                 this.drawerApproval = false
                 this.$root.$emit('lk', '')
@@ -1109,7 +1171,6 @@ export default {
                   message: '同意审核通过',
                   type: 'success'
                 })
-                // this.$emit('result', 'third')
               } else {
                 this.$root.$emit('lk', '')
               }
@@ -1192,6 +1253,7 @@ export default {
             // 对传过来的对象做处理
             console.log(this.drawerApprovalDeatail)
             this.drawerApproval = true
+            this.userId_wandan = res.payload.userId // 挽救单子表单提交用到
           }
         })
       }
@@ -1464,55 +1526,62 @@ export default {
         this.type_lk === 'REFUND' &&
         (this.positionIdlk === '3' || this.positionIdlk === '4')
       ) {
-        Object.assign(params, { page: 1, size: 999 })
+        Object.assign(params, { page: 1, size: 300 })
       }
       console.log(params, 'paramsparamsparams')
-      this.$http.Backend.checkListPending(params).then((res) => {
-        if (res && res.payload && res.payload.content) {
-          const zancunArr = res.payload.content.map((item) => {
-            const zhaiyao = item.abstractContent.split('^')
-            item.repiarContent = zhaiyao[0]
-            item.period = zhaiyao[1]
-            item.receptContent = zhaiyao[2]
-            item.reason = zhaiyao[3]
-            item.openTime = timestamp(item.ctime, 2)
-            item.approveTime = timestamp(item.endTime, 2)
-            item.applyDepartment = ''
-            return item
-          })
-          // 重写部门名称
-          const idArr = this.tableData.map((item) => item.applyId)
-          this.$http.Backend.changeDepart(idArr).then(
-            ({ data: { TeacherDepartmentRelationList } }) => {
-              console.info('lklk-待审核', idArr, TeacherDepartmentRelationList)
-              if (TeacherDepartmentRelationList.length) {
-                TeacherDepartmentRelationList.forEach((item, index) => {
-                  this.tableData.forEach((itemx, indexX) => {
-                    if (item.teacher_id === itemx.applyId) {
-                      itemx.applyDepartment = item.department.name
-                    }
-                  })
-                })
-              }
+      this.$http.Backend.checkListPending(params)
+        .then(async (res) => {
+          if (res && res.payload && res.payload.content) {
+            const zancunArr = res.payload.content.map((item) => {
+              const zhaiyao = item.abstractContent.split('^')
+              item.repiarContent = zhaiyao[0]
+              item.period = zhaiyao[1]
+              item.receptContent = zhaiyao[2]
+              item.reason = zhaiyao[3]
+              item.openTime = timestamp(item.ctime, 2)
+              item.approveTime = timestamp(item.endTime, 2)
+              // item.applyDepartment = ''
+              return item
+            })
+            // 重写部门名称
+            // const idArr = this.tableData.map((item) => item.applyId)
+            // this.$http.Backend.changeDepart(idArr).then(
+            //   ({ data: { TeacherDepartmentRelationList } }) => {
+            //     console.info('lklk-待审核', idArr, TeacherDepartmentRelationList)
+            //     if (TeacherDepartmentRelationList.length) {
+            //       TeacherDepartmentRelationList.forEach((item, index) => {
+            //         this.tableData.forEach((itemx, indexX) => {
+            //           if (item.teacher_id === itemx.applyId) {
+            //             itemx.applyDepartment = item.department.name
+            //           }
+            //         })
+            //       })
+            //     }
+            //   }
+            // )
+            // lk 为3,4 前端单独筛选下
+            if (this.type_lk === 'REFUND' && this.positionIdlk === '4') {
+              this.tableData = zancunArr.filter(
+                (item) => item.periodAlready === '0'
+              )
+              this.totalElements = this.tableData.length
+            } else if (this.type_lk === 'REFUND' && this.positionIdlk === '3') {
+              this.tableData = zancunArr.filter(
+                (item) => item.periodAlready !== '0'
+              )
+              this.totalElements = this.tableData.length
+            } else {
+              this.tableData = zancunArr
+              this.totalElements = res.payload.totalElements
             }
-          )
-          // lk 为3,4 前端单独筛选下
-          if (this.type_lk === 'REFUND' && this.positionIdlk === '4') {
-            this.tableData = zancunArr.filter(
-              (item) => item.periodAlready === '0'
-            )
-            this.totalElements = this.tableData.length
-          } else if (this.type_lk === 'REFUND' && this.positionIdlk === '3') {
-            this.tableData = zancunArr.filter(
-              (item) => item.periodAlready !== '0'
-            )
-            this.totalElements = this.tableData.length
-          } else {
-            this.tableData = zancunArr
-            this.totalElements = res.payload.totalElements
           }
-        }
-      })
+        })
+        .finally(() => {
+          // 重置 page: 1,size: 20  影响了this.params
+          if (this.type_lk === 'REFUND') {
+            Object.assign(this.params, { page: 1, size: 20 })
+          }
+        })
     },
     // 调期调级调班的drawer同意或拒绝
     adjustDrawerPass(type) {
@@ -1608,7 +1677,9 @@ export default {
   }
   .time {
     display: flex;
+    justify-content: flex-start;
     align-items: center;
+    flex-wrap: wrap;
   }
   // 是否三点
   .disnone {

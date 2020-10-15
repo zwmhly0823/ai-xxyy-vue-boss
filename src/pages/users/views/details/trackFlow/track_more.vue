@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-07-20 16:38:13
  * @LastEditors: liukun
- * @LastEditTime: 2020-07-27 18:20:08
+ * @LastEditTime: 2020-09-21 20:33:04
 -->
 <template>
   <el-drawer :visible.sync="drawer" size="35%" :destroy-on-close="true">
@@ -18,18 +18,27 @@
       <section class="flower_item" v-for="item of tableData" :key="item.ctime">
         <div class="upset_24col_space_between padding-right15">
           <div>
-            <el-tag size="small" v-if="item.teacherInfo.duty_id === '1'"
+            <el-tag
+              size="small"
+              v-if="item.teacherInfo && item.teacherInfo.duty_id === '1'"
               >CC</el-tag
             >
             <el-tag
               size="small"
               type="danger"
-              v-else-if="item.teacherInfo.duty_id === '2'"
+              v-else-if="item.teacherInfo && item.teacherInfo.duty_id === '2'"
               >CT</el-tag
             >
-            <span style="margin-left:10px">{{
-              item.teacherInfo.realname + item.teacherInfo.departmentInfo.name
-            }}</span>
+            <span style="margin-left:10px"
+              >{{
+                (item.teacherInfo && item.teacherInfo.realname) ||
+                  (item.staffInfo && item.staffInfo.real_name)
+              }}{{
+                item.teacherInfo &&
+                  item.teacherInfo.departmentInfo &&
+                  item.teacherInfo.departmentInfo.name
+              }}</span
+            >
           </div>
           <div>
             <svg
@@ -63,6 +72,9 @@
         </div>
         <div class="upset_24col_space_between padding-right15 margin22">
           <span class="color-gray">{{ item.point_type }}</span>
+          <el-tag v-if="item.label_text" type="warning" size="mini">{{
+            item.label_text
+          }}</el-tag>
           <span class="color-gray">{{ item.ctime }}</span>
         </div>
         <div class="upset_24col_space_between padding-right15">
@@ -89,6 +101,12 @@
 import { formatDate } from '@/utils/mini_tool_lk'
 export default {
   name: 'track_more',
+  props: {
+    changeSubject: {
+      type: Number,
+      required: true
+    }
+  },
   data() {
     return {
       drawer: false,
@@ -118,6 +136,7 @@ export default {
           UserFollowLogPage: { content, totalElements }
         }
       } = await this.$http.User.getTrackList({
+        subject: this.changeSubject,
         uid: this.$route.params.id,
         size,
         page
@@ -136,13 +155,28 @@ export default {
             '2': 'CF04',
             '3': 'CF08',
             '4': '老生覆盖',
-            '5': '日常沟通'
+            '5': '日常沟通',
+            '6': '退费挽单'
           }
           item.point_type = obj[item.point_type]
           item.ctime = formatDate(+item.ctime)
         })
         this.tableData = content
         console.info('2号list更新')
+      } else {
+        this.pageSize = 10
+        this.currentPage = 1
+        this.allDigit = 0
+        this.tableData = []
+      }
+    }
+  },
+  watch: {
+    changeSubject: {
+      immediate: false,
+      deep: true,
+      handler(newValue, oldValue) {
+        this.getTrackList()
       }
     }
   },
@@ -150,6 +184,7 @@ export default {
     this.getTrackList()
   },
   mounted() {
+    // 详情页新增记录刷新列表
     this.$root.$on('reload', (r) => {
       this.getTrackList()
     })

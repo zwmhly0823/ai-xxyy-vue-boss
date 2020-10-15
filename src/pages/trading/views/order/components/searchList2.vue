@@ -3,8 +3,8 @@
  * @version: 1.0.0
  * @Author: liukun
  * @Date: 2020-04-25 17:24:23
- * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-08-13 21:30:04
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-09-21 21:36:43
  -->
 <template>
   <el-card
@@ -52,11 +52,12 @@
       </el-form-item>
       <br />
 
-      <el-form-item label="下单时间:" :class="{ [$style.marginer]: true }">
+      <el-form-item :label="timeLabel" :class="{ [$style.marginer]: true }">
         <DatePicker
           :class="[$style.fourPoint, 'allmini']"
+          :name="timeName"
+          :key="payStatus"
           @result="getDate"
-          name="ctime"
         >
           <template v-slot:buttons>
             <div class="row_colum margin_l10">
@@ -134,7 +135,6 @@
           />
           <!-- BOSS 显示单双周选择 -->
           <trial-course-type
-            v-if="!teacherId"
             class="margin_l10"
             name="packages_id"
             @result="getTrialCourseType"
@@ -192,13 +192,20 @@ import GroupSell from '@/components/MSearch/searchItems/groupSell'
 import Department from '@/components/MSearch/searchItems/department'
 import SearchTeamName from '@/components/MSearch/searchItems/searchTeamName'
 import SearchStage from '@/components/MSearch/searchItems/searchStage'
-import TrialCourseType from '@/components/MSearch/searchItems/trialCourseType'
+import TrialCourseType from '@/components/MSearch/searchItems/trialClassType'
 import { downloadHandle } from '@/utils/download'
 import SearchPhoneAndUsername from '@/components/MSearch/searchItems/searchPhoneAndUsername'
 import SimpleSelect from '@/components/MSearch/searchItems/simpleSelect'
 import { isToss } from '@/utils/index'
 
 export default {
+  props: {
+    // 订单支付状态 3-已完成
+    payStatus: {
+      type: String,
+      default: '3'
+    }
+  },
   components: {
     // orderStatus,
     hardLevel,
@@ -247,7 +254,32 @@ export default {
       chooseExport: '1'
     }
   },
-  computed: {},
+  computed: {
+    timeLabel() {
+      return this.payStatus === '3' ? '支付时间:' : '下单时间:'
+    },
+    timeName() {
+      return this.payStatus === '3' ? 'buytime' : 'ctime'
+    }
+  },
+  watch: {
+    payStatus(val) {
+      /**
+       * 切换支付状态时，清空支付时间/下单时间搜索条件
+       */
+      this.searchParams.forEach((item) => {
+        if (item.range) {
+          const time = item.range?.ctime || item.range?.buytime
+          if (time) {
+            delete item.range
+            for (let i = 0; i < 4; i++) {
+              this['cur' + i] = false
+            }
+          }
+        }
+      })
+    }
+  },
   methods: {
     // 切换手机/订单清空筛选项
     clearNum() {
@@ -278,7 +310,7 @@ export default {
       if (!res || !res.quick) this.currentBtn = null
       if (res.quick && this.currentBtn) this[`cur${this.currentBtn}`] = true
       delete res.quick
-      this.setSeachParmas(res, ['ctime'], 'range')
+      this.setSeachParmas(res, [this.timeName], 'range')
     },
     // 4点外移
     today() {
@@ -477,6 +509,7 @@ export default {
       }
 
       const query = this.$parent.$children[1].finalParams
+      query.subject = 0
       const fileTitle = dayjs(new Date()).format('YYYY-MM-DD')
       const fileTitleTime = dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss')
 

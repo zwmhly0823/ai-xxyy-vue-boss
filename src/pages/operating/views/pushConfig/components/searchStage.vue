@@ -122,7 +122,10 @@ export default {
       this.loading = true
       const queryParams = {
         bool: {
-          must: [{ wildcard: { 'period_name.keyword': `*${queryString}*` } }]
+          must: [
+            { wildcard: { 'period_name.keyword': `*${queryString}*` } },
+            { term: { subject: this.$store.getters.subjects.subjectCode } }
+          ]
         }
       }
       if (this.type) {

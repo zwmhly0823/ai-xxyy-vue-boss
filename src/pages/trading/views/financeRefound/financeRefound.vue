@@ -3,8 +3,8 @@
  * @version: 1.0.0
  * @Author: liukun
  * @Date: 2020-05-19 17:18:39
- * @LastEditors: liukun
- * @LastEditTime: 2020-08-06 16:28:44
+ * @LastEditors: zhangjianwen
+ * @LastEditTime: 2020-10-13 14:43:22
 -->
 <template>
   <section class="bianju10">
@@ -140,7 +140,7 @@
     <el-divider></el-divider>
     <div>
       <el-table :data="tableData" style="width: 100%">
-        <!-- <el-table-column label="用户信息" width="120">
+        <el-table-column label="用户信息" width="120">
           <template slot-scope="scope">
             <div class="usertext" @click="userHandle(scope.row)">
               {{ scope.row.userName ? scope.row.userName : '-' }}<br />{{
@@ -148,7 +148,7 @@
               }}
             </div>
           </template>
-        </el-table-column> -->
+        </el-table-column>
         <el-table-column label="订单编号-订单交易流水号" width="220">
           <template slot-scope="scope">
             <div>
@@ -314,7 +314,7 @@
             >{{ choutidata.refundRuleStr }}
           </el-col>
         </el-row>
-        <!-- <el-row v-if="choutidata.invoiceStatus !== ''">
+        <el-row v-if="choutidata.invoiceStatus !== ''">
           <el-col :span="4">开票状态:</el-col>
           <el-col :span="18" :offset="2"
             ><span v-if="choutidata.invoiceStatus == 'DEFAULT'">待开票</span>
@@ -343,7 +343,7 @@
         <el-row v-if="choutidata.invoiceCode !== ''">
           <el-col :span="4">发票号码:</el-col>
           <el-col :span="18" :offset="2">{{ choutidata.invoiceCode }} </el-col>
-        </el-row> -->
+        </el-row>
         <el-row v-if="choutidata.refundReason !== ''">
           <el-col :span="4">退款原因:</el-col>
           <el-col :span="18" :offset="2">{{ choutidata.refundReason }} </el-col>

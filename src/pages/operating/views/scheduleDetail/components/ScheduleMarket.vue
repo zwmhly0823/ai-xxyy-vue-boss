@@ -4,7 +4,7 @@
  * @Author: shentong
  * @Date: 2020-04-02 16:08:02
  * @LastEditors: Shentong
- * @LastEditTime: 2020-07-15 16:39:26
+ * @LastEditTime: 2020-10-13 20:38:50
  -->
 <template>
   <div>
@@ -43,7 +43,7 @@
           <el-table-column
             prop="departmentName"
             label="部门"
-            width="140"
+            width="100"
             align="center"
           >
           </el-table-column>
@@ -70,12 +70,24 @@
           ></el-table-column>
           <el-table-column
             align="center"
+            prop="intruNum"
+            label="转介绍招生数"
+            width="100"
+          ></el-table-column>
+          <el-table-column
+            align="center"
+            prop="marketStuNum"
+            label="市场招生数"
+            width="100"
+          ></el-table-column>
+          <el-table-column
+            align="center"
             prop="realSumTeamSize"
             label="实际招生数"
           ></el-table-column>
           <el-table-column
             align="center"
-            prop="enrollRate"
+            prop="enrollStuRate"
             label="招生完成率"
           ></el-table-column>
           <el-table-column
@@ -96,16 +108,14 @@
             width="120"
           ></el-table-column>
           <el-table-column
-            prop="id"
+            prop="courseCategoryCHN"
             label="课程类型"
             width="120"
             align="center"
           >
-            <template slot-scope="scope">
-              <span v-if="scope.row.courseCategory == '0'">双周体验课</span>
-              <span v-if="scope.row.courseCategory == '2'">系统课</span>
-              <span v-if="scope.row.courseCategory == '3'">单周体验课</span>
-            </template>
+            <!-- <template slot-scope="scope">
+              <span>{{ courseCategoryCHN }}</span>
+            </template> -->
           </el-table-column>
         </ele-table>
       </div>
@@ -115,6 +125,7 @@
 
 <script>
 import EleTable from '@/components/Table/EleTable'
+import { COURSECATEGORY } from '@/utils/enums'
 export default {
   props: {
     paramsInfo: {
@@ -127,6 +138,12 @@ export default {
   },
   data() {
     return {
+      courseCategory: {
+        0: '双周体验课',
+        2: '年系统课',
+        3: '单周体验课',
+        4: '半年系统课'
+      },
       courseType: '0',
       totalElements: 0,
       flags: {
@@ -159,7 +176,7 @@ export default {
           ...val,
           pageNum: 1
         }
-        console.log('this.tabQuery', this.tabQuery)
+        // console.log('this.tabQuery', this.tabQuery)
         this.init()
         // 表格内统计
         this.getScheduleDetailStatistic()
@@ -180,6 +197,40 @@ export default {
       try {
         const _list = await this.getScheduleDetailList()
         const { content = [] } = _list
+        const idsArr = []
+        content.forEach((item) => {
+          idsArr.push(item.teacherId)
+        })
+        const query = {
+          ids: idsArr.join(','),
+          term: this.paramsInfo.period
+        }
+        // 转介绍招生数
+        const intruStuNumRes = await this.getIntroduceCountByIds(query)
+        intruStuNumRes.forEach((item) => {
+          content.forEach((value) => {
+            if (item.id === value.teacherId) {
+              value.intruNum = item.count || 0
+              // 市场招生数
+              value.marketStuNum = value.realSumTeamSize - value.intruNum
+              // 招生完成率
+              value.enrollStuRate =
+                ((value.marketStuNum * 100) / value.planSumTeamSize).toFixed(
+                  1
+                ) + '%'
+            }
+          })
+        })
+
+        content.forEach((value) => {
+          let { courseCategory, courseCategoryCHN = '' } = value
+          courseCategory.split(',').forEach((course) => {
+            courseCategoryCHN += ' ' + COURSECATEGORY(course)
+          })
+
+          value.courseCategoryCHN = courseCategoryCHN
+        })
+
         this.tableData = content
 
         this.totalElements = +_list.totalElements
@@ -239,6 +290,19 @@ export default {
         this.flags.loading = false
         return new Error(err)
       }
+    },
+    // 转介绍招生数
+    getIntroduceCountByIds(query) {
+      return this.$http.Operating.getIntroduceCountByIds(query)
+        .then((res) => {
+          if (res.status === 'OK') {
+            return res.payload
+          }
+          return false
+        })
+        .catch(() => {
+          return false
+        })
     },
     // 分页
     pageChange_handler(page) {

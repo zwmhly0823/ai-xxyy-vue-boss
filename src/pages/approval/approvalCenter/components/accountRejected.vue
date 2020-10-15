@@ -1,10 +1,6 @@
 <template>
   <div class="container" v-loading="pageLoading">
     <div class="filter-box">
-      <tab-time-select
-        @result="getSeacherTime"
-        class="filter-item"
-      ></tab-time-select>
       <el-select
         clearable
         class="filter-status-select-class"
@@ -21,9 +17,25 @@
         >
         </el-option>
       </el-select>
-      <search-part class="filter-item" @result="getSeachePart" />
-      <!-- <course-team class="filter-item" @result="getTeamId" /> -->
-      <searchPhone name="userTel" @result_lk="getPhone" class="filter-item" />
+      <searchPhone
+        name="userTel"
+        @result_lk="getPhone"
+        style="margin-right:20px"
+      />
+      <department
+        style="margin-right:20px"
+        name="DepartmentIds"
+        placeholder="全部部门"
+        :onlyDept="1"
+        @result="getSearchData1"
+      />
+      <group-sell
+        style="margin-right:20px"
+        @result="getSearchData2"
+        :name="'groupSell'"
+        tip="请选择老师"
+      />
+      <tabTimeSelect style="margin-left:0px" @result="getSeacherTime" />
     </div>
 
     <el-table :data="tableData" style="width: 100%" highlight-current-row>
@@ -103,10 +115,10 @@
 </template>
 
 <script>
+import Department from '@/components/MSearch/searchItems/department'
+import GroupSell from './groupSell'
 import searchPhone from '@/components/MSearch/searchItems/searchPhone.vue'
 import tabTimeSelect from './timeSearch'
-import searchPart from './searchPart'
-// import courseTeam from './courseTeam'
 import MPagination from '@/components/MPagination/index.vue'
 import { getStaffInfo } from '../common'
 import { timestamp } from '@/utils/index'
@@ -115,12 +127,12 @@ import _ from 'lodash'
 export default {
   name: 'accountRejected',
   components: {
+    Department,
+    GroupSell,
     searchPhone,
     tabTimeSelect,
     adjustDrawer,
-    MPagination,
-    searchPart
-    // courseTeam
+    MPagination
   },
   data() {
     return {
@@ -139,10 +151,11 @@ export default {
       // 列表数据的请求参数
       params: {
         type: 'REFUND',
-        keyword: '',
         status: '',
         startTime: '',
         endTime: '',
+        departmentIds: '', // 新添部门
+        teacherIds: '', // 新添老师
         page: 1,
         size: 20,
         isFinance: 1,
@@ -182,6 +195,18 @@ export default {
     this.initList()
   },
   methods: {
+    getSearchData1(val) {
+      console.info('选择部门获取值:', val)
+      this.params.departmentIds = val.DepartmentIds
+        ? String(val.DepartmentIds)
+        : ''
+      this.initListData(this.params)
+    },
+    getSearchData2(val) {
+      console.info('选择老师获取值:', val)
+      this.params.teacherIds = val.groupSell ? String(val.groupSell) : ''
+      this.initListData(this.params)
+    },
     initUserInfo() {
       const staffData = getStaffInfo()
       this.staffId = staffData.staffId
@@ -221,6 +246,11 @@ export default {
           width: '180'
         },
         {
+          prop: 'approvalName',
+          label: '审批人',
+          width: '180'
+        },
+        {
           prop: 'endTime',
           label: '审批时间',
           width: '180'
@@ -256,30 +286,30 @@ export default {
             this.currentPage = res.payload.number - 0 + 1
             this.totalElements = res.payload.totalElements
             this.tableData.forEach((item, index) => {
-              item.applyDepartment = ''
+              // item.applyDepartment = ''
             })
             // 个别数据做文字化处理
             this.tableData = this.dataToText(res.payload.content)
             // 重写部门名称
-            const idArr = this.tableData.map((item) => item.applyId)
-            this.$http.Backend.changeDepart(idArr).then(
-              ({ data: { TeacherDepartmentRelationList } }) => {
-                console.info(
-                  'lklk-财务拒绝',
-                  idArr,
-                  TeacherDepartmentRelationList
-                )
-                if (TeacherDepartmentRelationList.length) {
-                  TeacherDepartmentRelationList.forEach((item, index) => {
-                    this.tableData.forEach((itemx, indexX) => {
-                      if (item.teacher_id === itemx.applyId) {
-                        itemx.applyDepartment = item.department.name
-                      }
-                    })
-                  })
-                }
-              }
-            )
+            // const idArr = this.tableData.map((item) => item.applyId)
+            // this.$http.Backend.changeDepart(idArr).then(
+            //   ({ data: { TeacherDepartmentRelationList } }) => {
+            //     console.info(
+            //       'lklk-财务拒绝',
+            //       idArr,
+            //       TeacherDepartmentRelationList
+            //     )
+            //     if (TeacherDepartmentRelationList.length) {
+            //       TeacherDepartmentRelationList.forEach((item, index) => {
+            //         this.tableData.forEach((itemx, indexX) => {
+            //           if (item.teacher_id === itemx.applyId) {
+            //             itemx.applyDepartment = item.department.name
+            //           }
+            //         })
+            //       })
+            //     }
+            //   }
+            // )
           } else {
             this.tableData = []
           }
@@ -314,26 +344,6 @@ export default {
       }
       this.initListData(this.params)
     },
-    getSeachePart: _.debounce(function(val) {
-      if (!val) {
-        this.params.keyword = ''
-      } else {
-        this.params.keyword = val
-      }
-      this.initListData(this.params)
-    }, 500),
-    // getTeamId(val) {
-    //   if (val) {
-    //     Object.assign(this.params, {
-    //       managementType: val.teamSchedule.managementType,
-    //       period: val.teamSchedule.period
-    //     })
-    //   } else {
-    //     this.params.managementType = ''
-    //     this.params.period = ''
-    //   }
-    //   this.initListData(this.params)
-    // },
     clickStatusButton(val) {
       // console.log(val)
       this.adjustDrawerData.loading = true
@@ -534,12 +544,10 @@ export default {
 
 <style lang="scss" scoped>
 .filter-box {
-  padding: 20px;
-  .filter-item {
-    display: inline-block;
-    margin: 0;
-    margin-right: 30px;
-  }
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  flex-wrap: wrap;
   .filter-status-select-class {
     width: 130px;
     margin-right: 20px;

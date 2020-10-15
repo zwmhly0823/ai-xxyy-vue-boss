@@ -3,8 +3,8 @@
  * @version: 1.0.0
  * @Author: YangJiyong
  * @Date: 2020-06-22 12:08:17
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-07-29 21:56:53
+ * @LastEditors: zhangjianwen
+ * @LastEditTime: 2020-09-11 13:48:56
 -->
 <template>
   <div class="search-mobile d-flex align-center">
@@ -55,6 +55,7 @@
 <script>
 import { debounce } from 'lodash'
 import axios from '@/api/axiosConfig'
+import { injectSubject } from '@/utils/index'
 export default {
   props: {
     customStyle: {
@@ -88,6 +89,19 @@ export default {
     isHidden: {
       type: Boolean,
       default: true
+    },
+    // 是否增加扩展配置，抛出id使用
+    extension: {
+      type: Boolean,
+      default: false
+    },
+    userStatusKey: {
+      type: String,
+      default: 'user_status'
+    },
+    userNumKey: {
+      type: String,
+      default: 'user_num_text'
     }
   },
   data() {
@@ -105,7 +119,8 @@ export default {
           label: '学员ID'
         }
       ],
-      dataList: []
+      dataList: [],
+      uid: ''
     }
   },
   computed: {
@@ -125,6 +140,7 @@ export default {
   methods: {
     handleChange() {
       this.value = ''
+      this.uid = ''
       this.$emit('result', '')
     },
     getData(value = '') {
@@ -135,19 +151,19 @@ export default {
       // 系统课
       if (this.type === '1') {
         range = {
-          user_status: { gte: 2 }
+          [`${this.userStatusKey}`]: { gte: 2 }
         }
       }
       // 体验课
       if (this.type === '0') {
-        range = { user_status: ['1', '2'] }
+        range = { [`${this.userStatusKey}`]: ['1', '2'] }
       }
       // 全部
-      if (this.type === '2') {
-        range = {
-          user_status: { gt: 0 }
-        }
-      }
+      // if (this.type === '2') {
+      //   range = {
+      //     [`${this.userStatusKey}`]: { gte: 0 }
+      //   }
+      // }
       const query = { ...range }
       //   const query = {}
       if (this.searchType === 0) {
@@ -156,21 +172,27 @@ export default {
         })
       } else {
         Object.assign(query, {
-          'user_num_text.like': { 'user_num_text.keyword': `*${val}*` }
+          [`${this.userNumKey}.like`]: {
+            [`${this.userNumKey}.keyword`]: `*${val}*`
+          }
         })
       }
       const q = JSON.stringify(query)
 
       const sort = `{"id":"desc"}`
+      // 搜索全部学员时，传 u_id
+      const exParams =
+        this.tablename === 'UserSubjectStatisticsList' ? 'u_id' : ''
       axios
         .post('/graphql/v1/toss', {
           query: `{
                   ${this.tablename}(query: ${JSON.stringify(
-            q
+            injectSubject(q)
           )}, sort: ${JSON.stringify(sort)}){
                     id
                     user_num_text
                     mobile
+                    ${exParams}
                   }
                 }`
         })
@@ -184,8 +206,15 @@ export default {
     },
     // 获取选中的
     onChange(data) {
-      console.log(data)
-      this.$emit('result', data ? { [this.nameKey]: data } : '')
+      const _list = [...this.dataList]
+      for (const item of _list) {
+        if (item.mobile === data || item.user_num_text === data) {
+          this.uid = item.u_id
+        }
+      }
+      !this.extension
+        ? this.$emit('result', data ? { [this.nameKey]: data } : '')
+        : this.$emit('result', data ? { uid: this.uid } : '')
     }
   }
 }

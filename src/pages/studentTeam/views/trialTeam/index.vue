@@ -448,16 +448,6 @@ export default {
     },
     // 组件emit
     searchChange(res) {
-      // 判断当前社群销售的老师是否属于当前老师权限
-      // const { teacherId = '' } = res
-      // if (teacherId && !this.tabQuery.teacherIdArr.includes(teacherId)) {
-      //   this.$message({
-      //     message: '当前社群销售不属于该老师团队',
-      //     type: 'warning'
-      //   })
-      //   return
-      // }
-
       this.initSearchData(res, true)
       this.getTrialTeamList(this.tabQuery)
     },
@@ -488,12 +478,7 @@ export default {
         teacherId,
         page: 1
       })
-      // this.getTrialTeamList(this.tabQuery)
     },
-    // async getAllTeacherByRole(params) {
-    //   const teacherIds = await this.$http.Permission.getAllTeacherByRole(params)
-    //   this.tabQuery.teacherIdArr = teacherIds
-    // },
     // 条件查询列表
     async getTrialTeamList(params) {
       this.flags.loading = true
