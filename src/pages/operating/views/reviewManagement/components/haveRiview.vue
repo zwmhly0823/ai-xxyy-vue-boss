@@ -3,8 +3,8 @@
  * @Descripttion:
  * @Author: songyanan
  * @Date: 2020-05-11 14:30:00
- * @LastEditors: songyanan
- * @LastEditTime: 2020-05-16 12:44:20
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-10-15 21:45:33
  */
  -->
 <template>
@@ -15,13 +15,13 @@
       element-loading-text="拼命加载中"
       :data="list"
     >
-      <el-table-column label="作品" width="300" align="center">
+      <el-table-column label="作品" width="100" align="center">
         <template slot-scope="scope">
           <el-image
             class="works-img"
-            :src="scope.row.taskImage"
+            :src="scope.row.task_image"
             :lazy="true"
-            :preview-src-list="[scope.row.taskImage]"
+            :preview-src-list="[scope.row.task_image]"
             :z-index="1001"
           >
           </el-image>
@@ -29,35 +29,55 @@
       </el-table-column>
       <el-table-column label="点评" width="180" align="center">
         <template slot-scope="scope">
-          <div
+          <!-- <div
             class="audio-container"
             v-for="(audio, idx) in soundArr(scope.row.taskComments)"
             :key="idx"
           >
             <audio :src="audio" style="height: 47px" controls></audio>
+          </div> -->
+          <div class="audio-container">
+            <audio
+              :src="scope.row.sound_comment"
+              style="height: 47px"
+              controls
+            ></audio>
           </div>
         </template>
       </el-table-column>
       <el-table-column label="点评分类" align="center" width="180">
         <template slot-scope="scope">
-          <div
+          <!-- <div
             v-for="(item, index) in scope.row.taskComments"
             :key="index"
             class="review-type"
           >
             {{ item.type === 0 ? '手动点评' : '智能点评' }}
+          </div> -->
+          <div class="review-type">
+            {{ scope.row.type === 0 ? '手动点评' : '智能点评' }}
           </div>
         </template>
       </el-table-column>
       <el-table-column label="用户信息" align="center" width="180">
         <template slot-scope="scope">
-          <div class="review-type">{{ scope.row.userMobile }}</div>
-          <div class="review-type">{{ scope.row.weixinNickname }}</div>
+          <p>
+            {{ (scope.row.userExtends && scope.row.userExtends.mobile) || '-' }}
+          </p>
+          <p>
+            {{
+              (scope.row.userExtends &&
+                scope.row.userExtends.wechat_nikename) ||
+                '-'
+            }}
+          </p>
         </template>
       </el-table-column>
       <el-table-column label="班级" align="center" width="180">
         <template slot-scope="scope">
-          <div class="review-type">{{ scope.row.teamName }}</div>
+          <div class="review-type">
+            {{ (scope.row.teamInfo && scope.row.teamInfo.team_name) || '-' }}
+          </div>
         </template>
       </el-table-column>
       <el-table-column label="课程" align="center" width="180">
@@ -128,21 +148,34 @@ export default {
       totalElements: 0,
       radio: '',
       timestamp: timestamp,
-      loading: true
+      loading: true,
+      searchParams: {}
     }
   },
   mounted() {
     this.initList(this.number)
   },
   methods: {
-    async initList(number) {
+    async initList(params = this.searchParams, number = this.query.pageNum) {
       try {
-        const res = await this.$http.RiviewCourse.getHaveRiview(number)
-        if (res.code === 0) {
-          this.list = res.payload.content
-          this.totalElements = Number.parseInt(res.payload.totalElements)
-          this.loading = false
+        const res = await this.$http.RiviewCourse.getHaveRiviewV2(
+          params,
+          number
+        )
+        console.log(res)
+        if (res?.data?.StudentTaskRelationCommentDetailPage) {
+          this.list =
+            res.data.StudentTaskRelationCommentDetailPage?.content || []
+          this.totalElements =
+            +res.data.StudentTaskRelationCommentDetailPage?.totalElements || 0
         }
+        this.loading = false
+
+        // if (res.code === 0) {
+        //   this.list = res.payload.content
+        //   this.totalElements = Number.parseInt(res.payload.totalElements)
+        //   this.loading = false
+        // }
       } catch (error) {
         console.log(error)
       }
@@ -185,8 +218,8 @@ export default {
     margin: 0 0 20px 0;
   }
   .works-img {
-    width: 200px;
-    height: 300px;
+    width: 100px;
+    height: 150px;
     display: block;
     margin: 0 auto;
   }

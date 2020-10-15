@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-08-19 21:14:08
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-09-24 11:19:01
+ * @LastEditTime: 2020-10-15 20:37:48
  */
 import { removeToken } from '@/utils/auth'
 import { baseUrl } from '@/utils/index'
@@ -331,6 +331,14 @@ const bearArt = [
         name: 'channelManagement',
         meta: {
           title: '渠道管理',
+          module: 'operating'
+        }
+      },
+      {
+        path: '/comment',
+        name: 'comment',
+        meta: {
+          title: '语音库',
           module: 'operating'
         }
       },
