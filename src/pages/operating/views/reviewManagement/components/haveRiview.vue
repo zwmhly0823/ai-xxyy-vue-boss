@@ -4,7 +4,7 @@
  * @Author: songyanan
  * @Date: 2020-05-11 14:30:00
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-10-15 21:45:33
+ * @LastEditTime: 2020-10-15 22:29:03
  */
  -->
 <template>
@@ -85,41 +85,72 @@
           <div class="review-type">{{ scope.row.courseName }}</div>
         </template>
       </el-table-column>
-      <el-table-column label="辅导老师" align="center" width="180">
+      <el-table-column label="辅导老师" align="center" width="100">
         <template slot-scope="scope">
-          <div class="review-type">{{ scope.row.teacherRealName }}</div>
+          <div class="review-type">
+            {{
+              (scope.row.assistantTeacherInfo &&
+                scope.row.assistantTeacherInfo.realname) ||
+                '-'
+            }}
+          </div>
         </template>
       </el-table-column>
-      <el-table-column label="兼职老师" align="center" width="80">
-        <!-- <template slot-scope="scope">
-          <div class="review-type">{{ scope.row.teacherRealName }}</div>
-        </template> -->
+      <el-table-column label="兼职老师" align="center" width="100">
+        <template slot-scope="scope">
+          <div class="review-type">
+            {{
+              (scope.row.parttimeTeacherInfo &&
+                scope.row.parttimeTeacherInfo.realname) ||
+                '-'
+            }}
+          </div>
+        </template>
       </el-table-column>
       <el-table-column label="点评老师" align="center" width="80">
-        <!-- <template slot-scope="scope">
-          <div class="review-type">{{ scope.row.teacherRealName }}</div>
-        </template> -->
+        <template slot-scope="scope">
+          <div class="review-type">
+            {{
+              (scope.row.commentTeacherInfo &&
+                scope.row.commentTeacherInfo.realname) ||
+                '-'
+            }}
+          </div>
+        </template>
       </el-table-column>
       <el-table-column label="上传日期" align="center" width="180">
         <template slot-scope="scope">
-          <div class="review-type">{{ timestamp(scope.row.ctime, 2) }}</div>
+          <div class="review-type">
+            {{ scope.row.upload_time }}
+            {{ timestamp(scope.row.upload_time, 's') || '-' }}
+          </div>
         </template>
       </el-table-column>
       <el-table-column label="点评日期" align="center" width="180">
         <template slot-scope="scope">
-          <div
+          <!-- <div
             v-for="(item, index) in scope.row.taskComments"
             :key="index"
             class="review-type"
           >
-            {{ timestamp(item.ctime, 2) }}
+            {{ timestamp(item.ctime. 's') || '-' }}
+          </div> -->
+          <div class="review-type">
+            {{ timestamp(scope.row.comment_time, 's') || '-' }}
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="听点评" align="center" width="100">
-        <!-- <template slot-scope="scope">
-          <div class="review-type">{{ scope.row.teacherRealName }}</div>
-        </template> -->
+      <el-table-column label="听点评" align="center" width="180">
+        <template slot-scope="scope">
+          <div class="review-type">
+            {{
+              (scope.row.flagRecord &&
+                scope.row.flagRecord.ctime &&
+                timestamp(scope.row.flagRecord.ctime, 's')) ||
+                '未听点评'
+            }}
+          </div>
+        </template>
       </el-table-column>
     </el-table>
     <m-pagination
@@ -135,7 +166,7 @@
 </template>
 
 <script>
-import { timestamp } from '@/utils/index'
+import { formatData } from '@/utils/index'
 export default {
   data() {
     return {
@@ -147,7 +178,7 @@ export default {
       },
       totalElements: 0,
       radio: '',
-      timestamp: timestamp,
+      timestamp: formatData,
       loading: true,
       searchParams: {}
     }
@@ -162,7 +193,6 @@ export default {
           params,
           number
         )
-        console.log(res)
         if (res?.data?.StudentTaskRelationCommentDetailPage) {
           this.list =
             res.data.StudentTaskRelationCommentDetailPage?.content || []
