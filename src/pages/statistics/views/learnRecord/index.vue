@@ -4,7 +4,7 @@
  * @Author: zhangjianwen
  * @Date: 2020-07-09 15:02:59
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-10-13 23:15:57
+ * @LastEditTime: 2020-10-15 15:52:04
 -->
 <template>
   <div class="learn-record">
@@ -167,37 +167,23 @@ export default {
   watch: {
     lessonType(val, old) {
       this.currentPage = 1
-      this.$nextTick(() => {
-        this.getManagement().then(() => {
-          setTimeout(() => {
-            this.term = this.manageMentList[0].period
-            this.level = 'S1'
-            console.log('期数', this.term)
-            // this.getData(this.currentPage, val, this.level)
-          }, 300)
+      this.getManagement().then(() => {
+        this.$nextTick(() => {
+          this.term = this.manageMentList[0].period
+          this.level = 'S1'
+          console.log('期数', this.term)
         })
       })
     },
     term(val, old) {
-      if (val === '999') {
-        return false
-      }
       this.term = val
       this.currentPage = 1
       this.getData(this.currentPage, val, this.level)
     },
     level(val, old) {
-      // console.log('难度', val)
-      // this.level = val
-      // this.currentPage = 1
-      // this.getData(this.currentPage, this.term, val)
-      // if (this.dropName === '更多') {
-      //   return false
-      // } else {
-      //   this.level = val
-      //   this.currentPage = 1
-      //   this.getData(this.currentPage, this.term, val)
-      // }
+      this.level = val
+      this.currentPage = 1
+      this.getData(this.currentPage, this.term, val)
     }
   },
   created() {},
@@ -209,7 +195,6 @@ export default {
     })
   },
   methods: {
-    // 获取期数
     // 获取排期期数
     getManagement() {
       const params = {
@@ -272,7 +257,6 @@ export default {
             this.mangeFirst = handleData[0]
             this.manageMentHistoryList = handleData.slice(1)
             // this.manageMentHistoryList = manageMentHistoryList
-            console.log(this.manageMentHistoryList)
           } else {
             this.mangeFirst = handleData[0]
             this.manageMentHistoryList = handleData
@@ -284,14 +268,13 @@ export default {
             ]
             this.manageMentList = this.manageMentList.slice(0, 5)
           }
-          console.log('处理过的数据', this.manageMentHistoryList)
         }
       })
     },
     // 查询
     getData(page = this.currentPage, term = this.term, level = this.level) {
       this.recordList = []
-      // console.log(this.lessonType)
+
       if (+this.lessonType === 2) {
         return this.$http.LearnRecord.getStudentSystemRecordPage(
           page,
@@ -307,11 +290,8 @@ export default {
               const data = res.data.StudentSystemRecordOperatorStatisticsPage
               this.totalElements = Number(data.totalElements)
               this.totalPages = Number(data.totalPages)
-              console.log('数据量', this.recordList)
+
               this.recordList = data.content
-              // this.$nextTick(() => {
-              //   return ()
-              // })
             }
           })
           .catch(() => {})
@@ -338,12 +318,10 @@ export default {
     },
 
     handleCommand(command) {
-      console.log(command)
       this.term = command.period
       this.dropName = command.period_label
     },
     clearName() {
-      console.log(this.term)
       if (this.term === '999') {
         return
       }
