@@ -88,8 +88,10 @@
 </template>
 
 <script>
-import SearchPhone from '@/components/MSearch/searchItems/searchPhone'
 import _ from 'lodash'
+import SearchPhone from '@/components/MSearch/searchItems/searchPhone'
+import { SUP_LEVEL_UPPER, SUP_LEVEL_LIST_UPPER } from '@/utils/supList'
+
 export default {
   name: 'AdjustClass',
   components: {
@@ -831,7 +833,10 @@ export default {
     handleDoneClass(resData) {
       // 记录后面选择班级需要的stage
       this.formData.orderId.tempSatge = resData.term
-      this.formData.currentPeriod = `${resData.currentSuper}${resData.currentLevel}${resData.currentUnit}`
+      // this.formData.currentPeriod = `${resData.currentSuper}${resData.currentLevel}${resData.currentUnit}`
+      this.formData.currentPeriod = `${SUP_LEVEL_UPPER[resData.currentSuper]}${
+        resData.currentLevel
+      }${resData.currentUnit}`
       // 记录当前级别
       this.currentLevel = resData.currentSuper
       if (resData.remainingWeek <= 0) {
@@ -853,15 +858,27 @@ export default {
     handleAskforLevel() {
       // 先清空
       this.formData.targetSup = ''
-      const levelList = ['S1', 'S2', 'S3', 'S4', 'S5']
-      levelList.splice(levelList.indexOf(this.currentLevel), 1)
+      // const levelList = ['S1', 'S2', 'S3', 'S4', 'S5']
+      // levelList.splice(levelList.indexOf(this.currentLevel), 1)
+      // this.showData.content.forEach((item) => {
+      //   if (item.model === 'targetSup') {
+      //     item.options = []
+      //     levelList.forEach((lItem) => {
+      //       item.options.push({
+      //         label: lItem,
+      //         value: lItem
+      //       })
+      //     })
+      //   }
+      // })
+      const levelList = SUP_LEVEL_LIST_UPPER
       this.showData.content.forEach((item) => {
         if (item.model === 'targetSup') {
           item.options = []
           levelList.forEach((lItem) => {
             item.options.push({
-              label: lItem,
-              value: lItem
+              label: lItem.text,
+              value: lItem.id
             })
           })
         }

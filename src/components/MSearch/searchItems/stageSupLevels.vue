@@ -3,8 +3,8 @@
  * @version:
  * @Author: zhubaodong
  * @Date: 2020-03-24 18:50:54
- * @LastEditors: Shentong
- * @LastEditTime: 2020-04-30 20:05:43
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-10-15 15:45:16
  -->
 <template>
   <div class="search-item small">
@@ -41,8 +41,8 @@
       <el-option
         v-for="item in supList"
         :key="item.id"
-        :label="item.name"
-        :value="addSupS ? item.name : item.id"
+        :label="item.text"
+        :value="item.id"
       >
       </el-option>
     </el-select>
@@ -71,6 +71,7 @@
 <script>
 import axios from '@/api/axiosConfig'
 import { mapState } from 'vuex'
+import { SUP_LEVEL_LIST, SUP_LEVEL_LIST_LOWER } from '@/utils/supList'
 
 export default {
   props: {
@@ -135,8 +136,9 @@ export default {
   },
   async created() {
     await this.getStage()
-    await this.getSup()
+    // await this.getSup()
     await this.getLevel()
+    this.supList = this.addSupS ? SUP_LEVEL_LIST_LOWER : SUP_LEVEL_LIST
   },
   methods: {
     // 期数

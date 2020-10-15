@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-24 18:50:54
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-09-26 16:24:23
+ * @LastEditTime: 2020-10-15 15:01:42
  -->
 <template>
   <div class="search-item small">
@@ -22,8 +22,8 @@
       <el-option
         v-for="item in supList"
         :key="item.id"
-        :label="item.name"
-        :value="addSupS ? item.name : item.id"
+        :label="item.text"
+        :value="item.id"
       >
       </el-option>
     </el-select>
@@ -31,8 +31,13 @@
 </template>
 
 <script>
-import axios from '@/api/axiosConfig'
+// import axios from '@/api/axiosConfig'
 import { mapState } from 'vuex'
+import {
+  SUP_LEVEL_LIST,
+  SUP_LEVEL_LIST_LOWER,
+  SUP_LEVEL_LIST_UPPER
+} from '@/utils/supList'
 
 export default {
   props: {
@@ -45,6 +50,11 @@ export default {
       default: 'sup'
     },
     addSupS: {
+      type: Boolean,
+      default: false
+    },
+    // s大小写 - 默认小写
+    upper: {
       type: Boolean,
       default: false
     },
@@ -86,29 +96,34 @@ export default {
   //   }
   // },
   async created() {
-    await this.getSup()
+    // await this.getSup()
+    this.supList = this.addSupS
+      ? !this.upper
+        ? SUP_LEVEL_LIST_LOWER
+        : SUP_LEVEL_LIST_UPPER
+      : SUP_LEVEL_LIST
   },
   methods: {
     // 难度
-    async getSup() {
-      axios
-        .post('/graphql/filter', {
-          query: `{
-            courseSupList{
-                id
-                name
-              }
-            }
-          `
-        })
-        .then((res) => {
-          this.supList = res.data ? res.data.courseSupList || [] : []
-          this.supList.splice(
-            res.data.courseSupList.filter((item) => +item.id === 0),
-            1
-          )
-        })
-    },
+    // async getSup() {
+    //   axios
+    //     .post('/graphql/filter', {
+    //       query: `{
+    //         courseSupList{
+    //             id
+    //             name
+    //           }
+    //         }
+    //       `
+    //     })
+    //     .then((res) => {
+    //       this.supList = res.data ? res.data.courseSupList || [] : []
+    //       this.supList.splice(
+    //         res.data.courseSupList.filter((item) => +item.id === 0),
+    //         1
+    //       )
+    //     })
+    // },
 
     supChange(data) {
       console.log(data)

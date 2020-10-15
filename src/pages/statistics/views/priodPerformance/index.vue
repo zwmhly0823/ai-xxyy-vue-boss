@@ -3,8 +3,8 @@
  * @version:
  * @Author: Shentong
  * @Date: 2020-04-02 15:35:27
- * @LastEditors: songyanan
- * @LastEditTime: 2020-07-30 14:08:00
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-10-15 15:43:02
  -->
 <template>
   <el-row type="flex" class="app-main height schedule-container">
@@ -123,7 +123,7 @@
               >
               <el-table-column label="级别" width="50" align="center">
                 <template slot-scope="scope">
-                  <span v-if="+scope.row.sup">{{ `S${scope.row.sup}` }}</span>
+                  <span v-if="scope.row.sup">{{ scope.row.sup }}</span>
                 </template>
               </el-table-column>
               <el-table-column
@@ -272,6 +272,8 @@ import _ from 'lodash'
 import staticticsSearch from '../../components/staticticsSearch'
 import EleTable from '@/components/Table/EleTable'
 import { formatData } from '@/utils'
+import { SUP_LEVEL } from '@/utils/supList'
+
 export default {
   props: {
     department: {
@@ -503,6 +505,7 @@ export default {
           item.system_order_count,
           item.trial_course_count
         )
+        item.sup = SUP_LEVEL[item.sup] || ''
       })
     },
     // 计算开课天数
