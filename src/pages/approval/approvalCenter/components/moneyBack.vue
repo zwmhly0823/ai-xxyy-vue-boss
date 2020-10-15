@@ -2,7 +2,7 @@
  * @Descripttion: 
  * @version: 
  * @LastEditors: liukun
- * @LastEditTime: 2020-10-15 16:18:41
+ * @LastEditTime: 2020-10-15 17:36:59
  -->
 <template>
   <div class="adjustModule">
@@ -679,7 +679,8 @@ export default {
                 this.refundForm.refundMonths = 6
               } else {
                 this.$message({
-                  message: '该一年课订单课余量低于6,不支持该降包类型',
+                  message:
+                    '该一年课订单课余量低于6个月或余额低于1101,不支持该降包类型',
                   type: 'warning'
                 })
                 // this.onCancel('refundForm')
@@ -694,7 +695,8 @@ export default {
                 this.refundForm.refundMonths = 6
               } else {
                 this.$message({
-                  message: '该两年课订单课余量低于6,不支持该降包类型',
+                  message:
+                    '该两年课订单课余量低于6个月或余额低于781,不支持该降包类型',
                   type: 'warning'
                 })
                 // this.onCancel('refundForm')
