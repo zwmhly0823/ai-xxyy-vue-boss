@@ -146,7 +146,6 @@
                   type="daterange"
                   :disabled="promotionsRange !== '2'"
                   value-format="yyyy-MM-dd"
-                  :picker-options="expireTimeOption"
                   range-separator="至"
                   start-placeholder="开始日期"
                   end-placeholder="结束日期"
