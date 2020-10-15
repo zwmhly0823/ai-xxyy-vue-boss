@@ -50,6 +50,10 @@
         tip="请选择老师"
       />
       <tabTimeSelect style="margin-left:0px" @result="getSeacherTime" />
+      <ActivityName
+        class="inline-search margin_left_20"
+        @result="getActivityName"
+      />
       <el-button
         type="primary"
         size="mini"
@@ -782,6 +786,8 @@ import MPagination from '@/components/MPagination/index.vue'
 import tabTimeSelect from './timeSearch'
 import CheckType from './checkType'
 import { timestamp } from '@/utils/index'
+// import SearchPart from './searchPart'
+import ActivityName from './activityName'
 import adjustDrawer from './adjustDrawer'
 import { getStaffInfo } from '../common'
 import courseTeam from './courseTeam'
@@ -811,6 +817,8 @@ export default {
     tabTimeSelect,
     VersionBox,
     CheckType,
+    // SearchPart,
+    ActivityName,
     adjustDrawer,
     courseTeam,
     ApprovalGiftDetail,
@@ -1050,6 +1058,13 @@ export default {
     handleCloseDraw() {
       this.version = ''
       this.currentType = ''
+    },
+    //  活动名称搜索
+    getActivityName(val) {
+      Object.assign(this.params, { abstractContent: val })
+      this.params.page = 1
+      this.currentPage = 1
+      this.checkPending(this.params)
     },
     // 查询审批类型判断
     getcheckType(val) {

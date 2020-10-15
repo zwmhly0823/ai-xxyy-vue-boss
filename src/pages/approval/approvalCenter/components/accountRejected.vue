@@ -36,6 +36,11 @@
         tip="请选择老师"
       />
       <tabTimeSelect style="margin-left:0px" @result="getSeacherTime" />
+      <!-- <search-part class="filter-item" @result="getSeachePart" /> -->
+      <ActivityName
+        class="filter-item margin_left_20"
+        @result="getActivityName"
+      />
     </div>
 
     <el-table :data="tableData" style="width: 100%" highlight-current-row>
@@ -119,6 +124,8 @@ import Department from '@/components/MSearch/searchItems/department'
 import GroupSell from './groupSell'
 import searchPhone from '@/components/MSearch/searchItems/searchPhone.vue'
 import tabTimeSelect from './timeSearch'
+import ActivityName from './activityName'
+// import courseTeam from './courseTeam'
 import MPagination from '@/components/MPagination/index.vue'
 import { getStaffInfo } from '../common'
 import { timestamp } from '@/utils/index'
@@ -132,7 +139,9 @@ export default {
     searchPhone,
     tabTimeSelect,
     adjustDrawer,
-    MPagination
+    MPagination,
+    ActivityName
+    // courseTeam
   },
   data() {
     return {
@@ -344,6 +353,33 @@ export default {
       }
       this.initListData(this.params)
     },
+    //  活动名称搜索
+    getActivityName(val) {
+      Object.assign(this.params, { abstractContent: val })
+      this.params.page = 1
+      this.currentPage = 1
+      this.initListData(this.params)
+    },
+    // getSeachePart: _.debounce(function(val) {
+    //   if (!val) {
+    //     this.params.keyword = ''
+    //   } else {
+    //     this.params.keyword = val
+    //   }
+    //   this.initListData(this.params)
+    // }, 500),
+    // getTeamId(val) {
+    //   if (val) {
+    //     Object.assign(this.params, {
+    //       managementType: val.teamSchedule.managementType,
+    //       period: val.teamSchedule.period
+    //     })
+    //   } else {
+    //     this.params.managementType = ''
+    //     this.params.period = ''
+    //   }
+    //   this.initListData(this.params)
+    // },
     clickStatusButton(val) {
       // console.log(val)
       this.adjustDrawerData.loading = true

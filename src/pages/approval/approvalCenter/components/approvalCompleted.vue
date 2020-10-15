@@ -49,6 +49,10 @@
         tip="请选择老师"
       />
       <tabTimeSelect style="margin-left:0px" @result="getSeacherTime" />
+      <ActivityName
+        class="inline-search margin_left_20"
+        @result="getActivityName"
+      />
     </div>
     <el-table
       :data="tableData"
@@ -563,6 +567,8 @@ import { getStaffInfo } from '../common'
 import courseTeam from './courseTeam'
 import TabTimeSelect from './timeSearch'
 import CheckType from './checkType'
+// import SearchPart from './searchPart'
+import ActivityName from './activityName'
 import adjustDrawer from './adjustDrawer'
 import ApprovalGiftDetail from './approvalGiftDetail'
 
@@ -575,6 +581,8 @@ export default {
     MPagination,
     TabTimeSelect,
     CheckType,
+    // SearchPart,
+    ActivityName,
     adjustDrawer,
     courseTeam,
     ApprovalGiftDetail
@@ -700,6 +708,13 @@ export default {
       this.params.page = 1
       this.currentPage = 1
       Object.assign(this.params, { isZero: val })
+      this.checkPending(this.params)
+    },
+    //  活动名称搜索
+    getActivityName(val) {
+      Object.assign(this.params, { abstractContent: val })
+      this.params.page = 1
+      this.currentPage = 1
       this.checkPending(this.params)
     },
 

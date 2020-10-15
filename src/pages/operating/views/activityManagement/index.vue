@@ -61,12 +61,20 @@
                 </el-table-column>
                 <el-table-column label="活动范围" align="center">
                   <template slot-scope="scope">
-                    <span v-if="scope.row.trialTermsName"
-                      >体验课:{{ scope.row.trialTermsName }}</span
-                    ><br />
-                    <span v-if="scope.row.systemTermsName"
-                      >系统课:{{ scope.row.systemTermsName }}</span
-                    >
+                    <div v-if="scope.row.promotionsRange === 2">
+                      <span
+                        >{{ scope.row.orderStartDate }} ~
+                        {{ scope.row.orderEndDate }}</span
+                      >
+                    </div>
+                    <div v-else>
+                      <span v-if="scope.row.trialTermsName"
+                        >体验课:{{ scope.row.trialTermsName }}</span
+                      ><br />
+                      <span v-if="scope.row.systemTermsName"
+                        >系统课:{{ scope.row.systemTermsName }}</span
+                      >
+                    </div>
                   </template>
                 </el-table-column>
                 <el-table-column
