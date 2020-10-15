@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-13 16:53:27
  * @LastEditors: Shentong
- * @LastEditTime: 2020-10-14 11:46:07
+ * @LastEditTime: 2020-10-15 18:01:52
  -->
 <template>
   <div class="left-container">
@@ -40,7 +40,8 @@
               <el-input
                 size="mini"
                 v-model="data.day"
-                :disabled="period != ''"
+                :disabled="period != '' || data.disabled"
+                oninput="if(value<1) value=1"
                 type="number"
               ></el-input>
               <span>天</span>
@@ -153,9 +154,19 @@ export default {
     connectDeptIdDays(deptArr = [], deptIds = {}) {
       deptArr.forEach((item, index) => {
         const { id, children } = item
-        item.day = deptIds[id] || '3'
+        // let baseDay = '3'
         // 查看模式
-        this.period !== '' && (item.disabled = true)
+        if (this.period !== '') {
+          item.day = deptIds[id]
+          item.disabled = true
+        } else {
+          item.day = deptIds[id]
+          console.log(item.day, 'item.day')
+          if (item.day === 0) {
+            item.disabled = true
+          }
+        }
+        // this.period !== '' && (item.disabled = true)
         item = {
           ...item
         }
@@ -169,10 +180,6 @@ export default {
         const { children, pid } = item
 
         return children == null && pid !== '0'
-        // if (this.$route.params.couponId !== '5') {
-        //
-        // }
-        // return children == null && pid !== '0' && edit
       })
     },
     editCurDay(data) {

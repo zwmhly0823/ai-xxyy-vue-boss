@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-06-30 19:21:08
  * @LastEditors: Shentong
- * @LastEditTime: 2020-10-14 11:46:58
+ * @LastEditTime: 2020-10-15 17:28:09
 -->
 <template>
   <el-dialog
@@ -134,6 +134,7 @@
 </template>
 <script>
 // import { debounce } from 'lodash'
+import { deepClone } from '@/utils/index'
 import DeptTree from './deptTree'
 export default {
   props: {
@@ -158,6 +159,7 @@ export default {
     return {
       isSubmit: false,
       checkedAll: false,
+      dayAbortPeriod: [],
       formData: {
         exeType: '0',
         exePeriod: '',
@@ -178,7 +180,8 @@ export default {
       dayDeptId: {},
       lookPeriod: '',
       couponDetail: {},
-      isChangeRadio: false
+      isChangeRadio: false,
+      allTreeArr: []
     }
   },
   components: { DeptTree },
@@ -255,20 +258,20 @@ export default {
         (exeType === '0' && exePeriod === '') ||
         (exeType === '1' && periodMore === '')
       ) {
-        this.$message.warning('请选择执行期')
+        this.$message.warning('请选择需要执行的期')
         return 0
       }
-      const emptyDay = checkedNode.filter(
-        (item) => item.day === '' || item.day < 0
-      )
+      // const emptyDay = checkedNode.filter(
+      //   (item) => item.day === '' || item.day < 0
+      // )
 
-      if (!checkedNode.length) {
-        this.$message.warning('请先配置组和优惠券到期时间')
-        return 0
-      } else if (emptyDay.length) {
-        this.$message.warning('请填写指定组的优惠券到期时间')
-        return 0
-      }
+      // if (!checkedNode.length) {
+      //   this.$message.warning('请先配置组和优惠券到期时间')
+      //   return 0
+      // } else if (emptyDay.length) {
+      //   this.$message.warning('请填写指定组的优惠券到期时间')
+      //   return 0
+      // }
       return 1
     },
     /** 新增、修改 优惠券发放规则，部门id和天数关联数据 TODO: */
@@ -283,7 +286,44 @@ export default {
     dialogClose() {
       this.$emit('emitDialogOperate', { close: true })
     },
-    packageDeptIdAndDay(allTree, checkedNode) {
+    /** 选择当前期数下未选中给的，赋值为 day = 0 */
+    // choiceUnSelectNode(checkedNode = []) {
+    //   console.log(this.dayAbortPeriod, checkedNode)
+    //   const dayAbortPeriod = this.dayAbortPeriod
+    //   const checkObj = {}
+    //   checkedNode.forEach((nodeItem) => {
+    //     checkObj[nodeItem.id] = nodeItem
+    //   })
+    //   const unArr = dayAbortPeriod.filter((item) => {
+    //     console.log('item',item)
+    //     return !checkObj[item.id]
+    //   })
+    //   return []
+    // },
+    recursion(deptArr, checkObj) {
+      deptArr.forEach((item, index) => {
+        const { id: uid, children, pid } = item
+        if (children == null && pid !== '0') {
+          item.day = checkObj[uid] || '0'
+          this.allTreeArr.push({
+            day: String(item.day),
+            uid
+          })
+        }
+
+        if (children && children.length) this.recursion(children, checkObj)
+      })
+    },
+    /** 获取树所有的节点 */
+    getAllTreeData(deptArr = [], checkedNode = []) {
+      const checkObj = {}
+      checkedNode.forEach((nodeItem) => {
+        const { id, day } = nodeItem
+        checkObj[id] = day
+      })
+      this.recursion(deptArr, checkObj)
+    },
+    packageDeptIdAndDay(checkedNode) {
       return checkedNode.map((item) => {
         return {
           day: String(item.day),
@@ -292,8 +332,13 @@ export default {
       })
     },
     /** 打包封装需要提交的数据 */
-    bundleData(a, b) {
-      const couponDispensedDetails = this.packageDeptIdAndDay(a, b)
+    bundleData(allTree, checkedNode) {
+      this.getAllTreeData(deepClone(allTree), checkedNode)
+      // console.log('allTree', allTree)
+      // const couponDispensedDetails = this.packageDeptIdAndDay(
+      //   allTree,
+      //   checkedNode
+      // )
 
       const {
         formData: { exeType, exePeriod, periodMore },
@@ -303,26 +348,24 @@ export default {
       const periodAndName = {}
       const couponDispensedRules = {}
       const selPeriod = exeType === '0' ? exePeriod : periodMore
-      // exeType === '0' ? exePeriod : String(periodMore).split(',') // periodMore 是 string
-      const originPeriodArr =
-        exeType === '0' ? 'onlyExePeriod' : 'exePeriodMore'
+      const periodArr = exeType === '0' ? 'onlyExePeriod' : 'exePeriodMore'
 
-      this[originPeriodArr].forEach((item) => {
+      this[periodArr].forEach((item) => {
         periodAndName[item.period] = item.periodName
       })
 
       Object.assign(couponDispensedRules, {
-        // period: selPeriod.join(),
         period: selPeriod,
         periodName: periodAndName[selPeriod],
-        // periodName: periodName.join(),
         executeType: exeType,
         couponId,
         couponName
       })
 
+      // const unSelectNodes = this.choiceUnSelectNode(checkedNode)
+
       return {
-        couponDispensedDetails,
+        couponDispensedDetails: this.allTreeArr,
         couponDispensedRules
       }
     },
@@ -350,6 +393,7 @@ export default {
         couponId,
         period: Array.isArray(res) ? res.join() : res
       })
+      this.dayAbortPeriod = dayDeptId
       /** 回显 tree */
       this.dayDeptId = this.getIdDayKeyVal(dayDeptId)
     },
@@ -362,6 +406,7 @@ export default {
           const result = this.bundleData(deptFlatList, checkedNode)
           await this.saveCouponRule(result)
 
+          this.allTreeArr = []
           this.isSubmit = false
         }
       }
@@ -369,7 +414,7 @@ export default {
     /** 新增 优惠券发放规则， 保存 */
     async saveCouponRule(params) {
       const loadingInstance = this.$loading({
-        target: '.app-main',
+        target: 'body',
         lock: true,
         text: '正在保存...',
         fullscreen: true
