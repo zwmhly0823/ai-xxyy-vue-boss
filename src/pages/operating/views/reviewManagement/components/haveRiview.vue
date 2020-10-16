@@ -4,7 +4,7 @@
  * @Author: songyanan
  * @Date: 2020-05-11 14:30:00
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-10-16 19:31:53
+ * @LastEditTime: 2020-10-16 21:53:56
  */
  -->
 <template>
@@ -29,34 +29,56 @@
       </el-table-column>
       <el-table-column label="点评" width="180" align="center">
         <template slot-scope="scope">
-          <!-- <div
-            class="audio-container"
-            v-for="(audio, idx) in soundArr(scope.row.taskComments)"
-            :key="idx"
+          <p
+            v-if="
+              !scope.row.soundCommentlist ||
+                scope.row.soundCommentlist.length === 0
+            "
           >
-            <audio :src="audio" style="height: 47px" controls></audio>
-          </div> -->
-          <div class="audio-container">
+            -
+          </p>
+          <div
+            class="audio-container"
+            v-for="(audio, idx) in scope.row.soundCommentlist"
+            :key="idx"
+            v-else
+          >
+            <audio
+              :src="audio.sound_comment"
+              style="height: 47px"
+              controls
+            ></audio>
+          </div>
+          <!-- <div class="audio-container">
             <audio
               :src="scope.row.sound_comment"
               style="height: 47px"
               controls
             ></audio>
-          </div>
+          </div> -->
         </template>
       </el-table-column>
       <el-table-column label="点评分类" align="center" width="180">
         <template slot-scope="scope">
-          <!-- <div
-            v-for="(item, index) in scope.row.taskComments"
+          <p
+            v-if="
+              !scope.row.soundCommentlist ||
+                scope.row.soundCommentlist.length === 0
+            "
+          >
+            -
+          </p>
+          <div
+            v-else
+            v-for="(item, index) in scope.row.soundCommentlist"
             :key="index"
             class="review-type"
           >
             {{ item.type === 0 ? '手动点评' : '智能点评' }}
-          </div> -->
-          <div class="review-type">
-            {{ scope.row.type === 0 ? '手动点评' : '智能点评' }}
           </div>
+          <!-- <div class="review-type">
+            {{ scope.row.type === 0 ? '手动点评' : '智能点评' }}
+          </div> -->
         </template>
       </el-table-column>
       <el-table-column label="用户信息" align="center" width="180">
@@ -82,7 +104,10 @@
       </el-table-column>
       <el-table-column label="课程" align="center" width="180">
         <template slot-scope="scope">
-          <div class="review-type">{{ scope.row.courseName }}</div>
+          <div class="review-type" v-if="scope.row.courseware">
+            {{ scope.row.courseware.no }} - {{ scope.row.courseware.title }}
+          </div>
+          <div class="review-type" v-else></div>
         </template>
       </el-table-column>
       <el-table-column label="辅导老师" align="center" width="100">
@@ -121,7 +146,6 @@
       <el-table-column label="上传日期" align="center" width="180">
         <template slot-scope="scope">
           <div class="review-type">
-            {{ scope.row.ctime }}
             {{ timestamp(scope.row.ctime, 's') || '-' }}
           </div>
         </template>

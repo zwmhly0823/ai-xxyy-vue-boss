@@ -3,7 +3,7 @@
  * @Author: songyanan
  * @Date: 2020-05-11 17:35:28
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-10-16 19:31:16
+ * @LastEditTime: 2020-10-16 21:45:49
  */
 import axios from '../axiosConfig'
 import { injectSubject } from '@/utils/index'
@@ -115,6 +115,12 @@ export default {
             comment_time
             comment_id
             subject
+            soundCommentlist{
+              id
+              sound_comment
+              sound_comment_second
+              type
+            }
             userExtends{
               id
               mobile
@@ -122,6 +128,12 @@ export default {
             }
             courseware{
               id
+              title
+              no
+              level_no
+              unit_no
+              stage_no
+              type_no
             }
             teamInfo{
               team_name
