@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-10-13 21:14:38
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-10-14 15:50:31
+ * @LastEditTime: 2020-10-16 19:16:10
  */
 // import { deepClone } from '@/utils'
 /**
@@ -95,6 +95,31 @@ function formatSup(flag = 'S') {
 export function getSubLevel(s, upper = false) {
   if (!s) return ''
   return (upper ? SUP_LEVEL_UPPER[s] : SUP_LEVEL_LOWER[s]) || ''
+}
+
+/**
+ * 前端转班级名称历史数据 - S1,S2
+ * 0817期S1-3班级 -> 0817期S1-进阶-3班级
+ * 0817期S2-3班级 -> 0817期S1-基础-3班级
+ */
+export function formatTeamNameSup(teamName) {
+  if (!teamName) return
+  const upperName = teamName.toLocaleUpperCase()
+  if (
+    upperName.includes('S1-') &&
+    !upperName.includes('基础') &&
+    !upperName.includes('进阶')
+  ) {
+    teamName = teamName.replace('S1', 'S1-进阶')
+  }
+  if (
+    upperName.includes('S2-') &&
+    !upperName.includes('基础') &&
+    !upperName.includes('进阶')
+  ) {
+    teamName = teamName.replace('S2', 'S2-基础')
+  }
+  return teamName
 }
 
 /**

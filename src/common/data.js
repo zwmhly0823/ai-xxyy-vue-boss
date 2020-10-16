@@ -2,11 +2,13 @@
  * @Descripttion:
  * @Author: songyanan
  * @Date: 2020-05-11 10:10:00
- * @LastEditors: songyanan
- * @LastEditTime: 2020-05-15 15:30:00
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-10-16 18:46:18
  */
+import { SUP_LEVEL_LIST_UPPER } from '@/utils/supList'
 export const courseType = ['体验课', '系统课']
-export const courseDifficulty = ['S1', 'S2', 'S3', 'S4', 'S5']
+// export const courseDifficulty = ['S1', 'S2', 'S3', 'S4', 'S5']
+export const courseDifficulty = SUP_LEVEL_LIST_UPPER
 export const courseLevel = [
   'L1',
   'L2',
