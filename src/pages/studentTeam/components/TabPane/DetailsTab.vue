@@ -3,8 +3,8 @@
  * @version:
  * @Author: panjian
  * @Date: 2020-03-16 14:19:58
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-09-15 18:53:08
+ * @LastEditors: Shentong
+ * @LastEditTime: 2020-10-16 15:58:41
  -->
 <template>
   <div>
@@ -94,35 +94,53 @@
         <el-dialog
           title="请选择生成的完课榜周数"
           :visible.sync="dialogFormVisible"
+          class="work-exhibition-class"
           width="500px"
         >
-          <el-radio label="1" disabled v-show="MissedClassesOne"
-            >第一周未开课</el-radio
-          >
-          <el-radio
-            v-model="finishLessonData.weekNum"
-            label="U1"
-            v-show="radioOne"
-            >第一周</el-radio
-          >
-          <el-radio label="2" disabled v-show="MissedClassesTwo"
-            >第二周未开课</el-radio
-          >
-          <el-radio
-            v-model="finishLessonData.weekNum"
-            label="U2"
-            v-show="radioTwo"
-            >第二周</el-radio
-          >
+          <div class="trail-content" v-if="type == 'TRAIL'">
+            <el-radio label="1" disabled v-show="MissedClassesOne"
+              >第一周未开课</el-radio
+            >
+            <el-radio
+              v-model="finishLessonData.weekNum"
+              label="U1"
+              v-show="radioOne"
+              >第一周</el-radio
+            >
+            <el-radio label="2" disabled v-show="MissedClassesTwo"
+              >第二周未开课</el-radio
+            >
+            <el-radio
+              v-model="finishLessonData.weekNum"
+              label="U2"
+              v-show="radioTwo"
+              >第二周</el-radio
+            >
+          </div>
+          <div class="system-content" v-else>
+            <div class="cur-progress">
+              <span>当前课程进度</span><span class="progress">L5</span
+              ><span class="sets">「切换」</span>
+            </div>
+            <div class="system-radio">
+              <el-radio v-model="radio" label="1">备选项</el-radio>
+              <el-radio v-model="radio" label="2">备选项</el-radio>
+            </div>
+          </div>
           <div slot="footer" class="dialog-footer">
-            <el-button @click="dialogFormVisible = false">取 消</el-button>
-            <el-button type="primary" @click="clickHandler">确 定</el-button>
+            <el-button @click="dialogFormVisible = false" size="small"
+              >取 消</el-button
+            >
+            <el-button type="primary" @click="clickHandler" size="small"
+              >确 定</el-button
+            >
           </div>
         </el-dialog>
         <!-- 生成作品展弹出框 -->
         <el-dialog
           title="请选择生成的作品展周数"
           :visible.sync="Exhibition"
+          class="work-exhibition-class"
           width="500px"
         >
           <el-radio label="1" disabled v-show="MissedClassesOne"
@@ -149,7 +167,7 @@
           </div>
         </el-dialog>
         <!-- 系统课点击生成完课榜与作品展提示框 -->
-        <el-dialog title="活动未开放" :visible.sync="Tips" width="30%">
+        <!-- <el-dialog title="活动未开放" :visible.sync="Tips" width="30%">
           <span class="warning"
             ><img src="@/assets/images/warning.png" alt=""
           /></span>
@@ -158,7 +176,7 @@
             <el-button @click="Tips = false">取 消</el-button>
             <el-button type="primary" @click="Tips = false">确 定</el-button>
           </span>
-        </el-dialog>
+        </el-dialog> -->
       </div>
       <!-- 生成完课榜图片-->
       <div
@@ -225,18 +243,10 @@ export default {
       radioTwo: true,
       MissedClassesOne: false,
       MissedClassesTwo: false,
-      // 作品展隐藏单选框
-      // RadioOne: true,
-      // RadioTwo: true,
-      // missedClassesOne: false,
-      // missedClassesTwo: false,
       teacherId: '',
       search: '',
       querysData: '',
       experssShow: false,
-      // 单选按钮
-      // radio: '',
-      // finish: false,
       btnbox: false,
       type: null,
       input: '',
@@ -387,55 +397,6 @@ export default {
         this.getGroup()
       })
     }
-    // classObj(value) {
-    // // 切换标签 语音停止
-    // const audios = this.$refs
-    // const audiosList = Object.values(audios)
-    // audiosList.forEach((item, index) => {
-    //   item[0].load()
-    // })
-    // this.screenWorksData = {}
-    // this.screenAttendClassData = {}
-    // this.sortGroup = ''
-    // this.table.currentPage = 1
-    // if (value.teamId && value.classId.id) {
-    //   this.tableDataEmpty = true
-    //   if (+value.type === 0) {
-    //     this.type = 'TRAIL'
-    //   } else if (+value.type === 1) {
-    //     this.type = 'MONTH'
-    //   } else if (+value.type === 2) {
-    //     this.type = 'YEAR'
-    //   } else {
-    //     this.type = ''
-    //   }
-    //   this.getGroup()
-    //   if (this.tabsName === '加好友进群') {
-    //     setTimeout(() => {
-    //       this.getGroup()
-    //     }, 200)
-    //   } else if (this.tabsName === '物流') {
-    //     setTimeout(() => {
-    //       this.getLogistics()
-    //     }, 200)
-    //   } else if (this.tabsName === '打开APP') {
-    //     setTimeout(() => {
-    //       this.geiLogin()
-    //     }, 200)
-    //   } else if (this.tabsName === '参课和完课') {
-    //     setTimeout(() => {
-    //       this.getClassCompPage()
-    //     }, 200)
-    //   } else if (this.tabsName === '作品及点评') {
-    //     setTimeout(() => {
-    //       this.getStuComment()
-    //     }, 200)
-    //   }
-    // } else {
-    //   this.tableDataEmpty = false
-    //   this.table.tableData = []
-    // }
-    // }
   },
   mounted() {
     const teacherId = isToss()
@@ -471,34 +432,21 @@ export default {
     },
     // 搜索组件传回来的值
     handleSearch(res) {
-      if (res.length === 0) {
-        this.search = ''
-        this.getGroup()
-        if (this.tabsName === '加好友进群') {
-          this.getGroup()
-        } else if (this.tabsName === '物流') {
-          this.getLogistics()
-        } else if (this.tabsName === '打开APP') {
-          this.geiLogin()
-        } else if (this.tabsName === '参课和完课') {
-          this.getClassCompPage()
-        } else if (this.tabsName === '作品及点评') {
-          this.getStuComment()
-        }
-      } else {
+      this.search = ''
+      if (!res.length) this.getGroup()
+      else {
         this.search = `"${res[0].term.uid}"`
+      }
+      if (this.tabsName === '加好友进群') {
         this.getGroup()
-        if (this.tabsName === '加好友进群') {
-          this.getGroup()
-        } else if (this.tabsName === '物流') {
-          this.getLogistics()
-        } else if (this.tabsName === '打开APP') {
-          this.geiLogin()
-        } else if (this.tabsName === '参课和完课') {
-          this.getClassCompPage()
-        } else if (this.tabsName === '作品及点评') {
-          this.getStuComment()
-        }
+      } else if (this.tabsName === '物流') {
+        this.getLogistics()
+      } else if (this.tabsName === '打开APP') {
+        this.geiLogin()
+      } else if (this.tabsName === '参课和完课') {
+        this.getClassCompPage()
+      } else if (this.tabsName === '作品及点评') {
+        this.getStuComment()
       }
     },
     // 生成完课榜----确定按钮
@@ -592,22 +540,23 @@ export default {
     },
     // 点击显示完课榜 TODO:
     finishLessonList(week) {
-      if (this.teamDetail.id && this.teamDetail.current_lesson) {
-        // 显示弹框
+      // 体验课
+      if (this.type === 'TRAIL') {
+        if (this.teamDetail.id && this.teamDetail.current_lesson) {
+          // 显示弹框
+          this.dialogFormVisible = true
+          this.finishLessonData.teamId = this.teamDetail.id
+          const currentLesson = this.teamDetail.current_lesson.substring(0, 6)
+          this.finishLessonData.studentLesson = currentLesson.substring(0, 4)
+          this.finishLessonData.weekNum = currentLesson.substring(4, 6)
+          this.btnshow(
+            this.finishLessonData.weekNum,
+            this.classObj.type,
+            this.teamDetail.team_state
+          )
+        }
+      } else {
         this.dialogFormVisible = true
-        this.finishLessonData.teamId = this.teamDetail.id
-        const currentLesson = this.teamDetail.current_lesson.substring(0, 6)
-        this.finishLessonData.studentLesson = currentLesson.substring(0, 4)
-        this.finishLessonData.weekNum = currentLesson.substring(4, 6)
-        this.btnshow(
-          this.finishLessonData.weekNum,
-          this.classObj.type,
-          // TODO:
-          this.teamDetail.team_state
-        )
-        // const state = '0'
-        // const weekNum = 'U1'
-        // this.btnshow(weekNum, state)
       }
     },
     // 生成完课榜图片周按钮显示状态
@@ -642,54 +591,17 @@ export default {
         }
       }
       if (type > 0) {
-        // this.finishLessonData.isRequest = false
-        // this.ExhibitionData.isRequest = false
-        // this.radioOne = false
-        // this.radioTwo = false
-        // this.MissedClassesOne = true
-        // this.MissedClassesTwo = true
         this.dialogFormVisible = false
         this.Exhibition = false
         this.Tips = true
       }
     },
-    // 生成完作品展图片周按钮显示状态
-    // Btnshow(weekNum, state) {
-    //   if (weekNum === 'U1') {
-    //     if (state === 2) {
-    //       this.RadioOne = true
-    //       this.RadioTwo = false
-    //       this.missedClassesOne = false
-    //       this.missedClassesTwo = true
-    //     } else {
-    //       this.RadioOne = false
-    //       this.RadioTwo = false
-    //       this.missedClassesOne = true
-    //       this.missedClassesTwo = true
-    //     }
-    //   } else if (weekNum === 'U2') {
-    //     if (state === 2) {
-    //       this.RadioOne = true
-    //       this.RadioTwo = true
-    //       this.missedClassesOne = false
-    //       this.missedClassesTwo = false
-    //     } else {
-    //       this.RadioOne = true
-    //       this.RadioTwo = false
-    //       this.missedClassesOne = false
-    //       this.missedClassesTwo = true
-    //     }
-    //   }
-    // },
     // 点击显示作品展
     ExhibitionList(week) {
       if (this.teamDetail.id && this.teamDetail.current_lesson) {
         this.Exhibition = true
         this.ExhibitionData.teamId = this.teamDetail.id
-        // this.ExhibitionData.teamId = '100'
-        // this.ExhibitionData.weekNum = 'S1L1U1'
         const currentLesson = this.teamDetail.current_lesson.substring(0, 6)
-        // this.ExhibitionData.studentLesson = currentLesson.substring(0, 4)
         this.ExhibitionData.weekNum1 = currentLesson
         this.ExhibitionData.weekNum = currentLesson.substring(4, 6)
         this.btnshow(
@@ -701,9 +613,7 @@ export default {
     },
     // 请求完课榜 - 接口数据
     getStuRankingList(teamId, lesson, week, desc) {
-      if (!teamId || !lesson || !week) {
-        return
-      }
+      if (!teamId || !lesson || !week) return
       this.$loading({
         lock: true,
         text: '图片正在生成中'
@@ -717,9 +627,7 @@ export default {
       this.$http.Team.finishClassList({
         queryParams: queryParams
       }).then((res) => {
-        if (res.error) {
-          return
-        }
+        if (res.error) return
         // 生成完课榜（多页）
         const childLastData = []
         if (res.data.getStuComRankingList) {
@@ -743,9 +651,7 @@ export default {
     },
     // 请求作品展-接口数据
     getStuTaskRankingList(teamId, week) {
-      if (!teamId || !week) {
-        return
-      }
+      if (!teamId || !week) return
       this.$loading({
         lock: true,
         text: '图片正在生成中'
@@ -754,9 +660,7 @@ export default {
       this.$http.Team.exhibitionOfWorks({
         QueryParams: QueryParams
       }).then((res) => {
-        if (res.error) {
-          return
-        }
+        if (res.error) return
         // 生成作品展（多页）
         const childLastData = []
         if (res.data.getStuTaskRankingList) {
@@ -780,15 +684,11 @@ export default {
     },
     // 绘制生成完课榜图片
     canvasStart(res) {
-      if (res) {
-        this.handlePosterLoad(this.teamDetail.team_name)
-      }
+      res && this.handlePosterLoad(this.teamDetail.team_name)
     },
     // 绘制生成作品展图片
     CanvasStart(res) {
-      if (res) {
-        this.E_handlePosterLoad(this.teamDetail.team_name)
-      }
+      res && this.E_handlePosterLoad(this.teamDetail.team_name)
     },
     // 加好友进群 修改已加好友 已进群 接口
     getCodeHandle() {
@@ -1191,16 +1091,10 @@ export default {
     },
     // 添加物流地址 子组件传值 掉物流接口
     addExpresss(data) {
-      if (data) {
-        this.getLogistics()
-        // this.experssShow = true
-      }
+      if (data) this.getLogistics()
     },
     modifyAddressExpresss(data) {
-      if (data) {
-        this.getLogistics()
-        // this.experssShow = true
-      }
+      if (data) this.getLogistics()
     },
     // 加好友进群 已加好友子组建传值方法
     onCommandFriend(data) {
@@ -1309,7 +1203,6 @@ export default {
       aLink.download = fileName
       aLink.href = URL.createObjectURL(blob)
 
-      // aLink.dispatchEvent(evt);
       aLink.click()
       if (shutdownLoading) {
         _this.$loading().close()
@@ -1359,16 +1252,7 @@ export default {
   display: flex;
   align-items: center;
   width: 100%;
-  // height: 40px;
   margin-top: 10px;
-  // .btn {
-  //   position: absolute;
-  //   right: 18px;
-  // }
-  // .Btn {
-  //   position: absolute;
-  //   right: 150px;
-  // }
   .check-box {
     float: right;
   }
@@ -1379,7 +1263,6 @@ export default {
   height: 22px;
   position: relative;
   top: 5px;
-
   img {
     width: 100%;
     height: 100%;
@@ -1393,7 +1276,6 @@ export default {
 }
 
 .tabs-tab {
-  // padding-left: 20px;
   margin-top: 10px;
   position: relative;
   .el-input-search {
@@ -1409,17 +1291,11 @@ export default {
 }
 .table-flex {
   display: flex;
-  /* justify-content: space-between; */
   align-items: center;
 }
 .div {
   padding-top: 20px;
 }
-// .exportImg {
-//   display: flex;
-//   align-self: center;
-//   width: 550px;
-// }
 .finishBox {
   position: fixed;
   left: -1000px;
@@ -1456,6 +1332,32 @@ export default {
   }
   .el-tabs__item.is-active {
     color: #2a75ed;
+  }
+}
+.work-exhibition-class {
+  .system-content {
+    .cur-progress {
+      .progress {
+        margin: 0 5px;
+        color: #000;
+      }
+      .sets {
+        font-size: 12px;
+        color: #3a8ee6;
+        font-weight: 500;
+        cursor: pointer;
+      }
+    }
+    .system-radio {
+      padding: 30px 0;
+    }
+  }
+  .el-dialog__body {
+    padding: 10px 20px;
+  }
+  .el-radio__input {
+    position: relative;
+    top: 0px !important;
   }
 }
 .el-radio__input {
