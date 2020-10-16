@@ -4,7 +4,7 @@
  * @Author: zhangjiawen
  * @Date: 2020-07-10 14:49:13
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-10-14 16:23:24
+ * @LastEditTime: 2020-10-15 18:37:28
 -->
 <template>
   <div class="drawer-main">
@@ -79,10 +79,12 @@
           style="width: 90%;border: 1px solid #d7d7e0;"
           :header-cell-style="{ background: '#F0F9FD' }"
         >
-          <el-table-column prop="date" label="发起人/审批人"> </el-table-column>
-          <el-table-column prop="name" label="审批意见"> </el-table-column>
-          <el-table-column prop="address" label="操作时间"> </el-table-column>
-          <el-table-column prop="address" label="备注说明"> </el-table-column>
+          <el-table-column prop="approvalName" label="发起人/审批人">
+          </el-table-column>
+          <el-table-column prop="status" label="审批意见"> </el-table-column>
+          <el-table-column prop="utime" label="操作时间"> </el-table-column>
+          <el-table-column prop="approvalRemark" label="备注说明">
+          </el-table-column>
         </el-table>
       </div>
       <div class="rawer-bot">

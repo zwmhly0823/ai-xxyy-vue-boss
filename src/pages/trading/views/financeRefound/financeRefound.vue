@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-05-19 17:18:39
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-10-14 16:34:28
+ * @LastEditTime: 2020-10-15 17:14:34
 -->
 <template>
   <section class="bianju10">
@@ -106,6 +106,19 @@
           <div class="concat">
             <applicant @result="applicantSearch" placeholder="申请人" />
           </div>
+        </el-form-item>
+        <el-form-item label="退款支付状态:">
+          <el-select
+            clearable
+            placeholder="请键入"
+            v-model="fordisplay6"
+            @change="refundRule"
+          >
+            <el-option label="未发起" value="1"></el-option>
+            <el-option label="支付中" value="0"></el-option>
+            <el-option label="成功" value="0"></el-option>
+            <el-option label="失败" value="0"></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="时间查询:">
           <div class="concat">
