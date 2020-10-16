@@ -3,33 +3,35 @@
     <div class="search-item">
       <span class="search-text">辅导老师</span>
       <department
-        name="department_id"
-        :only-dept="1"
-        placeholder="选择销售组"
+        name="assistant_teacher_id_dpt"
+        placeholder="区部"
         style="margin-right: 10px;"
-        @result="getSearchData('department_id', arguments)"
+        @result="getSearchData('assistant_teacher_id_dpt', arguments)"
       />
       <group-sell
-        name="teacher_id"
-        tip="选择销售人员"
+        name="assistant_teacher_id"
+        tip="老师姓名"
         is-multiple
-        @result="getSearchData('teacher_id', arguments)"
+        :teacherscope="assistantTeacherScope"
+        :key="akey"
+        @result="getSearchData('assistant_teacher_id', arguments)"
       />
     </div>
     <div class="search-item">
       <span class="search-text">兼职老师</span>
       <department
-        name="department_id"
-        :only-dept="1"
-        placeholder="选择销售组"
+        name="parttime_teacher_id_dpt"
+        placeholder="区部"
         style="margin-right: 10px;"
-        @result="getSearchData('department_id', arguments)"
+        @result="getSearchData('parttime_teacher_id_dpt', arguments)"
       />
       <group-sell
-        name="teacher_id"
-        tip="选择销售人员"
+        name="parttime_teacher_id"
+        tip="老师姓名"
         is-multiple
-        @result="getSearchData('teacher_id', arguments)"
+        :teacherscope="parttimeTeacherScope"
+        :key="pkey"
+        @result="getSearchData('parttime_teacher_id', arguments)"
       />
     </div>
     <div class="search-item">
@@ -37,15 +39,17 @@
       <search-stage
         class="search-group-item"
         name="term"
-        placeholder="请选择"
+        placeholder="请选择期"
         type="1"
         :myStyle="{ width: '100px' }"
         @result="getSearchData('term', arguments)"
       />
       <search-team-name
         teamnameType="1"
-        @result="getSearchData('teamid', arguments)"
-        name="teamid"
+        @result="getSearchData('team_id', arguments)"
+        name="team_id"
+        :term="termScope"
+        :key="tkey"
         class="margin_l10"
       />
     </div>
@@ -53,8 +57,8 @@
       <span class="search-text">学员查询</span>
       <search-phone
         @result="getSearchPhoneData"
-        name="phone"
-        @inputChange="resetPartOfFormData"
+        name="student_id"
+        tip="学员手机号"
       />
     </div>
   </div>
@@ -75,14 +79,70 @@ export default {
     SearchTeamName,
     SearchPhone
   },
+  data() {
+    return {
+      searchParams: {},
+      assistantTeacherScope: null,
+      parttimeTeacherScope: null,
+      termScope: null,
+      tkey: 0,
+      pkey: 0,
+      akey: 0
+    }
+  },
   methods: {
     getSearchData(key, res) {
-      console.log(key, res)
+      const data = (res && res[0]) || {}
+      const val = data[key]
+
+      if (!val || val.length === 0) {
+        this.$delete(
+          this.searchParams,
+          key.includes('_dpt') ? key.replace('_dpt', '') : key
+        )
+        this.$emit('result', this.searchParams)
+        if (key === 'parttime_teacher_id_dpt') {
+          this.pkey = Date.now()
+          this.parttimeTeacherScope = null
+        }
+        if (key === 'assistant_teacher_id_dpt') {
+          this.akey = Date.now()
+          this.assistantTeacherScope = null
+        }
+        if (key === 'term') {
+          this.tkey = Date.now
+          this.termScope = null
+        }
+        return
+      }
+      if (key === 'parttime_teacher_id_dpt') {
+        this.pkey = Date.now()
+        this.parttimeTeacherScope = val
+        Object.assign(this.searchParams, { parttime_teacher_id: val })
+      }
+      if (key === 'assistant_teacher_id_dpt') {
+        this.akey = Date.now()
+        this.assistantTeacherScope = val
+        Object.assign(this.searchParams, { assistant_teacher_id: val })
+      }
+      if (key === 'term') {
+        this.tkey = Date.now()
+        this.termScope = val
+      }
+      if (!key.includes('_dpt')) {
+        Object.assign(this.searchParams, data)
+      }
+      this.$emit('result', this.searchParams)
     },
     getSearchPhoneData(val) {
-      console.log(val)
-    },
-    resetPartOfFormData() {}
+      val
+        ? Object.assign(this.searchParams, val)
+        : this.$delete(this.searchParams, 'student_id')
+      this.$emit('result', this.searchParams)
+    }
+    // resetPartOfFormData(val) {
+    //   console.log(val, 'student')
+    // }
   }
 }
 </script>

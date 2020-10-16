@@ -4,12 +4,12 @@
  * @Author: songyanan
  * @Date: 2020-05-11 14:30:00
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-10-15 22:29:03
+ * @LastEditTime: 2020-10-16 14:39:01
  */
  -->
 <template>
   <div class="container">
-    <have-riview-search></have-riview-search>
+    <have-riview-search @result="getSearch"></have-riview-search>
     <el-table
       v-loading="loading"
       element-loading-text="拼命加载中"
@@ -19,7 +19,7 @@
         <template slot-scope="scope">
           <el-image
             class="works-img"
-            :src="scope.row.task_image"
+            :src="`${scope.row.task_image}?x-oss-process=image/resize,l_100`"
             :lazy="true"
             :preview-src-list="[scope.row.task_image]"
             :z-index="1001"
@@ -168,6 +168,11 @@
 <script>
 import { formatData } from '@/utils/index'
 export default {
+  components: {
+    MPagination: () => import('@/components/MPagination/index.vue'),
+    HaveRiviewSearch: () =>
+      import('../../../components/search/haveRiviewSearch.vue')
+  },
   data() {
     return {
       number: 1,
@@ -184,7 +189,7 @@ export default {
     }
   },
   mounted() {
-    this.initList(this.number)
+    this.initList()
   },
   methods: {
     async initList(params = this.searchParams, number = this.query.pageNum) {
@@ -220,16 +225,22 @@ export default {
       }
       return arr
     },
+
+    /**
+     * 搜索
+     */
+    getSearch(res) {
+      console.log(res, 'search')
+      this.searchParams = res || {}
+      this.query.pageNum = 1
+      this.initList()
+    },
+
     async pageChange_handler(page) {
       this.query.pageNum = page
       await this.initList(page)
       document.body.scrollTop = document.documentElement.scrollTop = 0
     }
-  },
-  components: {
-    MPagination: () => import('@/components/MPagination/index.vue'),
-    HaveRiviewSearch: () =>
-      import('../../../components/search/haveRiviewSearch.vue')
   }
 }
 </script>
