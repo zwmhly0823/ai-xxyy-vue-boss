@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 14:19:58
  * @LastEditors: Shentong
- * @LastEditTime: 2020-10-16 15:58:41
+ * @LastEditTime: 2020-10-16 18:32:04
  -->
 <template>
   <div>
@@ -95,7 +95,7 @@
           title="请选择生成的完课榜周数"
           :visible.sync="dialogFormVisible"
           class="work-exhibition-class"
-          width="500px"
+          width="600px"
         >
           <div class="trail-content" v-if="type == 'TRAIL'">
             <el-radio label="1" disabled v-show="MissedClassesOne"
@@ -119,12 +119,35 @@
           </div>
           <div class="system-content" v-else>
             <div class="cur-progress">
-              <span>当前课程进度</span><span class="progress">L5</span
-              ><span class="sets">「切换」</span>
+              <span>当前课程进度</span
+              ><span class="progress">{{ currentProgress }}</span>
+              <el-popover
+                v-model="showProgressPopover"
+                placement="right-start"
+                width="100"
+                trigger="click"
+              >
+                <div class="progress-list">
+                  <div
+                    v-for="item in progressList"
+                    @click="progressClickHandle(item)"
+                    :key="item"
+                  >
+                    {{ item }}
+                  </div>
+                </div>
+                <span class="sets" slot="reference">「切换」</span>
+              </el-popover>
             </div>
             <div class="system-radio">
-              <el-radio v-model="radio" label="1">备选项</el-radio>
-              <el-radio v-model="radio" label="2">备选项</el-radio>
+              <el-radio v-model="sysFinishRadio" label="1">第一周</el-radio>
+              <el-radio v-model="sysFinishRadio" label="2">第二周</el-radio>
+              <el-radio v-model="sysFinishRadio" disabled label="3"
+                >第三周未开课</el-radio
+              >
+              <el-radio v-model="sysFinishRadio" label="4"
+                >第四周未开课</el-radio
+              >
             </div>
           </div>
           <div slot="footer" class="dialog-footer">
@@ -141,29 +164,68 @@
           title="请选择生成的作品展周数"
           :visible.sync="Exhibition"
           class="work-exhibition-class"
-          width="500px"
+          width="600px"
         >
-          <el-radio label="1" disabled v-show="MissedClassesOne"
-            >第一周暂无作品</el-radio
-          >
-          <el-radio
-            v-model="ExhibitionData.weekNum"
-            label="U1"
-            v-show="radioOne"
-            >第一周</el-radio
-          >
-          <el-radio label="2" disabled v-show="MissedClassesTwo"
-            >第二周暂无作品</el-radio
-          >
-          <el-radio
-            v-model="ExhibitionData.weekNum"
-            label="U2"
-            v-show="radioTwo"
-            >第二周</el-radio
-          >
+          <div class="trail-content" v-if="type == 'TRAIL'">
+            <el-radio label="1" disabled v-show="MissedClassesOne"
+              >第一周暂无作品</el-radio
+            >
+            <el-radio
+              v-model="ExhibitionData.weekNum"
+              label="U1"
+              v-show="radioOne"
+              >第一周</el-radio
+            >
+            <el-radio label="2" disabled v-show="MissedClassesTwo"
+              >第二周暂无作品</el-radio
+            >
+            <el-radio
+              v-model="ExhibitionData.weekNum"
+              label="U2"
+              v-show="radioTwo"
+              >第二周</el-radio
+            >
+          </div>
+          <div class="system-content" v-else>
+            <div class="cur-progress">
+              <span>当前课程进度</span
+              ><span class="progress">{{ currentProgress }}</span>
+              <el-popover
+                v-model="showProgressPopover"
+                placement="right-start"
+                width="100"
+                trigger="click"
+              >
+                <div class="progress-list">
+                  <div
+                    v-for="item in progressList"
+                    @click="progressClickHandle(item)"
+                    :key="item"
+                  >
+                    {{ item }}
+                  </div>
+                </div>
+                <span class="sets" slot="reference">「切换」</span>
+              </el-popover>
+            </div>
+            <div class="system-radio">
+              <el-radio v-model="sysFinishRadio" label="1">第一周</el-radio>
+              <el-radio v-model="sysFinishRadio" label="2">第二周</el-radio>
+              <el-radio v-model="sysFinishRadio" disabled label="3"
+                >第三周未开课</el-radio
+              >
+              <el-radio v-model="sysFinishRadio" label="4"
+                >第四周未开课</el-radio
+              >
+            </div>
+          </div>
           <div slot="footer" class="dialog-footer">
-            <el-button @click="Exhibition = false">取 消</el-button>
-            <el-button type="primary" @click="exhibitionBtn">确 定</el-button>
+            <el-button @click="Exhibition = false" size="small"
+              >取 消</el-button
+            >
+            <el-button type="primary" @click="exhibitionBtn" size="small"
+              >确 定</el-button
+            >
           </div>
         </el-dialog>
         <!-- 系统课点击生成完课榜与作品展提示框 -->
@@ -238,7 +300,16 @@ export default {
   },
   data() {
     return {
-      // 完课榜隐藏单选框
+      /**
+       * 系统课完课榜、生成作品展start
+       */
+      sysFinishRadio: '4',
+      progressList: ['L1', 'L2', 'L3', 'L4', 'L5'],
+      currentProgress: '',
+      showProgressPopover: false,
+      /**
+       * 系统课完课榜、生成作品展end
+       */
       radioOne: true,
       radioTwo: true,
       MissedClassesOne: false,
@@ -406,6 +477,10 @@ export default {
     this.table.tableLabel = [{ label: '购买时间', prop: 'buytime' }]
   },
   methods: {
+    progressClickHandle(item) {
+      this.currentProgress = item
+      this.showProgressPopover = false
+    },
     // 根据班级id获取班级详情
     getTeamDetailById(params) {
       this.$http.Team.getTeamDetailById({ id: params.teamId }).then((res) => {
@@ -484,32 +559,31 @@ export default {
       // 执行 截图操作并保存
     },
     // 生成完课榜
-    handlePosterLoad(picname) {
-      this.$nextTick(() => {
-        window.scrollTo(0, 0)
-        // 获取要生成图片的dom元素
-        var doms = document.getElementsByClassName('finishBox')
-        this.finishLessonData.opreaIndex++
-        if (this.finishLessonData.opreaIndex === doms.length) {
-          const _this = this
-          for (var h = 0; h < doms.length; h++) {
-            ;(function(i) {
-              html2canvas(doms[i], {
-                backgroundColor: 'rgba(0, 0, 0, 0)',
-                useCORS: true,
-                async: true,
-                allowTaint: false
-              }).then((canvas) => {
-                const data = canvas.toDataURL('image/jpeg')
-                // 执行浏览器下载
-                const shutdownLoading = i + 1 === h
-                const imgName = picname + '-' + (i * 1 + 1)
-                _this.download(`${imgName}.jpeg`, data, _this, shutdownLoading)
-              })
-            })(h)
-          }
+    async handlePosterLoad(picname) {
+      await this.$nextTick()
+      window.scrollTo(0, 0)
+      // 获取要生成图片的dom元素
+      var doms = document.getElementsByClassName('finishBox')
+      this.finishLessonData.opreaIndex++
+      if (this.finishLessonData.opreaIndex === doms.length) {
+        const _this = this
+        for (var h = 0; h < doms.length; h++) {
+          ;(function(i) {
+            html2canvas(doms[i], {
+              backgroundColor: 'rgba(0, 0, 0, 0)',
+              useCORS: true,
+              async: true,
+              allowTaint: false
+            }).then((canvas) => {
+              const data = canvas.toDataURL('image/jpeg')
+              // 执行浏览器下载
+              const shutdownLoading = i + 1 === h
+              const imgName = picname + '-' + (i * 1 + 1)
+              _this.download(`${imgName}.jpeg`, data, _this, shutdownLoading)
+            })
+          })(h)
         }
-      })
+      }
     },
     //  生成作品展
     E_handlePosterLoad(picname) {
@@ -540,24 +614,44 @@ export default {
     },
     // 点击显示完课榜 TODO:
     finishLessonList(week) {
+      const id = this.teamDetail.id
+      const curlesson = this.teamDetail.current_lesson
+
+      if (!id || !curlesson) return
+      this.dialogFormVisible = true
       // 体验课
-      if (this.type === 'TRAIL') {
-        if (this.teamDetail.id && this.teamDetail.current_lesson) {
-          // 显示弹框
-          this.dialogFormVisible = true
-          this.finishLessonData.teamId = this.teamDetail.id
-          const currentLesson = this.teamDetail.current_lesson.substring(0, 6)
-          this.finishLessonData.studentLesson = currentLesson.substring(0, 4)
-          this.finishLessonData.weekNum = currentLesson.substring(4, 6)
-          this.btnshow(
-            this.finishLessonData.weekNum,
-            this.classObj.type,
-            this.teamDetail.team_state
-          )
-        }
-      } else {
-        this.dialogFormVisible = true
-      }
+      // if (this.type === 'TRAIL') {
+      // } else {
+      //   this.dialogFormVisible = true
+      // }
+      this.finishLessonData.teamId = id
+      const currentLesson = curlesson.substring(0, 6)
+      this.finishLessonData.studentLesson = currentLesson.substring(0, 4)
+      this.finishLessonData.weekNum = currentLesson.substring(4, 6)
+
+      this.btnshow(
+        this.finishLessonData.weekNum,
+        this.classObj.type,
+        this.teamDetail.team_state
+      )
+    },
+    // 点击显示作品展
+    ExhibitionList(week) {
+      const id = this.teamDetail.id
+      const curlesson = this.teamDetail.current_lesson
+
+      if (!id || !curlesson) return
+
+      this.Exhibition = true
+      this.ExhibitionData.teamId = this.teamDetail.id
+      const currentLesson = this.teamDetail.current_lesson.substring(0, 6)
+      this.ExhibitionData.weekNum1 = currentLesson
+      this.ExhibitionData.weekNum = currentLesson.substring(4, 6)
+      this.btnshow(
+        this.ExhibitionData.weekNum,
+        this.teamDetail.team_type,
+        this.teamDetail.team_state
+      )
     },
     // 生成完课榜图片周按钮显示状态
     btnshow(weekNum, type, state) {
@@ -590,63 +684,47 @@ export default {
           this.MissedClassesTwo = false
         }
       }
-      if (type > 0) {
-        this.dialogFormVisible = false
-        this.Exhibition = false
-        this.Tips = true
-      }
-    },
-    // 点击显示作品展
-    ExhibitionList(week) {
-      if (this.teamDetail.id && this.teamDetail.current_lesson) {
-        this.Exhibition = true
-        this.ExhibitionData.teamId = this.teamDetail.id
-        const currentLesson = this.teamDetail.current_lesson.substring(0, 6)
-        this.ExhibitionData.weekNum1 = currentLesson
-        this.ExhibitionData.weekNum = currentLesson.substring(4, 6)
-        this.btnshow(
-          this.ExhibitionData.weekNum,
-          this.teamDetail.team_type,
-          this.teamDetail.team_state
-        )
-      }
+      // if (type > 0) {
+      //   this.dialogFormVisible = false
+      //   this.Exhibition = false
+      //   this.Tips = true
+      // }
     },
     // 请求完课榜 - 接口数据
-    getStuRankingList(teamId, lesson, week, desc) {
+    getStuRankingList(teamId, lesson, week) {
       if (!teamId || !lesson || !week) return
+
       this.$loading({
         lock: true,
         text: '图片正在生成中'
       })
-      const queryParams = `{"team_id" : ${teamId}, "week" : "${lesson +
+      const query = `{"team_id" : ${teamId}, "week" : "${lesson +
         week}", "sort" : "${this.finishLessonData.finishClassSort}"}`
-      console.log(
-        'request - params  -->> ',
-        'team_id: ' + teamId + ' , lesson :' + lesson + ' , week : ' + week
-      )
-      this.$http.Team.finishClassList({
-        queryParams: queryParams
-      }).then((res) => {
-        if (res.error) return
+
+      this.$http.Team.finishClassList({ query }).then((res) => {
+        const { error, data: { getStuComRankingList = [] } = {} } = res
+
+        if (error) return
         // 生成完课榜（多页）
         const childLastData = []
-        if (res.data.getStuComRankingList) {
-          const stuArrLength = res.data.getStuComRankingList.length
+        if (getStuComRankingList.length) {
+          const stuArrLength = getStuComRankingList.length
           const createDefineNum = 70
           const arevNum = Math.ceil(
             stuArrLength / Math.ceil(stuArrLength / createDefineNum)
           )
-          // 重构数组
           for (var j = 0; j < stuArrLength; j++) {
             const tmpnum = Math.floor(j / arevNum)
             childLastData[tmpnum] = childLastData[tmpnum]
               ? childLastData[tmpnum]
               : []
-            childLastData[tmpnum].push(res.data.getStuComRankingList[j])
+            childLastData[tmpnum].push(getStuComRankingList[j])
           }
+          this.finishLessonData.childListData = childLastData
+          this.finishLessonData.imgNum = childLastData.length
+        } else {
+          this.$loading().close()
         }
-        this.finishLessonData.childListData = childLastData
-        this.finishLessonData.imgNum = childLastData.length
       })
     },
     // 请求作品展-接口数据
@@ -659,12 +737,13 @@ export default {
       const QueryParams = `{"team_id" : ${teamId}, "week" :  "${week}"}`
       this.$http.Team.exhibitionOfWorks({
         QueryParams: QueryParams
-      }).then((res) => {
-        if (res.error) return
+      }).then((res = {}) => {
+        const { error, data: { getStuTaskRankingList = [] } = {} } = res
+        if (error) return
         // 生成作品展（多页）
         const childLastData = []
-        if (res.data.getStuTaskRankingList) {
-          const stuArrLength = res.data.getStuTaskRankingList.length
+        if (getStuTaskRankingList && getStuTaskRankingList.length) {
+          const stuArrLength = getStuTaskRankingList.length
           const createDefineNum = 28
           const arevNum = Math.ceil(
             stuArrLength / Math.ceil(stuArrLength / createDefineNum)
@@ -675,11 +754,13 @@ export default {
             childLastData[tmpnum] = childLastData[tmpnum]
               ? childLastData[tmpnum]
               : []
-            childLastData[tmpnum].push(res.data.getStuTaskRankingList[j])
+            childLastData[tmpnum].push(getStuTaskRankingList[j])
           }
+          this.ExhibitionData.childListData = childLastData
+          this.ExhibitionData.imgNum = childLastData.length
+        } else {
+          this.$loading().close()
         }
-        this.ExhibitionData.childListData = childLastData
-        this.ExhibitionData.imgNum = childLastData.length
       })
     },
     // 绘制生成完课榜图片
@@ -1248,6 +1329,17 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+.progress-list {
+  font-size: 14px;
+  > div {
+    font-size: 14px;
+    padding: 3px 5px;
+    cursor: pointer;
+    &:hover {
+      background: #eee;
+    }
+  }
+}
 .btnbox {
   display: flex;
   align-items: center;
@@ -1341,6 +1433,7 @@ export default {
         margin: 0 5px;
         color: #000;
       }
+
       .sets {
         font-size: 12px;
         color: #3a8ee6;
