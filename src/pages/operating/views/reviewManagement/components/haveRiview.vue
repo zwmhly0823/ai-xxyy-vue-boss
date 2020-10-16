@@ -4,7 +4,7 @@
  * @Author: songyanan
  * @Date: 2020-05-11 14:30:00
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-10-16 21:53:56
+ * @LastEditTime: 2020-10-16 22:15:31
  */
  -->
 <template>
@@ -227,6 +227,12 @@ export default {
             res.data.StudentTaskRelationCommentDetailPage?.content || []
           this.totalElements =
             +res.data.StudentTaskRelationCommentDetailPage?.totalElements || 0
+          this.list = this.list.map((item) => {
+            if (item?.courseware?.no) {
+              item.courseware.no = this.formatCourse(item.courseware.no)
+            }
+            return item
+          })
         }
         this.loading = false
 
@@ -258,6 +264,13 @@ export default {
       this.searchParams = res || {}
       this.query.pageNum = 1
       this.initList()
+    },
+
+    // T2S3L1U2Lesson1 -> S3L1U2
+    formatCourse(course) {
+      if (!course) return
+      const end = course.indexOf('Lesson')
+      return course.substring(2, end)
     },
 
     async pageChange_handler(page) {
