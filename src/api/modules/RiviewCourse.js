@@ -3,7 +3,7 @@
  * @Author: songyanan
  * @Date: 2020-05-11 17:35:28
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-10-15 21:43:44
+ * @LastEditTime: 2020-10-16 19:31:16
  */
 import axios from '../axiosConfig'
 import { injectSubject } from '@/utils/index'
@@ -110,7 +110,8 @@ export default {
             assistant_teacher_id
             parttime_teacher_id
             comment_teacher_id
-            upload_time
+            ctime
+            term
             comment_time
             comment_id
             subject

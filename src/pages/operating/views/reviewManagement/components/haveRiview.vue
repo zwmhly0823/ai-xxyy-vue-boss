@@ -4,7 +4,7 @@
  * @Author: songyanan
  * @Date: 2020-05-11 14:30:00
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-10-16 14:39:01
+ * @LastEditTime: 2020-10-16 19:31:53
  */
  -->
 <template>
@@ -121,8 +121,8 @@
       <el-table-column label="上传日期" align="center" width="180">
         <template slot-scope="scope">
           <div class="review-type">
-            {{ scope.row.upload_time }}
-            {{ timestamp(scope.row.upload_time, 's') || '-' }}
+            {{ scope.row.ctime }}
+            {{ timestamp(scope.row.ctime, 's') || '-' }}
           </div>
         </template>
       </el-table-column>
