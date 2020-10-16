@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-06-16 16:27:14
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-09-12 17:05:03
+ * @LastEditTime: 2020-10-16 19:49:20
 -->
 <template>
   <div class="user-list">
@@ -646,7 +646,9 @@
           <el-table-column label="APP登录" min-width="140">
             <template slot-scope="scope">
               <p v-if="scope.row.userLoginDataInfo">
-                {{ scope.row.userLoginDataInfo.device_type }}
+                {{ scope.row.userLoginDataInfo.device_type }}（V{{
+                  scope.row.userLoginDataInfo.appversion
+                }}）
               </p>
               <p>
                 {{

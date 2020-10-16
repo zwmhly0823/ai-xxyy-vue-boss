@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-05-25 15:34:04
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-09-07 21:00:43
+ * @LastEditTime: 2020-10-16 20:45:14
 -->
 <template>
   <div class="user-list">
@@ -434,6 +434,22 @@
           </span>
           <i v-else class="el-icon-check"></i>
           <!-- <item-status type="3" :row="wechatStatus(scope.row)" /> -->
+        </template>
+      </el-table-column>
+      <el-table-column label="APP登录" min-width="140">
+        <template slot-scope="scope">
+          <p v-if="scope.row.userLoginDataInfo">
+            {{ scope.row.userLoginDataInfo.device_type || '-' }}
+            （V{{ scope.row.userLoginDataInfo.appversion }}）
+          </p>
+          <p v-else>-</p>
+          <p>
+            {{
+              scope.row.lastlogintime !== '0'
+                ? formatDate(scope.row.lastlogintime)
+                : '-'
+            }}
+          </p>
         </template>
       </el-table-column>
       <el-table-column label="辅导老师/班级" min-width="190">
