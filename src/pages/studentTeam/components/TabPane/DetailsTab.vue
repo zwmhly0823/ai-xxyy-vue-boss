@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 14:19:58
  * @LastEditors: Shentong
- * @LastEditTime: 2020-10-16 18:32:04
+ * @LastEditTime: 2020-10-17 18:52:44
  -->
 <template>
   <div>
@@ -32,7 +32,7 @@
         v-if="btnbox"
         style="margin-right: 10px;"
         v-show="exhibition"
-        @click="ExhibitionList"
+        @click="xhibitionList"
         >生成作品展</el-button
       >
       <checkBox
@@ -141,11 +141,22 @@
             </div>
             <div class="system-radio">
               <el-radio v-model="sysFinishRadio" label="1">第一周</el-radio>
-              <el-radio v-model="sysFinishRadio" label="2">第二周</el-radio>
-              <el-radio v-model="sysFinishRadio" disabled label="3"
+              <el-radio
+                v-model="sysFinishRadio"
+                :disabled="radioJudgeDisable < 2"
+                label="2"
+                >第二周</el-radio
+              >
+              <el-radio
+                v-model="sysFinishRadio"
+                :disabled="radioJudgeDisable < 3"
+                label="3"
                 >第三周未开课</el-radio
               >
-              <el-radio v-model="sysFinishRadio" label="4"
+              <el-radio
+                v-model="sysFinishRadio"
+                :disabled="radioJudgeDisable < 4"
+                label="4"
                 >第四周未开课</el-radio
               >
             </div>
@@ -154,7 +165,7 @@
             <el-button @click="dialogFormVisible = false" size="small"
               >取 消</el-button
             >
-            <el-button type="primary" @click="clickHandler" size="small"
+            <el-button type="primary" @click="generatefinishLesson" size="small"
               >确 定</el-button
             >
           </div>
@@ -191,7 +202,7 @@
               <span>当前课程进度</span
               ><span class="progress">{{ currentProgress }}</span>
               <el-popover
-                v-model="showProgressPopover"
+                v-model="showExProgressPopover"
                 placement="right-start"
                 width="100"
                 trigger="click"
@@ -209,12 +220,23 @@
               </el-popover>
             </div>
             <div class="system-radio">
-              <el-radio v-model="sysFinishRadio" label="1">第一周</el-radio>
-              <el-radio v-model="sysFinishRadio" label="2">第二周</el-radio>
-              <el-radio v-model="sysFinishRadio" disabled label="3"
+              <el-radio v-model="sysExhibitionRadio" label="1">第一周</el-radio>
+              <el-radio
+                v-model="sysExhibitionRadio"
+                :disabled="radioJudgeDisable < 2"
+                label="2"
+                >第二周</el-radio
+              >
+              <el-radio
+                v-model="sysExhibitionRadio"
+                :disabled="radioJudgeDisable < 3"
+                label="3"
                 >第三周未开课</el-radio
               >
-              <el-radio v-model="sysFinishRadio" label="4"
+              <el-radio
+                v-model="sysExhibitionRadio"
+                :disabled="radioJudgeDisable < 4"
+                label="4"
                 >第四周未开课</el-radio
               >
             </div>
@@ -303,10 +325,14 @@ export default {
       /**
        * 系统课完课榜、生成作品展start
        */
-      sysFinishRadio: '4',
+      sysFinishRadio: '',
+      radioJudgeDisable: '1',
+      sysExhibitionRadio: '',
       progressList: ['L1', 'L2', 'L3', 'L4', 'L5'],
       currentProgress: '',
       showProgressPopover: false,
+      showExProgressPopover: false,
+      lessonDescription: {},
       /**
        * 系统课完课榜、生成作品展end
        */
@@ -321,8 +347,6 @@ export default {
       btnbox: false,
       type: null,
       input: '',
-      // 完课榜
-      show: false,
       // 点击生成图片--状态
       getImg: false,
       dataURL: '',
@@ -347,7 +371,6 @@ export default {
         studentLesson: '',
         finishClassSort: 'desc',
         weekNum: '',
-        isRequest: true,
         childListData: [],
         imgNum: 0,
         imgSuccessNum: 0,
@@ -358,7 +381,6 @@ export default {
         teamId: 0,
         weekNum: '',
         studentLesson: '',
-        isRequest: true,
         childListData: [],
         imgNum: 0,
         imgSuccessNum: 0,
@@ -383,6 +405,11 @@ export default {
         type: [],
         resource: '',
         desc: ''
+      },
+      currentLessonDesc: {
+        diff: '',
+        level: '',
+        week: ''
       },
       formLabelWidth: '120px',
       tableDataEmpty: true,
@@ -417,28 +444,19 @@ export default {
       } else {
         this.type = ''
       }
-      this.getGroup()
-      if (this.tabsName === '加好友进群') {
-        setTimeout(() => {
-          this.getGroup()
-        }, 200)
-      } else if (this.tabsName === '物流') {
-        setTimeout(() => {
+      setTimeout(() => {
+        if (this.tabsName === '物流') {
           this.getLogistics()
-        }, 200)
-      } else if (this.tabsName === '打开APP') {
-        setTimeout(() => {
+        } else if (this.tabsName === '打开APP') {
           this.geiLogin()
-        }, 200)
-      } else if (this.tabsName === '参课和完课') {
-        setTimeout(() => {
+        } else if (this.tabsName === '参课和完课') {
           this.getClassCompPage()
-        }, 200)
-      } else if (this.tabsName === '作品及点评') {
-        setTimeout(() => {
+        } else if (this.tabsName === '作品及点评') {
           this.getStuComment()
-        }, 200)
-      }
+        } else {
+          this.getGroup()
+        }
+      }, 200)
     } else {
       this.tableDataEmpty = false
       this.table.tableData = []
@@ -480,6 +498,7 @@ export default {
     progressClickHandle(item) {
       this.currentProgress = item
       this.showProgressPopover = false
+      this.showExProgressPopover = false
     },
     // 根据班级id获取班级详情
     getTeamDetailById(params) {
@@ -524,52 +543,70 @@ export default {
         this.getStuComment()
       }
     },
-    // 生成完课榜----确定按钮
-    async clickHandler() {
-      if (!this.finishLessonData.isRequest) {
-        this.dialogFormVisible = false
-        return
-      }
-      // 获取第几周的数据
-      await this.getStuRankingList(
-        this.finishLessonData.teamId,
-        this.finishLessonData.studentLesson,
-        this.finishLessonData.weekNum
-      )
 
+    // 生成完课榜----确定按钮
+    async generatefinishLesson() {
+      // 获取第几周的数据
+      const { difficute } = this.lessonDescription
+      const { teamId, studentLesson, weekNum } = this.finishLessonData
+      const isTrail = this.type === 'TRAIL'
+
+      const week = isTrail
+        ? `${studentLesson}${weekNum}`
+        : `${difficute}${this.currentProgress}U${this.sysFinishRadio}`
+
+      // await this.getStuRankingList(teamId, week)
+      await this.generateFinishAndExhibition(
+        'finishClassList',
+        teamId,
+        week,
+        70
+      )
       // 关闭弹框
       this.dialogFormVisible = false
-      this.show = true
       // 执行 截图操作并保存
     },
     // 生成作品展----确定按钮
     async exhibitionBtn() {
-      if (!this.ExhibitionData.isRequest) {
-        this.Exhibition = false
-        return
-      }
-      // 获取第几周的数据
-      await this.getStuTaskRankingList(
-        this.ExhibitionData.teamId,
-        this.ExhibitionData.weekNum1
+      const { difficute } = this.lessonDescription
+      const { teamId, weekNum1 } = this.ExhibitionData
+      const isTrail = this.type === 'TRAIL'
+
+      const week = isTrail
+        ? `${weekNum1}`
+        : `${difficute}${this.currentProgress}U${this.sysExhibitionRadio}`
+
+      // await this.getStuTaskRankingList(teamId, week)
+      await this.generateFinishAndExhibition(
+        'exhibitionOfWorks',
+        teamId,
+        week,
+        28
       )
+
       // 关闭弹框
-      this.show = true
       this.Exhibition = false
-      // 执行 截图操作并保存
     },
-    // 生成完课榜
-    async handlePosterLoad(picname) {
+    /**
+     * @description 生成作品展和完课榜 canvas
+     * @param modal = 'finishLessonData' 完课榜 / modal = 'ExhibitionData' 作品展
+     */
+    async createContentCanvas(modal, picname) {
       await this.$nextTick()
       window.scrollTo(0, 0)
+
+      const htmlMOM =
+        modal === 'finishLessonData' ? 'finishBox' : 'exhibitionBox'
+
       // 获取要生成图片的dom元素
-      var doms = document.getElementsByClassName('finishBox')
-      this.finishLessonData.opreaIndex++
-      if (this.finishLessonData.opreaIndex === doms.length) {
+      const DOMS = document.getElementsByClassName(htmlMOM)
+      this[modal].opreaIndex++
+
+      if (this[modal].opreaIndex === DOMS.length) {
         const _this = this
-        for (var h = 0; h < doms.length; h++) {
+        for (var h = 0; h < DOMS.length; h++) {
           ;(function(i) {
-            html2canvas(doms[i], {
+            html2canvas(DOMS[i], {
               backgroundColor: 'rgba(0, 0, 0, 0)',
               useCORS: true,
               async: true,
@@ -585,123 +622,152 @@ export default {
         }
       }
     },
-    //  生成作品展
-    E_handlePosterLoad(picname) {
-      this.$nextTick(() => {
-        window.scrollTo(0, 0)
-        const Doms = document.getElementsByClassName('exhibitionBox')
-        this.ExhibitionData.opreaIndex++
-        if (this.ExhibitionData.opreaIndex === Doms.length) {
-          const _this = this
-          for (var h = 0; h < Doms.length; h++) {
-            ;(function(i) {
-              html2canvas(Doms[i], {
-                backgroundColor: 'rgba(0, 0, 0, 0)',
-                useCORS: true,
-                async: true,
-                allowTaint: false
-              }).then((canvas) => {
-                const data = canvas.toDataURL('image/jpeg')
-                // 执行浏览器下载
-                const shutdownLoading = i + 1 === h
-                const imgName = picname + '-' + (i * 1 + 1)
-                _this.download(`${imgName}.jpeg`, data, _this, shutdownLoading)
-              })
-            })(h)
-          }
-        }
-      })
-    },
     // 点击显示完课榜 TODO:
-    finishLessonList(week) {
-      const id = this.teamDetail.id
+    finishLessonList() {
       const curlesson = this.teamDetail.current_lesson
+      const getLesseonDesc = this.getLesseonDesc(curlesson)
 
-      if (!id || !curlesson) return
       this.dialogFormVisible = true
-      // 体验课
-      // if (this.type === 'TRAIL') {
-      // } else {
-      //   this.dialogFormVisible = true
-      // }
-      this.finishLessonData.teamId = id
-      const currentLesson = curlesson.substring(0, 6)
-      this.finishLessonData.studentLesson = currentLesson.substring(0, 4)
-      this.finishLessonData.weekNum = currentLesson.substring(4, 6)
+      this.finishLessonData.teamId = this.teamDetail.id
 
-      this.btnshow(
-        this.finishLessonData.weekNum,
-        this.classObj.type,
-        this.teamDetail.team_state
-      )
+      Object.assign(this.finishLessonData, getLesseonDesc)
+
+      if (this.type === 'TRAIL') {
+        this.btnshow(
+          this.finishLessonData.weekNum,
+          this.classObj.type,
+          this.teamDetail.team_state
+        )
+      } else {
+        this.sysFinishRadio = this.finishLessonData.weekNum.substring(1)
+        this.radioJudgeDisable = this.sysFinishRadio
+        this.currentProgress = getLesseonDesc.level
+      }
     },
     // 点击显示作品展
-    ExhibitionList(week) {
-      const id = this.teamDetail.id
+    xhibitionList() {
       const curlesson = this.teamDetail.current_lesson
-
-      if (!id || !curlesson) return
+      const { currentLesson: weekNum1, weekNum, level } = this.getLesseonDesc(
+        curlesson
+      )
 
       this.Exhibition = true
-      this.ExhibitionData.teamId = this.teamDetail.id
-      const currentLesson = this.teamDetail.current_lesson.substring(0, 6)
-      this.ExhibitionData.weekNum1 = currentLesson
-      this.ExhibitionData.weekNum = currentLesson.substring(4, 6)
-      this.btnshow(
-        this.ExhibitionData.weekNum,
-        this.teamDetail.team_type,
-        this.teamDetail.team_state
-      )
-    },
-    // 生成完课榜图片周按钮显示状态
-    btnshow(weekNum, type, state) {
-      this.finishLessonData.isRequest = true
-      this.ExhibitionData.isRequest = true
-      if (weekNum === 'U1') {
-        if (state === 0) {
-          this.radioOne = false
-          this.radioTwo = false
-          this.MissedClassesOne = true
-          this.MissedClassesTwo = true
-          this.finishLessonData.isRequest = false
-          this.ExhibitionData.isRequest = false
-        } else {
-          this.radioOne = true
-          this.radioTwo = false
-          this.MissedClassesOne = false
-          this.MissedClassesTwo = true
-        }
-      } else if (weekNum === 'U2') {
-        if (state === 0) {
-          this.radioOne = true
-          this.radioTwo = false
-          this.MissedClassesOne = false
-          this.MissedClassesTwo = true
-        } else {
-          this.radioOne = true
-          this.radioTwo = true
-          this.MissedClassesOne = false
-          this.MissedClassesTwo = false
-        }
-      }
-      // if (type > 0) {
-      //   this.dialogFormVisible = false
-      //   this.Exhibition = false
-      //   this.Tips = true
-      // }
-    },
-    // 请求完课榜 - 接口数据
-    getStuRankingList(teamId, lesson, week) {
-      if (!teamId || !lesson || !week) return
 
+      Object.assign(this.ExhibitionData, {
+        teamId: this.teamDetail.id,
+        weekNum1,
+        weekNum
+      })
+
+      if (this.type === 'TRAIL') {
+        this.btnshow(weekNum, this.classObj.type, this.teamDetail.team_state)
+      } else {
+        this.sysExhibitionRadio = weekNum.substring(1)
+        this.radioJudgeDisable = this.sysExhibitionRadio
+        this.currentProgress = level
+      }
+    },
+    /**
+     * @description 生成完课榜和作品展统一接口方法
+     * @params model = 'finishClassList' 完课榜 / model = 'exhibitionOfWorks' 作品展
+     */
+    async generateFinishAndExhibition(model, teamId, week, createDefineNum) {
+      if (!teamId || !week) return
+
+      const type = this.type === 'TRAIL' ? '0' : '1'
+      const sort = this.finishLessonData.finishClassSort
       this.$loading({
         lock: true,
         text: '图片正在生成中'
       })
-      const query = `{"team_id" : ${teamId}, "week" : "${lesson +
-        week}", "sort" : "${this.finishLessonData.finishClassSort}"}`
 
-      this.$http.Team.finishClassList({ query }).then((res) => {
+      const query = `{"team_id" : ${teamId}, "week" : "${week}", "sort" : "${sort}","type": "${type}"}`
+      const {
+        error,
+        data: { getStuComRankingList: A, getStuTaskRankingList: B } = {}
+      } = await this.$http.Team[model](query).catch()
+      if (error) return
+
+      const _list = model === 'finishClassList' ? A || [] : B || []
+
+      const _data =
+        model === 'finishClassList' ? 'finishLessonData' : 'ExhibitionData'
+
+      const childListData = []
+      const arrL = _list.length
+
+      if (arrL) {
+        const arevNum = Math.ceil(arrL / Math.ceil(arrL / createDefineNum))
+
+        for (var j = 0; j < arrL; j++) {
+          const tmpnum = Math.floor(j / arevNum)
+          childListData[tmpnum] = childListData[tmpnum] || []
+          childListData[tmpnum].push(_list[j])
+        }
+
+        Object.assign(this[_data], {
+          childListData,
+          imgNum: childListData.length
+        })
+      } else {
+        this.$loading().close()
+        this.$message.warning('暂无内容可生成')
+      }
+    },
+    /** 通过课程名称，获取里面包含的 信息 */
+    getLesseonDesc(lesson) {
+      const currentLesson = lesson.substring(0, 6)
+
+      const difficute = currentLesson.substring(0, 2)
+      const studentLesson = currentLesson.substring(0, 4)
+      const weekNum = currentLesson.substring(4, 6)
+      const level = currentLesson.substring(2, 4)
+
+      this.lessonDescription = {
+        difficute,
+        currentLesson,
+        studentLesson,
+        weekNum,
+        level
+      }
+
+      return this.lessonDescription
+    },
+    // 生成完课榜图片周按钮显示状态
+    btnshow(weekNum, type, state) {
+      if (weekNum === 'U1') {
+        this.radioTwo = false
+        this.MissedClassesTwo = true
+        if (state === 0) {
+          this.radioOne = false
+          this.MissedClassesOne = true
+        } else {
+          this.radioOne = true
+          this.MissedClassesOne = false
+        }
+      } else if (weekNum === 'U2') {
+        this.radioOne = true
+        this.MissedClassesOne = false
+        if (state === 0) {
+          this.radioTwo = false
+          this.MissedClassesTwo = true
+        } else {
+          this.radioTwo = true
+          this.MissedClassesTwo = false
+        }
+      }
+    },
+    // 请求完课榜 - 接口数据
+    getStuRankingList(teamId, week) {
+      if (!teamId || !week) return
+
+      const type = this.type === 'TRAIL' ? '0' : '1'
+      this.$loading({
+        lock: true,
+        text: '图片正在生成中'
+      })
+      const query = `{"team_id" : ${teamId}, "week" : "${week}", "sort" : "${this.finishLessonData.finishClassSort}","type": "${type}"}`
+      this.$http.Team.finishClassList(query).then((res) => {
         const { error, data: { getStuComRankingList = [] } = {} } = res
 
         if (error) return
@@ -724,20 +790,21 @@ export default {
           this.finishLessonData.imgNum = childLastData.length
         } else {
           this.$loading().close()
+          this.$message.warning('暂无完课榜可生成')
         }
       })
     },
     // 请求作品展-接口数据
     getStuTaskRankingList(teamId, week) {
       if (!teamId || !week) return
+
+      const type = this.type === 'TRAIL' ? '0' : '1'
       this.$loading({
         lock: true,
         text: '图片正在生成中'
       })
-      const QueryParams = `{"team_id" : ${teamId}, "week" :  "${week}"}`
-      this.$http.Team.exhibitionOfWorks({
-        QueryParams: QueryParams
-      }).then((res = {}) => {
+      const queryParams = `{"team_id":${teamId}, "week":"${week}","type": "${type}"}`
+      this.$http.Team.exhibitionOfWorks(queryParams).then((res = {}) => {
         const { error, data: { getStuTaskRankingList = [] } = {} } = res
         if (error) return
         // 生成作品展（多页）
@@ -760,16 +827,19 @@ export default {
           this.ExhibitionData.imgNum = childLastData.length
         } else {
           this.$loading().close()
+          this.$message.warning('暂无作品可生成')
         }
       })
     },
     // 绘制生成完课榜图片
     canvasStart(res) {
-      res && this.handlePosterLoad(this.teamDetail.team_name)
+      res &&
+        this.createContentCanvas('finishLessonData', this.teamDetail.team_name)
     },
     // 绘制生成作品展图片
     CanvasStart(res) {
-      res && this.E_handlePosterLoad(this.teamDetail.team_name)
+      res &&
+        this.createContentCanvas('ExhibitionData', this.teamDetail.team_name)
     },
     // 加好友进群 修改已加好友 已进群 接口
     getCodeHandle() {
@@ -799,7 +869,6 @@ export default {
     },
     // 加好友进群接口
     getGroup() {
-      console.log(this.classObj.type, 'classObj.type')
       const trail = +this.classObj.type
         ? 'StudentSystemForTeamStatisticsPage'
         : 'StudentTrialForTeamStatisticsPage'
@@ -1292,7 +1361,6 @@ export default {
           studentLesson: '',
           finishClassSort: 'desc',
           weekNum: '',
-          isRequest: true,
           childListData: [],
           imgNum: 0,
           imgSuccessNum: 0,
@@ -1302,7 +1370,6 @@ export default {
           teamId: 0,
           weekNum: '',
           studentLesson: '',
-          isRequest: true,
           childListData: [],
           imgNum: 0,
           imgSuccessNum: 0,

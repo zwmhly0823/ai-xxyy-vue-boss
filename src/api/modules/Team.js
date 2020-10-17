@@ -514,36 +514,36 @@ export default {
     })
   },
   // 生成完课榜 / 生成作品展
-  finishClassList({ queryParams }) {
+  finishClassList(queryParams) {
     return axios.post('/graphql/getStuRankingList', {
       query: `{
-                getStuComRankingList(query : ${JSON.stringify(queryParams)}){
-                student_id
-                mobile
-                username
-                head
-                completeArr {
-                current_lesson
-                is_complete
-                }
-            }
-          }`
-    })
-  },
-  exhibitionOfWorks({ QueryParams }) {
-    return axios.post('/graphql/getStuRankingList', {
-      query: `{
-            getStuTaskRankingList(query : ${JSON.stringify(QueryParams)}){
+            getStuComRankingList(query : ${JSON.stringify(queryParams)}){
             student_id
             mobile
             username
             head
             completeArr {
-            current_lesson
-            task_image
-                }
-                }
-                  }`
+              current_lesson
+              is_complete
+            }
+        }
+      }`
+    })
+  },
+  exhibitionOfWorks(queryParams) {
+    return axios.post('/graphql/getStuRankingList', {
+      query: `{
+            getStuTaskRankingList(query : ${JSON.stringify(queryParams)}){
+            student_id
+            mobile
+            username
+            head
+            completeArr {
+              current_lesson
+              task_image
+            }
+          }
+        }`
     })
   },
   // 获取课程下拉框接口
