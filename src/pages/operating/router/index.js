@@ -1,7 +1,7 @@
 /*
  * @Date: 2020-03-13 15:20:21
- * @LastEditors: liukun
- * @LastEditTime: 2020-08-03 15:58:22
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-10-17 14:58:11
  * @FilePath: /ai-app-vue-toss/src/pages/studentTeam/router/index.js
  */
 import Vue from 'vue'
@@ -79,7 +79,7 @@ const routes = [
     path: '/comment',
     name: 'comment',
     meta: {
-      title: '点评管理',
+      title: '语音库',
       keepAlive: false
     },
     component: () => import('../views/reviewManagement/comment.vue')
