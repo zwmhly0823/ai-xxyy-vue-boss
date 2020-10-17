@@ -3,8 +3,8 @@
  * @version: 1.0.0
  * @Author: Shentong
  * @Date: 2020-05-14 14:11:21
- * @LastEditors: Shentong
- * @LastEditTime: 2020-09-15 15:49:16
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-10-17 20:01:58
  -->
 <template>
   <el-row type="flex" class="app-main team-container">
@@ -263,6 +263,7 @@
 import _ from 'lodash'
 import TableSearch from '../../components/tableSearch/index'
 import { calculateWD } from '@/utils/validate'
+import { formatTeamNameSup } from '@/utils/supList'
 import EleTable from '@/components/Table/EleTable'
 import { formatData, openBrowserTab } from '@/utils/index'
 // import ScheduleTable from './components/index.vue'
@@ -438,6 +439,7 @@ export default {
         item.ctime = +item.ctime ? formatData(item.ctime) : ''
         item.utime = +item.utime ? formatData(item.utime) : ''
         item.WD = item.current_lesson ? calculateWD(item.current_lesson) : ''
+        item.current_lesson = formatTeamNameSup(item.current_lesson)
         item.teamStatus = item.team_state
           ? this.teamStatusKeyVal[+item.team_state]
           : ''

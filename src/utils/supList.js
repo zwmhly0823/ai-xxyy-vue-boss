@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-10-13 21:14:38
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-10-17 13:31:20
+ * @LastEditTime: 2020-10-17 20:00:26
  */
 // import { deepClone } from '@/utils'
 /**
@@ -107,20 +107,30 @@ export function getSubLevel(s, upper = false) {
 export function formatTeamNameSup(teamName) {
   if (!teamName) return
   const upperName = teamName.toLocaleUpperCase()
-  if (
-    upperName.includes('S1') &&
-    !upperName.includes('基础') &&
-    !upperName.includes('进阶')
-  ) {
-    teamName = teamName.replace('S1', 'S1-进阶')
+  const idx =
+    upperName.indexOf('S1') &&
+    upperName.indexOf('S2') &&
+    upperName.indexOf('S4') &&
+    upperName.indexOf('S5')
+
+  if (idx >= 0 && !upperName.includes('基础') && !upperName.includes('进阶')) {
+    const s = upperName.substr(idx, 2)
+    teamName = teamName.replace(s, SUP_LEVEL_UPPER[s])
   }
-  if (
-    upperName.includes('S2') &&
-    !upperName.includes('基础') &&
-    !upperName.includes('进阶')
-  ) {
-    teamName = teamName.replace('S2', 'S2-基础')
-  }
+  // if (
+  //   upperName.includes('S1') &&
+  //   !upperName.includes('基础') &&
+  //   !upperName.includes('进阶')
+  // ) {
+  //   teamName = teamName.replace('S1', 'S1-进阶')
+  // }
+  // if (
+  //   upperName.includes('S2') &&
+  //   !upperName.includes('基础') &&
+  //   !upperName.includes('进阶')
+  // ) {
+  //   teamName = teamName.replace('S2', 'S2-基础')
+  // }
   return teamName
 }
 
