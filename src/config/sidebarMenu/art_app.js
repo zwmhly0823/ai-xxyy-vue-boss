@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-08-19 21:14:08
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-10-15 20:37:48
+ * @LastEditTime: 2020-10-17 11:53:01
  */
 import { removeToken } from '@/utils/auth'
 import { baseUrl } from '@/utils/index'
@@ -315,7 +315,8 @@ const bearArt = [
     meta: {
       title: '运营管理',
       icon: 'iconyunyingzhongxin',
-      module: 'operating'
+      module: 'operating',
+      bottom: true
     },
     children: [
       {
