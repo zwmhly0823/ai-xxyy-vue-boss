@@ -3,8 +3,8 @@
  * @Descripttion:
  * @Author: songyanan
  * @Date: 2020-05-11 14:30:00
- * @LastEditors: songyanan
- * @LastEditTime: 2020-05-16 12:44:20
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-10-17 13:50:46
  */
  -->
 <template>
@@ -100,6 +100,7 @@
 
 <script>
 import { timestamp } from '@/utils/index'
+import { formatTeamNameSup } from '@/utils/supList'
 export default {
   data() {
     return {
@@ -123,7 +124,10 @@ export default {
       try {
         const res = await this.$http.RiviewCourse.getHaveRiview(number)
         if (res.code === 0) {
-          this.list = res.payload.content
+          this.list = res.payload.content.map((item) => {
+            item.courseName = formatTeamNameSup(item.courseName)
+            return item
+          })
           this.totalElements = Number.parseInt(res.payload.totalElements)
           this.loading = false
         }
