@@ -282,6 +282,7 @@ const allExpressHideSearchItemActivity = {
   productType: 'productType'
 }
 const replenishHideCol = {
+  approvalReissueInfo: true,
   productName: true,
   productVersion: false,
   term: false,

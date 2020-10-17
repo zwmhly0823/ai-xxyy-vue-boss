@@ -177,6 +177,18 @@
         </template>
       </el-table-column>
       <el-table-column
+        label="附件详情"
+        min-width="200"
+        v-if="showCol.approvalReissueInfo"
+        :key="20"
+      >
+        <template slot-scope="scope">
+          <el-button type="text" @click="showEnclosureDialog(scope.row)"
+            >详情</el-button
+          >
+        </template>
+      </el-table-column>
+      <el-table-column
         label="申请人"
         min-width="180"
         v-if="showCol.applicant"
@@ -506,6 +518,15 @@
         />
       </el-dialog>
     </div>
+    <!-- 附件详情弹框 -->
+    <el-dialog
+      title="附件详情"
+      :visible.sync="enclosureDialog"
+      width="30%"
+      :before-close="handleCloseEnclosure"
+    >
+      <span>这是一段信息</span>
+    </el-dialog>
   </div>
 </template>
 
@@ -671,6 +692,7 @@ export default {
       ],
       value1: '0',
       dialogVisiblePass: false,
+      enclosureDialog: false,
       expressBatch: [],
       expressNu: [],
       selecInformation: '',
@@ -729,6 +751,15 @@ export default {
     }
   },
   methods: {
+    // 附件详情
+    showEnclosureDialog(row) {
+      this.enclosureDialog = true
+      console.log(row, 'row')
+    },
+    // 关闭附件详情
+    handleCloseEnclosure() {
+      this.enclosureDialog = false
+    },
     // 点击用户信息回调事件
     userHandle(user) {
       if (!user || !user.id) {
