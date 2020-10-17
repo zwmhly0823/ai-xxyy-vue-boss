@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 14:19:58
  * @LastEditors: Shentong
- * @LastEditTime: 2020-10-17 18:52:44
+ * @LastEditTime: 2020-10-17 18:56:31
  -->
 <template>
   <div>
@@ -1319,27 +1319,20 @@ export default {
     // 分页
     onCurrentPage(data) {
       this.table.currentPage = data
-      if (this.table.tabs === 0) {
-        setTimeout(() => {
+      setTimeout(() => {
+        if (this.table.tabs === 0) {
           this.getGroup()
-        }, 200)
-      } else if (this.table.tabs === 1) {
-        setTimeout(() => {
+        } else if (this.table.tabs === 1) {
           this.getLogistics()
-        }, 200)
-      } else if (this.table.tabs === 2) {
-        setTimeout(() => {
+        } else if (this.table.tabs === 2) {
           this.geiLogin()
-        }, 200)
-      } else if (this.table.tabs === 3) {
-        setTimeout(() => {
+        } else if (this.table.tabs === 3) {
           this.getClassCompPage()
-        }, 200)
-      } else if (this.table.tabs === 4) {
-        setTimeout(() => {
+        } else if (this.table.tabs === 4) {
           this.getStuComment()
-        }, 200)
-      }
+        }
+      }, 200)
+
       var dom = document.getElementById('right-scroll')
       dom.querySelector('.scrollbar-wrapper').scrollTo(0, 0)
     },
