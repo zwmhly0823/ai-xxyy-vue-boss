@@ -159,6 +159,7 @@ export function baseUrl() {
   let myBaseUrl = ''
   const pathname = location.pathname
   const environment = ['dev', 'test']
+
   const enFlag = environment.some((item, index) => {
     return pathname.includes(item)
   })

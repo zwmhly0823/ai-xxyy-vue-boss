@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-05-19 17:18:39
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-10-15 17:14:34
+ * @LastEditTime: 2020-10-19 18:23:42
 -->
 <template>
   <section class="bianju10">
@@ -150,7 +150,10 @@
         </el-form-item>
       </el-form>
       <div>
-        <el-button type="primary" @click.stop="BatchRefund"
+        <el-button
+          v-show="+roleId === 7"
+          type="primary"
+          @click.stop="BatchRefund"
           >批量发起退款支付</el-button
         >
       </div>
@@ -192,16 +195,13 @@
         <el-table-column prop="regtypeStr" label="业务类型" align="center">
         </el-table-column>
         <el-table-column prop="applyName" label="申请人-部门" align="center">
+          <template slot-scope="scope">
+            <p>{{ scope.row.applyName }}</p>
+            <p>{{ scope.row.applierDepartment }}</p>
+          </template>
         </el-table-column>
         <el-table-column prop="tradeTypeStr" label="支付方式" align="center">
         </el-table-column>
-        <!-- <el-table-column
-          prop="transactionId"
-          label="订单交易流水号"
-          align="center"
-          width="120"
-        >
-        </el-table-column> -->
         <el-table-column
           prop="buytime"
           label="订单支付时间"
@@ -212,7 +212,7 @@
         <el-table-column prop="statusStr" label="退款状态" align="center">
         </el-table-column>
         <el-table-column
-          prop="refundTypeStr"
+          prop="refundStatusStr"
           label="退款支付状态"
           align="center"
         >
@@ -242,6 +242,9 @@
           align="center"
           width="155"
         >
+          <template slot-scope="scope">
+            {{ scope.row.refundTime || '--' }}
+          </template>
         </el-table-column>
         <el-table-column label="操作" align="center" fixed="right">
           <template slot-scope="scope">
@@ -274,7 +277,11 @@
       <template v-slot:title>
         <h1 class="rawer-title">退费订单详情</h1>
       </template>
-      <drawer />
+      <drawer
+        @closeDrawer="closeDrawer"
+        :orderData="choutidata"
+        :approveData="approveData"
+      />
     </el-drawer>
   </section>
 </template>
@@ -294,6 +301,7 @@ export default {
   },
   data() {
     return {
+      roleId: JSON.parse(localStorage.getItem('staff')).roleId || '',
       selectData: [],
       searchJson: {
         regType: '', // 业务类型
@@ -335,6 +343,7 @@ export default {
 
       // tableData
       tableData: [],
+      approveData: [],
       // 抽屉
       drawer: false,
       choutidata: {},
@@ -676,16 +685,39 @@ export default {
       console.log(e)
       this.selectData = e
     },
+    closeDrawer() {
+      // 跳回列表并刷新
+      this.$refs.drawerLk.closeDrawer() // 关闭抽屉
+      this.arrangeParams() // 刷新列表数据
+    },
     // 批量退款
     BatchRefund() {
-      if (this.selectData && this.selectData.length > 0) {
+      if (this.selectData && this.selectData.length <= 0) {
         this.$message({
           message: '请选择订单',
           type: 'error'
         })
       }
+      // const data =  this.selectData.filter((item)=>{
+      //     [4,7,8,9].includes(item.status)&& [4,5].includes()
+      //   })
+      const payIds = []
+      this.selectData.map((item, idx) => {
+        if (
+          [4, 7, 8, 9].includes(item.status) &&
+          ![4, 5].includes(item.refundStatus)
+        ) {
+          payIds.push(item.id)
+        }
+      })
+      if (payIds.length === 0) {
+        return this.$message({
+          message: '无可退款订单',
+          type: 'error'
+        })
+      }
       this.$confirm(
-        `您即将给退款订单【确认退款】确认退款订单数：${this.selectData.length}条`,
+        `您即将给退款订单【确认退款】确认退款订单数：${payIds.length}条`,
         '批量确认退款',
         {
           confirmButtonText: '确定',
@@ -694,6 +726,13 @@ export default {
         }
       )
         .then(() => {
+          this.$http.Finance.toAgreeAll({
+            refundUid: JSON.parse(localStorage.getItem('staff')).id,
+            paymentId: payIds
+          }).catch((err) => {
+            console.log(err)
+          })
+          this.arrangeParams() // 刷新列表数据
           this.$message({
             type: 'success',
             message: '退款成功!'
@@ -711,6 +750,10 @@ export default {
     async handleEdit() {
       console.info('index:', arguments[0])
       console.info('row:', arguments[1])
+      this.approveData = await this.$http.Finance.getApprov({
+        flowApprovalId: arguments[1].approvalId
+      })
+      console.log(this.approveData)
       const { code, payload } = await this.$http.Finance.getDetail({
         paymentId: arguments[1].id
       }).catch((err) => {
@@ -726,72 +769,72 @@ export default {
         Object.assign(this.choutidata, payload)
         this.drawer = true
       }
-    },
-
-    async comfirmRefund() {
-      const { code } = await this.$http.Finance.toAgree({
-        refundUid: JSON.parse(localStorage.getItem('staff')).id,
-        paymentId: this.whichListOrderId
-        // 默认不传就是1 审核通过
-      }).catch((err) => {
-        console.error(err)
-        this.$message({
-          message: '通过操作失败,稍后再试',
-          type: 'error'
-        })
-        return -1
-      })
-      if (code === 0) {
-        this.$message({
-          message: '操作成功',
-          type: 'success'
-        })
-        // 跳回列表并刷新
-        this.$refs.drawerLk.closeDrawer() // 关闭抽屉
-        this.arrangeParams() // 刷新列表数据
-      } else {
-        this.$message({
-          message: '通过操作失败,稍后再试',
-          type: 'warning'
-        })
-      }
-    },
-    rejectRefund() {
-      this.$prompt('请告知您的驳回理由', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        inputPattern: /[\s\S]+/, // least 1
-        inputErrorMessage: '不能为空！好歹敲个space'
-      }).then(async ({ value }) => {
-        const { code } = await this.$http.Finance.toAgree({
-          refundUid: JSON.parse(localStorage.getItem('staff')).id,
-          paymentId: this.whichListOrderId,
-          auditType: 2,
-          rejectReason: value
-        }).catch((err) => {
-          console.error(err)
-          this.$message({
-            message: '驳回操作失败,请稍后再试',
-            type: 'error'
-          })
-          return -1
-        })
-        if (code === 0) {
-          this.$message({
-            message: '操作成功',
-            type: 'success'
-          })
-          // 跳回列表并刷新
-          this.$refs.drawerLk.closeDrawer() // 关闭抽屉
-          this.arrangeParams() // 刷新列表数据
-        } else {
-          this.$message({
-            message: '驳回操作失败,稍后再试',
-            type: 'warning'
-          })
-        }
-      })
     }
+
+    // async comfirmRefund() {
+    //   const { code } = await this.$http.Finance.toAgree({
+    //     refundUid: JSON.parse(localStorage.getItem('staff')).id,
+    //     paymentId: this.whichListOrderId
+    //     // 默认不传就是1 审核通过
+    //   }).catch((err) => {
+    //     console.error(err)
+    //     this.$message({
+    //       message: '通过操作失败,稍后再试',
+    //       type: 'error'
+    //     })
+    //     return -1
+    //   })
+    //   if (code === 0) {
+    //     this.$message({
+    //       message: '操作成功',
+    //       type: 'success'
+    //     })
+    //     // 跳回列表并刷新
+    //     this.$refs.drawerLk.closeDrawer() // 关闭抽屉
+    //     this.arrangeParams() // 刷新列表数据
+    //   } else {
+    //     this.$message({
+    //       message: '通过操作失败,稍后再试',
+    //       type: 'warning'
+    //     })
+    //   }
+    // },
+    // rejectRefund() {
+    //   this.$prompt('请告知您的驳回理由', '提示', {
+    //     confirmButtonText: '确定',
+    //     cancelButtonText: '取消',
+    //     inputPattern: /[\s\S]+/, // least 1
+    //     inputErrorMessage: '不能为空！好歹敲个space'
+    //   }).then(async ({ value }) => {
+    //     const { code } = await this.$http.Finance.toAgree({
+    //       refundUid: JSON.parse(localStorage.getItem('staff')).id,
+    //       paymentId: this.whichListOrderId,
+    //       auditType: 2,
+    //       rejectReason: value
+    //     }).catch((err) => {
+    //       console.error(err)
+    //       this.$message({
+    //         message: '驳回操作失败,请稍后再试',
+    //         type: 'error'
+    //       })
+    //       return -1
+    //     })
+    //     if (code === 0) {
+    //       this.$message({
+    //         message: '操作成功',
+    //         type: 'success'
+    //       })
+    //       // 跳回列表并刷新
+    //       this.$refs.drawerLk.closeDrawer() // 关闭抽屉
+    //       this.arrangeParams() // 刷新列表数据
+    //     } else {
+    //       this.$message({
+    //         message: '驳回操作失败,稍后再试',
+    //         type: 'warning'
+    //       })
+    //     }
+    //   })
+    // }
   },
   computed: {
     isOpen() {
