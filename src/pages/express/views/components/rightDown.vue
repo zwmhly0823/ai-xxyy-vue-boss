@@ -525,7 +525,11 @@
       width="30%"
       :before-close="handleCloseEnclosure"
     >
-      <span>这是一段信息</span>
+      <a :download="enclosureimg">下载图</a>
+      <img v-if="enclosureimg" style="width:100%;" :src="enclosureimg" alt="" />
+      <video v-if="enclosurevideo" width="100%" height="300" controls>
+        <source :src="enclosurevideo" type="video/mp4" />
+      </video>
     </el-dialog>
   </div>
 </template>
@@ -693,6 +697,8 @@ export default {
       value1: '0',
       dialogVisiblePass: false,
       enclosureDialog: false,
+      enclosureimg: '',
+      enclosurevideo: '',
       expressBatch: [],
       expressNu: [],
       selecInformation: '',
@@ -754,6 +760,10 @@ export default {
     // 附件详情
     showEnclosureDialog(row) {
       this.enclosureDialog = true
+      this.enclosureimg =
+        'http://s1.meixiu.mobi/android-images/2020-10-19/76d86930040d49daae5c7fa1bcc44078.jpg?x-oss-process=image/resize,l_100'
+      this.enclosurevideo =
+        'https://s1.meixiu.mobi/h5/headPic/1602838809544.mp4'
       console.log(row, 'row')
     },
     // 关闭附件详情
@@ -1158,6 +1168,10 @@ export default {
               stageInfo {
                 course_day
               }
+              approvalReissueInfo{
+                atts_url
+              }
+              reissue_reson
               teamInfo {
                 team_name
               }
