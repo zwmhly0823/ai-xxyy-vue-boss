@@ -2,7 +2,7 @@
  * @Descripttion: 
  * @version: 
  * @LastEditors: liukun
- * @LastEditTime: 2020-10-17 11:42:36
+ * @LastEditTime: 2020-10-19 11:58:45
  -->
 <template>
   <div class="adjustModule">
@@ -1003,11 +1003,8 @@ export default {
               (this.jsonDate3.deductGift === 1 ? 100 : 0))
           )
         } else {
-          console.warn(
-            '注意！次月课程保留没有被选择:为:',
-            this.jsonDate3.deductMonth
-          )
-          return ''
+          console.warn('注意！这是体验课,无需选择是否保留次月')
+          return this.refundForm.refundAmount
         }
       } else {
         // 退款类型-其他
