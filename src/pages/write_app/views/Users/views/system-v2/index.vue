@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-05-25 15:34:04
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-10-16 20:45:14
+ * @LastEditTime: 2020-10-19 10:56:44
 -->
 <template>
   <div class="user-list">
@@ -440,7 +440,9 @@
         <template slot-scope="scope">
           <p v-if="scope.row.userLoginDataInfo">
             {{ scope.row.userLoginDataInfo.device_type || '-' }}
-            （V{{ scope.row.userLoginDataInfo.appversion }}）
+            <span v-if="scope.row.userLoginDataInfo.appversion"
+              >（V{{ scope.row.userLoginDataInfo.appversion }}）</span
+            >
           </p>
           <p v-else>-</p>
           <p>
