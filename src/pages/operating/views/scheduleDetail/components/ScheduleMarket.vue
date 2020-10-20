@@ -4,7 +4,7 @@
  * @Author: shentong
  * @Date: 2020-04-02 16:08:02
  * @LastEditors: Shentong
- * @LastEditTime: 2020-10-13 20:38:50
+ * @LastEditTime: 2020-10-13 21:32:58
  -->
 <template>
   <div>
@@ -138,12 +138,6 @@ export default {
   },
   data() {
     return {
-      courseCategory: {
-        0: '双周体验课',
-        2: '年系统课',
-        3: '单周体验课',
-        4: '半年系统课'
-      },
       courseType: '0',
       totalElements: 0,
       flags: {
