@@ -2,7 +2,7 @@
  * @Descripttion: 
  * @version: 
  * @LastEditors: liukun
- * @LastEditTime: 2020-10-19 11:58:45
+ * @LastEditTime: 2020-10-20 15:43:16
  -->
 <template>
   <div class="adjustModule">
@@ -499,7 +499,7 @@ export default {
           this.refundForm.businessType === '系统课'
         ) {
           const {
-            payload: { remainingWeek }
+            payload: { remainingWeek, reduceWeek }
           } = await this.$http.RefundApproval.getPeriod({
             orderNo: targetItem.id
           }).catch((err) => {
@@ -511,10 +511,9 @@ export default {
           })
           if (remainingWeek) {
             this.pureWeekS = remainingWeek
-            this.pureWeekY =
-              this.selectOrder.packagesCourseWeek - this.pureWeekS
+            this.pureWeekY = reduceWeek
             console.info(
-              `选择系统订单后接口得到剩余${this.pureWeekS},经鑫计算得到已上${this.pureWeekY}`
+              `选择系统订单后接口得到剩余${this.pureWeekS},已上课${this.pureWeekY}`
             )
           } else {
             this.$message({
