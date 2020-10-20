@@ -4,7 +4,7 @@
  * @Author: zhangjiawen
  * @Date: 2020-07-10 14:49:13
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-10-20 15:16:57
+ * @LastEditTime: 2020-10-20 15:58:29
 -->
 <template>
   <div class="drawer-main">
@@ -82,13 +82,17 @@
           <span>开票状态:{{ orderData.invoiceStatus }}</span>
           <span>开票类型:{{ orderData.invoiceType }}</span>
           <span>发票号码:{{ orderData.invoiceCode }}</span>
-          <span>支付宝信息:{{ orderData.payeeAccount }}</span>
+          <span
+            >{{ orderData.tradeTypeDesc }}信息:{{
+              orderData.payeeAccount
+            }}</span
+          >
           <span>附加扣费说明:{{ orderData.status }}</span>
         </p>
       </div>
       <div class="drawer-line">
         <p class="line-title">订单生命周期</p>
-        <p style="width: 90%;height:100px; border: 1px solid #d7d7e0;">
+        <p style="width: 90%;height:110px; border: 1px solid #d7d7e0;">
           <el-steps style="padding-top:10px" :active="6" align-center>
             <!-- <el-step
               v-for="item in list"
@@ -263,6 +267,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.drawer-main {
+  max-height: 80vh;
+  overflow: auto;
+}
 .drawer-line {
   margin-left: 10px;
   .line-title {
