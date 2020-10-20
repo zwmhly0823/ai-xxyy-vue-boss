@@ -4,7 +4,7 @@
  * @Author: zhangjiawen
  * @Date: 2020-07-10 14:49:13
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-10-20 16:58:53
+ * @LastEditTime: 2020-10-20 18:14:00
 -->
 <template>
   <div class="drawer-main">
@@ -225,7 +225,7 @@ export default {
   methods: {
     // 时间处理
     dayjs(date) {
-      return Dayjs(date).format('YYYY-MM-DD HH:mm')
+      return Dayjs(date).format('YYYY-MM-DD HH:mm:ss')
     },
     async comfirmRefund() {
       const { code } = await this.$http.Finance.toAgree({

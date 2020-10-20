@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-05-22 12:39:14
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-10-19 17:02:49
+ * @LastEditTime: 2020-10-20 17:34:21
  */
 
 import axios from '../axiosConfig'
@@ -42,8 +42,8 @@ export default {
   toAgreeAll({ refundUid, paymentId } = {}) {
     console.warn('接口-财务同意或驳回发出')
     return axios.post(
-      change +
-        `/o/v1/refund/batchRefund?refundUid=${refundUid}&paymentId=${paymentId}`
+      change + `/o/v1/refund/batchRefund?refundUid=${refundUid}`,
+      paymentId
     )
   },
   // 导出
