@@ -5,7 +5,7 @@
  * @Author: shentong
  * @Date: 2020-03-13 14:38:28
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-10-12 11:23:28
+ * @LastEditTime: 2020-10-16 20:44:55
  */
 // import axios from '../axios'
 import axios from '../../axiosConfig'
@@ -171,6 +171,7 @@ export default {
             }
             userLoginDataInfo {
               device_type
+              appversion
             }
             userIntention {
               type
@@ -364,6 +365,10 @@ export default {
               send_id
               userExtends{
                 grade
+              }
+              userLoginDataInfo {
+                device_type
+                appversion
               }
             }
           }

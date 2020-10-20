@@ -4,8 +4,8 @@
  * @version:
  * @Author: shentong
  * @Date: 2020-03-13 14:38:28
- * @LastEditors: liukun
- * @LastEditTime: 2020-10-15 20:10:55
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-10-16 20:37:03
  */
 // import axios from '../axios'
 import axios from '../axiosConfig'
@@ -248,6 +248,7 @@ export default {
             }
             userLoginDataInfo {
               device_type
+              appversion
             }
             userIntention {
               type
@@ -447,6 +448,10 @@ export default {
                   username
                   user_num
                 }
+              }
+              userLoginDataInfo {
+                device_type
+                appversion
               }
             }
           }

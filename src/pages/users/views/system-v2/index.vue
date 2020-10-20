@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-05-25 15:34:04
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-09-04 11:55:00
+ * @LastEditTime: 2020-10-19 10:54:02
 -->
 <template>
   <div class="user-list">
@@ -451,6 +451,24 @@
             {{ scope.row.user_info.sender.user_num }}
           </p>
           <p v-else>-</p>
+        </template>
+      </el-table-column>
+      <el-table-column label="APP登录" min-width="140">
+        <template slot-scope="scope">
+          <p v-if="scope.row.userLoginDataInfo">
+            {{ scope.row.userLoginDataInfo.device_type || '-' }}
+            <span v-if="scope.row.userLoginDataInfo.appversion"
+              >（V{{ scope.row.userLoginDataInfo.appversion }}）</span
+            >
+          </p>
+          <p v-else>-</p>
+          <p>
+            {{
+              scope.row.lastlogintime !== '0'
+                ? formatDate(scope.row.lastlogintime)
+                : '-'
+            }}
+          </p>
         </template>
       </el-table-column>
       <el-table-column label="辅导老师/班级" min-width="190">

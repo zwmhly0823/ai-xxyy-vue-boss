@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-06-16 16:27:14
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-09-12 17:04:00
+ * @LastEditTime: 2020-10-19 10:56:32
 -->
 <template>
   <div class="user-list">
@@ -647,6 +647,9 @@
             <template slot-scope="scope">
               <p v-if="scope.row.userLoginDataInfo">
                 {{ scope.row.userLoginDataInfo.device_type }}
+                <span v-if="scope.row.userLoginDataInfo.appversion"
+                  >（V{{ scope.row.userLoginDataInfo.appversion }}）</span
+                >
               </p>
               <p>
                 {{
