@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-05-12 15:22:25
  * @LastEditors: liukun
- * @LastEditTime: 2020-08-11 19:07:53
+ * @LastEditTime: 2020-10-20 16:04:53
  */
 
 import axios from '../axiosConfig'
@@ -57,7 +57,7 @@ export default {
   getPeriod(query) {
     console.warn('我来查系统课已上时长', query)
     return axios.get(
-      '/api/ts/v1/teaching/student/system/findSystemByOrderNo',
+      '/api/b/v1/backend/refund/system/findSystemReduceWeek',
       query
     )
   },
