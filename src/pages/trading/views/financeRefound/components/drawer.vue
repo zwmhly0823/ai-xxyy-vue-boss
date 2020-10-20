@@ -4,7 +4,7 @@
  * @Author: zhangjiawen
  * @Date: 2020-07-10 14:49:13
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-10-20 18:14:00
+ * @LastEditTime: 2020-10-20 18:30:52
 -->
 <template>
   <div class="drawer-main">
@@ -42,10 +42,10 @@
       <div class="drawer-line">
         <p class="line-title">退款订单明细</p>
         <p class="line-delf">
-          <span>用户信息:{{ orderData.userName }}</span>
-          <span>订单号:{{ orderData.orderId }}</span>
-          <span>订单交易流水号:{{ orderData.outTradeNo }}</span>
-          <span>退款订单状态:{{ orderData.status }}</span>
+          <span>用户信息:{{ dataShow(orderData.userName) }}</span>
+          <span>订单号:{{ dataShow(orderData.orderId) }}</span>
+          <span>订单交易流水号:{{ dataShow(orderData.outTradeNo) }}</span>
+          <span>退款订单状态:{{ dataShow(orderData.statusStr) }}</span>
         </p>
         <el-table
           :data="orderDel"
@@ -79,13 +79,13 @@
           </el-table-column>
         </el-table>
         <p class="line-delf">
-          <span>开票状态:{{ orderData.invoiceStatus }}</span>
-          <span>开票类型:{{ orderData.invoiceType }}</span>
-          <span>发票号码:{{ orderData.invoiceCode }}</span>
+          <span>开票状态:{{ dataShow(orderData.invoiceStatus) }}</span>
+          <span>开票类型:{{ dataShow(orderData.invoiceType) }}</span>
+          <span>发票号码:{{ dataShow(orderData.invoiceCode) }}</span>
           <span v-show="orderData.tradeTypeDesc === '支付宝'"
-            >支付宝信息:{{ orderData.payeeAccount }}</span
+            >支付宝信息:{{ dataShow(orderData.payeeAccount) }}</span
           >
-          <span>附加扣费说明:{{ orderData.status }}</span>
+          <span>附加扣费说明:{{ dataShow(orderData.status) }}</span>
         </p>
       </div>
       <div class="drawer-line">
@@ -115,7 +115,7 @@
               :description="dayjs(+orderData.refundCtime)"
             ></el-step>
             <el-step
-              v-show="orderData.refundTime"
+              v-show="orderData.refundTime && orderData.refundTime !== '0'"
               title="完成退款时间"
               :description="dayjs(+orderData.refundTime)"
             ></el-step>
@@ -223,6 +223,14 @@ export default {
     console.log('参数', this.orderData)
   },
   methods: {
+    // 数据展示处理 DEFAULT '' 都展示为--
+    dataShow(data) {
+      if (!data || ['DEFAULT'].includes(data)) {
+        return '--'
+      } else {
+        return data
+      }
+    },
     // 时间处理
     dayjs(date) {
       return Dayjs(date).format('YYYY-MM-DD HH:mm:ss')
