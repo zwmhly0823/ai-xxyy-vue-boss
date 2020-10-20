@@ -177,18 +177,6 @@
         </template>
       </el-table-column>
       <el-table-column
-        label="附件详情"
-        min-width="200"
-        v-if="showCol.approvalReissueInfo"
-        :key="20"
-      >
-        <template slot-scope="scope">
-          <el-button type="text" @click="showEnclosureDialog(scope.row)"
-            >详情</el-button
-          >
-        </template>
-      </el-table-column>
-      <el-table-column
         label="申请人"
         min-width="180"
         v-if="showCol.applicant"
@@ -401,6 +389,18 @@
           </div>
         </template>
       </el-table-column>
+      <el-table-column
+        label="附件详情"
+        min-width="200"
+        v-if="showCol.approvalReissueInfo"
+        :key="20"
+      >
+        <template slot-scope="scope">
+          <el-button type="text" @click="showEnclosureDialog(scope.row)"
+            >详情</el-button
+          >
+        </template>
+      </el-table-column>
     </el-table>
     <div class="drawer-body">
       <express-detail
@@ -524,9 +524,23 @@
       :visible.sync="enclosureDialog"
       width="30%"
       :before-close="handleCloseEnclosure"
+      :destroy-on-close="true"
     >
-      <a :download="enclosureimg">下载图</a>
-      <img v-if="enclosureimg" style="width:100%;" :src="enclosureimg" alt="" />
+      <el-button
+        v-if="enclosureimg"
+        @click="downloadImg(enclosureimg, '图片')"
+        style="position: absolute;"
+        type="text"
+      >
+        下载图片
+      </el-button>
+      <img
+        v-if="enclosureimg"
+        id="girlImg"
+        style="width:100%;"
+        :src="enclosureimg"
+        alt=""
+      />
       <video v-if="enclosurevideo" width="100%" height="300" controls>
         <source :src="enclosurevideo" type="video/mp4" />
       </video>
@@ -760,15 +774,36 @@ export default {
     // 附件详情
     showEnclosureDialog(row) {
       this.enclosureDialog = true
-      this.enclosureimg =
-        'http://s1.meixiu.mobi/android-images/2020-10-19/76d86930040d49daae5c7fa1bcc44078.jpg?x-oss-process=image/resize,l_100'
-      this.enclosurevideo =
-        'https://s1.meixiu.mobi/h5/headPic/1602838809544.mp4'
+      if (
+        row.approvalReissueInfo &&
+        row.approvalReissueInfo.atts_url &&
+        row.approvalReissueInfo.atts_url.indexOf('mp4') === -1
+      ) {
+        this.enclosureimg = row.approvalReissueInfo.atts_url
+      } else {
+        this.enclosurevideo = row.approvalReissueInfo.atts_url
+      }
       console.log(row, 'row')
     },
     // 关闭附件详情
     handleCloseEnclosure() {
       this.enclosureDialog = false
+      this.enclosureimg = ''
+      this.enclosurevideo = ''
+    },
+    // 下载图片
+    downloadImg(src, name) {
+      const x = new XMLHttpRequest() // 禁止浏览器缓存；否则会报跨域的错误
+      x.open('GET', src + '?t=' + new Date().getTime(), true)
+      x.responseType = 'blob'
+      x.onload = function(e) {
+        var url = window.URL.createObjectURL(x.response)
+        var a = document.createElement('a')
+        a.href = url
+        a.download = name
+        a.click()
+      }
+      x.send()
     },
     // 点击用户信息回调事件
     userHandle(user) {

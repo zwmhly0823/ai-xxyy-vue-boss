@@ -449,7 +449,7 @@ export default {
         level: '课程级别',
         product_name: '物流商品名称',
         product_version: '随材版本',
-        reissue_reson: '补发原因',
+        'operator_name|replenish_reason|express_remark': '补发原因',
         receipt_name: '收货人姓名',
         receipt_tel: '收货人手机号',
         province: '省',
