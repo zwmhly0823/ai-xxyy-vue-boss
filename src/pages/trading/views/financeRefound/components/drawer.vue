@@ -4,7 +4,7 @@
  * @Author: zhangjiawen
  * @Date: 2020-07-10 14:49:13
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-10-20 18:30:52
+ * @LastEditTime: 2020-10-20 20:47:22
 -->
 <template>
   <div class="drawer-main">
@@ -85,7 +85,7 @@
           <span v-show="orderData.tradeTypeDesc === '支付宝'"
             >支付宝信息:{{ dataShow(orderData.payeeAccount) }}</span
           >
-          <span>附加扣费说明:{{ dataShow(orderData.status) }}</span>
+          <span>附加扣费说明:{{ dataShow(orderData.chargesExtra) }}</span>
         </p>
       </div>
       <div class="drawer-line">
