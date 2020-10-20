@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-05-19 17:18:39
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-10-19 18:23:42
+ * @LastEditTime: 2020-10-20 15:14:20
 -->
 <template>
   <section class="bianju10">
@@ -111,13 +111,13 @@
           <el-select
             clearable
             placeholder="请键入"
-            v-model="fordisplay6"
-            @change="refundRule"
+            v-model="payStatu"
+            @change="refundPay"
           >
-            <el-option label="未发起" value="1"></el-option>
-            <el-option label="支付中" value="0"></el-option>
-            <el-option label="成功" value="0"></el-option>
-            <el-option label="失败" value="0"></el-option>
+            <el-option label="未发起" value="0"></el-option>
+            <el-option label="支付中" value="1"></el-option>
+            <el-option label="成功" value="2"></el-option>
+            <el-option label="失败" value="3"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="时间查询:">
@@ -194,7 +194,12 @@
         </el-table-column> -->
         <el-table-column prop="regtypeStr" label="业务类型" align="center">
         </el-table-column>
-        <el-table-column prop="applyName" label="申请人-部门" align="center">
+        <el-table-column
+          prop="applyName"
+          label="申请人-部门"
+          width="120"
+          align="center"
+        >
           <template slot-scope="scope">
             <p>{{ scope.row.applyName }}</p>
             <p>{{ scope.row.applierDepartment }}</p>
@@ -215,6 +220,7 @@
           prop="refundStatusStr"
           label="退款支付状态"
           align="center"
+          width="120"
         >
         </el-table-column>
         <el-table-column prop="refundTypeStr" label="退款类型" align="center">
@@ -310,6 +316,7 @@ export default {
         refundRule: '', // 退款规则
         refundType: '', // 退款类型
         uid: '', // 用户id
+        refundStatus: '', // 退款支付状态
 
         outTradeNo: '', // 订单号
         transactionId: '', // 订单交易流水号
@@ -335,7 +342,7 @@ export default {
       fordisplay3: '', // 退款状态
       fordisplay5: '', // 退款类型
       fordisplay6: '', // 退款规则
-
+      payStatu: '', // 退款支付状态
       // 分页
       currentPage: 0,
       pageSize: 0,
@@ -414,6 +421,17 @@ export default {
         this.arrangeParams()
       }
     },
+    refundPay(val) {
+      console.info(val, typeof val)
+      if (val) {
+        this.searchJson.refundStatus = +val
+        this.arrangeParams()
+      } else {
+        this.searchJson.refundStatus = ''
+        this.arrangeParams()
+      }
+    },
+
     // 申请人
     applicantSearch(val) {
       console.info(val, typeof val)
@@ -705,7 +723,7 @@ export default {
       this.selectData.map((item, idx) => {
         if (
           [4, 7, 8, 9].includes(item.status) &&
-          ![4, 5].includes(item.refundStatus)
+          ![1, 2].includes(item.refundStatus)
         ) {
           payIds.push(item.id)
         }

@@ -4,7 +4,7 @@
  * @Author: zhangjiawen
  * @Date: 2020-07-10 14:49:13
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-10-19 18:07:53
+ * @LastEditTime: 2020-10-20 15:16:57
 -->
 <template>
   <div class="drawer-main">
@@ -52,9 +52,10 @@
           style="width: 90%;border: 1px solid #d7d7e0;"
           :header-cell-style="{ background: '#F0F9FD' }"
         >
-          <el-table-column prop="regTypeDesc" label="订单业务类型">
+          <el-table-column prop="regTypeDesc" width="100" label="订单业务类型">
           </el-table-column>
-          <el-table-column prop="title" label="订单商品信息"> </el-table-column>
+          <el-table-column prop="title" width="100" label="订单商品信息">
+          </el-table-column>
           <el-table-column prop="totalFee" label="订单金额"> </el-table-column>
           <el-table-column prop="address" label="优惠金额"> </el-table-column>
           <el-table-column prop="tradeTypeDesc" label="支付方式">
@@ -68,9 +69,13 @@
           </el-table-column>
           <el-table-column prop="refundTypeDesc" label="退款类型">
           </el-table-column>
-          <el-table-column prop="refundFee" label="订单退款金额">
+          <el-table-column prop="refundFee" width="100" label="订单退款金额">
           </el-table-column>
-          <el-table-column prop="remainingAmount" label="订单剩余金额">
+          <el-table-column
+            prop="remainingAmount"
+            width="100"
+            label="订单剩余金额"
+          >
           </el-table-column>
         </el-table>
         <p class="line-delf">
