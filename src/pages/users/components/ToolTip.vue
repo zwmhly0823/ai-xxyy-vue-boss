@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-06-19 21:20:49
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-10-17 15:08:48
+ * @LastEditTime: 2020-10-20 22:00:56
 -->
 <template>
   <el-tooltip placement="bottom-end">
@@ -16,7 +16,7 @@
           参课次数：筛选期数内，重复参加每节课的总次数
         </li>
         <li>
-          参课节数：筛选期数内，用户参课的节数／总共放课的节数（去重）
+          参课节数：筛选期数内，用户参课的节数／总共放课的节数
         </li>
       </ol>
       <p>【完课】完课指用户观看完课程的学习视频的行为（仅AI视频课）</p>
