@@ -4,7 +4,7 @@
  * @Author: zhangjiawen
  * @Date: 2020-07-10 14:49:13
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-10-20 15:58:29
+ * @LastEditTime: 2020-10-20 16:58:53
 -->
 <template>
   <div class="drawer-main">
@@ -82,10 +82,8 @@
           <span>开票状态:{{ orderData.invoiceStatus }}</span>
           <span>开票类型:{{ orderData.invoiceType }}</span>
           <span>发票号码:{{ orderData.invoiceCode }}</span>
-          <span
-            >{{ orderData.tradeTypeDesc }}信息:{{
-              orderData.payeeAccount
-            }}</span
+          <span v-show="orderData.tradeTypeDesc === '支付宝'"
+            >支付宝信息:{{ orderData.payeeAccount }}</span
           >
           <span>附加扣费说明:{{ orderData.status }}</span>
         </p>
@@ -136,7 +134,7 @@
           <el-table-column prop="statusStr" label="审批意见"> </el-table-column>
           <el-table-column prop="utime" label="操作时间">
             <template slot-scope="scope">
-              {{ dayjs(scope.row.utime) }}
+              {{ dayjs(+scope.row.utime) }}
             </template>
           </el-table-column>
           <el-table-column prop="approvalRemark" label="备注说明">
@@ -227,7 +225,7 @@ export default {
   methods: {
     // 时间处理
     dayjs(date) {
-      return Dayjs(date).format('YYYY-MM-DD hh:mm')
+      return Dayjs(date).format('YYYY-MM-DD HH:mm')
     },
     async comfirmRefund() {
       const { code } = await this.$http.Finance.toAgree({
