@@ -4,7 +4,7 @@
  * @Author: songyanan
  * @Date: 2020-05-11 14:30:00
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-10-21 22:50:14
+ * @LastEditTime: 2020-10-21 23:04:10
  */
  -->
 <template>
@@ -218,11 +218,10 @@ export default {
   },
   methods: {
     async initList(params = this.searchParams, number = this.query.pageNum) {
+      // 增加 已点评 状态
+      const query = Object.assign({}, params, { comment_time: { gt: 0 } })
       try {
-        const res = await this.$http.RiviewCourse.getHaveRiviewV2(
-          params,
-          number
-        )
+        const res = await this.$http.RiviewCourse.getHaveRiviewV2(query, number)
         if (res?.data?.StudentTaskRelationCommentDetailPage) {
           this.list =
             res.data.StudentTaskRelationCommentDetailPage?.content || []
