@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-04-02 15:35:27
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-08-10 22:58:16
+ * @LastEditTime: 2020-10-21 18:16:48
  -->
 <template>
   <el-row type="flex" class="app-main height teacherContainer">
@@ -46,6 +46,9 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+/deep/ .teacherContainer-left {
+  background: white;
+}
 .teacherContainer {
   &-left {
     padding-left: 0px;
