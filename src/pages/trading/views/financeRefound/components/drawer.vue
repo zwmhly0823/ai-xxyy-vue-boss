@@ -4,7 +4,7 @@
  * @Author: zhangjiawen
  * @Date: 2020-07-10 14:49:13
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-10-20 20:47:22
+ * @LastEditTime: 2020-10-21 16:37:17
 -->
 <template>
   <div class="drawer-main">
@@ -56,11 +56,13 @@
           </el-table-column>
           <el-table-column prop="title" width="100" label="订单商品信息">
           </el-table-column>
-          <el-table-column prop="totalFee" label="订单金额"> </el-table-column>
-          <el-table-column prop="address" label="优惠金额"> </el-table-column>
+          <el-table-column prop="totalAmount" label="订单金额">
+          </el-table-column>
+          <el-table-column prop="discountAmount" label="优惠金额">
+          </el-table-column>
           <el-table-column prop="tradeTypeDesc" label="支付方式">
           </el-table-column>
-          <el-table-column prop="address" label="实付金额"> </el-table-column>
+          <el-table-column prop="amount" label="实付金额"> </el-table-column>
           <el-table-column prop="periodAlready" label="已上周期">
           </el-table-column>
           <el-table-column prop="periodRefund" label="退费周期">
@@ -79,8 +81,8 @@
           </el-table-column>
         </el-table>
         <p class="line-delf">
-          <span>开票状态:{{ dataShow(orderData.invoiceStatus) }}</span>
-          <span>开票类型:{{ dataShow(orderData.invoiceType) }}</span>
+          <span>开票状态:{{ invoiceStatus[+orderData.invoiceStatus] }}</span>
+          <span>开票类型:{{ invoiceTypes[+orderData.invoiceType] }}</span>
           <span>发票号码:{{ dataShow(orderData.invoiceCode) }}</span>
           <span v-show="orderData.tradeTypeDesc === '支付宝'"
             >支付宝信息:{{ dataShow(orderData.payeeAccount) }}</span
@@ -178,6 +180,8 @@ export default {
     return {
       roleId: JSON.parse(localStorage.getItem('staff')).roleId || '',
       payData: [],
+      invoiceStatus: ['待开票', '开票中', '已开票', '开票失败', '作废'],
+      invoiceTypes: ['无', '普通发票', '专票'],
       payType: [
         '--',
         '--',
