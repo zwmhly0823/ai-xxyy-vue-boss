@@ -3,8 +3,8 @@
  * @version:
  * @Author: zhubaodong
  * @Date: 2020-03-13 16:53:27
- * @LastEditors: Shentong
- * @LastEditTime: 2020-09-16 13:56:15
+ * @LastEditors: zhangjianwen
+ * @LastEditTime: 2020-10-21 15:55:38
  
  -->
 <template>
@@ -314,6 +314,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 .left-container {
+  width: 300px;
   overflow: scroll;
   .title {
     font-size: 18px;
