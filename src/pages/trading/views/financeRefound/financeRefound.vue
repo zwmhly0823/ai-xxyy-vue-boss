@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-05-19 17:18:39
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-10-20 15:14:20
+ * @LastEditTime: 2020-10-21 16:05:41
 -->
 <template>
   <section class="bianju10">
@@ -304,6 +304,7 @@ export default {
   created() {
     // init全量数据展示
     this.arrangeParams()
+    console.log('test')
   },
   data() {
     return {
