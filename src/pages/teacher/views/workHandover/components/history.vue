@@ -3,8 +3,8 @@
  * @version: 
  * @Author: panjian
  * @Date: 2020-07-23 16:26:04
- * @LastEditors: panjian
- * @LastEditTime: 2020-07-25 14:37:16
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-10-21 13:45:24
 -->
 <template>
   <div class="history-box">
@@ -57,6 +57,7 @@
 
 <script>
 import { timestamp } from '@/utils/index'
+import { formatTeamNameSup } from '@/utils/supList'
 import MPagination from '@/components/MPagination/index.vue'
 import groupSell from './groupSell.vue'
 export default {
@@ -111,7 +112,7 @@ export default {
             ele.content = ele.sendWeixinNo
           } else {
             ele.studentSteamId = '班级交接'
-            ele.content = ele.teamName
+            ele.content = formatTeamNameSup(ele.teamName) || ''
           }
         })
         this.tableData = _data

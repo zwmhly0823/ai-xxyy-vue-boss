@@ -90,7 +90,11 @@
 <script>
 import _ from 'lodash'
 import SearchPhone from '@/components/MSearch/searchItems/searchPhone'
-import { SUP_LEVEL_UPPER, SUP_LEVEL_LIST_UPPER } from '@/utils/supList'
+import {
+  SUP_LEVEL_UPPER,
+  SUP_LEVEL_LIST_UPPER,
+  formatTeamNameSup
+} from '@/utils/supList'
 
 export default {
   name: 'AdjustClass',
@@ -809,10 +813,11 @@ export default {
           resData.forEach((chooseItem, chooseKey) => {
             // 其实只有调班需要做这个判断，但其他的类型没有currentClassId所以无所谓这么判断不会出问题
             if (chooseItem.id !== this.formData.currentClassId) {
+              const teamName = formatTeamNameSup(chooseItem.teamName)
               item.options.push({
-                label: `${chooseItem.teamName}-${chooseItem.teacherRealName}`,
+                label: `${teamName}-${chooseItem.teacherRealName}`,
                 value: {
-                  targetClassName: `${chooseItem.teamName}-${chooseItem.teacherRealName}`,
+                  targetClassName: `${teamName}-${chooseItem.teacherRealName}`,
                   targetClassId: chooseItem.id,
                   index: chooseKey
                 }
@@ -888,7 +893,9 @@ export default {
     handleCurrentClass(resData) {
       // console.log('resData', resData)
       this.formData.currentClassId = resData.id
-      this.formData.currentClassName = `${resData.teamName}-${resData.teacherRealName}`
+      const teamName = formatTeamNameSup(resData.teamName)
+      this.formData.currentClassName = `${teamName}-${resData.teacherRealName}`
+
       // 调班-调整班级列表,需要先获取到currentClassId
       this.commonSelectHandleFunction(
         'classChooseClass',

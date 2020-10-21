@@ -3,8 +3,8 @@
  * @version: 1.0.0
  * @Author: Shentong
  * @Date: 2020-04-25 14:35:19
- * @LastEditors: Shentong
- * @LastEditTime: 2020-08-21 19:40:21
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-10-21 14:29:21
  -->
 <template>
   <div class="table-searcher-container">
@@ -52,8 +52,8 @@
         <el-option
           v-for="item in scheduleLevelList"
           :key="item.value"
-          :label="item.label"
-          :value="item.value"
+          :label="item.text"
+          :value="item.id"
         >
         </el-option>
       </el-select>
@@ -69,6 +69,7 @@ import Department from '@/components/MSearch/searchItems/department'
 import GroupSell from '@/components/MSearch/searchItems/groupSell'
 import MoreVersionBox from '@/components/MSearch/searchItems/moreVersionBox'
 import wxList from '../wxSearch'
+import { SUP_LEVEL_LIST_UPPER } from '@/utils/supList'
 export default {
   props: {
     // 是否显示销售等级
@@ -106,21 +107,7 @@ export default {
         { label: '新兵营', value: 0 }
       ],
       // 招生级别
-      scheduleLevelList: [
-        {
-          label: 'S1',
-          value: 'S1'
-        },
-        {
-          label: 'S2',
-          value: 'S2'
-        },
-        {
-          label: 'S3',
-          value: 'S3'
-        },
-        { label: 'S4', value: 'S4' }
-      ]
+      scheduleLevelList: SUP_LEVEL_LIST_UPPER
     }
   },
   components: {
@@ -152,6 +139,8 @@ export default {
     },
     // 招生级别 TODO:
     scheduleLevel(courseDifficulties) {
+      console.log(courseDifficulties)
+
       this.manageChange({ courseDifficulties }, 'courseDifficulties')
     },
     // 销售等级

@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-10-13 21:14:38
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-10-17 20:00:26
+ * @LastEditTime: 2020-10-21 12:08:57
  */
 // import { deepClone } from '@/utils'
 /**
@@ -107,11 +107,19 @@ export function getSubLevel(s, upper = false) {
 export function formatTeamNameSup(teamName) {
   if (!teamName) return
   const upperName = teamName.toLocaleUpperCase()
-  const idx =
-    upperName.indexOf('S1') &&
-    upperName.indexOf('S2') &&
-    upperName.indexOf('S4') &&
-    upperName.indexOf('S5')
+  let idx = -1
+  if (upperName.indexOf('S1') > -1) {
+    idx = upperName.indexOf('S1')
+  }
+  if (upperName.indexOf('S2') > -1) {
+    idx = upperName.indexOf('S2')
+  }
+  if (upperName.indexOf('S4') > -1) {
+    idx = upperName.indexOf('S4')
+  }
+  if (upperName.indexOf('S5') > -1) {
+    idx = upperName.indexOf('S5')
+  }
 
   if (idx >= 0 && !upperName.includes('基础') && !upperName.includes('进阶')) {
     const s = upperName.substr(idx, 2)

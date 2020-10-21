@@ -3,8 +3,8 @@
  * @version:
  * @Author: shentong
  * @Date: 2020-04-02 16:08:02
- * @LastEditors: Shentong
- * @LastEditTime: 2020-10-13 20:38:50
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-10-21 14:49:14
  -->
 <template>
   <div>
@@ -13,16 +13,60 @@
         当前结果：社群销售<span>{{ resultStatistics.wechatSize }}</span
         >人，计划招生<span>{{ resultStatistics.planSumTeamSize }}</span>
         <span>（</span>
-        <span>S1:{{ resultStatistics.PS1 }} </span>
-        <span>S2:{{ resultStatistics.PS2 }} </span>
-        <span>S3:{{ resultStatistics.PS3 }} </span>
+        <span
+          >{{ SUP_LEVEL_UPPER['S4'] }}:{{
+            (resultStatistics.S4 && resultStatistics.S4.planSumTeamSize) || 0
+          }}
+        </span>
+        <span
+          >{{ SUP_LEVEL_UPPER['S1'] }}:{{
+            (resultStatistics.S1 && resultStatistics.S1.planSumTeamSize) || 0
+          }}
+        </span>
+        <span
+          >{{ SUP_LEVEL_UPPER['S2'] }}:{{
+            (resultStatistics.S2 && resultStatistics.S2.planSumTeamSize) || 0
+          }}
+        </span>
+        <span
+          >{{ SUP_LEVEL_UPPER['S5'] }}:{{
+            (resultStatistics.S5 && resultStatistics.S5.planSumTeamSize) || 0
+          }}
+        </span>
+        <span
+          >{{ SUP_LEVEL_UPPER['S3'] }}:{{
+            (resultStatistics.S3 && resultStatistics.S3.planSumTeamSize) || 0
+          }}
+        </span>
         <span>）</span>
 
         实际招生<span>{{ resultStatistics.realSumTeamSize }}</span>
         <span>（</span>
-        <span>S1:{{ resultStatistics.RS1 }} </span>
-        <span>S2:{{ resultStatistics.RS2 }} </span>
-        <span>S3:{{ resultStatistics.RS3 }} </span>
+        <span
+          >{{ SUP_LEVEL_UPPER['S4'] }}:{{
+            (resultStatistics.S4 && resultStatistics.S4.realSumTeamSize) || 0
+          }}
+        </span>
+        <span
+          >{{ SUP_LEVEL_UPPER['S1'] }}:{{
+            (resultStatistics.S1 && resultStatistics.S1.realSumTeamSize) || 0
+          }}
+        </span>
+        <span
+          >{{ SUP_LEVEL_UPPER['S2'] }}:{{
+            (resultStatistics.S2 && resultStatistics.S2.realSumTeamSize) || 0
+          }}
+        </span>
+        <span
+          >{{ SUP_LEVEL_UPPER['S5'] }}:{{
+            (resultStatistics.S5 && resultStatistics.S5.realSumTeamSize) || 0
+          }}
+        </span>
+        <span
+          >{{ SUP_LEVEL_UPPER['S3'] }}:{{
+            (resultStatistics.S4 && resultStatistics.S3.realSumTeamSize) || 0
+          }}
+        </span>
         <span>）</span>
       </div>
       <div class="orderStyle">
@@ -126,6 +170,7 @@
 <script>
 import EleTable from '@/components/Table/EleTable'
 import { COURSECATEGORY } from '@/utils/enums'
+import { SUP_LEVEL_UPPER } from '@/utils/supList'
 export default {
   props: {
     paramsInfo: {
@@ -138,6 +183,7 @@ export default {
   },
   data() {
     return {
+      SUP_LEVEL_UPPER,
       courseCategory: {
         0: '双周体验课',
         2: '年系统课',
@@ -229,6 +275,7 @@ export default {
           })
 
           value.courseCategoryCHN = courseCategoryCHN
+          value.courseDifficulty = SUP_LEVEL_UPPER[value.courseDifficulty] || ''
         })
 
         this.tableData = content
@@ -249,29 +296,41 @@ export default {
           wechatSize: 0, // 带班销售总人数
           planSumTeamSize: 0, // 计划招生总人数
           realSumTeamSize: 0, // 实际招生总人数
-          PS1: 0,
-          PS2: 0,
-          PS3: 0,
-          RS1: 0,
-          RS2: 0,
-          RS3: 0
+          // PS1: 0,
+          // PS2: 0,
+          // PS3: 0,
+          // RS1: 0,
+          // RS2: 0,
+          // RS3: 0
+          S1: {},
+          S2: {},
+          S3: {},
+          S4: {},
+          S5: {}
         }
 
         payload.forEach((item, index) => {
           obj.wechatSize += +item.wechatSize
           obj.planSumTeamSize += +item.planSumTeamSize
           obj.realSumTeamSize += +item.realSumTeamSize
-
-          if (index === 0) {
-            obj.PS1 = item.planSumTeamSize || '0'
-            obj.RS1 = item.realSumTeamSize || '0'
-          } else if (index === 1) {
-            obj.PS2 = item.planSumTeamSize || '0'
-            obj.RS2 = item.realSumTeamSize || '0'
-          } else if (index === 2) {
-            obj.PS3 = item.planSumTeamSize || '0'
-            obj.RS3 = item.realSumTeamSize || '0'
+          const sup = {
+            [item.courseDifficulty]: {
+              planSumTeamSize: item.planSumTeamSize || 0,
+              realSumTeamSize: item.realSumTeamSize || 0
+            }
           }
+          Object.assign(obj, sup)
+
+          // if (index === 0) {
+          //   obj.PS1 = item.planSumTeamSize || '0'
+          //   obj.RS1 = item.realSumTeamSize || '0'
+          // } else if (index === 1) {
+          //   obj.PS2 = item.planSumTeamSize || '0'
+          //   obj.RS2 = item.realSumTeamSize || '0'
+          // } else if (index === 2) {
+          //   obj.PS3 = item.planSumTeamSize || '0'
+          //   obj.RS3 = item.realSumTeamSize || '0'
+          // }
         })
 
         this.resultStatistics = obj
