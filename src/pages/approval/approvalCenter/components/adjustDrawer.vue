@@ -36,12 +36,14 @@
           </template>
           <template v-else>
             <el-image
-              style="width: 220px; height: 120px;"
+              v-if="dItem.value"
+              style="width: 220px; height: 120px"
               :src="dItem.value"
               fit="contain"
               :preview-src-list="[dItem.value]"
             >
             </el-image>
+            <span v-else>未上传</span>
           </template>
         </template>
         <template v-else-if="dItem.label === '用户电话'">

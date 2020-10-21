@@ -457,7 +457,9 @@ export default {
                     0: '优惠券退款',
                     1: '课程退款',
                     2: '降半年包',
-                    3: '补偿'
+                    3: '补偿',
+                    4: '降1年包',
+                    5: '降1年半包'
                   }[payData.refundType]
                 },
                 {
@@ -465,6 +467,36 @@ export default {
                   value: `${Math.floor(
                     payData.periodAlready / 4
                   )}月${payData.periodAlready % 4}周`
+                },
+                {
+                  label: '关单赠品',
+                  value: `${
+                    payData.deductGift === 1
+                      ? '扣除赠品费用'
+                      : payData.deductGift === 0
+                      ? '不扣除赠品费用'
+                      : '-'
+                  }`
+                },
+                {
+                  label: '次月课程',
+                  value: `${
+                    payData.deductMonth === 1
+                      ? '保留'
+                      : payData.deductMonth === 0
+                      ? '不保留'
+                      : '-'
+                  }`
+                },
+                {
+                  label: '随材盒子',
+                  value: `${
+                    payData.deductMaterial === 1
+                      ? '扣除随材盒子费用'
+                      : payData.deductMaterial === 0
+                      ? '不扣除随材盒子费用'
+                      : '-'
+                  }`
                 },
                 {
                   label: '退款月数',

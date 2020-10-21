@@ -4,7 +4,7 @@
  * @Author: Lukun
  * @Date: 2020-04-27 17:47:58
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-10-21 17:49:58
+ * @LastEditTime: 2020-10-21 23:37:13
  -->
 <template>
   <div class="container">
@@ -286,12 +286,14 @@
           <el-col :span="18" :offset="1">
             <div class="demo-image__preview">
               <el-image
+                v-if="drawerApprovalDeatail.attsUrl"
                 style="width: 220px; height: 120px"
                 :src="drawerApprovalDeatail.attsUrl"
                 fit="contain"
                 :preview-src-list="[drawerApprovalDeatail.attsUrl]"
               >
               </el-image>
+              <span v-else>未上传</span>
             </div>
           </el-col>
         </el-row>
@@ -397,9 +399,14 @@
           <el-row>
             <el-col :span="5">退款类型:</el-col>
             <el-col :span="18" :offset="1">{{
-              { 0: '优惠券退款', 1: '课程退款', 2: '降半年包', 3: '补偿' }[
-                drawerApprovalDeatail.refundType
-              ]
+              {
+                0: '优惠券退款',
+                1: '课程退款',
+                2: '降半年包',
+                3: '补偿',
+                4: '降1年包',
+                5: '降1年半包'
+              }[drawerApprovalDeatail.refundType]
             }}</el-col>
           </el-row>
           <el-row>
@@ -412,22 +419,43 @@
            `
             }}</el-col>
           </el-row>
-          <!-- <el-row>
-            <el-col :span="5">退款月数:</el-col>
+          <el-row
+            v-if="
+              drawerApprovalDeatail.deductGift === 1 ||
+                drawerApprovalDeatail.deductGift === 0
+            "
+          >
+            <el-col :span="5">关单赠品:</el-col>
             <el-col :span="18" :offset="1">{{
-              `${Math.floor(drawerApprovalDeatail.periodRefund / 4)}月`
+              drawerApprovalDeatail.deductGift === 1
+                ? '扣除赠品费用'
+                : '不扣除赠品费用'
             }}</el-col>
           </el-row>
-          <el-row>
-            <el-col :span="5">剩余可上课周期:</el-col>
+          <el-row
+            v-if="
+              drawerApprovalDeatail.deductMonth === 1 ||
+                drawerApprovalDeatail.deductMonth === 0
+            "
+          >
+            <el-col :span="5">次月课程:</el-col>
             <el-col :span="18" :offset="1">{{
-              `
-           ${Math.floor(
-             drawerApprovalDeatail.periodResidue / 4
-           )}月${drawerApprovalDeatail.periodResidue % 4}周
-           `
+              drawerApprovalDeatail.deductMonth === 1 ? '保留' : '不保留'
             }}</el-col>
-          </el-row> -->
+          </el-row>
+          <el-row
+            v-if="
+              drawerApprovalDeatail.deductMaterial === 1 ||
+                drawerApprovalDeatail.deductMaterial === 0
+            "
+          >
+            <el-col :span="5">随材盒子:</el-col>
+            <el-col :span="18" :offset="1">{{
+              drawerApprovalDeatail.deductMaterial === 1
+                ? '扣除随材盒子费用'
+                : '不扣除随材盒子费用'
+            }}</el-col>
+          </el-row>
           <el-row>
             <el-col :span="5">退款金额:</el-col>
             <el-col :span="18" :offset="1">{{
@@ -463,12 +491,14 @@
             <el-col :span="5">附件:</el-col>
             <el-col :span="18" :offset="1">
               <el-image
+                v-if="drawerApprovalDeatail.attsUrl"
                 style="width: 220px; height: 120px"
                 :src="drawerApprovalDeatail.attsUrl"
                 fit="contain"
                 :preview-src-list="[drawerApprovalDeatail.attsUrl]"
               >
               </el-image>
+              <span v-else>未上传</span>
             </el-col>
           </el-row>
         </div>
