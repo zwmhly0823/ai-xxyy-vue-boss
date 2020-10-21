@@ -3,8 +3,8 @@
  * @Descripttion:
  * @Author: songyanan
  * @Date: 2020-05-11 14:30:00
- * @LastEditors: Shentong
- * @LastEditTime: 2020-08-05 17:48:29
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-10-16 21:57:22
  */
  -->
 <template>
@@ -14,7 +14,7 @@
       element-loading-text="拼命加载中"
       :data="list"
     >
-      <el-table-column label="作品" width="300" align="center">
+      <el-table-column label="作品" width="100" align="center">
         <template slot-scope="scope" v-if="scope.row.taskImage">
           <el-image
             class="works-img"
@@ -26,7 +26,7 @@
           </el-image>
         </template>
       </el-table-column>
-      <el-table-column label="点评" width="500" align="center">
+      <el-table-column label="点评" width="300" align="center">
         <template
           slot-scope="scope"
           v-if="scope.row.reviewDataList !== undefined"
@@ -159,7 +159,10 @@ export default {
     async initList(number) {
       this.loading = true
       try {
-        const res = await this.$http.RiviewCourse.getToView(number)
+        const res = await this.$http.RiviewCourse.getToView(
+          number,
+          this.query.size
+        )
         if (res.code === 0) {
           const list = res.payload.content
           this.totalElements = Number.parseInt(res.payload.totalElements)
@@ -396,8 +399,8 @@ export default {
     }
   }
   .works-img {
-    width: 200px;
-    height: 300px;
+    width: 100px;
+    height: 150px;
     display: block;
     margin: 0 auto;
   }

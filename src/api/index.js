@@ -3,8 +3,8 @@
  * @version:
  * @Author: shentong
  * @Date: 2020-03-13 14:38:28
- * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-09-23 16:38:34
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-10-15 22:09:19
  */
 /**
  * 美术宝写字 专有。 业务代码中引用： this.$http.writeApp.User(params).then()

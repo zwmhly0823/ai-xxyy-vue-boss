@@ -3,8 +3,8 @@
  * @version: 1.0.0
  * @Author: YangJiyong
  * @Date: 2020-08-19 21:14:08
- * @LastEditors: Shentong
- * @LastEditTime: 2020-10-13 21:33:28
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-10-21 22:37:23
  */
 import { removeToken } from '@/utils/auth'
 import { baseUrl } from '@/utils/index'
@@ -315,7 +315,8 @@ const bearArt = [
     meta: {
       title: '运营管理',
       icon: 'iconyunyingzhongxin',
-      module: 'operating'
+      module: 'operating',
+      bottom: true
     },
     children: [
       {
@@ -331,6 +332,14 @@ const bearArt = [
         name: 'channelManagement',
         meta: {
           title: '渠道管理',
+          module: 'operating'
+        }
+      },
+      {
+        path: '/comment',
+        name: 'comment',
+        meta: {
+          title: '语音库',
           module: 'operating'
         }
       },

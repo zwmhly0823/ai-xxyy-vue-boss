@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-03-24 12:49:53
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-22 16:30:56
+ * @LastEditTime: 2020-10-17 11:55:24
 -->
 <template>
   <div v-if="!item.hidden">
@@ -30,7 +30,7 @@
         <!-- 有二级导航的，点击一级导航不跳转 -->
         <div
           @click.stop.prevent="() => {}"
-          @mouseenter="handleMouseEndter"
+          @mouseenter="handleMouseEndter(item)"
           @mouseleave="handleMouseLeave"
         >
           <!-- <i :class="item.meta.icon"></i> -->
@@ -165,7 +165,7 @@ export default {
     },
 
     // 弹出二级导航的浮层
-    handleMouseEndter() {
+    handleMouseEndter(item) {
       // 如果菜单是收起状态，不执行此逻辑
       if (!this.sidebar.opened) return
 
@@ -180,7 +180,7 @@ export default {
         top,
         bottom: 0
       }
-      if (bottom > height - 120) {
+      if (bottom > height - 120 || (item.meta.bottom && height < 800)) {
         Object.assign(payload, {
           bottom: 10
         })

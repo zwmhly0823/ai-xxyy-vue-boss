@@ -9,7 +9,7 @@
  -->
 <template>
   <div class="container">
-    <div class="top-tabs">
+    <!-- <div class="top-tabs">
       <div
         v-for="(item, index) in tabStatus"
         :key="index"
@@ -18,7 +18,7 @@
       >
         {{ item.label }}
       </div>
-    </div>
+    </div> -->
     <component :is="renderComponent" />
   </div>
 </template>
@@ -42,7 +42,8 @@ export default {
   },
   computed: {
     renderComponent() {
-      return this.tabIndex === '0' ? 'AudioLib' : 'WorkRiview'
+      // return this.tabIndex === '0' ? 'AudioLib' : 'WorkRiview'
+      return 'WorkRiview'
     }
   },
   methods: {
@@ -51,7 +52,7 @@ export default {
     }
   },
   components: {
-    AudioLib: () => import('./components/audioLib'),
+    // AudioLib: () => import('./components/audioLib'),
     WorkRiview: () => import('./components/workRiview')
   }
 }

@@ -2,10 +2,11 @@
  * @Descripttion:
  * @Author: songyanan
  * @Date: 2020-05-11 17:35:28
- * @LastEditors: Shentong
- * @LastEditTime: 2020-08-11 11:48:27
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-10-16 21:45:49
  */
 import axios from '../axiosConfig'
+import { injectSubject } from '@/utils/index'
 
 export default {
   /**
@@ -85,6 +86,77 @@ export default {
       `/api/tm/v1/teacher/manager/courseTask/all/commentTask?pageNumber=${number}&pageSize=${size}`
     )
   },
+
+  /**
+   * 作品点评 - 已听点评数 重写
+   */
+  getHaveRiviewV2(query = {}, page = 1, size = 10) {
+    const params = Object.assign({}, query || {})
+    const paramsStr = JSON.stringify(params)
+    return axios.post('/graphql/v1/toss', {
+      query: `{
+        StudentTaskRelationCommentDetailPage(query:${JSON.stringify(
+          injectSubject(paramsStr)
+        )}, page: ${page}, size: ${size}){
+          totalElements
+          content{
+            comment_id
+            task_image
+            sound_comment
+            type
+            student_id
+            course_id
+            team_id
+            assistant_teacher_id
+            parttime_teacher_id
+            comment_teacher_id
+            ctime
+            term
+            comment_time
+            comment_id
+            subject
+            soundCommentlist{
+              id
+              sound_comment
+              sound_comment_second
+              type
+            }
+            userExtends{
+              id
+              mobile
+              wechat_nikename
+            }
+            courseware{
+              id
+              title
+              no
+              level_no
+              unit_no
+              stage_no
+              type_no
+            }
+            teamInfo{
+              team_name
+            }
+            assistantTeacherInfo{
+              realname
+            }
+            parttimeTeacherInfo{
+              realname
+            }
+            commentTeacherInfo{
+              realname
+            }
+            flagRecord{
+              id
+              ctime
+            }
+          }
+        }
+      }`
+    })
+  },
+
   // 获取系统课名称 - 模糊搜索. typNo-课程类型
   getCoursewareSearch(query = '', typeNo = [0, 1, 8, 9]) {
     const newquery = {
