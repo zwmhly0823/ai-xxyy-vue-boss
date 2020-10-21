@@ -5,7 +5,7 @@
  * @Author: shentong
  * @Date: 2020-03-13 14:38:28
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-10-12 11:24:30
+ * @LastEditTime: 2020-10-16 20:37:03
  */
 // import axios from '../axios'
 import axios from '../axiosConfig'
@@ -248,6 +248,7 @@ export default {
             }
             userLoginDataInfo {
               device_type
+              appversion
             }
             userIntention {
               type
@@ -447,6 +448,10 @@ export default {
                   username
                   user_num
                 }
+              }
+              userLoginDataInfo {
+                device_type
+                appversion
               }
             }
           }
@@ -868,7 +873,10 @@ export default {
           totalPages
           totalElements
           content{
+            rmbRefundStatusText
             id
+            isrefund
+            invoice_status_text
             packages_name
             amount
             order_status
@@ -965,25 +973,20 @@ export default {
   //   })
   // },
   // 小熊币
-  getUserAssetsCoin(subject = '', query = '', page = 1, size = 20) {
+  getUserAssetsCoin(
+    subject = '',
+    query = '',
+    page = 1,
+    trans_type,
+    ctime,
+    size = 20
+  ) {
+    console.info('小熊币接口触发trans_type值', trans_type)
     const formattingQuery = JSON.stringify({
       subject,
       uid: query,
-      trans_type: [
-        '1',
-        '2',
-        '3',
-        '4',
-        '5',
-        '6',
-        '8',
-        '9',
-        '10',
-        '11',
-        '12',
-        '13',
-        '14'
-      ], // 经和后端确认前端滤掉0和7
+      trans_type,
+      ctime,
       account_type: 2
     })
     const sort = `{ "ctime": "desc" }`
@@ -1047,7 +1050,7 @@ export default {
    * {
    * teacher_id:[],
    * team_state: [0,1], 0-待开课，1-开课中，2-已结课
-   * team_type: 0, 0-体验课，1-系统课
+   * team_type: 0, 0-体验课，2-系统课
    * }
    * @return {
    *  status // '1 招生中   2待开课   3 开课中  4 已结课',
@@ -1286,6 +1289,7 @@ export default {
               sort:${JSON.stringify(JSON.stringify({ ctime: 'asc' }))}
               )
             {
+            remaining_week
             departmentname
             addedgroup
             addedwechat

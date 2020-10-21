@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-08-25 11:40:19
  * @LastEditors: liukun
- * @LastEditTime: 2020-09-17 11:24:12
+ * @LastEditTime: 2020-10-15 20:12:39
 -->
 <template>
   <div class="coin-content">
@@ -13,6 +13,42 @@
         <span class="coin-nums-label">{{ cItem.label }} :</span>
         <span class="coin-nums-val">{{ cItem.value }}</span>
       </div>
+    </div>
+    <div class="searchItem" v-if="changeSubject === 0">
+      <el-form :inline="true" size="mini">
+        <el-form-item label="任务类型:" style="margin-right:30px">
+          <el-select
+            v-model="value1"
+            clearable
+            multiple
+            collapse-tags
+            placeholder="请选择"
+            size="mini"
+          >
+            <el-option
+              v-for="(value, name) in options"
+              :key="name"
+              :label="value"
+              :value="name"
+              :disabled="name === '0' || name === '7'"
+            >
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="获取时间:">
+          <el-date-picker
+            v-model="value2"
+            type="daterange"
+            size="mini"
+            unlink-panels
+            value-format="timestamp"
+            range-separator="至"
+            start-placeholder="开始日期"
+            end-placeholder="结束日期"
+          >
+          </el-date-picker>
+        </el-form-item>
+      </el-form>
     </div>
     <el-table :data="renderTableData" style="width: 100%">
       <el-table-column prop="transTypeName" label="类型"></el-table-column>
@@ -51,6 +87,26 @@ export default {
   },
   data() {
     return {
+      value1: [], // 任务类型-[]
+      value2: null, // 获取时间-null
+      options: {
+        // 前端滤掉0和7
+        0: '默认',
+        1: '邀请有奖或推荐有礼',
+        2: '完成任务',
+        3: '邀请有奖红包',
+        4: '提现',
+        5: '小熊币宝石兑换',
+        6: '学习奖励',
+        7: '用户注册',
+        8: '运营活动',
+        9: '投诉补偿',
+        10: '小熊币抽奖',
+        11: '大转盘消耗',
+        12: '小熊币兑吧添加',
+        13: '小熊币兑吧扣除',
+        14: '运营扣除'
+      },
       coinNumList: [
         {
           label: '共获取',
@@ -65,20 +121,6 @@ export default {
           value: 0
         }
       ],
-      transTypeNameArr: [
-        '默认',
-        '邀请有奖或推荐有礼',
-        '完成任务',
-        '邀请有奖红包',
-        '提现',
-        '小熊币兑换',
-        '学习奖励',
-        '用户注册',
-        '运营活动',
-        '投诉补偿',
-        '大转盘',
-        '大转盘'
-      ],
       renderTableData: [],
       faProps: [], // 爹给的
       currentPage: 1,
@@ -91,7 +133,7 @@ export default {
       this.faProps = r || []
       this.top3Show()
     })
-    setTimeout(this.reqGetUserCoin, 2000)
+    setTimeout(this.reqGetUserCoin.bind(this, 'mounted'), 2000)
   },
   watch: {
     changeSubject: {
@@ -100,21 +142,50 @@ export default {
       handler(newValue, oldValue) {
         this.reqGetUserCoin()
       }
+    },
+    value1: {
+      immediate: false,
+      deep: true,
+      handler(newValue, oldValue) {
+        console.info('捕获任务类型改变', newValue, oldValue)
+        this.reqGetUserCoin()
+      }
+    },
+    value2: {
+      immediate: false,
+      deep: true,
+      handler(newValue, oldValue) {
+        console.info('捕获时间改变', newValue, oldValue)
+        this.reqGetUserCoin()
+      }
+    }
+  },
+  computed: {
+    // 获取时间筛选对象
+    ctime() {
+      const ctime = {}
+      ctime.gte = this.value2 ? this.value2[0] : 0 // 清空之后2030年↓
+      ctime.lte = this.value2 ? this.value2[1] : 1902591374054
+      return ctime
     }
   },
   methods: {
     // 数据接口_用户资产_小熊币
-    reqGetUserCoin() {
+    reqGetUserCoin(other) {
       this.$http.User.getUserAssetsCoin(
         this.changeSubject,
         this.$route.params.id,
-        this.currentPage
+        this.currentPage,
+        Array.isArray(this.value1) && this.value1.length
+          ? this.value1
+          : [1, 2, 3, 4, 5, 6, 8, 9, 10, 11, 12, 13, 14], // 清空之后全类型
+        this.ctime
       )
         .then((res) => {
           if (res.data.AccountPage && res.data.AccountPage.content.length) {
             res.data.AccountPage.content.forEach((nItem) => {
               // 类型
-              nItem.transTypeName = this.transTypeNameArr[+nItem.trans_type]
+              nItem.transTypeName = this.options['' + nItem.trans_type]
               // 操作时间
               nItem.update_date = nItem.update_date ? nItem.update_date : '-'
               // 金额颜色

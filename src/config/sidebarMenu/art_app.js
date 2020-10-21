@@ -3,8 +3,8 @@
  * @version: 1.0.0
  * @Author: YangJiyong
  * @Date: 2020-08-19 21:14:08
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-09-24 11:19:01
+ * @LastEditors: Shentong
+ * @LastEditTime: 2020-10-13 21:33:28
  */
 import { removeToken } from '@/utils/auth'
 import { baseUrl } from '@/utils/index'
@@ -403,8 +403,38 @@ const bearArt = [
       title: '营销中心',
       icon: 'iconyingxiaoguanli',
       module: 'marketing'
-    }
+    },
+    children: [
+      {
+        path: '/marketing',
+        name: 'marketing',
+        meta: {
+          title: '营销中心',
+          module: 'marketing',
+          style: 'line'
+        }
+      },
+      {
+        path: '/coupon',
+        name: 'coupon',
+        meta: {
+          title: '优惠券',
+          module: 'marketing',
+          style: 'line'
+        }
+      }
+    ]
   },
+  // {
+  //   path: '/marketing',
+  //   name: 'marketing',
+  //   hidden: staff.roleId !== '7',
+  //   meta: {
+  //     title: '营销中心',
+  //     icon: 'iconyingxiaoguanli',
+  //     module: 'marketing'
+  //   }
+  // },
   // 工具类路由
   {
     path: '/approval',

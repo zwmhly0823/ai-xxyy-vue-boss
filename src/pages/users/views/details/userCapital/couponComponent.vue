@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-08-25 11:40:19
  * @LastEditors: liukun
- * @LastEditTime: 2020-09-09 19:57:08
+ * @LastEditTime: 2020-10-14 20:16:44
 -->
 <template>
   <div class="coupon-content">
@@ -170,22 +170,24 @@ export default {
       }
     },
     top4Show() {
-      let i = 0
-      while (i < 4) {
-        this.couponNumList[i].value = 0
-        i++
-      }
-      console.count('kkkk')
-      this.couponNumList[0].value = this.faProps.length
-      this.faProps.forEach((nItem) => {
-        if (nItem.status === '0' || nItem.status === '3') {
-          this.couponNumList[2].value++ // 无效
-        } else if (nItem.status === '1') {
-          this.couponNumList[1].value++ // 可用
-        } else if (nItem.status === '2') {
-          this.couponNumList[3].value++ // 已使用
+      if (this.faProps) {
+        let i = 0
+        while (i < 4) {
+          this.couponNumList[i].value = 0
+          i++
         }
-      })
+        console.count('kkkk')
+        this.couponNumList[0].value = this.faProps.length
+        this.faProps.forEach((nItem) => {
+          if (nItem.status === '0' || nItem.status === '3') {
+            this.couponNumList[2].value++ // 无效
+          } else if (nItem.status === '1') {
+            this.couponNumList[1].value++ // 可用
+          } else if (nItem.status === '2') {
+            this.couponNumList[3].value++ // 已使用
+          }
+        })
+      }
     }
   }
 }

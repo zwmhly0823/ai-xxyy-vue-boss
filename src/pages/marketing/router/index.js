@@ -3,8 +3,8 @@
  * @version: 1.0.0
  * @Author: YangJiyong
  * @Date: 2020-08-06 17:08:18
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-12 14:44:27
+ * @LastEditors: Shentong
+ * @LastEditTime: 2020-09-18 17:12:47
  */
 import Vue from 'vue'
 import VueRouter from 'vue-router'
@@ -41,6 +41,24 @@ const routes = [
       keepAlive: true
     },
     component: () => import('../views/redeemCode/library.vue')
+  },
+  {
+    path: '/coupon',
+    name: 'coupon',
+    meta: {
+      title: '优惠券',
+      keepAlive: true
+    },
+    component: () => import('../views/coupon/index.vue')
+  },
+  {
+    path: '/grantRule/:couponId',
+    name: 'grantRule',
+    meta: {
+      title: '定向发放配置',
+      keepAlive: true
+    },
+    component: () => import('../views/coupon/grantRule.vue')
   }
   //   创建兑换码
   //   {

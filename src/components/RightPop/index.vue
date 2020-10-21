@@ -3,8 +3,8 @@
  * @version: 1.0.0
  * @Author: YangJiyong
  * @Date: 2020-06-11 16:06:24
- * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-08-15 16:02:08
+ * @LastEditors: Shentong
+ * @LastEditTime: 2020-09-16 13:55:39
 -->
 <template>
   <div class="right-pop" v-if="rightpop && rightpop.show" :style="myPosition">

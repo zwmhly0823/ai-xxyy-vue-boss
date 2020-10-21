@@ -3,8 +3,8 @@
  * @version: 1.0.0
  * @Author: YangJiyong
  * @Date: 2020-08-07 16:39:06
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-26 18:51:40
+ * @LastEditors: Shentong
+ * @LastEditTime: 2020-09-22 17:11:48
  */
 import axios from '../axiosConfig'
 
@@ -166,5 +166,39 @@ export default {
         }
       }`
     })
+  },
+
+  // 优惠券列表
+  getCouponList(params) {
+    const { page = 0, size = 20 } = params
+    return axios.get(`/api/s/v1/coupon/getCouponInfo?page=${page}&size=${size}`)
+  },
+
+  // 优惠券基本信息、发放规则
+  getCouponInfo(params) {
+    return axios.get(
+      `/api/s/v1/couponDispensed/getCouponDetailInfo?couponId=${params.couponId}`
+    )
+  },
+  // 优惠券 期 下拉框
+  getPeriodByStatus(status) {
+    return axios.get(
+      `/api/s/v1/management/user/getManagementListByStatus?status=${status}`
+    )
+  },
+  // 新增、查看 优惠券发放规则，部门id和天数关联数据
+  getDayTimeAndDeptId(params) {
+    return axios.post(`/api/s/v1/couponDispensed/selectCouponDispensed`, params)
+  },
+  // 新增 优惠券发放规则， 保存按钮
+  saveCouponRule(params) {
+    return axios.post(`/api/s/v1/couponDispensed/createCouponDispensed`, params)
+  },
+  // 根据选择的 select期数，联动tree组件
+  lookSendRule(params) {
+    return axios.post(
+      `/api/s/v1/couponDispensed/selectCouponDispensedDetails`,
+      params
+    )
   }
 }
