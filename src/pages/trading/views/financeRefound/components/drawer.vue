@@ -4,7 +4,7 @@
  * @Author: zhangjiawen
  * @Date: 2020-07-10 14:49:13
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-10-21 16:37:17
+ * @LastEditTime: 2020-10-21 17:55:51
 -->
 <template>
   <div class="drawer-main">
@@ -16,7 +16,7 @@
           style="width: 90%;border: 1px solid #d7d7e0;"
           :header-cell-style="{ background: '#F0F9FD' }"
         >
-          <el-table-column prop="status" label="选择支付状态">
+          <el-table-column prop="status" label="退款支付状态">
             <template slot-scope="scope">
               <span
                 :style="
@@ -26,7 +26,7 @@
                     ? styleObject[1]
                     : ''
                 "
-                >{{ payType[scope.row.status - 1] }}</span
+                >{{ scope.row.statusStr }}</span
               >
             </template>
           </el-table-column>
@@ -87,7 +87,7 @@
           <span v-show="orderData.tradeTypeDesc === '支付宝'"
             >支付宝信息:{{ dataShow(orderData.payeeAccount) }}</span
           >
-          <span>附加扣费说明:{{ dataShow(orderData.chargesExtra) }}</span>
+          <span>附加扣费说明:{{ payShow(orderData.chargesExtra) }}</span>
         </p>
       </div>
       <div class="drawer-line">
@@ -227,6 +227,28 @@ export default {
     console.log('参数', this.orderData)
   },
   methods: {
+    //
+    payShow(val) {
+      if (!val) {
+        return '--'
+      }
+      switch (val) {
+        case '0,0':
+          return '无'
+
+        case '0,1':
+          return '随材扣费100'
+
+        case '1,0':
+          return '赠品扣费100'
+
+        case '1,1':
+          return '随材扣费100，赠品扣费100'
+
+        default:
+          return '--'
+      }
+    },
     // 数据展示处理 DEFAULT '' 都展示为--
     dataShow(data) {
       if (!data || ['DEFAULT'].includes(data)) {
