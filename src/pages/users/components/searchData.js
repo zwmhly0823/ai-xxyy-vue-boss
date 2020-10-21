@@ -1,3 +1,5 @@
+import { SUP_LEVEL_LIST_LOWER } from '@/utils/supList'
+
 const enums = {
   addedWechatStatus: [
     {
@@ -156,28 +158,29 @@ const enums = {
       text: '半年课班'
     }
   ],
-  supList: [
-    {
-      id: 's1',
-      text: 's1'
-    },
-    {
-      id: 's2',
-      text: 's2'
-    },
-    {
-      id: 's3',
-      text: 's3'
-    },
-    {
-      id: 's4',
-      text: 's4'
-    },
-    {
-      id: 's5',
-      text: 's5'
-    }
-  ],
+  // supList: [
+  //   {
+  //     id: 's1',
+  //     text: 's1'
+  //   },
+  //   {
+  //     id: 's2',
+  //     text: 's2'
+  //   },
+  //   {
+  //     id: 's3',
+  //     text: 's3'
+  //   },
+  //   {
+  //     id: 's4',
+  //     text: 's4'
+  //   },
+  //   {
+  //     id: 's5',
+  //     text: 's5'
+  //   }
+  // ],
+  supList: SUP_LEVEL_LIST_LOWER,
   // 转介绍学员
   user_StatusList: [
     {

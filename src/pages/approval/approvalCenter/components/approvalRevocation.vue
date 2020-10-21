@@ -4,7 +4,7 @@
  * @Author: Lukun
  * @Date: 2020-04-27 17:47:58
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-09-22 17:12:06
+ * @LastEditTime: 2020-10-21 17:53:38
  -->
 <template>
   <div class="container">
@@ -135,8 +135,21 @@
       <el-table-column label="审批摘要" width="450">
         <template slot-scope="scope">
           <div>{{ scope.row.repiarContent }}</div>
-          <div>{{ scope.row.period }}</div>
-          <div>{{ scope.row.receptContent }}</div>
+          <!-- <div>{{ scope.row.period }}</div>
+          <div>{{ scope.row.receptContent }}</div> -->
+          <div>
+            <span v-if="scope.row.type === 'ADJUSTMENT_SUP'">{{
+              formatTeamNameSup(scope.row.period)
+            }}</span>
+            <span v-else>{{ scope.row.period }}</span>
+          </div>
+          <div>
+            <!-- 调级 -->
+            <span v-if="scope.row.type === 'ADJUSTMENT_SUP'">{{
+              formatTeamNameSup(scope.row.receptContent) || '-'
+            }}</span>
+            <span v-else>{{ scope.row.receptContent }}</span>
+          </div>
           <div>{{ scope.row.reason }}</div>
         </template>
       </el-table-column>
@@ -544,6 +557,7 @@ import GroupSell from './groupSell'
 import searchPhone from '@/components/MSearch/searchItems/searchPhone.vue'
 import MPagination from '@/components/MPagination/index.vue'
 import { timestamp } from '@/utils/index'
+import { formatTeamNameSup, SUP_LEVEL_UPPER } from '@/utils/supList'
 import CheckType from './checkType'
 import TabTimeSelect from './timeSearch'
 // import SearchPart from './searchPart'
@@ -582,6 +596,8 @@ export default {
   },
   data() {
     return {
+      SUP_LEVEL_UPPER,
+      formatTeamNameSup,
       xx: '', // 0课时绑定值
       isRefund: 0, // 选择退款出现0课时
       params: {}, // 列表的参数
@@ -861,11 +877,11 @@ export default {
                 [
                   {
                     label: '已上课周期',
-                    value: payData.currentPeriod
+                    value: formatTeamNameSup(payData.currentPeriod)
                   },
                   {
                     label: '调级级别',
-                    value: payData.targetSup
+                    value: SUP_LEVEL_UPPER[payData.targetSup] || '-'
                   }
                 ]
               )

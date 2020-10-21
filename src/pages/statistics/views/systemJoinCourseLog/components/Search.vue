@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-09-24 17:20:53
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-09-26 22:13:29
+ * @LastEditTime: 2020-10-15 15:13:34
 -->
 <template>
   <div class="search d-flex">
@@ -73,7 +73,7 @@
       />
     </div>
     <div class="search-item">
-      <hard-level addSupS :multiple="false" @result="getSup" />
+      <hard-level addSupS upper :multiple="false" @result="getSup" />
     </div>
     <div class="search-item">
       <search-stage

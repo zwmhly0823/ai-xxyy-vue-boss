@@ -3,8 +3,8 @@
  * @Descripttion:
  * @Author: songyanan
  * @Date: 2020-05-11 10:46:18
- * @LastEditors: Shentong
- * @LastEditTime: 2020-08-04 20:04:06
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-10-17 13:42:22
  */
  -->
 <template>
@@ -59,9 +59,9 @@
           }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="课程名称" width="180">
+      <el-table-column label="课程名称" width="200">
         <template slot-scope="scope">
-          <span style="margin: 0 20px 0 0"
+          <span style="margin: 0 10px 0 0"
             >{{
               scope.row.courseStrait +
                 scope.row.courseLevel +
@@ -150,6 +150,7 @@ import MSearch from '@/components/MSearch/index'
 import SimpleSelect from '@/components/MSearch/searchItems/simpleSelect'
 import DatePicker from '@/components/MSearch/searchItems/datePicker'
 import { formatData } from '@/utils/index.js'
+import { SUP_LEVEL_UPPER } from '@/utils/supList.js'
 export default {
   data() {
     return {
@@ -319,6 +320,7 @@ export default {
           const _list = res.payload.content
           _list.forEach((item) => {
             item.ctime = formatData(item.ctime, 's')
+            item.courseStrait = SUP_LEVEL_UPPER[item.courseStrait] || ''
           })
           this.list = _list
           this.totalElements = Number.parseInt(res.payload.totalElements)

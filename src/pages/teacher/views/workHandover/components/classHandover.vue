@@ -2,8 +2,8 @@
  * @Descripttion:
  * @Author: songyanan
  * @Date: 2020-05-20 10:12:30
- * @LastEditors: songyanan
- * @LastEditTime: 2020-05-26 11:32:30
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-10-21 15:59:06
  -->
 <template>
   <div class="class">
@@ -74,6 +74,7 @@
 </template>
 
 <script>
+import { formatTeamNameSup } from '@/utils/supList'
 export default {
   props: {
     tabIndex: {
@@ -151,7 +152,12 @@ export default {
           query.pageNumber
         )
         this.showTable = true
-        this.tableList = res.content
+        this.tableList =
+          res.content &&
+          res.content.map((item) => {
+            item.teamName = formatTeamNameSup(item.teamName) || '-'
+            return item
+          })
         this.totalElements = res.totalElements
         this.clearSelectData = false
       } catch (error) {
@@ -182,7 +188,7 @@ export default {
     margin: 0 auto;
   }
   .table-container {
-    margin: 60px 0 0 60px;
+    margin: 60px 0 50px 60px;
     h2 {
       margin: 40px 0 0 0;
     }

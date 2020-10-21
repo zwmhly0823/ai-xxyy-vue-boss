@@ -3,8 +3,8 @@
  * @version: 1.0.0
  * @Author: liukun
  * @Date: 2020-08-17 19:37:24
- * @LastEditors: liukun
- * @LastEditTime: 2020-10-09 18:39:56
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-10-21 16:21:37
 -->
 <template>
   <div class="details" v-loading="loading">
@@ -61,8 +61,8 @@
           >
           <el-col :span="5"
             ><div class="item1">
-              <span>购买时间</span
-              ><span>{{
+              <span>购买时间</span>
+              <span>{{
                 experience_lk0.sup && (experience_lk0.sup || '-')
               }}</span
               ><span>{{
@@ -272,7 +272,12 @@
           <el-col :span="5"
             ><div class="item1">
               <span>购买时间</span
-              ><span>{{ experience_lk.sup && (experience_lk.sup || '-') }}</span
+              ><span v-if="!changeSubject">{{
+                experience_lk.sup && (SUP_LEVEL_UPPER[experience_lk.sup] || '-')
+              }}</span>
+              <span v-else>{{
+                experience_lk.sup && (experience_lk.sup || '-')
+              }}</span
               ><span>{{
                 experience_lk.orderInfo &&
                   experience_lk.orderInfo.packages_name &&
@@ -342,7 +347,11 @@
           <el-col :span="5"
             ><div class="item1">
               <span>课程进度</span
-              ><span>{{
+              ><span v-if="!changeSubject">{{
+                experience_lk.current_lesson &&
+                  (formatTeamNameSup(experience_lk.current_lesson) || '-')
+              }}</span>
+              <span v-else>{{
                 experience_lk.current_lesson &&
                   (experience_lk.current_lesson || '-')
               }}</span>
@@ -475,8 +484,12 @@
           >
           <el-col :span="5"
             ><div class="item1">
-              <span>购买时间</span
-              ><span>{{
+              <span>购买时间</span>
+              <span v-if="!changeSubject">{{
+                systerm_lk.currentsuper &&
+                  (SUP_LEVEL_UPPER[systerm_lk.currentsuper] || '-')
+              }}</span>
+              <span v-else>{{
                 systerm_lk.currentsuper && (systerm_lk.currentsuper || '-')
               }}</span
               ><span>{{
@@ -533,7 +546,8 @@
             ><div class="item1">
               <span>课程进度</span
               ><span>{{
-                systerm_lk.currentsuper && (systerm_lk.currentsuper || '-')
+                systerm_lk.currentsuper &&
+                  (formatTeamNameSup(systerm_lk.currentsuper) || '-')
               }}</span>
               <span>{{
                 systerm_lk.currentlevel && (systerm_lk.currentlevel || '-')
@@ -649,6 +663,7 @@
 </template>
 <script>
 import { formatDate } from '@/utils/mini_tool_lk'
+import { SUP_LEVEL_UPPER, formatTeamNameSup } from '@/utils/supList'
 
 export default {
   created() {
@@ -663,7 +678,9 @@ export default {
       systerm_lk: {},
       loading: false,
       userId: this.$route.params.id,
-      changeSubject: this.$store.state.subjects.subjectCode
+      changeSubject: this.$store.state.subjects.subjectCode,
+      SUP_LEVEL_UPPER,
+      formatTeamNameSup
     }
   },
   watch: {

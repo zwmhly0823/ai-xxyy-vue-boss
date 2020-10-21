@@ -3,8 +3,8 @@
  * @version:
  * @Author: shentong
  * @Date: 2020-04-02 16:08:02
- * @LastEditors: Shentong
- * @LastEditTime: 2020-07-16 12:28:02
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-10-15 17:31:21
  -->
 <template>
   <div>
@@ -84,7 +84,7 @@
               v-for="(leve, l_index) in scope.row.wechatCourse"
               :key="l_index"
             >
-              {{ leve.courseDifficulty || '' }}
+              {{ supLevelUpper[leve.courseDifficulty] || '' }}
             </div>
           </template>
         </el-table-column>
@@ -177,6 +177,7 @@
 // import MSearch from '@/components/MSearch/index.vue' TODO:
 import EleTable from '@/components/Table/EleTable'
 import { formatData } from '@/utils'
+import { SUP_LEVEL_UPPER } from '@/utils/supList'
 export default {
   props: {
     department: {
@@ -217,7 +218,8 @@ export default {
       // 表格数据
       tableData: [],
       // 老师id
-      teacherID: ''
+      teacherID: '',
+      supLevelUpper: SUP_LEVEL_UPPER
     }
   },
   computed: {},

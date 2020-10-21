@@ -3,8 +3,8 @@
  * @version: 1.0.0
  * @Author: zhangjianwen
  * @Date: 2020-07-09 15:02:59
- * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-10-15 15:52:04
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-10-21 22:51:16
 -->
 <template>
   <div class="learn-record">
@@ -53,9 +53,15 @@
     </div>
     <div class="record-header">
       <el-tabs v-model="level">
-        <el-tab-pane label="S1难度" name="S1"></el-tab-pane>
+        <!-- <el-tab-pane label="S1难度" name="S1"></el-tab-pane>
         <el-tab-pane label="S2难度" name="S2"></el-tab-pane>
-        <el-tab-pane label="S3难度" name="S3"></el-tab-pane>
+        <el-tab-pane label="S3难度" name="S3"></el-tab-pane> -->
+        <el-tab-pane
+          v-for="sup in supList"
+          :label="sup.text"
+          :name="sup.id"
+          :key="sup.id"
+        ></el-tab-pane>
       </el-tabs>
     </div>
     <div class="record-con">
@@ -132,6 +138,7 @@
 <script>
 import _ from 'lodash'
 import { openBrowserTab } from '@/utils/index'
+import { SUP_LEVEL_LIST_UPPER } from '@/utils/supList'
 import MPagination from '@/components/MPagination/index.vue'
 // import Search from '../../components/Search.vue'
 
@@ -161,17 +168,21 @@ export default {
         10: '家长课堂',
         11: '小熊TV课',
         12: '小熊TV课'
-      }
+      },
+      supList: SUP_LEVEL_LIST_UPPER
     }
   },
   watch: {
     lessonType(val, old) {
       this.currentPage = 1
-      this.getManagement().then(() => {
-        this.$nextTick(() => {
-          this.term = this.manageMentList[0].period
-          this.level = 'S1'
-          console.log('期数', this.term)
+      this.$nextTick(() => {
+        this.getManagement().then(() => {
+          setTimeout(() => {
+            this.term = this.manageMentList[0].period
+            this.level = 'S4'
+            console.log('期数', this.term)
+            // this.getData(this.currentPage, val, this.level)
+          }, 300)
         })
       })
     },
@@ -181,16 +192,24 @@ export default {
       this.getData(this.currentPage, val, this.level)
     },
     level(val, old) {
+      // console.log('难度', val)
       this.level = val
       this.currentPage = 1
       this.getData(this.currentPage, this.term, val)
+      // if (this.dropName === '更多') {
+      //   return false
+      // } else {
+      //   this.level = val
+      //   this.currentPage = 1
+      //   this.getData(this.currentPage, this.term, val)
+      // }
     }
   },
   created() {},
   mounted() {
     this.getManagement().then(() => {
       this.term = this.manageMentList[0].period
-      this.level = 'S1'
+      this.level = 'S4'
       // this.getData()
     })
   },

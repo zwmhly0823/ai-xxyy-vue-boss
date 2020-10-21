@@ -4,7 +4,7 @@
  * @Author: songyanan
  * @Date: 2020-05-11 14:30:00
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-10-16 21:57:22
+ * @LastEditTime: 2020-10-21 22:50:31
  */
  -->
 <template>
@@ -134,6 +134,7 @@
 
 <script>
 import { timestamp } from '@/utils/index'
+import { formatTeamNameSup } from '@/utils/supList'
 import { reviewDegree, _scoreObj } from '@/common/data'
 export default {
   data() {
@@ -168,6 +169,7 @@ export default {
           this.totalElements = Number.parseInt(res.payload.totalElements)
           list.forEach((item, index) => {
             const str = `${item.id}@${item.courseId}`
+            item.courseName = formatTeamNameSup(item.courseName)
             this.courseIdList.push(str)
           })
           await this.iniToViewInform(list)

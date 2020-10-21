@@ -3,8 +3,8 @@
  * @version: 
  * @Author: Lukun
  * @Date: 2020-04-29 18:47:14
- * @LastEditors: Lukun
- * @LastEditTime: 2020-05-15 17:45:30
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-10-15 15:05:22
  -->
 <template>
   <div class="container">
@@ -19,7 +19,7 @@
       <el-option
         v-for="item in supList"
         :key="item.id"
-        :label="item.name"
+        :label="item.text"
         :value="item.id"
       >
       </el-option>
@@ -28,7 +28,8 @@
 </template>
 
 <script>
-import axios from '@/api/axiosConfig'
+// import axios from '@/api/axiosConfig'
+import { SUP_LEVEL_LIST } from '@/utils/supList'
 
 export default {
   props: {
@@ -44,7 +45,8 @@ export default {
     }
   },
   created() {
-    this.getSup()
+    // this.getSup()
+    this.supList = SUP_LEVEL_LIST
   },
   mounted() {
     this.$root.$on('qingkong', () => {
@@ -52,25 +54,25 @@ export default {
     })
   },
   methods: {
-    async getSup() {
-      axios
-        .post('/graphql/filter', {
-          query: `{
-            courseSupList{
-                id
-                name
-              }
-            }
-          `
-        })
-        .then((res) => {
-          const supList = res.data.courseSupList
+    // async getSup() {
+    //   axios
+    //     .post('/graphql/filter', {
+    //       query: `{
+    //         courseSupList{
+    //             id
+    //             name
+    //           }
+    //         }
+    //       `
+    //     })
+    //     .then((res) => {
+    //       const supList = res.data.courseSupList
 
-          this.supList = supList.filter((item) => {
-            return +item.id < 4 && +item.id > 0
-          })
-        })
-    },
+    //       this.supList = supList.filter((item) => {
+    //         return +item.id < 4 && +item.id > 0
+    //       })
+    //     })
+    // },
     supChange(data) {
       console.log(data, 'data')
       this.$emit('result', data)

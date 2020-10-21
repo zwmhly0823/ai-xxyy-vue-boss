@@ -3,7 +3,7 @@
  * @Author: songyanan
  * @Date: 2020-05-22 14:01:40
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-06-01 20:21:35
+ * @LastEditTime: 2020-10-16 19:11:56
  -->
 <template>
   <div class="container">
@@ -157,6 +157,7 @@
 <script>
 import Department from '@/components/MSearch/searchItems/department'
 import GroupSell from '@/components/MSearch/searchItems/groupSell'
+import { formatTeamNameSup } from '@/utils/supList'
 export default {
   props: {
     index: {
@@ -324,7 +325,10 @@ export default {
             })
             return
           }
-          this.classList = res.payload
+          this.classList = res.payload.map((item) => {
+            item.teamName = formatTeamNameSup(item.teamName)
+            return item
+          })
           this.flag = false
         }
       } catch (error) {

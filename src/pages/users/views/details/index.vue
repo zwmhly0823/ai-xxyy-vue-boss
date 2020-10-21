@@ -253,7 +253,7 @@
                   size="small"
                   v-for="item of babels_lk"
                   :key="item.id"
-                  >{{ item.name }}</el-tag
+                  >{{ formatTeamNameSup(item.name) }}</el-tag
                 >
               </span>
             </section>
@@ -333,6 +333,7 @@ import recommend from './recommendComponents/recommend.vue'
 import showAddress from './addressComponents/showAddress.vue'
 import trackFlow from './trackFlow/index'
 import { GetAgeByBrithday, formatData } from '@/utils/index'
+import { formatTeamNameSup } from '@/utils/supList'
 import modifyAddress from './addressComponents/modifyAddress.vue'
 
 export default {
@@ -379,7 +380,8 @@ export default {
       babels_lk: [],
       // paneltab name
       tabData: 'detailsInfo',
-      defaultHead: 'https://msb-ai.meixiu.mobi/ai-pm/static/touxiang.png'
+      defaultHead: 'https://msb-ai.meixiu.mobi/ai-pm/static/touxiang.png',
+      formatTeamNameSup
     }
   },
   computed: {

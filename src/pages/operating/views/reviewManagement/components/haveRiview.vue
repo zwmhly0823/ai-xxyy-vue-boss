@@ -4,7 +4,7 @@
  * @Author: songyanan
  * @Date: 2020-05-11 14:30:00
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-10-16 22:15:31
+ * @LastEditTime: 2020-10-21 22:50:14
  */
  -->
 <template>
@@ -191,6 +191,7 @@
 
 <script>
 import { formatData } from '@/utils/index'
+import { formatTeamNameSup } from '@/utils/supList'
 export default {
   components: {
     MPagination: () => import('@/components/MPagination/index.vue'),
@@ -229,7 +230,8 @@ export default {
             +res.data.StudentTaskRelationCommentDetailPage?.totalElements || 0
           this.list = this.list.map((item) => {
             if (item?.courseware?.no) {
-              item.courseware.no = this.formatCourse(item.courseware.no)
+              const coursewareNo = this.formatCourse(item.courseware.no)
+              item.courseware.no = formatTeamNameSup(coursewareNo)
             }
             return item
           })

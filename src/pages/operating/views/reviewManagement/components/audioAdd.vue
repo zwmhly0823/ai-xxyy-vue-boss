@@ -3,8 +3,8 @@
  * @Descripttion:
  * @Author: songyanan
  * @Date: 2020-05-11 14:30:00
- * @LastEditors: Shentong
- * @LastEditTime: 2020-08-11 12:04:44
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-10-16 18:52:08
  */
  -->
 <template>
@@ -31,10 +31,10 @@
         </div>
         <el-select v-model="form.difficulty" placeholder="请选择课程难度">
           <el-option
-            v-for="(item, index) in courseDifficulty"
-            :key="index"
-            :label="item"
-            :value="index"
+            v-for="item in courseDifficulty"
+            :key="item.id"
+            :label="item.text"
+            :value="item.id"
           >
           </el-option>
         </el-select>
@@ -235,7 +235,7 @@ export default {
           // 设置 对应的课程
           if (val.difficulty !== null) {
             this.getTVCourseLesson({
-              stageNo: this.courseDifficulty[val.difficulty],
+              stageNo: val.difficulty,
               typeNo: val.type
             })
           }
@@ -252,7 +252,7 @@ export default {
               SYSTEM: 'T2'
             }
             const type = couseT[val.type]
-            const params = `${type}${this.courseDifficulty[val.difficulty]}${
+            const params = `${type}${val.difficulty}${
               this.courseLevel[val.level]
             }${this.courseUnit[val.unit]}${this.courseLesson[val.lesson]}`
             this.loadCourseList(params)
@@ -405,7 +405,7 @@ export default {
       console.log(voiceName, 'voiceName=')
       const params = {
         courseType: type,
-        courseStrait: courseDifficulty[difficulty],
+        courseStrait: difficulty,
         courseLevel: courseLevel[level] || levelNo,
         courseUnit: courseUnit[unit] || unitNo,
         courseLesson: courseLesson[lesson] || coursewareNo,

@@ -3,8 +3,8 @@
  * @version:
  * @Author: zhubaodong
  * @Date: 2020-04-02 15:35:27
- * @LastEditors: Shentong
- * @LastEditTime: 2020-05-14 18:33:46
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-10-15 15:40:48
  -->
 <template>
   <el-row type="flex" class="app-main height schedule-container">
@@ -717,6 +717,8 @@ import _ from 'lodash'
 import staticticsSearch from '../../components/staticticsSearch'
 import EleTable from '@/components/Table/EleTable'
 import { formatData } from '@/utils'
+import { SUP_LEVEL_UPPER } from '@/utils/supList'
+
 export default {
   props: {
     department: {
@@ -1243,7 +1245,11 @@ export default {
       })
       // 放课天数排序
       this.schoolDays = this.schoolDays.sort()
-      this.tableDataAttend = list
+      // this.tableDataAttend = list
+      this.tableDataAttend = list.map((item) => {
+        item.sup = SUP_LEVEL_UPPER[item.sup]
+        return item
+      })
     },
     // 老师点评
     getTeacherComments(list) {
@@ -1279,7 +1285,11 @@ export default {
           Object.assign(data, commentRate, listenReview)
         })
       })
-      this.tableDataAttend = list
+      // this.tableDataAttend = list
+      this.tableDataAttend = list.map((item) => {
+        item.sup = SUP_LEVEL_UPPER[item.sup] || item.sup
+        return item
+      })
     },
     // 老师点评title统计
     titleReview() {
@@ -1329,6 +1339,7 @@ export default {
         if (this.tableDataChild.length <= childLength) {
           this.tableDataChild = conversionRateArr
         }
+        item.sup = SUP_LEVEL_UPPER[item.sup]
       })
       this.tableData = teacherConversion
     },
@@ -1345,7 +1356,11 @@ export default {
         }
       })
 
-      this.tableDataAttend = list
+      // this.tableDataAttend = list
+      this.tableDataAttend = list.map((item) => {
+        item.sup = SUP_LEVEL_UPPER[item.sup]
+        return item
+      })
     },
     // 点击tabs页签（转化统计、参课统计、完课统计 按钮）
     statisticsTypehandleClick(tab) {

@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-09-21 15:00:30
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-10-12 14:06:57
+ * @LastEditTime: 2020-10-15 15:14:25
 -->
 <template>
   <el-row type="flex" class="app-main height">
@@ -152,6 +152,7 @@
 
 <script>
 import { formatData, openBrowserTab } from '@/utils/index'
+import { SUP_LEVEL_UPPER } from '@/utils/supList'
 import MPagination from '@/components/MPagination/index.vue'
 import Search from './components/Search'
 export default {
@@ -209,6 +210,7 @@ export default {
     // 重新组合数据
     setData(data = []) {
       const list = data.map((item) => {
+        item.sup = SUP_LEVEL_UPPER[item.sup] || ''
         item.join_course_time =
           (item.join_course_time && formatData(item.join_course_time, 's')) ||
           '-'

@@ -3,8 +3,8 @@
  * @version: 
  * @Author: Lukun
  * @Date: 2020-04-27 17:47:58
- * @LastEditors: liukun
- * @LastEditTime: 2020-09-28 12:17:58
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-10-21 22:48:30
  -->
 <template>
   <div class="container">
@@ -148,8 +148,21 @@
       <el-table-column label="审批摘要" width="450">
         <template slot-scope="scope">
           <div>{{ scope.row.repiarContent }}</div>
-          <div>{{ scope.row.period }}</div>
-          <div>{{ scope.row.receptContent }}</div>
+          <!-- <div>{{ scope.row.period }}</div>
+          <div>{{ scope.row.receptContent }}</div> -->
+          <div>
+            <span v-if="scope.row.type === 'ADJUSTMENT_SUP'">{{
+              formatTeamNameSup(scope.row.period)
+            }}</span>
+            <span v-else>{{ scope.row.period }}</span>
+          </div>
+          <div>
+            <!-- 调级 -->
+            <span v-if="scope.row.type === 'ADJUSTMENT_SUP'">{{
+              formatTeamNameSup(scope.row.receptContent) || '-'
+            }}</span>
+            <span v-else>{{ scope.row.receptContent }}</span>
+          </div>
           <div>{{ scope.row.reason }}</div>
         </template>
       </el-table-column>
@@ -788,6 +801,7 @@ import CheckType from './checkType'
 import { timestamp } from '@/utils/index'
 // import SearchPart from './searchPart'
 import ActivityName from './activityName'
+import { formatTeamNameSup, SUP_LEVEL_UPPER } from '@/utils/supList'
 import adjustDrawer from './adjustDrawer'
 import { getStaffInfo } from '../common'
 import courseTeam from './courseTeam'
@@ -857,6 +871,8 @@ export default {
         reason: '',
         isRecover: true
       },
+      SUP_LEVEL_UPPER,
+      formatTeamNameSup,
       xx: '', // 0课时绑定值
       isRefund: 0, // 选择退款出现0课时
       dialogFormVisible: false, // ↑修改金额表单lk
@@ -1381,11 +1397,11 @@ export default {
                 [
                   {
                     label: '已上课周期',
-                    value: payData.currentPeriod
+                    value: formatTeamNameSup(payData.currentPeriod) || '-'
                   },
                   {
                     label: '调级级别',
-                    value: payData.targetSup
+                    value: SUP_LEVEL_UPPER[payData.targetSup] || '-'
                   }
                 ]
               )

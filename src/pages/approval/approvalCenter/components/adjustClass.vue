@@ -88,8 +88,14 @@
 </template>
 
 <script>
-import SearchPhone from '@/components/MSearch/searchItems/searchPhone'
 import _ from 'lodash'
+import SearchPhone from '@/components/MSearch/searchItems/searchPhone'
+import {
+  SUP_LEVEL_UPPER,
+  SUP_LEVEL_LIST_UPPER,
+  formatTeamNameSup
+} from '@/utils/supList'
+
 export default {
   name: 'AdjustClass',
   components: {
@@ -807,10 +813,11 @@ export default {
           resData.forEach((chooseItem, chooseKey) => {
             // 其实只有调班需要做这个判断，但其他的类型没有currentClassId所以无所谓这么判断不会出问题
             if (chooseItem.id !== this.formData.currentClassId) {
+              const teamName = formatTeamNameSup(chooseItem.teamName)
               item.options.push({
-                label: `${chooseItem.teamName}-${chooseItem.teacherRealName}`,
+                label: `${teamName}-${chooseItem.teacherRealName}`,
                 value: {
-                  targetClassName: `${chooseItem.teamName}-${chooseItem.teacherRealName}`,
+                  targetClassName: `${teamName}-${chooseItem.teacherRealName}`,
                   targetClassId: chooseItem.id,
                   index: chooseKey
                 }
@@ -831,7 +838,10 @@ export default {
     handleDoneClass(resData) {
       // 记录后面选择班级需要的stage
       this.formData.orderId.tempSatge = resData.term
-      this.formData.currentPeriod = `${resData.currentSuper}${resData.currentLevel}${resData.currentUnit}`
+      // this.formData.currentPeriod = `${resData.currentSuper}${resData.currentLevel}${resData.currentUnit}`
+      this.formData.currentPeriod = `${SUP_LEVEL_UPPER[resData.currentSuper]}${
+        resData.currentLevel
+      }${resData.currentUnit}`
       // 记录当前级别
       this.currentLevel = resData.currentSuper
       if (resData.remainingWeek <= 0) {
@@ -853,15 +863,27 @@ export default {
     handleAskforLevel() {
       // 先清空
       this.formData.targetSup = ''
-      const levelList = ['S1', 'S2', 'S3', 'S4', 'S5']
-      levelList.splice(levelList.indexOf(this.currentLevel), 1)
+      // const levelList = ['S1', 'S2', 'S3', 'S4', 'S5']
+      // levelList.splice(levelList.indexOf(this.currentLevel), 1)
+      // this.showData.content.forEach((item) => {
+      //   if (item.model === 'targetSup') {
+      //     item.options = []
+      //     levelList.forEach((lItem) => {
+      //       item.options.push({
+      //         label: lItem,
+      //         value: lItem
+      //       })
+      //     })
+      //   }
+      // })
+      const levelList = SUP_LEVEL_LIST_UPPER
       this.showData.content.forEach((item) => {
         if (item.model === 'targetSup') {
           item.options = []
           levelList.forEach((lItem) => {
             item.options.push({
-              label: lItem,
-              value: lItem
+              label: lItem.text,
+              value: lItem.id
             })
           })
         }
@@ -871,7 +893,9 @@ export default {
     handleCurrentClass(resData) {
       // console.log('resData', resData)
       this.formData.currentClassId = resData.id
-      this.formData.currentClassName = `${resData.teamName}-${resData.teacherRealName}`
+      const teamName = formatTeamNameSup(resData.teamName)
+      this.formData.currentClassName = `${teamName}-${resData.teacherRealName}`
+
       // 调班-调整班级列表,需要先获取到currentClassId
       this.commonSelectHandleFunction(
         'classChooseClass',

@@ -52,9 +52,7 @@
                     : '-'
                 }}
               </span>
-              <span style="color: #666"
-                >级别:{{ scope.row.sup ? `S${scope.row.sup}` : '-' }}</span
-              >
+              <span style="color: #666">级别:{{ scope.row.sup }}</span>
             </div>
           </div>
         </div>
@@ -146,6 +144,7 @@
 import dayjs from 'dayjs'
 import axios from '@/api/axiosConfig'
 import { GetAgeByBrithday, formatData, openBrowserTab } from '@/utils/index'
+import { SUP_LEVEL } from '@/utils/supList'
 
 import MPagination from '@/components/MPagination/index.vue'
 
@@ -271,6 +270,7 @@ export default {
                       .unix(Number(ele.management_start_date) / 1000)
                       .format('MMDD')
                   : ''
+                ele.sup = (ele.sup && SUP_LEVEL[ele.sup]) || '-'
               }
             })
           this.tableData = _data
