@@ -68,6 +68,15 @@ const routes = [
       keepAlive: false
     },
     component: () => import('../views/systemAccount/index.vue')
+  },
+  {
+    path: '/workHandover/partTimeTeacher',
+    name: 'partTimeTeacher',
+    meta: {
+      title: '兼职老师交接',
+      keepAlive: false
+    },
+    component: () => import('../views/workHandover/components/partTeacher.vue')
   }
 ]
 

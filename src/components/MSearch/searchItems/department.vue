@@ -85,7 +85,13 @@ export default {
         const department = sortByKey(arr, 'id')
         department.sort(this.handle('sort'))
         this.recursive(department)
-        this.departmentList = department
+        if (this.isParttimeTeacher) {
+          this.departmentList = department.filter((item) => {
+            return item.name === '美术兼职老师'
+          })
+        } else {
+          this.departmentList = department
+        }
       })
     },
     async onSelect(data) {

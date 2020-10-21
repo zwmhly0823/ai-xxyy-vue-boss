@@ -7,7 +7,7 @@
         <div class="module-search" v-show="showHandler">
           <Department
             name="pay_teacher_id"
-            placeholder="全部部门"
+            placeholder="兼职部门"
             :multiple="false"
             isParttimeTeacher
             @result="handoverSelectDepartment"
@@ -95,8 +95,9 @@
         <div class="module-search" v-show="showReceive">
           <Department
             name="pay_teacher_id"
-            placeholder="全部部门"
+            placeholder="兼职部门"
             :multiple="false"
+            isParttimeTeacher
             @result="receiveSelectDepartment"
           />
           <GroupSell
@@ -118,14 +119,14 @@
         </div>
       </div>
     </div>
-    <div class="bottom-text">
+    <div class="bottom-text" v-show="!showHandler">
       目标交接学员数
       <span class="prominent"> {{ listData.length }}</span>
       个， 实际接收学员数
       <span class="prominent">{{ checkList.length }} </span>
       个
     </div>
-    <div class="class-button">
+    <div class="class-button" v-show="!showReceive">
       <el-button type="primary" @click="dispatchStart">开始交接</el-button>
     </div>
   </div>
@@ -166,6 +167,7 @@ export default {
   methods: {
     // 交出方选择部门
     handoverSelectDepartment(res) {
+      console.log(res)
       this.handoverTeacherScope =
         res.pay_teacher_id.length !== 0 ? res.pay_teacher_id : null
     },
@@ -238,6 +240,7 @@ export default {
     // 交出方重新选择
     handoverToChoose() {
       this.showHandler = true
+      this.clearData()
     },
     // 接收方选择部门
     receiveSelectDepartment(res) {
@@ -275,7 +278,7 @@ export default {
         })
       }
     },
-    // 交出方重新选择
+    // 接收方重新选择
     receiveToChoose() {
       this.showReceive = true
     },
@@ -291,6 +294,10 @@ export default {
     },
     // 开始交接
     async dispatchStart() {
+      if (!this.receiveTeacherID || !this.showTeacherID) {
+        this.$message.error('接收老师和交出老师都不能为空')
+        return
+      }
       if (this.receiveTeacherID === this.showTeacherID) {
         this.$message.error('接收老师和交出老师不能是同一人')
         return
@@ -302,6 +309,10 @@ export default {
       this.loading = true
       const resData = await this.dispatchAjax()
       this.loading = false
+      if (resData.errors || resData.error) {
+        this.$message.error(resData.errors || resData.error)
+        return
+      }
       if (!resData || resData?.status !== 'OK') {
         return
       }
@@ -309,6 +320,9 @@ export default {
         type: 'success',
         message: '交接成功'
       })
+      setTimeout(() => {
+        location.reload()
+      }, 1000)
     },
     dispatchAjax() {
       let userStr = ''
@@ -327,6 +341,12 @@ export default {
         .catch(() => {
           return false
         })
+    },
+    clearData() {
+      this.isIndeterminate = false
+      this.checkAll = false
+      this.checkList = []
+      this.stuList = []
     }
   }
 }
@@ -334,13 +354,15 @@ export default {
 
 <style lang="scss" scoped>
 .part-teacher-c {
-  margin-bottom: 50px;
+  padding-top: 20px;
+  padding-bottom: 50px;
+  background-color: #fff;
   .container {
     display: flex;
     justify-content: space-between;
     align-items: center;
     width: 90%;
-    margin: 20px auto 80px;
+    margin: 0px auto 80px;
     .module {
       width: 300px;
       height: 400px;
