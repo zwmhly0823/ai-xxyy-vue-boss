@@ -65,6 +65,10 @@ export default {
   methods: {
     loaded(i) {
       this.num++
+      if (this.listinfo.length === 1) {
+        this.isLoaded = true
+        this.$emit('isLoad', this.isLoaded)
+      }
       if (this.listinfo.length - 1 === this.num) {
         this.isLoaded = true
         this.$emit('isload', this.isLoaded)
