@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 14:19:58
  * @LastEditors: Shentong
- * @LastEditTime: 2020-10-22 19:25:54
+ * @LastEditTime: 2020-10-22 21:22:55
  -->
 <template>
   <div>
@@ -328,7 +328,8 @@ export default {
       sysFinishRadio: '',
       radioJudgeDisable: '1',
       sysExhibitionRadio: '',
-      progressList: ['L1', 'L2', 'L3', 'L4', 'L5'],
+      // progressList: ['L1', 'L2', 'L3', 'L4', 'L5'],
+      progressList: [],
       currentProgress: '',
       showProgressPopover: false,
       showExProgressPopover: false,
@@ -650,7 +651,22 @@ export default {
         this.sysFinishRadio = this.finishLessonData.weekNum.substring(1)
         this.radioJudgeDisable = this.sysFinishRadio
         this.currentProgress = getLesseonDesc.level
+
+        this.progressList = this.getCurProgressList(getLesseonDesc.level)
+        //
       }
+    },
+    // 通过 当前 level 获取进度
+    getCurProgressList(level) {
+      const num = level.substring(1, 2)
+      const listArr = []
+
+      for (let i = 0; i < num; i++) {
+        const j = i + 1
+        listArr.push(`L${j}`)
+      }
+
+      return listArr
     },
     // 点击显示作品展
     xhibitionList() {
