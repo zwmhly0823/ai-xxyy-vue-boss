@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-05-19 17:18:39
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-10-21 16:05:41
+ * @LastEditTime: 2020-10-22 16:42:42
 -->
 <template>
   <section class="bianju10">
@@ -164,6 +164,7 @@
       <el-table
         :data="tableData"
         style="width: 100%"
+        ref="multipleTable"
         @selection-change="handleSelectionChange"
       >
         <el-table-column type="selection" width="55"> </el-table-column>
@@ -709,6 +710,16 @@ export default {
       this.$refs.drawerLk.closeDrawer() // 关闭抽屉
       this.arrangeParams() // 刷新列表数据
     },
+    // 取消选择
+    toggleSelection(rows) {
+      if (rows) {
+        rows.forEach((row) => {
+          this.$refs.multipleTable.toggleRowSelection(row)
+        })
+      } else {
+        this.$refs.multipleTable.clearSelection()
+      }
+    },
     // 批量退款
     BatchRefund() {
       if (this.selectData && this.selectData.length <= 0) {
@@ -756,12 +767,14 @@ export default {
             type: 'success',
             message: '退款成功!'
           })
+          this.toggleSelection()
         })
         .catch(() => {
           this.$message({
             type: 'info',
             message: '已取消退款'
           })
+          this.toggleSelection()
         })
     },
     // 操作

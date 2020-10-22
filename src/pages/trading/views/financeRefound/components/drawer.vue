@@ -4,7 +4,7 @@
  * @Author: zhangjiawen
  * @Date: 2020-07-10 14:49:13
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-10-22 14:37:45
+ * @LastEditTime: 2020-10-22 16:29:39
 -->
 <template>
   <div class="drawer-main">
@@ -34,7 +34,7 @@
           </el-table-column>
           <el-table-column prop="ctime" label="退款支付时间">
             <template slot-scope="scope">
-              {{ dayjs(scope.row.ctime) }}
+              {{ dayjs(+scope.row.ctime) }}
             </template>
           </el-table-column>
         </el-table>
@@ -68,6 +68,9 @@
           <el-table-column prop="periodRefund" label="退费周期">
           </el-table-column>
           <el-table-column prop="periodResidue" label="剩余周期">
+            <template slot-scope="scope">
+              {{ scope.row.periodResidue - scope.row.periodRefund }}
+            </template>
           </el-table-column>
           <el-table-column prop="refundTypeDesc" label="退款类型">
           </el-table-column>
@@ -144,7 +147,10 @@
         </el-table>
       </div>
       <div class="rawer-bot">
-        <el-button type="primary" v-show="+roleId === 7" @click="comfirmRefund"
+        <el-button
+          type="primary"
+          v-show="+roleId === 7 && ![5].includes(orderData.status)"
+          @click="comfirmRefund"
           >发起退款支付</el-button
         >
       </div>
@@ -276,7 +282,7 @@ export default {
       })
       if (code === 0) {
         this.$message({
-          message: '退款成功',
+          message: '退款发起成功',
           type: 'success'
         })
         this.$emit('closeDrawer')
