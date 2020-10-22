@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 14:19:58
  * @LastEditors: Shentong
- * @LastEditTime: 2020-10-17 18:56:31
+ * @LastEditTime: 2020-10-22 19:25:54
  -->
 <template>
   <div>
@@ -422,6 +422,8 @@ export default {
   },
   created() {
     // 切换标签 语音停止
+    console.log('this.classObj', this.classObj)
+
     const audios = this.$refs
     const audiosList = Object.values(audios)
     audiosList.forEach((item, index) => {
@@ -507,6 +509,7 @@ export default {
           data: { StudentTeam = {} }
         } = res
         this.teamDetail = StudentTeam
+        console.log('this.teamDetail', this.teamDetail)
       })
     },
     screenAttendClass(data) {
@@ -543,7 +546,7 @@ export default {
         this.getStuComment()
       }
     },
-
+    // 判断是否是待开课
     // 生成完课榜----确定按钮
     async generatefinishLesson() {
       // 获取第几周的数据
@@ -624,6 +627,11 @@ export default {
     },
     // 点击显示完课榜 TODO:
     finishLessonList() {
+      // 待开课班级 提示 未开课
+      if (this.teamDetail.team_state === '0') {
+        this.$message.warning('班级暂未开课')
+        return
+      }
       const curlesson = this.teamDetail.current_lesson
       const getLesseonDesc = this.getLesseonDesc(curlesson)
 
@@ -646,6 +654,10 @@ export default {
     },
     // 点击显示作品展
     xhibitionList() {
+      if (this.teamDetail.team_state === '0') {
+        this.$message.warning('班级暂未开课')
+        return
+      }
       const curlesson = this.teamDetail.current_lesson
       const { currentLesson: weekNum1, weekNum, level } = this.getLesseonDesc(
         curlesson
@@ -756,43 +768,6 @@ export default {
           this.MissedClassesTwo = false
         }
       }
-    },
-    // 请求完课榜 - 接口数据
-    getStuRankingList(teamId, week) {
-      if (!teamId || !week) return
-
-      const type = this.type === 'TRAIL' ? '0' : '1'
-      this.$loading({
-        lock: true,
-        text: '图片正在生成中'
-      })
-      const query = `{"team_id" : ${teamId}, "week" : "${week}", "sort" : "${this.finishLessonData.finishClassSort}","type": "${type}"}`
-      this.$http.Team.finishClassList(query).then((res) => {
-        const { error, data: { getStuComRankingList = [] } = {} } = res
-
-        if (error) return
-        // 生成完课榜（多页）
-        const childLastData = []
-        if (getStuComRankingList.length) {
-          const stuArrLength = getStuComRankingList.length
-          const createDefineNum = 70
-          const arevNum = Math.ceil(
-            stuArrLength / Math.ceil(stuArrLength / createDefineNum)
-          )
-          for (var j = 0; j < stuArrLength; j++) {
-            const tmpnum = Math.floor(j / arevNum)
-            childLastData[tmpnum] = childLastData[tmpnum]
-              ? childLastData[tmpnum]
-              : []
-            childLastData[tmpnum].push(getStuComRankingList[j])
-          }
-          this.finishLessonData.childListData = childLastData
-          this.finishLessonData.imgNum = childLastData.length
-        } else {
-          this.$loading().close()
-          this.$message.warning('暂无完课榜可生成')
-        }
-      })
     },
     // 请求作品展-接口数据
     getStuTaskRankingList(teamId, week) {
