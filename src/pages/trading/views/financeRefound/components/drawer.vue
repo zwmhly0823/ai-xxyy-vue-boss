@@ -4,7 +4,7 @@
  * @Author: zhangjiawen
  * @Date: 2020-07-10 14:49:13
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-10-21 17:55:51
+ * @LastEditTime: 2020-10-22 14:37:45
 -->
 <template>
   <div class="drawer-main">
@@ -43,8 +43,8 @@
         <p class="line-title">退款订单明细</p>
         <p class="line-delf">
           <span>用户信息:{{ dataShow(orderData.userName) }}</span>
-          <span>订单号:{{ dataShow(orderData.orderId) }}</span>
-          <span>订单交易流水号:{{ dataShow(orderData.outTradeNo) }}</span>
+          <span>订单号:{{ dataShow(orderData.outTradeNo) }}</span>
+          <span>订单交易流水号:{{ dataShow(orderData.transactionId) }}</span>
           <span>退款订单状态:{{ dataShow(orderData.statusStr) }}</span>
         </p>
         <el-table
