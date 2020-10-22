@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 14:19:58
  * @LastEditors: Shentong
- * @LastEditTime: 2020-10-22 21:22:55
+ * @LastEditTime: 2020-10-22 21:33:35
  -->
 <template>
   <div>
@@ -658,12 +658,11 @@ export default {
     },
     // 通过 当前 level 获取进度
     getCurProgressList(level) {
-      const num = level.substring(1, 2)
+      const num = level.substring(1)
       const listArr = []
 
-      for (let i = 0; i < num; i++) {
-        const j = i + 1
-        listArr.push(`L${j}`)
+      for (let i = 1; i < +num + 1; i++) {
+        listArr.push(`L${i}`)
       }
 
       return listArr
@@ -693,6 +692,8 @@ export default {
         this.sysExhibitionRadio = weekNum.substring(1)
         this.radioJudgeDisable = this.sysExhibitionRadio
         this.currentProgress = level
+
+        this.progressList = this.getCurProgressList(level)
       }
     },
     /**
