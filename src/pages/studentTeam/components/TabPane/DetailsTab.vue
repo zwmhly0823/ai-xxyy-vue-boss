@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 14:19:58
  * @LastEditors: Shentong
- * @LastEditTime: 2020-10-22 22:03:16
+ * @LastEditTime: 2020-10-22 23:17:42
  -->
 <template>
   <div>
@@ -711,7 +711,33 @@ export default {
       } = await this.$http.Team[model](query).catch()
       if (error) return
 
-      const _list = model === 'finishClassList' ? A || [] : B || []
+      const _list = model === 'finishClassList' ? A || [] : B || [] // TODO:
+      // const _list = [
+      //   {
+      //     student_id: '500508178832953344',
+      //     mobile: '15999062360',
+      //     username: '李晟宇',
+      //     head:
+      //       'http://s1.xiaoxiongmeishu.com/android-images/2020-09-10/cf199d0fdf79433ebf1a8734116f9051.jpeg',
+      //     completeArr: [
+      //       { current_lesson: 'W1D1', is_complete: '1' },
+      //       { current_lesson: 'W1D2', is_complete: '1' },
+      //       { current_lesson: 'W1D3', is_complete: '2' }
+      //     ]
+      //   },
+      //   {
+      //     student_id: '500508178832953344',
+      //     mobile: '15999062360',
+      //     username: '李晟宇',
+      //     head:
+      //       'http://s1.xiaoxiongmeishu.com/android-images/2020-09-10/cf199d0fdf79433ebf1a8734116f9051.jpeg',
+      //     completeArr: [
+      //       { current_lesson: 'W1D1', is_complete: '1' },
+      //       { current_lesson: 'W1D2', is_complete: '1' },
+      //       { current_lesson: 'W1D3', is_complete: '2' }
+      //     ]
+      //   }
+      // ]
 
       const _data =
         model === 'finishClassList' ? 'finishLessonData' : 'ExhibitionData'
