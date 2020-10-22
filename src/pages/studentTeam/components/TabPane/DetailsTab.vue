@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 14:19:58
  * @LastEditors: Shentong
- * @LastEditTime: 2020-10-22 21:33:35
+ * @LastEditTime: 2020-10-22 22:02:26
  -->
 <template>
   <div>
@@ -423,8 +423,6 @@ export default {
   },
   created() {
     // 切换标签 语音停止
-    console.log('this.classObj', this.classObj)
-
     const audios = this.$refs
     const audiosList = Object.values(audios)
     audiosList.forEach((item, index) => {
@@ -510,7 +508,6 @@ export default {
           data: { StudentTeam = {} }
         } = res
         this.teamDetail = StudentTeam
-        console.log('this.teamDetail', this.teamDetail)
       })
     },
     screenAttendClass(data) {
