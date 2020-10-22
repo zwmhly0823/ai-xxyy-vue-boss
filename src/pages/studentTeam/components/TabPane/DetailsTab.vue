@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 14:19:58
  * @LastEditors: Shentong
- * @LastEditTime: 2020-10-22 22:02:26
+ * @LastEditTime: 2020-10-22 22:03:16
  -->
 <template>
   <div>
@@ -556,7 +556,6 @@ export default {
         ? `${studentLesson}${weekNum}`
         : `${difficute}${this.currentProgress}U${this.sysFinishRadio}`
 
-      // await this.getStuRankingList(teamId, week)
       await this.generateFinishAndExhibition(
         'finishClassList',
         teamId,
@@ -565,7 +564,6 @@ export default {
       )
       // 关闭弹框
       this.dialogFormVisible = false
-      // 执行 截图操作并保存
     },
     // 生成作品展----确定按钮
     async exhibitionBtn() {
@@ -577,7 +575,6 @@ export default {
         ? `${weekNum1}`
         : `${difficute}${this.currentProgress}U${this.sysExhibitionRadio}`
 
-      // await this.getStuTaskRankingList(teamId, week)
       await this.generateFinishAndExhibition(
         'exhibitionOfWorks',
         teamId,
