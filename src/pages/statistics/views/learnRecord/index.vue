@@ -3,8 +3,8 @@
  * @version: 1.0.0
  * @Author: zhangjianwen
  * @Date: 2020-07-09 15:02:59
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-10-21 22:51:16
+ * @LastEditors: zhangjianwen
+ * @LastEditTime: 2020-10-22 17:03:50
 -->
 <template>
   <div class="learn-record">
@@ -282,7 +282,7 @@ export default {
           }
           if (this.manageMentList.length > 5) {
             this.manageMentHistoryList = [
-              ...this.manageMentList.slice(6),
+              ...this.manageMentList.slice(5),
               ...this.manageMentHistoryList
             ]
             this.manageMentList = this.manageMentList.slice(0, 5)
