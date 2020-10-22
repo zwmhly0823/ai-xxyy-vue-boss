@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-05-19 17:18:39
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-10-22 16:42:42
+ * @LastEditTime: 2020-10-22 17:26:27
 -->
 <template>
   <section class="bianju10">
@@ -235,12 +235,12 @@
         </el-table-column>
         <el-table-column label="订单支付时间" align="center" width="155">
           <template slot-scope="scope">
-            {{ scope.row.applyTime || scope.row.ctime }}
+            {{ scope.row.buytime }}
           </template>
         </el-table-column>
         <el-table-column label="申请退款时间" align="center" width="155">
           <template slot-scope="scope">
-            {{ scope.row.applyTime || scope.row.ctime }}
+            {{ scope.row.applyTime }}
           </template>
         </el-table-column>
         <el-table-column
