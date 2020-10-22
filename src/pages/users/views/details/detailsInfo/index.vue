@@ -3,8 +3,8 @@
  * @version: 1.0.0
  * @Author: liukun
  * @Date: 2020-08-17 19:37:24
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-10-21 16:21:37
+ * @LastEditors: liukun
+ * @LastEditTime: 2020-10-21 23:28:30
 -->
 <template>
   <div class="details" v-loading="loading">
@@ -92,12 +92,7 @@
               <span>所属班级</span
               ><span v-if="!isFrom1v1"
                 ><el-link
-                  :href="
-                    `${
-                      changeSubject ? '/write_app' : '/student-team'
-                    }/#/teamDetail/${experience_lk0.teamInfo &&
-                      experience_lk0.teamInfo.id}/0`
-                  "
+                  :href="userLink(experience_lk0.teamInfo.id, 'class', 0)"
                   target="_blank"
                   type="primary"
                   >{{
@@ -305,12 +300,7 @@
               <span>所属班级</span
               ><span
                 ><el-link
-                  :href="
-                    `${
-                      changeSubject ? '/write_app' : '/student-team'
-                    }/#/teamDetail/${experience_lk.teamInfo &&
-                      experience_lk.teamInfo.id}/0`
-                  "
+                  :href="userLink(experience_lk.teamInfo.id, 'class', 0)"
                   target="_blank"
                   type="primary"
                   >{{
@@ -464,11 +454,9 @@
             ><div class="item1">
               <span>服务微信</span
               ><span>{{
-                systerm_lk.teacherInfo &&
-                  systerm_lk.teacherInfo.weixin &&
-                  systerm_lk.teacherInfo.weixin[0] &&
-                  systerm_lk.teacherInfo.weixin[0].weixin_no &&
-                  (systerm_lk.teacherInfo.weixin[0].weixin_no || '-')
+                systerm_lk.teacherWeixinRelationInfo &&
+                  systerm_lk.teacherWeixinRelationInfo.weixin_no &&
+                  systerm_lk.teacherWeixinRelationInfo.weixin_no
               }}</span>
             </div></el-col
           >
@@ -514,14 +502,20 @@
         <el-row>
           <el-col :span="5"
             ><div class="item1">
+              <span>兼职老师</span
+              ><span>{{
+                systerm_lk.casualTeacherInfo
+                  ? systerm_lk.casualTeacherInfo.realname
+                  : '-'
+              }}</span>
+            </div></el-col
+          >
+          <el-col :span="5"
+            ><div class="item1">
               <span>所属班级</span
               ><span
                 ><el-link
-                  :href="
-                    `${
-                      changeSubject ? '/write_app' : '/student-team'
-                    }/#/teamDetail/${systerm_lk.teamid}/2`
-                  "
+                  :href="userLink(systerm_lk.teamid, 'class', 2)"
                   target="_blank"
                   type="primary"
                   >{{ systerm_lk.teamname || '-' }}</el-link
@@ -560,7 +554,7 @@
               }}</span>
             </div></el-col
           >
-          <el-col :span="5"
+          <el-col :span="4"
             ><div class="item1">
               <span>课前准备</span
               ><span>{{
@@ -576,7 +570,9 @@
               <span>{{ systerm_lk.expressstatus }}</span>
             </div></el-col
           >
-          <el-col :span="4"
+        </el-row>
+        <el-row>
+          <el-col :span="5"
             ><div class="item1">
               <span>剩余周数</span
               ><span>
@@ -589,8 +585,6 @@
               >
             </div></el-col
           >
-        </el-row>
-        <el-row>
           <el-col :span="5"
             ><div class="item1">
               <span v-if="changeSubject">参课/解锁</span>
@@ -681,6 +675,24 @@ export default {
       changeSubject: this.$store.state.subjects.subjectCode,
       SUP_LEVEL_UPPER,
       formatTeamNameSup
+    }
+  },
+  computed: {
+    userLink() {
+      return function(id, type = 'user', classl) {
+        let url = ''
+        const origin = window.location.origin
+        if (origin.includes('dev')) {
+          url = 'ai-app-vue-toss-dev/'
+        } else if (origin.includes('test')) {
+          url = 'ai-app-vue-toss-test/'
+        }
+        return type === 'user'
+          ? `${origin}/${url}users/#/details/${id}`
+          : `${origin}/${url}${
+              this.changeSubject ? 'write_app' : 'student-team'
+            }/#/teamDetail/${id}/${classl}`
+      }
     }
   },
   watch: {
