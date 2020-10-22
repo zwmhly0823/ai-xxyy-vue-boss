@@ -4,7 +4,7 @@
  * @Author: songyanan
  * @Date: 2020-05-11 14:30:00
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-10-21 22:50:31
+ * @LastEditTime: 2020-10-22 12:15:41
  */
  -->
 <template>
@@ -18,7 +18,7 @@
         <template slot-scope="scope" v-if="scope.row.taskImage">
           <el-image
             class="works-img"
-            :src="scope.row.taskImage"
+            :src="`${scope.row.taskImage}?x-oss-process=image/resize,l_100`"
             :lazy="true"
             :preview-src-list="[scope.row.taskImage]"
             :z-index="1001"
@@ -170,6 +170,7 @@ export default {
           list.forEach((item, index) => {
             const str = `${item.id}@${item.courseId}`
             item.courseName = formatTeamNameSup(item.courseName)
+            item.teamName = formatTeamNameSup(item.teamName)
             this.courseIdList.push(str)
           })
           await this.iniToViewInform(list)

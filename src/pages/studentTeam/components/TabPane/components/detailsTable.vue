@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 20:22:24
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-09-16 18:54:27
+ * @LastEditTime: 2020-10-22 11:38:31
  -->
 <template>
   <div class="table-box">
@@ -300,7 +300,7 @@
           <template slot-scope="scope">
             <div>
               <span class="logistics-address-name">{{
-                scope.row.product_name
+                formatTeamNameSup(scope.row.product_name)
               }}</span>
               <br />
               <div v-if="scope.row.receipt_name">
@@ -660,6 +660,7 @@ import MPagination from '@/components/MPagination/index.vue'
 import logisticsForm from '../components/logisticsForm'
 import modifyAddress from '../components/modifyAddress'
 import { openBrowserTab } from '@/utils/index'
+import { formatTeamNameSup } from '@/utils/supList'
 export default {
   name: 'detailsTable',
   props: {
@@ -687,6 +688,7 @@ export default {
   },
   data() {
     return {
+      formatTeamNameSup,
       expressStatus: '',
       rowId: '', // 判断页面那条数据显示
       showModifyAddressBtn: false,
