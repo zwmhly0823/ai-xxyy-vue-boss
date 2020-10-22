@@ -4,7 +4,7 @@
  * @Author: zhangjiawen
  * @Date: 2020-07-10 14:49:13
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-10-22 16:29:39
+ * @LastEditTime: 2020-10-22 18:21:37
 -->
 <template>
   <div class="drawer-main">
@@ -268,33 +268,49 @@ export default {
       return Dayjs(date).format('YYYY-MM-DD HH:mm:ss')
     },
     async comfirmRefund() {
-      const { code } = await this.$http.Finance.toAgree({
-        refundUid: JSON.parse(localStorage.getItem('staff')).id,
-        paymentId: this.orderData.paymentId
-        // 默认不传就是1 审核通过
-      }).catch((err) => {
-        console.error(err)
-        this.$message({
-          message: '通过操作失败,稍后再试',
-          type: 'error'
-        })
-        return -1
+      this.$confirm(`请再次确认发起退款`, '确认退款', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
       })
-      if (code === 0) {
-        this.$message({
-          message: '退款发起成功',
-          type: 'success'
+        .then(() => {
+          this.$http.Finance.toAgree({
+            refundUid: JSON.parse(localStorage.getItem('staff')).id,
+            paymentId: this.orderData.paymentId
+            // 默认不传就是1 审核通过
+          })
+            .then((res) => {
+              if (res.code === 0) {
+                this.$message({
+                  message: '退款发起成功',
+                  type: 'success'
+                })
+                this.$emit('closeDrawer')
+                // 跳回列表并刷新
+                // this.$refs.drawerLk.closeDrawer() // 关闭抽屉
+                // this.arrangeParams() // 刷新列表数据
+              } else {
+                this.$message({
+                  message: '通过操作失败,稍后再试',
+                  type: 'warning'
+                })
+              }
+            })
+            .catch((err) => {
+              this.$message({
+                message: '通过操作失败,稍后再试',
+                type: 'error'
+              })
+              return err
+            })
         })
-        this.$emit('closeDrawer')
-        // 跳回列表并刷新
-        // this.$refs.drawerLk.closeDrawer() // 关闭抽屉
-        // this.arrangeParams() // 刷新列表数据
-      } else {
-        this.$message({
-          message: '通过操作失败,稍后再试',
-          type: 'warning'
+        .catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消退款'
+          })
+          this.toggleSelection()
         })
-      }
     }
     // closeFeed() {
     //   localStorage.setItem('feedFlag', true)

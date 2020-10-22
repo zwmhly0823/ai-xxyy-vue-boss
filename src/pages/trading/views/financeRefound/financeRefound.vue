@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-05-19 17:18:39
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-10-22 17:26:27
+ * @LastEditTime: 2020-10-22 18:12:08
 -->
 <template>
   <section class="bianju10">
@@ -765,7 +765,7 @@ export default {
           this.arrangeParams() // 刷新列表数据
           this.$message({
             type: 'success',
-            message: '退款成功!'
+            message: '退款发起成功!'
           })
           this.toggleSelection()
         })
