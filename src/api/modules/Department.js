@@ -44,9 +44,10 @@ export default {
   },
 
   // 根据选择的部门ID获取老师ID
-  getDepartmentTeacher(query = '', size = 300) {
+  getDepartmentTeacher(query = '', size = 300, isParttimeTeacher = false) {
     const obj = JSON.parse(query || '{}')
     Object.assign(obj, { 'subject.like': { 'subject.keyword': `*0*` } })
+    isParttimeTeacher && Object.assign(obj, { duty_id: ['3', '4'] })
     return axios.post('/graphql/v1/toss', {
       query: `{
         TeacherList(query: ${JSON.stringify(
@@ -66,6 +67,9 @@ export default {
         TeacherListEx(query: ${JSON.stringify(query)}, size: ${size}){
           id
           realname
+          departmentInfo {
+            name
+          }
         }
       }`
     })

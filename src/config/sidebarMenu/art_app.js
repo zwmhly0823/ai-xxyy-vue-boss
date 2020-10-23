@@ -568,6 +568,14 @@ const bearArt = [
           title: '系统帐号',
           module: 'teacher'
         }
+      },
+      {
+        path: '/workHandover/partTimeTeacher',
+        name: 'partTimeTeacher',
+        meta: {
+          title: '兼职老师交接',
+          module: 'teacher'
+        }
       }
     ]
   }

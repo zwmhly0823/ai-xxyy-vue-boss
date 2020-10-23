@@ -120,9 +120,7 @@ export default {
               ]
         }
       }
-      this.teacherscope &&
-        // this.teacherscope.length &&
-        q.bool.must.push({ terms: { id: this.teacherscope } })
+      q.bool.must.push({ terms: { id: this.teacherscope } })
       getDepartmentTeacherEx(JSON.stringify(q))
         .then((res) => {
           this.teacherList = res.data.TeacherListEx || []

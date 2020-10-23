@@ -63,6 +63,11 @@ export default {
     checkStrictly: {
       type: Boolean,
       default: false
+    },
+    // 是否是兼职老师
+    isParttimeTeacher: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -80,7 +85,13 @@ export default {
         const department = sortByKey(arr, 'id')
         department.sort(this.handle('sort'))
         this.recursive(department)
-        this.departmentList = department
+        if (this.isParttimeTeacher) {
+          this.departmentList = department.filter((item) => {
+            return item.name === '美术兼职老师'
+          })
+        } else {
+          this.departmentList = department
+        }
       })
     },
     async onSelect(data) {
@@ -95,7 +106,9 @@ export default {
         // this.$emit('result', { [this.name]: data })
       } else {
         const teacher = await this.$http.Department.getDepartmentTeacher(
-          JSON.stringify(ids)
+          JSON.stringify(ids),
+          300,
+          this.isParttimeTeacher
         )
         const teacherIds = teacher.data.TeacherList.map((item) => item.id)
         this.$emit(
