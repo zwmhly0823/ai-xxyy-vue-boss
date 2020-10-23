@@ -25,7 +25,7 @@
         <div class="to-choose-container" v-show="!showHandler">
           <h3>{{ showTeacherName }}</h3>
           <p class="class-in">{{ showTeamName }}</p>
-          <p class="class-in">{{ showTeacherID }}</p>
+          <p class="class-in">【id】 {{ showTeacherID }}</p>
           <el-button type="text" @click="handoverToChoose">重新选择</el-button>
         </div>
       </div>
