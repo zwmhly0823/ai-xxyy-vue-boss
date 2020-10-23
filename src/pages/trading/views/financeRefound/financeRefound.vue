@@ -1,10 +1,10 @@
 <!--
- * @Descripttion: TOSS小熊
+ * @Descripttion: 
  * @version: 1.0.0
- * @Author: liukun
- * @Date: 2020-05-19 17:18:39
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-10-21 23:37:47
+ * @Author: zhangjiawen
+ * @Date: 2020-10-23 22:18:39
+ * @LastEditors: zhangjianwen
+ * @LastEditTime: 2020-10-23 23:04:35
 -->
 <template>
   <section class="bianju10">
@@ -109,6 +109,19 @@
             <applicant @result="applicantSearch" placeholder="申请人" />
           </div>
         </el-form-item>
+        <el-form-item label="退款支付状态:">
+          <el-select
+            clearable
+            placeholder="请键入"
+            v-model="payStatu"
+            @change="refundPay"
+          >
+            <el-option label="未发起" value="0"></el-option>
+            <el-option label="支付中" value="1"></el-option>
+            <el-option label="成功" value="2"></el-option>
+            <el-option label="失败" value="3"></el-option>
+          </el-select>
+        </el-form-item>
         <el-form-item label="时间查询:">
           <div class="concat">
             <el-select
@@ -138,11 +151,25 @@
           <el-button type="primary" @click.stop="exportAll">导出</el-button>
         </el-form-item>
       </el-form>
+      <div>
+        <el-button
+          v-show="+roleId === 7"
+          type="primary"
+          @click.stop="BatchRefund"
+          >批量发起退款支付</el-button
+        >
+      </div>
     </div>
     <el-divider></el-divider>
     <div>
-      <el-table :data="tableData" style="width: 100%">
-        <el-table-column label="用户信息" width="120">
+      <el-table
+        :data="tableData"
+        style="width: 100%"
+        ref="multipleTable"
+        @selection-change="handleSelectionChange"
+      >
+        <el-table-column type="selection" width="55"> </el-table-column>
+        <el-table-column label="用户信息" width="120" fixed="left">
           <template slot-scope="scope">
             <div class="usertext" @click="userHandle(scope.row)">
               {{ scope.row.userName ? scope.row.userName : '-' }}<br />{{
@@ -151,7 +178,11 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column label="订单编号-订单交易流水号" width="220">
+        <el-table-column
+          label="订单编号-订单交易流水号"
+          width="220"
+          fixed="left"
+        >
           <template slot-scope="scope">
             <div>
               {{
@@ -165,17 +196,19 @@
         </el-table-column> -->
         <el-table-column prop="regtypeStr" label="业务类型" align="center">
         </el-table-column>
-        <el-table-column prop="applyName" label="申请人" align="center">
+        <el-table-column
+          prop="applyName"
+          label="申请人-部门"
+          width="120"
+          align="center"
+        >
+          <template slot-scope="scope">
+            <p>{{ scope.row.applyName }}</p>
+            <p>{{ scope.row.applierDepartment }}</p>
+          </template>
         </el-table-column>
         <el-table-column prop="tradeTypeStr" label="支付方式" align="center">
         </el-table-column>
-        <!-- <el-table-column
-          prop="transactionId"
-          label="订单交易流水号"
-          align="center"
-          width="120"
-        >
-        </el-table-column> -->
         <el-table-column
           prop="buytime"
           label="订单支付时间"
@@ -185,17 +218,30 @@
         </el-table-column>
         <el-table-column prop="statusStr" label="退款状态" align="center">
         </el-table-column>
+        <el-table-column
+          prop="refundStatusStr"
+          label="退款支付状态"
+          align="center"
+          width="120"
+        >
+        </el-table-column>
         <el-table-column prop="refundTypeStr" label="退款类型" align="center">
         </el-table-column>
-        <el-table-column prop="refundRuleStr" label="退款规则" align="center">
-        </el-table-column>
+
         <el-table-column prop="refundFee" label="退款金额" align="center">
         </el-table-column>
         <el-table-column prop="totoalFee" label="交易金额" align="center">
         </el-table-column>
+        <el-table-column prop="refundRuleStr" label="退款规则" align="center">
+        </el-table-column>
+        <el-table-column label="订单支付时间" align="center" width="155">
+          <template slot-scope="scope">
+            {{ scope.row.buytime }}
+          </template>
+        </el-table-column>
         <el-table-column label="申请退款时间" align="center" width="155">
           <template slot-scope="scope">
-            {{ scope.row.applyTime || scope.row.ctime }}
+            {{ scope.row.applyTime }}
           </template>
         </el-table-column>
         <el-table-column
@@ -204,12 +250,15 @@
           align="center"
           width="155"
         >
+          <template slot-scope="scope">
+            {{ scope.row.refundTime || '--' }}
+          </template>
         </el-table-column>
-        <el-table-column label="操作" align="center">
+        <el-table-column label="操作" align="center" fixed="right">
           <template slot-scope="scope">
             <el-button type="text" @click="handleEdit(scope.$index, scope.row)"
-              >退款审核</el-button
-            >
+              >详情
+            </el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -230,157 +279,17 @@
     <el-drawer
       ref="drawerLk"
       :visible.sync="drawer"
-      size="50%"
+      size="60%"
       :destroy-on-close="true"
     >
       <template v-slot:title>
-        <h1>财务审核</h1>
+        <h1 class="rawer-title">退费订单详情</h1>
       </template>
-      <div class="chouti">
-        <el-row v-if="choutidata.buytime !== ''">
-          <el-col :span="4">订单支付时间:</el-col>
-          <el-col :span="18" :offset="2"
-            >{{ new Date(Number(choutidata.buytime)).toLocaleString() }}
-          </el-col>
-        </el-row>
-        <el-row v-if="choutidata.outTradeNo !== ''">
-          <el-col :span="4">订单号:</el-col>
-          <el-col :span="18" :offset="2"
-            >{{
-              choutidata.outTradeNo &&
-                choutidata.outTradeNo.replace(/[a-z]*/g, '')
-            }}<span
-              style="color:red"
-              v-if="Number(choutidata.importTime) > 0 && choutidata.importTime"
-              >(此为第三方导入订单)</span
-            >
-          </el-col>
-        </el-row>
-        <el-row v-if="choutidata.channelOuterName !== ''">
-          <el-col :span="4">第三方订单来源:</el-col>
-          <el-col :span="18" :offset="2"
-            >{{ choutidata.channelOuterName }}
-          </el-col>
-        </el-row>
-        <el-row v-if="choutidata.regtypeStr !== ''">
-          <el-col :span="4">业务类型:</el-col>
-          <el-col :span="18" :offset="2">{{ choutidata.regtypeStr }} </el-col>
-        </el-row>
-        <el-row v-if="choutidata.tradeTypeStr !== ''">
-          <el-col :span="4">支付渠道:</el-col>
-          <el-col :span="18" :offset="2">{{ choutidata.tradeTypeStr }} </el-col>
-        </el-row>
-        <el-row v-if="choutidata.transactionId !== ''">
-          <el-col :span="4">支付流水号:</el-col>
-          <el-col :span="18" :offset="2"
-            >{{ choutidata.transactionId }}
-          </el-col>
-        </el-row>
-        <el-row v-if="choutidata.payeeName !== ''">
-          <el-col :span="4">收款人姓名:</el-col>
-          <el-col :span="18" :offset="2">{{ choutidata.payeeName }} </el-col>
-        </el-row>
-        <el-row v-if="choutidata.payeeAccount !== ''">
-          <el-col :span="4">支付宝账号:</el-col>
-          <el-col :span="18" :offset="2">{{ choutidata.payeeAccount }} </el-col>
-        </el-row>
-        <el-row v-if="choutidata.periodAlready !== ''">
-          <el-col :span="4">已上课周期:</el-col>
-          <el-col :span="18" :offset="2"
-            >{{ choutidata.periodAlready }}
-          </el-col>
-        </el-row>
-        <el-row v-if="choutidata.periodRefund !== ''">
-          <el-col :span="4">退款月数:</el-col>
-          <el-col :span="18" :offset="2"
-            >{{ Math.floor(choutidata.periodRefund / 4) + '个月' }}
-          </el-col>
-        </el-row>
-        <el-row v-if="choutidata.refundFee !== ''">
-          <el-col :span="4">退款金额:</el-col>
-          <el-col :span="18" :offset="2">{{ choutidata.refundFee }} </el-col>
-        </el-row>
-        <el-row v-if="choutidata.amount !== ''">
-          <el-col :span="4">交易金额:</el-col>
-          <el-col :span="18" :offset="2">{{ choutidata.amount }} </el-col>
-        </el-row>
-        <el-row v-if="choutidata.refundTypeStr !== ''">
-          <el-col :span="4">退款类型:</el-col>
-          <el-col :span="18" :offset="2"
-            >{{ choutidata.refundTypeStr }}
-          </el-col>
-        </el-row>
-        <el-row v-if="choutidata.refundRuleStr !== ''">
-          <el-col :span="4">退款规则:</el-col>
-          <el-col :span="18" :offset="2"
-            >{{ choutidata.refundRuleStr }}
-          </el-col>
-        </el-row>
-        <el-row v-if="choutidata.invoiceStatus !== ''">
-          <el-col :span="4">开票状态:</el-col>
-          <el-col :span="18" :offset="2"
-            ><span v-if="choutidata.invoiceStatus == 'DEFAULT'">待开票</span>
-            <span v-else-if="choutidata.invoiceStatus == 'PENDING'"
-              >开票中</span
-            >
-            <span v-else-if="choutidata.invoiceStatus == 'COMPLETED'"
-              >已开票</span
-            >
-            <span v-else-if="choutidata.invoiceStatus == 'FAILED'"
-              >开票失败</span
-            >
-            <span v-else>作废</span>
-          </el-col>
-        </el-row>
-        <el-row v-if="choutidata.invoiceType !== ''">
-          <el-col :span="4">发票类型:</el-col>
-          <el-col :span="18" :offset="2"
-            ><span v-if="choutidata.invoiceType == 'DEFAULT'">无</span>
-            <span v-else-if="choutidata.invoiceType == 'GENERAL'"
-              >普通发票</span
-            >
-            <span v-else>专票</span>
-          </el-col>
-        </el-row>
-        <el-row v-if="choutidata.invoiceCode !== ''">
-          <el-col :span="4">发票号码:</el-col>
-          <el-col :span="18" :offset="2">{{ choutidata.invoiceCode }} </el-col>
-        </el-row>
-        <el-row v-if="choutidata.refundReason !== ''">
-          <el-col :span="4">退款原因:</el-col>
-          <el-col :span="18" :offset="2">{{ choutidata.refundReason }} </el-col>
-        </el-row>
-        <el-row v-if="choutidata.refundMsg !== ''">
-          <el-col :span="4">退款说明:</el-col>
-          <el-col :span="18" :offset="2">{{ choutidata.refundMsg }} </el-col>
-        </el-row>
-        <el-row v-if="choutidata.attsUrl !== ''">
-          <el-col :span="4">附件:</el-col>
-          <el-col :span="18" :offset="2">
-            <el-image
-              style="width: 200px"
-              :src="choutidata.attsUrl"
-              fit="contain"
-              :preview-src-list="[choutidata.attsUrl]"
-            ></el-image>
-          </el-col>
-        </el-row>
-        <el-row class="buttonBetween" v-if="statusStr === '退款中'">
-          <el-button
-            v-if="choutidata.payeeAccount !== ''"
-            type="warning"
-            @click="rejectRefund"
-            >退款驳回</el-button
-          >
-          <el-button type="primary" @click="comfirmRefund">确认退款</el-button>
-        </el-row>
-        <el-row class="buttonCenter" v-else-if="statusStr === '退款成功'">
-          <el-button type="success" :disabled="true">已经退款</el-button>
-        </el-row>
-        <el-row class="buttonCenter" v-else-if="statusStr === '退款驳回'">
-          <el-button type="danger" :disabled="true">已驳回</el-button>
-        </el-row>
-      </div>
+      <drawer
+        @closeDrawer="closeDrawer"
+        :orderData="choutidata"
+        :approveData="approveData"
+      />
     </el-drawer>
   </section>
 </template>
@@ -395,9 +304,12 @@ export default {
   created() {
     // init全量数据展示
     this.arrangeParams()
+    console.log('test')
   },
   data() {
     return {
+      roleId: JSON.parse(localStorage.getItem('staff')).roleId || '',
+      selectData: [],
       searchJson: {
         regType: '', // 业务类型
         tradeType: '', // 支付方式
@@ -405,6 +317,7 @@ export default {
         refundRule: '', // 退款规则
         refundType: '', // 退款类型
         uid: '', // 用户id
+        refundStatus: '', // 退款支付状态
 
         outTradeNo: '', // 订单号
         transactionId: '', // 订单交易流水号
@@ -430,7 +343,7 @@ export default {
       fordisplay3: '', // 退款状态
       fordisplay5: '', // 退款类型
       fordisplay6: '', // 退款规则
-
+      payStatu: '', // 退款支付状态
       // 分页
       currentPage: 0,
       pageSize: 0,
@@ -438,6 +351,7 @@ export default {
 
       // tableData
       tableData: [],
+      approveData: [],
       // 抽屉
       drawer: false,
       choutidata: {},
@@ -508,6 +422,17 @@ export default {
         this.arrangeParams()
       }
     },
+    refundPay(val) {
+      console.info(val, typeof val)
+      if (val) {
+        this.searchJson.refundStatus = +val
+        this.arrangeParams()
+      } else {
+        this.searchJson.refundStatus = ''
+        this.arrangeParams()
+      }
+    },
+
     // 申请人
     applicantSearch(val) {
       console.info(val, typeof val)
@@ -774,10 +699,92 @@ export default {
       console.log(`当前页: ${val}`)
       this.arrangeParams({ page: val, size: this.pageSize })
     },
+    // 全选
+    handleSelectionChange(e) {
+      console.log(e)
+      this.selectData = e
+    },
+    closeDrawer() {
+      // 跳回列表并刷新
+      this.$refs.drawerLk.closeDrawer() // 关闭抽屉
+      this.arrangeParams() // 刷新列表数据
+    },
+    // 取消选择
+    toggleSelection(rows) {
+      if (rows) {
+        rows.forEach((row) => {
+          this.$refs.multipleTable.toggleRowSelection(row)
+        })
+      } else {
+        this.$refs.multipleTable.clearSelection()
+      }
+    },
+    // 批量退款
+    BatchRefund() {
+      if (this.selectData && this.selectData.length <= 0) {
+        this.$message({
+          message: '请选择订单',
+          type: 'error'
+        })
+      }
+      // const data =  this.selectData.filter((item)=>{
+      //     [4,7,8,9].includes(item.status)&& [4,5].includes()
+      //   })
+      const payIds = []
+      this.selectData.map((item, idx) => {
+        if (
+          [4, 7, 8, 9].includes(item.status) &&
+          ![1, 2].includes(item.refundStatus)
+        ) {
+          payIds.push(item.id)
+        }
+      })
+      if (payIds.length === 0) {
+        return this.$message({
+          message: '无可退款订单',
+          type: 'error'
+        })
+      }
+      this.$confirm(
+        `您即将给退款订单【确认退款】确认退款订单数：${payIds.length}条`,
+        '批量确认退款',
+        {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }
+      )
+        .then(() => {
+          this.$http.Finance.toAgreeAll({
+            refundUid: JSON.parse(localStorage.getItem('staff')).id,
+            paymentId: payIds
+          }).catch((err) => {
+            console.log(err)
+          })
+          this.arrangeParams() // 刷新列表数据
+          this.$message({
+            type: 'success',
+            message: '退款发起成功!'
+          })
+          this.toggleSelection()
+        })
+        .catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消退款'
+          })
+          this.toggleSelection()
+        })
+    },
     // 操作
+
     async handleEdit() {
       console.info('index:', arguments[0])
       console.info('row:', arguments[1])
+      this.approveData = await this.$http.Finance.getApprov({
+        flowApprovalId: arguments[1].approvalId
+      })
+      console.log(this.approveData)
       const { code, payload } = await this.$http.Finance.getDetail({
         paymentId: arguments[1].id
       }).catch((err) => {
@@ -793,71 +800,72 @@ export default {
         Object.assign(this.choutidata, payload)
         this.drawer = true
       }
-    },
-    async comfirmRefund() {
-      const { code } = await this.$http.Finance.toAgree({
-        refundUid: JSON.parse(localStorage.getItem('staff')).id,
-        paymentId: this.whichListOrderId
-        // 默认不传就是1 审核通过
-      }).catch((err) => {
-        console.error(err)
-        this.$message({
-          message: '通过操作失败,稍后再试',
-          type: 'error'
-        })
-        return -1
-      })
-      if (code === 0) {
-        this.$message({
-          message: '操作成功',
-          type: 'success'
-        })
-        // 跳回列表并刷新
-        this.$refs.drawerLk.closeDrawer() // 关闭抽屉
-        this.arrangeParams() // 刷新列表数据
-      } else {
-        this.$message({
-          message: '通过操作失败,稍后再试',
-          type: 'warning'
-        })
-      }
-    },
-    rejectRefund() {
-      this.$prompt('请告知您的驳回理由', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        inputPattern: /[\s\S]+/, // least 1
-        inputErrorMessage: '不能为空！好歹敲个space'
-      }).then(async ({ value }) => {
-        const { code } = await this.$http.Finance.toAgree({
-          refundUid: JSON.parse(localStorage.getItem('staff')).id,
-          paymentId: this.whichListOrderId,
-          auditType: 2,
-          rejectReason: value
-        }).catch((err) => {
-          console.error(err)
-          this.$message({
-            message: '驳回操作失败,请稍后再试',
-            type: 'error'
-          })
-          return -1
-        })
-        if (code === 0) {
-          this.$message({
-            message: '操作成功',
-            type: 'success'
-          })
-          // 跳回列表并刷新
-          this.$refs.drawerLk.closeDrawer() // 关闭抽屉
-          this.arrangeParams() // 刷新列表数据
-        } else {
-          this.$message({
-            message: '驳回操作失败,稍后再试',
-            type: 'warning'
-          })
-        }
-      })
     }
+
+    // async comfirmRefund() {
+    //   const { code } = await this.$http.Finance.toAgree({
+    //     refundUid: JSON.parse(localStorage.getItem('staff')).id,
+    //     paymentId: this.whichListOrderId
+    //     // 默认不传就是1 审核通过
+    //   }).catch((err) => {
+    //     console.error(err)
+    //     this.$message({
+    //       message: '通过操作失败,稍后再试',
+    //       type: 'error'
+    //     })
+    //     return -1
+    //   })
+    //   if (code === 0) {
+    //     this.$message({
+    //       message: '操作成功',
+    //       type: 'success'
+    //     })
+    //     // 跳回列表并刷新
+    //     this.$refs.drawerLk.closeDrawer() // 关闭抽屉
+    //     this.arrangeParams() // 刷新列表数据
+    //   } else {
+    //     this.$message({
+    //       message: '通过操作失败,稍后再试',
+    //       type: 'warning'
+    //     })
+    //   }
+    // },
+    // rejectRefund() {
+    //   this.$prompt('请告知您的驳回理由', '提示', {
+    //     confirmButtonText: '确定',
+    //     cancelButtonText: '取消',
+    //     inputPattern: /[\s\S]+/, // least 1
+    //     inputErrorMessage: '不能为空！好歹敲个space'
+    //   }).then(async ({ value }) => {
+    //     const { code } = await this.$http.Finance.toAgree({
+    //       refundUid: JSON.parse(localStorage.getItem('staff')).id,
+    //       paymentId: this.whichListOrderId,
+    //       auditType: 2,
+    //       rejectReason: value
+    //     }).catch((err) => {
+    //       console.error(err)
+    //       this.$message({
+    //         message: '驳回操作失败,请稍后再试',
+    //         type: 'error'
+    //       })
+    //       return -1
+    //     })
+    //     if (code === 0) {
+    //       this.$message({
+    //         message: '操作成功',
+    //         type: 'success'
+    //       })
+    //       // 跳回列表并刷新
+    //       this.$refs.drawerLk.closeDrawer() // 关闭抽屉
+    //       this.arrangeParams() // 刷新列表数据
+    //     } else {
+    //       this.$message({
+    //         message: '驳回操作失败,稍后再试',
+    //         type: 'warning'
+    //       })
+    //     }
+    //   })
+    // }
   },
   computed: {
     isOpen() {
@@ -952,5 +960,9 @@ export default {
 .usertext {
   color: #2a75ed;
   cursor: pointer;
+}
+.rawer-title {
+  text-align: center;
+  color: black;
 }
 </style>
