@@ -1,7 +1,7 @@
 /*
  * @Date: 2020-03-13 15:20:21
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-10-17 14:58:11
+ * @LastEditors: Shentong
+ * @LastEditTime: 2020-10-23 15:08:48
  * @FilePath: /ai-app-vue-toss/src/pages/studentTeam/router/index.js
  */
 import Vue from 'vue'
@@ -165,6 +165,15 @@ const routes = [
       keepAlive: false
     },
     component: () => import('../views/recommend/changeRecommend.vue')
+  },
+  {
+    path: '/uploadFile',
+    name: 'uploadFile',
+    meta: {
+      title: '上传素材',
+      keepAlive: false
+    },
+    component: () => import('../views/uploadFile/index.vue')
   }
 ]
 
