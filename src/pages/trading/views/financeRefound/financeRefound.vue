@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-05-19 17:18:39
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-10-23 22:07:17
+ * @LastEditTime: 2020-10-23 22:12:12
 -->
 <template>
   <section class="bianju10">
@@ -300,7 +300,6 @@ import { openBrowserTab } from '@/utils/index'
 export default {
   components: {
     applicant,
-
     drawer
   },
   created() {
