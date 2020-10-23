@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-10-23 15:06:24
  * @LastEditors: Shentong
- * @LastEditTime: 2020-10-23 16:02:21
+ * @LastEditTime: 2020-10-23 17:43:29
 -->
 <template>
   <div class="upload-file-page app-main">
@@ -31,7 +31,7 @@
   </div>
 </template>
 <script>
-// import uploadFile from './upload'
+import uploadFile from './upload'
 export default {
   data() {
     return {
@@ -42,10 +42,10 @@ export default {
     // 上传附件
     uploadHandle(file) {
       console.log('file', file)
-      //   uploadFile(file).then((res) => {
-      //     console.log('res', res)
-      //     this.addContentForm.imgUrl = res
-      //   })
+      uploadFile(file).then((res) => {
+        console.log('res', res)
+        // this.addContentForm.imgUrl = res
+      })
     }
   }
 }
