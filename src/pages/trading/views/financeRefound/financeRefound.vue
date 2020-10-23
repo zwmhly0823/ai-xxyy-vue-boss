@@ -4,7 +4,7 @@
  * @Author: zhangjiawen
  * @Date: 2020-10-23 22:18:39
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-10-23 23:04:35
+ * @LastEditTime: 2020-10-23 23:06:15
 -->
 <template>
   <section class="bianju10">
@@ -297,9 +297,11 @@
 <script>
 import applicant from './applicant.vue'
 import { openBrowserTab } from '@/utils/index'
+import drawer from './components/drawer.vue'
 export default {
   components: {
-    applicant
+    applicant,
+    drawer
   },
   created() {
     // init全量数据展示
