@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 14:19:58
  * @LastEditors: Shentong
- * @LastEditTime: 2020-10-23 21:45:16
+ * @LastEditTime: 2020-10-23 22:28:05
  -->
 <template>
   <div>
@@ -493,12 +493,10 @@ export default {
         ? 'sysFinishRadio'
         : 'sysExhibitionRadio'
       // 如果当前进度小于总进度，那么禁用值为4，否则，禁用值等于初始值
-      console.log(val.substring(1), this[raceType])
       if (+val.substring(1) < this[raceType].substring(1)) {
         this.radioJudgeDisable = 4
 
         this[baseModal] = '1'
-        // if ()
       } else {
         const num = this.dialogFormVisible
           ? this.sysOriginWeekNum
