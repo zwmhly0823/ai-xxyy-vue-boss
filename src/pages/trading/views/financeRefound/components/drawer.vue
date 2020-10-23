@@ -4,7 +4,7 @@
  * @Author: zhangjiawen
  * @Date: 2020-07-10 14:49:13
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-10-23 23:27:24
+ * @LastEditTime: 2020-10-24 01:16:42
 -->
 <template>
   <div class="drawer-main">
@@ -13,18 +13,18 @@
         <p class="line-title">退款支付详情</p>
         <el-table
           :data="payDel"
-          style="width: 90%;border: 1px solid #d7d7e0;"
+          style="width: 95%;border: 1px solid #d7d7e0;"
           :header-cell-style="{ background: '#F0F9FD' }"
         >
           <el-table-column prop="status" label="退款支付状态">
             <template slot-scope="scope">
               <span
                 :style="
-                  scope.row.status === 5
+                  scope.row.status === 2
                     ? styleObject[0]
-                    : scope.row.status === 9
+                    : scope.row.status === 3
                     ? styleObject[1]
-                    : ''
+                    : styleObject[2]
                 "
                 >{{ scope.row.statusStr }}</span
               >
@@ -49,7 +49,7 @@
         </p>
         <el-table
           :data="orderDel"
-          style="width: 90%;border: 1px solid #d7d7e0;"
+          style="width: 95%;border: 1px solid #d7d7e0;"
           :header-cell-style="{ background: '#F0F9FD' }"
         >
           <el-table-column prop="regTypeDesc" width="100" label="订单业务类型">
@@ -95,7 +95,7 @@
       </div>
       <div class="drawer-line">
         <p class="line-title">订单生命周期</p>
-        <p style="width: 90%;height:110px; border: 1px solid #d7d7e0;">
+        <p style="width: 95%;height:110px; border: 1px solid #d7d7e0;">
           <el-steps style="padding-top:10px" :active="6" align-center>
             <!-- <el-step
               v-for="item in list"
@@ -131,7 +131,7 @@
         <p class="line-title">审批过程记录</p>
         <el-table
           :data="approveArr"
-          style="width: 90%;border: 1px solid #d7d7e0;"
+          style="width: 95%;border: 1px solid #d7d7e0;"
           :header-cell-style="{ background: '#F0F9FD' }"
         >
           <el-table-column prop="approvalName" label="发起人/审批人">
@@ -199,7 +199,11 @@ export default {
         '退款异常',
         '失败'
       ],
-      styleObject: [{ color: 'green' }, { color: 'red' }],
+      styleObject: [
+        { color: '#49BF7C' },
+        { color: '#FF0505' },
+        { color: '#6E6E6E' }
+      ],
       list: [
         { title: '订单创建时间', word: 111 },
         { title: '订单支付时间', word: 222 },
@@ -330,12 +334,13 @@ export default {
   .line-title {
     font-size: 16px;
     font-weight: bold;
-    margin: 10px;
+    margin: 6px 0 10px;
   }
   .line-delf {
-    width: 90%;
+    width: 95%;
     margin: 10px 0;
     font-size: 12px;
+    color: #6e6e6e;
     display: flex;
     justify-content: space-around;
   }
