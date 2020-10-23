@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 14:19:58
  * @LastEditors: Shentong
- * @LastEditTime: 2020-10-23 19:55:00
+ * @LastEditTime: 2020-10-23 20:32:11
  -->
 <template>
   <div>
@@ -480,7 +480,7 @@ export default {
         : 'sysExhibitionRadio'
 
       console.log(val.substring(1), this[raceType])
-      if (+val.substring(1) < this[raceType]) {
+      if (+val.substring(1) < this[raceType].substring(1)) {
         this.radioJudgeDisable = 4
       } else {
         const num = this.currentProgress.substring(1)
@@ -671,11 +671,11 @@ export default {
           this.teamDetail.team_state
         )
       } else {
-        this.sysFinishRadio = this.finishLessonData.weekNum.substring(1)
+        this.sysFinishRadio = this.finishLessonData.weekNum.substring(1) // 页面响应式周数，最大为4
         // this.radioJudgeDisable = this.sysFinishRadio
-        this.sysOriginRadio = this.sysFinishRadio
 
         this.currentProgress = getLesseonDesc.level
+        this.sysOriginRadio = this.currentProgress
 
         this.progressList = this.getCurProgressList(getLesseonDesc.level)
         //
@@ -715,9 +715,9 @@ export default {
         this.btnshow(weekNum, this.classObj.type, this.teamDetail.team_state)
       } else {
         this.sysExhibitionRadio = weekNum.substring(1)
-        this.exOriginRadio = this.sysExhibitionRadio
         // this.radioJudgeDisable = this.sysExhibitionRadio
         this.currentProgress = level
+        this.exOriginRadio = this.currentProgress
 
         this.progressList = this.getCurProgressList(level)
       }
