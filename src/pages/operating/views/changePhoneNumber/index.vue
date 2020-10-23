@@ -3,12 +3,13 @@
  * @version: 1.0.0
  * @Author: YangJiyong
  * @Date: 2020-06-25 16:48:38
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-07-03 19:00:12
+ * @LastEditors: zhangjianwen
+ * @LastEditTime: 2020-10-23 16:34:01
 -->
 <template>
   <el-row type="flex" class="app-main height">
     <div class="app-main-container">
+      <h3>替换操作</h3>
       <!-- <el-scrollbar wrap-class="user-wrapper" id="users-scroll"> -->
       <div class="app-main-container-scrollbar change-phone">
         <el-card shadow="never">
@@ -45,8 +46,28 @@
 
         <div class="record-list">
           <h3>替换记录</h3>
+          <el-form :inline="true" class="demo-form-flex">
+            <el-form-item label="原手机号">
+              <search-phone
+                @result="getSearchData('phone', arguments)"
+                tip="原手机号查询"
+                ref="searchUserByPhone"
+                teamId=""
+              />
+            </el-form-item>
+
+            <el-form-item label="新手机号">
+              <search-phone
+                @result="getSearchData('phone', arguments)"
+                tip="新手机号查询"
+                ref="searchUserByPhone"
+                teamId=""
+              />
+            </el-form-item>
+          </el-form>
           <!-- dom -->
           <div class="tableInner" ref="tableInner"></div>
+
           <el-table
             :data="recordList"
             :height="tableHeight"
@@ -88,6 +109,7 @@
 <script>
 import { openBrowserTab, formatData } from '@/utils/index'
 import MPagination from '@/components/MPagination/index.vue'
+import SearchPhone from './components/searchPhone'
 const valid = {
   isPhoneNum(str) {
     return /^1(3|4|5|6|7|8|9)\d{9}$/.test(str)
@@ -98,7 +120,8 @@ const valid = {
 }
 export default {
   components: {
-    MPagination
+    MPagination,
+    SearchPhone
   },
   data() {
     var checkPhone = (rule, value, callback) => {
@@ -235,13 +258,13 @@ export default {
       }
     }
   }
-
-  .record-list {
-    h3 {
-      margin-left: 20px;
-      font-size: 14px;
-      color: #666;
-    }
-  }
+}
+.demo-form-flex {
+  margin-left: 20px;
+}
+h3 {
+  margin-left: 20px;
+  font-size: 14px;
+  color: #666;
 }
 </style>
