@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 14:19:58
  * @LastEditors: Shentong
- * @LastEditTime: 2020-10-23 20:32:11
+ * @LastEditTime: 2020-10-23 20:51:57
  -->
 <template>
   <div>
@@ -422,8 +422,10 @@ export default {
       screenWorksData: {},
       screenAttendClassData: {},
       teamDetail: {},
-      sysOriginRadio: '',
+      sysOriginCurp: '',
+      sysOriginWeekNum: '',
       exOriginRadio: '',
+      exOriginWeekNum: '',
       defaultHead: 'https://msb-ai.meixiu.mobi/ai-pm/static/touxiang.png'
     }
   },
@@ -472,18 +474,20 @@ export default {
   watch: {
     currentProgress(val, oldVal) {
       const raceType = this.dialogFormVisible
-        ? 'sysOriginRadio'
+        ? 'sysOriginCurp'
         : 'exOriginRadio'
 
       const baseModal = this.dialogFormVisible
         ? 'sysFinishRadio'
         : 'sysExhibitionRadio'
-
+      // 如果当前进度小于总进度，那么禁用值为4，否则，禁用值等于初始值
       console.log(val.substring(1), this[raceType])
       if (+val.substring(1) < this[raceType].substring(1)) {
         this.radioJudgeDisable = 4
       } else {
-        const num = this.currentProgress.substring(1)
+        const num = this.dialogFormVisible
+          ? this.sysOriginWeekNum
+          : this.exOriginWeekNum
         this[baseModal] = num
 
         this.radioJudgeDisable = num
@@ -675,7 +679,9 @@ export default {
         // this.radioJudgeDisable = this.sysFinishRadio
 
         this.currentProgress = getLesseonDesc.level
-        this.sysOriginRadio = this.currentProgress
+
+        this.sysOriginCurp = this.currentProgress
+        this.sysOriginWeekNum = this.sysFinishRadio
 
         this.progressList = this.getCurProgressList(getLesseonDesc.level)
         //
@@ -717,7 +723,9 @@ export default {
         this.sysExhibitionRadio = weekNum.substring(1)
         // this.radioJudgeDisable = this.sysExhibitionRadio
         this.currentProgress = level
+
         this.exOriginRadio = this.currentProgress
+        this.exOriginWeekNum = this.sysExhibitionRadio
 
         this.progressList = this.getCurProgressList(level)
       }
