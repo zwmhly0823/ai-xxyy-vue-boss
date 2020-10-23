@@ -3,8 +3,8 @@
  * @version: 1.0.0
  * @Author: Shentong
  * @Date: 2020-04-15 20:35:57
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-10-15 17:50:25
+ * @LastEditors: Shentong
+ * @LastEditTime: 2020-10-23 18:15:54
  -->
 <template>
   <div class="third-step">
@@ -299,21 +299,21 @@ export default {
       currentTeacherWechatList: [],
       currentEidtRow: {},
       dialogVisible: false,
-      // levelList: [
-      //   {
-      //     label: 'S1',
-      //     value: 'S1'
-      //   },
-      //   {
-      //     label: 'S2',
-      //     value: 'S2'
-      //   },
-      //   {
-      //     label: 'S3',
-      //     value: 'S3'
-      //   }
-      // ],
-      levelList: SUP_LEVEL_LIST_UPPER,
+      trialLevelList: [
+        {
+          text: 'S1',
+          value: 'S1'
+        },
+        {
+          text: 'S2',
+          value: 'S2'
+        },
+        {
+          text: 'S3',
+          value: 'S3'
+        }
+      ],
+      levelList: [],
       levelObj: SUP_LEVEL_UPPER,
       tableData: [],
       isValidate: true,
@@ -357,8 +357,15 @@ export default {
   },
   watch: {},
   async created() {
-    const { courseType = 0 } = this.$route.params
+    console.log(this.$route.params)
+    const { courseType = '0' } = this.$route.params // courseType = '0' 体验课
     // 根据老师ids获取招生排期设置中老师配置信息 TODO:
+
+    if (courseType === '0') {
+      this.levelList = this.trialLevelList
+    } else {
+      this.levelList = SUP_LEVEL_LIST_UPPER
+    }
     Object.assign(this.params, {
       courseType,
       period: this.schedulePeriod,
