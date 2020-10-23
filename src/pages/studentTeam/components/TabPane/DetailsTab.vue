@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 14:19:58
  * @LastEditors: Shentong
- * @LastEditTime: 2020-10-22 23:17:42
+ * @LastEditTime: 2020-10-23 19:55:00
  -->
 <template>
   <div>
@@ -32,7 +32,7 @@
         v-if="btnbox"
         style="margin-right: 10px;"
         v-show="exhibition"
-        @click="xhibitionList"
+        @click="exhibitionList"
         >生成作品展</el-button
       >
       <checkBox
@@ -95,6 +95,8 @@
           title="请选择生成的完课榜周数"
           :visible.sync="dialogFormVisible"
           class="work-exhibition-class"
+          :close-on-press-escape="false"
+          @close="dialogClose"
           width="600px"
         >
           <div class="trail-content" v-if="type == 'TRAIL'">
@@ -174,7 +176,9 @@
         <el-dialog
           title="请选择生成的作品展周数"
           :visible.sync="Exhibition"
+          :close-on-press-escape="false"
           class="work-exhibition-class"
+          @close="dialogClose"
           width="600px"
         >
           <div class="trail-content" v-if="type == 'TRAIL'">
@@ -326,7 +330,7 @@ export default {
        * 系统课完课榜、生成作品展start
        */
       sysFinishRadio: '',
-      radioJudgeDisable: '1',
+      radioJudgeDisable: '',
       sysExhibitionRadio: '',
       // progressList: ['L1', 'L2', 'L3', 'L4', 'L5'],
       progressList: [],
@@ -418,6 +422,8 @@ export default {
       screenWorksData: {},
       screenAttendClassData: {},
       teamDetail: {},
+      sysOriginRadio: '',
+      exOriginRadio: '',
       defaultHead: 'https://msb-ai.meixiu.mobi/ai-pm/static/touxiang.png'
     }
   },
@@ -464,6 +470,25 @@ export default {
     }
   },
   watch: {
+    currentProgress(val, oldVal) {
+      const raceType = this.dialogFormVisible
+        ? 'sysOriginRadio'
+        : 'exOriginRadio'
+
+      const baseModal = this.dialogFormVisible
+        ? 'sysFinishRadio'
+        : 'sysExhibitionRadio'
+
+      console.log(val.substring(1), this[raceType])
+      if (+val.substring(1) < this[raceType]) {
+        this.radioJudgeDisable = 4
+      } else {
+        const num = this.currentProgress.substring(1)
+        this[baseModal] = num
+
+        this.radioJudgeDisable = num
+      }
+    },
     searchUser(user) {
       let teamId = ''
       let teamType = ''
@@ -496,6 +521,10 @@ export default {
     this.table.tableLabel = [{ label: '购买时间', prop: 'buytime' }]
   },
   methods: {
+    dialogClose() {
+      this.Exhibition = false
+      this.dialogFormVisible = false
+    },
     progressClickHandle(item) {
       this.currentProgress = item
       this.showProgressPopover = false
@@ -643,7 +672,9 @@ export default {
         )
       } else {
         this.sysFinishRadio = this.finishLessonData.weekNum.substring(1)
-        this.radioJudgeDisable = this.sysFinishRadio
+        // this.radioJudgeDisable = this.sysFinishRadio
+        this.sysOriginRadio = this.sysFinishRadio
+
         this.currentProgress = getLesseonDesc.level
 
         this.progressList = this.getCurProgressList(getLesseonDesc.level)
@@ -662,7 +693,7 @@ export default {
       return listArr
     },
     // 点击显示作品展
-    xhibitionList() {
+    exhibitionList() {
       if (this.teamDetail.team_state === '0') {
         this.$message.warning('班级暂未开课')
         return
@@ -684,7 +715,8 @@ export default {
         this.btnshow(weekNum, this.classObj.type, this.teamDetail.team_state)
       } else {
         this.sysExhibitionRadio = weekNum.substring(1)
-        this.radioJudgeDisable = this.sysExhibitionRadio
+        this.exOriginRadio = this.sysExhibitionRadio
+        // this.radioJudgeDisable = this.sysExhibitionRadio
         this.currentProgress = level
 
         this.progressList = this.getCurProgressList(level)
