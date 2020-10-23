@@ -3,8 +3,8 @@
  * @version:
  * @Author: zhubaodong
  * @Date: 2020-03-26 16:28:45
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-09-09 11:56:49
+ * @LastEditors: zhangjianwen
+ * @LastEditTime: 2020-10-24 00:50:50
  -->
 <template>
   <div class="search-item small">
@@ -120,7 +120,11 @@ export default {
               ]
         }
       }
-      q.bool.must.push({ terms: { id: this.teacherscope } })
+      console.log('test', this.teacherscope)
+      if (this.teacherscope) {
+        q.bool.must.push({ terms: { id: this.teacherscope } })
+      }
+      // q.bool.must.push({ terms: { id: this.teacherscope || '' } })
       getDepartmentTeacherEx(JSON.stringify(q))
         .then((res) => {
           this.teacherList = res.data.TeacherListEx || []

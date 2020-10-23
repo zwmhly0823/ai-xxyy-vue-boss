@@ -3,8 +3,8 @@
  * @version: 1.0.0
  * @Author: Shentong
  * @Date: 2020-05-14 14:11:21
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-10-17 20:01:36
+ * @LastEditors: zhangjianwen
+ * @LastEditTime: 2020-10-24 00:10:49
  -->
 <template>
   <el-row type="flex" class="app-main team-container">
@@ -464,6 +464,7 @@ export default {
       this.searchEmit = _.cloneDeep(res)
 
       const {
+        id = '',
         term = [],
         department = [],
         teacherId = '',
@@ -473,6 +474,7 @@ export default {
 
       Object.assign(this.tabQuery, {
         term,
+        id,
         teamName,
         sup,
         department,
