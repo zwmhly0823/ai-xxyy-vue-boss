@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 14:19:58
  * @LastEditors: Shentong
- * @LastEditTime: 2020-10-23 21:24:48
+ * @LastEditTime: 2020-10-23 21:45:16
  -->
 <template>
   <div>
@@ -496,6 +496,9 @@ export default {
       console.log(val.substring(1), this[raceType])
       if (+val.substring(1) < this[raceType].substring(1)) {
         this.radioJudgeDisable = 4
+
+        this[baseModal] = '1'
+        // if ()
       } else {
         const num = this.dialogFormVisible
           ? this.sysOriginWeekNum
