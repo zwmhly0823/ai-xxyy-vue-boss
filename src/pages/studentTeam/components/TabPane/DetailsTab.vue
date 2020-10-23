@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 14:19:58
  * @LastEditors: Shentong
- * @LastEditTime: 2020-10-23 20:51:57
+ * @LastEditTime: 2020-10-23 21:24:48
  -->
 <template>
   <div>
@@ -147,19 +147,25 @@
                 v-model="sysFinishRadio"
                 :disabled="radioJudgeDisable < 2"
                 label="2"
-                >第二周</el-radio
+                >第二周<span v-if="radioJudgeDisable < 2"
+                  >未开课</span
+                ></el-radio
               >
               <el-radio
                 v-model="sysFinishRadio"
                 :disabled="radioJudgeDisable < 3"
                 label="3"
-                >第三周未开课</el-radio
+                >第三周<span v-if="radioJudgeDisable < 3"
+                  >未开课</span
+                ></el-radio
               >
               <el-radio
                 v-model="sysFinishRadio"
                 :disabled="radioJudgeDisable < 4"
                 label="4"
-                >第四周未开课</el-radio
+                >第四周<span v-if="radioJudgeDisable < 4"
+                  >未开课</span
+                ></el-radio
               >
             </div>
           </div>
@@ -229,19 +235,25 @@
                 v-model="sysExhibitionRadio"
                 :disabled="radioJudgeDisable < 2"
                 label="2"
-                >第二周</el-radio
+                >第二周<span v-if="radioJudgeDisable < 2"
+                  >未开课</span
+                ></el-radio
               >
               <el-radio
                 v-model="sysExhibitionRadio"
                 :disabled="radioJudgeDisable < 3"
                 label="3"
-                >第三周未开课</el-radio
+                >第三周<span v-if="radioJudgeDisable < 3"
+                  >未开课</span
+                ></el-radio
               >
               <el-radio
                 v-model="sysExhibitionRadio"
                 :disabled="radioJudgeDisable < 4"
                 label="4"
-                >第四周未开课</el-radio
+                >第四周<span v-if="radioJudgeDisable < 4"
+                  >未开课</span
+                ></el-radio
               >
             </div>
           </div>
