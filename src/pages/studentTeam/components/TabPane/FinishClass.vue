@@ -9,10 +9,13 @@
         <table>
           <tr class="title">
             <td>宝贝信息</td>
-            <td>{{ listTitle }}D1</td>
+            <td v-for="(wd, index) in WDLIST" :key="index">
+              {{ wd.current_lesson || 'WD' }}
+            </td>
+            <!-- <td>{{ listTitle }}D1</td>
             <td>{{ listTitle }}D2</td>
             <td>{{ listTitle }}D3</td>
-            <td>{{ listTitle }}D4</td>
+            <td>{{ listTitle }}D4</td> -->
           </tr>
           <tr
             class="information"
@@ -157,12 +160,18 @@ export default {
   },
   computed: {
     listinfo() {
-      console.log('this.listData', this.listData)
       return this.listData || []
     },
     listTitle() {
       const listTitle = this.weekNum === 'U1' ? 'W1' : 'W2'
       return listTitle || ''
+    },
+    WDLIST() {
+      if (!this.listData.length) return []
+
+      console.log('this.listData[0].completeArr', this.listData[0].completeArr)
+
+      return this.listData[0].completeArr || []
     }
   },
 
