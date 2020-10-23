@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-10-13 21:14:38
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-10-21 12:08:57
+ * @LastEditTime: 2020-10-23 16:22:23
  */
 // import { deepClone } from '@/utils'
 /**
@@ -65,6 +65,14 @@ export const SUP_LEVEL_LIST_UPPER = [
   { id: 'S5', text: 'S2-进阶' },
   { id: 'S3', text: 'S3' }
 ]
+
+/**
+ * 用于特殊情况下，体验课
+ */
+const trialKey = [1, 2, 3]
+export const SUP_LEVEL_LIST_TRIAL = SUP_LEVEL_LIST.filter((item) =>
+  trialKey.includes(item.id)
+)
 
 // export const SUP_LEVEL_LIST_LOWER = formatSupList('s')
 // export const SUP_LEVEL_LIST_UPPER = formatSupList()

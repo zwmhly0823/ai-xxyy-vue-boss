@@ -4,7 +4,7 @@
  * @Author: Lukun
  * @Date: 2020-04-29 18:47:14
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-10-15 15:05:22
+ * @LastEditTime: 2020-10-23 16:23:21
  -->
 <template>
   <div class="container">
@@ -29,24 +29,33 @@
 
 <script>
 // import axios from '@/api/axiosConfig'
-import { SUP_LEVEL_LIST } from '@/utils/supList'
+import { SUP_LEVEL_LIST, SUP_LEVEL_LIST_TRIAL } from '@/utils/supList'
 
 export default {
   props: {
     supData: {
       type: String,
       default: ''
+    },
+    isTrial: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
     return {
-      supList: null,
+      // supList: null,
       supDataInner: ''
+    }
+  },
+  computed: {
+    supList() {
+      return this.isTrial ? SUP_LEVEL_LIST_TRIAL : SUP_LEVEL_LIST
     }
   },
   created() {
     // this.getSup()
-    this.supList = SUP_LEVEL_LIST
+    // this.supList = SUP_LEVEL_LIST
   },
   mounted() {
     this.$root.$on('qingkong', () => {

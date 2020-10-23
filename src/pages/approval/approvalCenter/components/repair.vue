@@ -3,8 +3,8 @@
  * @version: 
  * @Author: Lukun
  * @Date: 2020-04-28 13:50:45
- * @LastEditors: liukun
- * @LastEditTime: 2020-07-24 21:43:33
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-10-23 16:39:55
  -->
 <template>
   <div class="container-content">
@@ -116,7 +116,12 @@
                 @result="getPackageId"
                 :packageData="formRepair.packagesType"
               />
-              <repair-sup @result="getSup" :supData="formRepair.sup" />
+              <repair-sup
+                @result="getSup"
+                :is-trial="formRepair.packagesType === 'EXPERIENCE_COURSE'"
+                :supData="formRepair.sup"
+                :key="supKey"
+              />
               <repair-level
                 @result="getLevel"
                 v-if="formRepair.packagesType == 'SYSTEM_COURSE'"
@@ -332,6 +337,7 @@ export default {
       supData: '', // 组件的页面接受传过来的值
       orderList: [],
       value: '',
+      supKey: '',
       formRepair: {
         userId: '', // 用户id
         applyDepartment: '', // 申请人所在部门  --非必传
@@ -570,9 +576,8 @@ export default {
     },
     // getPackageId 获取子组件传来的系统课或者体验课
     getPackageId(val) {
-      if (val) {
-        this.formRepair.packagesType = val
-      }
+      this.formRepair.packagesType = val
+      this.supKey = Date.now()
     },
     // getLevel 获取子组件传来的系统课级别
     getLevel(val) {
