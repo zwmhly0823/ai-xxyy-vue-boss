@@ -168,9 +168,6 @@ export default {
     },
     WDLIST() {
       if (!this.listData.length) return []
-
-      console.log('this.listData[0].completeArr', this.listData[0].completeArr)
-
       return this.listData[0].completeArr || []
     }
   },
