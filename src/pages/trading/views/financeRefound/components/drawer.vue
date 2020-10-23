@@ -4,7 +4,7 @@
  * @Author: zhangjiawen
  * @Date: 2020-07-10 14:49:13
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-10-22 20:52:58
+ * @LastEditTime: 2020-10-23 23:27:24
 -->
 <template>
   <div class="drawer-main">
@@ -149,7 +149,7 @@
       <div class="rawer-bot">
         <el-button
           type="primary"
-          v-show="+roleId === 7 && ![5].includes(orderData.status)"
+          v-show="+roleId === 4 && ![5].includes(orderData.status)"
           @click="comfirmRefund"
           >发起退款支付</el-button
         >

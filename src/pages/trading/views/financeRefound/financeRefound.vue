@@ -4,7 +4,7 @@
  * @Author: zhangjiawen
  * @Date: 2020-10-23 22:18:39
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-10-23 22:30:51
+ * @LastEditTime: 2020-10-23 23:26:50
 -->
 <template>
   <section class="bianju10">
@@ -151,7 +151,7 @@
       </el-form>
       <div>
         <el-button
-          v-show="+roleId === 7"
+          v-show="+roleId === 4"
           type="primary"
           @click.stop="BatchRefund"
           >批量发起退款支付</el-button
