@@ -473,6 +473,10 @@ export default {
     .prominent {
       color: red;
     }
+    .container-middle {
+      display: flex;
+      flex-direction: column;
+    }
   }
   .bottom-text {
     text-align: center;
