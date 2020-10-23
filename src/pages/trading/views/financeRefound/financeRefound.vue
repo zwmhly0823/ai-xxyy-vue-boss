@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-05-19 17:18:39
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-10-22 18:12:08
+ * @LastEditTime: 2020-10-23 22:03:10
 -->
 <template>
   <section class="bianju10">
@@ -256,8 +256,8 @@
         <el-table-column label="操作" align="center" fixed="right">
           <template slot-scope="scope">
             <el-button type="text" @click="handleEdit(scope.$index, scope.row)"
-              >详情</el-button
-            >
+              >详情
+            </el-button>
           </template>
         </el-table-column>
       </el-table>
