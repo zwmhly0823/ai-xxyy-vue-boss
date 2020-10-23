@@ -529,7 +529,7 @@
       <el-button
         v-if="enclosureimg"
         @click="downloadImg(enclosureimg, '图片')"
-        style="position: absolute;"
+        style="position: absolute;top:44px;"
         type="text"
       >
         下载图片
