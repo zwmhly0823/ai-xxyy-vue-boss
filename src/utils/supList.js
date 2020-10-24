@@ -3,8 +3,8 @@
  * @version: 1.0.0
  * @Author: YangJiyong
  * @Date: 2020-10-13 21:14:38
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-10-23 16:22:23
+ * @LastEditors: Shentong
+ * @LastEditTime: 2020-10-24 17:13:07
  */
 // import { deepClone } from '@/utils'
 /**
@@ -34,6 +34,14 @@ export const SUP_LEVEL = {
 //   S5: 'S2-进阶',
 //   S3: 'S3'
 // }
+
+export const SCHEDULE_LEVE = (type) => {
+  if (type === '0') {
+    return { S1: 'S1进阶', S2: 'S2基础', S3: 'S3' }
+  } else if (type === '1') {
+    return formatSup('S')
+  } else return ''
+}
 
 // 对象， 大小写s
 export const SUP_LEVEL_LOWER = formatSup('s')

@@ -3,8 +3,8 @@
  * @version: 1.0.0
  * @Author: Shentong
  * @Date: 2020-04-15 20:35:57
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-10-15 17:50:25
+ * @LastEditors: Shentong
+ * @LastEditTime: 2020-10-24 15:38:26
  -->
 <template>
   <div class="third-step">
@@ -96,7 +96,7 @@
         >
           <template slot-scope="scope">
             <div v-for="(leve, l_index) in scope.row.enroll" :key="l_index">
-              {{ levelObj[leve.courseDifficulty] || '' }}
+              {{ levelObj[leve.courseDifficulty] }}
             </div>
           </template>
         </el-table-column>
@@ -299,22 +299,25 @@ export default {
       currentTeacherWechatList: [],
       currentEidtRow: {},
       dialogVisible: false,
-      // levelList: [
-      //   {
-      //     label: 'S1',
-      //     value: 'S1'
-      //   },
-      //   {
-      //     label: 'S2',
-      //     value: 'S2'
-      //   },
-      //   {
-      //     label: 'S3',
-      //     value: 'S3'
-      //   }
-      // ],
-      levelList: SUP_LEVEL_LIST_UPPER,
-      levelObj: SUP_LEVEL_UPPER,
+      levelList: [
+        {
+          text: 'S1进阶',
+          id: 'S1'
+        },
+        {
+          text: 'S2基础',
+          id: 'S2'
+        },
+        {
+          text: 'S3',
+          id: 'S3'
+        }
+      ],
+      levelObj: {
+        S1: 'S1进阶',
+        S2: 'S2基础',
+        S3: 'S3'
+      },
       tableData: [],
       isValidate: true,
       totalElements: 0,
@@ -341,7 +344,7 @@ export default {
         pageNum: 1
       },
       params: {
-        courseDifficulty: 'S4',
+        courseDifficulty: 'S1',
         departmentIds: '',
         teacherWechatIds: '',
         levels: ''
@@ -357,8 +360,15 @@ export default {
   },
   watch: {},
   async created() {
-    const { courseType = 0 } = this.$route.params
+    console.log(this.$route.params)
+    const { courseType = '0' } = this.$route.params // courseType = '0' 体验课
     // 根据老师ids获取招生排期设置中老师配置信息 TODO:
+
+    if (courseType !== '0') {
+      this.levelList = SUP_LEVEL_LIST_UPPER
+      this.params.courseDifficulty = 'S4'
+      this.levelObj = SUP_LEVEL_UPPER
+    }
     Object.assign(this.params, {
       courseType,
       period: this.schedulePeriod,
@@ -379,7 +389,6 @@ export default {
 
         this.getTeacherConfigList()
       }
-      // index !== this.levelIndex && this.stepOpt(false, callback)
       index !== this.levelIndex && callback()
     },
     /** 点击编辑微信 按钮 */
@@ -439,10 +448,6 @@ export default {
     },
     /** 保存更改的老师微信号 */
     saveEditTeacherWeChat(params) {
-      // const callback = () => {
-      //   this.currentTeacherWenum = ''
-      //   this.dialogVisible = false
-      // }
       this.$http.Operating.saveEditTeacherWeChat(params).then((res) => {
         const {
           payload: { wechatId = '', wechatNo = '' }

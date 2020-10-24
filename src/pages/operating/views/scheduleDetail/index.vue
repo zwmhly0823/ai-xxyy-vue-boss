@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-14 18:28:44
  * @LastEditors: Shentong
- * @LastEditTime: 2020-07-16 16:36:29
+ * @LastEditTime: 2020-10-24 15:49:08
  -->
 <template>
   <div class="app-main height add-schedule-container">
@@ -180,6 +180,7 @@ export default {
         align-items: center;
         font-size: 20px;
         font-weight: 500;
+        padding: 10px 0;
         > p {
           margin-right: 15px;
         }
