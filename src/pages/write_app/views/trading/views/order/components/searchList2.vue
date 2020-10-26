@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-04-25 17:24:23
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-09-21 21:37:25
+ * @LastEditTime: 2020-10-26 17:34:25
  -->
 <template>
   <el-card
@@ -30,7 +30,7 @@
         <orderStatus @result="getExpressStatus" />
       </el-form-item> -->
 
-      <!-- <el-form-item label="推荐人信息:" :class="{ [$style.marginer]: true }">
+      <el-form-item label="推荐人信息:" :class="{ [$style.marginer]: true }">
         <div class="row_colum">
           <simple-select
             name="is_first_order_send_id"
@@ -49,7 +49,7 @@
             v-if="hasSendId"
           />
         </div>
-      </el-form-item> -->
+      </el-form-item>
       <br />
 
       <el-form-item :label="timeLabel" :class="{ [$style.marginer]: true }">
@@ -197,8 +197,8 @@ import SearchTeamName from '@/components/MSearch/searchItems/searchTeamName'
 import SearchStage from '@/components/MSearch/searchItems/searchStage'
 
 import { downloadHandle } from '@/utils/download'
-// import SearchPhoneAndUsername from '@/components/MSearch/searchItems/searchPhoneAndUsername'
-// import SimpleSelect from '@/components/MSearch/searchItems/simpleSelect'
+import SearchPhoneAndUsername from '@/components/MSearch/searchItems/searchPhoneAndUsername'
+import SimpleSelect from '@/components/MSearch/searchItems/simpleSelect'
 import { isToss } from '@/utils/index'
 
 export default {
@@ -219,9 +219,9 @@ export default {
     Department,
     SearchTeamName,
     SearchStage,
-    TrialCourseType
-    // SearchPhoneAndUsername,
-    // SimpleSelect
+    TrialCourseType,
+    SearchPhoneAndUsername,
+    SimpleSelect
   },
 
   data() {

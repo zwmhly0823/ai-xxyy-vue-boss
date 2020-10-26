@@ -163,7 +163,7 @@
         </template>
       </el-table-column>
 
-      <!-- <el-table-column label="推荐人信息" min-width="120">
+      <el-table-column label="推荐人信息" min-width="120">
         <template slot-scope="scope">
           <p
             v-if="scope.row.first_send_user"
@@ -182,7 +182,7 @@
             }}
           </p>
         </template>
-      </el-table-column> -->
+      </el-table-column>
       <el-table-column :label="orderTimeLabel" min-width="180">
         <template slot-scope="scope">
           <p v-if="status === '3'">
