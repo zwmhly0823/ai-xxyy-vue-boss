@@ -303,6 +303,10 @@ export default {
                 status
               }
               pay_channel_outer_name
+              userExtends{
+                grade
+                status
+              }
             }
           }
         }`
@@ -365,7 +369,7 @@ export default {
             }
             // 状态匹配
             this.statusList.forEach((value) => {
-              if (value.id === ele.status) {
+              if (ele.userExtends && +value.id === +ele.userExtends.status) {
                 ele.status = value.nameZh
               }
             })

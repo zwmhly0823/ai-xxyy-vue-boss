@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 14:19:58
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-09-15 20:54:11
+ * @LastEditTime: 2020-10-26 21:29:19
  -->
 <template>
   <div class="dataStyle">
@@ -315,6 +315,7 @@ export default {
               pay_channel_outer_name
               userExtends{
                 grade
+                status
               }
             }
           }
@@ -375,7 +376,7 @@ export default {
             }
             // 状态匹配
             this.statusList.forEach((value) => {
-              if (+value.id === +ele.status) {
+              if (ele.userExtends && +value.id === +ele.userExtends.status) {
                 ele.status = value.nameZh
               }
             })
