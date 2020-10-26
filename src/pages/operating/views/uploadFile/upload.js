@@ -4,7 +4,7 @@
  * @Author: shentong
  * @Date: 2019-12-17 15:43:27
  * @LastEditors: Shentong
- * @LastEditTime: 2020-10-23 15:45:03
+ * @LastEditTime: 2020-10-26 17:13:23
  */
 import axios from 'axios'
 import $http from '@/api'
@@ -35,7 +35,9 @@ const judgeFileType = (type) => {
 
 // 头像上传格式校验
 const beforeAvatarUpload = (File) => {
-  const file = File.file
+  console.log('beforeAvatarUpload-file', File)
+
+  const file = File
   const { type, size } = file
   const isRegulation = judgeFileType(type)
 
@@ -63,6 +65,7 @@ const getOssToken = async () => {
 }
 
 const uploadFile = async (file) => {
+  console.log('---', file)
   const canUpload = beforeAvatarUpload(file)
   if (!canUpload) return
 
@@ -82,7 +85,7 @@ const uploadFile = async (file) => {
     } = puhSinged
 
     const requestHost = `https://${bucketName}.${endpoint}`
-    const filename = new Date().getTime() + getSuffix(file.file.name)
+    const filename = new Date().getTime() + getSuffix(file.name)
     const dirPath = 'h5/headPic/'
     const formData = new FormData()
     const fileUrl = `${Contants.OSS_IMG_BASE_URL}/${dirPath}${filename}`
@@ -93,7 +96,8 @@ const uploadFile = async (file) => {
     formData.append('Signature', singed) // 签名
     formData.append('success_action_status', 200) // 成功后返回的操作码
     formData.append('name', filename)
-    formData.append('file', file.file, filename)
+
+    formData.append('file', file, filename)
 
     return new Promise((resolve, reject) => {
       axios
