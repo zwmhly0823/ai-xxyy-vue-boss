@@ -36,8 +36,23 @@
           >开始上传</el-button
         >
       </div>
-      <div class="success-tip">success-tip</div>
-      <div class="err-tip">err-tip</div>
+      <div class="right-container">
+        <div class="success-upload">
+          <div class="succ-tip" v-if="successUpload.length">
+            共计<span>{{ successUpload.length }}</span
+            >条数据上传成功：
+          </div>
+          <div class="item" v-for="(suc, index) in successUpload" :key="index">
+            <span class="name">{{ suc.filename }}：</span>
+            <span class="url">
+              <a target="_blank" :href="suc.fileUrl">{{ suc.fileUrl }}</a>
+            </span>
+            <i class="el-icon-document-copy copy-btn"></i>
+          </div>
+        </div>
+      </div>
+      <!-- <div class="success-tip">success-tip</div>
+      <div class="err-tip">err-tip</div> -->
     </div>
   </div>
 </template>
@@ -51,7 +66,8 @@ export default {
       form: {},
       count: 0,
       fileList: [],
-      isShaky: false
+      isShaky: false,
+      successUpload: []
     }
   },
   methods: {
@@ -68,7 +84,6 @@ export default {
       return this.$confirm(`确定移除 ${file.name}？`)
     },
     OnChange(file, fileList) {
-      console.log(file, fileList)
       this.fileList = fileList
     },
     OnRemove(file, fileList) {
@@ -102,6 +117,7 @@ export default {
       })
       Promise.all(this.fileListPromise())
         .then((res) => {
+          this.successUpload = res
           console.log('Promise.all-res', res)
         })
         .catch((err) => {
@@ -122,8 +138,51 @@ export default {
   .upload-contriner {
     min-height: calc(100vh - 90px);
     text-align: center;
+    display: flex;
+    border: 1px solid #ebeef5;
+    box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
     .upload-box {
       margin-top: 40px;
+      width: 500px;
+    }
+    .right-container {
+      margin-top: 40px;
+      display: flex;
+      flex: 1;
+      .success-upload {
+        .succ-tip {
+          display: flex;
+          font-size: 16px;
+          margin-bottom: 10px;
+          margin-top: 7px;
+          span {
+            margin: 0 3px;
+            color: #409eff;
+          }
+        }
+        .item {
+          height: 30px;
+          display: flex;
+          align-items: center;
+          .name {
+            margin-right: 5px;
+          }
+          .url {
+            color: #409eff;
+            text-decoration: underline;
+            &:hover {
+              color: #0000ff;
+            }
+          }
+          .copy-btn {
+            display: none;
+            font-size: 18px;
+            margin-left: 11px;
+            cursor: pointer;
+            color: green;
+          }
+        }
+      }
     }
   }
   .el-upload__tip {

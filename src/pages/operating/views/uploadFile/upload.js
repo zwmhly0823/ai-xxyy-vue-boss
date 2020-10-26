@@ -4,7 +4,7 @@
  * @Author: shentong
  * @Date: 2019-12-17 15:43:27
  * @LastEditors: Shentong
- * @LastEditTime: 2020-10-26 19:05:17
+ * @LastEditTime: 2020-10-26 21:46:51
  */
 import axios from 'axios'
 import $http from '@/api'
@@ -35,7 +35,7 @@ const judgeFileType = (type) => {
 
 // 头像上传格式校验
 const beforeAvatarUpload = (File) => {
-  console.log('beforeAvatarUpload-file', File)
+  // console.log('beforeAvatarUpload-file', File)
 
   const file = File
   const { type, size } = file
@@ -65,7 +65,6 @@ const getOssToken = async () => {
 }
 
 const uploadFile = async (file, device = 'Pc') => {
-  console.log('---', file)
   const canUpload = beforeAvatarUpload(file)
   if (!canUpload) return
 
@@ -83,7 +82,6 @@ const uploadFile = async (file, device = 'Pc') => {
       policy = '',
       singed = ''
     } = puhSinged
-    console.log('猴嘴名', getSuffix(file.name))
     const requestHost = `https://${bucketName}.${endpoint}`
     const filename = new Date().getTime() + getSuffix(file.name)
     const dirPath = `${device}/fileUpload/`
@@ -105,7 +103,11 @@ const uploadFile = async (file, device = 'Pc') => {
           headers: { 'Content-Type': 'multipart/form-data' }
         })
         .then((res) => {
-          resolve(fileUrl)
+          const resolveData = {
+            fileUrl,
+            filename
+          }
+          resolve(resolveData)
         })
         .catch((err) => {
           reject(err)
