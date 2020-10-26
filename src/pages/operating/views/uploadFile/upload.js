@@ -4,7 +4,7 @@
  * @Author: shentong
  * @Date: 2019-12-17 15:43:27
  * @LastEditors: Shentong
- * @LastEditTime: 2020-10-26 21:46:51
+ * @LastEditTime: 2020-10-26 22:00:25
  */
 import axios from 'axios'
 import $http from '@/api'
@@ -65,6 +65,8 @@ const getOssToken = async () => {
 }
 
 const uploadFile = async (file, device = 'Pc') => {
+  console.log('ready upload file ->', file)
+
   const canUpload = beforeAvatarUpload(file)
   if (!canUpload) return
 
