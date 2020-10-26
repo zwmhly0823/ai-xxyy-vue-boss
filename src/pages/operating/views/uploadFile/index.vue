@@ -1,29 +1,46 @@
 <template>
-  <div>
-    <el-upload
-      drag
-      multiple
-      action=""
-      :auto-upload="false"
-      :on-change="OnChange"
-      :on-remove="OnRemove"
-      :on-preview="handlePictureCardPreview"
-      :before-remove="beforeRemove"
-    >
-      <i class="el-icon-upload"></i>
-      <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
-      <div class="el-upload__tip" slot="tip">
-        只能上传jpg/png文件，且不超过500kb
+  <div class="upload-file-page app-main">
+    <!-- <header>上传素材：</header> -->
+    <div class="upload-contriner">
+      <div class="upload-box">
+        <div
+          class="el-upload__tip shaky_style"
+          :class="{ shaky: isShaky }"
+          slot="tip"
+        >
+          最大上传10个文件，只能上传jpg/png文件，且单个文件限制2G以内
+        </div>
+        <el-upload
+          drag
+          multiple
+          action=""
+          :limit="10"
+          :auto-upload="false"
+          :on-change="OnChange"
+          :on-remove="OnRemove"
+          :on-preview="handlePreview"
+          :on-exceed="onExceedHandle"
+          :before-remove="beforeRemove"
+        >
+          <i class="el-icon-upload"></i>
+          <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+        </el-upload>
+
+        <!-- <el-button type="" @click="fun">点击查看filelist</el-button> -->
+        <el-button
+          type="primary"
+          class="submit-btn"
+          size="small"
+          @click="onSubmit"
+          :disabled="!fileList.length"
+          >开始上传</el-button
+        >
       </div>
-    </el-upload>
-    <el-dialog :visible.sync="dialogVisible">
-      <img width="100%" :src="dialogImageUrl" alt="" />
-    </el-dialog>
-    <el-button type="" @click="fun">点击查看filelist</el-button>
-    <el-button type="" @click="onSubmit">提交</el-button>
+      <div class="success-tip">success-tip</div>
+      <div class="err-tip">err-tip</div>
+    </div>
   </div>
 </template>
-
 <script>
 // import { host, batchTagInfo } from '../../api/api'
 import uploadFile from './upload'
@@ -34,14 +51,18 @@ export default {
       form: {},
       count: 0,
       fileList: [],
-      dialogVisible: false,
-      dialogImageUrl: ''
+      isShaky: false
     }
   },
   methods: {
-    handlePictureCardPreview(file) {
-      this.dialogImageUrl = file.url
-      this.dialogVisible = true
+    onExceedHandle(res) {
+      this.isShaky = true
+      setTimeout(() => {
+        this.isShaky = false
+      }, 500)
+    },
+    handlePreview(file) {
+      console.log(file)
     },
     beforeRemove(file, fileList) {
       return this.$confirm(`确定移除 ${file.name}？`)
@@ -53,23 +74,6 @@ export default {
     OnRemove(file, fileList) {
       this.fileList = fileList
     },
-    // 阻止upload的自己上传，进行再操作
-    // beforeupload(file) {
-    //     console.log('-------------------------')
-    //     console.log(file);
-    //     //创建临时的路径来展示图片
-    //     //重新写一个表单上传的方法
-    //     this.param = new FormData();
-    //     this.param.append('file[]', file, file.name);
-    //     this.form={
-    //       a:1,
-    //       b:2,
-    //       c:3
-    //     }
-    //     // this.param.append('file[]', file, file.name);
-    //     this.param.append('form',form)
-    //     return true;
-    // },
     fun() {
       console.log('------------------------')
       console.log(this.fileList)
@@ -90,6 +94,12 @@ export default {
       return this.fileList.map((item) => uploadFile(item.raw))
     },
     onSubmit() {
+      const loadingInstance = this.$loading({
+        target: '.app-main',
+        lock: true,
+        text: '正在上传...',
+        fullscreen: true
+      })
       Promise.all(this.fileListPromise())
         .then((res) => {
           console.log('Promise.all-res', res)
@@ -97,14 +107,9 @@ export default {
         .catch((err) => {
           console.log('Promise.all-err', err)
         })
-      // Promise.all(this.promiseAll()).then((res) => {
-      //   console.log('all-res', res)
-      // })
-      // this.fileList.forEach(async (item) => {
-      //   const result = await this.lomal(item.raw)
-      //   // const result = await uploadFile(item.raw)
-      //   console.log('result', result)
-      // })
+        .finally(() => {
+          loadingInstance.close()
+        })
     }
   }
 }
@@ -119,6 +124,350 @@ export default {
     text-align: center;
     .upload-box {
       margin-top: 40px;
+    }
+  }
+  .el-upload__tip {
+    display: inline-block;
+    margin: 7px;
+    padding: 3px;
+    border-radius: 3px;
+  }
+  .submit-btn {
+    margin-top: 20px;
+  }
+  .shaky {
+    -webkit-transform-origin: center center;
+    -ms-transform-origin: center center;
+    transform-origin: center center;
+    -webkit-animation-name: shaky-slow;
+    -ms-animation-name: shaky-slow;
+    animation-name: shaky-slow;
+    -webkit-animation-duration: 2s;
+    -ms-animation-duration: 2s;
+    animation-duration: 2s;
+    -webkit-animation-iteration-count: infinite;
+    -ms-animation-iteration-count: infinite;
+    animation-iteration-count: infinite;
+    -webkit-animation-timing-function: ease-in-out;
+    -ms-animation-timing-function: ease-in-out;
+    animation-timing-function: ease-in-out;
+    -webkit-animation-delay: 0s;
+    -ms-animation-delay: 0s;
+    animation-delay: 0s;
+    -webkit-animation-play-state: running;
+    -ms-animation-play-state: running;
+    animation-play-state: running;
+    &.shaky_style {
+      border: 1px dashed #e4393c;
+      box-shadow: 0 2px 12px 0 rgba(255, 255, 0, 0.1);
+    }
+    &.dialog-center {
+      border-color: #e4393c;
+      box-shadow: 0 2px 12px 0 rgba(255, 255, 0, 0.1);
+    }
+  }
+  @-webkit-keyframes shaky-slow {
+    0% {
+      -webkit-transform: translate(0px, 0px) rotate(0deg);
+    }
+    2% {
+      -webkit-transform: translate(-1px, 1.5px) rotate(1.5deg);
+    }
+    4% {
+      -webkit-transform: translate(1.3px, 0px) rotate(-0.5deg);
+    }
+    6% {
+      -webkit-transform: translate(1.4px, 1.4px) rotate(-2deg);
+    }
+    8% {
+      -webkit-transform: translate(-1.3px, -1px) rotate(-1.5deg);
+    }
+    10% {
+      -webkit-transform: translate(1.4px, 0px) rotate(-2deg);
+    }
+    12% {
+      -webkit-transform: translate(-1.3px, -1px) rotate(-2deg);
+    }
+    14% {
+      -webkit-transform: translate(1.5px, 1.3px) rotate(1.5deg);
+    }
+    16% {
+      -webkit-transform: translate(1.5px, -1.5px) rotate(-1.5deg);
+    }
+    18% {
+      -webkit-transform: translate(1.3px, -1.3px) rotate(-2deg);
+    }
+    20% {
+      -webkit-transform: translate(1px, 1px) rotate(-0.5deg);
+    }
+    22% {
+      -webkit-transform: translate(1.3px, 1.5px) rotate(-2deg);
+    }
+    24% {
+      -webkit-transform: translate(-1.4px, -1px) rotate(2deg);
+    }
+    26% {
+      -webkit-transform: translate(1.3px, -1.3px) rotate(0.5deg);
+    }
+    28% {
+      -webkit-transform: translate(1.6px, -1.6px) rotate(-2deg);
+    }
+    30% {
+      -webkit-transform: translate(-1.3px, -1.3px) rotate(-1.5deg);
+    }
+    32% {
+      -webkit-transform: translate(-1px, 0px) rotate(2deg);
+    }
+    34% {
+      -webkit-transform: translate(1.3px, 1.3px) rotate(-0.5deg);
+    }
+    36% {
+      -webkit-transform: translate(1.3px, 1.6px) rotate(1.5deg);
+    }
+    38% {
+      -webkit-transform: translate(1.3px, -1.6px) rotate(1.5deg);
+    }
+    40% {
+      -webkit-transform: translate(-1.4px, -1px) rotate(-0.5deg);
+    }
+    42% {
+      -webkit-transform: translate(-1.4px, 1.3px) rotate(-0.5deg);
+    }
+    44% {
+      -webkit-transform: translate(-1.6px, 1.4px) rotate(0.5deg);
+    }
+    46% {
+      -webkit-transform: translate(-2.1px, -1.3px) rotate(-0.5deg);
+    }
+    48% {
+      -webkit-transform: translate(1px, 1.6px) rotate(1.5deg);
+    }
+    50% {
+      -webkit-transform: translate(1.6px, 1.6px) rotate(1.5deg);
+    }
+    52% {
+      -webkit-transform: translate(-1.4px, 1.6px) rotate(0.5deg);
+    }
+    54% {
+      -webkit-transform: translate(1.6px, -1px) rotate(-2deg);
+    }
+    56% {
+      -webkit-transform: translate(1.3px, -1.6px) rotate(-2deg);
+    }
+    58% {
+      -webkit-transform: translate(-1.3px, -1.6px) rotate(0.5deg);
+    }
+    60% {
+      -webkit-transform: translate(1.3px, 1.6px) rotate(-0.5deg);
+    }
+    62% {
+      -webkit-transform: translate(0px, 0px) rotate(-1.5deg);
+    }
+    64% {
+      -webkit-transform: translate(-1.6px, -1.6px) rotate(-2deg);
+    }
+    66% {
+      -webkit-transform: translate(1.6px, -1.6px) rotate(0.5deg);
+    }
+    68% {
+      -webkit-transform: translate(0px, -1.6px) rotate(-2deg);
+    }
+    70% {
+      -webkit-transform: translate(-1.6px, 1px) rotate(1.5deg);
+    }
+    72% {
+      -webkit-transform: translate(-1.6px, 1.6px) rotate(2deg);
+    }
+    74% {
+      -webkit-transform: translate(1.3px, -1.6px) rotate(-0.5deg);
+    }
+    76% {
+      -webkit-transform: translate(1.4px, 1px) rotate(-0.5deg);
+    }
+    78% {
+      -webkit-transform: translate(-1px, 1.4px) rotate(2deg);
+    }
+    80% {
+      -webkit-transform: translate(1.4px, 1.6px) rotate(2deg);
+    }
+    82% {
+      -webkit-transform: translate(-1.6px, -1.6px) rotate(-0.5deg);
+    }
+    84% {
+      -webkit-transform: translate(-1.4px, 1.4px) rotate(-2deg);
+    }
+    86% {
+      -webkit-transform: translate(1px, 1.4px) rotate(-2deg);
+    }
+    88% {
+      -webkit-transform: translate(-1.4px, 1.4px) rotate(-1.5deg);
+    }
+    90% {
+      -webkit-transform: translate(-1.6px, -1.6px) rotate(-2deg);
+    }
+    92% {
+      -webkit-transform: translate(-1.6px, 1.6px) rotate(2deg);
+    }
+    94% {
+      -webkit-transform: translate(-1.6px, -1.6px) rotate(-2deg);
+    }
+    96% {
+      -webkit-transform: translate(-1.4px, 1.3px) rotate(-2deg);
+    }
+    98% {
+      -webkit-transform: translate(1.3px, 1px) rotate(-0.5deg);
+    }
+  }
+  @keyframes shaky-slow {
+    0% {
+      transform: translate(0px, 0px) rotate(0deg);
+    }
+    2% {
+      transform: translate(-1px, 1.5px) rotate(1.5deg);
+    }
+    4% {
+      transform: translate(1.3px, 0px) rotate(-0.5deg);
+    }
+    6% {
+      transform: translate(1.4px, 1.4px) rotate(-2deg);
+    }
+    8% {
+      transform: translate(-1.3px, -1px) rotate(-1.5deg);
+    }
+    10% {
+      transform: translate(1.4px, 0px) rotate(-2deg);
+    }
+    12% {
+      transform: translate(-1.3px, -1px) rotate(-2deg);
+    }
+    14% {
+      transform: translate(1.5px, 1.3px) rotate(1.5deg);
+    }
+    16% {
+      transform: translate(1.5px, -1.5px) rotate(-1.5deg);
+    }
+    18% {
+      transform: translate(1.3px, -1.3px) rotate(-2deg);
+    }
+    20% {
+      transform: translate(1px, 1px) rotate(-0.5deg);
+    }
+    22% {
+      transform: translate(1.3px, 1.5px) rotate(-2deg);
+    }
+    24% {
+      transform: translate(-1.4px, -1px) rotate(2deg);
+    }
+    26% {
+      transform: translate(1.3px, -1.3px) rotate(0.5deg);
+    }
+    28% {
+      transform: translate(1.6px, -1.6px) rotate(-1.5deg);
+    }
+    30% {
+      transform: translate(-1.3px, -1.3px) rotate(-1.5deg);
+    }
+    32% {
+      transform: translate(-1px, 0px) rotate(2deg);
+    }
+    34% {
+      transform: translate(1.3px, 1.3px) rotate(-0.5deg);
+    }
+    36% {
+      transform: translate(1.3px, 1.6px) rotate(1.5deg);
+    }
+    38% {
+      transform: translate(1.3px, -1.6px) rotate(1.5deg);
+    }
+    40% {
+      transform: translate(-1.4px, -1px) rotate(-0.5deg);
+    }
+    42% {
+      transform: translate(-1.4px, 1.3px) rotate(-0.5deg);
+    }
+    44% {
+      transform: translate(-1.6px, 1.4px) rotate(0.5deg);
+    }
+    46% {
+      transform: translate(-2.1px, -1.3px) rotate(-0.5deg);
+    }
+    48% {
+      transform: translate(1px, 1.6px) rotate(1.5deg);
+    }
+    50% {
+      transform: translate(1.6px, 1.6px) rotate(1.5deg);
+    }
+    52% {
+      transform: translate(-1.4px, 1.6px) rotate(0.5deg);
+    }
+    54% {
+      transform: translate(1.6px, -1px) rotate(-2deg);
+    }
+    56% {
+      transform: translate(1.3px, -1.6px) rotate(-2deg);
+    }
+    58% {
+      transform: translate(-1.3px, -1.6px) rotate(0.5deg);
+    }
+    60% {
+      transform: translate(1.3px, 1.6px) rotate(-0.5deg);
+    }
+    62% {
+      transform: translate(0px, 0px) rotate(-1.5deg);
+    }
+    64% {
+      transform: translate(-1.6px, -1.6px) rotate(-2deg);
+    }
+    66% {
+      transform: translate(1.6px, -1.6px) rotate(0.5deg);
+    }
+    68% {
+      transform: translate(0px, -1.6px) rotate(-2deg);
+    }
+    70% {
+      transform: translate(-1.6px, 1px) rotate(1.5deg);
+    }
+    72% {
+      transform: translate(-1.6px, 1.6px) rotate(2deg);
+    }
+    74% {
+      transform: translate(1.3px, -1.6px) rotate(-0.5deg);
+    }
+    76% {
+      transform: translate(1.4px, 1px) rotate(-0.5deg);
+    }
+    78% {
+      transform: translate(-1px, 1.4px) rotate(2deg);
+    }
+    80% {
+      transform: translate(1.4px, 1.6px) rotate(2deg);
+    }
+    82% {
+      transform: translate(-1.6px, -1.6px) rotate(-0.5deg);
+    }
+    84% {
+      transform: translate(-1.4px, 1.4px) rotate(-2deg);
+    }
+    86% {
+      transform: translate(1px, 1.4px) rotate(-2deg);
+    }
+    88% {
+      transform: translate(-1.4px, 1.4px) rotate(-1.5deg);
+    }
+    90% {
+      transform: translate(-1.6px, -1.6px) rotate(-2deg);
+    }
+    92% {
+      transform: translate(-1.4px, 1.6px) rotate(2deg);
+    }
+    94% {
+      transform: translate(-1.6px, -1.6px) rotate(-2deg);
+    }
+    96% {
+      transform: translate(-1.4px, 1.3px) rotate(-2deg);
+    }
+    98% {
+      transform: translate(1.3px, 1px) rotate(-0.5deg);
     }
   }
 }
