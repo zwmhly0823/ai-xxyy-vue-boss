@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-10-27 17:54:03
  * @LastEditors: Shentong
- * @LastEditTime: 2020-10-27 21:01:26
+ * @LastEditTime: 2020-10-27 22:01:06
  */
 import axios from 'axios'
 import $http from '@/api'
@@ -44,13 +44,14 @@ class GetFileCommentFn {
 class UploadFiles extends GetFileCommentFn {
   constructor(file, device = 'Pc') {
     super(file)
+    this.file = file
     this.name = file.name
     this.size = file.size
     this.type = file.type
     this.device = device
     this.puhSinged = null
 
-    this.requset()
+    this.init()
   }
 
   // 上传签名
@@ -80,8 +81,8 @@ class UploadFiles extends GetFileCommentFn {
     return isRegulation && isLt2G
   }
 
-  requset() {
-    const { formData, requestHost, fileUrl } = this.getOssUploadSigned()
+  async init() {
+    const { formData, requestHost, fileUrl } = await this.getOssUploadSigned()
     return new Promise((resolve, reject) => {
       axios
         .post(requestHost, formData, {
@@ -105,7 +106,6 @@ class UploadFiles extends GetFileCommentFn {
     try {
       this.puhSinged = await this.getOssToken()
     } catch (err) {}
-
     if (this.puhSinged) {
       const {
         bucketName = '',

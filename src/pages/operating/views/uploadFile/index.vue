@@ -65,13 +65,13 @@
   </div>
 </template>
 <script>
-import uploadFile from './upload'
+// import uploadFile from './upload'
 
 import UploadFiles from './a'
 
 import { copyText } from '@/utils/index'
 
-console.log('UploadFiles', new UploadFiles({ name: 'st', type: 'png' }))
+console.log('UploadFiles')
 export default {
   data() {
     return {
@@ -108,7 +108,7 @@ export default {
       console.log(this.fileList)
     },
     fileListPromise() {
-      return this.fileList.map((item) => uploadFile(item.raw))
+      return this.fileList.map((item) => new UploadFiles(item.raw))
     },
     onSubmit() {
       const loadingInstance = this.$loading({
