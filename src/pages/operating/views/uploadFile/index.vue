@@ -103,18 +103,6 @@ export default {
     fun() {
       console.log(this.fileList)
     },
-    promiseAll() {
-      return [1, 3, 4, 5, 6].map((item, index) => {
-        return this.lomal(item)
-      })
-    },
-    lomal(file) {
-      return new Promise((resolve, reject) => {
-        setTimeout(() => {
-          resolve(file.name || '没名')
-        }, 2000)
-      })
-    },
     fileListPromise() {
       return this.fileList.map((item) => uploadFile(item.raw))
     },
@@ -129,7 +117,6 @@ export default {
         .then((res) => {
           this.successUpload = res.filter((item) => item.status === 'success')
           this.failUpload = res.filter((item) => item.status !== 'success')
-          // console.log('Promise.all-res', res)
         })
         .catch((err) => {
           console.log('Promise.all-err', err)

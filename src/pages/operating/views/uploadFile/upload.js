@@ -4,7 +4,7 @@
  * @Author: shentong
  * @Date: 2019-12-17 15:43:27
  * @LastEditors: Shentong
- * @LastEditTime: 2020-10-27 15:10:41
+ * @LastEditTime: 2020-10-27 17:57:52
  */
 import axios from 'axios'
 import $http from '@/api'
@@ -20,11 +20,10 @@ const getSuffix = (_) => {
 }
 
 const judgeFileType = (type) => {
-  // 'audio/mpeg',
-
   const fileTypeArr = [
     'image/jpg',
     'image/jpeg',
+    'audio/mpeg',
     'image/png',
     'video/mp4',
     'video/mov',
