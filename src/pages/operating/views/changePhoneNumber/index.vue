@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-06-25 16:48:38
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-10-23 16:34:01
+ * @LastEditTime: 2020-10-27 16:00:52
 -->
 <template>
   <el-row type="flex" class="app-main height">
@@ -49,7 +49,8 @@
           <el-form :inline="true" class="demo-form-flex">
             <el-form-item label="原手机号">
               <search-phone
-                @result="getSearchData('phone', arguments)"
+                :dataType="false"
+                @result="getSearchData('oldPhone', arguments)"
                 tip="原手机号查询"
                 ref="searchUserByPhone"
                 teamId=""
@@ -58,7 +59,8 @@
 
             <el-form-item label="新手机号">
               <search-phone
-                @result="getSearchData('phone', arguments)"
+                @result="getSearchData('newPhone', arguments)"
+                :dataType="true"
                 tip="新手机号查询"
                 ref="searchUserByPhone"
                 teamId=""
@@ -136,6 +138,8 @@ export default {
       }
     }
     return {
+      new_mobile: '',
+      old_mobile: '',
       currentPage: 1,
       totalElements: 0,
       tableHeight: 0,
@@ -215,7 +219,7 @@ export default {
       this.getLogData()
     },
 
-    getLogData() {
+    getLogData(val = {}) {
       const loading = this.$loading({
         lock: true,
         text: '加载中',
@@ -223,7 +227,14 @@ export default {
         background: 'rgba(0, 0, 0, 0.1)'
       })
       // const query = {}
-      const query = ''
+
+      const query = val
+      if (this.old_mobile) {
+        val.old_mobile = this.old_mobile
+      }
+      if (this.new_mobile) {
+        val.new_mobile = this.new_mobile
+      }
       const params = JSON.stringify(JSON.stringify(query))
       this.$http.Operating.getUserReplaceMobileLog(params, this.currentPage)
         .then((res) => {
@@ -241,6 +252,14 @@ export default {
         .catch(() => {
           loading.close()
         })
+    },
+    getSearchData(key, val) {
+      if (key === 'oldPhone') {
+        this.old_mobile = val[0]
+      } else {
+        this.new_mobile = val[0]
+      }
+      this.getLogData()
     }
   }
 }

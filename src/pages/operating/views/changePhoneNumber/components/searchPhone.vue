@@ -16,7 +16,9 @@
       <i class="el-icon-search el-input__icon" slot="suffix"></i>
       <template slot-scope="{ item }">
         <div style="display:flex">
-          <div class="name">{{ item.tel || item.student_mobile || '-' }}</div>
+          <div class="name">
+            {{ item.new_mobile || item.old_mobile || '-' }}
+          </div>
           <div class="name" v-if="+onlyPhone">
             /{{ item.wechat_nikename || '-' }}
           </div>
@@ -41,8 +43,8 @@ export default {
       default: ''
     },
     dataType: {
-      type: String,
-      default: ''
+      type: Boolean,
+      default: true
     },
     onlyPhone: {
       type: String,
@@ -115,23 +117,28 @@ export default {
       }
       let searchUid
       this.createFilter(queryString)
-      // if (this.dataType) {
-      //   searchUid = await this.callFilter(queryString)
-      // } else {
-      //   searchUid = await this.createFilter(queryString)
-      // }
 
       console.log(searchUid, '匹配到的数据')
       const results = this.selectData
       // 调用 callback 返回建议列表的数据
       console.log(results, '结果')
-      cb(searchUid)
+      cb(results)
     },
     createFilter(queryString) {
       const queryArr = []
       queryArr.push(queryString)
-      const queryParams = {
-        'new_mobile.like': { 'new_mobile.keyword': `*${queryArr}*` }
+      let queryParams
+      let response
+      if (this.dataType) {
+        queryParams = {
+          'new_mobile.like': { 'new_mobile.keyword': `*${queryArr}*` }
+        }
+        response = 'new_mobile'
+      } else {
+        queryParams = {
+          'old_mobile.like': { 'old_mobile.keyword': `*${queryArr}*` }
+        }
+        response = 'old_mobile'
       }
       return axios // 未加工
         .post('/graphql/v1/toss', {
@@ -139,9 +146,8 @@ export default {
               UserReplaceMobileLogList(query: ${JSON.stringify(
                 JSON.stringify(queryParams)
               )}) {
-                
-                  new_mobile  
 
+                  ${response}
                 }
             }
           `
@@ -150,44 +156,15 @@ export default {
           return (this.selectData = res.data.UserReplaceMobileLogList)
         })
     },
-    callFilter(queryString) {
-      const queryArr = []
-      queryArr.push(queryString)
-      const queryParams = {
-        'student_mobile.like': { 'student_mobile.keyword': `*${queryArr}*` }
-      }
-
-      return axios // 未加工
-        .post('/graphql/v1/toss', {
-          query: `{
-              TeacherOutboundCallRecordList(query: ${JSON.stringify(
-                JSON.stringify(queryParams)
-              )}) {
-                  
-                  student_mobile
-
-                }
-            }
-          `
-        })
-        .then((res) => {
-          return (this.selectData = res.data.TeacherOutboundCallRecordList)
-        })
-    },
     inputHandler(data) {
-      this.input = data.tel || data.student_mobile
-      this.$emit('result', data.tel || data.student_mobile)
+      this.input = data.new_mobile || data.old_mobile
+      this.$emit('result', data.new_mobile || data.old_mobile)
       if (this.name === 'userTel') {
         this.$emit('result_lk', { [this.name]: data.tel })
       }
     }
   },
-  created() {
-    // this.initType =
-    //   this.dataType === '1'
-    //     ? 'TeacherOutboundCallRecordPage'
-    //     : 'TeacherOutboundList'
-  },
+  created() {},
   mounted() {}
 }
 </script>
