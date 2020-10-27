@@ -3,12 +3,13 @@
  * @version: 1.0.0
  * @Author: YangJiyong
  * @Date: 2020-06-25 16:48:38
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-07-03 19:00:12
+ * @LastEditors: zhangjianwen
+ * @LastEditTime: 2020-10-27 20:51:22
 -->
 <template>
   <el-row type="flex" class="app-main height">
     <div class="app-main-container">
+      <h3>替换操作</h3>
       <!-- <el-scrollbar wrap-class="user-wrapper" id="users-scroll"> -->
       <div class="app-main-container-scrollbar change-phone">
         <el-card shadow="never">
@@ -45,8 +46,30 @@
 
         <div class="record-list">
           <h3>替换记录</h3>
+          <el-form :inline="true" class="demo-form-flex">
+            <el-form-item label="原手机号">
+              <search-phone
+                :dataType="false"
+                @result="getSearchData('oldPhone', arguments)"
+                tip="原手机号查询"
+                ref="searchUserByPhone"
+                teamId=""
+              />
+            </el-form-item>
+
+            <el-form-item label="新手机号">
+              <search-phone
+                @result="getSearchData('newPhone', arguments)"
+                :dataType="true"
+                tip="新手机号查询"
+                ref="searchUserByPhone"
+                teamId=""
+              />
+            </el-form-item>
+          </el-form>
           <!-- dom -->
           <div class="tableInner" ref="tableInner"></div>
+
           <el-table
             :data="recordList"
             :height="tableHeight"
@@ -88,6 +111,7 @@
 <script>
 import { openBrowserTab, formatData } from '@/utils/index'
 import MPagination from '@/components/MPagination/index.vue'
+import SearchPhone from './components/searchPhone'
 const valid = {
   isPhoneNum(str) {
     return /^1(3|4|5|6|7|8|9)\d{9}$/.test(str)
@@ -98,7 +122,8 @@ const valid = {
 }
 export default {
   components: {
-    MPagination
+    MPagination,
+    SearchPhone
   },
   data() {
     var checkPhone = (rule, value, callback) => {
@@ -113,6 +138,8 @@ export default {
       }
     }
     return {
+      new_mobile: '',
+      old_mobile: '',
       currentPage: 1,
       totalElements: 0,
       tableHeight: 0,
@@ -192,7 +219,7 @@ export default {
       this.getLogData()
     },
 
-    getLogData() {
+    getLogData(val = {}) {
       const loading = this.$loading({
         lock: true,
         text: '加载中',
@@ -200,14 +227,22 @@ export default {
         background: 'rgba(0, 0, 0, 0.1)'
       })
       // const query = {}
-      const query = ''
+
+      const query = val
+      if (this.old_mobile) {
+        val.old_mobile = this.old_mobile
+      }
+      if (this.new_mobile) {
+        val.new_mobile = this.new_mobile
+      }
       const params = JSON.stringify(JSON.stringify(query))
       this.$http.Operating.getUserReplaceMobileLog(params, this.currentPage)
         .then((res) => {
           const data = res.data && res.data.UserReplaceMobileLogPage
           if (data) {
-            const { totalElements, content = [] } = data
+            const { totalElements, totalPages, content = [] } = data
             this.totalElements = totalElements
+            this.totalPages = totalPages
             this.recordList = content.map((item) => {
               item.utime_text = formatData(item.utime, 's')
               return item
@@ -218,6 +253,15 @@ export default {
         .catch(() => {
           loading.close()
         })
+    },
+    getSearchData(key, val) {
+      if (key === 'oldPhone') {
+        this.old_mobile = val[0]
+      } else {
+        this.new_mobile = val[0]
+      }
+      this.currentPage = 1
+      this.getLogData()
     }
   }
 }
@@ -235,13 +279,13 @@ export default {
       }
     }
   }
-
-  .record-list {
-    h3 {
-      margin-left: 20px;
-      font-size: 14px;
-      color: #666;
-    }
-  }
+}
+.demo-form-flex {
+  margin-left: 20px;
+}
+h3 {
+  margin-left: 20px;
+  font-size: 14px;
+  color: #666;
 }
 </style>
