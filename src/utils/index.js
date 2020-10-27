@@ -11,7 +11,7 @@ import { Message } from 'element-ui'
 import dayjs from 'dayjs'
 import store from '@/store'
 import { subjects } from '@/config/subjects'
-// import { of } from 'core-js/fn/array'
+// import { of } from 'core-js/fn/array'https://s1.meixiu.mobi/Pc/fileUpload/1603790950384.jpeg
 
 /**
  * 是否 toss。 是toss返回 teacher_id,否则返回 null
@@ -422,4 +422,25 @@ export function injectSubject(query) {
     queryObj.subject = getAppSubjectCode()
     return JSON.stringify(queryObj)
   }
+}
+
+/**
+ * 复制文字、手机号
+ */
+export function copyText(text, msg = '复制内容不存在，请确认') {
+  if (!text) {
+    Message.error('复制内容不存在，请确认')
+    return
+  }
+  const url = text
+  const oInput = document.createElement('input')
+  oInput.value = url
+  document.body.appendChild(oInput)
+  oInput.select()
+  document.execCommand('Copy')
+  Message({
+    message: '复制成功',
+    type: 'success'
+  })
+  oInput.remove()
 }

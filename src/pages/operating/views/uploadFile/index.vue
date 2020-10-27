@@ -47,7 +47,10 @@
             <span class="url">
               <a target="_blank" :href="suc.fileUrl">{{ suc.fileUrl }}</a>
             </span>
-            <i class="el-icon-document-copy copy-btn"></i>
+            <i
+              class="el-icon-document-copy copy-btn"
+              @click="copyText(suc.fileUrl)"
+            ></i>
           </div>
           <div class="fail-tip" v-if="failUpload.length">
             <span style="color:#e4393c;">{{ failUpload.length }}</span
@@ -63,9 +66,12 @@
 </template>
 <script>
 import uploadFile from './upload'
+
+import { copyText } from '@/utils/index'
 export default {
   data() {
     return {
+      copyText,
       param: new FormData(),
       form: {},
       count: 0,
@@ -181,7 +187,6 @@ export default {
             }
           }
           .copy-btn {
-            display: none;
             font-size: 18px;
             margin-left: 11px;
             cursor: pointer;
