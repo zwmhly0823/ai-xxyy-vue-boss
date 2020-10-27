@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-06-25 16:48:38
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-10-27 16:00:52
+ * @LastEditTime: 2020-10-27 20:51:22
 -->
 <template>
   <el-row type="flex" class="app-main height">
@@ -240,8 +240,9 @@ export default {
         .then((res) => {
           const data = res.data && res.data.UserReplaceMobileLogPage
           if (data) {
-            const { totalElements, content = [] } = data
+            const { totalElements, totalPages, content = [] } = data
             this.totalElements = totalElements
+            this.totalPages = totalPages
             this.recordList = content.map((item) => {
               item.utime_text = formatData(item.utime, 's')
               return item
@@ -259,6 +260,7 @@ export default {
       } else {
         this.new_mobile = val[0]
       }
+      this.currentPage = 1
       this.getLogData()
     }
   }
