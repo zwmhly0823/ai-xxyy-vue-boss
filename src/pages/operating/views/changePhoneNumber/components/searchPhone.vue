@@ -115,13 +115,13 @@ export default {
           return
         }
       }
-      let searchUid
-      this.createFilter(queryString)
+      // let searchUid
+      await this.createFilter(queryString)
 
-      console.log(searchUid, '匹配到的数据')
+      // console.log(searchUid, '匹配到的数据')
       const results = this.selectData
       // 调用 callback 返回建议列表的数据
-      console.log(results, '结果')
+      console.log(results, this.selectData, '结果')
       cb(results)
     },
     createFilter(queryString) {
