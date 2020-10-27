@@ -39,8 +39,8 @@
       <div class="right-container">
         <div class="success-upload">
           <div class="succ-tip" v-if="successUpload.length">
-            共计<span>{{ successUpload.length }}</span
-            >条数据上传成功：
+            <span>{{ successUpload.length }}</span
+            >条数据上传成功
           </div>
           <div class="item" v-for="(suc, index) in successUpload" :key="index">
             <span class="name">{{ suc.filename }}：</span>
@@ -49,15 +49,19 @@
             </span>
             <i class="el-icon-document-copy copy-btn"></i>
           </div>
+          <div class="fail-tip" v-if="failUpload.length">
+            <span style="color:#e4393c;">{{ failUpload.length }}</span
+            >条数据上传失败
+          </div>
+          <div class="item" v-for="(fail, index) in failUpload" :key="index">
+            <span class="name">{{ fail.filename }}</span>
+          </div>
         </div>
       </div>
-      <!-- <div class="success-tip">success-tip</div>
-      <div class="err-tip">err-tip</div> -->
     </div>
   </div>
 </template>
 <script>
-// import { host, batchTagInfo } from '../../api/api'
 import uploadFile from './upload'
 export default {
   data() {
@@ -67,7 +71,8 @@ export default {
       count: 0,
       fileList: [],
       isShaky: false,
-      successUpload: []
+      successUpload: [],
+      failUpload: []
     }
   },
   methods: {
@@ -90,7 +95,6 @@ export default {
       this.fileList = fileList
     },
     fun() {
-      console.log('------------------------')
       console.log(this.fileList)
     },
     promiseAll() {
@@ -117,8 +121,9 @@ export default {
       })
       Promise.all(this.fileListPromise())
         .then((res) => {
-          this.successUpload = res
-          console.log('Promise.all-res', res)
+          this.successUpload = res.filter((item) => item.status === 'success')
+          this.failUpload = res.filter((item) => item.status !== 'success')
+          // console.log('Promise.all-res', res)
         })
         .catch((err) => {
           console.log('Promise.all-err', err)
@@ -150,7 +155,8 @@ export default {
       display: flex;
       flex: 1;
       .success-upload {
-        .succ-tip {
+        .succ-tip,
+        .fail-tip {
           display: flex;
           font-size: 16px;
           margin-bottom: 10px;

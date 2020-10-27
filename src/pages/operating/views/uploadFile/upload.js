@@ -4,7 +4,7 @@
  * @Author: shentong
  * @Date: 2019-12-17 15:43:27
  * @LastEditors: Shentong
- * @LastEditTime: 2020-10-26 22:00:25
+ * @LastEditTime: 2020-10-27 15:10:41
  */
 import axios from 'axios'
 import $http from '@/api'
@@ -20,11 +20,12 @@ const getSuffix = (_) => {
 }
 
 const judgeFileType = (type) => {
+  // 'audio/mpeg',
+
   const fileTypeArr = [
     'image/jpg',
     'image/jpeg',
     'image/png',
-    'audio/mpeg',
     'video/mp4',
     'video/mov',
     'video/FLV',
@@ -35,8 +36,6 @@ const judgeFileType = (type) => {
 
 // 头像上传格式校验
 const beforeAvatarUpload = (File) => {
-  // console.log('beforeAvatarUpload-file', File)
-
   const file = File
   const { type, size } = file
   const isRegulation = judgeFileType(type)
@@ -47,12 +46,12 @@ const beforeAvatarUpload = (File) => {
     )
     return 0
   }
-  const isLt5M = size / 1024 / 1024 < 5
-  if (!isLt5M) {
-    window._Vue.$message.error('上传文件大小不能超过 5MB!')
+  const isLt2G = size / 1024 / 1024 / 1024 < 2
+  if (!isLt2G) {
+    window._Vue.$message.error('单个上传文件大小不能超过 2G!')
     return 0
   }
-  return isRegulation && isLt5M
+  return isRegulation && isLt2G
 }
 // 头像上传签名
 const getOssToken = async () => {
@@ -68,7 +67,11 @@ const uploadFile = async (file, device = 'Pc') => {
   console.log('ready upload file ->', file)
 
   const canUpload = beforeAvatarUpload(file)
-  if (!canUpload) return
+  if (!canUpload)
+    return {
+      status: 'fail',
+      filename: file.name
+    }
 
   let puhSinged
   try {
@@ -106,8 +109,9 @@ const uploadFile = async (file, device = 'Pc') => {
         })
         .then((res) => {
           const resolveData = {
+            status: 'success',
             fileUrl,
-            filename
+            filename: file.name
           }
           resolve(resolveData)
         })
