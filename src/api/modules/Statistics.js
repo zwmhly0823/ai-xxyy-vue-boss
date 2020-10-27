@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-07 13:52:26
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-10-09 17:22:14
+ * @LastEditTime: 2020-10-27 15:33:58
  */
 import axios from '../axiosConfig'
 import { injectSubject } from '@/utils/index'
@@ -81,10 +81,10 @@ export default {
   },
   // 按期汇总模块接口---->通过期数、销售部门、社群销售、难度 条件过滤 数量统计接口
   getCountStatisticBySearch(params) {
-    const { period = '' } = params
+    const { period = '', department = '', sup = '', teacher = '' } = params
     // , department = '', sup = '', teacher = ''
-    // const query = `{"term": "${period}","departmentId": "${department}", "sup": "${sup}", "teacherIds": "${teacher}"}`
-    const query = `{"term": "${period}"}`
+    // const query = `{"term": "${period}"}`
+    const query = `{"term": "${period}","departmentId": "${department}", "sup": "${sup}", "teacherIds": "${teacher}"}`
 
     return axios.post('/graphql/v1/toss', {
       query: `{
