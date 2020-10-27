@@ -117,6 +117,8 @@ export default {
         .then((res) => {
           this.successUpload = res.filter((item) => item.status === 'success')
           this.failUpload = res.filter((item) => item.status !== 'success')
+
+          this.fileList = []
         })
         .catch((err) => {
           console.log('Promise.all-err', err)
