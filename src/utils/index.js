@@ -424,3 +424,24 @@ export function injectSubject(query) {
     return JSON.stringify(queryObj)
   }
 }
+
+/**
+ * 复制文字、手机号
+ */
+export function copyText(text, msg = '复制内容不存在，请确认') {
+  if (!text) {
+    Message.error('复制内容不存在，请确认')
+    return
+  }
+  const url = text
+  const oInput = document.createElement('input')
+  oInput.value = url
+  document.body.appendChild(oInput)
+  oInput.select()
+  document.execCommand('Copy')
+  Message({
+    message: '复制成功',
+    type: 'success'
+  })
+  oInput.remove()
+}

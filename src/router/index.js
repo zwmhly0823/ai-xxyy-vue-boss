@@ -92,31 +92,78 @@ const routes = [
     path: '/student-team',
     name: 'student-team',
     meta: {
-      title: '班级管理',
+      title: '体验课管理',
       icon: 'iconbanjiguanli',
       module: 'student-team'
     },
     children: [
       {
-        path: '/trialTeam',
-        name: 'trialTeam',
+        path: '/trail/0/prepare',
+        name: 'trialTeam0',
         meta: {
-          title: '体验课',
+          title: '待上课',
           module: 'student-team',
           show: true
         }
       },
       {
-        path: '/systemTeam',
-        name: 'systemTeam',
+        path: '/trail/1/ongoing',
+        name: 'trialTeam1',
         meta: {
-          title: '系统课',
+          title: '上课中',
+          module: 'student-team',
+          show: true
+        }
+      },
+      {
+        path: '/trail/2/complete',
+        name: 'trialTeam2',
+        meta: {
+          title: '已完课',
           module: 'student-team',
           show: true
         }
       }
     ]
   },
+  {
+    path: '/student-team/systemTeam',
+    name: 'systemTeam',
+    meta: {
+      title: '系统课管理',
+      icon: 'iconbanjiguanli',
+      module: 'student-team'
+    }
+  },
+  // {
+  //   path: '/student-team',
+  //   name: 'student-team',
+  //   meta: {
+  //     title: '班级管理',
+  //     icon: 'iconbanjiguanli',
+  //     module: 'student-team'
+  //   },
+  //   children: [
+  //     {
+  //       path: '/trialTeam',
+  //       name: 'trialTeam',
+  //       meta: {
+  //         title: '体验课',
+  //         module: 'student-team',
+  //         show: true
+  //       }
+  //     },
+  //     {
+  //       path: '/systemTeam',
+  //       name: 'systemTeam',
+  //       meta: {
+  //         title: '系统课',
+  //         module: 'student-team',
+  //         show: true
+  //       }
+  //     }
+  //   ]
+  // },
   // 用户。体验课老师只能查看体验课学员，系统课只系统课学员
   {
     path: '/users',
