@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-13 16:53:27
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-10-21 15:55:38
+ * @LastEditTime: 2020-10-27 21:53:33
  
  -->
 <template>
@@ -291,7 +291,7 @@ export default {
     },
     // 组织结构排序
     handle(property) {
-      return function(a, b) {
+      return function(b, a) {
         const val1 = a[property]
         const val2 = b[property]
         return val2 - val1
