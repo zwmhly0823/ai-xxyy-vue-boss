@@ -3,8 +3,8 @@
  * @version: 
  * @Author: Lukun
  * @Date: 2020-04-27 17:47:58
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-10-21 23:37:13
+ * @LastEditors: liukun
+ * @LastEditTime: 2020-10-27 20:37:59
  -->
 <template>
   <div class="container">
@@ -190,6 +190,7 @@
           {{ '无归属订单审批' }}
         </h2>
       </template>
+      <!-- 1-1补发货全套 -->
       <div v-if="drawerApprovalDeatail.addressId" class="approval-replenish">
         <el-row>
           <el-col :span="3">申请人:</el-col>
@@ -314,8 +315,11 @@
           </el-col>
         </el-row>
       </div>
+      <!-- 1-2退款和无归属全套 -->
       <div v-else class="approvallk">
+        <!-- 1-2-1退款无归属共有展示项 -->
         <el-row>
+          <el-col :offset="1" :span="23"><h3>审批详情</h3></el-col>
           <el-col :span="5">申请人:</el-col>
           <el-col :span="18" :offset="1">{{
             drawerApprovalDeatail.applyUserName
@@ -353,6 +357,7 @@
             drawerApprovalDeatail.channelOuterName
           }}</el-col>
         </el-row>
+        <!-- 1-2-2退款特有展示项 -->
         <div v-if="currentType !== 'UNCREDITED'">
           <el-row>
             <el-col :span="5">业务类型:</el-col>
@@ -501,8 +506,45 @@
               <span v-else>未上传</span>
             </el-col>
           </el-row>
+          <el-row>
+            <el-col :offset="1" :span="23"><h3>退款节点</h3></el-col>
+            <el-col :offset="1" :span="22">
+              <el-table
+                :data="tableDataNode"
+                :header-cell-style="{
+                  background: 'rgba(31,116,249,.7)',
+                  color: '#fff'
+                }"
+              >
+                <el-table-column
+                  prop="approvalName"
+                  label="审核人"
+                  align="center"
+                >
+                </el-table-column>
+                <el-table-column
+                  prop="statusStr"
+                  label="审批状态"
+                  align="center"
+                >
+                </el-table-column>
+                <el-table-column
+                  prop="approvalRemark"
+                  label="审批意见"
+                  align="center"
+                >
+                </el-table-column>
+                <el-table-column label="操作时间" align="center">
+                  <template slot-scope="scope">
+                    {{ formatDate(scope.row.utime) }}
+                  </template>
+                </el-table-column>
+              </el-table>
+            </el-col>
+          </el-row>
         </div>
-        <div v-else>
+        <!-- 1-2-3无归属特有展示项 -->
+        <div v-if="currentType === 'UNCREDITED'">
           <el-row>
             <el-col :span="5">购买课程:</el-col>
             <el-col :span="18" :offset="1">{{
@@ -599,6 +641,7 @@
 </template>
 
 <script>
+import { formatDate } from '@/utils/mini_tool_lk'
 import Department from '@/components/MSearch/searchItems/department'
 import GroupSell from './groupSell'
 import searchPhone from '@/components/MSearch/searchItems/searchPhone.vue'
@@ -643,6 +686,7 @@ export default {
   },
   data() {
     return {
+      tableDataNode: [], // 退款审批抽屉专用_审批流程节点
       SUP_LEVEL_UPPER,
       formatTeamNameSup,
       xx: '', // 0课时绑定值
@@ -819,6 +863,17 @@ export default {
             this.drawerApproval = true
           }
         })
+        // 退款专用_抽屉里审核流程table
+        this.$http.RefundApproval.getFlowDetailNodeTable(id).then(
+          ({ code, payload }) => {
+            if (!code) {
+              this.tableDataNode = payload.reduce((pre, cur, index) => {
+                pre.push(cur[0])
+                return pre
+              }, [])
+            }
+          }
+        )
       }
       // 无归属订单详情
       if (type === 'UNCREDITED') {
@@ -1086,6 +1141,9 @@ export default {
         }
       })
     }
+  },
+  computed: {
+    formatDate: () => formatDate
   }
 }
 </script>
