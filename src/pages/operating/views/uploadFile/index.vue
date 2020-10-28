@@ -64,18 +64,13 @@
   </div>
 </template>
 <script>
-// import uploadFile from './upload'
-
 import UploadFiles from '@/utils/uploadFiles'
-
 import { copyText } from '@/utils/index'
+
 export default {
   data() {
     return {
       copyText,
-      param: new FormData(),
-      form: {},
-      count: 0,
       fileList: [],
       isShaky: false,
       successUpload: [],
@@ -89,9 +84,7 @@ export default {
         this.isShaky = false
       }, 500)
     },
-    handlePreview(file) {
-      console.log(file)
-    },
+    handlePreview(file) {},
     beforeRemove(file, fileList) {
       return this.$confirm(`确定移除 ${file.name}？`)
     },
@@ -100,9 +93,6 @@ export default {
     },
     OnRemove(file, fileList) {
       this.fileList = fileList
-    },
-    fun() {
-      console.log(this.fileList)
     },
     fileListPromise() {
       return this.fileList.map((item) => new UploadFiles(item.raw).init())
