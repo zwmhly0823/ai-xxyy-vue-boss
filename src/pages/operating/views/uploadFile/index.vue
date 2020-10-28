@@ -121,6 +121,7 @@ export default {
           this.failUpload = res.filter((item) => item.status !== 'success')
 
           this.$refs.upload.clearFiles()
+          this.fileList = []
         })
         .catch((err) => {
           console.log('Promise.all-err', err)
