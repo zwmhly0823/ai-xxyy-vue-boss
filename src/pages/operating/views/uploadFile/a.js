@@ -4,15 +4,14 @@
  * @Author: Shentong
  * @Date: 2020-10-27 17:54:03
  * @LastEditors: Shentong
- * @LastEditTime: 2020-10-27 22:01:06
+ * @LastEditTime: 2020-10-28 15:57:59
  */
-import axios from 'axios'
+import axios from '@/api/axiosConfig'
 import $http from '@/api'
 import Contants from '@/utils/contants'
 
 class GetFileCommentFn {
   constructor(file) {
-    console.log(file)
     this.type = file.type
     this.name = file.name
   }
@@ -50,8 +49,10 @@ class UploadFiles extends GetFileCommentFn {
     this.type = file.type
     this.device = device
     this.puhSinged = null
-
-    this.init()
+    this.failStatus = {
+      status: 'fail',
+      filename: this.name
+    }
   }
 
   // 上传签名
@@ -82,30 +83,33 @@ class UploadFiles extends GetFileCommentFn {
   }
 
   async init() {
-    const { formData, requestHost, fileUrl } = await this.getOssUploadSigned()
+    const { formData, HOST, fileUrl } = await this.getOssUploadSigned()
+
     return new Promise((resolve, reject) => {
-      axios
-        .post(requestHost, formData, {
-          headers: { 'Content-Type': 'multipart/form-data' }
-        })
-        .then((res) => {
-          const resolveData = {
-            status: 'success',
-            fileUrl,
-            filename: this.name
-          }
-          resolve(resolveData)
-        })
-        .catch((err) => {
-          reject(err)
-        })
+      const headers = { 'Content-Type': 'multipart/form-data' }
+      const resolveData = {
+        status: 'success',
+        fileUrl,
+        filename: this.name
+      }
+      // 请求接口
+      axios.post(HOST, formData, { headers }).then((res) => {
+        if (res.status === 'fail') {
+          reject(this.failStatus)
+        }
+        resolve(resolveData)
+      })
     })
   }
 
   async getOssUploadSigned() {
+    const canUpload = this.beforeAvatarUpload()
+    if (!canUpload) return this.failStatus
+
     try {
       this.puhSinged = await this.getOssToken()
     } catch (err) {}
+
     if (this.puhSinged) {
       const {
         bucketName = '',
@@ -115,7 +119,7 @@ class UploadFiles extends GetFileCommentFn {
         singed = ''
       } = this.puhSinged
 
-      const requestHost = `https://${bucketName}.${endpoint}`
+      const HOST = `https://${bucketName}.${endpoint}`
       const filename = new Date().getTime() + super.getSuffix()
       const dirPath = `${this.device}/fileUpload/`
       const formData = new FormData()
@@ -131,7 +135,7 @@ class UploadFiles extends GetFileCommentFn {
 
       const requstData = {
         formData,
-        requestHost,
+        HOST,
         fileUrl
       }
       return requstData

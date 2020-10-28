@@ -1,6 +1,5 @@
 <template>
   <div class="upload-file-page app-main">
-    <!-- <header>上传素材：</header> -->
     <div class="upload-contriner">
       <div class="upload-box">
         <div
@@ -11,6 +10,7 @@
           最大上传10个文件，只能上传jpg/png文件，且单个文件限制2G以内
         </div>
         <el-upload
+          ref="upload"
           drag
           multiple
           action=""
@@ -70,8 +70,6 @@
 import UploadFiles from './a'
 
 import { copyText } from '@/utils/index'
-
-console.log('UploadFiles')
 export default {
   data() {
     return {
@@ -108,7 +106,7 @@ export default {
       console.log(this.fileList)
     },
     fileListPromise() {
-      return this.fileList.map((item) => new UploadFiles(item.raw))
+      return this.fileList.map((item) => new UploadFiles(item.raw).init())
     },
     onSubmit() {
       const loadingInstance = this.$loading({
@@ -117,10 +115,13 @@ export default {
         text: '正在上传...',
         fullscreen: true
       })
+
       Promise.all(this.fileListPromise())
         .then((res) => {
           this.successUpload = res.filter((item) => item.status === 'success')
           this.failUpload = res.filter((item) => item.status !== 'success')
+
+          this.$refs.upload.clearFiles()
         })
         .catch((err) => {
           console.log('Promise.all-err', err)
