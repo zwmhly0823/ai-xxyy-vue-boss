@@ -92,7 +92,7 @@ const routes = [
     path: '/student-team',
     name: 'student-team',
     meta: {
-      title: '体验课管理',
+      title: '体验课班级',
       icon: 'iconbanjiguanli',
       module: 'student-team'
     },
@@ -130,7 +130,7 @@ const routes = [
     path: '/student-system-team',
     name: 'systemTeam',
     meta: {
-      title: '系统课管理',
+      title: '系统课班级',
       icon: 'iconbanjiguanli',
       module: 'student-team'
     }
