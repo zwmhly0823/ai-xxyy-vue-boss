@@ -9,12 +9,11 @@
 <template>
   <div class="team-layout-sidebar-handle">
     <!-- 组员不显示 -->
-    <div class="d-flex align-center" v-if="teacher.rankId !== '3'">
+    <div class="d-flex align-center">
       <!-- 选择部门  -->
       <department
         placeholder="选择部门"
         name="teacher_id"
-        :department-id="departmentId"
         :my-style="{ width: '110px !important' }"
         class="department"
         @result="getDepartment"
@@ -24,7 +23,6 @@
         tip="选择销售"
         name="teacher_id"
         :teacherscope="teacherIds"
-        :current="currentTeacher.join(',')"
         :my-style="{ 'max-width': '100% !important', margin: '10px 0' }"
         @result="getTeacher"
       />
@@ -73,7 +71,6 @@
 </template>
 
 <script>
-import { isToss, deepClone } from '@/utils/index'
 import { SUP_LEVEL_LIST_UPPER } from '@/utils/supList'
 import Department from '@/components/MSearch/searchItems/department'
 import GroupSell from '@/components/MSearch/searchItems/groupSell'
@@ -93,13 +90,8 @@ export default {
   },
   data() {
     return {
-      teacher: {},
       teacherIds: [],
       teacherIdsClone: [],
-      // 默认当前登录教师ID
-      currentTeacher: [],
-      // 当前老师部门ID
-      departmentId: '',
       supList: [],
       managementList: [],
       // 选择的期数
@@ -110,42 +102,18 @@ export default {
     }
   },
   created() {
-    this.teacher = isToss(true)
-    this.currentTeacher = [this.teacher.id]
-    this.departmentId = this.teacher.departmentId
-    this.getTeacherByRole()
+    this.getManagement()
 
     this.supList = SUP_LEVEL_LIST_UPPER
   },
 
   methods: {
-    // 经理-1、组长-2 获取当前老师下级全部老师ID
-    getTeacherByRole() {
-      const { rankId, id } = this.teacher
-      if (rankId === '3') {
-        this.teacherIds = [id]
-        setTimeout(() => {
-          this.getManagement()
-        }, 500)
-      } else {
-        this.$http.Permission.getAllTeacherByRole({ teacherId: id }).then(
-          (res) => {
-            this.teacherIds = res
-            setTimeout(() => {
-              this.getManagement()
-            }, 500)
-          }
-        )
-      }
-      this.teacherIdsClone = deepClone(this.teacherIdsClone)
-    },
     // 获取 选择的部门下老师ID
     getDepartment(data) {
       // console.log(data, 'department')
       this.departmenting = true
       if (data) {
         this.teacherIds = data.teacher_id
-        this.currentTeacher = []
       } else {
         delete this.search.teacher_id
         this.teacherIds = this.teacherIdsClone

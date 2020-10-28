@@ -134,7 +134,6 @@
 
 <script>
 import _ from 'lodash'
-import { isToss } from '@/utils/index'
 import SidebarTeamItem from './SidebarTeamItem'
 export default {
   components: {
@@ -168,8 +167,6 @@ export default {
       loading: false,
       // 班级列表
       teamList: [],
-      // 默认当前登录教师ID
-      teahcerId: [],
       // 选中的班级ID，列表只有一个班级里，默认选中，多个时不默认选中（需要手动选择）
       currentTeamId: '',
       isSidebarOpen: true
@@ -209,23 +206,12 @@ export default {
       this.$emit('select', val)
     }
   },
-  created() {
-    this.teahcerId = isToss()
-    // this.getTeamData()
-  },
   methods: {
     getTeamData() {
       this.loading = true
       const query = Object.assign({}, this.searchParams, {
         team_state: this.status
       })
-      // 1. 老师为组员时，如果参数没有teacher_id。此处赋值
-      // 2. 默认当前老师
-      if (!Object.keys(query).includes('teacher_id')) {
-        Object.assign(query, {
-          teacher_id: this.teahcerId
-        })
-      }
       // 测试提的bug说要加二级排序
       if (
         Object.keys(this.sortParams)[0] === 'enrolled' ||
