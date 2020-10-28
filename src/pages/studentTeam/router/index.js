@@ -87,7 +87,7 @@ const routes = [
       import(/* webpackChunkName: "student" */ '../views/trialTeam/index.vue')
   },
   {
-    path: '/systemTeam', // 系统课班级
+    path: '/student-system-team', // 系统课班级
     name: 'systemTeam',
     meta: {
       title: '系统课班级',

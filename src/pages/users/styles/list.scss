@@ -45,12 +45,6 @@
   }
 
   ::v-deep {
-    .el-tabs--border-card {
-      box-shadow: none;
-    }
-    .el-tabs--border-card > .el-tabs__header {
-      border: 1px solid #e4e7ed;
-    }
     .el-tabs--border-card > .el-tabs__content {
       padding: 0;
     }
@@ -93,6 +87,13 @@
           top: -6px;
         }
       }
+    }
+  }
+}
+.team-user-list {
+  .user-list {
+    .empty-text {
+      top: 100px;
     }
   }
 }

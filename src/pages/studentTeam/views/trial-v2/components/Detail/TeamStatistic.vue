@@ -694,6 +694,8 @@ $pink: #f56c6c;
       }
       ul {
         border: 1px solid #e3e3e3;
+        max-height: 105px;
+        overflow: auto;
         // border-top: 1px solid #e3e3e3;
         // border-left: 1px solid #e3e3e3;
         li {

@@ -42,6 +42,7 @@ import Outbound from './modules/Outbound' // 社群工具
 import Marketing from './modules/Marketing' // 营销中心
 import LearnRecord from './modules/LearnRecord' // 学习记录
 import Setting from './modules/Setting'
+import TeamV2 from './modules/TeamV2'
 
 export default Object.assign(
   {},
@@ -73,5 +74,6 @@ export default Object.assign(
   { Outbound },
   { Marketing },
   { LearnRecord },
-  { Setting }
+  { Setting },
+  { TeamV2 }
 )

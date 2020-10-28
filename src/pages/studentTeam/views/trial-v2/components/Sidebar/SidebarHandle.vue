@@ -204,7 +204,6 @@ export default {
       } else {
         Object.assign(this.search, { term: this.term })
       }
-      console.log(this.search)
       this.$emit('search', this.search)
     },
 
@@ -216,7 +215,10 @@ export default {
       }
       this.$http.User.ManagementForTeacherList(params).then((res) => {
         if (res?.data?.ManagementForTeacherList) {
-          const { ManagementForTeacherList = [] } = res.data
+          let { ManagementForTeacherList = [] } = res.data
+          ManagementForTeacherList = ManagementForTeacherList.filter((item) => {
+            return item.management !== null
+          })
           ManagementForTeacherList.sort((a, b) => {
             return b.management.period - a.management.period
           })
