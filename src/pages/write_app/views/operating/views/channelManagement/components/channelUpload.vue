@@ -3,8 +3,8 @@
  * @version: 
  * @Author: panjian
  * @Date: 2020-05-06 16:33:15
- * @LastEditors: panjian
- * @LastEditTime: 2020-05-22 14:32:16
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-10-28 14:30:08
  -->
 <template>
   <div class="channelUpload-box">
@@ -120,7 +120,7 @@ export default {
       formData.append('file', file)
       formData.append('adminId', JSON.parse(adminId).id)
       formData.append('remark', this.remarks)
-      this.$http.DownloadExcel.exportChannel(formData)
+      this.$http.writeApp.DownloadExcel.exportChannel(formData)
         .then((res) => {
           if (res.status === 420) {
             console.log('无权限执行')

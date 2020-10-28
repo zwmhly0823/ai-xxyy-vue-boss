@@ -4,11 +4,13 @@
  * @Author: Lukun
  * @Date: 2020-05-14 14:31:42
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-24 18:06:37
+ * @LastEditTime: 2020-10-28 16:44:32
  */
 import axios from '../../axios'
 import { getToken } from '@/utils/auth'
-// const Qs = require('qs')
+import { getAppSubject } from '@/utils/index'
+
+const subject = getAppSubject()
 
 const getHeaders = () => {
   const token = getToken() || ''
@@ -46,11 +48,11 @@ export default {
       })
     }
   },
-  exportChannel(params) {
+  exportChannel(params = {}) {
     if (judgeToken()) {
       return axios({
         method: 'POST',
-        url: '/api/b/v1/import/importCompletedOrder',
+        url: `/api/b/v1/import/importCompletedOrder?subject=${subject}`,
         responseType: 'blob',
         headers: getHeaders(),
         // data: {
