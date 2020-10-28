@@ -17,7 +17,8 @@ const routes = [
       title: '班级',
       icon: 'el-icon-s-custom',
       keepAlive: true
-    }
+    },
+    redirect: '/systemTeam'
     // component: () => import('../views/studentTeam/student.vue')
   },
   /**
