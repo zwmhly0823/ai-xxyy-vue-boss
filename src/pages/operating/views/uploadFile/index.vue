@@ -26,7 +26,6 @@
           <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
         </el-upload>
 
-        <!-- <el-button type="" @click="fun">点击查看filelist</el-button> -->
         <el-button
           type="primary"
           class="submit-btn"
@@ -67,7 +66,7 @@
 <script>
 // import uploadFile from './upload'
 
-import UploadFiles from './a'
+import UploadFiles from '@/utils/uploadFiles'
 
 import { copyText } from '@/utils/index'
 export default {
