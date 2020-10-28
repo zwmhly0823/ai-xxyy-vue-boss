@@ -9,13 +9,12 @@
 import _ from 'lodash'
 import { todayTimestamp, tomorrowTimestamp } from '../../utils'
 import MPagination from '@/components/MPagination/index.vue'
-import Outbound from '@/components/Outbound/index.vue'
 import ExtendUserInfo from '@/components/BaseUserInfo/Extend.vue'
 import BaseUserInfo from '@/components/BaseUserInfo/Base.vue'
 // import BaseUserInfo from '../../components/BaseUserInfo.vue'
 import ModifyAddress from '../../components/ModifyAddress.vue'
 import enums from '../../components/searchData'
-import { formatData, isToss, openBrowserTab } from '@/utils/index'
+import { formatData, openBrowserTab } from '@/utils/index'
 import intentionDialog from '../../components/intentionDialog'
 import { FOLLOW_EXPRESS_STATUS } from '@/utils/enums'
 import Search from '../../components/Search.vue'
@@ -31,7 +30,6 @@ export default {
   name: 'trialUsers',
   components: {
     MPagination,
-    Outbound,
     ExtendUserInfo,
     BaseUserInfo,
     ModifyAddress,
@@ -138,7 +136,6 @@ export default {
       showModifyAddress: false,
       showDialogFormVisible: false,
       modifyFormData: {},
-      teacherIds: [],
       tableHeight: 0,
       labelRowValue: {},
       curModifyItem: {},
@@ -244,7 +241,7 @@ export default {
     this.checkShowMode()
     // 消息中心传递过来的预设参数
     this.paramsFromUrl()
-    this.getTeachersById()
+    this.getManagement()
   },
   methods: {
     checkShowMode() {
@@ -283,7 +280,7 @@ export default {
     },
     onRefresh(data) {
       setTimeout(() => {
-        this.getTeachersById()
+        this.getManagement()
       }, 1000)
     },
     // 获取一行数据
@@ -291,26 +288,10 @@ export default {
       this.labelRowValue = row
       this.showDialogFormVisible = true
     },
-    // TOSS, 老师权限
-    getTeachersById() {
-      this.teacherId = isToss()
-      if (!this.teacherId) return
-      // console.log(this.teacherId)
-
-      this.$http.Permission.getAllTeacherByRole({
-        teacherId: this.teacherId
-      }).then(async (res) => {
-        // console.log(res)
-        this.teacherIds = res || [this.teacherId]
-        await this.getManagement()
-        // await this.getData()
-      })
-    },
     // 获取排期期数
     getManagement() {
-      if (this.teacherIds.length === 0) return
       const params = {
-        teacher_id: this.teacherIds,
+        teacher_id: [],
         team_state: [0, 1]
       }
       this.$http.User.ManagementForTeacherList(params).then((res) => {
@@ -365,14 +346,6 @@ export default {
         spinner: 'el-icon-loading',
         background: 'rgba(0, 0, 0, 0.1)'
       })
-      // 如果搜索销售，用获取的老师id替换权限老师id
-      const teacher = {}
-      // TODO: 注意放开
-      if (!Object.keys(this.searchParams).includes('teacher_id')) {
-        Object.assign(teacher, {
-          teacher_id: this.teacherIds
-        })
-      }
 
       // 标签处理
       const obj = {}
@@ -395,7 +368,7 @@ export default {
       if (this.teamParams) {
         Object.assign(obj, this.teamParams)
       }
-      const query = Object.assign({}, obj, teacher)
+      const query = Object.assign({}, obj)
 
       const page = this.currentPage
       const sort = {}
@@ -896,7 +869,7 @@ export default {
     // 待跟进数量
     getTodayCount(type = 'today') {
       const params = {
-        teacher_id: this.teacherIds,
+        teacher_id: [],
         is_track: 1,
         today: type === 'today' ? this.today : this.tomorrow
       }
@@ -947,8 +920,7 @@ export default {
     getTeacherLabel(uid) {
       const query = {
         userId: uid,
-        teacherId: this.teacherId,
-        teacherIds: [this.teacherId]
+        teacherIds: []
       }
       return this.$http.Setting.getTeacherLabel(query)
         .then((res) => {

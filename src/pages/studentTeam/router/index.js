@@ -17,8 +17,7 @@ const routes = [
       title: '班级',
       icon: 'el-icon-s-custom',
       keepAlive: true
-    },
-    redirect: '/systemTeam'
+    }
     // component: () => import('../views/studentTeam/student.vue')
   },
   /**
@@ -75,17 +74,17 @@ const routes = [
   /**
    * 体验课班级V2.0 End
    */
-  {
-    path: '/trialTeam', // 体验课班级
-    name: 'trialTeam',
-    meta: {
-      title: '体验课班级',
-      keepAlive: true
-    },
-    hidden: true,
-    component: () =>
-      import(/* webpackChunkName: "student" */ '../views/trialTeam/index.vue')
-  },
+  // {
+  //   path: '/trialTeam', // 体验课班级
+  //   name: 'trialTeam',
+  //   meta: {
+  //     title: '体验课班级',
+  //     keepAlive: true
+  //   },
+  //   hidden: true,
+  //   component: () =>
+  //     import(/* webpackChunkName: "student" */ '../views/trialTeam/index.vue')
+  // },
   {
     path: '/student-system-team', // 系统课班级
     name: 'systemTeam',

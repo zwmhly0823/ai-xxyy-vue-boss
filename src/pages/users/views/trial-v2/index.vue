@@ -259,10 +259,7 @@
           <el-table-column label="手动标签" min-width="150">
             <template slot-scope="scope">
               <template v-if="!scope.row.user_label">
-                <i
-                  class="el-icon-circle-plus-outline intention-icon"
-                  @click="editSysTag(scope.$index, scope.row.id)"
-                ></i>
+                <span>-</span>
               </template>
               <template v-else>
                 <div class="remarks-content tag-box">
@@ -289,10 +286,6 @@
                       ></tags-item>
                     </div>
                   </el-popover>
-                  <i
-                    class="el-icon-edit"
-                    @click="editSysTag(scope.$index, scope.row.id)"
-                  ></i>
                 </div>
               </template>
             </template>
@@ -818,11 +811,7 @@
           <el-table-column
             label="渠道"
             min-width="100"
-            v-if="
-              teacherInfo &&
-                +teacherInfo.rankId !== 3 &&
-                showMode === 'trialUserListMode'
-            "
+            v-if="showMode === 'trialUserListMode'"
           >
             <template slot-scope="scope">
               <span v-if="scope.row.payChannelInfo">
@@ -924,15 +913,8 @@
                     "
                     >催发地址短信</el-dropdown-item
                   >
-                  <el-dropdown-item command="3">发优惠券</el-dropdown-item>
-                  <el-dropdown-item command="4">添加标签</el-dropdown-item>
                 </el-dropdown-menu>
               </el-dropdown>
-            </template>
-          </el-table-column>
-          <el-table-column label="" min-width="60" fixed="right">
-            <template slot-scope="scope">
-              <Outbound :phoneData="scope.row" :key="scope.row.id"></Outbound>
             </template>
           </el-table-column>
         </el-table>
@@ -986,7 +968,6 @@
     <user-info-dialog
       :user="currentHoverUser"
       :tab="currentHoverTab"
-      :teacher-ids="teacherIds"
       :teamIdProp="teamIdProp"
       @close="handleCloseUserInfoDialog"
       ref="userInfoDialog"
