@@ -253,7 +253,11 @@
                   size="small"
                   v-for="item of babels_lk"
                   :key="item.id"
-                  >{{ formatTeamNameSup(item.name) }}</el-tag
+                  >{{
+                    item.subject === 'ART_APP'
+                      ? formatTeamNameSup(item.name)
+                      : item.name
+                  }}</el-tag
                 >
               </span>
             </section>
