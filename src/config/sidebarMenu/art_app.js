@@ -3,8 +3,8 @@
  * @version: 1.0.0
  * @Author: YangJiyong
  * @Date: 2020-08-19 21:14:08
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-10-21 22:37:23
+ * @LastEditors: Shentong
+ * @LastEditTime: 2020-10-29 17:46:16
  */
 import { removeToken } from '@/utils/auth'
 import { baseUrl } from '@/utils/index'
@@ -16,6 +16,23 @@ if (!staff) {
 
 let superOperatingRouter = []
 let superTeacherRouter = []
+let uploadFilePeimission = []
+
+// TODO:
+if (staff.mobile === '15801332536') {
+  uploadFilePeimission = [
+    {
+      path: '/uploadFile',
+      name: 'uploadFile',
+      meta: {
+        title: '上传素材',
+        module: 'operating'
+      }
+    }
+  ]
+}
+
+console.log()
 
 // 管理员、
 const adminRouter = []
@@ -399,6 +416,7 @@ const bearArt = [
           module: 'operating'
         }
       },
+      ...uploadFilePeimission,
       ...superOperatingRouter,
       ...adminRouter
     ]

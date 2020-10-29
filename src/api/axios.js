@@ -3,8 +3,8 @@
  * @version:
  * @Author: shentong
  * @Date: 2020-03-13 14:38:28
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-09-19 16:17:27
+ * @LastEditors: Shentong
+ * @LastEditTime: 2020-10-28 16:06:29
  */
 import axios from 'axios'
 import _ from 'lodash'
@@ -65,14 +65,14 @@ axios.interceptors.response.use(
     return _data
   },
   (err) => {
-    console.log('axios err', err)
-    const {
-      config: { url = '' }
-    } = err.response
-    switch (err.response.status) {
+    const errResponse = err.response || { status: 'fail' }
+    const { config: { url = '' } = {}, status } = errResponse
+    let errMsg = `服务器异常-${url}`
+
+    switch (status) {
       case 400:
         // Utils.removeCookie('token')
-        window._Vue.$message.error(`参数错误-${url}`)
+        errMsg = `参数错误-${url}`
         break
       case 401: {
         // 有登录状态的token, 但已离职的老师会提示
@@ -87,19 +87,23 @@ axios.interceptors.response.use(
         break
       }
       case 404: {
-        window._Vue.$message.error('接口不存在' + `-${url}`)
+        errMsg = `接口不存在-${url}`
         break
       }
       case 420: {
-        window._Vue.$message.error('无权限执行' + `-${url}`)
+        errMsg = `无权限执行-${url}`
         break
       }
       case 500:
       default:
-        window._Vue.$message.error('服务器异常' + `-${url}`)
         break
     }
-    return err.response
+
+    if (!document.getElementsByClassName('el-message').length) {
+      window._Vue.$message.error(errMsg)
+    }
+
+    return errResponse
   }
 )
 
