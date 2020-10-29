@@ -4,7 +4,7 @@
  * @Author: Lukun
  * @Date: 2020-04-27 17:47:58
  * @LastEditors: liukun
- * @LastEditTime: 2020-10-27 20:37:59
+ * @LastEditTime: 2020-10-29 17:20:11
  -->
 <template>
   <div class="container">
@@ -518,7 +518,7 @@
               >
                 <el-table-column
                   prop="approvalName"
-                  label="审核人"
+                  label="发起人/审核人"
                   align="center"
                 >
                 </el-table-column>
@@ -867,10 +867,11 @@ export default {
         this.$http.RefundApproval.getFlowDetailNodeTable(id).then(
           ({ code, payload }) => {
             if (!code) {
-              this.tableDataNode = payload.reduce((pre, cur, index) => {
-                pre.push(cur[0])
-                return pre
-              }, [])
+              this.tableDataNode = payload
+              // this.tableDataNode = payload.reduce((pre, cur, index) => {
+              //   pre.push(cur[0])
+              //   return pre
+              // }, [])
             }
           }
         )
