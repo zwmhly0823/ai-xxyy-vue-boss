@@ -718,6 +718,9 @@
             <template slot-scope="scope">
               <p v-if="scope.row.userLoginDataInfo">
                 {{ scope.row.userLoginDataInfo.device_type }}
+                <span v-if="scope.row.userLoginDataInfo.appversion">
+                  （V{{ scope.row.userLoginDataInfo.appversion }}）
+                </span>
               </p>
               <p>
                 {{
