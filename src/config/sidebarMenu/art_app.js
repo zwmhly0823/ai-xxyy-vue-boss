@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-08-19 21:14:08
  * @LastEditors: Shentong
- * @LastEditTime: 2020-10-23 15:05:21
+ * @LastEditTime: 2020-10-29 17:46:16
  */
 import { removeToken } from '@/utils/auth'
 import { baseUrl } from '@/utils/index'
@@ -19,7 +19,7 @@ let superTeacherRouter = []
 let uploadFilePeimission = []
 
 // TODO:
-if (staff.mobile !== '15801332536') {
+if (staff.mobile === '15801332536') {
   uploadFilePeimission = [
     {
       path: '/uploadFile',
