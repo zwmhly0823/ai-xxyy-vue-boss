@@ -5,7 +5,7 @@
  * @Author: shentong
  * @Date: 2020-03-13 14:38:28
  * @LastEditors: liukun
- * @LastEditTime: 2020-10-21 23:19:17
+ * @LastEditTime: 2020-10-29 16:35:33
  */
 // import axios from '../axios'
 import axios from '../axiosConfig'
@@ -1148,14 +1148,14 @@ export default {
             content{
               uid
               label_text
-              teacherInfo{
+              createTeacherInfo{
                 realname
                 duty_id
                 departmentInfo{
                   name
                 }
               }
-              staffInfo {
+              createStaffInfo {
                 real_name
               }
               contact_type
