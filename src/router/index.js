@@ -127,7 +127,7 @@ const routes = [
     ]
   },
   {
-    path: '/student-system-team',
+    path: '/systemTeam',
     name: 'systemTeam',
     meta: {
       title: '系统课班级',
