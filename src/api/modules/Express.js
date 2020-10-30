@@ -215,5 +215,9 @@ export default {
   // 获取第四级地址
   getCenterAddressTownList(code) {
     return axios.get(`/api/ex/v1/express/getCenterAddressTownList?code=${code}`)
+  },
+  // 一键发货
+  deliveryByCenter(type) {
+    return axios.get(`/api/ex/v1/express/deliveryByCenter`, type)
   }
 }
