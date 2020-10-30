@@ -2,6 +2,7 @@
   <div class="container">
     <div class="search-up">
       <m-search
+        ref="msearch"
         @search="handleSearch"
         class="clearBorder"
         :phone="showItem.phone"
