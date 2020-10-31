@@ -7,12 +7,7 @@
  * @LastEditTime: 2020-10-16 17:31:51
 -->
 <template>
-  <div
-    class="side-team-list-class"
-    v-infinite-scroll="getTeamData"
-    infinite-scroll-disabled="disabled"
-    infinite-scroll-immediate="true"
-  >
+  <div class="side-team-list-class">
     <!-- 待上课 班级信息 -->
     <template v-if="status === '0'">
       <sidebar-team-item
@@ -206,6 +201,9 @@ export default {
       this.$emit('select', val)
     }
   },
+  created() {
+    this.getTeamData()
+  },
   methods: {
     getTeamData() {
       this.loading = true
@@ -241,6 +239,13 @@ export default {
             this.totalElements = +totalElements
             this.teamList.push(...content)
             this.currentPage = +number + 1
+
+            if (+number === 1 && +number < +totalPages) {
+              this.$emit('openLazyload')
+            }
+            if (+number >= +totalPages) {
+              this.$emit('closeLazyload')
+            }
 
             if (this.currentTeamId) return
             // 是否默认选中-一个

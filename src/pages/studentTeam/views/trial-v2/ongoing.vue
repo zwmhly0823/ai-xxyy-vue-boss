@@ -13,18 +13,23 @@
       <sidebar-handle :status="status" @search="getSearchParams" />
       <div class="team-layout-sidebar-list flex-1">
         <!-- scroll list -->
-        <el-scrollbar>
+        <el-scrollbar id="scrollContent">
           <!-- 列表筛选条件 -->
           <sidebar-team-list-sort :status="status" @sort="getSortParams" />
 
           <!-- 列表项 -->
           <sidebar-team-list
+            ref="sidebarTeamList"
             :status="status"
             :search-params="searchParams"
             :sort-params="sortParams"
             @select="getSelectTeam"
             @toggle="handleToggle"
+            @openLazyload="openLazyload"
+            @closeLazyload="closeLazyload"
           />
+
+          <div class="lazy-load-bottom" ref="lazyLoadingBox"></div>
         </el-scrollbar>
       </div>
     </div>
@@ -38,6 +43,7 @@
 
 <script>
 import { deepClone } from '@/utils/index'
+import { debounce } from 'lodash'
 import SidebarHandle from './components/Sidebar/SidebarHandle'
 import SidebarTeamList from './components/Sidebar/SidebarTeamList'
 import SidebarTeamListSort from './components/Sidebar/SidebarTeamListSort'
@@ -57,7 +63,8 @@ export default {
       sortParams: { ctime: 'desc' },
       // 当前选中的teamId
       currentTeamId: '',
-      isOpened: true
+      isOpened: true,
+      closeLazyLoad: false
     }
   },
 
@@ -81,6 +88,37 @@ export default {
 
     handleToggle(data) {
       this.isOpened = data
+    },
+
+    openLazyload() {
+      const dom = document
+        .getElementById('scrollContent')
+        .getElementsByClassName('el-scrollbar__wrap')[0]
+      dom.addEventListener('scroll', debounce(this.scrollEvent, 200))
+    },
+    closeLazyload() {
+      // 不知道为什么removeEventListener清不掉监听
+      this.closeLazyLoad = true
+      // const dom = document
+      //   .getElementById('scrollContent')
+      //   .getElementsByClassName('el-scrollbar__wrap')[0]
+      // dom.removeEventListener('scroll', this.scrollEvent)
+    },
+
+    scrollEvent() {
+      if (this.closeLazyLoad) return
+      // 可视区域高度
+      const clientHeight =
+        document.documentElement.clientHeight || document.body.clientHeight
+      // 滚动距离
+      const scrollLong = document
+        .getElementById('scrollContent')
+        .getElementsByClassName('el-scrollbar__wrap')[0].scrollTop
+      // 判定元素距离顶部的距离
+      const itemToTop = this.$refs.lazyLoadingBox.offsetTop
+      if (clientHeight + scrollLong >= itemToTop) {
+        this.$refs.sidebarTeamList.getTeamData()
+      }
     }
   }
 }
