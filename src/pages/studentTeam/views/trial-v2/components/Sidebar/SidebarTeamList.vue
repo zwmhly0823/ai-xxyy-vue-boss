@@ -240,11 +240,14 @@ export default {
             this.teamList.push(...content)
             this.currentPage = +number + 1
 
-            if (+number === 1 && +number < +totalPages) {
-              this.$emit('openLazyload')
-            }
-            if (+number >= +totalPages) {
-              this.$emit('closeLazyload')
+            if (+number < +totalPages) {
+              if (+number === 1) {
+                // 开启懒加载
+                this.$emit('openLazyload')
+              } else {
+                // 单次加载成功后再开启下一次懒加载,否则在loading过程中，懒加载判断的div依旧在视图中
+                this.$emit('oneLazyFinish')
+              }
             }
 
             if (this.currentTeamId) return

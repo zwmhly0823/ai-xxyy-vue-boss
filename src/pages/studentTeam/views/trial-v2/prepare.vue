@@ -26,7 +26,7 @@
             @select="getSelectTeam"
             @toggle="handleToggle"
             @openLazyload="openLazyload"
-            @closeLazyload="closeLazyload"
+            @oneLazyFinish="oneLazyFinish"
           />
 
           <div class="lazy-load-bottom" ref="lazyLoadingBox"></div>
@@ -64,7 +64,8 @@ export default {
       // 当前选中的teamId
       currentTeamId: '',
       isOpened: true,
-      closeLazyLoad: false
+      onceLazy: true,
+      hasCreateLintener: false
     }
   },
 
@@ -91,33 +92,34 @@ export default {
     },
 
     openLazyload() {
+      if (this.hasCreateLintener) {
+        this.onceLazy = true
+        return
+      }
       const dom = document
         .getElementById('scrollContent')
         .getElementsByClassName('el-scrollbar__wrap')[0]
-      dom.addEventListener('scroll', debounce(this.scrollEvent, 200))
+      dom.addEventListener('scroll', debounce(this.scrollEvent, 100))
+      this.hasCreateLintener = true
     },
-    closeLazyload() {
-      // 不知道为什么removeEventListener清不掉监听
-      this.closeLazyLoad = true
-      // const dom = document
-      //   .getElementById('scrollContent')
-      //   .getElementsByClassName('el-scrollbar__wrap')[0]
-      // dom.removeEventListener('scroll', this.scrollEvent)
+    oneLazyFinish() {
+      this.$nextTick(() => {
+        this.onceLazy = true
+      })
     },
 
     scrollEvent() {
-      if (this.closeLazyLoad) return
+      // 单次开关
+      if (!this.onceLazy) return
       // 可视区域高度
       const clientHeight =
         document.documentElement.clientHeight || document.body.clientHeight
-      // 滚动距离
-      const scrollLong = document
-        .getElementById('scrollContent')
-        .getElementsByClassName('el-scrollbar__wrap')[0].scrollTop
-      // 判定元素距离顶部的距离
-      const itemToTop = this.$refs.lazyLoadingBox.offsetTop
-      if (clientHeight + scrollLong >= itemToTop) {
+      // 判定元素距离底部的距离
+      const itemToTop = this.$refs.lazyLoadingBox.getBoundingClientRect().top
+      if (clientHeight > itemToTop + 20) {
+        // console.log('scrollEvent')
         this.$refs.sidebarTeamList.getTeamData()
+        this.onceLazy = false
       }
     }
   }
