@@ -1,7 +1,7 @@
 /*
  * @Date: 2020-03-13 15:20:21
- * @LastEditors: Shentong
- * @LastEditTime: 2020-05-28 22:34:17
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-10-30 20:48:59
  * @FilePath: /ai-app-vue-toss/src/pages/studentTeam/router/index.js
  */
 import Vue from 'vue'
@@ -87,7 +87,7 @@ const routes = [
   //     import(/* webpackChunkName: "student" */ '../views/trialTeam/index.vue')
   // },
   {
-    path: '/student-system-team', // 系统课班级
+    path: '/systemTeam', // 系统课班级
     name: 'systemTeam',
     meta: {
       title: '系统课班级',

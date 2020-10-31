@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-08-19 21:14:08
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-10-21 22:37:23
+ * @LastEditTime: 2020-10-30 20:49:07
  */
 import { removeToken } from '@/utils/auth'
 import { baseUrl } from '@/utils/index'
@@ -111,7 +111,7 @@ const bearArt = [
     ]
   },
   {
-    path: '/student-system-team',
+    path: '/systemTeam',
     name: 'systemTeam',
     meta: {
       title: '系统课班级',
