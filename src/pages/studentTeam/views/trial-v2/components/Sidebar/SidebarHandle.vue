@@ -90,8 +90,8 @@ export default {
   },
   data() {
     return {
-      teacherIds: [],
-      teacherIdsClone: [],
+      teacherIds: null,
+      teacherIdsClone: null,
       supList: [],
       managementList: [],
       // 选择的期数
