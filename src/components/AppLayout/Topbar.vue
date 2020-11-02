@@ -4,7 +4,7 @@
  * @Date: 2020-03-13 15:13:34
  * @Description: topbar 顶部功能区
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-10-30 17:39:41
+ * @LastEditTime: 2020-11-02 15:54:13
  -->
 <template>
   <div class="navbar" :class="{ prod: isProd }">
@@ -271,12 +271,12 @@ export default {
       let path = `${baseUrl()}users/#/trial`
       if (command !== 'art_app') {
         path =
-          roleId === '18'
+          roleId === '19'
             ? `${baseUrl()}${command}/#/teacherManagement`
             : `${baseUrl()}${command}/#/trialUsers`
       } else {
         path =
-          roleId === '18'
+          roleId === '19'
             ? `${baseUrl()}teacher/#/`
             : `${baseUrl()}users/#/trial`
       }
@@ -292,11 +292,11 @@ export default {
       // 非小熊美术
       if (key !== 'art_app') {
         path =
-          roleId === '18'
+          roleId === '19'
             ? `/${key}/#/teacherManagement`
             : `/${key}/#/trialUsers`
       } else {
-        path = roleId === '18' ? `/teacher/#/` : `/users/#/trial`
+        path = roleId === '19' ? `/teacher/#/` : `/users/#/trial`
       }
       openBrowserTab(path)
     }

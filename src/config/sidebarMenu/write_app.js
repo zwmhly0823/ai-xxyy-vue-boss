@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-08-19 21:14:16
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-10-30 17:09:23
+ * @LastEditTime: 2020-11-02 15:54:22
  */
 import { removeToken } from '@/utils/auth'
 import { baseUrl } from '@/utils/index'
@@ -21,7 +21,7 @@ let msbWriting = []
  * 新增 教研 角色 （roleId: 18）
  * 美术BOSS只有 设置-员工账号 的权限
  */
-if (staff.roleId === '18') {
+if (staff.roleId === '19') {
   msbWriting = [
     // 运营中心
     {

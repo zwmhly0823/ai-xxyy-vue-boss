@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-08-19 21:14:08
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-10-30 17:04:24
+ * @LastEditTime: 2020-11-02 15:53:33
  */
 import { removeToken } from '@/utils/auth'
 import { baseUrl } from '@/utils/index'
@@ -17,10 +17,10 @@ if (!staff) {
 let bearArt = []
 
 /**
- * 新增 教研 角色 （roleId: 18）
+ * 新增 教研 角色 （roleId: 19）
  * 美术BOSS只有 设置-员工账号 的权限
  */
-if (staff.roleId === '18') {
+if (staff.roleId === '19') {
   bearArt = [
     // 设置 - 老师模块
     {

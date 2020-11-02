@@ -355,7 +355,7 @@ export default {
               JSON.stringify(getToken.staff || '{}')
             )
             // 如果是 教研 角色，跳转到 设置-员工帐号
-            if (getToken.staff.roleId === '18') {
+            if (getToken.staff.roleId === '19') {
               path = path.replace(/student-team/, 'teacher')
             }
           }
