@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-03-13 15:24:11
  * @LastEditors: Shentong
- * @LastEditTime: 2020-11-02 20:46:40
+ * @LastEditTime: 2020-11-02 21:33:18
  -->
 <template>
   <div id="login" class="login-container">
@@ -190,8 +190,7 @@ export default {
       if (!value.length) {
         callback(new Error('请输入密码'))
       } else {
-        console.log('validatePwd', validatePwd('111'))
-        // callback()
+        callback()
       }
     }
     // 验证密码
@@ -359,7 +358,14 @@ export default {
           // sessionStorage.setItem('multiTabbed', JSON.stringify(tabs))
           // sessionStorage.setItem('currentMultiTab', `${path}#/`)
 
-          location.href = `${path}#/`
+          // 检测用户登录的密码是否合法 TODO:
+          if (formName === 'pwdLoginForm') {
+            if (validatePwd(this.pwdLoginForm.pwd)) {
+              location.href = `${path}#/`
+            } else {
+              console.log('不合法')
+            }
+          }
         }
 
         // 以服务的方式调用的 Loading 需要异步关闭
