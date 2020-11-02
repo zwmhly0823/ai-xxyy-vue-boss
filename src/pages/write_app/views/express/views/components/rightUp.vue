@@ -197,7 +197,7 @@ export default {
           { text: '签收时间', value: 'signing_time' },
           { text: '审核时间', value: 'center_ctime' }
         ],
-        selectAddress: true,
+        selectAddress: 'province',
         replenishReason: 'replenish_reason',
         replenishMethod: 'replenish_type'
       }
@@ -297,6 +297,7 @@ export default {
     exportExpress(val) {
       var query
       const tableName = 'o_express'
+      const arrFlag = []
       if (sessionStorage.getItem('uid')) {
         var uid = sessionStorage.getItem('uid').split(',')
         query = { bool: { must: [{ terms: { id: uid } }] } } // 自行通过前端选择的条件进行动态组装
@@ -324,27 +325,84 @@ export default {
           //   delete item.wildcard.last_team_id
           // }
           if (item.term) {
+            if (item.term && item.term.consigneePhone) {
+              delete item.term.consigneePhone
+            }
+            if (item.term && item.term.product_name) {
+              arrFlag.push({
+                wildcard: {
+                  'product_name.keyword': `*${item.term.product_name}*`
+                }
+              })
+              delete item.term.product_name
+            }
             if (item.term && item.term.product_type) {
-              item.terms = { 'product_type.keyword': item.term.product_type }
+              arrFlag.push({
+                term: {
+                  'product_type.keyword': item.term.product_type
+                }
+              })
+              delete item.term.product_type
+            }
+
+            if (item.term && item.term.productType) {
+              arrFlag.push({
+                term: {
+                  product_type: item.term.productType
+                }
+              })
+              delete item.term.productType
             }
             if (item.term && item.term.replenish_reason) {
-              item.terms = {
-                'replenish_reason.keyword': item.term.replenish_reason
+              arrFlag.push({
+                terms: {
+                  replenish_reason: item.term.replenish_reason
+                }
+              })
+              delete item.term.replenish_reason
+            }
+            if (item.term && item.term.replenish_type) {
+              arrFlag.push({
+                terms: {
+                  replenish_type: item.term.replenish_type
+                }
+              })
+              delete item.term.replenish_type
+            }
+            if (item.term && item.term.regType) {
+              arrFlag.push({
+                terms: {
+                  regtype: item.term.regType.split(',')
+                }
+              })
+              delete item.term.regType
+            } else {
+              arrFlag.push({
+                terms: { regtype: this.regtype.split(',') }
+              })
+            }
+            if (item.term && item.term.province) {
+              if (item.term.province.provincesCode) {
+                arrFlag.push({
+                  term: { 'province.keyword': item.term.province.provincesCode }
+                })
               }
+              if (item.term.province.citysCode) {
+                arrFlag.push({
+                  term: { 'city.keyword': item.term.province.citysCode }
+                })
+              }
+              if (item.term.province.areasCode) {
+                arrFlag.push({
+                  term: { 'area.keyword': item.term.province.areasCode }
+                })
+              }
+              delete item.term.province
             }
-
-            if (item.term && item.term.citysCode) {
-              item.term = { 'city.keyword': item.term.citysCode }
-            }
-            if (item.term && item.term.areasCode) {
-              item.term = { 'area.keyword': item.term.areasCode }
-            }
-            if (item.term && item.term.provincesCode) {
-              item.term = { province: item.term.provincesCode }
-            }
-            delete item.term
+            if (Object.keys(item.term).length === 0) delete item.term
+            // console.log(Object.keys(item.term), 'Object.keys(item.term)')
           }
-
+          console.log(item, 'item++++++')
           return item
         })
         // debugger
@@ -368,8 +426,10 @@ export default {
         //   ])
         // }
 
+        const myTerm = term.concat(arrFlag)
+
         // term数组有空对象的，删除掉
-        const newTerm = term.filter((item) => Object.keys(item).length > 0)
+        const newTerm = myTerm.filter((item) => Object.keys(item).length > 0)
 
         const finaTerm = newTerm.concat([
           {
@@ -378,7 +438,8 @@ export default {
           {
             terms: { regtype: this.regtype.split(',') }
           },
-          { terms: { express_status: this.expressStatus.split(',') } }
+          { terms: { express_status: this.expressStatus.split(',') } },
+          { term: { subject: '1' } }
         ])
 
         query = {

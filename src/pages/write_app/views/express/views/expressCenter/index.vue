@@ -562,6 +562,8 @@ export default {
     },
     // 获取物流搜索的条件值
     getSearch(val) {
+      console.log(val, 'search')
+
       switch (this.activeName) {
         case '0':
           this.search = val
