@@ -3,8 +3,8 @@
  * @version:
  * @Author: Shentong
  * @Date: 2020-03-13 15:24:11
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-21 15:21:41
+ * @LastEditors: Shentong
+ * @LastEditTime: 2020-11-02 20:46:40
  -->
 <template>
   <div id="login" class="login-container">
@@ -42,7 +42,7 @@
             <i class="el-icon-user-solid"></i>
           </span>
           <el-input
-            v-model="pwdLoginForm.userName"
+            v-model.trim="pwdLoginForm.userName"
             placeholder="请输入用户名"
             name="userName"
             type="text"
@@ -58,7 +58,7 @@
           </span>
           <el-input
             :type="passwordType"
-            v-model="pwdLoginForm.pwd"
+            v-model.trim="pwdLoginForm.pwd"
             placeholder="密码"
             name="password"
             auto-complete="on"
@@ -94,14 +94,15 @@
             <i class="el-icon-mobile-phone"></i>
           </span>
           <el-input
-            v-model="codeLoginForm.phone"
+            v-model.trim="codeLoginForm.phone"
             placeholder="请输入手机号"
             name="phone"
             type="text"
             auto-complete="on"
             maxlength="11"
-            @focus="checkStart"
-            @blur="checkEnd"
+            @input="
+              codeLoginForm.phone = codeLoginForm.phone.replace(/[^\d]/g, '')
+            "
           />
         </el-form-item>
         <div class="code-form-outer">
@@ -110,7 +111,7 @@
               <i class="el-icon-lock"></i>
             </span>
             <el-input
-              v-model="codeLoginForm.code"
+              v-model.trim="codeLoginForm.code"
               placeholder="验证码"
               name="password"
               auto-complete="on"
@@ -152,6 +153,7 @@
 <script>
 import { Loading } from 'element-ui'
 import { setToken } from '@/utils/auth'
+import { validatePwd } from '@/utils/validate'
 
 const valid = {
   isPhoneNum(str) {
@@ -188,7 +190,8 @@ export default {
       if (!value.length) {
         callback(new Error('请输入密码'))
       } else {
-        callback()
+        console.log('validatePwd', validatePwd('111'))
+        // callback()
       }
     }
     // 验证密码
@@ -263,19 +266,13 @@ export default {
       clearInterval(this.checkInterval)
     },
     checkChinese() {
-      this.codeLoginForm.code = this.codeLoginForm.code.replace(
-        /[^0-9A-Za-z]/g,
-        ''
-      )
-      this.pwdLoginForm.userName = this.pwdLoginForm.userName.replace(
-        /[^0-9A-Za-z]/g,
-        ''
-      )
-      this.pwdLoginForm.pwd = this.pwdLoginForm.pwd.replace(/[^0-9A-Za-z]/g, '')
-      this.codeLoginForm.phone = this.codeLoginForm.phone.replace(
-        /[^0-9A-Za-z]/g,
-        ''
-      )
+      // 禁止输入中文
+      const test = /[\u4e00-\u9fa5]/gi
+      // /[^0-9A-Za-z]/g
+      this.codeLoginForm.code = this.codeLoginForm.code.replace(test, '')
+      this.pwdLoginForm.userName = this.pwdLoginForm.userName.replace(test, '')
+      this.pwdLoginForm.pwd = this.pwdLoginForm.pwd.replace(test, '')
+      this.codeLoginForm.phone = this.codeLoginForm.phone.replace(test, '')
     },
     // 通过密码登录
     async loginByPwd() {
