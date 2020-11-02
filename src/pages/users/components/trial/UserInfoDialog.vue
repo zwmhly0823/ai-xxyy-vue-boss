@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-08-16 16:27:39
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-10-10 19:45:13
+ * @LastEditTime: 2020-11-02 23:34:51
 -->
 <template>
   <div class="user-info">
@@ -15,7 +15,11 @@
       height="400px"
       :before-close="handleClose"
     >
-      <h4 slot="title">明细【学员：{{ userInfo.mobile }}】</h4>
+      <h4 slot="title">
+        明细【学员：{{
+          (userInfo.userInfo && userInfo.userInfo.mobile) || '-'
+        }}】
+      </h4>
       <!-- tab -->
       <el-tabs v-model="activeTab" type="card">
         <el-tab-pane label="课程" name="course">
@@ -316,10 +320,10 @@ export default {
     // 获取用户学习记录列表
     getSendCourseLogPage() {
       const page = this.currentPage
-      const uid = this.userInfo.id
+      const studentId = this.userInfo.id
       const teamId = this.teamId
       const params = {
-        uid,
+        studentId,
         teamId,
         page,
         size: 5

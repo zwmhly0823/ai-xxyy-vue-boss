@@ -4,8 +4,8 @@
  * @version:
  * @Author: shentong
  * @Date: 2020-03-13 14:38:28
- * @LastEditors: liukun
- * @LastEditTime: 2020-10-21 23:19:17
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-11-02 23:31:58
  */
 // import axios from '../axios'
 import axios from '../axiosConfig'
@@ -210,6 +210,7 @@ export default {
             listen_comment_count
             last_join_time
             last_complete_time
+            last_listen_comment_time
             added_group
             added_wechat
             follow
@@ -739,7 +740,8 @@ export default {
     studentId,
     teamId, // 只普通用
     lessonType, // 只普通用
-    courseId // 只写字0元体验课用
+    courseId, // 只写字0元体验课用
+    size = 20
   }) {
     const formattingQuery = JSON.stringify(
       courseId && courseId.length
@@ -767,7 +769,7 @@ export default {
           query:${JSON.stringify(formattingQuery)},
           sort:${JSON.stringify(JSON.stringify({ id: 'asc' }))},
           page: ${page},
-          size:20)
+          size:${size})
           {
             totalPages
             totalElements
@@ -846,6 +848,29 @@ export default {
             }
              is_day_upload_task
              ctime
+          }
+        }
+      }`
+    })
+  },
+  // 获取用户行为记录
+  getUserBehaviorLogPage(params, page, size = 5, sort) {
+    const query = params ? Object.assign({}, params || {}) : `""`
+    const sortParams = Object.assign({}, sort || {}, { ctime: 'desc' })
+    return axios.post('/graphql/v1/toss', {
+      query: `{
+        UserBehaviorLogPage(query: ${JSON.stringify(
+          JSON.stringify(query)
+        )}, page: ${page}, size: ${size}, sort: ${JSON.stringify(
+        JSON.stringify(sortParams)
+      )}){
+          totalPages
+          totalElements
+          content{
+            action_time
+            action_type
+            action_type_text
+            device_model
           }
         }
       }`
