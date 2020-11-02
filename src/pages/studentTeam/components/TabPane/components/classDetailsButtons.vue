@@ -273,9 +273,7 @@ export default {
       })
       const queryParams = `{"team_id" : ${teamId}, "week" : "${lesson +
         week}", "sort" : "${this.finishLessonData.finishClassSort}"}`
-      this.$http.Team.finishClassList({
-        queryParams: queryParams
-      }).then((res) => {
+      this.$http.Team.finishClassList(queryParams).then((res) => {
         if (res.error) {
           return
         }
@@ -310,9 +308,7 @@ export default {
         text: '图片正在生成中'
       })
       const QueryParams = `{"team_id" : ${teamId}, "week" :  "${week}"}`
-      this.$http.Team.exhibitionOfWorks({
-        QueryParams: QueryParams
-      }).then((res) => {
+      this.$http.Team.exhibitionOfWorks(QueryParams).then((res) => {
         if (res.error) {
           return
         }
