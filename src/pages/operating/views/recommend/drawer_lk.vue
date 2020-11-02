@@ -3,8 +3,8 @@
  * @version: 1.0.0
  * @Author: liukun
  * @Date: 2020-07-20 16:37:49
- * @LastEditors: liukun
- * @LastEditTime: 2020-08-22 19:51:59
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-11-02 12:17:17
 --><template>
   <el-drawer :visible.sync="drawer" size="40%" :destroy-on-close="true">
     <template v-slot:title>
@@ -52,7 +52,7 @@
           <el-radio-group v-model="form.remark">
             <el-radio
               v-for="(value, name) in {
-                0: '朋友圈未保留12小时以上',
+                0: '朋友圈未保留2小时以上',
                 1: '未分享活动指定海报',
                 2: '朋友圈设置了分组或私密',
                 3: '重复上传',
