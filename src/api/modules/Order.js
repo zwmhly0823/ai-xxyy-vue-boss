@@ -73,6 +73,7 @@ export default {
               team_name
             }
             last_teacher_id
+            trial_team_id
             teacher{
               realname
               area_name

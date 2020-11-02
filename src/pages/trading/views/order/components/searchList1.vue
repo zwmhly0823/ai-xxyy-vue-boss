@@ -108,6 +108,20 @@
           ></orderAttr>
         </div>
       </el-form-item>
+      <el-form-item
+        label="是否体验课转化:"
+        :class="{ [$style.marginer]: true }"
+      >
+        <div class="row_colum">
+          <simple-select
+            name="trial_team_id"
+            :data-list="expChangeList"
+            :multiple="false"
+            placeholder="全部"
+            @result="getExpChange"
+          ></simple-select>
+        </div>
+      </el-form-item>
       <br />
       <el-form-item label="体验课:" :class="{ [$style.marginer]: true }">
         <div class="row_colum">
@@ -334,6 +348,16 @@ export default {
         {
           id: '3',
           text: '续费'
+        }
+      ],
+      expChangeList: [
+        {
+          id: '1',
+          text: '是'
+        },
+        {
+          id: '2',
+          text: '否'
         }
       ],
       hasSendId: true,
@@ -635,6 +659,16 @@ export default {
     getOrderType(res) {
       console.log(res)
       this.setSeachParmas(res, ['regtype'])
+    },
+    getExpChange(res) {
+      if (res.trial_team_id === '1') {
+        this.setSeachParmas({ trial_team_id: { gt: 0 } }, ['trial_team_id'])
+      } else if (res.trial_team_id === '2') {
+        this.setSeachParmas({ trial_team_id: { lte: 0 } }, ['trial_team_id'])
+      } else {
+        this.setSeachParmas({ trial_team_id: { gte: 0 } }, ['trial_team_id'])
+      }
+      console.log(res, 'res')
     },
     getPerformType(res) {
       this.setSeachParmas(res, ['pay_teacher_duty_id'])
