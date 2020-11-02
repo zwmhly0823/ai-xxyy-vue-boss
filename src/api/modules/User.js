@@ -5,7 +5,7 @@
  * @Author: shentong
  * @Date: 2020-03-13 14:38:28
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-11-02 23:31:58
+ * @LastEditTime: 2020-11-03 01:11:31
  */
 // import axios from '../axios'
 import axios from '../axiosConfig'
@@ -760,7 +760,8 @@ export default {
             student_id: studentId,
             // normal 体验系统课
             team_id: teamId,
-            lesson_type: lessonType
+            lesson_type: lessonType,
+            course_id: { lt: '99999990' }
           }
     )
     return axios.post(`/graphql/v1/toss`, {
@@ -783,6 +784,10 @@ export default {
                 is_today_join_course
                 complete_time
                 is_today_complete_course
+                learn_course_count
+                course_task_count
+                task_comment_count
+                state
               }
             }
           }

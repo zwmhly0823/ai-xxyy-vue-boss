@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-08-16 16:27:39
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-11-02 23:34:51
+ * @LastEditTime: 2020-11-03 01:08:54
 -->
 <template>
   <div class="user-info">
@@ -74,7 +74,11 @@
           </el-row>
 
           <!-- 课程记录明细 -->
-          <el-table :data="courseLogData" style="margin-top: 20px;width: 100%">
+          <el-table
+            :data="courseLogData"
+            v-loading="courseLoading"
+            style="margin-top: 20px;width: 100%"
+          >
             <el-table-column prop="title" label="课程名" min-width="150">
               <template slot-scope="scope">
                 {{ scope.row.wd_info }} ·《{{ scope.row.title }}》
@@ -289,6 +293,7 @@ export default {
   },
   data() {
     return {
+      courseLoading: false,
       visible: false,
       activeTab: this.tab || '',
       courseLogData: [],
@@ -319,6 +324,7 @@ export default {
   methods: {
     // 获取用户学习记录列表
     getSendCourseLogPage() {
+      this.courseLoading = true
       const page = this.currentPage
       const studentId = this.userInfo.id
       const teamId = this.teamId
@@ -328,23 +334,28 @@ export default {
         page,
         size: 5
       }
-      this.$http.User.getSendCourseLogPage(params).then((res) => {
-        if (res?.data?.SendCourseLogPage) {
-          const {
-            totalPages,
-            totalElements,
-            content
-          } = res.data.SendCourseLogPage
-          const list = content.map((item) => {
-            item.studentCompleteCourseLog = item.studentCompleteCourseLog || {}
-            return item
-          })
-          this.courseLogData = list
-          this.totalPages = +totalPages
-          this.totalElements = +totalElements
-          this.pageSize = 5
-        }
-      })
+      this.$http.User.getSendCourseLogPage(params)
+        .then((res) => {
+          if (res?.data?.SendCourseLogPage) {
+            const {
+              totalPages,
+              totalElements,
+              content
+            } = res.data.SendCourseLogPage
+            const list = content.map((item) => {
+              item.studentCompleteCourseLog =
+                item.studentCompleteCourseLog || {}
+              return item
+            })
+            this.courseLogData = list
+            this.totalPages = +totalPages
+            this.totalElements = +totalElements
+            this.pageSize = 5
+          }
+        })
+        .finally(() => {
+          this.courseLoading = false
+        })
     },
 
     // 获取用户本班级作品集
