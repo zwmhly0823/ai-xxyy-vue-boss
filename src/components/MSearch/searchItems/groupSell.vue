@@ -22,6 +22,7 @@
         :disabled="isDisabled"
         :loading="loading"
         @change="onChange"
+        @clear="onClear"
         suffix-icon="el-icon-search"
       >
         <el-option
@@ -148,6 +149,10 @@ export default {
         })
       }
       this.$emit('result', item ? obj : '')
+    },
+    onClear() {
+      this.teacherscope = null
+      this.getTeacher()
     }
   }
 }
