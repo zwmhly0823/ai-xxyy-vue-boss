@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-03-13 15:24:11
  * @LastEditors: Shentong
- * @LastEditTime: 2020-11-02 22:06:54
+ * @LastEditTime: 2020-11-02 22:39:09
  -->
 <template>
   <div id="login" class="login-container">
@@ -155,29 +155,37 @@
         top="22vh"
         :append-to-body="true"
       >
-        <span class="update-pwd_tip"
-          >系统检测到您当前账号密码安全等级较低，请修改密码后重新登录</span
+        <span class="update-pwd_tip">
+          <span style="margin-right:5px">⚠️</span>
+          系统检测到您当前账号密码安全等级较低，请修改密码后重新登录</span
         >
-        <el-form>
-          <el-form-item label="新密码" label-width="15%">
-            <el-input size="medium" v-model="newPassword" />
+        <el-form
+          :model="updatePwd"
+          :rules="updatePwdRules"
+          style="margin-top:10px;"
+        >
+          <el-form-item label="新密码" label-width="15%" prop="newPassword">
+            <el-input size="medium" v-model="updatePwd.newPassword" />
           </el-form-item>
+          <el-form-item>
+            <div class="operate-btn">
+              <el-button
+                style="width:100px;"
+                size="medium"
+                @click="dialogVisible = false"
+                >取 消</el-button
+              >
+              <el-button
+                style="width:100px;"
+                size="medium"
+                type="primary"
+                @click="handleSureReplacePassword"
+                >确 定</el-button
+              >
+            </div>
+          </el-form-item>
+          <div slot="footer" class="dialog-footer"></div>
         </el-form>
-        <div slot="footer" class="dialog-footer">
-          <el-button
-            style="width:100px;"
-            size="medium"
-            @click="dialogVisible = false"
-            >取 消</el-button
-          >
-          <el-button
-            style="width:100px;"
-            size="medium"
-            type="primary"
-            @click="handleSureReplacePassword"
-            >确 定</el-button
-          >
-        </div>
       </el-dialog>
     </div>
   </div>
@@ -234,9 +242,32 @@ export default {
         callback()
       }
     }
+    // 修改密码验证
+    var validatePass = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error('请输入新密码'))
+      } else {
+        console.log(value, validatePwd(value))
+        if (!validatePwd(value)) {
+          callback(
+            new Error('密码至少包含大小写字母、数字、特殊字符大于8个字符!')
+          )
+        } else {
+          callback()
+        }
+      }
+    }
     return {
       userInfo: null,
-      newPassword: '',
+      updatePwdRules: {
+        newPassword: [
+          { required: true, validator: validatePass, trigger: 'blur' },
+          { min: 8, message: '长度在8个字符以上', trigger: 'blur' }
+        ]
+      },
+      updatePwd: {
+        newPassword: ''
+      },
       dialogVisible: false,
       cutDown: 60,
       timer: null,
@@ -273,7 +304,7 @@ export default {
   watch: {
     dialogVisible(val) {
       if (!val) {
-        this.newPassword = ''
+        this.updatePwd.newPassword = ''
       }
     }
   },
@@ -406,6 +437,7 @@ export default {
             if (validatePwd(this.pwdLoginForm.pwd)) {
               location.href = `${path}#/`
             } else {
+              this.getUserInfo()
               this.dialogVisible = true
             }
           }
@@ -416,13 +448,17 @@ export default {
       }
     },
     async handleSureReplacePassword() {
-      const { userInfo, newPassword } = this
+      const {
+        userInfo: { id },
+        updatePwd: { newPassword }
+      } = this
+      console.log('this.userInfo', this.userInfo)
       if (newPassword === '') {
         this.$message.warning('请填写密码～')
         return
       }
       try {
-        const res = await this.$http.Login.resetPwd(userInfo.id, newPassword)
+        const res = await this.$http.Login.resetPwd(id, newPassword)
         if (res.code === 0) {
           this.$message.success('密码修改成功～')
           this.dialogVisible = false
@@ -438,6 +474,8 @@ export default {
       if (!teacherId) itemType = 'staff'
 
       const userInfo = localStorage.getItem(itemType)
+
+      this.userInfo = userInfo
 
       return JSON.parse(userInfo)
     },
@@ -507,8 +545,12 @@ $bg: #2d3a4b;
 $dark_gray: #889aa4;
 $light_gray: #eee;
 
+.operate-btn {
+  display: flex;
+  justify-content: flex-end;
+}
 .update-pwd_tip {
-  color: #e4393c;
+  color: #e6a23c;
   margin-left: 30px;
   line-height: 30px;
 }
