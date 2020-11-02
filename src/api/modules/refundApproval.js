@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-05-12 15:22:25
  * @LastEditors: liukun
- * @LastEditTime: 2020-10-20 16:04:53
+ * @LastEditTime: 2020-10-27 18:15:07
  */
 
 import axios from '../axiosConfig'
@@ -92,6 +92,12 @@ export default {
       `/api/b/v1/backend/refund/detail/get?flowApprovalId=${params}`
     )
   },
+  getFlowDetailNodeTable(params) {
+    return axios.get(
+      `/api/b/v1/backend/flowApprovalLinkedRelation/findLinkedListByFlowApprovalIdForBoss?flowApprovalId=${params}`
+    )
+  },
+
   // 获取系统课全年/半年
   // SYSTEM_COURSE_YEAR 年课
   // SYSTEM_COURSE_HALFYEAR 半年课
