@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-03-13 15:24:11
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-21 15:21:41
+ * @LastEditTime: 2020-10-30 17:21:26
  -->
 <template>
   <div id="login" class="login-container">
@@ -307,7 +307,7 @@ export default {
     async pwdLoginHandle(formName) {
       let getToken
       const { pathname } = location
-      const path = pathname.replace(/login/, 'student-team')
+      let path = pathname.replace(/login/, 'student-team')
       // 校验回调返回的是Promise
       const validatePromise = await this.judegeValidate(formName).catch((err) =>
         console.log(err)
@@ -354,6 +354,10 @@ export default {
               'staff',
               JSON.stringify(getToken.staff || '{}')
             )
+            // 如果是 教研 角色，跳转到 设置-员工帐号
+            if (getToken.staff.roleId === '19') {
+              path = path.replace(/student-team/, 'teacher')
+            }
           }
           // 登录后，设置默认multiTabbed
           // const tabs = {

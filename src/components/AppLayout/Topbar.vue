@@ -3,8 +3,8 @@
  * @Email: yangjiyong@meishubao.com
  * @Date: 2020-03-13 15:13:34
  * @Description: topbar 顶部功能区
- * @LastEditors: Shentong
- * @LastEditTime: 2020-09-02 17:46:37
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-11-02 15:54:13
  -->
 <template>
   <div class="navbar" :class="{ prod: isProd }">
@@ -266,21 +266,39 @@ export default {
     // 当前页面切换
     handleChangeSubject(command, isNew = false) {
       console.log(command, isNew)
-      location.href =
-        command !== 'art_app'
-          ? `${baseUrl()}${command}/#/trialUsers`
-          : `${baseUrl()}users/#/trial`
+      // 如果角色是教研（roleId=18）,跳转到 设置-员工帐号
+      const { roleId = '' } = this.userInfo
+      let path = `${baseUrl()}users/#/trial`
+      if (command !== 'art_app') {
+        path =
+          roleId === '19'
+            ? `${baseUrl()}${command}/#/teacherManagement`
+            : `${baseUrl()}${command}/#/trialUsers`
+      } else {
+        path =
+          roleId === '19'
+            ? `${baseUrl()}teacher/#/`
+            : `${baseUrl()}users/#/trial`
+      }
+      location.href = path
     },
 
     // 新标签页打开
     openNewTab(key) {
       console.log(key, 'new tab')
+      // 如果角色是教研（roleId=18）,跳转到 设置-员工帐号
+      const { roleId = '' } = this.userInfo
+      let path = `/users/#/trial`
       // 非小熊美术
       if (key !== 'art_app') {
-        openBrowserTab(`/${key}/#/trialUsers`)
+        path =
+          roleId === '19'
+            ? `/${key}/#/teacherManagement`
+            : `/${key}/#/trialUsers`
       } else {
-        openBrowserTab(`/users/#/trial`)
+        path = roleId === '19' ? `/teacher/#/` : `/users/#/trial`
       }
+      openBrowserTab(path)
     }
   }
 }
