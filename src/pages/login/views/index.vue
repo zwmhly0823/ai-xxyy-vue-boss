@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-03-13 15:24:11
  * @LastEditors: Shentong
- * @LastEditTime: 2020-11-02 21:33:18
+ * @LastEditTime: 2020-11-02 22:06:54
  -->
 <template>
   <div id="login" class="login-container">
@@ -146,7 +146,39 @@
           >登录</el-button
         >
       </el-form>
-      <!-- 验证码登录 -->
+      <!-- 验证码登录 end -->
+      <!-- 修改用户密码 dialog -->
+      <el-dialog
+        title="修改密码"
+        :visible.sync="dialogVisible"
+        width="600px"
+        top="22vh"
+        :append-to-body="true"
+      >
+        <span class="update-pwd_tip"
+          >系统检测到您当前账号密码安全等级较低，请修改密码后重新登录</span
+        >
+        <el-form>
+          <el-form-item label="新密码" label-width="15%">
+            <el-input size="medium" v-model="newPassword" />
+          </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button
+            style="width:100px;"
+            size="medium"
+            @click="dialogVisible = false"
+            >取 消</el-button
+          >
+          <el-button
+            style="width:100px;"
+            size="medium"
+            type="primary"
+            @click="handleSureReplacePassword"
+            >确 定</el-button
+          >
+        </div>
+      </el-dialog>
     </div>
   </div>
 </template>
@@ -154,6 +186,7 @@
 import { Loading } from 'element-ui'
 import { setToken } from '@/utils/auth'
 import { validatePwd } from '@/utils/validate'
+import { isToss } from '@/utils/index'
 
 const valid = {
   isPhoneNum(str) {
@@ -202,6 +235,9 @@ export default {
       }
     }
     return {
+      userInfo: null,
+      newPassword: '',
+      dialogVisible: false,
       cutDown: 60,
       timer: null,
       tabFirstActive: true,
@@ -234,6 +270,13 @@ export default {
     }
   },
   computed: {},
+  watch: {
+    dialogVisible(val) {
+      if (!val) {
+        this.newPassword = ''
+      }
+    }
+  },
   methods: {
     // 切换登录方式点击事件
     loginTypeHandle(loginType) {
@@ -363,7 +406,7 @@ export default {
             if (validatePwd(this.pwdLoginForm.pwd)) {
               location.href = `${path}#/`
             } else {
-              console.log('不合法')
+              this.dialogVisible = true
             }
           }
         }
@@ -371,6 +414,32 @@ export default {
         // 以服务的方式调用的 Loading 需要异步关闭
         this.$nextTick(() => loadingInstance.close())
       }
+    },
+    async handleSureReplacePassword() {
+      const { userInfo, newPassword } = this
+      if (newPassword === '') {
+        this.$message.warning('请填写密码～')
+        return
+      }
+      try {
+        const res = await this.$http.Login.resetPwd(userInfo.id, newPassword)
+        if (res.code === 0) {
+          this.$message.success('密码修改成功～')
+          this.dialogVisible = false
+        }
+      } catch (error) {
+        console.log(error)
+      }
+    },
+    getUserInfo() {
+      let itemType = 'teacher'
+      const teacherId = isToss()
+
+      if (!teacherId) itemType = 'staff'
+
+      const userInfo = localStorage.getItem(itemType)
+
+      return JSON.parse(userInfo)
     },
     resetForm(formName) {
       this.passwordType = 'password'
@@ -438,11 +507,17 @@ $bg: #2d3a4b;
 $dark_gray: #889aa4;
 $light_gray: #eee;
 
+.update-pwd_tip {
+  color: #e4393c;
+  margin-left: 30px;
+  line-height: 30px;
+}
 .login-container {
   min-height: 100%;
   width: 100%;
   background-color: $bg;
   overflow: hidden;
+
   .form-container {
     position: relative;
     width: 520px;
