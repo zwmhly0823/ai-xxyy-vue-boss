@@ -7,7 +7,7 @@
  * @LastEditTime: 2020-10-24 00:50:50
  -->
 <template>
-  <div class="search-item small">
+  <div class="search-item small" :style="myStyle">
     <el-form @submit.native.prevent>
       <el-select
         v-model="teacherId"
@@ -22,6 +22,7 @@
         :disabled="isDisabled"
         :loading="loading"
         @change="onChange"
+        @clear="onClear"
         suffix-icon="el-icon-search"
       >
         <el-option
@@ -65,6 +66,10 @@ export default {
     returnList: {
       type: Boolean,
       default: false
+    },
+    myStyle: {
+      type: Object,
+      default: () => {}
     }
   },
   components: {},
@@ -144,6 +149,10 @@ export default {
         })
       }
       this.$emit('result', item ? obj : '')
+    },
+    onClear() {
+      this.teacherscope = null
+      this.getTeacher()
     }
   }
 }
@@ -151,7 +160,14 @@ export default {
 <style lang="scss" scoped>
 .search-item {
   &.small {
-    width: 150px !important;
+    max-width: 140px !important;
+    width: 100%;
+  }
+  ::v-deep {
+    .el-select {
+      max-width: inherit;
+      width: 100%;
+    }
   }
 }
 </style>

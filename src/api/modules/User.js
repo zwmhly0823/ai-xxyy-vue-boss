@@ -1067,7 +1067,8 @@ export default {
       team_type,
       subject
     }
-    const params = JSON.stringify(query)
+    // const params = JSON.stringify(query)
+    const params = injectSubject(query)
     // const sort = `{"id": "desc"}`
     return axios.post('/graphql/v1/toss', {
       query: `{
@@ -1076,7 +1077,6 @@ export default {
             period_name
             period
             status
-            subject
           }
         }
       }`

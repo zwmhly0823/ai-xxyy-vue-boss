@@ -1,7 +1,7 @@
 /*
  * @Date: 2020-03-13 15:20:21
- * @LastEditors: Shentong
- * @LastEditTime: 2020-05-28 22:34:17
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-10-30 20:48:59
  * @FilePath: /ai-app-vue-toss/src/pages/studentTeam/router/index.js
  */
 import Vue from 'vue'
@@ -18,20 +18,74 @@ const routes = [
       icon: 'el-icon-s-custom',
       keepAlive: true
     },
-    redirect: '/trialTeam'
+    redirect: '/systemTeam'
     // component: () => import('../views/studentTeam/student.vue')
   },
+  /**
+   * 体验课班级V2.0。 @status: 0-待上课，1-上课中，2-已结课
+   */
   {
-    path: '/trialTeam', // 体验课班级
-    name: 'trialTeam',
+    path: '/trail/:status',
+    name: 'trialTeamV2',
     meta: {
-      title: '体验课班级',
+      title: '班级管理',
       keepAlive: true
     },
-    hidden: true,
+    // redirect: 'prepare',
     component: () =>
-      import(/* webpackChunkName: "student" */ '../views/trialTeam/index.vue')
+      import(
+        /* webpackChunkName: "trial-team" */ '../views/trial-v2/index.vue'
+      ),
+    children: [
+      {
+        path: 'prepare',
+        name: 'trialTeamV2Prepare',
+        meta: {
+          title: '待上课'
+        },
+        component: () =>
+          import(
+            /* webpackChunkName: "trial-team" */ '../views/trial-v2/prepare.vue'
+          )
+      },
+      {
+        path: 'ongoing',
+        name: 'trialTeamV2Ongoing',
+        meta: {
+          title: '上课中'
+        },
+        component: () =>
+          import(
+            /* webpackChunkName: "trial-team" */ '../views/trial-v2/ongoing.vue'
+          )
+      },
+      {
+        path: 'complete',
+        name: 'trialTeamV2Complete',
+        meta: {
+          title: '已完课'
+        },
+        component: () =>
+          import(
+            /* webpackChunkName: "trial-team" */ '../views/trial-v2/complete.vue'
+          )
+      }
+    ]
   },
+  /**
+   * 体验课班级V2.0 End
+   */
+  // {
+  //   path: '/trialTeam', // 体验课班级
+  //   name: 'trialTeam',
+  //   meta: {
+  //     title: '体验课班级',
+  //     keepAlive: true
+  //   },
+  //   hidden: true,
+  //   component: () =>
+  //     import(/* webpackChunkName: "student" */ '../views/trialTeam/index.vue')
+  // },
   {
     path: '/systemTeam', // 系统课班级
     name: 'systemTeam',

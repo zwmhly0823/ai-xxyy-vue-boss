@@ -7,59 +7,70 @@
  * @Description: 公共样式
  */
 
-.d-flex {
-  display: flex;
-  &.align-center {
-    align-items: center;
-  }
-  &.justify-center {
-    justify-content: center;
-  }
-  &.justify-around {
-    justify-content: space-around;
-  }
-  &.justify-between {
-    justify-content: space-between;
-  }
-  .flex-1 {
-    flex: 1;
-  }
-}
-
-.clearfix {
-  @include clearfix();
-}
-
-.el-input--small {
-  font-size: 12px;
-}
-.box-shadow-0 {
-  box-shadow: none !important;
-}
-.el-tabs--border-card {
-  border: none !important;
-}
-.el-dialog__body .el-button span {
-  color: inherit !important;
-}
-.el-message {
-  z-index: 10001 !important;
-}
-
-//  设置 dialog 高度
-.my-dialog .el-dialog__body {
-  height: 500px;
-  overflow-y: auto;
-}
-// .el-select_tags
-.el-select__tags {
-  flex-wrap: nowrap !important;
-  white-space: nowrap !important;
-  overflow: hidden !important;
-  text-overflow: ellipsis !important;
-}
-
-// drawer的title默认会被选中的问题
-.el-drawer__header span[role='heading']:focus {
-  outline: 0;
-}
+ @import './mixin.scss';
+ .d-flex {
+   display: flex;
+   &.column {
+     flex-direction: column;
+   }
+   &.wrap {
+     flex-wrap: wrap;
+   }
+   &.align-center {
+     align-items: center;
+   }
+   &.align-start {
+     align-items: flex-start;
+   }
+   &.justify-center {
+     justify-content: center;
+   }
+   &.justify-around {
+     justify-content: space-around;
+   }
+   &.justify-between {
+     justify-content: space-between;
+   }
+   .flex-1 {
+     flex: 1;
+   }
+ }
+ 
+ .clearfix {
+   @include clearfix();
+ }
+ 
+ .el-input--small {
+   font-size: 12px;
+ }
+ .box-shadow-0 {
+   box-shadow: none !important;
+ }
+ .el-tabs--border-card {
+   border: none !important;
+ }
+ .el-dialog__body .el-button span {
+   color: inherit !important;
+ }
+ .el-message {
+   z-index: 10001 !important;
+ }
+ 
+ //  设置 dialog 高度
+ .my-dialog .el-dialog__body {
+   height: 500px;
+   overflow-y: auto;
+ }
+ 
+ // .el-select_tags
+ .el-select__tags {
+   flex-wrap: nowrap !important;
+   white-space: nowrap !important;
+   overflow: hidden !important;
+   text-overflow: ellipsis !important;
+ }
+ 
+ // drawer的title默认会被选中的问题
+ .el-drawer__header span[role='heading']:focus {
+   outline: 0;
+ }

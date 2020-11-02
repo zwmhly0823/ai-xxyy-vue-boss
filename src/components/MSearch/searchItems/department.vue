@@ -7,7 +7,7 @@
  * @Description: 社群销售 组织机构， 根据选择的机构ID，返回对应的老师ID
  -->
 <template>
-  <div class="search-item small threeSelect">
+  <div class="search-item small threeSelect" :style="myStyle">
     <el-cascader
       size="mini"
       class="item-style"
@@ -68,6 +68,10 @@ export default {
     isParttimeTeacher: {
       type: Boolean,
       default: false
+    },
+    myStyle: {
+      type: Object,
+      default: () => {}
     }
   },
   data() {
