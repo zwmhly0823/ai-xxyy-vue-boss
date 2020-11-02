@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-04-25 17:24:23
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-09-21 21:37:17
+ * @LastEditTime: 2020-10-26 17:33:55
  -->
 <template>
   <el-card
@@ -23,7 +23,7 @@
         />
       </el-form-item>
 
-      <!-- <el-form-item label="推荐人信息:" :class="{ [$style.marginer]: true }">
+      <el-form-item label="推荐人信息:" :class="{ [$style.marginer]: true }">
         <div class="row_colum">
           <simple-select
             name="is_first_order_send_id"
@@ -42,7 +42,7 @@
             v-if="hasSendId"
           />
         </div>
-      </el-form-item> -->
+      </el-form-item>
       <el-form-item label="订单类型:" :class="{ [$style.marginer]: true }">
         <div class="row_colum">
           <simple-select
@@ -244,7 +244,7 @@ import Department from '@/components/MSearch/searchItems/department'
 import SearchTeamName from '@/components/MSearch/searchItems/searchTeamName'
 // import SearchTrialTeamName from '@/components/MSearch/searchItems/searchTrialTeamName'
 import SearchStage from '@/components/MSearch/searchItems/searchStage'
-// import SearchPhoneAndUsername from '@/components/MSearch/searchItems/searchPhoneAndUsername'
+import SearchPhoneAndUsername from '@/components/MSearch/searchItems/searchPhoneAndUsername'
 import SimpleSelect from '@/components/MSearch/searchItems/simpleSelect'
 import { isToss } from '@/utils/index'
 import { downloadHandle } from '@/utils/download'
@@ -273,7 +273,7 @@ export default {
     SearchTeamName,
     // SearchTrialTeamName,
     SearchStage,
-    // SearchPhoneAndUsername,
+    SearchPhoneAndUsername,
     SimpleSelect
   },
 
