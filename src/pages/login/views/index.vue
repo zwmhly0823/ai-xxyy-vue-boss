@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-03-13 15:24:11
  * @LastEditors: Shentong
- * @LastEditTime: 2020-11-03 14:14:50
+ * @LastEditTime: 2020-11-03 15:15:44
  -->
 <template>
   <div id="login" class="login-container">
@@ -438,6 +438,8 @@ export default {
               this.getUserInfo()
               this.dialogVisible = true
             }
+          } else {
+            location.href = `${path}#/`
           }
         }
 
