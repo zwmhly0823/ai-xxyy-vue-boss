@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-07-20 16:38:13
  * @LastEditors: liukun
- * @LastEditTime: 2020-09-21 20:33:04
+ * @LastEditTime: 2020-10-29 16:39:24
 -->
 <template>
   <el-drawer :visible.sync="drawer" size="35%" :destroy-on-close="true">
@@ -20,23 +20,27 @@
           <div>
             <el-tag
               size="small"
-              v-if="item.teacherInfo && item.teacherInfo.duty_id === '1'"
+              v-if="
+                item.createTeacherInfo && item.createTeacherInfo.duty_id === '1'
+              "
               >CC</el-tag
             >
             <el-tag
               size="small"
               type="danger"
-              v-else-if="item.teacherInfo && item.teacherInfo.duty_id === '2'"
+              v-else-if="
+                item.createTeacherInfo && item.createTeacherInfo.duty_id === '2'
+              "
               >CT</el-tag
             >
             <span style="margin-left:10px"
               >{{
-                (item.teacherInfo && item.teacherInfo.realname) ||
-                  (item.staffInfo && item.staffInfo.real_name)
+                (item.createTeacherInfo && item.createTeacherInfo.realname) ||
+                  (item.createStaffInfo && item.createStaffInfo.real_name)
               }}{{
-                item.teacherInfo &&
-                  item.teacherInfo.departmentInfo &&
-                  item.teacherInfo.departmentInfo.name
+                item.createTeacherInfo &&
+                  item.createTeacherInfo.departmentInfo &&
+                  item.createTeacherInfo.departmentInfo.name
               }}</span
             >
           </div>
