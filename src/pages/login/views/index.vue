@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-03-13 15:24:11
  * @LastEditors: Shentong
- * @LastEditTime: 2020-11-02 22:39:09
+ * @LastEditTime: 2020-11-03 14:04:36
  -->
 <template>
   <div id="login" class="login-container">
@@ -160,6 +160,7 @@
           系统检测到您当前账号密码安全等级较低，请修改密码后重新登录</span
         >
         <el-form
+          ref="updatePwd"
           :model="updatePwd"
           :rules="updatePwdRules"
           style="margin-top:10px;"
@@ -179,12 +180,11 @@
                 style="width:100px;"
                 size="medium"
                 type="primary"
-                @click="handleSureReplacePassword"
+                @click="handleSureReplacePassword('updatePwd')"
                 >确 定</el-button
               >
             </div>
           </el-form-item>
-          <div slot="footer" class="dialog-footer"></div>
         </el-form>
       </el-dialog>
     </div>
@@ -243,18 +243,16 @@ export default {
       }
     }
     // 修改密码验证
-    var validatePass = (rule, value, callback) => {
+    const validatePass = (rule, value, callback) => {
+      console.log(validatePwd(value))
       if (value === '') {
         callback(new Error('请输入新密码'))
+      } else if (!validatePwd(value)) {
+        callback(
+          new Error('密码至少包含大小写字母、数字、特殊字符大于8个字符!')
+        )
       } else {
-        console.log(value, validatePwd(value))
-        if (!validatePwd(value)) {
-          callback(
-            new Error('密码至少包含大小写字母、数字、特殊字符大于8个字符!')
-          )
-        } else {
-          callback()
-        }
+        callback()
       }
     }
     return {
@@ -447,24 +445,27 @@ export default {
         this.$nextTick(() => loadingInstance.close())
       }
     },
-    async handleSureReplacePassword() {
-      const {
-        userInfo: { id },
-        updatePwd: { newPassword }
-      } = this
-      console.log('this.userInfo', this.userInfo)
-      if (newPassword === '') {
-        this.$message.warning('请填写密码～')
-        return
-      }
-      try {
-        const res = await this.$http.Login.resetPwd(id, newPassword)
-        if (res.code === 0) {
-          this.$message.success('密码修改成功～')
-          this.dialogVisible = false
+    async handleSureReplacePassword(formName) {
+      // 校验回调返回的是Promise
+      const validatePwd = await this.judegeValidate(formName).catch((err) =>
+        console.log(err)
+      )
+      if (validatePwd) {
+        const {
+          userInfo: { id },
+          updatePwd: { newPassword }
+        } = this
+
+        try {
+          const res = await this.$http.Login.resetPwd(id, newPassword)
+          if (res.code === 0) {
+            this.$message.success('密码修改成功～')
+            this.pwdLoginForm.pwd = ''
+            this.dialogVisible = false
+          }
+        } catch (error) {
+          console.log(error)
         }
-      } catch (error) {
-        console.log(error)
       }
     },
     getUserInfo() {
@@ -475,9 +476,7 @@ export default {
 
       const userInfo = localStorage.getItem(itemType)
 
-      this.userInfo = userInfo
-
-      return JSON.parse(userInfo)
+      this.userInfo = JSON.parse(userInfo)
     },
     resetForm(formName) {
       this.passwordType = 'password'
