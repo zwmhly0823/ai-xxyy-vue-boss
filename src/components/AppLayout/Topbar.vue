@@ -4,7 +4,7 @@
  * @Date: 2020-03-13 15:13:34
  * @Description: topbar 顶部功能区
  * @LastEditors: Shentong
- * @LastEditTime: 2020-09-02 17:46:37
+ * @LastEditTime: 2020-11-03 15:02:03
  -->
 <template>
   <div class="navbar" :class="{ prod: isProd }">
@@ -118,29 +118,31 @@
     <el-dialog
       title="修改密码"
       :visible.sync="dialogVisible"
-      width="430px"
+      width="500px"
       :append-to-body="true"
     >
-      <el-form style="height:30px;">
-        <el-form-item label="新密码" label-width="15%">
-          <el-input size="medium" v-model="newPassword" />
+      <el-form ref="updatePwd" :model="updatePwd" :rules="updatePwdRules">
+        <el-form-item label="新密码" label-width="15%" prop="newPassword">
+          <el-input size="medium" v-model="updatePwd.newPassword" />
+        </el-form-item>
+        <el-form-item>
+          <div class="operate-btn">
+            <el-button
+              style="width:100px;"
+              size="medium"
+              @click="dialogVisible = false"
+              >取 消</el-button
+            >
+            <el-button
+              style="width:100px;"
+              size="medium"
+              type="primary"
+              @click="handleSureReplacePassword('updatePwd')"
+              >确 定</el-button
+            >
+          </div>
         </el-form-item>
       </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button
-          style="width:100px;"
-          size="medium"
-          @click="dialogVisible = false"
-          >取 消</el-button
-        >
-        <el-button
-          style="width:100px;"
-          size="medium"
-          type="primary"
-          @click="handleSureReplacePassword"
-          >确 定</el-button
-        >
-      </div>
     </el-dialog>
   </div>
 </template>
@@ -153,6 +155,7 @@ import Hamburger from './Hamburger'
 import { removeToken } from '@/utils/auth'
 import { baseUrl, openBrowserTab } from '@/utils/index'
 import noticeCenter from './noticeCenter/noticeCenter'
+import { validatePwd } from '@/utils/validate'
 
 export default {
   components: {
@@ -170,24 +173,42 @@ export default {
       )
       return list
     }
-    // currentSubjectText() {
-    //   return this.subjects.currentSubjectTitle
-    // }
   },
   watch: {
     dialogVisible(val) {
       if (!val) {
-        this.newPassword = ''
+        this.updatePwd.newPassword = ''
       }
     }
   },
   data() {
+    // 修改密码验证
+    const validatePass = (rule, value, callback) => {
+      console.log(validatePwd(value))
+      if (value === '') {
+        callback(new Error('请输入新密码'))
+      } else if (!validatePwd(value)) {
+        callback(
+          new Error('密码至少包含大小写字母、数字、特殊字符大于8个字符!')
+        )
+      } else {
+        callback()
+      }
+    }
     return {
+      updatePwd: {
+        newPassword: ''
+      },
+      updatePwdRules: {
+        newPassword: [
+          { required: true, validator: validatePass, trigger: 'blur' },
+          { min: 8, message: '长度在8个字符以上', trigger: 'blur' }
+        ]
+      },
       isProd: false,
       userInfo: null,
       head: 'https://msb-ai.meixiu.mobi/ai-pm/static/touxiang.png',
       dialogVisible: false,
-      newPassword: '',
       noticeBadge: 0,
       currentSubject: 'art_app'
     }
@@ -215,7 +236,7 @@ export default {
     },
     logout() {
       removeToken()
-      console.log('baseUrl:', baseUrl())
+      // console.log('baseUrl:', baseUrl())
       location.href = `${baseUrl()}login/#/`
       // await this.$store.dispatch('user/logout')
       // this.$router.push(`/login?redirect=${this.$route.fullPath}`)
@@ -223,21 +244,29 @@ export default {
     replacePassword() {
       this.dialogVisible = true
     },
-    async handleSureReplacePassword() {
-      const { userInfo, newPassword } = this
-      if (newPassword === '') {
-        this.$message.warning('请填写密码～')
-        return
-      }
-      try {
-        const res = await this.$http.Login.resetPwd(userInfo.id, newPassword)
-        if (res.code === 0) {
-          this.$message.success('密码修改成功～')
-          this.dialogVisible = false
+    handleSureReplacePassword(formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          const {
+            userInfo,
+            updatePwd: { newPassword }
+          } = this
+          this.$http.Login.resetPwd(userInfo.id, newPassword).then(
+            (res) => {
+              if (res.code === 0) {
+                this.$message.success('密码修改成功～')
+                this.dialogVisible = false
+              }
+            },
+            (err) => {
+              console.log(err)
+            }
+          )
+        } else {
+          console.log('error submit!!')
+          return false
         }
-      } catch (error) {
-        console.log(error)
-      }
+      })
     },
     clickNoticeTop() {
       this.$refs.noticeCenter.openDrawer()
@@ -287,6 +316,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.operate-btn {
+  display: flex;
+  justify-content: flex-end;
+}
 .navbar {
   height: 50px;
   overflow: hidden;
