@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-03-13 15:24:11
  * @LastEditors: Shentong
- * @LastEditTime: 2020-11-03 14:04:36
+ * @LastEditTime: 2020-11-03 14:14:50
  -->
 <template>
   <div id="login" class="login-container">
@@ -170,18 +170,18 @@
           </el-form-item>
           <el-form-item>
             <div class="operate-btn">
-              <el-button
+              <!-- <el-button
                 style="width:100px;"
                 size="medium"
                 @click="dialogVisible = false"
                 >取 消</el-button
-              >
+              > -->
               <el-button
                 style="width:100px;"
                 size="medium"
                 type="primary"
                 @click="handleSureReplacePassword('updatePwd')"
-                >确 定</el-button
+                >确 认</el-button
               >
             </div>
           </el-form-item>
