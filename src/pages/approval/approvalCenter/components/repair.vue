@@ -3,8 +3,8 @@
  * @version: 
  * @Author: Lukun
  * @Date: 2020-04-28 13:50:45
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-10-23 16:39:55
+ * @LastEditors: liukun
+ * @LastEditTime: 2020-11-03 20:15:28
  -->
 <template>
   <div class="container-content">
@@ -57,7 +57,7 @@
             <el-input disabled v-model="formRepair.receiptName"></el-input>
             <div class="repair-address" @click="repairAddress" v-if="userId">
               <span>
-                修改收货信息
+                修改收货地址
               </span>
             </div>
           </el-form-item>
@@ -70,14 +70,12 @@
           <el-input disabled v-model="formRepair.receiptTel"></el-input>
         </el-form-item>
         <el-form-item
-          v-model="formRepair.totalAddress"
           label="收货人地址"
           prop="totalAddress"
           class="address-recept"
         >
           <el-input
             type="textarea"
-            resize="none"
             disabled
             v-model="formRepair.totalAddress"
           ></el-input>
@@ -339,6 +337,7 @@ export default {
       value: '',
       supKey: '',
       formRepair: {
+        totalAddress: '', // 补上
         userId: '', // 用户id
         applyDepartment: '', // 申请人所在部门  --非必传
         applyName: '', // 申请人名称
@@ -405,7 +404,11 @@ export default {
           { required: true, message: '请选择关联补发方式', trigger: 'change' }
         ],
         totalAddress: [
-          { required: true, message: '请选择关联收货人地址', trigger: 'change' }
+          {
+            required: true,
+            message: '请选择关联收货人地址',
+            trigger: 'change'
+          }
         ],
         chooseProductVaidator: [
           {
@@ -488,6 +491,7 @@ export default {
     // 清空全部数据
     clearAllData() {
       this.formRepair = {
+        totalAddress: '', // 补上
         userId: '', // 用户id
         applyDepartment: '', // 申请人所在部门  --非必传
         applyName: '', // 申请人名称
@@ -633,8 +637,7 @@ export default {
       if (val) {
         this.addresDialog = false
         Object.assign(this.formRepair, {
-          totalAddress:
-            val.province + val.city + val.area + val.addressDetail || '',
+          totalAddress: val.province + val.city + val.area + val.addressDetail,
           receiptAddressDetail: val.addressDetail,
           receiptAddressArea: val.area,
           receiptAddressCity: val.city,
@@ -651,6 +654,17 @@ export default {
         this.$http.Express.getExpressByOrderId(val.id).then((res) => {
           if (res && res.payload) {
             const medium = res.payload
+            // 回显bug无法提交_丹阳&伟霞
+            if (
+              medium.addressId === '0' ||
+              medium.expressStatus === 'INVALID' ||
+              medium.expressStatus === 'DEFAULT'
+            ) {
+              this.$message.warning(
+                '当前用户收货地址为空或被置为失效-请修改地址'
+              )
+            }
+            // 回显bug无法提交_丹阳&伟霞
             this.levelData = medium.level
             Object.assign(this.formRepair, {
               totalAddress:
