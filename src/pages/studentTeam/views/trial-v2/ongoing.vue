@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-07-31 19:06:52
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-04 17:22:25
+ * @LastEditTime: 2020-11-04 22:20:30
 -->
 <template>
   <div class="team-layout d-flex" :class="{ closed: !isOpened }">
@@ -36,7 +36,7 @@
 
     <!-- right container -->
     <div class="team-layout-container">
-      <team-detail :team-id="currentTeamId" />
+      <team-detail :team-id="currentTeamId" :key="detailKey" />
     </div>
   </div>
 </template>
@@ -65,7 +65,8 @@ export default {
       currentTeamId: '',
       isOpened: true,
       onceLazy: true,
-      hasCreateLintener: false
+      hasCreateLintener: false,
+      detailKey: 0
     }
   },
 
@@ -85,6 +86,7 @@ export default {
     getSelectTeam(id) {
       // console.log(id, 'team_id')
       this.currentTeamId = id
+      this.detailKey = Date.now()
     },
 
     handleToggle(data) {

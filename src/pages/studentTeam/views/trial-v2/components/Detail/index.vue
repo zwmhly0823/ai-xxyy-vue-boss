@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-08-04 17:15:44
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-18 14:13:59
+ * @LastEditTime: 2020-11-04 22:41:49
 -->
 <template>
   <div class="team-layout-main" v-loading="loading">
@@ -142,6 +142,9 @@ export default {
         this.tab = '0'
       }
       this.getTeamDetail()
+    },
+    tab(val) {
+      this.getFilterParams(null)
     }
   },
   methods: {
