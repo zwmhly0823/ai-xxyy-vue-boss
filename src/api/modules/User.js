@@ -5,7 +5,7 @@
  * @Author: shentong
  * @Date: 2020-03-13 14:38:28
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-11-03 22:19:24
+ * @LastEditTime: 2020-11-04 18:07:44
  */
 // import axios from '../axios'
 import axios from '../axiosConfig'
@@ -243,6 +243,7 @@ export default {
               }
             }
             orderInfo {
+              id
               trial_course {
                 order_no
               }

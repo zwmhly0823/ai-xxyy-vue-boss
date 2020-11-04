@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-09-04 18:38:15
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-09-12 18:26:04
+ * @LastEditTime: 2020-11-04 18:10:44
  */
 import _ from 'lodash'
 import { todayTimestamp, tomorrowTimestamp } from '../../utils'
@@ -119,6 +119,11 @@ export default {
     propHeight: {
       type: Number,
       default: 0
+    },
+    // 体验课班级阶段  tab 0-课前准备, 1-上课情况, 2-本班订单
+    teamTab: {
+      type: String,
+      default: ''
     }
     /** 班级 props end */
   },
@@ -827,6 +832,10 @@ export default {
         case '2':
           this.sendMessage(true)
           break
+        // 发送加好友短信
+        case '5':
+          this.handleSendJoinFrindMessage(user)
+          break
       }
     },
 
@@ -970,6 +979,21 @@ export default {
     handleMofifyWechatRemark(index, user, type) {
       console.log(user)
       this.$refs.modifyWechatRemark.visible = true
+    },
+
+    // 发送加好友短信
+    handleSendJoinFrindMessage(user) {
+      const orderId = user?.orderInfo?.id || ''
+      if (!orderId) {
+        this.$message.error('缺少参数：orderId')
+        return
+      }
+      this.$http.User.sendMsgForTeacher(orderId).then((res) => {
+        this.$message({
+          message: '已发送短信',
+          type: 'success'
+        })
+      })
     }
   }
 }
