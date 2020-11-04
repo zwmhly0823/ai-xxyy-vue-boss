@@ -7,7 +7,13 @@
           :class="{ shaky: isShaky }"
           slot="tip"
         >
-          最大上传10个文件，只能上传jpg/png文件，且单个文件限制2G以内
+          <span style="line-height:20px;"
+            >最大上传10个文件，且单个文件限制2G以内；</span
+          >
+          <span style="line-height:20px;"
+            >图片只能是 png/jpg 格式!
+            音频只能是audio/mpeg格式！视频只能是mp4/flv/mov/rmvb格式!</span
+          >
         </div>
         <el-upload
           ref="upload"
