@@ -4,14 +4,11 @@
  * @Author: Shentong
  * @Date: 2020-10-27 17:54:03
  * @LastEditors: Shentong
- * @LastEditTime: 2020-11-04 19:24:15
+ * @LastEditTime: 2020-11-04 20:14:41
  */
 import axios from '@/api/axiosConfig'
 import $http from '@/api'
 import Contants from '@/utils/contants'
-
-console.log(axios)
-// axios.defaults.timeout = 3000
 
 class GetFileCommentFn {
   constructor(file) {
