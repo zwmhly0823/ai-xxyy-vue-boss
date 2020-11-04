@@ -88,6 +88,7 @@
 
       <el-form-item v-if="level || sup || stage">
         <stage-sup-levels
+          ref="stagesuplevels"
           v-if="this.$store.getters.subjects.subjectCode === 0"
           @stageCallBack="stageCallBack"
           @supCallBack="supCallBack"
@@ -116,6 +117,7 @@
       <el-form-item v-if="schedule">
         <!-- 排期 -->
         <Schedule
+          ref="schedule"
           @result="selectSchedule"
           :name="schedule"
           :teamClass="teamClass"

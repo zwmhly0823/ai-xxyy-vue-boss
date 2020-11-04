@@ -28,6 +28,7 @@
     </el-select>
 
     <el-select
+      ref="sup_select"
       v-model="supData"
       class="item-style"
       clearable
@@ -47,6 +48,7 @@
       </el-option>
     </el-select>
     <el-select
+      ref="level_select"
       v-model="levelData"
       class="item-style"
       clearable

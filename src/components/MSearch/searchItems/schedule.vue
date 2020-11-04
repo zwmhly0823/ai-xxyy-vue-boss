@@ -10,6 +10,7 @@
   <div class="search-item small">
     <el-form @submit.native.prevent>
       <el-autocomplete
+        ref="term_autocomplete"
         size="mini"
         name="vals"
         clearable
