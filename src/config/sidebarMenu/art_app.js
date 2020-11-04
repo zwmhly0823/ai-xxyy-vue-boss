@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-08-19 21:14:08
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-11-02 22:20:27
+ * @LastEditTime: 2020-11-04 14:55:02
  */
 import { removeToken } from '@/utils/auth'
 import { baseUrl } from '@/utils/index'
@@ -129,7 +129,7 @@ if (staff.roleId === '19') {
       path: '/student-team',
       name: 'student-team',
       meta: {
-        title: '体验课班级',
+        title: '体验课班级(新版)',
         icon: 'iconbanjiguanli',
         module: 'student-team'
       },
@@ -163,14 +163,43 @@ if (staff.roleId === '19') {
         }
       ]
     },
+    // {
+    //   path: '/systemTeam',
+    //   name: 'systemTeam',
+    //   meta: {
+    //     title: '系统课班级',
+    //     icon: 'iconbanjiguanli',
+    //     module: 'student-team'
+    //   }
+    // },
     {
-      path: '/systemTeam',
-      name: 'systemTeam',
+      path: '/student-team',
+      name: 'student-team',
       meta: {
-        title: '系统课班级',
+        title: '班级管理',
         icon: 'iconbanjiguanli',
         module: 'student-team'
-      }
+      },
+      children: [
+        {
+          path: '/trialTeam',
+          name: 'trialTeam',
+          meta: {
+            title: '体验课',
+            module: 'student-team',
+            show: true
+          }
+        },
+        {
+          path: '/systemTeam',
+          name: 'systemTeam',
+          meta: {
+            title: '系统课',
+            module: 'student-team',
+            show: true
+          }
+        }
+      ]
     },
     // 用户。体验课老师只能查看体验课学员，系统课只系统课学员
     {
