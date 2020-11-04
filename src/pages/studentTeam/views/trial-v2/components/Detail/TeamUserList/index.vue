@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-08-05 20:17:42
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-10-16 16:42:25
+ * @LastEditTime: 2020-11-04 18:08:42
 -->
 <template>
   <div class="team-user-list">
@@ -68,6 +68,7 @@
       :team-id-prop="teamId"
       :teamParams="teamParamsNext"
       :teamStatus="status"
+      :teamTab="tab"
     />
   </div>
 </template>

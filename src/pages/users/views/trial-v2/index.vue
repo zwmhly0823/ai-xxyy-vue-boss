@@ -3,8 +3,8 @@
  * @version: 2.0.0
  * @Author: YangJiyong
  * @Date: 2020-06-16 16:27:14
- * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-09-09 23:38:25
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-11-04 18:12:58
 -->
 <template>
   <div class="user-list">
@@ -915,6 +915,10 @@
                         +scope.row.expressInfo.express_status === 0
                     "
                     >催发地址短信</el-dropdown-item
+                  >
+                  <!-- 班级2.0，课前准备阶段显示 teamTab=0 -->
+                  <el-dropdown-item command="5" v-if="teamTab === '0'"
+                    >发送加好友短信</el-dropdown-item
                   >
                 </el-dropdown-menu>
               </el-dropdown>
