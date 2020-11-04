@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-08-03 15:45:34
  * @LastEditors: liukun
- * @LastEditTime: 2020-08-22 19:50:56
+ * @LastEditTime: 2020-11-04 19:13:28
 -->
 <template>
   <!-- wrap_lk:给分页留了40高度 -->
@@ -117,9 +117,18 @@
         <el-table-column prop="approvalName" label="审核人" align="center">
         </el-table-column>
         <el-table-column label="操作" align="center">
-          <template slot-scope="scope" v-if="scope.row.status === '待审核'">
-            <el-button type="text" @click="handleEdit(scope.$index, scope.row)"
+          <template slot-scope="scope">
+            <el-button
+              type="text"
+              v-if="scope.row.status === '待审核'"
+              @click="handleEdit(scope.$index, scope.row)"
               >审核</el-button
+            >
+            <el-button
+              type="text"
+              v-if="scope.row.status === '审核驳回'"
+              @click="handleEdit_2(scope.$index, scope.row)"
+              >复审</el-button
             >
           </template>
         </el-table-column>
@@ -177,7 +186,7 @@ export default {
       // tabpans总量
       tabs: {
         全部: 'PENDING,DECLINE,COMPLETED',
-        待审核: 'PENDING',
+        待审核: 'PENDING,AIAUDIT',
         审核驳回: 'DECLINE',
         审核成功: 'COMPLETED'
       },
@@ -241,6 +250,20 @@ export default {
       this.approvingItem = item
       this.$refs.drawer_lk.drawer = true
     },
+    // 复审
+    async handleEdit_2(index, item) {
+      console.info('复审')
+      const { code } = await this.$http.Operating.submit_img_2(
+        item.flowId
+      ).catch((err) => {
+        console.error(err)
+        this.$message.error('复审失败')
+      })
+      if (code === 0) {
+        this.$message.success('该单审核通过')
+        this.getData()
+      }
+    },
     // 页容量变化
     handleSizeChange(val) {
       console.log(`每页 ${val} 条`)
@@ -252,7 +275,10 @@ export default {
       this.getData({ pageNum: val, pageSize: this.pageSize })
     },
     // 数据接口(传当前页,页容量 取总数据，总条目)
-    async getData({ pageNum = 1, pageSize = 10 } = {}) {
+    async getData({
+      pageNum = this.currentPage,
+      pageSize = this.pageSize
+    } = {}) {
       Object.assign(this.searchJson, { pageNum, pageSize }) // 放心page,size会覆盖原有
       const {
         code,
@@ -272,6 +298,7 @@ export default {
           item.ctime = item.ctime ? formatDate(+item.ctime) : '-'
           item.endTime = item.endTime !== '0' ? formatDate(+item.endTime) : '-'
           item.status = {
+            AIAUDIT: '待审核',
             PENDING: '待审核',
             COMPLETED: '审核通过',
             DECLINE: '审核驳回'
