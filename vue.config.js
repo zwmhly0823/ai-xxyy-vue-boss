@@ -10,6 +10,27 @@ const { NODE_ENV } = process.env
 const projectName = process.argv[3] || 'dashboard'
 const name = defaultSettings.title || '小熊美术BOSS'
 
+/**
+ * api 环境切换，默认 dev
+ */
+const env = 'dev' // dev, test, prod, live
+// graphql api
+let targetGrapqhlEnv = 'http://docker.meixiu.mobi:33401'
+// 后端api
+let targetApiEnv = 'https://dev.meixiu.mobi'
+// 测试环境
+if (env === 'test') {
+  targetGrapqhlEnv = 'http://docker.meixiu.mobi:43401'
+  targetApiEnv = 'https://test.meixiu.mobi'
+} else if (env === 'prod') {
+  // 预发布环境
+  targetGrapqhlEnv = 'http://docker.meixiu.mobi:53401'
+  targetApiEnv = 'https://tossprod.xiaoxiongmeishu.com'
+} else if (env === 'live') {
+  targetGrapqhlEnv = 'http://docker.meixiu.mobi:13401'
+  targetApiEnv = 'https://toss.xiaoxiongmeishu.com'
+}
+
 editOperation('构建')
 
 module.exports = {
@@ -56,9 +77,7 @@ module.exports = {
   devServer: {
     proxy: {
       '/api': {
-        // target: 'https://test.meixiu.mobi',
-        target: 'https://dev.meixiu.mobi',
-        // target: 'https://bossprod.xiaoxiongmeishu.com/',
+        target: targetApiEnv,
         changeOrigin: true,
         ws: true,
         secure: false,
@@ -68,8 +87,7 @@ module.exports = {
       },
       // 查询接口
       '/data': {
-        // target: 'https://test.meixiu.mobi',
-        target: 'https://dev.meixiu.mobi',
+        target: targetApiEnv,
         changeOrigin: true,
         ws: true,
         secure: false,
@@ -83,11 +101,12 @@ module.exports = {
         // release - 测试环境
         // target: 'http://docker.meixiu.mobi:43401',
         // dev - 开发环境
-        target: 'http://docker.meixiu.mobi:33401',
+        // target: 'http://docker.meixiu.mobi:33401',
         //  线上环境
         // target: 'http://docker.meixiu.mobi:13401',
         // product -预发布环境
         // target: 'http://docker.meixiu.mobi:53401',
+        target: targetGrapqhlEnv,
         changeOrigin: true,
         ws: true,
         secure: false,
@@ -97,7 +116,8 @@ module.exports = {
       },
       '/getStuRankingList': {
         // target: 'http://docker.meixiu.mobi:43401',
-        target: 'http://docker.meixiu.mobi:33401',
+        // target: 'http://docker.meixiu.mobi:33401',
+        target: targetGrapqhlEnv,
         changeOrigin: true,
         ws: true,
         secure: false,
