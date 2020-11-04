@@ -240,6 +240,18 @@ const routes = [
     },
     hidden: true,
     component: () => import('../views/studentTeam/views/teamDetail/index.vue')
+  },
+  {
+    path: '/verificationCode', // 验证码查询
+    name: 'verificationCode',
+    meta: {
+      title: '验证码查询',
+      keepAlive: false
+    },
+    component: () =>
+      import(
+        '../../operating/views/reviewManagement/components/verificationCode.vue'
+      )
   }
   /**
    * @descript 班级模块 >>>> end

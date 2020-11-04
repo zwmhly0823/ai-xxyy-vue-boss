@@ -261,6 +261,14 @@ if (staff.roleId === '19') {
             module
           }
         },
+        {
+          path: '/verificationCode',
+          name: 'verificationCode',
+          meta: {
+            title: '验证码查询',
+            module
+          }
+        },
         ...superOperatingRouter
       ]
     },
