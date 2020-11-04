@@ -106,8 +106,8 @@ export default {
         }
         this.$http.Base.getUserNumPhone(query).then((res) => {
           console.log(res, 'mobile')
-          if (res && res.data && res.data.UserSubjectStatisticsListEx) {
-            result = res.data.UserSubjectStatisticsListEx.map((item) => {
+          if (res && res.data && res.data.UserExtendsListEx) {
+            result = res.data.UserExtendsListEx.map((item) => {
               item.value = item.mobile
               return item
             })
@@ -135,11 +135,11 @@ export default {
         if (
           res &&
           res.data &&
-          res.data.UserSubjectStatisticsListEx &&
-          res.data.UserSubjectStatisticsListEx.length
+          res.data.UserExtendsListEx &&
+          res.data.UserExtendsListEx.length
         ) {
           this.$emit('result', {
-            uid: res.data.UserSubjectStatisticsListEx[0].u_id
+            uid: res.data.UserExtendsListEx[0].u_id
           })
         }
         setTimeout(() => {

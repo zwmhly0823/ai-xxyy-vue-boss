@@ -44,30 +44,30 @@ export default {
       }
 
       return this.$http.Base.getUserNumPhone(this.student_id).then((res) => {
-        console.log(res.data.UserSubjectStatisticsListEx.length)
+        console.log(res.data.UserExtendsListEx.length)
 
         if (
-          res.data.UserSubjectStatisticsListEx &&
-          res.data.UserSubjectStatisticsListEx.length === 1
+          res.data.UserExtendsListEx &&
+          res.data.UserExtendsListEx.length === 1
         ) {
           openBrowserTab(
-            `/${this.currentUrl}/#/details/${res.data.UserSubjectStatisticsListEx[0].u_id}`
+            `/${this.currentUrl}/#/details/${res.data.UserExtendsListEx[0].u_id}`
           )
           this.student_id = ''
         } else if (
-          res.data.UserSubjectStatisticsListEx &&
-          res.data.UserSubjectStatisticsListEx.length > 1 &&
+          res.data.UserExtendsListEx &&
+          res.data.UserExtendsListEx.length > 1 &&
           this.student_id.length < 11
         ) {
           const arrList = []
-          res.data.UserSubjectStatisticsListEx.map((item) => {
+          res.data.UserExtendsListEx.map((item) => {
             arrList.push(item.user_num)
           })
           const idx = arrList.indexOf(this.student_id)
           if (idx >= 0) {
             this.student_id = ''
             return openBrowserTab(
-              `/${this.currentUrl}/#/details/${res.data.UserSubjectStatisticsListEx[idx].u_id}`
+              `/${this.currentUrl}/#/details/${res.data.UserExtendsListEx[idx].u_id}`
             )
           } else {
             this.$message.error('暂无此学员')

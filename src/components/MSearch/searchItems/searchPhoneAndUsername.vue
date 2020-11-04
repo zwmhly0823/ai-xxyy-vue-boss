@@ -96,7 +96,7 @@ export default {
         .then((res) => {
           this.loading = false
           console.log(res)
-          this.dataList = res.data.UserSubjectStatisticsListEx
+          this.dataList = res.data.UserExtendsListEx
         })
         .catch(() => {
           this.loading = false

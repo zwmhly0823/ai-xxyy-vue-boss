@@ -29,12 +29,12 @@ export default {
             should: [
               {
                 wildcard: {
-                  mobile: `*${val}*`
+                  'mobile.keyword': `*${val}*`
                 }
               },
               {
                 wildcard: {
-                  user_num: `*${val}*`
+                  'user_num.keyword': `*${val}*`
                 }
               },
               {
@@ -55,7 +55,7 @@ export default {
     const sort = `{"id":"desc"}`
     return axios.post('/graphql/v1/toss', {
       query: `{
-        UserSubjectStatisticsListEx(query: ${JSON.stringify(
+        UserExtendsListEx(query: ${JSON.stringify(
           injectSubject(query)
         )}, sort: ${JSON.stringify(sort)}){
             id
