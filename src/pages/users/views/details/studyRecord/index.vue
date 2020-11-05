@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-08-25 11:40:19
  * @LastEditors: liukun
- * @LastEditTime: 2020-09-27 14:49:25
+ * @LastEditTime: 2020-11-05 19:10:46
 -->
 <template>
   <div>
@@ -265,16 +265,15 @@ export default {
         _data.forEach((item) => {
           // 课程计划时间
           item.ctime = item.ctime !== '0' ? formatData(item.ctime, 's') : '-'
+          if (!item.studentCompleteCourseLog) item.studentCompleteCourseLog = {}
           if (item.studentCompleteCourseLog) {
             // 参课时间
             if (
               item.studentCompleteCourseLog &&
               item.studentCompleteCourseLog.ctime
             ) {
-              item.studentCompleteCourseLog.ctime = formatData(
-                item.studentCompleteCourseLog.ctime,
-                's'
-              )
+              item.studentCompleteCourseLog.ctime =
+                formatData(item.studentCompleteCourseLog.ctime, 's') || '-'
             } else {
               item.studentCompleteCourseLog.ctime = '-'
             }
@@ -282,12 +281,11 @@ export default {
             // 完课时间
             if (
               item.studentCompleteCourseLog &&
-              item.studentCompleteCourseLog.complete_time !== '0'
+              item.studentCompleteCourseLog.complete_time
             ) {
-              item.studentCompleteCourseLog.complete_time = formatData(
-                item.studentCompleteCourseLog.complete_time,
-                's'
-              )
+              item.studentCompleteCourseLog.complete_time =
+                formatData(item.studentCompleteCourseLog.complete_time, 's') ||
+                '-'
             } else {
               item.studentCompleteCourseLog.complete_time = '-'
             }
