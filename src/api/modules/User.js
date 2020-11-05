@@ -51,7 +51,7 @@ export default {
     const q = JSON.stringify(query)
     return axios.post('/graphql/v1/toss', {
       query: `{
-        UserSubjectStatisticsList(query:${JSON.stringify(injectSubject(q))}){
+        UserExtendsList(query:${JSON.stringify(injectSubject(q))}){
           id
           mobile
           username

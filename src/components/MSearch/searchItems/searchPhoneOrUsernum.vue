@@ -181,8 +181,7 @@ export default {
 
       const sort = `{"id":"desc"}`
       // 搜索全部学员时，传 u_id
-      const exParams =
-        this.tablename === 'UserSubjectStatisticsList' ? 'u_id' : ''
+      const exParams = this.tablename === 'UserExtendsList' ? 'u_id' : ''
       axios
         .post('/graphql/v1/toss', {
           query: `{

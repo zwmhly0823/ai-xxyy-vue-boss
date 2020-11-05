@@ -17,7 +17,7 @@
                 type="2"
                 :extension="true"
                 user-num-key="user_num"
-                tablename="UserSubjectStatisticsList"
+                tablename="UserExtendsList"
                 @result="getSearchData('uid', arguments)"
               />
             </div>
