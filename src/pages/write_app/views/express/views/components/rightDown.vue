@@ -971,15 +971,20 @@ export default {
           if (item.term.product_type && item.term.product_type.length) {
             timeType.product_type = item.term.product_type.join(',')
           }
-          if (item.term.provincesCode) {
-            timeType.province = item.term.provincesCode
+          if (item.term.province) {
+            timeType.province = item.term.province.provincesCode
+            timeType.city = item.term.province.citysCode
+            timeType.area = item.term.province.areasCode
           }
-          if (item.term.citysCode) {
-            timeType.city = item.term.citysCode
-          }
-          if (item.term.areasCode) {
-            timeType.area = item.term.areasCode
-          }
+          // if (item.term.provincesCode) {
+          //   timeType.province = item.term.provincesCode
+          // }
+          // if (item.term.citysCode) {
+          //   timeType.city = item.term.citysCode
+          // }
+          // if (item.term.areasCode) {
+          //   timeType.area = item.term.areasCode
+          // }
           if (item.term.receipt_tel) {
             timeType.receipt_tel = item.term.receipt_tel
           }
@@ -1227,7 +1232,7 @@ export default {
       return dayjs.unix(time / 1000).format('MMDD' || '-')
     },
     handleRegtype(listItem) {
-      console.log(productTopicList, listItem.regtype)
+      // console.log(productTopicList, listItem.regtype)
       productTopicList.map((item) => {
         if (item.id === listItem.regtype) {
           listItem.regtype_text = item.name
