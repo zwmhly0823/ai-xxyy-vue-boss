@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-08-25 11:40:19
  * @LastEditors: liukun
- * @LastEditTime: 2020-09-12 19:00:06
+ * @LastEditTime: 2020-11-05 19:06:44
 -->
 <template>
   <div>
@@ -76,16 +76,11 @@
         <template slot-scope="scope">
           <div class="work-photo">
             <img
-              @click="enlarge(scope.row)"
               class="work-details"
-              :src="scope.row.task_image"
+              :src="scope.row.task_image + '?x-oss-process=image/resize,l_100'"
             />
             <!-- 如果有视频，显示播放按钮 -->
-            <i
-              class="el-icon-video-play"
-              @click="enlarge(scope.row)"
-              v-if="scope.row.task_video"
-            ></i>
+            <i class="el-icon-video-play" v-if="scope.row.task_video"></i>
             <el-button
               round
               v-if="!scope.row.task_video"

@@ -2,7 +2,7 @@
  * @Descripttion: 
  * @version: 
  * @LastEditors: liukun
- * @LastEditTime: 2020-10-20 15:43:16
+ * @LastEditTime: 2020-11-05 19:51:08
  -->
 <template>
   <div class="adjustModule">
@@ -72,6 +72,7 @@
             :class="$style.order100"
           ></el-input>
         </el-form-item>
+        <!-- isAlipay -->
         <template v-if="isAlipay">
           <el-form-item label="支付宝账号：" prop="alipayAccount">
             <div class="alipayAccount-name">
@@ -1099,7 +1100,7 @@ export default {
             productMsg: this.selectOrder.relationOrder.split('(^_^)')[1], // 商品信息(关联订单取)
             regType: this.refundForm.businessType, // 业务类型
             channel: this.refundForm.payChannel, // 支付渠道
-            payeeName: this.refundForm.accountName, // 收款人姓名
+            payeeName: this.refundForm.accountName, // 支付宝收款人姓名
             payeeAccount: this.refundForm.alipayAccount, // 支付宝账号
             orderFee: this.refundForm.orderAmount, // 订单金额
             residueFee: this.refundForm.residueFee, // 剩余金额
