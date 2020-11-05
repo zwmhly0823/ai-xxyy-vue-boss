@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-08-03 18:21:57
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-15 19:57:58
+ * @LastEditTime: 2020-11-04 20:54:18
  */
 import { injectSubject } from '@/utils/index'
 import axios from '../axiosConfig'
@@ -235,6 +235,8 @@ export default {
         un_added_group_count
         today_track_count
         tomorrow_track_count
+        un_added_wechat_uids
+        un_added_group_uids
       `
     }
     if (type === '1') {

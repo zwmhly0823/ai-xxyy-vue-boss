@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-08-05 20:17:42
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-11-04 18:08:42
+ * @LastEditTime: 2020-11-04 21:58:17
 -->
 <template>
   <div class="team-user-list">
@@ -140,7 +140,7 @@ export default {
     this.userinfo = JSON.parse(localStorage.getItem('teacher'))
     this.teamParamsNext = JSON.parse(JSON.stringify(this.teamParams))
     // 获取筛选项列表
-    this.getGroup()
+    // this.getGroup()
   },
   mounted() {
     // 获取高
@@ -148,38 +148,38 @@ export default {
     this.propHeight = this.$refs.tableInner.offsetTop + 25
   },
   methods: {
-    getGroup() {
-      Promise.all([
-        this.getAllFollowGroup('PERSONAL'),
-        this.getAllFollowGroup('DEPARTMENT')
-      ])
-        .then((res) => {
-          this.groupList = []
-          res.forEach((item) => {
-            item.forEach((child) => {
-              this.groupList.push({ id: child.expression, text: child.name })
-            })
-          })
-        })
-        .catch((error) => {
-          console.log(error)
-        })
-    },
-    getAllFollowGroup(type) {
-      return new Promise((resolve, reject) => {
-        return this.$http.User.getAllFollowGroup(this.userinfo.id, type)
-          .then((res) => {
-            if (res?.payload) {
-              resolve(res.payload)
-            } else {
-              resolve([])
-            }
-          })
-          .catch((error) => {
-            reject(error)
-          })
-      })
-    },
+    // getGroup() {
+    //   Promise.all([
+    //     this.getAllFollowGroup('PERSONAL'),
+    //     this.getAllFollowGroup('DEPARTMENT')
+    //   ])
+    //     .then((res) => {
+    //       this.groupList = []
+    //       res.forEach((item) => {
+    //         item.forEach((child) => {
+    //           this.groupList.push({ id: child.expression, text: child.name })
+    //         })
+    //       })
+    //     })
+    //     .catch((error) => {
+    //       console.log(error)
+    //     })
+    // },
+    // getAllFollowGroup(type) {
+    //   return new Promise((resolve, reject) => {
+    //     return this.$http.User.getAllFollowGroup(this.userinfo.id, type)
+    //       .then((res) => {
+    //         if (res?.payload) {
+    //           resolve(res.payload)
+    //         } else {
+    //           resolve([])
+    //         }
+    //       })
+    //       .catch((error) => {
+    //         reject(error)
+    //       })
+    //   })
+    // },
     filterParamsChange(val) {
       // 切换上面的筛选项时清空下面的输入框筛选
       this.teamParamsNext = JSON.parse(JSON.stringify(val))

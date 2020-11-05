@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-08-04 20:53:55
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-15 20:08:22
+ * @LastEditTime: 2020-11-04 22:34:29
  * 待上课只有 课前准备和本班订单，
  上课中和已完课有三个-课前准备、上课情况、本班订单
 -->
@@ -355,8 +355,10 @@ export default {
         },
         {
           name: '待加好友',
-          value: this.statistics.un_added_wechat_count || 0,
-          filter: { added_wechat: 0 }
+          // value: this.statistics.un_added_wechat_count || 0,
+          // filter: { added_wechat: 0 }
+          value: this.statistics.un_added_wechat_uids?.length || 0,
+          filter: { id: this.statistics.un_added_wechat_uids }
         },
         {
           name: '待绑定公众号',
@@ -375,8 +377,10 @@ export default {
         },
         {
           name: '待进群',
-          value: this.statistics.un_added_group_count || 0,
-          filter: { added_group: 0 }
+          // value: this.statistics.un_added_group_count || 0,
+          // filter: { added_group: 0 }
+          value: this.statistics.un_added_group_uids?.length || 0,
+          filter: { id: this.statistics.un_added_group_uids }
         },
         {
           name: '待登陆APP',
