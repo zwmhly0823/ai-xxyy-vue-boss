@@ -361,6 +361,10 @@ export default {
         {
           value: '4',
           label: '补差半年至两年'
+        },
+        {
+          value: '5',
+          label: '补差半年至一年'
         }
       ],
       tableData: [],
