@@ -30,6 +30,7 @@
         :teamClass="teamClass"
         :productName="showItem.productName"
         :regType="showItem.regType"
+        :channel="showItem.channel"
       />
     </div>
     <!-- v-if="!teacherId" TOSS -->
@@ -193,6 +194,7 @@ export default {
         teamDetail: 'last_team_id',
         moreVersion: 'product_version.keyword',
         consigneePhone: 'receipt_tel',
+        channel: 'pay_channel',
         timeData: [
           { text: '购买时间', value: 'ctime' },
           { text: '揽收时间', value: 'delivery_collect_time' },

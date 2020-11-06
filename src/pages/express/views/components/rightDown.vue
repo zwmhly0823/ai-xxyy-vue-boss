@@ -1102,6 +1102,9 @@ export default {
           if (item.terms.product_type) {
             timeType.product_type = `${item.terms.product_type}`
           }
+          if (item.terms.pay_channel) {
+            timeType.pay_channel = `${item.terms.pay_channel}`
+          }
         }
         if (item.range) {
           const { range } = item
