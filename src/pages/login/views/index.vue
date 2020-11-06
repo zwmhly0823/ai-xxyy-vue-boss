@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-03-13 15:24:11
  * @LastEditors: Shentong
- * @LastEditTime: 2020-11-03 15:15:44
+ * @LastEditTime: 2020-11-06 15:34:57
  -->
 <template>
   <div id="login" class="login-container">
@@ -60,6 +60,7 @@
             :type="passwordType"
             v-model.trim="pwdLoginForm.pwd"
             placeholder="密码"
+            maxlength="16"
             name="password"
             auto-complete="on"
             @focus="checkStart"
@@ -287,7 +288,12 @@ export default {
           { required: true, trigger: 'change', validator: validateUsername }
         ],
         pwd: [
-          { required: true, trigger: 'change', validator: validatePassword }
+          {
+            required: true,
+            max: 16,
+            trigger: 'change',
+            validator: validatePassword
+          }
         ]
       },
       codeLoginRules: {

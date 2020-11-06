@@ -4,7 +4,7 @@
  * @Date: 2020-03-13 15:13:34
  * @Description: topbar 顶部功能区
  * @LastEditors: Shentong
- * @LastEditTime: 2020-11-03 15:02:03
+ * @LastEditTime: 2020-11-06 15:35:52
  -->
 <template>
   <div class="navbar" :class="{ prod: isProd }">
@@ -123,7 +123,13 @@
     >
       <el-form ref="updatePwd" :model="updatePwd" :rules="updatePwdRules">
         <el-form-item label="新密码" label-width="15%" prop="newPassword">
-          <el-input size="medium" v-model="updatePwd.newPassword" />
+          <el-input
+            size="medium"
+            v-model.trim="updatePwd.newPassword"
+            @focus="checkStart"
+            @blur="checkEnd"
+            maxlength="16"
+          />
         </el-form-item>
         <el-form-item>
           <div class="operate-btn">
@@ -243,6 +249,19 @@ export default {
     },
     replacePassword() {
       this.dialogVisible = true
+    },
+    // 禁止输入中文
+    checkStart() {
+      this.checkInterval = setInterval(this.checkChinese, 100)
+    },
+    checkEnd() {
+      clearInterval(this.checkInterval)
+    },
+    checkChinese() {
+      // 禁止输入中文
+      const test = /[\u4e00-\u9fa5]/gi
+      // /[^0-9A-Za-z]/g
+      this.updatePwd.newPassword = this.updatePwd.newPassword.replace(test, '')
     },
     handleSureReplacePassword(formName) {
       this.$refs[formName].validate((valid) => {
