@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-05-06 11:18:37
  * @LastEditors: Shentong
- * @LastEditTime: 2020-05-27 22:21:30
+ * @LastEditTime: 2020-11-02 20:26:25
  */
 
 /**
@@ -56,4 +56,14 @@ export function calculateWD(currentLesson) {
     return ''
   }
   return 'W' + w + 'D' + d
+}
+/**
+ * @description 校验设置密码
+ * @static 至少包含大小写字母、数字、特殊字符大于8个字符
+ */
+
+export function validatePwd(pwd = '') {
+  return /^(?![A-Za-z]+$)(?![A-Z\d]+$)(?![A-Z\W]+$)(?![a-z\d]+$)(?![a-z\W]+$)(?![\d\W]+$)\S{8,}$/.test(
+    pwd
+  )
 }

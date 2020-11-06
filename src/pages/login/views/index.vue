@@ -3,8 +3,8 @@
  * @version:
  * @Author: Shentong
  * @Date: 2020-03-13 15:24:11
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-10-30 17:21:26
+ * @LastEditors: Shentong
+ * @LastEditTime: 2020-11-06 17:48:07
  -->
 <template>
   <div id="login" class="login-container">
@@ -42,7 +42,7 @@
             <i class="el-icon-user-solid"></i>
           </span>
           <el-input
-            v-model="pwdLoginForm.userName"
+            v-model.trim="pwdLoginForm.userName"
             placeholder="请输入用户名"
             name="userName"
             type="text"
@@ -58,8 +58,9 @@
           </span>
           <el-input
             :type="passwordType"
-            v-model="pwdLoginForm.pwd"
+            v-model.trim="pwdLoginForm.pwd"
             placeholder="密码"
+            maxlength="16"
             name="password"
             auto-complete="on"
             @focus="checkStart"
@@ -94,14 +95,15 @@
             <i class="el-icon-mobile-phone"></i>
           </span>
           <el-input
-            v-model="codeLoginForm.phone"
+            v-model.trim="codeLoginForm.phone"
             placeholder="请输入手机号"
             name="phone"
             type="text"
             auto-complete="on"
             maxlength="11"
-            @focus="checkStart"
-            @blur="checkEnd"
+            @input="
+              codeLoginForm.phone = codeLoginForm.phone.replace(/[^\d]/g, '')
+            "
           />
         </el-form-item>
         <div class="code-form-outer">
@@ -110,7 +112,7 @@
               <i class="el-icon-lock"></i>
             </span>
             <el-input
-              v-model="codeLoginForm.code"
+              v-model.trim="codeLoginForm.code"
               placeholder="验证码"
               name="password"
               auto-complete="on"
@@ -145,13 +147,55 @@
           >登录</el-button
         >
       </el-form>
-      <!-- 验证码登录 -->
+      <!-- 验证码登录 end -->
+      <!-- 修改用户密码 dialog -->
+      <el-dialog
+        title="修改密码"
+        :visible.sync="dialogVisible"
+        width="600px"
+        top="22vh"
+        :append-to-body="true"
+      >
+        <span class="update-pwd_tip">
+          <span style="margin-right:5px">⚠️</span>
+          系统检测到您当前账号密码安全等级较低，请修改密码后重新登录</span
+        >
+        <el-form
+          ref="updatePwd"
+          :model="updatePwd"
+          :rules="updatePwdRules"
+          style="margin-top:10px;"
+        >
+          <el-form-item label="新密码" label-width="15%" prop="newPassword">
+            <el-input size="medium" v-model="updatePwd.newPassword" />
+          </el-form-item>
+          <el-form-item>
+            <div class="operate-btn">
+              <!-- <el-button
+                style="width:100px;"
+                size="medium"
+                @click="dialogVisible = false"
+                >取 消</el-button
+              > -->
+              <el-button
+                style="width:100px;"
+                size="medium"
+                type="primary"
+                @click="handleSureReplacePassword('updatePwd')"
+                >确 认</el-button
+              >
+            </div>
+          </el-form-item>
+        </el-form>
+      </el-dialog>
     </div>
   </div>
 </template>
 <script>
 import { Loading } from 'element-ui'
 import { setToken } from '@/utils/auth'
+import { validatePwd } from '@/utils/validate'
+import { isToss } from '@/utils/index'
 
 const valid = {
   isPhoneNum(str) {
@@ -199,7 +243,31 @@ export default {
         callback()
       }
     }
+    // 修改密码验证
+    const validatePass = (rule, value, callback) => {
+      console.log(validatePwd(value))
+      if (value === '') {
+        callback(new Error('请输入新密码'))
+      } else if (!validatePwd(value)) {
+        callback(
+          new Error('密码至少包含大小写字母、数字、特殊字符大于8个字符!')
+        )
+      } else {
+        callback()
+      }
+    }
     return {
+      userInfo: null,
+      updatePwdRules: {
+        newPassword: [
+          { required: true, validator: validatePass, trigger: 'blur' },
+          { min: 8, message: '长度在8个字符以上', trigger: 'blur' }
+        ]
+      },
+      updatePwd: {
+        newPassword: ''
+      },
+      dialogVisible: false,
       cutDown: 60,
       timer: null,
       tabFirstActive: true,
@@ -220,7 +288,12 @@ export default {
           { required: true, trigger: 'change', validator: validateUsername }
         ],
         pwd: [
-          { required: true, trigger: 'change', validator: validatePassword }
+          {
+            required: true,
+            max: 16,
+            trigger: 'change',
+            validator: validatePassword
+          }
         ]
       },
       codeLoginRules: {
@@ -232,6 +305,13 @@ export default {
     }
   },
   computed: {},
+  watch: {
+    dialogVisible(val) {
+      if (!val) {
+        this.updatePwd.newPassword = ''
+      }
+    }
+  },
   methods: {
     // 切换登录方式点击事件
     loginTypeHandle(loginType) {
@@ -263,19 +343,13 @@ export default {
       clearInterval(this.checkInterval)
     },
     checkChinese() {
-      this.codeLoginForm.code = this.codeLoginForm.code.replace(
-        /[^0-9A-Za-z]/g,
-        ''
-      )
-      this.pwdLoginForm.userName = this.pwdLoginForm.userName.replace(
-        /[^0-9A-Za-z]/g,
-        ''
-      )
-      this.pwdLoginForm.pwd = this.pwdLoginForm.pwd.replace(/[^0-9A-Za-z]/g, '')
-      this.codeLoginForm.phone = this.codeLoginForm.phone.replace(
-        /[^0-9A-Za-z]/g,
-        ''
-      )
+      // 禁止输入中文
+      const test = /[\u4e00-\u9fa5]/gi
+      // /[^0-9A-Za-z]/g
+      this.codeLoginForm.code = this.codeLoginForm.code.replace(test, '')
+      this.pwdLoginForm.userName = this.pwdLoginForm.userName.replace(test, '')
+      this.pwdLoginForm.pwd = this.pwdLoginForm.pwd.replace(test, '')
+      this.codeLoginForm.phone = this.codeLoginForm.phone.replace(test, '')
     },
     // 通过密码登录
     async loginByPwd() {
@@ -366,12 +440,55 @@ export default {
           // sessionStorage.setItem('multiTabbed', JSON.stringify(tabs))
           // sessionStorage.setItem('currentMultiTab', `${path}#/`)
 
-          location.href = `${path}#/`
+          // 检测用户登录的密码是否合法 TODO:
+          if (formName === 'pwdLoginForm') {
+            if (validatePwd(this.pwdLoginForm.pwd)) {
+              location.href = `${path}#/`
+            } else {
+              this.getUserInfo()
+              this.dialogVisible = true
+            }
+          } else {
+            location.href = `${path}#/`
+          }
         }
 
         // 以服务的方式调用的 Loading 需要异步关闭
         this.$nextTick(() => loadingInstance.close())
       }
+    },
+    async handleSureReplacePassword(formName) {
+      // 校验回调返回的是Promise
+      const validatePwd = await this.judegeValidate(formName).catch((err) =>
+        console.log(err)
+      )
+      if (validatePwd) {
+        const {
+          userInfo: { id },
+          updatePwd: { newPassword }
+        } = this
+
+        try {
+          const res = await this.$http.Login.resetPwd(id, newPassword)
+          if (res.code === 0) {
+            this.$message.success('密码修改成功～')
+            this.pwdLoginForm.pwd = ''
+            this.dialogVisible = false
+          }
+        } catch (error) {
+          console.log(error)
+        }
+      }
+    },
+    getUserInfo() {
+      let itemType = 'teacher'
+      const teacherId = isToss()
+
+      if (!teacherId) itemType = 'staff'
+
+      const userInfo = localStorage.getItem(itemType)
+
+      this.userInfo = JSON.parse(userInfo)
     },
     resetForm(formName) {
       this.passwordType = 'password'
@@ -439,11 +556,21 @@ $bg: #2d3a4b;
 $dark_gray: #889aa4;
 $light_gray: #eee;
 
+.operate-btn {
+  display: flex;
+  justify-content: flex-end;
+}
+.update-pwd_tip {
+  color: #e6a23c;
+  margin-left: 30px;
+  line-height: 30px;
+}
 .login-container {
   min-height: 100%;
   width: 100%;
   background-color: $bg;
   overflow: hidden;
+
   .form-container {
     position: relative;
     width: 520px;
