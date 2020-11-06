@@ -169,7 +169,8 @@ export default {
       // 学员列表
       tableData: [],
       // 用户状态列表
-      statusList: []
+      statusList: [],
+      defaultHead: 'https://msb-ai.meixiu.mobi/ai-pm/static/touxiang.png'
     }
   },
   created() {
@@ -250,6 +251,11 @@ export default {
               // 性别 0/默认 1/男 2/女  3/保密
               const sex = ele.user.sex
               ele.sex = USER_SEX[sex]
+
+              // 默认头像
+              if (!ele.user.head || ele.user.head === 'undefined') {
+                ele.user.head = this.defaultHead
+              }
 
               // 年龄转换
               ele.user.birthday !== '0'
