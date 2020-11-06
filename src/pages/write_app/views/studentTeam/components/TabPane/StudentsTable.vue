@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 14:19:58
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-10-26 21:29:19
+ * @LastEditTime: 2020-11-06 16:26:59
  -->
 <template>
   <div class="dataStyle">
@@ -102,8 +102,10 @@
             <span>{{ scope.row.statistics.open_app }}</span>
           </div>
           <div class="haveclass-content">
-            解锁:
-            <span>{{ scope.row.statistics.start_course }}</span>
+            <!-- 解锁: -->
+            <!-- <span>{{ scope.row.statistics.start_course }}</span> -->
+            参课:
+            <span>{{ scope.row.statistics.join_course }}</span>
           </div>
           <div class="haveclass-content">
             完课:
