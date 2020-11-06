@@ -2,8 +2,8 @@
  * @Descripttion:
  * @Author: songyanan
  * @Date: 2020-06-13 10:35:39
- * @LastEditors: songyanan
- * @LastEditTime: 2020-06-19 16:34:00
+ * @LastEditors: Shentong
+ * @LastEditTime: 2020-11-06 18:00:25
  -->
 <template>
   <div class="system-container">
@@ -138,7 +138,7 @@ export default {
       searchQuery: '',
       departmentQuery: '',
       resetPassword: false,
-      defaultPassword: 'msb123456',
+      defaultPassword: 'MsbNB123',
       resetCurrentName: '',
       resetCurrentId: '',
       showTip: false,
