@@ -106,7 +106,7 @@ export default {
        * 王新建 - 18701139906
        */
       const { mobile = '' } = JSON.parse(localStorage.getItem('staff'))
-      const authData = ['18701139906', '18618194642']
+      const authData = ['18701139906', '18618194642', '15903264858']
       return authData.includes(mobile)
     }
   },
