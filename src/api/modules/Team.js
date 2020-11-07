@@ -7,7 +7,7 @@
  * @Description: 班级
  */
 import axios from '../axiosConfig'
-// import newAxios from '../axios.js'
+import { injectSubject } from '@/utils'
 
 export default {
   // 加好友进群 新接口  体验课
@@ -562,7 +562,9 @@ export default {
   getTrialCourseList(query = '', size = 20) {
     return axios.post('/graphql/v1/toss', {
       query: `{
-        StudentTrialCourseList(query: ${JSON.stringify(query)}, size: ${size}) {
+        StudentTrialCourseList(query: ${JSON.stringify(
+          injectSubject(query)
+        )}, size: ${size}) {
           student_id
           team_id
           order_no

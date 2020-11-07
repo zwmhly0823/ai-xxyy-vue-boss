@@ -7,7 +7,7 @@
  * @Description: 班级
  */
 import axios from '../../axiosConfig'
-import { getAppSubjectCode } from '@/utils/index'
+import { getAppSubjectCode, injectSubject } from '@/utils/index'
 const subject = getAppSubjectCode()
 
 export default {
@@ -703,7 +703,9 @@ export default {
   getTrialCourseList(query = '', size = 20) {
     return axios.post('/graphql/v1/toss', {
       query: `{
-        StudentTrialCourseList(query: ${JSON.stringify(query)}, size: ${size}) {
+        StudentTrialCourseList(query: ${JSON.stringify(
+          injectSubject(query)
+        )}, size: ${size}) {
           student_id
           team_id
           order_no
