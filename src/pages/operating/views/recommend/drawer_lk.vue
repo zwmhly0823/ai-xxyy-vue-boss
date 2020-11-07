@@ -3,8 +3,8 @@
  * @version: 1.0.0
  * @Author: liukun
  * @Date: 2020-07-20 16:37:49
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-11-02 12:17:17
+ * @LastEditors: liukun
+ * @LastEditTime: 2020-11-04 16:46:43
 --><template>
   <el-drawer :visible.sync="drawer" size="40%" :destroy-on-close="true">
     <template v-slot:title>
@@ -145,7 +145,7 @@ export default {
         this.$alert('当前页审批已全部完成', '辛苦啦', {
           callback: () => {
             this.drawer = false
-            this.cr.getData({ pageSize: this.cr.pageSize })
+            this.cr.getData()
             // 功能达成;副作用页码不响应,因为每次拉新都选第1页数据
             // 原因是每次审核是以页为单位,审完1页才接口更新总量数据
           }

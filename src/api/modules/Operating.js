@@ -3,8 +3,8 @@
  * @version:
  * @Author: Shentong
  * @Date: 2020-03-16 19:46:39
- * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-10-27 20:46:08
+ * @LastEditors: liukun
+ * @LastEditTime: 2020-11-04 17:54:42
  */
 import axios from '../axiosConfig'
 import { injectSubject, getAppSubjectCode } from '@/utils/index'
@@ -535,6 +535,10 @@ export default {
     return axios.post(
       `/api/b/v1/backend/userflow/complete?id=${parmas.id}&isAgree=${parmas.isAgree}&remark=${parmas.remark}`
     )
+  },
+  // 提交复审
+  submit_img_2(parmas) {
+    return axios.post(`/api/b/v1/backend/userflow/reComplete?id=${parmas}`)
   },
   // 新建活动编辑活动保存
   saveAndUpdatePromotions(params) {
