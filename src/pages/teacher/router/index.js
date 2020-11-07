@@ -1,7 +1,7 @@
 /*
  * @Date: 2020-03-13 15:20:21
- * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-08-27 17:46:31
+ * @LastEditors: Shentong
+ * @LastEditTime: 2020-11-07 20:03:59
  * @FilePath: /ai-app-vue-toss/src/pages/studentTeam/router/index.js
  */
 import Vue from 'vue'
@@ -77,6 +77,16 @@ const routes = [
       keepAlive: false
     },
     component: () => import('../views/workHandover/components/partTeacher.vue')
+  },
+  {
+    path: '/loginRecord',
+    name: 'loginRecord',
+    meta: {
+      title: '登录',
+      icon: 'el-icon-s-custom',
+      keepAlive: false
+    },
+    component: () => import('../views/loginRecord/index.vue')
   }
 ]
 
