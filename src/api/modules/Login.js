@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-03-16 19:46:39
  * @LastEditors: Shentong
- * @LastEditTime: 2020-11-07 19:37:49
+ * @LastEditTime: 2020-11-09 12:01:29
  */
 import axios from '../axiosConfig'
 
@@ -39,7 +39,7 @@ export default {
    * */
   getLoginRecord(params) {
     return axios.get(
-      `/api/t/v1/operatelog/getLog?uid=${params.uid}&type=${params.type}&page=${params.page}`
+      `/api/t/v1/operatelog/getLog?uid=${params.uid}&type=${params.type}&page=${params.page}&pagesize=${params.size}`
     )
   }
 }

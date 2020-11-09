@@ -4,12 +4,12 @@
  * @Author: Shentong
  * @Date: 2020-11-07 20:02:59
  * @LastEditors: Shentong
- * @LastEditTime: 2020-11-07 20:16:03
+ * @LastEditTime: 2020-11-09 13:49:16
 -->
 <template>
   <div class="login-record app-main">
     <div class="record-contriner">
-      <div ref="tbC">
+      <div ref="tbC" style="width:100%;">
         <ele-table
           :tableHeight="tableHeight"
           :tableSize="'small'"
@@ -23,9 +23,23 @@
           class="mytable add-first-cell-bg"
         >
           <el-table-column
-            label="结课时间"
-            min-width="120"
-            prop="end_course_day"
+            label="账号名称"
+            prop="loginName"
+            align="center"
+          ></el-table-column>
+          <el-table-column
+            label="操作类型"
+            prop="operateType"
+            align="center"
+          ></el-table-column>
+          <el-table-column
+            label="操作时间"
+            prop="ctime"
+            align="center"
+          ></el-table-column>
+          <el-table-column
+            label="操作的信息"
+            prop="remark"
             align="center"
           ></el-table-column>
         </ele-table>
@@ -35,6 +49,8 @@
 </template>
 <script>
 import EleTable from '@/components/Table/EleTable'
+import { LOGINTYPE } from '@/utils/enums'
+import { formatData, isToss } from '@/utils/index'
 export default {
   data() {
     return {
@@ -44,8 +60,8 @@ export default {
       tableQuery: {
         size: 20,
         loading: false,
-        uid: 1,
-        type: 1,
+        uid: '',
+        type: 'TOSS',
         page: 1
       }
     }
@@ -53,14 +69,43 @@ export default {
   components: {
     EleTable
   },
+  created() {
+    const teacherId = isToss()
+    let itemType = 'teacher'
+    if (!teacherId) {
+      itemType = 'staff'
+      this.tableQuery.type = 'BOSS'
+    }
+    const userInfo = localStorage.getItem(itemType)
+
+    this.tableQuery.uid = JSON.parse(userInfo).id
+    this.getLoginRecord()
+  },
   mounted() {
     this.calcTableHeight()
   },
   methods: {
     async getLoginRecord() {
-      const recordList = await this.$http.Login.getLoginRecord(this.params)
-      this.totalElements = +recordList.totalElements || 0
-      console.log('recordList', recordList)
+      /**
+       *
+       * @param operateType: "LOGIN": 登录/ "ADD"：新增员工：
+       */
+      const {
+        payload: { content = [], totalElements = 0 }
+      } = await this.$http.Login.getLoginRecord(this.tableQuery)
+
+      this.pakageListData(content)
+
+      this.recordList = content
+      this.totalElements = +totalElements
+    },
+    pakageListData(list) {
+      list.forEach((item) => {
+        const { ctime = null, operateType = 'LOGIN' } = item
+
+        item.ctime = +ctime ? formatData(ctime, 'm') : ''
+        item.operateType = LOGINTYPE[operateType] || ''
+      })
     },
     /**
      * @description 分页 回调事件
