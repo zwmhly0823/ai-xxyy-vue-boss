@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-03-16 14:19:58
  * @LastEditors: Shentong
- * @LastEditTime: 2020-09-16 14:48:31
+ * @LastEditTime: 2020-11-09 14:50:06
  -->
 <template>
   <div>
@@ -872,6 +872,9 @@ export default {
             }
 
             item.userExtends = userExtends
+            if (item.orderInfo && item.orderInfo.buytime) {
+              item.buytime = item.orderInfo.buytime
+            }
             item.buytime = item.buytime ? timestamp(item.buytime, 6) : ''
             item.added_wechat_time = timestamp(item.utime, 6)
             item.added_group_time = timestamp(item.utime, 6)
