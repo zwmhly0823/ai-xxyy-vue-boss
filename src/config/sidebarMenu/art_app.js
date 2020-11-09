@@ -3,8 +3,8 @@
  * @version: 1.0.0
  * @Author: YangJiyong
  * @Date: 2020-08-19 21:14:08
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-11-04 14:55:02
+ * @LastEditors: Shentong
+ * @LastEditTime: 2020-11-09 21:53:13
  */
 import { removeToken } from '@/utils/auth'
 import { baseUrl } from '@/utils/index'
@@ -675,6 +675,14 @@ if (staff.roleId === '19') {
           name: 'partTimeTeacher',
           meta: {
             title: '兼职老师交接',
+            module: 'teacher'
+          }
+        },
+        {
+          path: '/loginRecord',
+          name: 'loginRecord',
+          meta: {
+            title: '操作日志',
             module: 'teacher'
           }
         }

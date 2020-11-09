@@ -176,3 +176,12 @@ export const COURSECATEGORY = (course) => {
   }
   return TYPE[`${course}`] || ''
 }
+
+/**
+ * @description operateType
+ */
+export const LOGINTYPE = {
+  LOGIN: '登录',
+  ADD: '新增账号',
+  RESET: '重置密码'
+}
