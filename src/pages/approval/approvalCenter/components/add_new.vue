@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-07-20 16:37:49
  * @LastEditors: liukun
- * @LastEditTime: 2020-09-21 22:09:26
+ * @LastEditTime: 2020-11-09 20:58:09
 --><template>
   <el-dialog title="新建跟进记录" :visible.sync="dialogFormVisible" width="50%">
     <el-form
@@ -77,7 +77,7 @@ export default {
       // form
       form: {
         uid: 0,
-        teacherId: 0,
+        cid: 0,
         systemType: 'BOSS',
         pointType: '',
         contactType: '',
@@ -155,7 +155,7 @@ export default {
   mounted() {
     this.getTags()
     const storage1 = JSON.parse(localStorage.getItem('staff'))
-    this.form.teacherId = storage1.id
+    this.form.cid = storage1.id
   }
 }
 </script>
