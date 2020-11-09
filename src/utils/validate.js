@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-05-06 11:18:37
  * @LastEditors: Shentong
- * @LastEditTime: 2020-11-02 20:26:25
+ * @LastEditTime: 2020-11-09 15:10:28
  */
 
 /**
@@ -60,6 +60,7 @@ export function calculateWD(currentLesson) {
 /**
  * @description 校验设置密码
  * @static 至少包含大小写字母、数字、特殊字符大于8个字符
+ * @example 必须包含一个大写，一个小写字母，一个数字，一个特殊字符，且长度为8到16位（/^.*(?=.{6,})(?=.*\d)(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%^&*? ]).*$/）
  */
 
 export function validatePwd(pwd = '') {
