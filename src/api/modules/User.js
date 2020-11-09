@@ -1108,6 +1108,7 @@ export default {
             period_name
             period
             status
+            subject
           }
         }
       }`
