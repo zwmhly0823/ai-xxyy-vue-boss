@@ -82,7 +82,7 @@ const routes = [
     path: '/loginRecord',
     name: 'loginRecord',
     meta: {
-      title: '登录记录',
+      title: '操作日志',
       icon: 'el-icon-s-custom',
       keepAlive: false
     },

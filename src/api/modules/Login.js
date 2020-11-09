@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-03-16 19:46:39
  * @LastEditors: Shentong
- * @LastEditTime: 2020-11-09 12:01:29
+ * @LastEditTime: 2020-11-09 21:53:20
  */
 import axios from '../axiosConfig'
 
@@ -35,7 +35,7 @@ export default {
     return axios.put(`/api/b/v1/staff/resetPwd?staffId=${staffId}&pwd=${pwd}`)
   },
   /**
-   * 查找登录记录
+   * 查找操作日志
    * */
   getLoginRecord(params) {
     return axios.get(

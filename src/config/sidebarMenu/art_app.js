@@ -4,7 +4,7 @@
  * @Author: YangJiyong
  * @Date: 2020-08-19 21:14:08
  * @LastEditors: Shentong
- * @LastEditTime: 2020-11-09 11:44:23
+ * @LastEditTime: 2020-11-09 21:53:13
  */
 import { removeToken } from '@/utils/auth'
 import { baseUrl } from '@/utils/index'
@@ -682,7 +682,7 @@ if (staff.roleId === '19') {
           path: '/loginRecord',
           name: 'loginRecord',
           meta: {
-            title: '登录记录',
+            title: '操作日志',
             module: 'teacher'
           }
         }
