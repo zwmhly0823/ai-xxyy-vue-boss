@@ -3,8 +3,8 @@
  * @version: 1.0.0
  * @Author: liukun
  * @Date: 2020-04-25 17:10:01
- * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-09-11 15:37:59
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-11-10 16:08:15
  -->
 <template>
   <div>
@@ -145,9 +145,10 @@ export default {
           return
         }
         const params = {
-          'transaction_id.like': {
-            'transaction_id.keyword': `*${this.value}*`
-          },
+          // 'transaction_id.like': {
+          //   'transaction_id.keyword': `*${this.value}*`
+          // },
+          transaction_id: this.value,
           status: 2,
           type: 1
         }
