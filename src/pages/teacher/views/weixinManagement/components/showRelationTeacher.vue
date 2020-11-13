@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-04-15 16:56:59
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-11-13 20:10:58
+ * @LastEditTime: 2020-11-13 20:14:01
  -->
 <template>
   <div>
@@ -101,22 +101,23 @@ export default {
     handleChange(value) {
       console.log(value)
       console.log(Object.values(value))
-      switch (value && value.length) {
-        case 1:
-          this.ruleForm.associatedTeacher = value[0]
-          break
-        case 2:
-          this.ruleForm.associatedTeacher = value[1]
-          break
-        case 3:
-          this.ruleForm.associatedTeacher = value[2]
-          break
-        case 4:
-          this.ruleForm.associatedTeacher = value[3]
-          break
-        default:
-          break
-      }
+      // switch (value && value.length) {
+      //   case 1:
+      //     this.ruleForm.associatedTeacher = value[0]
+      //     break
+      //   case 2:
+      //     this.ruleForm.associatedTeacher = value[1]
+      //     break
+      //   case 3:
+      //     this.ruleForm.associatedTeacher = value[2]
+      //     break
+      //   case 4:
+      //     this.ruleForm.associatedTeacher = value[3]
+      //     break
+      //   default:
+      //     break
+      // }
+      this.ruleForm.associatedTeacher = value[value.length - 1]
       this.ruleForm.teacherId = ''
       this.regionOptionsList = []
       this.remoteMethod()
