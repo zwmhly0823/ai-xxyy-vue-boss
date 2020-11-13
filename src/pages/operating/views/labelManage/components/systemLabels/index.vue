@@ -7,7 +7,7 @@
  * @LastEditTime: 2020-06-12 11:52:20
 -->
 <template>
-  <div class="system-label">
+  <div class="system-label" v-loading="loading">
     <div class="search-box">
       <systemSearch
         class="search"
@@ -57,6 +57,7 @@ export default {
   },
   data() {
     return {
+      loading: false,
       tableData: [],
       currentPage: '1',
       totalElements: '',
@@ -78,20 +79,25 @@ export default {
         pageNo: this.currentPage,
         pageSize: 20
       }
-      this.$http.Operating.findLabelByPage(params).then((res) => {
-        this.totalElements = res.payload.totalElements
-        const _data = res.payload.content
-        _data.forEach((item) => {
-          item.labelAttr =
-            item.labelAttr === 'CONSTANT' ? '恒量标签' : '变量标签'
-          if (item.changeRule === 'ASSIGN') {
-            item.changeRule = '用户购课后分到所属班级事件触发'
-          } else if (item.changeRule === 'BUY_COURSE') {
-            item.changeRule = '用户购课事件触发'
-          }
+      this.loading = true
+      this.$http.Operating.findLabelByPage(params)
+        .then((res) => {
+          this.totalElements = res.payload.totalElements
+          const _data = res.payload.content
+          _data.forEach((item) => {
+            item.labelAttr =
+              item.labelAttr === 'CONSTANT' ? '恒量标签' : '变量标签'
+            if (item.changeRule === 'ASSIGN') {
+              item.changeRule = '用户购课后分到所属班级事件触发'
+            } else if (item.changeRule === 'BUY_COURSE') {
+              item.changeRule = '用户购课事件触发'
+            }
+          })
+          this.tableData = _data
         })
-        this.tableData = _data
-      })
+        .finally(() => {
+          this.loading = false
+        })
     },
     // 打开编辑
     onEdit() {
