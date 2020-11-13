@@ -3,8 +3,8 @@
  * @version: 
  * @Author: panjian
  * @Date: 2020-04-15 16:56:59
- * @LastEditors: panjian
- * @LastEditTime: 2020-05-07 18:23:08
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-11-13 20:10:58
  -->
 <template>
   <div>
@@ -111,6 +111,9 @@ export default {
         case 3:
           this.ruleForm.associatedTeacher = value[2]
           break
+        case 4:
+          this.ruleForm.associatedTeacher = value[3]
+          break
         default:
           break
       }
@@ -118,37 +121,34 @@ export default {
       this.regionOptionsList = []
       this.remoteMethod()
     },
-    remoteMethod(query) {
-      if (query !== '') {
-        this.loading = true
-        setTimeout(() => {
-          this.loading = false
-          if (this.ruleForm.associatedTeacher) {
-            this.TeacherListvalue = {
-              department_id: `${this.ruleForm.associatedTeacher}`
-            }
+    remoteMethod(query = '') {
+      // if (query) {
+      this.loading = true
+      setTimeout(() => {
+        this.loading = false
+        if (this.ruleForm.associatedTeacher) {
+          this.TeacherListvalue = {
+            department_id: `${this.ruleForm.associatedTeacher}`
           }
-          this.$http.Teacher.TeacherList(this.TeacherListvalue, query).then(
-            (res) => {
-              const data = res.data.TeacherListEx
-              const _data = []
-              data.forEach((res) => {
-                _data.push({
-                  value: res.id,
-                  label: res.realname
-                })
+        }
+        this.$http.Teacher.TeacherList(this.TeacherListvalue, query).then(
+          (res) => {
+            const data = res.data.TeacherListEx
+            const _data = []
+            data.forEach((res) => {
+              _data.push({
+                value: res.id,
+                label: res.realname
               })
-              this.regionOptionsList = _data.filter((item) => {
-                return query
-                  ? item.label.toLowerCase().indexOf(query.toLowerCase()) > -1
-                  : item
-              })
-            }
-          )
-        }, 200)
-      } else {
-        this.regionOptionsList = []
-      }
+            })
+            this.regionOptionsList = _data.filter((item) => {
+              return query
+                ? item.label.toLowerCase().indexOf(query.toLowerCase()) > -1
+                : item
+            })
+          }
+        )
+      }, 200)
     },
     // 提交
     submitForm(formName) {
