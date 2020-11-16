@@ -438,7 +438,8 @@ export default {
       sysOriginWeekNum: '',
       exOriginRadio: '',
       exOriginWeekNum: '',
-      defaultHead: 'https://msb-ai.meixiu.mobi/ai-pm/static/touxiang.png'
+      defaultHead: 'https://msb-ai.meixiu.mobi/ai-pm/static/touxiang.png',
+      tabsName: '加好友进群'
     }
   },
   created() {
