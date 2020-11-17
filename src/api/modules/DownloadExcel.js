@@ -3,8 +3,8 @@
  * @version:
  * @Author: Lukun
  * @Date: 2020-05-14 14:31:42
- * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-09-10 01:16:04
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-11-17 16:36:24
  */
 import axios from '../axios'
 import { getToken } from '@/utils/auth'
@@ -43,7 +43,12 @@ export default {
         url: '/data/search/m1/v1/search/common/export',
         responseType: 'blob',
         headers: getHeaders(),
-        params
+        data: {
+          ...params,
+          headers: JSON.stringify(params.headers),
+          query: JSON.stringify(params.query),
+          sort: JSON.stringify(params.sort)
+        }
       })
     }
   },
