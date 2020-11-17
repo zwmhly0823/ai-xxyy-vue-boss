@@ -334,9 +334,7 @@ export default {
       if (this.department || this.groupSell || this.teamTeach) {
         console.log(this.department, this.groupSell, this.teamTeach)
 
-        parmes.teacher_id = this.department || [this.groupSell] || [
-            this.teamTeach
-          ]
+        parmes.teacher_id = this.department || this.groupSell || this.teamTeach
 
         if (this.department && this.groupSell) {
           parmes.teacher_id = this.department.includes(this.groupSell)
@@ -400,9 +398,7 @@ export default {
       if (this.department || this.groupSell || this.teamTeach) {
         console.log(this.department, this.groupSell, this.teamTeach)
 
-        parmes.teacher_id = this.department || [this.groupSell] || [
-            this.teamTeach
-          ]
+        parmes.teacher_id = this.department || this.groupSell || this.teamTeach
 
         if (this.department && this.groupSell) {
           parmes.teacher_id = this.department.includes(this.groupSell)
