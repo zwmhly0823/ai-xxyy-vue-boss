@@ -17,7 +17,8 @@ const env = 'dev' // dev, test, prod, live
 // graphql api
 let targetGrapqhlEnv = 'http://docker.meixiu.mobi:33401'
 // 后端api
-let targetApiEnv = 'https://dev.meixiu.mobi'
+// let targetApiEnv = 'https://dev.meixiu.mobi'
+let targetApiEnv = 'http://ai-xxyy-default-boss.yinyuebao.com/'
 // 测试环境
 if (env === 'test') {
   targetGrapqhlEnv = 'http://docker.meixiu.mobi:43401'
@@ -46,7 +47,7 @@ module.exports = {
       hints: 'warning',
       maxEntrypointSize: 50000000,
       maxAssetSize: 30000000,
-      assetFilter: function(assetFilename) {
+      assetFilter: function (assetFilename) {
         return assetFilename.endsWith('.js')
       }
     }

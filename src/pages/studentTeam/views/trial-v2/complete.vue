@@ -84,10 +84,8 @@ export default {
 
     // 获取选中的班级ID
     getSelectTeam(id) {
+      this.currentTeamId = id
       this.detailKey = Date.now()
-      this.$nextTick(() => {
-        this.currentTeamId = id
-      })
     },
 
     handleToggle(data) {
