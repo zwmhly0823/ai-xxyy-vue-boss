@@ -15,7 +15,8 @@ const name = defaultSettings.title || '小熊美术BOSS'
  */
 const env = 'dev' // dev, test, prod, live
 // graphql api
-let targetGrapqhlEnv = 'http://docker.meixiu.mobi:33401'
+// let targetGrapqhlEnv = 'http://docker.meixiu.mobi:33401'
+let targetGrapqhlEnv = 'http://ai-xxyy-default-graphql-boss.yinyuebao.com/'
 // 后端api
 // let targetApiEnv = 'https://dev.meixiu.mobi'
 let targetApiEnv = 'http://ai-xxyy-default-boss.yinyuebao.com/'
