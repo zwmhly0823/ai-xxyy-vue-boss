@@ -1,6 +1,6 @@
 const defaultSettings = require('./src/settings.js')
 
-// const WebpackAliyunOss = require('webpack-aliyun-oss')
+const WebpackAliyunOss = require('webpack-aliyun-oss')
 const {
   getEntry,
   camel2Line,
@@ -11,14 +11,14 @@ const {
 const { NODE_ENV } = process.env
 const projectName = process.argv[3] || 'dashboard'
 const name = defaultSettings.title || '小熊美术BOSS'
-
-// const ossConfig = {
-//   bucket: 'xxyy-devtest',
-//   region: 'oss-cn-hangzhou',
-//   endpoint: 'oss-cn-hangzhou.aliyuncs.com',
-//   accessKeyId: 'LTAI4G6Z1YdzS7yEMtrfBrtH',
-//   accessKeySecret: 'T2WjNlLkAB4pDyMdfrx1aPHuQIEbaQ'
-// }
+const { BASE_URL } = process.env
+const ossConfig = {
+  bucket: 'xxyy-devtest',
+  region: 'oss-cn-hangzhou',
+  endpoint: 'oss-cn-hangzhou.aliyuncs.com',
+  accessKeyId: 'LTAI4G6Z1YdzS7yEMtrfBrtH',
+  accessKeySecret: 'T2WjNlLkAB4pDyMdfrx1aPHuQIEbaQ'
+}
 /**
  * api 环境切换，默认 dev
  */
@@ -88,14 +88,29 @@ module.exports = {
       })
       .end()
 
+    const ossDist = function() {
+      switch (BASE_URL) {
+        case 'ghpagesdev':
+          return 'xiaoxiong/ai-app-vue-boss-dev/'
+        case 'ghpagestest':
+          return 'xiaoxiong/ai-app-vue-boss-test/'
+        case 'ghpagesprod':
+          return 'xiaoxiongyarn/ai-app-vue-boss-prod/'
+        // case 'ghpageslive':
+        //   return '/'
+        default:
+          return '/'
+      }
+    }
+
     // 上传阿里云oss
-    // config.plugin('webpack-aliyun-oss').use(WebpackAliyunOss, [
-    //   {
-    //     from : ['./dist/**'],
-    //     dist : 'xiaoxiong/ai-xxyy-h5/',
-    //     ...ossConfig
-    //   }
-    // ])
+    config.plugin('webpack-aliyun-oss').use(WebpackAliyunOss, [
+      {
+        from: ['./dist/**'],
+        dist: `${ossDist()}`,
+        ...ossConfig
+      }
+    ])
   },
   devServer: {
     proxy: {
