@@ -16,21 +16,23 @@ const name = defaultSettings.title || '小熊美术BOSS'
 const env = 'dev' // dev, test, prod, live
 // graphql api
 // let targetGrapqhlEnv = 'http://docker.meixiu.mobi:33401'
-let targetGrapqhlEnv = 'http://ai-xxyy-default-graphql-boss.yinyuebao.com/'
+let targetGrapqhlEnv = 'http://ai-xxyy-default-graphql-boss.yinyuebao.com'
 // 后端api
 // let targetApiEnv = 'https://dev.meixiu.mobi'
-let targetApiEnv = 'http://ai-xxyy-default-boss.yinyuebao.com/'
-// 测试环境
-if (env === 'test') {
-  targetGrapqhlEnv = 'http://docker.meixiu.mobi:43401'
-  targetApiEnv = 'https://test.meixiu.mobi'
+let targetApiEnv = 'http://ai-xxyy-dev-boss.yinyuebao.com'
+if (env === 'dev') {
+  targetGrapqhlEnv = 'http://ai-xxyy-dev-graphql-boss.yinyuebao.com'
+  targetApiEnv = 'http://ai-xxyy-dev-boss.yinyuebao.com'
+}else if (env === 'test') { // 测试环境
+  targetGrapqhlEnv = 'http://ai-xxyy-test-graphql-boss.yinyuebao.com'
+  targetApiEnv = 'http://ai-xxyy-test-boss.yinyuebao.com'
 } else if (env === 'prod') {
   // 预发布环境
-  targetGrapqhlEnv = 'http://docker.meixiu.mobi:53401'
-  targetApiEnv = 'https://tossprod.xiaoxiongmeishu.com'
+  targetGrapqhlEnv = 'http://ai-xxyy-prod-graphql-boss.yinyuebao.com'
+  targetApiEnv = 'http://ai-xxyy-prod-boss.yinyuebao.com'
 } else if (env === 'live') {
-  targetGrapqhlEnv = 'http://docker.meixiu.mobi:13401'
-  targetApiEnv = 'https://toss.xiaoxiongmeishu.com'
+  targetGrapqhlEnv = 'http://ai-xxyy-live-graphql-boss.yinyuebao.com'
+  targetApiEnv = 'http://ai-xxyy-live-boss.yinyuebao.com'
 }
 
 editOperation('构建')
