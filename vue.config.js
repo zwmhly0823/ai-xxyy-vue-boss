@@ -1,4 +1,6 @@
 const defaultSettings = require('./src/settings.js')
+
+// const WebpackAliyunOss = require('webpack-aliyun-oss')
 const {
   getEntry,
   camel2Line,
@@ -10,28 +12,23 @@ const { NODE_ENV } = process.env
 const projectName = process.argv[3] || 'dashboard'
 const name = defaultSettings.title || '小熊美术BOSS'
 
+// const ossConfig = {
+//   bucket: 'xxyy-devtest',
+//   region: 'oss-cn-hangzhou',
+//   endpoint: 'oss-cn-hangzhou.aliyuncs.com',
+//   accessKeyId: 'LTAI4G6Z1YdzS7yEMtrfBrtH',
+//   accessKeySecret: 'T2WjNlLkAB4pDyMdfrx1aPHuQIEbaQ'
+// }
 /**
  * api 环境切换，默认 dev
  */
 const env = 'dev' // dev, test, prod, live
 // graphql api
 // let targetGrapqhlEnv = 'http://docker.meixiu.mobi:33401'
-let targetGrapqhlEnv = 'http://ai-xxyy-default-graphql-boss.yinyuebao.com/'
+let targetGrapqhlEnv = 'http://ai-xxyy-default-graphql-boss.yinyuebao.com'
 // 后端api
 // let targetApiEnv = 'https://dev.meixiu.mobi'
-let targetApiEnv = 'http://ai-xxyy-default-boss.yinyuebao.com/'
-// 测试环境
-// if (env === 'test') {
-//   targetGrapqhlEnv = 'http://docker.meixiu.mobi:43401'
-//   targetApiEnv = 'https://test.meixiu.mobi'
-// } else if (env === 'prod') {
-//   // 预发布环境
-//   targetGrapqhlEnv = 'http://docker.meixiu.mobi:53401'
-//   targetApiEnv = 'https://tossprod.xiaoxiongmeishu.com'
-// } else if (env === 'live') {
-//   targetGrapqhlEnv = 'http://docker.meixiu.mobi:13401'
-//   targetApiEnv = 'https://toss.xiaoxiongmeishu.com'
-// }
+let targetApiEnv = 'http://ai-xxyy-dev-boss.yinyuebao.com'
 if (env === 'dev') {
   targetGrapqhlEnv = 'http://ai-xxyy-dev-graphql-boss.yinyuebao.com'
   targetApiEnv = 'http://ai-xxyy-dev-boss.yinyuebao.com'
@@ -90,6 +87,15 @@ module.exports = {
         webp: { quality: 75 }
       })
       .end()
+
+    // 上传阿里云oss
+    // config.plugin('webpack-aliyun-oss').use(WebpackAliyunOss, [
+    //   {
+    //     from : ['./dist/**'],
+    //     dist : 'xiaoxiong/ai-xxyy-h5/',
+    //     ...ossConfig
+    //   }
+    // ])
   },
   devServer: {
     proxy: {
