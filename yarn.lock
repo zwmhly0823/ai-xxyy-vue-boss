@@ -2818,6 +2818,37 @@ ajv@^6.12.4:
     json-schema-traverse "^0.4.1"
     uri-js "^4.2.2"
 
+ali-oss@^6.10.0:
+  version "6.12.0"
+  resolved "http://fusion.meishubao.com:9001/ali-oss/-/ali-oss-6.12.0.tgz#2bc744cad569aee741e3b3968207761fbb2d21a4"
+  integrity sha1-K8dEytVprudB47OWggd2H7stIaQ=
+  dependencies:
+    address "^1.0.0"
+    agentkeepalive "^3.4.1"
+    bowser "^1.6.0"
+    co-defer "^1.0.0"
+    copy-to "^2.0.1"
+    dateformat "^2.0.0"
+    debug "^2.2.0"
+    destroy "^1.0.4"
+    end-or-error "^1.0.1"
+    get-ready "^1.0.0"
+    humanize-ms "^1.2.0"
+    is-type-of "^1.0.0"
+    js-base64 "^2.5.2"
+    jstoxml "^0.2.3"
+    merge-descriptors "^1.0.1"
+    mime "^2.4.5"
+    mz-modules "^2.1.0"
+    platform "^1.3.1"
+    pump "^3.0.0"
+    sdk-base "^2.0.1"
+    stream-http "2.8.2"
+    stream-wormhole "^1.0.4"
+    urllib "^2.33.1"
+    utility "^1.8.0"
+    xml2js "^0.4.16"
+
 ali-oss@^6.6.0:
   version "6.6.0"
   resolved "https://registry.yarnpkg.com/ali-oss/-/ali-oss-6.6.0.tgz#ba69bc04282eae3fac15ae2c5adffad5f8964c6d"
@@ -4182,6 +4213,11 @@ color@^3.0.0:
   dependencies:
     color-convert "^1.9.1"
     color-string "^1.5.2"
+
+colors@^1.3.2:
+  version "1.4.0"
+  resolved "http://fusion.meishubao.com:9001/colors/-/colors-1.4.0.tgz#c50491479d4c1bdaed2c9ced32cf7c7dc2360f78"
+  integrity sha512-a+UqTh4kgZg/SlGvfbzDHpgRu7AAQOmmqRHJnxhRZICKFUT91brVhNNt58CMWU9PsBbv3PDCZUHbVxuDiH2mtA==
 
 columnify@^1.5.4:
   version "1.5.4"
@@ -9492,6 +9528,11 @@ mime@^2.4.4:
   resolved "https://registry.npm.taobao.org/mime/download/mime-2.4.4.tgz#bd7b91135fc6b01cde3e9bae33d659b63d8857e5"
   integrity sha1-vXuRE1/GsBzePpuuM9ZZtj2IV+U=
 
+mime@^2.4.5:
+  version "2.4.7"
+  resolved "http://fusion.meishubao.com:9001/mime/-/mime-2.4.7.tgz#962aed9be0ed19c91fd7dc2ece5d7f4e89a90d74"
+  integrity sha1-lirtm+DtGckf19wuzl1/TompDXQ=
+
 mimic-fn@^1.0.0:
   version "1.2.0"
   resolved "https://registry.npm.taobao.org/mimic-fn/download/mimic-fn-1.2.0.tgz#820c86a39334640e99516928bd03fca88057d022"
@@ -13925,6 +13966,16 @@ webidl-conversions@^4.0.2:
   version "4.0.2"
   resolved "https://registry.npm.taobao.org/webidl-conversions/download/webidl-conversions-4.0.2.tgz#a855980b1f0b6b359ba1d5d9fb39ae941faa63ad"
   integrity sha1-qFWYCx8LazWbodXZ+zmulB+qY60=
+
+webpack-aliyun-oss@^0.3.1:
+  version "0.3.1"
+  resolved "http://fusion.meishubao.com:9001/webpack-aliyun-oss/-/webpack-aliyun-oss-0.3.1.tgz#451afe2866e515e13e90f555f9c6ba35b996f285"
+  integrity sha1-RRr+KGblFeE+kPVV+ca6NbmW8oU=
+  dependencies:
+    ali-oss "^6.10.0"
+    colors "^1.3.2"
+    globby "^10.0.1"
+    slash "^3.0.0"
 
 webpack-bundle-analyzer@^3.6.0:
   version "3.6.1"
