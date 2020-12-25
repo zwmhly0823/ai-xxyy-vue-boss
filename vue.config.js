@@ -22,18 +22,16 @@ const ossConfig = {
 /**
  * api 环境切换，默认 dev
  */
-const env = 'dev' // dev, test, prod, live
+const env = BASE_URL || 'default' // default, dev, test, prod, live
 // graphql api
 // let targetGrapqhlEnv = 'http://docker.meixiu.mobi:33401'
 let targetGrapqhlEnv = 'http://ai-xxyy-default-graphql-boss.yinyuebao.com'
-// 后端api
-// let targetApiEnv = 'https://dev.meixiu.mobi'
-let targetApiEnv = 'http://ai-xxyy-dev-boss.yinyuebao.com'
+let targetApiEnv = 'http://ai-xxyy-default-boss.yinyuebao.com'
 if (env === 'dev') {
   targetGrapqhlEnv = 'http://ai-xxyy-dev-graphql-boss.yinyuebao.com'
   targetApiEnv = 'http://ai-xxyy-dev-boss.yinyuebao.com'
 } else if (env === 'test') {
-  // 测试环境
+  // test环境
   targetGrapqhlEnv = 'http://ai-xxyy-test-graphql-boss.yinyuebao.com'
   targetApiEnv = 'http://ai-xxyy-test-boss.yinyuebao.com'
 } else if (env === 'prod') {
@@ -90,11 +88,13 @@ module.exports = {
 
     const ossDist = function() {
       switch (BASE_URL) {
-        case 'ghpagesdev':
+        case 'default':
+          return 'xiaoxiong/ai-app-vue-boss-default/'
+        case 'dev':
           return 'xiaoxiong/ai-app-vue-boss-dev/'
-        case 'ghpagestest':
+        case 'test':
           return 'xiaoxiong/ai-app-vue-boss-test/'
-        case 'ghpagesprod':
+        case 'prod':
           return 'xiaoxiongyarn/ai-app-vue-boss-prod/'
         // case 'ghpageslive':
         //   return '/'

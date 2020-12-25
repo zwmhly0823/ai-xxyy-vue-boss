@@ -24,10 +24,10 @@ const camel2Line = function(str) {
 
 const baseUrl = function() {
   switch (BASE_URL) {
-    case 'ghpagesdev':
+    case 'dev':
       return 'https://xxyy-devtest.oss-cn-hangzhou.aliyuncs.com/xiaoxiong/ai-app-vue-boss-dev/'
-    case 'ghpagestest':
-      return 'https://xxyy-devtest.oss-cn-hangzhou.aliyuncs.com/xiaoxiong/ai-app-vue-boss-test/'
+    case 'default':
+      return 'https://xxyy-devtest.oss-cn-hangzhou.aliyuncs.com/xiaoxiong/ai-app-vue-boss-default/'
     case 'ghpagesprod':
       return 'https://xxyy-devtest.oss-cn-hangzhou.aliyuncs.com/xiaoxiongyarn/ai-app-vue-boss-prod/'
     // case 'ghpageslive':
