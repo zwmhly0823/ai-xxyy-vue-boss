@@ -25,15 +25,15 @@ const ossConfig = {
 const env = BASE_URL || 'default' // default, dev, test, prod, live
 // graphql api
 // let targetGrapqhlEnv = 'http://docker.meixiu.mobi:33401'
-let targetGrapqhlEnv = 'http://ai-xxyy-default-graphql-boss.yinyuebao.com'
-let targetApiEnv = 'http://ai-xxyy-default-boss.yinyuebao.com'
+let targetGrapqhlEnv = 'http://ai-xxyy-default-graphql-boss.yinyuebao.cloud'
+let targetApiEnv = 'http://ai-xxyy-default-boss.yinyuebao.cloud'
 if (env === 'dev') {
-  targetGrapqhlEnv = 'http://ai-xxyy-dev-graphql-boss.yinyuebao.com'
-  targetApiEnv = 'http://ai-xxyy-dev-boss.yinyuebao.com'
+  targetGrapqhlEnv = 'http://ai-xxyy-dev-graphql-boss.yinyuebao.cloud'
+  targetApiEnv = 'http://ai-xxyy-dev-boss.yinyuebao.cloud'
 } else if (env === 'test') {
   // test环境
-  targetGrapqhlEnv = 'http://ai-xxyy-test-graphql-boss.yinyuebao.com'
-  targetApiEnv = 'http://ai-xxyy-test-boss.yinyuebao.com'
+  targetGrapqhlEnv = 'http://ai-xxyy-test-graphql-boss.yinyuebao.cloud'
+  targetApiEnv = 'http://ai-xxyy-test-boss.yinyuebao.cloud'
 } else if (env === 'prod') {
   // 预发布环境
   targetGrapqhlEnv = 'http://ai-xxyy-prod-graphql-boss.yinyuebao.com'
@@ -44,6 +44,7 @@ if (env === 'dev') {
 }
 
 editOperation('构建')
+console.log(NODE_ENV)
 
 module.exports = {
   publicPath:
@@ -102,15 +103,16 @@ module.exports = {
           return '/'
       }
     }
-
-    // 上传阿里云oss
-    config.plugin('webpack-aliyun-oss').use(WebpackAliyunOss, [
-      {
-        from: ['./dist/**'],
-        dist: `${ossDist()}`,
-        ...ossConfig
-      }
-    ])
+    if (NODE_ENV === 'production') {
+      // 上传阿里云oss
+      config.plugin('webpack-aliyun-oss').use(WebpackAliyunOss, [
+        {
+          from: ['./dist/**'],
+          dist: `${ossDist()}`,
+          ...ossConfig
+        }
+      ])
+    }
   },
   devServer: {
     proxy: {
