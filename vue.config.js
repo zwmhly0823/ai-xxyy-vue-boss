@@ -100,7 +100,7 @@ module.exports = {
         // case 'ghpageslive':
         //   return '/'
         default:
-          return '/'
+          return 'xiaoxiong/ai-app-vue-boss-default/'
       }
     }
     if (NODE_ENV === 'production') {
