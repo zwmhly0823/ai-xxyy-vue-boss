@@ -29,7 +29,7 @@ const baseUrl = function() {
     case 'default':
       return 'https://xxyy-devtest.oss-cn-hangzhou.aliyuncs.com/xiaoxiong/ai-app-vue-boss-default/'
     case 'test':
-      return 'https://xxyy-devtest.oss-cn-hangzhou.aliyuncs.com/xiaoxiongyarn/ai-app-vue-boss-test/'
+      return 'https://xxyy-devtest.oss-cn-hangzhou.aliyuncs.com/xiaoxiong/ai-app-vue-boss-test/'
     // case 'ghpageslive':
     //   return '/'
     default:

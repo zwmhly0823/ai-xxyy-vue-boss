@@ -96,7 +96,7 @@ module.exports = {
         case 'test':
           return 'xiaoxiong/ai-app-vue-boss-test/'
         case 'prod':
-          return 'xiaoxiongyarn/ai-app-vue-boss-prod/'
+          return 'xiaoxiong/ai-app-vue-boss-prod/'
         // case 'ghpageslive':
         //   return '/'
         default:
