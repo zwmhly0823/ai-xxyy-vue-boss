@@ -28,8 +28,8 @@ const baseUrl = function() {
       return 'https://xxyy-devtest.oss-cn-hangzhou.aliyuncs.com/xiaoxiong/ai-app-vue-boss-dev/'
     case 'default':
       return 'https://xxyy-devtest.oss-cn-hangzhou.aliyuncs.com/xiaoxiong/ai-app-vue-boss-default/'
-    case 'ghpagesprod':
-      return 'https://xxyy-devtest.oss-cn-hangzhou.aliyuncs.com/xiaoxiongyarn/ai-app-vue-boss-prod/'
+    case 'test':
+      return 'https://xxyy-devtest.oss-cn-hangzhou.aliyuncs.com/xiaoxiongyarn/ai-app-vue-boss-test/'
     // case 'ghpageslive':
     //   return '/'
     default:
