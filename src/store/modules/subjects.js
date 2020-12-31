@@ -23,7 +23,7 @@ const state = {
   subjects,
   subjectsList,
   subject: '', // 当前科目枚举值ART_APP, WRITE_APP，COLLEGE_APP
-  subjectCode: 0, // 当前科目枚举值对应的顺序  0，1，2
+  subjectCode: 3, // 当前科目枚举值对应的顺序  0，1，2
   currentSubjectTitle: '',
   currentSubjectKey: '', // 枚举值的小写art_app, write_app
   currentSubject: {}
@@ -32,11 +32,19 @@ const state = {
 const mutations = {
   GET_SUBJECT: (state) => {
     const key = getAppSubject(false)
-
     state.currentSubject = { [`${key}`]: subjects[key] }
     state.currentSubjectKey = key
     state.subject = key.toUpperCase()
-    state.subjectCode = Object.keys(subjects).findIndex((item) => item === key)
+    // state.subjectCode = Object.keys(subjects).findIndex((item) => item.key === key)
+    let subjectCode = 0
+    subjectsList.map((item, index) => {
+      if (item.key === key) {
+        subjectCode = index
+      }
+    })
+    state.subjects = subjects
+    state.subjectsList = subjectsList
+    state.subjectCode = subjectCode
     state.currentSubjectTitle = subjects[key]
   }
 }

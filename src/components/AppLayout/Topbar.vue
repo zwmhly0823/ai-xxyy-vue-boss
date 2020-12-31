@@ -177,6 +177,7 @@ export default {
       const list = this.subjects.subjectsList.filter(
         (item) => item.key !== this.subjects.currentSubjectKey
       )
+      console.log(list)
       return list
     }
   },

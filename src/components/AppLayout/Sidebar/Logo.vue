@@ -31,7 +31,7 @@
 </template>
 
 <script>
-// import Logo from '@/assets/images/boss.png'
+import Logo from '@/assets/images/boss.png'
 import ArtAppLogo from '@/assets/images/art_app_boss.png'
 import WriteAppLogo from '@/assets/images/write_app_boss.png'
 import LogoSmall from '@/assets/images/boss-64.png'
@@ -52,9 +52,14 @@ export default {
   },
   computed: {
     logo() {
-      return +this.$store.getters.subjects.subjectCode === 0
-        ? ArtAppLogo
-        : WriteAppLogo
+      let src = Logo
+      const index = +this.$store.getters.subjects.subjectCode
+      if (index === 0) {
+        src = ArtAppLogo
+      } else if (index === 1) {
+        src = WriteAppLogo
+      }
+      return src
     }
   }
 }

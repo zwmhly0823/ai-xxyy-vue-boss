@@ -406,7 +406,6 @@ export default {
     // const params = {
     //   teacherId: isToss() || ''
     // }
-
     // await this.getAllTeacherByRole(params)
     this.getTrialTeamList(this.tabQuery)
   },

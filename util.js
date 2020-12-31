@@ -16,7 +16,7 @@ const { getMenuText } = require('./src/config/sidebarMenu/menuItems')
 const { BASE_URL } = process.env
 const entries = {}
 // 多科目名称-除小熊美术
-const subjects = ['write_app']
+const subjects = ['write_app', 'music_app']
 
 const camel2Line = function(str) {
   return str.replace(/([A-Z])/g, '-$1').toLowerCase()
