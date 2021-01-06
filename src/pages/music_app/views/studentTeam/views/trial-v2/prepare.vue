@@ -35,7 +35,6 @@
     </div>
     <!-- right container 班级详情 -->
     <div class="team-layout-container">
-      3
       <team-detail :team-id="currentTeamId" :key="detailKey" />
     </div>
   </div>
