@@ -381,7 +381,7 @@ export default {
     async pwdLoginHandle(formName) {
       let getToken
       const { pathname } = location
-      let path = pathname.replace(/login/, 'student-team')
+      let path = pathname.replace(/login/, 'dashboard')
       // 校验回调返回的是Promise
       const validatePromise = await this.judegeValidate(formName).catch((err) =>
         console.log(err)
