@@ -69,8 +69,6 @@ if (staff.roleId === '19') {
     ]
   }
 
-  console.log()
-
   // 管理员、
   const adminRouter = []
 

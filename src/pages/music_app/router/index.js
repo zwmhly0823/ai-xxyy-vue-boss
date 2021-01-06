@@ -12,10 +12,22 @@ import VueRouter from 'vue-router'
 const staff = JSON.parse(localStorage.getItem('staff'))
 
 let superOperatingRouter = []
-
+let uploadFilePeimission = []
 // 管理员、
 const adminRouter = []
-
+if (staff.mobile === '15801332536') {
+  uploadFilePeimission = [
+    {
+      path: '/uploadFile',
+      name: 'uploadFile',
+      meta: {
+        title: '上传素材'
+        // module: 'operating'
+      },
+      component: () => import('../views/operating/views/uploadFile/index.vue')
+    }
+  ]
+}
 // 超级管理员权限
 if (staff.roleId === '7') {
   superOperatingRouter = [
@@ -23,17 +35,19 @@ if (staff.roleId === '7') {
       path: '/operatingSchedule',
       name: 'operatingSchedule',
       meta: {
-        title: '招生排期',
-        module: 'operating'
-      }
+        title: '招生排期'
+      },
+      component: () =>
+        import('../views/operating/views/enrollmentSchedule/index.vue')
     },
     {
       path: '/changePhoneNumber',
       name: 'changePhoneNumber',
       meta: {
-        title: '手机号替换',
-        module: 'operating'
-      }
+        title: '手机号替换'
+      },
+      component: () =>
+        import('../views/operating/views/changePhoneNumber/index.vue')
     }
   ]
 }
@@ -43,9 +57,10 @@ if (staff.roleId === '1') {
     path: '/changePhoneNumber',
     name: 'changePhoneNumber',
     meta: {
-      title: '手机号替换',
-      module: 'operating'
-    }
+      title: '手机号替换'
+    },
+    component: () =>
+      import('../views/operating/views/changePhoneNumber/index.vue')
   })
 }
 Vue.use(VueRouter)
@@ -255,6 +270,36 @@ const routes = [
     component: () => import('../views/operating/views/issueBearCoins/index.vue')
   },
   {
+    path: '/newActivityManage/:promotionsId/:type',
+    name: 'newActivityManage',
+    meta: {
+      title: '活动管理',
+      keepAlive: false
+    },
+    component: () =>
+      import(
+        '../views/operating/views/activityManagement/addActivityManage/index.vue'
+      )
+  },
+  {
+    path: '/addSchedule/:period/:courseType/',
+    name: 'addSchedule',
+    meta: {
+      title: '新建排期',
+      keepAlive: false
+    },
+    component: () => import('../views/operating/views/addSchedule/index.vue')
+  },
+  {
+    path: '/scheduleDetail/:period/:courseType/',
+    name: 'scheduleDetail',
+    meta: {
+      title: '排期详情',
+      keepAlive: false
+    },
+    component: () => import('../views/operating/views/scheduleDetail/index.vue')
+  },
+  {
     path: '/recommend',
     name: 'recommend',
     meta: {
@@ -354,8 +399,9 @@ const routes = [
     component: () => import('../views/outbound/views/callCenter/index.vue')
   },
 
-  ...adminRouter,
-  ...superOperatingRouter
+  ...uploadFilePeimission,
+  ...superOperatingRouter,
+  ...adminRouter
 ]
 
 const router = new VueRouter({
