@@ -19,7 +19,7 @@ import musicApp from './music_app'
  * TODO:当前打开项目
  */
 const subject = getAppSubject(false)
-let menu = artApp
+let menu = musicApp
 if (subject === 'artApp') {
   menu = artApp
 }

@@ -123,7 +123,7 @@ export default {
   },
   watch: {
     tabIndex(value) {
-      if (value === '3') {
+      if (value === '2') {
         this.channelSearchIds = []
         this.channelLevels = []
         this.currentPage = 1
@@ -134,8 +134,6 @@ export default {
   methods: {
     // 获取二级渠道列表
     getSecChannelList() {
-      console.log('dagag')
-
       // 默认查询数据
       const defaultQuery = { channel_class_parent_id: { gt: 0 } }
       // 如果有渠道筛选条件
@@ -146,13 +144,10 @@ export default {
       if (this.channelLevels.length !== 0) {
         defaultQuery.channel_level = Array.from(new Set(this.channelLevels))
       }
-      Object.assign(defaultQuery, {
-        subject: this.$store.getters.subjects.subjectCode
-      })
-      console.log(defaultQuery, 'defaultQuery')
-
       const queryParamsJsonStr = JSON.stringify(JSON.stringify(defaultQuery))
-      this.$http.writeApp.Operating.ChannelClassPage(
+      console.log(queryParamsJsonStr, '3')
+
+      this.$http.Operating.ChannelClassPage(
         queryParamsJsonStr,
         this.currentPage
       ).then((res) => {

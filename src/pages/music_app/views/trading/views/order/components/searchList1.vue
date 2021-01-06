@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-04-25 17:24:23
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-10-26 17:33:55
+ * @LastEditTime: 2020-09-21 21:36:53
  -->
 <template>
   <el-card
@@ -60,8 +60,8 @@
         <DatePicker
           :class="[$style.fourPoint, 'allmini']"
           :name="timeName"
-          :key="payStatus"
           @result="getDate"
+          :key="payStatus"
         >
           <template v-slot:buttons>
             <div class="row_colum margin_l10">
@@ -97,6 +97,31 @@
           </template>
         </DatePicker>
       </el-form-item>
+      <el-form-item label="业绩归属:" :class="{ [$style.marginer]: true }">
+        <div class="row_colum">
+          <orderAttr
+            name="pay_teacher_duty_id"
+            :data-list="orderTypeList"
+            :multiple="false"
+            placeholder="全部"
+            @result="getPerformType"
+          ></orderAttr>
+        </div>
+      </el-form-item>
+      <el-form-item
+        label="是否体验课转化:"
+        :class="{ [$style.marginer]: true }"
+      >
+        <div class="row_colum">
+          <simple-select
+            name="trial_team_id"
+            :data-list="expChangeList"
+            :multiple="false"
+            placeholder="全部"
+            @result="getExpChange"
+          ></simple-select>
+        </div>
+      </el-form-item>
       <br />
       <el-form-item label="体验课:" :class="{ [$style.marginer]: true }">
         <div class="row_colum">
@@ -124,7 +149,6 @@
           <hardLevel
             :class="['margin_l10']"
             placeholder="全部体验课难度"
-            teamType="0"
             style="width:140px"
             name="trial_team_id"
             @result="supCallBackTrial"
@@ -150,6 +174,7 @@
         <div class="row_colum">
           <systemCourseType
             style="width:140px"
+            teamType="1"
             @result="getSystemCourseType"
             name="packages_type"
           />
@@ -171,7 +196,6 @@
           <hardLevel
             :class="['margin_l10']"
             placeholder="全部系统课难度"
-            teamType="1"
             style="width:140px"
             name="sup"
             @result="supCallBack"
@@ -234,7 +258,8 @@
 </template>
 <script>
 import dayjs from 'dayjs'
-import hardLevel from '../../../../../components/search/Grade.vue' // add
+import orderAttr from '@/components/MSearch/searchItems/orderAttribution.vue' // add
+import hardLevel from '@/components/MSearch/searchItems/hardLevel.vue' // add
 import orderSearch from '@/components/MSearch/searchItems/orderSearch.vue' // add
 import systemCourseType from '@/components/MSearch/searchItems/systemCourseType.vue'
 import DatePicker from '@/components/MSearch/searchItems/datePicker.vue'
@@ -273,6 +298,7 @@ export default {
     SearchTeamName,
     // SearchTrialTeamName,
     SearchStage,
+    orderAttr,
     SearchPhoneAndUsername,
     SimpleSelect
   },
@@ -322,6 +348,16 @@ export default {
         {
           id: '3',
           text: '续费'
+        }
+      ],
+      expChangeList: [
+        {
+          id: '1',
+          text: '是'
+        },
+        {
+          id: '2',
+          text: '否'
         }
       ],
       hasSendId: true,
@@ -525,6 +561,16 @@ export default {
     },
     // 系统课选择课程类型
     getSystemCourseType(res) {
+      if (res && res.packages_type === '6') {
+        this.must.map((item, idx) => {
+          if (item.term && item.term.packages_type) {
+            this.must.splice(idx, 1)
+          }
+        })
+        return this.setSeachParmas({ packages_course_week: '72' }, [
+          'packages_course_week'
+        ])
+      }
       if (res && res.packages_type === '5') {
         this.must.map((item, idx) => {
           if (item.term && item.term.packages_type) {
@@ -532,6 +578,26 @@ export default {
           }
         })
         return this.setSeachParmas({ packages_course_week: '96' }, [
+          'packages_course_week'
+        ])
+      }
+      if (res && res.packages_type === '4') {
+        this.must.map((item, idx) => {
+          if (item.term && item.term.packages_type) {
+            this.must.splice(idx, 1)
+          }
+        })
+        return this.setSeachParmas({ packages_course_week: '48' }, [
+          'packages_course_week'
+        ])
+      }
+      if (res && res.packages_type === '3') {
+        this.must.map((item, idx) => {
+          if (item.term && item.term.packages_type) {
+            this.must.splice(idx, 1)
+          }
+        })
+        return this.setSeachParmas({ packages_course_week: '24' }, [
           'packages_course_week'
         ])
       }
@@ -594,7 +660,19 @@ export default {
       console.log(res)
       this.setSeachParmas(res, ['regtype'])
     },
-
+    getExpChange(res) {
+      if (res.trial_team_id === '1') {
+        this.setSeachParmas({ trial_team_id: { gt: 0 } }, ['trial_team_id'])
+      } else if (res.trial_team_id === '2') {
+        this.setSeachParmas({ trial_team_id: { lte: 0 } }, ['trial_team_id'])
+      } else {
+        this.setSeachParmas({ trial_team_id: { gte: 0 } }, ['trial_team_id'])
+      }
+      console.log(res, 'res')
+    },
+    getPerformType(res) {
+      this.setSeachParmas(res, ['pay_teacher_duty_id'])
+    },
     /**  处理接收到的查询参数
      * @res: Object, 子筛选组件返回的表达式对象，如 {sup: 2}
      * @key: Array 指定res的key。如课程类型+期数选项，清除课程类型时，期数也清除了，这里要同步清除must的数据
@@ -687,7 +765,7 @@ export default {
 
       // 获取查询条件
       const query = this.$parent.$children[1].finalParams
-      query.subject = 1
+      query.subject = 3
       console.log('query======')
       console.log(query)
 
@@ -713,7 +791,10 @@ export default {
             'packagesType.name': '套餐类型',
             'stageInfo.period_name': '期数',
             'channel.channel_outer_name': '线索渠道',
-            sup_text: '课程难度'
+            sup_text: '课程难度',
+            invoice_status_text: '开票状态',
+            invoice_type_text: '开票类型',
+            invoice_code: '发票号码'
             // paymentPayOut 退款流水
             // 'team.team_name': '班级',
             // 'team.team_type': '课程类型',

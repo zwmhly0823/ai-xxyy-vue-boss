@@ -409,12 +409,14 @@ export function getAppSubject(upper = true) {
 export function getAppSubjectCode() {
   const key = getAppSubject(false)
   // return Object.keys(subjects).findIndex((item) => item === key) + ''
-  let subjectCode = 0
+  let subjectCode = 3
   subjectsList.map((item, index) => {
     if (item.key === key) {
-      subjectCode = index
+      subjectCode = item.index
     }
   })
+  console.log(929392)
+  console.log(subjectCode)
   return subjectCode
 }
 // 注入 课程类型 subject 参数接受 对象和序列化的字符串

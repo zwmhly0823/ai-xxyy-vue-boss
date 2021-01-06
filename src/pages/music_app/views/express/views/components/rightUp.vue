@@ -1,17 +1,18 @@
 <template>
   <div class="container">
     <div class="search-up">
-      <!-- 随材版本 后端未开发 前端先注释 :moreVersion="showItem.moreVersion" -->
       <m-search
+        ref="msearch"
         @search="handleSearch"
         class="clearBorder"
-        :tab="tab"
         :phone="showItem.phone"
         :schedule="showItem.schedule"
         :sup="showItem.sup"
         :expressNo="showItem.expressNo"
+        :level="showItem.level"
         :groupSell="showItem.groupSell"
         :teamDetail="showItem.teamDetail"
+        :moreVersion="showItem.moreVersion"
         :timeData="showItem.timeData"
         :selectAddress="showItem.selectAddress"
         :consigneePhone="showItem.consigneePhone"
@@ -19,6 +20,7 @@
         :replenishMethod="showItem.replenishMethod"
         :supPlaceholder="showItem.supPlaceholder"
         :topicType="showItem.topicType"
+        :productType="showItem.productType"
         :operatorId="showItem.operatorId"
         :sourceType="showItem.sourceType"
         :replenishProduct="showItem.replenishProduct"
@@ -28,6 +30,7 @@
         :teamClass="teamClass"
         :productName="showItem.productName"
         :regType="showItem.regType"
+        :channel="showItem.channel"
       />
     </div>
     <!-- v-if="!teacherId" TOSS -->
@@ -124,7 +127,7 @@ export default {
     },
     status: {
       type: String,
-      default: '0'
+      default: ''
     },
     regtype: {
       type: String,
@@ -153,6 +156,10 @@ export default {
   },
   computed: {
     showItem() {
+      // 体验课物流增加 订单来源 筛选
+      if (this.teamClass === '0') {
+        Object.assign(this.defaultShowItem, { channel: 'pay_channel' })
+      }
       return { ...this.defaultShowItem, ...this.hideSearchItem }
     },
     searchInData() {
@@ -191,6 +198,7 @@ export default {
         teamDetail: 'last_team_id',
         moreVersion: 'product_version.keyword',
         consigneePhone: 'receipt_tel',
+        // channel: 'pay_channel',
         timeData: [
           { text: '购买时间', value: 'ctime' },
           { text: '揽收时间', value: 'delivery_collect_time' },
@@ -205,9 +213,7 @@ export default {
   },
   watch: {
     status(val) {
-      if (val) {
-        this.expressStatus = val
-      }
+      this.expressStatus = val
     },
     source_type() {
       this.$emit(
@@ -217,7 +223,6 @@ export default {
     }
   },
   created() {
-    console.log(this.tab, 'tab')
     this.teacherId = isToss()
     this.operatorId =
       this.teacherId || JSON.parse(localStorage.getItem('staff')).id
@@ -303,11 +308,8 @@ export default {
         query = { bool: { must: [{ terms: { id: uid } }] } } // 自行通过前端选择的条件进行动态组装
         sessionStorage.removeItem('uid')
       } else {
+        console.log(this.searchIn, 'this.searchIn-=')
         const term = this.searchIn.map((item, index) => {
-          if (item.range && item.range.ctime) {
-            item.range.create_order_time = item.range.ctime
-            delete item.range.ctime
-          }
           if (item.terms && item.terms.sup) {
             item.terms['sup.keyword'] = item.terms.sup
             delete item.terms.sup
@@ -318,7 +320,7 @@ export default {
           }
           if (item && item.wildcard && item.wildcard.express_nu) {
             item.wildcard['express_nu.keyword'] = item.wildcard.express_nu
-            delete item.wildcard
+            delete item.wildcard.express_nu
           }
           // if (item.wildcard && item.wildcard.last_team_id) {
           //   item['term'].team_id = item.wildcard.last_team_id
@@ -405,27 +407,7 @@ export default {
           console.log(item, 'item++++++')
           return item
         })
-        // debugger
-        // let finaTerm = term.concat([
-        //   {
-        //     terms: { 'source_type.keyword': this.source_type.split(',') }
-        //   }
-        // ])
-        // const isRegtype = term.some((item) => {
-        //   return 'regtype'
-        // })
-
-        // if (!isRegtype) {
-        //   finaTerm = term.concat([
-        //     {
-        //       terms: { 'source_type.keyword': this.source_type.split(',') }
-        //     },
-        //     {
-        //       terms: { regtype: this.regtype.split(',') }
-        //     }
-        //   ])
-        // }
-
+        console.log(arrFlag, 'arrFlag==')
         const myTerm = term.concat(arrFlag)
 
         // term数组有空对象的，删除掉
@@ -438,13 +420,19 @@ export default {
           {
             terms: { regtype: this.regtype.split(',') }
           },
-          { terms: { express_status: this.expressStatus.split(',') } },
-          { term: { subject: '1' } }
+          { terms: { express_status: this.expressStatus.split(',') } }
         ])
-
+        let finalmust = []
+        finalmust = finaTerm.filter((item) => {
+          if (!item.range) {
+            return Object.values(Object.values(item)[0])[0].length
+          }
+          return item
+        })
+        // finalmust = finaTerm
         query = {
           bool: {
-            must: finaTerm
+            must: finalmust
             // filter: {
             //   bool: {
             //     should: [
@@ -462,12 +450,13 @@ export default {
         id: '物流信息ID',
         user_id: '用户ID',
         out_trade_no: '订单号',
-        regtype: '商品类型',
+        product_type: '商品类型',
         term: '期名',
         sup: '课程难度',
         level: '课程级别',
         product_name: '物流商品名称',
         product_version: '随材版本',
+        'operator_name|replenish_reason|express_remark': '补发原因',
         receipt_name: '收货人姓名',
         receipt_tel: '收货人手机号',
         province: '省',
@@ -503,6 +492,7 @@ export default {
     },
     dosomething() {},
     handleSearch(search) {
+      console.log(search, 'search==')
       this.searchIn = deepClone(search)
       this.searchIn.forEach((item) => {
         if (item.terms && (item.terms.sup || item.terms.product_type)) {
@@ -519,6 +509,7 @@ export default {
       })
 
       this.$emit('result', this.searchIn)
+      console.log(this.searchIn, 'this.searchIn===')
       switchTabSearchIn[
         `searchIn${this.regtype}${this.source_type}`
       ] = this.searchIn

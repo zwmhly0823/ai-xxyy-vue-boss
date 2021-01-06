@@ -35,13 +35,13 @@
 
       <!-- 功能区 入口; 目前只有 小熊美术 显示 -->
       <template v-if="currentSubject === 'art_app'">
-        <a
+        <!-- <a
           class="order-btn"
           href="https://shimo.im/docs/opMWovESib0pcyh0/"
           target="_blank"
           >帮助</a
         >
-        <span class="item-line"></span>
+        <span class="item-line"></span> -->
         <el-badge
           :value="noticeBadge"
           :hidden="!noticeBadge"

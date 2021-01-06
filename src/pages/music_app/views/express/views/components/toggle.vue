@@ -11,7 +11,6 @@
     </div>
   </div>
 </template>
-
 <script>
 /* eslint-disable camelcase */
 import { isToss, injectSubject } from '@/utils/index'
@@ -86,7 +85,7 @@ export default {
       } else {
         q = `{"regtype":[${this.regtype}],"source_type":[${this.source_type}],"center_express_id":{"lte":0}}`
       }
-      const query = JSON.stringify(injectSubject(q))
+      const query = JSON.stringify(q)
       this.$http.Express.getLogisticsStatistics({
         query: `{
           logisticsStatisticsNew(query:${query}) {

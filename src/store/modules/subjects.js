@@ -36,10 +36,10 @@ const mutations = {
     state.currentSubjectKey = key
     state.subject = key.toUpperCase()
     // state.subjectCode = Object.keys(subjects).findIndex((item) => item.key === key)
-    let subjectCode = 0
+    let subjectCode = state.subjectCode
     subjectsList.map((item, index) => {
       if (item.key === key) {
-        subjectCode = index
+        subjectCode = item.index
       }
     })
     state.subjects = subjects

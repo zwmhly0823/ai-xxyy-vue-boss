@@ -22,7 +22,11 @@
         />
       </el-form-item>
       <el-form-item label="商品类型:" :class="{ [$style.marginer]: true }">
-        <product-type subjectType="1" name="regtype" @result="getProductType" />
+        <product-type
+          name="regtype"
+          :is-multipe="false"
+          @result="getProductType"
+        />
       </el-form-item>
       <br />
       <el-form-item label="下单时间:" :class="{ [$style.marginer]: true }">
@@ -177,8 +181,27 @@ export default {
     },
 
     getProductType(res) {
-      if (res.regtype.length === 0) res.regtype = ['4', '5', '6']
-      this.setSeachParmas(res, ['regtype'], 'terms')
+      console.log(res, 'type prudoct')
+      // if (res.regtype.length === 0) res.regtype = ['4', '5', '6']
+      // this.setSeachParmas(res, ['regtype'], 'term')
+      /**
+       * 新增商品类型筛选项-邀请有奖-抽奖（regtype=5, topic_id=10）
+       */
+      // 邀请有奖-抽奖
+      if (res && res.regtype === '666') {
+        res.regtype = '5'
+        this.setSeachParmas(res, ['regtype'], 'term')
+        this.setSeachParmas({ topic_id: '10' }, ['topic_id'], 'term')
+      } else {
+        this.setSeachParmas(res, ['regtype'], 'term')
+        // 小熊商城
+        if (res.regtype === '5') {
+          res.topic_id = { lt: 10 }
+          this.setSeachParmas(res, ['topic_id'], 'term')
+        } else {
+          this.setSeachParmas('', ['topic_id'], 'term')
+        }
+      }
     },
 
     getSendUser(res) {

@@ -4,7 +4,7 @@
  * @Author: panjian
  * @Date: 2020-04-25 12:09:03
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-09-25 22:11:29
+ * @LastEditTime: 2020-09-08 20:10:59
  -->
 <template>
   <div id="channel-box" class="channel-box">
@@ -21,6 +21,13 @@
     </div>
     <div class="channel-box-medium">
       <el-row :gutter="20">
+        <!-- <el-col :span="3">
+          <div class="grid-content2 bg-purple2">
+            <span>
+              数据汇总
+            </span>
+          </div>
+        </el-col> -->
         <el-col :span="6">
           <div class="grid-content bg-purple">
             <p>累计成单金额</p>
@@ -163,17 +170,9 @@
             </template>
           </el-table-column>
           <el-table-column prop="pay_channel" label="渠道ID"> </el-table-column>
-          <el-table-column
-            prop="trial_user_num"
-            label="体验课成单数"
-            min-width="100"
-          >
+          <el-table-column prop="trial_user_num" label="体验课成单数">
           </el-table-column>
-          <el-table-column
-            prop="order_user_no_pay_nums"
-            label="体验课未支付"
-            min-width="100"
-          >
+          <el-table-column prop="order_user_no_pay_nums" label="体验课未支付">
           </el-table-column>
           <el-table-column prop="wet_nums" label="添加微信数">
           </el-table-column>
@@ -317,7 +316,7 @@ export default {
   data() {
     return {
       tableShow: false,
-      link: 'https://www.baidu.com',
+      link: '',
       showClose: true,
       drawer: false,
       tableData: [],
@@ -389,9 +388,6 @@ export default {
   mounted() {
     window.addEventListener('scroll', this.handleScroll, true)
   },
-  destroyed() {
-    window.removeEventListener('scroll')
-  },
   methods: {
     handleScroll() {
       const dom = document.getElementById('channel-box').scrollTop
@@ -428,13 +424,13 @@ export default {
         startCtime: this.stateTime,
         endCtime: this.endTime
       }
-      this.$http.writeApp.Operating.countsByTrialChannel(params).then((res) => {
+      this.$http.Operating.countsByTrialChannel(params).then((res) => {
         const _data = res.content
         if (!_data) return
         this.totalNumber = res.number
         this.totalElements = res.totalElements
         _data.forEach((res) => {
-          res.channelNameLink = `https://activity.meishubao.com/custom/writing?channelId=${res.pay_channel}`
+          res.channelNameLink = `https://www.xiaoxiongmeishu.com/activity/newFortyNine?changeImg=1&channelId=${res.pay_channel}`
           // 线索数
           // const orderUserAllNums = +res.orderUserAllNums
           // 购买体验课数
@@ -471,84 +467,79 @@ export default {
         })
         this.onGetChannelList(_data)
       })
-      this.$http.writeApp.Operating.countsByTrialChannelOfTotal(paramsM).then(
-        (ele) => {
-          // 模块数据
-          const _datas = ele.payload
-          if (!_datas) return
-          // 累计成单金额
-          if (_datas.system_user_amounts !== 'null') {
-            const allSystemUserAmountsNums = +_datas.system_user_amounts
-            this.allSystemUserAmounts = `${allSystemUserAmountsNums.toFixed(2)}`
-          } else {
-            this.allSystemUserAmounts = '0'
-          }
-          // 累计转化率
-          if (
-            +_datas.system_user_num === 0 &&
-            _datas.trial_user_num === 'null'
-          ) {
-            this.conversionRate = `0%`
-          } else {
-            const conversionRatePercentNums =
-              (_datas.system_user_num / _datas.trial_user_num) * 100
-            this.conversionRate = `${conversionRatePercentNums.toFixed(2)}%`
-          }
-          // 系统课成单人数
-          this.allSystemUser = _datas.system_user_num
-          // 添加微信
-          if (_datas.wet_nums !== 'null') {
-            this.allWechatAddNums = _datas.wet_nums
-          } else {
-            this.allWechatAddNums = '0'
-          }
-          // 未支付
-          this.unpaid = _datas.order_user_no_pay_nums
-          // 参课数
-          this.allJoinUserNums = _datas.join_user_num
-          // 参课率
-          if (+_datas.join_user_num === 0 && _datas.trial_user_num === 'null') {
-            this.allJoinUserNumsPercent = `0%`
-          } else {
-            const allJoinUserNumsPercentNums =
-              (_datas.join_user_num / _datas.trial_user_num) * 100
-            this.allJoinUserNumsPercent = `${allJoinUserNumsPercentNums.toFixed(
-              2
-            )}%`
-          }
-          // 完课数
-          this.allCompleteUserNums = _datas.complete_user_num
-          // 完课率
-          if (
-            +_datas.complete_user_num === 0 &&
-            _datas.trial_user_num === 'null'
-          ) {
-            this.allCompleteUserNumsPercent = `0%`
-          } else {
-            const allCompleteUserNumsPercentNums =
-              (_datas.complete_user_num / _datas.trial_user_num) * 100
-            this.allCompleteUserNumsPercent = `${allCompleteUserNumsPercentNums.toFixed(
-              2
-            )}%`
-          }
-          // 成单数
-          if (_datas.trial_user_num !== 'null') {
-            this.allPayUserNums = _datas.trial_user_num
-          } else {
-            this.allPayUserNums = '0'
-          }
-          // 线索数
-          if (
-            _datas.trial_user_num !== 'null' &&
-            +_datas.order_user_no_pay_nums !== 0
-          ) {
-            this.allUserNums =
-              +_datas.trial_user_num + +_datas.order_user_no_pay_nums
-          } else {
-            this.allUserNums = '0'
-          }
+      this.$http.Operating.countsByTrialChannelOfTotal(paramsM).then((ele) => {
+        // 模块数据
+        const _datas = ele.payload
+        if (!_datas) return
+        // 累计成单金额
+        if (_datas.system_user_amounts !== 'null') {
+          const allSystemUserAmountsNums = +_datas.system_user_amounts
+          this.allSystemUserAmounts = `${allSystemUserAmountsNums.toFixed(2)}`
+        } else {
+          this.allSystemUserAmounts = '0'
         }
-      )
+        // 累计转化率
+        if (+_datas.system_user_num === 0 && _datas.trial_user_num === 'null') {
+          this.conversionRate = `0%`
+        } else {
+          const conversionRatePercentNums =
+            (_datas.system_user_num / _datas.trial_user_num) * 100
+          this.conversionRate = `${conversionRatePercentNums.toFixed(2)}%`
+        }
+        // 系统课成单人数
+        this.allSystemUser = _datas.system_user_num
+        // 添加微信
+        if (_datas.wet_nums !== 'null') {
+          this.allWechatAddNums = _datas.wet_nums
+        } else {
+          this.allWechatAddNums = '0'
+        }
+        // 未支付
+        this.unpaid = _datas.order_user_no_pay_nums
+        // 参课数
+        this.allJoinUserNums = _datas.join_user_num
+        // 参课率
+        if (+_datas.join_user_num === 0 && _datas.trial_user_num === 'null') {
+          this.allJoinUserNumsPercent = `0%`
+        } else {
+          const allJoinUserNumsPercentNums =
+            (_datas.join_user_num / _datas.trial_user_num) * 100
+          this.allJoinUserNumsPercent = `${allJoinUserNumsPercentNums.toFixed(
+            2
+          )}%`
+        }
+        // 完课数
+        this.allCompleteUserNums = _datas.complete_user_num
+        // 完课率
+        if (
+          +_datas.complete_user_num === 0 &&
+          _datas.trial_user_num === 'null'
+        ) {
+          this.allCompleteUserNumsPercent = `0%`
+        } else {
+          const allCompleteUserNumsPercentNums =
+            (_datas.complete_user_num / _datas.trial_user_num) * 100
+          this.allCompleteUserNumsPercent = `${allCompleteUserNumsPercentNums.toFixed(
+            2
+          )}%`
+        }
+        // 成单数
+        if (_datas.trial_user_num !== 'null') {
+          this.allPayUserNums = _datas.trial_user_num
+        } else {
+          this.allPayUserNums = '0'
+        }
+        // 线索数
+        if (
+          _datas.trial_user_num !== 'null' &&
+          +_datas.order_user_no_pay_nums !== 0
+        ) {
+          this.allUserNums =
+            +_datas.trial_user_num + +_datas.order_user_no_pay_nums
+        } else {
+          this.allUserNums = '0'
+        }
+      })
 
       //   this.tableData = _data.content
       // })
@@ -559,33 +550,33 @@ export default {
       const channelValue = `{"id":${JSON.stringify(query)}, "subject": ${
         this.$store.getters.subjects.subjectCode
       }}`
-      this.$http.writeApp.Operating.ChannelDetailStatisticsList(
-        channelValue
-      ).then((ele) => {
-        console.log(ele)
+      this.$http.Operating.ChannelDetailStatisticsList(channelValue).then(
+        (ele) => {
+          const __data = ele?.data?.ChannelDetailStatisticsList
+          console.log(__data)
 
-        const __data = ele.data?.ChannelDetailStatisticsList
-        if (!__data) return
-        _data.forEach((val) => {
-          __data.forEach((item) => {
-            if (+item.id === +val.pay_channel) {
-              val.channel_class_id = item.channel_class_id
-              val.channel_class_name = item.channel_class_name
-              val.channel_inner_name = item.channel_inner_name
-              val.ctime = item.ctime
-              if (+val.ctime === 0 && val.ctime) {
-                val.ctime = '-'
-              } else {
-                val.ctime = timestamp(val.ctime, 5)
+          if (!__data) return
+          _data.forEach((val) => {
+            __data.forEach((item) => {
+              if (+item.id === +val.pay_channel) {
+                val.channel_class_id = item.channel_class_id
+                val.channel_class_name = item.channel_class_name
+                val.channel_inner_name = item.channel_inner_name
+                val.ctime = item.ctime
+                if (+val.ctime === 0 && val.ctime) {
+                  val.ctime = '-'
+                } else {
+                  val.ctime = timestamp(val.ctime, 5)
+                }
+                val.id = item.id
+                val.p_channel_class_id = item.p_channel_class_id
+                val.p_channel_class_name = item.p_channel_class_name
               }
-              val.id = item.id
-              val.p_channel_class_id = item.p_channel_class_id
-              val.p_channel_class_name = item.p_channel_class_name
-            }
+            })
           })
-        })
-        this.tableData = _data
-      })
+          this.tableData = _data
+        }
+      )
     },
     // 组件 排期传的值
     schedulingSearch(data) {
@@ -696,6 +687,8 @@ export default {
       font-size: 12px;
       color: #666;
       font-weight: normal;
+      .row1 {
+      }
       .row2 {
         margin-left: 20px;
       }
@@ -723,6 +716,8 @@ export default {
       }
       .row10 {
         margin-left: 20px;
+      }
+      .row11 {
       }
       .bottom-tips {
         color: #fff;
@@ -752,6 +747,8 @@ export default {
         font-size: 12px;
         color: #666;
         font-weight: normal;
+        .row1 {
+        }
         .row2 {
           margin-left: -20px;
         }

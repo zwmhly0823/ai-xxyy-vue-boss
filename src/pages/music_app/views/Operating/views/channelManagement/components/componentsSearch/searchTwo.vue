@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-24 18:50:54
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-24 16:22:55
+ * @LastEditTime: 2020-08-26 12:08:10
  -->
 <template>
   <div class="search-item small threeSelect">
@@ -160,7 +160,7 @@ export default {
       channelList: [],
       channelData: null,
       channelClassData: [],
-      channelClassList: [], // 分类条件
+      channelClassList: null, // 分类条件
       showDatas: null // 三级列表展示数据
     }
   },
@@ -186,11 +186,10 @@ export default {
   methods: {
     // 获取渠道来源分类 filter: 过滤关键词  eg：filter:"抖音"
     async getChannelClassList() {
-      const res = await this.$http.writeApp.Operating.getChannelClassList()
+      const res = await this.$http.Operating.getChannelClassList()
       this.channelClassList = res?.data?.ChannelClassList || []
     },
-    formatData(classdata = [], classifiData = []) {
-      if (!classifiData) return
+    formatData(classdata, classifiData) {
       // 第一级目录
       const arrList = []
       classifiData.forEach((item) => {

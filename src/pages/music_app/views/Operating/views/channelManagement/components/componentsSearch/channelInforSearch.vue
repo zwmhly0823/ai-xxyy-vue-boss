@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-24 18:50:54
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-24 16:25:22
+ * @LastEditTime: 2020-08-26 11:48:03
  -->
 <template>
   <div class="search-item small threeSelect">
@@ -71,7 +71,7 @@ export default {
       channelList: [],
       channelData: null,
       channelClassData: [],
-      channelClassList: [], // 分类条件
+      channelClassList: null, // 分类条件
       showDatas: null // 三级列表展示数据
     }
   },
@@ -107,11 +107,10 @@ export default {
     },
     // 获取渠道来源分类 filter: 过滤关键词  eg：filter:"抖音"
     async getChannelClassList() {
-      const res = await this.$http.writeApp.Operating.getChannelClassList()
+      const res = await this.$http.Operating.getChannelClassList()
       this.channelClassList = res?.data?.ChannelClassList || []
     },
-    formatData(classdata, classifiData = []) {
-      if (!classifiData) return
+    formatData(classdata, classifiData) {
       // 第一级目录
       const arrList = []
       classifiData.forEach((item) => {
@@ -139,14 +138,13 @@ export default {
           item.children && item.children.forEach((vals) => (vals.children = []))
       )
 
-      classdata &&
-        classdata.forEach((content, num) => {
-          arrList.forEach((datas, nums) => {
-            if (+content.channel_class_id === +datas.id) {
-              datas.children.push(content)
-            }
-          })
+      classdata.forEach((content, num) => {
+        arrList.forEach((datas, nums) => {
+          if (+content.channel_class_id === +datas.id) {
+            datas.children.push(content)
+          }
         })
+      })
 
       const result = firstNode.map((item) => {
         if (item.children && item.children.length === 0) {

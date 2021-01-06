@@ -11,7 +11,7 @@
 import axios from '../axiosConfig'
 import { getAppSubjectCode, injectSubject } from '@/utils/index'
 const subject = getAppSubjectCode()
-
+console.log(subject)
 export default {
   /**
    * 修改学员是否已加微信、已进群状态

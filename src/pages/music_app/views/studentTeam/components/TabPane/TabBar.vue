@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-19 20:50:40
  * @LastEditors: Shentong
- * @LastEditTime: 2020-09-10 01:47:29
+ * @LastEditTime: 2020-05-22 13:49:54
  -->
 <template>
   <div>
@@ -16,10 +16,10 @@
         class="box-shadow-0"
       >
         <el-tab-pane label="学员" name="students">
-          <studens-table :classObj="classObj" />
+          <studens-tab :classObj="classObj" />
         </el-tab-pane>
         <el-tab-pane label="带班详情" name="details">
-          <class-detail :classObj="classObj" />
+          <details-tab :classObj="classObj" />
         </el-tab-pane>
         <el-tab-pane
           label="系统课订单"
@@ -54,8 +54,8 @@
   </div>
 </template>
 <script>
-import StudensTable from './StudentsTable'
-import ClassDetail from './ClassDetail'
+import StudensTab from './StudentsTab'
+import DetailsTab from './DetailsTab'
 import OrderTab from './OrderTab'
 // import GroupchatTab from './GroupchatTab'
 export default {
@@ -66,8 +66,8 @@ export default {
     }
   },
   components: {
-    StudensTable,
-    ClassDetail,
+    StudensTab,
+    DetailsTab,
     OrderTab
     // GroupchatTab,
   },

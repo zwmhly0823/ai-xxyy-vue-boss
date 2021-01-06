@@ -114,7 +114,7 @@
           <p>
             {{
               scope.row.out_trade_no
-                ? scope.row.out_trade_no.replace('xz', '')
+                ? scope.row.out_trade_no.replace('xiong', '')
                 : '-'
             }}
           </p>
@@ -430,11 +430,11 @@ export default {
     // 打开班级详情
     openDetail(id, row) {
       row && console.log(row)
-      id && openBrowserTab(`/write_app/#/teamDetail/${id}/0`)
+      id && openBrowserTab(`/student-team/#/teamDetail/${id}/0`)
     },
     // 用户详情
     openUserDetail(id) {
-      id && openBrowserTab(`/write_app/#/details/${id}`)
+      id && openBrowserTab(`/users/#/details/${id}`)
     }
   }
 }

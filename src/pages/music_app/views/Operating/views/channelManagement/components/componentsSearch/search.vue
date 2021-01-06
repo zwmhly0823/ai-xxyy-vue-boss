@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-24 18:50:54
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-08-24 15:28:43
+ * @LastEditTime: 2020-08-26 11:49:57
  -->
 <template>
   <div class="search-item small threeSelect">
@@ -91,7 +91,6 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
 import { debounce } from 'lodash'
 import axios from '@/api/axiosConfig'
 export default {
@@ -202,7 +201,6 @@ export default {
     this.formatData(this.channelList, this.channelClassList)
   },
   computed: {
-    ...mapGetters(['subjects']),
     handleDebounce() {
       return debounce(this.getData, 500)
     }
@@ -213,11 +211,11 @@ export default {
   methods: {
     // 获取渠道来源 filter: 过滤关键词  eg：filter:"抖音"
     async getChannelLeves() {
-      const query = { subject: this.subjects.subjectCode }
+      const subject = { subject: this.$store.getters.subjects.subjectCode }
       await axios
         .post('/graphql/v1/toss', {
           query: `{
-            ChannelAllList(query: ${JSON.stringify(JSON.stringify(query))}) {
+            ChannelAllList(query:${JSON.stringify(JSON.stringify(subject))}) {
                 id
                 channel_class_id
                 channel_outer_name
@@ -234,7 +232,7 @@ export default {
     },
     // 获取渠道来源分类 filter: 过滤关键词  eg：filter:"抖音"
     async getChannelClassList() {
-      const res = await this.$http.writeApp.Operating.getChannelClassList()
+      const res = await this.$http.Operating.getChannelClassList()
       this.channelClassList = res?.data?.ChannelClassList || []
     },
     formatData(classdata, classifiData) {
@@ -297,7 +295,7 @@ export default {
         bool: {
           must: [
             { wildcard: { 'period_name.keyword': `*${queryString}*` } },
-            { term: { subject: this.subjects.subjectCode } }
+            { term: { subject: this.$store.getters.subjects.subjectCode } }
           ]
         }
       }

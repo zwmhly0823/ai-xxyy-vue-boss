@@ -67,12 +67,11 @@ export default {
   methods: {
     // 获取渠道来源分类 filter: 过滤关键词  eg：filter:"抖音"
     async getChannelClassList() {
-      const res = await this.$http.writeApp.Operating.getChannelClassList()
+      const res = await this.$http.Operating.getChannelClassList()
       this.channelClassList = res?.data?.ChannelClassList || []
     },
     // 查询下拉列表
     formatData(classifiData) {
-      if (!classifiData) return
       // 第一级目录
       const arrList = []
       classifiData.forEach((item) => {

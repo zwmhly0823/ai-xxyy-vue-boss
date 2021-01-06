@@ -4,7 +4,7 @@
  * @Author: zhubaodong
  * @Date: 2020-03-24 15:16:26
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-09-21 20:29:09
+ * @LastEditTime: 2020-09-25 11:37:01
  -->
 <template>
   <el-row type="flex" class="app-main height">
@@ -44,18 +44,18 @@
                   v-if="activeTopic === '4'"
                 />
               </el-tab-pane>
-              <el-tab-pane label="活动订单" name="1,2,6">
+              <el-tab-pane label="活动订单" name="1,2,6,10">
                 <search-list3
                   @search="handleSearch"
-                  v-if="activeTopic === '1,2,6'"
+                  v-if="activeTopic === '1,2,6,10'"
                 />
                 <all-order3
                   :topic="activeTopic"
                   :search="search"
-                  v-if="activeTopic === '1,2,6'"
+                  v-if="activeTopic === '1,2,6,10'"
                 />
               </el-tab-pane>
-              <!-- <el-tab-pane label="素质课" name="7">
+              <el-tab-pane label="素质课" name="7">
                 <search-list4
                   @search="handleSearch"
                   v-if="activeTopic === '7'"
@@ -65,7 +65,7 @@
                   :search="search"
                   v-if="activeTopic === '7'"
                 />
-              </el-tab-pane> -->
+              </el-tab-pane>
             </el-tabs>
           </div>
         </el-scrollbar>
@@ -78,11 +78,11 @@
 import allOrder1 from './components/allOrder1'
 import allOrder2 from './components/allOrder2'
 import allOrder3 from './components/allOrder3'
-// import allOrder4 from './components/allOrder4'
+import allOrder4 from './components/allOrder4'
 import searchList1 from './components/searchList1.vue'
 import searchList2 from './components/searchList2.vue'
 import searchList3 from './components/searchList3.vue'
-// import searchList4 from './components/searchList4.vue'
+import searchList4 from './components/searchList4.vue'
 export default {
   name: 'orderModule',
   props: [],
@@ -90,11 +90,11 @@ export default {
     allOrder1,
     allOrder2,
     allOrder3,
-    // allOrder4,
+    allOrder4,
     searchList1,
     searchList2,
-    searchList3
-    // searchList4
+    searchList3,
+    searchList4
   },
   data() {
     return {
@@ -112,9 +112,13 @@ export default {
   methods: {
     // 点击搜索
     handleSearch(res) {
+      console.log(res, 'search')
+
       this.search = res
     },
+
     getPayStatus(status) {
+      console.log(status, 'pay status')
       this.payStatus = status
     }
   },

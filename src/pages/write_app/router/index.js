@@ -28,7 +28,7 @@ const routes = [
       title: '学员详情',
       keepAlive: false
     },
-    component: () => import('../../art_app/users/views/details/index.vue')
+    component: () => import('../../users/views/details/index.vue')
   },
   {
     path: '/trialUsers',
@@ -250,7 +250,7 @@ const routes = [
     },
     component: () =>
       import(
-        '../../operating/views/reviewManagement/components/verificationCode.vue'
+        '../../art_app/views/operating/views/reviewManagement/components/verificationCode.vue'
       )
   }
   /**

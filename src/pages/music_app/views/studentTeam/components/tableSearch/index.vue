@@ -4,7 +4,7 @@
  * @Author: Shentong
  * @Date: 2020-04-25 14:35:19
  * @LastEditors: Shentong
- * @LastEditTime: 2020-09-07 13:32:22
+ * @LastEditTime: 2020-07-13 13:43:24
  -->
 <template>
   <!-- <el-scrollbar class="scroll-search-container"> -->
@@ -42,17 +42,12 @@
     </div>
     <div class="comp-cell">
       <span class="label">课程难度：</span>
-      <level
-        :courseType="regType + ''"
-        @result="supCallBack"
-        :emitName="sup"
-      ></level>
-      <!-- <stage-sup-levels
+      <stage-sup-levels
         @supCallBack="supCallBack"
         :disabled="true"
         :supName="sup"
         style="margin-bottom:0px"
-      /> -->
+      />
     </div>
     <div class="comp-cell">
       <span class="label">班级名称：</span>
@@ -91,12 +86,10 @@
 <script>
 import _ from 'lodash'
 // import SearchTeamName from '@/components/MSearch/searchItems/searchTeamName'
-import Level from '../../../../components/search/Level.vue'
-
 import Department from '@/components/MSearch/searchItems/department'
 import SearchStage from '@/components/MSearch/searchItems/searchStage'
 import GroupSell from '@/components/MSearch/searchItems/groupSell'
-// import StageSupLevels from '@/components/MSearch/searchItems/stageSupLevels.vue'
+import StageSupLevels from '@/components/MSearch/searchItems/stageSupLevels.vue'
 export default {
   props: {
     regType: {
@@ -137,8 +130,7 @@ export default {
     // SearchTeamName,
     Department,
     GroupSell,
-    // StageSupLevels,
-    Level
+    StageSupLevels
   },
   methods: {
     // 课程排期emit
@@ -148,9 +140,6 @@ export default {
       // console.log(res, 'res')
       // this.setSeachParmas(res, ['stage'], 'terms')
     },
-    // supCallBack(level) {
-    //   console.log(level)
-    // },
     // 社群销售
     selectSellTeacher(teachers) {
       const { groupSell = '' } = teachers || {}
@@ -169,7 +158,7 @@ export default {
 
       if (sup.length) {
         sup = _.cloneDeep(sup)
-        let strSup = sup.map((item) => `${item}`)
+        let strSup = sup.map((item) => `S${item}`)
         strSup = strSup.join().split(',')
         this.manageChange(strSup, 'sup')
       } else this.manageChange(sup, 'sup')

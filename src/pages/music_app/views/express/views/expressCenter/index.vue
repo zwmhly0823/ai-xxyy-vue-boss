@@ -13,6 +13,11 @@
             command="setting"
             >自动发货设置</el-dropdown-item
           > -->
+          <el-dropdown-item
+            v-show="activeName === '0' || activeName === '1'"
+            command="delivery"
+            >一键批量发货</el-dropdown-item
+          >
         </el-dropdown-menu>
       </el-dropdown>
     </div>
@@ -92,7 +97,7 @@
           <rightUp
             ref="right2"
             @result="getSearch"
-            :regtype="regtypeActivity"
+            :regtype="`0,${regtypeActivity}`"
             :status="sortItem.id"
             :source_type="source_type"
             :hideCol="allExpressHideColActivity"
@@ -101,7 +106,7 @@
           <toggle
             @result="getStatus"
             :tab="activeName"
-            :regtype="regtypeActivity"
+            :regtype="`0,${regtypeActivity}`"
             :source_type="source_type"
             :hideToggleBtn="allHideToggleBtn"
           />
@@ -113,10 +118,11 @@
               <rightDown
                 :search="searchActivity"
                 :sortItem="sortItem"
-                :regtype="regtypeActivity"
+                :regtype="`0,${regtypeActivity}`"
                 :source_type="
                   (searchActivity &&
                     searchActivity[0] &&
+                    searchActivity[0].term &&
                     searchActivity[0].term.source_type) ||
                     source_type
                 "
@@ -126,7 +132,7 @@
           </el-scrollbar>
         </div>
       </el-tab-pane>
-      <!-- <el-tab-pane label="补发商品" name="3">
+      <el-tab-pane label="补发商品" name="3">
         <div v-if="activeName == '3'">
           <rightUp
             ref="right3"
@@ -161,7 +167,7 @@
             </div>
           </el-scrollbar>
         </div>
-      </el-tab-pane> -->
+      </el-tab-pane>
     </el-tabs>
     <!-- 自动发货设置弹窗 -->
     <el-dialog
@@ -230,6 +236,40 @@
         </el-button>
       </span>
     </el-dialog>
+    <el-dialog title="一键批量发货" :visible.sync="dialogDelivery" width="30%">
+      <section class="deliverycon" v-if="activeName === '0'">
+        <el-row> <span>物流类型:</span> <b>体验课</b> </el-row>
+        <el-row>
+          <span>排期:</span> <b>{{ deliveryParams.termText }}</b>
+        </el-row>
+        <el-row>
+          <span>难度:</span> <b>{{ deliveryParams.supText }}</b>
+        </el-row>
+      </section>
+      <section class="deliverycon" v-if="activeName === '1'">
+        <el-row> <span>物流类型:</span> <b>系统课</b> </el-row>
+        <el-row>
+          <span>级别:</span> <b>{{ deliveryParams.levelText }}</b>
+        </el-row>
+        <el-row>
+          <span>难度:</span> <b>{{ deliveryParams.supText }}</b>
+        </el-row>
+      </section>
+      <div slot="footer" class="dialog-footer">
+        <el-popconfirm
+          confirmButtonText="确定"
+          cancelButtonText="取消"
+          @onConfirm="godelivery"
+          v-loading.fullscreen.lock="fullscreenLoading"
+          icon="el-icon-info"
+          iconColor="red"
+          title="确定要立即发货吗？"
+        >
+          <el-button slot="reference" type="primary">一键发货</el-button>
+        </el-popconfirm>
+        <el-button @click="dialogDelivery = false">取 消</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -277,9 +317,11 @@ const allExpressHideSearchItemActivity = {
   schedule: '',
   groupSell: '',
   teamDetail: '',
-  topicType: 'regtype'
+  // topicType: 'regtype',
+  productType: 'productType'
 }
 const replenishHideCol = {
+  approvalReissueInfo: true,
   productName: true,
   productVersion: false,
   term: false,
@@ -299,7 +341,7 @@ const replenishHideSearchItem = {
   operatorId: 'operator_id',
   regType: 'regType'
 }
-const allExpressSourceType = '0,1,2,3,4'
+const allExpressSourceType = '0,1,2,3,4,6,7,8'
 const replenishSourceType = '5'
 export default {
   components: {
@@ -310,6 +352,9 @@ export default {
   data() {
     return {
       tabsShowed: ['0'],
+      dialogDelivery: false, // 一键发货弹窗
+      deliveryParams: {},
+      fullscreenLoading: false,
       isShowSetUp: false, // 自动发货按钮配置弹窗
       scrollHeight: 'auto', // scroll高度
       automaticParams: [
@@ -377,6 +422,9 @@ export default {
           break
         case 'export':
           this.$refs['right' + this.activeName].showExportDialog()
+          break
+        case 'delivery':
+          this.showDelivery()
           break
       }
     },
@@ -504,6 +552,91 @@ export default {
           this.$message.warning('没有发生变化')
         })
     },
+    // 打开一键发货弹窗
+    showDelivery() {
+      this.deliveryParams = {}
+      const staff = JSON.parse(localStorage.getItem('staff'))
+      if (staff && staff.id) {
+        this.deliveryParams.operatorId = staff.id
+      }
+      if (this.activeName === '0') {
+        this.deliveryParams.type = 1
+        console.log('体验课')
+        console.log(this.search, 'this.search')
+        this.search &&
+          this.search.forEach((item) => {
+            if (item && item.terms && item.terms.sup) {
+              if (item.terms.sup.length > 1) {
+                this.$message.warning('请选择单个难度、单个排期')
+              } else {
+                this.deliveryParams.sup = item.terms.sup.toString()
+                this.deliveryParams.supText = this.$refs.right0.$refs.msearch.$refs.stagesuplevels.$refs.sup_select.$refs.tags.innerText
+                console.log(item.terms.sup)
+              }
+            }
+            if (item && item.term && item.term.term) {
+              this.deliveryParams.term = item.term.term
+              this.deliveryParams.termText = this.$refs.right0.$refs.msearch.$refs.schedule.$refs.term_autocomplete.value
+              console.log(item.term.term)
+            }
+          })
+        if (!this.deliveryParams.term || !this.deliveryParams.sup) {
+          this.$message.warning('请选择单个难度、单个排期')
+        } else {
+          this.dialogDelivery = true
+        }
+      }
+      // this.$message.warning('请选择难度、排期')
+      if (this.activeName === '1') {
+        console.log('系统课')
+        this.deliveryParams.type = 2
+        console.log(this.searchSystem, 'this.searchSystem')
+        this.searchSystem &&
+          this.searchSystem.forEach((item) => {
+            console.log(item, 'item=-')
+            if (item && item.terms && item.terms.sup) {
+              if (item.terms.sup.length > 1) {
+                this.$message.warning('请选择单个难度、单个级别')
+              } else {
+                this.deliveryParams.sup = item.terms.sup.toString()
+                this.deliveryParams.supText = this.$refs.right1.$refs.msearch.$refs.stagesuplevels.$refs.sup_select.$refs.tags.innerText
+                console.log(item.terms.sup)
+              }
+            }
+            if (item && item.terms && item.terms.level) {
+              if (item.terms.level.length > 1) {
+                this.$message.warning('请选择单个难度、单个级别')
+              } else {
+                this.deliveryParams.level = item.terms.level.toString()
+                this.deliveryParams.levelText = this.$refs.right1.$refs.msearch.$refs.stagesuplevels.$refs.level_select.$refs.tags.innerText
+                console.log(item.terms.level)
+              }
+            }
+          })
+        if (!this.deliveryParams.level || !this.deliveryParams.sup) {
+          this.$message.warning('请选择单个难度、单个级别')
+          console.log(this.deliveryParams, 'this.deliveryParams')
+        } else {
+          this.dialogDelivery = true
+        }
+      }
+    },
+    // 一键发货按钮
+    godelivery() {
+      this.fullscreenLoading = true
+      // console.log(this.deliveryParams, 'deliveryParams')
+      const params = this.deliveryParams
+      this.$http.Express.deliveryByCenter(params).then((res) => {
+        if (res.payload.length) {
+          this.$message.warning(res.payload[0].message)
+        } else {
+          this.$message.success('发货任务已启动')
+          this.dialogDelivery = false
+        }
+        this.fullscreenLoading = false
+        console.log(res, 'ressss')
+      })
+    },
     // 自动发货配置弹窗关闭
     setUpClose() {
       this.isShowSetUp = false
@@ -512,6 +645,7 @@ export default {
     showSetUp() {
       this.getSwitchByType()
       this.isShowSetUp = true
+      console.log(this.search, 'this.search')
     },
     // 开关处理
     switchHandle(status) {
@@ -562,8 +696,6 @@ export default {
     },
     // 获取物流搜索的条件值
     getSearch(val) {
-      console.log(val, 'search')
-
       switch (this.activeName) {
         case '0':
           this.search = val
@@ -716,6 +848,16 @@ export default {
     padding-top: 12px;
     font-weight: 500;
     color: red;
+  }
+}
+.deliverycon {
+  padding: 0 20px;
+  b {
+    font-size: 20px;
+  }
+  span {
+    width: 80px;
+    display: inline-block;
   }
 }
 </style>

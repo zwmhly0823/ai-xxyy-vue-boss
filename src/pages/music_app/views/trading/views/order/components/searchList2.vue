@@ -4,7 +4,7 @@
  * @Author: liukun
  * @Date: 2020-04-25 17:24:23
  * @LastEditors: YangJiyong
- * @LastEditTime: 2020-10-26 17:34:25
+ * @LastEditTime: 2020-09-21 21:36:43
  -->
 <template>
   <el-card
@@ -120,7 +120,6 @@
           <hardLevel
             :class="['margin_l10']"
             placeholder="体验课难度"
-            subType="0"
             style="width:140px"
             name="sup"
             @result="supCallBackTrial"
@@ -134,7 +133,7 @@
             :class="['margin_l10']"
             style="width:140px"
           />
-          <!-- 写字 班级类型  -->
+          <!-- BOSS 显示单双周选择 -->
           <trial-course-type
             class="margin_l10"
             name="packages_id"
@@ -184,10 +183,8 @@
 </template>
 <script>
 import dayjs from 'dayjs'
-import hardLevel from '../../../../../components/search/Grade.vue' // add
-import TrialCourseType from '@/pages/write_app/components/search/subjecType.vue'
+import hardLevel from '@/components/MSearch/searchItems/hardLevel.vue' // add
 import orderSearch from '@/components/MSearch/searchItems/orderSearch.vue' // add
-
 // import orderStatus from '@/components/MSearch/searchItems/orderStatus.vue' // add
 import DatePicker from '@/components/MSearch/searchItems/datePicker.vue'
 import ChannelSelect from '@/components/MSearch/searchItems/channel.vue'
@@ -195,7 +192,7 @@ import GroupSell from '@/components/MSearch/searchItems/groupSell'
 import Department from '@/components/MSearch/searchItems/department'
 import SearchTeamName from '@/components/MSearch/searchItems/searchTeamName'
 import SearchStage from '@/components/MSearch/searchItems/searchStage'
-
+import TrialCourseType from '@/components/MSearch/searchItems/trialClassType'
 import { downloadHandle } from '@/utils/download'
 import SearchPhoneAndUsername from '@/components/MSearch/searchItems/searchPhoneAndUsername'
 import SimpleSelect from '@/components/MSearch/searchItems/simpleSelect'
@@ -512,7 +509,7 @@ export default {
       }
 
       const query = this.$parent.$children[1].finalParams
-      query.subject = 1
+      query.subject = 3
       const fileTitle = dayjs(new Date()).format('YYYY-MM-DD')
       const fileTitleTime = dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss')
 
@@ -547,7 +544,10 @@ export default {
             'packagesType.name': '套餐类型',
             'stageInfo.period_name': '期数',
             'channel.channel_outer_name': '线索渠道',
-            sup_text: '课程难度'
+            sup_text: '课程难度',
+            invoice_status_text: '开票状态',
+            invoice_type_text: '开票类型',
+            invoice_code: '发票号码'
           },
           fileName: `体验课订单导出-${fileTitleTime}`, // 文件名称
           query: JSON.stringify(query)

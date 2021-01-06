@@ -3,8 +3,8 @@
  * @version: 1.0.0
  * @Author: Shentong
  * @Date: 2020-05-14 14:11:21
- * @LastEditors: Shentong
- * @LastEditTime: 2020-09-07 22:04:02
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2020-10-17 20:01:58
  -->
 <template>
   <el-row type="flex" class="app-main team-container">
@@ -153,7 +153,7 @@
                 min-width="70"
                 prop="today_complete_course_count"
                 align="center"
-                v-if="!hideMutileTab"
+                v-if="teamIndex != 0 && teamIndex != 3"
               >
                 <template slot="header">
                   <div
@@ -187,7 +187,7 @@
                 min-width="70"
                 prop="yesterday_complete_course_count"
                 align="center"
-                v-if="!hideMutileTab"
+                v-if="teamIndex != 0 && teamIndex != 3"
               >
                 <template slot="header">
                   <div
@@ -238,7 +238,6 @@
                 min-width="110"
                 prop="current_lesson"
                 align="center"
-                v-if="!hideProgress"
               ></el-table-column>
               <el-table-column
                 label="开课时间"
@@ -264,6 +263,7 @@
 import _ from 'lodash'
 import TableSearch from '../../components/tableSearch/index'
 import { calculateWD } from '@/utils/validate'
+import { formatTeamNameSup } from '@/utils/supList'
 import EleTable from '@/components/Table/EleTable'
 import { formatData, openBrowserTab } from '@/utils/index'
 // import ScheduleTable from './components/index.vue'
@@ -341,18 +341,9 @@ export default {
     // }
 
     // await this.getAllTeacherByRole(params)
-    this.getTrialTeamList(this.tabQuery)
+    this.getSystemTeamList(this.tabQuery)
   },
-  computed: {
-    /** 待开课&全部班级: 课程进度隐藏 */
-    hideProgress() {
-      return [0, 1, 2, 3].includes(this.teamIndex)
-    },
-    /** 上课中&已结课: 今日完课、昨日完课 */
-    hideMutileTab() {
-      return [0, 1, 2, 3].includes(this.teamIndex)
-    }
-  },
+  computed: {},
   mounted() {
     this.calcTableHeight()
   },
@@ -363,13 +354,9 @@ export default {
       const teamType = row.team_type || '1'
       this.$store.commit('setTeamItem', row)
 
-      // id &&
-      //   this.$router.push({
-      //     path: `/teamDetail/${id}/${teamType}`
-      //   })
       id &&
         openBrowserTab(
-          `/write_app/#/teamDetail/${id}/${teamType}`,
+          `/student-team/#/teamDetail/${id}/${teamType}`,
           `${row.team_name}`
         )
     },
@@ -383,26 +370,15 @@ export default {
           page: 1,
           sort: `{"${sortKey}":"${this.sortKeys[sortKey]}"}`
         })
-        this.getTrialTeamList(this.tabQuery).then((content) => {
+        this.getSystemTeamList(this.tabQuery).then((content) => {
           this.sortActive = sortKey
-          // if (content.length) this.amountStatus = !this.amountStatus
         })
       }
     },
     // 组件emit
     searchChange(res) {
-      // 判断当前社群销售的老师是否属于当前老师权限
-      // const { teacherId = '' } = res
-      // if (teacherId && !this.tabQuery.teacherIdArr.includes(teacherId)) {
-      //   this.$message({
-      //     message: '当前社群销售不属于该老师团队',
-      //     type: 'warning'
-      //   })
-      //   return
-      // }
-
       this.initSearchData(res, true)
-      this.getTrialTeamList(this.tabQuery)
+      this.getSystemTeamList(this.tabQuery)
     },
     initSearchData(res, isFromEmit = false) {
       // 如果是子组件emit而来的数据，则不需要清空
@@ -433,21 +409,16 @@ export default {
         category,
         page: 1
       })
-      // this.getTrialTeamList(this.tabQuery)
     },
-    // async getAllTeacherByRole(params) {
-    //   const teacherIds = await this.$http.Permission.getAllTeacherByRole(params)
-    //   this.tabQuery.teacherIdArr = teacherIds
-    // },
     // 条件查询列表
-    async getTrialTeamList(params) {
+    async getSystemTeamList(params) {
       this.flags.loading = true
       try {
         const {
           data: {
             StudentSystemTeamStatisticsPage: { content = [], totalElements }
           }
-        } = await this.$http.writeApp.Team.getSystemTeamList(params)
+        } = await this.$http.Team.getSystemTeamList(params)
         // 总数、分页用
         this.totalElements = +totalElements || 0
         this.pakageListData(content)
@@ -468,6 +439,7 @@ export default {
         item.ctime = +item.ctime ? formatData(item.ctime) : ''
         item.utime = +item.utime ? formatData(item.utime) : ''
         item.WD = item.current_lesson ? calculateWD(item.current_lesson) : ''
+        item.current_lesson = formatTeamNameSup(item.current_lesson)
         item.teamStatus = item.team_state
           ? this.teamStatusKeyVal[+item.team_state]
           : ''
@@ -480,14 +452,14 @@ export default {
       Object.assign(this.tabQuery, team, {
         page: 1
       })
-      this.getTrialTeamList(this.tabQuery)
+      this.getSystemTeamList(this.tabQuery)
     },
     /**
      * @description 分页 回调事件
      */
     pageChange_handler(page) {
       this.tabQuery.page = page
-      this.getTrialTeamList(this.tabQuery)
+      this.getSystemTeamList(this.tabQuery)
     },
     calcTableHeight() {
       this.$nextTick(() => {

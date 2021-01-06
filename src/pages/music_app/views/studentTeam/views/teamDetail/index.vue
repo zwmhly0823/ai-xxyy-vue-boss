@@ -1,7 +1,7 @@
 <!--
  * @Date: 2020-03-13 15:33:48
  * @LastEditors: Shentong
- * @LastEditTime: 2020-09-11 18:23:22
+ * @LastEditTime: 2020-05-22 13:20:41
  * @FilePath: /ai-app-vue-toss/src/pages/studentTeam/views/studentTeam/index.vue
  -->
 <template>
@@ -9,7 +9,7 @@
     <el-col class="student-team-right ">
       <div class="grid-content right">
         <el-scrollbar wrap-class="scrollbar-wrapper" id="right-scroll">
-          <detail-info :classObj="classIdData" />
+          <right-bar :classObj="classIdData" />
         </el-scrollbar>
       </div>
     </el-col>
@@ -17,12 +17,12 @@
 </template>
 
 <script>
-import DetailInfo from '../../components/DetailInfo'
+import RightBar from '../../components/RightBar'
 
 export default {
   props: [],
   components: {
-    DetailInfo
+    RightBar
   },
   data() {
     return {

@@ -3,8 +3,8 @@
  * @version: 1.0.0
  * @Author: Shentong
  * @Date: 2020-05-14 14:11:21
- * @LastEditors: Shentong
- * @LastEditTime: 2020-09-07 18:52:30
+ * @LastEditors: zhangjianwen
+ * @LastEditTime: 2020-10-24 00:10:49
  -->
 <template>
   <el-row type="flex" class="app-main team-container">
@@ -221,7 +221,7 @@
                 min-width="70"
                 prop="today_complete_course_count"
                 align="center"
-                v-if="!hideMutileTab"
+                v-if="teamIndex != 0 && teamIndex != 3"
               >
                 <template slot="header">
                   <div
@@ -255,7 +255,7 @@
                 min-width="70"
                 prop="yesterday_complete_course_count"
                 align="center"
-                v-if="!hideMutileTab"
+                v-if="teamIndex != 0 && teamIndex != 3"
               >
                 <template slot="header">
                   <div
@@ -303,10 +303,9 @@
               ></el-table-column>
               <el-table-column
                 label="课程进度"
-                min-width="110"
+                min-width="140"
                 prop="current_lesson"
                 align="center"
-                v-if="!hideProgress"
               ></el-table-column>
               <el-table-column
                 label="开课时间"
@@ -331,9 +330,10 @@
 <script>
 import _ from 'lodash'
 import { calculateWD } from '@/utils/validate'
+import { formatTeamNameSup } from '@/utils/supList'
 import TableSearch from '../../components/tableSearch/index'
 import EleTable from '@/components/Table/EleTable'
-import { formatData } from '@/utils/index'
+import { formatData, openBrowserTab } from '@/utils/index'
 // import ScheduleTable from './components/index.vue'
 
 export default {
@@ -379,6 +379,11 @@ export default {
           title: '待开课',
           courseDay: ''
         },
+        // {
+        //   teamState: '1',
+        //   title: '今日开课',
+        //   courseDay: new Date(new Date().getTime()).setHours(0, 0, 0, 0)
+        // },
         {
           teamState: '1',
           title: '上课中',
@@ -398,18 +403,14 @@ export default {
     }
   },
   async created() {
+    console.log(9999923423)
+    // const params = {
+    //   teacherId: isToss() || ''
+    // }
+    // await this.getAllTeacherByRole(params)
     this.getTrialTeamList(this.tabQuery)
   },
-  computed: {
-    /** 待开课&全部班级: 课程进度隐藏 */
-    hideProgress() {
-      return [0, 1, 2, 3].includes(this.teamIndex)
-    },
-    /** 上课中&已结课: 今日完课、昨日完课 */
-    hideMutileTab() {
-      return [0, 1, 2, 3].includes(this.teamIndex)
-    }
-  },
+  computed: {},
   mounted() {
     this.calcTableHeight()
   },
@@ -420,11 +421,15 @@ export default {
       const teamType = row.team_type || '0'
       // 存入vuex
       this.$store.commit('setTeamItem', row)
-      if (id) {
-        this.$router.push({
-          path: `/teamDetail/${id}/${teamType}`
-        })
-      }
+      // id &&
+      //   this.$router.push({
+      //     path: `/teamDetail/${id}/${teamType}`
+      //   })
+      id &&
+        openBrowserTab(
+          `/student-team/#/teamDetail/${id}/${teamType}`,
+          `${row.team_name}`
+        )
     },
     onSortSystemCount(sortKey) {
       if (this.tableData.length) {
@@ -438,6 +443,7 @@ export default {
         })
         this.getTrialTeamList(this.tabQuery).then((content) => {
           this.sortActive = sortKey
+          // if (content.length) this.amountStatus = !this.amountStatus
         })
       }
     },
@@ -458,6 +464,7 @@ export default {
       this.searchEmit = _.cloneDeep(res)
 
       const {
+        id = '',
         term = [],
         department = [],
         teacherId = '',
@@ -467,6 +474,7 @@ export default {
 
       Object.assign(this.tabQuery, {
         term,
+        id,
         teamName,
         sup,
         department,
@@ -474,7 +482,6 @@ export default {
         page: 1
       })
     },
-
     // 条件查询列表
     async getTrialTeamList(params) {
       this.flags.loading = true
@@ -483,7 +490,7 @@ export default {
           data: {
             StudentTrialTeamStatisticsPage: { content = [], totalElements }
           }
-        } = await this.$http.writeApp.Team.getTrialTeamList(params)
+        } = await this.$http.Team.getTrialTeamList(params)
         // 总数、分页用
         this.totalElements = +totalElements || 0
         this.pakageListData(content)
@@ -504,6 +511,8 @@ export default {
         item.ctime = +item.ctime ? formatData(item.ctime) : ''
         item.utime = +item.utime ? formatData(item.utime) : ''
         item.WD = item.current_lesson ? calculateWD(item.current_lesson) : ''
+        item.current_lesson = formatTeamNameSup(item.current_lesson)
+
         item.teamStatus = item.team_state
           ? this.teamStatusKeyVal[+item.team_state]
           : ''

@@ -194,7 +194,7 @@
           <p>
             {{
               scope.row.out_trade_no
-                ? scope.row.out_trade_no.replace('xz', '')
+                ? scope.row.out_trade_no.replace('xiong', '')
                 : '-'
             }}
           </p>
@@ -277,10 +277,8 @@ export default {
   },
   computed: {
     topicArr() {
-      if (this.topic === '4') {
-        return ['7']
-      } else if (this.topic === '5') {
-        return ['8']
+      if (this.topic === '4' || this.topic === '5') {
+        return [this.topic]
       } else if (this.topic === '1,2,6') {
         return this.topic.split(',')
       }
@@ -383,8 +381,7 @@ export default {
         //   }
         // })
       }
-      // console.log('系统', this.topicArr)
-      //  const topiArrcId = this.topic === '5' ? '8' : this.topic
+
       const topicRelation = await this.$http.Product.topicRelationId(
         `${JSON.stringify({
           topic_id: this.topicArr
@@ -584,11 +581,11 @@ export default {
     openDetail(id, row, type) {
       // type 0体验课 2系统课
       row && console.log(row)
-      id && openBrowserTab(`/write_app/#/teamDetail/${id}/${type}`)
+      id && openBrowserTab(`/student-team/#/teamDetail/${id}/${type}`)
     },
     // 用户详情
     openUserDetail(id) {
-      id && openBrowserTab(`/write_app/#/details/${id}`)
+      id && openBrowserTab(`/users/#/details/${id}`)
     }
   }
 }

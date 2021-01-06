@@ -4,7 +4,7 @@
  * @Author: songyanan
  * @Date: 2020-07-01 11:08:23
  * @LastEditors: zhangjianwen
- * @LastEditTime: 2020-08-13 21:30:13
+ * @LastEditTime: 2020-09-10 01:20:17
  -->
 <template>
   <el-card
@@ -362,6 +362,7 @@ export default {
       }
 
       const query = this.$parent.$children[1].finalParams
+      query.subject = 3
       const fileTitle = dayjs(new Date()).format('YYYY-MM-DD')
       const fileTitleTime = dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss')
 
@@ -394,7 +395,10 @@ export default {
             'paymentPay.trade_type_text': '支付方式',
             amount: '交易金额',
             product_name: '商品名称',
-            'channel.channel_outer_name': '线索渠道'
+            'channel.channel_outer_name': '线索渠道',
+            invoice_status_text: '开票状态',
+            invoice_type_text: '开票类型',
+            invoice_code: '发票号码'
           },
           fileName: `素质课订单导出-${fileTitleTime}`, // 文件名称
           query: JSON.stringify(query)
