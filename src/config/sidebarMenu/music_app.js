@@ -568,6 +568,15 @@ if (staff.roleId === '19') {
             // module,
             style: 'line'
           }
+        },
+        {
+          path: '/testUser',
+          name: 'testUser',
+          meta: {
+            title: '用户白名单',
+            module: 'marketing',
+            show: true
+          }
         }
       ]
     },

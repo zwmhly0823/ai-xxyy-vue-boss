@@ -401,7 +401,7 @@ export function getAppSubject(upper = true) {
   const envFlag = env.some((item) => pathname.includes(item))
   // 测试或开发环境
   const key = envFlag ? pathname.split('/')[2] : pathname.split('/')[1]
-  const subject = Object.keys(subjects).includes(key) ? key : 'art_app'
+  const subject = Object.keys(subjects).includes(key) ? key : 'music_app'
   return upper ? subject.toUpperCase() : subject
 }
 
@@ -415,8 +415,6 @@ export function getAppSubjectCode() {
       subjectCode = item.index
     }
   })
-  console.log(929392)
-  console.log(subjectCode)
   return subjectCode
 }
 // 注入 课程类型 subject 参数接受 对象和序列化的字符串

@@ -58,7 +58,16 @@ const routes = [
       title: '定向发放配置',
       keepAlive: true
     },
-    component: () => import('../views/coupon/grantRule.vue')
+    component: () => import('../views/testUser/index.vue')
+  },
+  {
+    path: '/testUser',
+    name: 'testUser',
+    meta: {
+      title: '定向发放配置',
+      keepAlive: true
+    },
+    component: () => import('../views/testUser/index.vue')
   }
   //   创建兑换码
   //   {

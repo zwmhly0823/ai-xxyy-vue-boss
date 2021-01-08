@@ -9,6 +9,10 @@
 import axios from '../axiosConfig'
 
 export default {
+  // 获取白名单用户
+  getTestUserList() {
+    return axios.get('/api/o/h5/v1/order/delMktWhite')
+  },
   /**
    * 兑换码
    */
