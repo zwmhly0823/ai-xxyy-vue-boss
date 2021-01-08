@@ -100,8 +100,8 @@ module.exports = {
           return 'xiaoxiong/ai-app-vue-boss-test/'
         case 'prod':
           return 'xiaoxiong/ai-app-vue-boss-prod/'
-        // case 'ghpageslive':
-        //   return '/'
+        case 'live':
+          return 'xiaoxiong/ai-app-vue-boss-live/'
         default:
           return 'xiaoxiong/ai-app-vue-boss-default/'
       }
