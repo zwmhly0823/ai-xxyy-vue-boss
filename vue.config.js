@@ -19,6 +19,9 @@ const ossConfig = {
   accessKeyId: 'LTAI4G6Z1YdzS7yEMtrfBrtH',
   accessKeySecret: 'T2WjNlLkAB4pDyMdfrx1aPHuQIEbaQ'
 }
+if (env==='prod'||env==='live'){
+  ossConfig.bucket = 'ai-xxyy-frontend-online'
+}
 /**
  * api 环境切换，默认 dev
  */
