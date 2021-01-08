@@ -10,18 +10,25 @@ import axios from '../axiosConfig'
 
 export default {
   // 获取白名单用户
-  getTestUserList() {
-    return axios.get('/api/o/h5/v1/order/delMktWhite')
+  getMktWhites(params) {
+    return axios.post('/api/o/h5/v1/order/getMktWhites', params)
+  },
+  // 添加白名单
+  addMktWhite(params) {
+    console.log(params)
+    return axios.post(`/api/o/h5/v1/order/addMktWhite`, params)
+  },
+  // 删除白名单
+  delMktWhite(params) {
+    return axios.post(`/api/o/h5/v1/order/delMktWhite`, params)
   },
   /**
    * 兑换码
    */
-
   // 获取营销标签
   getMarketingLabelList() {
     return axios.get('/api/toss/v1/toss-api/label/getMarketingLabelInfo')
   },
-
   // 获取商品套餐列表
   getPackageList(params = {}, sort) {
     const sortObj = sort || { id: 'asc' }

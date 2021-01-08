@@ -12,8 +12,13 @@
       <div class="scroll-container">
         <el-scrollbar wrap-class="scrollbar-wrapper">
           <div class="activity-manage-container">
-            <div class="operete-row">
-              <!-- <activitySearch
+            <div class="wenjuan-css">
+              <el-button @click="changeActivityTime" size="mini" type="primary"
+                ><i class="el-icon-plus"></i>添加</el-button
+              >
+            </div>
+            <!-- <div class="operete-row">
+              <activitySearch
                 @search="getSearch"
                 @get_PromotionsPageList="get_PromotionsPageList"
                 :sourchParams="sourchParams"
@@ -23,10 +28,10 @@
                   type="primary"
                   size="mini"
                   @click="new_activity_handle"
-                  >新建活动</el-button
+                  >添加</el-button
                 >
-              </div> -->
-            </div>
+              </div>
+            </div> -->
             <section ref="tableContainer">
               <ele-table
                 :tableSize="'small'"
@@ -48,75 +53,23 @@
                   </template>
                 </el-table-column>
                 <el-table-column
-                  label="活动名称"
-                  prop="promotionsName"
+                  label="id"
+                  prop="id"
                   align="center"
                 ></el-table-column>
-                <el-table-column label="活动类型" align="center">
-                  <template slot-scope="scope">
-                    <span>{{
-                      scope.row.promotionsType === 'GIFT' ? '关单赠品' : '-'
-                    }}</span>
-                  </template>
-                </el-table-column>
-                <el-table-column label="活动范围" align="center">
-                  <template slot-scope="scope">
-                    <div v-if="scope.row.promotionsRange === 2">
-                      <span
-                        >{{ scope.row.orderStartDate }} ~
-                        {{ scope.row.orderEndDate }}</span
-                      >
-                    </div>
-                    <div v-else>
-                      <span v-if="scope.row.trialTermsName"
-                        >体验课:{{ scope.row.trialTermsName }}</span
-                      ><br />
-                      <span v-if="scope.row.systemTermsName"
-                        >系统课:{{ scope.row.systemTermsName }}</span
-                      >
-                    </div>
-                  </template>
-                </el-table-column>
                 <el-table-column
-                  label="活动时间"
-                  prop="clusterNum"
+                  label="手机"
+                  prop="mobile"
                   align="center"
-                  ><template slot-scope="scope">
-                    <span
-                      >{{ scope.row.startDate }}～{{ scope.row.endDate }}</span
-                    >
-                    <i
-                      class="el-icon-edit"
-                      style="margin-left:20px;"
-                      @click="changeActivityTime(scope.row)"
-                    ></i>
-                  </template>
-                </el-table-column>
-                <el-table-column label="创建时间" prop="ctime" align="center">
-                  <template slot-scope="scope">
-                    <span>{{
-                      scope.row.ctime ? formatTime(scope.row.ctime) : '-'
-                    }}</span>
-                  </template>
-                </el-table-column>
+                ></el-table-column>
                 <el-table-column label="操作" align="center">
-                  <template slot-scope="scope">
+                  <template slot-scope="scope" v-if="scope.row.del === '0'">
                     <div class="editStyle">
                       <el-button
                         class="editStyle_btn"
                         type="text"
-                        @click="activityDetails(scope.row, '1')"
-                        >详情</el-button
-                      >
-                      <el-button
-                        class="editStyle_btn"
-                        type="text"
-                        :disabled="isEditActivity(scope.row.startDate)"
-                        :class="{
-                          editStyle_unbtn: isEditActivity(scope.row.startDate)
-                        }"
-                        @click="activityDetails(scope.row, '2')"
-                        >编辑</el-button
+                        @click="activityDetails(scope.row, '3')"
+                        >删除</el-button
                       >
                     </div>
                   </template>
@@ -127,16 +80,16 @@
         </el-scrollbar>
       </div>
     </el-col>
-    <el-dialog title="修改活动结束时间" :visible.sync="activityTimeDialog">
+    <el-dialog title="添加手机号码" :visible.sync="activityTimeDialog">
       <el-form :model="activityTime">
-        <el-form-item label="结束时间">
-          <el-date-picker
-            v-model="activityTime.endTime"
-            type="date"
-            value-format="yyyy-MM-dd"
-            placeholder="选择日期"
+        <el-form-item label="手机号码">
+          <el-input
+            type="textarea"
+            :autosize="{ minRows: 2, maxRows: 4 }"
+            placeholder="请输入手机号"
+            v-model="activityTime.mobiles"
           >
-          </el-date-picker>
+          </el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -165,7 +118,7 @@ export default {
       totalElements: 0,
       activityTimeDialog: false,
       activityTime: {
-        endTime: ''
+        mobiles: ''
       },
       id: ''
     }
@@ -182,8 +135,6 @@ export default {
   created() {
     this.calcTableHeight()
     this.get_PromotionsPageList()
-    console.log('tableData')
-    console.log(this.tableData)
   },
   mounted() {},
   components: {
@@ -225,36 +176,13 @@ export default {
         this.totalElements = Number(res.payload.totalElements)
       })
     },
-
     async getTestUserList(data) {
       try {
-        const tmpInfo = await this.$http.Marketing.getTestUserList(data)
+        const tmpInfo = await this.$http.Marketing.getMktWhites(data)
         return tmpInfo
       } catch (err) {
         console.log(err)
       }
-    },
-    formatTime(timestamp) {
-      var date = new Date(timestamp * 1)
-      var Y = date.getFullYear() + '-'
-      var M =
-        (date.getMonth() + 1 < 10
-          ? '0' + (date.getMonth() + 1)
-          : date.getMonth() + 1) + '-'
-      var D =
-        (date.getDate() < 10 ? '0' + date.getDate() : date.getDate()) + ' '
-      var h =
-        (date.getHours() < 10 ? '0' + date.getHours() : date.getHours()) + ':'
-      var m =
-        (date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes()) +
-        ':'
-      var s =
-        date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds()
-      return Y + M + D + h + m + s
-    },
-    // 取消操作
-    cancelOperation(row, type) {
-      console.log(row, type)
     },
     // 换页
     pageChange_handler(res) {
@@ -270,26 +198,50 @@ export default {
         path: `/newActivityManage/${promotionsId}/0`
       })
     },
-    // 详情、编辑
-    activityDetails(row, type) {
-      const promotionsId = row.id
-      this.$router.push({
-        path: `/newActivityManage/${promotionsId}/${type}`
-      })
-    },
     // 修改活动时间
     changeActivityTime(row) {
       this.activityTimeDialog = true
-      this.activityTime.endTime = row.endDate
-      this.id = row.id
-      console.log(row)
+    },
+    // 删除
+    activityDetails(row, type) {
+      this.$confirm('确认删除?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      })
+        .then(() => {
+          const arr = []
+          arr.push(row.id)
+          const params = {
+            ids: arr
+          }
+          this.$http.Marketing.delMktWhite(params).then((res) => {
+            console.log(res, '-------------')
+            if (res.code === 0) {
+              this.$message({
+                message: '删除成功',
+                type: 'success'
+              })
+              this.get_PromotionsPageList()
+            }
+          })
+          this.activityTimeDialog = false
+        })
+        .catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          })
+          this.activityTimeDialog = false
+        })
     },
     _changeActivityTime() {
+      const arr = this.activityTime.mobiles.split(',')
+      console.log(arr)
       const params = {
-        id: this.id,
-        endDate: this.activityTime.endTime
+        mobiles: arr
       }
-      this.$http.Operating.updatePromotionsDate(params).then((res) => {
+      this.$http.Marketing.addMktWhite(params).then((res) => {
         console.log(res, '-------------')
         if (res.code === 0) {
           this.$message({
@@ -380,5 +332,13 @@ section {
 .editStyle_unbtn span {
   color: #c0c4cc !important;
   cursor: not-allowed;
+}
+.wenjuan-css {
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: center;
+  padding-right: 20px;
+  height: 50px;
+  background: #fff;
 }
 </style>
