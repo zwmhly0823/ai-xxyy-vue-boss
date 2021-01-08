@@ -36,11 +36,11 @@ if (env === 'dev') {
   targetApiEnv = 'http://ai-xxyy-test-boss.yinyuebao.cloud'
 } else if (env === 'prod') {
   // 预发布环境
-  targetGrapqhlEnv = 'http://ai-xxyy-prod-graphql-boss.yinyuebao.com'
-  targetApiEnv = 'http://ai-xxyy-prod-boss.yinyuebao.com'
+  targetGrapqhlEnv = 'http://ai-xxyy-prod-graphql-boss.yinyuebao.cloud'
+  targetApiEnv = 'http://ai-xxyy-prod-boss.yinyuebao.cloud'
 } else if (env === 'live') {
-  targetGrapqhlEnv = 'http://ai-xxyy-live-graphql-boss.yinyuebao.com'
-  targetApiEnv = 'http://ai-xxyy-live-boss.yinyuebao.com'
+  targetGrapqhlEnv = 'http://ai-xxyy-live-graphql-boss.yinyuebao.cloud'
+  targetApiEnv = 'http://ai-xxyy-live-boss.yinyuebao.cloud'
 }
 
 editOperation('构建')
