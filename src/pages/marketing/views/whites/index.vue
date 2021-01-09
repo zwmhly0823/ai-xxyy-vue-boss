@@ -32,21 +32,21 @@
                 :tableSize="'small'"
                 :dataList="tableData"
                 :tableHeight="tableHeight"
-                :size="sourchParams.size"
-                :page="sourchParams.page"
+                :size="sourchParams.pageSize"
+                :page="sourchParams.pageIndex"
                 :total="totalElements"
                 @pageChange="pageChange_handler"
                 class="mytable"
               >
-                <el-table-column label="序号" align="center">
+                <!-- <el-table-column label="序号" align="center">
                   <template slot-scope="scope">
                     <span>{{
-                      (sourchParams.page - 1) * sourchParams.size +
+                      (sourchParams.pageIndex - 1) * sourchParams.pageSize +
                       scope.$index +
                       1
                     }}</span>
                   </template>
-                </el-table-column>
+                </el-table-column> -->
                 <el-table-column
                   label="id"
                   prop="id"
@@ -57,14 +57,27 @@
                   prop="mobile"
                   align="center"
                 ></el-table-column>
+                <el-table-column label="状态" align="center">
+                  <template slot-scope="scope">
+                    <span>{{ scope.row.del == '0' ? '未删' : '已删' }}</span>
+                  </template>
+                </el-table-column>
                 <el-table-column label="操作" align="center">
-                  <template slot-scope="scope" v-if="scope.row.del === '0'">
-                    <div class="editStyle">
+                  <template slot-scope="scope">
+                    <div class="editStyle" v-if="scope.row.del === '0'">
                       <el-button
                         class="editStyle_btn"
                         type="text"
                         @click="activityDetails(scope.row, '3')"
                         >删除</el-button
+                      >
+                    </div>
+                    <div class="editStyle" v-if="scope.row.del === '1'">
+                      <el-button
+                        class="editStyle_btn"
+                        type="text"
+                        @click="activityDetails(scope.row, '3')"
+                        >启用</el-button
                       >
                     </div>
                   </template>
@@ -104,9 +117,8 @@ export default {
       tableHeight: 'auto',
       tableData: [],
       sourchParams: {
-        page: 1,
-        size: 10,
-        mobile: '',
+        pageIndex: 0,
+        pageSize: 20,
       },
       totalElements: 0,
       activityTimeDialog: false,
@@ -125,21 +137,39 @@ export default {
     EleTable,
     activitySearch,
   },
-  computed: {
-  },
+  computed: {},
   methods: {
     // 获取search
     getSearch(res) {
-      this.sourchParams = {
-        page: 1,
-        size: 20,
-        mobile:res.mobile
+      if (res.mobile !== '') {
+        this.sourchParams = {
+          pageIndex: 1,
+          pageSize: 20,
+          mobile: res.mobile,
+        }
+      } else {
+        this.sourchParams = {
+          pageIndex: 1,
+          pageSize: 20,
+        }
       }
       this.get_PromotionsPageList()
     },
     // 活动管理列表
     get_PromotionsPageList() {
-      this.getTestUserList(this.sourchParams).then((res) => {
+      let sourchParams = this.sourchParams
+
+      let pageIndex = 0
+      if (sourchParams.pageIndex == 1) {
+        pageIndex = 0
+      } else if (sourchParams.pageIndex > 1) {
+        pageIndex = sourchParams.pageIndex - 1
+      }
+      this.getTestUserList({
+        ...sourchParams,
+        pageSize: sourchParams.pageSize,
+        pageIndex,
+      }).then((res) => {
         console.log(res)
         this.tableData = res.payload.content
         this.totalElements = Number(res.payload.totalElements)
@@ -156,10 +186,8 @@ export default {
     // 换页
     pageChange_handler(res) {
       // this.tableParams.page = res
-      console.log(res)
-      this.sourchParams.page = res
+      this.sourchParams.pageIndex = res
       this.get_PromotionsPageList()
-      console.log(res)
     },
     // 修改活动时间
     changeActivityTime(row) {
@@ -167,36 +195,30 @@ export default {
     },
     // 删除
     activityDetails(row, type) {
-      this.$confirm('确认删除?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning',
-      })
-        .then(() => {
-          const arr = []
-          arr.push(row.id)
-          const params = {
-            ids: arr,
-          }
-          this.$http.Marketing.delMktWhite(params).then((res) => {
-            console.log(res, '-------------')
-            if (res.code === 0) {
-              this.$message({
-                message: '删除成功',
-                type: 'success',
-              })
-              this.get_PromotionsPageList()
-            }
-          })
-          this.activityTimeDialog = false
-        })
-        .catch(() => {
+      const arr = []
+      arr.push(row.id)
+      let del = 0
+      if (row.del === '0') {
+        del = 1
+      } else if (row.del === '1') {
+        del = 0
+      }
+
+      const params = {
+        ids: arr,
+        del,
+      }
+      this.$http.Marketing.updateMktWhite(params).then((res) => {
+        console.log(res, '-------------')
+        if (res.code === 0) {
           this.$message({
-            type: 'info',
-            message: '已取消删除',
+            message: '操作成功',
+            type: 'success',
           })
-          this.activityTimeDialog = false
-        })
+          this.get_PromotionsPageList()
+        }
+      })
+      this.activityTimeDialog = false
     },
     // 确定
     _changeActivityTime() {
@@ -213,7 +235,7 @@ export default {
           this.get_PromotionsPageList()
         }
       })
-      this.activityTime.mobiles='';
+      this.activityTime.mobiles = ''
       this.activityTimeDialog = false
     },
     // 计算表格高度
