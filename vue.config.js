@@ -19,13 +19,14 @@ const ossConfig = {
   accessKeyId: 'LTAI4G6Z1YdzS7yEMtrfBrtH',
   accessKeySecret: 'T2WjNlLkAB4pDyMdfrx1aPHuQIEbaQ'
 }
+const env = BASE_URL || 'default' // default, dev, test, prod, live
 if (env==='prod'||env==='live'){
   ossConfig.bucket = 'ai-xxyy-frontend-online'
 }
 /**
  * api 环境切换，默认 dev
  */
-const env = BASE_URL || 'default' // default, dev, test, prod, live
+
 // graphql api
 // let targetGrapqhlEnv = 'http://docker.meixiu.mobi:33401'
 let targetGrapqhlEnv = 'http://ai-xxyy-default-graphql-boss.yinyuebao.cloud'
