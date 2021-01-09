@@ -106,7 +106,7 @@ export default {
       sourchParams: {
         page: 1,
         size: 10,
-        // promotionsName: '',
+        mobile: '',
       },
       totalElements: 0,
       activityTimeDialog: false,
@@ -133,7 +133,7 @@ export default {
       this.sourchParams = {
         page: 1,
         size: 20,
-        ...res
+        mobile:res.mobile
       }
       this.get_PromotionsPageList()
     },
@@ -156,6 +156,7 @@ export default {
     // 换页
     pageChange_handler(res) {
       // this.tableParams.page = res
+      console.log(res)
       this.sourchParams.page = res
       this.get_PromotionsPageList()
       console.log(res)

@@ -570,8 +570,8 @@ if (staff.roleId === '19') {
           }
         },
         {
-          path: '/testUser',
-          name: 'testUser',
+          path: '/whites',
+          name: 'whites',
           meta: {
             title: '用户白名单',
             module: 'marketing',

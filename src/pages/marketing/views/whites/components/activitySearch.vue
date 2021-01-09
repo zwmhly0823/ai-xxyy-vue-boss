@@ -2,7 +2,7 @@
   <div class="table-searcher-container">
     <div class="comp-cell">
       <el-input
-        v-model="promotionsName"
+        v-model="mobile"
         size="mini"
         placeholder="用户手机号"
         clearable
@@ -44,7 +44,7 @@ export default {
   },
   data() {
     return {
-      promotionsName: '',
+      mobile: '',
       searchQuery: {}
     }
   },
@@ -83,7 +83,7 @@ export default {
       console.log(event)
       this.searchQuery = {
         ...this.searchQuery,
-        promotionsName: event
+        mobile: event
       }
       console.log(this.searchQuery)
       this.$emit('search', this.searchQuery)
