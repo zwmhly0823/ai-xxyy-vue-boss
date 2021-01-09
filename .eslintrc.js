@@ -5,10 +5,10 @@ module.exports = {
   },
   extends: [
     'plugin:vue/essential',
-    '@vue/standard',
-    'prettier',
-    'prettier/vue',
-    'plugin:prettier/recommended'
+    // '@vue/standard',
+    // 'prettier',
+    // 'prettier/vue',
+    // 'plugin:prettier/recommended'
   ],
   plugins: ['prettier'],
   parserOptions: {

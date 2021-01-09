@@ -4,13 +4,13 @@
       <el-input
         v-model="promotionsName"
         size="mini"
-        placeholder="活动名称"
+        placeholder="用户手机号"
         clearable
         @input="setPromotionsName"
         @change="setPromotionsName"
       ></el-input>
     </div>
-    <div class="comp-cell">
+    <!-- <div class="comp-cell">
       <search-stage
         class="search-group-item"
         name="trialTerms"
@@ -29,12 +29,12 @@
         :myStyle="{ width: '140px' }"
         @result="getSearchData('systemTerms', arguments)"
       />
-    </div>
+    </div> -->
   </div>
 </template>
 <script>
 import { debounce } from 'lodash'
-import SearchStage from '@/components/MSearch/searchItems/searchStage.vue'
+// import SearchStage from '@/components/MSearch/searchItems/searchStage.vue'
 export default {
   props: {
     sourchParams: {
@@ -49,7 +49,7 @@ export default {
     }
   },
   components: {
-    SearchStage
+    // SearchStage
   },
   created() {},
   methods: {

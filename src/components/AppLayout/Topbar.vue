@@ -78,7 +78,7 @@
       <!-- 用户信息 end -->
 
       <!-- 多科目切换 -->
-      <div class="subject-change">
+      <div class="subject-change" v-if="subjectsList.length">
         <el-dropdown
           @command="handleChangeSubject"
           trigger="hover"

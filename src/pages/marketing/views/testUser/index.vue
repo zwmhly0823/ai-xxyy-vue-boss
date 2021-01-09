@@ -12,12 +12,7 @@
       <div class="scroll-container">
         <el-scrollbar wrap-class="scrollbar-wrapper">
           <div class="activity-manage-container">
-            <div class="wenjuan-css">
-              <el-button @click="changeActivityTime" size="mini" type="primary"
-                ><i class="el-icon-plus"></i>添加</el-button
-              >
-            </div>
-            <!-- <div class="operete-row">
+            <div class="operete-row">
               <activitySearch
                 @search="getSearch"
                 @get_PromotionsPageList="get_PromotionsPageList"
@@ -27,11 +22,11 @@
                 <el-button
                   type="primary"
                   size="mini"
-                  @click="new_activity_handle"
+                  @click="changeActivityTime"
                   >添加</el-button
                 >
               </div>
-            </div> -->
+            </div>
             <section ref="tableContainer">
               <ele-table
                 :tableSize="'small'"
@@ -47,8 +42,8 @@
                   <template slot-scope="scope">
                     <span>{{
                       (sourchParams.page - 1) * sourchParams.size +
-                        scope.$index +
-                        1
+                      scope.$index +
+                      1
                     }}</span>
                   </template>
                 </el-table-column>
@@ -101,7 +96,7 @@
 </template>
 <script>
 // import { isToss } from '@/utils/index'
-// import activitySearch from './components/activitySearch'
+import activitySearch from './components/activitySearch'
 import EleTable from '@/components/Table/EleTable'
 export default {
   data() {
@@ -110,61 +105,35 @@ export default {
       tableData: [],
       sourchParams: {
         page: 1,
-        size: 20,
-        promotionsName: '',
-        trialTerms: '',
-        systemTerms: ''
+        size: 10,
+        // promotionsName: '',
       },
       totalElements: 0,
       activityTimeDialog: false,
       activityTime: {
-        mobiles: ''
+        mobiles: '',
       },
-      id: ''
+      id: '',
     }
   },
-  // watch: {
-  //   activeStatus(val) {
-  //     if (!val) {
-  //       this.activeStatus = 0
-  //     } else {
-  //       this.activeStatus = val
-  //     }
-  //   }
-  // },
   created() {
     this.calcTableHeight()
     this.get_PromotionsPageList()
   },
   mounted() {},
   components: {
-    EleTable
-    // activitySearch
+    EleTable,
+    activitySearch,
   },
   computed: {
-    isEditActivity() {
-      return (time) => {
-        const date = new Date(time).getTime()
-        const nowdate = new Date().getTime()
-        if (nowdate >= date) {
-          return true
-        } else {
-          return false
-        }
-      }
-    }
   },
-
   methods: {
     // 获取search
     getSearch(res) {
-      console.log(res, 'res_getSearch=-=-=')
       this.sourchParams = {
         page: 1,
         size: 20,
-        promotionsName: res.promotionsName,
-        trialTerms: res.trialTerms,
-        systemTerms: res.systemTerms
+        ...res
       }
       this.get_PromotionsPageList()
     },
@@ -191,13 +160,6 @@ export default {
       this.get_PromotionsPageList()
       console.log(res)
     },
-    /** 新建活动按钮 */
-    new_activity_handle() {
-      const promotionsId = '-1'
-      this.$router.push({
-        path: `/newActivityManage/${promotionsId}/0`
-      })
-    },
     // 修改活动时间
     changeActivityTime(row) {
       this.activityTimeDialog = true
@@ -207,20 +169,20 @@ export default {
       this.$confirm('确认删除?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
-        type: 'warning'
+        type: 'warning',
       })
         .then(() => {
           const arr = []
           arr.push(row.id)
           const params = {
-            ids: arr
+            ids: arr,
           }
           this.$http.Marketing.delMktWhite(params).then((res) => {
             console.log(res, '-------------')
             if (res.code === 0) {
               this.$message({
                 message: '删除成功',
-                type: 'success'
+                type: 'success',
               })
               this.get_PromotionsPageList()
             }
@@ -230,27 +192,27 @@ export default {
         .catch(() => {
           this.$message({
             type: 'info',
-            message: '已取消删除'
+            message: '已取消删除',
           })
           this.activityTimeDialog = false
         })
     },
+    // 确定
     _changeActivityTime() {
       const arr = this.activityTime.mobiles.split(',')
-      console.log(arr)
       const params = {
-        mobiles: arr
+        mobiles: arr,
       }
       this.$http.Marketing.addMktWhite(params).then((res) => {
-        console.log(res, '-------------')
         if (res.code === 0) {
           this.$message({
             message: '保存成功',
-            type: 'success'
+            type: 'success',
           })
           this.get_PromotionsPageList()
         }
       })
+      this.activityTime.mobiles='';
       this.activityTimeDialog = false
     },
     // 计算表格高度
@@ -263,8 +225,8 @@ export default {
         const tableHeight = document.body.clientHeight - tableTopHeight - 60
         this.tableHeight = tableHeight + ''
       })
-    }
-  }
+    },
+  },
 }
 </script>
 <style rel="stylesheet/scss" lang="scss">
