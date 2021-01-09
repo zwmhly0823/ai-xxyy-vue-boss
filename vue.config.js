@@ -19,6 +19,9 @@ const ossConfig = {
   accessKeyId: 'LTAI4G6Z1YdzS7yEMtrfBrtH',
   accessKeySecret: 'T2WjNlLkAB4pDyMdfrx1aPHuQIEbaQ'
 }
+if (env==='prod'||env==='live'){
+  ossConfig.bucket = 'ai-xxyy-frontend-online'
+}
 /**
  * api 环境切换，默认 dev
  */
@@ -36,11 +39,11 @@ if (env === 'dev') {
   targetApiEnv = 'http://ai-xxyy-test-boss.yinyuebao.cloud'
 } else if (env === 'prod') {
   // 预发布环境
-  targetGrapqhlEnv = 'http://ai-xxyy-prod-graphql-boss.yinyuebao.com'
-  targetApiEnv = 'http://ai-xxyy-prod-boss.yinyuebao.com'
+  targetGrapqhlEnv = 'http://ai-xxyy-prod-graphql-boss.yinyuebao.cloud'
+  targetApiEnv = 'http://ai-xxyy-prod-boss.yinyuebao.cloud'
 } else if (env === 'live') {
-  targetGrapqhlEnv = 'http://ai-xxyy-live-graphql-boss.yinyuebao.com'
-  targetApiEnv = 'http://ai-xxyy-live-boss.yinyuebao.com'
+  targetGrapqhlEnv = 'http://ai-xxyy-live-graphql-boss.yinyuebao.cloud'
+  targetApiEnv = 'http://ai-xxyy-live-boss.yinyuebao.cloud'
 }
 
 editOperation('构建')
@@ -97,8 +100,8 @@ module.exports = {
           return 'xiaoxiong/ai-app-vue-boss-test/'
         case 'prod':
           return 'xiaoxiong/ai-app-vue-boss-prod/'
-        // case 'ghpageslive':
-        //   return '/'
+        case 'live':
+          return 'xiaoxiong/ai-app-vue-boss-live/'
         default:
           return 'xiaoxiong/ai-app-vue-boss-default/'
       }
