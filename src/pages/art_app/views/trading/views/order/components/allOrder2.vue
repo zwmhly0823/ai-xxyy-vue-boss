@@ -119,7 +119,8 @@ export default {
         '3': { count: 0, value: 0 },
         '5': { count: 0, value: 0 },
         '6': { count: 0, value: 0 },
-        '7': { count: 0, value: 0 }
+        '7': { count: 0, value: 0 },
+        
       },
       finalParams: {}
     }
@@ -219,7 +220,9 @@ export default {
         '3': { count: 0, value: 0 },
         '5': { count: 0, value: 0 },
         '6': { count: 0, value: 0 },
-        '7': { count: 0, value: 0 }
+        '7': { count: 0, value: 0 },
+        '500': { count: 0, value: 0 },
+        '501': { count: 0, value: 0 }
       }
     }
   }

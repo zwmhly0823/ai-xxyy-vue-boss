@@ -387,7 +387,7 @@ export default {
           topic_id: this.topicArr
         })}`
       )
-      let relationIds = []
+    let relationIds = []
       if (
         topicRelation.data.PackagesTopicList &&
         topicRelation.data.PackagesTopicList.length > 0
@@ -395,6 +395,7 @@ export default {
         relationIds = topicRelation.data.PackagesTopicList.map(
           (item) => item.relation_id
         )
+      relationIds = [...relationIds, '500','501']
 
       console.log(this.searchIn)
 

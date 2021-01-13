@@ -336,6 +336,7 @@ export default {
         relationIds = topicRelation.data.PackagesTopicList.map(
           (item) => item.relation_id
         )
+        relationIds = [...relationIds,'500','501']
 
       // 组合搜索条件
       this.searchIn.forEach((item) => {

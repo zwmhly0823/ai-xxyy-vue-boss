@@ -111,20 +111,20 @@ import tableOrder1 from './tableOrder1'
 import { isToss } from '@/utils/index'
 export default {
   components: {
-    tableOrder1
+    tableOrder1,
   },
   props: {
     // 当前tab - 商品主题
     topic: {
       type: String,
-      default: ''
+      default: '',
     },
     search: {
       type: Array,
       default: () => {
         return []
-      }
-    }
+      },
+    },
   },
   data() {
     return {
@@ -136,14 +136,14 @@ export default {
       // 搜索
       searchIn: [],
       statistics: {
-        '0': { count: 0, value: 0 },
-        '1': { count: 0, value: 0 },
-        '3': { count: 0, value: 0 },
-        '5': { count: 0, value: 0 },
-        '6': { count: 0, value: 0 },
-        '7': { count: 0, value: 0 }
+        0: { count: 0, value: 0 },
+        1: { count: 0, value: 0 },
+        3: { count: 0, value: 0 },
+        5: { count: 0, value: 0 },
+        6: { count: 0, value: 0 },
+        7: { count: 0, value: 0 }
       },
-      finalParams: {}
+      finalParams: {},
     }
   },
   computed: {
@@ -155,7 +155,7 @@ export default {
         // 未支付 0，1
         obj.topay = {
           count: +statistics['0'].count + +statistics['1'].count,
-          value: +statistics['0'].value + +statistics['1'].value
+          value: +statistics['0'].value + +statistics['1'].value,
         }
         // 退费：5，6，7
         obj.refund = {
@@ -166,22 +166,22 @@ export default {
           value:
             +statistics['5'].value +
             +statistics['6'].value +
-            +statistics['7'].value
+            +statistics['7'].value,
         }
         obj.payed = {
           count: +statistics['3'].count,
-          value: +statistics['3'].value
+          value: +statistics['3'].value,
         }
         obj.total = {
           count: obj.topay.count + obj.refund.count + obj.payed.count,
-          value: obj.topay.value + obj.refund.value + obj.payed.value
+          value: obj.topay.value + obj.refund.value + obj.payed.value,
         }
         return obj
       },
       set(val) {
         return val
-      }
-    }
+      },
+    },
   },
   watch: {
     // 切换tab - 商品主题
@@ -193,7 +193,7 @@ export default {
       console.log(val, 'val')
 
       this.searchIn = val
-    }
+    },
   },
   created() {
     const teacherId = isToss()
@@ -211,12 +211,12 @@ export default {
           const { code, count, value } = item
           obj[`${code}`] = {
             count,
-            value
+            value,
           }
         })
         this.statistics = {
           ...this.statistics,
-          ...obj
+          ...obj,
         }
       } else {
         this.reset()
@@ -238,15 +238,15 @@ export default {
 
     reset() {
       this.statistics = {
-        '0': { count: 0, value: 0 },
-        '1': { count: 0, value: 0 },
-        '3': { count: 0, value: 0 },
-        '5': { count: 0, value: 0 },
-        '6': { count: 0, value: 0 },
-        '7': { count: 0, value: 0 }
+        0: { count: 0, value: 0 },
+        1: { count: 0, value: 0 },
+        3: { count: 0, value: 0 },
+        5: { count: 0, value: 0 },
+        6: { count: 0, value: 0 },
+        7: { count: 0, value: 0 },
       }
-    }
-  }
+    },
+  },
 }
 </script>
 <style lang="scss" scoped>
