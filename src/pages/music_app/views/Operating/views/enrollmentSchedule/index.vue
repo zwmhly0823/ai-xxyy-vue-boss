@@ -32,8 +32,12 @@ export default {
   },
   computed: {},
   watch: {},
+  mounted:()=>{
+    console.log(9999)
+  },
   methods: {
     leftBarHandler(data) {
+      console.log(data)
       this.currentDept = data
     }
   }

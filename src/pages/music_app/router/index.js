@@ -37,8 +37,7 @@ if (staff.roleId === '7') {
       meta: {
         title: '招生排期'
       },
-      component: () =>
-        import('../views/operating/views/enrollmentSchedule/index.vue')
+      component: () =>import('../views/operating/views/enrollmentSchedule/index.vue')
     },
     {
       path: '/changePhoneNumber',

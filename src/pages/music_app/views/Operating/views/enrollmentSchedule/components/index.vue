@@ -227,6 +227,9 @@ export default {
   async activated() {
     await this.getCourseListByType()
   },
+  created(){
+    this.tabs_click(this.tabIndex)
+  },
   methods: {
     /** adolf-start */
     tabs_click(index) {

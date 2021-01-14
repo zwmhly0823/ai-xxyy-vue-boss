@@ -133,7 +133,6 @@ if (staff.roleId === '19') {
       meta: {
         title: '体验课班级(新版)',
         icon: 'iconbanjiguanli',
-        // module: 'student-team'
         module
       },
       children: [
@@ -142,7 +141,6 @@ if (staff.roleId === '19') {
           name: 'trialTeam0',
           meta: {
             title: '待上课',
-            // module: 'student-team',
             module,
             show: true
           }
@@ -152,7 +150,6 @@ if (staff.roleId === '19') {
           name: 'trialTeam1',
           meta: {
             title: '上课中',
-            // module: 'student-team',
             module,
             show: true
           }
@@ -162,29 +159,27 @@ if (staff.roleId === '19') {
           name: 'trialTeam2',
           meta: {
             title: '已完课',
-            // module: 'student-team',
             module,
             show: true
           }
         }
       ]
     },
-    // {
-    //   path: '/systemTeam',
-    //   name: 'systemTeam',
-    //   meta: {
-    //     title: '系统课班级',
-    //     icon: 'iconbanjiguanli',
-    //     module: 'student-team'
-    //   }
-    // },
     {
-      path: '/student-team',
-      name: 'student-team',
+      path: '/systemTeam',
+      name: 'systemTeam',
+      meta: {
+        title: '系统课班级',
+        icon: 'iconbanjiguanli',
+        module
+      }
+    },
+    {
+      path: '/trail/:status',
+      name: 'trialTeamV2',
       meta: {
         title: '班级管理',
         icon: 'iconbanjiguanli',
-        // module: 'student-team'
         module
       },
       children: [
