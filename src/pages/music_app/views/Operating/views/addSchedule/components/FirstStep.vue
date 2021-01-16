@@ -105,13 +105,13 @@
         <div class="sale-time" v-if="diffDay">
           <el-row>
             <el-col :span="3"><span class="t-head">售卖日期</span></el-col>
-            <el-col :span="3"><span class="t-head">限售(对内)</span></el-col>
+            <el-col :span="3"><span class="t-head">限售(对内1)</span></el-col>
             <el-col :span="3"><span class="t-head">限售(对外)</span></el-col>
             <el-col :span="3"><span class="t-head">已售(对外)</span></el-col>
           </el-row>
           <el-row v-for="(item, index) in diffDay" :key="index" :gutter="10">
             <el-col :span="3">
-              <el-form-item label="" style="width:80%;">
+              <el-form-item label="" style="width: 80%">
                 <el-input
                   v-model="formInfo[`sellDate_${index}`]"
                   size="mini"
@@ -128,17 +128,18 @@
                   {
                     required: true,
                     message: '不能为空',
-                    trigger: 'blur'
+                    trigger: 'blur',
                   },
                   {
                     type: 'number',
                     transform: (value) => Number(value),
                     message: '必须为数字',
-                    trigger: 'blur'
+                    trigger: 'blur',
                   }
                 ]"
               >
                 <el-input
+                  type="number"
                   v-model="formInfo[`limit_${index}`]"
                   size="mini"
                   placeholder="限售(对内)"
@@ -153,20 +154,21 @@
                   {
                     required: true,
                     message: '不能为空',
-                    trigger: 'blur'
+                    trigger: 'blur',
                   },
                   {
                     type: 'number',
                     transform: (value) => Number(value),
                     message: '必须为数字',
-                    trigger: 'blur'
-                  }
+                    trigger: 'blur',
+                  },
                 ]"
               >
                 <el-input
                   v-model="formInfo[`fakeLimit_${index}`]"
                   size="mini"
                   placeholder="限售(对外)"
+               
                 ></el-input>
               </el-form-item>
             </el-col>
@@ -178,19 +180,20 @@
                   {
                     required: true,
                     message: '不能为空',
-                    trigger: 'blur'
+                    trigger: 'blur',
                   },
                   {
                     type: 'number',
                     transform: (value) => Number(value),
                     message: '必须为数字',
-                    trigger: 'blur'
-                  }
+                    trigger: 'blur',
+                  },
                 ]"
                 ><el-input
                   v-model="formInfo[`fakeSales_${index}`]"
                   size="mini"
                   placeholder="已售(对外)"
+              
                 ></el-input> </el-form-item
             ></el-col>
           </el-row>
@@ -232,17 +235,17 @@ export default {
         attendClassTimeStart: '',
         attendClassTimeEnd: '',
         // attendClassTime: '',
-        robinNum: '' // 接速设置
+        robinNum: '', // 接速设置
       },
       setSellTimeForm: [],
       attendClassObj: {
         // 上课周期
         courseDay: '',
-        endCourseDay: ''
+        endCourseDay: '',
       },
       sellCycleObj: {
         startDate: '',
-        endDate: ''
+        endDate: '',
       },
       diffDay: '',
       rules: {
@@ -250,22 +253,22 @@ export default {
           {
             required: true,
             message: '请选择售卖日期',
-            trigger: 'change'
-          }
+            trigger: 'change',
+          },
         ],
         attendClassTimeStart: [
           {
             required: true,
             message: '请选择开课时期',
-            trigger: 'change'
-          }
+            trigger: 'change',
+          },
         ],
         attendClassTimeEnd: [
           {
             required: true,
             message: '请选择结课时期',
-            trigger: 'change'
-          }
+            trigger: 'change',
+          },
         ],
         // attendClassTime: [
         //   {
@@ -274,7 +277,7 @@ export default {
         //     trigger: 'change'
         //   }
         // ],
-        robinNum: [{ validator: checkNumber, required: true, trigger: 'blur' }]
+        robinNum: [{ validator: checkNumber, required: true, trigger: 'blur' }],
       },
       pickerBeginDateBefore: {
         disabledDate: (time) => {
@@ -283,7 +286,7 @@ export default {
           if (endDateVal) {
             return time.getTime() > endDateVal
           }
-        }
+        },
       },
       pickerBeginDateAfter: {
         disabledDate: (time) => {
@@ -291,8 +294,8 @@ export default {
           if (endDateVal) {
             return time.getTime() < endDateVal
           }
-        }
-      }
+        },
+      },
     }
   },
   computed: {},
@@ -312,12 +315,12 @@ export default {
           startDate = '',
           endDate = '',
           robinNum = '',
-          sellCycle = []
+          sellCycle = [],
         } = _data.payload
 
         const sellCycleTime = [
           new Date(Number(`${startDate}`)),
-          new Date(Number(`${endDate}`))
+          new Date(Number(`${endDate}`)),
         ]
 
         this.formInfo = {
@@ -329,7 +332,7 @@ export default {
           //   new Date(Number(`${endCourseDay}`))
           // ],
           sellCycle,
-          robinNum // 接速设置
+          robinNum, // 接速设置
         }
         // this.startClassChange()
         this.sellCycleTimeChange(sellCycleTime)
@@ -398,7 +401,7 @@ export default {
       this.sellCycleObj = {
         ...this.sellCycleObj,
         startDate: startDate.getTime() || '',
-        endDate: endDate.getTime() || ''
+        endDate: endDate.getTime() || '',
       }
     },
     // 计算售卖设置里的 ’售卖日期‘
@@ -424,7 +427,7 @@ export default {
         target: '.app-main',
         lock: true,
         text: '正在保存...',
-        fullscreen: true
+        fullscreen: true,
       })
       try {
         const _res = await this.$http.Operating.addScheduleFirstStep(params)
@@ -432,7 +435,7 @@ export default {
       } catch (err) {
         this.$message({
           message: '获取数据出错',
-          type: 'warning'
+          type: 'warning',
         })
       } finally {
         // 以服务的方式调用的 Loading 需要异步关闭
@@ -447,7 +450,7 @@ export default {
       } catch (err) {
         this.$message({
           message: '获取列表出错',
-          type: 'warning'
+          type: 'warning',
         })
         return Promise.reject(err)
       }
@@ -460,7 +463,7 @@ export default {
           sellDate: new Date(this.formInfo[`sellDate_${i}`]).getTime(),
           limit: this.formInfo[`limit_${i}`],
           fakeLimit: this.formInfo[`fakeLimit_${i}`],
-          fakeSales: this.formInfo[`fakeSales_${i}`]
+          fakeSales: this.formInfo[`fakeSales_${i}`],
         }
         this.setSellTimeForm.push(obj)
       }
@@ -476,18 +479,21 @@ export default {
         robinNum: this.formInfo.robinNum,
         sellCycle: this.setSellTimeForm,
         type: this.courseType,
-        period: +this.period || ''
+        period: +this.period || '',
       })
 
       return sendFrom
     },
     nextStep() {
-      const sendFrom = this.pacakageFormInfo() // TODO:
+      const sendFrom = this.pacakageFormInfo()
+      // TODO:
       this.$refs.formInfo.validate((valid) => {
+        console.log('valid', valid)
         if (valid) {
           const cb = (_res) => {
+            console.log(res)
             const {
-              payload: { period }
+              payload: { period },
             } = _res
 
             this.period = period
@@ -504,8 +510,8 @@ export default {
     },
     cancel() {
       this.$router.push({ path: '/operatingSchedule' })
-    }
-  }
+    },
+  },
 }
 </script>
 <style lang="scss" scoped>

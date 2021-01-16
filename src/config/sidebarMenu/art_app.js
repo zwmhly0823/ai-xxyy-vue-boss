@@ -55,7 +55,7 @@ if (staff.roleId === '19') {
   let uploadFilePeimission = []
 
   // TODO:
-  if (staff.mobile === '15801332536') {
+  if (staff&&staff.mobile === '15801332536') {
     uploadFilePeimission = [
       {
         path: '/uploadFile',
@@ -68,8 +68,6 @@ if (staff.roleId === '19') {
       }
     ]
   }
-
-  console.log()
 
   // 管理员、
   const adminRouter = []
