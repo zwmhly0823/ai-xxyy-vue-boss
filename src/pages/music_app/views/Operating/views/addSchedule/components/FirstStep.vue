@@ -105,7 +105,7 @@
         <div class="sale-time" v-if="diffDay">
           <el-row>
             <el-col :span="3"><span class="t-head">售卖日期</span></el-col>
-            <el-col :span="3"><span class="t-head">限售(对内1)</span></el-col>
+            <el-col :span="3"><span class="t-head">限售(对内)</span></el-col>
             <el-col :span="3"><span class="t-head">限售(对外)</span></el-col>
             <el-col :span="3"><span class="t-head">已售(对外)</span></el-col>
           </el-row>
@@ -133,9 +133,11 @@
                   {
                     type: 'number',
                     transform: (value) => Number(value),
-                    message: '必须为数字',
+                    max: 99999,
+                    min: 0,
+                    message: '必须为(0-99999)数字',
                     trigger: 'blur',
-                  }
+                  },
                 ]"
               >
                 <el-input
@@ -159,7 +161,9 @@
                   {
                     type: 'number',
                     transform: (value) => Number(value),
-                    message: '必须为数字',
+                    max: 99999,
+                    min: 0,
+                    message: '必须为(0-99999)数字',
                     trigger: 'blur',
                   },
                 ]"
@@ -168,7 +172,6 @@
                   v-model="formInfo[`fakeLimit_${index}`]"
                   size="mini"
                   placeholder="限售(对外)"
-               
                 ></el-input>
               </el-form-item>
             </el-col>
@@ -185,7 +188,9 @@
                   {
                     type: 'number',
                     transform: (value) => Number(value),
-                    message: '必须为数字',
+                    max: 99999,
+                    min: 0,
+                    message: '必须为(0-99999)数字',
                     trigger: 'blur',
                   },
                 ]"
@@ -193,7 +198,6 @@
                   v-model="formInfo[`fakeSales_${index}`]"
                   size="mini"
                   placeholder="已售(对外)"
-              
                 ></el-input> </el-form-item
             ></el-col>
           </el-row>
