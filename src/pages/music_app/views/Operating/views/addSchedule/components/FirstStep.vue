@@ -435,8 +435,11 @@ export default {
       })
       try {
         const _res = await this.$http.Operating.addScheduleFirstStep(params)
+        console.log(_res)
         if (_res.code === 0) cb(_res)
+        console.log(_res)
       } catch (err) {
+         console.log(err)
         this.$message({
           message: '获取数据出错',
           type: 'warning',
@@ -495,13 +498,11 @@ export default {
         console.log('valid', valid)
         if (valid) {
           const cb = (_res) => {
-            console.log(res)
             const {
               payload: { period },
             } = _res
 
             this.period = period
-
             this.$store.commit('setSchedulePeriod', period)
             this.$emit('listenStepStatus', sendFrom)
           }
