@@ -115,7 +115,7 @@ export default {
       tableData: [],
       tabQuery: {
         size: 20,
-        page: 1,
+        page: 0,
       },
     }
   },
@@ -136,7 +136,7 @@ export default {
       })
     },
     pageChange_handler(page) {
-      this.tabQuery.page = page;
+      this.tabQuery.page = page - 1;
       this.init();
     },
   }
