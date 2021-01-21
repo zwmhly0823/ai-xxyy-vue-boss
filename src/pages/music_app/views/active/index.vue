@@ -115,7 +115,7 @@ export default {
       tableData: [],
       tabQuery: {
         size: 20,
-        page: 0,
+        page: 1,
       },
     }
   },
