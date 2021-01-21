@@ -76,6 +76,13 @@
                 align="center"
               >
               </el-table-column>
+              <el-table-column
+                label="创建时间"
+                min-width="70"
+                prop="createTime"
+                align="center"
+              >
+              </el-table-column>
             </ele-table>
           </div>
         </el-scrollbar>
@@ -108,7 +115,7 @@ export default {
       tableData: [],
       tabQuery: {
         size: 20,
-        page: 1,
+        page: 0,
       },
     }
   },
