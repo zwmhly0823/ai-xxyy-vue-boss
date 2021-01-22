@@ -18,7 +18,7 @@
               :dataList="tableData"
               :loading="flags.loading"
               :size="tabQuery.size"
-              :page="tabQuery.page"
+              :page="tabQuery.page + 1"
               :total="totalElements"
               :showAllTotalNum="true"
               @pageChange="pageChange_handler"
