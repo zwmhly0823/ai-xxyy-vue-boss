@@ -76,13 +76,13 @@
                 align="center"
               >
               </el-table-column>
-              <el-table-column
+              <!-- <el-table-column
                 label="创建时间"
                 min-width="70"
                 prop="createTime"
                 align="center"
               >
-              </el-table-column>
+              </el-table-column> -->
             </ele-table>
           </div>
         </el-scrollbar>
