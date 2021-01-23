@@ -675,7 +675,21 @@ export default {
             const shengYue = Math.floor(this.pureWeekS / 4)
             if (this.half === 48) {
               // 1年课的情况
-              if (shengYue >= 6 && this.refundForm.residueFee >= 1101) {
+              // if (shengYue >= 6 && this.refundForm.residueFee >= 1101) {
+              //   this.refundForm.refundAmount = 1101
+              //   this.refundForm.refundMonths = 6
+              // } else {
+              //   this.$message({
+              //     message:
+              //       '该一年课订单课余量低于6个月或余额低于1101,不支持该降包类型',
+              //     type: 'warning'
+              //   })
+              //   // this.onCancel('refundForm')
+              //   setTimeout(() => {
+              //     location.reload()
+              //   }, 4000)
+              // }
+              if (shengYue >= 6 && this.refundForm.residueFee >= 1) {
                 this.refundForm.refundAmount = 1101
                 this.refundForm.refundMonths = 6
               } else {
