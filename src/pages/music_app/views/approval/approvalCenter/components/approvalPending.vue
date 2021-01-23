@@ -687,12 +687,7 @@
         </div>
         <!-- 1-2-5无归属操作按钮 只有测试:bearboss;线上:只有张奔,杨阳,刘彩屏有权限-->
         <div
-          v-if="
-            currentType === 'UNCREDITED' &&
-              (resetParams.staffId === '455930731630301184' ||
-                resetParams.staffId === '455930591481827328' ||
-                resetParams.staffId === '462345658762924032')
-          "
+          v-if="currentType === 'UNCREDITED' &&(resetParams.staffId === '470676591924613120')"
         >
           <el-row class="BOTTOM">
             <el-col :span="20" :offset="1">
