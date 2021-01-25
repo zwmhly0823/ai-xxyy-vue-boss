@@ -63,6 +63,7 @@ export default {
    * @param {Object} params [请求时携带的参数]
    */
   post(url, params, extend = {}) {
+    console.log('kkk', url);
     if (process.env.NODE_ENV === 'development') {
       if (url.match(/graphql/)) {
         const reg = /[\s][\w]+\(query:/

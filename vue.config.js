@@ -22,6 +22,8 @@ const ossConfig = {
 const env = BASE_URL || 'default' // default, dev, test, prod, live
 if (env==='prod'||env==='live'){
   ossConfig.bucket = 'ai-xxyy-frontend-online'
+  ossConfig.accessKeyId = 'LTAI4FyK2VJrGFHM2Vj91ENc'
+  ossConfig.accessKeySecret = 'yl8eC6FyUJZKRbabJBPAxYi1WLrAZp' 
 }
 /**
  * api 环境切换，默认 dev
@@ -30,7 +32,8 @@ if (env==='prod'||env==='live'){
 // graphql api
 // let targetGrapqhlEnv = 'http://docker.meixiu.mobi:33401'
 let targetGrapqhlEnv = 'http://ai-xxyy-default-graphql-boss.yinyuebao.cloud'
-let targetApiEnv = 'http://ai-xxyy-default-boss.yinyuebao.cloud'
+// let targetApiEnv = 'http://ai-xxyy-default-boss.yinyuebao.cloud'
+let targetApiEnv = 'https://ai-xxyy-default-boss-h5.yinyuebao.com';
 if (env === 'dev') {
   targetGrapqhlEnv = 'http://ai-xxyy-dev-graphql-boss.yinyuebao.cloud'
   targetApiEnv = 'http://ai-xxyy-dev-boss.yinyuebao.cloud'

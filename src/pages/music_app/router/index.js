@@ -397,6 +397,15 @@ const routes = [
     },
     component: () => import('../views/outbound/views/callCenter/index.vue')
   },
+  {
+    path: '/Active',
+    name: 'Active',
+    meta: {
+      title: '小度活动',
+      style: 'line'
+    },
+    component: () => import('../views/active/index.vue')
+  },
 
   ...uploadFilePeimission,
   ...superOperatingRouter,
