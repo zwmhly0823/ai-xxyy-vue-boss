@@ -737,6 +737,16 @@ if (staff.roleId === '19') {
           }
         }
       ]
+    },
+    {
+      path: '/active',
+      name: 'active',
+      // hidden: true,
+      meta: {
+        title: '活动',
+        icon: 'iconiconset',
+        module: module,
+      },
     }
   ]
 }

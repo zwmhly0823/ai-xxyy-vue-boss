@@ -7,6 +7,8 @@
     "build:default": "cross-env BASE_URL=default npm run build ",
     "build:dev": "cross-env BASE_URL=dev npm run build ",
     "build:test": "cross-env BASE_URL=test npm run build ",
+    "build:prod": "cross-env BASE_URL=prod npm run build ",
+    "build:live": "cross-env BASE_URL=live npm run build ",
     "build": "vue-cli-service build",
     "test:unit": "vue-cli-service test:unit",
     "lint": "eslint --fix --ext .js,.vue src",
