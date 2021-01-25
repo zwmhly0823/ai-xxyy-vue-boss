@@ -22,6 +22,8 @@ const ossConfig = {
 const env = BASE_URL || 'default' // default, dev, test, prod, live
 if (env==='prod'||env==='live'){
   ossConfig.bucket = 'ai-xxyy-frontend-online'
+  ossConfig.accessKeyId = 'LTAI4FyK2VJrGFHM2Vj91ENc'
+  ossConfig.accessKeySecret = 'yl8eC6FyUJZKRbabJBPAxYi1WLrAZp' 
 }
 /**
  * api 环境切换，默认 dev
