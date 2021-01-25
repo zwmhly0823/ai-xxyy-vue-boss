@@ -32,7 +32,8 @@ if (env==='prod'||env==='live'){
 // graphql api
 // let targetGrapqhlEnv = 'http://docker.meixiu.mobi:33401'
 let targetGrapqhlEnv = 'http://ai-xxyy-default-graphql-boss.yinyuebao.cloud'
-let targetApiEnv = 'http://ai-xxyy-default-boss.yinyuebao.cloud'
+// let targetApiEnv = 'http://ai-xxyy-default-boss.yinyuebao.cloud'
+let targetApiEnv = 'https://ai-xxyy-default-boss-h5.yinyuebao.com';
 if (env === 'dev') {
   targetGrapqhlEnv = 'http://ai-xxyy-dev-graphql-boss.yinyuebao.cloud'
   targetApiEnv = 'http://ai-xxyy-dev-boss.yinyuebao.cloud'

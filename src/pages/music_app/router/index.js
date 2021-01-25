@@ -401,7 +401,7 @@ const routes = [
     path: '/Active',
     name: 'Active',
     meta: {
-      title: '活动',
+      title: '小度活动',
       style: 'line'
     },
     component: () => import('../views/active/index.vue')
