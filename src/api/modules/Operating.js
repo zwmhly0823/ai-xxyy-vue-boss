@@ -74,7 +74,7 @@ export default {
    */
   getTeacherConfigList(params) {
     return axios.post(
-      `/api/t/v1/teacher/course/enroll/teacher/config?courseType=${params.courseType}&period=${params.period}&courseDifficulty=${params.courseDifficulty}&departmentIds=${params.departmentIds}&teacherWechatIds=${params.teacherWechatIds}&levels=${params.levels}`,
+      `/api/t/v1/teacher/course/enroll/teacher/config?courseType=${params.courseType}&period=${params.period}&courseDifficulty=${params.courseDifficulty}&departmentIds=${params.departmentIds}&teacherWechatIds=${params.teacherWechatIds}&levels=${params.levels}&subject=MUSIC_APP`,
       params.ids
     )
   },
@@ -83,7 +83,7 @@ export default {
    */
   saveScheduleConfig(params) {
     return axios.post(
-      `/api/t/v1/teacher/course/enroll/teacher/config/save?courseType=${params.courseType}&period=${params.period}`,
+      `/api/t/v1/teacher/course/enroll/teacher/config/save?courseType=${params.courseType}&period=${params.period}&subject=MUSIC_APP`,
       params.body
     )
   },
