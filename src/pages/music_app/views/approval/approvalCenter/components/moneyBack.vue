@@ -391,7 +391,7 @@ export default {
         this.selectOrder = targetItem
         console.info('选择关联订单是我,大家快来公用--', targetItem)
 
-        // 显示业务类型
+        // 显示业务类型 : 体验课，首单，续费
         if (targetItem && targetItem.regtype) {
           if (
             targetItem.regtype === 'EXPERIENCE' ||
