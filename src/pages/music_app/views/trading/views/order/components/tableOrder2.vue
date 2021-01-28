@@ -336,7 +336,7 @@ export default {
         relationIds = topicRelation.data.PackagesTopicList.map(
           (item) => item.relation_id
         )
-        relationIds = [...relationIds,'500','501']
+        // relationIds = [...relationIds,'500','501']
 
       // 组合搜索条件
       this.searchIn.forEach((item) => {
@@ -410,6 +410,7 @@ export default {
     orderData(queryObj = {}, page = 1) {
       // 最终搜索条件
       this.$emit('get-params', queryObj)
+      console.log(queryObj)
       this.$http.Order.orderPage(`${JSON.stringify(queryObj)}`, page)
         .then((res) => {
           if (!res.data.OrderPage) {
@@ -418,7 +419,8 @@ export default {
             this.orderList = []
             return
           }
-          if (this.topic === '4' || this.topic === '5') {
+          console.log(res.data)
+          if (this.topic === '4'||this.topic==='5') {
             this.totalElements = +res.data.OrderPage.totalElements
             this.currentPage = +res.data.OrderPage.number
           }

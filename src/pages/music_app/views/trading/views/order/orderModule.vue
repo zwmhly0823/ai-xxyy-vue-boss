@@ -126,7 +126,7 @@ export default {
     if (urlParams) {
       // 本期消息中心跳转只做体验课的
       // 更新:本期虽然但是，都要往系统课跳，默认就是系统课
-      // this.activeTopic = '4'
+      this.activeTopic = '4'
       this.searchProp = {
         name: urlParams.split(',')[0],
         value: urlParams.split(',')[1]

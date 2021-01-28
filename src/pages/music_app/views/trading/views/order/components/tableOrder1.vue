@@ -395,7 +395,7 @@ export default {
         relationIds = topicRelation.data.PackagesTopicList.map(
           (item) => item.relation_id
         )
-      relationIds = [...relationIds, '500','501']
+      // relationIds = [...relationIds, '500','501']
 
       console.log(this.searchIn)
 
@@ -416,7 +416,7 @@ export default {
        * this.topic
        * 体验课(4),系统课(5)去 p_packages_topic表找relation_id
        */
-      if (this.topic === '4' || this.topic === '5') {
+      if ( this.topic === '5') {
         Object.assign(queryObj, { packages_id: relationIds })
 
         // !!! 如果系统课类型选择 半年系统课 - packages，则packages_id = 10
@@ -497,7 +497,6 @@ export default {
       // 最终搜索条件
       this.$emit('get-params', queryObj)
       // console.log(queryObj)
-
       this.$http.Order.orderPage(`${JSON.stringify(queryObj)}`, page)
         .then((res) => {
           if (!res.data.OrderPage) {
