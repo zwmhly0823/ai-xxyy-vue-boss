@@ -410,7 +410,6 @@ export default {
     orderData(queryObj = {}, page = 1) {
       // 最终搜索条件
       this.$emit('get-params', queryObj)
-      console.log(queryObj)
       this.$http.Order.orderPage(`${JSON.stringify(queryObj)}`, page)
         .then((res) => {
           if (!res.data.OrderPage) {
@@ -419,8 +418,7 @@ export default {
             this.orderList = []
             return
           }
-          console.log(res.data)
-          if (this.topic === '4'||this.topic==='5') {
+          if (this.topic === '4' || this.topic === '5') {
             this.totalElements = +res.data.OrderPage.totalElements
             this.currentPage = +res.data.OrderPage.number
           }
