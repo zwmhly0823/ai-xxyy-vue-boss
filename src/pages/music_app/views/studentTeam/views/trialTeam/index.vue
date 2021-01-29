@@ -427,7 +427,7 @@ export default {
       //   })
       id &&
         openBrowserTab(
-          `/student-team/#/teamDetail/${id}/${teamType}`,
+          `/music_app/#/teamDetail/${id}/${teamType}`,
           `${row.team_name}`
         )
     },
