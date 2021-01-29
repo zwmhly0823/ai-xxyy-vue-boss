@@ -8,6 +8,13 @@
  */
 import axios from '../axiosConfig'
 export default {
+   /**
+   * /v1/backend/approval/staffIds/get
+   * 获取退款审批权限id
+   */
+  getStaffIds(){
+    return axios.post('/api/b/v1/backend/approval/staffIds/get?redisKey=approval:uncreditedApprovalIds', {})
+  },
   /**
    * /v1/backend/apply/reissue/flow
    * 申请补发货接口

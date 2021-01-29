@@ -43,6 +43,7 @@ import Marketing from './modules/Marketing' // 营销中心
 import LearnRecord from './modules/LearnRecord' // 学习记录
 import Setting from './modules/Setting'
 import TeamV2 from './modules/TeamV2'
+import Active from './modules/Active'
 
 export default Object.assign(
   {},
@@ -75,5 +76,6 @@ export default Object.assign(
   { Marketing },
   { LearnRecord },
   { Setting },
-  { TeamV2 }
+  { TeamV2 },
+  { Active },
 )
