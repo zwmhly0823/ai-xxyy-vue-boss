@@ -21,7 +21,7 @@ let msbWriting = []
  * 新增 教研 角色 （roleId: 18）
  * 美术BOSS只有 设置-员工账号 的权限
  */
-if (staff.roleId === '19') {
+if (staff&&staff.roleId === '19') {
   msbWriting = [
     // 运营中心
     {

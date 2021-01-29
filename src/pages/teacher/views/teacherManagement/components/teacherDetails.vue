@@ -80,6 +80,7 @@
 </template>
 <script>
 import { formatData } from '@/utils/index'
+import Image1 from '../../../../../assets/images/bear.png'
 export default {
   props: {
     teacherID: String,
@@ -91,7 +92,7 @@ export default {
       drawer: false,
       // 头像
       headImage: '',
-      Image: require('../../../../../assets/images/bear.png'),
+      Image: Image1,
       // 真实姓名
       realName: '',
       // 性别

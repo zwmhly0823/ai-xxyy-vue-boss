@@ -3,8 +3,8 @@
  * @version:
  * @Author: Shentong
  * @Date: 2020-03-17 11:50:18
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-11-17 16:34:15
+ * @LastEditors: Shentong
+ * @LastEditTime: 2020-10-28 15:41:00
  */
 import axios from './axios'
 import { getToken } from '@/utils/auth'
@@ -63,6 +63,7 @@ export default {
    * @param {Object} params [请求时携带的参数]
    */
   post(url, params, extend = {}) {
+    console.log('kkk', url);
     if (process.env.NODE_ENV === 'development') {
       if (url.match(/graphql/)) {
         const reg = /[\s][\w]+\(query:/

@@ -472,18 +472,18 @@ export default {
       ],
       // 课程类型
       subjectList: [
-        {
-          value: '0',
-          label: '美术'
-        },
-        {
-          value: '1',
-          label: '写字'
-        }
         // {
-        //   value: '2',
-        //   label: 'AI学院'
+        //   value: '0',
+        //   label: '美术'
+        // },
+        // {
+        //   value: '1',
+        //   label: '写字'
         // }
+        {
+          value: '3',
+          label: '音乐'
+        }
       ],
       // Level: [
       //   { label: '新兵培训', value: 0 },

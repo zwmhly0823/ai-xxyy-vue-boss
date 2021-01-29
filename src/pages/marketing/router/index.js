@@ -59,6 +59,15 @@ const routes = [
       keepAlive: true
     },
     component: () => import('../views/coupon/grantRule.vue')
+  },
+  {
+    path: '/whites',
+    name: 'whites',
+    meta: {
+      title: '白名单配置',
+      keepAlive: true
+    },
+    component: () => import('../views/whites/index.vue')
   }
   //   创建兑换码
   //   {

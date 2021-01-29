@@ -381,7 +381,7 @@ export default {
     async pwdLoginHandle(formName) {
       let getToken
       const { pathname } = location
-      let path = pathname.replace(/login/, 'student-team')
+      let path = pathname.replace(/login/, 'dashboard')
       // 校验回调返回的是Promise
       const validatePromise = await this.judegeValidate(formName).catch((err) =>
         console.log(err)
@@ -441,16 +441,16 @@ export default {
           // sessionStorage.setItem('currentMultiTab', `${path}#/`)
 
           // 检测用户登录的密码是否合法 TODO:
-          if (formName === 'pwdLoginForm') {
-            if (validatePwd(this.pwdLoginForm.pwd)) {
-              location.href = `${path}#/`
-            } else {
-              this.getUserInfo()
-              this.dialogVisible = true
-            }
-          } else {
-            location.href = `${path}#/`
-          }
+          // if (formName === 'pwdLoginForm') {
+          //   if (validatePwd(this.pwdLoginForm.pwd)) {
+          //     location.href = `${path}#/`
+          //   } else {
+          //     this.getUserInfo()
+          //     this.dialogVisible = true
+          //   }
+          // } else {
+          location.href = `${path}#/`
+          // }
         }
 
         // 以服务的方式调用的 Loading 需要异步关闭

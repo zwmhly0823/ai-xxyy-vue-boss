@@ -15,7 +15,7 @@ if (!staff) {
 }
 
 let bearArt = []
-
+const module = 'art_app'
 /**
  * 新增 教研 角色 （roleId: 19）
  * 美术BOSS只有 设置-员工账号 的权限
@@ -55,20 +55,19 @@ if (staff.roleId === '19') {
   let uploadFilePeimission = []
 
   // TODO:
-  if (staff.mobile === '15801332536') {
+  if (staff&&staff.mobile === '15801332536') {
     uploadFilePeimission = [
       {
         path: '/uploadFile',
         name: 'uploadFile',
         meta: {
           title: '上传素材',
-          module: 'operating'
+          // module: 'operating'
+          module
         }
       }
     ]
   }
-
-  console.log()
 
   // 管理员、
   const adminRouter = []
@@ -81,7 +80,8 @@ if (staff.roleId === '19') {
         name: 'operatingSchedule',
         meta: {
           title: '招生排期',
-          module: 'operating'
+          // module: 'operating'
+          module
         }
       },
       {
@@ -89,7 +89,8 @@ if (staff.roleId === '19') {
         name: 'changePhoneNumber',
         meta: {
           title: '手机号替换',
-          module: 'operating'
+          // module: 'operating'
+          module
         }
       }
     ]
@@ -119,7 +120,8 @@ if (staff.roleId === '19') {
       name: 'changePhoneNumber',
       meta: {
         title: '手机号替换',
-        module: 'operating'
+        // module: 'operating'
+        module
       }
     })
   }
@@ -131,7 +133,8 @@ if (staff.roleId === '19') {
       meta: {
         title: '体验课班级(新版)',
         icon: 'iconbanjiguanli',
-        module: 'student-team'
+        // module: 'student-team'
+        module
       },
       children: [
         {
@@ -139,7 +142,8 @@ if (staff.roleId === '19') {
           name: 'trialTeam0',
           meta: {
             title: '待上课',
-            module: 'student-team',
+            // module: 'student-team',
+            module,
             show: true
           }
         },
@@ -148,7 +152,8 @@ if (staff.roleId === '19') {
           name: 'trialTeam1',
           meta: {
             title: '上课中',
-            module: 'student-team',
+            // module: 'student-team',
+            module,
             show: true
           }
         },
@@ -157,7 +162,8 @@ if (staff.roleId === '19') {
           name: 'trialTeam2',
           meta: {
             title: '已完课',
-            module: 'student-team',
+            // module: 'student-team',
+            module,
             show: true
           }
         }
@@ -178,7 +184,8 @@ if (staff.roleId === '19') {
       meta: {
         title: '班级管理',
         icon: 'iconbanjiguanli',
-        module: 'student-team'
+        // module: 'student-team'
+        module
       },
       children: [
         {
@@ -186,7 +193,8 @@ if (staff.roleId === '19') {
           name: 'trialTeam',
           meta: {
             title: '体验课',
-            module: 'student-team',
+            // module: 'student-team',
+            module,
             show: true
           }
         },
@@ -195,7 +203,8 @@ if (staff.roleId === '19') {
           name: 'systemTeam',
           meta: {
             title: '系统课',
-            module: 'student-team',
+            // module: 'student-team',
+            module,
             show: true
           }
         }
@@ -210,6 +219,7 @@ if (staff.roleId === '19') {
         title: '学员管理',
         icon: 'iconxueyuanguanli',
         module: 'users'
+        // module
       },
       children: [
         {
@@ -218,6 +228,7 @@ if (staff.roleId === '19') {
           meta: {
             title: '体验课',
             module: 'users',
+            // module,
             show: true
           }
         },
@@ -227,6 +238,7 @@ if (staff.roleId === '19') {
           meta: {
             title: '系统课',
             module: 'users',
+            // module,
             show: true
           }
         },
@@ -236,6 +248,7 @@ if (staff.roleId === '19') {
           meta: {
             title: '全部学员',
             module: 'users',
+            // module,
             show: true
           }
         }
@@ -249,7 +262,8 @@ if (staff.roleId === '19') {
       meta: {
         title: '交易管理',
         icon: 'iconjianyiguanli',
-        module: 'trading'
+        // module: 'trading'
+        module
       },
       children: [
         {
@@ -257,7 +271,8 @@ if (staff.roleId === '19') {
           name: 'order',
           meta: {
             title: '订单管理',
-            module: 'trading',
+            // module: 'trading',
+            module,
             show: true
           }
         },
@@ -266,7 +281,8 @@ if (staff.roleId === '19') {
           name: 'financeRefound',
           meta: {
             title: '订单退款',
-            module: 'trading',
+            // module: 'trading',
+            module,
             show: true
           }
         },
@@ -275,106 +291,109 @@ if (staff.roleId === '19') {
           name: 'invoiceManage',
           meta: {
             title: '发票管理',
-            module: 'trading',
+            // module: 'trading',
+            module,
             show: true
           }
         }
       ]
     },
     // 社群工具
-    {
-      path: '/community',
-      name: 'community',
-      meta: {
-        title: '社群工具',
-        icon: 'icongongju1',
-        module: 'community'
-      },
-      children: [
-        {
-          path: '/groupSop',
-          name: 'groupSop',
-          meta: {
-            title: '群SOP',
-            module: 'community',
-            show: false
-          }
-        },
-        {
-          path:
-            'https://wgj.xiaoxiongmeishu.com/Site/AccuratePush/accuratePush.html',
-          meta: {
-            title: '群发消息',
-            show: false
-          }
-        },
-        {
-          path:
-            'https://wgj.xiaoxiongmeishu.com/Marketing/FriendsCircle/FriendsCircleList',
-          meta: {
-            title: '发朋友圈',
-            show: false
-          }
-        },
-        {
-          path:
-            'https://wgj.xiaoxiongmeishu.com/Equipment/QuickReply/QuickReplyList',
-          meta: {
-            title: '快捷回复',
-            show: false
-          }
-        },
-        {
-          path:
-            'https://wgj.xiaoxiongmeishu.com/Equipment/AutoCreateCluster/KeyClusterList',
-          meta: {
-            title: '自动拉群',
-            show: false
-          }
-        },
-        {
-          path: 'https://wgj.xiaoxiongmeishu.com/WeiXin/Tag/WeiXinTagList',
-          meta: {
-            title: '微信标签',
-            show: false
-          }
-        },
-        {
-          path: 'https://wgj.xiaoxiongmeishu.com/WeiXin/Cluster/ClusterList',
-          meta: {
-            title: '微信群',
-            show: false
-          }
-        },
-        {
-          path:
-            'https://wgj.xiaoxiongmeishu.com/Marketing/AutoPassFriend/AutoPassFriendList',
-          meta: {
-            title: '被动通过添加好友设置'
-          }
-        },
-        {
-          path:
-            'https://wgj.xiaoxiongmeishu.com/Equipment/MsgRule/UserAddRuleList',
-          meta: {
-            title: '通过好友自动回复设置'
-          }
-        },
-        {
-          path: 'https://wgj.xiaoxiongmeishu.com/Equipment/MsgRule/KeyRuleList',
-          meta: {
-            title: '单聊关键词自动回复设置'
-          }
-        },
-        {
-          path:
-            'https://wgj.xiaoxiongmeishu.com/Equipment/MsgRule/ClusterKeyRuleList?menuType=1',
-          meta: {
-            title: '群聊关键词自动回复设置'
-          }
-        }
-      ]
-    },
+    // {
+    //   path: '/community',
+    //   name: 'community',
+    //   meta: {
+    //     title: '社群工具',
+    //     icon: 'icongongju1',
+    //     // module: 'community'
+    //     module
+    //   },
+    //   children: [
+    //     {
+    //       path: '/groupSop',
+    //       name: 'groupSop',
+    //       meta: {
+    //         title: '群SOP',
+    //         // module: 'community',
+    //         module,
+    //         show: false
+    //       }
+    //     },
+    //     {
+    //       path:
+    //         'https://wgj.xiaoxiongmeishu.com/Site/AccuratePush/accuratePush.html',
+    //       meta: {
+    //         title: '群发消息',
+    //         show: false
+    //       }
+    //     },
+    //     {
+    //       path:
+    //         'https://wgj.xiaoxiongmeishu.com/Marketing/FriendsCircle/FriendsCircleList',
+    //       meta: {
+    //         title: '发朋友圈',
+    //         show: false
+    //       }
+    //     },
+    //     {
+    //       path:
+    //         'https://wgj.xiaoxiongmeishu.com/Equipment/QuickReply/QuickReplyList',
+    //       meta: {
+    //         title: '快捷回复',
+    //         show: false
+    //       }
+    //     },
+    //     {
+    //       path:
+    //         'https://wgj.xiaoxiongmeishu.com/Equipment/AutoCreateCluster/KeyClusterList',
+    //       meta: {
+    //         title: '自动拉群',
+    //         show: false
+    //       }
+    //     },
+    //     {
+    //       path: 'https://wgj.xiaoxiongmeishu.com/WeiXin/Tag/WeiXinTagList',
+    //       meta: {
+    //         title: '微信标签',
+    //         show: false
+    //       }
+    //     },
+    //     {
+    //       path: 'https://wgj.xiaoxiongmeishu.com/WeiXin/Cluster/ClusterList',
+    //       meta: {
+    //         title: '微信群',
+    //         show: false
+    //       }
+    //     },
+    //     {
+    //       path:
+    //         'https://wgj.xiaoxiongmeishu.com/Marketing/AutoPassFriend/AutoPassFriendList',
+    //       meta: {
+    //         title: '被动通过添加好友设置'
+    //       }
+    //     },
+    //     {
+    //       path:
+    //         'https://wgj.xiaoxiongmeishu.com/Equipment/MsgRule/UserAddRuleList',
+    //       meta: {
+    //         title: '通过好友自动回复设置'
+    //       }
+    //     },
+    //     {
+    //       path: 'https://wgj.xiaoxiongmeishu.com/Equipment/MsgRule/KeyRuleList',
+    //       meta: {
+    //         title: '单聊关键词自动回复设置'
+    //       }
+    //     },
+    //     {
+    //       path:
+    //         'https://wgj.xiaoxiongmeishu.com/Equipment/MsgRule/ClusterKeyRuleList?menuType=1',
+    //       meta: {
+    //         title: '群聊关键词自动回复设置'
+    //       }
+    //     }
+    //   ]
+    // },
     // 物流管理new
     {
       path: '/express',
@@ -382,7 +401,8 @@ if (staff.roleId === '19') {
       meta: {
         title: '物流管理',
         icon: 'iconwuliuguanli',
-        module: 'express'
+        // module: 'express'
+        module
       }
     },
     // 财务(该模块先隐藏,丹阳还会回来)
@@ -393,7 +413,8 @@ if (staff.roleId === '19') {
       meta: {
         title: '财务',
         icon: 'el-icon-s-finance',
-        module: 'finance'
+        // module: 'finance'
+        module
       },
       children: [
         {
@@ -401,7 +422,8 @@ if (staff.roleId === '19') {
           name: 'financeRefound',
           meta: {
             title: '退款',
-            module: 'finance'
+            // module: 'finance'
+            module
           }
         }
       ]
@@ -415,7 +437,8 @@ if (staff.roleId === '19') {
       meta: {
         title: '运营管理',
         icon: 'iconyunyingzhongxin',
-        module: 'operating',
+        // module: 'operating',
+        module,
         bottom: true
       },
       children: [
@@ -424,7 +447,8 @@ if (staff.roleId === '19') {
           name: 'activityManagement',
           meta: {
             title: '活动管理',
-            module: 'operating'
+            // module: 'operating'
+            module
           }
         },
         {
@@ -432,7 +456,8 @@ if (staff.roleId === '19') {
           name: 'channelManagement',
           meta: {
             title: '渠道管理',
-            module: 'operating'
+            // module: 'operating'
+            module
           }
         },
         {
@@ -440,7 +465,8 @@ if (staff.roleId === '19') {
           name: 'comment',
           meta: {
             title: '语音库',
-            module: 'operating'
+            // module: 'operating'
+            module
           }
         },
         {
@@ -448,7 +474,8 @@ if (staff.roleId === '19') {
           name: 'reviewManagement',
           meta: {
             title: '点评管理',
-            module: 'operating'
+            // module: 'operating'
+            module
           }
         },
         {
@@ -456,7 +483,8 @@ if (staff.roleId === '19') {
           name: 'verificationCode',
           meta: {
             title: '验证码查询',
-            module: 'operating'
+            // module: 'operating'
+            module
           }
         },
         {
@@ -464,7 +492,8 @@ if (staff.roleId === '19') {
           name: 'labelManage',
           meta: {
             title: '标签管理',
-            module: 'operating'
+            // module: 'operating'
+            module
           }
         },
         {
@@ -472,7 +501,8 @@ if (staff.roleId === '19') {
           name: 'pushConfig',
           meta: {
             title: '推送配置',
-            module: 'operating'
+            // module: 'operating'
+            module
           }
         },
         {
@@ -480,7 +510,8 @@ if (staff.roleId === '19') {
           name: 'problem',
           meta: {
             title: '问卷管理',
-            module: 'operating'
+            // module: 'operating'
+            module
           }
         },
         {
@@ -488,7 +519,8 @@ if (staff.roleId === '19') {
           name: 'issueBearCoins',
           meta: {
             title: '发放小熊币',
-            module: 'operating'
+            // module: 'operating'
+            module
           }
         },
         {
@@ -496,7 +528,8 @@ if (staff.roleId === '19') {
           name: 'recommend',
           meta: {
             title: '转介绍截图',
-            module: 'operating'
+            // module: 'operating'
+            module
           }
         },
         ...uploadFilePeimission,
@@ -513,6 +546,7 @@ if (staff.roleId === '19') {
         title: '营销中心',
         icon: 'iconyingxiaoguanli',
         module: 'marketing'
+        // module
       },
       children: [
         {
@@ -521,6 +555,7 @@ if (staff.roleId === '19') {
           meta: {
             title: '营销中心',
             module: 'marketing',
+            // module,
             style: 'line'
           }
         },
@@ -530,6 +565,7 @@ if (staff.roleId === '19') {
           meta: {
             title: '优惠券',
             module: 'marketing',
+            // module,
             style: 'line'
           }
         }
@@ -552,7 +588,8 @@ if (staff.roleId === '19') {
       meta: {
         title: '审批中心',
         icon: 'iconshenpizhongxin',
-        module: 'approval'
+        // module: 'approval'
+        module
       }
     },
     {
@@ -561,7 +598,8 @@ if (staff.roleId === '19') {
       meta: {
         title: '呼叫中心',
         icon: 'icondianhua',
-        module: 'outbound'
+        // module: 'outbound'
+        module
       },
       children: [
         {
@@ -569,7 +607,8 @@ if (staff.roleId === '19') {
           name: 'CallRecord',
           meta: {
             title: '通话记录',
-            module: 'outbound',
+            // module: 'outbound',
+            module,
             style: 'line'
           }
         },
@@ -578,70 +617,77 @@ if (staff.roleId === '19') {
           name: 'CallCenter',
           meta: {
             title: '席位配置',
-            module: 'outbound',
+            // module: 'outbound',
+            module,
             style: 'line'
           }
         }
       ]
     },
     // 数据中心
-    {
-      path: '/statistics',
-      name: 'statistics',
-      // hidden: true,
-      meta: {
-        title: '数据中心',
-        icon: 'icontongjifenxi',
-        module: 'statistics'
-      },
-      children: [
-        {
-          path: '/priodPerformance',
-          name: 'priodPerformance',
-          meta: {
-            title: '按期汇总',
-            module: 'statistics',
-            style: 'line'
-          }
-        },
-        {
-          path: '/salesPerformance',
-          name: 'salesPerformance',
-          meta: {
-            title: '过程分析',
-            module: 'statistics',
-            style: 'line'
-          }
-        },
-        {
-          path: '/behavior',
-          name: 'behavior',
-          meta: {
-            title: '行为轨迹',
-            module: 'statistics',
-            style: 'line'
-          }
-        },
-        {
-          path: '/learnRecord',
-          name: 'learnRecord',
-          meta: {
-            title: '学习记录',
-            module: 'statistics',
-            style: 'line'
-          }
-        },
-        {
-          path: '/systemJoinCourseLog',
-          name: 'systemJoinCourseLog',
-          meta: {
-            title: '参课统计',
-            module: 'statistics',
-            style: 'line'
-          }
-        }
-      ]
-    },
+    // {
+    //   path: '/statistics',
+    //   name: 'statistics',
+    //   // hidden: true,
+    //   meta: {
+    //     title: '数据中心',
+    //     icon: 'icontongjifenxi',
+    //     // module: 'statistics'
+    //     module
+    //   },
+    //   children: [
+    //     {
+    //       path: '/priodPerformance',
+    //       name: 'priodPerformance',
+    //       meta: {
+    //         title: '按期汇总',
+    //         // module: 'statistics',
+    //         module,
+    //         style: 'line'
+    //       }
+    //     },
+    //     {
+    //       path: '/salesPerformance',
+    //       name: 'salesPerformance',
+    //       meta: {
+    //         title: '过程分析',
+    //         // module: 'statistics',
+    //         module,
+    //         style: 'line'
+    //       }
+    //     },
+    //     {
+    //       path: '/behavior',
+    //       name: 'behavior',
+    //       meta: {
+    //         title: '行为轨迹',
+    //         // module: 'statistics',
+    //         module,
+    //         style: 'line'
+    //       }
+    //     },
+    //     {
+    //       path: '/learnRecord',
+    //       name: 'learnRecord',
+    //       meta: {
+    //         title: '学习记录',
+    //         // module: 'statistics',
+    //         module,
+    //         style: 'line'
+    //       }
+    //     },
+    //     {
+    //       path: '/systemJoinCourseLog',
+    //       name: 'systemJoinCourseLog',
+    //       meta: {
+    //         title: '参课统计',
+    //         // module: 'statistics',,
+    //         module,
+    //         style: 'line'
+    //       }
+    //     }
+    //   ]
+    // },
     // 设置 - 老师模块
     {
       path: '/teacher',

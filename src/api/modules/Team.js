@@ -164,7 +164,7 @@ export default {
       size = '20',
       sort = `{"ctime":"desc"}`
     } = params
-    const query = { team_state: teamState.split(','), subject: '0' }
+    const query = { team_state: teamState.split(','), subject: '3' }
     teamName &&
       Object.assign(query, {
         'team_name.like': { 'team_name.keyword': `*${teamName}*` }
@@ -243,7 +243,7 @@ export default {
       size = '20',
       sort = `{"ctime":"desc"}`
     } = params
-    const query = { team_state: teamState.split(','), subject: '0' }
+    const query = { team_state: teamState.split(','), subject: '3' }
     teamName &&
       Object.assign(query, {
         'team_name.like': { 'team_name.keyword': `*${teamName}*` }

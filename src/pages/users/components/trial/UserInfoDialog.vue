@@ -371,7 +371,7 @@ export default {
         teamId,
         page,
         size: 5,
-        subject: '0'
+        subject: '3'
       }).then((res) => {
         if (res?.data?.StudentCourseTaskPage) {
           const {

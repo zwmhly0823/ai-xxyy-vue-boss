@@ -112,7 +112,7 @@
 
 <script>
 import { formatData } from '@/utils/index'
-import ExpressDetail from '@/pages/trading/views/components/expressDetail'
+import ExpressDetail from '@/pages/art_app/views/trading/views/components/expressDetail'
 
 export default {
   name: 'logistics',

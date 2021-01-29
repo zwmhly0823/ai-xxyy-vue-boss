@@ -16,7 +16,7 @@ const { getMenuText } = require('./src/config/sidebarMenu/menuItems')
 const { BASE_URL } = process.env
 const entries = {}
 // 多科目名称-除小熊美术
-const subjects = ['write_app']
+const subjects = ['write_app', 'music_app']
 
 const camel2Line = function(str) {
   return str.replace(/([A-Z])/g, '-$1').toLowerCase()
@@ -24,14 +24,16 @@ const camel2Line = function(str) {
 
 const baseUrl = function() {
   switch (BASE_URL) {
-    case 'ghpagesdev':
-      return '/ai-app-vue-boss-dev/'
-    case 'ghpagestest':
-      return '/ai-app-vue-boss-test/'
-    case 'ghpagesprod':
-      return '/ai-app-vue-boss-prod/'
-    case 'ghpageslive':
-      return '/'
+    case 'dev':
+      return 'https://xxyy-devtest.oss-cn-hangzhou.aliyuncs.com/xiaoxiong/ai-app-vue-boss-dev/'
+    case 'default':
+      return 'https://xxyy-devtest.oss-cn-hangzhou.aliyuncs.com/xiaoxiong/ai-app-vue-boss-default/'
+    case 'test':
+      return 'https://xxyy-devtest.oss-cn-hangzhou.aliyuncs.com/xiaoxiong/ai-app-vue-boss-test/'
+    case 'prod':
+      return 'https://ai-xxyy-frontend-online-oss.yinyuebao.com/xiaoxiong/ai-app-vue-boss-prod/'
+    case 'live':
+      return 'https://ai-xxyy-frontend-online-oss.yinyuebao.com/xiaoxiong/ai-app-vue-boss-live/'
     default:
       return '/'
   }

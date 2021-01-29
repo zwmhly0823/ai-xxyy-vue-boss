@@ -13,14 +13,21 @@
 import { getAppSubject } from '@/utils/index'
 import artApp from './art_app'
 import writeApp from './write_app'
+import musicApp from './music_app'
 
 /**
  * TODO:当前打开项目
  */
 const subject = getAppSubject(false)
-let menu = artApp
+let menu = musicApp
+if (subject === 'artApp') {
+  menu = artApp
+}
 if (subject === 'write_app') {
   menu = writeApp
+}
+if (subject === 'music_app') {
+  menu = musicApp
 }
 
 export default menu

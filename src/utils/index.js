@@ -10,7 +10,7 @@
 import { Message } from 'element-ui'
 import dayjs from 'dayjs'
 import store from '@/store'
-import { subjects } from '@/config/subjects'
+import { subjects, subjectsList } from '@/config/subjects'
 // import { of } from 'core-js/fn/array'https://s1.meixiu.mobi/Pc/fileUpload/1603790950384.jpeg
 
 /**
@@ -401,14 +401,21 @@ export function getAppSubject(upper = true) {
   const envFlag = env.some((item) => pathname.includes(item))
   // 测试或开发环境
   const key = envFlag ? pathname.split('/')[2] : pathname.split('/')[1]
-  const subject = Object.keys(subjects).includes(key) ? key : 'art_app'
+  const subject = Object.keys(subjects).includes(key) ? key : 'music_app'
   return upper ? subject.toUpperCase() : subject
 }
 
 // 获取科目cdoe: '0','1','2' (0-ART_APP, 1-WRITE_APP, 2-COLLEGE_APP)
 export function getAppSubjectCode() {
   const key = getAppSubject(false)
-  return Object.keys(subjects).findIndex((item) => item === key) + ''
+  // return Object.keys(subjects).findIndex((item) => item === key) + ''
+  let subjectCode = 3
+  subjectsList.map((item, index) => {
+    if (item.key === key) {
+      subjectCode = item.index
+    }
+  })
+  return subjectCode
 }
 // 注入 课程类型 subject 参数接受 对象和序列化的字符串
 export function injectSubject(query) {

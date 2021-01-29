@@ -520,9 +520,9 @@ import {
 } from '@/utils/index'
 import { mapState } from 'vuex'
 import dayjs from 'dayjs'
-import expressDetail from '@/pages/trading/views/components/expressDetail'
-import modifyAddress from '@/pages/studentTeam/components/TabPane/components/modifyAddress'
-import logisticsForm from '@/pages/studentTeam/components/TabPane/components/logisticsForm'
+import expressDetail from '@/pages/art_app/views/trading/views/components/expressDetail'
+import modifyAddress from '@/pages/art_app/views/studentTeam/components/TabPane/components/modifyAddress'
+import logisticsForm from '@/pages/art_app/views/studentTeam/components/TabPane/components/logisticsForm'
 import {
   replenishTypeList,
   replenishReasonSearchList,

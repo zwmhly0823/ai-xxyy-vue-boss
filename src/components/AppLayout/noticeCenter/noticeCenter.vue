@@ -92,7 +92,7 @@
 <script>
 import { debounce } from 'lodash'
 import { formatData } from '@/utils/index'
-import { noticeLinkTo } from '@/pages/noticeCenter/utils/functions'
+import { noticeLinkTo } from '@/pages/art_app/views/noticeCenter/utils/functions'
 export default {
   name: 'noticeCenterComponent',
   data() {

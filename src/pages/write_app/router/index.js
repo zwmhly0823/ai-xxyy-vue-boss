@@ -64,7 +64,7 @@ const routes = [
       title: '招生排期',
       keepAlive: true
     },
-    component: () => import('../views/operating/scheduleList/index.vue')
+    component: () => import('../views/Operating/scheduleList/index.vue')
   },
   // 新增、编辑
   {
@@ -74,7 +74,7 @@ const routes = [
       title: '新建排期',
       keepAlive: false
     },
-    component: () => import('../views/operating/addSchedule/index.vue')
+    component: () => import('../views/Operating/addSchedule/index.vue')
   },
   {
     path: '/scheduleDetail/:period/:courseType/',
@@ -83,7 +83,7 @@ const routes = [
       title: '排期详情',
       keepAlive: false
     },
-    component: () => import('../views/operating/scheduleDetail/index.vue')
+    component: () => import('../views/Operating/scheduleDetail/index.vue')
   },
   {
     path: '/teacherManagement',
@@ -172,7 +172,7 @@ const routes = [
       keepAlive: true
     },
     component: () =>
-      import('../views/operating/views/channelManagement/channelManagement.vue')
+      import('../views/Operating/views/channelManagement/channelManagement.vue')
   },
   /**
    * 点评管理
@@ -185,7 +185,7 @@ const routes = [
       keepAlive: true
     },
     component: () =>
-      import('../views/operating/views/reviewManagement/index.vue')
+      import('../views/Operating/views/reviewManagement/index.vue')
   },
   /**
    * 营销中心  - 和小熊美术用一套
@@ -250,7 +250,7 @@ const routes = [
     },
     component: () =>
       import(
-        '../../operating/views/reviewManagement/components/verificationCode.vue'
+        '../../art_app/views/operating/views/reviewManagement/components/verificationCode.vue'
       )
   }
   /**

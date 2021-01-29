@@ -10,7 +10,7 @@
       <div :class="{ 'fixed-header': fixedHeader }">
         <topbar />
         <!-- <multi-tabbed /> -->
-        <Feedback />
+        <!-- <Feedback /> -->
       </div>
       <app-main />
     </div>
@@ -25,7 +25,7 @@ import AppMain from './AppMain.vue'
 // import MultiTabbed from './MultiTabbed.vue'
 import RightPop from '@/components/RightPop/index.vue'
 import ResizeMixin from './mixin/ResizeHandler'
-import Feedback from './Feedback/index.vue'
+// import Feedback from './Feedback/index.vue'
 export default {
   name: 'Layout',
   components: {
@@ -33,8 +33,8 @@ export default {
     Sidebar,
     AppMain,
     // MultiTabbed,
-    RightPop,
-    Feedback
+    RightPop
+    // Feedback
   },
   mixins: [ResizeMixin],
   computed: {

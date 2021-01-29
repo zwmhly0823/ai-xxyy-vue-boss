@@ -19,7 +19,6 @@ import tabbed from './modules/tabbed'
 import subjects from './modules/subjects'
 
 Vue.use(Vuex)
-
 const store = new Vuex.Store({
   modules: {
     app,
