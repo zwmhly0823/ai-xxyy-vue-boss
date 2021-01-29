@@ -257,7 +257,7 @@ const routes = [
    * @descript 班级模块 >>>> end
    */
 ]
-
+// 
 const router = new VueRouter({
   base: process.env.BASE_URL,
   module: 'write_app',
