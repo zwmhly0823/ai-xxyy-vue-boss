@@ -1,6 +1,6 @@
 const defaultSettings = require('./src/settings.js')
 
-const WebpackAliyunOss = require('webpack-aliyun-oss')
+const WebpackAliOss = require('webpack-alioss-plugin')
 const {
   getEntry,
   camel2Line,
@@ -112,11 +112,21 @@ module.exports = {
     }
     if (NODE_ENV === 'production') {
       // 上传阿里云oss
-      config.plugin('webpack-aliyun-oss').use(WebpackAliyunOss, [
+      // config.plugin('webpack-aliyun-oss').use(WebpackAliyunOss, [
+      //   {
+      //     from: ['./dist/**'],
+      //     dist: `${ossDist()}`,
+      //     ...ossConfig
+      //   }
+      // ])
+      config.plugin('webpack-alioss-plugin').use(WebpackAliOss, [
         {
-          from: ['./dist/**'],
-          dist: `${ossDist()}`,
-          ...ossConfig
+          ossBaseDir: ossDist(),
+          project: '',
+          auth: ossConfig,
+          removeMode: false,
+          existCheck: false,
+          exclude: /.*\.mainfest$/
         }
       ])
     }
