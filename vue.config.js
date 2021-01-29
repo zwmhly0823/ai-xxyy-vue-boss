@@ -97,17 +97,17 @@ module.exports = {
     const ossDist = function() {
       switch (BASE_URL) {
         case 'default':
-          return 'xiaoxiong/ai-app-vue-boss-default/'
+          return 'ai-app-vue-boss-default'
         case 'dev':
-          return 'xiaoxiong/ai-app-vue-boss-dev/'
+          return 'ai-app-vue-boss-dev'
         case 'test':
-          return 'xiaoxiong/ai-app-vue-boss-test/'
+          return 'ai-app-vue-boss-test'
         case 'prod':
-          return 'xiaoxiong/ai-app-vue-boss-prod/'
+          return 'ai-app-vue-boss-prod'
         case 'live':
-          return 'xiaoxiong/ai-app-vue-boss-live/'
+          return 'ai-app-vue-boss-live'
         default:
-          return 'xiaoxiong/ai-app-vue-boss-default/'
+          return 'ai-app-vue-boss-default'
       }
     }
     if (NODE_ENV === 'production') {
@@ -121,8 +121,8 @@ module.exports = {
       // ])
       config.plugin('webpack-alioss-plugin').use(WebpackAliOss, [
         {
-          ossBaseDir: ossDist(),
-          project: '',
+          ossBaseDir: 'xiaoxiong',
+          project:  ossDist(),
           auth: ossConfig,
           removeMode: false,
           existCheck: false,
