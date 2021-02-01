@@ -186,6 +186,17 @@ export default {
 .step-two-container .transfer-container .el-transfer-panel {
   width: 350px;
 }
+.step-two-container .transfer-container .el-transfer__buttons .el-button {
+  display: block;
+  margin-right: 0;
+  margin-left: 0;
+  width: 100%;
+}
+@media (max-width: 1550px) {
+  .step-two-container .transfer-container .el-transfer-panel {
+    width: 200px;
+  }
+}
 </style>
 <style lang="scss" scoped>
 .step-two-container {
