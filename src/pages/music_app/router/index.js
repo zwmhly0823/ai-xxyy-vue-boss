@@ -346,6 +346,7 @@ const routes = [
     component: () =>
       import('../views/approval/approvalCenter/components/repair.vue')
   },
+  // 无用000
   {
     path: '/approvalCenter/adjust',
     name: 'adjust',

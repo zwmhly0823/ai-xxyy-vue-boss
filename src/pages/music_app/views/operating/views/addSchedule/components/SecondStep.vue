@@ -21,8 +21,8 @@
               filterable
               :right-default-checked="rightDefaultChecked"
               :props="{
+                label: 'realname',
                 key: 'id',
-                label: 'realname'
               }"
               :render-content="renderFunc"
               :titles="['待选择', '已选择']"
@@ -33,20 +33,15 @@
               }"
               @change="handleChange"
               :data="transferData"
-            >
-            </el-transfer>
+            ></el-transfer>
           </div>
         </el-col>
       </el-row>
 
       <!-- 取消、下一步 -->
       <div class="operate-btn">
-        <el-button size="small" type="primary" @click="stepOperate(0)"
-          >上一步</el-button
-        >
-        <el-button size="small" type="primary" @click="stepOperate(1)"
-          >下一步</el-button
-        >
+        <el-button size="small" type="primary" @click="stepOperate(0)">上一步</el-button>
+        <el-button size="small" type="primary" @click="stepOperate(1)">下一步</el-button>
       </div>
     </div>
   </div>
@@ -70,7 +65,7 @@ export default {
       renderFunc(h, option) {
         return (
           <span>
-            {option.id} - {option.realname}
+            {option.realname} - {option.id}
           </span>
         )
       }
@@ -187,6 +182,20 @@ export default {
 }
 .el-transfer-panel__list.is-filterable {
   height: 270px;
+}
+.step-two-container .transfer-container .el-transfer-panel {
+  width: 350px;
+}
+.step-two-container .transfer-container .el-transfer__buttons .el-button {
+  display: block;
+  margin-right: 0;
+  margin-left: 0;
+  width: 100%;
+}
+@media (max-width: 1550px) {
+  .step-two-container .transfer-container .el-transfer-panel {
+    width: 200px;
+  }
 }
 </style>
 <style lang="scss" scoped>
