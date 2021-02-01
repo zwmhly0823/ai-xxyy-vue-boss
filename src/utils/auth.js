@@ -9,7 +9,7 @@
  */
 import Cookies from 'js-cookie'
 
-const TokenKey = 'xiaoxiongmeishu_toss'
+const TokenKey = 'xiaoxiongyinyue_toss'
 
 export function getToken() {
   return Cookies.get(TokenKey)
