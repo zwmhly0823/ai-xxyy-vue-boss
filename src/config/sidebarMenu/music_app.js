@@ -8,7 +8,7 @@
  */
 import { removeToken } from '@/utils/auth'
 import { baseUrl } from '@/utils/index'
-const staff = JSON.parse(localStorage.getItem('staff')) || {}
+var staff = JSON.parse(localStorage.getItem('staff')) || {}
 if (!staff) {
   removeToken()
   location.href = `${baseUrl()}login/#/`
@@ -20,6 +20,7 @@ const module = 'music_app'
  * 新增 教研 角色 （roleId: 19）
  * 美术BOSS只有 设置-员工账号 的权限
  */
+
 if (staff.roleId === '19') {
   bearArt = [
     // 设置 - 老师模块
@@ -176,7 +177,7 @@ if (staff.roleId === '19') {
     },
     {
       path: '/trail/:status',
-      name: 'trialTeamV2',
+      name: '',
       meta: {
         title: '班级管理',
         icon: 'iconbanjiguanli',
