@@ -165,45 +165,45 @@ const routes = [
   //   ]
   // },
   // 用户。体验课老师只能查看体验课学员，系统课只系统课学员
-  {
-    path: '/users',
-    name: 'users',
-    hidden: false,
-    meta: {
-      title: '学员管理',
-      icon: 'iconxueyuanguanli',
-      module: 'users'
-    },
-    children: [
-      {
-        path: '/trial',
-        name: 'trial',
-        meta: {
-          title: '体验课',
-          module: 'users',
-          show: true
-        }
-      },
-      {
-        path: '/system',
-        name: 'system',
-        meta: {
-          title: '系统课',
-          module: 'users',
-          show: true
-        }
-      },
-      {
-        path: '/allUsers',
-        name: 'allUsers',
-        meta: {
-          title: '全部学员',
-          module: 'users',
-          show: true
-        }
-      }
-    ]
-  },
+  // {
+  //   path: '/users',
+  //   name: 'users',
+  //   hidden: false,
+  //   meta: {
+  //     title: '学员管理',
+  //     icon: 'iconxueyuanguanli',
+  //     module: 'users'
+  //   },
+  //   children: [
+  //     {
+  //       path: '/trial',
+  //       name: 'trial',
+  //       meta: {
+  //         title: '体验课',
+  //         module: 'users',
+  //         show: true
+  //       }
+  //     },
+  //     {
+  //       path: '/system',
+  //       name: 'system',
+  //       meta: {
+  //         title: '系统课',
+  //         module: 'users',
+  //         show: true
+  //       }
+  //     },
+  //     {
+  //       path: '/allUsers',
+  //       name: 'allUsers',
+  //       meta: {
+  //         title: '全部学员',
+  //         module: 'users',
+  //         show: true
+  //       }
+  //     }
+  //   ]
+  // },
   // 交易
   // {
   //   path: '/trading',
