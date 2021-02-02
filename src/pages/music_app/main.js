@@ -37,3 +37,12 @@ const _Vue = new Vue({
 }).$mount('#app')
 
 window._Vue = _Vue
+_Vue.$router.beforeEach((to,from,next)=>{
+  var isLogin = JSON.parse(localStorage.getItem('staff'))
+  // 判断是否登录
+  if(isLogin){
+    next()
+  }else{
+    next({name:'login'})
+  }
+})

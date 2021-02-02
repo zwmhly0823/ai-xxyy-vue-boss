@@ -609,7 +609,7 @@ export default {
         document.title.startsWith('学员中心') &&
           (document.title = `${this.stuInfor.username +
             '·' +
-            this.stuInfor.user_num}-小熊美术BOSS`)
+            this.stuInfor.user_num}-美术宝BOSS`)
         if (typeof this.stuInfor.systemCourse_lifeCycle === 'string') {
           this.stuInfor.systemCourse_lifeCycle = {
             0: '待开课',

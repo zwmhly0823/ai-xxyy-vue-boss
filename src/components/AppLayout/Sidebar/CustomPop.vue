@@ -17,9 +17,9 @@
     @mouseleave="handleLeave"
   >
     <ul role="menu" class="el-menu el-menu--popup el-menu--popup-right-start">
-      <li data-v-1c22e290="" class="el-menu-item-group">
+      <li data-v-1c22e290 class="el-menu-item-group">
         <div class="el-menu-item-group__title" style="padding-left: 20px;">
-          <span data-v-1c22e290="">{{ menu && menu.title }}</span>
+          <span data-v-1c22e290>{{ menu && menu.title }}</span>
         </div>
         <ul>
           <li
@@ -29,7 +29,7 @@
             @click.left="handleOpen(item, `${index.toString()}`)"
             @contextmenu.prevent="handleRight(item)"
           >
-            <em data-v-1c22e290="">{{ item.meta.title }}</em>
+            <em data-v-1c22e290>{{ item.meta.title }}</em>
           </li>
         </ul>
       </li>
@@ -144,6 +144,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+#custom-menu{
+  max-height:300px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
 #custom-menu.el-menu--vertical {
   position: fixed;
   z-index: 2000;
