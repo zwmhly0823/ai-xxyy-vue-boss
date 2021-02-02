@@ -18,6 +18,11 @@ import musicApp from './music_app'
 /**
  * TODO:当前打开项目
  */
+const staff = JSON.parse(localStorage.getItem('staff'))
+if(staff===null){
+  window.location.replace('/login')
+}
+
 const subject = getAppSubject(false)
 let menu = musicApp
 if (subject === 'artApp') {

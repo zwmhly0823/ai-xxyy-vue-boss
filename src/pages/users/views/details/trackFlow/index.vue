@@ -15,6 +15,7 @@
         <el-select v-model="changeSubject" size="mini" style="width:75px">
           <el-option label="美术" :value="0"></el-option>
           <el-option label="写字" :value="1"></el-option>
+          <el-option label="音乐" :value="3"></el-option>
         </el-select>
       </section>
       <section style="margin-right:30px">

@@ -229,7 +229,7 @@
                         icon="el-icon-info"
                         iconColor="red"
                         title="你确定要删除该项内容吗？"
-                        @onConfirm="confirmDelRow(scope.row, scope.$index)"
+                        @confirm="confirmDelRow(scope.row, scope.$index)"
                       >
                         <span slot="reference">删除</span>
                       </el-popconfirm>
@@ -263,7 +263,7 @@
       <el-dialog
         title="赠品设置"
         :visible.sync="dialogGroupVisible"
-        width="76%"
+        width="950px"
         destroy-on-close
       >
         <ChooseProduct

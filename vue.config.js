@@ -10,7 +10,7 @@ const {
 } = require('./util')
 const { NODE_ENV } = process.env
 const projectName = process.argv[3] || 'dashboard'
-const name = defaultSettings.title || '小熊美术BOSS'
+const name = defaultSettings.title || '美术宝BOSS'
 const { BASE_URL } = process.env
 const ossConfig = {
   bucket: 'xxyy-devtest',

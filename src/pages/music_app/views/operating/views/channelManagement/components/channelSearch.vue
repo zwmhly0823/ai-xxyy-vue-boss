@@ -27,7 +27,7 @@
               数据汇总
             </span>
           </div>
-        </el-col> -->
+        </el-col>-->
         <el-col :span="6">
           <div class="grid-content bg-purple">
             <p>累计成单金额</p>
@@ -37,7 +37,11 @@
         <el-col :span="6">
           <div class="grid-content bg-purple">
             <p>累计转化率/系统课成单人数</p>
-            <span>{{ conversionRate }} <em>/</em> {{ allSystemUser }}</span>
+            <span>
+              {{ conversionRate }}
+              <em>/</em>
+              {{ allSystemUser }}
+            </span>
           </div>
         </el-col>
         <el-col :span="12">
@@ -69,15 +73,11 @@
               </el-col>
               <el-col :span="6" style="text-align:center;">
                 <p class="bg-purple-text">参课率</p>
-                <span class="bg-purple-num">
-                  {{ allJoinUserNumsPercent }}
-                </span>
+                <span class="bg-purple-num">{{ allJoinUserNumsPercent }}</span>
               </el-col>
               <el-col :span="6" style="text-align:center;">
                 <p class="bg-purple-text">完课率</p>
-                <span class="bg-purple-num">
-                  {{ allCompleteUserNumsPercent }}
-                </span>
+                <span class="bg-purple-num">{{ allCompleteUserNumsPercent }}</span>
               </el-col>
             </el-row>
           </div>
@@ -86,75 +86,88 @@
     </div>
     <div class="channel-fixed" v-show="tableShow">
       <el-row class="channel-fixed-row">
-        <el-col :span="2"><div>渠道分类</div></el-col>
-        <el-col :span="2" class="row2"><div>渠道名称</div></el-col>
-        <el-col :span="1" class="row3"><div>渠道ID</div></el-col>
-        <el-col :span="2" class="row4"><div>体验课成单数</div></el-col>
-        <el-col :span="2" class="row5"><div>体验课未支付</div></el-col>
-        <el-col :span="1" class="row6"><div>添加微信数</div></el-col>
-        <el-col :span="2" class="row7"
-          ><div>
+        <el-col :span="2">
+          <div>渠道分类</div>
+        </el-col>
+        <el-col :span="2" class="row2">
+          <div>渠道名称</div>
+        </el-col>
+        <el-col :span="1" class="row3">
+          <div>渠道ID</div>
+        </el-col>
+        <el-col :span="2" class="row4">
+          <div>体验课成单数</div>
+        </el-col>
+        <el-col :span="2" class="row5">
+          <div>体验课未支付</div>
+        </el-col>
+        <el-col :span="1" class="row6">
+          <div>添加微信数</div>
+        </el-col>
+        <el-col :span="2" class="row7">
+          <div>
             <span>参课数/参课率</span>
             <el-tooltip placement="top">
               <div slot="content">
-                参课数：此渠道下所有购买体验课的学员且参课的学员<br />参课率：参课数
+                参课数：此渠道下所有购买体验课的学员且参课的学员
+                <br />参课率：参课数
                 / 已购体验课数
               </div>
               <span class="bottom-tips">?</span>
             </el-tooltip>
-          </div></el-col
-        >
-        <el-col :span="2" class="row8"
-          ><div>
+          </div>
+        </el-col>
+        <el-col :span="2" class="row8">
+          <div>
             <span>完课数/完课率</span>
             <el-tooltip placement="top">
               <div slot="content">
-                完课数：此渠道下已购体验课且完成一次体验课即为完课<br />完课率：完课数
+                完课数：此渠道下已购体验课且完成一次体验课即为完课
+                <br />完课率：完课数
                 / 已购体验课学员数
               </div>
               <span class="bottom-tips">?</span>
             </el-tooltip>
-          </div></el-col
-        >
-        <el-col :span="2" class="row9"
-          ><div>
+          </div>
+        </el-col>
+        <el-col :span="2" class="row9">
+          <div>
             <span>成单数/转化率</span>
             <el-tooltip placement="top">
               <div slot="content">
-                成单数：已购体验课且转化系统课数量<br />转化率：当前系统课成单数
+                成单数：已购体验课且转化系统课数量
+                <br />转化率：当前系统课成单数
                 / 当前体验课成单数
               </div>
               <span class="bottom-tips">?</span>
             </el-tooltip>
-          </div></el-col
-        >
-        <el-col :span="2" class="row10"
-          ><div>
+          </div>
+        </el-col>
+        <el-col :span="2" class="row10">
+          <div>
             <span>成单金额</span>
             <el-tooltip placement="top">
-              <div slot="content">
-                成单金额： 当前渠道购买系统课的订单总金额
-              </div>
+              <div slot="content">成单金额： 当前渠道购买系统课的订单总金额</div>
               <span class="bottom-tips">?</span>
             </el-tooltip>
-          </div></el-col
-        >
-        <el-col :span="2" class="row11"><div>创建时间</div></el-col>
+          </div>
+        </el-col>
+        <el-col :span="2" class="row11">
+          <div>创建时间</div>
+        </el-col>
       </el-row>
     </div>
     <div class="channel-box-bottom">
       <template>
-        <el-table
-          :header-cell-style="headerCss"
-          :data="tableData"
-          style="width: 100%;"
-        >
+        <el-table :header-cell-style="headerCss" :data="tableData" style="width: 100%;">
           <el-table-column label="渠道分类" width="200" align="center">
             <template slot-scope="scope">
               <span>{{ scope.row.p_channel_class_name || '-' }}</span>
-              <span style="margin-left:10px;">{{
+              <span style="margin-left:10px;">
+                {{
                 scope.row.channel_class_name || '-'
-              }}</span>
+                }}
+              </span>
             </template>
           </el-table-column>
           <el-table-column width="150" label="渠道名称">
@@ -164,30 +177,22 @@
                 style="color: #2a75ed;"
                 :href="scope.row.channelNameLink"
                 target="_blank"
-                >{{ scope.row.channel_inner_name }}</a
-              >
+              >{{ scope.row.channel_inner_name }}</a>
               <span v-else>-</span>
             </template>
           </el-table-column>
-          <el-table-column prop="pay_channel" label="渠道ID"> </el-table-column>
-          <el-table-column prop="trial_user_num" label="体验课成单数">
-          </el-table-column>
-          <el-table-column prop="order_user_no_pay_nums" label="体验课未支付">
-          </el-table-column>
-          <el-table-column prop="wet_nums" label="添加微信数">
-          </el-table-column>
-          <el-table-column
-            prop="address"
-            width="130px"
-            align="conent"
-            label="参课数/参课率"
-          >
+          <el-table-column prop="pay_channel" label="渠道ID"></el-table-column>
+          <el-table-column prop="trial_user_num" label="体验课成单数"></el-table-column>
+          <el-table-column prop="order_user_no_pay_nums" label="体验课未支付"></el-table-column>
+          <el-table-column prop="wet_nums" label="添加微信数"></el-table-column>
+          <el-table-column prop="address" width="130px" align="conent" label="参课数/参课率">
             <template slot="header">
               <div>
                 <span>参课数/参课率</span>
                 <el-tooltip placement="top">
                   <div slot="content">
-                    参课数：此渠道下所有购买体验课的学员且参课的学员<br />参课率：参课数
+                    参课数：此渠道下所有购买体验课的学员且参课的学员
+                    <br />参课率：参课数
                     / 已购体验课数
                   </div>
                   <span class="bottom-tips">?</span>
@@ -205,7 +210,8 @@
                 <span>完课数/完课率</span>
                 <el-tooltip placement="top">
                   <div slot="content">
-                    完课数：此渠道下已购体验课且完成一次体验课即为完课<br />完课率：完课数
+                    完课数：此渠道下已购体验课且完成一次体验课即为完课
+                    <br />完课率：完课数
                     / 已购体验课学员数
                   </div>
                   <span class="bottom-tips">?</span>
@@ -223,7 +229,8 @@
                 <span>成单数/转化率</span>
                 <el-tooltip placement="top">
                   <div slot="content">
-                    成单数：已购体验课且转化系统课数量<br />转化率：当前系统课成单数
+                    成单数：已购体验课且转化系统课数量
+                    <br />转化率：当前系统课成单数
                     / 当前体验课成单数
                   </div>
                   <span class="bottom-tips">?</span>
@@ -235,27 +242,19 @@
               <div>{{ scope.row.systemOrderNumsPercent }}</div>
             </template>
           </el-table-column>
-          <el-table-column
-            prop="system_user_amounts"
-            width="100"
-            label="成单金额"
-          >
+          <el-table-column prop="system_user_amounts" width="100" label="成单金额">
             <template slot="header">
               <div>
                 <span>成单金额</span>
                 <el-tooltip placement="top">
-                  <div slot="content">
-                    成单金额： 当前渠道购买系统课的订单总金额
-                  </div>
+                  <div slot="content">成单金额： 当前渠道购买系统课的订单总金额</div>
                   <span class="bottom-tips">?</span>
                 </el-tooltip>
               </div>
             </template>
           </el-table-column>
           <el-table-column label="创建时间">
-            <template slot-scope="scope">
-              {{ scope.row.ctime || '-' }}
-            </template>
+            <template slot-scope="scope">{{ scope.row.ctime || '-' }}</template>
           </el-table-column>
         </el-table>
         <m-pagination
@@ -278,19 +277,19 @@
       <div class="drawer-box">
         <h3>基本信息</h3>
         <p>
-          <span>渠道分类: </span>
-          <span class="drawer-box-text"> 线上推广 - 推广人</span>
+          <span>渠道分类:</span>
+          <span class="drawer-box-text">线上推广 - 推广人</span>
         </p>
         <p>
-          <span>渠道名称: </span>
+          <span>渠道名称:</span>
           <span class="drawer-box-text">推广人</span>
         </p>
         <p>
-          <span>渠道ID: </span>
+          <span>渠道ID:</span>
           <span class="drawer-box-text">43433</span>
         </p>
         <p>
-          <span>链接地址: </span>
+          <span>链接地址:</span>
           <a :href="link" target="_blank">{{ link }}</a>
         </p>
       </div>
@@ -430,7 +429,18 @@ export default {
         this.totalNumber = res.number
         this.totalElements = res.totalElements
         _data.forEach((res) => {
-          res.channelNameLink = `https://www.xiaoxiongmeishu.com/activity/newFortyNine?changeImg=1&channelId=${res.pay_channel}`
+          // 渠道地址
+          var qudaourl = new RegExp('[0-9]').test(location.origin.split('/')[2])
+            ? 'https://ai-xxyy-default.yinyuebao.com'
+            : location.origin.includes('default')
+            ? 'https://ai-xxyy-default.yinyuebao.com'
+            : location.origin.includes('test')
+            ? 'https://ai-xxyy-test.yinyuebao.com'
+            : location.origin.includes('prod')
+            ? 'https://ai-xxyy-prod.yinyuebao.com'
+            : 'https://ai-xxyy-live.yinyuebao.com'
+          res.channelNameLink =
+            qudaourl + `/channel/index?changeImg=1&channelId=${res.pay_channel}`
           // 线索数
           // const orderUserAllNums = +res.orderUserAllNums
           // 购买体验课数
