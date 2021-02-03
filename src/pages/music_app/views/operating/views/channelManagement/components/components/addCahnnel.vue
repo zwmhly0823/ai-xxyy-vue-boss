@@ -197,7 +197,8 @@ export default {
             channelSort: this.ruleForm.sort, // 渠道排序
             status: this.ruleForm.status, // 1开启0禁用
             remarks: this.ruleForm.desc,
-            channelLevel: this.getLevel(this.ruleForm.channelLevel) // 渠道等级
+            channelLevel: this.getLevel(this.ruleForm.channelLevel), // 渠道等级
+            subject:"MUSIC_APP"
           }
           this.$http.Operating.createChannel(props).then((res) => {
             if (res.code === 0) {
