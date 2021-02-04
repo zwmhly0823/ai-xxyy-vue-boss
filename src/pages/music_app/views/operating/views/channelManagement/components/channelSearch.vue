@@ -385,9 +385,20 @@ export default {
     this.getChannelDetailPage()
   },
   mounted() {
-    window.addEventListener('scroll', this.handleScroll, true)
+    this.initScrollTop()
   },
   methods: {
+    initScrollTop() {
+      this.timer = null
+      this.timer = setTimeout(function() {
+        if (document.getElementById('channel-box')) {
+          window.addEventListener('scroll', this.handleScroll, true)
+          clearTimeout(this.timer)
+        } else {
+          this.initScrollTop()
+        }
+      }, 100)
+    },
     handleScroll() {
       const dom = document.getElementById('channel-box').scrollTop
       dom > 289 ? (this.tableShow = true) : (this.tableShow = false)
@@ -563,7 +574,6 @@ export default {
       this.$http.Operating.ChannelDetailStatisticsList(channelValue).then(
         (ele) => {
           const __data = ele?.data?.ChannelDetailStatisticsList
-          console.log(__data)
 
           if (!__data) return
           _data.forEach((val) => {
@@ -697,8 +707,6 @@ export default {
       font-size: 12px;
       color: #666;
       font-weight: normal;
-      .row1 {
-      }
       .row2 {
         margin-left: 20px;
       }
@@ -726,8 +734,6 @@ export default {
       }
       .row10 {
         margin-left: 20px;
-      }
-      .row11 {
       }
       .bottom-tips {
         color: #fff;
@@ -757,8 +763,6 @@ export default {
         font-size: 12px;
         color: #666;
         font-weight: normal;
-        .row1 {
-        }
         .row2 {
           margin-left: -20px;
         }

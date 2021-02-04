@@ -25,19 +25,19 @@
         <template slot-scope="scope">
           <p>
             {{
-              scope.row.packages_name
-                ? scope.row.packages_name || '-'
-                : scope.row.product_name || '-'
+            scope.row.packages_name
+            ? scope.row.packages_name || '-'
+            : scope.row.product_name || '-'
             }}
           </p>
           <p>
             {{ scope.row.currency ? scope.row.currency : '人民币 ' }}
             {{
-              scope.row.amount
-                ? scope.row.amount
-                : scope.row.regtype === 6
-                ? ''
-                : '-'
+            scope.row.amount
+            ? scope.row.amount
+            : scope.row.regtype === 6
+            ? ''
+            : '-'
             }}
           </p>
         </template>
@@ -73,17 +73,13 @@
             }}
           </p>
         </template>
-      </el-table-column> -->
+      </el-table-column>-->
       <el-table-column label="订单状态" min-width="220">
-        <template slot-scope="scope">
-          {{ scope.row.order_status ? scope.row.order_status : '-' }}
-        </template>
+        <template slot-scope="scope">{{ scope.row.order_status ? scope.row.order_status : '-' }}</template>
       </el-table-column>
       <el-table-column label="订单来源" min-width="140">
         <template slot-scope="scope">
-          <p>
-            {{ scope.row.channel ? scope.row.channel.channel_outer_name : '-' }}
-          </p>
+          <p>{{ scope.row.channel ? scope.row.channel.channel_outer_name : '-' }}</p>
         </template>
       </el-table-column>
       <el-table-column label="推荐人信息" min-width="160">
@@ -94,28 +90,26 @@
             @click="openUserDetail(scope.row.first_send_user.id)"
           >
             {{
-              scope.row.first_send_user
-                ? scope.row.first_send_user.username
-                : '-'
+            scope.row.first_send_user
+            ? scope.row.first_send_user.username
+            : '-'
             }}
           </p>
           <p>
             {{
-              scope.row.first_send_user ? scope.row.first_send_user.mobile : '-'
+            scope.row.first_send_user ? scope.row.first_send_user.mobile : '-'
             }}
           </p>
         </template>
       </el-table-column>
       <el-table-column label="下单时间·订单号" min-width="180">
         <template slot-scope="scope">
-          <p>
-            {{ scope.row.ctime ? scope.row.ctime : '-' }}
-          </p>
+          <p>{{ scope.row.ctime ? scope.row.ctime : '-' }}</p>
           <p>
             {{
-              scope.row.out_trade_no
-                ? scope.row.out_trade_no.replace('xiong', '')
-                : '-'
+            scope.row.out_trade_no
+            ? scope.row.out_trade_no.replace('xiong', '')
+            : '-'
             }}
           </p>
         </template>
@@ -141,7 +135,7 @@
             }}
           </p>
         </template>
-      </el-table-column> -->
+      </el-table-column>-->
     </el-table>
     <div v-if="orderList.length === 0" class="noData">暂无数据</div>
     <div class="drawer-body">
@@ -430,11 +424,11 @@ export default {
     // 打开班级详情
     openDetail(id, row) {
       row && console.log(row)
-      id && openBrowserTab(`/student-team/#/teamDetail/${id}/0`)
+      id && openBrowserTab(`/music_app/#/teamDetail/${id}/0`)
     },
     // 用户详情
     openUserDetail(id) {
-      id && openBrowserTab(`/users/#/details/${id}`)
+      id && openBrowserTab(`/music_app/#/details/${id}`)
     }
   }
 }

@@ -5,86 +5,49 @@
       type="primary"
       style="margin-right: 10px;"
       @click="finishLessonList"
-    >
-      生成完课榜
-    </el-button>
+    >生成完课榜</el-button>
     <el-button
       type="primary"
       size="mini"
       style="margin-right: 10px;"
       v-show="exhibition"
       @click="ExhibitionList"
-    >
-      生成作品展
-    </el-button>
+    >生成作品展</el-button>
     <el-dialog
       class="dialog-class"
       title="请选择生成的完课榜周数"
       :visible.sync="dialogFormVisible"
       width="500px"
     >
-      <el-radio label="1" disabled v-show="MissedClassesOne">
-        第一周未开课
-      </el-radio>
-      <el-radio v-model="finishLessonData.weekNum" label="U1" v-show="radioOne">
-        第一周
-      </el-radio>
-      <el-radio label="2" disabled v-show="MissedClassesTwo">
-        第二周未开课
-      </el-radio>
-      <el-radio v-model="finishLessonData.weekNum" label="U2" v-show="radioTwo">
-        第二周
-      </el-radio>
+      <el-radio label="1" disabled v-show="MissedClassesOne">第一周未开课</el-radio>
+      <el-radio v-model="finishLessonData.weekNum" label="U1" v-show="radioOne">第一周</el-radio>
+      <el-radio label="2" disabled v-show="MissedClassesTwo">第二周未开课</el-radio>
+      <el-radio v-model="finishLessonData.weekNum" label="U2" v-show="radioTwo">第二周</el-radio>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取 消</el-button>
         <el-button type="primary" @click="clickHandler">确 定</el-button>
       </div>
     </el-dialog>
     <!-- 生成作品展弹出框 -->
-    <el-dialog
-      class="dialog-class"
-      title="请选择生成的作品展周数"
-      :visible.sync="Exhibition"
-      width="500px"
-    >
-      <el-radio label="1" disabled v-show="MissedClassesOne"
-        >第一周暂无作品</el-radio
-      >
-      <el-radio v-model="ExhibitionData.weekNum" label="U1" v-show="radioOne"
-        >第一周</el-radio
-      >
-      <el-radio label="2" disabled v-show="MissedClassesTwo"
-        >第二周暂无作品</el-radio
-      >
-      <el-radio v-model="ExhibitionData.weekNum" label="U2" v-show="radioTwo"
-        >第二周</el-radio
-      >
+    <el-dialog class="dialog-class" title="请选择生成的作品展周数" :visible.sync="Exhibition" width="500px">
+      <el-radio label="1" disabled v-show="MissedClassesOne">第一周暂无作品</el-radio>
+      <el-radio v-model="ExhibitionData.weekNum" label="U1" v-show="radioOne">第一周</el-radio>
+      <el-radio label="2" disabled v-show="MissedClassesTwo">第二周暂无作品</el-radio>
+      <el-radio v-model="ExhibitionData.weekNum" label="U2" v-show="radioTwo">第二周</el-radio>
       <div slot="footer" class="dialog-footer">
         <el-button @click="Exhibition = false">取 消</el-button>
         <el-button type="primary" @click="exhibitionBtn">确 定</el-button>
       </div>
     </el-dialog>
     <!-- 生成完课榜图片-->
-    <div
-      v-for="(item, index) in finishLessonData.childListData"
-      :key="index + 1"
-      class="finishBox"
-    >
+    <div v-for="(item, index) in finishLessonData.childListData" :key="index + 1" class="finishBox">
       <slot>
         <!-- 需要转换的html -->
-        <finishclass
-          @isLoad="canvasStart"
-          :listData="item"
-          :weekNum="finishLessonData.weekNum"
-        ></finishclass>
+        <finishclass @isLoad="canvasStart" :listData="item" :weekNum="finishLessonData.weekNum"></finishclass>
       </slot>
     </div>
     <!-- 生成作品展图片 -->
-    <div
-      class="exhibitionBox"
-      v-for="(item, index) in ExhibitionData.childListData"
-      :key="index"
-    >
+    <div class="exhibitionBox" v-for="(item, index) in ExhibitionData.childListData" :key="index">
       <slot>
         <!-- 需要转换的html -->
         <exhibition @isload="CanvasStart" :listData="item"></exhibition>
@@ -94,8 +57,8 @@
 </template>
 
 <script>
-import finishclass from '@/pages/art_app/views/studentTeam/components/TabPane/FinishClass.vue'
-import exhibition from '@/pages/art_app/views/studentTeam/components/TabPane/Exhibition.vue'
+import finishclass from '@/components/art_app/FinishClass.vue'
+import exhibition from '@/components/art_app/Exhibition.vue'
 import html2canvas from 'html2canvas'
 // 模块整体是从系统课班级详情那边儿扣过来的
 export default {

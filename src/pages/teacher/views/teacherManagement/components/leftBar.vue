@@ -10,53 +10,47 @@
 <template>
   <div class="left-container">
     <div class="title">组织架构</div>
-    <el-tree
-      class="left-container-tree"
-      :data="departmentList"
-      node-key="pid"
-      :current-node-key="0"
-      :expand-on-click-node="false"
-      :default-expanded-keys="['99999']"
-      highlight-current
-      style="color:#2F2E31"
-      @node-click="nodeClick"
-    >
-      <span
-        class="custom-tree-node"
-        slot-scope="{ node, data }"
-        @mouseover="showTools(data)"
-        @mouseleave="hiddenTools(data)"
+    <div>
+      <el-tree
+        class="left-container-tree"
+        :data="departmentList"
+        node-key="id"
+        :current-node-key="0"
+        :expand-on-click-node="false"
+        :default-expanded-keys="['99999']"
+        highlight-current
+        style="color:#2F2E31"
+        @node-click="nodeClick"
       >
-        <span class="menu-box">
-          <span :title="data.id" class="menu-name">{{ `${data.name}` }}</span>
-          <span v-if="data.name === '小熊项目'">{{ `(${qbSize})` }}</span>
-          <span v-else>{{ data.size ? `(${data.size} )` : `(0)` }}</span>
-        </span>
         <span
-          v-show="nowId == data.id && isShowEditIcon"
-          class="el-icon-more"
-          @click.stop="editTools(data)"
-        ></span>
-        <el-card
-          v-show="nowId == data.id && showMenu && data.name === '小熊项目'"
+          class="custom-tree-node"
+          slot-scope="{ node, data }"
+          @mouseover="showTools(data)"
+          @mouseleave="hiddenTools(data)"
         >
-          <div v-for="(item, index) in editMenuListNodel" :key="index">
-            <div @click.stop="handleMenuItem(data, item)">
-              {{ item.lable }}
+          <span class="menu-box">
+            <span :title="data.id" class="menu-name">{{ `${data.name}` }}</span>
+            <span v-if="data.name === '小熊项目'">{{ `(${qbSize})` }}</span>
+            <span v-else>{{ data.size ? `(${data.size} )` : `(0)` }}</span>
+          </span>
+          <span
+            v-show="nowId == data.id && isShowEditIcon"
+            class="el-icon-more"
+            @click.stop="editTools(data)"
+          ></span>
+          <el-card v-show="nowId == data.id && showMenu && data.name === '小熊项目'">
+            <div v-for="(item, index) in editMenuListNodel" :key="index">
+              <div @click.stop="handleMenuItem(data, item)">{{ item.lable }}</div>
             </div>
-          </div>
-        </el-card>
-        <el-card
-          v-show="nowId == data.id && showMenu && data.name !== '小熊项目'"
-        >
-          <div v-for="(item, index) in editMenuList" :key="index">
-            <div @click.stop="handleMenuItem(data, item)">
-              {{ item.lable }}
+          </el-card>
+          <el-card v-show="nowId == data.id && showMenu && data.name !== '小熊项目'">
+            <div v-for="(item, index) in editMenuList" :key="index">
+              <div @click.stop="handleMenuItem(data, item)">{{ item.lable }}</div>
             </div>
-          </div>
-        </el-card>
-      </span>
-    </el-tree>
+          </el-card>
+        </span>
+      </el-tree>
+    </div>
     <DialogMenu
       v-if="dialogVisible"
       :editCurrentData="editCurrentData"
@@ -88,7 +82,7 @@ export default {
       departmentList: [
         {
           name: '小熊项目',
-          pid: '99999',
+          id: '99999',
           children: []
         }
       ],

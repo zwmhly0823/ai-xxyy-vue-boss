@@ -10,13 +10,12 @@
     >
       <el-table-column fixed label="购买用户" class="bugUser" width="220px">
         <template slot-scope="scope" v-if="scope.row.user">
-          <img class="bugUser-img" :src="scope.row.user.head" alt="" />
+          <img class="bugUser-img" :src="scope.row.user.head" alt />
           <div class="bugUser-right primary-text">
             <div class="phone">
               <span
                 @click="openUserDetail(scope.row.user && scope.row.user.id)"
-                >{{ scope.row.user.mobile ? scope.row.user.mobile : '-' }}</span
-              >
+              >{{ scope.row.user.mobile ? scope.row.user.mobile : '-' }}</span>
             </div>
             <div
               @click="openUserDetail(scope.row.user && scope.row.user.id)"
@@ -37,19 +36,19 @@
           <div class="text333">
             <div>
               {{
-                scope.row.packages_name
-                  ? scope.row.packages_name
-                  : scope.row.product_name
-                  ? scope.row.product_name
-                  : '-'
+              scope.row.packages_name
+              ? scope.row.packages_name
+              : scope.row.product_name
+              ? scope.row.product_name
+              : '-'
               }}
             </div>
             <div style="white-space:nowrap">
-              <span style="color: #666"
-                >时长:{{
-                  scope.row.packages_course_week
-                    ? `${scope.row.packages_course_week}周`
-                    : '-'
+              <span style="color: #666">
+                时长:{{
+                scope.row.packages_course_week
+                ? `${scope.row.packages_course_week}周`
+                : '-'
                 }}
               </span>
               <span style="color: #666">级别:{{ scope.row.sup }}</span>
@@ -60,12 +59,8 @@
       <el-table-column label="创建时间" class="logistics">
         <template slot-scope="scope">
           <div v-if="scope.row.ctime">
-            <div class="text333" style="white-space:nowrap">
-              {{ scope.row.ctime.split(' ')[0] }}
-            </div>
-            <div class="text333" style="white-space:nowrap">
-              {{ scope.row.ctime.split(' ')[1] }}
-            </div>
+            <div class="text333" style="white-space:nowrap">{{ scope.row.ctime.split(' ')[0] }}</div>
+            <div class="text333" style="white-space:nowrap">{{ scope.row.ctime.split(' ')[1] }}</div>
           </div>
           <span v-else>-</span>
         </template>
@@ -77,9 +72,9 @@
             <span v-if="scope.row.express_status">.</span>
             <span class="text333">{{ scope.row.express_status }}</span>
           </div>
-          <div v-if="scope.row.express_status">
-            {{ scope.row.express_cur_time ? scope.row.express_cur_time : '-' }}
-          </div>
+          <div
+            v-if="scope.row.express_status"
+          >{{ scope.row.express_cur_time ? scope.row.express_cur_time : '-' }}</div>
         </template>
       </el-table-column>
       <el-table-column label="系统课信息" class="status-style">
@@ -93,39 +88,37 @@
             "
           >
             <div class="text333">
-              <span
-                >开课:{{
-                  scope.row.management_start_date
-                    ? `${scope.row.management_start_date} `
-                    : '- '
-                }}</span
-              >
-
-              <span
-                >班级:{{
-                  scope.row.student_team_name
-                    ? scope.row.student_team_name
-                    : '-'
-                }}</span
-              >
-            </div>
-            <div class="text333">
-              <span
-                >老师:{{
-                  scope.row.teacher_name ? `${scope.row.teacher_name} ` : '- '
+              <span>
+                开课:{{
+                scope.row.management_start_date
+                ? `${scope.row.management_start_date} `
+                : '- '
                 }}
               </span>
 
-              <span
-                >微信:{{
-                  scope.row.teacher_wx ? scope.row.teacher_wx : '-'
-                }}</span
-              >
+              <span>
+                班级:{{
+                scope.row.student_team_name
+                ? scope.row.student_team_name
+                : '-'
+                }}
+              </span>
+            </div>
+            <div class="text333">
+              <span>
+                老师:{{
+                scope.row.teacher_name ? `${scope.row.teacher_name} ` : '- '
+                }}
+              </span>
+
+              <span>
+                微信:{{
+                scope.row.teacher_wx ? scope.row.teacher_wx : '-'
+                }}
+              </span>
             </div>
           </div>
-          <div v-else>
-            -
-          </div>
+          <div v-else>-</div>
         </template>
       </el-table-column>
     </el-table>
@@ -289,7 +282,7 @@ export default {
     // 打开用户详情
     openUserDetail(uid, row) {
       row && console.log(row)
-      uid && openBrowserTab(`/users/#/details/${uid}`)
+      uid && openBrowserTab(`/music_app/#/details/${uid}`)
     }
   }
 }

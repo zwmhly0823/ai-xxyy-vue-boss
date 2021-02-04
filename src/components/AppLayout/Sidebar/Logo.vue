@@ -32,8 +32,8 @@
 
 <script>
 import Logo from '@/assets/images/boss.png'
-import ArtAppLogo from '@/assets/images/art_app_boss.png'
-import WriteAppLogo from '@/assets/images/write_app_boss.png'
+// import ArtAppLogo from '@/assets/images/art_app_boss.png'
+// import WriteAppLogo from '@/assets/images/write_app_boss.png'
 import LogoSmall from '@/assets/images/boss-64.png'
 export default {
   name: 'SidebarLogo',

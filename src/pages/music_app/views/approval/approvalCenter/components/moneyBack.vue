@@ -1144,7 +1144,7 @@ export default {
                 .then(({ code }) => {
                   if (!code) {
                     this.$router.push({
-                      name: 'approvalCenter',
+                      name: 'approval',
                       params: { activeApprove: 'second' }
                     })
                     // 回首掏
@@ -1168,7 +1168,7 @@ export default {
               .then(({ code }) => {
                 if (!code) {
                   this.$router.push({
-                    name: 'approvalCenter',
+                    name: 'approval',
                     params: { activeApprove: 'second' }
                   })
                   // 回首掏

@@ -24,11 +24,7 @@
           <template slot-scope="scope">
             <div class="info-box">
               <div class="user-info-box">
-                <img
-                  v-if="scope.row.head"
-                  class="user-info-img"
-                  :src="`${scope.row.head}`"
-                />
+                <img v-if="scope.row.head" class="user-info-img" :src="`${scope.row.head}`" />
                 <img
                   v-else
                   class="user-info-img"
@@ -46,19 +42,11 @@
                 />
               </div>
               <div class="user-info-text-box">
-                <span @click="userHandle(scope.row)"
-                  >{{ scope.row.username || '-' }} -</span
-                >
-                <span @click="userHandle(scope.row)">
-                  {{ scope.row.mobile || '-' }}</span
-                >
+                <span @click="userHandle(scope.row)">{{ scope.row.username || '-' }} -</span>
+                <span @click="userHandle(scope.row)">{{ scope.row.mobile || '-' }}</span>
                 <br />
-                <span @click="userHandle(scope.row)">
-                  {{ scope.row.birthday || '-' }} ·
-                </span>
-                <span @click="userHandle(scope.row)">
-                  {{ scope.row.base_painting_text || '-' }}
-                </span>
+                <span @click="userHandle(scope.row)">{{ scope.row.birthday || '-' }} ·</span>
+                <span @click="userHandle(scope.row)">{{ scope.row.base_painting_text || '-' }}</span>
               </div>
             </div>
           </template>
@@ -66,7 +54,7 @@
         <el-table-column label="微信信息">
           <template slot-scope="scope">
             <div class="weixin-box">
-              <img class="weixin-img" :src="scope.row.weixin_avatar" alt="" />
+              <img class="weixin-img" :src="scope.row.weixin_avatar" alt />
               <span class="weixin-text">{{ scope.row.weixin_nick_name }}</span>
             </div>
           </template>
@@ -74,7 +62,7 @@
         <el-table-column label="用户行为" width="200">
           <template slot-scope="scope">
             <div class="behavior-box" v-if="+scope.row.action_type === 1">
-              <span>{{ scope.row.action_type_text }} </span>
+              <span>{{ scope.row.action_type_text }}</span>
               <span class="behavior-text">{{ scope.row.device_model }}</span>
               <br />
               <span>{{ scope.row.action_time }}</span>
@@ -105,16 +93,18 @@
             <div>
               <span>{{ scope.row.status }}</span>
               <br />
-              <span v-if="scope.row.status == '已转化'">{{
+              <span v-if="scope.row.status == '已转化'">
+                {{
                 scope.row.order.buytime
-              }}</span>
+                }}
+              </span>
             </div>
           </template>
         </el-table-column>
         <el-table-column label="归属地">
           <template slot-scope="scope">
             <div>
-              <span>{{ scope.row.mobile_province || '-' }} · </span>
+              <span>{{ scope.row.mobile_province || '-' }} ·</span>
               <span>{{ scope.row.mobile_city || '-' }}</span>
             </div>
           </template>
@@ -125,8 +115,7 @@
               <span
                 @click="openTeam(scope.row)"
                 style="color: #409eff;cursor: pointer;"
-                >{{ scope.row.team_name }}</span
-              >
+              >{{ scope.row.team_name }}</span>
             </div>
             <div v-else>
               <span>-</span>
@@ -194,7 +183,7 @@ export default {
       const teamid = row.team_id
       teamid &&
         openBrowserTab(
-          `/student-team/#/teamDetail/${teamid}/${teamtype}`,
+          `/music_app/#/teamDetail/${teamid}/${teamtype}`,
           `${teamname}`
         )
     },
@@ -203,7 +192,7 @@ export default {
       // console.log(user, '点击用户信息')
       const userId = user.user.id
       // 新标签打开详情页
-      userId && openBrowserTab(`/users/#/details/${userId}`)
+      userId && openBrowserTab(`/music_app/#/details/${userId}`)
     },
     getUserBehaviorLogPage() {
       const paramsValue = []

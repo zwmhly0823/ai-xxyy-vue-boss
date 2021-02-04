@@ -12,53 +12,28 @@
       <el-form :inline="true" size="mini">
         <el-form-item label="订单搜索:">
           <div class="concat">
-            <el-select
-              clearable
-              v-model="num1"
-              placeholder="请选择"
-              @change="chooseOrder"
-            >
+            <el-select clearable v-model="num1" placeholder="请选择" @change="chooseOrder">
               <el-option label="用户手机号" value="2"></el-option>
               <el-option label="订单号" value="0"></el-option>
               <el-option label="交易流水号" value="1"></el-option>
             </el-select>
-            <el-input
-              clearable
-              v-model="num1_"
-              placeholder="请键入编号"
-              @change="intoNumber"
-            ></el-input>
+            <el-input clearable v-model="num1_" placeholder="请键入编号" @change="intoNumber"></el-input>
           </div>
         </el-form-item>
         <el-form-item label="业务类型:">
-          <el-select
-            clearable
-            placeholder="请键入"
-            v-model="fordisplay1"
-            @change="businessType"
-          >
+          <el-select clearable placeholder="请键入" v-model="fordisplay1" @change="businessType">
             <el-option label="体验课" value="1"></el-option>
             <el-option label="系统课" value="2"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="支付方式:">
-          <el-select
-            clearable
-            placeholder="请键入"
-            v-model="fordisplay2"
-            @change="payMethod"
-          >
+          <el-select clearable placeholder="请键入" v-model="fordisplay2" @change="payMethod">
             <el-option label="微信" value="1"></el-option>
             <el-option label="支付宝" value="2"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="退款状态:">
-          <el-select
-            clearable
-            placeholder="请键入"
-            v-model="fordisplay3"
-            @change="refundStatus"
-          >
+          <el-select clearable placeholder="请键入" v-model="fordisplay3" @change="refundStatus">
             <el-option label="退款驳回" value="7"></el-option>
             <el-option label="退款中" value="4"></el-option>
             <el-option label="退款成功" value="5"></el-option>
@@ -66,24 +41,14 @@
         </el-form-item>
 
         <el-form-item label="退款规则:">
-          <el-select
-            clearable
-            placeholder="请键入"
-            v-model="fordisplay6"
-            @change="refundRule"
-          >
+          <el-select clearable placeholder="请键入" v-model="fordisplay6" @change="refundRule">
             <el-option label="不符合" value="1"></el-option>
             <el-option label="符合" value="0"></el-option>
           </el-select>
         </el-form-item>
 
         <el-form-item label="退款类型:">
-          <el-select
-            clearable
-            placeholder="请键入"
-            v-model="fordisplay5"
-            @change="refundType"
-          >
+          <el-select clearable placeholder="请键入" v-model="fordisplay5" @change="refundType">
             <el-option
               v-for="(item, index) of [
                 { label: '优惠券退款' },
@@ -101,7 +66,7 @@
             <!-- <el-option label="优惠券退款" value="0"></el-option>
             <el-option label="课程退款" value="1"></el-option>
             <el-option label="降为半年包" value="2"></el-option>
-            <el-option label="补偿" value="3"></el-option> -->
+            <el-option label="补偿" value="3"></el-option>-->
           </el-select>
         </el-form-item>
         <el-form-item label="申请人搜索:">
@@ -110,12 +75,7 @@
           </div>
         </el-form-item>
         <el-form-item label="退款支付状态:">
-          <el-select
-            clearable
-            placeholder="请键入"
-            v-model="payStatu"
-            @change="refundPay"
-          >
+          <el-select clearable placeholder="请键入" v-model="payStatu" @change="refundPay">
             <el-option label="未发起" value="0"></el-option>
             <el-option label="支付中" value="1"></el-option>
             <el-option label="成功" value="2"></el-option>
@@ -124,12 +84,7 @@
         </el-form-item>
         <el-form-item label="时间查询:">
           <div class="concat">
-            <el-select
-              clearable
-              v-model="num2"
-              placeholder="请键入"
-              @change="whichTime"
-            >
+            <el-select clearable v-model="num2" placeholder="请键入" @change="whichTime">
               <el-option label="订单支付时间" value="0"></el-option>
               <el-option label="申请退款时间" value="1"></el-option>
               <el-option label="完成退款时间" value="2"></el-option>
@@ -143,8 +98,7 @@
               range-separator="至"
               start-placeholder="开始日期"
               end-placeholder="结束日期"
-            >
-            </el-date-picker>
+            ></el-date-picker>
           </div>
         </el-form-item>
         <el-form-item class="marginL20">
@@ -152,12 +106,7 @@
         </el-form-item>
       </el-form>
       <div>
-        <el-button
-          v-show="+roleId === 4"
-          type="primary"
-          @click.stop="BatchRefund"
-          >批量发起退款支付</el-button
-        >
+        <el-button v-show="+roleId === 4" type="primary" @click.stop="BatchRefund">批量发起退款支付</el-button>
       </div>
     </div>
     <el-divider></el-divider>
@@ -168,97 +117,60 @@
         ref="multipleTable"
         @selection-change="handleSelectionChange"
       >
-        <el-table-column type="selection" width="55"> </el-table-column>
+        <el-table-column type="selection" width="55"></el-table-column>
         <el-table-column label="用户信息" width="120" fixed="left">
           <template slot-scope="scope">
             <div class="usertext" @click="userHandle(scope.row)">
-              {{ scope.row.userName ? scope.row.userName : '-' }}<br />{{
-                scope.row.mobile
+              {{ scope.row.userName ? scope.row.userName : '-' }}
+              <br />
+              {{
+              scope.row.mobile
               }}
             </div>
           </template>
         </el-table-column>
-        <el-table-column
-          label="订单编号-订单交易流水号"
-          width="220"
-          fixed="left"
-        >
+        <el-table-column label="订单编号-订单交易流水号" width="220" fixed="left">
           <template slot-scope="scope">
             <div>
               {{
-                scope.row.outTradeNo &&
-                  scope.row.outTradeNo.replace(/[a-z]*/g, '')
-              }}<br />{{ scope.row.transactionId }}
+              scope.row.outTradeNo &&
+              scope.row.outTradeNo.replace(/[a-z]*/g, '')
+              }}
+              <br />
+              {{ scope.row.transactionId }}
             </div>
           </template>
         </el-table-column>
         <!-- <el-table-column prop="uid" label="用户ID" align="center" width="180">
-        </el-table-column> -->
-        <el-table-column prop="regtypeStr" label="业务类型" align="center">
-        </el-table-column>
-        <el-table-column
-          prop="applyName"
-          label="申请人-部门"
-          width="120"
-          align="center"
-        >
+        </el-table-column>-->
+        <el-table-column prop="regtypeStr" label="业务类型" align="center"></el-table-column>
+        <el-table-column prop="applyName" label="申请人-部门" width="120" align="center">
           <template slot-scope="scope">
             <p>{{ scope.row.applyName }}</p>
             <p>{{ scope.row.applierDepartment }}</p>
           </template>
         </el-table-column>
-        <el-table-column prop="tradeTypeStr" label="支付方式" align="center">
-        </el-table-column>
-        <el-table-column
-          prop="buytime"
-          label="订单支付时间"
-          align="center"
-          width="155"
-        >
-        </el-table-column>
-        <el-table-column prop="statusStr" label="退款状态" align="center">
-        </el-table-column>
-        <el-table-column
-          prop="refundStatusStr"
-          label="退款支付状态"
-          align="center"
-          width="120"
-        >
-        </el-table-column>
-        <el-table-column prop="refundTypeStr" label="退款类型" align="center">
-        </el-table-column>
+        <el-table-column prop="tradeTypeStr" label="支付方式" align="center"></el-table-column>
+        <el-table-column prop="buytime" label="订单支付时间" align="center" width="155"></el-table-column>
+        <el-table-column prop="statusStr" label="退款状态" align="center"></el-table-column>
+        <el-table-column prop="refundStatusStr" label="退款支付状态" align="center" width="120"></el-table-column>
+        <el-table-column prop="refundTypeStr" label="退款类型" align="center"></el-table-column>
 
-        <el-table-column prop="refundFee" label="退款金额" align="center">
-        </el-table-column>
-        <el-table-column prop="totoalFee" label="交易金额" align="center">
-        </el-table-column>
-        <el-table-column prop="refundRuleStr" label="退款规则" align="center">
-        </el-table-column>
+        <el-table-column prop="refundFee" label="退款金额" align="center"></el-table-column>
+        <el-table-column prop="totoalFee" label="交易金额" align="center"></el-table-column>
+        <el-table-column prop="refundRuleStr" label="退款规则" align="center"></el-table-column>
         <el-table-column label="订单支付时间" align="center" width="155">
-          <template slot-scope="scope">
-            {{ scope.row.buytime }}
-          </template>
+          <template slot-scope="scope">{{ scope.row.buytime }}</template>
         </el-table-column>
         <el-table-column label="申请退款时间" align="center" width="155">
-          <template slot-scope="scope">
-            {{ scope.row.applyTime }}
-          </template>
+          <template slot-scope="scope">{{ scope.row.applyTime }}</template>
         </el-table-column>
-        <el-table-column
-          prop="refundTime"
-          label="完成退款时间"
-          align="center"
-          width="155"
-        >
-          <template slot-scope="scope">
-            {{ scope.row.refundTime || '--' }}
-          </template>
+        <el-table-column prop="refundTime" label="完成退款时间" align="center" width="155">
+          <template slot-scope="scope">{{ scope.row.refundTime || '--' }}</template>
         </el-table-column>
         <el-table-column label="操作" align="center" fixed="right">
           <template slot-scope="scope">
-            <el-button type="text" @click="handleEdit(scope.$index, scope.row)"
-              >详情
-            </el-button>
+            <el-button type="text" @click="handleEdit(scope.$index, scope.row)">详情</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -272,24 +184,14 @@
         :current-page="currentPage"
         :total="allDigit"
         :page-size="pageSize"
-      >
-      </el-pagination>
+      ></el-pagination>
     </div>
 
-    <el-drawer
-      ref="drawerLk"
-      :visible.sync="drawer"
-      size="60%"
-      :destroy-on-close="true"
-    >
+    <el-drawer ref="drawerLk" :visible.sync="drawer" size="60%" :destroy-on-close="true">
       <template v-slot:title>
         <h1 class="rawer-title">退费订单详情</h1>
       </template>
-      <drawer
-        @closeDrawer="closeDrawer"
-        :orderData="choutidata"
-        :approveData="approveData"
-      />
+      <drawer @closeDrawer="closeDrawer" :orderData="choutidata" :approveData="approveData" />
     </el-drawer>
   </section>
 </template>
@@ -372,7 +274,7 @@ export default {
       }
       const { uid } = user
       // 新标签打开详情页
-      uid && openBrowserTab(`/users/#/details/${uid}`)
+      uid && openBrowserTab(`/music_app/#/details/${uid}`)
     },
     businessType(val) {
       console.info(val, typeof val)

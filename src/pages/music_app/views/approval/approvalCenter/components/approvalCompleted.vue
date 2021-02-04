@@ -209,7 +209,7 @@
           <el-col :span="20" :offset="1"
             ><el-link
               type="primary"
-              :href="'/users/#/details/' + drawerApprovalDeatail.userId"
+              :href="'/music_app/#/details/' + drawerApprovalDeatail.userId"
               target="_blank"
               >{{ drawerApprovalDeatail.userTel }}</el-link
             ></el-col
@@ -336,7 +336,7 @@
           <el-col :span="18" :offset="1"
             ><el-link
               type="primary"
-              :href="'/users/#/details/' + drawerApprovalDeatail.userId"
+              :href="'/music_app/#/details/' + drawerApprovalDeatail.userId"
               target="_blank"
               >{{ drawerApprovalDeatail.customerPhone }}</el-link
             ></el-col
@@ -575,7 +575,7 @@
               ><el-link
                 v-if="Number(drawerApprovalDeatail.sendId)"
                 type="primary"
-                :href="'/users/#/details/' + drawerApprovalDeatail.sendId"
+                :href="'/music_app/#/details/' + drawerApprovalDeatail.sendId"
                 target="_blank"
                 >{{
                   (JSON.parse(drawerApprovalDeatail.sendInfo).mobile || '-') +

@@ -199,7 +199,7 @@
 </template>
 
 <script>
-import { todayTimestamp, tomorrowTimestamp } from '@/pages/users/utils.js'
+import { todayTimestamp, tomorrowTimestamp } from '@/pages/music_app/views/users/utils.js'
 export default {
   props: {
     teamId: String,

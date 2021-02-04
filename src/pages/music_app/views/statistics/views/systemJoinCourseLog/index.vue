@@ -21,54 +21,54 @@
           </p>
           <p>
             参课率
-            <span class="primary-text">{{
+            <span class="primary-text">
+              {{
               summary.join_course_rate === 'NaN'
-                ? '-'
-                : `${summary.join_course_rate || '0.00'}%`
-            }}</span>
+              ? '-'
+              : `${summary.join_course_rate || '0.00'}%`
+              }}
+            </span>
           </p>
           <p>
             参课完课率
-            <span class="primary-text">{{
+            <span class="primary-text">
+              {{
               summary.complete_in_join_rate === 'NaN'
-                ? '-'
-                : `${summary.complete_in_join_rate || '0.00'}%`
-            }}</span>
+              ? '-'
+              : `${summary.complete_in_join_rate || '0.00'}%`
+              }}
+            </span>
           </p>
           <p>
             完课率
-            <span class="primary-text">{{
+            <span class="primary-text">
+              {{
               summary.complete_course_rate === 'NaN'
-                ? '-'
-                : `${summary.complete_course_rate || '0.00'}%`
-            }}</span>
+              ? '-'
+              : `${summary.complete_course_rate || '0.00'}%`
+              }}
+            </span>
           </p>
         </div>
 
         <!-- dom -->
         <div class="tableInner" ref="tableInner"></div>
         <!-- list -->
-        <el-table
-          :data="tableData"
-          style="width: 100%"
-          v-loading="loading"
-          :height="tableHeight"
-        >
-          <el-table-column prop="sup" label="难度级别" min-width="70">
-          </el-table-column>
+        <el-table :data="tableData" style="width: 100%" v-loading="loading" :height="tableHeight">
+          <el-table-column prop="sup" label="难度级别" min-width="70"></el-table-column>
           <el-table-column label="班主任" min-width="80">
             <template slot-scope="scope">
               {{
-                (scope.row.teacherInfo && scope.row.teacherInfo.realname) || '-'
+              (scope.row.teacherInfo && scope.row.teacherInfo.realname) || '-'
               }}
             </template>
           </el-table-column>
           <el-table-column label="服务组" min-width="140">
             <template slot-scope="scope">
               {{
-                (scope.row.teacherInfo &&
-                  scope.row.teacherInfo.department_name) ||
-                  '-'
+              (scope.row.teacherInfo &&
+              scope.row.teacherInfo.department_name) ||
+              '-'
               }}
             </template>
           </el-table-column>
@@ -87,51 +87,32 @@
           </el-table-column>
           <el-table-column label="用户状态" min-width="100">
             <template slot-scope="scope">
-              <p v-if="scope.row.userExtends">
-                {{ scope.row.userExtends.status_text || '-' }}
-              </p>
+              <p v-if="scope.row.userExtends">{{ scope.row.userExtends.status_text || '-' }}</p>
               <p v-else>-</p>
             </template>
           </el-table-column>
           <el-table-column label="课程名称" min-width="140">
             <template slot-scope="scope">
-              <p>
-                {{ scope.row.lesson || '-' }}
-              </p>
+              <p>{{ scope.row.lesson || '-' }}</p>
               <p>{{ scope.row.title || '-' }}</p>
             </template>
           </el-table-column>
-          <el-table-column prop="ctime" label="放课时间" min-width="140">
-          </el-table-column>
-          <el-table-column
-            prop="join_course_time"
-            label="参课时间"
-            min-width="140"
-          >
-          </el-table-column>
-          <el-table-column
-            prop="complete_time"
-            label="完课时间"
-            min-width="140"
-          >
-          </el-table-column>
+          <el-table-column prop="ctime" label="放课时间" min-width="140"></el-table-column>
+          <el-table-column prop="join_course_time" label="参课时间" min-width="140"></el-table-column>
+          <el-table-column prop="complete_time" label="完课时间" min-width="140"></el-table-column>
           <el-table-column label="班级信息" min-width="140">
             <template slot-scope="scope">
               <p
                 v-if="scope.row.teamInfo"
                 @click="openTeamDetail(scope.row.teamInfo)"
                 class="primary-text"
-              >
-                {{ scope.row.teamInfo.team_name || '-' }}
-              </p>
+              >{{ scope.row.teamInfo.team_name || '-' }}</p>
               <p v-else>-</p>
             </template>
           </el-table-column>
           <el-table-column label="期数" min-width="80">
             <template slot-scope="scope">
-              <p v-if="scope.row.management">
-                {{ scope.row.management.period_name || '-' }}
-              </p>
+              <p v-if="scope.row.management">{{ scope.row.management.period_name || '-' }}</p>
               <p v-else>-</p>
             </template>
           </el-table-column>
@@ -247,13 +228,13 @@ export default {
 
     openUserDetail(user) {
       if (!user || !user.u_id) return
-      openBrowserTab(`/users/#/details/${user.u_id}`)
+      openBrowserTab(`/music_app/#/details/${user.u_id}`)
     },
     openTeamDetail(team) {
       if (!team || !team.id) return
       // const type = team.team_type || '1'
       const type = '1'
-      openBrowserTab(`/student-team/#/teamDetail/${team.id}/${type}`)
+      openBrowserTab(`/music_app/#/teamDetail/${team.id}/${type}`)
     },
     // page
     handleSizeChange(page) {

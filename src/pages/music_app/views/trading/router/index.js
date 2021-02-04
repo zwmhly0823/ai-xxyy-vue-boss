@@ -4,72 +4,45 @@
  * @LastEditTime: 2020-05-29 20:16:46
  * @FilePath: /ai-app-vue-toss/src/pages/studentTeam/router/index.js
  */
-import Vue from 'vue'
-import VueRouter from 'vue-router'
 
-Vue.use(VueRouter)
-
-const routes = [
-  {
-    path: '/',
+const routes = [{
+    path: '/trading',
     name: 'trading',
+    // hidden: true,
     meta: {
-      title: '交易',
-      icon: 'el-icon-s-custom'
+      title: '交易管理',
+      icon: 'iconjianyiguanli'
     },
-    redirect: '/order'
+    component: () => import('../views/order/orderModule.vue')
   },
-  // {
-  //   path: '/express',
-  //   name: 'express',
-  //   meta: {
-  //     title: '物流',
-  //     keepAlive: false
-  //   },
-  //   component: () =>
-  //     import(
-  //       /* webpackChunkName: "expressModule" */
-  //       '../views/express/expressModule.vue'
-  //     )
-  // },
   {
     path: '/order',
     name: 'order',
     meta: {
-      title: '订单',
-      keepAlive: false
+      title: '订单管理',
+      show: true
     },
-    component: () =>
-      import(
-        /* webpackChunkName: "orderModule" */
-        '../views/order/orderModule.vue'
-      )
+    component: () => import('../views/order/orderModule.vue')
   },
   {
     path: '/financeRefound',
     name: 'financeRefound',
     meta: {
-      title: '财务退款',
-      keepAlive: true
+      title: '订单退款',
+      show: true
     },
-    component: () => import('../views/financeRefound/financeRefound.vue')
+    component: () =>
+      import('../views/financeRefound/financeRefound.vue')
   },
   {
     path: '/invoiceManage',
     name: 'invoiceManage',
     meta: {
       title: '发票管理',
-      keepAlive: true
+      show: true
     },
     component: () => import('../views/invoiceManage/index.vue')
-  }
+  },
 ]
 
-const router = new VueRouter({
-  // mode: 'history',
-  base: process.env.BASE_URL,
-  module: 'trading',
-  routes
-})
-
-export default router
+export default routes

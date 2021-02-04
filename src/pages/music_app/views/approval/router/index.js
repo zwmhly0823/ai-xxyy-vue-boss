@@ -7,32 +7,15 @@
  * @LastEditTime: 2020-05-20 13:42:24
  */
 
-import Vue from 'vue'
-import VueRouter from 'vue-router'
-
-Vue.use(VueRouter)
-
-// 工具类路由
-const routes = [
-  // 二级路由
-  {
-    path: '/',
-    name: 'ApprovalCenter',
-    meta: {
-      title: '审批中心',
-      icon: 'el-icon-menu'
-    },
-    redirect: '/approvalCenter'
-    // 子路由
-  },
-  {
-    path: '/approvalCenter',
-    name: 'approvalCenter',
+const routes = [{
+    path: '/approval',
+    name: 'approval',
+    alias: '/approvalCenter',
     meta: {
       title: '审批中心',
       keepAlive: false
     },
-    component: () => import('../approvalCenter/index.vue')
+    component: () => import('../approvalCenter/index.vue'),
   },
   {
     path: '/moneyBack',
@@ -53,7 +36,7 @@ const routes = [
     component: () => import('../approvalCenter/components/repair.vue')
   },
   {
-    path: '/approvalCenter/adjust',
+    path: '/adjust',
     name: 'adjust',
     meta: {
       title: '审批中心'
@@ -65,7 +48,7 @@ const routes = [
       )
   },
   {
-    path: '/approvalCenter/mergeboxes',
+    path: '/mergeboxes',
     name: 'mergeboxes',
     meta: {
       title: '审批中心'
@@ -76,12 +59,7 @@ const routes = [
         '../approvalCenter/views/mergeBoxes.vue'
       )
   }
-]
-const router = new VueRouter({
-  // mode: 'history',
-  base: process.env.BASE_URL,
-  module: 'approval',
-  routes
-})
 
-export default router
+]
+
+export default routes

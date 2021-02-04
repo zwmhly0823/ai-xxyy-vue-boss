@@ -51,17 +51,14 @@
           align="center"
           :cell-style="{ fontSize: '16px' }"
         >
-          <el-table-column prop="all_send_course_count" label="应参课人数">
-          </el-table-column>
+          <el-table-column prop="all_send_course_count" label="应参课人数"></el-table-column>
           <el-table-column
             prop="join_course_count"
             label="实际参课人数"
             v-if="interTypef.includes(lessonType)"
           >
             <template slot-scope="scope">
-              <p>
-                {{ scope.row.join_course_count }}
-              </p>
+              <p>{{ scope.row.join_course_count }}</p>
             </template>
           </el-table-column>
           <el-table-column
@@ -70,23 +67,19 @@
             v-if="interTypes.includes(lessonType)"
           >
             <template slot-scope="scope">
-              <p>
-                {{ scope.row.ad_join_course_count }}
-              </p>
+              <p>{{ scope.row.ad_join_course_count }}</p>
             </template>
           </el-table-column>
           <el-table-column
             prop="learn_course_count"
             label="总参课次数"
             v-if="interTypef.includes(lessonType)"
-          >
-          </el-table-column>
+          ></el-table-column>
           <el-table-column
             prop="ad_learn_course_count"
             label="总参课次数"
             v-if="interTypes.includes(lessonType)"
-          >
-          </el-table-column>
+          ></el-table-column>
 
           <el-table-column
             prop="all_join_course_rate"
@@ -94,9 +87,7 @@
             v-if="interTypef.includes(lessonType)"
           >
             <template slot-scope="scope">
-              <p>
-                {{ `${scope.row.all_join_course_rate}%` }}
-              </p>
+              <p>{{ `${scope.row.all_join_course_rate}%` }}</p>
             </template>
           </el-table-column>
           <el-table-column
@@ -105,70 +96,47 @@
             v-if="interTypes.includes(lessonType)"
           >
             <template slot-scope="scope">
-              <p>
-                {{ `${scope.row.ad_all_join_course_rate}%` }}
-              </p>
+              <p>{{ `${scope.row.ad_all_join_course_rate}%` }}</p>
             </template>
           </el-table-column>
           <el-table-column
             prop="complete_course_count"
             v-if="interTypef.includes(lessonType)"
             label="总完课人数"
-          >
-          </el-table-column>
+          ></el-table-column>
           <el-table-column
             prop="ad_complete_course_count"
             v-if="interTypes.includes(lessonType)"
             label="总完课人数"
-          >
-          </el-table-column>
+          ></el-table-column>
           <el-table-column
             prop="all_complete_course_rate"
             label="累计完课率"
             v-if="interTypef.includes(lessonType)"
-            >>
+          >
+            >
             <template slot-scope="scope">
-              <p>
-                {{ `${scope.row.all_complete_course_rate}%` }}
-              </p>
+              <p>{{ `${scope.row.all_complete_course_rate}%` }}</p>
             </template>
           </el-table-column>
           <el-table-column
             prop="ad_all_complete_course_rate"
             label="累计完课率"
             v-if="interTypes.includes(lessonType)"
-            >>
+          >
+            >
             <template slot-scope="scope">
-              <p>
-                {{ `${scope.row.ad_all_complete_course_rate}%` }}
-              </p>
+              <p>{{ `${scope.row.ad_all_complete_course_rate}%` }}</p>
             </template>
           </el-table-column>
           <el-table-column prop="task_count" label="总传作品数">
             <template slot-scope="scope">
-              <p>
-                {{ scope.row.task_count }}
-              </p>
+              <p>{{ scope.row.task_count }}</p>
             </template>
           </el-table-column>
-          <el-table-column
-            prop="ad_count"
-            label="总答题数"
-            v-if="lessonType === 12"
-          >
-          </el-table-column>
-          <el-table-column
-            prop="comment_count"
-            label="总点评数"
-            v-if="lessonType === 1"
-          >
-          </el-table-column>
-          <el-table-column
-            prop="lesson_comment_count"
-            label="总听点评数"
-            v-if="lessonType === 1"
-          >
-          </el-table-column>
+          <el-table-column prop="ad_count" label="总答题数" v-if="lessonType === 12"></el-table-column>
+          <el-table-column prop="comment_count" label="总点评数" v-if="lessonType === 1"></el-table-column>
+          <el-table-column prop="lesson_comment_count" label="总听点评数" v-if="lessonType === 1"></el-table-column>
         </el-table>
       </div>
     </div>
@@ -184,22 +152,19 @@
             round
             v-bind:class="{ active: isActive === 1 }"
             @click="changeType(1)"
-            >已完课</el-button
-          >
+          >已完课</el-button>
           <el-button
             plain
             round
             v-bind:class="{ active: isActive === 0 }"
             @click="changeType(0)"
-            >参课未完课</el-button
-          >
+          >参课未完课</el-button>
           <el-button
             plain
             round
             v-bind:class="{ active: isActive === 2 }"
             @click="changeType(2)"
-            >未参课</el-button
-          >
+          >未参课</el-button>
         </div>
         <div>
           <el-form ref="form" label-width="100px">
@@ -254,14 +219,10 @@
         class="table-style"
         v-loading="loading"
       >
-        <el-table-column prop="user_num" label="ID" min-width="80">
-        </el-table-column>
+        <el-table-column prop="user_num" label="ID" min-width="80"></el-table-column>
         <el-table-column label="用户信息" min-width="200">
           <template slot-scope="scope">
-            <base-user-info
-              :user="scope.row.userExtends"
-              @handle-click="userHandle(scope.row)"
-            />
+            <base-user-info :user="scope.row.userExtends" @handle-click="userHandle(scope.row)" />
           </template>
         </el-table-column>
         <el-table-column
@@ -271,14 +232,12 @@
           v-if="interTypef.includes(lessonType)"
         >
           <template slot-scope="scope">
-            <p>
-              {{ scope.row.state === 2 ? '未参课' : '已参课' }}
-            </p>
+            <p>{{ scope.row.state === 2 ? '未参课' : '已参课' }}</p>
             <p>
               {{
-                scope.row.last_join_course_time
-                  ? `最近：${formatDate(scope.row.last_join_course_time)}`
-                  : `最近：无`
+              scope.row.last_join_course_time
+              ? `最近：${formatDate(scope.row.last_join_course_time)}`
+              : `最近：无`
               }}
             </p>
           </template>
@@ -290,14 +249,12 @@
           v-if="interTypes.includes(lessonType)"
         >
           <template slot-scope="scope">
-            <p>
-              {{ scope.row.ad_state === 2 ? '未参课' : '已参课' }}
-            </p>
+            <p>{{ scope.row.ad_state === 2 ? '未参课' : '已参课' }}</p>
             <p>
               {{
-                scope.row.ad_last_join_course_time
-                  ? `最近：${formatDate(scope.row.ad_last_join_course_time)}`
-                  : `最近：无`
+              scope.row.ad_last_join_course_time
+              ? `最近：${formatDate(scope.row.ad_last_join_course_time)}`
+              : `最近：无`
               }}
             </p>
           </template>
@@ -308,16 +265,14 @@
           label="参课次数"
           width="80"
           v-if="interTypef.includes(lessonType)"
-        >
-        </el-table-column>
+        ></el-table-column>
 
         <el-table-column
           prop="ad_join_course_count"
           label="参课次数"
           width="80"
           v-if="interTypes.includes(lessonType)"
-        >
-        </el-table-column>
+        ></el-table-column>
         <el-table-column
           prop="last_join_course_time"
           label="完课"
@@ -325,14 +280,12 @@
           min-width="200"
         >
           <template slot-scope="scope">
-            <p>
-              {{ scope.row.state === 1 ? '已完课' : '未完课' }}
-            </p>
+            <p>{{ scope.row.state === 1 ? '已完课' : '未完课' }}</p>
             <p>
               {{
-                scope.row.state === 1
-                  ? `最近：${formatDate(scope.row.complete_time)}`
-                  : ''
+              scope.row.state === 1
+              ? `最近：${formatDate(scope.row.complete_time)}`
+              : ''
               }}
             </p>
           </template>
@@ -345,64 +298,49 @@
           min-width="200"
         >
           <template slot-scope="scope">
-            <p>
-              {{ scope.row.ad_state === 1 ? '已完课' : '未完课' }}
-            </p>
+            <p>{{ scope.row.ad_state === 1 ? '已完课' : '未完课' }}</p>
             <p>
               {{
-                scope.row.ad_state === 1
-                  ? `最近：${formatDate(scope.row.ad_complete_time)}`
-                  : ''
+              scope.row.ad_state === 1
+              ? `最近：${formatDate(scope.row.ad_complete_time)}`
+              : ''
               }}
             </p>
           </template>
         </el-table-column>
 
-        <el-table-column
-          label="传作品"
-          v-if="lessonType !== 10"
-          min-width="200"
-        >
+        <el-table-column label="传作品" v-if="lessonType !== 10" min-width="200">
           <template slot-scope="scope">
-            <p>
-              {{ scope.row.task.length > 0 ? '已上传' : '未上传' }}
-            </p>
+            <p>{{ scope.row.task.length > 0 ? '已上传' : '未上传' }}</p>
             <p>
               {{
-                scope.row.task.length > 0 && scope.row.task[0].ctime
-                  ? `最近：${formatDate(scope.row.task[0].ctime)}`
-                  : `最近：无`
+              scope.row.task.length > 0 && scope.row.task[0].ctime
+              ? `最近：${formatDate(scope.row.task[0].ctime)}`
+              : `最近：无`
               }}
             </p>
           </template>
         </el-table-column>
-        <el-table-column
-          prop="ad_count"
-          label="总答题数"
-          v-if="lessonType === 12"
-        >
-        </el-table-column>
+        <el-table-column prop="ad_count" label="总答题数" v-if="lessonType === 12"></el-table-column>
 
-        <el-table-column prop="comment_count" label="点评数"> </el-table-column>
-        <el-table-column prop="lesson_comment_count" label="听点评数">
-        </el-table-column>
-        <el-table-column prop="completed_count" label="本月上传截图次数">
-        </el-table-column>
+        <el-table-column prop="comment_count" label="点评数"></el-table-column>
+        <el-table-column prop="lesson_comment_count" label="听点评数"></el-table-column>
+        <el-table-column prop="completed_count" label="本月上传截图次数"></el-table-column>
         <!-- <el-table-column prop="status" label="是否转化" width="80">
           <template slot-scope="scope">
             <p>
               {{ use_status[scope.row.userExtends.status] }}
             </p>
           </template>
-        </el-table-column> -->
+        </el-table-column>-->
         <el-table-column prop="status" label="是否退费" width="80">
           <template slot-scope="scope">
             <p>
               {{
-                scope.row.studentSystemStatistics &&
-                scope.row.studentSystemStatistics.life_cycle === 91
-                  ? '退费'
-                  : '否'
+              scope.row.studentSystemStatistics &&
+              scope.row.studentSystemStatistics.life_cycle === 91
+              ? '退费'
+              : '否'
               }}
             </p>
           </template>
@@ -411,22 +349,20 @@
           <template slot-scope="scope">
             <p>
               {{
-                scope.row.studentSystemStatistics &&
-                scope.row.studentSystemStatistics.remain_order_count > 1
-                  ? '续费'
-                  : '否'
+              scope.row.studentSystemStatistics &&
+              scope.row.studentSystemStatistics.remain_order_count > 1
+              ? '续费'
+              : '否'
               }}
             </p>
           </template>
         </el-table-column>
         <el-table-column label="班级-销售" min-width="200">
           <template slot-scope="scope">
-            <p style="color:#2a75ed" @click="openTeam(scope.row)">
-              {{ scope.row.team_name }}
-            </p>
+            <p style="color:#2a75ed" @click="openTeam(scope.row)">{{ scope.row.team_name }}</p>
             <p>
               {{
-                `${scope.row.teacherInfo.realname} ${scope.row.teacherInfo.department_name}`
+              `${scope.row.teacherInfo.realname} ${scope.row.teacherInfo.department_name}`
               }}
             </p>
           </template>
@@ -670,7 +606,7 @@ export default {
       // 新标签打开详情页
       studentId &&
         openBrowserTab(
-          `/users/#/details/${studentId}`,
+          `/music_app/#/details/${studentId}`,
           `学员:${username || mobile}`
         )
     },
@@ -680,8 +616,7 @@ export default {
       //  if (!row.teacherInfo || !row.teamInfo || !row.team_id) return
       const teamId = row.team_id
       const teamType = '0'
-      teamId &&
-        openBrowserTab(`/student-team/#/teamDetail/${teamId}/${teamType}`)
+      teamId && openBrowserTab(`/music_app/#/teamDetail/${teamId}/${teamType}`)
     },
     formatDate(date) {
       return formatData(date, 's')

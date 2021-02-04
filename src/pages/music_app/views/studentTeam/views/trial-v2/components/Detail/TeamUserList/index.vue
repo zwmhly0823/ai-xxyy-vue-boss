@@ -76,9 +76,9 @@
 <script>
 import SearchPhone from '@/components/MSearch/searchItems/searchPhone.vue'
 import SearchUsernum from '@/components/MSearch/searchItems/searchUsernum.vue'
-import TrialUserList from '@/pages/users/views/trial-v2/index.vue'
+import TrialUserList from '@/pages/music_app/views/users/views/trial-v2/index.vue'
 import SimpleSelect from '@/components/MSearch/searchItems/simpleSelect.vue'
-import classDetailsButtons from '@/pages/art_app/views/studentTeam/components/TabPane/components/classDetailsButtons.vue'
+import classDetailsButtons from '@/components/art_app/classDetailsButtons.vue'
 import DefineLabelV2 from '@/components/MSearch/searchItems/defineLabelV2.vue'
 export default {
   components: {

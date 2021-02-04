@@ -4,7 +4,7 @@ export function noticeLinkTo(type, val) {
     case 3:
       // 课前提醒
       // 本期仅涉及体验课
-      hrefUrl = 'users/#/trial'
+      hrefUrl = 'music_app/#/trial'
       break
     case 4:
       // 订单

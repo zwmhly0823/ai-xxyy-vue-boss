@@ -9,7 +9,7 @@
 /**
  * 美术宝写字 专有。 业务代码中引用： this.$http.writeApp.User(params).then()
  */
-import writeApp from './index_write_app'
+// import writeApp from './index_write_app'
 
 /**
  * 小熊美术 及 公共
@@ -47,7 +47,7 @@ import Active from './modules/Active'
 
 export default Object.assign(
   {},
-  { writeApp },
+  // { writeApp },
   { Base },
   { Login },
   { Order },

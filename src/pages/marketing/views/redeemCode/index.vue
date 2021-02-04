@@ -10,33 +10,31 @@
   <el-row type="flex" class="app-main height">
     <div class="app-main-container redeem-code">
       <div class="redeem-code-header d-flex">
-        <el-button type="primary" size="mini" @click="handleAdd"
-          >创建兑换码</el-button
-        >
+        <el-button type="primary" size="mini" @click="handleAdd">创建兑换码</el-button>
       </div>
       <!-- list -->
       <div class="redeem-code-list">
         <el-table :data="tableData" style="width: 100%">
-          <el-table-column prop="title" label="兑换码标题" width="180">
-          </el-table-column>
+          <el-table-column prop="title" label="兑换码标题" width="180"></el-table-column>
           <el-table-column prop="num" label="兑换个数/个数" width="100">
             <template slot-scope="scope">
               <p>{{ scope.row.converted_num }}/{{ scope.row.num }}</p>
             </template>
           </el-table-column>
-          <el-table-column
-            prop="package_name"
-            label="套餐商品"
-          ></el-table-column>
+          <el-table-column prop="package_name" label="套餐商品"></el-table-column>
           <el-table-column prop="customer_sign_name" label="标签">
-            <template slot-scope="scope">{{
+            <template slot-scope="scope">
+              {{
               scope.row.customer_sign_name || '--'
-            }}</template>
+              }}
+            </template>
           </el-table-column>
           <el-table-column prop="channel_name" label="渠道">
-            <template slot-scope="scope">{{
+            <template slot-scope="scope">
+              {{
               scope.row.channel_name || '--'
-            }}</template>
+              }}
+            </template>
           </el-table-column>
           <el-table-column prop="start_date" label="有效期" min-width="120">
             <template slot-scope="scope">
@@ -50,19 +48,13 @@
             </template>
           </el-table-column>
           <el-table-column prop="status" label="状态">
-            <template slot-scope="scope">
-              {{ scope.row.status_text }}
-            </template>
+            <template slot-scope="scope">{{ scope.row.status_text }}</template>
           </el-table-column>
           <el-table-column label="操作">
             <template slot-scope="scope">
               <p class="primary-text">
                 <span @click="handleOpenLibrary(scope.row)">码库</span> |
-                <span
-                  @click="handleInvalid(scope.row)"
-                  v-if="scope.row.status === 1"
-                  >失效</span
-                >
+                <span @click="handleInvalid(scope.row)" v-if="scope.row.status === 1">失效</span>
                 <span @click="handleDelete(scope.row)" v-else>删除</span>
               </p>
             </template>
@@ -178,10 +170,12 @@ export default {
     },
     // 查看码库
     handleOpenLibrary(row) {
+      alert('sss')
       const { id, status } = row
       // 区分科目 TODO:新增其他科目时再优化
       const subject = this.$store.getters.subjects.subjectCode
-      const subjectText = +subject === 0 ? 'marketing' : 'write_app'
+      // var subjectText = +subject === 3 ? 'marketing' : 'write_app'
+      var subjectText = 'marketing'
       // 如果是自定义时间，则加上参数 expire
       let url = `/${subjectText}/#/redeemCodeLibrary/${id}/${status}`
       if (row.expire && row.expire !== '0') {
