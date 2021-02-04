@@ -108,16 +108,16 @@ module.exports = {
       }
     }
     if (NODE_ENV === 'production') {
-      // config.plugin('webpack-alioss-plugin').use(WebpackAliOss, [
-      //   {
-      //     ossBaseDir: 'xiaoxiong',
-      //     project:  ossDist(),
-      //     auth: ossConfig,
-      //     removeMode: false,
-      //     existCheck: false,
-      //     exclude: /.*\.mainfest$/
-      //   }
-      // ])
+      config.plugin('webpack-alioss-plugin').use(WebpackAliOss, [
+        {
+          ossBaseDir: 'xiaoxiong',
+          project:  ossDist(),
+          auth: ossConfig,
+          removeMode: false,
+          existCheck: false,
+          exclude: /.*\.mainfest$/
+        }
+      ])
     }
   },
   devServer: {
