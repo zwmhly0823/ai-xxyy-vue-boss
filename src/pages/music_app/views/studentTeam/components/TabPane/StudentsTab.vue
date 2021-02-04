@@ -24,15 +24,9 @@
         <template slot="header" slot-scope="scope">
           <el-Popover popper-class="batch-btn" trigger="hover">
             <!-- 标题气泡内容 -->
-            <div size="mini" type="text" @click="batchBtn">
-              批量发放优惠券
-            </div>
+            <div size="mini" type="text" @click="batchBtn">批量发放优惠券</div>
             <!-- 标题点击...图片 -->
-            <div
-              @click="headerPoint(scope.$index, scope)"
-              v-show="moreTitle"
-              slot="reference"
-            >
+            <div @click="headerPoint(scope.$index, scope)" v-show="moreTitle" slot="reference">
               <img src="../../../../../../assets/images/point.png" />
             </div>
           </el-Popover>
@@ -45,38 +39,35 @@
               <span v-show="moreTitle === false">发放优惠券</span>
             </div>
             <!-- 点击...图片 -->
-            <div
-              @mouseenter="handleEdit(scope.$index, scope.row)"
-              slot="reference"
-            >
+            <div @mouseenter="handleEdit(scope.$index, scope.row)" slot="reference">
               <img src="../../../../../../assets/images/point.png" />
             </div>
           </el-Popover>
         </template>
       </el-table-column>
       <!-- 弹窗 -->
-      <coupon-popover
-        ref="couponPopover"
-        :couponData="couponData"
-        :selectUserId="selectUserId"
-      />
+      <coupon-popover ref="couponPopover" :couponData="couponData" :selectUserId="selectUserId" />
       <el-table-column label="基本信息" class="information" width="300px">
         <template slot-scope="scope">
           <img
             class="information-img"
             :src="`${scope.row.head}?x-oss-process=image/resize,l_100`"
-            alt=""
+            alt
           />
           <div class="information-right">
             <div>
               <div class="phone primary-text">
-                <span @click="openUserDetail(scope.row)">{{
+                <span @click="openUserDetail(scope.row)">
+                  {{
                   scope.row.mobile
-                }}</span>
+                  }}
+                </span>
               </div>
               <div @click="openUserDetail(scope.row)" class="age primary-text">
                 {{ scope.row.sex }} · {{ scope.row.birthday }}
-                <span v-show="scope.row.base_painting_text">·</span>
+                <span
+                  v-show="scope.row.base_painting_text"
+                >·</span>
                 {{ scope.row.base_painting_text }}
               </div>
             </div>
@@ -118,19 +109,15 @@
       <el-table-column label="关联物流" class="logistics">
         <template slot-scope="scope">
           <!-- <div class="logistics-num">{{ scope.row.express.total }}</div> -->
-          <span class="text333"> 全部物流:</span>
-          <span class="logistics-num">
-            {{ scope.row.express.total }}
-          </span>
+          <span class="text333">全部物流:</span>
+          <span class="logistics-num">{{ scope.row.express.total }}</span>
           <div class="text333">{{ scope.row.express.status }}</div>
         </template>
       </el-table-column>
       <el-table-column label="状态" class="status-style">
         <template slot-scope="scope">
           <div class="text333">{{ scope.row.status }}</div>
-          <div class="text333">
-            {{ scope.row.wechat_status.added_wechat }}
-          </div>
+          <div class="text333">{{ scope.row.wechat_status.added_wechat }}</div>
           <div class="text333">{{ scope.row.wechat_status.added_group }}</div>
         </template>
       </el-table-column>
@@ -450,7 +437,7 @@ export default {
 
     // 打开用户详情
     openUserDetail(row) {
-      row.id && openBrowserTab(`/users/#/details/${row.id}`)
+      row.id && openBrowserTab(`/music_app/#/details/${row.id}`)
     }
   }
 }

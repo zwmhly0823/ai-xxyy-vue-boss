@@ -21,11 +21,7 @@
       <div class="library-search d-flex align-center justify-between">
         <div class="library-search-item d-flex align-center">
           <!-- 手机号搜索 -->
-          <search-phone
-            name="user_id"
-            @result="getPhone"
-            style="margin-right: 10px;"
-          />
+          <search-phone name="user_id" @result="getPhone" style="margin-right: 10px;" />
           <!-- 状态搜索 -->
           <simple-select
             placeholder="全部状态"
@@ -35,13 +31,7 @@
             @result="getStatus"
           />
         </div>
-        <el-button
-          type="primary"
-          size="mini"
-          @click="handleExport"
-          :disabled="exporting"
-          >导出码库</el-button
-        >
+        <el-button type="primary" size="mini" @click="handleExport" :disabled="exporting">导出码库</el-button>
       </div>
       <!-- search end -->
 
@@ -49,8 +39,7 @@
       <!-- list -->
       <div class="redeem-code-library_list">
         <el-table :data="tableData" style="width: 100%">
-          <el-table-column prop="code" label="兑换码" width="120">
-          </el-table-column>
+          <el-table-column prop="code" label="兑换码" width="120"></el-table-column>
           <el-table-column label="用户" width="200">
             <template slot-scope="scope">
               <p
@@ -59,28 +48,18 @@
                 v-if="scope.row && scope.row.userInfo"
               >
                 {{ scope.row.userInfo.mobile }}-{{
-                  scope.row.userInfo.username
+                scope.row.userInfo.username
                 }}
               </p>
               <p v-else>--</p>
             </template>
           </el-table-column>
-          <el-table-column prop="status_text" label="使用状态" width="120">
-          </el-table-column>
-          <el-table-column
-            prop="converted_date_text"
-            :label="expire ? '兑换/发放时间' : '兑换时间'"
-          ></el-table-column>
+          <el-table-column prop="status_text" label="使用状态" width="120"></el-table-column>
+          <el-table-column prop="converted_date_text" :label="expire ? '兑换/发放时间' : '兑换时间'"></el-table-column>
           <!-- 自定义时间显示 -->
-          <el-table-column
-            prop="expire_text"
-            label="失效时间"
-            v-if="expire"
-          ></el-table-column>
+          <el-table-column prop="expire_text" label="失效时间" v-if="expire"></el-table-column>
           <el-table-column prop="use_date" label="使用时间"></el-table-column>
-          <el-table-column
-            :label="isTrialPackage ? '班级/销售' : '班级/班主任'"
-          >
+          <el-table-column :label="isTrialPackage ? '班级/销售' : '班级/班主任'">
             <template slot-scope="scope">
               <p
                 class="primary-text"
@@ -94,15 +73,13 @@
                     1
                   )
                 "
-              >
-                {{ scope.row.teamInfo.team_name }}
-              </p>
+              >{{ scope.row.teamInfo.team_name }}</p>
               <p v-else>--</p>
               <p v-if="scope.row.teacherInfo">
                 {{ scope.row.teacherInfo.realname }} -
                 {{
-                  scope.row.teacherInfo.department_name ||
-                    scope.row.teacherInfo.group_name
+                scope.row.teacherInfo.department_name ||
+                scope.row.teacherInfo.group_name
                 }}
               </p>
               <p v-else>--</p>
@@ -287,9 +264,9 @@ export default {
 
     // 打开用户或班级详情页 0-用户，1-班级
     openDetailPage(obj, type = 0) {
-      let url = `/users/#/details/${obj.id}`
+      let url = `/music_app/#/details/${obj.id}`
       if (type === 1) {
-        url = `/student-team/#/teamDetail/${obj.id}/${obj.type}`
+        url = `/music_app/#/teamDetail/${obj.id}/${obj.type}`
       }
       // 写字项目时
       if (+this.$store.getters.subjects.subjectCode === 1) {

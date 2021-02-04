@@ -79,9 +79,15 @@ export default {
       console.log(this.rigthValueChoose, '组合商品')
       if (this.rigthValueChoose.length > 0) {
         this.$emit('combinationPro', this.rigthValueChoose)
-        console.log(this.rigthValueChoose, 'this.rigthValueChoose====')
+        // console.log(this.rigthValueChoose, 'this.rigthValueChoose====')
       } else {
-        console.log('选择得')
+        this.$notify({
+          title: '警告',
+          message: '请在右侧列表中勾选需要组合的商品',
+          type: 'warning',
+          showClose: false,
+          duration:2000
+        });
       }
     },
     // 关闭

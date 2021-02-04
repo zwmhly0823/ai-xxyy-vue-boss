@@ -68,17 +68,17 @@ export default {
       this.$router.push('/repair')
     },
     goMoneyBack() {
-      this.$router.push({ name: 'moneyBack' })
+      this.$router.push({ path: '/moneyBack' })
     },
     jumpAdjustPage(data) {
       this.$router.push({
-        path: '/approvalCenter/adjust',
+        path: '/adjust',
         query: { adjustType: data }
       })
     },
     // 随材打包
     mergeBoxes() {
-      this.$router.push('/approvalCenter/mergeboxes')
+      this.$router.push('/mergeboxes')
     }
   }
 }

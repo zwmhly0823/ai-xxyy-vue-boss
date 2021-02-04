@@ -3,13 +3,17 @@
  * @version:
  * @Author: shentong
  * @Date: 2020-03-13 14:38:28
- * @LastEditors: Shentong
- * @LastEditTime: 2020-10-28 16:06:29
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2021-01-11 15:57:53
  */
 import axios from 'axios'
 import _ from 'lodash'
-import { removeToken } from '@/utils/auth'
-import { getAppSubject } from '@/utils/index'
+import {
+  removeToken
+} from '@/utils/auth'
+import {
+  getAppSubject
+} from '@/utils/index'
 
 const subject = getAppSubject()
 
@@ -26,12 +30,14 @@ axios.defaults.headers.post['Content-Type'] =
 axios.interceptors.request.use(
   (config) => {
     // 非graphql服务接口，统一回科目类型
-    const { url, method } = config
+    const {
+      url
+    } = config
     if (url.includes('/api/') && !url.includes('graphql')) {
-      if (method.toLowerCase() === 'get' && url.indexOf('subject=') === -1) {
-        config.url += !url.includes('?')
-          ? `?subject=${subject}`
-          : `&subject=${subject}`
+      if (url.indexOf('subject=') === -1) {
+        config.url += !url.includes('?') ?
+          `?subject=${subject}` :
+          `&subject=${subject}`
       }
     }
     return config
@@ -47,7 +53,9 @@ axios.interceptors.response.use(
     if (response.status === 200) {
       _data = response.data
       const {
-        config: { url = '' }
+        config: {
+          url = ''
+        }
       } = response
       _data = response.data
       if (_.isPlainObject(_data) && _data.code) {
@@ -65,8 +73,15 @@ axios.interceptors.response.use(
     return _data
   },
   (err) => {
-    const errResponse = err.response || { status: 'fail' }
-    const { config: { url = '' } = {}, status } = errResponse
+    const errResponse = err.response || {
+      status: 'fail'
+    }
+    const {
+      config: {
+        url = ''
+      } = {},
+      status
+    } = errResponse
     let errMsg = `服务器异常-${url}`
 
     switch (status) {
@@ -76,14 +91,7 @@ axios.interceptors.response.use(
         break
       case 401: {
         // 有登录状态的token, 但已离职的老师会提示
-        if (document.getElementsByClassName('el-message').length === 0) {
-          window._Vue.$message.error('没有权限，禁止登录')
-        }
-        // 退出登录
-        setTimeout(() => {
-          removeToken()
-          location.href = `/login/#/`
-        }, 1000)
+        errMsg = `没有权限，禁止登录`
         break
       }
       case 404: {
@@ -100,7 +108,16 @@ axios.interceptors.response.use(
     }
 
     if (!document.getElementsByClassName('el-message').length) {
-      window._Vue.$message.error(errMsg)
+      window._Vue.$message({
+        type: 'error',
+        message: errMsg,
+        onClose: () => {
+          if (status === 401) {
+            removeToken()
+            location.href = `/login/#/`
+          }
+        }
+      })
     }
 
     return errResponse

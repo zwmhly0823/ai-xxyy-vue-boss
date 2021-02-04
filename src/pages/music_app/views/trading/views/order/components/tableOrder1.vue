@@ -19,13 +19,13 @@
         <template slot-scope="scope">
           <p>
             {{
-              scope.row.regtype
-                ? +scope.row.regtype === 2
-                  ? '首单'
-                  : +scope.row.regtype === 3
-                  ? '续费'
-                  : '-'
-                : '-'
+            scope.row.regtype
+            ? +scope.row.regtype === 2
+            ? '首单'
+            : +scope.row.regtype === 3
+            ? '续费'
+            : '-'
+            : '-'
             }}
           </p>
         </template>
@@ -34,20 +34,20 @@
         <template slot-scope="scope">
           <p>
             {{
-              scope.row.packages_name
-                ? scope.row.packages_name || '-'
-                : scope.row.product_name || '-'
+            scope.row.packages_name
+            ? scope.row.packages_name || '-'
+            : scope.row.product_name || '-'
             }}
           </p>
           <!-- 人民币 ， 宝石，小熊币 -->
           <p>
             {{ scope.row.currency ? scope.row.currency : '人民币 ' }}
             {{
-              scope.row.amount
-                ? scope.row.amount
-                : scope.row.regtype === 6
-                ? ''
-                : '-'
+            scope.row.amount
+            ? scope.row.amount
+            : scope.row.regtype === 6
+            ? ''
+            : '-'
             }}
           </p>
         </template>
@@ -66,29 +66,27 @@
                 @click="
                   openDetail(trialTeamUid[scope.row.uid].id, scope.row, 0)
                 "
-              >
-                （{{ trialTeamUid[scope.row.uid].team_name }}）
-              </span>
+              >（{{ trialTeamUid[scope.row.uid].team_name }}）</span>
               <span v-else>-</span>
             </p>
             <p>
               {{
-                scope.row.salesman
-                  ? scope.row.salesman.area_name ||
-                    scope.row.salesman.department_name ||
-                    scope.row.salesman.group_name
-                    ? scope.row.salesman.group_name ||
-                      scope.row.salesman.department_name ||
-                      scope.row.salesman.area_name
-                    : '-'
-                  : '-'
+              scope.row.salesman
+              ? scope.row.salesman.area_name ||
+              scope.row.salesman.department_name ||
+              scope.row.salesman.group_name
+              ? scope.row.salesman.group_name ||
+              scope.row.salesman.department_name ||
+              scope.row.salesman.area_name
+              : '-'
+              : '-'
               }}
             </p>
           </div>
           <!-- <div v-else>
             <p>-</p>
             <p>-</p>
-          </div> -->
+          </div>-->
         </template>
       </el-table-column>
       <el-table-column label="服务老师" min-width="180">
@@ -100,21 +98,19 @@
               <span
                 :class="{ 'primary-text': scope.row.team }"
                 @click="openDetail(scope.row.team.id, scope.row, 2)"
-              >
-                ({{ scope.row.team ? scope.row.team.team_name : '-' }})
-              </span>
+              >({{ scope.row.team ? scope.row.team.team_name : '-' }})</span>
             </p>
             <p>
               {{
-                scope.row.teacher
-                  ? scope.row.teacher.area_name ||
-                    scope.row.teacher.department_name ||
-                    scope.row.teacher.group_name
-                    ? scope.row.teacher.group_name ||
-                      scope.row.teacher.department_name ||
-                      scope.row.teacher.area_name
-                    : '-'
-                  : '-'
+              scope.row.teacher
+              ? scope.row.teacher.area_name ||
+              scope.row.teacher.department_name ||
+              scope.row.teacher.group_name
+              ? scope.row.teacher.group_name ||
+              scope.row.teacher.department_name ||
+              scope.row.teacher.area_name
+              : '-'
+              : '-'
               }}
             </p>
           </div>
@@ -148,7 +144,7 @@
                   : '-'
               }}
             </p>
-          </div> -->
+          </div>-->
         </template>
       </el-table-column>
 
@@ -157,7 +153,7 @@
           <p>体验课:{{ scope.row.trial_pay_channel_text || '-' }}</p>
           <p>
             系统课:{{
-              scope.row.channel ? scope.row.channel.channel_outer_name : '-'
+            scope.row.channel ? scope.row.channel.channel_outer_name : '-'
             }}
           </p>
         </template>
@@ -171,40 +167,34 @@
             @click="openUserDetail(scope.row.first_send_user.id)"
           >
             {{
-              scope.row.first_send_user
-                ? scope.row.first_send_user.username
-                : '-'
+            scope.row.first_send_user
+            ? scope.row.first_send_user.username
+            : '-'
             }}
           </p>
           <p>
             {{
-              scope.row.first_send_user ? scope.row.first_send_user.mobile : '-'
+            scope.row.first_send_user ? scope.row.first_send_user.mobile : '-'
             }}
           </p>
         </template>
       </el-table-column>
       <el-table-column :label="orderTimeLabel" min-width="180">
         <template slot-scope="scope">
-          <p v-if="status === '3'">
-            {{ scope.row.buytime ? scope.row.buytime : '-' }}
-          </p>
-          <p v-else>
-            {{ scope.row.ctime ? scope.row.ctime : '-' }}
-          </p>
+          <p v-if="status === '3'">{{ scope.row.buytime ? scope.row.buytime : '-' }}</p>
+          <p v-else>{{ scope.row.ctime ? scope.row.ctime : '-' }}</p>
           <p>
             {{
-              scope.row.out_trade_no
-                ? scope.row.out_trade_no.replace('xiong', '')
-                : '-'
+            scope.row.out_trade_no
+            ? scope.row.out_trade_no.replace('xiong', '')
+            : '-'
             }}
           </p>
         </template>
       </el-table-column>
 
       <el-table-column label="订单状态" min-width="80">
-        <template slot-scope="scope">
-          {{ scope.row.order_status ? scope.row.order_status : '-' }}
-        </template>
+        <template slot-scope="scope">{{ scope.row.order_status ? scope.row.order_status : '-' }}</template>
       </el-table-column>
 
       <el-table-column label="关联物流" min-width="170">
@@ -214,17 +204,15 @@
             @click="
               showExpressDetail(scope.row.id, scope.row.express.express_total)
             "
-          >
-            {{ scope.row.express ? scope.row.express.express_total || 0 : '-' }}
-          </p>
+          >{{ scope.row.express ? scope.row.express.express_total || 0 : '-' }}</p>
           <!-- 体验课不显示最后一次物流状态 -->
           <p>
             {{
-              scope.row.express
-                ? scope.row.express.last_express_status
-                  ? `最后一次${scope.row.express.last_express_status}`
-                  : '-'
-                : '-'
+            scope.row.express
+            ? scope.row.express.last_express_status
+            ? `最后一次${scope.row.express.last_express_status}`
+            : '-'
+            : '-'
             }}
           </p>
         </template>
@@ -387,7 +375,7 @@ export default {
           topic_id: this.topicArr
         })}`
       )
-    let relationIds = []
+      let relationIds = []
       if (
         topicRelation.data.PackagesTopicList &&
         topicRelation.data.PackagesTopicList.length > 0
@@ -395,7 +383,7 @@ export default {
         relationIds = topicRelation.data.PackagesTopicList.map(
           (item) => item.relation_id
         )
-      relationIds = [...relationIds, '500','501']
+      // relationIds = [...relationIds, '500','501']
 
       console.log(this.searchIn)
 
@@ -582,11 +570,11 @@ export default {
     openDetail(id, row, type) {
       // type 0体验课 2系统课
       row && console.log(row)
-      id && openBrowserTab(`/student-team/#/teamDetail/${id}/${type}`)
+      id && openBrowserTab(`/music_app/#/teamDetail/${id}/${type}`)
     },
     // 用户详情
     openUserDetail(id) {
-      id && openBrowserTab(`/users/#/details/${id}`)
+      id && openBrowserTab(`/music_app/#/details/${id}`)
     }
   }
 }

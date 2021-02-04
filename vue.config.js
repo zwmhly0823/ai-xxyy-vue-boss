@@ -10,21 +10,18 @@ const {
 } = require('./util')
 const { NODE_ENV } = process.env
 const projectName = process.argv[3] || 'dashboard'
-const name = defaultSettings.title || '小熊美术BOSS'
+const name = defaultSettings.title || '美术宝BOSS'
+const version = defaultSettings.version;
 const { BASE_URL } = process.env
-const ossConfig = {
-  bucket: 'xxyy-devtest',
-  region: 'oss-cn-hangzhou',
-  endpoint: 'oss-cn-hangzhou.aliyuncs.com',
-  accessKeyId: 'LTAI4G6Z1YdzS7yEMtrfBrtH',
-  accessKeySecret: 'T2WjNlLkAB4pDyMdfrx1aPHuQIEbaQ'
-}
 const env = BASE_URL || 'default' // default, dev, test, prod, live
-if (env==='prod'||env==='live'){
-  ossConfig.bucket = 'ai-xxyy-frontend-online'
-  ossConfig.accessKeyId = 'LTAI4FyK2VJrGFHM2Vj91ENc'
-  ossConfig.accessKeySecret = 'yl8eC6FyUJZKRbabJBPAxYi1WLrAZp' 
+
+const ossConfig = {
+  bucket: process.env.WEBPACK_ALIOSS_PLUGIN_BUCKET,
+  region: process.env.WEBPACK_ALIOSS_PLUGIN_REGION,
+  accessKeyId: process.env.WEBPACK_ALIOSS_PLUGIN_ACCESS_KEY_ID,
+  accessKeySecret: process.env.WEBPACK_ALIOSS_PLUGIN_ACCESS_KEY_SECRET
 }
+
 /**
  * api 环境切换，默认 dev
  */
@@ -55,7 +52,7 @@ console.log(NODE_ENV)
 
 module.exports = {
   publicPath:
-    NODE_ENV === 'production' ? `${baseUrl()}` : `/${camel2Line(projectName)}`,
+    NODE_ENV === 'production' ? `${baseUrl()}${version}` : `/${camel2Line(projectName)}`,
   pages: getEntry(),
   productionSourceMap: NODE_ENV !== 'production',
   configureWebpack: {
@@ -97,32 +94,24 @@ module.exports = {
     const ossDist = function() {
       switch (BASE_URL) {
         case 'default':
-          return 'xiaoxiong/ai-app-vue-boss-default/'
+          return 'ai-app-vue-boss-default'
         case 'dev':
-          return 'xiaoxiong/ai-app-vue-boss-dev/'
+          return 'ai-app-vue-boss-dev'
         case 'test':
-          return 'xiaoxiong/ai-app-vue-boss-test/'
+          return 'ai-app-vue-boss-test'
         case 'prod':
-          return 'xiaoxiong/ai-app-vue-boss-prod/'
+          return `ai-app-vue-boss-prod/${version}`
         case 'live':
-          return 'xiaoxiong/ai-app-vue-boss-live/'
+          return `ai-app-vue-boss-live/${version}`
         default:
-          return 'xiaoxiong/ai-app-vue-boss-default/'
+          return 'ai-app-vue-boss-default'
       }
     }
     if (NODE_ENV === 'production') {
-      // 上传阿里云oss
-      // config.plugin('webpack-aliyun-oss').use(WebpackAliyunOss, [
-      //   {
-      //     from: ['./dist/**'],
-      //     dist: `${ossDist()}`,
-      //     ...ossConfig
-      //   }
-      // ])
       config.plugin('webpack-alioss-plugin').use(WebpackAliOss, [
         {
-          ossBaseDir: ossDist(),
-          project: '',
+          ossBaseDir: 'xiaoxiong',
+          project:  ossDist(),
           auth: ossConfig,
           removeMode: false,
           existCheck: false,

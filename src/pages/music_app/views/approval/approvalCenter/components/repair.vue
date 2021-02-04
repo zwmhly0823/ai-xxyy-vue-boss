@@ -876,7 +876,7 @@ export default {
             if (res) {
               this.clearData()
               this.$router.push({
-                name: 'approvalCenter',
+                name: 'approval',
                 params: {
                   activeApprove: 'second'
                 }

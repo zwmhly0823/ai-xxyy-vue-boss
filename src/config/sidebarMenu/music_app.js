@@ -6,9 +6,15 @@
  * @LastEditors: Shentong
  * @LastEditTime: 2020-11-09 21:53:13
  */
-import { removeToken } from '@/utils/auth'
-import { baseUrl } from '@/utils/index'
-const staff = JSON.parse(localStorage.getItem('staff')) || {}
+
+import {
+  removeToken
+} from '@/utils/auth'
+import {
+  baseUrl
+} from '@/utils/index'
+
+var staff = JSON.parse(localStorage.getItem('staff')) || {}
 if (!staff) {
   removeToken()
   location.href = `${baseUrl()}login/#/`
@@ -20,6 +26,7 @@ const module = 'music_app'
  * 新增 教研 角色 （roleId: 19）
  * 美术BOSS只有 设置-员工账号 的权限
  */
+
 if (staff.roleId === '19') {
   bearArt = [
     // 设置 - 老师模块
@@ -32,17 +39,15 @@ if (staff.roleId === '19') {
         icon: 'iconiconset',
         module: 'teacher'
       },
-      children: [
-        {
-          path: '/teacherManagement',
-          name: 'teacherManagement',
-          meta: {
-            title: '员工帐号',
-            module: 'teacher',
-            show: true
-          }
+      children: [{
+        path: '/teacherManagement',
+        name: 'teacherManagement',
+        meta: {
+          title: '员工帐号',
+          module: 'teacher',
+          show: true
         }
-      ]
+      }]
     }
   ]
 } else {
@@ -55,18 +60,16 @@ if (staff.roleId === '19') {
   let uploadFilePeimission = []
 
   // TODO:
-  if (staff&&staff.mobile === '15801332536') {
-    uploadFilePeimission = [
-      {
-        path: '/uploadFile',
-        name: 'uploadFile',
-        meta: {
-          title: '上传素材',
-          // module: 'operating'
-          module
-        }
+  if (staff && staff.mobile === '15801332536') {
+    uploadFilePeimission = [{
+      path: '/uploadFile',
+      name: 'uploadFile',
+      meta: {
+        title: '上传素材',
+        // module: 'operating'
+        module
       }
-    ]
+    }]
   }
 
   // 管理员、
@@ -74,8 +77,7 @@ if (staff.roleId === '19') {
 
   // 超级管理员权限
   if (staff.roleId === '7') {
-    superOperatingRouter = [
-      {
+    superOperatingRouter = [{
         path: '/operatingSchedule',
         name: 'operatingSchedule',
         meta: {
@@ -94,8 +96,7 @@ if (staff.roleId === '19') {
         }
       }
     ]
-    superTeacherRouter = [
-      {
+    superTeacherRouter = [{
         path: '/teacherManagement',
         name: 'teacherManagement',
         meta: {
@@ -135,8 +136,7 @@ if (staff.roleId === '19') {
         icon: 'iconbanjiguanli',
         module
       },
-      children: [
-        {
+      children: [{
           path: '/trail/0/prepare',
           name: 'trialTeam0',
           meta: {
@@ -176,14 +176,13 @@ if (staff.roleId === '19') {
     },
     {
       path: '/trail/:status',
-      name: 'trialTeamV2',
+      name: '',
       meta: {
         title: '班级管理',
         icon: 'iconbanjiguanli',
         module
       },
-      children: [
-        {
+      children: [{
           path: '/trialTeam',
           name: 'trialTeam',
           meta: {
@@ -213,16 +212,14 @@ if (staff.roleId === '19') {
       meta: {
         title: '学员管理',
         icon: 'iconxueyuanguanli',
-        module: 'users'
-        // module
+        module
       },
-      children: [
-        {
+      children: [{
           path: '/trial',
           name: 'trial',
           meta: {
             title: '体验课',
-            module: 'users',
+            module,
             // module,
             show: true
           }
@@ -232,7 +229,7 @@ if (staff.roleId === '19') {
           name: 'system',
           meta: {
             title: '系统课',
-            module: 'users',
+            module,
             // module,
             show: true
           }
@@ -242,7 +239,7 @@ if (staff.roleId === '19') {
           name: 'allUsers',
           meta: {
             title: '全部学员',
-            module: 'users',
+            module,
             // module,
             show: true
           }
@@ -260,8 +257,7 @@ if (staff.roleId === '19') {
         // module: 'trading'
         module
       },
-      children: [
-        {
+      children: [{
           path: '/order',
           name: 'order',
           meta: {
@@ -411,17 +407,15 @@ if (staff.roleId === '19') {
         // module: 'finance'
         module
       },
-      children: [
-        {
-          path: '/financeRefound',
-          name: 'financeRefound',
-          meta: {
-            title: '退款',
-            // module: 'finance'
-            module
-          }
+      children: [{
+        path: '/financeRefound',
+        name: 'financeRefound',
+        meta: {
+          title: '退款',
+          // module: 'finance'
+          module
         }
-      ]
+      }]
     },
 
     // 运营中心
@@ -436,8 +430,7 @@ if (staff.roleId === '19') {
         module,
         bottom: true
       },
-      children: [
-        {
+      children: [{
           path: '/activityManagement',
           name: 'activityManagement',
           meta: {
@@ -543,8 +536,7 @@ if (staff.roleId === '19') {
         module: 'marketing'
         // module
       },
-      children: [
-        {
+      children: [{
           path: '/marketing',
           name: 'marketing',
           meta: {
@@ -605,8 +597,7 @@ if (staff.roleId === '19') {
         // module: 'outbound'
         module
       },
-      children: [
-        {
+      children: [{
           path: '/CallRecord',
           name: 'CallRecord',
           meta: {

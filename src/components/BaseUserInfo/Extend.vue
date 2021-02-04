@@ -95,7 +95,7 @@ export default {
       }
       const { id } = this.user
       // 新标签打开详情页
-      id && openBrowserTab(`/users/#/details/${id}`)
+      id && openBrowserTab(`/music_app/#/details/${id}`)
     },
 
     // 复制学员手机号

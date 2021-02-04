@@ -15,10 +15,12 @@ import 'normalize.css/normalize.css' // A modern alternative to CSS resets
 import '@/assets/styles/index.scss' // global css
 
 import $http from '@/api' // global
-import { getAppSubject, getAppSubjectCode } from '@/utils'
+import {
+  getAppSubject,
+  getAppSubjectCode
+} from '@/utils'
 
-Vue.config.productionTip = false
-console.log(getAppSubject(false))
+Vue.config.productionTip = false;
 const $subject = {
   key: getAppSubject(), // 大写 ’WRITE_APP‘
   lowerKey: getAppSubject(false), // 小写 ’WRITE_APP‘
@@ -29,7 +31,6 @@ Object.assign(Vue.prototype, {
   $http,
   $subject
 })
-
 const _Vue = new Vue({
   store,
   router,
@@ -37,3 +38,14 @@ const _Vue = new Vue({
 }).$mount('#app')
 
 window._Vue = _Vue
+_Vue.$router.beforeEach((to, from, next) => {
+  var isLogin = JSON.parse(localStorage.getItem('staff'))
+  // 判断是否登录
+  if (isLogin) {
+    next()
+  } else {
+    next({
+      name: 'login'
+    })
+  }
+})

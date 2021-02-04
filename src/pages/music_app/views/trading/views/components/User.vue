@@ -14,17 +14,19 @@
       <p @click="openUserDetail(user.id, user)">
         {{ user.username || '-' }}
         {{
-          user.birthday
-            ? user.birthday !== '0'
-              ? getAgeByBrithday(user.birthday)
-              : ''
-            : ''
+        user.birthday
+        ? user.birthday !== '0'
+        ? getAgeByBrithday(user.birthday)
+        : ''
+        : ''
         }}
       </p>
       <p>
-        <span @click="openUserDetail(user.id, user)">{{
+        <span @click="openUserDetail(user.id, user)">
+          {{
           user.mobile || '-'
-        }}</span>
+          }}
+        </span>
       </p>
     </div>
   </section>
@@ -60,10 +62,10 @@ export default {
       if (Object.keys(this.singleData).length) {
         uid &&
           openBrowserTab(
-            `/users/#/details/${uid}?isrefund=${this.singleData.isrefund}`
+            `/music_app/#/details/${uid}?isrefund=${this.singleData.isrefund}`
           )
       } else {
-        uid && openBrowserTab(`/users/#/details/${uid}`)
+        uid && openBrowserTab(`/music_app/#/details/${uid}`)
       }
     }
   }

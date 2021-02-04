@@ -13,9 +13,9 @@
 </template>
 <script>
 import AppLayout from '@/components/AppLayout/index.vue'
-console.log(11)
+
 export default {
-  name: 'art_app',
+  name: 'music_app',
   components: {
     AppLayout
   }

@@ -7,11 +7,6 @@
  * @LastEditTime: 2020-05-26 23:42:01
  */
 
-import Vue from 'vue'
-import VueRouter from 'vue-router'
-
-Vue.use(VueRouter)
-
 const routes = [
   // 就是自己根Vue实例的路由
   {
@@ -34,11 +29,5 @@ const routes = [
     component: () => import('../views/financeRefound.vue')
   }
 ]
-const router = new VueRouter({
-  // mode: 'history',
-  base: process.env.BASE_URL,
-  module: 'approval',
-  routes
-})
 
-export default router
+export default routes

@@ -3,8 +3,8 @@
  * @version:
  * @Author: Shentong
  * @Date: 2020-03-17 11:50:18
- * @LastEditors: Shentong
- * @LastEditTime: 2020-10-28 15:41:00
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2021-01-13 22:04:02
  */
 import axios from './axios'
 import { getToken } from '@/utils/auth'
@@ -39,14 +39,18 @@ export default {
    * @param {String} url [请求的url地址]
    * @param {Object} params [请求时携带的参数]
    */
-  get(url, params) {
+  get(url, params, extend = {}) {
     if (this.judgeToken()) {
+      const headers =
+        params && params.headers ? params.headers : this.getHeaders()
+      if (extend?.responseType === 'blob') {
+        headers.responseType = 'blob'
+      }
       return new Promise((resolve, reject) => {
         axios
           .get(url, {
             params: params,
-            headers:
-              params && params.headers ? params.headers : this.getHeaders()
+            headers: headers
           })
           .then((res) => {
             resolve(res)
@@ -63,14 +67,13 @@ export default {
    * @param {Object} params [请求时携带的参数]
    */
   post(url, params, extend = {}) {
-    console.log('kkk', url);
     if (process.env.NODE_ENV === 'development') {
       if (url.match(/graphql/)) {
         const reg = /[\s][\w]+\(query:/
         const matchs = params.query.match(reg)
         if (matchs && matchs.length) {
           const tail = matchs[0].replace(/\s/, '').replace('(query:', '')
-          url += `/${tail}`
+          url
         }
         const regParam = /\(query:[\w\W]+\)/
         const matchsParam = params.query.match(regParam)
@@ -141,7 +144,7 @@ export default {
     const subject = getAppSubject()
     // 增加操作人ID
     const staff = JSON.parse(localStorage.getItem('staff') || '{}')
-    const operatorId = staff && staff.id
+    const operatorId = (staff && staff.id) || ''
     const token = getToken() || ''
     const headers = {
       'Content-Type': 'application/json;charset=UTF-8',

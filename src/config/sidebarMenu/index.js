@@ -10,22 +10,21 @@
 // const teacher = localStorage.getItem('teacher')
 // teacherInfo = JSON.parse(teacher) || {} // dutyId: 1-体验课老师， 2-系统课老师
 
-import { getAppSubject } from '@/utils/index'
-import artApp from './art_app'
-import writeApp from './write_app'
+import {
+  getAppSubject
+} from '@/utils/index'
 import musicApp from './music_app'
 
 /**
  * TODO:当前打开项目
  */
+const staff = JSON.parse(localStorage.getItem('staff'))
+if (staff === null) {
+  window.location.replace('/login')
+}
+
 const subject = getAppSubject(false)
-let menu = musicApp
-if (subject === 'artApp') {
-  menu = artApp
-}
-if (subject === 'write_app') {
-  menu = writeApp
-}
+var menu = null
 if (subject === 'music_app') {
   menu = musicApp
 }

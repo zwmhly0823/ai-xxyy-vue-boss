@@ -333,9 +333,20 @@ export default {
     this.getChannelDetailPage()
   },
   mounted() {
-    window.addEventListener('scroll', this.handleScroll, true)
+    this.initScrollTop()
   },
   methods: {
+    initScrollTop() {
+      this.timer = null
+      this.timer = setTimeout(function() {
+        if (document.getElementById('channel-box')) {
+          window.addEventListener('scroll', this.handleScroll, true)
+          clearTimeout(this.timer)
+        } else {
+          this.initScrollTop()
+        }
+      }, 100)
+    },
     handleScroll() {
       const dom = document.getElementById('channel-boxs').scrollTop
       dom > 289 ? (this.tableShow = true) : (this.tableShow = false)

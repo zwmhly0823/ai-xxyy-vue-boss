@@ -141,13 +141,16 @@ export default {
   },
   created() {
     this.onQueryQuestionnairePage()
+    // 问卷调查地址
     this.isEnv = new RegExp('[0-9]').test(location.origin.split('/')[2])
-      ? 'https://test.meixiu.mobi/ai-app-h5-test/question'
+      ? 'https://ai-xxyy-default.yinyuebao.com/question'
+      : location.origin.includes('default')
+      ? 'https://ai-xxyy-default.yinyuebao.com/question'
       : location.origin.includes('test')
-      ? 'https://test.meixiu.mobi/ai-app-h5-test/question'
+      ? 'https://ai-xxyy-test.yinyuebao.com/question'
       : location.origin.includes('prod')
-      ? 'https://test.meixiu.mobi/ai-app-h5-test/question'
-      : 'https://www.xiaoxiongmeishu.com/h5/question'
+      ? 'https://ai-xxyy-prod.yinyuebao.com/question'
+      : 'https://ai-xxyy-live.yinyuebao.com/question'
   },
   methods: {
     handLeCopy(index, row) {
