@@ -100,7 +100,7 @@ module.exports = {
         case 'test':
           return 'ai-app-vue-boss-test'
         case 'prod':
-          return `ai-app-vue-boss-prod/${version}}`
+          return `ai-app-vue-boss-prod/${version}`
         case 'live':
           return `ai-app-vue-boss-live/${version}`
         default:
