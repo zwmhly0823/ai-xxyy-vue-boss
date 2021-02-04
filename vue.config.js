@@ -52,7 +52,7 @@ console.log(NODE_ENV)
 
 module.exports = {
   publicPath:
-    NODE_ENV === 'production' ? `${baseUrl()}` : `/${camel2Line(projectName)}/${version}`,
+    NODE_ENV === 'production' ? `${baseUrl()}${version}` : `/${camel2Line(projectName)}`,
   pages: getEntry(),
   productionSourceMap: NODE_ENV !== 'production',
   configureWebpack: {
