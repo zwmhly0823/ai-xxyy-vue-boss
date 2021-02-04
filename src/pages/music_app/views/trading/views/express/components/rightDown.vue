@@ -301,8 +301,8 @@ import axios from '@/api/axiosConfig'
 import { isToss, formatData } from '@/utils/index'
 import { mapState } from 'vuex'
 import expressDetail from '../../components/expressDetail'
-import modifyAddress from '@/pages/studentTeam/components/TabPane/components/modifyAddress'
-import logisticsForm from '@/pages/studentTeam/components/TabPane/components/logisticsForm'
+import modifyAddress from '@/pages/music_app/views/studentTeam/components/TabPane/components/modifyAddress'
+import logisticsForm from '@/pages/music_app/views/studentTeam/components/TabPane/components/logisticsForm'
 export default {
   props: ['dataExp', 'search'],
   components: {

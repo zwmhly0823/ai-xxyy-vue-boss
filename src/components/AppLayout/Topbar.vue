@@ -317,7 +317,7 @@ export default {
       console.log(command, isNew)
       // 如果角色是教研（roleId=18）,跳转到 设置-员工帐号
       const { roleId = '' } = this.userInfo
-      let path = `${baseUrl()}users/#/trial`
+      let path = `${baseUrl()}music_app/#/trial`
       if (command !== 'art_app') {
         path =
           roleId === '19'
@@ -327,7 +327,7 @@ export default {
         path =
           roleId === '19'
             ? `${baseUrl()}teacher/#/`
-            : `${baseUrl()}users/#/trial`
+            : `${baseUrl()}music_app/#/trial`
       }
       location.href = path
     },
@@ -337,7 +337,7 @@ export default {
       console.log(key, 'new tab')
       // 如果角色是教研（roleId=18）,跳转到 设置-员工帐号
       const { roleId = '' } = this.userInfo
-      let path = `/users/#/trial`
+      let path = `/music_app/#/trial`
       // 非小熊美术
       if (key !== 'art_app') {
         path =
@@ -345,7 +345,7 @@ export default {
             ? `/${key}/#/teacherManagement`
             : `/${key}/#/trialUsers`
       } else {
-        path = roleId === '19' ? `/teacher/#/` : `/users/#/trial`
+        path = roleId === '19' ? `/teacher/#/` : `/music_app/#/trial`
       }
       openBrowserTab(path)
     }

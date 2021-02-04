@@ -33,40 +33,36 @@
                     <div @click="userHandle(scope.row)" class="primary-text">
                       <p>
                         {{
-                          scope.row.userInfo && scope.row.userInfo.username
-                            ? scope.row.userInfo.username
-                            : '-'
+                        scope.row.userInfo && scope.row.userInfo.username
+                        ? scope.row.userInfo.username
+                        : '-'
                         }}
                       </p>
                       <p>
                         {{
-                          scope.row.userInfo && scope.row.userInfo.mobile
-                            ? scope.row.userInfo.mobile
-                            : '-'
+                        scope.row.userInfo && scope.row.userInfo.mobile
+                        ? scope.row.userInfo.mobile
+                        : '-'
                         }}
                       </p>
                     </div>
                   </template>
                 </el-table-column>
-                <el-table-column
-                  label="订单编号·订单交易流水号"
-                  align="center"
-                  min-width="130"
-                >
+                <el-table-column label="订单编号·订单交易流水号" align="center" min-width="130">
                   <template slot-scope="scope">
                     <p>
                       {{
-                        scope.row.orderInfo && scope.row.orderInfo.out_trade_no
-                          ? scope.row.orderInfo.out_trade_no
-                          : '-'
+                      scope.row.orderInfo && scope.row.orderInfo.out_trade_no
+                      ? scope.row.orderInfo.out_trade_no
+                      : '-'
                       }}
                     </p>
                     <p>
                       {{
-                        scope.row.paymentPayInfo &&
-                        scope.row.paymentPayInfo.transaction_id
-                          ? scope.row.paymentPayInfo.transaction_id
-                          : '-'
+                      scope.row.paymentPayInfo &&
+                      scope.row.paymentPayInfo.transaction_id
+                      ? scope.row.paymentPayInfo.transaction_id
+                      : '-'
                       }}
                     </p>
                   </template>
@@ -90,11 +86,13 @@
                 </el-table-column>
                 <el-table-column label="发票号码" align="center">
                   <template slot-scope="scope">
-                    <span>{{
+                    <span>
+                      {{
                       scope.row.orderInfo && scope.row.orderInfo.invoice_code
-                        ? scope.row.orderInfo.invoice_code
-                        : '-'
-                    }}</span>
+                      ? scope.row.orderInfo.invoice_code
+                      : '-'
+                      }}
+                    </span>
                   </template>
                 </el-table-column>
                 <el-table-column label="开票申请时间" align="center">
@@ -104,9 +102,11 @@
                 </el-table-column>
                 <el-table-column label="开票完成时间" align="center">
                   <template slot-scope="scope">
-                    <span>{{
+                    <span>
+                      {{
                       scope.row.complete_time ? scope.row.complete_time : '-'
-                    }}</span>
+                      }}
+                    </span>
                   </template>
                 </el-table-column>
                 <el-table-column label="开票状态" align="center">
@@ -125,8 +125,7 @@
                       class="editStyle"
                       target="_blank"
                       v-if="scope.row.invoice_pdf"
-                      >详情</a
-                    >
+                    >详情</a>
                     <span v-else>-</span>
                   </template>
                 </el-table-column>
@@ -198,7 +197,7 @@ export default {
     // 用户详情页
     userHandle(row) {
       // 新标签打开详情页
-      row.uid && openBrowserTab(`/users/#/details/${row.uid}`)
+      row.uid && openBrowserTab(`/music_app/#/details/${row.uid}`)
     },
     // 换页
     pageChange_handler(res) {

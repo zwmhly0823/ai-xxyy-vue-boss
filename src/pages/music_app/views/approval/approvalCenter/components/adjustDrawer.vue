@@ -50,14 +50,14 @@
           <el-link
             v-if="!is3d"
             type="primary"
-            :href="'/users/#/details/' + dItem.valueId"
+            :href="'/music_app/#/details/' + dItem.valueId"
             target="_blank"
             >{{ dItem.value }}</el-link
           >
           <el-link
             v-else
             type="primary"
-            :href="'/users/#/details/' + dItem.valueId"
+            :href="'/music_app/#/details/' + dItem.valueId"
             target="_blank"
             >{{ dItem.value }}</el-link
           >

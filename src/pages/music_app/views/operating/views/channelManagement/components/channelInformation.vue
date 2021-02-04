@@ -17,21 +17,14 @@
           @channelInputValue="channelInputValue"
           @channelLevelValue="channelLevelValue"
         ></channel-search>
-        <el-button
-          class="add-btn"
-          @click="onAddChannel"
-          size="mini"
-          type="primary"
-          >添加渠道</el-button
-        >
+        <el-button class="add-btn" @click="onAddChannel" size="mini" type="primary">添加渠道</el-button>
         <el-button
           class="bulkDownload"
           size="mini"
           type="primary"
           @click="onBulkDownload"
           :loading="downLoad"
-          >批量下载</el-button
-        >
+        >批量下载</el-button>
       </div>
     </div>
     <div class="channelAdd-table">
@@ -47,26 +40,23 @@
               <div size="mini" type="text" @click="batchBtn(scope.row)">
                 <span style="cursor:pointer">编辑</span>
               </div>
-              <div
-                @mouseenter="handleEdit(scope.$index, scope.row)"
-                slot="reference"
-              >
+              <div @mouseenter="handleEdit(scope.$index, scope.row)" slot="reference">
                 <img src="@/assets/images/point.png" />
               </div>
             </el-Popover>
           </template>
         </el-table-column>
-        <el-table-column type="index" label="序号" align="center">
-        </el-table-column>
-        <el-table-column prop="id" label="渠道id" align="center">
-        </el-table-column>
+        <el-table-column type="index" label="序号" align="center"></el-table-column>
+        <el-table-column prop="id" label="渠道id" align="center"></el-table-column>
         <el-table-column label="渠道分类" width="180" align="center">
           <template slot-scope="scope">
             <div class="logistics-wx-box">
               <span>{{ scope.row.p_channel_class_name }}</span>
-              <span style="margin-left:20px">{{
+              <span style="margin-left:20px">
+                {{
                 scope.row.channel_class_name
-              }}</span>
+                }}
+              </span>
             </div>
           </template>
         </el-table-column>
@@ -75,17 +65,9 @@
           label="渠道名称"
           align="center"
           show-overflow-tooltip
-        >
-        </el-table-column>
-        <el-table-column
-          prop="channel_level"
-          label="渠道等级"
-          align="center"
-          show-overflow-tooltip
-        >
-          <template slot-scope="scope">
-            {{ scope.row.channel_level | channelLevelFilter }}
-          </template>
+        ></el-table-column>
+        <el-table-column prop="channel_level" label="渠道等级" align="center" show-overflow-tooltip>
+          <template slot-scope="scope">{{ scope.row.channel_level | channelLevelFilter }}</template>
         </el-table-column>
         <el-table-column prop="status" label="渠道状态" align="center">
           <template slot-scope="scope">
@@ -99,13 +81,7 @@
             <span v-else>-</span>
           </template>
         </el-table-column>
-        <el-table-column
-          prop="ctime"
-          label="创建时间"
-          width="160"
-          align="center"
-        >
-        </el-table-column>
+        <el-table-column prop="ctime" label="创建时间" width="160" align="center"></el-table-column>
         <el-table-column width="300" align="center" label="其他">
           <template slot-scope="scope">
             <div
@@ -121,24 +97,20 @@
                 style="color:#2a75ed;font-size:12px;"
                 @click="onLink(scope.row)"
                 target="_blank"
-                >查看链接</a
-              >
+              >查看链接</a>
               <a
                 v-if="scope.row.short_er_code"
                 style="color:#2a75ed;font-size:12px;margin-left:10px;margin-right:10px;"
                 size="mini"
                 type="text"
                 @click="onUpload(scope.row)"
-              >
-                下载二维码</a
-              >
+              >下载二维码</a>
               <a
                 v-if="scope.row.isExtension"
                 style="color:#2a75ed;font-size:12px;"
                 @click="onExtension(scope.row)"
                 target="_blank"
-                >推广人统计</a
-              >
+              >推广人统计</a>
             </div>
             <div v-else class="logistics-wx-box">
               <span>-</span>
@@ -161,10 +133,7 @@
       :modal="false"
       size="30%"
     >
-      <add-cahnnel
-        @addChannelShowBtn="addChannelShowBtn"
-        @addChannelShow="addChannelShow"
-      />
+      <add-cahnnel @addChannelShowBtn="addChannelShowBtn" @addChannelShow="addChannelShow" />
     </el-drawer>
     <el-drawer
       class="drawer-detail"

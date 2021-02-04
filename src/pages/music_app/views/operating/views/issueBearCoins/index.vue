@@ -11,64 +11,28 @@
         />
         <!-- table -->
         <div class="coins-table">
-          <el-table
-            :data="tableData"
-            style="width: 100%;border-top:1px solid #EBEEF5"
-          >
-            <el-table-column
-              label="用户编号"
-              min-width="15%"
-              align="center"
-              prop="userNum"
-            >
+          <el-table :data="tableData" style="width: 100%;border-top:1px solid #EBEEF5">
+            <el-table-column label="用户编号" min-width="15%" align="center" prop="userNum">
               <template slot-scope="scope">
                 <span v-if="!+scope.row.userNum">-</span>
-                <span v-else class="user-detail" @click="userHandle(scope.row)">
-                  {{ scope.row.userNum }}
-                </span>
+                <span
+                  v-else
+                  class="user-detail"
+                  @click="userHandle(scope.row)"
+                >{{ scope.row.userNum }}</span>
               </template>
             </el-table-column>
-            <el-table-column
-              label="补发类型"
-              min-width="15%"
-              align="center"
-              prop="transTypeName"
-            >
-            </el-table-column>
+            <el-table-column label="补发类型" min-width="15%" align="center" prop="transTypeName"></el-table-column>
             <el-table-column label="补发数量" min-width="15%" align="center">
               <template slot-scope="scope">
                 <span v-if="scope.row.trans_type === '14'">-</span>
                 <span>{{ scope.row.amount }}</span>
               </template>
             </el-table-column>
-            <el-table-column
-              label="补发原因"
-              min-width="35%"
-              align="center"
-              prop="reason"
-            >
-            </el-table-column>
-            <el-table-column
-              label="发放时间"
-              min-width="20%"
-              align="center"
-              prop="ctime"
-            >
-            </el-table-column>
-            <el-table-column
-              label="状态"
-              min-width="15%"
-              align="center"
-              prop="statusName"
-            >
-            </el-table-column>
-            <el-table-column
-              label="备注"
-              min-width="25%"
-              align="center"
-              prop="failedReason"
-            >
-            </el-table-column>
+            <el-table-column label="补发原因" min-width="35%" align="center" prop="reason"></el-table-column>
+            <el-table-column label="发放时间" min-width="20%" align="center" prop="ctime"></el-table-column>
+            <el-table-column label="状态" min-width="15%" align="center" prop="statusName"></el-table-column>
+            <el-table-column label="备注" min-width="25%" align="center" prop="failedReason"></el-table-column>
           </el-table>
         </div>
         <m-pagination
@@ -212,7 +176,7 @@ export default {
       // const { id } = user.user
       const id = user.uid
       // 新标签打开详情页
-      id && openBrowserTab(`/users/#/details/${id}`)
+      id && openBrowserTab(`/music_app/#/details/${id}`)
     }
   }
 }

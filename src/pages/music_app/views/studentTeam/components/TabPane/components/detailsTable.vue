@@ -34,15 +34,9 @@
           <template slot="header" slot-scope="scope">
             <el-Popover popper-class="batch-btn" trigger="hover">
               <!-- 标题气泡内容 -->
-              <div size="mini" type="text" @click="batchBtn">
-                批量发送加好友短信
-              </div>
+              <div size="mini" type="text" @click="batchBtn">批量发送加好友短信</div>
               <!-- 标题点击...图片 -->
-              <div
-                @click="headerPoint(scope.$index, scope)"
-                v-show="moreTitle"
-                slot="reference"
-              >
+              <div @click="headerPoint(scope.$index, scope)" v-show="moreTitle" slot="reference">
                 <img src="../../../../../../../assets/images/point.png" />
               </div>
             </el-Popover>
@@ -55,10 +49,7 @@
                 <span v-show="moreTitle === false">发送加好友短信</span>
               </div>
               <!-- 点击...图片 -->
-              <div
-                @mouseenter="handleEdit(scope.$index, scope.row)"
-                slot="reference"
-              >
+              <div @mouseenter="handleEdit(scope.$index, scope.row)" slot="reference">
                 <img src="../../../../../../../assets/images/point.png" />
               </div>
             </el-Popover>
@@ -71,26 +62,28 @@
               <img
                 class="scope-info-img borders"
                 :src="`${scope.row.head}?x-oss-process=image/resize,l_100`"
-                alt=""
+                alt
               />
               <div class="info-telephone">
-                <span @click="openUserDetail(scope.row.student_id)">{{
+                <span @click="openUserDetail(scope.row.student_id)">
+                  {{
                   scope.row.mobile
-                }}</span>
+                  }}
+                </span>
               </div>
               <span
                 @click="openUserDetail(scope.row.student_id)"
                 class="info-sex"
-                >{{ scope.row.sex }}</span
-              >
+              >{{ scope.row.sex }}</span>
               <span
                 @click="openUserDetail(scope.row.student_id)"
                 class="info-age"
-                >{{ scope.row.birthday }}</span
-              >
-              <span class="info-basics">{{
+              >{{ scope.row.birthday }}</span>
+              <span class="info-basics">
+                {{
                 scope.row.base_painting_text
-              }}</span>
+                }}
+              </span>
             </div>
           </template>
         </el-table-column>
@@ -102,8 +95,7 @@
           :width="item.width"
           :label="item.label"
           :default-sort="{ prop: 'date', order: 'descending' }"
-        >
-        </el-table-column>
+        ></el-table-column>
         <!-- 已加好友 -->
         <el-table-column prop="added_wechat" label="已加好友">
           <!-- <template v-if="renderHtml" slot="header"> -->
@@ -129,14 +121,9 @@
               class="group-img"
               v-if="scope.row.added_wechat == 0"
               src="@/assets/images/error.png"
-              alt=""
+              alt
             />
-            <img
-              class="group-img"
-              v-else
-              src="@/assets/images/success.png"
-              alt=""
-            />
+            <img class="group-img" v-else src="@/assets/images/success.png" alt />
             <el-dropdown @command="commandFriend" trigger="click">
               <span class="el-dropdown-link icon-warps">
                 <i
@@ -146,16 +133,12 @@
               </span>
               <el-dropdown-menu slot="dropdown">
                 <el-dropdown-item command="1">
-                  <img
-                    style="width: 18px;"
-                    src="@/assets/images/success.png"
-                    alt=""
-                  />
+                  <img style="width: 18px;" src="@/assets/images/success.png" alt />
                 </el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
             <div>{{ scope.row.added_wechat_time }}</div>
-            <span style="display: none;"> {{ scope.row.group }}</span>
+            <span style="display: none;">{{ scope.row.group }}</span>
           </template>
         </el-table-column>
         <!-- 已进群 -->
@@ -182,14 +165,9 @@
               class="group-img"
               v-if="scope.row.added_group == 0"
               src="@/assets/images/error.png"
-              alt=""
+              alt
             />
-            <img
-              class="group-img"
-              v-else
-              src="@/assets/images/success.png"
-              alt=""
-            />
+            <img class="group-img" v-else src="@/assets/images/success.png" alt />
             <el-dropdown @command="onGroup" trigger="click">
               <span class="el-dropdown-link icon-warps">
                 <i
@@ -199,16 +177,12 @@
               </span>
               <el-dropdown-menu slot="dropdown">
                 <el-dropdown-item command="1">
-                  <img
-                    style="width: 18px;"
-                    src="@/assets/images/success.png"
-                    alt=""
-                  />
+                  <img style="width: 18px;" src="@/assets/images/success.png" alt />
                 </el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
             <div>{{ scope.row.added_group_time }}</div>
-            <span style="display: none;"> {{ scope.row.group }}</span>
+            <span style="display: none;">{{ scope.row.group }}</span>
           </template>
         </el-table-column>
         <!-- 关注公众号 -->
@@ -231,20 +205,10 @@
             </div>
           </template>
           <template slot-scope="scope">
-            <img
-              class="group-img"
-              v-if="scope.row.follow == 0"
-              src="@/assets/images/error.png"
-              alt=""
-            />
-            <img
-              class="group-img"
-              v-else
-              src="@/assets/images/success.png"
-              alt=""
-            />
+            <img class="group-img" v-if="scope.row.follow == 0" src="@/assets/images/error.png" alt />
+            <img class="group-img" v-else src="@/assets/images/success.png" alt />
             <div>{{ scope.row.fast_follow_time }}</div>
-            <span style="display: none;"> {{ scope.row }}</span>
+            <span style="display: none;">{{ scope.row }}</span>
           </template>
         </el-table-column>
       </el-table>
@@ -275,8 +239,7 @@
               <span
                 class="primary-text"
                 @click="openUserDetail(scope.row.user_id)"
-                >{{ scope.row.mobile }}</span
-              >
+              >{{ scope.row.mobile }}</span>
               <br />
               <span>{{ scope.row.ctime }}</span>
             </div>
@@ -289,9 +252,9 @@
                 v-if="scope.row.head != ''"
                 class="logistics-wx-img borders"
                 :src="`${scope.row.head}?x-oss-process=image/resize,l_100`"
-                alt=""
+                alt
               />
-              <span v-else class="logistics-wx-imgs borders"> - </span>
+              <span v-else class="logistics-wx-imgs borders">-</span>
               <span class="logistics-nickname">{{ scope.row.nickname }}</span>
             </div>
           </template>
@@ -299,16 +262,18 @@
         <el-table-column key="3" label="收货人及地址" width="300">
           <template slot-scope="scope">
             <div>
-              <span class="logistics-address-name">{{
+              <span class="logistics-address-name">
+                {{
                 formatTeamNameSup(scope.row.product_name)
-              }}</span>
+                }}
+              </span>
               <br />
               <div v-if="scope.row.receipt_name">
                 <span>{{ scope.row.receipt_name }}</span>
                 <span>{{ scope.row.receipt_tel }}</span>
                 <!-- showModifyAddressBtn &&
                       scope.row.id == rowId &&
-                      (expressStatus === '待审核' || expressStatus === '无效') -->
+                (expressStatus === '待审核' || expressStatus === '无效')-->
                 <el-button
                   v-if="
                     showModifyAddressBtn &&
@@ -321,8 +286,7 @@
                   type="primary"
                   plain
                   @click="onModifyAddress"
-                  >修改地址</el-button
-                >
+                >修改地址</el-button>
                 <br />
                 <span>{{ scope.row.province }}</span>
                 <span>{{ scope.row.city }}</span>
@@ -338,16 +302,14 @@
                   type="primary"
                   plain
                   @click="handelAddExpress"
-                  >帮他填写</el-button
-                >
+                >帮他填写</el-button>
                 <el-button
                   icon="el-icon-postcard"
                   size="mini"
                   type="primary"
                   plain
                   @click="onUrgentAddress"
-                  >催发地址</el-button
-                >
+                >催发地址</el-button>
               </div>
             </div>
           </template>
@@ -385,8 +347,7 @@
               <span
                 class="primary-text"
                 @click="openUserDetail(scope.row.id)"
-                >{{ scope.row.mobile }}</span
-              >
+              >{{ scope.row.mobile }}</span>
               <br />
               <span>{{ scope.row.express_ctime }}</span>
             </div>
@@ -399,9 +360,9 @@
                 v-if="scope.row.head != ''"
                 class="login-wx-img borders"
                 :src="`${scope.row.head}?x-oss-process=image/resize,l_100`"
-                alt=""
+                alt
               />
-              <span v-else class="login-wx-imgs borders"> - </span>
+              <span v-else class="login-wx-imgs borders">-</span>
               <span class="login-nickname">{{ scope.row.nickname }}</span>
             </div>
           </template>
@@ -448,8 +409,7 @@
               <span
                 class="primary-text"
                 @click="openUserDetail(scope.row.student_id)"
-                >{{ scope.row.mobile }}</span
-              >
+              >{{ scope.row.mobile }}</span>
               <br />
               <span>{{ scope.row.buy_time }}</span>
             </div>
@@ -462,12 +422,14 @@
                 v-if="scope.row.head != ''"
                 class="participateIn-wx-img borders"
                 :src="`${scope.row.head}?x-oss-process=image/resize,l_100`"
-                alt=""
+                alt
               />
-              <span v-else class="participateIn-wx-imgs borders"> - </span>
-              <span class="participateIn-nickname">{{
+              <span v-else class="participateIn-wx-imgs borders">-</span>
+              <span class="participateIn-nickname">
+                {{
                 scope.row.nickname
-              }}</span>
+                }}
+              </span>
             </div>
           </template>
         </el-table-column>
@@ -531,8 +493,7 @@
               <span
                 class="primary-text"
                 @click="openUserDetail(scope.row.student_id)"
-                >{{ scope.row.mobile }}</span
-              >
+              >{{ scope.row.mobile }}</span>
               <br />
               <span>{{ scope.row.buytime }}</span>
               <br />
@@ -547,9 +508,9 @@
                 v-if="scope.row.head != ''"
                 class="works-wx-img borders"
                 :src="`${scope.row.head}?x-oss-process=image/resize,l_100`"
-                alt=""
+                alt
               />
-              <span v-else class="works-wx-imgs borders"> - </span>
+              <span v-else class="works-wx-imgs borders">-</span>
               <span class="works-nickname">{{ scope.row.nickname }}</span>
             </div>
           </template>
@@ -572,7 +533,7 @@
                 :src="
                   `${scope.row.task_image}?x-oss-process=image/resize,l_100`
                 "
-                alt=""
+                alt
               />
               <span v-else>未上传</span>
             </div>
@@ -594,19 +555,10 @@
                   v-if="audioIndex === index && rowIdDianping == scope.row.id"
                   class="audio-imgs"
                   src="@/assets/images/sound-active.gif"
-                  alt=""
+                  alt
                 />
-                <img
-                  v-else
-                  class="audio-img"
-                  src="@/assets/images/playing-icon.png"
-                  alt=""
-                />
-                <audio
-                  @ended="audioEnded"
-                  :ref="'audioRef' + index"
-                  :src="item.task_sound"
-                ></audio>
+                <img v-else class="audio-img" src="@/assets/images/playing-icon.png" alt />
+                <audio @ended="audioEnded" :ref="'audioRef' + index" :src="item.task_sound"></audio>
                 <span class="audio-second">{{ item.task_sound_second }}</span>
               </div>
               <!-- {{ item.task_sound ? item.task_sound : '-' }} -->
@@ -622,7 +574,7 @@
           :prop="item.prop"
           :width="item.width"
           :label="item.label"
-        ></el-table-column> -->
+        ></el-table-column>-->
       </el-table>
       <!-- 分页 -->
       <m-pagination
@@ -634,19 +586,10 @@
       />
     </div>
 
-    <el-dialog
-      :destroy-on-close="true"
-      title="填写物流信息"
-      :visible.sync="showExpress"
-      width="30%"
-    >
+    <el-dialog :destroy-on-close="true" title="填写物流信息" :visible.sync="showExpress" width="30%">
       <logistics-form @addExpress="addExpress" :formData="formData" />
     </el-dialog>
-    <el-dialog
-      :destroy-on-close="true"
-      :visible.sync="showModifyAddress"
-      width="30%"
-    >
+    <el-dialog :destroy-on-close="true" :visible.sync="showModifyAddress" width="30%">
       <modify-address
         @modifyAddressExpress="modifyAddressExpress"
         v-if="showModifyAddress"
@@ -953,7 +896,7 @@ export default {
     // 打开用户详情
     openUserDetail(uid, row) {
       console.log(row)
-      uid && openBrowserTab(`/users/#/details/${uid}`)
+      uid && openBrowserTab(`/music_app/#/details/${uid}`)
     }
   }
 }

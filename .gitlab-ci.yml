@@ -1,0 +1,139 @@
+stages:
+  - deploy_default
+  - deploy_dev
+  - deploy_test
+  - deploy_prod
+  - deploy_live
+  
+variables:
+  DEPLOY_USER: "wanghongbao liyafei"
+
+  KUBECTL_CLI_OPTS: "kubectl --kubeconfig=/home/gitlab-runner/xxyy-devtest-k8s.config"
+  
+  WEBPACK_ALIOSS_PLUGIN_ACCESS_KEY_ID: ${WEBPACK_ALIOSS_PLUGIN_ACCESS_KEY_ID_TEST}
+  WEBPACK_ALIOSS_PLUGIN_ACCESS_KEY_SECRET: ${WEBPACK_ALIOSS_PLUGIN_ACCESS_KEY_SECRET_TEST}
+  WEBPACK_ALIOSS_PLUGIN_BUCKET: ${WEBPACK_ALIOSS_PLUGIN_BUCKET_TEST}
+
+
+  KUBECTL_CLI_OPTS_LIVE: "kubectl --kubeconfig=/home/gitlab-runner/xxyy-online-k8s.config"
+
+before_script:
+  - export result=$(echo $DEPLOY_USER | grep $GITLAB_USER_NAME)
+  - if [ "$CI_JOB_STAGE" == "deploy_live" -a "$result" == "" ]; then echo '没有权限' && exit 1; fi
+
+deploy_default:
+  stage: deploy_default
+  script:
+    # 打包default环境
+    - echo $PATH
+    - rm -rf dist
+    - yarn cache dir
+    - npm set progress=false
+    - yarn config set registry https://registry.npm.taobao.org/
+    - yarn config set sass_binary_site http://cdn.npm.taobao.org/dist/node-sass -g
+    - yarn --network-timeout 60000
+    - yarn install
+    - yarn run build:default
+    - export KUBERNETES_NAMESPACE=ai-xxyy-default
+    - ./mvnw deploy
+    - ${KUBECTL_CLI_OPTS} apply -f target/classes/META-INF/jkube/kubernetes.yml -n ${KUBERNETES_NAMESPACE}
+  only:
+    - /.*default.*$/
+  tags:
+    - xxyy-k8s-fe
+  
+deploy_dev:
+  stage: deploy_dev
+  script:
+    # 打包dev环境
+    - echo $PATH
+    - rm -rf dist
+    - yarn cache dir
+    - npm set progress=false
+    - yarn config set registry https://registry.npm.taobao.org/
+    - yarn config set sass_binary_site http://cdn.npm.taobao.org/dist/node-sass -g
+    - yarn --network-timeout 60000
+    - yarn install
+    - yarn run build:dev
+    - export KUBERNETES_NAMESPACE=ai-xxyy-dev
+    - ./mvnw deploy
+    - ${KUBECTL_CLI_OPTS} apply -f target/classes/META-INF/jkube/kubernetes.yml -n ${KUBERNETES_NAMESPACE}
+  only:
+    - /.*dev.*$/
+  tags:
+    - xxyy-k8s-fe
+
+
+deploy_test:
+  stage: deploy_test
+  script:
+    # 打包test环境
+    - echo $PATH
+    - rm -rf dist
+    - yarn cache dir
+    - npm set progress=false
+    - yarn config set registry https://registry.npm.taobao.org/
+    - yarn config set sass_binary_site http://cdn.npm.taobao.org/dist/node-sass -g
+    - yarn --network-timeout 60000
+    - yarn install
+    - yarn run build:test
+    - export KUBERNETES_NAMESPACE=ai-xxyy-test
+    - ./mvnw deploy
+    - ${KUBECTL_CLI_OPTS} apply -f target/classes/META-INF/jkube/kubernetes.yml -n ${KUBERNETES_NAMESPACE}
+  only:
+    - /.*test.*$/
+  tags:
+    - xxyy-k8s-fe
+
+
+deploy_prod:
+  stage: deploy_prod
+  script:
+    # 打包prod环境
+    - export WEBPACK_ALIOSS_PLUGIN_ACCESS_KEY_ID=${WEBPACK_ALIOSS_PLUGIN_ACCESS_KEY_ID_LIVE}
+    - export WEBPACK_ALIOSS_PLUGIN_ACCESS_KEY_SECRET=${WEBPACK_ALIOSS_PLUGIN_ACCESS_KEY_SECRET_LIVE}
+    - export WEBPACK_ALIOSS_PLUGIN_BUCKET=${WEBPACK_ALIOSS_PLUGIN_BUCKET_LIVE}
+  
+    - echo $PATH
+    - rm -rf dist
+    - yarn cache dir
+    - npm set progress=false
+    - yarn config set registry https://registry.npm.taobao.org/
+    - yarn config set sass_binary_site http://cdn.npm.taobao.org/dist/node-sass -g
+    - yarn --network-timeout 60000
+    - yarn install
+    - yarn run build:prod
+    - export KUBERNETES_NAMESPACE=ai-xxyy-prod
+    - ./mvnw deploy
+    - ${KUBECTL_CLI_OPTS} apply -f target/classes/META-INF/jkube/kubernetes.yml -n ${KUBERNETES_NAMESPACE}
+  only:
+    - /.*prod.*$/
+  tags:
+    - xxyy-k8s-fe
+
+deploy_live:
+  stage: deploy_live
+  script:
+    #打包live环境
+    - export WEBPACK_ALIOSS_PLUGIN_ACCESS_KEY_ID=${WEBPACK_ALIOSS_PLUGIN_ACCESS_KEY_ID_LIVE}
+    - export WEBPACK_ALIOSS_PLUGIN_ACCESS_KEY_SECRET=${WEBPACK_ALIOSS_PLUGIN_ACCESS_KEY_SECRET_LIVE}
+    - export WEBPACK_ALIOSS_PLUGIN_BUCKET=${WEBPACK_ALIOSS_PLUGIN_BUCKET_LIVE}
+    
+    - echo $PATH
+    - rm -rf dist
+    - yarn cache dir
+    - npm set progress=false
+    - yarn config set registry https://registry.npm.taobao.org/
+    - yarn config set sass_binary_site http://cdn.npm.taobao.org/dist/node-sass -g
+    - yarn --network-timeout 60000
+    - yarn install
+    - yarn run build:live
+    - export KUBERNETES_NAMESPACE=ai-xxyy-live
+    - ./mvnw deploy
+    - ${KUBECTL_CLI_OPTS_LIVE} apply -f target/classes/META-INF/jkube/kubernetes.yml -n ${KUBERNETES_NAMESPACE}
+  only:
+    - /^master-.*$/
+  tags:
+    - xxyy-k8s-fe
+  when:
+    manual

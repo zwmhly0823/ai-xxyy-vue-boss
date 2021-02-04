@@ -10,12 +10,7 @@
   <!-- wrap_lk:给分页留了40高度 -->
   <section class="wrap_lk">
     <div class="search_lk">
-      <el-form
-        :inline="true"
-        size="mini"
-        label-position="right"
-        label-width="80px"
-      >
+      <el-form :inline="true" size="mini" label-position="right" label-width="80px">
         <!--type 1-系统课，0-体验课 2-全部 -->
         <el-form-item label="学员搜索:">
           <SearchPhoneAndUsername
@@ -36,8 +31,7 @@
             start-placeholder="开始日期"
             end-placeholder="结束日期"
             :default-time="['00:00:00', '23:59:59']"
-          >
-          </el-date-picker>
+          ></el-date-picker>
         </el-form-item>
         <el-form-item label="老师搜索:">
           <GroupSell tip="老师姓名" :isMultiple="true" @result="_wai2" />
@@ -62,12 +56,7 @@
     </div>
     <div class="tabpan_lk">
       <el-tabs v-model="tabsValue" @tab-click="handleClick">
-        <el-tab-pane
-          v-for="(value, key) in tabs"
-          :key="value"
-          :label="key"
-          :name="value"
-        ></el-tab-pane>
+        <el-tab-pane v-for="(value, key) in tabs" :key="value" :label="key" :name="value"></el-tab-pane>
       </el-tabs>
     </div>
     <div class="table_lk">
@@ -78,23 +67,14 @@
               type="primary"
               :href="userLink(scope.row.userId)"
               target="_blank"
-              >{{ scope.row.userName }}</el-link
-            >
+            >{{ scope.row.userName }}</el-link>
           </template>
         </el-table-column>
-        <el-table-column prop="title" label="活动名称" align="center">
-        </el-table-column>
+        <el-table-column prop="title" label="活动名称" align="center"></el-table-column>
         <el-table-column label="活动赠品" align="center">
-          <template slot-scope="scope">
-            {{ scope.row.rewardName + '*' + scope.row.rewardValue }}
-          </template>
+          <template slot-scope="scope">{{ scope.row.rewardName + '*' + scope.row.rewardValue }}</template>
         </el-table-column>
-        <el-table-column
-          prop="systemTeacherName"
-          label="辅导老师"
-          align="center"
-        >
-        </el-table-column>
+        <el-table-column prop="systemTeacherName" label="辅导老师" align="center"></el-table-column>
         <el-table-column prop="buytime" label="截图" align="center">
           <template slot-scope="scope">
             <el-image
@@ -102,34 +82,26 @@
               fit="contain"
               :src="scope.row.uploadUrl"
               :preview-src-list="[scope.row.uploadUrl]"
-            >
-            </el-image>
+            ></el-image>
           </template>
         </el-table-column>
-        <el-table-column prop="ctime" label="上传截图时间" align="center">
-        </el-table-column>
-        <el-table-column label="审核时间" prop="endTime" align="center">
-        </el-table-column>
-        <el-table-column prop="status" label="审核状态" align="center">
-        </el-table-column>
-        <el-table-column prop="approvalRemark" label="驳回原因" align="center">
-        </el-table-column>
-        <el-table-column prop="approvalName" label="审核人" align="center">
-        </el-table-column>
+        <el-table-column prop="ctime" label="上传截图时间" align="center"></el-table-column>
+        <el-table-column label="审核时间" prop="endTime" align="center"></el-table-column>
+        <el-table-column prop="status" label="审核状态" align="center"></el-table-column>
+        <el-table-column prop="approvalRemark" label="驳回原因" align="center"></el-table-column>
+        <el-table-column prop="approvalName" label="审核人" align="center"></el-table-column>
         <el-table-column label="操作" align="center">
           <template slot-scope="scope">
             <el-button
               type="text"
               v-if="scope.row.status === '待审核'"
               @click="handleEdit(scope.$index, scope.row)"
-              >审核</el-button
-            >
+            >审核</el-button>
             <el-button
               type="text"
               v-if="scope.row.status === '审核驳回'"
               @click="handleEdit_2(scope.$index, scope.row)"
-              >复审</el-button
-            >
+            >复审</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -143,15 +115,10 @@
         @size-change="handleSizeChange"
         :current-page="currentPage"
         @current-change="handleCurrentChange"
-      >
-      </el-pagination>
+      ></el-pagination>
     </div>
     <div class="pdrawer_lk">
-      <drawerLk
-        ref="drawer_lk"
-        :arrangeArr="arrangeArr"
-        :approvingItem="approvingItem"
-      />
+      <drawerLk ref="drawer_lk" :arrangeArr="arrangeArr" :approvingItem="approvingItem" />
     </div>
   </section>
 </template>
@@ -207,7 +174,7 @@ export default {
         if (origin.includes('test')) {
           url = 'ai-app-vue-boss-test/'
         }
-        return `${origin}/${url}users/#/details/${userId}`
+        return `${origin}/${url}music_app/#/details/${userId}`
       }
     }
   },

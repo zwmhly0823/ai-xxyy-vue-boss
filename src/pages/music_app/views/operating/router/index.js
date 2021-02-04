@@ -4,13 +4,35 @@
  * @LastEditTime: 2020-10-23 15:08:48
  * @FilePath: /ai-app-vue-toss/src/pages/studentTeam/router/index.js
  */
-import Vue from 'vue'
-import VueRouter from 'vue-router'
-
-Vue.use(VueRouter)
-
-const routes = [
+const operatingSchedule = [{
+    path: '/operatingSchedule',
+    name: 'operatingSchedule',
+    meta: {
+      title: '招生排期',
+      keepAlive: true
+    },
+    component: () => import('../views/enrollmentSchedule/index.vue')
+  },
+  // 新增、编辑
   {
+    path: '/addSchedule/:period/:courseType/',
+    name: 'addSchedule',
+    meta: {
+      title: '新建排期',
+      keepAlive: false
+    },
+    component: () => import('../views/addSchedule/index.vue')
+  }, {
+    path: '/scheduleDetail/:period/:courseType/',
+    name: 'scheduleDetail',
+    meta: {
+      title: '排期详情',
+      keepAlive: false
+    },
+    component: () => import('../views/scheduleDetail/index.vue')
+  },
+]
+const operatingRoutes = [{
     path: '/',
     name: 'operating',
     meta: {
@@ -39,15 +61,6 @@ const routes = [
       import('../views/activityManagement/addActivityManage/index.vue')
   },
   {
-    path: '/operatingSchedule',
-    name: 'operatingSchedule',
-    meta: {
-      title: '招生排期',
-      keepAlive: true
-    },
-    component: () => import('../views/enrollmentSchedule/index.vue')
-  },
-  {
     path: '/channelManagement',
     name: 'channelManagement',
     meta: {
@@ -56,25 +69,7 @@ const routes = [
     },
     component: () => import('../views/channelManagement/channelManagement.vue')
   },
-  // 新增、编辑
-  {
-    path: '/addSchedule/:period/:courseType/',
-    name: 'addSchedule',
-    meta: {
-      title: '新建排期',
-      keepAlive: false
-    },
-    component: () => import('../views/addSchedule/index.vue')
-  },
-  {
-    path: '/scheduleDetail/:period/:courseType/',
-    name: 'scheduleDetail',
-    meta: {
-      title: '排期详情',
-      keepAlive: false
-    },
-    component: () => import('../views/scheduleDetail/index.vue')
-  },
+
   {
     path: '/comment',
     name: 'comment',
@@ -130,15 +125,7 @@ const routes = [
     },
     component: () => import('../views/pushConfig/index.vue')
   },
-  {
-    path: '/changePhoneNumber',
-    name: 'changePhoneNumber',
-    meta: {
-      title: '手机号替换',
-      keepAlive: false
-    },
-    component: () => import('../views/changePhoneNumber/index.vue')
-  },
+
   {
     path: '/problem',
     name: 'problem',
@@ -166,22 +153,29 @@ const routes = [
     },
     component: () => import('../views/recommend/changeRecommend.vue')
   },
-  {
-    path: '/uploadFile',
-    name: 'uploadFile',
-    meta: {
-      title: '上传素材',
-      keepAlive: false
-    },
-    component: () => import('../views/uploadFile/index.vue')
-  }
+
 ]
-
-const router = new VueRouter({
-  // mode: 'history',
-  base: process.env.BASE_URL,
-  module: 'teacher',
-  routes
-})
-
-export default router
+const operatingUploadList = [{
+  path: '/uploadFile',
+  name: 'uploadFile',
+  meta: {
+    title: '上传素材',
+    keepAlive: false
+  },
+  component: () => import('../views/uploadFile/index.vue')
+}]
+const operatingMobile = [{
+  path: '/changePhoneNumber',
+  name: 'changePhoneNumber',
+  meta: {
+    title: '手机号替换',
+    keepAlive: false
+  },
+  component: () => import('../views/changePhoneNumber/index.vue')
+}]
+export {
+  operatingRoutes,
+  operatingSchedule,
+  operatingUploadList,
+  operatingMobile
+}

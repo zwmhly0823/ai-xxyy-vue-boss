@@ -13,13 +13,7 @@
       <!-- <el-scrollbar wrap-class="user-wrapper" id="users-scroll"> -->
       <div class="app-main-container-scrollbar change-phone">
         <el-card shadow="never">
-          <el-form
-            :inline="true"
-            size="mini"
-            :model="phoneForm"
-            :rules="rules"
-            ref="phoneForm"
-          >
+          <el-form :inline="true" size="mini" :model="phoneForm" :rules="rules" ref="phoneForm">
             <el-form-item label="原手机号" prop="oldMobile">
               <el-input
                 v-model="phoneForm.oldMobile"
@@ -37,9 +31,7 @@
               ></el-input>
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" @click="onSubmit('phoneForm')"
-                >替换</el-button
-              >
+              <el-button type="primary" @click="onSubmit('phoneForm')">替换</el-button>
             </el-form-item>
           </el-form>
         </el-card>
@@ -53,7 +45,7 @@
                 @result="getSearchData('oldPhone', arguments)"
                 tip="原手机号查询"
                 ref="searchUserByPhone"
-                teamId=""
+                teamId
               />
             </el-form-item>
 
@@ -63,36 +55,30 @@
                 :dataType="true"
                 tip="新手机号查询"
                 ref="searchUserByPhone"
-                teamId=""
+                teamId
               />
             </el-form-item>
           </el-form>
           <!-- dom -->
           <div class="tableInner" ref="tableInner"></div>
 
-          <el-table
-            :data="recordList"
-            :height="tableHeight"
-            style="width: 100%"
-          >
+          <el-table :data="recordList" :height="tableHeight" style="width: 100%">
             <el-table-column label="用户ID">
               <template slot-scope="scope">
-                <p @click="userHandle(scope.row.user)" class="primary-text">
-                  {{ scope.row.user && scope.row.user.user_num }}
-                </p>
+                <p
+                  @click="userHandle(scope.row.user)"
+                  class="primary-text"
+                >{{ scope.row.user && scope.row.user.user_num }}</p>
               </template>
             </el-table-column>
-            <el-table-column prop="old_mobile" label="原手机号">
-            </el-table-column>
-            <el-table-column prop="new_mobile" label="新手机号">
-            </el-table-column>
+            <el-table-column prop="old_mobile" label="原手机号"></el-table-column>
+            <el-table-column prop="new_mobile" label="新手机号"></el-table-column>
             <el-table-column prop="name" label="修改人">
-              <template slot-scope="scope">
-                {{ (scope.row.staff && scope.row.staff.real_name) || '-' }}
-              </template>
+              <template
+                slot-scope="scope"
+              >{{ (scope.row.staff && scope.row.staff.real_name) || '-' }}</template>
             </el-table-column>
-            <el-table-column prop="utime_text" label="修改时间">
-            </el-table-column>
+            <el-table-column prop="utime_text" label="修改时间"></el-table-column>
           </el-table>
         </div>
         <m-pagination
@@ -210,7 +196,7 @@ export default {
       }
       const { id } = row
       // 新标签打开详情页
-      id && openBrowserTab(`/users/#/details/${id}`)
+      id && openBrowserTab(`/music_app/#/details/${id}`)
     },
 
     handleCurrentChange(page) {

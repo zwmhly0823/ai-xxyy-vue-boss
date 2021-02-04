@@ -15,7 +15,7 @@
       @cell-mouse-enter="handleMouseEnter"
       @cell-mouse-leave="handleMouseLeave"
     >
-      <el-table-column type="selection" min-width="25" fixed> </el-table-column>
+      <el-table-column type="selection" min-width="25" fixed></el-table-column>
       <el-table-column min-width="25" fixed v-if="sortItem.id == 6">
         <template slot-scope="scope">
           <el-dropdown trigger="click">
@@ -27,9 +27,7 @@
                 <div v-if="selectNum > 1">
                   <el-dropdown-item>
                     <div>
-                      <el-button type="text" @click="handleBatchPass()"
-                        >批量审核通过
-                      </el-button>
+                      <el-button type="text" @click="handleBatchPass()">批量审核通过</el-button>
                     </div>
                   </el-dropdown-item>
                 </div>
@@ -63,24 +61,15 @@
           </el-dropdown>
         </template>
       </el-table-column>
-      <el-table-column
-        label="用户及注册时间"
-        min-width="200"
-        fixed
-        v-if="showCol.userAddDate"
-      >
+      <el-table-column label="用户及注册时间" min-width="200" fixed v-if="showCol.userAddDate">
         <template slot-scope="scope">
           <div class="user" if="scope.row.user">
             <div class="name">
-              <el-button
-                type="text"
-                class="trail"
-                @click="userHandle(scope.row.user)"
-              >
+              <el-button type="text" class="trail" @click="userHandle(scope.row.user)">
                 {{
-                  (scope.row.user &&
-                    `${scope.row.user.mobile} ${scope.row.user.username}`) ||
-                    ''
+                (scope.row.user &&
+                `${scope.row.user.mobile} ${scope.row.user.username}`) ||
+                ''
                 }}
               </el-button>
             </div>
@@ -88,18 +77,12 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column
-        label="商品信息"
-        min-width="200"
-        v-if="showCol.productName"
-      >
+      <el-table-column label="商品信息" min-width="200" v-if="showCol.productName">
         <template slot-scope="scope">
           <div class="product">
             <span>{{ scope.row.center_product_code || '-' }}</span>
           </div>
-          <div class="gray-text">
-            {{ scope.row.product_name }} {{ scope.row.product_version }}
-          </div>
+          <div class="gray-text">{{ scope.row.product_name }} {{ scope.row.product_version }}</div>
         </template>
       </el-table-column>
       <el-table-column
@@ -110,32 +93,24 @@
       >
         <template slot-scope="scope">
           <div class="product">
-            <span>{{
+            <span>
+              {{
               +regtype === 1 || regtype === '2,3'
-                ? scope.row.sup
-                : scope.row.product_name
-            }}</span>
+              ? scope.row.sup
+              : scope.row.product_name
+              }}
+            </span>
           </div>
         </template>
       </el-table-column>
-      <el-table-column
-        v-if="showCol.level"
-        label="级别"
-        min-width="120"
-        :key="1"
-      >
+      <el-table-column v-if="showCol.level" label="级别" min-width="120" :key="1">
         <template slot-scope="scope">
           <div class="product">
             <span>{{ scope.row.level || '--' }}</span>
           </div>
         </template>
       </el-table-column>
-      <el-table-column
-        label="物流类型"
-        min-width="200"
-        v-if="showCol.replenishType"
-        :key="2"
-      >
+      <el-table-column label="物流类型" min-width="200" v-if="showCol.replenishType" :key="2">
         <template slot-scope="scope">
           <div class="product">
             <span>{{ regtypeEnum[scope.row.regtype] || '--' }}</span>
@@ -145,55 +120,35 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column
-        label="补发类别"
-        min-width="200"
-        v-if="showCol.replenishFamily"
-        :key="3"
-      >
+      <el-table-column label="补发类别" min-width="200" v-if="showCol.replenishFamily" :key="3">
         <template slot-scope="scope">
           <div class="product">
             <span>{{ scope.row.regtype_text || '--' }}</span>
           </div>
         </template>
       </el-table-column>
-      <el-table-column
-        label="补发原因"
-        min-width="200"
-        v-if="showCol.replenishReason"
-        :key="4"
-      >
+      <el-table-column label="补发原因" min-width="200" v-if="showCol.replenishReason" :key="4">
         <template slot-scope="scope">
           <div class="product">
             <span>{{ scope.row.operator_name || '--' }}申请</span>
           </div>
           <div class="gray-text">
-            <span
-              >{{ scope.row.replenish_reason_text || '--' }}&nbsp;&nbsp;&nbsp;{{
-                scope.row.express_remark || '--'
-              }}</span
-            >
+            <span>
+              {{ scope.row.replenish_reason_text || '--' }}&nbsp;&nbsp;&nbsp;{{
+              scope.row.express_remark || '--'
+              }}
+            </span>
           </div>
         </template>
       </el-table-column>
-      <el-table-column
-        label="申请人"
-        min-width="180"
-        v-if="showCol.applicant"
-        :key="5"
-      >
+      <el-table-column label="申请人" min-width="180" v-if="showCol.applicant" :key="5">
         <template slot-scope="scope">
           <div class="product">
             <span>{{ scope.row.operator_name }}</span>
           </div>
         </template>
       </el-table-column>
-      <el-table-column
-        label="活动类型"
-        min-width="180"
-        v-if="showCol.courseType"
-        :key="6"
-      >
+      <el-table-column label="活动类型" min-width="180" v-if="showCol.courseType" :key="6">
         <template slot-scope="scope">
           <div class="product">
             <span>{{ scope.row.regtype_text }}</span>
@@ -211,13 +166,8 @@
             <span>{{ scope.row.product_version || '-' }}</span>
           </div>
         </template>
-      </el-table-column> -->
-      <el-table-column
-        label="收货信息"
-        width="280"
-        v-if="showCol.receiptInfo"
-        :key="8"
-      >
+      </el-table-column>-->
+      <el-table-column label="收货信息" width="280" v-if="showCol.receiptInfo" :key="8">
         <template slot-scope="scope">
           <div class="address">
             <div class="take">
@@ -249,63 +199,48 @@
                 size="mini"
                 type="primary"
                 plain
-                >修改地址</el-button
-              >
+              >修改地址</el-button>
               <el-button
                 v-show="sortItem.id === '0'"
                 icon="el-icon-edit"
                 size="mini"
                 type="primary"
                 plain
-                >填写地址</el-button
-              >
+              >填写地址</el-button>
             </div>
           </div>
         </template>
       </el-table-column>
-      <el-table-column
-        label="期数"
-        min-width="150"
-        v-if="showCol.term"
-        :key="10"
-      >
+      <el-table-column label="期数" min-width="150" v-if="showCol.term" :key="10">
         <template slot-scope="scope">
           <div class="product">
-            <span>{{
+            <span>
+              {{
               ManagementList[`${scope.row.newtype}${scope.row.term}`] || '-'
-            }}</span>
+              }}
+            </span>
           </div>
         </template>
       </el-table-column>
-      <el-table-column
-        label="班级信息"
-        min-width="150"
-        v-if="showCol.className"
-        :key="11"
-      >
+      <el-table-column label="班级信息" min-width="150" v-if="showCol.className" :key="11">
         <template slot-scope="scope">
           <!-- <div class="product">
             <span>{{
               scope.row.course_day ? scope.row.course_day + '开课' : '--'
             }}</span>
-          </div> -->
+          </div>-->
           <div class="product">
             {{
-              scope.row.lastTeamInfo ? scope.row.lastTeamInfo.team_name : '--'
+            scope.row.lastTeamInfo ? scope.row.lastTeamInfo.team_name : '--'
             }}
           </div>
         </template>
       </el-table-column>
-      <el-table-column
-        label="班级"
-        min-width="150"
-        v-if="showCol.classNameBf"
-        :key="19"
-      >
+      <el-table-column label="班级" min-width="150" v-if="showCol.classNameBf" :key="19">
         <template slot-scope="scope">
           <div>
             {{
-              scope.row.lastTeamInfo ? scope.row.lastTeamInfo.team_name : '--'
+            scope.row.lastTeamInfo ? scope.row.lastTeamInfo.team_name : '--'
             }}
           </div>
         </template>
@@ -319,67 +254,41 @@
         <template slot-scope="scope">
           <div class="product">
             {{
-              scope.row.lastTeacherInfo
-                ? scope.row.lastTeacherInfo.realname
-                : ''
+            scope.row.lastTeacherInfo
+            ? scope.row.lastTeacherInfo.realname
+            : ''
             }}
           </div>
           <div class="gray-text">
             {{
-              scope.row.lastTeacherInfo
-                ? scope.row.lastTeacherInfo.group_name
-                : '--'
+            scope.row.lastTeacherInfo
+            ? scope.row.lastTeacherInfo.group_name
+            : '--'
             }}
           </div>
         </template>
       </el-table-column>
-      <el-table-column
-        label="物流状态"
-        min-width="200"
-        v-if="showCol.expressStatus"
-        :key="13"
-      >
+      <el-table-column label="物流状态" min-width="200" v-if="showCol.expressStatus" :key="13">
         <template slot-scope="scope">
           <div class="express">
-            <div :class="'wait_' + scope.row.express_status">
-              {{ scope.row.express_status_chinese }}
-            </div>
+            <div :class="'wait_' + scope.row.express_status">{{ scope.row.express_status_chinese }}</div>
             <div
               v-if="
                 scope.row.express_status == 0 || scope.row.express_status == 6
               "
-            >
-              追踪
-            </div>
-            <el-button
-              type="text"
-              class="trail"
-              v-else
-              @click="Express(scope.row)"
-            >
-              追踪
-            </el-button>
+            >追踪</div>
+            <el-button type="text" class="trail" v-else @click="Express(scope.row)">追踪</el-button>
           </div>
         </template>
       </el-table-column>
-      <el-table-column
-        label="失败原因"
-        min-width="200"
-        v-if="showCol.expressRemark"
-        :key="9"
-      >
+      <el-table-column label="失败原因" min-width="200" v-if="showCol.expressRemark" :key="9">
         <template slot-scope="scope">
           <div class="gray-text">
             <span>{{ scope.row.express_remark || '--' }}</span>
           </div>
         </template>
       </el-table-column>
-      <el-table-column
-        label="物流时效"
-        min-width="200"
-        v-if="showCol.expressInfo"
-        :key="14"
-      >
+      <el-table-column label="物流时效" min-width="200" v-if="showCol.expressInfo" :key="14">
         <template slot-scope="scope">
           <div class="gray-text">
             <div>创建: {{ scope.row.crtime }}</div>
@@ -389,25 +298,14 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column
-        label="附件详情"
-        min-width="200"
-        v-if="showCol.approvalReissueInfo"
-        :key="20"
-      >
+      <el-table-column label="附件详情" min-width="200" v-if="showCol.approvalReissueInfo" :key="20">
         <template slot-scope="scope">
-          <el-button type="text" @click="showEnclosureDialog(scope.row)"
-            >详情</el-button
-          >
+          <el-button type="text" @click="showEnclosureDialog(scope.row)">详情</el-button>
         </template>
       </el-table-column>
     </el-table>
     <div class="drawer-body">
-      <express-detail
-        :transferExpress="transferExpress"
-        @refresh="getExpressList"
-        ref="zi"
-      />
+      <express-detail :transferExpress="transferExpress" @refresh="getExpressList" ref="zi" />
     </div>
 
     <div class="dialog-shenhe">
@@ -423,11 +321,7 @@
             <div>物流商品类型：</div>
             <div class="mess">
               <div class="ms">
-                <ul
-                  class="infinite-list"
-                  v-infinite-scroll
-                  style="overflow:auto"
-                >
+                <ul class="infinite-list" v-infinite-scroll style="overflow:auto">
                   <li
                     :key="item.id"
                     v-for="item in checkBatchParams"
@@ -444,26 +338,19 @@
           <div class="message" v-else>
             <div>物流商品类型：</div>
             <div class="mess" :key="i" v-for="(item, i) in checkParams">
-              <div class="ms">
-                {{ item.term }}期 {{ item.sup }} {{ item.product_name }}
-              </div>
+              <div class="ms">{{ item.term }}期 {{ item.sup }} {{ item.product_name }}</div>
             </div>
           </div>
           <div class="choose-product">
             <div>选择承运商：</div>
             <div class="dropdown">
-              <el-select
-                v-model="value1"
-                placeholder="请选择承运商"
-                @change="selectExpress"
-              >
+              <el-select v-model="value1" placeholder="请选择承运商" @change="selectExpress">
                 <el-option
                   v-for="item in options"
                   :key="item.value1"
                   :label="item.label"
                   :value="item.value1"
-                >
-                </el-option>
+                ></el-option>
               </el-select>
             </div>
           </div>
@@ -531,16 +418,8 @@
         @click="downloadImg(enclosureimg, '图片')"
         style="position: absolute;top:44px;"
         type="text"
-      >
-        下载图片
-      </el-button>
-      <img
-        v-if="enclosureimg"
-        id="girlImg"
-        style="width:100%;"
-        :src="enclosureimg"
-        alt=""
-      />
+      >下载图片</el-button>
+      <img v-if="enclosureimg" id="girlImg" style="width:100%;" :src="enclosureimg" alt />
       <video v-if="enclosurevideo" width="100%" height="300" controls>
         <source :src="enclosurevideo" type="video/mp4" />
       </video>
@@ -559,9 +438,9 @@ import {
 } from '@/utils/index'
 import { mapState } from 'vuex'
 import dayjs from 'dayjs'
-import expressDetail from '@/pages/art_app/views/trading/views/components/expressDetail'
-import modifyAddress from '@/pages/art_app/views/studentTeam/components/TabPane/components/modifyAddress'
-import logisticsForm from '@/pages/art_app/views/studentTeam/components/TabPane/components/logisticsForm'
+import expressDetail from '@/components/art_app/expressDetail'
+import modifyAddress from '@/components/art_app/modifyAddress'
+import logisticsForm from '@/components/art_app/logisticsForm'
 import {
   replenishTypeList,
   replenishReasonSearchList,
@@ -813,7 +692,7 @@ export default {
       }
       const { id } = user
       // 新标签打开详情页
-      id && openBrowserTab(`/users/#/details/${id}`)
+      id && openBrowserTab(`/music_app/#/details/${id}`)
     },
     // 初始化searchIn
     initTableData() {
