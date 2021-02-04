@@ -44,38 +44,72 @@ import LearnRecord from './modules/LearnRecord' // 学习记录
 import Setting from './modules/Setting'
 import TeamV2 from './modules/TeamV2'
 import Active from './modules/Active'
+import TeamV3 from './modules/studentTeam/TeamV3' // 班级接口
 
-export default Object.assign(
-  {},
+
+export default Object.assign({},
   // { writeApp },
-  { Base },
-  { Login },
-  { Order },
-  { User },
-  { Team },
-  { StudentTerm },
-  { Express },
-  { Permission },
-  { Department },
-  { Product },
-  { Teacher },
-  { Weixin },
-  { Operating },
-  { Statistics },
-  { RiviewCourse },
-  { DownloadExcel },
-  { Backend },
-  { RefundApproval },
-  { Approval },
-  { Finance },
-  { WorkerHandover },
-  { Staff },
-  { NoticeCenter },
-  { Community },
-  { Outbound },
-  { Marketing },
-  { LearnRecord },
-  { Setting },
-  { TeamV2 },
-  { Active },
+  {
+    Base
+  }, {
+    Login
+  }, {
+    Order
+  }, {
+    User
+  }, {
+    Team
+  }, {
+    StudentTerm
+  }, {
+    Express
+  }, {
+    Permission
+  }, {
+    Department
+  }, {
+    Product
+  }, {
+    Teacher
+  }, {
+    Weixin
+  }, {
+    Operating
+  }, {
+    Statistics
+  }, {
+    RiviewCourse
+  }, {
+    DownloadExcel
+  }, {
+    Backend
+  }, {
+    RefundApproval
+  }, {
+    Approval
+  }, {
+    Finance
+  }, {
+    WorkerHandover
+  }, {
+    Staff
+  }, {
+    NoticeCenter
+  }, {
+    Community
+  }, {
+    Outbound
+  }, {
+    Marketing
+  }, {
+    LearnRecord
+  }, {
+    Setting
+  }, {
+    TeamV2
+  }, {
+    Active
+  }, {
+    TeamV3
+  },
 )

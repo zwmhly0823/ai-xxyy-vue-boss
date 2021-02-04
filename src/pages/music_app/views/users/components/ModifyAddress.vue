@@ -1,5 +1,5 @@
 <!--
- * @Descripttion: 添加无地址用户收货地址.  copy from '@/pages/studentTeam/components/TabPane/components/logisticsForm'
+ * @Descripttion: 添加无地址用户收货地址.  copy from '@/pages/music_app/views/studentTeam/components/TabPane/components/logisticsForm'
  * @version: 
  * @Author: panjian
  * @Date: 2020-04-01 13:24:40

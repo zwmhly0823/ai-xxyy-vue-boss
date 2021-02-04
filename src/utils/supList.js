@@ -161,3 +161,29 @@ export function formatTeamNameSup(teamName) {
 /**
  * 美术 - 课程难度更改 END
  */
+export function formatTeamNameSupReverse(teamName) {
+  if (!teamName) return
+  const upperName = teamName.toLocaleUpperCase()
+  let idx = -1
+  if (upperName.indexOf('S1-基础') > -1) {
+    idx = upperName.indexOf('S1-基础')
+  }
+  if (upperName.indexOf('S1-进阶') > -1) {
+    idx = upperName.indexOf('S1-进阶')
+  }
+  if (upperName.indexOf('S2-基础') > -1) {
+    idx = upperName.indexOf('S2-基础')
+  }
+  if (upperName.indexOf('S2-进阶') > -1) {
+    idx = upperName.indexOf('S2-进阶')
+  }
+  if (upperName.indexOf('S3专项技能课') > -1) {
+    idx = upperName.indexOf('S3专项技能课')
+  }
+
+  if (idx >= 0) {
+    const s = upperName.substr(idx, 5)
+    teamName = teamName.replace(s, SUP_LEVEL_LIST_UPPER_REVERSE.get(s))
+  }
+  return teamName
+}

@@ -43,7 +43,7 @@
        keepAlive: true
      },
      hidden: true,
-     component: () => import('../views/trialTeam/index.vue')
+     component: () => import('../views/trial-v3/index.vue')
    },
    {
      path: '/systemTeam', // 系统课班级
@@ -62,7 +62,7 @@
        title: '班级中心'
      },
      hidden: true,
-     component: () => import('../views/teamDetail/index.vue')
+     component: () => import('../views/teamDetail/trial-v3/index.vue')
    },
  ]
  export default routes;

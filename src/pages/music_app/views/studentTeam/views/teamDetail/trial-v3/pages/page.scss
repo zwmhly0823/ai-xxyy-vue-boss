@@ -1,0 +1,91 @@
+// user page common scss
+
+$dangerColor: #f56c6c;
+$mainColor: #2a75ed;
+$successColor: #67c23a;
+$grayColor: #f0f1f2;
+
+.danger {
+  color: $dangerColor;
+}
+// .success {
+//   color: $successColor;
+// }
+// .main-text {
+//   color: #333;
+// }
+// .ellipsis {
+//   white-space: nowrap;
+//   overflow: hidden;
+//   text-overflow: ellipsis;
+// }
+.user-container {
+  ::v-deep {
+    .el-table-column--selection .cell {
+      padding: 0 0 0 10px;
+    }
+    // .el-table th,
+    // .el-table td {
+    //   padding: 5px 0;
+    // }
+    p {
+      margin: 0;
+      line-height: 20px;
+    }
+    .level {
+      flex-flow: wrap;
+      justify-content: flex-start;
+    }
+    .el-switch__core {
+      height: 14px;
+      width: 30px !important;
+      &:after {
+        width: 10px;
+        height: 10px;
+      }
+    }
+    .el-switch.is-checked .el-switch__core::after {
+      margin-left: -11px;
+    }
+  }
+}
+.show-tips {
+  padding: 10px;
+  background-color: #f8fafc;
+  font-size: 12px;
+}
+.user-survey {
+  cursor: pointer;
+  &:hover {
+    background-color: rgba(42, 117, 237, 0.25);
+  }
+  p {
+    // margin: 0;
+    span {
+      padding: 0 5px 0 2px;
+    }
+  }
+}
+.user-follow {
+  .flex-1 {
+    overflow: hidden;
+  }
+  i {
+    margin-left: 8px;
+    cursor: pointer;
+  }
+}
+.prepare {
+  i,
+  span {
+    padding: 0 5px 0 3px;
+  }
+  i {
+    &.el-icon-check {
+      color: $successColor;
+    }
+    &.el-icon-close {
+      color: #999;
+    }
+  }
+}
