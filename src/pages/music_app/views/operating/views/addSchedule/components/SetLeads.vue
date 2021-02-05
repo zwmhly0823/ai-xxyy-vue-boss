@@ -7,7 +7,7 @@
         class="btn-directed"
         @click="exportExcel"
       >
-        转介绍规则导入
+        上传转介绍配置
       </el-button>
       <el-button
         type="primary"
