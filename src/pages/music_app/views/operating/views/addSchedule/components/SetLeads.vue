@@ -7,7 +7,7 @@
         class="btn-directed"
         @click="exportExcel"
       >
-        导入数据
+        转介绍规则导入
       </el-button>
       <el-button
         type="primary"

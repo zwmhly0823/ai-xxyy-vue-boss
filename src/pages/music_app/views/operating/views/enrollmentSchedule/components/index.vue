@@ -133,7 +133,7 @@
           label="状态"
           align="center"
         ></el-table-column>
-        <el-table-column label="操作" align="center" width="200">
+        <el-table-column label="操作" align="center" width="220">
           <template slot-scope="scope">
             <div class="editStyle">
               <span style="margin-right:15px" @click="downlaodExcel(scope.row)"
@@ -355,11 +355,14 @@ export default {
         content.forEach((item) => {
           if (['待开课', '上课中', '已结课'].includes(item.status)) {
             item.intruSwitchName = '招生完毕'
+            // item.intruSwitchName = ''
           } else if (['待开始', '招生中'].includes(item.status)) {
-            item.intruSwitchName = '停止招生'
+            // item.intruSwitchName = '停止招生'
+            item.intruSwitchName = '关闭转介绍'
           }
           if (enrollArr.includes(item.period + '')) {
-            item.intruSwitchName = '恢复招生'
+            // item.intruSwitchName = '恢复招生'
+            item.intruSwitchName = '打开转介绍'
           }
         })
 

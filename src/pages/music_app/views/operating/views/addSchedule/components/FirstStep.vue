@@ -453,7 +453,7 @@ export default {
     },
     nextStep() {
       const sendFrom = this.pacakageFormInfo()
-      console.log(sendFrom)
+      
       // TODO:
       this.$refs.formInfo.validate((valid) => {
         if (valid) {
@@ -464,12 +464,12 @@ export default {
 
             this.period = period
             // console
-            this.$store.commit('setSchedulePeriod', 2)
+            // this.$store.commit('setSchedulePeriod', 2)
             this.$emit('listenStepStatus', sendFrom)
           }
-          
+          this.$emit('listenStepStatus', sendFrom)
           // 掉接口 TODO:
-          this.addScheduleFirstStep(sendFrom, cb)
+          // this.addScheduleFirstStep(sendFrom, cb)
         } else {
           return false
         }
@@ -477,15 +477,14 @@ export default {
     },
     // 新增招生排期第一步-add
     async addScheduleFirstStep(params, cb) {
-      // const loadingInstance = Loading.service({
-      //   target: '.app-main',
-      //   lock: true,
-      //   text: '正在保存...',
-      //   fullscreen: true
-      // })
+      const loadingInstance = Loading.service({
+        target: '.app-main',
+        lock: true,
+        text: '正在保存...',
+        fullscreen: true
+      })
       try {
         const _res = await this.$http.Operating.addScheduleFirstStep(params)
-        
         if (_res.code === 0) cb(_res)
       } catch (err) {
         this.$message({
