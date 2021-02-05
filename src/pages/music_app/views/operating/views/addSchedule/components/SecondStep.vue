@@ -135,6 +135,12 @@ export default {
       if (this.departmentQuery) {
         this.query = Object.assign({}, this.departmentQuery || {})
       }
+      var courseType = this.params.courseType==0?1:2
+      if(this.query){
+        this.query.duty_id = courseType;
+      }else{
+        this.query = {duty_id:courseType}
+      }
       const query = this.query ? JSON.stringify(this.query) : ''
       // tab数据
       const res = await this.$http.Teacher.getTeacherRealnameAndId(
