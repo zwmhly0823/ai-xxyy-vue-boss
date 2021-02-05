@@ -121,10 +121,10 @@ export default {
     handleSubmit() {
       const { form } = this
       // 编辑的时候不保存密码
-      if(form.id){
+      if(this.handleType !== 'add'){
         delete form.password
       }
-      console.log(form)
+      
       const flag = Object.keys(form).some((item) => {
         return form[item] === ''
       })
