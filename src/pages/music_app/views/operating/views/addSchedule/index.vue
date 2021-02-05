@@ -125,7 +125,6 @@ export default {
   methods: {
     // 第一步 点击下一步 监听
     oneStepNext(val) {
-      console.log(val)
       if (val) this.stepStatus++
     },
     /**
