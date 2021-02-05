@@ -111,7 +111,15 @@ if (staff.roleId === '19') {
           title: '员工微信',
           module: 'teacher'
         }
-      }
+      },
+      {
+        path: '/systemAccount',
+        name: 'systemAccount',
+        meta: {
+          title: '系统帐号',
+          module: 'teacher'
+        }
+      },
     ]
   }
   // 管理员权限
@@ -703,14 +711,7 @@ if (staff.roleId === '19') {
             module: 'teacher'
           }
         },
-        {
-          path: '/systemAccount',
-          name: 'systemAccount',
-          meta: {
-            title: '系统帐号',
-            module: 'teacher'
-          }
-        },
+        
         {
           path: '/workHandover/partTimeTeacher',
           name: 'partTimeTeacher',
