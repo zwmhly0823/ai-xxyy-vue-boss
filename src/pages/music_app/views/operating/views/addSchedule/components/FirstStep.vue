@@ -451,43 +451,22 @@ export default {
         return ''
       }
     },
-    nextStep() {
-      const sendFrom = this.pacakageFormInfo()
-      console.log(sendFrom)
-      // TODO:
-      this.$refs.formInfo.validate((valid) => {
-        if (valid) {
-          const cb = (_res) => {
-            const {
-              payload: { period }
-            } = _res
-
-            this.period = period
-            // console
-            this.$store.commit('setSchedulePeriod', 2)
-            this.$emit('listenStepStatus', sendFrom)
-          }
-          
-          // 掉接口 TODO:
-          this.addScheduleFirstStep(sendFrom, cb)
-        } else {
-          return false
-        }
-      })
-    },
     // 新增招生排期第一步-add
     async addScheduleFirstStep(params, cb) {
-      // const loadingInstance = Loading.service({
-      //   target: '.app-main',
-      //   lock: true,
-      //   text: '正在保存...',
-      //   fullscreen: true
-      // })
+      const loadingInstance = Loading.service({
+        target: '.app-main',
+        lock: true,
+        text: '正在保存...',
+        fullscreen: true
+      })
       try {
+        
         const _res = await this.$http.Operating.addScheduleFirstStep(params)
         
         if (_res.code === 0) cb(_res)
+        
       } catch (err) {
+        
         this.$message({
           message: '获取数据出错',
           type: 'warning'
@@ -497,7 +476,6 @@ export default {
         this.$nextTick(() => loadingInstance.close())
       }
     },
-    
     // 新增招生排期第一步-edit获取数据
     async getScheduleFirstStep(params) {
       try {
@@ -527,7 +505,7 @@ export default {
       const courseDay = new Date(this.formInfo.attendClassTimeStart).setHours(0)
 
       const endCourseDay = new Date(this.formInfo.attendClassTimeEnd).getTime()
-
+      console.log(+this.period)
       Object.assign(sendFrom, {
         ...this.sellCycleObj,
         courseDay,
@@ -540,7 +518,27 @@ export default {
 
       return sendFrom
     },
-    
+    nextStep() {
+      const sendFrom = this.pacakageFormInfo()
+      // TODO:
+      this.$refs.formInfo.validate((valid) => {
+        if (valid) {
+          const cb = (_res) => {
+            const {
+              payload: { period }
+            } = _res
+
+            this.period = period
+            this.$store.commit('setSchedulePeriod', period)
+            this.$emit('listenStepStatus', sendFrom)
+          }
+          // 掉接口 TODO:
+          this.addScheduleFirstStep(sendFrom, cb)
+        } else {
+          return false
+        }
+      })
+    },
     cancel() {
       this.$router.push({ path: '/operatingSchedule' })
     }
