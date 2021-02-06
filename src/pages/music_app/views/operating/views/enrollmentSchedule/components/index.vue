@@ -239,7 +239,7 @@ export default {
     },
     // 下载当前行
     async downlaodExcel(row) {
-      console.log('row', row.period)
+     
       const params = {
         departmentIds: '',
         teacherId: '',
@@ -357,14 +357,13 @@ export default {
             item.intruSwitchName = '招生完毕'
           } else if (['待开始', '招生中'].includes(item.status)) {
             // item.intruSwitchName = '停止招生'
-            item.intruSwitchName = '停止转介绍招生'
+            item.intruSwitchName = '停止转介绍'
           }
           if (enrollArr.includes(item.period + '')) {
             // item.intruSwitchName = '恢复招生'
-            item.intruSwitchName = '恢复转介绍招生'
+            item.intruSwitchName = '恢复转介绍'
           }
         })
-
         this.flags.loading = false
         this.tableData = content
       } catch (err) {
@@ -395,7 +394,7 @@ export default {
       }
       const params = {
         period: period,
-        status: name === '停止招生' ? 'NOOPEN' : 'OPEN'
+        status: name === '停止转介绍招生' ? 'NOOPEN' : 'OPEN'
       }
       this.flags.loading = true
       this.$http.Operating.updateStatusByPeriod(params)
@@ -408,7 +407,7 @@ export default {
             this.$set(
               this.tableData[index],
               'intruSwitchName',
-              name === '停止招生' ? '恢复招生' : '停止招生'
+              name === '停止转介绍' ? '恢复转介绍' : '停止转介绍'
             )
           } else {
             this.$message.error('修改失败')
