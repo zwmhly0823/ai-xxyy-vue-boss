@@ -292,6 +292,7 @@ export default {
         this.queryList,
         this.currentPage
       ).then((res) => {
+        console.log(res)
         this.currentPage = res.data.ChannelDetailStatisticsPage.number
         this.totalElements = res.data.ChannelDetailStatisticsPage.totalElements
         const _data = res.data.ChannelDetailStatisticsPage.content
