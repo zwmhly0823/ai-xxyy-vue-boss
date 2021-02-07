@@ -15,6 +15,7 @@ import {
 } from '@/utils/index'
 
 var staff = JSON.parse(localStorage.getItem('staff')) || {}
+
 if (!staff) {
   removeToken()
   location.href = `${baseUrl()}login/#/`
