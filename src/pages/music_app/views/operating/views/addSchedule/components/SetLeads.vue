@@ -1,22 +1,13 @@
 <template>
   <div class="set-leads-container">
     <div class="btn-area">
-      <el-button
-        type="primary"
-        size="small"
-        class="btn-directed"
-        @click="exportExcel"
-      >
-        上传转介绍配置
-      </el-button>
+      <el-button type="primary" size="small" class="btn-directed" @click="exportExcel">上传转介绍配置</el-button>
       <el-button
         type="primary"
         size="small"
         class="btn-directed"
         @click="toSetChannelLeads"
-      >
-        渠道线索定向分配
-      </el-button>
+      >渠道线索定向分配</el-button>
     </div>
     <div class="set-area">
       <div class="set-percent">
@@ -29,8 +20,9 @@
               .channelLevelList"
             :key="index"
             :span="6"
-            ><h3>{{ line.channelLevel }}</h3></el-col
           >
+            <h3>{{ line.channelLevel }}</h3>
+          </el-col>
         </el-row>
         <el-row :gutter="10" class="row-style">
           <el-col :span="4" class="leads-title">销售等级</el-col>
@@ -49,9 +41,11 @@
             v-for="(line, index) in leaderLineForm.leaderLine"
             :key="index"
           >
-            <el-col :span="4" class="leads-title">{{
+            <el-col :span="4" class="leads-title">
+              {{
               line.teacherLevelName
-            }}</el-col>
+              }}
+            </el-col>
             <el-col
               :span="6"
               v-for="(channel, i_channel) in line.channelLevelList"
@@ -101,21 +95,12 @@
         <!-- 线索分配占比设置end -->
       </div>
     </div>
-    <ChannelThreelist
-      :channelThreededList="channelThreededList"
-      @editRow="editRow"
-    ></ChannelThreelist>
+    <ChannelThreelist :channelThreededList="channelThreededList" @editRow="editRow"></ChannelThreelist>
     <!-- 取消、下一步 -->
     <div class="operate-btn">
-      <el-button size="small" type="primary" @click="stepOperate(0)">
-        上一步
-      </el-button>
-      <el-button size="small" type="primary" @click="stepOperate(1)">
-        下一步
-      </el-button>
-      <el-button size="small" type="info" @click="skip">
-        跳过此步
-      </el-button>
+      <el-button size="small" type="primary" @click="stepOperate(0)">上一步</el-button>
+      <el-button size="small" type="primary" @click="stepOperate(1)">下一步</el-button>
+      <el-button size="small" type="info" @click="skip">跳过此步</el-button>
     </div>
     <!-- 导入数据模态框 -->
     <el-dialog
@@ -126,7 +111,7 @@
     >
       <el-upload
         ref="upload"
-        action=""
+        action
         accept=".xls, .xlsx"
         :headers="headers"
         :auto-upload="false"
@@ -134,21 +119,14 @@
         :http-request="uploadFile"
         :on-progress="uploadProgress"
       >
-        <el-button
-          slot="trigger"
-          size="small"
-          type="primary"
-          :disabled="uploading"
-          >选取文件</el-button
-        >
+        <el-button slot="trigger" size="small" type="primary" :disabled="uploading">选取文件</el-button>
         <el-button
           style="margin-left: 10px;"
           size="small"
           type="success"
           @click="submitUpload"
           :disabled="uploading"
-          >上传到服务器</el-button
-        >
+        >上传到服务器</el-button>
         <!-- :loading="uploading" -->
         <div slot="tip" class="el-upload__tip">只能上传xls/xlsx文件</div>
       </el-upload>
@@ -292,7 +270,8 @@ export default {
     /** 渠道线索定向分配 教师渠道绑定-查找记录 */
     async getRecord(cb) {
       try {
-        const { period = '' } = this.$route.params
+        let { period = '' } = this.$route.params
+        period = +period>0?period:this.schedulePeriod;
         const res = await this.$http.Operating.getRecord({ period })
         if (res.code === 0) {
           this.channelThreededList = res.payload

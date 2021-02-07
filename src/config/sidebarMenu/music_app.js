@@ -58,7 +58,7 @@ if (staff.roleId === '19') {
   let superOperatingRouter = []
   let superTeacherRouter = []
   let uploadFilePeimission = []
-
+  let adminTeacherRouter = []
   // TODO:
   if (staff && staff.mobile === '15801332536') {
     uploadFilePeimission = [{
@@ -131,6 +131,14 @@ if (staff.roleId === '19') {
         title: '手机号替换',
         // module: 'operating'
         module
+      }
+    })
+    adminTeacherRouter.push({
+      path: '/systemAccount',
+      name: 'systemAccount',
+      meta: {
+        title: '系统帐号',
+        module: 'teacher'
       }
     })
   }
@@ -702,6 +710,7 @@ if (staff.roleId === '19') {
         module: 'teacher'
       },
       children: [
+        ...adminTeacherRouter,
         ...superTeacherRouter,
         {
           path: '/workHandover',

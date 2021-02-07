@@ -139,7 +139,9 @@
             prop="planTeam"
             label="计划班级人数"
           ></el-table-column>
-          <el-table-column prop="realTeam" label="已开班级数"></el-table-column>
+          <el-table-column prop="realTeam" label="已开班级数" align="center" >
+            
+          </el-table-column>
           <el-table-column
             align="center"
             prop="teacherWechatNos"
@@ -275,12 +277,17 @@ export default {
           })
 
           value.courseCategoryCHN = courseCategoryCHN
-          value.courseDifficulty =
-            SCHEDULE_LEVE(this.courseType)[value.courseDifficulty] || ''
+          
+          for(let key in value){
+            if(value[key]==null){
+              value[key] = '--'
+            }
+          }
+          // value.courseDifficulty =
+          //   SCHEDULE_LEVE(this.courseType)[value.courseDifficulty] || ''
         })
-
         this.tableData = content
-
+        
         this.totalElements = +_list.totalElements
         this.flags.loading = false
       } catch (err) {}

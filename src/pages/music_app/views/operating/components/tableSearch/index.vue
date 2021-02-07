@@ -14,7 +14,7 @@
     </div>
     <!-- 社群销售 -->
     <div class="comp-cell">
-      <group-sell @result="selectSellTeacher" :name="'groupSell'" />
+      <group-sell @result="selectSellTeacher"  :name="'groupSell'" />
     </div>
     <!-- 微信号搜索 -->
     <div class="comp-cell" v-if="isShowWxSearch">
@@ -95,6 +95,7 @@ export default {
   },
   data() {
     return {
+      teacherscope:[],
       emitInfo: {},
       wxSerch: '',
       level: '',
@@ -153,7 +154,9 @@ export default {
     },
     // 销售部门
     getDepartment(depts) {
+
       this.manageChange(depts, 'department')
+      // this.teacherscope = depts.department
     },
     manageChange(res, key) {
       this.emitInfo[key] = res[key]

@@ -142,7 +142,9 @@ export default {
   created() {
     this.onQueryQuestionnairePage()
     // 问卷调查地址
-    this.isEnv = new RegExp('[0-9]').test(location.origin.split('/')[2])
+    this.isEnv = new RegExp('192').test(location.origin.split('/')[2])
+      ? 'https://ai-xxyy-default.yinyuebao.com/question':
+      new RegExp('localhost').test(location.origin.split('/')[2])
       ? 'https://ai-xxyy-default.yinyuebao.com/question'
       : location.origin.includes('default')
       ? 'https://ai-xxyy-default.yinyuebao.com/question'

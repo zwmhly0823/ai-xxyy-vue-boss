@@ -173,6 +173,7 @@ export default {
       this.$emit('dialogOperate', { close: true })
     },
     getDepartment(res) {
+      
       const { data, index } = res
       this.formList[index].teacherscope = data.pay_teacher_id || null
       this.formList[index].teacherId = []
