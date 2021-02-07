@@ -32,10 +32,11 @@
                   :picker-options="pickerBefore"
                 ></el-date-picker>
               </el-form-item>
-
               <h6>建议体验课售卖周期从本周五至下周五</h6>
             </el-col>
-            <el-col :span="10" :offset="1">
+          </el-row>
+          <el-row>
+            <el-col :span="10" >
               <h4>上课周期</h4>
               <el-form-item label prop="attendClassTimeStart">
                 <el-date-picker
@@ -83,7 +84,9 @@
               </el-form-item>
               <h6>开始上课时间必须从星期一开始</h6>
             </el-col>
-            <el-col v-if="courseType == '1'" :span="4" :offset="1">
+          <!-- </el-row>
+          <el-row> -->
+            <el-col v-if="courseType == '1'" :span="4" >
               <h4>接速设置</h4>
               <el-form-item label prop="robinNum">
                 <el-input size="small" v-model.number="formInfo.robinNum" placeholder="请输入学生数"></el-input>
@@ -150,8 +153,15 @@
                   v-model=""
                   size="mini"
                   
-                ></el-input> -->
-                <el-input-number v-model="formInfo[`limit_${index}`]" controls-position="right" size="mini" :min="1" :max="9999" placeholder="限售(对内)" ></el-input-number>
+                ></el-input>-->
+                <el-input-number
+                  v-model="formInfo[`limit_${index}`]"
+                  controls-position="right"
+                  size="mini"
+                  :min="1"
+                  :max="9999"
+                  placeholder="限售(对内)"
+                ></el-input-number>
               </el-form-item>
             </el-col>
             <el-col :span="3" :offset="1">
@@ -175,7 +185,14 @@
                 ]"
               >
                 <!-- <el-input v-model="formInfo[`fakeLimit_${index}`]" size="mini" placeholder="限售(对外)"></el-input> -->
-                <el-input-number v-model="formInfo[`fakeLimit_${index}`]" controls-position="right" size="mini" :min="1" :max="9999" placeholder="限售(对外)" ></el-input-number>
+                <el-input-number
+                  v-model="formInfo[`fakeLimit_${index}`]"
+                  controls-position="right"
+                  size="mini"
+                  :min="1"
+                  :max="9999"
+                  placeholder="限售(对外)"
+                ></el-input-number>
               </el-form-item>
             </el-col>
             <el-col :span="3" :offset="1">
@@ -199,7 +216,14 @@
                 ]"
               >
                 <!-- <el-input v-model="formInfo[`fakeSales_${index}`]" size="mini" placeholder="已售(对外)"></el-input> -->
-                <el-input-number v-model="formInfo[`fakeSales_${index}`]" controls-position="right" size="mini" :min="1" :max="9999" placeholder="已售(对外)" ></el-input-number>
+                <el-input-number
+                  v-model="formInfo[`fakeSales_${index}`]"
+                  controls-position="right"
+                  size="mini"
+                  :min="1"
+                  :max="9999"
+                  placeholder="已售(对外)"
+                ></el-input-number>
               </el-form-item>
             </el-col>
           </el-row>
@@ -283,10 +307,10 @@ export default {
         // ],
         robinNum: [{ validator: checkNumber, required: true, trigger: 'blur' }]
       },
-      pickerBefore:{
-        disabledDate:(time)=>{
-          let timeNow = new Date().getTime();
-          return time.getTime()<timeNow
+      pickerBefore: {
+        disabledDate: (time) => {
+          let timeNow = new Date().getTime()
+          return time.getTime() < timeNow
         }
       },
       pickerBeginDateBefore: {
@@ -415,7 +439,7 @@ export default {
         : 0
 
       const { sellCycle = new Array(this.diffDay) } = this.formInfo
-      
+
       for (let i = 0; i < this.diffDay; i++) {
         this.$set(
           this.formInfo,
@@ -427,7 +451,7 @@ export default {
           `limit_${i}`,
           (sellCycle[i] && sellCycle[i].limit) || '10000'
         )
-        
+
         this.$set(
           this.formInfo,
           `fakeLimit_${i}`,
