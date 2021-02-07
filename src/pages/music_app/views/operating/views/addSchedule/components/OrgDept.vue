@@ -110,10 +110,11 @@ export default {
 </script>
 <style lang="scss" scoped>
 .left-container {
-  .tree-container {
-    max-height: 350px;
-  }
+  
+  // .tree-container {
+  // }
   .el-scrollbar .el-scrollbar__wrap .el-scrollbar__view {
+    max-height: 350px;
     white-space: nowrap;
   }
   // .scrollbar-wrapper {

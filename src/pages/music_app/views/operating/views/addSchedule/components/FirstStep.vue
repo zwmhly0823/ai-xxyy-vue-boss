@@ -29,12 +29,14 @@
                   end-placeholder="结束日期"
                   :default-time="['00:00:00', '00:00:00']"
                   @change="sellCycleTimeChange"
+                  :picker-options="pickerBefore"
                 ></el-date-picker>
               </el-form-item>
-
               <h6>建议体验课售卖周期从本周五至下周五</h6>
             </el-col>
-            <el-col :span="10" :offset="1">
+          </el-row>
+          <el-row>
+            <el-col :span="10" >
               <h4>上课周期</h4>
               <el-form-item label prop="attendClassTimeStart">
                 <el-date-picker
@@ -48,8 +50,8 @@
                   :default-value="this.sellCycleObj.endDate?this.sellCycleObj.endDate:new Date()"
                 ></el-date-picker>
               </el-form-item>
-              <span class="time-space">至</span>
-              <el-form-item label prop="attendClassTimeEnd">
+              <span class="time-space" v-if="courseType == '0'">至</span>
+              <el-form-item label prop="attendClassTimeEnd" v-if="courseType == '0'">
                 <el-date-picker
                   size="small"
                   v-model="formInfo.attendClassTimeEnd"
@@ -82,7 +84,9 @@
               </el-form-item>
               <h6>开始上课时间必须从星期一开始</h6>
             </el-col>
-            <el-col v-if="courseType == '1'" :span="4" :offset="1">
+          <!-- </el-row>
+          <el-row> -->
+            <el-col v-if="courseType == '1'" :span="4" >
               <h4>接速设置</h4>
               <el-form-item label prop="robinNum">
                 <el-input size="small" v-model.number="formInfo.robinNum" placeholder="请输入学生数"></el-input>
@@ -123,7 +127,7 @@
                 ></el-input>
               </el-form-item>
             </el-col>
-            <el-col :span="2">
+            <el-col :span="3">
               <el-form-item
                 label
                 :inline="true"
@@ -139,20 +143,28 @@
                     transform: (value) => Number(value),
                     max: 99999,
                     min: 0,
-                    message: '必须为(0-99999)数字',
+                    message: '必须为(1-99999)数字',
                     trigger: 'blur',
                   },
                 ]"
               >
-                <el-input
+                <!-- <el-input
                   type="number"
-                  v-model="formInfo[`limit_${index}`]"
+                  v-model=""
                   size="mini"
+                  
+                ></el-input>-->
+                <el-input-number
+                  v-model="formInfo[`limit_${index}`]"
+                  controls-position="right"
+                  size="mini"
+                  :min="1"
+                  :max="9999"
                   placeholder="限售(对内)"
-                ></el-input>
+                ></el-input-number>
               </el-form-item>
             </el-col>
-            <el-col :span="2" :offset="1">
+            <el-col :span="3" :offset="1">
               <el-form-item
                 label
                 :prop="`fakeLimit_${index}`"
@@ -167,15 +179,23 @@
                     transform: (value) => Number(value),
                     max: 99999,
                     min: 0,
-                    message: '必须为(0-99999)数字',
+                    message: '必须为(1-99999)数字',
                     trigger: 'blur',
                   },
                 ]"
               >
-                <el-input v-model="formInfo[`fakeLimit_${index}`]" size="mini" placeholder="限售(对外)"></el-input>
+                <!-- <el-input v-model="formInfo[`fakeLimit_${index}`]" size="mini" placeholder="限售(对外)"></el-input> -->
+                <el-input-number
+                  v-model="formInfo[`fakeLimit_${index}`]"
+                  controls-position="right"
+                  size="mini"
+                  :min="1"
+                  :max="9999"
+                  placeholder="限售(对外)"
+                ></el-input-number>
               </el-form-item>
             </el-col>
-            <el-col :span="2" :offset="1">
+            <el-col :span="3" :offset="1">
               <el-form-item
                 label
                 :prop="`fakeSales_${index}`"
@@ -190,12 +210,20 @@
                     transform: (value) => Number(value),
                     max: 99999,
                     min: 0,
-                    message: '必须为(0-99999)数字',
+                    message: '必须为(1-99999)数字',
                     trigger: 'blur',
                   },
                 ]"
               >
-                <el-input v-model="formInfo[`fakeSales_${index}`]" size="mini" placeholder="已售(对外)"></el-input>
+                <!-- <el-input v-model="formInfo[`fakeSales_${index}`]" size="mini" placeholder="已售(对外)"></el-input> -->
+                <el-input-number
+                  v-model="formInfo[`fakeSales_${index}`]"
+                  controls-position="right"
+                  size="mini"
+                  :min="1"
+                  :max="9999"
+                  placeholder="已售(对外)"
+                ></el-input-number>
               </el-form-item>
             </el-col>
           </el-row>
@@ -278,6 +306,12 @@ export default {
         //   }
         // ],
         robinNum: [{ validator: checkNumber, required: true, trigger: 'blur' }]
+      },
+      pickerBefore: {
+        disabledDate: (time) => {
+          let timeNow = new Date().getTime()
+          return time.getTime() < timeNow
+        }
       },
       pickerBeginDateBefore: {
         disabledDate: (time) => {
@@ -405,6 +439,7 @@ export default {
         : 0
 
       const { sellCycle = new Array(this.diffDay) } = this.formInfo
+
       for (let i = 0; i < this.diffDay; i++) {
         this.$set(
           this.formInfo,
@@ -416,6 +451,7 @@ export default {
           `limit_${i}`,
           (sellCycle[i] && sellCycle[i].limit) || '10000'
         )
+
         this.$set(
           this.formInfo,
           `fakeLimit_${i}`,
@@ -427,7 +463,7 @@ export default {
           (sellCycle[i] && sellCycle[i].fakeSales) || '100'
         )
       }
-
+      console.log(this.formInfo)
       this.sellCycleObj = {
         ...this.sellCycleObj,
         startDate: startDate.length != 0 ? startDate.getTime() : '',
@@ -460,13 +496,10 @@ export default {
         fullscreen: true
       })
       try {
-        
         const _res = await this.$http.Operating.addScheduleFirstStep(params)
-        
+
         if (_res.code === 0) cb(_res)
-        
       } catch (err) {
-        
         this.$message({
           message: '获取数据出错',
           type: 'warning'
@@ -505,7 +538,7 @@ export default {
       const courseDay = new Date(this.formInfo.attendClassTimeStart).setHours(0)
 
       const endCourseDay = new Date(this.formInfo.attendClassTimeEnd).getTime()
-      console.log(+this.period)
+
       Object.assign(sendFrom, {
         ...this.sellCycleObj,
         courseDay,
@@ -520,6 +553,7 @@ export default {
     },
     nextStep() {
       const sendFrom = this.pacakageFormInfo()
+
       // TODO:
       this.$refs.formInfo.validate((valid) => {
         if (valid) {

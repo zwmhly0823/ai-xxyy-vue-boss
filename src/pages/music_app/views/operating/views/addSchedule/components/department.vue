@@ -85,7 +85,7 @@ export default {
     },
     async onSelect(data) {
       // TODO: 根据选择的销售组，获取销售ID
-      const ids = { department_id: data || [] }
+      const ids = { department_id: data || [],status:0 }
       if (this.onlyDept === 1) {
         // 返回选择的节点本身及其包含的了节点
         const allNodes = this.$refs.dept.getCheckedNodes()
