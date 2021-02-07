@@ -36,7 +36,7 @@
             </el-col>
           </el-row>
           <el-row>
-            <el-col :span="10" >
+            <el-col :span="10">
               <h4>上课周期</h4>
               <el-form-item label prop="attendClassTimeStart">
                 <el-date-picker
@@ -84,9 +84,9 @@
               </el-form-item>
               <h6>开始上课时间必须从星期一开始</h6>
             </el-col>
-          <!-- </el-row>
-          <el-row> -->
-            <el-col v-if="courseType == '1'" :span="4" >
+            <!-- </el-row>
+            <el-row>-->
+            <el-col v-if="courseType == '1'" :span="4">
               <h4>接速设置</h4>
               <el-form-item label prop="robinNum">
                 <el-input size="small" v-model.number="formInfo.robinNum" placeholder="请输入学生数"></el-input>
@@ -256,7 +256,7 @@ export default {
     }
     return {
       // 周几放课
-      passWeek: 1,
+      passWeek: [1],
       courseType: 0, // 课程类型；0 体验课；1系统课
       formInfo: {
         sellCycleTime: '',
@@ -323,11 +323,13 @@ export default {
           // if (time.getTime()<=this.sellCycleObj.endDate) {
           //   return time.getDay() !== this.passWeek
           // }
+
           var endDate = this.sellCycleObj.endDate
           if (time.getTime() < endDate) {
             return true
           } else {
-            if (time.getDay() !== this.passWeek) {
+            // 体验课周三，系统课周五
+            if (this.passWeek.indexOf(time.getDay()) < 0) {
               return true
             }
           }
@@ -343,6 +345,9 @@ export default {
       }
     }
   },
+  activated() {
+    
+  },
   computed: {},
   watch: {
     ['sellCycleObj.endDate']: (res) => {
@@ -351,10 +356,13 @@ export default {
     }
   },
   async created() {
+    
     const { period = '', courseType = 0 } = this.$route.params
     this.period = period
     this.courseType = courseType
-
+// 体验课周五放课，系统课周三放课
+    this.courseType==1 ? (this.passWeek = [3]) : (this.passWeek = [5])
+    console.log(this.courseType,this.passWeek[0])
     if (+period) {
       // 编辑页面 TODO:
       try {
