@@ -351,7 +351,7 @@ export default {
   computed: {},
   watch: {
     ['sellCycleObj.endDate']: (res) => {
-      console.log(res)
+      
       // this.pickerBeginDateBefore.disabledDate()
     }
   },
@@ -362,7 +362,7 @@ export default {
     this.courseType = courseType
 // 体验课周五放课，系统课周三放课
     this.courseType==1 ? (this.passWeek = [3]) : (this.passWeek = [5])
-    console.log(this.courseType,this.passWeek[0])
+    
     if (+period) {
       // 编辑页面 TODO:
       try {
@@ -471,7 +471,7 @@ export default {
           (sellCycle[i] && sellCycle[i].fakeSales) || '100'
         )
       }
-      console.log(this.formInfo)
+     
       this.sellCycleObj = {
         ...this.sellCycleObj,
         startDate: startDate.length != 0 ? startDate.getTime() : '',

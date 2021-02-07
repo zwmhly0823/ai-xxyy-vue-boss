@@ -97,6 +97,11 @@ export default {
     ThirdStep,
     SetLeads
   },
+  watch:{
+    stepStatus(val){
+      this.setStatus(val)
+    }
+  },
   computed: {
     isShowSecondStep() {
       return (
@@ -121,8 +126,20 @@ export default {
     const { courseType = '0' } = this.$route.params
     this.courseType = courseType
     this.courseName = courseType === '0' ? '体验课' : '系统课'
+    let staff = JSON.parse(localStorage.getItem('staff'));
+    if(staff.stepStatus){
+        this.stepStatus = staff.stepStatus
+    }
+  },
+  destroyed(){
+    this.setStatus()
   },
   methods: {
+    setStatus(val=1){
+      var staff = JSON.parse(localStorage.getItem('staff'))
+      staff.stepStatus=val
+      localStorage.setItem('staff',JSON.stringify(staff))
+    },
     // 第一步 点击下一步 监听
     oneStepNext(val) {
       if (val) this.stepStatus++

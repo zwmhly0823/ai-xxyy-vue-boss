@@ -653,7 +653,7 @@ export default {
         return
       }
       // 新标签打开详情页
-      openBrowserTab(`/users/#/details/${uid}`)
+      openBrowserTab(`/music_app/#/details/${uid}`)
     },
     // 发优惠券
     handleCoupon(uid, data) {

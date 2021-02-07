@@ -341,6 +341,7 @@ export default {
         })
         // 然后再获取招生的状态
         const enrollStudentStatus = await this.getStatusByperiods(periodsArr)
+        
         if (!enrollStudentStatus) {
           this.$message.error('获取招生状态失败')
           return
@@ -392,10 +393,12 @@ export default {
       if (name === '招生完毕') {
         return
       }
+      console.log(name)
       const params = {
         period: period,
-        status: name === '停止转介绍招生' ? 'NOOPEN' : 'OPEN'
+        status: name === '停止转介绍' ? 'NOOPEN' : 'OPEN'
       }
+      console.log(params)
       this.flags.loading = true
       this.$http.Operating.updateStatusByPeriod(params)
         .then((res) => {
