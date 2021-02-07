@@ -426,8 +426,8 @@ export default {
           if (getToken.staff) {
             // 前端设置权限管理
 
-            getToken.staff.roleId = '7';
-            getToken.staff.mobile = '15801332536'
+            // getToken.staff.roleId = '7';
+            // getToken.staff.mobile = '15801332536'
             console.log('ss')
             localStorage.setItem(
               'staff',
