@@ -84,6 +84,17 @@ export default {
   },
   /**
    * @description 招生排期上传excel
+   * 期数
+   * 老师姓名
+   * 部门名称
+   * 销售等级
+   * 接生微信号
+   * 难度级别
+   * 班级人数
+   * 计划招生数
+   * 课程随材版本
+   * 课程类型
+   * 配速
    */
   updateScheduleExcel(params) {
     if (judgeToken()) {
@@ -91,6 +102,30 @@ export default {
         axios({
           method: 'POST',
           url: `/api/t/v1/enroll/import?courseType=${params.courseType}`,
+          responseType: 'blob',
+          headers: getHeaders(),
+          data: params
+        })
+          .then((res) => {
+            console.log('updateScheduleExcel-res', res)
+            resolve(res)
+          })
+          .catch((err) => {
+            reject(err)
+          })
+      })
+    }
+  },
+  /**
+   * 
+   * @param {*} params 
+   */
+  updateReferralExcel(params) {
+    if (judgeToken()) {
+      return new Promise((resolve, reject) => {
+        axios({
+          method: 'POST',
+          url: `/api/t//v1/enroll/importForConversion?courseType=${params.courseType}`,
           responseType: 'blob',
           headers: getHeaders(),
           data: params

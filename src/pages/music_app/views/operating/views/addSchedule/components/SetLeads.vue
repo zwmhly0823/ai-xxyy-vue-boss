@@ -104,7 +104,7 @@
     </div>
     <!-- 导入数据模态框 -->
     <el-dialog
-      title="导入物流信息"
+      title="上传转介绍配置"
       :visible.sync="dialogVisible"
       :before-close="handleCloseUpdata"
       width="30%"
@@ -128,7 +128,7 @@
           :disabled="uploading"
         >上传到服务器</el-button>
         <!-- :loading="uploading" -->
-        <div slot="tip" class="el-upload__tip">只能上传xls/xlsx文件</div>
+        <div slot="tip" class="el-upload__tip">只能上传xlsx文件</div>
       </el-upload>
     </el-dialog>
 
@@ -229,7 +229,7 @@ export default {
       this.uploading = true
       Object.assign(formdata, { courseType })
 
-      this.$http.DownloadExcel.updateScheduleExcel(formdata)
+      this.$http.DownloadExcel.updateReferralExcel(formdata)
         .then((res) => {
           console.log(res)
           // 有可能下载失败，返回{code: '500'},但responseType: 'blob'会把data强制转为blob，导致下载undefined.excel
@@ -241,9 +241,10 @@ export default {
           if (res && Object.prototype.toString.call(res) === '[object Blob]') {
             this.$refs.upload.clearFiles()
             this.dialogVisible = false
-            this.downloadFn(res, file.name, () => {
-              this.$emit('setExcelStatus', 'complete')
-            })
+            // this.downloadFn(res, file.name, () => {
+            //   this.$emit('setExcelStatus', 'complete')
+            // })
+            this.$message.success('上传成功')
           } else {
             this.$message.error('上传失败')
           }

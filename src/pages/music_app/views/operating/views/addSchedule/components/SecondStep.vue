@@ -183,11 +183,14 @@ export default {
   display: block;
   width: auto;
 }
-.el-transfer-panel__body {
-  height: 300px;
+.el-transfer {
+  height: 350px;
 }
-.el-transfer-panel__list.is-filterable {
-  height: 270px;
+.el-transfer-panel {
+  height: 100%;
+}
+.el-transfer-panel__list.is-filterable{
+  height:246px;
 }
 .step-two-container .transfer-container .el-transfer-panel {
   width: 350px;
