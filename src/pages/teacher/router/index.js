@@ -10,7 +10,8 @@ import VueRouter from 'vue-router'
 Vue.use(VueRouter)
 const staff = JSON.parse(localStorage.getItem('staff'))
 var systemAccount = []
-if (staff.roulId == 7 || staff.roleId == 1) {
+
+if (staff.roleId == 7 || staff.roleId == 1) {
   systemAccount = [{
     path: '/systemAccount',
     name: 'systemAccount',

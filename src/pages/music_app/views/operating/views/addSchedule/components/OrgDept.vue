@@ -9,7 +9,7 @@
 <template>
   <div class="left-container" @mouseleave="outTools">
     <!-- <div class="title">组织结构</div> -->
-    <el-scrollbar wrap-class="scrollbar-wrapper">
+    <el-scrollbar class="elScrollbar" wrap-class="scrollbar-wrapper">
       <div class="tree-container">
         <el-tree
           class="left-container-tree"
@@ -110,11 +110,17 @@ export default {
 </script>
 <style lang="scss" scoped>
 .left-container {
-  
-  // .tree-container {
-  // }
+  border: 1px solid #ebeef5;
+  border-radius: 4px;
+
+  .elScrollbar {
+    height: 350px;
+    padding: 15px 0;
+  }
+  .tree-container {
+    padding: 0 15px;
+  }
   .el-scrollbar .el-scrollbar__wrap .el-scrollbar__view {
-    max-height: 350px;
     white-space: nowrap;
   }
   // .scrollbar-wrapper {
