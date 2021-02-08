@@ -114,6 +114,7 @@ export default {
           300,
           this.isParttimeTeacher
         )
+        console.log(teacher)
         const teacherIds = teacher.data.TeacherList.map((item) => item.id)
         this.$emit(
           'result',
