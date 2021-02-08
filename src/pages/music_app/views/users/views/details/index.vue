@@ -391,7 +391,11 @@ export default {
   computed: {
     studyCount() {
       return this.stuInfor.bought_subject.map((item) => {
+        
         switch (item) {
+          case 'MUSIC_APP':
+            item = '小熊音乐'
+            break
           case 'ART_APP':
             item = '小熊美术'
             break
