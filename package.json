@@ -15,12 +15,6 @@
     "dll": "webpack -p --progress --config ./webpack.dll.conf.js",
     "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s"
   },
-  "scripts-back": {
-    "build:live": "cross-env BASE_URL=ghpageslive npm run build && cross-env BASE_URL=ghpageslive node ghpages.js",
-    "build:prod": "cross-env BASE_URL=ghpagesprod npm run build && cross-env BASE_URL=ghpagesprod node ghpages.js",
-    "build:test": "cross-env BASE_URL=ghpagestest npm run build && cross-env BASE_URL=ghpagestest node ghpages.js",
-    "build:dev": "cross-env BASE_URL=dev npm run build && cross-env BASE_URL=dev node ghpages.js"
-  },
   "dependencies": {
     "ali-oss": "^6.6.0",
     "axios": "^0.19.2",
