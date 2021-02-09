@@ -31,6 +31,7 @@ const ossConfig = {
 let targetGrapqhlEnv = 'http://ai-xxyy-default-graphql-boss.yinyuebao.cloud'
 // let targetApiEnv = 'http://ai-xxyy-default-boss.yinyuebao.cloud'
 let targetApiEnv = 'https://ai-xxyy-default-boss-h5.yinyuebao.com';
+let publicPath = baseUrl();
 if (env === 'dev') {
   targetGrapqhlEnv = 'http://ai-xxyy-dev-graphql-boss.yinyuebao.cloud'
   targetApiEnv = 'http://ai-xxyy-dev-boss.yinyuebao.cloud'
@@ -40,9 +41,11 @@ if (env === 'dev') {
   targetApiEnv = 'http://ai-xxyy-test-boss.yinyuebao.cloud'
 } else if (env === 'prod') {
   // 预发布环境
+  publicPath = publicPath + version;
   targetGrapqhlEnv = 'http://ai-xxyy-prod-graphql-boss.yinyuebao.cloud'
   targetApiEnv = 'http://ai-xxyy-prod-boss.yinyuebao.cloud'
 } else if (env === 'live') {
+  publicPath = publicPath + version;
   targetGrapqhlEnv = 'http://ai-xxyy-live-graphql-boss.yinyuebao.cloud'
   targetApiEnv = 'http://ai-xxyy-live-boss.yinyuebao.cloud'
 }
@@ -52,7 +55,7 @@ console.log(NODE_ENV)
 
 module.exports = {
   publicPath:
-    NODE_ENV === 'production' ? `${baseUrl()}${version}` : `/${camel2Line(projectName)}`,
+    NODE_ENV === 'production' ? `${publicPath}` : `/${camel2Line(projectName)}`,
   pages: getEntry(),
   productionSourceMap: NODE_ENV !== 'production',
   configureWebpack: {
