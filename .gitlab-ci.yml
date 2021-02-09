@@ -27,13 +27,11 @@ deploy_default:
     # 打包default环境
     - echo $PATH
     - rm -rf dist
-    - yarn cache dir
     - npm set progress=false
-    - yarn config set registry https://registry.npm.taobao.org/
-    - yarn config set sass_binary_site http://cdn.npm.taobao.org/dist/node-sass -g
-    - yarn --network-timeout 60000
-    - yarn install
-    - yarn run build:default
+    - npm config set registry https://registry.npm.taobao.org/
+    - npm config set sass_binary_site http://cdn.npm.taobao.org/dist/node-sass
+    - npm ci
+    - npm run build:default
     - export KUBERNETES_NAMESPACE=ai-xxyy-default
     - ./mvnw deploy
     - ${KUBECTL_CLI_OPTS} apply -f target/classes/META-INF/jkube/kubernetes.yml -n ${KUBERNETES_NAMESPACE}
@@ -48,13 +46,11 @@ deploy_dev:
     # 打包dev环境
     - echo $PATH
     - rm -rf dist
-    - yarn cache dir
     - npm set progress=false
-    - yarn config set registry https://registry.npm.taobao.org/
-    - yarn config set sass_binary_site http://cdn.npm.taobao.org/dist/node-sass -g
-    - yarn --network-timeout 60000
-    - yarn install
-    - yarn run build:dev
+    - npm config set registry https://registry.npm.taobao.org/
+    - npm config set sass_binary_site http://cdn.npm.taobao.org/dist/node-sass
+    - npm ci
+    - npm run build:dev
     - export KUBERNETES_NAMESPACE=ai-xxyy-dev
     - ./mvnw deploy
     - ${KUBECTL_CLI_OPTS} apply -f target/classes/META-INF/jkube/kubernetes.yml -n ${KUBERNETES_NAMESPACE}
@@ -70,13 +66,11 @@ deploy_test:
     # 打包test环境
     - echo $PATH
     - rm -rf dist
-    - yarn cache dir
     - npm set progress=false
-    - yarn config set registry https://registry.npm.taobao.org/
-    - yarn config set sass_binary_site http://cdn.npm.taobao.org/dist/node-sass -g
-    - yarn --network-timeout 60000
-    - yarn install
-    - yarn run build:test
+    - npm config set registry https://registry.npm.taobao.org/
+    - npm config set sass_binary_site http://cdn.npm.taobao.org/dist/node-sass
+    - npm ci
+    - npm run build:test
     - export KUBERNETES_NAMESPACE=ai-xxyy-test
     - ./mvnw deploy
     - ${KUBECTL_CLI_OPTS} apply -f target/classes/META-INF/jkube/kubernetes.yml -n ${KUBERNETES_NAMESPACE}
@@ -96,13 +90,11 @@ deploy_prod:
   
     - echo $PATH
     - rm -rf dist
-    - yarn cache dir
     - npm set progress=false
-    - yarn config set registry https://registry.npm.taobao.org/
-    - yarn config set sass_binary_site http://cdn.npm.taobao.org/dist/node-sass -g
-    - yarn --network-timeout 60000
-    - yarn install
-    - yarn run build:prod
+    - npm config set registry https://registry.npm.taobao.org/
+    - npm config set sass_binary_site http://cdn.npm.taobao.org/dist/node-sass
+    - npm ci
+    - npm run build:prod
     - export KUBERNETES_NAMESPACE=ai-xxyy-prod
     - ./mvnw deploy
     - ${KUBECTL_CLI_OPTS} apply -f target/classes/META-INF/jkube/kubernetes.yml -n ${KUBERNETES_NAMESPACE}
@@ -121,13 +113,11 @@ deploy_live:
     
     - echo $PATH
     - rm -rf dist
-    - yarn cache dir
     - npm set progress=false
-    - yarn config set registry https://registry.npm.taobao.org/
-    - yarn config set sass_binary_site http://cdn.npm.taobao.org/dist/node-sass -g
-    - yarn --network-timeout 60000
-    - yarn install
-    - yarn run build:live
+    - npm config set registry https://registry.npm.taobao.org/
+    - npm config set sass_binary_site http://cdn.npm.taobao.org/dist/node-sass
+    - npm ci
+    - npm run build:live
     - export KUBERNETES_NAMESPACE=ai-xxyy-live
     - ./mvnw deploy
     - "envsubst < target/classes/META-INF/jkube/kubernetes.yml | sed 's/replicas: 1/replicas: 2/g' | ${KUBECTL_CLI_OPTS_LIVE} apply -f - -n ${KUBERNETES_NAMESPACE}"
