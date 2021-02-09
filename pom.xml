@@ -46,7 +46,7 @@
                             <arguments>
                                 <argument>build</argument>
                                 <argument>-t</argument>
-                                <argument>${docker.prefix}/${project.artifactId}:${project.version}</argument>
+                                <argument>${docker.prefix}/${project.artifactId}:${KUBERNETES_NAMESPACE}-${project.version}</argument>
                                 <argument>.</argument>
                             </arguments>
                             <workingDirectory>${project.basedir}</workingDirectory>
@@ -62,7 +62,7 @@
                             <executable>docker</executable>
                             <arguments>
                                 <argument>push</argument>
-                                <argument>${docker.prefix}/${project.artifactId}:${project.version}</argument>
+                                <argument>${docker.prefix}/${project.artifactId}:${KUBERNETES_NAMESPACE}-${project.version}</argument>
                             </arguments>
                             <workingDirectory>${project.basedir}</workingDirectory>
                         </configuration>
@@ -84,7 +84,7 @@
                 <configuration>
                     <images>
                         <image>
-                            <name>${docker.prefix}/${project.artifactId}:${project.version}</name>
+                            <name>${docker.prefix}/${project.artifactId}:${KUBERNETES_NAMESPACE}-${project.version}</name>
                             <build>
                                 <tags>
                                     <tag>latest</tag>
