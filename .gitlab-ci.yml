@@ -38,7 +38,7 @@ deploy_default:
     - ./mvnw deploy
     - ${KUBECTL_CLI_OPTS} apply -f target/classes/META-INF/jkube/kubernetes.yml -n ${KUBERNETES_NAMESPACE}
   only:
-    - /.*default.*$/
+    - default
   tags:
     - xxyy-k8s-fe
   
@@ -59,7 +59,7 @@ deploy_dev:
     - ./mvnw deploy
     - ${KUBECTL_CLI_OPTS} apply -f target/classes/META-INF/jkube/kubernetes.yml -n ${KUBERNETES_NAMESPACE}
   only:
-    - /.*dev.*$/
+    - dev
   tags:
     - xxyy-k8s-fe
 
@@ -81,7 +81,7 @@ deploy_test:
     - ./mvnw deploy
     - ${KUBECTL_CLI_OPTS} apply -f target/classes/META-INF/jkube/kubernetes.yml -n ${KUBERNETES_NAMESPACE}
   only:
-    - /.*test.*$/
+    - test
   tags:
     - xxyy-k8s-fe
 
@@ -107,7 +107,7 @@ deploy_prod:
     - ./mvnw deploy
     - ${KUBECTL_CLI_OPTS} apply -f target/classes/META-INF/jkube/kubernetes.yml -n ${KUBERNETES_NAMESPACE}
   only:
-    - /.*prod.*$/
+    - prod
   tags:
     - xxyy-k8s-fe
 
@@ -130,7 +130,7 @@ deploy_live:
     - yarn run build:live
     - export KUBERNETES_NAMESPACE=ai-xxyy-live
     - ./mvnw deploy
-    - ${KUBECTL_CLI_OPTS_LIVE} apply -f target/classes/META-INF/jkube/kubernetes.yml -n ${KUBERNETES_NAMESPACE}
+    - "envsubst < target/classes/META-INF/jkube/kubernetes.yml | sed 's/replicas: 1/replicas: 2/g' | ${KUBECTL_CLI_OPTS_LIVE} apply -f - -n ${KUBERNETES_NAMESPACE}"
   only:
     - /^master-.*$/
   tags:
