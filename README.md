@@ -30,51 +30,13 @@ bearboss /MsbNB123
 ## Project setup
 
 ```
-yarn install
+npm ci
 ```
 
 ### Compiles and hot-reloads for development
 
 ```
-yarn serve
-```
-
-### 打包
-
-```
-测试环境：
-yarn build:test moduleName
-
-预发布环境：
-yarn build:prod moduleName
-
-生产环境：
-yarn build:live moduleName
-```
-
-### 部署
-
-```
-测试环境：
-yarn deploy:test
-
-预发布环境：
-yarn deploy:prod
-
-生产环境：
-yarn deploy:live
-```
-
-### Run your unit tests
-
-```
-yarn test:unit
-```
-
-### Lints and fixes files
-
-```
-yarn lint
+npm run serve
 ```
 
 ## 文件命名规范
