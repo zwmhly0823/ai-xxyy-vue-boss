@@ -52,7 +52,7 @@ console.log(NODE_ENV)
 
 module.exports = {
   publicPath:
-    NODE_ENV === 'production' ? `${baseUrl()}` : `/${camel2Line(projectName)}`,
+    NODE_ENV === 'production' ? `${baseUrl()}${version}` : `/${camel2Line(projectName)}`,
   pages: getEntry(),
   productionSourceMap: NODE_ENV !== 'production',
   configureWebpack: {
@@ -100,7 +100,7 @@ module.exports = {
         case 'test':
           return 'ai-app-vue-boss-test'
         case 'prod':
-          return `ai-app-vue-boss-prod/${version}}`
+          return `ai-app-vue-boss-prod/${version}`
         case 'live':
           return `ai-app-vue-boss-live/${version}`
         default:
