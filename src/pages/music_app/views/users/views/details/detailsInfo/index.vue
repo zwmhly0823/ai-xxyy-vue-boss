@@ -679,14 +679,16 @@ export default {
         let url = ''
         const origin = window.location.origin
         if (origin.includes('dev')) {
-          url = 'ai-app-vue-toss-dev/'
+          url = 'ai-xxyy-dev-boss-h5/'
         } else if (origin.includes('test')) {
-          url = 'ai-app-vue-toss-test/'
+          url = 'ai-xxyy-test-boss-h5/'
+        }else{
+          url='ai-xxyy-default-boss-h5'
         }
         return type === 'user'
           ? `${origin}/${url}music_app/#/details/${id}`
           : `${origin}/${url}${
-              this.changeSubject ? 'write_app' : 'student-team'
+              'music_app'
             }/#/teamDetail/${id}/${classl}`
       }
     }

@@ -354,7 +354,8 @@ export default {
     // 通过密码登录
     async loginByPwd() {
       const pwdLoginIn = await this.$http.Login.pwdLoginIn(this.pwdLoginForm)
-
+console.log(pwdLoginIn)
+debugger
       if (pwdLoginIn && pwdLoginIn.payload) {
         return pwdLoginIn.payload
       }
@@ -401,6 +402,7 @@ export default {
           : (getToken = await this.loginBycode().catch((err) =>
               console.log(err)
             ))
+            
         if (getToken && getToken.token) {
           setToken(getToken.token)
           if (getToken.teacher) {

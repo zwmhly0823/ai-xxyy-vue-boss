@@ -28,7 +28,8 @@ import trad from '../views/trading/router'
 import users from '../views/users/router'
 // 财务
 import finance from '../views/finance/router'
-
+// 投诉中心
+import complaint from '../views/complaint/router'
 
 const staff = JSON.parse(localStorage.getItem('staff'))
 
@@ -78,7 +79,8 @@ const routes = [{
   ...studentTeam,
   ...trad,
   ...users,
-  ...finance
+  ...finance,
+  ...complaint
 ]
 const router = new VueRouter({
   base: process.env.BASE_URL,

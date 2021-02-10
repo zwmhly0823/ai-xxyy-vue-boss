@@ -537,6 +537,16 @@ if (staff.roleId === '19') {
             module
           }
         },
+        // 投诉中心  经理和区长可以查看
+        {
+          path: '/complaint',
+          name: 'complaint',
+          // hidden: teacherInfo.dutyId !== '1',
+          meta: {
+            title: '投诉中心',
+            module
+          }
+        },
         ...uploadFilePeimission,
         ...superOperatingRouter,
         ...adminRouter

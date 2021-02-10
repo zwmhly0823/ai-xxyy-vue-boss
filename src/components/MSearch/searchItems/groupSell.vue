@@ -127,7 +127,7 @@ export default {
         }
       }
       
-      if (this.teacherscope.length) {
+      if (this.teacherscope&&this.teacherscope.length) {
         q.bool.must.push({ terms: { department_id: this.teacherscope } })
       }
       // q.bool.must.push({ terms: { id: this.teacherscope || '' } })

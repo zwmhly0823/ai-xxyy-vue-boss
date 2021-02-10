@@ -203,9 +203,10 @@ export default {
     },
     packageFormData() {
       const { courseType = '0', period = '', formArr = [] } = this.$route.params
-
+debugger
       this.formList.forEach((item) => {
         const { channel = '', teacherId = [] } = item
+        
         teacherId.forEach((id) => {
           formArr.push({
             period,

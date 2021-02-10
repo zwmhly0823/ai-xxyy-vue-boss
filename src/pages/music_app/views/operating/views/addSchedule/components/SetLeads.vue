@@ -112,12 +112,13 @@
       <el-upload
         ref="upload"
         action
-        accept=".xls, .xlsx"
+        accept=".xlsx"
         :headers="headers"
         :auto-upload="false"
         :limit="1"
         :http-request="uploadFile"
         :on-progress="uploadProgress"
+        :on-change="uploadChange"
       >
         <el-button slot="trigger" size="small" type="primary" :disabled="uploading">选取文件</el-button>
         <el-button
@@ -201,6 +202,14 @@ export default {
     this.getRecord()
   },
   methods: {
+    uploadChange(file, fileList) {
+      let lastNum = file.name.indexOf('.')
+      let lastName = file.name.substring(lastNum)
+      if (lastName != '.xlsx') {
+        this.$refs.upload.clearFiles()
+        this.$message.error('只能上传xlsx结尾的文件')
+      }
+    },
     editRow(row) {
       this.centerDialogVisible = true
       this.editChannelThreeded = row
@@ -224,6 +233,7 @@ export default {
       const { courseType = 0 } = this.$route.params
       const formdata = new FormData()
       const { file } = params
+
       formdata.append('file', file)
 
       this.uploading = true
@@ -272,7 +282,7 @@ export default {
     async getRecord(cb) {
       try {
         let { period = '' } = this.$route.params
-        period = +period>0?period:this.schedulePeriod;
+        period = +period > 0 ? period : this.schedulePeriod
         const res = await this.$http.Operating.getRecord({ period })
         if (res.code === 0) {
           this.channelThreededList = res.payload

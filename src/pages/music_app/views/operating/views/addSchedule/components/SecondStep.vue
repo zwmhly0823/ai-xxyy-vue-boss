@@ -9,35 +9,32 @@
 <template>
   <div class="second-step">
     <div class="step-container step-two-container">
-      <el-row :gutter="20">
-        <el-col :span="4" :offset="3">
+      <div class="secondContent">
+        <div>
           <org-dept @changeOrgDept="changeOrgDept"></org-dept>
-        </el-col>
-        <el-col :span="16">
-          <div class="transfer-container">
-            <el-transfer
-              style="text-align: left; display: inline-block"
-              v-model="transferVal"
-              filterable
-              :right-default-checked="rightDefaultChecked"
-              :props="{
+        </div>
+        <div>
+          <el-transfer
+            style="text-align: left; display: inline-block"
+            v-model="transferVal"
+            filterable
+            :right-default-checked="rightDefaultChecked"
+            :props="{
                 label: 'realname',
                 key: 'id',
               }"
-              :render-content="renderFunc"
-              :titles="['待选择', '已选择']"
-              :button-texts="['到左边', '到右边']"
-              :format="{
+            :render-content="renderFunc"
+            :titles="['待选择', '已选择']"
+            :button-texts="['到左边', '到右边']"
+            :format="{
                 noChecked: '${total}',
                 hasChecked: '${checked}/${total}'
               }"
-              @change="handleChange"
-              :data="transferData"
-            ></el-transfer>
-          </div>
-        </el-col>
-      </el-row>
-
+            @change="handleChange"
+            :data="transferData"
+          ></el-transfer>
+        </div>
+      </div>
       <!-- 取消、下一步 -->
       <div class="operate-btn">
         <el-button size="small" type="primary" @click="stepOperate(0)">上一步</el-button>
@@ -135,11 +132,11 @@ export default {
       if (this.departmentQuery) {
         this.query = Object.assign({}, this.departmentQuery || {})
       }
-      var courseType = this.params.courseType==0?1:2
-      if(this.query){
-        this.query.duty_id = courseType;
-      }else{
-        this.query = {duty_id:courseType}
+      var courseType = this.params.courseType == 0 ? 1 : 2
+      if (this.query) {
+        this.query.duty_id = courseType
+      } else {
+        this.query = { duty_id: courseType }
       }
       const query = this.query ? JSON.stringify(this.query) : ''
       // tab数据
@@ -183,15 +180,24 @@ export default {
   display: block;
   width: auto;
 }
+.secondContent{
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+}
+.secondContent > div{
+  margin-bottom:20px;
+}
 .el-transfer {
   height: 350px;
 }
 .el-transfer-panel {
   height: 100%;
 }
-.el-transfer-panel__list.is-filterable{
-  height:246px;
+.el-transfer-panel__list.is-filterable {
+  height: 246px;
 }
+
 .step-two-container .transfer-container .el-transfer-panel {
   width: 350px;
 }
@@ -211,6 +217,7 @@ export default {
 .step-two-container {
   margin: 60px 0;
   .transfer-container {
+    min-width: 570px;
     text-align: center;
   }
   .operate-btn {

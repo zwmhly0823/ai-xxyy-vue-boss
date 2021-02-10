@@ -452,3 +452,51 @@ export function copyText(text, msg = '复制内容不存在，请确认') {
   })
   oInput.remove()
 }
+/**
+ * 返回倒计时时间
+ */
+export function MillisecondToDate(msd) {
+  const flag = msd > 0 ? 1 : 0
+  var time = Math.abs(parseFloat(msd) / 1000)
+
+  if (time > 60 && time < 60 * 60) {
+    time =
+      getZero(parseInt(time / 60.0)) +
+      ':' +
+      getZero(parseInt((parseFloat(time / 60.0) - parseInt(time / 60.0)) * 60))
+  } else if (time >= 60 * 60) {
+    time =
+      getZero(parseInt(time / 3600.0)) +
+      ':' +
+      getZero(
+        parseInt((parseFloat(time / 3600.0) - parseInt(time / 3600.0)) * 60)
+      ) +
+      ':' +
+      getZero(
+        parseInt(
+          (parseFloat(
+            (parseFloat(time / 3600.0) - parseInt(time / 3600.0)) * 60
+          ) -
+            parseInt(
+              (parseFloat(time / 3600.0) - parseInt(time / 3600.0)) * 60
+            )) *
+            60
+        )
+      )
+  } else {
+    time = getZero(parseInt(time))
+  }
+  if (flag) {
+    return time
+  } else {
+    return `-${time}`
+  }
+}
+// 补零
+export function getZero(num) {
+  // 单数前面加0
+  if (parseInt(num) < 10) {
+    num = '0' + num
+  }
+  return num
+}
