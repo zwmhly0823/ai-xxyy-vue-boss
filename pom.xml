@@ -82,6 +82,13 @@
                     </execution>
                 </executions>
                 <configuration>
+                    <enricher>
+                        <config>
+                            <jkube-revision-history>
+                                <limit>10</limit>
+                            </jkube-revision-history>
+                        </config>
+                    </enricher>
                     <images>
                         <image>
                             <name>${docker.prefix}/${project.artifactId}:${KUBERNETES_NAMESPACE}-${project.version}</name>
