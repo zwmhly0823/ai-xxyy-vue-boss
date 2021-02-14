@@ -145,7 +145,7 @@ export default {
   methods: {
     // 后退
     back() {
-      this.$router.push('/approvalCenter')
+      this.$router.push('/approval')
     },
     // 选择手机号后获取userId和手机号
     getUid({ userId }) {

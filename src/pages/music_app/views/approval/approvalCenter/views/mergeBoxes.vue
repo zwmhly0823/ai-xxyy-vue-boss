@@ -163,7 +163,7 @@ export default {
   methods: {
     // 后退
     back() {
-      this.$router.push('/approvalCenter')
+      this.$router.push('/approval')
     },
     // 下拉手机号的校验
     validatePhone(rule, value, callback) {

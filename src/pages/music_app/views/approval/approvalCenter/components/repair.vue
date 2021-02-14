@@ -574,7 +574,7 @@ export default {
 
     // 后退
     back() {
-      this.$router.push('/approvalCenter')
+      this.$router.push('/approval')
     },
     getSeletOrder(val) {
       console.log(val, 'val')

@@ -38,7 +38,7 @@ const routes = [
     component: () => import('../approvalCenter/components/repair.vue')
   },
   {
-    path: '/approvalCenter/adjust',
+    path: '/approval/adjust',
     name: 'adjust',
     meta: {
       title: '系统课调整'
@@ -59,7 +59,7 @@ const routes = [
     component: () => import('../approvalCenter/components/approvalGift.vue')
   },
   {
-    path: '/approvalCenter/mergeboxes',
+    path: '/approval/mergeboxes',
     name: 'mergeboxes',
     meta: {
       title: '随材打包'
