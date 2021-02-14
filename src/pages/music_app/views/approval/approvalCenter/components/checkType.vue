@@ -3,8 +3,8 @@
  * @version: 
  * @Author: Lukun
  * @Date: 2020-05-08 17:37:00
- * @LastEditors: Lukun
- * @LastEditTime: 2020-06-23 17:12:58
+ * @LastEditors: liukun
+ * @LastEditTime: 2021-01-30 02:39:58
  -->
 <template>
   <div class="search-item small">
@@ -46,6 +46,7 @@ export default {
       productVersion: [
         { name: '退款', value: 'REFUND' },
         { name: '补发货', value: 'REISSUE' },
+        { name: '体验课调级', value: 'ADJUSTMENT_SUP_TRIAL' },
         { name: '调期申请', value: 'ADJUSTMENT_STAGE' },
         { name: '调级申请', value: 'ADJUSTMENT_SUP' },
         { name: '调班申请', value: 'ADJUSTMENT_CLASS' },

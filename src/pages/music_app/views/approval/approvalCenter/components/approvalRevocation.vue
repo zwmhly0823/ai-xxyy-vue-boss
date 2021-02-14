@@ -3,8 +3,8 @@
  * @version: 
  * @Author: Lukun
  * @Date: 2020-04-27 17:47:58
- * @LastEditors: YangJiyong
- * @LastEditTime: 2020-10-21 23:37:36
+ * @LastEditors: liukun
+ * @LastEditTime: 2021-02-02 21:20:27
  -->
 <template>
   <div class="container">
@@ -14,7 +14,7 @@
         :style="{ 'margin-right': '20px' }"
         clearable
         size="mini"
-        v-model="xx"
+        v-model="zero_time"
         placeholder="请选择是否0课时"
         @change="zeroChange"
         v-show="isRefund"
@@ -50,13 +50,17 @@
       />
       <tabTimeSelect style="margin-left:0px" @result="getSeacherTime" />
       <ActivityName
+        v-if="checkTypeAssert !== 'REISSUE'"
         class="inline-search margin_left_20"
         @result="getActivityName"
       />
     </div>
+    <!-- dom -->
+    <div class="tableInner" ref="tableInner"></div>
     <el-table
       :data="tableData"
       style="width: 100%"
+      :height="tableHeight"
       highlight-current-row
       @cell-mouse-enter="handleMouseEnter"
       @cell-mouse-leave="handleMouseLeave"
@@ -99,6 +103,9 @@
           </div>
           <div v-show="scope.row.type === 'REFUND'">
             退款
+          </div>
+          <div v-show="scope.row.type === 'ADJUSTMENT_SUP_TRIAL'">
+            体验课调级
           </div>
           <div v-if="scope.row.type === 'ADJUSTMENT_CLASS'">
             调班
@@ -151,6 +158,7 @@
             <span v-else>{{ scope.row.receptContent }}</span>
           </div>
           <div>{{ scope.row.reason }}</div>
+          <div>{{ scope.row.refundTypeStr }}</div>
         </template>
       </el-table-column>
       <el-table-column label="发起时间" width="180">
@@ -172,7 +180,13 @@
       <el-table-column label="状态" width="180">
         <template slot-scope="scope">
           <div
-            @click="getApprovalDeatail(scope.row.type, scope.row.id)"
+            @click="
+              getApprovalDeatail(
+                scope.row.type,
+                scope.row.id,
+                scope.row.applyId
+              )
+            "
             v-show="scope.row.status === 'REVOCATION'"
             class="wait-pending"
           >
@@ -181,6 +195,7 @@
         </template>
       </el-table-column>
     </el-table>
+    <!-- 退款-补发货-无归属-抽屉 -->
     <el-drawer
       :visible.sync="drawerApproval"
       :destroy-on-close="true"
@@ -214,7 +229,7 @@
           <el-col :span="20" :offset="1"
             ><el-link
               type="primary"
-              :href="'/music_app/#/details/' + drawerApprovalDeatail.userId"
+              :href="'/users/#/details/' + drawerApprovalDeatail.userId"
               target="_blank"
               >{{ drawerApprovalDeatail.userTel }}</el-link
             ></el-col
@@ -247,10 +262,33 @@
           }}</el-col>
         </el-row>
         <el-row>
+          <el-col :span="3">课程进度:</el-col>
+          <el-col :span="20" :offset="1">
+            {{ formatTeamNameSup(drawerApprovalDeatail.currentLesson) }}
+          </el-col>
+        </el-row>
+        <el-row>
           <el-col :span="3">商品信息:</el-col>
-          <el-col :span="20" :offset="1">{{
-            drawerApprovalDeatail.productNames
-          }}</el-col>
+          <el-col :span="20" :offset="1">
+            {{ drawerApprovalDeatail.productNames }}
+            <span
+              v-if="
+                drawerApprovalDeatail.mode === 'SINGLE' &&
+                  (drawerApprovalDeatail.productInfo.includes('体验') ||
+                    drawerApprovalDeatail.productInfo.includes('系统'))
+              "
+            >
+              （
+              {{
+                drawerApprovalDeatail.productInfo.includes('体验')
+                  ? '体验课'
+                  : '系统课'
+              }}
+              {{ formatTeamNameSup(drawerApprovalDeatail.sup) }}
+              {{ drawerApprovalDeatail.level }}
+              ）
+            </span>
+          </el-col>
         </el-row>
         <el-row v-show="+drawerApprovalDeatail.stage !== 0">
           <el-col :span="3">开课期数:</el-col>
@@ -328,7 +366,7 @@
           <el-col :span="18" :offset="1"
             ><el-link
               type="primary"
-              :href="'/music_app/#/details/' + drawerApprovalDeatail.userId"
+              :href="'/users/#/details/' + drawerApprovalDeatail.userId"
               target="_blank"
               >{{ drawerApprovalDeatail.customerPhone }}</el-link
             ></el-col
@@ -415,18 +453,40 @@
            `
             }}</el-col>
           </el-row>
-          <el-row
-            v-if="
-              drawerApprovalDeatail.deductGift === 1 ||
-                drawerApprovalDeatail.deductGift === 0
-            "
-          >
+          <el-row>
             <el-col :span="5">关单赠品:</el-col>
-            <el-col :span="18" :offset="1">{{
-              drawerApprovalDeatail.deductGift === 1
-                ? '扣除赠品费用'
-                : '不扣除赠品费用'
-            }}</el-col>
+            <el-col :span="18" :offset="1">
+              <span
+                v-if="
+                  !(
+                    drawerApprovalDeatail.productList &&
+                    drawerApprovalDeatail.productList.length
+                  )
+                "
+                >不扣除赠品费用</span
+              >
+              <el-table
+                ref="multipleTable"
+                :data="drawerApprovalDeatail.productList"
+                border
+                tooltip-effect="dark"
+                style="width: 50%"
+                v-if="
+                  drawerApprovalDeatail.productList &&
+                    drawerApprovalDeatail.productList.length
+                "
+              >
+                <el-table-column
+                  label="赠品信息"
+                  prop="name"
+                  min-width="120"
+                  show-overflow-tooltip
+                >
+                </el-table-column>
+                <el-table-column prop="price" label="赠品价格" min-width="120">
+                </el-table-column>
+              </el-table>
+            </el-col>
           </el-row>
           <el-row
             v-if="
@@ -516,7 +576,7 @@
               ><el-link
                 v-if="Number(drawerApprovalDeatail.sendId)"
                 type="primary"
-                :href="'/music_app/#/details/' + drawerApprovalDeatail.sendId"
+                :href="'/users/#/details/' + drawerApprovalDeatail.sendId"
                 target="_blank"
                 >{{
                   (JSON.parse(drawerApprovalDeatail.sendInfo).mobile || '-') +
@@ -560,12 +620,20 @@
         </div>
       </div>
     </el-drawer>
+    <!-- 体验课调级详情抽屉_全托管 -->
+    <trialChangeLevel
+      ref="trialChangeLevel"
+      v-if="currentType === 'ADJUSTMENT_SUP_TRIAL'"
+      :forSonDataApprovalPersonId="forSonDataApprovalPersonId"
+      :forSonDataApprovalId="forSonDataApprovalId"
+    />
     <!-- 赠品审批抽屉 -->
     <ApprovalGiftDetail
       :drawerGiftDeatail="drawerGiftDeatail"
       :drawerGift="drawerGift"
       @close-gift="handleClose"
     />
+    <!-- 三调系列+随材打包申请抽屉 -->
     <adjust-drawer
       :is3d="1"
       ref="adjustDrawerCom"
@@ -582,6 +650,7 @@
 </template>
 
 <script>
+import trialChangeLevel from './trialChangeLevel.vue'
 import Department from '@/components/MSearch/searchItems/department'
 import GroupSell from './groupSell'
 import searchPhone from '@/components/MSearch/searchItems/searchPhone.vue'
@@ -600,6 +669,7 @@ import ApprovalGiftDetail from './approvalGiftDetail'
 export default {
   props: ['activeName'],
   components: {
+    trialChangeLevel,
     Department,
     GroupSell,
     searchPhone,
@@ -626,9 +696,13 @@ export default {
   },
   data() {
     return {
+      tableHeight: 0,
+      forSonDataApprovalPersonId: '',
+      forSonDataApprovalId: '',
+      checkTypeAssert: '', // 审批类型判断-公用
       SUP_LEVEL_UPPER,
       formatTeamNameSup,
-      xx: '', // 0课时绑定值
+      zero_time: '', // 0课时绑定值
       isRefund: 0, // 选择退款出现0课时
       params: {}, // 列表的参数
       resetParams: {}, // 撤销的参数
@@ -650,7 +724,13 @@ export default {
       reasonList: {
         OTHER: '其他',
         DELIVERY_MISS: '发货漏发',
-        TRANSPORT_BAD: '运输损坏'
+        TRANSPORT_BAD: '运输损坏',
+        MULTI_SELF_PAY: '自费补发',
+        MULTI_LOSS: '丢件补发',
+        MULTI_TIMEOUT_RETURN: '超时退回',
+        MULTI_ADJUSTMENT_SUP: '调级补发',
+        SINGLE_QUALITY: '产品质量问题',
+        SINGLE_PIGMENT_LEAKAGE: '颜料撒漏'
       },
       courseOptions: { TESTCOURSE: '体验课', SYSTEMCOURSE: '系统课' },
       currentType: ''
@@ -714,13 +794,15 @@ export default {
     },
     // 审批类型判断
     getcheckType(val) {
+      this.checkTypeAssert = val
       // external_0课时退费(显隐)
       if (val === 'REFUND') {
         this.isRefund = 1
       } else {
         this.isRefund = 0
         this.params.isZero = ''
-        this.xx = ''
+        this.zero_time = ''
+        this.params.approvalUserType = ''
       }
       this.params.page = 1
       this.currentPage = 1
@@ -772,9 +854,18 @@ export default {
       Object.assign(this.params, { page: val })
       this.checkPending(this.params)
     },
-    // 打开抽屉 传进来两个参数 一个type 一个id  type用来区分补发货还是退款
-    getApprovalDeatail(type, id) {
-      this.currentType = type
+    // 打开抽屉 传进来3个参数 申请单type 申请单id  申请单申请人id
+    getApprovalDeatail(type, id, applyId) {
+      this.currentType = type // 全局配置:申请单类型
+      // 体验课调级详情
+      if (type === 'ADJUSTMENT_SUP_TRIAL') {
+        this.forSonDataApprovalId = id
+        this.forSonDataApprovalPersonId = applyId
+        this.$nextTick(() => {
+          this.$refs.trialChangeLevel.isShow = true
+        })
+      }
+      //  补发货详情
       if (type === 'REISSUE') {
         this.$http.Backend.getReplenishDetail(id).then((res) => {
           if (res && res.payload) {
@@ -1026,17 +1117,17 @@ export default {
       }
       if (type === 'ADJUSTMENT_STAGE') {
         this.$router.push({
-          path: '/adjust',
+          path: '/approvalCenter/adjust',
           query: { adjustType: 1 }
         })
       } else if (type === 'ADJUSTMENT_SUP') {
         this.$router.push({
-          path: '/adjust',
+          path: '/approvalCenter/adjust',
           query: { adjustType: 2 }
         })
       } else if (type === 'ADJUSTMENT_CLASS') {
         this.$router.push({
-          path: '/adjust',
+          path: '/approvalCenter/adjust',
           query: { adjustType: 3 }
         })
       }
@@ -1051,6 +1142,7 @@ export default {
     },
     // 待审核列表渲染
     checkPending(params) {
+      this.calcTableHeight()
       this.$http.Backend.checkListPending(params).then((res) => {
         if (res && res.payload && res.payload.content) {
           this.totalElements = res.payload.totalElements
@@ -1060,28 +1152,20 @@ export default {
             item.period = zhaiyao[1]
             item.receptContent = zhaiyao[2]
             item.reason = zhaiyao[3]
+            item.refundTypeStr = zhaiyao[4]
             item.openTime = timestamp(item.ctime, 2)
             item.approveTime = timestamp(item.endTime, 2)
             // item.applyDepartment = ''
             return item
           })
-          // 重写部门名称
-          // const idArr = this.tableData.map((item) => item.applyId)
-          // this.$http.Backend.changeDepart(idArr).then(
-          //   ({ data: { TeacherDepartmentRelationList } }) => {
-          //     console.info('lklk-已撤销', idArr, TeacherDepartmentRelationList)
-          //     if (TeacherDepartmentRelationList.length) {
-          //       TeacherDepartmentRelationList.forEach((item, index) => {
-          //         this.tableData.forEach((itemx, indexX) => {
-          //           if (item.teacher_id === itemx.applyId) {
-          //             itemx.applyDepartment = item.department.name
-          //           }
-          //         })
-          //       })
-          //     }
-          //   }
-          // )
         }
+      })
+    },
+    calcTableHeight() {
+      this.$nextTick(() => {
+        const tableHeight =
+          document.body.clientHeight - this.$refs.tableInner.offsetTop - 160
+        this.tableHeight = tableHeight + ''
       })
     }
   }
