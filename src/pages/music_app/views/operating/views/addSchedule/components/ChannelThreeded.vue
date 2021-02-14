@@ -77,6 +77,11 @@
               class="margin_l10"
             />-->
             <i
+              class="el-icon-remove-outline remove-btn"
+              v-if="formList.length>1"
+              @click="removeFormItem(index)"
+            ></i>
+            <i
               class="el-icon-circle-plus add-btn"
               @click="addFormItem"
               v-if="formList.length && index === formList.length - 1"
@@ -250,6 +255,9 @@ export default {
         this.$message.error('配置出错')
       }
     },
+    removeFormItem(index){
+      this.formList.splice(index,1)
+    },
     // 添加一个渠道池
     addFormItem() {
       this.formList.push(cloneDeep(this.formItem))
@@ -340,6 +348,11 @@ export default {
       .add-btn {
         font-size: 25px;
         color: #409eff;
+        cursor: pointer;
+      }
+      .remove-btn {
+        font-size: 25px;
+        color:#409eff;
         cursor: pointer;
       }
     }
