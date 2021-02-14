@@ -112,7 +112,7 @@ export default {
 .left-container {
   border: 1px solid #ebeef5;
   border-radius: 4px;
-
+  min-width:200px;
   .elScrollbar {
     height: 350px;
     padding: 15px 0;
