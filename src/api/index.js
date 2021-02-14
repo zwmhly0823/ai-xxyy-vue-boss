@@ -45,10 +45,11 @@ import Setting from './modules/Setting'
 import TeamV2 from './modules/TeamV2'
 import Active from './modules/Active'
 import TeamV3 from './modules/studentTeam/TeamV3' // 班级接口
-
+import Complaint from './modules/complaint/complaint.js' // 投诉中心
 
 export default Object.assign({},
   // { writeApp },
+  { Complaint },
   {
     Base
   }, {

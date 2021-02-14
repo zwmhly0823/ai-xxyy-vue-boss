@@ -301,22 +301,27 @@ export default {
       dialogVisible: false,
       levelList: [
         {
-          text: 'S1进阶',
+          text: 'M1',
           id: 'S1'
         },
         {
-          text: 'S2基础',
+          text: 'M2',
           id: 'S2'
         },
         {
-          text: 'S3',
+          text: 'M3',
           id: 'S3'
+        },
+        {
+          text: 'M4',
+          id: 'S4'
         }
       ],
       levelObj: {
-        S1: 'S1进阶',
-        S2: 'S2基础',
-        S3: 'S3'
+        S1: 'M1',
+        S2: 'M2',
+        S3: 'M3',
+        S4: 'M4'
       },
       tableData: [],
       isValidate: true,
@@ -360,7 +365,6 @@ export default {
   },
   watch: {},
   async created() {
-    console.log(this.$route.params)
     const { courseType = '0' } = this.$route.params // courseType = '0' 体验课
     // 根据老师ids获取招生排期设置中老师配置信息 TODO:
 
@@ -489,6 +493,7 @@ export default {
     async getTeacherConfigList() {
       this.flags.loading = true
       try {
+        console.log(this.params)
         const teacherList = await this.$http.Operating.getTeacherConfigList(
           this.params
         )

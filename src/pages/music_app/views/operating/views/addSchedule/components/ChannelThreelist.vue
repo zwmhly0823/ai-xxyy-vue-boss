@@ -78,7 +78,6 @@ export default {
   methods: {
     pageChange_handler() {},
     editRow(row) {
-      console.log(row)
       this.$emit('editRow', row)
     }
   }

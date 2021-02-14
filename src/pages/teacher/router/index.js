@@ -93,6 +93,15 @@ const routes = [{
     },
     component: () => import('../views/loginRecord/index.vue')
   },
+  {
+    path: '/wechatWaterArmy',
+    name: 'wechatWaterArmy',
+    meta: {
+      title: '水军微信',
+      keepAlive: false
+    },
+    component: () => import('../views/wechatWaterArmy/index.vue')
+  },
   ...systemAccount
 ]
 
