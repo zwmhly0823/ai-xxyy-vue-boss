@@ -724,6 +724,14 @@ if (staff.roleId === '19') {
         ...adminTeacherRouter,
         ...superTeacherRouter,
         {
+          path: '/wechatWaterArmy',
+          name: 'wechatWaterArmy',
+          meta: {
+            title: '水军微信',
+            module: 'teacher'
+          }
+        },
+        {
           path: '/workHandover',
           name: 'workHandover',
           meta: {
@@ -731,7 +739,6 @@ if (staff.roleId === '19') {
             module: 'teacher'
           }
         },
-        
         {
           path: '/workHandover/partTimeTeacher',
           name: 'partTimeTeacher',

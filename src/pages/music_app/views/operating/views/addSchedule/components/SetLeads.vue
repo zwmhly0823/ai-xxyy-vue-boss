@@ -356,6 +356,7 @@ export default {
 }
 .set-leads-container {
   width: 80%;
+  min-width: 892px;
   margin: 0 auto;
   .btn-area {
     text-align: right;

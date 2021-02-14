@@ -19,11 +19,7 @@
     >
       <div class="dialog-center">
         <div class="channel-list">
-          <div
-            class="channel-item"
-            v-for="(item, index) in formList"
-            :key="index"
-          >
+          <div class="channel-item" v-for="(item, index) in formList" :key="index">
             <div class="label">指定渠道{{ index + 1 }}</div>
             <el-select
               style="margin-left:20px;"
@@ -42,8 +38,7 @@
                 :key="item.id"
                 :label="item.channel_outer_name"
                 :value="item.id"
-              >
-              </el-option>
+              ></el-option>
             </el-select>
             <div class="tip-icon">→</div>
             <!-- <div class="for-teacher"> -->
@@ -71,8 +66,7 @@
                 :key="item.id"
                 :label="item.realname"
                 :value="item.id"
-              >
-              </el-option>
+              ></el-option>
             </el-select>
             <!-- <group-sell
               :teacherscope="teacherscope"
@@ -81,7 +75,7 @@
               @result="selectPayTeacher"
               name="pay_teacher_id"
               class="margin_l10"
-            /> -->
+            />-->
             <i
               class="el-icon-circle-plus add-btn"
               @click="addFormItem"
@@ -92,12 +86,8 @@
         </div>
       </div>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="dialogOperate('cancel')" size="mini"
-          >取 消</el-button
-        >
-        <el-button @click="dialogOperate('submit')" type="primary" size="mini"
-          >提交</el-button
-        >
+        <el-button @click="dialogOperate('cancel')" size="mini">取 消</el-button>
+        <el-button @click="dialogOperate('submit')" type="primary" size="mini">提交</el-button>
       </span>
     </el-dialog>
   </div>
@@ -157,7 +147,8 @@ export default {
         {
           ...this.formItem,
           channel: channelId,
-          isEdit: true
+          isEdit: true,
+          id: this.editChannelThreeded.id
         }
       ]
     }
@@ -173,7 +164,6 @@ export default {
       this.$emit('dialogOperate', { close: true })
     },
     getDepartment(res) {
-      
       const { data, index } = res
       this.formList[index].teacherscope = data.pay_teacher_id || null
       this.formList[index].teacherId = []
@@ -203,17 +193,21 @@ export default {
     },
     packageFormData() {
       const { courseType = '0', period = '', formArr = [] } = this.$route.params
-debugger
       this.formList.forEach((item) => {
         const { channel = '', teacherId = [] } = item
+
+        let editChannelThreededObj = {};
+        if (item.id) editChannelThreededObj = {id:item.id}
         
         teacherId.forEach((id) => {
-          formArr.push({
+          let obj = {
+            id: item.id,
             period,
             channelId: channel,
             teacherId: id,
             courseCategory: courseType !== '0' ? '2' : '0'
-          })
+          }
+          formArr.push(Object.assign(obj,editChannelThreededObj))
         })
       })
       return formArr

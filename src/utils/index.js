@@ -13,6 +13,9 @@ import store from '@/store'
 import { subjects, subjectsList } from '@/config/subjects'
 // import { of } from 'core-js/fn/array'https://s1.meixiu.mobi/Pc/fileUpload/1603790950384.jpeg
 
+export const defaultHead =
+  'https://msb-ai.meixiu.mobi/ai-pm/static/touxiang.png'
+
 /**
  * 是否 toss。 是toss返回 teacher_id,否则返回 null
  * 测试环境同一域名，除localstorage外，根据pathname区别
