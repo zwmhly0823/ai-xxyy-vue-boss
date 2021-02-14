@@ -500,7 +500,7 @@ export default {
     },
     // 后退
     back() {
-      this.$router.push('/approvalCenter')
+      this.$router.push('/approval')
     },
     // 根据手机号获取uid
     createFilter(phonenum) {

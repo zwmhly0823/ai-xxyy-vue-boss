@@ -98,7 +98,7 @@ export default {
     },
     jumpAdjustPage(data) {
       this.$router.push({
-        path: '/approvalCenter/adjust',
+        path: '/approval/adjust',
         query: { adjustType: data }
       })
     },
@@ -107,7 +107,7 @@ export default {
     },
     // 随材打包
     mergeBoxes() {
-      this.$router.push('/approvalCenter/mergeboxes')
+      this.$router.push('/approval/mergeboxes')
     }
   }
 }

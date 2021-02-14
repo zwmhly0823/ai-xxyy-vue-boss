@@ -1016,7 +1016,7 @@ export default {
   methods: {
     // 后退
     back() {
-      this.$router.push('/approvalCenter')
+      this.$router.push('/approval')
     },
     // 关单赠品改变
     giveaway(r) {

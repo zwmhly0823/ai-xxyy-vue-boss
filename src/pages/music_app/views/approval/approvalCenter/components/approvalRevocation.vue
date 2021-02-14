@@ -1117,17 +1117,17 @@ export default {
       }
       if (type === 'ADJUSTMENT_STAGE') {
         this.$router.push({
-          path: '/approvalCenter/adjust',
+          path: '/approval/adjust',
           query: { adjustType: 1 }
         })
       } else if (type === 'ADJUSTMENT_SUP') {
         this.$router.push({
-          path: '/approvalCenter/adjust',
+          path: '/approval/adjust',
           query: { adjustType: 2 }
         })
       } else if (type === 'ADJUSTMENT_CLASS') {
         this.$router.push({
-          path: '/approvalCenter/adjust',
+          path: '/approval/adjust',
           query: { adjustType: 3 }
         })
       }
