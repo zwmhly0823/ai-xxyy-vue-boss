@@ -1,8 +1,10 @@
 <!--
  * @Descripttion: 
  * @version: 
+ * @Author: huzhifu
+ * @Date: 2020-05-07 10:50:45
  * @LastEditors: liukun
- * @LastEditTime: 2020-11-05 19:51:08
+ * @LastEditTime: 2021-01-21 21:30:44
  -->
 <template>
   <div class="adjustModule">
@@ -73,7 +75,7 @@
           ></el-input>
         </el-form-item>
         <!-- isAlipay -->
-        <template v-if="isAlipay">
+        <template v-if="false">
           <el-form-item label="支付宝账号：" prop="alipayAccount">
             <div class="alipayAccount-name">
               <el-input
@@ -116,17 +118,25 @@
               >优惠券退款</el-radio
             >
             <el-radio :label="1">课程退款</el-radio>
-            <el-radio :label="2" v-show="refundForm.businessType === '系统课'"
+            <el-radio
+              :label="2"
+              v-show="
+                refundForm.businessType === '系统课' && moneyCountLevelHalf
+              "
               >降半年课包</el-radio
             >
             <el-radio
               :label="4"
-              v-show="refundForm.businessType === '系统课' && half === 96"
+              v-show="
+                refundForm.businessType === '系统课' && moneyCountLevelFull
+              "
               >降1年课包</el-radio
             >
             <el-radio
               :label="5"
-              v-show="refundForm.businessType === '系统课' && half === 96"
+              v-show="
+                refundForm.businessType === '系统课' && moneyCountLevelFullPlus
+              "
               >降1年半课包</el-radio
             >
             <el-radio :label="3" v-show="refundForm.businessType === '系统课'"
@@ -140,6 +150,7 @@
             refundForm.refundType === 1 && refundForm.businessType === '系统课'
           "
         >
+          <!-- <template> -->
           <el-form-item label="次月课程：" prop="deductMonth">
             <el-radio-group
               v-model="jsonDate3.deductMonth"
@@ -159,13 +170,38 @@
               <el-radio :label="1">扣除随材盒子费用100元</el-radio>
             </el-radio-group>
           </el-form-item>
-          <el-form-item label="关单赠品：" prop="deductGiftx">
-            <el-radio-group v-model="jsonDate3.deductGift" @change="giveaway">
-              <el-radio :label="0">不扣除赠品费用</el-radio>
-              <el-radio :label="1">扣除赠品费用100元</el-radio>
-            </el-radio-group>
+          <el-form-item label="关单赠品：">
+            <span>（选中扣费）</span>
+            <el-table
+              v-show="productData && productData.length"
+              ref="multipleTable"
+              :data="productData"
+              tooltip-effect="dark"
+              border
+              style="width: 50%"
+              @selection-change="handleSelectionChange"
+            >
+              <el-table-column
+                :selectable="checkSelectable"
+                label="是否扣费"
+                type="selection"
+                min-width="55"
+              >
+              </el-table-column>
+              <el-table-column
+                label="赠品信息"
+                prop="name"
+                min-width="120"
+                show-overflow-tooltip
+              >
+              </el-table-column>
+              <el-table-column prop="price" label="赠品价格" min-width="80">
+              </el-table-column>
+            </el-table>
+            <span v-show="!productData.length">暂无关单赠品</span>
           </el-form-item>
         </template>
+
         <!-- 课程退款&&系统课 -->
         <template
           v-if="refundForm.refundType && refundForm.businessType === '系统课'"
@@ -272,6 +308,7 @@ export default {
   components: {
     SearchPhone
   },
+
   // 学员详情跳转来审批query lk
   async mounted() {
     if (this.$route.query && this.$route.query.cellphone) {
@@ -289,13 +326,20 @@ export default {
       })
       if (blurrySearch && blurrySearch[0] && blurrySearch[0].id) {
         this.refundForm.name = blurrySearch[0].id // 保存uid
-        this.getordersWithUid() // uid获取订单list
+        if (this.$route.query && this.$route.query.order_no) {
+          this.getordersWithUid(this.$route.query.order_no) // uid获取订单list
+        } else {
+          this.getordersWithUid() // uid获取订单list
+        }
       } else {
         this.$message.warning('跳转来的手机号没有uid')
       }
     }
+    // const id = '172322292686'
+    // this.$http.Order.getOrderproductList(id).then((res) => {
+    //   this.productData = res.payload
+    // })
   },
-
   watch: {
     // 统一规划退款预警值
     refundAmountComputed: {
@@ -362,20 +406,18 @@ export default {
         this.pureWeekY = '' // 已周数(给接口)
         this.pureWeekS = '' // 剩周数(给接口)
         this.isThird = 0 // 是否第三方
-
         this.jsonDate3 = {
-          // 关单赠品,次月课程,随材盒子
-          deductGift: '',
+          // 次月课程,随材盒子
           deductMonth: '',
           deductMaterial: '',
           boxAble: false
         }
-        this.onePrice = '' // 3条二轮计算用到的单价
+        this.onePrice = '' // 3条二轮计算用到的月单价
       }
     },
     // 关联订单改变~巴拉巴拉
     'refundForm.order': {
-      immediate: true,
+      immediate: false,
       deep: true,
       async handler(newValue, oldValue) {
         this.isAlipay = false
@@ -390,21 +432,20 @@ export default {
         // primary->存起来方便公用
         this.selectOrder = targetItem
         console.info('选择关联订单是我,大家快来公用--', targetItem)
+        console.info('所选订单购买时间戳:', Number(this.selectOrder.buytime))
 
-        // 显示业务类型 : 体验课，首单，续费
+        // 显示业务类型
         if (targetItem && targetItem.regtype) {
           if (
             targetItem.regtype === 'EXPERIENCE' ||
             targetItem.regtype === 'FIRST_ORDER' ||
-            targetItem.regtype === 'RENEW'
+            targetItem.regtype === 'RENEW' ||
+            targetItem.regtype === 'MAKEUP' ||
+            targetItem.regtype === 'RENEW_MAKEUP'
           ) {
             this.refundForm.businessType =
               targetItem.regtype === 'EXPERIENCE' ? '体验课' : '系统课'
           }
-        }
-        // 判断系统课-课时种类(半年课:24  1年课:48  2年课:96)
-        if (this.refundForm.businessType === '系统课') {
-          this.half = this.selectOrder.packagesCourseWeek
         }
         // 导入订单红色显示(只限体验课)
         if (targetItem && targetItem.regtype === 'EXPERIENCE') {
@@ -412,7 +453,6 @@ export default {
             Number(targetItem.importTime) > 0 && targetItem.importTime ? 1 : 0
           console.info(this.isThird)
         }
-
         // 获取该订单剩余金额
         if (this.isThird) {
           // 第三方直接为0
@@ -445,9 +485,23 @@ export default {
             }
           }
         }
-
-        // 查询订单退款规则状态
         if (targetItem && targetItem.id) {
+          // 获取关单赠品列表
+          this.$http.Order.getOrderproductList(targetItem.id).then((res) => {
+            this.productData = res.payload
+          })
+          const query = {
+            orderId: targetItem.id,
+            uid: this.refundForm.name
+          }
+          // 获取国美考级-检测已核销-标识必扣费
+          this.examType = false
+          this.$http.Order.getGmExamByUidAndOrderId(query).then((res) => {
+            if (res.payload && res.payload.status === 'ALREADYCHECK') {
+              this.examType = true
+            }
+          })
+          // 查询订单退款规则状态
           const {
             code,
             payload: { isRefundStatus }
@@ -492,7 +546,6 @@ export default {
             })
           }
         }
-
         // 只有系统课才去查-已上课时
         if (
           targetItem &&
@@ -540,6 +593,8 @@ export default {
                 APP: '微信APP支付',
                 MWEB: '微信H5支付',
                 WAP: '支付宝H5支付',
+                WAPIOS: '支付宝H5支付',
+                ZAPP: '支付宝APP支付',
                 APPLE: '苹果支付',
                 IMPORT: '第三方订单支付'
               }
@@ -574,14 +629,6 @@ export default {
         if (this.selectOrder && Object.keys(this.selectOrder).length) {
           // newValue:0 选中优惠券时-获取优惠券列表
           if (newValue === 0) {
-            // 非课程退款置空其关联的3项
-            this.jsonDate3 = {
-              deductGift: '',
-              deductMonth: '',
-              deductMaterial: '',
-              boxAble: false
-            }
-
             this.refundForm.refundAmount = '' // 退款额
             this.refundForm.refundMonths = ''
             if (this.refundForm.residueFee >= 200) {
@@ -619,6 +666,14 @@ export default {
             this.refundForm.refundMonths = ''
             this.refundForm.refundAmount = '' // 退款额
             if (this.refundForm.businessType === '系统课') {
+              //  VIRTUAL_GOODS-虚拟商品自动勾选-国考
+              const that = this
+              this.$nextTick(() => {
+                that.productData.forEach((row) => {
+                  if (row.type === 'VIRTUAL_GOODS')
+                    this.$refs.multipleTable.toggleRowSelection(row, true)
+                })
+              })
               if (this.pureWeekS && this.pureWeekY !== '') {
                 // 计算系统课退费,得保证取到剩总课时和已上课时
                 const yiYue = Math.ceil(this.pureWeekY / 4) // 已上课向上取整
@@ -662,43 +717,32 @@ export default {
             }
             // 降为半年包(分两类情况价格不同)
           } else if (newValue === 2) {
-            // 非课程退款置空其关联的3项
-            this.jsonDate3 = {
-              deductGift: '',
-              deductMonth: '',
-              deductMaterial: '',
-              boxAble: false
-            }
-
             this.refundForm.refundAmount = '' // 退款额
             this.refundForm.refundMonths = ''
             const shengYue = Math.floor(this.pureWeekS / 4)
-            if (this.half === 48) {
-              // 1年课的情况
-              if (shengYue >= 6 && this.refundForm.residueFee >= 1101) {
-                this.refundForm.refundAmount = 1101
+            if (this.refundForm.businessType === '系统课') {
+              if (shengYue >= 6 && this.refundForm.residueFee >= 881) {
+                if (
+                  this.refundForm.orderAmount === 2680 ||
+                  this.refundForm.orderAmount === 2180
+                ) {
+                  this.refundForm.refundAmount = 881
+                } else if (
+                  this.refundForm.orderAmount === 2800 ||
+                  this.refundForm.orderAmount === 2600
+                ) {
+                  this.refundForm.refundAmount = 1101
+                  // Number(this.selectOrder.buytime) < 1607011200000
+                  //   ? 1101
+                  //   : 1001
+                } else {
+                  this.$message.warning('订单金额未涵盖')
+                }
                 this.refundForm.refundMonths = 6
               } else {
                 this.$message({
                   message:
-                    '该一年课订单课余量低于6个月或余额低于1101,不支持该降包类型',
-                  type: 'warning'
-                })
-                // this.onCancel('refundForm')
-                setTimeout(() => {
-                  location.reload()
-                }, 4000)
-              }
-          
-            } else if (this.half === 96) {
-              // 2年课的情况
-              if (shengYue >= 6 && this.refundForm.residueFee >= 781) {
-                this.refundForm.refundAmount = 781
-                this.refundForm.refundMonths = 6
-              } else {
-                this.$message({
-                  message:
-                    '该两年课订单课余量低于6个月或余额低于781,不支持该降包类型',
+                    '该订单课余量低于6个月或余额低于881,不支持该降包类型',
                   type: 'warning'
                 })
                 // this.onCancel('refundForm')
@@ -718,23 +762,37 @@ export default {
             }
             // 降1年课包
           } else if (newValue === 4) {
-            // 非课程退款置空其关联的3项
-            this.jsonDate3 = {
-              deductGift: '',
-              deductMonth: '',
-              deductMaterial: '',
-              boxAble: false
-            }
             this.refundForm.refundAmount = '' // 退款额
             this.refundForm.refundMonths = ''
             const shengYue = Math.floor(this.pureWeekS / 4)
-            if (shengYue >= 12 && this.refundForm.residueFee >= 2080) {
-              this.refundForm.refundAmount = 2080
+            if (shengYue >= 12 && this.refundForm.residueFee >= 1600) {
+              if (
+                this.refundForm.orderAmount === 3181 ||
+                this.refundForm.orderAmount === 2981
+              ) {
+                this.refundForm.refundAmount = 1880
+              } else if (
+                this.refundForm.orderAmount === 4680 ||
+                this.refundForm.orderAmount === 5280
+              ) {
+                this.refundForm.refundAmount = 2080
+              } else if (
+                this.refundForm.orderAmount === 3681 ||
+                this.refundForm.orderAmount === 3881 ||
+                this.refundForm.orderAmount === 2601 ||
+                this.refundForm.orderAmount === 2701 ||
+                this.refundForm.orderAmount === 5200 ||
+                this.refundForm.orderAmount === 4200
+              ) {
+                this.refundForm.refundAmount = 1600
+              } else {
+                this.$message.warning('订单金额未涵盖')
+              }
               this.refundForm.refundMonths = 12
             } else {
               this.$message({
                 message:
-                  '该两年课订单课余量低于12个月或剩余金额低于2080,不支持该降包类型',
+                  '该订单课余量低于12个月或剩余金额低于1600,不支持该降包类型',
                 type: 'warning'
               })
               // this.onCancel('refundForm')
@@ -745,23 +803,29 @@ export default {
           }
           // 降1年半课包
           else if (newValue === 5) {
-            // 非课程退款置空其关联的3项
-            this.jsonDate3 = {
-              deductGift: '',
-              deductMonth: '',
-              deductMaterial: '',
-              boxAble: false
-            }
             this.refundForm.refundAmount = '' // 退款额
             this.refundForm.refundMonths = ''
             const shengYue = Math.floor(this.pureWeekS / 4)
-            if (shengYue >= 18 && this.refundForm.residueFee >= 3181) {
-              this.refundForm.refundAmount = 3181
+            if (shengYue >= 18 && this.refundForm.residueFee >= 2601) {
+              if (
+                this.refundForm.orderAmount === 5200 ||
+                this.refundForm.orderAmount === 4200
+              ) {
+                this.refundForm.refundAmount = 2701
+              } else if (
+                this.refundForm.orderAmount === 4680 ||
+                this.refundForm.orderAmount === 5280
+              ) {
+                this.refundForm.refundAmount = 3181
+                // Number(this.selectOrder.buytime) < 1607011200000 ? 3181 : 3081
+              } else {
+                this.$message.warning('订单金额未涵盖')
+              }
               this.refundForm.refundMonths = 18
             } else {
               this.$message({
                 message:
-                  '该两年课订单课余量低于18个月或剩余金额低于3181,不支持该降包类型',
+                  '该订单课余量低于18个月或剩余金额低于2601,不支持该降包类型',
                 type: 'warning'
               })
               // this.onCancel('refundForm')
@@ -771,28 +835,25 @@ export default {
             }
           } // 补偿
           else if (newValue === 3) {
-            // 非课程退款置空其关联的3项
-            this.jsonDate3 = {
-              deductGift: '',
-              deductMonth: '',
-              deductMaterial: '',
-              boxAble: false
-            }
-
             this.refundForm.refundAmount = '' // 退款额
             this.refundForm.refundMonths = ''
-            if (this.refundForm.residueFee >= 1101) {
-              this.refundForm.refundAmount = 1101
-            } else {
-              this.$message({
-                message: '退款金额不能大于剩余金额',
-                type: 'warning'
-              })
-              // this.onCancel('refundForm')
-              setTimeout(() => {
-                location.reload()
-              }, 4000)
-            }
+            this.$prompt('100或200', '补偿金额', {
+              showClose: false,
+              showCancelButton: false,
+              closeOnClickModal: false,
+              confirmButtonText: '确定',
+              inputPattern: /^200|100$/,
+              inputErrorMessage: '只能100或200'
+            }).then(({ value }) => {
+              if (this.refundForm.residueFee < value) {
+                this.$message.error('补偿金额不能大于剩余金额')
+                setTimeout(() => {
+                  location.reload()
+                }, 4000)
+              } else {
+                this.refundForm.refundAmount = value
+              }
+            })
           }
         }
       }
@@ -832,13 +893,6 @@ export default {
         }
       }, 200)
     }
-    var deductGift = (rule, value, callback) => {
-      if (this.jsonDate3.deductGift === 1 || this.jsonDate3.deductGift === 0) {
-        callback()
-      } else {
-        callback(new Error('请选择是否扣除赠品费用'))
-      }
-    }
     var deductMonth = (rule, value, callback) => {
       if (
         this.jsonDate3.deductMonth === 1 ||
@@ -861,9 +915,6 @@ export default {
     }
     return {
       rules: {
-        deductGiftx: [
-          { required: true, validator: deductGift, trigger: 'change' }
-        ],
         deductMonth: [
           { required: true, validator: deductMonth, trigger: 'change' }
         ],
@@ -948,13 +999,17 @@ export default {
         orderSourceId: '' // 订单来源id+
       },
       jsonDate3: {
-        // 关单赠品,次月课程,随材盒子
-        deductGift: '',
+        // 次月课程,随材盒子
         deductMonth: '',
         deductMaterial: '',
         boxAble: false
       },
+      productData: [], // 关单赠品table-备选的数据
+      productList: [], // 关单赠品table-选中的数据
+      fontPrice: 0, // 关单赠品最终核算价格
+      examType: false, // 国考券核销否
       onePrice: '', // 关单赠品,次月课程,随材盒子 用到的月单价
+
       orderOptions: [], // 关联订单项
       couponTypeOptions: [], // 优惠券项
       selectOrder: '', // 公用选中的订单项
@@ -962,11 +1017,56 @@ export default {
       everyPrice: '', // 月单价
       pureWeekY: '', // 已周数(给接口)
       pureWeekS: '', // 剩周数(给接口)
-      isThird: 0, // 是第三方订单麽+
-      half: ''
+      isThird: 0 // 是第三方订单麽+
     }
   },
   computed: {
+    moneyCountLevelHalf() {
+      // 半年
+      if (
+        this.refundForm.orderAmount === 2800 ||
+        this.refundForm.orderAmount === 2600 ||
+        this.refundForm.orderAmount === 2680 ||
+        this.refundForm.orderAmount === 2180
+      ) {
+        return true
+      } else {
+        return false
+      }
+    },
+
+    moneyCountLevelFull() {
+      // 一年
+      if (
+        this.refundForm.orderAmount === 3181 ||
+        this.refundForm.orderAmount === 2981 ||
+        this.refundForm.orderAmount === 3681 ||
+        this.refundForm.orderAmount === 3881 ||
+        this.refundForm.orderAmount === 2601 ||
+        this.refundForm.orderAmount === 2701 ||
+        this.refundForm.orderAmount === 4680 ||
+        this.refundForm.orderAmount === 5280 ||
+        this.refundForm.orderAmount === 5200 ||
+        this.refundForm.orderAmount === 4200
+      ) {
+        return true
+      } else {
+        return false
+      }
+    },
+    moneyCountLevelFullPlus() {
+      // 1年半
+      if (
+        this.refundForm.orderAmount === 4680 ||
+        this.refundForm.orderAmount === 5280 ||
+        this.refundForm.orderAmount === 5200 ||
+        this.refundForm.orderAmount === 4200
+      ) {
+        return true
+      } else {
+        return false
+      }
+    },
     pureWeekYto() {
       // 已经上课时间
       if (this.pureWeekY === '') {
@@ -987,21 +1087,21 @@ export default {
         return '报错:退款月数小于0'
       }
     },
-    // 计算退款额
+    // 计算退款额(基础退费基础上+次月课程+随材盒子+关单赠品)
     refundAmountComputed() {
       if (this.refundForm.refundType === 1) {
         // 课程退款
         if (this.jsonDate3.deductMonth === 1 && this.onePrice > 0) {
+          // 保留次月
           return (
             this.refundForm.refundAmount -
-            (Math.round(this.onePrice) +
-              (this.jsonDate3.deductGift === 1 ? 100 : 0))
+            (Math.round(this.onePrice) + this.fontPrice)
           )
         } else if (this.jsonDate3.deductMonth === 0) {
+          // 不保留次月
           return (
             this.refundForm.refundAmount -
-            ((this.jsonDate3.deductMaterial === 1 ? 100 : 0) +
-              (this.jsonDate3.deductGift === 1 ? 100 : 0))
+            ((this.jsonDate3.deductMaterial === 1 ? 100 : 0) + this.fontPrice)
           )
         } else {
           console.warn('注意！这是体验课,无需选择是否保留次月')
@@ -1018,6 +1118,7 @@ export default {
     back() {
       this.$router.push('/approvalCenter')
     },
+
     // 关单赠品改变
     giveaway(r) {
       console.info('选中课程退款后触发-关单赠品继续计算', r)
@@ -1041,6 +1142,7 @@ export default {
     casket(r) {
       console.info('选中课程退款后触发-随材盒子继续计算', r)
     },
+
     // 选择手机号后获取uid和手机号
     getUid({ uid }) {
       console.info(uid)
@@ -1055,8 +1157,12 @@ export default {
         })
       }
     },
+    // 点击是否退费
+    ispay(val) {
+      console.log(val)
+    },
     // 用uid去提货订单数据
-    getordersWithUid() {
+    getordersWithUid(e = '') {
       this.$http.RefundApproval.getOrdersByUid(this.refundForm.name)
         .then(({ code, payload }) => {
           if (!code && payload.length) {
@@ -1068,6 +1174,9 @@ export default {
                 `(^_^)${item.packagesName}`
               return item
             })
+            if (e) {
+              this.refundForm.order = e
+            }
           } else {
             this.$message({
               message: '该手机号未查询到订单',
@@ -1079,6 +1188,33 @@ export default {
           this.$message.error('uid获取失败')
           console.error(err)
         })
+    },
+    checkSelectable(row, index) {
+      if (
+        (row.id === '3462' && this.examType) ||
+        row.id === '3492' ||
+        row.id === '3493'
+      ) {
+        return undefined
+      } else {
+        return true
+      }
+    },
+    handleSelectionChange(val) {
+      this.productList = []
+      this.fontPrice = 0
+      // 核算选中赠品价格+整合选中赠品
+      if (val.length) {
+        val.forEach((item) => {
+          this.fontPrice += item.price
+          this.productList.push(item)
+        })
+      }
+      console.log(
+        '最终关单赠品的扣费详单和金额如下',
+        this.productList,
+        this.fontPrice
+      )
     },
     // 提交表单
     onSubmit(formName) {
@@ -1101,8 +1237,8 @@ export default {
             productMsg: this.selectOrder.relationOrder.split('(^_^)')[1], // 商品信息(关联订单取)
             regType: this.refundForm.businessType, // 业务类型
             channel: this.refundForm.payChannel, // 支付渠道
-            payeeName: this.refundForm.accountName, // 支付宝收款人姓名
-            payeeAccount: this.refundForm.alipayAccount, // 支付宝账号
+            // payeeName: this.refundForm.accountName, // 支付宝收款人姓名
+            // payeeAccount: this.refundForm.alipayAccount, // 支付宝账号
             orderFee: this.refundForm.orderAmount, // 订单金额
             residueFee: this.refundForm.residueFee, // 剩余金额
             refundType: this.refundForm.refundType, // 退款类型:课程退款-1，优惠券退款-0
@@ -1117,7 +1253,7 @@ export default {
             periodResidue: this.pureWeekS, // 剩余上课周期“周”(原味)
             periodRefund: this.refundMonthsComputed * 4, // (剩余的全退)多少周期“周”(floor处理后,小于真实剩余周数periodResidue)-新
 
-            deductGift: this.jsonDate3.deductGift, // 关单赠品
+            productList: this.productList, // 新版关单赠品
             deductMonth: this.jsonDate3.deductMonth, // 次月课程
             deductMaterial: this.jsonDate3.deductMaterial, // 随材盒子
 
@@ -1144,7 +1280,7 @@ export default {
                 .then(({ code }) => {
                   if (!code) {
                     this.$router.push({
-                      name: 'approval',
+                      name: 'approvalCenter',
                       params: { activeApprove: 'second' }
                     })
                     // 回首掏
@@ -1168,7 +1304,7 @@ export default {
               .then(({ code }) => {
                 if (!code) {
                   this.$router.push({
-                    name: 'approval',
+                    name: 'approvalCenter',
                     params: { activeApprove: 'second' }
                   })
                   // 回首掏

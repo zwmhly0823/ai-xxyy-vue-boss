@@ -4,7 +4,7 @@
  * @Author: Lukun
  * @Date: 2020-04-28 13:50:45
  * @LastEditors: liukun
- * @LastEditTime: 2020-11-03 20:15:28
+ * @LastEditTime: 2021-01-09 16:12:34
  -->
 <template>
   <div class="container-content">
@@ -52,6 +52,14 @@
             </el-option>
           </el-select>
         </el-form-item>
+        <el-form-item label="课程进度" class="address-recept">
+          <el-input
+            v-model="formRepair.currentLesson"
+            :disabled="true"
+            :key="now"
+          >
+          </el-input>
+        </el-form-item>
         <div class="address">
           <el-form-item label="收货人" disabled prop="receiptName">
             <el-input disabled v-model="formRepair.receiptName"></el-input>
@@ -80,7 +88,7 @@
             v-model="formRepair.totalAddress"
           ></el-input>
         </el-form-item>
-        <el-form-item v-model="formRepair.type" label="补发类别" prop="type">
+        <el-form-item label="补发类别" prop="type">
           <el-radio-group v-model="formRepair.type" @change="chooseType">
             <el-radio label="MATERIALS">盒子随材</el-radio>
             <el-radio label="STORE">小熊商城</el-radio>
@@ -92,7 +100,6 @@
           v-if="formRepair.type == 'MATERIALS'"
           label="补发方式"
           prop="mode"
-          v-model="formRepair.mode"
         >
           <el-radio-group v-model="formRepair.mode" @change="chooseMode">
             <el-radio label="DEFAULT">整盒补发</el-radio>
@@ -101,11 +108,11 @@
         </el-form-item>
         <el-form-item
           label="补发商品"
-          v-model="formRepair.chooseProductVaidator"
           class="product-repair"
           prop="chooseProductVaidator"
         >
           <div class="reapirProduct">
+            <!-- 课程-难度-级别 -->
             <div
               class="reapirProduct-detail"
               v-if="formRepair.type == 'MATERIALS'"
@@ -126,15 +133,15 @@
                 :leveData="formRepair.level"
               />
             </div>
+            <!-- 所选商品展示+更换入口 -->
             <div class="content-gift">
-              <div class="changeGift" v-if="ensureGift.length > 0">
-                <el-table :data="ensureGift" width="400" border>
-                  <el-table-column align="center" width="400" label="商品名称">
-                    <template slot-scope="scope">
-                      <span>
-                        {{ scope.row.name.split(',').join('&&') }}
-                      </span>
-                    </template>
+              <div class="changeGift" v-if="selectName.length > 0">
+                <el-table :data="selectName">
+                  <el-table-column label="商品id" prop="id" align="center">
+                  </el-table-column>
+                  <el-table-column label="商品名称" prop="name" align="center">
+                  </el-table-column>
+                  <el-table-column label="商品数量" prop="count" align="center">
                   </el-table-column>
                 </el-table>
               </div>
@@ -144,9 +151,7 @@
                 ref="ruleProduct"
               >
                 <i class="el-icon-plus"></i>
-                <span v-text="changeProductText">
-                  {{ changeProductText }}
-                </span>
+                <span v-text="changeProductText"></span>
               </div>
             </div>
           </div>
@@ -158,6 +163,44 @@
           >
             <el-radio label="DELIVERY_MISS">发货漏发</el-radio>
             <el-radio label="TRANSPORT_BAD">运输损坏</el-radio>
+            <template v-show="formRepair.type === 'MATERIALS'">
+              <el-radio
+                v-show="formRepair.mode === 'DEFAULT'"
+                label="MULTI_SELF_PAY"
+              >
+                自费补发
+              </el-radio>
+              <el-radio
+                v-show="formRepair.mode === 'DEFAULT'"
+                label="MULTI_LOSS"
+              >
+                丢件补发
+              </el-radio>
+              <el-radio
+                v-show="formRepair.mode === 'DEFAULT'"
+                label="MULTI_TIMEOUT_RETURN"
+              >
+                超时退回
+              </el-radio>
+              <el-radio
+                v-show="formRepair.mode === 'DEFAULT'"
+                label="MULTI_ADJUSTMENT_SUP"
+              >
+                调级补发
+              </el-radio>
+              <el-radio
+                v-show="formRepair.mode === 'SINGLE'"
+                label="SINGLE_QUALITY"
+              >
+                产品质量问题
+              </el-radio>
+              <el-radio
+                v-show="formRepair.mode === 'SINGLE'"
+                label="SINGLE_PIGMENT_LEAKAGE"
+              >
+                颜料撒漏
+              </el-radio>
+            </template>
             <el-radio label="OTHER">其他</el-radio>
           </el-radio-group>
         </el-form-item>
@@ -168,35 +211,32 @@
             class="repair-resolve"
             v-model="formRepair.reissueMsg"
             placeholder="请输入"
+            maxlength="150"
+            show-word-limit
           ></el-input>
         </el-form-item>
         <el-form-item label="附件" prop="attsUrl">
           <el-upload
             action=""
-            :http-request="upload"
-            :class="$style.refundForm_attsUrl"
-            :show-file-list="false"
+            list-type="picture-card"
+            multiple
+            :limit="9"
+            :file-list="fileListC"
+            :on-exceed="onExceed"
+            :http-request="uploadAll"
+            :on-preview="onPreview"
+            :on-remove="onRemove"
+            :on-success="onSuccess"
+            :on-error="onError"
+            :on-progress="onProgress"
+            :on-change="onChange"
+            :before-upload="beforeUpload"
+            :before-remove="beforeRemove"
           >
-            <div v-if="imgShow && !videoShow">
-              <el-image
-                :src="formRepair.attsUrl"
-                fit="contain"
-                :class="$style.avatar"
-              />
+            <div slot="tip" class="el-upload__tip">
+              提示信息内容告知
             </div>
-
-            <div v-else-if="!imgShow && videoShow">
-              <video
-                style="width: 220px; height: 120px"
-                :src="formRepair.attsUrl"
-                controls
-              ></video>
-            </div>
-            <i
-              v-else
-              class="el-icon-plus"
-              :class="$style.avatar_uploader_icon"
-            ></i>
+            <i class="el-icon-plus"></i>
           </el-upload>
         </el-form-item>
         <el-form-item class="box-padding">
@@ -207,6 +247,10 @@
         </el-form-item>
       </el-form>
     </div>
+    <!-- 上传文件的预览弹窗 -->
+    <el-dialog :visible.sync="dialogVisible">
+      <img width="100%" :src="dialogImageUrl" alt="" />
+    </el-dialog>
     <el-dialog
       title="修改收货地址"
       :visible.sync="addresDialog"
@@ -222,10 +266,10 @@
     <el-dialog
       title="选择商品"
       :visible.sync="productDialog"
-      width="30%"
+      width="40%"
       :modal="false"
       :destroy-on-close="true"
-      class="choose-product-gift"
+      class="choose-product-gift shangpin"
       v-if="productDialog"
     >
       <el-table
@@ -236,21 +280,34 @@
         @selection-change="handleSelectionChange"
         align="center"
       >
-        <el-table-column prop="name" label="商品名称" width="250">
+        <el-table-column
+          v-if="formRepair.mode === 'SINGLE'"
+          type="selection"
+          align="center"
+        >
+        </el-table-column>
+        <el-table-column prop="name" label="商品名称" align="center">
         </el-table-column>
         <el-table-column
-          type="selection"
-          width="110"
-          align="center"
           v-if="formRepair.mode === 'SINGLE'"
+          align="center"
+          label="数量"
         >
+          <template slot-scope="scope">
+            <el-input-number
+              :min="1"
+              size="small"
+              v-model="scope.row.count"
+              :disabled="!scope.row.canOperating"
+            ></el-input-number>
+          </template>
         </el-table-column>
         <el-table-column
           align="center"
           v-if="formRepair.mode !== 'SINGLE'"
-          label="选择"
+          label="单选"
         >
-          <input name="Fruit" type="radio" value="" />
+          <input name="Fruit" type="radio" />
         </el-table-column>
       </el-table>
       <span slot="footer" class="dialog-footer">
@@ -266,7 +323,8 @@ import RepairSup from '@/components/MSearch/searchItems/repairSup'
 import Package from './package'
 import { getStaffInfo } from '../common'
 import SearchPhone from '@/components/MSearch/searchItems/searchPhone'
-import uploadFile from '@/utils/upload' // 上传公共方法
+import UploadFile from '@/utils/uploadFiles' // 上传公共方法(单文件上传)
+import { formatTeamNameSup } from '@/utils/supList'
 
 export default {
   components: {
@@ -318,7 +376,8 @@ export default {
     }
     var validateProduct = (rule, value, callback) => {
       setTimeout(() => {
-        if (this.formRepair.chooseProductVaidator) {
+        console.info('触发商品校验', this.selectName.length, this.selectName)
+        if (this.selectName.length) {
           callback() // 自定义校验-以获取到保存到商品信息
         } else {
           callback(new Error('请完成商品信息的选择'))
@@ -326,6 +385,9 @@ export default {
       }, 200)
     }
     return {
+      fileListC: [],
+      dialogImageUrl: '', // 上传文件的预览url
+      dialogVisible: false, // 上传文件的预览弹窗显隐开关
       orderDisable: true,
       applyDepartment: '', // 申请人部门
       applyName: '', // 申请人名字
@@ -358,7 +420,6 @@ export default {
         type: '', // 类型 见下方注解
         mode: '', // 方式 见下方注解
         courseType: '', // 课程类型 1体验课 2系统课 --非必传
-        reason: '', // 原因 见下方注解
         productId: '', // 商品id 多个传0
         productNames: '', // 商品名称 多个,连接
         sup: '', // 难度		--非必传
@@ -366,18 +427,16 @@ export default {
         cellPhone: '', // 附加
         name: '',
         attsUrl: '',
-        reissueMsg: '',
-        chooseProductVaidator: '', // 附加校验
+        reason: '', // 后端补发货原因认这个=↓
+        replenishReason: '', // 补发原因-radio
+        reissueMsg: '', // 补发说明-textarea
         packagesType: '' // 体验课或者系统课首先默认选择
       },
-      imgShow: false, // 附件图片显示
-      videoShow: false, // 附件视频显示
       addresDialog: false,
       textarea: '',
       productDialog: false,
       chooseProductName: this.productDialog,
       userId: '',
-      ensureGift: [], // 完成选择商品
       giftList: [],
       selectName: [],
       changeProductText: '选择商品',
@@ -413,8 +472,7 @@ export default {
         chooseProductVaidator: [
           {
             required: true,
-            validator: validateProduct,
-            trigger: 'change'
+            validator: validateProduct
           }
         ],
         replenishReason: [
@@ -426,16 +484,94 @@ export default {
         ],
         reissueMsg: [
           { required: true, message: '请填写原因', trigger: 'blur' },
-          { min: 0, max: 50, message: '最大长度50个字符', trigger: 'blur' }
+          { min: 0, max: 150, message: '最大长度150个字符', trigger: 'blur' }
         ],
         attsUrl: [
           { required: true, message: '请选择上传的附件', trigger: 'change' }
         ]
-      }
+      },
+      now: new Date().getTime()
     }
   },
 
   methods: {
+    singglefileListPromise() {
+      console.info(this.fileListC)
+      const promiseAll = this.fileListC.map((item) =>
+        new UploadFile(item.raw).init()
+      )
+      console.info('返回promise结果数组', promiseAll)
+      return promiseAll
+    },
+    uploadAll() {
+      // 文件上传巴拉巴拉
+      Promise.all(this.singglefileListPromise())
+        .then((res) => {
+          // 静态方法all 整体都是resolve返回时
+          // this.fileListC = res
+          console.info('整体成功', res)
+          this.formRepair.attsUrl = res.map((item) => item.fileUrl).join()
+        })
+        .catch((err) => {
+          console.log('Promise.all-err', err)
+        })
+    },
+    // 超过个数限制
+    onExceed(files, fileList) {
+      this.$message.warning(
+        `当前限制选择9个文件，本次选择了 ${
+          files.length
+        } 个文件，共选择了 ${files.length + fileList.length} 个文件`
+      )
+    },
+    // 点击预览文件
+    onPreview(file) {
+      this.dialogImageUrl = file.url
+      this.dialogVisible = true
+    },
+    // 移除列表文件之前
+    beforeRemove(file, fileList) {
+      return this.$confirm(`确定移除 ${file.name}？`)
+    },
+    // 移除文件
+    onRemove(file, fileList) {
+      console.info('你移除的文件是', file.name)
+    },
+    // 文件上传成功
+    onSuccess(response, file, fileList) {
+      console.info('文件上传成功', file.name)
+    },
+    // 文件上传失败
+    onError(err2, file, fileList) {
+      console.info('文件上传失败')
+    },
+    // 文件上传中
+    onProgress(event, file, fileList) {
+      console.info('文件正在上传中', file.name)
+    },
+    // 文件变化都捕获
+    onChange(file, fileList) {
+      this.fileListC = fileList
+      console.info(
+        '文件状态改变时的钩子，添加文件、上传成功和上传失败时都会被调用'
+      )
+    },
+    // 上传前-做文件校验
+    beforeUpload(file) {
+      // const isJPG = file.type === 'image/jpeg'
+      // const isLt2M = file.size / 1024 / 1024 < 2
+      // if (!isJPG) {
+      //   this.$message.error('上传头像图片只能是 JPG 格式!')
+      // }
+      // if (!isLt2M) {
+      //   this.$message.error('上传头像图片大小不能超过 2MB!')
+      // }
+      // return isJPG && isLt2M
+      // this.$message.error('上传前可以做校验哟')
+    },
+
+    // -----------------------------------上传分割线----------------------------------------------
+
     // 后退
     back() {
       this.$router.push('/approvalCenter')
@@ -447,49 +583,20 @@ export default {
       this.addresDialog = false
       this.$message('您已取消修改地址')
     },
-    upload(file) {
-      uploadFile(file).then((res) => {
-        this.formRepair.attsUrl = res // 取来图片remote地址
-        if (res) {
-          if (
-            res.includes('.mp4') ||
-            res.includes('.mov') ||
-            res.includes('.FLV') ||
-            res.includes('.rmvb')
-          ) {
-            this.videoShow = true
-            this.imgShow = false
-          }
-          if (
-            res.includes('.png') ||
-            res.includes('.jpg') ||
-            res.includes('.jpeg')
-          ) {
-            this.videoShow = false
-            this.imgShow = true
-          }
-        } else {
-          this.videoShow = false
-          this.imgShow = false
-          this.$message('文件上传失败，请尝试换张图片或者重试')
-        }
-      })
-    },
     // 清空数据
     clearData() {
       this.changeProductText = '选择商品'
       this.giftList = []
-      this.ensureGift = []
       this.selectName = []
       this.formRepair.packagesType = ''
       this.formRepair.sup = ''
       this.formRepair.level = ''
       this.formRepair.mode = ''
-      this.formRepair.chooseProductVaidator = ''
       this.$root.$emit('qingkong', '') // 清空子组件里的值
     },
     // 清空全部数据
     clearAllData() {
+      this.fileListC = []
       this.formRepair = {
         totalAddress: '', // 补上
         userId: '', // 用户id
@@ -512,52 +619,30 @@ export default {
         type: '', // 类型 见下方注解
         mode: '', // 方式 见下方注解
         courseType: '', // 课程类型 1体验课 2系统课 --非必传
-        reason: '', // 原因 见下方注解
         productId: '', // 商品id 多个传0
         productNames: '', // 商品名称 多个,连接
         sup: '', // 难度		--非必传
         level: '',
         cellPhone: '', // 附加
         name: '',
-        chooseProductVaidator: '', // 附加校验
         packagesType: '', // 体验课或者系统课首先默认选择
-        replenishReason: '', // 附件图片显示
-        attsUrl: '',
-        reissueMsg: ''
+        reason: '',
+        replenishReason: '',
+        reissueMsg: '',
+        attsUrl: ''
       }
-      this.imgShow = false
-      this.videoShow = false
       this.changeProductText = '选择商品'
       this.giftList = []
-      this.ensureGift = []
       this.selectName = []
     },
     // 保存商品
     saveGift() {
-      this.ensureGift = []
       if (this.selectName.length) {
-        // 校验
-        this.ensureGift.push({
-          name: this.selectName
-            .map((item) => {
-              return item.name
-            })
-            .join(),
-          id:
-            this.selectName.map((item) => {
-              return item.id
-            }) + ''
-        })
-
         Object.assign(this.formRepair, {
-          productNames: this.ensureGift[0].name,
-          productId:
-            this.ensureGift[0].id.split(',').length > 1
-              ? 0
-              : this.ensureGift[0].id
+          productdetails: this.selectName // 新启用
+          // productId,productNames罢用
         })
         this.chooseCompleted = false
-        this.formRepair.chooseProductVaidator = this.formRepair.productNames
         this.changeProductText = '更换商品'
         this.productDialog = false
       } else {
@@ -566,41 +651,52 @@ export default {
     },
     // 多选选中商品类型
     handleSelectionChange(val) {
-      this.selectName = []
+      // 多选框选中后,才能操作+-
       val.forEach((item) => {
-        this.selectName.push(item)
+        item.canOperating = true
       })
+      this.selectName = val
+      console.info('复选选入筐', this.selectName)
     },
-    // 单选
+    // 单选(只能靠这个事件模拟实现-用SINGLE排除对复选影响)
     handleCurrentChange(val) {
-      this.selectName = []
-      if (val) {
-        this.selectName.push(val)
+      if (this.formRepair.mode !== 'SINGLE') {
+        this.selectName = [val]
+        console.info('单选入筐', this.selectName)
       }
     },
     // getPackageId 获取子组件传来的系统课或者体验课
     getPackageId(val) {
+      this.selectName = []
       this.formRepair.packagesType = val
       this.supKey = Date.now()
     },
-    // getLevel 获取子组件传来的系统课级别
-    getLevel(val) {
-      if (val) {
-        this.formRepair.level = val.replace(/L/g, 'LEVEL')
-      }
-    },
     // getSup 获取子组件传来的系统课或者体验课难度
     getSup(val) {
+      this.selectName = []
       if (val) {
         this.formRepair.sup = `S${val}`
       }
     },
+    // getLevel 获取子组件传来的系统课级别
+    getLevel(val) {
+      this.selectName = []
+      if (val) {
+        this.formRepair.level = val.replace(/L/g, 'LEVEL')
+      }
+    },
+
     // 获取主题商品列表
     getProductTopticGiftList(id) {
       this.$http.Product.getTopicDetail(id).then((res) => {
         if (res && res.payload && res.payload.productList) {
           res.payload.productList.forEach((item) => {
-            this.giftList.push({ id: item.id, name: item.name })
+            this.giftList.push({
+              id: item.id,
+              name: item.name,
+              count: 1,
+              canOperating: false
+            })
           })
         }
       })
@@ -628,7 +724,7 @@ export default {
       this.clearData()
       this.formRepair.mode = val
     },
-    // 选择补发原因
+    // 选择补发原因-为了给reason附上replenishReason补发原因
     choosereplenishReason(val) {
       Object.assign(this.formRepair, { reason: val })
     },
@@ -649,7 +745,7 @@ export default {
       }
     },
     // 通过订单id查询物流信息
-    getSeletInput(val) {
+    async getSeletInput(val) {
       if (val.id) {
         this.$http.Express.getExpressByOrderId(val.id).then((res) => {
           if (res && res.payload) {
@@ -679,8 +775,6 @@ export default {
               receiptAddressProvince: medium.province,
               receiptName: medium.receiptName,
               receiptTel: medium.receiptTel,
-              replenishReason: medium.replenishReason,
-              reason: medium.replenishReason,
               userId: val.uid,
               stage: val.stage,
               mode: '',
@@ -720,6 +814,52 @@ export default {
           }
         })
       }
+      // 根据订单获取课程进度
+      // 分体验课和系统课
+      this.formRepair.currentLesson = ''
+      if (val.regtype === 'EXPERIENCE') {
+        const resTrialData = await this.getTrialClassProgress(val.id)
+        if (resTrialData) {
+          // console.log(resTrialData)
+          this.formRepair.currentLesson = formatTeamNameSup(
+            resTrialData.currentLesson
+          )
+          this.now = new Date().getTime()
+        }
+      } else if (val.regtype === 'FIRST_ORDER' || val.regtype === 'RENEW') {
+        const resSysData = await this.getSystemClassProgress(val.id)
+        if (resSysData) {
+          // console.log(resSysData)
+          this.formRepair.currentLesson = formatTeamNameSup(
+            `${resSysData.currentSuper}${resSysData.currentLevel}${resSysData.currentUnit}${resSysData.currentLesson}`
+          )
+          this.now = new Date().getTime()
+        }
+      }
+    },
+    getTrialClassProgress(orderNo) {
+      return this.$http.Approval.findTrailByOrderNo(orderNo)
+        .then((res) => {
+          if (res.status !== 'OK') {
+            return false
+          }
+          return res.payload
+        })
+        .catch(() => {
+          return false
+        })
+    },
+    getSystemClassProgress(orderNo) {
+      return this.$http.Approval.findSystemByOrderNo(orderNo)
+        .then((res) => {
+          if (res.status !== 'OK') {
+            return false
+          }
+          return res.payload
+        })
+        .catch(() => {
+          return false
+        })
     },
     // 搜索手机号 获取uid 查询订单信息
     getSearchPhone(val) {
@@ -760,7 +900,7 @@ export default {
         })
     },
 
-    // 选择商品
+    // 再次--改变选择商品
     chooseProduct() {
       if (this.formRepair.type && this.formRepair.type !== 'MATERIALS') {
         this.productDialog = true
@@ -778,7 +918,9 @@ export default {
                       this.giftList = []
                       this.giftList.push({
                         id: res.payload.id,
-                        name: res.payload.name
+                        name: res.payload.name,
+                        count: 1,
+                        canOperating: false
                       })
                     }
                   )
@@ -794,7 +936,9 @@ export default {
                       this.giftList = []
                       this.giftList.push({
                         id: res.payload.id,
-                        name: res.payload.name
+                        name: res.payload.name,
+                        count: 1,
+                        canOperating: false
                       })
                     }
                   )
@@ -817,7 +961,12 @@ export default {
                   this.productDialog = true
                   this.giftList = []
                   res.payload.forEach((item) => {
-                    this.giftList.push({ id: item.id, name: item.name })
+                    this.giftList.push({
+                      id: item.id,
+                      name: item.name,
+                      count: 1,
+                      canOperating: false
+                    })
                   })
                 }
               )
@@ -876,7 +1025,7 @@ export default {
             if (res) {
               this.clearData()
               this.$router.push({
-                name: 'approval',
+                name: 'approvalCenter',
                 params: {
                   activeApprove: 'second'
                 }
@@ -927,6 +1076,10 @@ export default {
   }
   .choose-product-gift {
     padding: 20px;
+  }
+  /deep/.shangpin .el-dialog {
+    max-height: 600px;
+    overflow-y: auto;
   }
 
   .content {
@@ -992,21 +1145,5 @@ export default {
 .searchphonerepair,
 .chooseinput {
   width: 50% !important;
-}
-.refundForm_attsUrl {
-  text-align: center;
-  border: 1px dashed #d9d9d9;
-  border-radius: 6px;
-  cursor: pointer;
-  width: 178px;
-  overflow: hidden;
-}
-.avatar_uploader_icon {
-  font-size: 28px;
-  color: #8c939d;
-  width: 178px;
-  height: 178px;
-  line-height: 178px;
-  text-align: center;
 }
 </style>

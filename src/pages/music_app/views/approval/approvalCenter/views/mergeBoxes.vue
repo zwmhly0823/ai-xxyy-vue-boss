@@ -54,10 +54,10 @@
           @change="selectPackageCount"
         >
           <el-option
-            v-for="i in packageCountList"
-            :key="i"
-            :label="i"
-            :value="i"
+            v-for="(i, key) in packageCountList"
+            :key="key"
+            :label="i.label"
+            :value="i.value"
           ></el-option>
         </el-select>
       </el-form-item>
@@ -153,7 +153,7 @@ export default {
         ]
       },
       // 选择打包数量
-      packageCountList: 0,
+      packageCountList: [],
       // 商品信息
       showGoods: false,
       goodsData: [],
@@ -209,7 +209,7 @@ export default {
           }
         ]
       }
-      this.packageCountList = 0
+      this.packageCountList = []
       // 隐藏商品信息
       this.showGoods = false
     },
@@ -294,6 +294,7 @@ export default {
             this.formData.expressInfo = res.payload.productName
             return res.payload
           } else {
+            this.formData.expressInfo = ''
             this.$message({
               message: '该订单没有物流信息..',
               type: 'warning'
@@ -342,9 +343,19 @@ export default {
       }
       if (baseCount - curLevel > this.goodsData.length) {
         // 没那么多货，比如说课时到6月，但货只有5月的
-        this.packageCountList = this.goodsData.length
+        for (let i = 1, len = this.goodsData.length; i <= len; i++) {
+          this.packageCountList.push({
+            label: `${i}个月`,
+            value: i
+          })
+        }
       } else {
-        this.packageCountList = baseCount - baseCount
+        for (let i = 1, len = baseCount - curLevel; i <= len; i++) {
+          this.packageCountList.push({
+            label: `${i}个月`,
+            value: i
+          })
+        }
       }
     },
     selectPackageCount(val) {

@@ -3,14 +3,14 @@
  * @version: 
  * @Author: Shasen
  * @Date: 2020-08-05 17:47:58
- * @LastEditors: Shasen
- * @LastEditTime: 2020-08-08 14:31:27
+ * @LastEditors: YangJiyong
+ * @LastEditTime: 2021-01-01 15:45:34
  -->
 <template>
   <el-drawer
     :visible.sync="drawerGift"
     :destroy-on-close="true"
-    size="50%"
+    size="35%"
     class="drawer-approval-detail"
     :before-close="handleClose"
     :modal="false"
@@ -112,9 +112,13 @@
               staffId === '490293972040814592')
         "
       >
-        <el-col :span="20" :offset="1">
-          <el-button type="button" @click="refuseDialog">拒 绝</el-button>
-          <el-button type="button" @click="ensureReplenish">同 意</el-button>
+        <el-col :span="20" :offset="1" style="margin-top: 40px">
+          <el-button type="button" size="mini" @click="refuseDialog"
+            >拒 绝</el-button
+          >
+          <el-button type="primary" size="mini" @click="ensureReplenish"
+            >同 意</el-button
+          >
         </el-col>
       </el-row>
     </div>
@@ -201,4 +205,13 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.approvallk {
+  ::v-deep {
+    .el-row {
+      margin-bottom: 10px;
+      font-size: 12px;
+    }
+  }
+}
+</style>
