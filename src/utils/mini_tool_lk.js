@@ -44,3 +44,13 @@ export const formatTime = function(millisecondsLk) {
     (seconds < 10 ? '0' + seconds : seconds)
   )
 }
+// 模块间跳转-兼容dev test 多出来的 ai-app-vue-toss-dev
+export function assertdt(lope) {
+  const origin = window.location.origin
+  if (origin.includes('dev')) {
+    lope = '/ai-app-vue-boss-dev' + lope
+  } else if (origin.includes('test')) {
+    lope = '/ai-app-vue-boss-test' + lope
+  }
+  return origin + lope
+}
