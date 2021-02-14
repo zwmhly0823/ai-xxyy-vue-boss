@@ -406,14 +406,13 @@ export default {
     },
     // 下载单张二维码
     onUpload(row) {
-      console.log(row)
       const url = row.short_er_code
-      // setTimeout(() => {
-      //   downloadByBlob(
-      //     url,
-      //     `${row.p_channel_class_name}-${row.channel_class_name}-${row.channel_inner_name}-${row.id}`
-      //   )
-      // }, 300)
+      setTimeout(() => {
+        downloadByBlob(
+          url,
+          `${row.p_channel_class_name}-${row.channel_class_name}-${row.channel_inner_name}-${row.id}`
+        )
+      }, 300)
     },
     // 批量下载二维码
     onBulkDownload() {

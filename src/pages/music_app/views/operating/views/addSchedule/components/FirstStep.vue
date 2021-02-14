@@ -82,7 +82,8 @@
                 >
                 </el-date-picker>-->
               </el-form-item>
-              <h6>开始上课时间必须从星期一开始</h6>
+              <!-- 体验课周三，系统课周五 -->
+              <!-- <h6>{{`开始上课时间必须从星期${courseType==0?'三':'五'}开始`}}</h6> -->
             </el-col>
             <!-- </el-row>
             <el-row>-->
@@ -360,8 +361,9 @@ export default {
     const { period = '', courseType = 0 } = this.$route.params
     this.period = period
     this.courseType = courseType
-// 体验课周五放课，系统课周三放课
-    this.courseType==1 ? (this.passWeek = [3]) : (this.passWeek = [5])
+// 体验课  5,6,0,1
+// 系统课  3,6
+    this.courseType==0 ? (this.passWeek = [5,6,0,1]) : (this.passWeek = [3,6])
     
     if (+period) {
       // 编辑页面 TODO:

@@ -537,6 +537,16 @@ if (staff.roleId === '19') {
             module
           }
         },
+        // 投诉中心  经理和区长可以查看
+        {
+          path: '/complaint',
+          name: 'complaint',
+          // hidden: teacherInfo.dutyId !== '1',
+          meta: {
+            title: '投诉中心',
+            module
+          }
+        },
         ...uploadFilePeimission,
         ...superOperatingRouter,
         ...adminRouter
@@ -714,6 +724,14 @@ if (staff.roleId === '19') {
         ...adminTeacherRouter,
         ...superTeacherRouter,
         {
+          path: '/wechatWaterArmy',
+          name: 'wechatWaterArmy',
+          meta: {
+            title: '水军微信',
+            module: 'teacher'
+          }
+        },
+        {
           path: '/workHandover',
           name: 'workHandover',
           meta: {
@@ -721,7 +739,6 @@ if (staff.roleId === '19') {
             module: 'teacher'
           }
         },
-        
         {
           path: '/workHandover/partTimeTeacher',
           name: 'partTimeTeacher',
