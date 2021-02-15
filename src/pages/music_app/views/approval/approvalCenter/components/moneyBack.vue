@@ -82,7 +82,6 @@
         <el-form-item label="交易金额：" prop="orderAmount">
           <el-input v-model="refundForm.orderAmount" disabled :class="$style.order100"></el-input>
         </el-form-item>
-
         <el-form-item label="剩余金额：" prop="residueFee">
           <el-input v-model="refundForm.residueFee" disabled :class="$style.order100"></el-input>
         </el-form-item>
@@ -136,45 +135,30 @@
               <el-radio :label="1">扣除随材盒子费用100元</el-radio>
             </el-radio-group>
           </el-form-item>
-
-          <el-form-item v-if="giftsList.length>0" label="赠品列表：" prop="giftType">
-            <el-checkbox-group
-              v-model="checkedGifts"
-              value-key="productId"
-              @change="handleCheckedGiftsChange"
-            >
-              <el-checkbox
-                v-for="item in giftsList"
-                :key="'id'+item.productId"
-                :label="item"
-              >{{item.productName+' — ￥'+item.productPrice}}</el-checkbox>
-            </el-checkbox-group>
-          </el-form-item>
-          <el-form-item label="赠品退款：" prop="giftRefund">
-            <el-input v-model="fontPrice" disabled :class="$style.order100"></el-input>
-          </el-form-item>
-
           <el-form-item label="关单赠品：">
-            <span>（选中扣费）</span>
+            <span>( 赠品不可分割 )</span>
             <el-table
               v-show="productData && productData.length"
               ref="multipleTable"
               :data="productData"
-              tooltip-effect="dark"
               border
               style="width: 50%"
-              @selection-change="handleSelectionChange"
             >
               <el-table-column
-                :selectable="checkSelectable"
-                label="是否扣费"
-                type="selection"
-                min-width="55"
+                label="赠品信息"
+                prop="productName"
+                min-width="120"
+                show-overflow-tooltip
               ></el-table-column>
-              <el-table-column label="赠品信息" prop="name" min-width="120" show-overflow-tooltip></el-table-column>
-              <el-table-column prop="price" label="赠品价格" min-width="80"></el-table-column>
+              <el-table-column prop="productPrice" label="赠品价格" min-width="80"></el-table-column>
             </el-table>
             <span v-show="!productData.length">暂无关单赠品</span>
+          </el-form-item>
+          <el-form-item label="是否扣除赠品金额">
+            <el-radio-group v-model="giftsFlag" @change="handlerGiftsFlag">
+              <el-radio :label="0">不扣除赠品费用</el-radio>
+              <el-radio :label="1">{{`扣除赠品费用${giftsPrice}元`}}</el-radio>
+            </el-radio-group>
           </el-form-item>
         </template>
 
@@ -371,7 +355,6 @@ export default {
       immediate: false,
       deep: true,
       async handler(newValue, oldValue) {
-        const _this = this
         this.isAlipay = false
         this.refundForm.payChannel = '' // 支付渠道
         this.refundForm.refundType = '' // 退款类型
@@ -424,7 +407,7 @@ export default {
               })
             })
             if (!code && payload > 0) {
-              this.refundForm.residueFee = payload
+              this.refundForm.residueFee = 10000
             } else {
               this.$message({
                 message: '该订单剩余金额获取失败或为0',
@@ -439,30 +422,17 @@ export default {
         }
         if (targetItem && targetItem.id) {
           // 获取关单赠品列表
-          // this.$http.Order.getOrderproductList(targetItem.id).then((res) => {
-          //   this.productData = res.payload
-          // })
-
-          // 查询关单赠品
-          const gifts = await this.$http.Approval.findOrderGiftApprovalStatus(
-            targetItem.id
-          )
-          if (!gifts.payload.existFlag) {
-            this.$http.Approval.findOrderGiftInfo(targetItem.id).then((res) => {
-              _this.giftsList = res.payload.itemInfoModelList
-            })
-          }
+          this.$http.Approval.findOrderGiftInfo(targetItem.id).then((res) => {
+            this.productData = res.payload.itemInfoModelList
+            this.giftsPrice = +res.payload.productPrice
+          })
           const query = {
             orderId: targetItem.id,
             uid: this.refundForm.name
           }
           // 获取国美考级-检测已核销-标识必扣费
           this.examType = false
-          // this.$http.Order.getGmExamByUidAndOrderId(query).then((res) => {
-          //   if (res.payload && res.payload.status === 'ALREADYCHECK') {
-          //     this.examType = true
-          //   }
-          // })
+
           // 查询订单退款规则状态
           const {
             code,
@@ -876,12 +846,10 @@ export default {
       }
     }
     return {
-      giftsList: [],
-      checkedGifts: [],
+      // 是否扣除赠品
+      giftsFlag:0,
+      giftsPrice:0,
       rules: {
-        giftRefund: [
-          { required: true, message: '请选择赠品', trigger: 'blur' }
-        ],
         deductMonth: [
           { required: true, validator: deductMonth, trigger: 'change' }
         ],
@@ -1081,12 +1049,9 @@ export default {
     }
   },
   methods: {
-    handleCheckedGiftsChange() {
-      let plusNum = 0
-      this.checkedGifts.forEach((item) => {
-        plusNum += item.productPrice
-      })
-      this.fontPrice = plusNum
+    // 切换是否扣除赠品
+    handlerGiftsFlag(val){
+      this.fontPrice = val?this.giftsPrice:0;
     },
     // 后退
     back() {
@@ -1174,22 +1139,7 @@ export default {
         return true
       }
     },
-    handleSelectionChange(val) {
-      this.productList = []
-      this.fontPrice = 0
-      // 核算选中赠品价格+整合选中赠品
-      if (val.length) {
-        val.forEach((item) => {
-          this.fontPrice += item.price
-          this.productList.push(item)
-        })
-      }
-      console.log(
-        '最终关单赠品的扣费详单和金额如下',
-        this.productList,
-        this.fontPrice
-      )
-    },
+
     // 提交表单
     onSubmit(formName) {
       this.$refs[formName].validate((valid) => {
