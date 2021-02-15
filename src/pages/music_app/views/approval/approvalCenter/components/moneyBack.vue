@@ -41,38 +41,21 @@
               :key="item.outTradeNo"
               :value="item.outTradeNo"
               :label="item.relationOrder"
-            >
-            </el-option>
+            ></el-option>
           </el-select>
           <div :class="$style.tip" v-if="isThird">该订单为第三方导入订单</div>
         </el-form-item>
         <el-form-item label="退款规则：" prop="isRules">
-          <el-input
-            v-model="refundForm.isRules"
-            disabled
-            :class="$style.order100"
-          ></el-input>
+          <el-input v-model="refundForm.isRules" disabled :class="$style.order100"></el-input>
         </el-form-item>
         <el-form-item label="业务类型：" prop="businessType">
-          <el-input
-            v-model="refundForm.businessType"
-            disabled
-            :class="$style.order100"
-          ></el-input>
+          <el-input v-model="refundForm.businessType" disabled :class="$style.order100"></el-input>
         </el-form-item>
         <el-form-item label="订单来源" prop="orderSource" v-if="isThird">
-          <el-input
-            v-model="refundForm.orderSource"
-            disabled
-            :class="$style.order100"
-          ></el-input>
+          <el-input v-model="refundForm.orderSource" disabled :class="$style.order100"></el-input>
         </el-form-item>
         <el-form-item label="支付渠道：" prop="payChannel">
-          <el-input
-            v-model="refundForm.payChannel"
-            disabled
-            :class="$style.order100"
-          ></el-input>
+          <el-input v-model="refundForm.payChannel" disabled :class="$style.order100"></el-input>
         </el-form-item>
         <!-- isAlipay -->
         <template v-if="false">
@@ -92,56 +75,42 @@
                 placeholder="请输入收款人姓名"
                 :class="$style.order100"
               ></el-input>
-              <div :class="$style.tip">
-                支付宝原路退回的，需要填写支付宝实名认证的姓名
-              </div>
+              <div :class="$style.tip">支付宝原路退回的，需要填写支付宝实名认证的姓名</div>
             </div>
           </el-form-item>
         </template>
         <el-form-item label="交易金额：" prop="orderAmount">
-          <el-input
-            v-model="refundForm.orderAmount"
-            disabled
-            :class="$style.order100"
-          ></el-input>
+          <el-input v-model="refundForm.orderAmount" disabled :class="$style.order100"></el-input>
         </el-form-item>
+
         <el-form-item label="剩余金额：" prop="residueFee">
-          <el-input
-            v-model="refundForm.residueFee"
-            disabled
-            :class="$style.order100"
-          ></el-input>
+          <el-input v-model="refundForm.residueFee" disabled :class="$style.order100"></el-input>
         </el-form-item>
         <el-form-item label="退款类型：" prop="refundType">
           <el-radio-group v-model="refundForm.refundType">
-            <el-radio :label="0" v-show="refundForm.businessType === '系统课'"
-              >优惠券退款</el-radio
-            >
+            <el-radio :label="0" v-show="refundForm.businessType === '系统课'">优惠券退款</el-radio>
             <el-radio :label="1">课程退款</el-radio>
             <el-radio
               :label="2"
               v-show="
                 refundForm.businessType === '系统课' && moneyCountLevelHalf
               "
-              >降半年课包</el-radio
-            >
+            >降半年课包</el-radio>
             <el-radio
               :label="4"
               v-show="
                 refundForm.businessType === '系统课' && moneyCountLevelFull
               "
-              >降1年课包</el-radio
-            >
+            >降1年课包</el-radio>
             <el-radio
               :label="5"
               v-show="
                 refundForm.businessType === '系统课' && moneyCountLevelFullPlus
               "
-              >降1年半课包</el-radio
-            >
-            <el-radio :label="3" v-show="refundForm.businessType === '系统课'"
+            >降1年半课包</el-radio>
+            <!-- <el-radio :label="3" v-show="refundForm.businessType === '系统课'"
               >补偿</el-radio
-            >
+            >-->
           </el-radio-group>
         </el-form-item>
         <!-- 关单赠品-次月课程-随材盒子(出现条件系统课+选中课程退款) -->
@@ -152,10 +121,7 @@
         >
           <!-- <template> -->
           <el-form-item label="次月课程：" prop="deductMonth">
-            <el-radio-group
-              v-model="jsonDate3.deductMonth"
-              @change="reduceNextMonth"
-            >
+            <el-radio-group v-model="jsonDate3.deductMonth" @change="reduceNextMonth">
               <el-radio :label="0">不保留</el-radio>
               <el-radio :label="1">保留</el-radio>
             </el-radio-group>
@@ -170,6 +136,24 @@
               <el-radio :label="1">扣除随材盒子费用100元</el-radio>
             </el-radio-group>
           </el-form-item>
+
+          <el-form-item v-if="giftsList.length>0" label="赠品列表：" prop="giftType">
+            <el-checkbox-group
+              v-model="checkedGifts"
+              value-key="productId"
+              @change="handleCheckedGiftsChange"
+            >
+              <el-checkbox
+                v-for="item in giftsList"
+                :key="'id'+item.productId"
+                :label="item"
+              >{{item.productName+' — ￥'+item.productPrice}}</el-checkbox>
+            </el-checkbox-group>
+          </el-form-item>
+          <el-form-item label="赠品退款：" prop="giftRefund">
+            <el-input v-model="fontPrice" disabled :class="$style.order100"></el-input>
+          </el-form-item>
+
           <el-form-item label="关单赠品：">
             <span>（选中扣费）</span>
             <el-table
@@ -186,32 +170,18 @@
                 label="是否扣费"
                 type="selection"
                 min-width="55"
-              >
-              </el-table-column>
-              <el-table-column
-                label="赠品信息"
-                prop="name"
-                min-width="120"
-                show-overflow-tooltip
-              >
-              </el-table-column>
-              <el-table-column prop="price" label="赠品价格" min-width="80">
-              </el-table-column>
+              ></el-table-column>
+              <el-table-column label="赠品信息" prop="name" min-width="120" show-overflow-tooltip></el-table-column>
+              <el-table-column prop="price" label="赠品价格" min-width="80"></el-table-column>
             </el-table>
             <span v-show="!productData.length">暂无关单赠品</span>
           </el-form-item>
         </template>
 
         <!-- 课程退款&&系统课 -->
-        <template
-          v-if="refundForm.refundType && refundForm.businessType === '系统课'"
-        >
+        <template v-if="refundForm.refundType && refundForm.businessType === '系统课'">
           <el-form-item label="用户已上课周期：" prop="pureWeekYto">
-            <el-input
-              v-model="pureWeekYto"
-              disabled
-              :class="$style.order100"
-            ></el-input>
+            <el-input v-model="pureWeekYto" disabled :class="$style.order100"></el-input>
           </el-form-item>
         </template>
         <el-form-item
@@ -231,22 +201,13 @@
               v-for="item in couponTypeOptions"
               :key="item.name + Math.random()"
               :value="item.name"
-            >
-            </el-option>
+            ></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="退款金额：" prop="refundAmount">
-          <el-input
-            v-model="refundAmountComputed"
-            disabled
-            :class="$style.order100"
-          ></el-input>
+          <el-input v-model="refundAmountComputed" disabled :class="$style.order100"></el-input>
         </el-form-item>
-        <el-form-item
-          v-if="refundForm.refundType"
-          label="退款原因："
-          prop="reason"
-        >
+        <el-form-item v-if="refundForm.refundType" label="退款原因：" prop="reason">
           <el-radio-group v-model="refundForm.reason">
             <el-radio label="服务">服务</el-radio>
             <el-radio label="内容">内容</el-radio>
@@ -272,28 +233,18 @@
         </el-form-item>
         <el-form-item label="附件：">
           <el-upload
-            action=""
+            action
             :http-request="upload"
             :class="$style.refundForm_imageUrl"
             :show-file-list="false"
           >
-            <img
-              v-if="refundForm.imageUrl"
-              :src="refundForm.imageUrl"
-              :class="$style.avatar"
-            />
-            <i
-              v-else
-              class="el-icon-plus"
-              :class="$style.avatar_uploader_icon"
-            ></i>
+            <img v-if="refundForm.imageUrl" :src="refundForm.imageUrl" :class="$style.avatar" />
+            <i v-else class="el-icon-plus" :class="$style.avatar_uploader_icon"></i>
           </el-upload>
         </el-form-item>
         <el-form-item>
           <el-button @click="onCancel('refundForm')">取消</el-button>
-          <el-button type="primary" @click="onSubmit('refundForm')"
-            >提交</el-button
-          >
+          <el-button type="primary" @click="onSubmit('refundForm')">提交</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -420,6 +371,7 @@ export default {
       immediate: false,
       deep: true,
       async handler(newValue, oldValue) {
+        const _this = this
         this.isAlipay = false
         this.refundForm.payChannel = '' // 支付渠道
         this.refundForm.refundType = '' // 退款类型
@@ -433,9 +385,7 @@ export default {
         this.selectOrder = targetItem
         console.info('选择关联订单是我,大家快来公用--', targetItem)
         console.info('所选订单购买时间戳:', Number(this.selectOrder.buytime))
-        // 查询关单赠品
-        const gifts = await this.$http.Approval.findOrderGiftApprovalStatus({orderId:targetItem.id})
-        console.log(gifts)
+
         // 显示业务类型
         if (targetItem && targetItem.regtype) {
           if (
@@ -489,20 +439,30 @@ export default {
         }
         if (targetItem && targetItem.id) {
           // 获取关单赠品列表
-          this.$http.Order.getOrderproductList(targetItem.id).then((res) => {
-            this.productData = res.payload
-          })
+          // this.$http.Order.getOrderproductList(targetItem.id).then((res) => {
+          //   this.productData = res.payload
+          // })
+
+          // 查询关单赠品
+          const gifts = await this.$http.Approval.findOrderGiftApprovalStatus(
+            targetItem.id
+          )
+          if (!gifts.payload.existFlag) {
+            this.$http.Approval.findOrderGiftInfo(targetItem.id).then((res) => {
+              _this.giftsList = res.payload.itemInfoModelList
+            })
+          }
           const query = {
             orderId: targetItem.id,
             uid: this.refundForm.name
           }
           // 获取国美考级-检测已核销-标识必扣费
           this.examType = false
-          this.$http.Order.getGmExamByUidAndOrderId(query).then((res) => {
-            if (res.payload && res.payload.status === 'ALREADYCHECK') {
-              this.examType = true
-            }
-          })
+          // this.$http.Order.getGmExamByUidAndOrderId(query).then((res) => {
+          //   if (res.payload && res.payload.status === 'ALREADYCHECK') {
+          //     this.examType = true
+          //   }
+          // })
           // 查询订单退款规则状态
           const {
             code,
@@ -836,27 +796,27 @@ export default {
               }, 4000)
             }
           } // 补偿
-          else if (newValue === 3) {
-            this.refundForm.refundAmount = '' // 退款额
-            this.refundForm.refundMonths = ''
-            this.$prompt('100或200', '补偿金额', {
-              showClose: false,
-              showCancelButton: false,
-              closeOnClickModal: false,
-              confirmButtonText: '确定',
-              inputPattern: /^200|100$/,
-              inputErrorMessage: '只能100或200'
-            }).then(({ value }) => {
-              if (this.refundForm.residueFee < value) {
-                this.$message.error('补偿金额不能大于剩余金额')
-                setTimeout(() => {
-                  location.reload()
-                }, 4000)
-              } else {
-                this.refundForm.refundAmount = value
-              }
-            })
-          }
+          // else if (newValue === 3) {
+          //   this.refundForm.refundAmount = '' // 退款额
+          //   this.refundForm.refundMonths = ''
+          //   this.$prompt('100或200', '补偿金额', {
+          //     showClose: false,
+          //     showCancelButton: false,
+          //     closeOnClickModal: false,
+          //     confirmButtonText: '确定',
+          //     inputPattern: /^200|100$/,
+          //     inputErrorMessage: '只能100或200'
+          //   }).then(({ value }) => {
+          //     if (this.refundForm.residueFee < value) {
+          //       this.$message.error('补偿金额不能大于剩余金额')
+          //       setTimeout(() => {
+          //         location.reload()
+          //       }, 4000)
+          //     } else {
+          //       this.refundForm.refundAmount = value
+          //     }
+          //   })
+          // }
         }
       }
     },
@@ -916,7 +876,12 @@ export default {
       }
     }
     return {
+      giftsList: [],
+      checkedGifts: [],
       rules: {
+        giftRefund: [
+          { required: true, message: '请选择赠品', trigger: 'blur' }
+        ],
         deductMonth: [
           { required: true, validator: deductMonth, trigger: 'change' }
         ],
@@ -1116,6 +1081,13 @@ export default {
     }
   },
   methods: {
+    handleCheckedGiftsChange() {
+      let plusNum = 0
+      this.checkedGifts.forEach((item) => {
+        plusNum += item.productPrice
+      })
+      this.fontPrice = plusNum
+    },
     // 后退
     back() {
       this.$router.push('/approval')
