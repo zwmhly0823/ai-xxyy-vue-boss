@@ -433,7 +433,11 @@ export default {
         this.selectOrder = targetItem
         console.info('选择关联订单是我,大家快来公用--', targetItem)
         console.info('所选订单购买时间戳:', Number(this.selectOrder.buytime))
-
+        // 查询关单赠品
+        this.$http.Approval.findOrderGiftApprovalStatus({orderId:targetItem.id}).then(res=>{
+          console.log('gifts')
+          console.log(res)
+        })
         // 显示业务类型
         if (targetItem && targetItem.regtype) {
           if (
