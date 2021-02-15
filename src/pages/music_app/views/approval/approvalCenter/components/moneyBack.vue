@@ -155,7 +155,7 @@
             <span v-show="!productData.length">暂无关单赠品</span>
           </el-form-item>
           <el-form-item label="是否扣除赠品金额">
-            <el-radio-group v-model="giftsFlag" @change="handlerGiftsFlag">
+            <el-radio-group :disabled='!productData.length' v-model="giftsFlag" @change="handlerGiftsFlag">
               <el-radio :label="0">不扣除赠品费用</el-radio>
               <el-radio :label="1">{{`扣除赠品费用${giftsPrice}元`}}</el-radio>
             </el-radio-group>
@@ -407,7 +407,7 @@ export default {
               })
             })
             if (!code && payload > 0) {
-              this.refundForm.residueFee = 10000
+              this.refundForm.residueFee = payload
             } else {
               this.$message({
                 message: '该订单剩余金额获取失败或为0',
@@ -1052,6 +1052,7 @@ export default {
     // 切换是否扣除赠品
     handlerGiftsFlag(val){
       this.fontPrice = val?this.giftsPrice:0;
+      this.refundAmountComputed
     },
     // 后退
     back() {
