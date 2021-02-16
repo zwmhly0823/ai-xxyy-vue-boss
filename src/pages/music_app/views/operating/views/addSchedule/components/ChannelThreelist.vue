@@ -45,6 +45,7 @@
     <el-table-column label="操作" align="center">
       <template slot-scope="scope">
         <span @click="editRow(scope.row)" class="edit-row">编辑</span>
+        <span @click="removeRow(scope.row)" class="edit-row">删除</span>
       </template>
     </el-table-column>
   </ele-table>
@@ -79,6 +80,9 @@ export default {
     pageChange_handler() {},
     editRow(row) {
       this.$emit('editRow', row)
+    },
+    removeRow(row){
+      this.$emit('removeRow',row)
     }
   }
 }
@@ -88,6 +92,7 @@ export default {
   .edit-row {
     color: #2a75ed;
     cursor: pointer;
+    margin:10px;
   }
 }
 </style>

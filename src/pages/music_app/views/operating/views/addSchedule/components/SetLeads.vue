@@ -95,7 +95,11 @@
         <!-- 线索分配占比设置end -->
       </div>
     </div>
-    <ChannelThreelist :channelThreededList="channelThreededList" @editRow="editRow"></ChannelThreelist>
+    <ChannelThreelist
+      :channelThreededList="channelThreededList"
+      @editRow="editRow"
+      @removeRow="removeRow"
+    ></ChannelThreelist>
     <!-- 取消、下一步 -->
     <div class="operate-btn">
       <el-button size="small" type="primary" @click="stepOperate(0)">上一步</el-button>
@@ -213,6 +217,21 @@ export default {
     editRow(row) {
       this.centerDialogVisible = true
       this.editChannelThreeded = row
+    },
+    removeRow(row) {
+      this.$http.Operating.removeChannelSales(row.id)
+        .then((res) => {
+          let code = res.code
+          if (code == 0) {
+            this.$message.success('删除成功')
+          }
+        })
+        .catch((err) => {
+          this.$message.error('出错了，删除失败')
+        })
+        .finally(() => {
+          this.getRecord()
+        })
     },
     dialogOperate(args) {
       const { close = true, submitSucc = false } = args

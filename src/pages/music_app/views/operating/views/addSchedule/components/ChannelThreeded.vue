@@ -144,6 +144,7 @@ export default {
   },
   async created() {
     await this.getChannelLeves()
+    console.log(this.editChannelThreeded)
     if (this.editChannelThreeded === null) {
       this.initForm()
     } else {
