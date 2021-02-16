@@ -97,11 +97,7 @@ export default {
   // },
   async created() {
     // await this.getSup()
-    this.supList = this.addSupS
-      ? !this.upper
-        ? SUP_LEVEL_LIST_LOWER
-        : SUP_LEVEL_LIST_UPPER
-      : SUP_LEVEL_LIST
+    this.supList = SUP_LEVEL_LIST_LOWER
   },
   methods: {
     // 难度

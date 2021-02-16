@@ -174,6 +174,7 @@ export default {
         })
         .then((res) => {
           this.loading = false
+          
           this.dataList = res.data.ManagementListEx
         })
         .catch(() => {

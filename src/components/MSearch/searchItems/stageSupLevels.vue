@@ -140,6 +140,7 @@ export default {
     await this.getStage()
     // await this.getSup()
     await this.getLevel()
+    
     this.supList = this.addSupS ? SUP_LEVEL_LIST_LOWER : SUP_LEVEL_LIST
   },
   methods: {
