@@ -85,8 +85,8 @@
         <el-form-item label="剩余金额：" prop="residueFee">
           <el-input v-model="refundForm.residueFee" disabled :class="$style.order100"></el-input>
         </el-form-item>
-        <el-form-item label="退款类型：" prop="refundType">
-          <el-radio-group v-model="refundForm.refundType">
+        <el-form-item label="退款类型："  prop="refundType">
+          <el-radio-group v-model="refundForm.refundType" >
             <el-radio :label="0" v-show="refundForm.businessType === '系统课'">优惠券退款</el-radio>
             <el-radio :label="1">课程退款</el-radio>
             <el-radio
@@ -135,6 +135,12 @@
               <el-radio :label="1">扣除随材盒子费用100元</el-radio>
             </el-radio-group>
           </el-form-item>
+        </template>
+        <template
+          v-if="
+            refundForm.refundType === 1 && refundForm.businessType === '系统课'
+          "
+        >
           <el-form-item label="关单赠品：">
             <span>( 赠品不可分割 )</span>
             <el-table
@@ -155,13 +161,16 @@
             <span v-show="!productData.length">暂无关单赠品</span>
           </el-form-item>
           <el-form-item label="是否扣除赠品金额">
-            <el-radio-group :disabled='!productData.length' v-model="giftsFlag" @change="handlerGiftsFlag">
+            <el-radio-group
+              :disabled="jsonDate3.boxAble"
+              v-model="giftsFlag"
+              @change="handlerGiftsFlag"
+            >
               <el-radio :label="0">不扣除赠品费用</el-radio>
               <el-radio :label="1">{{`扣除赠品费用${giftsPrice}元`}}</el-radio>
             </el-radio-group>
           </el-form-item>
         </template>
-
         <!-- 课程退款&&系统课 -->
         <template v-if="refundForm.refundType && refundForm.businessType === '系统课'">
           <el-form-item label="用户已上课周期：" prop="pureWeekYto">
@@ -343,7 +352,7 @@ export default {
         this.isThird = 0 // 是否第三方
         this.jsonDate3 = {
           // 次月课程,随材盒子
-          deductMonth: '',
+          deductMonth: 0,
           deductMaterial: '',
           boxAble: false
         }
@@ -813,6 +822,16 @@ export default {
           }
         }
       }
+    },
+    fontPrice: {
+      immediate: true,
+      handler(newValue, oldValue) {}
+    },
+    giftsFlag: {
+      immediate: true,
+      handler(newValue) {
+        this.fontPrice = newValue ? this.giftsPrice : 0
+      }
     }
   },
   data() {
@@ -847,8 +866,8 @@ export default {
     }
     return {
       // 是否扣除赠品
-      giftsFlag:0,
-      giftsPrice:0,
+      giftsFlag: '',
+      giftsPrice: 0,
       rules: {
         deductMonth: [
           { required: true, validator: deductMonth, trigger: 'change' }
@@ -1024,6 +1043,8 @@ export default {
     },
     // 计算退款额(基础退费基础上+次月课程+随材盒子+关单赠品)
     refundAmountComputed() {
+      console.log(this.jsonDate3.deductMonth)
+      console.log(this.refundForm.refundType)
       if (this.refundForm.refundType === 1) {
         // 课程退款
         if (this.jsonDate3.deductMonth === 1 && this.onePrice > 0) {
@@ -1050,9 +1071,8 @@ export default {
   },
   methods: {
     // 切换是否扣除赠品
-    handlerGiftsFlag(val){
-      this.fontPrice = val?this.giftsPrice:0;
-      this.refundAmountComputed
+    handlerGiftsFlag(val) {
+      console.log('扣除赠品金额')
     },
     // 后退
     back() {
@@ -1071,10 +1091,12 @@ export default {
       if (r === 1) {
         this.jsonDate3.boxAble = true
         this.jsonDate3.deductMaterial = 0
+        this.giftsFlag = 1
       } else if (r === 0) {
         // 不保留 随材盒子自由选择
         this.jsonDate3.boxAble = false
         this.jsonDate3.deductMaterial = ''
+        this.giftsFlag = ''
       }
     },
 
