@@ -377,6 +377,7 @@ export default {
     },
     // 组件emit
     searchChange(res) {
+      console.log(res)
       this.initSearchData(res, true)
       this.getSystemTeamList(this.tabQuery)
     },

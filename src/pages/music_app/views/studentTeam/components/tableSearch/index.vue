@@ -46,6 +46,7 @@
         @supCallBack="supCallBack"
         :disabled="true"
         :supName="sup"
+        :addSupS="true"
         style="margin-bottom:0px"
       />
     </div>
@@ -158,7 +159,7 @@ export default {
 
       if (sup.length) {
         sup = _.cloneDeep(sup)
-        let strSup = sup.map((item) => `S${item}`)
+        let strSup = sup.map((item) => `${item}`)
         strSup = strSup.join().split(',')
         this.manageChange(strSup, 'sup')
       } else this.manageChange(sup, 'sup')

@@ -359,6 +359,7 @@ export default {
      * search item 回调。 key,自定义参数，res，组件返回的值 res[0]
      */
     getSearchData(key, res) {
+
       const search = res && res[0]
       // console.log(key, res)
 
