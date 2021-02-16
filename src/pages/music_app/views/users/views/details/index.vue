@@ -254,9 +254,7 @@
                   v-for="item of babels_lk"
                   :key="item.id"
                   >{{
-                    item.subject === 'ART_APP'
-                      ? formatTeamNameSup(item.name)
-                      : item.name
+                    item.name||'无信息'
                   }}</el-tag
                 >
               </span>
@@ -436,7 +434,9 @@ export default {
         this.$message.error('标签获取失败')
         console.error(err)
       })
+      
       if (!code && payload && payload.length) {
+        console.log(payload)
         this.babels_lk = payload
       }
     },

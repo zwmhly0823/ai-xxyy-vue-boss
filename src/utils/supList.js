@@ -42,7 +42,7 @@ export const SCHEDULE_LEVE = (type) => {
     return formatSup('S')
   } else return ''
 }
-
+ 
 // 对象， 大小写s
 export const SUP_LEVEL_LOWER = formatSup('s')
 export const SUP_LEVEL_UPPER = formatSup('S')
@@ -50,28 +50,25 @@ export const SUP_LEVEL_UPPER = formatSup('S')
 /**
  * 数组
  * [{id: 'S1', text:'S1-基础'}]
+ * 体验课里面  显示 M1 M2 M3 M4   传值  对应  S1 S2 S3 S4
+ * 系统课里面  显示 MA MB   传值  对应  S8 S9
  * */
 // export const SUP_LEVEL_LIST = formatSupList()
 export const SUP_LEVEL_LIST = [
-  { id: 4, text: 'S1-基础' },
-  { id: 1, text: 'S1-进阶' },
-  { id: 2, text: 'S2-基础' },
-  { id: 5, text: 'S2-进阶' },
-  { id: 3, text: 'S3' }
+  { id: 'S1', text: 'M1' },
+  { id: 'S2', text: 'M2' },
+  { id: 'S3', text: 'M3' },
+  { id: 'S4', text: 'M4' },
 ]
 export const SUP_LEVEL_LIST_LOWER = [
-  { id: 's4', text: 'S1-基础' },
-  { id: 's1', text: 'S1-进阶' },
-  { id: 's2', text: 'S2-基础' },
-  { id: 's5', text: 'S2-进阶' },
-  { id: 's3', text: 'S3' }
+  { id: 'S8', text: 'MA' },
+  { id: 'S9', text: 'MB' },
 ]
 export const SUP_LEVEL_LIST_UPPER = [
-  { id: 'S4', text: 'S1-基础' },
-  { id: 'S1', text: 'S1-进阶' },
-  { id: 'S2', text: 'S2-基础' },
-  { id: 'S5', text: 'S2-进阶' },
-  { id: 'S3', text: 'S3' }
+  { id: 'S1', text: 'M1' },
+  { id: 'S2', text: 'M2' },
+  { id: 'S3', text: 'M3' },
+  { id: 'S4', text: 'M4' },
 ]
 
 /**
