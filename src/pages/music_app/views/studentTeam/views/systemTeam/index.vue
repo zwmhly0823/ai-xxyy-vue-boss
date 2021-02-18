@@ -383,8 +383,8 @@ export default {
         item.ctime = +item.ctime ? formatData(item.ctime) : ''
         item.utime = +item.utime ? formatData(item.utime) : ''
         item.WD = item.current_lesson ? calculateWD(item.current_lesson) : ''
-        item.current_lesson = courseLevelReplace(item.current_lesson, item.sup)
-        item.team_name = courseLevelReplace(item.team_name, item.sup)
+        item.current_lesson = courseLevelReplace(item.current_lesson)
+        item.team_name = courseLevelReplace(item.team_name)
         item.teamStatus = item.team_state
           ? this.teamStatusKeyVal[+item.team_state]
           : ''

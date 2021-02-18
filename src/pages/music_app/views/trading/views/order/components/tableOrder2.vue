@@ -478,7 +478,7 @@ export default {
     // 打开班级详情
     openDetail(id, row) {
       row && console.log(row)
-      id && openBrowserTab(`/music_app/#/teamDetail/${id}/0`)
+      id && openBrowserTab(`/music_app/#/teamTrialDetail/${id}/0`)
     },
     // 用户详情
     openUserDetail(id) {

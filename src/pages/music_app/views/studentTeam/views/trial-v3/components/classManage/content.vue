@@ -384,7 +384,7 @@ export default {
       //   url = 'detail/trial'
       //   teamParams = row.team_state || '0'
       // }
-      url = 'teamDetail'
+      url = 'teamTrialDetail'
       teamParams = row.team_state || '0'
       id &&
         openBrowserTab(

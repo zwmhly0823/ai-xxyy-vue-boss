@@ -200,8 +200,16 @@ export function formatTeamNameSupReverse(teamName) {
 }
 
 // 课程难度替换
-export function courseLevelReplace(str,forStr){
-  let showStr = SUP_LEVEL_ALL[forStr]
-  let outStr = str.replace(forStr,showStr)
-  return outStr
+
+export function courseLevelReplace(name) {
+  let result = ''
+  const reg = /S(\d{1,2})/
+  const str = name.match(reg)
+  if (str) {
+    const num = str[0]
+    result = name.replace(reg, SUP_LEVEL_ALL[num])
+  } else {
+    result = name
+  }
+  return result
 }
