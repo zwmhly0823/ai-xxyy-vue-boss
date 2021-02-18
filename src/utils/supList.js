@@ -70,7 +70,16 @@ export const SUP_LEVEL_LIST_UPPER = [
   { id: 'S3', text: 'M3' },
   { id: 'S4', text: 'M4' },
 ]
-
+export const SUP_LEVEL_TRIAL = {
+  S1:'M1',
+  S2:'M2',
+  S3:'M3',
+  S4:'M4'
+}
+export const SUP_LEVEL_SYSTEM = {
+  S8:'MA',
+  S9:'MB',
+}
 /**
  * 用于特殊情况下，体验课
  */

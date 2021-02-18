@@ -641,7 +641,7 @@ export default {
                 } else {
                   // 全年半年二合一
                   const interfaceTy = (this.pureWeekS + this.pureWeekY) / 4
-                  console.log(this.refundForm.residueFee)
+                  
                   const priceTre = this.refundForm.residueFee / interfaceTy // 单价
                   this.onePrice = priceTre
                   this.refundForm.refundAmount = Math.round(
