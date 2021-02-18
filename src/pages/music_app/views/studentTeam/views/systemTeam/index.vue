@@ -12,11 +12,7 @@
       <div class="grid-content">
         <el-scrollbar wrap-class="scrollbar-wrapper">
           <div class="header-search-container" border>
-            <table-search
-              v-if="showSearch"
-              @change="searchChange"
-              :regType="regType"
-            ></table-search>
+            <table-search v-if="showSearch" @change="searchChange" :regType="regType"></table-search>
           </div>
           <div class="tabs-operate">
             <div
@@ -41,58 +37,28 @@
               @pageChange="pageChange_handler"
               class="mytable add-first-cell-bg"
             >
-              <el-table-column
-                label="班级名称"
-                min-width="110"
-                align="center"
-                prop="team_name"
-              >
+              <el-table-column label="班级名称" min-width="110" align="center" prop="team_name">
                 <template slot-scope="scope">
                   <span
                     @click="goTeamDetail(scope.row)"
                     class="team-name-pointer"
-                  >
-                    {{ scope.row.team_name }}
+                  >{{ scope.row.team_name }}</span>
+                </template>
+              </el-table-column>
+              <el-table-column label="服务组" min-width="120" prop="department_name" align="center"></el-table-column>
+              <el-table-column label="辅导老师" width="80" prop="teacher_realname" align="center"></el-table-column>
+              <el-table-column label="班级人数" min-width="80" align="center" prop="student_count">
+                <template slot-scope="scope">
+                  <span>
+                    {{ scope.row.student_count }}/{{
+                    scope.row.pre_enroll
+                    }}
                   </span>
                 </template>
               </el-table-column>
-              <el-table-column
-                label="服务组"
-                min-width="120"
-                prop="department_name"
-                align="center"
-              ></el-table-column>
-              <el-table-column
-                label="辅导老师"
-                width="80"
-                prop="teacher_realname"
-                align="center"
-              ></el-table-column>
-              <el-table-column
-                label="班级人数"
-                min-width="80"
-                align="center"
-                prop="student_count"
-              >
-                <template slot-scope="scope">
-                  <span
-                    >{{ scope.row.student_count }}/{{
-                      scope.row.pre_enroll
-                    }}</span
-                  >
-                </template>
-              </el-table-column>
-              <el-table-column
-                label="待加好友"
-                min-width="70"
-                prop="unadd_wechat"
-                align="center"
-              >
+              <el-table-column label="待加好友" min-width="70" prop="unadd_wechat" align="center">
                 <template slot="header">
-                  <div
-                    @click="onSortSystemCount('unadd_wechat')"
-                    class="sort-operate-box"
-                  >
+                  <div @click="onSortSystemCount('unadd_wechat')" class="sort-operate-box">
                     <span>待加好友</span>
                     <div class="sort-icon-arrow">
                       <i
@@ -122,10 +88,7 @@
                 align="center"
               >
                 <template slot="header">
-                  <div
-                    @click="onSortSystemCount('to_be_delivered_count')"
-                    class="sort-operate-box"
-                  >
+                  <div @click="onSortSystemCount('to_be_delivered_count')" class="sort-operate-box">
                     <span>待发货</span>
                     <div class="sort-icon-arrow">
                       <i
@@ -220,12 +183,7 @@
                   </div>
                 </template>
               </el-table-column>
-              <el-table-column
-                label="老师微信"
-                min-width="120"
-                prop="teacher_wechat_no"
-                align="center"
-              ></el-table-column>
+              <el-table-column label="老师微信" min-width="120" prop="teacher_wechat_no" align="center"></el-table-column>
               <el-table-column
                 label="班级状态"
                 min-width="70"
@@ -233,24 +191,9 @@
                 align="center"
                 v-if="teamIndex == 4"
               ></el-table-column>
-              <el-table-column
-                label="课程进度"
-                min-width="110"
-                prop="current_lesson"
-                align="center"
-              ></el-table-column>
-              <el-table-column
-                label="开课时间"
-                min-width="100"
-                prop="course_day"
-                align="center"
-              ></el-table-column>
-              <el-table-column
-                label="结课时间"
-                min-width="120"
-                prop="end_course_day"
-                align="center"
-              ></el-table-column>
+              <el-table-column label="课程进度" min-width="110" prop="current_lesson" align="center"></el-table-column>
+              <el-table-column label="开课时间" min-width="100" prop="course_day" align="center"></el-table-column>
+              <el-table-column label="结课时间" min-width="120" prop="end_course_day" align="center"></el-table-column>
             </ele-table>
           </div>
         </el-scrollbar>
@@ -263,7 +206,7 @@
 import _ from 'lodash'
 import TableSearch from '../../components/tableSearch/index'
 import { calculateWD } from '@/utils/validate'
-import { formatTeamNameSup } from '@/utils/supList'
+import { courseLevelReplace } from '@/utils/supList'
 import EleTable from '@/components/Table/EleTable'
 import { formatData, openBrowserTab } from '@/utils/index'
 // import ScheduleTable from './components/index.vue'
@@ -440,11 +383,13 @@ export default {
         item.ctime = +item.ctime ? formatData(item.ctime) : ''
         item.utime = +item.utime ? formatData(item.utime) : ''
         item.WD = item.current_lesson ? calculateWD(item.current_lesson) : ''
-        item.current_lesson = formatTeamNameSup(item.current_lesson)
+        item.current_lesson = courseLevelReplace(item.current_lesson, item.sup)
+        item.team_name = courseLevelReplace(item.team_name, item.sup)
         item.teamStatus = item.team_state
           ? this.teamStatusKeyVal[+item.team_state]
           : ''
       })
+      console.log(list)
     },
     team_tabs_click(team, index) {
       this.teamIndex = index

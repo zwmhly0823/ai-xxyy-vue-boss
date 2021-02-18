@@ -76,6 +76,7 @@ export default {
         break
     }
     this.teamId = id
+     
     this.getTeamInfo()
   },
   methods: {
@@ -89,7 +90,7 @@ export default {
         id: this.teamId
       })
         .then((res) => {
-          // console.log(res, 'team detail')
+          console.log(res, 'team detail')
           this.teamInfo = res?.data?.StudentTrialTeamStatistics || {}
           // console.log(this.teamInfo)
         })

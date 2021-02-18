@@ -53,13 +53,8 @@ export const SUP_LEVEL_UPPER = formatSup('S')
  * 体验课里面  显示 M1 M2 M3 M4   传值  对应  S1 S2 S3 S4
  * 系统课里面  显示 MA MB   传值  对应  S8 S9
  * */
-// export const SUP_LEVEL_LIST = formatSupList()
-export const SUP_LEVEL_LIST = [
-  { id: 'S1', text: 'M1' },
-  { id: 'S2', text: 'M2' },
-  { id: 'S3', text: 'M3' },
-  { id: 'S4', text: 'M4' },
-]
+// export const SUP_LEVEL_LIST_UPPER = formatSupList()
+
 export const SUP_LEVEL_LIST_LOWER = [
   { id: 'S8', text: 'MA' },
   { id: 'S9', text: 'MB' },
@@ -80,11 +75,19 @@ export const SUP_LEVEL_SYSTEM = {
   S8:'MA',
   S9:'MB',
 }
+export const SUP_LEVEL_ALL = {
+  S1:'M1',
+  S2:'M2',
+  S3:'M3',
+  S4:'M4',
+  S8:'MA',
+  S9:'MB',
+}
 /**
  * 用于特殊情况下，体验课
  */
 const trialKey = [1, 2, 3]
-export const SUP_LEVEL_LIST_TRIAL = SUP_LEVEL_LIST.filter((item) =>
+export const SUP_LEVEL_LIST_TRIAL = SUP_LEVEL_LIST_UPPER.filter((item) =>
   trialKey.includes(item.id)
 )
 
@@ -105,7 +108,7 @@ function formatSup(flag = 'S') {
 // flag: s-S
 // function formatSupList(flag = 'S') {
 //   let list = []
-//   const arr = deepClone(SUP_LEVEL_LIST)
+//   const arr = deepClone(SUP_LEVEL_LIST_UPPER)
 //   list = arr.map((item) => {
 //     item.id = `${flag}${item.id}`
 //     return item
@@ -127,6 +130,7 @@ export function getSubLevel(s, upper = false) {
  * S2L1U3 -> S2-基础L1U3
  */
 export function formatTeamNameSup(teamName) {
+  
   if (!teamName) return
   const upperName = teamName.toLocaleUpperCase()
   let idx = -1
@@ -146,6 +150,7 @@ export function formatTeamNameSup(teamName) {
   if (idx >= 0 && !upperName.includes('基础') && !upperName.includes('进阶')) {
     const s = upperName.substr(idx, 2)
     teamName = teamName.replace(s, SUP_LEVEL_UPPER[s])
+    
   }
   // if (
   //   upperName.includes('S1') &&
@@ -192,4 +197,11 @@ export function formatTeamNameSupReverse(teamName) {
     teamName = teamName.replace(s, SUP_LEVEL_LIST_UPPER_REVERSE.get(s))
   }
   return teamName
+}
+
+// 课程难度替换
+export function courseLevelReplace(str,forStr){
+  let showStr = SUP_LEVEL_ALL[forStr]
+  let outStr = str.replace(forStr,showStr)
+  return outStr
 }

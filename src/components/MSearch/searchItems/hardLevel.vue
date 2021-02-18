@@ -34,9 +34,8 @@
 // import axios from '@/api/axiosConfig'
 import { mapState } from 'vuex'
 import {
-  SUP_LEVEL_LIST,
-  SUP_LEVEL_LIST_LOWER,
-  SUP_LEVEL_LIST_UPPER
+  SUP_LEVEL_LIST_UPPER,
+  SUP_LEVEL_LIST_LOWER
 } from '@/utils/supList'
 
 export default {
