@@ -151,6 +151,7 @@
             placeholder="全部体验课难度"
             style="width:140px"
             name="trial_team_id"
+            :courseType="false"
             @result="supCallBackTrial"
           />
           <search-team-name

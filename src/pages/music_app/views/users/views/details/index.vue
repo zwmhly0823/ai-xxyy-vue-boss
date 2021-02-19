@@ -335,7 +335,7 @@ import recommend from './recommendComponents/recommend.vue'
 import showAddress from './addressComponents/showAddress.vue'
 import trackFlow from './trackFlow/index'
 import { GetAgeByBrithday, formatData } from '@/utils/index'
-import { formatTeamNameSup,courseLevelReplace } from '@/utils/supList'
+import { courseLevelReplace } from '@/utils/supList'
 import modifyAddress from './addressComponents/modifyAddress.vue'
 
 export default {
@@ -383,7 +383,6 @@ export default {
       // paneltab name
       tabData: 'detailsInfo',
       defaultHead: 'https://msb-ai.meixiu.mobi/ai-pm/static/touxiang.png',
-      formatTeamNameSup,
       courseLevelReplace
     }
   },

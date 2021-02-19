@@ -7,24 +7,9 @@
  * @LastEditTime: 2020-08-17 16:23:42
  */
 
-import Vue from 'vue'
-import VueRouter from 'vue-router'
-
-Vue.use(VueRouter)
 
 // 工具类路由
 const routes = [
-  // 二级路由
-  {
-    path: '/',
-    name: 'outbound',
-    meta: {
-      title: '呼叫中心',
-      icon: 'el-icon-menu'
-    },
-    redirect: '/CallRecord'
-    // 子路由
-  },
   {
     path: '/CallRecord',
     name: 'CallRecord',
@@ -46,11 +31,6 @@ const routes = [
     component: () => import('../views/callCenter/index.vue')
   }
 ]
-const router = new VueRouter({
-  // mode: 'history',
-  base: process.env.BASE_URL,
-  module: 'outbound',
-  routes
-})
 
-export default router
+
+export default routes

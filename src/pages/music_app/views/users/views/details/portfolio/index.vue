@@ -10,14 +10,15 @@
   <div>
     <div class="course-sty">
       <el-radio-group v-model="changeSubject" size="mini">
-        <el-radio-button :label="0">美术</el-radio-button>
-        <el-radio-button :label="1">写字</el-radio-button>
+        <!-- <el-radio-button :label="0">美术</el-radio-button>
+        <el-radio-button :label="1">写字</el-radio-button> -->
+        <el-radio-button :label="3">音乐</el-radio-button>
       </el-radio-group>
       <el-tabs v-model="courseData" @tab-click="courseBtn">
         <el-tab-pane
           v-for="(item, key) of teams_lk_filter"
           :key="key"
-          :label="`${item.team_type_formatting || '体验课'}:${item.team_name}`"
+          :label="`${item.team_type_formatting || '体验课'}:${courseLevelReplace(item.team_name)}`"
           :courseIds="item.course_ids"
           :teamId="item.id"
         >
@@ -195,6 +196,7 @@
 
 <script>
 import { formatData } from '@/utils/index'
+import {courseLevelReplace} from "@/utils/supList.js"
 export default {
   name: 'portfolio',
   mounted() {
@@ -237,7 +239,8 @@ export default {
       play: -1,
       audioId: '',
       currentVideo: '',
-      videoDialog: false
+      videoDialog: false,
+      courseLevelReplace
     }
   },
   computed: {

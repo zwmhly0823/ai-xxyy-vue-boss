@@ -69,7 +69,7 @@
             >
               ({{
               trialTeam[scope.row.id]
-              ? trialTeam[scope.row.id].team_name
+              ? courseLevelReplace(trialTeam[scope.row.id].team_name)
               : '-'
               }})
             </span>
@@ -182,6 +182,7 @@ import MPagination from '@/components/MPagination/index.vue'
 import { formatData, isToss, deepClone, openBrowserTab } from '@/utils/index.js'
 import ExpressDetail from '../../components/expressDetail'
 import User from '../../components/User.vue'
+import {courseLevelReplace} from '@/utils/supList.js'
 export default {
   components: {
     MPagination,
@@ -221,6 +222,7 @@ export default {
   },
   data() {
     return {
+      courseLevelReplace,
       loading: false,
       // 给物流详情组件传递的订单id
       order_id: '',

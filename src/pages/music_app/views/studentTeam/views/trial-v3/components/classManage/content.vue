@@ -11,7 +11,7 @@
       <el-table-column prop="date" label="销售/班级" min-width="180">
         <template slot-scope="scope">
           <div>{{ scope.row.teacher_realname }}</div>
-          <el-button type="text" @click="goTeamDetail(scope.row)">{{ scope.row.team_name }}</el-button>
+          <el-button type="text" @click="goTeamDetail(scope.row)">{{ courseLevelReplace(scope.row.team_name) }}</el-button>
         </template>
       </el-table-column>
       <el-table-column prop="department_name" label="销售组" min-width="120"></el-table-column>
@@ -256,6 +256,7 @@
 
 <script>
 import { formatData, openBrowserTab } from '@/utils/index'
+import {courseLevelReplace} from "@/utils/supList.js"
 export default {
   name: 'componentContentBox',
   data() {
@@ -268,7 +269,8 @@ export default {
       tableData: [],
       totalElements: '0',
       teamState: '0',
-      now: new Date().getTime()
+      now: new Date().getTime(),
+      courseLevelReplace
     }
   },
   created() {

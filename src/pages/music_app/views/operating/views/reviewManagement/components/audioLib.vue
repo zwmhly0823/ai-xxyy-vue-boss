@@ -150,10 +150,12 @@ import MSearch from '@/components/MSearch/index'
 import SimpleSelect from '@/components/MSearch/searchItems/simpleSelect'
 import DatePicker from '@/components/MSearch/searchItems/datePicker'
 import { formatData } from '@/utils/index.js'
-import { SUP_LEVEL_UPPER } from '@/utils/supList.js'
+import { SUP_LEVEL_UPPER,SUP_LEVEL_ALL,courseLevelReplace } from '@/utils/supList.js'
 export default {
   data() {
     return {
+      courseLevelReplace,
+      SUP_LEVEL_ALL,
       shelfList: [
         {
           id: 0,
@@ -320,7 +322,7 @@ export default {
           const _list = res.payload.content
           _list.forEach((item) => {
             item.ctime = formatData(item.ctime, 's')
-            item.courseStrait = SUP_LEVEL_UPPER[item.courseStrait] || ''
+            item.courseStrait = SUP_LEVEL_ALL[item.courseStrait] || ''
           })
           this.list = _list
           this.totalElements = Number.parseInt(res.payload.totalElements)
