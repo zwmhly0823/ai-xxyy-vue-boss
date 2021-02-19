@@ -25,6 +25,7 @@
 <script>
 import componentSearch from './components/classManage/search'
 import componentContent from './components/classManage/content'
+
 export default {
   name: 'classManageIndex',
   components: {
@@ -34,7 +35,7 @@ export default {
   data() {
     return {
       loading: false,
-      classStatus: '0'
+      classStatus: '0',
     }
   },
   methods: {

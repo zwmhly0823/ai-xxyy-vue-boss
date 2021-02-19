@@ -970,7 +970,7 @@ export default {
       this.adjustLoading = false
       if (result === 'success') {
         this.$router.push({
-          name: 'approvalCenter',
+          path: '/approval',
           params: { activeApprove: 'second' }
         })
       }

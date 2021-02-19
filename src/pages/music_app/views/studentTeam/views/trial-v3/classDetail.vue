@@ -15,6 +15,7 @@ export default {
   mounted() {
     // 之所以放到mounted里是因为要触发teamDetail的watch，迭代之后可以看情况去除
     this.teamId = this.$route.params.id
+    
   },
   data() {
     return {

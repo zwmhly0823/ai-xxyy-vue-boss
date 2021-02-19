@@ -811,7 +811,7 @@
           <el-row class="BOTTOM" v-if="isStaffId">
             <el-col :span="20" :offset="1">
               <a
-                :href="'/users/#/details/' + drawerApprovalDeatail.userId"
+                :href="'/music_app/#/details/' + drawerApprovalDeatail.userId"
                 target="_blank"
                 style="margin-right:5px"
               >

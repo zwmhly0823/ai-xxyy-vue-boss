@@ -266,10 +266,10 @@
             ><div class="item1">
               <span>购买时间</span
               ><span v-if="!changeSubject">{{
-                experience_lk.sup && (SUP_LEVEL_UPPER[experience_lk.sup] || '-')
+                SUP_LEVEL_ALL[experience_lk.sup] && (SUP_LEVEL_ALL[experience_lk.sup] || '-')
               }}</span>
               <span v-else>{{
-                experience_lk.sup && (experience_lk.sup || '-')
+                SUP_LEVEL_ALL[experience_lk.sup] && (SUP_LEVEL_ALL[experience_lk.sup] || '-')
               }}</span
               ><span>{{
                 experience_lk.orderInfo &&
@@ -303,8 +303,8 @@
                   type="primary"
                   >{{
                     experience_lk.teamInfo &&
-                      experience_lk.teamInfo.team_name &&
-                      (experience_lk.teamInfo.team_name || '-')
+                      courseLevelReplace(experience_lk.teamInfo.team_name) &&
+                      (courseLevelReplace(experience_lk.teamInfo.team_name) || '-')
                   }}</el-link
                 ></span
               >
@@ -336,12 +336,12 @@
             ><div class="item1">
               <span>课程进度</span
               ><span v-if="!changeSubject">{{
-                experience_lk.current_lesson &&
-                  (formatTeamNameSup(experience_lk.current_lesson) || '-')
+                courseLevelReplace(experience_lk.current_lesson) &&
+                  (courseLevelReplace(experience_lk.current_lesson) || '-')
               }}</span>
               <span v-else>{{
-                experience_lk.current_lesson &&
-                  (experience_lk.current_lesson || '-')
+                courseLevelReplace(experience_lk.current_lesson) &&
+                  (courseLevelReplace(experience_lk.current_lesson) || '-')
               }}</span>
             </div></el-col
           >
@@ -471,11 +471,11 @@
             ><div class="item1">
               <span>购买时间</span>
               <span v-if="!changeSubject">{{
-                systerm_lk.currentsuper &&
+                SUP_LEVEL_UPPER[systerm_lk.currentsuper] &&
                   (SUP_LEVEL_UPPER[systerm_lk.currentsuper] || '-')
               }}</span>
               <span v-else>{{
-                systerm_lk.currentsuper && (systerm_lk.currentsuper || '-')
+                courseLevelReplace(systerm_lk.currentsuper) && (courseLevelReplace(systerm_lk.currentsuper) || '-')
               }}</span
               ><span>{{
                 systerm_lk.orderInfo &&
@@ -515,7 +515,7 @@
                   :href="userLink(systerm_lk.teamid, 'class', 2)"
                   target="_blank"
                   type="primary"
-                  >{{ systerm_lk.teamname || '-' }}</el-link
+                  >{{ courseLevelReplace(systerm_lk.teamname) || '-' }}</el-link
                 ></span
               >
             </div></el-col
@@ -537,8 +537,8 @@
             ><div class="item1">
               <span>课程进度</span
               ><span>{{
-                systerm_lk.currentsuper &&
-                  (formatTeamNameSup(systerm_lk.currentsuper) || '-')
+                courseLevelReplace(systerm_lk.currentsuper) &&
+                  (courseLevelReplace(systerm_lk.currentsuper) || '-')
               }}</span>
               <span>{{
                 systerm_lk.currentlevel && (systerm_lk.currentlevel || '-')
@@ -652,7 +652,7 @@
 </template>
 <script>
 import { formatDate } from '@/utils/mini_tool_lk'
-import { SUP_LEVEL_UPPER, formatTeamNameSup } from '@/utils/supList'
+import { SUP_LEVEL_UPPER,SUP_LEVEL_ALL, formatTeamNameSup,courseLevelReplace } from '@/utils/supList'
 
 export default {
   created() {
@@ -669,8 +669,9 @@ export default {
       loading: false,
       userId: this.$route.params.id,
       changeSubject: this.$store.state.subjects.subjectCode,
-      SUP_LEVEL_UPPER,
-      formatTeamNameSup
+      SUP_LEVEL_UPPER,SUP_LEVEL_ALL,
+      formatTeamNameSup,
+      courseLevelReplace
     }
   },
   computed: {

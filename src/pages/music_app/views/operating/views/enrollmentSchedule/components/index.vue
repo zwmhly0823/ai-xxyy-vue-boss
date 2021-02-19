@@ -20,19 +20,8 @@
     </div>
     <div class="sear-container">
       <!-- <m-search @search="handleSearch" stage="stage" sup="sup" />TODO: -->
-      <el-button
-        type="primary"
-        slot="searchItems"
-        size="mini"
-        @click="addEditSchedule(0)"
-        >新增招生排期</el-button
-      >
-      <el-alert
-        title="随意新增或编辑招生排期，有可能影响当前线索分配！请谨慎操作！"
-        type="error"
-        :closable="false"
-      >
-      </el-alert>
+      <el-button type="primary" slot="searchItems" size="mini" @click="addEditSchedule(0)">新增招生排期</el-button>
+      <el-alert title="随意新增或编辑招生排期，有可能影响当前线索分配！请谨慎操作！" type="error" :closable="false"></el-alert>
     </div>
 
     <div class="orderStyle">
@@ -45,108 +34,67 @@
         @pageChange="pageChange_handler"
         class="mytable"
       >
-        <el-table-column prop="period" label="序号" width="50" align="center">
-        </el-table-column>
-        <el-table-column
-          prop="periodName"
-          label="期名"
-          align="center"
-          width="90"
-        >
-        </el-table-column>
-        <el-table-column
-          prop="startDate"
-          width="100"
-          align="center"
-          label="开始招生"
-        ></el-table-column>
-        <el-table-column
-          prop="endDate"
-          width="100"
-          align="center"
-          label="结束招生"
-        ></el-table-column>
-        <el-table-column
-          prop="courseDay"
-          width="100"
-          align="center"
-          label="开课时间"
-        ></el-table-column>
-        <el-table-column
-          prop="endCourseDay"
-          width="100"
-          align="center"
-          label="结课时间"
-        ></el-table-column>
+        <el-table-column prop="period" label="序号" width="50" align="center"></el-table-column>
+        <el-table-column prop="periodName" label="期名" align="center" width="90"></el-table-column>
+        <el-table-column prop="startDate" width="100" align="center" label="开始招生"></el-table-column>
+        <el-table-column prop="endDate" width="100" align="center" label="结束招生"></el-table-column>
+        <el-table-column prop="courseDay" width="100" align="center" label="开课时间"></el-table-column>
+        <el-table-column prop="endCourseDay" width="100" align="center" label="结课时间"></el-table-column>
         <el-table-column label="招生级别" align="center" width="80">
           <template slot-scope="scope">
             <div
               v-for="(leve, l_index) in scope.row.wechatCourse"
               :key="l_index"
-            >
-              {{ supLevelUpper[leve.courseDifficulty] || '' }}
-            </div>
+            >{{ supLevelUpper[leve.courseDifficulty] || '' }}</div>
           </template>
         </el-table-column>
-        <el-table-column
-          prop="address"
-          label="带班销售人数"
-          width="100"
-          align="center"
-        >
+        <el-table-column prop="address" label="带班销售人数" width="100" align="center">
           <template slot-scope="scope">
-            <div v-for="(w, l_index) in scope.row.wechatCourse" :key="l_index">
-              {{ w.wechatSize || '0' }}
-            </div>
+            <div
+              v-for="(w, l_index) in scope.row.wechatCourse"
+              :key="l_index"
+            >{{ w.wechatSize || '0' }}</div>
           </template>
         </el-table-column>
         <el-table-column prop="address" label="计划招生" align="center">
           <template slot-scope="scope">
-            <div v-for="(p, l_index) in scope.row.wechatCourse" :key="l_index">
-              {{ p.planSumTeamSize || '0' }}
-            </div>
+            <div
+              v-for="(p, l_index) in scope.row.wechatCourse"
+              :key="l_index"
+            >{{ p.planSumTeamSize || '0' }}</div>
           </template>
         </el-table-column>
         <el-table-column prop="address" label="实际招生" align="center">
           <template slot-scope="scope">
-            <div v-for="(r, l_index) in scope.row.wechatCourse" :key="l_index">
-              {{ r.realSumTeamSize || '0' }}
-            </div>
+            <div
+              v-for="(r, l_index) in scope.row.wechatCourse"
+              :key="l_index"
+            >{{ r.realSumTeamSize || '0' }}</div>
           </template>
         </el-table-column>
         <el-table-column prop="address" label="计划开班" align="center">
           <template slot-scope="scope">
-            <div v-for="(p, l_index) in scope.row.wechatCourse" :key="l_index">
-              {{ p.planTeamSize || '0' }}
-            </div>
+            <div
+              v-for="(p, l_index) in scope.row.wechatCourse"
+              :key="l_index"
+            >{{ p.planTeamSize || '0' }}</div>
           </template>
         </el-table-column>
         <el-table-column prop="address" label="实际开班" align="center">
           <template slot-scope="scope">
-            <div v-for="(r, l_index) in scope.row.wechatCourse" :key="l_index">
-              {{ r.realTeamSize || '0' }}
-            </div>
+            <div
+              v-for="(r, l_index) in scope.row.wechatCourse"
+              :key="l_index"
+            >{{ r.realTeamSize || '0' }}</div>
           </template>
         </el-table-column>
-        <el-table-column
-          prop="status"
-          label="状态"
-          align="center"
-        ></el-table-column>
+        <el-table-column prop="status" label="状态" align="center"></el-table-column>
         <el-table-column label="操作" align="center" width="220">
           <template slot-scope="scope">
             <div class="editStyle">
-              <span style="margin-right:15px" @click="downlaodExcel(scope.row)"
-                >下载</span
-              >
-              <span
-                style="margin-right:15px"
-                @click="addEditSchedule(scope.row)"
-                >编辑</span
-              >
-              <span style="margin-right:15px" @click="go_detail(scope.row)">
-                详细
-              </span>
+              <span style="margin-right:15px" @click="downlaodExcel(scope.row)">下载</span>
+              <span style="margin-right:15px" @click="addEditSchedule(scope.row)">编辑</span>
+              <span style="margin-right:15px" @click="go_detail(scope.row)">详细</span>
               <span
                 v-if="tabIndex === 0"
                 :class="[
@@ -162,9 +110,7 @@
                     scope.row.intruSwitchName
                   )
                 "
-              >
-                {{ scope.row.intruSwitchName }}
-              </span>
+              >{{ scope.row.intruSwitchName }}</span>
             </div>
           </template>
         </el-table-column>
@@ -177,7 +123,7 @@
 // import MSearch from '@/components/MSearch/index.vue' TODO:
 import EleTable from '@/components/Table/EleTable'
 import { formatData } from '@/utils'
-import { SUP_LEVEL_UPPER } from '@/utils/supList'
+import { SUP_LEVEL_TRIAL, SUP_LEVEL_SYSTEM } from '@/utils/supList'
 export default {
   props: {
     department: {
@@ -219,7 +165,7 @@ export default {
       tableData: [],
       // 老师id
       teacherID: '',
-      supLevelUpper: SUP_LEVEL_UPPER
+      supLevelUpper: {}
     }
   },
   computed: {},
@@ -227,19 +173,20 @@ export default {
   async activated() {
     await this.getCourseListByType()
   },
-  created(){
+  created() {
     this.tabs_click(this.tabIndex)
   },
   methods: {
     /** adolf-start */
     tabs_click(index) {
+      this.supLevelUpper = +index ? SUP_LEVEL_SYSTEM:SUP_LEVEL_TRIAL
+
       this.tabIndex = index
       this.tabQuery.page = 1
       this.getCourseListByType()
     },
     // 下载当前行
     async downlaodExcel(row) {
-     
       const params = {
         departmentIds: '',
         teacherId: '',
@@ -341,7 +288,7 @@ export default {
         })
         // 然后再获取招生的状态
         const enrollStudentStatus = await this.getStatusByperiods(periodsArr)
-        
+
         if (!enrollStudentStatus) {
           this.$message.error('获取招生状态失败')
           return
@@ -367,6 +314,7 @@ export default {
         })
         this.flags.loading = false
         this.tableData = content
+        console.log(content)
       } catch (err) {
         this.flags.loading = false
         return new Error(err)

@@ -631,7 +631,6 @@ if (staff.roleId === '19') {
             title: '通话记录',
             // module: 'outbound',
             module,
-            style: 'line'
           }
         },
         {
@@ -641,7 +640,6 @@ if (staff.roleId === '19') {
             title: '席位配置',
             // module: 'outbound',
             module,
-            style: 'line'
           }
         }
       ]

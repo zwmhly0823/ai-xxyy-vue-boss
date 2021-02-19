@@ -160,7 +160,7 @@
             </el-table>
             <span v-show="!productData.length">暂无关单赠品</span>
           </el-form-item>
-          <el-form-item label="是否扣除赠品金额">
+          <el-form-item label="是否扣除赠品金额" >
             <el-radio-group
               :disabled="jsonDate3.boxAble"
               v-model="giftsFlag"
@@ -603,6 +603,7 @@ export default {
               })
             }
           } else if (newValue === 1) {
+            this.jsonDate3.deductMaterial = 0
             // 选中课程退款时
             this.refundForm.refundMonths = ''
             this.refundForm.refundAmount = '' // 退款额
@@ -640,6 +641,7 @@ export default {
                 } else {
                   // 全年半年二合一
                   const interfaceTy = (this.pureWeekS + this.pureWeekY) / 4
+                  
                   const priceTre = this.refundForm.residueFee / interfaceTy // 单价
                   this.onePrice = priceTre
                   this.refundForm.refundAmount = Math.round(
@@ -866,7 +868,7 @@ export default {
     }
     return {
       // 是否扣除赠品
-      giftsFlag: '',
+      giftsFlag: 0,
       giftsPrice: 0,
       rules: {
         deductMonth: [
@@ -1043,8 +1045,6 @@ export default {
     },
     // 计算退款额(基础退费基础上+次月课程+随材盒子+关单赠品)
     refundAmountComputed() {
-      console.log(this.jsonDate3.deductMonth)
-      console.log(this.refundForm.refundType)
       if (this.refundForm.refundType === 1) {
         // 课程退款
         if (this.jsonDate3.deductMonth === 1 && this.onePrice > 0) {

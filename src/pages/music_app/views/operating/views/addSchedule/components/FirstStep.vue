@@ -310,8 +310,7 @@ export default {
       },
       pickerBefore: {
         disabledDate: (time) => {
-          let timeNow = new Date().getTime()
-          return time.getTime() < timeNow
+          
         }
       },
       pickerBeginDateBefore: {

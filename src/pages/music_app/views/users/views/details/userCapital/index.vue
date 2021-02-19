@@ -9,8 +9,9 @@
 <template>
   <div>
     <el-radio-group v-model="changeSubject" size="mini">
-      <el-radio-button :label="0">美术</el-radio-button>
-      <el-radio-button :label="1">写字</el-radio-button>
+      <!-- <el-radio-button :label="0">美术</el-radio-button>
+        <el-radio-button :label="1">写字</el-radio-button> -->
+        <el-radio-button :label="3">音乐</el-radio-button>
     </el-radio-group>
     <el-tabs v-model="assetCurPane">
       <el-tab-pane label="优惠券" name="assetCoupon">

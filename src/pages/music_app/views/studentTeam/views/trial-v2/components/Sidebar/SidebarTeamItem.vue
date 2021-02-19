@@ -13,7 +13,7 @@
     @click="handleSelectTeam(team)"
   >
     <div class="team-item-title d-flex align-center justify-between">
-      <h4>{{ team.team_name }}</h4>
+      <h4>{{ courseLevelReplace(team.team_name) }}</h4>
       <span>转化{{ team.order_conversion_rate || 0 }}%</span>
     </div>
     <!-- boday -->
@@ -35,6 +35,7 @@
 </template>
 
 <script>
+import {courseLevelReplace} from '@/utils/supList.js'
 export default {
   props: {
     // 班级信息
@@ -49,7 +50,9 @@ export default {
     }
   },
   data() {
-    return {}
+    return {
+      courseLevelReplace:courseLevelReplace
+    }
   },
   methods: {
     // 选择班级
