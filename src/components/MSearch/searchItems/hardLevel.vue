@@ -34,13 +34,16 @@
 // import axios from '@/api/axiosConfig'
 import { mapState } from 'vuex'
 import {
-  SUP_LEVEL_LIST,
-  SUP_LEVEL_LIST_LOWER,
-  SUP_LEVEL_LIST_UPPER
+  SUP_LEVEL_LIST_UPPER,
+  SUP_LEVEL_LIST_LOWER
 } from '@/utils/supList'
 
 export default {
   props: {
+    courseType:{
+      type:Boolean,
+      default:true
+    },
     placeholder: {
       type: String,
       default: '难度'
@@ -97,7 +100,7 @@ export default {
   // },
   async created() {
     // await this.getSup()
-    this.supList = SUP_LEVEL_LIST_LOWER
+    this.supList = this.courseType?SUP_LEVEL_LIST_LOWER:SUP_LEVEL_LIST_UPPER
   },
   methods: {
     // 难度
@@ -125,9 +128,9 @@ export default {
       console.log(data)
       // 如果是体验课难度，查询订单的话，需要关联tg_student_team,根据id关联o_order的trial_team_id
       if (this.name === 'trial_team_id') {
-        const supArr = data.map((item) => `S${item}`)
+        const supArr = data.map((item) => `${item}`)
         this.$http.StudentTerm.searchTeamBySup(supArr).then((res) => {
-          console.log(res)
+          
           if (res && res.data && res.data.StudentTeamList) {
             const result = res.data.StudentTeamList.map((item) => item.id)
             this.$emit(

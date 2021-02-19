@@ -277,6 +277,7 @@
 import toggle from '../components/toggle'
 import rightDown from '../components/rightDown'
 import rightUp from '../components/rightUp'
+import {courseLevelReplace} from '@/utils/supList.js'
 const allExpressHideCol = {
   replenishType: false,
   productType: false,
@@ -351,6 +352,7 @@ export default {
   },
   data() {
     return {
+      courseLevelReplace,
       tabsShowed: ['0'],
       dialogDelivery: false, // 一键发货弹窗
       deliveryParams: {},

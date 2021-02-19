@@ -604,7 +604,7 @@ export default {
       const teamId = row.team_id
       const teamType = row.teamInfo.team_type || '0'
       teamId &&
-        openBrowserTab(`/music_app/#/teamDetail/${teamId}/${teamType}`)
+        openBrowserTab(`/music_app/#/teamTrialDetail/${teamId}/${teamType}`)
     },
 
     formatDate(date, flag = 's') {

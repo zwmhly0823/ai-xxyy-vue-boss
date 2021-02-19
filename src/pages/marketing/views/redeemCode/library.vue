@@ -269,12 +269,12 @@ export default {
         url = `/music_app/#/teamDetail/${obj.id}/${obj.type}`
       }
       // 写字项目时
-      if (+this.$store.getters.subjects.subjectCode === 1) {
-        url =
-          type === 0
-            ? `/write_app/#/details/${obj.id}`
-            : `/write_app/#/teamDetail/${obj.id}/${obj.type}`
-      }
+      // if (+this.$store.getters.subjects.subjectCode === 1) {
+      //   url =
+      //     type === 0
+      //       ? `/write_app/#/details/${obj.id}`
+      //       : `/write_app/#/teamDetail/${obj.id}/${obj.type}`
+      // }
       openBrowserTab(url)
     },
 

@@ -18,7 +18,7 @@
         <div class="header-left">
           <div class="title">
             <span class="title-text"
-              >{{ teamDetail.id }}:{{ teamDetail.team_name }}</span
+              >{{ teamDetail.id }}:{{ courseLevelReplace(teamDetail.team_name) }}</span
             >
             <span class="text-iconsY">{{
               teamDetail.team_type == 0 ? '体验课' : '系统课'
@@ -265,6 +265,7 @@
 import TabBar from './TabPane/TabBar.vue'
 import { calculateWD } from '@/utils/validate'
 import { isToss, formatData } from '@/utils/index'
+import {courseLevelReplace} from "@/utils/supList.js"
 export default {
   props: {
     classObj: {
@@ -289,6 +290,7 @@ export default {
         2: '已结课'
       },
       autoAddFriends: false,
+      courseLevelReplace,
       teamDetail: {},
       autoAddFriendsIn: false,
       switchState: 'OFF' // 默认状态

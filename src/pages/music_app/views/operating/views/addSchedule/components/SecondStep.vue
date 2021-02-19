@@ -165,6 +165,7 @@ export default {
           type: 'warning'
         })
       } else {
+        
         this.$store.commit('setScheduleTeacher', this.transferVal)
         this.$emit('listenStepStatus', this.transferVal)
       }

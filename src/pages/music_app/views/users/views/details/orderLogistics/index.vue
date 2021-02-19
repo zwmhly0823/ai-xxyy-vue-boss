@@ -25,7 +25,7 @@
       <el-table-column label="班级信息">
         <template slot-scope="scope">
           <div>
-            <div>{{ scope.row.team ? scope.row.team.team_name : '-' }}</div>
+            <div>{{ scope.row.team ? courseLevelReplace(scope.row.team.team_name) : '-' }}</div>
             <div>
               {{
                 scope.row.team && scope.row.team.teacher_info
@@ -113,7 +113,7 @@
 <script>
 import { formatData } from '@/utils/index'
 import ExpressDetail from '@/components/art_app/expressDetail'
-
+import {courseLevelReplace} from "@/utils/supList.js"
 export default {
   name: 'logistics',
   components: {
@@ -132,7 +132,8 @@ export default {
       // 数据查询
       currentPage: 1, // 页码
       // 分页组件
-      allDigit: 1 // 总量
+      allDigit: 1, // 总量
+      courseLevelReplace
     }
   },
   methods: {

@@ -82,7 +82,7 @@
           <div class="product">
             <span>{{ scope.row.center_product_code || '-' }}</span>
           </div>
-          <div class="gray-text">{{ scope.row.product_name }} {{ scope.row.product_version }}</div>
+          <div class="gray-text">{{ courseLevelReplace(scope.row.product_name) }} {{ scope.row.product_version }}</div>
         </template>
       </el-table-column>
       <el-table-column
@@ -231,7 +231,7 @@
           </div>-->
           <div class="product">
             {{
-            scope.row.lastTeamInfo ? scope.row.lastTeamInfo.team_name : '--'
+            scope.row.lastTeamInfo ? courseLevelReplace(scope.row.lastTeamInfo.team_name) : '--'
             }}
           </div>
         </template>
@@ -448,7 +448,7 @@ import {
   productTopicListBf,
   productTypeList
 } from '@/utils/expressItemConfig'
-
+import {courseLevelReplace} from '@/utils/supList.js'
 let supList = []
 const regtypeEnum = {
   '1': '体验课补发',
@@ -646,7 +646,8 @@ export default {
         courseType: true
       },
       showModifyAddress: false,
-      modifyFormData: {}
+      modifyFormData: {},
+      courseLevelReplace
     }
   },
   methods: {

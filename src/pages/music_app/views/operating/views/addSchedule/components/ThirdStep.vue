@@ -16,9 +16,7 @@
           :key="index"
           :class="{ active: index == levelIndex }"
           @click="levelClickHandle(tab, index)"
-        >
-          {{ tab.text }}
-        </div>
+        >{{ tab.text }}</div>
         <div class="tip">tip：切换前请先保存当前级别下更改的内容哟~</div>
       </div>
       <!-- 随材版本和课程类型先不做 -->
@@ -28,7 +26,7 @@
           :isShowLevel="true"
           :isShowWxSearch="true"
         ></table-search>
-      </div> -->
+      </div>-->
     </div>
     <div class="step-container step-three-container">
       <ele-table
@@ -41,38 +39,13 @@
         @pageChange="pageChange_handler"
         class="mytable"
       >
-        <el-table-column type="index" label="序号" width="70" align="center">
+        <el-table-column type="index" label="序号" width="70" align="center"></el-table-column>
+        <el-table-column prop="teacherRealName" label="真实姓名" min-width="100" align="center"></el-table-column>
+        <el-table-column prop="departmentName" label="所属部门" min-width="150" align="center"></el-table-column>
+        <el-table-column prop="levelName" label="销售等级" min-width="120" align="center">
+          <template slot-scope="scope">{{ scope.row.levelName || '' }}</template>
         </el-table-column>
-        <el-table-column
-          prop="teacherRealName"
-          label="真实姓名"
-          min-width="100"
-          align="center"
-        >
-        </el-table-column>
-        <el-table-column
-          prop="departmentName"
-          label="所属部门"
-          min-width="150"
-          align="center"
-        >
-        </el-table-column>
-        <el-table-column
-          prop="levelName"
-          label="销售等级"
-          min-width="120"
-          align="center"
-        >
-          <template slot-scope="scope">
-            {{ scope.row.levelName || '' }}
-          </template>
-        </el-table-column>
-        <el-table-column
-          prop="teacherWechatNo"
-          label="绑定微信"
-          min-width="130"
-          align="center"
-        >
+        <el-table-column prop="teacherWechatNo" label="绑定微信" min-width="130" align="center">
           <template slot-scope="scope">
             {{ scope.row.teacherWechatNo || '' }}
             <i
@@ -81,31 +54,16 @@
             ></i>
           </template>
         </el-table-column>
-        <el-table-column
-          prop="lastPeriod"
-          label="最近接生期数"
-          min-width="100"
-          align="center"
-        >
-        </el-table-column>
-        <el-table-column
-          prop="address"
-          label="招生级别"
-          min-width="80"
-          align="center"
-        >
+        <el-table-column prop="lastPeriod" label="最近接生期数" min-width="100" align="center"></el-table-column>
+        <el-table-column prop="address" label="招生级别" min-width="80" align="center">
           <template slot-scope="scope">
-            <div v-for="(leve, l_index) in scope.row.enroll" :key="l_index">
-              {{ levelObj[leve.courseDifficulty] }}
-            </div>
+            <div
+              v-for="(leve, l_index) in scope.row.enroll"
+              :key="l_index"
+            >{{ levelObj[leve.courseDifficulty] }}</div>
           </template>
         </el-table-column>
-        <el-table-column
-          prop="address"
-          label="打开开关"
-          min-width="100"
-          align="center"
-        >
+        <el-table-column prop="address" label="打开开关" min-width="100" align="center">
           <template slot-scope="scope">
             <div
               v-for="(swicth, s_index) in scope.row.enroll"
@@ -117,8 +75,7 @@
                 active-color="#13ce66"
                 :active-value="1"
                 :inactive-value="0"
-              >
-              </el-switch>
+              ></el-switch>
             </div>
           </template>
         </el-table-column>
@@ -135,12 +92,7 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column
-          prop="address"
-          label="计划招生"
-          min-width="100"
-          align="center"
-        >
+        <el-table-column prop="address" label="计划招生" min-width="100" align="center">
           <template slot-scope="scope">
             <div v-for="(p, t_index) in scope.row.enroll" :key="t_index">
               <el-input
@@ -153,18 +105,9 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column
-          prop="address"
-          label="课程材料版本"
-          min-width="130"
-          align="center"
-        >
+        <el-table-column prop="address" label="课程材料版本" min-width="130" align="center">
           <template slot-scope="scope">
-            <div
-              v-for="(v, v_index) in scope.row.enroll"
-              :key="v_index"
-              class="select-container"
-            >
+            <div v-for="(v, v_index) in scope.row.enroll" :key="v_index" class="select-container">
               <el-select
                 :disabled="!Boolean(+v.status)"
                 v-model="v.courseVersion"
@@ -176,18 +119,12 @@
                   :key="i"
                   :label="item.value"
                   :value="item.value"
-                >
-                </el-option>
+                ></el-option>
               </el-select>
             </div>
           </template>
         </el-table-column>
-        <el-table-column
-          prop="address"
-          label="体验课类型"
-          min-width="240"
-          align="center"
-        >
+        <el-table-column prop="address" label="体验课类型" min-width="240" align="center">
           <template slot-scope="scope">
             <div v-for="(v, v_index) in scope.row.enroll" :key="v_index">
               <el-select
@@ -204,33 +141,24 @@
                   :key="item.value"
                   :label="item.name"
                   :value="item.value"
-                >
-                </el-option>
+                ></el-option>
               </el-select>
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="address" label="" min-width="70" align="center">
+        <el-table-column prop="address" label min-width="70" align="center">
           <template slot-scope="scope">
-            <el-button
-              type="primary"
-              size="mini"
-              @click="saveRow(scope.$index, scope.row)"
-            >
-              保存
-            </el-button>
+            <el-button type="primary" size="mini" @click="saveRow(scope.$index, scope.row)">保存</el-button>
           </template>
         </el-table-column>
       </ele-table>
 
       <!-- 取消、下一步 -->
       <div class="operate-btn">
-        <el-button size="small" type="warning" @click="backList"
-          >取消</el-button
-        >
+        <el-button size="small" type="warning" @click="backList">取消</el-button>
         <!-- <el-button size="small" type="primary" @click="stepOpt(1)"
           >提交保存</el-button
-        > -->
+        >-->
       </div>
     </div>
     <!-- 编辑微信号模态框 -->
@@ -245,40 +173,33 @@
       <div class="dialog-info">
         <div class="row-cell">
           <div>
-            <span class="label">销售姓名：</span
-            ><span>{{ currentEidtRow.teacherRealName }}</span>
+            <span class="label">销售姓名：</span>
+            <span>{{ currentEidtRow.teacherRealName }}</span>
           </div>
         </div>
         <div class="row-cell">
           <div>
-            <span class="label">所属部门：</span
-            ><span>{{ currentEidtRow.departmentName }}</span>
+            <span class="label">所属部门：</span>
+            <span>{{ currentEidtRow.departmentName }}</span>
           </div>
         </div>
         <div class="row-cell">
           <div>
             <span class="label">选择微信号：</span>
-            <el-select
-              v-model="currentTeacherWenum"
-              placeholder="请选择"
-              size="mini"
-            >
+            <el-select v-model="currentTeacherWenum" placeholder="请选择" size="mini">
               <el-option
                 v-for="item in currentTeacherWechatList"
                 :key="item.weixinId"
                 :label="item.weixinNo"
                 :value="item.weixinId"
-              >
-              </el-option>
+              ></el-option>
             </el-select>
           </div>
         </div>
       </div>
       <span slot="footer" class="dialog-footer">
         <el-button size="mini" @click="dialogHandleClose">取 消</el-button>
-        <el-button size="mini" type="primary" @click="saveEditHandle"
-          >确 定</el-button
-        >
+        <el-button size="mini" type="primary" @click="saveEditHandle">确 定</el-button>
       </span>
     </el-dialog>
   </div>
@@ -317,11 +238,25 @@ export default {
           id: 'S4'
         }
       ],
+      levelListB: [
+        {
+          text: 'MA',
+          id: 'S8'
+        },
+        {
+          text: 'MB',
+          id: 'S9'
+        }
+      ],
       levelObj: {
         S1: 'M1',
         S2: 'M2',
         S3: 'M3',
         S4: 'M4'
+      },
+      levelObjB: {
+        S8: 'MA',
+        S9: 'MB'
       },
       tableData: [],
       isValidate: true,
@@ -369,9 +304,9 @@ export default {
     // 根据老师ids获取招生排期设置中老师配置信息 TODO:
 
     if (courseType !== '0') {
-      this.levelList = SUP_LEVEL_LIST_UPPER
-      this.params.courseDifficulty = 'S4'
-      this.levelObj = SUP_LEVEL_UPPER
+      this.levelList = +courseType ? this.levelListB : this.levelList
+      this.levelObj = +courseType ? this.levelObjB : this.levelObj
+      this.params.courseDifficulty = this.levelList[0].id
     }
     Object.assign(this.params, {
       courseType,

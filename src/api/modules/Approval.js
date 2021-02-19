@@ -94,5 +94,15 @@ export default {
   // orderId
   findOrderGiftInfo(query) {
     return axios.post(`/api/b/v1/backend/refund/system/findOrderGiftInfo?orderId=${query}`)
-  }
+  },
+  findSystemByOrderNo(orderNo) {
+    return axios.get(
+      `/api/ts/v1/teaching/student/system/findSystemByOrderNo?orderNo=${orderNo}`
+    )
+  },
+  findTrailByOrderNo(orderNo) {
+    return axios.get(
+      `/api/ts/v1/teaching/student/trial/findTrailByOrderNo?orderNo=${orderNo}`
+    )
+  },
 }

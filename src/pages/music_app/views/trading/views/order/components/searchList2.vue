@@ -122,6 +122,7 @@
             placeholder="体验课难度"
             style="width:140px"
             name="sup"
+            :courseType="false"
             @result="supCallBackTrial"
           />
           <search-team-name

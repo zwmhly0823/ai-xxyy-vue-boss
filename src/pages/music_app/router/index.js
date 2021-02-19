@@ -30,6 +30,8 @@ import users from '../views/users/router'
 import finance from '../views/finance/router'
 // 投诉中心
 import complaint from '../views/complaint/router'
+// 呼叫中心
+import outbound from '../views/outbound/router'
 
 const staff = JSON.parse(localStorage.getItem('staff'))
 
@@ -80,7 +82,8 @@ const routes = [{
   ...trad,
   ...users,
   ...finance,
-  ...complaint
+  ...complaint,
+  ...outbound
 ]
 const router = new VueRouter({
   base: process.env.BASE_URL,
