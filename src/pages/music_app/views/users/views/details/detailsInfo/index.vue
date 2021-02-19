@@ -337,7 +337,7 @@
               <span>课程进度</span
               ><span v-if="!changeSubject">{{
                 experience_lk.current_lesson &&
-                  (formatTeamNameSup(experience_lk.current_lesson) || '-')
+                  (courseLevelReplace(experience_lk.current_lesson) || '-')
               }}</span>
               <span v-else>{{
                 experience_lk.current_lesson &&
@@ -475,7 +475,7 @@
                   (SUP_LEVEL_UPPER[systerm_lk.currentsuper] || '-')
               }}</span>
               <span v-else>{{
-                systerm_lk.currentsuper && (systerm_lk.currentsuper || '-')
+                systerm_lk.currentsuper && (courseLevelReplace(systerm_lk.currentsuper) || '-')
               }}</span
               ><span>{{
                 systerm_lk.orderInfo &&
@@ -515,7 +515,7 @@
                   :href="userLink(systerm_lk.teamid, 'class', 2)"
                   target="_blank"
                   type="primary"
-                  >{{ systerm_lk.teamname || '-' }}</el-link
+                  >{{ courseLevelReplace(systerm_lk.teamname) || '-' }}</el-link
                 ></span
               >
             </div></el-col
@@ -537,8 +537,8 @@
             ><div class="item1">
               <span>课程进度</span
               ><span>{{
-                systerm_lk.currentsuper &&
-                  (formatTeamNameSup(systerm_lk.currentsuper) || '-')
+                courseLevelReplace(systerm_lk.currentsuper) &&
+                  (courseLevelReplace(systerm_lk.currentsuper) || '-')
               }}</span>
               <span>{{
                 systerm_lk.currentlevel && (systerm_lk.currentlevel || '-')
@@ -652,7 +652,7 @@
 </template>
 <script>
 import { formatDate } from '@/utils/mini_tool_lk'
-import { SUP_LEVEL_UPPER, formatTeamNameSup } from '@/utils/supList'
+import { SUP_LEVEL_UPPER, formatTeamNameSup,courseLevelReplace } from '@/utils/supList'
 
 export default {
   created() {
@@ -670,7 +670,8 @@ export default {
       userId: this.$route.params.id,
       changeSubject: this.$store.state.subjects.subjectCode,
       SUP_LEVEL_UPPER,
-      formatTeamNameSup
+      formatTeamNameSup,
+      courseLevelReplace
     }
   },
   computed: {

@@ -254,7 +254,7 @@
                   v-for="item of babels_lk"
                   :key="item.id"
                   >{{
-                    item.name||'无信息'
+                    courseLevelReplace(item.name)||'无信息'
                   }}</el-tag
                 >
               </span>
@@ -335,7 +335,7 @@ import recommend from './recommendComponents/recommend.vue'
 import showAddress from './addressComponents/showAddress.vue'
 import trackFlow from './trackFlow/index'
 import { GetAgeByBrithday, formatData } from '@/utils/index'
-import { formatTeamNameSup } from '@/utils/supList'
+import { formatTeamNameSup,courseLevelReplace } from '@/utils/supList'
 import modifyAddress from './addressComponents/modifyAddress.vue'
 
 export default {
@@ -383,7 +383,8 @@ export default {
       // paneltab name
       tabData: 'detailsInfo',
       defaultHead: 'https://msb-ai.meixiu.mobi/ai-pm/static/touxiang.png',
-      formatTeamNameSup
+      formatTeamNameSup,
+      courseLevelReplace
     }
   },
   computed: {

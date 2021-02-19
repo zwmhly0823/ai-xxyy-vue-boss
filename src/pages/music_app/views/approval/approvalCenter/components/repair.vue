@@ -280,8 +280,9 @@
         @selection-change="handleSelectionChange"
         align="center"
       >
+      
+          <!-- v-if="formRepair.mode === 'SINGLE'" -->
         <el-table-column
-          v-if="formRepair.mode === 'SINGLE'"
           type="selection"
           align="center"
         >
@@ -302,13 +303,13 @@
             ></el-input-number>
           </template>
         </el-table-column>
-        <el-table-column
+        <!-- <el-table-column
           align="center"
           v-if="formRepair.mode !== 'SINGLE'"
           label="单选"
         >
           <input name="Fruit" type="radio" />
-        </el-table-column>
+        </el-table-column> -->
       </el-table>
       <span slot="footer" class="dialog-footer">
         <el-button type="primary" @click="saveGift">保存</el-button>
@@ -324,7 +325,7 @@ import Package from './package'
 import { getStaffInfo } from '../common'
 import SearchPhone from '@/components/MSearch/searchItems/searchPhone'
 import UploadFile from '@/utils/uploadFiles' // 上传公共方法(单文件上传)
-import { formatTeamNameSup,SUP_LEVEL_ALL } from '@/utils/supList'
+import { courseLevelReplace,SUP_LEVEL_ALL } from '@/utils/supList'
 
 
 export default {
@@ -823,7 +824,7 @@ export default {
         const resTrialData = await this.getTrialClassProgress(val.id)
         if (resTrialData) {
           // console.log(resTrialData)
-          this.formRepair.currentLesson = formatTeamNameSup(
+          this.formRepair.currentLesson = courseLevelReplace(
             resTrialData.currentLesson
           )
           // console.log(this.formRepair.currentLesson)
@@ -833,9 +834,8 @@ export default {
         const resSysData = await this.getSystemClassProgress(val.id)
         if (resSysData) {
           // console.log(resSysData)
-          this.formRepair.currentLesson = formatTeamNameSup(
-            `${SUP_LEVEL_ALL[resSysData.currentSuper]}${resSysData.currentLevel}${resSysData.currentUnit}${resSysData.currentLesson}`
-          )
+          this.formRepair.currentLesson = `${SUP_LEVEL_ALL[resSysData.currentSuper]}${resSysData.currentLevel}${resSysData.currentUnit}${resSysData.currentLesson}`
+          
           // console.log(this.formRepair.currentLesson)
           this.now = new Date().getTime()
         }
@@ -991,6 +991,7 @@ export default {
       this.clearAllData()
     },
     confirmButton(formName) {
+      console.log(this.formRepair.attsUrl='sssssssssssssss')
       this.$refs[formName].validate((valid) => {
         if (valid) {
           if (!this.formRepair.reissueMsg.trim()) {
@@ -1029,7 +1030,7 @@ export default {
             if (res) {
               this.clearData()
               this.$router.push({
-                name: 'approvalCenter',
+                path: '/approval',
                 params: {
                   activeApprove: 'second'
                 }
