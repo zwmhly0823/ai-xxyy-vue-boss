@@ -311,6 +311,17 @@ export default {
             // item.intruSwitchName = '恢复招生'
             item.intruSwitchName = '恢复转介绍'
           }
+          
+          if(item.wechatCourse&&item.wechatCourse.length>0){
+            let reg = /\d/
+            item.wechatCourse.forEach(weItem=>{
+              weItem.myCourseLevelId = +weItem.courseDifficulty.match(reg)[0]
+            })
+            
+            item.wechatCourse.sort((a,b)=>{
+              return a.myCourseLevelId - b.myCourseLevelId
+            })
+          }
         })
         this.flags.loading = false
         this.tableData = content
