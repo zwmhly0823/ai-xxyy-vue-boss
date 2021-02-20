@@ -220,14 +220,14 @@
           <div>{{ scope.row.receptContent }}</div> -->
           <div>
             <span v-if="scope.row.type === 'ADJUSTMENT_SUP'">{{
-              formatTeamNameSup(scope.row.period)
+              courseLevelReplace(scope.row.period)
             }}</span>
             <span v-else>{{ scope.row.period }}</span>
           </div>
           <div>
             <!-- 调级 -->
             <span v-if="scope.row.type === 'ADJUSTMENT_SUP'">{{
-              formatTeamNameSup(scope.row.receptContent) || '-'
+              courseLevelReplace(scope.row.receptContent) || '-'
             }}</span>
             <span v-else>{{ scope.row.receptContent }}</span>
           </div>
@@ -335,7 +335,7 @@
         <el-row>
           <el-col :span="3">课程进度:</el-col>
           <el-col :span="20" :offset="1">
-            {{ formatTeamNameSup(drawerApprovalDeatail.currentLesson) }}
+            {{ courseLevelReplace(drawerApprovalDeatail.currentLesson) }}
           </el-col>
         </el-row>
         <el-row>
@@ -344,7 +344,7 @@
             <span
               v-for="item of drawerApprovalDeatail.productdetails"
               :key="item.id"
-              >{{ `${item.name}(${item.count})` }}</span
+              >{{ `${courseLevelReplace(item.name)}(${item.count})` }}</span
             >
             <span
               v-if="
@@ -359,7 +359,7 @@
                   ? '体验课'
                   : '系统课'
               }}
-              {{ formatTeamNameSup(drawerApprovalDeatail.sup) }}
+              {{ courseLevelReplace(drawerApprovalDeatail.sup) }}
               {{ drawerApprovalDeatail.level }}
               】
             </span>
@@ -1074,7 +1074,7 @@ import CheckType from './checkType'
 import { timestamp } from '@/utils/index'
 // import SearchPart from './searchPart'
 import ActivityName from './activityName'
-import { formatTeamNameSup, SUP_LEVEL_UPPER } from '@/utils/supList'
+import { courseLevelReplace, SUP_LEVEL_ALL } from '@/utils/supList'
 import adjustDrawer from './adjustDrawer'
 import { getStaffInfo } from '../common'
 import courseTeam from './courseTeam'
@@ -1158,8 +1158,8 @@ export default {
         reason: '',
         isRecover: true
       },
-      SUP_LEVEL_UPPER,
-      formatTeamNameSup,
+      SUP_LEVEL_ALL,
+      courseLevelReplace,
       zero_time: '', // 0课时绑定值
       nodeSort: '', // 退款节点选择
       bind_tag: '', // 退款类型标签
@@ -1805,11 +1805,11 @@ export default {
                 [
                   {
                     label: '已上课周期',
-                    value: formatTeamNameSup(payData.currentPeriod) || '-'
+                    value: courseLevelReplace(payData.currentPeriod) || '-'
                   },
                   {
                     label: '调级级别',
-                    value: SUP_LEVEL_UPPER[payData.targetSup] || '-'
+                    value: SUP_LEVEL_ALL(payData.targetSup) || '-'
                   }
                 ]
               )
@@ -1830,7 +1830,7 @@ export default {
               [
                 {
                   label: '选择班级',
-                  value: payData.targetClassName
+                  value: courseLevelReplace(payData.targetClassName)
                 },
                 {
                   label: '调级理由',
@@ -2047,11 +2047,11 @@ export default {
           if (res && res.payload && res.payload.content) {
             const zancunArr = res.payload.content.map((item) => {
               const zhaiyao = item.abstractContent.split('^')
-              item.repiarContent = zhaiyao[0]
-              item.period = zhaiyao[1]
-              item.receptContent = zhaiyao[2]
-              item.reason = zhaiyao[3]
-              item.refundTypeStr = zhaiyao[4]
+              item.repiarContent = courseLevelReplace(zhaiyao[0])
+              item.period = courseLevelReplace(zhaiyao[1])
+              item.receptContent = courseLevelReplace(zhaiyao[2])
+              item.reason = courseLevelReplace(zhaiyao[3])
+              item.refundTypeStr = courseLevelReplace(zhaiyao[4])
               item.openTime = timestamp(item.ctime, 2)
               item.approveTime = timestamp(item.endTime, 2)
               // item.applyDepartment = ''
