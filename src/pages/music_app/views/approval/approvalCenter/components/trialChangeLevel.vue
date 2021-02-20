@@ -60,19 +60,19 @@
       <el-row>
         <el-col :span="4">当前报名级别:</el-col>
         <el-col :span="19" :offset="1">{{
-          drawerApprovalDeatail.currentSup
+          SUP_LEVEL_ALL[drawerApprovalDeatail.currentSup]
         }}</el-col>
       </el-row>
       <el-row>
         <el-col :span="4">申请调级级别:</el-col>
         <el-col :span="19" :offset="1">{{
-          drawerApprovalDeatail.targetSup
+          SUP_LEVEL_ALL[drawerApprovalDeatail.targetSup]
         }}</el-col>
       </el-row>
       <el-row v-if="drawerApprovalDeatail.targetClassName">
         <el-col :span="4">接收班级:</el-col>
         <el-col :span="19" :offset="1">{{
-          drawerApprovalDeatail.targetClassName
+          courseLevelReplace(drawerApprovalDeatail.targetClassName)
         }}</el-col>
       </el-row>
       <el-row v-else>
@@ -144,6 +144,7 @@
 
 <script>
 import { assertdt } from '@/utils/mini_tool_lk'
+import { SUP_LEVEL_ALL,courseLevelReplace } from '@/utils/supList.js'
 import * as tools from '@/utils/mini_tool_lk'
 import { getStaffInfo } from './common'
 

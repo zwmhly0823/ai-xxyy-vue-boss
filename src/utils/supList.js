@@ -202,6 +202,7 @@ export function formatTeamNameSupReverse(teamName) {
 // 课程难度替换
 
 export function courseLevelReplace(name) {
+  if(!name)return
   let result = ''
   const reg = /S(\d{1,2})/
   const str = name.match(reg)

@@ -142,14 +142,14 @@
           <div>{{ scope.row.repiarContent }}</div>
           <div>
             <span v-if="scope.row.type === 'ADJUSTMENT_SUP'">{{
-              formatTeamNameSup(scope.row.period)
+              scope.row.period
             }}</span>
             <span v-else>{{ scope.row.period }}</span>
           </div>
           <div>
             <!-- 调级 -->
             <span v-if="scope.row.type === 'ADJUSTMENT_SUP'">{{
-              formatTeamNameSup(scope.row.receptContent) || '-'
+              scope.row.receptContent || '-'
             }}</span>
             <span v-else>{{ scope.row.receptContent }}</span>
           </div>
@@ -280,7 +280,7 @@
         <el-row>
           <el-col :span="3">课程进度:</el-col>
           <el-col :span="20" :offset="1">
-            {{ formatTeamNameSup(drawerApprovalDeatail.currentLesson) }}
+            {{ courseLevelReplace(drawerApprovalDeatail.currentLesson) }}
           </el-col>
         </el-row>
         <el-row>
@@ -300,7 +300,7 @@
                   ? '体验课'
                   : '系统课'
               }}
-              {{ formatTeamNameSup(drawerApprovalDeatail.sup) }}
+              {{ courseLevelReplace(drawerApprovalDeatail.sup) }}
               {{ drawerApprovalDeatail.level }}
               ）
             </span>
@@ -747,7 +747,7 @@ import GroupSell from './groupSell'
 import searchPhone from '@/components/MSearch/searchItems/searchPhone.vue'
 import MPagination from '@/components/MPagination/index.vue'
 import { timestamp } from '@/utils/index'
-import { formatTeamNameSup, SUP_LEVEL_UPPER } from '@/utils/supList'
+import { courseLevelReplace, SUP_LEVEL_UPPER } from '@/utils/supList'
 import { getStaffInfo } from '../common'
 import courseTeam from './courseTeam'
 import TabTimeSelect from './timeSearch'
@@ -793,7 +793,7 @@ export default {
       checkTypeAssert: '', // 审批类型判断-公用
       tableDataNode: [], // 退款审批抽屉专用_审批流程节点
       SUP_LEVEL_UPPER,
-      formatTeamNameSup,
+      courseLevelReplace,
       zero_time: '', // 0课时绑定值
       status_result: '', // 审批结果筛选
       isRefund: 0, // 选择退款出现0课时
@@ -1114,7 +1114,7 @@ export default {
                 [
                   {
                     label: '已上课周期',
-                    value: formatTeamNameSup(payData.currentPeriod)
+                    value: courseLevelReplace(payData.currentPeriod)
                   },
                   {
                     label: '调级级别',
@@ -1129,7 +1129,7 @@ export default {
                 [
                   {
                     label: '当前班级',
-                    value: payData.currentClassName
+                    value: courseLevelReplace(payData.currentClassName)
                   }
                 ]
               )
@@ -1139,7 +1139,7 @@ export default {
               [
                 {
                   label: '选择班级',
-                  value: payData.targetClassName
+                  value: courseLevelReplace(payData.targetClassName)
                 },
                 {
                   label: '调级理由',
@@ -1244,11 +1244,12 @@ export default {
           this.totalElements = res.payload.totalElements
           this.tableData = res.payload.content.map((item) => {
             const zhaiyao = item.abstractContent.split('^')
-            item.repiarContent = zhaiyao[0]
-            item.period = zhaiyao[1]
-            item.receptContent = zhaiyao[2]
-            item.reason = zhaiyao[3]
-            item.refundTypeStr = zhaiyao[4]
+            item.repiarContent = this.courseLevelReplace(zhaiyao[0])
+            item.period = this.courseLevelReplace(zhaiyao[1])
+            item.receptContent = this.courseLevelReplace(zhaiyao[2])
+            item.reason = this.courseLevelReplace(zhaiyao[3])
+            item.refundTypeStr = this.courseLevelReplace(zhaiyao[4])
+            
             item.openTime = timestamp(item.ctime, 2)
             item.approveTime = timestamp(item.endTime, 2)
             // item.applyDepartment = ''
