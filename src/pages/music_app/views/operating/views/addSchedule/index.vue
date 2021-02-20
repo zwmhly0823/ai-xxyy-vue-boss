@@ -120,12 +120,10 @@ export default {
       this.stepStatus = staff.stepStatus
     }
     let _this = this
-    window.onbeforeunload=() => {
-      _this.setStatus()
-    }
+    
   },
   destroyed() {
-    this.setStatus()
+    
   },
   methods: {
     setStatus(val = 1) {

@@ -233,6 +233,10 @@ export default {
     addEditSchedule(row) {
       const { period = 0 } = row // TODO:
 
+      var staff = JSON.parse(localStorage.getItem('staff'))
+      staff.stepStatus = 1
+      localStorage.setItem('staff', JSON.stringify(staff))
+
       this.$router.push({ path: `/addSchedule/${period}/${this.tabIndex}` })
     },
     // 查看详情

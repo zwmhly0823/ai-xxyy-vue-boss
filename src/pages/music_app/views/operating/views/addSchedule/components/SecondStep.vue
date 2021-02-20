@@ -136,7 +136,7 @@ export default {
       if (this.query) {
         this.query.duty_id = courseType
       } else {
-        this.query = { duty_id: courseType }
+        this.query = { duty_id: courseType, status: 0 }
       }
       const query = this.query ? JSON.stringify(this.query) : ''
       // tab数据
@@ -165,7 +165,6 @@ export default {
           type: 'warning'
         })
       } else {
-        
         this.$store.commit('setScheduleTeacher', this.transferVal)
         this.$emit('listenStepStatus', this.transferVal)
       }
@@ -181,13 +180,13 @@ export default {
   display: block;
   width: auto;
 }
-.secondContent{
+.secondContent {
   display: flex;
   justify-content: space-around;
   flex-wrap: wrap;
 }
-.secondContent > div{
-  margin-bottom:20px;
+.secondContent > div {
+  margin-bottom: 20px;
 }
 .el-transfer {
   height: 350px;
