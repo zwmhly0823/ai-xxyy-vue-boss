@@ -105,4 +105,11 @@ export default {
       `/api/ts/v1/teaching/student/trial/findTrailByOrderNo?orderNo=${orderNo}`
     )
   },
+  // 查询所有有效活动
+  getPromotionsList({ userId, orderId }) {
+    return axios.get(
+      `/api/b/v1/backend/promotions/flow/getPromotionsListByUserIdAndOrderId`,
+      { userId, orderId }
+    )
+  },
 }
