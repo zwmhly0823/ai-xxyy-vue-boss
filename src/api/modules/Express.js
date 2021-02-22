@@ -6,7 +6,9 @@
  * @LastEditors: YangJiyong
  * @LastEditTime: 2020-10-13 16:22:00
  */
-import { getAppSubjectCode } from '@/utils/index'
+import {
+  getAppSubjectCode
+} from '@/utils/index'
 import axios from '../axiosConfig'
 const subjectCode = getAppSubjectCode()
 
@@ -59,11 +61,16 @@ export default {
   searchExpressByRecieptTel(queryString = '') {
     const query = {
       bool: {
-        must: [
-          {
-            wildcard: { receipt_tel: `*${queryString}*` }
+        must: [{
+            wildcard: {
+              receipt_tel: `*${queryString}*`
+            }
           },
-          { term: { subject: subjectCode } }
+          {
+            term: {
+              subject: subjectCode
+            }
+          }
         ]
       }
     }
@@ -141,7 +148,9 @@ export default {
    * @param {Array} params
    */
   updateSwitchStatus(params) {
-    return axios.post(`/api/ex/v1/switch/updateSwitchStatus`, { list: params })
+    return axios.post(`/api/ex/v1/switch/updateSwitchStatus`, {
+      list: params
+    })
   },
   /**
    * 自动发货/全国发货 获取开关数据
@@ -219,5 +228,17 @@ export default {
   // 一键发货
   deliveryByCenter(type) {
     return axios.get(`/api/ex/v1/express/deliveryByCenter`, type)
+  },
+  /**
+   * 通过地址id查询物流信息-new
+   */
+  getAddressById(params) {
+    return axios.get(`/api/ex/v1/express/getAddressById?addressId=${params}`)
+  },
+  /**
+   * 通过uid、oid获取 退费类型
+   */
+  getRefundtypeById(params) {
+    return axios.get(`/api/b/v1/backend/refund/flow/get`, params)
   }
 }
