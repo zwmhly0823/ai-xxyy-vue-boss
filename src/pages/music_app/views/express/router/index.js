@@ -7,22 +7,9 @@
  * @LastEditTime: 2020-07-11 15:59:42
  */
 
-import Vue from 'vue'
-import VueRouter from 'vue-router'
-
-Vue.use(VueRouter)
-
-const routes = [{
-    path: '/',
-    name: 'express',
-    meta: {
-      title: '物流',
-      icon: 'el-icon-s-custom'
-    },
-    redirect: '/expressCenter'
-  },
+const routes = [
   {
-    path: '/expressCenter',
+    path: '/express',
     name: 'expressCenter',
     meta: {
       title: '物流管理',
@@ -75,11 +62,5 @@ const routes = [{
   }
 ]
 
-const router = new VueRouter({
-  // mode: 'history',
-  base: process.env.BASE_URL,
-  module: 'express',
-  routes
-})
 
-export default router
+export default routes

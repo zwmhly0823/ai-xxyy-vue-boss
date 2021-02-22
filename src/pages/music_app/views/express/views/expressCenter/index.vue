@@ -34,6 +34,7 @@
             :hideCol="hideCol"
             :hideSearchItem="hideSearchItem"
             :teamClass="teamClass"
+            :addSupS="false"
           />
           <toggle
             @result="getStatus"
@@ -69,6 +70,7 @@
             :hideCol="allExpressHideCol"
             :hideSearchItem="allExpressHideSearchItemSystem"
             :teamClass="teamClassSys"
+            :addSupS="true"
           />
           <toggle
             @result="getStatus"
@@ -412,6 +414,7 @@ export default {
     this.$nextTick(() => {
       this.calcSrollHeight()
     })
+    
   },
   methods: {
     handleCommand(command) {

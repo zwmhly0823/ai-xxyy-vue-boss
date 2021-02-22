@@ -10,62 +10,19 @@
   <div>
     <div class="sear-container">
       <div class="description" v-if="resultStatistics">
-        当前结果：社群销售<span>{{ resultStatistics.wechatSize }}</span
-        >人，计划招生<span>{{ resultStatistics.planSumTeamSize }}</span>
+        当前结果：社群销售
+        <span>{{ resultStatistics.wechatSize }}</span>人，计划招生
+        <span>{{ resultStatistics.planSumTeamSize }}</span>
         <span>（</span>
-        <span v-if="courseType != '0'"
-          >{{ SCHEDULE_LEVE(courseType)['S4'] }}:{{
-            (resultStatistics.S4 && resultStatistics.S4.planSumTeamSize) || 0
-          }}
-        </span>
-        <span
-          >{{ SCHEDULE_LEVE(courseType)['S1'] }}:{{
-            (resultStatistics.S1 && resultStatistics.S1.planSumTeamSize) || 0
-          }}
-        </span>
-        <span
-          >{{ SCHEDULE_LEVE(courseType)['S2'] }}:{{
-            (resultStatistics.S2 && resultStatistics.S2.planSumTeamSize) || 0
-          }}
-        </span>
-        <span v-if="courseType != '0'"
-          >{{ SCHEDULE_LEVE(courseType)['S5'] }}:{{
-            (resultStatistics.S5 && resultStatistics.S5.planSumTeamSize) || 0
-          }}
-        </span>
-        <span
-          >{{ SCHEDULE_LEVE(courseType)['S3'] }}:{{
-            (resultStatistics.S3 && resultStatistics.S3.planSumTeamSize) || 0
-          }}
+        <span class="resultsSpan" v-for="item in courseLevelList" :key="item.id">
+          <span>{{item.text}}:{{(resultStatistics[item.id] && resultStatistics[item.id].planSumTeamSize) || 0}}</span>
         </span>
         <span>）</span>
-
-        实际招生<span>{{ resultStatistics.realSumTeamSize }}</span>
+        实际招生
+        <span>{{ resultStatistics.realSumTeamSize }}</span>
         <span>（</span>
-        <span v-if="courseType != '0'"
-          >{{ SCHEDULE_LEVE(courseType)['S4'] }}:{{
-            (resultStatistics.S4 && resultStatistics.S4.realSumTeamSize) || 0
-          }}
-        </span>
-        <span
-          >{{ SCHEDULE_LEVE(courseType)['S1'] }}:{{
-            (resultStatistics.S1 && resultStatistics.S1.realSumTeamSize) || 0
-          }}
-        </span>
-        <span
-          >{{ SCHEDULE_LEVE(courseType)['S2'] }}:{{
-            (resultStatistics.S2 && resultStatistics.S2.realSumTeamSize) || 0
-          }}
-        </span>
-        <span v-if="courseType != '0'"
-          >{{ SCHEDULE_LEVE(courseType)['S5'] }}:{{
-            (resultStatistics.S5 && resultStatistics.S5.realSumTeamSize) || 0
-          }}
-        </span>
-        <span
-          >{{ SCHEDULE_LEVE(courseType)['S3'] }}:{{
-            (resultStatistics.S4 && resultStatistics.S3.realSumTeamSize) || 0
-          }}
+        <span class="resultsSpan" v-for="item in courseLevelList" :key="item.text">
+          <span>{{item.text}}:{{(resultStatistics[item.id] && resultStatistics[item.id].realSumTeamSize) || 0}}</span>
         </span>
         <span>）</span>
       </div>
@@ -80,88 +37,27 @@
           class="mytable"
         >
           <el-table-column prop="id" label="序号" width="50" align="center">
-            <template slot-scope="scope"
-              ><span>{{ scope.$index + calcIndex + 1 }} </span></template
-            >
+            <template slot-scope="scope">
+              <span>{{ scope.$index + calcIndex + 1 }}</span>
+            </template>
           </el-table-column>
-          <el-table-column
-            prop="departmentName"
-            label="部门"
-            width="100"
-            align="center"
-          >
-          </el-table-column>
-          <el-table-column
-            align="center"
-            prop="teacherRealName"
-            label="真实姓名"
-          ></el-table-column>
-          <el-table-column
-            v-if="courseType == '0'"
-            align="center"
-            prop="levelName"
-            label="销售等级"
-          ></el-table-column>
-          <el-table-column
-            align="center"
-            prop="courseDifficulty"
-            label="招生级别"
-          ></el-table-column>
-          <el-table-column
-            align="center"
-            prop="planSumTeamSize"
-            label="计划招生数"
-          ></el-table-column>
-          <el-table-column
-            align="center"
-            prop="intruNum"
-            label="转介绍招生数"
-            width="100"
-          ></el-table-column>
-          <el-table-column
-            align="center"
-            prop="marketStuNum"
-            label="市场招生数"
-            width="100"
-          ></el-table-column>
-          <el-table-column
-            align="center"
-            prop="realSumTeamSize"
-            label="实际招生数"
-          ></el-table-column>
-          <el-table-column
-            align="center"
-            prop="enrollStuRate"
-            label="招生完成率"
-          ></el-table-column>
-          <el-table-column
-            align="center"
-            prop="planTeam"
-            label="计划班级人数"
-          ></el-table-column>
-          <el-table-column prop="realTeam" label="已开班级数" align="center" >
-            
-          </el-table-column>
-          <el-table-column
-            align="center"
-            prop="teacherWechatNos"
-            label="绑定微信号"
-          ></el-table-column>
-          <el-table-column
-            align="center"
-            prop="courseVersion"
-            label="课程和材料版本"
-            width="120"
-          ></el-table-column>
-          <el-table-column
-            prop="courseCategoryCHN"
-            label="课程类型"
-            width="120"
-            align="center"
-          >
+          <el-table-column prop="departmentName" label="部门" width="100" align="center"></el-table-column>
+          <el-table-column align="center" prop="teacherRealName" label="真实姓名"></el-table-column>
+          <el-table-column v-if="courseType == '0'" align="center" prop="levelName" label="销售等级"></el-table-column>
+          <el-table-column align="center" prop="courseDifficulty" label="招生级别"></el-table-column>
+          <el-table-column align="center" prop="planSumTeamSize" label="计划招生数"></el-table-column>
+          <el-table-column align="center" prop="intruNum" label="转介绍招生数" width="100"></el-table-column>
+          <el-table-column align="center" prop="marketStuNum" label="市场招生数" width="100"></el-table-column>
+          <el-table-column align="center" prop="realSumTeamSize" label="实际招生数"></el-table-column>
+          <el-table-column align="center" prop="enrollStuRate" label="招生完成率"></el-table-column>
+          <el-table-column align="center" prop="planTeam" label="计划班级人数"></el-table-column>
+          <el-table-column prop="realTeam" label="已开班级数" align="center"></el-table-column>
+          <el-table-column align="center" prop="teacherWechatNos" label="绑定微信号"></el-table-column>
+          <el-table-column align="center" prop="courseVersion" label="课程和材料版本" width="120"></el-table-column>
+          <el-table-column prop="courseCategoryCHN" label="课程类型" width="120" align="center">
             <!-- <template slot-scope="scope">
               <span>{{ courseCategoryCHN }}</span>
-            </template> -->
+            </template>-->
           </el-table-column>
         </ele-table>
       </div>
@@ -172,7 +68,7 @@
 <script>
 import EleTable from '@/components/Table/EleTable'
 import { COURSECATEGORY } from '@/utils/enums'
-import { SCHEDULE_LEVE } from '@/utils/supList'
+import { SUP_LEVEL_LIST_UPPER, SUP_LEVEL_LIST_LOWER } from '@/utils/supList'
 export default {
   props: {
     paramsInfo: {
@@ -185,7 +81,7 @@ export default {
   },
   data() {
     return {
-      SCHEDULE_LEVE,
+      courseLevelList: [],
       courseCategory: {
         0: '双周体验课',
         2: '年系统课',
@@ -235,6 +131,9 @@ export default {
     const { period = '', courseType = '0' } = this.$route.params
     this.courseType = courseType
     Object.assign(this.tabQuery, { period, courseType })
+    this.courseLevelList = +this.courseType
+      ? SUP_LEVEL_LIST_LOWER
+      : SUP_LEVEL_LIST_UPPER
     // 表格内统计
     this.getScheduleDetailStatistic()
   },
@@ -277,17 +176,17 @@ export default {
           })
 
           value.courseCategoryCHN = courseCategoryCHN
-          
-          for(let key in value){
-            if(value[key]==null){
+
+          for (let key in value) {
+            if (value[key] == null) {
               value[key] = '--'
             }
           }
           // value.courseDifficulty =
-          //   SCHEDULE_LEVE(this.courseType)[value.courseDifficulty] || ''
+          //   courseLevelList(this.courseType)[value.courseDifficulty] || ''
         })
         this.tableData = content
-        
+
         this.totalElements = +_list.totalElements
         this.flags.loading = false
       } catch (err) {}
@@ -304,17 +203,12 @@ export default {
           wechatSize: 0, // 带班销售总人数
           planSumTeamSize: 0, // 计划招生总人数
           realSumTeamSize: 0, // 实际招生总人数
-          // PS1: 0,
-          // PS2: 0,
-          // PS3: 0,
-          // RS1: 0,
-          // RS2: 0,
-          // RS3: 0
           S1: {},
           S2: {},
           S3: {},
           S4: {},
-          S5: {}
+          S8: {},
+          S9: {}
         }
 
         payload.forEach((item, index) => {
@@ -328,17 +222,6 @@ export default {
             }
           }
           Object.assign(obj, sup)
-
-          // if (index === 0) {
-          //   obj.PS1 = item.planSumTeamSize || '0'
-          //   obj.RS1 = item.realSumTeamSize || '0'
-          // } else if (index === 1) {
-          //   obj.PS2 = item.planSumTeamSize || '0'
-          //   obj.RS2 = item.realSumTeamSize || '0'
-          // } else if (index === 2) {
-          //   obj.PS3 = item.planSumTeamSize || '0'
-          //   obj.RS3 = item.realSumTeamSize || '0'
-          // }
         })
 
         this.resultStatistics = obj
@@ -418,5 +301,8 @@ export default {
     padding-left: 0px !important;
     color: rgb(102, 102, 102) !important;
   }
+}
+.resultsSpan {
+  margin: 2px;
 }
 </style>

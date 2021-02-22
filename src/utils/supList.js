@@ -35,13 +35,6 @@ export const SUP_LEVEL = {
 //   S3: 'S3'
 // }
 
-export const SCHEDULE_LEVE = (type) => {
-  if (type === '0') {
-    return { S1: 'S1进阶', S2: 'S2基础', S3: 'S3' }
-  } else if (type === '1') {
-    return formatSup('S')
-  } else return ''
-}
  
 // 对象， 大小写s
 export const SUP_LEVEL_LOWER = formatSup('s')

@@ -25,15 +25,14 @@
         :key="item.id"
         :label="item.name"
         :value="addSupS ? item.name : item.id"
-      >
-      </el-option>
+      ></el-option>
     </el-select>
   </div>
 </template>
 
 <script>
 import { mapState } from 'vuex'
-
+import { SUP_LEVEL_LIST_LOWER, SUP_LEVEL_LIST_UPPER } from '@/utils/supList.js'
 export default {
   props: {
     placeholder: {
@@ -63,18 +62,6 @@ export default {
       stageList: [],
       scheduleList: [],
       supList: [],
-      experList: [
-        { id: 1, name: '基础(S1)' },
-        { id: 2, name: '高阶(S2)' }
-      ],
-      systemList: [
-        { id: 1, name: '一年级(S1)' },
-        { id: 2, name: '二年级(S2)' },
-        { id: 3, name: '三年级(S3)' },
-        { id: 4, name: '四年级(S4)' },
-        { id: 5, name: '五年级(S5)' },
-        { id: 6, name: '六年级(S6)' }
-      ],
       levelList: [],
       stageData: null,
       schedule: null,
@@ -94,8 +81,9 @@ export default {
   },
   watch: {},
   async created() {
-    console.log(this.subType)
-    this.supList = this.subType === '1' ? this.systemList : this.experList
+    
+    this.supList =
+      this.subType === '1' ? SUP_LEVEL_LIST_UPPER : SUP_LEVEL_LIST_LOWER
     // await this.getSup()
   },
   methods: {
