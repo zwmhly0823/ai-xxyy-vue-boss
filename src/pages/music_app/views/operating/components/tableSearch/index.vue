@@ -69,7 +69,7 @@ import Department from '@/components/MSearch/searchItems/department'
 import GroupSell from '@/components/MSearch/searchItems/groupSell'
 import MoreVersionBox from '@/components/MSearch/searchItems/moreVersionBox'
 import wxList from '../wxSearch'
-import { SUP_LEVEL_LIST_UPPER } from '@/utils/supList'
+import { SUP_LEVEL_LIST_UPPER,SUP_LEVEL_LIST_LOWER } from '@/utils/supList'
 export default {
   props: {
     // 是否显示销售等级
@@ -108,7 +108,7 @@ export default {
         { label: '新兵营', value: 0 }
       ],
       // 招生级别
-      scheduleLevelList: SUP_LEVEL_LIST_UPPER
+      scheduleLevelList: this.isShowLevel?SUP_LEVEL_LIST_UPPER:SUP_LEVEL_LIST_LOWER
     }
   },
   components: {

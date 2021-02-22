@@ -21,7 +21,7 @@ const zqClass = {
   1: 'online',
   2: 'unknown'
 }
-
+2481632
 export default [
   {
     prop: 'weixinNo',
@@ -39,7 +39,7 @@ export default [
   },
   {
     prop: 'zqStatus',
-    label: '智群登录',
+    label: '微信登录状态',
     render(h, data, row) {
       const text = zqStatus[data] || '未知'
       return h(

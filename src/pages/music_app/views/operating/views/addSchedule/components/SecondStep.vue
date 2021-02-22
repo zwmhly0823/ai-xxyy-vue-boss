@@ -146,9 +146,15 @@ export default {
         3000
       )
       if (res && res.data) {
-        const { content = [], number } = res.data.TeacherManagePage || {}
-
-        this.transferData = content
+        var { content = [], number } = res.data.TeacherManagePage || {}
+        var contentList = []
+        // 过滤未绑定微信的销售
+        content.map((item,index) => {
+          if (item.weixin_ids !== '') {
+            contentList.push(item)
+          }
+        })
+        this.transferData = contentList
         this.currentPage = +number
       }
     },

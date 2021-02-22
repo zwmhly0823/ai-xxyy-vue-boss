@@ -21,7 +21,7 @@
     </div>
     <div class="search-item">
       <simple-select
-        placeholder="智群登录"
+        placeholder="智群登陆状态"
         name="zqStatus"
         :multiple="false"
         :data-list="statusList"
@@ -90,8 +90,7 @@ export default {
       }
     },
     getStatus(res) {
-      console.log(res, 'status')
-      if (res) {
+      if (res.zqStatus!=2) {
         this.$set(this.searchParams, 'zqStatus', res.zqStatus)
       } else {
         this.$delete(this.searchParams, 'zqStatus')

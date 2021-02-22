@@ -27,6 +27,7 @@ export default {
             head_img_url
             wechat_id
             wechat_record_id
+            wechat_status
           }
         }
       }`

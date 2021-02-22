@@ -45,6 +45,7 @@ export default {
           content {
             id
             realname
+            weixin_ids
           }
         }
       }`
@@ -372,9 +373,9 @@ export default {
     return axios.post('/api/t/v1/navy/saveNavy', params)
   },
 
-  // 水军微信 列表（查询）@weixinNo；@zqStatus body: departmentIds []
+  // 水军微信 列表（查询）@weixinNo；@wechat_status body: departmentIds []
   getWaterArmyPage(
-    { weixinNo = '', zqStatus = '', departmentIds = [] } = {},
+    { weixinNo = '', wechat_status = '', departmentIds = [] } = {},
     pageNum = 1,
     pageSize = 20
   ) {
@@ -382,8 +383,8 @@ export default {
     if (weixinNo) {
       url += `&weixinNo=${weixinNo}`
     }
-    if (zqStatus || zqStatus === 0) {
-      url += `&zqStatus=${zqStatus}`
+    if (wechat_status || wechat_status === 0) {
+      url += `&wechat_status=${wechat_status}`
     }
     return axios.post(
       url,

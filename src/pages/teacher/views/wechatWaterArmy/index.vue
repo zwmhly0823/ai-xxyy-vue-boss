@@ -105,6 +105,7 @@ export default {
       )
         .then((res) => {
           const { content = [], totalElements = 0, totalPages = 1 } = res || {}
+          console.log(content)
           this.dataList = content
           Object.assign(this.listQuery, {
             totalPages: +totalPages,
